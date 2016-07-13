@@ -107,8 +107,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const entity hit = M_ARGV(1, entity); if (hit == attacker) return;
     const int health = M_ARGV(2, int);
     const int armor = M_ARGV(3, int);
-    const int potential_damage = M_ARGV(4, int);
-    const int deathtype = M_ARGV(6, int);
+    const int deathtype = M_ARGV(5, int);
+    const int potential_damage = M_ARGV(6, int);
     const vector location = hit.origin;
     FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
         if (

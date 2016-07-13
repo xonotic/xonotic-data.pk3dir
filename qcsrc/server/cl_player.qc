@@ -511,7 +511,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 	if (damage)
 	{
-		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, damage, hitloc, deathtype);
+		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 	}
 
 	if (this.health < 1)
