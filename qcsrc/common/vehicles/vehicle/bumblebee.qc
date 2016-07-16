@@ -297,15 +297,17 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	if(!vehic.gunner1 && !vehic.gunner2 && ((time >= vehic.gun1.phase) + (time >= vehic.gun2.phase)) == 2)
 	{
 		// we can have some fun
-		if(vlen2(real_origin(vehic.gun2) - player.origin) < vlen2(real_origin(vehic.gun1) - player.origin))
-		{
-			gunner = vehic.gun2;
-			vehic.gunner2 = player;
-		}
-		else
+		vector v1 = gettaginfo(vehic, gettagindex(vehic, "cannon_right"));
+		vector v2 = gettaginfo(vehic, gettagindex(vehic, "cannon_left"));
+		if(vlen2(player.origin - v1) < vlen2(player.origin - v2))
 		{
 			gunner = vehic.gun1;
 			vehic.gunner1 = player;
+		}
+		else
+		{
+			gunner = vehic.gun2;
+			vehic.gunner2 = player;
 		}
 	}
 	else if(!vehic.gunner1 && time >= vehic.gun1.phase) 	{ gunner = vehic.gun1; vehic.gunner1 = player; }
@@ -736,6 +738,20 @@ METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
     settouch(instance, bumblebee_touch);
     instance.nextthink = 0;
     instance.movetype = MOVETYPE_BOUNCEMISSILE;
+}
+METHOD(Bumblebee, vr_gunner_enter, void(Bumblebee thisveh, entity instance, entity actor))
+{
+	if(!instance.gunner1)
+	if(time >= instance.gun1.phase)
+	if(instance.gun1.vehicle_enter)
+	if(instance.gun1.vehicle_enter(instance, actor))
+		return;
+
+	if(!instance.gunner2)
+	if(time >= instance.gun2.phase)
+	if(instance.gun2.vehicle_enter)
+	if(instance.gun2.vehicle_enter(instance, actor))
+		return;
 }
 METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 {

@@ -441,6 +441,10 @@ void Draw_GrapplingHook(entity this)
 			break;
 	}
 
+	MUTATOR_CALLHOOK(DrawGrapplingHook, this, tex, rgb, t);
+	tex = M_ARGV(1, string);
+	rgb = M_ARGV(2, vector);
+
 	Draw_GrapplingHook_trace_callback_tex = tex;
 	Draw_GrapplingHook_trace_callback_rnd = offset;
 	Draw_GrapplingHook_trace_callback_rgb = rgb;

@@ -462,6 +462,8 @@ void PutClientInServer(entity this)
 	if (IS_OBSERVER(this)) {
 		PutObserverInServer(this);
 	} else if (IS_PLAYER(this)) {
+		if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
+		
 		PlayerState_attach(this);
 		accuracy_resend(this);
 
@@ -802,7 +804,7 @@ void ClientKill_Now(entity this)
 	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
-	if(IS_PLAYER(this))
+	if(!IS_SPEC(this) && !IS_OBSERVER(this))
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
 
 	// now I am sure the player IS dead
@@ -905,7 +907,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 				setorigin(it.killindicator, '0 0 52');
 				setthink(it.killindicator, KillIndicator_Think);
 				it.killindicator.nextthink = starttime + (it.lip) * 0.05;
-				clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
+				//clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
 				it.killindicator.cnt = ceil(killtime);
 			});
 			this.lip = 0;
@@ -1623,7 +1625,9 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        this.fixangle = false;
+    	this.angles = spectatee.v_angle;
+
+        //this.fixangle = false;
         //this.velocity = spectatee.vehicle.velocity;
         this.vehicle_health = spectatee.vehicle_health;
         this.vehicle_shield = spectatee.vehicle_shield;
@@ -1633,12 +1637,12 @@ void SpectateCopy(entity this, entity spectatee)
         this.vehicle_reload1 = spectatee.vehicle_reload1;
         this.vehicle_reload2 = spectatee.vehicle_reload2;
 
-        msg_entity = this;
+        //msg_entity = this;
 
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.x);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.y);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.z);
+       // WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            //WriteAngle(MSG_ONE,  spectatee.v_angle.x);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.y);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
         //    WriteEntity(MSG_ONE, this);
@@ -2167,10 +2171,8 @@ void PlayerPreThink (entity this)
 			{
 				if(!it.team || SAME_TEAM(this, it))
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
-			}
-			else if(autocvar_g_vehicles_steal)
-			{
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+				else if(autocvar_g_vehicles_steal)
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
 			}
 		});
 
@@ -2216,27 +2218,39 @@ void PlayerPreThink (entity this)
 				if (frametime) player_anim(this);
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
-				if (this.deadflag == DEAD_DYING) {
-					if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max)) {
-						this.deadflag = DEAD_RESPAWNING;
-					} else if (!button_pressed) {
-						this.deadflag = DEAD_DEAD;
-                    }
-				} else if (this.deadflag == DEAD_DEAD) {
-					if (button_pressed) {
-						this.deadflag = DEAD_RESPAWNABLE;
-					} else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNABLE) {
-					if (!button_pressed) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNING) {
-					if (time > this.respawn_time) {
-						this.respawn_time = time + 1; // only retry once a second
-						this.respawn_time_max = this.respawn_time;
-						respawn(this);
+				switch(this.deadflag)
+				{
+					case DEAD_DYING:
+					{
+						if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
+							this.deadflag = DEAD_RESPAWNING;
+						else if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_DEAD;
+						break;
+					}
+					case DEAD_DEAD:
+					{
+						if (button_pressed)
+							this.deadflag = DEAD_RESPAWNABLE;
+						else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNABLE:
+					{
+						if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNING:
+					{
+						if (time > this.respawn_time)
+						{
+							this.respawn_time = time + 1; // only retry once a second
+							this.respawn_time_max = this.respawn_time;
+							respawn(this);
+						}
+						break;
 					}
 				}
 
@@ -2366,13 +2380,13 @@ void PlayerPreThink (entity this)
 		entity e = this.teamkill_soundsource;
 		entity oldpusher = e.pusher;
 		e.pusher = this;
-		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
+		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOL_BASEVOICE, VOICETYPE_LASTATTACKER_ONLY);
 		e.pusher = oldpusher;
 	}
 
 	if (this.taunt_soundtime && time > this.taunt_soundtime) {
 		this.taunt_soundtime = 0;
-		PlayerSound(this, playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
+		PlayerSound(this, playersound_taunt, CH_VOICE, VOL_BASEVOICE, VOICETYPE_AUTOTAUNT);
 	}
 
 	target_voicescript_next(this);
@@ -2393,7 +2407,7 @@ void DrownPlayer(entity this)
 	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)
 	{
 		if(this.air_finished < time)
-			PlayerSound(this, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
 		this.dmg = 2;
 	}

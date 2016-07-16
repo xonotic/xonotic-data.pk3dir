@@ -1449,7 +1449,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 
 spawnfunc(target_items)
 {
-	float n, i;
+	int n, j;
 	string s;
 
 	this.use = target_items_use;
@@ -1467,20 +1467,20 @@ spawnfunc(target_items)
 	}
 	else
 	{
-		for(i = 0; i < n; ++i)
+		for(j = 0; j < n; ++j)
 		{
-			if     (argv(i) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
-			else if(argv(i) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
-			else if(argv(i) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
-			else if(argv(i) == "strength")               this.items |= ITEM_Strength.m_itemid;
-			else if(argv(i) == "invincible")             this.items |= ITEM_Shield.m_itemid;
-			else if(argv(i) == "superweapons")           this.items |= IT_SUPERWEAPON;
-			else if(argv(i) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
-			else if(argv(i) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
+			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
+			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
+			else if(argv(j) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
+			else if(argv(j) == "strength")               this.items |= ITEM_Strength.m_itemid;
+			else if(argv(j) == "invincible")             this.items |= ITEM_Shield.m_itemid;
+			else if(argv(j) == "superweapons")           this.items |= IT_SUPERWEAPON;
+			else if(argv(j) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
+			else if(argv(j) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
 				FOREACH(Weapons, it != WEP_Null, {
-					s = W_UndeprecateName(argv(i));
+					s = W_UndeprecateName(argv(j));
 					if(s == it.netname)
 					{
 						this.weapons |= (it.m_wepset);
@@ -1541,9 +1541,9 @@ spawnfunc(target_items)
 	//print(this.netname, "\n");
 
 	n = tokenize_console(this.netname);
-	for(i = 0; i < n; ++i)
+	for(j = 0; j < n; ++j)
 	{
-		FOREACH(Weapons, it != WEP_Null && argv(i) == it.netname, {
+		FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(argv(j)) == it.netname, {
             it.wr_init(it);
             break;
 		});
@@ -1766,7 +1766,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, ammo_fuel, op, val);
 				break;
 			default:
-				FOREACH(Weapons, it != WEP_Null && cmd == it.netname, {
+				FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(cmd) == it.netname, {
                     got += GiveWeapon(e, it.m_id, op, val);
                     break;
 				});

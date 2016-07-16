@@ -892,22 +892,19 @@ void vehicles_enter(entity pl, entity veh)
 	|| (pl.vehicle)
 	) { return; }
 
+	Vehicle info = Vehicles_from(veh.vehicleid);
+
 	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
 	if(veh.owner && SAME_TEAM(pl, veh))
 	{
-		if(!veh.gunner1)
-		if(time >= veh.gun1.phase)
-		if(veh.gun1.vehicle_enter)
-		if(veh.gun1.vehicle_enter(veh, pl))
-			return;
-
-		if(!veh.gunner2)
-		if(time >= veh.gun2.phase)
-		if(veh.gun2.vehicle_enter)
-		if(veh.gun2.vehicle_enter(veh, pl))
-			return;
+		// we don't need a return value or anything here
+		// if successful the owner check below will prevent anything weird
+		info.vr_gunner_enter(info, veh, pl);
 	}
+
+	if(veh.owner)
+		return; // got here and didn't enter the gunner, return
 
 	if(teamplay)
 	if(veh.team)
@@ -1008,7 +1005,6 @@ void vehicles_enter(entity pl, entity veh)
 	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
 	CSQCModel_UnlinkEntity(veh);
-	Vehicle info = Vehicles_from(veh.vehicleid);
 	info.vr_enter(info, veh);
 
 	antilag_clear(pl, CS(pl));
@@ -1029,6 +1025,17 @@ void vehicles_think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
+void vehicles_reset(entity this)
+{
+	if(this.owner)
+		vehicles_exit(this, VHEF_RELEASE);
+
+	vehicles_clearreturn(this);
+
+	if(this.active != ACTIVE_NOT)
+		vehicles_spawn(this);
+}
+
 // initialization
 void vehicles_spawn(entity this)
 {
@@ -1040,6 +1047,7 @@ void vehicles_spawn(entity this)
 	this.owner				= NULL;
 	settouch(this, vehicles_touch);
 	this.event_damage		= vehicles_damage;
+	this.reset 				= vehicles_reset;
 	this.iscreature			= true;
 	this.teleportable		= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents	= true;
@@ -1169,6 +1177,8 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	setsize(this, info.mins, info.maxs);
 
+	info.vr_setup(info, this);
+
 	if(!nodrop)
 	{
 		setorigin(this, this.origin);
@@ -1179,8 +1189,6 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.pos1 = this.origin;
 	this.pos2 = this.angles;
 	this.tur_head.team = this.team;
-
-	info.vr_setup(info, this);
 
 	if(this.active == ACTIVE_NOT)
 		this.nextthink = 0; // wait until activated

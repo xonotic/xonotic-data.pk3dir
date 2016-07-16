@@ -35,6 +35,7 @@ const float ATTEN_MAX = 3.984375;
 
 const float VOL_BASE = 0.7;
 const float VOL_BASEVOICE = 1.0;
+const float VOL_MUFFLED = 0.35;
 
 // Play all sounds via sound7, for access to the extra channels.
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
