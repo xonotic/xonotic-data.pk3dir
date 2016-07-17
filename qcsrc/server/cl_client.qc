@@ -1615,7 +1615,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.angles = spectatee.v_angle;
 	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
 	this.revive_progress = spectatee.revive_progress;
-	if(!PHYS_INPUT_BUTTON_USE(this))
+	if(!PHYS_INPUT_BUTTON_USE(this) && this.camera_spectator != 2)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
@@ -1959,6 +1959,13 @@ void SpectatorThink(entity this)
 	{
 		if(MinigameImpulse(this, this.impulse))
 			this.impulse = 0;
+
+		if (this.impulse == IMP_weapon_drop.impulse)
+		{
+			this.camera_spectator = (this.camera_spectator + 1) % 3;
+			this.impulse = 0;
+			return;
+		}
 	}
 	if (this.flags & FL_JUMPRELEASED) {
 		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
@@ -2067,6 +2074,7 @@ Called every frame for each client before the physics are run
 .float usekeypressed;
 .float last_vehiclecheck;
 .int items_added;
+.float camera_spectator_stat = _STAT(CAMERA_SPECTATOR);
 void PlayerPreThink (entity this)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
@@ -2394,6 +2402,8 @@ void PlayerPreThink (entity this)
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
 	if (PS(this).m_weapon == WEP_Null)
 		this.clip_load = this.clip_size = 0;
+
+	this.camera_spectator_stat = this.camera_spectator;
 }
 
 void DrownPlayer(entity this)
