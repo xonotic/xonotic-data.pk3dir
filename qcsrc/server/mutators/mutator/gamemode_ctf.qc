@@ -1987,7 +1987,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 						   | CTF_YELLOW_FLAG_CARRYING	| CTF_YELLOW_FLAG_TAKEN 	| CTF_YELLOW_FLAG_LOST
 						   | CTF_PINK_FLAG_CARRYING 	| CTF_PINK_FLAG_TAKEN		| CTF_PINK_FLAG_LOST
 						   | CTF_NEUTRAL_FLAG_CARRYING	| CTF_NEUTRAL_FLAG_TAKEN	| CTF_NEUTRAL_FLAG_LOST
-						   | CTF_FLAG_NEUTRAL | CTF_SHIELDED);
+						   | CTF_FLAG_NEUTRAL | CTF_SHIELDED | CTF_STALEMATE);
 
 	// scan through all the flags and notify the client about them
 	for(entity flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
@@ -2020,6 +2020,9 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 	// item for stopping players from capturing the flag too often
 	if(player.ctf_captureshielded)
 		player.ctf_flagstatus |= CTF_SHIELDED;
+
+	if(ctf_stalemate)
+		player.ctf_flagstatus |= CTF_STALEMATE;
 
 	// update the health of the flag carrier waypointsprite
 	if(player.wps_flagcarrier)
