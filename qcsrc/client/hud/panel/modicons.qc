@@ -264,6 +264,8 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 
 	#define X(team) MACRO_BEGIN { \
 		f = bound(0, team##flag_statuschange_elapsedtime * 2, 1); \
+		if (team##_icon && 0) /* TODO Replace 0 with stalemate condition */ \
+			drawpic_aspect_skin(team##flag_pos, "flag_stalemate", flag_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL); \
 		if (team##_icon_prevstatus && f < 1) \
 			drawpic_aspect_skin_expanding(team##flag_pos, team##_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * team##_alpha_prevstatus, DRAWFLAG_NORMAL, f); \
 		if (team##_icon) \
