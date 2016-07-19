@@ -1002,7 +1002,7 @@ void ctf_FlagThink(entity this)
 			if((this.pass_target == NULL)
 				|| (IS_DEAD(this.pass_target))
 				|| (this.pass_target.flagcarried)
-				|| (vdist(this.origin - targ_origin, <, autocvar_g_ctf_pass_radius))
+				|| (vdist(this.origin - targ_origin, >, autocvar_g_ctf_pass_radius))
 				|| ((trace_fraction < 1) && (trace_ent != this.pass_target))
 				|| (time > this.ctf_droptime + autocvar_g_ctf_pass_timelimit))
 			{
