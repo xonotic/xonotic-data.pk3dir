@@ -227,6 +227,7 @@ float spritelookupblinkvalue(entity this, string s)
             return 2;
     }
     if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypointblink;
+    if(s == WP_FlagReturn.netname) return 2;
 
     return 1;
 }
