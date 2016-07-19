@@ -197,6 +197,7 @@ float autocvar_g_jetpack_antigravity;
 int autocvar_g_jetpack_fuel;
 float autocvar_g_jetpack_maxspeed_side;
 float autocvar_g_jetpack_maxspeed_up;
+float autocvar_g_jetpack_reverse_thrust;
 #define autocvar_g_maplist cvar_string("g_maplist")
 bool autocvar_g_maplist_check_waypoints;
 int autocvar_g_maplist_index;
