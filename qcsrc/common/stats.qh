@@ -246,8 +246,7 @@ REGISTER_STAT(DOM_PPS_PINK, float)
 REGISTER_STAT(TELEPORT_MAXSPEED, float, autocvar_g_teleport_maxspeed)
 REGISTER_STAT(TELEPORT_TELEFRAG_AVOID, int, autocvar_g_telefrags_avoid)
 
-.int camera_spectator;
-REGISTER_STAT(CAMERA_SPECTATOR, int, this.camera_spectator)
+REGISTER_STAT(CAMERA_SPECTATOR, int)
 
 REGISTER_STAT(SPECTATORSPEED, float)
 
