@@ -546,6 +546,7 @@
     MULTITEAM_CENTER(CTF_PICKUP_TEAM_VERBOSE, 4,        1,      2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_NEUTRAL,           1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate^BG got the flag! Protect them!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_VERBOSE_NEUTRAL,   1,      2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "")
+    MSG_CENTER_NOTIF(CTF_PICKUP_VISIBLE,                1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGEnemies can now see you on radar!"), "")
     MULTITEAM_CENTER(CTF_RETURN, 4,                     1,      0, 0, "",               CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou returned the ^TC^TT^BG flag!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_STALEMATE_CARRIER,             1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGStalemate! Enemies can now see you on radar!"), "")
     MSG_CENTER_NOTIF(CTF_STALEMATE_OTHER,               1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "")
