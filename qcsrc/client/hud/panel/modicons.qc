@@ -117,6 +117,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	int redflag, blueflag, yellowflag, pinkflag, neutralflag; // current status
 	float redflag_statuschange_elapsedtime = 0, blueflag_statuschange_elapsedtime = 0, yellowflag_statuschange_elapsedtime = 0, pinkflag_statuschange_elapsedtime = 0, neutralflag_statuschange_elapsedtime = 0; // time since the status changed
 	bool ctf_oneflag; // one-flag CTF mode enabled/disabled
+	bool ctf_stalemate; // currently in stalemate
 	int stat_items = STAT(CTF_FLAGSTATUS);
 	float fs, fs2, fs3, size1, size2;
 	vector e1, e2;
@@ -128,6 +129,8 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	neutralflag = (stat_items/CTF_NEUTRAL_FLAG_TAKEN) & 3;
 
 	ctf_oneflag = (stat_items & CTF_FLAG_NEUTRAL);
+
+	ctf_stalemate = (stat_items & CTF_STALEMATE);
 
 	mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag || (stat_items & CTF_SHIELDED));
 

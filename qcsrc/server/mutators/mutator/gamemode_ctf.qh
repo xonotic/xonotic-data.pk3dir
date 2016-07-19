@@ -171,3 +171,4 @@ const int CTF_NEUTRAL_FLAG_LOST			= 512;
 const int CTF_NEUTRAL_FLAG_CARRYING		= 768;
 const int CTF_FLAG_NEUTRAL				= 2048;
 const int CTF_SHIELDED					= 4096;
+const int CTF_STALEMATE					= 8192;
