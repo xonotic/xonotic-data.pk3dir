@@ -767,7 +767,7 @@ void nade_touch(entity this, entity toucher)
 	if(autocvar_g_nades_pickup)
 	if(time >= this.spawnshieldtime)
 	if(!toucher.nade && this.health == this.max_health) // no boosted shot pickups, thank you very much
-	if(!toucher.frozen)
+	if(!STAT(FROZEN, toucher))
 	if(CanThrowNade(toucher)) // prevent some obvious things, like dead players
 	if(IS_REAL_CLIENT(toucher)) // above checks for IS_PLAYER, don't need to do it here
 	{
