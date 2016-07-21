@@ -1070,7 +1070,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		t = strcat(t, _("encryption:"), " ", (q ? sprintf(_("AES level %d"), q) : ZCTX(_("ENC^none"))), ", ");
 		t = strcat(t, sprintf(_("mod: %s"), ((modname == "xonotic") ? ZCTX(_("MOD^Default")) : original_modname)));
 		if(pure_available)
-			t = strcat(t, sprintf(_(" (%s)"), (pure) ? _("official settings") : _("modified settings")));
+			t = strcat(t, sprintf(" (%s)", (pure) ? _("official settings") : _("modified settings")));
 		t = strcat(t, ", ");
 		t = strcat(t, ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) ? _("stats enabled") : _("stats disabled")));
 		setZonedTooltip(me, t, string_null);

@@ -68,7 +68,7 @@ void physical_item_think(entity this)
 		remove(this); // the real item is gone, remove this
 }
 
-void physical_item_touch(entity this)
+void physical_item_touch(entity this, entity toucher)
 {
 	if(!this.cnt) // not for dropped items
 	if (ITEM_TOUCH_NEEDKILL())

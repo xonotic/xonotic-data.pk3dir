@@ -476,10 +476,9 @@ void bot_list_commands()
 // Commands code
 .int bot_exec_status;
 
-void SV_ParseClientCommand(string s);
 float bot_cmd_cc(entity this)
 {
-	WITHSELF(this, SV_ParseClientCommand(bot_cmd.bot_cmd_parm_string));
+	SV_ParseClientCommand(this, bot_cmd.bot_cmd_parm_string);
 	return CMD_STATUS_FINISHED;
 }
 

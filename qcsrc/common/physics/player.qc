@@ -13,7 +13,7 @@ bool Physics_Valid(string thecvar)
 	return autocvar_g_physics_clientselect && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
-float Physics_ClientOption(entity this, string option)
+float Physics_ClientOption(entity this, string option, float defaultval)
 {
 	if(Physics_Valid(this.cvar_cl_physics))
 	{
@@ -27,40 +27,40 @@ float Physics_ClientOption(entity this, string option)
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
-	return cvar(strcat("sv_", option));
+	return defaultval;
 }
 
 void Physics_UpdateStats(entity this, float maxspd_mod)
 {
-	STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw"), maxspd_mod);
-	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw"))
-		? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw"), maxspd_mod)
+	STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw), maxspd_mod);
+	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw))
+		? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw), maxspd_mod)
 		: 0;
-	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw") * maxspd_mod;
-	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed") * maxspd_mod; // also slow walking
+	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
+	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
 
 	// old stats
 	// fix some new settings
-	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor");
-	STAT(MOVEVARS_MAXAIRSTRAFESPEED, this) = Physics_ClientOption(this, "maxairstrafespeed");
-	STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed");
-	STAT(MOVEVARS_AIRSTRAFEACCELERATE, this) = Physics_ClientOption(this, "airstrafeaccelerate");
-	STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, this) = Physics_ClientOption(this, "warsowbunny_turnaccel");
-	STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, this) = Physics_ClientOption(this, "airaccel_sideways_friction");
-	STAT(MOVEVARS_AIRCONTROL, this) = Physics_ClientOption(this, "aircontrol");
-	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(this, "aircontrol_power");
-	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(this, "aircontrol_penalty");
-	STAT(MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, this) = Physics_ClientOption(this, "warsowbunny_airforwardaccel");
-	STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, this) = Physics_ClientOption(this, "warsowbunny_topspeed");
-	STAT(MOVEVARS_WARSOWBUNNY_ACCEL, this) = Physics_ClientOption(this, "warsowbunny_accel");
-	STAT(MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, this) = Physics_ClientOption(this, "warsowbunny_backtosideratio");
-	STAT(MOVEVARS_FRICTION, this) = Physics_ClientOption(this, "friction");
-	STAT(MOVEVARS_ACCELERATE, this) = Physics_ClientOption(this, "accelerate");
-	STAT(MOVEVARS_STOPSPEED, this) = Physics_ClientOption(this, "stopspeed");
-	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate");
-	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate");
-	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity");
-	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump");
+	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor", autocvar_sv_airaccel_qw_stretchfactor);
+	STAT(MOVEVARS_MAXAIRSTRAFESPEED, this) = Physics_ClientOption(this, "maxairstrafespeed", autocvar_sv_maxairstrafespeed);
+	STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed", autocvar_sv_maxairspeed);
+	STAT(MOVEVARS_AIRSTRAFEACCELERATE, this) = Physics_ClientOption(this, "airstrafeaccelerate", autocvar_sv_airstrafeaccelerate);
+	STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, this) = Physics_ClientOption(this, "warsowbunny_turnaccel", autocvar_sv_warsowbunny_turnaccel);
+	STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, this) = Physics_ClientOption(this, "airaccel_sideways_friction", autocvar_sv_airaccel_sideways_friction);
+	STAT(MOVEVARS_AIRCONTROL, this) = Physics_ClientOption(this, "aircontrol", autocvar_sv_aircontrol);
+	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(this, "aircontrol_power", autocvar_sv_aircontrol_power);
+	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(this, "aircontrol_penalty", autocvar_sv_aircontrol_penalty);
+	STAT(MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, this) = Physics_ClientOption(this, "warsowbunny_airforwardaccel", autocvar_sv_warsowbunny_airforwardaccel);
+	STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, this) = Physics_ClientOption(this, "warsowbunny_topspeed", autocvar_sv_warsowbunny_topspeed);
+	STAT(MOVEVARS_WARSOWBUNNY_ACCEL, this) = Physics_ClientOption(this, "warsowbunny_accel", autocvar_sv_warsowbunny_accel);
+	STAT(MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, this) = Physics_ClientOption(this, "warsowbunny_backtosideratio", autocvar_sv_warsowbunny_backtosideratio);
+	STAT(MOVEVARS_FRICTION, this) = Physics_ClientOption(this, "friction", autocvar_sv_friction);
+	STAT(MOVEVARS_ACCELERATE, this) = Physics_ClientOption(this, "accelerate", autocvar_sv_accelerate);
+	STAT(MOVEVARS_STOPSPEED, this) = Physics_ClientOption(this, "stopspeed", autocvar_sv_stopspeed);
+	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate", autocvar_sv_airaccelerate);
+	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate", autocvar_sv_airstopaccelerate);
+	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
+	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 }
 #endif
 
@@ -73,11 +73,11 @@ float IsMoveInDirection(vector mv, float ang) // key mix factor
 	return ang > 1 ? 0 : ang < -1 ? 0 : 1 - fabs(ang);
 }
 
-float GeomLerp(float a, float lerp, float b)
+float GeomLerp(float a, float _lerp, float b)
 {
-	return a == 0 ? (lerp < 1 ? 0 : b)
-		: b == 0 ? (lerp > 0 ? 0 : a)
-		: a * pow(fabs(b / a), lerp);
+	return a == 0 ? (_lerp < 1 ? 0 : b)
+		: b == 0 ? (_lerp > 0 ? 0 : a)
+		: a * pow(fabs(b / a), _lerp);
 }
 
 #define unstick_offsets(X) \
@@ -541,7 +541,7 @@ bool PlayerJump(entity this)
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
-		PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 #endif
 	return true;
 }
@@ -781,7 +781,8 @@ void PM_check_hitground(entity this)
     entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
     	? GS_FALL_METAL
     	: GS_FALL;
-    GlobalSound(this, gs, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+    float vol = ((IS_DUCKED(this)) ? VOL_MUFFLED : VOL_BASE);
+    GlobalSound(this, gs, CH_PLAYER, vol, VOICETYPE_PLAYERSOUND);
 #endif
 }
 
@@ -801,7 +802,7 @@ void PM_Footsteps(entity this)
 		entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 			? GS_STEP_METAL
 			: GS_STEP;
-		GlobalSound(this, gs, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+		GlobalSound(this, gs, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 	}
 #endif
 }
@@ -1012,10 +1013,14 @@ void PM_jetpack(entity this, float maxspd_mod)
 	float a_up = PHYS_JETPACK_ACCEL_UP(this);
 	float a_add = PHYS_JETPACK_ANTIGRAVITY(this) * PHYS_GRAVITY(this);
 
+	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(self)) { a_up = PHYS_JETPACK_REVERSE_THRUST(this); }
+
 	wishvel_x *= a_side;
 	wishvel_y *= a_side;
 	wishvel_z *= a_up;
 	wishvel_z += a_add;
+
+	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(self)) { wishvel_z *= -1; }
 
 	float best = 0;
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -1330,6 +1335,9 @@ void PM_Main(entity this)
 	if (this.PlayerPhysplug)
 		if (this.PlayerPhysplug(this))
 			return;
+#elif defined(CSQC)
+	if(hud != HUD_NORMAL)
+		return; // no vehicle prediction (yet)
 #endif
 
 #ifdef SVQC
@@ -1546,13 +1554,10 @@ LABEL(end)
 }
 
 #if defined(SVQC)
-void SV_PlayerPhysics()
+void SV_PlayerPhysics(entity this)
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
-#ifdef SVQC
-	ENGINE_EVENT();
-#endif
 	PM_Main(this);
 }

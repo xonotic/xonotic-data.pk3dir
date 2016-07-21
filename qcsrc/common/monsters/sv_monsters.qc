@@ -123,29 +123,26 @@ entity Monster_FindTarget(entity mon)
 {
 	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return mon.enemy; } // Handled by a mutator
 
-	entity head, closest_target = NULL;
-	head = findradius(mon.origin, mon.target_range);
+	entity closest_target = NULL;
 
-	while(head) // find the closest acceptable target to pass to
+	// find the closest acceptable target to pass to
+	FOREACH_ENTITY_RADIUS(mon.origin, mon.target_range, it.monster_attack,
 	{
-		if(head.monster_attack)
-		if(Monster_ValidTarget(mon, head))
+		if(Monster_ValidTarget(mon, it))
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-			vector head_center = CENTER_OR_VIEWOFS(head);
+			vector head_center = CENTER_OR_VIEWOFS(it);
 			vector ent_center = CENTER_OR_VIEWOFS(mon);
 
 			if(closest_target)
 			{
 				vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
 				if(vlen2(ent_center - head_center) < vlen2(ent_center - closest_target_center))
-					{ closest_target = head; }
+					{ closest_target = it; }
 			}
-			else { closest_target = head; }
+			else { closest_target = it; }
 		}
-
-		head = head.chain;
-	}
+	});
 
 	return closest_target;
 }
@@ -341,7 +338,7 @@ void Monster_Sound(entity this, .string samplefield, float sound_delay, float de
 	if(delaytoo)
 	if(time < this.msound_delay)
 		return; // too early
-	GlobalSound_string(this, this.(samplefield), chan, VOICETYPE_PLAYERSOUND);
+	GlobalSound_string(this, this.(samplefield), chan, VOL_BASE, VOICETYPE_PLAYERSOUND);
 
 	this.msound_delay = time + sound_delay;
 }
@@ -394,7 +391,7 @@ bool Monster_Attack_Leap_Check(entity this, vector vel)
 	return true;
 }
 
-bool Monster_Attack_Leap(entity this, vector anm, void(entity this) touchfunc, vector vel, float animtime)
+bool Monster_Attack_Leap(entity this, vector anm, void(entity this, entity toucher) touchfunc, vector vel, float animtime)
 {
 	if(!Monster_Attack_Leap_Check(this, vel))
 		return false;
@@ -466,15 +463,15 @@ void Monster_UpdateModel(entity this)
 	mon.mr_anim(mon, this);
 }
 
-void Monster_Touch(entity this)
+void Monster_Touch(entity this, entity toucher)
 {
-	if(other == NULL) { return; }
+	if(toucher == NULL) { return; }
 
-	if(other.monster_attack)
-	if(this.enemy != other)
-	if(!IS_MONSTER(other))
-	if(Monster_ValidTarget(this, other))
-		this.enemy = other;
+	if(toucher.monster_attack)
+	if(this.enemy != toucher)
+	if(!IS_MONSTER(toucher))
+	if(Monster_ValidTarget(this, toucher))
+		this.enemy = toucher;
 }
 
 void Monster_Miniboss_Check(entity this)

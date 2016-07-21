@@ -116,6 +116,14 @@ vector reflect(vector dir, vector norm)
 	return dir - 2 * (dir * norm) * norm;
 }
 
+/**
+ * clip vel along the plane defined by norm (assuming 0 distance away), bounciness determined by bounce 0..1
+ */
+vector vec_reflect(vector vel, vector norm, float bounce)
+{
+	return vel - (1 + bounce) * (vel * norm) * norm;
+}
+
 #ifndef MENUQC
 	vector get_corner_position(entity box, int corner)
 	{

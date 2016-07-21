@@ -68,11 +68,11 @@ void RemovePlayer(entity player)
 void MoveToLast(entity e)
 {
 	AuditLists();
-	other = e.sort_next;
-	while(other)
+	entity ent = e.sort_next;
+	while(ent)
 	{
-		SORT_SWAP(other, e);
-		other = e.sort_next;
+		SORT_SWAP(ent, e);
+		ent = e.sort_next;
 	}
 	AuditLists();
 }

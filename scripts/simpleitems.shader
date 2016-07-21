@@ -300,6 +300,32 @@ g_tuba_simple // tuba
 	}
 }
 
+g_ok_hmg_simple // heavy machinegun
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+
+ 	{
+		map models/weapons/g_ok_hmg_simple
+		blendfunc blend
+
+	}
+}
+
+g_ok_rl_simple // rocket propelled chainsaw
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+
+ 	{
+		map models/weapons/g_ok_rl_simple
+		blendfunc blend
+
+	}
+}
+
 ////////// ARMOR + HEALTH ITEMS //////////
 
 ///// ARMOR /////

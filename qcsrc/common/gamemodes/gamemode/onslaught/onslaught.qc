@@ -162,9 +162,9 @@ void FixSize(entity e);
 // CaptureShield Functions
 // =======================
 
-bool ons_CaptureShield_Customize(entity this)
+bool ons_CaptureShield_Customize(entity this, entity client)
 {
-	entity e = WaypointSprite_getviewentity(other);
+	entity e = WaypointSprite_getviewentity(client);
 
 	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, e.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return false; }
 	if(SAME_TEAM(this, e)) { return false; }
@@ -172,25 +172,25 @@ bool ons_CaptureShield_Customize(entity this)
 	return true;
 }
 
-void ons_CaptureShield_Touch(entity this)
+void ons_CaptureShield_Touch(entity this, entity toucher)
 {
-	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, other.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return; }
-	if(!IS_PLAYER(other)) { return; }
-	if(SAME_TEAM(other, this)) { return; }
+	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, toucher.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return; }
+	if(!IS_PLAYER(toucher)) { return; }
+	if(SAME_TEAM(toucher, this)) { return; }
 
 	vector mymid = (this.absmin + this.absmax) * 0.5;
-	vector othermid = (other.absmin + other.absmax) * 0.5;
+	vector theirmid = (toucher.absmin + toucher.absmax) * 0.5;
 
-	Damage(other, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(othermid - mymid) * ons_captureshield_force);
+	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(theirmid - mymid) * ons_captureshield_force);
 
-	if(IS_REAL_CLIENT(other))
+	if(IS_REAL_CLIENT(toucher))
 	{
-		play2(other, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
+		play2(toucher, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
 
 		if(this.enemy.classname == "onslaught_generator")
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
 		else
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
 	}
 }
 
@@ -776,9 +776,8 @@ void ons_ControlPoint_UpdateSprite(entity e)
 	}
 }
 
-void ons_ControlPoint_Touch(entity this)
+void ons_ControlPoint_Touch(entity this, entity toucher)
 {
-	entity toucher = other;
 	int attackable;
 
 	if(IS_VEHICLE(toucher) && toucher.owner)
@@ -1083,13 +1082,13 @@ void ons_DelayedGeneratorSetup(entity this)
 }
 
 
-void onslaught_generator_touch(entity this)
+void onslaught_generator_touch(entity this, entity toucher)
 {
-	if ( IS_PLAYER(other) )
-	if ( SAME_TEAM(this,other) )
+	if ( IS_PLAYER(toucher) )
+	if ( SAME_TEAM(this,toucher) )
 	if ( this.iscaptured )
 	{
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_TELEPORT);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_TELEPORT);
 	}
 }
 
@@ -1759,7 +1758,7 @@ MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.ons_roundlost = false;
 		it.ons_deathloc = '0 0 0';
-		WITHSELF(it, PutClientInServer());
+		PutClientInServer(it);
 	});
 	return false;
 }

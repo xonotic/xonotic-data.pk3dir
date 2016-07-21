@@ -16,7 +16,7 @@ class(Projectile).float gravity;
 class(Projectile).int snd_looping;
 class(Projectile).bool silent;
 
-void SUB_Stop(entity this);
+void SUB_Stop(entity this, entity toucher);
 
 void Projectile_ResetTrail(entity this, vector to);
 

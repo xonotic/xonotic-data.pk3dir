@@ -34,7 +34,7 @@ float object_count;
 .string material;
 
 .float touch_timer;
-void sandbox_ObjectFunction_Touch(entity this)
+void sandbox_ObjectFunction_Touch(entity this, entity toucher)
 {
 	// apply material impact effects
 
@@ -46,7 +46,7 @@ void sandbox_ObjectFunction_Touch(entity this)
 
 	// make particle count and sound volume depend on impact speed
 	float intensity;
-	intensity = vlen(this.velocity) + vlen(other.velocity);
+	intensity = vlen(this.velocity) + vlen(toucher.velocity);
 	if(intensity) // avoid divisions by 0
 		intensity /= 2; // average the two velocities
 	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))
@@ -142,25 +142,23 @@ void sandbox_ObjectAttach_Remove(entity e)
 {
 	// detaches any object attached to e
 
-	entity head;
-	for(head = NULL; (head = find(head, classname, "object")); )
+	FOREACH_ENTITY_ENT(owner, e,
 	{
-		if(head.owner == e)
-		{
-			vector org;
-			org = gettaginfo(head, 0);
-			setattachment(head, NULL, "");
-			head.owner = NULL;
+		if(it.classname != "object") continue;
 
-			// objects change origin and angles when detached, so apply previous position
-			setorigin(head, org);
-			head.angles = e.angles; // don't allow detached objects to spin or roll
+		vector org;
+		org = gettaginfo(it, 0);
+		setattachment(it, NULL, "");
+		it.owner = NULL;
 
-			head.solid = head.old_solid; // restore persisted solidity
-			head.movetype = head.old_movetype; // restore persisted physics
-			head.takedamage = DAMAGE_AIM;
-		}
-	}
+		// objects change origin and angles when detached, so apply previous position
+		setorigin(it, org);
+		it.angles = e.angles; // don't allow detached objects to spin or roll
+
+		it.solid = it.old_solid; // restore persisted solidity
+		it.movetype = it.old_movetype; // restore persisted physics
+		it.takedamage = DAMAGE_AIM;
+	});
 }
 
 entity sandbox_ObjectSpawn(entity this, float database)
@@ -462,7 +460,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 		switch(argv(1))
 		{
 			entity e;
-			float i;
+			int j;
 			string s;
 
 			// ---------------- COMMAND: HELP ----------------
@@ -704,8 +702,8 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							if(e.material)	strunzone(e.material);
 							if(argv(3))
 							{
-								for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
-									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".wav"));
+								for (j = 1; j <= 5; j++) // precache material sounds, 5 in total
+									precache_sound(strcat("object/impact_", argv(3), "_", ftos(j), ".wav"));
 								e.material = strzone(argv(3));
 							}
 							else
@@ -783,20 +781,18 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 						case "attachments":
 							// this should show the same info as 'mesh' but for attachments
 							s = "";
-							entity head;
-							i = 0;
-							for(head = NULL; (head = find(head, classname, "object")); )
+							j = 0;
+							FOREACH_ENTITY_ENT(owner, e,
 							{
-								if(head.owner == e)
-								{
-									++i; // start from 1
-									gettaginfo(e, head.tag_index);
-									s = strcat(s, "^1attachment ", ftos(i), "^7 has mesh \"^3", head.model, "^7\" at animation frame ^3", ftos(head.frame));
-									s = strcat(s, "^7 and is attached to bone \"^5", gettaginfo_name, "^7\", ");
-								}
-							}
-							if(i) // object contains attachments
-								print_to(player, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(i), "^7 attachment(s): ", s));
+								if(it.classname != "object") continue;
+
+								++j; // start from 1
+								gettaginfo(e, it.tag_index);
+								s = strcat(s, "^1attachment ", ftos(j), "^7 has mesh \"^3", it.model, "^7\" at animation frame ^3", ftos(it.frame));
+								s = strcat(s, "^7 and is attached to bone \"^5", gettaginfo_name, "^7\", ");
+							});
+							if(j) // object contains attachments
+								print_to(player, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(j), "^7 attachment(s): ", s));
 							else
 								print_to(player, "^2SANDBOX - INFO: ^7Object contains no attachments");
 							return true;

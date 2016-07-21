@@ -120,9 +120,10 @@ ENDCLASS(CallbackChain)
 void RegisterHooks() {};
 void RegisterCallbacks() {};
 
-#define _MUTATOR_HOOKABLE(id, ...) CallbackChain HOOK_##id; bool __Mutator_Send_##id(__VA_ARGS__)
-#define MUTATOR_HOOKABLE(id, params) \
-    _MUTATOR_HOOKABLE(id, int params(_MUTATOR_HANDLE_PARAMS, _MUTATOR_HANDLE_NOP)) { \
+#define MUTATOR_HOOKABLE(id, params) _MUTATOR_HOOKABLE(id, params)
+#define _MUTATOR_HOOKABLE(id, params) \
+    CallbackChain HOOK_##id;  \
+    bool __Mutator_Send_##id(int params(_MUTATOR_HANDLE_PARAMS, _MUTATOR_HANDLE_NOP)) { \
         params(_MUTATOR_HANDLE_PUSHTMP, _MUTATOR_HANDLE_NOP) \
         params(_MUTATOR_HANDLE_PREPARE, _MUTATOR_HANDLE_NOP) \
         bool ret = CallbackChain_Call(HOOK_##id); \
@@ -132,10 +133,12 @@ void RegisterCallbacks() {};
         return ret; \
     } \
     [[accumulate]] void RegisterHooks() { HOOK_##id = NEW(CallbackChain, #id); }
+
+#define MUTATOR_CALLHOOK(id, ...) _MUTATOR_CALLHOOK(id, __VA_ARGS__)
 #ifdef __STDC__
-    #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0 P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+    #define _MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0 P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 #else
-    #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
+    #define _MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
 #endif
 
 enum {

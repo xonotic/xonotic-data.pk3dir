@@ -301,18 +301,18 @@ void GrapplingHookThink(entity this)
 	}
 }
 
-void GrapplingHookTouch (entity this)
+void GrapplingHookTouch(entity this, entity toucher)
 {
-	if(other.movetype == MOVETYPE_FOLLOW)
+	if(toucher.movetype == MOVETYPE_FOLLOW)
 		return;
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	GrapplingHook_Stop(this);
 
-	if(other)
-		if(other.movetype != MOVETYPE_NONE)
+	if(toucher)
+		if(toucher.movetype != MOVETYPE_NONE)
 		{
-			SetMovetypeFollow(this, other);
+			SetMovetypeFollow(this, toucher);
 			WarpZone_RefSys_BeginAddingIncrementally(this, this.aiment);
 		}
 

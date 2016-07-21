@@ -15,6 +15,12 @@ void PlayerState_detach(entity this)
     PlayerState ps = PS(this);
 	if (!ps) return;  // initial connect
 	PS(this) = NULL;
+
+	ps.m_switchweapon = WEP_Null;
+	ps.m_weapon = WEP_Null;
+	ps.m_switchingweapon = WEP_Null;
+	ps.ps_push(ps, this);
+
 	if (ps.m_client != this) return;  // don't own state, spectator
 	FOREACH_CLIENT(PS(it) == ps, { PS(it) = NULL; });
 	remove(ps);

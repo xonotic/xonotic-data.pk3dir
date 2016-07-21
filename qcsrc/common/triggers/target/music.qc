@@ -71,13 +71,13 @@ spawnfunc(target_music)
 }
 void TargetMusic_RestoreGame()
 {
-	for(entity e = NULL; (e = find(e, classname, "target_music")); )
+	FOREACH_ENTITY_CLASS("target_music", true,
 	{
-		if(e.targetname == "")
-			target_music_sendto(e, MSG_INIT, 1);
+		if(it.targetname == "")
+			target_music_sendto(it, MSG_INIT, 1);
 		else
-			target_music_sendto(e, MSG_INIT, 0);
-	}
+			target_music_sendto(it, MSG_INIT, 0);
+	});
 }
 // values:
 //   volume

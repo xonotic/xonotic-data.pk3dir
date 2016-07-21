@@ -112,11 +112,11 @@ void minigame_resend(entity minigame)
 	}
 }
 
-bool minigame_CheckSend(entity this)
+bool minigame_CheckSend(entity this, entity client)
 {
 	entity e;
 	for ( e = this.owner.minigame_players; e != NULL; e = e.list_next )
-		if ( e.minigame_players == other )
+		if ( e.minigame_players == client )
 			return true;
 	return false;
 }

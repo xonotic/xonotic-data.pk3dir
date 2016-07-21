@@ -20,7 +20,7 @@ CLASS(Flag, Pickup)
     ATTRIB(Flag, m_maxs, vector, PL_MAX_CONST + '0 0 -13')
 ENDCLASS(Flag)
 Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
-void ctf_FlagTouch(entity this) { ITEM_HANDLE(Pickup, CTF_FLAG, this, other); }
+void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }
 
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
 
@@ -70,6 +70,7 @@ entity ctf_worldflaglist;
 .entity wps_flagbase;
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
+.entity wps_flagreturn;
 .entity wps_enemyflagcarrier;
 .float wps_helpme_time;
 bool wpforenemy_announced;
@@ -97,6 +98,8 @@ const int RETURN_DROPPED = 2;
 const int RETURN_DAMAGE = 3;
 const int RETURN_SPEEDRUN = 4;
 const int RETURN_NEEDKILL = 5;
+
+bool ctf_Stalemate_Customize(entity this, entity client);
 
 void ctf_Handle_Throw(entity player, entity receiver, float droptype);
 
@@ -171,3 +174,4 @@ const int CTF_NEUTRAL_FLAG_LOST			= 512;
 const int CTF_NEUTRAL_FLAG_CARRYING		= 768;
 const int CTF_FLAG_NEUTRAL				= 2048;
 const int CTF_SHIELDED					= 4096;
+const int CTF_STALEMATE					= 8192;

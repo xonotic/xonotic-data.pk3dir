@@ -92,14 +92,24 @@ spawnfunc(func_snow)
 	Net_LinkEntity(this, false, 0, rainsnow_SendEntity);
 }
 #elif defined(CSQC)
+float autocvar_cl_rainsnow_maxdrawdist = 2048;
+
 void Draw_Rain(entity this)
 {
-    te_particlerain(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
+	vector maxdist = '1 1 0' * autocvar_cl_rainsnow_maxdrawdist;
+	maxdist.z = 5;
+	if(boxesoverlap(vec2(view_origin) - maxdist, vec2(view_origin) + maxdist, vec2(this.absmin) - '0 0 5', vec2(this.absmax) + '0 0 5'))
+	//if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
+    	te_particlerain(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
 }
 
 void Draw_Snow(entity this)
 {
-    te_particlesnow(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
+	vector maxdist = '1 1 0' * autocvar_cl_rainsnow_maxdrawdist;
+	maxdist.z = 5;
+	if(boxesoverlap(vec2(view_origin) - maxdist, vec2(view_origin) + maxdist, vec2(this.absmin) - '0 0 5', vec2(this.absmax) + '0 0 5'))
+	//if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
+    	te_particlesnow(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
 }
 
 NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)

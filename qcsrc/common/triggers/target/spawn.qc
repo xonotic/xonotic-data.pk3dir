@@ -287,8 +287,10 @@ void target_spawn_use(entity this, entity actor, entity trigger)
 	else
 	{
 		// edit entity
-		for(entity e = NULL; (e = find(e, targetname, this.target)); )
-			target_spawn_useon(e, this, actor, trigger);
+		FOREACH_ENTITY_STRING(targetname, this.target,
+		{
+			target_spawn_useon(it, this, actor, trigger);
+		});
 	}
 }
 

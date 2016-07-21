@@ -226,6 +226,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 		{
 			minigame_self = this;
 			activate_minigame(this.owner);
+			minigame_self = this; // set it again (needed before, but may also be reset)
 		}
 	}
 	MINIGAME_SIMPLELINKED_ENTITIES

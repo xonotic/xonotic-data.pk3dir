@@ -46,6 +46,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("SZ^Gigantic")), "0.75");
 			e.addValue(e, ZCTX(_("SZ^Colossal")), "1");
 			e.configureXonoticTextSliderValues(e);
+			e.applyButton = videoApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Color depth:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("vid_bitsperpixel",
