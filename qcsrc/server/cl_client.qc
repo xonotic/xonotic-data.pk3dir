@@ -111,7 +111,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
 	if (e.zoomstate)            sf |= 4; // zoomed
 	if (e.porto_v_angle_held)   sf |= 8; // angles held
-	sf |= 16; // always check spectators
+	if (autocvar_sv_showspectators) sf |= 16; // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
