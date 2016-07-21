@@ -1832,7 +1832,7 @@ void LeaveSpectatorMode(entity this)
 		{
 			TRANSMUTE(Player, this);
 
-			SetSpectatee(self, world);
+			SetSpectatee(this, NULL);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(this, false, true); }
