@@ -131,6 +131,8 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if(this.hook && !wasfreed(this.hook))
 		do_crouch = false;
+	if(this.waterlevel >= WATERLEVEL_SWIMMING)
+		do_crouch = false;
 	if(hud != HUD_NORMAL)
 		do_crouch = false;
 	if(STAT(FROZEN, this))
@@ -871,21 +873,20 @@ void PM_swim(entity this, float maxspd_mod)
 		}
 	}
 	makevectors(this.v_angle);
+	float wishdown = this.movement.z;
+	if(PHYS_INPUT_BUTTON_CROUCH(this))
+		wishdown = -PHYS_MAXSPEED(this);
 	//wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
 	vector wishvel = v_forward * this.movement.x
 					+ v_right * this.movement.y
-					+ '0 0 1' * this.movement.z;
+					+ '0 0 1' * wishdown;
 	if(this.viewloc)
 		wishvel.z = -160; // drift anyway
 	else if (wishvel == '0 0 0')
 		wishvel = '0 0 -60'; // drift towards bottom
 
-
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod) * 0.7;
-
-	if (IS_DUCKED(this))
-    	wishspeed *= 0.5;
 
 //	if (pmove_waterjumptime <= 0) // TODO: use
     {
@@ -913,6 +914,9 @@ void PM_swim(entity this, float maxspd_mod)
 			{
 				if (IS_NEXUIZ_DERIVED(gamemode))
 #endif
+				if(this.waterlevel >= WATERLEVEL_SUBMERGED)
+					this.velocity_z = PHYS_MAXSPEED(this);
+				else
 					this.velocity_z = 200;
 #if 0
 				else

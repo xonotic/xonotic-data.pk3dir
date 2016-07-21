@@ -2281,6 +2281,8 @@ void PlayerPreThink (entity this)
         .entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if (this.hook.state) {
 			do_crouch = false;
+		} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
+			do_crouch = false;
 		} else if (this.vehicle) {
 			do_crouch = false;
 		} else if (STAT(FROZEN, this)) {
