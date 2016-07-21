@@ -257,7 +257,7 @@ void PutObserverInServer(entity this)
     RemoveGrapplingHook(this);
 	Portal_ClearAll(this);
 	Unfreeze(this);
-	SetSpectatee(this, world);
+	SetSpectatee(this, NULL);
 
 	if (this.alivetime)
 	{
