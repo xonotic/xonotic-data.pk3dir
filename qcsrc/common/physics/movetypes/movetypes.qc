@@ -640,14 +640,38 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 	Movetype_Physics_MatchTicrate(this, TICRATE, sloppy);
 }
 
+.vector tic_origin;
+.vector tic_velocity;
+.int tic_flags;
+.vector tic_avelocity;
+.vector tic_angles;
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Physics_Entity
 {
-	//if(tr <= 0)
-	//{
+	if(this.tic_origin == '0 0 0') // new update?
+	{
+		this.tic_origin = this.origin;
+		this.tic_velocity = this.velocity;
+		this.tic_avelocity = this.avelocity;
+		this.tic_angles = this.angles;
+		this.tic_flags = this.flags;
+	}
+
+	if(tr <= 0)
+	{
+		this.flags = this.tic_flags;
+		this.velocity = this.tic_velocity;
+		this.origin = this.tic_origin;
+		this.avelocity = this.tic_avelocity;
+		this.angles = this.tic_angles;
 		Movetype_Physics_NoMatchServer(this);
-		//return;
-	//}
-/*
+		this.tic_origin = this.origin;
+		this.tic_velocity = this.velocity;
+		this.tic_avelocity = this.avelocity;
+		this.tic_angles = this.angles;
+		this.tic_flags = this.flags;
+		return;
+	}
+
 	float dt = time - this.move_time;
 
 	int n = max(0, floor(dt / tr));
@@ -655,18 +679,32 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	this.move_time += n * tr;
 
 	if(!this.move_didgravity)
-		this.move_didgravity = ((this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS) && !IS_ONGROUND(this));
+		this.move_didgravity = ((this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS) && !(this.tic_flags & FL_ONGROUND));
 
 	for (int i = 0; i < n; ++i)
 	{
+		this.flags = this.tic_flags;
+		this.velocity = this.tic_velocity;
+		this.origin = this.tic_origin;
+		this.avelocity = this.tic_avelocity;
+		this.angles = this.tic_angles;
 		_Movetype_Physics_Frame(this, tr);
+		this.tic_origin = this.origin;
+		this.tic_velocity = this.velocity;
+		this.tic_avelocity = this.avelocity;
+		this.tic_angles = this.angles;
+		this.tic_flags = this.flags;
 		if(wasfreed(this))
 			return;
 	}
 
-	if(dt > 0 && this.move_movetype != MOVETYPE_NONE && !IS_ONGROUND(this))
+	this.avelocity = this.tic_avelocity;
+
+	if(dt > 0 && this.move_movetype != MOVETYPE_NONE && !(this.tic_flags & FL_ONGROUND))
 	{
 		// now continue the move from move_time to time
+		this.velocity = this.tic_velocity;
+
 		if(this.move_didgravity > 0)
 		{
 			this.velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
@@ -675,11 +713,11 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 			    * PHYS_GRAVITY(this);
 		}
 
-		this.angles = this.angles + dt * this.avelocity;
+		this.angles = this.tic_angles + dt * this.avelocity;
 
 		if(sloppy || this.move_movetype == MOVETYPE_NOCLIP)
 		{
-			setorigin(this, this.origin + dt * this.velocity);
+			setorigin(this, this.tic_origin + dt * this.velocity);
 		}
 		else
 		{
@@ -693,7 +731,8 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	}
 	else
 	{
-		setorigin(this, this.origin);
+		this.velocity = this.tic_velocity;
+		this.angles = this.tic_angles;
+		setorigin(this, this.tic_origin);
 	}
-	*/
 }
