@@ -49,10 +49,10 @@ void Casing_Delete(entity this)
 
 void Casing_Draw(entity this)
 {
-    if (this.move_flags & FL_ONGROUND)
+    if (this.flags & FL_ONGROUND)
     {
-        this.move_angles_x = 0;
-        this.move_angles_z = 0;
+        this.angles_x = 0;
+        this.angles_z = 0;
         UNSET_ONGROUND(this);
     }
 
@@ -121,8 +121,8 @@ void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector t
 {
     if (thisforce.z < 0)
         thisforce.z = 0;
-    this.move_velocity = this.move_velocity + thisforce + '0 0 100';
-    this.move_flags &= ~FL_ONGROUND;
+    this.velocity = this.velocity + thisforce + '0 0 100';
+    this.flags &= ~FL_ONGROUND;
 }
 
 NET_HANDLE(casings, bool isNew)
@@ -151,10 +151,8 @@ NET_HANDLE(casings, bool isNew)
     casing.drawmask = MASK_NORMAL;
 
     casing.draw = Casing_Draw;
-    casing.move_origin = casing.origin;
-    casing.move_velocity = casing.velocity + 2 * prandomvec();
-    casing.move_angles = casing.angles;
-    casing.move_avelocity = '0 250 0' + 100 * prandomvec();
+    casing.velocity = casing.velocity + 2 * prandomvec();
+    casing.avelocity = '0 250 0' + 100 * prandomvec();
     casing.move_movetype = MOVETYPE_BOUNCE;
     settouch(casing, Casing_Touch);
     casing.move_time = time;

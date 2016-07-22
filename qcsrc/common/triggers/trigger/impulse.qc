@@ -21,11 +21,7 @@ void trigger_impulse_touch1(entity this, entity toucher)
 		return;
 	}
 
-#ifdef SVQC
 	str = min(this.radius, vlen(this.origin - toucher.origin));
-#elif defined(CSQC)
-	str = min(this.radius, vlen(this.origin - toucher.move_origin));
-#endif
 
 	if(this.falloff == 1)
 		str = (str / this.radius) * this.strength;
@@ -41,35 +37,20 @@ void trigger_impulse_touch1(entity this, entity toucher)
 
 	if(this.spawnflags & 64)
 	{
-#ifdef SVQC
 		float addspeed = str - toucher.velocity * normalize(targ.origin - this.origin);
 		if (addspeed > 0)
 		{
 			float accelspeed = min(8 * pushdeltatime * str, addspeed);
 			toucher.velocity += accelspeed * normalize(targ.origin - this.origin);
 		}
-#elif defined(CSQC)
-		float addspeed = str - toucher.move_velocity * normalize(targ.origin - this.origin);
-		if (addspeed > 0)
-		{
-			float accelspeed = min(8 * pushdeltatime * str, addspeed);
-			toucher.move_velocity += accelspeed * normalize(targ.origin - this.origin);
-		}
-#endif
 	}
 	else
-#ifdef SVQC
 		toucher.velocity = toucher.velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
-#elif defined(CSQC)
-		toucher.move_velocity = toucher.move_velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
-#endif
 
-#ifdef SVQC
 	UNSET_ONGROUND(toucher);
 
+#ifdef SVQC
 	UpdateCSQCProjectile(toucher);
-#elif defined(CSQC)
-	toucher.move_flags &= ~FL_ONGROUND;
 #endif
 }
 
@@ -92,12 +73,10 @@ void trigger_impulse_touch2(entity this, entity toucher)
 	if(!pushdeltatime) return;
 
 	// div0: ticrate independent, 1 = identity (not 20)
-#ifdef SVQC
 	toucher.velocity = toucher.velocity * pow(this.strength, pushdeltatime);
 
+#ifdef SVQC
 	UpdateCSQCProjectile(toucher);
-#elif defined(CSQC)
-	toucher.move_velocity = toucher.move_velocity * pow(this.strength, pushdeltatime);
 #endif
 }
 
@@ -122,11 +101,7 @@ void trigger_impulse_touch3(entity this, entity toucher)
 
 	setsize(this, '-1 -1 -1' * this.radius,'1 1 1' * this.radius);
 
-#ifdef SVQC
 	str = min(this.radius, vlen(this.origin - toucher.origin));
-#elif defined(CSQC)
-	str = min(this.radius, vlen(this.origin - toucher.move_origin));
-#endif
 
 	if(this.falloff == 1)
 		str = (1 - str / this.radius) * this.strength; // 1 in the inside
@@ -135,12 +110,10 @@ void trigger_impulse_touch3(entity this, entity toucher)
 	else
 		str = this.strength;
 
-#ifdef SVQC
 	toucher.velocity = toucher.velocity + normalize(toucher.origin - this.origin) * str * pushdeltatime;
 
+#ifdef SVQC
 	UpdateCSQCProjectile(toucher);
-#elif defined(CSQC)
-	toucher.move_velocity = toucher.move_velocity + normalize(toucher.move_origin - this.origin) * str * pushdeltatime;
 #endif
 }
 

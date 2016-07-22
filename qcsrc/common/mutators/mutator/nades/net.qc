@@ -34,7 +34,7 @@ void orb_setup(entity e)
 	e.solid = SOLID_NOT;
 	e.drawmask = MASK_NORMAL;
 	e.scale = 0.01;
-	e.avelocity = e.move_avelocity = '7 0 11';
+	e.avelocity = '7 0 11';
 	e.renderflags |= RF_ADDITIVE;
 }
 #endif

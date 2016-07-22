@@ -255,8 +255,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		if(it.damageforcescale)
 			if(vdist(thisforce, !=, 0))
 			{
-				it.move_velocity = it.move_velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.move_velocity, autocvar_g_balance_damagepush_speedfactor);
-				it.move_flags &= ~FL_ONGROUND;
+				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, autocvar_g_balance_damagepush_speedfactor);
+				it.flags &= ~FL_ONGROUND;
 			}
 
 		if(w_issilent)

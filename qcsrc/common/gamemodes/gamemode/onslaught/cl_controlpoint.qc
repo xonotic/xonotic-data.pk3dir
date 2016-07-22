@@ -74,9 +74,9 @@ void cpicon_draw(entity this)
 		}
 
 		this.angles_x = this.punchangle_x;
-		this.angles_y = this.punchangle_y + this.move_angles_y;
+		this.angles_y = this.punchangle_y + this.angles_y;
 		this.angles_z = this.punchangle_z;
-		this.move_angles_y = this.move_angles_y + 45 * frametime;
+		this.angles_y = this.angles_y + 45 * frametime;
 	}
 
 	setorigin(this, this.cp_origin + this.cp_bob_origin + this.cp_bob_dmg);
@@ -119,7 +119,6 @@ void cpicon_construct(entity this)
 		setsize(this.icon_realmodel, CPICON_MIN, CPICON_MAX);
 		this.icon_realmodel.movetype = MOVETYPE_NOCLIP;
 		this.icon_realmodel.solid = SOLID_NOT;
-		this.icon_realmodel.move_origin = this.icon_realmodel.origin;
 	}
 
 	if(this.iscaptured) { this.icon_realmodel.solid = SOLID_BBOX; }
@@ -127,7 +126,6 @@ void cpicon_construct(entity this)
 	this.move_movetype	= MOVETYPE_NOCLIP;
 	this.solid			= SOLID_NOT;
 	this.movetype		= MOVETYPE_NOCLIP;
-	this.move_origin	= this.origin;
 	this.move_time		= time;
 	this.drawmask		= MASK_NORMAL;
 	this.alpha			= 1;

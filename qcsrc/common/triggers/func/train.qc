@@ -327,8 +327,6 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 		train_next(this);
 
 		this.move_movetype = MOVETYPE_PUSH;
-		this.move_origin = this.origin;
-		this.move_angles = this.angles;
 		this.move_time = time;
 	}
 

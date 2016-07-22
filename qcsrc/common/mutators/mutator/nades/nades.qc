@@ -572,13 +572,11 @@ void nade_entrap_touch(entity this, entity toucher)
 		if(!pushdeltatime) return;
 
 		// div0: ticrate independent, 1 = identity (not 20)
-#ifdef SVQC
 		toucher.velocity = toucher.velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
 
+	#ifdef SVQC
 		UpdateCSQCProjectile(toucher);
-#elif defined(CSQC)
-		toucher.move_velocity = toucher.move_velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
-#endif
+	#endif
 	}
 
 	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )

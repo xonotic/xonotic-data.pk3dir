@@ -852,10 +852,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		else
 		{
 			targ.velocity = targ.velocity + farce;
-			targ.move_velocity = targ.velocity;
 		}
 		UNSET_ONGROUND(targ);
-		targ.move_flags &= ~FL_ONGROUND;
 		UpdateCSQCProjectile(targ);
 	}
 	// apply damage

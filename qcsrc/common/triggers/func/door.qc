@@ -824,10 +824,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 			door_init_startopen(this);
 
 		this.move_time = time;
-		this.move_origin = this.origin;
 		this.move_movetype = MOVETYPE_PUSH;
-		this.move_angles = this.angles;
-		this.move_blocked = door_blocked;
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -841,7 +838,6 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.origin_y = ReadCoord();
 		this.origin_z = ReadCoord();
 		setorigin(this, this.origin);
-		this.move_origin = this.origin;
 
 		this.pos1_x = ReadCoord();
 		this.pos1_y = ReadCoord();

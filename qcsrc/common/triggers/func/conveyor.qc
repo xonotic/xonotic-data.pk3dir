@@ -156,7 +156,6 @@ void conveyor_init(entity this)
 	this.movetype = MOVETYPE_NONE;
 	this.model = "";
 	this.solid = SOLID_TRIGGER;
-	this.move_origin = this.origin;
 	this.move_time = time;
 }
 

@@ -146,7 +146,6 @@ void trigger_push_touch(entity this, entity toucher)
 	if(this.enemy)
 	{
 		toucher.velocity = trigger_push_calculatevelocity(toucher.origin, this.enemy, this.height);
-		toucher.move_velocity = toucher.velocity;
 	}
 	else if(this.target && this.target != "")
 	{
@@ -160,22 +159,18 @@ void trigger_push_touch(entity this, entity toucher)
 				RandomSelection_Add(e, 0, string_null, 1, 1);
 		}
 		toucher.velocity = trigger_push_calculatevelocity(toucher.origin, RandomSelection_chosen_ent, this.height);
-		toucher.move_velocity = toucher.velocity;
 	}
 	else
 	{
 		toucher.velocity = this.movedir;
-		toucher.move_velocity = toucher.velocity;
 	}
 
-#ifdef SVQC
 	UNSET_ONGROUND(toucher);
-#elif defined(CSQC)
-	toucher.move_flags &= ~FL_ONGROUND;
 
+#ifdef CSQC
 	if (toucher.flags & FL_PROJECTILE)
 	{
-		toucher.move_angles = vectoangles (toucher.move_velocity);
+		toucher.angles = vectoangles (toucher.velocity);
 		switch(toucher.move_movetype)
 		{
 			case MOVETYPE_FLY:

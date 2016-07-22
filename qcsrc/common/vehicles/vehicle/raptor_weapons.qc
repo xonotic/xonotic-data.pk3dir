@@ -224,7 +224,7 @@ void RaptorCBShellfragDraw(entity this)
         return;
 
     Movetype_Physics_MatchTicrate(this, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
-    this.move_avelocity += randomvec() * 15;
+    this.avelocity += randomvec() * 15;
     this.renderflags = 0;
 
     if(this.cnt < time)
@@ -246,10 +246,9 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 
     sfrag.draw = RaptorCBShellfragDraw;
 
-    sfrag.move_origin = sfrag.origin = _org;
-    sfrag.move_velocity = _vel;
-    sfrag.move_avelocity = prandomvec() * vlen(sfrag.move_velocity);
-    sfrag.angles = sfrag.move_angles = _ang;
+    sfrag.velocity = _vel;
+    sfrag.avelocity = prandomvec() * vlen(sfrag.velocity);
+    sfrag.angles = _ang;
 
     sfrag.move_time = time;
     sfrag.damageforcescale = 4;

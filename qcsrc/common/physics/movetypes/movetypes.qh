@@ -12,16 +12,16 @@
 
 .float move_movetype;
 .float move_time;
-.vector move_origin;
-.vector move_angles;
-.vector move_velocity;
-.vector move_avelocity;
-.int move_flags;
-.int move_watertype;
-.int move_waterlevel;
+//.vector move_origin;
+//.vector move_angles;
+//.vector move_velocity;
+//.vector move_avelocity;
+//.int move_flags;
+//.int move_watertype;
+//.int move_waterlevel;
 .void(float, float)contentstransition;
-.float move_bounce_factor;
-.float move_bounce_stopspeed;
+//.float move_bounce_factor;
+//.float move_bounce_stopspeed;
 .float move_nomonsters;  // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
 
 .entity aiment;

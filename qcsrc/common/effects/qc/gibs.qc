@@ -192,10 +192,9 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 		org = trace_endpos;
 	}
 
-	gib.move_origin = org;
 	setorigin(gib, org);
-	gib.move_velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
-	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity) * autocvar_cl_gibs_avelocity_scale;
+	gib.velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
+	gib.avelocity = prandomvec() * vlen(gib.velocity) * autocvar_cl_gibs_avelocity_scale;
 	gib.move_time = time;
 	gib.damageforcescale = autocvar_cl_gibs_damageforcescale;
 

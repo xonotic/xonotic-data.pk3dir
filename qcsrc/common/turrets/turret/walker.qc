@@ -642,8 +642,7 @@ void walker_draw(entity this)
     fixedmakevectors(this.angles);
     movelib_groundalign4point(this, 300, 100, 0.25, 45);
     setorigin(this, this.origin + this.velocity * dt);
-    this.tur_head.angles += dt * this.tur_head.move_avelocity;
-    this.angles_y = this.move_angles_y;
+    this.tur_head.angles += dt * this.tur_head.avelocity;
 
     if (this.health < 127)
     if(random() < 0.15)
@@ -653,9 +652,7 @@ void walker_draw(entity this)
         METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         {
             it.gravity		= 1;
-            it.movetype		= MOVETYPE_BOUNCE;
             it.move_movetype	= MOVETYPE_BOUNCE;
-            it.move_origin	= it.origin;
             it.move_time		= time;
             it.draw			= walker_draw;
         }

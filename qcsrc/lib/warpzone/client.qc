@@ -89,7 +89,7 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 	// engine currently wants this
 	setpredraw(this, WarpZone_Fade_PreDraw);
 
-	//this.move_touch = WarpZone_Touch;
+	//settouch(this, WarpZone_Touch);
 	return true;
 }
 
