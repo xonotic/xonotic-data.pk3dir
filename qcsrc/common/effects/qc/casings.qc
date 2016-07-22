@@ -53,7 +53,7 @@ void Casing_Draw(entity this)
     {
         this.angles_x = 0;
         this.angles_z = 0;
-        UNSET_ONGROUND(this);
+        //UNSET_ONGROUND(this);
     }
 
     Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);

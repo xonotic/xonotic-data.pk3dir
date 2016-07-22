@@ -653,7 +653,6 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 .vector tic_saved_angles;
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Physics_Entity
 {
-	// this will also detect new updates
 #define X(s) \
 	if(this.(s) != this.tic_saved_##s) \
 		this.tic_##s = this.(s)
@@ -678,6 +677,12 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		this.tic_avelocity = this.avelocity;
 		this.tic_angles = this.angles;
 		this.tic_flags = this.flags;
+
+		this.tic_saved_flags = this.flags;
+		this.tic_saved_velocity = this.velocity;
+		this.tic_saved_origin = this.origin;
+		this.tic_saved_avelocity = this.avelocity;
+		this.tic_saved_angles = this.angles;
 		return;
 	}
 
@@ -694,7 +699,7 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	{
 		this.flags = this.tic_flags;
 		this.velocity = this.tic_velocity;
-		this.origin = this.tic_origin;
+		setorigin(this, this.tic_origin);
 		this.avelocity = this.tic_avelocity;
 		this.angles = this.tic_angles;
 		_Movetype_Physics_Frame(this, tr);
@@ -730,7 +735,10 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		}
 		else
 		{
+			vector oldorg = this.origin;
+			this.origin = this.tic_origin;
 			_Movetype_PushEntityTrace(this, dt * this.velocity);
+			this.origin = oldorg;
 			if(!trace_startsolid)
 				setorigin(this, trace_endpos);
 		}
