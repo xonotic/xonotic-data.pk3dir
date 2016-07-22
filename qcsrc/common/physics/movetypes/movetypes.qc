@@ -642,12 +642,12 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Physics_Entity
 {
-	if(tr <= 0)
-	{
+	//if(tr <= 0)
+	//{
 		Movetype_Physics_NoMatchServer(this);
-		return;
-	}
-
+		//return;
+	//}
+/*
 	float dt = time - this.move_time;
 
 	int n = max(0, floor(dt / tr));
@@ -695,4 +695,5 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	{
 		setorigin(this, this.origin);
 	}
+	*/
 }
