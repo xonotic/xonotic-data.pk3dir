@@ -46,7 +46,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		this.move_didgravity = 1;
 		grav = dt * (PHYS_ENTGRAVITY(this) ? PHYS_ENTGRAVITY(this) : 1) * PHYS_GRAVITY(this);
 
-		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(this.flags & FL_ONGROUND))
+		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.velocity_z -= grav * 0.5;
@@ -99,7 +99,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 					trace_ent = NULL;
 				}
 
-				this.flags |= FL_ONGROUND;
+				SET_ONGROUND(this);
 				this.move_groundentity = trace_ent;
 			}
 		}
@@ -230,7 +230,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 
 	if(applygravity)
 	{
-		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(this.flags & FL_ONGROUND))
+		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.velocity_z -= grav * 0.5f;
@@ -480,7 +480,7 @@ float _Movetype_PushEntity(entity this, vector push, bool failonstartsolid)  // 
 	this.origin = trace_endpos;
 
 	if(trace_fraction < 1)
-		if(this.solid >= SOLID_TRIGGER && (!(this.flags & FL_ONGROUND) || (this.move_groundentity != trace_ent)))
+		if(this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || (this.move_groundentity != trace_ent)))
 			_Movetype_Impact(this, trace_ent);
 
 	return trace_fraction;
@@ -655,7 +655,7 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	this.move_time += n * tr;
 
 	if(!this.move_didgravity)
-		this.move_didgravity = ((this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS) && !(this.flags & FL_ONGROUND));
+		this.move_didgravity = ((this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS) && !IS_ONGROUND(this));
 
 	for (int i = 0; i < n; ++i)
 	{
@@ -665,7 +665,7 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	}
 
 
-	if(dt > 0 && this.move_movetype != MOVETYPE_NONE && !(this.flags & FL_ONGROUND))
+	if(dt > 0 && this.move_movetype != MOVETYPE_NONE && !IS_ONGROUND(this))
 	{
 		// now continue the move from move_time to time
 

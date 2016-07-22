@@ -2,11 +2,11 @@
 
 void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 {
-	if (this.flags & FL_ONGROUND)
+	if (IS_ONGROUND(this))
 	{
 		if (this.velocity.z >= 1 / 32 && UPWARD_VELOCITY_CLEARS_ONGROUND(this))
 		{
-			this.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(this);
 		}
 		else if (!this.move_groundentity)
 		{
@@ -64,7 +64,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 		if (this.move_movetype == MOVETYPE_BOUNCEMISSILE)
 		{
 			this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 2.0);
-			this.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(this);
 		}
 		else if (this.move_movetype == MOVETYPE_BOUNCE)
 		{
@@ -77,14 +77,14 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			float d = trace_plane_normal * this.velocity;
 			if (trace_plane_normal.z > 0.7 && d < bstop && d > -bstop)
 			{
-				this.flags |= FL_ONGROUND;
+				SET_ONGROUND(this);
 				this.move_groundentity = trace_ent;
 				this.velocity = '0 0 0';
 				this.avelocity = '0 0 0';
 			}
 			else
 			{
-				this.flags &= ~FL_ONGROUND;
+				UNSET_ONGROUND(this);
 			}
 		}
 		else
@@ -92,7 +92,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1.0);
 			if (trace_plane_normal.z > 0.7)
 			{
-				this.flags |= FL_ONGROUND;
+				SET_ONGROUND(this);
 				this.move_groundentity = trace_ent;
 				if (trace_ent.solid == SOLID_BSP)
 					this.move_suspendedinair = true;
@@ -101,7 +101,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			}
 			else
 			{
-				this.flags &= ~FL_ONGROUND;
+				UNSET_ONGROUND(this);
 			}
 		}
 
@@ -110,11 +110,11 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			break;
 
 		// DP revision 8918 (WHY...)
-		if (this.flags & FL_ONGROUND)
+		if (IS_ONGROUND(this))
 			break;
 	}
 
-	//if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE && this.move_didgravity > 0 && !(this.flags & FL_ONGROUND))
+	//if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE && this.move_didgravity > 0 && !IS_ONGROUND(this))
 	//	this.velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
 	_Movetype_CheckWaterTransition(this);

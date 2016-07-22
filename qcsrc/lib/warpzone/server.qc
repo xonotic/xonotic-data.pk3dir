@@ -176,7 +176,9 @@ void WarpZone_Touch(entity this, entity toucher)
 
 	// FIXME needs a better check to know what is safe to teleport and what not
 	if(toucher.movetype == MOVETYPE_NONE || toucher.movetype == MOVETYPE_FOLLOW || toucher.tag_entity
+#if 0
 	|| toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW
+#endif
 #ifdef CSQC
 	|| tag_networkentity
 #endif

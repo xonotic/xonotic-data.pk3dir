@@ -14,7 +14,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	_Movetype_CheckVelocity(this);
 
 	// do a regular slide move unless it looks like you ran into a step
-	bool oldonground = (this.flags & FL_ONGROUND);
+	bool oldonground = IS_ONGROUND(this);
 
 	vector start_origin = this.origin;
 	vector start_velocity = this.velocity;
@@ -43,7 +43,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 	// if the move did not hit the ground at any point, we're not on ground
 	if (!(clip & 1))
-		this.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(this);
 
 	_Movetype_CheckVelocity(this);
 	_Movetype_LinkEdict(this, true);
@@ -137,7 +137,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			_Movetype_WallFriction(this, stepnormal);
 	}
 	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
-	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !oldonground || (this.flags & FL_ONGROUND))
+	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !oldonground || IS_ONGROUND(this))
 	{
 		return;
 	}

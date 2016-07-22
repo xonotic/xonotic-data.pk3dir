@@ -14,7 +14,7 @@ Applies some friction to this
 void SUB_Friction (entity this)
 {
 	this.SUB_NEXTTHINK = time;
-	if(this.SUB_FLAGS & FL_ONGROUND)
+	if(IS_ONGROUND(this))
 		this.SUB_VELOCITY = this.SUB_VELOCITY * (1 - frametime * this.friction);
 }
 

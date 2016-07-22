@@ -62,7 +62,7 @@ void Projectile_Draw(entity this)
 
 	if (this.count & 0x80)
 	{
-		// this.flags &= ~FL_ONGROUND;
+		// UNSET_ONGROUND(this);
 		if (this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FLY)
 			Movetype_Physics_NoMatchServer(this);
 		// the trivial movetypes do not have to match the
@@ -72,7 +72,7 @@ void Projectile_Draw(entity this)
 		// moving, we might still be ticrate dependent.
 		else
 			Movetype_Physics_MatchServer(this, autocvar_cl_projectiles_sloppy);
-		if (!(this.flags & FL_ONGROUND))
+		if (!IS_ONGROUND(this))
 			if (this.velocity != '0 0 0')
 				this.angles = vectoangles(this.velocity);
 	}
@@ -209,9 +209,9 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	// projectiles no longer being able to lie on a bmodel
 	this.move_nomonsters = MOVE_WORLDONLY;
 	if (f & 0x40)
-		this.flags |= FL_ONGROUND;
+		SET_ONGROUND(this);
 	else
-		this.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(this);
 
 	if (!this.move_time)
 	{

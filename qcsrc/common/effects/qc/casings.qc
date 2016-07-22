@@ -49,7 +49,7 @@ void Casing_Delete(entity this)
 
 void Casing_Draw(entity this)
 {
-    if (this.flags & FL_ONGROUND)
+    if (IS_ONGROUND(this))
     {
         this.angles_x = 0;
         this.angles_z = 0;
@@ -122,7 +122,7 @@ void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector t
     if (thisforce.z < 0)
         thisforce.z = 0;
     this.velocity = this.velocity + thisforce + '0 0 100';
-    this.flags &= ~FL_ONGROUND;
+    UNSET_ONGROUND(this);
 }
 
 NET_HANDLE(casings, bool isNew)

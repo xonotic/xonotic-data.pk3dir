@@ -68,7 +68,7 @@ void ItemDraw(entity this)
     if(this.gravity)
     {
         Movetype_Physics_MatchServer(this, false);
-        if(this.flags & FL_ONGROUND)
+        if(IS_ONGROUND(this))
         { // For some reason avelocity gets set to '0 0 0' here ...
             this.oldorigin = this.origin;
             this.gravity = 0;
@@ -107,7 +107,7 @@ void ItemDrawSimple(entity this)
     {
         Movetype_Physics_MatchServer(this, false);
 
-        if(this.flags & FL_ONGROUND)
+        if(IS_ONGROUND(this))
             this.gravity = 0;
     }
 

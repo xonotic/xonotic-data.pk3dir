@@ -128,7 +128,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	setorigin(player, to);
 	player.angles = to_angles;
 	player.velocity = to_velocity;
-	player.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(player);
 	player.iflags |= IFLAG_TELEPORTED | IFLAG_V_ANGLE | IFLAG_ANGLES;
 	player.csqcmodel_teleported = 1;
 	player.v_angle = to_angles;

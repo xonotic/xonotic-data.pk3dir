@@ -10,7 +10,6 @@
 #define SUB_THINK(e, f)     setthink(e, f)
 #define SUB_THUNK(e)        getthink(e)
 #define SUB_LTIME			ltime
-#define SUB_FLAGS			flags
 
 
 void SUB_SetFade (entity ent, float when, float fading_time);

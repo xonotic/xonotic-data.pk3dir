@@ -330,7 +330,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	player.vehicle_reload1 	= vehic.vehicle_reload1;
 	player.vehicle_reload2 	= vehic.vehicle_reload2;
 	player.vehicle_energy 	= vehic.vehicle_energy;
-	player.flags 		   &= ~FL_ONGROUND;
+	UNSET_ONGROUND(player);
 
 	RemoveGrapplingHook(player);
 
