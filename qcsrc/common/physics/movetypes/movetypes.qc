@@ -664,12 +664,9 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 			return;
 	}
 
-
 	if(dt > 0 && this.move_movetype != MOVETYPE_NONE && !IS_ONGROUND(this))
 	{
 		// now continue the move from move_time to time
-
-
 		if(this.move_didgravity > 0)
 		{
 			this.velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
@@ -696,7 +693,6 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 	}
 	else
 	{
-
 		setorigin(this, this.origin);
 	}
 }
