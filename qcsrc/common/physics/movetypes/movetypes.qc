@@ -645,16 +645,25 @@ void Movetype_Physics_MatchServer(entity this, bool sloppy)
 .int tic_flags;
 .vector tic_avelocity;
 .vector tic_angles;
+
+.vector tic_saved_origin;
+.vector tic_saved_velocity;
+.int tic_saved_flags;
+.vector tic_saved_avelocity;
+.vector tic_saved_angles;
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Physics_Entity
 {
-	if(this.tic_origin == '0 0 0') // new update?
-	{
-		this.tic_origin = this.origin;
-		this.tic_velocity = this.velocity;
-		this.tic_avelocity = this.avelocity;
-		this.tic_angles = this.angles;
-		this.tic_flags = this.flags;
-	}
+	// this will also detect new updates
+#define X(s) \
+	if(this.(s) != this.tic_saved_##s) \
+		this.tic_##s = this.(s)
+
+	X(origin);
+	X(velocity);
+	X(flags);
+	X(avelocity);
+	X(angles);
+#undef X
 
 	if(tr <= 0)
 	{
@@ -735,4 +744,10 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 		this.angles = this.tic_angles;
 		setorigin(this, this.tic_origin);
 	}
+
+	this.tic_saved_flags = this.flags;
+	this.tic_saved_velocity = this.velocity;
+	this.tic_saved_origin = this.origin;
+	this.tic_saved_avelocity = this.avelocity;
+	this.tic_saved_angles = this.angles;
 }
