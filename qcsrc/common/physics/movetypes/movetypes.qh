@@ -5,10 +5,10 @@
 #define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
 #define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
 
-.float move_ltime;
-.void(entity this) move_think;
-.float move_nextthink;
-.void(entity this, entity blocker) move_blocked;
+#ifdef CSQC
+.float bouncestop;
+.float bouncefactor;
+#endif
 
 .float move_movetype;
 .float move_time;

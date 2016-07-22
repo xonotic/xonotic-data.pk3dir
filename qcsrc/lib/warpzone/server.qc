@@ -40,9 +40,9 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	setorigin(player, to); // NOTE: this also aborts the move, when this is called by touch
 #ifdef SVQC
 	player.oldorigin = to; // for DP's unsticking
+	player.fixangle = true;
 #endif
 	player.angles = to_angles;
-	player.fixangle = true;
 	player.velocity = to_velocity;
 
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);

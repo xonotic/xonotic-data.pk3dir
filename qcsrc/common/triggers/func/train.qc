@@ -322,8 +322,6 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 		//func_train_find();
 
 		// but we will need these
-		//this.move_nextthink = this.move_ltime + 0.1;
-		//this.move_think = train_next;
 		train_next(this);
 
 		this.move_movetype = MOVETYPE_PUSH;
