@@ -11,7 +11,7 @@ CLASS(Shockwave, Weapon)
 #endif
 /* crosshair */ ATTRIB(Shockwave, w_crosshair, string, "gfx/crosshairshotgun");
 /* crosshair */ ATTRIB(Shockwave, w_crosshair_size, float, 0.7);
-/* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshotgun");
+/* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshockwave");
 /* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
 /* wepname   */ ATTRIB(Shockwave, m_name, string, _("Shockwave"));
 
