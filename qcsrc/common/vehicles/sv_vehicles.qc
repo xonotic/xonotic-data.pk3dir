@@ -947,7 +947,7 @@ void vehicles_enter(entity pl, entity veh)
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
-	pl.disableclientprediction = 0; // physics is no longer run, so this won't be reset
+	pl.disableclientprediction = 1; // physics is no longer run, so this won't be reset
 	set_movetype(pl, MOVETYPE_NOCLIP);
 	pl.teleportable		= false;
 	pl.alpha			= -1;
