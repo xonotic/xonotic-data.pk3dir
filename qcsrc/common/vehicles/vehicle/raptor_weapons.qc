@@ -67,7 +67,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             _flare.effects = EF_LOWPRECISION | EF_FLAME;
             _flare.scale = 0.5;
             setorigin(_flare, actor.origin - '0 0 16');
-            _flare.movetype = MOVETYPE_TOSS;
+            set_movetype(_flare, MOVETYPE_TOSS);
             _flare.gravity = 0.15;
             _flare.velocity = 0.25 * actor.velocity + (v_forward + randomvec() * 0.25)* -500;
             setthink(_flare, raptor_flare_think);
@@ -128,7 +128,7 @@ void raptor_bomb_burst(entity this)
         bomblet = spawn();
         setorigin(bomblet, this.origin);
 
-        bomblet.movetype	= MOVETYPE_TOSS;
+        bomblet.move_movetype	= MOVETYPE_TOSS;
         settouch(bomblet, raptor_bomblet_touch);
         setthink(bomblet, raptor_bomblet_boom);
         bomblet.nextthink   = time + 5;
@@ -160,7 +160,7 @@ void raptor_bombdrop(entity this)
     org = gettaginfo(this, gettagindex(this, "bombmount_right"));
     setorigin(bomb_2, org);
 
-    bomb_1.movetype	 = bomb_2.movetype   = MOVETYPE_BOUNCE;
+    bomb_1.move_movetype	 = bomb_2.move_movetype   = MOVETYPE_BOUNCE;
     bomb_1.velocity	 = bomb_2.velocity   = this.velocity;
     settouch(bomb_1, raptor_bomb_touch);
     settouch(bomb_2, raptor_bomb_touch);
@@ -240,7 +240,7 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
     setmodel(sfrag, MDL_VEH_RAPTOR_CB_FRAGMENT);
     setorigin(sfrag, _org);
 
-    sfrag.move_movetype = MOVETYPE_BOUNCE;
+    set_movetype(sfrag, MOVETYPE_BOUNCE);
     sfrag.gravity = 0.15;
     sfrag.solid = SOLID_CORPSE;
 

@@ -395,7 +395,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor)
 
 		prevproj = proj;
 
-		proj.movetype = MOVETYPE_BOUNCEMISSILE;
+		set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
 		PROJECTILE_MAKETRIGGER(proj);
 		proj.projectiledeathtype = WEP_CRYLINK.m_id;
 		//proj.gravity = 0.001;
@@ -503,7 +503,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor)
 
 		prevproj = proj;
 
-		proj.movetype = MOVETYPE_BOUNCEMISSILE;
+		set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
 		PROJECTILE_MAKETRIGGER(proj);
 		proj.projectiledeathtype = WEP_CRYLINK.m_id | HITTYPE_SECONDARY;
 		//proj.gravity = 0.001;

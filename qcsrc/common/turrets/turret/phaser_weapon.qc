@@ -33,7 +33,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
         beam.owner = actor;
         beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / beam.ticrate);
         beam.scale = actor.target_range / 256;
-        beam.movetype = MOVETYPE_NONE;
+        set_movetype(beam, MOVETYPE_NONE);
         beam.enemy = actor.enemy;
         beam.bot_dodge = true;
         beam.bot_dodgerating = beam.shot_dmg;

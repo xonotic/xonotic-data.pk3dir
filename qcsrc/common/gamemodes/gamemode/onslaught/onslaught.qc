@@ -211,7 +211,7 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 	settouch(shield, ons_CaptureShield_Touch);
 	setcefc(shield, ons_CaptureShield_Customize);
 	shield.effects = EF_ADDITIVE;
-	shield.movetype = MOVETYPE_NOCLIP;
+	set_movetype(shield, MOVETYPE_NOCLIP);
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
 	shield.scale = 1;
@@ -863,7 +863,7 @@ void ons_ControlPoint_Setup(entity cp)
 	cp.netname = "Control point";
 	cp.team = 0;
 	cp.solid = SOLID_BBOX;
-	cp.movetype = MOVETYPE_NONE;
+	set_movetype(cp, MOVETYPE_NONE);
 	settouch(cp, ons_ControlPoint_Touch);
 	setthink(cp, ons_ControlPoint_Think);
 	cp.nextthink = time + ONS_CP_THINKRATE;
@@ -882,14 +882,14 @@ void ons_ControlPoint_Setup(entity cp)
 	if((cp.spawnflags & 1) || cp.noalign) // don't drop to floor, just stay at fixed location
 	{
 		cp.noalign = true;
-		cp.movetype = MOVETYPE_NONE;
+		set_movetype(cp, MOVETYPE_NONE);
 	}
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{
 		setorigin(cp, cp.origin + '0 0 20');
 		cp.noalign = false;
 		droptofloor(cp);
-		cp.movetype = MOVETYPE_TOSS;
+		set_movetype(cp, MOVETYPE_TOSS);
 	}
 
 	// waypointsprites
@@ -1105,7 +1105,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
 	gen.team_saved = teamnumber;
-	gen.movetype = MOVETYPE_NONE;
+	set_movetype(gen, MOVETYPE_NONE);
 	gen.lasthealth = gen.max_health = gen.health = autocvar_g_onslaught_gen_health;
 	gen.takedamage = DAMAGE_AIM;
 	gen.bot_attack = true;

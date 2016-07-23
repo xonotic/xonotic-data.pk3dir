@@ -227,7 +227,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.shot_force	   = _force;
 	proj.totalfrags	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
-	proj.movetype		 = MOVETYPE_FLYMISSILE;
+	proj.move_movetype		 = MOVETYPE_FLYMISSILE;
 	proj.flags			= FL_PROJECTILE;
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
@@ -290,7 +290,7 @@ entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, 
 	vector org = gettaginfo(this, gettagindex(this, _tag));
 	setorigin(_gib, org);
 	_gib.velocity = _vel;
-	_gib.movetype = MOVETYPE_TOSS;
+	set_movetype(_gib, MOVETYPE_TOSS);
 	_gib.solid = SOLID_CORPSE;
 	_gib.colormod = '-0.5 -0.5 -0.5';
 	_gib.effects = EF_LOWPRECISION;
@@ -777,7 +777,7 @@ void vehicles_exit(entity vehic, bool eject)
 
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
-		player.movetype		= MOVETYPE_WALK;
+		player.move_movetype		= MOVETYPE_WALK;
 		player.effects		   &= ~EF_NODRAW;
 		player.teleportable	= TELEPORT_NORMAL;
 		player.alpha			= 1;
@@ -947,7 +947,7 @@ void vehicles_enter(entity pl, entity veh)
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
-	pl.movetype			= MOVETYPE_NOCLIP;
+	pl.move_movetype			= MOVETYPE_NOCLIP;
 	pl.teleportable		= false;
 	pl.alpha			= -1;
 	pl.event_damage		= func_null;
@@ -1051,7 +1051,7 @@ void vehicles_spawn(entity this)
 	this.iscreature			= true;
 	this.teleportable		= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents	= true;
-	this.movetype			= MOVETYPE_WALK;
+	this.move_movetype			= MOVETYPE_WALK;
 	this.solid				= SOLID_SLIDEBOX;
 	this.takedamage			= DAMAGE_AIM;
 	this.deadflag			= DEAD_NO;

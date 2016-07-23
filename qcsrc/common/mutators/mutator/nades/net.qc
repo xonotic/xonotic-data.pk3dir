@@ -30,7 +30,7 @@ void orb_setup(entity e)
 
 	e.draw = orb_draw;
 	e.health = 255;
-	e.movetype = MOVETYPE_NONE;
+	e.move_movetype = MOVETYPE_NONE;
 	e.solid = SOLID_NOT;
 	e.drawmask = MASK_NORMAL;
 	e.scale = 0.01;

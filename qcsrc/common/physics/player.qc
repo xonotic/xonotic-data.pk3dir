@@ -1381,24 +1381,24 @@ void PM_Main(entity this)
 		if (!allowed_to_move)
 		{
 			this.velocity = '0 0 0';
-			this.movetype = MOVETYPE_NONE;
+			set_movetype(this, MOVETYPE_NONE);
 			this.disableclientprediction = 2;
 		}
 		else if (this.disableclientprediction == 2)
 		{
-			if (this.movetype == MOVETYPE_NONE)
-				this.movetype = MOVETYPE_WALK;
+			if (this.move_movetype == MOVETYPE_NONE)
+				set_movetype(this, MOVETYPE_WALK);
 			this.disableclientprediction = 0;
 		}
 	}
 #endif
 
 #ifdef SVQC
-	if (this.movetype == MOVETYPE_NONE)
+	if (this.move_movetype == MOVETYPE_NONE)
 		return;
 
 	// when we get here, disableclientprediction cannot be 2
-	this.disableclientprediction = 0;
+	this.disableclientprediction = -1;
 #endif
 
 	viewloc_PlayerPhysics(this);
@@ -1523,7 +1523,7 @@ void PM_Main(entity this)
 		{ }
 
 #ifdef SVQC
-	else if (this.movetype == MOVETYPE_NOCLIP || this.movetype == MOVETYPE_FLY || this.movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
+	else if (this.move_movetype == MOVETYPE_NOCLIP || this.move_movetype == MOVETYPE_FLY || this.move_movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
 #elif defined(CSQC)
 	else if (this.move_movetype == MOVETYPE_NOCLIP || this.move_movetype == MOVETYPE_FLY || this.move_movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
 #endif
@@ -1564,4 +1564,8 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
 	PM_Main(this);
+
+#ifdef SVQC
+	this.pm_frametime = frametime;
+#endif
 }

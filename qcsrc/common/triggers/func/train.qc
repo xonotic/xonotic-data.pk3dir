@@ -307,7 +307,7 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 
 		this.classname = "func_train";
 		this.solid = SOLID_BSP;
-		this.movetype = MOVETYPE_PUSH;
+		this.move_movetype = MOVETYPE_PUSH;
 		this.drawmask = MASK_NORMAL;
 		this.draw = train_draw;
 		this.entremove = trigger_remove_generic;

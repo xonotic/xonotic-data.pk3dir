@@ -35,7 +35,7 @@ spawnfunc(func_rain)
 	if (!this.dest)
 		this.dest = '0 0 -700';
 	this.angles = '0 0 0';
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this);
 	if (!this.cnt)
@@ -73,7 +73,7 @@ spawnfunc(func_snow)
 	if (!this.dest)
 		this.dest = '0 0 -300';
 	this.angles = '0 0 0';
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this);
 	if (!this.cnt)

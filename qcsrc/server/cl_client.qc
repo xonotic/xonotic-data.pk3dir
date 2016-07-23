@@ -269,7 +269,7 @@ void PutObserverInServer(entity this)
 	this.health = FRAGS_SPECTATOR;
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
-	this.movetype = MOVETYPE_FLY_WORLDONLY; // user preference is controlled by playerprethink
+	set_movetype(this, MOVETYPE_FLY_WORLDONLY); // user preference is controlled by playerprethink
 	this.flags = FL_CLIENT | FL_NOTARGET;
 	this.armorvalue = 666;
 	this.effects = 0;
@@ -481,7 +481,7 @@ void PutClientInServer(entity this)
 		this.iscreature = true;
 		this.teleportable = TELEPORT_NORMAL;
 		this.damagedbycontents = true;
-		this.movetype = MOVETYPE_WALK;
+		set_movetype(this, MOVETYPE_WALK);
 		this.solid = SOLID_SLIDEBOX;
 		this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 		if (autocvar_g_playerclip_collisions)
@@ -1289,7 +1289,7 @@ void respawn(entity this)
 	{
 		this.solid = SOLID_NOT;
 		this.takedamage = DAMAGE_NO;
-		this.movetype = MOVETYPE_FLY;
+		set_movetype(this, MOVETYPE_FLY);
 		this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
@@ -1675,7 +1675,7 @@ bool SpectateSet(entity this)
 	msg_entity = this;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
 	WriteEntity(MSG_ONE, this.enemy);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	accuracy_resend(this);
 
 	if(!SpectateUpdate(this))
@@ -1925,7 +1925,6 @@ void ObserverThink(entity this)
 		MinigameImpulse(this, this.impulse);
 		this.impulse = 0;
 	}
-	float prefered_movetype;
 	if (this.flags & FL_JUMPRELEASED) {
 		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
 			this.flags &= ~FL_JUMPRELEASED;
@@ -1936,9 +1935,8 @@ void ObserverThink(entity this)
 				TRANSMUTE(Spectator, this);
 			}
 		} else {
-			prefered_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? this.cvar_cl_clippedspectating : !this.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
-			if (this.movetype != prefered_movetype)
-				this.movetype = prefered_movetype;
+			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? this.cvar_cl_clippedspectating : !this.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			set_movetype(this, preferred_movetype);
 		}
 	} else {
 		if (!(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this))) {
@@ -2420,6 +2418,30 @@ void DrownPlayer(entity this)
 	}
 }
 
+void Player_Physics(entity this)
+{
+	this.movetype = ((this.move_qcphysics) ? MOVETYPE_NONE : this.move_movetype);
+
+	if(!this.move_qcphysics)
+		return;
+
+	int mt = this.move_movetype;
+
+	if(mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH || mt == MOVETYPE_PHYSICS)
+	{
+		this.move_qcphysics = false;
+		this.movetype = mt;
+		return;
+	}
+
+	if(!frametime && !this.pm_frametime)
+		return;
+
+	Movetype_Physics_NoMatchTicrate(this, this.pm_frametime, true);
+
+	this.pm_frametime = 0;
+}
+
 /*
 =============
 PlayerPostThink
@@ -2430,6 +2452,8 @@ Called every frame for each client after the physics are run
 .float idlekick_lasttimeleft;
 void PlayerPostThink (entity this)
 {
+	Player_Physics(this);
+
 	if (sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))

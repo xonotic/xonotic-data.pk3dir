@@ -1077,7 +1077,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	{
 		this.reset = SUB_Remove;
 		// it's a dropped weapon
-		this.movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		setthink(this, RemoveItem);
@@ -1118,9 +1118,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(this.spawnflags & 1)
 			this.noalign = 1;
 		if (this.noalign > 0)
-			this.movetype = MOVETYPE_NONE;
+			set_movetype(this, MOVETYPE_NONE);
 		else
-			this.movetype = MOVETYPE_TOSS;
+			set_movetype(this, MOVETYPE_TOSS);
 		// do item filtering according to game mode and other things
 		if (this.noalign <= 0)
 		{

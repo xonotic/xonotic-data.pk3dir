@@ -85,10 +85,10 @@ void M_Shambler_Attack_Lightning_Explode(entity this, entity directhitentity)
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.velocity = '0 0 0';
 
-	if(this.movetype == MOVETYPE_NONE)
+	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
 	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), 
@@ -150,7 +150,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.owner = gren.realowner = this;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
-	gren.movetype = MOVETYPE_BOUNCE;
+	set_movetype(gren, MOVETYPE_BOUNCE);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = DEATH_MONSTER_SHAMBLER_ZAP.m_id;
 	setorigin(gren, CENTER_OR_VIEWOFS(this));

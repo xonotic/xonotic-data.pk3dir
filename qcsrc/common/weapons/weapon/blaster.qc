@@ -80,7 +80,7 @@ void W_Blaster_Touch(entity this, entity toucher)
 
 void W_Blaster_Think(entity this)
 {
-	this.movetype = MOVETYPE_FLY;
+	set_movetype(this, MOVETYPE_FLY);
 	setthink(this, SUB_Remove);
 	this.nextthink = time + this.blaster_lifetime;
 	CSQCProjectile(this, true, PROJECTILE_BLASTER, true);

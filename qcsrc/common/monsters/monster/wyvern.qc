@@ -64,7 +64,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		entity missile = spawn();
 		missile.owner = missile.realowner = actor;
 		missile.solid = SOLID_TRIGGER;
-		missile.movetype = MOVETYPE_FLYMISSILE;
+		set_movetype(missile, MOVETYPE_FLYMISSILE);
 		missile.projectiledeathtype = DEATH_MONSTER_WYVERN.m_id;
 		setsize(missile, '-6 -6 -6', '6 6 6');
 		setorigin(missile, actor.origin + actor.view_ofs + v_forward * 14);

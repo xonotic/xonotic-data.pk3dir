@@ -10,6 +10,12 @@
 .float bouncefactor;
 #endif
 
+#ifdef SVQC
+.bool move_qcphysics;
+#endif
+
+void set_movetype(entity this, int mt);
+
 .float move_movetype;
 .float move_time;
 //.vector move_origin;
@@ -46,6 +52,7 @@ void _Movetype_PushEntityTrace(entity this, vector push);
 float _Movetype_PushEntity(entity this, vector push, float failonstartsolid);
 void makevectors_matrix(vector myangles);
 
+void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient);
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy);
 void Movetype_Physics_MatchServer(entity this, bool sloppy);
 void Movetype_Physics_NoMatchServer(entity this);

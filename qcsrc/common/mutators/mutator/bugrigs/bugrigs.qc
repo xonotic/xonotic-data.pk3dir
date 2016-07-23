@@ -214,13 +214,13 @@ void RaceCarPhysics(entity this)
 		}
 
 		this.velocity = (neworigin - this.origin) * (1.0 / PHYS_INPUT_TIMELENGTH);
-		this.movetype = MOVETYPE_NOCLIP;
+		set_movetype(this, MOVETYPE_NOCLIP);
 	}
 	else
 	{
 		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY(this); // 4x gravity plays better
 		this.velocity = rigvel;
-		this.movetype = MOVETYPE_FLY;
+		set_movetype(this, MOVETYPE_FLY);
 	}
 
 	trace_fraction = 1;

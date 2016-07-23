@@ -138,7 +138,7 @@ bool bumblebee_gunner_frame(entity this)
 			gun.enemy = NULL;
 
 		if(trace_ent)
-			if(trace_ent.movetype)
+			if(trace_ent.move_movetype)
 				if(trace_ent.takedamage)
 					if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 					{
@@ -156,7 +156,7 @@ bool bumblebee_gunner_frame(entity this)
 
 		vector vf = real_origin(gun.enemy);
 		vector _vel = gun.enemy.velocity;
-		if(gun.enemy.movetype == MOVETYPE_WALK)
+		if(gun.enemy.move_movetype == MOVETYPE_WALK)
 			_vel.z *= 0.1;
 
 
@@ -256,7 +256,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 
 	player.takedamage     = DAMAGE_AIM;
 	player.solid          = SOLID_SLIDEBOX;
-	player.movetype       = MOVETYPE_WALK;
+	player.move_movetype       = MOVETYPE_WALK;
 	player.effects       &= ~EF_NODRAW;
 	player.alpha          = 1;
 	player.PlayerPhysplug = func_null;
@@ -319,7 +319,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	player.takedamage 		= DAMAGE_NO;
 	player.solid 			= SOLID_NOT;
 	player.alpha 			= -1;
-	player.movetype 		= MOVETYPE_NOCLIP;
+	player.move_movetype 		= MOVETYPE_NOCLIP;
 	player.event_damage 	= func_null;
 	player.view_ofs 		= '0 0 0';
 	player.hud 				= gunner.hud;
@@ -510,7 +510,7 @@ bool bumblebee_pilot_frame(entity this)
 			vehic.tur_head.enemy = NULL;
 
 		if(trace_ent)
-		if(trace_ent.movetype)
+		if(trace_ent.move_movetype)
 		if(trace_ent.takedamage)
 		if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 		{
@@ -660,7 +660,7 @@ void bumblebee_exit(entity this, int eject)
 		this.nextthink  = time;
 	}
 
-	this.movetype = MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 
 	if(!this.owner)
 		return;
@@ -737,7 +737,7 @@ METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
 {
     settouch(instance, bumblebee_touch);
     instance.nextthink = 0;
-    instance.movetype = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
 }
 METHOD(Bumblebee, vr_gunner_enter, void(Bumblebee thisveh, entity instance, entity actor))
 {
@@ -824,7 +824,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     instance.solid			= SOLID_NOT;
     instance.takedamage		= DAMAGE_NO;
     instance.deadflag		= DEAD_DYING;
-    instance.movetype		= MOVETYPE_NONE;
+    instance.move_movetype		= MOVETYPE_NONE;
     instance.effects		= EF_NODRAW;
     instance.colormod		= '0 0 0';
     instance.avelocity		= '0 0 0';
@@ -904,7 +904,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
     instance.vehicle_health = autocvar_g_vehicle_bumblebee_health;
     instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
     instance.solid = SOLID_BBOX;
-    instance.movetype = MOVETYPE_TOSS;
+    set_movetype(instance, MOVETYPE_TOSS);
     instance.damageforcescale = 0.025;
 
     instance.PlayerPhysplug = bumblebee_pilot_frame;

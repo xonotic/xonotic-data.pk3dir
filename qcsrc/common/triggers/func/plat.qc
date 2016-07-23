@@ -168,7 +168,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		this.classname = "plat";
 		this.solid = SOLID_BSP;
-		this.movetype = MOVETYPE_PUSH;
+		this.move_movetype = MOVETYPE_PUSH;
 		this.drawmask = MASK_NORMAL;
 		this.draw = plat_draw;
 		this.use = plat_use;

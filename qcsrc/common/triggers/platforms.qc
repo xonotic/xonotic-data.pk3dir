@@ -23,7 +23,7 @@ void plat_spawn_inside_trigger(entity this)
 
 	trigger = spawn();
 	settouch(trigger, plat_center_touch);
-	trigger.movetype = MOVETYPE_NONE;
+	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.enemy = this;
 

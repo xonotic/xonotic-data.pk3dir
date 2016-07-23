@@ -837,7 +837,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
-		if(targ.movetype == MOVETYPE_PHYSICS)
+		if(targ.move_movetype == MOVETYPE_PHYSICS)
 		{
 			entity farcent = new(farce);
 			farcent.enemy = targ;

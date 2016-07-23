@@ -307,7 +307,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 #endif
 	key.flags = 0;
 	key.solid = SOLID_NOT;
-	key.movetype = MOVETYPE_NONE;
+	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
 	key.nextthink = time;
 	key.damageforcescale = 0;
@@ -346,7 +346,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 #endif
 	key.flags = FL_ITEM;
 	key.solid = SOLID_TRIGGER;
-	key.movetype = MOVETYPE_TOSS;
+	set_movetype(key, MOVETYPE_TOSS);
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;

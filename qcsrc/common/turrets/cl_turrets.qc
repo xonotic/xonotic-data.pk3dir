@@ -230,8 +230,8 @@ void turret_construct(entity this)
 	this.health						= 255;
 	this.solid						= SOLID_BBOX;
 	this.tur_head.solid				= SOLID_NOT;
-	this.movetype					= MOVETYPE_NOCLIP;
-	this.tur_head.movetype			= MOVETYPE_NOCLIP;
+	this.move_movetype					= MOVETYPE_NOCLIP;
+	this.tur_head.move_movetype			= MOVETYPE_NOCLIP;
 	this.draw						= turret_draw;
 	this.entremove					= turret_remove;
 	this.drawmask					= MASK_NORMAL;

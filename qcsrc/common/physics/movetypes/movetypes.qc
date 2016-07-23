@@ -12,6 +12,28 @@
 	#include <server/autocvars.qh>
 #endif
 
+#ifdef SVQC
+void set_movetype(entity this, int mt)
+{
+	if(mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH)
+	{
+		this.movetype = this.move_movetype = mt; // we still set move_movetype, for other code that checks movetype
+		this.move_qcphysics = false;
+		return;
+	}
+
+	this.move_movetype = mt;
+
+	if(!this.move_qcphysics)
+		this.movetype = mt;
+}
+#elif defined(CSQC)
+void set_movetype(entity this, int mt)
+{
+	this.move_movetype = mt;
+}
+#endif
+
 void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 {
 	/*float d, i;
@@ -621,6 +643,20 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 		case MOVETYPE_PHYSICS:
 			break;
 	}
+}
+
+void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient)  // to be run every move frame
+{
+	this.move_time = time;
+
+	if(isclient)
+		_Movetype_Physics_ClientFrame(this, movedt);
+	else
+		_Movetype_Physics_Frame(this, movedt);
+	if(wasfreed(this))
+		return;
+
+	setorigin(this, this.origin);
 }
 
 void Movetype_Physics_NoMatchServer(entity this)  // optimized

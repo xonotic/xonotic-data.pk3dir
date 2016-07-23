@@ -178,7 +178,7 @@ void GiveBall(entity plyr, entity ball)
 	ball.effects &= ~autocvar_g_nexball_basketball_effects_default;
 
 	ball.velocity = '0 0 0';
-	ball.movetype = MOVETYPE_NONE;
+	set_movetype(ball, MOVETYPE_NONE);
 	settouch(ball, func_null);
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
@@ -209,7 +209,7 @@ void DropBall(entity ball, vector org, vector vel)
 
 	setattachment(ball, NULL, "");
 	setorigin(ball, org);
-	ball.movetype = MOVETYPE_BOUNCE;
+	set_movetype(ball, MOVETYPE_BOUNCE);
 	UNSET_ONGROUND(ball);
 	ball.scale = ball_scale;
 	ball.velocity = vel;
@@ -237,7 +237,7 @@ void InitBall(entity this)
 {
 	if(gameover) return;
 	UNSET_ONGROUND(this);
-	this.movetype = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	if(this.classname == "nexball_basketball")
 		settouch(this, basketball_touch);
 	else if(this.classname == "nexball_football")
@@ -261,7 +261,7 @@ void ResetBall(entity this)
 			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
 
 		settouch(this, func_null);
-		this.movetype = MOVETYPE_NOCLIP;
+		set_movetype(this, MOVETYPE_NOCLIP);
 		this.velocity = '0 0 0'; // just in case?
 		if(!this.cnt)
 			LogNB("resetidle", NULL);
@@ -283,7 +283,7 @@ void ResetBall(entity this)
 				   vtos(this.origin - this.spawnorigin), " Velocity: ", vtos(this.velocity), "\n");
 		this.velocity = '0 0 0';
 		setorigin(this, this.spawnorigin); // make sure it's positioned correctly anyway
-		this.movetype = MOVETYPE_NONE;
+		set_movetype(this, MOVETYPE_NONE);
 		setthink(this, InitBall);
 		this.nextthink = max(time, game_starttime) + autocvar_g_nexball_delay_start;
 	}
@@ -549,7 +549,7 @@ void SpawnBall(entity this)
 		this.glow_trail = true;
 	}
 
-	this.movetype = MOVETYPE_FLY;
+	set_movetype(this, MOVETYPE_FLY);
 
 	if(!autocvar_g_nexball_sound_bounce)
 		this.noise = "";
@@ -818,7 +818,7 @@ void W_Nexball_Attack2(entity actor)
 
 	missile.owner = actor;
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	//setmodel(missile, "models/elaser.mdl");  // precision set below

@@ -99,9 +99,9 @@ void spawn_item_key(entity this)
 		this.noalign = 1;
 
 	if (this.noalign)
-		this.movetype = MOVETYPE_NONE;
+		set_movetype(this, MOVETYPE_NONE);
 	else
-		this.movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 
 	precache_sound(this.noise);
 

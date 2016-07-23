@@ -277,7 +277,7 @@ void W_RocketMinsta_Attack2(entity actor)
 
         //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
-        proj.movetype = MOVETYPE_BOUNCEMISSILE;
+        set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
         //W_SETUPPROJECTILEVELOCITY(proj, g_balance_minstanex_laser);
 		proj.velocity = (w_shotdir + (((counter + 0.5) / total) * 2 - 1) * v_right * (spread * (rndspread ? random() : 1))) * cvar("g_rm_laser_speed");
 		proj.velocity_z = proj.velocity_z + cvar("g_rm_laser_zspread") * (random() - 0.5);
@@ -329,7 +329,7 @@ void W_RocketMinsta_Attack3 (entity actor)
 
         //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
-        proj.movetype = MOVETYPE_BOUNCEMISSILE;
+        set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
 		proj.velocity = w_shotdir * autocvar_g_rm_laser_speed;
 		proj.velocity = W_CalculateProjectileVelocity(actor, actor.velocity, proj.velocity, true);
         proj.angles = vectoangles(proj.velocity);

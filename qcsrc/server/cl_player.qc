@@ -91,7 +91,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.modelindex = this.modelindex;
 	clone.skin = this.skin;
 	clone.species = this.species;
-	clone.movetype = this.movetype;
+	clone.move_qcphysics = false; // don't run gamecode logic on clones, too many
+	set_movetype(clone, this.move_movetype);
 	clone.solid = this.solid;
 	clone.ballistics_density = this.ballistics_density;
 	clone.takedamage = this.takedamage;
@@ -151,7 +152,7 @@ void player_anim(entity this)
 	int animbits = deadbits;
 	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(this.movetype == MOVETYPE_FOLLOW)
+	if(this.move_movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
 	if(this.crouch)
 		animbits |= ANIMSTATE_DUCK;
@@ -594,7 +595,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// view from the floor
 		this.view_ofs = '0 0 -8';
 		// toss the corpse
-		this.movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 		// shootable corpse
 		this.solid = SOLID_CORPSE;
 		this.ballistics_density = autocvar_g_ballistics_density_corpse;

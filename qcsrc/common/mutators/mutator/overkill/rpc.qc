@@ -129,7 +129,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
 	missile.health = WEP_CVAR(rpc, health);
 	missile.event_damage = W_RocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 
 	missile.projectiledeathtype = WEP_RPC.m_id;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot

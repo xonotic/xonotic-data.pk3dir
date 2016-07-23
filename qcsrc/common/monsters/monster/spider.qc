@@ -185,7 +185,7 @@ void M_Spider_Attack_Web(entity this)
 
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
-	proj.movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	W_SetupProjVelocity_Explicit(proj, v_forward, v_up, (autocvar_g_monster_spider_attack_web_speed), (autocvar_g_monster_spider_attack_web_speed_up), 0, 0, false);
 	settouch(proj, M_Spider_Attack_Web_Touch);
 	setsize(proj, '-4 -4 -4', '4 4 4');

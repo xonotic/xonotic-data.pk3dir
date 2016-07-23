@@ -441,7 +441,7 @@ void door_spawnfield(entity this, vector fmins, vector fmaxs)
 	vector	t1 = fmins, t2 = fmaxs;
 
 	trigger = new(doortriggerfield);
-	trigger.movetype = MOVETYPE_NONE;
+	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = this;
 #ifdef SVQC
@@ -815,7 +815,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.SUB_LTIME = ReadCoord();
 
 		this.solid = SOLID_BSP;
-		this.movetype = MOVETYPE_PUSH;
+		this.move_movetype = MOVETYPE_PUSH;
 		this.use = door_use;
 
 		LinkDoors(this);

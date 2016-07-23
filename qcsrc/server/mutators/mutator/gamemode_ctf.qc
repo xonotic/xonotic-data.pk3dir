@@ -334,7 +334,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 	settouch(shield, ctf_CaptureShield_Touch);
 	setcefc(shield, ctf_CaptureShield_Customize);
 	shield.effects = EF_ADDITIVE;
-	shield.movetype = MOVETYPE_NOCLIP;
+	set_movetype(shield, MOVETYPE_NOCLIP);
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
 	shield.scale = 0.5;
@@ -355,7 +355,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	player = (player ? player : flag.pass_sender);
 
 	// main
-	flag.movetype = MOVETYPE_TOSS;
+	set_movetype(flag, MOVETYPE_TOSS);
 	flag.takedamage = DAMAGE_YES;
 	flag.angles = '0 0 0';
 	flag.health = flag.max_flag_health;
@@ -414,7 +414,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 		setattachment(flag, player, "");
 		setorigin(flag, FLAG_CARRY_OFFSET);
 	}
-	flag.movetype = MOVETYPE_NONE;
+	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
@@ -480,7 +480,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 			ctf_CalculatePassVelocity(flag, targ_origin, player.origin, false);
 
 			// main
-			flag.movetype = MOVETYPE_FLY;
+			set_movetype(flag, MOVETYPE_FLY);
 			flag.takedamage = DAMAGE_NO;
 			flag.pass_sender = player;
 			flag.pass_target = receiver;
@@ -668,7 +668,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	}
 
 	// flag setup
-	flag.movetype = MOVETYPE_NONE;
+	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
@@ -937,9 +937,9 @@ void ctf_FlagThink(entity this)
 					if(pointcontents(midpoint + FLAG_FLOAT_OFFSET) == CONTENT_WATER)
 						{ this.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater; }
 					else
-						{ this.movetype = MOVETYPE_FLY; }
+						{ set_movetype(this, MOVETYPE_FLY); }
 				}
-				else if(this.movetype == MOVETYPE_FLY) { this.movetype = MOVETYPE_TOSS; }
+				else if(this.move_movetype == MOVETYPE_FLY) { set_movetype(this, MOVETYPE_TOSS); }
 			}
 			if(autocvar_g_ctf_flag_return_dropped)
 			{
@@ -1157,7 +1157,7 @@ void ctf_RespawnFlag(entity flag)
 	setattachment(flag, NULL, "");
 	setorigin(flag, flag.ctf_spawnorigin);
 
-	flag.movetype = ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS);
+	set_movetype(flag, ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS));
 	flag.takedamage = DAMAGE_NO;
 	flag.health = flag.max_flag_health;
 	flag.solid = SOLID_TRIGGER;
@@ -1318,13 +1318,13 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	{
 		flag.dropped_origin = flag.origin;
 		flag.noalign = true;
-		flag.movetype = MOVETYPE_NONE;
+		set_movetype(flag, MOVETYPE_NONE);
 	}
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{
 		flag.noalign = false;
 		droptofloor(flag);
-		flag.movetype = MOVETYPE_TOSS;
+		set_movetype(flag, MOVETYPE_NONE);
 	}
 
 	InitializeEntity(flag, ctf_DelayedFlagSetup, INITPRIO_SETLOCATION);
@@ -2334,7 +2334,7 @@ MUTATOR_HOOKFUNCTION(ctf, MatchEnd)
 			case FLAG_PASSING:
 			{
 				// lock the flag, game is over
-				flag.movetype = MOVETYPE_NONE;
+				set_movetype(flag, MOVETYPE_NONE);
 				flag.takedamage = DAMAGE_NO;
 				flag.solid = SOLID_NOT;
 				flag.nextthink = false; // stop thinking

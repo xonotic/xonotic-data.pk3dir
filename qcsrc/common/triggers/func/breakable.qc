@@ -59,7 +59,7 @@ void LaunchDebris (entity this, string debrisname, vector force)
 	dbr.skin = this.debrisskin;
 	dbr.colormap = this.colormap; // inherit team colors
 	dbr.owner = this; // do not be affected by our own explosion
-	dbr.movetype = this.debrismovetype;
+	set_movetype(dbr, this.debrismovetype);
 	dbr.solid = this.debrissolid;
 	if(dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
 		setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it

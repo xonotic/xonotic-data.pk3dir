@@ -235,14 +235,14 @@ void trigger_push_touch(entity this, entity toucher)
 	if (toucher.flags & FL_PROJECTILE)
 	{
 		toucher.angles = vectoangles (toucher.velocity);
-		switch(toucher.movetype)
+		switch(toucher.move_movetype)
 		{
 			case MOVETYPE_FLY:
-				toucher.movetype = MOVETYPE_TOSS;
+				set_movetype(toucher, MOVETYPE_TOSS);
 				toucher.gravity = 1;
 				break;
 			case MOVETYPE_BOUNCEMISSILE:
-				toucher.movetype = MOVETYPE_BOUNCE;
+				set_movetype(toucher, MOVETYPE_BOUNCE);
 				toucher.gravity = 1;
 				break;
 		}
@@ -289,7 +289,7 @@ void trigger_push_findtarget(entity this)
 			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
 			tracetoss(e, e);
-			if(e.movetype == MOVETYPE_NONE)
+			if(e.move_movetype == MOVETYPE_NONE)
 				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 			remove(e);
 #endif

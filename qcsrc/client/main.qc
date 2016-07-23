@@ -699,7 +699,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			precache_model(this.mdl);
 			setmodel(this, this.mdl);
 			this.drawmask = MASK_NORMAL;
-			//this.movetype = MOVETYPE_NOCLIP;
+			//this.move_movetype = MOVETYPE_NOCLIP;
 			//this.draw = Spawn_Draw;
 		}*/
 		if(autocvar_cl_spawn_point_particles)
