@@ -478,7 +478,7 @@
     MSG_INFO_NOTIF(WEAPON_SEEKER_MURDER_SPRAY,              1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponseeker",             _("^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SEEKER_MURDER_TAG,                1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponseeker",             _("^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SEEKER_SUICIDE,                   1,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponseeker",             _("^BG%s^K1 played with tiny Seeker rockets%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER,                 1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshotgun",            _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"), "")
+    MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER,                 1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshockwave",          _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER_SLAP,            1,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_shotgun",     _("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOTGUN_MURDER,                   1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshotgun",            _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOTGUN_MURDER_SLAP,              1,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_shotgun",     _("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"), "")
