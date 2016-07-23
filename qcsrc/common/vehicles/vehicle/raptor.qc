@@ -517,7 +517,7 @@ void raptor_blowup(entity this, entity toucher)
 	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_RAPT_DEATH.m_id, NULL);
 
 	this.alpha		  = -1;
-	this.move_movetype	   = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.effects		= EF_NODRAW;
 	this.colormod	   = '0 0 0';
 	this.avelocity	  = '0 0 0';
@@ -613,7 +613,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 {
     instance.vehicle_weapon2mode = RSM_BOMB;
     instance.owner.PlayerPhysplug = raptor_takeoff;
-    instance.move_movetype	   = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
     instance.solid		  = SOLID_SLIDEBOX;
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
@@ -635,7 +635,7 @@ METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
     instance.solid				= SOLID_CORPSE;
     instance.takedamage			= DAMAGE_NO;
     instance.deadflag			= DEAD_DYING;
-    instance.move_movetype			= MOVETYPE_BOUNCE;
+    set_movetype(instance, MOVETYPE_BOUNCE);
     setthink(instance, raptor_diethink);
     instance.nextthink			= time;
     instance.wait				= time + 5 + (random() * 5);
@@ -724,7 +724,7 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
     instance.frame		  = 0;
     instance.vehicle_health = autocvar_g_vehicle_raptor_health;
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-    instance.move_movetype	   = MOVETYPE_TOSS;
+    set_movetype(instance, MOVETYPE_TOSS);
     instance.solid		  = SOLID_SLIDEBOX;
     instance.vehicle_energy = 1;
 

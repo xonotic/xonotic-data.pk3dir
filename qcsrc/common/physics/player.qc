@@ -1398,7 +1398,7 @@ void PM_Main(entity this)
 		return;
 
 	// when we get here, disableclientprediction cannot be 2
-	this.disableclientprediction = -1;
+	this.disableclientprediction = (this.move_qcphysics) ? -1 : 0;
 #endif
 
 	viewloc_PlayerPhysics(this);

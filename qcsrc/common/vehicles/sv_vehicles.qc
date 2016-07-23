@@ -227,7 +227,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.shot_force	   = _force;
 	proj.totalfrags	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
-	proj.move_movetype		 = MOVETYPE_FLYMISSILE;
+	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.flags			= FL_PROJECTILE;
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
@@ -777,7 +777,7 @@ void vehicles_exit(entity vehic, bool eject)
 
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
-		player.move_movetype		= MOVETYPE_WALK;
+		set_movetype(player, MOVETYPE_WALK);
 		player.effects		   &= ~EF_NODRAW;
 		player.teleportable	= TELEPORT_NORMAL;
 		player.alpha			= 1;
@@ -947,7 +947,8 @@ void vehicles_enter(entity pl, entity veh)
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
-	pl.move_movetype			= MOVETYPE_NOCLIP;
+	pl.disableclientprediction = 0; // physics is no longer run, so this won't be reset
+	set_movetype(pl, MOVETYPE_NOCLIP);
 	pl.teleportable		= false;
 	pl.alpha			= -1;
 	pl.event_damage		= func_null;
@@ -1051,7 +1052,7 @@ void vehicles_spawn(entity this)
 	this.iscreature			= true;
 	this.teleportable		= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents	= true;
-	this.move_movetype			= MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 	this.solid				= SOLID_SLIDEBOX;
 	this.takedamage			= DAMAGE_AIM;
 	this.deadflag			= DEAD_NO;

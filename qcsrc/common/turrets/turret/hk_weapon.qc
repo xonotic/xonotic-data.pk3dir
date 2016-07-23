@@ -207,7 +207,7 @@ void turret_hk_missile_think(entity this)
     {
         this.cnt = time + 0.25;
         this.nextthink = 0;
-        this.move_movetype		 = MOVETYPE_BOUNCE;
+        set_movetype(this, MOVETYPE_BOUNCE);
         return;
     }
 

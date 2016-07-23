@@ -256,7 +256,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 
 	player.takedamage     = DAMAGE_AIM;
 	player.solid          = SOLID_SLIDEBOX;
-	player.move_movetype       = MOVETYPE_WALK;
+	set_movetype(player, MOVETYPE_WALK);
 	player.effects       &= ~EF_NODRAW;
 	player.alpha          = 1;
 	player.PlayerPhysplug = func_null;
@@ -319,7 +319,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	player.takedamage 		= DAMAGE_NO;
 	player.solid 			= SOLID_NOT;
 	player.alpha 			= -1;
-	player.move_movetype 		= MOVETYPE_NOCLIP;
+	set_movetype(player, MOVETYPE_NOCLIP);
 	player.event_damage 	= func_null;
 	player.view_ofs 		= '0 0 0';
 	player.hud 				= gunner.hud;
@@ -824,7 +824,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     instance.solid			= SOLID_NOT;
     instance.takedamage		= DAMAGE_NO;
     instance.deadflag		= DEAD_DYING;
-    instance.move_movetype		= MOVETYPE_NONE;
+    set_movetype(instance, MOVETYPE_NONE);
     instance.effects		= EF_NODRAW;
     instance.colormod		= '0 0 0';
     instance.avelocity		= '0 0 0';

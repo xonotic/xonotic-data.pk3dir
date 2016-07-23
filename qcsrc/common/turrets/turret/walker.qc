@@ -255,7 +255,7 @@ void walker_fire_rocket(entity this, vector org)
     rocket.event_damage	   = walker_rocket_damage;
 
     rocket.nextthink		  = time;
-    rocket.move_movetype		   = MOVETYPE_FLY;
+    set_movetype(rocket, MOVETYPE_FLY);
     rocket.velocity		   = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * (autocvar_g_turrets_unit_walker_rocket_speed);
     rocket.angles			 = vectoangles(rocket.velocity);
     settouch(rocket, walker_rocket_touch);

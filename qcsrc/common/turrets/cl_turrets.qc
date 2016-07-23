@@ -224,14 +224,14 @@ void turret_construct(entity this)
 
 	this.tur_head.classname			= "turret_head";
 	this.tur_head.owner				= this;
-	this.tur_head.move_movetype		= MOVETYPE_NOCLIP;
-	this.move_movetype				= MOVETYPE_NOCLIP;
+	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.tur_head.angles			= this.angles;
 	this.health						= 255;
 	this.solid						= SOLID_BBOX;
 	this.tur_head.solid				= SOLID_NOT;
-	this.move_movetype					= MOVETYPE_NOCLIP;
-	this.tur_head.move_movetype			= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
+	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
 	this.draw						= turret_draw;
 	this.entremove					= turret_remove;
 	this.drawmask					= MASK_NORMAL;
@@ -303,7 +303,7 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 		gib.nextthink = time + autocvar_cl_gibs_lifetime * (1 + prandom() * 0.15);
 
 	gib.gravity		 = 1;
-	gib.move_movetype   = MOVETYPE_BOUNCE;
+	set_movetype(gib, MOVETYPE_BOUNCE);
 	setorigin(gib,		_from);
 	gib.velocity   = _to;
 	gib.avelocity  = prandomvec() * 32;

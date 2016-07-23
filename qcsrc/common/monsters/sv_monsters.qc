@@ -1010,7 +1010,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	this.takedamage		= DAMAGE_AIM;
 	this.deadflag		= DEAD_DEAD;
 	this.enemy			= NULL;
-	this.move_movetype		= MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 	this.moveto			= this.origin;
 	settouch(this, Monster_Touch); // reset incase monster was pouncing
 	this.reset			= func_null;
@@ -1320,7 +1320,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	settouch(this, Monster_Touch);
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;
-	this.move_movetype			= MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 	this.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
 	this.enemy				= NULL;
 	this.velocity			= '0 0 0';

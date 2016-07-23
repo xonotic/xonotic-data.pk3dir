@@ -128,7 +128,7 @@ void raptor_bomb_burst(entity this)
         bomblet = spawn();
         setorigin(bomblet, this.origin);
 
-        bomblet.move_movetype	= MOVETYPE_TOSS;
+        set_movetype(bomblet, MOVETYPE_TOSS);
         settouch(bomblet, raptor_bomblet_touch);
         setthink(bomblet, raptor_bomblet_boom);
         bomblet.nextthink   = time + 5;
@@ -160,7 +160,8 @@ void raptor_bombdrop(entity this)
     org = gettaginfo(this, gettagindex(this, "bombmount_right"));
     setorigin(bomb_2, org);
 
-    bomb_1.move_movetype	 = bomb_2.move_movetype   = MOVETYPE_BOUNCE;
+    set_movetype(bomb_1, MOVETYPE_BOUNCE);
+    set_movetype(bomb_2, MOVETYPE_BOUNCE);
     bomb_1.velocity	 = bomb_2.velocity   = this.velocity;
     settouch(bomb_1, raptor_bomb_touch);
     settouch(bomb_2, raptor_bomb_touch);

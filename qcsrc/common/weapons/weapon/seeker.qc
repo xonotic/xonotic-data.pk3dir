@@ -293,7 +293,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, vector f_diff, entity m
 
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-4 -4 -4', '4 4 4');
-	missile.move_movetype    = MOVETYPE_FLYMISSILE;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.flags       = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH | MIF_GUIDED_TAG;
 
@@ -578,7 +578,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor)
 	settouch(missile, W_Seeker_Tag_Touch);
 	setthink(missile, SUB_Remove);
 	missile.nextthink       = time + WEP_CVAR(seeker, tag_lifetime);
-	missile.move_movetype        = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	missile.solid           = SOLID_BBOX;
 
 	missile.takedamage       = DAMAGE_YES;
@@ -592,7 +592,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor)
 	missile.flags       = FL_PROJECTILE;
 	//missile.missile_flags = MIF_..?;
 
-	missile.move_movetype    = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRE(missile, seeker, tag_);
 	missile.angles = vectoangles(missile.velocity);
 

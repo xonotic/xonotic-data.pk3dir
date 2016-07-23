@@ -474,7 +474,7 @@ entity turret_projectile(entity actor, Sound _snd, float _size, float _health, f
 	setthink(proj, turret_projectile_explode);
 	settouch(proj, turret_projectile_touch);
 	proj.nextthink	  = time + 9;
-	proj.move_movetype		= MOVETYPE_FLYMISSILE;
+	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.velocity		= normalize(actor.tur_shotdir_updated + randomvec() * actor.shot_spread) * actor.shot_speed;
 	proj.flags		  = FL_PROJECTILE;
 	proj.enemy		  = actor.enemy;
@@ -1329,7 +1329,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.ammo_recharge		   *= this.ticrate;
 	this.solid					= SOLID_BBOX;
 	this.takedamage				= DAMAGE_AIM;
-	this.move_movetype				= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.view_ofs				= '0 0 0';
 	this.turret_firecheckfunc	= turret_firecheck;
 	this.event_damage			= turret_damage;

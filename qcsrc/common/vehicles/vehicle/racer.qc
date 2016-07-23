@@ -439,7 +439,7 @@ void racer_exit(entity this, int eject)
 
 	setthink(this, racer_think);
 	this.nextthink  = time;
-	this.move_movetype   = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	sound (this.tur_head, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
 
 	if(!this.owner)
@@ -490,7 +490,7 @@ void racer_blowup(entity this)
 
 	this.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
 	setthink(this, vehicles_spawn);
-	this.move_movetype   = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.effects	= EF_NODRAW;
 	this.solid = SOLID_NOT;
 
@@ -572,7 +572,7 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
     instance.vehicle_health = autocvar_g_vehicle_racer_health;
     instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
-    instance.move_movetype	  = MOVETYPE_TOSS;
+    set_movetype(instance, MOVETYPE_TOSS);
     instance.solid		  = SOLID_SLIDEBOX;
     instance.delay		  = time;
     instance.scale		  = 0.5;
@@ -596,7 +596,7 @@ METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
     instance.solid			= SOLID_CORPSE;
     instance.takedamage		= DAMAGE_NO;
     instance.deadflag		= DEAD_DYING;
-    instance.move_movetype		= MOVETYPE_BOUNCE;
+    set_movetype(instance, MOVETYPE_BOUNCE);
     instance.wait			= time;
     instance.delay			= 2 + time + random() * 3;
     instance.cnt			= 1 + random() * 2;
