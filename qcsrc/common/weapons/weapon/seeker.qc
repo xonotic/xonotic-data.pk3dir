@@ -367,7 +367,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
 	missile.solid 			= SOLID_BBOX;
-	missile.move_movetype 		= MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	missile.projectiledeathtype = WEP_SEEKER.m_id;
 	missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
 	missile.flags 				= FL_PROJECTILE;
