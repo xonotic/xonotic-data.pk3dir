@@ -397,6 +397,22 @@ void W_Shockwave_Attack(entity actor)
 		false
 	);
 
+	float lag = ANTILAG_LATENCY(actor);
+	if(lag < 0.001)
+		lag = 0;
+	if (!IS_REAL_CLIENT(actor))
+		lag = 0;
+	if(autocvar_g_antilag == 0 || actor.cvar_cl_noantilag)
+		lag = 0; // only do hitscan, but no antilag
+	if(lag)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && it != actor, antilag_takeback(it, CS(it), time - lag));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if (it != actor)
+				antilag_takeback(it, it, time - lag);
+		});
+	}
+
 	while(head)
 	{
 		if(head.takedamage)
@@ -651,11 +667,8 @@ void W_Shockwave_Attack(entity actor)
 			final_force
 		);
 
-		if(accuracy_isgooddamage(actor.realowner, head))
-		{
-			LOG_INFO("wtf\n");
-			accuracy_add(actor.realowner, WEP_SHOCKWAVE.m_id, 0, final_damage);
-		}
+		if(accuracy_isgooddamage(actor, head))
+			accuracy_add(actor, WEP_SHOCKWAVE.m_id, 0, final_damage);
 
 		#ifdef DEBUG_SHOCKWAVE
 		LOG_INFO(sprintf(
@@ -669,6 +682,15 @@ void W_Shockwave_Attack(entity actor)
 		shockwave_hit[i-1] = NULL;
 		shockwave_hit_force[i-1] = '0 0 0';
 		shockwave_hit_damage[i-1] = 0;
+	}
+
+	if(lag)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && it != actor, antilag_restore(it, CS(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if (it != actor)
+				antilag_restore(it, it);
+		});
 	}
 }
 
