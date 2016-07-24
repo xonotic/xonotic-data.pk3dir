@@ -68,18 +68,18 @@ void ItemDraw(entity this)
     if(this.gravity)
     {
         Movetype_Physics_MatchServer(this, false);
-        if(this.move_flags & FL_ONGROUND)
-        { // For some reason move_avelocity gets set to '0 0 0' here ...
+        if(IS_ONGROUND(this))
+        { // For some reason avelocity gets set to '0 0 0' here ...
             this.oldorigin = this.origin;
             this.gravity = 0;
 
             if(autocvar_cl_animate_items)
             { // ... so reset it if animations are requested.
                 if(this.ItemStatus & ITS_ANIMATE1)
-                    this.move_avelocity = '0 180 0';
+                    this.avelocity = '0 180 0';
 
                 if(this.ItemStatus & ITS_ANIMATE2)
-                    this.move_avelocity = '0 -90 0';
+                    this.avelocity = '0 -90 0';
             }
         }
     }
@@ -87,13 +87,13 @@ void ItemDraw(entity this)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
         {
-            this.angles += this.move_avelocity * frametime;
+            this.angles += this.avelocity * frametime;
             setorigin(this, '0 0 10' + this.oldorigin + '0 0 8' * sin(time * 2));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
-            this.angles += this.move_avelocity * frametime;
+            this.angles += this.avelocity * frametime;
             setorigin(this, '0 0 8' + this.oldorigin + '0 0 4' * sin(time * 3));
         }
     }
@@ -107,7 +107,7 @@ void ItemDrawSimple(entity this)
     {
         Movetype_Physics_MatchServer(this, false);
 
-        if(this.move_flags & FL_ONGROUND)
+        if(IS_ONGROUND(this))
             this.gravity = 0;
     }
 
@@ -164,7 +164,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.angles_x = ReadAngle();
         this.angles_y = ReadAngle();
         this.angles_z = ReadAngle();
-        this.move_angles = this.angles;
     }
 
     if(sf & ISF_SIZE)
@@ -198,7 +197,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		this.move_movetype = MOVETYPE_TOSS;
         this.draw       = ItemDraw;
         this.solid = SOLID_TRIGGER;
-        //this.move_flags |= FL_ITEM;
+        //this.flags |= FL_ITEM;
 
         bool use_bigsize = ReadByte();
 
@@ -253,13 +252,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     {
         this.gravity = 1;
         this.pushable = true;
-        //this.move_angles = '0 0 0';
+        //this.angles = '0 0 0';
         this.move_movetype = MOVETYPE_TOSS;
-        this.move_velocity_x = ReadCoord();
-        this.move_velocity_y = ReadCoord();
-        this.move_velocity_z = ReadCoord();
-        this.velocity = this.move_velocity;
-        this.move_origin = this.oldorigin;
+        this.velocity_x = ReadCoord();
+        this.velocity_y = ReadCoord();
+        this.velocity_z = ReadCoord();
+        setorigin(this, this.oldorigin);
 
         if(!this.move_time)
         {
@@ -273,10 +271,10 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     if(autocvar_cl_animate_items)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
-            this.move_avelocity = '0 180 0';
+            this.avelocity = '0 180 0';
 
         if(this.ItemStatus & ITS_ANIMATE2)
-            this.move_avelocity = '0 -90 0';
+            this.avelocity = '0 -90 0';
     }
 
     this.entremove = ItemRemove;
@@ -1079,7 +1077,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	{
 		this.reset = SUB_Remove;
 		// it's a dropped weapon
-		this.movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		setthink(this, RemoveItem);
@@ -1120,9 +1118,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(this.spawnflags & 1)
 			this.noalign = 1;
 		if (this.noalign > 0)
-			this.movetype = MOVETYPE_NONE;
+			set_movetype(this, MOVETYPE_NONE);
 		else
-			this.movetype = MOVETYPE_TOSS;
+			set_movetype(this, MOVETYPE_TOSS);
 		// do item filtering according to game mode and other things
 		if (this.noalign <= 0)
 		{

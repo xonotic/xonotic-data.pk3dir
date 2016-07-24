@@ -100,7 +100,7 @@ bool autocvar_debugdraw;
 //						if (it.entnum) break;
 //						if (it.drawmask) break;
 //						if (it.predraw) break;
-//						if (it.movetype) break;
+//						if (it.move_movetype) break;
 						if (it.solid) break;
 //						if (it.origin) break;
 //						if (it.oldorigin) break;

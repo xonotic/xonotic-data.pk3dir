@@ -232,7 +232,7 @@ void spiderbot_rocket_do(entity this)
             float h2 = 0.75 * vlen(rocket.pos1 - v);
 
             rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));
-            rocket.movetype  = MOVETYPE_TOSS;
+            set_movetype(rocket, MOVETYPE_TOSS);
             rocket.gravity   = 1;
             //setthink(rocket, spiderbot_rocket_artillery);
         break;

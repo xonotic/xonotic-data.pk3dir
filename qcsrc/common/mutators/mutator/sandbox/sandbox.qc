@@ -129,8 +129,8 @@ void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 	sandbox_ObjectAttach_Remove(e);
 
 	e.old_solid = e.solid; // persist solidity
-	e.old_movetype = e.movetype; // persist physics
-	e.movetype = MOVETYPE_FOLLOW;
+	e.old_movetype = e.move_movetype; // persist physics
+	set_movetype(e, MOVETYPE_FOLLOW);
 	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_NO;
 
@@ -156,7 +156,7 @@ void sandbox_ObjectAttach_Remove(entity e)
 		it.angles = e.angles; // don't allow detached objects to spin or roll
 
 		it.solid = it.old_solid; // restore persisted solidity
-		it.movetype = it.old_movetype; // restore persisted physics
+		set_movetype(it, it.old_movetype); // restore persisted physics
 		it.takedamage = DAMAGE_AIM;
 	});
 }
@@ -169,7 +169,7 @@ entity sandbox_ObjectSpawn(entity this, float database)
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
 	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
-	e.movetype = MOVETYPE_TOSS;
+	set_movetype(e, MOVETYPE_TOSS);
 	e.frame = 0;
 	e.skin = 0;
 	e.material = string_null;
@@ -240,7 +240,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		{
 			slot = 0;
 			solidity = head.solid; // applied solidity is normal solidity for children
-			physics = head.movetype; // applied physics are normal physics for parents
+			physics = head.move_movetype; // applied physics are normal physics for parents
 		}
 		else if(head.owner == e) // child object, list them in order
 		{
@@ -347,7 +347,8 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 		e.frame = stof(argv(argv_num));	++argv_num;
 		sandbox_ObjectEdit_Scale(e, stof(argv(argv_num)));	++argv_num;
 		e.solid = e.old_solid = stof(argv(argv_num));	++argv_num;
-		e.movetype = e.old_movetype = stof(argv(argv_num));	++argv_num;
+		e.old_movetype = stof(argv(argv_num));	++argv_num;
+		set_movetype(e, e.old_movetype);
 		e.damageforcescale = stof(argv(argv_num));	++argv_num;
 		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
 		if(database)
@@ -683,13 +684,13 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							switch(argv(3))
 							{
 								case "0": // static
-									e.movetype = MOVETYPE_NONE;
+									set_movetype(e, MOVETYPE_NONE);
 									break;
 								case "1": // movable
-									e.movetype = MOVETYPE_TOSS;
+									set_movetype(e, MOVETYPE_TOSS);
 									break;
 								case "2": // physical
-									e.movetype = MOVETYPE_PHYSICS;
+									set_movetype(e, MOVETYPE_PHYSICS);
 									break;
 								default:
 									break;

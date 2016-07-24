@@ -50,7 +50,7 @@ void monster_dropitem(entity this, entity attacker)
 		e.noalign = true;
 		e.monster_loot(e);
 		e.gravity = 1;
-		e.movetype = MOVETYPE_TOSS;
+		set_movetype(e, MOVETYPE_TOSS);
 		e.reset = SUB_Remove;
 		setorigin(e, org);
 		e.velocity = randomvec() * 175 + '0 0 325';
@@ -763,15 +763,15 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 			}
 
 
-			this.movetype = MOVETYPE_BOUNCE;
+			set_movetype(this, MOVETYPE_BOUNCE);
 			//this.velocity_z = -200;
 
 			return;
 		}
-		else if(this.movetype == MOVETYPE_BOUNCE)
+		else if(this.move_movetype == MOVETYPE_BOUNCE)
 		{
 			this.angles_x = 0;
-			this.movetype = MOVETYPE_WALK;
+			set_movetype(this, MOVETYPE_WALK);
 		}
 	}
 
@@ -1010,7 +1010,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	this.takedamage		= DAMAGE_AIM;
 	this.deadflag		= DEAD_DEAD;
 	this.enemy			= NULL;
-	this.movetype		= MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 	this.moveto			= this.origin;
 	settouch(this, Monster_Touch); // reset incase monster was pouncing
 	this.reset			= func_null;
@@ -1320,7 +1320,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	settouch(this, Monster_Touch);
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;
-	this.movetype			= MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 	this.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
 	this.enemy				= NULL;
 	this.velocity			= '0 0 0';
@@ -1355,7 +1355,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	if(mon.spawnflags & MONSTER_TYPE_FLY)
 	{
 		this.flags |= FL_FLY;
-		this.movetype = MOVETYPE_FLY;
+		set_movetype(this, MOVETYPE_FLY);
 	}
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))

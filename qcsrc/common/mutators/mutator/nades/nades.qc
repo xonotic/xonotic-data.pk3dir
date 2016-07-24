@@ -94,7 +94,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 		proj.maxs = '16 16 16';
 	}
 	proj.colormod = nade_type.m_color;
-	proj.move_movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	settouch(proj, func_null);
 	proj.scale = 1.5;
 	proj.avelocity = randomvec() * 720;
@@ -273,7 +273,7 @@ void nade_napalm_ball(entity this)
 	proj.team = this.owner.team;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
-	proj.movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	proj.projectiledeathtype = DEATH_NADE_NAPALM.m_id;
 	PROJECTILE_MAKETRIGGER(proj);
 	setmodel(proj, MDL_Null);
@@ -356,7 +356,7 @@ void nade_napalm_boom(entity this)
 	fountain.ltime = time + autocvar_g_nades_napalm_fountain_lifetime;
 	fountain.pushltime = fountain.ltime;
 	fountain.team = this.team;
-	fountain.movetype = MOVETYPE_TOSS;
+	set_movetype(fountain, MOVETYPE_TOSS);
 	fountain.projectiledeathtype = DEATH_NADE_NAPALM.m_id;
 	fountain.bot_dodge = true;
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
@@ -448,7 +448,7 @@ void nade_ice_boom(entity this)
 	fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
 	fountain.pushltime = fountain.wait = fountain.ltime;
 	fountain.team = this.team;
-	fountain.movetype = MOVETYPE_TOSS;
+	set_movetype(fountain, MOVETYPE_TOSS);
 	fountain.projectiledeathtype = DEATH_NADE_ICE.m_id;
 	fountain.bot_dodge = false;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
@@ -494,7 +494,7 @@ void nade_spawn_boom(entity this)
 	entity spawnloc = spawn();
 	setorigin(spawnloc, this.origin);
 	setsize(spawnloc, this.realowner.mins, this.realowner.maxs);
-	spawnloc.movetype = MOVETYPE_NONE;
+	set_movetype(spawnloc, MOVETYPE_NONE);
 	spawnloc.solid = SOLID_NOT;
 	spawnloc.drawonlytoclient = this.realowner;
 	spawnloc.effects = EF_STARDUST;
@@ -572,13 +572,11 @@ void nade_entrap_touch(entity this, entity toucher)
 		if(!pushdeltatime) return;
 
 		// div0: ticrate independent, 1 = identity (not 20)
-#ifdef SVQC
 		toucher.velocity = toucher.velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
 
+	#ifdef SVQC
 		UpdateCSQCProjectile(toucher);
-#elif defined(CSQC)
-		toucher.move_velocity = toucher.move_velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
-#endif
+	#endif
 	}
 
 	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
@@ -909,7 +907,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 		setsize(_nade, '-8 -8 -8', '8 8 8');
 	else
 		setsize(_nade, '-16 -16 -16', '16 16 16');
-	_nade.movetype = MOVETYPE_BOUNCE;
+	set_movetype(_nade, MOVETYPE_BOUNCE);
 
 	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, false, _nade);
 	if (trace_startsolid)

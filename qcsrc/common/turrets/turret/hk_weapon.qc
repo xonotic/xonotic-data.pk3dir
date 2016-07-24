@@ -31,7 +31,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
         setthink(missile, turret_hk_missile_think);
         missile.nextthink = time + 0.25;
-        missile.movetype = MOVETYPE_BOUNCEMISSILE;
+        set_movetype(missile, MOVETYPE_BOUNCEMISSILE);
         missile.velocity = actor.tur_shotdir_updated * (actor.shot_speed * 0.75);
         missile.angles = vectoangles(missile.velocity);
         missile.cnt = time + 30;
@@ -207,7 +207,7 @@ void turret_hk_missile_think(entity this)
     {
         this.cnt = time + 0.25;
         this.nextthink = 0;
-        this.movetype		 = MOVETYPE_BOUNCE;
+        set_movetype(this, MOVETYPE_BOUNCE);
         return;
     }
 

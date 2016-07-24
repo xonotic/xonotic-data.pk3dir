@@ -47,7 +47,7 @@ void follow_init(entity this)
 	{
 		if(this.spawnflags & 2)
 		{
-			dst.movetype = MOVETYPE_FOLLOW;
+			set_movetype(dst, MOVETYPE_FOLLOW);
 			dst.aiment = src;
 			// dst.punchangle = '0 0 0'; // keep unchanged
 			dst.view_ofs = dst.origin;

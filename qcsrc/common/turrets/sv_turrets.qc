@@ -32,7 +32,7 @@ vector turret_aim_generic(entity this)
 
 			if(this.aim_flags & TFL_AIM_ZPREDICT)
 			if(!IS_ONGROUND(this.enemy))
-			if(this.enemy.movetype == MOVETYPE_WALK || this.enemy.movetype == MOVETYPE_TOSS || this.enemy.movetype == MOVETYPE_BOUNCE)
+			if(this.enemy.move_movetype == MOVETYPE_WALK || this.enemy.move_movetype == MOVETYPE_TOSS || this.enemy.move_movetype == MOVETYPE_BOUNCE)
 			{
 				float vz;
 				prep_z = pre_pos_z;
@@ -474,7 +474,7 @@ entity turret_projectile(entity actor, Sound _snd, float _size, float _health, f
 	setthink(proj, turret_projectile_explode);
 	settouch(proj, turret_projectile_touch);
 	proj.nextthink	  = time + 9;
-	proj.movetype		= MOVETYPE_FLYMISSILE;
+	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.velocity		= normalize(actor.tur_shotdir_updated + randomvec() * actor.shot_spread) * actor.shot_speed;
 	proj.flags		  = FL_PROJECTILE;
 	proj.enemy		  = actor.enemy;
@@ -1329,7 +1329,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.ammo_recharge		   *= this.ticrate;
 	this.solid					= SOLID_BBOX;
 	this.takedamage				= DAMAGE_AIM;
-	this.movetype				= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.view_ofs				= '0 0 0';
 	this.turret_firecheckfunc	= turret_firecheck;
 	this.event_damage			= turret_damage;
@@ -1349,7 +1349,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.tur_head.owner			= this;
 	this.tur_head.takedamage	= DAMAGE_NO;
 	this.tur_head.solid			= SOLID_NOT;
-	this.tur_head.movetype		= this.movetype;
+	this.tur_head.move_movetype		= this.move_movetype;
 
 	if(!this.tur_defend)
 	if(this.target != "")

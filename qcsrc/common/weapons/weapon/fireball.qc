@@ -218,7 +218,7 @@ void W_Fireball_Attack1(entity actor)
 	proj.projectiledeathtype = WEP_FIREBALL.m_id;
 	setorigin(proj, w_shotorg);
 
-	proj.movetype = MOVETYPE_FLY;
+	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRI(proj, fireball);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, W_Fireball_TouchExplode);
@@ -340,7 +340,7 @@ void W_Fireball_Attack2(entity actor)
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(fireball, damage);
-	proj.movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	proj.projectiledeathtype = WEP_FIREBALL.m_id | HITTYPE_SECONDARY;
 	settouch(proj, W_Fireball_Firemine_Touch);
 	PROJECTILE_MAKETRIGGER(proj);

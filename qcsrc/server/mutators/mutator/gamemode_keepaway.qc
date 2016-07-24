@@ -96,7 +96,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	}
 
 	makevectors(this.angles);
-	this.movetype = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	this.velocity = '0 0 200';
 	this.angles = '0 0 0';
 	this.effects = autocvar_g_keepawayball_effects;
@@ -152,7 +152,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 
 	// make the ball invisible/unable to do anything/set up time scoring
 	this.velocity = '0 0 0';
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.effects |= EF_NODRAW;
 	settouch(this, func_null);
 	setthink(this, ka_TimeScoring);
@@ -191,7 +191,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 
 	// reset the ball
 	setattachment(ball, NULL, "");
-	ball.movetype = MOVETYPE_BOUNCE;
+	set_movetype(ball, MOVETYPE_BOUNCE);
 	ball.wait = time + 1;
 	settouch(ball, ka_TouchEvent);
 	setthink(ball, ka_RespawnBall);
@@ -490,7 +490,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
 	e.solid = SOLID_TRIGGER;
-	e.movetype = MOVETYPE_BOUNCE;
+	set_movetype(e, MOVETYPE_BOUNCE);
 	e.glow_color = autocvar_g_keepawayball_trail_color;
 	e.glow_trail = true;
 	e.flags = FL_ITEM;

@@ -164,7 +164,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor)
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRI(missile, hagar);
 
 	missile.angles = vectoangles(missile.velocity);
@@ -207,7 +207,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor)
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	missile.movetype = MOVETYPE_BOUNCEMISSILE;
+	set_movetype(missile, MOVETYPE_BOUNCEMISSILE);
 	W_SetupProjVelocity_SEC(missile, hagar);
 
 	missile.angles = vectoangles(missile.velocity);
@@ -264,7 +264,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 		missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
 		setorigin(missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
-		missile.movetype = MOVETYPE_FLY;
+		set_movetype(missile, MOVETYPE_FLY);
 		missile.missile_flags = MIF_SPLASH;
 
 		// per-shot spread calculation: the more shots there are, the less spread is applied (based on the bias cvar)

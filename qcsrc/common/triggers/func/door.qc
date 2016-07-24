@@ -441,7 +441,7 @@ void door_spawnfield(entity this, vector fmins, vector fmaxs)
 	vector	t1 = fmins, t2 = fmaxs;
 
 	trigger = new(doortriggerfield);
-	trigger.movetype = MOVETYPE_NONE;
+	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = this;
 #ifdef SVQC
@@ -815,7 +815,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.SUB_LTIME = ReadCoord();
 
 		this.solid = SOLID_BSP;
-		this.movetype = MOVETYPE_PUSH;
+		this.move_movetype = MOVETYPE_PUSH;
 		this.use = door_use;
 
 		LinkDoors(this);
@@ -824,10 +824,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 			door_init_startopen(this);
 
 		this.move_time = time;
-		this.move_origin = this.origin;
 		this.move_movetype = MOVETYPE_PUSH;
-		this.move_angles = this.angles;
-		this.move_blocked = door_blocked;
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -841,7 +838,6 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.origin_y = ReadCoord();
 		this.origin_z = ReadCoord();
 		setorigin(this, this.origin);
-		this.move_origin = this.origin;
 
 		this.pos1_x = ReadCoord();
 		this.pos1_y = ReadCoord();

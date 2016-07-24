@@ -28,44 +28,27 @@
 .float warpzone_teleport_finishtime;
 .entity warpzone_teleport_zone;
 
-#ifdef SVQC
-	#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN { \
-		entity e = e_; \
-		e.warpzone_oldorigin = e.origin; \
-		e.warpzone_oldvelocity = e.velocity; \
-		e.warpzone_oldangles = e.angles; \
-		} MACRO_END
-#elif defined(CSQC)
-	#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN { \
-		entity e = e_; \
-		e.warpzone_oldorigin = e.move_origin; \
-		e.warpzone_oldvelocity = e.move_velocity; \
-		e.warpzone_oldangles = e.move_angles; \
-		} MACRO_END
-#endif
+#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN { \
+	entity e = e_; \
+	e.warpzone_oldorigin = e.origin; \
+	e.warpzone_oldvelocity = e.velocity; \
+	e.warpzone_oldangles = e.angles; \
+	} MACRO_END
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
-#ifdef SVQC
 	setorigin(player, to); // NOTE: this also aborts the move, when this is called by touch
+#ifdef SVQC
 	player.oldorigin = to; // for DP's unsticking
-	player.angles = to_angles;
 	player.fixangle = true;
-	player.velocity = to_velocity;
-#elif defined(CSQC)
-	player.move_origin = to;
-	player.move_angles = to_angles;
-	player.move_velocity = to_velocity;
 #endif
+	player.angles = to_angles;
+	player.velocity = to_velocity;
 
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
 	if(IS_PLAYER(player))
-#ifdef SVQC
 		BITCLR_ASSIGN(player.flags, FL_ONGROUND);
-#elif defined(CSQC)
-		BITCLR_ASSIGN(player.move_flags, FL_ONGROUND);
-#endif
 
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
@@ -85,15 +68,9 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 {
 	vector o0, a0, v0, o1, a1, v1, o10;
 
-#ifdef SVQC
 	o0 = player.origin + player.view_ofs;
 	v0 = player.velocity;
 	a0 = player.angles;
-#elif defined(CSQC)
-	o0 = player.move_origin + player.view_ofs;
-	v0 = player.move_velocity;
-	a0 = player.move_angles;
-#endif
 
 	o10 = o1 = WarpZone_TransformOrigin(wz, o0);
 	v1 = WarpZone_TransformVelocity(wz, v0);
@@ -198,21 +175,17 @@ void WarpZone_Touch(entity this, entity toucher)
 		return;
 
 	// FIXME needs a better check to know what is safe to teleport and what not
-#ifdef SVQC
-	if(toucher.movetype == MOVETYPE_NONE || toucher.movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
-#elif defined(CSQC)
-	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_networkentity)
+	if((toucher.move_movetype == MOVETYPE_NONE && toucher.move_movetype == MOVETYPE_NONE) || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity
+#ifdef CSQC
+	|| tag_networkentity
 #endif
+	)
 		return;
 
 	if(WarpZoneLib_ExactTrigger_Touch(this, toucher))
 		return;
 
-#ifdef SVQC
 	if(WarpZone_PlaneDist(this, toucher.origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
-#elif defined(CSQC)
-	if(WarpZone_PlaneDist(this, toucher.move_origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
-#endif
 		return;
 
 	float f;
@@ -229,11 +202,7 @@ void WarpZone_Touch(entity this, entity toucher)
 	float d;
 	d = 24 + max(vlen(toucher.mins), vlen(toucher.maxs));
 	if(IS_NOT_A_CLIENT(toucher))
-	#ifdef SVQC
 		f = -d / bound(frametime * d * 1, frametime * vlen(toucher.velocity), d);
-	#elif defined(CSQC)
-		f = -d / bound(frametime * d * 1, frametime * vlen(toucher.move_velocity), d);
-	#endif
 	else
 		f = -1;
 	if(WarpZone_Teleport(this, toucher, f, 0))
@@ -365,17 +334,8 @@ float WarpZone_CheckProjectileImpact(entity player)
 {
 	vector o0, v0;
 
-	.vector orgvec, velvec;
-#ifdef SVQC
-	orgvec = origin;
-	velvec = velocity;
-#elif defined(CSQC)
-	orgvec = move_origin;
-	velvec = move_velocity;
-#endif
-
-	o0 = player.orgvec + player.view_ofs;
-	v0 = player.velvec;
+	o0 = player.origin + player.view_ofs;
+	v0 = player.velocity;
 
 	// if we teleported shortly before, abort
 	if(time <= player.warpzone_teleport_finishtime + 0.1)
@@ -393,19 +353,15 @@ float WarpZone_CheckProjectileImpact(entity player)
 	LOG_INFO("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
 #endif
 	LOG_INFO("Entity type: ", player.classname, "\n");
-	LOG_INFO("Origin: ", vtos(player.orgvec), "\n");
-	LOG_INFO("Velocity: ", vtos(player.velvec), "\n");
+	LOG_INFO("Origin: ", vtos(player.origin), "\n");
+	LOG_INFO("Velocity: ", vtos(player.velocity), "\n");
 
 #ifdef WARPZONELIB_REMOVEHACK
 	return 0;
 #else
 	// retry previous move
-#ifdef SVQC
 	setorigin(player, player.warpzone_oldorigin);
-#elif defined(CSQC)
-	player.move_origin = player.warpzone_oldorigin;
-#endif
-	player.velvec = player.warpzone_oldvelocity;
+	player.velocity = player.warpzone_oldvelocity;
 	if(WarpZone_Teleport(wz, player, 0, 1))
 	{
 		string save1, save2;
@@ -425,7 +381,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 	else
 	{
 		setorigin(player, o0 - player.view_ofs);
-		player.velvec = v0;
+		player.velocity = v0;
 	}
 
 	return +1;

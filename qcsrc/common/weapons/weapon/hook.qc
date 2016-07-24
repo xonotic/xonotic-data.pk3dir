@@ -115,7 +115,7 @@ void W_Hook_Explode2(entity this)
 	this.dmg_duration = WEP_CVAR_SEC(hook, duration);
 	this.teleport_time = time;
 	this.dmg_last = 1;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 }
 
 void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
@@ -152,7 +152,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 	gren.owner = gren.realowner = actor;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
-	gren.movetype = MOVETYPE_TOSS;
+	set_movetype(gren, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);

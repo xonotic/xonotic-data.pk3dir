@@ -114,7 +114,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 
 	this.entremove = trigger_remove_generic;
 	this.solid = SOLID_TRIGGER;
-	//this.move_touch = trigger_push_touch;
+	//settouch(this, trigger_push_touch);
 	this.move_time = time;
 	defer(this, 0.25, teleport_findtarget);
 

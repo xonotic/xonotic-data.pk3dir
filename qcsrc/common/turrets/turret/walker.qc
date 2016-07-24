@@ -255,7 +255,7 @@ void walker_fire_rocket(entity this, vector org)
     rocket.event_damage	   = walker_rocket_damage;
 
     rocket.nextthink		  = time;
-    rocket.movetype		   = MOVETYPE_FLY;
+    set_movetype(rocket, MOVETYPE_FLY);
     rocket.velocity		   = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * (autocvar_g_turrets_unit_walker_rocket_speed);
     rocket.angles			 = vectoangles(rocket.velocity);
     settouch(rocket, walker_rocket_touch);
@@ -571,7 +571,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
     entity e;
 
     // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
-    if(it.movetype == MOVETYPE_WALK)
+    if(it.move_movetype == MOVETYPE_WALK)
     {
         if(it.pos1)
             setorigin(it, it.pos1);
@@ -590,7 +590,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
     it.damagedbycontents = true;
     it.solid = SOLID_SLIDEBOX;
     it.takedamage = DAMAGE_AIM;
-    if(it.movetype != MOVETYPE_WALK)
+    if(it.move_movetype != MOVETYPE_WALK)
     {
         setorigin(it, it.origin);
         tracebox(it.origin + '0 0 128', it.mins, it.maxs, it.origin - '0 0 10000', MOVE_NORMAL, it);
@@ -598,7 +598,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         it.pos1 = it.origin;
         it.pos2 = it.angles;
     }
-    it.movetype = MOVETYPE_WALK;
+    set_movetype(it, MOVETYPE_WALK);
     it.idle_aim = '0 0 0';
     it.turret_firecheckfunc = walker_firecheck;
 
@@ -642,8 +642,7 @@ void walker_draw(entity this)
     fixedmakevectors(this.angles);
     movelib_groundalign4point(this, 300, 100, 0.25, 45);
     setorigin(this, this.origin + this.velocity * dt);
-    this.tur_head.angles += dt * this.tur_head.move_avelocity;
-    this.angles_y = this.move_angles_y;
+    this.tur_head.angles += dt * this.tur_head.avelocity;
 
     if (this.health < 127)
     if(random() < 0.15)
@@ -653,9 +652,7 @@ void walker_draw(entity this)
         METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         {
             it.gravity		= 1;
-            it.movetype		= MOVETYPE_BOUNCE;
             it.move_movetype	= MOVETYPE_BOUNCE;
-            it.move_origin	= it.origin;
             it.move_time		= time;
             it.draw			= walker_draw;
         }

@@ -91,7 +91,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	newmine.spawnshieldtime = this.spawnshieldtime;
 	newmine.damagedbycontents = true;
 
-	newmine.movetype = MOVETYPE_NONE; // lock the mine in place
+	set_movetype(newmine, MOVETYPE_NONE); // lock the mine in place
 	newmine.projectiledeathtype = this.projectiledeathtype;
 
 	newmine.mine_time = this.mine_time;
@@ -148,7 +148,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	if(this.movetype == MOVETYPE_NONE || this.movetype == MOVETYPE_FOLLOW)
+	if(this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FOLLOW)
 		this.velocity = this.mine_orientation; // particle fx and decals need .velocity
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, NULL);
@@ -216,12 +216,12 @@ void W_MineLayer_Think(entity this)
 
 	this.nextthink = time;
 
-	if(this.movetype == MOVETYPE_FOLLOW)
+	if(this.move_movetype == MOVETYPE_FOLLOW)
 	{
 		if(LostMovetypeFollow(this))
 		{
 			UnsetMovetypeFollow(this);
-			this.movetype = MOVETYPE_NONE;
+			set_movetype(this, MOVETYPE_NONE);
 		}
 	}
 
@@ -274,7 +274,7 @@ void W_MineLayer_Think(entity this)
 
 void W_MineLayer_Touch(entity this, entity toucher)
 {
-	if(this.movetype == MOVETYPE_NONE || this.movetype == MOVETYPE_FOLLOW)
+	if(this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
 
 	if(WarpZone_Projectile_Touch(this, toucher))
@@ -350,7 +350,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor)
 	mine.event_damage = W_MineLayer_Damage;
 	mine.damagedbycontents = true;
 
-	mine.movetype = MOVETYPE_TOSS;
+	set_movetype(mine, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(mine);
 	mine.projectiledeathtype = WEP_MINE_LAYER.m_id;
 	setsize(mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot

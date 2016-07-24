@@ -556,7 +556,7 @@ void spawn_flocker(entity this)
     setthink(flocker, flocker_think);
     flocker.nextthink  = time + random() * 5;
     PROJECTILE_MAKETRIGGER(flocker);
-    flocker.movetype   = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(flocker, MOVETYPE_BOUNCEMISSILE);
     flocker.effects    = EF_LOWPRECISION;
     flocker.velocity   = randomvec() * 300;
     flocker.angles     = vectoangles(flocker.velocity);
@@ -649,7 +649,7 @@ spawnfunc(flockerspawn)
 
     this.enemy.scale     = 3;
     this.enemy.effects   = EF_LOWPRECISION;
-    this.enemy.movetype  = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(this.enemy, MOVETYPE_BOUNCEMISSILE);
     PROJECTILE_MAKETRIGGER(this.enemy);
     setthink(this.enemy, flocker_hunter_think);
     this.enemy.nextthink = time + 10;

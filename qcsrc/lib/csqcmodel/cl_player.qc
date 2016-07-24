@@ -138,24 +138,12 @@ void Movetype_Physics_Spam(entity this)  // optimized
 	if(wasfreed(this))
 		return;
 
-	this.avelocity = this.move_avelocity;
-	this.velocity = this.move_velocity;
-	this.angles = this.move_angles;
-	this.flags = BITSET(this.flags, FL_ONGROUND, boolean(this.move_flags & FL_ONGROUND));
-	this.flags = BITSET(this.flags, FL_WATERJUMP, boolean(this.move_flags & FL_WATERJUMP));
-	this.waterlevel = this.move_waterlevel;
-	this.watertype = this.move_watertype;
-	setorigin(this, this.move_origin);
+	setorigin(this, this.origin);
 }
 
 void CSQCPlayer_CheckWater(entity this)
 {
-	this.move_origin = this.origin;
-	this.move_waterlevel = this.waterlevel;
-	this.move_watertype = this.watertype;
 	_Movetype_CheckWater(this);
-	this.waterlevel = this.move_waterlevel;
-	this.watertype = this.move_watertype;
 }
 
 void CSQCPlayer_Physics(entity this)
@@ -173,18 +161,7 @@ void CSQCPlayer_Physics(entity this)
 		CSQC_ClientMovement_PlayerMove_Frame(this);
 
 		if(autocvar_cl_movement == 1)
-		{
-			this.move_origin = this.origin;
-			this.move_angles = this.angles;
-			//this.move_movetype = MOVETYPE_WALK; // temp
-			this.move_velocity = this.velocity;
-			this.move_avelocity = this.avelocity;
-			this.move_flags = BITSET(this.move_flags, FL_ONGROUND, IS_ONGROUND(this));
-			this.move_flags = BITSET(this.move_flags, FL_WATERJUMP, boolean(this.flags & FL_WATERJUMP));
-			this.move_waterlevel = this.waterlevel;
-			this.move_watertype = this.watertype;
 			Movetype_Physics_Spam(this);
-		}
 
 		view_angles = this.v_angle;
 		input_angles = this.angles;

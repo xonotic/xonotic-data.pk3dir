@@ -257,7 +257,7 @@ void W_Porto_Attack(entity actor, float type)
 	gren.playerid = actor.playerid;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = 200;
-	gren.movetype = MOVETYPE_BOUNCEMISSILE;
+	set_movetype(gren, MOVETYPE_BOUNCEMISSILE);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.effects = EF_RED;
 	gren.scale = 4;

@@ -417,7 +417,7 @@ void InitTrigger(entity this)
 	SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
 }
@@ -429,7 +429,7 @@ void InitSolidBSPTrigger(entity this)
 	SetMovedir(this);
 	this.solid = SOLID_BSP;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
+	set_movetype(this, MOVETYPE_NONE); // why was this PUSH? -div0
 //	this.modelindex = 0;
 	this.model = "";
 }
@@ -440,7 +440,7 @@ bool InitMovingBrushTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	this.solid = SOLID_BSP;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	if(this.modelindex == 0)
 	{
 		objerror(this, "InitMovingBrushTrigger: no brushes found!");

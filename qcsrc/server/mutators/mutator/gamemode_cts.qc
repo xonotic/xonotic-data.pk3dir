@@ -127,7 +127,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 		if(player.race_penalty)
 		{
 			player.velocity = '0 0 0';
-			player.movetype = MOVETYPE_NONE;
+			set_movetype(player, MOVETYPE_NONE);
 			player.disableclientprediction = 2;
 		}
 	}

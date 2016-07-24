@@ -156,7 +156,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	if(this.movetype == MOVETYPE_BOUNCE)
+	if(this.move_movetype == MOVETYPE_BOUNCE)
 	{
 		RadiusDamage(
 			this,
@@ -285,7 +285,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	proj.projectiledeathtype = WEP_ELECTRO.m_id;
 	setorigin(proj, w_shotorg);
 
-	proj.movetype = MOVETYPE_FLY;
+	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRI(proj, electro);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, W_Electro_TouchExplode);
@@ -385,7 +385,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
 
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
-	proj.movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	W_SetupProjVelocity_UP_SEC(proj, electro);
 	settouch(proj, W_Electro_Orb_Touch);
 	setsize(proj, '0 0 -4', '0 0 -4');

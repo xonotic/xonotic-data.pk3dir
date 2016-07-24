@@ -43,7 +43,7 @@ void WarpZoneLib_ExactTrigger_Init(entity this)
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
 	else
 		setsize(this, this.mins, this.maxs);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_TRIGGER;
 	this.model = "";
 }

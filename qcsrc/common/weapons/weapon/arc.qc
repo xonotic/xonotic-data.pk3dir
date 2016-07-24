@@ -295,7 +295,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRE(missile, arc, bolt_);
 
 	missile.angles = vectoangles(missile.velocity);
@@ -683,7 +683,7 @@ void W_Arc_Beam(float burst, entity actor)
 	beam.solid = SOLID_NOT;
 	setthink(beam, W_Arc_Beam_Think);
 	beam.owner = actor;
-	beam.movetype = MOVETYPE_NONE;
+	set_movetype(beam, MOVETYPE_NONE);
 	beam.bot_dodge = true;
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
 	beam.beam_bursting = burst;

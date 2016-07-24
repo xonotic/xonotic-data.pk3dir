@@ -5,9 +5,9 @@ void player_clear_minigame(entity player)
 	player.active_minigame = NULL;
 	player.minigame_players = NULL;
 	if ( IS_PLAYER(player) )
-		player.movetype = MOVETYPE_WALK;
+		set_movetype(player, MOVETYPE_WALK);
 	else
-		player.movetype = MOVETYPE_FLY_WORLDONLY;
+		set_movetype(player, MOVETYPE_FLY_WORLDONLY);
 	player.team_forced = 0;
 }
 

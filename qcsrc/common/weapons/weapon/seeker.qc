@@ -244,9 +244,9 @@ void W_Seeker_Missile_Animate(entity this)
 		this.nextthink       = time;// + cvar("g_balance_seeker_missile_activate_delay"); // cant dealy with csqc projectiles
 
 		if(autocvar_g_balance_seeker_missile_proxy)
-			this.movetype    = MOVETYPE_BOUNCEMISSILE;
+			this.move_movetype    = MOVETYPE_BOUNCEMISSILE;
 		else
-			this.movetype    = MOVETYPE_FLYMISSILE;
+			this.move_movetype    = MOVETYPE_FLYMISSILE;
 	}
 
 	UpdateCSQCProjectile(this);
@@ -293,7 +293,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, vector f_diff, entity m
 
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-4 -4 -4', '4 4 4');
-	missile.movetype    = MOVETYPE_FLYMISSILE;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.flags       = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH | MIF_GUIDED_TAG;
 
@@ -367,7 +367,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
 	missile.solid 			= SOLID_BBOX;
-	missile.movetype 		= MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	missile.projectiledeathtype = WEP_SEEKER.m_id;
 	missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
 	missile.flags 				= FL_PROJECTILE;
@@ -578,7 +578,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor)
 	settouch(missile, W_Seeker_Tag_Touch);
 	setthink(missile, SUB_Remove);
 	missile.nextthink       = time + WEP_CVAR(seeker, tag_lifetime);
-	missile.movetype        = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	missile.solid           = SOLID_BBOX;
 
 	missile.takedamage       = DAMAGE_YES;
@@ -592,7 +592,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor)
 	missile.flags       = FL_PROJECTILE;
 	//missile.missile_flags = MIF_..?;
 
-	missile.movetype    = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRE(missile, seeker, tag_);
 	missile.angles = vectoangles(missile.velocity);
 

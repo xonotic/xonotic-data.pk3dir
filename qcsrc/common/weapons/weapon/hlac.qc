@@ -95,7 +95,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor)
 
     missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	setorigin(missile, w_shotorg);
@@ -137,7 +137,7 @@ void W_HLAC_Attack2(entity actor)
 
     missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	setorigin(missile, w_shotorg);

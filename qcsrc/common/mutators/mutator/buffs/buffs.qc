@@ -207,7 +207,7 @@ void buff_Respawn(entity this)
 
 	setorigin(this, trace_endpos); // attempt to unstick
 
-	this.movetype = MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 
 	makevectors(this.angles);
 	this.angles = '0 0 0';
@@ -428,7 +428,7 @@ void buff_Init(entity this)
 	this.reset = buff_Reset;
 	this.nextthink = time + 0.1;
 	this.gravity = 1;
-	this.movetype = MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 	this.scale = 1;
 	this.skin = buff.m_skin;
 	this.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
@@ -445,7 +445,7 @@ void buff_Init(entity this)
 		this.noalign = true;
 
 	if(this.noalign)
-		this.movetype = MOVETYPE_NONE; // reset by random location
+		set_movetype(this, MOVETYPE_NONE); // reset by random location
 
 	setmodel(this, MDL_BUFF);
 	setsize(this, BUFF_MIN, BUFF_MAX);
