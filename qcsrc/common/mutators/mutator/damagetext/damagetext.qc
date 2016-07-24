@@ -150,7 +150,7 @@ NET_HANDLE(damagetext, bool isNew)
                 }
             }
         }
-        NEW(DamageText, group, location, health, armor, deathtype, friendlyfire);
+        make_impure(NEW(DamageText, group, location, health, armor, deathtype, friendlyfire));
     }
 }
 #endif
