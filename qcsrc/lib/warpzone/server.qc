@@ -803,7 +803,7 @@ void WarpZone_StartFrame()
 		WarpZone_PostInitialize_Callback();
 	}
 
-	FOREACH_ENTITY(!is_pure(it),
+	FOREACH_ENTITY_FLOAT(pure_data, false,
 	{
 		if(warpzone_warpzones_exist)
 			WarpZone_StoreProjectileData(it);
@@ -835,9 +835,10 @@ void WarpZone_StartFrame()
 .float warpzone_reconnecting;
 bool visible_to_some_client(entity ent)
 {
-	FOREACH_ENTITY(!IS_NOT_A_CLIENT(it), LAMBDA(
-		if (IS_PLAYER(it) && IS_REAL_CLIENT(it) && checkpvs(it.origin + it.view_ofs, ent)) return true;
-	));
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && checkpvs(it.origin + it.view_ofs, ent),
+	{
+		return true;
+	});
 	return false;
 }
 void trigger_warpzone_reconnect_use(entity this, entity actor, entity trigger)

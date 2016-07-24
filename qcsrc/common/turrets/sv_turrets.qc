@@ -1199,7 +1199,7 @@ void turrets_manager_think(entity this)
 
 	if (autocvar_g_turrets_reloadcvars == 1)
 	{
-		FOREACH_ENTITY(IS_TURRET(it), {
+		FOREACH_ENTITY_FLAGS(turret_flags, TUR_FLAG_ISTURRET, {
 			load_unit_settings(it, true);
 			Turret tur = get_turretinfo(it.m_id);
 			tur.tr_think(tur, it);

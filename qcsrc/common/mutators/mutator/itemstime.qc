@@ -136,13 +136,16 @@ void Item_ItemsTime_SetTimesForAllPlayers()
 float Item_ItemsTime_UpdateTime(entity e, float t)
 {
     bool isavailable = (t == 0);
-    FOREACH_ENTITY(it.itemdef == e.itemdef || ((e.weapons & WEPSET_SUPERWEAPONS) && (it.weapons & WEPSET_SUPERWEAPONS) && clienttype(it) == CLIENTTYPE_NOTACLIENT), LAMBDA(
+    FOREACH_ENTITY_FLOAT(pure_data, false,
+    {
+        if(!(it.itemdef == e.itemdef || ((e.weapons & WEPSET_SUPERWEAPONS) && (it.weapons & WEPSET_SUPERWEAPONS) && clienttype(it) == CLIENTTYPE_NOTACLIENT)))
+            continue;
         if (e == it) continue;
         if (it.scheduledrespawntime <= time)
             isavailable = true;
         else if (t == 0 || it.scheduledrespawntime < t)
             t = it.scheduledrespawntime;
-    ));
+    });
     if (isavailable)
         t = -t; // let know the client there's another available item
     return t;
@@ -153,9 +156,12 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
     Item_ItemsTime_ResetTimes();
     // ALL the times need to be reset before .reset()ing each item
     // since Item_Reset schedules respawn of superweapons and powerups
-    FOREACH_ENTITY(IS_NOT_A_CLIENT(it), LAMBDA(
+    FOREACH_ENTITY_FLOAT(pure_data, false,
+    {
+        if(IS_CLIENT(it))
+            continue;
         if (it.reset) Item_ItemsTime_SetTime(it, 0);
-    ));
+    });
     Item_ItemsTime_SetTimesForAllPlayers();
 }
 
