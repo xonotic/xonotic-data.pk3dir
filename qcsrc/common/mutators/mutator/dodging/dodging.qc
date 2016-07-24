@@ -189,7 +189,10 @@ void PM_dodging(entity this)
 	}
 
 	// make sure v_up, v_right and v_forward are sane
-	makevectors(this.angles);
+	if(PHYS_DODGING_AIR)
+		makevectors(this.v_angle);
+	else
+		makevectors(this.angles);
 
 	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
 	// will be called ramp_time/frametime times = 2 times. so, we need to
