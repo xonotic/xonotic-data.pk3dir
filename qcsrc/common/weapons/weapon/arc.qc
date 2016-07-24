@@ -333,11 +333,9 @@ void W_Arc_Beam_Think(entity this)
 		||
 		IS_DEAD(this.owner)
 		||
-		gameover
+		forbidWeaponUse(this.owner)
 		||
 		(!PHYS_INPUT_BUTTON_ATCK(this.owner) && !burst )
-		||
-		STAT(FROZEN, this.owner)
 		||
 		this.owner.vehicle
 		||

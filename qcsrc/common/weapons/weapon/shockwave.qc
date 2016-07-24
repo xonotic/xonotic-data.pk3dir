@@ -586,7 +586,7 @@ void W_Shockwave_Attack(entity actor)
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 
-			if((vlen(head.WarpZone_findradius_dist) <= WEP_CVAR(shockwave, blast_distance))
+			if((vdist(head.WarpZone_findradius_dist, <=, WEP_CVAR(shockwave, blast_distance)))
 				&& (W_Shockwave_Attack_IsVisible(actor, head, nearest_on_line, w_shotorg, attack_endpos)))
 			{
 				// calculate importance of distance and accuracy for this attack
