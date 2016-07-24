@@ -363,6 +363,7 @@ STATIC_INIT(Porto)
 {
 	entity e = new_pure(porto);
 	e.draw = Porto_Draw;
+	IL_PUSH(g_drawables, e);
 	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
 
@@ -1871,10 +1872,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
-	{
-		if(it.draw) { it.draw(it); }
-	});
+	IL_EACH(g_drawables, it.draw, it.draw(it));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -2204,10 +2202,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	  } else */
 
 	// draw 2D entities
-	FOREACH_ENTITY_FLOAT(pure_data, false,
-	{
-		if(it.draw2d) { it.draw2d(it); }
-	});
+	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
 	Debug_Draw();
 
@@ -2264,6 +2259,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// let's reset the view back to normal for the end
 	setproperty(VF_MIN, '0 0 0');
 	setproperty(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
+
+	IL_ENDFRAME();
 }
 
 

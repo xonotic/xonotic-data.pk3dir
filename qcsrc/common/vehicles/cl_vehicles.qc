@@ -71,6 +71,7 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 	axh.colormod_z		= ReadByte() / 255;
 	axh.cnt 			= time;
 	axh.draw2d			= AuxiliaryXhair_Draw2D;
+	if (isnew) IL_PUSH(g_drawables_2d, axh);
 	return true;
 }
 

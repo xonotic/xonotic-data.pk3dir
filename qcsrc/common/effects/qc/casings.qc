@@ -151,6 +151,7 @@ NET_HANDLE(casings, bool isNew)
     casing.drawmask = MASK_NORMAL;
 
     casing.draw = Casing_Draw;
+    if (isNew) IL_PUSH(g_drawables, casing);
     casing.velocity = casing.velocity + 2 * prandomvec();
     casing.avelocity = '0 250 0' + 100 * prandomvec();
     casing.move_movetype = MOVETYPE_BOUNCE;

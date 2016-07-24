@@ -77,6 +77,7 @@ void    isnt_bool(float this) { print(ftos(this)); }
 #include "file.qh"
 #include "functional.qh"
 #include "i18n.qh"
+#include "intrusivelist.qh"
 #include "iter.qh"
 #include "json.qc"
 #include "lazy.qh"

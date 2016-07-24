@@ -86,6 +86,7 @@ CLASS(DamageText, Object)
         this.m_group = _group;
         this.m_friendlyfire = _friendlyfire;
         DamageText_update(this, _origin, _health, _armor, _deathtype);
+		IL_PUSH(g_drawables_2d, this);
     }
 ENDCLASS(DamageText)
 #endif

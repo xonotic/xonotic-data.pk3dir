@@ -477,6 +477,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 	this.classname = "csqcprojectile";
 	this.draw = Projectile_Draw;
+	if (isnew) IL_PUSH(g_drawables, this);
 	this.entremove = Ent_RemoveProjectile;
 }
 

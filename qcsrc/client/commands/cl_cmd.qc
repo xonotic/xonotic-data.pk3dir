@@ -183,6 +183,7 @@ void LocalCommand_debugmodel(int request, int argc)
 			setorigin(debugmodel_entity, view_origin);
 			debugmodel_entity.angles = view_angles;
 			debugmodel_entity.draw = DrawDebugModel;
+			IL_PUSH(g_drawables, debugmodel_entity);
 
 			return;
 		}

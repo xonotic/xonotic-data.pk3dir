@@ -238,6 +238,7 @@ void turret_construct(entity this)
 	this.tur_head.drawmask			= MASK_NORMAL;
 	this.anim_start_time			= 0;
 	this.draw2d = turret_draw2d;
+	IL_PUSH(g_drawables_2d, this);
 	this.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
 	this.teamradar_color = '1 0 0';
 	this.alpha = 1;

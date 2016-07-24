@@ -40,6 +40,8 @@ int(string s1, string s2, int len) _strncasecmp = #230;
 int() _buf_create = #440;
 #define buf_create _buf_create
 
+bool(entity ent) wasfreed = #353;
+
 #pragma noref 0
 
 #endif

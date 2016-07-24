@@ -108,7 +108,7 @@ vector fixrgbexcess(vector rgb);
 
 void Ent_RemoveWaypointSprite(entity this);
 
-void Ent_WaypointSprite(entity this);
+void Ent_WaypointSprite(entity this, bool isnew);
 
 void WaypointSprite_Load_Frames(string ext);
 

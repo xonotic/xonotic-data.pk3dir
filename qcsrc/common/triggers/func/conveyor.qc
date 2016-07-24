@@ -151,6 +151,7 @@ void conveyor_draw(entity this) { conveyor_think(this); }
 void conveyor_init(entity this)
 {
 	this.draw = conveyor_draw;
+	IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
 	this.move_movetype = MOVETYPE_NONE;

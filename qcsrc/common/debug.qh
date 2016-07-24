@@ -309,6 +309,7 @@ STATIC_INIT(TRACE_ENT)
 {
 	entity e = TRACE_ENT = new_pure(TRACE_ENT);
 	e.draw2d = Trace_draw2d;
+	IL_PUSH(g_drawables_2d, e);
 }
 #endif
 

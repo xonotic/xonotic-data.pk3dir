@@ -849,6 +849,7 @@ void m_draw(float width, float height)
 	postMenuDraw();
 
 	frametime = 0;
+	IL_ENDFRAME();
 }
 
 void m_display()

@@ -701,6 +701,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			this.drawmask = MASK_NORMAL;
 			//this.move_movetype = MOVETYPE_NOCLIP;
 			//this.draw = Spawn_Draw;
+			IL_PUSH(g_drawables, this);
 		}*/
 		if(autocvar_cl_spawn_point_particles)
 		{
@@ -718,6 +719,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			else { this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
 
 			this.draw = Spawn_Draw;
+			if (is_new) IL_PUSH(g_drawables, this);
 			setpredraw(this, Spawn_PreDraw);
 			this.fade_start = autocvar_cl_spawn_point_dist_min;
 			this.fade_end = autocvar_cl_spawn_point_dist_max;

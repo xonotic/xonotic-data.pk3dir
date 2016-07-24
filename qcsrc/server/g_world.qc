@@ -2058,6 +2058,7 @@ void EndFrame()
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
 	});
+	IL_ENDFRAME();
 }
 
 

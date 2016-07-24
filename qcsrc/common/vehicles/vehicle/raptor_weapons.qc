@@ -246,6 +246,7 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
     sfrag.solid = SOLID_CORPSE;
 
     sfrag.draw = RaptorCBShellfragDraw;
+    IL_PUSH(g_drawables, sfrag);
 
     sfrag.velocity = _vel;
     sfrag.avelocity = prandomvec() * vlen(sfrag.velocity);
