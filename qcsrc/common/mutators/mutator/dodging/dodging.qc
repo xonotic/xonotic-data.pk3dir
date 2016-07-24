@@ -123,7 +123,7 @@ float PM_dodging_checkpressedkeys(entity this)
 
 	makevectors(this.angles);
 
-	if(!PHYS_DODGING_AIR(this))
+	if(!PHYS_DODGING_AIR)
 	if (check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD) != 1
 		&& check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
 		return true;
