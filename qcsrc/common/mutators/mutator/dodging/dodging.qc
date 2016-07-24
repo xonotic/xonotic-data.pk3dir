@@ -10,6 +10,7 @@
 #define PHYS_DODGING_RAMP_TIME 				STAT(DODGING_RAMP_TIME, this)
 #define PHYS_DODGING_UP_SPEED 				STAT(DODGING_UP_SPEED, this)
 #define PHYS_DODGING_WALL 					STAT(DODGING_WALL, this)
+#define PHYS_DODGING_AIR 					STAT(DODGING_AIR, this)
 #define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 
 #ifdef CSQC
@@ -18,8 +19,6 @@
 #elif defined(SVQC)
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
-
-
 #endif
 
 #ifdef SVQC
@@ -124,6 +123,7 @@ float PM_dodging_checkpressedkeys(entity this)
 
 	makevectors(this.angles);
 
+	if(!PHYS_DODGING_AIR(this))
 	if (check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD) != 1
 		&& check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
 		return true;
