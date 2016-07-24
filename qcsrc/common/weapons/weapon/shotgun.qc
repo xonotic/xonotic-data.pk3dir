@@ -20,6 +20,7 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, alt_animtime, float, SEC) \
 		P(class, prefix, alt_refire, float, SEC) \
 		P(class, prefix, ammo, float, PRI) \
+		P(class, prefix, conespread, float, PRI) \
 		P(class, prefix, animtime, float, BOTH) \
 		P(class, prefix, bullets, float, PRI) \
 		P(class, prefix, damage, float, BOTH) \
@@ -66,8 +67,28 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo));
 
 	W_SetupShot(actor, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
-	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
-		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+	vector right = v_right;
+	vector up = v_up;
+	vector s;
+
+	float mu = WEP_CVAR_PRI(shotgun, conespread);
+	float shots = WEP_CVAR_PRI(shotgun, bullets);
+	// fire one bullet straight
+	fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+
+	for(sc = 1;sc < shots;++sc)
+	{
+		vector dir = w_shotdir;
+
+		s = '0 0 0';
+		makevectors('0 360 0' * (0.75 + (sc - 0.5) / (shots - 1)));
+		s.y = v_forward.x;
+		s.z = v_forward.y;
+
+		s = s * mu;
+		dir += right * s.y + up * s.z;
+		fireBullet(actor, w_shotorg, dir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+	}
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
