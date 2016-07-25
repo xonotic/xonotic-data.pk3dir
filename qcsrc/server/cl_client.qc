@@ -1615,7 +1615,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.angles = spectatee.v_angle;
 	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
 	this.revive_progress = spectatee.revive_progress;
-	if(!PHYS_INPUT_BUTTON_USE(this))
+	if(!PHYS_INPUT_BUTTON_USE(this) && STAT(CAMERA_SPECTATOR, this) != 2)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
@@ -1957,6 +1957,13 @@ void SpectatorThink(entity this)
 	{
 		if(MinigameImpulse(this, this.impulse))
 			this.impulse = 0;
+
+		if (this.impulse == IMP_weapon_drop.impulse)
+		{
+			STAT(CAMERA_SPECTATOR, this) = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
+			this.impulse = 0;
+			return;
+		}
 	}
 	if (this.flags & FL_JUMPRELEASED) {
 		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {

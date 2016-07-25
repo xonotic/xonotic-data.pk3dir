@@ -942,6 +942,9 @@ void HUD_Crosshair(entity this)
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;
 
+		if (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2)
+			return;
+
 		if (hud != HUD_NORMAL)
 		{
 			HUD_Crosshair_Vehicle(this);
@@ -1459,6 +1462,25 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
+		if(STAT(CAMERA_SPECTATOR))
+		{
+			if(spectatee_status > 0)
+			{
+				if(!autocvar_chase_active)
+				{
+					cvar_set("chase_active", "-2");
+					goto skip_eventchase_death;
+				}
+			}
+			else if(autocvar_chase_active == -2)
+				cvar_set("chase_active", "0");
+
+			if(autocvar_chase_active == -2)
+				goto skip_eventchase_death;
+		}
+		else if(autocvar_chase_active == -2)
+			cvar_set("chase_active", "0");
+
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
 		entity gen = NULL;
@@ -1568,6 +1590,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 		cvar_settemp("chase_active", "-1");
 		eventchase_current_distance = 0;
 	}
+
+	LABEL(skip_eventchase_death);
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
 	if(autocvar_cl_lockview || (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened())))
