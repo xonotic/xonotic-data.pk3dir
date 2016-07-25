@@ -9,10 +9,10 @@ float autocvar_hud_panel_infomessages_group_fadetime = 0.4;
 float autocvar_hud_panel_infomessages_group_time = 6;
 const int IMG_COUNT = 1; // number of InfoMessage Groups
 float img_fade[IMG_COUNT];
-int img_id[IMG_COUNT];
+int img_cur_msg[IMG_COUNT];
 float img_time[IMG_COUNT];
 
-int img_select(int group_id, int msg_cnt)
+int img_select(int group_id)
 {
 	float fadetime = max(0.001, autocvar_hud_panel_infomessages_group_fadetime);
 	if(time > img_time[group_id])
@@ -20,13 +20,13 @@ int img_select(int group_id, int msg_cnt)
 		img_fade[group_id] = max(0, img_fade[group_id] - frametime / fadetime);
 		if(!img_fade[group_id])
 		{
-			++img_id[group_id];
+			++img_cur_msg[group_id];
 			img_time[group_id] = floor(time) + autocvar_hud_panel_infomessages_group_time;
 		}
 	}
 	else
 		img_fade[group_id] = min(1, img_fade[group_id] + frametime / fadetime);
-	return img_id[group_id] % msg_cnt;
+	return img_cur_msg[group_id];
 }
 
 float stringwidth_colors(string s, vector theSize);
@@ -46,7 +46,10 @@ vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector 
 	return pos;
 }
 
-#define InfoMessage(s, a) pos = InfoMessages_drawstring(s, pos, mySize, a, fontsize)
+#define InfoMessage(s) MACRO_BEGIN { \
+	pos = InfoMessages_drawstring(s, pos, mySize, ((img_curr_group >= 0) ? panel_fg_alpha * img_fade[img_curr_group] : panel_fg_alpha), fontsize); \
+	img_curr_group = -1; \
+} MACRO_END
 
 void HUD_InfoMessages()
 {
@@ -73,19 +76,19 @@ void HUD_InfoMessages()
 
 	vector fontsize = '0.2 0.2 0' * mySize.y;
 	string s;
+	int img_curr_group = -1;
 	if(!autocvar__hud_configure)
 	{
-		float img_group;
 		if(spectatee_status)
 		{
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
 				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
-			InfoMessage(s, panel_fg_alpha);
+			InfoMessage(s);
 
-			img_group = 0;
-			switch(img_select(img_group, 3))
+			img_curr_group = 0;
+			switch(img_select(img_curr_group) % 3)
 			{
 				default:
 				case 0:
@@ -104,7 +107,7 @@ void HUD_InfoMessages()
 					s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey(_("server info"), "+show_info"));
 					break;
 			}
-			InfoMessage(s, img_fade[img_group] * panel_fg_alpha);
+			InfoMessage(s);
 
 			if(gametype == MAPINFO_TYPE_LMS)
 			{
@@ -119,7 +122,7 @@ void HUD_InfoMessages()
 			}
 			else
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
-			InfoMessage(s, panel_fg_alpha);
+			InfoMessage(s);
 		}
 
 		if (time < STAT(GAMESTARTTIME))
@@ -127,13 +130,13 @@ void HUD_InfoMessages()
 			//we need to ceil, otherwise the countdown would be off by .5 when using round()
 			float countdown = ceil(STAT(GAMESTARTTIME) - time);
 			s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
-			InfoMessage(s, panel_fg_alpha);
+			InfoMessage(s);
 		}
 
 		if(warmup_stage)
 		{
 			s = _("^2Currently in ^1warmup^2 stage!");
-			InfoMessage(s, panel_fg_alpha);
+			InfoMessage(s);
 		}
 
 		string blinkcolor;
@@ -158,12 +161,12 @@ void HUD_InfoMessages()
 				else
 					s = _("^2Waiting for others to ready up...");
 			}
-			InfoMessage(s, panel_fg_alpha);
+			InfoMessage(s);
 		}
 		else if(warmup_stage && !spectatee_status)
 		{
 			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey(_("ready"), "ready"));
-			InfoMessage(s, panel_fg_alpha);
+			InfoMessage(s);
 		}
 
 		if(teamplay && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
@@ -187,16 +190,16 @@ void HUD_InfoMessages()
 					tm = GetTeam(myteam, false);
 					if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
 						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team menu"), "menu_showteamselect"), blinkcolor));
-					InfoMessage(s, panel_fg_alpha);
+					InfoMessage(s);
 				}
 			}
 		}
 	}
 	else
 	{
-		InfoMessage(_("^7Press ^3ESC ^7to show HUD options."), panel_fg_alpha);
-		InfoMessage(_("^3Doubleclick ^7a panel for panel-specific options."), panel_fg_alpha);
-		InfoMessage(_("^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"), panel_fg_alpha);
-		InfoMessage(_("^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."), panel_fg_alpha);
+		InfoMessage(_("^7Press ^3ESC ^7to show HUD options."));
+		InfoMessage(_("^3Doubleclick ^7a panel for panel-specific options."));
+		InfoMessage(_("^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"));
+		InfoMessage(_("^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."));
 	}
 }
