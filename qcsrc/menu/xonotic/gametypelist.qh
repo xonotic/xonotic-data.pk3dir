@@ -4,6 +4,7 @@
 CLASS(XonoticGametypeList, XonoticListBox)
 	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity));
 	ATTRIB(XonoticGametypeList, rowsPerItem, float, 2)
+	METHOD(XonoticGametypeList, draw, void(entity));
 	METHOD(XonoticGametypeList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticGametypeList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticGametypeList, setSelected, void(entity, float));
