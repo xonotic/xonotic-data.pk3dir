@@ -174,12 +174,21 @@ REGISTER_STAT(BUGRIGS_SPEED_POW, float, g_bugrigs_speed_pow)
 REGISTER_STAT(BUGRIGS_SPEED_REF, float, g_bugrigs_speed_ref)
 REGISTER_STAT(BUGRIGS_STEER, float, g_bugrigs_steer)
 
-REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, cvar("sv_gameplayfix_downtracesupportsongroundflag"))
-REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, cvar("sv_gameplayfix_easierwaterjump"))
-REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, int, cvar("sv_gameplayfix_stepdown"))
-REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int, cvar("sv_gameplayfix_stepmultipletimes"))
-REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, cvar("sv_gameplayfix_unstickplayers"))
+#ifdef SVQC
+int autocvar_sv_gameplayfix_downtracesupportsongroundflag;
+int autocvar_sv_gameplayfix_easierwaterjump;
+int autocvar_sv_gameplayfix_stepdown;
+int autocvar_sv_gameplayfix_stepmultipletimes;
+int autocvar_sv_gameplayfix_unstickplayers;
+int autocvar_sv_gameplayfix_fixedcheckwatertransition;
+#endif
+REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
+REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
+REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, int, autocvar_sv_gameplayfix_stepdown)
+REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int, autocvar_sv_gameplayfix_stepmultipletimes)
+REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, autocvar_sv_gameplayfix_unstickplayers)
 REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
+REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, int, autocvar_sv_gameplayfix_fixedcheckwatertransition)
 
 REGISTER_STAT(MOVEVARS_JUMPSTEP, int, cvar("sv_jumpstep"))
 REGISTER_STAT(NOSTEP, int, cvar("sv_nostep"))

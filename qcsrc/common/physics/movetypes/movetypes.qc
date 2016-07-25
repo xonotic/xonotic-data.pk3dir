@@ -309,7 +309,7 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 	if(!ent.watertype)
 	{
 		// just spawned here
-		if(!autocvar_cl_gameplayfix_fixedcheckwatertransition)
+		if(!GAMEPLAYFIX_WATERTRANSITION(ent))
 		{
 			ent.watertype = contents;
 			ent.waterlevel = 1;
@@ -331,7 +331,7 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 	else
 	{
 		ent.watertype = CONTENT_EMPTY;
-		ent.waterlevel = (autocvar_cl_gameplayfix_fixedcheckwatertransition ? 0 : contents);
+		ent.waterlevel = (GAMEPLAYFIX_WATERTRANSITION(ent) ? 0 : contents);
 	}
 }
 

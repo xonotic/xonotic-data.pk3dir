@@ -106,7 +106,7 @@ void CSQCPlayer_Unpredict(entity this)
 
 void CSQCPlayer_SetMinsMaxs(entity this)
 {
-	if ((this.flags & FL_DUCKED) || !this.isplayermodel)
+	if (IS_DUCKED(this) || !this.isplayermodel)
 	{
 		this.mins = STAT(PL_CROUCH_MIN, NULL);
 		this.maxs = STAT(PL_CROUCH_MAX, NULL);
@@ -130,49 +130,31 @@ void CSQCPlayer_SavePrediction(entity this)
 }
 
 void CSQC_ClientMovement_PlayerMove_Frame(entity this);
-void _Movetype_Physics_ClientFrame(entity this, float movedt);
-
-void Movetype_Physics_Spam(entity this)  // optimized
-{
-	_Movetype_Physics_ClientFrame(this, PHYS_INPUT_TIMELENGTH);
-	if(wasfreed(this))
-		return;
-
-	setorigin(this, this.origin);
-}
-
-void CSQCPlayer_CheckWater(entity this)
-{
-	_Movetype_CheckWater(this);
-}
 
 void CSQCPlayer_Physics(entity this)
 {
-	if(autocvar_cl_movement)
-	{
-		if(autocvar_cl_movement == 1)
-			CSQCPlayer_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
+	if(!autocvar_cl_movement) { return; }
 
-		vector oldv_angle = this.v_angle;
-		vector oldangles = this.angles; // we need to save these, as they're abused by other code
-		this.v_angle = PHYS_INPUT_ANGLES(this);
-		this.angles = PHYS_WORLD_ANGLES(this);
+	_Movetype_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
-		CSQC_ClientMovement_PlayerMove_Frame(this);
+	vector oldv_angle = this.v_angle;
+	vector oldangles = this.angles; // we need to save these, as they're abused by other code
+	this.v_angle = PHYS_INPUT_ANGLES(this);
+	this.angles = PHYS_WORLD_ANGLES(this);
 
-		if(autocvar_cl_movement == 1)
-			Movetype_Physics_Spam(this);
+	CSQC_ClientMovement_PlayerMove_Frame(this);
 
-		view_angles = this.v_angle;
-		input_angles = this.angles;
-		this.v_angle = oldv_angle;
-		this.angles = oldangles;
+	Movetype_Physics_NoMatchTicrate(this, PHYS_INPUT_TIMELENGTH, true);
 
-		this.pmove_flags =
-				((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
-				(!(this.flags & FL_JUMPRELEASED) ? PMF_JUMP_HELD : 0) |
-				((IS_ONGROUND(this)) ? PMF_ONGROUND : 0);
-	}
+	view_angles = this.v_angle;
+	input_angles = this.angles;
+	this.v_angle = oldv_angle;
+	this.angles = oldangles;
+
+	this.pmove_flags =
+			((IS_DUCKED(this)) ? PMF_DUCKED : 0) |
+			((IS_JUMP_HELD(this)) ? PMF_JUMP_HELD : 0) |
+			((IS_ONGROUND(this)) ? PMF_ONGROUND : 0);
 }
 
 void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
@@ -208,6 +190,15 @@ void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
 		do
 		{
 			if (!getinputstate(csqcplayer_moveframe)) break;
+			/*if (input_timelength > 0.0005)
+			{
+				if (input_timelength > 0.05)
+				{
+					input_timelength /= 2;
+					CSQCPlayer_Physics(this);
+				}
+				CSQCPlayer_Physics(this);
+			}*/
 			CSQCPlayer_Physics(this);
 			CSQCPlayer_SetMinsMaxs(this);
 			++csqcplayer_moveframe;

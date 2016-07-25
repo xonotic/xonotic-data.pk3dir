@@ -262,8 +262,6 @@ void RaceCarPhysics(entity this)
 	smoothangles = vectoangles2(vf1, vu1);
 	this.angles_x = -smoothangles_x;
 	this.angles_z =  smoothangles_z;
-
-	PM_ClientMovement_Move(this);
 }
 
 #ifdef SVQC

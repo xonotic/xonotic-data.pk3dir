@@ -33,9 +33,6 @@ void set_movetype(entity this, int mt);
 .entity aiment;
 .vector punchangle;
 
-// should match sv_gameplayfix_fixedcheckwatertransition
-float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
-
 .entity move_groundentity;  // FIXME add move_groundnetworkentity?
 .float move_suspendedinair;
 .float move_didgravity;
