@@ -19,11 +19,12 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	if(!(f & WAYPOINTFLAG_PERSONAL))
 	{
-		FOREACH_ENTITY_CLASS("waypoint", boxesoverlap(m1, m2, it.absmin, it.absmax),
+		for(entity wp = findchain(classname, "waypoint"); wp; wp = wp.chain)
 		{
 			// if a matching spawnfunc_waypoint already exists, don't add a duplicate
-			return it;
-		});
+			if(boxesoverlap(m1, m2, wp.absmin, wp.absmax))
+				return wp;
+		}
 	}
 		
 

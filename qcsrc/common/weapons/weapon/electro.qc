@@ -144,19 +144,19 @@ void W_Electro_ExplodeCombo(entity this)
 	remove(this);
 }
 
-void W_Electro_Explode(entity this)
+void W_Electro_Explode(entity this, entity directhitentity)
 {
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(this.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	if(this.movetype == MOVETYPE_BOUNCE)
+	if(this.move_movetype == MOVETYPE_BOUNCE)
 	{
 		RadiusDamage(
 			this,
@@ -168,7 +168,7 @@ void W_Electro_Explode(entity this)
 			NULL,
 			WEP_CVAR_SEC(electro, force),
 			this.projectiledeathtype,
-			other
+			directhitentity
 		);
 	}
 	else
@@ -184,7 +184,7 @@ void W_Electro_Explode(entity this)
 			NULL,
 			WEP_CVAR_PRI(electro, force),
 			this.projectiledeathtype,
-			other
+			directhitentity
 		);
 	}
 
@@ -193,13 +193,13 @@ void W_Electro_Explode(entity this)
 
 void W_Electro_Explode_use(entity this, entity actor, entity trigger)
 {
-	W_Electro_Explode(this);
+	W_Electro_Explode(this, trigger);
 }
 
-void W_Electro_TouchExplode(entity this)
+void W_Electro_TouchExplode(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	W_Electro_Explode(this);
+	PROJECTILE_TOUCH(this, toucher);
+	W_Electro_Explode(this, toucher);
 }
 
 void W_Electro_Bolt_Think(entity this)
@@ -285,7 +285,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	proj.projectiledeathtype = WEP_ELECTRO.m_id;
 	setorigin(proj, w_shotorg);
 
-	proj.movetype = MOVETYPE_FLY;
+	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRI(proj, electro);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, W_Electro_TouchExplode);
@@ -298,11 +298,11 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-void W_Electro_Orb_Touch(entity this)
+void W_Electro_Orb_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	if(other.takedamage == DAMAGE_AIM)
-		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(this); } }
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM)
+		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(this, toucher); } }
 	else
 	{
 		//UpdateCSQCProjectile(this);
@@ -385,7 +385,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
 
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
-	proj.movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	W_SetupProjVelocity_UP_SEC(proj, electro);
 	settouch(proj, W_Electro_Orb_Touch);
 	setsize(proj, '0 0 -4', '0 0 -4');

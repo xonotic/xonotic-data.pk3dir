@@ -1319,7 +1319,7 @@ void detach_sameorigin(entity e)
 
 void follow_sameorigin(entity e, entity to)
 {
-    e.movetype = MOVETYPE_FOLLOW; // make the hole follow
+    set_movetype(e, MOVETYPE_FOLLOW); // make the hole follow
     e.aiment = to; // make the hole follow bmodel
     e.punchangle = to.angles; // the original angles of bmodel
     e.view_ofs = e.origin - to.origin; // relative origin
@@ -1328,7 +1328,7 @@ void follow_sameorigin(entity e, entity to)
 
 void unfollow_sameorigin(entity e)
 {
-    e.movetype = MOVETYPE_NONE;
+    set_movetype(e, MOVETYPE_NONE);
 }
 
 entity gettaginfo_relative_ent;
@@ -1350,7 +1350,7 @@ vector gettaginfo_relative(entity e, float tag)
 void SetMovetypeFollow(entity ent, entity e)
 {
 	// FIXME this may not be warpzone aware
-	ent.movetype = MOVETYPE_FOLLOW; // make the hole follow
+	set_movetype(ent, MOVETYPE_FOLLOW); // make the hole follow
 	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
 	ent.aiment = e; // make the hole follow bmodel
 	ent.punchangle = e.angles; // the original angles of bmodel
@@ -1361,14 +1361,14 @@ void SetMovetypeFollow(entity ent, entity e)
 }
 void UnsetMovetypeFollow(entity ent)
 {
-	ent.movetype = MOVETYPE_FLY;
+	set_movetype(ent, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(ent);
 	ent.aiment = NULL;
 }
 float LostMovetypeFollow(entity ent)
 {
 /*
-	if(ent.movetype != MOVETYPE_FOLLOW)
+	if(ent.move_movetype != MOVETYPE_FOLLOW)
 		if(ent.aiment)
 			error("???");
 */

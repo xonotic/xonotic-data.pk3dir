@@ -64,54 +64,54 @@ REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
 spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(this, WEP_MORTAR); }
 spawnfunc(weapon_grenadelauncher) { spawnfunc_weapon_mortar(this); }
 
-void W_Mortar_Grenade_Explode(entity this)
+void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 {
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(this.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	if(this.movetype == MOVETYPE_NONE)
+	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
 void W_Mortar_Grenade_Explode_use(entity this, entity actor, entity trigger)
 {
-	W_Mortar_Grenade_Explode(this);
+	W_Mortar_Grenade_Explode(this, trigger);
 }
 
-void W_Mortar_Grenade_Explode2(entity this)
+void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 {
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(this.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	if(this.movetype == MOVETYPE_NONE)
+	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
 void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)
 {
-	W_Mortar_Grenade_Explode2(this);
+	W_Mortar_Grenade_Explode2(this, trigger);
 }
 
 void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -133,21 +133,20 @@ void W_Mortar_Grenade_Think1(entity this)
 	this.nextthink = time;
 	if(time > this.cnt)
 	{
-		other = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mortar_Grenade_Explode(this);
+		W_Mortar_Grenade_Explode(this, NULL);
 		return;
 	}
 	if(this.gl_detonate_later && this.gl_bouncecnt >= WEP_CVAR_PRI(mortar, remote_minbouncecnt))
-		W_Mortar_Grenade_Explode(this);
+		W_Mortar_Grenade_Explode(this, NULL);
 }
 
-void W_Mortar_Grenade_Touch1(entity this)
+void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
-		this.use(this, NULL, NULL);
+		this.use(this, NULL, toucher);
 	}
 	else if(WEP_CVAR_PRI(mortar, type) == 1) // bounce
 	{
@@ -156,14 +155,14 @@ void W_Mortar_Grenade_Touch1(entity this)
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		this.gl_bouncecnt += 1;
 	}
-	else if(WEP_CVAR_PRI(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
+	else if(WEP_CVAR_PRI(mortar, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
 		spamsound(this, CH_SHOTS, SND(GRENADE_STICK), VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
 		this.oldvelocity = this.velocity;
 		this.velocity = '0 0 0';
-		this.movetype = MOVETYPE_NONE; // also disables gravity
+		set_movetype(this, MOVETYPE_NONE); // also disables gravity
 		this.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
 		UpdateCSQCProjectile(this);
 
@@ -174,12 +173,12 @@ void W_Mortar_Grenade_Touch1(entity this)
 	}
 }
 
-void W_Mortar_Grenade_Touch2(entity this)
+void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
-		this.use(this, NULL, NULL);
+		this.use(this, NULL, toucher);
 	}
 	else if(WEP_CVAR_SEC(mortar, type) == 1) // bounce
 	{
@@ -192,14 +191,14 @@ void W_Mortar_Grenade_Touch2(entity this)
 			this.nextthink = time + WEP_CVAR_SEC(mortar, lifetime_bounce);
 
 	}
-	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
+	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
 		spamsound(this, CH_SHOTS, SND(GRENADE_STICK), VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
 		this.oldvelocity = this.velocity;
 		this.velocity = '0 0 0';
-		this.movetype = MOVETYPE_NONE; // also disables gravity
+		set_movetype(this, MOVETYPE_NONE); // also disables gravity
 		this.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
 		UpdateCSQCProjectile(this);
 
@@ -225,7 +224,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor)
 	gren.owner = gren.realowner = actor;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_PRI(mortar, damage);
-	gren.movetype = MOVETYPE_BOUNCE;
+	set_movetype(gren, MOVETYPE_BOUNCE);
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
@@ -273,7 +272,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor)
 	gren.owner = gren.realowner = actor;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(mortar, damage);
-	gren.movetype = MOVETYPE_BOUNCE;
+	set_movetype(gren, MOVETYPE_BOUNCE);
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);

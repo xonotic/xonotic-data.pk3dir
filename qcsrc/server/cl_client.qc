@@ -269,7 +269,7 @@ void PutObserverInServer(entity this)
 	this.health = FRAGS_SPECTATOR;
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
-	this.movetype = MOVETYPE_FLY_WORLDONLY; // user preference is controlled by playerprethink
+	set_movetype(this, MOVETYPE_FLY_WORLDONLY); // user preference is controlled by playerprethink
 	this.flags = FL_CLIENT | FL_NOTARGET;
 	this.armorvalue = 666;
 	this.effects = 0;
@@ -462,6 +462,8 @@ void PutClientInServer(entity this)
 	if (IS_OBSERVER(this)) {
 		PutObserverInServer(this);
 	} else if (IS_PLAYER(this)) {
+		if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
+		
 		PlayerState_attach(this);
 		accuracy_resend(this);
 
@@ -479,7 +481,7 @@ void PutClientInServer(entity this)
 		this.iscreature = true;
 		this.teleportable = TELEPORT_NORMAL;
 		this.damagedbycontents = true;
-		this.movetype = MOVETYPE_WALK;
+		set_movetype(this, MOVETYPE_WALK);
 		this.solid = SOLID_SLIDEBOX;
 		this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 		if (autocvar_g_playerclip_collisions)
@@ -802,7 +804,7 @@ void ClientKill_Now(entity this)
 	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
-	if(IS_PLAYER(this))
+	if(!IS_SPEC(this) && !IS_OBSERVER(this))
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
 
 	// now I am sure the player IS dead
@@ -905,7 +907,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 				setorigin(it.killindicator, '0 0 52');
 				setthink(it.killindicator, KillIndicator_Think);
 				it.killindicator.nextthink = starttime + (it.lip) * 0.05;
-				clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
+				//clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
 				it.killindicator.cnt = ceil(killtime);
 			});
 			this.lip = 0;
@@ -1287,7 +1289,7 @@ void respawn(entity this)
 	{
 		this.solid = SOLID_NOT;
 		this.takedamage = DAMAGE_NO;
-		this.movetype = MOVETYPE_FLY;
+		set_movetype(this, MOVETYPE_FLY);
 		this.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		this.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		this.effects |= CSQCMODEL_EF_RESPAWNGHOST;
@@ -1613,7 +1615,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.angles = spectatee.v_angle;
 	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
 	this.revive_progress = spectatee.revive_progress;
-	if(!PHYS_INPUT_BUTTON_USE(this))
+	if(!PHYS_INPUT_BUTTON_USE(this) && STAT(CAMERA_SPECTATOR, this) != 2)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
@@ -1623,7 +1625,9 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        this.fixangle = false;
+    	this.angles = spectatee.v_angle;
+
+        //this.fixangle = false;
         //this.velocity = spectatee.vehicle.velocity;
         this.vehicle_health = spectatee.vehicle_health;
         this.vehicle_shield = spectatee.vehicle_shield;
@@ -1633,12 +1637,12 @@ void SpectateCopy(entity this, entity spectatee)
         this.vehicle_reload1 = spectatee.vehicle_reload1;
         this.vehicle_reload2 = spectatee.vehicle_reload2;
 
-        msg_entity = this;
+        //msg_entity = this;
 
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.x);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.y);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.z);
+       // WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            //WriteAngle(MSG_ONE,  spectatee.v_angle.x);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.y);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
         //    WriteEntity(MSG_ONE, this);
@@ -1671,7 +1675,7 @@ bool SpectateSet(entity this)
 	msg_entity = this;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
 	WriteEntity(MSG_ONE, this.enemy);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	accuracy_resend(this);
 
 	if(!SpectateUpdate(this))
@@ -1704,14 +1708,14 @@ bool Spectate(entity this, entity pl)
 
 bool SpectateNext(entity this)
 {
-	other = find(this.enemy, classname, STR_PLAYER);
+	entity ent = find(this.enemy, classname, STR_PLAYER);
 
-	if (MUTATOR_CALLHOOK(SpectateNext, this, other))
-		other = M_ARGV(1, entity);
-	else if (!other)
-		other = find(other, classname, STR_PLAYER);
+	if (MUTATOR_CALLHOOK(SpectateNext, this, ent))
+		ent = M_ARGV(1, entity);
+	else if (!ent)
+		ent = find(ent, classname, STR_PLAYER);
 
-	if(other) { SetSpectatee(this, other); }
+	if(ent) { SetSpectatee(this, ent); }
 
 	return SpectateSet(this);
 }
@@ -1719,36 +1723,35 @@ bool SpectateNext(entity this)
 bool SpectatePrev(entity this)
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
-	other = findchain(classname, STR_PLAYER);
-	if (!other) // no player
+	entity ent = findchain(classname, STR_PLAYER);
+	if (!ent) // no player
 		return false;
 
-	entity first = other;
+	entity first = ent;
 	// skip players until current spectated player
 	if(this.enemy)
-	while(other && other != this.enemy)
-		other = other.chain;
+	while(ent && ent != this.enemy)
+		ent = ent.chain;
 
-	switch (MUTATOR_CALLHOOK(SpectatePrev, this, other, first))
+	switch (MUTATOR_CALLHOOK(SpectatePrev, this, ent, first))
 	{
 		case MUT_SPECPREV_FOUND:
-		    other = M_ARGV(1, entity);
+		    ent = M_ARGV(1, entity);
 		    break;
 		case MUT_SPECPREV_RETURN:
-		    other = M_ARGV(1, entity);
 		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
-			if(other.chain)
-				other = other.chain;
+			if(ent.chain)
+				ent = ent.chain;
 			else
-				other = first;
+				ent = first;
 			break;
 		}
 	}
 
-	SetSpectatee(this, other);
+	SetSpectatee(this, ent);
 	return SpectateSet(this);
 }
 
@@ -1922,7 +1925,6 @@ void ObserverThink(entity this)
 		MinigameImpulse(this, this.impulse);
 		this.impulse = 0;
 	}
-	float prefered_movetype;
 	if (this.flags & FL_JUMPRELEASED) {
 		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
 			this.flags &= ~FL_JUMPRELEASED;
@@ -1933,9 +1935,8 @@ void ObserverThink(entity this)
 				TRANSMUTE(Spectator, this);
 			}
 		} else {
-			prefered_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? this.cvar_cl_clippedspectating : !this.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
-			if (this.movetype != prefered_movetype)
-				this.movetype = prefered_movetype;
+			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? this.cvar_cl_clippedspectating : !this.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			set_movetype(this, preferred_movetype);
 		}
 	} else {
 		if (!(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this))) {
@@ -1956,6 +1957,13 @@ void SpectatorThink(entity this)
 	{
 		if(MinigameImpulse(this, this.impulse))
 			this.impulse = 0;
+
+		if (this.impulse == IMP_weapon_drop.impulse)
+		{
+			STAT(CAMERA_SPECTATOR, this) = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
+			this.impulse = 0;
+			return;
+		}
 	}
 	if (this.flags & FL_JUMPRELEASED) {
 		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
@@ -2167,10 +2175,8 @@ void PlayerPreThink (entity this)
 			{
 				if(!it.team || SAME_TEAM(this, it))
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
-			}
-			else if(autocvar_g_vehicles_steal)
-			{
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+				else if(autocvar_g_vehicles_steal)
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
 			}
 		});
 
@@ -2216,27 +2222,39 @@ void PlayerPreThink (entity this)
 				if (frametime) player_anim(this);
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
-				if (this.deadflag == DEAD_DYING) {
-					if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max)) {
-						this.deadflag = DEAD_RESPAWNING;
-					} else if (!button_pressed) {
-						this.deadflag = DEAD_DEAD;
-                    }
-				} else if (this.deadflag == DEAD_DEAD) {
-					if (button_pressed) {
-						this.deadflag = DEAD_RESPAWNABLE;
-					} else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNABLE) {
-					if (!button_pressed) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNING) {
-					if (time > this.respawn_time) {
-						this.respawn_time = time + 1; // only retry once a second
-						this.respawn_time_max = this.respawn_time;
-						respawn(this);
+				switch(this.deadflag)
+				{
+					case DEAD_DYING:
+					{
+						if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
+							this.deadflag = DEAD_RESPAWNING;
+						else if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_DEAD;
+						break;
+					}
+					case DEAD_DEAD:
+					{
+						if (button_pressed)
+							this.deadflag = DEAD_RESPAWNABLE;
+						else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNABLE:
+					{
+						if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNING:
+					{
+						if (time > this.respawn_time)
+						{
+							this.respawn_time = time + 1; // only retry once a second
+							this.respawn_time_max = this.respawn_time;
+							respawn(this);
+						}
+						break;
 					}
 				}
 
@@ -2267,6 +2285,8 @@ void PlayerPreThink (entity this)
 		bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
         .entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if (this.hook.state) {
+			do_crouch = false;
+		} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
 			do_crouch = false;
 		} else if (this.vehicle) {
 			do_crouch = false;
@@ -2366,13 +2386,13 @@ void PlayerPreThink (entity this)
 		entity e = this.teamkill_soundsource;
 		entity oldpusher = e.pusher;
 		e.pusher = this;
-		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
+		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOL_BASEVOICE, VOICETYPE_LASTATTACKER_ONLY);
 		e.pusher = oldpusher;
 	}
 
 	if (this.taunt_soundtime && time > this.taunt_soundtime) {
 		this.taunt_soundtime = 0;
-		PlayerSound(this, playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
+		PlayerSound(this, playersound_taunt, CH_VOICE, VOL_BASEVOICE, VOICETYPE_AUTOTAUNT);
 	}
 
 	target_voicescript_next(this);
@@ -2388,10 +2408,10 @@ void DrownPlayer(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	if (this.waterlevel != WATERLEVEL_SUBMERGED)
+	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)
 	{
 		if(this.air_finished < time)
-			PlayerSound(this, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
 		this.dmg = 2;
 	}
@@ -2405,6 +2425,30 @@ void DrownPlayer(entity this)
 	}
 }
 
+void Player_Physics(entity this)
+{
+	this.movetype = ((this.move_qcphysics) ? MOVETYPE_NONE : this.move_movetype);
+
+	if(!this.move_qcphysics)
+		return;
+
+	int mt = this.move_movetype;
+
+	if(mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH || mt == MOVETYPE_PHYSICS)
+	{
+		this.move_qcphysics = false;
+		this.movetype = mt;
+		return;
+	}
+
+	if(!frametime && !this.pm_frametime)
+		return;
+
+	Movetype_Physics_NoMatchTicrate(this, this.pm_frametime, true);
+
+	this.pm_frametime = 0;
+}
+
 /*
 =============
 PlayerPostThink
@@ -2415,12 +2459,25 @@ Called every frame for each client after the physics are run
 .float idlekick_lasttimeleft;
 void PlayerPostThink (entity this)
 {
+	Player_Physics(this);
+
 	if (sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
 	if (IS_PLAYER(this) || sv_maxidle_spectatorsareidle)
 	{
-		if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
+		int totalClients = 0;
+		if(sv_maxidle_slots > 0)
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || sv_maxidle_slots_countbots,
+			{
+				++totalClients;
+			});
+		}
+
+		if (sv_maxidle_slots > 0 && (maxclients - totalClients) > sv_maxidle_slots)
+		{ /* do nothing */ }
+		else if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if (this.idlekick_lasttimeleft)
 			{

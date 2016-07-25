@@ -196,7 +196,7 @@ void spiderbot_rocket_do(entity this)
             float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
             _dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
             rocket.nextthink  = time + (_dist / autocvar_g_vehicle_spiderbot_rocket_speed);
-            setthink(rocket, vehicles_projectile_explode);
+            setthink(rocket, vehicles_projectile_explode_think);
 
             if(PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.tur_head.frame == 1)
                 this.wait = -10;
@@ -232,7 +232,7 @@ void spiderbot_rocket_do(entity this)
             float h2 = 0.75 * vlen(rocket.pos1 - v);
 
             rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));
-            rocket.movetype  = MOVETYPE_TOSS;
+            set_movetype(rocket, MOVETYPE_TOSS);
             rocket.gravity   = 1;
             //setthink(rocket, spiderbot_rocket_artillery);
         break;

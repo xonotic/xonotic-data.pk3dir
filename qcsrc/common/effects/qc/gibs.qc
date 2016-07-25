@@ -111,13 +111,13 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 		__pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
 }
 
-void SUB_RemoveOnNoImpact(entity this)
+void SUB_RemoveOnNoImpact(entity this, entity toucher)
 {
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		Gib_Delete(this);
 }
 
-void Gib_Touch(entity this)
+void Gib_Touch(entity this, entity toucher)
 {
 	// TODO maybe bounce of walls, make more gibs, etc.
 
@@ -192,10 +192,9 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 		org = trace_endpos;
 	}
 
-	gib.move_origin = org;
 	setorigin(gib, org);
-	gib.move_velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
-	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity) * autocvar_cl_gibs_avelocity_scale;
+	gib.velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
+	gib.avelocity = prandomvec() * vlen(gib.velocity) * autocvar_cl_gibs_avelocity_scale;
 	gib.move_time = time;
 	gib.damageforcescale = autocvar_cl_gibs_damageforcescale;
 

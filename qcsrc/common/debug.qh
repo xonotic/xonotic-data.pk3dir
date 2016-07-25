@@ -100,7 +100,7 @@ bool autocvar_debugdraw;
 //						if (it.entnum) break;
 //						if (it.drawmask) break;
 //						if (it.predraw) break;
-//						if (it.movetype) break;
+//						if (it.move_movetype) break;
 						if (it.solid) break;
 //						if (it.origin) break;
 //						if (it.oldorigin) break;
@@ -218,6 +218,40 @@ GENERIC_COMMAND(version, "Print the current version")
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " version"));
+			return;
+		}
+	}
+}
+
+#ifdef CSQC
+void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
+#endif
+GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string s = "";
+			int h = buf_create();
+			buf_cvarlist(h, "", "_"); // exclude all _ cvars as they are temporary
+			int n = buf_getsize(h);
+			for (int i = 0; i < n; ++i) {
+				string k = bufstr_get(h, i);
+				string v = cvar_string(k);
+				string d = cvar_defstring(k);
+				if (v == d)
+					continue;
+				s = strcat(s, k, " \"", v, "\" // \"", d, "\"\n");
+			}
+			buf_del(h);
+			LOG_INFO(s);
+			return;
+		}
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges"));
 			return;
 		}
 	}

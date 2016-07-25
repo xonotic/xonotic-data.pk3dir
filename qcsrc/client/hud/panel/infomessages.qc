@@ -98,7 +98,7 @@ void HUD_InfoMessages()
 					if(spectatee_status == -1)
 						s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
 					else
-						s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey(_("secondary fire"), "+fire2"));
+						s = sprintf(_("^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"), getcommandkey(_("secondary fire"), "+fire2"), getcommandkey(_("drop weapon"), "dropweapon"));
 					break;
 				case 2:
 					s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey(_("server info"), "+show_info"));

@@ -118,14 +118,14 @@ void W_Porto_Think(entity this)
 		W_Porto_Fail(this, 0);
 }
 
-void W_Porto_Touch(entity this)
+void W_Porto_Touch(entity this, entity toucher)
 {
 	vector norm;
 
 	// do not use PROJECTILE_TOUCH here
 	// FIXME but DO handle warpzones!
 
-	if(other.classname == "portal")
+	if(toucher.classname == "portal")
 		return; // handled by the portal
 
 	norm = trace_plane_normal;
@@ -257,7 +257,7 @@ void W_Porto_Attack(entity actor, float type)
 	gren.playerid = actor.playerid;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = 200;
-	gren.movetype = MOVETYPE_BOUNCEMISSILE;
+	set_movetype(gren, MOVETYPE_BOUNCEMISSILE);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.effects = EF_RED;
 	gren.scale = 4;

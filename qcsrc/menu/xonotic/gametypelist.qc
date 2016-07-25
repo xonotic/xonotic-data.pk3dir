@@ -59,6 +59,15 @@ void XonoticGametypeList_saveCvars(entity me)
 		owner.gameTypeChangeNotify(owner);
 	}
 }
+void XonoticGametypeList_draw(entity me)
+{
+	if(me.nItems != GameType_GetCount())
+	{
+		me.nItems = GameType_GetCount();
+		me.setSelected(me, 0);
+	}
+	SUPER(XonoticGametypeList).draw(me);
+}
 void XonoticGametypeList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s1, s2;

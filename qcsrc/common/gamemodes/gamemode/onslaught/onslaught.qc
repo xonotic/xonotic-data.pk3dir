@@ -162,9 +162,9 @@ void FixSize(entity e);
 // CaptureShield Functions
 // =======================
 
-bool ons_CaptureShield_Customize(entity this)
+bool ons_CaptureShield_Customize(entity this, entity client)
 {
-	entity e = WaypointSprite_getviewentity(other);
+	entity e = WaypointSprite_getviewentity(client);
 
 	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, e.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return false; }
 	if(SAME_TEAM(this, e)) { return false; }
@@ -172,25 +172,25 @@ bool ons_CaptureShield_Customize(entity this)
 	return true;
 }
 
-void ons_CaptureShield_Touch(entity this)
+void ons_CaptureShield_Touch(entity this, entity toucher)
 {
-	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, other.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return; }
-	if(!IS_PLAYER(other)) { return; }
-	if(SAME_TEAM(other, this)) { return; }
+	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, toucher.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return; }
+	if(!IS_PLAYER(toucher)) { return; }
+	if(SAME_TEAM(toucher, this)) { return; }
 
 	vector mymid = (this.absmin + this.absmax) * 0.5;
-	vector othermid = (other.absmin + other.absmax) * 0.5;
+	vector theirmid = (toucher.absmin + toucher.absmax) * 0.5;
 
-	Damage(other, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(othermid - mymid) * ons_captureshield_force);
+	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(theirmid - mymid) * ons_captureshield_force);
 
-	if(IS_REAL_CLIENT(other))
+	if(IS_REAL_CLIENT(toucher))
 	{
-		play2(other, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
+		play2(toucher, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
 
 		if(this.enemy.classname == "onslaught_generator")
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
 		else
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
 	}
 }
 
@@ -211,7 +211,7 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 	settouch(shield, ons_CaptureShield_Touch);
 	setcefc(shield, ons_CaptureShield_Customize);
 	shield.effects = EF_ADDITIVE;
-	shield.movetype = MOVETYPE_NOCLIP;
+	set_movetype(shield, MOVETYPE_NOCLIP);
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
 	shield.scale = 1;
@@ -776,9 +776,8 @@ void ons_ControlPoint_UpdateSprite(entity e)
 	}
 }
 
-void ons_ControlPoint_Touch(entity this)
+void ons_ControlPoint_Touch(entity this, entity toucher)
 {
-	entity toucher = other;
 	int attackable;
 
 	if(IS_VEHICLE(toucher) && toucher.owner)
@@ -864,7 +863,7 @@ void ons_ControlPoint_Setup(entity cp)
 	cp.netname = "Control point";
 	cp.team = 0;
 	cp.solid = SOLID_BBOX;
-	cp.movetype = MOVETYPE_NONE;
+	set_movetype(cp, MOVETYPE_NONE);
 	settouch(cp, ons_ControlPoint_Touch);
 	setthink(cp, ons_ControlPoint_Think);
 	cp.nextthink = time + ONS_CP_THINKRATE;
@@ -883,14 +882,14 @@ void ons_ControlPoint_Setup(entity cp)
 	if((cp.spawnflags & 1) || cp.noalign) // don't drop to floor, just stay at fixed location
 	{
 		cp.noalign = true;
-		cp.movetype = MOVETYPE_NONE;
+		set_movetype(cp, MOVETYPE_NONE);
 	}
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{
 		setorigin(cp, cp.origin + '0 0 20');
 		cp.noalign = false;
 		droptofloor(cp);
-		cp.movetype = MOVETYPE_TOSS;
+		set_movetype(cp, MOVETYPE_TOSS);
 	}
 
 	// waypointsprites
@@ -1083,13 +1082,13 @@ void ons_DelayedGeneratorSetup(entity this)
 }
 
 
-void onslaught_generator_touch(entity this)
+void onslaught_generator_touch(entity this, entity toucher)
 {
-	if ( IS_PLAYER(other) )
-	if ( SAME_TEAM(this,other) )
+	if ( IS_PLAYER(toucher) )
+	if ( SAME_TEAM(this,toucher) )
 	if ( this.iscaptured )
 	{
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_TELEPORT);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_TELEPORT);
 	}
 }
 
@@ -1106,7 +1105,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
 	gen.team_saved = teamnumber;
-	gen.movetype = MOVETYPE_NONE;
+	set_movetype(gen, MOVETYPE_NONE);
 	gen.lasthealth = gen.max_health = gen.health = autocvar_g_onslaught_gen_health;
 	gen.takedamage = DAMAGE_AIM;
 	gen.bot_attack = true;

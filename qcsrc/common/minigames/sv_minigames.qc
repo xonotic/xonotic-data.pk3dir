@@ -5,9 +5,9 @@ void player_clear_minigame(entity player)
 	player.active_minigame = NULL;
 	player.minigame_players = NULL;
 	if ( IS_PLAYER(player) )
-		player.movetype = MOVETYPE_WALK;
+		set_movetype(player, MOVETYPE_WALK);
 	else
-		player.movetype = MOVETYPE_FLY_WORLDONLY;
+		set_movetype(player, MOVETYPE_FLY_WORLDONLY);
 	player.team_forced = 0;
 }
 
@@ -112,11 +112,11 @@ void minigame_resend(entity minigame)
 	}
 }
 
-bool minigame_CheckSend(entity this)
+bool minigame_CheckSend(entity this, entity client)
 {
 	entity e;
 	for ( e = this.owner.minigame_players; e != NULL; e = e.list_next )
-		if ( e.minigame_players == other )
+		if ( e.minigame_players == client )
 			return true;
 	return false;
 }

@@ -252,16 +252,16 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	if(spot.target != "")
 	{
 		int found = 0;
-		FOREACH_ENTITY_STRING(targetname, spot.target,
+		for(entity targ = findchain(targetname, spot.target); targ; targ = targ.chain)
 		{
 			++found;
-			if(it.spawn_evalfunc)
+			if(targ.spawn_evalfunc)
 			{
-				spawn_score = it.spawn_evalfunc(it, this, spot, spawn_score);
+				spawn_score = targ.spawn_evalfunc(targ, this, spot, spawn_score);
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}
-		});
+		}
 
 		if(!found)
 		{

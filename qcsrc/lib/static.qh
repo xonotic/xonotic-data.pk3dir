@@ -9,8 +9,23 @@ void __static_init_precache() {}
 void __shutdown() {}
 #define shutdownhooks() CALL_ACCUMULATED_FUNCTION(__shutdown)
 
+#define GETTIME_REALTIME 1
+#ifdef MENUQC
+float(int tmr) _gettime = #67;
+#else
+float(int tmr) _gettime = #519;
+#endif
+
+void profile(string s)
+{
+	static float g_starttime;
+	float rt = _gettime(GETTIME_REALTIME);
+	if (!g_starttime) g_starttime = rt;
+	LOG_TRACEF("[%f] %s", rt - g_starttime, s);
+}
+
 #define _STATIC_INIT(where, func) \
-	void _static_##func(); \
+	[[accumulate]] void _static_##func() { profile(#func); } \
 	ACCUMULATE_FUNCTION(where, _static_##func) \
 	void _static_##func()
 

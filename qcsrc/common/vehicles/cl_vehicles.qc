@@ -33,7 +33,7 @@ void AuxiliaryXhair_Draw2D(entity this)
 		return;
 
 	vector size = draw_getimagesize(this.axh_image) * autocvar_cl_vehicles_crosshair_size;
-	vector pos = project_3d_to_2d(this.move_origin) - 0.5 * size;
+	vector pos = project_3d_to_2d(this.origin) - 0.5 * size;
 
 	if (!(pos.z < 0 || pos.x < 0 || pos.y < 0 || pos.x > vid_conwidth || pos.y > vid_conheight))
 	{
@@ -63,9 +63,9 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 		AuxiliaryXhair[axh_id] = axh;
 	}
 
-	axh.move_origin_x	= ReadCoord();
-	axh.move_origin_y	= ReadCoord();
-	axh.move_origin_z	= ReadCoord();
+	axh.origin_x	= ReadCoord();
+	axh.origin_y	= ReadCoord();
+	axh.origin_z	= ReadCoord();
 	axh.colormod_x		= ReadByte() / 255;
 	axh.colormod_y		= ReadByte() / 255;
 	axh.colormod_z		= ReadByte() / 255;

@@ -129,24 +129,23 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	return sdir * vs + '0 0 1' * vz;
 }
 
-void trigger_push_touch(entity this)
+void trigger_push_touch(entity this, entity toucher)
 {
 	if (this.active == ACTIVE_NOT)
 		return;
 
-	if (!isPushable(other))
+	if (!isPushable(toucher))
 		return;
 
 	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, other)))
+		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, toucher)))
 			return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
 	if(this.enemy)
 	{
-		other.velocity = trigger_push_calculatevelocity(other.origin, this.enemy, this.height);
-		other.move_velocity = other.velocity;
+		toucher.velocity = trigger_push_calculatevelocity(toucher.origin, this.enemy, this.height);
 	}
 	else if(this.target && this.target != "")
 	{
@@ -159,105 +158,101 @@ void trigger_push_touch(entity this)
 			else
 				RandomSelection_Add(e, 0, string_null, 1, 1);
 		}
-		other.velocity = trigger_push_calculatevelocity(other.origin, RandomSelection_chosen_ent, this.height);
-		other.move_velocity = other.velocity;
+		toucher.velocity = trigger_push_calculatevelocity(toucher.origin, RandomSelection_chosen_ent, this.height);
 	}
 	else
 	{
-		other.velocity = this.movedir;
-		other.move_velocity = other.velocity;
+		toucher.velocity = this.movedir;
 	}
 
-#ifdef SVQC
-	UNSET_ONGROUND(other);
-#elif defined(CSQC)
-	other.move_flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(toucher);
 
-	if (other.flags & FL_PROJECTILE)
+#ifdef CSQC
+	if (toucher.flags & FL_PROJECTILE)
 	{
-		other.move_angles = vectoangles (other.move_velocity);
-		switch(other.move_movetype)
+		toucher.angles = vectoangles (toucher.velocity);
+		switch(toucher.move_movetype)
 		{
 			case MOVETYPE_FLY:
-				other.move_movetype = MOVETYPE_TOSS;
-				other.gravity = 1;
+				toucher.move_movetype = MOVETYPE_TOSS;
+				toucher.gravity = 1;
 				break;
 			case MOVETYPE_BOUNCEMISSILE:
-				other.move_movetype = MOVETYPE_BOUNCE;
-				other.gravity = 1;
+				toucher.move_movetype = MOVETYPE_BOUNCE;
+				toucher.gravity = 1;
 				break;
 		}
 	}
 #endif
 
 #ifdef SVQC
-	if (IS_PLAYER(other))
+	if (IS_PLAYER(toucher))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
-		other.oldvelocity = other.velocity;
+		toucher.oldvelocity = toucher.velocity;
 
 		if(this.pushltime < time)  // prevent "snorring" sound when a player hits the jumppad more than once
 		{
 			// flash when activated
-			Send_Effect(EFFECT_JUMPPAD, other.origin, other.velocity, 1);
-			_sound (other, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+			Send_Effect(EFFECT_JUMPPAD, toucher.origin, toucher.velocity, 1);
+			_sound (toucher, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 			this.pushltime = time + 0.2;
 		}
-		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
+		if(IS_REAL_CLIENT(toucher) || IS_BOT_CLIENT(toucher))
 		{
 			bool found = false;
-			for(int i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
-				if(other.(jumppadsused[i]) == this)
+			for(int i = 0; i < toucher.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
+				if(toucher.(jumppadsused[i]) == this)
 					found = true;
 			if(!found)
 			{
-				other.(jumppadsused[other.jumppadcount % NUM_JUMPPADSUSED]) = this;
-				other.jumppadcount = other.jumppadcount + 1;
+				toucher.(jumppadsused[toucher.jumppadcount % NUM_JUMPPADSUSED]) = this;
+				toucher.jumppadcount = toucher.jumppadcount + 1;
 			}
 
-			if(IS_REAL_CLIENT(other))
+			if(IS_REAL_CLIENT(toucher))
 			{
 				if(this.message)
-					centerprint(other, this.message);
+					centerprint(toucher, this.message);
 			}
 			else
-				other.lastteleporttime = time;
+				toucher.lastteleporttime = time;
 
-			if (!IS_DEAD(other))
-				animdecide_setaction(other, ANIMACTION_JUMP, true);
+			if (!IS_DEAD(toucher))
+				animdecide_setaction(toucher, ANIMACTION_JUMP, true);
 		}
 		else
-			other.jumppadcount = true;
+			toucher.jumppadcount = true;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
-		other.pushltime = 0;
-		other.istypefrag = 0;
+		toucher.pushltime = 0;
+		toucher.istypefrag = 0;
 	}
 
 	if(this.enemy.target)
-		SUB_UseTargets(this.enemy, other, other); // TODO: do we need other as trigger too?
+		SUB_UseTargets(this.enemy, toucher, toucher); // TODO: do we need toucher as trigger too?
 
-	if (other.flags & FL_PROJECTILE)
+	if (toucher.flags & FL_PROJECTILE)
 	{
-		other.angles = vectoangles (other.velocity);
-		switch(other.movetype)
+		toucher.angles = vectoangles (toucher.velocity);
+		switch(toucher.move_movetype)
 		{
 			case MOVETYPE_FLY:
-				other.movetype = MOVETYPE_TOSS;
-				other.gravity = 1;
+				set_movetype(toucher, MOVETYPE_TOSS);
+				toucher.gravity = 1;
 				break;
 			case MOVETYPE_BOUNCEMISSILE:
-				other.movetype = MOVETYPE_BOUNCE;
-				other.gravity = 1;
+				set_movetype(toucher, MOVETYPE_BOUNCE);
+				toucher.gravity = 1;
 				break;
 		}
-		UpdateCSQCProjectile(other);
+		UpdateCSQCProjectile(toucher);
 	}
 
-	/*if (other.flags & FL_ITEM)
+	/*if (toucher.flags & FL_ITEM)
 	{
-		ItemUpdate(other);
-		other.SendFlags |= ISF_DROP;
+		ItemUpdate(toucher);
+		toucher.SendFlags |= ISF_DROP;
 	}*/
 
 	if (this.spawnflags & PUSH_ONCE)
@@ -294,7 +289,7 @@ void trigger_push_findtarget(entity this)
 			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
 			tracetoss(e, e);
-			if(e.movetype == MOVETYPE_NONE)
+			if(e.move_movetype == MOVETYPE_NONE)
 				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 			remove(e);
 #endif
