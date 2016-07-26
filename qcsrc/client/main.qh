@@ -96,6 +96,8 @@ vector view_origin, view_forward, view_right, view_up;
 
 IntrusiveList g_radarlinks;
 STATIC_INIT(g_radarlinks) { g_radarlinks = IL_NEW(); }
+IntrusiveList g_radaricons;
+STATIC_INIT(g_radaricons) { g_radaricons = IL_NEW(); }
 
 bool button_zoom;
 bool spectatorbutton_zoom;

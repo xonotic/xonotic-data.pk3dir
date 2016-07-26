@@ -123,7 +123,10 @@ void Ent_WaypointSprite(entity this, bool isnew)
         this.spawntime = time;
 
     this.draw2d = Draw_WaypointSprite;
-    if (isnew) IL_PUSH(g_drawables_2d, this);
+    if (isnew) {
+		IL_PUSH(g_drawables_2d, this);
+		IL_PUSH(g_radaricons, this);
+    }
 
     InterpolateOrigin_Undo(this);
     this.iflags |= IFLAG_ORIGIN;

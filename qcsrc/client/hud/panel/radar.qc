@@ -353,7 +353,7 @@ void HUD_Radar()
 
 	IL_EACH(g_radarlinks, true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
-	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, {
+	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
 		if ( it.health >= 0 )
 		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE || !(serverflags & SERVERFLAG_TEAMPLAY) )
