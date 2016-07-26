@@ -135,7 +135,7 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		do_crouch = false;
 	if(STAT(FROZEN, this))
 		do_crouch = false;
-	if((activeweapon == WEP_SHOCKWAVE || activeweapon == WEP_SHOTGUN) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
+	if((activeweapon == WEP_SHOCKWAVE || activeweapon == WEP_SHOTGUN || activeweapon == WEP_BLASTER) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
 		do_crouch = false;
 
 	if (do_crouch)

@@ -30,6 +30,18 @@ CLASS(Blaster, Weapon)
 		P(class, prefix, shotangle, float, BOTH) \
 		P(class, prefix, speed, float, BOTH) \
 		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, melee_animtime, float, SEC) \
+		P(class, prefix, melee_refire, float, SEC) \
+		P(class, prefix, melee_damage, float, SEC) \
+		P(class, prefix, melee_delay, float, SEC) \
+		P(class, prefix, melee_multihit, float, SEC) \
+		P(class, prefix, melee_nonplayerdamage, float, SEC) \
+		P(class, prefix, melee_no_doubleslap, float, SEC) \
+		P(class, prefix, melee_range, float, SEC) \
+		P(class, prefix, melee_swing_side, float, SEC) \
+		P(class, prefix, melee_swing_up, float, SEC) \
+		P(class, prefix, melee_time, float, SEC) \
+		P(class, prefix, melee_traces, float, SEC) \
         P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
         P(class, prefix, weaponreplace, string, NONE) \
@@ -150,6 +162,116 @@ void W_Blaster_Attack(
 	}
 }
 
+.float swing_prev;
+.entity swing_alreadyhit;
+void W_Blaster_Melee_Think(entity this)
+{
+	// declarations
+	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
+	entity target_victim;
+	vector targpos;
+
+	if(!this.cnt) // set start time of melee
+	{
+		this.cnt = time;
+		W_PlayStrengthSound(this.realowner);
+	}
+
+	makevectors(this.realowner.v_angle); // update values for v_* vectors
+
+	// calculate swing percentage based on time
+	meleetime = WEP_CVAR_SEC(blaster, melee_time) * W_WeaponRateFactor(this.realowner);
+	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
+	f = ((1 - swing) * WEP_CVAR_SEC(blaster, melee_traces));
+
+	// check to see if we can still continue, otherwise give up now
+	if(IS_DEAD(this.realowner) && WEP_CVAR_SEC(blaster, melee_no_doubleslap))
+	{
+		remove(this);
+		return;
+	}
+
+	// if okay, perform the traces needed for this frame
+	for(i=this.swing_prev; i < f; ++i)
+	{
+		swing_factor = ((1 - (i / WEP_CVAR_SEC(blaster, melee_traces))) * 2 - 1);
+
+		targpos = (this.realowner.origin + this.realowner.view_ofs
+			+ (v_forward * WEP_CVAR_SEC(blaster, melee_range))
+			+ (v_up * swing_factor * WEP_CVAR_SEC(blaster, melee_swing_up))
+			+ (v_right * swing_factor * WEP_CVAR_SEC(blaster, melee_swing_side)));
+
+		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
+
+		// draw lightning beams for debugging
+		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		//te_customflash(targpos, 40,  2, '1 1 1');
+
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
+
+		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
+			&& (trace_ent.takedamage == DAMAGE_AIM)
+			&& (trace_ent != this.swing_alreadyhit)
+			&& (is_player || WEP_CVAR_SEC(blaster, melee_nonplayerdamage)))
+		{
+			target_victim = trace_ent; // so it persists through other calls
+
+			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
+				swing_damage = (WEP_CVAR_SEC(blaster, melee_damage) * min(1, swing_factor + 1));
+			else
+				swing_damage = (WEP_CVAR_SEC(blaster, melee_nonplayerdamage) * min(1, swing_factor + 1));
+
+			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
+
+			Damage(target_victim, this.realowner, this.realowner,
+				swing_damage, WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+				this.realowner.origin + this.realowner.view_ofs,
+				v_forward * WEP_CVAR_SEC(blaster, force));
+
+			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_BLASTER.m_id, 0, swing_damage); }
+
+			// draw large red flash for debugging
+			//te_customflash(targpos, 200, 2, '15 0 0');
+
+			if(WEP_CVAR_SEC(blaster, melee_multihit)) // allow multiple hits with one swing, but not against the same player twice.
+			{
+				this.swing_alreadyhit = target_victim;
+				continue; // move along to next trace
+			}
+			else
+			{
+				remove(this);
+				return;
+			}
+		}
+	}
+
+	if(time >= this.cnt + meleetime)
+	{
+		// melee is finished
+		remove(this);
+		return;
+	}
+	else
+	{
+		// set up next frame
+		this.swing_prev = i;
+		this.nextthink = time;
+	}
+}
+
+void W_Blaster_Attack_Melee(Weapon thiswep, entity actor, .entity weaponentity, int fire)
+{
+	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTEN_NORM);
+	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, melee_animtime), w_ready);
+
+	entity meleetemp = new_pure(meleetemp);
+	meleetemp.realowner = actor;
+	setthink(meleetemp, W_Blaster_Melee_Think);
+	meleetemp.nextthink = time + WEP_CVAR_SEC(blaster, melee_delay) * W_WeaponRateFactor(actor);
+	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_SEC(blaster, melee_damage), WEP_CVAR_SEC(blaster, melee_range));
+}
+
 METHOD(Blaster, wr_aim, void(entity thiswep, entity actor))
 {
     if(WEP_CVAR(blaster, secondary))
@@ -213,7 +335,21 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
                         WEP_CVAR_SEC(blaster, delay),
                         WEP_CVAR_SEC(blaster, lifetime)
                     );
-                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
+                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(blaster, animtime), w_ready);
+                }
+
+                break;
+            }
+
+            case 2: // slap
+            {
+                if(!actor.crouch) // no crouchmelee please
+                {
+                    if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(blaster, melee_refire)))
+                    {
+                        // attempt forcing playback of the anim by switching to another anim (that we never play) here...
+                        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Blaster_Attack_Melee);
+                    }
                 }
 
                 break;
