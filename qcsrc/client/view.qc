@@ -1186,6 +1186,13 @@ void HUD_Crosshair(entity this)
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
+				else if (activeweapon == WEP_SHOTGUN && STAT(SHOTGUN_LOAD) && autocvar_crosshair_ring_hagar)
+				{
+					ring_value = bound(0, STAT(SHOTGUN_LOAD) / WEP_CVAR_SEC(shotgun, load_max), 1);
+					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring.tga";
+				}
 				else if (ok_ammo_charge)
 				{
 					ring_value = ok_ammo_chargepool;

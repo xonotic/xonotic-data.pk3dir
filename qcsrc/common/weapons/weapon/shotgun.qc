@@ -19,11 +19,11 @@ CLASS(Shotgun, Weapon)
 	BEGIN(class) \
 		P(class, prefix, alt_animtime, float, SEC) \
 		P(class, prefix, alt_refire, float, SEC) \
-		P(class, prefix, ammo, float, PRI) \
-		P(class, prefix, conespread, float, PRI) \
-		P(class, prefix, numcircles, float, PRI) \
+		P(class, prefix, ammo, float, BOTH) \
+		P(class, prefix, conespread, float, NONE) \
+		P(class, prefix, numcircles, float, NONE) \
 		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bullets, float, PRI) \
+		P(class, prefix, bullets, float, BOTH) \
 		P(class, prefix, damage, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, melee_delay, float, SEC) \
@@ -35,6 +35,12 @@ CLASS(Shotgun, Weapon)
 		P(class, prefix, melee_swing_up, float, SEC) \
 		P(class, prefix, melee_time, float, SEC) \
 		P(class, prefix, melee_traces, float, SEC) \
+        P(class, prefix, load_abort, float, SEC) \
+        P(class, prefix, load_animtime, float, SEC) \
+        P(class, prefix, load_hold, float, SEC) \
+        P(class, prefix, load_max, float, SEC) \
+        P(class, prefix, load_releasedeath, float, SEC) \
+        P(class, prefix, load_speed, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \
         P(class, prefix, reload_time, float, NONE) \
@@ -66,24 +72,24 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 	entity flash;
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo));
+	float numcircles = WEP_CVAR(shotgun, numcircles);
 
-	float shots = WEP_CVAR_PRI(shotgun, bullets);
-	W_SetupShot(actor, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * shots);
+	float streaks = WEP_CVAR_PRI(shotgun, bullets);
+	W_SetupShot(actor, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * (streaks*numcircles+1));
 	vector right = v_right;
 	vector up = v_up;
 	vector s;
 
-	float mu = WEP_CVAR_PRI(shotgun, conespread);
-	float numcircles = WEP_CVAR_PRI(shotgun, numcircles);
+	float mu = WEP_CVAR(shotgun, conespread);
 	// fire one bullet straight
 	fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
-	for(sc = 0;sc < shots;++sc)
+	for(sc = 0;sc < streaks;++sc)
 	{
 		vector dir;
 
 		s = '0 0 0';
-		makevectors('0 360 0' * (0.75 + sc/shots));
+		makevectors('0 360 0' * (0.75 + sc/streaks));
 		s.y = v_forward.x;
 		s.z = v_forward.y;
 
@@ -250,6 +256,187 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
+// alternate secondary (load more bullets)
+.float shotgun_loadstep, shotgun_loadblock, shotgun_loadbeep, shotgun_warning;
+void W_Shotgun_Attack2_Load_Release(entity actor, .entity weaponentity)
+{
+	// time to release the bullets we've loaded
+	float counter, shots, sc, cc;
+	vector forward, right, up;
+
+	if(!actor.shotgun_load)
+		return;
+	shots = actor.shotgun_load;
+
+	float streaks = WEP_CVAR_SEC(shotgun, bullets);
+	float mu = WEP_CVAR(shotgun, conespread);
+	float numcircles = WEP_CVAR(shotgun, numcircles);
+
+	W_SetupShot(actor, false, 2, SND_SHOTGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(shotgun, damage)*shots*(streaks*numcircles+1));
+	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+
+	forward = v_forward;
+	right = v_right;
+	up = v_up;
+
+	vector org;
+	for(counter = 0; counter < shots; ++counter)
+	{
+		float alpha = 2*M_PI*(counter/WEP_CVAR_SEC(shotgun, load_max));
+		org = w_shotorg + right * sin(alpha)*10 + up * cos(alpha)*10;
+
+		// TODO: move this into its own function because primary and secondary fire share much here code
+		// calling W_Shotgun_Attack here does not show the desired results
+
+		// fire one bullet straight
+		fireBullet(actor, org, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+
+		vector s;
+		for(sc = 0;sc < streaks;++sc)
+		{
+			vector dir;
+
+			s = '0 0 0';
+			makevectors('0 360 0' * (0.75 + sc/streaks));
+			s.y = v_forward.x;
+			s.z = v_forward.y;
+
+			for(cc = 1; cc <= numcircles; ++cc)
+			{
+				s = s * mu * cc/numcircles;
+				dir = w_shotdir + right * s.y + up * s.z;
+				fireBullet(actor, org, dir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+			}
+		}
+
+		// casing code
+		if(autocvar_g_casings >= 1)
+			for(sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
+				SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor);
+	}
+	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
+
+		// muzzle flash for 1st person view
+	entity flash = spawn();
+	setmodel(flash, MDL_SHOTGUN_MUZZLEFLASH); // precision set below
+	setthink(flash, SUB_Remove);
+	flash.nextthink = time + 0.06;
+	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	W_AttachToShotorg(actor, flash, '5 0 0');
+
+	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, load_animtime), w_ready);
+	actor.shotgun_loadstep = time + WEP_CVAR_SEC(shotgun, refire) * W_WeaponRateFactor(actor);
+	actor.shotgun_load = 0;
+}
+
+void W_Shotgun_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
+{
+	// loadable shotgun secondary attack, must always run each frame
+
+	if(time < game_starttime)
+		return;
+
+	bool loaded = actor.shotgun_load >= WEP_CVAR_SEC(shotgun, load_max);
+
+	// this is different than WR_CHECKAMMO when it comes to reloading
+	bool enough_ammo;
+	if(actor.items & IT_UNLIMITED_WEAPON_AMMO)
+		enough_ammo = true;
+	else if(autocvar_g_balance_shotgun_reload_ammo)
+		enough_ammo = actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_SEC(shotgun, ammo);
+	else
+		enough_ammo = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(shotgun, ammo);
+
+	bool stopped = loaded || !enough_ammo;
+
+	if(PHYS_INPUT_BUTTON_ATCK2(actor))
+	{
+		if(PHYS_INPUT_BUTTON_ATCK(actor) && WEP_CVAR_SEC(shotgun, load_abort))
+		{
+			if(actor.shotgun_load)
+			{
+				// if we pressed primary fire while loading, unload all rockets and abort
+				actor.(weaponentity).state = WS_READY;
+				W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(shotgun, ammo) * actor.shotgun_load * -1); // give back ammo
+				actor.shotgun_load = 0;
+				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
+
+				// pause until we can load rockets again, once we re-press the alt fire button
+				actor.shotgun_loadstep = time + WEP_CVAR_SEC(shotgun, load_speed) * W_WeaponRateFactor(actor);
+
+				// require letting go of the alt fire button before we can load again
+				actor.shotgun_loadblock = true;
+			}
+		}
+		else
+		{
+			// check if we can attempt to load another rocket
+			if(!stopped)
+			{
+				if(!actor.shotgun_loadblock && actor.shotgun_loadstep < time)
+				{
+					W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(shotgun, ammo));
+					actor.(weaponentity).state = WS_INUSE;
+					actor.shotgun_load += 1;
+					sound(actor, CH_WEAPON_B, SND_HAGAR_LOAD, VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
+
+					if(actor.shotgun_load >= WEP_CVAR_SEC(shotgun, load_max))
+						stopped = true;
+					else
+						actor.shotgun_loadstep = time + WEP_CVAR_SEC(shotgun, load_speed) * W_WeaponRateFactor(actor);
+				}
+			}
+			if(stopped && !actor.shotgun_loadbeep && actor.shotgun_load) // prevents the beep from playing each frame
+			{
+				// if this is the last rocket we can load, play a beep sound to notify the player
+				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
+				actor.shotgun_loadbeep = true;
+				actor.shotgun_loadstep = time + WEP_CVAR_SEC(shotgun, load_hold) * W_WeaponRateFactor(actor);
+			}
+		}
+	}
+	else if(actor.shotgun_loadblock)
+	{
+		// the alt fire button has been released, so re-enable loading if blocked
+		actor.shotgun_loadblock = false;
+	}
+
+	if(actor.shotgun_load)
+	{
+		// play warning sound if we're about to release
+		if(stopped && actor.shotgun_loadstep - 0.5 < time && WEP_CVAR_SEC(shotgun, load_hold) >= 0)
+		{
+			if(!actor.shotgun_warning) // prevents the beep from playing each frame
+			{
+				// we're about to automatically release after holding time, play a beep sound to notify the player
+				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
+				actor.shotgun_warning = true;
+			}
+		}
+
+		// release if player let go of button or if they've held it in too long
+		if(!PHYS_INPUT_BUTTON_ATCK2(actor) || (stopped && actor.shotgun_loadstep < time && WEP_CVAR_SEC(shotgun, load_hold) >= 0))
+		{
+			actor.(weaponentity).state = WS_READY;
+			W_Shotgun_Attack2_Load_Release(actor, weaponentity);
+		}
+	}
+	else
+	{
+		actor.shotgun_loadbeep = false;
+		actor.shotgun_warning = false;
+
+		// we aren't checking ammo during an attack, so we must do it here
+		if(!(thiswep.wr_checkammo1(thiswep, actor) + thiswep.wr_checkammo2(thiswep, actor)))
+		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+		{
+			// note: this doesn't force the switch
+			W_SwitchToOtherWeapon(actor);
+			return;
+		}
+	}
+}
+
 .float shotgun_primarytime;
 
 METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor))
@@ -261,6 +448,10 @@ METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor))
 }
 METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
+	if(WEP_CVAR(shotgun, secondary) == 3)
+	{
+		W_Shotgun_Attack2_Load(thiswep, actor, weaponentity); // must always run each frame
+	}
     if(WEP_CVAR(shotgun, reload_ammo) && actor.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
     {
         // don't force reload an empty shotgun if its melee attack is active
