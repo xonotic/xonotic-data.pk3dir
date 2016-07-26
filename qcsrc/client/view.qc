@@ -707,6 +707,36 @@ float TrueAimCheck()
 	return SHOTTYPE_HITWORLD;
 }
 
+float open_file_value;
+
+void open_file_read(void)
+{
+	if(open_file_value)
+		return;
+	else
+		open_file_value = fopen("test_write", FILE_READ);
+}
+
+void open_file_write(void)
+{
+	if(open_file_value)
+		return;
+	else
+		open_file_value = fopen("test_write", FILE_WRITE);
+}
+
+void close_file(void)
+{
+	if(open_file_value)
+	{
+		fclose(open_file_value);
+		open_file_value = 0;
+	}
+}
+
+vector origin_next, angle_next;
+float time_next; // float playback_finished;
+
 void PostInit();
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard();
@@ -2271,144 +2301,206 @@ void CSQC_UpdateView(entity this, float w, float h)
 vector camera_offset, current_camera_offset, mouse_angles, current_angles, current_origin, current_position;
 void CSQC_Demo_Camera()
 {
-	float speed, attenuation, dimensions;
-	vector tmp, delta;
-
-	if( autocvar_camera_reset || !camera_mode )
+	if(autocvar_camera_playback)
 	{
-		camera_offset = '0 0 0';
-		current_angles = '0 0 0';
-		camera_direction = '0 0 0';
-		camera_offset.z += 30;
-		camera_offset.x += 30 * -cos(current_angles.y * DEG2RAD);
-		camera_offset.y += 30 * -sin(current_angles.y * DEG2RAD);
-		current_origin = view_origin;
-		current_camera_offset  = camera_offset;
-		cvar_set("camera_reset", "0");
-		camera_mode = CAMERA_CHASE;
-	}
+		open_file_read();
+		string s, s2;
 
-	// Camera angles
-	if( camera_roll )
-		mouse_angles.z += camera_roll * autocvar_camera_speed_roll;
-
-	if(autocvar_camera_look_player)
-	{
-		vector dir;
 		float n;
 
-		dir = normalize(view_origin - current_position);
-		n = mouse_angles.z;
-		mouse_angles = vectoangles(dir);
-		mouse_angles.x = mouse_angles.x * -1;
-		mouse_angles.z = n;
-	}
-	else
-	{
-		tmp = getmousepos() * 0.1;
-		if(vdist(tmp, >, autocvar_camera_mouse_threshold))
+		if(time >= time_next)
 		{
-			mouse_angles.x += tmp.y * cos(mouse_angles.z * DEG2RAD) + (tmp.x * sin(mouse_angles.z * DEG2RAD));
-			mouse_angles.y -= tmp.x * cos(mouse_angles.z * DEG2RAD) + (tmp.y * -sin(mouse_angles.z * DEG2RAD));
+			setproperty(VF_ANGLES, angle_next);
+			setproperty(VF_ORIGIN, origin_next);
+
+			s = fgets(open_file_value);
+
+			if(s == "")
+			{
+				print("^1file closed\n");
+				close_file();
+				autocvar_camera_playback = 0;
+				return;
+			}
+
+			s2 = substring(s, 0, 2);
+
+			if(s2 == "//")
+				print("Comment\n");
+			else if(s2 == "##")
+				print("Do stuff\n");
+			else
+			{
+				n = tokenizebyseparator(s, ",");
+
+				if(n != 3)
+				{
+					print("^1Error: ", s, "\n");
+					return;
+				}
+
+				time_next = stof(argv(0));
+				origin_next = stov(argv(1));
+				angle_next = stov(argv(2));
+			}
 		}
-	}
-
-	while (mouse_angles.x < -180) mouse_angles.x = mouse_angles.x + 360;
-	while (mouse_angles.x > 180) mouse_angles.x = mouse_angles.x - 360;
-	while (mouse_angles.y < -180) mouse_angles.y = mouse_angles.y + 360;
-	while (mouse_angles.y > 180) mouse_angles.y = mouse_angles.y - 360;
-
-	// Fix difference when angles don't have the same sign
-	delta = '0 0 0';
-	if(mouse_angles.y < -60 && current_angles.y > 60)
-		delta = '0 360 0';
-	if(mouse_angles.y > 60 && current_angles.y < -60)
-		delta = '0 -360 0';
-
-	if(autocvar_camera_look_player)
-		attenuation = autocvar_camera_look_attenuation;
-	else
-		attenuation = autocvar_camera_speed_attenuation;
-
-	attenuation = 1 / max(1, attenuation);
-	current_angles += (mouse_angles - current_angles + delta) * attenuation;
-
-	while (current_angles.x < -180) current_angles.x = current_angles.x + 360;
-	while (current_angles.x > 180) current_angles.x = current_angles.x - 360;
-	while (current_angles.y < -180) current_angles.y = current_angles.y + 360;
-	while (current_angles.y > 180) current_angles.y = current_angles.y - 360;
-
-	// Camera position
-	tmp = '0 0 0';
-	dimensions = 0;
-
-	if( camera_direction.x )
-	{
-		tmp.x = camera_direction.x * cos(current_angles.y * DEG2RAD);
-		tmp.y = camera_direction.x * sin(current_angles.y * DEG2RAD);
-		if( autocvar_camera_forward_follows && !autocvar_camera_look_player )
-			tmp.z = camera_direction.x * -sin(current_angles.x * DEG2RAD);
-		++dimensions;
-	}
-
-	if( camera_direction.y )
-	{
-		tmp.x += camera_direction.y * -sin(current_angles.y * DEG2RAD);
-		tmp.y += camera_direction.y * cos(current_angles.y * DEG2RAD) * cos(current_angles.z * DEG2RAD);
-		tmp.z += camera_direction.y * sin(current_angles.z * DEG2RAD);
-		++dimensions;
-	}
-
-	if( camera_direction.z )
-	{
-		tmp.z += camera_direction.z * cos(current_angles.z * DEG2RAD);
-		++dimensions;
-	}
-
-	if(autocvar_camera_free)
-		speed = autocvar_camera_speed_free;
-	else
-		speed = autocvar_camera_speed_chase;
-
-	if(dimensions)
-	{
-		speed = speed * sqrt(1 / dimensions);
-		camera_offset += tmp * speed;
-	}
-
-	current_camera_offset += (camera_offset - current_camera_offset) * attenuation;
-
-	// Camera modes
-	if( autocvar_camera_free )
-	{
-		if ( camera_mode == CAMERA_CHASE )
-		{
-			current_camera_offset = current_origin + current_camera_offset;
-			camera_offset = current_origin + camera_offset;
-		}
-
-		camera_mode = CAMERA_FREE;
-		current_position = current_camera_offset;
-	}
-	else
-	{
-		if ( camera_mode == CAMERA_FREE )
-		{
-			current_origin = view_origin;
-			camera_offset = camera_offset - current_origin;
-			current_camera_offset = current_camera_offset - current_origin;
-		}
-
-		camera_mode = CAMERA_CHASE;
-
-		if(autocvar_camera_chase_smoothly)
-			current_origin += (view_origin - current_origin) * attenuation;
 		else
-			current_origin = view_origin;
-
-		current_position = current_origin + current_camera_offset;
+		{
+			setproperty(VF_ANGLES, angle_next);
+			setproperty(VF_ORIGIN, origin_next);
+		}
 	}
+	else
+	{
+		float speed, attenuation, dimensions;
+		vector tmp, delta;
 
-	setproperty(VF_ANGLES, current_angles);
-	setproperty(VF_ORIGIN, current_position);
+		if( autocvar_camera_reset || !camera_mode )
+		{
+			camera_offset = '0 0 0';
+			current_angles = '0 0 0';
+			camera_direction = '0 0 0';
+			camera_offset.z += 30;
+			camera_offset.x += 30 * -cos(current_angles.y * DEG2RAD);
+			camera_offset.y += 30 * -sin(current_angles.y * DEG2RAD);
+			current_origin = view_origin;
+			current_camera_offset  = camera_offset;
+			cvar_set("camera_reset", "0");
+			camera_mode = CAMERA_CHASE;
+		}
+
+		// Camera angles
+		if( camera_roll )
+			mouse_angles.z += camera_roll * autocvar_camera_speed_roll;
+
+		if(autocvar_camera_look_player)
+		{
+			vector dir;
+			float n;
+
+			dir = normalize(view_origin - current_position);
+			n = mouse_angles.z;
+			mouse_angles = vectoangles(dir);
+			mouse_angles.x = mouse_angles.x * -1;
+			mouse_angles.z = n;
+		}
+		else
+		{
+			tmp = getmousepos() * 0.1;
+			if(vdist(tmp, >, autocvar_camera_mouse_threshold))
+			{
+				mouse_angles.x += tmp.y * cos(mouse_angles.z * DEG2RAD) + (tmp.x * sin(mouse_angles.z * DEG2RAD));
+				mouse_angles.y -= tmp.x * cos(mouse_angles.z * DEG2RAD) + (tmp.y * -sin(mouse_angles.z * DEG2RAD));
+			}
+		}
+	
+		while (mouse_angles.x < -180) mouse_angles.x = mouse_angles.x + 360;
+		while (mouse_angles.x > 180) mouse_angles.x = mouse_angles.x - 360;
+		while (mouse_angles.y < -180) mouse_angles.y = mouse_angles.y + 360;
+		while (mouse_angles.y > 180) mouse_angles.y = mouse_angles.y - 360;
+
+		// Fix difference when angles don't have the same sign
+		delta = '0 0 0';
+		if(mouse_angles.y < -60 && current_angles.y > 60)
+			delta = '0 360 0';
+		if(mouse_angles.y > 60 && current_angles.y < -60)
+			delta = '0 -360 0';
+
+		if(autocvar_camera_look_player)
+			attenuation = autocvar_camera_look_attenuation;
+		else
+			attenuation = autocvar_camera_speed_attenuation;
+
+		attenuation = 1 / max(1, attenuation);
+		current_angles += (mouse_angles - current_angles + delta) * attenuation;
+
+		while (current_angles.x < -180) current_angles.x = current_angles.x + 360;
+		while (current_angles.x > 180) current_angles.x = current_angles.x - 360;
+		while (current_angles.y < -180) current_angles.y = current_angles.y + 360;
+		while (current_angles.y > 180) current_angles.y = current_angles.y - 360;
+
+		// Camera position
+		tmp = '0 0 0';
+		dimensions = 0;
+
+		if( camera_direction.x )
+		{
+			tmp.x = camera_direction.x * cos(current_angles.y * DEG2RAD);
+			tmp.y = camera_direction.x * sin(current_angles.y * DEG2RAD);
+			if( autocvar_camera_forward_follows && !autocvar_camera_look_player )
+				tmp.z = camera_direction.x * -sin(current_angles.x * DEG2RAD);
+			++dimensions;
+		}
+
+		if( camera_direction.y )
+		{
+			tmp.x += camera_direction.y * -sin(current_angles.y * DEG2RAD);
+			tmp.y += camera_direction.y * cos(current_angles.y * DEG2RAD) * cos(current_angles.z * DEG2RAD);
+			tmp.z += camera_direction.y * sin(current_angles.z * DEG2RAD);
+			++dimensions;
+		}
+
+		if( camera_direction.z )
+		{
+			tmp.z += camera_direction.z * cos(current_angles.z * DEG2RAD);
+			++dimensions;
+		}
+
+		if(autocvar_camera_free)
+			speed = autocvar_camera_speed_free;
+		else
+			speed = autocvar_camera_speed_chase;
+
+		if(dimensions)
+		{
+			speed = speed * sqrt(1 / dimensions);
+			camera_offset += tmp * speed;
+		}
+
+		current_camera_offset += (camera_offset - current_camera_offset) * attenuation;
+
+		// Camera modes
+		if( autocvar_camera_free )
+		{
+			if ( camera_mode == CAMERA_CHASE )
+			{
+				current_camera_offset = current_origin + current_camera_offset;
+				camera_offset = current_origin + camera_offset;
+			}
+
+			camera_mode = CAMERA_FREE;
+			current_position = current_camera_offset;
+		}
+		else
+		{
+			if ( camera_mode == CAMERA_FREE )
+			{
+				current_origin = view_origin;
+				camera_offset = camera_offset - current_origin;
+				current_camera_offset = current_camera_offset - current_origin;
+			}
+
+			camera_mode = CAMERA_CHASE;
+
+			if(autocvar_camera_chase_smoothly)
+				current_origin += (view_origin - current_origin) * attenuation;
+			else
+				current_origin = view_origin;
+
+			current_position = current_origin + current_camera_offset;
+		}
+
+		setproperty(VF_ANGLES, current_angles);
+		setproperty(VF_ORIGIN, current_position);
+
+		if(autocvar_camera_record)
+		{
+			open_file_write();
+			fputs(open_file_value, strcat(ftos(time), ",", vtos(current_position), ",", vtos(current_angles), "\n"));
+		}
+		else
+		{
+			close_file();
+		}
+	}
 }

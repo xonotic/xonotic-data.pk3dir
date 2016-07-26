@@ -13,6 +13,8 @@ bool autocvar_camera_free;
 float autocvar_camera_look_attenuation;
 float autocvar_camera_look_player;
 float autocvar_camera_mouse_threshold;
+float autocvar_camera_playback;
+float autocvar_camera_record;
 bool autocvar_camera_reset;
 float autocvar_camera_speed_attenuation;
 float autocvar_camera_speed_chase;
