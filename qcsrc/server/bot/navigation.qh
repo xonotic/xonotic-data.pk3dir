@@ -10,7 +10,6 @@ float navigation_testtracewalk;
 vector jumpstepheightvec;
 vector stepheightvec;
 
-entity botframe_dangerwaypoint;
 entity navigation_bestgoal;
 
 // stack of current goals (the last one of which may be an item or other

@@ -597,20 +597,14 @@ void flocker_hunter_think(entity this)
 
     if(!this.enemy)
     {
-        e = findchainfloat(flock_id,this.flock_id);
-        while(e)
+        FOREACH_ENTITY_FLOAT(flock_id, this.flock_id,
         {
-            d = vlen(this.origin - e.origin);
+            if(it == this.owner || it == ee)
+                continue;
 
-            if(e != this.owner)
-            if(e != ee)
-            if(d > bd)
-            {
-                this.enemy = e;
-                bd = d;
-            }
-            e = e.chain;
-        }
+            if(!this.enemy || vlen2(this.origin - it.origin) < vlen2(this.origin - this.enemy.origin))
+                this.enemy = it;
+        });
     }
 
     if(this.enemy)
@@ -623,7 +617,6 @@ void flocker_hunter_think(entity this)
     newmove = dodgemove + attractmove;
     this.velocity = movelib_inertmove_byspeed(this, newmove,1250,0.3,0.7);
     this.velocity = movelib_dragvec(this, 0.01,0.5);
-
 
     this.angles = vectoangles(this.velocity);
     this.nextthink = time + 0.1;

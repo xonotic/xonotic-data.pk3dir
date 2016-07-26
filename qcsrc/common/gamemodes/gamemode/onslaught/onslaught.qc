@@ -358,13 +358,11 @@ void onslaught_updatelinks()
 		}
 		ons_ControlPoint_UpdateSprite(l);
 	}
-	l = findchain(classname, "ons_captureshield");
-	while(l)
+	FOREACH_ENTITY_CLASS("ons_captureshield", true,
 	{
-		l.team = l.enemy.team;
-		l.colormap = l.enemy.colormap;
-		l = l.chain;
-	}
+		it.team = it.enemy.team;
+		it.colormap = it.enemy.colormap;
+	});
 }
 
 
@@ -1289,8 +1287,6 @@ void Onslaught_RoundStart()
 
 void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector org, float sradius)
 {
-	entity head;
-	float t, c;
 	bool needarmor = false, needweapons = false;
 
 	// Needs armor/health?
@@ -1298,7 +1294,7 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 		needarmor = true;
 
 	// Needs weapons?
-	c = 0;
+	int c = 0;
 	FOREACH(Weapons, it != WEP_Null, {
 		if(this.weapons & (it.m_wepset))
 		if(++c >= 4)
@@ -1315,20 +1311,18 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 	LOG_DEBUG(strcat(this.netname, " needs armor ", ftos(needarmor) , "\n"));
 
 	// See what is around
-	head = findchainfloat(bot_pickup, true);
-	while (head)
+	FOREACH_ENTITY_FLOAT(bot_pickup, true,
 	{
 		// gather health and armor only
-		if (head.solid)
-		if ( ((head.health || head.armorvalue) && needarmor) || (head.weapons && needweapons ) )
-		if (vdist(head.origin - org, <, sradius))
+		if (it.solid)
+		if ( ((it.health || it.armorvalue) && needarmor) || (it.weapons && needweapons ) )
+		if (vdist(it.origin - org, <, sradius))
 		{
-			t = head.bot_pickupevalfunc(this, head);
+			int t = it.bot_pickupevalfunc(this, it);
 			if (t > 0)
-				navigation_routerating(this, head, t * ratingscale, 500);
+				navigation_routerating(this, it, t * ratingscale, 500);
 		}
-		head = head.chain;
-	}
+	});
 }
 
 void havocbot_role_ons_setrole(entity this, int role)
@@ -1597,26 +1591,22 @@ void havocbot_ons_reset_role(entity this)
  */
 entity ons_Nearest_ControlPoint(entity this, vector pos, float max_dist)
 {
-	entity tmp_entity, closest_target = NULL;
-	tmp_entity = findchain(classname, "onslaught_controlpoint");
-	while(tmp_entity)
+	entity closest_target = NULL;
+	FOREACH_ENTITY_CLASS("onslaught_controlpoint", true,
 	{
-		if(SAME_TEAM(tmp_entity, this))
-		if(tmp_entity.iscaptured)
-		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <=, max_dist))
-		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
-			closest_target = tmp_entity;
-		tmp_entity = tmp_entity.chain;
-	}
-	tmp_entity = findchain(classname, "onslaught_generator");
-	while(tmp_entity)
+		if(SAME_TEAM(it, this))
+		if(it.iscaptured)
+		if(max_dist <= 0 || vdist(it.origin - pos, <=, max_dist))
+		if(vlen2(it.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
+			closest_target = it;
+	});
+	FOREACH_ENTITY_CLASS("onslaught_generator", true,
 	{
-		if(SAME_TEAM(tmp_entity, this))
-		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <, max_dist))
-		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
-			closest_target = tmp_entity;
-		tmp_entity = tmp_entity.chain;
-	}
+		if(SAME_TEAM(it, this))
+		if(max_dist <= 0 || vdist(it.origin - pos, <, max_dist))
+		if(vlen2(it.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
+			closest_target = it;
+	});
 
 	return closest_target;
 }
@@ -1628,45 +1618,39 @@ entity ons_Nearest_ControlPoint(entity this, vector pos, float max_dist)
  */
 entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 {
-	entity tmp_entity, closest_target = NULL;
+	entity closest_target = NULL;
 	vector delta;
 	float smallest_distance = 0, distance;
 
-	tmp_entity = findchain(classname, "onslaught_controlpoint");
-	while(tmp_entity)
+	FOREACH_ENTITY_CLASS("onslaught_controlpoint", true,
 	{
-		delta = tmp_entity.origin - pos;
+		delta = it.origin - pos;
 		delta_z = 0;
 		distance = vlen(delta);
 
-		if(SAME_TEAM(tmp_entity, this))
-		if(tmp_entity.iscaptured)
+		if(SAME_TEAM(it, this))
+		if(it.iscaptured)
 		if(max_dist <= 0 || distance <= max_dist)
 		if(closest_target == NULL || distance <= smallest_distance )
 		{
-			closest_target = tmp_entity;
+			closest_target = it;
 			smallest_distance = distance;
 		}
-
-		tmp_entity = tmp_entity.chain;
-	}
-	tmp_entity = findchain(classname, "onslaught_generator");
-	while(tmp_entity)
+	});
+	FOREACH_ENTITY_CLASS("onslaught_generator", true,
 	{
-		delta = tmp_entity.origin - pos;
+		delta = it.origin - pos;
 		delta_z = 0;
 		distance = vlen(delta);
 
-		if(SAME_TEAM(tmp_entity, this))
+		if(SAME_TEAM(it, this))
 		if(max_dist <= 0 || distance <= max_dist)
 		if(closest_target == NULL || distance <= smallest_distance )
 		{
-			closest_target = tmp_entity;
+			closest_target = it;
 			smallest_distance = distance;
 		}
-
-		tmp_entity = tmp_entity.chain;
-	}
+	});
 
 	return closest_target;
 }
@@ -1675,23 +1659,18 @@ entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
  */
 int ons_Count_SelfControlPoints(entity this)
 {
-	entity tmp_entity;
-	tmp_entity = findchain(classname, "onslaught_controlpoint");
 	int n = 0;
-	while(tmp_entity)
+	FOREACH_ENTITY_CLASS("onslaught_controlpoint", true,
 	{
-		if(SAME_TEAM(tmp_entity, this))
-		if(tmp_entity.iscaptured)
+		if(SAME_TEAM(it, this))
+		if(it.iscaptured)
 			n++;
-		tmp_entity = tmp_entity.chain;
-	}
-	tmp_entity = findchain(classname, "onslaught_generator");
-	while(tmp_entity)
+	});
+	FOREACH_ENTITY_CLASS("onslaught_generator", true,
 	{
-		if(SAME_TEAM(tmp_entity, this))
+		if(SAME_TEAM(it, this))
 			n++;
-		tmp_entity = tmp_entity.chain;
-	}
+	});
 	return n;
 }
 

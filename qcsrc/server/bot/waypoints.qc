@@ -19,14 +19,11 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	if(!(f & WAYPOINTFLAG_PERSONAL))
 	{
-		for(entity wp = findchain(classname, "waypoint"); wp; wp = wp.chain)
+		FOREACH_ENTITY_CLASS("waypoint", boxesoverlap(m1, m2, it.absmin, it.absmax),
 		{
-			// if a matching spawnfunc_waypoint already exists, don't add a duplicate
-			if(boxesoverlap(m1, m2, wp.absmin, wp.absmax))
-				return wp;
-		}
+			return it;
+		});
 	}
-		
 
 	entity w = new(waypoint);
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
@@ -344,28 +341,21 @@ void waypoint_remove(entity e)
 // empties the map of waypoints
 void waypoint_removeall()
 {
-	entity head, next;
-	head = findchain(classname, "waypoint");
-	while (head)
+	FOREACH_ENTITY_CLASS("waypoint", true,
 	{
-		next = head.chain;
-		remove(head);
-		head = next;
-	}
+		remove(it);
+	});
 }
 
 // tell all waypoints to relink
 // (is this useful at all?)
 void waypoint_schedulerelinkall()
 {
-	entity head;
 	relink_total = relink_walkculled = relink_pvsculled = relink_lengthculled = 0;
-	head = findchain(classname, "waypoint");
-	while (head)
+	FOREACH_ENTITY_CLASS("waypoint", true,
 	{
-		waypoint_schedulerelink(head);
-		head = head.chain;
-	}
+		waypoint_schedulerelink(it);
+	});
 }
 
 // Load waypoint links from file
@@ -588,87 +578,71 @@ entity waypoint_get_link(entity w, float i)
 // Save all waypoint links to a file
 void waypoint_save_links()
 {
-	string filename, s;
-	float file, c, i;
-	entity w, link;
-	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.cache");
-	file = fopen(filename, FILE_WRITE);
+	string filename = sprintf("maps/%s.waypoints.cache", mapname);
+	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
-		LOG_INFO("waypoint links save to ");
-		LOG_INFO(filename);
-		LOG_INFO(" failed\n");
+		LOG_INFOF("waypoint link save to %s failed\n", filename);
+		return;
 	}
-	c = 0;
-	w = findchain(classname, "waypoint");
-	while (w)
-	{
-		for(i=0;i<32;++i)
-		{
-			// :S
-			link = waypoint_get_link(w, i);
-			if(link==NULL)
-				continue;
 
-			s = strcat(vtos(w.origin), "*", vtos(link.origin), "\n");
-			fputs(file, s);
-			++c;
+	int c = 0;
+	FOREACH_ENTITY_CLASS("waypoint", true,
+	{
+		for(int j = 0; j < 32; ++j)
+		{
+			entity link = waypoint_get_link(it, j);
+			if(link)
+			{
+				string s = strcat(vtos(it.origin), "*", vtos(link.origin), "\n");
+				fputs(file, s);
+				++c;
+			}
 		}
-		w = w.chain;
-	}
+	});
 	fclose(file);
 	botframe_cachedwaypointlinks = true;
 
-	LOG_INFO("saved ");
-	LOG_INFO(ftos(c));
-	LOG_INFO(" waypoints links to maps/");
-	LOG_INFO(mapname);
-	LOG_INFO(".waypoints.cache\n");
+	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache\n", c, mapname);
 }
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
 void waypoint_saveall()
 {
-	string filename, s;
-	float file, c;
-	entity w;
-	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints");
-	file = fopen(filename, FILE_WRITE);
-	if (file >= 0)
+	string filename = sprintf("maps/%s.waypoints", mapname);
+	int file = fopen(filename, FILE_WRITE);
+	if (file < 0)
 	{
-		c = 0;
-		w = findchain(classname, "waypoint");
-		while (w)
+		waypoint_save_links(); // save anyway?
+		botframe_loadedforcedlinks = false;
+
+		LOG_INFOF("waypoint links: save to %s failed\n", filename);
+		return;
+	}
+
+	int c = 0;
+	FOREACH_ENTITY_CLASS("waypoint", true,
+	{
+		if(it.wpflags & WAYPOINTFLAG_GENERATED)
+			continue;
+
+		for(int j = 0; j < 32; ++j)
 		{
-			if (!(w.wpflags & WAYPOINTFLAG_GENERATED))
-			{
-				s = strcat(vtos(w.origin + w.mins), "\n");
-				s = strcat(s, vtos(w.origin + w.maxs));
-				s = strcat(s, "\n");
-				s = strcat(s, ftos(w.wpflags));
-				s = strcat(s, "\n");
-				fputs(file, s);
-				c = c + 1;
-			}
-			w = w.chain;
+			string s;
+			s = strcat(vtos(it.origin + it.mins), "\n");
+			s = strcat(s, vtos(it.origin + it.maxs));
+			s = strcat(s, "\n");
+			s = strcat(s, ftos(it.wpflags));
+			s = strcat(s, "\n");
+			fputs(file, s);
+			++c;
 		}
-		fclose(file);
-		bprint("saved ");
-		bprint(ftos(c));
-		bprint(" waypoints to maps/");
-		bprint(mapname);
-		bprint(".waypoints\n");
-	}
-	else
-	{
-		bprint("waypoint save to ");
-		bprint(filename);
-		bprint(" failed\n");
-	}
+	});
+	fclose(file);
 	waypoint_save_links();
 	botframe_loadedforcedlinks = false;
+
+	LOG_INFOF("saved %d waypoints to maps/%s.waypoints\n", c, mapname);
 }
 
 // load waypoints from file
@@ -723,33 +697,30 @@ vector waypoint_fixorigin(vector position)
 
 void waypoint_spawnforitem_force(entity e, vector org)
 {
-	entity w;
-
 	// Fix the waypoint altitude if necessary
 	org = waypoint_fixorigin(org);
 
 	// don't spawn an item spawnfunc_waypoint if it already exists
-	w = findchain(classname, "waypoint");
-	while (w)
+	FOREACH_ENTITY_CLASS("waypoint", true,
 	{
-		if (w.wpisbox)
+		if(it.wpisbox)
 		{
-			if (boxesoverlap(org, org, w.absmin, w.absmax))
+			if(boxesoverlap(org, org, it.absmin, it.absmax))
 			{
-				e.nearestwaypoint = w;
+				e.nearestwaypoint = it;
 				return;
 			}
 		}
 		else
 		{
-			if (vlen(w.origin - org) < 16)
+			if(vdist(it.origin - org, <, 16))
 			{
-				e.nearestwaypoint = w;
+				e.nearestwaypoint = it;
 				return;
 			}
 		}
-		w = w.chain;
-	}
+	});
+
 	e.nearestwaypoint = waypoint_spawn(org, org, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_ITEM);
 }
 

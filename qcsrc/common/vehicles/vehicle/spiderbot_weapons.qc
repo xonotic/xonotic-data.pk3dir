@@ -48,21 +48,17 @@ void spiderbot_rocket_guided(entity this)
 
 void spiderbot_guide_release(entity this)
 {
-    entity rkt;
-    rkt = findchainentity(realowner, this.owner);
-    if(!rkt)
-        return;
-
-    crosshair_trace(this.owner);
-    while(rkt)
+    FOREACH_ENTITY_ENT(realowner, this.owner,
     {
-        if(getthink(rkt) == spiderbot_rocket_guided)
+        if(i == 0) // something exists, let's trace!
+            crosshair_trace(this.owner);
+
+        if(getthink(it) == spiderbot_rocket_guided)
         {
-            rkt.pos1 = trace_endpos;
-            setthink(rkt, spiderbot_rocket_unguided);
+            it.pos1 = trace_endpos;
+            setthink(it, spiderbot_rocket_unguided);
         }
-        rkt = rkt.chain;
-    }
+    });
 }
 
 float spiberbot_calcartillery_flighttime;

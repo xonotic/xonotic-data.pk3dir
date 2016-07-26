@@ -1528,23 +1528,19 @@ void havocbot_goalrating_ctf_droppedflags(entity this, float ratingscale, vector
 
 void havocbot_goalrating_ctf_carrieritems(entity this, float ratingscale, vector org, float sradius)
 {
-	entity head;
-	float t;
-	head = findchainfloat(bot_pickup, true);
-	while (head)
+	FOREACH_ENTITY_FLOAT(bot_pickup, true,
 	{
 		// gather health and armor only
-		if (head.solid)
-		if (head.health || head.armorvalue)
-		if (vdist(head.origin - org, <, sradius))
+		if (it.solid)
+		if (it.health || it.armorvalue)
+		if (vdist(it.origin - org, <, sradius))
 		{
 			// get the value of the item
-			t = head.bot_pickupevalfunc(this, head) * 0.0001;
+			float t = it.bot_pickupevalfunc(this, it) * 0.0001;
 			if (t > 0)
-				navigation_routerating(this, head, t * ratingscale, 500);
+				navigation_routerating(this, it, t * ratingscale, 500);
 		}
-		head = head.chain;
-	}
+	});
 }
 
 void havocbot_ctf_reset_role(entity this)

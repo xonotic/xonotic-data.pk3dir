@@ -46,7 +46,7 @@ float pathlib_closed_cnt;
 float pathlib_made_cnt;
 float pathlib_merge_cnt;
 float pathlib_searched_cnt;
-float pathlib_bestopen_seached;
+float pathlib_bestopen_searched;
 float pathlib_bestcash_hits;
 float pathlib_bestcash_saved;
 float pathlib_gridsize;

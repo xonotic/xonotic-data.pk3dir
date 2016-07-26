@@ -429,68 +429,48 @@ spawnfunc(target_assault_roundstart)
 // legacy bot code
 void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 {
-	entity ad, best, wp;
-	float radius, bestvalue;
-	bool found;
-	vector p;
-
-	ad = findchain(classname, "func_assault_destructible");
-
-	for (; ad; ad = ad.chain)
+	FOREACH_ENTITY_CLASS("func_assault_destructible", it.bot_attack,
 	{
-		if (ad.target == "")
+		if (it.target == "")
 			continue;
 
-		if (!ad.bot_attack)
-			continue;
-
-		found = false;
-		FOREACH_ENTITY_STRING(targetname, ad.target,
+		bool found = false;
+		FOREACH_ENTITY_STRING(targetname, it.target,
 		{
-			if(it.classname == "target_objective_decrease")
+			if(it.classname != "target_objective_decrease")
+				continue;
+
+			if(it.enemy.health > 0 && it.enemy.health < ASSAULT_VALUE_INACTIVE)
 			{
-				if(it.enemy.health > 0 && it.enemy.health < ASSAULT_VALUE_INACTIVE)
-				{
-				//	dprint(etos(ad),"\n");
-					found = true;
-					break;
-				}
+				found = true;
+				break;
 			}
 		});
 
 		if(!found)
-		{
-		///	dprint("target not found\n");
 			continue;
-		}
-		/// dprint("target #", etos(ad), " found\n");
 
-
-		p = 0.5 * (ad.absmin + ad.absmax);
-	//	dprint(vtos(ad.origin), " ", vtos(ad.absmin), " ", vtos(ad.absmax),"\n");
-	//	te_knightspike(p);
-	//	te_lightning2(NULL, '0 0 0', p);
+		vector p = 0.5 * (it.absmin + it.absmax);
 
 		// Find and rate waypoints around it
 		found = false;
-		best = NULL;
-		bestvalue = 99999999999;
-		for(radius=0; radius<1500 && !found; radius+=500)
+		entity best = NULL;
+		float bestvalue = 99999999999;
+		entity des = it;
+		for(float radius = 0; radius < 1500 && !found; radius += 500)
 		{
-			for(wp=findradius(p, radius); wp; wp=wp.chain)
+			FOREACH_ENTITY_RADIUS(p, radius, it.classname == "waypoint" && !(it.wpflags & WAYPOINTFLAG_GENERATED),
 			{
-				if(!(wp.wpflags & WAYPOINTFLAG_GENERATED))
-				if(wp.classname=="waypoint")
-				if(checkpvs(wp.origin, ad))
+				if(checkpvs(it.origin, des))
 				{
 					found = true;
-					if(wp.cnt<bestvalue)
+					if(it.cnt < bestvalue)
 					{
-						best = wp;
-						bestvalue = wp.cnt;
+						best = it;
+						bestvalue = it.cnt;
 					}
 				}
-			}
+			});
 		}
 
 		if(best)
@@ -504,14 +484,14 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 
 			this.havocbot_attack_time = 0;
 
-			if(checkpvs(this.view_ofs,ad))
+			if(checkpvs(this.view_ofs,it))
 			if(checkpvs(this.view_ofs,best))
 			{
 			//	dprint("increasing attack time for this target\n");
 				this.havocbot_attack_time = time + 2;
 			}
 		}
-	}
+	});
 }
 
 void havocbot_role_ast_offense(entity this)

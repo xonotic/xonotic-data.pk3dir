@@ -614,7 +614,7 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 	entity w, wp, waylist;
 	float searching, cost, cost2;
 	vector p;
-	w = waylist = findchain(classname, "waypoint");
+	w = waylist = findchain(classname, "waypoint"); // TODO
 	while (w)
 	{
 		w.wpconsidered = false;
@@ -1024,40 +1024,34 @@ void navigation_goalrating_end(entity this)
 
 void botframe_updatedangerousobjects(float maxupdate)
 {
-	entity head, bot_dodgelist;
 	vector m1, m2, v, o;
 	float c, d, danger;
 	c = 0;
-	bot_dodgelist = findchainfloat(bot_dodge, true);
-	botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
-	while (botframe_dangerwaypoint != NULL)
+	FOREACH_ENTITY_CLASS("waypoint", true,
 	{
 		danger = 0;
-		m1 = botframe_dangerwaypoint.mins;
-		m2 = botframe_dangerwaypoint.maxs;
-		head = bot_dodgelist;
-		while (head)
+		m1 = it.mins;
+		m2 = it.maxs;
+		FOREACH_ENTITY_FLOAT(bot_dodge, true,
 		{
-			v = head.origin;
+			v = it.origin;
 			v.x = bound(m1_x, v.x, m2_x);
 			v.y = bound(m1_y, v.y, m2_y);
 			v.z = bound(m1_z, v.z, m2_z);
-			o = (head.absmin + head.absmax) * 0.5;
-			d = head.bot_dodgerating - vlen(o - v);
+			o = (it.absmin + it.absmax) * 0.5;
+			d = it.bot_dodgerating - vlen(o - v);
 			if (d > 0)
 			{
 				traceline(o, v, true, NULL);
 				if (trace_fraction == 1)
 					danger = danger + d;
 			}
-			head = head.chain;
-		}
-		botframe_dangerwaypoint.dmg = danger;
+		});
+		it.dmg = danger;
 		c = c + 1;
 		if (c >= maxupdate)
 			break;
-		botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
-	}
+	});
 }
 
 void navigation_unstuck(entity this)

@@ -415,8 +415,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
     if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
     {
         // decide whether to detonate mines
-        entity targetlist, targ;
-        float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
+        float edgedamage, coredamage, edgeradius, recipricoledgeradius;
         float selfdamage, teamdamage, enemydamage;
         edgedamage = WEP_CVAR(minelayer, edgedamage);
         coredamage = WEP_CVAR(minelayer, damage);
@@ -425,31 +424,26 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
         selfdamage = 0;
         teamdamage = 0;
         enemydamage = 0;
-        targetlist = findchainfloat(bot_attack, true);
-        entity mine = find(NULL, classname, "mine");
-        while(mine)
+
+        FOREACH_ENTITY_ENT(realowner, actor,
         {
-            if(mine.realowner != actor)
-            {
-                mine = find(mine, classname, "mine");
-                continue;
-            }
-            targ = targetlist;
-            while(targ)
-            {
-                d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - mine.origin);
-                d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
+        	if(it.classname != "mine") continue;
+
+        	entity mine = it;
+        	FOREACH_ENTITY_FLOAT(bot_attack, true,
+        	{
+        		float d = vlen(it.origin + (it.mins + it.maxs) * 0.5 - mine.origin);
+        		d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
                 // count potential damage according to type of target
-                if(targ == actor)
+                if(it == actor)
                     selfdamage = selfdamage + d;
-                else if(targ.team == actor.team && teamplay)
+                else if(SAME_TEAM(it, actor))
                     teamdamage = teamdamage + d;
-                else if(bot_shouldattack(actor, targ))
+                else if(bot_shouldattack(actor, it))
                     enemydamage = enemydamage + d;
-                targ = targ.chain;
-            }
-            mine = find(mine, classname, "mine");
-        }
+        	});
+        });
+
         float desirabledamage;
         desirabledamage = enemydamage;
         if(time > actor.invincible_finished && time > actor.spawnshieldtime)
@@ -457,41 +451,37 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
         if(teamplay && actor.team)
             desirabledamage = desirabledamage - teamdamage;
 
-        mine = find(NULL, classname, "mine");
-        while(mine)
+        makevectors(actor.v_angle);
+        FOREACH_ENTITY_ENT(realowner, actor,
         {
-            if(mine.realowner != actor)
-            {
-                mine = find(mine, classname, "mine");
-                continue;
-            }
-            makevectors(mine.v_angle);
-            targ = targetlist;
+            if(it.classname != "mine") continue;
+
             if(skill > 9) // normal players only do this for the target they are tracking
             {
-                targ = targetlist;
-                while(targ)
-                {
-                    if(
-                        (v_forward * normalize(mine.origin - targ.origin)< 0.1)
-                        && desirabledamage > 0.1*coredamage
-                    ) PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-                    targ = targ.chain;
-                }
-            }else{
-                float distance; distance= bound(300,vlen(actor.origin-actor.enemy.origin),30000);
+	            entity mine = it;
+	            FOREACH_ENTITY_FLOAT(bot_attack, true,
+	            {
+	            	if((v_forward * normalize(mine.origin - it.origin) < 0.1)
+	                    && desirabledamage > 0.1 * coredamage
+	                    ) PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+	            });
+	        }
+	        else
+	        {
                 //As the distance gets larger, a correct detonation gets near imposible
                 //Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
-                if(v_forward * normalize(mine.origin - actor.enemy.origin)< 0.1)
-                    if(IS_PLAYER(actor.enemy))
-                        if(desirabledamage >= 0.1*coredamage)
-                            if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
-                                PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-            //	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
-            }
+                if((v_forward * normalize(it.origin - actor.enemy.origin) < 0.1)
+                	&& IS_PLAYER(actor.enemy)
+                	&& (desirabledamage >= 0.1 * coredamage)
+                	)
+                {
+                	float distance = bound(300, vlen(actor.origin - actor.enemy.origin), 30000);
+                	if(random() / distance * 300 > frametime * bound(0, (10 - skill) * 0.2, 1))
+                		PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+                }
+	        }
+        });
 
-            mine = find(mine, classname, "mine");
-        }
         // if we would be doing at X percent of the core damage, detonate it
         // but don't fire a new shot at the same time!
         if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events

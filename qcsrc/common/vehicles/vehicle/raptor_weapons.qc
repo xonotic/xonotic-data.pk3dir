@@ -201,15 +201,13 @@ void raptor_flare_damage(entity this, entity inflictor, entity attacker, float d
 void raptor_flare_think(entity this)
 {
     this.nextthink = time + 0.1;
-    entity _missile = findchainentity(enemy, this.owner);
-    while(_missile)
+    FOREACH_ENTITY_ENT(enemy, this.owner,
     {
-        if(_missile.flags & FL_PROJECTILE)
-        if(vdist(this.origin - _missile.origin, <, autocvar_g_vehicle_raptor_flare_range))
+        if(it.flags & FL_PROJECTILE)
+        if(vdist(this.origin - it.origin, <, autocvar_g_vehicle_raptor_flare_range))
         if(random() > autocvar_g_vehicle_raptor_flare_chase)
-            _missile.enemy = this;
-        _missile = _missile.chain;
-    }
+            it.enemy = this;
+    });
 
     if(this.tur_impacttime < time)
         remove(this);
