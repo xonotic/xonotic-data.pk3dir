@@ -119,24 +119,6 @@ void HUD_InfoMessages()
 			drawInfoMessage(s);
 		}
 
-		if(autocvar_cl_showspectators)
-		if(num_spectators)
-		//if(spectatee_status != -1)
-		{
-			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
-			//drawInfoMessage(s)
-			int limit = min(num_spectators, MAX_SPECTATORS);
-			for(int i = 0; i < limit; ++i)
-			{
-				float slot = spectatorlist[i];
-				if(i == 0)
-					s = strcat(s, " ^3", entcs_GetName(slot));
-				else
-					s = strcat("^3", entcs_GetName(slot));
-				drawInfoMessage(s);
-			}
-		}
-
 		string blinkcolor;
 		if(time % 1 >= 0.5)
 			blinkcolor = "^1";
@@ -192,6 +174,24 @@ void HUD_InfoMessages()
 						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
 					drawInfoMessage(s);
 				}
+			}
+		}
+
+		if(autocvar_cl_showspectators)
+		if(num_spectators)
+		//if(spectatee_status != -1)
+		{
+			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
+			//drawInfoMessage(s)
+			int limit = min(num_spectators, MAX_SPECTATORS);
+			for(int i = 0; i < limit; ++i)
+			{
+				float slot = spectatorlist[i];
+				if(i == 0)
+					s = strcat(s, " ^7", entcs_GetName(slot));
+				else
+					s = strcat("^7", entcs_GetName(slot));
+				drawInfoMessage(s);
 			}
 		}
 	}
