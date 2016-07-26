@@ -719,7 +719,43 @@ void close_file(void)
 }
 
 vector origin_next, angle_next;
-float time_next; // float playback_finished;
+float time_next;
+float read_next_line()
+{
+	string s, s2;
+	float n;
+	s = fgets(camera_record_fh);
+
+	if(s == "")
+	{
+		print("Finished reading camera record file\n");
+		close_file();
+		return 0;
+	}
+
+	s2 = substring(s, 0, 2);
+
+	if(s2 == "//")
+		;
+	else if(s2 == "##")
+		localcmd("\n", substring(s, 2, strlen(s) - 2), "\n");
+	else
+	{
+		n = tokenizebyseparator(s, ",");
+
+		if(n != 3)
+		{
+			print("^1Error: line with wrong number of arguments:", s, "\n");
+			close_file();
+			return 0;
+		}
+
+		time_next = stof(argv(0));
+		origin_next = stov(argv(1));
+		angle_next = stov(argv(2));
+	}
+	return 1;
+}
 
 void PostInit();
 void CSQC_Demo_Camera();
@@ -2287,53 +2323,28 @@ void CSQC_Demo_Camera()
 {
 	if(autocvar_camera_playback)
 	{
-		string s, s2;
-		float n;
-
 		if(camera_record_fh < 0)
-			camera_record_fh = fopen("test_write", FILE_READ);
-
-		if(time >= time_next)
 		{
-			setproperty(VF_ANGLES, angle_next);
-			setproperty(VF_ORIGIN, origin_next);
-
-			s = fgets(camera_record_fh);
-
-			if(s == "")
+			camera_record_fh = fopen("test_write", FILE_READ);
+			if(camera_record_fh < 0)
 			{
-				print("Camera record file closed\n");
-				close_file();
+				print("^1Error: couldn't open test_write\n");
 				autocvar_camera_playback = 0;
 				return;
 			}
 
-			s2 = substring(s, 0, 2);
-
-			if(s2 == "//")
-				;
-			else if(s2 == "##")
-				localcmd("\n", substring(s, 2, strlen(s) - 2), "\n");
-			else
+			time_next = 0;
+		}
+		while(time >= time_next)
+		{
+			if(!read_next_line())
 			{
-				n = tokenizebyseparator(s, ",");
-
-				if(n != 3)
-				{
-					print("^1Error: ", s, "\n");
-					return;
-				}
-
-				time_next = stof(argv(0));
-				origin_next = stov(argv(1));
-				angle_next = stov(argv(2));
+				autocvar_camera_playback = 0;
+				return;
 			}
 		}
-		else
-		{
-			setproperty(VF_ANGLES, angle_next);
-			setproperty(VF_ORIGIN, origin_next);
-		}
+		setproperty(VF_ANGLES, angle_next);
+		setproperty(VF_ORIGIN, origin_next);
 	}
 	else
 	{
@@ -2487,7 +2498,11 @@ void CSQC_Demo_Camera()
 		}
 		else
 		{
-			close_file();
+			if(camera_record_fh >= 0)
+			{
+				print("Camera record file saved\n");
+				close_file();
+			}
 		}
 	}
 }
