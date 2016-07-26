@@ -2302,7 +2302,7 @@ void CSQC_Demo_Camera()
 
 			if(s == "")
 			{
-				print("^1file closed\n");
+				print("Camera record file closed\n");
 				close_file();
 				autocvar_camera_playback = 0;
 				return;
@@ -2311,9 +2311,9 @@ void CSQC_Demo_Camera()
 			s2 = substring(s, 0, 2);
 
 			if(s2 == "//")
-				print("Comment\n");
+				;
 			else if(s2 == "##")
-				print("Do stuff\n");
+				localcmd("\n", substring(s, 2, strlen(s) - 2), "\n");
 			else
 			{
 				n = tokenizebyseparator(s, ",");
