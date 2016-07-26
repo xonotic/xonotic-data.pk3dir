@@ -195,6 +195,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     {
         this.drawmask  = MASK_NORMAL;
 		this.move_movetype = MOVETYPE_TOSS;
+		if (isnew) IL_PUSH(g_drawables, this);
         this.draw       = ItemDraw;
         this.solid = SOLID_TRIGGER;
         //this.flags |= FL_ITEM;
@@ -214,7 +215,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
         {
-            if (isnew) IL_PUSH(g_drawables, this);
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             this.draw = ItemDrawSimple;
 
