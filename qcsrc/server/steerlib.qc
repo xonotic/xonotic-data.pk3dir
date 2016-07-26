@@ -579,8 +579,7 @@ void flockerspawn_think(entity this)
 void flocker_hunter_think(entity this)
 {
     vector dodgemove,attractmove,newmove;
-    entity e,ee;
-    float d,bd;
+    entity ee;
 
     this.angles_x = this.angles.x * -1;
     makevectors(this.angles);
