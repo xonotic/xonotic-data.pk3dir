@@ -673,6 +673,7 @@ void bot_serverframe()
 			FOREACH_ENTITY_CLASS("waypoint", time - it.nextthink > 10,
 			{
 				waypoint_save_links();
+				break;
 			});
 		}
 	}
