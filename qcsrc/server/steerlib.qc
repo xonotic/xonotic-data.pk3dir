@@ -601,7 +601,7 @@ void flocker_hunter_think(entity this)
             if(it == this.owner || it == ee)
                 continue;
 
-            if(!this.enemy || vlen2(this.origin - it.origin) < vlen2(this.origin - this.enemy.origin))
+            if(!this.enemy || vlen2(this.origin - it.origin) > vlen2(this.origin - this.enemy.origin))
                 this.enemy = it;
         });
     }
