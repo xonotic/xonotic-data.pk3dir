@@ -461,7 +461,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     }
     else
     {
-        if(fire & 1)
+        if(fire & 1 && !actor.shotgun_load && !actor.shotgun_loadblock)
         {
             if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
             {
@@ -518,6 +518,12 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor))
         {
             float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
             ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+            return ammo_amount;
+        }
+        case 3:
+        {
+            float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(shotgun, ammo);
+            ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_SEC(shotgun, ammo);
             return ammo_amount;
         }
         default: return false; // secondary unavailable
