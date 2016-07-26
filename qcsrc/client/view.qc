@@ -707,30 +707,14 @@ float TrueAimCheck()
 	return SHOTTYPE_HITWORLD;
 }
 
-float open_file_value;
-
-void open_file_read(void)
-{
-	if(open_file_value)
-		return;
-	else
-		open_file_value = fopen("test_write", FILE_READ);
-}
-
-void open_file_write(void)
-{
-	if(open_file_value)
-		return;
-	else
-		open_file_value = fopen("test_write", FILE_WRITE);
-}
+float camera_record_fh = -1;
 
 void close_file(void)
 {
-	if(open_file_value)
+	if(camera_record_fh >= 0)
 	{
-		fclose(open_file_value);
-		open_file_value = 0;
+		fclose(camera_record_fh);
+		camera_record_fh = -1;
 	}
 }
 
@@ -2303,17 +2287,18 @@ void CSQC_Demo_Camera()
 {
 	if(autocvar_camera_playback)
 	{
-		open_file_read();
 		string s, s2;
-
 		float n;
+
+		if(camera_record_fh < 0)
+			camera_record_fh = fopen("test_write", FILE_READ);
 
 		if(time >= time_next)
 		{
 			setproperty(VF_ANGLES, angle_next);
 			setproperty(VF_ORIGIN, origin_next);
 
-			s = fgets(open_file_value);
+			s = fgets(camera_record_fh);
 
 			if(s == "")
 			{
@@ -2495,8 +2480,10 @@ void CSQC_Demo_Camera()
 
 		if(autocvar_camera_record)
 		{
-			open_file_write();
-			fputs(open_file_value, strcat(ftos(time), ",", vtos(current_position), ",", vtos(current_angles), "\n"));
+			if(camera_record_fh < 0)
+				camera_record_fh = fopen("test_write", FILE_WRITE);
+			else
+				fputs(camera_record_fh, strcat(ftos(time), ",", vtos(current_position), ",", vtos(current_angles), "\n"));
 		}
 		else
 		{
