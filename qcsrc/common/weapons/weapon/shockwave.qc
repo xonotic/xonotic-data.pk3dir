@@ -2,7 +2,7 @@
 CLASS(Shockwave, Weapon)
 /* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none)
 /* impulse   */ ATTRIB(Shockwave, impulse, int, 2)
-/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");

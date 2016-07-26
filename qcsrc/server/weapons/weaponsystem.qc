@@ -391,7 +391,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		int act = (fr == WFRAME_FIRE2 && (PS(actor).m_weapon == WEP_SHOCKWAVE || PS(actor).m_weapon == WEP_SHOTGUN))
+		bool primary_melee = boolean(fr == WFRAME_FIRE1 && (PS(actor).m_weapon.spawnflags & WEP_TYPE_MELEE_PRI));
+		bool secondary_melee = boolean(fr == WFRAME_FIRE2 && (PS(actor).m_weapon.spawnflags & WEP_TYPE_MELEE_SEC));
+		int act = (primary_melee || secondary_melee)
 			? ANIMACTION_MELEE
 			: ANIMACTION_SHOOT
 			;

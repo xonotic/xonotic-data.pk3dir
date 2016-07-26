@@ -191,6 +191,8 @@ const int WEP_FLAG_HIDDEN         =  0x40; // hides from menu
 const int WEP_FLAG_RELOADABLE     =  0x80; // can has reload
 const int WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
 const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
+const int WEP_TYPE_MELEE_PRI      = 0x400; // primary attack is melee swing (for animation)
+const int WEP_TYPE_MELEE_SEC      = 0x800; // secondary attack is melee swing (for animation)
 
 // variables:
 string weaponorder_byid;

@@ -2292,8 +2292,9 @@ void PlayerPreThink (entity this)
 			do_crouch = false;
 		} else if (STAT(FROZEN, this)) {
 			do_crouch = false;
-        } else if ((PS(this).m_weapon == WEP_SHOTGUN || PS(this).m_weapon == WEP_SHOCKWAVE) && this.(weaponentity).wframe == WFRAME_FIRE2 && time < this.(weaponentity).weapon_nextthink) {
-		    // WEAPONTODO: predict
+        } else if ((PS(this).m_weapon.spawnflags & WEP_TYPE_MELEE_PRI) && this.(weaponentity).wframe == WFRAME_FIRE1 && time < this.(weaponentity).weapon_nextthink) {
+			do_crouch = false;
+        } else if ((PS(this).m_weapon.spawnflags & WEP_TYPE_MELEE_SEC) && this.(weaponentity).wframe == WFRAME_FIRE2 && time < this.(weaponentity).weapon_nextthink) {
 			do_crouch = false;
         }
 
