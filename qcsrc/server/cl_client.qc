@@ -215,7 +215,7 @@ void PutObserverInServer(entity this)
         	// needed for player sounds
         	this.model = "";
 	        FixPlayermodel(this);
-        } 
+        }
         setmodel(this, MDL_Null);
         setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
         this.view_ofs = '0 0 0';
@@ -463,7 +463,7 @@ void PutClientInServer(entity this)
 		PutObserverInServer(this);
 	} else if (IS_PLAYER(this)) {
 		if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
-		
+
 		PlayerState_attach(this);
 		accuracy_resend(this);
 
@@ -2285,7 +2285,7 @@ void PlayerPreThink (entity this)
 			do_crouch = false;
 		} else if (STAT(FROZEN, this)) {
 			do_crouch = false;
-        } else if ((PS(this).m_weapon == WEP_SHOTGUN || PS(this).m_weapon == WEP_SHOCKWAVE) && this.(weaponentity).wframe == WFRAME_FIRE2 && time < this.(weaponentity).weapon_nextthink) {
+        } else if ((PS(this).m_weapon == WEP_SHOTGUN || PS(this).m_weapon == WEP_SHOCKWAVE || PS(this).m_weapon == WEP_BLASTER) && this.(weaponentity).wframe == WFRAME_FIRE2 && time < this.(weaponentity).weapon_nextthink) {
 		    // WEAPONTODO: predict
 			do_crouch = false;
         }
