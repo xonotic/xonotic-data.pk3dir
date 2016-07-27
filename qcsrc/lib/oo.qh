@@ -73,11 +73,15 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 
 [[accumulate]] void ONREMOVE(entity this) {}
 
+#ifndef SVQC
+	#define delete_fn builtin_remove
+#endif
+
 #define delete(this) MACRO_BEGIN { \
     entity _this = (this); \
     void(entity) _dtor = _this.dtor; \
     ONREMOVE(this); \
-    if (_dtor) _dtor(_this); else remove(_this); \
+    if (_dtor) _dtor(_this); else delete_fn(_this); \
     /* this = NULL; */  \
 } MACRO_END
 
@@ -274,7 +278,7 @@ STATIC_INIT(RegisterClasses)
 #define spawn_1(this)
 #define _vtbl NULL
 CLASS(Object, );
-    DESTRUCTOR(Object) { remove(this); }
+    DESTRUCTOR(Object) { builtin_remove(this); }
     #define remove(this) delete(this)
 	METHOD(Object, describe, string(Object this))
 	{

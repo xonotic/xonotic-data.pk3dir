@@ -102,12 +102,6 @@ SELFWRAP(SendEntity, bool, (entity to, int sendflags), (entity this, entity to, 
 #endif
 #define error(...) (__self = (NULL), builtin_error(__VA_ARGS__))
 #define movetogoal(e, ...) (__self = (e), builtin_movetogoal(__VA_ARGS__))
-#ifndef SVQC
-    #define objerror(e, ...) (__self = (e), builtin_objerror(__VA_ARGS__))
-#else
-    void make_safe_for_remove(entity this);
-    #define objerror(e, ...) (__self = (e), make_safe_for_remove(__self), builtin_objerror(__VA_ARGS__))
-#endif
 #define walkmove(e, ...) (__self = (e), builtin_walkmove(__VA_ARGS__))
 
 #ifndef MENUQC

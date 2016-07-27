@@ -112,6 +112,22 @@ void    isnt_bool(float this) { print(ftos(this)); }
 
 #include "matrix/_mod.inc"
 
+#ifndef SVQC
+#define objerror_safe(e)
+#else
+void make_safe_for_remove(entity this);
+    #define objerror_safe(e) make_safe_for_remove(e)
+#endif
+
+#define objerror(this, msg) MACRO_BEGIN { \
+	LOG_WARNING("======OBJECT ERROR======"); \
+	entity _e = (this); \
+	eprint(_e); \
+	objerror_safe(_e); \
+	delete(_e); \
+	LOG_WARNINGF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); \
+} MACRO_END
+
 #ifdef MENUQC
 	void _m_init();
 	void m_init() { if (_m_init) _m_init(); }

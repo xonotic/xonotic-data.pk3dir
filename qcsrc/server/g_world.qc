@@ -540,7 +540,7 @@ spawnfunc(__init_dedicated_server)
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
 
-	remove = remove_unsafely;
+	delete_fn = remove_unsafely;
 
 	entity e = spawn();
 	setthink(e, GotoFirstMap);
@@ -657,7 +657,7 @@ spawnfunc(worldspawn)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
 	world_already_spawned = true;
 
-	remove = remove_safely; // during spawning, watch what you remove!
+	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 

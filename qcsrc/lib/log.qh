@@ -82,13 +82,7 @@ string(string...) strcat0n = #115;
 	} MACRO_END
 
 // TODO: this sucks, lets find a better way to do backtraces?
-#ifdef SVQC
-	void builtin_remove(entity);
-	#define _backtrace() builtin_remove(NULL)
-#else
-	void remove(entity);
-	#define _backtrace() remove(NULL)
-#endif
+#define _backtrace() builtin_remove(NULL)
 
 noref int autocvar_developer;
 noref bool autocvar_prvm_backtraceforwarnings;
