@@ -2051,7 +2051,8 @@ void EndFrame()
 		it.damage_dealt = 0;
 		antilag_record(it, CS(it), altime);
 	});
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+	IL_EACH(g_monsters, true,
+	{
 		antilag_record(it, it, altime);
 	});
 	FOREACH_CLIENT(PS(it), {

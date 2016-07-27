@@ -43,7 +43,7 @@ const string STR_OBSERVER = "observer";
 
 #define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), body)
 
-// NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, { code; });
+// NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: IL_EACH(g_monsters, true, { code; });
 
 #include <common/effects/all.qh>
 #include <common/models/all.qh>

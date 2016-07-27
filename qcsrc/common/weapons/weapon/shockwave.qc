@@ -407,9 +407,9 @@ void W_Shockwave_Attack(entity actor)
 	if(lag)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != actor, antilag_takeback(it, CS(it), time - lag));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if (it != actor)
-				antilag_takeback(it, it, time - lag);
+		IL_EACH(g_monsters, it != actor,
+		{
+			antilag_takeback(it, it, time - lag);
 		});
 	}
 
@@ -687,9 +687,9 @@ void W_Shockwave_Attack(entity actor)
 	if(lag)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != actor, antilag_restore(it, CS(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if (it != actor)
-				antilag_restore(it, it);
+		IL_EACH(g_monsters, it != actor,
+		{
+			antilag_restore(it, it);
 		});
 	}
 }

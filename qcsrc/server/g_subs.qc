@@ -51,9 +51,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	{
 		// take players back into the past
 		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_takeback(it, CS(it), time - lag));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if(it != forent)
-				antilag_takeback(it, it, time - lag);
+		IL_EACH(g_monsters, it != forent,
+		{
+			antilag_takeback(it, it, time - lag);
 		});
 	}
 
@@ -67,9 +67,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	if (lag)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_restore(it, CS(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if (it != forent)
-				antilag_restore(it, it);
+		IL_EACH(g_monsters, it != forent,
+		{
+			antilag_restore(it, it);
 		});
 	}
 
