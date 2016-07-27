@@ -23,10 +23,11 @@
 	MACRO_BEGIN \
 	{ \
 		int _i = 0; \
-		for (entity _it = list##_first; _it; (_it = _it.next, ++_i)) \
+		for (entity _it = list##_first, _next = NULL; _it; (_it = _next, ++_i)) \
 		{ \
 			const noref int i = _i; \
 			ITER_CONST noref entity it = _it; \
+			_next = _it.next; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
