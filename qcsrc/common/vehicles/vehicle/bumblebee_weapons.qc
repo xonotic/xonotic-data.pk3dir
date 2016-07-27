@@ -71,6 +71,7 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
         this.lip = particleeffectnum(EFFECT_BUMBLEBEE_HEAL_IMPACT);
 
         this.draw = bumble_raygun_draw;
+        if (isnew) IL_PUSH(g_drawables, this);
     }
 
 

@@ -310,6 +310,7 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 		this.move_movetype = MOVETYPE_PUSH;
 		this.drawmask = MASK_NORMAL;
 		this.draw = train_draw;
+		if (isnew) IL_PUSH(g_drawables, this);
 		this.entremove = trigger_remove_generic;
 
 		if(set_platmovetype(this, this.platmovetype))

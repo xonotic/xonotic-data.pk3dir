@@ -156,6 +156,7 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	e.cnt = ReadByte() / 255.0; // actually alpha
 
 	e.draw = ModelEffect_Draw;
+	if (isnew) IL_PUSH(g_drawables, e);
 
 	if (!isnew) remove(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
 	return true;

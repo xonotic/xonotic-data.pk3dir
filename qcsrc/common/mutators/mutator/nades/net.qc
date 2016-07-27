@@ -29,6 +29,7 @@ void orb_setup(entity e)
 	e.orb_radius = e.orb_radius/model_radius*0.6;
 
 	e.draw = orb_draw;
+	IL_PUSH(g_drawables, e);
 	e.health = 255;
 	e.move_movetype = MOVETYPE_NONE;
 	e.solid = SOLID_NOT;

@@ -377,5 +377,6 @@ NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 
 	InterpolateOrigin_Note(this);
 	this.draw = Draw_Laser;
+	if (isnew) IL_PUSH(g_drawables, this);
 }
 #endif

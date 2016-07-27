@@ -230,5 +230,6 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 
 	this.entremove = Ent_Wall_Remove;
 	this.draw = Ent_Wall_Draw;
+	if (isnew) IL_PUSH(g_drawables, this);
 	setpredraw(this, Ent_Wall_PreDraw);
 }

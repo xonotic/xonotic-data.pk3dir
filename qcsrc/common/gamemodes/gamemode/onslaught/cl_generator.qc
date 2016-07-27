@@ -39,6 +39,7 @@ void ons_generator_ray_spawn(vector org)
 	e.move_time = time + 0.05;
 	e.drawmask = MASK_NORMAL;
 	e.draw = ons_generator_ray_draw;
+	IL_PUSH(g_drawables, e);
 }
 
 void generator_draw(entity this)

@@ -886,7 +886,7 @@ void InitializeEntitiesRun()
 {
     entity startoflist = initialize_entity_first;
     initialize_entity_first = NULL;
-    remove = remove_except_protected;
+    delete_fn = remove_except_protected;
     for (entity e = startoflist; e; e = e.initialize_entity_next)
     {
 		e.remove_except_protected_forbidden = 1;
@@ -917,7 +917,7 @@ void InitializeEntitiesRun()
         }
         e = next;
     }
-    remove = remove_unsafely;
+    delete_fn = remove_unsafely;
 }
 
 .float(entity) isEliminated;

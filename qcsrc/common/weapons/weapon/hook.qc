@@ -541,6 +541,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 	if(bIsNew || !this.teleport_time)
 	{
 		this.draw = Draw_GrapplingHook;
+		IL_PUSH(g_drawables, this);
 		this.entremove = Remove_GrapplingHook;
 
 		switch(this.HookType)

@@ -1296,6 +1296,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 		// set other main attributes of the beam
 		this.draw = Draw_ArcBeam;
+		IL_PUSH(g_drawables, this);
 		this.entremove = Remove_ArcBeam;
 		this.move_time = time;
 		loopsound(this, CH_SHOTS_SINGLE, SND(ARC_LOOP), VOL_BASE, ATTEN_NORM);

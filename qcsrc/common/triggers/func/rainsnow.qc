@@ -134,6 +134,7 @@ NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 	setorigin(this, this.origin);
 	setsize(this, this.mins, this.maxs);
 	this.solid = SOLID_NOT;
+	if (isnew) IL_PUSH(g_drawables, this);
 	if(this.impulse)
 		this.draw = Draw_Rain;
 	else

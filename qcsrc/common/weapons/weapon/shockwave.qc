@@ -862,6 +862,7 @@ void Net_ReadShockwaveParticle()
 	entity shockwave;
 	shockwave = spawn();
 	shockwave.draw = Draw_Shockwave;
+	IL_PUSH(g_drawables, shockwave);
 
 	shockwave.sw_shotorg_x = ReadCoord(); shockwave.sw_shotorg_y = ReadCoord(); shockwave.sw_shotorg_z = ReadCoord();
 	shockwave.sw_shotdir_x = ReadCoord(); shockwave.sw_shotdir_y = ReadCoord(); shockwave.sw_shotdir_z = ReadCoord();

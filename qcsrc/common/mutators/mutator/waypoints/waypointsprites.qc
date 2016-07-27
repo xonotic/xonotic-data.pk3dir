@@ -100,9 +100,9 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 #endif
 
 #ifdef CSQC
-void Ent_WaypointSprite(entity this);
+void Ent_WaypointSprite(entity this, bool isnew);
 NET_HANDLE(waypointsprites, bool isnew) {
-    Ent_WaypointSprite(this);
+    Ent_WaypointSprite(this, isnew);
     return true;
 }
 
@@ -114,7 +114,7 @@ void Ent_RemoveWaypointSprite(entity this)
 }
 
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
-void Ent_WaypointSprite(entity this)
+void Ent_WaypointSprite(entity this, bool isnew)
 {
     int sendflags = ReadByte();
     this.wp_extra = ReadByte();
@@ -123,6 +123,10 @@ void Ent_WaypointSprite(entity this)
         this.spawntime = time;
 
     this.draw2d = Draw_WaypointSprite;
+    if (isnew) {
+		IL_PUSH(g_drawables_2d, this);
+		IL_PUSH(g_radaricons, this);
+    }
 
     InterpolateOrigin_Undo(this);
     this.iflags |= IFLAG_ORIGIN;

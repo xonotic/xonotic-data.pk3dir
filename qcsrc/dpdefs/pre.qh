@@ -6,4 +6,5 @@
 #define error builtin_error
 #define movetogoal builtin_movetogoal
 #define objerror builtin_objerror
+#define remove builtin_remove
 #define walkmove builtin_walkmove

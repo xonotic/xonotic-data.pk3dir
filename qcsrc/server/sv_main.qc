@@ -165,7 +165,7 @@ void StartFrame()
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
-	remove = remove_unsafely; // not during spawning!
+	delete_fn = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
 	servertime = time;
 	serverframetime = frametime;

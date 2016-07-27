@@ -140,6 +140,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	setthink(this, SUB_Remove);
 	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	this.draw = VaporizerBeam_Draw;
+	if (isNew) IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
 	this.vorg1_x = ReadCoord(); this.vorg1_y = ReadCoord(); this.vorg1_z = ReadCoord();

@@ -180,6 +180,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	setsize (gib, '-8 -8 -8', '8 8 8');
 
 	gib.draw = Gib_Draw;
+	IL_PUSH(g_drawables, gib);
 	if(destroyontouch)
 		settouch(gib, Gib_Touch);
 	else
