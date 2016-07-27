@@ -338,8 +338,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
 				loopsound(this, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
-				this.mins = '0 0 -4';
-				this.maxs = '0 0 -4';
+				this.mins = '-4 -4 -4';
+				this.maxs = '4 4 4';
 				this.move_movetype = MOVETYPE_BOUNCE;
 				settouch(this, func_null);
 				this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);

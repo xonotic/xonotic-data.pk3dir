@@ -50,6 +50,7 @@ CLASS(Electro, Weapon)
 		P(class, prefix, speed_up, float, SEC) \
 		P(class, prefix, speed_z, float, SEC) \
 		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, stick, float, SEC) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, touchexplode, float, SEC) \
@@ -156,7 +157,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	if(this.move_movetype == MOVETYPE_BOUNCE)
+	if(this.move_movetype == MOVETYPE_BOUNCE || this.classname == "electro_orb") // TODO: classname is more reliable anyway?
 	{
 		RadiusDamage(
 			this,
@@ -298,6 +299,43 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
+void W_Electro_Orb_Stick(entity this, entity to)
+{
+	entity newproj = spawn();
+	newproj.classname = this.classname;
+
+	newproj.bot_dodge = this.bot_dodge;
+	newproj.bot_dodgerating = this.bot_dodgerating;
+
+	newproj.owner = this.owner;
+	newproj.realowner = this.realowner;
+	setsize(newproj, this.mins, this.maxs);
+	setorigin(newproj, this.origin);
+	setmodel(newproj, MDL_PROJECTILE_ELECTRO);
+	newproj.angles = vectoangles(-trace_plane_normal); // face against the surface
+
+	newproj.takedamage = this.takedamage;
+	newproj.damageforcescale = this.damageforcescale;
+	newproj.health = this.health;
+	newproj.event_damage = this.event_damage;
+	newproj.spawnshieldtime = this.spawnshieldtime;
+	newproj.damagedbycontents = true;
+
+	set_movetype(newproj, MOVETYPE_NONE); // lock the orb in place
+	newproj.projectiledeathtype = this.projectiledeathtype;
+
+	settouch(newproj, func_null);
+	setthink(newproj, getthink(this));
+	newproj.nextthink = this.nextthink;
+	newproj.use = this.use;
+	newproj.flags = this.flags;
+
+	remove(this);
+
+	if(to)
+		SetMovetypeFollow(this, to);
+}
+
 void W_Electro_Orb_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
@@ -308,6 +346,9 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 		//UpdateCSQCProjectile(this);
 		spamsound(this, CH_SHOTS, SND(ELECTRO_BOUNCE), VOL_BASE, ATTEN_NORM);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
+
+		if(WEP_CVAR_SEC(electro, stick))
+			W_Electro_Orb_Stick(this, toucher);
 	}
 }
 
@@ -359,8 +400,8 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
 
 	W_SetupShot_ProjectileSize(
 		actor,
-		'0 0 -4',
-		'0 0 -4',
+		'-4 -4 -4',
+		'4 4 4',
 		false,
 		2,
 		SND_ELECTRO_FIRE2,
@@ -388,7 +429,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
 	set_movetype(proj, MOVETYPE_BOUNCE);
 	W_SetupProjVelocity_UP_SEC(proj, electro);
 	settouch(proj, W_Electro_Orb_Touch);
-	setsize(proj, '0 0 -4', '0 0 -4');
+	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = WEP_CVAR_SEC(electro, damageforcescale);
 	proj.health = WEP_CVAR_SEC(electro, health);
