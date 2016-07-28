@@ -75,7 +75,7 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				if(wpn == WEP_MINE_LAYER)
-					FOREACH_ENTITY_CLASS("mine", it.owner == this,
+					IL_EACH(g_mines, it.owner == this,
 					{
 						f = 1;
 						break; // no need to continue

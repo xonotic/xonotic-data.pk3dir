@@ -70,6 +70,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
 	entity newmine = spawn();
+	IL_PUSH(g_mines, newmine);
 	newmine.classname = this.classname;
 
 	newmine.bot_dodge = this.bot_dodge;
@@ -203,9 +204,10 @@ void W_MineLayer_ProximityExplode(entity this)
 int W_MineLayer_Count(entity e)
 {
 	int minecount = 0;
-	entity mine;
-	for(mine = NULL; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
+	IL_EACH(g_mines, it.realowner == e,
+	{
 		minecount += 1;
+	});
 
 	return minecount;
 }
@@ -335,6 +337,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor)
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(actor);
+	IL_PUSH(g_mines, mine);
 	mine.owner = mine.realowner = actor;
 	if(WEP_CVAR(minelayer, detonatedelay) >= 0)
 		mine.spawnshieldtime = time + WEP_CVAR(minelayer, detonatedelay);
@@ -384,24 +387,23 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor)
 	actor.minelayer_mines = W_MineLayer_Count(actor);
 }
 
-float W_MineLayer_PlacedMines(entity this, float detonate)
+bool W_MineLayer_PlacedMines(entity this, bool detonate)
 {
-	entity mine;
-	float minfound = 0;
+	bool minfound = false;
 
-	for(mine = NULL; (mine = find(mine, classname, "mine")); ) if(mine.realowner == this)
+	IL_EACH(g_mines, it.realowner == this,
 	{
 		if(detonate)
 		{
-			if(!mine.minelayer_detonate)
+			if(!it.minelayer_detonate)
 			{
-				mine.minelayer_detonate = true;
-				minfound = 1;
+				it.minelayer_detonate = true;
+				minfound = true;
 			}
 		}
 		else
-			minfound = 1;
-	}
+			minfound = true;
+	});
 	return minfound;
 }
 
@@ -425,10 +427,8 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
         teamdamage = 0;
         enemydamage = 0;
 
-        FOREACH_ENTITY_ENT(realowner, actor,
+        IL_EACH(g_mines, it.realowner == actor,
         {
-        	if(it.classname != "mine") continue;
-
         	entity mine = it;
         	FOREACH_ENTITY_FLOAT(bot_attack, true,
         	{
@@ -452,10 +452,8 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
             desirabledamage = desirabledamage - teamdamage;
 
         makevectors(actor.v_angle);
-        FOREACH_ENTITY_ENT(realowner, actor,
+        IL_EACH(g_mines, it.realowner == actor,
         {
-            if(it.classname != "mine") continue;
-
             if(skill > 9) // normal players only do this for the target they are tracking
             {
 	            entity mine = it;
