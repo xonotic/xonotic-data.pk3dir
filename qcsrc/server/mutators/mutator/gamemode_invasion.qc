@@ -485,7 +485,7 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 	return true;
 }
 
-void invasion_ScoreRules(float inv_teams)
+void invasion_ScoreRules(int inv_teams)
 {
 	if(inv_teams) { CheckAllowedTeams(NULL); }
 	ScoreRules_basics(inv_teams, 0, 0, false);
@@ -497,7 +497,16 @@ void invasion_ScoreRules(float inv_teams)
 void invasion_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	if(autocvar_g_invasion_teams)
+	{
 		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);
+		int teams = 0;
+		if(invasion_teams >= 1) teams |= BIT(0);
+		if(invasion_teams >= 2) teams |= BIT(1);
+		if(invasion_teams >= 3) teams |= BIT(2);
+		if(invasion_teams >= 4) teams |= BIT(3);
+
+		invasion_teams = teams; // now set it?
+	}
 	else
 		invasion_teams = 0;
 

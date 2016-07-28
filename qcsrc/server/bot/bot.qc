@@ -584,7 +584,7 @@ float bot_fixcount()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
-	if (teamplay && autocvar_bot_vs_human && (c3==-1 && c4==-1))
+	if (teamplay && autocvar_bot_vs_human && AvailableTeams() == 2)
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
