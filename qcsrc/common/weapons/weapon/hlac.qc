@@ -110,6 +110,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor)
     missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.projectiledeathtype = WEP_HLAC.m_id;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
@@ -152,6 +153,7 @@ void W_HLAC_Attack2(entity actor)
     missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = WEP_HLAC.m_id | HITTYPE_SECONDARY;
 

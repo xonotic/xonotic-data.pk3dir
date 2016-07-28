@@ -169,6 +169,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor)
 
 	missile.angles = vectoangles(missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
@@ -212,6 +213,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor)
 
 	missile.angles = vectoangles(missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR_BOUNCING, true);
@@ -288,6 +290,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 
 		missile.angles = vectoangles(missile.velocity);
 		missile.flags = FL_PROJECTILE;
+		IL_PUSH(g_projectiles, missile);
 
 		CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 

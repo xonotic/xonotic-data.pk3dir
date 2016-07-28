@@ -476,7 +476,8 @@ entity turret_projectile(entity actor, Sound _snd, float _size, float _health, f
 	proj.nextthink	  = time + 9;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.velocity		= normalize(actor.tur_shotdir_updated + randomvec() * actor.shot_spread) * actor.shot_speed;
-	proj.flags		  = FL_PROJECTILE;
+	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.enemy		  = actor.enemy;
 	proj.totalfrags	 = _death;
 	PROJECTILE_MAKETRIGGER(proj);

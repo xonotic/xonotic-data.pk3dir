@@ -294,6 +294,7 @@ void nade_napalm_ball(entity this)
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	//CSQCProjectile(proj, true, PROJECTILE_NAPALM_FIRE, true);
@@ -941,6 +942,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.damagedbycontents = true;
 	_nade.angles = vectoangles(_nade.velocity);
 	_nade.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, _nade);
 	_nade.projectiledeathtype = DEATH_NADE.m_id;
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);

@@ -294,7 +294,8 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, vector f_diff, entity m
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-4 -4 -4', '4 4 4');
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.flags       = FL_PROJECTILE;
+	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH | MIF_GUIDED_TAG;
 
 	W_SetupProjVelocity_UP_PRE(missile, seeker, missile_);
@@ -370,7 +371,8 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
 	set_movetype(missile, MOVETYPE_FLY);
 	missile.projectiledeathtype = WEP_SEEKER.m_id;
 	missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
-	missile.flags 				= FL_PROJECTILE;
+	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags       = MIF_SPLASH;
 
 	// csqc projectiles
@@ -589,7 +591,8 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor)
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-2 -2 -2', '2 2 2');
 
-	missile.flags       = FL_PROJECTILE;
+	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	//missile.missile_flags = MIF_..?;
 
 	set_movetype(missile, MOVETYPE_FLY);

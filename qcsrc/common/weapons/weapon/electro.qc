@@ -292,6 +292,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	settouch(proj, W_Electro_TouchExplode);
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
@@ -435,6 +436,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
 	proj.health = WEP_CVAR_SEC(electro, health);
 	proj.event_damage = W_Electro_Orb_Damage;
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.damagedbycontents = (WEP_CVAR_SEC(electro, damagedbycontents));
 
 	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);

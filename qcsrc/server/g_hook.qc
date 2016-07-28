@@ -370,6 +370,7 @@ void FireGrapplingHook(entity actor)
 	missile.reset = GrapplingHookReset;
 	missile.classname = "grapplinghook";
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 
 	set_movetype(missile, ((autocvar_g_balance_grapplehook_gravity) ? MOVETYPE_TOSS : MOVETYPE_FLY));
 	PROJECTILE_MAKETRIGGER(missile);

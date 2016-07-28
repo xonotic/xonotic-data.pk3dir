@@ -102,6 +102,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	newmine.nextthink = time;
 	newmine.cnt = this.cnt;
 	newmine.flags = this.flags;
+	IL_PUSH(g_projectiles, newmine);
 
 	remove(this);
 
@@ -367,6 +368,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor)
 	mine.nextthink = time;
 	mine.cnt = (WEP_CVAR(minelayer, lifetime) - WEP_CVAR(minelayer, lifetime_countdown));
 	mine.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, mine);
 	mine.missile_flags = MIF_SPLASH | MIF_ARC | MIF_PROXY;
 
 	if(mine.cnt > 0) { mine.cnt += time; }

@@ -224,6 +224,7 @@ void W_Fireball_Attack1(entity actor)
 	settouch(proj, W_Fireball_TouchExplode);
 	setsize(proj, '-16 -16 -16', '16 16 16');
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
     proj.missile_flags = MIF_SPLASH | MIF_PROXY;
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREBALL, true);
@@ -354,6 +355,7 @@ void W_Fireball_Attack2(entity actor)
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
     proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREMINE, true);

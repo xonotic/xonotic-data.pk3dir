@@ -287,6 +287,7 @@ void W_RocketMinsta_Attack2(entity actor)
         settouch(proj, W_RocketMinsta_Laser_Touch);
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
+        IL_PUSH(g_projectiles, proj);
         proj.missile_flags = MIF_SPLASH;
 
         CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);
@@ -337,6 +338,7 @@ void W_RocketMinsta_Attack3 (entity actor)
         settouch(proj, W_RocketMinsta_Laser_Touch);
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
+        IL_PUSH(g_projectiles, proj);
         proj.missile_flags = MIF_SPLASH;
 
         CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);
