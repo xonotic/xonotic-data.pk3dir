@@ -153,7 +153,7 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
-bool autocvar_sv_autopause = true;
+bool autocvar_sv_autopause = false;
 float RedirectionThink();
 void PM_Main(Client this);
 void StartFrame()
