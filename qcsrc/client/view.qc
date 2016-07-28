@@ -861,7 +861,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 	{
 		case 1: // crosshair_color_per_weapon
 		{
-			if(this != WEP_Null)
+			if(this != WEP_Null && hud == HUD_NORMAL)
 			{
 				wcross_color = this.wpcolor;
 				break;
