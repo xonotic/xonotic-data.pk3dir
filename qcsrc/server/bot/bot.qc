@@ -670,7 +670,7 @@ void bot_serverframe()
 		else
 		{
 			// TODO: Make this check cleaner
-			FOREACH_ENTITY_CLASS("waypoint", time - it.nextthink > 10,
+			IL_EACH(g_waypoints, time - it.nextthink > 10,
 			{
 				waypoint_save_links();
 				break;

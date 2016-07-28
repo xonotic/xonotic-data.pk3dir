@@ -512,7 +512,7 @@ IMPULSE(navwaypoint_save)
 IMPULSE(navwaypoint_unreachable)
 {
 	if (!autocvar_g_waypointeditor) return;
-	FOREACH_ENTITY_CLASS("waypoint", true,
+	IL_EACH(g_waypoints, true,
 	{
 		it.colormod = '0.5 0.5 0.5';
 		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
@@ -524,7 +524,7 @@ IMPULSE(navwaypoint_unreachable)
 
 	j = 0;
 	m = 0;
-	FOREACH_ENTITY_CLASS("waypoint", it.wpcost >= 10000000,
+	IL_EACH(g_waypoints, it.wpcost >= 10000000,
 	{
 		LOG_INFO("unreachable: ", etos(it), " ", vtos(it.origin), "\n");
 		it.colormod_z = 8;
@@ -536,7 +536,7 @@ IMPULSE(navwaypoint_unreachable)
 	navigation_markroutes_inverted(e2);
 
 	j = 0;
-	FOREACH_ENTITY_CLASS("waypoint", it.wpcost >= 10000000,
+	IL_EACH(g_waypoints, it.wpcost >= 10000000,
 	{
 		LOG_INFO("cannot reach me: ", etos(it), " ", vtos(it.origin), "\n");
 		it.colormod_x = 8;

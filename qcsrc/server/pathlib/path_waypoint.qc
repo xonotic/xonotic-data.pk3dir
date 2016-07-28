@@ -162,8 +162,7 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     LOG_TRACE("pathlib_waypointpath init\n");
 
     // Initialize waypoint grid
-    // FIXME! presisted chain for better preformance
-    FOREACH_ENTITY_CLASS("waypoint", true,
+    IL_EACH(g_waypoints, true,
     {
         it.pathlib_list = NULL;
         it.pathlib_node_g = 0;

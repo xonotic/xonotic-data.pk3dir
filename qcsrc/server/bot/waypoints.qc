@@ -19,13 +19,14 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	if(!(f & WAYPOINTFLAG_PERSONAL))
 	{
-		FOREACH_ENTITY_CLASS("waypoint", boxesoverlap(m1, m2, it.absmin, it.absmax),
+		IL_EACH(g_waypoints, boxesoverlap(m1, m2, it.absmin, it.absmax),
 		{
 			return it;
 		});
 	}
 
 	entity w = new(waypoint);
+	IL_PUSH(g_waypoints, w);
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	w.wpflags = f;
 	w.solid = SOLID_TRIGGER;
@@ -170,7 +171,7 @@ void waypoint_think(entity this)
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
 	sm1 = this.origin + this.mins;
 	sm2 = this.origin + this.maxs;
-	FOREACH_ENTITY_CLASS("waypoint", true,
+	IL_EACH(g_waypoints, true,
 	{
 		if (boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
 		{
@@ -292,6 +293,8 @@ void waypoint_schedulerelink(entity wp)
 // spawnfunc_waypoint map entity
 spawnfunc(waypoint)
 {
+	IL_PUSH(g_waypoints, this);
+
 	setorigin(this, this.origin);
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(this);
@@ -341,7 +344,7 @@ void waypoint_remove(entity e)
 // empties the map of waypoints
 void waypoint_removeall()
 {
-	FOREACH_ENTITY_CLASS("waypoint", true,
+	IL_EACH(g_waypoints, true,
 	{
 		remove(it);
 	});
@@ -352,7 +355,7 @@ void waypoint_removeall()
 void waypoint_schedulerelinkall()
 {
 	relink_total = relink_walkculled = relink_pvsculled = relink_lengthculled = 0;
-	FOREACH_ENTITY_CLASS("waypoint", true,
+	IL_EACH(g_waypoints, true,
 	{
 		waypoint_schedulerelink(it);
 	});
@@ -587,7 +590,7 @@ void waypoint_save_links()
 	}
 
 	int c = 0;
-	FOREACH_ENTITY_CLASS("waypoint", true,
+	IL_EACH(g_waypoints, true,
 	{
 		for(int j = 0; j < 32; ++j)
 		{
@@ -621,7 +624,7 @@ void waypoint_saveall()
 	}
 
 	int c = 0;
-	FOREACH_ENTITY_CLASS("waypoint", true,
+	IL_EACH(g_waypoints, true,
 	{
 		if(it.wpflags & WAYPOINTFLAG_GENERATED)
 			continue;
@@ -701,7 +704,7 @@ void waypoint_spawnforitem_force(entity e, vector org)
 	org = waypoint_fixorigin(org);
 
 	// don't spawn an item spawnfunc_waypoint if it already exists
-	FOREACH_ENTITY_CLASS("waypoint", true,
+	IL_EACH(g_waypoints, true,
 	{
 		if(it.wpisbox)
 		{
@@ -781,19 +784,20 @@ entity waypoint_spawnpersonal(entity this, vector position)
 
 void botframe_showwaypointlinks()
 {
-	entity head, w;
 	if (time < botframe_waypointeditorlightningtime)
 		return;
 	botframe_waypointeditorlightningtime = time + 0.5;
-	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot,
+	{
 		if(IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
 		{
 			//navigation_testtracewalk = true;
-			head = navigation_findnearestwaypoint(it, false);
+			entity head = navigation_findnearestwaypoint(it, false);
 		//	print("currently selected WP is ", etos(head), "\n");
 			//navigation_testtracewalk = false;
 			if (head)
 			{
+				entity w;
 				w = head     ;if (w) te_lightning2(NULL, w.origin, it.origin);
 				w = head.wp00;if (w) te_lightning2(NULL, w.origin, head.origin);
 				w = head.wp01;if (w) te_lightning2(NULL, w.origin, head.origin);
@@ -829,7 +833,7 @@ void botframe_showwaypointlinks()
 				w = head.wp31;if (w) te_lightning2(NULL, w.origin, head.origin);
 			}
 		}
-	));
+	});
 }
 
 float botframe_autowaypoints_fixdown(vector v)
@@ -842,17 +846,11 @@ float botframe_autowaypoints_fixdown(vector v)
 
 float botframe_autowaypoints_createwp(vector v, entity p, .entity fld, float f)
 {
-	entity w;
-
-	w = find(NULL, classname, "waypoint");
-	while (w)
+	IL_EACH(g_waypoints, boxesoverlap(v - '32 32 32', v + '32 32 32', it.absmin, it.absmax),
 	{
 		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
-		if (boxesoverlap(v - '32 32 32', v + '32 32 32', w.absmin, w.absmax))
-		//if (boxesoverlap(v - '4 4 4', v + '4 4 4', w.absmin, w.absmax))
-			return 0;
-		w = find(w, classname, "waypoint");
-	}
+		return 0;
+	});
 
 	waypoint_schedulerelink(p.(fld) = waypoint_spawn(v, v, f));
 	return 1;
@@ -895,25 +893,18 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 			maxdist = 2100;
 		}
 
-		float bestdist;
-		bestdist = maxdist;
-		w = find(NULL, classname, "waypoint");
-		while (w)
+		float bestdist = maxdist;
+		IL_EACH(g_waypoints, it != wp && !(it.wpflags & WAYPOINTFLAG_NORELINK),
 		{
-			if(w != wp && !(w.wpflags & WAYPOINTFLAG_NORELINK))
+			float d = vlen(wp.origin - it.origin) + vlen(it.origin - porg);
+			if(d < bestdist)
+			if(navigation_waypoint_will_link(wp.origin, it.origin, p, walkfromwp, 1050))
+			if(navigation_waypoint_will_link(it.origin, porg, p, walkfromwp, 1050))
 			{
-				float d;
-				d = vlen(wp.origin - w.origin) + vlen(w.origin - porg);
-				if(d < bestdist)
-					if(navigation_waypoint_will_link(wp.origin, w.origin, p, walkfromwp, 1050))
-						if(navigation_waypoint_will_link(w.origin, porg, p, walkfromwp, 1050))
-						{
-							bestdist = d;
-							p.(fld) = w;
-						}
+				bestdist = d;
+				p.(fld) = it;
 			}
-			w = find(w, classname, "waypoint");
-		}
+		});
 		if(bestdist < maxdist)
 		{
 			LOG_INFO("update chain to new nearest WP ", etos(p.(fld)), "\n");
@@ -1019,84 +1010,80 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 
 void botframe_deleteuselesswaypoints()
 {
-	entity w, w1, w2;
-	float i, j, k;
-	for (w = NULL; (w = findfloat(w, bot_pickup, true)); )
+	FOREACH_ENTITY_FLOAT(bot_pickup, true,
 	{
 		// NOTE: this protects waypoints if they're the ONLY nearest
 		// waypoint. That's the intention.
-		navigation_findnearestwaypoint(w, false);  // Walk TO item.
-		navigation_findnearestwaypoint(w, true);  // Walk FROM item.
-	}
-	for (w = NULL; (w = find(w, classname, "waypoint")); )
+		navigation_findnearestwaypoint(it, false);  // Walk TO item.
+		navigation_findnearestwaypoint(it, true);  // Walk FROM item.
+	});
+	IL_EACH(g_waypoints, true,
 	{
-		w.wpflags |= WAYPOINTFLAG_DEAD_END;
-		w.wpflags &= ~WAYPOINTFLAG_USEFUL;
+		it.wpflags |= WAYPOINTFLAG_DEAD_END;
+		it.wpflags &= ~WAYPOINTFLAG_USEFUL;
 		// WP is useful if:
-		if (w.wpflags & WAYPOINTFLAG_ITEM)
-			w.wpflags |= WAYPOINTFLAG_USEFUL;
-		if (w.wpflags & WAYPOINTFLAG_TELEPORT)
-			w.wpflags |= WAYPOINTFLAG_USEFUL;
-		if (w.wpflags & WAYPOINTFLAG_PROTECTED)
-			w.wpflags |= WAYPOINTFLAG_USEFUL;
+		if (it.wpflags & WAYPOINTFLAG_ITEM)
+			it.wpflags |= WAYPOINTFLAG_USEFUL;
+		if (it.wpflags & WAYPOINTFLAG_TELEPORT)
+			it.wpflags |= WAYPOINTFLAG_USEFUL;
+		if (it.wpflags & WAYPOINTFLAG_PROTECTED)
+			it.wpflags |= WAYPOINTFLAG_USEFUL;
 		// b) WP is closest WP for an item/spawnpoint/other entity
 		//    This has been done above by protecting these WPs.
-	}
+	});
 	// c) There are w1, w, w2 so that w1 -> w, w -> w2 and not w1 -> w2.
-	for (w1 = NULL; (w1 = find(w1, classname, "waypoint")); )
+	IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_PERSONAL),
 	{
-		if (w1.wpflags & WAYPOINTFLAG_PERSONAL)
-			continue;
-		for (i = 0; i < 32; ++i)
+		for (int m = 0; m < 32; ++m)
 		{
-			w = waypoint_get_link(w1, i);
+			entity w = waypoint_get_link(it, m);
 			if (!w)
 				break;
 			if (w.wpflags & WAYPOINTFLAG_PERSONAL)
 				continue;
 			if (w.wpflags & WAYPOINTFLAG_USEFUL)
 				continue;
-			for (j = 0; j < 32; ++j)
+			for (int j = 0; j < 32; ++j)
 			{
-				w2 = waypoint_get_link(w, j);
+				entity w2 = waypoint_get_link(w, j);
 				if (!w2)
 					break;
-				if (w1 == w2)
+				if (it == w2)
 					continue;
 				if (w2.wpflags & WAYPOINTFLAG_PERSONAL)
 					continue;
-				// If we got here, w1 != w2 exist with w1 -> w
+				// If we got here, it != w2 exist with it -> w
 				// and w -> w2. That means the waypoint is not
 				// a dead end.
 				w.wpflags &= ~WAYPOINTFLAG_DEAD_END;
-				for (k = 0; k < 32; ++k)
+				for (int k = 0; k < 32; ++k)
 				{
-					if (waypoint_get_link(w1, k) == w2)
+					if (waypoint_get_link(it, k) == w2)
 						continue;
 					// IF WE GET HERE, w is proven useful
-					// to get from w1 to w2!
+					// to get from it to w2!
 					w.wpflags |= WAYPOINTFLAG_USEFUL;
 					goto next;
 				}
 			}
 LABEL(next)
 		}
-	}
+	});
 	// d) The waypoint is a dead end. Dead end waypoints must be kept as
 	//     they are needed to complete routes while autowaypointing.
 
-	for (w = NULL; (w = find(w, classname, "waypoint")); )
+	IL_EACH(g_waypoints, !(it.wpflags & (WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END)),
 	{
-		if (!(w.wpflags & (WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END)))
-		{
-			LOG_INFOF("Removed a waypoint at %v. Try again for more!\n", w.origin);
-			te_explosion(w.origin);
-			waypoint_remove(w);
-			break;
-		}
-	}
-	for (w = NULL; (w = find(w, classname, "waypoint")); )
-		w.wpflags &= ~(WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END); // temp flag
+		LOG_INFOF("Removed a waypoint at %v. Try again for more!\n", it.origin);
+		te_explosion(it.origin);
+		waypoint_remove(it);
+		break;
+	});
+
+	IL_EACH(g_waypoints, true,
+	{
+		it.wpflags &= ~(WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END); // temp flag
+	});
 }
 
 void botframe_autowaypoints()

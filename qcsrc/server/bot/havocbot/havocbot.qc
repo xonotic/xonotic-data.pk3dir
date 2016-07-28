@@ -46,7 +46,7 @@ void havocbot_ai(entity this)
 		{
 			// Look for the closest waypoint out of water
 			entity newgoal = NULL;
-			FOREACH_ENTITY_CLASS("waypoint", vdist(it.origin - this.origin, <=, 10000),
+			IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 10000),
 			{
 				if(it.origin.z < this.origin.z)
 					continue;
@@ -486,7 +486,7 @@ void havocbot_movetogoal(entity this)
 			if(fabs(this.velocity.z)<50)
 			{
 				entity newgoal = NULL;
-				FOREACH_ENTITY_CLASS("waypoint", vdist(it.origin - this.origin, <=, 1000),
+				IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 1000),
 				{
 					traceline(this.origin + this.view_ofs, ((it.absmin + it.absmax) * 0.5), true, this);
 

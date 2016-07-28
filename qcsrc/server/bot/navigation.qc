@@ -373,25 +373,17 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 // find the spawnfunc_waypoint near a dynamic goal such as a dropped weapon
 entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfromwp, float bestdist, entity except)
 {
-	entity waylist, w, best;
-	vector v, org, pm1, pm2;
-
-	pm1 = ent.origin + ent.mins;
-	pm2 = ent.origin + ent.maxs;
-	waylist = findchain(classname, "waypoint");
+	vector pm1 = ent.origin + ent.mins;
+	vector pm2 = ent.origin + ent.maxs;
 
 	// do two scans, because box test is cheaper
-	w = waylist;
-	while (w)
+	IL_EACH(g_waypoints, it != ent && it != except,
 	{
-		// if object is touching spawnfunc_waypoint
-		if(w != ent && w != except)
-			if (boxesoverlap(pm1, pm2, w.absmin, w.absmax))
-				return w;
-		w = w.chain;
-	}
+		if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+			return it;
+	});
 
-	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
+	vector org = ent.origin + 0.5 * (ent.mins + ent.maxs);
 	org.z = ent.origin.z + ent.mins.z - STAT(PL_MIN, NULL).z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
@@ -399,34 +391,28 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	if (navigation_testtracewalk)
 		te_plasmaburn(org);
 
-	best = NULL;
+	entity best = NULL;
+	vector v;
 
 	// box check failed, try walk
-	w = waylist;
-	while (w)
+	IL_EACH(g_waypoints, it != ent,
 	{
-		// if object can walk from spawnfunc_waypoint
-		if(w != ent)
+		if(it.wpisbox)
 		{
-			if (w.wpisbox)
-			{
-				vector wm1, wm2;
-				wm1 = w.origin + w.mins;
-				wm2 = w.origin + w.maxs;
-				v.x = bound(wm1_x, org.x, wm2_x);
-				v.y = bound(wm1_y, org.y, wm2_y);
-				v.z = bound(wm1_z, org.z, wm2_z);
-			}
-			else
-				v = w.origin;
-			if(navigation_waypoint_will_link(v, org, ent, walkfromwp, bestdist))
-			{
-				bestdist = vlen(v - org);
-				best = w;
-			}
+			vector wm1 = it.origin + it.mins;
+			vector wm2 = it.origin + it.maxs;
+			v.x = bound(wm1_x, org.x, wm2_x);
+			v.y = bound(wm1_y, org.y, wm2_y);
+			v.z = bound(wm1_z, org.z, wm2_z);
 		}
-		w = w.chain;
-	}
+		else
+			v = it.origin;
+		if(navigation_waypoint_will_link(v, org, ent, walkfromwp, bestdist))
+		{
+			bestdist = vlen(v - org);
+			best = it;
+		}
+	});
 	return best;
 }
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
@@ -442,46 +428,39 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 }
 
 // finds the waypoints near the bot initiating a navigation query
-float navigation_markroutes_nearestwaypoints(entity this, entity waylist, float maxdist)
+float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 {
-	entity head;
-	vector v, m1, m2, diff;
-	float c;
+	vector v, m1, m2;
 //	navigation_testtracewalk = true;
-	c = 0;
-	head = waylist;
-	while (head)
+	int c = 0;
+	IL_EACH(g_waypoints, !it.wpconsidered,
 	{
-		if (!head.wpconsidered)
+		if (it.wpisbox)
 		{
-			if (head.wpisbox)
+			m1 = it.origin + it.mins;
+			m2 = it.origin + it.maxs;
+			v = this.origin;
+			v.x = bound(m1_x, v.x, m2_x);
+			v.y = bound(m1_y, v.y, m2_y);
+			v.z = bound(m1_z, v.z, m2_z);
+		}
+		else
+			v = it.origin;
+		vector diff = v - this.origin;
+		diff.z = max(0, diff.z);
+		if(vdist(diff, <, maxdist))
+		{
+			it.wpconsidered = true;
+			if (tracewalk(this, this.origin, this.mins, this.maxs, v, bot_navigation_movemode))
 			{
-				m1 = head.origin + head.mins;
-				m2 = head.origin + head.maxs;
-				v = this.origin;
-				v.x = bound(m1_x, v.x, m2_x);
-				v.y = bound(m1_y, v.y, m2_y);
-				v.z = bound(m1_z, v.z, m2_z);
-			}
-			else
-				v = head.origin;
-			diff = v - this.origin;
-			diff.z = max(0, diff.z);
-			if(vdist(diff, <, maxdist))
-			{
-				head.wpconsidered = true;
-				if (tracewalk(this, this.origin, this.mins, this.maxs, v, bot_navigation_movemode))
-				{
-					head.wpnearestpoint = v;
-					head.wpcost = vlen(v - this.origin) + head.dmg;
-					head.wpfire = 1;
-					head.enemy = NULL;
-					c = c + 1;
-				}
+				it.wpnearestpoint = v;
+				it.wpcost = vlen(v - this.origin) + it.dmg;
+				it.wpfire = 1;
+				it.enemy = NULL;
+				c = c + 1;
 			}
 		}
-		head = head.chain;
-	}
+	});
 	//navigation_testtracewalk = false;
 	return c;
 }
@@ -515,19 +494,17 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 // queries the entire spawnfunc_waypoint network for pathes leading away from the bot
 void navigation_markroutes(entity this, entity fixed_source_waypoint)
 {
-	entity w, wp, waylist;
-	float searching, cost, cost2;
+	float cost, cost2;
 	vector p;
-	w = waylist = findchain(classname, "waypoint");
-	while (w)
+
+	IL_EACH(g_waypoints, true,
 	{
-		w.wpconsidered = false;
-		w.wpnearestpoint = '0 0 0';
-		w.wpcost = 10000000;
-		w.wpfire = 0;
-		w.enemy = NULL;
-		w = w.chain;
-	}
+		it.wpconsidered = false;
+		it.wpnearestpoint = '0 0 0';
+		it.wpcost = 10000000;
+		it.wpfire = 0;
+		it.enemy = NULL;
+	});
 
 	if(fixed_source_waypoint)
 	{
@@ -541,7 +518,7 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint)
 	{
 		// try a short range search for the nearest waypoints, and expand the search repeatedly if none are found
 		// as this search is expensive we will use lower values if the bot is on the air
-		float i, increment, maxdistance;
+		float increment, maxdistance;
 		if(IS_ONGROUND(this))
 		{
 			increment = 750;
@@ -553,77 +530,70 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint)
 			maxdistance = 1500;
 		}
 
-		for(i=increment;!navigation_markroutes_nearestwaypoints(this, waylist, i)&&i<maxdistance;i+=increment);
+		for(int j = increment; !navigation_markroutes_nearestwaypoints(this, j) && j < maxdistance; j += increment);
 	}
 
-	searching = true;
+	bool searching = true;
 	while (searching)
 	{
 		searching = false;
-		w = waylist;
-		while (w)
+		IL_EACH(g_waypoints, it.wpfire,
 		{
-			if (w.wpfire)
-			{
-				searching = true;
-				w.wpfire = 0;
-				cost = w.wpcost;
-				p = w.wpnearestpoint;
-				wp = w.wp00;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp00mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp01;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp01mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp02;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp02mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp03;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp03mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp04;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp04mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp05;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp05mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp06;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp06mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp07;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp07mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp08;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp08mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp09;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp09mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp10;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp10mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp11;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp11mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp12;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp12mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp13;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp13mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp14;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp14mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp15;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp15mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp16;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp16mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp17;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp17mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp18;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp18mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp19;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp19mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp20;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp20mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp21;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp21mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp22;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp22mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp23;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp23mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp24;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp24mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp25;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp25mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp26;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp26mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp27;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp27mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp28;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp28mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp29;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp29mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp30;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp30mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				wp = w.wp31;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + w.wp31mincost) navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
-			}
-			w = w.chain;
-		}
+			searching = true;
+			it.wpfire = 0;
+			cost = it.wpcost;
+			p = it.wpnearestpoint;
+			entity wp;
+			wp = it.wp00;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp00mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp01;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp01mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp02;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp02mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp03;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp03mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp04;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp04mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp05;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp05mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp06;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp06mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp07;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp07mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp08;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp08mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp09;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp09mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp10;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp10mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp11;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp11mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp12;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp12mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp13;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp13mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp14;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp14mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp15;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp15mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp16;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp16mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp17;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp17mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp18;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp18mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp19;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp19mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp20;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp20mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp21;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp21mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp22;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp22mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp23;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp23mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp24;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp24mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp25;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp25mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp26;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp26mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp27;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp27mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp28;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp28mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp29;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp29mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp30;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp30mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			wp = it.wp31;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp31mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
+			}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+		});
 	}
 }
 
 // queries the entire spawnfunc_waypoint network for pathes leading to the bot
 void navigation_markroutes_inverted(entity fixed_source_waypoint)
 {
-	entity w, wp, waylist;
-	float searching, cost, cost2;
+	float cost, cost2;
 	vector p;
-	w = waylist = findchain(classname, "waypoint"); // TODO
-	while (w)
+	IL_EACH(g_waypoints, true,
 	{
-		w.wpconsidered = false;
-		w.wpnearestpoint = '0 0 0';
-		w.wpcost = 10000000;
-		w.wpfire = 0;
-		w.enemy = NULL;
-		w = w.chain;
-	}
+		it.wpconsidered = false;
+		it.wpnearestpoint = '0 0 0';
+		it.wpcost = 10000000;
+		it.wpfire = 0;
+		it.enemy = NULL;
+	});
 
 	if(fixed_source_waypoint)
 	{
@@ -638,36 +608,32 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 		error("need to start with a waypoint\n");
 	}
 
-	searching = true;
+	bool searching = true;
 	while (searching)
 	{
 		searching = false;
-		w = waylist;
-		while (w)
+		IL_EACH(g_waypoints, it.wpfire,
 		{
-			if (w.wpfire)
+			searching = true;
+			it.wpfire = 0;
+			cost = it.wpcost; // cost to walk from it to home
+			p = it.wpnearestpoint;
+			entity wp = it;
+			IL_EACH(g_waypoints, true,
 			{
-				searching = true;
-				w.wpfire = 0;
-				cost = w.wpcost; // cost to walk from w to home
-				p = w.wpnearestpoint;
-				for(wp = waylist; wp; wp = wp.chain)
-				{
-					if(w != wp.wp00) if(w != wp.wp01) if(w != wp.wp02) if(w != wp.wp03)
-					if(w != wp.wp04) if(w != wp.wp05) if(w != wp.wp06) if(w != wp.wp07)
-					if(w != wp.wp08) if(w != wp.wp09) if(w != wp.wp10) if(w != wp.wp11)
-					if(w != wp.wp12) if(w != wp.wp13) if(w != wp.wp14) if(w != wp.wp15)
-					if(w != wp.wp16) if(w != wp.wp17) if(w != wp.wp18) if(w != wp.wp19)
-					if(w != wp.wp20) if(w != wp.wp21) if(w != wp.wp22) if(w != wp.wp23)
-					if(w != wp.wp24) if(w != wp.wp25) if(w != wp.wp26) if(w != wp.wp27)
-					if(w != wp.wp28) if(w != wp.wp29) if(w != wp.wp30) if(w != wp.wp31)
-						continue;
-					cost2 = cost + wp.dmg;
-					navigation_markroutes_checkwaypoint(w, wp, cost2, p);
-				}
-			}
-			w = w.chain;
-		}
+				if(wp != it.wp00) if(wp != it.wp01) if(wp != it.wp02) if(wp != it.wp03)
+				if(wp != it.wp04) if(wp != it.wp05) if(wp != it.wp06) if(wp != it.wp07)
+				if(wp != it.wp08) if(wp != it.wp09) if(wp != it.wp10) if(wp != it.wp11)
+				if(wp != it.wp12) if(wp != it.wp13) if(wp != it.wp14) if(wp != it.wp15)
+				if(wp != it.wp16) if(wp != it.wp17) if(wp != it.wp18) if(wp != it.wp19)
+				if(wp != it.wp20) if(wp != it.wp21) if(wp != it.wp22) if(wp != it.wp23)
+				if(wp != it.wp24) if(wp != it.wp25) if(wp != it.wp26) if(wp != it.wp27)
+				if(wp != it.wp28) if(wp != it.wp29) if(wp != it.wp30) if(wp != it.wp31)
+					continue;
+				cost2 = cost + it.dmg;
+				navigation_markroutes_checkwaypoint(wp, it, cost2, p);
+			});
+		});
 	}
 }
 
@@ -1027,7 +993,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 	vector m1, m2, v, o;
 	float c, d, danger;
 	c = 0;
-	FOREACH_ENTITY_CLASS("waypoint", true,
+	IL_EACH(g_waypoints, true,
 	{
 		danger = 0;
 		m1 = it.mins;
@@ -1112,27 +1078,18 @@ void navigation_unstuck(entity this)
 		// build a new queue
 		LOG_DEBUG(strcat(this.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n"));
 
-		entity head, first;
+		entity first = NULL;
 
-		first = NULL;
-		head = findradius(this.origin, search_radius);
-
-		while(head)
+		FOREACH_ENTITY_RADIUS(this.origin, search_radius, it.classname == "waypoint" && !(it.wpflags & WAYPOINTFLAG_GENERATED),
 		{
-			if(head.classname=="waypoint")
-		//	if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
-			{
-				if(bot_waypoint_queue_goal)
-					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = head;
-				else
-					first = head;
+			if(bot_waypoint_queue_goal)
+				bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = it;
+			else
+				first = it;
 
-				bot_waypoint_queue_goal = head;
-				bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = NULL;
-			}
-
-			head = head.chain;
-		}
+			bot_waypoint_queue_goal = it;
+			bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = NULL;
+		});
 
 		if (first)
 			bot_waypoint_queue_goal = first;
