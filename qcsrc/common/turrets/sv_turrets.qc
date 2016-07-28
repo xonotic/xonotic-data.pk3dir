@@ -1199,7 +1199,8 @@ void turrets_manager_think(entity this)
 
 	if (autocvar_g_turrets_reloadcvars == 1)
 	{
-		FOREACH_ENTITY_FLAGS(turret_flags, TUR_FLAG_ISTURRET, {
+		IL_EACH(g_turrets, true,
+		{
 			load_unit_settings(it, true);
 			Turret tur = get_turretinfo(it.m_id);
 			tur.tr_think(tur, it);
@@ -1248,6 +1249,7 @@ bool turret_initialize(entity this, Turret tur)
 	// if tur_head exists, we can assume this turret re-spawned
 	if(!this.tur_head) {
 		tur.tr_precache(tur);
+		IL_PUSH(g_turrets, this);
 	}
 
 	entity e = find(NULL, classname, "turret_manager");

@@ -452,3 +452,6 @@ STATIC_INIT(g_waypoints) { g_waypoints = IL_NEW(); }
 
 IntrusiveList g_vehicles;
 STATIC_INIT(g_vehicles) { g_vehicles = IL_NEW(); }
+
+IntrusiveList g_turrets;
+STATIC_INIT(g_turrets) { g_turrets = IL_NEW(); }
