@@ -63,6 +63,7 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 		axh.axh_image		= vCROSS_HINT;
 		axh.alpha			= 1;
 		AuxiliaryXhair[axh_id] = axh;
+		IL_PUSH(g_drawables_2d, axh);
 	}
 
 	if(sf & 2)
@@ -81,7 +82,6 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 
 	axh.cnt 			= time;
 	axh.draw2d			= AuxiliaryXhair_Draw2D;
-	if (isnew) IL_PUSH(g_drawables_2d, axh);
 	return true;
 }
 
@@ -126,6 +126,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		axh.axh_image    = vCROSS_HINT;
 		axh.alpha        = 1;
 		AuxiliaryXhair[i] = axh;
+		IL_PUSH(g_drawables_2d, axh);
 	}
 
 	if(hud_id == HUD_BUMBLEBEE_GUN)
