@@ -8,13 +8,13 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 		{
 			UNSET_ONGROUND(this);
 		}
-		else if (!this.move_groundentity)
+		else if (!this.groundentity)
 		{
 			return;
 		}
-		else if (this.move_suspendedinair && wasfreed(this.move_groundentity))
+		else if (this.move_suspendedinair && wasfreed(this.groundentity))
 		{
-			this.move_groundentity = NULL;
+			this.groundentity = NULL;
 			return;
 		}
 	}
@@ -78,7 +78,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			if (trace_plane_normal.z > 0.7 && d < bstop && d > -bstop)
 			{
 				SET_ONGROUND(this);
-				this.move_groundentity = trace_ent;
+				this.groundentity = trace_ent;
 				this.velocity = '0 0 0';
 				this.avelocity = '0 0 0';
 			}
@@ -93,7 +93,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			if (trace_plane_normal.z > 0.7)
 			{
 				SET_ONGROUND(this);
-				this.move_groundentity = trace_ent;
+				this.groundentity = trace_ent;
 				if (trace_ent.solid == SOLID_BSP)
 					this.move_suspendedinair = true;
 				this.velocity = '0 0 0';

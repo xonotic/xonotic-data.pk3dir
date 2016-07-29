@@ -122,7 +122,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 				}
 
 				SET_ONGROUND(this);
-				this.move_groundentity = trace_ent;
+				this.groundentity = trace_ent;
 			}
 		}
 		else if(stepheight)
@@ -502,7 +502,7 @@ float _Movetype_PushEntity(entity this, vector push, bool failonstartsolid)  // 
 	this.origin = trace_endpos;
 
 	if(trace_fraction < 1)
-		if(this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || (this.move_groundentity != trace_ent)))
+		if(this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || (this.groundentity != trace_ent)))
 			_Movetype_Impact(this, trace_ent);
 
 	return trace_fraction;
