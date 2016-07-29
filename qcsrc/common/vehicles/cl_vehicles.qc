@@ -48,12 +48,14 @@ void AuxiliaryXhair_Draw2D(entity this)
 
 NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 {
-	int axh_id	= bound(0, ReadByte(), MAX_AXH);
-	entity axh 		= AuxiliaryXhair[axh_id];
+	int sf = ReadByte();
 
-	if(axh == NULL || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+	int axh_id	= bound(0, ReadByte(), MAX_AXH);
+	entity axh = AuxiliaryXhair[axh_id];
+
+	if(axh == NULL || wasfreed(axh))
 	{
-		axh					= spawn();
+		axh					= new(auxiliary_crosshair);
 		axh.draw2d			= func_null;
 		axh.drawmask 		= MASK_NORMAL;
 		axh.axh_drawflag	= DRAWFLAG_ADDITIVE;
@@ -63,12 +65,20 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 		AuxiliaryXhair[axh_id] = axh;
 	}
 
-	axh.origin_x	= ReadCoord();
-	axh.origin_y	= ReadCoord();
-	axh.origin_z	= ReadCoord();
-	axh.colormod_x		= ReadByte() / 255;
-	axh.colormod_y		= ReadByte() / 255;
-	axh.colormod_z		= ReadByte() / 255;
+	if(sf & 2)
+	{
+		axh.origin_x = ReadCoord();
+		axh.origin_y = ReadCoord();
+		axh.origin_z = ReadCoord();
+	}
+
+	if(sf & 4)
+	{
+		axh.colormod_x = ReadByte() / 255;
+		axh.colormod_y = ReadByte() / 255;
+		axh.colormod_z = ReadByte() / 255;
+	}
+
 	axh.cnt 			= time;
 	axh.draw2d			= AuxiliaryXhair_Draw2D;
 	if (isnew) IL_PUSH(g_drawables_2d, axh);
@@ -81,10 +91,22 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 	return = true;
 
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
-	if(hud_id == 0)
+	// note: HUD_NORMAL is set to 0 currently too, but we'll check both just in case
+	if(hud_id == 0 || hud_id == HUD_NORMAL)
 	{
 		sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
 		sound(this, CH_PAIN_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
+
+		for(int i = 0; i < MAX_AXH; ++i)
+		{
+			entity axh = AuxiliaryXhair[i];
+
+			if(axh != NULL && !wasfreed(axh))
+			{
+				AuxiliaryXhair[i] = NULL;
+				remove(axh);
+			}
+		}
 		return;
 	}
 
