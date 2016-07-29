@@ -43,6 +43,7 @@ vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector 
 		pos.y += fontsize.y;
 		offset = fontsize.x;
 	}
+	pos.y += fontsize.y * 0.25;
 	return pos;
 }
 
