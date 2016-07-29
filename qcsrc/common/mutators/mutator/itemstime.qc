@@ -130,7 +130,7 @@ void Item_ItemsTime_SetTime(entity e, float t)
 
 void Item_ItemsTime_SetTimesForAllPlayers()
 {
-    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it)), LAMBDA(Item_ItemsTime_SetTimesForPlayer(it)));
+    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it) || autocvar_sv_itemstime == 2), LAMBDA(Item_ItemsTime_SetTimesForPlayer(it)));
 }
 
 float Item_ItemsTime_UpdateTime(entity e, float t)

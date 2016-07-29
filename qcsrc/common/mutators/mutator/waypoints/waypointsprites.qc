@@ -939,7 +939,7 @@ bool WaypointSprite_visible_for_player(entity this, entity player, entity view)
     {
         if (!autocvar_sv_itemstime)
             return false;
-        if (!warmup_stage && IS_PLAYER(view))
+        if (!warmup_stage && IS_PLAYER(view) && autocvar_sv_itemstime != 2)
             return false;
     }
     else if (this.team && this.rule == SPRITERULE_DEFAULT)
