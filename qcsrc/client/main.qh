@@ -103,7 +103,9 @@ float warmup_stage;
 
 void Fog_Force();
 
-string getcommandkey(string text, string command);
+string _getcommandkey(string text, string command, bool forcename);
+#define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
+#define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
 
 string vote_called_vote;
 float ready_waiting;

@@ -118,10 +118,10 @@ void HUD_Vote()
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, eX * mySize.x + eY * (1.75/8) * mySize.y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-	s = sprintf(_("Yes (%s): %d"), getcommandkey(_("vote YES"), "vyes"), vote_yescount);
-	drawstring_aspect(pos + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, '0 1 0', a, DRAWFLAG_NORMAL);
-	s = sprintf(_("No (%s): %d"), getcommandkey(_("vote NO"), "vno"), vote_nocount);
-	drawstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, '1 0 0', a, DRAWFLAG_NORMAL);
+	s = sprintf("^2%s ^7(%d)", getcommandkey_forcename(_("Yes"), "vyes"), vote_yescount);
+	drawcolorcodedstring_aspect(pos + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, a, DRAWFLAG_NORMAL);
+	s = sprintf("^1%s ^7(%d)", getcommandkey_forcename(_("No"), "vno"), vote_nocount);
+	drawcolorcodedstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
 	drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_back", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
