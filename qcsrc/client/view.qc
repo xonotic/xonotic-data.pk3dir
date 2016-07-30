@@ -3,8 +3,8 @@
 #include "announcer.qh"
 #include "hud/all.qh"
 #include "mapvoting.qh"
-#include "scoreboard.qh"
 #include "shownames.qh"
+#include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 
 #include "mutators/events.qh"

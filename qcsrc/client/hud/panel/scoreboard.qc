@@ -1,8 +1,6 @@
 #include "scoreboard.qh"
 
-#include "hud/panel/quickmenu.qh"
-#include "hud/all.qh"
-
+#include "quickmenu.qh"
 #include <common/ent_cs.qh>
 #include <common/constants.qh>
 #include <common/mapinfo.qh>

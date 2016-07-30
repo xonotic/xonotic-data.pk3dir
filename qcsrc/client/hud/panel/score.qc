@@ -1,6 +1,6 @@
 #include "score.qh"
 
-#include <client/scoreboard.qh>
+#include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 

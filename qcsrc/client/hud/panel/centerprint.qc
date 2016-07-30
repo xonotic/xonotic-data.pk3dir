@@ -1,6 +1,6 @@
 #include "centerprint.qh"
 
-#include <client/scoreboard.qh>
+#include "scoreboard.qh"
 
 // CenterPrint (#16)
 
