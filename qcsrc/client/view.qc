@@ -1350,7 +1350,6 @@ void HUD_Draw(entity this)
 				Accuracy_LoadLevels();
 
 			HUD_Main();
-			HUD_DrawScoreboard();
 			HUD_Scale_Disable();
 		}
 

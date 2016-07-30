@@ -235,6 +235,7 @@ REGISTER_HUD_PANEL(MINIGAME_MENU,   HUD_MinigameMenu,   minigamemenu,   PANEL_CO
 REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       mapvote,        PANEL_CONFIG_NO  , PANEL_SHOW_MAPVOTE )
 REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      itemstime,      PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
 REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(SCOREBOARD,      HUD_Scoreboard,     scoreboard,     PANEL_CONFIG_NO  , PANEL_SHOW_ALWAYS  )
 // always add new panels to the end of list
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:

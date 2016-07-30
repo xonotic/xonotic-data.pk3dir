@@ -490,17 +490,24 @@ void Hud_Dynamic_Frame()
 	hud_shift_current = hud_shift;
 }
 
+// Scoreboard panel
+//
+void HUD_DrawScoreboard();
+void HUD_Scoreboard(void)
+{
+	HUD_DrawScoreboard();
+}
+
 void HUD_Main()
 {
 	int i;
-	// global hud alpha fade
+	// global hud alpha fade (scoreboard-related panels behave differently and override it temporarly)
 	if(menu_enabled == 1)
 		hud_fade_alpha = 1;
+	else if(!autocvar__hud_configure)
+		hud_fade_alpha = (1 - scoreboard_fade_alpha) * (1 - autocvar__menu_alpha);
 	else
-		hud_fade_alpha = (1 - autocvar__menu_alpha);
-
-	if(scoreboard_fade_alpha)
-		hud_fade_alpha = (1 - scoreboard_fade_alpha);
+		hud_fade_alpha = 1 - autocvar__menu_alpha;
 
 	HUD_Configure_Frame();
 
@@ -510,8 +517,14 @@ void HUD_Main()
 	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
-		HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
-		return;
+		if(autocvar__menu_alpha == 1)
+			return;
+		if(scoreboard_fade_alpha == 1)
+		{
+			HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
+			HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
+			return;
+		}
 	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)

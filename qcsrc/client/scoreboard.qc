@@ -989,9 +989,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 }
 
 float HUD_WouldDrawScoreboard() {
-	if (autocvar__hud_configure)
-		return 0;
-	else if (QuickMenu_IsOpened())
+	if (QuickMenu_IsOpened())
 		return 0;
 	else if (HUD_Radar_Clickable())
 		return 0;
@@ -1255,57 +1253,85 @@ float hud_woulddrawscoreboard_prev;
 float hud_woulddrawscoreboard_change; // "time" at which HUD_WouldDrawScoreboard() changed
 void HUD_DrawScoreboard()
 {
-	float hud_woulddrawscoreboard;
-	hud_woulddrawscoreboard = scoreboard_active;
-	if(hud_woulddrawscoreboard != hud_woulddrawscoreboard_prev) {
-		hud_woulddrawscoreboard_change = time;
-		hud_woulddrawscoreboard_prev = hud_woulddrawscoreboard;
-	}
+	if(!autocvar__hud_configure)
+	{
+		float hud_woulddrawscoreboard;
+		hud_woulddrawscoreboard = scoreboard_active;
+		if(hud_woulddrawscoreboard != hud_woulddrawscoreboard_prev) {
+			hud_woulddrawscoreboard_change = time;
+			hud_woulddrawscoreboard_prev = hud_woulddrawscoreboard;
+		}
+	
+		if(hud_woulddrawscoreboard) {
+			if(menu_enabled == 1)
+				scoreboard_fade_alpha = 1;
+			float scoreboard_fadeinspeed = autocvar_scoreboard_fadeinspeed;
+			if (scoreboard_fadeinspeed)
+				scoreboard_fade_alpha = bound (0, (time - hud_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
+			else
+				scoreboard_fade_alpha = 1;
+		}
+		else {
+			float scoreboard_fadeoutspeed = autocvar_scoreboard_fadeoutspeed;
+			if (scoreboard_fadeoutspeed)
+				scoreboard_fade_alpha = bound (0, (1/scoreboard_fadeoutspeed - (time - hud_woulddrawscoreboard_change)) * scoreboard_fadeoutspeed, 1);
+			else
+				scoreboard_fade_alpha = 0;
+		}
 
-	if(hud_woulddrawscoreboard) {
-		float scoreboard_fadeinspeed = autocvar_scoreboard_fadeinspeed;
-		if (scoreboard_fadeinspeed)
-			scoreboard_fade_alpha = bound (0, (time - hud_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
-		else
-			scoreboard_fade_alpha = 1;
+		if (!scoreboard_fade_alpha)
+			return;
 	}
-	else {
-		float scoreboard_fadeoutspeed = autocvar_scoreboard_fadeoutspeed;
-		if (scoreboard_fadeoutspeed)
-			scoreboard_fade_alpha = bound (0, (1/scoreboard_fadeoutspeed - (time - hud_woulddrawscoreboard_change)) * scoreboard_fadeoutspeed, 1);
-		else
-			scoreboard_fade_alpha = 0;
-	}
-
-	if (!scoreboard_fade_alpha)
-		return;
+	else
+		scoreboard_fade_alpha = 0;
 
 	if (autocvar_scoreboard_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
 
-	HUD_UpdatePlayerTeams();
+	float hud_fade_alpha_save = hud_fade_alpha;
+	if(menu_enabled == 1)
+		hud_fade_alpha = 1;
+	else
+		hud_fade_alpha = scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
+	HUD_Panel_UpdateCvars();
 
-	scoreboard_alpha_bg = autocvar_scoreboard_alpha_bg * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
-	scoreboard_alpha_fg = autocvar_scoreboard_alpha_fg * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
+	scoreboard_alpha_bg = autocvar_scoreboard_alpha_bg * panel_fg_alpha;
+	scoreboard_alpha_fg = autocvar_scoreboard_alpha_fg * panel_fg_alpha;
 	scoreboard_highlight = autocvar_scoreboard_highlight;
-	scoreboard_highlight_alpha = autocvar_scoreboard_highlight_alpha * scoreboard_alpha_fg;
-	scoreboard_highlight_alpha_self = autocvar_scoreboard_highlight_alpha_self * scoreboard_alpha_fg;
-	scoreboard_alpha_name = autocvar_scoreboard_alpha_name * scoreboard_alpha_fg;
-	scoreboard_alpha_name_self = autocvar_scoreboard_alpha_name_self * scoreboard_alpha_fg;
+	scoreboard_highlight_alpha = autocvar_scoreboard_highlight_alpha * panel_fg_alpha;
+	scoreboard_highlight_alpha_self = autocvar_scoreboard_highlight_alpha_self * panel_fg_alpha;
+	scoreboard_alpha_name = autocvar_scoreboard_alpha_name * panel_fg_alpha;
+	scoreboard_alpha_name_self = autocvar_scoreboard_alpha_name_self * panel_fg_alpha;
+
+	hud_fade_alpha = hud_fade_alpha_save;
+
+	// don't overlap with con_notify
+	if(!autocvar__hud_configure)
+		panel_pos_y = max((autocvar_con_notify * autocvar_con_notifysize), panel_pos_y);
+
+	HUD_Panel_DrawBg(scoreboard_fade_alpha);
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	HUD_UpdatePlayerTeams();
 
 	vector rgb, pos, tmp;
 	entity pl, tm;
 	string str;
 
-	xmin = (autocvar_scoreboard_offset_left * vid_conwidth);
-	ymin = max((autocvar_con_notify * autocvar_con_notifysize), (autocvar_scoreboard_offset_vertical * vid_conwidth));
+	xmin = panel_pos_x;
+	ymin = panel_pos_y;
 
-	xmax = ((1 - autocvar_scoreboard_offset_right) * vid_conwidth);
-	ymax = (vid_conheight - ymin);
+	xmax = panel_pos_x + panel_size_x;
+	ymax = panel_pos_y + panel_size_y;
 
-	sbwidth = xmax - xmin;
+	sbwidth = panel_size_x;
 
 	// Initializes position
 	pos.x = xmin;
