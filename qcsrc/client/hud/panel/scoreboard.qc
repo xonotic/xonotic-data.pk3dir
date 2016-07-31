@@ -858,7 +858,6 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	body_table_height = 1.25 * hud_fontsize.y * max(1, tm.team_size); // no player? show 1 empty line
 
-	pos.y += autocvar_scoreboard_border_thickness;
 	pos -= '1 1 0';
 
 	tmp.x = sbwidth + 2;
@@ -870,17 +869,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	else
 		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, rgb + '0.5 0.5 0.5', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 
-	// table border
-	tmp.y += autocvar_scoreboard_border_thickness;
-	tmp.y += body_table_height;
-	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg, DRAWFLAG_NORMAL); // more transparency for the scoreboard
-
-	// separator header/table
 	pos.y += 1.25 * hud_fontsize.y;
-	tmp.y = autocvar_scoreboard_border_thickness;
-	drawfill(pos, tmp, '0 0 0', scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-
-	pos.y += autocvar_scoreboard_border_thickness;
 
 	// table background
 	tmp.y = body_table_height;
@@ -894,14 +883,12 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// go back to the top to make alternated columns highlighting and to print the strings
 	pos.y -= 1.25 * hud_fontsize.y;
-	pos.y -= autocvar_scoreboard_border_thickness;
 
 	pos += '1 1 0';
 
 	if (scoreboard_highlight)
 	{
 		column_dim.y = 1.25 * hud_fontsize.y; // header
-		column_dim.y += autocvar_scoreboard_border_thickness;
 		column_dim.y += body_table_height;
 	}
 
@@ -952,7 +939,6 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	pos.x = xmin;
 	pos.y += 1.25 * hud_fontsize.y; // skip the header
-	pos.y += autocvar_scoreboard_border_thickness;
 
 	// item size
 	tmp.x = sbwidth;
@@ -1033,7 +1019,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float weapon_width = sbwidth / columnns / rows;
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos.y += 1.25 * hud_fontsize.y + autocvar_scoreboard_border_thickness;
+	pos.y += 1.25 * hud_fontsize.y;
 	vector tmp = '0 0 0';
 	tmp.x = sbwidth;
 	tmp.y = height * rows;
@@ -1042,7 +1028,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// column highlighting
 	for (int i = 0; i < columnns; ++i)
@@ -1159,7 +1144,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 
 	//  draw table header
 	drawstring(pos, _("Map stats:"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos.y += 1.25 * hud_fontsize.y + autocvar_scoreboard_border_thickness;
+	pos.y += 1.25 * hud_fontsize.y;
 
 	// draw table
 	vector tmp = '0 0 0';
@@ -1170,7 +1155,6 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// draw monsters
 	if(stat_monsters_total)
@@ -1212,7 +1196,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 
 	pos.y += hud_fontsize.y;
 	drawstring(pos, _("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos.y += hud_fontsize.y + autocvar_scoreboard_border_thickness;
+	pos.y += hud_fontsize.y;
 	vector tmp = '0 0 0';
 	tmp.x = sbwidth;
 	tmp.y = 1.25 * hud_fontsize.y * RANKINGS_RECEIVED_CNT;
@@ -1221,7 +1205,6 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
-	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// row highlighting
 	for(i = 0; i<RANKINGS_RECEIVED_CNT; ++i)
@@ -1242,7 +1225,6 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		drawcolorcodedstring(pos + '8 0 0' * hud_fontsize.y, n, '1 1 0' * hud_fontsize.y, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		pos.y += 1.25 * hud_fontsize.y;
 	}
-	pos.y += autocvar_scoreboard_border_thickness;
 
 	return pos;
 }
@@ -1350,8 +1332,7 @@ void HUD_DrawScoreboard()
 
 	if(teamplay)
 	{
-		vector team_score_baseoffset;
-		team_score_baseoffset = eY * (2 * autocvar_scoreboard_border_thickness + hud_fontsize.y) - eX * (autocvar_scoreboard_border_thickness + hud_fontsize.x * 0.25);
+		vector team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.25;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
