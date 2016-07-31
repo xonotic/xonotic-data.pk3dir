@@ -540,7 +540,7 @@ spawnfunc(__init_dedicated_server)
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
 
-	remove = remove_unsafely;
+	delete_fn = remove_unsafely;
 
 	entity e = spawn();
 	setthink(e, GotoFirstMap);
@@ -657,7 +657,7 @@ spawnfunc(worldspawn)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
 	world_already_spawned = true;
 
-	remove = remove_safely; // during spawning, watch what you remove!
+	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 
@@ -1299,6 +1299,7 @@ When the player presses attack or jump, change to the next level
 void IntermissionThink(entity this)
 {
 	FixIntermissionClient(this);
+	CSQCMODEL_AUTOUPDATE(this); // PlayerPostThink returns before calling this during intermission, so run it here
 
 	float server_screenshot = (autocvar_sv_autoscreenshot && this.cvar_cl_autoscreenshot);
 	float client_screenshot = (this.cvar_cl_autoscreenshot == 2);
@@ -1487,7 +1488,7 @@ void FixIntermissionClient(entity e)
 		e.health = -2342;
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
 		e.solid = SOLID_NOT;
-		e.movetype = MOVETYPE_NONE;
+		set_movetype(e, MOVETYPE_NONE);
 		e.takedamage = DAMAGE_NO;
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1983,10 +1984,53 @@ string GotoMap(string m)
 		return "Map switch will happen after scoreboard.";
 }
 
+bool autocvar_sv_freezenonclients;
+bool autocvar_sv_gameplayfix_delayprojectiles;
+void Physics_Frame()
+{
+	if(autocvar_sv_freezenonclients)
+		return;
+
+	FOREACH_ENTITY_FLOAT(pure_data, false,
+	{
+		if(IS_CLIENT(it) || it.classname == "" || it.movetype == MOVETYPE_PUSH || it.movetype == MOVETYPE_FAKEPUSH || it.movetype == MOVETYPE_PHYSICS)
+			continue;
+
+		int mt = it.move_movetype;
+
+		if(mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH || mt == MOVETYPE_PHYSICS)
+		{
+			it.move_qcphysics = false;
+			it.movetype = mt;
+			continue;
+		}
+
+		it.movetype = ((it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype);
+
+		if(it.move_movetype == MOVETYPE_NONE)
+			continue;
+
+		if(it.move_qcphysics)
+			Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
+	});
+
+	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)
+		return;
+
+	FOREACH_ENTITY_FLOAT(move_qcphysics, true,
+	{
+		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
+			continue;
+		Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
+	});
+}
+
 void systems_update();
 void EndFrame()
 {
 	anticheat_endframe();
+
+	Physics_Frame();
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		entity e = IS_SPEC(it) ? it.enemy : it;
@@ -2008,7 +2052,8 @@ void EndFrame()
 		it.damage_dealt = 0;
 		antilag_record(it, CS(it), altime);
 	});
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+	IL_EACH(g_monsters, true,
+	{
 		antilag_record(it, it, altime);
 	});
 	FOREACH_CLIENT(PS(it), {
@@ -2016,6 +2061,7 @@ void EndFrame()
 		s.ps_push(s, it);
 	});
 	systems_update();
+	IL_ENDFRAME();
 }
 
 

@@ -23,3 +23,4 @@ COMPONENT(phys);
 .bool com_phys_vel_2d;
 .bool com_phys_water;
 .bool com_phys_friction_air;
+.bool move_qcphysics;

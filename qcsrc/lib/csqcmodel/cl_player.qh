@@ -22,7 +22,7 @@
 #ifndef LIB_CSQCMODEL_CL_PLAYER_H
 #define LIB_CSQCMODEL_CL_PLAYER_H
 
-int autocvar_cl_movement = 1;
+bool autocvar_cl_movement = true;
 
 entity csqcplayer;
 float csqcplayer_status;

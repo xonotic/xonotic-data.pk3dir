@@ -28,7 +28,7 @@ void sys_phys_update(entity this, float dt)
 	if (IS_SVQC) {
 		if (PHYS_MOVETYPE(this) == MOVETYPE_NONE) { return; }
 		// when we get here, disableclientprediction cannot be 2
-		this.disableclientprediction = 0;
+		this.disableclientprediction = (this.move_qcphysics) ? -1 : 0;
 	}
 
 	viewloc_PlayerPhysics(this);
@@ -76,8 +76,8 @@ void sys_phys_update(entity this, float dt)
 	if (this.flags & FL_WATERJUMP) {
 		this.velocity_x = this.movedir.x;
 		this.velocity_y = this.movedir.y;
-		if (time > PHYS_TELEPORT_TIME(this)
-		    || this.waterlevel == WATERLEVEL_NONE
+		if (this.waterlevel == WATERLEVEL_NONE
+		    || time > PHYS_TELEPORT_TIME(this)
 		    || PHYS_WATERJUMP_TIME(this) <= 0
 		   ) {
 			this.flags &= ~FL_WATERJUMP;
@@ -192,7 +192,6 @@ void sys_phys_simulate(entity this, float dt)
 				if (!trace_startsolid) {
 					this.velocity = forward * 50;
 					this.velocity_z = 310;
-					if (IS_CSQC) { PHYS_WATERJUMP_TIME(this) = 2; }
 					UNSET_ONGROUND(this);
 					SET_JUMP_HELD(this);
 				}
@@ -205,6 +204,9 @@ void sys_phys_simulate(entity this, float dt)
 	    + v_right * this.movement.y
 	    + '0 0 1' * this.movement.z * (this.com_phys_vel_2d ? 0 : 1);
 	if (this.com_phys_water) {
+		if (PHYS_INPUT_BUTTON_CROUCH(this)) {
+			wishvel.z = -PHYS_MAXSPEED(this);
+		}
 		if (this.viewloc) {
 			wishvel.z = -160;    // drift anyway
 		} else if (wishvel == '0 0 0') {
@@ -298,9 +300,7 @@ void sys_phys_simulate(entity this, float dt)
 			}
 		}
 	} else {
-		if (this.com_phys_ground || this.com_phys_water) {
-			if (IS_DUCKED(this)) { wishspeed *= 0.5; }
-		}
+		if (this.com_phys_ground && IS_DUCKED(this)) { wishspeed *= 0.5; }
 		if (this.com_phys_water) {
 			wishspeed *= 0.7;
 
@@ -325,6 +325,9 @@ void sys_phys_simulate(entity this, float dt)
 					// water: 100
 					// idea: double those
 					this.velocity_z = 200;
+					if (this.waterlevel >= WATERLEVEL_SUBMERGED) {
+						this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
+					}
 				}
 			}
 			if (this.viewloc) {
@@ -336,7 +339,6 @@ void sys_phys_simulate(entity this, float dt)
 			} else {
 				// water acceleration
 				PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
-				PM_ClientMovement_Move(this);
 			}
 			return;
 		}
@@ -385,17 +387,13 @@ void sys_phys_simulate(entity this, float dt)
 				const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
 				this.velocity += accelspeed * wishdir;
 			}
-			if (IS_CSQC && vdist(this.velocity, >, 0)) {
-				PM_ClientMovement_Move(this);
-			}
 			return;
 		}
 
-		if (IS_CSQC || time >= PHYS_TELEPORT_TIME(this)) {
+		if (IS_CSQC ? PHYS_WATERJUMP_TIME(this) <= 0 : time >= PHYS_TELEPORT_TIME(this)) {
 			PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 		}
 	}
-	PM_ClientMovement_Move(this);
 }
 
 .entity groundentity;
@@ -447,7 +445,7 @@ void sys_phys_simulate_simple(entity this, float dt)
 					    trace_dphitcontents = 0;
 					    trace_dphitq3surfaceflags = 0;
 					    trace_dphittexturename = string_null;
-					    gettouch(it)((other = this, it));
+					    gettouch(it)(this, it);
 					    vel = this.velocity;
 					}
 				});
@@ -455,11 +453,11 @@ void sys_phys_simulate_simple(entity this, float dt)
 			if (hit && this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || this.groundentity != ent)) {
 				// SV_Impact (ent, trace);
 				tracebox(p0, mn, mx, p1, MOVE_NORMAL, this);
-				void(entity) touched = gettouch(this);
+				void(entity, entity) touched = gettouch(this);
 				if (touched && this.solid != SOLID_NOT) {
-					touched((other = ent, this));
+					touched(ent, this);
 				}
-				void(entity) touched2 = gettouch(ent);
+				void(entity, entity) touched2 = gettouch(ent);
 				if (this && ent && touched2 && ent.solid != SOLID_NOT) {
 					trace_endpos = ent.origin;
 					trace_plane_normal *= -1;
@@ -469,7 +467,7 @@ void sys_phys_simulate_simple(entity this, float dt)
 					trace_dphitcontents = 0;
 					trace_dphitq3surfaceflags = 0;
 					trace_dphittexturename = string_null;
-					touched2((other = this, ent));
+					touched2(this, ent);
 				}
 			}
 		}

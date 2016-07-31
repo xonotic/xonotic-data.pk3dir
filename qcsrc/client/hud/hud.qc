@@ -493,7 +493,7 @@ void Hud_Dynamic_Frame()
 void HUD_Main()
 {
 	int i;
-	// global hud theAlpha fade
+	// global hud alpha fade
 	if(menu_enabled == 1)
 		hud_fade_alpha = 1;
 	else

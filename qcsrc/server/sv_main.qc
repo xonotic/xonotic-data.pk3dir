@@ -96,6 +96,7 @@ void CreatureFrame_Liquids(entity this)
 void CreatureFrame_FallDamage(entity this)
 {
 	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
+	if(this.velocity || this.oldvelocity) // moving or has moved
 	{
 		// check for falling damage
 		float velocity_len = vlen(this.velocity);
@@ -118,7 +119,7 @@ void CreatureFrame_FallDamage(entity this)
 void CreatureFrame_All()
 {
 	FOREACH_ENTITY_FLOAT(damagedbycontents, true, {
-		if (it.movetype == MOVETYPE_NOCLIP) continue;
+		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
 		CreatureFrame_FallDamage(it);
 		it.oldvelocity = it.velocity;
@@ -152,7 +153,7 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
-bool autocvar_sv_autopause = true;
+bool autocvar_sv_autopause = false;
 float RedirectionThink();
 void systems_update();
 void sys_phys_update(entity this, float dt);
@@ -165,7 +166,7 @@ void StartFrame()
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
-	remove = remove_unsafely; // not during spawning!
+	delete_fn = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
 	servertime = time;
 	serverframetime = frametime;
@@ -367,6 +368,8 @@ LABEL(cvar_fail)
 		__spawnfunc_expecting = false;
 		return;
 	}
+
+	this.move_movetype = this.movetype;
 
 	// support special -1 and -2 angle from radiant
 	if (this.angles == '0 -1 0')

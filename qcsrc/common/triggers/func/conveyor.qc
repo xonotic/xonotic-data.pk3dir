@@ -140,7 +140,7 @@ spawnfunc(func_conveyor)
 {
 	SetMovedir(this);
 	InitMovingBrushTrigger(this);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	conveyor_init(this);
 }
 
@@ -151,12 +151,12 @@ void conveyor_draw(entity this) { conveyor_think(this); }
 void conveyor_init(entity this)
 {
 	this.draw = conveyor_draw;
+	IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
-	this.movetype = MOVETYPE_NONE;
+	this.move_movetype = MOVETYPE_NONE;
 	this.model = "";
 	this.solid = SOLID_TRIGGER;
-	this.move_origin = this.origin;
 	this.move_time = time;
 }
 

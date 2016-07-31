@@ -165,7 +165,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 
 
 #define G_MODEL_INIT(ent,sol) \
-	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) ent.movetype = MOVETYPE_PHYSICS; \
+	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
 	SetBrushEntityModel(ent); \
 	ent.use = g_model_setcolormaptoactivator; \
@@ -173,7 +173,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(!ent.solid) ent.solid = (sol); else if(ent.solid < 0) ent.solid = SOLID_NOT;
 
 #define G_CLIENTMODEL_INIT(ent,sol) \
-	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) ent.movetype = MOVETYPE_PHYSICS; \
+	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
 	SetBrushEntityModel(ent); \
 	ent.use = g_clientmodel_use; \

@@ -10,6 +10,7 @@
 #define PHYS_DODGING_RAMP_TIME 				STAT(DODGING_RAMP_TIME, this)
 #define PHYS_DODGING_UP_SPEED 				STAT(DODGING_UP_SPEED, this)
 #define PHYS_DODGING_WALL 					STAT(DODGING_WALL, this)
+#define PHYS_DODGING_AIR 					STAT(DODGING_AIR, this)
 #define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 
 #ifdef CSQC
@@ -18,8 +19,6 @@
 #elif defined(SVQC)
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
-
-
 #endif
 
 #ifdef SVQC
@@ -124,6 +123,7 @@ float PM_dodging_checkpressedkeys(entity this)
 
 	makevectors(this.angles);
 
+	if(!PHYS_DODGING_AIR)
 	if (check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD) != 1
 		&& check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
 		return true;
@@ -189,7 +189,10 @@ void PM_dodging(entity this)
 	}
 
 	// make sure v_up, v_right and v_forward are sane
-	makevectors(this.angles);
+	if(PHYS_DODGING_AIR)
+		makevectors(this.v_angle);
+	else
+		makevectors(this.angles);
 
 	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
 	// will be called ramp_time/frametime times = 2 times. so, we need to
@@ -226,7 +229,7 @@ void PM_dodging(entity this)
 
 #ifdef SVQC
 		if (autocvar_sv_dodging_sound)
-			PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 
 		animdecide_setaction(this, ANIMACTION_JUMP, true);
 #endif

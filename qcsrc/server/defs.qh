@@ -253,6 +253,8 @@ float lockteams;
 .float parm_idlesince;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
+int sv_maxidle_slots;
+bool sv_maxidle_slots_countbots;
 
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
@@ -393,7 +395,6 @@ const float ACTIVE_TOGGLE 	= 3;
 .float player_blocked;
 .float weapon_blocked; // weapon use disabled
 
-.float frozen = _STAT(FROZEN); // for freeze attacks
 .float revive_progress = _STAT(REVIVE_PROGRESS);
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
@@ -442,3 +443,9 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .bool init_for_player_needed;
 .void(entity this, entity player) init_for_player;
+
+IntrusiveList g_monsters;
+STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
+
+IntrusiveList g_waypoints;
+STATIC_INIT(g_waypoints) { g_waypoints = IL_NEW(); }

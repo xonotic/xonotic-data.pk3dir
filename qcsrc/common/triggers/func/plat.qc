@@ -168,17 +168,16 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		this.classname = "plat";
 		this.solid = SOLID_BSP;
-		this.movetype = MOVETYPE_PUSH;
+		this.move_movetype = MOVETYPE_PUSH;
 		this.drawmask = MASK_NORMAL;
 		this.draw = plat_draw;
+		if (isnew) IL_PUSH(g_drawables, this);
 		this.use = plat_use;
 		this.entremove = trigger_remove_generic;
 
 		plat_reset(this); // also called here
 
 		this.move_movetype = MOVETYPE_PUSH;
-		this.move_origin = this.origin;
-		this.move_angles = this.angles;
 		this.move_time = time;
 
 		plat_spawn_inside_trigger(this);
@@ -188,8 +187,6 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 	{
 		plat_reset(this);
 
-		this.move_origin = this.origin;
-		this.move_angles = this.angles;
 		this.move_time = time;
 	}
 	return true;

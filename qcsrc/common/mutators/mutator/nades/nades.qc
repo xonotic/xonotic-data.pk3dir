@@ -94,7 +94,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 		proj.maxs = '16 16 16';
 	}
 	proj.colormod = nade_type.m_color;
-	proj.move_movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	settouch(proj, func_null);
 	proj.scale = 1.5;
 	proj.avelocity = randomvec() * 720;
@@ -273,7 +273,7 @@ void nade_napalm_ball(entity this)
 	proj.team = this.owner.team;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
-	proj.movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	proj.projectiledeathtype = DEATH_NADE_NAPALM.m_id;
 	PROJECTILE_MAKETRIGGER(proj);
 	setmodel(proj, MDL_Null);
@@ -356,7 +356,7 @@ void nade_napalm_boom(entity this)
 	fountain.ltime = time + autocvar_g_nades_napalm_fountain_lifetime;
 	fountain.pushltime = fountain.ltime;
 	fountain.team = this.team;
-	fountain.movetype = MOVETYPE_TOSS;
+	set_movetype(fountain, MOVETYPE_TOSS);
 	fountain.projectiledeathtype = DEATH_NADE_NAPALM.m_id;
 	fountain.bot_dodge = true;
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
@@ -448,7 +448,7 @@ void nade_ice_boom(entity this)
 	fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
 	fountain.pushltime = fountain.wait = fountain.ltime;
 	fountain.team = this.team;
-	fountain.movetype = MOVETYPE_TOSS;
+	set_movetype(fountain, MOVETYPE_TOSS);
 	fountain.projectiledeathtype = DEATH_NADE_ICE.m_id;
 	fountain.bot_dodge = false;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
@@ -494,7 +494,7 @@ void nade_spawn_boom(entity this)
 	entity spawnloc = spawn();
 	setorigin(spawnloc, this.origin);
 	setsize(spawnloc, this.realowner.mins, this.realowner.maxs);
-	spawnloc.movetype = MOVETYPE_NONE;
+	set_movetype(spawnloc, MOVETYPE_NONE);
 	spawnloc.solid = SOLID_NOT;
 	spawnloc.drawonlytoclient = this.realowner;
 	spawnloc.effects = EF_STARDUST;
@@ -559,35 +559,33 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	return orb;
 }
 
-void nade_entrap_touch(entity this)
+void nade_entrap_touch(entity this, entity toucher)
 {
-	if(DIFF_TEAM(other, this.realowner)) // TODO: what if realowner changes team or disconnects?
+	if(DIFF_TEAM(toucher, this.realowner)) // TODO: what if realowner changes team or disconnects?
 	{
-		if (!isPushable(other))
+		if (!isPushable(toucher))
 			return;
 
-		float pushdeltatime = time - other.lastpushtime;
+		float pushdeltatime = time - toucher.lastpushtime;
 		if (pushdeltatime > 0.15) pushdeltatime = 0;
-		other.lastpushtime = time;
+		toucher.lastpushtime = time;
 		if(!pushdeltatime) return;
 
 		// div0: ticrate independent, 1 = identity (not 20)
-#ifdef SVQC
-		other.velocity = other.velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
+		toucher.velocity = toucher.velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
 
-		UpdateCSQCProjectile(other);
-#elif defined(CSQC)
-		other.move_velocity = other.move_velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
-#endif
+	#ifdef SVQC
+		UpdateCSQCProjectile(toucher);
+	#endif
 	}
 
-	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) || IS_MONSTER(other) )
+	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) || IS_MONSTER(toucher) )
 	{
-		entity show_tint = (IS_VEHICLE(other)) ? other.owner : other;
+		entity show_tint = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
 
 		float tint_alpha = 0.75;
-		if(SAME_TEAM(other, this.realowner))
+		if(SAME_TEAM(toucher, this.realowner))
 			tint_alpha = 0.45;
 		STAT(ENTRAP_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -601,43 +599,43 @@ void nade_entrap_boom(entity this)
 	orb.colormod = NADE_TYPE_ENTRAP.m_color;
 }
 
-void nade_heal_touch(entity this)
+void nade_heal_touch(entity this, entity toucher)
 {
 	float maxhealth;
 	float health_factor;
-	if(IS_PLAYER(other) || IS_MONSTER(other))
-	if(!IS_DEAD(other))
-	if(!STAT(FROZEN, other))
+	if(IS_PLAYER(toucher) || IS_MONSTER(toucher))
+	if(!IS_DEAD(toucher))
+	if(!STAT(FROZEN, toucher))
 	{
 		health_factor = autocvar_g_nades_heal_rate*frametime/2;
-		if ( other != this.realowner )
+		if ( toucher != this.realowner )
 		{
-			if ( SAME_TEAM(other,this) )
+			if ( SAME_TEAM(toucher,this) )
 				health_factor *= autocvar_g_nades_heal_friend;
 			else
 				health_factor *= autocvar_g_nades_heal_foe;
 		}
 		if ( health_factor > 0 )
 		{
-			maxhealth = (IS_MONSTER(other)) ? other.max_health : g_pickup_healthmega_max;
-			if ( other.health < maxhealth )
+			maxhealth = (IS_MONSTER(toucher)) ? toucher.max_health : g_pickup_healthmega_max;
+			if ( toucher.health < maxhealth )
 			{
 				if ( this.nade_show_particles )
-					Send_Effect(EFFECT_HEALING, other.origin, '0 0 0', 1);
-				other.health = min(other.health+health_factor, maxhealth);
+					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
+				toucher.health = min(toucher.health+health_factor, maxhealth);
 			}
-			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
+			toucher.pauserothealth_finished = max(toucher.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 		}
 		else if ( health_factor < 0 )
 		{
-			Damage(other,this,this.realowner,-health_factor,DEATH_NADE_HEAL.m_id,other.origin,'0 0 0');
+			Damage(toucher,this,this.realowner,-health_factor,DEATH_NADE_HEAL.m_id,toucher.origin,'0 0 0');
 		}
 
 	}
 
-	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
+	if ( IS_REAL_CLIENT(toucher) || IS_VEHICLE(toucher) )
 	{
-		entity show_red = (IS_VEHICLE(other)) ? other.owner : other;
+		entity show_red = (IS_VEHICLE(toucher)) ? toucher.owner : toucher;
 		show_red.stat_healing_orb = time+0.1;
 		show_red.stat_healing_orb_alpha = 0.75 * (this.ltime - time) / this.orb_lifetime;
 	}
@@ -756,22 +754,22 @@ void nade_pickup(entity this, entity thenade)
 }
 
 bool CanThrowNade(entity this);
-void nade_touch(entity this)
+void nade_touch(entity this, entity toucher)
 {
-	if(other)
+	if(toucher)
 		UpdateCSQCProjectile(this);
 
-	if(other == this.realowner)
+	if(toucher == this.realowner)
 		return; // no this impacts
 
 	if(autocvar_g_nades_pickup)
 	if(time >= this.spawnshieldtime)
-	if(!other.nade && this.health == this.max_health) // no boosted shot pickups, thank you very much
-	if(!other.frozen)
-	if(CanThrowNade(other)) // prevent some obvious things, like dead players
-	if(IS_REAL_CLIENT(other)) // above checks for IS_PLAYER, don't need to do it here
+	if(!toucher.nade && this.health == this.max_health) // no boosted shot pickups, thank you very much
+	if(!STAT(FROZEN, toucher))
+	if(CanThrowNade(toucher)) // prevent some obvious things, like dead players
+	if(IS_REAL_CLIENT(toucher)) // above checks for IS_PLAYER, don't need to do it here
 	{
-		nade_pickup(other, this);
+		nade_pickup(toucher, this);
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
 		remove(this);
 		return;
@@ -792,7 +790,7 @@ void nade_touch(entity this)
 		return;
 	}
 
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	//setsize(this, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(this);
@@ -802,7 +800,7 @@ void nade_touch(entity this)
 		return;
 	}
 
-	this.enemy = other;
+	this.enemy = toucher;
 	nade_boom(this);
 }
 
@@ -909,7 +907,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 		setsize(_nade, '-8 -8 -8', '8 8 8');
 	else
 		setsize(_nade, '-16 -16 -16', '16 16 16');
-	_nade.movetype = MOVETYPE_BOUNCE;
+	set_movetype(_nade, MOVETYPE_BOUNCE);
 
 	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, false, _nade);
 	if (trace_startsolid)
@@ -999,10 +997,10 @@ MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 	nades_RemoveBonus(player);
 }
 
-float nade_customize(entity this)
+bool nade_customize(entity this, entity client)
 {
-	//if(IS_SPEC(other)) { return false; }
-	if(other == this.exteriormodeltoclient || (IS_SPEC(other) && other.enemy == this.exteriormodeltoclient))
+	//if(IS_SPEC(client)) { return false; }
+	if(client == this.exteriormodeltoclient || (IS_SPEC(client) && client.enemy == this.exteriormodeltoclient))
 	{
 		// somewhat hide the model, but keep the glow
 		//this.effects = 0;

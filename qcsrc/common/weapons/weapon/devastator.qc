@@ -81,15 +81,15 @@ void W_Devastator_Unregister(entity this)
 	}
 }
 
-void W_Devastator_Explode(entity this)
+void W_Devastator_Explode(entity this, entity directhitentity)
 {
 	W_Devastator_Unregister(this);
 
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(this.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	this.event_damage = func_null;
@@ -105,7 +105,7 @@ void W_Devastator_Explode(entity this)
 		NULL,
 		WEP_CVAR(devastator, force),
 		this.projectiledeathtype,
-		other
+		directhitentity
 	);
 
 	Weapon thiswep = WEP_DEVASTATOR;
@@ -121,6 +121,11 @@ void W_Devastator_Explode(entity this)
 		}
 	}
 	remove(this);
+}
+
+void W_Devastator_Explode_think(entity this)
+{
+	W_Devastator_Explode(this, NULL);
 }
 
 void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
@@ -259,9 +264,8 @@ void W_Devastator_Think(entity this)
 	this.nextthink = time;
 	if(time > this.cnt)
 	{
-		other = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Devastator_Explode(this);
+		W_Devastator_Explode(this, NULL);
 		return;
 	}
 
@@ -320,16 +324,16 @@ void W_Devastator_Think(entity this)
 		UpdateCSQCProjectile(this);
 }
 
-void W_Devastator_Touch(entity this)
+void W_Devastator_Touch(entity this, entity toucher)
 {
-	if(WarpZone_Projectile_Touch(this))
+	if(WarpZone_Projectile_Touch(this, toucher))
 	{
 		if(wasfreed(this))
 			W_Devastator_Unregister(this);
 		return;
 	}
 	W_Devastator_Unregister(this);
-	W_Devastator_Explode(this);
+	W_Devastator_Explode(this, toucher);
 }
 
 void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -344,7 +348,7 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode);
+		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode_think);
 }
 
 void W_Devastator_Attack(Weapon thiswep, entity actor)
@@ -372,7 +376,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor)
 	missile.event_damage = W_Devastator_Damage;
 	missile.damagedbycontents = true;
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_DEVASTATOR.m_id;
 	setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
@@ -437,8 +441,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
     {
         // decide whether to detonate rockets
-        entity targetlist, targ;
-        float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
+        float edgedamage, coredamage, edgeradius, recipricoledgeradius;
         float selfdamage, teamdamage, enemydamage;
         edgedamage = WEP_CVAR(devastator, edgedamage);
         coredamage = WEP_CVAR(devastator, damage);
@@ -447,25 +450,23 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
         selfdamage = 0;
         teamdamage = 0;
         enemydamage = 0;
-        targetlist = findchainfloat(bot_attack, true);
         FOREACH_ENTITY_ENT(realowner, actor,
         {
             if(it.classname != "rocket") continue;
 
-            targ = targetlist;
-            while(targ)
+            entity rocket = it;
+            FOREACH_ENTITY_FLOAT(bot_attack, true,
             {
-                d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - it.origin);
-                d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
-                // count potential damage according to type of target
-                if(targ == actor)
-                    selfdamage = selfdamage + d;
-                else if(targ.team == actor.team && teamplay)
-                    teamdamage = teamdamage + d;
-                else if(bot_shouldattack(actor, targ))
-                    enemydamage = enemydamage + d;
-                targ = targ.chain;
-            }
+            	float d = vlen(it.origin + (it.mins + it.maxs) * 0.5 - rocket.origin);
+            	d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
+            	// count potential damage according to type of target
+            	if(it == actor)
+            		selfdamage = selfdamage + d;
+            	else if(SAME_TEAM(it, actor))
+            		teamdamage = teamdamage + d;
+            	else if(bot_shouldattack(actor, it))
+            		enemydamage = enemydamage + d;
+            });
         });
         float desirabledamage;
         desirabledamage = enemydamage;
@@ -474,36 +475,35 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
         if(teamplay && actor.team)
             desirabledamage = desirabledamage - teamdamage;
 
+        makevectors(actor.v_angle);
         FOREACH_ENTITY_ENT(realowner, actor,
         {
             if(it.classname != "rocket") continue;
 
-            makevectors(it.v_angle);
-            targ = targetlist;
             if(skill > 9) // normal players only do this for the target they are tracking
             {
-                targ = targetlist;
-                while(targ)
-                {
-                    if(
-                        (v_forward * normalize(it.origin - targ.origin)< 0.1)
-                        && desirabledamage > 0.1*coredamage
-                    ) PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-                    targ = targ.chain;
-                }
-            }
-            else
-            {
-                float distance; distance= bound(300,vlen(actor.origin-actor.enemy.origin),30000);
+	            entity rocket = it;
+	            FOREACH_ENTITY_FLOAT(bot_attack, true,
+	            {
+	            	if((v_forward * normalize(rocket.origin - it.origin) < 0.1)
+	                    && desirabledamage > 0.1 * coredamage
+	                    ) PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+	            });
+	        }
+	        else
+	        {
                 //As the distance gets larger, a correct detonation gets near imposible
                 //Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
-                if(v_forward * normalize(it.origin - actor.enemy.origin)< 0.1)
-                    if(IS_PLAYER(actor.enemy))
-                        if(desirabledamage >= 0.1*coredamage)
-                            if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
-                                PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-            //	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
-            }
+                if((v_forward * normalize(it.origin - actor.enemy.origin) < 0.1)
+                	&& IS_PLAYER(actor.enemy)
+                	&& (desirabledamage >= 0.1 * coredamage)
+                	)
+                {
+                	float distance = bound(300, vlen(actor.origin - actor.enemy.origin), 30000);
+                	if(random() / distance * 300 > frametime * bound(0, (10 - skill) * 0.2, 1))
+                		PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+                }
+	        }
         });
         // if we would be doing at X percent of the core damage, detonate it
         // but don't fire a new shot at the same time!

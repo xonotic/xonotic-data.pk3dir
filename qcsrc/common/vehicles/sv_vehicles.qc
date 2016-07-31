@@ -3,19 +3,29 @@
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
+	WriteByte(MSG_ENTITY, sf);
 
 	WriteByte(MSG_ENTITY, this.cnt);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	if(sf & 2)
+	{
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
+	}
 
-	WriteByte(MSG_ENTITY, rint(this.colormod_x * 255));
-	WriteByte(MSG_ENTITY, rint(this.colormod_y * 255));
-	WriteByte(MSG_ENTITY, rint(this.colormod_z * 255));
+	if(sf & 4)
+	{
+		WriteByte(MSG_ENTITY, rint(this.colormod_x * 255));
+		WriteByte(MSG_ENTITY, rint(this.colormod_y * 255));
+		WriteByte(MSG_ENTITY, rint(this.colormod_z * 255));
+	}
 
 	return true;
 }
+
+.vector axh_prevorigin;
+.vector axh_prevcolors;
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 {
@@ -27,17 +37,26 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 
 	if(axh == NULL || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist? Mario: because of sloppy code like this)
 	{
-		axh					 = spawn();
-		axh.cnt				 = axh_id;
-		axh.drawonlytoclient	= own;
-		axh.owner			   = own;
+		axh = new(auxiliary_xhair);
+		axh.cnt = axh_id;
+		axh.drawonlytoclient = own;
+		axh.owner = own;
 		Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
 	}
 
-	setorigin(axh, loc);
-	axh.colormod			= clr;
-	axh.SendFlags		   = 0x01;
-	own.(AuxiliaryXhair[axh_id]) = axh;
+	if(loc != axh.axh_prevorigin)
+	{
+		setorigin(axh, loc);
+		axh.SendFlags |= 2;
+	}
+
+	if(clr != axh.axh_prevcolors)
+	{
+		axh.colormod = clr;
+		axh.SendFlags |= 4;
+	}
+
+	own.(AuxiliaryXhair[axh_id]) = axh; // set it anyway...?
 }
 
 void CSQCVehicleSetup(entity own, int vehicle_id)
@@ -179,28 +198,33 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 	}
 }
 
-void vehicles_projectile_explode(entity this)
+void vehicles_projectile_explode(entity this, entity toucher)
 {
-	if(this.owner && other != NULL)
+	if(this.owner && toucher != NULL)
 	{
-		if(other == this.owner.vehicle)
+		if(toucher == this.owner.vehicle)
 			return;
 
-		if(other == this.owner.vehicle.tur_head)
+		if(toucher == this.owner.vehicle.tur_head)
 			return;
 	}
 
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, other);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, toucher);
 
 	remove (this);
 }
 
+void vehicles_projectile_explode_think(entity this)
+{
+	vehicles_projectile_explode(this, NULL);
+}
+
 void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
 {
-	vehicles_projectile_explode(this);
+	vehicles_projectile_explode(this, trigger);
 }
 
 entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
@@ -222,7 +246,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.shot_force	   = _force;
 	proj.totalfrags	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
-	proj.movetype		 = MOVETYPE_FLYMISSILE;
+	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.flags			= FL_PROJECTILE;
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
@@ -264,6 +288,11 @@ void vehicles_gib_explode(entity this)
 	remove(this);
 }
 
+void vehicles_gib_touch(entity this, entity toucher)
+{
+	vehicles_gib_explode(this);
+}
+
 void vehicles_gib_think(entity this)
 {
 	this.alpha -= 0.1;
@@ -280,7 +309,7 @@ entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, 
 	vector org = gettaginfo(this, gettagindex(this, _tag));
 	setorigin(_gib, org);
 	_gib.velocity = _vel;
-	_gib.movetype = MOVETYPE_TOSS;
+	set_movetype(_gib, MOVETYPE_TOSS);
 	_gib.solid = SOLID_CORPSE;
 	_gib.colormod = '-0.5 -0.5 -0.5';
 	_gib.effects = EF_LOWPRECISION;
@@ -293,7 +322,7 @@ entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, 
 	{
 		setthink(_gib, vehicles_gib_explode);
 		_gib.nextthink = time + random() * _explode;
-		settouch(_gib, vehicles_gib_explode);
+		settouch(_gib, vehicles_gib_touch);
 	}
 	else
 	{
@@ -767,7 +796,7 @@ void vehicles_exit(entity vehic, bool eject)
 
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
-		player.movetype		= MOVETYPE_WALK;
+		set_movetype(player, MOVETYPE_WALK);
 		player.effects		   &= ~EF_NODRAW;
 		player.teleportable	= TELEPORT_NORMAL;
 		player.alpha			= 1;
@@ -817,21 +846,21 @@ void vehicles_exit(entity vehic, bool eject)
 	vehicles_exit_running = false;
 }
 
-void vehicles_touch(entity this)
+void vehicles_touch(entity this, entity toucher)
 {
-	if(MUTATOR_CALLHOOK(VehicleTouch, this, other))
+	if(MUTATOR_CALLHOOK(VehicleTouch, this, toucher))
 		return;
 
 	// Vehicle currently in use
 	if(this.owner)
 	{
 		if(!forbidWeaponUse(this.owner))
-		if(other != NULL)
-		if((this.origin_z + this.maxs_z) > (other.origin_z))
-		if(vehicles_crushable(other))
+		if(toucher != NULL)
+		if((this.origin_z + this.maxs_z) > (toucher.origin_z))
+		if(vehicles_crushable(toucher))
 		{
 			if(vdist(this.velocity, >=, 30))
-				Damage(other, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(other.origin - this.origin) * autocvar_g_vehicles_crush_force);
+				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
@@ -847,7 +876,7 @@ void vehicles_touch(entity this)
 	if(autocvar_g_vehicles_enter)
 		return;
 
-	vehicles_enter(other, this);
+	vehicles_enter(toucher, this);
 }
 
 bool vehicle_impulse(entity this, int imp)
@@ -882,22 +911,19 @@ void vehicles_enter(entity pl, entity veh)
 	|| (pl.vehicle)
 	) { return; }
 
+	Vehicle info = Vehicles_from(veh.vehicleid);
+
 	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
 	if(veh.owner && SAME_TEAM(pl, veh))
 	{
-		if(!veh.gunner1)
-		if(time >= veh.gun1.phase)
-		if(veh.gun1.vehicle_enter)
-		if(veh.gun1.vehicle_enter(veh, pl))
-			return;
-
-		if(!veh.gunner2)
-		if(time >= veh.gun2.phase)
-		if(veh.gun2.vehicle_enter)
-		if(veh.gun2.vehicle_enter(veh, pl))
-			return;
+		// we don't need a return value or anything here
+		// if successful the owner check below will prevent anything weird
+		info.vr_gunner_enter(info, veh, pl);
 	}
+
+	if(veh.owner)
+		return; // got here and didn't enter the gunner, return
 
 	if(teamplay)
 	if(veh.team)
@@ -940,7 +966,8 @@ void vehicles_enter(entity pl, entity veh)
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
-	pl.movetype			= MOVETYPE_NOCLIP;
+	pl.disableclientprediction = 1; // physics is no longer run, so this won't be reset
+	set_movetype(pl, MOVETYPE_NOCLIP);
 	pl.teleportable		= false;
 	pl.alpha			= -1;
 	pl.event_damage		= func_null;
@@ -998,7 +1025,6 @@ void vehicles_enter(entity pl, entity veh)
 	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
 	CSQCModel_UnlinkEntity(veh);
-	Vehicle info = Vehicles_from(veh.vehicleid);
 	info.vr_enter(info, veh);
 
 	antilag_clear(pl, CS(pl));
@@ -1019,6 +1045,17 @@ void vehicles_think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
+void vehicles_reset(entity this)
+{
+	if(this.owner)
+		vehicles_exit(this, VHEF_RELEASE);
+
+	vehicles_clearreturn(this);
+
+	if(this.active != ACTIVE_NOT)
+		vehicles_spawn(this);
+}
+
 // initialization
 void vehicles_spawn(entity this)
 {
@@ -1030,10 +1067,11 @@ void vehicles_spawn(entity this)
 	this.owner				= NULL;
 	settouch(this, vehicles_touch);
 	this.event_damage		= vehicles_damage;
+	this.reset 				= vehicles_reset;
 	this.iscreature			= true;
 	this.teleportable		= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents	= true;
-	this.movetype			= MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 	this.solid				= SOLID_SLIDEBOX;
 	this.takedamage			= DAMAGE_AIM;
 	this.deadflag			= DEAD_NO;
@@ -1159,6 +1197,8 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	setsize(this, info.mins, info.maxs);
 
+	info.vr_setup(info, this);
+
 	if(!nodrop)
 	{
 		setorigin(this, this.origin);
@@ -1169,8 +1209,6 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.pos1 = this.origin;
 	this.pos2 = this.angles;
 	this.tur_head.team = this.team;
-
-	info.vr_setup(info, this);
 
 	if(this.active == ACTIVE_NOT)
 		this.nextthink = 0; // wait until activated

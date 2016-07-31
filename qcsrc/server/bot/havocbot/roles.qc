@@ -13,58 +13,45 @@
 
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
-	entity head;
-	float rating, d, discard, distance, friend_distance, enemy_distance;
+	float rating, d, discard, friend_distance, enemy_distance;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
-	head = findchainfloat(bot_pickup, true);
 
-	while (head)
+	FOREACH_ENTITY_FLOAT(bot_pickup, true,
 	{
-		o = (head.absmin + head.absmax) * 0.5;
-		distance = vlen(o - org);
+		o = (it.absmin + it.absmax) * 0.5;
 		friend_distance = 10000; enemy_distance = 10000;
 		rating = 0;
 
-		if(!head.solid || distance > sradius || (head == this.ignoregoal && time < this.ignoregoaltime) )
-		{
-			head = head.chain;
+		if(!it.solid || vdist(o - org, >, sradius) || (it == this.ignoregoal && time < this.ignoregoaltime) )
 			continue;
-		}
 
 		// Check if the item can be picked up safely
-		if(head.classname == "droppedweapon")
+		if(it.classname == "droppedweapon")
 		{
 			traceline(o, o + '0 0 -1500', true, NULL);
 
 			d = pointcontents(trace_endpos + '0 0 1');
 			if(d & CONTENT_WATER || d & CONTENT_SLIME || d & CONTENT_LAVA)
-			{
-				head = head.chain;
 				continue;
-			}
-			if(tracebox_hits_trigger_hurt(head.origin, head.mins, head.maxs, trace_endpos))
-			{
-				head = head.chain;
+			if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
 				continue;
-			}
 		}
 		else
 		{
 			// Ignore items under water
-			traceline(head.origin + head.maxs, head.origin + head.maxs, MOVE_NORMAL, head);
+			traceline(it.origin + it.maxs, it.origin + it.maxs, MOVE_NORMAL, it);
 			if(trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
-			{
-				head = head.chain;
 				continue;
-			}
 		}
 
 		if(teamplay)
 		{
 			discard = false;
 
-			FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it), LAMBDA(
+			entity picker = it;
+			FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
+			{
 				d = vlen(it.origin - o); // distance between player and item
 
 				if ( it.team == this.team )
@@ -79,29 +66,29 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 					discard = true;
 
-					if( head.health && it.health > this.health )
+					if( picker.health && it.health > this.health )
 						continue;
 
-					if( head.armorvalue && it.armorvalue > this.armorvalue)
+					if( picker.armorvalue && it.armorvalue > this.armorvalue)
 						continue;
 
-					if( head.weapons )
-					if( head.weapons & ~it.weapons )
+					if( picker.weapons )
+					if( picker.weapons & ~it.weapons )
 						continue;
 
-					if (head.ammo_shells && it.ammo_shells > this.ammo_shells)
+					if (picker.ammo_shells && it.ammo_shells > this.ammo_shells)
 						continue;
 
-					if (head.ammo_nails && it.ammo_nails > this.ammo_nails)
+					if (picker.ammo_nails && it.ammo_nails > this.ammo_nails)
 						continue;
 
-					if (head.ammo_rockets && it.ammo_rockets > this.ammo_rockets)
+					if (picker.ammo_rockets && it.ammo_rockets > this.ammo_rockets)
 						continue;
 
-					if (head.ammo_cells && it.ammo_cells > this.ammo_cells)
+					if (picker.ammo_cells && it.ammo_cells > this.ammo_cells)
 						continue;
 
-					if (head.ammo_plasma && it.ammo_plasma > this.ammo_plasma)
+					if (picker.ammo_plasma && it.ammo_plasma > this.ammo_plasma)
 						continue;
 
 					discard = false;
@@ -113,40 +100,33 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 					if( d < enemy_distance )
 						enemy_distance = d;
 				}
-			));
+			});
 
 			// Rate the item only if no one needs it, or if an enemy is closer to it
-			if ( (enemy_distance < friend_distance && distance < enemy_distance) ||
+			if ( (enemy_distance < friend_distance && vdist(o - org, <, enemy_distance)) ||
 				(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ) || !discard )
-				rating = head.bot_pickupevalfunc(this, head);
+				rating = it.bot_pickupevalfunc(this, it);
 
 		}
 		else
-			rating = head.bot_pickupevalfunc(this, head);
+			rating = it.bot_pickupevalfunc(this, it);
 
 		if(rating > 0)
-			navigation_routerating(this, head, rating * ratingscale, 2000);
-		head = head.chain;
-	}
+			navigation_routerating(this, it, rating * ratingscale, 2000);
+	});
 }
 
 void havocbot_goalrating_controlpoints(entity this, float ratingscale, vector org, float sradius)
 {
-	entity head;
-	head = findchain(classname, "dom_controlpoint");
-	while (head)
+	FOREACH_ENTITY_CLASS("dom_controlpoint", vdist((((it.absmin + it.absmax) * 0.5) - org), <, sradius),
 	{
-		if(vdist((((head.absmin + head.absmax) * 0.5) - org), <, sradius))
-		{
-			if(head.cnt > -1) // this is just being fought for
-				navigation_routerating(this, head, ratingscale, 5000);
-			else if(head.goalentity.cnt == 0) // unclaimed point
-				navigation_routerating(this, head, ratingscale * 0.5, 5000);
-			else if(head.goalentity.team != this.team) // other team's point
-				navigation_routerating(this, head, ratingscale * 0.2, 5000);
-		}
-		head = head.chain;
-	}
+		if(it.cnt > -1) // this is just being fought
+			navigation_routerating(this, it, ratingscale, 5000);
+		else if(it.goalentity.cnt == 0) // unclaimed
+			navigation_routerating(this, it, ratingscale * 0.5, 5000);
+		else if(it.goalentity.team != this.team) // other team's point
+			navigation_routerating(this, it, ratingscale * 0.2, 5000);
+	});
 }
 
 void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius)

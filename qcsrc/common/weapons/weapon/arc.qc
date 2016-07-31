@@ -231,17 +231,17 @@ void Arc_Player_SetHeat(entity player)
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
 }
 
-void W_Arc_Bolt_Explode(entity this)
+void W_Arc_Bolt_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
 void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 {
-	W_Arc_Bolt_Explode(this);
+	W_Arc_Bolt_Explode(this, trigger);
 }
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -259,10 +259,10 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
-void W_Arc_Bolt_Touch(entity this)
+void W_Arc_Bolt_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	this.use(this, NULL, NULL);
+	PROJECTILE_TOUCH(this, toucher);
+	this.use(this, NULL, toucher);
 }
 
 void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)
@@ -295,7 +295,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRE(missile, arc, bolt_);
 
 	missile.angles = vectoangles(missile.velocity);
@@ -333,11 +333,9 @@ void W_Arc_Beam_Think(entity this)
 		||
 		IS_DEAD(this.owner)
 		||
-		gameover
+		forbidWeaponUse(this.owner)
 		||
 		(!PHYS_INPUT_BUTTON_ATCK(this.owner) && !burst )
-		||
-		STAT(FROZEN, this.owner)
 		||
 		this.owner.vehicle
 		||
@@ -685,7 +683,7 @@ void W_Arc_Beam(float burst, entity actor)
 	beam.solid = SOLID_NOT;
 	setthink(beam, W_Arc_Beam_Think);
 	beam.owner = actor;
-	beam.movetype = MOVETYPE_NONE;
+	set_movetype(beam, MOVETYPE_NONE);
 	beam.bot_dodge = true;
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
 	beam.beam_bursting = burst;
@@ -857,6 +855,7 @@ METHOD(Arc, wr_drop, void(entity thiswep, entity actor))
     weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
     actor.arc_overheat = 0;
     actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
 }
 METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
 {
@@ -866,6 +865,18 @@ METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
         actor.arc_overheat = weapon_dropevent_item.arc_overheat;
         actor.arc_cooldown = weapon_dropevent_item.arc_cooldown;
     }
+}
+METHOD(Arc, wr_resetplayer, void(entity thiswep, entity actor))
+{
+    actor.arc_overheat = 0;
+    actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
+}
+METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor))
+{
+    actor.arc_overheat = 0;
+    actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
 }
 #endif
 #ifdef CSQC
@@ -1285,6 +1296,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 		// set other main attributes of the beam
 		this.draw = Draw_ArcBeam;
+		IL_PUSH(g_drawables, this);
 		this.entremove = Remove_ArcBeam;
 		this.move_time = time;
 		loopsound(this, CH_SHOTS_SINGLE, SND(ARC_LOOP), VOL_BASE, ATTEN_NORM);

@@ -34,7 +34,7 @@ void turret_draw(entity this)
 	if(dt <= 0)
 		return;
 
-	this.tur_head.angles += dt * this.tur_head.move_avelocity;
+	this.tur_head.angles += dt * this.tur_head.avelocity;
 
 	if (this.health < 127)
 	{
@@ -224,20 +224,21 @@ void turret_construct(entity this)
 
 	this.tur_head.classname			= "turret_head";
 	this.tur_head.owner				= this;
-	this.tur_head.move_movetype		= MOVETYPE_NOCLIP;
-	this.move_movetype				= MOVETYPE_NOCLIP;
+	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.tur_head.angles			= this.angles;
 	this.health						= 255;
 	this.solid						= SOLID_BBOX;
 	this.tur_head.solid				= SOLID_NOT;
-	this.movetype					= MOVETYPE_NOCLIP;
-	this.tur_head.movetype			= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
+	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
 	this.draw						= turret_draw;
 	this.entremove					= turret_remove;
 	this.drawmask					= MASK_NORMAL;
 	this.tur_head.drawmask			= MASK_NORMAL;
 	this.anim_start_time			= 0;
 	this.draw2d = turret_draw2d;
+	IL_PUSH(g_drawables_2d, this);
 	this.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
 	this.teamradar_color = '1 0 0';
 	this.alpha = 1;
@@ -303,11 +304,10 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 		gib.nextthink = time + autocvar_cl_gibs_lifetime * (1 + prandom() * 0.15);
 
 	gib.gravity		 = 1;
-	gib.move_movetype   = MOVETYPE_BOUNCE;
-	gib.move_origin	 = _from;
+	set_movetype(gib, MOVETYPE_BOUNCE);
 	setorigin(gib,		_from);
-	gib.move_velocity   = _to;
-	gib.move_avelocity  = prandomvec() * 32;
+	gib.velocity   = _to;
+	gib.avelocity  = prandomvec() * 32;
 	gib.move_time	   = time;
 	gib.damageforcescale = 1;
 
@@ -341,9 +341,9 @@ void turret_die(entity this)
 			entity headgib = turret_gibtoss((get_turretinfo(this.m_id)).head_model, this.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', true);
 			if(headgib)
 			{
-				headgib.angles = headgib.move_angles = this.tur_head.angles;
-				headgib.avelocity = headgib.move_avelocity = this.tur_head.move_avelocity + randomvec() * 45;
-				headgib.avelocity_y = headgib.move_avelocity_y = headgib.move_avelocity_y * 5;
+				headgib.angles = this.tur_head.angles;
+				headgib.avelocity = this.tur_head.avelocity + randomvec() * 45;
+				headgib.avelocity_y = headgib.avelocity_y * 5;
 				headgib.gravity = 0.5;
 			}
 		}
@@ -382,10 +382,9 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		if(this.tur_head == NULL) // aparenly this can happpen before TNSF_SETUP. great.
 			this.tur_head = spawn();
 
-		this.tur_head.move_angles_x = ReadShort();
-		this.tur_head.move_angles_y = ReadShort();
-		//this.tur_head.angles = this.angles + this.tur_head.move_angles;
-		this.tur_head.angles = this.tur_head.move_angles;
+		this.tur_head.angles_x = ReadShort();
+		this.tur_head.angles_y = ReadShort();
+		//this.tur_head.angles = this.angles + this.tur_head.angles;
 	}
 
 	if(sf & TNSF_AVEL)
@@ -393,8 +392,8 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		if(this.tur_head == NULL) // aparenly this can happpen before TNSF_SETUP. great.
 			this.tur_head = spawn();
 
-		this.tur_head.move_avelocity_x = ReadShort();
-		this.tur_head.move_avelocity_y = ReadShort();
+		this.tur_head.avelocity_x = ReadShort();
+		this.tur_head.avelocity_y = ReadShort();
 	}
 
 	if(sf & TNSF_MOVE)
@@ -408,11 +407,9 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		this.velocity_y = ReadShort();
 		this.velocity_z = ReadShort();
 
-		this.move_angles_y = ReadShort();
+		this.angles_y = ReadShort();
 
 		this.move_time	 = time;
-		this.move_velocity = this.velocity;
-		this.move_origin   = this.origin;
 	}
 
 	if(sf & TNSF_ANIM)

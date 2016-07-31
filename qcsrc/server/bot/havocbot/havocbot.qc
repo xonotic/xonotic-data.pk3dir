@@ -41,41 +41,30 @@ void havocbot_ai(entity this)
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
 		if(IS_DEAD(this))
-		if(this.goalcurrent==NULL)
-		if(this.waterlevel==WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
+		if(!this.goalcurrent)
+		if(this.waterlevel == WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
 		{
 			// Look for the closest waypoint out of water
-			entity newgoal, head;
-			float bestdistance, distance;
-
-			newgoal = NULL;
-			bestdistance = 10000;
-			for (head = findchain(classname, "waypoint"); head; head = head.chain)
+			entity newgoal = NULL;
+			IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 10000),
 			{
-				distance = vlen(head.origin - this.origin);
-				if(distance>10000)
+				if(it.origin.z < this.origin.z)
 					continue;
 
-				if(head.origin.z < this.origin.z)
+				if(it.origin.z - this.origin.z - this.view_ofs.z > 100)
 					continue;
 
-				if(head.origin.z - this.origin.z - this.view_ofs.z > 100)
+				if (pointcontents(it.origin + it.maxs + '0 0 1') != CONTENT_EMPTY)
 					continue;
 
-				if (pointcontents(head.origin + head.maxs + '0 0 1') != CONTENT_EMPTY)
+				traceline(this.origin + this.view_ofs, ((it.absmin + it.absmax) * 0.5), true, this);
+
+				if(trace_fraction < 1)
 					continue;
 
-				traceline(this.origin + this.view_ofs , head.origin, true, head);
-
-				if(trace_fraction<1)
-					continue;
-
-				if(distance<bestdistance)
-				{
-					newgoal = head;
-					bestdistance = distance;
-				}
-			}
+				if(!newgoal || vlen2(it.origin - this.origin) < vlen2(newgoal.origin - this.origin))
+					newgoal = it;
+			});
 
 			if(newgoal)
 			{
@@ -496,27 +485,17 @@ void havocbot_movetogoal(entity this)
 		{
 			if(fabs(this.velocity.z)<50)
 			{
-				entity head, newgoal = NULL;
-				float distance, bestdistance = 0;
-
-				for (head = findchain(classname, "waypoint"); head; head = head.chain)
+				entity newgoal = NULL;
+				IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 1000),
 				{
+					traceline(this.origin + this.view_ofs, ((it.absmin + it.absmax) * 0.5), true, this);
 
-					distance = vlen(head.origin - this.origin);
-					if(distance>1000)
+					if(trace_fraction < 1)
 						continue;
 
-					traceline(this.origin + this.view_ofs , ( ( head.absmin + head.absmax ) * 0.5 ), true, NULL);
-
-					if(trace_fraction<1)
-						continue;
-
-					if(distance>bestdistance)
-					{
-						newgoal = head;
-						bestdistance = distance;
-					}
-				}
+					if(!newgoal || vlen2(it.origin - this.origin) > vlen2(newgoal.origin - this.origin))
+						newgoal = it;
+				});
 
 				if(newgoal)
 				{

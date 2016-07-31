@@ -6,6 +6,7 @@
 #undef error
 #undef movetogoal
 #undef objerror
+#undef remove
 #undef walkmove
 
 #ifdef MENUQC

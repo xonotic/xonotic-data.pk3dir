@@ -33,13 +33,13 @@ void ons_generator_ray_spawn(vector org)
 	setmodel(e, MDL_ONS_RAY);
 	setorigin(e, org);
 	e.angles = randomvec() * 360;
-	e.move_origin = org;
-	e.movetype = MOVETYPE_NONE;
+	e.move_movetype = MOVETYPE_NONE;
 	e.alpha = 0;
 	e.scale = random() * 5 + 8;
 	e.move_time = time + 0.05;
 	e.drawmask = MASK_NORMAL;
 	e.draw = ons_generator_ray_draw;
+	IL_PUSH(g_drawables, e);
 }
 
 void generator_draw(entity this)
@@ -154,8 +154,7 @@ void generator_construct(entity this)
 
 	this.move_movetype	= MOVETYPE_NOCLIP;
 	this.solid			= SOLID_BBOX;
-	this.movetype		= MOVETYPE_NOCLIP;
-	this.move_origin	= this.origin;
+	this.move_movetype		= MOVETYPE_NOCLIP;
 	this.move_time		= time;
 	this.drawmask		= MASK_NORMAL;
 	this.alpha			= 1;

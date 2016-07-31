@@ -346,31 +346,28 @@ void bot_endgame()
 
 void bot_relinkplayerlist()
 {
-	entity e;
-	entity prevbot;
 	player_count = 0;
 	currentbots = 0;
-	player_list = e = findchainflags(flags, FL_CLIENT);
 	bot_list = NULL;
-	prevbot = NULL;
-	while (e)
+
+	entity prevbot = NULL;
+	FOREACH_CLIENT(true,
 	{
-		player_count = player_count + 1;
-		e.nextplayer = e.chain;
-		if (IS_BOT_CLIENT(e))
+		++player_count;
+
+		if(IS_BOT_CLIENT(it))
 		{
-			if (prevbot)
-				prevbot.nextbot = e;
+			if(prevbot)
+				prevbot.nextbot = it;
 			else
 			{
-				bot_list = e;
+				bot_list = it;
 				bot_list.nextbot = NULL;
 			}
-			prevbot = e;
-			currentbots = currentbots + 1;
+			prevbot = it;
+			++currentbots;
 		}
-		e = e.chain;
-	}
+	});
 	LOG_TRACE(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
@@ -427,70 +424,84 @@ void bot_clientconnect(entity this)
 
 void bot_removefromlargestteam()
 {
-	float besttime, bestcount, thiscount;
-	entity best, head;
 	CheckAllowedTeams(NULL);
 	GetTeamCounts(NULL);
-	head = findchainfloat(isbot, true);
-	if (!head)
-		return;
-	best = head;
-	besttime = head.createdtime;
-	bestcount = 0;
-	while (head)
+
+	entity best = NULL;
+	float besttime = 0;
+	int bestcount = 0;
+
+	int bcount = 0;
+	FOREACH_ENTITY_FLOAT(isbot, true,
 	{
-		if(head.team == NUM_TEAM_1)
-			thiscount = c1;
-		else if(head.team == NUM_TEAM_2)
-			thiscount = c2;
-		else if(head.team == NUM_TEAM_3)
-			thiscount = c3;
-		else if(head.team == NUM_TEAM_4)
-			thiscount = c4;
-		else
-			thiscount = 0;
-		if (thiscount > bestcount)
+		++bcount;
+
+		if(!best)
+		{
+			best = it;
+			besttime = it.createdtime;
+		}
+
+		int thiscount = 0;
+
+		switch(it.team)
+		{
+			case NUM_TEAM_1: thiscount = c1; break;
+			case NUM_TEAM_2: thiscount = c2; break;
+			case NUM_TEAM_3: thiscount = c3; break;
+			case NUM_TEAM_4: thiscount = c4; break;
+		}
+
+		if(thiscount > bestcount)
 		{
 			bestcount = thiscount;
-			besttime = head.createdtime;
-			best = head;
+			besttime = it.createdtime;
+			best = it;
 		}
-		else if (thiscount == bestcount && besttime < head.createdtime)
+		else if(thiscount == bestcount && besttime < it.createdtime)
 		{
-			besttime = head.createdtime;
-			best = head;
+			besttime = it.createdtime;
+			best = it;
 		}
-		head = head.chain;
-	}
+	});
+	if(!bcount)
+		return; // no bots to remove
 	currentbots = currentbots - 1;
 	dropclient(best);
 }
 
 void bot_removenewest()
 {
-	float besttime;
-	entity best, head;
-
 	if(teamplay)
 	{
 		bot_removefromlargestteam();
 		return;
 	}
 
-	head = findchainfloat(isbot, true);
-	if (!head)
-		return;
-	best = head;
-	besttime = head.createdtime;
-	while (head)
+	float besttime = 0;
+	entity best = NULL;
+	int bcount = 0;
+
+	FOREACH_ENTITY_FLOAT(isbot, true,
 	{
-		if (besttime < head.createdtime)
+		++bcount;
+
+		if(!best)
 		{
-			besttime = head.createdtime;
-			best = head;
+			best = it;
+			besttime = it.createdtime;
 		}
-		head = head.chain;
-	}
+
+		if(besttime < it.createdtime)
+		{
+			besttime = it.createdtime;
+			best = it;
+		}
+	});
+
+	if(!bcount)
+		return; // no bots to remove
+
 	currentbots = currentbots - 1;
 	dropclient(best);
 }
@@ -573,7 +584,7 @@ float bot_fixcount()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
-	if (teamplay && autocvar_bot_vs_human && (c3==-1 && c4==-1))
+	if (teamplay && autocvar_bot_vs_human && AvailableTeams() == 2)
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
@@ -659,9 +670,11 @@ void bot_serverframe()
 		else
 		{
 			// TODO: Make this check cleaner
-			entity wp = findchain(classname, "waypoint");
-			if(time - wp.nextthink > 10)
+			IL_EACH(g_waypoints, time - it.nextthink > 10,
+			{
 				waypoint_save_links();
+				break;
+			});
 		}
 	}
 	else

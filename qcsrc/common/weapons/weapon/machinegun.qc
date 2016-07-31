@@ -130,7 +130,10 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity we
 
 	// casing code
 	if(autocvar_g_casings >= 2)
+	{
+		makevectors(actor.v_angle); // for some reason, this is lost
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
+	}
 
 	if(actor.misc_bulletcounter == 1)
 		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(machinegun, first_ammo));
@@ -202,7 +205,10 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	if(autocvar_g_casings >= 2) // casing code
+	{
+		makevectors(actor.v_angle); // for some reason, this is lost
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
+	}
 
 	int slot = weaponslot(weaponentity);
 	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(machinegun, first_refire) * W_WeaponRateFactor(actor);
@@ -226,7 +232,10 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	if(autocvar_g_casings >= 2) // casing code
+	{
+		makevectors(actor.v_angle); // for some reason, this is lost
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
+	}
 
 	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 	if(actor.misc_bulletcounter == 0)

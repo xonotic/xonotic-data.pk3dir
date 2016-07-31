@@ -13,7 +13,7 @@ bool Physics_Valid(string thecvar)
 	return autocvar_g_physics_clientselect && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
-float Physics_ClientOption(entity this, string option)
+float Physics_ClientOption(entity this, string option, float defaultval)
 {
 	if(Physics_Valid(this.cvar_cl_physics))
 	{
@@ -27,40 +27,40 @@ float Physics_ClientOption(entity this, string option)
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
-	return cvar(strcat("sv_", option));
+	return defaultval;
 }
 
 void Physics_UpdateStats(entity this, float maxspd_mod)
 {
-	STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw"), maxspd_mod);
-	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw"))
-		? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw"), maxspd_mod)
+	STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw), maxspd_mod);
+	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw))
+		? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw), maxspd_mod)
 		: 0;
-	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw") * maxspd_mod;
-	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed") * maxspd_mod; // also slow walking
+	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
+	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
 
 	// old stats
 	// fix some new settings
-	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor");
-	STAT(MOVEVARS_MAXAIRSTRAFESPEED, this) = Physics_ClientOption(this, "maxairstrafespeed");
-	STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed");
-	STAT(MOVEVARS_AIRSTRAFEACCELERATE, this) = Physics_ClientOption(this, "airstrafeaccelerate");
-	STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, this) = Physics_ClientOption(this, "warsowbunny_turnaccel");
-	STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, this) = Physics_ClientOption(this, "airaccel_sideways_friction");
-	STAT(MOVEVARS_AIRCONTROL, this) = Physics_ClientOption(this, "aircontrol");
-	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(this, "aircontrol_power");
-	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(this, "aircontrol_penalty");
-	STAT(MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, this) = Physics_ClientOption(this, "warsowbunny_airforwardaccel");
-	STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, this) = Physics_ClientOption(this, "warsowbunny_topspeed");
-	STAT(MOVEVARS_WARSOWBUNNY_ACCEL, this) = Physics_ClientOption(this, "warsowbunny_accel");
-	STAT(MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, this) = Physics_ClientOption(this, "warsowbunny_backtosideratio");
-	STAT(MOVEVARS_FRICTION, this) = Physics_ClientOption(this, "friction");
-	STAT(MOVEVARS_ACCELERATE, this) = Physics_ClientOption(this, "accelerate");
-	STAT(MOVEVARS_STOPSPEED, this) = Physics_ClientOption(this, "stopspeed");
-	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate");
-	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate");
-	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity");
-	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump");
+	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor", autocvar_sv_airaccel_qw_stretchfactor);
+	STAT(MOVEVARS_MAXAIRSTRAFESPEED, this) = Physics_ClientOption(this, "maxairstrafespeed", autocvar_sv_maxairstrafespeed);
+	STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed", autocvar_sv_maxairspeed);
+	STAT(MOVEVARS_AIRSTRAFEACCELERATE, this) = Physics_ClientOption(this, "airstrafeaccelerate", autocvar_sv_airstrafeaccelerate);
+	STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, this) = Physics_ClientOption(this, "warsowbunny_turnaccel", autocvar_sv_warsowbunny_turnaccel);
+	STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, this) = Physics_ClientOption(this, "airaccel_sideways_friction", autocvar_sv_airaccel_sideways_friction);
+	STAT(MOVEVARS_AIRCONTROL, this) = Physics_ClientOption(this, "aircontrol", autocvar_sv_aircontrol);
+	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(this, "aircontrol_power", autocvar_sv_aircontrol_power);
+	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(this, "aircontrol_penalty", autocvar_sv_aircontrol_penalty);
+	STAT(MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, this) = Physics_ClientOption(this, "warsowbunny_airforwardaccel", autocvar_sv_warsowbunny_airforwardaccel);
+	STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, this) = Physics_ClientOption(this, "warsowbunny_topspeed", autocvar_sv_warsowbunny_topspeed);
+	STAT(MOVEVARS_WARSOWBUNNY_ACCEL, this) = Physics_ClientOption(this, "warsowbunny_accel", autocvar_sv_warsowbunny_accel);
+	STAT(MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, this) = Physics_ClientOption(this, "warsowbunny_backtosideratio", autocvar_sv_warsowbunny_backtosideratio);
+	STAT(MOVEVARS_FRICTION, this) = Physics_ClientOption(this, "friction", autocvar_sv_friction);
+	STAT(MOVEVARS_ACCELERATE, this) = Physics_ClientOption(this, "accelerate", autocvar_sv_accelerate);
+	STAT(MOVEVARS_STOPSPEED, this) = Physics_ClientOption(this, "stopspeed", autocvar_sv_stopspeed);
+	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate", autocvar_sv_airaccelerate);
+	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate", autocvar_sv_airstopaccelerate);
+	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
+	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 }
 #endif
 
@@ -73,11 +73,11 @@ float IsMoveInDirection(vector mv, float ang) // key mix factor
 	return ang > 1 ? 0 : ang < -1 ? 0 : 1 - fabs(ang);
 }
 
-float GeomLerp(float a, float lerp, float b)
+float GeomLerp(float a, float _lerp, float b)
 {
-	return a == 0 ? (lerp < 1 ? 0 : b)
-		: b == 0 ? (lerp > 0 ? 0 : a)
-		: a * pow(fabs(b / a), lerp);
+	return a == 0 ? (_lerp < 1 ? 0 : b)
+		: b == 0 ? (_lerp > 0 ? 0 : a)
+		: a * pow(fabs(b / a), _lerp);
 }
 
 #define unstick_offsets(X) \
@@ -118,24 +118,25 @@ void PM_ClientMovement_Unstick(entity this)
 	#undef X
 }
 
-void PM_ClientMovement_UpdateStatus(entity this, bool ground)
+void PM_ClientMovement_UpdateStatus(entity this)
 {
 #ifdef CSQC
 	if(!IS_PLAYER(this))
 		return;
-	// make sure player is not stuck
-	if(autocvar_cl_movement == 3)
-		PM_ClientMovement_Unstick(this);
 
 	// set crouched
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if(this.hook && !wasfreed(this.hook))
 		do_crouch = false;
+	if(this.waterlevel >= WATERLEVEL_SWIMMING)
+		do_crouch = false;
 	if(hud != HUD_NORMAL)
 		do_crouch = false;
 	if(STAT(FROZEN, this))
 		do_crouch = false;
-	if((activeweapon == WEP_SHOCKWAVE || activeweapon == WEP_SHOTGUN) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
+	if((activeweapon.spawnflags & WEP_TYPE_MELEE_PRI) && viewmodel.animstate_startframe == viewmodel.anim_fire1_x && time < viewmodel.weapon_nextthink)
+		do_crouch = false;
+	if((activeweapon.spawnflags & WEP_TYPE_MELEE_SEC) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
 		do_crouch = false;
 
 	if (do_crouch)
@@ -153,145 +154,8 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		}
 	}
 
-	// set onground
-	vector origin1 = this.origin + '0 0 1';
-	vector origin2 = this.origin - '0 0 1';
-
-	if (ground && autocvar_cl_movement == 3)
-	{
-		tracebox(origin1, this.mins, this.maxs, origin2, MOVE_NORMAL, this);
-		if (trace_fraction < 1.0 && trace_plane_normal.z > 0.7)
-		{
-			SET_ONGROUND(this);
-
-			// this code actually "predicts" an impact; so let's clip velocity first
-			this.velocity -= this.velocity * trace_plane_normal * trace_plane_normal;
-		}
-		else
-			UNSET_ONGROUND(this);
-	}
-
-	if(autocvar_cl_movement == 3)
-	{
-		// set watertype/waterlevel
-		origin1 = this.origin;
-		origin1.z += this.mins_z + 1;
-		this.waterlevel = WATERLEVEL_NONE;
-
-		int thepoint = pointcontents(origin1);
-
-		this.watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
-
-		if (this.watertype)
-		{
-			this.waterlevel = WATERLEVEL_WETFEET;
-			origin1.z = this.origin.z + (this.mins.z + this.maxs.z) * 0.5;
-			thepoint = pointcontents(origin1);
-			if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
-			{
-				this.waterlevel = WATERLEVEL_SWIMMING;
-				origin1.z = this.origin.z + 22;
-				thepoint = pointcontents(origin1);
-				if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
-					this.waterlevel = WATERLEVEL_SUBMERGED;
-			}
-		}
-	}
-
 	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_WATERJUMP_TIME(this) <= 0)
 		PHYS_WATERJUMP_TIME(this) = 0;
-#endif
-}
-
-void PM_ClientMovement_Move(entity this)
-{
-#ifdef CSQC
-
-	PM_ClientMovement_UpdateStatus(this, false);
-	if(autocvar_cl_movement == 1)
-		return;
-
-	int bump;
-	float t;
-	float f;
-	vector neworigin;
-	vector currentorigin2;
-	vector neworigin2;
-	vector primalvelocity;
-
-	vector trace1_endpos = '0 0 0';
-	vector trace2_endpos = '0 0 0';
-	vector trace3_endpos = '0 0 0';
-	float trace1_fraction = 0;
-	float trace2_fraction = 0;
-	float trace3_fraction = 0;
-	vector trace1_plane_normal = '0 0 0';
-	vector trace2_plane_normal = '0 0 0';
-	vector trace3_plane_normal = '0 0 0';
-
-	primalvelocity = this.velocity;
-	for(bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && (this.velocity * this.velocity) > 0; bump++)
-	{
-		neworigin = this.origin + t * this.velocity;
-		tracebox(this.origin, this.mins, this.maxs, neworigin, MOVE_NORMAL, this);
-		trace1_endpos = trace_endpos;
-		trace1_fraction = trace_fraction;
-		trace1_plane_normal = trace_plane_normal;
-		if(trace1_fraction < 1 && trace1_plane_normal_z == 0)
-		{
-			// may be a step or wall, try stepping up
-			// first move forward at a higher level
-			currentorigin2 = this.origin;
-			currentorigin2_z += PHYS_STEPHEIGHT(this);
-			neworigin2 = neworigin;
-			neworigin2_z += PHYS_STEPHEIGHT(this);
-			tracebox(currentorigin2, this.mins, this.maxs, neworigin2, MOVE_NORMAL, this);
-			trace2_endpos = trace_endpos;
-			trace2_fraction = trace_fraction;
-			trace2_plane_normal = trace_plane_normal;
-			if(!trace_startsolid)
-			{
-				// then move down from there
-				currentorigin2 = trace2_endpos;
-				neworigin2 = trace2_endpos;
-				neworigin2_z = this.origin_z;
-				tracebox(currentorigin2, this.mins, this.maxs, neworigin2, MOVE_NORMAL, this);
-				trace3_endpos = trace_endpos;
-				trace3_fraction = trace_fraction;
-				trace3_plane_normal = trace_plane_normal;
-				// accept the new trace if it made some progress
-				if(fabs(trace3_endpos_x - trace1_endpos_x) >= 0.03125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.03125)
-				{
-					trace1_endpos = trace2_endpos;
-					trace1_fraction = trace2_fraction;
-					trace1_plane_normal = trace2_plane_normal;
-					trace1_endpos = trace3_endpos;
-				}
-			}
-		}
-
-		// check if it moved at all
-		if(trace1_fraction >= 0.001)
-			setorigin(this, trace1_endpos);
-
-		// check if it moved all the way
-		if(trace1_fraction == 1)
-			break;
-
-		// this is only really needed for nogravityonground combined with gravityunaffectedbyticrate
-		// <LordHavoc> I'm pretty sure I commented it out solely because it seemed redundant
-		// this got commented out in a change that supposedly makes the code match QW better
-		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
-		if(trace1_plane_normal_z > 0.7)
-			SET_ONGROUND(this);
-
-		t -= t * trace1_fraction;
-
-		f = (this.velocity * trace1_plane_normal);
-		this.velocity = this.velocity + -f * trace1_plane_normal;
-	}
-	if(PHYS_TELEPORT_TIME(this) > 0)
-		this.velocity = primalvelocity;
 #endif
 }
 
@@ -541,7 +405,7 @@ bool PlayerJump(entity this)
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
-		PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 #endif
 	return true;
 }
@@ -781,7 +645,8 @@ void PM_check_hitground(entity this)
     entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
     	? GS_FALL_METAL
     	: GS_FALL;
-    GlobalSound(this, gs, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+    float vol = ((IS_DUCKED(this)) ? VOL_MUFFLED : VOL_BASE);
+    GlobalSound(this, gs, CH_PLAYER, vol, VOICETYPE_PLAYERSOUND);
 #endif
 }
 
@@ -801,7 +666,7 @@ void PM_Footsteps(entity this)
 		entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 			? GS_STEP_METAL
 			: GS_STEP;
-		GlobalSound(this, gs, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+		GlobalSound(this, gs, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 	}
 #endif
 }
@@ -839,10 +704,14 @@ void PM_jetpack(entity this, float maxspd_mod)
 	float a_up = PHYS_JETPACK_ACCEL_UP(this);
 	float a_add = PHYS_JETPACK_ANTIGRAVITY(this) * PHYS_GRAVITY(this);
 
+	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(self)) { a_up = PHYS_JETPACK_REVERSE_THRUST(this); }
+
 	wishvel_x *= a_side;
 	wishvel_y *= a_side;
 	wishvel_z *= a_up;
 	wishvel_z += a_add;
+
+	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(self)) { wishvel_z *= -1; }
 
 	float best = 0;
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -920,24 +789,6 @@ void PM_jetpack(entity this, float maxspd_mod)
 		this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
 #endif
 	}
-
-#ifdef CSQC
-	float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(this) * PHYS_INPUT_TIMELENGTH;
-	if(autocvar_cl_movement == 3)
-	{
-		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-			this.velocity_z -= g * 0.5;
-		else
-			this.velocity_z -= g;
-	}
-	PM_ClientMovement_Move(this);
-	if(autocvar_cl_movement == 3)
-	{
-		if (!IS_ONGROUND(this) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
-			if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-				this.velocity_z -= g * 0.5;
-	}
-#endif
 }
 
 // used for calculating airshots
@@ -962,4 +813,8 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
 	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);
+
+#ifdef SVQC
+	this.pm_frametime = frametime;
+#endif
 }

@@ -40,10 +40,10 @@ float W_WeaponSpeedFactor(entity this)
 }
 
 
-bool CL_Weaponentity_CustomizeEntityForClient(entity this)
+bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 {
 	this.viewmodelforclient = this.owner;
-	if (IS_SPEC(other) && other.enemy == this.owner) this.viewmodelforclient = other;
+	if (IS_SPEC(client) && client.enemy == this.owner) this.viewmodelforclient = client;
 	return true;
 }
 
@@ -391,7 +391,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		int act = (fr == WFRAME_FIRE2 && (PS(actor).m_weapon == WEP_SHOCKWAVE || PS(actor).m_weapon == WEP_SHOTGUN))
+		bool primary_melee = boolean(fr == WFRAME_FIRE1 && (PS(actor).m_weapon.spawnflags & WEP_TYPE_MELEE_PRI));
+		bool secondary_melee = boolean(fr == WFRAME_FIRE2 && (PS(actor).m_weapon.spawnflags & WEP_TYPE_MELEE_SEC));
+		int act = (primary_melee || secondary_melee)
 			? ANIMACTION_MELEE
 			: ANIMACTION_SHOOT
 			;
@@ -408,6 +410,7 @@ bool forbidWeaponUse(entity player)
 	if (time < game_starttime && !autocvar_sv_ready_restart_after_countdown) return true;
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
 	if (player.player_blocked) return true;
+	if (gameover) return true;
 	if (STAT(FROZEN, player)) return true;
 	if (player.weapon_blocked) return true;
 	return false;

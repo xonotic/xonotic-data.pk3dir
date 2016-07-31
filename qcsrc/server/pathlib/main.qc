@@ -6,15 +6,11 @@
 
 void pathlib_deletepath(entity start)
 {
-    entity e;
-
-    e = findchainentity(owner, start);
-    while(e)
+    FOREACH_ENTITY_ENT(owner, start,
     {
-        setthink(e, SUB_Remove);
-        e.nextthink = time;
-        e = e.chain;
-    }
+        setthink(it, SUB_Remove);
+        it.nextthink = time;
+    });
 }
 
 //#define PATHLIB_NODEEXPIRE 0.05
@@ -218,9 +214,6 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
 entity pathlib_getbestopen()
 {
-    entity node;
-    entity bestnode;
-
     if(best_open_node)
     {
         ++pathlib_bestcash_hits;
@@ -229,19 +222,14 @@ entity pathlib_getbestopen()
         return best_open_node;
     }
 
-    node = findchainentity(owner,openlist);
-    if(!node)
-        return NULL;
-
-    bestnode = node;
-    while(node)
+    entity bestnode = NULL;
+    FOREACH_ENTITY_ENT(owner, openlist,
     {
-        ++pathlib_bestopen_seached;
-        if(node.pathlib_node_f < bestnode.pathlib_node_f)
-            bestnode = node;
+        ++pathlib_bestopen_searched;
 
-        node = node.chain;
-    }
+        if(!bestnode || it.pathlib_node_f < bestnode.pathlib_node_f)
+            bestnode = it;
+    });
 
     return bestnode;
 }
@@ -432,7 +420,7 @@ entity pathlib_astar(entity this, vector from,vector to)
     pathlib_made_cnt         = 0;
     pathlib_merge_cnt        = 0;
     pathlib_searched_cnt     = 0;
-    pathlib_bestopen_seached = 0;
+    pathlib_bestopen_searched = 0;
     pathlib_bestcash_hits    = 0;
     pathlib_bestcash_saved   = 0;
 
@@ -561,7 +549,7 @@ entity pathlib_astar(entity this, vector from,vector to)
             LOG_TRACE("Nodes -          merged: ", ftos(pathlib_merge_cnt),"\n");
             LOG_TRACE("Nodes -          closed: ", ftos(pathlib_closed_cnt),"\n");
             LOG_TRACE("Nodes -        searched: ", ftos(pathlib_searched_cnt),"\n");
-            LOG_TRACE("Nodes bestopen searched: ", ftos(pathlib_bestopen_seached),"\n");
+            LOG_TRACE("Nodes bestopen searched: ", ftos(pathlib_bestopen_searched),"\n");
             LOG_TRACE("Nodes bestcash -   hits: ", ftos(pathlib_bestcash_hits),"\n");
             LOG_TRACE("Nodes bestcash -   save: ", ftos(pathlib_bestcash_saved),"\n");
             LOG_TRACE("AStar done.\n");

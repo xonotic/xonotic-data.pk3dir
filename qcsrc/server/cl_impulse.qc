@@ -512,96 +512,93 @@ IMPULSE(navwaypoint_save)
 IMPULSE(navwaypoint_unreachable)
 {
 	if (!autocvar_g_waypointeditor) return;
-	for (entity e = findchain(classname, "waypoint"); e; e = e.chain)
+	IL_EACH(g_waypoints, true,
 	{
-		e.colormod = '0.5 0.5 0.5';
-		e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
-	}
+		it.colormod = '0.5 0.5 0.5';
+		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
+	});
 	entity e2 = navigation_findnearestwaypoint(this, false);
 	navigation_markroutes(this, e2);
 
-	int i, m;
+	int j, m;
 
-	i = 0;
+	j = 0;
 	m = 0;
-	for (entity e = findchain(classname, "waypoint"); e; e = e.chain)
+	IL_EACH(g_waypoints, it.wpcost >= 10000000,
 	{
-		if (e.wpcost < 10000000) continue;
-		LOG_INFO("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
-		e.colormod_z = 8;
-		e.effects |= EF_NODEPTHTEST | EF_BLUE;
-		++i;
+		LOG_INFO("unreachable: ", etos(it), " ", vtos(it.origin), "\n");
+		it.colormod_z = 8;
+		it.effects |= EF_NODEPTHTEST | EF_BLUE;
+		++j;
 		++m;
-	}
-	if (i) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)\n", i);
+	});
+	if (j) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)\n", j);
 	navigation_markroutes_inverted(e2);
 
-	i = 0;
-	for (entity e = findchain(classname, "waypoint"); e; e = e.chain)
+	j = 0;
+	IL_EACH(g_waypoints, it.wpcost >= 10000000,
 	{
-		if (e.wpcost < 10000000) continue;
-		LOG_INFO("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
-		e.colormod_x = 8;
-		if (!(e.effects & EF_NODEPTHTEST))  // not already reported before
+		LOG_INFO("cannot reach me: ", etos(it), " ", vtos(it.origin), "\n");
+		it.colormod_x = 8;
+		if (!(it.effects & EF_NODEPTHTEST))  // not already reported before
 			++m;
-		e.effects |= EF_NODEPTHTEST | EF_RED;
-		++i;
-	}
-	if (i) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)\n", i);
+		it.effects |= EF_NODEPTHTEST | EF_RED;
+		++j;
+	});
+	if (j) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)\n", j);
 	if (m) LOG_INFOF("%d waypoints have been marked total\n", m);
 
-	i = 0;
-	for (entity e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
+	j = 0;
+	FOREACH_ENTITY_CLASS("info_player_deathmatch", true,
 	{
-		vector org = e.origin;
-		tracebox(e.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), e.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
-		setorigin(e, trace_endpos);
-		if (navigation_findnearestwaypoint(e, false))
+		vector org = it.origin;
+		tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
+		setorigin(it, trace_endpos);
+		if (navigation_findnearestwaypoint(it, false))
 		{
-			setorigin(e, org);
-			e.effects &= ~EF_NODEPTHTEST;
-			e.model = "";
+			setorigin(it, org);
+			it.effects &= ~EF_NODEPTHTEST;
+			it.model = "";
 		}
 		else
 		{
-			setorigin(e, org);
-			LOG_INFO("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-			e.effects |= EF_NODEPTHTEST;
-			_setmodel(e, this.model);
-			e.frame = this.frame;
-			e.skin = this.skin;
-			e.colormod = '8 0.5 8';
-			setsize(e, '0 0 0', '0 0 0');
-			++i;
+			setorigin(it, org);
+			LOG_INFO("spawn without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+			it.effects |= EF_NODEPTHTEST;
+			_setmodel(it, this.model);
+			it.frame = this.frame;
+			it.skin = this.skin;
+			it.colormod = '8 0.5 8';
+			setsize(it, '0 0 0', '0 0 0');
+			++j;
 		}
-	}
-	if (i) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)\n", i);
+	});
+	if (j) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)\n", j);
 
-	i = 0;
-	entity start = findchainflags(flags, FL_ITEM);
-	for (entity e = start; e; e = e.chain)
+	j = 0;
+	FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 	{
-		e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
-		e.colormod = '0.5 0.5 0.5';
-	}
-	for (entity e = start; e; e = e.chain)
+		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
+		it.colormod = '0.5 0.5 0.5';
+	});
+	FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 	{
-		if (navigation_findnearestwaypoint(e, false)) continue;
-		LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-		e.effects |= EF_NODEPTHTEST | EF_RED;
-		e.colormod_x = 8;
-		++i;
-	}
-	if (i) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)\n", i);
+		if (navigation_findnearestwaypoint(it, false)) continue;
+		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+		it.effects |= EF_NODEPTHTEST | EF_RED;
+		it.colormod_x = 8;
+		++j;
+	});
+	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)\n", j);
 
-	i = 0;
-	for (entity e = start; e; e = e.chain)
+	j = 0;
+	FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 	{
-		if (navigation_findnearestwaypoint(e, true)) continue;
-		LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-		e.effects |= EF_NODEPTHTEST | EF_BLUE;
-		e.colormod_z = 8;
-		++i;
-	}
-	if (i) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", i);
+		if (navigation_findnearestwaypoint(it, true)) continue;
+		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+		it.effects |= EF_NODEPTHTEST | EF_BLUE;
+		it.colormod_z = 8;
+		++j;
+	});
+	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
 }

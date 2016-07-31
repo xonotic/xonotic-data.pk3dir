@@ -363,6 +363,7 @@ STATIC_INIT(Porto)
 {
 	entity e = new_pure(porto);
 	e.draw = Porto_Draw;
+	IL_PUSH(g_drawables, e);
 	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
 
@@ -447,7 +448,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if(hud == HUD_NORMAL)
+	if(hud == HUD_NORMAL && !spectatee_status)
 	if(switchweapon == activeweapon)
 	if((activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
 		zoomdir += button_attack2;
@@ -860,7 +861,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 	{
 		case 1: // crosshair_color_per_weapon
 		{
-			if(this != WEP_Null)
+			if(this != WEP_Null && hud == HUD_NORMAL)
 			{
 				wcross_color = this.wpcolor;
 				break;
@@ -940,6 +941,9 @@ void HUD_Crosshair(entity this)
 		!HUD_MinigameMenu_IsOpened() )
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
+			return;
+
+		if (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2)
 			return;
 
 		if (hud != HUD_NORMAL)
@@ -1459,6 +1463,25 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
+		if(STAT(CAMERA_SPECTATOR))
+		{
+			if(spectatee_status > 0)
+			{
+				if(!autocvar_chase_active)
+				{
+					cvar_set("chase_active", "-2");
+					goto skip_eventchase_death;
+				}
+			}
+			else if(autocvar_chase_active == -2)
+				cvar_set("chase_active", "0");
+
+			if(autocvar_chase_active == -2)
+				goto skip_eventchase_death;
+		}
+		else if(autocvar_chase_active == -2)
+			cvar_set("chase_active", "0");
+
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
 		entity gen = NULL;
@@ -1568,6 +1591,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 		cvar_settemp("chase_active", "-1");
 		eventchase_current_distance = 0;
 	}
+
+	LABEL(skip_eventchase_death);
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
 	if(autocvar_cl_lockview || (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened())))
@@ -1847,7 +1872,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	FOREACH_ENTITY(it.draw, it.draw(it));
+	IL_EACH(g_drawables, it.draw, it.draw(it));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -2177,7 +2202,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	  } else */
 
 	// draw 2D entities
-	FOREACH_ENTITY(it.draw2d, it.draw2d(it));
+	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
 	Debug_Draw();
 
@@ -2234,6 +2259,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// let's reset the view back to normal for the end
 	setproperty(VF_MIN, '0 0 0');
 	setproperty(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
+
+	IL_ENDFRAME();
 }
 
 

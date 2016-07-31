@@ -46,6 +46,8 @@ CLASS(Vehicle, Object)
     METHOD(Vehicle, vr_precache, void(Vehicle this)) { }
     /** (SERVER) called when a player enters this vehicle */
     METHOD(Vehicle, vr_enter, void(Vehicle this, entity instance)) { }
+    /** (SERVER) called when a player enters this vehicle while occupied */
+    METHOD(Vehicle, vr_gunner_enter, void(Vehicle this, entity instance, entity actor)) { }
     /** (SERVER) called when the vehicle re-spawns */
     METHOD(Vehicle, vr_spawn, void(Vehicle this, entity instance)) { }
     /** (SERVER) called when a vehicle hits something */

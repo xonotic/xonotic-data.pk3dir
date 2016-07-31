@@ -2,7 +2,7 @@
 CLASS(Shotgun, Weapon)
 /* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells)
 /* impulse   */ ATTRIB(Shotgun, impulse, int, 2)
-/* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shotgun, mdl, string, "shotgun");
@@ -73,8 +73,11 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 
 	// casing code
 	if(autocvar_g_casings >= 1)
+	{
+		makevectors(actor.v_angle); // for some reason, this is lost
 		for(sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
 			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor);
+	}
 
 	// muzzle flash for 1st person view
 	flash = spawn();

@@ -61,8 +61,9 @@
 		sf |= this.m_forceupdate;
 		this.m_forceupdate = 0;
 		bool valid =
-		    IS_PLAYER(player)             // player must be active
-		    || player == to               // player is self
+			time > game_starttime
+		    && (IS_PLAYER(player)          // player must be active
+		    || player == to)               // player is self
 		;
 		if (!valid) sf = 0;
 		if (chan == MSG_ENTITY)

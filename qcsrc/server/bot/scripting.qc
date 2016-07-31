@@ -252,7 +252,7 @@ entity find_bot_by_number(float number)
 	if(!number)
 		return NULL;
 
-	bot = findchainflags(flags, FL_CLIENT);
+	bot = findchainflags(flags, FL_CLIENT); // TODO: doesn't findchainflags loop backwards through entities?
 	while (bot)
 	{
 		if(IS_BOT_CLIENT(bot))

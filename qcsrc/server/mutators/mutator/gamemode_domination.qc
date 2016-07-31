@@ -249,11 +249,11 @@ void dompointthink(entity this)
 	}
 }
 
-void dompointtouch(entity this)
+void dompointtouch(entity this, entity toucher)
 {
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
-	if (other.health < 1)
+	if (toucher.health < 1)
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
@@ -264,7 +264,7 @@ void dompointtouch(entity this)
 
 	// only valid teams can claim it
 	entity head = find(NULL, classname, "dom_team");
-	while (head && head.team != other.team)
+	while (head && head.team != toucher.team)
 		head = find(head, classname, "dom_team");
 	if (!head || head.netname == "" || head == this.goalentity)
 		return;
@@ -273,9 +273,9 @@ void dompointtouch(entity this)
 
 	this.team = this.goalentity.team; // this stores the PREVIOUS team!
 
-	this.cnt = other.team;
+	this.cnt = toucher.team;
 	this.owner = head; // team to switch to after the delay
-	this.dmg_inflictor = other;
+	this.dmg_inflictor = toucher;
 
 	// this.state = 1;
 	// this.delay = time + cvar("g_domination_point_capturetime");
@@ -298,8 +298,8 @@ void dompointtouch(entity this)
 	this.modelindex = head.dmg;
 	this.skin = head.skin;
 
-	this.enemy = other; // individual player scoring
-	this.enemy_playerid = other.playerid;
+	this.enemy = toucher; // individual player scoring
+	this.enemy_playerid = toucher.playerid;
 	dompoint_captured(this);
 }
 
@@ -600,7 +600,7 @@ spawnfunc(dom_team)
 }
 
 // scoreboard setup
-void ScoreRules_dom(float teams)
+void ScoreRules_dom(int teams)
 {
 	if(domination_roundbased)
 	{
@@ -684,7 +684,14 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	}
 
 	CheckAllowedTeams(NULL);
-	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
+	//domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
+
+	int teams = 0;
+	if(c1 >= 0) teams |= BIT(0);
+	if(c2 >= 0) teams |= BIT(1);
+	if(c3 >= 0) teams |= BIT(2);
+	if(c4 >= 0) teams |= BIT(3);
+	domination_teams = teams;
 
 	domination_roundbased = autocvar_g_domination_roundbased;
 

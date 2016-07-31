@@ -16,9 +16,9 @@
 .float scale;
 .vector colormod;
 
-void SUB_Stop(entity this)
+void SUB_Stop(entity this, entity toucher)
 {
-	this.move_velocity = this.move_avelocity = '0 0 0';
+	this.velocity = this.avelocity = '0 0 0';
 	this.move_movetype = MOVETYPE_NONE;
 }
 
@@ -58,11 +58,11 @@ void Projectile_Draw(entity this)
 	float t;
 	float a;
 
-	f = this.move_flags;
+	f = this.flags;
 
 	if (this.count & 0x80)
 	{
-		// this.move_flags &= ~FL_ONGROUND;
+		// UNSET_ONGROUND(this);
 		if (this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FLY)
 			Movetype_Physics_NoMatchServer(this);
 		// the trivial movetypes do not have to match the
@@ -72,9 +72,9 @@ void Projectile_Draw(entity this)
 		// moving, we might still be ticrate dependent.
 		else
 			Movetype_Physics_MatchServer(this, autocvar_cl_projectiles_sloppy);
-		if (!(this.move_flags & FL_ONGROUND))
+		if (!IS_ONGROUND(this))
 			if (this.velocity != '0 0 0')
-				this.move_angles = this.angles = vectoangles(this.velocity);
+				this.angles = vectoangles(this.velocity);
 	}
 	else
 	{
@@ -209,9 +209,9 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	// projectiles no longer being able to lie on a bmodel
 	this.move_nomonsters = MOVE_WORLDONLY;
 	if (f & 0x40)
-		this.move_flags |= FL_ONGROUND;
+		SET_ONGROUND(this);
 	else
-		this.move_flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(this);
 
 	if (!this.move_time)
 	{
@@ -243,8 +243,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.gravity = ReadCoord();
 			else
 				this.gravity = 0;  // none
-			this.move_origin = this.origin;
-			this.move_velocity = this.velocity;
 		}
 
 		if (time == this.spawntime || (this.count & 0x80) || (f & 0x08))
@@ -340,12 +338,12 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
 				loopsound(this, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
-				this.mins = '0 0 -4';
-				this.maxs = '0 0 -4';
+				this.mins = '-4 -4 -4';
+				this.maxs = '4 4 4';
 				this.move_movetype = MOVETYPE_BOUNCE;
 				settouch(this, func_null);
-				this.move_bounce_factor = WEP_CVAR_SEC(electro, bouncefactor);
-				this.move_bounce_stopspeed = WEP_CVAR_SEC(electro, bouncestop);
+				this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
+				this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
@@ -362,8 +360,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '3 3 3';
 				this.move_movetype = MOVETYPE_BOUNCE;
 				settouch(this, func_null);
-				this.move_bounce_factor = WEP_CVAR(mortar, bouncefactor);
-				this.move_bounce_stopspeed = WEP_CVAR(mortar, bouncestop);
+				this.bouncefactor = WEP_CVAR(mortar, bouncefactor);
+				this.bouncestop = WEP_CVAR(mortar, bouncestop);
 				break;
 			case PROJECTILE_SHAMBLER_LIGHTNING:
 				this.mins = '-8 -8 -8';
@@ -443,9 +441,9 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			    this.mins = '0 0 -4';
 			    this.maxs = '0 0 -4';
 			    this.move_movetype = MOVETYPE_BOUNCE;
-			    this.move_touch = func_null;
-			    this.move_bounce_factor = WEP_CVAR_SEC(electro, bouncefactor);
-			    this.move_bounce_stopspeed = WEP_CVAR_SEC(electro, bouncestop);
+			    settouch(this, func_null);
+			    this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
+			    this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 			    break;
 			*/
 			default:
@@ -479,6 +477,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 	this.classname = "csqcprojectile";
 	this.draw = Projectile_Draw;
+	if (isnew) IL_PUSH(g_drawables, this);
 	this.entremove = Ent_RemoveProjectile;
 }
 

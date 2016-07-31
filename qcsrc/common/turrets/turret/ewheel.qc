@@ -184,7 +184,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 {
     entity e;
 
-    if(it.movetype == MOVETYPE_WALK)
+    if(it.move_movetype == MOVETYPE_WALK)
     {
         it.velocity = '0 0 0';
         it.enemy = NULL;
@@ -218,7 +218,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
     it.iscreature				= true;
     it.teleportable			= TELEPORT_NORMAL;
     it.damagedbycontents		= true;
-    it.movetype				= MOVETYPE_WALK;
+    set_movetype(it, MOVETYPE_WALK);
     it.solid					= SOLID_SLIDEBOX;
     it.takedamage				= DAMAGE_AIM;
     it.idle_aim				= '0 0 0';
@@ -247,8 +247,7 @@ void ewheel_draw(entity this)
 
     fixedmakevectors(this.angles);
     setorigin(this, this.origin + this.velocity * dt);
-    this.tur_head.angles += dt * this.tur_head.move_avelocity;
-    this.angles_y = this.move_angles_y;
+    this.tur_head.angles += dt * this.tur_head.avelocity;
 
     if (this.health < 127)
     if(random() < 0.05)
@@ -258,9 +257,7 @@ void ewheel_draw(entity this)
         METHOD(EWheel, tr_setup, void(EWheel this, entity it))
         {
             it.gravity		= 1;
-            it.movetype		= MOVETYPE_BOUNCE;
-            it.move_movetype	= MOVETYPE_BOUNCE;
-            it.move_origin	= it.origin;
+            it.move_movetype = MOVETYPE_BOUNCE;
             it.move_time		= time;
             it.draw			= ewheel_draw;
         }

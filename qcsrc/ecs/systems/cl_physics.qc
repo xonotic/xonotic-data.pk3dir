@@ -10,7 +10,7 @@ void sys_phys_fix(entity this, float dt)
 	this.spectatorspeed = STAT(SPECTATORSPEED, this);
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
 		UNSET_JUMP_HELD(this);           // canjump = true
-	PM_ClientMovement_UpdateStatus(this, true);
+	PM_ClientMovement_UpdateStatus(this);
 }
 
 bool sys_phys_override(entity this)

@@ -50,7 +50,7 @@ void monster_dropitem(entity this, entity attacker)
 		e.noalign = true;
 		e.monster_loot(e);
 		e.gravity = 1;
-		e.movetype = MOVETYPE_TOSS;
+		set_movetype(e, MOVETYPE_TOSS);
 		e.reset = SUB_Remove;
 		setorigin(e, org);
 		e.velocity = randomvec() * 175 + '0 0 325';
@@ -338,7 +338,7 @@ void Monster_Sound(entity this, .string samplefield, float sound_delay, float de
 	if(delaytoo)
 	if(time < this.msound_delay)
 		return; // too early
-	GlobalSound_string(this, this.(samplefield), chan, VOICETYPE_PLAYERSOUND);
+	GlobalSound_string(this, this.(samplefield), chan, VOL_BASE, VOICETYPE_PLAYERSOUND);
 
 	this.msound_delay = time + sound_delay;
 }
@@ -391,7 +391,7 @@ bool Monster_Attack_Leap_Check(entity this, vector vel)
 	return true;
 }
 
-bool Monster_Attack_Leap(entity this, vector anm, void(entity this) touchfunc, vector vel, float animtime)
+bool Monster_Attack_Leap(entity this, vector anm, void(entity this, entity toucher) touchfunc, vector vel, float animtime)
 {
 	if(!Monster_Attack_Leap_Check(this, vel))
 		return false;
@@ -463,15 +463,15 @@ void Monster_UpdateModel(entity this)
 	mon.mr_anim(mon, this);
 }
 
-void Monster_Touch(entity this)
+void Monster_Touch(entity this, entity toucher)
 {
-	if(other == NULL) { return; }
+	if(toucher == NULL) { return; }
 
-	if(other.monster_attack)
-	if(this.enemy != other)
-	if(!IS_MONSTER(other))
-	if(Monster_ValidTarget(this, other))
-		this.enemy = other;
+	if(toucher.monster_attack)
+	if(this.enemy != toucher)
+	if(!IS_MONSTER(toucher))
+	if(Monster_ValidTarget(this, toucher))
+		this.enemy = toucher;
 }
 
 void Monster_Miniboss_Check(entity this)
@@ -763,15 +763,15 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 			}
 
 
-			this.movetype = MOVETYPE_BOUNCE;
+			set_movetype(this, MOVETYPE_BOUNCE);
 			//this.velocity_z = -200;
 
 			return;
 		}
-		else if(this.movetype == MOVETYPE_BOUNCE)
+		else if(this.move_movetype == MOVETYPE_BOUNCE)
 		{
 			this.angles_x = 0;
-			this.movetype = MOVETYPE_WALK;
+			set_movetype(this, MOVETYPE_WALK);
 		}
 	}
 
@@ -1010,7 +1010,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	this.takedamage		= DAMAGE_AIM;
 	this.deadflag		= DEAD_DEAD;
 	this.enemy			= NULL;
-	this.movetype		= MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 	this.moveto			= this.origin;
 	settouch(this, Monster_Touch); // reset incase monster was pouncing
 	this.reset			= func_null;
@@ -1290,6 +1290,9 @@ bool Monster_Spawn(entity this, int mon_id)
 
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
+	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+		IL_PUSH(g_monsters, this);
+
 	if(Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
 
 	if(!this.monster_skill)
@@ -1320,7 +1323,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	settouch(this, Monster_Touch);
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;
-	this.movetype			= MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 	this.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
 	this.enemy				= NULL;
 	this.velocity			= '0 0 0';
@@ -1355,7 +1358,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	if(mon.spawnflags & MONSTER_TYPE_FLY)
 	{
 		this.flags |= FL_FLY;
-		this.movetype = MOVETYPE_FLY;
+		set_movetype(this, MOVETYPE_FLY);
 	}
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))

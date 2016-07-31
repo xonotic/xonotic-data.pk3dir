@@ -349,7 +349,7 @@ void spiderbot_exit(entity this, int eject)
 	setthink(this, vehicles_think);
 	this.nextthink = time;
 	this.frame = 5;
-	this.movetype = MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 
 	if(!this.owner)
 		return;
@@ -435,7 +435,7 @@ void spiderbot_blowup(entity this)
 
 	vector org = gettaginfo(this, gettagindex(this, "tag_head"));
 	setorigin(h, org);
-	h.movetype = MOVETYPE_BOUNCE;
+	set_movetype(h, MOVETYPE_BOUNCE);
 	h.solid = SOLID_BBOX;
 	h.velocity = v_up * (500 + random() * 500) + randomvec() * 128;
 	h.modelflags = MF_ROCKET;
@@ -451,14 +451,14 @@ void spiderbot_blowup(entity this)
 
 	org = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_hardpoint01"));
 	setorigin(g1, org);
-	g1.movetype = MOVETYPE_TOSS;
+	set_movetype(g1, MOVETYPE_TOSS);
 	g1.solid = SOLID_CORPSE;
 	g1.velocity = v_forward * 700 + (randomvec() * 32);
 	g1.avelocity = randomvec() * 180;
 
 	org = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_hardpoint02"));
 	setorigin(g2, org);
-	g2.movetype = MOVETYPE_TOSS;
+	set_movetype(g2, MOVETYPE_TOSS);
 	g2.solid = SOLID_CORPSE;
 	g2.velocity = v_forward * 700 + (randomvec() * 32);
 	g2.avelocity = randomvec() * 180;
@@ -473,7 +473,7 @@ void spiderbot_blowup(entity this)
 	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_SPID_DEATH.m_id, NULL);
 
 	this.alpha = this.tur_head.alpha = this.gun1.alpha = this.gun2.alpha = -1;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.deadflag = DEAD_DEAD;
 	this.solid = SOLID_NOT;
 	this.tur_head.effects &= ~EF_FLAME;
@@ -543,7 +543,7 @@ METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
 METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 {
     instance.vehicle_weapon2mode = SBRM_GUIDE;
-    instance.movetype = MOVETYPE_WALK;
+    set_movetype(instance, MOVETYPE_WALK);
     CSQCVehicleSetup(instance.owner, 0);
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
@@ -573,7 +573,7 @@ METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
     instance.tur_head.effects  |= EF_FLAME;
     instance.colormod			= instance.tur_head.colormod = '-1 -1 -1';
     instance.frame				= 10;
-    instance.movetype			= MOVETYPE_TOSS;
+    set_movetype(instance, MOVETYPE_TOSS);
 
     CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 }
@@ -594,7 +594,7 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 
     instance.frame = 5;
     instance.tur_head.frame = 1;
-    instance.movetype = MOVETYPE_WALK;
+    set_movetype(instance, MOVETYPE_WALK);
     instance.solid = SOLID_SLIDEBOX;
     instance.alpha = instance.tur_head.alpha = instance.gun1.alpha = instance.gun2.alpha = 1;
     instance.tur_head.angles = '0 0 0';

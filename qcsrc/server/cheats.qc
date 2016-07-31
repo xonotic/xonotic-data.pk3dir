@@ -232,7 +232,7 @@ float CheatImpulse(entity this, int imp)
 			break;
 		case CHIMPULSE_TELEPORT.impulse:
 			IS_CHEAT(this, imp, 0, 0);
-			if(this.movetype == MOVETYPE_NOCLIP)
+			if(this.move_movetype == MOVETYPE_NOCLIP)
 			{
 				e = find(NULL, classname, "info_autoscreenshot");
 				if(e)
@@ -639,29 +639,29 @@ float CheatCommand(entity this, int argc)
 			break;
 		case "noclip":
 			IS_CHEAT(this, 0, argc, 0);
-			if(this.movetype != MOVETYPE_NOCLIP)
+			if(this.move_movetype != MOVETYPE_NOCLIP)
 			{
-				this.movetype = MOVETYPE_NOCLIP;
+				set_movetype(this, MOVETYPE_NOCLIP);
 				sprint(this, "noclip ON\n");
 				DID_CHEAT();
 			}
 			else
 			{
-				this.movetype = MOVETYPE_WALK;
+				set_movetype(this, MOVETYPE_WALK);
 				sprint(this, "noclip OFF\n");
 			}
 			break;
 		case "fly":
 			IS_CHEAT(this, 0, argc, 0);
-			if(this.movetype != MOVETYPE_FLY)
+			if(this.move_movetype != MOVETYPE_FLY)
 			{
-				this.movetype = MOVETYPE_FLY;
+				set_movetype(this, MOVETYPE_FLY);
 				sprint(this, "flymode ON\n");
 				DID_CHEAT();
 			}
 			else
 			{
-				this.movetype = MOVETYPE_WALK;
+				set_movetype(this, MOVETYPE_WALK);
 				sprint(this, "flymode OFF\n");
 			}
 			break;
@@ -733,7 +733,8 @@ float CheatFrame(entity this)
 			if(this.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
 			{
 				// use cheat dragging if cheats are enabled
-				crosshair_trace_plusvisibletriggers(this);
+				//if(Drag_IsDragging(this))
+					//crosshair_trace_plusvisibletriggers(this);
 				Drag(this, true, true);
 			}
 			else
@@ -867,9 +868,9 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 {
 	float tagscale;
 
-	draggee.dragmovetype = draggee.movetype;
+	draggee.dragmovetype = draggee.move_movetype;
 	draggee.draggravity = draggee.gravity;
-	draggee.movetype = MOVETYPE_WALK;
+	set_movetype(draggee, MOVETYPE_WALK);
 	draggee.gravity = 0.00001;
 	UNSET_ONGROUND(draggee);
 	draggee.draggedby = dragger;
@@ -894,10 +895,10 @@ void Drag_Finish(entity dragger)
 	if(dragger)
 		dragger.dragentity = NULL;
 	draggee.draggedby = NULL;
-	draggee.movetype = draggee.dragmovetype;
+	set_movetype(draggee, draggee.dragmovetype);
 	draggee.gravity = draggee.draggravity;
 
-	switch(draggee.movetype)
+	switch(draggee.move_movetype)
 	{
 		case MOVETYPE_TOSS:
 		case MOVETYPE_WALK:

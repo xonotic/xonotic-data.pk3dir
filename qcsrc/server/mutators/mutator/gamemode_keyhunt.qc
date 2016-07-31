@@ -144,7 +144,7 @@ const float SP_KH_DESTROYS = 6;
 const float SP_KH_PICKUPS = 7;
 const float SP_KH_KCKILLS = 8;
 const float SP_KH_LOSSES = 9;
-void kh_ScoreRules(float teams)
+void kh_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
 	ScoreInfo_SetLabel_TeamScore(  ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
@@ -307,7 +307,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 #endif
 	key.flags = 0;
 	key.solid = SOLID_NOT;
-	key.movetype = MOVETYPE_NONE;
+	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
 	key.nextthink = time;
 	key.damageforcescale = 0;
@@ -346,7 +346,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 #endif
 	key.flags = FL_ITEM;
 	key.solid = SOLID_TRIGGER;
-	key.movetype = MOVETYPE_TOSS;
+	set_movetype(key, MOVETYPE_TOSS);
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
 	key.damageforcescale = autocvar_g_balance_keyhunt_damageforcescale;
 	key.takedamage = DAMAGE_YES;
@@ -505,7 +505,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
 
-void kh_Key_Touch(entity this)  // runs many, many times when a key has been dropped and can be picked up
+void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a key has been dropped and can be picked up
 {
 	if(intermission_running)
 		return;
@@ -521,14 +521,14 @@ void kh_Key_Touch(entity this)  // runs many, many times when a key has been dro
 		// maybe start a shorter countdown?
 	}
 
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
-	if(IS_DEAD(other))
+	if(IS_DEAD(toucher))
 		return;
-	if(other == this.enemy)
+	if(toucher == this.enemy)
 		if(time < this.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
 			return;  // you just dropped it!
-	kh_Key_Collect(this, other);
+	kh_Key_Collect(this, toucher);
 }
 
 void kh_Key_Remove(entity key)  // runs after when all the keys have been collected or when a key has been dropped for more than X seconds
@@ -959,9 +959,15 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		}
 		else
 		{
-			float missing_teams_mask = boolean(p1) + boolean(p2) * 2;
-			if(kh_teams >= 3) missing_teams_mask += boolean(p3) * 4;
-			if(kh_teams >= 4) missing_teams_mask += boolean(p4) * 8;
+			int missing_teams_mask = 0;
+			if(kh_teams & BIT(0))
+				missing_teams_mask += boolean(p1) * 1;
+			if(kh_teams & BIT(1))
+				missing_teams_mask += boolean(p2) * 2;
+			if(kh_teams & BIT(2))
+				missing_teams_mask += boolean(p3) * 4;
+			if(kh_teams & BIT(3))
+				missing_teams_mask += boolean(p4) * 8;
 			if(prev_missing_teams_mask != missing_teams_mask)
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
@@ -1055,6 +1061,14 @@ void kh_Initialize()  // sets up th KH environment
 	if(kh_teams < 2)
 		kh_teams = autocvar_g_keyhunt_teams;
 	kh_teams = bound(2, kh_teams, 4);
+
+	int teams = 0;
+	if(kh_teams >= 1) teams |= BIT(0);
+	if(kh_teams >= 2) teams |= BIT(1);
+	if(kh_teams >= 3) teams |= BIT(2);
+	if(kh_teams >= 4) teams |= BIT(3);
+
+	kh_teams = teams; // now set it?
 
 	// make a KH entity for controlling the game
 	kh_controller = spawn();

@@ -47,7 +47,7 @@ void HUD_Chat()
 			panel.current_panel_bg = strzone(panel_bg);
 			chat_panel_modified = true;
 		}
-		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an theAlpha of at least 0.75
+		panel_bg_alpha = max(0.75, panel_bg_alpha);
 	}
 
 	vector pos, mySize;
@@ -77,7 +77,7 @@ void HUD_Chat()
 	{
 		vector chatsize;
 		chatsize = '1 1 0' * autocvar_con_chatsize;
-		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over theAlpha and such
+		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
 		float i, a;
 		for(i = 0; i < autocvar_con_chat; ++i)
 		{

@@ -307,9 +307,10 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 
 		this.classname = "func_train";
 		this.solid = SOLID_BSP;
-		this.movetype = MOVETYPE_PUSH;
+		this.move_movetype = MOVETYPE_PUSH;
 		this.drawmask = MASK_NORMAL;
 		this.draw = train_draw;
+		if (isnew) IL_PUSH(g_drawables, this);
 		this.entremove = trigger_remove_generic;
 
 		if(set_platmovetype(this, this.platmovetype))
@@ -322,13 +323,9 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 		//func_train_find();
 
 		// but we will need these
-		//this.move_nextthink = this.move_ltime + 0.1;
-		//this.move_think = train_next;
 		train_next(this);
 
 		this.move_movetype = MOVETYPE_PUSH;
-		this.move_origin = this.origin;
-		this.move_angles = this.angles;
 		this.move_time = time;
 	}
 

@@ -115,7 +115,7 @@ void mark_error(vector where,float lifetime)
 	entity err = new(error_marker);
 	setmodel(err, MDL_MARKER);
 	setorigin(err, where);
-	err.movetype = MOVETYPE_NONE;
+	set_movetype(err, MOVETYPE_NONE);
 	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 0;
@@ -128,7 +128,7 @@ void mark_info(vector where,float lifetime)
 	entity err = spawn(info_marker);
 	setmodel(err, MDL_MARKER);
 	setorigin(err, where);
-	err.movetype = MOVETYPE_NONE;
+	set_movetype(err, MOVETYPE_NONE);
 	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 1;
@@ -141,7 +141,7 @@ entity mark_misc(vector where,float lifetime)
 	entity err = spawn(mark_misc);
 	setmodel(err, MDL_MARKER);
 	setorigin(err, where);
-	err.movetype = MOVETYPE_NONE;
+	set_movetype(err, MOVETYPE_NONE);
 	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 3;
@@ -167,7 +167,7 @@ void paint_target(entity onwho, float f_size, vector v_color, float f_time)
 	//setattachment(e,onwho,"");
 	setorigin(e, onwho.origin + '0 0 1');
 	e.alpha = 0.15;
-	e.movetype = MOVETYPE_FLY;
+	set_movetype(e, MOVETYPE_FLY);
 
 	e.velocity = (v_color * 32); // + '0 0 1' * 64;
 
@@ -186,7 +186,7 @@ void paint_target2(entity onwho, float f_size, vector v_color, float f_time)
 
 	setorigin(e, onwho.origin + '0 0 1');
 	e.alpha = 0.15;
-	e.movetype = MOVETYPE_FLY;
+	set_movetype(e, MOVETYPE_FLY);
 
 	e.velocity = (v_color * 32); // + '0 0 1' * 64;
 	e.avelocity_x = -128;
@@ -203,7 +203,7 @@ void paint_target3(vector where, float f_size, vector v_color, float f_time)
 	e.scale = (f_size/512);
 	setsize(e, '0 0 0', '0 0 0');
 	setorigin(e, where + '0 0 1');
-	e.movetype = MOVETYPE_NONE;
+	set_movetype(e, MOVETYPE_NONE);
 	e.velocity = '0 0 0';
 	e.colormod = v_color;
 	SUB_SetFade(e,time,f_time);

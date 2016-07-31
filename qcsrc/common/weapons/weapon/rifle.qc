@@ -76,7 +76,10 @@ void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pFor
 		fireBullet(actor, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
 
 	if(autocvar_g_casings >= 2)
+    {
+        makevectors(actor.v_angle); // for some reason, this is lost
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
+    }
 }
 
 void W_Rifle_Attack(entity actor)
