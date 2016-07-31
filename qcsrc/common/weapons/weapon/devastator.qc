@@ -120,7 +120,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 			PS(this.realowner).m_switchweapon = w_getbestweapon(this.realowner);
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 void W_Devastator_Explode_think(entity this)
@@ -206,7 +206,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 			PS(this.realowner).m_switchweapon = w_getbestweapon(this.realowner);
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 void W_Devastator_RemoteExplode(entity this, .entity weaponentity)

@@ -27,7 +27,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
         actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 
         entity t = toast(actor, e,r,d);
-        remove(e);
+        delete(e);
 
         if (t == NULL) return;
 

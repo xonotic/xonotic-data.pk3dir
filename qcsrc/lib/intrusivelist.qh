@@ -150,7 +150,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 #define IL_DELETE(this, dtor) \
 	MACRO_BEGIN \
 	{ \
-		remove(this); \
+		delete(this); \
 		this = NULL; \
 	} MACRO_END
 

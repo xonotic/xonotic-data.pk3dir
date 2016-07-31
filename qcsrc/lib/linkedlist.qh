@@ -40,7 +40,7 @@ entity LL_POP(LinkedList this)
 	LinkedListNode prev = n.ll_prev;
 	if (prev) (this.ll_tail = prev).ll_next = NULL;
 	else this.ll_head = this.ll_tail = NULL;
-	remove(n);
+	delete(n);
 	return e;
 }
 
@@ -57,7 +57,7 @@ entity LL_POP(LinkedList this)
 			entity it = LL_POP(_ll); \
 			if (!it) continue; \
 			dtor \
-			remove(it); \
+			delete(it); \
 		} \
 	} MACRO_END
 
@@ -68,7 +68,7 @@ entity LL_POP(LinkedList this)
 	MACRO_BEGIN \
 	{ \
 		LL_CLEAR_2(this, dtor); \
-		remove(this); \
+		delete(this); \
 		this = NULL; \
 	} MACRO_END
 

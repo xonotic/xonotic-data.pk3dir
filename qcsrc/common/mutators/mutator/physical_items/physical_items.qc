@@ -65,7 +65,7 @@ void physical_item_think(entity this)
 	}
 
 	if(!this.owner.modelindex)
-		remove(this); // the real item is gone, remove this
+		delete(this); // the real item is gone, remove this
 }
 
 void physical_item_touch(entity this, entity toucher)

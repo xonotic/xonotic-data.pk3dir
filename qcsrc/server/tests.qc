@@ -3,8 +3,8 @@
 void test_weapons_hurt(entity this)
 {
     EXPECT_NE(100, this.health);
-    remove(this.enemy);
-    remove(this);
+    delete(this.enemy);
+    delete(this);
 }
 
 TEST(Weapons, Hurt)

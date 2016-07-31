@@ -600,8 +600,8 @@ bool raptor_impulse(entity this, int _imp)
 
 spawnfunc(vehicle_raptor)
 {
-	if(!autocvar_g_vehicle_raptor) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_RAPTOR, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_raptor) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_RAPTOR, false)) { delete(this); return; }
 }
 
 METHOD(Raptor, vr_impact, void(Raptor thisveh, entity instance))

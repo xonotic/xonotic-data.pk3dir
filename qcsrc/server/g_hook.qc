@@ -74,7 +74,7 @@ void RemoveGrapplingHook(entity pl)
 {
 	if(pl.hook == NULL)
 		return;
-	remove(pl.hook);
+	delete(pl.hook);
 	pl.hook = NULL;
 	if(pl.move_movetype == MOVETYPE_FLY)
 		set_movetype(pl, MOVETYPE_WALK);
@@ -87,7 +87,7 @@ void GrapplingHookReset(entity this)
 	if(this.realowner.hook == this)
 		RemoveGrapplingHook(this.owner);
 	else // in any case:
-		remove(this);
+		delete(this);
 }
 
 void GrapplingHookThink(entity this);

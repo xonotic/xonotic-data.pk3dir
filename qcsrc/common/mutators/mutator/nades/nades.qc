@@ -163,7 +163,7 @@ void nade_timer_think(entity this)
 	this.skin = 8 - (this.owner.wait - time) / (autocvar_g_nades_nade_lifetime / 10);
 	this.nextthink = time;
 	if(!this.owner || wasfreed(this.owner))
-		remove(this);
+		delete(this);
 }
 
 void nade_burn_spawn(entity _nade)
@@ -232,13 +232,13 @@ void napalm_ball_think(entity this)
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
 	if(time > this.pushltime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -306,13 +306,13 @@ void napalm_fountain_think(entity this)
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
 	if(time >= this.ltime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -379,7 +379,7 @@ void nade_ice_think(entity this)
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -396,7 +396,7 @@ void nade_ice_think(entity this)
 			Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 		}
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -502,7 +502,7 @@ void nade_spawn_boom(entity this)
 
 	if(this.realowner.nade_spawnloc)
 	{
-		remove(this.realowner.nade_spawnloc);
+		delete(this.realowner.nade_spawnloc);
 		this.realowner.nade_spawnloc = NULL;
 	}
 
@@ -513,7 +513,7 @@ void nades_orb_think(entity this)
 {
 	if(time >= this.ltime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -737,7 +737,7 @@ void nade_boom(entity this)
 			RemoveGrapplingHook(it.realowner);
 	});
 
-	remove(this);
+	delete(this);
 }
 
 void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype);
@@ -771,7 +771,7 @@ void nade_touch(entity this, entity toucher)
 	{
 		nade_pickup(toucher, this);
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
-		remove(this);
+		delete(this);
 		return;
 	}
 	/*float is_weapclip = 0;
@@ -786,7 +786,7 @@ void nade_touch(entity this, entity toucher)
 			if(it.classname == "grapplinghook")
 				RemoveGrapplingHook(it.realowner);
 		});
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -884,7 +884,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	entity _nade = e.nade;
 	e.nade = NULL;
 
-	remove(e.fake_nade);
+	delete(e.fake_nade);
 	e.fake_nade = NULL;
 
 	makevectors(e.v_angle);
@@ -1065,10 +1065,10 @@ void nade_prime(entity this)
 		return; // only allow bonus nades
 
 	if(this.nade)
-		remove(this.nade);
+		delete(this.nade);
 
 	if(this.fake_nade)
-		remove(this.fake_nade);
+		delete(this.fake_nade);
 
 	int ntype;
 	string pntype = this.pokenade_type;
@@ -1149,9 +1149,9 @@ void nades_CheckThrow(entity this)
 void nades_Clear(entity player)
 {
 	if(player.nade)
-		remove(player.nade);
+		delete(player.nade);
 	if(player.fake_nade)
-		remove(player.fake_nade);
+		delete(player.fake_nade);
 
 	player.nade = player.fake_nade = NULL;
 	player.nade_timer = 0;
@@ -1349,7 +1349,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 
 		if(player.nade_spawnloc.cnt <= 0)
 		{
-			remove(player.nade_spawnloc);
+			delete(player.nade_spawnloc);
 			player.nade_spawnloc = NULL;
 		}
 	}

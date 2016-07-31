@@ -49,7 +49,7 @@ void turret_flac_projectile_think_explode(entity this)
 #else
     RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
 #endif
-    remove(this);
+    delete(this);
 }
 
 #endif

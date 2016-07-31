@@ -406,7 +406,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 
 	if(player.killindicator && player.killindicator.health == 1) // player.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
 	{
-		remove(player.killindicator);
+		delete(player.killindicator);
 		player.killindicator = NULL;
 
 		ClientKill_Now(player); // allow instant kill in this case

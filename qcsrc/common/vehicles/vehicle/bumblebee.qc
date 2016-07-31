@@ -701,7 +701,7 @@ void bumblebee_blowup(entity this)
 	if(this.owner.deadflag == DEAD_DYING)
 		this.owner.deadflag = DEAD_DEAD;
 
-	remove(this);
+	delete(this);
 }
 
 void bumblebee_dead_touch(entity this, entity toucher)
@@ -725,8 +725,8 @@ void bumblebee_diethink(entity this)
 
 spawnfunc(vehicle_bumblebee)
 {
-	if(!autocvar_g_vehicle_bumblebee) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_BUMBLEBEE, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_bumblebee) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_BUMBLEBEE, false)) { delete(this); return; }
 }
 
 METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh, entity instance))

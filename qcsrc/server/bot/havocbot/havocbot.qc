@@ -1148,7 +1148,7 @@ float havocbot_moveto(entity this, vector pos)
 				{
 					LOG_TRACE("Warning: can't walk to the personal waypoint located at ", vtos(this.havocbot_personal_waypoint.origin),"\n");
 					this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_LINKING;
-					remove(this.havocbot_personal_waypoint);
+					delete(this.havocbot_personal_waypoint);
 					return CMD_STATUS_ERROR;
 				}
 				else
@@ -1171,7 +1171,7 @@ float havocbot_moveto(entity this, vector pos)
 		{
 			// Step 5: Waypoint reached
 			LOG_TRACE(this.netname, "'s personal waypoint reached\n");
-			remove(this.havocbot_personal_waypoint);
+			delete(this.havocbot_personal_waypoint);
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			return CMD_STATUS_FINISHED;
 		}

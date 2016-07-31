@@ -243,7 +243,7 @@ void OnlineBanList_Think(entity this)
 	return;
 
 LABEL(killme)
-	remove(this);
+	delete(this);
 }
 
 const float BAN_MAX = 256;

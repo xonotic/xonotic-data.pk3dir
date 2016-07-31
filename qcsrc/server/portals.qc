@@ -418,7 +418,7 @@ void Portal_Remove(entity portal, float killed)
 		fixedmakevectors(portal.mangle);
 		sound(portal, CH_SHOTS, SND_PORTO_EXPLODE, VOL_BASE, ATTEN_NORM);
 		Send_Effect(EFFECT_ROCKET_EXPLODE, portal.origin + v_forward * 16, v_forward * 1024, 4);
-		remove(portal);
+		delete(portal);
 	}
 	else
 	{
@@ -642,7 +642,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 
 	if(!Portal_FindSafeOrigin(portal))
 	{
-		remove(portal);
+		delete(portal);
 		return NULL;
 	}
 

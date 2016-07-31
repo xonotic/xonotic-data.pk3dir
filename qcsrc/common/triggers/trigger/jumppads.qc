@@ -292,7 +292,7 @@ void trigger_push_findtarget(entity this)
 			tracetoss(e, e);
 			if(e.move_movetype == MOVETYPE_NONE)
 				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
-			remove(e);
+			delete(e);
 #endif
 		}
 
@@ -324,7 +324,7 @@ void trigger_push_findtarget(entity this)
 		e.velocity = this.movedir;
 		tracetoss(e, e);
 		waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
-		remove(e);
+		delete(e);
 	}
 
 	trigger_push_link(this);

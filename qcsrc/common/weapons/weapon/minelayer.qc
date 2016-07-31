@@ -102,7 +102,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	newmine.cnt = this.cnt;
 	newmine.flags = this.flags;
 
-	remove(this);
+	delete(this);
 
 	if(to)
 		SetMovetypeFollow(newmine, to);
@@ -135,7 +135,7 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 		}
 	}
 	this.realowner.minelayer_mines -= 1;
-	remove(this);
+	delete(this);
 }
 
 void W_MineLayer_Explode_think(entity this)
@@ -166,7 +166,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 		}
 	}
 	this.realowner.minelayer_mines -= 1;
-	remove(this);
+	delete(this);
 }
 
 void W_MineLayer_RemoteExplode(entity this)

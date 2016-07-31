@@ -122,7 +122,7 @@ void W_Shockwave_Melee_Think(entity this)
 	// check to see if we can still continue, otherwise give up now
 	if(IS_DEAD(this.realowner) && WEP_CVAR(shockwave, melee_no_doubleslap))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -214,7 +214,7 @@ void W_Shockwave_Melee_Think(entity this)
 			}
 			else
 			{
-				remove(this);
+				delete(this);
 				return;
 			}
 		}
@@ -223,7 +223,7 @@ void W_Shockwave_Melee_Think(entity this)
 	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		remove(this);
+		delete(this);
 		return;
 	}
 	else
@@ -757,7 +757,7 @@ void Draw_Shockwave(entity this)
 {
 	// fading/removal control
 	float a = bound(0, (SW_MAXALPHA - ((time - this.sw_time) / SW_FADETIME)), SW_MAXALPHA);
-	if(a < ALPHA_MIN_VISIBLE) { remove(this); }
+	if(a < ALPHA_MIN_VISIBLE) { delete(this); }
 
 	// WEAPONTODO: save this only once when creating the entity
 	vector sw_color = entcs_GetColor(this.sv_entnum - 1); // GetTeamRGB(entcs_GetTeam(this.sv_entnum));

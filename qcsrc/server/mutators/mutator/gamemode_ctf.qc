@@ -2467,7 +2467,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team1)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	ctf_FlagSetup(NUM_TEAM_1, this);
 }
@@ -2485,7 +2485,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team2)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	ctf_FlagSetup(NUM_TEAM_2, this);
 }
@@ -2503,7 +2503,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team3)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	ctf_FlagSetup(NUM_TEAM_3, this);
 }
@@ -2521,7 +2521,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team4)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	ctf_FlagSetup(NUM_TEAM_4, this);
 }
@@ -2539,8 +2539,8 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_neutral)
 {
-	if(!g_ctf) { remove(this); return; }
-	if(!cvar("g_ctf_oneflag")) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
+	if(!cvar("g_ctf_oneflag")) { delete(this); return; }
 
 	ctf_FlagSetup(0, this);
 }
@@ -2553,7 +2553,7 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(ctf_team)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	this.classname = "ctf_team";
 	this.team = this.cnt + 1;

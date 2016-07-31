@@ -12,7 +12,7 @@
 	/** Remove entity */
 	void SUB_Remove(entity this)
 	{
-		remove(this);
+		delete(this);
 	}
 
 	void defer_think(entity this)

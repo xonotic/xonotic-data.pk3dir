@@ -153,7 +153,7 @@ void Destroy_Notification_Entity(entity notif)
 	if (notif.nent_icon != "") strunzone(notif.nent_icon);
 	if (notif.nent_durcnt != "") strunzone(notif.nent_durcnt);
 	if (notif.nent_string != "") strunzone(notif.nent_string);
-	remove(notif);
+	delete(notif);
 }
 
 void Destroy_All_Notifications()
@@ -1491,7 +1491,7 @@ void Net_Notification_Remove(entity this)
 	));
 	#endif
 	for (int i = 0; i < this.nent_stringcount; ++i) { if (this.nent_strings[i]) strunzone(this.nent_strings[i]); }
-	remove(this);
+	delete(this);
 }
 
 bool Net_Write_Notification(entity this, entity client, int sf)

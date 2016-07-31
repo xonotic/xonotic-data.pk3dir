@@ -635,7 +635,7 @@ int cvar_settemp_restore()
 			cvar_set(it.netname, it.message);
 			strunzone(it.netname);
 			strunzone(it.message);
-			remove(it);
+			delete(it);
 			++j;
 		}
 		else
@@ -649,7 +649,7 @@ int cvar_settemp_restore()
 		if(cvar_type(e.netname))
 		{
 			cvar_set(e.netname, e.message);
-			remove(e);
+			delete(e);
 			++j;
 		}
 		else

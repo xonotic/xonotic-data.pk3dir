@@ -185,8 +185,8 @@ void Shutdown()
 {
 	WarpZone_Shutdown();
 
-	remove(teams);
-	remove(players);
+	delete(teams);
+	delete(players);
 	db_close(binddb);
 	db_close(tempdb);
 	if(autocvar_cl_db_saveasdump)
@@ -874,7 +874,7 @@ void CSQC_Ent_Remove(entity this)
 		return;
 	}
 	if (this.enttype) Ent_Remove(this);
-	remove(this);
+	delete(this);
 }
 
 void Gamemode_Init()

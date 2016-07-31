@@ -112,7 +112,7 @@ void ClientData_Attach(entity this)
 
 void ClientData_Detach(entity this)
 {
-	remove(this.clientdata);
+	delete(this.clientdata);
 	this.clientdata = NULL;
 }
 
@@ -639,7 +639,7 @@ void PutClientInServer(entity this)
 		if (autocvar_spawn_debug)
 		{
 			sprint(this, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
-			remove(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
+			delete(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
 		PS(this).m_switchweapon = w_getbestweapon(this);
@@ -797,7 +797,7 @@ void ClientKill_Now(entity this)
 	}
 
 	if(this.killindicator && !wasfreed(this.killindicator))
-		remove(this.killindicator);
+		delete(this.killindicator);
 
 	this.killindicator = NULL;
 
@@ -814,14 +814,14 @@ void KillIndicator_Think(entity this)
 	if (gameover)
 	{
 		this.owner.killindicator = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 
 	if (this.owner.alpha < 0 && !this.owner.vehicle)
 	{
 		this.owner.killindicator = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -1201,8 +1201,8 @@ void ClientDisconnect(entity this)
 
 	this.flags &= ~FL_CLIENT;
 
-	if (this.chatbubbleentity) remove(this.chatbubbleentity);
-	if (this.killindicator) remove(this.killindicator);
+	if (this.chatbubbleentity) delete(this.chatbubbleentity);
+	if (this.killindicator) delete(this.killindicator);
 
 	WaypointSprite_PlayerGone(this);
 
@@ -1211,7 +1211,7 @@ void ClientDisconnect(entity this)
 	if (this.netname_previous) strunzone(this.netname_previous);
 	if (this.clientstatus) strunzone(this.clientstatus);
 	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
-	if (this.personal) remove(this.personal);
+	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
 	ReadyCount();
@@ -1225,7 +1225,7 @@ void ChatBubbleThink(entity this)
 	{
 		if(this.owner) // but why can that ever be NULL?
 			this.owner.chatbubbleentity = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 

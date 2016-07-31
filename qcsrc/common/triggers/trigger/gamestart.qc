@@ -2,7 +2,7 @@
 void gamestart_use(entity this, entity actor, entity trigger)
 {
 	SUB_UseTargets(this, this, trigger);
-	remove(this);
+	delete(this);
 }
 
 void gamestart_use_this(entity this)

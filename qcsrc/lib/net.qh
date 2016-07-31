@@ -176,7 +176,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		} MACRO_END
 	#define Net_Reject() \
 		MACRO_BEGIN { \
-			if (this)     remove(this); \
+			if (this)     delete(this); \
 		} MACRO_END
 
 	string g_buf;

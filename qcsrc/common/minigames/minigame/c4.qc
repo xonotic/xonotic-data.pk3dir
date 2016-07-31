@@ -201,7 +201,7 @@ int c4_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}

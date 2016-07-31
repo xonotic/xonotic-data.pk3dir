@@ -44,7 +44,7 @@ class(Casing) .float cnt;
 
 void Casing_Delete(entity this)
 {
-    remove(this);
+    delete(this);
 }
 
 void Casing_Draw(entity this)

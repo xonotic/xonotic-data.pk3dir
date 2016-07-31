@@ -16,7 +16,7 @@ void turret_targettrigger_touch(entity this, entity toucher)
 */
 spawnfunc(turret_targettrigger)
 {
-    if(!autocvar_g_turrets) { remove(this); return; }
+    if(!autocvar_g_turrets) { delete(this); return; }
 
     InitTrigger(this);
 

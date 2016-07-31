@@ -113,7 +113,7 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
 	});
 
-	remove(this);
+	delete(this);
 }
 
 void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher)

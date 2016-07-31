@@ -75,7 +75,7 @@ void W_Blaster_Touch(entity this, entity toucher)
 		toucher
 	);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Blaster_Think(entity this)

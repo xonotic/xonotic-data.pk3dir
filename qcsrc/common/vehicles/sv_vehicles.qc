@@ -214,7 +214,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	this.event_damage = func_null;
 	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, toucher);
 
-	remove (this);
+	delete (this);
 }
 
 void vehicles_projectile_explode_think(entity this)
@@ -285,7 +285,7 @@ void vehicles_gib_explode(entity this)
 	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (this.origin + '0 0 100'), '0 0 0', 1);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.wp00.origin + '0 0 64', '0 0 0', 1);
-	remove(this);
+	delete(this);
 }
 
 void vehicles_gib_touch(entity this, entity toucher)
@@ -297,7 +297,7 @@ void vehicles_gib_think(entity this)
 {
 	this.alpha -= 0.1;
 	if(this.cnt >= time)
-		remove(this);
+		delete(this);
 	else
 		this.nextthink = time + 0.1;
 }
@@ -457,7 +457,7 @@ void vehicles_return(entity this)
 	if(this.waypointsprite_attached)
 		WaypointSprite_Kill(this.waypointsprite_attached);
 
-	remove(this);
+	delete(this);
 }
 
 void vehicles_showwp_goaway(entity this)
@@ -465,7 +465,7 @@ void vehicles_showwp_goaway(entity this)
 	if(this.waypointsprite_attached)
 		WaypointSprite_Kill(this.waypointsprite_attached);
 
-	remove(this);
+	delete(this);
 }
 
 void vehicles_showwp(entity this)

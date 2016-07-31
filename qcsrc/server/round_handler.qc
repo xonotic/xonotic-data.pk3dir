@@ -111,6 +111,6 @@ void round_handler_Reset(float next_think)
 
 void round_handler_Remove()
 {
-	remove(round_handler);
+	delete(round_handler);
 	round_handler = NULL;
 }

@@ -1,6 +1,6 @@
 void turret_remove(entity this)
 {
-	remove(this.tur_head);
+	delete(this.tur_head);
 	//remove(this.enemy);
 	this.tur_head = NULL;
 }
@@ -259,14 +259,14 @@ void turret_gib_draw(entity this)
 		if(time >= this.nextthink)
 		{
 			turret_gibboom(this);
-			remove(this);
+			delete(this);
 		}
 	}
 	else
 	{
 		this.alpha = bound(0, this.nextthink - time, 1);
 		if(this.alpha < ALPHA_MIN_VISIBLE)
-			remove(this);
+			delete(this);
 	}
 }
 

@@ -53,7 +53,7 @@ void plat_spawn_inside_trigger(entity this)
 			}
 
 	// otherwise, something is fishy...
-	remove(trigger);
+	delete(trigger);
 	objerror(this, "plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
 }
 

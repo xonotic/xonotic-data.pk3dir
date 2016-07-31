@@ -1077,10 +1077,10 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 		else if(this.classname == "spike")
 		{
 			W_Crylink_Dequeue(this);
-			remove(this);
+			delete(this);
 		}
 		else
-			remove(this);
+			delete(this);
 		return true;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
