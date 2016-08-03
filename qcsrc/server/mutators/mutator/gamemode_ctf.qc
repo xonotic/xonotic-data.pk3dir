@@ -2418,10 +2418,10 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 		{
 			switch(argv(1))
 			{
-				case "red": _team = NUM_TEAM_1; break;
-				case "blue": _team = NUM_TEAM_2; break;
-				case "yellow": if(ctf_teams >= 3) _team = NUM_TEAM_3; break;
-				case "pink": if(ctf_teams >= 4) _team = NUM_TEAM_4; break;
+				case "red":    if(ctf_teams & BIT(0)) _team = NUM_TEAM_1; break;
+				case "blue":   if(ctf_teams & BIT(1)) _team = NUM_TEAM_2; break;
+				case "yellow": if(ctf_teams & BIT(2)) _team = NUM_TEAM_3; break;
+				case "pink":   if(ctf_teams & BIT(3)) _team = NUM_TEAM_4; break;
 			}
 		}
 
@@ -2604,27 +2604,44 @@ void ctf_SpawnTeam (string teamname, int teamcolor)
 
 void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
-	ctf_teams = 2;
+	ctf_teams = 0;
 
 	entity tmp_entity;
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 	{
-		if(tmp_entity.team == NUM_TEAM_3) { ctf_teams = max(3, ctf_teams); }
-		if(tmp_entity.team == NUM_TEAM_4) { ctf_teams = max(4, ctf_teams); }
+		//if(tmp_entity.team == NUM_TEAM_3) { ctf_teams = max(3, ctf_teams); }
+		//if(tmp_entity.team == NUM_TEAM_4) { ctf_teams = max(4, ctf_teams); }
+
+		switch(tmp_entity.team)
+		{
+			case NUM_TEAM_1: BITSET_ASSIGN(ctf_teams, BIT(0)); break;
+			case NUM_TEAM_2: BITSET_ASSIGN(ctf_teams, BIT(1)); break;
+			case NUM_TEAM_3: BITSET_ASSIGN(ctf_teams, BIT(2)); break;
+			case NUM_TEAM_4: BITSET_ASSIGN(ctf_teams, BIT(3)); break;
+		}
 		if(tmp_entity.team == 0) { ctf_oneflag = true; }
 	}
 
-	ctf_teams = bound(2, ctf_teams, 4);
+	if(NumTeams(ctf_teams) < 2) // somehow, there's not enough flags!
+	{
+		ctf_teams = 0; // so set the default red and blue teams
+		BITSET_ASSIGN(ctf_teams, BIT(0));
+		BITSET_ASSIGN(ctf_teams, BIT(1));
+	}
+
+	//ctf_teams = bound(2, ctf_teams, 4);
 
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "ctf_team") == NULL)
 	{
 		LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.\n");
-		ctf_SpawnTeam("Red", NUM_TEAM_1);
-		ctf_SpawnTeam("Blue", NUM_TEAM_2);
-		if(ctf_teams >= 3)
+		if(ctf_teams & BIT(0))
+			ctf_SpawnTeam("Red", NUM_TEAM_1);
+		if(ctf_teams & BIT(1))
+			ctf_SpawnTeam("Blue", NUM_TEAM_2);
+		if(ctf_teams & BIT(2))
 			ctf_SpawnTeam("Yellow", NUM_TEAM_3);
-		if(ctf_teams >= 4)
+		if(ctf_teams & BIT(3))
 			ctf_SpawnTeam("Pink", NUM_TEAM_4);
 	}
 

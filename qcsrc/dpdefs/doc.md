@@ -55,6 +55,21 @@ float sound_starttime;
 
 # SVQC
 
+Main loop:
+* SV_Physics()
+    * StartFrame()
+    * if (force_retouch)
+        * foreach entity:
+            * .touch()
+    * foreach client:
+        * PlayerPreThink()
+        * .think()
+        * PlayerPostThink()
+    * foreach nonclient:
+        * .think()
+    * EndFrame()
+
+
 ```
 
 .entity clientcamera;

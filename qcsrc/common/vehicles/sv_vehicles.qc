@@ -3,19 +3,29 @@
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
+	WriteByte(MSG_ENTITY, sf);
 
 	WriteByte(MSG_ENTITY, this.cnt);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	if(sf & 2)
+	{
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
+	}
 
-	WriteByte(MSG_ENTITY, rint(this.colormod_x * 255));
-	WriteByte(MSG_ENTITY, rint(this.colormod_y * 255));
-	WriteByte(MSG_ENTITY, rint(this.colormod_z * 255));
+	if(sf & 4)
+	{
+		WriteByte(MSG_ENTITY, rint(this.colormod_x * 255));
+		WriteByte(MSG_ENTITY, rint(this.colormod_y * 255));
+		WriteByte(MSG_ENTITY, rint(this.colormod_z * 255));
+	}
 
 	return true;
 }
+
+.vector axh_prevorigin;
+.vector axh_prevcolors;
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 {
@@ -27,17 +37,26 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 
 	if(axh == NULL || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist? Mario: because of sloppy code like this)
 	{
-		axh					 = spawn();
-		axh.cnt				 = axh_id;
-		axh.drawonlytoclient	= own;
-		axh.owner			   = own;
+		axh = new(auxiliary_xhair);
+		axh.cnt = axh_id;
+		axh.drawonlytoclient = own;
+		axh.owner = own;
 		Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
 	}
 
-	setorigin(axh, loc);
-	axh.colormod			= clr;
-	axh.SendFlags		   = 0x01;
-	own.(AuxiliaryXhair[axh_id]) = axh;
+	if(loc != axh.axh_prevorigin)
+	{
+		setorigin(axh, loc);
+		axh.SendFlags |= 2;
+	}
+
+	if(clr != axh.axh_prevcolors)
+	{
+		axh.colormod = clr;
+		axh.SendFlags |= 4;
+	}
+
+	own.(AuxiliaryXhair[axh_id]) = axh; // set it anyway...?
 }
 
 void CSQCVehicleSetup(entity own, int vehicle_id)

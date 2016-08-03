@@ -160,13 +160,18 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 #define ITEMS_STAT(s)                       ((s).items)
 
 .float teleport_time;
+#define PHYS_TELEPORT_TIME(s)               ((s).teleport_time)
+
+.float waterjump_time;
+#define PHYS_WATERJUMP_TIME(s)               ((s).waterjump_time)
 
 #ifdef CSQC
 
+	#define PHYS_FIXANGLE(s) ('0 0 0')
+	#define PHYS_MOVETYPE(s) ((s).move_movetype)
+
 	string autocvar_cl_jumpspeedcap_min;
 	string autocvar_cl_jumpspeedcap_max;
-
-	noref float pmove_waterjumptime;
 
 	const int FL_WATERJUMP = 2048;  // player jumping out of water
 	const int FL_JUMPRELEASED = 4096;  // for jump debouncing
@@ -190,8 +195,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 	//float player_jumpheight;
 
 	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
-
-	#define PHYS_TELEPORT_TIME(s)               ((s).teleport_time)
 
 	#define TICRATE                             ticrate
 
@@ -241,6 +244,9 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 
 #elif defined(SVQC)
 
+	#define PHYS_FIXANGLE(s) ((s).fixangle)
+	#define PHYS_MOVETYPE(s) ((s).movetype)
+
 	bool Physics_Valid(string thecvar);
 
 	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
@@ -249,8 +255,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 	/** Not real stats */
 	.string jumpspeedcap_min;
 	.string jumpspeedcap_max;
-
-	#define PHYS_TELEPORT_TIME(s)               ((s).teleport_time)
 
 	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
 

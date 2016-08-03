@@ -61,7 +61,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	vector originalvelocity = this.velocity;
 	// originalmove_clip = clip;
 	int originalflags = this.flags;
-	entity originalmove_groundentity = this.move_groundentity;
+	entity originalmove_groundentity = this.groundentity;
 
 	// if move didn't block on a step, return
 	if (clip & 2)
@@ -124,7 +124,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 			this.velocity = originalvelocity;
 			// clip = originalmove_clip;
 			this.flags = originalflags;
-			this.move_groundentity = originalmove_groundentity;
+			this.groundentity = originalmove_groundentity;
 			// now try to unstick if needed
 			// clip = SV_TryUnstick (ent, oldvel);
 			return;
@@ -168,7 +168,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		this.origin = originalorigin;
 		this.velocity = originalvelocity;
 		this.flags = originalflags;
-		this.move_groundentity = originalmove_groundentity;
+		this.groundentity = originalmove_groundentity;
 	}
 
 	_Movetype_CheckVelocity(this);

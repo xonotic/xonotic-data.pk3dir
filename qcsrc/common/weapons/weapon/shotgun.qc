@@ -73,8 +73,11 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 
 	// casing code
 	if(autocvar_g_casings >= 1)
+	{
+		makevectors(actor.v_angle); // for some reason, this is lost
 		for(sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
 			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor);
+	}
 
 	// muzzle flash for 1st person view
 	flash = spawn();

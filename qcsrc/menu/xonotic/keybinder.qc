@@ -41,10 +41,10 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+fire2"                                , _("secondary fire"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("Weapon switching"));
-	KEYBIND_DEF("weapprev"                              , _("previous"));
-	KEYBIND_DEF("weapnext"                              , _("next"));
-	KEYBIND_DEF("weaplast"                              , _("previously used"));
-	KEYBIND_DEF("weapbest"                              , _("best"));
+	KEYBIND_DEF("weapprev"                              , CTX(_("WEAPON^previous")));
+	KEYBIND_DEF("weapnext"                              , CTX(_("WEAPON^next")));
+	KEYBIND_DEF("weaplast"                              , CTX(_("WEAPON^previously used")));
+	KEYBIND_DEF("weapbest"                              , CTX(_("WEAPON^best")));
 	KEYBIND_DEF("reload"                                , _("reload"));
 
 	int i;

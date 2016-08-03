@@ -219,12 +219,10 @@ void CheckAllowedTeams (entity for_whom)
 
 	if(!mutator_returnvalue)
 	{
-		if(dm >= 4)
-			c1 = c2 = c3 = c4 = 0;
-		else if(dm >= 3)
-			c1 = c2 = c3 = 0;
-		else
-			c1 = c2 = 0;
+		if(dm & BIT(0)) c1 = 0;
+		if(dm & BIT(1)) c2 = 0;
+		if(dm & BIT(2)) c3 = 0;
+		if(dm & BIT(3)) c4 = 0;
 	}
 
 	// find out what teams are allowed if necessary
@@ -246,24 +244,46 @@ void CheckAllowedTeams (entity for_whom)
 	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if(c3==-1 && c4==-1)
+	if(AvailableTeams() == 2)
 	if(autocvar_bot_vs_human && for_whom)
 	{
 		if(autocvar_bot_vs_human > 0)
 		{
-			// bots are all blue
+			// find last team available
+
 			if(IS_BOT_CLIENT(for_whom))
-				c1 = c3 = c4 = -1;
+			{
+				if(c4 >= 0) { c3 = c2 = c1 = -1; }
+				else if(c3 >= 0) { c4 = c2 = c1 = -1; }
+				else { c4 = c3 = c1 = -1; }
+				// no further cases, we know at least 2 teams exist
+			}
 			else
-				c2 = -1;
+			{
+				if(c1 >= 0) { c2 = c3 = c4 = -1; }
+				else if(c2 >= 0) { c1 = c3 = c4 = -1; }
+				else { c1 = c2 = c4 = -1; }
+				// no further cases, bots have one of the teams
+			}
 		}
 		else
 		{
-			// bots are all red
+			// find first team available
+
 			if(IS_BOT_CLIENT(for_whom))
-				c2 = c3 = c4 = -1;
+			{
+				if(c1 >= 0) { c2 = c3 = c4 = -1; }
+				else if(c2 >= 0) { c1 = c3 = c4 = -1; }
+				else { c1 = c2 = c4 = -1; }
+				// no further cases, we know at least 2 teams exist
+			}
 			else
-				c1 = -1;
+			{
+				if(c4 >= 0) { c3 = c2 = c1 = -1; }
+				else if(c3 >= 0) { c4 = c2 = c1 = -1; }
+				else { c4 = c3 = c1 = -1; }
+				// no further cases, bots have one of the teams
+			}
 		}
 	}
 
@@ -426,8 +446,12 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl)
 {
-	float totalteams, t;
-	totalteams = 0;
+	int totalteams = 0;
+	int t = 1; // initialize with a random team?
+	if(c4 >= 0) t = 4;
+	if(c3 >= 0) t = 3;
+	if(c2 >= 0) t = 2;
+	if(c1 >= 0) t = 1;
 
 	// find out what teams are available
 	//CheckAllowedTeams();
@@ -461,7 +485,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	RandomSelection_Init();
 
-	t = 1;
+	if(TeamSmallerEqThanTeam(1, t, pl))
+		t = 1;
 	if(TeamSmallerEqThanTeam(2, t, pl))
 		t = 2;
 	if(TeamSmallerEqThanTeam(3, t, pl))

@@ -203,8 +203,12 @@ void W_Electro_TouchExplode(entity this, entity toucher)
 	W_Electro_Explode(this, toucher);
 }
 
+
+void sys_phys_update_single(entity this);
+
 void W_Electro_Bolt_Think(entity this)
 {
+	// sys_phys_update_single(this);
 	if(time >= this.ltime)
 	{
 		this.use(this, NULL, NULL);
@@ -253,6 +257,7 @@ void W_Electro_Bolt_Think(entity this)
 			{ this.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), this.ltime); }
 	}
 	else { this.nextthink = this.ltime; }
+	// this.nextthink = time;
 }
 
 void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
@@ -286,6 +291,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	proj.projectiledeathtype = WEP_ELECTRO.m_id;
 	setorigin(proj, w_shotorg);
 
+	// if (IS_CSQC)
 	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRI(proj, electro);
 	proj.angles = vectoangles(proj.velocity);
@@ -298,6 +304,8 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
+	// proj.com_phys_pos = proj.origin;
+	// proj.com_phys_vel = proj.velocity;
 }
 
 void W_Electro_Orb_Stick(entity this, entity to)

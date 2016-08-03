@@ -62,7 +62,7 @@ int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
 
 const float SP_FREEZETAG_REVIVALS = 4;
-void freezetag_ScoreRules(float teams)
+void freezetag_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS, "revivals", 0);
@@ -91,7 +91,7 @@ void freezetag_count_alive_players()
 	eliminatedPlayers.SendFlags |= 1;
 }
 #define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
-#define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
+#define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == NumTeams(freezetag_teams))
 
 float freezetag_CheckTeams()
 {
@@ -110,9 +110,15 @@ float freezetag_CheckTeams()
 		prev_missing_teams_mask = -1;
 		return 0;
 	}
-	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
-	if(freezetag_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
-	if(freezetag_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	int missing_teams_mask = 0;
+	if(freezetag_teams & BIT(0))
+		missing_teams_mask += (!redalive) * 1;
+	if(freezetag_teams & BIT(1))
+		missing_teams_mask += (!bluealive) * 2;
+	if(freezetag_teams & BIT(2))
+		missing_teams_mask += (!yellowalive) * 4;
+	if(freezetag_teams & BIT(3))
+		missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
@@ -617,6 +623,14 @@ void freezetag_Initialize()
 	if(freezetag_teams < 2)
 		freezetag_teams = autocvar_g_freezetag_teams;
 	freezetag_teams = bound(2, freezetag_teams, 4);
+
+	int teams = 0;
+	if(freezetag_teams >= 1) teams |= BIT(0);
+	if(freezetag_teams >= 2) teams |= BIT(1);
+	if(freezetag_teams >= 3) teams |= BIT(2);
+	if(freezetag_teams >= 4) teams |= BIT(3);
+
+	freezetag_teams = teams; // now set it?
 	freezetag_ScoreRules(freezetag_teams);
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);

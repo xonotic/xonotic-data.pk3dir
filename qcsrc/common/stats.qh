@@ -124,6 +124,7 @@ REGISTER_STAT(BUFF_TIME, float)
 REGISTER_STAT(CTF_FLAGSTATUS, int)
 REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
+REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 
 #ifdef SVQC
 int autocvar_g_multijump;

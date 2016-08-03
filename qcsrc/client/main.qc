@@ -1222,13 +1222,13 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-string getcommandkey(string text, string command)
+string _getcommandkey(string cmd_name, string command, bool forcename)
 {
 	string keys;
 	float n, j, k, l = 0;
 
 	if (!autocvar_hud_showbinds)
-		return text;
+		return cmd_name;
 
 	keys = db_get(binddb, command);
 	if (keys == "")
@@ -1262,12 +1262,12 @@ string getcommandkey(string text, string command)
 
 	if (keys == "NO_KEY") {
 		if (autocvar_hud_showbinds > 1)
-			return sprintf(_("%s (not bound)"), text);
+			return sprintf(_("%s (not bound)"), cmd_name);
 		else
-			return text;
+			return cmd_name;
 	}
-	else if (autocvar_hud_showbinds > 1)
-		return sprintf("%s (%s)", text, keys);
+	else if (autocvar_hud_showbinds > 1 || forcename)
+		return sprintf("%s (%s)", cmd_name, keys);
 	else
 		return keys;
 }

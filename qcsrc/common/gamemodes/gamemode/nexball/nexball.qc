@@ -72,7 +72,7 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 const float ST_NEXBALL_GOALS = 1;
 const float SP_NEXBALL_GOALS = 4;
 const float SP_NEXBALL_FAULTS = 5;
-void nb_ScoreRules(float teams)
+void nb_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, 0, 0, true);
 	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
@@ -376,7 +376,7 @@ void GoalTouch(entity this, entity toucher)
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 
-	if(nb_teams == 2)
+	if(NumTeams(nb_teams) == 2)
 		otherteam = OtherTeam(ball.team);
 	else
 		otherteam = 0;
@@ -395,7 +395,7 @@ void GoalTouch(entity this, entity toucher)
 	else if(this.team == GOAL_FAULT)
 	{
 		LogNB("fault", ball.pusher);
-		if(nb_teams == 2)
+		if(NumTeams(nb_teams) == 2)
 			bprint(Team_ColoredFullName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
 		else
 			bprint(Team_ColoredFullName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
@@ -421,7 +421,7 @@ void GoalTouch(entity this, entity toucher)
 
 	if(ball.team && pscore)
 	{
-		if(nb_teams == 2 && pscore < 0)
+		if(NumTeams(nb_teams) == 2 && pscore < 0)
 			TeamScore_AddToTeam(otherteam, ST_NEXBALL_GOALS, -pscore);
 		else
 			TeamScore_AddToTeam(ball.team, ST_NEXBALL_GOALS, pscore);
@@ -466,7 +466,7 @@ void nb_spawnteam(string teamname, float teamcolor)
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
-	nb_teams += 1;
+	//nb_teams += 1;
 }
 
 void nb_spawnteams()
@@ -481,6 +481,7 @@ void nb_spawnteams()
 			if(!t_red)
 			{
 				nb_spawnteam("Red", e.team-1)   ;
+				nb_teams |= BIT(0);
 				t_red = true;
 			}
 			break;
@@ -489,6 +490,7 @@ void nb_spawnteams()
 			{
 				nb_spawnteam("Blue", e.team-1)  ;
 				t_blue = true;
+				nb_teams |= BIT(1);
 			}
 			break;
 		case NUM_TEAM_3:
@@ -496,6 +498,7 @@ void nb_spawnteams()
 			{
 				nb_spawnteam("Yellow", e.team-1);
 				t_yellow = true;
+				nb_teams |= BIT(2);
 			}
 			break;
 		case NUM_TEAM_4:
@@ -503,6 +506,7 @@ void nb_spawnteams()
 			{
 				nb_spawnteam("Pink", e.team-1)  ;
 				t_pink = true;
+				nb_teams |= BIT(3);
 			}
 			break;
 		}

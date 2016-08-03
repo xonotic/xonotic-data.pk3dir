@@ -2,6 +2,18 @@
 	#define COMPAT_NO_MOD_IS_XONOTIC
 #endif
 
+#ifdef CSQC
+#define IS_CSQC 1
+#else
+#define IS_CSQC 0
+#endif
+
+#ifdef SVQC
+#define IS_SVQC 1
+#else
+#define IS_SVQC 0
+#endif
+
 #include "compiler.qh"
 
 #ifndef QCC_SUPPORT_INT
@@ -253,3 +265,8 @@ void make_safe_for_remove(entity this);
 	#define CSQC_Ent_Remove _CSQC_Ent_Remove
 #endif
 #undef ENGINE_EVENT
+
+#ifndef MENUQC
+	#include <ecs/_lib.qh>
+	#include <ecs/components/_mod.qh>
+#endif

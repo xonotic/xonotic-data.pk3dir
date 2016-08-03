@@ -130,7 +130,7 @@ void Item_ItemsTime_SetTime(entity e, float t)
 
 void Item_ItemsTime_SetTimesForAllPlayers()
 {
-    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it)), LAMBDA(Item_ItemsTime_SetTimesForPlayer(it)));
+    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it) || autocvar_sv_itemstime == 2), LAMBDA(Item_ItemsTime_SetTimesForPlayer(it)));
 }
 
 float Item_ItemsTime_UpdateTime(entity e, float t)
@@ -180,14 +180,14 @@ MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)
 	{
 		// client became player on connection skipping putObserverInServer step
 		if (IS_REAL_CLIENT(player))
-		if (warmup_stage)
+		if (warmup_stage || autocvar_sv_itemstime == 2)
 			Item_ItemsTime_SetTimesForPlayer(player);
 	}
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
 {
-    if (warmup_stage) return;
+    if (warmup_stage || autocvar_sv_itemstime == 2) return;
     entity player = M_ARGV(0, entity);
 
     Item_ItemsTime_ResetTimesForPlayer(player);
@@ -270,7 +270,7 @@ void HUD_ItemsTime()
     {
         if (!(
             (autocvar_hud_panel_itemstime == 1 && spectatee_status != 0)
-        ||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage))
+        ||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage || STAT(ITEMSTIME) == 2))
             )) { return; }
     }
     else

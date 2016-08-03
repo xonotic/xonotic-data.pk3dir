@@ -2004,7 +2004,7 @@ void Physics_Frame()
 			it.movetype = mt;
 			continue;
 		}
-		
+
 		it.movetype = ((it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype);
 
 		if(it.move_movetype == MOVETYPE_NONE)
@@ -2025,6 +2025,7 @@ void Physics_Frame()
 	});
 }
 
+void systems_update();
 void EndFrame()
 {
 	anticheat_endframe();
@@ -2059,6 +2060,7 @@ void EndFrame()
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
 	});
+	systems_update();
 	IL_ENDFRAME();
 }
 

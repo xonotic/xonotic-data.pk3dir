@@ -144,7 +144,7 @@ const float SP_KH_DESTROYS = 6;
 const float SP_KH_PICKUPS = 7;
 const float SP_KH_KCKILLS = 8;
 const float SP_KH_LOSSES = 9;
-void kh_ScoreRules(float teams)
+void kh_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
 	ScoreInfo_SetLabel_TeamScore(  ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
@@ -959,9 +959,15 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		}
 		else
 		{
-			float missing_teams_mask = boolean(p1) + boolean(p2) * 2;
-			if(kh_teams >= 3) missing_teams_mask += boolean(p3) * 4;
-			if(kh_teams >= 4) missing_teams_mask += boolean(p4) * 8;
+			int missing_teams_mask = 0;
+			if(kh_teams & BIT(0))
+				missing_teams_mask += boolean(p1) * 1;
+			if(kh_teams & BIT(1))
+				missing_teams_mask += boolean(p2) * 2;
+			if(kh_teams & BIT(2))
+				missing_teams_mask += boolean(p3) * 4;
+			if(kh_teams & BIT(3))
+				missing_teams_mask += boolean(p4) * 8;
 			if(prev_missing_teams_mask != missing_teams_mask)
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
@@ -1055,6 +1061,14 @@ void kh_Initialize()  // sets up th KH environment
 	if(kh_teams < 2)
 		kh_teams = autocvar_g_keyhunt_teams;
 	kh_teams = bound(2, kh_teams, 4);
+
+	int teams = 0;
+	if(kh_teams >= 1) teams |= BIT(0);
+	if(kh_teams >= 2) teams |= BIT(1);
+	if(kh_teams >= 3) teams |= BIT(2);
+	if(kh_teams >= 4) teams |= BIT(3);
+
+	kh_teams = teams; // now set it?
 
 	// make a KH entity for controlling the game
 	kh_controller = spawn();

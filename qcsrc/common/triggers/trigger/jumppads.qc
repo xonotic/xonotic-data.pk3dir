@@ -235,6 +235,7 @@ void trigger_push_touch(entity this, entity toucher)
 	if (toucher.flags & FL_PROJECTILE)
 	{
 		toucher.angles = vectoangles (toucher.velocity);
+		toucher.com_phys_gravity_factor = 1;
 		switch(toucher.move_movetype)
 		{
 			case MOVETYPE_FLY:
