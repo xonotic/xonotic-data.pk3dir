@@ -1,8 +1,6 @@
 #pragma once
 #include "../panel.qh"
 
-float xmin, xmax, ymin, ymax, sbwidth;
-
 float scoreboard_active;
 float scoreboard_fade_alpha;
 
