@@ -60,13 +60,10 @@ spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(this, WEP_SHOTGUN); }
 
 void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 {
-	float	sc;
-	entity flash;
-
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo));
 
 	W_SetupShot(actor, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
-	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
+	for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
@@ -75,12 +72,12 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 	if(autocvar_g_casings >= 1)
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
-		for(sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
+		//for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
 			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor);
 	}
 
 	// muzzle flash for 1st person view
-	flash = spawn();
+	entity flash = spawn();
 	setmodel(flash, MDL_SHOTGUN_MUZZLEFLASH); // precision set below
 	setthink(flash, SUB_Remove);
 	flash.nextthink = time + 0.06;
