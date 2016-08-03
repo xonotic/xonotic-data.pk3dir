@@ -40,10 +40,10 @@ void sys_phys_pregame_hold(entity this)
 	const bool allowed_to_move = (time >= game_starttime);
 	if (!allowed_to_move) {
 		this.velocity = '0 0 0';
-		this.movetype = MOVETYPE_NONE;
+		set_movetype(this, MOVETYPE_NONE);
 		this.disableclientprediction = 2;
 	} else if (this.disableclientprediction == 2) {
-		if (this.movetype == MOVETYPE_NONE) { this.movetype = MOVETYPE_WALK; }
+		if (this.move_movetype == MOVETYPE_NONE) { set_movetype(this, MOVETYPE_WALK); }
 		this.disableclientprediction = 0;
 	}
 }
