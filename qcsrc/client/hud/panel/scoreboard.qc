@@ -98,12 +98,12 @@ void HUD_InitScores()
 	if(ts_secondary == -1)
 		ts_secondary = ts_primary;
 
-	Cmd_HUD_SetFields(0);
+	Cmd_Scoreboard_SetFields(0);
 }
 
 float SetTeam(entity pl, float Team);
 //float lastpnum;
-void HUD_UpdatePlayerTeams()
+void Scoreboard_UpdatePlayerTeams()
 {
 	float Team;
 	entity pl, tmp;
@@ -251,7 +251,7 @@ void HUD_UpdateTeamPos(entity Team)
 	}
 }
 
-void Cmd_HUD_Help()
+void Cmd_Scoreboard_Help()
 {
 	LOG_INFO(_("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"));
 	LOG_INFO(_("^3|---------------------------------------------------------------|\n"));
@@ -327,7 +327,7 @@ void Cmd_HUD_Help()
 " +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
 " -lms,rc,cts,inv,nb/score"
 
-void Cmd_HUD_SetFields(int argc)
+void Cmd_Scoreboard_SetFields(int argc)
 {
     TC(int, argc);
 	int i, j, slash;
@@ -1302,7 +1302,7 @@ void HUD_DrawScoreboard()
 	if(!autocvar__hud_configure)
 		panel_pos.y = max((autocvar_con_notify * autocvar_con_notifysize), panel_pos.y);
 
-	HUD_UpdatePlayerTeams();
+	Scoreboard_UpdatePlayerTeams();
 
 	vector pos, tmp;
 	entity pl, tm;

@@ -137,7 +137,7 @@ void CSQC_Init()
 	for(int i = 0; i < MAX_SBT_FIELDS; ++i)
 		sbt_field_title[i] = strzone("(null)");
 
-	Cmd_HUD_SetFields(0);
+	Cmd_Scoreboard_SetFields(0);
 
 	postinit = false;
 
@@ -323,7 +323,7 @@ void Playerchecker_Think(entity this)
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
 				int t = entcs_GetScoreTeam(i);
-				if (t) SetTeam(e, t); // will not hurt; later updates come with HUD_UpdatePlayerTeams
+				if (t) SetTeam(e, t); // will not hurt; later updates come with Scoreboard_UpdatePlayerTeams
 				RegisterPlayer(e);
 				HUD_UpdatePlayerPos(e);
 			}

@@ -6,7 +6,7 @@
 
 // Score (#7)
 
-void HUD_UpdatePlayerTeams();
+void Scoreboard_UpdatePlayerTeams();
 void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
@@ -71,8 +71,8 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		return;
 	}
 
-	if (!scoreboard_fade_alpha) // the scoreboard too calls HUD_UpdatePlayerTeams
-		HUD_UpdatePlayerTeams();
+	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
+		Scoreboard_UpdatePlayerTeams();
 	if (team_count)
 	{
 		// show team scores in the first line
