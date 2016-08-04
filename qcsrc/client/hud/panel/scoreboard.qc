@@ -739,6 +739,7 @@ void HUD_PrintScoreboardItem(vector item_pos, vector rgb, entity pl, bool is_sel
 		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 	vector pos = item_pos;
+	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
 	vector tmp = '0 0 0';
 	int i;
 	for(i = 0; i < sbt_num_fields; ++i)
@@ -883,6 +884,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// print the strings of the columns headers and draw the columns
 	int i;
+	vector text_offset = (1.25 - 1) / 2 * hud_fontsize.y * eY;
 	for(i = 0; i < sbt_num_fields; ++i)
 	{
 		if(sbt_field[i] == SP_SEPARATOR)
@@ -893,13 +895,13 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 			if (i % 2)
 				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 		}
-		drawstring(pos, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		pos.x += column_dim.x;
 	}
 	if(sbt_field[i] == SP_SEPARATOR)
 	{
 		pos.x = panel_pos.x + panel_size.x;
-		tmp.y = 0;
+		tmp.y = text_offset.y;
 		for(i = sbt_num_fields - 1; i > 0; --i)
 		{
 			if(sbt_field[i] == SP_SEPARATOR)
