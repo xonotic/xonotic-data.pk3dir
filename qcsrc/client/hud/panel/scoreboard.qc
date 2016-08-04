@@ -1289,7 +1289,7 @@ void HUD_DrawScoreboard()
 		hud_fade_alpha = scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
 	HUD_Panel_UpdateCvars();
 
-	sbt_bg_alpha = autocvar_hud_panel_scoreboard_table_bg_alpha;
+	sbt_bg_alpha = autocvar_hud_panel_scoreboard_table_bg_alpha * panel_fg_alpha;
 	sbt_highlight = autocvar_hud_panel_scoreboard_table_highlight;
 	sbt_highlight_alpha = autocvar_hud_panel_scoreboard_table_highlight_alpha * panel_fg_alpha;
 	sbt_highlight_alpha_self = autocvar_hud_panel_scoreboard_table_highlight_alpha_self * panel_fg_alpha;
