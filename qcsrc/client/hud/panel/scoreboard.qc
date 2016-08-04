@@ -1020,14 +1020,17 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if (sbt_bg_alpha)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
 
-	// column highlighting
-	for (int i = 0; i < columnns; ++i)
-		if ((i % 2) == 0)
-			drawfill(pos + eX * weapon_width * rows * i, eY * height * rows + eX * weapon_width * rows, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+	if(sbt_highlight)
+	{
+		// column highlighting
+		for (int i = 0; i < columnns; ++i)
+			if ((i % 2) == 0)
+				drawfill(pos + eX * weapon_width * rows * i, eY * height * rows + eX * weapon_width * rows, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
-	// row highlighting
-	for (int i = 0; i < rows; ++i)
-		drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+		// row highlighting
+		for (int i = 0; i < rows; ++i)
+			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+	}
 
 	average_accuracy = 0;
 	int weapons_with_stats = 0;
