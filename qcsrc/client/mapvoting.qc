@@ -88,10 +88,10 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	// Bounding box details
 	float rect_margin = hud_fontsize.y / 2;
 
-	pos.x += rect_margin + autocvar_scoreboard_border_thickness;
-	pos.y += rect_margin + autocvar_scoreboard_border_thickness;
-	maxh -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
-	tsize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
+	pos.x += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	pos.y += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	maxh -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
+	tsize -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
 
 	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
 	vector rect_size = '1 1 0';
@@ -109,7 +109,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	if(id == mv_ownvote)
 	{
 		drawfill(rect_pos, rect_size, rgb, 0.1*alpha, DRAWFLAG_NORMAL);
-		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
 	}
 
 	vector offset = pos;
@@ -193,10 +193,10 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	float rect_margin = hud_fontsize.y / 2;
 
-	pos.x += rect_margin + autocvar_scoreboard_border_thickness;
-	pos.y += rect_margin + autocvar_scoreboard_border_thickness;
-	isize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
-	tsize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
+	pos.x += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	pos.y += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	isize -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
+	tsize -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
 
 	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
 	vector rect_size = '1 1 0';
@@ -240,7 +240,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	if(id == mv_ownvote)
 	{
 		drawfill(rect_pos, rect_size, rgb, 0.1*theAlpha, DRAWFLAG_NORMAL);
-		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, theAlpha, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, theAlpha, DRAWFLAG_NORMAL);
 	}
 
 	drawstring(text_pos, label, hud_fontsize, rgb, theAlpha, DRAWFLAG_NORMAL);
