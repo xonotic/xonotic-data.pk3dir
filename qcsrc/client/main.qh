@@ -40,7 +40,7 @@ void LoadMenuSkinValues();
 // --------------------------------------------------------------------------
 // Scoreboard stuff
 
-const int MAX_HUD_FIELDS = 16;
+const int MAX_SBT_FIELDS = 16;
 
 const int SP_END = -1;
 
@@ -54,10 +54,10 @@ const int SP_SUM = -8;
 
 const int SP_SEPARATOR = -100;
 
-float hud_field[MAX_HUD_FIELDS + 1];
-float hud_size[MAX_HUD_FIELDS + 1];
-string hud_title[MAX_HUD_FIELDS + 1];
-int hud_num_fields;
+float sbt_field[MAX_SBT_FIELDS + 1];
+float sbt_field_size[MAX_SBT_FIELDS + 1];
+string sbt_field_title[MAX_SBT_FIELDS + 1];
+int sbt_num_fields;
 
 string scores_label[MAX_SCORE];
 int scores_flags[MAX_SCORE];

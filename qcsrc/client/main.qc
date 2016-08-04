@@ -133,9 +133,9 @@ void CSQC_Init()
 
 	gametype = 0;
 
-	// hud_fields uses strunzone on the titles!
-	for(int i = 0; i < MAX_HUD_FIELDS; ++i)
-		hud_title[i] = strzone("(null)");
+	// sbt_fields uses strunzone on the titles!
+	for(int i = 0; i < MAX_SBT_FIELDS; ++i)
+		sbt_field_title[i] = strzone("(null)");
 
 	Cmd_HUD_SetFields(0);
 
