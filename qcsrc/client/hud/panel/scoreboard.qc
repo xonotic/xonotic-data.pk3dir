@@ -15,13 +15,23 @@ bool sbt_highlight;
 float sbt_highlight_alpha;
 float sbt_highlight_alpha_self;
 
-// TODO init autocvars
-float autocvar_hud_panel_scoreboard_table_bg_alpha;
-float autocvar_hud_panel_scoreboard_table_fg_alpha;
-float autocvar_hud_panel_scoreboard_table_fg_alpha_self;
-bool autocvar_hud_panel_scoreboard_table_highlight;
-float autocvar_hud_panel_scoreboard_table_highlight_alpha;
-float autocvar_hud_panel_scoreboard_table_highlight_alpha_self;
+float autocvar_hud_panel_scoreboard_fadeinspeed = 10;
+float autocvar_hud_panel_scoreboard_fadeoutspeed = 5;
+float autocvar_hud_panel_scoreboard_respawntime_decimals = 1;
+float autocvar_hud_panel_scoreboard_table_bg_alpha = 0.7;
+float autocvar_hud_panel_scoreboard_table_bg_scale = 0.25;
+float autocvar_hud_panel_scoreboard_table_fg_alpha = 0.9;
+float autocvar_hud_panel_scoreboard_table_fg_alpha_self = 1;
+bool autocvar_hud_panel_scoreboard_table_highlight = true;
+float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
+float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.5;
+
+bool autocvar_hud_panel_scoreboard_accuracy = true;
+bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
+bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
+
+bool autocvar_hud_panel_scoreboard_dynamichud = false;
+
 
 void drawstringright(vector, string, vector, vector, float, float);
 void drawstringcenter(vector, string, vector, vector, float, float);
@@ -987,7 +997,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if (weapon_cnt <= 0) return pos;
 
 	int rows = 1;
-	if (autocvar_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - 1) * 0.5))
+	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - 1) * 0.5))
 		rows = 2;
 	int columnns = ceil(weapon_cnt / rows);
 
@@ -1037,7 +1047,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if (rows == 2)
 		pos.x += weapon_width / 2;
 
-	if (autocvar_scoreboard_accuracy_nocolors)
+	if (autocvar_hud_panel_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
 	else
 		Accuracy_LoadColors();
@@ -1072,7 +1082,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			float padding;
 			padding = (weapon_width - stringwidth(s, false, eX * fontsize)) / 2; // center the accuracy value
 
-			if(!autocvar_scoreboard_accuracy_nocolors)
+			if(!autocvar_hud_panel_scoreboard_accuracy_nocolors)
 				rgb = Accuracy_GetColor(weapon_stats);
 
 			drawstring(tmpos + eX * padding + eY * weapon_height, s, '1 1 0' * fontsize, rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
@@ -1250,14 +1260,14 @@ void HUD_DrawScoreboard()
 		if(hud_woulddrawscoreboard) {
 			if(menu_enabled == 1)
 				scoreboard_fade_alpha = 1;
-			float scoreboard_fadeinspeed = autocvar_scoreboard_fadeinspeed;
+			float scoreboard_fadeinspeed = autocvar_hud_panel_scoreboard_fadeinspeed;
 			if (scoreboard_fadeinspeed)
 				scoreboard_fade_alpha = bound (0, (time - hud_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
 			else
 				scoreboard_fade_alpha = 1;
 		}
 		else {
-			float scoreboard_fadeoutspeed = autocvar_scoreboard_fadeoutspeed;
+			float scoreboard_fadeoutspeed = autocvar_hud_panel_scoreboard_fadeoutspeed;
 			if (scoreboard_fadeoutspeed)
 				scoreboard_fade_alpha = bound (0, (1/scoreboard_fadeoutspeed - (time - hud_woulddrawscoreboard_change)) * scoreboard_fadeoutspeed, 1);
 			else
@@ -1270,7 +1280,7 @@ void HUD_DrawScoreboard()
 	else
 		scoreboard_fade_alpha = 0;
 
-	if (autocvar_scoreboard_dynamichud)
+	if (autocvar_hud_panel_scoreboard_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
@@ -1315,7 +1325,10 @@ void HUD_DrawScoreboard()
 	pos.y += panel_bg_border;
 
 	// Draw the scoreboard
-	vector bg_size = draw_getimagesize("gfx/scoreboard/scoreboard_bg") * ((autocvar_scoreboard_bg_scale > 0) ? autocvar_scoreboard_bg_scale : 0.25);
+	float scale = autocvar_hud_panel_scoreboard_table_bg_scale;
+	if(scale <= 0)
+		scale = 0.25;
+	vector bg_size = draw_getimagesize("gfx/scoreboard/scoreboard_bg") * scale;
 
 	if(teamplay)
 	{
@@ -1368,9 +1381,8 @@ void HUD_DrawScoreboard()
 		}
 		pos = HUD_DrawScoreboardRankings(pos, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
-	else if (autocvar_scoreboard_accuracy && !warmup_stage && gametype != MAPINFO_TYPE_NEXBALL) {
+	else if (autocvar_hud_panel_scoreboard_accuracy && !warmup_stage && gametype != MAPINFO_TYPE_NEXBALL)
 		pos = HUD_DrawScoreboardAccuracyStats(pos, panel_bg_color, bg_size);
-	}
 
 	pos = HUD_DrawMapStats(pos, panel_bg_color, bg_size);
 
@@ -1464,8 +1476,8 @@ void HUD_DrawScoreboard()
 			respawn_time = max(time, respawn_time); // don't show a negative value while the server is respawning the player (lag)
 
 			str = sprintf(_("^1Respawning in ^3%s^1..."),
-				(autocvar_scoreboard_respawntime_decimals ?
-					count_seconds_decs(respawn_time - time, autocvar_scoreboard_respawntime_decimals)
+				(autocvar_hud_panel_scoreboard_respawntime_decimals ?
+					count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
 					:
 					count_seconds(respawn_time - time)
 				)
@@ -1474,8 +1486,8 @@ void HUD_DrawScoreboard()
 		else if(time < respawn_time)
 		{
 			str = sprintf(_("You are dead, wait ^3%s^7 before respawning"),
-				(autocvar_scoreboard_respawntime_decimals ?
-					count_seconds_decs(respawn_time - time, autocvar_scoreboard_respawntime_decimals)
+				(autocvar_hud_panel_scoreboard_respawntime_decimals ?
+					count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
 					:
 					count_seconds(respawn_time - time)
 				)
