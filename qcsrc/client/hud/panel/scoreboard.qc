@@ -720,6 +720,53 @@ string HUD_FixScoreboardColumnWidth(int i, string str)
 	return str;
 }
 
+vector HUD_PrintScoreboardHeader(vector pos, vector rgb)
+{
+	int i;
+	vector column_dim = eY * panel_size.y;
+	vector text_offset = eY * (1.25 - 1) / 2 * hud_fontsize.y;
+	for(i = 0; i < sbt_num_fields; ++i)
+	{
+		if(sbt_field[i] == SP_SEPARATOR)
+			break;
+		column_dim.x = sbt_field_size[i] + hud_fontsize.x;
+		if (sbt_highlight)
+			if (i % 2)
+				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		pos.x += column_dim.x;
+	}
+	if(sbt_field[i] == SP_SEPARATOR)
+	{
+		pos.x = panel_pos.x + panel_size.x;
+		for(i = sbt_num_fields - 1; i > 0; --i)
+		{
+			if(sbt_field[i] == SP_SEPARATOR)
+				break;
+
+			pos.x -= sbt_field_size[i];
+
+			if (sbt_highlight)
+				if (!(i % 2))
+				{
+					if (i == sbt_num_fields-1)
+						column_dim.x = sbt_field_size[i] + hud_fontsize.x * 0.5;
+					else
+						column_dim.x = sbt_field_size[i] + hud_fontsize.x;
+					drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+				}
+
+			text_offset.x = sbt_field_size[i] - stringwidth(sbt_field_title[i], false, hud_fontsize);
+			drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			pos.x -= hud_fontsize.x;
+		}
+	}
+
+	pos.x = panel_pos.x;
+	pos.y += 1.25 * hud_fontsize.y;
+	return pos;
+}
+
 void HUD_PrintScoreboardItem(vector item_pos, vector rgb, entity pl, bool is_self, int pl_number)
 {
     TC(bool, is_self); TC(int, pl_number);
@@ -846,7 +893,6 @@ void HUD_PrintScoreboardItem(vector item_pos, vector rgb, entity pl, bool is_sel
 
 vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
-	vector column_dim = '0 0 0';
 	entity pl;
 
 	panel_pos = pos;
@@ -876,70 +922,12 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	if (sbt_bg_alpha)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
 
-	// go back to the top to make alternated columns highlighting and to print the strings
-	pos.y -= 1.25 * hud_fontsize.y;
 
-	if (sbt_highlight)
-		column_dim.y = panel_size.y;
-
-	// print the strings of the columns headers and draw the columns
-	int i;
-	vector text_offset = (1.25 - 1) / 2 * hud_fontsize.y * eY;
-	for(i = 0; i < sbt_num_fields; ++i)
-	{
-		if(sbt_field[i] == SP_SEPARATOR)
-			break;
-		column_dim.x = sbt_field_size[i] + hud_fontsize.x;
-		if (sbt_highlight)
-		{
-			if (i % 2)
-				drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
-		}
-		drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
-		pos.x += column_dim.x;
-	}
-	if(sbt_field[i] == SP_SEPARATOR)
-	{
-		pos.x = panel_pos.x + panel_size.x;
-		tmp.y = text_offset.y;
-		for(i = sbt_num_fields - 1; i > 0; --i)
-		{
-			if(sbt_field[i] == SP_SEPARATOR)
-				break;
-
-			pos.x -= sbt_field_size[i];
-
-			if (sbt_highlight)
-			{
-				if (!(i % 2))
-				{
-					if (i == sbt_num_fields-1)
-						column_dim.x = sbt_field_size[i] + hud_fontsize.x * 0.5;
-					else
-						column_dim.x = sbt_field_size[i] + hud_fontsize.x;
-					if(i == sbt_num_fields - 1)
-						drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
-					else
-						drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
-				}
-			}
-
-			tmp.x = stringwidth(sbt_field_title[i], false, hud_fontsize);
-			tmp.x = (sbt_field_size[i] - tmp.x);
-			drawstring(pos + tmp, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
-			pos.x -= hud_fontsize.x;
-		}
-	}
-
-	pos.x = panel_pos.x;
-	pos.y += 1.25 * hud_fontsize.y; // skip the header
-
-	// item size
-	tmp.x = panel_size.x;
-	tmp.y = hud_fontsize.y * 1.25;
+	// print header row and highlight columns
+	pos = HUD_PrintScoreboardHeader(panel_pos, rgb);
 
 	// fill the table and draw the rows
-	i = 0;
+	int i = 0;
 	if (teamplay)
 		for(pl = players.sort_next; pl; pl = pl.sort_next)
 		{
