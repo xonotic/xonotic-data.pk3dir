@@ -716,14 +716,14 @@ string Scoreboard_FixColumnWidth(int i, string str)
 		sbt_field_size[i] = namesize;
 
 		if (sbt_fixcolumnwidth_iconlen != 0)
-			namesize -= sbt_fixcolumnwidth_marginlen + sbt_fixcolumnwidth_iconlen;
+			namesize -= sbt_fixcolumnwidth_marginlen + sbt_fixcolumnwidth_iconlen * hud_fontsize.x;
 		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		sbt_fixcolumnwidth_len = stringwidth(str, true, hud_fontsize);
 	}
 	else
 		sbt_fixcolumnwidth_len = stringwidth(str, false, hud_fontsize);
 
-	f = sbt_fixcolumnwidth_len + sbt_fixcolumnwidth_marginlen + sbt_fixcolumnwidth_iconlen;
+	f = sbt_fixcolumnwidth_len + sbt_fixcolumnwidth_marginlen + sbt_fixcolumnwidth_iconlen * hud_fontsize.x;
 	if(sbt_field_size[i] < f)
 		sbt_field_size[i] = f;
 
