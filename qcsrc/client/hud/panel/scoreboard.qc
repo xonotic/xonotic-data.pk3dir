@@ -713,7 +713,6 @@ string Scoreboard_FixColumnWidth(int i, string str)
 			if(j != i)
 				if (sbt_field[i] != SP_SEPARATOR)
 					namesize -= sbt_field_size[j] + hud_fontsize.x;
-		namesize += hud_fontsize.x;
 		sbt_field_size[i] = namesize;
 
 		if (sbt_fixcolumnwidth_iconlen != 0)
@@ -736,6 +735,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb)
 	int i;
 	vector column_dim = eY * panel_size.y;
 	vector text_offset = eY * (1.25 - 1) / 2 * hud_fontsize.y;
+	pos.x += hud_fontsize.x * 0.5;
 	for(i = 0; i < sbt_num_fields; ++i)
 	{
 		if(sbt_field[i] == SP_SEPARATOR)
@@ -749,7 +749,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb)
 	}
 	if(sbt_field[i] == SP_SEPARATOR)
 	{
-		pos.x = panel_pos.x + panel_size.x;
+		pos.x = panel_pos.x + panel_size.x - hud_fontsize.x * 0.5;
 		for(i = sbt_num_fields - 1; i > 0; --i)
 		{
 			if(sbt_field[i] == SP_SEPARATOR)
@@ -797,6 +797,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 	vector pos = item_pos;
+	pos.x += hud_fontsize.x * 0.5;
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
 	vector tmp = '0 0 0';
 	int i;
@@ -849,7 +850,7 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 	if(sbt_field[i] == SP_SEPARATOR)
 	{
-		pos.x = item_pos.x + panel_size.x;
+		pos.x = item_pos.x + panel_size.x - hud_fontsize.x * 0.5;
 		for(i = sbt_num_fields-1; i > 0; --i)
 		{
 			field = sbt_field[i];
