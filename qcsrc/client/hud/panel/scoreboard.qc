@@ -25,6 +25,7 @@ float autocvar_hud_panel_scoreboard_table_fg_alpha_self = 1;
 bool autocvar_hud_panel_scoreboard_table_highlight = true;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.5;
+float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
 
 bool autocvar_hud_panel_scoreboard_accuracy = true;
 bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
@@ -1327,6 +1328,7 @@ void Scoreboard_Draw()
 
 	if(teamplay)
 	{
+		vector panel_bg_color_save = panel_bg_color;
 		vector team_score_baseoffset = eY * hud_fontsize.y - eX * (panel_bg_border + hud_fontsize.x * 0.5);
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
@@ -1346,11 +1348,15 @@ void Scoreboard_Draw()
 				drawstring(pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize) + eY * hud_fontsize.y * 1.5, str, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			draw_endBoldFont();
-
-			panel_bg_color = rgb * panel_bg_color_team;
+			if(autocvar_hud_panel_scoreboard_bg_teams_color_team > 0)
+				panel_bg_color = rgb * autocvar_hud_panel_scoreboard_bg_teams_color_team;
+			else if(panel_bg_color_team > 0)
+				panel_bg_color = rgb * panel_bg_color_team;
+			else
+				panel_bg_color = rgb;
 			pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 		}
-		panel_bg_color = Team_ColorRGB(myteam) * panel_bg_color_team;
+		panel_bg_color = panel_bg_color_save;
 	}
 	else
 	{
