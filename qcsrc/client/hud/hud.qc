@@ -489,14 +489,6 @@ void Hud_Dynamic_Frame()
 	hud_shift_current = hud_shift;
 }
 
-// Scoreboard panel
-//
-void HUD_DrawScoreboard();
-void HUD_Scoreboard(void)
-{
-	HUD_DrawScoreboard();
-}
-
 void HUD_Main()
 {
 	int i;

@@ -710,7 +710,7 @@ float TrueAimCheck()
 
 void PostInit();
 void CSQC_Demo_Camera();
-float HUD_WouldDrawScoreboard();
+float Scoreboard_WouldDraw();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
@@ -1776,7 +1776,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(f != teamplay)
 	{
 		teamplay = f;
-		HUD_InitScores();
+		Scoreboard_InitScores();
 	}
 
 	if(last_switchweapon != switchweapon)
@@ -2205,7 +2205,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Draw_ShowNames_All();
 	Debug_Draw();
 
-	scoreboard_active = HUD_WouldDrawScoreboard();
+	scoreboard_active = Scoreboard_WouldDraw();
 
 	HUD_Draw(this); // this parameter for deep vehicle function
 

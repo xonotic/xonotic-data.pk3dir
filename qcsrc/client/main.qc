@@ -325,7 +325,7 @@ void Playerchecker_Think(entity this)
 				int t = entcs_GetScoreTeam(i);
 				if (t) SetTeam(e, t); // will not hurt; later updates come with Scoreboard_UpdatePlayerTeams
 				RegisterPlayer(e);
-				HUD_UpdatePlayerPos(e);
+				Scoreboard_UpdatePlayerPos(e);
 			}
 		}
 	}
@@ -449,7 +449,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	return = true;
 
 	if(o.sort_prev)
-		HUD_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
+		Scoreboard_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
 
 	this.entremove = Ent_RemovePlayerScore;
 }
@@ -483,7 +483,7 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 
 	return = true;
 
-	HUD_UpdateTeamPos(o);
+	Scoreboard_UpdateTeamPos(o);
 }
 
 NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
@@ -955,7 +955,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		teamscores_flags[i] = ReadByte();
 	}
 	return = true;
-	HUD_InitScores();
+	Scoreboard_InitScores();
 	Gamemode_Init();
 }
 
