@@ -1253,18 +1253,19 @@ void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
 	{
+		// frametime checks allow to toggle the scoreboard even when the game is paused
 		if(scoreboard_active) {
 			if(menu_enabled == 1)
 				scoreboard_fade_alpha = 1;
 			float scoreboard_fadeinspeed = autocvar_hud_panel_scoreboard_fadeinspeed;
-			if (scoreboard_fadeinspeed)
+			if (scoreboard_fadeinspeed && frametime)
 				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * scoreboard_fadeinspeed);
 			else
 				scoreboard_fade_alpha = 1;
 		}
 		else {
 			float scoreboard_fadeoutspeed = autocvar_hud_panel_scoreboard_fadeoutspeed;
-			if (scoreboard_fadeoutspeed)
+			if (scoreboard_fadeoutspeed && frametime)
 				scoreboard_fade_alpha = max(0, scoreboard_fade_alpha - frametime * scoreboard_fadeoutspeed);
 			else
 				scoreboard_fade_alpha = 0;
