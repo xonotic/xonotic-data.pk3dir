@@ -1244,32 +1244,23 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl, vector rgb, vector bg_s
 	return end_pos;
 }
 
-float hud_woulddrawscoreboard_prev;
-float hud_woulddrawscoreboard_change; // "time" at which HUD_WouldDrawScoreboard() changed
 void HUD_DrawScoreboard()
 {
 	if(!autocvar__hud_configure)
 	{
-		float hud_woulddrawscoreboard;
-		hud_woulddrawscoreboard = scoreboard_active;
-		if(hud_woulddrawscoreboard != hud_woulddrawscoreboard_prev) {
-			hud_woulddrawscoreboard_change = time;
-			hud_woulddrawscoreboard_prev = hud_woulddrawscoreboard;
-		}
-
-		if(hud_woulddrawscoreboard) {
+		if(scoreboard_active) {
 			if(menu_enabled == 1)
 				scoreboard_fade_alpha = 1;
 			float scoreboard_fadeinspeed = autocvar_hud_panel_scoreboard_fadeinspeed;
 			if (scoreboard_fadeinspeed)
-				scoreboard_fade_alpha = bound (0, (time - hud_woulddrawscoreboard_change) * scoreboard_fadeinspeed, 1);
+				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * scoreboard_fadeinspeed);
 			else
 				scoreboard_fade_alpha = 1;
 		}
 		else {
 			float scoreboard_fadeoutspeed = autocvar_hud_panel_scoreboard_fadeoutspeed;
 			if (scoreboard_fadeoutspeed)
-				scoreboard_fade_alpha = bound (0, (1/scoreboard_fadeoutspeed - (time - hud_woulddrawscoreboard_change)) * scoreboard_fadeoutspeed, 1);
+				scoreboard_fade_alpha = max(0, scoreboard_fade_alpha - frametime * scoreboard_fadeoutspeed);
 			else
 				scoreboard_fade_alpha = 0;
 		}
