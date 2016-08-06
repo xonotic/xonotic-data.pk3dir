@@ -1229,7 +1229,7 @@ void HUD_Configure_Frame()
 	int i;
 	if(autocvar__hud_configure)
 	{
-		if(isdemo() || intermission == 2)
+		if(isdemo() || intermission == 2 || scoreboard_active)
 		{
 			HUD_Configure_Exit_Force();
 			return;
