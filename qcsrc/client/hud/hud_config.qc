@@ -1,6 +1,7 @@
 #include "hud_config.qh"
 
 #include "hud.qh"
+#include "panel/scoreboard.qh"
 
 #define HUD_Write(s) fputs(fh, s)
 #define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
