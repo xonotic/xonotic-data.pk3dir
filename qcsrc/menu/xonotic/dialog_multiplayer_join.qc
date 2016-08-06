@@ -17,7 +17,8 @@ entity makeXonoticServerListTab()
 
 void XonoticServerListTab_refresh(entity this, entity slist)
 {
-    slist.refreshServerList(slist, REFRESHSERVERLIST_RESET);
+    bool clear = false;
+    slist.refreshServerList(slist, clear ? REFRESHSERVERLIST_RESET : REFRESHSERVERLIST_ASK);
 }
 
 void XonoticServerListTab_fill(entity me)
