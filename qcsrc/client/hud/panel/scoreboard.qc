@@ -924,7 +924,9 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg(scoreboard_fade_alpha);
 
-	vector end_pos = panel_pos + eY * (panel_size.y + panel_bg_border * 2 + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	if(panel.current_panel_bg != "0")
+		end_pos.y += panel_bg_border * 2;
 
 	if(panel_bg_padding)
 	{
@@ -1019,14 +1021,17 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
-	pos.y += panel_bg_border;
+	if(panel.current_panel_bg != "0")
+		pos.y += panel_bg_border;
 
 	panel_pos = pos;
 	panel_size.y = height * rows;
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg(scoreboard_fade_alpha);
 
-	vector end_pos = panel_pos + eY * (panel_size.y + panel_bg_border * 2 + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	if(panel.current_panel_bg != "0")
+		end_pos.y += panel_bg_border * 2;
 
 	if(panel_bg_padding)
 	{
@@ -1161,14 +1166,17 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	//  draw table header
 	drawstring(pos + eX * panel_bg_padding, _("Map stats:"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
-	pos.y += panel_bg_border;
+	if(panel.current_panel_bg != "0")
+		pos.y += panel_bg_border;
 
 	panel_pos = pos;
 	panel_size.y = hud_fontsize.y * rows;
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg(scoreboard_fade_alpha);
 
-	vector end_pos = panel_pos + eY * (panel_size.y + panel_bg_border * 2 + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	if(panel.current_panel_bg != "0")
+		end_pos.y += panel_bg_border * 2;
 
 	if(panel_bg_padding)
 	{
@@ -1217,14 +1225,17 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	pos.y += hud_fontsize.y;
 	drawstring(pos + eX * panel_bg_padding, _("Rankings"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
-	pos.y += panel_bg_border;
+	if(panel.current_panel_bg != "0")
+		pos.y += panel_bg_border;
 
 	panel_pos = pos;
 	panel_size.y = 1.25 * hud_fontsize.y * RANKINGS_RECEIVED_CNT;
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg(scoreboard_fade_alpha);
 
-	vector end_pos = panel_pos + eY * (panel_size.y + panel_bg_border * 2 + hud_fontsize.y);
+	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
+	if(panel.current_panel_bg != "0")
+		end_pos.y += panel_bg_border * 2;
 
 	if(panel_bg_padding)
 	{
@@ -1332,7 +1343,8 @@ void Scoreboard_Draw()
 	draw_endBoldFont();
 
 	pos.y += sb_heading_fontsize.y;
-	pos.y += panel_bg_border;
+	if(panel.current_panel_bg != "0")
+		pos.y += panel_bg_border;
 
 	// Draw the scoreboard
 	float scale = autocvar_hud_panel_scoreboard_table_bg_scale;
@@ -1343,7 +1355,9 @@ void Scoreboard_Draw()
 	if(teamplay)
 	{
 		vector panel_bg_color_save = panel_bg_color;
-		vector team_score_baseoffset = eY * hud_fontsize.y - eX * (panel_bg_border + hud_fontsize.x * 0.5);
+		vector team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
+		if(panel.current_panel_bg != "0")
+			team_score_baseoffset.x -= panel_bg_border;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
