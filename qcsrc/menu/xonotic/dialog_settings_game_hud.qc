@@ -43,20 +43,18 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
 	me.TR(me);
 	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
-	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "scoreboard_alpha_bg"));
+	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_panel_scoreboard_bg_alpha"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fading speed:")));
 		me.TD(me, 1, 2, e = makeXonoticScoreboardFadeTimeSlider());
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Side padding:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.05, 0.3, 0.01, "scoreboard_offset_left"));
-			makeMulti(e, "scoreboard_offset_right");
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_table_highlight", _("Enable rows / columns highlighting")));
 
 	me.TR(me);
 	//me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "scoreboard_respawntime_decimals", _("Show decimals in respawn countdown")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_respawntime_decimals", _("Show decimals in respawn countdown")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "scoreboard_accuracy", _("Show accuracy underneath scoreboard")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_accuracy", _("Show accuracy underneath scoreboard")));
 
 	me.TR(me);
 	me.TR(me);
