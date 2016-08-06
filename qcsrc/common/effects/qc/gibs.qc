@@ -46,7 +46,7 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	e.oldorigin_x = compressShortVector(e.velocity);
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), Violence_GibSplash_SendEntity(e, it, 0));
-	remove(e);
+	delete(e);
 }
 
 void Violence_GibSplash(entity source, float type, float amount, entity attacker)
@@ -70,7 +70,7 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 
 void Gib_Delete(entity this)
 {
-	remove(this);
+	delete(this);
 }
 
 string species_prefix(int specnum);
@@ -311,7 +311,7 @@ NET_HANDLE(net_gibsplash, bool isNew)
 			// no gibs in gentle mode, sorry
 			break;
 	}
-	remove(this);
+	delete(this);
 }
 #endif
 

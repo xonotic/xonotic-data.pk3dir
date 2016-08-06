@@ -888,7 +888,7 @@ void WaypointSprite_Kill(entity wp)
 {
     if (!wp) return;
     if (wp.owner) wp.owner.(wp.owned_by_field) = NULL;
-    remove(wp);
+    delete(wp);
 }
 
 void WaypointSprite_Disown(entity wp, float fadetime)
@@ -1021,7 +1021,7 @@ entity WaypointSprite_Spawn(
     if (own)
     {
         if (own.(ownfield))
-            remove(own.(ownfield));
+            delete(own.(ownfield));
         own.(ownfield) = wp;
         wp.owned_by_field = ownfield;
     }

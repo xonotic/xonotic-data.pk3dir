@@ -332,7 +332,7 @@ int WinningCondition_Assault()
 // spawnfuncs
 spawnfunc(info_player_attacker)
 {
-	if (!g_assault) { remove(this); return; }
+	if (!g_assault) { delete(this); return; }
 
 	this.team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
@@ -340,7 +340,7 @@ spawnfunc(info_player_attacker)
 
 spawnfunc(info_player_defender)
 {
-	if (!g_assault) { remove(this); return; }
+	if (!g_assault) { delete(this); return; }
 
 	this.team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
@@ -348,7 +348,7 @@ spawnfunc(info_player_defender)
 
 spawnfunc(target_objective)
 {
-	if (!g_assault) { remove(this); return; }
+	if (!g_assault) { delete(this); return; }
 
 	this.classname = "target_objective";
 	this.use = assault_objective_use;
@@ -359,7 +359,7 @@ spawnfunc(target_objective)
 
 spawnfunc(target_objective_decrease)
 {
-	if (!g_assault) { remove(this); return; }
+	if (!g_assault) { delete(this); return; }
 
 	this.classname = "target_objective_decrease";
 
@@ -378,7 +378,7 @@ spawnfunc(target_objective_decrease)
 spawnfunc(func_breakable);
 spawnfunc(func_assault_destructible)
 {
-	if (!g_assault) { remove(this); return; }
+	if (!g_assault) { delete(this); return; }
 
 	this.spawnflags = 3;
 	this.classname = "func_assault_destructible";
@@ -393,7 +393,7 @@ spawnfunc(func_assault_destructible)
 
 spawnfunc(func_assault_wall)
 {
-	if (!g_assault) { remove(this); return; }
+	if (!g_assault) { delete(this); return; }
 
 	this.classname = "func_assault_wall";
 	this.mdl = this.model;
@@ -406,7 +406,7 @@ spawnfunc(func_assault_wall)
 
 spawnfunc(target_assault_roundend)
 {
-	if (!g_assault) { remove(this); return; }
+	if (!g_assault) { delete(this); return; }
 
 	this.winning = 0; // round not yet won by attackers
 	this.classname = "target_assault_roundend";
@@ -417,7 +417,7 @@ spawnfunc(target_assault_roundend)
 
 spawnfunc(target_assault_roundstart)
 {
-	if (!g_assault) { remove(this); return; }
+	if (!g_assault) { delete(this); return; }
 
 	assault_attacker_team = NUM_TEAM_1;
 	this.classname = "target_assault_roundstart";

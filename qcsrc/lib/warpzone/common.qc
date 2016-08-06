@@ -671,7 +671,7 @@ void WarpZone_RefSys_GC(entity this)
 	// garbage collect unused reference systems
 	this.nextthink = time + 1;
 	if(this.owner.WarpZone_refsys != this)
-		remove(this);
+		delete(this);
 }
 void WarpZone_RefSys_CheckCreate(entity me)
 {
@@ -688,7 +688,7 @@ void WarpZone_RefSys_Clear(entity me)
 {
 	if(me.WarpZone_refsys)
 	{
-		remove(me.WarpZone_refsys);
+		delete(me.WarpZone_refsys);
 		me.WarpZone_refsys = NULL;
 	}
 }

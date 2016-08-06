@@ -551,7 +551,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 			setmodel_fixsize(this.owner, MDL_ONS_CP_PAD1);
 		//setsize(this, '-32 -32 0', '32 32 8');
 
-		remove(this);
+		delete(this);
 	}
 
 	this.SendFlags |= CPSF_STATUS;
@@ -819,7 +819,7 @@ void ons_ControlPoint_Think(entity this)
 void ons_ControlPoint_Reset(entity this)
 {
 	if(this.goalentity)
-		remove(this.goalentity);
+		delete(this.goalentity);
 
 	this.goalentity = NULL;
 	this.team = 0;
@@ -1923,7 +1923,7 @@ void ons_MonsterSpawn_Delayed(entity this)
 {
 	entity own = this.owner;
 
-	if(!own) { remove(this); return; }
+	if(!own) { delete(this); return; }
 
 	if(own.targetname)
 	{
@@ -1936,7 +1936,7 @@ void ons_MonsterSpawn_Delayed(entity this)
 		}
 	}
 
-	remove(this);
+	delete(this);
 }
 
 MUTATOR_HOOKFUNCTION(ons, MonsterSpawn)
@@ -1952,7 +1952,7 @@ void ons_TurretSpawn_Delayed(entity this)
 {
 	entity own = this.owner;
 
-	if(!own) { remove(this); return; }
+	if(!own) { delete(this); return; }
 
 	if(own.targetname)
 	{
@@ -1966,7 +1966,7 @@ void ons_TurretSpawn_Delayed(entity this)
 		}
 	}
 
-	remove(this);
+	delete(this);
 }
 
 MUTATOR_HOOKFUNCTION(ons, TurretSpawn)
@@ -2178,7 +2178,7 @@ keys:
  */
 spawnfunc(onslaught_link)
 {
-	if(!g_onslaught) { remove(this); return; }
+	if(!g_onslaught) { delete(this); return; }
 
 	if (this.target == "" || this.target2 == "")
 		objerror(this, "target and target2 must be set\n");
@@ -2203,7 +2203,7 @@ keys:
 
 spawnfunc(onslaught_controlpoint)
 {
-	if(!g_onslaught) { remove(this); return; }
+	if(!g_onslaught) { delete(this); return; }
 
 	ons_ControlPoint_Setup(this);
 }
@@ -2219,7 +2219,7 @@ keys:
  */
 spawnfunc(onslaught_generator)
 {
-	if(!g_onslaught) { remove(this); return; }
+	if(!g_onslaught) { delete(this); return; }
 	if(!this.team) { objerror(this, "team must be set"); }
 
 	ons_GeneratorSetup(this);

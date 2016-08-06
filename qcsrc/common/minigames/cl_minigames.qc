@@ -75,7 +75,7 @@ MINIGAME_SIMPLELINKED_ENTITIES
 void minigame_autoclean_entity(entity e)
 {
 	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
-	remove(e);
+	delete(e);
 }
 
 void HUD_MinigameMenu_CurrentButton();

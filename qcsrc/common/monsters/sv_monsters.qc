@@ -903,10 +903,10 @@ void Monster_Remove(entity this)
 	if(!MUTATOR_CALLHOOK(MonsterRemove, this))
 		Send_Effect(EFFECT_ITEM_PICKUP, this.origin, '0 0 0', 1);
 
-	if(this.(weaponentity)) { remove(this.(weaponentity)); }
-	if(this.iceblock) { remove(this.iceblock); }
+	if(this.(weaponentity)) { delete(this.(weaponentity)); }
+	if(this.iceblock) { delete(this.iceblock); }
 	WaypointSprite_Kill(this.sprite);
-	remove(this);
+	delete(this);
 }
 
 void Monster_Dead_Think(entity this)

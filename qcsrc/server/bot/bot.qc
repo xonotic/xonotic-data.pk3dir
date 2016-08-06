@@ -391,7 +391,7 @@ void bot_clientdisconnect(entity this)
 	this.playermodel_freeme = string_null;
 	this.playerskin_freeme = string_null;
 	if(this.bot_cmd_current)
-		remove(this.bot_cmd_current);
+		delete(this.bot_cmd_current);
 	if(bot_waypoint_queue_owner==this)
 		bot_waypoint_queue_owner = NULL;
 }

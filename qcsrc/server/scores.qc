@@ -327,7 +327,7 @@ void PlayerScore_Detach(entity player)
 {
 	if(!player.scorekeeper)
 		error("player has no scorekeeper");
-	remove(player.scorekeeper);
+	delete(player.scorekeeper);
 	player.scorekeeper = NULL;
 }
 

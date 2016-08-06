@@ -148,7 +148,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 		});
 
-		remove(this);
+		delete(this);
 	}
 }
 

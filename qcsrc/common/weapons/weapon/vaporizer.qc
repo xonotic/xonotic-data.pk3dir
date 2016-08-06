@@ -158,7 +158,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 		WarpZone_TrailParticles(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
 		this.draw = func_null;
 		this.drawmask = MASK_NORMAL;
-		remove(this);
+		delete(this);
 	}
 
 	return true;
@@ -177,7 +177,7 @@ void W_RocketMinsta_Explosion(entity actor, vector loc)
 	dmgent.owner = dmgent.realowner = actor;
 	setorigin(dmgent, loc);
 	RadiusDamage (dmgent, actor, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, NULL, NULL, autocvar_g_rm_force, WEP_DEVASTATOR.m_id | HITTYPE_SPLASH, other);
-	remove(dmgent);
+	delete(dmgent);
 }
 
 void W_Vaporizer_Attack(Weapon thiswep, entity actor)
@@ -226,7 +226,7 @@ void W_RocketMinsta_Laser_Explode (entity this)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, other);
-	remove(this);
+	delete(this);
 }
 
 void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
@@ -239,7 +239,7 @@ void W_RocketMinsta_Laser_Touch(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 	//W_RocketMinsta_Laser_Explode ();
 	RadiusDamage(this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, toucher);
-	remove(this);
+	delete(this);
 }
 
 void W_RocketMinsta_Attack2(entity actor)

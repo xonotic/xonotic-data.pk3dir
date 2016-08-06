@@ -193,8 +193,8 @@ void turret_die(entity this)
 	{
 		tur.tr_death(tur, this);
 
-		remove(this.tur_head);
-		remove(this);
+		delete(this.tur_head);
+		delete(this);
 	}
 	else
 	{
@@ -440,7 +440,7 @@ void turret_projectile_explode(entity this)
 #else
 	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
 #endif
-	remove(this);
+	delete(this);
 }
 
 void turret_projectile_touch(entity this, entity toucher)

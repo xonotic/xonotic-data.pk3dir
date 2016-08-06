@@ -109,7 +109,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 		}
 	}
 
-	remove(this);
+	delete(this);
 }
 
 void W_Fireball_Explode_think(entity this)
@@ -273,7 +273,7 @@ void W_Fireball_Firemine_Think(entity this)
 {
 	if(time > this.pushltime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -301,7 +301,7 @@ void W_Fireball_Firemine_Touch(entity this, entity toucher)
 	if(toucher.takedamage == DAMAGE_AIM)
 	if(Fire_AddDamage(toucher, this.realowner, WEP_CVAR_SEC(fireball, damage), WEP_CVAR_SEC(fireball, damagetime), this.projectiledeathtype) >= 0)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.projectiledeathtype |= HITTYPE_BOUNCE;

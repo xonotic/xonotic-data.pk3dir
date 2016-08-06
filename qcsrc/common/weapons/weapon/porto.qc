@@ -62,7 +62,7 @@ void W_Porto_Success(entity this)
 	}
 
 	this.realowner.porto_current = NULL;
-	remove(this);
+	delete(this);
 }
 
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
@@ -98,7 +98,7 @@ void W_Porto_Fail(entity this, float failhard)
 			}
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 void W_Porto_Remove(entity p)
@@ -113,7 +113,7 @@ void W_Porto_Think(entity this)
 {
 	trace_plane_normal = '0 0 0';
 	if(this.realowner.playerid != this.playerid)
-		remove(this);
+		delete(this);
 	else
 		W_Porto_Fail(this, 0);
 }
@@ -143,7 +143,7 @@ void W_Porto_Touch(entity this, entity toucher)
 	if(this.realowner.playerid != this.playerid)
 	{
 		sound(this, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
-		remove(this);
+		delete(this);
 	}
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
 	{

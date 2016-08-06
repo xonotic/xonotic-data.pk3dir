@@ -104,7 +104,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 			if(axh != NULL && !wasfreed(axh))
 			{
 				AuxiliaryXhair[i] = NULL;
-				remove(axh);
+				delete(axh);
 			}
 		}
 		return;
@@ -116,7 +116,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		entity axh = AuxiliaryXhair[i];
 
 		if(axh != NULL && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
-			remove(axh);
+			delete(axh);
 
 		axh              = spawn();
 		axh.draw2d       = func_null;

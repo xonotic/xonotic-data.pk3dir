@@ -114,7 +114,7 @@ void W_Crylink_Dequeue(entity e)
 void W_Crylink_Reset(entity this)
 {
 	W_Crylink_Dequeue(this);
-	remove(this);
+	delete(this);
 }
 
 // force projectile to explode
@@ -138,7 +138,7 @@ void W_Crylink_LinkExplode(entity e, entity e2, entity directhitentity)
 	W_Crylink_LinkExplode(e.queuenext, e2, directhitentity);
 
 	e.classname = "spike_oktoremove";
-	remove(e);
+	delete(e);
 }
 
 // adjust towards center
@@ -268,7 +268,7 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 			}
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
@@ -320,14 +320,14 @@ void W_Crylink_Touch(entity this, entity toucher)
 			this.realowner.crylink_lastgroup = NULL;
 		W_Crylink_LinkExplode(this.queuenext, this, toucher);
 		this.classname = "spike_oktoremove";
-		remove(this);
+		delete(this);
 		return;
 	}
 	else if(finalhit)
 	{
 		// just unlink
 		W_Crylink_Dequeue(this);
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.cnt = this.cnt - 1;
@@ -342,7 +342,7 @@ void W_Crylink_Touch(entity this, entity toucher)
 void W_Crylink_Fadethink(entity this)
 {
 	W_Crylink_Dequeue(this);
-	remove(this);
+	delete(this);
 }
 
 void W_Crylink_Attack(Weapon thiswep, entity actor)

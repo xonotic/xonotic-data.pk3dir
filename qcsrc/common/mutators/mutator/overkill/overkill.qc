@@ -157,7 +157,7 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 	entity olditem = M_ARGV(1, entity);
 	entity frag_attacker = M_ARGV(2, entity);
 
-	remove(olditem);
+	delete(olditem);
 
 	M_ARGV(1, entity) = NULL;
 

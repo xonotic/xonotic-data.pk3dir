@@ -247,7 +247,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
@@ -356,7 +356,7 @@ LABEL(cvar_fail)
 		if (!inv)
 		{
 			//print("cvarfilter fail\n");
-			remove(this);
+			delete(this);
 			__spawnfunc_expecting = false;
 			return;
 		}
@@ -364,7 +364,7 @@ LABEL(cvar_fail)
 
 	if(DoesQ3ARemoveThisEntity(this))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
@@ -394,7 +394,7 @@ LABEL(cvar_fail)
 
 	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}

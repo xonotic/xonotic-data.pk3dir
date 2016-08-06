@@ -34,7 +34,7 @@ void trigger_secret_touch(entity this, entity toucher)
 
 	// handle normal trigger features
 	multi_touch(this, toucher);
-	remove(this);
+	delete(this);
 }
 
 /*QUAKED trigger_secret (.5 .5 .5) ?

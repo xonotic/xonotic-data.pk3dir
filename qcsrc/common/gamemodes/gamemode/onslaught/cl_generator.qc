@@ -14,7 +14,7 @@ void ons_generator_ray_draw(entity this)
 
 	if(this.count > 10)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 

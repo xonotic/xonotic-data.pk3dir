@@ -66,7 +66,7 @@ void W_HLAC_Touch(entity this, entity toucher)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, toucher);
 
-	remove(this);
+	delete(this);
 }
 
 void W_HLAC_Attack(Weapon thiswep, entity actor)

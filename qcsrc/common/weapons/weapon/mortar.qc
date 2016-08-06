@@ -81,7 +81,7 @@ void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Mortar_Grenade_Explode_use(entity this, entity actor, entity trigger)
@@ -106,7 +106,7 @@ void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)

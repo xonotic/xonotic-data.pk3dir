@@ -142,7 +142,7 @@ void W_Electro_ExplodeCombo(entity this)
 		NULL
 	);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Electro_Explode(entity this, entity directhitentity)
@@ -189,7 +189,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 		);
 	}
 
-	remove(this);
+	delete(this);
 }
 
 void W_Electro_Explode_use(entity this, entity actor, entity trigger)
@@ -338,7 +338,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.use = this.use;
 	newproj.flags = this.flags;
 
-	remove(this);
+	delete(this);
 
 	if(to)
 		SetMovetypeFollow(this, to);

@@ -217,7 +217,7 @@ void sandbox_ObjectRemove(entity e)
 	if(e.netname)	{	strunzone(e.netname);	e.netname = string_null;	}
 	if(e.message)	{	strunzone(e.message);	e.message = string_null;	}
 	if(e.message2)	{	strunzone(e.message2);	e.message2 = string_null;	}
-	remove(e);
+	delete(e);
 	e = NULL;
 
 	object_count -= 1;

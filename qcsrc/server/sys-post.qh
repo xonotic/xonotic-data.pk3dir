@@ -2,7 +2,6 @@
 
 #undef droptofloor
 #undef sound
-#undef remove
 #undef cvar_set
 #undef cvar_string
 #undef cvar

@@ -558,7 +558,7 @@ void kh_Key_Remove(entity key)  // runs after when all the keys have been collec
 		}
 	}
 
-	remove(key);
+	delete(key);
 
 	kh_update_state();
 }
@@ -1099,7 +1099,7 @@ void kh_finalize()
 {
 	// to be called before intermission
 	kh_FinishRound();
-	remove(kh_controller);
+	delete(kh_controller);
 	kh_controller = NULL;
 }
 

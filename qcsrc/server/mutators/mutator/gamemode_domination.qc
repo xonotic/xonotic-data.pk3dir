@@ -535,7 +535,7 @@ spawnfunc(dom_controlpoint)
 {
 	if(!g_domination)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	setthink(this, dom_controlpoint_setup);
@@ -580,7 +580,7 @@ spawnfunc(dom_team)
 {
 	if(!g_domination || autocvar_g_domination_teams_override >= 2)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	precache_model(this.model);

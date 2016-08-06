@@ -189,7 +189,7 @@ void timeout_handler_reset(entity this)
 	timeout_time = 0;
 	timeout_leadtime = 0;
 
-	remove(this);
+	delete(this);
 }
 
 void timeout_handler_think(entity this)

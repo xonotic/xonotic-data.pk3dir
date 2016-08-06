@@ -47,7 +47,7 @@ void accuracy_init(entity e)
 
 void accuracy_free(entity e)
 {
-	remove(e.accuracy);
+	delete(e.accuracy);
 }
 
 // force a resend of a player's accuracy stats

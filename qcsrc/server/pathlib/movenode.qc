@@ -77,7 +77,7 @@ void a_think(entity this)
 {
     te_lightning1(this,this.origin, this.pos1);
     if(this.cnt < time)
-        remove(this);
+        delete(this);
     else
         this.nextthink = time + 0.2;
 }

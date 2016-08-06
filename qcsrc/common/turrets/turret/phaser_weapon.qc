@@ -60,7 +60,7 @@ void beam_think(entity this)
         this.owner.fireflag = 2;
         this.owner.tur_head.frame = 10;
         sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-        remove(this);
+        delete(this);
         return;
     }
 

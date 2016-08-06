@@ -157,7 +157,7 @@ void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
 	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
 
-	remove (this);
+	delete (this);
 }
 
 void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
