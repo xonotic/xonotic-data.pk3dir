@@ -24,7 +24,7 @@ float autocvar_hud_panel_scoreboard_table_fg_alpha = 0.9;
 float autocvar_hud_panel_scoreboard_table_fg_alpha_self = 1;
 bool autocvar_hud_panel_scoreboard_table_highlight = true;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
-float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.5;
+float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
 
 bool autocvar_hud_panel_scoreboard_accuracy = true;
