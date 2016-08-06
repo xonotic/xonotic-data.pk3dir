@@ -1349,7 +1349,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.tur_head.owner			= this;
 	this.tur_head.takedamage	= DAMAGE_NO;
 	this.tur_head.solid			= SOLID_NOT;
-	this.tur_head.move_movetype		= this.move_movetype;
+	set_movetype(this.tur_head, this.move_movetype);
 
 	if(!this.tur_defend)
 	if(this.target != "")

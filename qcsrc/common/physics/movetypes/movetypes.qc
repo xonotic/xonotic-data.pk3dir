@@ -15,17 +15,13 @@
 #ifdef SVQC
 void set_movetype(entity this, int mt)
 {
-	if(mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH)
-	{
-		this.movetype = this.move_movetype = mt; // we still set move_movetype, for other code that checks movetype
-		this.move_qcphysics = false;
-		return;
-	}
-
 	this.move_movetype = mt;
-
-	if(!this.move_qcphysics)
+	if (mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH) {
+		this.move_qcphysics = false;
+	}
+	if (!this.move_qcphysics) {
 		this.movetype = mt;
+	}
 }
 #elif defined(CSQC)
 void set_movetype(entity this, int mt)

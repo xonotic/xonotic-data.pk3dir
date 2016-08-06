@@ -1993,7 +1993,7 @@ void Physics_Frame()
 
 	FOREACH_ENTITY_FLOAT(pure_data, false,
 	{
-		if(IS_CLIENT(it) || it.classname == "" || it.movetype == MOVETYPE_PUSH || it.movetype == MOVETYPE_FAKEPUSH || it.movetype == MOVETYPE_PHYSICS)
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
 		int mt = it.move_movetype;
@@ -2001,11 +2001,11 @@ void Physics_Frame()
 		if(mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH || mt == MOVETYPE_PHYSICS)
 		{
 			it.move_qcphysics = false;
-			it.movetype = mt;
+			set_movetype(it, mt);
 			continue;
 		}
 
-		it.movetype = ((it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype);
+		set_movetype(it, ((it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype));
 
 		if(it.move_movetype == MOVETYPE_NONE)
 			continue;

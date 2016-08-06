@@ -26,7 +26,7 @@ void sys_phys_update(entity this, float dt)
 	sys_phys_pregame_hold(this);
 
 	if (IS_SVQC) {
-		if (PHYS_MOVETYPE(this) == MOVETYPE_NONE) { return; }
+		if (this.move_movetype == MOVETYPE_NONE) { return; }
 		// when we get here, disableclientprediction cannot be 2
 		this.disableclientprediction = (this.move_qcphysics) ? -1 : 0;
 	}
@@ -86,9 +86,9 @@ void sys_phys_update(entity this, float dt)
 		}
 	} else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod)) {
 		// handled
-	} else if (PHYS_MOVETYPE(this) == MOVETYPE_NOCLIP
-	    || PHYS_MOVETYPE(this) == MOVETYPE_FLY
-	    || PHYS_MOVETYPE(this) == MOVETYPE_FLY_WORLDONLY
+	} else if (this.move_movetype == MOVETYPE_NOCLIP
+	    || this.move_movetype == MOVETYPE_FLY
+	    || this.move_movetype == MOVETYPE_FLY_WORLDONLY
 	    || MUTATOR_CALLHOOK(IsFlying, this)) {
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;

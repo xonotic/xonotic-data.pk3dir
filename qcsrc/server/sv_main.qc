@@ -369,7 +369,7 @@ LABEL(cvar_fail)
 		return;
 	}
 
-	this.move_movetype = this.movetype;
+	set_movetype(this, this.movetype);
 
 	// support special -1 and -2 angle from radiant
 	if (this.angles == '0 -1 0')

@@ -307,7 +307,7 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 
 		this.classname = "func_train";
 		this.solid = SOLID_BSP;
-		this.move_movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.drawmask = MASK_NORMAL;
 		this.draw = train_draw;
 		if (isnew) IL_PUSH(g_drawables, this);
@@ -325,7 +325,7 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 		// but we will need these
 		train_next(this);
 
-		this.move_movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.move_time = time;
 	}
 

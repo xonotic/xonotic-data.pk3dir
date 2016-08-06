@@ -170,7 +170,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 	// TODO remove some gibs according to cl_nogibs
 	gib = RubbleNew("gib");
-	gib.move_movetype = MOVETYPE_BOUNCE;
+	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;
 	gib.cnt = specnum;

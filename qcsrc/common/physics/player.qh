@@ -168,7 +168,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 #ifdef CSQC
 
 	#define PHYS_FIXANGLE(s) ('0 0 0')
-	#define PHYS_MOVETYPE(s) ((s).move_movetype)
 
 	string autocvar_cl_jumpspeedcap_min;
 	string autocvar_cl_jumpspeedcap_max;
@@ -245,7 +244,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 #elif defined(SVQC)
 
 	#define PHYS_FIXANGLE(s) ((s).fixangle)
-	#define PHYS_MOVETYPE(s) ((s).move_movetype)
 
 	bool Physics_Valid(string thecvar);
 

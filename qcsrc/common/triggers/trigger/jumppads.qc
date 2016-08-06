@@ -174,11 +174,11 @@ void trigger_push_touch(entity this, entity toucher)
 		switch(toucher.move_movetype)
 		{
 			case MOVETYPE_FLY:
-				toucher.move_movetype = MOVETYPE_TOSS;
+				set_movetype(toucher, MOVETYPE_TOSS);
 				toucher.gravity = 1;
 				break;
 			case MOVETYPE_BOUNCEMISSILE:
-				toucher.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(toucher, MOVETYPE_BOUNCE);
 				toucher.gravity = 1;
 				break;
 		}

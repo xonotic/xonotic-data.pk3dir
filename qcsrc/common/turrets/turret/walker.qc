@@ -652,7 +652,7 @@ void walker_draw(entity this)
         METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         {
             it.gravity		= 1;
-            it.move_movetype	= MOVETYPE_BOUNCE;
+            set_movetype(it, MOVETYPE_BOUNCE);
             it.move_time		= time;
             it.draw			= walker_draw;
         }

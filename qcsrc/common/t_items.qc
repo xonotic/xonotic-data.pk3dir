@@ -194,7 +194,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     if(sf & ISF_MODEL)
     {
         this.drawmask  = MASK_NORMAL;
-		this.move_movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 		if (isnew) IL_PUSH(g_drawables, this);
         this.draw       = ItemDraw;
         this.solid = SOLID_TRIGGER;
@@ -254,7 +254,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.gravity = 1;
         this.pushable = true;
         //this.angles = '0 0 0';
-        this.move_movetype = MOVETYPE_TOSS;
+        set_movetype(this, MOVETYPE_TOSS);
         this.velocity_x = ReadCoord();
         this.velocity_y = ReadCoord();
         this.velocity_z = ReadCoord();

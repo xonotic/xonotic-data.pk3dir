@@ -154,7 +154,7 @@ void conveyor_init(entity this)
 	IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
-	this.move_movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.model = "";
 	this.solid = SOLID_TRIGGER;
 	this.move_time = time;

@@ -257,7 +257,7 @@ void ewheel_draw(entity this)
         METHOD(EWheel, tr_setup, void(EWheel this, entity it))
         {
             it.gravity		= 1;
-            it.move_movetype = MOVETYPE_BOUNCE;
+            set_movetype(it, MOVETYPE_BOUNCE);
             it.move_time		= time;
             it.draw			= ewheel_draw;
         }
