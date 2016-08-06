@@ -208,6 +208,21 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_QUICKMENU:
 					HUD_Write_PanelCvar("_align");
 					break;
+				case HUD_PANEL_SCOREBOARD:
+					HUD_Write_PanelCvar("_fadeinspeed");
+					HUD_Write_PanelCvar("_fadeoutspeed");
+					HUD_Write_PanelCvar("_respawntime_decimals");
+					HUD_Write_PanelCvar("_table_bg_alpha");
+					HUD_Write_PanelCvar("_table_bg_scale");
+					HUD_Write_PanelCvar("_table_fg_alpha");
+					HUD_Write_PanelCvar("_table_fg_alpha_self");
+					HUD_Write_PanelCvar("_table_highlight");
+					HUD_Write_PanelCvar("_table_highlight_alpha");
+					HUD_Write_PanelCvar("_table_highlight_alpha_self");
+					HUD_Write_PanelCvar("_bg_teams_color_team");
+					HUD_Write_PanelCvar("_accuracy_doublerows");
+					HUD_Write_PanelCvar("_accuracy_nocolors");
+					break;
 			}
 			HUD_Write("\n");
 		}
