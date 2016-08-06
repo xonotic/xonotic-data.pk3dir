@@ -411,6 +411,7 @@ void Cmd_HUD_SetFields(int argc)
 			case "sum": case "diff": case "k-d": hud_field[hud_num_fields] = SP_SUM; break;
 			case "name": case "nick": hud_field[hud_num_fields] = SP_NAME; have_name = true; break;
 			case "|": hud_field[hud_num_fields] = SP_SEPARATOR; have_separator = true; break;
+			case "elo": hud_field[hud_num_fields] = SP_ELO; break;
 			case "dmg": hud_field[hud_num_fields] = SP_DMG; break;
 			case "dmgtaken": hud_field[hud_num_fields] = SP_DMGTAKEN; break;
 			default:
@@ -619,6 +620,16 @@ string HUD_GetField(entity pl, PlayerScoreField field)
 				hud_field_rgb = '1 0 0';
 			}
 			return ftos(f);
+
+		case SP_ELO:
+		{
+			float elo = pl.(scores(SP_ELO));
+			switch (elo) {
+				case -1: return "...";
+				case -2: return _("N/A");
+				default: return ftos(elo);
+			}
+		}
 
 		case SP_DMG:
 			num = pl.(scores(SP_DMG));

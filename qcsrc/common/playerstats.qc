@@ -416,12 +416,14 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 {
+	PlayerScore_Add(joiningplayer, SP_ELO, -1);
 	// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
 	if(autocvar_g_playerstats_playerbasic_uri != "")
 	{
 		string uri = autocvar_g_playerstats_playerbasic_uri;
-		if(joiningplayer.crypto_idfp != "")
-		{
+		if (joiningplayer.crypto_idfp == "") {
+			PlayerScore_Add(joiningplayer, SP_ELO, -1);
+		} else {
 			// create the database if it doesn't already exist
 			if(PS_B_IN_DB < 0)
 				PS_B_IN_DB = db_create();
@@ -452,6 +454,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 	else
 	{
 		// server has this disabled, kill the DB and set status to idle
+		PlayerScore_Add(joiningplayer, SP_ELO, -1);
 		if(PS_B_IN_DB >= 0)
 		{
 			db_close(PS_B_IN_DB);
@@ -466,12 +469,10 @@ void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer)
 {
 	// determine whether we should retrieve playerbasic information again
 
-	#if 0
-	LOG_INFOF("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f\n",
+	LOG_TRACEF("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f\n",
 		joiningplayer.netname,
 		time
 	);
-	#endif
 
 	// TODO: check to see if this playerid is inside the database already somehow...
 	// for now we'll just check the field, but this won't work for players who disconnect and reconnect properly
@@ -503,11 +504,12 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 			*/url_fputs(fh, "\n");
 			url_fclose(fh);
-			break;
+			return;
 		}
 
 		case URL_READY_CANREAD:
 		{
+			bool handled = false;
 			string gt = string_null;
 			for (string s = ""; (s = url_fgets(fh)); ) {
 				int n = tokenizebyseparator(s, " "); // key value? data
@@ -551,8 +553,9 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
                         LOG_TRACE("G: ", gt);
                         LOG_TRACE("e: ", data);
                         if (gt == GetGametype()) {
+                            handled = true;
                             float e = stof(data);
-                            PlayerScore_Add(p, SP_ELO, e);
+                            PlayerScore_Add(p, SP_ELO, +1 + e);
                         }
                         if (gt == "") {
                             // PlayerInfo_AddItem(p, value, data);
@@ -563,13 +566,14 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
                 }
 			}
 			url_fclose(fh);
+			if (handled) return;
 			break;
 		}
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
 			LOG_INFO("Player stats synchronized with server\n");
-			break;
+			return;
 		}
 
 		case URL_READY_ERROR:
@@ -579,6 +583,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			break;
 		}
 	}
+	PlayerScore_Add(p, SP_ELO, -1);
 }
 #endif // SVQC
 
