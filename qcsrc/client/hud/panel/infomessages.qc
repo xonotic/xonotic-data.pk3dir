@@ -201,7 +201,7 @@ void HUD_InfoMessages()
 		//if(spectatee_status != -1)
 		{
 			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
-			//drawInfoMessage(s)
+			// InfoMessage(s)
 			int limit = min(num_spectators, MAX_SPECTATORS);
 			for(int i = 0; i < limit; ++i)
 			{
@@ -210,7 +210,7 @@ void HUD_InfoMessages()
 					s = strcat(s, " ^7", entcs_GetName(slot));
 				else
 					s = strcat("^7", entcs_GetName(slot));
-				drawInfoMessage(s);
+				InfoMessage(s);
 			}
 		}
 	}
