@@ -195,6 +195,24 @@ void HUD_InfoMessages()
 				}
 			}
 		}
+
+		if(autocvar_cl_showspectators)
+		if(num_spectators)
+		//if(spectatee_status != -1)
+		{
+			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
+			//drawInfoMessage(s)
+			int limit = min(num_spectators, MAX_SPECTATORS);
+			for(int i = 0; i < limit; ++i)
+			{
+				float slot = spectatorlist[i];
+				if(i == 0)
+					s = strcat(s, " ^7", entcs_GetName(slot));
+				else
+					s = strcat("^7", entcs_GetName(slot));
+				drawInfoMessage(s);
+			}
+		}
 	}
 	else
 	{

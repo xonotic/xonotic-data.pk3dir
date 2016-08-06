@@ -75,6 +75,30 @@ void send_CSQC_teamnagger() {
 	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
+int CountSpectators(entity player, entity to)
+{
+	if(!player) { return 0; } // not sure how, but best to be safe
+
+	int spec_count = 0;
+
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
+	{
+		spec_count++;
+	});
+
+	return spec_count;
+}
+
+void WriteSpectators(entity player, entity to)
+{
+	if(!player) { return; } // not sure how, but best to be safe
+
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
+	{
+		WriteByte(MSG_ENTITY, num_for_edict(it));
+	});
+}
+
 bool ClientData_Send(entity this, entity to, int sf)
 {
 	assert(to == this.owner, return false);
@@ -87,6 +111,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
 	if (e.zoomstate)            sf |= 4; // zoomed
 	if (e.porto_v_angle_held)   sf |= 8; // angles held
+	if (autocvar_sv_showspectators) sf |= 16; // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -100,6 +125,14 @@ bool ClientData_Send(entity this, entity to, int sf)
 		WriteAngle(MSG_ENTITY, e.v_angle.x);
 		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
+
+	if(sf & 16)
+	{
+		float specs = CountSpectators(e, to);
+		WriteByte(MSG_ENTITY, specs);
+		WriteSpectators(e, to);
+	}
+
 	return true;
 }
 
@@ -224,6 +257,7 @@ void PutObserverInServer(entity this)
     RemoveGrapplingHook(this);
 	Portal_ClearAll(this);
 	Unfreeze(this);
+	SetSpectatee(this, NULL);
 
 	if (this.alivetime)
 	{
@@ -1187,6 +1221,8 @@ void ClientDisconnect(entity this)
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
+	SetSpectatee(this, NULL);
+
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	ClientState_detach(this);
@@ -1672,6 +1708,8 @@ bool SpectateSet(entity this)
 	if(!IS_PLAYER(this.enemy))
 		return false;
 
+	ClientData_Touch(this.enemy);
+
 	msg_entity = this;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
 	WriteEntity(MSG_ONE, this.enemy);
@@ -1694,6 +1732,9 @@ void SetSpectatee(entity this, entity spectatee)
 	// these are required to fix the spectator bug with arc
 	if(old_spectatee && old_spectatee.arc_beam) { old_spectatee.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 	if(this.enemy && this.enemy.arc_beam) { this.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+
+	// needed to update spectator list
+	if(old_spectatee) { ClientData_Touch(old_spectatee); }
 }
 
 bool Spectate(entity this, entity pl)
@@ -1790,6 +1831,8 @@ void LeaveSpectatorMode(entity this)
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
 		{
 			TRANSMUTE(Player, this);
+
+			SetSpectatee(this, NULL);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(this, false, true); }

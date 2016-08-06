@@ -516,6 +516,22 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	else
 		angles_held_status = 0;
 
+	if(f & 16)
+	{
+		num_spectators = ReadByte();
+
+		float i, slot;
+
+		for(i = 0; i < MAX_SPECTATORS; ++i)
+			spectatorlist[i] = 0; // reset list first
+
+		for(i = 0; i < num_spectators; ++i)
+		{
+			slot = ReadByte();
+			spectatorlist[i] = slot - 1;
+		}
+	}
+
 	return = true;
 
 	if(newspectatee_status != spectatee_status)

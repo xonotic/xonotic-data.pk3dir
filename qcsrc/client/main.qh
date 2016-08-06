@@ -151,6 +151,11 @@ float g_trueaim_minrange;
 
 float hud;
 float view_quality;
+
+int num_spectators;
+const int MAX_SPECTATORS = 7;
+int spectatorlist[MAX_SPECTATORS];
+
 int framecount;
 .float health;
 
