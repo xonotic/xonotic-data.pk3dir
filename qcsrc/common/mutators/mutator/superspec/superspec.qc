@@ -383,7 +383,7 @@ void superspec_hello(entity this)
 	if(this.enemy.crypto_idfp == "")
 		Send_Notification(NOTIF_ONE_ONLY, this.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 
-	remove(this);
+	delete(this);
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ClientConnect)

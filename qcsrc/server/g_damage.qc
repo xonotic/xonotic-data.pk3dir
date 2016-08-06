@@ -503,7 +503,7 @@ void Ice_Think(entity this)
 {
 	if(!STAT(FROZEN, this.owner) || this.owner.iceblock != this)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	setorigin(this, this.owner.origin - '0 0 16');
@@ -569,7 +569,7 @@ void Unfreeze (entity targ)
 
 	// remove the ice block
 	if(targ.iceblock)
-		remove(targ.iceblock);
+		delete(targ.iceblock);
 	targ.iceblock = NULL;
 }
 
@@ -837,7 +837,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
-		if(targ.movetype == MOVETYPE_PHYSICS)
+		if(targ.move_movetype == MOVETYPE_PHYSICS)
 		{
 			entity farcent = new(farce);
 			farcent.enemy = targ;
@@ -852,10 +852,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		else
 		{
 			targ.velocity = targ.velocity + farce;
-			targ.move_velocity = targ.velocity;
 		}
 		UNSET_ONGROUND(targ);
-		targ.move_flags &= ~FL_ONGROUND;
 		UpdateCSQCProjectile(targ);
 	}
 	// apply damage
@@ -1253,14 +1251,14 @@ void fireburner_think(entity this)
 	// for players, this is done in the regular loop
 	if(wasfreed(this.owner))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	Fire_ApplyEffect(this.owner);
 	if(!Fire_IsBurning(this.owner))
 	{
 		this.owner.fire_burner = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 	Fire_ApplyDamage(this.owner);

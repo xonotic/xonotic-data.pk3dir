@@ -300,7 +300,7 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 		));
 
 		if(pseudoprojectile)
-			remove(pseudoprojectile);
+			delete(pseudoprojectile);
 	}
 
 	// find all the entities the railgun hit and hurt them
@@ -377,9 +377,9 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 	if(lag)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_takeback(it, CS(it), time - lag));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if (it != this)
-				antilag_takeback(it, it, time - lag);
+		IL_EACH(g_monsters, it != this,
+		{
+			antilag_takeback(it, it, time - lag);
 		});
 	}
 
@@ -492,9 +492,9 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 	if(lag)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_restore(it, CS(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if (it != this)
-				antilag_restore(it, it);
+		IL_EACH(g_monsters, it != this,
+		{
+			antilag_restore(it, it);
 		});
 	}
 

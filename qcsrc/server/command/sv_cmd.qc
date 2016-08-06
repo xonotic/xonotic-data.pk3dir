@@ -45,7 +45,7 @@ void make_mapinfo_Think(entity this)
 	{
 		LOG_INFO("Done rebuiling mapinfos.\n");
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-		remove(this);
+		delete(this);
 	}
 	else
 	{
@@ -830,7 +830,7 @@ void GameCommand_gettaginfo(float request, float argc)
 					LOG_INFO("bone not found\n");
 				}
 
-				remove(tmp_entity);
+				delete(tmp_entity);
 				return;
 			}
 		}
@@ -889,7 +889,7 @@ void GameCommand_animbench(float request, float argc)
 				LOG_INFO("model ", tmp_entity.model, " frame ", ftos(f1), " animtime ", ftos(n / t1), "/s\n");
 				LOG_INFO("model ", tmp_entity.model, " frame ", ftos(f2), " animtime ", ftos(n / t2), "/s\n");
 
-				remove(tmp_entity);
+				delete(tmp_entity);
 				return;
 			}
 		}

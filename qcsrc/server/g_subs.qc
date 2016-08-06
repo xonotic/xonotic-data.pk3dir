@@ -8,7 +8,7 @@
 
 spawnfunc(info_null)
 {
-	remove(this);
+	delete(this);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
 }
 
@@ -51,9 +51,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	{
 		// take players back into the past
 		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_takeback(it, CS(it), time - lag));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if(it != forent)
-				antilag_takeback(it, it, time - lag);
+		IL_EACH(g_monsters, it != forent,
+		{
+			antilag_takeback(it, it, time - lag);
 		});
 	}
 
@@ -67,9 +67,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	if (lag)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_restore(it, CS(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if (it != forent)
-				antilag_restore(it, it);
+		IL_EACH(g_monsters, it != forent,
+		{
+			antilag_restore(it, it);
 		});
 	}
 
@@ -234,7 +234,7 @@ vector findbetterlocation (vector org, float mindist)
 	return org;
 }
 
-float LOD_customize(entity this)
+bool LOD_customize(entity this, entity client)
 {
 	if(autocvar_loddebug)
 	{
@@ -249,10 +249,10 @@ float LOD_customize(entity this)
 	}
 
 	// TODO csqc network this so it only gets sent once
-	vector near_point = NearestPointOnBox(this, other.origin);
-	if(vdist(near_point - other.origin, <, this.loddistance1))
+	vector near_point = NearestPointOnBox(this, client.origin);
+	if(vdist(near_point - client.origin, <, this.loddistance1))
 		this.modelindex = this.lodmodelindex0;
-	else if(!this.lodmodelindex2 || vdist(near_point - other.origin, <, this.loddistance2))
+	else if(!this.lodmodelindex2 || vdist(near_point - client.origin, <, this.loddistance2))
 		this.modelindex = this.lodmodelindex1;
 	else
 		this.modelindex = this.lodmodelindex2;
@@ -281,7 +281,7 @@ void LODmodel_attach(entity this)
 		if(e)
 		{
 			this.lodmodel1 = e.model;
-			remove(e);
+			delete(e);
 		}
 	}
 	if(this.lodtarget2 != "")
@@ -290,7 +290,7 @@ void LODmodel_attach(entity this)
 		if(e)
 		{
 			this.lodmodel2 = e.model;
-			remove(e);
+			delete(e);
 		}
 	}
 
@@ -417,7 +417,7 @@ void InitTrigger(entity this)
 	SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
 }
@@ -429,7 +429,7 @@ void InitSolidBSPTrigger(entity this)
 	SetMovedir(this);
 	this.solid = SOLID_BSP;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
+	set_movetype(this, MOVETYPE_NONE); // why was this PUSH? -div0
 //	this.modelindex = 0;
 	this.model = "";
 }
@@ -440,7 +440,7 @@ bool InitMovingBrushTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	this.solid = SOLID_BSP;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	if(this.modelindex == 0)
 	{
 		objerror(this, "InitMovingBrushTrigger: no brushes found!");

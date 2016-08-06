@@ -91,7 +91,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.modelindex = this.modelindex;
 	clone.skin = this.skin;
 	clone.species = this.species;
-	clone.movetype = this.movetype;
+	clone.move_qcphysics = false; // don't run gamecode logic on clones, too many
+	set_movetype(clone, this.move_movetype);
 	clone.solid = this.solid;
 	clone.ballistics_density = this.ballistics_density;
 	clone.takedamage = this.takedamage;
@@ -151,7 +152,7 @@ void player_anim(entity this)
 	int animbits = deadbits;
 	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(this.movetype == MOVETYPE_FOLLOW)
+	if(this.move_movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
 	if(this.crouch)
 		animbits |= ANIMSTATE_DUCK;
@@ -436,15 +437,15 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
 						if(deathtype == DEATH_FALL.m_id)
-							PlayerSound(this, playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_fall, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 						else if(this.health > 75)
-							PlayerSound(this, playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain100, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 						else if(this.health > 50)
-							PlayerSound(this, playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain75, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 						else if(this.health > 25)
-							PlayerSound(this, playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain50, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 						else
-							PlayerSound(this, playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain25, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 					}
 				}
 			}
@@ -494,11 +495,14 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = 1;
 	}
 
+	dh = dh - max(this.health, 0);
+	da = da - max(this.armorvalue, 0);
 	if(valid_damage_for_weaponstats)
 	{
-		dh = dh - max(this.health, 0);
-		da = da - max(this.armorvalue, 0);
 		WeaponStats_LogDamage(awep.m_id, abot, PS(this).m_weapon.m_id, vbot, dh + da);
+	}
+	if (dh + da)
+	{
 		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype);
 	}
 
@@ -520,15 +524,15 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN.m_id)
-				PlayerSound(this, playersound_drown, CH_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(this, playersound_drown, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 			else
-				PlayerSound(this, playersound_death, CH_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(this, playersound_death, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
 		}
 
 		// get rid of kill indicator
 		if(this.killindicator)
 		{
-			remove(this.killindicator);
+			delete(this.killindicator);
 			this.killindicator = NULL;
 			if(this.killindicator_teamchange)
 				defer_ClientKill_Now_TeamChange = true;
@@ -591,7 +595,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// view from the floor
 		this.view_ofs = '0 0 -8';
 		// toss the corpse
-		this.movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 		// shootable corpse
 		this.solid = SOLID_CORPSE;
 		this.ballistics_density = autocvar_g_ballistics_density_corpse;

@@ -46,7 +46,7 @@ bool turret_fusionreactor_firecheck(entity this)
     return true;
 }
 
-spawnfunc(turret_fusionreactor) { if (!turret_initialize(this, TUR_FUSIONREACTOR)) remove(this); }
+spawnfunc(turret_fusionreactor) { if (!turret_initialize(this, TUR_FUSIONREACTOR)) delete(this); }
 
 METHOD(FusionReactor, tr_attack, void(FusionReactor this, entity it))
 {

@@ -33,7 +33,6 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
         te_explosion (missile.origin);
         setthink(missile, turret_hellion_missile_think);
         missile.nextthink	= time;
-        missile.flags		= FL_PROJECTILE;
         missile.max_health   = time + 9;
         missile.tur_aimpos   = randomvec() * 128;
         missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;

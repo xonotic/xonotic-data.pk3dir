@@ -5,7 +5,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger);
 void DelayThink(entity this)
 {
 	SUB_UseTargets (this, this.enemy, NULL);
-	remove(this);
+	delete(this);
 }
 
 void FixSize(entity e)
@@ -225,7 +225,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	if (s != "")
 	{
 		for(entity t = NULL; (t = find(t, targetname, s)); )
-			remove(t);
+			delete(t);
 	}
 #endif
 

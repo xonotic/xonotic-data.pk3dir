@@ -142,7 +142,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		_setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
 		forceplayermodels_goodmodelindex = e.modelindex;
-		remove(e);
+		delete(e);
 	}
 
 	// first, try finding it from the server
@@ -175,7 +175,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		forceplayermodels_model = e.model;
 		forceplayermodels_modelindex = e.modelindex;
 		forceplayermodels_skin = autocvar__cl_playerskin;
-		remove(e);
+		delete(e);
 	}
 
 	if(autocvar_cl_forcemyplayermodel != "" && autocvar_cl_forcemyplayermodel != forceplayermodels_mymodel)
@@ -185,7 +185,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		forceplayermodels_myisgoodmodel = fexists(e.model);
 		forceplayermodels_mymodel = e.model;
 		forceplayermodels_mymodelindex = e.modelindex;
-		remove(e);
+		delete(e);
 	}
 
 	// apply it

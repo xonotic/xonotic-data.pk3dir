@@ -34,7 +34,7 @@ void playerdemo_open_read(entity this, string f)
 	this.playerdemo_starttime = time - 1;
 	this.playerdemo_time = stof(fgets(this.playerdemo_fh));
 	this.playerdemo_time += this.playerdemo_starttime;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	LOG_INFO("playerdemo: ", this.netname, " reading from ", f, "\n");
 }
 void playerdemo_open_write(entity this, string f)
@@ -147,9 +147,9 @@ float playerdemo_read(entity this)
 		PLAYERDEMO_FIELDS(this, playerdemo_read_)
 		{
 			time = this.playerdemo_time;
-			WITHSELF(this, PlayerPreThink());
+			PlayerPreThink(this);
 			// not running physics though... this is just so we can run weapon stuff
-			WITHSELF(this, PlayerPostThink());
+			PlayerPostThink(this);
 		}
 		this.playerdemo_time = stof(fgets(this.playerdemo_fh));
 		if(this.playerdemo_time == 0)

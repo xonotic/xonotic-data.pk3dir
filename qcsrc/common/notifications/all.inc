@@ -478,7 +478,7 @@
     MSG_INFO_NOTIF(WEAPON_SEEKER_MURDER_SPRAY,              1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponseeker",             _("^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SEEKER_MURDER_TAG,                1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponseeker",             _("^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SEEKER_SUICIDE,                   1,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponseeker",             _("^BG%s^K1 played with tiny Seeker rockets%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER,                 1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshotgun",            _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"), "")
+    MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER,                 1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshockwave",          _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER_SLAP,            1,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_shotgun",     _("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOTGUN_MURDER,                   1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshotgun",            _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOTGUN_MURDER_SLAP,              1,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_shotgun",     _("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"), "")
@@ -528,7 +528,7 @@
     MSG_CENTER_NOTIF(CTF_PASS_OTHER_NEUTRAL,            1,      2, 0, "s1 s2",          CPID_CTF_PASS,          "0 0",  _("^BG%s^BG passed the flag to %s"), "")
     MULTITEAM_CENTER(CTF_PASS_RECEIVED, 4,              1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou received the ^TC^TT^BG flag from %s"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PASS_RECEIVED_NEUTRAL,         1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou received the flag from %s"), "")
-    MSG_CENTER_NOTIF(CTF_PASS_REQUESTED,                1,      1, 0, "s1 pass_key",    CPID_CTF_PASS,          "0 0",  _("^BG%s^BG requests you to pass the flag%s"), "")
+    MSG_CENTER_NOTIF(CTF_PASS_REQUESTED,                1,      1, 0, "pass_key s1",    CPID_CTF_PASS,          "0 0",  _("^BGPress ^F2%s^BG to receive the flag from %s^BG"), "")
     MSG_CENTER_NOTIF(CTF_PASS_REQUESTING,               1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGRequesting %s^BG to pass you the flag"), "")
     MULTITEAM_CENTER(CTF_PASS_SENT, 4,                  1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou passed the ^TC^TT^BG flag to %s"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PASS_SENT_NEUTRAL,             1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou passed the flag to %s"), "")
@@ -546,6 +546,7 @@
     MULTITEAM_CENTER(CTF_PICKUP_TEAM_VERBOSE, 4,        1,      2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_NEUTRAL,           1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate^BG got the flag! Protect them!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_VERBOSE_NEUTRAL,   1,      2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "")
+    MSG_CENTER_NOTIF(CTF_PICKUP_VISIBLE,                1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGEnemies can now see you on radar!"), "")
     MULTITEAM_CENTER(CTF_RETURN, 4,                     1,      0, 0, "",               CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou returned the ^TC^TT^BG flag!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_STALEMATE_CARRIER,             1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGStalemate! Enemies can now see you on radar!"), "")
     MSG_CENTER_NOTIF(CTF_STALEMATE_OTHER,               1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "")
@@ -675,7 +676,7 @@
     MSG_CENTER_NOTIF(ONS_GENERATOR_SHIELDED,            1,      0, 0, "",               CPID_ONS_CAPSHIELD,     "0 0",  _("^BGThe enemy generator cannot be destroyed yet\n^F2Capture some control points to unshield it"), "")
     MULTITEAM_CENTER(ONS_NOTSHIELDED, 4,                1,      0, 0, "",               CPID_ONSLAUGHT,         "0 0",  _("^BGThe ^TCenemy^BG generator is no longer shielded!"), "", NAME)
     MSG_CENTER_NOTIF(ONS_NOTSHIELDED_TEAM,              1,      0, 0, "",               CPID_ONSLAUGHT,         "0 0",  _("^K1Your generator is NOT shielded!\n^BGRe-capture control points to shield it!"), "")
-    MSG_CENTER_NOTIF(ONS_TELEPORT,                      1,      0, 0, "pass_key",       CPID_ONSLAUGHT,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to teleport"), "")
+    MSG_CENTER_NOTIF(ONS_TELEPORT,                      1,      0, 0, "pass_key",       CPID_ONSLAUGHT,         "0 0",  _("^BGPress ^F2%s^BG to teleport"), "")
     MSG_CENTER_NOTIF(ONS_TELEPORT_ANTISPAM,             1,      0, 1, "f1secs",         CPID_ONSLAUGHT,         "0 0",  _("^BGTeleporting disabled for %s"), "")
 
     MSG_CENTER_NOTIF(OVERTIME_FRAG,                     1,      0, 0, "",               CPID_OVERTIME,          "0 0",  _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!"))
@@ -720,9 +721,9 @@
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             1,      0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
-    MSG_CENTER_NOTIF(VEHICLE_ENTER,                     1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter/exit the vehicle"), "")
-    MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter the vehicle gunner"), "")
-    MSG_CENTER_NOTIF(VEHICLE_ENTER_STEAL,               1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to steal this vehicle"), "")
+    MSG_CENTER_NOTIF(VEHICLE_ENTER,                     1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter/exit the vehicle"), "")
+    MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter the vehicle gunner"), "")
+    MSG_CENTER_NOTIF(VEHICLE_ENTER_STEAL,               1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to steal this vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL,                     1,      0, 0, "",               CPID_VEHICLES_OTHER,    "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL_SELF,                1,      0, 0, "",               CPID_VEHICLES_OTHER,    "4 0",  _("^F2You have stolen the enemy's vehicle, you are now visible on their radar!"), "")
 

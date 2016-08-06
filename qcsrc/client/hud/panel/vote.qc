@@ -7,6 +7,15 @@ void HUD_Vote()
 {
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
+		// this dialog gets overriden by the uid2name menu dialog, if it exists
+		// TODO remove this client side uid2name dialog in the next release
+		if(autocvar__menu_alpha)
+			hud_fade_alpha = 0;
+		else
+			uid2name_dialog = 0;
+		if (!uid2name_dialog)
+			localcmd("menu_cmd directmenu Uid2Name\n");
+
 		vote_active = 1;
 		if (autocvar__hud_configure)
 		{
@@ -63,7 +72,6 @@ void HUD_Vote()
 		panel_size = eX * 0.4 * vid_conwidth + eY * 0.3 * vid_conheight;
 	}
 
-    // these must be below above block
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -110,10 +118,10 @@ void HUD_Vote()
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, eX * mySize.x + eY * (1.75/8) * mySize.y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-    s = sprintf(_("Yes (%s): %d"), getcommandkey("vyes", "vyes"), vote_yescount);
-	drawstring_aspect(pos + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, '0 1 0', a, DRAWFLAG_NORMAL);
-    s = sprintf(_("No (%s): %d"), getcommandkey("vno", "vno"), vote_nocount);
-	drawstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, '1 0 0', a, DRAWFLAG_NORMAL);
+	s = sprintf("^2%s ^7(%d)", getcommandkey_forcename(_("Yes"), "vyes"), vote_yescount);
+	drawcolorcodedstring_aspect(pos + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, a, DRAWFLAG_NORMAL);
+	s = sprintf("^1%s ^7(%d)", getcommandkey_forcename(_("No"), "vno"), vote_nocount);
+	drawcolorcodedstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
 	drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_back", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);

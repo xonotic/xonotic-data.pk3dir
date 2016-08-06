@@ -27,7 +27,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
         actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 
         entity t = toast(actor, e,r,d);
-        remove(e);
+        delete(e);
 
         if (t == NULL) return;
 
@@ -42,12 +42,10 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
 
         }
 
-        e = findchainfloat(railgunhit, 1);
-        while (e) {
-            e.railgunhit = 0;
-            e = e.chain;
-        }
-
+        FOREACH_ENTITY_FLOAT(railgunhit, 1,
+        {
+            it.railgunhit = 0;
+        });
     }
 }
 

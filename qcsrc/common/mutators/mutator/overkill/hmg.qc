@@ -62,8 +62,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 		return;
 	}
 
-	if(!thiswep.wr_checkammo1(thiswep, actor))
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if((!thiswep.wr_checkammo1(thiswep, actor) && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (!(actor.items & IT_SUPERWEAPON) && !(actor.items & IT_UNLIMITED_SUPERWEAPONS)))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -91,7 +90,10 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	if (autocvar_g_casings >= 2) // casing code
+	{
+		makevectors(actor.v_angle); // for some reason, this is lost
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
+	}
 
 	int slot = weaponslot(weaponentity);
 	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(hmg, refire) * W_WeaponRateFactor(actor);

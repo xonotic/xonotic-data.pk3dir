@@ -130,7 +130,7 @@ void ok_DropItem(entity this, entity targ)
 	e.spawnfunc_checked = true;
 	spawnfunc_item_armor_small(e);
 	if (!wasfreed(e)) { // might have been blocked by a mutator
-        e.movetype = MOVETYPE_TOSS;
+        set_movetype(e, MOVETYPE_TOSS);
         e.gravity = 1;
         e.reset = SUB_Remove;
         setorigin(e, this.origin + '0 0 32');
@@ -157,7 +157,7 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 	entity olditem = M_ARGV(1, entity);
 	entity frag_attacker = M_ARGV(2, entity);
 
-	remove(olditem);
+	delete(olditem);
 
 	M_ARGV(1, entity) = NULL;
 

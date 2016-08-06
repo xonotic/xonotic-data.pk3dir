@@ -21,7 +21,7 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 void Weapon_whereis(Weapon this, entity cl)
 {
 	if (!autocvar_g_showweaponspawns) return;
-	for (entity it = NULL; (it = findfloat(it, weapon, this.m_id)); )
+	FOREACH_ENTITY_FLOAT(weapon, this.m_id,
 	{
 		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
 			continue;
@@ -37,7 +37,7 @@ void Weapon_whereis(Weapon this, entity cl)
 			RADARICON_NONE
 		);
 		wp.wp_extra = this.m_id;
-	}
+	});
 }
 
 bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
@@ -75,7 +75,7 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				if(wpn == WEP_MINE_LAYER)
-					FOREACH_ENTITY_CLASS("mine", it.owner == this,
+					IL_EACH(g_mines, it.owner == this,
 					{
 						f = 1;
 						break; // no need to continue

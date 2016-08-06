@@ -41,41 +41,30 @@ void havocbot_ai(entity this)
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
 		if(IS_DEAD(this))
-		if(this.goalcurrent==NULL)
-		if(this.waterlevel==WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
+		if(!this.goalcurrent)
+		if(this.waterlevel == WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
 		{
 			// Look for the closest waypoint out of water
-			entity newgoal, head;
-			float bestdistance, distance;
-
-			newgoal = NULL;
-			bestdistance = 10000;
-			for (head = findchain(classname, "waypoint"); head; head = head.chain)
+			entity newgoal = NULL;
+			IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 10000),
 			{
-				distance = vlen(head.origin - this.origin);
-				if(distance>10000)
+				if(it.origin.z < this.origin.z)
 					continue;
 
-				if(head.origin.z < this.origin.z)
+				if(it.origin.z - this.origin.z - this.view_ofs.z > 100)
 					continue;
 
-				if(head.origin.z - this.origin.z - this.view_ofs.z > 100)
+				if (pointcontents(it.origin + it.maxs + '0 0 1') != CONTENT_EMPTY)
 					continue;
 
-				if (pointcontents(head.origin + head.maxs + '0 0 1') != CONTENT_EMPTY)
+				traceline(this.origin + this.view_ofs, ((it.absmin + it.absmax) * 0.5), true, this);
+
+				if(trace_fraction < 1)
 					continue;
 
-				traceline(this.origin + this.view_ofs , head.origin, true, head);
-
-				if(trace_fraction<1)
-					continue;
-
-				if(distance<bestdistance)
-				{
-					newgoal = head;
-					bestdistance = distance;
-				}
-			}
+				if(!newgoal || vlen2(it.origin - this.origin) < vlen2(newgoal.origin - this.origin))
+					newgoal = it;
+			});
 
 			if(newgoal)
 			{
@@ -496,27 +485,17 @@ void havocbot_movetogoal(entity this)
 		{
 			if(fabs(this.velocity.z)<50)
 			{
-				entity head, newgoal = NULL;
-				float distance, bestdistance = 0;
-
-				for (head = findchain(classname, "waypoint"); head; head = head.chain)
+				entity newgoal = NULL;
+				IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 1000),
 				{
+					traceline(this.origin + this.view_ofs, ((it.absmin + it.absmax) * 0.5), true, this);
 
-					distance = vlen(head.origin - this.origin);
-					if(distance>1000)
+					if(trace_fraction < 1)
 						continue;
 
-					traceline(this.origin + this.view_ofs , ( ( head.absmin + head.absmax ) * 0.5 ), true, NULL);
-
-					if(trace_fraction<1)
-						continue;
-
-					if(distance>bestdistance)
-					{
-						newgoal = head;
-						bestdistance = distance;
-					}
-				}
+					if(!newgoal || vlen2(it.origin - this.origin) > vlen2(newgoal.origin - this.origin))
+						newgoal = it;
+				});
 
 				if(newgoal)
 				{
@@ -1169,7 +1148,7 @@ float havocbot_moveto(entity this, vector pos)
 				{
 					LOG_TRACE("Warning: can't walk to the personal waypoint located at ", vtos(this.havocbot_personal_waypoint.origin),"\n");
 					this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_LINKING;
-					remove(this.havocbot_personal_waypoint);
+					delete(this.havocbot_personal_waypoint);
 					return CMD_STATUS_ERROR;
 				}
 				else
@@ -1192,7 +1171,7 @@ float havocbot_moveto(entity this, vector pos)
 		{
 			// Step 5: Waypoint reached
 			LOG_TRACE(this.netname, "'s personal waypoint reached\n");
-			remove(this.havocbot_personal_waypoint);
+			delete(this.havocbot_personal_waypoint);
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			return CMD_STATUS_FINISHED;
 		}
@@ -1233,15 +1212,11 @@ float havocbot_moveto(entity this, vector pos)
 	this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 
 	// if pos is inside a teleport, then let's mark it as teleport waypoint
-	entity head;
-	for(head = NULL; (head = find(head, classname, "trigger_teleport")); )
+	FOREACH_ENTITY_CLASS("trigger_teleport", WarpZoneLib_BoxTouchesBrush(pos, pos, it, NULL),
 	{
-		if(WarpZoneLib_BoxTouchesBrush(pos, pos, head, NULL))
-		{
-			wp.wpflags |= WAYPOINTFLAG_TELEPORT;
-			this.lastteleporttime = 0;
-		}
-	}
+		wp.wpflags |= WAYPOINTFLAG_TELEPORT;
+		this.lastteleporttime = 0;
+	});
 
 /*
 	if(wp.wpflags & WAYPOINTFLAG_TELEPORT)

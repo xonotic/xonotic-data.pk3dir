@@ -189,7 +189,7 @@ void timeout_handler_reset(entity this)
 	timeout_time = 0;
 	timeout_leadtime = 0;
 
-	remove(this);
+	delete(this);
 }
 
 void timeout_handler_think(entity this)
@@ -364,10 +364,10 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					if (arg_lower == "list") { print_to(caller, monsterlist_reply); return; }
 
-					FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-						if(it.realowner == caller)
-							++tmp_moncount;
-					));
+					IL_EACH(g_monsters, it.realowner == caller,
+					{
+						++tmp_moncount;
+					});
 
 					if (!autocvar_g_monsters) { print_to(caller, "Monsters are disabled"); return; }
 					if (autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { print_to(caller, "Monster spawning is disabled"); return; }
@@ -436,10 +436,12 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					int tmp_remcount = 0;
 
-					FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+					IL_EACH(g_monsters, true,
+					{
 						Monster_Remove(it);
 						++tmp_remcount;
-					));
+					});
+					IL_CLEAR(g_monsters);
 
 					monsters_total = monsters_killed = totalspawned = 0;
 

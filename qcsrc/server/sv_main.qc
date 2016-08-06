@@ -96,6 +96,7 @@ void CreatureFrame_Liquids(entity this)
 void CreatureFrame_FallDamage(entity this)
 {
 	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
+	if(this.velocity || this.oldvelocity) // moving or has moved
 	{
 		// check for falling damage
 		float velocity_len = vlen(this.velocity);
@@ -118,7 +119,7 @@ void CreatureFrame_FallDamage(entity this)
 void CreatureFrame_All()
 {
 	FOREACH_ENTITY_FLOAT(damagedbycontents, true, {
-		if (it.movetype == MOVETYPE_NOCLIP) continue;
+		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
 		CreatureFrame_FallDamage(it);
 		it.oldvelocity = it.velocity;
@@ -152,19 +153,20 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
-bool autocvar_sv_autopause = true;
+bool autocvar_sv_autopause = false;
 float RedirectionThink();
-void PM_Main(Client this);
+void systems_update();
+void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPreThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
-	remove = remove_unsafely; // not during spawning!
+	delete_fn = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
 	servertime = time;
 	serverframetime = frametime;
@@ -228,7 +230,7 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
     FOREACH_CLIENT(true, GlobalStats_update(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPostThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }
 
 .vector originjitter;
@@ -237,15 +239,15 @@ void StartFrame()
 .string gametypefilter;
 .string cvarfilter;
 bool DoesQ3ARemoveThisEntity(entity this);
-void SV_OnEntityPreSpawnFunction()
-{ENGINE_EVENT();
+void SV_OnEntityPreSpawnFunction(entity this)
+{
 	__spawnfunc_expecting = true;
 	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
@@ -354,7 +356,7 @@ LABEL(cvar_fail)
 		if (!inv)
 		{
 			//print("cvarfilter fail\n");
-			remove(this);
+			delete(this);
 			__spawnfunc_expecting = false;
 			return;
 		}
@@ -362,10 +364,12 @@ LABEL(cvar_fail)
 
 	if(DoesQ3ARemoveThisEntity(this))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
+
+	set_movetype(this, this.movetype);
 
 	// support special -1 and -2 angle from radiant
 	if (this.angles == '0 -1 0')
@@ -390,7 +394,7 @@ LABEL(cvar_fail)
 
 	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}

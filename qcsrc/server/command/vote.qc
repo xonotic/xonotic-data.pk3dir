@@ -344,7 +344,7 @@ void reset_map(bool dorespawn)
 			continue;
 		}
 		if (it.team_saved) it.team = it.team_saved;
-		if (it.flags & FL_PROJECTILE) remove(it);  // remove any projectiles left
+		if (it.flags & FL_PROJECTILE) delete(it);  // remove any projectiles left
 	});
 
 	// Waypoints and assault start come LAST
@@ -378,7 +378,7 @@ void reset_map(bool dorespawn)
 						it.velocity = '0 0 0';
 						it.avelocity = '0 0 0';
 						it.movement = '0 0 0';
-						WITHSELF(it, PutClientInServer());
+						PutClientInServer(it);
 					}
 				}
 			));
@@ -392,7 +392,7 @@ void ReadyRestart_think(entity this)
 	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
-	remove(this);
+	delete(this);
 }
 
 // Forces a restart of the game without actually reloading the map // this is a mess...

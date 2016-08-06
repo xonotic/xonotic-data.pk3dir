@@ -186,7 +186,7 @@ bool racer_frame(entity this)
 
 	traceline(vehic.origin, vehic.origin + '0 0 1', MOVE_NOMONSTERS, this);
 	int cont = trace_dpstartcontents;
-	if(cont & DPCONTENTS_WATER)
+	if(!(cont & DPCONTENTS_WATER))
 		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(IS_DEAD(vehic))
@@ -198,12 +198,6 @@ bool racer_frame(entity this)
 	racer_align4point(vehic, PHYS_INPUT_TIMELENGTH);
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
-
-	if(time >= vehic.vehicle_last_trace)
-	{
-		crosshair_trace(this);
-		vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
-	}
 
 	vehic.angles_x *= -1;
 
@@ -337,10 +331,16 @@ bool racer_frame(entity this)
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
-		if(vehic.vehicle_last_trace == time + autocvar_g_vehicle_racer_thinkrate)
-		vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
-						 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
-						 autocvar_g_vehicle_racer_rocket_locked_time);
+		if(time >= vehic.vehicle_last_trace)
+		{
+			crosshair_trace(this);
+
+			vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
+							 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
+							 autocvar_g_vehicle_racer_rocket_locked_time);
+
+			vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
+		}
 
 		if(vehic.lock_target)
 		{
@@ -439,7 +439,7 @@ void racer_exit(entity this, int eject)
 
 	setthink(this, racer_think);
 	this.nextthink  = time;
-	this.movetype   = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	sound (this.tur_head, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
 
 	if(!this.owner)
@@ -490,7 +490,7 @@ void racer_blowup(entity this)
 
 	this.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
 	setthink(this, vehicles_spawn);
-	this.movetype   = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.effects	= EF_NODRAW;
 	this.solid = SOLID_NOT;
 
@@ -511,7 +511,7 @@ void racer_blowup_think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void racer_deadtouch(entity this)
+void racer_deadtouch(entity this, entity toucher)
 {
 	this.avelocity_x *= 0.7;
 	this.cnt -= 1;
@@ -521,46 +521,11 @@ void racer_deadtouch(entity this)
 
 spawnfunc(vehicle_racer)
 {
-	if(!autocvar_g_vehicle_racer) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_RACER, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_racer) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_RACER, false)) { delete(this); return; }
 }
 
 #endif // SVQC
-
-#ifdef CSQC
-#if 0
-void racer_draw(entity this)
-{
-	float pushdeltatime = time - this.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	this.lastpushtime = time;
-	if(!pushdeltatime) return;
-
-	tracebox(this.move_origin, this.mins, this.maxs, this.move_origin - ('0 0 1' * STAT(VEH_RACER_SPRINGLENGTH)), MOVE_NOMONSTERS, this);
-
-	vector df = this.move_velocity * -STAT(VEH_RACER_FRICTION);
-	df_z += (1 - trace_fraction) * STAT(VEH_RACER_HOVERPOWER) + sin(time * 2) * (STAT(VEH_RACER_SPRINGLENGTH) * 2);
-
-	float forced = STAT(VEH_RACER_UPFORCEDAMPER);
-
-	int cont = pointcontents(this.move_origin - '0 0 64');
-	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
-	{
-		forced = STAT(VEH_RACER_WATER_UPFORCEDAMPER);
-		this.move_velocity_z += 200;
-	}
-
-	this.move_velocity += df * pushdeltatime;
-	if(this.move_velocity_z > 0)
-		this.move_velocity_z *= 1 - forced * pushdeltatime;
-
-	this.move_angles_x *= 1 - (STAT(VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
-	this.move_angles_z *= 1 - (STAT(VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
-
-	Movetype_Physics_MatchServer(this, false);
-}
-#endif
-#endif
 
 METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 {
@@ -573,14 +538,14 @@ METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
-    instance.movetype = MOVETYPE_BOUNCE;
+    set_movetype(instance, MOVETYPE_BOUNCE);
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
 
     if(instance.owner.flagcarried)
        setorigin(instance.owner.flagcarried, '-190 0 96');
 #elif defined(CSQC)
-    instance.move_movetype = MOVETYPE_BOUNCE;
+    set_movetype(instance, MOVETYPE_BOUNCE);
 #endif
 }
 
@@ -607,7 +572,7 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
     instance.vehicle_health = autocvar_g_vehicle_racer_health;
     instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
-    instance.movetype	  = MOVETYPE_TOSS;
+    set_movetype(instance, MOVETYPE_TOSS);
     instance.solid		  = SOLID_SLIDEBOX;
     instance.delay		  = time;
     instance.scale		  = 0.5;
@@ -631,7 +596,7 @@ METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
     instance.solid			= SOLID_CORPSE;
     instance.takedamage		= DAMAGE_NO;
     instance.deadflag		= DEAD_DYING;
-    instance.movetype		= MOVETYPE_BOUNCE;
+    set_movetype(instance, MOVETYPE_BOUNCE);
     instance.wait			= time;
     instance.delay			= 2 + time + random() * 3;
     instance.cnt			= 1 + random() * 2;

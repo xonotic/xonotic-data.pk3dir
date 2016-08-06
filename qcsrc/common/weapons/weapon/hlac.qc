@@ -54,19 +54,19 @@ REGISTER_WEAPON(HLAC, hlac, NEW(HLAC));
 #ifdef SVQC
 spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
-void W_HLAC_Touch(entity this)
+void W_HLAC_Touch(entity this, entity toucher)
 {
 	float isprimary;
 
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
 
 	isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, toucher);
 
-	remove(this);
+	delete(this);
 }
 
 void W_HLAC_Attack(Weapon thiswep, entity actor)
@@ -95,7 +95,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor)
 
     missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	setorigin(missile, w_shotorg);
@@ -110,6 +110,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor)
     missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.projectiledeathtype = WEP_HLAC.m_id;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
@@ -137,7 +138,7 @@ void W_HLAC_Attack2(entity actor)
 
     missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	setorigin(missile, w_shotorg);
@@ -152,6 +153,7 @@ void W_HLAC_Attack2(entity actor)
     missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = WEP_HLAC.m_id | HITTYPE_SECONDARY;
 

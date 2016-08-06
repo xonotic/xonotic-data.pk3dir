@@ -423,3 +423,25 @@ g_uzi_luma
 		blendfunc blend
 	}
 }
+
+g_ok_hmg_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/weapons/g_ok_hmg_luma
+		blendfunc blend
+	}
+}
+
+g_ok_rl_luma
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/weapons/g_ok_rl_luma
+		blendfunc blend
+	}
+}

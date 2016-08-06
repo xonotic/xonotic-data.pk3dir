@@ -14,3 +14,6 @@
 
 #define _STR(it) #it
 #define STR(it) _STR(it)
+
+#define EMPTY()
+#define DEFER(id) id EMPTY()

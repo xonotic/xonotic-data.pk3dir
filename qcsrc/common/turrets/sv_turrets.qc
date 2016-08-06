@@ -32,7 +32,7 @@ vector turret_aim_generic(entity this)
 
 			if(this.aim_flags & TFL_AIM_ZPREDICT)
 			if(!IS_ONGROUND(this.enemy))
-			if(this.enemy.movetype == MOVETYPE_WALK || this.enemy.movetype == MOVETYPE_TOSS || this.enemy.movetype == MOVETYPE_BOUNCE)
+			if(this.enemy.move_movetype == MOVETYPE_WALK || this.enemy.move_movetype == MOVETYPE_TOSS || this.enemy.move_movetype == MOVETYPE_BOUNCE)
 			{
 				float vz;
 				prep_z = pre_pos_z;
@@ -193,8 +193,8 @@ void turret_die(entity this)
 	{
 		tur.tr_death(tur, this);
 
-		remove(this.tur_head);
-		remove(this);
+		delete(this.tur_head);
+		delete(this);
 	}
 	else
 	{
@@ -440,12 +440,12 @@ void turret_projectile_explode(entity this)
 #else
 	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
 #endif
-	remove(this);
+	delete(this);
 }
 
-void turret_projectile_touch(entity this)
+void turret_projectile_touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 	turret_projectile_explode(this);
 }
 
@@ -474,9 +474,10 @@ entity turret_projectile(entity actor, Sound _snd, float _size, float _health, f
 	setthink(proj, turret_projectile_explode);
 	settouch(proj, turret_projectile_touch);
 	proj.nextthink	  = time + 9;
-	proj.movetype		= MOVETYPE_FLYMISSILE;
+	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.velocity		= normalize(actor.tur_shotdir_updated + randomvec() * actor.shot_spread) * actor.shot_speed;
-	proj.flags		  = FL_PROJECTILE;
+	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.enemy		  = actor.enemy;
 	proj.totalfrags	 = _death;
 	PROJECTILE_MAKETRIGGER(proj);
@@ -1199,7 +1200,8 @@ void turrets_manager_think(entity this)
 
 	if (autocvar_g_turrets_reloadcvars == 1)
 	{
-		FOREACH_ENTITY(IS_TURRET(it), {
+		IL_EACH(g_turrets, true,
+		{
 			load_unit_settings(it, true);
 			Turret tur = get_turretinfo(it.m_id);
 			tur.tr_think(tur, it);
@@ -1248,6 +1250,7 @@ bool turret_initialize(entity this, Turret tur)
 	// if tur_head exists, we can assume this turret re-spawned
 	if(!this.tur_head) {
 		tur.tr_precache(tur);
+		IL_PUSH(g_turrets, this);
 	}
 
 	entity e = find(NULL, classname, "turret_manager");
@@ -1329,7 +1332,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.ammo_recharge		   *= this.ticrate;
 	this.solid					= SOLID_BBOX;
 	this.takedamage				= DAMAGE_AIM;
-	this.movetype				= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.view_ofs				= '0 0 0';
 	this.turret_firecheckfunc	= turret_firecheck;
 	this.event_damage			= turret_damage;
@@ -1349,7 +1352,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.tur_head.owner			= this;
 	this.tur_head.takedamage	= DAMAGE_NO;
 	this.tur_head.solid			= SOLID_NOT;
-	this.tur_head.movetype		= this.movetype;
+	set_movetype(this.tur_head, this.move_movetype);
 
 	if(!this.tur_defend)
 	if(this.target != "")

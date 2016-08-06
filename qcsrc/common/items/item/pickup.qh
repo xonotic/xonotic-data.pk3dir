@@ -29,7 +29,7 @@ CLASS(Pickup, GameItem)
         TC(Pickup, this);
         bool b = Item_GiveTo(item, player);
         if (b) {
-            LOG_TRACEF("entity %i picked up %s\n", player, this.m_name);
+            LOG_DEBUGF("entity %i picked up %s\n", player, this.m_name);
             player.inventory.inv_items[this.m_id]++;
             Inventory_update(player);
         }

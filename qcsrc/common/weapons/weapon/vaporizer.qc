@@ -140,6 +140,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	setthink(this, SUB_Remove);
 	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	this.draw = VaporizerBeam_Draw;
+	if (isNew) IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
 	this.vorg1_x = ReadCoord(); this.vorg1_y = ReadCoord(); this.vorg1_z = ReadCoord();
@@ -157,7 +158,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 		WarpZone_TrailParticles(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
 		this.draw = func_null;
 		this.drawmask = MASK_NORMAL;
-		remove(this);
+		delete(this);
 	}
 
 	return true;
@@ -176,7 +177,7 @@ void W_RocketMinsta_Explosion(entity actor, vector loc)
 	dmgent.owner = dmgent.realowner = actor;
 	setorigin(dmgent, loc);
 	RadiusDamage (dmgent, actor, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, NULL, NULL, autocvar_g_rm_force, WEP_DEVASTATOR.m_id | HITTYPE_SPLASH, other);
-	remove(dmgent);
+	delete(dmgent);
 }
 
 void W_Vaporizer_Attack(Weapon thiswep, entity actor)
@@ -225,7 +226,7 @@ void W_RocketMinsta_Laser_Explode (entity this)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, other);
-	remove(this);
+	delete(this);
 }
 
 void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
@@ -233,12 +234,12 @@ void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
 	W_RocketMinsta_Laser_Explode(this);
 }
 
-void W_RocketMinsta_Laser_Touch (entity this)
+void W_RocketMinsta_Laser_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 	//W_RocketMinsta_Laser_Explode ();
-	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, other);
-	remove(this);
+	RadiusDamage(this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, toucher);
+	delete(this);
 }
 
 void W_RocketMinsta_Attack2(entity actor)
@@ -277,7 +278,7 @@ void W_RocketMinsta_Attack2(entity actor)
 
         //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
-        proj.movetype = MOVETYPE_BOUNCEMISSILE;
+        set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
         //W_SETUPPROJECTILEVELOCITY(proj, g_balance_minstanex_laser);
 		proj.velocity = (w_shotdir + (((counter + 0.5) / total) * 2 - 1) * v_right * (spread * (rndspread ? random() : 1))) * cvar("g_rm_laser_speed");
 		proj.velocity_z = proj.velocity_z + cvar("g_rm_laser_zspread") * (random() - 0.5);
@@ -286,6 +287,7 @@ void W_RocketMinsta_Attack2(entity actor)
         settouch(proj, W_RocketMinsta_Laser_Touch);
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
+        IL_PUSH(g_projectiles, proj);
         proj.missile_flags = MIF_SPLASH;
 
         CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);
@@ -329,13 +331,14 @@ void W_RocketMinsta_Attack3 (entity actor)
 
         //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
-        proj.movetype = MOVETYPE_BOUNCEMISSILE;
+        set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
 		proj.velocity = w_shotdir * autocvar_g_rm_laser_speed;
 		proj.velocity = W_CalculateProjectileVelocity(actor, actor.velocity, proj.velocity, true);
         proj.angles = vectoangles(proj.velocity);
         settouch(proj, W_RocketMinsta_Laser_Touch);
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
+        IL_PUSH(g_projectiles, proj);
         proj.missile_flags = MIF_SPLASH;
 
         CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);

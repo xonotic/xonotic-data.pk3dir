@@ -68,18 +68,18 @@ void ItemDraw(entity this)
     if(this.gravity)
     {
         Movetype_Physics_MatchServer(this, false);
-        if(this.move_flags & FL_ONGROUND)
-        { // For some reason move_avelocity gets set to '0 0 0' here ...
+        if(IS_ONGROUND(this))
+        { // For some reason avelocity gets set to '0 0 0' here ...
             this.oldorigin = this.origin;
             this.gravity = 0;
 
             if(autocvar_cl_animate_items)
             { // ... so reset it if animations are requested.
                 if(this.ItemStatus & ITS_ANIMATE1)
-                    this.move_avelocity = '0 180 0';
+                    this.avelocity = '0 180 0';
 
                 if(this.ItemStatus & ITS_ANIMATE2)
-                    this.move_avelocity = '0 -90 0';
+                    this.avelocity = '0 -90 0';
             }
         }
     }
@@ -87,13 +87,13 @@ void ItemDraw(entity this)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
         {
-            this.angles += this.move_avelocity * frametime;
+            this.angles += this.avelocity * frametime;
             setorigin(this, '0 0 10' + this.oldorigin + '0 0 8' * sin(time * 2));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
-            this.angles += this.move_avelocity * frametime;
+            this.angles += this.avelocity * frametime;
             setorigin(this, '0 0 8' + this.oldorigin + '0 0 4' * sin(time * 3));
         }
     }
@@ -107,7 +107,7 @@ void ItemDrawSimple(entity this)
     {
         Movetype_Physics_MatchServer(this, false);
 
-        if(this.move_flags & FL_ONGROUND)
+        if(IS_ONGROUND(this))
             this.gravity = 0;
     }
 
@@ -164,7 +164,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.angles_x = ReadAngle();
         this.angles_y = ReadAngle();
         this.angles_z = ReadAngle();
-        this.move_angles = this.angles;
     }
 
     if(sf & ISF_SIZE)
@@ -195,10 +194,11 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     if(sf & ISF_MODEL)
     {
         this.drawmask  = MASK_NORMAL;
-		this.move_movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
+		if (isnew) IL_PUSH(g_drawables, this);
         this.draw       = ItemDraw;
         this.solid = SOLID_TRIGGER;
-        //this.move_flags |= FL_ITEM;
+        //this.flags |= FL_ITEM;
 
         bool use_bigsize = ReadByte();
 
@@ -253,13 +253,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     {
         this.gravity = 1;
         this.pushable = true;
-        //this.move_angles = '0 0 0';
-        this.move_movetype = MOVETYPE_TOSS;
-        this.move_velocity_x = ReadCoord();
-        this.move_velocity_y = ReadCoord();
-        this.move_velocity_z = ReadCoord();
-        this.velocity = this.move_velocity;
-        this.move_origin = this.oldorigin;
+        //this.angles = '0 0 0';
+        set_movetype(this, MOVETYPE_TOSS);
+        this.velocity_x = ReadCoord();
+        this.velocity_y = ReadCoord();
+        this.velocity_z = ReadCoord();
+        setorigin(this, this.oldorigin);
 
         if(!this.move_time)
         {
@@ -273,10 +272,10 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     if(autocvar_cl_animate_items)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
-            this.move_avelocity = '0 180 0';
+            this.avelocity = '0 180 0';
 
         if(this.ItemStatus & ITS_ANIMATE2)
-            this.move_avelocity = '0 -90 0';
+            this.avelocity = '0 -90 0';
     }
 
     this.entremove = ItemRemove;
@@ -761,7 +760,7 @@ LABEL(skip)
 	return 1;
 }
 
-void Item_Touch(entity this)
+void Item_Touch(entity this, entity toucher)
 {
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
@@ -769,26 +768,26 @@ void Item_Touch(entity this)
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
-			remove(this);
+			delete(this);
 			return;
 		}
 	}
 
-	if(!(other.flags & FL_PICKUPITEMS)
-	|| STAT(FROZEN, other)
-	|| IS_DEAD(other)
+	if(!(toucher.flags & FL_PICKUPITEMS)
+	|| STAT(FROZEN, toucher)
+	|| IS_DEAD(toucher)
 	|| (this.solid != SOLID_TRIGGER)
-	|| (this.owner == other)
+	|| (this.owner == toucher)
 	|| (time < this.item_spawnshieldtime)
 	) { return; }
 
-	switch (MUTATOR_CALLHOOK(ItemTouch, this, other))
+	switch (MUTATOR_CALLHOOK(ItemTouch, this, toucher))
 	{
 		case MUT_ITEMTOUCH_RETURN: { return; }
-		case MUT_ITEMTOUCH_PICKUP: { other = M_ARGV(1, entity); goto pickup; }
+		case MUT_ITEMTOUCH_PICKUP: { toucher = M_ARGV(1, entity); goto pickup; }
 	}
 
-	other = M_ARGV(1, entity);
+	toucher = M_ARGV(1, entity);
 
 	if (this.classname == "droppedweapon")
 	{
@@ -797,7 +796,7 @@ void Item_Touch(entity this)
 		this.superweapons_finished = max(0, this.superweapons_finished - time);
 	}
 	entity it = this.itemdef;
-	bool gave = ITEM_HANDLE(Pickup, it, this, other);
+	bool gave = ITEM_HANDLE(Pickup, it, this, toucher);
 	if (!gave)
 	{
 		if (this.classname == "droppedweapon")
@@ -812,28 +811,28 @@ void Item_Touch(entity this)
 
 LABEL(pickup)
 
-	other.last_pickup = time;
+	toucher.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	_sound (other, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
+	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
-		remove (this);
+		delete (this);
 	else if (this.spawnshieldtime)
 	{
 		entity e;
 		if(this.team)
 		{
 			RandomSelection_Init();
-			for(entity head = NULL; (head = findfloat(head, team, this.team)); )
+			FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 			{
-				if(head.flags & FL_ITEM)
-				if(head.classname != "item_flag_team" && head.classname != "item_key_team")
+				if(it.team == this.team)
+				if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 				{
-					Item_Show(head, -1);
-					RandomSelection_Add(head, 0, string_null, head.cnt, 0);
+					Item_Show(it, -1);
+					RandomSelection_Add(it, 0, string_null, it.cnt, 0);
 				}
-			}
+			});
 			e = RandomSelection_chosen_ent;
 
 		}
@@ -905,7 +904,7 @@ void RemoveItem(entity this)
 {
 	if(wasfreed(this) || !this) { return; }
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	remove(this);
+	delete(this);
 }
 
 // pickup evaluation functions
@@ -1070,7 +1069,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if(MUTATOR_CALLHOOK(FilterItem, this)) // error means we do not want the item
 	{
 		startitem_failed = true;
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -1079,7 +1078,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	{
 		this.reset = SUB_Remove;
 		// it's a dropped weapon
-		this.movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		setthink(this, RemoveItem);
@@ -1099,7 +1098,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 		{
 			startitem_failed = true;
-			remove(this);
+			delete(this);
 			return;
 		}
 	}
@@ -1108,7 +1107,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
-			remove (this);
+			delete (this);
 			return;
 		}
 
@@ -1120,9 +1119,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(this.spawnflags & 1)
 			this.noalign = 1;
 		if (this.noalign > 0)
-			this.movetype = MOVETYPE_NONE;
+			set_movetype(this, MOVETYPE_NONE);
 		else
-			this.movetype = MOVETYPE_TOSS;
+			set_movetype(this, MOVETYPE_TOSS);
 		// do item filtering according to game mode and other things
 		if (this.noalign <= 0)
 		{
@@ -1227,7 +1226,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if (MUTATOR_CALLHOOK(Item_Spawn, this))
 	{
 		startitem_failed = true;
-		remove(this);
+		delete(this);
 		return;
 	}
 }
@@ -1421,12 +1420,10 @@ spawnfunc(item_quad) { this.classname = "item_strength";spawnfunc_item_strength(
 
 void target_items_use(entity this, entity actor, entity trigger)
 {
-	other = trigger; // TODO
-
 	if(actor.classname == "droppedweapon")
 	{
-		EXACTTRIGGER_TOUCH;
-		remove(actor);
+		EXACTTRIGGER_TOUCH(this, trigger);
+		delete(actor);
 		return;
 	}
 
@@ -1436,13 +1433,13 @@ void target_items_use(entity this, entity actor, entity trigger)
 		return;
 	if(trigger.solid == SOLID_TRIGGER)
 	{
-		EXACTTRIGGER_TOUCH;
+		EXACTTRIGGER_TOUCH(this, trigger);
 	}
 
 	FOREACH_ENTITY_ENT(enemy, actor,
 	{
 		if(it.classname == "droppedweapon")
-			remove(it);
+			delete(it);
 	});
 
 	if(GiveItems(actor, 0, tokenize_console(this.netname)))
@@ -1451,7 +1448,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 
 spawnfunc(target_items)
 {
-	float n, i;
+	int n, j;
 	string s;
 
 	this.use = target_items_use;
@@ -1469,20 +1466,20 @@ spawnfunc(target_items)
 	}
 	else
 	{
-		for(i = 0; i < n; ++i)
+		for(j = 0; j < n; ++j)
 		{
-			if     (argv(i) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
-			else if(argv(i) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
-			else if(argv(i) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
-			else if(argv(i) == "strength")               this.items |= ITEM_Strength.m_itemid;
-			else if(argv(i) == "invincible")             this.items |= ITEM_Shield.m_itemid;
-			else if(argv(i) == "superweapons")           this.items |= IT_SUPERWEAPON;
-			else if(argv(i) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
-			else if(argv(i) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
+			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
+			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
+			else if(argv(j) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
+			else if(argv(j) == "strength")               this.items |= ITEM_Strength.m_itemid;
+			else if(argv(j) == "invincible")             this.items |= ITEM_Shield.m_itemid;
+			else if(argv(j) == "superweapons")           this.items |= IT_SUPERWEAPON;
+			else if(argv(j) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
+			else if(argv(j) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
 				FOREACH(Weapons, it != WEP_Null, {
-					s = W_UndeprecateName(argv(i));
+					s = W_UndeprecateName(argv(j));
 					if(s == it.netname)
 					{
 						this.weapons |= (it.m_wepset);
@@ -1543,9 +1540,9 @@ spawnfunc(target_items)
 	//print(this.netname, "\n");
 
 	n = tokenize_console(this.netname);
-	for(i = 0; i < n; ++i)
+	for(j = 0; j < n; ++j)
 	{
-		FOREACH(Weapons, it != WEP_Null && argv(i) == it.netname, {
+		FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(argv(j)) == it.netname, {
             it.wr_init(it);
             break;
 		});
@@ -1768,7 +1765,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, ammo_fuel, op, val);
 				break;
 			default:
-				FOREACH(Weapons, it != WEP_Null && cmd == it.netname, {
+				FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(cmd) == it.netname, {
                     got += GiveWeapon(e, it.m_id, op, val);
                     break;
 				});

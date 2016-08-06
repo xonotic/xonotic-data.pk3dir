@@ -8,47 +8,46 @@ void conveyor_think(entity this)
 	this.move_time = time;
 	if(dt <= 0) { return; }
 #endif
-	entity e;
 
 	// set mythis as current conveyor where possible
-	for(e = NULL; (e = findentity(e, conveyor, this)); )
-		e.conveyor = NULL;
+	FOREACH_ENTITY_ENT(conveyor, this,
+	{
+		it.conveyor = NULL;
+	});
 
 	if(this.state)
 	{
-		for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
-			if(!e.conveyor.state)
-				if(isPushable(e))
-				{
-					vector emin = e.absmin;
-					vector emax = e.absmax;
-					if(this.solid == SOLID_BSP)
-					{
-						emin -= '1 1 1';
-						emax += '1 1 1';
-					}
-					if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
-						if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
-							e.conveyor = this;
-				}
-
-		for(e = NULL; (e = findentity(e, conveyor, this)); )
+		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, !it.conveyor.state && isPushable(it),
 		{
-			if(IS_CLIENT(e)) // doing it via velocity has quite some advantages
+			vector emin = it.absmin;
+			vector emax = it.absmax;
+			if(this.solid == SOLID_BSP)
+			{
+				emin -= '1 1 1';
+				emax += '1 1 1';
+			}
+			if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+				if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
+					it.conveyor = this;
+		});
+
+		FOREACH_ENTITY_ENT(conveyor, this,
+		{
+			if(IS_CLIENT(it)) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics	continue;
 
-			setorigin(e, e.origin + this.movedir * PHYS_INPUT_FRAMETIME);
-			move_out_of_solid(e);
+			setorigin(it, it.origin + this.movedir * PHYS_INPUT_FRAMETIME);
+			move_out_of_solid(it);
 #ifdef SVQC
-			UpdateCSQCProjectile(e);
+			UpdateCSQCProjectile(it);
 #endif
 			/*
 			// stupid conveyor code
-			tracebox(e.origin, e.mins, e.maxs, e.origin + this.movedir * sys_frametime, MOVE_NORMAL, e);
+			tracebox(it.origin, it.mins, it.maxs, it.origin + this.movedir * sys_frametime, MOVE_NORMAL, it);
 			if(trace_fraction > 0)
-				setorigin(e, trace_endpos);
+				setorigin(it, trace_endpos);
 			*/
-		}
+		});
 	}
 
 #ifdef SVQC
@@ -141,7 +140,7 @@ spawnfunc(func_conveyor)
 {
 	SetMovedir(this);
 	InitMovingBrushTrigger(this);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	conveyor_init(this);
 }
 
@@ -152,12 +151,12 @@ void conveyor_draw(entity this) { conveyor_think(this); }
 void conveyor_init(entity this)
 {
 	this.draw = conveyor_draw;
+	IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.model = "";
 	this.solid = SOLID_TRIGGER;
-	this.move_origin = this.origin;
 	this.move_time = time;
 }
 

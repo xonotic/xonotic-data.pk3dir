@@ -698,10 +698,10 @@ void checkpoint_passed(entity this, entity player)
 	}
 }
 
-void checkpoint_touch(entity this)
+void checkpoint_touch(entity this, entity toucher)
 {
-	EXACTTRIGGER_TOUCH;
-	checkpoint_passed(this, other);
+	EXACTTRIGGER_TOUCH(this, toucher);
+	checkpoint_passed(this, toucher);
 }
 
 void checkpoint_use(entity this, entity actor, entity trigger)
@@ -905,7 +905,7 @@ vector trigger_race_checkpoint_spawn_evalfunc(entity this, entity player, entity
 spawnfunc(trigger_race_checkpoint)
 {
 	vector o;
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 
 	EXACTTRIGGER_INIT;
 
@@ -953,7 +953,7 @@ spawnfunc(trigger_race_checkpoint)
 spawnfunc(target_checkpoint) // defrag entity
 {
 	vector o;
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
 
 	EXACTTRIGGER_INIT;
@@ -1031,7 +1031,7 @@ void race_RetractPlayer(entity this)
 
 spawnfunc(info_player_race)
 {
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 	++race_spawns;
 	spawnfunc_info_player_deathmatch(this);
 
@@ -1092,13 +1092,13 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 	}
 }
 
-void penalty_touch(entity this)
+void penalty_touch(entity this, entity toucher)
 {
-	EXACTTRIGGER_TOUCH;
-	if(other.race_lastpenalty != this)
+	EXACTTRIGGER_TOUCH(this, toucher);
+	if(toucher.race_lastpenalty != this)
 	{
-		other.race_lastpenalty = this;
-		race_ImposePenaltyTime(other, this.race_penalty, this.race_penalty_reason);
+		toucher.race_lastpenalty = this;
+		race_ImposePenaltyTime(toucher, this.race_penalty, this.race_penalty_reason);
 	}
 }
 

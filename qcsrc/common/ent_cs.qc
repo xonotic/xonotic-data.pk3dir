@@ -61,8 +61,9 @@
 		sf |= this.m_forceupdate;
 		this.m_forceupdate = 0;
 		bool valid =
-		    IS_PLAYER(player)             // player must be active
-		    || player == to               // player is self
+			time > game_starttime
+		    && (IS_PLAYER(player)          // player must be active
+		    || player == to)               // player is self
 		;
 		if (!valid) sf = 0;
 		if (chan == MSG_ENTITY)
@@ -117,7 +118,7 @@
 	void entcs_detach(entity player)
 	{
 		if (!player.entcs) return;
-		remove(player.entcs);
+		delete(player.entcs);
 		player.entcs = NULL;
 	}
 
@@ -130,7 +131,7 @@
 		int n = this.sv_entnum;
 		entity e = entcs_receiver(n);
 		entcs_receiver(n, NULL);
-		if (e != this) remove(e);
+		if (e != this) delete(e);
 	}
 
 	void entcs_think(entity this)

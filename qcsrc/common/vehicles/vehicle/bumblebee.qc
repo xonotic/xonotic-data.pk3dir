@@ -46,6 +46,7 @@ float autocvar_g_vehicle_bumblebee_turnspeed = 120;
 float autocvar_g_vehicle_bumblebee_pitchspeed = 60;
 float autocvar_g_vehicle_bumblebee_pitchlimit = 60;
 float autocvar_g_vehicle_bumblebee_friction = 0.5;
+bool autocvar_g_vehicle_bumblebee_swim = false;
 
 float autocvar_g_vehicle_bumblebee_energy = 500;
 float autocvar_g_vehicle_bumblebee_energy_regen = 50;
@@ -138,7 +139,7 @@ bool bumblebee_gunner_frame(entity this)
 			gun.enemy = NULL;
 
 		if(trace_ent)
-			if(trace_ent.movetype)
+			if(trace_ent.move_movetype)
 				if(trace_ent.takedamage)
 					if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 					{
@@ -156,7 +157,7 @@ bool bumblebee_gunner_frame(entity this)
 
 		vector vf = real_origin(gun.enemy);
 		vector _vel = gun.enemy.velocity;
-		if(gun.enemy.movetype == MOVETYPE_WALK)
+		if(gun.enemy.move_movetype == MOVETYPE_WALK)
 			_vel.z *= 0.1;
 
 
@@ -256,7 +257,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 
 	player.takedamage     = DAMAGE_AIM;
 	player.solid          = SOLID_SLIDEBOX;
-	player.movetype       = MOVETYPE_WALK;
+	set_movetype(player, MOVETYPE_WALK);
 	player.effects       &= ~EF_NODRAW;
 	player.alpha          = 1;
 	player.PlayerPhysplug = func_null;
@@ -297,15 +298,17 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	if(!vehic.gunner1 && !vehic.gunner2 && ((time >= vehic.gun1.phase) + (time >= vehic.gun2.phase)) == 2)
 	{
 		// we can have some fun
-		if(vlen2(real_origin(vehic.gun2) - player.origin) < vlen2(real_origin(vehic.gun1) - player.origin))
-		{
-			gunner = vehic.gun2;
-			vehic.gunner2 = player;
-		}
-		else
+		vector v1 = gettaginfo(vehic, gettagindex(vehic, "cannon_right"));
+		vector v2 = gettaginfo(vehic, gettagindex(vehic, "cannon_left"));
+		if(vlen2(player.origin - v1) < vlen2(player.origin - v2))
 		{
 			gunner = vehic.gun1;
 			vehic.gunner1 = player;
+		}
+		else
+		{
+			gunner = vehic.gun2;
+			vehic.gunner2 = player;
 		}
 	}
 	else if(!vehic.gunner1 && time >= vehic.gun1.phase) 	{ gunner = vehic.gun1; vehic.gunner1 = player; }
@@ -317,7 +320,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	player.takedamage 		= DAMAGE_NO;
 	player.solid 			= SOLID_NOT;
 	player.alpha 			= -1;
-	player.movetype 		= MOVETYPE_NOCLIP;
+	set_movetype(player, MOVETYPE_NOCLIP);
 	player.event_damage 	= func_null;
 	player.view_ofs 		= '0 0 0';
 	player.hud 				= gunner.hud;
@@ -328,7 +331,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	player.vehicle_reload1 	= vehic.vehicle_reload1;
 	player.vehicle_reload2 	= vehic.vehicle_reload2;
 	player.vehicle_energy 	= vehic.vehicle_energy;
-	player.flags 		   &= ~FL_ONGROUND;
+	UNSET_ONGROUND(player);
 
 	RemoveGrapplingHook(player);
 
@@ -369,26 +372,26 @@ bool vehicles_valid_pilot(entity this, entity toucher)
 	return true;
 }
 
-void bumblebee_touch(entity this)
+void bumblebee_touch(entity this, entity toucher)
 {
 	if(autocvar_g_vehicles_enter) { return; }
 
 	if(this.gunner1 != NULL && this.gunner2 != NULL)
 	{
-		vehicles_touch(this);
+		vehicles_touch(this, toucher);
 		return;
 	}
 
-	if(vehicles_valid_pilot(this, other))
+	if(vehicles_valid_pilot(this, toucher))
 	{
 		float phase_time = (time >= this.gun1.phase) + (time >= this.gun2.phase);
 
-		if(time >= other.vehicle_enter_delay && phase_time)
-		if(bumblebee_gunner_enter(this, other))
+		if(time >= toucher.vehicle_enter_delay && phase_time)
+		if(bumblebee_gunner_enter(this, toucher))
 			return;
 	}
 
-	vehicles_touch(this);
+	vehicles_touch(this, toucher);
 }
 
 void bumblebee_regen(entity this)
@@ -508,7 +511,7 @@ bool bumblebee_pilot_frame(entity this)
 			vehic.tur_head.enemy = NULL;
 
 		if(trace_ent)
-		if(trace_ent.movetype)
+		if(trace_ent.move_movetype)
 		if(trace_ent.takedamage)
 		if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 		{
@@ -562,7 +565,7 @@ bool bumblebee_pilot_frame(entity this)
 					if((teamplay && trace_ent.team == this.team) || !teamplay)
 					{
 
-						if(trace_ent.vehicle_flags & VHF_ISVEHICLE)
+						if(IS_VEHICLE(trace_ent))
 						{
 							if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.max_health)
 								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * frametime, trace_ent.tur_head.max_health);
@@ -629,7 +632,7 @@ void bumblebee_land(entity this)
 {
 	float hgt;
 
-	hgt = raptor_altitude(this, 512);
+	hgt = vehicle_altitude(this, 512);
 	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
 	this.angles_x *= 0.95;
 	this.angles_z *= 0.95;
@@ -658,7 +661,7 @@ void bumblebee_exit(entity this, int eject)
 		this.nextthink  = time;
 	}
 
-	this.movetype = MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 
 	if(!this.owner)
 		return;
@@ -698,7 +701,12 @@ void bumblebee_blowup(entity this)
 	if(this.owner.deadflag == DEAD_DYING)
 		this.owner.deadflag = DEAD_DEAD;
 
-	remove(this);
+	delete(this);
+}
+
+void bumblebee_dead_touch(entity this, entity toucher)
+{
+	bumblebee_blowup(this);
 }
 
 void bumblebee_diethink(entity this)
@@ -717,8 +725,8 @@ void bumblebee_diethink(entity this)
 
 spawnfunc(vehicle_bumblebee)
 {
-	if(!autocvar_g_vehicle_bumblebee) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_BUMBLEBEE, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_bumblebee) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_BUMBLEBEE, false)) { delete(this); return; }
 }
 
 METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh, entity instance))
@@ -730,7 +738,21 @@ METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
 {
     settouch(instance, bumblebee_touch);
     instance.nextthink = 0;
-    instance.movetype = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
+}
+METHOD(Bumblebee, vr_gunner_enter, void(Bumblebee thisveh, entity instance, entity actor))
+{
+	if(!instance.gunner1)
+	if(time >= instance.gun1.phase)
+	if(instance.gun1.vehicle_enter)
+	if(instance.gun1.vehicle_enter(instance, actor))
+		return;
+
+	if(!instance.gunner2)
+	if(time >= instance.gun2.phase)
+	if(instance.gun2.vehicle_enter)
+	if(instance.gun2.vehicle_enter(instance, actor))
+		return;
 }
 METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 {
@@ -745,11 +767,8 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         {
         	entity e = instance.gunner1;
         	instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
-        	entity oldother = other;
-        	other = e;
         	instance.phase = 0;
-        	gettouch(instance)(instance);
-        	other = oldother;
+        	gettouch(instance)(instance, e);
         	return;
         }
 
@@ -757,11 +776,8 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         {
         	entity e = instance.gunner2;
         	instance.gun2.vehicle_exit(instance.gun2, VHEF_EJECT);
-        	entity oldother = other;
-        	other = e;
         	instance.phase = 0;
-        	gettouch(instance)(instance);
-        	other = oldother;
+        	gettouch(instance)(instance, e);
             return;
         }
     }
@@ -790,7 +806,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     entity _body = vehicle_tossgib(instance, instance, instance.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
 
     if(random() > 0.5)
-        settouch(_body, bumblebee_blowup);
+        settouch(_body, bumblebee_dead_touch);
     else
         settouch(_body, func_null);
 
@@ -809,7 +825,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     instance.solid			= SOLID_NOT;
     instance.takedamage		= DAMAGE_NO;
     instance.deadflag		= DEAD_DYING;
-    instance.movetype		= MOVETYPE_NONE;
+    set_movetype(instance, MOVETYPE_NONE);
     instance.effects		= EF_NODRAW;
     instance.colormod		= '0 0 0';
     instance.avelocity		= '0 0 0';
@@ -886,10 +902,13 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
         }
     }
 
+    if(!autocvar_g_vehicle_bumblebee_swim)
+    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
+
     instance.vehicle_health = autocvar_g_vehicle_bumblebee_health;
     instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
     instance.solid = SOLID_BBOX;
-    instance.movetype = MOVETYPE_TOSS;
+    set_movetype(instance, MOVETYPE_TOSS);
     instance.damageforcescale = 0.025;
 
     instance.PlayerPhysplug = bumblebee_pilot_frame;

@@ -55,7 +55,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 			LOG_INFO("url_URI_Get_Callback: out of memory in buf_create\n");
 			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 			strunzone(e.url_url);
-			remove(e);
+			delete(e);
 			return 1;
 		}
 		e.url_rbufpos = 0;
@@ -64,7 +64,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 			LOG_INFO("url_URI_Get_Callback: out of memory in buf_create\n");
 			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 			strunzone(e.url_url);
-			remove(e);
+			delete(e);
 			return 1;
 		}
 		for (i = 0; i < n; ++i)
@@ -77,7 +77,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 		// an ERROR
 		e.url_ready(e, e.url_ready_pass, -fabs(status));
 		strunzone(e.url_url);
-		remove(e);
+		delete(e);
 		return 1;
 	}
 }
@@ -107,7 +107,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 					LOG_INFO("url_single_fopen: out of memory in buf_create\n");
 					rdy(e, pass, URL_READY_ERROR);
 					strunzone(e.url_url);
-					remove(e);
+					delete(e);
 					return;
 				}
 				e.url_wbufpos = 0;
@@ -229,7 +229,7 @@ void url_fclose(entity e)
 					e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 					buf_del(e.url_wbuf);
 					strunzone(e.url_url);
-					remove(e);
+					delete(e);
 					return;
 				}
 			}
@@ -241,7 +241,7 @@ void url_fclose(entity e)
 				e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 				buf_del(e.url_wbuf);
 				strunzone(e.url_url);
-				remove(e);
+				delete(e);
 				return;
 			}
 
@@ -262,20 +262,20 @@ void url_fclose(entity e)
 			e.url_ready(e, e.url_ready_pass, URL_READY_CLOSED);
 			buf_del(e.url_rbuf);
 			strunzone(e.url_url);
-			remove(e);
+			delete(e);
 		}
 	}
 	else if (e.url_fh == URL_FH_STDOUT)
 	{
 		e.url_ready(e, e.url_ready_pass, URL_READY_CLOSED);  // closing creates no reading handle
-		remove(e);
+		delete(e);
 	}
 	else
 	{
 		// file
 		fclose(e.url_fh);
 		e.url_ready(e, e.url_ready_pass, URL_READY_CLOSED);  // closing creates no reading handle
-		remove(e);
+		delete(e);
 	}
 }
 
@@ -336,7 +336,7 @@ void url_multi_ready(entity fh, entity me, float status)
 			LOG_INFO("uri_multi_ready: got HTTP error 422, data is in unusable format - not continuing\n");
 			me.url_ready(fh, me.url_ready_pass, status);
 			strunzone(me.url_url);
-			remove(me);
+			delete(me);
 			return;
 		}
 		me.url_attempt += 1;
@@ -345,7 +345,7 @@ void url_multi_ready(entity fh, entity me, float status)
 		{
 			me.url_ready(fh, me.url_ready_pass, status);
 			strunzone(me.url_url);
-			remove(me);
+			delete(me);
 			return;
 		}
 		url_single_fopen(argv(me.url_attempt), me.url_mode, url_multi_ready, me);

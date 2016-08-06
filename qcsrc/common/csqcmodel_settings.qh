@@ -28,7 +28,7 @@
 # define TAG_VIEWLOC_NAME viewloc
 # define TAG_VIEWLOC_TYPE entity
 
-# define MOVETYPE_NAME movetype
+# define MOVETYPE_NAME move_movetype
 #endif
 
 // new fields

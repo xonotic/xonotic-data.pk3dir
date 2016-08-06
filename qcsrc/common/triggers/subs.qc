@@ -14,7 +14,7 @@ Applies some friction to this
 void SUB_Friction (entity this)
 {
 	this.SUB_NEXTTHINK = time;
-	if(this.SUB_FLAGS & FL_ONGROUND)
+	if(IS_ONGROUND(this))
 		this.SUB_VELOCITY = this.SUB_VELOCITY * (1 - frametime * this.friction);
 }
 
@@ -40,7 +40,7 @@ void SUB_VanishOrRemove (entity ent)
 	else
 	{
 		// remove
-		remove (ent);
+		delete (ent);
 	}
 }
 
@@ -144,7 +144,7 @@ void SUB_CalcMove_controller_think (entity this)
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
 		entity own = this.owner;
 		SUB_THINK(own, this.think1);
-		remove(this);
+		delete(this);
 		SUB_THUNK(own)(own);
 	}
 }

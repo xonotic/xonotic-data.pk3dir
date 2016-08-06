@@ -159,7 +159,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 		if(player.race_penalty)
 		{
 			player.velocity = '0 0 0';
-			player.movetype = MOVETYPE_NONE;
+			set_movetype(player, MOVETYPE_NONE);
 			player.disableclientprediction = 2;
 		}
 	}
@@ -463,6 +463,14 @@ void rc_SetLimits()
 	{
 		ActivateTeamplay();
 		race_teams = bound(2, autocvar_g_race_teams, 4);
+		int teams = 0;
+		if(race_teams >= 1) teams |= BIT(0);
+		if(race_teams >= 2) teams |= BIT(1);
+		if(race_teams >= 3) teams |= BIT(2);
+		if(race_teams >= 4) teams |= BIT(3);
+
+		race_teams = teams; // now set it?
+
 		have_team_spawns = -1; // request team spawns
 	}
 	else

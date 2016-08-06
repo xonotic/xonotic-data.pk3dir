@@ -5,9 +5,9 @@ void player_clear_minigame(entity player)
 	player.active_minigame = NULL;
 	player.minigame_players = NULL;
 	if ( IS_PLAYER(player) )
-		player.movetype = MOVETYPE_WALK;
+		set_movetype(player, MOVETYPE_WALK);
 	else
-		player.movetype = MOVETYPE_FLY_WORLDONLY;
+		set_movetype(player, MOVETYPE_FLY_WORLDONLY);
 	player.team_forced = 0;
 }
 
@@ -27,7 +27,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 		GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
 			ftos(etof(player)),":",player.netname));
 		minigame_session.minigame_players = p.list_next;
-		remove ( p );
+		delete ( p );
 		player_clear_minigame(player);
 	}
 	else
@@ -40,7 +40,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 				GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
 					ftos(etof(player)),":",player.netname));
 				p.list_next = e.list_next;
-				remove(e);
+				delete(e);
 				player_clear_minigame(player);
 				return;
 			}
@@ -112,11 +112,11 @@ void minigame_resend(entity minigame)
 	}
 }
 
-bool minigame_CheckSend(entity this)
+bool minigame_CheckSend(entity this, entity client)
 {
 	entity e;
 	for ( e = this.owner.minigame_players; e != NULL; e = e.list_next )
-		if ( e.minigame_players == other )
+		if ( e.minigame_players == client )
 			return true;
 	return false;
 }
@@ -153,7 +153,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 
 		minigame_resend(minigame_session);
 	}
-	else { remove(player_pointer); }
+	else { delete(player_pointer); }
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
 		ftos(etof(player)),":",player.netname));
 
@@ -236,7 +236,7 @@ void end_minigame(entity minigame_session)
 		if ( e.minigame_autoclean )
 		{
 			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
-			remove(e);
+			delete(e);
 		}
 
 	entity p;
@@ -244,11 +244,11 @@ void end_minigame(entity minigame_session)
 	{
 		p = e.list_next;
 		player_clear_minigame(e.minigame_players);
-		remove(e);
+		delete(e);
 	}
 
 	strunzone(minigame_session.netname);
-	remove(minigame_session);
+	delete(minigame_session);
 }
 
 void end_minigames()

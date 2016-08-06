@@ -198,7 +198,7 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 	return true;
 }
 
-void ScoreInfo_Init(float teams)
+void ScoreInfo_Init(int teams)
 {
 	if(scores_initialized)
 	{
@@ -209,13 +209,13 @@ void ScoreInfo_Init(float teams)
 		scores_initialized = new_pure(ent_client_scoreinfo);
 		Net_LinkEntity(scores_initialized, false, 0, ScoreInfo_SendEntity);
 	}
-	if(teams >= 1)
+	if(teams & BIT(0))
 		TeamScore_Spawn(NUM_TEAM_1, "Red");
-	if(teams >= 2)
+	if(teams & BIT(1))
 		TeamScore_Spawn(NUM_TEAM_2, "Blue");
-	if(teams >= 3)
+	if(teams & BIT(2))
 		TeamScore_Spawn(NUM_TEAM_3, "Yellow");
-	if(teams >= 4)
+	if(teams & BIT(3))
 		TeamScore_Spawn(NUM_TEAM_4, "Pink");
 }
 
@@ -314,7 +314,7 @@ void PlayerScore_Detach(entity player)
 {
 	if(!player.scorekeeper)
 		error("player has no scorekeeper");
-	remove(player.scorekeeper);
+	delete(player.scorekeeper);
 	player.scorekeeper = NULL;
 }
 

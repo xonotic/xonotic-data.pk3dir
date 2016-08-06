@@ -92,12 +92,12 @@ REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 	}
 }
 
-bool buffs_BuffModel_Customize(entity this)
+bool buffs_BuffModel_Customize(entity this, entity client)
 {
 	entity player, myowner;
 	bool same_team;
 
-	player = WaypointSprite_getviewentity(other);
+	player = WaypointSprite_getviewentity(client);
 	myowner = this.owner;
 	same_team = (SAME_TEAM(player, myowner) || SAME_TEAM(player, myowner));
 
@@ -107,7 +107,7 @@ bool buffs_BuffModel_Customize(entity this)
 	if(MUTATOR_CALLHOOK(BuffModel_Customize, this, player))
 		return false;
 
-	if(player == myowner || (IS_SPEC(other) && other.enemy == myowner))
+	if(player == myowner || (IS_SPEC(client) && client.enemy == myowner))
 	{
 		// somewhat hide the model, but keep the glow
 		this.effects = 0;
@@ -207,7 +207,7 @@ void buff_Respawn(entity this)
 
 	setorigin(this, trace_endpos); // attempt to unstick
 
-	this.movetype = MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 
 	makevectors(this.angles);
 	this.angles = '0 0 0';
@@ -222,7 +222,7 @@ void buff_Respawn(entity this)
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
-void buff_Touch(entity this)
+void buff_Touch(entity this, entity toucher)
 {
 	if(gameover) { return; }
 
@@ -232,9 +232,9 @@ void buff_Touch(entity this)
 		return;
 	}
 
-	if((this.team && DIFF_TEAM(other, this))
-	|| (STAT(FROZEN, other))
-	|| (other.vehicle)
+	if((this.team && DIFF_TEAM(toucher, this))
+	|| (STAT(FROZEN, toucher))
+	|| (toucher.vehicle)
 	|| (!this.buff_active)
 	)
 	{
@@ -242,37 +242,37 @@ void buff_Touch(entity this)
 		return;
 	}
 
-	if(MUTATOR_CALLHOOK(BuffTouch, this, other))
+	if(MUTATOR_CALLHOOK(BuffTouch, this, toucher))
 		return;
-	other = M_ARGV(1, entity);
+	toucher = M_ARGV(1, entity);
 
-	if(!IS_PLAYER(other))
-		return; // incase mutator changed other
+	if(!IS_PLAYER(toucher))
+		return; // incase mutator changed toucher
 
-	if (other.buffs)
+	if (toucher.buffs)
 	{
-		if (other.cvar_cl_buffs_autoreplace && other.buffs != this.buffs)
+		if (toucher.cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
 		{
-			int buffid = buff_FirstFromFlags(other.buffs).m_id;
-			//Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_DROP, other.buffs);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, buffid);
+			int buffid = buff_FirstFromFlags(toucher.buffs).m_id;
+			//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_DROP, toucher.buffs);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
 
-			other.buffs = 0;
-			//sound(other, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+			toucher.buffs = 0;
+			//sound(toucher, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		}
 		else { return; } // do nothing
 	}
 
-	this.owner = other;
+	this.owner = toucher;
 	this.buff_active = false;
 	this.lifetime = 0;
 	int buffid = buff_FirstFromFlags(this.buffs).m_id;
-	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, buffid);
-	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, buffid);
+	Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_GOT, buffid);
+	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_INFO, INFO_ITEM_BUFF, toucher.netname, buffid);
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	sound(other, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
-	other.buffs |= (this.buffs);
+	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
+	toucher.buffs |= (this.buffs);
 }
 
 float buff_Available(entity buff)
@@ -390,9 +390,9 @@ void buff_Reset(entity this)
 		buff_Respawn(this);
 }
 
-float buff_Customize(entity this)
+bool buff_Customize(entity this, entity client)
 {
-	entity player = WaypointSprite_getviewentity(other);
+	entity player = WaypointSprite_getviewentity(client);
 	if(!this.buff_active || (this.team && DIFF_TEAM(player, this)))
 	{
 		this.alpha = 0.3;
@@ -411,7 +411,7 @@ float buff_Customize(entity this)
 
 void buff_Init(entity this)
 {
-	if(!cvar("g_buffs")) { remove(this); return; }
+	if(!cvar("g_buffs")) { delete(this); return; }
 
 	if(!teamplay && this.team) { this.team = 0; }
 
@@ -428,7 +428,7 @@ void buff_Init(entity this)
 	this.reset = buff_Reset;
 	this.nextthink = time + 0.1;
 	this.gravity = 1;
-	this.movetype = MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 	this.scale = 1;
 	this.skin = buff.m_skin;
 	this.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
@@ -445,7 +445,7 @@ void buff_Init(entity this)
 		this.noalign = true;
 
 	if(this.noalign)
-		this.movetype = MOVETYPE_NONE; // reset by random location
+		set_movetype(this, MOVETYPE_NONE); // reset by random location
 
 	setmodel(this, MDL_BUFF);
 	setsize(this, BUFF_MIN, BUFF_MAX);
@@ -480,7 +480,7 @@ void buff_Vengeance_DelayedDamage(entity this)
 	if(this.enemy)
 		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, this.enemy.origin, '0 0 0');
 
-	remove(this);
+	delete(this);
 	return;
 }
 
@@ -626,6 +626,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.buffs = 0;
+	player.buff_time = 0;
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
@@ -689,7 +690,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 
 		if(frag_target.buff_model)
 		{
-			remove(frag_target.buff_model);
+			delete(frag_target.buff_model);
 			frag_target.buff_model = NULL;
 		}
 	}
@@ -708,6 +709,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		player.buffs = 0;
+		player.buff_time = 0; // already notified
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
@@ -786,7 +788,7 @@ bool buffs_RemovePlayer(entity player)
 {
 	if(player.buff_model)
 	{
-		remove(player.buff_model);
+		delete(player.buff_model);
 		player.buff_model = NULL;
 	}
 
@@ -870,9 +872,12 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	// 2: notify carrier as well
 	int buff_lost = 0;
 
-	if(player.buff_time)
+	if(player.buff_time && player.buffs)
 	if(time >= player.buff_time)
+	{
+		player.buff_time = 0;
 		buff_lost = 2;
+	}
 
 	if(STAT(FROZEN, player)) { buff_lost = 1; }
 
@@ -881,12 +886,13 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		if(player.buffs)
 		{
 			int buffid = buff_FirstFromFlags(player.buffs).m_id;
-			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
-			if(buff_lost >= 2)
+			if(buff_lost == 2)
 			{
 				Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
 				sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 			}
+			else
+				Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 			player.buffs = 0;
 		}
 	}
@@ -904,12 +910,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			if(boxesoverlap(player.absmin - pickup_size, player.absmax + pickup_size, it.absmin, it.absmax))
 			{
 				if(gettouch(it))
-				{
-					entity oldother = other;
-					other = player;
-					gettouch(it)(it);
-					other = oldother;
-				}
+					gettouch(it)(it, player);
 			}
 		});
 	}
@@ -985,7 +986,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 		else
 		{
-			remove(player.buff_model);
+			delete(player.buff_model);
 			player.buff_model = NULL;
 
 			player.effects &= ~(EF_NOSHADOW);

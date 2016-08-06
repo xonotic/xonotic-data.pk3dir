@@ -130,19 +130,22 @@ void Item_ItemsTime_SetTime(entity e, float t)
 
 void Item_ItemsTime_SetTimesForAllPlayers()
 {
-    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it)), LAMBDA(Item_ItemsTime_SetTimesForPlayer(it)));
+    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it) || autocvar_sv_itemstime == 2), LAMBDA(Item_ItemsTime_SetTimesForPlayer(it)));
 }
 
 float Item_ItemsTime_UpdateTime(entity e, float t)
 {
     bool isavailable = (t == 0);
-    FOREACH_ENTITY(it.itemdef == e.itemdef || ((e.weapons & WEPSET_SUPERWEAPONS) && (it.weapons & WEPSET_SUPERWEAPONS) && clienttype(it) == CLIENTTYPE_NOTACLIENT), LAMBDA(
+    FOREACH_ENTITY_FLOAT(pure_data, false,
+    {
+        if(!(it.itemdef == e.itemdef || ((e.weapons & WEPSET_SUPERWEAPONS) && (it.weapons & WEPSET_SUPERWEAPONS) && clienttype(it) == CLIENTTYPE_NOTACLIENT)))
+            continue;
         if (e == it) continue;
         if (it.scheduledrespawntime <= time)
             isavailable = true;
         else if (t == 0 || it.scheduledrespawntime < t)
             t = it.scheduledrespawntime;
-    ));
+    });
     if (isavailable)
         t = -t; // let know the client there's another available item
     return t;
@@ -153,9 +156,12 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
     Item_ItemsTime_ResetTimes();
     // ALL the times need to be reset before .reset()ing each item
     // since Item_Reset schedules respawn of superweapons and powerups
-    FOREACH_ENTITY(IS_NOT_A_CLIENT(it), LAMBDA(
+    FOREACH_ENTITY_FLOAT(pure_data, false,
+    {
+        if(IS_CLIENT(it))
+            continue;
         if (it.reset) Item_ItemsTime_SetTime(it, 0);
-    ));
+    });
     Item_ItemsTime_SetTimesForAllPlayers();
 }
 
@@ -174,14 +180,14 @@ MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)
 	{
 		// client became player on connection skipping putObserverInServer step
 		if (IS_REAL_CLIENT(player))
-		if (warmup_stage)
+		if (warmup_stage || autocvar_sv_itemstime == 2)
 			Item_ItemsTime_SetTimesForPlayer(player);
 	}
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
 {
-    if (warmup_stage) return;
+    if (warmup_stage || autocvar_sv_itemstime == 2) return;
     entity player = M_ARGV(0, entity);
 
     Item_ItemsTime_ResetTimesForPlayer(player);
@@ -264,7 +270,7 @@ void HUD_ItemsTime()
     {
         if (!(
             (autocvar_hud_panel_itemstime == 1 && spectatee_status != 0)
-        ||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage))
+        ||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage || STAT(ITEMSTIME) == 2))
             )) { return; }
     }
     else

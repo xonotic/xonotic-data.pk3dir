@@ -40,10 +40,10 @@ float W_WeaponSpeedFactor(entity this)
 }
 
 
-bool CL_Weaponentity_CustomizeEntityForClient(entity this)
+bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 {
 	this.viewmodelforclient = this.owner;
-	if (IS_SPEC(other) && other.enemy == this.owner) this.viewmodelforclient = other;
+	if (IS_SPEC(client) && client.enemy == this.owner) this.viewmodelforclient = client;
 	return true;
 }
 
@@ -54,7 +54,7 @@ vector CL_Weapon_GetShotOrg(int wpn)
 	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
 	CL_WeaponEntity_SetModel(e, "", false);
-	remove(e);
+	delete(e);
 	return ret;
 }
 
@@ -69,8 +69,8 @@ void CL_Weaponentity_Think(entity this)
 	if (this.owner.(weaponentity) != this)
 	{
 		// owner has new gun; remove old one
-		if (this.weaponchild) remove(this.weaponchild);
-		remove(this);
+		if (this.weaponchild) delete(this.weaponchild);
+		delete(this);
 		return;
 	}
 	if (IS_DEAD(this.owner))
@@ -110,7 +110,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	this.nextthink = time;
 	if (this.owner.exteriorweaponentity != this)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	if (IS_DEAD(this.owner))
@@ -214,8 +214,12 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	if (ammo) return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
-		for (entity mine; (mine = find(mine, classname, "mine")); )
-			if (mine.owner == actor) return false;
+	{
+		IL_EACH(g_mines, it.owner == actor,
+		{
+			return false;
+		});
+	}
 
 	if (thiswep == WEP_SHOTGUN)
 		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;           // no clicking, just allow
@@ -386,7 +390,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		int act = (fr == WFRAME_FIRE2 && (PS(actor).m_weapon == WEP_SHOCKWAVE || PS(actor).m_weapon == WEP_SHOTGUN))
+		bool primary_melee = boolean(fr == WFRAME_FIRE1 && (PS(actor).m_weapon.spawnflags & WEP_TYPE_MELEE_PRI));
+		bool secondary_melee = boolean(fr == WFRAME_FIRE2 && (PS(actor).m_weapon.spawnflags & WEP_TYPE_MELEE_SEC));
+		int act = (primary_melee || secondary_melee)
 			? ANIMACTION_MELEE
 			: ANIMACTION_SHOOT
 			;
@@ -403,6 +409,7 @@ bool forbidWeaponUse(entity player)
 	if (time < game_starttime && !autocvar_sv_ready_restart_after_countdown) return true;
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
 	if (player.player_blocked) return true;
+	if (gameover) return true;
 	if (STAT(FROZEN, player)) return true;
 	if (player.weapon_blocked) return true;
 	return false;

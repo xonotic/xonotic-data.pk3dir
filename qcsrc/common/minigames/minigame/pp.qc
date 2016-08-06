@@ -121,7 +121,7 @@ void pp_move(entity minigame, entity player, string pos )
 			if(existing)
 			{
 				if(existing.netname) { strunzone(existing.netname); }
-				remove(existing);
+				delete(existing);
 			}
 
 			entity piece = msle_spawn(minigame,"minigame_board_piece");
@@ -186,7 +186,7 @@ void pp_next_match(entity minigame, entity player)
 		entity e = NULL;
 		while ( ( e = findentity(e,owner,minigame) ) )
 			if ( e.classname == "minigame_board_piece" )
-				remove(e);
+				delete(e);
 		minigame.pp_team1_score = 0;
 		minigame.pp_team2_score = 0;
 
@@ -215,7 +215,7 @@ int pp_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}

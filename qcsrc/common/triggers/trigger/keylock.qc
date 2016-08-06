@@ -15,21 +15,21 @@ void trigger_keylock_kill(string s)
 {
 	entity t;
 	for(t = NULL; (t = find(t, targetname, s)); )
-		remove(t);
+		delete(t);
 }
 
-void trigger_keylock_touch(entity this)
+void trigger_keylock_touch(entity this, entity toucher)
 {
 	bool key_used = false;
 	bool started_delay = false;
 
 	// only player may trigger the lock
-	if(!IS_PLAYER(other))
+	if(!IS_PLAYER(toucher))
 		return;
 
 	// check silver key
 	if(this.itemkeys)
-		key_used = item_keys_usekey(this, other);
+		key_used = item_keys_usekey(this, toucher);
 
 	if(this.itemkeys)
 	{
@@ -38,16 +38,16 @@ void trigger_keylock_touch(entity this)
 		if(key_used)
 		{
 			// one or more keys were given, but others are still missing!
-			play2(other, this.noise1);
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(this.itemkeys));
-			other.key_door_messagetime = time + 2;
+			play2(toucher, this.noise1);
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(this.itemkeys));
+			toucher.key_door_messagetime = time + 2;
 		}
-		else if(other.key_door_messagetime <= time)
+		else if(toucher.key_door_messagetime <= time)
 		{
 			// no keys were given
-			play2(other, this.noise2);
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(this.itemkeys));
-			other.key_door_messagetime = time + 2;
+			play2(toucher, this.noise2);
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(this.itemkeys));
+			toucher.key_door_messagetime = time + 2;
 		}
 #endif
 
@@ -55,7 +55,7 @@ void trigger_keylock_touch(entity this)
 		if(this.delay <= time || started_delay == true)
 		if(this.target2)
 		{
-			trigger_keylock_trigger(this, other, this.target2);
+			trigger_keylock_trigger(this, toucher, this.target2);
 			started_delay = true;
 			this.delay = time + this.wait;
 		}
@@ -64,17 +64,17 @@ void trigger_keylock_touch(entity this)
 	{
 #ifdef SVQC
 		// all keys were given!
-		play2(other, this.noise);
-		centerprint(other, this.message);
+		play2(toucher, this.noise);
+		centerprint(toucher, this.message);
 #endif
 
 		if(this.target)
-			trigger_keylock_trigger(this, other, this.target);
+			trigger_keylock_trigger(this, toucher, this.target);
 
 		if(this.killtarget)
 			trigger_keylock_kill(this.killtarget);
 
-		remove(this);
+		delete(this);
 	}
 
 }
@@ -121,7 +121,7 @@ message2 and noise2 will be resent to the player every 2 seconds while he is in 
 */
 spawnfunc(trigger_keylock)
 {
-	if(!this.itemkeys) { remove(this); return; }
+	if(!this.itemkeys) { delete(this); return; }
 
 	// set unlocked message
 	if(this.message == "")

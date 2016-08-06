@@ -43,7 +43,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	if (!tracetossfaketarget)
 		tracetossfaketarget = new(tracetossfaketarget);
 	tracetossfaketarget.solid = savesolid;
-	tracetossfaketarget.movetype = targ.movetype;
+	set_movetype(tracetossfaketarget, targ.move_movetype);
 	_setmodel(tracetossfaketarget, targ.model); // no low precision
 	tracetossfaketarget.model = targ.model;
 	tracetossfaketarget.modelindex = targ.modelindex;
@@ -63,7 +63,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 
 			// make it disappear
 			tracetossfaketarget.solid = SOLID_NOT;
-			tracetossfaketarget.movetype = MOVETYPE_NONE;
+			set_movetype(tracetossfaketarget, MOVETYPE_NONE);
 			tracetossfaketarget.model = "";
 			tracetossfaketarget.modelindex = 0;
 			// relink to remove it from physics considerations
@@ -78,7 +78,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 
 	// make it disappear
 	tracetossfaketarget.solid = SOLID_NOT;
-	tracetossfaketarget.movetype = MOVETYPE_NONE;
+	set_movetype(tracetossfaketarget, MOVETYPE_NONE);
 	tracetossfaketarget.model = "";
 	tracetossfaketarget.modelindex = 0;
 	// relink to remove it from physics considerations

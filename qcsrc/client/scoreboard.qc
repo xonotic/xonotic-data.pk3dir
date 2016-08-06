@@ -191,13 +191,14 @@ float HUD_ComparePlayerScores(entity left, entity right)
 
 void HUD_UpdatePlayerPos(entity player)
 {
-	for(other = player.sort_next; other && HUD_ComparePlayerScores(player, other); other = player.sort_next)
+	entity ent;
+	for(ent = player.sort_next; ent && HUD_ComparePlayerScores(player, ent); ent = player.sort_next)
 	{
-		SORT_SWAP(player, other);
+		SORT_SWAP(player, ent);
 	}
-	for(other = player.sort_prev; other != players && HUD_ComparePlayerScores(other, player); other = player.sort_prev)
+	for(ent = player.sort_prev; ent != players && HUD_ComparePlayerScores(ent, player); ent = player.sort_prev)
 	{
-		SORT_SWAP(other, player);
+		SORT_SWAP(ent, player);
 	}
 }
 
@@ -233,13 +234,14 @@ float HUD_CompareTeamScores(entity left, entity right)
 
 void HUD_UpdateTeamPos(entity Team)
 {
-	for(other = Team.sort_next; other && HUD_CompareTeamScores(Team, other); other = Team.sort_next)
+	entity ent;
+	for(ent = Team.sort_next; ent && HUD_CompareTeamScores(Team, ent); ent = Team.sort_next)
 	{
-		SORT_SWAP(Team, other);
+		SORT_SWAP(Team, ent);
 	}
-	for(other = Team.sort_prev; other != teams && HUD_CompareTeamScores(other, Team); other = Team.sort_prev)
+	for(ent = Team.sort_prev; ent != teams && HUD_CompareTeamScores(ent, Team); ent = Team.sort_prev)
 	{
-		SORT_SWAP(other, Team);
+		SORT_SWAP(ent, Team);
 	}
 }
 
@@ -1371,11 +1373,11 @@ void HUD_DrawScoreboard()
 
 	if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE) {
 		if(race_speedaward) {
-			drawcolorcodedstring(pos, sprintf(_("Speed award: %d ^7(%s^7)"), race_speedaward, race_speedaward_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, race_speedaward_unit, race_speedaward_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y;
 		}
 		if(race_speedaward_alltimebest) {
-			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_unit, race_speedaward_alltimebest_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y;
 		}
 		pos = HUD_DrawScoreboardRankings(pos, playerslots[player_localnum], rgb, bg_size);
@@ -1506,7 +1508,7 @@ void HUD_DrawScoreboard()
 			);
 		}
 		else if(time >= respawn_time)
-			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
+			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey(_("jump"), "+jump"));
 
 		pos.y += 1.2 * hud_fontsize.y;
 		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);

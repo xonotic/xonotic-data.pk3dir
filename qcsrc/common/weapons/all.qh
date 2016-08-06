@@ -299,6 +299,7 @@ REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
 {
+	string inaccessible = "";
     FOREACH(Weapons, true, {
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
@@ -309,8 +310,9 @@ STATIC_INIT(register_weapons_done)
         if (imp <= WEP_IMPULSE_END)
             localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
         else
-            LOG_TRACEF("Impulse limit exceeded, weapon will not be directly accessible: %s\n", it.netname);
+        	inaccessible = strcat(inaccessible, "\n", it.netname);
     });
+    if (inaccessible) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s\n", inaccessible);
     #ifdef CSQC
     FOREACH(Weapons, true, it.wr_init(it));
     #endif

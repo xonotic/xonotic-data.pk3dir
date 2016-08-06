@@ -252,7 +252,7 @@ entity find_bot_by_number(float number)
 	if(!number)
 		return NULL;
 
-	bot = findchainflags(flags, FL_CLIENT);
+	bot = findchainflags(flags, FL_CLIENT); // TODO: doesn't findchainflags loop backwards through entities?
 	while (bot)
 	{
 		if(IS_BOT_CLIENT(bot))
@@ -476,10 +476,9 @@ void bot_list_commands()
 // Commands code
 .int bot_exec_status;
 
-void SV_ParseClientCommand(string s);
 float bot_cmd_cc(entity this)
 {
-	WITHSELF(this, SV_ParseClientCommand(bot_cmd.bot_cmd_parm_string));
+	SV_ParseClientCommand(this, bot_cmd.bot_cmd_parm_string);
 	return CMD_STATUS_FINISHED;
 }
 

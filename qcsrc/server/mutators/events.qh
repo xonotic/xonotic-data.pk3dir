@@ -656,7 +656,7 @@ MUTATOR_HOOKABLE(SetChangeParms, EV_NO_ARGS);
 MUTATOR_HOOKABLE(DecodeLevelParms, EV_NO_ARGS);
 
 #define EV_GetRecords(i, o) \
-    /** page */           i(int, MUTATOR_ARGV_1_int) \
+    /** page */           i(int, MUTATOR_ARGV_0_int) \
     /** record list */    i(string, MUTATOR_ARGV_1_string) \
     /**/                  o(string, MUTATOR_ARGV_1_string) \
     /**/

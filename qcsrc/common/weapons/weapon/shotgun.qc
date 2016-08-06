@@ -2,7 +2,7 @@
 CLASS(Shotgun, Weapon)
 /* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells)
 /* impulse   */ ATTRIB(Shotgun, impulse, int, 2)
-/* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shotgun, mdl, string, "shotgun");
@@ -60,24 +60,24 @@ spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(this, WEP_SHOTGUN); }
 
 void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 {
-	float	sc;
-	entity flash;
-
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo));
 
 	W_SetupShot(actor, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
-	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
+	for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
 	// casing code
 	if(autocvar_g_casings >= 1)
-		for(sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
+	{
+		makevectors(actor.v_angle); // for some reason, this is lost
+		//for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
 			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor);
+	}
 
 	// muzzle flash for 1st person view
-	flash = spawn();
+	entity flash = spawn();
 	setmodel(flash, MDL_SHOTGUN_MUZZLEFLASH); // precision set below
 	setthink(flash, SUB_Remove);
 	flash.nextthink = time + 0.06;
@@ -110,7 +110,7 @@ void W_Shotgun_Melee_Think(entity this)
 	// check to see if we can still continue, otherwise give up now
 	if(IS_DEAD(this.realowner) && WEP_CVAR_SEC(shotgun, melee_no_doubleslap))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -163,7 +163,7 @@ void W_Shotgun_Melee_Think(entity this)
 			}
 			else
 			{
-				remove(this);
+				delete(this);
 				return;
 			}
 		}
@@ -172,7 +172,7 @@ void W_Shotgun_Melee_Think(entity this)
 	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		remove(this);
+		delete(this);
 		return;
 	}
 	else

@@ -77,7 +77,7 @@ float autocvar_g_invasion_spawn_delay;
 
 spawnfunc(invasion_spawnpoint)
 {
-	if(!g_invasion) { remove(this); return; }
+	if(!g_invasion) { delete(this); return; }
 
 	this.classname = "invasion_spawnpoint";
 
@@ -112,15 +112,13 @@ float invasion_PickMonster(float supermonster_count)
 
 entity invasion_PickSpawn()
 {
-	entity e;
-
 	RandomSelection_Init();
 
-	for(e = NULL;(e = find(e, classname, "invasion_spawnpoint")); )
+	FOREACH_ENTITY_CLASS("invasion_spawnpoint", true,
 	{
-		RandomSelection_Add(e, 0, string_null, 1, ((time >= e.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
-		e.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
-	}
+		RandomSelection_Add(it, 0, string_null, 1, ((time >= it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
+		it.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
+	});
 
 	return RandomSelection_chosen_ent;
 }
@@ -195,7 +193,11 @@ float Invasion_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(Monster_Remove(it)));
+		IL_EACH(g_monsters, true,
+		{
+			Monster_Remove(it);
+		});
+		IL_CLEAR(g_monsters);
 
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
@@ -205,23 +207,21 @@ float Invasion_CheckWinner()
 
 	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;
 
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-		if(it.health > 0)
-		{
-			if((get_monsterinfo(it.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-				++supermonster_count;
-			++total_alive_monsters;
+	IL_EACH(g_monsters, it.health > 0,
+	{
+		if((get_monsterinfo(it.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+			++supermonster_count;
+		++total_alive_monsters;
 
-			if(teamplay)
-			switch(it.team)
-			{
-				case NUM_TEAM_1: ++red_alive; break;
-				case NUM_TEAM_2: ++blue_alive; break;
-				case NUM_TEAM_3: ++yellow_alive; break;
-				case NUM_TEAM_4: ++pink_alive; break;
-			}
+		if(teamplay)
+		switch(it.team)
+		{
+			case NUM_TEAM_1: ++red_alive; break;
+			case NUM_TEAM_2: ++blue_alive; break;
+			case NUM_TEAM_3: ++yellow_alive; break;
+			case NUM_TEAM_4: ++pink_alive; break;
 		}
-	));
+	});
 
 	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < inv_maxspawned)
 	{
@@ -274,7 +274,11 @@ float Invasion_CheckWinner()
 		));
 	}
 
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(Monster_Remove(it)));
+	IL_EACH(g_monsters, true,
+	{
+		Monster_Remove(it);
+	});
+	IL_CLEAR(g_monsters);
 
 	if(teamplay)
 	{
@@ -481,7 +485,7 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 	return true;
 }
 
-void invasion_ScoreRules(float inv_teams)
+void invasion_ScoreRules(int inv_teams)
 {
 	if(inv_teams) { CheckAllowedTeams(NULL); }
 	ScoreRules_basics(inv_teams, 0, 0, false);
@@ -493,7 +497,16 @@ void invasion_ScoreRules(float inv_teams)
 void invasion_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	if(autocvar_g_invasion_teams)
+	{
 		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);
+		int teams = 0;
+		if(invasion_teams >= 1) teams |= BIT(0);
+		if(invasion_teams >= 2) teams |= BIT(1);
+		if(invasion_teams >= 3) teams |= BIT(2);
+		if(invasion_teams >= 4) teams |= BIT(3);
+
+		invasion_teams = teams; // now set it?
+	}
 	else
 		invasion_teams = 0;
 

@@ -114,20 +114,16 @@ float pathlib_wpp_expand(entity wp)
 
 entity pathlib_wpp_bestopen()
 {
-    entity n, best;
-
     if(best_open_node)
         return best_open_node;
 
-    n = findchainentity(pathlib_list, openlist);
-    best = n;
-    while(n)
-    {
-        if(n.pathlib_node_f < best.pathlib_node_f)
-            best = n;
+    entity best = NULL;
 
-        n = n.chain;
-    }
+    FOREACH_ENTITY_ENT(pathlib_list, openlist,
+    {
+        if(!best || it.pathlib_node_f < best.pathlib_node_f)
+            best = it;
+    });
 
     return best;
 
@@ -135,7 +131,6 @@ entity pathlib_wpp_bestopen()
 
 entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
 {
-    entity n;
     float ptime;
 
     ptime 					= gettime(GETTIME_REALTIME);
@@ -167,20 +162,18 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     LOG_TRACE("pathlib_waypointpath init\n");
 
     // Initialize waypoint grid
-    // FIXME! presisted chain for better preformance
-    for(n = findchain(classname, "waypoint"); n; n = n.chain)
+    IL_EACH(g_waypoints, true,
     {
-        n.pathlib_list = NULL;
-        n.pathlib_node_g = 0;
-        n.pathlib_node_f = 0;
-        n.pathlib_node_h = 0;
+        it.pathlib_list = NULL;
+        it.pathlib_node_g = 0;
+        it.pathlib_node_f = 0;
+        it.pathlib_node_h = 0;
 
-        //setmodel(n, "models/runematch/rune.mdl");
-        //n.effects = EF_LOWPRECISION;
-        //n.colormod = '0 0 0';
-        //n.scale = 1;
-
-    }
+        //setmodel(it, "models/runematch/rune.mdl");
+        //it.effects = EF_LOWPRECISION;
+        //it.colormod = '0 0 0';
+        //it.scale = 1;
+    });
 
     goal_node  = wp_to;
     start_node = wp_from;

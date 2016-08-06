@@ -556,7 +556,7 @@ void spawn_flocker(entity this)
     setthink(flocker, flocker_think);
     flocker.nextthink  = time + random() * 5;
     PROJECTILE_MAKETRIGGER(flocker);
-    flocker.movetype   = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(flocker, MOVETYPE_BOUNCEMISSILE);
     flocker.effects    = EF_LOWPRECISION;
     flocker.velocity   = randomvec() * 300;
     flocker.angles     = vectoangles(flocker.velocity);
@@ -579,8 +579,7 @@ void flockerspawn_think(entity this)
 void flocker_hunter_think(entity this)
 {
     vector dodgemove,attractmove,newmove;
-    entity e,ee;
-    float d,bd;
+    entity ee;
 
     this.angles_x = this.angles.x * -1;
     makevectors(this.angles);
@@ -597,20 +596,14 @@ void flocker_hunter_think(entity this)
 
     if(!this.enemy)
     {
-        e = findchainfloat(flock_id,this.flock_id);
-        while(e)
+        FOREACH_ENTITY_FLOAT(flock_id, this.flock_id,
         {
-            d = vlen(this.origin - e.origin);
+            if(it == this.owner || it == ee)
+                continue;
 
-            if(e != this.owner)
-            if(e != ee)
-            if(d > bd)
-            {
-                this.enemy = e;
-                bd = d;
-            }
-            e = e.chain;
-        }
+            if(!this.enemy || vlen2(this.origin - it.origin) > vlen2(this.origin - this.enemy.origin))
+                this.enemy = it;
+        });
     }
 
     if(this.enemy)
@@ -623,7 +616,6 @@ void flocker_hunter_think(entity this)
     newmove = dodgemove + attractmove;
     this.velocity = movelib_inertmove_byspeed(this, newmove,1250,0.3,0.7);
     this.velocity = movelib_dragvec(this, 0.01,0.5);
-
 
     this.angles = vectoangles(this.velocity);
     this.nextthink = time + 0.1;
@@ -649,7 +641,7 @@ spawnfunc(flockerspawn)
 
     this.enemy.scale     = 3;
     this.enemy.effects   = EF_LOWPRECISION;
-    this.enemy.movetype  = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(this.enemy, MOVETYPE_BOUNCEMISSILE);
     PROJECTILE_MAKETRIGGER(this.enemy);
     setthink(this.enemy, flocker_hunter_think);
     this.enemy.nextthink = time + 10;

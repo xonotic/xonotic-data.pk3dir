@@ -75,7 +75,7 @@ MINIGAME_SIMPLELINKED_ENTITIES
 void minigame_autoclean_entity(entity e)
 {
 	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
-	remove(e);
+	delete(e);
 }
 
 void HUD_MinigameMenu_CurrentButton();
@@ -226,6 +226,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 		{
 			minigame_self = this;
 			activate_minigame(this.owner);
+			minigame_self = this; // set it again (needed before, but may also be reset)
 		}
 	}
 	MINIGAME_SIMPLELINKED_ENTITIES

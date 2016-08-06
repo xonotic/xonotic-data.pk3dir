@@ -37,7 +37,7 @@
 
 		if (n) n.prevSibling = p;
 		else this.lastChild = p;
-		remove(other);
+		delete(other);
 	}
 
 	METHOD(AnimHost, removeAllAnim, void(entity this))

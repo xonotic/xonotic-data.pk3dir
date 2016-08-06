@@ -123,7 +123,7 @@ void ttt_next_match(entity minigame, entity player)
 		entity e = NULL;
 		while ( ( e = findentity(e,owner,minigame) ) )
 			if ( e.classname == "minigame_board_piece" )
-				remove(e);
+				delete(e);
 	}
 }
 
@@ -147,7 +147,7 @@ int ttt_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}

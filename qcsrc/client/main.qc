@@ -185,8 +185,8 @@ void Shutdown()
 {
 	WarpZone_Shutdown();
 
-	remove(teams);
-	remove(players);
+	delete(teams);
+	delete(players);
 	db_close(binddb);
 	db_close(tempdb);
 	if(autocvar_cl_db_saveasdump)
@@ -510,6 +510,22 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	else
 		angles_held_status = 0;
 
+	if(f & 16)
+	{
+		num_spectators = ReadByte();
+
+		float i, slot;
+
+		for(i = 0; i < MAX_SPECTATORS; ++i)
+			spectatorlist[i] = 0; // reset list first
+
+		for(i = 0; i < num_spectators; ++i)
+		{
+			slot = ReadByte();
+			spectatorlist[i] = slot - 1;
+		}
+	}
+
 	return = true;
 
 	if(newspectatee_status != spectatee_status)
@@ -678,6 +694,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 	spn_origin.y = ReadCoord();
 	spn_origin.z = ReadCoord();
 
+	this.team = (teamnum + 1);
+
 	//if(is_new)
 	//{
 		this.origin = spn_origin;
@@ -691,8 +709,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			precache_model(this.mdl);
 			setmodel(this, this.mdl);
 			this.drawmask = MASK_NORMAL;
-			//this.movetype = MOVETYPE_NOCLIP;
+			//this.move_movetype = MOVETYPE_NOCLIP;
 			//this.draw = Spawn_Draw;
+			IL_PUSH(g_drawables, this);
 		}*/
 		if(autocvar_cl_spawn_point_particles)
 		{
@@ -710,6 +729,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			else { this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
 
 			this.draw = Spawn_Draw;
+			if (is_new) IL_PUSH(g_drawables, this);
 			setpredraw(this, Spawn_PreDraw);
 			this.fade_start = autocvar_cl_spawn_point_dist_min;
 			this.fade_end = autocvar_cl_spawn_point_dist_max;
@@ -774,8 +794,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
-void CSQC_Ent_Update(bool isnew)
-{ENGINE_EVENT();
+void CSQC_Ent_Update(entity this, bool isnew)
+{
 	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
@@ -819,6 +839,7 @@ void CSQC_Ent_Update(bool isnew)
 		if (autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
+		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
 	});
 	time = savetime;
@@ -854,8 +875,8 @@ void Ent_Remove(entity this)
 	// TODO possibly set more stuff to defaults
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
-void CSQC_Ent_Remove()
-{ENGINE_EVENT();
+void CSQC_Ent_Remove(entity this)
+{
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
@@ -863,7 +884,7 @@ void CSQC_Ent_Remove()
 		return;
 	}
 	if (this.enttype) Ent_Remove(this);
-	remove(this);
+	delete(this);
 }
 
 void Gamemode_Init()
@@ -976,6 +997,42 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	if (!postinit) PostInit();
 }
 
+float GetSpeedUnitFactor(int speed_unit)
+{
+	switch(speed_unit)
+	{
+		default:
+		case 1:
+			return 1.0;
+		case 2:
+			return 0.0254;
+		case 3:
+			return 0.0254 * 3.6;
+		case 4:
+			return 0.0254 * 3.6 * 0.6213711922;
+		case 5:
+			return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
+	}
+}
+
+string GetSpeedUnit(int speed_unit)
+{
+	switch(speed_unit)
+	{
+		default:
+		case 1:
+			return _(" qu/s");
+		case 2:
+			return _(" m/s");
+		case 3:
+			return _(" km/h");
+		case 4:
+			return _(" mph");
+		case 5:
+			return _(" knots");
+	}
+}
+
 NET_HANDLE(TE_CSQC_RACE, bool isNew)
 {
 	int b = ReadByte();
@@ -1064,16 +1121,22 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_server_record = ReadInt24_t();
 			break;
 		case RACE_NET_SPEED_AWARD:
-			race_speedaward = ReadInt24_t();
+			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
 			if(race_speedaward_holder)
 				strunzone(race_speedaward_holder);
 			race_speedaward_holder = strzone(ReadString());
+			if(race_speedaward_unit)
+				strunzone(race_speedaward_unit);
+			race_speedaward_unit = strzone(GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
-			race_speedaward_alltimebest = ReadInt24_t();
+			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
 			if(race_speedaward_alltimebest_holder)
 				strunzone(race_speedaward_alltimebest_holder);
 			race_speedaward_alltimebest_holder = strzone(ReadString());
+			if(race_speedaward_alltimebest_unit)
+				strunzone(race_speedaward_alltimebest_unit);
+			race_speedaward_alltimebest_unit = strzone(GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_SERVER_RANKINGS:
 			float prevpos, del;
@@ -1168,13 +1231,13 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-string getcommandkey(string text, string command)
+string _getcommandkey(string cmd_name, string command, bool forcename)
 {
 	string keys;
 	float n, j, k, l = 0;
 
 	if (!autocvar_hud_showbinds)
-		return text;
+		return cmd_name;
 
 	keys = db_get(binddb, command);
 	if (keys == "")
@@ -1208,12 +1271,12 @@ string getcommandkey(string text, string command)
 
 	if (keys == "NO_KEY") {
 		if (autocvar_hud_showbinds > 1)
-			return sprintf(_("%s (not bound)"), text);
+			return sprintf(_("%s (not bound)"), cmd_name);
 		else
-			return text;
+			return cmd_name;
 	}
-	else if (autocvar_hud_showbinds > 1)
-		return sprintf("%s (%s)", text, keys);
+	else if (autocvar_hud_showbinds > 1 || forcename)
+		return sprintf("%s (%s)", cmd_name, keys);
 	else
 		return keys;
 }

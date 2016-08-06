@@ -53,22 +53,22 @@ void physical_item_think(entity this)
 				this.angles = this.spawn_angles;
 				this.solid = SOLID_NOT;
 				this.alpha = -1;
-				this.movetype = MOVETYPE_NONE;
+				set_movetype(this, MOVETYPE_NONE);
 			}
 			else
 			{
 				this.alpha = 1;
 				this.solid = SOLID_CORPSE;
-				this.movetype = MOVETYPE_PHYSICS;
+				set_movetype(this, MOVETYPE_PHYSICS);
 			}
 		}
 	}
 
 	if(!this.owner.modelindex)
-		remove(this); // the real item is gone, remove this
+		delete(this); // the real item is gone, remove this
 }
 
-void physical_item_touch(entity this)
+void physical_item_touch(entity this, entity toucher)
 {
 	if(!this.cnt) // not for dropped items
 	if (ITEM_TOUCH_NEEDKILL())
@@ -109,7 +109,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 
 	wep.owner = item;
 	wep.solid = SOLID_CORPSE;
-	wep.movetype = MOVETYPE_PHYSICS;
+	set_movetype(wep, MOVETYPE_PHYSICS);
 	wep.takedamage = DAMAGE_AIM;
 	wep.effects |= EF_NOMODELFLAGS; // disable the spinning
 	wep.colormap = item.owner.colormap;
@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	wep.spawn_angles = item.angles;
 
 	item.effects |= EF_NODRAW; // hide the original weapon
-	item.movetype = MOVETYPE_FOLLOW;
+	set_movetype(item, MOVETYPE_FOLLOW);
 	item.aiment = wep; // attach the original weapon
 	setSendEntity(item, func_null);
 }

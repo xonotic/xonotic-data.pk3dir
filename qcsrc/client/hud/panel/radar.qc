@@ -26,6 +26,13 @@ void HUD_Radar_Show_Maximized(bool doshow,float clickable)
 			if(autocvar_hud_cursormode)
 				setcursormode(1);
 			hud_panel_radar_mouse = 1;
+
+			// we must unset the player's buttons, as they aren't released elsewhere
+			localcmd("-fire\n");
+			localcmd("-fire2\n");
+			localcmd("-use\n");
+			localcmd("-hook\n");
+			localcmd("-jump\n");
 		}
 	}
 	else if ( hud_panel_radar_mouse )
@@ -78,11 +85,9 @@ float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	else
 	{
 		// allow console/use binds to work without hiding the map
-		string con_keys;
-		float keys;
-		float i;
-		con_keys = strcat(findkeysforcommand("toggleconsole", 0)," ",findkeysforcommand("+use", 0)) ;
-		keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		string con_keys = strcat(findkeysforcommand("toggleconsole", 0), " ", findkeysforcommand("+use", 0)) ;
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		int i;
 		for (i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
@@ -346,12 +351,12 @@ void HUD_Radar()
 
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
-	FOREACH_ENTITY_CLASS("radarlink", true, draw_teamradar_link(it.origin, it.velocity, it.team));
+	IL_EACH(g_radarlinks, true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
-	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, {
+	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
-		if ( it.health > 0 )
-		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE )
+		if ( it.health >= 0 )
+		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE || !(serverflags & SERVERFLAG_TEAMPLAY) )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if(vdist((mousepos - coord), <, 8))

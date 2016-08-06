@@ -27,7 +27,7 @@ USING(vectori, vector);
 	#define _STAT(id) g_stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		T _STAT(id); \
-		T CAT(_STAT(id), _prev); \
+		/* T CAT(_STAT(id), _prev); */ \
 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
 			if (#T == "vector" || #T == "vectori") { \
@@ -38,8 +38,8 @@ USING(vectori, vector);
 		[[accumulate]] void stats_get() \
 		{ \
 			T it = getstat_##T(STAT_##id.m_id); \
-			if (it != CAT(_STAT(id), _prev)) \
-				CAT(_STAT(id), _prev) = _STAT(id) = it; \
+			/* if (it != CAT(_STAT(id), _prev)) \
+				CAT(_STAT(id), _prev) = */ _STAT(id) = it; \
 		}
 	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
 #elif defined(SVQC)

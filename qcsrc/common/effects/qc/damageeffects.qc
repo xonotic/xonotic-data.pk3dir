@@ -81,7 +81,7 @@ void DamageEffect_Think(entity this)
 	{
 		// time is up or the player got gibbed / disconnected
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
-		remove(this);
+		delete(this);
 		return;
 	}
 	if(this.state && !this.owner.csqcmodel_isdead)
@@ -89,7 +89,7 @@ void DamageEffect_Think(entity this)
 		// if the player was dead but is now alive, it means he respawned
 		// if so, clear his damage effects, or damages from his dead body will be copied back
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.state = this.owner.csqcmodel_isdead;
@@ -255,8 +255,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		if(it.damageforcescale)
 			if(vdist(thisforce, !=, 0))
 			{
-				it.move_velocity = it.move_velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.move_velocity, autocvar_g_balance_damagepush_speedfactor);
-				it.move_flags &= ~FL_ONGROUND;
+				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, autocvar_g_balance_damagepush_speedfactor);
+				UNSET_ONGROUND(it);
 			}
 
 		if(w_issilent)

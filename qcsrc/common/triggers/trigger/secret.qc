@@ -17,10 +17,10 @@ void secrets_setstatus(entity this)
 /**
  * A secret has been found (maybe :P)
  */
-void trigger_secret_touch(entity this)
+void trigger_secret_touch(entity this, entity toucher)
 {
 	// only a player can trigger this
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
 
 	// update secrets found counter
@@ -29,12 +29,12 @@ void trigger_secret_touch(entity this)
 	//print(ftos(secret_counter.count), "\n");
 
 	// centerprint message (multi_touch() doesn't always call centerprint())
-	centerprint(other, this.message);
+	centerprint(toucher, this.message);
 	this.message = "";
 
 	// handle normal trigger features
-	multi_touch(this);
-	remove(this);
+	multi_touch(this, toucher);
+	delete(this);
 }
 
 /*QUAKED trigger_secret (.5 .5 .5) ?

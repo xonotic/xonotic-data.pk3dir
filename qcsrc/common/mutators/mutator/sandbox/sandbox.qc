@@ -34,7 +34,7 @@ float object_count;
 .string material;
 
 .float touch_timer;
-void sandbox_ObjectFunction_Touch(entity this)
+void sandbox_ObjectFunction_Touch(entity this, entity toucher)
 {
 	// apply material impact effects
 
@@ -46,7 +46,7 @@ void sandbox_ObjectFunction_Touch(entity this)
 
 	// make particle count and sound volume depend on impact speed
 	float intensity;
-	intensity = vlen(this.velocity) + vlen(other.velocity);
+	intensity = vlen(this.velocity) + vlen(toucher.velocity);
 	if(intensity) // avoid divisions by 0
 		intensity /= 2; // average the two velocities
 	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))
@@ -129,8 +129,8 @@ void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 	sandbox_ObjectAttach_Remove(e);
 
 	e.old_solid = e.solid; // persist solidity
-	e.old_movetype = e.movetype; // persist physics
-	e.movetype = MOVETYPE_FOLLOW;
+	e.old_movetype = e.move_movetype; // persist physics
+	set_movetype(e, MOVETYPE_FOLLOW);
 	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_NO;
 
@@ -142,25 +142,23 @@ void sandbox_ObjectAttach_Remove(entity e)
 {
 	// detaches any object attached to e
 
-	entity head;
-	for(head = NULL; (head = find(head, classname, "object")); )
+	FOREACH_ENTITY_ENT(owner, e,
 	{
-		if(head.owner == e)
-		{
-			vector org;
-			org = gettaginfo(head, 0);
-			setattachment(head, NULL, "");
-			head.owner = NULL;
+		if(it.classname != "object") continue;
 
-			// objects change origin and angles when detached, so apply previous position
-			setorigin(head, org);
-			head.angles = e.angles; // don't allow detached objects to spin or roll
+		vector org;
+		org = gettaginfo(it, 0);
+		setattachment(it, NULL, "");
+		it.owner = NULL;
 
-			head.solid = head.old_solid; // restore persisted solidity
-			head.movetype = head.old_movetype; // restore persisted physics
-			head.takedamage = DAMAGE_AIM;
-		}
-	}
+		// objects change origin and angles when detached, so apply previous position
+		setorigin(it, org);
+		it.angles = e.angles; // don't allow detached objects to spin or roll
+
+		it.solid = it.old_solid; // restore persisted solidity
+		set_movetype(it, it.old_movetype); // restore persisted physics
+		it.takedamage = DAMAGE_AIM;
+	});
 }
 
 entity sandbox_ObjectSpawn(entity this, float database)
@@ -171,7 +169,7 @@ entity sandbox_ObjectSpawn(entity this, float database)
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
 	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
-	e.movetype = MOVETYPE_TOSS;
+	set_movetype(e, MOVETYPE_TOSS);
 	e.frame = 0;
 	e.skin = 0;
 	e.material = string_null;
@@ -219,7 +217,7 @@ void sandbox_ObjectRemove(entity e)
 	if(e.netname)	{	strunzone(e.netname);	e.netname = string_null;	}
 	if(e.message)	{	strunzone(e.message);	e.message = string_null;	}
 	if(e.message2)	{	strunzone(e.message2);	e.message2 = string_null;	}
-	remove(e);
+	delete(e);
 	e = NULL;
 
 	object_count -= 1;
@@ -242,7 +240,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		{
 			slot = 0;
 			solidity = head.solid; // applied solidity is normal solidity for children
-			physics = head.movetype; // applied physics are normal physics for parents
+			physics = head.move_movetype; // applied physics are normal physics for parents
 		}
 		else if(head.owner == e) // child object, list them in order
 		{
@@ -349,7 +347,8 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 		e.frame = stof(argv(argv_num));	++argv_num;
 		sandbox_ObjectEdit_Scale(e, stof(argv(argv_num)));	++argv_num;
 		e.solid = e.old_solid = stof(argv(argv_num));	++argv_num;
-		e.movetype = e.old_movetype = stof(argv(argv_num));	++argv_num;
+		e.old_movetype = stof(argv(argv_num));	++argv_num;
+		set_movetype(e, e.old_movetype);
 		e.damageforcescale = stof(argv(argv_num));	++argv_num;
 		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
 		if(database)
@@ -462,7 +461,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 		switch(argv(1))
 		{
 			entity e;
-			float i;
+			int j;
 			string s;
 
 			// ---------------- COMMAND: HELP ----------------
@@ -685,13 +684,13 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							switch(argv(3))
 							{
 								case "0": // static
-									e.movetype = MOVETYPE_NONE;
+									set_movetype(e, MOVETYPE_NONE);
 									break;
 								case "1": // movable
-									e.movetype = MOVETYPE_TOSS;
+									set_movetype(e, MOVETYPE_TOSS);
 									break;
 								case "2": // physical
-									e.movetype = MOVETYPE_PHYSICS;
+									set_movetype(e, MOVETYPE_PHYSICS);
 									break;
 								default:
 									break;
@@ -704,8 +703,8 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							if(e.material)	strunzone(e.material);
 							if(argv(3))
 							{
-								for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
-									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".wav"));
+								for (j = 1; j <= 5; j++) // precache material sounds, 5 in total
+									precache_sound(strcat("object/impact_", argv(3), "_", ftos(j), ".wav"));
 								e.material = strzone(argv(3));
 							}
 							else
@@ -783,20 +782,18 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 						case "attachments":
 							// this should show the same info as 'mesh' but for attachments
 							s = "";
-							entity head;
-							i = 0;
-							for(head = NULL; (head = find(head, classname, "object")); )
+							j = 0;
+							FOREACH_ENTITY_ENT(owner, e,
 							{
-								if(head.owner == e)
-								{
-									++i; // start from 1
-									gettaginfo(e, head.tag_index);
-									s = strcat(s, "^1attachment ", ftos(i), "^7 has mesh \"^3", head.model, "^7\" at animation frame ^3", ftos(head.frame));
-									s = strcat(s, "^7 and is attached to bone \"^5", gettaginfo_name, "^7\", ");
-								}
-							}
-							if(i) // object contains attachments
-								print_to(player, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(i), "^7 attachment(s): ", s));
+								if(it.classname != "object") continue;
+
+								++j; // start from 1
+								gettaginfo(e, it.tag_index);
+								s = strcat(s, "^1attachment ", ftos(j), "^7 has mesh \"^3", it.model, "^7\" at animation frame ^3", ftos(it.frame));
+								s = strcat(s, "^7 and is attached to bone \"^5", gettaginfo_name, "^7\", ");
+							});
+							if(j) // object contains attachments
+								print_to(player, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(j), "^7 attachment(s): ", s));
 							else
 								print_to(player, "^2SANDBOX - INFO: ^7Object contains no attachments");
 							return true;

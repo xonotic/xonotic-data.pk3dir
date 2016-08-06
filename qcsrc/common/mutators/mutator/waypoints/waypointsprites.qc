@@ -24,6 +24,8 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
         f |= 2; // my own
 
     MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
+    sendflags = M_ARGV(2, int);
+    f = M_ARGV(3, int);
 
     WriteByte(MSG_ENTITY, sendflags);
     WriteByte(MSG_ENTITY, this.wp_extra);
@@ -98,9 +100,9 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 #endif
 
 #ifdef CSQC
-void Ent_WaypointSprite(entity this);
+void Ent_WaypointSprite(entity this, bool isnew);
 NET_HANDLE(waypointsprites, bool isnew) {
-    Ent_WaypointSprite(this);
+    Ent_WaypointSprite(this, isnew);
     return true;
 }
 
@@ -112,7 +114,7 @@ void Ent_RemoveWaypointSprite(entity this)
 }
 
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
-void Ent_WaypointSprite(entity this)
+void Ent_WaypointSprite(entity this, bool isnew)
 {
     int sendflags = ReadByte();
     this.wp_extra = ReadByte();
@@ -121,6 +123,10 @@ void Ent_WaypointSprite(entity this)
         this.spawntime = time;
 
     this.draw2d = Draw_WaypointSprite;
+    if (isnew) {
+		IL_PUSH(g_drawables_2d, this);
+		IL_PUSH(g_radaricons, this);
+    }
 
     InterpolateOrigin_Undo(this);
     this.iflags |= IFLAG_ORIGIN;
@@ -225,6 +231,7 @@ float spritelookupblinkvalue(entity this, string s)
             return 2;
     }
     if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypointblink;
+    if(s == WP_FlagReturn.netname) return 2;
 
     return 1;
 }
@@ -479,7 +486,7 @@ void Draw_WaypointSprite(entity this)
         case SPRITERULE_SPECTATOR:
             if (!(
                 (autocvar_g_waypointsprite_itemstime == 1 && t == NUM_SPECTATOR + 1)
-            ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage))
+            ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage || STAT(ITEMSTIME) == 2))
                 ))
                 return;
             spriteimage = this.netname;
@@ -881,7 +888,7 @@ void WaypointSprite_Kill(entity wp)
 {
     if (!wp) return;
     if (wp.owner) wp.owner.(wp.owned_by_field) = NULL;
-    remove(wp);
+    delete(wp);
 }
 
 void WaypointSprite_Disown(entity wp, float fadetime)
@@ -932,7 +939,7 @@ bool WaypointSprite_visible_for_player(entity this, entity player, entity view)
     {
         if (!autocvar_sv_itemstime)
             return false;
-        if (!warmup_stage && IS_PLAYER(view))
+        if (!warmup_stage && IS_PLAYER(view) && autocvar_sv_itemstime != 2)
             return false;
     }
     else if (this.team && this.rule == SPRITERULE_DEFAULT)
@@ -963,17 +970,17 @@ float WaypointSprite_isteammate(entity e, entity e2)
     return e2 == e;
 }
 
-float WaypointSprite_Customize(entity this)
+bool WaypointSprite_Customize(entity this, entity client)
 {
     // this is not in SendEntity because it shall run every frame, not just every update
 
     // make spectators see what the player would see
-    entity e = WaypointSprite_getviewentity(other);
+    entity e = WaypointSprite_getviewentity(client);
 
-    if (MUTATOR_CALLHOOK(CustomizeWaypoint, this, other))
+    if (MUTATOR_CALLHOOK(CustomizeWaypoint, this, client))
         return false;
 
-    return this.waypointsprite_visible_for_player(this, other, e);
+    return this.waypointsprite_visible_for_player(this, client, e);
 }
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
@@ -1014,7 +1021,7 @@ entity WaypointSprite_Spawn(
     if (own)
     {
         if (own.(ownfield))
-            remove(own.(ownfield));
+            delete(own.(ownfield));
         own.(ownfield) = wp;
         wp.owned_by_field = ownfield;
     }

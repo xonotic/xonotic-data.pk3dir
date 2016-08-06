@@ -392,7 +392,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	if (name == "")
 	{
 		this.model = "";
-		if (this.weaponchild) remove(this.weaponchild);
+		if (this.weaponchild) delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
 		this.spawnorigin = '0 0 0';
@@ -436,7 +436,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		}
 		else
 		{
-			if (this.weaponchild) remove(this.weaponchild);
+			if (this.weaponchild) delete(this.weaponchild);
 			this.weaponchild = NULL;
 		}
 

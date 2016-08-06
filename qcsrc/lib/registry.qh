@@ -71,10 +71,13 @@ REGISTRY(Registries, BITS(8))
 	REGISTER_INIT(id) {} \
 	void Register_##id() \
 	{ \
-		if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
-		entity this = id = inst; \
-		this.registered_id = #id; \
-		REGISTRY_PUSH(registry, fld, this); \
+		entity this = id; \
+		if (this == NULL) { \
+			if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
+			this = id = inst; \
+			this.registered_id = #id; \
+			REGISTRY_PUSH(registry, fld, this); \
+		} \
 		Register_##id##_init(this); \
 	} \
 	ACCUMULATE_FUNCTION(_Register##registry, Register_##id) \
@@ -180,5 +183,9 @@ void Registry_send(string id, string hash);
 	CLASS(id##Registry, Object) \
 		ATTRIB(id##Registry, m_name, string, str) \
 		ATTRIB(id##Registry, REGISTRY_NEXT, entity, id##_first) \
+		METHOD(id##Registry, m_reload, void()); \
 	ENDCLASS(id##Registry) \
-	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry));
+	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry)); \
+	METHOD(id##Registry, m_reload, void()) { \
+		Register##id(); \
+	}
