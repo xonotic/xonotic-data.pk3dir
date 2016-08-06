@@ -837,6 +837,7 @@ void W_Nexball_Attack2(entity actor)
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 
 	CSQCProjectile(missile, true, PROJECTILE_ELECTRO, true);
 }

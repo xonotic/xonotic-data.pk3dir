@@ -179,6 +179,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 	gren.angles = '0 0 0';
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_HOOKBOMB, true);
 

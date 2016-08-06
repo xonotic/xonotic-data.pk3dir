@@ -259,7 +259,8 @@ void walker_fire_rocket(entity this, vector org)
     rocket.velocity		   = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * (autocvar_g_turrets_unit_walker_rocket_speed);
     rocket.angles			 = vectoangles(rocket.velocity);
     settouch(rocket, walker_rocket_touch);
-    rocket.flags			  = FL_PROJECTILE;
+    rocket.flags = FL_PROJECTILE;
+    IL_PUSH(g_projectiles, rocket);
     rocket.solid			  = SOLID_BBOX;
     rocket.max_health		 = time + 9;
     rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;

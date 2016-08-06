@@ -215,10 +215,9 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
 	{
-		FOREACH_ENTITY_ENT(owner, actor,
+		IL_EACH(g_mines, it.owner == actor,
 		{
-			if(it.classname != "mine") continue;
-			if(it.owner == actor) return false;
+			return false;
 		});
 	}
 

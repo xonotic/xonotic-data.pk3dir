@@ -439,6 +439,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor)
 		//proj.glow_size = 20;
 
 		proj.flags = FL_PROJECTILE;
+		IL_PUSH(g_projectiles, proj);
 		proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
@@ -554,6 +555,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor)
 		//proj.glow_size = 20;
 
 		proj.flags = FL_PROJECTILE;
+		IL_PUSH(g_projectiles, proj);
         proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);

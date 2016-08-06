@@ -259,10 +259,11 @@ void assault_new_round(entity this)
 	// Eject players from vehicles
     FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, vehicles_exit(it.vehicle, VHEF_RELEASE));
 
-    FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE, LAMBDA(
+    IL_EACH(g_vehicles, true,
+    {
         vehicles_clearreturn(it);
         vehicles_spawn(it);
-    ));
+    });
 
 	// up round counter
 	this.winning = this.winning + 1;

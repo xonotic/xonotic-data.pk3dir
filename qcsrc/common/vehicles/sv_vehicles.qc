@@ -247,7 +247,8 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.totalfrags	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
-	proj.flags			= FL_PROJECTILE;
+	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;
@@ -265,7 +266,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 		proj.health		   = _health;
 	}
 	else
-		proj.flags		   = FL_PROJECTILE | FL_NOTARGET;
+		proj.flags |= FL_NOTARGET;
 
 	if(_mzlsound != SND_Null)
 		sound (this, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
@@ -1115,7 +1116,10 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		return false;
 
 	if(!this.tur_head)
+	{
 		info.vr_precache(info);
+		IL_PUSH(g_vehicles, this);
+	}
 
 	if(this.targetname && this.targetname != "")
 	{
