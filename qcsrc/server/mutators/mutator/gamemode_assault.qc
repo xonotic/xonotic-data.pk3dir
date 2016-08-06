@@ -59,7 +59,6 @@ void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrat
 
 // scoreboard stuff
 const float ST_ASSAULT_OBJECTIVES = 1;
-const float SP_ASSAULT_OBJECTIVES = 4;
 
 // predefined spawnfuncs
 void target_objective_decrease_activate(entity this);

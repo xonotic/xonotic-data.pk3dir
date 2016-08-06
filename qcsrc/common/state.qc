@@ -45,13 +45,12 @@ void ClientState_attach(entity this)
 
     GetCvars(this, 0);  // get other cvars from player
 
-	if (IS_REAL_CLIENT(this)) { PlayerStats_PlayerBasic_CheckUpdate(this); }
-
 	// TODO: fold all of these into ClientState
 
 	DecodeLevelParms(this);
 
 	PlayerScore_Attach(this);
+	PlayerStats_PlayerBasic_CheckUpdate(this);
 	ClientData_Attach(this);
 	accuracy_init(this);
 	entcs_attach(this);

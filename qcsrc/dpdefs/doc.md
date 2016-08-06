@@ -214,6 +214,10 @@ void SV_PlayerPhysics();
 //   self
 void SV_ParseClientCommand(string cmd);
 
+// qcstatus server field
+string worldstatus;
+.string clientstatus;
+
 ```
 
 # MENUQC

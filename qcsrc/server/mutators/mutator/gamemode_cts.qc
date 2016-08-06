@@ -38,9 +38,6 @@ REGISTER_MUTATOR(cts, false)
 
 // scores
 const float ST_CTS_LAPS = 1;
-const float SP_CTS_LAPS = 4;
-const float SP_CTS_TIME = 5;
-const float SP_CTS_FASTEST = 6;
 #endif
 
 #ifdef IMPLEMENTATION

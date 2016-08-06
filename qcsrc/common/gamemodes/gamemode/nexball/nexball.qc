@@ -70,8 +70,6 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 }
 
 const float ST_NEXBALL_GOALS = 1;
-const float SP_NEXBALL_GOALS = 4;
-const float SP_NEXBALL_FAULTS = 5;
 void nb_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, 0, 0, true);

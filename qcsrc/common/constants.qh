@@ -123,19 +123,115 @@ const int SFL_SORT_PRIO_SECONDARY = 4;
 const int SFL_SORT_PRIO_PRIMARY = 8;
 const int SFL_SORT_PRIO_MASK = 12;
 
-/**
+/*
  * Score indices
  */
-#define MAX_SCORE 12
+
+#ifndef MENUQC
+
+#define IS_INCREASING(x) ( (x) & SFL_LOWER_IS_BETTER )
+#define IS_DECREASING(x) ( !((x) & SFL_LOWER_IS_BETTER) )
+
+
+#define MAX_SCORE 64
+
+#define REGISTER_SP(id) REGISTER(Scores, SP, id, m_id, new_pure(PlayerScoreField))
+REGISTRY(Scores, MAX_SCORE);
+#define Scores_from(i) _Scores_from(i, NULL)
+REGISTER_REGISTRY(Scores)
+REGISTRY_SORT(Scores);
+REGISTRY_CHECK(Scores);
+STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }
+
+USING(PlayerScoreField, entity);
+.int _scores[MAX_SCORE];
+.string m_name;
+.int m_flags;
+
+#define scores(this) _scores[(this).m_id]
+#define scores_label(this) ((this).m_name)
+#define scores_flags(this) ((this).m_flags)
+
+REGISTER_SP(END);
+
+REGISTER_SP(PING);
+REGISTER_SP(NAME);
+REGISTER_SP(KDRATIO);
+REGISTER_SP(CLRATIO);
+REGISTER_SP(PL);
+REGISTER_SP(SUM);
+
+REGISTER_SP(SEPARATOR);
+
+REGISTER_SP(SCORE);
+
+REGISTER_SP(DMG);
+REGISTER_SP(DMGTAKEN);
+
+REGISTER_SP(KILLS);
+REGISTER_SP(DEATHS);
+REGISTER_SP(SUICIDES);
+REGISTER_SP(FRAGS);
+
+REGISTER_SP(ELO);
+
+// TODO: move to common mutators
+
+REGISTER_SP(RACE_TIME);
+REGISTER_SP(RACE_LAPS);
+REGISTER_SP(RACE_FASTEST);
+
+REGISTER_SP(CTS_TIME);
+REGISTER_SP(CTS_LAPS);
+REGISTER_SP(CTS_FASTEST);
+
+REGISTER_SP(ASSAULT_OBJECTIVES);
+
+REGISTER_SP(CTF_PICKUPS);
+REGISTER_SP(CTF_FCKILLS);
+REGISTER_SP(CTF_RETURNS);
+REGISTER_SP(CTF_CAPS);
+REGISTER_SP(CTF_CAPTIME);
+REGISTER_SP(CTF_DROPS);
+
+REGISTER_SP(DOM_TAKES);
+REGISTER_SP(DOM_TICKS);
+
+REGISTER_SP(FREEZETAG_REVIVALS);
+
+REGISTER_SP(KEEPAWAY_PICKUPS);
+REGISTER_SP(KEEPAWAY_BCTIME);
+REGISTER_SP(KEEPAWAY_CARRIERKILLS);
+
+REGISTER_SP(KH_PICKUPS);
+REGISTER_SP(KH_CAPS);
+REGISTER_SP(KH_KCKILLS);
+REGISTER_SP(KH_PUSHES);
+REGISTER_SP(KH_DESTROYS);
+REGISTER_SP(KH_LOSSES);
+
+REGISTER_SP(LMS_RANK);
+REGISTER_SP(LMS_LIVES);
+
+REGISTER_SP(NEXBALL_GOALS);
+REGISTER_SP(NEXBALL_FAULTS);
+
+REGISTER_SP(ONS_TAKES);
+REGISTER_SP(ONS_CAPS);
+
 #define MAX_TEAMSCORE 2
+USING(ScoreTeam, string);
+.int _teamscores[MAX_TEAMSCORE];
+#define teamscores(i) _teamscores[i]
+string _teamscores_label[MAX_TEAMSCORE];
+#define teamscores_label(i) _teamscores_label[i]
+int _teamscores_flags[MAX_TEAMSCORE];
+#define teamscores_flags(i) _teamscores_flags[i]
+
+#endif
 
 const int ST_SCORE = 0;
-const int SP_KILLS = 0;
-const int SP_DEATHS = 1;
-const int SP_SUICIDES = 2;
-const int SP_SCORE = 3;
-const int SP_DMG = 10;
-const int SP_DMGTAKEN = 11;
+
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
 // WEAPONTODO: move this into separate/new projectile handling code // this sets sounds and other properties of the projectiles in csqc

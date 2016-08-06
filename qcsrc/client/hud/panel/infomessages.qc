@@ -114,9 +114,9 @@ void HUD_InfoMessages()
 			{
 				entity sk;
 				sk = playerslots[player_localnum];
-				if(sk.(scores[ps_primary]) >= 666)
+				if(sk.(scores(ps_primary)) >= 666)
 					s = _("^1Match has already begun");
-				else if(sk.(scores[ps_primary]) > 0)
+				else if(sk.(scores(ps_primary)) > 0)
 					s = _("^1You have no more lives left");
 				else
 					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));

@@ -32,10 +32,6 @@ REGISTER_MUTATOR(lms, false)
 	return 0;
 }
 
-// scoreboard stuff
-const float SP_LMS_LIVES = 4;
-const float SP_LMS_RANK = 5;
-
 // lives related defs
 float lms_lowest_lives;
 float lms_next_place;
@@ -392,7 +388,7 @@ MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 {
 	if(gameover)
-	if(M_ARGV(0, int) == SP_LMS_RANK) // score field
+	if(M_ARGV(0, entity) == SP_LMS_RANK) // score field
 		return true; // allow writing to this field in intermission as it is needed for newly joining players
 }
 
