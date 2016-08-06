@@ -54,7 +54,7 @@ vector CL_Weapon_GetShotOrg(int wpn)
 	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
 	CL_WeaponEntity_SetModel(e, "", false);
-	remove(e);
+	delete(e);
 	return ret;
 }
 
@@ -69,8 +69,8 @@ void CL_Weaponentity_Think(entity this)
 	if (this.owner.(weaponentity) != this)
 	{
 		// owner has new gun; remove old one
-		if (this.weaponchild) remove(this.weaponchild);
-		remove(this);
+		if (this.weaponchild) delete(this.weaponchild);
+		delete(this);
 		return;
 	}
 	if (IS_DEAD(this.owner))
@@ -110,7 +110,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	this.nextthink = time;
 	if (this.owner.exteriorweaponentity != this)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	if (IS_DEAD(this.owner))
@@ -215,10 +215,9 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
 	{
-		FOREACH_ENTITY_ENT(owner, actor,
+		IL_EACH(g_mines, it.owner == actor,
 		{
-			if(it.classname != "mine") continue;
-			if(it.owner == actor) return false;
+			return false;
 		});
 	}
 

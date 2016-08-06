@@ -68,7 +68,7 @@ void W_Hagar_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Hagar_Explode_use(entity this, entity actor, entity trigger)
@@ -81,7 +81,7 @@ void W_Hagar_Explode2(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Hagar_Explode2_use(entity this, entity actor, entity trigger)
@@ -169,6 +169,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor)
 
 	missile.angles = vectoangles(missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
@@ -212,6 +213,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor)
 
 	missile.angles = vectoangles(missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR_BOUNCING, true);
@@ -288,6 +290,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 
 		missile.angles = vectoangles(missile.velocity);
 		missile.flags = FL_PROJECTILE;
+		IL_PUSH(g_projectiles, missile);
 
 		CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 

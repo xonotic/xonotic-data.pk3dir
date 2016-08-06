@@ -463,7 +463,7 @@ IMPULSE(waypoint_clear_personal)
 	WaypointSprite_ClearPersonal(this);
 	if (this.personal)
 	{
-		remove(this.personal);
+		delete(this.personal);
 		this.personal = NULL;
 	}
 	sprint(this, "personal waypoint cleared\n");
@@ -474,7 +474,7 @@ IMPULSE(waypoint_clear)
 	WaypointSprite_ClearOwned(this);
 	if (this.personal)
 	{
-		remove(this.personal);
+		delete(this.personal);
 		this.personal = NULL;
 	}
 	sprint(this, "all waypoints cleared\n");

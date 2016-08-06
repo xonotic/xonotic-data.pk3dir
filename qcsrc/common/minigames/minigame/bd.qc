@@ -259,7 +259,7 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 					return; // how?!
 
 				if(piece.netname) { strunzone(piece.netname); }
-				remove(piece);
+				delete(piece);
 				minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 				return;
 			}
@@ -313,12 +313,12 @@ void bd_unfill_recurse(entity minigame, entity player, int thetype, int letter, 
 	if(targ && thetype == targ.bd_tiletype)
 	{
 		if(targ.netname) { strunzone(targ.netname); }
-		remove(targ);
+		delete(targ);
 	}
 	else if(piece && thetype == piece.bd_tiletype)
 	{
 		if(piece.netname) { strunzone(piece.netname); }
-		remove(piece);
+		delete(piece);
 	}
 	else return;
 
@@ -393,7 +393,7 @@ void bd_setup_pieces(entity minigame)
 		if(e.classname == "minigame_board_piece")
 		{
 			if(e.netname) { strunzone(e.netname); }
-			remove(e);
+			delete(e);
 		}
 
 	bd_load_level(minigame);
@@ -631,7 +631,7 @@ int bd_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 
 			if(minigame.bd_nextlevel) { strunzone(minigame.bd_nextlevel); }

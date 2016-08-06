@@ -173,6 +173,7 @@ void M_Shambler_Attack_Lightning(entity this)
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }

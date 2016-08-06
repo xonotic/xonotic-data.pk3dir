@@ -430,9 +430,8 @@ bool raptor_frame(entity this)
 	if(vehic.bomb1.cnt < time)
 	{
 		bool incoming = false;
-		FOREACH_ENTITY_ENT(enemy, vehic,
+		IL_EACH(g_projectiles, it.enemy == vehic,
 		{
-			if(it.flags & FL_PROJECTILE)
 			if(MISSILE_IS_TRACKING(it))
 			if(vdist(vehic.origin - it.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
 			{
@@ -600,8 +599,8 @@ bool raptor_impulse(entity this, int _imp)
 
 spawnfunc(vehicle_raptor)
 {
-	if(!autocvar_g_vehicle_raptor) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_RAPTOR, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_raptor) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_RAPTOR, false)) { delete(this); return; }
 }
 
 METHOD(Raptor, vr_impact, void(Raptor thisveh, entity instance))

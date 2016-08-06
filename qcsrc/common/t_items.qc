@@ -194,7 +194,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     if(sf & ISF_MODEL)
     {
         this.drawmask  = MASK_NORMAL;
-		this.move_movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 		if (isnew) IL_PUSH(g_drawables, this);
         this.draw       = ItemDraw;
         this.solid = SOLID_TRIGGER;
@@ -254,7 +254,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.gravity = 1;
         this.pushable = true;
         //this.angles = '0 0 0';
-        this.move_movetype = MOVETYPE_TOSS;
+        set_movetype(this, MOVETYPE_TOSS);
         this.velocity_x = ReadCoord();
         this.velocity_y = ReadCoord();
         this.velocity_z = ReadCoord();
@@ -768,7 +768,7 @@ void Item_Touch(entity this, entity toucher)
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
-			remove(this);
+			delete(this);
 			return;
 		}
 	}
@@ -817,7 +817,7 @@ LABEL(pickup)
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
-		remove (this);
+		delete (this);
 	else if (this.spawnshieldtime)
 	{
 		entity e;
@@ -904,7 +904,7 @@ void RemoveItem(entity this)
 {
 	if(wasfreed(this) || !this) { return; }
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	remove(this);
+	delete(this);
 }
 
 // pickup evaluation functions
@@ -1069,7 +1069,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if(MUTATOR_CALLHOOK(FilterItem, this)) // error means we do not want the item
 	{
 		startitem_failed = true;
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -1098,7 +1098,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 		{
 			startitem_failed = true;
-			remove(this);
+			delete(this);
 			return;
 		}
 	}
@@ -1107,7 +1107,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
-			remove (this);
+			delete (this);
 			return;
 		}
 
@@ -1226,7 +1226,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if (MUTATOR_CALLHOOK(Item_Spawn, this))
 	{
 		startitem_failed = true;
-		remove(this);
+		delete(this);
 		return;
 	}
 }
@@ -1423,7 +1423,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 	if(actor.classname == "droppedweapon")
 	{
 		EXACTTRIGGER_TOUCH(this, trigger);
-		remove(actor);
+		delete(actor);
 		return;
 	}
 
@@ -1439,7 +1439,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 	FOREACH_ENTITY_ENT(enemy, actor,
 	{
 		if(it.classname == "droppedweapon")
-			remove(it);
+			delete(it);
 	});
 
 	if(GiveItems(actor, 0, tokenize_console(this.netname)))

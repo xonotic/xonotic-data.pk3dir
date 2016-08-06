@@ -8,7 +8,7 @@
 
 spawnfunc(info_null)
 {
-	remove(this);
+	delete(this);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
 }
 
@@ -281,7 +281,7 @@ void LODmodel_attach(entity this)
 		if(e)
 		{
 			this.lodmodel1 = e.model;
-			remove(e);
+			delete(e);
 		}
 	}
 	if(this.lodtarget2 != "")
@@ -290,7 +290,7 @@ void LODmodel_attach(entity this)
 		if(e)
 		{
 			this.lodmodel2 = e.model;
-			remove(e);
+			delete(e);
 		}
 	}
 

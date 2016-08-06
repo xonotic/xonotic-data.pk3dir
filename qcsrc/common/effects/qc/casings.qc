@@ -44,7 +44,7 @@ class(Casing) .float cnt;
 
 void Casing_Delete(entity this)
 {
-    remove(this);
+    delete(this);
 }
 
 void Casing_Draw(entity this)
@@ -154,7 +154,7 @@ NET_HANDLE(casings, bool isNew)
     if (isNew) IL_PUSH(g_drawables, casing);
     casing.velocity = casing.velocity + 2 * prandomvec();
     casing.avelocity = '0 250 0' + 100 * prandomvec();
-    casing.move_movetype = MOVETYPE_BOUNCE;
+    set_movetype(casing, MOVETYPE_BOUNCE);
     settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;

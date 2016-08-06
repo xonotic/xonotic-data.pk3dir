@@ -51,7 +51,7 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(tdm_team)
 {
-	if(!g_tdm || !this.cnt) { remove(this); return; }
+	if(!g_tdm || !this.cnt) { delete(this); return; }
 
 	this.classname = "tdm_team";
 	this.team = this.cnt + 1;

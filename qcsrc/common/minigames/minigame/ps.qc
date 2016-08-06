@@ -139,7 +139,7 @@ bool ps_move_piece(entity minigame, entity piece, string pos, int leti, int numb
 		return false;
 
 	if(middle.netname) { strunzone(middle.netname); }
-	remove(middle);
+	delete(middle);
 
 	if(piece.netname) { strunzone(piece.netname); }
 	piece.netname = strzone(pos);
@@ -232,7 +232,7 @@ int ps_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}

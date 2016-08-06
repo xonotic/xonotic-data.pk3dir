@@ -574,3 +574,4 @@ float autocvar_sv_stopspeed;
 float autocvar_sv_airaccelerate;
 float autocvar_sv_airstopaccelerate;
 float autocvar_sv_track_canjump;
+bool autocvar_sv_showspectators;

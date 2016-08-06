@@ -143,7 +143,7 @@ void HUD_MinigameMenu_EraseEntry ( entity e )
 	if ( HUD_MinigameMenu_activeitem == e )
 		HUD_MinigameMenu_activeitem = NULL;
 
-	remove(e);
+	delete(e);
 }
 
 // Minigame menu options: create entry
@@ -193,7 +193,7 @@ bool HUD_MinigameMenu_Click_ExpandCollapse(entity this)
 			if ( e.flags & 2 )
 				HUD_MinigameMenu_Click(e);
 			this.list_next = e.list_next;
-			remove(e);
+			delete(e);
 		}
 		if ( this.list_next )
 			this.list_next.list_prev = this;
@@ -351,7 +351,7 @@ void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger)
 		for ( e = HUD_MinigameMenu_entries; e != NULL; e = p )
 		{
 			p = e.list_next;
-			remove(e);
+			delete(e);
 		}
 		HUD_MinigameMenu_entries = NULL;
 		HUD_MinigameMenu_last_entry = NULL;

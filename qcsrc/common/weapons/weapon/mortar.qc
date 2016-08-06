@@ -81,7 +81,7 @@ void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Mortar_Grenade_Explode_use(entity this, entity actor, entity trigger)
@@ -106,7 +106,7 @@ void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)
@@ -248,6 +248,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor)
 
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
 
 	if(WEP_CVAR_PRI(mortar, type) == 0 || WEP_CVAR_PRI(mortar, type) == 2)
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);
@@ -295,6 +296,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor)
 
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
 
 	if(WEP_CVAR_SEC(mortar, type) == 0 || WEP_CVAR_SEC(mortar, type) == 2)
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);

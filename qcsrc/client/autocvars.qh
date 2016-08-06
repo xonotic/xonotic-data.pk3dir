@@ -442,6 +442,7 @@ string autocvar__cl_playermodel;
 float autocvar_cl_deathglow;
 bool autocvar_developer_csqcentities;
 float autocvar_g_jetpack_attenuation;
+bool autocvar_cl_showspectators;
 string autocvar_crosshair_hmg = "";
 vector autocvar_crosshair_hmg_color = '0.2 1.0 0.2';
 float autocvar_crosshair_hmg_alpha = 1;

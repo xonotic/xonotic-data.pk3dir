@@ -411,7 +411,7 @@ bool buff_Customize(entity this, entity client)
 
 void buff_Init(entity this)
 {
-	if(!cvar("g_buffs")) { remove(this); return; }
+	if(!cvar("g_buffs")) { delete(this); return; }
 
 	if(!teamplay && this.team) { this.team = 0; }
 
@@ -480,7 +480,7 @@ void buff_Vengeance_DelayedDamage(entity this)
 	if(this.enemy)
 		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, this.enemy.origin, '0 0 0');
 
-	remove(this);
+	delete(this);
 	return;
 }
 
@@ -690,7 +690,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 
 		if(frag_target.buff_model)
 		{
-			remove(frag_target.buff_model);
+			delete(frag_target.buff_model);
 			frag_target.buff_model = NULL;
 		}
 	}
@@ -788,7 +788,7 @@ bool buffs_RemovePlayer(entity player)
 {
 	if(player.buff_model)
 	{
-		remove(player.buff_model);
+		delete(player.buff_model);
 		player.buff_model = NULL;
 	}
 
@@ -986,7 +986,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 		else
 		{
-			remove(player.buff_model);
+			delete(player.buff_model);
 			player.buff_model = NULL;
 
 			player.effects &= ~(EF_NOSHADOW);

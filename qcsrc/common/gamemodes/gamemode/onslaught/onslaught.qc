@@ -120,8 +120,6 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 
 // score rule declarations
 const int ST_ONS_CAPS = 1;
-const int SP_ONS_CAPS = 4;
-const int SP_ONS_TAKES = 6;
 
 #endif
 #endif
@@ -551,7 +549,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 			setmodel_fixsize(this.owner, MDL_ONS_CP_PAD1);
 		//setsize(this, '-32 -32 0', '32 32 8');
 
-		remove(this);
+		delete(this);
 	}
 
 	this.SendFlags |= CPSF_STATUS;
@@ -819,7 +817,7 @@ void ons_ControlPoint_Think(entity this)
 void ons_ControlPoint_Reset(entity this)
 {
 	if(this.goalentity)
-		remove(this.goalentity);
+		delete(this.goalentity);
 
 	this.goalentity = NULL;
 	this.team = 0;
@@ -1923,7 +1921,7 @@ void ons_MonsterSpawn_Delayed(entity this)
 {
 	entity own = this.owner;
 
-	if(!own) { remove(this); return; }
+	if(!own) { delete(this); return; }
 
 	if(own.targetname)
 	{
@@ -1936,7 +1934,7 @@ void ons_MonsterSpawn_Delayed(entity this)
 		}
 	}
 
-	remove(this);
+	delete(this);
 }
 
 MUTATOR_HOOKFUNCTION(ons, MonsterSpawn)
@@ -1952,7 +1950,7 @@ void ons_TurretSpawn_Delayed(entity this)
 {
 	entity own = this.owner;
 
-	if(!own) { remove(this); return; }
+	if(!own) { delete(this); return; }
 
 	if(own.targetname)
 	{
@@ -1966,7 +1964,7 @@ void ons_TurretSpawn_Delayed(entity this)
 		}
 	}
 
-	remove(this);
+	delete(this);
 }
 
 MUTATOR_HOOKFUNCTION(ons, TurretSpawn)
@@ -2178,7 +2176,7 @@ keys:
  */
 spawnfunc(onslaught_link)
 {
-	if(!g_onslaught) { remove(this); return; }
+	if(!g_onslaught) { delete(this); return; }
 
 	if (this.target == "" || this.target2 == "")
 		objerror(this, "target and target2 must be set\n");
@@ -2203,7 +2201,7 @@ keys:
 
 spawnfunc(onslaught_controlpoint)
 {
-	if(!g_onslaught) { remove(this); return; }
+	if(!g_onslaught) { delete(this); return; }
 
 	ons_ControlPoint_Setup(this);
 }
@@ -2219,7 +2217,7 @@ keys:
  */
 spawnfunc(onslaught_generator)
 {
-	if(!g_onslaught) { remove(this); return; }
+	if(!g_onslaught) { delete(this); return; }
 	if(!this.team) { objerror(this, "team must be set"); }
 
 	ons_GeneratorSetup(this);
@@ -2236,7 +2234,7 @@ void ons_ScoreRules()
 	if(c4 >= 0) teams |= BIT(3);
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "destroyed", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,    "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
 	ScoreRules_basics_end();
 }

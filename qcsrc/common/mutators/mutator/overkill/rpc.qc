@@ -57,7 +57,7 @@ void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 
 	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
 
-	remove (this);
+	delete (this);
 }
 
 void W_RocketPropelledChainsaw_Explode_think(entity this)
@@ -92,7 +92,7 @@ void W_RocketPropelledChainsaw_Think(entity this)
 {
 	if(this.cnt <= time)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -143,6 +143,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
 	missile.cnt = time + WEP_CVAR(rpc, lifetime);
 	missile.nextthink = time;
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 
 	CSQCProjectile(missile, true, PROJECTILE_RPC, false);
 

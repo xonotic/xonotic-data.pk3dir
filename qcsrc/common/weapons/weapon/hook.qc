@@ -96,7 +96,7 @@ void W_Hook_ExplodeThink(entity this)
 	if(dt < this.dmg_duration)
 		this.nextthink = time + 0.05; // soon
 	else
-		remove(this);
+		delete(this);
 }
 
 void W_Hook_Explode2(entity this)
@@ -179,6 +179,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 	gren.angles = '0 0 0';
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_HOOKBOMB, true);
 

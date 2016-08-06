@@ -38,9 +38,6 @@ REGISTER_MUTATOR(cts, false)
 
 // scores
 const float ST_CTS_LAPS = 1;
-const float SP_CTS_LAPS = 4;
-const float SP_CTS_TIME = 5;
-const float SP_CTS_FASTEST = 6;
 #endif
 
 #ifdef IMPLEMENTATION
@@ -406,7 +403,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 
 	if(player.killindicator && player.killindicator.health == 1) // player.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
 	{
-		remove(player.killindicator);
+		delete(player.killindicator);
 		player.killindicator = NULL;
 
 		ClientKill_Now(player); // allow instant kill in this case

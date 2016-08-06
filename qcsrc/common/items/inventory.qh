@@ -71,7 +71,7 @@ void Inventory_new(entity e)
     inv.drawonlytoclient = e;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);
 }
-void Inventory_delete(entity e) { remove(e.inventory.inventory); remove(e.inventory); }
+void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
 #endif
 

@@ -236,7 +236,7 @@ void W_Arc_Bolt_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
@@ -311,7 +311,7 @@ void W_Arc_Beam_Think(entity this)
 {
 	if(this != this.owner.arc_beam)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -378,7 +378,7 @@ void W_Arc_Beam_Think(entity this)
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(own);
 		}
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -1279,7 +1279,7 @@ void Draw_ArcBeam(entity this)
 
 void Remove_ArcBeam(entity this)
 {
-	remove(this.beam_muzzleentity);
+	delete(this.beam_muzzleentity);
 	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 

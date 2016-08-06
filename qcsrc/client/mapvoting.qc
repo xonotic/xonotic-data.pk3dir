@@ -177,11 +177,11 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		drawstring(last.origin+offset, last.message, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
 		next = last;
 		last = last.chain;
-		remove(next);
+		delete(next);
 	}
 
 	// Cleanup
-	remove(title);
+	delete(title);
 }
 
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float _count, int id)

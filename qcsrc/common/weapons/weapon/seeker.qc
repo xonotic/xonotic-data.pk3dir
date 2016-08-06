@@ -99,7 +99,7 @@ void W_Seeker_Missile_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), NULL, NULL, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Seeker_Missile_Explode_think(entity this)
@@ -294,7 +294,8 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, vector f_diff, entity m
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-4 -4 -4', '4 4 4');
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.flags       = FL_PROJECTILE;
+	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH | MIF_GUIDED_TAG;
 
 	W_SetupProjVelocity_UP_PRE(missile, seeker, missile_);
@@ -315,7 +316,7 @@ void W_Seeker_Flac_Explode(entity this, entity directhitentity)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), NULL, NULL, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Seeker_Flac_Touch(entity this, entity toucher)
@@ -370,7 +371,8 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
 	set_movetype(missile, MOVETYPE_FLY);
 	missile.projectiledeathtype = WEP_SEEKER.m_id;
 	missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
-	missile.flags 				= FL_PROJECTILE;
+	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags       = MIF_SPLASH;
 
 	// csqc projectiles
@@ -431,7 +433,7 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 	Weapon thiswep = WEP_SEEKER;
 	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && this.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (PS(this.realowner).m_switchweapon != WEP_SEEKER))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -472,7 +474,7 @@ void W_Seeker_Tracker_Think(entity this)
 		if(this)
 		{
 			WaypointSprite_Kill(this.tag_target.wps_tag_tracker);
-			remove(this);
+			delete(this);
 		}
 		return;
 	}
@@ -490,7 +492,7 @@ void W_Seeker_Tag_Explode(entity this)
 	//    return;
 	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -560,7 +562,7 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 		}
 	}
 
-	remove(this);
+	delete(this);
 	return;
 }
 
@@ -589,7 +591,8 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor)
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-2 -2 -2', '2 2 2');
 
-	missile.flags       = FL_PROJECTILE;
+	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	//missile.missile_flags = MIF_..?;
 
 	set_movetype(missile, MOVETYPE_FLY);

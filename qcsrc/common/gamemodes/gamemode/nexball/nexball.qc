@@ -70,8 +70,6 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 }
 
 const float ST_NEXBALL_GOALS = 1;
-const float SP_NEXBALL_GOALS = 4;
-const float SP_NEXBALL_FAULTS = 5;
 void nb_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, 0, 0, true);
@@ -453,7 +451,7 @@ spawnfunc(nexball_team)
 {
 	if(!g_nexball)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.team = this.cnt + 1;
@@ -527,7 +525,7 @@ void nb_delayedinit(entity this)
 
 void SpawnBall(entity this)
 {
-	if(!g_nexball) { remove(this); return; }
+	if(!g_nexball) { delete(this); return; }
 
 //	balls += 4; // using the remaining bits to count balls will leave more than the max edict count, so it's fine
 
@@ -624,7 +622,7 @@ bool nb_Goal_Customize(entity this, entity client)
 
 void SpawnGoal(entity this)
 {
-	if(!g_nexball) { remove(this); return; }
+	if(!g_nexball) { delete(this); return; }
 
 	EXACTTRIGGER_INIT;
 
@@ -761,7 +759,7 @@ void W_Nexball_Touch(entity this, entity toucher)
 				GiveBall(attacker, toucher.ballcarried);
 			}
 		}
-	remove(this);
+	delete(this);
 }
 
 void W_Nexball_Attack(entity actor, float t)
@@ -837,6 +835,7 @@ void W_Nexball_Attack2(entity actor)
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 
 	CSQCProjectile(missile, true, PROJECTILE_ELECTRO, true);
 }

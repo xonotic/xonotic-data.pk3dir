@@ -288,10 +288,10 @@ void pathlib_cleanup()
     }
 
     if(openlist)
-        remove(openlist);
+        delete(openlist);
 
     if(closedlist)
-        remove(closedlist);
+        delete(closedlist);
 
     openlist       = NULL;
     closedlist     = NULL;

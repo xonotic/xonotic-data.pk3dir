@@ -74,7 +74,7 @@ void RemoveGrapplingHook(entity pl)
 {
 	if(pl.hook == NULL)
 		return;
-	remove(pl.hook);
+	delete(pl.hook);
 	pl.hook = NULL;
 	if(pl.move_movetype == MOVETYPE_FLY)
 		set_movetype(pl, MOVETYPE_WALK);
@@ -87,7 +87,7 @@ void GrapplingHookReset(entity this)
 	if(this.realowner.hook == this)
 		RemoveGrapplingHook(this.owner);
 	else // in any case:
-		remove(this);
+		delete(this);
 }
 
 void GrapplingHookThink(entity this);
@@ -370,6 +370,7 @@ void FireGrapplingHook(entity actor)
 	missile.reset = GrapplingHookReset;
 	missile.classname = "grapplinghook";
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 
 	set_movetype(missile, ((autocvar_g_balance_grapplehook_gravity) ? MOVETYPE_TOSS : MOVETYPE_FLY));
 	PROJECTILE_MAKETRIGGER(missile);

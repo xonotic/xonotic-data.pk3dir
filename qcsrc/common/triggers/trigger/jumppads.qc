@@ -174,11 +174,11 @@ void trigger_push_touch(entity this, entity toucher)
 		switch(toucher.move_movetype)
 		{
 			case MOVETYPE_FLY:
-				toucher.move_movetype = MOVETYPE_TOSS;
+				set_movetype(toucher, MOVETYPE_TOSS);
 				toucher.gravity = 1;
 				break;
 			case MOVETYPE_BOUNCEMISSILE:
-				toucher.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(toucher, MOVETYPE_BOUNCE);
 				toucher.gravity = 1;
 				break;
 		}
@@ -235,6 +235,7 @@ void trigger_push_touch(entity this, entity toucher)
 	if (toucher.flags & FL_PROJECTILE)
 	{
 		toucher.angles = vectoangles (toucher.velocity);
+		toucher.com_phys_gravity_factor = 1;
 		switch(toucher.move_movetype)
 		{
 			case MOVETYPE_FLY:
@@ -291,7 +292,7 @@ void trigger_push_findtarget(entity this)
 			tracetoss(e, e);
 			if(e.move_movetype == MOVETYPE_NONE)
 				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
-			remove(e);
+			delete(e);
 #endif
 		}
 
@@ -323,7 +324,7 @@ void trigger_push_findtarget(entity this)
 		e.velocity = this.movedir;
 		tracetoss(e, e);
 		waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
-		remove(e);
+		delete(e);
 	}
 
 	trigger_push_link(this);

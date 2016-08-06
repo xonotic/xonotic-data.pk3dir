@@ -400,7 +400,7 @@ void spiderbot_headfade(entity this)
 			sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 			Send_Effect(EFFECT_EXPLOSION_BIG, this.origin + '0 0 100', '0 0 0', 1);
 		}
-		remove(this);
+		delete(this);
 	}
 }
 
@@ -531,8 +531,8 @@ bool spiderbot_impulse(entity this, int _imp)
 
 spawnfunc(vehicle_spiderbot)
 {
-	if(!autocvar_g_vehicle_spiderbot) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_SPIDERBOT, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_spiderbot) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_SPIDERBOT, false)) { delete(this); return; }
 }
 
 METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))

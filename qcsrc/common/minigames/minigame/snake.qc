@@ -287,7 +287,7 @@ void snake_eat_team(entity minigame, int pteam)
 		if ( e.classname == "minigame_board_piece" && e.cnt && e.team == pteam )
 		{
 			if(e.netname) { strunzone(e.netname); }
-			remove(e);
+			delete(e);
 		}
 
 	if(minigame.snake_lives[pteam] <= 0)
@@ -354,7 +354,7 @@ void snake_move_head(entity minigame, entity head)
 	if(ate_mouse)
 	{
 		if(hit.netname) { strunzone(hit.netname); }
-		remove(hit);
+		delete(hit);
 
 		snake_new_mouse(minigame);
 	}
@@ -425,7 +425,7 @@ int snake_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}

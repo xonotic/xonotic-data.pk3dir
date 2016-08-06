@@ -442,8 +442,8 @@ int pong_server_event(entity minigame, string event, ...)
 								paddle.realowner.classname == "pong_ai" )
 							{
 								minigame.pong_paddles[i] = NULL;
-								remove(paddle.realowner);
-								remove(paddle);
+								delete(paddle.realowner);
+								delete(paddle);
 								return true;
 							}
 						}

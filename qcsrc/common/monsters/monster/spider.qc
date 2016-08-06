@@ -148,7 +148,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 		});
 
-		remove(this);
+		delete(this);
 	}
 }
 
@@ -194,6 +194,7 @@ void M_Spider_Attack_Web(entity this)
 	proj.health = 500;
 	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.damagedbycontents = true;
 
 	proj.bouncefactor = 0.3;

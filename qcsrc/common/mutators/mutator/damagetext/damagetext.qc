@@ -49,7 +49,7 @@ CLASS(DamageText, Object)
         this.time_prev = time;
         setorigin(this, this.origin + dt * this.velocity);
         this.alpha -= dt * this.fade_rate;
-        if (this.alpha < 0) remove(this);
+        if (this.alpha < 0) delete(this);
         vector pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
         if (pos.z >= 0 && this.m_size > 0) {
             pos.z = 0;

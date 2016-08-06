@@ -157,7 +157,7 @@ void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
 	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
 
-	remove (this);
+	delete (this);
 }
 
 void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
@@ -235,6 +235,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	setorigin(missile, this.origin + v_forward * 14 + '0 0 30' + v_right * -14);
 	setsize(missile, '0 0 0', '0 0 0');
 	missile.velocity = dir * 400;

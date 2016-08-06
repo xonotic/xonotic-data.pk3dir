@@ -168,7 +168,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		this.classname = "plat";
 		this.solid = SOLID_BSP;
-		this.move_movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.drawmask = MASK_NORMAL;
 		this.draw = plat_draw;
 		if (isnew) IL_PUSH(g_drawables, this);
@@ -177,7 +177,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		plat_reset(this); // also called here
 
-		this.move_movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.move_time = time;
 
 		plat_spawn_inside_trigger(this);

@@ -179,7 +179,7 @@ void W_Tuba_NoteOff(entity this)
 			}
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 int W_Tuba_GetNote(entity pl, int hittype)
@@ -563,9 +563,9 @@ void Ent_TubaNote_Think(entity this)
 		sound(this, CH_TUBA_SINGLE, SND_Null, 0, 0);
 		if (this.enemy) {
 			sound(this.enemy, CH_TUBA_SINGLE, SND_Null, 0, 0);
-			remove(this.enemy);
+			delete(this.enemy);
 		}
-		remove(this);
+		delete(this);
 	} else {
 		tubasound(this, 0);
 	}

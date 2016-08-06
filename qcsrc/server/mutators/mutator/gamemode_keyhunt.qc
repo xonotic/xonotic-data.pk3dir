@@ -138,12 +138,6 @@ float kh_interferemsg_time, kh_interferemsg_team;
 float kh_key_dropped, kh_key_carried;
 
 const float ST_KH_CAPS = 1;
-const float SP_KH_CAPS = 4;
-const float SP_KH_PUSHES = 5;
-const float SP_KH_DESTROYS = 6;
-const float SP_KH_PICKUPS = 7;
-const float SP_KH_KCKILLS = 8;
-const float SP_KH_LOSSES = 9;
 void kh_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
@@ -558,7 +552,7 @@ void kh_Key_Remove(entity key)  // runs after when all the keys have been collec
 		}
 	}
 
-	remove(key);
+	delete(key);
 
 	kh_update_state();
 }
@@ -1099,7 +1093,7 @@ void kh_finalize()
 {
 	// to be called before intermission
 	kh_FinishRound();
-	remove(kh_controller);
+	delete(kh_controller);
 	kh_controller = NULL;
 }
 

@@ -77,7 +77,7 @@ float autocvar_g_invasion_spawn_delay;
 
 spawnfunc(invasion_spawnpoint)
 {
-	if(!g_invasion) { remove(this); return; }
+	if(!g_invasion) { delete(this); return; }
 
 	this.classname = "invasion_spawnpoint";
 

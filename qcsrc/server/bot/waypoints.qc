@@ -43,7 +43,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			if(!(f & WAYPOINTFLAG_GENERATED))
 			{
 				LOG_TRACE("Killed a waypoint that was stuck in solid at ", vtos(w.origin), "\n");
-				remove(w);
+				delete(w);
 				return NULL;
 			}
 			else
@@ -338,7 +338,7 @@ void waypoint_remove(entity e)
 	waypoint_schedulerelink(e.wp30);
 	waypoint_schedulerelink(e.wp31);
 	// and now remove the spawnfunc_waypoint
-	remove(e);
+	delete(e);
 }
 
 // empties the map of waypoints
@@ -346,7 +346,7 @@ void waypoint_removeall()
 {
 	IL_EACH(g_waypoints, true,
 	{
-		remove(it);
+		delete(it);
 	});
 }
 

@@ -815,7 +815,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.SUB_LTIME = ReadCoord();
 
 		this.solid = SOLID_BSP;
-		this.move_movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.use = door_use;
 
 		LinkDoors(this);
@@ -824,7 +824,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 			door_init_startopen(this);
 
 		this.move_time = time;
-		this.move_movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 	}
 
 	if(sf & SF_TRIGGER_RESET)

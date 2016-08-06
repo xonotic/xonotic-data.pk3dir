@@ -300,7 +300,7 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 		));
 
 		if(pseudoprojectile)
-			remove(pseudoprojectile);
+			delete(pseudoprojectile);
 	}
 
 	// find all the entities the railgun hit and hurt them

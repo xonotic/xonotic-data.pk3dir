@@ -118,7 +118,7 @@
 	void entcs_detach(entity player)
 	{
 		if (!player.entcs) return;
-		remove(player.entcs);
+		delete(player.entcs);
 		player.entcs = NULL;
 	}
 
@@ -131,7 +131,7 @@
 		int n = this.sv_entnum;
 		entity e = entcs_receiver(n);
 		entcs_receiver(n, NULL);
-		if (e != this) remove(e);
+		if (e != this) delete(e);
 	}
 
 	void entcs_think(entity this)

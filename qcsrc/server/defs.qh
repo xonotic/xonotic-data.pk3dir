@@ -35,7 +35,7 @@ float player_count;
 float currentbots;
 float bots_would_leave;
 
-void UpdateFrags(entity player, float f);
+void UpdateFrags(entity player, int f);
 .float totalfrags;
 
 float team1_score, team2_score, team3_score, team4_score;
@@ -449,3 +449,15 @@ STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
 
 IntrusiveList g_waypoints;
 STATIC_INIT(g_waypoints) { g_waypoints = IL_NEW(); }
+
+IntrusiveList g_vehicles;
+STATIC_INIT(g_vehicles) { g_vehicles = IL_NEW(); }
+
+IntrusiveList g_turrets;
+STATIC_INIT(g_turrets) { g_turrets = IL_NEW(); }
+
+IntrusiveList g_mines;
+STATIC_INIT(g_mines) { g_mines = IL_NEW(); }
+
+IntrusiveList g_projectiles;
+STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }

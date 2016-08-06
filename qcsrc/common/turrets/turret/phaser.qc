@@ -22,7 +22,7 @@ REGISTER_TURRET(PHASER, NEW(PhaserTurret));
 
 #ifdef SVQC
 
-spawnfunc(turret_phaser) { if (!turret_initialize(this, TUR_PHASER)) remove(this); }
+spawnfunc(turret_phaser) { if (!turret_initialize(this, TUR_PHASER)) delete(this); }
 
 .int fireflag;
 

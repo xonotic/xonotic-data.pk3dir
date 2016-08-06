@@ -521,8 +521,8 @@ void racer_deadtouch(entity this, entity toucher)
 
 spawnfunc(vehicle_racer)
 {
-	if(!autocvar_g_vehicle_racer) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_RACER, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_racer) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_RACER, false)) { delete(this); return; }
 }
 
 #endif // SVQC
@@ -545,7 +545,7 @@ METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
     if(instance.owner.flagcarried)
        setorigin(instance.owner.flagcarried, '-190 0 96');
 #elif defined(CSQC)
-    instance.move_movetype = MOVETYPE_BOUNCE;
+    set_movetype(instance, MOVETYPE_BOUNCE);
 #endif
 }
 

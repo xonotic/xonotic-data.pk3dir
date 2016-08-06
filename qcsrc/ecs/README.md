@@ -44,5 +44,4 @@
 ### listening
 
     entity listener = new_pure(someListener);
-    listener.evt_$event = void(entity this) { code; };
-    subscribe(listener, $event);
+    subscribe(listener, $event, void(entity this) { code; });

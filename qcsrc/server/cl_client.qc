@@ -75,6 +75,30 @@ void send_CSQC_teamnagger() {
 	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
+int CountSpectators(entity player, entity to)
+{
+	if(!player) { return 0; } // not sure how, but best to be safe
+
+	int spec_count = 0;
+
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
+	{
+		spec_count++;
+	});
+
+	return spec_count;
+}
+
+void WriteSpectators(entity player, entity to)
+{
+	if(!player) { return; } // not sure how, but best to be safe
+
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
+	{
+		WriteByte(MSG_ENTITY, num_for_edict(it));
+	});
+}
+
 bool ClientData_Send(entity this, entity to, int sf)
 {
 	assert(to == this.owner, return false);
@@ -87,6 +111,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
 	if (e.zoomstate)            sf |= 4; // zoomed
 	if (e.porto_v_angle_held)   sf |= 8; // angles held
+	if (autocvar_sv_showspectators) sf |= 16; // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -100,6 +125,14 @@ bool ClientData_Send(entity this, entity to, int sf)
 		WriteAngle(MSG_ENTITY, e.v_angle.x);
 		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
+
+	if(sf & 16)
+	{
+		float specs = CountSpectators(e, to);
+		WriteByte(MSG_ENTITY, specs);
+		WriteSpectators(e, to);
+	}
+
 	return true;
 }
 
@@ -112,7 +145,7 @@ void ClientData_Attach(entity this)
 
 void ClientData_Detach(entity this)
 {
-	remove(this.clientdata);
+	delete(this.clientdata);
 	this.clientdata = NULL;
 }
 
@@ -224,6 +257,7 @@ void PutObserverInServer(entity this)
     RemoveGrapplingHook(this);
 	Portal_ClearAll(this);
 	Unfreeze(this);
+	SetSpectatee(this, NULL);
 
 	if (this.alivetime)
 	{
@@ -639,7 +673,7 @@ void PutClientInServer(entity this)
 		if (autocvar_spawn_debug)
 		{
 			sprint(this, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
-			remove(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
+			delete(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
 		PS(this).m_switchweapon = w_getbestweapon(this);
@@ -797,7 +831,7 @@ void ClientKill_Now(entity this)
 	}
 
 	if(this.killindicator && !wasfreed(this.killindicator))
-		remove(this.killindicator);
+		delete(this.killindicator);
 
 	this.killindicator = NULL;
 
@@ -814,14 +848,14 @@ void KillIndicator_Think(entity this)
 	if (gameover)
 	{
 		this.owner.killindicator = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 
 	if (this.owner.alpha < 0 && !this.owner.vehicle)
 	{
 		this.owner.killindicator = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -1187,6 +1221,8 @@ void ClientDisconnect(entity this)
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
+	SetSpectatee(this, NULL);
+
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	ClientState_detach(this);
@@ -1201,8 +1237,8 @@ void ClientDisconnect(entity this)
 
 	this.flags &= ~FL_CLIENT;
 
-	if (this.chatbubbleentity) remove(this.chatbubbleentity);
-	if (this.killindicator) remove(this.killindicator);
+	if (this.chatbubbleentity) delete(this.chatbubbleentity);
+	if (this.killindicator) delete(this.killindicator);
 
 	WaypointSprite_PlayerGone(this);
 
@@ -1211,7 +1247,7 @@ void ClientDisconnect(entity this)
 	if (this.netname_previous) strunzone(this.netname_previous);
 	if (this.clientstatus) strunzone(this.clientstatus);
 	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
-	if (this.personal) remove(this.personal);
+	if (this.personal) delete(this.personal);
 
 	this.playerid = 0;
 	ReadyCount();
@@ -1225,7 +1261,7 @@ void ChatBubbleThink(entity this)
 	{
 		if(this.owner) // but why can that ever be NULL?
 			this.owner.chatbubbleentity = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -1672,6 +1708,8 @@ bool SpectateSet(entity this)
 	if(!IS_PLAYER(this.enemy))
 		return false;
 
+	ClientData_Touch(this.enemy);
+
 	msg_entity = this;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
 	WriteEntity(MSG_ONE, this.enemy);
@@ -1694,6 +1732,9 @@ void SetSpectatee(entity this, entity spectatee)
 	// these are required to fix the spectator bug with arc
 	if(old_spectatee && old_spectatee.arc_beam) { old_spectatee.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 	if(this.enemy && this.enemy.arc_beam) { this.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+
+	// needed to update spectator list
+	if(old_spectatee) { ClientData_Touch(old_spectatee); }
 }
 
 bool Spectate(entity this, entity pl)
@@ -1790,6 +1831,8 @@ void LeaveSpectatorMode(entity this)
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
 		{
 			TRANSMUTE(Player, this);
+
+			SetSpectatee(this, NULL);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(this, false, true); }
@@ -2428,7 +2471,7 @@ void DrownPlayer(entity this)
 
 void Player_Physics(entity this)
 {
-	this.movetype = ((this.move_qcphysics) ? MOVETYPE_NONE : this.move_movetype);
+	set_movetype(this, ((this.move_qcphysics) ? MOVETYPE_NONE : this.move_movetype));
 
 	if(!this.move_qcphysics)
 		return;
@@ -2438,7 +2481,7 @@ void Player_Physics(entity this)
 	if(mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH || mt == MOVETYPE_PHYSICS)
 	{
 		this.move_qcphysics = false;
-		this.movetype = mt;
+		set_movetype(this, mt);
 		return;
 	}
 

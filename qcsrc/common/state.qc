@@ -23,7 +23,7 @@ void PlayerState_detach(entity this)
 
 	if (ps.m_client != this) return;  // don't own state, spectator
 	FOREACH_CLIENT(PS(it) == ps, { PS(it) = NULL; });
-	remove(ps);
+	delete(ps);
 
     Inventory_delete(this);
 }
@@ -45,13 +45,12 @@ void ClientState_attach(entity this)
 
     GetCvars(this, 0);  // get other cvars from player
 
-	if (IS_REAL_CLIENT(this)) { PlayerStats_PlayerBasic_CheckUpdate(this); }
-
 	// TODO: fold all of these into ClientState
 
 	DecodeLevelParms(this);
 
 	PlayerScore_Attach(this);
+	PlayerStats_PlayerBasic_CheckUpdate(this);
 	ClientData_Attach(this);
 	accuracy_init(this);
 	entcs_attach(this);
@@ -73,7 +72,7 @@ void PlayerScore_Detach(entity this);
 
 void ClientState_detach(entity this)
 {
-	remove(CS(this));
+	delete(CS(this));
 	this._cs = NULL;
 
     GetCvars(this, -1);  // free cvars

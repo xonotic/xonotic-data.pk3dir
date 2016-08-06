@@ -123,7 +123,7 @@ void nmm_kill_tiles(entity minig)
 			strunzone(e.netname);
 			strunzone(e.nmm_tile_hmill);
 			strunzone(e.nmm_tile_vmill);
-			remove(e);
+			delete(e);
 		}
 }
 

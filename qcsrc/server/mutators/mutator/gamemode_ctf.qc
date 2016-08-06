@@ -260,7 +260,7 @@ bool ctf_CaptureShield_CheckStatus(entity p)
 	if(ctf_captureshield_max_ratio <= 0)
 		return false;
 
-	s = PlayerScore_Add(p, SP_CTF_CAPS, 0);
+	s  = PlayerScore_Add(p, SP_CTF_CAPS,    0);
 	s2 = PlayerScore_Add(p, SP_CTF_PICKUPS, 0);
 	s3 = PlayerScore_Add(p, SP_CTF_RETURNS, 0);
 	s4 = PlayerScore_Add(p, SP_CTF_FCKILLS, 0);
@@ -274,7 +274,7 @@ bool ctf_CaptureShield_CheckStatus(entity p)
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		if(DIFF_TEAM(it, p))
 			continue;
-		se = PlayerScore_Add(it, SP_CTF_CAPS, 0);
+		se  = PlayerScore_Add(it, SP_CTF_CAPS,    0);
 		se2 = PlayerScore_Add(it, SP_CTF_PICKUPS, 0);
 		se3 = PlayerScore_Add(it, SP_CTF_RETURNS, 0);
 		se4 = PlayerScore_Add(it, SP_CTF_FCKILLS, 0);
@@ -2467,7 +2467,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team1)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	ctf_FlagSetup(NUM_TEAM_1, this);
 }
@@ -2485,7 +2485,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team2)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	ctf_FlagSetup(NUM_TEAM_2, this);
 }
@@ -2503,7 +2503,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team3)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	ctf_FlagSetup(NUM_TEAM_3, this);
 }
@@ -2521,7 +2521,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team4)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	ctf_FlagSetup(NUM_TEAM_4, this);
 }
@@ -2539,8 +2539,8 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_neutral)
 {
-	if(!g_ctf) { remove(this); return; }
-	if(!cvar("g_ctf_oneflag")) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
+	if(!cvar("g_ctf_oneflag")) { delete(this); return; }
 
 	ctf_FlagSetup(0, this);
 }
@@ -2553,7 +2553,7 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(ctf_team)
 {
-	if(!g_ctf) { remove(this); return; }
+	if(!g_ctf) { delete(this); return; }
 
 	this.classname = "ctf_team";
 	this.team = this.cnt + 1;
@@ -2583,12 +2583,12 @@ void ctf_ScoreRules(int teams)
 	CheckAllowedTeams(NULL);
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPTIME,  "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,    "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPTIME, "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS, "pickups",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS, "fckills",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS, "returns",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,   "drops",     SFL_LOWER_IS_BETTER);
 	ScoreRules_basics_end();
 }
 

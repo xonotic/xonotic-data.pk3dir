@@ -109,7 +109,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 		}
 	}
 
-	remove(this);
+	delete(this);
 }
 
 void W_Fireball_Explode_think(entity this)
@@ -224,6 +224,7 @@ void W_Fireball_Attack1(entity actor)
 	settouch(proj, W_Fireball_TouchExplode);
 	setsize(proj, '-16 -16 -16', '16 16 16');
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
     proj.missile_flags = MIF_SPLASH | MIF_PROXY;
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREBALL, true);
@@ -273,7 +274,7 @@ void W_Fireball_Firemine_Think(entity this)
 {
 	if(time > this.pushltime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -301,7 +302,7 @@ void W_Fireball_Firemine_Touch(entity this, entity toucher)
 	if(toucher.takedamage == DAMAGE_AIM)
 	if(Fire_AddDamage(toucher, this.realowner, WEP_CVAR_SEC(fireball, damage), WEP_CVAR_SEC(fireball, damagetime), this.projectiledeathtype) >= 0)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -354,6 +355,7 @@ void W_Fireball_Attack2(entity actor)
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
     proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREMINE, true);

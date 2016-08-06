@@ -10,10 +10,6 @@
 .float bouncefactor;
 #endif
 
-#ifdef SVQC
-.bool move_qcphysics;
-#endif
-
 void set_movetype(entity this, int mt);
 
 .float move_movetype;
