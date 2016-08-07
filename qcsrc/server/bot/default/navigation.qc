@@ -1,5 +1,7 @@
 #include "navigation.qh"
 
+#include "cvars.qh"
+
 #include "bot.qh"
 #include "waypoints.qh"
 

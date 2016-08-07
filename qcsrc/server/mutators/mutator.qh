@@ -11,12 +11,7 @@
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 
-#include <server/bot/bot.qh>
-#include <server/bot/navigation.qh>
-#include <server/bot/waypoints.qh>
-
-#include <server/bot/havocbot/havocbot.qh>
-#include <server/bot/havocbot/roles.qh>
+#include <server/bot/api.qh>
 
 #include <server/command/vote.qh>
 #include <server/command/common.qh>

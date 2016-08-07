@@ -4,8 +4,7 @@
 #include "g_hook.qh"
 #include "g_world.qh"
 
-#include "bot/bot.qh"
-#include "bot/waypoints.qh"
+#include "bot/api.qh"
 
 #include "command/common.qh"
 

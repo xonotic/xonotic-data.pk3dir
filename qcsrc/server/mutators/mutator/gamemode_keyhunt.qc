@@ -50,8 +50,6 @@ USING(kh_Think_t, void());
 void kh_StartRound();
 void kh_Controller_SetThink(float t, kh_Think_t func);
 
-entity kh_worldkeylist;
-.entity kh_worldkeynext;
 #endif
 
 #ifdef IMPLEMENTATION

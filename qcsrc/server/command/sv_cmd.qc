@@ -16,9 +16,7 @@
 #include "../playerdemo.qh"
 #include "../teamplay.qh"
 
-#include "../bot/bot.qh"
-#include "../bot/navigation.qh"
-#include "../bot/scripting.qh"
+#include "../bot/api.qh"
 
 #include "../mutators/all.qh"
 

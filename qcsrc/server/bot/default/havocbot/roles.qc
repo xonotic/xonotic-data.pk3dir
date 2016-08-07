@@ -2,6 +2,8 @@
 
 #include "havocbot.qh"
 
+#include "../cvars.qh"
+
 #include "../bot.qh"
 #include "../navigation.qh"
 
