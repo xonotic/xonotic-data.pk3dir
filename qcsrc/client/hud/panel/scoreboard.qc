@@ -1144,14 +1144,10 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	// get monster stats
 	stat_monsters_killed = STAT(MONSTERS_KILLED);
 	stat_monsters_total = STAT(MONSTERS_TOTAL);
-	stat_monsters_killed = 14;
-	stat_monsters_total = 22;
 
 	// get secrets stats
 	stat_secrets_found = STAT(SECRETS_FOUND);
 	stat_secrets_total = STAT(SECRETS_TOTAL);
-	stat_secrets_found = 5;
-	stat_secrets_total = 7;
 
 	// get number of rows
 	if(stat_secrets_total)
