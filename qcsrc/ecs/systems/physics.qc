@@ -84,7 +84,7 @@ void sys_phys_update(entity this, float dt)
 			PHYS_TELEPORT_TIME(this) = 0;
 			PHYS_WATERJUMP_TIME(this) = 0;
 		}
-	} else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod)) {
+	} else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod, dt)) {
 		// handled
 	} else if (this.move_movetype == MOVETYPE_NOCLIP
 	    || this.move_movetype == MOVETYPE_FLY
