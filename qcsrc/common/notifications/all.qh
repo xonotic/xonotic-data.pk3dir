@@ -1,5 +1,4 @@
-#ifndef NOTIFICATIONS_H
-#define NOTIFICATIONS_H
+#pragma once
 
 #include <common/command/all.qh>
 
@@ -800,5 +799,3 @@ REGISTRY_END(Notifications)
 }
 
 #include "all.inc"
-
-#endif

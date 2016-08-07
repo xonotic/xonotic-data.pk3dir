@@ -1,5 +1,4 @@
-#ifndef COMMON_UTIL_H
-#define COMMON_UTIL_H
+#pragma once
 
 #ifndef MENUQC
 
@@ -296,4 +295,3 @@ vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);
 
 // Returns the correct difference between two always increasing numbers
 #define COMPARE_INCREASING(to,from) (to < from ? from + to + 2 : to - from)
-#endif

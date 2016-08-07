@@ -1,5 +1,4 @@
-#ifndef CSQCMODEL_SETTINGS_H
-#define CSQCMODEL_SETTINGS_H
+#pragma once
 
 // define this if svqc code wants to use .frame2 and .lerpfrac
 //#define CSQCMODEL_HAVE_TWO_FRAMES
@@ -94,4 +93,3 @@
 #endif
 
 #define CSQCMODEL_EF_RESPAWNGHOST EF_SELECTABLE
-#endif

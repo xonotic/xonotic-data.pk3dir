@@ -1,5 +1,4 @@
-#ifndef SOUND_H
-#define SOUND_H
+#pragma once
 
 // negative = SVQC autochannels
 // positive = one per entity
@@ -130,5 +129,3 @@ CLASS(Sound, Object)
 		precache_sound(s);
 	}
 ENDCLASS(Sound)
-
-#endif

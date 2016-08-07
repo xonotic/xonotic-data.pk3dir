@@ -1,5 +1,4 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #define setmodel(e, m) _setmodel((e), (m).model_str())
 
@@ -23,5 +22,3 @@ CLASS(Model, Object)
         precache_model(s);
     }
 ENDCLASS(Model)
-
-#endif

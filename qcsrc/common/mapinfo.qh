@@ -1,5 +1,4 @@
-#ifndef MAPINFO_H
-#define MAPINFO_H
+#pragma once
 
 bool autocvar_developer_mapper;
 
@@ -270,4 +269,3 @@ void MapInfo_Shutdown(); // call this in the shutdown handler
 
 #define MAPINFO_SETTEMP_ACL_USER cvar_string("g_mapinfo_settemp_acl")
 #define MAPINFO_SETTEMP_ACL_SYSTEM "-g_mapinfo_* -rcon_* -_* -g_ban* +*"
-#endif

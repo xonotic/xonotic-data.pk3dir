@@ -1,5 +1,5 @@
-#ifndef WEAPON_H
-#define WEAPON_H
+#pragma once
+
 #include <common/items/item/pickup.qh>
 #include <common/stats.qh>
 
@@ -216,5 +216,3 @@ int GetAmmoStat(.int ammotype);
 
 string W_Sound(string w_snd);
 string W_Model(string w_mdl);
-
-#endif

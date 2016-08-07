@@ -1,5 +1,4 @@
-#ifndef SV_MINIGAMES_H
-#define SV_MINIGAMES_H
+#pragma once
 
 /// Create a new minigame session
 /// \return minigame session entity
@@ -59,5 +58,3 @@ REGISTRY_CHECK(Minigames)
 		this.minigame_event = name##_server_event; \
     } \
     REGISTER_INIT(MINIGAME_##name)
-
-#endif

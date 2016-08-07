@@ -1,5 +1,5 @@
-#ifndef AMMO_H
-#define AMMO_H
+#pragma once
+
 #include "pickup.qh"
 CLASS(Ammo, Pickup)
 #ifdef SVQC
@@ -8,4 +8,3 @@ CLASS(Ammo, Pickup)
     ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo))
 #endif
 ENDCLASS(Ammo)
-#endif

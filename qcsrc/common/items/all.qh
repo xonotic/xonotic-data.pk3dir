@@ -1,5 +1,4 @@
-#ifndef ITEMS_ALL_H
-#define ITEMS_ALL_H
+#pragma once
 
 #include <common/command/all.qh>
 
@@ -32,6 +31,4 @@ GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
 
 #ifndef MENUQC
 string Item_Model(string item_mdl);
-#endif
-
 #endif

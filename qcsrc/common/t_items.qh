@@ -1,5 +1,4 @@
-#ifndef T_ITEMS_H
-#define T_ITEMS_H
+#pragma once
 
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
@@ -132,5 +131,4 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 
 float GiveItems(entity e, float beginarg, float endarg);
-#endif
 #endif

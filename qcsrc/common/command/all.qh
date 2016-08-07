@@ -1,5 +1,4 @@
-#ifndef COMMON_COMMANDS_ALL_H
-#define COMMON_COMMANDS_ALL_H
+#pragma once
 
 #include "command.qh"
 REGISTRY(GENERIC_COMMANDS, BITS(7))
@@ -22,5 +21,3 @@ STATIC_INIT(GENERIC_COMMANDS_aliases) {
 #include "generic.qh"
 #include "markup.qh"
 #include "rpn.qh"
-
-#endif

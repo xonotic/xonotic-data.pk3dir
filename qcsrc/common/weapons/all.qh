@@ -1,5 +1,4 @@
-#ifndef WEAPONS_ALL_H
-#define WEAPONS_ALL_H
+#pragma once
 
 #include <common/command/all.qh>
 #include <common/stats.qh>
@@ -359,6 +358,4 @@ ENUMCLASS_END(WFRAME)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
-#endif
-
 #endif

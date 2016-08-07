@@ -1,5 +1,4 @@
-#ifndef MONSTER_H
-#define MONSTER_H
+#pragma once
 
 #ifdef SVQC
 #include "sv_monsters.qh"
@@ -74,5 +73,3 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
 
 ENDCLASS(Monster)
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef SOUNDS_ALL_H
-#define SOUNDS_ALL_H
+#pragma once
 
 #include "sound.qh"
 
@@ -21,4 +20,3 @@ PRECACHE(Sounds) {
 SOUND(Null, "misc/null");
 #include "all.inc"
 #include "all.qc"
-#endif

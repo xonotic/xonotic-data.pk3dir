@@ -1,5 +1,5 @@
-#ifndef ARMOR_H
-#define ARMOR_H
+#pragma once
+
 #include "pickup.qh"
 CLASS(Armor, Pickup)
 #ifdef SVQC
@@ -8,4 +8,3 @@ CLASS(Armor, Pickup)
     ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), commodity_pickupevalfunc)
 #endif
 ENDCLASS(Armor)
-#endif

@@ -1,5 +1,4 @@
-#ifndef STATS_H
-#define STATS_H
+#pragma once
 
 #ifdef SVQC
 #include <server/cl_client.qh>
@@ -322,7 +321,4 @@ REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 REGISTER_STAT(GUNALIGN, int, this.cvar_cl_gunalign)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))
-#endif
-
-
 #endif

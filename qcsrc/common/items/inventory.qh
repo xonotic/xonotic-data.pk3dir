@@ -1,5 +1,4 @@
-#ifndef INVENTORY_H
-#define INVENTORY_H
+#pragma once
 
 #include "all.qh"
 #include "item/pickup.qh"
@@ -73,6 +72,4 @@ void Inventory_new(entity e)
 }
 void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
-#endif
-
 #endif

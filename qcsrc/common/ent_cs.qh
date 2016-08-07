@@ -1,5 +1,4 @@
-#ifndef ENT_CS_H
-#define ENT_CS_H
+#pragma once
 
 REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 REGISTER_NET_TEMP(CLIENT_ENTCS)
@@ -139,7 +138,5 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		entity e = CSQCModel_server2csqc(i);
 		return e ? e.csqcmodel_isdead : false;
 	}
-
-#endif
 
 #endif

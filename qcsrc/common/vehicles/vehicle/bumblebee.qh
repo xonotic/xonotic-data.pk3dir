@@ -1,9 +1,6 @@
-#ifndef BUMBLEBEE_H
-#define BUMBLEBEE_H
+#pragma once
 
 #ifdef CSQC
 
 void CSQC_BUMBLE_GUN_HUD();
-#endif
-
 #endif
