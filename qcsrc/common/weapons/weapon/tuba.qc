@@ -643,7 +643,7 @@ PRECACHE(Tuba)
 	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
 	if (Tuba_PitchStep) {
 		if (!checkextension("DP_SND_SOUND7_WIP2") && !checkextension("DP_SND_SOUND7")) {
-			LOG_WARNING("requested pitch shifting, but not supported by this engine build");
+			LOG_WARN("requested pitch shifting, but not supported by this engine build");
 			Tuba_PitchStep = 0;
 		}
 	}

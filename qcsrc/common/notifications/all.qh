@@ -32,7 +32,7 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
 	}
-	LOG_WARNINGF("Get_Notif_TypeName(%d): Improper net type!\n", ORDINAL(net_type));
+	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!\n", ORDINAL(net_type));
 	return "";
 }
 
@@ -252,7 +252,7 @@ string Get_Notif_BroadcastName(NOTIF broadcast)
 		case NOTIF_TEAM: return "NOTIF_TEAM";
 		case NOTIF_TEAM_EXCEPT: return "NOTIF_TEAM_EXCEPT";
 	}
-	LOG_WARNINGF("Get_Notif_BroadcastName(%d): Improper broadcast!\n", broadcast);
+	LOG_WARNF("Get_Notif_BroadcastName(%d): Improper broadcast!\n", broadcast);
 	return "";
 }
 
@@ -684,7 +684,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 {
 	Notification it = _Notifications_from(net_name, NULL);
 	if (it.nent_type != net_type) {
-		LOG_WARNINGF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!\n",
+		LOG_WARNF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!\n",
 			Get_Notif_TypeName(net_type), net_type,
 			it.registered_id, net_name,
 			Get_Notif_TypeName(it.nent_type)

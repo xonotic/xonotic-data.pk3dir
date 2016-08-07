@@ -333,7 +333,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	{
 		if(gameover)
 			return 0;
-		LOG_WARNING("Adding score to unknown player!");
+		LOG_WARN("Adding score to unknown player!");
 		return 0;
 	}
 	if(score)

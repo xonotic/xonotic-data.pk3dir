@@ -9,7 +9,7 @@ void db_save(int db, string filename)
 	int fh = fopen(filename, FILE_WRITE);
 	if (fh < 0)
 	{
-		LOG_WARNINGF("^1Can't write DB to %s\n", filename);
+		LOG_WARNF("^1Can't write DB to %s\n", filename);
 		return;
 	}
 	fputs(fh, strcat(ftos(DB_BUCKETS), "\n"));

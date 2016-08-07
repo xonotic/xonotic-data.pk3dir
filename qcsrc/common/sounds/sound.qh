@@ -114,7 +114,7 @@ CLASS(Sound, Object)
 			/**/
 		#define tryext(ext) { string s = strcat(base, "." #ext); if (fexists(strcat("sound/", s))) return s; }
 		extensions(tryext);
-		LOG_WARNINGF("Missing sound: \"%s\"\n", strcat("sound/", base));
+		LOG_WARNF("Missing sound: \"%s\"\n", strcat("sound/", base));
 		#undef tryext
 		#undef extensions
 		return string_null;

@@ -879,7 +879,7 @@ void CSQC_Ent_Remove(entity this)
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
-		LOG_WARNING("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
 	if (this.enttype) Ent_Remove(this);

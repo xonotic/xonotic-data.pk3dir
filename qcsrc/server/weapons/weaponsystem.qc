@@ -459,7 +459,7 @@ void W_WeaponFrame(Player actor)
 		switch (this.state)
 		{
 			default:
-				LOG_WARNINGF("unhandled weaponentity (%i) state for player (%i): %d\n", this, actor, this.state);
+				LOG_WARNF("unhandled weaponentity (%i) state for player (%i): %d\n", this, actor, this.state);
 				break;
 			case WS_INUSE:
 			case WS_RAISE:

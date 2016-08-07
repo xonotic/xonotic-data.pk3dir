@@ -15,7 +15,7 @@ CLASS(Model, Object)
         TC(Model, this);
         string s = this.model_str();
         if (s != "" && s != "null" && !fexists(s)) {
-            LOG_WARNINGF("Missing model: \"%s\"\n", s);
+            LOG_WARNF("Missing model: \"%s\"\n", s);
             return;
         }
         profile(sprintf("precache_model(\"%s\")\n", s));

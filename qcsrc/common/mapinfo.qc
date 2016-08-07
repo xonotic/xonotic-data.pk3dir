@@ -1345,7 +1345,7 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 		FOREACH(Gametypes, it.m_flags == _t, { t = it; break; });
 
 		// t is now a supported mode!
-		LOG_WARNING("can't play the selected map in the given game mode. Falling back to a supported mode.\n");
+		LOG_WARN("can't play the selected map in the given game mode. Falling back to a supported mode.\n");
 		MapInfo_LoadMapSettings_SaveGameType(t);
 	}
 	MapInfo_Get_ByName(s, 1, t);
