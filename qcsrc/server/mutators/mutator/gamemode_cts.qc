@@ -108,8 +108,9 @@ void CTS_ClientKill(entity e) // silent version of ClientKill, used when player 
 MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
+	float dt = M_ARGV(1, float);
 
-	player.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
+	player.race_movetime_frac += dt;
 	float f = floor(player.race_movetime_frac);
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;

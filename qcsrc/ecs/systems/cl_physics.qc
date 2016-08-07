@@ -13,13 +13,13 @@ void sys_phys_fix(entity this, float dt)
 	PM_ClientMovement_UpdateStatus(this);
 }
 
-bool sys_phys_override(entity this)
+bool sys_phys_override(entity this, float dt)
 {
 	// no vehicle prediction
 	return hud != HUD_NORMAL;
 }
 
-void sys_phys_monitor(entity this) {}
+void sys_phys_monitor(entity this, float dt) {}
 
 void sys_phys_ai(entity this) {}
 

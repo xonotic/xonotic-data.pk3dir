@@ -15,7 +15,7 @@ void sys_phys_update(entity this, float dt)
 	sys_in_update(this, dt);
 
 	sys_phys_fix(this, dt);
-	if (sys_phys_override(this)) { return; } sys_phys_monitor(this);
+	if (sys_phys_override(this, dt)) { return; } sys_phys_monitor(this, dt);
 
 	this.buttons_old = PHYS_INPUT_BUTTON_MASK(this);
 	this.movement_old = this.movement;
@@ -41,7 +41,7 @@ void sys_phys_update(entity this, float dt)
 
 // conveyors: first fix velocity
 	if (this.conveyor.state) { this.velocity -= this.conveyor.movedir; }
-	MUTATOR_CALLHOOK(PlayerPhysics, this);
+	MUTATOR_CALLHOOK(PlayerPhysics, this, dt);
 
 	if (!IS_PLAYER(this)) {
 		sys_phys_spectator_control(this);
@@ -115,7 +115,7 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_ladder = false;
 		this.com_phys_gravity = '0 0 0';
 	} else if (ITEMS_STAT(this) & IT_USING_JETPACK) {
-		PM_jetpack(this, maxspeed_mod);
+		PM_jetpack(this, maxspeed_mod, dt);
 	} else if (IS_ONGROUND(this)) {
 		if (!WAS_ONGROUND(this)) {
 			emit(phys_land, this);
@@ -263,7 +263,7 @@ void sys_phys_simulate(entity this, float dt)
 				airaccel += (this.com_phys_acc_rate_air_stop - airaccel) * max(0, -(curdir * wishdir));
 			}
 			// note that for straight forward jumping:
-			// step = accel * PHYS_INPUT_TIMELENGTH * wishspeed0;
+			// step = accel * dt * wishspeed0;
 			// accel  = bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
 			// -->
 			// dv/dt = accel * maxspeed (when slow)
@@ -288,15 +288,15 @@ void sys_phys_simulate(entity this, float dt)
 			// !CPM
 
 			if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && this.movement.y == 0 && this.movement.x != 0) {
-				PM_AirAccelerate(this, wishdir, wishspeed2);
+				PM_AirAccelerate(this, dt, wishdir, wishspeed2);
 			} else {
 				float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
-				PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw,
+				PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw,
 					PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
 			}
 
 			if (PHYS_AIRCONTROL(this)) {
-				CPM_PM_Aircontrol(this, wishdir, wishspeed2);
+				CPM_PM_Aircontrol(this, dt, wishdir, wishspeed2);
 			}
 		}
 	} else {
@@ -338,7 +338,7 @@ void sys_phys_simulate(entity this, float dt)
 				}
 			} else {
 				// water acceleration
-				PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
+				PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 			}
 			return;
 		}
@@ -391,7 +391,7 @@ void sys_phys_simulate(entity this, float dt)
 		}
 
 		if (IS_CSQC ? PHYS_WATERJUMP_TIME(this) <= 0 : time >= PHYS_TELEPORT_TIME(this)) {
-			PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
+			PM_Accelerate(this, dt, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 		}
 	}
 }

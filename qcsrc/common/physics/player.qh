@@ -25,7 +25,7 @@
 .vector v_angle_old;
 .string lastclassname;
 
-.float(entity) PlayerPhysplug;
+.float(entity,float) PlayerPhysplug;
 float AdjustAirAccelQW(float accelqw, float factor);
 
 bool IsFlying(entity a);

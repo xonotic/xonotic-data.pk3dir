@@ -24,7 +24,7 @@ CLASS(Vehicle, Object)
     /** cockpit model tag */
     ATTRIB(Vehicle, tag_view, string, string_null)
     /** player physics mod */
-    ATTRIB(Vehicle, PlayerPhysplug, bool(entity), func_null)
+    ATTRIB(Vehicle, PlayerPhysplug, bool(entity,float), func_null)
     /**  */
     ATTRIB(Vehicle, spawnflags, int, 0)
     /** vehicle hitbox size */

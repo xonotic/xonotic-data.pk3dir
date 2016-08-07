@@ -75,6 +75,7 @@ MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
  */
 #define EV_PlayerPhysics(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** ticrate*/ i(float, MUTATOR_ARGV_1_float) \
     /**/
 MUTATOR_HOOKABLE(PlayerPhysics, EV_PlayerPhysics);
 
