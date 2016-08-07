@@ -1,5 +1,4 @@
-#ifndef LIB_WARPZONE_SERVER_H
-#define LIB_WARPZONE_SERVER_H
+#pragma once
 
 #ifdef SVQC
 void WarpZone_StartFrame();
@@ -16,6 +15,4 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 void WarpZone_PlayerPhysics_FixVAngle(entity this);
 
 void WarpZone_PostInitialize_Callback();
-#endif
-
 #endif

@@ -19,8 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef LIB_CSQCMODEL_CL_MODEL_H
-#define LIB_CSQCMODEL_CL_MODEL_H
+#pragma once
 
 #include "common.qh"
 
@@ -50,4 +49,3 @@ void CSQCModel_InterpolateAnimation_1To2_Note(entity this, int sf, float set_tim
 void CSQCModel_InterpolateAnimation_2To4_Do(entity this);
 void CSQCModel_InterpolateAnimation_1To2_Do(entity this);
 // will overwrite lerpfrac, lerpfrac3, lerpfrac4, and possibly clear frame*time if they are undisplayed according to lerpfracs
-#endif
