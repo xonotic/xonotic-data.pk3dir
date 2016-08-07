@@ -5,7 +5,7 @@
 #include "scores.qh"
 #include "scores_rules.qh"
 
-#include "bot/bot.qh"
+#include "bot/api.qh"
 
 #include "command/vote.qh"
 

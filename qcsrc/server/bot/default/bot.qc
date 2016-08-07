@@ -1,5 +1,7 @@
 #include "bot.qh"
 
+#include "cvars.qh"
+
 #include "aim.qh"
 #include "navigation.qh"
 #include "scripting.qh"
@@ -8,20 +10,20 @@
 #include "havocbot/havocbot.qh"
 #include "havocbot/scripting.qh"
 
-#include "../teamplay.qh"
+#include "../../teamplay.qh"
 
-#include "../antilag.qh"
-#include "../autocvars.qh"
-#include "../campaign.qh"
-#include "../cl_client.qh"
-#include "../constants.qh"
-#include "../defs.qh"
-#include "../race.qh"
+#include "../../antilag.qh"
+#include "../../autocvars.qh"
+#include "../../campaign.qh"
+#include "../../cl_client.qh"
+#include "../../constants.qh"
+#include "../../defs.qh"
+#include "../../race.qh"
 #include <common/t_items.qh>
 
-#include "../mutators/all.qh"
+#include "../../mutators/all.qh"
 
-#include "../weapons/accuracy.qh"
+#include "../../weapons/accuracy.qh"
 
 #include <common/physics/player.qh>
 #include <common/constants.qh>

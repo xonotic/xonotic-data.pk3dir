@@ -4,8 +4,7 @@
 
 #if defined(SVQC)
 
-    #include "../server/bot/bot.qh"
-    #include "../server/bot/waypoints.qh"
+    #include "../server/bot/api.qh"
 
     #include <server/mutators/all.qh>
 

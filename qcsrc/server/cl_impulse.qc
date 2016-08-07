@@ -1,12 +1,11 @@
 #include "cl_impulse.qh"
 #include "round_handler.qh"
 
-#include "bot/waypoints.qh"
+#include "bot/api.qh"
 
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "cheats.qh"
-#include "bot/navigation.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
