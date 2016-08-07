@@ -646,9 +646,6 @@ spawnfunc(worldspawn)
 		}
 	}
 
-	float fd, l;
-	string s;
-
 	cvar = cvar_normal;
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
@@ -660,8 +657,6 @@ spawnfunc(worldspawn)
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
-
-	compressShortVector_init();
 
 	maxclients = 0;
 	for (entity head = nextent(NULL); head; head = nextent(head))
@@ -753,7 +748,7 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -806,12 +801,13 @@ spawnfunc(worldspawn)
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
-		fd = fopen(strcat("maps/", mapname, ".cfg"), FILE_READ);
+		int fd = fopen(strcat("maps/", mapname, ".cfg"), FILE_READ);
 		if(fd != -1)
 		{
+			string s;
 			while((s = fgets(fd)))
 			{
-				l = tokenize_console(s);
+				int l = tokenize_console(s);
 				if(l < 2)
 					continue;
 				if(argv(0) == "cd")
@@ -853,7 +849,7 @@ spawnfunc(worldspawn)
 	monsterlist_reply = strzone(getmonsterlist());
 	for(int i = 0; i < 10; ++i)
 	{
-		s = getrecords(i);
+		string s = getrecords(i);
 		if (s)
 			records_reply[i] = strzone(s);
 	}
@@ -872,7 +868,7 @@ spawnfunc(worldspawn)
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
 	{
-		s = "csprogs-" WATERMARK ".txt";
+		string s = "csprogs-" WATERMARK ".txt";
 		// remove automatically managed files from the list to prevent duplicates
 		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
@@ -884,7 +880,7 @@ spawnfunc(worldspawn)
 		}
 		// add automatically managed files to the list
 		#define X(match) MACRO_BEGIN { \
-			fd = search_begin(match, true, false); \
+			int fd = search_begin(match, true, false); \
 			if (fd >= 0) \
 			{ \
 				for (int i = 0, j = search_getsize(fd); i < j; ++i) \

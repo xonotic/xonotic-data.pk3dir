@@ -627,7 +627,7 @@ void GameTypeVote_ReadOption(int i)
 	}
 	else
 	{
-		int type = MapInfo_Type_FromString(gt);
+		Gametype type = MapInfo_Type_FromString(gt);
 		mv_pk3[i] = strzone(MapInfo_Type_ToText(type));
 		mv_desc[i] = MapInfo_Type_Description(type);
 	}

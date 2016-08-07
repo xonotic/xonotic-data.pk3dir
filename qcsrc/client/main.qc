@@ -108,7 +108,6 @@ void CSQC_Init()
 	binddb = db_create();
 	tempdb = db_create();
 	ClientProgsDB = db_load("client.db");
-	compressShortVector_init();
 
 	draw_endBoldFont();
 
@@ -131,7 +130,7 @@ void CSQC_Init()
 
 	registercvar("cl_spawn_near_teammate", "1");
 
-	gametype = 0;
+	gametype = NULL;
 
 	// hud_fields uses strunzone on the titles!
 	for(int i = 0; i < MAX_HUD_FIELDS; ++i)
@@ -950,7 +949,7 @@ void Gamemode_Init();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
-	gametype = ReadInt24_t();
+	gametype = ReadRegistered(Gametypes);
 	HUD_ModIcons_SetFunc();
 	FOREACH(Scores, true, {
 		if (scores_label(it)) strunzone(scores_label(it));
