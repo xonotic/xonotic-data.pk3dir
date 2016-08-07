@@ -74,7 +74,7 @@
 #include "all.qh"
 
 STATIC_INIT_LATE(Gametype) {
-    Gametype g = MapInfo_Type(MapInfo_CurrentGametype());
+    Gametype g = MapInfo_CurrentGametype();
     if (g) {
         for (string _s = g.m_mutators; _s != ""; _s = cdr(_s)) {
             string s = car(_s);

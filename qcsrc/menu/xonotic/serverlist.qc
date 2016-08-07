@@ -630,10 +630,8 @@ void ServerList_PlayerSort_Click(entity btn, entity me)
 }
 void ServerList_TypeSort_Click(entity btn, entity me)
 {
-	string s, t;
-	float i, m;
-	s = me.filterString;
-	m = strstrofs(s, ":", 0);
+	string s = me.filterString;
+	int m = strstrofs(s, ":", 0);
 	if(m >= 0)
 	{
 		s = substring(s, 0, m);
@@ -643,30 +641,23 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 	else
 		s = "";
 
-	for(i = 1; ; i *= 2) // 20 modes ought to be enough for anyone
-	{
-		t = MapInfo_Type_ToString(i);
-		if(i > 1)
-			if(t == "") // it repeats (default case)
-			{
-				// no type was found
-				// choose the first one
-				s = MapInfo_Type_ToString(1);
-				break;
-			}
-		if(s == t)
-		{
-			// the type was found
-			// choose the next one
-			s = MapInfo_Type_ToString(i * 2);
-			if(s == "")
-				s = MapInfo_Type_ToString(1);
-			break;
-		}
+	Gametype first = NULL; FOREACH(Gametypes, !first, first = it; break);
+	bool flag = false;
+	FOREACH(Gametypes, s == MapInfo_Type_ToString(it), {
+		// the type was found
+		// choose the next one
+		flag = true;
+		s = MapInfo_Type_ToString(Gametypes_from(it.m_id + 1));
+		if (s == "") s = MapInfo_Type_ToString(first);
+		break;
+	});
+	if (!flag) {
+		// no type was found
+		// choose the first one
+		s = MapInfo_Type_ToString(first);
 	}
 
-	if(s != "")
-		s = strcat(s, ":");
+	if(s != "") s = strcat(s, ":");
 	s = strcat(s, substring(me.filterString, m+1, strlen(me.filterString) - m - 1));
 
 	me.controlledTextbox.setText(me.controlledTextbox, s);
