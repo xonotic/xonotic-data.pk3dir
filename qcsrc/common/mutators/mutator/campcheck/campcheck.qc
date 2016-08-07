@@ -11,7 +11,7 @@ REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
 MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CPID_CAMPCHECK);
 }
 

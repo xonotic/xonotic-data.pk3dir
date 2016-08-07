@@ -247,7 +247,7 @@ void PutObserverInServer(entity this)
         	// needed for player sounds
         	this.model = "";
 	        FixPlayermodel(this);
-        } 
+        }
         setmodel(this, MDL_Null);
         setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
         this.view_ofs = '0 0 0';
@@ -496,7 +496,7 @@ void PutClientInServer(entity this)
 		PutObserverInServer(this);
 	} else if (IS_PLAYER(this)) {
 		if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
-		
+
 		PlayerState_attach(this);
 		accuracy_resend(this);
 

@@ -283,7 +283,7 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
 }

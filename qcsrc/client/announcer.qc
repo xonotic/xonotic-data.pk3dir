@@ -58,7 +58,7 @@ void Announcer_Countdown(entity this)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
-			if(annce_num != NULL)		
+			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
 		}
 

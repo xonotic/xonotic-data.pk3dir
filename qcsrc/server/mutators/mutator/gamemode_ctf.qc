@@ -2444,7 +2444,7 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 MUTATOR_HOOKFUNCTION(ctf, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	if(frag_target.flagcarried)
 		ctf_Handle_Throw(frag_target, NULL, DROP_THROW);
 }

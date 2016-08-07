@@ -1384,7 +1384,7 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	kh_Key_DropAll(frag_target, false);
 }
 
