@@ -1733,8 +1733,24 @@ void SetSpectatee(entity this, entity spectatee)
 
 	// WEAPONTODO
 	// these are required to fix the spectator bug with arc
-	if(old_spectatee && old_spectatee.arc_beam) { old_spectatee.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-	if(this.enemy && this.enemy.arc_beam) { this.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	if(old_spectatee)
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(old_spectatee.(weaponentity).arc_beam)
+				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+		}
+	}
+	if(this.enemy)
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.enemy.(weaponentity).arc_beam)
+				this.enemy.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+		}
+	}
 
 	// needed to update spectator list
 	if(old_spectatee) { ClientData_Touch(old_spectatee); }
