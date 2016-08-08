@@ -351,6 +351,10 @@ void PutObserverInServer(entity this)
 	this.oldvelocity = this.velocity;
 	this.fire_endtime = -1;
 	this.event_damage = func_null;
+
+	STAT(ACTIVEWEAPON, this) = WEP_Null.m_id;
+	STAT(SWITCHINGWEAPON, this) = WEP_Null.m_id;
+	STAT(SWITCHWEAPON, this) = WEP_Null.m_id;
 }
 
 int player_getspecies(entity this)
