@@ -476,9 +476,14 @@ METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor))
     // we lost the weapon and want to prepare switching away
     if(actor.hagar_load)
     {
-        .entity weaponentity = weaponentities[0]; // TODO: unhardcode
-        actor.(weaponentity).state = WS_READY;
-        W_Hagar_Attack2_Load_Release(actor, weaponentity);
+        for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    	{
+    		.entity weaponentity = weaponentities[slot];
+    		if(actor.(weaponentity).weaponname != WEP_HAGAR.mdl)
+    			continue; // only if it's a hagar (currently only way to detect)
+    		actor.(weaponentity).state = WS_READY;
+    		W_Hagar_Attack2_Load_Release(actor, weaponentity);
+    	}
     }
 }
 METHOD(Hagar, wr_setup, void(entity thiswep, entity actor))
@@ -509,10 +514,17 @@ METHOD(Hagar, wr_resetplayer, void(entity thiswep, entity actor))
 }
 METHOD(Hagar, wr_playerdeath, void(entity thiswep, entity actor))
 {
-    .entity weaponentity = weaponentities[0]; // TODO: unhardcode
     // if we have any rockets loaded when we die, release them
     if(actor.hagar_load && WEP_CVAR_SEC(hagar, load_releasedeath))
-        W_Hagar_Attack2_Load_Release(actor, weaponentity);
+    {
+    	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    	{
+    		.entity weaponentity = weaponentities[slot];
+    		if(actor.(weaponentity).weaponname != WEP_HAGAR.mdl)
+    			continue; // only if it's a hagar (currently only way to detect)
+    		W_Hagar_Attack2_Load_Release(actor, weaponentity);
+    	}
+    }
 }
 METHOD(Hagar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
