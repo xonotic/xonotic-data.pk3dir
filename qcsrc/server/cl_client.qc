@@ -218,8 +218,7 @@ void FixPlayermodel(entity player);
 void PutObserverInServer(entity this)
 {
     bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
-    if(IS_PLAYER(this)) // our own state
-		PlayerState_detach(this);
+	PlayerState_detach(this);
 
 	if (IS_PLAYER(this) && this.health >= 1) {
         // despawn effect
