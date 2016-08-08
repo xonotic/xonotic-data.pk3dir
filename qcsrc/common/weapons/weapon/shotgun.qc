@@ -270,7 +270,6 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         }
     }
     if(actor.clip_load >= 0) // we are not currently reloading
-    if(!actor.crouch) // no crouchmelee please
     if(WEP_CVAR(shotgun, secondary) == 1)
     if(((fire & 1) && actor.(thiswep.ammo_field) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (fire & 2))
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(shotgun, refire)))

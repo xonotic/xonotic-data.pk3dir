@@ -718,7 +718,6 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
     else if(fire & 2)
     {
         //if(actor.clip_load >= 0) // we are not currently reloading
-        if(!actor.crouch) // no crouchmelee please
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(shockwave, melee_refire)))
         {
             // attempt forcing playback of the anim by switching to another anim (that we never play) here...

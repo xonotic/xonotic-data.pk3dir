@@ -2329,7 +2329,6 @@ void PlayerPreThink (entity this)
 		this.prevorigin = this.origin;
 
 		bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-        .entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if (this.hook.state) {
 			do_crouch = false;
 		} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
@@ -2337,10 +2336,6 @@ void PlayerPreThink (entity this)
 		} else if (this.vehicle) {
 			do_crouch = false;
 		} else if (STAT(FROZEN, this)) {
-			do_crouch = false;
-        } else if ((PS(this).m_weapon.spawnflags & WEP_TYPE_MELEE_PRI) && this.(weaponentity).wframe == WFRAME_FIRE1 && time < this.(weaponentity).weapon_nextthink) {
-			do_crouch = false;
-        } else if ((PS(this).m_weapon.spawnflags & WEP_TYPE_MELEE_SEC) && this.(weaponentity).wframe == WFRAME_FIRE2 && time < this.(weaponentity).weapon_nextthink) {
 			do_crouch = false;
         }
 
