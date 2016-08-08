@@ -101,7 +101,15 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(this, wpn.m_id, 1);
-			Weapon_whereis(wpn, this);
+			if(autocvar_g_showweaponspawns < 3)
+				Weapon_whereis(wpn, this);
+			else
+			{
+				FOREACH(Weapons, it.impulse == wpn.impulse,
+				{
+					Weapon_whereis(it, this);
+				});
+			}
 		}
 		else
 		{
