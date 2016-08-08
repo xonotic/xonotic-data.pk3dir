@@ -134,10 +134,6 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		do_crouch = false;
 	if(STAT(FROZEN, this))
 		do_crouch = false;
-	if((activeweapon.spawnflags & WEP_TYPE_MELEE_PRI) && viewmodel.animstate_startframe == viewmodel.anim_fire1_x && time < viewmodel.weapon_nextthink)
-		do_crouch = false;
-	if((activeweapon.spawnflags & WEP_TYPE_MELEE_SEC) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
-		do_crouch = false;
 
 	if (do_crouch)
 	{
