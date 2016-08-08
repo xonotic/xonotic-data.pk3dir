@@ -2367,7 +2367,10 @@ void PlayerPreThink (entity this)
 		{
 			this.items &= ~this.items_added;
 
-			W_WeaponFrame(this);
+			//for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				//W_WeaponFrame(this, weaponentities[slot]);
+			.entity weaponentity = weaponentities[0]; // TODO
+			W_WeaponFrame(this, weaponentity);
 
 			this.items_added = 0;
 			if (this.items & ITEM_Jetpack.m_itemid && (this.items & ITEM_JetpackRegen.m_itemid || this.ammo_fuel >= 0.01))

@@ -1,5 +1,5 @@
 #ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner);
+void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -14,9 +14,8 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 REGISTER_NET_TEMP(casings)
 
 #ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
+void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
-    .entity weaponentity = weaponentities[0]; // TODO: parameter
     entity wep = casingowner.(weaponentity);
     vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 

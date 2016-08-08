@@ -53,7 +53,7 @@ MUTATOR_HOOKFUNCTION(ok, W_Reload)
 	return actor.ok_use_ammocharge;
 }
 
-void W_Blaster_Attack(entity, float, float, float, float, float, float, float, float, float, float);
+void W_Blaster_Attack(entity, .entity, float, float, float, float, float, float, float, float, float, float);
 spawnfunc(weapon_hmg);
 spawnfunc(weapon_rpc);
 
@@ -227,6 +227,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		PS(player).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			player,
+			weaponentities[0],
 			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
 			WEP_CVAR_SEC(vaporizer, damage),

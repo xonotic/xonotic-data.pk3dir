@@ -265,13 +265,13 @@ void W_Arc_Bolt_Touch(entity this, entity toucher)
 	this.use(this, NULL, toucher);
 }
 
-void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)
+void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(arc, bolt_ammo));
 
-	W_SetupShot(actor, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage));
 
 	Send_Effect(EFFECT_ARC_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -405,6 +405,7 @@ void W_Arc_Beam_Think(entity this)
 
 	W_SetupShot_Range(
 		this.owner,
+		weaponentities[0], // TODO
 		true,
 		0,
 		SND_Null,
@@ -691,10 +692,10 @@ void W_Arc_Beam(float burst, entity actor)
 
 	getthink(beam)(beam);
 }
-void Arc_Smoke(entity actor)
+void Arc_Smoke(entity actor, .entity weaponentity)
 {
 	makevectors(actor.v_angle);
-	W_SetupShot_Range(actor,true,0,SND_Null,0,0,0);
+	W_SetupShot_Range(actor,weaponentity,true,0,SND_Null,0,0,0);
 
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )
@@ -753,7 +754,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor))
 METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     Arc_Player_SetHeat(actor);
-    Arc_Smoke(actor);
+    Arc_Smoke(actor, weaponentity);
 
     bool beam_fire2 = ((fire & 2) && !WEP_CVAR(arc, bolt));
 
@@ -791,7 +792,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(arc, bolt_refire)))
         {
-            W_Arc_Attack_Bolt(thiswep, actor);
+            W_Arc_Attack_Bolt(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);
         }
     }

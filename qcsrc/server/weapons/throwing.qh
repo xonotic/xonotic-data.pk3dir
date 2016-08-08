@@ -9,6 +9,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 bool W_IsWeaponThrowable(entity this, int w);
 
 // toss current weapon
-void W_ThrowWeapon(entity this, vector velo, vector delta, float doreduce);
+void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta, float doreduce);
 
 void SpawnThrownWeapon(entity this, vector org, float w);

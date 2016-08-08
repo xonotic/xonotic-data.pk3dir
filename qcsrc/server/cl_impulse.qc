@@ -247,7 +247,7 @@ IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	W_ThrowWeapon(this, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
+	W_ThrowWeapon(this, weaponentities[0], W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
 }
 
 IMPULSE(weapon_reload)

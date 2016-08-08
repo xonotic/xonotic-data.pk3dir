@@ -56,13 +56,13 @@ spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(this, WEP_RIFLE); }
 spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
 spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 
-void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
+void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
 {
 	float i;
 
 	W_DecreaseAmmo(thiswep, actor, pAmmo);
 
-	W_SetupShot(actor, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
+	W_SetupShot(actor, weaponentity, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
 	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
@@ -78,21 +78,21 @@ void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pFor
 	if(autocvar_g_casings >= 2)
     {
         makevectors(actor.v_angle); // for some reason, this is lost
-		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
+		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor, weaponentity);
     }
 }
 
-void W_Rifle_Attack(entity actor)
+void W_Rifle_Attack(entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND_CAMPINGRIFLE_FIRE, actor);
+	W_Rifle_FireBullet(WEP_RIFLE, weaponentity, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND_CAMPINGRIFLE_FIRE, actor);
 }
 
-void W_Rifle_Attack2(entity actor)
+void W_Rifle_Attack2(entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND_CAMPINGRIFLE_FIRE2, actor);
+	W_Rifle_FireBullet(WEP_RIFLE, weaponentity, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND_CAMPINGRIFLE_FIRE2, actor);
 }
 
-.void(entity actor) rifle_bullethail_attackfunc;
+.void(entity actor, .entity weaponentity) rifle_bullethail_attackfunc;
 .WFRAME rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
@@ -110,7 +110,7 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 		PS(actor).m_switchweapon = sw;
 	if(r)
 	{
-		actor.rifle_bullethail_attackfunc(actor);
+		actor.rifle_bullethail_attackfunc(actor, weaponentity);
 		weapon_thinkf(actor, weaponentity, actor.rifle_bullethail_frame, actor.rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
 	}
 	else
@@ -119,10 +119,10 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	}
 }
 
-void W_Rifle_BulletHail(entity actor, .entity weaponentity, float mode, void(entity actor) AttackFunc, WFRAME fr, float animtime, float refire)
+void W_Rifle_BulletHail(entity actor, .entity weaponentity, float mode, void(entity actor, .entity weaponentity) AttackFunc, WFRAME fr, float animtime, float refire)
 {
 	// if we get here, we have at least one bullet to fire
-	AttackFunc(actor);
+	AttackFunc(actor, weaponentity);
 	if(mode)
 	{
 		// continue hail
@@ -217,7 +217,7 @@ METHOD(Rifle, wr_resetplayer, void(entity thiswep, entity actor))
 }
 METHOD(Rifle, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND_RELOAD);
+    W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND_RELOAD);
 }
 METHOD(Rifle, wr_suicidemessage, Notification(entity thiswep))
 {

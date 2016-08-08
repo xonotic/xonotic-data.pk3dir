@@ -165,7 +165,7 @@ bool W_IsWeaponThrowable(entity this, int w)
 }
 
 // toss current weapon
-void W_ThrowWeapon(entity this, vector velo, vector delta, float doreduce)
+void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta, float doreduce)
 {
 	Weapon w = PS(this).m_weapon;
 	if (w == WEP_Null)
@@ -174,7 +174,6 @@ void W_ThrowWeapon(entity this, vector velo, vector delta, float doreduce)
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if(this.(weaponentity).state != WS_READY)
 		return;
 	if(!W_IsWeaponThrowable(this, w.m_id))

@@ -88,6 +88,7 @@ void W_Blaster_Think(entity this)
 
 void W_Blaster_Attack(
 	entity actor,
+	.entity weaponentity,
 	float atk_deathtype,
 	float atk_shotangle,
 	float atk_damage,
@@ -101,7 +102,7 @@ void W_Blaster_Attack(
 {
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(actor, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage);
+	W_SetupShot_Dir(actor, weaponentity, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = new(blasterbolt);
@@ -172,6 +173,7 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
         {
             W_Blaster_Attack(
                 actor,
+                weaponentity,
                 WEP_BLASTER.m_id,
                 WEP_CVAR_PRI(blaster, shotangle),
                 WEP_CVAR_PRI(blaster, damage),
@@ -203,6 +205,7 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
                 {
                     W_Blaster_Attack(
                         actor,
+                        weaponentity,
                         WEP_BLASTER.m_id | HITTYPE_SECONDARY,
                         WEP_CVAR_SEC(blaster, shotangle),
                         WEP_CVAR_SEC(blaster, damage),

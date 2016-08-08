@@ -260,7 +260,7 @@ void W_Electro_Bolt_Think(entity this)
 	// this.nextthink = time;
 }
 
-void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
+void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity proj;
 
@@ -268,6 +268,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 
 	W_SetupShot_ProjectileSize(
 		actor,
+		weaponentity,
 		'0 0 -3',
 		'0 0 -3',
 		false,
@@ -403,12 +404,13 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 	}
 }
 
-void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
+void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
 		actor,
+		weaponentity,
 		'-4 -4 -4',
 		'4 4 4',
 		false,
@@ -470,7 +472,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 	if(PHYS_INPUT_BUTTON_ATCK2(actor))
 	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
-		W_Electro_Attack_Orb(WEP_ELECTRO, actor);
+		W_Electro_Attack_Orb(WEP_ELECTRO, actor, weaponentity);
 		actor.electro_count -= 1;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
@@ -530,7 +532,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
         {
-                W_Electro_Attack_Bolt(thiswep, actor);
+                W_Electro_Attack_Bolt(thiswep, actor, weaponentity);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
     }
@@ -539,7 +541,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         if(time >= actor.electro_secondarytime)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
         {
-            W_Electro_Attack_Orb(thiswep, actor);
+            W_Electro_Attack_Orb(thiswep, actor, weaponentity);
             actor.electro_count = WEP_CVAR_SEC(electro, count);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
             actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor);
@@ -573,7 +575,7 @@ METHOD(Electro, wr_resetplayer, void(entity thiswep, entity actor))
 }
 METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND_RELOAD);
+    W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND_RELOAD);
 }
 METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
 {
