@@ -899,13 +899,17 @@ void Monster_Remove(entity this)
 	if(IS_CLIENT(this))
 		return; // don't remove it?
 
-	.entity weaponentity = weaponentities[0];
 	if(!this) { return; }
 
 	if(!MUTATOR_CALLHOOK(MonsterRemove, this))
 		Send_Effect(EFFECT_ITEM_PICKUP, this.origin, '0 0 0', 1);
 
-	if(this.(weaponentity)) { delete(this.(weaponentity)); }
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity))
+			delete(this.(weaponentity));
+	}
 	if(this.iceblock) { delete(this.iceblock); }
 	WaypointSprite_Kill(this.sprite);
 	delete(this);

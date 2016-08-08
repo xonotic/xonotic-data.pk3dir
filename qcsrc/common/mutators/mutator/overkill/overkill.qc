@@ -227,7 +227,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		PS(player).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			player,
-			weaponentities[0],
+			weaponentities[0], // TODO: unhardcode
 			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
 			WEP_CVAR_SEC(vaporizer, damage),

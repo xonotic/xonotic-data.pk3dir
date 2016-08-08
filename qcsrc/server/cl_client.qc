@@ -2379,7 +2379,10 @@ void PlayerPreThink (entity this)
 			this.items &= ~this.items_added;
 
 			//for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-				//W_WeaponFrame(this, weaponentities[slot]);
+			//{
+				//.entity weaponentity = weaponentities[slot];
+				//W_WeaponFrame(this, weaponentity);
+			//}
 			.entity weaponentity = weaponentities[0]; // TODO
 			W_WeaponFrame(this, weaponentity);
 
