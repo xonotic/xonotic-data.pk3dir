@@ -131,7 +131,8 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 		if(!w.wr_checkammo1(w, own))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
-			int slot = 0; // TODO: unhardcode
+			.entity weaponentity = this.weaponentity_fld;
+			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
 			PS(own).m_switchweapon = w_getbestweapon(own);
 		}
@@ -162,7 +163,8 @@ void W_MineLayer_DoRemoteExplode(entity this)
 		if(!w.wr_checkammo1(w, own))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
-			int slot = 0; // TODO: unhardcode
+			.entity weaponentity = this.weaponentity_fld;
+			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
 			PS(own).m_switchweapon = w_getbestweapon(own);
 		}
@@ -338,6 +340,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(actor);
+	mine.weaponentity_fld = weaponentity;
 	IL_PUSH(g_mines, mine);
 	mine.owner = mine.realowner = actor;
 	if(WEP_CVAR(minelayer, detonatedelay) >= 0)
