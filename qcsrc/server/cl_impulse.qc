@@ -257,8 +257,11 @@ IMPULSE(weapon_reload)
 	if (forbidWeaponUse(this)) return;
 	Weapon w = PS(this).m_weapon;
 	entity actor = this;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	w.wr_reload(w, actor, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		w.wr_reload(w, actor, weaponentity);
+	}
 }
 
 void ImpulseCommands(entity this)

@@ -441,22 +441,23 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	oldenemy = own.enemy;
 	own.enemy = this.enemy;
+	.entity weaponentity = this.weaponentity_fld;
 
 	c = own.cnt % 4;
 	switch(c)
 	{
 		case 0:
-			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentities[0], '-1.25 -3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentity, '-1.25 -3.75 0', own.enemy); // TODO
 			break;
 		case 1:
-			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentities[0], '+1.25 -3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentity, '+1.25 -3.75 0', own.enemy); // TODO
 			break;
 		case 2:
-			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentities[0], '-1.25 +3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentity, '-1.25 +3.75 0', own.enemy); // TODO
 			break;
 		case 3:
 		default:
-			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentities[0], '+1.25 +3.75 0', own.enemy); // TODO
+			W_Seeker_Fire_Missile(WEP_SEEKER, own, weaponentity, '+1.25 +3.75 0', own.enemy); // TODO
 			break;
 	}
 
@@ -534,6 +535,7 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 		{
 			//sprint(this.realowner, strcat("You just tagged ^2", toucher.netname, "^7 with a tracking device!\n"));
 			e             = new(tag_tracker);
+			e.weaponentity_fld = this.weaponentity_fld;
 			e.cnt         = WEP_CVAR(seeker, missile_count);
 			e.owner       = this.owner;
 			e.realowner   = this.realowner;
@@ -571,6 +573,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_TAG_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
 	entity missile          = new(seeker_tag);
+	missile.weaponentity_fld = weaponentity;
 	missile.owner           = missile.realowner = actor;
 	missile.bot_dodge       = true;
 	missile.bot_dodgerating = 50;
