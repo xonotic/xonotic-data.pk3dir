@@ -879,12 +879,12 @@ METHOD(Arc, wr_resetplayer, void(entity thiswep, entity actor))
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     	actor.arc_BUTTON_ATCK_prev[slot] = false;
 }
-METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor))
+METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponentity))
 {
     actor.arc_overheat = 0;
     actor.arc_cooldown = 0;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    	actor.arc_BUTTON_ATCK_prev[slot] = false;
+    int slot = weaponslot(weaponentity);
+    actor.arc_BUTTON_ATCK_prev[slot] = false;
 }
 #endif
 #ifdef CSQC
