@@ -1058,7 +1058,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 {
 	float f = bot_cmd.bot_cmd_parm_float;
 
-	int slot = 0;
+	int slot = 0; // TODO: unhardcode?
 	.entity weaponentity = weaponentities[slot];
 	if(this.(weaponentity).state != WS_READY)
 	{
