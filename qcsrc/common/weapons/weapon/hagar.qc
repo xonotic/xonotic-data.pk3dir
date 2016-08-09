@@ -471,19 +471,13 @@ METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
         }
     }
 }
-METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor))
+METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor, .entity weaponentity))
 {
     // we lost the weapon and want to prepare switching away
     if(actor.hagar_load)
     {
-        for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    	{
-    		.entity weaponentity = weaponentities[slot];
-    		if(actor.(weaponentity).weaponname != WEP_HAGAR.mdl)
-    			continue; // only if it's a hagar (currently only way to detect)
-    		actor.(weaponentity).state = WS_READY;
-    		W_Hagar_Attack2_Load_Release(actor, weaponentity);
-    	}
+    	actor.(weaponentity).state = WS_READY;
+    	W_Hagar_Attack2_Load_Release(actor, weaponentity);
     }
 }
 METHOD(Hagar, wr_setup, void(entity thiswep, entity actor))

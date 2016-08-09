@@ -569,7 +569,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 			}
 			else if (e)
 			{
-				e.wr_gonethink(e, actor);
+				e.wr_gonethink(e, actor, weaponentity);
 			}
 		}
 
