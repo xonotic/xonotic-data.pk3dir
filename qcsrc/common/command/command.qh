@@ -1,5 +1,4 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#pragma once
 
 const int CMD_REQUEST_COMMAND = 1;
 const int CMD_REQUEST_USAGE = 2;
@@ -12,5 +11,3 @@ CLASS(Command, Object)
         TC(Command, this);
 	}
 ENDCLASS(Command)
-
-#endif

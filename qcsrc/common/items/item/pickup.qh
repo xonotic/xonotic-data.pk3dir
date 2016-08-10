@@ -1,5 +1,5 @@
-#ifndef PICKUP_H
-#define PICKUP_H
+#pragma once
+
 #include <common/items/inventory.qh>
 #include <common/items/item.qh>
 CLASS(Pickup, GameItem)
@@ -38,5 +38,3 @@ CLASS(Pickup, GameItem)
     bool ITEM_HANDLE(Pickup, Pickup this, entity item, entity player);
 #endif
 ENDCLASS(Pickup)
-
-#endif

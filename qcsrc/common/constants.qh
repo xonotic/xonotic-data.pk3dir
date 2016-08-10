@@ -1,5 +1,4 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#pragma once
 
 REGISTER_NET_TEMP(TE_CSQC_PICTURE)
 REGISTER_NET_TEMP(TE_CSQC_RACE)
@@ -326,4 +325,3 @@ const int SPAWN_PRIO_GOOD_DISTANCE = 10;
 const int GTV_FORBIDDEN = 0; // Cannot be voted
 const int GTV_AVAILABLE = 1; // Can be voted
 const int GTV_CUSTOM    = 2; // Custom entry
-#endif

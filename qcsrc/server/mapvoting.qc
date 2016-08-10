@@ -41,10 +41,10 @@ entity mapvote_ent;
  * Returns the gamtype ID from its name, if type_name isn't a real gametype it
  * checks for sv_vote_gametype_(type_name)_type
  */
-float GameTypeVote_Type_FromString(string type_name)
+Gametype GameTypeVote_Type_FromString(string type_name)
 {
-	float type = MapInfo_Type_FromString(type_name);
-	if ( type == 0 )
+	Gametype type = MapInfo_Type_FromString(type_name);
+	if (type == NULL)
 		type = MapInfo_Type_FromString(cvar_string(
 			strcat("sv_vote_gametype_",type_name,"_type")));
 	return type;
@@ -54,22 +54,22 @@ int GameTypeVote_AvailabilityStatus(string type_name)
 {
 	int flag = GTV_FORBIDDEN;
 
-	float type = MapInfo_Type_FromString(type_name);
-	if ( type == 0 )
+	Gametype type = MapInfo_Type_FromString(type_name);
+	if ( type == NULL )
 	{
 		type = MapInfo_Type_FromString(cvar_string(
 			strcat("sv_vote_gametype_",type_name,"_type")));
 		flag |= GTV_CUSTOM;
 	}
 
-	if( type == 0 )
+	if( type == NULL )
 		return flag;
 
 	if ( autocvar_nextmap != "" )
 	{
-		if ( !MapInfo_Get_ByName(autocvar_nextmap, false, 0) )
+		if ( !MapInfo_Get_ByName(autocvar_nextmap, false, NULL) )
 			return flag;
-		if (!(MapInfo_Map_supportedGametypes & type))
+		if (!(MapInfo_Map_supportedGametypes & type.m_flags))
 			return flag;
 	}
 
@@ -83,7 +83,7 @@ float GameTypeVote_GetMask()
 	n = min(MAPVOTE_COUNT, n);
 	gametype_mask = 0;
 	for(j = 0; j < n; ++j)
-		gametype_mask |= GameTypeVote_Type_FromString(argv(j));
+		gametype_mask |= GameTypeVote_Type_FromString(argv(j)).m_flags;
 	return gametype_mask;
 }
 
@@ -92,7 +92,7 @@ string GameTypeVote_MapInfo_FixName(string m)
 	if ( autocvar_sv_vote_gametype )
 	{
 		MapInfo_Enumerate();
-		MapInfo_FilterGametype(GameTypeVote_GetMask(), 0, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+		_MapInfo_FilterGametype(GameTypeVote_GetMask(), 0, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	}
 	return MapInfo_FixName(m);
 }
@@ -695,12 +695,12 @@ void MapVote_Think()
 	MapVote_Tick();
 }
 
-float GameTypeVote_SetGametype(float type)
+float GameTypeVote_SetGametype(Gametype type)
 {
 	if (MapInfo_CurrentGametype() == type)
 		return true;
 
-	float tsave = MapInfo_CurrentGametype();
+	Gametype tsave = MapInfo_CurrentGametype();
 
 	MapInfo_SwitchGameType(type);
 
@@ -752,7 +752,7 @@ float GameTypeVote_Finished(float pos)
 float GameTypeVote_AddVotable(string nextMode)
 {
 	float j;
-	if ( nextMode == "" || GameTypeVote_Type_FromString(nextMode) == 0 )
+	if ( nextMode == "" || GameTypeVote_Type_FromString(nextMode) == NULL )
 		return false;
 	for(j = 0; j < mapvote_count; ++j)
 		if(mapvote_maps[j] == nextMode)

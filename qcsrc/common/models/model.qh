@@ -1,5 +1,4 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #define setmodel(e, m) _setmodel((e), (m).model_str())
 
@@ -16,12 +15,10 @@ CLASS(Model, Object)
         TC(Model, this);
         string s = this.model_str();
         if (s != "" && s != "null" && !fexists(s)) {
-            LOG_WARNINGF("Missing model: \"%s\"\n", s);
+            LOG_WARNF("Missing model: \"%s\"\n", s);
             return;
         }
         profile(sprintf("precache_model(\"%s\")\n", s));
         precache_model(s);
     }
 ENDCLASS(Model)
-
-#endif

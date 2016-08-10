@@ -99,7 +99,7 @@ vector autocvar_g_vehicle_bumblebee_bouncepain = '1 100 200';
 
 bool autocvar_g_vehicle_bumblebee = true;
 
-bool bumblebee_gunner_frame(entity this)
+bool bumblebee_gunner_frame(entity this, float dt)
 {
 	entity vehic = this.vehicle.owner;
 	entity gun = this.vehicle;
@@ -394,28 +394,28 @@ void bumblebee_touch(entity this, entity toucher)
 	vehicles_touch(this, toucher);
 }
 
-void bumblebee_regen(entity this)
+void bumblebee_regen(entity this, float dt)
 {
 	if(this.gun1.delay + autocvar_g_vehicle_bumblebee_cannon_ammo_regen_pause < time)
 		this.gun1.vehicle_energy = min(autocvar_g_vehicle_bumblebee_cannon_ammo,
-									   this.gun1.vehicle_energy + autocvar_g_vehicle_bumblebee_cannon_ammo_regen * frametime);
+									   this.gun1.vehicle_energy + autocvar_g_vehicle_bumblebee_cannon_ammo_regen * dt);
 
 	if(this.gun2.delay + autocvar_g_vehicle_bumblebee_cannon_ammo_regen_pause < time)
 		this.gun2.vehicle_energy = min(autocvar_g_vehicle_bumblebee_cannon_ammo,
-									   this.gun2.vehicle_energy + autocvar_g_vehicle_bumblebee_cannon_ammo_regen * frametime);
+									   this.gun2.vehicle_energy + autocvar_g_vehicle_bumblebee_cannon_ammo_regen * dt);
 
 	if(this.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(this, this.dmg_time, vehicle_shield, autocvar_g_vehicle_bumblebee_shield, autocvar_g_vehicle_bumblebee_shield_regen_pause, autocvar_g_vehicle_bumblebee_shield_regen, frametime, true);
+		vehicles_regen(this, this.dmg_time, vehicle_shield, autocvar_g_vehicle_bumblebee_shield, autocvar_g_vehicle_bumblebee_shield_regen_pause, autocvar_g_vehicle_bumblebee_shield_regen, dt, true);
 
 	if(this.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(this, this.dmg_time, vehicle_health, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_health_regen_pause, autocvar_g_vehicle_bumblebee_health_regen, frametime, false);
+		vehicles_regen(this, this.dmg_time, vehicle_health, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_health_regen_pause, autocvar_g_vehicle_bumblebee_health_regen, dt, false);
 
 	if(this.vehicle_flags  & VHF_ENERGYREGEN)
-		vehicles_regen(this, this.wait, vehicle_energy, autocvar_g_vehicle_bumblebee_energy, autocvar_g_vehicle_bumblebee_energy_regen_pause, autocvar_g_vehicle_bumblebee_energy_regen, frametime, false);
+		vehicles_regen(this, this.wait, vehicle_energy, autocvar_g_vehicle_bumblebee_energy, autocvar_g_vehicle_bumblebee_energy_regen_pause, autocvar_g_vehicle_bumblebee_energy_regen, dt, false);
 
 }
 
-bool bumblebee_pilot_frame(entity this)
+bool bumblebee_pilot_frame(entity this, float dt)
 {
 	entity vehic = this.vehicle;
 	return = true;
@@ -435,7 +435,7 @@ bool bumblebee_pilot_frame(entity this)
 		return;
 	}
 
-	bumblebee_regen(vehic);
+	bumblebee_regen(vehic, dt);
 
 	crosshair_trace(this);
 
@@ -486,7 +486,7 @@ bool bumblebee_pilot_frame(entity this)
 		else if(this.movement.y > 0)
 			newvel += v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
 		ftmp = newvel * v_right;
-		ftmp *= frametime * 0.1;
+		ftmp *= dt * 0.1;
 		vehic.angles_z = bound(-15, vehic.angles.z + ftmp, 15);
 	}
 	else
@@ -501,7 +501,7 @@ bool bumblebee_pilot_frame(entity this)
 	else if(PHYS_INPUT_BUTTON_JUMP(this))
 		newvel +=  v_up * autocvar_g_vehicle_bumblebee_speed_up;
 
-	vehic.velocity  += newvel * frametime;
+	vehic.velocity  += newvel * dt;
 	this.velocity = this.movement  = vehic.velocity;
 
 
@@ -542,7 +542,7 @@ bool bumblebee_pilot_frame(entity this)
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
 
 	if(!forbidWeaponUse(this))
-	if((PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || autocvar_g_vehicle_bumblebee_raygun == 0))
+	if((PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * PHYS_INPUT_FRAMETIME || autocvar_g_vehicle_bumblebee_raygun == 0))
 	{
 		vehic.gun3.enemy.realowner = this;
 		vehic.gun3.enemy.effects &= ~EF_NODRAW;
@@ -556,8 +556,8 @@ bool bumblebee_pilot_frame(entity this)
 		{
 			if(autocvar_g_vehicle_bumblebee_raygun)
 			{
-				Damage(trace_ent, vehic, this, autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime, DEATH_GENERIC.m_id, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * sys_frametime);
-				vehic.vehicle_energy -= autocvar_g_vehicle_bumblebee_raygun_aps * sys_frametime;
+				Damage(trace_ent, vehic, this, autocvar_g_vehicle_bumblebee_raygun_dps * PHYS_INPUT_FRAMETIME, DEATH_GENERIC.m_id, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * PHYS_INPUT_FRAMETIME);
+				vehic.vehicle_energy -= autocvar_g_vehicle_bumblebee_raygun_aps * PHYS_INPUT_FRAMETIME;
 			}
 			else
 			{
@@ -568,25 +568,25 @@ bool bumblebee_pilot_frame(entity this)
 						if(IS_VEHICLE(trace_ent))
 						{
 							if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.max_health)
-								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * frametime, trace_ent.tur_head.max_health);
+								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * dt, trace_ent.tur_head.max_health);
 
 							if(autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.vehicle_health = min(trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.max_health);
+								trace_ent.vehicle_health = min(trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * dt, trace_ent.max_health);
 						}
 						else if(IS_CLIENT(trace_ent))
 						{
 							if(trace_ent.health <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
+								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax);
 
 							if(trace_ent.armorvalue <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
-								trace_ent.armorvalue = min(trace_ent.armorvalue + autocvar_g_vehicle_bumblebee_healgun_aps * frametime, autocvar_g_vehicle_bumblebee_healgun_amax);
+								trace_ent.armorvalue = min(trace_ent.armorvalue + autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax);
 
-							trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
+							trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * dt, autocvar_g_vehicle_bumblebee_healgun_hmax);
 						}
 						else if(IS_TURRET(trace_ent))
 						{
 							if(trace_ent.health  <= trace_ent.max_health && autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.max_health);
+								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * dt, trace_ent.max_health);
 							//else ..hmmm what? ammo?
 
 							trace_ent.SendFlags |= TNSF_STATUS;
@@ -633,7 +633,7 @@ void bumblebee_land(entity this)
 	float hgt;
 
 	hgt = vehicle_altitude(this, 512);
-	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
+	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * PHYS_INPUT_FRAMETIME);
 	this.angles_x *= 0.95;
 	this.angles_z *= 0.95;
 

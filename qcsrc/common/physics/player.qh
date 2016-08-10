@@ -1,5 +1,4 @@
-#ifndef COMMON_PHYSICS_H
-#define COMMON_PHYSICS_H
+#pragma once
 
 // Client/server mappings
 
@@ -25,7 +24,7 @@
 .vector v_angle_old;
 .string lastclassname;
 
-.float(entity) PlayerPhysplug;
+.float(entity,float) PlayerPhysplug;
 float AdjustAirAccelQW(float accelqw, float factor);
 
 bool IsFlying(entity a);
@@ -324,6 +323,4 @@ NET_HANDLE(setpause, bool)
 	PHYS_INPUT_BUTTON_CHAT(sender) = ispaused;
 	return true;
 }
-#endif
-
 #endif

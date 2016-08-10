@@ -185,7 +185,7 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 {
 	float i;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
-	WriteInt24_t(MSG_ENTITY, MapInfo_LoadedGametype);
+	WriteRegistered(Gametypes, MSG_ENTITY, MapInfo_LoadedGametype);
 	FOREACH(Scores, true, {
 		WriteString(MSG_ENTITY, scores_label(it));
 		WriteByte(MSG_ENTITY, scores_flags(it));
@@ -333,7 +333,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	{
 		if(gameover)
 			return 0;
-		LOG_WARNING("Adding score to unknown player!");
+		LOG_WARN("Adding score to unknown player!");
 		return 0;
 	}
 	if(score)

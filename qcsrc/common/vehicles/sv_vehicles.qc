@@ -339,7 +339,7 @@ bool vehicle_addplayerslot(	entity _owner,
 								entity _slot,
 								int _hud,
 								Model _hud_model,
-								bool(entity) _framefunc,
+								bool(entity,float) _framefunc,
 								void(entity,bool) _exitfunc, float(entity, entity) _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))

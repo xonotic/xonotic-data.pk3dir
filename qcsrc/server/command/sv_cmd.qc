@@ -16,9 +16,7 @@
 #include "../playerdemo.qh"
 #include "../teamplay.qh"
 
-#include "../bot/bot.qh"
-#include "../bot/navigation.qh"
-#include "../bot/scripting.qh"
+#include "../bot/api.qh"
 
 #include "../mutators/all.qh"
 
@@ -41,7 +39,7 @@ void PutObserverInServer(entity this);
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think(entity this)
 {
-	if (MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
+	if (_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
 	{
 		LOG_INFO("Done rebuiling mapinfos.\n");
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -742,7 +740,7 @@ void GameCommand_gametype(float request, float argc)
 			if (argv(1) != "")
 			{
 				string s = argv(1);
-				float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
+				Gametype t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
 
 				if (t)
 				{

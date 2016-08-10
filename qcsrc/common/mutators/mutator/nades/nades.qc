@@ -1429,7 +1429,7 @@ MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	if(frag_target.nade)
 		toss_nade(frag_target, true, '0 0 0', time + 0.05);
 }

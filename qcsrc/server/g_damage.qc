@@ -1,6 +1,6 @@
 #include "g_damage.qh"
 
-#include "bot/bot.qh"
+#include "bot/api.qh"
 #include "g_hook.qh"
 #include "mutators/all.qh"
 #include "scores.qh"

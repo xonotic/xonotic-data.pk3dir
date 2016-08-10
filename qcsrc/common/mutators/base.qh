@@ -203,7 +203,7 @@ NET_HANDLE(Mutator, bool isNew)
         WITH(bool, mutator_log, true, LAMBDA(
             FOREACH(Mutators, it.registered_id == s, { Mutator_Add(it); ++added; });
         ));
-        if (added > 1) LOG_WARNINGF("Added more than one mutator for %s\n", s);
+        if (added > 1) LOG_WARNF("Added more than one mutator for %s\n", s);
     }
 }
 #endif

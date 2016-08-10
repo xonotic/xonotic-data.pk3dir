@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
-cd "$(dirname "$0")"
+cd ${0%/*}
 cd ..
 
 function startswith() {

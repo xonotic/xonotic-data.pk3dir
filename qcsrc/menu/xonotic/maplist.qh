@@ -23,7 +23,7 @@ CLASS(XonoticMapList, XonoticListBox)
 	ATTRIB(XonoticMapList, realUpperMargin1, float, 0)
 	ATTRIB(XonoticMapList, realUpperMargin2, float, 0)
 
-	ATTRIB(XonoticMapList, lastGametype, float, 0)
+	ATTRIB(XonoticMapList, lastGametype, entity, NULL)
 	ATTRIB(XonoticMapList, lastFeatures, float, 0)
 
 	ATTRIB(XonoticMapList, origin, vector, '0 0 0')

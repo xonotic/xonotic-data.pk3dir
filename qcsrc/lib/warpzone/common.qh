@@ -1,5 +1,4 @@
-#ifndef LIB_WARPZONE_COMMON_H
-#define LIB_WARPZONE_COMMON_H
+#pragma once
 
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL
@@ -113,4 +112,3 @@ void WarpZoneLib_ExactTrigger_Init(entity this);
 // WARNING: this kills the trace globals
 #define EXACTTRIGGER_TOUCH(e,t) if(WarpZoneLib_ExactTrigger_Touch((e), (t))) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init(this)
-#endif

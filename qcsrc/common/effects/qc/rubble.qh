@@ -1,5 +1,4 @@
-#ifndef RUBBLE_H
-#define RUBBLE_H
+#pragma once
 
 #ifdef CSQC
 
@@ -44,7 +43,5 @@ entity RubbleNew(string cname)
 	e.creationtime = time;
 	return e;
 }
-
-#endif
 
 #endif

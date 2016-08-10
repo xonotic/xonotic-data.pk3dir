@@ -176,7 +176,7 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 }
 

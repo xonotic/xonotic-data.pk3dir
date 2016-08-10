@@ -1,11 +1,13 @@
 #include "waypoints.qh"
 
+#include "cvars.qh"
+
 #include "bot.qh"
 #include "navigation.qh"
 
 #include <common/state.qh>
 
-#include "../antilag.qh"
+#include "../../antilag.qh"
 
 #include <common/constants.qh>
 

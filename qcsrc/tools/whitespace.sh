@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
-cd "$(dirname "$0")"
+cd ${0%/*}
 cd ..
 
 function check() {
@@ -14,6 +14,7 @@ function check() {
 
 check lib
 check common
+check ecs
 check client
 check server
 check menu

@@ -1,5 +1,4 @@
-#ifndef NET_NOTICE_H
-#define NET_NOTICE_H
+#pragma once
 
 #ifdef SVQC
 string autocvar_sv_join_notices;
@@ -12,6 +11,4 @@ void sv_notice_join(entity _to);
 
 #ifdef CSQC
 void cl_notice_read();
-#endif
-
 #endif

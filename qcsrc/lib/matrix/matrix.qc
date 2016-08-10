@@ -46,7 +46,7 @@ void MX_Messages_(entity fh, entity pass, int status)
 {
     switch (status) {
         default: {
-            LOG_WARNINGF("status: %d", status);
+            LOG_WARNF("status: %d", status);
             break;
         }
         case URL_READY_CLOSED: break;
@@ -90,7 +90,7 @@ void MX_Sync_(entity fh, entity pass, int status)
 {
     switch (status) {
         default: {
-            LOG_WARNINGF("status: %d", status);
+            LOG_WARNF("status: %d", status);
             break;
         }
         case URL_READY_CLOSED: break;

@@ -1,5 +1,7 @@
 #include "scripting.qh"
 
+#include "cvars.qh"
+
 #include <common/state.qh>
 #include <common/physics/player.qh>
 

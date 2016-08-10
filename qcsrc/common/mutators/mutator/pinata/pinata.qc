@@ -4,7 +4,7 @@ REGISTER_MUTATOR(pinata, cvar("g_pinata") && !cvar("g_instagib") && !cvar("g_ove
 MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		if(frag_target.weapons & WepSet_FromWeapon(it))
 		if(PS(frag_target).m_switchweapon != it)

@@ -6,15 +6,15 @@ void sys_phys_fix(entity this, float dt)
 	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
 }
 
-bool sys_phys_override(entity this)
+bool sys_phys_override(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	if (PM_check_specialcommand(this, buttons)) { return true; }
-	if (this.PlayerPhysplug && this.PlayerPhysplug(this)) { return true; }
+	if (this.PlayerPhysplug && this.PlayerPhysplug(this, dt)) { return true; }
 	return false;
 }
 
-void sys_phys_monitor(entity this)
+void sys_phys_monitor(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	anticheat_physics(this);
@@ -24,7 +24,7 @@ void sys_phys_monitor(entity this)
 		    || this.v_angle != this.v_angle_old) { this.parm_idlesince = time; }
 	}
 	PM_check_nickspam(this);
-	PM_check_punch(this);
+	PM_check_punch(this, dt);
 }
 
 void sys_phys_ai(entity this)

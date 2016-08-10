@@ -1,5 +1,4 @@
-#ifndef T_TELEPORTERS_H
-#define T_TELEPORTERS_H
+#pragma once
 
 .entity pusher;
 const float TELEPORT_FLAG_SOUND = 1;
@@ -91,6 +90,4 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl);
 		if(head != player) \
 			if(head.isplayermodel) \
 				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
-#endif
-
 #endif

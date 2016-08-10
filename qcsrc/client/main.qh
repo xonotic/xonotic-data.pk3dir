@@ -19,7 +19,7 @@ string minimapname;
 // General stuff
 
 float postinit;
-float gametype;
+entity gametype;
 
 //float sorted_players;
 //float sorted_teams;

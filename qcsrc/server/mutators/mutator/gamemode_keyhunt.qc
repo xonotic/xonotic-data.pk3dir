@@ -50,8 +50,6 @@ USING(kh_Think_t, void());
 void kh_StartRound();
 void kh_Controller_SetThink(float t, kh_Think_t func);
 
-entity kh_worldkeylist;
-.entity kh_worldkeynext;
 #endif
 
 #ifdef IMPLEMENTATION
@@ -1386,7 +1384,7 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	kh_Key_DropAll(frag_target, false);
 }
 

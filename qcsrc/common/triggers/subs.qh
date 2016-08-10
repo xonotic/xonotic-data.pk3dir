@@ -1,5 +1,4 @@
-#ifndef SUBS_H
-#define SUBS_H
+#pragma once
 
 #define SUB_ANGLES(s)		(s).angles
 #define SUB_VELOCITY		velocity
@@ -68,6 +67,4 @@ float	STATE_DOWN		= 3;
 .string		noise, noise1, noise2, noise3;	// contains names of wavs to play
 
 .float		max_health;		// players maximum health is stored here
-#endif
-
 #endif

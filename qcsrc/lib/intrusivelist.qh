@@ -204,7 +204,7 @@ void IL_INIT(IntrusiveList this)
 			return;
 		}
 	}
-	LOG_WARNINGF("IntrusiveList overflow");
+	LOG_WARNF("IntrusiveList overflow");
 }
 
 void IL_DTOR(IntrusiveList this)

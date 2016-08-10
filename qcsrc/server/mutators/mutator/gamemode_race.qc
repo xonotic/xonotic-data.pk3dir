@@ -143,8 +143,9 @@ float WinningCondition_QualifyingThenRace(float limit)
 MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
+	float dt = M_ARGV(1, float);
 
-	player.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
+	player.race_movetime_frac += dt;
 	float f = floor(player.race_movetime_frac);
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;
@@ -318,7 +319,7 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
 }

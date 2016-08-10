@@ -1,5 +1,4 @@
-#ifndef TURRET_H
-#define TURRET_H
+#pragma once
 
 #include <common/weapons/all.qh>
 
@@ -176,5 +175,3 @@ const int TNSF_MOVE         = 64;
 const int TNSF_ANIM         = 128;
 
 const int TNSF_FULL_UPDATE  = 16777215;
-
-#endif

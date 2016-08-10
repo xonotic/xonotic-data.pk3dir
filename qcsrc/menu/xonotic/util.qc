@@ -515,7 +515,7 @@ float preMenuInit()
 
 	MapInfo_Cache_Create();
 	MapInfo_Enumerate();
-	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
+	if(!_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
 	{
 		draw_reset_cropped();
 
@@ -690,17 +690,17 @@ float updateCompression()
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
 	/**/
 
-int GameType_GetID(int cnt)
+Gametype GameType_GetID(int cnt)
 {
 	int i = 0;
 
-	#define GAMETYPE(id) { if (i++ == cnt) return id; }
+	#define GAMETYPE(it) { if (i++ == cnt) return it; }
 	GAMETYPES
 	#undef GAMETYPE
 
 	unused_float = i;
 
-	return 0;
+	return NULL;
 }
 
 int GameType_GetCount()
@@ -716,22 +716,14 @@ int GameType_GetCount()
 
 string GameType_GetName(int cnt)
 {
-	int i = GameType_GetID(cnt);
-
-	if(i)
-		return MapInfo_Type_ToText(i);
-
-	return "";
+	Gametype i = GameType_GetID(cnt);
+	return i ? MapInfo_Type_ToText(i) : "";
 }
 
 string GameType_GetIcon(int cnt)
 {
-	int i = GameType_GetID(cnt);
-
-	if(i)
-		return strcat("gametype_", MapInfo_Type_ToString(i));
-
-	return "";
+	Gametype i = GameType_GetID(cnt);
+	return i ? strcat("gametype_", MapInfo_Type_ToString(i)) : "";
 }
 
 .void(entity) TR;

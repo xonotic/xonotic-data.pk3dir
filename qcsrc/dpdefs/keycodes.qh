@@ -1,5 +1,4 @@
-#ifndef KEYCODES_H
-#define KEYCODES_H
+#pragma once
 
 #pragma noref 1
 
@@ -10,5 +9,3 @@
 //#undef float
 
 #pragma noref 0
-
-#endif

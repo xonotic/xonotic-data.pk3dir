@@ -1,5 +1,4 @@
-#ifndef TRIGGERS_H
-#define TRIGGERS_H
+#pragma once
 
 const float SF_TRIGGER_INIT = 1;
 const float SF_TRIGGER_UPDATE = 2;
@@ -49,6 +48,4 @@ const int ACTIVE_ACTIVE 	= 1;
 const int ACTIVE_IDLE 		= 2;
 const int ACTIVE_BUSY 		= 2;
 const int ACTIVE_TOGGLE		= 3;
-#endif
-
 #endif

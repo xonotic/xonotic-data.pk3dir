@@ -1,5 +1,4 @@
-#ifndef SV_TURRETS_H
-#define SV_TURRETS_H
+#pragma once
 
 entity turret_projectile(entity actor, Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim);
 void turret_projectile_explode(entity this);
@@ -119,5 +118,3 @@ vector tvt_tadv; // turret angle diff vector, updated by a successful call to tu
 float tvt_thadf; // turret head angle diff float, updated by a successful call to turret_validate_target
 float tvt_tadf; // turret angle diff float, updated by a successful call to turret_validate_target
 float tvt_dist; // turret distance, updated by a successful call to turret_validate_target
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef VEHICLE_H
-#define VEHICLE_H
+#pragma once
 
 CLASS(Vehicle, Object)
     ATTRIB(Vehicle, vehicleid, int, 0)
@@ -24,7 +23,7 @@ CLASS(Vehicle, Object)
     /** cockpit model tag */
     ATTRIB(Vehicle, tag_view, string, string_null)
     /** player physics mod */
-    ATTRIB(Vehicle, PlayerPhysplug, bool(entity), func_null)
+    ATTRIB(Vehicle, PlayerPhysplug, bool(entity,float), func_null)
     /**  */
     ATTRIB(Vehicle, spawnflags, int, 0)
     /** vehicle hitbox size */
@@ -76,5 +75,3 @@ const int VHF_PLAYERSLOT		= BIT(14); /// This ent is a player slot on a multi-pe
 
 // fields:
 .entity tur_head;
-
-#endif

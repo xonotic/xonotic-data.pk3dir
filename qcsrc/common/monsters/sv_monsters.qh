@@ -1,5 +1,4 @@
-#ifndef SV_MONSTERS_H
-#define SV_MONSTERS_H
+#pragma once
 
 // stats networking
 .int stat_monsters_killed;
@@ -113,5 +112,3 @@ ALLMONSTERSOUNDS
 #undef _MSOUND
 
 float GetMonsterSoundSampleField_notFound;
-
-#endif

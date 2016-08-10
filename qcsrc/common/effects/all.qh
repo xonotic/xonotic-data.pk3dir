@@ -1,5 +1,4 @@
-#ifndef EFFECTS_ALL_H
-#define EFFECTS_ALL_H
+#pragma once
 
 #include "effect.qh"
 
@@ -17,5 +16,3 @@ REGISTRY_CHECK(Effects)
 
 EFFECT(0, Null, string_null)
 #include "all.inc"
-
-#endif

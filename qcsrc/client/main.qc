@@ -108,7 +108,6 @@ void CSQC_Init()
 	binddb = db_create();
 	tempdb = db_create();
 	ClientProgsDB = db_load("client.db");
-	compressShortVector_init();
 
 	draw_endBoldFont();
 
@@ -131,7 +130,7 @@ void CSQC_Init()
 
 	registercvar("cl_spawn_near_teammate", "1");
 
-	gametype = 0;
+	gametype = NULL;
 
 	// sbt_fields uses strunzone on the titles!
 	for(int i = 0; i < MAX_SBT_FIELDS; ++i)
@@ -880,7 +879,7 @@ void CSQC_Ent_Remove(entity this)
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
-		LOG_WARNING("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
 	if (this.enttype) Ent_Remove(this);
@@ -950,7 +949,7 @@ void Gamemode_Init();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
-	gametype = ReadInt24_t();
+	gametype = ReadRegistered(Gametypes);
 	HUD_ModIcons_SetFunc();
 	FOREACH(Scores, true, {
 		if (scores_label(it)) strunzone(scores_label(it));

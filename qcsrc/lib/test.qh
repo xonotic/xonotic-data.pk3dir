@@ -15,7 +15,7 @@
 #define SUCCEED() (TEST_ok = true)
 
 /** Add a failure, but continue */
-#define ADD_FAILURE(msg) MACRO_BEGIN { ++TEST_failed; LOG_WARNINGF(msg); } MACRO_END
+#define ADD_FAILURE(msg) MACRO_BEGIN { ++TEST_failed; LOG_WARNF(msg); } MACRO_END
 
 /** Add a failure and return */
 #define FAIL(msg) _TEST_ASSERT(ADD_FAILURE(msg))
@@ -87,7 +87,7 @@ int TEST_failed;
 
 #define EXPECT_NO_FATAL_FAILURE_(statement, then) \
 	EXPECT_NO_FATAL_FAILURE__(statement, { \
-		LOG_WARNINGF( \
+		LOG_WARNF( \
 			"  Actual: %d fatal failures\n" \
 			"Expected: no fatal failures\n", \
 			TEST_fatal - TEST_prevfatal \

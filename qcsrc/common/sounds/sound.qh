@@ -1,5 +1,4 @@
-#ifndef SOUND_H
-#define SOUND_H
+#pragma once
 
 // negative = SVQC autochannels
 // positive = one per entity
@@ -115,7 +114,7 @@ CLASS(Sound, Object)
 			/**/
 		#define tryext(ext) { string s = strcat(base, "." #ext); if (fexists(strcat("sound/", s))) return s; }
 		extensions(tryext);
-		LOG_WARNINGF("Missing sound: \"%s\"\n", strcat("sound/", base));
+		LOG_WARNF("Missing sound: \"%s\"\n", strcat("sound/", base));
 		#undef tryext
 		#undef extensions
 		return string_null;
@@ -130,5 +129,3 @@ CLASS(Sound, Object)
 		precache_sound(s);
 	}
 ENDCLASS(Sound)
-
-#endif

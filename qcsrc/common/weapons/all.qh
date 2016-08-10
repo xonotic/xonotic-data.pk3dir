@@ -1,5 +1,4 @@
-#ifndef WEAPONS_ALL_H
-#define WEAPONS_ALL_H
+#pragma once
 
 #include <common/command/all.qh>
 #include <common/stats.qh>
@@ -26,14 +25,14 @@ WepSet ReadWepSet();
 
 #include <common/util.qh>
 
-#ifdef SVQC
-#include <server/bot/aim.qh>
-#endif
-
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 #define Weapons_from(i) _Weapons_from(i, WEP_Null)
 REGISTER_REGISTRY(Weapons)
 STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPickup, it)); }
+
+#ifdef SVQC
+#include <server/bot/api.qh>
+#endif
 
 .WepSet m_wepset;
 #define WEPSET(id) (WEP_##id.m_wepset)
@@ -359,6 +358,4 @@ ENUMCLASS_END(WFRAME)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
-#endif
-
 #endif

@@ -681,7 +681,7 @@ MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
 MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	if(frag_target.buffs)
 	{
 		int buffid = buff_FirstFromFlags(frag_target.buffs).m_id;

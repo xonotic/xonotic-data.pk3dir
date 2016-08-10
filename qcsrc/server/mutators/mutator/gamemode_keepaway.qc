@@ -466,7 +466,7 @@ MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	if(frag_target.ballcarried)
 		ka_DropEvent(frag_target);
 }

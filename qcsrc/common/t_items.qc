@@ -4,8 +4,7 @@
 
 #if defined(SVQC)
 
-    #include "../server/bot/bot.qh"
-    #include "../server/bot/waypoints.qh"
+    #include "../server/bot/api.qh"
 
     #include <server/mutators/all.qh>
 
@@ -35,6 +34,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 
 #ifdef CSQC
 bool autocvar_cl_ghost_items_vehicle = true;
+.vector item_glowmod;
 void Item_SetAlpha(entity this)
 {
 	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);
@@ -42,7 +42,8 @@ void Item_SetAlpha(entity this)
 	if(!veh_hud && (this.ItemStatus & ITS_AVAILABLE))
 	{
 		this.alpha = 1;
-		this.colormod = this.glowmod = '1 1 1';
+		this.colormod = '1 1 1';
+		this.glowmod = this.item_glowmod;
 	}
 	else
 	{
@@ -247,7 +248,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     }
 
     if(sf & ISF_COLORMAP)
+    {
         this.colormap = ReadShort();
+        this.item_glowmod_x = ReadByte() / 255.0;
+        this.item_glowmod_y = ReadByte() / 255.0;
+        this.item_glowmod_z = ReadByte() / 255.0;
+    }
 
     if(sf & ISF_DROP)
     {
@@ -328,14 +334,19 @@ bool ItemSend(entity this, entity to, int sf)
 		WriteShort(MSG_ENTITY, this.fade_start);
 
 		if(this.mdl == "")
-			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "exspect a crash just aboute now\n");
+			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "expect a crash just about now\n");
 
 		WriteString(MSG_ENTITY, this.mdl);
 	}
 
 
 	if(sf & ISF_COLORMAP)
+	{
 		WriteShort(MSG_ENTITY, this.colormap);
+		WriteByte(MSG_ENTITY, this.glowmod.x * 255.0);
+        WriteByte(MSG_ENTITY, this.glowmod.y * 255.0);
+        WriteByte(MSG_ENTITY, this.glowmod.z * 255.0);
+	}
 
 	if(sf & ISF_DROP)
 	{
@@ -447,7 +458,7 @@ void Item_Show (entity e, float mode)
 		//setmodel(e, "null");
 		e.solid = SOLID_NOT;
 		e.colormod = '0 0 0';
-		e.glowmod = e.colormod;
+		//e.glowmod = e.colormod;
 		e.spawnshieldtime = 1;
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}}
@@ -1205,7 +1216,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.gravity = 1;
 		if (!(this.spawnflags & 1024))
 			this.ItemStatus |= ITS_ANIMATE1;
-		this.ItemStatus |= ISF_COLORMAP;
+		this.SendFlags |= ISF_COLORMAP;
 	}
 
 	this.state = 0;

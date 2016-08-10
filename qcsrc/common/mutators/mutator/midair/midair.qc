@@ -10,7 +10,7 @@ MUTATOR_HOOKFUNCTION(midair, PlayerDamage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
 	if(time < frag_target.midair_shieldtime)

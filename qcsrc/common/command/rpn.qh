@@ -1,5 +1,4 @@
-#ifndef COMMAND_RPN_H
-#define COMMAND_RPN_H
+#pragma once
 
 // =========================================================
 //  Declarations for RPN command code, written by divVerent
@@ -13,5 +12,3 @@ int rpn_sp;
 string rpn_stack[MAX_RPN_STACK];
 
 void GenericCommand_rpn(float request, float argc, string command);
-
-#endif

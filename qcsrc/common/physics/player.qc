@@ -134,10 +134,6 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		do_crouch = false;
 	if(STAT(FROZEN, this))
 		do_crouch = false;
-	if((activeweapon.spawnflags & WEP_TYPE_MELEE_PRI) && viewmodel.animstate_startframe == viewmodel.anim_fire1_x && time < viewmodel.weapon_nextthink)
-		do_crouch = false;
-	if((activeweapon.spawnflags & WEP_TYPE_MELEE_SEC) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
-		do_crouch = false;
 
 	if (do_crouch)
 	{
@@ -159,7 +155,7 @@ void PM_ClientMovement_UpdateStatus(entity this)
 #endif
 }
 
-void CPM_PM_Aircontrol(entity this, vector wishdir, float wishspeed)
+void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 {
 	float k = 32 * (2 * IsMoveInDirection(this.movement, 0) - 1);
 	if (k <= 0)
@@ -176,7 +172,7 @@ void CPM_PM_Aircontrol(entity this, vector wishdir, float wishspeed)
 
 	if (dot > 0) // we can't change direction while slowing down
 	{
-		k *= pow(dot, PHYS_AIRCONTROL_POWER(this)) * PHYS_INPUT_TIMELENGTH;
+		k *= pow(dot, PHYS_AIRCONTROL_POWER(this)) * dt;
 		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k/32);
 		k *= PHYS_AIRCONTROL(this);
 		this.velocity = normalize(this.velocity * xyspeed + wishdir * k);
@@ -196,7 +192,7 @@ float AdjustAirAccelQW(float accelqw, float factor)
 //   sv_airaccel_sideways_friction 0
 //   prvm_globalset server speedclamp_mode 1
 //     (or 2)
-void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
+void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
 {
 	float speedclamp = stretchfactor > 0 ? stretchfactor
 	: accelqw < 0 ? 1 // full clamping, no stretch
@@ -212,7 +208,7 @@ void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed
 	vector vel_xy = vec2(this.velocity);
 	vector vel_perpend = vel_xy - vel_straight * wishdir;
 
-	float step = accel * PHYS_INPUT_TIMELENGTH * wishspeed0;
+	float step = accel * dt * wishspeed0;
 
 	float vel_xy_current  = vlen(vel_xy);
 	if (speedlimit)
@@ -225,7 +221,7 @@ void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed
 	if (sidefric < 0 && (vel_perpend*vel_perpend))
 		// negative: only apply so much sideways friction to stay below the speed you could get by "braking"
 	{
-		float f = max(0, 1 + PHYS_INPUT_TIMELENGTH * wishspeed * sidefric);
+		float f = max(0, 1 + dt * wishspeed * sidefric);
 		float themin = (vel_xy_backward * vel_xy_backward - vel_straight * vel_straight) / (vel_perpend * vel_perpend);
 		// assume: themin > 1
 		// vel_xy_backward*vel_xy_backward - vel_straight*vel_straight > vel_perpend*vel_perpend
@@ -241,7 +237,7 @@ void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed
 		}
 	}
 	else
-		vel_perpend *= max(0, 1 - PHYS_INPUT_TIMELENGTH * wishspeed * sidefric);
+		vel_perpend *= max(0, 1 - dt * wishspeed * sidefric);
 
 	vel_xy = vel_straight * wishdir + vel_perpend;
 
@@ -260,7 +256,7 @@ void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed
 	this.velocity = vel_xy + vel_z * '0 0 1';
 }
 
-void PM_AirAccelerate(entity this, vector wishdir, float wishspeed)
+void PM_AirAccelerate(entity this, float dt, vector wishdir, float wishspeed)
 {
 	if (wishspeed == 0)
 		return;
@@ -270,18 +266,18 @@ void PM_AirAccelerate(entity this, vector wishdir, float wishspeed)
 	float curspeed = vlen(curvel);
 
 	if (wishspeed > curspeed * 1.01)
-		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL(this) * PHYS_MAXSPEED(this) * PHYS_INPUT_TIMELENGTH);
+		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL(this) * PHYS_MAXSPEED(this) * dt);
 	else
 	{
 		float f = max(0, (PHYS_WARSOWBUNNY_TOPSPEED(this) - curspeed) / (PHYS_WARSOWBUNNY_TOPSPEED(this) - PHYS_MAXSPEED(this)));
-		wishspeed = max(curspeed, PHYS_MAXSPEED(this)) + PHYS_WARSOWBUNNY_ACCEL(this) * f * PHYS_MAXSPEED(this) * PHYS_INPUT_TIMELENGTH;
+		wishspeed = max(curspeed, PHYS_MAXSPEED(this)) + PHYS_WARSOWBUNNY_ACCEL(this) * f * PHYS_MAXSPEED(this) * dt;
 	}
 	vector wishvel = wishdir * wishspeed;
 	vector acceldir = wishvel - curvel;
 	float addspeed = vlen(acceldir);
 	acceldir = normalize(acceldir);
 
-	float accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL(this) * PHYS_MAXSPEED(this) * PHYS_INPUT_TIMELENGTH);
+	float accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL(this) * PHYS_MAXSPEED(this) * dt);
 
 	if (PHYS_WARSOWBUNNY_BACKTOSIDERATIO(this) < 1)
 	{
@@ -579,12 +575,12 @@ void PM_check_nickspam(entity this)
 #endif
 }
 
-void PM_check_punch(entity this)
+void PM_check_punch(entity this, float dt)
 {
 #ifdef SVQC
 	if (this.punchangle != '0 0 0')
 	{
-		float f = vlen(this.punchangle) - 10 * PHYS_INPUT_TIMELENGTH;
+		float f = vlen(this.punchangle) - 10 * dt;
 		if (f > 0)
 			this.punchangle = normalize(this.punchangle) * f;
 		else
@@ -593,7 +589,7 @@ void PM_check_punch(entity this)
 
 	if (this.punchvector != '0 0 0')
 	{
-		float f = vlen(this.punchvector) - 30 * PHYS_INPUT_TIMELENGTH;
+		float f = vlen(this.punchvector) - 30 * dt;
 		if (f > 0)
 			this.punchvector = normalize(this.punchvector) * f;
 		else
@@ -683,7 +679,7 @@ void PM_check_blocked(entity this)
 
 .vector oldmovement;
 
-void PM_jetpack(entity this, float maxspd_mod)
+void PM_jetpack(entity this, float maxspd_mod, float dt)
 {
 	//makevectors(this.v_angle.y * '0 1 0');
 	makevectors(this.v_angle);
@@ -768,7 +764,7 @@ void PM_jetpack(entity this, float maxspd_mod)
 
 	fvel = min(1, vlen(wishvel) / best);
 	if (PHYS_JETPACK_FUEL(this) && !(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-		f = min(1, PHYS_AMMO_FUEL(this) / (PHYS_JETPACK_FUEL(this) * PHYS_INPUT_TIMELENGTH * fvel));
+		f = min(1, PHYS_AMMO_FUEL(this) / (PHYS_JETPACK_FUEL(this) * dt * fvel));
 	else
 		f = 1;
 
@@ -776,12 +772,12 @@ void PM_jetpack(entity this, float maxspd_mod)
 
 	if (f > 0 && wishvel != '0 0 0')
 	{
-		this.velocity = this.velocity + wishvel * f * PHYS_INPUT_TIMELENGTH;
+		this.velocity = this.velocity + wishvel * f * dt;
 		UNSET_ONGROUND(this);
 
 #ifdef SVQC
 		if (!(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-			this.ammo_fuel -= PHYS_JETPACK_FUEL(this) * PHYS_INPUT_TIMELENGTH * fvel * f;
+			this.ammo_fuel -= PHYS_JETPACK_FUEL(this) * dt * fvel * f;
 
 		ITEMS_STAT(this) |= IT_USING_JETPACK;
 
