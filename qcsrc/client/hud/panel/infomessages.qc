@@ -5,6 +5,7 @@
 
 // Info messages panel (#14)
 
+float autocvar_hud_panel_infomessages_group0 = 1;
 float autocvar_hud_panel_infomessages_group_fadetime = 0.4;
 float autocvar_hud_panel_infomessages_group_time = 6;
 const int IMG_COUNT = 1; // number of InfoMessage Groups
@@ -88,27 +89,30 @@ void HUD_InfoMessages()
 				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
 			InfoMessage(s);
 
-			img_curr_group = 0;
-			switch(img_select(img_curr_group) % 3)
+			if(autocvar_hud_panel_infomessages_group0)
 			{
-				default:
-				case 0:
-					if(spectatee_status == -1)
-						s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey(_("primary fire"), "+fire"));
-					else
-						s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
-					break;
-				case 1:
-					if(spectatee_status == -1)
-						s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
-					else
-						s = sprintf(_("^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"), getcommandkey(_("secondary fire"), "+fire2"), getcommandkey(_("drop weapon"), "dropweapon"));
-					break;
-				case 2:
-					s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey(_("server info"), "+show_info"));
-					break;
+				img_curr_group = 0;
+				switch(img_select(img_curr_group) % 3)
+				{
+					default:
+					case 0:
+						if(spectatee_status == -1)
+							s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey(_("primary fire"), "+fire"));
+						else
+							s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
+						break;
+					case 1:
+						if(spectatee_status == -1)
+							s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
+						else
+							s = sprintf(_("^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"), getcommandkey(_("secondary fire"), "+fire2"), getcommandkey(_("drop weapon"), "dropweapon"));
+						break;
+					case 2:
+						s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey(_("server info"), "+show_info"));
+						break;
+				}
+				InfoMessage(s);
 			}
-			InfoMessage(s);
 
 			if(gametype == MAPINFO_TYPE_LMS)
 			{
