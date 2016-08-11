@@ -29,7 +29,7 @@ void Weapon_whereis(Weapon this, entity cl)
 			continue;
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,
-			1, 0,
+			-2, 0,
 			NULL, it.origin + ('0 0 1' * it.maxs.z) * 1.2,
 			cl, 0,
 			NULL, enemy,

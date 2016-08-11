@@ -459,8 +459,10 @@ vector fixrgbexcess(vector rgb)
 
 void Draw_WaypointSprite(entity this)
 {
-    if (this.lifetime)
+    if (this.lifetime > 0)
         this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
+    else if (this.lifetime < 0)
+        this.alpha = (time < this.fadetime) ? 1 : 0; // no fading out effect
     else
         this.alpha = 1;
 
@@ -542,7 +544,7 @@ void Draw_WaypointSprite(entity this)
     {
         if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
-        else if (!this.lifetime) // fading out waypoints don't blink
+        else if (this.lifetime > 0) // fading out waypoints don't blink
             a *= spritelookupblinkvalue(this, spriteimage);
     }
 
@@ -871,6 +873,8 @@ void WaypointSprite_FadeOutIn(entity e, float t)
         float current_fadetime;
         current_fadetime = e.teleport_time - time;
         e.teleport_time = time + t;
+        if (e.fade_time < 0)
+        	e.fade_time = -e.fade_time;
         e.fade_time = e.fade_time * t / current_fadetime;
     }
 
@@ -1004,8 +1008,10 @@ entity WaypointSprite_Spawn(
 )
 {
     entity wp = new(sprite_waypoint);
+    wp.fade_time = _lifetime; // if negative tells client not to fade it out
+    if(_lifetime < 0)
+    	_lifetime = -_lifetime;
     wp.teleport_time = time + _lifetime;
-    wp.fade_time = _lifetime;
     wp.exteriormodeltoclient = ref;
     if (ref)
     {
