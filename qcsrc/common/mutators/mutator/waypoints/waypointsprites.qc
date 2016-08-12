@@ -461,8 +461,6 @@ void Draw_WaypointSprite(entity this)
 {
     if (this.lifetime > 0)
         this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
-    else if (this.lifetime < 0)
-        this.alpha = (time < this.fadetime) ? 1 : 0; // no fading out effect
     else
         this.alpha = 1;
 
