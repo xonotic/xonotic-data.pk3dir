@@ -525,7 +525,7 @@ void LinkDoors(entity this)
 			break;
 		}
 	}
-	LOG_TRACE("\n");
+	LOG_TRACE("");
 
 	// collect health, targetname, message, size
 	cmins = this.absmin;

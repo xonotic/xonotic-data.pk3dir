@@ -236,14 +236,14 @@ void onslaught_updatelinks()
 {
 	entity l;
 	// first check if the game has ended
-	LOG_DEBUG("--- updatelinks ---\n");
+	LOG_DEBUG("--- updatelinks ---");
 	// mark generators as being shielded and networked
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
 	{
 		if (l.iscaptured)
-			LOG_DEBUG(strcat(etos(l), " (generator) belongs to team ", ftos(l.team), "\n"));
+			LOG_DEBUG(etos(l), " (generator) belongs to team ", ftos(l.team));
 		else
-			LOG_DEBUG(strcat(etos(l), " (generator) is destroyed\n"));
+			LOG_DEBUG(etos(l), " (generator) is destroyed");
 		l.islinked = l.iscaptured;
 		l.isshielded = l.iscaptured;
 		l.sprite.SendFlags |= 16;
@@ -255,7 +255,7 @@ void onslaught_updatelinks()
 		l.isshielded = true;
 		int i;
 		for(i = 0; i < 17; ++i) { l.isgenneighbor[i] = false; l.iscpneighbor[i] = false; }
-		LOG_DEBUG(strcat(etos(l), " (point) belongs to team ", ftos(l.team), "\n"));
+		LOG_DEBUG(etos(l), " (point) belongs to team ", ftos(l.team));
 		l.sprite.SendFlags |= 16;
 	}
 	// flow power outward from the generators through the network
@@ -275,13 +275,13 @@ void onslaught_updatelinks()
 						{
 							stop = false;
 							l.goalentity.islinked = true;
-							LOG_DEBUG(strcat(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)\n"));
+							LOG_DEBUG(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)");
 						}
 						else if (!l.enemy.islinked)
 						{
 							stop = false;
 							l.enemy.islinked = true;
-							LOG_DEBUG(strcat(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n"));
+							LOG_DEBUG(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)");
 						}
 					}
 		}
@@ -294,7 +294,7 @@ void onslaught_updatelinks()
 		{
 			if(DIFF_TEAM(l.goalentity, l.enemy))
 			{
-				LOG_DEBUG(strcat(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)\n"));
+				LOG_DEBUG(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)");
 				l.enemy.isshielded = false;
 			}
 			if(l.goalentity.classname == "onslaught_generator")
@@ -306,7 +306,7 @@ void onslaught_updatelinks()
 		{
 			if(DIFF_TEAM(l.goalentity, l.enemy))
 			{
-				LOG_DEBUG(strcat(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)\n"));
+				LOG_DEBUG(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)");
 				l.goalentity.isshielded = false;
 			}
 			if(l.enemy.classname == "onslaught_generator")
@@ -320,13 +320,13 @@ void onslaught_updatelinks()
 	{
 		if (l.isshielded)
 		{
-			LOG_DEBUG(strcat(etos(l), " (generator) is shielded\n"));
+			LOG_DEBUG(etos(l), " (generator) is shielded");
 			l.takedamage = DAMAGE_NO;
 			l.bot_attack = false;
 		}
 		else
 		{
-			LOG_DEBUG(strcat(etos(l), " (generator) is not shielded\n"));
+			LOG_DEBUG(etos(l), " (generator) is not shielded");
 			l.takedamage = DAMAGE_AIM;
 			l.bot_attack = true;
 		}
@@ -338,7 +338,7 @@ void onslaught_updatelinks()
 	{
 		if (l.isshielded)
 		{
-			LOG_DEBUG(strcat(etos(l), " (point) is shielded\n"));
+			LOG_DEBUG(etos(l), " (point) is shielded");
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_NO;
@@ -347,7 +347,7 @@ void onslaught_updatelinks()
 		}
 		else
 		{
-			LOG_DEBUG(strcat(etos(l), " (point) is not shielded\n"));
+			LOG_DEBUG(etos(l), " (point) is not shielded");
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_AIM;
@@ -417,7 +417,7 @@ void ons_DelayedLinkSetup(entity this)
 	if(!this.goalentity) { objerror(this, "can not find target\n"); }
 	if(!this.enemy) { objerror(this, "can not find target2\n"); }
 
-	LOG_DEBUG(strcat(etos(this.goalentity), " linked with ", etos(this.enemy), "\n"));
+	LOG_DEBUG(etos(this.goalentity), " linked with ", etos(this.enemy));
 	this.SendFlags |= 3;
 	setthink(this, ons_Link_CheckUpdate);
 	this.nextthink = time;
@@ -1305,8 +1305,8 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 	if(!needweapons && !needarmor)
 		return;
 
-	LOG_DEBUG(strcat(this.netname, " needs weapons ", ftos(needweapons) , "\n"));
-	LOG_DEBUG(strcat(this.netname, " needs armor ", ftos(needarmor) , "\n"));
+	LOG_DEBUG(this.netname, " needs weapons ", ftos(needweapons));
+	LOG_DEBUG(this.netname, " needs armor ", ftos(needarmor));
 
 	// See what is around
 	FOREACH_ENTITY_FLOAT(bot_pickup, true,
@@ -1325,7 +1325,7 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 
 void havocbot_role_ons_setrole(entity this, int role)
 {
-	LOG_DEBUG(strcat(this.netname," switched to "));
+	LOG_DEBUG(this.netname," switched to ");
 	switch(role)
 	{
 		case HAVOCBOT_ONS_ROLE_DEFENSE:
@@ -1347,7 +1347,7 @@ void havocbot_role_ons_setrole(entity this, int role)
 			this.havocbot_role_timeout = 0;
 			break;
 	}
-	LOG_DEBUG("\n");
+	LOG_DEBUG("");
 }
 
 void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale)
@@ -1403,7 +1403,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 	if (!cp)
 		return;
 
-	LOG_DEBUG(strcat(this.netname, " chose cp ranked ", ftos(bestvalue), "\n"));
+	LOG_DEBUG(this.netname, " chose cp ranked ", ftos(bestvalue));
 
 	if(cp.goalentity)
 	{
@@ -1444,12 +1444,12 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 		{
 			navigation_routerating(this, cp, ratingscale, 10000);
 		}
-		LOG_DEBUG(strcat(this.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n"));
+		LOG_DEBUG(this.netname, " found an attackable controlpoint at ", vtos(cp.origin));
 	}
 	else
 	{
 		// Should be touched
-		LOG_DEBUG(strcat(this.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n"));
+		LOG_DEBUG(this.netname, " found a touchable controlpoint at ", vtos(cp.origin));
 		found = false;
 
 		// Look for auto generated waypoint
@@ -1502,7 +1502,7 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 
 		if(bestwp)
 		{
-			LOG_DEBUG("waypoints found around generator\n");
+			LOG_DEBUG("waypoints found around generator");
 			navigation_routerating(this, bestwp, ratingscale, 10000);
 			bestwp.cnt += 1;
 
@@ -1515,7 +1515,7 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 		}
 		else
 		{
-			LOG_DEBUG("generator found without waypoints around\n");
+			LOG_DEBUG("generator found without waypoints around");
 			// if there aren't waypoints near the generator go straight to it
 			navigation_routerating(this, g, ratingscale, 10000);
 			this.havocbot_attack_time = 0;

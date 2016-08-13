@@ -321,22 +321,22 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 	if(_Nex_ExtResponseSystem_UpdateTo)
 	{
-		LOG_TRACE("error: UpdateNotification_URI_Get_Callback has been called before\n");
+		LOG_TRACE("error: UpdateNotification_URI_Get_Callback has been called before");
 		return;
 	}
 	if(status != 0)
 	{
-		LOG_TRACEF("error receiving update notification: status is %d\n", status);
+		LOG_TRACEF("error receiving update notification: status is %d", status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		LOG_TRACE("error: received HTML instead of an update notification\n");
+		LOG_TRACE("error: received HTML instead of an update notification");
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		LOG_TRACE("error: received carriage returns from update notification server\n");
+		LOG_TRACE("error: received carriage returns from update notification server");
 		return;
 	}
 

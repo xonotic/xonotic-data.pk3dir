@@ -212,7 +212,7 @@ int CheckCategoryForEntry(int entry)
 			case "cts":
 			case "xdf": { return CAT_DEFRAG; }
 
-			default: { LOG_TRACEF("Found strange mod type: %s\n", modtype); return CAT_MODIFIED; }
+			default: { LOG_TRACEF("Found strange mod type: %s", modtype); return CAT_MODIFIED; }
 		}
 	}
 

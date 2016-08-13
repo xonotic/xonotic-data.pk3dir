@@ -378,7 +378,7 @@ METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 #endif
 #ifdef CSQC
 METHOD(PortoLaunch, wr_impacteffect, void(entity this, entity actor)) {
-    LOG_WARN("Since when does Porto send DamageInfo?\n");
+    LOG_WARN("Since when does Porto send DamageInfo?");
 }
 #endif
 #endif

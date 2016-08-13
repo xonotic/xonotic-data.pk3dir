@@ -73,7 +73,7 @@ void tdm_DelayedInit(entity this)
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "tdm_team") == NULL)
 	{
-		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.\n");
+		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.");
 
 		int numteams = autocvar_g_tdm_teams_override;
 

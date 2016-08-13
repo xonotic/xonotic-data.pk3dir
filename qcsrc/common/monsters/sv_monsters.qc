@@ -247,7 +247,7 @@ void Monster_Sound_Precache(string f)
 	{
 		if(tokenize_console(s) != 3)
 		{
-			LOG_TRACE("Invalid sound info line: ", s, "\n");
+			LOG_TRACE("Invalid sound info line: ", s);
 			continue;
 		}
 		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
@@ -302,7 +302,7 @@ bool Monster_Sounds_Load(entity this, string f, int first)
 	fh = fopen(f, FILE_READ);
 	if(fh < 0)
 	{
-		LOG_TRACE("Monster sound file not found: ", f, "\n");
+		LOG_TRACE("Monster sound file not found: ", f);
 		return false;
 	}
 	while((s = fgets(fh)))

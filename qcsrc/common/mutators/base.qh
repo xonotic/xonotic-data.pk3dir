@@ -203,7 +203,7 @@ NET_HANDLE(Mutator, bool isNew)
         WITH(bool, mutator_log, true, LAMBDA(
             FOREACH(Mutators, it.registered_id == s, { Mutator_Add(it); ++added; });
         ));
-        if (added > 1) LOG_WARNF("Added more than one mutator for %s\n", s);
+        if (added > 1) LOG_WARNF("Added more than one mutator for %s", s);
     }
 }
 #endif
@@ -227,7 +227,7 @@ bool Mutator_Add(Mutator mut)
     mutatorfunc_t func = mut.mutatorfunc;
     if (!func(MUTATOR_ADDING)) {
         // good
-        if (mutator_log) LOG_TRACEF("Mutator: added %s\n", mut.m_name);
+        if (mutator_log) LOG_TRACEF("Mutator: added %s", mut.m_name);
 #ifdef SVQC
         Net_LinkEntity(mut, false, 0, Mutator_SendEntity);
 #endif
@@ -257,7 +257,7 @@ void Mutator_Remove(Mutator mut)
         // baaaaad
         error("Mutator_Remove: removing mutator failed");
     }
-    if (mutator_log) LOG_TRACEF("Mutator: removed %s\n", mut.m_name);
+    if (mutator_log) LOG_TRACEF("Mutator: removed %s", mut.m_name);
 #ifdef SVQC
     Net_UnlinkEntity(mut);
 #endif

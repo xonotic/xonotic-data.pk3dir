@@ -608,12 +608,12 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         e = find(NULL, targetname, it.target);
         if (!e)
         {
-            LOG_TRACE("Initital waypoint for walker does NOT exsist, fix your map!\n");
+            LOG_TRACE("Initital waypoint for walker does NOT exsist, fix your map!");
             it.target = "";
         }
 
         if (e.classname != "turret_checkpoint")
-            LOG_TRACE("Warning: not a turrret path\n");
+            LOG_TRACE("Warning: not a turrret path");
         else
         {
 #ifdef WALKER_FANCYPATHING

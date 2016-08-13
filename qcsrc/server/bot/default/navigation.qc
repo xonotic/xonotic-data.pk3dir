@@ -662,7 +662,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	{
 		vector pointa, pointb;
 
-		LOG_DEBUG("jetpack ai: evaluating path for ", e.classname, "\n");
+		LOG_DEBUG("jetpack ai: evaluating path for ", e.classname);
 
 		// Point A
 		traceline(this.origin, this.origin + '0 0 65535', MOVE_NORMAL, this);
@@ -677,7 +677,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 		if(trace_fraction==1)
 		{
-			LOG_DEBUG("jetpack ai: can bridge these two points\n");
+			LOG_DEBUG("jetpack ai: can bridge these two points");
 
 			// Lower the altitude of these points as much as possible
 			float zdistance, xydistance, cost, t, fuel;
@@ -714,7 +714,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
-			LOG_DEBUG(strcat("jetpack ai: required fuel ", ftos(fuel), " this.ammo_fuel ", ftos(this.ammo_fuel), "\n"));
+			LOG_DEBUG("jetpack ai: required fuel ", ftos(fuel), " this.ammo_fuel ", ftos(this.ammo_fuel));
 
 			// enough fuel ?
 			if(this.ammo_fuel>fuel)
@@ -732,7 +732,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 				if (navigation_bestrating < f)
 				{
-					LOG_DEBUG(strcat("jetpack path: added goal ", e.classname, " (with rating ", ftos(f), ")\n"));
+					LOG_DEBUG("jetpack path: added goal ", e.classname, " (with rating ", ftos(f), ")");
 					navigation_bestrating = f;
 					navigation_bestgoal = e;
 					this.navigation_jetpack_goal = e;
@@ -778,7 +778,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 				e.nearestwaypoint = nwp;
 			else
 			{
-				LOG_DEBUG(strcat("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e), "\n"));
+				LOG_DEBUG("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e));
 
 				if(e.flags & FL_ITEM)
 					e.blacklisted = true;
@@ -790,7 +790,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 				if(e.blacklisted)
 				{
-					LOG_DEBUG(strcat("The entity '", e.classname, "' is going to be excluded from path finding during this match\n"));
+					LOG_DEBUG("The entity '", e.classname, "' is going to be excluded from path finding during this match");
 					return;
 				}
 			}
@@ -804,17 +804,17 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		nwp = e.nearestwaypoint;
 	}
 
-	LOG_DEBUG(strcat("-- checking ", e.classname, " (with cost ", ftos(nwp.wpcost), ")\n"));
+	LOG_DEBUG("-- checking ", e.classname, " (with cost ", ftos(nwp.wpcost), ")");
 	if (nwp)
 	if (nwp.wpcost < 10000000)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
-		LOG_DEBUG(strcat(e.classname, " ", ftos(f), "/(1+", ftos((nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint))), "/", ftos(rangebias), ") = "));
+		LOG_DEBUG(e.classname, " ", ftos(f), "/(1+", ftos((nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint))), "/", ftos(rangebias), ") = ");
 		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(o - nwp.wpnearestpoint)));
-		LOG_DEBUG(strcat("considering ", e.classname, " (with rating ", ftos(f), ")\n"));
+		LOG_DEBUG("considering ", e.classname, " (with rating ", ftos(f), ")");
 		if (navigation_bestrating < f)
 		{
-			LOG_DEBUG(strcat("ground path: added goal ", e.classname, " (with rating ", ftos(f), ")\n"));
+			LOG_DEBUG("ground path: added goal ", e.classname, " (with rating ", ftos(f), ")");
 			navigation_bestrating = f;
 			navigation_bestgoal = e;
 		}
@@ -897,7 +897,7 @@ void navigation_poptouchedgoals(entity this)
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
 	if(tracewalk(this, this.origin, this.mins, this.maxs, (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5, bot_navigation_movemode))
 	{
-		LOG_DEBUG(strcat("path optimized for ", this.netname, ", removed a goal from the queue\n"));
+		LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
 		navigation_poproute(this);
 		// TODO this may also be a nice idea to do "early" (e.g. by
 		// manipulating the vlen() comparisons) to shorten paths in
@@ -974,7 +974,7 @@ void navigation_goalrating_end(entity this)
 		return;
 
 	navigation_routetogoal(this, navigation_bestgoal, this.origin);
-	LOG_DEBUG(strcat("best goal ", this.goalcurrent.classname , "\n"));
+	LOG_DEBUG("best goal ", this.goalcurrent.classname);
 
 	// If the bot got stuck then try to reach the farthest waypoint
 	if (!this.navigation_hasgoals)
@@ -982,7 +982,7 @@ void navigation_goalrating_end(entity this)
 	{
 		if (!(this.aistatus & AI_STATUS_STUCK))
 		{
-			LOG_DEBUG(strcat(this.netname, " cannot walk to any goal\n"));
+			LOG_DEBUG(this.netname, " cannot walk to any goal");
 			this.aistatus |= AI_STATUS_STUCK;
 		}
 
@@ -1031,7 +1031,7 @@ void navigation_unstuck(entity this)
 
 	if (!bot_waypoint_queue_owner)
 	{
-		LOG_DEBUG(strcat(this.netname, " sutck, taking over the waypoints queue\n"));
+		LOG_DEBUG(this.netname, " sutck, taking over the waypoints queue");
 		bot_waypoint_queue_owner = this;
 		bot_waypoint_queue_bestgoal = NULL;
 		bot_waypoint_queue_bestgoalrating = 0;
@@ -1044,7 +1044,7 @@ void navigation_unstuck(entity this)
 	{
 		// evaluate the next goal on the queue
 		float d = vlen(this.origin - bot_waypoint_queue_goal.origin);
-		LOG_DEBUG(strcat(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n"));
+		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
 		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), bot_waypoint_queue_goal.origin, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
@@ -1059,14 +1059,14 @@ void navigation_unstuck(entity this)
 		{
 			if (bot_waypoint_queue_bestgoal)
 			{
-				LOG_DEBUG(strcat(this.netname, " stuck, reachable waypoint found, heading to it\n"));
+				LOG_DEBUG(this.netname, " stuck, reachable waypoint found, heading to it");
 				navigation_routetogoal(this, bot_waypoint_queue_bestgoal, this.origin);
 				this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 				this.aistatus &= ~AI_STATUS_STUCK;
 			}
 			else
 			{
-				LOG_DEBUG(strcat(this.netname, " stuck, cannot walk to any waypoint at all\n"));
+				LOG_DEBUG(this.netname, " stuck, cannot walk to any waypoint at all");
 			}
 
 			bot_waypoint_queue_owner = NULL;
@@ -1078,7 +1078,7 @@ void navigation_unstuck(entity this)
 			return;
 
 		// build a new queue
-		LOG_DEBUG(strcat(this.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n"));
+		LOG_DEBUG(this.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu");
 
 		entity first = NULL;
 
@@ -1097,7 +1097,7 @@ void navigation_unstuck(entity this)
 			bot_waypoint_queue_goal = first;
 		else
 		{
-			LOG_DEBUG(strcat(this.netname, " stuck, cannot walk to any waypoint at all\n"));
+			LOG_DEBUG(this.netname, " stuck, cannot walk to any waypoint at all");
 			bot_waypoint_queue_owner = NULL;
 		}
 	}

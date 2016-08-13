@@ -520,7 +520,7 @@ void havocbot_movetogoal(entity this)
 				threshold = maxspeed * 0.2;
 				if(vdist(velxy, <, threshold))
 				{
-					LOG_TRACE("Warning: ", this.netname, " got stuck on a jumppad (velocity in xy is ", vtos(velxy), "), trying to get out of it now\n");
+					LOG_TRACE("Warning: ", this.netname, " got stuck on a jumppad (velocity in xy is ", vtos(velxy), "), trying to get out of it now");
 					this.aistatus |= AI_STATUS_OUT_JUMPPAD;
 				}
 				return;
@@ -771,7 +771,7 @@ void havocbot_movetogoal(entity this)
 						if(tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
-							LOG_TRACE("bot ", this.netname, " avoided the goal ", this.goalcurrent.classname, " ", etos(this.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
+							LOG_TRACE("bot ", this.netname, " avoided the goal ", this.goalcurrent.classname, " ", etos(this.goalcurrent), " because it led to a dangerous path; goal stack cleared");
 							navigation_clearroute(this);
 							return;
 						}
@@ -1127,7 +1127,7 @@ float havocbot_moveto(entity this, vector pos)
 		// Step 4: Move to waypoint
 		if(this.havocbot_personal_waypoint==NULL)
 		{
-			LOG_TRACE("Error: ", this.netname, " trying to walk to a non existent personal waypoint\n");
+			LOG_TRACE("Error: ", this.netname, " trying to walk to a non existent personal waypoint");
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			return CMD_STATUS_ERROR;
 		}
@@ -1138,7 +1138,7 @@ float havocbot_moveto(entity this, vector pos)
 			bot_strategytoken_taken = true;
 			if(havocbot_moveto_refresh_route(this))
 			{
-				LOG_TRACE(this.netname, " walking to its personal waypoint (after ", ftos(this.havocbot_personal_waypoint_failcounter), " failed attempts)\n");
+				LOG_TRACE(this.netname, " walking to its personal waypoint (after ", ftos(this.havocbot_personal_waypoint_failcounter), " failed attempts)");
 				this.havocbot_personal_waypoint_searchtime = time + 10;
 				this.havocbot_personal_waypoint_failcounter = 0;
 			}
@@ -1148,13 +1148,13 @@ float havocbot_moveto(entity this, vector pos)
 				this.havocbot_personal_waypoint_searchtime = time + 2;
 				if(this.havocbot_personal_waypoint_failcounter >= 30)
 				{
-					LOG_TRACE("Warning: can't walk to the personal waypoint located at ", vtos(this.havocbot_personal_waypoint.origin),"\n");
+					LOG_TRACE("Warning: can't walk to the personal waypoint located at ", vtos(this.havocbot_personal_waypoint.origin));
 					this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 					delete(this.havocbot_personal_waypoint);
 					return CMD_STATUS_ERROR;
 				}
 				else
-					LOG_TRACE(this.netname, " can't walk to its personal waypoint (after ", ftos(this.havocbot_personal_waypoint_failcounter), " failed attempts), trying later\n");
+					LOG_TRACE(this.netname, " can't walk to its personal waypoint (after ", ftos(this.havocbot_personal_waypoint_failcounter), " failed attempts), trying later");
 			}
 		}
 
@@ -1172,7 +1172,7 @@ float havocbot_moveto(entity this, vector pos)
 		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_REACHED)
 		{
 			// Step 5: Waypoint reached
-			LOG_TRACE(this.netname, "'s personal waypoint reached\n");
+			LOG_TRACE(this.netname, "'s personal waypoint reached");
 			delete(this.havocbot_personal_waypoint);
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			return CMD_STATUS_FINISHED;
@@ -1187,7 +1187,7 @@ float havocbot_moveto(entity this, vector pos)
 		// Wait until it is linked
 		if(!this.havocbot_personal_waypoint.wplinked)
 		{
-			LOG_TRACE(this.netname, " waiting for personal waypoint to be linked\n");
+			LOG_TRACE(this.netname, " waiting for personal waypoint to be linked");
 			return CMD_STATUS_EXECUTING;
 		}
 
@@ -1196,7 +1196,7 @@ float havocbot_moveto(entity this, vector pos)
 		this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_GOING;
 
 		// Step 3: Route to waypoint
-		LOG_TRACE(this.netname, " walking to its personal waypoint\n");
+		LOG_TRACE(this.netname, " walking to its personal waypoint");
 
 		return CMD_STATUS_EXECUTING;
 	}
@@ -1205,7 +1205,7 @@ float havocbot_moveto(entity this, vector pos)
 	wp = waypoint_spawnpersonal(this, pos);
 	if(wp==NULL)
 	{
-		LOG_TRACE("Error: Can't spawn personal waypoint at ",vtos(pos),"\n");
+		LOG_TRACE("Error: Can't spawn personal waypoint at ",vtos(pos));
 		return CMD_STATUS_ERROR;
 	}
 

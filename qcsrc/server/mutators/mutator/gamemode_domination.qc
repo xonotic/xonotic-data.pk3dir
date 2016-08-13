@@ -675,7 +675,7 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "dom_team") == NULL || autocvar_g_domination_teams_override >= 2)
 	{
-		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.\n");
+		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.");
 		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}

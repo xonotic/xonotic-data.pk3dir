@@ -159,7 +159,7 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     pathlib_searched_cnt     = 0;
     pathlib_foundgoal      = false;
 
-    LOG_TRACE("pathlib_waypointpath init\n");
+    LOG_TRACE("pathlib_waypointpath init");
 
     // Initialize waypoint grid
     IL_EACH(g_waypoints, true,
@@ -179,10 +179,10 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     start_node = wp_from;
 
     start_node.pathlib_list = closedlist;
-    LOG_TRACE("Expanding ",ftos(pathlib_wpp_expand(start_node))," links\n");
+    LOG_TRACE("Expanding ",ftos(pathlib_wpp_expand(start_node))," links");
     if(pathlib_open_cnt <= 0)
     {
-        LOG_TRACE("pathlib_waypointpath: Start waypoint not linked! aborting.\n");
+        LOG_TRACE("pathlib_waypointpath: Start waypoint not linked! aborting.");
         return NULL;
     }
 
@@ -196,17 +196,17 @@ entity pathlib_waypointpath_step()
     n = pathlib_wpp_bestopen();
     if(!n)
     {
-        LOG_TRACE("Cannot find best open node, abort.\n");
+        LOG_TRACE("Cannot find best open node, abort.");
         return NULL;
     }
     pathlib_wpp_close(n);
-	LOG_TRACE("Expanding ",ftos(pathlib_wpp_expand(n))," links\n");
+	LOG_TRACE("Expanding ",ftos(pathlib_wpp_expand(n))," links");
 
     if(pathlib_foundgoal)
     {
         entity start, end, open, ln;
 
-        LOG_TRACE("Target found. Rebuilding and filtering path...\n");
+        LOG_TRACE("Target found. Rebuilding and filtering path...");
 
 		buildpath_nodefilter = buildpath_nodefilter_none;
 		start = path_build(NULL, start_node.origin, NULL, NULL);

@@ -20,7 +20,7 @@ noref bool require_spawnfunc_prefix;
 
 	#define _spawnfunc_checktypes(fld) \
 		if (fieldname == #fld) \
-			if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted\n", fieldname);
+			if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted", fieldname);
 #else
 	#define _spawnfunc_checktypes(fld)
 #endif
@@ -62,7 +62,7 @@ noref bool require_spawnfunc_prefix;
 					if (fieldname == "") continue; \
 					FIELDS_COMMON(_spawnfunc_check) \
 					whitelist(_spawnfunc_check) \
-					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue.\n"), #id, fieldname, value); \
+					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), #id, fieldname, value); \
 				} \
 				this.spawnfunc_checked = true; \
 			} \

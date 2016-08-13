@@ -253,7 +253,7 @@ void effectinfo_read()
             #undef p
             #undef MY
             default:
-                LOG_WARNF("Unknown property '%s'\n", k);
+                LOG_WARNF("Unknown property '%s'", k);
                 break;
         }
     }
@@ -306,7 +306,7 @@ GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt")
 				LOG_INFOF("Reload with ^2cl_particles_reloadeffects data/%s^7.\n", filename);
                 fclose(fh);
             } else {
-                LOG_WARNF("Could not open file '%s'!\n", filename);
+                LOG_WARNF("Could not open file '%s'!", filename);
             }
             return;
         }

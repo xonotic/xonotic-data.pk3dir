@@ -97,7 +97,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 void CSQCPlayer_Unpredict(entity this)
 {
 	if (csqcplayer_status == CSQCPLAYERSTATUS_UNPREDICTED) return;
-	if (csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED) LOG_FATALF("Cannot unpredict in current status (%d)\n", csqcplayer_status);
+	if (csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED) LOG_FATALF("Cannot unpredict in current status (%d)", csqcplayer_status);
 	this.origin = csqcplayer_origin;
 	this.velocity = csqcplayer_velocity;
 	csqcplayer_moveframe = csqcplayer_sequence + 1; // + 1 because the recieved frame has the move already done (server side)

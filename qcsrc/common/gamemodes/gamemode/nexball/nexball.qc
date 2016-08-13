@@ -459,7 +459,7 @@ spawnfunc(nexball_team)
 
 void nb_spawnteam(string teamname, float teamcolor)
 {
-	LOG_TRACE("^2spawned team ", teamname, "\n");
+	LOG_TRACE("^2spawned team ", teamname);
 	entity e = new(nexball_team);
 	e.netname = teamname;
 	e.cnt = teamcolor;

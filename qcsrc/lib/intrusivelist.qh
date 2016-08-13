@@ -127,7 +127,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 	entity otail = this.il_tail;
 	next ? next.(il_prev) = prev : this.il_tail = prev;
 	prev ? prev.(il_next) = next : this.il_head = next;
-	LOG_DEBUGF("remove %i (%i :: %i), head: %i -> %i, tail: %i -> %i\n", it, it.(il_prev), it.(il_next), ohead, this.il_head, otail, this.il_tail);
+	LOG_DEBUGF("remove %i (%i :: %i), head: %i -> %i, tail: %i -> %i", it, it.(il_prev), it.(il_next), ohead, this.il_head, otail, this.il_tail);
 	it.(il_next) = it.(il_prev) = NULL;
 }
 

@@ -602,7 +602,7 @@ void HUD_Main()
 			}
 		}
 		if (warning)
-			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
+			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder");
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)

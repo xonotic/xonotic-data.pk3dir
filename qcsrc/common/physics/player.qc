@@ -374,7 +374,7 @@ bool PlayerJump(entity this)
 	{
 #ifdef SVQC
 		if(autocvar_speedmeter)
-			LOG_TRACE(strcat("landing velocity: ", vtos(this.velocity), " (abs: ", ftos(vlen(this.velocity)), ")\n"));
+			LOG_TRACE("landing velocity: ", vtos(this.velocity), " (abs: ", ftos(vlen(this.velocity)), ")");
 #endif
 		if(this.lastground < time - 0.3)
 		{
@@ -384,7 +384,7 @@ bool PlayerJump(entity this)
 		}
 #ifdef SVQC
 		if(this.jumppadcount > 1)
-			LOG_TRACE(strcat(ftos(this.jumppadcount), "x jumppad combo\n"));
+			LOG_TRACE(ftos(this.jumppadcount), "x jumppad combo");
 		this.jumppadcount = 0;
 #endif
 	}

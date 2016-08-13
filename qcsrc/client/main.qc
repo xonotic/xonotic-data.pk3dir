@@ -234,7 +234,7 @@ float SetTeam(entity o, int Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
+					LOG_TRACEF("trying to switch to unsupported team %d", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -250,7 +250,7 @@ float SetTeam(entity o, int Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
+					LOG_TRACEF("trying to switch to unsupported team %d", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -844,7 +844,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	time = savetime;
 	if (!done)
 	{
-		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 	}
 }
 
@@ -879,7 +879,7 @@ void CSQC_Ent_Remove(entity this)
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
-		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?");
 		return;
 	}
 	if (this.enttype) Ent_Remove(this);

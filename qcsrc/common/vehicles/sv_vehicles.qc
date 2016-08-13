@@ -532,7 +532,7 @@ void vehicles_setreturn(entity veh)
 
 void vehicle_use(entity this, entity actor, entity trigger)
 {
-	LOG_DEBUG("vehicle ", this.netname, " used by ", actor.classname, "\n");
+	LOG_DEBUG("vehicle ", this.netname, " used by ", actor.classname);
 
 	this.tur_head.team = actor.team;
 
@@ -543,7 +543,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 
 	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !gameover)
 	{
-		LOG_DEBUG("Respawning vehicle: ", this.netname, "\n");
+		LOG_DEBUG("Respawning vehicle: ", this.netname);
 		if(this.effects & EF_NODRAW)
 		{
 			setthink(this, vehicles_spawn);
@@ -765,7 +765,7 @@ void vehicles_exit(entity vehic, bool eject)
 
 	if(vehicles_exit_running)
 	{
-		LOG_TRACE("^1vehicles_exit already running! this is not good...\n");
+		LOG_TRACE("^1vehicles_exit already running! this is not good...");
 		return;
 	}
 
@@ -1060,7 +1060,7 @@ void vehicles_reset(entity this)
 // initialization
 void vehicles_spawn(entity this)
 {
-	LOG_DEBUG("Spawning vehicle: ", this.classname, "\n");
+	LOG_DEBUG("Spawning vehicle: ", this.classname);
 
 	// disown & reset
 	this.vehicle_hudmodel.viewmodelforclient = this;
@@ -1126,7 +1126,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		this.vehicle_controller = find(NULL, target, this.targetname);
 		if(!this.vehicle_controller)
 		{
-			LOG_DEBUG("^1WARNING: ^7Vehicle with invalid .targetname\n");
+			LOG_DEBUG("^1WARNING: ^7Vehicle with invalid .targetname");
 			this.active = ACTIVE_ACTIVE;
 		}
 		else

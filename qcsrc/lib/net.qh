@@ -156,7 +156,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		{
 			entity reader = C2S_Protocol_from(C2S);
 			if (reader && reader.m_read && reader.m_read(NULL, sender, true)) continue;
-			LOG_SEVEREF("Net_ClientCommand() with malformed C2S=%d\n", C2S);
+			LOG_SEVEREF("Net_ClientCommand() with malformed C2S=%d", C2S);
 			return;
 		}
 		g_buf_i--;

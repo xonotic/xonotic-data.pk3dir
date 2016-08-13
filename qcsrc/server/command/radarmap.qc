@@ -45,7 +45,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 		c = trace_endpos;
 	}
 
-	if (n > 200) LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations\n");
+	if (n > 200) LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations");
 
 	return white / (black + white);
 }

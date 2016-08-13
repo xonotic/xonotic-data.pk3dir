@@ -38,7 +38,7 @@
 		{
 			if (!me.overrideRealOrigin_x) me.realOrigin_x = me.keepspaceLeft;
 			if (!me.overrideCondenseFactor) me.condenseFactor = spaceAvail / spaceUsed;
-			LOG_TRACEF("NOTE: label text %s too wide for label, condensed by factor %f\n", t, me.condenseFactor);
+			LOG_TRACEF("NOTE: label text %s too wide for label, condensed by factor %f", t, me.condenseFactor);
 		}
 
 		if (!me.overrideRealOrigin_y)

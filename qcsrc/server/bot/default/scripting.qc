@@ -20,7 +20,7 @@ void bot_clearqueue(entity bot)
 		return;
 	buf_del(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = false;
-	LOG_TRACE("bot ", bot.netname, " queue cleared\n");
+	LOG_TRACE("bot ", bot.netname, " queue cleared");
 }
 
 void bot_queuecommand(entity bot, string cmdstring)

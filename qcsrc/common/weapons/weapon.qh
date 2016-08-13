@@ -158,7 +158,7 @@ CLASS(WeaponPickup, Pickup)
     {
         bool b = Item_GiveTo(item, player);
         if (b) {
-            LOG_TRACEF("entity %i picked up %s\n", player, this.m_name);
+            LOG_TRACEF("entity %i picked up %s", player, this.m_name);
         }
         return b;
     }

@@ -176,7 +176,7 @@ entity start_minigame(entity player, string minigame )
 		GameLogEcho(strcat(":minigame:start:",minig.netname));
 		if ( ! minigame_addplayer(minig,player) )
 		{
-			LOG_TRACE("Minigame ",minig.netname," rejected the first player join!\n");
+			LOG_TRACE("Minigame ",minig.netname," rejected the first player join!");
 			end_minigame(minig);
 			return NULL;
 		}
@@ -235,7 +235,7 @@ void end_minigame(entity minigame_session)
 	while( (e = findentity(e, owner, minigame_session)) )
 		if ( e.minigame_autoclean )
 		{
-			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
+			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")");
 			delete(e);
 		}
 

@@ -223,7 +223,7 @@ void Net_TargetMusic()
 		_sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
-			LOG_TRACEF("Cannot initialize sound %s\n", e.noise);
+			LOG_TRACEF("Cannot initialize sound %s", e.noise);
 			strunzone(e.noise);
 			e.noise = string_null;
 		}
@@ -310,7 +310,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 			_sound(this, CH_BGM_SINGLE, this.noise, 0, ATTEN_NONE);
 			if(getsoundtime(this, CH_BGM_SINGLE) < 0)
 			{
-				LOG_TRACEF("Cannot initialize sound %s\n", this.noise);
+				LOG_TRACEF("Cannot initialize sound %s", this.noise);
 				strunzone(this.noise);
 				this.noise = string_null;
 			}

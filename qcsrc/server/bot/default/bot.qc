@@ -370,7 +370,7 @@ void bot_relinkplayerlist()
 			++currentbots;
 		}
 	});
-	LOG_TRACE(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
+	LOG_TRACE("relink: ", ftos(currentbots), " bots seen.");
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
 }
@@ -526,14 +526,14 @@ void autoskill(float factor)
 	LOG_TRACE("best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		LOG_TRACE("not doing anything\n");
+		LOG_TRACE("not doing anything");
 		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(autocvar_skill < 17)
 		{
-			LOG_TRACE("2 frags difference, increasing skill\n");
+			LOG_TRACE("2 frags difference, increasing skill");
 			cvar_set("skill", ftos(autocvar_skill + 1));
 			bprint("^2SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
@@ -542,14 +542,14 @@ void autoskill(float factor)
 	{
 		if(autocvar_skill > 0)
 		{
-			LOG_TRACE("2 frags difference, decreasing skill\n");
+			LOG_TRACE("2 frags difference, decreasing skill");
 			cvar_set("skill", ftos(autocvar_skill - 1));
 			bprint("^1SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else
 	{
-		LOG_TRACE("not doing anything\n");
+		LOG_TRACE("not doing anything");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}

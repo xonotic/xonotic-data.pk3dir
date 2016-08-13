@@ -1139,7 +1139,7 @@ void havocbot_role_kh_carrier(entity this)
 
 	if (!(this.kh_next))
 	{
-		LOG_TRACE("changing role to freelancer\n");
+		LOG_TRACE("changing role to freelancer");
 		this.havocbot_role = havocbot_role_kh_freelancer;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1166,7 +1166,7 @@ void havocbot_role_kh_defense(entity this)
 
 	if (this.kh_next)
 	{
-		LOG_TRACE("changing role to carrier\n");
+		LOG_TRACE("changing role to carrier");
 		this.havocbot_role = havocbot_role_kh_carrier;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1176,7 +1176,7 @@ void havocbot_role_kh_defense(entity this)
 		this.havocbot_role_timeout = time + random() * 10 + 20;
 	if (time > this.havocbot_role_timeout)
 	{
-		LOG_TRACE("changing role to freelancer\n");
+		LOG_TRACE("changing role to freelancer");
 		this.havocbot_role = havocbot_role_kh_freelancer;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1207,7 +1207,7 @@ void havocbot_role_kh_offense(entity this)
 
 	if (this.kh_next)
 	{
-		LOG_TRACE("changing role to carrier\n");
+		LOG_TRACE("changing role to carrier");
 		this.havocbot_role = havocbot_role_kh_carrier;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1217,7 +1217,7 @@ void havocbot_role_kh_offense(entity this)
 		this.havocbot_role_timeout = time + random() * 10 + 20;
 	if (time > this.havocbot_role_timeout)
 	{
-		LOG_TRACE("changing role to freelancer\n");
+		LOG_TRACE("changing role to freelancer");
 		this.havocbot_role = havocbot_role_kh_freelancer;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1249,7 +1249,7 @@ void havocbot_role_kh_freelancer(entity this)
 
 	if (this.kh_next)
 	{
-		LOG_TRACE("changing role to carrier\n");
+		LOG_TRACE("changing role to carrier");
 		this.havocbot_role = havocbot_role_kh_carrier;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1261,12 +1261,12 @@ void havocbot_role_kh_freelancer(entity this)
 	{
 		if (random() < 0.5)
 		{
-			LOG_TRACE("changing role to offense\n");
+			LOG_TRACE("changing role to offense");
 			this.havocbot_role = havocbot_role_kh_offense;
 		}
 		else
 		{
-			LOG_TRACE("changing role to defense\n");
+			LOG_TRACE("changing role to defense");
 			this.havocbot_role = havocbot_role_kh_defense;
 		}
 		this.havocbot_role_timeout = 0;

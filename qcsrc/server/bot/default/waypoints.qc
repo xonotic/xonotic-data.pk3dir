@@ -44,7 +44,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
 			{
-				LOG_TRACE("Killed a waypoint that was stuck in solid at ", vtos(w.origin), "\n");
+				LOG_TRACE("Killed a waypoint that was stuck in solid at ", vtos(w.origin));
 				delete(w);
 				return NULL;
 			}
@@ -378,7 +378,7 @@ float waypoint_load_links()
 	{
 		LOG_TRACE("waypoint links load from ");
 		LOG_TRACE(filename);
-		LOG_TRACE(" failed\n");
+		LOG_TRACE(" failed");
 		return false;
 	}
 
@@ -414,7 +414,7 @@ float waypoint_load_links()
 
 			if(!found)
 			{
-				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin),"\n");
+				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin));
 				continue;
 			}
 
@@ -436,7 +436,7 @@ float waypoint_load_links()
 
 		if(!found)
 		{
-			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin),"\n");
+			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin));
 			continue;
 		}
 
@@ -446,7 +446,7 @@ float waypoint_load_links()
 
 	fclose(file);
 
-	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.cache\n");
+	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.cache");
 
 	botframe_cachedwaypointlinks = true;
 	return true;
@@ -466,7 +466,7 @@ void waypoint_load_links_hardwired()
 
 	if (file < 0)
 	{
-		LOG_TRACE("waypoint links load from ", filename, " failed\n");
+		LOG_TRACE("waypoint links load from ", filename, " failed");
 		return;
 	}
 
@@ -537,7 +537,7 @@ void waypoint_load_links_hardwired()
 
 	fclose(file);
 
-	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired\n");
+	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
 }
 
 entity waypoint_get_link(entity w, float i)
@@ -681,11 +681,11 @@ float waypoint_loadall()
 				cwb = cwb + 1;
 		}
 		fclose(file);
-		LOG_TRACE("loaded ", ftos(cwp), " waypoints and ", ftos(cwb), " wayboxes from maps/", mapname, ".waypoints\n");
+		LOG_TRACE("loaded ", ftos(cwp), " waypoints and ", ftos(cwb), " wayboxes from maps/", mapname, ".waypoints");
 	}
 	else
 	{
-		LOG_TRACE("waypoint load from ", filename, " failed\n");
+		LOG_TRACE("waypoint load from ", filename, " failed");
 	}
 	return cwp + cwb;
 }
