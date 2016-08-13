@@ -1408,10 +1408,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else
 		view_quality = 1;
 
-	// this needs to be updated manually now due to the destruction of engine physics stats
-	if(!isdemo() && autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
-		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
-
 	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
 	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);
 
