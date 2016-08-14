@@ -269,7 +269,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	float i;
 	float inWorldspawn;
 	float r;
-	float twoBaseModes;
 	float diameter, spawnpoints;
 	float spawnplaces;
 
@@ -349,21 +348,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			}
 			else if(k == "classname")
 			{
-				if(v == "dom_controlpoint")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DOMINATION.m_flags;
-				else if(v == "item_flag_team2")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF.m_flags;
-				else if(v == "team_CTF_blueflag")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF.m_flags;
-				else if(v == "invasion_spawnpoint")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INVASION.m_flags;
-				else if(v == "target_assault_roundend")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT.m_flags;
-				else if(v == "onslaught_generator")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ONSLAUGHT.m_flags;
-				else if(substring(v, 0, 8) == "nexball_" || substring(v, 0, 4) == "ball")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_NEXBALL.m_flags;
-				else if(v == "info_player_team1")
+				if(v == "info_player_team1")
 					++spawnpoints;
 				else if(v == "info_player_team2")
 					++spawnpoints;
@@ -371,10 +356,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					++spawnpoints;
 				else if(v == "info_player_deathmatch")
 					++spawnpoints;
-				else if(v == "trigger_race_checkpoint")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RACE.m_flags;
-				else if(v == "target_startTimer")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS.m_flags;
 				else if(v == "weapon_nex")
 					{ }
 				else if(v == "weapon_railgun")
@@ -389,6 +370,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_MONSTERS;
 				else if(v == "target_music" || v == "trigger_music")
 					_MapInfo_Map_worldspawn_music = string_null; // don't use regular BGM
+				else
+					FOREACH(Gametypes, true, it.m_generate_mapinfo(it, v));
 			}
 		}
 	}
@@ -399,8 +382,9 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	}
 	diameter = vlen(mapMaxs - mapMins);
 
-	twoBaseModes = MapInfo_Map_supportedGametypes & (MAPINFO_TYPE_CTF.m_flags | MAPINFO_TYPE_ASSAULT.m_flags | MAPINFO_TYPE_RACE.m_flags | MAPINFO_TYPE_NEXBALL.m_flags);
-	if(twoBaseModes && (MapInfo_Map_supportedGametypes == twoBaseModes))
+	int twoBaseModes = 0;
+	FOREACH(Gametypes, it.m_isTwoBaseMode(), twoBaseModes |= it.m_flags); 
+	if(twoBaseModes && (twoBaseModes &= MapInfo_Map_supportedGametypes))
 	{
 		// we have a CTF-only or Assault-only map. Don't add other modes then,
 		// as the map is too symmetric for them.
