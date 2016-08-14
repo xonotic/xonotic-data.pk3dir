@@ -459,7 +459,7 @@ vector fixrgbexcess(vector rgb)
 
 void Draw_WaypointSprite(entity this)
 {
-    if (this.lifetime)
+    if (this.lifetime > 0)
         this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
     else
         this.alpha = 1;
@@ -470,14 +470,12 @@ void Draw_WaypointSprite(entity this)
     if (autocvar_cl_hidewaypoints >= 2)
         return;
 
-    if (this.hideflags & 1)
-        if (autocvar_cl_hidewaypoints)
-            return; // fixed waypoint
+    if (this.hideflags & 1 && autocvar_cl_hidewaypoints)
+        return; // fixed waypoint
 
     InterpolateOrigin_Do(this);
 
     float t = entcs_GetTeam(player_localnum) + 1;
-
     string spriteimage = "";
 
     // choose the sprite
@@ -520,11 +518,8 @@ void Draw_WaypointSprite(entity this)
 
     ++waypointsprite_newcount;
 
-    float dist;
-    dist = vlen(this.origin - view_origin);
-
-    float a;
-    a = this.alpha * autocvar_hud_panel_fg_alpha;
+    float dist = vlen(this.origin - view_origin);
+    float a = this.alpha * autocvar_hud_panel_fg_alpha;
 
     if (this.maxdistance > waypointsprite_normdistance)
         a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
@@ -542,7 +537,7 @@ void Draw_WaypointSprite(entity this)
     {
         if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
-        else if (!this.lifetime) // fading out waypoints don't blink
+        else if (this.lifetime > 0) // fading out waypoints don't blink
             a *= spritelookupblinkvalue(this, spriteimage);
     }
 
@@ -868,9 +863,10 @@ void WaypointSprite_FadeOutIn(entity e, float t)
         // ensure:
         //   (e.teleport_time - time) / wp.fade_time stays
         //   e.teleport_time = time + fadetime
-        float current_fadetime;
-        current_fadetime = e.teleport_time - time;
+        float current_fadetime = e.teleport_time - time;
         e.teleport_time = time + t;
+        if (e.fade_time < 0)
+        	e.fade_time = -e.fade_time;
         e.fade_time = e.fade_time * t / current_fadetime;
     }
 
@@ -1004,8 +1000,10 @@ entity WaypointSprite_Spawn(
 )
 {
     entity wp = new(sprite_waypoint);
+    wp.fade_time = _lifetime; // if negative tells client not to fade it out
+    if(_lifetime < 0)
+    	_lifetime = -_lifetime;
     wp.teleport_time = time + _lifetime;
-    wp.fade_time = _lifetime;
     wp.exteriormodeltoclient = ref;
     if (ref)
     {

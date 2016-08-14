@@ -966,10 +966,10 @@ float MapHasRightSize(string map)
 		LOG_TRACE("checkwp "); LOG_TRACE(map);
 		if(!fexists(strcat("maps/", map, ".waypoints")))
 		{
-			LOG_TRACE(": no waypoints\n");
+			LOG_TRACE(": no waypoints");
 			return false;
 		}
-		LOG_TRACE(": has waypoints\n");
+		LOG_TRACE(": has waypoints");
 	}
 
 	// open map size restriction file
@@ -984,18 +984,18 @@ float MapHasRightSize(string map)
 		fclose(fh);
 		if(player_count < mapmin)
 		{
-			LOG_TRACE("not enough\n");
+			LOG_TRACE("not enough");
 			return false;
 		}
 		if(player_count > mapmax)
 		{
-			LOG_TRACE("too many\n");
+			LOG_TRACE("too many");
 			return false;
 		}
-		LOG_TRACE("right size\n");
+		LOG_TRACE("right size");
 		return true;
 	}
-	LOG_TRACE(": not found\n");
+	LOG_TRACE(": not found");
 	return true;
 }
 
@@ -1034,7 +1034,7 @@ float Map_Check(float position, float pass)
 		return 0;
 	}
 	else
-		LOG_DEBUG( "Couldn't select '", filename, "'...\n" );
+		LOG_DEBUG( "Couldn't select '", filename, "'..." );
 
 	return 0;
 }
@@ -1067,7 +1067,7 @@ float() MaplistMethod_Iterate = // usual method
 {
 	float pass, i;
 
-	LOG_TRACE("Trying MaplistMethod_Iterate\n");
+	LOG_TRACE("Trying MaplistMethod_Iterate");
 
 	for(pass = 1; pass <= 2; ++pass)
 	{
@@ -1084,7 +1084,7 @@ float() MaplistMethod_Iterate = // usual method
 
 float() MaplistMethod_Repeat = // fallback method
 {
-	LOG_TRACE("Trying MaplistMethod_Repeat\n");
+	LOG_TRACE("Trying MaplistMethod_Repeat");
 
 	if(Map_Check(Map_Current, 2))
 		return Map_Current;
@@ -1095,7 +1095,7 @@ float() MaplistMethod_Random = // random map selection
 {
 	float i, imax;
 
-	LOG_TRACE("Trying MaplistMethod_Random\n");
+	LOG_TRACE("Trying MaplistMethod_Random");
 
 	imax = 42;
 
@@ -1115,7 +1115,7 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 {
 	float i, j, imax, insertpos;
 
-	LOG_TRACE("Trying MaplistMethod_Shuffle\n");
+	LOG_TRACE("Trying MaplistMethod_Shuffle");
 
 	imax = 42;
 
@@ -1127,7 +1127,7 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
 		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
-		LOG_TRACE("SHUFFLE: insert pos = ", ftos(insertpos), "\n");
+		LOG_TRACE("SHUFFLE: insert pos = ", ftos(insertpos));
 
 		// insert the current map there
 		newlist = "";
@@ -2133,7 +2133,7 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
-		LOG_TRACE("Saving persistent data...\n");
+		LOG_TRACE("Saving persistent data...");
 		Ban_SaveBans();
 
 		// playerstats with unfinished match
@@ -2156,7 +2156,7 @@ void Shutdown()
 		CheatShutdown(); // must be after cheatcount check
 		db_close(ServerProgsDB);
 		db_close(TemporaryDB);
-		LOG_TRACE("Saving persistent data... done!\n");
+		LOG_TRACE("Saving persistent data... done!");
 		// tell the bot system the game is ending now
 		bot_endgame();
 

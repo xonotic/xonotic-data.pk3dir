@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Devastator, Weapon)
-/* ammotype  */ ATTRIB(Devastator, ammo_field, .int, ammo_rockets)
-/* impulse   */ ATTRIB(Devastator, impulse, int, 9)
+/* ammotype  */ ATTRIB(Devastator, ammo_field, .int, ammo_rockets);
+/* impulse   */ ATTRIB(Devastator, impulse, int, 9);
 /* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
@@ -61,7 +61,7 @@ ENDCLASS(Devastator)
 REGISTER_WEAPON(DEVASTATOR, devastator, NEW(Devastator));
 
 #ifdef SVQC
-.float rl_release;
+.float rl_release[MAX_WEAPONSLOTS];
 .float rl_detonate_later;
 #endif
 #endif
@@ -76,7 +76,12 @@ void W_Devastator_Unregister(entity this)
 {
 	if(this.realowner && this.realowner.lastrocket == this)
 	{
-		this.realowner.lastrocket = NULL;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.realowner.(weaponentity).lastrocket == this)
+				this.realowner.(weaponentity).lastrocket = NULL;
+		}
 		// this.realowner.rl_release = 1;
 	}
 }
@@ -212,7 +217,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 void W_Devastator_RemoteExplode(entity this, .entity weaponentity)
 {
 	if(!IS_DEAD(this.realowner))
-	if(this.realowner.lastrocket)
+	if(this.realowner.(weaponentity).lastrocket)
 	{
 		if((this.spawnshieldtime >= 0)
 			? (time >= this.spawnshieldtime) // timer
@@ -278,8 +283,11 @@ void W_Devastator_Think(entity this)
 	// laser guided, or remote detonation
 	if(PS(this.realowner).m_weapon == WEP_DEVASTATOR)
 	{
-		if(this == this.realowner.lastrocket)
-		if(!this.realowner.rl_release)
+		.entity weaponentity = this.weaponentity_fld;
+		int slot = weaponslot(weaponentity);
+
+		if(this == this.realowner.(weaponentity).lastrocket)
+		if(!this.realowner.rl_release[slot])
 		if(!PHYS_INPUT_BUTTON_ATCK2(this))
 		if(WEP_CVAR(devastator, guiderate))
 		if(time > this.pushltime)
@@ -315,7 +323,6 @@ void W_Devastator_Think(entity this)
 			}
 		}
 
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if(this.rl_detonate_later)
 			W_Devastator_RemoteExplode(this, weaponentity);
 	}
@@ -351,16 +358,17 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode_think);
 }
 
-void W_Devastator_Attack(Weapon thiswep, entity actor)
+void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo));
 
-	W_SetupShot_ProjectileSize(actor, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	missile.weaponentity_fld = weaponentity;
 	missile.owner = missile.realowner = actor;
-	actor.lastrocket = missile;
+	actor.(weaponentity).lastrocket = missile;
 	if(WEP_CVAR(devastator, detonatedelay) >= 0)
 		missile.spawnshieldtime = time + WEP_CVAR(devastator, detonatedelay);
 	else
@@ -400,7 +408,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor)
 	setmodel(flash, MDL_DEVASTATOR_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, flash, '5 0 0');
+	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
@@ -523,18 +531,19 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
     if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else {
+    	int slot = weaponslot(weaponentity);
         if(fire & 1)
         {
-            if(actor.rl_release || WEP_CVAR(devastator, guidestop))
+            if(actor.rl_release[slot] || WEP_CVAR(devastator, guidestop))
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(devastator, refire)))
             {
-                W_Devastator_Attack(thiswep, actor);
+                W_Devastator_Attack(thiswep, actor, weaponentity);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
-                actor.rl_release = 0;
+                actor.rl_release[slot] = 0;
             }
         }
         else
-            actor.rl_release = 1;
+            actor.rl_release[slot] = 1;
 
         if(fire & 2)
         if(PS(actor).m_switchweapon == WEP_DEVASTATOR)
@@ -556,7 +565,8 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 }
 METHOD(Devastator, wr_setup, void(entity thiswep, entity actor))
 {
-    actor.rl_release = 1;
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    	actor.rl_release[slot] = 1;
 }
 METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor))
 {
@@ -600,12 +610,16 @@ METHOD(Devastator, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Devastator, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
-    actor.rl_release = 0;
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
+    	actor.rl_release[slot] = 0;
+    }
 }
 METHOD(Devastator, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, WEP_CVAR(devastator, ammo), SND_RELOAD);
+    W_Reload(actor, weaponentity, WEP_CVAR(devastator, ammo), SND_RELOAD);
 }
 METHOD(Devastator, wr_suicidemessage, Notification(entity thiswep))
 {

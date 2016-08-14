@@ -720,7 +720,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 		{
 			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
 			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
-			LOG_TRACE("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
+			LOG_TRACE("pickup_dropped_score is ", ftos(pickup_dropped_score));
 			PlayerTeamScore_AddScore(player, pickup_dropped_score);
 			ctf_EventLog("pickup", flag.team, player);
 			break;
@@ -893,7 +893,7 @@ void ctf_FlagThink(entity this)
 
 	// sanity checks
 	if(this.mins != CTF_FLAG.m_mins || this.maxs != CTF_FLAG.m_maxs) { // reset the flag boundaries in case it got squished
-		LOG_TRACE("wtf the flag got squashed?\n");
+		LOG_TRACE("wtf the flag got squashed?");
 		tracebox(this.origin, CTF_FLAG.m_mins, CTF_FLAG.m_maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(!trace_startsolid || this.noalign) // can we resize it without getting stuck?
 			setsize(this, CTF_FLAG.m_mins, CTF_FLAG.m_maxs); }
@@ -1019,7 +1019,7 @@ void ctf_FlagThink(entity this)
 
 		default: // this should never happen
 		{
-			LOG_TRACE("ctf_FlagThink(): Flag exists with no status?\n");
+			LOG_TRACE("ctf_FlagThink(): Flag exists with no status?");
 			return;
 		}
 	}
@@ -1107,7 +1107,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 
 		case FLAG_CARRY:
 		{
-			LOG_TRACE("Someone touched a flag even though it was being carried?\n");
+			LOG_TRACE("Someone touched a flag even though it was being carried?");
 			break;
 		}
 
@@ -1961,47 +1961,47 @@ void havocbot_role_ctf_defense(entity this)
 
 void havocbot_role_ctf_setrole(entity bot, int role)
 {
-	LOG_TRACE(strcat(bot.netname," switched to "));
+	string s = "(null)";
 	switch(role)
 	{
 		case HAVOCBOT_CTF_ROLE_CARRIER:
-			LOG_TRACE("carrier");
+			s = "carrier";
 			bot.havocbot_role = havocbot_role_ctf_carrier;
 			bot.havocbot_role_timeout = 0;
 			bot.havocbot_cantfindflag = time + 10;
 			bot.bot_strategytime = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_DEFENSE:
-			LOG_TRACE("defense");
+			s = "defense";
 			bot.havocbot_role = havocbot_role_ctf_defense;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_MIDDLE:
-			LOG_TRACE("middle");
+			s = "middle";
 			bot.havocbot_role = havocbot_role_ctf_middle;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_OFFENSE:
-			LOG_TRACE("offense");
+			s = "offense";
 			bot.havocbot_role = havocbot_role_ctf_offense;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_RETRIEVER:
-			LOG_TRACE("retriever");
+			s = "retriever";
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_retriever;
 			bot.havocbot_role_timeout = time + 10;
 			bot.bot_strategytime = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_ESCORT:
-			LOG_TRACE("escort");
+			s = "escort";
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_escort;
 			bot.havocbot_role_timeout = time + 30;
 			bot.bot_strategytime = 0;
 			break;
 	}
-	LOG_TRACE("\n");
+	LOG_TRACE(bot.netname, " switched to ", s);
 }
 
 
@@ -2634,7 +2634,7 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "ctf_team") == NULL)
 	{
-		LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.\n");
+		LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.");
 		if(ctf_teams & BIT(0))
 			ctf_SpawnTeam("Red", NUM_TEAM_1);
 		if(ctf_teams & BIT(1))

@@ -196,12 +196,12 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
             e = find(NULL, targetname, it.target);
             if (!e)
             {
-                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
+                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!");
                 it.target = "";
             }
 
             if (e.classname != "turret_checkpoint")
-                LOG_TRACE("Warning: not a turrret path\n");
+                LOG_TRACE("Warning: not a turrret path");
             else
             {
 

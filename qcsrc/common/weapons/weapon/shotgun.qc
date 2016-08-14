@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Shotgun, Weapon)
-/* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells)
-/* impulse   */ ATTRIB(Shotgun, impulse, int, 2)
+/* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells);
+/* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
 /* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');
@@ -58,11 +58,11 @@ REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
 #ifdef SVQC
 spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(this, WEP_SHOTGUN); }
 
-void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
+void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot(actor, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
@@ -73,7 +73,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
 		//for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
-			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor);
+			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor, weaponentity);
 	}
 
 	// muzzle flash for 1st person view
@@ -82,7 +82,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 	setthink(flash, SUB_Remove);
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, flash, '5 0 0');
+	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 }
 
 .float swing_prev;
@@ -192,7 +192,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shotgun_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
 
 // alternate secondary weapon frames
@@ -207,7 +207,7 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 	}
 
 	sound(actor, CH_WEAPON_SINGLE, SND_Null, VOL_BASE, ATTN_NORM); // kill previous sound
-	W_Shotgun_Attack(WEP_SHOTGUN, actor, true); // actually is secondary, but we trick the last shot into playing full reload sound
+	W_Shotgun_Attack(WEP_SHOTGUN, actor, weaponentity, true); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
@@ -220,11 +220,11 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		return;
 	}
 
-	W_Shotgun_Attack(WEP_SHOTGUN, actor, false);
+	W_Shotgun_Attack(WEP_SHOTGUN, actor, weaponentity, false);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
-.float shotgun_primarytime;
+.float shotgun_primarytime[MAX_WEAPONSLOTS];
 
 METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor))
 {
@@ -246,24 +246,26 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     {
         if(fire & 1)
         {
-            if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+        	int slot = weaponslot(weaponentity);
+            if(time >= actor.shotgun_primarytime[slot]) // handle refire separately so the secondary can be fired straight after a primary
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
                 {
-                    W_Shotgun_Attack(thiswep, actor, true);
-                    actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
+                    W_Shotgun_Attack(thiswep, actor, weaponentity, true);
+                    actor.shotgun_primarytime[slot] = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
                 }
             }
         }
         else if((fire & 2) && WEP_CVAR(shotgun, secondary) == 2)
         {
-            if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+        	int slot = weaponslot(weaponentity);
+            if(time >= actor.shotgun_primarytime[slot]) // handle refire separately so the secondary can be fired straight after a primary
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
                 {
-                    W_Shotgun_Attack(thiswep, actor, false);
-                    actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
+                    W_Shotgun_Attack(thiswep, actor, weaponentity, false);
+                    actor.shotgun_primarytime[slot] = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
                 }
             }
@@ -307,7 +309,7 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, WEP_CVAR_PRI(shotgun, ammo), SND_RELOAD); // WEAPONTODO
+    W_Reload(actor, weaponentity, WEP_CVAR_PRI(shotgun, ammo), SND_RELOAD); // WEAPONTODO
 }
 METHOD(Shotgun, wr_suicidemessage, Notification(entity thiswep))
 {

@@ -49,7 +49,7 @@ string CTX(string s)
 	int p = strstrofs(s, "^", 0);
 	string ret = (p < 0) ? s : substring(s, p + 1, -1);
 #if CTX_CACHE
-        LOG_DEBUGF("CTX(\"%s\")\n", s);
+        LOG_DEBUGF("CTX(\"%s\")", s);
 		HM_sets(CTX_cache, s, ret);
 #endif
 	return ret;

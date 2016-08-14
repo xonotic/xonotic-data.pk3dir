@@ -369,7 +369,7 @@ int nmm_server_event(entity minigame, string event, ...)
 				minigame.SendFlags |= MINIG_SF_UPDATE;
 			}
 			else
-				LOG_TRACE("Invalid move: ",...(2,string),"\n");
+				LOG_TRACE("Invalid move: ", ...(2, string));
 			return 1;
 		}
 	}

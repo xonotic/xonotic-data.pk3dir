@@ -358,7 +358,6 @@ void HUD_Weapons()
 	vector label_size = '1 1 0' * min(weapon_size.x, weapon_size.y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
 	vector noncurrent_size = weapon_size * bound(0.01, autocvar_hud_panel_weapons_noncurrent_scale, 1);
 	float noncurrent_alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_weapons_noncurrent_alpha, 1);
-	bool isCurrent;
 	static vector weapon_pos_current = '-1 0 0';
 	if(weapon_pos_current.x == -1)
 		weapon_pos_current = panel_pos;
@@ -370,7 +369,9 @@ void HUD_Weapons()
 		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
-	if(!panel_switchweapon)
+	if(switchweapon == WEP_Null)
+		panel_switchweapon = NULL;
+	else if(!panel_switchweapon)
 		panel_switchweapon = switchweapon;
 
 	// draw background behind currently selected weapon
@@ -403,8 +404,7 @@ void HUD_Weapons()
 		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
 
 		// update position of the currently selected weapon
-		isCurrent = (it == panel_switchweapon);
-		if(isCurrent)
+		if(it == panel_switchweapon)
 		{
 			if(weapon_pos_current.y > weapon_pos.y)
 				weapon_pos_current.y = max(weapon_pos.y, weapon_pos_current.y - switch_speed * (weapon_pos_current.y - weapon_pos.y));

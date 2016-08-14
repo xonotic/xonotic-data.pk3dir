@@ -29,7 +29,7 @@ void Weapon_whereis(Weapon this, entity cl)
 			continue;
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,
-			1, 0,
+			-2, 0,
 			NULL, it.origin + ('0 0 1' * it.maxs.z) * 1.2,
 			cl, 0,
 			NULL, enemy,
@@ -272,8 +272,11 @@ void W_SwitchWeapon(entity this, Weapon w)
 	}
 	else if(!forbidWeaponUse(this)) {
 		entity actor = this;
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		w.wr_reload(w, actor, weaponentity);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			w.wr_reload(w, actor, weaponentity);
+		}
 	}
 }
 

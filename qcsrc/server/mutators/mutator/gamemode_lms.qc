@@ -128,7 +128,7 @@ int WinningCondition_LMS()
 		{
 			// SNAFU (maybe a draw game?)
 			ClearWinners();
-			LOG_TRACE("No players, ending game.\n");
+			LOG_TRACE("No players, ending game.");
 			return WINNING_YES;
 		}
 	}

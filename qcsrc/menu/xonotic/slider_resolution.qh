@@ -8,9 +8,9 @@ CLASS(XonoticResolutionSlider, XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, loadCvars, void(entity));
 	METHOD(XonoticResolutionSlider, saveCvars, void(entity));
 	METHOD(XonoticResolutionSlider, draw, void(entity));
-	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float, -1)
-	ATTRIB(XonoticResolutionSlider, maxAllowedWidth, float, 0)
-	ATTRIB(XonoticResolutionSlider, maxAllowedHeight, float, 0)
+	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float, -1);
+	ATTRIB(XonoticResolutionSlider, maxAllowedWidth, float, 0);
+	ATTRIB(XonoticResolutionSlider, maxAllowedHeight, float, 0);
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
 float updateConwidths(float width, float height, float pixelheight);

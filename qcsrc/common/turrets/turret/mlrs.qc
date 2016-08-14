@@ -30,8 +30,8 @@ METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur, entity it))
     it.tur_head.frame = bound(0, 6 - floor(0.1 + it.ammo / it.shot_dmg), 6);
     if(it.tur_head.frame < 0)
     {
-        LOG_TRACE("ammo:",ftos(it.ammo),"\n");
-        LOG_TRACE("shot_dmg:",ftos(it.shot_dmg),"\n");
+        LOG_TRACE("ammo:",ftos(it.ammo));
+        LOG_TRACE("shot_dmg:",ftos(it.shot_dmg));
     }
 }
 METHOD(MLRSTurret, tr_setup, void(MLRSTurret this, entity it))

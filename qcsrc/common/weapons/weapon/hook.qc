@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Hook, Weapon)
-/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel)
-/* impulse   */ ATTRIB(Hook, impulse, int, 0)
+/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel);
+/* impulse   */ ATTRIB(Hook, impulse, int, 0);
 /* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
@@ -14,7 +14,7 @@ CLASS(Hook, Weapon)
 /* wepimg    */ ATTRIB(Hook, model2, string, "weaponhook");
 /* refname   */ ATTRIB(Hook, netname, string, "hook");
 /* wepname   */ ATTRIB(Hook, m_name, string, _("Grappling Hook"));
-	ATTRIB(Hook, ammo_factor, float, 1)
+	ATTRIB(Hook, ammo_factor, float, 1);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
@@ -143,10 +143,10 @@ void W_Hook_Touch2(entity this, entity toucher)
 	this.use(this, NULL, NULL);
 }
 
-void W_Hook_Attack2(Weapon thiswep, entity actor)
+void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(actor, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	entity gren = new(hookbomb);
 	gren.owner = gren.realowner = actor;
@@ -208,7 +208,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hook, refire)))
         {
-            W_Hook_Attack2(thiswep, actor);
+            W_Hook_Attack2(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
         }
     }

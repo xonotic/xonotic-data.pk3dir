@@ -19,15 +19,15 @@ ENDCLASS(DataSource)
 
 
 CLASS(StringSource, DataSource)
-    ATTRIB(StringSource, StringSource_str, string, string_null)
-    ATTRIB(StringSource, StringSource_sep, string, string_null)
+    ATTRIB(StringSource, StringSource_str, string);
+    ATTRIB(StringSource, StringSource_sep, string);
     CONSTRUCTOR(StringSource, string str, string sep);
     METHOD(StringSource, getEntry, entity(entity this, int i, void(string name, string icon) returns));
     METHOD(StringSource, reload, int(entity this, string filter));
 ENDCLASS(StringSource)
 
 CLASS(CvarStringSource, StringSource)
-    ATTRIB(CvarStringSource, CvarStringSource_cvar, string, string_null)
+    ATTRIB(CvarStringSource, CvarStringSource_cvar, string);
     CONSTRUCTOR(CvarStringSource, string cv, string sep);
     METHOD(CvarStringSource, getEntry, entity(entity this, int i, void(string name, string icon) returns));
     METHOD(CvarStringSource, reload, int(entity this, string filter));

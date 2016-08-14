@@ -890,7 +890,8 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	makevectors(e.v_angle);
 
-	W_SetupShot(e, false, false, SND_Null, CH_WEAPON_A, 0);
+	// NOTE: always throw from first weapon entity?
+	W_SetupShot(e, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 
@@ -1174,7 +1175,7 @@ CLASS(NadeOffhand, OffhandWeapon)
 		if (held_nade)
 		{
 			player.nade_timer = bound(0, (time - held_nade.nade_time_primed) / autocvar_g_nades_nade_lifetime, 1);
-			// LOG_TRACEF("%d %d\n", player.nade_timer, time - held_nade.nade_time_primed);
+			// LOG_TRACEF("%d %d", player.nade_timer, time - held_nade.nade_time_primed);
 			makevectors(player.angles);
 			held_nade.velocity = player.velocity;
 			setorigin(held_nade, player.origin + player.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);

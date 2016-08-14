@@ -1,6 +1,6 @@
 #ifndef IMPLEMENTATION
 CLASS(Tuba, Weapon)
-/* impulse   */ ATTRIB(Tuba, impulse, int, 1)
+/* impulse   */ ATTRIB(Tuba, impulse, int, 1);
 /* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
@@ -309,12 +309,12 @@ void W_Tuba_NoteThink(entity this)
 	});
 }
 
-void W_Tuba_NoteOn(entity actor, float hittype)
+void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 {
 	vector o;
 	float n;
 
-	W_SetupShot(actor, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
 
 	n = W_Tuba_GetNote(actor, hittype);
 
@@ -377,13 +377,13 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 	if (fire & 1)
 	if (weapon_prepareattack(this, actor, weaponentity, false, WEP_CVAR(tuba, refire)))
 	{
-		W_Tuba_NoteOn(actor, 0);
+		W_Tuba_NoteOn(actor, weaponentity, 0);
 		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 	}
 	if (fire & 2)
 	if (weapon_prepareattack(this, actor, weaponentity, true, WEP_CVAR(tuba, refire)))
 	{
-		W_Tuba_NoteOn(actor, HITTYPE_SECONDARY);
+		W_Tuba_NoteOn(actor, weaponentity, HITTYPE_SECONDARY);
 		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 	}
 	if (actor.tuba_note)
@@ -448,7 +448,7 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 				break;
 		}
 		tuba_instrument_send(actor, actor.tuba_instrument);
-		W_SetupShot(actor, false, 0, SND_Null, 0, 0);
+		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);

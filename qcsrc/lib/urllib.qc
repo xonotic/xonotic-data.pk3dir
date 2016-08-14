@@ -316,7 +316,7 @@ void url_fputs(entity e, string s)
 	else if (e.url_fh == URL_FH_STDOUT)
 	{
 		// stdout
-		LOG_INFO(s);
+		print(s);
 	}
 	else
 	{

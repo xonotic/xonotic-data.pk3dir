@@ -825,7 +825,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	*/
 
 #ifdef TURRET_DEBUG_TARGETSELECT
-	LOG_TRACE("Target:",e_target.netname," is a valid target for ",e_turret.netname,"\n");
+	LOG_TRACE("Target:",e_target.netname," is a valid target for ",e_turret.netname);
 #endif
 
 	return 1;
@@ -1175,7 +1175,7 @@ void turret_think(entity this)
 */
 void turret_use(entity this, entity actor, entity trigger)
 {
-	LOG_TRACE("Turret ",this.netname, " used by ", actor.classname, "\n");
+	LOG_TRACE("Turret ",this.netname, " used by ", actor.classname);
 
 	this.team = actor.team;
 
@@ -1361,7 +1361,7 @@ bool turret_initialize(entity this, Turret tur)
 		if (this.tur_defend == NULL)
 		{
 			this.target = "";
-			LOG_TRACE("Turret has invalid defendpoint!\n");
+			LOG_TRACE("Turret has invalid defendpoint!");
 		}
 	}
 

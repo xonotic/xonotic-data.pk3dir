@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Shockwave, Weapon)
-/* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none)
-/* impulse   */ ATTRIB(Shockwave, impulse, int, 2)
+/* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none);
+/* impulse   */ ATTRIB(Shockwave, impulse, int, 2);
 /* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
@@ -243,7 +243,7 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shockwave_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
 }
 
 // SHOCKWAVE ATTACK MODE
@@ -355,7 +355,7 @@ void W_Shockwave_Send(entity actor)
 	WriteByte(MSG_BROADCAST, etof(actor));
 }
 
-void W_Shockwave_Attack(entity actor)
+void W_Shockwave_Attack(entity actor, .entity weaponentity)
 {
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
@@ -366,7 +366,7 @@ void W_Shockwave_Attack(entity actor)
 	float i, queue = 0;
 
 	// set up the shot direction
-	W_SetupShot(actor, true, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
+	W_SetupShot(actor, weaponentity, true, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(shockwave, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, actor);
 	vector attack_hitpos = trace_endpos;
@@ -709,7 +709,7 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
             {
-                W_Shockwave_Attack(actor);
+                W_Shockwave_Attack(actor, weaponentity);
                 actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
             }

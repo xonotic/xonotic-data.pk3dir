@@ -462,7 +462,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			}
 			else
 			{
-				LOG_WARNF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong\n",
+				LOG_WARNF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong",
 					this.model);
 				this.movedir = '0 0 0';
 			}
@@ -481,7 +481,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			}
 			else
 			{
-				LOG_WARNF("weapon model %s does not support the 'shell' tag, will display casings wrong\n",
+				LOG_WARNF("weapon model %s does not support the 'shell' tag, will display casings wrong",
 					this.model);
 				this.spawnorigin = this.movedir;
 			}

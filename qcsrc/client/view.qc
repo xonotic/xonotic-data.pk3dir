@@ -792,7 +792,7 @@ void UpdateDamage()
 	if (damage_dealt_time != damage_dealt_time_prev)
 	{
 		unaccounted_damage += unaccounted_damage_new;
-		LOG_TRACE("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
+		LOG_TRACE("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")");
 	}
 	damage_dealt_time_prev = damage_dealt_time;
 
@@ -832,7 +832,7 @@ void HitSound()
 				pitch_shift = mirror_value + (mirror_value - pitch_shift);
 			}
 
-			LOG_TRACE("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift), "\n");
+			LOG_TRACE("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift));
 
 			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
 			// todo: normalize sound pressure levels? seems unnecessary
@@ -1406,10 +1406,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 		view_quality = getproperty(VF_MINFPS_QUALITY);
 	else
 		view_quality = 1;
-
-	// this needs to be updated manually now due to the destruction of engine physics stats
-	if(!isdemo() && autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
-		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 
 	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
 	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);

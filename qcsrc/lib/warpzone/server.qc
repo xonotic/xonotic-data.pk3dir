@@ -225,7 +225,7 @@ void WarpZone_Touch(entity this, entity toucher)
 	}
 	else
 	{
-		LOG_TRACE("WARPZONE FAIL AHAHAHAHAH))\n");
+		LOG_TRACE("WARPZONE FAIL AHAHAHAHAH))");
 	}
 }
 

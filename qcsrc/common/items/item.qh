@@ -39,12 +39,12 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)
-    ATTRIB(GameItem, m_id, int, 0)
-    ATTRIB(GameItem, m_name, string, string_null)
-    ATTRIB(GameItem, m_icon, string, string_null)
-    ATTRIB(GameItem, m_color, vector, '1 1 1')
-    ATTRIB(GameItem, m_waypoint, string, string_null)
-    ATTRIB(GameItem, m_waypointblink, int, 1)
+    ATTRIB(GameItem, m_id, int, 0);
+    ATTRIB(GameItem, m_name, string);
+    ATTRIB(GameItem, m_icon, string);
+    ATTRIB(GameItem, m_color, vector, '1 1 1');
+    ATTRIB(GameItem, m_waypoint, string);
+    ATTRIB(GameItem, m_waypointblink, int, 1);
     METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
     {
         TC(GameItem, this);

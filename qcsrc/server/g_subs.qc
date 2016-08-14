@@ -141,10 +141,10 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 
 		if(c == 50)
 		{
-			LOG_TRACE("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2), "\n");
-			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos), "\n");
-			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos), "\n");
-			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
+			LOG_TRACE("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2));
+			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos));
+			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos));
+			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)));
 		}
 
 		stopentity = trace_ent;

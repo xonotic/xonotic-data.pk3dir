@@ -230,7 +230,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             else
             {
                 this.draw = ItemDraw;
-                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it\n");
+                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it");
             }
         }
 
@@ -239,7 +239,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 
         if(this.mdl == "")
-            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!\n");
+            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!");
 
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
@@ -334,7 +334,7 @@ bool ItemSend(entity this, entity to, int sf)
 		WriteShort(MSG_ENTITY, this.fade_start);
 
 		if(this.mdl == "")
-			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "expect a crash just about now\n");
+			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "expect a crash just about now");
 
 		WriteString(MSG_ENTITY, this.mdl);
 	}
@@ -878,7 +878,7 @@ void Item_FindTeam(entity this)
 	if(this.effects & EF_NODRAW)
 	{
 		// marker for item team search
-		LOG_TRACE("Initializing item team ", ftos(this.team), "\n");
+		LOG_TRACE("Initializing item team ", ftos(this.team));
 		RandomSelection_Init();
 		FOREACH_ENTITY_FLOAT(team, this.team,
 		{
@@ -1166,7 +1166,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
             // why not flags & fl_item?
 		    FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
                 LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
-                LOG_TRACE(" vs ", it.netname, vtos(it.origin), "\n");
+                LOG_TRACE(" vs ", it.netname, vtos(it.origin));
                 error("Mapper sucks.");
             });
 			this.is_item = true;

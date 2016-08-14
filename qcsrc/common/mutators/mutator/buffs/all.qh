@@ -18,12 +18,12 @@ REGISTRY_CHECK(Buffs)
 #include <common/items/item/pickup.qh>
 CLASS(Buff, Pickup)
 	/** bit index */
-	ATTRIB(Buff, m_itemid, int, 0)
-	ATTRIB(Buff, m_name, string, "buff")
-	ATTRIB(Buff, m_color, vector, '1 1 1')
-	ATTRIB(Buff, m_prettyName, string, "Buff")
-	ATTRIB(Buff, m_skin, int, 0)
-	ATTRIB(Buff, m_sprite, string, "")
+	ATTRIB(Buff, m_itemid, int, 0);
+	ATTRIB(Buff, m_name, string, "buff");
+	ATTRIB(Buff, m_color, vector, '1 1 1');
+	ATTRIB(Buff, m_prettyName, string, "Buff");
+	ATTRIB(Buff, m_skin, int, 0);
+	ATTRIB(Buff, m_sprite, string, "");
 	METHOD(Buff, display, void(entity this, void(string name, string icon) returns)) {
 		returns(this.m_prettyName, sprintf("/gfx/hud/%s/buff_%s", cvar_string("menu_skin"), this.m_name));
 	}

@@ -4,8 +4,8 @@ const int CMD_REQUEST_COMMAND = 1;
 const int CMD_REQUEST_USAGE = 2;
 
 CLASS(Command, Object)
-	ATTRIB(Command, m_name, string, string_null);
-	ATTRIB(Command, m_description, string, string_null);
+	ATTRIB(Command, m_name, string);
+	ATTRIB(Command, m_description, string);
 	METHOD(Command, m_invokecmd, void(Command this, int request, entity caller, int arguments, string command))
 	{
         TC(Command, this);

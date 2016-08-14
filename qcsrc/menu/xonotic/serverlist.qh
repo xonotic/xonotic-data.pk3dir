@@ -3,7 +3,7 @@
 #include "listbox.qh"
 CLASS(XonoticServerList, XonoticListBox)
 	METHOD(XonoticServerList, configureXonoticServerList, void(entity));
-	ATTRIB(XonoticServerList, rowsPerItem, float, 1)
+	ATTRIB(XonoticServerList, rowsPerItem, float, 1);
 	METHOD(XonoticServerList, draw, void(entity));
 	METHOD(XonoticServerList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticServerList, doubleClickListBoxItem, void(entity, float, vector));
@@ -11,56 +11,56 @@ CLASS(XonoticServerList, XonoticListBox)
 	METHOD(XonoticServerList, keyDown, float(entity, float, float, float));
 	METHOD(XonoticServerList, toggleFavorite, void(entity, string));
 
-	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85)
+	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85);
 	METHOD(XonoticServerList, mouseMove, float(entity, vector));
-	ATTRIB(XonoticServerList, mouseOverIcons, bool, false)
+	ATTRIB(XonoticServerList, mouseOverIcons, bool, false);
 	METHOD(XonoticServerList, focusedItemChangeNotify, void(entity));
 
-	ATTRIB(XonoticServerList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticServerList, realUpperMargin, float, 0)
-	ATTRIB(XonoticServerList, columnIconsOrigin, float, 0)
-	ATTRIB(XonoticServerList, columnIconsSize, float, 0)
-	ATTRIB(XonoticServerList, columnPingOrigin, float, 0)
-	ATTRIB(XonoticServerList, columnPingSize, float, 0)
-	ATTRIB(XonoticServerList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticServerList, columnNameSize, float, 0)
-	ATTRIB(XonoticServerList, columnMapOrigin, float, 0)
-	ATTRIB(XonoticServerList, columnMapSize, float, 0)
-	ATTRIB(XonoticServerList, columnTypeOrigin, float, 0)
-	ATTRIB(XonoticServerList, columnTypeSize, float, 0)
-	ATTRIB(XonoticServerList, columnPlayersOrigin, float, 0)
-	ATTRIB(XonoticServerList, columnPlayersSize, float, 0)
-	ATTRIB(XonoticServerList, lockedSelectedItem, bool, true)      // initially keep selected the first item of the list, avoiding an unwanted scrolling
+	ATTRIB(XonoticServerList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticServerList, realUpperMargin, float, 0);
+	ATTRIB(XonoticServerList, columnIconsOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnIconsSize, float, 0);
+	ATTRIB(XonoticServerList, columnPingOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnPingSize, float, 0);
+	ATTRIB(XonoticServerList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnNameSize, float, 0);
+	ATTRIB(XonoticServerList, columnMapOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnMapSize, float, 0);
+	ATTRIB(XonoticServerList, columnTypeOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnTypeSize, float, 0);
+	ATTRIB(XonoticServerList, columnPlayersOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnPlayersSize, float, 0);
+	ATTRIB(XonoticServerList, lockedSelectedItem, bool, true);      // initially keep selected the first item of the list, avoiding an unwanted scrolling
 
-	ATTRIB(XonoticServerList, selectedServer, string, string_null) // to restore selected server when needed
+	ATTRIB(XonoticServerList, selectedServer, string); // to restore selected server when needed
 	METHOD(XonoticServerList, setSelected, void(entity, float));
 	METHOD(XonoticServerList, setSortOrder, void(entity, float, float));
-	ATTRIB(XonoticServerList, filterShowEmpty, float, 1)
-	ATTRIB(XonoticServerList, filterShowFull, float, 1)
-	ATTRIB(XonoticServerList, filterString, string, string_null)
-	ATTRIB(XonoticServerList, controlledTextbox, entity, NULL)
-	ATTRIB(XonoticServerList, ipAddressBox, entity, NULL)
-	ATTRIB(XonoticServerList, favoriteButton, entity, NULL)
-	ATTRIB(XonoticServerList, nextRefreshTime, float, 0)
+	ATTRIB(XonoticServerList, filterShowEmpty, float, 1);
+	ATTRIB(XonoticServerList, filterShowFull, float, 1);
+	ATTRIB(XonoticServerList, filterString, string);
+	ATTRIB(XonoticServerList, controlledTextbox, entity);
+	ATTRIB(XonoticServerList, ipAddressBox, entity);
+	ATTRIB(XonoticServerList, favoriteButton, entity);
+	ATTRIB(XonoticServerList, nextRefreshTime, float, 0);
 	METHOD(XonoticServerList, refreshServerList, void(entity, float));  // refresh mode: REFRESHSERVERLIST_*
-	ATTRIB(XonoticServerList, needsRefresh, float, 1)
+	ATTRIB(XonoticServerList, needsRefresh, float, 1);
 	METHOD(XonoticServerList, focusEnter, void(entity));
 	METHOD(XonoticServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)));
-	ATTRIB(XonoticServerList, sortButton1, entity, NULL)
-	ATTRIB(XonoticServerList, sortButton2, entity, NULL)
-	ATTRIB(XonoticServerList, sortButton3, entity, NULL)
-	ATTRIB(XonoticServerList, sortButton4, entity, NULL)
-	ATTRIB(XonoticServerList, sortButton5, entity, NULL)
-	ATTRIB(XonoticServerList, connectButton, entity, NULL)
-	ATTRIB(XonoticServerList, infoButton, entity, NULL)
-	ATTRIB(XonoticServerList, currentSortOrder, float, 0)
-	ATTRIB(XonoticServerList, currentSortField, float, -1)
+	ATTRIB(XonoticServerList, sortButton1, entity);
+	ATTRIB(XonoticServerList, sortButton2, entity);
+	ATTRIB(XonoticServerList, sortButton3, entity);
+	ATTRIB(XonoticServerList, sortButton4, entity);
+	ATTRIB(XonoticServerList, sortButton5, entity);
+	ATTRIB(XonoticServerList, connectButton, entity);
+	ATTRIB(XonoticServerList, infoButton, entity);
+	ATTRIB(XonoticServerList, currentSortOrder, float, 0);
+	ATTRIB(XonoticServerList, currentSortField, float, -1);
 
-	ATTRIB(XonoticServerList, ipAddressBoxFocused, float, -1)
+	ATTRIB(XonoticServerList, ipAddressBoxFocused, float, -1);
 
-	ATTRIB(XonoticServerList, seenIPv4, float, 0)
-	ATTRIB(XonoticServerList, seenIPv6, float, 0)
-	ATTRIB(XonoticServerList, categoriesHeight, float, 1.25)
+	ATTRIB(XonoticServerList, seenIPv4, float, 0);
+	ATTRIB(XonoticServerList, seenIPv6, float, 0);
+	ATTRIB(XonoticServerList, categoriesHeight, float, 1.25);
 
 	METHOD(XonoticServerList, getTotalHeight, float(entity));
 	METHOD(XonoticServerList, getItemAtPos, float(entity, float));

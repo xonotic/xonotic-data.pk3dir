@@ -1210,7 +1210,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 			Get_Notif_TypeName(net_type)
 		));
 		#endif
-		LOG_WARNF("Incorrect usage of Local_Notification: %s\n", "Null notification");
+		LOG_WARNF("Incorrect usage of Local_Notification: %s", "Null notification");
 		return;
 	}
 

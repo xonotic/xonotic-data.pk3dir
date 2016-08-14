@@ -19,12 +19,12 @@ CLASS(Item, Object)
 	METHOD(Item, hideNotify, void(Item));
 	METHOD(Item, toString, string(Item));
 	METHOD(Item, destroy, void(Item));
-	ATTRIB(Item, focused, float, 0)
-	ATTRIB(Item, focusable, float, 0)
-	ATTRIB(Item, allowFocusSound, float, 0)
-	ATTRIB(Item, parent, entity, NULL)
-	ATTRIB(Item, preferredFocusPriority, float, 0)
-	ATTRIB(Item, origin, vector, '0 0 0')
-	ATTRIB(Item, size, vector, '0 0 0')
-	ATTRIB(Item, tooltip, string, string_null)
+	ATTRIB(Item, focused, float, 0);
+	ATTRIB(Item, focusable, float, 0);
+	ATTRIB(Item, allowFocusSound, float, 0);
+	ATTRIB(Item, parent, entity);
+	ATTRIB(Item, preferredFocusPriority, float, 0);
+	ATTRIB(Item, origin, vector, '0 0 0');
+	ATTRIB(Item, size, vector, '0 0 0');
+	ATTRIB(Item, tooltip, string);
 ENDCLASS(Item)

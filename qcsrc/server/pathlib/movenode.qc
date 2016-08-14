@@ -87,7 +87,7 @@ vector pathlib_walknode(entity this, vector start, vector end, float doedge)
     vector direction,point,last_point,s,e;
     float steps, distance, i;
 
-    LOG_TRACE("Walking node from ", vtos(start), " to ", vtos(end), "\n");
+    LOG_TRACE("Walking node from ", vtos(start), " to ", vtos(end));
 
     pathlib_movenode_goodnode = 0;
 
@@ -109,7 +109,7 @@ vector pathlib_walknode(entity this, vector start, vector end, float doedge)
         //start - movenode_maxdrop
         a.cnt = time + 10;
 
-        LOG_TRACE("I cant walk on air!\n");
+        LOG_TRACE("I cant walk on air!");
         return trace_endpos;
     }
 

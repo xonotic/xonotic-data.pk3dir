@@ -8,7 +8,7 @@ void animdecide_setimplicitstate(entity e, float onground);
 void animdecide_setframes(entity e, bool support_blending, .int fld_frame, .int fld_frame1time, .int fld_frame2, .int fld_frame2time);
 
 CLASS(Animation, Object)
-	ATTRIB(Animation, m_framenames, string, string_null)
+	ATTRIB(Animation, m_framenames, string);
 	STATIC_METHOD(Animation, getframe, int(Animation this, int mdlidx))
 	{
 		FOREACH_WORD(this.m_framenames, true, {
@@ -16,7 +16,7 @@ CLASS(Animation, Object)
 			if (f != -1) return f;
 		});
 #ifdef CSQC
-		LOG_DEBUGF("Missing animation for %s: %s\n", modelnameforindex(mdlidx), this.registered_id);
+		LOG_DEBUGF("Missing animation for %s: %s", modelnameforindex(mdlidx), this.registered_id);
 #endif
 		return -1;
 	}

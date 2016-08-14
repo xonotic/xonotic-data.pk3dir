@@ -10,8 +10,8 @@ void ctf_RespawnFlag(entity flag);
 const int ST_CTF_CAPS = 1;
 
 CLASS(Flag, Pickup)
-    ATTRIB(Flag, m_mins, vector, PL_MIN_CONST + '0 0 -13')
-    ATTRIB(Flag, m_maxs, vector, PL_MAX_CONST + '0 0 -13')
+    ATTRIB(Flag, m_mins, vector, PL_MIN_CONST + '0 0 -13');
+    ATTRIB(Flag, m_maxs, vector, PL_MAX_CONST + '0 0 -13');
 ENDCLASS(Flag)
 Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
 void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }

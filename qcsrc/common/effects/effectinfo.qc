@@ -138,7 +138,7 @@
     /**/
 
 CLASS(EffectInfo, Object)
-    ATTRIB(EffectInfo, effectinfo_name, string, string_null)
+    ATTRIB(EffectInfo, effectinfo_name, string);
     CONSTRUCTOR(EffectInfo, string s) {
         CONSTRUCT(EffectInfo);
         this.effectinfo_name = s;
@@ -193,7 +193,7 @@ CLASS(EffectInfo, Object)
     MY(velocityoffset, vector, '0 0 0') \
     /**/
 
-    #define MY(f, type, val) ATTRIB(EffectInfo, effectinfo_##f, type, val)
+    #define MY(f, type, val) ATTRIB(EffectInfo, effectinfo_##f, type, val);
     FIELDS(MY)
     #undef MY
 
@@ -227,8 +227,8 @@ CLASS(EffectInfo, Object)
 ENDCLASS(EffectInfo)
 
 CLASS(EffectInfoGroup, Object)
-    ATTRIBARRAY(EffectInfoGroup, children, EffectInfo, 16)
-    ATTRIB(EffectInfoGroup, children_count, int, 0)
+    ATTRIBARRAY(EffectInfoGroup, children, EffectInfo, 16);
+    ATTRIB(EffectInfoGroup, children_count, int, 0);
 ENDCLASS(EffectInfoGroup)
 
 void effectinfo_read()
@@ -253,7 +253,7 @@ void effectinfo_read()
             #undef p
             #undef MY
             default:
-                LOG_WARNF("Unknown property '%s'\n", k);
+                LOG_WARNF("Unknown property '%s'", k);
                 break;
         }
     }
@@ -306,7 +306,7 @@ GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt")
 				LOG_INFOF("Reload with ^2cl_particles_reloadeffects data/%s^7.\n", filename);
                 fclose(fh);
             } else {
-                LOG_WARNF("Could not open file '%s'!\n", filename);
+                LOG_WARNF("Could not open file '%s'!", filename);
             }
             return;
         }

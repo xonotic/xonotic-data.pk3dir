@@ -203,7 +203,7 @@ void havocbot_chooserole_generic(entity this)
 
 void havocbot_chooserole(entity this)
 {
-	LOG_TRACE("choosing a role...\n");
+	LOG_TRACE("choosing a role...");
 	this.bot_strategytime = 0;
 	if(!MUTATOR_CALLHOOK(HavocBot_ChooseRole, this))
 		havocbot_chooserole_generic(this);

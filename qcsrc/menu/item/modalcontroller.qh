@@ -34,10 +34,10 @@ CLASS(ModalController, Container)
 	METHOD(ModalController, initializeDialog, void(entity, entity));
 
 	METHOD(ModalController, switchState, void(entity, entity, float, float));
-	ATTRIB(ModalController, origin, vector, '0 0 0')
-	ATTRIB(ModalController, size, vector, '0 0 0')
-	ATTRIB(ModalController, previousButton, entity, NULL)
-	ATTRIB(ModalController, fadedAlpha, float, 0.3)
+	ATTRIB(ModalController, origin, vector, '0 0 0');
+	ATTRIB(ModalController, size, vector, '0 0 0');
+	ATTRIB(ModalController, previousButton, entity);
+	ATTRIB(ModalController, fadedAlpha, float, 0.3);
 ENDCLASS(ModalController)
 
 .float ModalController_state;

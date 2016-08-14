@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(PortoLaunch, Weapon)
-/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none)
-/* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0)
+/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none);
+/* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0);
 /* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
@@ -240,11 +240,11 @@ void W_Porto_Touch(entity this, entity toucher)
 	}
 }
 
-void W_Porto_Attack(entity actor, float type)
+void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 {
 	entity gren;
 
-	W_SetupShot(actor, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
+	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;
@@ -310,7 +310,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(actor, 0);
+            W_Porto_Attack(actor, weaponentity, 0);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
 
@@ -319,7 +319,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
         {
-            W_Porto_Attack(actor, 1);
+            W_Porto_Attack(actor, weaponentity, 1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
         }
     }
@@ -352,7 +352,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(actor, -1);
+            W_Porto_Attack(actor, weaponentity, -1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
     }
@@ -378,7 +378,7 @@ METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 #endif
 #ifdef CSQC
 METHOD(PortoLaunch, wr_impacteffect, void(entity this, entity actor)) {
-    LOG_WARN("Since when does Porto send DamageInfo?\n");
+    LOG_WARN("Since when does Porto send DamageInfo?");
 }
 #endif
 #endif

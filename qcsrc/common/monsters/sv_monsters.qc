@@ -247,7 +247,7 @@ void Monster_Sound_Precache(string f)
 	{
 		if(tokenize_console(s) != 3)
 		{
-			LOG_TRACE("Invalid sound info line: ", s, "\n");
+			LOG_TRACE("Invalid sound info line: ", s);
 			continue;
 		}
 		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
@@ -302,7 +302,7 @@ bool Monster_Sounds_Load(entity this, string f, int first)
 	fh = fopen(f, FILE_READ);
 	if(fh < 0)
 	{
-		LOG_TRACE("Monster sound file not found: ", f, "\n");
+		LOG_TRACE("Monster sound file not found: ", f);
 		return false;
 	}
 	while((s = fgets(fh)))
@@ -899,13 +899,17 @@ void Monster_Remove(entity this)
 	if(IS_CLIENT(this))
 		return; // don't remove it?
 
-	.entity weaponentity = weaponentities[0];
 	if(!this) { return; }
 
 	if(!MUTATOR_CALLHOOK(MonsterRemove, this))
 		Send_Effect(EFFECT_ITEM_PICKUP, this.origin, '0 0 0', 1);
 
-	if(this.(weaponentity)) { delete(this.(weaponentity)); }
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity))
+			delete(this.(weaponentity));
+	}
 	if(this.iceblock) { delete(this.iceblock); }
 	WaypointSprite_Kill(this.sprite);
 	delete(this);

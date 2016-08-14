@@ -139,7 +139,7 @@ void GameCommand_adminmsg(float request, float argc)
 					}
 
 					successful = strcat(successful, (successful ? ", " : ""), client.netname);
-					LOG_TRACE("Message sent to ", client.netname, "\n");
+					LOG_TRACE("Message sent to ", client.netname);
 					continue;
 				}
 

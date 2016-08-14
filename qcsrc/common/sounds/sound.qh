@@ -93,8 +93,8 @@ const float VOL_MUFFLED = 0.35;
 	} MACRO_END
 
 CLASS(Sound, Object)
-	ATTRIB(Sound, m_id, int, 0)
-	ATTRIB(Sound, sound_str, string(), func_null)
+	ATTRIB(Sound, m_id, int, 0);
+	ATTRIB(Sound, sound_str, string());
 	CONSTRUCTOR(Sound, string() path)
 	{
 		CONSTRUCT(Sound);
@@ -114,7 +114,7 @@ CLASS(Sound, Object)
 			/**/
 		#define tryext(ext) { string s = strcat(base, "." #ext); if (fexists(strcat("sound/", s))) return s; }
 		extensions(tryext);
-		LOG_WARNF("Missing sound: \"%s\"\n", strcat("sound/", base));
+		LOG_WARNF("Missing sound: \"%s\"", strcat("sound/", base));
 		#undef tryext
 		#undef extensions
 		return string_null;
@@ -125,7 +125,7 @@ CLASS(Sound, Object)
 	    TC(Sound, this);
 		string s = Sound_fixpath(this);
 		if (!s) return;
-		profile(sprintf("precache_sound(\"%s\")\n", s));
+		profile(sprintf("precache_sound(\"%s\")", s));
 		precache_sound(s);
 	}
 ENDCLASS(Sound)

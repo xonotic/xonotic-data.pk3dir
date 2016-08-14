@@ -417,11 +417,10 @@ bool forbidWeaponUse(entity player)
 
 .bool hook_switchweapon;
 
-void W_WeaponFrame(Player actor)
+void W_WeaponFrame(Player actor, .entity weaponentity)
 {
     TC(Player, actor);
     TC(PlayerState, PS(actor));
-	.entity weaponentity = weaponentities[0];  // TODO: unhardcode
 	entity this = actor.(weaponentity);
 	if (frametime) actor.weapon_frametime = frametime;
 
@@ -459,7 +458,7 @@ void W_WeaponFrame(Player actor)
 		switch (this.state)
 		{
 			default:
-				LOG_WARNF("unhandled weaponentity (%i) state for player (%i): %d\n", this, actor, this.state);
+				LOG_WARNF("unhandled weaponentity (%i) state for player (%i): %d", this, actor, this.state);
 				break;
 			case WS_INUSE:
 			case WS_RAISE:
@@ -570,7 +569,7 @@ void W_WeaponFrame(Player actor)
 			}
 			else if (e)
 			{
-				e.wr_gonethink(e, actor);
+				e.wr_gonethink(e, actor, weaponentity);
 			}
 		}
 
@@ -593,9 +592,8 @@ void W_WeaponFrame(Player actor)
 	}
 }
 
-void W_AttachToShotorg(entity actor, entity flash, vector offset)
+void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset)
 {
-	.entity weaponentity = weaponentities[0];
 	flash.owner = actor;
 	flash.angles_z = random() * 360;
 
@@ -690,10 +688,9 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
 
-void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
+void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sent_sound)
 {
     TC(Sound, sent_sound);
-	.entity weaponentity = weaponentities[0];
 	// set global values to work with
 	Weapon e = PS(actor).m_weapon;
 
