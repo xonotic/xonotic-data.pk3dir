@@ -16,8 +16,8 @@ void IL_ENDFRAME();
  *   freed entities must be removed from the list
  */
 CLASS(IntrusiveList, Object)
-	ATTRIB(IntrusiveList, il_head, entity, NULL);
-	ATTRIB(IntrusiveList, il_tail, entity, NULL);
+	ATTRIB(IntrusiveList, il_head, entity);
+	ATTRIB(IntrusiveList, il_tail, entity);
 	ATTRIB(IntrusiveList, il_nextfld, .entity, nil);
 	ATTRIB(IntrusiveList, il_prevfld, .entity, nil);
 	INIT(IntrusiveList) { IL_INIT(this); }

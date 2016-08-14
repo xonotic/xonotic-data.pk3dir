@@ -20,7 +20,7 @@ CLASS(Callback, Object)
      *     return false;
      * }
      */
-    ATTRIB(Callback, cbc_func, bool(), func_null)
+    ATTRIB(Callback, cbc_func, bool());
     CONSTRUCTOR(Callback, bool() func) {
         CONSTRUCT(Callback);
         this.cbc_func = func;
@@ -32,9 +32,9 @@ ENDCLASS(Callback)
  */
 CLASS(CallbackChain, Object)
     CLASS(CallbackNode, Object)
-        ATTRIB(CallbackNode, cbc, Callback, NULL)
-        ATTRIB(CallbackNode, cbc_next, CallbackNode, NULL)
-        ATTRIB(CallbackNode, cbc_order, int, 0)
+        ATTRIB(CallbackNode, cbc, Callback);
+        ATTRIB(CallbackNode, cbc_next, CallbackNode);
+        ATTRIB(CallbackNode, cbc_order, int, 0);
         CONSTRUCTOR(CallbackNode, Callback it, int order) {
             CONSTRUCT(CallbackNode);
             this.cbc = it;
@@ -42,8 +42,8 @@ CLASS(CallbackChain, Object)
         }
     ENDCLASS(CallbackNode)
 
-    ATTRIB(CallbackChain, cbc_next, CallbackNode, NULL)
-    ATTRIB(CallbackChain, cbc_order, int, 0)
+    ATTRIB(CallbackChain, cbc_next, CallbackNode);
+    ATTRIB(CallbackChain, cbc_order, int, 0);
     CONSTRUCTOR(CallbackChain, string _name) {
         CONSTRUCT(CallbackChain);
         this.netname = _name;
@@ -150,10 +150,10 @@ enum {
 USING(mutatorfunc_t, bool(int));
 
 CLASS(Mutator, Object)
-    ATTRIB(Mutator, m_id, int, 0)
-    ATTRIB(Mutator, m_name, string, string_null)
-    ATTRIB(Mutator, mutatorfunc, mutatorfunc_t, func_null)
-    ATTRIB(Mutator, mutatorcheck, bool(), func_null)
+    ATTRIB(Mutator, m_id, int, 0);
+    ATTRIB(Mutator, m_name, string);
+    ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);
+    ATTRIB(Mutator, mutatorcheck, bool());
     CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
         CONSTRUCT(Mutator);
         this.m_name = _name;

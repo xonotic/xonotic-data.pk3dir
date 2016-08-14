@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Shotgun, Weapon)
-/* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells)
-/* impulse   */ ATTRIB(Shotgun, impulse, int, 2)
+/* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells);
+/* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
 /* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');

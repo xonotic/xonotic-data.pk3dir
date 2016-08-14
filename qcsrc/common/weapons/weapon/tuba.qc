@@ -1,6 +1,6 @@
 #ifndef IMPLEMENTATION
 CLASS(Tuba, Weapon)
-/* impulse   */ ATTRIB(Tuba, impulse, int, 1)
+/* impulse   */ ATTRIB(Tuba, impulse, int, 1);
 /* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');

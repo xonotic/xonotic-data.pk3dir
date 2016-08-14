@@ -3,7 +3,7 @@
 #include "oo.qh"
 
 CLASS(Lazy, Object)
-	ATTRIB(Lazy, m_get, entity(), func_null);
+	ATTRIB(Lazy, m_get, entity());
 	CONSTRUCTOR(Lazy, entity() _compute)
 	{
 		this.m_get = _compute;

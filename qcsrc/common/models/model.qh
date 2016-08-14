@@ -3,8 +3,8 @@
 #define setmodel(e, m) _setmodel((e), (m).model_str())
 
 CLASS(Model, Object)
-    ATTRIB(Model, m_id, int, 0)
-    ATTRIB(Model, model_str, string(), func_null)
+    ATTRIB(Model, m_id, int, 0);
+    ATTRIB(Model, model_str, string());
     CONSTRUCTOR(Model, string() path)
     {
         CONSTRUCT(Model);

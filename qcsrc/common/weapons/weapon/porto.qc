@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(PortoLaunch, Weapon)
-/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none)
-/* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0)
+/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none);
+/* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0);
 /* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');

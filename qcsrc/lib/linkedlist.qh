@@ -1,14 +1,14 @@
 #pragma once
 
 CLASS(LinkedListNode, Object)
-	ATTRIB(LinkedListNode, ll_data, entity, NULL)
-	ATTRIB(LinkedListNode, ll_prev, LinkedListNode, NULL)
-	ATTRIB(LinkedListNode, ll_next, LinkedListNode, NULL)
+	ATTRIB(LinkedListNode, ll_data, entity);
+	ATTRIB(LinkedListNode, ll_prev, LinkedListNode);
+	ATTRIB(LinkedListNode, ll_next, LinkedListNode);
 ENDCLASS(LinkedListNode)
 
 CLASS(LinkedList, Object)
-	ATTRIB(LinkedList, ll_head, LinkedListNode, NULL);
-	ATTRIB(LinkedList, ll_tail, LinkedListNode, NULL);
+	ATTRIB(LinkedList, ll_head, LinkedListNode);
+	ATTRIB(LinkedList, ll_tail, LinkedListNode);
 ENDCLASS(LinkedList)
 
 #define LL_NEW() NEW(LinkedList)

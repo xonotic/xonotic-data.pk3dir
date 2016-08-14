@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Arc, Weapon)
-/* ammotype  */ ATTRIB(Arc, ammo_field, .int, ammo_cells)
-/* impulse   */ ATTRIB(Arc, impulse, int, 3)
+/* ammotype  */ ATTRIB(Arc, ammo_field, .int, ammo_cells);
+/* impulse   */ ATTRIB(Arc, impulse, int, 3);
 /* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_NORMAL);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');

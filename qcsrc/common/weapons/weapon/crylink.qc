@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Crylink, Weapon)
-/* ammotype  */ ATTRIB(Crylink, ammo_field, .int, ammo_cells)
-/* impulse   */ ATTRIB(Crylink, impulse, int, 6)
+/* ammotype  */ ATTRIB(Crylink, ammo_field, .int, ammo_cells);
+/* impulse   */ ATTRIB(Crylink, impulse, int, 6);
 /* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Crylink, wpcolor, vector, '1 0.5 1');

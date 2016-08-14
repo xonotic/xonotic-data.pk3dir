@@ -3,24 +3,24 @@
 #include <common/weapons/all.qh>
 
 CLASS(Turret, Object)
-    ATTRIB(Turret, m_id, int, 0)
+    ATTRIB(Turret, m_id, int, 0);
 
     /** short name */
-    ATTRIB(Turret, netname, string, string_null)
+    ATTRIB(Turret, netname, string);
     /** human readable name */
-    ATTRIB(Turret, turret_name, string, _("Turret"))
+    ATTRIB(Turret, turret_name, string, _("Turret"));
     /** currently a copy of the model */
-    ATTRIB(Turret, mdl, string, string_null)
+    ATTRIB(Turret, mdl, string);
     /** full name of model */
-    ATTRIB(Turret, model, string, string_null)
+    ATTRIB(Turret, model, string);
     /** full name of tur_head model */
-    ATTRIB(Turret, head_model, string, string_null)
+    ATTRIB(Turret, head_model, string);
 
-    ATTRIB(Turret, spawnflags, int, 0)
+    ATTRIB(Turret, spawnflags, int, 0);
     /** turret hitbox size */
-    ATTRIB(Turret, mins, vector, '-0 -0 -0')
+    ATTRIB(Turret, mins, vector, '-0 -0 -0');
     /** turret hitbox size */
-    ATTRIB(Turret, maxs, vector, '0 0 0')
+    ATTRIB(Turret, maxs, vector, '0 0 0');
 
     METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
         returns(this.turret_name, string_null);
@@ -41,7 +41,7 @@ CLASS(Turret, Object)
     METHOD(Turret, tr_precache, void(Turret this)) {
 
     }
-    ATTRIB(Turret, m_weapon, Weapon, WEP_Null)
+    ATTRIB(Turret, m_weapon, Weapon);
 #ifdef SVQC
     /** (SERVER) called when turret attacks */
     METHOD(Turret, tr_attack, void(Turret this, entity it)) {

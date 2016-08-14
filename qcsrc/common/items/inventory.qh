@@ -5,9 +5,9 @@
 
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
-    ATTRIBARRAY(Inventory, inv_items, int, Items_MAX)
+    ATTRIBARRAY(Inventory, inv_items, int, Items_MAX);
     /** Previous state */
-    ATTRIB(Inventory, inventory, Inventory, NULL)
+    ATTRIB(Inventory, inventory, Inventory);
 ENDCLASS(Inventory)
 
 /** Player inventory */

@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Hagar, Weapon)
-/* ammotype  */ ATTRIB(Hagar, ammo_field, .int, ammo_rockets)
-/* impulse   */ ATTRIB(Hagar, impulse, int, 8)
+/* ammotype  */ ATTRIB(Hagar, ammo_field, .int, ammo_rockets);
+/* impulse   */ ATTRIB(Hagar, impulse, int, 8);
 /* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');

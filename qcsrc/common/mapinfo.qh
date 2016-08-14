@@ -8,24 +8,24 @@ bool autocvar_developer_mapper;
 #include "util.qh"
 
 CLASS(Gametype, Object)
-    ATTRIB(Gametype, m_id, int, 0)
+    ATTRIB(Gametype, m_id, int, 0);
     /** game type ID */
-    ATTRIB(Gametype, items, int, 0)
+    ATTRIB(Gametype, items, int, 0);
     /** game type name as in cvar (with g_ prefix) */
-    ATTRIB(Gametype, netname, string, string_null)
+    ATTRIB(Gametype, netname, string);
     /** game type short name */
-    ATTRIB(Gametype, mdl, string, string_null)
+    ATTRIB(Gametype, mdl, string);
     /** human readable name */
-    ATTRIB(Gametype, message, string, string_null)
+    ATTRIB(Gametype, message, string);
     /** does this gametype support teamplay? */
-    ATTRIB(Gametype, team, bool, false)
+    ATTRIB(Gametype, team, bool, false);
     /** game type defaults */
-    ATTRIB(Gametype, model2, string, string_null)
+    ATTRIB(Gametype, model2, string);
     /** game type description */
-    ATTRIB(Gametype, gametype_description, string, string_null)
+    ATTRIB(Gametype, gametype_description, string);
 
-    ATTRIB(Gametype, m_mutators, string, string_null)
-    ATTRIB(Gametype, m_parse_mapinfo, bool(string k, string v), func_null)
+    ATTRIB(Gametype, m_mutators, string);
+    ATTRIB(Gametype, m_parse_mapinfo, bool(string k, string v));
 
     METHOD(Gametype, describe, string(Gametype this))
     {

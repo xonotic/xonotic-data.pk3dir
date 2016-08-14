@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Vortex, Weapon)
-/* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells)
-/* impulse   */ ATTRIB(Vortex, impulse, int, 7)
+/* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells);
+/* impulse   */ ATTRIB(Vortex, impulse, int, 7);
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');

@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Blaster, Weapon)
-/* ammotype  */ //ATTRIB(Blaster, ammo_field, .int, ammo_none)
-/* impulse   */ ATTRIB(Blaster, impulse, int, 1)
+/* ammotype  */ //ATTRIB(Blaster, ammo_field, .int, ammo_none);
+/* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');

@@ -181,8 +181,8 @@ void Registry_send(string id, string hash);
 #define REGISTER_REGISTRY_2(id, str) \
 	ACCUMULATE_FUNCTION(__static_init, Register##id) \
 	CLASS(id##Registry, Object) \
-		ATTRIB(id##Registry, m_name, string, str) \
-		ATTRIB(id##Registry, REGISTRY_NEXT, entity, id##_first) \
+		ATTRIB(id##Registry, m_name, string, str); \
+		ATTRIB(id##Registry, REGISTRY_NEXT, entity, id##_first); \
 		METHOD(id##Registry, m_reload, void()); \
 	ENDCLASS(id##Registry) \
 	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry)); \

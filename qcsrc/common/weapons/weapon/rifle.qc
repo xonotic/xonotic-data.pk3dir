@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Rifle, Weapon)
-/* ammotype  */ ATTRIB(Rifle, ammo_field, .int, ammo_nails)
-/* impulse   */ ATTRIB(Rifle, impulse, int, 7)
+/* ammotype  */ ATTRIB(Rifle, ammo_field, .int, ammo_nails);
+/* impulse   */ ATTRIB(Rifle, impulse, int, 7);
 /* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Rifle, wpcolor, vector, '0.5 1 0');

@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Hook, Weapon)
-/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel)
-/* impulse   */ ATTRIB(Hook, impulse, int, 0)
+/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel);
+/* impulse   */ ATTRIB(Hook, impulse, int, 0);
 /* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
@@ -14,7 +14,7 @@ CLASS(Hook, Weapon)
 /* wepimg    */ ATTRIB(Hook, model2, string, "weaponhook");
 /* refname   */ ATTRIB(Hook, netname, string, "hook");
 /* wepname   */ ATTRIB(Hook, m_name, string, _("Grappling Hook"));
-	ATTRIB(Hook, ammo_factor, float, 1)
+	ATTRIB(Hook, ammo_factor, float, 1);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

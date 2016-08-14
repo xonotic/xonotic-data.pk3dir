@@ -93,8 +93,8 @@ const float VOL_MUFFLED = 0.35;
 	} MACRO_END
 
 CLASS(Sound, Object)
-	ATTRIB(Sound, m_id, int, 0)
-	ATTRIB(Sound, sound_str, string(), func_null)
+	ATTRIB(Sound, m_id, int, 0);
+	ATTRIB(Sound, sound_str, string());
 	CONSTRUCTOR(Sound, string() path)
 	{
 		CONSTRUCT(Sound);

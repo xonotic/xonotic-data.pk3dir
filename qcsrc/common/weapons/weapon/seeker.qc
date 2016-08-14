@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Seeker, Weapon)
-/* ammotype  */ ATTRIB(Seeker, ammo_field, .int, ammo_rockets)
-/* impulse   */ ATTRIB(Seeker, impulse, int, 8)
+/* ammotype  */ ATTRIB(Seeker, ammo_field, .int, ammo_rockets);
+/* impulse   */ ATTRIB(Seeker, impulse, int, 8);
 /* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Seeker, wpcolor, vector, '0.5 1 0');

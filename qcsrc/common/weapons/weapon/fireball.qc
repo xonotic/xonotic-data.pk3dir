@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Fireball, Weapon)
-/* ammotype  */ //ATTRIB(Fireball, ammo_field, .int, ammo_none)
-/* impulse   */ ATTRIB(Fireball, impulse, int, 9)
+/* ammotype  */ //ATTRIB(Fireball, ammo_field, .int, ammo_none);
+/* impulse   */ ATTRIB(Fireball, impulse, int, 9);
 /* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Fireball, wpcolor, vector, '1 0.5 0');
