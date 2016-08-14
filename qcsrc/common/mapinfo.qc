@@ -383,25 +383,14 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	diameter = vlen(mapMaxs - mapMins);
 
 	int twoBaseModes = 0;
-	FOREACH(Gametypes, it.m_isTwoBaseMode(), twoBaseModes |= it.m_flags); 
+	FOREACH(Gametypes, it.m_isTwoBaseMode(), twoBaseModes |= it.m_flags);
 	if(twoBaseModes && (twoBaseModes &= MapInfo_Map_supportedGametypes))
 	{
-		// we have a CTF-only or Assault-only map. Don't add other modes then,
-		// as the map is too symmetric for them.
+		// we have a symmetrical map, don't add the modes without bases
 	}
 	else
 	{
-		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH.m_flags;      // DM always works
-		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_LMS.m_flags;             // LMS always works
-		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEEPAWAY.m_flags;		// Keepaway always works
-
-		if(spawnpoints >= 8  && diameter > 4096) {
-			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH.m_flags;
-			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG.m_flags;
-			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CA.m_flags;
-		}
-		if(spawnpoints >= 12 && diameter > 5120)
-			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT.m_flags;
+		FOREACH(Gametypes, it.m_isAlwaysSupported(it, spawnpoints, diameter), MapInfo_Map_supportedGametypes |= it.m_flags);
 	}
 
 	if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE.m_flags)
