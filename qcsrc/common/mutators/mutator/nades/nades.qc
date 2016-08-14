@@ -890,7 +890,8 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	makevectors(e.v_angle);
 
-	W_SetupShot(e, false, false, SND_Null, CH_WEAPON_A, 0);
+	// NOTE: always throw from first weapon entity?
+	W_SetupShot(e, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 

@@ -71,7 +71,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	W_DecreaseAmmo(WEP_HMG, actor, WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (actor, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
@@ -86,13 +86,13 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_MachineGun_MuzzleFlash(actor);
-	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
+	W_MachineGun_MuzzleFlash(actor, weaponentity);
+	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
 
 	if (autocvar_g_casings >= 2) // casing code
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
-		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
+		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor, weaponentity);
 	}
 
 	int slot = weaponslot(weaponentity);
@@ -145,7 +145,7 @@ METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep, entity actor))
 
 METHOD(HeavyMachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, WEP_CVAR(hmg, ammo), SND_RELOAD);
+    W_Reload(actor, weaponentity, WEP_CVAR(hmg, ammo), SND_RELOAD);
 }
 
 METHOD(HeavyMachineGun, wr_suicidemessage, Notification(entity thiswep))

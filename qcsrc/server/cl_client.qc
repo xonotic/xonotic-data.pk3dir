@@ -1733,8 +1733,24 @@ void SetSpectatee(entity this, entity spectatee)
 
 	// WEAPONTODO
 	// these are required to fix the spectator bug with arc
-	if(old_spectatee && old_spectatee.arc_beam) { old_spectatee.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-	if(this.enemy && this.enemy.arc_beam) { this.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	if(old_spectatee)
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(old_spectatee.(weaponentity).arc_beam)
+				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+		}
+	}
+	if(this.enemy)
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.enemy.(weaponentity).arc_beam)
+				this.enemy.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
+		}
+	}
 
 	// needed to update spectator list
 	if(old_spectatee) { ClientData_Touch(old_spectatee); }
@@ -2362,7 +2378,13 @@ void PlayerPreThink (entity this)
 		{
 			this.items &= ~this.items_added;
 
-			W_WeaponFrame(this);
+			//for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			//{
+				//.entity weaponentity = weaponentities[slot];
+				//W_WeaponFrame(this, weaponentity);
+			//}
+			.entity weaponentity = weaponentities[0]; // TODO
+			W_WeaponFrame(this, weaponentity);
 
 			this.items_added = 0;
 			if (this.items & ITEM_Jetpack.m_itemid && (this.items & ITEM_JetpackRegen.m_itemid || this.ammo_fuel >= 0.01))

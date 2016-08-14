@@ -762,14 +762,14 @@ void W_Nexball_Touch(entity this, entity toucher)
 	delete(this);
 }
 
-void W_Nexball_Attack(entity actor, float t)
+void W_Nexball_Attack(entity actor, .entity weaponentity, float t)
 {
 	entity ball;
 	float mul, mi, ma;
 	if(!(ball = actor.ballcarried))
 		return;
 
-	W_SetupShot(actor, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
+	W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, NULL);
 	if(trace_startsolid)
 	{
@@ -800,12 +800,12 @@ void W_Nexball_Attack(entity actor, float t)
 
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
 
-void W_Nexball_Attack2(entity actor)
+void W_Nexball_Attack2(entity actor, .entity weaponentity)
 {
 	if(actor.ballcarried.enemy)
 	{
 		entity _ball = actor.ballcarried;
-		W_SetupShot(actor, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
+		W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
 		setthink(_ball, W_Nexball_Think);
 		_ball.nextthink = time;
@@ -815,7 +815,7 @@ void W_Nexball_Attack2(entity actor)
 	if(!autocvar_g_nexball_tackling)
 		return;
 
-	W_SetupShot(actor, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0);
+	W_SetupShot(actor, weaponentity, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0);
 	entity missile = new(ballstealer);
 
 	missile.owner = actor;
@@ -881,19 +881,19 @@ METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity we
             }
             else
             {
-                W_Nexball_Attack(actor, -1);
+                W_Nexball_Attack(actor, weaponentity, -1);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
             }
     if(fire & 2)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
         {
-            W_Nexball_Attack2(actor);
+            W_Nexball_Attack2(actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
         }
 
     if(!(fire & 1) && actor.metertime && actor.ballcarried)
     {
-        W_Nexball_Attack(actor, time - actor.metertime);
+        W_Nexball_Attack(actor, weaponentity, time - actor.metertime);
         // DropBall or stealing will set metertime back to 0
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
     }

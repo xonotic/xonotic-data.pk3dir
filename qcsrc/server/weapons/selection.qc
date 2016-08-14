@@ -272,8 +272,11 @@ void W_SwitchWeapon(entity this, Weapon w)
 	}
 	else if(!forbidWeaponUse(this)) {
 		entity actor = this;
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		w.wr_reload(w, actor, weaponentity);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			w.wr_reload(w, actor, weaponentity);
+		}
 	}
 }
 

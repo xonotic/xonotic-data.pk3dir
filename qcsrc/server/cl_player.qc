@@ -559,7 +559,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		excess = M_ARGV(4, float);
 
 		Weapon wep = PS(this).m_weapon;
-		wep.wr_playerdeath(wep, this);
+		/*for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			wep.wr_playerdeath(wep, this, weaponentity);
+		}*/
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		wep.wr_playerdeath(wep, this, weaponentity);
 
 		RemoveGrapplingHook(this);
 
