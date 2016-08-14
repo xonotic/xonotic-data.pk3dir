@@ -42,6 +42,7 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, gametype_description, string);
 #ifdef CSQC
     ATTRIB(Gametype, m_modicons, void(vector pos, vector mySize));
+    ATTRIB(Gametype, m_modicons_reset, void());
 #endif
 
     ATTRIB(Gametype, m_mutators, string);
@@ -205,6 +206,7 @@ REGISTER_GAMETYPE(TEAM_DEATHMATCH, NEW(TeamDeathmatch));
 
 #ifdef CSQC
 void HUD_Mod_CTF(vector pos, vector mySize);
+void HUD_Mod_CTF_Reset();
 #endif
 CLASS(CaptureTheFlag, Gametype)
     INIT(CaptureTheFlag)
@@ -222,6 +224,7 @@ CLASS(CaptureTheFlag, Gametype)
     }
 #ifdef CSQC
     ATTRIB(CaptureTheFlag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CTF);
+    ATTRIB(CaptureTheFlag, m_modicons_reset, void(), HUD_Mod_CTF_Reset);
 #endif
 ENDCLASS(CaptureTheFlag)
 REGISTER_GAMETYPE(CTF, NEW(CaptureTheFlag));

@@ -383,8 +383,8 @@ void HUD_Panel_Draw(entity panent)
 void HUD_Reset()
 {
 	// reset gametype specific icons
-	if(gametype == MAPINFO_TYPE_CTF)
-		HUD_Mod_CTF_Reset();
+	if(gametype.m_modicons_reset)
+		gametype.m_modicons_reset();
 }
 
 float autocvar_hud_dynamic_shake = 1;
