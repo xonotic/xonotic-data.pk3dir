@@ -363,6 +363,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 		// no layout can be properly set up until score_info data haven't been received
 		argc = tokenizebyseparator("0 1 ping pl name | score", " ");
 		ps_primary = SP_SCORE;
+		ps_secondary = SP_SCORE;
 		scores_label(ps_primary) = strzone("score");
 		scores_flags(ps_primary) = SFL_ALLOW_HIDE;
 	}
