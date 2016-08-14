@@ -64,13 +64,9 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 void CSQCModel_CheckUpdate(entity e)
 {
 	// some nice flags for CSQCMODEL_IF
-	float isplayer = IS_CLIENT(e);
-	float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
-	float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
-
-	unused_float = isplayer;
-	unused_float = islocalplayer;
-	unused_float = isnolocalplayer;
+	noref float isplayer = IS_CLIENT(e);
+	noref float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
+	noref float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 
 #if CSQCPLAYER_FORCE_UPDATES
 	if(isplayer && time > e.csqcmodel_nextforcedupdate)

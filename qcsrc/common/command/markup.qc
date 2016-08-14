@@ -53,7 +53,6 @@ void GenericCommand_markup_init()
 	markup_from[i] = "&.."; markup_to[i] = "\x9e"; ++i;
 	markup_from[i] = "&.)"; markup_to[i] = "\x9f"; ++i;
 	markup_from[i] = "&<|"; markup_to[i] = "\xff"; ++i;
-	unused_float = i;
 }
 
 string GenericCommand_markup(string s2)

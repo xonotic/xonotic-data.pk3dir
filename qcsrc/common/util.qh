@@ -231,9 +231,6 @@ float ReadApproxPastTime();
 void execute_next_frame();
 void queue_to_execute_next_frame(string s);
 
-// for marking written-to values as unused where it's a good idea to do this
-noref float unused_float;
-
 // a function f with:
 // f(0) = 0
 // f(1) = 1

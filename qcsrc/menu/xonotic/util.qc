@@ -693,24 +693,18 @@ float updateCompression()
 Gametype GameType_GetID(int cnt)
 {
 	int i = 0;
-
 	#define GAMETYPE(it) { if (i++ == cnt) return it; }
 	GAMETYPES
 	#undef GAMETYPE
-
-	unused_float = i;
-
 	return NULL;
 }
 
 int GameType_GetCount()
 {
 	int i = 0;
-
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-
 	return i;
 }
 
