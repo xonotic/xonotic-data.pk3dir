@@ -40,6 +40,9 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, model2, string);
     /** game type description */
     ATTRIB(Gametype, gametype_description, string);
+#ifdef CSQC
+    ATTRIB(Gametype, m_modicons, void(vector pos, vector mySize));
+#endif
 
     ATTRIB(Gametype, m_mutators, string);
     METHOD(Gametype, m_parse_mapinfo, bool(string k, string v))
@@ -106,6 +109,9 @@ CLASS(LastManStanding, Gametype)
 ENDCLASS(LastManStanding)
 REGISTER_GAMETYPE(LMS, NEW(LastManStanding));
 
+#ifdef CSQC
+void HUD_Mod_Race(vector pos, vector mySize);
+#endif
 CLASS(Race, Gametype)
     INIT(Race)
     {
@@ -133,6 +139,9 @@ CLASS(Race, Gametype)
     {
         return true;
     }
+#ifdef CSQC
+    ATTRIB(Race, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
+#endif
 ENDCLASS(Race)
 REGISTER_GAMETYPE(RACE, NEW(Race));
 #define g_race IS_GAMETYPE(RACE)
@@ -147,6 +156,9 @@ CLASS(RaceCTS, Gametype)
         if(v == "target_startTimer")
             MapInfo_Map_supportedGametypes |= this.m_flags;
     }
+#ifdef CSQC
+    ATTRIB(RaceCTS, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
+#endif
 ENDCLASS(RaceCTS)
 REGISTER_GAMETYPE(CTS, NEW(RaceCTS));
 #define g_cts IS_GAMETYPE(CTS)
@@ -173,6 +185,9 @@ ENDCLASS(TeamDeathmatch)
 REGISTER_GAMETYPE(TEAM_DEATHMATCH, NEW(TeamDeathmatch));
 #define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
 
+#ifdef CSQC
+void HUD_Mod_CTF(vector pos, vector mySize);
+#endif
 CLASS(CaptureTheFlag, Gametype)
     INIT(CaptureTheFlag)
     {
@@ -187,10 +202,16 @@ CLASS(CaptureTheFlag, Gametype)
     {
         return true;
     }
+#ifdef CSQC
+    ATTRIB(CaptureTheFlag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CTF);
+#endif
 ENDCLASS(CaptureTheFlag)
 REGISTER_GAMETYPE(CTF, NEW(CaptureTheFlag));
 #define g_ctf IS_GAMETYPE(CTF)
 
+#ifdef CSQC
+void HUD_Mod_CA(vector pos, vector mySize);
+#endif
 CLASS(ClanArena, Gametype)
     INIT(ClanArena)
     {
@@ -209,10 +230,16 @@ CLASS(ClanArena, Gametype)
         }
         return false;
     }
+#ifdef CSQC
+    ATTRIB(ClanArena, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
+#endif
 ENDCLASS(ClanArena)
 REGISTER_GAMETYPE(CA, NEW(ClanArena));
 #define g_ca IS_GAMETYPE(CA)
 
+#ifdef CSQC
+void HUD_Mod_Dom(vector pos, vector mySize);
+#endif
 CLASS(Domination, Gametype)
     INIT(Domination)
     {
@@ -236,9 +263,15 @@ CLASS(Domination, Gametype)
         if(v == "dom_controlpoint")
             MapInfo_Map_supportedGametypes |= this.m_flags;
     }
+#ifdef CSQC
+    ATTRIB(Domination, m_modicons, void(vector pos, vector mySize), HUD_Mod_Dom);
+#endif
 ENDCLASS(Domination)
 REGISTER_GAMETYPE(DOMINATION, NEW(Domination));
 
+#ifdef CSQC
+void HUD_Mod_KH(vector pos, vector mySize);
+#endif
 CLASS(KeyHunt, Gametype)
     INIT(KeyHunt)
     {
@@ -257,6 +290,15 @@ CLASS(KeyHunt, Gametype)
         }
         return false;
     }
+    METHOD(KeyHunt, m_modicons, void(vector pos, vector mySize))
+    {
+    #ifdef CSQC
+        HUD_Mod_KH(pos, mySize);
+    #endif
+    }
+#ifdef CSQC
+    ATTRIB(KeyHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_KH);
+#endif
 ENDCLASS(KeyHunt)
 REGISTER_GAMETYPE(KEYHUNT, NEW(KeyHunt));
 
@@ -291,6 +333,9 @@ CLASS(Onslaught, Gametype)
 ENDCLASS(Onslaught)
 REGISTER_GAMETYPE(ONSLAUGHT, NEW(Onslaught));
 
+#ifdef CSQC
+void HUD_Mod_NexBall(vector pos, vector mySize);
+#endif
 CLASS(NexBall, Gametype)
     INIT(NexBall)
     {
@@ -305,6 +350,9 @@ CLASS(NexBall, Gametype)
     {
         return true;
     }
+#ifdef CSQC
+    ATTRIB(NexBall, m_modicons, void(vector pos, vector mySize), HUD_Mod_NexBall);
+#endif
 ENDCLASS(NexBall)
 REGISTER_GAMETYPE(NEXBALL, NEW(NexBall));
 #define g_nexball IS_GAMETYPE(NEXBALL)
@@ -327,15 +375,24 @@ CLASS(FreezeTag, Gametype)
         }
         return false;
     }
+#ifdef CSQC
+    ATTRIB(FreezeTag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
+#endif
 ENDCLASS(FreezeTag)
 REGISTER_GAMETYPE(FREEZETAG, NEW(FreezeTag));
 #define g_freezetag IS_GAMETYPE(FREEZETAG)
 
+#ifdef CSQC
+void HUD_Mod_Keepaway(vector pos, vector mySize);
+#endif
 CLASS(Keepaway, Gametype)
     INIT(Keepaway)
     {
         this.gametype_init(this, _("Keepaway"),"ka","g_keepaway",true,"","timelimit=20 pointlimit=30",_("Hold the ball to get points for kills"));
     }
+#ifdef CSQC
+    ATTRIB(Keepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_Keepaway);
+#endif
 ENDCLASS(Keepaway)
 REGISTER_GAMETYPE(KEEPAWAY, NEW(Keepaway));
 
