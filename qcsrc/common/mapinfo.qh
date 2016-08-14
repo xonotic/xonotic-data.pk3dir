@@ -169,6 +169,13 @@ CLASS(RaceCTS, Gametype)
         if(v == "target_startTimer")
             MapInfo_Map_supportedGametypes |= this.m_flags;
     }
+    METHOD(RaceCTS, m_setTeams, void(string sa))
+    {
+        // this is the skill of the map
+        // not parsed by anything yet
+        // for map databases
+        //  cvar_set("fraglimit", sa);
+    }
 #ifdef CSQC
     ATTRIB(RaceCTS, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
 #endif
@@ -200,6 +207,10 @@ CLASS(TeamDeathmatch, Gametype)
             return true;
         return false;
     }
+    METHOD(TeamDeathmatch, m_setTeams, void(string sa))
+    {
+        cvar_set("g_tdm_teams", sa);
+    }
 ENDCLASS(TeamDeathmatch)
 REGISTER_GAMETYPE(TEAM_DEATHMATCH, NEW(TeamDeathmatch));
 #define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
@@ -221,6 +232,10 @@ CLASS(CaptureTheFlag, Gametype)
     METHOD(CaptureTheFlag, m_isTwoBaseMode, bool())
     {
         return true;
+    }
+    METHOD(CaptureTheFlag, m_setTeams, void(string sa))
+    {
+        cvar_set("fraglimit", sa);
     }
 #ifdef CSQC
     ATTRIB(CaptureTheFlag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CTF);
@@ -256,6 +271,10 @@ CLASS(ClanArena, Gametype)
         if(spawnpoints >= 8 && diameter > 4096)
             return true;
         return false;
+    }
+    METHOD(ClanArena, m_setTeams, void(string sa))
+    {
+        cvar_set("g_ca_teams", sa);
     }
 #ifdef CSQC
     ATTRIB(ClanArena, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
@@ -322,6 +341,10 @@ CLASS(KeyHunt, Gametype)
         if(spawnpoints >= 12 && diameter > 5120)
             return true;
         return false;
+    }
+    METHOD(KeyHunt, m_setTeams, void(string sa))
+    {
+        cvar_set("g_keyhunt_teams", sa);
     }
 #ifdef CSQC
     ATTRIB(KeyHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_KH);
@@ -407,6 +430,10 @@ CLASS(FreezeTag, Gametype)
         if(spawnpoints >= 8 && diameter > 4096)
             return true;
         return false;
+    }
+    METHOD(FreezeTag, m_setTeams, void(string sa))
+    {
+        cvar_set("g_freezetag_teams", sa);
     }
 #ifdef CSQC
     ATTRIB(FreezeTag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);

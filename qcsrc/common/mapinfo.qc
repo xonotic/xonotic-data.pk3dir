@@ -476,55 +476,13 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 		cvar_set("timelimit", sa);
 	s = cdr(s);
 
-	if(pWantedType == MAPINFO_TYPE_TEAM_DEATHMATCH)
+	if(pWantedType.m_setTeams)
 	{
 		sa = car(s);
 		if(sa != "")
-			cvar_set("g_tdm_teams", sa);
+			pWantedType.m_setTeams(sa);
 		s = cdr(s);
 	}
-
-	if(pWantedType == MAPINFO_TYPE_KEYHUNT)
-	{
-		sa = car(s);
-		if(sa != "")
-			cvar_set("g_keyhunt_teams", sa);
-		s = cdr(s);
-	}
-
-	if(pWantedType == MAPINFO_TYPE_CA)
-	{
-		sa = car(s);
-		if(sa != "")
-			cvar_set("g_ca_teams", sa);
-		s = cdr(s);
-	}
-
-	if(pWantedType == MAPINFO_TYPE_FREEZETAG)
-	{
-		sa = car(s);
-		if(sa != "")
-			cvar_set("g_freezetag_teams", sa);
-		s = cdr(s);
-	}
-
-	if(pWantedType == MAPINFO_TYPE_CTF)
-	{
-		sa = car(s);
-		if(sa != "")
-			cvar_set("fraglimit", sa);
-		s = cdr(s);
-	}
-
-	/* keepaway wuz here
-	if(pWantedType == MAPINFO_TYPE_KEEPAWAY)
-	{
-		sa = car(s);
-		if(sa != "")
-			cvar_set("fraglimit", sa);
-		s = cdr(s);
-	}
-	*/
 
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
@@ -543,19 +501,6 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 		if(sa != "")
 			if(cvar("g_race_teams") >= 2)
 				cvar_set("fraglimit", sa);
-		s = cdr(s);
-	}
-
-	if(pWantedType == MAPINFO_TYPE_CTS)
-	{
-		sa = car(s);
-
-		// this is the skill of the map
-		// not parsed by anything yet
-		// for map databases
-		//if(sa != "")
-		//	cvar_set("fraglimit", sa);
-
 		s = cdr(s);
 	}
 
