@@ -4,8 +4,8 @@
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
+#include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
-#include "scoreboard.qh"
 #include "shownames.qh"
 #include <common/t_items.qh>
 #include "wall.qh"
@@ -132,11 +132,11 @@ void CSQC_Init()
 
 	gametype = NULL;
 
-	// hud_fields uses strunzone on the titles!
-	for(int i = 0; i < MAX_HUD_FIELDS; ++i)
-		hud_title[i] = strzone("(null)");
+	// sbt_fields uses strunzone on the titles!
+	for(int i = 0; i < MAX_SBT_FIELDS; ++i)
+		sbt_field_title[i] = strzone("(null)");
 
-	Cmd_HUD_SetFields(0);
+	Cmd_Scoreboard_SetFields(0);
 
 	postinit = false;
 
@@ -322,9 +322,9 @@ void Playerchecker_Think(entity this)
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
 				int t = entcs_GetScoreTeam(i);
-				if (t) SetTeam(e, t); // will not hurt; later updates come with HUD_UpdatePlayerTeams
+				if (t) SetTeam(e, t); // will not hurt; later updates come with Scoreboard_UpdatePlayerTeams
 				RegisterPlayer(e);
-				HUD_UpdatePlayerPos(e);
+				Scoreboard_UpdatePlayerPos(e);
 			}
 		}
 	}
@@ -442,7 +442,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	return = true;
 
 	if(o.sort_prev)
-		HUD_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
+		Scoreboard_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
 
 	this.entremove = Ent_RemovePlayerScore;
 }
@@ -476,7 +476,7 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 
 	return = true;
 
-	HUD_UpdateTeamPos(o);
+	Scoreboard_UpdateTeamPos(o);
 }
 
 NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
@@ -963,7 +963,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 		teamscores_flags(i) = ReadByte();
 	}
 	return = true;
-	HUD_InitScores();
+	Scoreboard_InitScores();
 	Gamemode_Init();
 }
 

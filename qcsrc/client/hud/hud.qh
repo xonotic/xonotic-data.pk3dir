@@ -235,6 +235,7 @@ REGISTER_HUD_PANEL(MINIGAME_MENU,   HUD_MinigameMenu,   minigamemenu,   PANEL_CO
 REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       mapvote,        PANEL_CONFIG_NO  , PANEL_SHOW_MAPVOTE )
 REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      itemstime,      PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
 REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CONFIG_NO  , PANEL_SHOW_ALWAYS  )
 // always add new panels to the end of list
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
@@ -274,12 +275,12 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
 #define HUD_Panel_GetColor() MACRO_BEGIN {                                                                          \
-	if ((teamplay) && panel_bg_color_team) {                                                                        \
+	if ((teamplay) && panel_bg_color_team > 0) {                                                                        \
 		if (autocvar__hud_configure && myteam == NUM_SPECTATOR)                                                     \
 			panel_bg_color = '1 0 0' * panel_bg_color_team;                                                         \
 		else                                                                                                        \
 			panel_bg_color = myteamcolors * panel_bg_color_team;                                                    \
-	} else if (autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && panel_bg_color_team) {          \
+	} else if (autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && panel_bg_color_team > 0) {          \
 		panel_bg_color = '1 0 0' * panel_bg_color_team;                                                             \
 	} else {                                                                                                        \
 		if (panel_bg_color_str == "") {                                                                             \
@@ -386,11 +387,11 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 		panel_bg_padding_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_padding"));                  \
 		HUD_Panel_GetBg();                                                                                          \
 		if (panel.current_panel_bg != "0") {                                                                        \
-			HUD_Panel_GetColorTeam();                                                                               \
-			HUD_Panel_GetColor();                                                                                   \
 			HUD_Panel_GetBgAlpha();                                                                                 \
 			HUD_Panel_GetBorder();                                                                                  \
 		}                                                                                                           \
+		HUD_Panel_GetColorTeam();                                                                               \
+		HUD_Panel_GetColor();                                                                                   \
 		HUD_Panel_GetFgAlpha();                                                                                     \
 		HUD_Panel_GetPadding();                                                                                     \
 		panel.current_panel_bg_alpha = panel_bg_alpha;                                                              \

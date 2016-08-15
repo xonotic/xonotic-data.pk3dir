@@ -3,8 +3,8 @@
 #include "announcer.qh"
 #include "hud/all.qh"
 #include "mapvoting.qh"
-#include "scoreboard.qh"
 #include "shownames.qh"
+#include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 
 #include "mutators/events.qh"
@@ -710,7 +710,7 @@ float TrueAimCheck()
 
 void PostInit();
 void CSQC_Demo_Camera();
-float HUD_WouldDrawScoreboard();
+float Scoreboard_WouldDraw();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
@@ -1350,7 +1350,6 @@ void HUD_Draw(entity this)
 				Accuracy_LoadLevels();
 
 			HUD_Main();
-			HUD_DrawScoreboard();
 			HUD_Scale_Disable();
 		}
 
@@ -1773,7 +1772,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(f != teamplay)
 	{
 		teamplay = f;
-		HUD_InitScores();
+		Scoreboard_InitScores();
 	}
 
 	if(last_switchweapon != switchweapon)
@@ -2202,7 +2201,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Draw_ShowNames_All();
 	Debug_Draw();
 
-	scoreboard_active = HUD_WouldDrawScoreboard();
+	scoreboard_active = Scoreboard_WouldDraw();
 
 	HUD_Draw(this); // this parameter for deep vehicle function
 

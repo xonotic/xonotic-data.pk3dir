@@ -19,3 +19,4 @@
 // #include "panel/mapvote.qc"
 // #include "panel/itemstime.qc"
 #include "panel/quickmenu.qc"
+#include "panel/scoreboard.qc"

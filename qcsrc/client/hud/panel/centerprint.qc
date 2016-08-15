@@ -1,6 +1,6 @@
 #include "centerprint.qh"
 
-#include <client/scoreboard.qh>
+#include "scoreboard.qh"
 
 // CenterPrint (#16)
 
@@ -154,13 +154,14 @@ void HUD_CenterPrint ()
 	}
 
 	// this panel fades only when the menu does
-	float hud_fade_alpha_save = 0;
-	if(scoreboard_fade_alpha)
-	{
-		hud_fade_alpha_save = hud_fade_alpha;
+	float hud_fade_alpha_save = hud_fade_alpha;
+	if(menu_enabled == 1)
+		hud_fade_alpha = 1;
+	else
 		hud_fade_alpha = 1 - autocvar__menu_alpha;
-	}
+
 	HUD_Panel_UpdateCvars();
+	hud_fade_alpha = hud_fade_alpha_save;
 
 	if ( HUD_Radar_Clickable() )
 	{
@@ -170,17 +171,13 @@ void HUD_CenterPrint ()
 		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
 		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
 	}
-	else if(scoreboard_fade_alpha)
+	else if(!autocvar__hud_configure && scoreboard_fade_alpha)
 	{
-		hud_fade_alpha = hud_fade_alpha_save;
-
 		// move the panel below the scoreboard
 		if (scoreboard_bottom >= 0.96 * vid_conheight)
 			return;
 		vector target_pos;
-
 		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size.x);
-
 		if(target_pos.y > panel_pos.y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);

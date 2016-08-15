@@ -1,6 +1,7 @@
 #include "hud_config.qh"
 
 #include "hud.qh"
+#include "panel/scoreboard.qh"
 
 #define HUD_Write(s) fputs(fh, s)
 #define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
@@ -206,6 +207,21 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_QUICKMENU:
 					HUD_Write_PanelCvar("_align");
+					break;
+				case HUD_PANEL_SCOREBOARD:
+					HUD_Write_PanelCvar("_fadeinspeed");
+					HUD_Write_PanelCvar("_fadeoutspeed");
+					HUD_Write_PanelCvar("_respawntime_decimals");
+					HUD_Write_PanelCvar("_table_bg_alpha");
+					HUD_Write_PanelCvar("_table_bg_scale");
+					HUD_Write_PanelCvar("_table_fg_alpha");
+					HUD_Write_PanelCvar("_table_fg_alpha_self");
+					HUD_Write_PanelCvar("_table_highlight");
+					HUD_Write_PanelCvar("_table_highlight_alpha");
+					HUD_Write_PanelCvar("_table_highlight_alpha_self");
+					HUD_Write_PanelCvar("_bg_teams_color_team");
+					HUD_Write_PanelCvar("_accuracy_doublerows");
+					HUD_Write_PanelCvar("_accuracy_nocolors");
 					break;
 			}
 			HUD_Write("\n");
@@ -1229,7 +1245,7 @@ void HUD_Configure_Frame()
 	int i;
 	if(autocvar__hud_configure)
 	{
-		if(isdemo() || intermission == 2)
+		if(isdemo() || intermission == 2 || scoreboard_active)
 		{
 			HUD_Configure_Exit_Force();
 			return;
