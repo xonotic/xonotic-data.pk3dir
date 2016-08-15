@@ -1516,7 +1516,7 @@ void Scoreboard_Draw()
 				(autocvar_hud_panel_scoreboard_respawntime_decimals ?
 					count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
 					:
-					count_seconds(respawn_time - time)
+					count_seconds(ceil(respawn_time - time))
 				)
 			);
 		}
@@ -1526,7 +1526,7 @@ void Scoreboard_Draw()
 				(autocvar_hud_panel_scoreboard_respawntime_decimals ?
 					count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
 					:
-					count_seconds(respawn_time - time)
+					count_seconds(ceil(respawn_time - time))
 				)
 			);
 		}
