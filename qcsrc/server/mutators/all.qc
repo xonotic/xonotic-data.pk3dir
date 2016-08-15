@@ -10,10 +10,7 @@
     #include <common/stats.qh>
     #include <common/teams.qh>
     #include <common/util.qh>
-    #include <common/command/markup.qh>
-    #include <common/command/rpn.qh>
-    #include <common/command/generic.qh>
-    #include <common/command/command.qh>
+    #include <common/command/_all.qh>
     #include <common/net_notice.qh>
     #include <common/animdecide.qh>
     #include <common/monsters/all.qh>

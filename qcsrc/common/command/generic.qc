@@ -1,4 +1,5 @@
-#include "all.qh"
+#include "_all.qh"
+#include "reg.qh"
 
 #include "markup.qh"
 #include "rpn.qh"
@@ -14,10 +15,7 @@
 #endif
 
 #ifdef SVQC
-	#include <server/command/banning.qh>
-	#include <server/command/cmd.qh>
-	#include <server/command/common.qh>
-	#include <server/command/sv_cmd.qh>
+	#include <server/command/_all.qh>
 	#include <common/turrets/config.qh>
 	#include <common/weapons/config.qh>
 #endif

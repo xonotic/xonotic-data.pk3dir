@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/command/all.qh>
+#include <common/command/_all.qh>
 #include "config.qh"
 
 #include "turret.qh"
@@ -73,4 +73,4 @@ const int TUR_FIRST = 1;
 
 REGISTER_TURRET(Null, NEW(Turret));
 
-#include "turret/_mod.inc"
+#include "turret/_all.inc"

@@ -16,4 +16,4 @@ const int MON_FIRST = 1;
 REGISTER_MONSTER(Null, NEW(Monster));
 
 
-#include "monster/_mod.inc"
+#include "monster/_all.inc"

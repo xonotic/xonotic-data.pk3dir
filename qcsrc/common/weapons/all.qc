@@ -39,7 +39,7 @@
     #include "../deathtypes/all.qh"
     #include <server/mutators/all.qh>
     #include "../mapinfo.qh"
-    #include <server/command/common.qh>
+    #include <server/command/_all.qh>
     #include <lib/csqcmodel/sv_model.qh>
     #include <server/portals.qh>
     #include <server/g_hook.qh>

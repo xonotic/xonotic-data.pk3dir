@@ -11,7 +11,6 @@ declare -a QCCDEFS=(
     -DNDEBUG=1
     -DXONOTIC=1
     -DWATERMARK="\"$(git describe --tags --dirty='~')\""
-    -DDEBUGPATHING=0
 )
 QCCDEFS="${QCCDEFS[@]}"
 

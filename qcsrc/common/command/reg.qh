@@ -17,7 +17,3 @@ REGISTRY_SORT(GENERIC_COMMANDS)
 STATIC_INIT(GENERIC_COMMANDS_aliases) {
 	FOREACH(GENERIC_COMMANDS, true, localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svmenu")));
 }
-
-#include "generic.qh"
-#include "markup.qh"
-#include "rpn.qh"

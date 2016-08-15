@@ -15,7 +15,7 @@ string M_Model(string m_mdl)
 #include "all.qh"
 
 #define IMPLEMENTATION
-#include "monster/_mod.inc"
+#include "monster/_all.inc"
 #undef IMPLEMENTATION
 
 #ifdef SVQC

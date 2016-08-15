@@ -2,7 +2,7 @@
 
 #include "autocvars.qh"
 #include "cl_client.qh"
-#include "command/all.qh"
+#include "command/_all.qh"
 #include "weapons/common.qh"
 #include "weapons/selection.qh"
 #include <common/items/item.qh>

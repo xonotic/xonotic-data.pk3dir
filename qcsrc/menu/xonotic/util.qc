@@ -7,7 +7,7 @@
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/util.qh>
-#include <common/command/generic.qh>
+#include <common/command/_all.qh>
 
 float GL_CheckExtension(string ext)
 {

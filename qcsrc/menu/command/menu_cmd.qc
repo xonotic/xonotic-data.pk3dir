@@ -5,7 +5,7 @@
 
 #include "../mutators/events.qh"
 
-#include <common/command/generic.qh>
+#include <common/command/_all.qh>
 
 .entity firstChild, nextSibling;
 

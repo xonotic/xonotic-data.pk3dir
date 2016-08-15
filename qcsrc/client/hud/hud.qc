@@ -1,5 +1,7 @@
 #include "hud.qh"
 
+#include "panel/scoreboard.qh"
+
 #include "hud_config.qh"
 #include "../mapvoting.qh"
 #include "../teamradar.qh"
@@ -334,8 +336,6 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertica
 	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
-#include "all.inc"
-
 /*
 ==================
 Main HUD system
@@ -356,6 +356,8 @@ void HUD_Vehicle()
 		info.vr_hud(info);
 	}
 }
+
+bool HUD_Minigame_Showpanels();
 
 bool HUD_Panel_CheckFlags(int showflags)
 {
@@ -413,6 +415,7 @@ bool Hud_Shake_Update()
 	return true;
 }
 
+entity CSQCModel_server2csqc(int i);
 void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {

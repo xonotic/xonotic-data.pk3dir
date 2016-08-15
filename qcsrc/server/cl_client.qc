@@ -2489,6 +2489,8 @@ void DrownPlayer(entity this)
 	}
 }
 
+.bool move_qcphysics;
+
 void Player_Physics(entity this)
 {
 	set_movetype(this, ((this.move_qcphysics) ? MOVETYPE_NONE : this.move_movetype));

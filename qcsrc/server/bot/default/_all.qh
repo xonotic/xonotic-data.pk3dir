@@ -1,0 +1,4 @@
+#pragma once
+#include "_mod.qh"
+
+#include "havocbot/_all.qh"

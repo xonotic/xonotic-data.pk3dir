@@ -39,11 +39,11 @@ float autocvar_net_connecttimeout = 30;
 #include "t_items.qc"
 #endif
 
-#include "items/_mod.inc"
+#include "items/_all.inc"
     #include "weapons/all.qc"
         #include "monsters/all.qc"
         #include "turrets/all.qc"
         #include "vehicles/all.qc"
 
-#include "mutators/_mod.inc"
-    #include "gamemodes/_mod.inc"
+#include "mutators/_all.inc"
+    #include "gamemodes/_all.inc"

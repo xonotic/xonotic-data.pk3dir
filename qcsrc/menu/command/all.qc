@@ -1,3 +1,3 @@
 #include "all.qh"
 
-#include <common/command/all.qc>
+#include <common/command/_all.inc>

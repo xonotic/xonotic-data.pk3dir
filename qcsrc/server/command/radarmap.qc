@@ -1,5 +1,5 @@
 #include "radarmap.qh"
-#include <common/command/command.qh>
+#include <common/command/_all.qh>
 #include "radarmap.qh"
 
 #include "../g_world.qh"

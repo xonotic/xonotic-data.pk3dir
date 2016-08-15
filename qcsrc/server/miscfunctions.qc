@@ -9,7 +9,7 @@
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
-#include "../common/command/generic.qh"
+#include "../common/command/_all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"

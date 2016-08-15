@@ -1,6 +1,4 @@
-#ifndef DEBUGPATHING
-	#define DEBUGPATHING 0
-#endif
+#include "pathlib.qh"
 
 #include "costs.qc"
 #include "expandnode.qc"

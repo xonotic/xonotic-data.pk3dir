@@ -1,7 +1,7 @@
 #include "view.qh"
 
 #include "announcer.qh"
-#include "hud/all.qh"
+#include "hud/_all.qh"
 #include "mapvoting.qh"
 #include "shownames.qh"
 #include "hud/panel/scoreboard.qh"

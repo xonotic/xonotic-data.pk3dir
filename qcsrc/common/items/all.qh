@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/command/all.qh>
+#include <common/command/_all.qh>
 
 #include "item.qh"
 

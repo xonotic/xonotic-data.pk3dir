@@ -18,8 +18,7 @@
 	#include "../turrets/util.qh"
     #include "../vehicles/all.qh"
     #include <server/campaign.qh>
-    #include <server/command/common.qh>
-    #include <server/command/cmd.qh>
+    #include <server/command/_all.qh>
 	#include "../triggers/triggers.qh"
     #include <lib/csqcmodel/sv_model.qh>
     #include <server/round_handler.qh>

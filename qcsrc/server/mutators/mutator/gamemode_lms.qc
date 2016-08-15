@@ -43,7 +43,7 @@ float LMS_NewPlayerLives();
 
 #include <common/mutators/mutator/instagib/items.qc>
 #include <server/campaign.qh>
-#include <server/command/cmd.qh>
+#include <server/command/_all.qh>
 
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;

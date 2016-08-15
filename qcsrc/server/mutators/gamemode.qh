@@ -13,11 +13,9 @@
 
 #include <server/bot/api.qh>
 
-#include <server/command/vote.qh>
+#include <server/command/_all.qh>
 
 #include <common/monsters/all.qh>
-
-#include <server/command/common.qh>
 
 #include <server/weapons/tracing.qh>
 #include <server/weapons/weaponsystem.qh>

@@ -1,5 +1,5 @@
 #include "sv_cmd.qh"
-#include "all.qh"
+#include "_all.qh"
 
 #include "banning.qh"
 #include "cmd.qh"

@@ -1,7 +1,7 @@
 #include "main.qh"
 
 #include <common/effects/qc/all.qh>
-#include "hud/all.qh"
+#include "hud/_all.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
 #include "hud/panel/scoreboard.qh"
