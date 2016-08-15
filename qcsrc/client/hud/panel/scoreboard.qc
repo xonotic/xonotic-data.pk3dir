@@ -1510,15 +1510,17 @@ void Scoreboard_Draw()
 		{
 			// a negative number means we are awaiting respawn, time value is still the same
 			respawn_time *= -1; // remove mark now that we checked it
-			respawn_time = max(time, respawn_time); // don't show a negative value while the server is respawning the player (lag)
 
-			str = sprintf(_("^1Respawning in ^3%s^1..."),
-				(autocvar_hud_panel_scoreboard_respawntime_decimals ?
-					count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
-					:
-					count_seconds(ceil(respawn_time - time))
-				)
-			);
+			if(respawn_time < time) // it happens for a few frames when server is respawning the player
+				str = ""; // draw an empty string to not change suddenly scoreboard_bottom
+			else
+				str = sprintf(_("^1Respawning in ^3%s^1..."),
+					(autocvar_hud_panel_scoreboard_respawntime_decimals ?
+						count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
+						:
+						count_seconds(ceil(respawn_time - time))
+					)
+				);
 		}
 		else if(time < respawn_time)
 		{
