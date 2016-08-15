@@ -1287,7 +1287,7 @@ void Scoreboard_Draw()
 	{
 		// frametime checks allow to toggle the scoreboard even when the game is paused
 		if(scoreboard_active) {
-			if(menu_enabled == 1)
+			if(hud_configure_menu_open == 1)
 				scoreboard_fade_alpha = 1;
 			float scoreboard_fadeinspeed = autocvar_hud_panel_scoreboard_fadeinspeed;
 			if (scoreboard_fadeinspeed && frametime)
@@ -1315,7 +1315,7 @@ void Scoreboard_Draw()
 		HUD_Scale_Disable();
 
 	float hud_fade_alpha_save = hud_fade_alpha;
-	if(menu_enabled == 1)
+	if(hud_configure_menu_open == 1)
 		hud_fade_alpha = 1;
 	else
 		hud_fade_alpha = scoreboard_fade_alpha * (1 - autocvar__menu_alpha);

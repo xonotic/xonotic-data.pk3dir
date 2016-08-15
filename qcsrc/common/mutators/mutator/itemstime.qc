@@ -330,7 +330,7 @@ void HUD_ItemsTime()
     if (autocvar_hud_panel_itemstime_dynamicsize)
     {
         if (autocvar__hud_configure)
-        if (menu_enabled != 2)
+        if (hud_configure_menu_open != 2)
             HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
 
         // reduce panel to avoid spacing items

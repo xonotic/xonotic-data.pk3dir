@@ -98,17 +98,10 @@ float weaponprevtime;
 
 float teamnagger;
 
-float hud_configure_checkcollisions;
-float hud_configure_prev;
-vector hud_configure_gridSize;
-vector hud_configure_realGridSize;
-
 int hudShiftState;
 const int S_SHIFT = 1;
 const int S_CTRL = 2;
 const int S_ALT = 4;
-
-float menu_enabled; // 1 showing the entire HUD, 2 showing only the clicked panel
 
 float hud_fade_alpha;
 
@@ -316,7 +309,7 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 	if (autocvar__hud_configure) {                                                                                  \
 		if (!panel_enabled)                                                                                         \
 			panel_bg_alpha = 0.25;                                                                                  \
-		else if (menu_enabled == 2 && panel == highlightedPanel)                                                    \
+		else if (hud_configure_menu_open == 2 && panel == highlightedPanel)                                                    \
 			panel_bg_alpha = (1 - autocvar__menu_alpha) * max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha) + autocvar__menu_alpha * panel_bg_alpha;\
 		else                                                                                                        \
 			panel_bg_alpha = max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha);                                \
@@ -354,16 +347,16 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 // return smoothly faded pos and size of given panel when a dialog is active
 // don't center too wide panels, it doesn't work with different resolutions
 #define HUD_Panel_UpdatePosSize_ForMenu() MACRO_BEGIN { \
-	vector menu_enable_size = panel_size; \
+	vector new_size = panel_size; \
 	float max_panel_width = 0.52 * vid_conwidth; \
 	if(panel_size.x > max_panel_width) \
 	{ \
-		menu_enable_size.x = max_panel_width; \
-		menu_enable_size.y = panel_size.y * (menu_enable_size.x / panel_size.x); \
+		new_size.x = max_panel_width; \
+		new_size.y = panel_size.y * (new_size.x / panel_size.x); \
 	} \
-	vector menu_enable_pos = eX * (panel_bg_border + 0.5 * max_panel_width) + eY * 0.5 * vid_conheight - 0.5 * menu_enable_size; \
-	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos; \
-	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size; \
+	vector new_pos = eX * (panel_bg_border + 0.5 * max_panel_width) + eY * 0.5 * vid_conheight - 0.5 * new_size; \
+	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * new_pos; \
+	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * new_size; \
 } MACRO_END
 
 // Scale the pos and size vectors to absolute coordinates
@@ -396,7 +389,7 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 		HUD_Panel_GetPadding();                                                                                     \
 		panel.current_panel_bg_alpha = panel_bg_alpha;                                                              \
 		panel.current_panel_fg_alpha = panel_fg_alpha;                                                              \
-		if (menu_enabled == 2 && panel == highlightedPanel) {                                                       \
+		if (hud_configure_menu_open == 2 && panel == highlightedPanel) {                                                       \
 			HUD_Panel_UpdatePosSize_ForMenu();                                                                      \
 		} else {                                                                                                    \
 			panel_bg_alpha *= hud_fade_alpha;                                                                       \
@@ -426,7 +419,7 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 	panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos")));                                  \
 	panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size")));                                \
 	HUD_Panel_ScalePosSize();                                                                                       \
-	if (menu_enabled == 2 && panel == highlightedPanel) {                                                           \
+	if (hud_configure_menu_open == 2 && panel == highlightedPanel) {                                                           \
 		HUD_Panel_UpdatePosSize_ForMenu();                                                                          \
 	}                                                                                                               \
 	panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border"));                        \

@@ -155,7 +155,7 @@ void HUD_CenterPrint ()
 
 	// this panel fades only when the menu does
 	float hud_fade_alpha_save = hud_fade_alpha;
-	if(menu_enabled == 1)
+	if(hud_configure_menu_open == 1)
 		hud_fade_alpha = 1;
 	else
 		hud_fade_alpha = 1 - autocvar__menu_alpha;

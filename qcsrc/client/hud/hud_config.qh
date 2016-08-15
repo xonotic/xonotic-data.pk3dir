@@ -8,6 +8,12 @@ int prevMouseClicked; // previous state
 float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
 vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
 
+float hud_configure_prev;
+float hud_configure_checkcollisions;
+vector hud_configure_gridSize;
+vector hud_configure_realGridSize;
+float hud_configure_menu_open; // 1 showing the entire HUD, 2 showing only the clicked panel
+
 void HUD_Panel_ExportCfg(string cfgname);
 
 void HUD_Panel_Mouse();
