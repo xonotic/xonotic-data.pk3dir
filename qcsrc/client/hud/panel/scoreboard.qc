@@ -1370,7 +1370,7 @@ void Scoreboard_Draw()
 		{
 			if(tm.team == NUM_SPECTATOR)
 				continue;
-			if(!tm.team && teamplay)
+			if(!tm.team)
 				continue;
 
 			draw_beginBoldFont();
@@ -1399,8 +1399,6 @@ void Scoreboard_Draw()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
-				continue;
-			if(!tm.team && teamplay)
 				continue;
 
 			pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
