@@ -478,6 +478,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 		// fraction_used_of_what_is_left = dist_taken / maxdist
 		// solid_penetration_left = solid_penetration_left - solid_penetration_left * fraction_used_of_what_is_left
 		solid_penetration_left *= 1 - dist_taken / maxdist;
+		solid_penetration_left = max(solid_penetration_left, 0);
 
 		// Only show effect when going through a player (invisible otherwise)
 		if (hit && (hit.solid != SOLID_BSP))
