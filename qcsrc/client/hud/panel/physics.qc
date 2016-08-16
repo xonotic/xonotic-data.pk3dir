@@ -1,10 +1,11 @@
 #include "physics.qh"
 
+#include "scoreboard.qh"
 #include <client/main.qh>
 #include <common/mapinfo.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
-// Physics panel (#15)
+// Physics (#15)
 
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;

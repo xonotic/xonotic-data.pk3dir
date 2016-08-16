@@ -1,4 +1,7 @@
 #include "timer.qh"
+
+// Timer (#5)
+
 void HUD_Timer()
 {
 	if(!autocvar__hud_configure)

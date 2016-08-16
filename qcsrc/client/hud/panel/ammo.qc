@@ -1,5 +1,6 @@
 #include "ammo.qh"
 
+#include "scoreboard.qh"
 #include <common/t_items.qh>
 
 // Ammo (#1)

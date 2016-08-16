@@ -1,5 +1,6 @@
 #include "engineinfo.qh"
-// Engine info panel (#13)
+
+// Engine info (#13)
 
 float prevfps;
 float prevfps_time;

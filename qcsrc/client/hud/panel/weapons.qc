@@ -1,5 +1,8 @@
 #include "weapons.qh"
-// Weapon icons (#0)
+
+#include "scoreboard.qh"
+
+// Weapons (#0)
 
 entity weaponorder[Weapons_MAX];
 void weaponorder_swap(int i, int j, entity pass)

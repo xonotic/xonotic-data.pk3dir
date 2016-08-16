@@ -8,6 +8,8 @@
 #include <common/stats.qh>
 #include <common/teams.qh>
 
+// Scoreboard (#24)
+
 float sbt_bg_alpha;
 float sbt_fg_alpha;
 float sbt_fg_alpha_self;

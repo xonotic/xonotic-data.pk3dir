@@ -2,7 +2,8 @@
 
 #include <common/mapinfo.qh>
 
-/** Vote window (#9) */
+// Vote (#9)
+
 void HUD_Vote()
 {
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))

@@ -1,5 +1,6 @@
 #include "powerups.qh"
 
+#include "scoreboard.qh"
 #include <common/items/all.qc>
 
 // Powerups (#2)

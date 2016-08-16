@@ -1,5 +1,9 @@
 #include "pressedkeys.qh"
-/** Draw pressed keys (#11) */
+
+#include "scoreboard.qh"
+
+// Pressed keys (#11)
+
 void HUD_PressedKeys()
 {
 	if(!autocvar__hud_configure)

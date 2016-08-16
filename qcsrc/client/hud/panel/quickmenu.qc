@@ -1,9 +1,11 @@
 #include "quickmenu.qh"
-// QuickMenu (#23)
 
+#include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <client/hud/all.qh>
 #include <client/mapvoting.qh>
+
+// QuickMenu (#23)
 
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;

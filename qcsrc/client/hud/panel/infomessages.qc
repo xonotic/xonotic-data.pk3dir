@@ -1,9 +1,10 @@
 #include "infomessages.qh"
 
+#include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 
-// Info messages panel (#14)
+// Info messages (#14)
 
 float autocvar_hud_panel_infomessages_group0 = 1;
 float autocvar_hud_panel_infomessages_group_fadetime = 0.4;

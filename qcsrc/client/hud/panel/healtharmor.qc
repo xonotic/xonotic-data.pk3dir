@@ -1,8 +1,10 @@
 #include "healtharmor.qh"
 
+#include "scoreboard.qh"
 #include <common/deathtypes/all.qh>
 
-/** Health/armor (#3) */
+// Health/armor (#3)
+
 void HUD_HealthArmor()
 {
 	int armor, health, fuel;
