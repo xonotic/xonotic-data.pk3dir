@@ -614,6 +614,7 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(CHAT));
 	if(hud_panel_quickmenu)
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
+	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 
 	if (scoreboard_active || intermission == 2)
 		HUD_Reset();

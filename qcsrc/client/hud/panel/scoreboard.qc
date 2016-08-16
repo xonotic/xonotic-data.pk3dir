@@ -1286,6 +1286,8 @@ void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
 	{
+		if(!hud_draw_maximized) return;
+
 		// frametime checks allow to toggle the scoreboard even when the game is paused
 		if(scoreboard_active) {
 			if(hud_configure_menu_open == 1)
