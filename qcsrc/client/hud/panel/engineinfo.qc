@@ -19,7 +19,7 @@ void HUD_EngineInfo()
 		if(!autocvar_hud_panel_engineinfo) return;
 	}
 
-	HUD_Panel_UpdateCvars(1);
+	HUD_Panel_LoadCvars(1);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;

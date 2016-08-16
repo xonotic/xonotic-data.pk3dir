@@ -771,7 +771,7 @@ void HUD_ModIcons()
 
 	//if(mod_alpha <= 0)
 	//	return;
-	HUD_Panel_UpdateCvars(mod_alpha);
+	HUD_Panel_LoadCvars(mod_alpha);
 
 	draw_beginBoldFont();
 

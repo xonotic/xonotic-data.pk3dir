@@ -9,7 +9,7 @@ void HUD_Timer()
 		if(!autocvar_hud_panel_timer) return;
 	}
 
-	HUD_Panel_UpdateCvars(1);
+	HUD_Panel_LoadCvars(1);
 
 	draw_beginBoldFont();
 

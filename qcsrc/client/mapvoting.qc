@@ -336,7 +336,7 @@ void MapVote_Draw()
 
 	if(1 - scoreboard_fade_alpha <= 0)
 		return;
-	HUD_Panel_UpdateCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
 
 	if (!autocvar_hud_cursormode)
 	{

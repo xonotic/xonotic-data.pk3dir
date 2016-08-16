@@ -366,7 +366,7 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 
 // NOTE: in hud_configure mode cvars must be reloaded every frame
 float _panel_fade_alpha;
-#define HUD_Panel_UpdateCvars(theAlpha) MACRO_BEGIN {                                                                       \
+#define HUD_Panel_LoadCvars(theAlpha) MACRO_BEGIN { \
 	_panel_fade_alpha = theAlpha; \
 	if(autocvar__hud_configure) \
 		_panel_fade_alpha = 1; \

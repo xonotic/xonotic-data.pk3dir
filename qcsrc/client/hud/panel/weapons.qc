@@ -86,7 +86,7 @@ void HUD_Weapons()
 	// update generic hud functions
 	if(1 - scoreboard_fade_alpha <= 0)
 		return;
-	HUD_Panel_UpdateCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
 
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])

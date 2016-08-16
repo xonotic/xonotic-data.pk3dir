@@ -148,7 +148,7 @@ void HUD_Radar_Mouse()
 
 	if(1 - scoreboard_fade_alpha <= 0)
 		return;
-	HUD_Panel_UpdateCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
 
 
 	panel_size = autocvar_hud_panel_radar_maximized_size;
@@ -202,7 +202,7 @@ void HUD_Radar()
 
 	if(1 - scoreboard_fade_alpha <= 0)
 		return;
-	HUD_Panel_UpdateCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
 
 	float f = 0;
 
