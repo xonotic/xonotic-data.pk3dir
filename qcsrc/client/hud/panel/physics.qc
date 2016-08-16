@@ -18,7 +18,9 @@ void HUD_Physics()
 		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	if(1 - scoreboard_fade_alpha <= 0)
+		return;
+	HUD_Panel_UpdateCvars(1 - scoreboard_fade_alpha);
 
 	draw_beginBoldFont();
 
@@ -26,7 +28,7 @@ void HUD_Physics()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;

@@ -60,7 +60,9 @@ void HUD_InfoMessages()
 		if(!autocvar_hud_panel_infomessages) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	if(1 - scoreboard_fade_alpha <= 0)
+		return;
+	HUD_Panel_UpdateCvars(1 - scoreboard_fade_alpha);
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -69,7 +71,7 @@ void HUD_InfoMessages()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;

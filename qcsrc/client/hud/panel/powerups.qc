@@ -109,12 +109,14 @@ void HUD_Powerups()
 		return;
 
 	// Draw panel background
-	HUD_Panel_UpdateCvars();
+	if(1 - scoreboard_fade_alpha <= 0)
+		return;
+	HUD_Panel_UpdateCvars(1 - scoreboard_fade_alpha);
 	if (autocvar_hud_panel_powerups_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	// Set drawing area
 	vector pos = panel_pos;

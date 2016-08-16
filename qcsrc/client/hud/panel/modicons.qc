@@ -758,9 +758,6 @@ void HUD_ModIcons()
 		if(!HUD_ModIcons_GameType) return;
 	}
 
-	HUD_Panel_UpdateCvars();
-
-	draw_beginBoldFont();
 
 	if(mod_active != mod_prev) {
 		mod_change = time;
@@ -772,12 +769,18 @@ void HUD_ModIcons()
 	else
 		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
 
+	//if(mod_alpha <= 0)
+	//	return;
+	HUD_Panel_UpdateCvars(mod_alpha);
+
+	draw_beginBoldFont();
+
 	if (autocvar_hud_panel_modicons_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	if(mod_alpha)
-		HUD_Panel_DrawBg(mod_alpha);
+
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{

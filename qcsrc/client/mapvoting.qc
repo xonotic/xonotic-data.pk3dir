@@ -385,7 +385,9 @@ void MapVote_Draw()
 	pos.y += hud_fontsize.y * 1.5;
 	pos.y += hud_fontsize.y * 0.5;
 
-	HUD_Panel_UpdateCvars();
+	if(1 - scoreboard_fade_alpha <= 0)
+		return;
+	HUD_Panel_UpdateCvars(1 - scoreboard_fade_alpha);
 
 	// base for multi-column stuff...
 	pos.y += hud_fontsize.y;
@@ -440,7 +442,7 @@ void MapVote_Draw()
 	panel_pos.y = pos.y;
 	panel_size.x = xmax - xmin;
 	panel_size.y = ymax - ymin;
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{

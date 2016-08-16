@@ -21,7 +21,7 @@ void HUD_Chat()
 		}
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_UpdateCvars(1); // can't be forced to fade with the scoreboard anyway
 
 	if(intermission == 2)
 	{
@@ -56,7 +56,7 @@ void HUD_Chat()
 
 	// chat messages don't scale properly since they are displayed directly by the engine
 	HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{

@@ -22,14 +22,13 @@ REGISTER_REGISTRY(hud_panels)
 #define HUD_PANEL(NAME) HUD_PANEL_##NAME
 
 // draw the background/borders
-#define HUD_Panel_DrawBg(theAlpha) MACRO_BEGIN { \
+#define HUD_Panel_DrawBg() MACRO_BEGIN { \
 	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "") \
 		draw_BorderPicture( \
 			HUD_Shift(panel_pos - '1 1 0' * panel_bg_border), \
 			panel.current_panel_bg, \
 			HUD_Scale(panel_size + '1 1 0' * 2 * panel_bg_border), \
-			panel_bg_color, \
-			panel_bg_alpha * theAlpha, \
+			panel_bg_color, panel_bg_alpha, \
 			HUD_Scale('1 1 0' * (panel_bg_border/BORDER_MULTIPLIER)) \
 		); \
 } MACRO_END
@@ -366,7 +365,11 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 } MACRO_END
 
 // NOTE: in hud_configure mode cvars must be reloaded every frame
-#define HUD_Panel_UpdateCvars() MACRO_BEGIN {                                                                       \
+float _panel_fade_alpha;
+#define HUD_Panel_UpdateCvars(theAlpha) MACRO_BEGIN {                                                                       \
+	_panel_fade_alpha = theAlpha; \
+	if(autocvar__hud_configure) \
+		_panel_fade_alpha = 1; \
 	if (panel.update_time <= time) {                                                                                \
 		if (autocvar__hud_configure) panel_enabled = cvar(strcat("hud_panel_", panel.panel_name));                  \
 		panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos")));                              \
@@ -392,8 +395,8 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 		if (hud_configure_menu_open == 2 && panel == highlightedPanel) {                                                       \
 			HUD_Panel_UpdatePosSize_ForMenu();                                                                      \
 		} else {                                                                                                    \
-			panel_bg_alpha *= hud_fade_alpha;                                                                       \
-			panel_fg_alpha *= hud_fade_alpha;                                                                       \
+			panel_bg_alpha *= hud_fade_alpha * _panel_fade_alpha;                                                                       \
+			panel_fg_alpha *= hud_fade_alpha * _panel_fade_alpha;                                                                       \
 		}                                                                                                           \
 		panel.current_panel_pos = panel_pos;                                                                        \
 		panel.current_panel_size = panel_size;                                                                      \
@@ -405,12 +408,12 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 	} else {                                                                                                        \
 		panel_pos = panel.current_panel_pos;                                                                        \
 		panel_size = panel.current_panel_size;                                                                      \
-		panel_bg_alpha = panel.current_panel_bg_alpha * hud_fade_alpha;                                             \
+		panel_bg_alpha = panel.current_panel_bg_alpha * hud_fade_alpha * _panel_fade_alpha;                                             \
 		panel_bg_border = panel.current_panel_bg_border;                                                            \
 		panel_bg_color = panel.current_panel_bg_color;                                                              \
 		panel_bg_color_team = panel.current_panel_bg_color_team;                                                    \
 		panel_bg_padding = panel.current_panel_bg_padding;                                                          \
-		panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha;                                             \
+		panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha * _panel_fade_alpha;                                             \
 	}                                                                                                               \
 } MACRO_END
 

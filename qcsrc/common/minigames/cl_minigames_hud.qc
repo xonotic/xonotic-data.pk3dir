@@ -35,7 +35,7 @@ void HUD_MinigameBoard ()
 	if ( !hud_minigame )
 		return;
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_UpdateCvars(1);
 
 
 	vector pos, mySize;
@@ -61,7 +61,7 @@ void HUD_MinigameStatus ()
 	if ( !hud_minigame )
 		return;
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_UpdateCvars(1);
 
 
 	vector pos, mySize;
@@ -429,7 +429,7 @@ void HUD_MinigameMenu_MouseInput()
 {
 	panel = HUD_PANEL(MINIGAME_MENU);
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_UpdateCvars(1);
 
 	if(panel_bg_padding)
 	{
@@ -475,10 +475,10 @@ void HUD_MinigameMenu ()
 	if ( !HUD_MinigameMenu_IsOpened() )
 		return;
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_UpdateCvars(1);
 
 	HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{
@@ -545,7 +545,7 @@ void HUD_MinigameHelp()
 	if ( !help_message )
 		return;
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_UpdateCvars(1);
 
 
 	vector pos, mySize;

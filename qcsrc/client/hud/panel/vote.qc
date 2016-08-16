@@ -61,10 +61,10 @@ void HUD_Vote()
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
-	if(!vote_alpha)
+	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
+	if(a <= 0)
 		return;
-
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_UpdateCvars(a);
 
 	if(uid2name_dialog)
 	{
@@ -76,13 +76,11 @@ void HUD_Vote()
 	pos = panel_pos;
 	mySize = panel_size;
 
-	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
 	if (autocvar_hud_panel_vote_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(a);
-	a = panel_fg_alpha * a;
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{

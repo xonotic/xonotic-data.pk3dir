@@ -6,7 +6,7 @@ void HUD_Timer()
 		if(!autocvar_hud_panel_timer) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_UpdateCvars(1);
 
 	draw_beginBoldFont();
 
@@ -18,7 +18,7 @@ void HUD_Timer()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
