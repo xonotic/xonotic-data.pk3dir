@@ -616,7 +616,7 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 
-	if (scoreboard_active || intermission == 2)
+	if (intermission == 2)
 		HUD_Reset();
 
 	HUD_Configure_PostDraw();
