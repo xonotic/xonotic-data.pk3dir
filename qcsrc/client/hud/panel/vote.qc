@@ -127,30 +127,32 @@ void HUD_Vote()
 	s = sprintf("^1%s ^7(%d)", getcommandkey_forcename(_("No"), "vno"), vote_nocount);
 	drawcolorcodedstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 
+	pos.y += (5/8) * mySize.y;
+	vector tmp_size = eX * mySize.x + eY * (3/8) * mySize.y;
 	// draw the progress bar backgrounds
-	drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_back", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_skin(pos, "voteprogress_back", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// draw the highlights
 	if(vote_highlighted == 1) {
 		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5, mySize.y);
-		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_voted", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_voted", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else if(vote_highlighted == -1) {
 		drawsetcliparea(pos.x + 0.5 * mySize.x, pos.y, mySize.x * 0.5, mySize.y);
-		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_voted", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_voted", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	// draw the progress bars
 	if(vote_yescount && vote_needed)
 	{
 		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5 * (vote_yescount/vote_needed), mySize.y);
-		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_prog", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_prog", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if(vote_nocount && vote_needed)
 	{
 		drawsetcliparea(pos.x + mySize.x - mySize.x * 0.5 * (vote_nocount/vote_needed), pos.y, mySize.x * 0.5, mySize.y);
-		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_prog", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_prog", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	drawresetcliparea();
