@@ -22,7 +22,7 @@
 // make sure you call makevectors first (FIXME?)
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range)
 {
-    TC(Sound, snd);
+	TC(Sound, snd);
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid;
 	vector vecs, dv;
@@ -475,7 +475,10 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 			break;
 
 		float dist_taken = max(autocvar_g_ballistics_mindistance, vlen(trace_endpos - start));
-		solid_penetration_left *= (dist_taken / maxdist);
+		// fraction_used_of_what_is_left = dist_taken / maxdist
+		// solid_penetration_left = solid_penetration_left - solid_penetration_left * fraction_used_of_what_is_left
+		solid_penetration_left *= 1 - dist_taken / maxdist;
+		solid_penetration_left = max(solid_penetration_left, 0);
 
 		// Only show effect when going through a player (invisible otherwise)
 		if (hit && (hit.solid != SOLID_BSP))
