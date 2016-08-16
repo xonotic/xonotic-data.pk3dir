@@ -85,6 +85,7 @@ string TranslateScoresLabel(string l)
 		case "rank": return CTX(_("SCO^rank"));
 		case "returns": return CTX(_("SCO^returns"));
 		case "revivals": return CTX(_("SCO^revivals"));
+		case "rounds": return CTX(_("SCO^rounds won"));
 		case "score": return CTX(_("SCO^score"));
 		case "suicides": return CTX(_("SCO^suicides"));
 		case "takes": return CTX(_("SCO^takes"));
