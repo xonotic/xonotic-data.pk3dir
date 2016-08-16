@@ -26,7 +26,7 @@ void HUD_Timer()
 	}
 
 	string timer;
-	float timelimit, elapsedTime, timeleft, minutesLeft;
+	float timelimit, timeleft, minutesLeft;
 
 	timelimit = STAT(TIMELIMIT);
 
@@ -57,13 +57,10 @@ void HUD_Timer()
 	if (gameover_time) {
 		timer = seconds_tostring(max(0, floor(gameover_time - STAT(GAMESTARTTIME))));
 	} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
-		if (time < STAT(GAMESTARTTIME)) {
-			//while restart is still active, show 00:00
-			timer = seconds_tostring(0);
-		} else {
-			elapsedTime = floor(time - STAT(GAMESTARTTIME));
-			timer = seconds_tostring(elapsedTime);
-		}
+		if (time < STAT(GAMESTARTTIME))
+			timer = seconds_tostring(0); //while restart is still active, show 00:00
+		else
+			timer = seconds_tostring(floor(time - STAT(GAMESTARTTIME)));
 	} else {
 		if(warmup_stage)
 			timer = seconds_tostring(warmup_timeleft);
