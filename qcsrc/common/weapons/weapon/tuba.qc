@@ -451,7 +451,10 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
-		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
+		// TODO: don't show the reload animation cause the weapon is already switched
+		// switch animations need a better system
+// 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, 0.5, w_ready);
 	}
 }
 #endif
