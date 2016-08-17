@@ -158,7 +158,8 @@ void ClientData_Touch(entity e)
 
 .string netname_previous;
 
-void SetSpectatee(entity player, entity spectatee);
+void SetSpectatee(entity this, entity spectatee);
+void SetSpectatee_status(entity this, int spectatee_num);
 
 
 /*
@@ -300,6 +301,7 @@ void PutObserverInServer(entity this)
 	this.teleportable = TELEPORT_SIMPLE;
 	this.damagedbycontents = false;
 	this.health = FRAGS_SPECTATOR;
+	SetSpectatee_status(this, etof(this));
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_FLY_WORLDONLY); // user preference is controlled by playerprethink
@@ -514,6 +516,7 @@ void PutClientInServer(entity this)
 		}
 
 		TRANSMUTE(Player, this);
+
 		this.wasplayer = true;
 		this.iscreature = true;
 		this.teleportable = TELEPORT_NORMAL;
@@ -555,6 +558,7 @@ void PutClientInServer(entity this)
 			this.armorvalue = start_armorvalue;
 			this.weapons = start_weapons;
 		}
+		SetSpectatee_status(this, 0);
 
 		this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
 
@@ -1725,6 +1729,18 @@ bool SpectateSet(entity this)
 	return true;
 }
 
+void SetSpectatee_status(entity this, int spectatee_num)
+{
+	int oldspectatee_status = this.spectatee_status;
+	this.spectatee_status = spectatee_num;
+
+	if (this.spectatee_status != oldspectatee_status)
+	{
+		ClientData_Touch(this);
+		if (g_race || g_cts) race_InitSpectator();
+	}
+}
+
 void SetSpectatee(entity this, entity spectatee)
 {
 	entity old_spectatee = this.enemy;
@@ -1751,6 +1767,9 @@ void SetSpectatee(entity this, entity spectatee)
 				this.enemy.(weaponentity).arc_beam.SendFlags |= ARC_SF_SETTINGS;
 		}
 	}
+
+	if (this.enemy)
+		SetSpectatee_status(this, etof(this.enemy));
 
 	// needed to update spectator list
 	if(old_spectatee) { ClientData_Touch(old_spectatee); }
@@ -2429,19 +2448,6 @@ void PlayerPreThink (entity this)
 			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
 		);
     }
-
-	int oldspectatee_status = this.spectatee_status;
-	if (IS_SPEC(this)) {
-		this.spectatee_status = etof(this.enemy);
-	} else if (IS_OBSERVER(this)) {
-		this.spectatee_status = etof(this);
-	} else {
-		this.spectatee_status = 0;
-    }
-	if (this.spectatee_status != oldspectatee_status) {
-		ClientData_Touch(this);
-		if (g_race || g_cts) race_InitSpectator();
-	}
 
 	if (this.teamkill_soundtime && time > this.teamkill_soundtime)
 	{
