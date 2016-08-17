@@ -398,7 +398,7 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 METHOD(Tuba, wr_setup, void(Tuba this, entity actor))
 {
 	actor.ammo_field = ammo_none;
-	actor.tuba_instrument = 0;
+// 	actor.tuba_instrument = 0;
 }
 #endif
 
@@ -411,6 +411,7 @@ NET_HANDLE(tuba_instrument, bool)
 	string s = (i == 0) ? "tuba" :
 	           (i == 1) ? "akordeon" :
 	                      "kleinbottle" ;
+	activeweapon.mdl = s;
 	CL_WeaponEntity_SetModel(viewmodel, s, true);
 }
 #endif

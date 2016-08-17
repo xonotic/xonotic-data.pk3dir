@@ -312,7 +312,7 @@ void viewmodel_draw(entity this)
 		static string name_last;
 		string name = wep.mdl;
 		bool swap = name != name_last;
-		if (swap)
+// 		if (swap)
 		{
 			name_last = name;
 			CL_WeaponEntity_SetModel(this, name, swap);
