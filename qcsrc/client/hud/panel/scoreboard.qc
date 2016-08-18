@@ -809,8 +809,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
     TC(bool, is_self); TC(int, pl_number);
 	string str;
 	bool is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
-	if(is_spec && !is_self)
-		rgb = '0 0 0';
 
 	vector h_pos = item_pos;
 	vector h_size = eX * panel_size.x + eY * hud_fontsize.y * 1.25;
@@ -1071,7 +1069,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 		// row highlighting
 		for (int i = 0; i < rows; ++i)
-			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
 	average_accuracy = 0;
@@ -1430,7 +1428,7 @@ void Scoreboard_Draw()
 		if(pl.team != NUM_SPECTATOR)
 			continue;
 		pos.y += 1.25 * hud_fontsize.y;
-		Scoreboard_DrawItem(pos, panel_bg_color, pl, (pl.sv_entnum == player_localnum), specs);
+		Scoreboard_DrawItem(pos, '0 0 0', pl, (pl.sv_entnum == player_localnum), specs);
 		++specs;
 	}
 
