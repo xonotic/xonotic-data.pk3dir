@@ -32,10 +32,6 @@ REGISTER_MUTATOR(lms, false)
 	return 0;
 }
 
-// scoreboard stuff
-const float SP_LMS_LIVES = 4;
-const float SP_LMS_RANK = 5;
-
 // lives related defs
 float lms_lowest_lives;
 float lms_next_place;
@@ -132,7 +128,7 @@ int WinningCondition_LMS()
 		{
 			// SNAFU (maybe a draw game?)
 			ClearWinners();
-			LOG_TRACE("No players, ending game.\n");
+			LOG_TRACE("No players, ending game.");
 			return WINNING_YES;
 		}
 	}
@@ -180,7 +176,7 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 }
 
@@ -392,7 +388,7 @@ MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 {
 	if(gameover)
-	if(M_ARGV(0, int) == SP_LMS_RANK) // score field
+	if(M_ARGV(0, entity) == SP_LMS_RANK) // score field
 		return true; // allow writing to this field in intermission as it is needed for newly joining players
 }
 

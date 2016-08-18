@@ -12,7 +12,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
     float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + veh.misc_bulletcounter == 4);
     if (fire & 1)
     if (weapon_prepareattack(thiswep, player, weaponentity, false, t)) {
-        if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
+        if (isPlayer) W_SetupShot_Dir(player, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
         vector org = w_shotorg;
         vector dir = w_shotdir;
         if (veh) {
@@ -91,7 +91,7 @@ void raptor_bomblet_boom(entity this)
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
                                     autocvar_g_vehicle_raptor_bomblet_radius, NULL, NULL,
                                     autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, NULL);
-    remove(this);
+    delete(this);
 }
 
 void raptor_bomblet_touch(entity this, entity toucher)
@@ -140,7 +140,7 @@ void raptor_bomb_burst(entity this)
         CSQCProjectile(bomblet, true, PROJECTILE_RAPTORBOMBLET, true);
     }
 
-    remove(this);
+    delete(this);
 }
 
 void raptor_bomb_touch(entity this, entity toucher)
@@ -188,14 +188,14 @@ void raptor_bombdrop(entity this)
 
 void raptor_flare_touch(entity this, entity toucher)
 {
-    remove(this);
+    delete(this);
 }
 
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
     this.health -= damage;
     if(this.health <= 0)
-        remove(this);
+        delete(this);
 }
 
 void raptor_flare_think(entity this)
@@ -210,7 +210,7 @@ void raptor_flare_think(entity this)
     });
 
     if(this.tur_impacttime < time)
-        remove(this);
+        delete(this);
 }
 
 #endif
@@ -230,7 +230,7 @@ void RaptorCBShellfragDraw(entity this)
         this.alpha = bound(0, this.nextthink - time, 1);
 
     if(this.alpha < ALPHA_MIN_VISIBLE)
-        remove(this);
+        delete(this);
 }
 
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)

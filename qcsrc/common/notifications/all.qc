@@ -153,7 +153,7 @@ void Destroy_Notification_Entity(entity notif)
 	if (notif.nent_icon != "") strunzone(notif.nent_icon);
 	if (notif.nent_durcnt != "") strunzone(notif.nent_durcnt);
 	if (notif.nent_string != "") strunzone(notif.nent_string);
-	remove(notif);
+	delete(notif);
 }
 
 void Destroy_All_Notifications()
@@ -572,7 +572,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 				}
 				else if(icon != "")
 				{
-					LOG_WARNINGF(
+					LOG_WARNF(
 						(
 							"^1NOTIFICATION HAS ICON BUT NO HUDARGS: "
 							"^7net_type = %s, net_name = %s.\n"
@@ -589,7 +589,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 
 					if (cpid == CPID_Null && durcnt != "0 0")
 					{
-						LOG_WARNINGF(
+						LOG_WARNF(
 							(
 								"Notification has durcnt but no cpid: "
 								"net_type = %s, net_name = %s."
@@ -1210,7 +1210,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 			Get_Notif_TypeName(net_type)
 		));
 		#endif
-		LOG_WARNINGF("Incorrect usage of Local_Notification: %s\n", "Null notification");
+		LOG_WARNF("Incorrect usage of Local_Notification: %s", "Null notification");
 		return;
 	}
 
@@ -1491,7 +1491,7 @@ void Net_Notification_Remove(entity this)
 	));
 	#endif
 	for (int i = 0; i < this.nent_stringcount; ++i) { if (this.nent_strings[i]) strunzone(this.nent_strings[i]); }
-	remove(this);
+	delete(this);
 }
 
 bool Net_Write_Notification(entity this, entity client, int sf)
@@ -1523,7 +1523,7 @@ void Kill_Notification(
 	#endif
 
 	string checkargs = Notification_CheckArgs(broadcast, client);
-	if (checkargs != "") { LOG_WARNINGF("Incorrect usage of Kill_Notification: %s", checkargs); return; }
+	if (checkargs != "") { LOG_WARNF("Incorrect usage of Kill_Notification: %s", checkargs); return; }
 
 	entity net_notif = new_pure(net_kill_notification);
 	net_notif.nent_broadcast = broadcast;
@@ -1561,7 +1561,7 @@ void Send_Notification(
 
 	if (!notif)
 	{
-		LOG_WARNING("Send_Notification: Could not find notification entity!");
+		LOG_WARN("Send_Notification: Could not find notification entity!");
 		return;
 	}
 
@@ -1570,7 +1570,7 @@ void Send_Notification(
     if (!net_name) { checkargs = sprintf("No notification provided! %s", checkargs); }
 	if (checkargs != "")
 	{
-		LOG_WARNINGF("Incorrect usage of Send_Notification: %s", checkargs);
+		LOG_WARNF("Incorrect usage of Send_Notification: %s", checkargs);
 		return;
 	}
 
@@ -1594,7 +1594,7 @@ void Send_Notification(
 
 	if ((notif.nent_stringcount + notif.nent_floatcount) != count)
 	{
-		LOG_WARNINGF(
+		LOG_WARNF(
 			"Argument mismatch for Send_Notification(%s, ...)! "
 			"stringcount(%d) + floatcount(%d) != count(%d)\n"
 			"Check the definition and function call for accuracy...?\n",

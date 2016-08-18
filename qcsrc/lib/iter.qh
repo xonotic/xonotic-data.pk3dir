@@ -123,13 +123,19 @@
             if (cond) LAMBDA(body) \
         } \
     } MACRO_END
+#define MUTEX_LOCK(this) MACRO_BEGIN \
+	if (this) LOG_SEVEREF("Loop mutex held by %s", this); \
+	this = __FUNC__; \
+MACRO_END
+#define MUTEX_UNLOCK(this) MACRO_BEGIN \
+	this = string_null; \
+MACRO_END
 #define _FOREACH_ENTITY_FIND_UNORDERED(id, T, fld, match, cond, body) \
 	MACRO_BEGIN { \
-		if (_FOREACH_ENTITY_FIND_##T##_##id##mutex) LOG_SEVEREF("Loop mutex held by %s", _FOREACH_ENTITY_FIND_##T##_##id##mutex); \
-		_FOREACH_ENTITY_FIND_##T##_##id##mutex = __FUNC__; \
+		MUTEX_LOCK(_FOREACH_ENTITY_FIND_##T##_##id##mutex); \
 		entity _foundchain_first = _findchain##T##_tofield(fld, match, _FOREACH_ENTITY_FIND_##T##_next##id); \
 		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_FIND_##T##_next##id, cond, body); \
-		_FOREACH_ENTITY_FIND_##T##_##id##mutex = string_null; \
+		MUTEX_UNLOCK(_FOREACH_ENTITY_FIND_##T##_##id##mutex); \
 	} MACRO_END
 
 #define FOREACH_ENTITY(cond, body) ORDERED(FOREACH_ENTITY)(cond, body)
@@ -155,9 +161,18 @@
 
 #ifndef MENUQC
 entity(vector org, float rad, .entity tofield) _findchainradius_tofield = #22;
-#define FOREACH_ENTITY_RADIUS(org, dist, cond, body) FOREACH_ENTITY_RADIUS_UNORDERED(org, dist, cond, body)
+#define FOREACH_ENTITY_RADIUS(org, dist, cond, body) ORDERED(FOREACH_ENTITY_RADIUS)(org, dist, cond, body)
 .entity _FOREACH_ENTITY_FIND_radius_next; noref string _FOREACH_ENTITY_FIND_radius_mutex;
 #define FOREACH_ENTITY_RADIUS_UNORDERED(org, dist, cond, body) _FOREACH_ENTITY_FIND_UNORDERED(, radius, org, dist, cond, body)
+.entity _FOREACH_ENTITY_FIND_radius_nexttmp; noref string _FOREACH_ENTITY_FIND_radius_tmpmutex;
+#define FOREACH_ENTITY_RADIUS_ORDERED(org, dist, cond, body) \
+MACRO_BEGIN \
+	entity _rev_first = NULL; \
+	_FOREACH_ENTITY_FIND_UNORDERED(tmp, radius, org, dist, cond, (it._FOREACH_ENTITY_FIND_radius_nexttmp = _rev_first, _rev_first = it)); \
+	MUTEX_LOCK(_FOREACH_ENTITY_FIND_radius_tmpmutex); \
+	FOREACH_LIST(_rev, _FOREACH_ENTITY_FIND_radius_nexttmp, true, body); \
+	MUTEX_UNLOCK(_FOREACH_ENTITY_FIND_radius_tmpmutex); \
+MACRO_END
 #endif
 
 #define FOREACH_ENTITY_FLOAT(fld, match, body) ORDERED(FOREACH_ENTITY_FLOAT)(fld, match, body)

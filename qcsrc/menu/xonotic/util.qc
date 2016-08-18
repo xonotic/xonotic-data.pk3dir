@@ -321,22 +321,22 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 	if(_Nex_ExtResponseSystem_UpdateTo)
 	{
-		LOG_TRACE("error: UpdateNotification_URI_Get_Callback has been called before\n");
+		LOG_TRACE("error: UpdateNotification_URI_Get_Callback has been called before");
 		return;
 	}
 	if(status != 0)
 	{
-		LOG_TRACEF("error receiving update notification: status is %d\n", status);
+		LOG_TRACEF("error receiving update notification: status is %d", status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		LOG_TRACE("error: received HTML instead of an update notification\n");
+		LOG_TRACE("error: received HTML instead of an update notification");
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		LOG_TRACE("error: received carriage returns from update notification server\n");
+		LOG_TRACE("error: received carriage returns from update notification server");
 		return;
 	}
 
@@ -515,7 +515,7 @@ float preMenuInit()
 
 	MapInfo_Cache_Create();
 	MapInfo_Enumerate();
-	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
+	if(!_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
 	{
 		draw_reset_cropped();
 
@@ -690,48 +690,34 @@ float updateCompression()
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
 	/**/
 
-int GameType_GetID(int cnt)
+Gametype GameType_GetID(int cnt)
 {
 	int i = 0;
-
-	#define GAMETYPE(id) { if (i++ == cnt) return id; }
+	#define GAMETYPE(it) { if (i++ == cnt) return it; }
 	GAMETYPES
 	#undef GAMETYPE
-
-	unused_float = i;
-
-	return 0;
+	return NULL;
 }
 
 int GameType_GetCount()
 {
 	int i = 0;
-
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-
 	return i;
 }
 
 string GameType_GetName(int cnt)
 {
-	int i = GameType_GetID(cnt);
-
-	if(i)
-		return MapInfo_Type_ToText(i);
-
-	return "";
+	Gametype i = GameType_GetID(cnt);
+	return i ? MapInfo_Type_ToText(i) : "";
 }
 
 string GameType_GetIcon(int cnt)
 {
-	int i = GameType_GetID(cnt);
-
-	if(i)
-		return strcat("gametype_", MapInfo_Type_ToString(i));
-
-	return "";
+	Gametype i = GameType_GetID(cnt);
+	return i ? strcat("gametype_", MapInfo_Type_ToString(i)) : "";
 }
 
 .void(entity) TR;

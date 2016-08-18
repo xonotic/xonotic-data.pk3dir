@@ -1,6 +1,7 @@
 #include "hud_config.qh"
 
 #include "hud.qh"
+#include "panel/scoreboard.qh"
 
 #define HUD_Write(s) fputs(fh, s)
 #define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
@@ -207,6 +208,21 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_QUICKMENU:
 					HUD_Write_PanelCvar("_align");
 					break;
+				case HUD_PANEL_SCOREBOARD:
+					HUD_Write_PanelCvar("_fadeinspeed");
+					HUD_Write_PanelCvar("_fadeoutspeed");
+					HUD_Write_PanelCvar("_respawntime_decimals");
+					HUD_Write_PanelCvar("_table_bg_alpha");
+					HUD_Write_PanelCvar("_table_bg_scale");
+					HUD_Write_PanelCvar("_table_fg_alpha");
+					HUD_Write_PanelCvar("_table_fg_alpha_self");
+					HUD_Write_PanelCvar("_table_highlight");
+					HUD_Write_PanelCvar("_table_highlight_alpha");
+					HUD_Write_PanelCvar("_table_highlight_alpha_self");
+					HUD_Write_PanelCvar("_bg_teams_color_team");
+					HUD_Write_PanelCvar("_accuracy_doublerows");
+					HUD_Write_PanelCvar("_accuracy_nocolors");
+					break;
 			}
 			HUD_Write("\n");
 		}
@@ -221,9 +237,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 
 void HUD_Configure_Exit_Force()
 {
-	if (menu_enabled)
+	if (hud_configure_menu_open)
 	{
-		menu_enabled = 0;
+		hud_configure_menu_open = 0;
 		localcmd("togglemenu\n");
 	}
 	cvar_set("_hud_configure", "0");
@@ -727,14 +743,14 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	{
 		if (bInputType == 1)
 			return true;
-		menu_enabled = 1;
+		hud_configure_menu_open = 1;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
 	{
 		if (bInputType == 1)
 			return true;
-		if (!menu_enabled)
+		if (!hud_configure_menu_open)
 			cvar_set("_hud_configure", "0");
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
@@ -1082,7 +1098,7 @@ void HUD_Panel_Highlight(float allow_move)
 
 void HUD_Panel_EnableMenu()
 {
-	menu_enabled = 2;
+	hud_configure_menu_open = 2;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
 float mouse_over_panel;
@@ -1181,7 +1197,7 @@ void HUD_Panel_Mouse()
 	{
 		if(prevMouseClicked)
 			highlightedAction = 0;
-		if(menu_enabled == 2)
+		if(hud_configure_menu_open == 2)
 			mouse_over_panel = 0;
 		else
 			mouse_over_panel = HUD_Panel_Check_Mouse_Pos(true);
@@ -1229,7 +1245,7 @@ void HUD_Configure_Frame()
 	int i;
 	if(autocvar__hud_configure)
 	{
-		if(isdemo() || intermission == 2)
+		if(isdemo() || intermission == 2 || scoreboard_active)
 		{
 			HUD_Configure_Exit_Force();
 			return;
@@ -1248,7 +1264,7 @@ void HUD_Configure_Frame()
 		if(autocvar__menu_alpha != _menu_alpha_prev)
 		{
 			if(autocvar__menu_alpha == 0)
-				menu_enabled = 0;
+				hud_configure_menu_open = 0;
 			_menu_alpha_prev = autocvar__menu_alpha;
 		}
 
@@ -1256,8 +1272,8 @@ void HUD_Configure_Frame()
 	}
 	else if(hud_configure_prev)
 	{
-		if(menu_enabled)
-			menu_enabled = 0;
+		if(hud_configure_menu_open)
+			hud_configure_menu_open = 0;
 		if(autocvar_hud_cursormode)
 			setcursormode(0);
 		hud_dynamic_shake_factor = -1;

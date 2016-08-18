@@ -142,7 +142,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		_setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
 		forceplayermodels_goodmodelindex = e.modelindex;
-		remove(e);
+		delete(e);
 	}
 
 	// first, try finding it from the server
@@ -175,7 +175,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		forceplayermodels_model = e.model;
 		forceplayermodels_modelindex = e.modelindex;
 		forceplayermodels_skin = autocvar__cl_playerskin;
-		remove(e);
+		delete(e);
 	}
 
 	if(autocvar_cl_forcemyplayermodel != "" && autocvar_cl_forcemyplayermodel != forceplayermodels_mymodel)
@@ -185,7 +185,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		forceplayermodels_myisgoodmodel = fexists(e.model);
 		forceplayermodels_mymodel = e.model;
 		forceplayermodels_mymodelindex = e.modelindex;
-		remove(e);
+		delete(e);
 	}
 
 	// apply it
@@ -369,7 +369,7 @@ int CSQCPlayer_FallbackFrame(entity this, int f)
 		case 29: return 4; // anim_duckwalkbackright -> anim_duckwalk
 		case 30: return 4; // anim_duckwalkbackleft -> anim_duckwalk
 	}
-	LOG_DEBUGF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, this.model);
+	LOG_DEBUGF("Frame %d missing in model %s, and we have no fallback - FAIL!", f, this.model);
 	return f;
 }
 void CSQCPlayer_FallbackFrame_Apply(entity this)
@@ -433,7 +433,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 							// we need to prevent this from 'appening
 							this.tag_entity = NULL;
 							this.drawmask = 0;
-							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it\n");
+							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it");
 						}
 					}
 					else if(this.tag_entity.isplayermodel)

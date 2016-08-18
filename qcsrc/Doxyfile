@@ -2002,10 +2002,11 @@ PREDEFINED             = \
     "INIT(class)=class::class()" \
     "CONSTRUCTOR(class)=class::class(" \
     "DESTRUCTOR(class)=class::~class()" \
-    "ATTRIB(class, name, T, val)=T name = val;" \
-    "ATTRIB_STRZONE(class, name, T, val)=T name = val;" \
-    "STATIC_ATTRIB(class, name, T, val)=static T name = val;" \
-    "STATIC_ATTRIB_STRZONE(class, name, T, val)=static T name = val;" \
+    "ATTRIB(class, name, T, val)=T name = val" \
+    "ATTRIB_STRZONE(class, name, T, val)=T name = val" \
+    "ATTRIBARRAY(class, name, T, val)=T name[val]" \
+    "STATIC_ATTRIB(class, name, T, val)=static T name = val" \
+    "STATIC_ATTRIB_STRZONE(class, name, T, val)=static T name = val" \
     "METHOD(class, name, prototype)=virtual void class::name()" \
     "ENDCLASS(class)=};" \
     __STDC__

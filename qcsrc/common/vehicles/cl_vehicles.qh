@@ -1,5 +1,4 @@
-#ifndef CL_VEHICLES_H
-#define CL_VEHICLES_H
+#pragma once
 
 vector vehicleHud_Size;
 vector vehicleHud_Pos;
@@ -8,5 +7,3 @@ void RaptorCBShellfragDraw(entity this);
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
 
 #define weapon2mode STAT(VEHICLESTAT_W2MODE)
-
-#endif

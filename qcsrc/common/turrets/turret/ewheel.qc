@@ -133,7 +133,7 @@ void ewheel_move_idle(entity this)
         movelib_brake_simple(this, (autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
-spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) remove(this); }
+spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) delete(this); }
 
 METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 {
@@ -196,12 +196,12 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
             e = find(NULL, targetname, it.target);
             if (!e)
             {
-                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
+                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!");
                 it.target = "";
             }
 
             if (e.classname != "turret_checkpoint")
-                LOG_TRACE("Warning: not a turrret path\n");
+                LOG_TRACE("Warning: not a turrret path");
             else
             {
 
@@ -257,7 +257,7 @@ void ewheel_draw(entity this)
         METHOD(EWheel, tr_setup, void(EWheel this, entity it))
         {
             it.gravity		= 1;
-            it.move_movetype = MOVETYPE_BOUNCE;
+            set_movetype(it, MOVETYPE_BOUNCE);
             it.move_time		= time;
             it.draw			= ewheel_draw;
         }

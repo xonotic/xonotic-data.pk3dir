@@ -1,6 +1,6 @@
 #include "g_damage.qh"
 
-#include "bot/bot.qh"
+#include "bot/api.qh"
 #include "g_hook.qh"
 #include "mutators/all.qh"
 #include "scores.qh"
@@ -25,7 +25,7 @@
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
 
-void UpdateFrags(entity player, float f)
+void UpdateFrags(entity player, int f)
 {
 	PlayerTeamScore_AddScore(player, f);
 }
@@ -503,7 +503,7 @@ void Ice_Think(entity this)
 {
 	if(!STAT(FROZEN, this.owner) || this.owner.iceblock != this)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	setorigin(this, this.owner.origin - '0 0 16');
@@ -569,7 +569,7 @@ void Unfreeze (entity targ)
 
 	// remove the ice block
 	if(targ.iceblock)
-		remove(targ.iceblock);
+		delete(targ.iceblock);
 	targ.iceblock = NULL;
 }
 
@@ -1251,14 +1251,14 @@ void fireburner_think(entity this)
 	// for players, this is done in the regular loop
 	if(wasfreed(this.owner))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	Fire_ApplyEffect(this.owner);
 	if(!Fire_IsBurning(this.owner))
 	{
 		this.owner.fire_burner = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 	Fire_ApplyDamage(this.owner);

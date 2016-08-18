@@ -123,7 +123,7 @@ void nmm_kill_tiles(entity minig)
 			strunzone(e.netname);
 			strunzone(e.nmm_tile_hmill);
 			strunzone(e.nmm_tile_vmill);
-			remove(e);
+			delete(e);
 		}
 }
 
@@ -369,7 +369,7 @@ int nmm_server_event(entity minigame, string event, ...)
 				minigame.SendFlags |= MINIG_SF_UPDATE;
 			}
 			else
-				LOG_TRACE("Invalid move: ",...(2,string),"\n");
+				LOG_TRACE("Invalid move: ", ...(2, string));
 			return 1;
 		}
 	}

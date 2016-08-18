@@ -100,7 +100,7 @@ void walker_setnoanim(entity this)
 void walker_rocket_explode(entity this)
 {
     RadiusDamage (this, this.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), this, NULL, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET.m_id, NULL);
-    remove (this);
+    delete (this);
 }
 
 void walker_rocket_touch(entity this, entity toucher)
@@ -259,7 +259,8 @@ void walker_fire_rocket(entity this, vector org)
     rocket.velocity		   = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * (autocvar_g_turrets_unit_walker_rocket_speed);
     rocket.angles			 = vectoangles(rocket.velocity);
     settouch(rocket, walker_rocket_touch);
-    rocket.flags			  = FL_PROJECTILE;
+    rocket.flags = FL_PROJECTILE;
+    IL_PUSH(g_projectiles, rocket);
     rocket.solid			  = SOLID_BBOX;
     rocket.max_health		 = time + 9;
     rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
@@ -344,7 +345,7 @@ void walker_move_path(entity this)
 #endif
 }
 
-spawnfunc(turret_walker) { if(!turret_initialize(this, TUR_WALKER)) remove(this); }
+spawnfunc(turret_walker) { if(!turret_initialize(this, TUR_WALKER)) delete(this); }
 
 METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 {
@@ -607,12 +608,12 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         e = find(NULL, targetname, it.target);
         if (!e)
         {
-            LOG_TRACE("Initital waypoint for walker does NOT exsist, fix your map!\n");
+            LOG_TRACE("Initital waypoint for walker does NOT exsist, fix your map!");
             it.target = "";
         }
 
         if (e.classname != "turret_checkpoint")
-            LOG_TRACE("Warning: not a turrret path\n");
+            LOG_TRACE("Warning: not a turrret path");
         else
         {
 #ifdef WALKER_FANCYPATHING
@@ -652,7 +653,7 @@ void walker_draw(entity this)
         METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         {
             it.gravity		= 1;
-            it.move_movetype	= MOVETYPE_BOUNCE;
+            set_movetype(it, MOVETYPE_BOUNCE);
             it.move_time		= time;
             it.draw			= walker_draw;
         }

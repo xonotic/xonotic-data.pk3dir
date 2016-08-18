@@ -50,8 +50,6 @@ USING(kh_Think_t, void());
 void kh_StartRound();
 void kh_Controller_SetThink(float t, kh_Think_t func);
 
-entity kh_worldkeylist;
-.entity kh_worldkeynext;
 #endif
 
 #ifdef IMPLEMENTATION
@@ -138,12 +136,6 @@ float kh_interferemsg_time, kh_interferemsg_team;
 float kh_key_dropped, kh_key_carried;
 
 const float ST_KH_CAPS = 1;
-const float SP_KH_CAPS = 4;
-const float SP_KH_PUSHES = 5;
-const float SP_KH_DESTROYS = 6;
-const float SP_KH_PICKUPS = 7;
-const float SP_KH_KCKILLS = 8;
-const float SP_KH_LOSSES = 9;
 void kh_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
@@ -558,7 +550,7 @@ void kh_Key_Remove(entity key)  // runs after when all the keys have been collec
 		}
 	}
 
-	remove(key);
+	delete(key);
 
 	kh_update_state();
 }
@@ -1099,7 +1091,7 @@ void kh_finalize()
 {
 	// to be called before intermission
 	kh_FinishRound();
-	remove(kh_controller);
+	delete(kh_controller);
 	kh_controller = NULL;
 }
 
@@ -1147,7 +1139,7 @@ void havocbot_role_kh_carrier(entity this)
 
 	if (!(this.kh_next))
 	{
-		LOG_TRACE("changing role to freelancer\n");
+		LOG_TRACE("changing role to freelancer");
 		this.havocbot_role = havocbot_role_kh_freelancer;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1174,7 +1166,7 @@ void havocbot_role_kh_defense(entity this)
 
 	if (this.kh_next)
 	{
-		LOG_TRACE("changing role to carrier\n");
+		LOG_TRACE("changing role to carrier");
 		this.havocbot_role = havocbot_role_kh_carrier;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1184,7 +1176,7 @@ void havocbot_role_kh_defense(entity this)
 		this.havocbot_role_timeout = time + random() * 10 + 20;
 	if (time > this.havocbot_role_timeout)
 	{
-		LOG_TRACE("changing role to freelancer\n");
+		LOG_TRACE("changing role to freelancer");
 		this.havocbot_role = havocbot_role_kh_freelancer;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1215,7 +1207,7 @@ void havocbot_role_kh_offense(entity this)
 
 	if (this.kh_next)
 	{
-		LOG_TRACE("changing role to carrier\n");
+		LOG_TRACE("changing role to carrier");
 		this.havocbot_role = havocbot_role_kh_carrier;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1225,7 +1217,7 @@ void havocbot_role_kh_offense(entity this)
 		this.havocbot_role_timeout = time + random() * 10 + 20;
 	if (time > this.havocbot_role_timeout)
 	{
-		LOG_TRACE("changing role to freelancer\n");
+		LOG_TRACE("changing role to freelancer");
 		this.havocbot_role = havocbot_role_kh_freelancer;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1257,7 +1249,7 @@ void havocbot_role_kh_freelancer(entity this)
 
 	if (this.kh_next)
 	{
-		LOG_TRACE("changing role to carrier\n");
+		LOG_TRACE("changing role to carrier");
 		this.havocbot_role = havocbot_role_kh_carrier;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -1269,12 +1261,12 @@ void havocbot_role_kh_freelancer(entity this)
 	{
 		if (random() < 0.5)
 		{
-			LOG_TRACE("changing role to offense\n");
+			LOG_TRACE("changing role to offense");
 			this.havocbot_role = havocbot_role_kh_offense;
 		}
 		else
 		{
-			LOG_TRACE("changing role to defense\n");
+			LOG_TRACE("changing role to defense");
 			this.havocbot_role = havocbot_role_kh_defense;
 		}
 		this.havocbot_role_timeout = 0;
@@ -1392,7 +1384,7 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	kh_Key_DropAll(frag_target, false);
 }
 

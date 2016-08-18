@@ -39,7 +39,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		s = M_ARGV(2, string);
 		if (s == "")
 		{
-			remove(this);
+			delete(this);
 			startitem_failed = true;
 			return;
 		}
@@ -76,7 +76,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 		if (wpn == WEP_Null)
 		{
-			remove(this);
+			delete(this);
 			startitem_failed = true;
 			return;
 		}

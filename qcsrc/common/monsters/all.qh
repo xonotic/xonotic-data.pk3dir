@@ -1,5 +1,4 @@
-#ifndef MONSTERS_ALL_H
-#define MONSTERS_ALL_H
+#pragma once
 
 #include "monster.qh"
 
@@ -18,5 +17,3 @@ REGISTER_MONSTER(Null, NEW(Monster));
 
 
 #include "monster/_mod.inc"
-
-#endif

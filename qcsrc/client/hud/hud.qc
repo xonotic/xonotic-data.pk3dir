@@ -2,7 +2,6 @@
 
 #include "hud_config.qh"
 #include "../mapvoting.qh"
-#include "../scoreboard.qh"
 #include "../teamradar.qh"
 #include <common/t_items.qh>
 #include <common/deathtypes/all.qh>
@@ -383,8 +382,8 @@ void HUD_Panel_Draw(entity panent)
 void HUD_Reset()
 {
 	// reset gametype specific icons
-	if(gametype == MAPINFO_TYPE_CTF)
-		HUD_Mod_CTF_Reset();
+	if(gametype.m_modicons_reset)
+		gametype.m_modicons_reset();
 }
 
 float autocvar_hud_dynamic_shake = 1;
@@ -493,14 +492,13 @@ void Hud_Dynamic_Frame()
 void HUD_Main()
 {
 	int i;
-	// global hud alpha fade
-	if(menu_enabled == 1)
+	// global hud alpha fade (scoreboard-related panels behave differently and override it temporarly)
+	if(hud_configure_menu_open == 1)
 		hud_fade_alpha = 1;
+	else if(!autocvar__hud_configure)
+		hud_fade_alpha = (1 - scoreboard_fade_alpha) * (1 - autocvar__menu_alpha);
 	else
-		hud_fade_alpha = (1 - autocvar__menu_alpha);
-
-	if(scoreboard_fade_alpha)
-		hud_fade_alpha = (1 - scoreboard_fade_alpha);
+		hud_fade_alpha = 1 - autocvar__menu_alpha;
 
 	HUD_Configure_Frame();
 
@@ -510,8 +508,14 @@ void HUD_Main()
 	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
-		HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
-		return;
+		if(autocvar__menu_alpha == 1)
+			return;
+		if(scoreboard_fade_alpha == 1)
+		{
+			HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
+			HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
+			return;
+		}
 	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
@@ -602,7 +606,7 @@ void HUD_Main()
 			}
 		}
 		if (warning)
-			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
+			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder");
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)

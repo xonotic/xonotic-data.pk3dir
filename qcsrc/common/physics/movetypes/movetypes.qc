@@ -15,17 +15,13 @@
 #ifdef SVQC
 void set_movetype(entity this, int mt)
 {
-	if(mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH)
-	{
-		this.movetype = this.move_movetype = mt; // we still set move_movetype, for other code that checks movetype
-		this.move_qcphysics = false;
-		return;
-	}
-
 	this.move_movetype = mt;
-
-	if(!this.move_qcphysics)
+	if (mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH) {
+		this.move_qcphysics = false;
+	}
+	if (!this.move_qcphysics) {
 		this.movetype = mt;
+	}
 }
 #elif defined(CSQC)
 void set_movetype(entity this, int mt)
@@ -452,12 +448,12 @@ bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         X(17)
         #undef X
         {
-            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
+            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
                 etof(this), this.classname, vtos(this.origin));
             return false;
         }
 	}
-	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
+	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
 	_Movetype_LinkEdict(this, true);
 	return true;
@@ -573,7 +569,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!\n");
+			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;
@@ -613,7 +609,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!\n");
+			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;

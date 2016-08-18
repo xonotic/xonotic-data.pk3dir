@@ -1,14 +1,13 @@
-#ifndef INVENTORY_H
-#define INVENTORY_H
+#pragma once
 
 #include "all.qh"
 #include "item/pickup.qh"
 
 CLASS(Inventory, Object)
     /** Stores counts of items, the id being the index */
-    ATTRIBARRAY(Inventory, inv_items, int, Items_MAX)
+    ATTRIBARRAY(Inventory, inv_items, int, Items_MAX);
     /** Previous state */
-    ATTRIB(Inventory, inventory, Inventory, NULL)
+    ATTRIB(Inventory, inventory, Inventory);
 ENDCLASS(Inventory)
 
 /** Player inventory */
@@ -25,7 +24,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
         .int fld = inv_items[it.m_id];
         int prev = this.(fld);
         int next = this.(fld) = ReadByte();
-        LOG_TRACEF("%s: %.0f -> %.0f\n", it.m_name, prev, next);
+        LOG_TRACEF("%s: %.0f -> %.0f", it.m_name, prev, next);
     });
     return true;
 }
@@ -71,8 +70,6 @@ void Inventory_new(entity e)
     inv.drawonlytoclient = e;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);
 }
-void Inventory_delete(entity e) { remove(e.inventory.inventory); remove(e.inventory); }
+void Inventory_delete(entity e) { delete(e.inventory.inventory); delete(e.inventory); }
 void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
-#endif
-
 #endif

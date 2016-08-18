@@ -77,7 +77,7 @@ float autocvar_g_invasion_spawn_delay;
 
 spawnfunc(invasion_spawnpoint)
 {
-	if(!g_invasion) { remove(this); return; }
+	if(!g_invasion) { delete(this); return; }
 
 	this.classname = "invasion_spawnpoint";
 
@@ -131,7 +131,7 @@ void invasion_SpawnChosenMonster(float mon)
 
 	if(spawn_point == NULL)
 	{
-		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations\n");
+		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations");
 		entity e = spawn();
 		setsize(e, (get_monsterinfo(mon)).mins, (get_monsterinfo(mon)).maxs);
 

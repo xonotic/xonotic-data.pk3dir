@@ -1,6 +1,3 @@
-#ifndef TRIGGERS_TARGET_INCLUDE_H
-#define TRIGGERS_TARGET_INCLUDE_H
+#pragma once
 
 #include "music.qh"
-
-#endif

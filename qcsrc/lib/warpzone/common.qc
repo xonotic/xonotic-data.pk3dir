@@ -112,7 +112,7 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 #ifdef CSQC
 	if (trace_networkentity)
 	{
-		LOG_TRACE("hit a network ent, cannot continue WarpZoneLib_BoxTouchesBrush\n");
+		LOG_TRACE("hit a network ent, cannot continue WarpZoneLib_BoxTouchesBrush");
 		// we cannot continue, as a player blocks us...
 		// so, abort
 		return 0;
@@ -271,7 +271,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	{
 		if(--i < 1)
 		{
-			LOG_TRACE("Too many warpzones in sequence, aborting trace.\n");
+			LOG_TRACE("Too many warpzones in sequence, aborting trace.");
 			trace_ent = NULL;
 			break;
 		}
@@ -299,7 +299,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		if(trace_ent == wz)
 		{
 			// FIXME can this check be removed? Do we really need it?
-			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace\n");
+			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace");
 			trace_ent = NULL;
 			break;
 		}
@@ -395,7 +395,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	{
 		if(--i < 1)
 		{
-			LOG_TRACE("Too many warpzones in sequence, aborting trace.\n");
+			LOG_TRACE("Too many warpzones in sequence, aborting trace.");
 			trace_ent = NULL;
 			break;
 		}
@@ -413,7 +413,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		if(trace_ent == wz)
 		{
 			// FIXME can this check be removed? Do we really need it?
-			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace\n");
+			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace");
 			trace_ent = NULL;
 			break;
 		}
@@ -671,7 +671,7 @@ void WarpZone_RefSys_GC(entity this)
 	// garbage collect unused reference systems
 	this.nextthink = time + 1;
 	if(this.owner.WarpZone_refsys != this)
-		remove(this);
+		delete(this);
 }
 void WarpZone_RefSys_CheckCreate(entity me)
 {
@@ -688,7 +688,7 @@ void WarpZone_RefSys_Clear(entity me)
 {
 	if(me.WarpZone_refsys)
 	{
-		remove(me.WarpZone_refsys);
+		delete(me.WarpZone_refsys);
 		me.WarpZone_refsys = NULL;
 	}
 }

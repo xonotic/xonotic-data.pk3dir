@@ -307,13 +307,13 @@ void LocalCommand_hud(int request, int argc)
 
 				case "scoreboard_columns_set":
 				{
-					Cmd_HUD_SetFields(argc);
+					Cmd_Scoreboard_SetFields(argc);
 					return;
 				}
 
 				case "scoreboard_columns_help":
 				{
-					Cmd_HUD_Help();
+					Cmd_Scoreboard_Help();
 					return;
 				}
 

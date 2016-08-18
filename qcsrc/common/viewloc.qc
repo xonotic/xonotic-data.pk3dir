@@ -136,9 +136,9 @@ void viewloc_SetViewLocation()
 		}
 
 #if 0
-		LOG_TRACE(vtos(camera_position), "\n");
-		LOG_TRACE(vtos(old_camera_angle), "\n");
-		LOG_TRACE(vtos(camera_angle), "\n");
+		LOG_TRACE(vtos(camera_position));
+		LOG_TRACE(vtos(old_camera_angle));
+		LOG_TRACE(vtos(camera_angle));
 #endif
 
 		freeze_org = getpropertyvec(VF_ORIGIN);

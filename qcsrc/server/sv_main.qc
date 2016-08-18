@@ -4,8 +4,7 @@
 #include "g_hook.qh"
 #include "g_world.qh"
 
-#include "bot/bot.qh"
-#include "bot/waypoints.qh"
+#include "bot/api.qh"
 
 #include "command/common.qh"
 
@@ -155,11 +154,12 @@ float game_delay_last;
 
 bool autocvar_sv_autopause = false;
 float RedirectionThink();
-void PM_Main(Client this);
+void systems_update();
+void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
     FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
@@ -246,7 +246,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
@@ -355,7 +355,7 @@ LABEL(cvar_fail)
 		if (!inv)
 		{
 			//print("cvarfilter fail\n");
-			remove(this);
+			delete(this);
 			__spawnfunc_expecting = false;
 			return;
 		}
@@ -363,12 +363,12 @@ LABEL(cvar_fail)
 
 	if(DoesQ3ARemoveThisEntity(this))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
 
-	this.move_movetype = this.movetype;
+	set_movetype(this, this.movetype);
 
 	// support special -1 and -2 angle from radiant
 	if (this.angles == '0 -1 0')
@@ -393,7 +393,7 @@ LABEL(cvar_fail)
 
 	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}

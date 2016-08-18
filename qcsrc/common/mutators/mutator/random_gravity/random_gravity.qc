@@ -35,7 +35,7 @@ MUTATOR_HOOKFUNCTION(random_gravity, SV_StartFrame)
 
 	gravity_delay = time + autocvar_g_random_gravity_delay;
 
-	LOG_TRACE("Gravity is now: ", ftos(autocvar_sv_gravity), "\n");
+	LOG_TRACE("Gravity is now: ", ftos(autocvar_sv_gravity));
 }
 
 MUTATOR_HOOKFUNCTION(random_gravity, BuildMutatorsString)

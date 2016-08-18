@@ -37,7 +37,7 @@ flags:
 void dynlight_think(entity this)
 {
 	if(!this.owner)
-		remove(this);
+		delete(this);
 
 	this.nextthink = time + 0.1;
 }

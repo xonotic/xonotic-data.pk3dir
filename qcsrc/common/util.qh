@@ -1,5 +1,4 @@
-#ifndef COMMON_UTIL_H
-#define COMMON_UTIL_H
+#pragma once
 
 #ifndef MENUQC
 
@@ -64,7 +63,6 @@ const float TIME_FACTOR = 100;
 
 string ScoreString(float vflags, float value);
 
-void compressShortVector_init();
 vector decompressShortVector(float data);
 float compressShortVector(vector vec);
 
@@ -126,7 +124,7 @@ string getWrappedLine_remaining;
 string getWrappedLine(float w, vector size, textLengthUpToWidth_widthFunction_t tw);
 string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
 
-float isGametypeInFilter(float gt, float tp, float ts, string pattern);
+float isGametypeInFilter(entity gt, float tp, float ts, string pattern);
 
 string swapwords(string str, float i, float j);
 string shufflewords(string str);
@@ -233,9 +231,6 @@ float ReadApproxPastTime();
 void execute_next_frame();
 void queue_to_execute_next_frame(string s);
 
-// for marking written-to values as unused where it's a good idea to do this
-noref float unused_float;
-
 // a function f with:
 // f(0) = 0
 // f(1) = 1
@@ -297,4 +292,3 @@ vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);
 
 // Returns the correct difference between two always increasing numbers
 #define COMPARE_INCREASING(to,from) (to < from ? from + to + 2 : to - from)
-#endif

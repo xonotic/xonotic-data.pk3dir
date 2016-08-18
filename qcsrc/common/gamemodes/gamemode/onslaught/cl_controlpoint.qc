@@ -117,15 +117,15 @@ void cpicon_construct(entity this)
 		setmodel(this.icon_realmodel, MDL_Null);
 		setorigin(this.icon_realmodel, this.origin);
 		setsize(this.icon_realmodel, CPICON_MIN, CPICON_MAX);
-		this.icon_realmodel.move_movetype = MOVETYPE_NOCLIP;
+		set_movetype(this.icon_realmodel, MOVETYPE_NOCLIP);
 		this.icon_realmodel.solid = SOLID_NOT;
 	}
 
 	if(this.iscaptured) { this.icon_realmodel.solid = SOLID_BBOX; }
 
-	this.move_movetype	= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.solid			= SOLID_NOT;
-	this.move_movetype		= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.move_time		= time;
 	this.drawmask		= MASK_NORMAL;
 	this.alpha			= 1;

@@ -240,7 +240,7 @@ float CheatImpulse(entity this, int imp)
 					sprint(this, "Emergency teleport used info_autoscreenshot location\n");
 					setorigin(this, e.origin);
 					this.angles = e.angles;
-					remove(e);
+					delete(e);
 					// should we? this.angles_x = -this.angles_x;
 					this.fixangle = true;
 					this.velocity = '0 0 0';
@@ -274,7 +274,7 @@ float CheatImpulse(entity this, int imp)
 			e2 = spawn();
 			setorigin(e2, e.origin);
 			RadiusDamage(e2, this, 1000, 0, 128, NULL, NULL, 500, DEATH_CHEAT.m_id, e);
-			remove(e2);
+			delete(e2);
 
 			LOG_INFO("404 Sportsmanship not found.\n");
 			DID_CHEAT();
@@ -323,7 +323,7 @@ float CheatCommand(entity this, int argc)
 				// arguments:
 				//   effectname
 				effectnum = _particleeffectnum(argv(1));
-				W_SetupShot(this, false, false, SND_Null, CH_WEAPON_A, 0);
+				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, this);
 				__trailparticles(this, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -338,7 +338,7 @@ float CheatCommand(entity this, int argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(this, false, false, SND_Null, CH_WEAPON_A, 0);
+				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, this);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
@@ -364,7 +364,7 @@ float CheatCommand(entity this, int argc)
 						tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_NORMAL, e);
 						if(trace_startsolid)
 						{
-							remove(e);
+							delete(e);
 							sprint(this, "cannot make stuff there (no space)\n");
 						}
 						else
@@ -480,13 +480,13 @@ float CheatCommand(entity this, int argc)
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			if(RandomSelection_chosen_ent)
 			{
-				remove(RandomSelection_chosen_ent.killindicator.killindicator);
-				remove(RandomSelection_chosen_ent.killindicator);
+				delete(RandomSelection_chosen_ent.killindicator.killindicator);
+				delete(RandomSelection_chosen_ent.killindicator);
 				if(RandomSelection_chosen_ent.aiment)
-					remove(RandomSelection_chosen_ent.aiment);
+					delete(RandomSelection_chosen_ent.aiment);
 				if(RandomSelection_chosen_ent.enemy)
-					remove(RandomSelection_chosen_ent.enemy);
-				remove(RandomSelection_chosen_ent);
+					delete(RandomSelection_chosen_ent.enemy);
+				delete(RandomSelection_chosen_ent);
 			}
 			DID_CHEAT();
 			break;
@@ -604,15 +604,15 @@ float CheatCommand(entity this, int argc)
 		case "drag_clear":
 			IS_CHEAT(this, 0, argc, 0);
 			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
-				remove(e);
+				delete(e);
 			for(entity e = NULL; (e = find(e, classname, "dragbox_corner_1")); )
-				remove(e);
+				delete(e);
 			for(entity e = NULL; (e = find(e, classname, "dragbox_corner_2")); )
-				remove(e);
+				delete(e);
 			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
-				remove(e);
+				delete(e);
 			for(entity e = NULL; (e = find(e, classname, "drag_digit")); )
-				remove(e);
+				delete(e);
 			DID_CHEAT();
 			break;
 		case "god":
@@ -675,7 +675,7 @@ float CheatCommand(entity this, int argc)
 			entity e = spawn();
 			e.target = argv(1);
 			SUB_UseTargets(e, this, NULL);
-			remove(e);
+			delete(e);
 			DID_CHEAT();
 			break;
 		case "killtarget":
@@ -683,7 +683,7 @@ float CheatCommand(entity this, int argc)
 			entity e2 = spawn();
 			e2.killtarget = argv(1);
 			SUB_UseTargets(e2, this, NULL);
-			remove(e2);
+			delete(e2);
 			DID_CHEAT();
 			break;
 		case "teleporttotarget":
@@ -695,7 +695,7 @@ float CheatCommand(entity this, int argc)
 			if(!wasfreed(ent))
 			{
 				Simple_TeleportPlayer(ent, this);
-				remove(ent);
+				delete(ent);
 				DID_CHEAT();
 			}
 			break;

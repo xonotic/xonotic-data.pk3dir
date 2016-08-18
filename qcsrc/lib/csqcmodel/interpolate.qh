@@ -19,8 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef LIB_CSQCMODEL_INTERPOLATE_H
-#define LIB_CSQCMODEL_INTERPOLATE_H
+#pragma once
 
 .int iflags;
 const int IFLAG_VELOCITY = BIT(0);
@@ -49,4 +48,3 @@ void InterpolateOrigin_Do(entity this);
 
 // in case we interpolate that:
 .vector v_angle;
-#endif

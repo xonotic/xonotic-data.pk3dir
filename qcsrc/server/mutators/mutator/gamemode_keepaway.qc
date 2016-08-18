@@ -32,10 +32,6 @@ REGISTER_MUTATOR(ka, false)
 
 entity ka_ball;
 
-const float SP_KEEPAWAY_PICKUPS = 4;
-const float SP_KEEPAWAY_CARRIERKILLS = 5;
-const float SP_KEEPAWAY_BCTIME = 6;
-
 void(entity this) havocbot_role_ka_carrier;
 void(entity this) havocbot_role_ka_collector;
 
@@ -470,7 +466,7 @@ MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	if(frag_target.ballcarried)
 		ka_DropEvent(frag_target);
 }
@@ -506,9 +502,9 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 void ka_ScoreRules()
 {
 	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, true); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,			"pickups",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,			"bctime",		SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,		"pickups",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,   "bckills",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,		    "bctime",		SFL_SORT_PRIO_SECONDARY);
 	ScoreRules_basics_end();
 }
 

@@ -8,19 +8,21 @@ void HUD_HealthArmor()
 	int armor, health, fuel;
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_healtharmor) return;
+		if((!autocvar_hud_panel_healtharmor) || (spectatee_status == -1))
+			return;
 		if(hud != HUD_NORMAL) return;
-		if(spectatee_status == -1) return;
 
 		health = STAT(HEALTH);
 		if(health <= 0)
 		{
+			health = 0;
 			prev_health = -1;
-			return;
+			if(autocvar_hud_panel_healtharmor_hide_ondeath)
+				return;
 		}
 		armor = STAT(ARMOR);
 
-		// code to check for spectatee_status changes is in Ent_ClientData()
+		// code to check for spectatee_status changes is in ENT_CLIENT_CLIENTDATA
 		// prev_p_health and prev_health can be set to -1 there
 
 		if (prev_p_health == -1)

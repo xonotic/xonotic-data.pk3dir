@@ -1,5 +1,4 @@
-#ifndef MOVETYPES_H
-#define MOVETYPES_H
+#pragma once
 
 #define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
 #define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
@@ -8,10 +7,6 @@
 #ifdef CSQC
 .float bouncestop;
 .float bouncefactor;
-#endif
-
-#ifdef SVQC
-.bool move_qcphysics;
 #endif
 
 void set_movetype(entity this, int mt);
@@ -93,6 +88,4 @@ const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = BIT(2);
 
 #ifdef CSQC
 #define moveflags STAT(MOVEFLAGS)
-#endif
-
 #endif

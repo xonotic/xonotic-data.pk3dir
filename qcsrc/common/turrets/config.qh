@@ -1,5 +1,4 @@
-#ifndef TURRETS_CONFIG_H
-#define TURRETS_CONFIG_H
+#pragma once
 
 #ifdef SVQC
 
@@ -15,7 +14,5 @@ string tur_config_queue[MAX_TUR_CONFIG];
 	fputs(tur_config_file, a); \
 	if(tur_config_alsoprint) { LOG_INFO(a); } }
 
-
-#endif
 
 #endif

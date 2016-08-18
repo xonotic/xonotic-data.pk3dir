@@ -532,9 +532,9 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	entity me;
 	me = playerslots[player_localnum];
 	float score;
-	score = me.(scores[ps_primary]);
+	score = me.(scores(ps_primary));
 
-	if(!(scores_flags[ps_primary] & SFL_TIME) || teamplay) // race/cts record display on HUD
+	if(!(scores_flags(ps_primary) & SFL_TIME) || teamplay) // race/cts record display on HUD
 		return; // no records in the actual race
 
 	// clientside personal record
@@ -743,18 +743,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 
 void HUD_ModIcons_SetFunc()
 {
-	switch(gametype)
-	{
-		case MAPINFO_TYPE_KEYHUNT:		HUD_ModIcons_GameType = HUD_Mod_KH; break;
-		case MAPINFO_TYPE_CTF:			HUD_ModIcons_GameType = HUD_Mod_CTF; break;
-		case MAPINFO_TYPE_NEXBALL:		HUD_ModIcons_GameType = HUD_Mod_NexBall; break;
-		case MAPINFO_TYPE_CTS:
-		case MAPINFO_TYPE_RACE:		HUD_ModIcons_GameType = HUD_Mod_Race; break;
-		case MAPINFO_TYPE_CA:
-		case MAPINFO_TYPE_FREEZETAG:	HUD_ModIcons_GameType = HUD_Mod_CA; break;
-		case MAPINFO_TYPE_DOMINATION:	HUD_ModIcons_GameType = HUD_Mod_Dom; break;
-		case MAPINFO_TYPE_KEEPAWAY:	HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
-	}
+	HUD_ModIcons_GameType = gametype.m_modicons;
 }
 
 int mod_prev; // previous state of mod_active to check for a change

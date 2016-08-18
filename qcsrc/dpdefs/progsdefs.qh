@@ -1,5 +1,4 @@
-#ifndef PROGSDEFS_H
-#define PROGSDEFS_H
+#pragma once
 
 #pragma noref 1
 
@@ -30,5 +29,3 @@ MACRO_END
 
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
-
-#endif

@@ -1,5 +1,7 @@
 #include "scripting.qh"
 
+#include "cvars.qh"
+
 #include <common/state.qh>
 #include <common/physics/player.qh>
 
@@ -18,7 +20,7 @@ void bot_clearqueue(entity bot)
 		return;
 	buf_del(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = false;
-	LOG_TRACE("bot ", bot.netname, " queue cleared\n");
+	LOG_TRACE("bot ", bot.netname, " queue cleared");
 }
 
 void bot_queuecommand(entity bot, string cmdstring)
@@ -1056,7 +1058,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 {
 	float f = bot_cmd.bot_cmd_parm_float;
 
-	int slot = 0;
+	int slot = 0; // TODO: unhardcode?
 	.entity weaponentity = weaponentities[slot];
 	if(this.(weaponentity).state != WS_READY)
 	{

@@ -22,7 +22,7 @@ REGISTER_TURRET(TESLA, NEW(TeslaCoil));
 
 #ifdef SVQC
 
-spawnfunc(turret_tesla) { if (!turret_initialize(this, TUR_TESLA)) remove(this); }
+spawnfunc(turret_tesla) { if (!turret_initialize(this, TUR_TESLA)) delete(this); }
 
 METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur, entity it))
 {

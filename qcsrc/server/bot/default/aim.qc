@@ -1,13 +1,15 @@
 #include "aim.qh"
 
+#include "cvars.qh"
+
 #include "bot.qh"
 
 #include <common/physics/player.qh>
 #include <common/state.qh>
 
-#include "../weapons/weaponsystem.qh"
+#include "../../weapons/weaponsystem.qh"
 
-#include "../mutators/all.qh"
+#include "../../mutators/all.qh"
 
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
@@ -341,12 +343,12 @@ bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshott
 	shotspeedupward *= W_WeaponSpeedFactor(this);
 	if (!shotspeed)
 	{
-		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " shotspeed is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " shotspeed is zero!");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " maxshottime is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " maxshottime is zero!");
 		maxshottime = 1;
 	}
 	makevectors(this.v_angle);

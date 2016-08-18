@@ -37,10 +37,7 @@ REGISTER_MUTATOR(dom, false)
 
 // score rule declarations
 const float ST_DOM_TICKS = 1;
-const float SP_DOM_TICKS = 4;
-const float SP_DOM_TAKES = 5;
 const float ST_DOM_CAPS = 1;
-const float SP_DOM_CAPS = 4;
 
 // pps: points per second
 .float dom_total_pps = _STAT(DOM_TOTAL_PPS);
@@ -535,7 +532,7 @@ spawnfunc(dom_controlpoint)
 {
 	if(!g_domination)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	setthink(this, dom_controlpoint_setup);
@@ -580,7 +577,7 @@ spawnfunc(dom_team)
 {
 	if(!g_domination || autocvar_g_domination_teams_override >= 2)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	precache_model(this.model);
@@ -678,7 +675,7 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "dom_team") == NULL || autocvar_g_domination_teams_override >= 2)
 	{
-		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.\n");
+		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.");
 		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}

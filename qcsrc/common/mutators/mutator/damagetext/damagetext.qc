@@ -31,25 +31,25 @@ AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color, vector, '1 0 0',    "Damage text
 
 #ifdef CSQC
 CLASS(DamageText, Object)
-    ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color)
-    ATTRIB(DamageText, m_color_friendlyfire, vector, autocvar_cl_damagetext_friendlyfire_color)
-    ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size)
-    ATTRIB(DamageText, alpha, float, autocvar_cl_damagetext_alpha_start)
-    ATTRIB(DamageText, fade_rate, float, 1 / autocvar_cl_damagetext_alpha_lifetime)
-    ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity)
-    ATTRIB(DamageText, m_group, int, 0)
-    ATTRIB(DamageText, m_friendlyfire, bool, false)
-    ATTRIB(DamageText, m_damage, int, 0)
-    ATTRIB(DamageText, m_armordamage, int, 0)
-    ATTRIB(DamageText, m_deathtype, int, 0)
-    ATTRIB(DamageText, time_prev, float, time)
+    ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color);
+    ATTRIB(DamageText, m_color_friendlyfire, vector, autocvar_cl_damagetext_friendlyfire_color);
+    ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size);
+    ATTRIB(DamageText, alpha, float, autocvar_cl_damagetext_alpha_start);
+    ATTRIB(DamageText, fade_rate, float, 1 / autocvar_cl_damagetext_alpha_lifetime);
+    ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity);
+    ATTRIB(DamageText, m_group, int, 0);
+    ATTRIB(DamageText, m_friendlyfire, bool, false);
+    ATTRIB(DamageText, m_damage, int, 0);
+    ATTRIB(DamageText, m_armordamage, int, 0);
+    ATTRIB(DamageText, m_deathtype, int, 0);
+    ATTRIB(DamageText, time_prev, float, time);
 
     void DamageText_draw2d(DamageText this) {
         float dt = time - this.time_prev;
         this.time_prev = time;
         setorigin(this, this.origin + dt * this.velocity);
         this.alpha -= dt * this.fade_rate;
-        if (this.alpha < 0) remove(this);
+        if (this.alpha < 0) delete(this);
         vector pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
         if (pos.z >= 0 && this.m_size > 0) {
             pos.z = 0;
@@ -71,7 +71,7 @@ CLASS(DamageText, Object)
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
-    ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d)
+    ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d);
 
     void DamageText_update(DamageText this, vector _origin, int _health, int _armor, int _deathtype) {
         this.m_damage = _health;
@@ -160,10 +160,10 @@ NET_HANDLE(damagetext, bool isNew)
 CLASS(XonoticDamageTextSettings, XonoticTab)
     #include <menu/gamesettings.qh>
     REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
-    ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"))
-    ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9)
-    ATTRIB(XonoticDamageTextSettings, rows, float, 15.5)
-    ATTRIB(XonoticDamageTextSettings, columns, float, 5)
+    ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"));
+    ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9);
+    ATTRIB(XonoticDamageTextSettings, rows, float, 15.5);
+    ATTRIB(XonoticDamageTextSettings, columns, float, 5);
     INIT(XonoticDamageTextSettings) { this.configureDialog(this); }
     METHOD(XonoticDamageTextSettings, showNotify, void(entity this)) { loadAllCvars(this); }
     METHOD(XonoticDamageTextSettings, fill, void(entity this))

@@ -10,15 +10,15 @@ vector CL_Weapon_GetShotOrg(float wpn);
 
 float forbidWeaponUse(entity player);
 
-void W_AttachToShotorg(entity actor, entity flash, vector offset);
+void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset);
 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use);
 
 void W_DropEvent(.void(Weapon, entity actor) event, entity player, float weapon_type, entity weapon_item);
 
-void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound);
+void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sent_sound);
 
-void W_WeaponFrame(Player actor);
+void W_WeaponFrame(Player actor, .entity weaponentity);
 
 float W_WeaponRateFactor(entity this);
 

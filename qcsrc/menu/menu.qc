@@ -237,7 +237,7 @@ void m_keyup(float key, float ascii)
 		if (mouseButtonsPressed < 0)
 		{
 			mouseButtonsPressed = 0;
-			LOG_TRACE("Warning: released an already released button\n");
+			LOG_TRACE("Warning: released an already released button");
 		}
 	}
 	if (key == K_ALT) menuShiftState &= ~S_ALT;
@@ -286,7 +286,7 @@ void m_keydown(float key, float ascii)
 		if (mouseButtonsPressed > 10)
 		{
 			mouseButtonsPressed = 10;
-			LOG_TRACE("Warning: pressed an already pressed button\n");
+			LOG_TRACE("Warning: pressed an already pressed button");
 		}
 	}
 	if (key == K_ALT) menuShiftState |= S_ALT;

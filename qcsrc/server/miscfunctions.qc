@@ -172,7 +172,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
             {
                 LOG_TRACE("Nearest point (");
                 LOG_TRACE(nearest_entity[0].netname);
-                LOG_TRACE(") is not visible, using a visible one.\n");
+                LOG_TRACE(") is not visible, using a visible one.");
             }
             return nearest_entity[i];
         }
@@ -181,7 +181,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     if (num_nearest == 0)
         return NULL;
 
-    LOG_TRACE("Not seeing any location point, using nearest as fallback.\n");
+    LOG_TRACE("Not seeing any location point, using nearest as fallback.");
     /* DEBUGGING CODE:
     dprint("Candidates were: ");
     for(j = 0; j < num_nearest; ++j)
@@ -1036,8 +1036,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	// these stop the projectile from moving, so...
 	if(trace_dphitcontents == 0)
 	{
-		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(this), this.classname, vtos(this.origin));
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
 		checkclient(this);
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -1050,11 +1049,11 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
         traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
         if (trace_fraction >= 1)
         {
-            LOG_TRACE("Odd... did not hit...?\n");
+            LOG_TRACE("Odd... did not hit...?");
         }
         else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         {
-            LOG_TRACE("Detected and prevented the sky-grapple bug.\n");
+            LOG_TRACE("Detected and prevented the sky-grapple bug.");
             return true;
         }
     }
@@ -1078,10 +1077,10 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 		else if(this.classname == "spike")
 		{
 			W_Crylink_Dequeue(this);
-			remove(this);
+			delete(this);
 		}
 		else
-			remove(this);
+			delete(this);
 		return true;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
@@ -1245,7 +1244,7 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
-        LOG_TRACE("Needed ", ftos(i + 1), " attempts\n");
+        LOG_TRACE("Needed ", ftos(i + 1), " attempts");
         return true;
     }
     else

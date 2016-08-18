@@ -3,7 +3,7 @@
 #include "listbox.qh"
 CLASS(XonoticHUDSkinList, XonoticListBox)
 	METHOD(XonoticHUDSkinList, configureXonoticHUDSkinList, void(entity));
-	ATTRIB(XonoticHUDSkinList, rowsPerItem, float, 1)
+	ATTRIB(XonoticHUDSkinList, rowsPerItem, float, 1);
 	METHOD(XonoticHUDSkinList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticHUDSkinList, draw, void(entity));
 	METHOD(XonoticHUDSkinList, drawListBoxItem, void(entity, int, vector, bool, bool));
@@ -18,17 +18,17 @@ CLASS(XonoticHUDSkinList, XonoticListBox)
 	METHOD(XonoticHUDSkinList, destroy, void(entity));
 	METHOD(XonoticHUDSkinList, showNotify, void(entity));
 
-	ATTRIB(XonoticHUDSkinList, listHUDSkin, float, -1)
-	ATTRIB(XonoticHUDSkinList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticHUDSkinList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticHUDSkinList, columnNameSize, float, 0)
-	ATTRIB(XonoticHUDSkinList, realUpperMargin, float, 0)
-	ATTRIB(XonoticHUDSkinList, origin, vector, '0 0 0')
-	ATTRIB(XonoticHUDSkinList, itemAbsSize, vector, '0 0 0')
+	ATTRIB(XonoticHUDSkinList, listHUDSkin, float, -1);
+	ATTRIB(XonoticHUDSkinList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticHUDSkinList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticHUDSkinList, columnNameSize, float, 0);
+	ATTRIB(XonoticHUDSkinList, realUpperMargin, float, 0);
+	ATTRIB(XonoticHUDSkinList, origin, vector, '0 0 0');
+	ATTRIB(XonoticHUDSkinList, itemAbsSize, vector, '0 0 0');
 
-	ATTRIB(XonoticHUDSkinList, filterString, string, string_null)
-	ATTRIB(XonoticHUDSkinList, delayedRefreshTime, float, 0)
-	ATTRIB(XonoticHUDSkinList, savedName, string, string_null)
+	ATTRIB(XonoticHUDSkinList, filterString, string);
+	ATTRIB(XonoticHUDSkinList, delayedRefreshTime, float, 0);
+	ATTRIB(XonoticHUDSkinList, savedName, string);
 ENDCLASS(XonoticHUDSkinList)
 entity hudskinlist;
 entity makeXonoticHUDSkinList();

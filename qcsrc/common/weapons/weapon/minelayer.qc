@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(MineLayer, Weapon)
-/* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets)
-/* impulse   */ ATTRIB(MineLayer, impulse, int, 4)
+/* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets);
+/* impulse   */ ATTRIB(MineLayer, impulse, int, 4);
 /* flags     */ ATTRIB(MineLayer, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(MineLayer, wpcolor, vector, '0.75 1 0');
@@ -70,6 +70,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
 	entity newmine = spawn();
+	IL_PUSH(g_mines, newmine);
 	newmine.classname = this.classname;
 
 	newmine.bot_dodge = this.bot_dodge;
@@ -101,8 +102,9 @@ void W_MineLayer_Stick(entity this, entity to)
 	newmine.nextthink = time;
 	newmine.cnt = this.cnt;
 	newmine.flags = this.flags;
+	IL_PUSH(g_projectiles, newmine);
 
-	remove(this);
+	delete(this);
 
 	if(to)
 		SetMovetypeFollow(newmine, to);
@@ -129,13 +131,14 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 		if(!w.wr_checkammo1(w, own))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
-			int slot = 0; // TODO: unhardcode
+			.entity weaponentity = this.weaponentity_fld;
+			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
 			PS(own).m_switchweapon = w_getbestweapon(own);
 		}
 	}
 	this.realowner.minelayer_mines -= 1;
-	remove(this);
+	delete(this);
 }
 
 void W_MineLayer_Explode_think(entity this)
@@ -160,13 +163,14 @@ void W_MineLayer_DoRemoteExplode(entity this)
 		if(!w.wr_checkammo1(w, own))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
-			int slot = 0; // TODO: unhardcode
+			.entity weaponentity = this.weaponentity_fld;
+			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
 			PS(own).m_switchweapon = w_getbestweapon(own);
 		}
 	}
 	this.realowner.minelayer_mines -= 1;
-	remove(this);
+	delete(this);
 }
 
 void W_MineLayer_RemoteExplode(entity this)
@@ -203,9 +207,10 @@ void W_MineLayer_ProximityExplode(entity this)
 int W_MineLayer_Count(entity e)
 {
 	int minecount = 0;
-	entity mine;
-	for(mine = NULL; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
+	IL_EACH(g_mines, it.realowner == e,
+	{
 		minecount += 1;
+	});
 
 	return minecount;
 }
@@ -312,7 +317,7 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 		W_PrepareExplosionByDamage(this, attacker, W_MineLayer_Explode_think);
 }
 
-void W_MineLayer_Attack(Weapon thiswep, entity actor)
+void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity mine;
 	entity flash;
@@ -331,10 +336,12 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo));
 
-	W_SetupShot_ProjectileSize(actor, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(actor);
+	mine.weaponentity_fld = weaponentity;
+	IL_PUSH(g_mines, mine);
 	mine.owner = mine.realowner = actor;
 	if(WEP_CVAR(minelayer, detonatedelay) >= 0)
 		mine.spawnshieldtime = time + WEP_CVAR(minelayer, detonatedelay);
@@ -364,6 +371,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor)
 	mine.nextthink = time;
 	mine.cnt = (WEP_CVAR(minelayer, lifetime) - WEP_CVAR(minelayer, lifetime_countdown));
 	mine.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, mine);
 	mine.missile_flags = MIF_SPLASH | MIF_ARC | MIF_PROXY;
 
 	if(mine.cnt > 0) { mine.cnt += time; }
@@ -375,7 +383,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor)
 	setmodel(flash, MDL_MINELAYER_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, flash, '5 0 0');
+	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 
 	// common properties
 
@@ -384,24 +392,23 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor)
 	actor.minelayer_mines = W_MineLayer_Count(actor);
 }
 
-float W_MineLayer_PlacedMines(entity this, float detonate)
+bool W_MineLayer_PlacedMines(entity this, bool detonate)
 {
-	entity mine;
-	float minfound = 0;
+	bool minfound = false;
 
-	for(mine = NULL; (mine = find(mine, classname, "mine")); ) if(mine.realowner == this)
+	IL_EACH(g_mines, it.realowner == this,
 	{
 		if(detonate)
 		{
-			if(!mine.minelayer_detonate)
+			if(!it.minelayer_detonate)
 			{
-				mine.minelayer_detonate = true;
-				minfound = 1;
+				it.minelayer_detonate = true;
+				minfound = true;
 			}
 		}
 		else
-			minfound = 1;
-	}
+			minfound = true;
+	});
 	return minfound;
 }
 
@@ -425,10 +432,8 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
         teamdamage = 0;
         enemydamage = 0;
 
-        FOREACH_ENTITY_ENT(realowner, actor,
+        IL_EACH(g_mines, it.realowner == actor,
         {
-        	if(it.classname != "mine") continue;
-
         	entity mine = it;
         	FOREACH_ENTITY_FLOAT(bot_attack, true,
         	{
@@ -452,10 +457,8 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
             desirabledamage = desirabledamage - teamdamage;
 
         makevectors(actor.v_angle);
-        FOREACH_ENTITY_ENT(realowner, actor,
+        IL_EACH(g_mines, it.realowner == actor,
         {
-            if(it.classname != "mine") continue;
-
             if(skill > 9) // normal players only do this for the target they are tracking
             {
 	            entity mine = it;
@@ -506,7 +509,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(minelayer, refire)))
         {
-            W_MineLayer_Attack(thiswep, actor);
+            W_MineLayer_Attack(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
         }
     }
@@ -542,7 +545,7 @@ METHOD(MineLayer, wr_resetplayer, void(entity thiswep, entity actor))
 }
 METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, WEP_CVAR(minelayer, ammo), SND_RELOAD);
+    W_Reload(actor, weaponentity, WEP_CVAR(minelayer, ammo), SND_RELOAD);
 }
 METHOD(MineLayer, wr_suicidemessage, Notification(entity thiswep))
 {

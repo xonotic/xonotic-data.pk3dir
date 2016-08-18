@@ -1,5 +1,7 @@
 #include "bot.qh"
 
+#include "cvars.qh"
+
 #include "aim.qh"
 #include "navigation.qh"
 #include "scripting.qh"
@@ -8,20 +10,20 @@
 #include "havocbot/havocbot.qh"
 #include "havocbot/scripting.qh"
 
-#include "../teamplay.qh"
+#include "../../teamplay.qh"
 
-#include "../antilag.qh"
-#include "../autocvars.qh"
-#include "../campaign.qh"
-#include "../cl_client.qh"
-#include "../constants.qh"
-#include "../defs.qh"
-#include "../race.qh"
+#include "../../antilag.qh"
+#include "../../autocvars.qh"
+#include "../../campaign.qh"
+#include "../../cl_client.qh"
+#include "../../constants.qh"
+#include "../../defs.qh"
+#include "../../race.qh"
 #include <common/t_items.qh>
 
-#include "../mutators/all.qh"
+#include "../../mutators/all.qh"
 
-#include "../weapons/accuracy.qh"
+#include "../../weapons/accuracy.qh"
 
 #include <common/physics/player.qh>
 #include <common/constants.qh>
@@ -368,7 +370,7 @@ void bot_relinkplayerlist()
 			++currentbots;
 		}
 	});
-	LOG_TRACE(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
+	LOG_TRACE("relink: ", ftos(currentbots), " bots seen.");
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
 }
@@ -391,7 +393,7 @@ void bot_clientdisconnect(entity this)
 	this.playermodel_freeme = string_null;
 	this.playerskin_freeme = string_null;
 	if(this.bot_cmd_current)
-		remove(this.bot_cmd_current);
+		delete(this.bot_cmd_current);
 	if(bot_waypoint_queue_owner==this)
 		bot_waypoint_queue_owner = NULL;
 }
@@ -524,14 +526,14 @@ void autoskill(float factor)
 	LOG_TRACE("best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		LOG_TRACE("not doing anything\n");
+		LOG_TRACE("not doing anything");
 		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(autocvar_skill < 17)
 		{
-			LOG_TRACE("2 frags difference, increasing skill\n");
+			LOG_TRACE("2 frags difference, increasing skill");
 			cvar_set("skill", ftos(autocvar_skill + 1));
 			bprint("^2SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
@@ -540,14 +542,14 @@ void autoskill(float factor)
 	{
 		if(autocvar_skill > 0)
 		{
-			LOG_TRACE("2 frags difference, decreasing skill\n");
+			LOG_TRACE("2 frags difference, decreasing skill");
 			cvar_set("skill", ftos(autocvar_skill - 1));
 			bprint("^1SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else
 	{
-		LOG_TRACE("not doing anything\n");
+		LOG_TRACE("not doing anything");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}

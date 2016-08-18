@@ -28,7 +28,7 @@ REGISTER_TURRET(HK, NEW(HunterKiller));
 .float atime;
 #endif
 
-spawnfunc(turret_hk) { if(!turret_initialize(this, TUR_HK)) remove(this); }
+spawnfunc(turret_hk) { if(!turret_initialize(this, TUR_HK)) delete(this); }
 
 METHOD(HunterKiller, tr_think, void(HunterKiller thistur, entity it))
 {

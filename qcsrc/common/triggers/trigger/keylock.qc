@@ -15,7 +15,7 @@ void trigger_keylock_kill(string s)
 {
 	entity t;
 	for(t = NULL; (t = find(t, targetname, s)); )
-		remove(t);
+		delete(t);
 }
 
 void trigger_keylock_touch(entity this, entity toucher)
@@ -74,7 +74,7 @@ void trigger_keylock_touch(entity this, entity toucher)
 		if(this.killtarget)
 			trigger_keylock_kill(this.killtarget);
 
-		remove(this);
+		delete(this);
 	}
 
 }
@@ -121,7 +121,7 @@ message2 and noise2 will be resent to the player every 2 seconds while he is in 
 */
 spawnfunc(trigger_keylock)
 {
-	if(!this.itemkeys) { remove(this); return; }
+	if(!this.itemkeys) { delete(this); return; }
 
 	// set unlocked message
 	if(this.message == "")

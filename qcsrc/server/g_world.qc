@@ -2,7 +2,7 @@
 
 #include "anticheat.qh"
 #include "antilag.qh"
-#include "bot/bot.qh"
+#include "bot/api.qh"
 #include "campaign.qh"
 #include "cheats.qh"
 #include "cl_client.qh"
@@ -646,9 +646,6 @@ spawnfunc(worldspawn)
 		}
 	}
 
-	float fd, l;
-	string s;
-
 	cvar = cvar_normal;
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
@@ -660,8 +657,6 @@ spawnfunc(worldspawn)
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
-
-	compressShortVector_init();
 
 	maxclients = 0;
 	for (entity head = nextent(NULL); head; head = nextent(head))
@@ -753,7 +748,7 @@ spawnfunc(worldspawn)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -806,12 +801,13 @@ spawnfunc(worldspawn)
 
 	if(whichpack(strcat("maps/", mapname, ".cfg")) != "")
 	{
-		fd = fopen(strcat("maps/", mapname, ".cfg"), FILE_READ);
+		int fd = fopen(strcat("maps/", mapname, ".cfg"), FILE_READ);
 		if(fd != -1)
 		{
+			string s;
 			while((s = fgets(fd)))
 			{
-				l = tokenize_console(s);
+				int l = tokenize_console(s);
 				if(l < 2)
 					continue;
 				if(argv(0) == "cd")
@@ -853,7 +849,7 @@ spawnfunc(worldspawn)
 	monsterlist_reply = strzone(getmonsterlist());
 	for(int i = 0; i < 10; ++i)
 	{
-		s = getrecords(i);
+		string s = getrecords(i);
 		if (s)
 			records_reply[i] = strzone(s);
 	}
@@ -872,7 +868,7 @@ spawnfunc(worldspawn)
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
 	{
-		s = "csprogs-" WATERMARK ".txt";
+		string s = "csprogs-" WATERMARK ".txt";
 		// remove automatically managed files from the list to prevent duplicates
 		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
@@ -884,7 +880,7 @@ spawnfunc(worldspawn)
 		}
 		// add automatically managed files to the list
 		#define X(match) MACRO_BEGIN { \
-			fd = search_begin(match, true, false); \
+			int fd = search_begin(match, true, false); \
 			if (fd >= 0) \
 			{ \
 				for (int i = 0, j = search_getsize(fd); i < j; ++i) \
@@ -923,7 +919,7 @@ spawnfunc(worldspawn)
 spawnfunc(light)
 {
 	//makestatic (this); // Who the f___ did that?
-	remove(this);
+	delete(this);
 }
 
 string GetGametype()
@@ -970,10 +966,10 @@ float MapHasRightSize(string map)
 		LOG_TRACE("checkwp "); LOG_TRACE(map);
 		if(!fexists(strcat("maps/", map, ".waypoints")))
 		{
-			LOG_TRACE(": no waypoints\n");
+			LOG_TRACE(": no waypoints");
 			return false;
 		}
-		LOG_TRACE(": has waypoints\n");
+		LOG_TRACE(": has waypoints");
 	}
 
 	// open map size restriction file
@@ -988,18 +984,18 @@ float MapHasRightSize(string map)
 		fclose(fh);
 		if(player_count < mapmin)
 		{
-			LOG_TRACE("not enough\n");
+			LOG_TRACE("not enough");
 			return false;
 		}
 		if(player_count > mapmax)
 		{
-			LOG_TRACE("too many\n");
+			LOG_TRACE("too many");
 			return false;
 		}
-		LOG_TRACE("right size\n");
+		LOG_TRACE("right size");
 		return true;
 	}
-	LOG_TRACE(": not found\n");
+	LOG_TRACE(": not found");
 	return true;
 }
 
@@ -1038,7 +1034,7 @@ float Map_Check(float position, float pass)
 		return 0;
 	}
 	else
-		LOG_DEBUG( "Couldn't select '", filename, "'...\n" );
+		LOG_DEBUG( "Couldn't select '", filename, "'..." );
 
 	return 0;
 }
@@ -1071,7 +1067,7 @@ float() MaplistMethod_Iterate = // usual method
 {
 	float pass, i;
 
-	LOG_TRACE("Trying MaplistMethod_Iterate\n");
+	LOG_TRACE("Trying MaplistMethod_Iterate");
 
 	for(pass = 1; pass <= 2; ++pass)
 	{
@@ -1088,7 +1084,7 @@ float() MaplistMethod_Iterate = // usual method
 
 float() MaplistMethod_Repeat = // fallback method
 {
-	LOG_TRACE("Trying MaplistMethod_Repeat\n");
+	LOG_TRACE("Trying MaplistMethod_Repeat");
 
 	if(Map_Check(Map_Current, 2))
 		return Map_Current;
@@ -1099,7 +1095,7 @@ float() MaplistMethod_Random = // random map selection
 {
 	float i, imax;
 
-	LOG_TRACE("Trying MaplistMethod_Random\n");
+	LOG_TRACE("Trying MaplistMethod_Random");
 
 	imax = 42;
 
@@ -1119,7 +1115,7 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 {
 	float i, j, imax, insertpos;
 
-	LOG_TRACE("Trying MaplistMethod_Shuffle\n");
+	LOG_TRACE("Trying MaplistMethod_Shuffle");
 
 	imax = 42;
 
@@ -1131,7 +1127,7 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
 		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
-		LOG_TRACE("SHUFFLE: insert pos = ", ftos(insertpos), "\n");
+		LOG_TRACE("SHUFFLE: insert pos = ", ftos(insertpos));
 
 		// insert the current map there
 		newlist = "";
@@ -2021,7 +2017,7 @@ void Physics_Frame()
 
 	FOREACH_ENTITY_FLOAT(pure_data, false,
 	{
-		if(IS_CLIENT(it) || it.classname == "" || it.movetype == MOVETYPE_PUSH || it.movetype == MOVETYPE_FAKEPUSH || it.movetype == MOVETYPE_PHYSICS)
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
 		int mt = it.move_movetype;
@@ -2029,11 +2025,11 @@ void Physics_Frame()
 		if(mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH || mt == MOVETYPE_PHYSICS)
 		{
 			it.move_qcphysics = false;
-			it.movetype = mt;
+			set_movetype(it, mt);
 			continue;
 		}
-		
-		it.movetype = ((it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype);
+
+		set_movetype(it, ((it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype));
 
 		if(it.move_movetype == MOVETYPE_NONE)
 			continue;
@@ -2060,6 +2056,7 @@ void Physics_Frame()
 	});
 }
 
+void systems_update();
 void EndFrame()
 {
 	anticheat_endframe();
@@ -2094,6 +2091,7 @@ void EndFrame()
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
 	});
+	systems_update();
 	IL_ENDFRAME();
 }
 
@@ -2170,7 +2168,7 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
-		LOG_TRACE("Saving persistent data...\n");
+		LOG_TRACE("Saving persistent data...");
 		Ban_SaveBans();
 
 		// playerstats with unfinished match
@@ -2193,7 +2191,7 @@ void Shutdown()
 		CheatShutdown(); // must be after cheatcount check
 		db_close(ServerProgsDB);
 		db_close(TemporaryDB);
-		LOG_TRACE("Saving persistent data... done!\n");
+		LOG_TRACE("Saving persistent data... done!");
 		// tell the bot system the game is ending now
 		bot_endgame();
 

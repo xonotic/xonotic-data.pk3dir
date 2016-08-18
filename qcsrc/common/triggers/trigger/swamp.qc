@@ -45,7 +45,7 @@ void swampslug_think(entity this)
 	if(this.health <= 0)
 	{
 		this.owner.in_swamp = 0;
-		remove(this);
+		delete(this);
 		//centerprint(this.owner,"Killing slug...\n");
 		return;
 	}

@@ -38,9 +38,6 @@ REGISTER_MUTATOR(cts, false)
 
 // scores
 const float ST_CTS_LAPS = 1;
-const float SP_CTS_LAPS = 4;
-const float SP_CTS_TIME = 5;
-const float SP_CTS_FASTEST = 6;
 #endif
 
 #ifdef IMPLEMENTATION
@@ -111,8 +108,9 @@ void CTS_ClientKill(entity e) // silent version of ClientKill, used when player 
 MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
+	float dt = M_ARGV(1, float);
 
-	player.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
+	player.race_movetime_frac += dt;
 	float f = floor(player.race_movetime_frac);
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;
@@ -285,7 +283,7 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
 }
@@ -406,7 +404,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 
 	if(player.killindicator && player.killindicator.health == 1) // player.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
 	{
-		remove(player.killindicator);
+		delete(player.killindicator);
 		player.killindicator = NULL;
 
 		ClientKill_Now(player); // allow instant kill in this case

@@ -20,7 +20,6 @@ const int AI_STATUS_STUCK						= BIT(11);  // Cannot reach any goal
 .int aistatus;
 
 // Skill system
-float skill;
 float autoskill_nextthink;
 
 // havocbot_keyboardskill // keyboard movement
@@ -43,13 +42,8 @@ float autoskill_nextthink;
 .float totalfrags_lastcheck;
 
 // Custom weapon priorities
-float bot_custom_weapon;
 float bot_distance_far;
 float bot_distance_close;
-
-float bot_weapons_far[Weapons_MAX];
-float bot_weapons_mid[Weapons_MAX];
-float bot_weapons_close[Weapons_MAX];
 
 entity bot_list;
 .entity nextbot;

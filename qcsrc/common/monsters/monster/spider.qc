@@ -106,7 +106,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 			actor.anim_finished = time + 1;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web(actor);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -148,7 +148,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 		});
 
-		remove(this);
+		delete(this);
 	}
 }
 
@@ -194,6 +194,7 @@ void M_Spider_Attack_Web(entity this)
 	proj.health = 500;
 	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.damagedbycontents = true;
 
 	proj.bouncefactor = 0.3;

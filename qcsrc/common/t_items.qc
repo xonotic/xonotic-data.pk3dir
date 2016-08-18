@@ -4,8 +4,7 @@
 
 #if defined(SVQC)
 
-    #include "../server/bot/bot.qh"
-    #include "../server/bot/waypoints.qh"
+    #include "../server/bot/api.qh"
 
     #include <server/mutators/all.qh>
 
@@ -35,6 +34,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 
 #ifdef CSQC
 bool autocvar_cl_ghost_items_vehicle = true;
+.vector item_glowmod;
 void Item_SetAlpha(entity this)
 {
 	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);
@@ -42,7 +42,8 @@ void Item_SetAlpha(entity this)
 	if(!veh_hud && (this.ItemStatus & ITS_AVAILABLE))
 	{
 		this.alpha = 1;
-		this.colormod = this.glowmod = '1 1 1';
+		this.colormod = '1 1 1';
+		this.glowmod = this.item_glowmod;
 	}
 	else
 	{
@@ -194,7 +195,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     if(sf & ISF_MODEL)
     {
         this.drawmask  = MASK_NORMAL;
-		this.move_movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 		if (isnew) IL_PUSH(g_drawables, this);
         this.draw       = ItemDraw;
         this.solid = SOLID_TRIGGER;
@@ -229,7 +230,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             else
             {
                 this.draw = ItemDraw;
-                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it\n");
+                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it");
             }
         }
 
@@ -238,7 +239,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 
         if(this.mdl == "")
-            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!\n");
+            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!");
 
         precache_model(this.mdl);
         _setmodel(this, this.mdl);
@@ -247,14 +248,19 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     }
 
     if(sf & ISF_COLORMAP)
+    {
         this.colormap = ReadShort();
+        this.item_glowmod_x = ReadByte() / 255.0;
+        this.item_glowmod_y = ReadByte() / 255.0;
+        this.item_glowmod_z = ReadByte() / 255.0;
+    }
 
     if(sf & ISF_DROP)
     {
         this.gravity = 1;
         this.pushable = true;
         //this.angles = '0 0 0';
-        this.move_movetype = MOVETYPE_TOSS;
+        set_movetype(this, MOVETYPE_TOSS);
         this.velocity_x = ReadCoord();
         this.velocity_y = ReadCoord();
         this.velocity_z = ReadCoord();
@@ -328,14 +334,19 @@ bool ItemSend(entity this, entity to, int sf)
 		WriteShort(MSG_ENTITY, this.fade_start);
 
 		if(this.mdl == "")
-			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "exspect a crash just aboute now\n");
+			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "expect a crash just about now");
 
 		WriteString(MSG_ENTITY, this.mdl);
 	}
 
 
 	if(sf & ISF_COLORMAP)
+	{
 		WriteShort(MSG_ENTITY, this.colormap);
+		WriteByte(MSG_ENTITY, this.glowmod.x * 255.0);
+        WriteByte(MSG_ENTITY, this.glowmod.y * 255.0);
+        WriteByte(MSG_ENTITY, this.glowmod.z * 255.0);
+	}
 
 	if(sf & ISF_DROP)
 	{
@@ -447,7 +458,7 @@ void Item_Show (entity e, float mode)
 		//setmodel(e, "null");
 		e.solid = SOLID_NOT;
 		e.colormod = '0 0 0';
-		e.glowmod = e.colormod;
+		//e.glowmod = e.colormod;
 		e.spawnshieldtime = 1;
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}}
@@ -768,7 +779,7 @@ void Item_Touch(entity this, entity toucher)
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
-			remove(this);
+			delete(this);
 			return;
 		}
 	}
@@ -817,7 +828,7 @@ LABEL(pickup)
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
-		remove (this);
+		delete (this);
 	else if (this.spawnshieldtime)
 	{
 		entity e;
@@ -867,7 +878,7 @@ void Item_FindTeam(entity this)
 	if(this.effects & EF_NODRAW)
 	{
 		// marker for item team search
-		LOG_TRACE("Initializing item team ", ftos(this.team), "\n");
+		LOG_TRACE("Initializing item team ", ftos(this.team));
 		RandomSelection_Init();
 		FOREACH_ENTITY_FLOAT(team, this.team,
 		{
@@ -904,7 +915,7 @@ void RemoveItem(entity this)
 {
 	if(wasfreed(this) || !this) { return; }
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	remove(this);
+	delete(this);
 }
 
 // pickup evaluation functions
@@ -1069,7 +1080,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if(MUTATOR_CALLHOOK(FilterItem, this)) // error means we do not want the item
 	{
 		startitem_failed = true;
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -1098,7 +1109,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 		{
 			startitem_failed = true;
-			remove(this);
+			delete(this);
 			return;
 		}
 	}
@@ -1107,7 +1118,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
-			remove (this);
+			delete (this);
 			return;
 		}
 
@@ -1155,7 +1166,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
             // why not flags & fl_item?
 		    FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
                 LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
-                LOG_TRACE(" vs ", it.netname, vtos(it.origin), "\n");
+                LOG_TRACE(" vs ", it.netname, vtos(it.origin));
                 error("Mapper sucks.");
             });
 			this.is_item = true;
@@ -1205,7 +1216,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.gravity = 1;
 		if (!(this.spawnflags & 1024))
 			this.ItemStatus |= ITS_ANIMATE1;
-		this.ItemStatus |= ISF_COLORMAP;
+		this.SendFlags |= ISF_COLORMAP;
 	}
 
 	this.state = 0;
@@ -1226,7 +1237,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if (MUTATOR_CALLHOOK(Item_Spawn, this))
 	{
 		startitem_failed = true;
-		remove(this);
+		delete(this);
 		return;
 	}
 }
@@ -1423,7 +1434,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 	if(actor.classname == "droppedweapon")
 	{
 		EXACTTRIGGER_TOUCH(this, trigger);
-		remove(actor);
+		delete(actor);
 		return;
 	}
 
@@ -1439,7 +1450,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 	FOREACH_ENTITY_ENT(enemy, actor,
 	{
 		if(it.classname == "droppedweapon")
-			remove(it);
+			delete(it);
 	});
 
 	if(GiveItems(actor, 0, tokenize_console(this.netname)))

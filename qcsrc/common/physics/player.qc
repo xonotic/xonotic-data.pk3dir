@@ -134,10 +134,6 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		do_crouch = false;
 	if(STAT(FROZEN, this))
 		do_crouch = false;
-	if((activeweapon.spawnflags & WEP_TYPE_MELEE_PRI) && viewmodel.animstate_startframe == viewmodel.anim_fire1_x && time < viewmodel.weapon_nextthink)
-		do_crouch = false;
-	if((activeweapon.spawnflags & WEP_TYPE_MELEE_SEC) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
-		do_crouch = false;
 
 	if (do_crouch)
 	{
@@ -154,12 +150,12 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		}
 	}
 
-	if (IS_ONGROUND(this) || this.velocity.z <= 0 || pmove_waterjumptime <= 0)
-		pmove_waterjumptime = 0;
+	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_WATERJUMP_TIME(this) <= 0)
+		PHYS_WATERJUMP_TIME(this) = 0;
 #endif
 }
 
-void CPM_PM_Aircontrol(entity this, vector wishdir, float wishspeed)
+void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 {
 	float k = 32 * (2 * IsMoveInDirection(this.movement, 0) - 1);
 	if (k <= 0)
@@ -176,7 +172,7 @@ void CPM_PM_Aircontrol(entity this, vector wishdir, float wishspeed)
 
 	if (dot > 0) // we can't change direction while slowing down
 	{
-		k *= pow(dot, PHYS_AIRCONTROL_POWER(this)) * PHYS_INPUT_TIMELENGTH;
+		k *= pow(dot, PHYS_AIRCONTROL_POWER(this)) * dt;
 		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k/32);
 		k *= PHYS_AIRCONTROL(this);
 		this.velocity = normalize(this.velocity * xyspeed + wishdir * k);
@@ -196,7 +192,7 @@ float AdjustAirAccelQW(float accelqw, float factor)
 //   sv_airaccel_sideways_friction 0
 //   prvm_globalset server speedclamp_mode 1
 //     (or 2)
-void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
+void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
 {
 	float speedclamp = stretchfactor > 0 ? stretchfactor
 	: accelqw < 0 ? 1 // full clamping, no stretch
@@ -212,7 +208,7 @@ void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed
 	vector vel_xy = vec2(this.velocity);
 	vector vel_perpend = vel_xy - vel_straight * wishdir;
 
-	float step = accel * PHYS_INPUT_TIMELENGTH * wishspeed0;
+	float step = accel * dt * wishspeed0;
 
 	float vel_xy_current  = vlen(vel_xy);
 	if (speedlimit)
@@ -225,7 +221,7 @@ void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed
 	if (sidefric < 0 && (vel_perpend*vel_perpend))
 		// negative: only apply so much sideways friction to stay below the speed you could get by "braking"
 	{
-		float f = max(0, 1 + PHYS_INPUT_TIMELENGTH * wishspeed * sidefric);
+		float f = max(0, 1 + dt * wishspeed * sidefric);
 		float themin = (vel_xy_backward * vel_xy_backward - vel_straight * vel_straight) / (vel_perpend * vel_perpend);
 		// assume: themin > 1
 		// vel_xy_backward*vel_xy_backward - vel_straight*vel_straight > vel_perpend*vel_perpend
@@ -241,7 +237,7 @@ void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed
 		}
 	}
 	else
-		vel_perpend *= max(0, 1 - PHYS_INPUT_TIMELENGTH * wishspeed * sidefric);
+		vel_perpend *= max(0, 1 - dt * wishspeed * sidefric);
 
 	vel_xy = vel_straight * wishdir + vel_perpend;
 
@@ -260,7 +256,7 @@ void PM_Accelerate(entity this, vector wishdir, float wishspeed, float wishspeed
 	this.velocity = vel_xy + vel_z * '0 0 1';
 }
 
-void PM_AirAccelerate(entity this, vector wishdir, float wishspeed)
+void PM_AirAccelerate(entity this, float dt, vector wishdir, float wishspeed)
 {
 	if (wishspeed == 0)
 		return;
@@ -270,18 +266,18 @@ void PM_AirAccelerate(entity this, vector wishdir, float wishspeed)
 	float curspeed = vlen(curvel);
 
 	if (wishspeed > curspeed * 1.01)
-		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL(this) * PHYS_MAXSPEED(this) * PHYS_INPUT_TIMELENGTH);
+		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL(this) * PHYS_MAXSPEED(this) * dt);
 	else
 	{
 		float f = max(0, (PHYS_WARSOWBUNNY_TOPSPEED(this) - curspeed) / (PHYS_WARSOWBUNNY_TOPSPEED(this) - PHYS_MAXSPEED(this)));
-		wishspeed = max(curspeed, PHYS_MAXSPEED(this)) + PHYS_WARSOWBUNNY_ACCEL(this) * f * PHYS_MAXSPEED(this) * PHYS_INPUT_TIMELENGTH;
+		wishspeed = max(curspeed, PHYS_MAXSPEED(this)) + PHYS_WARSOWBUNNY_ACCEL(this) * f * PHYS_MAXSPEED(this) * dt;
 	}
 	vector wishvel = wishdir * wishspeed;
 	vector acceldir = wishvel - curvel;
 	float addspeed = vlen(acceldir);
 	acceldir = normalize(acceldir);
 
-	float accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL(this) * PHYS_MAXSPEED(this) * PHYS_INPUT_TIMELENGTH);
+	float accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL(this) * PHYS_MAXSPEED(this) * dt);
 
 	if (PHYS_WARSOWBUNNY_BACKTOSIDERATIO(this) < 1)
 	{
@@ -378,7 +374,7 @@ bool PlayerJump(entity this)
 	{
 #ifdef SVQC
 		if(autocvar_speedmeter)
-			LOG_TRACE(strcat("landing velocity: ", vtos(this.velocity), " (abs: ", ftos(vlen(this.velocity)), ")\n"));
+			LOG_TRACE("landing velocity: ", vtos(this.velocity), " (abs: ", ftos(vlen(this.velocity)), ")");
 #endif
 		if(this.lastground < time - 0.3)
 		{
@@ -388,7 +384,7 @@ bool PlayerJump(entity this)
 		}
 #ifdef SVQC
 		if(this.jumppadcount > 1)
-			LOG_TRACE(strcat(ftos(this.jumppadcount), "x jumppad combo\n"));
+			LOG_TRACE(ftos(this.jumppadcount), "x jumppad combo");
 		this.jumppadcount = 0;
 #endif
 	}
@@ -434,7 +430,7 @@ void CheckWaterJump(entity this)
 		#ifdef SVQC
 			PHYS_TELEPORT_TIME(this) = time + 2;	// safety net
 		#elif defined(CSQC)
-			pmove_waterjumptime = 2;
+			PHYS_WATERJUMP_TIME(this) = 2;
 		#endif
 		}
 	}
@@ -579,12 +575,12 @@ void PM_check_nickspam(entity this)
 #endif
 }
 
-void PM_check_punch(entity this)
+void PM_check_punch(entity this, float dt)
 {
 #ifdef SVQC
 	if (this.punchangle != '0 0 0')
 	{
-		float f = vlen(this.punchangle) - 10 * PHYS_INPUT_TIMELENGTH;
+		float f = vlen(this.punchangle) - 10 * dt;
 		if (f > 0)
 			this.punchangle = normalize(this.punchangle) * f;
 		else
@@ -593,7 +589,7 @@ void PM_check_punch(entity this)
 
 	if (this.punchvector != '0 0 0')
 	{
-		float f = vlen(this.punchvector) - 30 * PHYS_INPUT_TIMELENGTH;
+		float f = vlen(this.punchvector) - 30 * dt;
 		if (f > 0)
 			this.punchvector = normalize(this.punchvector) * f;
 		else
@@ -681,184 +677,9 @@ void PM_check_blocked(entity this)
 #endif
 }
 
-void PM_fly(entity this, float maxspd_mod)
-{
-	// noclipping or flying
-	UNSET_ONGROUND(this);
-
-	this.velocity = this.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this));
-	makevectors(this.v_angle);
-	//wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
-	vector wishvel = v_forward * this.movement.x
-					+ v_right * this.movement.y
-					+ '0 0 1' * this.movement.z;
-	// acceleration
-	vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod);
-#ifdef SVQC
-	if(time >= PHYS_TELEPORT_TIME(this))
-#elif defined(CSQC)
-	if(pmove_waterjumptime <= 0)
-#endif
-		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this) * maxspd_mod, 1, 0, 0, 0);
-}
-
-void PM_swim(entity this, float maxspd_mod)
-{
-	// swimming
-	UNSET_ONGROUND(this);
-
-	float jump = PHYS_INPUT_BUTTON_JUMP(this);
-	// water jump only in certain situations
-	// this mimics quakeworld code
-	if (jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc)
-	{
-		vector yawangles = '0 1 0' * this.v_angle.y;
-		makevectors(yawangles);
-		vector forward = v_forward;
-		vector spot = this.origin + 24 * forward;
-		spot_z += 8;
-		traceline(spot, spot, MOVE_NOMONSTERS, this);
-		if (trace_startsolid)
-		{
-			spot_z += 24;
-			traceline(spot, spot, MOVE_NOMONSTERS, this);
-			if (!trace_startsolid)
-			{
-				this.velocity = forward * 50;
-				this.velocity_z = 310;
-				UNSET_ONGROUND(this);
-				SET_JUMP_HELD(this);
-			}
-		}
-	}
-	makevectors(this.v_angle);
-	float wishdown = this.movement.z;
-	if(PHYS_INPUT_BUTTON_CROUCH(this))
-		wishdown = -PHYS_MAXSPEED(this);
-	//wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
-	vector wishvel = v_forward * this.movement.x
-					+ v_right * this.movement.y
-					+ '0 0 1' * wishdown;
-	if(this.viewloc)
-		wishvel.z = -160; // drift anyway
-	else if (wishvel == '0 0 0')
-		wishvel = '0 0 -60'; // drift towards bottom
-
-	vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod) * 0.7;
-
-//	if (pmove_waterjumptime <= 0) // TODO: use
-    {
-		// water friction
-		float f = 1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this);
-		f = min(max(0, f), 1);
-		this.velocity *= f;
-
-		f = wishspeed - this.velocity * wishdir;
-		if (f > 0)
-		{
-			float accelspeed = min(PHYS_ACCELERATE(this) * PHYS_INPUT_TIMELENGTH * wishspeed, f);
-			this.velocity += accelspeed * wishdir;
-		}
-
-		// holding jump button swims upward slowly
-		if (jump && !this.viewloc)
-		{
-#if 0
-			if (this.watertype & CONTENT_LAVA)
-				this.velocity_z =  50;
-			else if (this.watertype & CONTENT_SLIME)
-				this.velocity_z =  80;
-			else
-			{
-				if (IS_NEXUIZ_DERIVED(gamemode))
-#endif
-				if(this.waterlevel >= WATERLEVEL_SUBMERGED)
-					this.velocity_z = PHYS_MAXSPEED(this);
-				else
-					this.velocity_z = 200;
-#if 0
-				else
-					this.velocity_z = 100;
-			}
-#endif
-		}
-	}
-	if(this.viewloc)
-	{
-		const float addspeed = wishspeed - this.velocity * wishdir;
-		if (addspeed > 0)
-		{
-			const float accelspeed = min(PHYS_ACCELERATE(this) * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
-			this.velocity += accelspeed * wishdir;
-		}
-	}
-	else
-	{
-		// water acceleration
-		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this) * maxspd_mod, 1, 0, 0, 0);
-	}
-}
-
 .vector oldmovement;
-void PM_ladder(entity this, float maxspd_mod)
-{
-	// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
-	UNSET_ONGROUND(this);
 
-	float g;
-	g = PHYS_GRAVITY(this) * PHYS_INPUT_TIMELENGTH;
-	if (PHYS_ENTGRAVITY(this))
-		g *= PHYS_ENTGRAVITY(this);
-	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-	{
-		g *= 0.5;
-		this.velocity_z += g;
-	}
-
-	this.velocity = this.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this));
-	makevectors(this.v_angle);
-	//wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
-	vector wishvel = v_forward * this.movement_x
-					+ v_right * this.movement_y
-					+ '0 0 1' * this.movement_z;
-	if(this.viewloc)
-		wishvel.z = this.oldmovement.x;
-	this.velocity_z += g;
-	if (this.ladder_entity.classname == "func_water")
-	{
-		float f = vlen(wishvel);
-		if (f > this.ladder_entity.speed)
-			wishvel *= (this.ladder_entity.speed / f);
-
-		this.watertype = this.ladder_entity.skin;
-		f = this.ladder_entity.origin_z + this.ladder_entity.maxs_z;
-		if ((this.origin_z + this.view_ofs_z) < f)
-			this.waterlevel = WATERLEVEL_SUBMERGED;
-		else if ((this.origin_z + (this.mins_z + this.maxs_z) * 0.5) < f)
-			this.waterlevel = WATERLEVEL_SWIMMING;
-		else if ((this.origin_z + this.mins_z + 1) < f)
-			this.waterlevel = WATERLEVEL_WETFEET;
-		else
-		{
-			this.waterlevel = WATERLEVEL_NONE;
-			this.watertype = CONTENT_EMPTY;
-		}
-	}
-	// acceleration
-	vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod);
-#ifdef SVQC
-	if(time >= PHYS_TELEPORT_TIME(this))
-#elif defined(CSQC)
-	if(pmove_waterjumptime <= 0)
-#endif
-		// water acceleration
-		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this)*maxspd_mod, 1, 0, 0, 0);
-}
-
-void PM_jetpack(entity this, float maxspd_mod)
+void PM_jetpack(entity this, float maxspd_mod, float dt)
 {
 	//makevectors(this.v_angle.y * '0 1 0');
 	makevectors(this.v_angle);
@@ -943,7 +764,7 @@ void PM_jetpack(entity this, float maxspd_mod)
 
 	fvel = min(1, vlen(wishvel) / best);
 	if (PHYS_JETPACK_FUEL(this) && !(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-		f = min(1, PHYS_AMMO_FUEL(this) / (PHYS_JETPACK_FUEL(this) * PHYS_INPUT_TIMELENGTH * fvel));
+		f = min(1, PHYS_AMMO_FUEL(this) / (PHYS_JETPACK_FUEL(this) * dt * fvel));
 	else
 		f = 1;
 
@@ -951,158 +772,18 @@ void PM_jetpack(entity this, float maxspd_mod)
 
 	if (f > 0 && wishvel != '0 0 0')
 	{
-		this.velocity = this.velocity + wishvel * f * PHYS_INPUT_TIMELENGTH;
+		this.velocity = this.velocity + wishvel * f * dt;
 		UNSET_ONGROUND(this);
 
 #ifdef SVQC
 		if (!(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-			this.ammo_fuel -= PHYS_JETPACK_FUEL(this) * PHYS_INPUT_TIMELENGTH * fvel * f;
+			this.ammo_fuel -= PHYS_JETPACK_FUEL(this) * dt * fvel * f;
 
 		ITEMS_STAT(this) |= IT_USING_JETPACK;
 
 		// jetpack also inhibits health regeneration, but only for 1 second
 		this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
 #endif
-	}
-}
-
-void PM_walk(entity this, float maxspd_mod)
-{
-	if (!WAS_ONGROUND(this))
-	{
-#ifdef SVQC
-		if (autocvar_speedmeter)
-			LOG_TRACE(strcat("landing velocity: ", vtos(this.velocity), " (abs: ", ftos(vlen(this.velocity)), ")\n"));
-#endif
-		if (this.lastground < time - 0.3)
-			this.velocity *= (1 - PHYS_FRICTION_ONLAND(this));
-#ifdef SVQC
-		if (this.jumppadcount > 1)
-			LOG_TRACE(strcat(ftos(this.jumppadcount), "x jumppad combo\n"));
-		this.jumppadcount = 0;
-#endif
-	}
-
-	// walking
-	makevectors(this.v_angle.y * '0 1 0');
-	const vector wishvel = v_forward * this.movement.x
-						+ v_right * this.movement.y;
-	// acceleration
-	const vector wishdir = normalize(wishvel);
-	float wishspeed = vlen(wishvel);
-	wishspeed = min(wishspeed, PHYS_MAXSPEED(this) * maxspd_mod);
-	if (IS_DUCKED(this)) wishspeed *= 0.5;
-
-	// apply edge friction
-	const float f2 = vlen2(vec2(this.velocity));
-	if (f2 > 0)
-	{
-		trace_dphitq3surfaceflags = 0;
-		tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-		// TODO: apply edge friction
-		// apply ground friction
-		const int realfriction = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-			? PHYS_FRICTION_SLICK(this)
-			: PHYS_FRICTION(this);
-
-		float f = sqrt(f2);
-		f = 1 - PHYS_INPUT_TIMELENGTH * realfriction * ((f < PHYS_STOPSPEED(this)) ? (PHYS_STOPSPEED(this) / f) : 1);
-		f = max(0, f);
-		this.velocity *= f;
-		/*
-		   Mathematical analysis time!
-
-		   Our goal is to invert this mess.
-
-		   For the two cases we get:
-			v = v0 * (1 - PHYS_INPUT_TIMELENGTH * (PHYS_STOPSPEED(this) / v0) * PHYS_FRICTION(this))
-			  = v0 - PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
-			v0 = v + PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
-		   and
-			v = v0 * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
-			v0 = v / (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
-
-		   These cases would be chosen ONLY if:
-			v0 < PHYS_STOPSPEED(this)
-			v + PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this) < PHYS_STOPSPEED(this)
-			v < PHYS_STOPSPEED(this) * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
-		   and, respectively:
-			v0 >= PHYS_STOPSPEED(this)
-			v / (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this)) >= PHYS_STOPSPEED(this)
-			v >= PHYS_STOPSPEED(this) * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
-		 */
-	}
-	const float addspeed = wishspeed - this.velocity * wishdir;
-	if (addspeed > 0)
-	{
-		const float accelspeed = min(PHYS_ACCELERATE(this) * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
-		this.velocity += accelspeed * wishdir;
-	}
-}
-
-void PM_air(entity this, float buttons_prev, float maxspd_mod)
-{
-	makevectors(this.v_angle.y * '0 1 0');
-	vector wishvel = v_forward * this.movement.x
-					+ v_right * this.movement.y;
-	// acceleration
-	vector wishdir = normalize(wishvel);
-	float wishspeed = vlen(wishvel);
-
-#ifdef SVQC
-	if(time >= PHYS_TELEPORT_TIME(this))
-#elif defined(CSQC)
-	if(pmove_waterjumptime <= 0)
-#endif
-	{
-		float maxairspd = PHYS_MAXAIRSPEED(this) * min(maxspd_mod, 1);
-
-		// apply air speed limit
-		float airaccelqw = PHYS_AIRACCEL_QW(this);
-		float wishspeed0 = wishspeed;
-		wishspeed = min(wishspeed, maxairspd);
-		if (IS_DUCKED(this))
-			wishspeed *= 0.5;
-		float airaccel = PHYS_AIRACCELERATE(this) * min(maxspd_mod, 1);
-
-		float accelerating = (this.velocity * wishdir > 0);
-		float wishspeed2 = wishspeed;
-
-		// CPM: air control
-		if (PHYS_AIRSTOPACCELERATE(this))
-		{
-			vector curdir = normalize(vec2(this.velocity));
-			airaccel += (PHYS_AIRSTOPACCELERATE(this)*maxspd_mod - airaccel) * max(0, -(curdir * wishdir));
-		}
-		// note that for straight forward jumping:
-		// step = accel * PHYS_INPUT_TIMELENGTH * wishspeed0;
-		// accel  = bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
-		// -->
-		// dv/dt = accel * maxspeed (when slow)
-		// dv/dt = accel * maxspeed * (1 - accelqw) (when fast)
-		// log dv/dt = logaccel + logmaxspeed (when slow)
-		// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
-		float strafity = IsMoveInDirection(this.movement, -90) + IsMoveInDirection(this.movement, +90); // if one is nonzero, other is always zero
-		if (PHYS_MAXAIRSTRAFESPEED(this))
-			wishspeed = min(wishspeed, GeomLerp(PHYS_MAXAIRSPEED(this)*maxspd_mod, strafity, PHYS_MAXAIRSTRAFESPEED(this)*maxspd_mod));
-		if (PHYS_AIRSTRAFEACCELERATE(this))
-			airaccel = GeomLerp(airaccel, strafity, PHYS_AIRSTRAFEACCELERATE(this)*maxspd_mod);
-		if (PHYS_AIRSTRAFEACCEL_QW(this))
-			airaccelqw =
-            	(((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(this) : PHYS_AIRACCEL_QW(this)) >= 0) ? +1 : -1)
-            	*
-            	(1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(this)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(this))));
-		// !CPM
-
-		if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && this.movement.y == 0 && this.movement.x != 0)
-			PM_AirAccelerate(this, wishdir, wishspeed2);
-		else {
-		    float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
-			PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
-        }
-
-		if (PHYS_AIRCONTROL(this))
-			CPM_PM_Aircontrol(this, wishdir, wishspeed2);
 	}
 }
 
@@ -1119,267 +800,15 @@ bool IsFlying(entity this)
 	return true;
 }
 
-void PM_Main(entity this)
-{
-	int buttons = PHYS_INPUT_BUTTON_MASK(this);
-#ifdef CSQC
-	this.items = STAT(ITEMS);
 
-	this.movement = PHYS_INPUT_MOVEVALUES(this);
-
-	this.spectatorspeed = STAT(SPECTATORSPEED);
-
-	this.team = myteam + 1; // is this correct?
-	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
-		UNSET_JUMP_HELD(this); // canjump = true
-	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
-
-	PM_ClientMovement_UpdateStatus(this);
-#endif
-
-	this.oldmovement = this.movement;
-
-
-#ifdef SVQC
-	WarpZone_PlayerPhysics_FixVAngle(this);
-#endif
-	float maxspeed_mod = 1;
-	maxspeed_mod *= PHYS_HIGHSPEED(this);
-
-#ifdef SVQC
-	Physics_UpdateStats(this, maxspeed_mod);
-
-	if (this.PlayerPhysplug)
-		if (this.PlayerPhysplug(this))
-			return;
-#elif defined(CSQC)
-	if(hud != HUD_NORMAL)
-		return; // no vehicle prediction (yet)
-#endif
-
-#ifdef SVQC
-	anticheat_physics(this);
-#endif
-
-	if (PM_check_specialcommand(this, buttons))
-		return;
-#ifdef SVQC
-	if (sv_maxidle > 0)
-	{
-		if (buttons != this.buttons_old || this.movement != this.movement_old || this.v_angle != this.v_angle_old)
-			this.parm_idlesince = time;
-	}
-#endif
-	int buttons_prev = this.buttons_old;
-	this.buttons_old = buttons;
-	this.movement_old = this.movement;
-	this.v_angle_old = this.v_angle;
-
-	PM_check_nickspam(this);
-
-	PM_check_punch(this);
-#ifdef SVQC
-	if (IS_BOT_CLIENT(this))
-	{
-		if (playerdemo_read(this))
-			return;
-		bot_think(this);
-	}
-#endif
-
-#ifdef SVQC
-	if (IS_PLAYER(this))
-	{
-		const bool allowed_to_move = (time >= game_starttime);
-		if (!allowed_to_move)
-		{
-			this.velocity = '0 0 0';
-			set_movetype(this, MOVETYPE_NONE);
-			this.disableclientprediction = 2;
-		}
-		else if (this.disableclientprediction == 2)
-		{
-			if (this.move_movetype == MOVETYPE_NONE)
-				set_movetype(this, MOVETYPE_WALK);
-			this.disableclientprediction = 0;
-		}
-	}
-#endif
-
-#ifdef SVQC
-	if (this.move_movetype == MOVETYPE_NONE)
-		return;
-
-	// when we get here, disableclientprediction cannot be 2
-	this.disableclientprediction = (this.move_qcphysics) ? -1 : 0;
-#endif
-
-	viewloc_PlayerPhysics(this);
-
-	PM_check_frozen(this);
-
-	PM_check_blocked(this);
-
-	maxspeed_mod = 1;
-
-	if (this.in_swamp)
-		maxspeed_mod *= this.swamp_slowdown; //cvar("g_balance_swamp_moverate");
-
-	// conveyors: first fix velocity
-	if (this.conveyor.state)
-		this.velocity -= this.conveyor.movedir;
-
-	MUTATOR_CALLHOOK(PlayerPhysics, this);
-
-	if (!IS_PLAYER(this))
-	{
-#ifdef SVQC
-		maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
-		if (!this.spectatorspeed)
-			this.spectatorspeed = maxspeed_mod;
-		if (this.impulse && this.impulse <= 19 || (this.impulse >= 200 && this.impulse <= 209) || (this.impulse >= 220 && this.impulse <= 229))
-		{
-			if (this.lastclassname != STR_PLAYER)
-			{
-				if (this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209))
-					this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5);
-				else if (this.impulse == 11)
-					this.spectatorspeed = maxspeed_mod;
-				else if (this.impulse == 12 || this.impulse == 16  || this.impulse == 19 || (this.impulse >= 220 && this.impulse <= 229))
-					this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
-				else if (this.impulse >= 1 && this.impulse <= 9)
-					this.spectatorspeed = 1 + 0.5 * (this.impulse - 1);
-			} // otherwise just clear
-			this.impulse = 0;
-		}
-#endif
-		maxspeed_mod = this.spectatorspeed;
-	}
-#ifdef SVQC
-
-	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
-	if(this.speed != spd)
-	{
-		this.speed = spd;
-		string temps = ftos(spd);
-		stuffcmd(this, strcat("cl_forwardspeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_backspeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_sidespeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
-	}
-
-	if(this.jumpspeedcap_min != autocvar_sv_jumpspeedcap_min)
-	{
-		this.jumpspeedcap_min = autocvar_sv_jumpspeedcap_min;
-		stuffcmd(this, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
-	}
-	if(this.jumpspeedcap_max != autocvar_sv_jumpspeedcap_max)
-	{
-		this.jumpspeedcap_max = autocvar_sv_jumpspeedcap_max;
-		stuffcmd(this, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
-	}
-#endif
-
-	if(IS_DEAD(this))
-	{
-		// handle water here
-		vector midpoint = ((this.absmin + this.absmax) * 0.5);
-		if(pointcontents(midpoint) == CONTENT_WATER)
-		{
-			this.velocity = this.velocity * 0.5;
-
-			// do we want this?
-			//if(pointcontents(midpoint + '0 0 2') == CONTENT_WATER)
-				//{ this.velocity_z = 70; }
-		}
-		goto end;
-	}
-
-#ifdef SVQC
-	if (!this.fixangle)
-		this.angles = '0 1 0' * this.v_angle.y;
-#endif
-
-	if (IS_PLAYER(this) && IS_ONGROUND(this))
-	{
-		PM_check_hitground(this);
-		PM_Footsteps(this);
-	}
-
-#ifdef SVQC
-	if(IsFlying(this))
-		this.wasFlying = 1;
-#endif
-
-	if (IS_PLAYER(this))
-		CheckPlayerJump(this);
-
-	if (this.flags & FL_WATERJUMP)
-	{
-		this.velocity_x = this.movedir.x;
-		this.velocity_y = this.movedir.y;
-		if (this.waterlevel == WATERLEVEL_NONE
-		#ifdef CSQC
-			|| pmove_waterjumptime <= 0
-		#elif defined(SVQC)
-			|| time > PHYS_TELEPORT_TIME(this)
-		#endif
-			)
-		{
-			this.flags &= ~FL_WATERJUMP;
-		#ifdef CSQC
-			pmove_waterjumptime = 0;
-		#elif defined(CSQC)
-			PHYS_TELEPORT_TIME(this) = 0;
-		#endif
-		}
-	}
-
-	else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod))
-		{ }
-
-#ifdef SVQC
-	else if (this.move_movetype == MOVETYPE_NOCLIP || this.move_movetype == MOVETYPE_FLY || this.move_movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
-#elif defined(CSQC)
-	else if (this.move_movetype == MOVETYPE_NOCLIP || this.move_movetype == MOVETYPE_FLY || this.move_movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
-#endif
-		PM_fly(this, maxspeed_mod);
-
-	else if (this.waterlevel >= WATERLEVEL_SWIMMING)
-		PM_swim(this, maxspeed_mod);
-
-	else if (time < this.ladder_time)
-		PM_ladder(this, maxspeed_mod);
-
-	else if (ITEMS_STAT(this) & IT_USING_JETPACK)
-		PM_jetpack(this, maxspeed_mod);
-
-	else if (IS_ONGROUND(this))
-		PM_walk(this, maxspeed_mod);
-
-	else
-		PM_air(this, buttons_prev, maxspeed_mod);
-
-LABEL(end)
-	if (IS_ONGROUND(this))
-		this.lastground = time;
-
-	// conveyors: then break velocity again
-	if(this.conveyor.state)
-		this.velocity += this.conveyor.movedir;
-
-	this.lastflags = this.flags;
-
-	this.lastclassname = this.classname;
-}
-
+void sys_phys_update(entity this, float dt);
 #if defined(SVQC)
 void SV_PlayerPhysics(entity this)
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
-	PM_Main(this);
+	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);
 
 #ifdef SVQC
 	this.pm_frametime = frametime;

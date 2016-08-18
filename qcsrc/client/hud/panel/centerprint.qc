@@ -1,6 +1,6 @@
 #include "centerprint.qh"
 
-#include <client/scoreboard.qh>
+#include "scoreboard.qh"
 
 // CenterPrint (#16)
 
@@ -57,8 +57,7 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 			{
 				// fade out the current msg (duration and countdown_num are ignored)
 				centerprint_time[j] = min(5, autocvar_hud_panel_centerprint_fade_out);
-				if (centerprint_expire_time[j] > time + min(5, autocvar_hud_panel_centerprint_fade_out) || centerprint_expire_time[j] < time)
-					centerprint_expire_time[j] = time + min(5, autocvar_hud_panel_centerprint_fade_out);
+				centerprint_expire_time[j] = -1; // don't use the variable time here!
 				return;
 			}
 			break; // found a msg with the same id, at position j
@@ -80,14 +79,14 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 	if (duration < 0)
 	{
 		centerprint_time[j] = -1;
-		centerprint_expire_time[j] = time;
+		centerprint_expire_time[j] = -1; // don't use the variable time here!
 	}
 	else
 	{
 		if(duration == 0)
 			duration = max(1, autocvar_hud_panel_centerprint_time);
 		centerprint_time[j] = duration;
-		centerprint_expire_time[j] = time + duration;
+		centerprint_expire_time[j] = -1; // don't use the variable time here!
 	}
 	centerprint_countdown_num[j] = countdown_num;
 }
@@ -155,13 +154,14 @@ void HUD_CenterPrint ()
 	}
 
 	// this panel fades only when the menu does
-	float hud_fade_alpha_save = 0;
-	if(scoreboard_fade_alpha)
-	{
-		hud_fade_alpha_save = hud_fade_alpha;
+	float hud_fade_alpha_save = hud_fade_alpha;
+	if(hud_configure_menu_open == 1)
+		hud_fade_alpha = 1;
+	else
 		hud_fade_alpha = 1 - autocvar__menu_alpha;
-	}
+
 	HUD_Panel_UpdateCvars();
+	hud_fade_alpha = hud_fade_alpha_save;
 
 	if ( HUD_Radar_Clickable() )
 	{
@@ -171,17 +171,13 @@ void HUD_CenterPrint ()
 		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
 		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
 	}
-	else if(scoreboard_fade_alpha)
+	else if(!autocvar__hud_configure && scoreboard_fade_alpha)
 	{
-		hud_fade_alpha = hud_fade_alpha_save;
-
 		// move the panel below the scoreboard
 		if (scoreboard_bottom >= 0.96 * vid_conheight)
 			return;
 		vector target_pos;
-
 		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size.x);
-
 		if(target_pos.y > panel_pos.y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
@@ -228,6 +224,13 @@ void HUD_CenterPrint ()
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
+		if (centerprint_expire_time[j] == -1)
+		{
+			// here we are sure the time variable is not altered by CSQC_Ent_Update
+			centerprint_expire_time[j] = time;
+			if (centerprint_time[j] > 0)
+				centerprint_expire_time[j] += centerprint_time[j];
+		}
 		if (centerprint_expire_time[j] <= time)
 		{
 			if (centerprint_countdown_num[j] && centerprint_time[j] > 0)

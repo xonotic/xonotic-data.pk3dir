@@ -81,7 +81,7 @@ void DamageEffect_Think(entity this)
 	{
 		// time is up or the player got gibbed / disconnected
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
-		remove(this);
+		delete(this);
 		return;
 	}
 	if(this.state && !this.owner.csqcmodel_isdead)
@@ -89,7 +89,7 @@ void DamageEffect_Think(entity this)
 		// if the player was dead but is now alive, it means he respawned
 		// if so, clear his damage effects, or damages from his dead body will be copied back
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.state = this.owner.csqcmodel_isdead;

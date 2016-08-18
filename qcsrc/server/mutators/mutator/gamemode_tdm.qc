@@ -51,7 +51,7 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(tdm_team)
 {
-	if(!g_tdm || !this.cnt) { remove(this); return; }
+	if(!g_tdm || !this.cnt) { delete(this); return; }
 
 	this.classname = "tdm_team";
 	this.team = this.cnt + 1;
@@ -73,7 +73,7 @@ void tdm_DelayedInit(entity this)
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "tdm_team") == NULL)
 	{
-		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.\n");
+		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.");
 
 		int numteams = autocvar_g_tdm_teams_override;
 

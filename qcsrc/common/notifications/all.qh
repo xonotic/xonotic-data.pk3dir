@@ -1,5 +1,4 @@
-#ifndef NOTIFICATIONS_H
-#define NOTIFICATIONS_H
+#pragma once
 
 #include <common/command/all.qh>
 
@@ -33,7 +32,7 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
 	}
-	LOG_WARNINGF("Get_Notif_TypeName(%d): Improper net type!\n", ORDINAL(net_type));
+	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!", ORDINAL(net_type));
 	return "";
 }
 
@@ -253,7 +252,7 @@ string Get_Notif_BroadcastName(NOTIF broadcast)
 		case NOTIF_TEAM: return "NOTIF_TEAM";
 		case NOTIF_TEAM_EXCEPT: return "NOTIF_TEAM_EXCEPT";
 	}
-	LOG_WARNINGF("Get_Notif_BroadcastName(%d): Improper broadcast!\n", broadcast);
+	LOG_WARNF("Get_Notif_BroadcastName(%d): Improper broadcast!", broadcast);
 	return "";
 }
 
@@ -408,7 +407,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) \
 	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
 	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
-	ARG_CASE(ARG_CS,        "pass_key",      ((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
+	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) \
 	ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(true, f2)) \
 	ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) \
 	/*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
@@ -685,7 +684,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 {
 	Notification it = _Notifications_from(net_name, NULL);
 	if (it.nent_type != net_type) {
-		LOG_WARNINGF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!\n",
+		LOG_WARNF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!",
 			Get_Notif_TypeName(net_type), net_type,
 			it.registered_id, net_name,
 			Get_Notif_TypeName(it.nent_type)
@@ -800,5 +799,3 @@ REGISTRY_END(Notifications)
 }
 
 #include "all.inc"
-
-#endif

@@ -47,7 +47,7 @@ void superspec_save_client_conf(entity this)
 	fh = fopen(fn, FILE_WRITE);
 	if(fh < 0)
 	{
-		LOG_TRACE("^1ERROR: ^7 superspec can not open ", fn, " for writing.\n");
+		LOG_TRACE("^1ERROR: ^7 superspec can not open ", fn, " for writing.");
 	}
 	else
 	{
@@ -383,7 +383,7 @@ void superspec_hello(entity this)
 	if(this.enemy.crypto_idfp == "")
 		Send_Notification(NOTIF_ONE_ONLY, this.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 
-	remove(this);
+	delete(this);
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
@@ -415,14 +415,14 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
-		LOG_TRACE("^1ERROR: ^7 superspec can not open ", fn, " for reading.\n");
+		LOG_TRACE("^1ERROR: ^7 superspec can not open ", fn, " for reading.");
 	}
 	else
 	{
 		string _magic = fgets(fh);
 		if(_magic != _SSMAGIX)
 		{
-			LOG_TRACE("^1ERROR^7 While reading superspec options file: unknown magic\n");
+			LOG_TRACE("^1ERROR^7 While reading superspec options file: unknown magic");
 		}
 		else
 		{

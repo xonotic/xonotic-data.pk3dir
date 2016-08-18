@@ -45,7 +45,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 		c = trace_endpos;
 	}
 
-	if (n > 200) LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations\n");
+	if (n > 200) LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations");
 
 	return white / (black + white);
 }
@@ -207,7 +207,7 @@ void RadarMap_Next()
 		localcmd(strcat("defer 1 \"sv_cmd radarmap --flags ", ftos(radarmapper.count), strcat(" --res ", ftos(radarmapper.size.x), " ", ftos(radarmapper.size.y), " --sharpen ", ftos(radarmapper.ltime), " --qual ", ftos(radarmapper.size.z)), "\"\n"));
 		GotoNextMap(0);
 	}
-	remove(radarmapper);
+	delete(radarmapper);
 	radarmapper = NULL;
 }
 void RadarMap_Think(entity this)
@@ -253,7 +253,7 @@ void RadarMap_Think(entity this)
 		if (this.cnt < 0)
 		{
 			LOG_INFO("Error writing ", this.netname, "\n");
-			remove(this);
+			delete(this);
 			radarmapper = NULL;
 			return;
 		}
@@ -439,7 +439,7 @@ float RadarMap_Make(float argc)
 
 				default:
 					i = argc;
-					remove(radarmapper);
+					delete(radarmapper);
 					radarmapper = NULL;
 					break;
 			}

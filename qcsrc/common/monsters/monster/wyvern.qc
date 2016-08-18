@@ -54,7 +54,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
     TC(WyvernAttack, thiswep);
     if (fire & 1)
     if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
-        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0);
+        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
 			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;
@@ -69,6 +69,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		setsize(missile, '-6 -6 -6', '6 6 6');
 		setorigin(missile, actor.origin + actor.view_ofs + v_forward * 14);
 		missile.flags = FL_PROJECTILE;
+        IL_PUSH(g_projectiles, missile);
 		missile.velocity = w_shotdir * (autocvar_g_monster_wyvern_attack_fireball_speed);
 		missile.avelocity = '300 300 300';
 		missile.nextthink = time + 5;
@@ -113,7 +114,7 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
 	});
 
-	remove(this);
+	delete(this);
 }
 
 void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher)

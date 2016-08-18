@@ -1,6 +1,6 @@
 #include "cl_player.qh"
 
-#include "bot/bot.qh"
+#include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "g_subs.qh"
@@ -532,7 +532,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// get rid of kill indicator
 		if(this.killindicator)
 		{
-			remove(this.killindicator);
+			delete(this.killindicator);
 			this.killindicator = NULL;
 			if(this.killindicator_teamchange)
 				defer_ClientKill_Now_TeamChange = true;
@@ -559,7 +559,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		excess = M_ARGV(4, float);
 
 		Weapon wep = PS(this).m_weapon;
-		wep.wr_playerdeath(wep, this);
+		/*for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			wep.wr_playerdeath(wep, this, weaponentity);
+		}*/
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		wep.wr_playerdeath(wep, this, weaponentity);
 
 		RemoveGrapplingHook(this);
 

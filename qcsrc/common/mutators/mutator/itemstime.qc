@@ -180,14 +180,14 @@ MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)
 	{
 		// client became player on connection skipping putObserverInServer step
 		if (IS_REAL_CLIENT(player))
-		if (warmup_stage)
+		if (warmup_stage || autocvar_sv_itemstime == 2)
 			Item_ItemsTime_SetTimesForPlayer(player);
 	}
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
 {
-    if (warmup_stage) return;
+    if (warmup_stage || autocvar_sv_itemstime == 2) return;
     entity player = M_ARGV(0, entity);
 
     Item_ItemsTime_ResetTimesForPlayer(player);
@@ -270,7 +270,7 @@ void HUD_ItemsTime()
     {
         if (!(
             (autocvar_hud_panel_itemstime == 1 && spectatee_status != 0)
-        ||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage))
+        ||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage || STAT(ITEMSTIME) == 2))
             )) { return; }
     }
     else
@@ -330,7 +330,7 @@ void HUD_ItemsTime()
     if (autocvar_hud_panel_itemstime_dynamicsize)
     {
         if (autocvar__hud_configure)
-        if (menu_enabled != 2)
+        if (hud_configure_menu_open != 2)
             HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
 
         // reduce panel to avoid spacing items

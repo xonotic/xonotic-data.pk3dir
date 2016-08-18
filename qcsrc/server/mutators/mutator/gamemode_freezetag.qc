@@ -61,7 +61,6 @@ int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
 
-const float SP_FREEZETAG_REVIVALS = 4;
 void freezetag_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true); // SFL_SORT_PRIO_PRIMARY
@@ -305,7 +304,7 @@ void havocbot_role_ft_offense(entity this)
 	// If only one left on team or if role has timed out then start trying to free players.
 	if (((unfrozen == 0) && (!STAT(FROZEN, this))) || (time > this.havocbot_role_timeout))
 	{
-		LOG_TRACE("changing role to freeing\n");
+		LOG_TRACE("changing role to freeing");
 		this.havocbot_role = havocbot_role_ft_freeing;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -334,7 +333,7 @@ void havocbot_role_ft_freeing(entity this)
 
 	if (time > this.havocbot_role_timeout)
 	{
-		LOG_TRACE("changing role to offense\n");
+		LOG_TRACE("changing role to offense");
 		this.havocbot_role = havocbot_role_ft_offense;
 		this.havocbot_role_timeout = 0;
 		return;

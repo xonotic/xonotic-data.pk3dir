@@ -3,8 +3,8 @@
 #include "announcer.qh"
 #include "hud/all.qh"
 #include "mapvoting.qh"
-#include "scoreboard.qh"
 #include "shownames.qh"
+#include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
 
 #include "mutators/events.qh"
@@ -710,7 +710,7 @@ float TrueAimCheck()
 
 void PostInit();
 void CSQC_Demo_Camera();
-float HUD_WouldDrawScoreboard();
+float Scoreboard_WouldDraw();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
@@ -792,7 +792,7 @@ void UpdateDamage()
 	if (damage_dealt_time != damage_dealt_time_prev)
 	{
 		unaccounted_damage += unaccounted_damage_new;
-		LOG_TRACE("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
+		LOG_TRACE("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")");
 	}
 	damage_dealt_time_prev = damage_dealt_time;
 
@@ -832,7 +832,7 @@ void HitSound()
 				pitch_shift = mirror_value + (mirror_value - pitch_shift);
 			}
 
-			LOG_TRACE("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift), "\n");
+			LOG_TRACE("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift));
 
 			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
 			// todo: normalize sound pressure levels? seems unnecessary
@@ -1350,7 +1350,6 @@ void HUD_Draw(entity this)
 				Accuracy_LoadLevels();
 
 			HUD_Main();
-			HUD_DrawScoreboard();
 			HUD_Scale_Disable();
 		}
 
@@ -1407,10 +1406,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 		view_quality = getproperty(VF_MINFPS_QUALITY);
 	else
 		view_quality = 1;
-
-	// this needs to be updated manually now due to the destruction of engine physics stats
-	if(!isdemo() && autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
-		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 
 	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
 	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);
@@ -1777,7 +1772,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(f != teamplay)
 	{
 		teamplay = f;
-		HUD_InitScores();
+		Scoreboard_InitScores();
 	}
 
 	if(last_switchweapon != switchweapon)
@@ -2206,7 +2201,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	Draw_ShowNames_All();
 	Debug_Draw();
 
-	scoreboard_active = HUD_WouldDrawScoreboard();
+	scoreboard_active = Scoreboard_WouldDraw();
 
 	HUD_Draw(this); // this parameter for deep vehicle function
 

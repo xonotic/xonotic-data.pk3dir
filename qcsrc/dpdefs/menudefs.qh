@@ -1,5 +1,4 @@
-#ifndef MENUDEFS_H
-#define MENUDEFS_H
+#pragma once
 
 #pragma noref 1
 
@@ -43,5 +42,3 @@ int() _buf_create = #440;
 bool(entity ent) wasfreed = #353;
 
 #pragma noref 0
-
-#endif

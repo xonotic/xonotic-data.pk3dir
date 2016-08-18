@@ -29,7 +29,7 @@ void Weapon_whereis(Weapon this, entity cl)
 			continue;
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,
-			1, 0,
+			-2, 0,
 			NULL, it.origin + ('0 0 1' * it.maxs.z) * 1.2,
 			cl, 0,
 			NULL, enemy,
@@ -75,7 +75,7 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				if(wpn == WEP_MINE_LAYER)
-					FOREACH_ENTITY_CLASS("mine", it.owner == this,
+					IL_EACH(g_mines, it.owner == this,
 					{
 						f = 1;
 						break; // no need to continue
@@ -101,7 +101,15 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(this, wpn.m_id, 1);
-			Weapon_whereis(wpn, this);
+			if(autocvar_g_showweaponspawns < 3)
+				Weapon_whereis(wpn, this);
+			else
+			{
+				FOREACH(Weapons, it.impulse == wpn.impulse,
+				{
+					Weapon_whereis(it, this);
+				});
+			}
 		}
 		else
 		{
@@ -264,8 +272,11 @@ void W_SwitchWeapon(entity this, Weapon w)
 	}
 	else if(!forbidWeaponUse(this)) {
 		entity actor = this;
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		w.wr_reload(w, actor, weaponentity);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			w.wr_reload(w, actor, weaponentity);
+		}
 	}
 }
 

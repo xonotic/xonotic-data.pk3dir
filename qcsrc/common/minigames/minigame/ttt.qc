@@ -123,7 +123,7 @@ void ttt_next_match(entity minigame, entity player)
 		entity e = NULL;
 		while ( ( e = findentity(e,owner,minigame) ) )
 			if ( e.classname == "minigame_board_piece" )
-				remove(e);
+				delete(e);
 	}
 }
 
@@ -147,7 +147,7 @@ int ttt_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}
@@ -421,7 +421,7 @@ int ttt_ai_random(int piecemask)
 		f <<= 1;
 	}
 
-	LOG_TRACE(sprintf("TTT AI: selected %x from %x\n",
+	LOG_TRACE(sprintf("TTT AI: selected %x from %x",
 			RandomSelection_chosen_float, piecemask) );
 	return RandomSelection_chosen_float;
 }
@@ -439,7 +439,7 @@ int ttt_ai_block3 ( int piecemask, int piecemask_free )
 	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A3,TTT_AI_POSFLAG_B3,TTT_AI_POSFLAG_C3);
 	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A1,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_C3);
 	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A3,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_C1);
-	LOG_TRACE(sprintf("TTT AI: possible 3 in a rows in %x: %x (%x)\n",piecemask,r, r&piecemask_free));
+	LOG_TRACE(sprintf("TTT AI: possible 3 in a rows in %x: %x (%x)",piecemask,r, r&piecemask_free));
 	r &= piecemask_free;
 	return ttt_ai_random(r);
 }
@@ -452,15 +452,15 @@ string ttt_ai_choose_simple(int piecemask_self, int piecemask_opponent, int piec
 {
 	int move = 0;
 
-	LOG_TRACE("TTT AI: checking winning move\n");
+	LOG_TRACE("TTT AI: checking winning move");
 	if (( move = ttt_ai_block3(piecemask_self,piecemask_free) ))
 		return ttt_ai_piece_flag2pos(move); // place winning move
 
-	LOG_TRACE("TTT AI: checking opponent's winning move\n");
+	LOG_TRACE("TTT AI: checking opponent's winning move");
 	if (( move = ttt_ai_block3(piecemask_opponent,piecemask_free) ))
 		return ttt_ai_piece_flag2pos(move); // block opponent
 
-	LOG_TRACE("TTT AI: random move\n");
+	LOG_TRACE("TTT AI: random move");
 	return ttt_ai_piece_flag2pos(ttt_ai_random(piecemask_free));
 }
 
@@ -510,12 +510,12 @@ void ttt_aimove(entity minigame)
 		}
 
 		// TODO multiple AI difficulties
-		LOG_TRACE(sprintf("TTT AI: self: %x opponent: %x free: %x\n",
+		LOG_TRACE(sprintf("TTT AI: self: %x opponent: %x free: %x",
 				piecemask_self, piecemask_opponent, piecemask_free));
 		pos = ttt_ai_choose_simple(piecemask_self, piecemask_opponent, piecemask_free);
-		LOG_TRACE("TTT AI: chosen move: ",pos,"\n\n");
+		LOG_TRACE("TTT AI: chosen move: ", pos);
 		if ( !pos )
-			LOG_TRACE("Tic Tac Toe AI has derped!\n");
+			LOG_TRACE("Tic Tac Toe AI has derped!");
 		else
 			ttt_move(minigame,aiplayer,pos);
 	}

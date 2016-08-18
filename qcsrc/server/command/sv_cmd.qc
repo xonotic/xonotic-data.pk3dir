@@ -16,9 +16,7 @@
 #include "../playerdemo.qh"
 #include "../teamplay.qh"
 
-#include "../bot/bot.qh"
-#include "../bot/navigation.qh"
-#include "../bot/scripting.qh"
+#include "../bot/api.qh"
 
 #include "../mutators/all.qh"
 
@@ -41,11 +39,11 @@ void PutObserverInServer(entity this);
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think(entity this)
 {
-	if (MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
+	if (_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
 	{
 		LOG_INFO("Done rebuiling mapinfos.\n");
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-		remove(this);
+		delete(this);
 	}
 	else
 	{
@@ -141,7 +139,7 @@ void GameCommand_adminmsg(float request, float argc)
 					}
 
 					successful = strcat(successful, (successful ? ", " : ""), client.netname);
-					LOG_TRACE("Message sent to ", client.netname, "\n");
+					LOG_TRACE("Message sent to ", client.netname);
 					continue;
 				}
 
@@ -742,7 +740,7 @@ void GameCommand_gametype(float request, float argc)
 			if (argv(1) != "")
 			{
 				string s = argv(1);
-				float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
+				Gametype t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
 
 				if (t)
 				{
@@ -830,7 +828,7 @@ void GameCommand_gettaginfo(float request, float argc)
 					LOG_INFO("bone not found\n");
 				}
 
-				remove(tmp_entity);
+				delete(tmp_entity);
 				return;
 			}
 		}
@@ -889,7 +887,7 @@ void GameCommand_animbench(float request, float argc)
 				LOG_INFO("model ", tmp_entity.model, " frame ", ftos(f1), " animtime ", ftos(n / t1), "/s\n");
 				LOG_INFO("model ", tmp_entity.model, " frame ", ftos(f2), " animtime ", ftos(n / t2), "/s\n");
 
-				remove(tmp_entity);
+				delete(tmp_entity);
 				return;
 			}
 		}

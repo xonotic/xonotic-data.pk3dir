@@ -214,7 +214,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	this.event_damage = func_null;
 	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, toucher);
 
-	remove (this);
+	delete (this);
 }
 
 void vehicles_projectile_explode_think(entity this)
@@ -247,7 +247,8 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.totalfrags	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
-	proj.flags			= FL_PROJECTILE;
+	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;
@@ -265,7 +266,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 		proj.health		   = _health;
 	}
 	else
-		proj.flags		   = FL_PROJECTILE | FL_NOTARGET;
+		proj.flags |= FL_NOTARGET;
 
 	if(_mzlsound != SND_Null)
 		sound (this, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
@@ -285,7 +286,7 @@ void vehicles_gib_explode(entity this)
 	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (this.origin + '0 0 100'), '0 0 0', 1);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.wp00.origin + '0 0 64', '0 0 0', 1);
-	remove(this);
+	delete(this);
 }
 
 void vehicles_gib_touch(entity this, entity toucher)
@@ -297,7 +298,7 @@ void vehicles_gib_think(entity this)
 {
 	this.alpha -= 0.1;
 	if(this.cnt >= time)
-		remove(this);
+		delete(this);
 	else
 		this.nextthink = time + 0.1;
 }
@@ -338,7 +339,7 @@ bool vehicle_addplayerslot(	entity _owner,
 								entity _slot,
 								int _hud,
 								Model _hud_model,
-								bool(entity) _framefunc,
+								bool(entity,float) _framefunc,
 								void(entity,bool) _exitfunc, float(entity, entity) _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
@@ -457,7 +458,7 @@ void vehicles_return(entity this)
 	if(this.waypointsprite_attached)
 		WaypointSprite_Kill(this.waypointsprite_attached);
 
-	remove(this);
+	delete(this);
 }
 
 void vehicles_showwp_goaway(entity this)
@@ -465,7 +466,7 @@ void vehicles_showwp_goaway(entity this)
 	if(this.waypointsprite_attached)
 		WaypointSprite_Kill(this.waypointsprite_attached);
 
-	remove(this);
+	delete(this);
 }
 
 void vehicles_showwp(entity this)
@@ -531,7 +532,7 @@ void vehicles_setreturn(entity veh)
 
 void vehicle_use(entity this, entity actor, entity trigger)
 {
-	LOG_DEBUG("vehicle ", this.netname, " used by ", actor.classname, "\n");
+	LOG_DEBUG("vehicle ", this.netname, " used by ", actor.classname);
 
 	this.tur_head.team = actor.team;
 
@@ -542,7 +543,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 
 	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !gameover)
 	{
-		LOG_DEBUG("Respawning vehicle: ", this.netname, "\n");
+		LOG_DEBUG("Respawning vehicle: ", this.netname);
 		if(this.effects & EF_NODRAW)
 		{
 			setthink(this, vehicles_spawn);
@@ -764,7 +765,7 @@ void vehicles_exit(entity vehic, bool eject)
 
 	if(vehicles_exit_running)
 	{
-		LOG_TRACE("^1vehicles_exit already running! this is not good...\n");
+		LOG_TRACE("^1vehicles_exit already running! this is not good...");
 		return;
 	}
 
@@ -1059,7 +1060,7 @@ void vehicles_reset(entity this)
 // initialization
 void vehicles_spawn(entity this)
 {
-	LOG_DEBUG("Spawning vehicle: ", this.classname, "\n");
+	LOG_DEBUG("Spawning vehicle: ", this.classname);
 
 	// disown & reset
 	this.vehicle_hudmodel.viewmodelforclient = this;
@@ -1115,14 +1116,17 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		return false;
 
 	if(!this.tur_head)
+	{
 		info.vr_precache(info);
+		IL_PUSH(g_vehicles, this);
+	}
 
 	if(this.targetname && this.targetname != "")
 	{
 		this.vehicle_controller = find(NULL, target, this.targetname);
 		if(!this.vehicle_controller)
 		{
-			LOG_DEBUG("^1WARNING: ^7Vehicle with invalid .targetname\n");
+			LOG_DEBUG("^1WARNING: ^7Vehicle with invalid .targetname");
 			this.active = ACTIVE_ACTIVE;
 		}
 		else

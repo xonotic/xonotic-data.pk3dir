@@ -325,7 +325,7 @@ float compressShortVector(vector vec)
 	return (p * 0x1000) + (y * 0x80) + len;
 }
 
-void compressShortVector_init()
+STATIC_INIT(compressShortVector)
 {
 	float l = 1;
 	float f = pow(2, 1/8);
@@ -472,7 +472,7 @@ void get_mi_min_max(float mode)
 
 	mi_min = mi;
 	mi_max = ma;
-	MapInfo_Get_ByName(mi_shortname, 0, 0);
+	MapInfo_Get_ByName(mi_shortname, 0, NULL);
 	if(MapInfo_Map_mins.x < MapInfo_Map_maxs.x)
 	{
 		mi_min = MapInfo_Map_mins;
@@ -592,7 +592,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if (!(tmp_cvar || tmp_value))
 	{
-		LOG_TRACE("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		LOG_TRACE("Error: Invalid usage of cvar_settemp(string, string); !");
 		return 0;
 	}
 
@@ -635,7 +635,7 @@ int cvar_settemp_restore()
 			cvar_set(it.netname, it.message);
 			strunzone(it.netname);
 			strunzone(it.message);
-			remove(it);
+			delete(it);
 			++j;
 		}
 		else
@@ -649,7 +649,7 @@ int cvar_settemp_restore()
 		if(cvar_type(e.netname))
 		{
 			cvar_set(e.netname, e.message);
-			remove(e);
+			delete(e);
 			++j;
 		}
 		else
@@ -932,7 +932,7 @@ string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_
 		return strcat(substring(theText, 0, textLengthUpToLength(theText, maxWidth - tw("..."), tw)), "...");
 }
 
-float isGametypeInFilter(float gt, float tp, float ts, string pattern)
+float isGametypeInFilter(Gametype gt, float tp, float ts, string pattern)
 {
 	string subpattern, subpattern2, subpattern3, subpattern4;
 	subpattern = strcat(",", MapInfo_Type_ToString(gt), ",");

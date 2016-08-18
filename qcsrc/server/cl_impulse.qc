@@ -1,12 +1,11 @@
 #include "cl_impulse.qh"
 #include "round_handler.qh"
 
-#include "bot/waypoints.qh"
+#include "bot/api.qh"
 
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "cheats.qh"
-#include "bot/navigation.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
@@ -248,7 +247,7 @@ IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	W_ThrowWeapon(this, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
+	W_ThrowWeapon(this, weaponentities[0], W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
 }
 
 IMPULSE(weapon_reload)
@@ -258,8 +257,11 @@ IMPULSE(weapon_reload)
 	if (forbidWeaponUse(this)) return;
 	Weapon w = PS(this).m_weapon;
 	entity actor = this;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	w.wr_reload(w, actor, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		w.wr_reload(w, actor, weaponentity);
+	}
 }
 
 void ImpulseCommands(entity this)
@@ -463,7 +465,7 @@ IMPULSE(waypoint_clear_personal)
 	WaypointSprite_ClearPersonal(this);
 	if (this.personal)
 	{
-		remove(this.personal);
+		delete(this.personal);
 		this.personal = NULL;
 	}
 	sprint(this, "personal waypoint cleared\n");
@@ -474,7 +476,7 @@ IMPULSE(waypoint_clear)
 	WaypointSprite_ClearOwned(this);
 	if (this.personal)
 	{
-		remove(this.personal);
+		delete(this.personal);
 		this.personal = NULL;
 	}
 	sprint(this, "all waypoints cleared\n");

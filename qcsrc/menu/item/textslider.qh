@@ -14,7 +14,7 @@ CLASS(TextSlider, Slider)
 	METHOD(TextSlider, addValue, void(entity, string, string));
 	METHOD(TextSlider, insertValue, void(entity, float, string, string));
 	METHOD(TextSlider, configureTextSliderValues, void(entity, string));
-	ATTRIBARRAY(TextSlider, valueStrings, string, 256)
-	ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256)
-	ATTRIB(TextSlider, nValues, int, 0)
+	ATTRIBARRAY(TextSlider, valueStrings, string, 256);
+	ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256);
+	ATTRIB(TextSlider, nValues, int, 0);
 ENDCLASS(TextSlider)

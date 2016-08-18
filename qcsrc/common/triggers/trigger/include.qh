@@ -1,5 +1,4 @@
-#ifndef TRIGGERS_TRIGGER_INCLUDE_H
-#define TRIGGERS_TRIGGER_INCLUDE_H
+#pragma once
 
 #include "multi.qh"
 #include "jumppads.qh"
@@ -8,5 +7,3 @@
 #include "keylock.qh"
 #include "impulse.qh"
 #include "viewloc.qh"
-
-#endif

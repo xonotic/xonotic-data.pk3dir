@@ -4,8 +4,7 @@
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
-#include "bot/waypoints.qh"
-#include "bot/navigation.qh"
+#include "bot/api.qh"
 #include "command/getreplies.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
@@ -905,7 +904,7 @@ vector trigger_race_checkpoint_spawn_evalfunc(entity this, entity player, entity
 spawnfunc(trigger_race_checkpoint)
 {
 	vector o;
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 
 	EXACTTRIGGER_INIT;
 
@@ -953,7 +952,7 @@ spawnfunc(trigger_race_checkpoint)
 spawnfunc(target_checkpoint) // defrag entity
 {
 	vector o;
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
 
 	EXACTTRIGGER_INIT;
@@ -1031,7 +1030,7 @@ void race_RetractPlayer(entity this)
 
 spawnfunc(info_player_race)
 {
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 	++race_spawns;
 	spawnfunc_info_player_deathmatch(this);
 

@@ -10,7 +10,7 @@ REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
 	{
 		if (!(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")))
 		{
-			LOG_TRACE("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
+			LOG_TRACE("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.");
 			return -1;
 		}
 	}
@@ -65,7 +65,7 @@ void physical_item_think(entity this)
 	}
 
 	if(!this.owner.modelindex)
-		remove(this); // the real item is gone, remove this
+		delete(this); // the real item is gone, remove this
 }
 
 void physical_item_touch(entity this, entity toucher)

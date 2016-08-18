@@ -16,8 +16,8 @@ void IL_ENDFRAME();
  *   freed entities must be removed from the list
  */
 CLASS(IntrusiveList, Object)
-	ATTRIB(IntrusiveList, il_head, entity, NULL);
-	ATTRIB(IntrusiveList, il_tail, entity, NULL);
+	ATTRIB(IntrusiveList, il_head, entity);
+	ATTRIB(IntrusiveList, il_tail, entity);
 	ATTRIB(IntrusiveList, il_nextfld, .entity, nil);
 	ATTRIB(IntrusiveList, il_prevfld, .entity, nil);
 	INIT(IntrusiveList) { IL_INIT(this); }
@@ -127,7 +127,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 	entity otail = this.il_tail;
 	next ? next.(il_prev) = prev : this.il_tail = prev;
 	prev ? prev.(il_next) = next : this.il_head = next;
-	LOG_DEBUGF("remove %i (%i :: %i), head: %i -> %i, tail: %i -> %i\n", it, it.(il_prev), it.(il_next), ohead, this.il_head, otail, this.il_tail);
+	LOG_DEBUGF("remove %i (%i :: %i), head: %i -> %i, tail: %i -> %i", it, it.(il_prev), it.(il_next), ohead, this.il_head, otail, this.il_tail);
 	it.(il_next) = it.(il_prev) = NULL;
 }
 
@@ -150,7 +150,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 #define IL_DELETE(this, dtor) \
 	MACRO_BEGIN \
 	{ \
-		remove(this); \
+		delete(this); \
 		this = NULL; \
 	} MACRO_END
 
@@ -204,7 +204,7 @@ void IL_INIT(IntrusiveList this)
 			return;
 		}
 	}
-	LOG_WARNINGF("IntrusiveList overflow");
+	LOG_WARNF("IntrusiveList overflow");
 }
 
 void IL_DTOR(IntrusiveList this)

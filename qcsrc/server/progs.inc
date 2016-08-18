@@ -10,7 +10,6 @@
 
 #include "../server/_mod.inc"
 #include "bot/_mod.inc"
-#include "bot/havocbot/_mod.inc"
 #include "command/_mod.inc"
 #include "mutators/_mod.inc"
 #include "pathlib/_all.inc"

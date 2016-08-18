@@ -392,7 +392,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	if (name == "")
 	{
 		this.model = "";
-		if (this.weaponchild) remove(this.weaponchild);
+		if (this.weaponchild) delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
 		this.spawnorigin = '0 0 0';
@@ -436,7 +436,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		}
 		else
 		{
-			if (this.weaponchild) remove(this.weaponchild);
+			if (this.weaponchild) delete(this.weaponchild);
 			this.weaponchild = NULL;
 		}
 
@@ -462,7 +462,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			}
 			else
 			{
-				LOG_WARNINGF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong\n",
+				LOG_WARNF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong",
 					this.model);
 				this.movedir = '0 0 0';
 			}
@@ -481,7 +481,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			}
 			else
 			{
-				LOG_WARNINGF("weapon model %s does not support the 'shell' tag, will display casings wrong\n",
+				LOG_WARNF("weapon model %s does not support the 'shell' tag, will display casings wrong",
 					this.model);
 				this.spawnorigin = this.movedir;
 			}
@@ -503,7 +503,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			}
 			else
 			{
-				LOG_WARNINGF(
+				LOG_WARNF(
 					"weapon model %s does not support the 'handle' tag "
 					"and neither does the v_ model support the 'shot' tag, "
 					"will display muzzle flashes TOTALLY wrong\n",

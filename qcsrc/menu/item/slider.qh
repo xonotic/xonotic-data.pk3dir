@@ -20,31 +20,31 @@ CLASS(Slider, Label)
 	METHOD(Slider, setValue, void(entity, float));
 	METHOD(Slider, setSliderValue, void(entity, float));
 	METHOD(Slider, showNotify, void(entity));
-	ATTRIB(Slider, src, string, string_null)
-	ATTRIB(Slider, focusable, float, 1)
-	ATTRIB(Slider, allowFocusSound, float, 1)
-	ATTRIB(Slider, value, float, 0)
-	ATTRIB(Slider, animated, float, 1)
-	ATTRIB(Slider, sliderValue, float, 0)
-	ATTRIB(Slider, sliderAnim, entity, NULL)
-	ATTRIB(Slider, valueMin, float, 0)
-	ATTRIB(Slider, valueMax, float, 0)
-	ATTRIB(Slider, valueStep, float, 0)
-	ATTRIB(Slider, valueDigits, float, 0)
-	ATTRIB(Slider, valueKeyStep, float, 0)
-	ATTRIB(Slider, valuePageStep, float, 0)
-	ATTRIB(Slider, valueDisplayMultiplier, float, 1.0)
-	ATTRIB(Slider, textSpace, float, 0)
-	ATTRIB(Slider, controlWidth, float, 0)
-	ATTRIB(Slider, pressed, float, 0)
-	ATTRIB(Slider, pressOffset, float, 0)
-	ATTRIB(Slider, previousValue, float, 0)
-	ATTRIB(Slider, tolerance, vector, '0 0 0')
-	ATTRIB(Slider, disabled, float, 0)
-	ATTRIB(Slider, color, vector, '1 1 1')
-	ATTRIB(Slider, color2, vector, '1 1 1')
-	ATTRIB(Slider, colorD, vector, '1 1 1')
-	ATTRIB(Slider, colorC, vector, '1 1 1')
-	ATTRIB(Slider, colorF, vector, '1 1 1')
-	ATTRIB(Slider, disabledAlpha, float, 0.3)
+	ATTRIB(Slider, src, string);
+	ATTRIB(Slider, focusable, float, 1);
+	ATTRIB(Slider, allowFocusSound, float, 1);
+	ATTRIB(Slider, value, float, 0);
+	ATTRIB(Slider, animated, float, 1);
+	ATTRIB(Slider, sliderValue, float, 0);
+	ATTRIB(Slider, sliderAnim, entity);
+	ATTRIB(Slider, valueMin, float, 0);
+	ATTRIB(Slider, valueMax, float, 0);
+	ATTRIB(Slider, valueStep, float, 0);
+	ATTRIB(Slider, valueDigits, float, 0);
+	ATTRIB(Slider, valueKeyStep, float, 0);
+	ATTRIB(Slider, valuePageStep, float, 0);
+	ATTRIB(Slider, valueDisplayMultiplier, float, 1.0);
+	ATTRIB(Slider, textSpace, float, 0);
+	ATTRIB(Slider, controlWidth, float, 0);
+	ATTRIB(Slider, pressed, float, 0);
+	ATTRIB(Slider, pressOffset, float, 0);
+	ATTRIB(Slider, previousValue, float, 0);
+	ATTRIB(Slider, tolerance, vector, '0 0 0');
+	ATTRIB(Slider, disabled, float, 0);
+	ATTRIB(Slider, color, vector, '1 1 1');
+	ATTRIB(Slider, color2, vector, '1 1 1');
+	ATTRIB(Slider, colorD, vector, '1 1 1');
+	ATTRIB(Slider, colorC, vector, '1 1 1');
+	ATTRIB(Slider, colorF, vector, '1 1 1');
+	ATTRIB(Slider, disabledAlpha, float, 0.3);
 ENDCLASS(Slider)

@@ -1,7 +1,7 @@
 #ifndef IMPLEMENTATION
 CLASS(Hagar, Weapon)
-/* ammotype  */ ATTRIB(Hagar, ammo_field, .int, ammo_rockets)
-/* impulse   */ ATTRIB(Hagar, impulse, int, 8)
+/* ammotype  */ ATTRIB(Hagar, ammo_field, .int, ammo_rockets);
+/* impulse   */ ATTRIB(Hagar, impulse, int, 8);
 /* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');
@@ -68,7 +68,7 @@ void W_Hagar_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Hagar_Explode_use(entity this, entity actor, entity trigger)
@@ -81,7 +81,7 @@ void W_Hagar_Explode2(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, directhitentity);
 
-	remove(this);
+	delete(this);
 }
 
 void W_Hagar_Explode2_use(entity this, entity actor, entity trigger)
@@ -134,13 +134,13 @@ void W_Hagar_Touch2(entity this, entity toucher)
 	}
 }
 
-void W_Hagar_Attack(Weapon thiswep, entity actor)
+void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hagar, ammo));
 
-	W_SetupShot(actor, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -169,6 +169,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor)
 
 	missile.angles = vectoangles(missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
@@ -176,13 +177,13 @@ void W_Hagar_Attack(Weapon thiswep, entity actor)
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-void W_Hagar_Attack2(Weapon thiswep, entity actor)
+void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo));
 
-	W_SetupShot(actor, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -212,6 +213,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor)
 
 	missile.angles = vectoangles(missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR_BOUNCING, true);
@@ -234,7 +236,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 
 	weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(hagar, refire));
 
-	W_SetupShot(actor, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
@@ -288,6 +290,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 
 		missile.angles = vectoangles(missile.velocity);
 		missile.flags = FL_PROJECTILE;
+		IL_PUSH(g_projectiles, missile);
 
 		CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
@@ -423,7 +426,7 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 		return;
 	}
 
-	W_Hagar_Attack(thiswep, actor);
+	W_Hagar_Attack(thiswep, actor, weaponentity);
 
 	int slot = weaponslot(weaponentity);
 	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hagar, refire) * W_WeaponRateFactor(actor);
@@ -463,19 +466,18 @@ METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hagar, refire)))
         {
-            W_Hagar_Attack2(thiswep, actor);
+            W_Hagar_Attack2(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hagar, refire), w_ready);
         }
     }
 }
-METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor))
+METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor, .entity weaponentity))
 {
     // we lost the weapon and want to prepare switching away
     if(actor.hagar_load)
     {
-        .entity weaponentity = weaponentities[0]; // TODO: unhardcode
-        actor.(weaponentity).state = WS_READY;
-        W_Hagar_Attack2_Load_Release(actor, weaponentity);
+    	actor.(weaponentity).state = WS_READY;
+    	W_Hagar_Attack2_Load_Release(actor, weaponentity);
     }
 }
 METHOD(Hagar, wr_setup, void(entity thiswep, entity actor))
@@ -504,17 +506,16 @@ METHOD(Hagar, wr_resetplayer, void(entity thiswep, entity actor))
 {
     actor.hagar_load = 0;
 }
-METHOD(Hagar, wr_playerdeath, void(entity thiswep, entity actor))
+METHOD(Hagar, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    .entity weaponentity = weaponentities[0]; // TODO: unhardcode
     // if we have any rockets loaded when we die, release them
     if(actor.hagar_load && WEP_CVAR_SEC(hagar, load_releasedeath))
-        W_Hagar_Attack2_Load_Release(actor, weaponentity);
+    	W_Hagar_Attack2_Load_Release(actor, weaponentity);
 }
 METHOD(Hagar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(!actor.hagar_load) // require releasing loaded rockets first
-        W_Reload(actor, min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), SND_RELOAD);
+        W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), SND_RELOAD);
 }
 METHOD(Hagar, wr_suicidemessage, Notification(entity thiswep))
 {

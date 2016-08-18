@@ -1,5 +1,4 @@
-#ifndef TRIGGERS_INCLUDE_H
-#define TRIGGERS_INCLUDE_H
+#pragma once
 
 // some required common stuff
 #ifdef CSQC
@@ -18,5 +17,3 @@
 
 // trigger
 #include "trigger/include.qh"
-
-#endif

@@ -4,8 +4,8 @@
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
+#include "hud/panel/scoreboard.qh"
 #include "hud/panel/quickmenu.qh"
-#include "scoreboard.qh"
 #include "shownames.qh"
 #include <common/t_items.qh>
 #include "wall.qh"
@@ -108,7 +108,6 @@ void CSQC_Init()
 	binddb = db_create();
 	tempdb = db_create();
 	ClientProgsDB = db_load("client.db");
-	compressShortVector_init();
 
 	draw_endBoldFont();
 
@@ -131,13 +130,13 @@ void CSQC_Init()
 
 	registercvar("cl_spawn_near_teammate", "1");
 
-	gametype = 0;
+	gametype = NULL;
 
-	// hud_fields uses strunzone on the titles!
-	for(int i = 0; i < MAX_HUD_FIELDS; ++i)
-		hud_title[i] = strzone("(null)");
+	// sbt_fields uses strunzone on the titles!
+	for(int i = 0; i < MAX_SBT_FIELDS; ++i)
+		sbt_field_title[i] = strzone("(null)");
 
-	Cmd_HUD_SetFields(0);
+	Cmd_Scoreboard_SetFields(0);
 
 	postinit = false;
 
@@ -185,8 +184,8 @@ void Shutdown()
 {
 	WarpZone_Shutdown();
 
-	remove(teams);
-	remove(players);
+	delete(teams);
+	delete(players);
 	db_close(binddb);
 	db_close(tempdb);
 	if(autocvar_cl_db_saveasdump)
@@ -235,7 +234,7 @@ float SetTeam(entity o, int Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
+					LOG_TRACEF("trying to switch to unsupported team %d", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -251,7 +250,7 @@ float SetTeam(entity o, int Team)
 			default:
 				if(GetTeam(Team, false) == NULL)
 				{
-					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
+					LOG_TRACEF("trying to switch to unsupported team %d", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -323,9 +322,9 @@ void Playerchecker_Think(entity this)
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
 				int t = entcs_GetScoreTeam(i);
-				if (t) SetTeam(e, t); // will not hurt; later updates come with HUD_UpdatePlayerTeams
+				if (t) SetTeam(e, t); // will not hurt; later updates come with Scoreboard_UpdatePlayerTeams
 				RegisterPlayer(e);
-				HUD_UpdatePlayerPos(e);
+				Scoreboard_UpdatePlayerPos(e);
 			}
 		}
 	}
@@ -385,23 +384,21 @@ void Ent_RemovePlayerScore(entity this)
 	if(this.owner) {
 		SetTeam(this.owner, -1);
 		this.owner.gotscores = 0;
-		for(int i = 0; i < MAX_SCORE; ++i) {
-			this.owner.(scores[i]) = 0; // clear all scores
-		}
+		FOREACH(Scores, true, {
+			this.owner.(scores(it)) = 0; // clear all scores
+		});
 	}
 }
 
 NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 {
 	make_pure(this);
-	int i, n;
-	bool isNew;
 	entity o;
 
 	// damnit -.- don't want to go change every single .sv_entnum in hud.qc AGAIN
 	// (no I've never heard of M-x replace-string, sed, or anything like that)
-	isNew = !this.owner; // workaround for DP bug
-	n = ReadByte()-1;
+	bool isNew = !this.owner; // workaround for DP bug
+	int n = ReadByte()-1;
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != this.sv_entnum)
@@ -429,27 +426,23 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	//playerchecker will do this for us later, if it has not already done so
 
     int sf, lf;
-#if MAX_SCORE <= 8
-	sf = ReadByte();
-	lf = ReadByte();
-#else
 	sf = ReadShort();
 	lf = ReadShort();
-#endif
-    int p;
-	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
-		if(sf & p)
+	FOREACH(Scores, true, {
+        int p = 1 << (i % 16);
+		if (sf & p)
 		{
-			if(lf & p)
-				o.(scores[i]) = ReadInt24_t();
+			if (lf & p)
+				o.(scores(it)) = ReadInt24_t();
 			else
-				o.(scores[i]) = ReadChar();
+				o.(scores(it)) = ReadChar();
 		}
+    });
 
 	return = true;
 
 	if(o.sort_prev)
-		HUD_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
+		Scoreboard_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
 
 	this.entremove = Ent_RemovePlayerScore;
 }
@@ -476,14 +469,14 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 		if(sf & p)
 		{
 			if(lf & p)
-				o.(teamscores[i]) = ReadInt24_t();
+				o.(teamscores(i)) = ReadInt24_t();
 			else
-				o.(teamscores[i]) = ReadChar();
+				o.(teamscores(i)) = ReadChar();
 		}
 
 	return = true;
 
-	HUD_UpdateTeamPos(o);
+	Scoreboard_UpdateTeamPos(o);
 }
 
 NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
@@ -515,6 +508,22 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	}
 	else
 		angles_held_status = 0;
+
+	if(f & 16)
+	{
+		num_spectators = ReadByte();
+
+		float i, slot;
+
+		for(i = 0; i < MAX_SPECTATORS; ++i)
+			spectatorlist[i] = 0; // reset list first
+
+		for(i = 0; i < num_spectators; ++i)
+		{
+			slot = ReadByte();
+			spectatorlist[i] = slot - 1;
+		}
+	}
 
 	return = true;
 
@@ -835,7 +844,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	time = savetime;
 	if (!done)
 	{
-		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 	}
 }
 
@@ -870,11 +879,11 @@ void CSQC_Ent_Remove(entity this)
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
-		LOG_WARNING("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?");
 		return;
 	}
 	if (this.enttype) Ent_Remove(this);
-	remove(this);
+	delete(this);
 }
 
 void Gamemode_Init()
@@ -940,22 +949,21 @@ void Gamemode_Init();
 NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
-	gametype = ReadInt24_t();
+	gametype = ReadRegistered(Gametypes);
 	HUD_ModIcons_SetFunc();
-	for (int i = 0; i < MAX_SCORE; ++i)
-	{
-		if (scores_label[i]) strunzone(scores_label[i]);
-		scores_label[i] = strzone(ReadString());
-		scores_flags[i] = ReadByte();
-	}
+	FOREACH(Scores, true, {
+		if (scores_label(it)) strunzone(scores_label(it));
+		scores_label(it) = strzone(ReadString());
+		scores_flags(it) = ReadByte();
+	});
 	for (int i = 0; i < MAX_TEAMSCORE; ++i)
 	{
-		if (teamscores_label[i]) strunzone(teamscores_label[i]);
-		teamscores_label[i] = strzone(ReadString());
-		teamscores_flags[i] = ReadByte();
+		if (teamscores_label(i)) strunzone(teamscores_label(i));
+		teamscores_label(i) = strzone(ReadString());
+		teamscores_flags(i) = ReadByte();
 	}
 	return = true;
-	HUD_InitScores();
+	Scoreboard_InitScores();
 	Gamemode_Init();
 }
 
@@ -1222,13 +1230,13 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-string getcommandkey(string text, string command)
+string _getcommandkey(string cmd_name, string command, bool forcename)
 {
 	string keys;
 	float n, j, k, l = 0;
 
 	if (!autocvar_hud_showbinds)
-		return text;
+		return cmd_name;
 
 	keys = db_get(binddb, command);
 	if (keys == "")
@@ -1262,12 +1270,12 @@ string getcommandkey(string text, string command)
 
 	if (keys == "NO_KEY") {
 		if (autocvar_hud_showbinds > 1)
-			return sprintf(_("%s (not bound)"), text);
+			return sprintf(_("%s (not bound)"), cmd_name);
 		else
-			return text;
+			return cmd_name;
 	}
-	else if (autocvar_hud_showbinds > 1)
-		return sprintf("%s (%s)", text, keys);
+	else if (autocvar_hud_showbinds > 1 || forcename)
+		return sprintf("%s (%s)", cmd_name, keys);
 	else
 		return keys;
 }

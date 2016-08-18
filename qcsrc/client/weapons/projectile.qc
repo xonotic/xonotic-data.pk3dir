@@ -19,7 +19,7 @@
 void SUB_Stop(entity this, entity toucher)
 {
 	this.velocity = this.avelocity = '0 0 0';
-	this.move_movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 }
 
 void Projectile_ResetTrail(entity this, vector to)
@@ -330,7 +330,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		this.maxs = '0 0 0';
 		this.colormod = '0 0 0';
 		settouch(this, SUB_Stop);
-		this.move_movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 		this.alphamod = 1;
 
 		switch (this.cnt)
@@ -340,7 +340,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				loopsound(this, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
 				this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
@@ -358,7 +358,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_GRENADE_BOUNCING:
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				this.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 				this.bouncestop = WEP_CVAR(mortar, bouncestop);
@@ -376,21 +376,21 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_PORTO_RED:
 				this.colormod = '2 1 1';
 				this.alphamod = 0.5;
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_PORTO_BLUE:
 				this.colormod = '1 1 2';
 				this.alphamod = 0.5;
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_HAGAR_BOUNCING:
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_CRYLINK_BOUNCING:
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_FIREBALL:
@@ -400,7 +400,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 			case PROJECTILE_FIREMINE:
 				loopsound(this, CH_SHOTS_SINGLE, SND(FIREBALL_FLY), VOL_BASE, ATTEN_NORM);
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
@@ -460,16 +460,16 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	if (this.gravity)
 	{
 		if (this.move_movetype == MOVETYPE_FLY)
-			this.move_movetype = MOVETYPE_TOSS;
+			set_movetype(this, MOVETYPE_TOSS);
 		if (this.move_movetype == MOVETYPE_BOUNCEMISSILE)
-			this.move_movetype = MOVETYPE_BOUNCE;
+			set_movetype(this, MOVETYPE_BOUNCE);
 	}
 	else
 	{
 		if (this.move_movetype == MOVETYPE_TOSS)
-			this.move_movetype = MOVETYPE_FLY;
+			set_movetype(this, MOVETYPE_FLY);
 		if (this.move_movetype == MOVETYPE_BOUNCE)
-			this.move_movetype = MOVETYPE_BOUNCEMISSILE;
+			set_movetype(this, MOVETYPE_BOUNCEMISSILE);
 	}
 
 	if (!(this.count & 0x80))
