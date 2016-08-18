@@ -786,10 +786,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb)
 			if (sbt_highlight)
 				if (!(i % 2))
 				{
-					if (i == sbt_num_fields-1)
-						column_dim.x = sbt_field_size[i] + hud_fontsize.x * 0.5;
-					else
-						column_dim.x = sbt_field_size[i] + hud_fontsize.x;
+					column_dim.x = sbt_field_size[i] + hud_fontsize.x;
 					drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 				}
 
