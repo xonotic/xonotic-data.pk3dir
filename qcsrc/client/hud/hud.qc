@@ -361,8 +361,10 @@ void HUD_Vehicle()
 void HUD_Panel_Draw(entity panent)
 {
 	panel = panent;
-	if (autocvar__hud_configure && panel.panel_configflags & PANEL_CONFIG_MAIN)
+	if (autocvar__hud_configure)
 	{
+		if (!(panel.panel_configflags & PANEL_CONFIG_MAIN))
+			return;
 		panel.panel_draw();
 		return;
 	}
