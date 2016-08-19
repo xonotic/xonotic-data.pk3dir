@@ -97,7 +97,7 @@ void GameLogEcho(string s)
     }
     if (autocvar_sv_eventlog_console)
     {
-        LOG_INFO(s, "\n");
+        dedicated_print(strcat(s, "\n"));
     }
 }
 
