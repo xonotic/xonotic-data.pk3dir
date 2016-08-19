@@ -367,8 +367,6 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 // NOTE: in hud_configure mode cvars must be reloaded every frame
 float panel_fade_alpha;
 #define HUD_Panel_LoadCvars() MACRO_BEGIN { \
-	if(autocvar__hud_configure) \
-		panel_fade_alpha = 1; \
 	if (panel.update_time <= time) {                                                                                \
 		if (autocvar__hud_configure) panel_enabled = cvar(strcat("hud_panel_", panel.panel_name));                  \
 		panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos")));                              \
