@@ -1,6 +1,5 @@
 #include "ammo.qh"
 
-#include "scoreboard.qh"
 #include <common/t_items.qh>
 
 // Ammo (#1)
@@ -105,9 +104,7 @@ void HUD_Ammo()
 			return;
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 	draw_beginBoldFont();
 

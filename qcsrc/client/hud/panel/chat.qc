@@ -23,7 +23,7 @@ void HUD_Chat()
 		}
 	}
 
-	HUD_Panel_LoadCvars(1); // can't be forced to fade with the scoreboard anyway
+	HUD_Panel_LoadCvars();
 
 	if(intermission == 2)
 	{

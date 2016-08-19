@@ -1,6 +1,5 @@
 #include "weapons.qh"
 
-#include "scoreboard.qh"
 
 // Weapons (#0)
 
@@ -84,9 +83,7 @@ void HUD_Weapons()
 	}
 
 	// update generic hud functions
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])

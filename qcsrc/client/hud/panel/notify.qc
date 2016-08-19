@@ -1,6 +1,5 @@
 #include "notify.qh"
 
-#include "scoreboard.qh"
 
 // Notifications (#4)
 
@@ -50,9 +49,8 @@ void HUD_Notify()
 		if (!autocvar_hud_panel_notify)
 			return;
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
+
 	if (autocvar_hud_panel_notify_dynamichud)
 		HUD_Scale_Enable();
 	else

@@ -1,6 +1,5 @@
 #include "pressedkeys.qh"
 
-#include "scoreboard.qh"
 
 // Pressed keys (#11)
 
@@ -12,9 +11,7 @@ void HUD_PressedKeys()
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;

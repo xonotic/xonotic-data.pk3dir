@@ -1,6 +1,5 @@
 #include "healtharmor.qh"
 
-#include "scoreboard.qh"
 #include <common/deathtypes/all.qh>
 
 // Health/armor (#3)
@@ -58,9 +57,7 @@ void HUD_HealthArmor()
 		fuel = 20;
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 	draw_beginBoldFont();
 

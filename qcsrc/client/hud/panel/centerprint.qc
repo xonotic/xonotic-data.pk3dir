@@ -153,8 +153,7 @@ void HUD_CenterPrint ()
 		}
 	}
 
-	// this panel fades only when the menu does
-	HUD_Panel_LoadCvars(1); // keep with the scoreboard
+	HUD_Panel_LoadCvars();
 
 	if ( HUD_Radar_Clickable() )
 	{

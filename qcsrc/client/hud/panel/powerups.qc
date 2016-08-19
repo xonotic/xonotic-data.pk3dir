@@ -1,6 +1,5 @@
 #include "powerups.qh"
 
-#include "scoreboard.qh"
 #include <common/items/all.qc>
 
 // Powerups (#2)
@@ -110,9 +109,8 @@ void HUD_Powerups()
 		return;
 
 	// Draw panel background
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
+
 	if (autocvar_hud_panel_powerups_dynamichud)
 		HUD_Scale_Enable();
 	else

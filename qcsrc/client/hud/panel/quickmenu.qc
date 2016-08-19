@@ -1,6 +1,5 @@
 #include "quickmenu.qh"
 
-#include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <client/hud/all.qh>
 #include <client/mapvoting.qh>
@@ -505,9 +504,7 @@ void QuickMenu_Mouse()
 		mousepos.y = bound(0, mousepos.y, vid_conheight);
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 	if(panel_bg_padding)
 	{
@@ -621,9 +618,7 @@ void HUD_QuickMenu()
 		}
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 	HUD_Scale_Disable();
 	HUD_Panel_DrawBg();

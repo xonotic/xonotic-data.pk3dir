@@ -63,14 +63,14 @@ void HUD_Vote()
 	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
 	if(a <= 0)
 		return;
-	//HUD_Panel_LoadCvars(a);
+	//panel_fade_alpha *= a;
 	// nothing can hide this panel, not even the menu
 	float hud_fade_alpha_save = hud_fade_alpha;
 	if(uid2name_dialog && autocvar__menu_alpha)
 		hud_fade_alpha = 0;
 	else
 		hud_fade_alpha = a;
-	HUD_Panel_LoadCvars(1);
+	HUD_Panel_LoadCvars();
 	hud_fade_alpha = hud_fade_alpha_save;
 
 	if(uid2name_dialog)

@@ -1321,7 +1321,8 @@ void Scoreboard_Draw()
 
 	if(scoreboard_fade_alpha <= 0)
 		return;
-	HUD_Panel_LoadCvars(scoreboard_fade_alpha);
+	panel_fade_alpha *= scoreboard_fade_alpha;
+	HUD_Panel_LoadCvars();
 
 	sbt_bg_alpha = autocvar_hud_panel_scoreboard_table_bg_alpha * panel_fg_alpha;
 	sbt_highlight = autocvar_hud_panel_scoreboard_table_highlight;

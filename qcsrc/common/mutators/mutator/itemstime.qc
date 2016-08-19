@@ -306,9 +306,7 @@ void HUD_ItemsTime()
     if (count == 0)
         return;
 
-    if(1 - scoreboard_fade_alpha <= 0)
-        return;
-    HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+    HUD_Panel_LoadCvars();
 
     vector pos, mySize;
     pos = panel_pos;

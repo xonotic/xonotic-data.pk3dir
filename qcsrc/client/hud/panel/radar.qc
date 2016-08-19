@@ -1,6 +1,5 @@
 #include "radar.qh"
 
-#include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 #include <client/mapvoting.qh>
@@ -146,9 +145,7 @@ void HUD_Radar_Mouse()
 		mousepos_y = bound(0, mousepos_y, vid_conheight);
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 
 	panel_size = autocvar_hud_panel_radar_maximized_size;
@@ -200,9 +197,7 @@ void HUD_Radar()
 	if ( hud_panel_radar_temp_hidden )
 		return;
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 	float f = 0;
 

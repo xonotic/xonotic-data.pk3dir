@@ -1,6 +1,5 @@
 #include "racetimer.qh"
 
-#include "scoreboard.qh"
 #include <common/mapinfo.qh>
 
 // Race timer (#6)
@@ -84,9 +83,7 @@ void HUD_RaceTimer ()
 		if(spectatee_status == -1) return;
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 	vector pos, mySize;
 	pos = panel_pos;

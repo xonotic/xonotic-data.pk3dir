@@ -1,6 +1,5 @@
 #include "infomessages.qh"
 
-#include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 
@@ -61,9 +60,7 @@ void HUD_InfoMessages()
 		if(!autocvar_hud_panel_infomessages) return;
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;

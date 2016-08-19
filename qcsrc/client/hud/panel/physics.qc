@@ -1,6 +1,5 @@
 #include "physics.qh"
 
-#include "scoreboard.qh"
 #include <client/main.qh>
 #include <common/mapinfo.qh>
 #include <lib/csqcmodel/cl_player.qh>
@@ -19,9 +18,7 @@ void HUD_Physics()
 		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 
-	if(1 - scoreboard_fade_alpha <= 0)
-		return;
-	HUD_Panel_LoadCvars(1 - scoreboard_fade_alpha);
+	HUD_Panel_LoadCvars();
 
 	draw_beginBoldFont();
 

@@ -1,5 +1,6 @@
 #include "hud.qh"
 
+#include "panel/scoreboard.qh"
 #include "hud_config.qh"
 #include "../mapvoting.qh"
 #include "../teamradar.qh"
@@ -357,26 +358,35 @@ void HUD_Vehicle()
 	}
 }
 
-bool HUD_Panel_CheckFlags(int showflags)
-{
-    TC(int, showflags);
-	if ( HUD_Minigame_Showpanels() )
-		return showflags & PANEL_SHOW_MINIGAME;
-	if(intermission == 2)
-		return showflags & PANEL_SHOW_MAPVOTE;
-	return showflags & PANEL_SHOW_MAINGAME;
-}
-
 void HUD_Panel_Draw(entity panent)
 {
 	panel = panent;
-	if(autocvar__hud_configure)
+	if (autocvar__hud_configure && panel.panel_configflags & PANEL_CONFIG_MAIN)
 	{
-		if(panel.panel_configflags & PANEL_CONFIG_MAIN)
-			panel.panel_draw();
-	}
-	else if(HUD_Panel_CheckFlags(panel.panel_showflags))
 		panel.panel_draw();
+		return;
+	}
+
+	bool draw_allowed = false;
+	if ((panel.panel_showflags & PANEL_SHOW_MINIGAME) && HUD_Minigame_Showpanels())
+		draw_allowed = true;
+	else if((panel.panel_showflags & PANEL_SHOW_MAPVOTE) && intermission == 2)
+		draw_allowed = true;
+	else if (panel.panel_showflags & PANEL_SHOW_MAINGAME)
+		draw_allowed = true;
+
+	if (draw_allowed)
+	{
+		if (panel.panel_showflags & PANEL_SHOW_WITH_SB)
+			panel_fade_alpha = 1;
+		else
+		{
+			panel_fade_alpha = 1 - scoreboard_fade_alpha;
+			if(!panel_fade_alpha)
+				return;
+		}
+		panel.panel_draw();
+	}
 }
 
 void HUD_Reset()
