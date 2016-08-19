@@ -33,6 +33,12 @@ void HUD_Vote()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_vote) return;
+		/*
+		if(cvar("hud_panel_vote_test")) {
+			if(vote_called_vote) strunzone(vote_called_vote); vote_called_vote = strzone("^1test the vote panel");
+			vote_active = true; vote_yescount = 3; vote_nocount = 2; vote_needed = 4;
+		} else vote_active = false;
+		*/
 	}
 	else
 	{
@@ -47,13 +53,6 @@ void HUD_Vote()
 		vote_change = time;
 		vote_prev = vote_active;
 	}
-
-	/*
-	if(cvar("hud_panel_vote_test")) {
-		if(vote_called_vote) strunzone(vote_called_vote); vote_called_vote = strzone("^1test the vote panel");
-		vote_active = true; vote_yescount = 3; vote_nocount = 2; vote_needed = 4;
-	} else vote_active = false;
-	*/
 
 	if(vote_active || autocvar__hud_configure)
 		vote_alpha = bound(0, (time - vote_change) * 2, 1);
