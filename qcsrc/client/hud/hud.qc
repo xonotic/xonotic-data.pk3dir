@@ -372,10 +372,16 @@ void HUD_Panel_Draw(entity panent)
 	}
 
 	bool draw_allowed = false;
-	if ((panel.panel_showflags & PANEL_SHOW_MINIGAME) && HUD_Minigame_Showpanels())
-		draw_allowed = true;
-	else if((panel.panel_showflags & PANEL_SHOW_MAPVOTE) && intermission == 2)
-		draw_allowed = true;
+	if (HUD_Minigame_Showpanels())
+	{
+		if (panel.panel_showflags & PANEL_SHOW_MINIGAME)
+			draw_allowed = true;
+	}
+	else if(intermission == 2)
+	{
+		if(panel.panel_showflags & PANEL_SHOW_MAPVOTE)
+			draw_allowed = true;
+	}
 	else if (panel.panel_showflags & PANEL_SHOW_MAINGAME)
 		draw_allowed = true;
 
