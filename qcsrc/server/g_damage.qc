@@ -2,7 +2,7 @@
 
 #include "bot/api.qh"
 #include "g_hook.qh"
-#include "mutators/all.qh"
+#include "mutators/_all.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"

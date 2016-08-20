@@ -10,7 +10,7 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_all.qh"
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>

@@ -9,7 +9,7 @@
 
 #include "command/vote.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_all.qh"
 
 #include "../common/deathtypes/all.qh"
 #include "../common/gamemodes/all.qh"

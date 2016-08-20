@@ -4,7 +4,7 @@
 #include "race.qh"
 #include "../common/triggers/teleporters.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_all.qh"
 
 #include "weapons/tracing.qh"
 

@@ -6,7 +6,7 @@
 
     #include "../server/bot/api.qh"
 
-    #include <server/mutators/all.qh>
+    #include <server/mutators/_all.qh>
 
     #include "../server/weapons/common.qh"
     #include "../server/weapons/selection.qh"

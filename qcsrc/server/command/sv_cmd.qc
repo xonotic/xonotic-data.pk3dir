@@ -18,7 +18,7 @@
 
 #include "../bot/api.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_all.qh"
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
