@@ -86,7 +86,7 @@ bool orb_send(entity this, entity to, int sf);
 void nades_Clear(entity player);
 
 // Give a bonus grenade to a player
-void(entity player, float score) nades_GiveBonus;
+void nades_GiveBonus(entity player, float score);
 
 /**
  * called to adjust nade damage and force on hit

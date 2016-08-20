@@ -1,5 +1,11 @@
 #pragma once
 
+#include <server/g_world.qh>
+#include <server/round_handler.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
+#include <server/teamplay.qh>
+
 #include "mutator.qh"
 
 // TODO: trim
@@ -56,14 +62,11 @@
 #include <common/playerstats.qh>
 #include <server/portals.qh>
 #include <server/g_hook.qh>
-#include <server/scores.qh>
 #include <server/spawnpoints.qh>
 #include <server/mapvoting.qh>
 #include <server/ipban.qh>
-#include <server/race.qh>
 #include <server/antilag.qh>
 #include <server/playerdemo.qh>
-#include <server/round_handler.qh>
 #include <server/item_key.qh>
 #include <server/pathlib/pathlib.qh>
 #include <common/vehicles/all.qh>
@@ -73,11 +76,6 @@
 #include <server/cl_impulse.qh>
 #include <server/cheats.qh>
 #include <server/g_damage.qh>
-#include <server/g_world.qh>
-#include <server/round_handler.qh>
-#include <server/scores.qh>
-#include <server/scores_rules.qh>
-#include <server/teamplay.qh>
 
 #include <server/bot/api.qh>
 

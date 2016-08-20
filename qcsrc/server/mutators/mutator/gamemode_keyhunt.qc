@@ -1,58 +1,4 @@
 #include "gamemode_keyhunt.qh"
-#ifndef GAMEMODE_KEYHUNT_H
-#define GAMEMODE_KEYHUNT_H
-
-#define autocvar_g_keyhunt_point_limit cvar("g_keyhunt_point_limit")
-int autocvar_g_keyhunt_point_leadlimit;
-bool autocvar_g_keyhunt_team_spawns;
-void kh_Initialize();
-
-REGISTER_MUTATOR(kh, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		kh_Initialize();
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, autocvar_timelimit_override, -1);
-		if (autocvar_g_keyhunt_team_spawns)
-			have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back kh_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-#define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
-
-// ALL OF THESE should be removed in the future, as other code should not have to care
-
-// used by bots:
-float kh_tracking_enabled;
-.entity kh_next;
-float kh_Key_AllOwnedByWhichTeam();
-
-USING(kh_Think_t, void());
-void kh_StartRound();
-void kh_Controller_SetThink(float t, kh_Think_t func);
-
-#endif
-
-#ifdef IMPLEMENTATION
 
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
@@ -569,6 +515,8 @@ void kh_FinishRound()  // runs when a team captures the keys
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 }
+
+void nades_GiveBonus(entity player, float score);
 
 void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TEEM?!?! what the fuck is wrong with you people
 {
@@ -1392,5 +1340,3 @@ MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 {
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
 }
-
-#endif

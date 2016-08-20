@@ -1,58 +1,4 @@
 #include "gamemode_freezetag.qh"
-#ifndef GAMEMODE_FREEZETAG_H
-#define GAMEMODE_FREEZETAG_H
-
-int autocvar_g_freezetag_point_limit;
-int autocvar_g_freezetag_point_leadlimit;
-bool autocvar_g_freezetag_team_spawns;
-void freezetag_Initialize();
-
-REGISTER_MUTATOR(ft, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		freezetag_Initialize();
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, autocvar_timelimit_override, -1);
-
-		if (autocvar_g_freezetag_team_spawns)
-			have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back freezetag_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-.float freezetag_frozen_time;
-.float freezetag_frozen_timeout;
-const float ICE_MAX_ALPHA = 1;
-const float ICE_MIN_ALPHA = 0.1;
-float freezetag_teams;
-
-.float reviving; // temp var
-
-float autocvar_g_freezetag_revive_extra_size;
-float autocvar_g_freezetag_revive_speed;
-bool autocvar_g_freezetag_revive_nade;
-float autocvar_g_freezetag_revive_nade_health;
-
-#endif
-#ifdef IMPLEMENTATION
 
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
@@ -150,6 +96,9 @@ float freezetag_getWinnerTeam()
 		return winner_team;
 	return -1; // no player left
 }
+
+void nades_Clear(entity);
+void nades_GiveBonus(entity player, float score);
 
 float freezetag_CheckWinner()
 {
@@ -637,5 +586,3 @@ void freezetag_Initialize()
 
 	EliminatedPlayers_Init(freezetag_isEliminated);
 }
-
-#endif
