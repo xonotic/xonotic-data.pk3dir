@@ -88,6 +88,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if(it.msnt_timer < time)
 			if(SAME_TEAM(player, it))
 			if(time > it.spawnshieldtime) // spawn shielding
+			if(!forbidWeaponUse(it))
 			if(STAT(FROZEN, it) == 0)
 			if(it != player)
 			{

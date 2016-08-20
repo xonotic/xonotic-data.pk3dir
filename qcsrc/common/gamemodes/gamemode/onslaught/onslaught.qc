@@ -76,8 +76,6 @@ bool ons_stalemate;
 
 .float teleport_antispam;
 
-.bool ons_roundlost = _STAT(ROUNDLOST);
-
 // waypoint sprites
 .entity bot_basewaypoint; // generator waypointsprite
 
@@ -1250,7 +1248,7 @@ bool Onslaught_CheckWinner()
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
-		it.ons_roundlost = true;
+		STAT(ROUNDLOST, it) = true;
 		it.player_blocked = true;
 
 		nades_Clear(it);
@@ -1733,7 +1731,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), {
-		it.ons_roundlost = false;
+		STAT(ROUNDLOST, it) = false;
 		it.ons_deathloc = '0 0 0';
 		PutClientInServer(it);
 	});
@@ -2008,7 +2006,7 @@ MUTATOR_HOOKFUNCTION(ons, SpectateCopy)
 	entity spectatee = M_ARGV(0, entity);
 	entity client = M_ARGV(1, entity);
 
-	client.ons_roundlost = spectatee.ons_roundlost; // make spectators see it too
+	STAT(ROUNDLOST, client) = STAT(ROUNDLOST, spectatee); // make spectators see it too
 }
 
 MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)

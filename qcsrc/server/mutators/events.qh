@@ -271,6 +271,15 @@ MUTATOR_HOOKABLE(MonsterMove, EV_MonsterMove);
 /** called when a monster looks for another target */
 MUTATOR_HOOKABLE(MonsterFindTarget, EV_NO_ARGS);
 
+/**
+ * called when validating a monster's target
+ */
+#define EV_MonsterValidTarget(i, o) \
+    /** monster */       i(entity, MUTATOR_ARGV_0_entity) \
+    /** target */        i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(MonsterValidTarget, EV_MonsterValidTarget);
+
 /** called to change a random monster to a miniboss */
 #define EV_MonsterCheckBossFlag(i, o) \
     /** monster */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -837,3 +846,11 @@ MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
 	/** data */     i(string, MUTATOR_ARGV_2_string) \
     /**/
 MUTATOR_HOOKABLE(URI_GetCallback, EV_URI_GetCallback);
+
+/**
+ * return true to prevent weapon use for a player
+ */
+ #define EV_ForbidWeaponUse(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(ForbidWeaponUse, EV_ForbidWeaponUse);
