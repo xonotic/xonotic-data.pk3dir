@@ -9,7 +9,7 @@
 void CopyBody_Think(entity this);
 void CopyBody(entity this, float keepvelocity);
 
-void dedicated_print(string input)
+void dedicated_print(string input);
 
 void player_setupanimsformodel(entity this);
 
