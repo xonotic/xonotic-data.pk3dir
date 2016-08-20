@@ -1,28 +1,27 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include <lib/warpzone/common.qh>
-    #include "../constants.qh"
-    #include "../teams.qh"
-    #include "../util.qh"
-    #include "all.qh"
-    #include "sv_monsters.qh"
-	#include "../physics/movelib.qh"
-    #include "../weapons/all.qh"
-    #include <server/autocvars.qh>
-    #include <server/defs.qh>
-    #include "../deathtypes/all.qh"
-    #include <server/mutators/_all.qh>
-	#include <server/steerlib.qh>
-	#include "../turrets/sv_turrets.qh"
-	#include "../turrets/util.qh"
-    #include "../vehicles/all.qh"
-    #include <server/campaign.qh>
-    #include <server/command/_all.qh>
-	#include "../triggers/triggers.qh"
-    #include <lib/csqcmodel/sv_model.qh>
-    #include <server/round_handler.qh>
-#endif
+#include "sv_monsters.qh"
+
+#include <server/g_subs.qh>
+#include <lib/warpzone/common.qh>
+#include "../constants.qh"
+#include "../teams.qh"
+#include "../util.qh"
+#include "all.qh"
+#include "../physics/movelib.qh"
+#include "../weapons/_mod.qh"
+#include <server/autocvars.qh>
+#include <server/defs.qh>
+#include "../deathtypes/all.qh"
+#include <server/mutators/_mod.qh>
+#include <server/steerlib.qh>
+#include "../turrets/sv_turrets.qh"
+#include "../turrets/util.qh"
+#include "../vehicles/all.qh"
+#include <server/campaign.qh>
+#include <server/command/_mod.qh>
+#include "../triggers/triggers.qh"
+#include <lib/csqcmodel/sv_model.qh>
+#include <server/round_handler.qh>
+#include <server/weapons/_mod.qh>
 
 void monsters_setstatus(entity this)
 {
@@ -507,6 +506,8 @@ bool Monster_Respawn_Check(entity this)
 
 void Monster_Respawn(entity this) { Monster_Spawn(this, this.monsterid); }
 
+.vector	pos1, pos2;
+
 void Monster_Dead_Fade(entity this)
 {
 	if(Monster_Respawn_Check(this))
@@ -542,6 +543,7 @@ void Monster_Use(entity this, entity actor, entity trigger)
 	if(Monster_ValidTarget(this, actor)) { this.enemy = actor; }
 }
 
+.float pass_distance;
 vector Monster_Move_Target(entity this, entity targ)
 {
 	// enemy is always preferred target
@@ -685,6 +687,7 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 }
 
 .entity draggedby;
+.entity target2;
 
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {

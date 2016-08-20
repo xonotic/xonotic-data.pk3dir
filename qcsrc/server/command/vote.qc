@@ -1,5 +1,5 @@
 #include "vote.qh"
-#include <common/command/_all.qh>
+#include <common/command/_mod.qh>
 #include "vote.qh"
 
 #include "common.qh"
@@ -10,7 +10,7 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 
-#include "../mutators/_all.qh"
+#include "../mutators/_mod.qh"
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>

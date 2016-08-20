@@ -122,7 +122,7 @@ void    isnt_bool(float this) { print(ftos(this)); }
 #include "vector.qh"
 #include "yenc.qh"
 
-#include "matrix/_all.inc"
+#include "matrix/_mod.inc"
 
 #ifndef SVQC
 #define objerror_safe(e)
@@ -267,6 +267,5 @@ void make_safe_for_remove(entity this);
 #undef ENGINE_EVENT
 
 #ifndef MENUQC
-	#include <ecs/_lib.qh>
-	#include <ecs/components/_mod.qh>
+	#include <ecs/_mod.qh>
 #endif

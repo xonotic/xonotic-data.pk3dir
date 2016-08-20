@@ -1,5 +1,5 @@
 #include "banning.qh"
-#include <common/command/_all.qh>
+#include <common/command/_mod.qh>
 #include "banning.qh"
 
 #include "common.qh"

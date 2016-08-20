@@ -1,8 +1,8 @@
 #include "miscfunctions.qh"
 
-#include "hud/_all.qh"
+#include "hud/_mod.qh"
 
-#include <common/command/_all.qh>
+#include <common/command/_mod.qh>
 
 #include <common/teams.qh>
 

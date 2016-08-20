@@ -1,11 +1,11 @@
 #include <server/_all.qh>
 #include "_mod.inc"
 
-#include "bot/_all.inc"
-#include "command/_all.inc"
-#include "mutators/_all.inc"
-#include "pathlib/_all.inc"
-#include "weapons/_all.inc"
+#include "bot/_mod.inc"
+#include "command/_mod.inc"
+#include "mutators/_mod.inc"
+#include "pathlib/_mod.inc"
+#include "weapons/_mod.inc"
 
 #include <common/_all.inc>
 #include <common/effects/qc/all.qc>

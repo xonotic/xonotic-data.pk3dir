@@ -20,4 +20,4 @@ const int VEH_FIRST = 1;
 
 REGISTER_VEHICLE(Null, NEW(Vehicle));
 
-#include "vehicle/_all.inc"
+#include "vehicle/_mod.inc"

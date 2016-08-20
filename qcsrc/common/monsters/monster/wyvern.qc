@@ -22,7 +22,7 @@ REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
 #endif
 }
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 CLASS(WyvernAttack, PortoLaunch)
 /* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);

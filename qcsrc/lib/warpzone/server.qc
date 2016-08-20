@@ -7,7 +7,7 @@
 	#include <common/constants.qh>
 	#include <common/triggers/subs.qh>
 	#include <common/util.qh>
-	#include <server/command/_all.qh>
+	#include <server/command/_mod.qh>
 	#include <server/constants.qh>
 	#include <server/defs.qh>
 #endif

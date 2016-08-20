@@ -1,5 +1,5 @@
 #include "common.qh"
-#include <common/command/_all.qh>
+#include <common/command/_mod.qh>
 #include "common.qh"
 
 #include "../scores.qh"

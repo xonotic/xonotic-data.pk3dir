@@ -8,7 +8,7 @@
 	#include <server/constants.qh>
 	#include <server/defs.qh>
 	#include "all.qh"
-	#include <server/mutators/_all.qh>
+	#include <server/mutators/_mod.qh>
 #endif
 
 // ================================================

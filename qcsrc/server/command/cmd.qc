@@ -1,5 +1,5 @@
 #include "cmd.qh"
-#include <common/command/_all.qh>
+#include <common/command/_mod.qh>
 
 #include "common.qh"
 #include "vote.qh"
@@ -12,7 +12,7 @@
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/_all.qh"
+#include "../mutators/_mod.qh"
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>

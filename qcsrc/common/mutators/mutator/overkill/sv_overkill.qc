@@ -1,5 +1,8 @@
 #include "sv_overkill.qh"
 
+#include "hmg.qh"
+#include "rpc.qh"
+
 bool autocvar_g_overkill_powerups_replace;
 float autocvar_g_overkill_superguns_respawn_time;
 bool autocvar_g_overkill_100h_anyway;

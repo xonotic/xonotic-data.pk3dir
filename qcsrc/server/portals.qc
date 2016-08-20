@@ -1,14 +1,14 @@
 #include "portals.qh"
 
 #include "g_hook.qh"
-#include "mutators/_all.qh"
+#include "mutators/_mod.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
 #include "../common/triggers/teleporters.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/util_server.qh"

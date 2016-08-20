@@ -1,5 +1,5 @@
 #include "dialog_multiplayer_create_mutators.qh"
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 #include "weaponarenacheckbox.qh"
 #include "checkbox.qh"

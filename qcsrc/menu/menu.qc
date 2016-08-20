@@ -17,8 +17,8 @@
 
 #include "xonotic/util.qh"
 
-#include "../common/items/all.qh"
-#include <common/weapons/all.qh>
+#include "../common/items/_mod.qh"
+#include <common/weapons/_all.qh>
 #include "../common/mapinfo.qh"
 #include "../common/mutators/base.qh"
 

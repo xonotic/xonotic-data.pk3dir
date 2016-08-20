@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 const int WAYPOINTFLAG_GENERATED = BIT(23);
 const int WAYPOINTFLAG_ITEM = BIT(22);

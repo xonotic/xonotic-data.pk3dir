@@ -6,7 +6,7 @@ float autocvar_g_instagib_speed_highspeed;
 
 #include <server/client.qh>
 
-#include <common/items/all.qc>
+#include <common/items/_mod.qh>
 
 REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
 

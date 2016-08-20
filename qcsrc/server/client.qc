@@ -18,6 +18,7 @@
 #include "antilag.qh"
 #include "campaign.qh"
 #include "command/common.qh"
+#include "scores_rules.qh"
 
 #include "bot/api.qh"
 
@@ -36,7 +37,7 @@
 #include "../common/net_notice.qh"
 #include "../common/physics/player.qh"
 
-#include "../common/items/all.qc"
+#include "../common/items/_mod.qh"
 
 #include "../common/mutators/mutator/waypoints/all.qh"
 
@@ -1840,6 +1841,8 @@ void ShowRespawnCountdown(entity this)
 		}
 	}
 }
+
+.float caplayer;
 
 void LeaveSpectatorMode(entity this)
 {

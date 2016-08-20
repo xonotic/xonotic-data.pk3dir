@@ -1,7 +1,7 @@
 #include "main.qh"
 
 #include <common/effects/qc/all.qh>
-#include "hud/_all.qh"
+#include "hud/_mod.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
 #include "hud/panel/scoreboard.qh"
@@ -11,7 +11,7 @@
 #include "wall.qh"
 #include "weapons/projectile.qh"
 #include <common/deathtypes/all.qh>
-#include <common/items/all.qh>
+#include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>

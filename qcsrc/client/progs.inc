@@ -4,7 +4,7 @@
 #include "_all.inc"
 #endif
 
-#include <ecs/_lib.inc>
+#include <ecs/_mod.inc>
 
 #if BUILD_MOD
 #include "../../mod/client/progs.inc"

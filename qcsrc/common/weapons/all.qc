@@ -19,6 +19,7 @@
 	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
+	#include <common/items/_mod.qh>
     #include <lib/warpzone/anglestransform.qh>
     #include <lib/warpzone/common.qh>
     #include <lib/warpzone/util_server.qh>
@@ -37,9 +38,9 @@
     #include <server/defs.qh>
     #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
-    #include <server/mutators/_all.qh>
+    #include <server/mutators/_mod.qh>
     #include "../mapinfo.qh"
-    #include <server/command/_all.qh>
+    #include <server/command/_mod.qh>
     #include <lib/csqcmodel/sv_model.qh>
     #include <server/portals.qh>
     #include <server/g_hook.qh>

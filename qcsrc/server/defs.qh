@@ -1,7 +1,7 @@
 #pragma once
 
 float warmup_limit;
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
 #define INDEPENDENT_ATTACK_FINISHED 1
@@ -12,20 +12,6 @@ float g_footsteps, g_grappling_hook, g_instagib;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
-PROPERTY(float, g_pickup_respawntime_weapon)
-PROPERTY(float, g_pickup_respawntime_superweapon)
-PROPERTY(float, g_pickup_respawntime_ammo)
-PROPERTY(float, g_pickup_respawntime_short)
-PROPERTY(float, g_pickup_respawntime_medium)
-PROPERTY(float, g_pickup_respawntime_long)
-PROPERTY(float, g_pickup_respawntime_powerup)
-PROPERTY(float, g_pickup_respawntimejitter_weapon)
-PROPERTY(float, g_pickup_respawntimejitter_superweapon)
-PROPERTY(float, g_pickup_respawntimejitter_ammo)
-PROPERTY(float, g_pickup_respawntimejitter_short)
-PROPERTY(float, g_pickup_respawntimejitter_medium)
-PROPERTY(float, g_pickup_respawntimejitter_long)
-PROPERTY(float, g_pickup_respawntimejitter_powerup)
 float g_jetpack;
 
 float sv_clones;

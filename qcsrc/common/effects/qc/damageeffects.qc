@@ -6,7 +6,7 @@
 #include <common/physics/movetypes/movetypes.qh>
 #include <client/mutators/events.qh>
 #include <common/vehicles/all.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #endif
 
 #endif

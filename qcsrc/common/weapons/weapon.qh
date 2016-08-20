@@ -130,7 +130,7 @@ CLASS(Weapon, Object)
 	}
 ENDCLASS(Weapon)
 
-#include <common/items/all.qh>
+#include <common/items/_mod.qh>
 CLASS(WeaponPickup, Pickup)
     ATTRIB(WeaponPickup, m_weapon, Weapon);
     ATTRIB(WeaponPickup, m_name, string);
@@ -174,11 +174,6 @@ ENDCLASS(OffhandWeapon)
 #endif
 
 const int MAX_SHOT_DISTANCE = 32768;
-
-// weapon pickup ratings for bot logic
-const int BOT_PICKUP_RATING_LOW  =  2500;
-const int BOT_PICKUP_RATING_MID  =  5000;
-const int BOT_PICKUP_RATING_HIGH = 10000;
 
 // weapon flags
 const int WEP_TYPE_OTHER          =  0x00; // not for damaging people

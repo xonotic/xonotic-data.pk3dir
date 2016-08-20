@@ -31,6 +31,8 @@ float autocvar_net_connecttimeout = 30;
 
 #include "debug.qh"
 
+#include "command/_mod.inc"
+
 #ifndef MENUQC
 #include "deathtypes/all.qc"
 #include "effects/all.qc"
@@ -39,11 +41,11 @@ float autocvar_net_connecttimeout = 30;
 #include "t_items.qc"
 #endif
 
-#include "items/_all.inc"
-    #include "weapons/all.qc"
+#include "items/_mod.inc"
+    #include "weapons/_all.inc"
         #include "monsters/all.qc"
         #include "turrets/all.qc"
         #include "vehicles/all.qc"
 
-#include "mutators/_all.inc"
-    #include "gamemodes/_all.inc"
+#include "mutators/_mod.inc"
+    #include "gamemodes/_mod.inc"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/command/_all.qh>
+#include <common/command/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/teams.qh>

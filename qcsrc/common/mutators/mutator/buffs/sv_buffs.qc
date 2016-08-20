@@ -1,7 +1,7 @@
 #include "sv_buffs.qh"
 
 #include <common/triggers/target/music.qh>
-#include <common/gamemodes/_all.qh>
+#include <common/gamemodes/_mod.qh>
 
 .float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit(entity this);

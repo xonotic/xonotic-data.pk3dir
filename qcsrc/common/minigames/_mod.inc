@@ -9,3 +9,5 @@
 #ifdef SVQC
     #include <common/minigames/sv_minigames.qc>
 #endif
+
+#include <common/minigames/minigame/_mod.inc>

@@ -7,7 +7,7 @@
 #include "../teamradar.qh"
 #include <common/t_items.qh>
 #include <common/deathtypes/all.qh>
-#include <common/items/all.qc>
+#include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/vehicles/all.qh>
 #include <common/mutators/mutator/waypoints/all.qh>

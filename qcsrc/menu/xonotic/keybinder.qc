@@ -1,6 +1,6 @@
 #include "keybinder.qh"
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 .int flags;
 
 #include "button.qh"

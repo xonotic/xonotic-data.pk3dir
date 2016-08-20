@@ -1,5 +1,5 @@
 #include "sv_cmd.qh"
-#include "_all.qh"
+#include "_mod.qh"
 
 #include "banning.qh"
 #include "cmd.qh"
@@ -18,7 +18,7 @@
 
 #include "../bot/api.qh"
 
-#include "../mutators/_all.qh"
+#include "../mutators/_mod.qh"
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>

@@ -1,6 +1,6 @@
 #include "shownames.qh"
 
-#include "hud/_all.qh"
+#include "hud/_mod.qh"
 
 #include <common/ent_cs.qh>
 #include <common/constants.qh>

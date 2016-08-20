@@ -46,5 +46,3 @@ function check() {
 check client
 check server
 check menu
-
-# TODO: check that "_mod.(qc|inc)" is not included except by "_all.(qc|inc)"

@@ -1,10 +1,10 @@
 #include <client/_all.qh>
 #include "_mod.inc"
 
-#include "commands/_all.inc"
-#include "hud/_all.inc"
-#include "mutators/_all.inc"
-#include "weapons/_all.inc"
+#include "commands/_mod.inc"
+#include "hud/_mod.inc"
+#include "mutators/_mod.inc"
+#include "weapons/_mod.inc"
 
 #include <common/_all.inc>
 #include <common/effects/qc/all.qc>

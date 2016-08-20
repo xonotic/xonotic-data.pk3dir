@@ -1,4 +1,4 @@
-#include "_all.qh"
+#include "_mod.qh"
 #include "reg.qh"
 
 #include "markup.qh"
@@ -15,7 +15,7 @@
 #endif
 
 #ifdef SVQC
-	#include <server/command/_all.qh>
+	#include <server/command/_mod.qh>
 	#include <common/turrets/config.qh>
 	#include <common/weapons/config.qh>
 #endif

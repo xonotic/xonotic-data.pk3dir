@@ -1,5 +1,0 @@
-#pragma once
-#include "_mod.qh"
-
-#include "nexball/_mod.qh"
-#include "onslaught/_mod.qh"

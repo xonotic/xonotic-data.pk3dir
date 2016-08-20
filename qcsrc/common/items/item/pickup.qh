@@ -1,7 +1,31 @@
 #pragma once
 
+#ifdef SVQC
+PROPERTY(float, g_pickup_respawntime_weapon)
+PROPERTY(float, g_pickup_respawntime_superweapon)
+PROPERTY(float, g_pickup_respawntime_ammo)
+PROPERTY(float, g_pickup_respawntime_short)
+PROPERTY(float, g_pickup_respawntime_medium)
+PROPERTY(float, g_pickup_respawntime_long)
+PROPERTY(float, g_pickup_respawntime_powerup)
+PROPERTY(float, g_pickup_respawntimejitter_weapon)
+PROPERTY(float, g_pickup_respawntimejitter_superweapon)
+PROPERTY(float, g_pickup_respawntimejitter_ammo)
+PROPERTY(float, g_pickup_respawntimejitter_short)
+PROPERTY(float, g_pickup_respawntimejitter_medium)
+PROPERTY(float, g_pickup_respawntimejitter_long)
+PROPERTY(float, g_pickup_respawntimejitter_powerup)
+#endif
+
+// pickup ratings for bot logic
+const int BOT_PICKUP_RATING_LOW  =  2500;
+const int BOT_PICKUP_RATING_MID  =  5000;
+const int BOT_PICKUP_RATING_HIGH = 10000;
+
 #include <common/items/inventory.qh>
 #include <common/items/item.qh>
+#include <common/t_items.qh>
+
 CLASS(Pickup, GameItem)
 #ifndef MENUQC
     ATTRIB(Pickup, m_model, Model);
@@ -13,12 +37,12 @@ CLASS(Pickup, GameItem)
         TC(Pickup, this);
         LOG_INFOF("%s: %s\n", etos(this), this.m_name);
     }
+    ATTRIB(Pickup, m_itemid, int, 0);
 #ifdef SVQC
     ATTRIB(Pickup, m_mins, vector, '-16 -16 0');
     ATTRIB(Pickup, m_maxs, vector, '16 16 32');
     ATTRIB(Pickup, m_botvalue, int, 0);
     ATTRIB(Pickup, m_itemflags, int, 0);
-    ATTRIB(Pickup, m_itemid, int, 0);
     float generic_pickupevalfunc(entity player, entity item);
     ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc);
     ATTRIB(Pickup, m_respawntime, float());

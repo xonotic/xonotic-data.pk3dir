@@ -22,8 +22,8 @@ REGISTER_MONSTER(MAGE, NEW(Mage)) {
 #endif
 }
 
-#include <common/weapons/all.qh>
-#include <common/items/all.qc>
+#include <common/weapons/_all.qh>
+#include <common/items/_mod.qh>
 
 CLASS(MageSpike, PortoLaunch)
 /* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);

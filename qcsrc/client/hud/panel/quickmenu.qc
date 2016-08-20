@@ -2,7 +2,7 @@
 // QuickMenu (#23)
 
 #include <common/ent_cs.qh>
-#include <client/hud/_all.qh>
+#include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
 
 // QUICKMENU_MAXLINES must be <= 10

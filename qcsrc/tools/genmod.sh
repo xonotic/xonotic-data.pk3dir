@@ -27,10 +27,21 @@ function genmod() {
             if [[ -f "ui_${f%.qc}.qh" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
         fi
     done
-    # echo >> ${MOD}
+    declare -l rec=1
+    if [[ -f "_all.inc" ]]; then rec=0; fi
     for f in *; do if [ -d "$f" ]; then
         (cd -- "$f" && genmod)
-        # echo "#include \"$f/MOD\"" >> ${MOD}
+        if [[ $rec == 1 ]]; then
+            rec=2
+            echo >> ${MOD}.inc
+            echo >> ${MOD}.qh
+        fi
+        if [[ $rec != 0 ]]; then
+            declare -l mod=_mod
+            if [[ -f "$f/_all.inc" ]]; then mod=_all; fi
+            echo "#include <${CTX}$f/${mod}.inc>" >> ${MOD}.inc
+            echo "#include <${CTX}$f/${mod}.qh>" >> ${MOD}.qh
+        fi
     fi; done
 }
 

@@ -4,7 +4,7 @@
     #include <common/t_items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <common/weapons/all.qh>
+    #include <common/weapons/_all.qh>
 #endif
 
 void WarpZone_Accumulator_Clear(entity acc)

@@ -1,5 +1,6 @@
 #include "bot_null.qh"
 
+#if 0
 bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshottime, float applygravity) { return false; }
 void bot_clientconnect(entity this) { }
 void bot_clientdisconnect(entity this) { }
@@ -39,3 +40,4 @@ void waypoint_spawnforitem_force(entity e, vector org) { }
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken) { }
 void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken) { }
 entity waypoint_spawn(vector m1, vector m2, float f) { return NULL; }
+#endif

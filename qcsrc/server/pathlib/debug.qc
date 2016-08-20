@@ -1,5 +1,6 @@
 #include "debug.qh"
-#include "pathlib.qh"
+
+#if DEBUGPATHING
 
 MODEL(SQUARE,       "models/pathlib/square.md3");
 MODEL(SQUARE_GOOD,  "models/pathlib/goodsquare.md3");
@@ -119,3 +120,5 @@ void pathlib_showedge(vector where,float _lifetime,float rot)
     //e.angles_x += 90;
 
 }
+
+#endif

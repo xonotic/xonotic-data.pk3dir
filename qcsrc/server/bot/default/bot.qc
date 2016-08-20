@@ -21,7 +21,7 @@
 #include "../../race.qh"
 #include <common/t_items.qh>
 
-#include "../../mutators/_all.qh"
+#include "../../mutators/_mod.qh"
 
 #include "../../weapons/accuracy.qh"
 
@@ -31,7 +31,9 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 
-#include <common/weapons/all.qh>
+#include <server/scores_rules.qh>
+
+#include <common/weapons/_all.qh>
 
 #include <lib/csqcmodel/sv_model.qh>
 

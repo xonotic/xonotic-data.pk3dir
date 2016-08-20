@@ -9,10 +9,10 @@
 
 #include "command/vote.qh"
 
-#include "mutators/_all.qh"
+#include "mutators/_mod.qh"
 
 #include "../common/deathtypes/all.qh"
-#include "../common/gamemodes/_all.qh"
+#include "../common/gamemodes/_mod.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)

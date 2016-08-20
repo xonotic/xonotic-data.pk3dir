@@ -2,14 +2,14 @@
 
 #include "bot/api.qh"
 #include "g_hook.qh"
-#include "mutators/_all.qh"
+#include "mutators/_mod.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
 #include "../common/physics/player.qh"
 #include "../common/t_items.qh"
 #include "../common/vehicles/all.qh"
-#include "../common/items/all.qc"
+#include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
@@ -21,7 +21,7 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
 
@@ -110,6 +110,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	if(f)
 		UpdateFrags(attacker, f);
 }
+
+.entity kh_next;
 
 string AppendItemcodes(string s, entity player)
 {

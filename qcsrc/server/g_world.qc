@@ -13,7 +13,7 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mapvoting.qh"
-#include "mutators/_all.qh"
+#include "mutators/_mod.qh"
 #include "race.qh"
 #include "scores.qh"
 #include "teamplay.qh"
@@ -32,8 +32,8 @@
 #include "../common/triggers/trigger/secret.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/util.qh"
-#include "../common/items/all.qh"
-#include "../common/weapons/all.qh"
+#include "../common/items/_mod.qh"
+#include <common/weapons/_all.qh>
 #include "../common/state.qh"
 
 const float LATENCY_THINKRATE = 10;
