@@ -1,2 +1,4 @@
 #pragma once
 #include "_mod.qh"
+
+#include "gamemode/_all.qh"

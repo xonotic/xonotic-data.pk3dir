@@ -12,15 +12,19 @@ function genmod() {
     echo '// generated file; do not modify' > ${MOD}.inc
     echo '// generated file; do not modify' > ${MOD}.qh
     for f in $(ls | sort -k 1,1 -t .); do
-        if [[ "$f" == cl_* ]]; then if [[ -f "${f#cl_}" ]]; then continue; fi; fi
-        if [[ "$f" == sv_* ]]; then if [[ -f "${f#sv_}" ]]; then continue; fi; fi
-        if [[ "$f" == ui_* ]]; then if [[ -f "${f#ui_}" ]]; then continue; fi; fi
+          if [[ "$f" == cl_* ]]; then f="${f#cl_}"; if [[ -f "$f" ]]; then continue; fi
+        elif [[ "$f" == sv_* ]]; then f="${f#sv_}"; if [[ -f "$f" ]]; then continue; fi
+        elif [[ "$f" == ui_* ]]; then f="${f#ui_}"; if [[ -f "$f" ]]; then continue; fi
+        fi
         if [[ "$f" == *.qc ]]; then
-            echo "#include <${CTX}$f>" >> ${MOD}.inc
-            echo "#include <${CTX}${f%.qc}.qh>" >> ${MOD}.qh
+            if [[ -f "$f" ]]; then echo -e "#include <${CTX}$f>" >> ${MOD}.inc; fi
+            if [[ -f "${f%.qc}.qh" ]]; then echo -e "#include <${CTX}${f%.qc}.qh>" >> ${MOD}.qh; fi
             if [[ -f "cl_$f" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_$f>\n#endif" >> ${MOD}.inc; fi
+            if [[ -f "cl_${f%.qc}.qh" ]]; then echo -e "#ifdef CSQC\n    #include <${CTX}cl_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
             if [[ -f "sv_$f" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_$f>\n#endif" >> ${MOD}.inc; fi
+            if [[ -f "sv_${f%.qc}.qh" ]]; then echo -e "#ifdef SVQC\n    #include <${CTX}sv_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
             if [[ -f "ui_$f" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_$f>\n#endif" >> ${MOD}.inc; fi
+            if [[ -f "ui_${f%.qc}.qh" ]]; then echo -e "#ifdef MENUQC\n    #include <${CTX}ui_${f%.qc}.qh>\n#endif" >> ${MOD}.qh; fi
         fi
     done
     # echo >> ${MOD}

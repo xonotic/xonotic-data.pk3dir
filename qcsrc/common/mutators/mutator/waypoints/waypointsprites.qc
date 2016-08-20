@@ -1,7 +1,5 @@
 #include "waypointsprites.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_MUTATOR(waypointsprites, true);
 
 REGISTER_NET_LINKED(waypointsprites)
@@ -1146,5 +1144,4 @@ void WaypointSprite_PlayerGone(entity this)
     WaypointSprite_Disown(this.waypointsprite_attached, waypointsprite_deadlifetime);
     WaypointSprite_DetachCarrier(this);
 }
-#endif
 #endif

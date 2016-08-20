@@ -15,7 +15,7 @@
 #include "../../antilag.qh"
 #include "../../autocvars.qh"
 #include "../../campaign.qh"
-#include "../../cl_client.qh"
+#include "../../client.qh"
 #include "../../constants.qh"
 #include "../../defs.qh"
 #include "../../race.qh"

@@ -6,7 +6,7 @@
 	#include <common/animdecide.qh>
 
 	#ifdef SVQC
-		#include <server/cl_player.qh>
+		#include <server/player.qh>
 	#endif
 
 	REGISTER_NET_TEMP(globalsound)

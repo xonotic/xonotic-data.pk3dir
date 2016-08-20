@@ -6,7 +6,7 @@
 
 #include "../campaign.qh"
 #include "../cheats.qh"
-#include "../cl_player.qh"
+#include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
 #include "../scores.qh"

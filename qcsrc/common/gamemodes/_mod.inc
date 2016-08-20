@@ -1,2 +1,1 @@
 // generated file; do not modify
-#include <common/gamemodes/all.qc>

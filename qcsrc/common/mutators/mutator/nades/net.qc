@@ -1,6 +1,8 @@
-#include "nades.qh"
+#include "net.qh"
 
-#ifdef IMPLEMENTATION
+#ifndef MENUQC
+
+#include "nades.qh"
 
 #ifdef CSQC
 .float ltime;

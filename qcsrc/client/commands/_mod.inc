@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <client/commands/cl_cmd.qc>
+#ifdef CSQC
+    #include <client/commands/cl_cmd.qc>
+#endif

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "autocvars.qh"
-#include "cl_client.qh"
+#include "client.qh"
 #include "command/_all.qh"
 #include "weapons/common.qh"
 #include "weapons/selection.qh"

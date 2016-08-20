@@ -5,7 +5,7 @@
 #include "bot/api.qh"
 #include "campaign.qh"
 #include "cheats.qh"
-#include "cl_client.qh"
+#include "client.qh"
 #include "command/common.qh"
 #include "command/getreplies.qh"
 #include "command/sv_cmd.qh"

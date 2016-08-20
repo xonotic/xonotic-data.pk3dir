@@ -2,9 +2,9 @@
 
 #include <common/mutators/base.qh>
 
-#include <server/cl_client.qh>
-#include <server/cl_player.qh>
-#include <server/cl_impulse.qh>
+#include <server/client.qh>
+#include <server/player.qh>
+#include <server/impulse.qh>
 #include <server/cheats.qh>
 #include <server/g_damage.qh>
 #include <server/round_handler.qh>

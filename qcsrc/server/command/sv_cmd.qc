@@ -9,8 +9,8 @@
 
 #include "../anticheat.qh"
 #include "../campaign.qh"
-#include "../cl_client.qh"
-#include "../cl_player.qh"
+#include "../client.qh"
+#include "../player.qh"
 #include "../g_world.qh"
 #include "../ipban.qh"
 #include "../playerdemo.qh"

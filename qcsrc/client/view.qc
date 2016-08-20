@@ -15,7 +15,7 @@
 #include <common/constants.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
-#include <common/gamemodes/all.qh>
+#include <common/gamemodes/_all.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
 #include <common/triggers/target/music.qh>

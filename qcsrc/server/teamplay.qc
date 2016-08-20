@@ -1,6 +1,6 @@
 #include "teamplay.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
@@ -12,7 +12,7 @@
 #include "mutators/_all.qh"
 
 #include "../common/deathtypes/all.qh"
-#include "../common/gamemodes/all.qh"
+#include "../common/gamemodes/_all.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
@@ -540,7 +540,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 				SetPlayerColors(this, selectedteam - 1);
 
 				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
-				// when JoinBestTeam is called by cl_client.qc/ClientConnect the player_id is 0 the log attempt is rejected
+				// when JoinBestTeam is called by client.qc/ClientConnect the player_id is 0 the log attempt is rejected
 				LogTeamchange(this.playerid, this.team, 99);
 			}
 			return selectedteam;

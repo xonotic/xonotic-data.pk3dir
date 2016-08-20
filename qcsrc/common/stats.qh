@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef SVQC
-#include <server/cl_client.qh>
+#include <server/client.qh>
 #endif
 
 // Full list of all stat constants, included in a single location for easy reference

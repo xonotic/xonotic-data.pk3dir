@@ -4,7 +4,7 @@
 
 #include "common.qh"
 
-#include "../cl_player.qh"
+#include "../player.qh"
 #include "../ipban.qh"
 
 #include <common/util.qh>

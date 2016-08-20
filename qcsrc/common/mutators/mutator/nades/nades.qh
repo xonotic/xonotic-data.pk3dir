@@ -1,5 +1,4 @@
-#ifndef NADES_ALL_H
-#define NADES_ALL_H
+#pragma once
 
 #include <common/teams.qh>
 
@@ -100,7 +99,5 @@ void nades_GiveBonus(entity player, float score);
     /**/          o(float,  MUTATOR_ARGV_3_float) \
     /**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
-
-#endif
 
 #endif
