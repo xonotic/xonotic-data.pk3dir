@@ -610,12 +610,7 @@ void GameTypeVote_ReadOption(int i)
 	mv_maps[i] = gt;
 	mv_flags[i] = ReadByte();
 
-	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, gt);
-	if(precache_pic(mv_picpath) == "")
-		mv_picpath = strcat("gfx/menu/default/gametype_", gt);
-	string pic = strzone(mv_picpath);
-	mv_pics[i] = pic;
-	mv_preview[i] = PreviewExists(pic);
+	string mv_picpath = string_null;
 
 	if ( mv_flags[i] & GTV_CUSTOM )
 	{
@@ -624,6 +619,13 @@ void GameTypeVote_ReadOption(int i)
 			name = gt;
 		mv_pk3[i] = strzone(name);
 		mv_desc[i] = strzone(ReadString());
+		gt = strzone(ReadString());
+		mv_picpath = strzone(ReadString());
+		// "" or " " makes precache_pic crash, string_null doesn't
+		if (strreplace(" ", "", mv_picpath) == "")
+		{
+			mv_picpath = string_null;
+		}
 	}
 	else
 	{
@@ -631,6 +633,18 @@ void GameTypeVote_ReadOption(int i)
 		mv_pk3[i] = strzone(MapInfo_Type_ToText(type));
 		mv_desc[i] = MapInfo_Type_Description(type);
 	}
+
+	if(!mv_picpath || precache_pic(mv_picpath) == "")
+	{
+		mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, gt);
+		if(precache_pic(mv_picpath) == "")
+		{
+			mv_picpath = strcat("gfx/menu/default/gametype_", gt);
+		}
+	}
+	string pic = strzone(mv_picpath);
+	mv_pics[i] = pic;
+	mv_preview[i] = PreviewExists(pic);
 }
 
 void MapVote_Init()
