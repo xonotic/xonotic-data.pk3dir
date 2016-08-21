@@ -23,7 +23,7 @@ function qpp() {
     >&2 echo + ${CPP} ${@:3} ${DEFS} ${IN}
     set +e
     # additional information
-    ${CPP} ${@:3} \
+    ${CPP} ${@:3} ${DEFS} \
         -dM 1>${WORKDIR}/${MODE}_macros.txt \
         -H 2>${WORKDIR}/${MODE}_includes.txt \
         ${IN}
