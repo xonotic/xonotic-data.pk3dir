@@ -854,3 +854,11 @@ MUTATOR_HOOKABLE(URI_GetCallback, EV_URI_GetCallback);
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(ForbidWeaponUse, EV_ForbidWeaponUse);
+
+/** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
+#define EV_CopyBody(i, o) \
+    /** player */               i(entity, MUTATOR_ARGV_0_entity) \
+    /** newly created clone */  i(entity, MUTATOR_ARGV_1_entity) \
+    /** keepvelocity? */        i(bool, MUTATOR_ARGV_2_bool) \
+    /**/
+MUTATOR_HOOKABLE(CopyBody, EV_CopyBody);
