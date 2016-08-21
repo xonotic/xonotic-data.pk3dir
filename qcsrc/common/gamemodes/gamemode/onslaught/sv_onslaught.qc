@@ -1463,21 +1463,21 @@ void havocbot_ons_reset_role(entity this)
 entity ons_Nearest_ControlPoint(entity this, vector pos, float max_dist)
 {
 	entity closest_target = NULL;
-	FOREACH_ENTITY_CLASS("onslaught_controlpoint", true,
+	for(entity cp = ons_worldcplist; cp; cp = cp.ons_worldcpnext)
 	{
-		if(SAME_TEAM(it, this))
-		if(it.iscaptured)
-		if(max_dist <= 0 || vdist(it.origin - pos, <=, max_dist))
-		if(vlen2(it.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
-			closest_target = it;
-	});
-	FOREACH_ENTITY_CLASS("onslaught_generator", true,
+		if(SAME_TEAM(cp, this))
+		if(cp.iscaptured)
+		if(max_dist <= 0 || vdist(cp.origin - pos, <=, max_dist))
+		if(vlen2(cp.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
+			closest_target = cp;
+	}
+	for(entity gen = ons_worldgeneratorlist; gen; gen = gen.ons_worldgeneratornext)
 	{
-		if(SAME_TEAM(it, this))
-		if(max_dist <= 0 || vdist(it.origin - pos, <, max_dist))
-		if(vlen2(it.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
-			closest_target = it;
-	});
+		if(SAME_TEAM(gen, this))
+		if(max_dist <= 0 || vdist(gen.origin - pos, <, max_dist))
+		if(vlen2(gen.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
+			closest_target = gen;
+	}
 
 	return closest_target;
 }
@@ -1493,35 +1493,35 @@ entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 	vector delta;
 	float smallest_distance = 0, distance;
 
-	FOREACH_ENTITY_CLASS("onslaught_controlpoint", true,
+	for(entity cp = ons_worldcplist; cp; cp = cp.ons_worldcpnext)
 	{
-		delta = it.origin - pos;
+		delta = cp.origin - pos;
 		delta_z = 0;
 		distance = vlen(delta);
 
-		if(SAME_TEAM(it, this))
-		if(it.iscaptured)
+		if(SAME_TEAM(cp, this))
+		if(cp.iscaptured)
 		if(max_dist <= 0 || distance <= max_dist)
 		if(closest_target == NULL || distance <= smallest_distance )
 		{
-			closest_target = it;
+			closest_target = cp;
 			smallest_distance = distance;
 		}
-	});
-	FOREACH_ENTITY_CLASS("onslaught_generator", true,
+	}
+	for(entity gen = ons_worldgeneratorlist; gen; gen = gen.ons_worldgeneratornext)
 	{
-		delta = it.origin - pos;
+		delta = gen.origin - pos;
 		delta_z = 0;
 		distance = vlen(delta);
 
-		if(SAME_TEAM(it, this))
+		if(SAME_TEAM(gen, this))
 		if(max_dist <= 0 || distance <= max_dist)
 		if(closest_target == NULL || distance <= smallest_distance )
 		{
-			closest_target = it;
+			closest_target = gen;
 			smallest_distance = distance;
 		}
-	});
+	}
 
 	return closest_target;
 }
@@ -1531,17 +1531,17 @@ entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 int ons_Count_SelfControlPoints(entity this)
 {
 	int n = 0;
-	FOREACH_ENTITY_CLASS("onslaught_controlpoint", true,
+	for(entity cp = ons_worldcplist; cp; cp = cp.ons_worldcpnext)
 	{
-		if(SAME_TEAM(it, this))
-		if(it.iscaptured)
+		if(SAME_TEAM(cp, this))
+		if(cp.iscaptured)
 			n++;
-	});
-	FOREACH_ENTITY_CLASS("onslaught_generator", true,
+	}
+	for(entity gen = ons_worldgeneratorlist; gen; gen = gen.ons_worldgeneratornext)
 	{
-		if(SAME_TEAM(it, this))
+		if(SAME_TEAM(gen, this))
 			n++;
-	});
+	}
 	return n;
 }
 
