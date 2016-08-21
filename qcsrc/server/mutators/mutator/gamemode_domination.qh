@@ -59,3 +59,5 @@ float pps_pink;
 // misc globals
 float domination_roundbased;
 float domination_teams;
+
+void AnimateDomPoint(entity this);

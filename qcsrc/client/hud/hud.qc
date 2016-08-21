@@ -496,7 +496,7 @@ void HUD_Main()
 {
 	int i;
 	// global hud alpha fade (scoreboard-related panels behave differently and override it temporarly)
-	if(menu_enabled == 1)
+	if(hud_configure_menu_open == 1)
 		hud_fade_alpha = 1;
 	else if(!autocvar__hud_configure)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha) * (1 - autocvar__menu_alpha);

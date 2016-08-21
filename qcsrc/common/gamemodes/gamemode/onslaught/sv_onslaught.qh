@@ -73,8 +73,6 @@ bool ons_stalemate;
 
 .float teleport_antispam;
 
-.bool ons_roundlost = _STAT(ROUNDLOST);
-
 // waypoint sprites
 .entity bot_basewaypoint; // generator waypointsprite
 

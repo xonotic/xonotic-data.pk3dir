@@ -126,7 +126,7 @@ const int HOOK_END =      2;
 
 float g_trueaim_minrange;
 
-float hud;
+int hud;
 float view_quality;
 
 int num_spectators;

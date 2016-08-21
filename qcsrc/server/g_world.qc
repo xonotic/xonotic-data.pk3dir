@@ -1980,6 +1980,34 @@ string GotoMap(string m)
 		return "Map switch will happen after scoreboard.";
 }
 
+bool autocvar_sv_gameplayfix_multiplethinksperframe;
+void RunThink(entity this)
+{
+	// don't let things stay in the past.
+	// it is possible to start that way by a trigger with a local time.
+	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+		return;
+
+	float oldtime = time; // do we need to save this?
+
+	for (int iterations = 0; iterations < 128 && !wasfreed(this); iterations++)
+	{
+		time = max(oldtime, this.nextthink);
+		this.nextthink = 0;
+
+		if(getthink(this))
+			getthink(this)(this);
+		// mods often set nextthink to time to cause a think every frame,
+		// we don't want to loop in that case, so exit if the new nextthink is
+		// <= the time the qc was told, also exit if it is past the end of the
+		// frame
+		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+			break;
+	}
+
+	time = oldtime;
+}
+
 bool autocvar_sv_freezenonclients;
 bool autocvar_sv_gameplayfix_delayprojectiles;
 void Physics_Frame()
@@ -2008,6 +2036,13 @@ void Physics_Frame()
 
 		if(it.move_qcphysics)
 			Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
+
+		if(it.movetype >= MOVETYPE_USER_FIRST && it.movetype <= MOVETYPE_USER_LAST) // these cases have no think handling
+		{
+			// handle thinking here
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
+				RunThink(it);
+		}
 	});
 
 	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)

@@ -68,9 +68,10 @@ void HUD_Powerups()
 	// Initialize items
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_powerups) return;
-		if(spectatee_status == -1) return;
-		if(STAT(HEALTH) <= 0) return;
+		if((!autocvar_hud_panel_powerups) || (spectatee_status == -1))
+			return;
+		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_powerups_hide_ondeath)
+			return;
 		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);

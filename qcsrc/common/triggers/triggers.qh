@@ -27,7 +27,11 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 
 void target_voicescript_next(entity pl);
 void target_voicescript_clear(entity pl);
+
+void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger);
 #endif
+
+.float sub_target_used;
 
 .float volume, atten;
 

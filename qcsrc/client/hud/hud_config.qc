@@ -237,9 +237,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 
 void HUD_Configure_Exit_Force()
 {
-	if (menu_enabled)
+	if (hud_configure_menu_open)
 	{
-		menu_enabled = 0;
+		hud_configure_menu_open = 0;
 		localcmd("togglemenu\n");
 	}
 	cvar_set("_hud_configure", "0");
@@ -743,14 +743,14 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	{
 		if (bInputType == 1)
 			return true;
-		menu_enabled = 1;
+		hud_configure_menu_open = 1;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
 	{
 		if (bInputType == 1)
 			return true;
-		if (!menu_enabled)
+		if (!hud_configure_menu_open)
 			cvar_set("_hud_configure", "0");
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
@@ -1098,7 +1098,7 @@ void HUD_Panel_Highlight(float allow_move)
 
 void HUD_Panel_EnableMenu()
 {
-	menu_enabled = 2;
+	hud_configure_menu_open = 2;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
 float mouse_over_panel;
@@ -1197,7 +1197,7 @@ void HUD_Panel_Mouse()
 	{
 		if(prevMouseClicked)
 			highlightedAction = 0;
-		if(menu_enabled == 2)
+		if(hud_configure_menu_open == 2)
 			mouse_over_panel = 0;
 		else
 			mouse_over_panel = HUD_Panel_Check_Mouse_Pos(true);
@@ -1264,7 +1264,7 @@ void HUD_Configure_Frame()
 		if(autocvar__menu_alpha != _menu_alpha_prev)
 		{
 			if(autocvar__menu_alpha == 0)
-				menu_enabled = 0;
+				hud_configure_menu_open = 0;
 			_menu_alpha_prev = autocvar__menu_alpha;
 		}
 
@@ -1272,8 +1272,8 @@ void HUD_Configure_Frame()
 	}
 	else if(hud_configure_prev)
 	{
-		if(menu_enabled)
-			menu_enabled = 0;
+		if(hud_configure_menu_open)
+			hud_configure_menu_open = 0;
 		if(autocvar_hud_cursormode)
 			setcursormode(0);
 		hud_dynamic_shake_factor = -1;

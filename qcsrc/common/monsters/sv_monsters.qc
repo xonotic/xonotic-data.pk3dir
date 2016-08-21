@@ -92,6 +92,7 @@ bool Monster_ValidTarget(entity this, entity targ)
 	|| (SAME_TEAM(targ, this))
 	|| (STAT(FROZEN, targ))
 	|| (targ.alpha != 0 && targ.alpha < 0.5)
+	|| (MUTATOR_CALLHOOK(MonsterValidTarget, this, targ))
 	)
 	{
 		// if any of the above checks fail, target is not valid

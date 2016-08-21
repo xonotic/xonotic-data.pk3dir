@@ -125,6 +125,8 @@ void CopyBody(entity this, float keepvelocity)
 	// "bake" the current animation frame for clones (they don't get clientside animation)
 	animdecide_load_if_needed(clone);
 	animdecide_setframes(clone, false, frame, frame1time, frame2, frame2time);
+
+	MUTATOR_CALLHOOK(CopyBody, this, clone, keepvelocity);
 }
 
 void player_setupanimsformodel(entity this)

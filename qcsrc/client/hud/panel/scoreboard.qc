@@ -85,6 +85,7 @@ string TranslateScoresLabel(string l)
 		case "rank": return CTX(_("SCO^rank"));
 		case "returns": return CTX(_("SCO^returns"));
 		case "revivals": return CTX(_("SCO^revivals"));
+		case "rounds": return CTX(_("SCO^rounds won"));
 		case "score": return CTX(_("SCO^score"));
 		case "suicides": return CTX(_("SCO^suicides"));
 		case "takes": return CTX(_("SCO^takes"));
@@ -785,10 +786,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb)
 			if (sbt_highlight)
 				if (!(i % 2))
 				{
-					if (i == sbt_num_fields-1)
-						column_dim.x = sbt_field_size[i] + hud_fontsize.x * 0.5;
-					else
-						column_dim.x = sbt_field_size[i] + hud_fontsize.x;
+					column_dim.x = sbt_field_size[i] + hud_fontsize.x;
 					drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 				}
 
@@ -808,8 +806,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
     TC(bool, is_self); TC(int, pl_number);
 	string str;
 	bool is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
-	if(is_spec && !is_self)
-		rgb = '0 0 0';
 
 	vector h_pos = item_pos;
 	vector h_size = eX * panel_size.x + eY * hud_fontsize.y * 1.25;
@@ -1070,7 +1066,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 		// row highlighting
 		for (int i = 0; i < rows; ++i)
-			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
 	average_accuracy = 0;
@@ -1287,7 +1283,7 @@ void Scoreboard_Draw()
 	{
 		// frametime checks allow to toggle the scoreboard even when the game is paused
 		if(scoreboard_active) {
-			if(menu_enabled == 1)
+			if(hud_configure_menu_open == 1)
 				scoreboard_fade_alpha = 1;
 			float scoreboard_fadeinspeed = autocvar_hud_panel_scoreboard_fadeinspeed;
 			if (scoreboard_fadeinspeed && frametime)
@@ -1315,7 +1311,7 @@ void Scoreboard_Draw()
 		HUD_Scale_Disable();
 
 	float hud_fade_alpha_save = hud_fade_alpha;
-	if(menu_enabled == 1)
+	if(hud_configure_menu_open == 1)
 		hud_fade_alpha = 1;
 	else
 		hud_fade_alpha = scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
@@ -1370,7 +1366,7 @@ void Scoreboard_Draw()
 		{
 			if(tm.team == NUM_SPECTATOR)
 				continue;
-			if(!tm.team && teamplay)
+			if(!tm.team)
 				continue;
 
 			draw_beginBoldFont();
@@ -1399,8 +1395,6 @@ void Scoreboard_Draw()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
-				continue;
-			if(!tm.team && teamplay)
 				continue;
 
 			pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
@@ -1431,7 +1425,7 @@ void Scoreboard_Draw()
 		if(pl.team != NUM_SPECTATOR)
 			continue;
 		pos.y += 1.25 * hud_fontsize.y;
-		Scoreboard_DrawItem(pos, panel_bg_color, pl, (pl.sv_entnum == player_localnum), specs);
+		Scoreboard_DrawItem(pos, '0 0 0', pl, (pl.sv_entnum == player_localnum), specs);
 		++specs;
 	}
 
