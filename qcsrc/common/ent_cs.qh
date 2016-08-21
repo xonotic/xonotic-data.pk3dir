@@ -58,10 +58,12 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	/**
      * @param i zero indexed player
      */
+    .int frags;
 	bool entcs_IsSpectating(int i)
 	{
 		bool unconnected = !playerslots[i].gotscores;
-		return unconnected || stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR;
+		entity e = entcs_receiver(i);
+		return unconnected || ((e) ? e.frags : stof(getplayerkeyvalue(i, "frags"))) == FRAGS_SPECTATOR;
 	}
 
 	/**
