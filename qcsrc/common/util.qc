@@ -600,7 +600,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 		return 0;
 	}
 
-	FOREACH_ENTITY_CLASS("saved_cvar_value", it.netname == tmp_cvar,
+	IL_EACH("saved_cvar_value", it.netname == tmp_cvar,
 	{
 		created_saved_value = -1; // skip creation
 		break; // no need to continue
@@ -610,6 +610,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	{
 		// creating a new entity to keep track of this cvar
 		entity e = new_pure(saved_cvar_value);
+		IL_PUSH(g_saved_cvars, e);
 		e.netname = strzone(tmp_cvar);
 		e.message = strzone(cvar_string(tmp_cvar));
 		created_saved_value = 1;
