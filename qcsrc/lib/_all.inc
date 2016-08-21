@@ -266,7 +266,6 @@ void make_safe_for_remove(entity this);
 #endif
 #undef ENGINE_EVENT
 
-#ifndef MENUQC
-	#include <ecs/_lib.qh>
-	#include <ecs/components/_mod.qh>
+#ifdef GAMEQC
+	#include <ecs/_mod.qh>
 #endif

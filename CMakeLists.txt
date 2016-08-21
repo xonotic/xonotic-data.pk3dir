@@ -26,11 +26,11 @@ set_source_files_properties(
 )
 
 add_executable(csprogs qcsrc/client/progs.inc)
-target_compile_definitions(csprogs PRIVATE -DCSQC)
+target_compile_definitions(csprogs PRIVATE -DGAMEQC -DCSQC)
 add_dependencies(csprogs gmqcc)
 
 add_executable(progs qcsrc/server/progs.inc)
-target_compile_definitions(progs PRIVATE -DSVQC)
+target_compile_definitions(progs PRIVATE -DGAMEQC -DSVQC)
 add_dependencies(progs gmqcc)
 
 add_executable(menu qcsrc/menu/progs.inc)

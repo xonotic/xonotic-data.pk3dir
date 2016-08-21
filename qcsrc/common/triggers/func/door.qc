@@ -1,3 +1,4 @@
+#include "door.qh"
 /*
 
 Doors are similar to buttons, but can spawn a fat trigger field around them

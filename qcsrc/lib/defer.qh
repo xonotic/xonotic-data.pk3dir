@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 	#include "oo.qh"
 	#include "self.qh"

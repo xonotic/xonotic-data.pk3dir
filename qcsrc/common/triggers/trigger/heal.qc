@@ -1,3 +1,4 @@
+#include "heal.qh"
 #ifdef SVQC
 .float triggerhealtime;
 void trigger_heal_touch(entity this, entity toucher)

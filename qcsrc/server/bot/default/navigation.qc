@@ -7,7 +7,7 @@
 
 #include <common/t_items.qh>
 
-#include <common/items/all.qh>
+#include <common/items/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/triggers/trigger/jumppads.qh>

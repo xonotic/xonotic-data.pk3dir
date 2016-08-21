@@ -1,5 +1,4 @@
-#ifndef MUTATORS_BASE_H
-#define MUTATORS_BASE_H
+#pragma once
 
 const int CBC_ORDER_FIRST = 1;
 const int CBC_ORDER_LAST = 2;
@@ -168,7 +167,7 @@ bool Mutator_Add(Mutator mut);
 void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 
-#ifndef MENUQC
+#ifdef GAMEQC
 /** server mutators activate corresponding client mutators for all clients */
 REGISTER_NET_LINKED(Mutator)
 
@@ -322,5 +321,3 @@ STATIC_INIT_LATE(Mutators) {
 } MACRO_END
 
 #include "events.qh"
-
-#endif

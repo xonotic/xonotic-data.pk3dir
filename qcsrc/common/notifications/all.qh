@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/command/all.qh>
+#include <common/command/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/teams.qh>
@@ -159,7 +159,7 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			#ifndef MENUQC
+			#ifdef GAMEQC
 			string filename = argv(1);
 			bool alsoprint = false;
 			if (filename == "")

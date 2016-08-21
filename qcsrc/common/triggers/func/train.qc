@@ -1,3 +1,4 @@
+#include "train.qh"
 .float train_wait_turning;
 void train_next(entity this);
 #ifdef SVQC

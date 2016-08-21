@@ -1,16 +1,7 @@
 #include <lib/_all.inc>
 
 #if XONOTIC
-
-#include "../menu/_mod.inc"
-#include "anim/_mod.inc"
-#include "command/_mod.inc"
-#include "item/_mod.inc"
-#include "mutators/_mod.inc"
-#include "xonotic/_mod.inc"
-
-#include <common/_all.inc>
-
+#include "_all.inc"
 #endif
 
 #if BUILD_MOD

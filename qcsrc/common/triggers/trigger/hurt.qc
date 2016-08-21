@@ -1,3 +1,4 @@
+#include "hurt.qh"
 #ifdef SVQC
 void trigger_hurt_use(entity this, entity actor, entity trigger)
 {

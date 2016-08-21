@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/hook/hook.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/hook/sv_hook.qc>
+#endif

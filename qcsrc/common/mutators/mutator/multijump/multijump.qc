@@ -1,4 +1,7 @@
-#ifdef IMPLEMENTATION
+#include "multijump.qh"
+
+#ifdef GAMEQC
+
 #ifdef SVQC
 	#include <server/antilag.qh>
 #endif
@@ -126,4 +129,5 @@ MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsPrettyString)
 }
 
 #endif
+
 #endif

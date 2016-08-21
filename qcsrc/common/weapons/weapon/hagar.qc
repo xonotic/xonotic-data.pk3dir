@@ -1,3 +1,4 @@
+#include "hagar.qh"
 #ifndef IMPLEMENTATION
 CLASS(Hagar, Weapon)
 /* ammotype  */ ATTRIB(Hagar, ammo_field, .int, ammo_rockets);
@@ -6,7 +7,7 @@ CLASS(Hagar, Weapon)
 /* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');
 /* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Hagar, m_model, Model, MDL_HAGAR_ITEM);
 #endif
 /* crosshair */ ATTRIB(Hagar, w_crosshair, string, "gfx/crosshairhagar");

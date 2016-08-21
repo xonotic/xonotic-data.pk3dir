@@ -1,3 +1,4 @@
+#include "magicear.qh"
 #ifdef SVQC
 float magicear_matched;
 float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);

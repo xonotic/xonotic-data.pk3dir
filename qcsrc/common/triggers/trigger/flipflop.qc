@@ -1,3 +1,4 @@
+#include "flipflop.qh"
 #ifdef SVQC
 /*QUAKED spawnfunc_trigger_flipflop (.5 .5 .5) (-8 -8 -8) (8 8 8) START_ENABLED
 "Flip-flop" trigger gate... lets only every second trigger event through

@@ -1,3 +1,4 @@
+#include "impulse.qh"
 // targeted (directional) mode
 void trigger_impulse_touch1(entity this, entity toucher)
 {

@@ -1,3 +1,4 @@
+#include "tuba.qh"
 #ifndef IMPLEMENTATION
 CLASS(Tuba, Weapon)
 /* impulse   */ ATTRIB(Tuba, impulse, int, 1);
@@ -5,7 +6,7 @@ CLASS(Tuba, Weapon)
 /* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Tuba, m_model, Model, MDL_TUBA_ITEM);
 #endif
 /* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairtuba");

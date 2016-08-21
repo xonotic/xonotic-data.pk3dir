@@ -1,6 +1,5 @@
 #include "nexball.qh"
 
-#ifdef IMPLEMENTATION
 #ifdef CSQC
 int autocvar_cl_eventchase_nexball = 1;
 
@@ -1156,5 +1155,4 @@ REGISTER_MUTATOR(nb, g_nexball)
 	return 0;
 }
 
-#endif
 #endif

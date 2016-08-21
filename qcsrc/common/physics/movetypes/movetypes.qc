@@ -1,10 +1,10 @@
+#include "movetypes.qh"
 #include "../player.qh"
 
 #if defined(CSQC)
 	#include <client/defs.qh>
 	#include <common/stats.qh>
 	#include <common/util.qh>
-	#include "movetypes.qh"
 	#include <lib/csqcmodel/common.qh>
 	#include <common/t_items.qh>
 #elif defined(MENUQC)

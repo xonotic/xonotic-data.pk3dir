@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 #ifdef SVQC
 void spiderbot_rocket_do(entity this);

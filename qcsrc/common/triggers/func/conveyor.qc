@@ -1,3 +1,4 @@
+#include "conveyor.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_CONVEYOR)
 
 void conveyor_think(entity this)

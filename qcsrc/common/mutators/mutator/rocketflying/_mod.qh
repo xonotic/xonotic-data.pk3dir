@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/rocketflying/rocketflying.qh>
+#ifdef SVQC
+    #include <common/mutators/mutator/rocketflying/sv_rocketflying.qh>
+#endif

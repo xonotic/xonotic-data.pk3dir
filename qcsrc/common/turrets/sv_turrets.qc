@@ -1,3 +1,4 @@
+#include "sv_turrets.qh"
 #ifdef SVQC
 #include <server/autocvars.qh>
 

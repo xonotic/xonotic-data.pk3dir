@@ -1,19 +1,4 @@
-#ifndef TURRET_FUSIONREACTOR_H
-#define TURRET_FUSIONREACTOR_H
-
-CLASS(FusionReactor, Turret)
-/* spawnflags */ ATTRIB(FusionReactor, spawnflags, int, TUR_FLAG_SUPPORT | TUR_FLAG_AMMOSOURCE);
-/* mins       */ ATTRIB(FusionReactor, mins, vector, '-34 -34 0');
-/* maxs       */ ATTRIB(FusionReactor, maxs, vector, '34 34 90');
-/* modelname  */ ATTRIB(FusionReactor, mdl, string, "base.md3");
-/* model      */ ATTRIB_STRZONE(FusionReactor, model, string, strcat("models/turrets/", this.mdl));
-/* head_model */ ATTRIB_STRZONE(FusionReactor, head_model, string, strcat("models/turrets/", "reactor.md3"));
-/* netname    */ ATTRIB(FusionReactor, netname, string, "fusreac");
-/* fullname   */ ATTRIB(FusionReactor, turret_name, string, _("Fusion Reactor"));
-ENDCLASS(FusionReactor)
-REGISTER_TURRET(FUSIONREACTOR, NEW(FusionReactor));
-
-#endif
+#include "fusionreactor.qh"
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
