@@ -7,10 +7,11 @@
 /**
     Uniform pull towards a point
 **/
-vector steerlib_pull(entity this, vector point)
+#define steerlib_pull(ent,point) normalize(point - (ent).origin)
+/*vector steerlib_pull(entity this, vector point)
 {
     return normalize(point - this.origin);
-}
+}*/
 
 /**
     Uniform push from a point
