@@ -463,3 +463,6 @@ STATIC_INIT(g_assault_objectivedecreasers) { g_assault_objectivedecreasers = IL_
 
 IntrusiveList g_spawnpoints;
 STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }
+
+IntrusiveList g_players;
+STATIC_INIT(g_players) { g_players = IL_NEW(); }

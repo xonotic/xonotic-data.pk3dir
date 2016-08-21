@@ -71,8 +71,11 @@ ENDCLASS(Spectator)
 CLASS(Player, Client)
     INIT(Player) {
         this.classname = STR_PLAYER;
+        IL_PUSH(g_players, this);
     }
-    DESTRUCTOR(Player) { }
+    DESTRUCTOR(Player) {
+        IL_REMOVE(g_players, this);
+    }
 ENDCLASS(Player)
 
 METHOD(Client, m_unwind, bool(Client this))
