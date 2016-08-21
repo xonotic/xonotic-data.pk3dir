@@ -1196,7 +1196,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	FOREACH_ENTITY_FLOAT(init_for_player_needed, true, {
+	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
 	});
 

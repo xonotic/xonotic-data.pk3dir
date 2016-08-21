@@ -191,7 +191,7 @@ void StartFrame()
 	}
 #endif
 
-	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, CSQCProjectile_Check(it));
+	IL_EACH(g_projectiles, it.csqcprojectile_clientanimate, CSQCProjectile_Check(it));
 
 	if (RedirectionThink()) return;
 

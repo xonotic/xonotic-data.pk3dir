@@ -426,7 +426,6 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .string cvar_cl_physics;
 
-.bool init_for_player_needed;
 .void(entity this, entity player) init_for_player;
 
 IntrusiveList g_monsters;
@@ -449,3 +448,6 @@ STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }
 
 IntrusiveList g_items;
 STATIC_INIT(g_items) { g_items = IL_NEW(); }
+
+IntrusiveList g_initforplayer;
+STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
