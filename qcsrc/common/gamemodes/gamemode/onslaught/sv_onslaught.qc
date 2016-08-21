@@ -74,6 +74,7 @@ void ons_CaptureShield_Reset(entity this)
 void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 {
 	entity shield = new(ons_captureshield);
+	IL_PUSH(g_onsshields, shield);
 
 	shield.enemy = generator;
 	shield.team = generator.team;
@@ -229,7 +230,7 @@ void onslaught_updatelinks()
 		}
 		ons_ControlPoint_UpdateSprite(l);
 	}
-	FOREACH_ENTITY_CLASS("ons_captureshield", true,
+	IL_EACH(g_onsshields, true,
 	{
 		it.team = it.enemy.team;
 		it.colormap = it.enemy.colormap;
