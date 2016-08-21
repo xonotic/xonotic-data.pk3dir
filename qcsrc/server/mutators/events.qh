@@ -58,6 +58,7 @@ MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 /** called when a player dies to e.g. remove stuff he was carrying */
 #define EV_PlayHitsound(i, o) \
     /** victim */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
 
