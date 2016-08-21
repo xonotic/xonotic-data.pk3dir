@@ -460,10 +460,8 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
         selfdamage = 0;
         teamdamage = 0;
         enemydamage = 0;
-        FOREACH_ENTITY_ENT(realowner, actor,
+        IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
         {
-            if(it.classname != "rocket") continue;
-
             entity rocket = it;
             FOREACH_ENTITY_FLOAT(bot_attack, true,
             {
@@ -486,10 +484,8 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
             desirabledamage = desirabledamage - teamdamage;
 
         makevectors(actor.v_angle);
-        FOREACH_ENTITY_ENT(realowner, actor,
+        IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
         {
-            if(it.classname != "rocket") continue;
-
             if(skill > 9) // normal players only do this for the target they are tracking
             {
 	            entity rocket = it;
