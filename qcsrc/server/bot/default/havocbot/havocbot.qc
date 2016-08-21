@@ -13,6 +13,7 @@
 #include <common/state.qh>
 #include <common/items/_mod.qh>
 
+#include <common/triggers/teleporters.qh>
 #include <common/triggers/trigger/jumppads.qh>
 
 #include <lib/warpzone/common.qh>

@@ -71,16 +71,13 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 
 void assault_setenemytoobjective(entity this)
 {
-	FOREACH_ENTITY_STRING(targetname, this.target,
+	IL_EACH(g_assault_objectives, it.targetname == this.target,
 	{
-		if(it.classname == "target_objective")
-		{
-			if(this.enemy == NULL)
-				this.enemy = it;
-			else
-				objerror(this, "more than one objective as target - fix the map!");
-			break;
-		}
+		if(this.enemy == NULL)
+			this.enemy = it;
+		else
+			objerror(this, "more than one objective as target - fix the map!");
+		break;
 	});
 
 	if(this.enemy == NULL)
@@ -284,6 +281,7 @@ spawnfunc(target_objective)
 	if (!g_assault) { delete(this); return; }
 
 	this.classname = "target_objective";
+	IL_PUSH(g_assault_objectives, this);
 	this.use = assault_objective_use;
 	this.reset = assault_objective_reset;
 	this.reset(this);
