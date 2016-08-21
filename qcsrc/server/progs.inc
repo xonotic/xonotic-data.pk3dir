@@ -6,6 +6,6 @@
 
 #include <ecs/_mod.inc>
 
-#if BUILD_MOD
-#include "../../mod/server/progs.inc"
+#ifdef BUILD_MOD
+#include <mod/server/progs.inc>
 #endif

@@ -4,6 +4,6 @@
 #include <menu/_all.inc>
 #endif
 
-#if BUILD_MOD
-#include "../../mod/menu/progs.inc"
+#ifdef BUILD_MOD
+#include <mod/menu/progs.inc>
 #endif
