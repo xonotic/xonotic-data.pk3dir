@@ -147,7 +147,8 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 	SUB_UseTargets(this, this, trigger);
 
 	//(Re)spawn all turrets
-	FOREACH_ENTITY_CLASS("turret_main", true, LAMBDA(
+	IL_EACH(g_turrets, true,
+	{
 		// Swap turret teams
 		if(it.team == NUM_TEAM_1)
 			it.team = NUM_TEAM_2;
@@ -156,7 +157,7 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 
 		// Doubles as teamchange
 		turret_respawn(it);
-	));
+	});
 }
 void assault_roundstart_use_this(entity this)
 {
