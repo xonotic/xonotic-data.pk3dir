@@ -1,7 +1,6 @@
+#include "all.qh"
 #ifndef WEAPONS_ALL_C
 #define WEAPONS_ALL_C
-
-#include "all.qh"
 
 #if defined(CSQC)
 	#include <client/defs.qh>
@@ -19,6 +18,7 @@
 	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
+	#include <common/items/_mod.qh>
     #include <lib/warpzone/anglestransform.qh>
     #include <lib/warpzone/common.qh>
     #include <lib/warpzone/util_server.qh>
@@ -37,14 +37,14 @@
     #include <server/defs.qh>
     #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
-    #include <server/mutators/all.qh>
+    #include <server/mutators/_mod.qh>
     #include "../mapinfo.qh"
-    #include <server/command/common.qh>
+    #include <server/command/_mod.qh>
     #include <lib/csqcmodel/sv_model.qh>
     #include <server/portals.qh>
     #include <server/g_hook.qh>
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 	#include "calculations.qc"
 #endif
 #ifdef SVQC
@@ -275,7 +275,7 @@ string W_Model(string w_mdl)
 	return M_ARGV(1, string);
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 {
 	switch (algn)
@@ -547,7 +547,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 }
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 REGISTER_NET_TEMP(wframe)
 #ifdef CSQC

@@ -5,8 +5,8 @@
 #include <common/deathtypes/all.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>
-#include <common/weapons/all.qh>
-#include <common/items/all.qc>
+#include <common/weapons/_all.qh>
+#include <common/items/_mod.qh>
 
 void W_GiveWeapon(entity e, int wep)
 {

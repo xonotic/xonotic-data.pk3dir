@@ -1,49 +1,8 @@
 #include "gamemode_lms.qh"
-#ifndef GAMEMODE_LMS_H
-#define GAMEMODE_LMS_H
-
-#define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
-void lms_Initialize();
-
-REGISTER_MUTATOR(lms, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		lms_Initialize();
-
-		SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, autocvar_timelimit_override, -1);
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back lms_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-// lives related defs
-float lms_lowest_lives;
-float lms_next_place;
-float LMS_NewPlayerLives();
-
-#endif
-
-#ifdef IMPLEMENTATION
 
 #include <common/mutators/mutator/instagib/items.qc>
 #include <server/campaign.qh>
-#include <server/command/cmd.qh>
+#include <server/command/_mod.qh>
 
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
@@ -408,6 +367,3 @@ void lms_Initialize()
 
 	lms_ScoreRules();
 }
-
-
-#endif

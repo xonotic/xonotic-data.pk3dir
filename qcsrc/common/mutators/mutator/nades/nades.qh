@@ -1,5 +1,4 @@
-#ifndef NADES_ALL_H
-#define NADES_ALL_H
+#pragma once
 
 #include <common/teams.qh>
 
@@ -52,7 +51,7 @@ Nade Nade_FromProjectile(int proj)
     return NADE_TYPE_Null;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #include "effects.inc"
 #endif
 
@@ -86,7 +85,7 @@ bool orb_send(entity this, entity to, int sf);
 void nades_Clear(entity player);
 
 // Give a bonus grenade to a player
-void(entity player, float score) nades_GiveBonus;
+void nades_GiveBonus(entity player, float score);
 
 /**
  * called to adjust nade damage and force on hit
@@ -100,7 +99,5 @@ void(entity player, float score) nades_GiveBonus;
     /**/          o(float,  MUTATOR_ARGV_3_float) \
     /**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
-
-#endif
 
 #endif

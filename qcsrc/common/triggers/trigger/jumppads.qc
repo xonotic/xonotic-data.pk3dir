@@ -1,3 +1,4 @@
+#include "jumppads.qh"
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
 #include "jumppads.qh"

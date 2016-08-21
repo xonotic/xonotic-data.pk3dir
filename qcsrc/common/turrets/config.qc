@@ -1,3 +1,4 @@
+#include "config.qh"
 // ==========================
 //  Turret Config Generator
 // ==========================

@@ -1,70 +1,5 @@
 #include "gamemode_assault.qh"
-#ifndef GAMEMODE_ASSAULT_H
-#define GAMEMODE_ASSAULT_H
 
-void assault_ScoreRules();
-void ActivateTeamplay();
-
-REGISTER_MUTATOR(as, false)
-{
-	ActivateTeamplay();
-	have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		assault_ScoreRules();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back assault_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-// sprites
-.entity assault_decreaser;
-.entity assault_sprite;
-
-// legacy bot defs
-const int HAVOCBOT_AST_ROLE_NONE = 0;
-const int HAVOCBOT_AST_ROLE_DEFENSE = 2;
-const int HAVOCBOT_AST_ROLE_OFFENSE = 4;
-
-.int havocbot_role_flags;
-.float havocbot_attack_time;
-
-.void(entity this) havocbot_role;
-.void(entity this) havocbot_previous_role;
-
-void(entity this) havocbot_role_ast_defense;
-void(entity this) havocbot_role_ast_offense;
-.entity havocbot_ast_target;
-
-void(entity bot) havocbot_ast_reset_role;
-
-void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_items;
-void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
-
-// scoreboard stuff
-const float ST_ASSAULT_OBJECTIVES = 1;
-
-// predefined spawnfuncs
-void target_objective_decrease_activate(entity this);
-#endif
-
-#ifdef IMPLEMENTATION
 .entity sprite;
 
 // random functions
@@ -676,5 +611,3 @@ void assault_ScoreRules()
 	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }
-
-#endif

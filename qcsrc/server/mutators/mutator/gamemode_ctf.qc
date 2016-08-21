@@ -1,6 +1,5 @@
 #include "gamemode_ctf.qh"
 
-#ifdef IMPLEMENTATION
 #ifndef CSQC
 void ctf_Initialize();
 
@@ -2658,5 +2657,3 @@ void ctf_Initialize()
 
 	InitializeEntity(NULL, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }
-
-#endif

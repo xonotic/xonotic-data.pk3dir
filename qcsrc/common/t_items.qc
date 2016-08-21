@@ -1,12 +1,12 @@
 #include "t_items.qh"
 
-#include "items/all.qc"
+#include "items/_mod.qh"
 
 #if defined(SVQC)
 
     #include "../server/bot/api.qh"
 
-    #include <server/mutators/all.qh>
+    #include <server/mutators/_mod.qh>
 
     #include "../server/weapons/common.qh"
     #include "../server/weapons/selection.qh"
@@ -20,12 +20,12 @@
 
     #include <common/monsters/all.qh>
 
-    #include <common/weapons/all.qh>
+    #include <common/weapons/_all.qh>
 
     #include "../lib/warpzone/util_server.qh"
 #elif defined(CSQC)
 	#include "physics/movetypes/movetypes.qh"
-	#include <common/weapons/all.qh>
+	#include <common/weapons/_all.qh>
 	#include "../lib/csqcmodel/cl_model.qh"
 	#include "../lib/csqcmodel/common.qh"
 #endif

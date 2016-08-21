@@ -1,3 +1,4 @@
+#include "shotgun.qh"
 #ifndef IMPLEMENTATION
 CLASS(Shotgun, Weapon)
 /* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells);
@@ -6,7 +7,7 @@ CLASS(Shotgun, Weapon)
 /* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shotgun, mdl, string, "shotgun");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Shotgun, m_model, Model, MDL_SHOTGUN_ITEM);
 #endif
 /* crosshair */ ATTRIB(Shotgun, w_crosshair, string, "gfx/crosshairshotgun");

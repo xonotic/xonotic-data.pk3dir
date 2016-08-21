@@ -1,3 +1,4 @@
+#include "triggers.qh"
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);

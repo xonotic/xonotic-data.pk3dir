@@ -1,3 +1,4 @@
+#include "porto.qh"
 #ifndef IMPLEMENTATION
 CLASS(PortoLaunch, Weapon)
 /* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none);
@@ -6,7 +7,7 @@ CLASS(PortoLaunch, Weapon)
 /* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
 /* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
 #endif
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair, string, "gfx/crosshairporto");

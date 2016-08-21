@@ -1,3 +1,4 @@
+#include "targettrigger.qh"
 spawnfunc(turret_targettrigger);
 void turret_targettrigger_touch(entity this, entity toucher);
 

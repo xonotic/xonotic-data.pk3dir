@@ -1,2 +1,3 @@
 // generated file; do not modify
-#include <common/gamemodes/all.qh>
+
+#include <common/gamemodes/gamemode/_mod.qh>

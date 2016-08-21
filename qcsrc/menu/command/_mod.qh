@@ -1,3 +1,2 @@
 // generated file; do not modify
-#include <menu/command/all.qh>
 #include <menu/command/menu_cmd.qh>

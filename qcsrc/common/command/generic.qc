@@ -1,11 +1,13 @@
-#include "all.qh"
+#include "generic.qh"
+#include "_mod.qh"
+#include "reg.qh"
 
 #include "markup.qh"
 #include "rpn.qh"
 
 #include "../mapinfo.qh"
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	#include "../notifications/all.qh"
 #endif
 
@@ -14,10 +16,7 @@
 #endif
 
 #ifdef SVQC
-	#include <server/command/banning.qh>
-	#include <server/command/cmd.qh>
-	#include <server/command/common.qh>
-	#include <server/command/sv_cmd.qh>
+	#include <server/command/_mod.qh>
 	#include <common/turrets/config.qh>
 	#include <common/weapons/config.qh>
 #endif
@@ -374,7 +373,7 @@ void GenericCommand_restartnotifs(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			#ifndef MENUQC
+			#ifdef GAMEQC
 			int NOTIF_ANNCE_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE,   { ++NOTIF_ANNCE_COUNT;  });
 			int NOTIF_INFO_COUNT    = 0; FOREACH(Notifications, it.nent_type == MSG_INFO,    { ++NOTIF_INFO_COUNT;   });
 			int NOTIF_CENTER_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER,  { ++NOTIF_CENTER_COUNT; });

@@ -1,3 +1,4 @@
+#include "relay_activators.qh"
 #ifdef SVQC
 void relay_activators_use(entity this, entity actor, entity trigger)
 {

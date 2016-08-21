@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/vampirehook/vampirehook.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/vampirehook/sv_vampirehook.qc>
+#endif

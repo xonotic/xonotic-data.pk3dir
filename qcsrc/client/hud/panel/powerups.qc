@@ -1,6 +1,6 @@
 #include "powerups.qh"
 
-#include <common/items/all.qc>
+#include <common/items/_mod.qh>
 
 // Powerups (#2)
 

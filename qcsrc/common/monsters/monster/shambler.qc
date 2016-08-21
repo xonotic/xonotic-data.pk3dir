@@ -1,28 +1,4 @@
-#ifndef SHAMBLER_H
-#define SHAMBLER_H
-
-#ifndef MENUQC
-MODEL(MON_SHAMBLER, M_Model("shambler.mdl"));
-#endif
-
-CLASS(Shambler, Monster)
-    ATTRIB(Shambler, spawnflags, int, MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Shambler, mins, vector, '-41 -41 -31');
-    ATTRIB(Shambler, maxs, vector, '41 41 65');
-#ifndef MENUQC
-    ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
-#endif
-    ATTRIB(Shambler, netname, string, "shambler");
-    ATTRIB(Shambler, monster_name, string, _("Shambler"));
-ENDCLASS(Shambler)
-
-REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#endif
+#include "shambler.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -250,7 +226,7 @@ METHOD(Shambler, mr_death, bool(Shambler this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
 {
     TC(Shambler, this);

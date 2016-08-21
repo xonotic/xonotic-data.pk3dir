@@ -1,5 +1,5 @@
-#include "command.qh"
 #include "rpn.qh"
+#include "command.qh"
 
 
 // ========================================

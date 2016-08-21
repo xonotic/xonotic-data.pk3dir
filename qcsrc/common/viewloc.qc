@@ -1,3 +1,4 @@
+#include "viewloc.qh"
 #include "util.qh"
 
 #if defined(CSQC)

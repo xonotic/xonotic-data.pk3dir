@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 vector real_origin(entity ent);
 #endif
@@ -8,10 +8,8 @@ vector real_origin(entity ent);
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
 string wordwrap(string s, float l);
-#ifndef MENUQC
-#ifndef CSQC
+#ifdef SVQC
 void wordwrap_sprint(entity to, string s, float l);
-#endif
 #endif
 void wordwrap_cb(string s, float l, void(string) callback);
 
@@ -66,7 +64,7 @@ string ScoreString(float vflags, float value);
 vector decompressShortVector(float data);
 float compressShortVector(vector vec);
 
-#ifndef MENUQC
+#ifdef GAMEQC
 float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector dvz);
 #endif
 
@@ -79,7 +77,7 @@ float cvar_value_issafe(string s);
 float cvar_settemp(string pKey, string pValue);
 float cvar_settemp_restore();
 
-#ifndef MENUQC
+#ifdef GAMEQC
 // modes: 0 = trust q3map2 (_mini images)
 //        1 = trust tracebox (_radar images)
 // in both modes, mapinfo's "size" overrides
@@ -148,14 +146,14 @@ string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_re
 string records_reply[10];
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
 vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage); // returns vector: take, save, 0
 #endif
 
 string getcurrentmod();
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #ifdef CSQC
 int ReadInt24_t();
 #else
@@ -190,7 +188,7 @@ float get_model_parameters_fixbone;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector NearestPointOnBox(entity box, vector org);
 #endif
 
@@ -205,7 +203,7 @@ const float XENCODE_LEN = 5;
 string xencode(float f);
 float xdecode(string s);
 
-#ifndef MENUQC
+#ifdef GAMEQC
 string strtolower(string s);
 #endif
 
@@ -214,7 +212,7 @@ string MakeConsoleSafe(string input);
 // generic shutdown handler
 void Shutdown();
 
-#ifndef MENUQC
+#ifdef GAMEQC
 .float skeleton_bones;
 void Skeleton_SetBones(entity e);
 // loops through the tags of model v using counter tagnum
@@ -256,7 +254,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 string CCR(string input);
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	#ifdef CSQC
 		#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
 	#else
@@ -265,11 +263,11 @@ string CCR(string input);
 	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector animfixfps(entity e, vector a, vector b);
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 const float CNT_NORMAL = 1;
 const float CNT_GAMESTART = 2;
 const float CNT_IDLE = 3;
@@ -279,7 +277,7 @@ const float CNT_ROUNDSTART = 6;
 entity Announcer_PickNumber(float type, float num);
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 #endif

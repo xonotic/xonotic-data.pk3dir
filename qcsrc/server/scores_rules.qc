@@ -1,6 +1,6 @@
 #include "scores_rules.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "scores.qh"
 
 int ScoreRules_teams;

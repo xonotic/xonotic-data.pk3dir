@@ -1,3 +1,5 @@
+#include "calculations.qh"
+
 // =============================
 //  Explosion Force Calculation
 // =============================

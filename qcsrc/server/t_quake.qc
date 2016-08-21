@@ -1,6 +1,6 @@
 #include "t_quake.qh"
 
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 
 spawnfunc(weapon_electro);
 spawnfunc(weapon_hagar);

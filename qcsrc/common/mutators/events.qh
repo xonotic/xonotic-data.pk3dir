@@ -1,5 +1,4 @@
-#ifndef COMMON_MUTATORS_EVENTS_H
-#define COMMON_MUTATORS_EVENTS_H
+#pragma once
 
 #define EV_NO_ARGS(i, o)
 
@@ -104,5 +103,3 @@ MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
     /**/          o(string, MUTATOR_ARGV_1_string) \
     /**/
 MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);
-
-#endif

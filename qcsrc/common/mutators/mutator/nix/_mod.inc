@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/nix/nix.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/nix/sv_nix.qc>
+#endif

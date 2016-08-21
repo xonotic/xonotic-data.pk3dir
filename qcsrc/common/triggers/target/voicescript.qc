@@ -1,3 +1,4 @@
+#include "voicescript.qh"
 #ifdef SVQC
 .entity voicescript; // attached voice script
 .float voicescript_index; // index of next voice, or -1 to use the randomized ones

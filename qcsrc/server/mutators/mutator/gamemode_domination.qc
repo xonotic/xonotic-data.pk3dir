@@ -1,67 +1,4 @@
 #include "gamemode_domination.qh"
-#ifndef GAMEMODE_DOMINATION_H
-#define GAMEMODE_DOMINATION_H
-
-#define autocvar_g_domination_point_limit cvar("g_domination_point_limit")
-bool autocvar_g_domination_roundbased;
-int autocvar_g_domination_roundbased_point_limit;
-int autocvar_g_domination_point_leadlimit;
-
-void dom_Initialize();
-
-REGISTER_MUTATOR(dom, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		dom_Initialize();
-
-		int fraglimit_override = autocvar_g_domination_point_limit;
-		if (autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
-			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
-
-		ActivateTeamplay();
-		SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, autocvar_timelimit_override, -1);
-		have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-// score rule declarations
-const float ST_DOM_TICKS = 1;
-const float ST_DOM_CAPS = 1;
-
-// pps: points per second
-.float dom_total_pps = _STAT(DOM_TOTAL_PPS);
-.float dom_pps_red = _STAT(DOM_PPS_RED);
-.float dom_pps_blue = _STAT(DOM_PPS_BLUE);
-.float dom_pps_yellow = _STAT(DOM_PPS_YELLOW);
-.float dom_pps_pink = _STAT(DOM_PPS_PINK);
-float total_pps;
-float pps_red;
-float pps_blue;
-float pps_yellow;
-float pps_pink;
-
-// capture declarations
-.float enemy_playerid;
-.entity sprite;
-.float captime;
-
-// misc globals
-float domination_roundbased;
-float domination_teams;
-#endif
-
-#ifdef IMPLEMENTATION
 
 #include <server/teamplay.qh>
 
@@ -706,5 +643,3 @@ void dom_Initialize()
 	g_domination = true;
 	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
-
-#endif

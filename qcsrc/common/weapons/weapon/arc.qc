@@ -1,3 +1,4 @@
+#include "arc.qh"
 #ifndef IMPLEMENTATION
 CLASS(Arc, Weapon)
 /* ammotype  */ ATTRIB(Arc, ammo_field, .int, ammo_cells);
@@ -6,7 +7,7 @@ CLASS(Arc, Weapon)
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);
 #endif
 /* crosshair */ ATTRIB(Arc, w_crosshair, string, "gfx/crosshairhlac");
@@ -74,7 +75,7 @@ ENDCLASS(Arc)
 REGISTER_WEAPON(ARC, arc, NEW(Arc));
 
 
-#ifndef MENUQC
+#ifdef GAMEQC
 const float ARC_MAX_SEGMENTS = 20;
 vector arc_shotorigin[4];
 .vector beam_start;

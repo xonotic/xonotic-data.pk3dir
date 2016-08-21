@@ -5,7 +5,7 @@
 #include "weapons/weaponsystem.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
-#include "cl_player.qh"
+#include "player.qh"
 #include "command/common.qh"
 #include "round_handler.qh"
 #include "../common/state.qh"
@@ -13,7 +13,7 @@
 #include "../common/vehicles/all.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
 
