@@ -65,12 +65,21 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	}
 
 	/**
+     * @param i zero indexed player
+     */
+	int entcs_GetClientColors(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e ? e.colormap : stof(getplayerkeyvalue(i, "colors"));
+	}
+
+	/**
 	* @param i zero indexed player
 	* @returns 0 if not teamplay
 	*/
 	int entcs_GetTeamColor(int i)
 	{
-		return (!teamplay) ? 0 : stof(getplayerkeyvalue(i, "colors")) & 15;
+		return (!teamplay) ? 0 : entcs_GetClientColors(i) & 15;
 	}
 
 	/**
@@ -97,7 +106,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	*/
 	string entcs_GetName(int i)
 	{
-		return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
+		entity e = entcs_receiver(i);
+		return e ? ColorTranslateRGB(e.netname) : ColorTranslateRGB(getplayerkeyvalue(i, "name"));
 	}
 
     /**
@@ -126,7 +136,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		       ? '1 1 1'
 			   : colormapPaletteColor(((e.colormap >= 1024)
 			? e.colormap
-			: stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 15, true)
+			: entcs_GetClientColors(e.colormap - 1)) & 15, true)
 		;
 	}
 

@@ -224,7 +224,7 @@ void bot_setnameandstuff(entity this)
 	this.bot_config_loaded = true;
 
 	// this is really only a default, JoinBestTeam is called later
-	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
+	set_color(this, stof(bot_shirt) * 16 + stof(bot_pants));
 	this.bot_preferredcolors = this.clientcolors;
 
 	// pick the name
@@ -340,7 +340,7 @@ void bot_endgame()
 	e = bot_list;
 	while (e)
 	{
-		setcolor(e, e.bot_preferredcolors);
+		set_color(e, e.bot_preferredcolors);
 		e = e.nextbot;
 	}
 	// if dynamic waypoints are ever implemented, save them here

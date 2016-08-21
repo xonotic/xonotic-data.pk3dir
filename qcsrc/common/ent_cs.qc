@@ -35,6 +35,10 @@
 	{ WriteByte(chan, this.skin); }, \
 	{ this.skin = ReadByte(); }) \
     \
+    PROP(true, clientcolors, \
+	{ WriteByte(chan, this.clientcolors); }, \
+	{ this.colormap = ReadByte(); }) \
+    \
 	/**/
 
 #ifdef SVQC

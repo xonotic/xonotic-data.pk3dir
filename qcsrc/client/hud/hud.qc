@@ -556,11 +556,11 @@ void HUD_Main()
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkeyvalue(current_player, "colors"));
+				f = entcs_GetClientColors(current_player);
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkeyvalue(current_player, "colors"));
+				f = entcs_GetClientColors(current_player);
 				color = colormapPaletteColor(f % 16, 1);
 			}
 			else

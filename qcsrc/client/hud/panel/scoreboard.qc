@@ -605,7 +605,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			}
 			else if(!teamplay)
 			{
-				f = stof(getplayerkeyvalue(pl.sv_entnum, "colors"));
+				f = entcs_GetClientColors(pl.sv_entnum);
 				{
 					sbt_field_icon0 = "gfx/scoreboard/playercolor_base";
 					sbt_field_icon1 = "gfx/scoreboard/playercolor_shirt";

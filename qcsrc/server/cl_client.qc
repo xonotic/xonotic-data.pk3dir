@@ -471,7 +471,7 @@ void FixPlayermodel(entity player)
 	if(!teamplay)
 		if(strlen(autocvar_sv_defaultplayercolors))
 			if(player.clientcolors != stof(autocvar_sv_defaultplayercolors))
-				setcolor(player, stof(autocvar_sv_defaultplayercolors));
+				set_color(player, stof(autocvar_sv_defaultplayercolors));
 }
 
 

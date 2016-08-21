@@ -3,6 +3,7 @@
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>
+#include <common/ent_cs.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/viewloc.qh>
 #include <lib/csqcmodel/cl_model.qh>
@@ -192,7 +193,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 	bool isfriend;
 	int cm;
 	cm = this.forceplayermodels_savecolormap;
-	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(cm - 1, "colors")) + 1024);
+	cm = (cm >= 1024) ? cm : (entcs_GetClientColors(cm - 1) + 1024);
 
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
@@ -279,7 +280,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
-		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : stof(getplayerkeyvalue(this.colormap - 1, "colors"))) & 0x0F, true) * 2;
+		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true) * 2;
 	else
 		this.glowmod = '1 1 1';
 

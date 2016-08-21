@@ -111,7 +111,7 @@ void VaporizerBeam_Draw(entity this)
 	//entity e = CSQCModel_server2csqc(this.sv_entnum - 1);
 	//if (e == NULL)
 	//{
-		rgb = colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true);
+		rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 		//rgb = '1 1 1';
 	//}
 	//else

@@ -158,6 +158,16 @@ string getwelcomemessage(entity this)
 	return s;
 }
 
+void set_color(entity this, int clr)
+{
+#if 0
+	this.clientcolors = clr;
+	this.team = (clr & 15) + 1;
+#else
+	setcolor(this, clr);
+#endif
+}
+
 void SetPlayerColors(entity pl, float _color)
 {
 	/*string s;
@@ -173,9 +183,9 @@ void SetPlayerColors(entity pl, float _color)
 
 
 	if(teamplay) {
-		setcolor(pl, 16*pants + pants);
+		set_color(pl, 16*pants + pants);
 	} else {
-		setcolor(pl, shirt + pants);
+		set_color(pl, shirt + pants);
 	}
 }
 
