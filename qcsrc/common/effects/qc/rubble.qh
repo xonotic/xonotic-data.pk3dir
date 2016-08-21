@@ -5,7 +5,10 @@
 entityclass(Rubble);
 class(Rubble).float creationtime;
 
-void RubbleLimit(string cname, float limit, void(entity) deleteproc)
+IntrusiveList g_rubble;
+STATIC_INIT(g_rubble) { g_rubble = IL_NEW(); }
+
+void RubbleLimit(string cname, int limit, void(entity) deleteproc)
 {
 	// remove rubble of the same type if it's at the limit
 	// remove multiple rubble if the limit has been decreased
@@ -17,7 +20,7 @@ void RubbleLimit(string cname, float limit, void(entity) deleteproc)
 		entity oldest = NULL;
 		float oldesttime = 0;
 		// compare to all other matching entities
-		FOREACH_ENTITY_CLASS(cname, true,
+		IL_EACH(g_rubble, it.classname == cname,
 		{
 			++c;
 			if(!oldest || oldesttime > it.creationtime)
@@ -41,6 +44,7 @@ entity RubbleNew(string cname)
 	entity e = spawn();
 	e.classname = cname;
 	e.creationtime = time;
+	IL_PUSH(g_rubble, e);
 	return e;
 }
 

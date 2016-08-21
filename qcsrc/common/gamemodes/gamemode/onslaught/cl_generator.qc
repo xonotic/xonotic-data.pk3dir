@@ -143,10 +143,13 @@ void generator_damage(entity this, float hp)
 	setsize(this, GENERATOR_MIN, GENERATOR_MAX);
 }
 
-void generator_construct(entity this)
+void generator_construct(entity this, bool isnew)
 {
 	this.netname = "Generator";
 	this.classname = "onslaught_generator";
+
+	if(isnew)
+		IL_PUSH(g_onsgenerators, this);
 
 	setorigin(this, this.origin);
 	setmodel(this, MDL_ONS_GEN);
@@ -199,7 +202,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 			this.count = 40;
 
 		generator_changeteam(this);
-		generator_construct(this);
+		generator_construct(this, isnew);
 	}
 
 	if(sf & GSF_STATUS)
