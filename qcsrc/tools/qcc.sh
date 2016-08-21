@@ -12,7 +12,15 @@ QCCFLAGS=${QCCFLAGS}
 function qpp() {
     IN=$1
     OUT=$2
-    >&2 echo + ${CPP} ${@:3} ${IN}
+    case ${MODE} in
+        client) DEFS="-DGAMEQC -DCSQC"
+        ;;
+        menu) DEFS="-DMENUQC"
+        ;;
+        server) DEFS="-DGAMEQC -DSVQC"
+        ;;
+    esac
+    >&2 echo + ${CPP} ${@:3} ${DEFS} ${IN}
     set +e
     # additional information
     ${CPP} ${@:3} \
@@ -20,7 +28,7 @@ function qpp() {
         -H 2>${WORKDIR}/${MODE}_includes.txt \
         ${IN}
     # main step
-    ${CPP} ${@:3} -MMD -MP -MT ${OUT} -Wall -Wundef -Werror ${IN} -o ${WORKDIR}/${MODE}.txt
+    ${CPP} ${@:3} ${DEFS} -MMD -MP -MT ${OUT} -Wall -Wundef -Werror ${IN} -o ${WORKDIR}/${MODE}.txt
     err=$?
     set -e
     if [ ${err} -ne 0 ]; then return ${err}; fi
@@ -37,16 +45,6 @@ $(return >/dev/null 2>&1) || {
     MODE=$1
     OUT=$2
     IN=$3
-
-    case ${MODE} in
-        client) DEFS="-DGAMEQC -DCSQC"
-        ;;
-        menu) DEFS="-DMENUQC"
-        ;;
-        server) DEFS="-DGAMEQC -DSVQC"
-        ;;
-    esac
-
-    qpp ${IN} ${OUT} -I. ${QCCIDENT} ${QCCDEFS} ${DEFS} > ${WORKDIR}/${MODE}.qc
+    qpp ${IN} ${OUT} -I. ${QCCIDENT} ${QCCDEFS} > ${WORKDIR}/${MODE}.qc
     qcc ${QCCFLAGS} -o ${OUT} ../${WORKDIR}/${MODE}.qc
 }
