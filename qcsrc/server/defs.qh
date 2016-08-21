@@ -451,3 +451,6 @@ STATIC_INIT(g_items) { g_items = IL_NEW(); }
 
 IntrusiveList g_initforplayer;
 STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
+
+IntrusiveList g_clones;
+STATIC_INIT(g_clones) { g_clones = IL_NEW(); }

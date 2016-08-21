@@ -126,6 +126,8 @@ void CopyBody(entity this, float keepvelocity)
 	animdecide_load_if_needed(clone);
 	animdecide_setframes(clone, false, frame, frame1time, frame2, frame2time);
 
+	IL_PUSH(g_clones, clone);
+
 	MUTATOR_CALLHOOK(CopyBody, this, clone, keepvelocity);
 }
 
