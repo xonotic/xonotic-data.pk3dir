@@ -832,15 +832,14 @@ void trigger_race_checkpoint_verify(entity this)
 				race_timed_checkpoint = 255;
 			}
 		} else {
-			for (entity cp = NULL; (cp = find(cp, classname, "trigger_race_checkpoint")); ) {
-				if (cp.sprite) {
-					if (cp.race_checkpoint == 0) {
-						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
-                    } else if (cp.race_checkpoint == race_timed_checkpoint) {
-						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceFinish, WP_Null, WP_Null);
-                    }
+			IL_EACH(g_racecheckpoints, it.sprite,
+			{
+				if (it.race_checkpoint == 0) {
+					WaypointSprite_UpdateSprites(it.sprite, WP_RaceStart, WP_Null, WP_Null);
+                } else if (it.race_checkpoint == race_timed_checkpoint) {
+					WaypointSprite_UpdateSprites(it.sprite, WP_RaceFinish, WP_Null, WP_Null);
 				}
-            }
+            });
 		}
 	}
 
@@ -945,6 +944,8 @@ spawnfunc(trigger_race_checkpoint)
 
 	this.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 	this.spawn_evalfunc = trigger_race_checkpoint_spawn_evalfunc;
+
+	IL_PUSH(g_racecheckpoints, this);
 
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
@@ -1142,7 +1143,7 @@ float race_GetFractionalLapCount(entity e)
 
 	vector o0, o1;
 	float bestfraction, fraction;
-	entity lastcp, cp0, cp1;
+	entity lastcp;
 	float nextcpindex, lastcpindex;
 
 	nextcpindex = max(e.race_checkpoint, 0);
@@ -1153,26 +1154,26 @@ float race_GetFractionalLapCount(entity e)
 		return l; // finish
 
 	bestfraction = 1;
-	for(cp0 = NULL; (cp0 = find(cp0, classname, "trigger_race_checkpoint")); )
+	IL_EACH(g_racecheckpoints, true,
 	{
-		if(cp0.race_checkpoint != lastcpindex)
+		if(it.race_checkpoint != lastcpindex)
 			continue;
 		if(lastcp)
-			if(cp0 != lastcp)
+			if(it != lastcp)
 				continue;
-		o0 = (cp0.absmin + cp0.absmax) * 0.5;
-		for(cp1 = NULL; (cp1 = find(cp1, classname, "trigger_race_checkpoint")); )
+		o0 = (it.absmin + it.absmax) * 0.5;
+		IL_EACH(g_racecheckpoints, true,
 		{
-			if(cp1.race_checkpoint != nextcpindex)
+			if(it.race_checkpoint != nextcpindex)
 				continue;
-			o1 = (cp1.absmin + cp1.absmax) * 0.5;
+			o1 = (it.absmin + it.absmax) * 0.5;
 			if(o0 == o1)
 				continue;
 			fraction = bound(0.0001, vlen(e.origin - o1) / vlen(o0 - o1), 1);
 			if(fraction < bestfraction)
 				bestfraction = fraction;
-		}
-	}
+		});
+	});
 
 	// we are at CP "nextcpindex - bestfraction"
 	// race_timed_checkpoint == 4: then nextcp==4 means 0.9999x, nextcp==0 means 0.0000x

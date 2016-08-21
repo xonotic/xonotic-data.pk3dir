@@ -454,3 +454,9 @@ STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
 
 IntrusiveList g_clones;
 STATIC_INIT(g_clones) { g_clones = IL_NEW(); }
+
+IntrusiveList g_assault_destructibles;
+STATIC_INIT(g_assault_destructibles) { g_assault_destructibles = IL_NEW(); }
+
+IntrusiveList g_assault_objectivedecreasers;
+STATIC_INIT(g_assault_objectivedecreasers) { g_assault_objectivedecreasers = IL_NEW(); }
