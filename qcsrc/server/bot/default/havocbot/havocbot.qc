@@ -1214,7 +1214,7 @@ float havocbot_moveto(entity this, vector pos)
 	this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 
 	// if pos is inside a teleport, then let's mark it as teleport waypoint
-	FOREACH_ENTITY_CLASS("trigger_teleport", WarpZoneLib_BoxTouchesBrush(pos, pos, it, NULL),
+	IL_EACH(g_teleporters, WarpZoneLib_BoxTouchesBrush(pos, pos, it, NULL),
 	{
 		wp.wpflags |= WAYPOINTFLAG_TELEPORT;
 		this.lastteleporttime = 0;

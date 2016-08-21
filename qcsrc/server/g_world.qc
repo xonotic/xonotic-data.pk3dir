@@ -1768,7 +1768,8 @@ float WinningCondition_RanOutOfSpawns()
 		}
 	));
 
-	FOREACH_ENTITY_CLASS("info_player_deathmatch", true, LAMBDA(
+	FOREACH_ENTITY_CLASS("info_player_deathmatch", true,
+	{
 		switch(it.team)
 		{
 			case NUM_TEAM_1: team1_score = 1; break;
@@ -1776,7 +1777,7 @@ float WinningCondition_RanOutOfSpawns()
 			case NUM_TEAM_3: team3_score = 1; break;
 			case NUM_TEAM_4: team4_score = 1; break;
 		}
-	));
+	});
 
 	ClearWinners();
 	if(team1_score + team2_score + team3_score + team4_score == 0)
