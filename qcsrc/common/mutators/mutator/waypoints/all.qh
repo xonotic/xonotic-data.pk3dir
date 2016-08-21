@@ -3,7 +3,7 @@
 
 #include "waypointsprites.qh"
 
-REGISTRY(Waypoints, BITS(6))
+REGISTRY(Waypoints, BITS(7))
 #define Waypoints_from(i) _Waypoints_from(i, WP_Null)
 REGISTER_REGISTRY(Waypoints)
 REGISTRY_CHECK(Waypoints)
