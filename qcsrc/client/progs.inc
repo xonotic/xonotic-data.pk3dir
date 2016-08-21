@@ -1,7 +1,7 @@
 #include <lib/_all.inc>
 
 #if XONOTIC
-#include "_all.inc"
+#include <client/_all.inc>
 #endif
 
 #include <ecs/_mod.inc>

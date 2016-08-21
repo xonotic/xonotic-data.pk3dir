@@ -1,7 +1,7 @@
 #include <lib/_all.inc>
 
 #if XONOTIC
-#include "_all.inc"
+#include <menu/_all.inc>
 #endif
 
 #if BUILD_MOD
