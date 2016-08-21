@@ -99,7 +99,8 @@ void dompoint_captured(entity this)
 	WaypointSprite_UpdateSprites(this.sprite, msg, WP_Null, WP_Null);
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	FOREACH_ENTITY_CLASS("dom_controlpoint", true, LAMBDA(
+	IL_EACH(g_dompoints, true,
+	{
 		if (autocvar_g_domination_point_amt)
 			points = autocvar_g_domination_point_amt;
 		else
@@ -116,7 +117,7 @@ void dompoint_captured(entity this)
 			case NUM_TEAM_4: pps_pink += points/wait_time; break;
 		}
 		total_pps += points/wait_time;
-	));
+	});
 
 	WaypointSprite_UpdateTeamRadar(this.sprite, RADARICON_DOMPOINT, colormapPaletteColor(this.goalentity.team - 1, 0));
 	WaypointSprite_Ping(this.sprite);
@@ -283,8 +284,9 @@ void dom_controlpoint_setup(entity this)
 	this.nextthink = time;
 	settouch(this, dompointtouch);
 	this.solid = SOLID_TRIGGER;
+	if(!this.flags & FL_ITEM)
+		IL_PUSH(g_items, this);
 	this.flags = FL_ITEM;
-	IL_PUSH(g_items, this);
 	setsize(this, '-32 -32 -32', '32 32 32');
 	setorigin(this, this.origin + '0 0 20');
 	droptofloor(this);
@@ -297,7 +299,7 @@ float total_controlpoints;
 void Domination_count_controlpoints()
 {
 	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
-	FOREACH_ENTITY_CLASS("dom_controlpoint", true,
+	IL_EACH(g_dompoints, true,
 	{
 		++total_controlpoints;
 		redowned += (it.goalentity.team == NUM_TEAM_1);
@@ -379,6 +381,19 @@ void Domination_RoundStart()
 }
 
 //go to best items, or control points you don't own
+void havocbot_goalrating_controlpoints(entity this, float ratingscale, vector org, float sradius)
+{
+	IL_EACH(g_dompoints, vdist((((it.absmin + it.absmax) * 0.5) - org), <, sradius),
+	{
+		if(it.cnt > -1) // this is just being fought
+			navigation_routerating(this, it, ratingscale, 5000);
+		else if(it.goalentity.cnt == 0) // unclaimed
+			navigation_routerating(this, it, ratingscale * 0.5, 5000);
+		else if(it.goalentity.team != this.team) // other team's point
+			navigation_routerating(this, it, ratingscale * 0.2, 5000);
+	});
+}
+
 void havocbot_role_dom(entity this)
 {
 	if(IS_DEAD(this))
@@ -483,6 +498,8 @@ spawnfunc(dom_controlpoint)
 	this.effects = this.effects | EF_LOWPRECISION;
 	if (autocvar_g_domination_point_fullbright)
 		this.effects |= EF_FULLBRIGHT;
+
+	IL_PUSH(g_dompoints, this);
 }
 
 /*QUAKED spawnfunc_dom_team (0 .5 .8) (-32 -32 -24) (32 32 32)
