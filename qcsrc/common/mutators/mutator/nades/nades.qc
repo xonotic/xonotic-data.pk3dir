@@ -730,10 +730,9 @@ void nade_boom(entity this)
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 	}
 
-	FOREACH_ENTITY_ENT(aiment, this,
+	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 	{
-		if(it.classname == "grapplinghook")
-			RemoveGrapplingHook(it.realowner);
+		RemoveGrapplingHook(it.realowner);
 	});
 
 	delete(this);
@@ -780,10 +779,9 @@ void nade_touch(entity this, entity toucher)
 		is_weapclip = 1;*/
 	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
-		FOREACH_ENTITY_ENT(aiment, this,
+		IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 		{
-			if(it.classname == "grapplinghook")
-				RemoveGrapplingHook(it.realowner);
+			RemoveGrapplingHook(it.realowner);
 		});
 		delete(this);
 		return;
