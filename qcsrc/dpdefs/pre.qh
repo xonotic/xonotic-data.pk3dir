@@ -8,3 +8,4 @@
 #define objerror builtin_objerror
 #define remove builtin_remove
 #define walkmove builtin_walkmove
+#define setcolor builtin_setcolor
