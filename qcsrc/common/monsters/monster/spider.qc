@@ -1,7 +1,7 @@
 #ifndef SPIDER_H
 #define SPIDER_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_SPIDER, M_Model("spider.dpm"));
 #endif
 
@@ -9,7 +9,7 @@ CLASS(Spider, Monster)
     ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
     ATTRIB(Spider, mins, vector, '-18 -18 -25');
     ATTRIB(Spider, maxs, vector, '18 18 30');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
 #endif
     ATTRIB(Spider, netname, string, "spider");
@@ -17,7 +17,7 @@ CLASS(Spider, Monster)
 ENDCLASS(Spider)
 
 REGISTER_MONSTER(SPIDER, NEW(Spider)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -249,7 +249,7 @@ METHOD(Spider, mr_death, bool(Spider this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 {
     TC(Spider, this);

@@ -1,7 +1,7 @@
 #ifndef MAGE_H
 #define MAGE_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_MAGE, M_Model("mage.dpm"));
 #endif
 
@@ -9,7 +9,7 @@ CLASS(Mage, Monster)
     ATTRIB(Mage, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Mage, mins, vector, '-36 -36 -24');
     ATTRIB(Mage, maxs, vector, '36 36 50');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Mage, m_model, Model, MDL_MON_MAGE);
 #endif
     ATTRIB(Mage, netname, string, "mage");
@@ -17,7 +17,7 @@ CLASS(Mage, Monster)
 ENDCLASS(Mage)
 
 REGISTER_MONSTER(MAGE, NEW(Mage)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -459,7 +459,7 @@ METHOD(Mage, mr_death, bool(Mage this, entity actor))
 }
 
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 {
     TC(Mage, this);

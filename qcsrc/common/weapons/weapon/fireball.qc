@@ -6,7 +6,7 @@ CLASS(Fireball, Weapon)
 /* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Fireball, wpcolor, vector, '1 0.5 0');
 /* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Fireball, m_model, Model, MDL_FIREBALL_ITEM);
 #endif
 /* crosshair */ ATTRIB(Fireball, w_crosshair, string, "gfx/crosshairfireball");

@@ -7,7 +7,7 @@ CLASS(HeavyMachineGun, Weapon)
 /* rating    */ ATTRIB(HeavyMachineGun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(HeavyMachineGun, wpcolor, vector, '0.5 0.5 0');
 /* modelname */ ATTRIB(HeavyMachineGun, mdl, string, "ok_hmg");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(HeavyMachineGun, m_model, Model, MDL_HMG_ITEM);
 #endif
 /* crosshair */ ATTRIB(HeavyMachineGun, w_crosshair, string, "gfx/crosshairuzi");

@@ -1,6 +1,6 @@
 #include "net.qh"
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 #include "nades.qh"
 

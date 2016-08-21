@@ -6,7 +6,7 @@ CLASS(MineLayer, Weapon)
 /* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(MineLayer, wpcolor, vector, '0.75 1 0');
 /* modelname */ ATTRIB(MineLayer, mdl, string, "minelayer");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(MineLayer, m_model, Model, MDL_MINELAYER_ITEM);
 #endif
 /* crosshair */ ATTRIB(MineLayer, w_crosshair, string, "gfx/crosshairminelayer");

@@ -7,7 +7,7 @@ float autocvar_g_nades_spread = 0.04;
 
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
-#ifndef MENUQC
+#ifdef GAMEQC
 entity Nade_TrailEffect(int proj, int nade_team)
 {
     switch (proj)

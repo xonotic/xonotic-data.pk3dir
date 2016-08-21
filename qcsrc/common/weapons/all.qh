@@ -18,7 +18,7 @@ WepSet ReadWepSet();
 
 #include "weapon.qh"
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #include "calculations.qh"
 #include <common/models/all.qh>
 #endif
@@ -322,7 +322,7 @@ STATIC_INIT(register_weapons_done)
     weaponorder_byid = strzone(substring(weaponorder_byid, 1, -1));
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 .entity weaponchild;
 .entity exteriorweaponentity;

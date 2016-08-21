@@ -1,7 +1,7 @@
 #ifndef WYVERN_H
 #define WYVERN_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_WYVERN, M_Model("wizard.mdl"));
 #endif
 
@@ -9,7 +9,7 @@ CLASS(Wyvern, Monster)
     ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE);
     ATTRIB(Wyvern, mins, vector, '-20 -20 -58');
     ATTRIB(Wyvern, maxs, vector, '20 20 20');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
 #endif
     ATTRIB(Wyvern, netname, string, "wyvern");
@@ -17,7 +17,7 @@ CLASS(Wyvern, Monster)
 ENDCLASS(Wyvern)
 
 REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -170,7 +170,7 @@ METHOD(Wyvern, mr_death, bool(Wyvern this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
 {
     TC(Wyvern, this);

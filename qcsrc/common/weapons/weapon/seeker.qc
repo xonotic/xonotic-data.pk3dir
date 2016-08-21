@@ -6,7 +6,7 @@ CLASS(Seeker, Weapon)
 /* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Seeker, wpcolor, vector, '0.5 1 0');
 /* modelname */ ATTRIB(Seeker, mdl, string, "seeker");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Seeker, m_model, Model, MDL_SEEKER_ITEM);
 #endif
 /* crosshair */ ATTRIB(Seeker, w_crosshair, string, "gfx/crosshairseeker");

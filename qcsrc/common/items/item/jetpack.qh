@@ -11,12 +11,12 @@
 .int m_itemid;
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 #endif
 
 REGISTER_ITEM(Jetpack, Powerup) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model                =   MDL_Jetpack_ITEM;
     this.m_itemid               =   IT_JETPACK;
 #endif
@@ -31,12 +31,12 @@ REGISTER_ITEM(Jetpack, Powerup) {
 #endif
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
 #endif
 
 REGISTER_ITEM(JetpackFuel, Ammo) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model    =   MDL_JetpackFuel_ITEM;
 #endif
     this.m_name     =   "Fuel";
@@ -47,12 +47,12 @@ REGISTER_ITEM(JetpackFuel, Ammo) {
 #endif
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
 #endif
 
 REGISTER_ITEM(JetpackRegen, Powerup) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model                =   MDL_JetpackRegen_ITEM;
 #endif
     this.m_name                 =   "Fuel regenerator";

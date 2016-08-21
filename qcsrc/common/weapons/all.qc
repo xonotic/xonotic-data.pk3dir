@@ -45,7 +45,7 @@
     #include <server/portals.qh>
     #include <server/g_hook.qh>
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 	#include "calculations.qc"
 #endif
 #ifdef SVQC
@@ -276,7 +276,7 @@ string W_Model(string w_mdl)
 	return M_ARGV(1, string);
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 {
 	switch (algn)
@@ -548,7 +548,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 }
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 REGISTER_NET_TEMP(wframe)
 #ifdef CSQC

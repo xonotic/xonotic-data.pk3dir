@@ -7,7 +7,7 @@ CLASS(RocketPropelledChainsaw, Weapon)
 /* rating    */ ATTRIB(RocketPropelledChainsaw, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(RocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
 /* modelname */ ATTRIB(RocketPropelledChainsaw, mdl, string, "ok_rl");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(RocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
 #endif
 /* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair, string, "gfx/crosshairrocketlauncher");

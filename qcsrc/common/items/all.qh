@@ -29,6 +29,6 @@ GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
     }
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 string Item_Model(string item_mdl);
 #endif

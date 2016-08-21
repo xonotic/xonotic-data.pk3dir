@@ -1,7 +1,7 @@
 #ifndef ZOMBIE_H
 #define ZOMBIE_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_ZOMBIE, M_Model("zombie.dpm"));
 #endif
 
@@ -9,7 +9,7 @@ CLASS(Zombie, Monster)
     ATTRIB(Zombie, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RIDE);
     ATTRIB(Zombie, mins, vector, '-18 -18 -25');
     ATTRIB(Zombie, maxs, vector, '18 18 47');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
 #endif
     ATTRIB(Zombie, netname, string, "zombie");
@@ -17,7 +17,7 @@ CLASS(Zombie, Monster)
 ENDCLASS(Zombie)
 
 REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -180,7 +180,7 @@ METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
 {
     TC(Zombie, this);

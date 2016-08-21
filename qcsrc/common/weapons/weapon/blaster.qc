@@ -6,7 +6,7 @@ CLASS(Blaster, Weapon)
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
 /* modelname */ ATTRIB(Blaster, mdl, string, "laser");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
 #endif
 /* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");

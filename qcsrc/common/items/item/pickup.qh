@@ -27,7 +27,7 @@ const int BOT_PICKUP_RATING_HIGH = 10000;
 #include <common/t_items.qh>
 
 CLASS(Pickup, GameItem)
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Pickup, m_model, Model);
     ATTRIB(Pickup, m_sound, Sound, SND_ITEMPICKUP);
 #endif

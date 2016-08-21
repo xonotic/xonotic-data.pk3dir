@@ -1298,7 +1298,7 @@ int MapInfo_ForbiddenFlags()
 {
 	int f = MAPINFO_FLAG_FORBIDDEN;
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	if (!cvar("g_maplist_allow_hidden"))
 #endif
 		f |= MAPINFO_FLAG_HIDDEN;

@@ -6,7 +6,7 @@ CLASS(Crylink, Weapon)
 /* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Crylink, wpcolor, vector, '1 0.5 1');
 /* modelname */ ATTRIB(Crylink, mdl, string, "crylink");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Crylink, m_model, Model, MDL_CRYLINK_ITEM);
 #endif
 /* crosshair */ ATTRIB(Crylink, w_crosshair, string, "gfx/crosshaircrylink");

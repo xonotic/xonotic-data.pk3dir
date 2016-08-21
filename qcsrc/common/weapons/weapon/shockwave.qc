@@ -6,7 +6,7 @@ CLASS(Shockwave, Weapon)
 /* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Shockwave, m_model, Model, MDL_SHOCKWAVE_ITEM);
 #endif
 /* crosshair */ ATTRIB(Shockwave, w_crosshair, string, "gfx/crosshairshotgun");

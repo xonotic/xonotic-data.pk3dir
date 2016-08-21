@@ -23,7 +23,7 @@ CLASS(Bumblebee, Vehicle)
 ENDCLASS(Bumblebee)
 REGISTER_VEHICLE(BUMBLEBEE, NEW(Bumblebee));
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	MODEL(VEH_BUMBLEBEE_GUNCOCKPIT, "models/vehicles/wakizashi_cockpit.dpm");
 #endif
 

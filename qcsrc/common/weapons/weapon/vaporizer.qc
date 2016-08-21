@@ -6,7 +6,7 @@ CLASS(Vaporizer, Weapon)
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.5 1 1');
 /* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);
 #endif
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair, string, "gfx/crosshairminstanex");

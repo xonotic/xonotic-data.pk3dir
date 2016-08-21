@@ -134,7 +134,7 @@ ENDCLASS(Weapon)
 CLASS(WeaponPickup, Pickup)
     ATTRIB(WeaponPickup, m_weapon, Weapon);
     ATTRIB(WeaponPickup, m_name, string);
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(WeaponPickup, m_sound, Sound, SND_WEAPONPICKUP);
 #endif
 #ifdef SVQC
@@ -146,7 +146,7 @@ CLASS(WeaponPickup, Pickup)
         CONSTRUCT(WeaponPickup);
         this.m_weapon = w;
         this.m_name = w.m_name;
-#ifndef MENUQC
+#ifdef GAMEQC
         this.m_model = w.m_model;
 #endif
 #ifdef SVQC

@@ -13,12 +13,12 @@ ENDCLASS(Ammo)
     #include <common/t_items.qh>
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
 #endif
 
 REGISTER_ITEM(Bullets, Ammo) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model    =   MDL_Bullets_ITEM;
 #endif
     this.m_name     =   "bullets";
@@ -29,12 +29,12 @@ REGISTER_ITEM(Bullets, Ammo) {
 #endif
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
 #endif
 
 REGISTER_ITEM(Cells, Ammo) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model    =   MDL_Cells_ITEM;
 #endif
     this.m_name     =   "cells";
@@ -45,12 +45,12 @@ REGISTER_ITEM(Cells, Ammo) {
 #endif
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
 #endif
 
 REGISTER_ITEM(Plasma, Ammo) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model    =   MDL_Plasma_ITEM;
 #endif
     this.m_name     =   "plasma";
@@ -61,12 +61,12 @@ REGISTER_ITEM(Plasma, Ammo) {
 #endif
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
 #endif
 
 REGISTER_ITEM(Rockets, Ammo) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model    =   MDL_Rockets_ITEM;
 #endif
     this.m_name     =   "rockets";
@@ -77,12 +77,12 @@ REGISTER_ITEM(Rockets, Ammo) {
 #endif
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
 #endif
 
 REGISTER_ITEM(Shells, Ammo) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model    =   MDL_Shells_ITEM;
 #endif
     this.m_name     =   "shells";

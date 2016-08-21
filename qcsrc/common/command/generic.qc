@@ -6,7 +6,7 @@
 
 #include "../mapinfo.qh"
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	#include "../notifications/all.qh"
 #endif
 
@@ -372,7 +372,7 @@ void GenericCommand_restartnotifs(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			#ifndef MENUQC
+			#ifdef GAMEQC
 			int NOTIF_ANNCE_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE,   { ++NOTIF_ANNCE_COUNT;  });
 			int NOTIF_INFO_COUNT    = 0; FOREACH(Notifications, it.nent_type == MSG_INFO,    { ++NOTIF_INFO_COUNT;   });
 			int NOTIF_CENTER_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER,  { ++NOTIF_CENTER_COUNT; });

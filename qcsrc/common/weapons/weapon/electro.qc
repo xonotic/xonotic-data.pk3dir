@@ -6,7 +6,7 @@ CLASS(Electro, Weapon)
 /* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Electro, wpcolor, vector, '0 0.5 1');
 /* modelname */ ATTRIB(Electro, mdl, string, "electro");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Electro, m_model, Model, MDL_ELECTRO_ITEM);
 #endif
 /* crosshair */ ATTRIB(Electro, w_crosshair, string, "gfx/crosshairelectro");

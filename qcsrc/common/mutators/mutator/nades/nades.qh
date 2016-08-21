@@ -51,7 +51,7 @@ Nade Nade_FromProjectile(int proj)
     return NADE_TYPE_Null;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #include "effects.inc"
 #endif
 

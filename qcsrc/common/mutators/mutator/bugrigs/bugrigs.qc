@@ -1,6 +1,6 @@
 #include "bugrigs.qh"
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 #ifdef SVQC
 	#include <server/antilag.qh>

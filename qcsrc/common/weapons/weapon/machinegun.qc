@@ -6,7 +6,7 @@ CLASS(MachineGun, Weapon)
 /* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(MachineGun, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(MachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);
 #endif
 /* crosshair */ ATTRIB(MachineGun, w_crosshair, string, "gfx/crosshairuzi");

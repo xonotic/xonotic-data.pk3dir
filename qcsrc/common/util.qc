@@ -18,7 +18,7 @@
     #include "mapinfo.qh"
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 /*
 * Get "real" origin, in worldspace, even if ent is attached to something else.
 */
@@ -55,8 +55,7 @@ string wordwrap(string s, float l)
 	return r;
 }
 
-#ifndef MENUQC
-#ifndef CSQC
+#ifdef SVQC
 entity _wordwrap_buffer_sprint_ent;
 void wordwrap_buffer_sprint(string s)
 {
@@ -79,7 +78,6 @@ void wordwrap_sprint(entity to, string s, float l)
 	wordwrap_buffer = "";
 	return;
 }
-#endif
 #endif
 
 #ifndef SVQC
@@ -352,7 +350,7 @@ STATIC_INIT(compressShortVector)
 	}
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector dvz)
 {
 	traceline(v0, v0 + dvx, true, forent); if(trace_fraction < 1) return 0;
@@ -448,7 +446,7 @@ string swapInPriorityList(string order, float i, float j)
 	return order;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 void get_mi_min_max(float mode)
 {
 	vector mi, ma;
@@ -1113,7 +1111,7 @@ vector decompressShotOrigin(int f)
 	return v;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
@@ -1228,7 +1226,7 @@ float get_model_parameters(string m, float sk)
 	}
 	get_model_parameters_fixbone = 0;
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	MUTATOR_CALLHOOK(ClearModelParams);
 #endif
 
@@ -1293,7 +1291,7 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
-	#ifndef MENUQC
+	#ifdef GAMEQC
 		MUTATOR_CALLHOOK(GetModelParams, c, s);
 	#endif
 		for(int i = 0; i < MAX_AIM_BONES; ++i)
@@ -1386,7 +1384,7 @@ void m_shutdown()
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 .float skeleton_bones_index;
 void Skeleton_SetBones(entity e)
 {
@@ -1464,7 +1462,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector animfixfps(entity e, vector a, vector b)
 {
 	// multi-frame anim: keep as-is
@@ -1483,7 +1481,7 @@ vector animfixfps(entity e, vector a, vector b)
 }
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 Notification Announcer_PickNumber(int type, int num)
 {
     return = NULL;
@@ -1595,7 +1593,7 @@ Notification Announcer_PickNumber(int type, int num)
 }
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents)
 {
 	switch(nativecontents)

@@ -9,13 +9,13 @@ float instagib_respawntimejitter_ammo = 0;
 GETTER(float, instagib_respawntime_ammo)
 GETTER(float, instagib_respawntimejitter_ammo)
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(VaporizerCells_ITEM, Item_Model("a_cells.md3"));
 SOUND(VaporizerCells, "misc/itempickup");
 #endif
 
 REGISTER_ITEM(VaporizerCells, Ammo) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model                =   MDL_VaporizerCells_ITEM;
     this.m_sound                =   SND_VaporizerCells;
 #endif
@@ -29,13 +29,13 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
 #endif
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));
 SOUND(ExtraLife, "misc/megahealth");
 #endif
 
 REGISTER_ITEM(ExtraLife, Powerup) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model                =   MDL_ExtraLife_ITEM;
     this.m_sound                =   SND_ExtraLife;
 #endif
@@ -47,13 +47,13 @@ REGISTER_ITEM(ExtraLife, Powerup) {
     this.m_itemid               =   IT_NAILS;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(Invisibility_ITEM, Item_Model("g_strength.md3"));
 SOUND(Invisibility, "misc/powerup");
 #endif
 
 REGISTER_ITEM(Invisibility, Powerup) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model            =   MDL_Invisibility_ITEM;
     this.m_sound            =   SND_Invisibility;
 #endif
@@ -65,13 +65,13 @@ REGISTER_ITEM(Invisibility, Powerup) {
     this.m_itemid           =   IT_STRENGTH;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(Speed_ITEM, Item_Model("g_invincible.md3"));
 SOUND(Speed, "misc/powerup_shield");
 #endif
 
 REGISTER_ITEM(Speed, Powerup) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.m_model            =   MDL_Speed_ITEM;
     this.m_sound            =   SND_Speed;
 #endif

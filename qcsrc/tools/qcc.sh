@@ -39,14 +39,14 @@ $(return >/dev/null 2>&1) || {
     IN=$3
 
     case ${MODE} in
-        client) PROG=CSQC
+        client) DEFS="-DGAMEQC -DCSQC"
         ;;
-        menu) PROG=MENUQC
+        menu) DEFS="-DMENUQC"
         ;;
-        server) PROG=SVQC
+        server) DEFS="-DGAMEQC -DSVQC"
         ;;
     esac
 
-    qpp ${IN} ${OUT} -I. ${QCCIDENT} ${QCCDEFS} -D${PROG} > ${WORKDIR}/${MODE}.qc
+    qpp ${IN} ${OUT} -I. ${QCCIDENT} ${QCCDEFS} ${DEFS} > ${WORKDIR}/${MODE}.qc
     qcc ${QCCFLAGS} -o ${OUT} ../${WORKDIR}/${MODE}.qc
 }
