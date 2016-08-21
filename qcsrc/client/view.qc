@@ -293,7 +293,7 @@ void viewmodel_draw(entity this)
 	else if (wasinvehicle) a = 1;
 	wasinvehicle = invehicle;
 	Weapon wep = activeweapon;
-	int c = stof(getplayerkeyvalue(current_player, "colors"));
+	int c = entcs_GetClientColors(current_player);
 	vector g = weaponentity_glowmod(wep, c);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)

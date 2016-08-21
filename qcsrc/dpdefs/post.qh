@@ -8,6 +8,7 @@
 #undef objerror
 #undef remove
 #undef walkmove
+#undef setcolor
 
 #ifdef MENUQC
 	#define NULL (0, null_entity)

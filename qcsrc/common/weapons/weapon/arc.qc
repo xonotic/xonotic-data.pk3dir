@@ -1398,7 +1398,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 	{
 		this.beam_type = ReadByte();
 
-		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true) : '1 1 1');
+		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true) : '1 1 1');
 		switch(this.beam_type)
 		{
 			case ARC_BT_MISS:

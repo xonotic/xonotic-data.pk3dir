@@ -11,3 +11,5 @@
 #include "defs.qh"
 #include "main.qh"
 #include "miscfunctions.qh"
+
+#include <common/ent_cs.qh>
