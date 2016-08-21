@@ -1,3 +1,4 @@
+#include "crylink.qh"
 #ifndef IMPLEMENTATION
 CLASS(Crylink, Weapon)
 /* ammotype  */ ATTRIB(Crylink, ammo_field, .int, ammo_cells);

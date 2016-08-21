@@ -1,3 +1,4 @@
+#include "porto.qh"
 #ifndef IMPLEMENTATION
 CLASS(PortoLaunch, Weapon)
 /* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none);

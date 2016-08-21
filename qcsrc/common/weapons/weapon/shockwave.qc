@@ -1,3 +1,4 @@
+#include "shockwave.qh"
 #ifndef IMPLEMENTATION
 CLASS(Shockwave, Weapon)
 /* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none);

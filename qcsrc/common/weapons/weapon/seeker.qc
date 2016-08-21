@@ -1,3 +1,4 @@
+#include "seeker.qh"
 #ifndef IMPLEMENTATION
 CLASS(Seeker, Weapon)
 /* ammotype  */ ATTRIB(Seeker, ammo_field, .int, ammo_rockets);

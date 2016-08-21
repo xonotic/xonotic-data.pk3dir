@@ -1,3 +1,4 @@
+#include "speaker.qh"
 #ifdef SVQC
 // TODO add a way to do looped sounds with sound(); then complete this entity
 void target_speaker_use_off(entity this, entity actor, entity trigger);

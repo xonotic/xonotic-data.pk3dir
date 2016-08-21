@@ -1,3 +1,4 @@
+#include "devastator.qh"
 #ifndef IMPLEMENTATION
 CLASS(Devastator, Weapon)
 /* ammotype  */ ATTRIB(Devastator, ammo_field, .int, ammo_rockets);

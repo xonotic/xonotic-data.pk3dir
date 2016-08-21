@@ -1,3 +1,4 @@
+#include "blaster.qh"
 #ifndef IMPLEMENTATION
 CLASS(Blaster, Weapon)
 /* ammotype  */ //ATTRIB(Blaster, ammo_field, .int, ammo_none);

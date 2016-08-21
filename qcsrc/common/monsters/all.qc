@@ -1,3 +1,4 @@
+#include "all.qh"
 #ifndef MONSTERS_ALL_C
 #define MONSTERS_ALL_C
 

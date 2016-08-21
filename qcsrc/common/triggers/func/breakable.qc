@@ -1,3 +1,4 @@
+#include "breakable.qh"
 #ifdef SVQC
 
 #include <server/g_subs.qh>

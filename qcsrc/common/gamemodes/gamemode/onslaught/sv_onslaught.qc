@@ -1,3 +1,4 @@
+#include "sv_onslaught.qh"
 #include "sv_controlpoint.qh"
 #include "sv_generator.qh"
 

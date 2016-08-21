@@ -1,3 +1,4 @@
+#include "electro.qh"
 #ifndef IMPLEMENTATION
 CLASS(Electro, Weapon)
 /* ammotype  */ ATTRIB(Electro, ammo_field, .int, ammo_cells);

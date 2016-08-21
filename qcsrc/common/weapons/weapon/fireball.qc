@@ -1,3 +1,4 @@
+#include "fireball.qh"
 #ifndef IMPLEMENTATION
 CLASS(Fireball, Weapon)
 /* ammotype  */ //ATTRIB(Fireball, ammo_field, .int, ammo_none);

@@ -1,7 +1,6 @@
+#include "all.qh"
 #ifndef WEAPONS_ALL_C
 #define WEAPONS_ALL_C
-
-#include "all.qh"
 
 #if defined(CSQC)
 	#include <client/defs.qh>

@@ -1,3 +1,4 @@
+#include "hlac.qh"
 #ifndef IMPLEMENTATION
 CLASS(HLAC, Weapon)
 /* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells);

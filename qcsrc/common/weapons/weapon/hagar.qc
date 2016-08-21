@@ -1,3 +1,4 @@
+#include "hagar.qh"
 #ifndef IMPLEMENTATION
 CLASS(Hagar, Weapon)
 /* ammotype  */ ATTRIB(Hagar, ammo_field, .int, ammo_rockets);

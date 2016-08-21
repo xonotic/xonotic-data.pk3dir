@@ -1,13 +1,12 @@
+#include "mapinfo.qh"
 #if defined(CSQC)
     #include "../client/defs.qh"
     #include "util.qh"
     #include <common/weapons/_all.qh>
-    #include "mapinfo.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "util.qh"
     #include <common/monsters/all.qh>
-    #include "mapinfo.qh"
 #endif
 
 // generic string stuff

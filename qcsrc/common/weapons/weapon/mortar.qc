@@ -1,3 +1,4 @@
+#include "mortar.qh"
 #ifndef IMPLEMENTATION
 CLASS(Mortar, Weapon)
 /* ammotype  */ ATTRIB(Mortar, ammo_field, .int, ammo_rockets);

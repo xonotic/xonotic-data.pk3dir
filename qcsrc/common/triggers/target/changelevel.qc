@@ -1,3 +1,4 @@
+#include "changelevel.qh"
 #ifdef SVQC
 .string chmap, gametype;
 .entity chlevel_targ;

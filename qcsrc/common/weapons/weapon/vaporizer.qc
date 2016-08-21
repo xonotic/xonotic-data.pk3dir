@@ -1,3 +1,4 @@
+#include "vaporizer.qh"
 #ifndef IMPLEMENTATION
 CLASS(Vaporizer, Weapon)
 /* ammotype  */ ATTRIB(Vaporizer, ammo_field, .int, ammo_cells);

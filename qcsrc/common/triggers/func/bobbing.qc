@@ -1,3 +1,4 @@
+#include "bobbing.qh"
 #ifdef SVQC
 .float height;
 void func_bobbing_controller_think(entity this)

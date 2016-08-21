@@ -1,3 +1,4 @@
+#include "shotgun.qh"
 #ifndef IMPLEMENTATION
 CLASS(Shotgun, Weapon)
 /* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells);

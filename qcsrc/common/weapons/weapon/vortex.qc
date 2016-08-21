@@ -1,3 +1,4 @@
+#include "vortex.qh"
 #ifndef IMPLEMENTATION
 CLASS(Vortex, Weapon)
 /* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells);

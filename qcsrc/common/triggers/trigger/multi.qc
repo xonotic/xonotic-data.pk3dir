@@ -1,3 +1,4 @@
+#include "multi.qh"
 // NOTE: also contains trigger_once at bottom
 
 #ifdef SVQC

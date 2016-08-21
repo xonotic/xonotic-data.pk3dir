@@ -1,3 +1,4 @@
+#include "minelayer.qh"
 #ifndef IMPLEMENTATION
 CLASS(MineLayer, Weapon)
 /* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets);

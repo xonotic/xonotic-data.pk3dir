@@ -1,3 +1,4 @@
+#include "gravity.qh"
 #ifdef SVQC
 .entity trigger_gravity_check;
 void trigger_gravity_remove(entity own)

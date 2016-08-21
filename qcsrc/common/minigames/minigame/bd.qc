@@ -1,3 +1,4 @@
+#include "bd.qh"
 REGISTER_MINIGAME(bd, "Bulldozer");
 
 const int BD_TURN_MOVE  = 0x0100; // player must move the bulldozer

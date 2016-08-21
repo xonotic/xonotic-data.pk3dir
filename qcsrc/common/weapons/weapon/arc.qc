@@ -1,3 +1,4 @@
+#include "arc.qh"
 #ifndef IMPLEMENTATION
 CLASS(Arc, Weapon)
 /* ammotype  */ ATTRIB(Arc, ammo_field, .int, ammo_cells);

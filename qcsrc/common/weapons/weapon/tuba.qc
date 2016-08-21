@@ -1,3 +1,4 @@
+#include "tuba.qh"
 #ifndef IMPLEMENTATION
 CLASS(Tuba, Weapon)
 /* impulse   */ ATTRIB(Tuba, impulse, int, 1);

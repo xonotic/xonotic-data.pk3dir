@@ -1,3 +1,4 @@
+#include "hook.qh"
 #ifndef IMPLEMENTATION
 CLASS(Hook, Weapon)
 /* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel);

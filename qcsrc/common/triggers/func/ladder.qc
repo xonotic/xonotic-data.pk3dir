@@ -1,3 +1,4 @@
+#include "ladder.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_LADDER)
 
 void func_ladder_touch(entity this, entity toucher)
