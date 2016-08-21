@@ -578,12 +578,12 @@ IMPULSE(navwaypoint_unreachable)
 	if (j) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)\n", j);
 
 	j = 0;
-	FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
+	IL_EACH(g_items, true,
 	{
 		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 		it.colormod = '0.5 0.5 0.5';
 	});
-	FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
+	IL_EACH(g_items, true,
 	{
 		if (navigation_findnearestwaypoint(it, false)) continue;
 		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
@@ -594,7 +594,7 @@ IMPULSE(navwaypoint_unreachable)
 	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)\n", j);
 
 	j = 0;
-	FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
+	IL_EACH(g_items, true,
 	{
 		if (navigation_findnearestwaypoint(it, true)) continue;
 		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");

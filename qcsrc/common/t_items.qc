@@ -880,9 +880,8 @@ void Item_FindTeam(entity this)
 		// marker for item team search
 		LOG_TRACE("Initializing item team ", ftos(this.team));
 		RandomSelection_Init();
-		FOREACH_ENTITY_FLOAT(team, this.team,
+		IL_EACH(g_items, it.team == this.team,
 		{
-			if(it.flags & FL_ITEM)
 			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 				RandomSelection_Add(it, 0, string_null, it.cnt, 0);
 		});
@@ -891,9 +890,8 @@ void Item_FindTeam(entity this)
 		e.state = 0;
 		Item_Show(e, 1);
 
-		FOREACH_ENTITY_FLOAT(team, this.team,
+		IL_EACH(g_items, it.team == this.team,
 		{
-			if(it.flags & FL_ITEM)
 			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 			{
 				if(it != e)
@@ -1076,6 +1074,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.weapons = WepSet_FromWeapon(Weapons_from(weaponid));
 
 	this.flags = FL_ITEM | itemflags;
+	IL_PUSH(g_items, this);
 
 	if(MUTATOR_CALLHOOK(FilterItem, this)) // error means we do not want the item
 	{

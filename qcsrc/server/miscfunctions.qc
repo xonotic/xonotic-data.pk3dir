@@ -1206,10 +1206,15 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
 				break;
 	if(!sp)
 	{
-		for(sp = NULL; (sp = findflags(sp, flags, FL_ITEM)); )
-			if(checkpvs(mstart, sp))
-				if((traceline(mstart, sp.origin + (sp.mins + sp.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
-					break;
+		IL_EACH(g_items, checkpvs(mstart, it),
+		{
+			if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
+			{
+				sp = it;
+				break;
+			}
+		});
+
 		if(!sp)
 			continue;
 	}

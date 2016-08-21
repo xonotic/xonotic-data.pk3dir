@@ -1182,7 +1182,7 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 	LOG_DEBUG(this.netname, " needs armor ", ftos(needarmor));
 
 	// See what is around
-	FOREACH_ENTITY_FLOAT(bot_pickup, true,
+	IL_EACH(g_items, it.bot_pickup,
 	{
 		// gather health and armor only
 		if (it.solid)

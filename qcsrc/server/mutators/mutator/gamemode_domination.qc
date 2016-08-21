@@ -284,6 +284,7 @@ void dom_controlpoint_setup(entity this)
 	settouch(this, dompointtouch);
 	this.solid = SOLID_TRIGGER;
 	this.flags = FL_ITEM;
+	IL_PUSH(g_items, this);
 	setsize(this, '-32 -32 -32', '32 32 32');
 	setorigin(this, this.origin + '0 0 20');
 	droptofloor(this);

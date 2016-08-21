@@ -446,3 +446,6 @@ STATIC_INIT(g_mines) { g_mines = IL_NEW(); }
 
 IntrusiveList g_projectiles;
 STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }
+
+IntrusiveList g_items;
+STATIC_INIT(g_items) { g_items = IL_NEW(); }

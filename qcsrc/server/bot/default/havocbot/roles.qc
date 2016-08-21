@@ -19,7 +19,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 
-	FOREACH_ENTITY_FLOAT(bot_pickup, true,
+	IL_EACH(g_items, it.bot_pickup,
 	{
 		o = (it.absmin + it.absmax) * 0.5;
 		friend_distance = 10000; enemy_distance = 10000;

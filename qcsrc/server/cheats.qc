@@ -913,7 +913,7 @@ void Drag_Finish(entity dragger)
 			break;
 	}
 
-	if((draggee.flags & FL_ITEM) && (vlen(draggee.velocity) < 32))
+	if((draggee.flags & FL_ITEM) && (vdist(draggee.velocity, <, 32)))
 	{
 		draggee.velocity = '0 0 0';
 		SET_ONGROUND(draggee); // floating items are FUN
