@@ -28,8 +28,6 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 void target_voicescript_next(entity pl);
 void target_voicescript_clear(entity pl);
 
-void SUB_ForEachTarget_Init();
-void SUB_ForEachTarget(entity s, void(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata);
 void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger);
 #endif
 
