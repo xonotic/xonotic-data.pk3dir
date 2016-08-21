@@ -551,7 +551,7 @@ IMPULSE(navwaypoint_unreachable)
 	if (m) LOG_INFOF("%d waypoints have been marked total\n", m);
 
 	j = 0;
-	FOREACH_ENTITY_CLASS("info_player_deathmatch", true,
+	IL_EACH(g_spawnpoints, true,
 	{
 		vector org = it.origin;
 		tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);

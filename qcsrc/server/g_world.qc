@@ -555,6 +555,8 @@ spawnfunc(__init_dedicated_server)
 	static_init_late();
 	static_init_precache();
 
+	IL_PUSH(g_spawnpoints, e); // just incase
+
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
@@ -1768,7 +1770,7 @@ float WinningCondition_RanOutOfSpawns()
 		}
 	));
 
-	FOREACH_ENTITY_CLASS("info_player_deathmatch", true,
+	IL_EACH(g_spawnpoints, true,
 	{
 		switch(it.team)
 		{

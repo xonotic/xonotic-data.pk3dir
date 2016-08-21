@@ -600,7 +600,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 		return 0;
 	}
 
-	IL_EACH("saved_cvar_value", it.netname == tmp_cvar,
+	IL_EACH(g_saved_cvars, it.netname == tmp_cvar,
 	{
 		created_saved_value = -1; // skip creation
 		break; // no need to continue
