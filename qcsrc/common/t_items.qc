@@ -835,9 +835,8 @@ LABEL(pickup)
 		if(this.team)
 		{
 			RandomSelection_Init();
-			FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
+			IL_EACH(g_items, it.team == this.team,
 			{
-				if(it.team == this.team)
 				if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 				{
 					Item_Show(it, -1);
@@ -1446,10 +1445,9 @@ void target_items_use(entity this, entity actor, entity trigger)
 		EXACTTRIGGER_TOUCH(this, trigger);
 	}
 
-	FOREACH_ENTITY_ENT(enemy, actor,
+	IL_EACH(g_items, it.enemy == actor && it.classname == "droppedweapon",
 	{
-		if(it.classname == "droppedweapon")
-			delete(it);
+		delete(it);
 	});
 
 	if(GiveItems(actor, 0, tokenize_console(this.netname)))

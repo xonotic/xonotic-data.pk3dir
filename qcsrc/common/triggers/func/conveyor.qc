@@ -1,6 +1,9 @@
 #include "conveyor.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_CONVEYOR)
 
+IntrusiveList g_conveyed;
+STATIC_INIT(g_conveyed) { g_conveyed = IL_NEW(); }
+
 void conveyor_think(entity this)
 {
 #ifdef CSQC
@@ -11,9 +14,10 @@ void conveyor_think(entity this)
 #endif
 
 	// set mythis as current conveyor where possible
-	FOREACH_ENTITY_ENT(conveyor, this,
+	IL_EACH(g_conveyed, it.conveyor == this,
 	{
 		it.conveyor = NULL;
+		IL_REMOVE(g_conveyed, it);
 	});
 
 	if(this.state)
@@ -29,10 +33,14 @@ void conveyor_think(entity this)
 			}
 			if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
 				if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
+				{
+					if(!it.conveyor)
+						IL_PUSH(g_conveyed, it);
 					it.conveyor = this;
+				}
 		});
 
-		FOREACH_ENTITY_ENT(conveyor, this,
+		IL_EACH(g_conveyed, it.conveyor == this,
 		{
 			if(IS_CLIENT(it)) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics	continue;
