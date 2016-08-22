@@ -382,16 +382,28 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
     TC(Mage, thismon);
     bool need_help = false;
 
-    FOREACH_ENTITY_FLOAT(iscreature, true,
+    FOREACH_CLIENT(IS_PLAYER(it) && it != actor,
     {
-        if(it != actor)
-        if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+    	if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
         if(M_Mage_Defend_Heal_Check(actor, it))
         {
             need_help = true;
             break;
         }
     });
+
+    if(!need_help)
+    {
+    	IL_EACH(g_monsters, it != actor,
+    	{
+    		if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+	        if(M_Mage_Defend_Heal_Check(actor, it))
+	        {
+	            need_help = true;
+	            break;
+	        }
+    	});
+    }
 
     if(actor.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
     if(time >= actor.attack_finished_single[0])

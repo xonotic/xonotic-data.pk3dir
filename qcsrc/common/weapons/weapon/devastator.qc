@@ -415,35 +415,6 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-#if 0
-METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
-{
-    entity this = actor;
-    // aim and decide to fire if appropriate
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
-    if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
-    {
-        // decide whether to detonate rockets
-        entity missile, targetlist, targ;
-        targetlist = findchainfloat(bot_attack, true);
-        for(missile = NULL; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == actor)
-        {
-            targ = targetlist;
-            while(targ)
-            {
-                if(targ != missile.realowner && vlen(targ.origin - missile.origin) < WEP_CVAR(devastator, radius))
-                {
-                    PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-                    break;
-                }
-                targ = targ.chain;
-            }
-        }
-
-        if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
-    }
-}
-#else
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
 {
     // aim and decide to fire if appropriate
@@ -522,7 +493,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
         if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
     }
 }
-#endif
+
 METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload

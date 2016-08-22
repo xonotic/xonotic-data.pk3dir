@@ -74,10 +74,9 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 
 	RadiusDamage(this, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, NULL, NULL, autocvar_g_monster_wyvern_attack_fireball_radius, this.projectiledeathtype, NULL);
 
-	FOREACH_ENTITY_FLOAT(takedamage, DAMAGE_AIM,
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_wyvern_attack_fireball_radius, it.takedamage == DAMAGE_AIM,
 	{
-		if(vdist(it.origin - this.origin, <=, autocvar_g_monster_wyvern_attack_fireball_radius))
-			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
+		Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
 	});
 
 	delete(this);
