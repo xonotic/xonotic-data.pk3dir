@@ -278,6 +278,7 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	gren.portal_id = time;
 	actor.porto_current = gren;

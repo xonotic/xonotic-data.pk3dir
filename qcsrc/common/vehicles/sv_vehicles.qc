@@ -249,6 +249,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;

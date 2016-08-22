@@ -479,6 +479,7 @@ entity turret_projectile(entity actor, Sound _snd, float _size, float _health, f
 	proj.velocity		= normalize(actor.tur_shotdir_updated + randomvec() * actor.shot_spread) * actor.shot_speed;
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.enemy		  = actor.enemy;
 	proj.totalfrags	 = _death;
 	PROJECTILE_MAKETRIGGER(proj);

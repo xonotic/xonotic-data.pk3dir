@@ -97,6 +97,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	missile.nextthink = time;
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 
 	CSQCProjectile(missile, true, PROJECTILE_RPC, false);
 

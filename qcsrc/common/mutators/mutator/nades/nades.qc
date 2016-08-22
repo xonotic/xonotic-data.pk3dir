@@ -293,6 +293,7 @@ void nade_napalm_ball(entity this)
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	//CSQCProjectile(proj, true, PROJECTILE_NAPALM_FIRE, true);
@@ -351,6 +352,7 @@ void nade_napalm_boom(entity this)
 	fountain.origin = this.origin;
 	fountain.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, napalm_fountain_think);
 	fountain.nextthink = time;
@@ -942,6 +944,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.angles = vectoangles(_nade.velocity);
 	_nade.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, _nade);
+	IL_PUSH(g_bot_dodge, _nade);
 	_nade.projectiledeathtype = DEATH_NADE.m_id;
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
