@@ -20,6 +20,8 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	string message_save;
 
 	this.health = 10000;
+	if(!this.bot_attack)
+		IL_PUSH(g_bot_targets, this);
 	this.bot_attack = true;
 
 	// exit if still moving around...

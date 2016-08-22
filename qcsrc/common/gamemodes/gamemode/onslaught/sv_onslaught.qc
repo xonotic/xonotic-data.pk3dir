@@ -220,6 +220,8 @@ void onslaught_updatelinks()
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_NO;
+				if(l.goalentity.bot_attack)
+					IL_REMOVE(g_bot_targets, l.goalentity);
 				l.goalentity.bot_attack = false;
 			}
 		}
@@ -229,6 +231,8 @@ void onslaught_updatelinks()
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_AIM;
+				if(!l.goalentity.bot_attack)
+					IL_PUSH(g_bot_targets, l.goalentity);
 				l.goalentity.bot_attack = true;
 			}
 		}
