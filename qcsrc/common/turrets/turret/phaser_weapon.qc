@@ -36,6 +36,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
         set_movetype(beam, MOVETYPE_NONE);
         beam.enemy = actor.enemy;
         beam.bot_dodge = true;
+        IL_PUSH(g_bot_dodge, beam);
         beam.bot_dodgerating = beam.shot_dmg;
         sound (beam, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
         actor.fireflag = 1;

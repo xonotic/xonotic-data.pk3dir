@@ -1000,7 +1000,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 		danger = 0;
 		m1 = it.mins;
 		m2 = it.maxs;
-		IL_EACH(g_projectiles, it.bot_dodge,
+		IL_EACH(g_bot_dodge, true,
 		{
 			v = it.origin;
 			v.x = bound(m1_x, v.x, m2_x);
