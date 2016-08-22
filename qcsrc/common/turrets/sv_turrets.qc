@@ -1252,6 +1252,7 @@ bool turret_initialize(entity this, Turret tur)
 	if(!this.tur_head) {
 		tur.tr_precache(tur);
 		IL_PUSH(g_turrets, this);
+		IL_PUSH(g_bot_targets, this);
 	}
 
 	entity e = find(NULL, classname, "turret_manager");

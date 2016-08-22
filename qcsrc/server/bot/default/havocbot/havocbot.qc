@@ -837,11 +837,28 @@ void havocbot_movetogoal(entity this)
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-this.bot_dodgeskill)*0.1,1)) this.havocbot_ducktime=time+0.3/bound(0.1,skill+this.bot_dodgeskill,10);
 }
 
+entity havocbot_gettarget(entity this, bool secondary)
+{
+	entity best = NULL;
+	vector eye = CENTER_OR_VIEWOFS(this);
+	IL_EACH(g_bot_targets, boolean((secondary) ? it.classname == "misc_breakablemodel" : it.classname != "misc_breakablemodel"),
+	{
+		vector v = CENTER_OR_VIEWOFS(it);
+		if(vdist(v - eye, <, autocvar_bot_ai_enemydetectionradius))
+		if(!best || vlen2(CENTER_OR_VIEWOFS(best) - eye) > vlen2(v - eye))
+		if(bot_shouldattack(this, it))
+		{
+			traceline(eye, v, true, this);
+			if (trace_ent == it || trace_fraction >= 1)
+				best = it;
+		}
+	});
+
+	return best;
+}
+
 void havocbot_chooseenemy(entity this)
 {
-	entity head, best, head2;
-	float rating, bestrating, hf;
-	vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
 	{
 		this.enemy = NULL;
@@ -880,81 +897,24 @@ void havocbot_chooseenemy(entity this)
 	if (time < this.havocbot_chooseenemy_finished)
 		return;
 	this.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
-	eye = this.origin + this.view_ofs;
-	best = NULL;
-	bestrating = 100000000;
-	head = head2 = findchainfloat(bot_attack, true);
-
-	// Backup hit flags
-	hf = this.dphitcontentsmask;
 
 	// Search for enemies, if no enemy can be seen directly try to look through transparent objects
 
+	int myhit = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	bool scan_transparent = false;
-	bool scan_secondary_targets = false;
-	bool have_secondary_targets = false;
-	while(true)
+	entity best = havocbot_gettarget(this, false); // first try primary targets
+	if(!best)
+		best = havocbot_gettarget(this, true); // now try secondary targets
+	if(!best && this.weapons)
 	{
-		scan_secondary_targets = false;
-LABEL(scan_targets)
-		for( ; head; head = head.chain)
-		{
-			if(!scan_secondary_targets)
-			{
-				if(head.classname == "misc_breakablemodel")
-				{
-					have_secondary_targets = true;
-					continue;
-				}
-			}
-			else
-			{
-				if(head.classname != "misc_breakablemodel")
-					continue;
-			}
-
-			v = (head.absmin + head.absmax) * 0.5;
-			rating = vlen(v - eye);
-			if (rating<autocvar_bot_ai_enemydetectionradius)
-			if (bestrating > rating)
-			if (bot_shouldattack(this, head))
-			{
-				traceline(eye, v, true, this);
-				if (trace_ent == head || trace_fraction >= 1)
-				{
-					best = head;
-					bestrating = rating;
-				}
-			}
-		}
-
-		if(!best && have_secondary_targets && !scan_secondary_targets)
-		{
-			scan_secondary_targets = true;
-			// restart the loop
-			head = head2;
-			bestrating = 100000000;
-			goto scan_targets;
-		}
-
-		// I want to do a second scan if no enemy was found or I don't have weapons
-		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || this.weapons) // || this.weapon == WEP_RIFLE.m_id
-			break;
-		if(scan_transparent)
-			break;
-
-		// Set flags to see through transparent objects
 		this.dphitcontentsmask |= DPCONTENTS_OPAQUE;
-
-		head = head2;
-		scan_transparent = true;
+		best = havocbot_gettarget(this, false);
+		if(!best)
+			best = havocbot_gettarget(this, true);
 	}
 
-	// Restore hit flags
-	this.dphitcontentsmask = hf;
+	this.dphitcontentsmask = myhit;
 
 	this.enemy = best;
 	this.havocbot_stickenemy = true;

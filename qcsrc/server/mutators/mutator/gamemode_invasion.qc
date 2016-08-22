@@ -343,6 +343,8 @@ MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	if(player.bot_attack)
+		IL_REMOVE(g_bot_targets, player);
 	player.bot_attack = false;
 }
 

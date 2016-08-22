@@ -134,6 +134,8 @@ void func_breakable_behave_destroyed(entity this)
 {
 	this.health = this.max_health;
 	this.takedamage = DAMAGE_NO;
+	if(this.bot_attack)
+		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
 	this.event_damage = func_null;
 	this.state = 1;
@@ -155,6 +157,8 @@ void func_breakable_behave_restore(entity this)
 	if(!(this.spawnflags & 4))
 	{
 		this.takedamage = DAMAGE_AIM;
+		if(!this.bot_attack)
+			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.event_damage = func_breakable_damage;
 	}

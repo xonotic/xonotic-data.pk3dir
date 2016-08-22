@@ -294,6 +294,8 @@ void PutObserverInServer(entity this)
 	accuracy_resend(this);
 
 	this.spectatortime = time;
+	if(this.bot_attack)
+		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
     this.hud = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
@@ -632,6 +634,8 @@ void PutClientInServer(entity this)
 
 		this.event_damage = PlayerDamage;
 
+		if(!this.bot_attack)
+			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.monster_attack = true;
 

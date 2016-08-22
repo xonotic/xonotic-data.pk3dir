@@ -436,7 +436,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
         IL_EACH(g_mines, it.realowner == actor,
         {
         	entity mine = it;
-        	FOREACH_ENTITY_FLOAT(bot_attack, true,
+        	IL_EACH(g_bot_targets, it.bot_attack,
         	{
         		float d = vlen(it.origin + (it.mins + it.maxs) * 0.5 - mine.origin);
         		d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
@@ -463,7 +463,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
             if(skill > 9) // normal players only do this for the target they are tracking
             {
 	            entity mine = it;
-	            FOREACH_ENTITY_FLOAT(bot_attack, true,
+	            IL_EACH(g_bot_targets, it.bot_attack,
 	            {
 	            	if((v_forward * normalize(mine.origin - it.origin) < 0.1)
 	                    && desirabledamage > 0.1 * coredamage

@@ -466,3 +466,6 @@ STATIC_INIT(g_assault_objectives) { g_assault_objectives = IL_NEW(); }
 
 IntrusiveList g_spawnpoints;
 STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }
+
+IntrusiveList g_bot_targets;
+STATIC_INIT(g_bot_targets) { g_bot_targets = IL_NEW(); }

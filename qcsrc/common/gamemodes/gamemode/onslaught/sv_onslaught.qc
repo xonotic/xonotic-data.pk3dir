@@ -196,12 +196,16 @@ void onslaught_updatelinks()
 		{
 			LOG_DEBUG(etos(l), " (generator) is shielded");
 			l.takedamage = DAMAGE_NO;
+			if(l.bot_attack)
+				IL_REMOVE(g_bot_targets, l);
 			l.bot_attack = false;
 		}
 		else
 		{
 			LOG_DEBUG(etos(l), " (generator) is not shielded");
 			l.takedamage = DAMAGE_AIM;
+			if(!l.bot_attack)
+				IL_PUSH(g_bot_targets, l);
 			l.bot_attack = true;
 		}
 
@@ -566,6 +570,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_AIM;
 	e.bot_attack = true;
+	IL_PUSH(g_bot_targets, e);
 	e.event_damage = ons_ControlPoint_Icon_Damage;
 	e.team = player.team;
 	e.colormap = 1024 + (e.team - 1) * 17;
@@ -917,6 +922,7 @@ void ons_GeneratorReset(entity this)
 	this.lasthealth = this.max_health = this.health = autocvar_g_onslaught_gen_health;
 	this.takedamage = DAMAGE_AIM;
 	this.bot_attack = true;
+	IL_PUSH(g_bot_targets, this);
 	this.iscaptured = true;
 	this.islinked = true;
 	this.isshielded = true;
@@ -979,6 +985,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.lasthealth = gen.max_health = gen.health = autocvar_g_onslaught_gen_health;
 	gen.takedamage = DAMAGE_AIM;
 	gen.bot_attack = true;
+	IL_PUSH(g_bot_targets, gen);
 	gen.event_damage = ons_GeneratorDamage;
 	gen.reset = ons_GeneratorReset;
 	setthink(gen, ons_GeneratorThink);

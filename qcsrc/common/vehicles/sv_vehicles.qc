@@ -1077,6 +1077,7 @@ void vehicles_spawn(entity this)
 	this.takedamage			= DAMAGE_AIM;
 	this.deadflag			= DEAD_NO;
 	this.bot_attack			= true;
+	IL_PUSH(g_bot_targets, this);
 	this.flags				= FL_NOTARGET;
 	this.avelocity			= '0 0 0';
 	this.velocity			= '0 0 0';
@@ -1161,6 +1162,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.tur_head.owner			= this;
 	this.takedamage				= DAMAGE_NO;
 	this.bot_attack				= true;
+	IL_PUSH(g_bot_targets, this);
 	this.iscreature				= true;
 	this.teleportable			= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents		= true;
