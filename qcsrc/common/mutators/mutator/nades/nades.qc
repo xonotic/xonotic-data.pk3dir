@@ -349,6 +349,8 @@ void nade_napalm_boom(entity this)
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, napalm_fountain_think);
 	fountain.nextthink = time;
