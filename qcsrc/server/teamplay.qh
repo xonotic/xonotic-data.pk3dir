@@ -50,3 +50,5 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam);
 //void() ctf_playerchanged;
 
 void ShufflePlayerOutOfTeam (float source_team);
+
+void setcolor(entity this, int clr);

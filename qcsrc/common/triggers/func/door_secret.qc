@@ -1,3 +1,4 @@
+#include "door_secret.qh"
 #ifdef SVQC
 void fd_secret_move1(entity this);
 void fd_secret_move2(entity this);

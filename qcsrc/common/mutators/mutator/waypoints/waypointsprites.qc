@@ -1,7 +1,5 @@
 #include "waypointsprites.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_MUTATOR(waypointsprites, true);
 
 REGISTER_NET_LINKED(waypointsprites)
@@ -18,10 +16,12 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
         sendflags |= 0x80;
 
     int f = 0;
-    if(this.currentammo)
+    if(this.currentammo == 1)
         f |= 1; // hideable
     if(this.exteriormodeltoclient == to)
         f |= 2; // my own
+    if(this.currentammo == 2)
+        f |= 2; // radar only
 
     MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
     sendflags = M_ARGV(2, int);
@@ -1146,5 +1146,4 @@ void WaypointSprite_PlayerGone(entity this)
     WaypointSprite_Disown(this.waypointsprite_attached, waypointsprite_deadlifetime);
     WaypointSprite_DetachCarrier(this);
 }
-#endif
 #endif

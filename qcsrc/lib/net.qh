@@ -287,7 +287,7 @@ USING(Stream, int);
 #define Read_string() ReadString()
 #define Write_string(to, f) WriteString(to, f)
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 	#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)

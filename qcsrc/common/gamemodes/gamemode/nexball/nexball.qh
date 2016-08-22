@@ -1,5 +1,4 @@
-#ifndef GAMEMODE_NEXBALL_H
-#define GAMEMODE_NEXBALL_H
+#pragma once
 
 #ifdef SVQC
 //EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
@@ -34,5 +33,4 @@ float nb_teams;
 .float nb_droptime;
 
 .float teamtime;
-#endif
 #endif

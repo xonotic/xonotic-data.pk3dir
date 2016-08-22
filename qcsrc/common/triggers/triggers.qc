@@ -1,3 +1,4 @@
+#include "triggers.qh"
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);
@@ -163,6 +164,7 @@ void trigger_remove_generic(entity this)
 }
 #endif
 
+
 /*
 ==============================
 SUB_UseTargets
@@ -182,7 +184,8 @@ match (string)this.target and call their .use function
 
 ==============================
 */
-void SUB_UseTargets(entity this, entity actor, entity trigger)
+
+void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventReuse)
 {
 //
 // check for a delay
@@ -253,7 +256,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 			int aw_flag = this.antiwall_flag;
 			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
-				if(t.use)
+				if(t.use && (t.sub_target_used != time || !preventReuse))
 				{
 					if(this.target_random)
 					{
@@ -265,6 +268,8 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 							t.antiwall_flag = aw_flag;
 
 						t.use(t, actor, this);
+						if(preventReuse)
+							t.sub_target_used = time;
 					}
 				}
 			}
@@ -272,8 +277,15 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	}
 
 	if(this.target_random && RandomSelection_chosen_ent)
+	{
 		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
+		if(preventReuse)
+			RandomSelection_chosen_ent.sub_target_used = time;
+	}
 }
+
+void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false); }
+void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true); }
 
 void SUB_UseTargets_self(entity this)
 {

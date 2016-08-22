@@ -1,3 +1,4 @@
+#include "vectormamamam.qh"
 #ifdef SVQC
 // reusing some fields havocbots declared
 .entity wp00, wp01, wp02, wp03;

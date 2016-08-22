@@ -58,6 +58,7 @@ MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 /** called when a player dies to e.g. remove stuff he was carrying */
 #define EV_PlayHitsound(i, o) \
     /** victim */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
 
@@ -271,6 +272,15 @@ MUTATOR_HOOKABLE(MonsterMove, EV_MonsterMove);
 /** called when a monster looks for another target */
 MUTATOR_HOOKABLE(MonsterFindTarget, EV_NO_ARGS);
 
+/**
+ * called when validating a monster's target
+ */
+#define EV_MonsterValidTarget(i, o) \
+    /** monster */       i(entity, MUTATOR_ARGV_0_entity) \
+    /** target */        i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(MonsterValidTarget, EV_MonsterValidTarget);
+
 /** called to change a random monster to a miniboss */
 #define EV_MonsterCheckBossFlag(i, o) \
     /** monster */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -350,7 +360,7 @@ MUTATOR_HOOKABLE(W_DecreaseAmmo, EV_W_DecreaseAmmo);
     /**/
 MUTATOR_HOOKABLE(W_Reload, EV_W_Reload);
 
-/** called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items. */
+/** called at the end of player_powerups() in client.qc, used for manipulating the values which are set by powerup items. */
 #define EV_PlayerPowerups(i, o) \
     /** player */    i(entity, MUTATOR_ARGV_0_entity) \
     /** old items */ i(int, MUTATOR_ARGV_1_int) \
@@ -499,7 +509,7 @@ MUTATOR_HOOKABLE(BotShouldAttack, EV_BotShouldAttack);
 MUTATOR_HOOKABLE(PortalTeleport, EV_PortalTeleport);
 
 /**
- * called whenever a player uses impulse 33 (help me) in cl_impulse.qc
+ * called whenever a player uses impulse 33 (help me) in impulse.qc
  * normally help me ping uses .waypointsprite_attachedforcarrier,
  * but if your mutator uses something different then you can handle it
  * in a special manner using this hook
@@ -837,3 +847,19 @@ MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
 	/** data */     i(string, MUTATOR_ARGV_2_string) \
     /**/
 MUTATOR_HOOKABLE(URI_GetCallback, EV_URI_GetCallback);
+
+/**
+ * return true to prevent weapon use for a player
+ */
+ #define EV_ForbidWeaponUse(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(ForbidWeaponUse, EV_ForbidWeaponUse);
+
+/** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
+#define EV_CopyBody(i, o) \
+    /** player */               i(entity, MUTATOR_ARGV_0_entity) \
+    /** newly created clone */  i(entity, MUTATOR_ARGV_1_entity) \
+    /** keepvelocity? */        i(bool, MUTATOR_ARGV_2_bool) \
+    /**/
+MUTATOR_HOOKABLE(CopyBody, EV_CopyBody);

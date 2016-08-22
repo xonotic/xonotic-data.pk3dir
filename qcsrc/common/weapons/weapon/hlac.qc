@@ -1,3 +1,4 @@
+#include "hlac.qh"
 #ifndef IMPLEMENTATION
 CLASS(HLAC, Weapon)
 /* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells);
@@ -6,7 +7,7 @@ CLASS(HLAC, Weapon)
 /* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);
 #endif
 /* crosshair */ ATTRIB(HLAC, w_crosshair, string, "gfx/crosshairhlac");

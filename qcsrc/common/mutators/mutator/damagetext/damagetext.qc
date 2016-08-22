@@ -1,13 +1,5 @@
-#ifndef MUTATOR_DAMAGETEXT_H
-#define MUTATOR_DAMAGETEXT_H
+#include "damagetext.qh"
 
-#ifdef MENUQC
-#include <menu/xonotic/tab.qh>
-#endif
-
-#endif
-
-#ifdef IMPLEMENTATION
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
@@ -157,8 +149,10 @@ NET_HANDLE(damagetext, bool isNew)
 #endif
 
 #ifdef MENUQC
+
+#include <menu/gamesettings.qh>
+
 CLASS(XonoticDamageTextSettings, XonoticTab)
-    #include <menu/gamesettings.qh>
     REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
     ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"));
     ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9);
@@ -193,7 +187,6 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
                 setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
         this.TR(this);
-        // friendly fire
             this.TD(this, 1, 3, e = makeXonoticCheckBox(0, "cl_damagetext_friendlyfire", _("Draw damage numbers for friendly fire")));
                 setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
@@ -204,5 +197,4 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
         this.TR(this);
     }
 ENDCLASS(XonoticDamageTextSettings)
-#endif
 #endif

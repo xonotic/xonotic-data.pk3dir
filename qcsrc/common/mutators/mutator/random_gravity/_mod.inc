@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/random_gravity/random_gravity.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/random_gravity/sv_random_gravity.qc>
+#endif

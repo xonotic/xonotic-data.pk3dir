@@ -1,3 +1,4 @@
+#include "pointparticles.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_POINTPARTICLES)
 
 #ifdef SVQC

@@ -15,13 +15,13 @@
 #include "../../antilag.qh"
 #include "../../autocvars.qh"
 #include "../../campaign.qh"
-#include "../../cl_client.qh"
+#include "../../client.qh"
 #include "../../constants.qh"
 #include "../../defs.qh"
 #include "../../race.qh"
 #include <common/t_items.qh>
 
-#include "../../mutators/all.qh"
+#include "../../mutators/_mod.qh"
 
 #include "../../weapons/accuracy.qh"
 
@@ -31,7 +31,9 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 
-#include <common/weapons/all.qh>
+#include <server/scores_rules.qh>
+
+#include <common/weapons/_all.qh>
 
 #include <lib/csqcmodel/sv_model.qh>
 

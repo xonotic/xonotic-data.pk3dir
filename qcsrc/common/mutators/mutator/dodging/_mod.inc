@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/dodging/dodging.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/dodging/sv_dodging.qc>
+#endif

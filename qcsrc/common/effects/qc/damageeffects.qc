@@ -1,15 +1,4 @@
-#ifndef DAMAGEEFFECTS_H
-#define DAMAGEEFFECTS_H
-
-#ifdef CSQC
-#include <common/deathtypes/all.qh>
-#include <common/physics/movetypes/movetypes.qh>
-#include <client/mutators/events.qh>
-#include <common/vehicles/all.qh>
-#include <common/weapons/all.qh>
-#endif
-
-#endif
+#include "damageeffects.qh"
 
 #ifdef IMPLEMENTATION
 

@@ -1,3 +1,4 @@
+#include "arc.qh"
 #ifndef IMPLEMENTATION
 CLASS(Arc, Weapon)
 /* ammotype  */ ATTRIB(Arc, ammo_field, .int, ammo_cells);
@@ -6,7 +7,7 @@ CLASS(Arc, Weapon)
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);
 #endif
 /* crosshair */ ATTRIB(Arc, w_crosshair, string, "gfx/crosshairhlac");
@@ -74,7 +75,7 @@ ENDCLASS(Arc)
 REGISTER_WEAPON(ARC, arc, NEW(Arc));
 
 
-#ifndef MENUQC
+#ifdef GAMEQC
 const float ARC_MAX_SEGMENTS = 20;
 vector arc_shotorigin[4];
 .vector beam_start;
@@ -1397,7 +1398,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 	{
 		this.beam_type = ReadByte();
 
-		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true) : '1 1 1');
+		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true) : '1 1 1');
 		switch(this.beam_type)
 		{
 			case ARC_BT_MISS:

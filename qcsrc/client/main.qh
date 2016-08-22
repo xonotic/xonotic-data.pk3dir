@@ -1,7 +1,7 @@
 #pragma once
 
 #include <common/constants.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 // --------------------------------------------------------------------------
 // MENU Functionality
@@ -126,7 +126,7 @@ const int HOOK_END =      2;
 
 float g_trueaim_minrange;
 
-float hud;
+int hud;
 float view_quality;
 
 int num_spectators;

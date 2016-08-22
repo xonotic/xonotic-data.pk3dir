@@ -1,3 +1,4 @@
+#include "cl_turrets.qh"
 void turret_remove(entity this)
 {
 	delete(this.tur_head);

@@ -1,0 +1,68 @@
+#pragma once
+
+#ifdef SVQC
+    #include <common/t_items.qh>
+#endif
+
+#include "ammo.qh"
+#include "powerup.qh"
+
+#ifndef SVQC
+.int m_itemid;
+#endif
+
+#ifdef GAMEQC
+MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
+#endif
+
+REGISTER_ITEM(Jetpack, Powerup) {
+#ifdef GAMEQC
+    this.m_model                =   MDL_Jetpack_ITEM;
+    this.m_itemid               =   IT_JETPACK;
+#endif
+    this.m_name                 =   "Jet pack";
+    this.m_icon                 =   "jetpack";
+    this.m_color                =   '0.5 0.5 0.5';
+    this.m_waypoint             =   _("Jet Pack");
+    this.m_waypointblink        =   2;
+#ifdef SVQC
+    this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
+    this.m_pickupevalfunc       =   commodity_pickupevalfunc;
+#endif
+}
+
+#ifdef GAMEQC
+MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
+#endif
+
+REGISTER_ITEM(JetpackFuel, Ammo) {
+#ifdef GAMEQC
+    this.m_model    =   MDL_JetpackFuel_ITEM;
+#endif
+    this.m_name     =   "Fuel";
+    this.m_icon     =   "ammo_fuel";
+#ifdef SVQC
+    this.m_botvalue =   BOT_PICKUP_RATING_LOW;
+    this.m_itemid   =   IT_FUEL;
+#endif
+}
+
+#ifdef GAMEQC
+MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
+#endif
+
+REGISTER_ITEM(JetpackRegen, Powerup) {
+#ifdef GAMEQC
+    this.m_model                =   MDL_JetpackRegen_ITEM;
+#endif
+    this.m_name                 =   "Fuel regenerator";
+    this.m_icon                 =   "fuelregen";
+    this.m_color                =   '1 0.5 0';
+    this.m_waypoint             =   _("Fuel regen");
+    this.m_waypointblink        =   2;
+#ifdef SVQC
+    this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
+    this.m_itemid               =   IT_FUEL_REGEN;
+    this.m_pickupevalfunc       =   commodity_pickupevalfunc;
+#endif
+}

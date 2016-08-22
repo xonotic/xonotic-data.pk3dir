@@ -1,3 +1,4 @@
+#include "vortex.qh"
 #ifndef IMPLEMENTATION
 CLASS(Vortex, Weapon)
 /* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells);
@@ -6,7 +7,7 @@ CLASS(Vortex, Weapon)
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);
 #endif
 /* crosshair */ ATTRIB(Vortex, w_crosshair, string, "gfx/crosshairnex");

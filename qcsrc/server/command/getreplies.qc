@@ -1,5 +1,5 @@
 #include "getreplies.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "getreplies.qh"
 
 #include "../race.qh"

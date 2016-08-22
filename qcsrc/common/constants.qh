@@ -126,7 +126,7 @@ const int SFL_SORT_PRIO_MASK = 12;
  * Score indices
  */
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 #define IS_INCREASING(x) ( (x) & SFL_LOWER_IS_BETTER )
 #define IS_DECREASING(x) ( !((x) & SFL_LOWER_IS_BETTER) )

@@ -1,6 +1,6 @@
 #include "race.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"

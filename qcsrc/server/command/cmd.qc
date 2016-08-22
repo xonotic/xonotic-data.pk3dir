@@ -1,18 +1,18 @@
 #include "cmd.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 
 #include "common.qh"
 #include "vote.qh"
 
 #include "../campaign.qh"
 #include "../cheats.qh"
-#include "../cl_player.qh"
+#include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>

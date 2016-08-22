@@ -1,7 +1,7 @@
 #pragma once
 
 float warmup_limit;
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
 #define INDEPENDENT_ATTACK_FINISHED 1
@@ -12,20 +12,6 @@ float g_footsteps, g_grappling_hook, g_instagib;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
-PROPERTY(float, g_pickup_respawntime_weapon)
-PROPERTY(float, g_pickup_respawntime_superweapon)
-PROPERTY(float, g_pickup_respawntime_ammo)
-PROPERTY(float, g_pickup_respawntime_short)
-PROPERTY(float, g_pickup_respawntime_medium)
-PROPERTY(float, g_pickup_respawntime_long)
-PROPERTY(float, g_pickup_respawntime_powerup)
-PROPERTY(float, g_pickup_respawntimejitter_weapon)
-PROPERTY(float, g_pickup_respawntimejitter_superweapon)
-PROPERTY(float, g_pickup_respawntimejitter_ammo)
-PROPERTY(float, g_pickup_respawntimejitter_short)
-PROPERTY(float, g_pickup_respawntimejitter_medium)
-PROPERTY(float, g_pickup_respawntimejitter_long)
-PROPERTY(float, g_pickup_respawntimejitter_powerup)
 float g_jetpack;
 
 float sv_clones;
@@ -429,7 +415,6 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 #define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? true : false)
 #define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? true : false)
 #define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? true : false)
-
 
 ////
 

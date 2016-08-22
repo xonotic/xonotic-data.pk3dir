@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 CLASS(RacerAttack, PortoLaunch)
 /* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);

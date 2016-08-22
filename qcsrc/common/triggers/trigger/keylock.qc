@@ -1,3 +1,4 @@
+#include "keylock.qh"
 /**
  * trigger given targets
  */

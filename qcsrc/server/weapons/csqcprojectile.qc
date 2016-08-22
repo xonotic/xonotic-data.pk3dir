@@ -5,7 +5,7 @@
 #include "../command/common.qh"
 
 #include <common/constants.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 .float csqcprojectile_type;
 

@@ -1,12 +1,12 @@
+#include "playerstats.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
     #include "util.qh"
-    #include <common/weapons/all.qh>
+    #include <common/weapons/_all.qh>
     #include "../server/weapons/accuracy.qh"
     #include "../server/defs.qh"
-    #include "playerstats.qh"
     #include "../server/scores.qh"
 #endif
 

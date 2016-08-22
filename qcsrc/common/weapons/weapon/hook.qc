@@ -1,3 +1,4 @@
+#include "hook.qh"
 #ifndef IMPLEMENTATION
 CLASS(Hook, Weapon)
 /* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel);
@@ -6,7 +7,7 @@ CLASS(Hook, Weapon)
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
 /* modelname */ ATTRIB(Hook, mdl, string, "hookgun");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Hook, m_model, Model, MDL_HOOK_ITEM);
 #endif
 /* crosshair */ ATTRIB(Hook, w_crosshair, string, "gfx/crosshairhook");

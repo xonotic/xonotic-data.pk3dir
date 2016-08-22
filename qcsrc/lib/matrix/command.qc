@@ -1,6 +1,6 @@
 #include "command.qh"
 
-#include <common/command/all.qh>
+#include <common/command/_mod.qh>
 
 GENERIC_COMMAND(mx, "Send a matrix command") {
     switch (argv(1)) {

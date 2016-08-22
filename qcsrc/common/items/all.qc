@@ -1,8 +1,4 @@
-#ifndef ITEMS_ALL_C
-#define ITEMS_ALL_C
 #include "all.qh"
-
-#include "item/_mod.inc"
 
 void Dump_Items()
 {
@@ -18,5 +14,3 @@ string Item_Model(string item_mdl)
 #endif
     return output;
 }
-
-#endif

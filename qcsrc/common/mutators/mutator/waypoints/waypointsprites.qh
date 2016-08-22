@@ -1,5 +1,4 @@
-#ifndef WAYPOINTSPRITES_H
-#define WAYPOINTSPRITES_H
+#pragma once
 
 #include "all.qh"
 
@@ -118,6 +117,8 @@ void Draw_WaypointSprite(entity this);
 #endif
 
 #ifdef SVQC
+.entity sprite;
+
 float autocvar_sv_waypointsprite_deadlifetime;
 float autocvar_sv_waypointsprite_deployed_lifetime;
 float autocvar_sv_waypointsprite_limitedrange;
@@ -233,6 +234,4 @@ void WaypointSprite_ClearOwned(entity this);
 void WaypointSprite_PlayerDead(entity this);
 
 void WaypointSprite_PlayerGone(entity this);
-#endif
-
 #endif

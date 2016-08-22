@@ -4,7 +4,7 @@
 .entity tag_entity;
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 .bool debug;
 .int sv_entnum;
 REGISTER_NET_TEMP(net_debug)
@@ -47,7 +47,7 @@ REGISTER_NET_TEMP(net_debug)
 	}
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 /**
  * 0: off
  * 1: on

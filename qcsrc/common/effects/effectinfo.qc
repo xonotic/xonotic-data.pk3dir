@@ -1,3 +1,4 @@
+#include "effectinfo.qh"
 #define EFFECTINFO_PARSER(on, MY) \
     on(type,                                        MY(type) \
     ,{ demand(n == 1 && "type");                    MY(type) = strzone(argv(1)); \

@@ -1,6 +1,6 @@
 #include "t_quake3.qh"
 
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 
 spawnfunc(weapon_crylink);
 spawnfunc(weapon_electro);
