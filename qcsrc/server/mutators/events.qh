@@ -856,7 +856,7 @@ MUTATOR_HOOKABLE(URI_GetCallback, EV_URI_GetCallback);
     /**/
 MUTATOR_HOOKABLE(ForbidWeaponUse, EV_ForbidWeaponUse);
 
-/** called when creating a clone of player (usually for corpses that stay after the player has re-spawned) */
+/** called when creating a clone of the player (usually for corpses that stay after the player has re-spawned) */
 #define EV_CopyBody(i, o) \
     /** player */               i(entity, MUTATOR_ARGV_0_entity) \
     /** newly created clone */  i(entity, MUTATOR_ARGV_1_entity) \
