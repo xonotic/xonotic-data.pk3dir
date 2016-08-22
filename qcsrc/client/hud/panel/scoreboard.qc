@@ -359,15 +359,12 @@ void Cmd_Scoreboard_SetFields(int argc)
 	float missing;
 
 	if(!gametype)
-	{
-		// set up a temporary scoreboard layout
-		// no layout can be properly set up until score_info data haven't been received
-		argc = tokenizebyseparator("0 1 ping pl name | score", " ");
-		ps_primary = SP_SCORE;
-		ps_secondary = SP_SCORE;
-		scores_label(ps_primary) = strzone("score");
-		scores_flags(ps_primary) = SFL_ALLOW_HIDE;
-	}
+		return; // do nothing, we don't know gametype and scores yet
+
+	// sbt_fields uses strunzone on the titles!
+	if(!sbt_field_title[0])
+		for(i = 0; i < MAX_SBT_FIELDS; ++i)
+			sbt_field_title[i] = strzone("(null)");
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 3) // no arguments provided

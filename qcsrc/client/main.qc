@@ -132,12 +132,6 @@ void CSQC_Init()
 
 	gametype = NULL;
 
-	// sbt_fields uses strunzone on the titles!
-	for(int i = 0; i < MAX_SBT_FIELDS; ++i)
-		sbt_field_title[i] = strzone("(null)");
-
-	Cmd_Scoreboard_SetFields(0);
-
 	postinit = false;
 
 	calledhooks = 0;
