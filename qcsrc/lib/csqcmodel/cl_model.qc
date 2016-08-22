@@ -194,6 +194,14 @@ void CSQCModel_Draw(entity this)
 
 	CSQCModel_Hook_PreDraw(this, isplayer);
 
+	if(isplayer)
+	{
+		if(this.entnum == player_localentnum)
+			this.renderflags |= RF_EXTERNALMODEL;
+		else
+			this.renderflags &= ~RF_EXTERNALMODEL;
+	}
+
 	// inherit draw flags easily
 	entity root = this;
 	while(root.tag_entity)

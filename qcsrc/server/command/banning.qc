@@ -1,10 +1,10 @@
 #include "banning.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "banning.qh"
 
 #include "common.qh"
 
-#include "../cl_player.qh"
+#include "../player.qh"
 #include "../ipban.qh"
 
 #include <common/util.qh>

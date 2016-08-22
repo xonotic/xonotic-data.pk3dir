@@ -1,7 +1,5 @@
 #include "nades.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
 float autocvar_g_nades_spread = 0.04;
@@ -9,7 +7,7 @@ float autocvar_g_nades_spread = 0.04;
 
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
-#ifndef MENUQC
+#ifdef GAMEQC
 entity Nade_TrailEffect(int proj, int nade_team)
 {
     switch (proj)
@@ -147,7 +145,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 
 #ifdef SVQC
 
-#include <common/gamemodes/all.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/monsters/spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <server/g_subs.qh>
@@ -1485,5 +1483,4 @@ MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3nades^8 are enabled, press 'g' to use them\n");
 }
 
-#endif
 #endif

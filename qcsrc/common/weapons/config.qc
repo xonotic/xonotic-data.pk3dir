@@ -1,8 +1,8 @@
+#include "config.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "../util.qh"
-    #include "config.qh"
     #include "all.qh"
 #endif
 

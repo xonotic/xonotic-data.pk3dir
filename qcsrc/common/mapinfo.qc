@@ -1,13 +1,12 @@
+#include "mapinfo.qh"
 #if defined(CSQC)
     #include "../client/defs.qh"
     #include "util.qh"
-    #include <common/weapons/all.qh>
-    #include "mapinfo.qh"
+    #include <common/weapons/_all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "util.qh"
     #include <common/monsters/all.qh>
-    #include "mapinfo.qh"
 #endif
 
 // generic string stuff
@@ -1298,7 +1297,7 @@ int MapInfo_ForbiddenFlags()
 {
 	int f = MAPINFO_FLAG_FORBIDDEN;
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	if (!cvar("g_maplist_allow_hidden"))
 #endif
 		f |= MAPINFO_FLAG_HIDDEN;

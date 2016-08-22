@@ -1,3 +1,4 @@
+#include "c4.qh"
 REGISTER_MINIGAME(c4, "Connect Four");
 
 const float C4_TURN_PLACE = 0x0100; // player has to place a piece on the board

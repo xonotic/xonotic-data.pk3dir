@@ -1,3 +1,4 @@
+#include "sv_minigames.qh"
 #include "minigames.qh"
 
 void player_clear_minigame(entity player)

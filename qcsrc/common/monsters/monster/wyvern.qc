@@ -1,38 +1,4 @@
-#ifndef WYVERN_H
-#define WYVERN_H
-
-#ifndef MENUQC
-MODEL(MON_WYVERN, M_Model("wizard.mdl"));
-#endif
-
-CLASS(Wyvern, Monster)
-    ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE);
-    ATTRIB(Wyvern, mins, vector, '-20 -20 -58');
-    ATTRIB(Wyvern, maxs, vector, '20 20 20');
-#ifndef MENUQC
-    ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
-#endif
-    ATTRIB(Wyvern, netname, string, "wyvern");
-    ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
-ENDCLASS(Wyvern)
-
-REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#include <common/weapons/all.qh>
-
-CLASS(WyvernAttack, PortoLaunch)
-/* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(WyvernAttack, impulse, int, 9);
-/* refname   */ ATTRIB(WyvernAttack, netname, string, "wyvern");
-/* wepname   */ ATTRIB(WyvernAttack, m_name, string, _("Wyvern attack"));
-ENDCLASS(WyvernAttack)
-REGISTER_WEAPON(WYVERN_ATTACK, NEW(WyvernAttack));
-
-#endif
+#include "wyvern.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -170,7 +136,7 @@ METHOD(Wyvern, mr_death, bool(Wyvern this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
 {
     TC(Wyvern, this);

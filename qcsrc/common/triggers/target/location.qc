@@ -1,3 +1,4 @@
+#include "location.qh"
 #ifdef SVQC
 void target_push_init(entity this);
 

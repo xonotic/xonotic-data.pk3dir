@@ -1,3 +1,4 @@
+#include "rifle.qh"
 #ifndef IMPLEMENTATION
 CLASS(Rifle, Weapon)
 /* ammotype  */ ATTRIB(Rifle, ammo_field, .int, ammo_nails);
@@ -6,7 +7,7 @@ CLASS(Rifle, Weapon)
 /* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Rifle, wpcolor, vector, '0.5 1 0');
 /* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);
 #endif
 /* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");

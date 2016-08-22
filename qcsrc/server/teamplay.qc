@@ -1,6 +1,6 @@
 #include "teamplay.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
@@ -9,10 +9,10 @@
 
 #include "command/vote.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 
 #include "../common/deathtypes/all.qh"
-#include "../common/gamemodes/all.qh"
+#include "../common/gamemodes/_mod.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
@@ -156,6 +156,16 @@ string getwelcomemessage(entity this)
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
 	return s;
+}
+
+void setcolor(entity this, int clr)
+{
+#if 0
+	this.clientcolors = clr;
+	this.team = (clr & 15) + 1;
+#else
+	builtin_setcolor(this, clr);
+#endif
 }
 
 void SetPlayerColors(entity pl, float _color)
@@ -473,8 +483,10 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
-		else
-			error(sprintf("Too few teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
+		else if(totalteams == 1) // single team
+			LOG_TRACEF("Only 1 team available for %s, you may need to fix your map", MapInfo_Type_ToString(MapInfo_CurrentGametype()));
+		else // no teams, major no no
+			error(sprintf("No teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
 	}
 
 	// count how many players are in each team
@@ -540,7 +552,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 				SetPlayerColors(this, selectedteam - 1);
 
 				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
-				// when JoinBestTeam is called by cl_client.qc/ClientConnect the player_id is 0 the log attempt is rejected
+				// when JoinBestTeam is called by client.qc/ClientConnect the player_id is 0 the log attempt is rejected
 				LogTeamchange(this.playerid, this.team, 99);
 			}
 			return selectedteam;

@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/rocketminsta/rocketminsta.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/rocketminsta/sv_rocketminsta.qc>
+#endif

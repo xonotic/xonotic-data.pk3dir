@@ -1,4 +1,5 @@
 #pragma once
+//#include "_mod.qh"
 
 #include <common/util.qh>
 
@@ -10,3 +11,5 @@
 #include "defs.qh"
 #include "main.qh"
 #include "miscfunctions.qh"
+
+#include <common/ent_cs.qh>

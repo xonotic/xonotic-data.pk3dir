@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 float autocvar_g_vehicle_bumblebee_cannon_cost = 2;
 float autocvar_g_vehicle_bumblebee_cannon_damage = 60;

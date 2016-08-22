@@ -159,7 +159,7 @@ MACRO_END
 .entity _FOREACH_ENTITY_FIND_flags_next; noref string _FOREACH_ENTITY_FIND_flags_mutex;
 #define FOREACH_ENTITY_FLAGS_UNORDERED(fld, match, body) _FOREACH_ENTITY_FIND_UNORDERED(, flags, fld, match, true, body)
 
-#ifndef MENUQC
+#ifdef GAMEQC
 entity(vector org, float rad, .entity tofield) _findchainradius_tofield = #22;
 #define FOREACH_ENTITY_RADIUS(org, dist, cond, body) ORDERED(FOREACH_ENTITY_RADIUS)(org, dist, cond, body)
 .entity _FOREACH_ENTITY_FIND_radius_next; noref string _FOREACH_ENTITY_FIND_radius_mutex;

@@ -1,3 +1,4 @@
+#include "pp.qh"
 REGISTER_MINIGAME(pp, "Push-Pull");
 
 const int PP_TURN_PLACE = 0x0100; // player has to place a piece on the board

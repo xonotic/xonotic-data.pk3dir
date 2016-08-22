@@ -1,3 +1,4 @@
+#include "rotating.qh"
 #ifdef SVQC
 void func_rotating_setactive(entity this, int astate)
 {

@@ -1,3 +1,4 @@
+#include "disablerelay.qh"
 #ifdef SVQC
 void trigger_disablerelay_use(entity this, entity actor, entity trigger)
 {

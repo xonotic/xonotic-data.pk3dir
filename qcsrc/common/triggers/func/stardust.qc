@@ -1,3 +1,4 @@
+#include "stardust.qh"
 #ifdef SVQC
 spawnfunc(func_stardust)
 {

@@ -1,4 +1,6 @@
-#ifdef IMPLEMENTATION
+#include "doublejump.qh"
+
+#ifdef GAMEQC
 #ifdef SVQC
 	#include <server/antilag.qh>
 #endif
@@ -31,5 +33,4 @@ MUTATOR_HOOKFUNCTION(doublejump, PlayerJump)
 		}
 	}
 }
-
 #endif

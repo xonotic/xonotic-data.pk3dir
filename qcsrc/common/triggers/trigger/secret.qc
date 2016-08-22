@@ -1,9 +1,9 @@
+#include "secret.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/util.qh>
     #include <server/defs.qh>
-    #include "secret.qh"
 #endif
 
 #ifdef SVQC

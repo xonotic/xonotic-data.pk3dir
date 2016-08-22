@@ -1,3 +1,4 @@
+#include "mortar.qh"
 #ifndef IMPLEMENTATION
 CLASS(Mortar, Weapon)
 /* ammotype  */ ATTRIB(Mortar, ammo_field, .int, ammo_rockets);
@@ -6,7 +7,7 @@ CLASS(Mortar, Weapon)
 /* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Mortar, wpcolor, vector, '1 0 0');
 /* modelname */ ATTRIB(Mortar, mdl, string, "gl");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Mortar, m_model, Model, MDL_MORTAR_ITEM);
 #endif
 /* crosshair */ ATTRIB(Mortar, w_crosshair, string, "gfx/crosshairgrenadelauncher");

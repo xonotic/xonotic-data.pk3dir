@@ -1,7 +1,7 @@
 #include "view.qh"
 
 #include "announcer.qh"
-#include "hud/all.qh"
+#include "hud/_mod.qh"
 #include "mapvoting.qh"
 #include "shownames.qh"
 #include "hud/panel/scoreboard.qh"
@@ -15,14 +15,14 @@
 #include <common/constants.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
-#include <common/gamemodes/all.qh>
+#include <common/gamemodes/_mod.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
 #include <common/triggers/target/music.qh>
 #include <common/teams.qh>
 
 #include <common/vehicles/all.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
@@ -293,7 +293,7 @@ void viewmodel_draw(entity this)
 	else if (wasinvehicle) a = 1;
 	wasinvehicle = invehicle;
 	Weapon wep = activeweapon;
-	int c = stof(getplayerkeyvalue(current_player, "colors"));
+	int c = entcs_GetClientColors(current_player);
 	vector g = weaponentity_glowmod(wep, c);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
@@ -937,7 +937,7 @@ void HUD_Crosshair(entity this)
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 &&
-		spectatee_status != -1 && !csqcplayer.viewloc &&
+		spectatee_status != -1 && !csqcplayer.viewloc && !MUTATOR_CALLHOOK(DrawCrosshair) &&
 		!HUD_MinigameMenu_IsOpened() )
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
@@ -1337,6 +1337,11 @@ void HUD_Draw(entity this)
 		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * STAT(NADE_TIMER)) - ('0 1 1' * STAT(NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
+	else if(STAT(CAPTURE_PROGRESS))
+	{
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+	}
 	else if(STAT(REVIVE_PROGRESS))
 	{
 		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
@@ -1368,6 +1373,7 @@ float oldr_useportalculling;
 float oldr_useinfinitefarclip;
 
 void cl_notice_run();
+
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
@@ -1828,8 +1834,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else if(csqcplayer.viewloc) { setproperty(VF_FOV, GetViewLocationFOV(110)); } // enforce 110 fov, so things dont look odd
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
-	// Camera for demo playback
-	if(camera_active)
+	if(camera_active) // Camera for demo playback
 	{
 		if(autocvar_camera_enable)
 			CSQC_Demo_Camera();

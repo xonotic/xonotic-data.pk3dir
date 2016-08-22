@@ -1,3 +1,4 @@
+#include "pong.qh"
 REGISTER_MINIGAME(pong, "Pong");
 
 // minigame flags

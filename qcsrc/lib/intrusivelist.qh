@@ -147,7 +147,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 /**
  * Delete the list
  */
-#define IL_DELETE(this, dtor) \
+#define IL_DELETE(this) \
 	MACRO_BEGIN \
 	{ \
 		delete(this); \

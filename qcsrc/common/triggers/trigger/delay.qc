@@ -1,3 +1,4 @@
+#include "delay.qh"
 #ifdef SVQC
 void delay_use(entity this, entity actor, entity trigger)
 {

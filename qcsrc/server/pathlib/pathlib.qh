@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef DEBUGPATHING
+	#define DEBUGPATHING 0
+#endif
+
 .entity pathlib_list;
 .entity path_next;
 .entity path_prev;

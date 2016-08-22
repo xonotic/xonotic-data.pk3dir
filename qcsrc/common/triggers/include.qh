@@ -1,7 +1,7 @@
 #pragma once
 
 // some required common stuff
-#ifdef CSQC
+#ifdef SVQC
 	#include <server/item_key.qh>
 #endif
 #include "triggers.qh"

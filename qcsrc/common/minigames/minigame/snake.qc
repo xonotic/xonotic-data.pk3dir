@@ -1,3 +1,4 @@
+#include "snake.qh"
 REGISTER_MINIGAME(snake, "Snake"); // SNAAAAKE
 
 const float SNAKE_TURN_MOVE  = 0x0100; // the snake is moving, player must control it

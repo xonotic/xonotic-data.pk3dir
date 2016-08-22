@@ -1,5 +1,5 @@
-#include "command.qh"
 #include "markup.qh"
+#include "command.qh"
 
 // =========================================================
 //  Markup chat characters command code, reworked by Samual

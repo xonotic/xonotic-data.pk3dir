@@ -1,3 +1,4 @@
+#include "ttt.qh"
 REGISTER_MINIGAME(ttt, "Tic Tac Toe");
 
 const int TTT_TURN_PLACE = 0x0100; // player has to place a piece on the board

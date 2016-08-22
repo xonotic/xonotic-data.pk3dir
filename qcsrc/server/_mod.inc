@@ -3,20 +3,20 @@
 #include <server/antilag.qc>
 #include <server/campaign.qc>
 #include <server/cheats.qc>
-#include <server/cl_client.qc>
-#include <server/cl_impulse.qc>
-#include <server/cl_player.qc>
+#include <server/client.qc>
 #include <server/g_damage.qc>
 #include <server/g_hook.qc>
 #include <server/g_lights.qc>
 #include <server/g_models.qc>
 #include <server/g_subs.qc>
 #include <server/g_world.qc>
+#include <server/impulse.qc>
 #include <server/ipban.qc>
 #include <server/item_key.qc>
 #include <server/mapvoting.qc>
 #include <server/matrix.qc>
 #include <server/miscfunctions.qc>
+#include <server/player.qc>
 #include <server/playerdemo.qc>
 #include <server/portals.qc>
 #include <server/race.qc>
@@ -25,7 +25,9 @@
 #include <server/scores_rules.qc>
 #include <server/spawnpoints.qc>
 #include <server/steerlib.qc>
-#include <server/sv_main.qc>
+#ifdef SVQC
+    #include <server/sv_main.qc>
+#endif
 #include <server/teamplay.qc>
 #include <server/tests.qc>
 #include <server/t_halflife.qc>

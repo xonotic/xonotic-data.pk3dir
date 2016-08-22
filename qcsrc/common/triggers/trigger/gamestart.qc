@@ -1,3 +1,4 @@
+#include "gamestart.qh"
 #ifdef SVQC
 void gamestart_use(entity this, entity actor, entity trigger)
 {

@@ -4,12 +4,12 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "cl_cmd.qh"
 
 #include "../autocvars.qh"
 #include "../defs.qh"
-#include <client/hud/all.qh>
+#include <client/hud/_mod.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
@@ -17,8 +17,6 @@
 #include "../mutators/events.qh"
 
 #include <common/mapinfo.qh>
-
-#include <common/command/generic.qh>
 
 void DrawDebugModel(entity this)
 {

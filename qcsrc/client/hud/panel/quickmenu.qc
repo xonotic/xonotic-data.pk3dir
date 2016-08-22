@@ -1,7 +1,7 @@
 #include "quickmenu.qh"
 
 #include <common/ent_cs.qh>
-#include <client/hud/all.qh>
+#include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
 
 // QuickMenu (#23)

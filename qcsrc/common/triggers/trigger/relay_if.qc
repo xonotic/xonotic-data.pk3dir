@@ -1,3 +1,4 @@
+#include "relay_if.qh"
 #ifdef SVQC
 void trigger_relay_if_use(entity this, entity actor, entity trigger)
 {

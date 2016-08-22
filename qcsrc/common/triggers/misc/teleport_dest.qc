@@ -1,3 +1,4 @@
+#include "teleport_dest.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_TELEPORT_DEST)
 
 #ifdef SVQC

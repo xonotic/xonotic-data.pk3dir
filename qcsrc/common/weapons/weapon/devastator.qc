@@ -1,3 +1,4 @@
+#include "devastator.qh"
 #ifndef IMPLEMENTATION
 CLASS(Devastator, Weapon)
 /* ammotype  */ ATTRIB(Devastator, ammo_field, .int, ammo_rockets);
@@ -6,7 +7,7 @@ CLASS(Devastator, Weapon)
 /* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Devastator, mdl, string, "rl");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Devastator, m_model, Model, MDL_DEVASTATOR_ITEM);
 #endif
 /* crosshair */ ATTRIB(Devastator, w_crosshair, string, "gfx/crosshairrocketlauncher");

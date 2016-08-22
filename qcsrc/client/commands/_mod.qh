@@ -1,3 +1,4 @@
 // generated file; do not modify
-#include <client/commands/all.qh>
-#include <client/commands/cl_cmd.qh>
+#ifdef CSQC
+    #include <client/commands/cl_cmd.qh>
+#endif

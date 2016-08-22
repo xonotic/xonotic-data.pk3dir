@@ -6,7 +6,7 @@
 #include "../teamradar.qh"
 #include <common/t_items.qh>
 #include <common/deathtypes/all.qh>
-#include <common/items/all.qc>
+#include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/vehicles/all.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
@@ -335,8 +335,6 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertica
 	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
-#include "all.inc"
-
 /*
 ==================
 Main HUD system
@@ -357,6 +355,8 @@ void HUD_Vehicle()
 		info.vr_hud(info);
 	}
 }
+
+bool HUD_Minigame_Showpanels();
 
 void HUD_Panel_Draw(entity panent)
 {
@@ -433,6 +433,7 @@ bool Hud_Shake_Update()
 	return true;
 }
 
+entity CSQCModel_server2csqc(int i);
 void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {
@@ -555,11 +556,11 @@ void HUD_Main()
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkeyvalue(current_player, "colors"));
+				f = entcs_GetClientColors(current_player);
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkeyvalue(current_player, "colors"));
+				f = entcs_GetClientColors(current_player);
 				color = colormapPaletteColor(f % 16, 1);
 			}
 			else

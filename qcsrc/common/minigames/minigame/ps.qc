@@ -1,3 +1,4 @@
+#include "ps.qh"
 REGISTER_MINIGAME(ps, "Peg Solitaire");
 
 const float PS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board

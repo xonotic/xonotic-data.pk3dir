@@ -1,3 +1,4 @@
+#include "pendulum.qh"
 #ifdef SVQC
 .float freq;
 void func_pendulum_controller_think(entity this)

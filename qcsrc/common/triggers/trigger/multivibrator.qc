@@ -1,3 +1,4 @@
+#include "multivibrator.qh"
 #ifdef SVQC
 void multivibrator_send(entity this)
 {

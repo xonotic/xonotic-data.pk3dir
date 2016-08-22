@@ -1,4 +1,7 @@
-#ifdef IMPLEMENTATION
+#include "bugrigs.qh"
+
+#ifdef GAMEQC
+
 #ifdef SVQC
 	#include <server/antilag.qh>
 #endif
@@ -311,4 +314,5 @@ MUTATOR_HOOKFUNCTION(bugrigs, BuildMutatorsPrettyString)
 }
 
 #endif
+
 #endif

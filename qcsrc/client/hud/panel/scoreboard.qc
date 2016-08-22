@@ -607,7 +607,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			}
 			else if(!teamplay)
 			{
-				f = stof(getplayerkeyvalue(pl.sv_entnum, "colors"));
+				f = entcs_GetClientColors(pl.sv_entnum);
 				{
 					sbt_field_icon0 = "gfx/scoreboard/playercolor_base";
 					sbt_field_icon1 = "gfx/scoreboard/playercolor_shirt";
@@ -788,10 +788,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb)
 			if (sbt_highlight)
 				if (!(i % 2))
 				{
-					if (i == sbt_num_fields-1)
-						column_dim.x = sbt_field_size[i] + hud_fontsize.x * 0.5;
-					else
-						column_dim.x = sbt_field_size[i] + hud_fontsize.x;
+					column_dim.x = sbt_field_size[i] + hud_fontsize.x;
 					drawfill(pos - eX * hud_fontsize.x * 0.5, column_dim, '0 0 0', sbt_highlight_alpha, DRAWFLAG_NORMAL);
 				}
 
@@ -811,8 +808,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
     TC(bool, is_self); TC(int, pl_number);
 	string str;
 	bool is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
-	if(is_spec && !is_self)
-		rgb = '0 0 0';
 
 	vector h_pos = item_pos;
 	vector h_size = eX * panel_size.x + eY * hud_fontsize.y * 1.25;
@@ -1073,7 +1068,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 		// row highlighting
 		for (int i = 0; i < rows; ++i)
-			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
 	average_accuracy = 0;
@@ -1430,7 +1425,7 @@ void Scoreboard_Draw()
 		if(pl.team != NUM_SPECTATOR)
 			continue;
 		pos.y += 1.25 * hud_fontsize.y;
-		Scoreboard_DrawItem(pos, panel_bg_color, pl, (pl.sv_entnum == player_localnum), specs);
+		Scoreboard_DrawItem(pos, '0 0 0', pl, (pl.sv_entnum == player_localnum), specs);
 		++specs;
 	}
 

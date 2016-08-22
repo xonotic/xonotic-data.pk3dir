@@ -1,44 +1,4 @@
 #include "gamemode_keepaway.qh"
-#ifndef GAMEMODE_KEEPAWAY_H
-#define GAMEMODE_KEEPAWAY_H
-
-void ka_Initialize();
-
-REGISTER_MUTATOR(ka, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		ka_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ka_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return false;
-}
-
-
-entity ka_ball;
-
-void(entity this) havocbot_role_ka_carrier;
-void(entity this) havocbot_role_ka_collector;
-
-void ka_DropEvent(entity plyr);
-#endif
-
-#ifdef IMPLEMENTATION
 
 int autocvar_g_keepaway_ballcarrier_effects;
 float autocvar_g_keepaway_ballcarrier_damage;
@@ -471,6 +431,7 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 		ka_DropEvent(frag_target);
 }
 
+.bool pushable;
 
 // ==============
 // Initialization
@@ -513,5 +474,3 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 	ka_ScoreRules();
 	ka_SpawnBall();
 }
-
-#endif

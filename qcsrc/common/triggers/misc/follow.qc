@@ -1,3 +1,4 @@
+#include "follow.qh"
 // the way this entity works makes it no use to CSQC, as it removes itself instantly
 
 #ifdef SVQC

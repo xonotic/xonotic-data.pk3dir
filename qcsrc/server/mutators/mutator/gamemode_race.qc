@@ -1,42 +1,5 @@
 #include "gamemode_race.qh"
 
-#ifndef GAMEMODE_RACE_H
-#define GAMEMODE_RACE_H
-
-void rc_SetLimits();
-void race_Initialize();
-
-REGISTER_MUTATOR(rc, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-
-		rc_SetLimits();
-		race_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back race_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-#endif
-
-#ifdef IMPLEMENTATION
-
 #include <server/race.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
@@ -505,5 +468,3 @@ void rc_SetLimits()
 		g_race_qualifying = 0;
 	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
 }
-
-#endif

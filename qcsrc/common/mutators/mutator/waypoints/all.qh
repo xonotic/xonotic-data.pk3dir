@@ -1,9 +1,8 @@
-#ifndef WAYPOINTS_ALL_H
-#define WAYPOINTS_ALL_H
+#pragma once
 
 #include "waypointsprites.qh"
 
-REGISTRY(Waypoints, BITS(6))
+REGISTRY(Waypoints, BITS(7))
 #define Waypoints_from(i) _Waypoints_from(i, WP_Null)
 REGISTER_REGISTRY(Waypoints)
 REGISTRY_CHECK(Waypoints)
@@ -58,5 +57,3 @@ REGISTER_RADARICON(Vehicle,         1);
 REGISTER_RADARICON(Weapon,          1);
 
 #include "all.inc"
-
-#endif

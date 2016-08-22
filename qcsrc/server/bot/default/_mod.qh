@@ -5,3 +5,5 @@
 #include <server/bot/default/navigation.qh>
 #include <server/bot/default/scripting.qh>
 #include <server/bot/default/waypoints.qh>
+
+#include <server/bot/default/havocbot/_mod.qh>

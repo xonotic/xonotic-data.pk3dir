@@ -1997,6 +1997,7 @@ INCLUDE_FILE_PATTERNS  =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 PREDEFINED             = \
+    "XONOTIC" \
     "USING(name, T)=using name = T" \
     "CLASS(name, base)=class name : public base { public:" \
     "INIT(class)=class::class()" \
