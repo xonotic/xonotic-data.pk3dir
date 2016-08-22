@@ -629,6 +629,8 @@ void PutClientInServer(entity this)
 		this.oldorigin = this.origin;
 		this.prevorigin = this.origin;
 		this.lastteleporttime = time; // prevent insane speeds due to changing origin
+		if(this.conveyor)
+			IL_REMOVE(g_conveyed, this);
 		this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
 		this.hud = HUD_NORMAL;
 
