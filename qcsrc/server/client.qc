@@ -27,6 +27,7 @@
 
 #include <common/effects/qc/globalsound.qh>
 
+#include "../common/triggers/func/conveyor.qh"
 #include "../common/triggers/teleporters.qh"
 
 #include "../common/vehicles/all.qh"

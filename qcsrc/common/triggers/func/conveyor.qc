@@ -1,9 +1,6 @@
 #include "conveyor.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_CONVEYOR)
 
-IntrusiveList g_conveyed;
-STATIC_INIT(g_conveyed) { g_conveyed = IL_NEW(); }
-
 void conveyor_think(entity this)
 {
 #ifdef CSQC

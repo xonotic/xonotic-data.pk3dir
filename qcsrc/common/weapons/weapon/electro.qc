@@ -341,6 +341,8 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.nextthink = this.nextthink;
 	newproj.use = this.use;
 	newproj.flags = this.flags;
+	IL_PUSH(g_projectiles, newproj);
+	IL_PUSH(g_bot_dodge, newproj);
 
 	delete(this);
 

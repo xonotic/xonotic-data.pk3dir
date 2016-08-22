@@ -692,6 +692,7 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 	beam.owner = actor;
 	set_movetype(beam, MOVETYPE_NONE);
 	beam.bot_dodge = true;
+	IL_PUSH(g_bot_dodge, beam);
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
 	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
