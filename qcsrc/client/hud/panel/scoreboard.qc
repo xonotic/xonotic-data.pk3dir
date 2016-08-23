@@ -59,7 +59,7 @@ string TranslateScoresLabel(string l)
 		case "captime": return CTX(_("SCO^captime"));
 		case "deaths": return CTX(_("SCO^deaths"));
 		case "destroyed": return CTX(_("SCO^destroyed"));
-		case "dmg": return CTX(_("SCO^dmg"));
+		case "dmg": return CTX(_("SCO^damage"));
 		case "dmgtaken": return CTX(_("SCO^dmgtaken"));
 		case "drops": return CTX(_("SCO^drops"));
 		case "faults": return CTX(_("SCO^faults"));
@@ -436,8 +436,8 @@ void Cmd_Scoreboard_SetFields(int argc)
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
 			case "elo": sbt_field[sbt_num_fields] = SP_ELO; break;
-			case "dmg": sbt_field[sbt_num_fields] = SP_DMG; break;
-			case "dmgtaken": sbt_field[sbt_num_fields] = SP_DMGTAKEN; break;
+			case "dmg": case "damage": sbt_field[sbt_num_fields] = SP_DMG; break;
+			case "dmgtaken": case "damagetaken": sbt_field[sbt_num_fields] = SP_DMGTAKEN; break;
 			default:
 			{
 				FOREACH(Scores, true, {
