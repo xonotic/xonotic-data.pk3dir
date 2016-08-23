@@ -1322,6 +1322,13 @@ void HUD_Crosshair(entity this)
 
 void HUD_Draw(entity this)
 {
+	// if we don't know gametype and scores yet avoid drawing the scoreboard
+	// also in the very first frames, player state may be inconsistent so avoid drawing the hud at all
+	// e.g. since initial player's health is 0 hud would display the hud_damage effect,
+	// cl_deathscoreboard would show the scoreboard and so on
+	if(!gametype)
+		return;
+
 	if(!intermission)
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
