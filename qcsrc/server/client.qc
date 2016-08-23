@@ -733,7 +733,7 @@ void ClientInit_misc(entity this)
 	else
 		WriteString(channel, "");
 	WriteByte(channel, this.count * 255.0); // g_balance_armor_blockpercent
-	WriteByte(channel, serverflags); // client has to know if it should zoom or not
+	WriteByte(channel, serverflags);
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 }
 

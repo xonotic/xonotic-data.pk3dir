@@ -708,7 +708,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 		}*/
 		if(autocvar_cl_spawn_point_particles)
 		{
-			if((serverflags & SERVERFLAG_TEAMPLAY))
+			if(teamplay)
 			{
 				switch(teamnum)
 				{

@@ -3,7 +3,6 @@
 #include "../gamemode.qh"
 
 void assault_ScoreRules();
-void ActivateTeamplay();
 
 REGISTER_MUTATOR(as, false)
 {
