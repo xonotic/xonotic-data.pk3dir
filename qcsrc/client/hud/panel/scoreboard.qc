@@ -67,8 +67,7 @@ string TranslateScoresLabel(string l)
 		case "goals": return CTX(_("SCO^goals"));
 		case "kckills": return CTX(_("SCO^kckills"));
 		case "kdratio": return CTX(_("SCO^kdratio"));
-		case "k/d": return CTX(_("SCO^k/d"));
-		case "kd": return CTX(_("SCO^kd"));
+		case "kd": return CTX(_("SCO^k/d"));
 		case "kdr": return CTX(_("SCO^kdr"));
 		case "kills": return CTX(_("SCO^kills"));
 		case "laps": return CTX(_("SCO^laps"));
@@ -431,7 +430,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 		{
 			case "ping": sbt_field[sbt_num_fields] = SP_PING; break;
 			case "pl": sbt_field[sbt_num_fields] = SP_PL; break;
-			case "kd": case "kdr": case "kdratio": case "k/d": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
+			case "kd": case "kdr": case "kdratio": sbt_field[sbt_num_fields] = SP_KDRATIO; break;
 			case "sum": case "diff": case "k-d": sbt_field[sbt_num_fields] = SP_SUM; break;
 			case "name": case "nick": sbt_field[sbt_num_fields] = SP_NAME; have_name = true; break;
 			case "|": sbt_field[sbt_num_fields] = SP_SEPARATOR; have_separator = true; break;
