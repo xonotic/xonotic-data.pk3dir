@@ -80,44 +80,6 @@ float GeomLerp(float a, float _lerp, float b)
 		: a * pow(fabs(b / a), _lerp);
 }
 
-#define unstick_offsets(X) \
-/* 1 no nudge (just return the original if this test passes) */ \
-	X(' 0.000  0.000  0.000') \
-/* 6 simple nudges */ \
-	X(' 0.000  0.000  0.125') X('0.000  0.000 -0.125') \
-	X('-0.125  0.000  0.000') X('0.125  0.000  0.000') \
-	X(' 0.000 -0.125  0.000') X('0.000  0.125  0.000') \
-/* 4 diagonal flat nudges */ \
-	X('-0.125 -0.125  0.000') X('0.125 -0.125  0.000') \
-	X('-0.125  0.125  0.000') X('0.125  0.125  0.000') \
-/* 8 diagonal upward nudges */ \
-	X('-0.125  0.000  0.125') X('0.125  0.000  0.125') \
-	X(' 0.000 -0.125  0.125') X('0.000  0.125  0.125') \
-	X('-0.125 -0.125  0.125') X('0.125 -0.125  0.125') \
-	X('-0.125  0.125  0.125') X('0.125  0.125  0.125') \
-/* 8 diagonal downward nudges */ \
-	X('-0.125  0.000 -0.125') X('0.125  0.000 -0.125') \
-	X(' 0.000 -0.125 -0.125') X('0.000  0.125 -0.125') \
-	X('-0.125 -0.125 -0.125') X('0.125 -0.125 -0.125') \
-	X('-0.125  0.125 -0.125') X('0.125  0.125 -0.125') \
-/**/
-
-void PM_ClientMovement_Unstick(entity this)
-{
-	#define X(unstick_offset) \
-	{ \
-		vector neworigin = unstick_offset + this.origin; \
-		tracebox(neworigin, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL), neworigin, MOVE_NORMAL, this); \
-		if (!trace_startsolid) \
-		{ \
-			setorigin(this, neworigin); \
-			return; \
-		} \
-	}
-	unstick_offsets(X);
-	#undef X
-}
-
 void PM_ClientMovement_UpdateStatus(entity this)
 {
 #ifdef CSQC
