@@ -631,7 +631,6 @@ void WarpZone_InitStep_ClearTarget(entity this)
 	this.enemy = NULL;
 }
 
-entity warpzone_first; .entity warpzone_next;
 void WarpZone_InitStep_FindTarget(entity this)
 {
 	float i;
@@ -731,6 +730,8 @@ spawnfunc(trigger_warpzone)
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.warpzone_next = warpzone_first;
 	warpzone_first = this;
+
+	IL_PUSH(g_warpzones, this);
 }
 spawnfunc(func_camera)
 {
