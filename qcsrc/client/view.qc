@@ -1784,13 +1784,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	switchweapon = Weapons_from(STAT(SWITCHWEAPON));
 
-	f = (serverflags & SERVERFLAG_TEAMPLAY);
-	if(f != teamplay)
-	{
-		teamplay = f;
-		Scoreboard_InitScores();
-	}
-
 	if(last_switchweapon != switchweapon)
 	{
 		weapontime = time;

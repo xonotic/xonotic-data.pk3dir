@@ -944,6 +944,7 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
 	gametype = ReadRegistered(Gametypes);
+	teamplay = _MapInfo_GetTeamPlayBool(gametype);
 	HUD_ModIcons_SetFunc();
 	FOREACH(Scores, true, {
 		if (scores_label(it)) strunzone(scores_label(it));
