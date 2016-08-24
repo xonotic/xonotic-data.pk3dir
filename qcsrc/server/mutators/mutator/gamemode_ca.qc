@@ -166,6 +166,22 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 		eliminatedPlayers.SendFlags |= 1;
 }
 
+MUTATOR_HOOKFUNCTION(ca, ForbidSpawn)
+{
+	entity player = M_ARGV(0, entity);
+
+	if (!allowed_to_spawn)
+	{
+		if (player.jointime != time && !player.caplayer) // not when connecting
+		{
+			player.caplayer = 0.5;
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
+		}
+		return true;
+	}
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);

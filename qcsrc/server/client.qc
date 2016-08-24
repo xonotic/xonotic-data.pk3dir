@@ -1698,7 +1698,7 @@ void SpectateCopy(entity this, entity spectatee)
 bool SpectateUpdate(entity this)
 {
 	if(!this.enemy)
-	    return false;
+		return false;
 
 	if(!IS_PLAYER(this.enemy) || this == this.enemy)
 	{
@@ -1861,12 +1861,8 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-.float caplayer;
-
 void LeaveSpectatorMode(entity this)
 {
-	if(this.caplayer)
-		return;
 	if(nJoinAllowed(this, this))
 	{
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
@@ -2009,8 +2005,9 @@ void ObserverThink(entity this)
 		MinigameImpulse(this, this.impulse);
 		this.impulse = 0;
 	}
+
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch && !MUTATOR_CALLHOOK(ForbidSpawn, this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !this.version_mismatch) {
@@ -2049,8 +2046,9 @@ void SpectatorThink(entity this)
 			return;
 		}
 	}
+
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch && !MUTATOR_CALLHOOK(ForbidSpawn, this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) || this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209)) {
