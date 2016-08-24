@@ -338,8 +338,6 @@ void GameTypeVote_SendOption(int i)
 				strcat("sv_vote_gametype_",type_name,"_description")));
 			WriteString(MSG_ENTITY, cvar_string(
 				strcat("sv_vote_gametype_",type_name,"_type")));
-			WriteString(MSG_ENTITY, cvar_string(
-				strcat("sv_vote_gametype_",type_name,"_icon")));
 		}
 	}
 }
