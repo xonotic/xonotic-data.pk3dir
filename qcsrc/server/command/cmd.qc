@@ -159,33 +159,19 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
+bool spawnAllowed(entity this);
+void LeaveSpectatorMode(entity this);
 void ClientCommand_join(entity caller, float request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
-			{
-				if (!IS_PLAYER(caller) && !lockteams && !gameover)
-				{
-					if (caller.caplayer) return;
-					if (nJoinAllowed(caller, caller))
-					{
-						if (autocvar_g_campaign)   campaign_bots_may_start = true;
-						TRANSMUTE(Player, caller);
-						PlayerScore_Clear(caller);
-						Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && caller.team != -1) ? APP_TEAM_ENT(caller, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), caller.netname);
-						PutClientInServer(caller);
-					}
-					else
-					{
-						// player may not join because of g_maxplayers is set
-						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_JOIN_PREVENT);
-					}
-				}
-			}
+			if (!gameover)
+			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
+			if (spawnAllowed(caller))
+				LeaveSpectatorMode(caller);
+
 			return;  // never fall through to usage
 		}
 
@@ -326,6 +312,7 @@ void ClientCommand_say_team(entity caller, float request, float argc, string com
 	}
 }
 
+.int selectedteam;
 void ClientCommand_selectteam(entity caller, float request, float argc)
 {
 	switch (request)
@@ -363,7 +350,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 
 								if (selection)
 								{
-									if (caller.team == selection && !IS_DEAD(caller))
+									if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
 									{
 										sprint(caller, "^7You already are on that team.\n");
 									}
@@ -385,6 +372,8 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 										}
 										ClientKill_TeamChange(caller, selection);
 									}
+									if(!IS_PLAYER(caller))
+										caller.team_selected = true; // avoids asking again for team selection on join
 								}
 							}
 							else

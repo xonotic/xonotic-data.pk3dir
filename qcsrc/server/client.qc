@@ -1861,11 +1861,12 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
+.int team_selected;
 void LeaveSpectatorMode(entity this)
 {
 	if(nJoinAllowed(this, this))
 	{
-		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
+		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
 		{
 			TRANSMUTE(Player, this);
 
@@ -1880,8 +1881,10 @@ void LeaveSpectatorMode(entity this)
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
 			PutClientInServer(this);
+			PlayerScore_Clear(this);
 
 			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
+			this.team_selected = false;
 		}
 		else
 			stuffcmd(this, "menu_showteamselect\n");
@@ -1998,6 +2001,14 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
+bool spawnAllowed(entity this)
+{
+	if (this.version_mismatch) return false;
+	if (teamplay && lockteams) return false;
+	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
+	return true;
+}
+
 void ObserverThink(entity this)
 {
 	if ( this.impulse )
@@ -2007,7 +2018,7 @@ void ObserverThink(entity this)
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch && !MUTATOR_CALLHOOK(ForbidSpawn, this)) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && spawnAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !this.version_mismatch) {
@@ -2048,7 +2059,7 @@ void SpectatorThink(entity this)
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch && !MUTATOR_CALLHOOK(ForbidSpawn, this)) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && spawnAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) || this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209)) {
