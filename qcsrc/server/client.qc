@@ -300,6 +300,8 @@ void PutObserverInServer(entity this)
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
+	if(this.damagedbycontents)
+		IL_REMOVE(g_damagedbycontents, this);
 	this.damagedbycontents = false;
 	this.health = FRAGS_SPECTATOR;
 	SetSpectatee_status(this, etof(this));
@@ -521,6 +523,8 @@ void PutClientInServer(entity this)
 		this.wasplayer = true;
 		this.iscreature = true;
 		this.teleportable = TELEPORT_NORMAL;
+		if(!this.damagedbycontents)
+			IL_PUSH(g_damagedbycontents, this);
 		this.damagedbycontents = true;
 		set_movetype(this, MOVETYPE_WALK);
 		this.solid = SOLID_SLIDEBOX;

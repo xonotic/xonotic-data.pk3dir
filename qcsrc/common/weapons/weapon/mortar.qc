@@ -242,6 +242,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.damageforcescale = WEP_CVAR_PRI(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_UP_PRI(gren, mortar);
 
@@ -290,6 +291,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.damageforcescale = WEP_CVAR_SEC(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_UP_SEC(gren, mortar);
 

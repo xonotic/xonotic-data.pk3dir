@@ -162,6 +162,7 @@ void M_Spider_Attack_Web(entity this)
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	proj.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, proj);
 
 	proj.bouncefactor = 0.3;
 	proj.bouncestop = 0.05;

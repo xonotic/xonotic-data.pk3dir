@@ -282,6 +282,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.health          = WEP_CVAR(seeker, missile_health);
 	missile.damageforcescale = WEP_CVAR(seeker, missile_damageforcescale);
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 	//missile.think           = W_Seeker_Missile_Animate; // csqc projectiles.
 
 	if(missile.enemy != NULL)

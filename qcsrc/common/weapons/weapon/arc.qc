@@ -289,6 +289,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.damageforcescale = WEP_CVAR(arc, bolt_damageforcescale);
 	missile.event_damage = W_Arc_Bolt_Damage;
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 
 	settouch(missile, W_Arc_Bolt_Touch);
 	missile.use = W_Arc_Bolt_Explode_use;

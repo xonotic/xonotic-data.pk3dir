@@ -1300,7 +1300,10 @@ bool Monster_Spawn(entity this, int mon_id)
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	{
 		IL_PUSH(g_monsters, this);
+		IL_PUSH(g_damagedbycontents, this);
+	}
 
 	if(Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
 

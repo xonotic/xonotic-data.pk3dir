@@ -939,6 +939,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.gravity = 1;
 	_nade.missile_flags = MIF_SPLASH | MIF_ARC;
 	_nade.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, _nade);
 	_nade.angles = vectoangles(_nade.velocity);
 	_nade.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, _nade);

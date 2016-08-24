@@ -1245,6 +1245,8 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
+	if(flag.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, flag);
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
 	flag.reset = ctf_Reset;

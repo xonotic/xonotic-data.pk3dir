@@ -144,6 +144,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.damageforcescale = 0;
 	gren.event_damage = M_Shambler_Attack_Lightning_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_Explicit(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, false);
 
