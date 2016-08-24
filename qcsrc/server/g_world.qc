@@ -2020,16 +2020,7 @@ void Physics_Frame()
 		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
-		int mt = it.move_movetype;
-
-		if(mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH || mt == MOVETYPE_PHYSICS)
-		{
-			it.move_qcphysics = false;
-			set_movetype(it, mt);
-			continue;
-		}
-
-		set_movetype(it, ((it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype));
+		set_movetype(it, it.move_movetype);
 
 		if(it.move_movetype == MOVETYPE_NONE)
 			continue;

@@ -19,9 +19,7 @@ void set_movetype(entity this, int mt)
 	if (mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH) {
 		this.move_qcphysics = false;
 	}
-	if (!this.move_qcphysics) {
-		this.movetype = mt;
-	}
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_NONE : mt;
 }
 #elif defined(CSQC)
 void set_movetype(entity this, int mt)
