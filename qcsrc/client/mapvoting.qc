@@ -84,6 +84,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		alpha = mv_top2_alpha; // Fade away if not one of the top 2 choice
 	else
 		alpha = 1; // Normal, full alpha
+	alpha *= panel_fg_alpha;
 
 	// Bounding box details
 	float rect_margin = hud_fontsize.y / 2;
@@ -101,14 +102,14 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	// Highlight selected item
 	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
 	{
-		drawfill(rect_pos, rect_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
+		drawfill(rect_pos, rect_size, '1 1 1', 0.1 * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	// Highlight current vote
 	vector rgb = MapVote_RGB(id);
 	if(id == mv_ownvote)
 	{
-		drawfill(rect_pos, rect_size, rgb, 0.1*alpha, DRAWFLAG_NORMAL);
+		drawfill(rect_pos, rect_size, rgb, 0.1 * alpha, DRAWFLAG_NORMAL);
 		drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
 	}
 
@@ -230,16 +231,17 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		theAlpha = mv_top2_alpha;
 	else
 		theAlpha = 1;
+	theAlpha *= panel_fg_alpha;
 
 	// Highlight selected item
 	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
-		drawfill(rect_pos, rect_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
+		drawfill(rect_pos, rect_size, '1 1 1', 0.1 * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// Highlight current vote
 	vector rgb = MapVote_RGB(id);
 	if(id == mv_ownvote)
 	{
-		drawfill(rect_pos, rect_size, rgb, 0.1*theAlpha, DRAWFLAG_NORMAL);
+		drawfill(rect_pos, rect_size, rgb, 0.1 * theAlpha, DRAWFLAG_NORMAL);
 		drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, theAlpha, DRAWFLAG_NORMAL);
 	}
 
@@ -272,7 +274,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float _count, int
 	text_size = stringwidth(label, false, hud_fontsize);
 
 	pos.x -= text_size*0.5;
-	drawstring(pos, label, hud_fontsize, rgb, 1, DRAWFLAG_NORMAL);
+	drawstring(pos, label, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 vector MapVote_GridVec(vector gridspec, int i, int m)
@@ -332,6 +334,8 @@ void MapVote_Draw()
 	if(!mv_active)
 		return;
 
+	HUD_Panel_LoadCvars();
+
 	if (!autocvar_hud_cursormode)
 	{
 		vector mpos = mv_mousepos + getmousepos();
@@ -364,14 +368,14 @@ void MapVote_Draw()
 
 	map = ((gametypevote) ? _("Decide the gametype") : _("Vote for a map"));
 	pos.x = center - stringwidth(map, false, hud_fontsize * 2) * 0.5;
-	drawstring(pos, map, hud_fontsize * 2, '1 1 1', 1, DRAWFLAG_NORMAL);
+	drawstring(pos, map, hud_fontsize * 2, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += hud_fontsize.y * 2;
 
 	if( mapvote_chosenmap != "" )
 	{
 		pos.y += hud_fontsize.y * 0.25;
 		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize * 1.5) * 0.5;
-		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += hud_fontsize.y * 1.5;
 	}
 	pos.y += hud_fontsize.y * 0.5;
@@ -381,11 +385,9 @@ void MapVote_Draw()
 	i = ceil(max(0, mv_timeout - time));
 	map = sprintf(_("%d seconds left"), i);
 	pos.x = center - stringwidth(map, false, hud_fontsize * 1.5) * 0.5;
-	drawstring(pos, map, hud_fontsize * 1.5, '0 1 0', 1, DRAWFLAG_NORMAL);
+	drawstring(pos, map, hud_fontsize * 1.5, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += hud_fontsize.y * 1.5;
 	pos.y += hud_fontsize.y * 0.5;
-
-	HUD_Panel_UpdateCvars();
 
 	// base for multi-column stuff...
 	pos.y += hud_fontsize.y;
@@ -440,7 +442,7 @@ void MapVote_Draw()
 	panel_pos.y = pos.y;
 	panel_size.x = xmax - xmin;
 	panel_size.y = ymax - ymin;
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{
@@ -486,7 +488,7 @@ void MapVote_Draw()
 		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}
 
-	draw_cursor_normal(mv_mousepos, '1 1 1', 1 - autocvar__menu_alpha);
+	draw_cursor_normal(mv_mousepos, '1 1 1', panel_fg_alpha);
 }
 
 void Cmd_MapVote_MapDownload(int argc)

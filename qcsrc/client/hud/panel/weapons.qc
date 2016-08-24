@@ -1,5 +1,7 @@
 #include "weapons.qh"
-// Weapon icons (#0)
+
+
+// Weapons (#0)
 
 entity weaponorder[Weapons_MAX];
 void weaponorder_swap(int i, int j, entity pass)
@@ -81,7 +83,7 @@ void HUD_Weapons()
 	}
 
 	// update generic hud functions
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
@@ -152,7 +154,7 @@ void HUD_Weapons()
 		if(autocvar__hud_configure)
 		{
 			if(hud_configure_menu_open != 2)
-				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+				HUD_Panel_DrawBg(); // also draw the bg of the entire panel
 		}
 
 		// do we own this weapon?
@@ -314,7 +316,7 @@ void HUD_Weapons()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(center.x == -1)
 		return; // panel has gone off screen

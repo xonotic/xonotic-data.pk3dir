@@ -1,5 +1,7 @@
 #include "chat.qh"
-/** Handle chat as a panel (#12) */
+
+// Chat (#12)
+
 void HUD_Chat()
 {
 	if(!autocvar__hud_configure)
@@ -21,7 +23,7 @@ void HUD_Chat()
 		}
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	if(intermission == 2)
 	{
@@ -56,7 +58,7 @@ void HUD_Chat()
 
 	// chat messages don't scale properly since they are displayed directly by the engine
 	HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{

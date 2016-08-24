@@ -2,7 +2,8 @@
 
 #include <common/deathtypes/all.qh>
 
-/** Health/armor (#3) */
+// Health/armor (#3)
+
 void HUD_HealthArmor()
 {
 	int armor, health, fuel;
@@ -56,7 +57,7 @@ void HUD_HealthArmor()
 		fuel = 20;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	draw_beginBoldFont();
 
@@ -68,7 +69,7 @@ void HUD_HealthArmor()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;

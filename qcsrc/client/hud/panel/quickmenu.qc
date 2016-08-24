@@ -1,9 +1,10 @@
 #include "quickmenu.qh"
-// QuickMenu (#23)
 
 #include <common/ent_cs.qh>
 #include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
+
+// QuickMenu (#23)
 
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
@@ -503,7 +504,7 @@ void QuickMenu_Mouse()
 		mousepos.y = bound(0, mousepos.y, vid_conheight);
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	if(panel_bg_padding)
 	{
@@ -617,10 +618,10 @@ void HUD_QuickMenu()
 		}
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{

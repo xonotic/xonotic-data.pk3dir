@@ -1,7 +1,6 @@
 #include "hud.qh"
 
 #include "panel/scoreboard.qh"
-
 #include "hud_config.qh"
 #include "../mapvoting.qh"
 #include "../teamradar.qh"
@@ -359,26 +358,45 @@ void HUD_Vehicle()
 
 bool HUD_Minigame_Showpanels();
 
-bool HUD_Panel_CheckFlags(int showflags)
-{
-    TC(int, showflags);
-	if ( HUD_Minigame_Showpanels() )
-		return showflags & PANEL_SHOW_MINIGAME;
-	if(intermission == 2)
-		return showflags & PANEL_SHOW_MAPVOTE;
-	return showflags & PANEL_SHOW_MAINGAME;
-}
-
 void HUD_Panel_Draw(entity panent)
 {
 	panel = panent;
-	if(autocvar__hud_configure)
+	if (autocvar__hud_configure)
 	{
-		if(panel.panel_configflags & PANEL_CONFIG_MAIN)
-			panel.panel_draw();
-	}
-	else if(HUD_Panel_CheckFlags(panel.panel_showflags))
+		if (!(panel.panel_configflags & PANEL_CONFIG_MAIN))
+			return;
+		panel_fade_alpha = 1;
+		Hud_Panel_GetPanelEnabled();
 		panel.panel_draw();
+		return;
+	}
+
+	bool draw_allowed = false;
+	if (HUD_Minigame_Showpanels())
+	{
+		if (panel.panel_showflags & PANEL_SHOW_MINIGAME)
+			draw_allowed = true;
+	}
+	else if(intermission == 2)
+	{
+		if(panel.panel_showflags & PANEL_SHOW_MAPVOTE)
+			draw_allowed = true;
+	}
+	else if (panel.panel_showflags & PANEL_SHOW_MAINGAME)
+		draw_allowed = true;
+
+	if (draw_allowed)
+	{
+		if (panel.panel_showflags & PANEL_SHOW_WITH_SB)
+			panel_fade_alpha = 1;
+		else
+		{
+			panel_fade_alpha = 1 - scoreboard_fade_alpha;
+			if(!panel_fade_alpha)
+				return;
+		}
+		panel.panel_draw();
+	}
 }
 
 void HUD_Reset()
@@ -495,11 +513,8 @@ void Hud_Dynamic_Frame()
 void HUD_Main()
 {
 	int i;
-	// global hud alpha fade (scoreboard-related panels behave differently and override it temporarly)
 	if(hud_configure_menu_open == 1)
 		hud_fade_alpha = 1;
-	else if(!autocvar__hud_configure)
-		hud_fade_alpha = (1 - scoreboard_fade_alpha) * (1 - autocvar__menu_alpha);
 	else
 		hud_fade_alpha = 1 - autocvar__menu_alpha;
 
@@ -507,27 +522,9 @@ void HUD_Main()
 
 	Hud_Dynamic_Frame();
 
-	// panels that we want to be active together with the scoreboard
-	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
-	{
 		if(autocvar__menu_alpha == 1)
 			return;
-		if(scoreboard_fade_alpha == 1)
-		{
-			HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
-			HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
-			return;
-		}
-	}
-
-	if(!autocvar__hud_configure && !hud_fade_alpha)
-	{
-		hud_fade_alpha = 1;
-		HUD_Panel_Draw(HUD_PANEL(VOTE));
-		hud_fade_alpha = 0;
-		return;
-	}
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
@@ -638,8 +635,9 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(CHAT));
 	if(hud_panel_quickmenu)
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
+	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 
-	if (scoreboard_active || intermission == 2)
+	if (intermission == 2)
 		HUD_Reset();
 
 	HUD_Configure_PostDraw();

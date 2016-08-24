@@ -848,7 +848,10 @@ LABEL(find_tab_panel)
 			return true;
 
 		if (highlightedPanel)
-			cvar_set(strcat("hud_panel_", highlightedPanel.panel_name), ftos(!cvar(strcat("hud_panel_", highlightedPanel.panel_name))));
+		{
+			if(panel.panel_configflags & PANEL_CONFIG_CANBEOFF)
+				cvar_set(strcat("hud_panel_", highlightedPanel.panel_name), ftos(!cvar(strcat("hud_panel_", highlightedPanel.panel_name))));
+		}
 		else
 			cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
 	}

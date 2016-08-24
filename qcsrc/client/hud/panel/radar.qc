@@ -145,7 +145,7 @@ void HUD_Radar_Mouse()
 		mousepos_y = bound(0, mousepos_y, vid_conheight);
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 
 	panel_size = autocvar_hud_panel_radar_maximized_size;
@@ -197,7 +197,7 @@ void HUD_Radar()
 	if ( hud_panel_radar_temp_hidden )
 		return;
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	float f = 0;
 
@@ -284,7 +284,7 @@ void HUD_Radar()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;

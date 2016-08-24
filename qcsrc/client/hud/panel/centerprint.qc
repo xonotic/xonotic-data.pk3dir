@@ -153,15 +153,7 @@ void HUD_CenterPrint ()
 		}
 	}
 
-	// this panel fades only when the menu does
-	float hud_fade_alpha_save = hud_fade_alpha;
-	if(hud_configure_menu_open == 1)
-		hud_fade_alpha = 1;
-	else
-		hud_fade_alpha = 1 - autocvar__menu_alpha;
-
-	HUD_Panel_UpdateCvars();
-	hud_fade_alpha = hud_fade_alpha_save;
+	HUD_Panel_LoadCvars();
 
 	if ( HUD_Radar_Clickable() )
 	{
@@ -189,7 +181,7 @@ void HUD_CenterPrint ()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if (!centerprint_showing)
 		return;

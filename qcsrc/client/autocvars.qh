@@ -324,7 +324,6 @@ bool autocvar_hud_panel_timer_increment;
 float autocvar_hud_panel_update_interval;
 bool autocvar_hud_panel_vote;
 float autocvar_hud_panel_vote_alreadyvoted_alpha;
-string autocvar_hud_panel_vote_bg_alpha;
 bool autocvar_hud_panel_weapons;
 bool autocvar_hud_panel_weapons_accuracy;
 bool autocvar_hud_panel_weapons_ammo;

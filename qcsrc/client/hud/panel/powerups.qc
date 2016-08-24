@@ -109,12 +109,13 @@ void HUD_Powerups()
 		return;
 
 	// Draw panel background
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
+
 	if (autocvar_hud_panel_powerups_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	// Set drawing area
 	vector pos = panel_pos;

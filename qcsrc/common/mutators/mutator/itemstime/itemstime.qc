@@ -307,7 +307,7 @@ void HUD_ItemsTime()
     if (count == 0)
         return;
 
-    HUD_Panel_UpdateCvars();
+    HUD_Panel_LoadCvars();
 
     vector pos, mySize;
     pos = panel_pos;
@@ -332,7 +332,7 @@ void HUD_ItemsTime()
     {
         if (autocvar__hud_configure)
         if (hud_configure_menu_open != 2)
-            HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+            HUD_Panel_DrawBg(); // also draw the bg of the entire panel
 
         // reduce panel to avoid spacing items
         if (itemstime_size.x / itemstime_size.y < ar)
@@ -371,7 +371,7 @@ void HUD_ItemsTime()
     }
 
     HUD_Scale_Enable();
-    HUD_Panel_DrawBg(1);
+    HUD_Panel_DrawBg();
 
     float row = 0, column = 0;
     bool item_available;

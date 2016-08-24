@@ -4,7 +4,7 @@
 #include <common/ent_cs.qh>
 #include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
 
-// Mod icons panel (#10)
+// Mod icons (#10)
 
 bool mod_active; // is there any active mod icon?
 
@@ -758,9 +758,6 @@ void HUD_ModIcons()
 		if(!HUD_ModIcons_GameType) return;
 	}
 
-	HUD_Panel_UpdateCvars();
-
-	draw_beginBoldFont();
 
 	if(mod_active != mod_prev) {
 		mod_change = time;
@@ -772,12 +769,19 @@ void HUD_ModIcons()
 	else
 		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
 
+	//if(mod_alpha <= 0)
+	//	return;
+	panel_fade_alpha *= mod_alpha;
+	HUD_Panel_LoadCvars();
+
+	draw_beginBoldFont();
+
 	if (autocvar_hud_panel_modicons_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	if(mod_alpha)
-		HUD_Panel_DrawBg(mod_alpha);
+
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{

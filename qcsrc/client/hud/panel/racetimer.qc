@@ -2,7 +2,7 @@
 
 #include <common/mapinfo.qh>
 
-/** Race timer (#8) */
+// Race timer (#6)
 
 // return the string of the onscreen race timer
 string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname)
@@ -83,7 +83,7 @@ void HUD_RaceTimer ()
 		if(spectatee_status == -1) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	vector pos, mySize;
 	pos = panel_pos;
@@ -93,7 +93,7 @@ void HUD_RaceTimer ()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;

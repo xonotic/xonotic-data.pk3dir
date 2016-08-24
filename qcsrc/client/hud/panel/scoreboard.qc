@@ -8,6 +8,8 @@
 #include <common/stats.qh>
 #include <common/teams.qh>
 
+// Scoreboard (#24)
+
 float sbt_bg_alpha;
 float sbt_fg_alpha;
 float sbt_fg_alpha_self;
@@ -926,7 +928,7 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	panel_pos = pos;
 	panel_size.y = 1.25 * hud_fontsize.y * (1 + max(1, tm.team_size));
 	panel_size.y += panel_bg_padding * 2;
-	HUD_Panel_DrawBg(scoreboard_fade_alpha);
+	HUD_Panel_DrawBg();
 
 	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
@@ -1031,7 +1033,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	panel_pos = pos;
 	panel_size.y = height * rows;
 	panel_size.y += panel_bg_padding * 2;
-	HUD_Panel_DrawBg(scoreboard_fade_alpha);
+	HUD_Panel_DrawBg();
 
 	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
@@ -1172,7 +1174,7 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size) {
 	panel_pos = pos;
 	panel_size.y = hud_fontsize.y * rows;
 	panel_size.y += panel_bg_padding * 2;
-	HUD_Panel_DrawBg(scoreboard_fade_alpha);
+	HUD_Panel_DrawBg();
 
 	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
@@ -1231,7 +1233,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	panel_pos = pos;
 	panel_size.y = 1.25 * hud_fontsize.y * RANKINGS_RECEIVED_CNT;
 	panel_size.y += panel_bg_padding * 2;
-	HUD_Panel_DrawBg(scoreboard_fade_alpha);
+	HUD_Panel_DrawBg();
 
 	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
 	if(panel.current_panel_bg != "0")
@@ -1277,6 +1279,8 @@ void Scoreboard_Draw()
 {
 	if(!autocvar__hud_configure)
 	{
+		if(!hud_draw_maximized) return;
+
 		// frametime checks allow to toggle the scoreboard even when the game is paused
 		if(scoreboard_active) {
 			if(hud_configure_menu_open == 1)
@@ -1306,12 +1310,10 @@ void Scoreboard_Draw()
 	else
 		HUD_Scale_Disable();
 
-	float hud_fade_alpha_save = hud_fade_alpha;
-	if(hud_configure_menu_open == 1)
-		hud_fade_alpha = 1;
-	else
-		hud_fade_alpha = scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
-	HUD_Panel_UpdateCvars();
+	if(scoreboard_fade_alpha <= 0)
+		return;
+	panel_fade_alpha *= scoreboard_fade_alpha;
+	HUD_Panel_LoadCvars();
 
 	sbt_bg_alpha = autocvar_hud_panel_scoreboard_table_bg_alpha * panel_fg_alpha;
 	sbt_highlight = autocvar_hud_panel_scoreboard_table_highlight;
@@ -1319,8 +1321,6 @@ void Scoreboard_Draw()
 	sbt_highlight_alpha_self = autocvar_hud_panel_scoreboard_table_highlight_alpha_self * panel_fg_alpha;
 	sbt_fg_alpha = autocvar_hud_panel_scoreboard_table_fg_alpha * panel_fg_alpha;
 	sbt_fg_alpha_self = autocvar_hud_panel_scoreboard_table_fg_alpha_self * panel_fg_alpha;
-
-	hud_fade_alpha = hud_fade_alpha_save;
 
 	// don't overlap with con_notify
 	if(!autocvar__hud_configure)

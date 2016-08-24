@@ -497,9 +497,8 @@ void nmm_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void nmm_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
-
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
 	pos_y += ts_y;
