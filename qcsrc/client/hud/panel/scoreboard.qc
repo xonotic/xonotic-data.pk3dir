@@ -10,6 +10,9 @@
 
 // Scoreboard (#24)
 
+string autocvar_hud_fontsize;
+string hud_fontsize_str;
+
 float sbt_bg_alpha;
 float sbt_fg_alpha;
 float sbt_fg_alpha_self;
@@ -754,6 +757,12 @@ string Scoreboard_FixColumnWidth(int i, string str)
 	return str;
 }
 
+void Scoreboard_initFieldSizes()
+{
+	for(int i = 0; i < sbt_num_fields; ++i)
+		sbt_field_size[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
+}
+
 vector Scoreboard_DrawHeader(vector pos, vector rgb)
 {
 	int i;
@@ -1290,6 +1299,14 @@ void Scoreboard_Draw()
 				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * scoreboard_fadeinspeed);
 			else
 				scoreboard_fade_alpha = 1;
+			if(hud_fontsize_str != autocvar_hud_fontsize)
+			{
+				hud_fontsize = HUD_GetFontsize("hud_fontsize");
+				Scoreboard_initFieldSizes();
+				if(hud_fontsize_str)
+					strunzone(hud_fontsize_str);
+				hud_fontsize_str = strzone(autocvar_hud_fontsize);
+			}
 		}
 		else {
 			float scoreboard_fadeoutspeed = autocvar_hud_panel_scoreboard_fadeoutspeed;
