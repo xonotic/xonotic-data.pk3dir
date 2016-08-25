@@ -1871,17 +1871,17 @@ void LeaveSpectatorMode(entity this)
 		SetSpectatee(this, NULL);
 
 		if(autocvar_g_campaign || autocvar_g_balance_teams)
-			{ JoinBestTeam(this, false, true); }
+			JoinBestTeam(this, false, true);
 
 		if(autocvar_g_campaign)
-			{ campaign_bots_may_start = true; }
+			campaign_bots_may_start = true;
 
 		Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
 		PutClientInServer(this);
 		PlayerScore_Clear(this);
 
-		if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname);
 		this.team_selected = false;
 	}
 	else
@@ -1894,20 +1894,20 @@ void LeaveSpectatorMode(entity this)
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-bool nJoinAllowed(entity this, entity ignore)
+int nJoinAllowed(entity this, entity ignore)
 {
 	if(!ignore)
 	// this is called that way when checking if anyone may be able to join (to build qcstatus)
 	// so report 0 free slots if restricted
 	{
 		if(autocvar_g_forced_team_otherwise == "spectate")
-			return false;
+			return 0;
 		if(autocvar_g_forced_team_otherwise == "spectator")
-			return false;
+			return 0;
 	}
 
 	if(this.team_forced < 0)
-		return false; // forced spectators can never join
+		return 0; // forced spectators can never join
 
 	// TODO simplify this
 	int totalClients = 0;
@@ -1926,7 +1926,7 @@ bool nJoinAllowed(entity this, entity ignore)
 	if(currentlyPlaying < autocvar_g_maxplayers)
 		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
-	return false;
+	return 0;
 }
 
 /**
