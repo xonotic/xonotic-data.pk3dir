@@ -659,19 +659,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			}
 		}
 
-		case SP_DMG:
-			num = pl.(scores(SP_DMG));
-			denom = 1000;
-
-			str = sprintf("%.1f k", num/denom);
-			return str;
-
-		case SP_DMGTAKEN:
-			num = pl.(scores(SP_DMGTAKEN));
-			denom = 1000;
-
-			str = sprintf("%.1f k", num/denom);
-			return str;
+		case SP_DMG: case SP_DMGTAKEN:
+			return sprintf("%.1f k", pl.(scores(field)) / 1000);
 
 		default:
 			tmp = pl.(scores(field));
@@ -696,7 +685,6 @@ string Scoreboard_FixColumnWidth(int i, string str)
     TC(int, i);
 	float f;
 	vector sz;
-	PlayerScoreField field = sbt_field[i];
 
 	sbt_fixcolumnwidth_iconlen = 0;
 
@@ -731,7 +719,7 @@ string Scoreboard_FixColumnWidth(int i, string str)
 	else
 		sbt_fixcolumnwidth_marginlen = 0;
 
-	if(field == SP_NAME) // name gets all remaining space
+	if(sbt_field[i] == SP_NAME) // name gets all remaining space
 	{
 		int j;
 		float namesize;
