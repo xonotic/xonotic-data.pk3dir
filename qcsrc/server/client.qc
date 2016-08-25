@@ -1864,36 +1864,28 @@ void ShowRespawnCountdown(entity this)
 .int team_selected;
 void LeaveSpectatorMode(entity this)
 {
-	if(nJoinAllowed(this, this))
+	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
 	{
-		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
-		{
-			TRANSMUTE(Player, this);
+		TRANSMUTE(Player, this);
 
-			SetSpectatee(this, NULL);
+		SetSpectatee(this, NULL);
 
-			if(autocvar_g_campaign || autocvar_g_balance_teams)
-				{ JoinBestTeam(this, false, true); }
+		if(autocvar_g_campaign || autocvar_g_balance_teams)
+			{ JoinBestTeam(this, false, true); }
 
-			if(autocvar_g_campaign)
-				{ campaign_bots_may_start = true; }
+		if(autocvar_g_campaign)
+			{ campaign_bots_may_start = true; }
 
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
+		Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
-			PutClientInServer(this);
-			PlayerScore_Clear(this);
+		PutClientInServer(this);
+		PlayerScore_Clear(this);
 
-			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
-			this.team_selected = false;
-		}
-		else
-			stuffcmd(this, "menu_showteamselect\n");
+		if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
+		this.team_selected = false;
 	}
 	else
-	{
-		// Player may not join because g_maxplayers is set
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
-	}
+		stuffcmd(this, "menu_showteamselect\n");
 }
 
 /**
@@ -2006,6 +1998,12 @@ bool spawnAllowed(entity this)
 	if (this.version_mismatch) return false;
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
+	if (!nJoinAllowed(this, this))
+	{
+		// Player may not join because g_maxplayers is set
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
+		return false;
+	}
 	return true;
 }
 
