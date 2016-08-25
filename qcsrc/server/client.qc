@@ -1920,13 +1920,20 @@ int nJoinAllowed(entity this, entity ignore)
 			++currentlyPlaying;
 	));
 
+	float free_slots = 0;
 	if (!autocvar_g_maxplayers)
-		return maxclients - totalClients;
+		free_slots = maxclients - totalClients;
+	else if(currentlyPlaying < autocvar_g_maxplayers)
+		free_slots = min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
-	if(currentlyPlaying < autocvar_g_maxplayers)
-		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
+	static float join_prevent_msg_time = 0;
+	if(ignore && !free_slots && time > join_prevent_msg_time)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
+		join_prevent_msg_time = time + 3;
+	}
 
-	return 0;
+	return free_slots;
 }
 
 /**
@@ -1998,12 +2005,7 @@ bool spawnAllowed(entity this)
 	if (this.version_mismatch) return false;
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
-	if (!nJoinAllowed(this, this))
-	{
-		// Player may not join because g_maxplayers is set
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
-		return false;
-	}
+	if (!nJoinAllowed(this, this)) return false;
 	return true;
 }
 
