@@ -1906,7 +1906,7 @@ int nJoinAllowed(entity this, entity ignore)
 			return 0;
 	}
 
-	if(this.team_forced < 0)
+	if(this && this.team_forced < 0)
 		return 0; // forced spectators can never join
 
 	// TODO simplify this
@@ -1927,7 +1927,7 @@ int nJoinAllowed(entity this, entity ignore)
 		free_slots = min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
 	static float join_prevent_msg_time = 0;
-	if(ignore && !free_slots && time > join_prevent_msg_time)
+	if(this && ignore && !free_slots && time > join_prevent_msg_time)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
 		join_prevent_msg_time = time + 3;
