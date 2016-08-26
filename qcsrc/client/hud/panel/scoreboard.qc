@@ -1026,7 +1026,8 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		rows = 2;
 	int columnns = ceil(weapon_cnt / rows);
 
-	float height = 40;
+	float weapon_height = 29;
+	float height = hud_fontsize.y + weapon_height;
 
 	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
@@ -1051,8 +1052,6 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	pos = panel_pos;
 	vector tmp = panel_size;
 
-	float fontsize = height * 1/3;
-	float weapon_height = height * 2/3;
 	float weapon_width = tmp.x / columnns / rows;
 
 	if (sbt_bg_alpha)
@@ -1067,7 +1066,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 		// row highlighting
 		for (int i = 0; i < rows; ++i)
-			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * hud_fontsize.y, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
 	average_accuracy = 0;
@@ -1108,12 +1107,12 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 			s = sprintf("%d%%", weapon_stats * 100);
 
 			float padding;
-			padding = (weapon_width - stringwidth(s, false, eX * fontsize)) / 2; // center the accuracy value
+			padding = (weapon_width - stringwidth(s, false, hud_fontsize)) / 2; // center the accuracy value
 
 			if(!autocvar_hud_panel_scoreboard_accuracy_nocolors)
 				rgb = Accuracy_GetColor(weapon_stats);
 
-			drawstring(tmpos + eX * padding + eY * weapon_height, s, '1 1 0' * fontsize, rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(tmpos + eX * padding + eY * weapon_height, s, hud_fontsize, rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		tmpos.x += weapon_width * rows;
 		pos.x += weapon_width * rows;
