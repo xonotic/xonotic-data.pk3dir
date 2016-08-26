@@ -1004,19 +1004,25 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	WepSet weapons_stat = WepSet_GetFromStat();
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	int disownedcnt = 0;
+	int nHidden = 0;
 	FOREACH(Weapons, it != WEP_Null, {
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
-		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
-			++disownedcnt;
+		if (weapon_stats < 0)
+		{
+			if (!(weapons_stat & set) && (it.spawnflags & WEP_FLAG_HIDDEN || it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				nHidden += 1;
+			else if (!(weapons_stat & set || weapons_inmap & set))
+				++disownedcnt;
+		}
 	});
 
-	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
+	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt - nHidden;
 	if (weapon_cnt <= 0) return pos;
 
 	int rows = 1;
-	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - 1) * 0.5))
+	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - nHidden - 1) * 0.5))
 		rows = 2;
 	int columnns = ceil(weapon_cnt / rows);
 
