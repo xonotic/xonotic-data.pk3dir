@@ -1,22 +1,5 @@
 #pragma once
 
-#ifdef SVQC
-#include "sv_monsters.qh"
-#include <server/g_damage.qh>
-#include <server/bot/api.qh>
-#include <server/weapons/common.qh>
-#include <server/weapons/tracing.qh>
-#include <server/weapons/weaponsystem.qh>
-#include <common/mutators/mutator/waypoints/waypointsprites.qh>
-#include <lib/warpzone/server.qh>
-#endif
-
-#ifdef GAMEQC
-#include "../animdecide.qh"
-#include "../anim.qh"
-vector animfixfps(entity e, vector a, vector b);
-#endif
-
 // special spawn flags
 const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
 const int MONSTER_TYPE_FLY = 32;
@@ -73,3 +56,21 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
 
 ENDCLASS(Monster)
+
+
+#ifdef SVQC
+#include "sv_monsters.qh"
+#include <server/g_damage.qh>
+#include <server/bot/api.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <lib/warpzone/server.qh>
+#endif
+
+#ifdef GAMEQC
+#include "../animdecide.qh"
+#include "../anim.qh"
+vector animfixfps(entity e, vector a, vector b);
+#endif
