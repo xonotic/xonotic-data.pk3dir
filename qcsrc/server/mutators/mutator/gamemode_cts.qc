@@ -18,7 +18,7 @@ void havocbot_role_cts(entity this)
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
-		FOREACH_ENTITY_CLASS("trigger_race_checkpoint", true,
+		IL_EACH(g_racecheckpoints, true,
 		{
 			if(it.cnt == this.race_checkpoint)
 				navigation_routerating(this, it, 1000000, 5000);

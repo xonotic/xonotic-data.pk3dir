@@ -146,7 +146,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #ifdef SVQC
 
 #include <common/gamemodes/_mod.qh>
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <server/g_subs.qh>
 
@@ -293,6 +293,7 @@ void nade_napalm_ball(entity this)
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	//CSQCProjectile(proj, true, PROJECTILE_NAPALM_FIRE, true);
@@ -349,6 +350,9 @@ void nade_napalm_boom(entity this)
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, napalm_fountain_think);
 	fountain.nextthink = time;
@@ -730,10 +734,9 @@ void nade_boom(entity this)
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 	}
 
-	FOREACH_ENTITY_ENT(aiment, this,
+	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 	{
-		if(it.classname == "grapplinghook")
-			RemoveGrapplingHook(it.realowner);
+		RemoveGrapplingHook(it.realowner);
 	});
 
 	delete(this);
@@ -780,10 +783,9 @@ void nade_touch(entity this, entity toucher)
 		is_weapclip = 1;*/
 	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
-		FOREACH_ENTITY_ENT(aiment, this,
+		IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 		{
-			if(it.classname == "grapplinghook")
-				RemoveGrapplingHook(it.realowner);
+			RemoveGrapplingHook(it.realowner);
 		});
 		delete(this);
 		return;
@@ -943,6 +945,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.angles = vectoangles(_nade.velocity);
 	_nade.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, _nade);
+	IL_PUSH(g_bot_dodge, _nade);
 	_nade.projectiledeathtype = DEATH_NADE.m_id;
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);

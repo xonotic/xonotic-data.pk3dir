@@ -1,6 +1,4 @@
 #include "all.qh"
-#ifndef MONSTERS_ALL_C
-#define MONSTERS_ALL_C
 
 string M_Model(string m_mdl)
 {
@@ -12,16 +10,3 @@ string M_Model(string m_mdl)
 	return output;
 #endif
 }
-
-#include "all.qh"
-
-#define IMPLEMENTATION
-#include "monster/_mod.inc"
-#undef IMPLEMENTATION
-
-#ifdef SVQC
-#include "spawn.qc"
-#include "sv_monsters.qc"
-#endif
-
-#endif

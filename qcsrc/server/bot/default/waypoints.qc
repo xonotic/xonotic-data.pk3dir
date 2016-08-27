@@ -1012,7 +1012,7 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 
 void botframe_deleteuselesswaypoints()
 {
-	FOREACH_ENTITY_FLOAT(bot_pickup, true,
+	IL_EACH(g_items, it.bot_pickup,
 	{
 		// NOTE: this protects waypoints if they're the ONLY nearest
 		// waypoint. That's the intention.

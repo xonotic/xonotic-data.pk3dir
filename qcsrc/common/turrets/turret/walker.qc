@@ -241,6 +241,7 @@ void walker_fire_rocket(entity this, vector org)
     settouch(rocket, walker_rocket_touch);
     rocket.flags = FL_PROJECTILE;
     IL_PUSH(g_projectiles, rocket);
+    IL_PUSH(g_bot_dodge, rocket);
     rocket.solid			  = SOLID_BBOX;
     rocket.max_health		 = time + 9;
     rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;

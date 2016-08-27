@@ -1234,6 +1234,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
 	flag.flags = FL_ITEM | FL_NOTARGET;
+	IL_PUSH(g_items, flag);
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_NO;
 	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;
@@ -1529,7 +1530,7 @@ void havocbot_goalrating_ctf_droppedflags(entity this, float ratingscale, vector
 
 void havocbot_goalrating_ctf_carrieritems(entity this, float ratingscale, vector org, float sradius)
 {
-	FOREACH_ENTITY_FLOAT(bot_pickup, true,
+	IL_EACH(g_items, it.bot_pickup,
 	{
 		// gather health and armor only
 		if (it.solid)

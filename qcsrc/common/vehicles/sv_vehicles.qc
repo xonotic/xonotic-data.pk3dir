@@ -249,6 +249,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;
@@ -433,17 +434,15 @@ void vehicles_reset_colors(entity this)
 void vehicles_clearreturn(entity veh)
 {
 	// Remove "return helper" entities, if any.
-	FOREACH_ENTITY_ENT(wp00, veh,
+	IL_EACH(g_vehicle_returners, it.wp00 == veh,
 	{
-		if(it.classname == "vehicle_return")
-		{
-			it.classname = "";
-			setthink(it, SUB_Remove);
-			it.nextthink = time + 0.1;
+		it.classname = "";
+		setthink(it, SUB_Remove);
+		it.nextthink = time + 0.1;
+		IL_REMOVE(g_vehicle_returners, it);
 
-			if(it.waypointsprite_attached)
-				WaypointSprite_Kill(it.waypointsprite_attached);
-		}
+		if(it.waypointsprite_attached)
+			WaypointSprite_Kill(it.waypointsprite_attached);
 	});
 }
 
@@ -513,6 +512,7 @@ void vehicles_setreturn(entity veh)
 	vehicles_clearreturn(veh);
 
 	entity ret = new(vehicle_return);
+	IL_PUSH(g_vehicle_returners, ret);
 	ret.wp00	   = veh;
 	ret.team		= veh.team;
 	setthink(ret, vehicles_showwp);
@@ -1076,6 +1076,8 @@ void vehicles_spawn(entity this)
 	this.solid				= SOLID_SLIDEBOX;
 	this.takedamage			= DAMAGE_AIM;
 	this.deadflag			= DEAD_NO;
+	if(!this.bot_attack)
+		IL_PUSH(g_bot_targets, this);
 	this.bot_attack			= true;
 	this.flags				= FL_NOTARGET;
 	this.avelocity			= '0 0 0';
@@ -1161,6 +1163,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.tur_head.owner			= this;
 	this.takedamage				= DAMAGE_NO;
 	this.bot_attack				= true;
+	IL_PUSH(g_bot_targets, this);
 	this.iscreature				= true;
 	this.teleportable			= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents		= true;

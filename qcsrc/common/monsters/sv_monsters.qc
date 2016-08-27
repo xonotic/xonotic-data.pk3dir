@@ -1327,6 +1327,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	this.classname			= "monster";
 	this.takedamage			= DAMAGE_AIM;
 	this.bot_attack			= true;
+	IL_PUSH(g_bot_targets, this);
 	this.iscreature			= true;
 	this.teleportable		= true;
 	this.damagedbycontents	= true;

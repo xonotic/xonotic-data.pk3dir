@@ -301,6 +301,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
@@ -341,6 +342,8 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.nextthink = this.nextthink;
 	newproj.use = this.use;
 	newproj.flags = this.flags;
+	IL_PUSH(g_projectiles, newproj);
+	IL_PUSH(g_bot_dodge, newproj);
 
 	delete(this);
 
@@ -449,6 +452,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.event_damage = W_Electro_Orb_Damage;
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.damagedbycontents = (WEP_CVAR_SEC(electro, damagedbycontents));
 	if(proj.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, proj);

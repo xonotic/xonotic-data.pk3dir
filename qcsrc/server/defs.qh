@@ -426,7 +426,6 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .string cvar_cl_physics;
 
-.bool init_for_player_needed;
 .void(entity this, entity player) init_for_player;
 
 IntrusiveList g_damagedbycontents;
@@ -449,3 +448,30 @@ STATIC_INIT(g_mines) { g_mines = IL_NEW(); }
 
 IntrusiveList g_projectiles;
 STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }
+
+IntrusiveList g_items;
+STATIC_INIT(g_items) { g_items = IL_NEW(); }
+
+IntrusiveList g_initforplayer;
+STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
+
+IntrusiveList g_clones;
+STATIC_INIT(g_clones) { g_clones = IL_NEW(); }
+
+IntrusiveList g_assault_destructibles;
+STATIC_INIT(g_assault_destructibles) { g_assault_destructibles = IL_NEW(); }
+
+IntrusiveList g_assault_objectivedecreasers;
+STATIC_INIT(g_assault_objectivedecreasers) { g_assault_objectivedecreasers = IL_NEW(); }
+
+IntrusiveList g_assault_objectives;
+STATIC_INIT(g_assault_objectives) { g_assault_objectives = IL_NEW(); }
+
+IntrusiveList g_spawnpoints;
+STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }
+
+IntrusiveList g_bot_targets;
+STATIC_INIT(g_bot_targets) { g_bot_targets = IL_NEW(); }
+
+IntrusiveList g_bot_dodge;
+STATIC_INIT(g_bot_dodge) { g_bot_dodge = IL_NEW(); }

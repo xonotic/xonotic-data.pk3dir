@@ -1000,7 +1000,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 		danger = 0;
 		m1 = it.mins;
 		m2 = it.maxs;
-		FOREACH_ENTITY_FLOAT(bot_dodge, true,
+		IL_EACH(g_bot_dodge, it.bot_dodge,
 		{
 			v = it.origin;
 			v.x = bound(m1_x, v.x, m2_x);

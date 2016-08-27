@@ -13,6 +13,7 @@
 #include <common/state.qh>
 #include <common/items/_mod.qh>
 
+#include <common/triggers/teleporters.qh>
 #include <common/triggers/trigger/jumppads.qh>
 
 #include <lib/warpzone/common.qh>
@@ -836,6 +837,26 @@ void havocbot_movetogoal(entity this)
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-this.bot_dodgeskill)*0.1,1)) this.havocbot_ducktime=time+0.3/bound(0.1,skill+this.bot_dodgeskill,10);
 }
 
+entity havocbot_gettarget(entity this, bool secondary)
+{
+	entity best = NULL;
+	vector eye = CENTER_OR_VIEWOFS(this);
+	IL_EACH(g_bot_targets, boolean((secondary) ? it.classname == "misc_breakablemodel" : it.classname != "misc_breakablemodel"),
+	{
+		vector v = CENTER_OR_VIEWOFS(it);
+		if(vdist(v - eye, <, autocvar_bot_ai_enemydetectionradius))
+		if(!best || vlen2(CENTER_OR_VIEWOFS(best) - eye) > vlen2(v - eye))
+		if(bot_shouldattack(this, it))
+		{
+			traceline(eye, v, true, this);
+			if (trace_ent == it || trace_fraction >= 1)
+				best = it;
+		}
+	});
+
+	return best;
+}
+
 void havocbot_chooseenemy(entity this)
 {
 	entity head, best, head2;
@@ -1214,7 +1235,7 @@ float havocbot_moveto(entity this, vector pos)
 	this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 
 	// if pos is inside a teleport, then let's mark it as teleport waypoint
-	FOREACH_ENTITY_CLASS("trigger_teleport", WarpZoneLib_BoxTouchesBrush(pos, pos, it, NULL),
+	IL_EACH(g_teleporters, WarpZoneLib_BoxTouchesBrush(pos, pos, it, NULL),
 	{
 		wp.wpflags |= WAYPOINTFLAG_TELEPORT;
 		this.lastteleporttime = 0;

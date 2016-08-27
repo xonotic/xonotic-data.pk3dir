@@ -1,5 +1,8 @@
 #pragma once
 
+IntrusiveList g_teleporters;
+STATIC_INIT(g_teleporters) { g_teleporters = IL_NEW(); }
+
 .entity pusher;
 const float TELEPORT_FLAG_SOUND = 1;
 const float TELEPORT_FLAG_PARTICLES = 2;

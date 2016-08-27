@@ -27,7 +27,7 @@
 #include <common/stats.qh>
 #include <common/teams.qh>
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 
 #include <lib/warpzone/anglestransform.qh>
 #include <lib/warpzone/server.qh>

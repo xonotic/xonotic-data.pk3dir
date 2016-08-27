@@ -21,7 +21,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
-#include "../common/monsters/all.qh"
+#include "../common/monsters/_mod.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/notifications/all.qh"
@@ -554,6 +554,8 @@ spawnfunc(__init_dedicated_server)
 	static_init();
 	static_init_late();
 	static_init_precache();
+
+	IL_PUSH(g_spawnpoints, e); // just incase
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -1768,7 +1770,8 @@ float WinningCondition_RanOutOfSpawns()
 		}
 	));
 
-	FOREACH_ENTITY_CLASS("info_player_deathmatch", true, LAMBDA(
+	IL_EACH(g_spawnpoints, true,
+	{
 		switch(it.team)
 		{
 			case NUM_TEAM_1: team1_score = 1; break;
@@ -1776,7 +1779,7 @@ float WinningCondition_RanOutOfSpawns()
 			case NUM_TEAM_3: team3_score = 1; break;
 			case NUM_TEAM_4: team4_score = 1; break;
 		}
-	));
+	});
 
 	ClearWinners();
 	if(team1_score + team2_score + team3_score + team4_score == 0)
@@ -2020,16 +2023,7 @@ void Physics_Frame()
 		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
-		int mt = it.move_movetype;
-
-		if(mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH || mt == MOVETYPE_PHYSICS)
-		{
-			it.move_qcphysics = false;
-			set_movetype(it, mt);
-			continue;
-		}
-
-		set_movetype(it, ((it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype));
+		set_movetype(it, it.move_movetype);
 
 		if(it.move_movetype == MOVETYPE_NONE)
 			continue;

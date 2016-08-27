@@ -10,13 +10,10 @@ void assault_objective_use(entity this, entity actor, entity trigger)
 	//print("^2Activated objective ", this.targetname, "=", etos(this), "\n");
 	//print("Activator is ", actor.classname, "\n");
 
-	for (entity e = NULL; (e = find(e, target, this.targetname)); )
+	IL_EACH(g_assault_objectivedecreasers, it.target == this.targetname,
 	{
-		if (e.classname == "target_objective_decrease")
-		{
-			target_objective_decrease_activate(e);
-		}
-	}
+		target_objective_decrease_activate(it);
+	});
 }
 
 vector target_objective_spawn_evalfunc(entity this, entity player, entity spot, vector current)
@@ -74,16 +71,13 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 
 void assault_setenemytoobjective(entity this)
 {
-	FOREACH_ENTITY_STRING(targetname, this.target,
+	IL_EACH(g_assault_objectives, it.targetname == this.target,
 	{
-		if(it.classname == "target_objective")
-		{
-			if(this.enemy == NULL)
-				this.enemy = it;
-			else
-				objerror(this, "more than one objective as target - fix the map!");
-			break;
-		}
+		if(this.enemy == NULL)
+			this.enemy = it;
+		else
+			objerror(this, "more than one objective as target - fix the map!");
+		break;
 	});
 
 	if(this.enemy == NULL)
@@ -150,7 +144,8 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 	SUB_UseTargets(this, this, trigger);
 
 	//(Re)spawn all turrets
-	FOREACH_ENTITY_CLASS("turret_main", true, LAMBDA(
+	IL_EACH(g_turrets, true,
+	{
 		// Swap turret teams
 		if(it.team == NUM_TEAM_1)
 			it.team = NUM_TEAM_2;
@@ -159,7 +154,7 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 
 		// Doubles as teamchange
 		turret_respawn(it);
-	));
+	});
 }
 void assault_roundstart_use_this(entity this)
 {
@@ -286,6 +281,7 @@ spawnfunc(target_objective)
 	if (!g_assault) { delete(this); return; }
 
 	this.classname = "target_objective";
+	IL_PUSH(g_assault_objectives, this);
 	this.use = assault_objective_use;
 	this.reset = assault_objective_reset;
 	this.reset(this);
@@ -297,6 +293,7 @@ spawnfunc(target_objective_decrease)
 	if (!g_assault) { delete(this); return; }
 
 	this.classname = "target_objective_decrease";
+	IL_PUSH(g_assault_objectivedecreasers, this);
 
 	if(!this.dmg)
 		this.dmg = 101;
@@ -317,6 +314,7 @@ spawnfunc(func_assault_destructible)
 
 	this.spawnflags = 3;
 	this.classname = "func_assault_destructible";
+	IL_PUSH(g_assault_destructibles, this);
 
 	if(assault_attacker_team == NUM_TEAM_1)
 		this.team = NUM_TEAM_2;
@@ -364,17 +362,15 @@ spawnfunc(target_assault_roundstart)
 // legacy bot code
 void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 {
-	FOREACH_ENTITY_CLASS("func_assault_destructible", it.bot_attack,
+	IL_EACH(g_assault_destructibles, it.bot_attack,
 	{
 		if (it.target == "")
 			continue;
 
 		bool found = false;
-		FOREACH_ENTITY_STRING(targetname, it.target,
+		entity destr = it;
+		IL_EACH(g_assault_objectivedecreasers, it.targetname == destr.target,
 		{
-			if(it.classname != "target_objective_decrease")
-				continue;
-
 			if(it.enemy.health > 0 && it.enemy.health < ASSAULT_VALUE_INACTIVE)
 			{
 				found = true;

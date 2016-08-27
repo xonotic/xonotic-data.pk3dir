@@ -249,6 +249,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	if(WEP_CVAR_PRI(mortar, type) == 0 || WEP_CVAR_PRI(mortar, type) == 2)
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);
@@ -298,6 +299,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	if(WEP_CVAR_SEC(mortar, type) == 0 || WEP_CVAR_SEC(mortar, type) == 2)
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);

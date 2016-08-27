@@ -1,10 +1,12 @@
 #include "gamemode_invasion.qh"
 
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 
 #include <server/teamplay.qh>
 
+IntrusiveList g_invasion_spawns;
+STATIC_INIT(g_invasion_spawns) { g_invasion_spawns = IL_NEW(); }
 
 float autocvar_g_invasion_round_timelimit;
 float autocvar_g_invasion_spawnpoint_spawn_delay;
@@ -18,6 +20,7 @@ spawnfunc(invasion_spawnpoint)
 	if(!g_invasion) { delete(this); return; }
 
 	this.classname = "invasion_spawnpoint";
+	IL_PUSH(g_invasion_spawns, this);
 
 	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
 	if(this.monsterid) {
@@ -52,7 +55,7 @@ entity invasion_PickSpawn()
 {
 	RandomSelection_Init();
 
-	FOREACH_ENTITY_CLASS("invasion_spawnpoint", true,
+	IL_EACH(g_invasion_spawns, true,
 	{
 		RandomSelection_Add(it, 0, string_null, 1, ((time >= it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
 		it.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
@@ -340,6 +343,8 @@ MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	if(player.bot_attack)
+		IL_REMOVE(g_bot_targets, player);
 	player.bot_attack = false;
 }
 

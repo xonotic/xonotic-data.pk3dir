@@ -283,6 +283,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.angles_y += key.owner.angles.y;
 #endif
 	key.flags = FL_ITEM;
+	IL_PUSH(g_items, key);
 	key.solid = SOLID_TRIGGER;
 	set_movetype(key, MOVETYPE_TOSS);
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;

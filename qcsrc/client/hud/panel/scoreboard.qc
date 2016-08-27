@@ -10,6 +10,9 @@
 
 // Scoreboard (#24)
 
+string autocvar_hud_fontsize;
+string hud_fontsize_str;
+
 float sbt_bg_alpha;
 float sbt_fg_alpha;
 float sbt_fg_alpha_self;
@@ -656,19 +659,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			}
 		}
 
-		case SP_DMG:
-			num = pl.(scores(SP_DMG));
-			denom = 1000;
-
-			str = sprintf("%.1f k", num/denom);
-			return str;
-
-		case SP_DMGTAKEN:
-			num = pl.(scores(SP_DMGTAKEN));
-			denom = 1000;
-
-			str = sprintf("%.1f k", num/denom);
-			return str;
+		case SP_DMG: case SP_DMGTAKEN:
+			return sprintf("%.1f k", pl.(scores(field)) / 1000);
 
 		default:
 			tmp = pl.(scores(field));
@@ -693,7 +685,6 @@ string Scoreboard_FixColumnWidth(int i, string str)
     TC(int, i);
 	float f;
 	vector sz;
-	PlayerScoreField field = sbt_field[i];
 
 	sbt_fixcolumnwidth_iconlen = 0;
 
@@ -728,7 +719,7 @@ string Scoreboard_FixColumnWidth(int i, string str)
 	else
 		sbt_fixcolumnwidth_marginlen = 0;
 
-	if(field == SP_NAME) // name gets all remaining space
+	if(sbt_field[i] == SP_NAME) // name gets all remaining space
 	{
 		int j;
 		float namesize;
@@ -752,6 +743,12 @@ string Scoreboard_FixColumnWidth(int i, string str)
 		sbt_field_size[i] = f;
 
 	return str;
+}
+
+void Scoreboard_initFieldSizes()
+{
+	for(int i = 0; i < sbt_num_fields; ++i)
+		sbt_field_size[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
 }
 
 vector Scoreboard_DrawHeader(vector pos, vector rgb)
@@ -1007,23 +1004,30 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	WepSet weapons_stat = WepSet_GetFromStat();
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	int disownedcnt = 0;
+	int nHidden = 0;
 	FOREACH(Weapons, it != WEP_Null, {
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
-		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
-			++disownedcnt;
+		if (weapon_stats < 0)
+		{
+			if (!(weapons_stat & set) && (it.spawnflags & WEP_FLAG_HIDDEN || it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				nHidden += 1;
+			else if (!(weapons_stat & set || weapons_inmap & set))
+				++disownedcnt;
+		}
 	});
 
-	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
+	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt - nHidden;
 	if (weapon_cnt <= 0) return pos;
 
 	int rows = 1;
-	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - 1) * 0.5))
+	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - nHidden - 1) * 0.5))
 		rows = 2;
 	int columnns = ceil(weapon_cnt / rows);
 
-	float height = 40;
+	float weapon_height = 29;
+	float height = hud_fontsize.y + weapon_height;
 
 	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y;
@@ -1048,8 +1052,6 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 	pos = panel_pos;
 	vector tmp = panel_size;
 
-	float fontsize = height * 1/3;
-	float weapon_height = height * 2/3;
 	float weapon_width = tmp.x / columnns / rows;
 
 	if (sbt_bg_alpha)
@@ -1064,7 +1066,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 		// row highlighting
 		for (int i = 0; i < rows; ++i)
-			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * fontsize, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + eY * weapon_height + eY * height * i, eX * tmp.x + eY * hud_fontsize.y, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
 	average_accuracy = 0;
@@ -1105,12 +1107,12 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 			s = sprintf("%d%%", weapon_stats * 100);
 
 			float padding;
-			padding = (weapon_width - stringwidth(s, false, eX * fontsize)) / 2; // center the accuracy value
+			padding = (weapon_width - stringwidth(s, false, hud_fontsize)) / 2; // center the accuracy value
 
 			if(!autocvar_hud_panel_scoreboard_accuracy_nocolors)
 				rgb = Accuracy_GetColor(weapon_stats);
 
-			drawstring(tmpos + eX * padding + eY * weapon_height, s, '1 1 0' * fontsize, rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(tmpos + eX * padding + eY * weapon_height, s, hud_fontsize, rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		tmpos.x += weapon_width * rows;
 		pos.x += weapon_width * rows;
@@ -1290,6 +1292,14 @@ void Scoreboard_Draw()
 				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * scoreboard_fadeinspeed);
 			else
 				scoreboard_fade_alpha = 1;
+			if(hud_fontsize_str != autocvar_hud_fontsize)
+			{
+				hud_fontsize = HUD_GetFontsize("hud_fontsize");
+				Scoreboard_initFieldSizes();
+				if(hud_fontsize_str)
+					strunzone(hud_fontsize_str);
+				hud_fontsize_str = strzone(autocvar_hud_fontsize);
+			}
 		}
 		else {
 			float scoreboard_fadeoutspeed = autocvar_hud_panel_scoreboard_fadeoutspeed;

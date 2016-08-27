@@ -401,6 +401,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, WEP_CVAR(devastator, guiderate) == 0 && WEP_CVAR(devastator, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound
@@ -416,35 +417,6 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-#if 0
-METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
-{
-    entity this = actor;
-    // aim and decide to fire if appropriate
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
-    if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
-    {
-        // decide whether to detonate rockets
-        entity missile, targetlist, targ;
-        targetlist = findchainfloat(bot_attack, true);
-        for(missile = NULL; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == actor)
-        {
-            targ = targetlist;
-            while(targ)
-            {
-                if(targ != missile.realowner && vlen(targ.origin - missile.origin) < WEP_CVAR(devastator, radius))
-                {
-                    PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-                    break;
-                }
-                targ = targ.chain;
-            }
-        }
-
-        if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
-    }
-}
-#else
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
 {
     // aim and decide to fire if appropriate
@@ -461,12 +433,10 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
         selfdamage = 0;
         teamdamage = 0;
         enemydamage = 0;
-        FOREACH_ENTITY_ENT(realowner, actor,
+        IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
         {
-            if(it.classname != "rocket") continue;
-
             entity rocket = it;
-            FOREACH_ENTITY_FLOAT(bot_attack, true,
+            IL_EACH(g_bot_targets, it.bot_attack,
             {
             	float d = vlen(it.origin + (it.mins + it.maxs) * 0.5 - rocket.origin);
             	d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
@@ -487,14 +457,12 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
             desirabledamage = desirabledamage - teamdamage;
 
         makevectors(actor.v_angle);
-        FOREACH_ENTITY_ENT(realowner, actor,
+        IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
         {
-            if(it.classname != "rocket") continue;
-
             if(skill > 9) // normal players only do this for the target they are tracking
             {
 	            entity rocket = it;
-	            FOREACH_ENTITY_FLOAT(bot_attack, true,
+	            IL_EACH(g_bot_targets, it.bot_attack,
 	            {
 	            	if((v_forward * normalize(rocket.origin - it.origin) < 0.1)
 	                    && desirabledamage > 0.1 * coredamage
@@ -527,7 +495,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
         if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
     }
 }
-#endif
+
 METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload

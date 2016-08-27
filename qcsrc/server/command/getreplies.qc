@@ -8,7 +8,7 @@
 #include <common/mapinfo.qh>
 #include <common/util.qh>
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 
 // =========================================================
 //  Reply messages for common commands, re-worked by Samual

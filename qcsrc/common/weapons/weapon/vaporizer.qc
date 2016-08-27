@@ -289,6 +289,7 @@ void W_RocketMinsta_Attack2(entity actor, .entity weaponentity)
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
         IL_PUSH(g_projectiles, proj);
+        IL_PUSH(g_bot_dodge, proj);
         proj.missile_flags = MIF_SPLASH;
 
         CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);
@@ -340,6 +341,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
         IL_PUSH(g_projectiles, proj);
+        IL_PUSH(g_bot_dodge, proj);
         proj.missile_flags = MIF_SPLASH;
 
         CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);

@@ -1507,9 +1507,10 @@ void CSQC_UpdateView(entity this, float w, float h)
 			}
 		}
 
-		if(ons_roundlost)
+		if(ons_roundlost) // TODO: move this junk to a client mutator for onslaught (possible using the WantEventchase hook)
 		{
-			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, {
+			IL_EACH(g_onsgenerators, it.health <= 0,
+			{
 				gen = it;
 				break;
 			});
@@ -1783,13 +1784,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 	activeweapon = Weapons_from(STAT(ACTIVEWEAPON));
 
 	switchweapon = Weapons_from(STAT(SWITCHWEAPON));
-
-	f = (serverflags & SERVERFLAG_TEAMPLAY);
-	if(f != teamplay)
-	{
-		teamplay = f;
-		Scoreboard_InitScores();
-	}
 
 	if(last_switchweapon != switchweapon)
 	{

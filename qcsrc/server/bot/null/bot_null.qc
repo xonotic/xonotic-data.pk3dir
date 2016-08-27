@@ -18,7 +18,6 @@ void bot_think(entity this) { }
 entity find_bot_by_name(string name) { return NULL; }
 entity find_bot_by_number(float number) { return NULL; }
 
-void havocbot_goalrating_controlpoints(entity this, float ratingscale, vector org, float sradius) { }
 void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius) { }
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius) { }
 

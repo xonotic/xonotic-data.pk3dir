@@ -12,6 +12,9 @@ REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_MUSIC)
 
 #ifdef SVQC
 
+IntrusiveList g_targetmusic_list;
+STATIC_INIT(g_targetmusic_list) { g_targetmusic_list = IL_NEW(); }
+
 // values:
 //   volume
 //   noise
@@ -37,7 +40,8 @@ void target_music_reset(entity this)
 }
 void target_music_kill()
 {
-	FOREACH_ENTITY_CLASS("target_music", true, {
+	IL_EACH(g_targetmusic_list, true,
+	{
 		it.volume = 0;
         if (it.targetname == "")
             target_music_sendto(it, MSG_ALL, 1);
@@ -65,6 +69,7 @@ spawnfunc(target_music)
 	this.reset = target_music_reset;
 	if(!this.volume)
 		this.volume = 1;
+	IL_PUSH(g_targetmusic_list, this);
 	if(this.targetname == "")
 		target_music_sendto(this, MSG_INIT, 1);
 	else
@@ -72,7 +77,7 @@ spawnfunc(target_music)
 }
 void TargetMusic_RestoreGame()
 {
-	FOREACH_ENTITY_CLASS("target_music", true,
+	IL_EACH(g_targetmusic_list, true,
 	{
 		if(it.targetname == "")
 			target_music_sendto(it, MSG_INIT, 1);

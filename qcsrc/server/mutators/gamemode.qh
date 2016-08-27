@@ -21,9 +21,9 @@
 #include <common/command/_mod.qh>
 #include <common/net_notice.qh>
 #include <common/animdecide.qh>
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/weapons/config.qh>
 #include <common/weapons/_all.qh>
 #include <server/weapons/accuracy.qh>
@@ -81,7 +81,7 @@
 
 #include <server/command/_mod.qh>
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 
 #include <server/weapons/tracing.qh>
 #include <server/weapons/weaponsystem.qh>
