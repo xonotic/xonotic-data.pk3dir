@@ -201,6 +201,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 	setorigin(missile, this.origin + v_forward * 14 + '0 0 30' + v_right * -14);
 	setsize(missile, '0 0 0', '0 0 0');
 	missile.velocity = dir * 400;
@@ -382,16 +383,28 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
     TC(Mage, thismon);
     bool need_help = false;
 
-    FOREACH_ENTITY_FLOAT(iscreature, true,
+    FOREACH_CLIENT(IS_PLAYER(it) && it != actor,
     {
-        if(it != actor)
-        if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+    	if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
         if(M_Mage_Defend_Heal_Check(actor, it))
         {
             need_help = true;
             break;
         }
     });
+
+    if(!need_help)
+    {
+    	IL_EACH(g_monsters, it != actor,
+    	{
+    		if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+	        if(M_Mage_Defend_Heal_Check(actor, it))
+	        {
+	            need_help = true;
+	            break;
+	        }
+    	});
+    }
 
     if(actor.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
     if(time >= actor.attack_finished_single[0])

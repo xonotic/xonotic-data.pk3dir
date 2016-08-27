@@ -44,7 +44,6 @@ const vector CPICON_OFFSET = ('0 0 96');
 // list of generators on the map
 entity ons_worldgeneratorlist;
 .entity ons_worldgeneratornext;
-.entity ons_stalegeneratornext;
 
 // list of control points on the map
 entity ons_worldcplist;

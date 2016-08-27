@@ -226,6 +226,11 @@ float prev_soundtime;
 #endif
 
 #ifdef SVQC
+IntrusiveList g_notifications;
+STATIC_INIT(g_notifications) { g_notifications = IL_NEW(); }
+#endif
+
+#ifdef SVQC
 ENUMCLASS(NOTIF)
 	/** send to one client and their spectators */
 	CASE(NOTIF, ONE)

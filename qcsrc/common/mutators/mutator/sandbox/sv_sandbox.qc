@@ -143,12 +143,9 @@ void sandbox_ObjectAttach_Remove(entity e)
 {
 	// detaches any object attached to e
 
-	FOREACH_ENTITY_ENT(owner, e,
+	IL_EACH(g_sandbox_objects, it.owner == e,
 	{
-		if(it.classname != "object") continue;
-
-		vector org;
-		org = gettaginfo(it, 0);
+		vector org = gettaginfo(it, 0);
 		setattachment(it, NULL, "");
 		it.owner = NULL;
 
@@ -167,6 +164,7 @@ entity sandbox_ObjectSpawn(entity this, float database)
 	// spawn a new object with default properties
 
 	entity e = new(object);
+	IL_PUSH(g_sandbox_objects, e);
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
 	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
@@ -226,30 +224,28 @@ void sandbox_ObjectRemove(entity e)
 
 string port_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't defined as a global
 
-string sandbox_ObjectPort_Save(entity e, float database)
+string sandbox_ObjectPort_Save(entity e, bool database)
 {
 	// save object properties, and return them as a string
-	float i = 0;
-	string s;
-	entity head;
+	int o = 0;
 
-	for(head = NULL; (head = find(head, classname, "object")); )
-	{
+	// order doesn't really matter, as we're writing the file fresh
+	IL_EACH(g_sandbox_objects, it == e || it.owner == e, LAMBDA(
 		// the main object needs to be first in the array [0] with attached objects following
-		float slot, physics, solidity;
-		if(head == e) // this is the main object, place it first
+		int slot, physics, solidity;
+		if(it == e) // this is the main object, place it first
 		{
 			slot = 0;
-			solidity = head.solid; // applied solidity is normal solidity for children
-			physics = head.move_movetype; // applied physics are normal physics for parents
+			solidity = it.solid; // applied solidity is normal solidity for children
+			physics = it.move_movetype; // applied physics are normal physics for parents
 		}
-		else if(head.owner == e) // child object, list them in order
+		else if(it.owner == e) // child object, list them in order
 		{
-			i += 1; // children start from 1
-			slot = i;
-			solidity = head.old_solid; // persisted solidity is normal solidity for children
-			physics = head.old_movetype; // persisted physics are normal physics for children
-			gettaginfo(head.owner, head.tag_index); // get the name of the tag our object is attached to, used further below
+			o += 1; // children start from 1
+			slot = o;
+			solidity = it.old_solid; // persisted solidity is normal solidity for children
+			physics = it.old_movetype; // persisted physics are normal physics for children
+			gettaginfo(it.owner, it.tag_index); // get the name of the tag our object is attached to, used further below
 		}
 		else
 			continue;
@@ -258,46 +254,55 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		if(slot)
 		{
 			// properties stored only for child objects
-			if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
+			if(gettaginfo_name)
+				port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");
+			else
+				port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 		}
 		else
 		{
 			// properties stored only for parent objects
 			if(database)
 			{
-				port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.origin), " ");
-				port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.angles), " ");
+				port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", it.origin), " ");
+				port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", it.angles), " ");
 			}
 		}
 		// properties stored for all objects
-		port_string[slot] = strcat(port_string[slot], "\"", head.model, "\" ");
-		port_string[slot] = strcat(port_string[slot], ftos(head.skin), " ");
-		port_string[slot] = strcat(port_string[slot], ftos(head.alpha), " ");
-		port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.colormod), " ");
-		port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.glowmod), " ");
-		port_string[slot] = strcat(port_string[slot], ftos(head.frame), " ");
-		port_string[slot] = strcat(port_string[slot], ftos(head.scale), " ");
+		port_string[slot] = strcat(port_string[slot], "\"", it.model, "\" ");
+		port_string[slot] = strcat(port_string[slot], ftos(it.skin), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(it.alpha), " ");
+		port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", it.colormod), " ");
+		port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", it.glowmod), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(it.frame), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(it.scale), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(solidity), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(physics), " ");
-		port_string[slot] = strcat(port_string[slot], ftos(head.damageforcescale), " ");
-		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
+		port_string[slot] = strcat(port_string[slot], ftos(it.damageforcescale), " ");
+		if(it.material)
+			port_string[slot] = strcat(port_string[slot], "\"", it.material, "\" ");
+		else
+			port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 		if(database)
 		{
 			// properties stored only for the database
-			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
+			if(it.crypto_idfp)
+				port_string[slot] = strcat(port_string[slot], "\"", it.crypto_idfp, "\" ");
+			else
+				port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 			port_string[slot] = strcat(port_string[slot], "\"", e.netname, "\" ");
 			port_string[slot] = strcat(port_string[slot], "\"", e.message, "\" ");
 			port_string[slot] = strcat(port_string[slot], "\"", e.message2, "\" ");
 		}
-	}
+	));
 
 	// now apply the array to a simple string, with the ; symbol separating objects
-	s = "";
-	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
+	string s = "";
+	for(int j = 0; j <= MAX_STORAGE_ATTACHMENTS; ++j)
 	{
-		if(port_string[i])
-			s = strcat(s, port_string[i], "; ");
-		port_string[i] = string_null; // fully clear the string
+		if(port_string[j])
+			s = strcat(s, port_string[j], "; ");
+		port_string[j] = string_null; // fully clear the string
 	}
 
 	return s;
@@ -375,7 +380,6 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 void sandbox_Database_Save()
 {
 	// saves all objects to the database file
-	entity head;
 	string file_name;
 	float file_get;
 
@@ -384,15 +388,11 @@ void sandbox_Database_Save()
 	fputs(file_get, strcat("// sandbox storage \"", autocvar_g_sandbox_storage_name, "\" for map \"", GetMapname(), "\" last updated ", strftime(true, "%d-%m-%Y %H:%M:%S")));
 	fputs(file_get, strcat(" containing ", ftos(object_count), " objects\n"));
 
-	for(head = NULL; (head = find(head, classname, "object")); )
+	IL_EACH(g_sandbox_objects, !it.owner, // attached objects are persisted separately, ignore them here
 	{
-		// attached objects are persisted separately, ignore them here
-		if(head.owner != NULL)
-			continue;
-
 		// use a line of text for each object, listing all properties
-		fputs(file_get, strcat(sandbox_ObjectPort_Save(head, true), "\n"));
-	}
+		fputs(file_get, strcat(sandbox_ObjectPort_Save(it, true), "\n"));
+	});
 	fclose(file_get);
 }
 
@@ -784,10 +784,8 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							// this should show the same info as 'mesh' but for attachments
 							s = "";
 							j = 0;
-							FOREACH_ENTITY_ENT(owner, e,
+							IL_EACH(g_sandbox_objects, it.owner == e,
 							{
-								if(it.classname != "object") continue;
-
 								++j; // start from 1
 								gettaginfo(e, it.tag_index);
 								s = strcat(s, "^1attachment ", ftos(j), "^7 has mesh \"^3", it.model, "^7\" at animation frame ^3", ftos(it.frame));

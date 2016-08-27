@@ -140,6 +140,7 @@ void W_Blaster_Attack(
 	settouch(missile, W_Blaster_Touch);
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = atk_deathtype;
 	setthink(missile, W_Blaster_Think);

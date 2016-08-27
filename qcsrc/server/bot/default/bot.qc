@@ -436,7 +436,7 @@ void bot_removefromlargestteam()
 	int bestcount = 0;
 
 	int bcount = 0;
-	FOREACH_ENTITY_FLOAT(isbot, true,
+	FOREACH_CLIENT(it.isbot,
 	{
 		++bcount;
 
@@ -486,7 +486,7 @@ void bot_removenewest()
 	entity best = NULL;
 	int bcount = 0;
 
-	FOREACH_ENTITY_FLOAT(isbot, true,
+	FOREACH_CLIENT(it.isbot,
 	{
 		++bcount;
 

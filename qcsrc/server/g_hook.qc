@@ -371,6 +371,7 @@ void FireGrapplingHook(entity actor)
 	missile.classname = "grapplinghook";
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 
 	set_movetype(missile, ((autocvar_g_balance_grapplehook_gravity) ? MOVETYPE_TOSS : MOVETYPE_FLY));
 	PROJECTILE_MAKETRIGGER(missile);

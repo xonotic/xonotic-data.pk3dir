@@ -161,6 +161,7 @@ void M_Spider_Attack_Web(entity this)
 	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.damagedbycontents = true;
 
 	proj.bouncefactor = 0.3;

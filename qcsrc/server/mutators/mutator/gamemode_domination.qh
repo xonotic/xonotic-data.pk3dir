@@ -61,3 +61,6 @@ float domination_roundbased;
 float domination_teams;
 
 void AnimateDomPoint(entity this);
+
+IntrusiveList g_dompoints;
+STATIC_INIT(g_dompoints) { g_dompoints = IL_NEW(); }

@@ -97,41 +97,41 @@ spawnfunc(target_init)
 // weapon give ent from defrag
 void target_give_init(entity this)
 {
-	entity targ;
-	for (targ = NULL; (targ = find(targ, targetname, this.target)); ) {
-		if (targ.classname == "weapon_rocketlauncher" || targ.classname == "weapon_devastator") {
-			this.ammo_rockets += targ.count * WEP_CVAR(devastator, ammo);
+	IL_EACH(g_items, it.targetname == this.target,
+	{
+		if (it.classname == "weapon_rocketlauncher" || it.classname == "weapon_devastator") {
+			this.ammo_rockets += it.count * WEP_CVAR(devastator, ammo);
 			this.netname = "devastator";
 		}
-		else if (targ.classname == "weapon_plasmagun") {
-			this.ammo_rockets += targ.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
+		else if (it.classname == "weapon_plasmagun") {
+			this.ammo_rockets += it.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
 			if(this.netname == "")
 				this.netname = "hagar";
 			else
 				this.netname = strcat(this.netname, " hagar");
 		}
-		else if (targ.classname == "weapon_bfg") {
-			this.ammo_cells += targ.count * WEP_CVAR_PRI(crylink, ammo);
+		else if (it.classname == "weapon_bfg") {
+			this.ammo_cells += it.count * WEP_CVAR_PRI(crylink, ammo);
 			if(this.netname == "")
 				this.netname = "crylink";
 			else
 				this.netname = strcat(this.netname, " crylink");
 		}
-		else if (targ.classname == "weapon_grenadelauncher" || targ.classname == "weapon_mortar") {
-			this.ammo_rockets += targ.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
+		else if (it.classname == "weapon_grenadelauncher" || it.classname == "weapon_mortar") {
+			this.ammo_rockets += it.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
 			if(this.netname == "")
 				this.netname = "mortar";
 			else
 				this.netname = strcat(this.netname, " mortar");
 		}
-		else if (targ.classname == "item_armor_body")
+		else if (it.classname == "item_armor_body")
 			this.armorvalue = 100;
-		else if (targ.classname == "item_health_mega")
+		else if (it.classname == "item_health_mega")
 			this.health = 200;
-		//remove(targ); // removing ents in init functions causes havoc, workaround:
-        setthink(targ, SUB_Remove);
-        targ.nextthink = time;
-	}
+		//remove(it); // removing ents in init functions causes havoc, workaround:
+        setthink(it, SUB_Remove);
+        it.nextthink = time;
+	});
 	this.spawnflags = 2;
 	spawnfunc_target_items(this);
 	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);

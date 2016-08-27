@@ -159,8 +159,8 @@ void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPreThink(it));
+    IL_EACH(g_players, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
+    IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
@@ -191,7 +191,7 @@ void StartFrame()
 	}
 #endif
 
-	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, CSQCProjectile_Check(it));
+	IL_EACH(g_projectiles, it.csqcprojectile_clientanimate, CSQCProjectile_Check(it));
 
 	if (RedirectionThink()) return;
 
@@ -229,7 +229,7 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
     FOREACH_CLIENT(true, GlobalStats_update(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPostThink(it));
+    IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }
 
 .vector originjitter;

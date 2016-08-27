@@ -1532,8 +1532,8 @@ void Kill_Notification(
 	net_notif.nent_net_name = ORDINAL(net_cpid);
 	Net_LinkEntity(net_notif, false, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 
-	FOREACH_ENTITY_CLASS(
-		"net_notification",
+	IL_EACH(
+		g_notifications,
 		(it.owner.nent_type == net_type || net_type == MSG_Null) && (it.owner.nent_cpid == net_cpid || net_cpid == CPID_Null),
 		{
 			it.nent_net_name = -1;
@@ -1682,6 +1682,7 @@ void Send_Notification(
 	else
 	{
 		entity net_notif = new_pure(net_notification);
+		IL_PUSH(g_notifications, net_notif);
 		net_notif.owner = notif;
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;

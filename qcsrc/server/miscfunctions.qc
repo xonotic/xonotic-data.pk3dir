@@ -1144,7 +1144,6 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
-    entity sp;
 
     m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
@@ -1200,16 +1199,26 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
             continue;
 
 	// rule 4: we must "see" some spawnpoint or item
-	for(sp = NULL; (sp = find(sp, classname, "info_player_deathmatch")); )
-		if(checkpvs(mstart, sp))
-			if((traceline(mstart, sp.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
-				break;
+    entity sp = NULL;
+    IL_EACH(g_spawnpoints, checkpvs(mstart, it),
+    {
+    	if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+    	{
+    		sp = it;
+    		break;
+    	}
+    });
 	if(!sp)
 	{
-		for(sp = NULL; (sp = findflags(sp, flags, FL_ITEM)); )
-			if(checkpvs(mstart, sp))
-				if((traceline(mstart, sp.origin + (sp.mins + sp.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
-					break;
+		IL_EACH(g_items, checkpvs(mstart, it),
+		{
+			if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
+			{
+				sp = it;
+				break;
+			}
+		});
+
 		if(!sp)
 			continue;
 	}

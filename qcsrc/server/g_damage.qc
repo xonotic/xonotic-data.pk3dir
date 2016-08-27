@@ -526,6 +526,8 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
+	if(targ.bot_attack)
+		IL_REMOVE(g_bot_targets, targ);
 	targ.bot_attack = false;
 
 	entity ice = new(ice);
@@ -563,6 +565,8 @@ void Unfreeze (entity targ)
 	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
+	if(!targ.bot_attack)
+		IL_PUSH(g_bot_targets, targ);
 	targ.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);

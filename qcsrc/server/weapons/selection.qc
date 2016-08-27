@@ -21,11 +21,9 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 void Weapon_whereis(Weapon this, entity cl)
 {
 	if (!autocvar_g_showweaponspawns) return;
-	FOREACH_ENTITY_FLOAT(weapon, this.m_id,
+	IL_EACH(g_items, it.weapon == this.m_id,
 	{
 		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
-			continue;
-		if (!(it.flags & FL_ITEM))
 			continue;
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,

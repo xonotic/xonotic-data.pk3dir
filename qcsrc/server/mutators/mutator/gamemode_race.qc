@@ -14,23 +14,22 @@ void havocbot_role_race(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	entity e;
 	if (this.bot_strategytime < time)
 	{
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
-		for(e = NULL; (e = find(e, classname, "trigger_race_checkpoint")) != NULL; )
+		IL_EACH(g_racecheckpoints, true,
 		{
-			if(e.cnt == this.race_checkpoint)
+			if(it.cnt == this.race_checkpoint)
 			{
-				navigation_routerating(this, e, 1000000, 5000);
+				navigation_routerating(this, it, 1000000, 5000);
 			}
 			else if(this.race_checkpoint == -1)
 			{
-				navigation_routerating(this, e, 1000000, 5000);
+				navigation_routerating(this, it, 1000000, 5000);
 			}
-		}
+		});
 
 		navigation_goalrating_end(this);
 	}
