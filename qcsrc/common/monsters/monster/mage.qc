@@ -1,7 +1,5 @@
 #include "mage.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 SOUND(MageSpike_FIRE, W_Sound("electro_fire"));
@@ -474,6 +472,4 @@ METHOD(Mage, mr_precache, bool(Mage this))
     TC(Mage, this);
     return true;
 }
-#endif
-
 #endif

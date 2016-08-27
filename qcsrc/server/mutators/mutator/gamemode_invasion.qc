@@ -1,6 +1,6 @@
 #include "gamemode_invasion.qh"
 
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 
 #include <server/teamplay.qh>

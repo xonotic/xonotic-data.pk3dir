@@ -1,7 +1,5 @@
 #include "wyvern.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 float autocvar_g_monster_wyvern_attack_fireball_damage;
@@ -172,6 +170,4 @@ METHOD(Wyvern, mr_precache, bool(Wyvern this))
     TC(Wyvern, this);
     return true;
 }
-#endif
-
 #endif

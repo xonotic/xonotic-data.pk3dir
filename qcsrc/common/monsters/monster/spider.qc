@@ -1,7 +1,5 @@
 #include "spider.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 .float spider_slowness; // effect time of slowness inflicted by spiders
@@ -251,6 +249,4 @@ METHOD(Spider, mr_precache, bool(Spider this))
     TC(Spider, this);
     return true;
 }
-#endif
-
 #endif

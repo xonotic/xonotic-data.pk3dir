@@ -14,6 +14,3 @@ const int MON_FIRST = 1;
 #define REGISTER_MONSTER(id, inst) REGISTER(Monsters, MON, id, monsterid, inst)
 
 REGISTER_MONSTER(Null, NEW(Monster));
-
-
-#include "monster/_mod.inc"

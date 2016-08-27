@@ -27,7 +27,7 @@
     #include "../stats.qh"
     #include "../teams.qh"
     #include "../util.qh"
-    #include "../monsters/all.qh"
+    #include "../monsters/_mod.qh"
     #include "config.qh"
     #include <server/weapons/csqcprojectile.qh>
     #include <server/weapons/tracing.qh>

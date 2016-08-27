@@ -21,7 +21,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
-#include "../common/monsters/all.qh"
+#include "../common/monsters/_mod.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/notifications/all.qh"

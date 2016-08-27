@@ -1,7 +1,5 @@
 #include "shambler.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
 float autocvar_g_monster_shambler_damageforcescale = 0.1;
@@ -273,6 +271,4 @@ METHOD(Shambler, mr_precache, bool(Shambler this))
     TC(Shambler, this);
     return true;
 }
-#endif
-
 #endif

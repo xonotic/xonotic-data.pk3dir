@@ -146,7 +146,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #ifdef SVQC
 
 #include <common/gamemodes/_mod.qh>
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <server/g_subs.qh>
 

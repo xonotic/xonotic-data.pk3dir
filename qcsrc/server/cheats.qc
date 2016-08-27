@@ -14,7 +14,7 @@
 
 #include <common/physics/player.qh>
 
-#include "../common/monsters/all.qh"
+#include "../common/monsters/_mod.qh"
 
 #include <common/weapons/_all.qh>
 

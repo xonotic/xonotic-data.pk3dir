@@ -6,7 +6,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "util.qh"
-    #include <common/monsters/all.qh>
+    #include <common/monsters/_mod.qh>
 #endif
 
 // generic string stuff
