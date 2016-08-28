@@ -1,11 +1,7 @@
 #include "ent_cs.qh"
 
 // #define PROP(public, fld, sv, cl)
-#define ENTCS_NETPROPS(PROP) \
-	PROP(true, sv_entnum, \
-	{ WriteByte(chan, etof(player) - 1); }, \
-	{ this.sv_entnum = ReadByte(); }) \
-    \
+#define ENTCS_NETPROPS(PROP) PROP(false, sv_entnum, {}, {}) /* sentinel */ \
 	PROP(false, origin, \
 	{ WriteShort(chan, this.origin.x);  WriteShort(chan, this.origin.y); \
 	  WriteShort(chan, this.origin.z); }, \
@@ -50,8 +46,13 @@
 	int ENTCS_PUBLICMASK = 0;
 	STATIC_INIT(ENTCS_PUBLICMASK)
 	{
-		int i = 1;
-		#define X(public, fld, sv, cl) { if (public) ENTCS_PUBLICMASK |= BIT(i); } i += 1;
+		int i = 0;
+		#define X(public, fld, sv, cl) { \
+			if (public) { \
+				ENTCS_PUBLICMASK |= BIT(i); \
+			} \
+			i += 1; \
+		}
 		ENTCS_NETPROPS(X);
 	#undef X
 		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded ENTCS_NETPROPS limit");
@@ -60,9 +61,8 @@
 	bool _entcs_send(entity this, entity to, int sf, int chan)
 	{
 		entity player = this.owner;
-		sf |= BIT(0) | BIT(1);
-		if (IS_PLAYER(to) || to.caplayer)                                  // unless spectating,
-		{
+		sf |= BIT(0); // assume private
+		if (IS_PLAYER(to) || to.caplayer) {                                // unless spectating,
 			bool same_team = (to == player) || (teamplay && player.team == to.team);
 			if (!same_team && !radar_showennemies) sf &= ENTCS_PUBLICMASK; // no private updates
 		}
@@ -80,8 +80,13 @@
 			WriteHeader(chan, CLIENT_ENTCS);
 		WriteByte(chan, etof(player) - 1);
 		WriteShort(chan, sf);
-		int i = 1;
-		#define X(public, fld, sv, cl) { if (sf & BIT(i)) sv; } i += 1;
+		int i = 0;
+		#define X(public, fld, sv, cl) { \
+			if (sf & BIT(i)) { \
+				sv; \
+			} \
+			i += 1; \
+		}
 		ENTCS_NETPROPS(X);
 	#undef X
 		return true;
@@ -96,14 +101,14 @@
 	{
 		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
 		entity o = this.owner;
-		int i = 1;
-		#define X(public, fld, sv, cl) \
-			if (o.fld != this.fld) \
-			{ \
+		int i = 0;
+		#define X(public, fld, sv, cl) { \
+			if (o.fld != this.fld) { \
 				this.fld = o.fld; \
 				this.SendFlags |= BIT(i); \
 			} \
-			i += 1;
+			i += 1; \
+		}
 		ENTCS_NETPROPS(X);
 	#undef X
 	    setorigin(this, this.origin);  // relink
@@ -190,8 +195,13 @@
 		int sf = ReadShort();
 		this.has_sv_origin = false;
 		this.m_entcs_private = boolean(sf & BIT(0));
-		int i = 1;
-		#define X(public, fld, sv, cl) { if (sf & BIT(i)) cl; } i += 1;
+		int i = 0;
+		#define X(public, fld, sv, cl) { \
+			if (sf & BIT(i)) { \
+				cl; \
+			} \
+			i += 1; \
+		}
 		ENTCS_NETPROPS(X);
 	#undef X
 		this.iflags |= IFLAG_ORIGIN;
