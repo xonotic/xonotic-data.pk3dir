@@ -62,18 +62,14 @@
 	{
 		entity player = this.owner;
 		sf |= BIT(0); // assume private
-		if (IS_PLAYER(to) || to.caplayer) {                                // unless spectating,
-			bool same_team = (to == player) || (teamplay && player.team == to.team);
-			if (!same_team && !radar_showennemies) sf &= ENTCS_PUBLICMASK; // no private updates
-		}
+		do {
+			if (radar_showennemies) break;
+			if ((to == player) || (teamplay && player.team == to.team)) break;
+			if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
+			sf &= ENTCS_PUBLICMASK; // no private updates
+		} while (0);
 		sf |= this.m_forceupdate;
 		this.m_forceupdate = 0;
-		bool valid =
-			time > game_starttime
-		    && (IS_PLAYER(player)          // player must be active
-		    || player == to)               // player is self
-		;
-		if (!valid) sf = 0;
 		if (chan == MSG_ENTITY)
 			WriteHeader(chan, ENT_CLIENT_ENTCS);
 		else
