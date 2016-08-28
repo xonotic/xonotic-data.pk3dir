@@ -79,6 +79,8 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+showscores"                           , _("show scores"));
 	KEYBIND_DEF("screenshot"                            , _("screen shot"));
 	KEYBIND_DEF("+hud_panel_radar_maximized"            , _("maximize radar"));
+	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
+	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("Communicate"));
 	KEYBIND_DEF("messagemode"                           , _("public chat"));
@@ -98,11 +100,11 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
 	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
-	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
-	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
 	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Misc"));
+	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
 	KEYBIND_DEF("+button8"                              , _("drag object"));
-	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("User defined"));
 
