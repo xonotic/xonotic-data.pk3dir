@@ -504,6 +504,7 @@ void QuickMenu_Mouse()
 		mousepos.y = bound(0, mousepos.y, vid_conheight);
 	}
 
+	panel = HUD_PANEL(QUICKMENU);
 	HUD_Panel_LoadCvars();
 
 	if(panel_bg_padding)

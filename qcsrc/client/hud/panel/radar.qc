@@ -145,6 +145,7 @@ void HUD_Radar_Mouse()
 		mousepos_y = bound(0, mousepos_y, vid_conheight);
 	}
 
+	panel = HUD_PANEL(RADAR);
 	HUD_Panel_LoadCvars();
 
 
