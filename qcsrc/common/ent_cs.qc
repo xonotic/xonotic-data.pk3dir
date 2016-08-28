@@ -169,32 +169,38 @@
 	{
 		int n = ReadByte();
 		entity e = entcs_receiver(n);
+		#define X(e) { \
+			setthink(e, entcs_think); \
+			entcs_receiver(n, e); \
+		}
 		if (e == NULL)
 		{
-			if (this)
+			if (!this)
 			{
-				e = this;
+				// initial = temp
+				e = new_pure(entcs_receiver);
+				X(e);
 			}
 			else
 			{
-				e = new(entcs_receiver);
-				make_pure(e);
+				// initial = linked
+				e = this;
+				X(e);
 			}
-			e.sv_entnum = n;
-			setthink(e, entcs_think);
-			entcs_receiver(n, e);
 		}
-		else if (this && e != this)
+		else if (e != this && this)
 		{
-			this.classname = "entcs_gc";
-			this.sv_entnum = n;
+			// upgrade to linked
+			delete(e);
+			e = this;
+			X(e);
 		}
-		this = e;
-		InterpolateOrigin_Undo(this);
-		this.sv_entnum = n;
+		#undef X
+		InterpolateOrigin_Undo(e);
+		e.sv_entnum = n;
 		int sf = ReadShort();
-		this.has_sv_origin = false;
-		this.m_entcs_private = boolean(sf & BIT(0));
+		e.has_sv_origin = false;
+		e.m_entcs_private = boolean(sf & BIT(0));
 		int i = 0;
 		#define X(public, fld, sv, cl) { \
 			if (sf & BIT(i)) { \
@@ -204,9 +210,9 @@
 		}
 		ENTCS_NETPROPS(X);
 	#undef X
-		this.iflags |= IFLAG_ORIGIN;
-		InterpolateOrigin_Note(this);
-		getthink(this)(this);
+		e.iflags |= IFLAG_ORIGIN;
+		InterpolateOrigin_Note(e);
+		getthink(e)(e);
 		return true;
 	}
 
