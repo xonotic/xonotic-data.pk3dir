@@ -244,6 +244,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.angles_y -= key.owner.angles.y;
 #endif
 	key.flags = 0;
+	IL_REMOVE(g_items, key);
 	key.solid = SOLID_NOT;
 	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
@@ -526,8 +527,8 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 	float first;
 	entity key;
 	float score;
-	score = (kh_teams - 1) * autocvar_g_balance_keyhunt_score_capture;
-	DistributeEvenly_Init(score, kh_teams);
+	score = (NumTeams(kh_teams) - 1) * autocvar_g_balance_keyhunt_score_capture;
+	DistributeEvenly_Init(score, NumTeams(kh_teams));
 	// twice the score for 3 team games, three times the score for 4 team games!
 	// note: for a win by destroying the key, this should NOT be applied
 	FOR_EACH_KH_KEY(key)
@@ -571,11 +572,11 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 			firstorigin = thisorigin;
 		first = false;
 	}
-	if(kh_teams > 2)
+	if(NumTeams(kh_teams) > 2)
 	{
 		te_lightning2(NULL, lastorigin, firstorigin);
 	}
-	midpoint = midpoint * (1 / kh_teams);
+	midpoint = midpoint * (1 / NumTeams(kh_teams));
 	te_customflash(midpoint, 1000, 1, Team_ColorRGB(teem) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
 
 	play2all(SND(KH_CAPTURE));
@@ -636,8 +637,8 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		fragsleft = DistributeEvenly_Get(players);
 
 		// Now distribute these among all other teams...
-		j = kh_teams - 1;
-		for(i = 0; i < kh_teams; ++i)
+		j = NumTeams(kh_teams) - 1;
+		for(i = 0; i < NumTeams(kh_teams); ++i)
 		{
 			thisteam = kh_Team_ByID(i);
 			if(thisteam == teem) // bad boy, no cookie - this WILL happen
@@ -788,7 +789,7 @@ float kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all th
 	float keys;
 
 	teem = -1;
-	keys = kh_teams;
+	keys = NumTeams(kh_teams);
 	FOR_EACH_KH_KEY(key)
 	{
 		if(!key.owner)
@@ -856,7 +857,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 
 float kh_CheckPlayers(float num)
 {
-	if(num < kh_teams)
+	if(num < NumTeams(kh_teams))
 	{
 		float t_team = kh_Team_ByID(num);
 		float players = 0;
@@ -870,8 +871,8 @@ float kh_CheckPlayers(float num)
 	return 0;
 }
 
-#define KH_READY_TEAMS() (!p1 + !p2 + ((kh_teams >= 3) ? !p3 : p3) + ((kh_teams >= 4) ? !p4 : p4))
-#define KH_READY_TEAMS_OK() (KH_READY_TEAMS() == kh_teams)
+#define KH_READY_TEAMS() (!p1 + !p2 + ((NumTeams(kh_teams) >= 3) ? !p3 : p3) + ((NumTeams(kh_teams) >= 4) ? !p4 : p4))
+#define KH_READY_TEAMS_OK() (KH_READY_TEAMS() == NumTeams(kh_teams))
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
 	if(time < game_starttime)
@@ -947,7 +948,7 @@ void kh_StartRound()  // runs at the start of each round
 	Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_KEYHUNT);
 	Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
-	for(i = 0; i < kh_teams; ++i)
+	for(i = 0; i < NumTeams(kh_teams); ++i)
 	{
 		teem = kh_Team_ByID(i);
 		players = 0;
@@ -960,7 +961,7 @@ void kh_StartRound()  // runs at the start of each round
 					my_player = it;
 			}
 		));
-		kh_Key_Spawn(my_player, 360 * i / kh_teams, i);
+		kh_Key_Spawn(my_player, 360 * i / NumTeams(kh_teams), i);
 	}
 
 	kh_tracking_enabled = false;
