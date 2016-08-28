@@ -64,7 +64,7 @@
 		sf |= BIT(0); // assume private
 		do {
 			if (radar_showennemies) break;
-			if ((to == player) || (teamplay && player.team == to.team)) break;
+			if (SAME_TEAM(to, player)) break;
 			if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
 			sf &= ENTCS_PUBLICMASK; // no private updates
 		} while (0);
