@@ -40,12 +40,13 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+fire"                                 , _("primary fire"));
 	KEYBIND_DEF("+fire2"                                , _("secondary fire"));
 	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Weapon switching"));
+	KEYBIND_DEF(""                                      , _("Weapons"));
 	KEYBIND_DEF("weapprev"                              , CTX(_("WEAPON^previous")));
 	KEYBIND_DEF("weapnext"                              , CTX(_("WEAPON^next")));
 	KEYBIND_DEF("weaplast"                              , CTX(_("WEAPON^previously used")));
 	KEYBIND_DEF("weapbest"                              , CTX(_("WEAPON^best")));
 	KEYBIND_DEF("reload"                                , _("reload"));
+	KEYBIND_DEF("dropweapon"                            , _("drop weapon / throw nade"));
 
 	int i;
 
@@ -99,7 +100,6 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
 	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
 	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
-	KEYBIND_DEF("dropweapon"                            , _("drop weapon"));
 	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
 	KEYBIND_DEF("+button8"                              , _("drag object"));
 	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
