@@ -24,7 +24,6 @@ float mv_timeout;
 float mv_top2_time;
 float mv_top2_alpha;
 
-vector mv_mousepos;
 int mv_selection;
 int mv_columns;
 int mv_mouse_selection;
@@ -297,10 +296,10 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	for (r = 0; r < rows; ++r)
 		for (c = 0; c < columns; ++c)
 		{
-			if (mv_mousepos.x >= topleft.x + cellsize.x *  c &&
-				mv_mousepos.x <= topleft.x + cellsize.x * (c + 1) &&
-				mv_mousepos.y >= topleft.y + cellsize.y *  r &&
-				mv_mousepos.y <= topleft.y + cellsize.y * (r + 1))
+			if (mousepos.x >= topleft.x + cellsize.x *  c &&
+				mousepos.x <= topleft.x + cellsize.x * (c + 1) &&
+				mousepos.y >= topleft.y + cellsize.y *  r &&
+				mousepos.y <= topleft.y + cellsize.y * (r + 1))
 			{
 				mv_mouse_selection = r * columns + c;
 				break;
@@ -338,13 +337,10 @@ void MapVote_Draw()
 
 	if (!autocvar_hud_cursormode)
 	{
-		vector mpos = mv_mousepos + getmousepos();
-		mpos.x = bound(0, mpos.x, vid_conwidth);
-		mpos.y = bound(0, mpos.y, vid_conheight);
-
-		if ( mpos.x != mv_mousepos.x || mpos.y != mv_mousepos.y )
+		vector mpos = mousepos;
+		update_mousepos();
+		if (mpos.x != mousepos.x || mpos.y != mousepos.y)
 			mv_selection_keyboard = 0;
-		mv_mousepos = mpos;
 	}
 
 	center = (vid_conwidth - 1)/2;
@@ -488,7 +484,7 @@ void MapVote_Draw()
 		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}
 
-	draw_cursor_normal(mv_mousepos, '1 1 1', panel_fg_alpha);
+	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
 }
 
 void Cmd_MapVote_MapDownload(int argc)
@@ -638,8 +634,8 @@ void GameTypeVote_ReadOption(int i)
 void MapVote_Init()
 {
 	mv_active = 1;
-	if(autocvar_hud_cursormode) { setcursormode(1); }
-	else { mv_mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight; }
+	if(autocvar_hud_cursormode) setcursormode(1);
+	else mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 	mv_selection = -1;
 	mv_selection_keyboard = 0;
 
@@ -775,8 +771,8 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if(bInputType == 3)
 	{
-		mv_mousepos.x = nPrimary;
-		mv_mousepos.y = nSecondary;
+		mousepos.x = nPrimary;
+		mousepos.y = nSecondary;
 		mv_selection_keyboard = 0;
 		return true;
 	}
