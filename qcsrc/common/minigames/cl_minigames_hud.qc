@@ -682,13 +682,8 @@ void HUD_Minigame_Mouse()
 	if( !HUD_MinigameMenu_IsOpened() || autocvar__hud_configure || mv_active )
 		return;
 
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-
-		mousepos_x = bound(0, mousepos_x, vid_conwidth);
-		mousepos_y = bound(0, mousepos_y, vid_conheight);
-	}
+	if (!autocvar_hud_cursormode)
+		update_mousepos();
 
 	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
 		HUD_MinigameMenu_MouseInput();

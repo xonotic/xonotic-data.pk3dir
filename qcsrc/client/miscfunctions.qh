@@ -187,6 +187,8 @@ void drawcolorcodedstring_expanding(vector position, string text, vector theScal
 
 void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float theAlpha, float drawflag, float fadelerp);
 
+void update_mousepos();
+
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
 float PolyDrawModelSurface(entity e, float i_s);
 void PolyDrawModel(entity e);
