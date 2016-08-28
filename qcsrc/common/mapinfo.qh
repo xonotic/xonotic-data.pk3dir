@@ -1,10 +1,5 @@
 #pragma once
 
-bool autocvar_developer_mapper;
-
-#define LOG_MAPWARN(...) MACRO_BEGIN { if (autocvar_developer_mapper) LOG_WARN(__VA_ARGS__); } MACRO_END
-#define LOG_MAPWARNF(...) MACRO_BEGIN { if (autocvar_developer_mapper) LOG_WARNF(__VA_ARGS__); } MACRO_END
-
 #include "util.qh"
 
 // info about a map that MapInfo loads
