@@ -334,7 +334,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	float teamcheck;
 	entity spot, firstspot;
 
-	spot = find (NULL, classname, "testplayerstart");
+	spot = find(NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 

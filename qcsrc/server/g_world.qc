@@ -1334,32 +1334,32 @@ entity FindIntermission()
 	local	float cyc;
 
 // look for info_intermission first
-	spot = find (NULL, classname, "info_intermission");
+	spot = find(NULL, classname, "info_intermission");
 	if (spot)
 	{	// pick a random one
 		cyc = random() * 4;
 		while (cyc > 1)
 		{
-			spot = find (spot, classname, "info_intermission");
+			spot = find(spot, classname, "info_intermission");
 			if (!spot)
-				spot = find (spot, classname, "info_intermission");
+				spot = find(spot, classname, "info_intermission");
 			cyc = cyc - 1;
 		}
 		return spot;
 	}
 
 // then look for the start position
-	spot = find (NULL, classname, "info_player_start");
+	spot = find(NULL, classname, "info_player_start");
 	if (spot)
 		return spot;
 
 // testinfo_player_start is only found in regioned levels
-	spot = find (NULL, classname, "testplayerstart");
+	spot = find(NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
 // then look for the start position
-	spot = find (NULL, classname, "info_player_deathmatch");
+	spot = find(NULL, classname, "info_player_deathmatch");
 	if (spot)
 		return spot;
 
