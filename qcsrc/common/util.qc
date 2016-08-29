@@ -397,8 +397,8 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 		n = tokenize_console(neworder);
 		for(w = to; w >= from; --w)
 		{
-			float wflags = Weapons_from(w).spawnflags;
-			if(wflags & WEP_FLAG_HIDDEN && wflags & WEP_FLAG_MUTATORBLOCKED && !(wflags & WEP_FLAG_NORMAL))
+			int wflags = Weapons_from(w).spawnflags;
+			if((wflags & WEP_FLAG_HIDDEN) && (wflags & WEP_FLAG_MUTATORBLOCKED) && !(wflags & WEP_FLAG_NORMAL))
 				continue;
 			for(i = 0; i < n; ++i)
 				if(stof(argv(i)) == w)
