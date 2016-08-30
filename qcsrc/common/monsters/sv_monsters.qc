@@ -101,11 +101,9 @@ bool Monster_ValidTarget(entity this, entity targ)
 
 	traceline(this.origin + this.view_ofs, targ.origin, MOVE_NORMAL, this);
 
-	if(trace_fraction < 1)
+	if(trace_fraction < 1 && trace_ent != targ)
+	if(!autocvar_g_monsters_ignoretraces || !trace_ent.iscreature)
 		return false; // solid
-
-	if(trace_ent != targ && !autocvar_g_monsters_ignoretraces)
-		return false; // not our enemy
 
 	if(autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT))
 	if(this.enemy != targ)
