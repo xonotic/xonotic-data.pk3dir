@@ -29,24 +29,19 @@ spawnfunc(invasion_spawnpoint)
 	}
 }
 
-float invasion_PickMonster(float supermonster_count)
+int invasion_PickMonster(int supermonster_count)
 {
 	if(autocvar_g_invasion_zombies_only)
 		return MON_ZOMBIE.monsterid;
 
-	float i;
-	entity mon;
-
 	RandomSelection_Init();
 
-	for(i = MON_FIRST; i <= MON_LAST; ++i)
+	FOREACH(Monsters, it != MON_Null,
 	{
-		mon = get_monsterinfo(i);
-		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || ((mon.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
-			continue; // flying/swimming monsters not yet supported
-
-		RandomSelection_Add(NULL, i, string_null, 1, 1);
-	}
+		if((it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM) || (it.spawnflags & MONSTER_SIZE_QUAKE) || ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
+			continue;
+        RandomSelection_Add(NULL, it.monsterid, string_null, 1, 1);
+	});
 
 	return RandomSelection_chosen_float;
 }
@@ -123,14 +118,14 @@ void invasion_SpawnChosenMonster(float mon)
 		monster.spawnflags |= MONSTERFLAG_MINIBOSS; // last round spawns minibosses
 }
 
-void invasion_SpawnMonsters(float supermonster_count)
+void invasion_SpawnMonsters(int supermonster_count)
 {
-	float chosen_monster = invasion_PickMonster(supermonster_count);
+	int chosen_monster = invasion_PickMonster(supermonster_count);
 
 	invasion_SpawnChosenMonster(chosen_monster);
 }
 
-float Invasion_CheckWinner()
+bool Invasion_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
