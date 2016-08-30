@@ -55,6 +55,7 @@ bool autocvar_hud_panel_scoreboard_maxrows = true;
 int autocvar_hud_panel_scoreboard_maxrows_players = 20;
 int autocvar_hud_panel_scoreboard_maxrows_teamplayers = 9;
 bool autocvar_hud_panel_scoreboard_others_showscore = true;
+bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 
 
 void drawstringright(vector, string, vector, vector, float, float);
@@ -929,10 +930,15 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		drawfill(h_pos, h_size, '0 0 0', 0.5 * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity ignored_pl, entity pl, int pl_number)
+vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity ignored_pl, entity pl, int pl_number)
 {
+	int i = 0;
 	vector h_pos = item_pos;
 	vector h_size = eX * panel_size.x + eY * hud_fontsize.y * 1.25;
+
+	bool complete = (this_team == NUM_SPECTATOR);
+
+	if(!complete)
 	if((sbt_highlight) && (!(pl_number % 2)))
 		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
@@ -941,27 +947,54 @@ void Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity ig
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
 
 	float width_limit = item_pos.x + panel_size.x - hud_fontsize.x;
-	width_limit -= stringwidth("...", false, hud_fontsize);
+	if(!complete)
+		width_limit -= stringwidth("...", false, hud_fontsize);
 	float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
-	for(int i = 0; pl; pl = pl.sort_next)
+	float ping_padding = 0;
+	float min_pingsize = stringwidth("999", false, hud_fontsize);
+	for(i = 0; pl; pl = pl.sort_next)
 	{
 		if(pl.team != this_team)
 			continue;
 		if(pl == ignored_pl)
 			continue;
+
+		ping_padding = 0;
 		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
-		if(autocvar_hud_panel_scoreboard_others_showscore)
+		if(this_team == NUM_SPECTATOR)
+		{
+			if(autocvar_hud_panel_scoreboard_spectators_showping)
+			{
+				string ping = Scoreboard_GetField(pl, SP_PING);
+				float pingsize = stringwidth(ping, false, hud_fontsize);
+				if(min_pingsize > pingsize)
+					ping_padding = min_pingsize - pingsize;
+				string col = rgb_to_hexcolor(sbt_field_rgb);
+				str = sprintf("%s ^7[%s%s^7]", str, col, ping);
+			}
+		}
+		else if(autocvar_hud_panel_scoreboard_others_showscore)
 			str = sprintf("%s ^7(^3%s^7)", str, ftos(pl.(scores(ps_primary))));
 		float str_width = stringwidth(str, true, hud_fontsize);
 		if(pos.x + str_width > width_limit)
 		{
-			drawstring(pos, "...", hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-			break;
+			++i;
+			if(!complete)
+			{
+				drawstring(pos, "...", hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+				break;
+			}
+			else
+			{
+				pos.x = item_pos.x + hud_fontsize.x * 0.5;
+				pos.y = item_pos.y + i * (hud_fontsize.y * 1.25);
+			}
 		}
 		drawcolorcodedstring(pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		pos.x += str_width + hud_fontsize.x * 0.5;
-		++i;
+		pos.x += ping_padding;
 	}
+	return eX * item_pos.x + eY * (item_pos.y + i * hud_fontsize.y * 1.25);
 }
 
 vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
@@ -1034,8 +1067,7 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 		}
 		if(i >= max_players - 1)
 		{
-			Scoreboard_DrawOthers(pos, rgb, tm.team, (self_shown ? me : NULL), pl, i);
-			pos.y += 1.25 * hud_fontsize.y;
+			pos = Scoreboard_DrawOthers(pos, rgb, tm.team, (self_shown ? me : NULL), pl, i);
 			break;
 		}
 		is_self = (pl.sv_entnum == current_player);
@@ -1413,12 +1445,9 @@ void Scoreboard_Draw()
 
 	Scoreboard_UpdatePlayerTeams();
 
-	vector pos, tmp;
+	vector pos = panel_pos;
 	entity pl, tm;
 	string str;
-
-	// Initializes position
-	pos = panel_pos;
 
 	// Heading
 	vector sb_heading_fontsize;
@@ -1499,23 +1528,20 @@ void Scoreboard_Draw()
 	pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
 
 	// List spectators
-	float specs = 0;
-	tmp = pos;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
-		if(pl.team != NUM_SPECTATOR)
-			continue;
-		pos.y += 1.25 * hud_fontsize.y;
-		Scoreboard_DrawItem(pos, '0 0 0', pl, (pl.sv_entnum == player_localnum), specs);
-		++specs;
-	}
+		if(pl.team == NUM_SPECTATOR)
+		{
+			draw_beginBoldFont();
+			drawstring(pos, _("Spectators"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			draw_endBoldFont();
+			pos.y += 1.25 * hud_fontsize.y;
 
-	if(specs)
-	{
-		draw_beginBoldFont();
-		drawstring(tmp, _("Spectators"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		draw_endBoldFont();
-		pos.y += 1.25 * hud_fontsize.y;
+			pos = Scoreboard_DrawOthers(pos, '0 0 0', pl.team, NULL, pl, 0);
+			pos.y += 1.25 * hud_fontsize.y;
+
+			break;
+		}
 	}
 
 	// Print info string
