@@ -12,6 +12,7 @@
 
 string autocvar_hud_fontsize;
 string hud_fontsize_str;
+float max_namesize;
 
 float sbt_bg_alpha;
 float sbt_fg_alpha;
@@ -42,6 +43,7 @@ bool autocvar_hud_panel_scoreboard_table_highlight = true;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha = 0.2;
 float autocvar_hud_panel_scoreboard_table_highlight_alpha_self = 0.4;
 float autocvar_hud_panel_scoreboard_bg_teams_color_team = 0;
+float autocvar_hud_panel_scoreboard_namesize = 15;
 
 bool autocvar_hud_panel_scoreboard_accuracy = true;
 bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
@@ -722,18 +724,20 @@ string Scoreboard_FixColumnWidth(int i, string str)
 	if(sbt_field[i] == SP_NAME) // name gets all remaining space
 	{
 		int j;
-		float namesize;
-		namesize = panel_size.x;
+		float remaining_space = 0;
 		for(j = 0; j < sbt_num_fields; ++j)
 			if(j != i)
 				if (sbt_field[i] != SP_SEPARATOR)
-					namesize -= sbt_field_size[j] + hud_fontsize.x;
-		sbt_field_size[i] = namesize;
+					remaining_space += sbt_field_size[j] + hud_fontsize.x;
+		sbt_field_size[i] = panel_size.x - remaining_space;
 
 		if (sbt_fixcolumnwidth_iconlen != 0)
-			namesize -= sbt_fixcolumnwidth_marginlen + sbt_fixcolumnwidth_iconlen * hud_fontsize.x;
+			remaining_space += sbt_fixcolumnwidth_marginlen + sbt_fixcolumnwidth_iconlen * hud_fontsize.x;
+		float namesize = panel_size.x - remaining_space;
 		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		sbt_fixcolumnwidth_len = stringwidth(str, true, hud_fontsize);
+
+		max_namesize = vid_conwidth - remaining_space;
 	}
 	else
 		sbt_fixcolumnwidth_len = stringwidth(str, false, hud_fontsize);
@@ -1335,6 +1339,11 @@ void Scoreboard_Draw()
 	// don't overlap with con_notify
 	if(!autocvar__hud_configure)
 		panel_pos.y = max((autocvar_con_notify * autocvar_con_notifysize), panel_pos.y);
+
+	float excess = max(0, max_namesize - autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x);
+	float fixed_scoreboard_width = bound(vid_conwidth * 0.4, vid_conwidth - excess, vid_conwidth * 0.93);
+	panel_pos.x = 0.5 * (vid_conwidth - fixed_scoreboard_width);
+	panel_size.x = fixed_scoreboard_width;
 
 	Scoreboard_UpdatePlayerTeams();
 
