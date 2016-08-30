@@ -51,6 +51,11 @@ bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
+bool autocvar_hud_panel_scoreboard_maxrows = true;
+int autocvar_hud_panel_scoreboard_maxrows_players = 20;
+int autocvar_hud_panel_scoreboard_maxrows_teamplayers = 9;
+bool autocvar_hud_panel_scoreboard_others_showscore = true;
+
 
 void drawstringright(vector, string, vector, vector, float, float);
 void drawstringcenter(vector, string, vector, vector, float, float);
@@ -755,10 +760,12 @@ void Scoreboard_initFieldSizes()
 		sbt_field_size[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
 }
 
-vector Scoreboard_DrawHeader(vector pos, vector rgb)
+vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
 {
 	int i;
 	vector column_dim = eY * panel_size.y;
+	if(other_players)
+		column_dim.y -= 1.25 * hud_fontsize.y;
 	vector text_offset = eY * (1.25 - 1) / 2 * hud_fontsize.y;
 	pos.x += hud_fontsize.x * 0.5;
 	for(i = 0; i < sbt_num_fields; ++i)
@@ -922,12 +929,60 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		drawfill(h_pos, h_size, '0 0 0', 0.5 * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+void Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity ignored_pl, entity pl, int pl_number)
+{
+	vector h_pos = item_pos;
+	vector h_size = eX * panel_size.x + eY * hud_fontsize.y * 1.25;
+	if((sbt_highlight) && (!(pl_number % 2)))
+		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
+
+	vector pos = item_pos;
+	pos.x += hud_fontsize.x * 0.5;
+	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
+
+	float width_limit = item_pos.x + panel_size.x - hud_fontsize.x;
+	width_limit -= stringwidth("...", false, hud_fontsize);
+	float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
+	for(int i = 0; pl; pl = pl.sort_next)
+	{
+		if(pl.team != this_team)
+			continue;
+		if(pl == ignored_pl)
+			continue;
+		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
+		if(autocvar_hud_panel_scoreboard_others_showscore)
+			str = sprintf("%s ^7(^3%s^7)", str, ftos(pl.(scores(ps_primary))));
+		float str_width = stringwidth(str, true, hud_fontsize);
+		if(pos.x + str_width > width_limit)
+		{
+			drawstring(pos, "...", hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+			break;
+		}
+		drawcolorcodedstring(pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		pos.x += str_width + hud_fontsize.x * 0.5;
+		++i;
+	}
+}
+
 vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
-	entity pl;
+	int max_players = 999;
+	if(autocvar_hud_panel_scoreboard_maxrows)
+	{
+		if(teamplay)
+			max_players = autocvar_hud_panel_scoreboard_maxrows_teamplayers;
+		else
+			max_players = autocvar_hud_panel_scoreboard_maxrows_players;
+		if(max_players <= 1)
+			max_players = 1;
+		if(max_players == tm.team_size)
+			max_players = 999;
+	}
 
+	entity pl;
+	entity me = playerslots[current_player];
 	panel_pos = pos;
-	panel_size.y = 1.25 * hud_fontsize.y * (1 + max(1, tm.team_size));
+	panel_size.y = 1.25 * hud_fontsize.y * (1 + bound(1, tm.team_size, max_players));
 	panel_size.y += panel_bg_padding * 2;
 	HUD_Panel_DrawBg();
 
@@ -957,28 +1012,39 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 
 
 	// print header row and highlight columns
-	pos = Scoreboard_DrawHeader(panel_pos, rgb);
+	pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm.team_size));
 
 	// fill the table and draw the rows
+	bool is_self = false;
+	bool self_shown = false;
 	int i = 0;
-	if (teamplay)
-		for(pl = players.sort_next; pl; pl = pl.sort_next)
+	for(pl = players.sort_next; pl; pl = pl.sort_next)
+	{
+		if(pl.team != tm.team)
+			continue;
+		if(i == max_players - 2 && pl != me)
 		{
-			if(pl.team != tm.team)
-				continue;
-			Scoreboard_DrawItem(pos, rgb, pl, (pl.sv_entnum == player_localnum), i);
-			pos.y += 1.25 * hud_fontsize.y;
-			++i;
+			if(!self_shown && me.team == tm.team)
+			{
+				Scoreboard_DrawItem(pos, rgb, me, true, i);
+				self_shown = true;
+				pos.y += 1.25 * hud_fontsize.y;
+				++i;
+			}
 		}
-	else
-		for(pl = players.sort_next; pl; pl = pl.sort_next)
+		if(i >= max_players - 1)
 		{
-			if(pl.team == NUM_SPECTATOR)
-				continue;
-			Scoreboard_DrawItem(pos, rgb, pl, (pl.sv_entnum == player_localnum), i);
+			Scoreboard_DrawOthers(pos, rgb, tm.team, (self_shown ? me : NULL), pl, i);
 			pos.y += 1.25 * hud_fontsize.y;
-			++i;
+			break;
 		}
+		is_self = (pl.sv_entnum == current_player);
+		Scoreboard_DrawItem(pos, rgb, pl, is_self, i);
+		if(is_self)
+			self_shown = true;
+		pos.y += 1.25 * hud_fontsize.y;
+		++i;
+	}
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
 	return end_pos;
