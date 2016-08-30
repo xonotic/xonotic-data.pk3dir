@@ -1229,6 +1229,7 @@ float get_model_parameters(string m, float sk)
 		get_model_parameters_bone_aimweight[i] = 0;
 	}
 	get_model_parameters_fixbone = 0;
+	get_model_parameters_hidden = false;
 
 #ifdef GAMEQC
 	MUTATOR_CALLHOOK(ClearModelParams);
@@ -1306,6 +1307,8 @@ float get_model_parameters(string m, float sk)
 			}
 		if(c == "fixbone")
 			get_model_parameters_fixbone = stof(s);
+		if(c == "hidden")
+			get_model_parameters_hidden = stob(s);
 	}
 
 	while((s = fgets(fh)))

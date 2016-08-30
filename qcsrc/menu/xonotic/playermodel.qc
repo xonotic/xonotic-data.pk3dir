@@ -38,6 +38,8 @@ void XonoticPlayerModelSelector_loadModels(entity me)
 		fn = search_getfilename(glob, i);
 		if(!get_model_parameters(fn, -1))
 			continue;
+		if(get_model_parameters_hidden)
+			continue;
 		bufstr_add(sortbuf, sprintf("%-128s%s", get_model_parameters_name, fn), 1);
 	}
 	search_end(glob);
@@ -49,6 +51,8 @@ void XonoticPlayerModelSelector_loadModels(entity me)
 		fn = substring(bufstr_get(sortbuf, i), 128, -1);
 		if(!get_model_parameters(fn, -1))
 			error("But it JUST worked!");
+		if(get_model_parameters_hidden)
+			continue;
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_TITLE, get_model_parameters_name);
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_IMAGE, strcat("/", substring(get_model_datafilename(get_model_parameters_modelname, get_model_parameters_modelskin, "tga"), 0, -5)));
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL, get_model_parameters_modelname);
