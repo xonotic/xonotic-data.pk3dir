@@ -1503,12 +1503,10 @@ void Scoreboard_Draw()
 	else
 	{
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		{
-			if(tm.team == NUM_SPECTATOR)
-				continue;
-
-			pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
-		}
+			if(tm.team != NUM_SPECTATOR)
+				break;
+		// display it anyway
+		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
 
 	if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE) {
