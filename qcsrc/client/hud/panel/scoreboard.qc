@@ -10,6 +10,13 @@
 
 // Scoreboard (#24)
 
+const int MAX_SBT_FIELDS = MAX_SCORE;
+
+PlayerScoreField sbt_field[MAX_SBT_FIELDS + 1];
+float sbt_field_size[MAX_SBT_FIELDS + 1];
+string sbt_field_title[MAX_SBT_FIELDS + 1];
+int sbt_num_fields;
+
 string autocvar_hud_fontsize;
 string hud_fontsize_str;
 
