@@ -2008,9 +2008,9 @@ void PrintWelcomeMessage(entity this)
 bool spawnAllowed(entity this)
 {
 	if (this.version_mismatch) return false;
+	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
-	if (!nJoinAllowed(this, this)) return false;
 	return true;
 }
 
