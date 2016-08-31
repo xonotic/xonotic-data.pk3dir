@@ -517,16 +517,15 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
         if(fire & 2)
         if(PS(actor).m_switchweapon == WEP_DEVASTATOR)
         {
-            entity rock;
             bool rockfound = false;
-            for(rock = NULL; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == actor)
+            IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
             {
-                if(!rock.rl_detonate_later)
+                if(!it.rl_detonate_later)
                 {
-                    rock.rl_detonate_later = true;
+                    it.rl_detonate_later = true;
                     rockfound = true;
                 }
-            }
+            });
             if(rockfound)
                 sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
         }

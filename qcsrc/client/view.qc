@@ -980,7 +980,7 @@ void HUD_Crosshair(entity this)
 				v = wcross_origin - wcross_oldorigin;
 				v.x /= vid_conwidth;
 				v.y /= vid_conheight;
-				if(vlen(v) > 0.01)
+				if(vdist(v, >, 0.01))
 					shottype = SHOTTYPE_HITOBSTRUCTION;
 			}
 			if(!autocvar_crosshair_hittest_showimpact)

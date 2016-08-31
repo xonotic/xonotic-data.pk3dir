@@ -99,10 +99,10 @@ bool Monster_ValidTarget(entity this, entity targ)
 		return false;
 	}
 
-	traceline(this.origin + this.view_ofs, targ.origin, 0, this);
+	traceline(this.origin + this.view_ofs, targ.origin, MOVE_NOMONSTERS, this);
 
-	if((trace_fraction < 1) && (trace_ent != targ))
-		return false;
+	if(trace_fraction < 1)
+		return false; // solid
 
 	if(autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT))
 	if(this.enemy != targ)

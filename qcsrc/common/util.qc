@@ -397,8 +397,8 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 		n = tokenize_console(neworder);
 		for(w = to; w >= from; --w)
 		{
-			float wflags = Weapons_from(w).spawnflags;
-			if(wflags & WEP_FLAG_HIDDEN && wflags & WEP_FLAG_MUTATORBLOCKED && !(wflags & WEP_FLAG_NORMAL))
+			int wflags = Weapons_from(w).spawnflags;
+			if((wflags & WEP_FLAG_HIDDEN) && (wflags & WEP_FLAG_MUTATORBLOCKED) && !(wflags & WEP_FLAG_NORMAL))
 				continue;
 			for(i = 0; i < n; ++i)
 				if(stof(argv(i)) == w)
@@ -1229,6 +1229,7 @@ float get_model_parameters(string m, float sk)
 		get_model_parameters_bone_aimweight[i] = 0;
 	}
 	get_model_parameters_fixbone = 0;
+	get_model_parameters_hidden = false;
 
 #ifdef GAMEQC
 	MUTATOR_CALLHOOK(ClearModelParams);
@@ -1306,6 +1307,8 @@ float get_model_parameters(string m, float sk)
 			}
 		if(c == "fixbone")
 			get_model_parameters_fixbone = stof(s);
+		if(c == "hidden")
+			get_model_parameters_hidden = stob(s);
 	}
 
 	while((s = fgets(fh)))
