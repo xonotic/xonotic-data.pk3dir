@@ -554,9 +554,6 @@ string sbt_field_icon2;
 vector sbt_field_icon0_rgb;
 vector sbt_field_icon1_rgb;
 vector sbt_field_icon2_rgb;
-float sbt_field_icon0_alpha;
-float sbt_field_icon1_alpha;
-float sbt_field_icon2_alpha;
 string Scoreboard_GetField(entity pl, PlayerScoreField field)
 {
 	float tmp, num, denom;
@@ -569,9 +566,6 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 	sbt_field_icon0_rgb = '1 1 1';
 	sbt_field_icon1_rgb = '1 1 1';
 	sbt_field_icon2_rgb = '1 1 1';
-	sbt_field_icon0_alpha = 1;
-	sbt_field_icon1_alpha = 1;
-	sbt_field_icon2_alpha = 1;
 	switch(field)
 	{
 		case SP_PING:
@@ -810,6 +804,8 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	else if((sbt_highlight) && (!(pl_number % 2)))
 		drawfill(h_pos, h_size, rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
+	float fg_alpha = (is_self ? sbt_fg_alpha_self : sbt_fg_alpha);
+
 	vector pos = item_pos;
 	pos.x += hud_fontsize.x * 0.5;
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
@@ -833,34 +829,19 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 		if(field == SP_NAME) {
 			tmp.x = sbt_field_size[i] - hud_fontsize.x * sbt_fixcolumnwidth_iconlen - sbt_fixcolumnwidth_marginlen + hud_fontsize.x;
-			if (is_self)
-				drawcolorcodedstring(pos - tmp, str, hud_fontsize, sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-			else
-				drawcolorcodedstring(pos - tmp, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos - tmp, str, hud_fontsize, fg_alpha, DRAWFLAG_NORMAL);
 		} else {
 			tmp.x = sbt_fixcolumnwidth_len + hud_fontsize.x;
-			if (is_self)
-				drawstring(pos - tmp, str, hud_fontsize, sbt_field_rgb, sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-			else
-				drawstring(pos - tmp, str, hud_fontsize, sbt_field_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos - tmp, str, hud_fontsize, sbt_field_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		}
 
 		tmp.x = sbt_field_size[i] + hud_fontsize.x;
 		if(sbt_field_icon0 != "")
-			if (is_self)
-				drawpic(pos - tmp, sbt_field_icon0, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, sbt_field_icon0_alpha * sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-			else
-				drawpic(pos - tmp, sbt_field_icon0, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, sbt_field_icon0_alpha * sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic(pos - tmp, sbt_field_icon0, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		if(sbt_field_icon1 != "")
-			if (is_self)
-				drawpic(pos - tmp, sbt_field_icon1, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, sbt_field_icon1_alpha * sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-			else
-				drawpic(pos - tmp, sbt_field_icon1, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, sbt_field_icon1_alpha * sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic(pos - tmp, sbt_field_icon1, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		if(sbt_field_icon2 != "")
-			if (is_self)
-				drawpic(pos - tmp, sbt_field_icon2, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon2_rgb, sbt_field_icon2_alpha * sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-			else
-				drawpic(pos - tmp, sbt_field_icon2, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon2_rgb, sbt_field_icon2_alpha * sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic(pos - tmp, sbt_field_icon2, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if(sbt_field[i] == SP_SEPARATOR)
@@ -882,34 +863,19 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 			if(field == SP_NAME) {
 				tmp.x = sbt_fixcolumnwidth_len; // left or right aligned? let's put it right...
-				if(is_self)
-					drawcolorcodedstring(pos - tmp, str, hud_fontsize, sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-				else
-					drawcolorcodedstring(pos - tmp, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos - tmp, str, hud_fontsize, fg_alpha, DRAWFLAG_NORMAL);
 			} else {
 				tmp.x = sbt_fixcolumnwidth_len;
-				if(is_self)
-					drawstring(pos - tmp, str, hud_fontsize, sbt_field_rgb, sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-				else
-					drawstring(pos - tmp, str, hud_fontsize, sbt_field_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring(pos - tmp, str, hud_fontsize, sbt_field_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			tmp.x = sbt_field_size[i];
 			if(sbt_field_icon0 != "")
-				if (is_self)
-					drawpic(pos - tmp, sbt_field_icon0, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, sbt_field_icon0_alpha * sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-				else
-					drawpic(pos - tmp, sbt_field_icon0, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, sbt_field_icon0_alpha * sbt_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, sbt_field_icon0, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			if(sbt_field_icon1 != "")
-				if (is_self)
-					drawpic(pos - tmp, sbt_field_icon1, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, sbt_field_icon1_alpha * sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-				else
-					drawpic(pos - tmp, sbt_field_icon1, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, sbt_field_icon1_alpha * sbt_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, sbt_field_icon1, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			if(sbt_field_icon2 != "")
-				if (is_self)
-					drawpic(pos - tmp, sbt_field_icon2, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon2_rgb, sbt_field_icon2_alpha * sbt_fg_alpha_self, DRAWFLAG_NORMAL);
-				else
-					drawpic(pos - tmp, sbt_field_icon2, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon2_rgb, sbt_field_icon2_alpha * sbt_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, sbt_field_icon2, eY * hud_fontsize.y + eX * hud_fontsize.x * sbt_fixcolumnwidth_iconlen, sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			pos.x -= sbt_field_size[i] + hud_fontsize.x;
 		}
 	}
