@@ -839,7 +839,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 	// apply push
 	if (targ.damageforcescale)
-	if (vlen(force))
+	if (force)
 	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
@@ -863,7 +863,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		UpdateCSQCProjectile(targ);
 	}
 	// apply damage
-	if (damage != 0 || (targ.damageforcescale && vlen(force)))
+	if (damage != 0 || (targ.damageforcescale && force))
 	if (targ.event_damage)
 		targ.event_damage (targ, inflictor, attacker, damage, deathtype, hitloc, force);
 
@@ -1038,7 +1038,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
 					//	print(" (", ftos(a), ")\n");
 					//}
-					if(finaldmg || vlen(force))
+					if(finaldmg || force)
 					{
 						if(targ.iscreature)
 						{

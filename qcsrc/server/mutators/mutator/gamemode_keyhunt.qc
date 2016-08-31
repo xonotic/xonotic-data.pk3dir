@@ -423,7 +423,7 @@ void kh_Key_Damage(entity this, entity inflictor, entity attacker, float damage,
 		// immediately return is bad
 		// maybe start a shorter countdown?
 	}
-	if(vlen(force) <= 0)
+	if(force == '0 0 0')
 		return;
 	if(time > this.pushltime)
 		if(IS_PLAYER(attacker))

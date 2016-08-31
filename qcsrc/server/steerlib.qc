@@ -144,7 +144,7 @@ vector steerlib_wander(entity this, float range, float tresh, vector oldpoint)
     vector wander_point;
     wander_point = v_forward - oldpoint;
 
-    if (vlen(wander_point) > tresh)
+    if (vdist(wander_point, >, tresh))
         return oldpoint;
 
     range = bound(0,range,1);

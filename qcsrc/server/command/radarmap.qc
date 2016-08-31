@@ -26,7 +26,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 	float n, m;
 	n = m = 0;
 
-	while (vlen(c - b) > 1)
+	while (vdist(c - b, >, 1))
 	{
 		++m;
 
