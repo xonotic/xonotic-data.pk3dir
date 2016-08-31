@@ -108,4 +108,7 @@ bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
 float vehicle_altitude(entity this, float amax);
 
+IntrusiveList g_vehicle_returners;
+STATIC_INIT(g_vehicle_returners) { g_vehicle_returners = IL_NEW(); }
+
 #endif

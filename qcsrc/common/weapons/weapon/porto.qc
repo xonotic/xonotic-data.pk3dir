@@ -90,6 +90,7 @@ void W_Porto_Fail(entity this, float failhard)
 		if(move_out_of_solid(this))
 		{
 			this.flags = FL_ITEM;
+			IL_PUSH(g_items, this);
 			this.velocity = trigger_push_calculatevelocity(this.origin, this.realowner, 128);
 			tracetoss(this, this);
 			if(vdist(trace_endpos - this.realowner.origin, <, 128))
@@ -277,6 +278,7 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	gren.portal_id = time;
 	actor.porto_current = gren;

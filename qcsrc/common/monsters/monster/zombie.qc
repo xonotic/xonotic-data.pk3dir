@@ -1,7 +1,5 @@
 #include "zombie.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
 float autocvar_g_monster_zombie_damageforcescale = 0.55;
@@ -209,6 +207,4 @@ METHOD(Zombie, mr_precache, bool(Zombie this))
     TC(Zombie, this);
     return true;
 }
-#endif
-
 #endif

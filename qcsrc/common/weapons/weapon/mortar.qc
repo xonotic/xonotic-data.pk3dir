@@ -248,6 +248,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	if(WEP_CVAR_PRI(mortar, type) == 0 || WEP_CVAR_PRI(mortar, type) == 2)
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);
@@ -296,6 +297,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	if(WEP_CVAR_SEC(mortar, type) == 0 || WEP_CVAR_SEC(mortar, type) == 2)
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);
@@ -361,15 +363,14 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         if(WEP_CVAR_SEC(mortar, remote_detonateprimary))
         {
             bool nadefound = false;
-            entity nade;
-            for(nade = NULL; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == actor)
+            IL_EACH(g_projectiles, it.realowner == actor && it.classname == "grenade",
             {
-                if(!nade.gl_detonate_later)
+                if(!it.gl_detonate_later)
                 {
-                    nade.gl_detonate_later = true;
+                    it.gl_detonate_later = true;
                     nadefound = true;
                 }
-            }
+            });
             if(nadefound)
                 sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
         }

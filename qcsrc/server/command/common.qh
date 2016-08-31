@@ -19,7 +19,7 @@ STATIC_INIT(COMMON_COMMANDS_aliases) {
 }
 
 #include "vote.qh"
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 
 #include <common/command/_mod.qh>
 

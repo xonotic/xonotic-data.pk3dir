@@ -345,6 +345,10 @@ void buff_Init(entity this)
 	this.classname = "item_buff";
 	this.solid = SOLID_TRIGGER;
 	this.flags = FL_ITEM;
+	this.bot_pickup = true;
+	this.bot_pickupevalfunc = commodity_pickupevalfunc;
+	this.bot_pickupbasevalue = 1000;
+	IL_PUSH(g_items, this);
 	setthink(this, buff_Think);
 	settouch(this, buff_Touch);
 	this.reset = buff_Reset;
@@ -822,7 +826,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if(player.buffs & BUFF_MAGNET.m_itemid)
 	{
 		vector pickup_size;
-		FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
+		IL_EACH(g_items, it.classname != "item_flag_team" && it.classname != "item_kh_key",
 		{
 			if(it.buffs)
 				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;

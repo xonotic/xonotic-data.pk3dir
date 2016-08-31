@@ -27,6 +27,7 @@
 
 #include <common/effects/qc/globalsound.qh>
 
+#include "../common/triggers/func/conveyor.qh"
 #include "../common/triggers/teleporters.qh"
 
 #include "../common/vehicles/all.qh"
@@ -295,6 +296,8 @@ void PutObserverInServer(entity this)
 	accuracy_resend(this);
 
 	this.spectatortime = time;
+	if(this.bot_attack)
+		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
     this.hud = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
@@ -631,11 +634,15 @@ void PutClientInServer(entity this)
 		this.oldorigin = this.origin;
 		this.prevorigin = this.origin;
 		this.lastteleporttime = time; // prevent insane speeds due to changing origin
+		if(this.conveyor)
+			IL_REMOVE(g_conveyed, this);
 		this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
 		this.hud = HUD_NORMAL;
 
 		this.event_damage = PlayerDamage;
 
+		if(!this.bot_attack)
+			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.monster_attack = true;
 
@@ -938,10 +945,8 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 			this.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(this, strcat("^1You'll be dead in ", ftos(this.killindicator.cnt), " seconds\n"));
 
-			FOREACH_ENTITY_ENT(enemy, this,
+			IL_EACH(g_clones, it.enemy == this && !(it.effects & CSQCMODEL_EF_RESPAWNGHOST),
 			{
-				if(it.classname != "body")
-					continue;
 				it.killindicator = spawn();
 				it.killindicator.owner = it;
 				it.killindicator.scale = 0.5;
@@ -1200,7 +1205,7 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
-	FOREACH_ENTITY_FLOAT(init_for_player_needed, true, {
+	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
 	});
 

@@ -8,7 +8,7 @@
 #include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>

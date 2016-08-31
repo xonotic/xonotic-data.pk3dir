@@ -314,9 +314,8 @@ void spiderbot_exit(entity this, int eject)
 {
 	vector spot;
 
-	FOREACH_ENTITY_ENT(owner, this.owner,
+	IL_EACH(g_projectiles, it.owner == this.owner && it.classname == "spiderbot_rocket",
 	{
-		if(it.classname != "spiderbot_rocket") continue;
 		it.realowner = this.owner;
 		it.owner = NULL;
 	});

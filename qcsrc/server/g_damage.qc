@@ -526,6 +526,8 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
+	if(targ.bot_attack)
+		IL_REMOVE(g_bot_targets, targ);
 	targ.bot_attack = false;
 
 	entity ice = new(ice);
@@ -563,6 +565,8 @@ void Unfreeze (entity targ)
 	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
+	if(!targ.bot_attack)
+		IL_PUSH(g_bot_targets, targ);
 	targ.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
@@ -835,7 +839,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 	// apply push
 	if (targ.damageforcescale)
-	if (vlen(force))
+	if (force)
 	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
@@ -859,7 +863,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		UpdateCSQCProjectile(targ);
 	}
 	// apply damage
-	if (damage != 0 || (targ.damageforcescale && vlen(force)))
+	if (damage != 0 || (targ.damageforcescale && force))
 	if (targ.event_damage)
 		targ.event_damage (targ, inflictor, attacker, damage, deathtype, hitloc, force);
 
@@ -1034,7 +1038,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
 					//	print(" (", ftos(a), ")\n");
 					//}
-					if(finaldmg || vlen(force))
+					if(finaldmg || force)
 					{
 						if(targ.iscreature)
 						{

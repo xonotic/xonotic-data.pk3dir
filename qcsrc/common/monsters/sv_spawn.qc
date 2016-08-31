@@ -1,11 +1,10 @@
-#include "spawn.qh"
+#include "sv_spawn.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "../util.qh"
     #include "all.qh"
     #include "sv_monsters.qh"
-    #include "spawn.qh"
     #include <server/autocvars.qh>
     #include <server/defs.qh>
 #endif

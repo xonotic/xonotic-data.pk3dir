@@ -98,6 +98,9 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
 
+	IntrusiveList g_uncustomizables;
+	STATIC_INIT(g_uncustomizables) { g_uncustomizables = IL_NEW(); }
+
 	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
 		if (e.classname == "") e.classname = "net_linked";
@@ -135,11 +138,13 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		setcefc(e, customizer);
 		e.uncustomizeentityforclient = uncustomizer;
 		e.uncustomizeentityforclient_set = !!uncustomizer;
+		if(uncustomizer)
+			IL_PUSH(g_uncustomizables, e);
 	}
 
 	void UncustomizeEntitiesRun()
 	{
-		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, it.uncustomizeentityforclient(it));
+		IL_EACH(g_uncustomizables, it.uncustomizeentityforclient_set, it.uncustomizeentityforclient(it));
 	}
 
 	STRING_ITERATOR(g_buf, string_null, 0);

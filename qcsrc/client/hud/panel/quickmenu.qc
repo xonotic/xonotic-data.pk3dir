@@ -496,14 +496,10 @@ void QuickMenu_Mouse()
 		return;
 	}
 
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+	if (!autocvar_hud_cursormode)
+		update_mousepos();
 
-		mousepos.x = bound(0, mousepos.x, vid_conwidth);
-		mousepos.y = bound(0, mousepos.y, vid_conheight);
-	}
-
+	panel = HUD_PANEL(QUICKMENU);
 	HUD_Panel_LoadCvars();
 
 	if(panel_bg_padding)

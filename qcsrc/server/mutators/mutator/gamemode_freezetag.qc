@@ -334,7 +334,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(2, float);
+	float frag_deathtype = M_ARGV(3, float);
 
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())

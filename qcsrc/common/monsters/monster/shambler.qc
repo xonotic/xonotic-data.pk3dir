@@ -1,7 +1,5 @@
 #include "shambler.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
 float autocvar_g_monster_shambler_damageforcescale = 0.1;
@@ -150,6 +148,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
@@ -272,6 +271,4 @@ METHOD(Shambler, mr_precache, bool(Shambler this))
     TC(Shambler, this);
     return true;
 }
-#endif
-
 #endif

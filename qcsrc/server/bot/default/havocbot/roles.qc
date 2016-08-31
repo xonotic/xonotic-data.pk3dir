@@ -19,7 +19,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 
-	FOREACH_ENTITY_FLOAT(bot_pickup, true,
+	IL_EACH(g_items, it.bot_pickup,
 	{
 		o = (it.absmin + it.absmax) * 0.5;
 		friend_distance = 10000; enemy_distance = 10000;
@@ -115,19 +115,6 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
-	});
-}
-
-void havocbot_goalrating_controlpoints(entity this, float ratingscale, vector org, float sradius)
-{
-	FOREACH_ENTITY_CLASS("dom_controlpoint", vdist((((it.absmin + it.absmax) * 0.5) - org), <, sradius),
-	{
-		if(it.cnt > -1) // this is just being fought
-			navigation_routerating(this, it, ratingscale, 5000);
-		else if(it.goalentity.cnt == 0) // unclaimed
-			navigation_routerating(this, it, ratingscale * 0.5, 5000);
-		else if(it.goalentity.team != this.team) // other team's point
-			navigation_routerating(this, it, ratingscale * 0.2, 5000);
 	});
 }
 

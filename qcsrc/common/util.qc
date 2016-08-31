@@ -397,6 +397,9 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 		n = tokenize_console(neworder);
 		for(w = to; w >= from; --w)
 		{
+			int wflags = Weapons_from(w).spawnflags;
+			if((wflags & WEP_FLAG_HIDDEN) && (wflags & WEP_FLAG_MUTATORBLOCKED) && !(wflags & WEP_FLAG_NORMAL))
+				continue;
 			for(i = 0; i < n; ++i)
 				if(stof(argv(i)) == w)
 					break;
@@ -600,7 +603,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 		return 0;
 	}
 
-	FOREACH_ENTITY_CLASS("saved_cvar_value", it.netname == tmp_cvar,
+	IL_EACH(g_saved_cvars, it.netname == tmp_cvar,
 	{
 		created_saved_value = -1; // skip creation
 		break; // no need to continue
@@ -610,6 +613,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	{
 		// creating a new entity to keep track of this cvar
 		entity e = new_pure(saved_cvar_value);
+		IL_PUSH(g_saved_cvars, e);
 		e.netname = strzone(tmp_cvar);
 		e.message = strzone(cvar_string(tmp_cvar));
 		created_saved_value = 1;
@@ -1225,6 +1229,7 @@ float get_model_parameters(string m, float sk)
 		get_model_parameters_bone_aimweight[i] = 0;
 	}
 	get_model_parameters_fixbone = 0;
+	get_model_parameters_hidden = false;
 
 #ifdef GAMEQC
 	MUTATOR_CALLHOOK(ClearModelParams);
@@ -1302,6 +1307,8 @@ float get_model_parameters(string m, float sk)
 			}
 		if(c == "fixbone")
 			get_model_parameters_fixbone = stof(s);
+		if(c == "hidden")
+			get_model_parameters_hidden = stob(s);
 	}
 
 	while((s = fgets(fh)))

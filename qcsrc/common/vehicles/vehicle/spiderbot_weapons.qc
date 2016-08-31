@@ -48,16 +48,17 @@ void spiderbot_rocket_guided(entity this)
 
 void spiderbot_guide_release(entity this)
 {
-    FOREACH_ENTITY_ENT(realowner, this.owner,
+    bool donetrace = false;
+    IL_EACH(g_projectiles, it.realowner == this.owner && getthink(it) == spiderbot_rocket_guided,
     {
-        if(i == 0) // something exists, let's trace!
-            crosshair_trace(this.owner);
-
-        if(getthink(it) == spiderbot_rocket_guided)
+        if(!donetrace) // something exists, let's trace!
         {
-            it.pos1 = trace_endpos;
-            setthink(it, spiderbot_rocket_unguided);
+            donetrace = true;
+            crosshair_trace(this.owner);
         }
+
+        it.pos1 = trace_endpos;
+        setthink(it, spiderbot_rocket_unguided);
     });
 }
 

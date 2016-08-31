@@ -267,10 +267,10 @@ void teleport_findtarget(entity this)
 
 entity Teleport_Find(vector mi, vector ma)
 {
-	entity e;
-	for(e = NULL; (e = find(e, classname, "trigger_teleport")); )
-		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, NULL))
-			return e;
+	IL_EACH(g_teleporters, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL),
+	{
+		return it;
+	});
 	return NULL;
 }
 

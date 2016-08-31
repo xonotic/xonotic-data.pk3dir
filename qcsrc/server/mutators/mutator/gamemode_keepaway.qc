@@ -451,6 +451,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.glow_color = autocvar_g_keepawayball_trail_color;
 	e.glow_trail = true;
 	e.flags = FL_ITEM;
+	IL_PUSH(g_items, e);
 	e.pushable = true;
 	e.reset = ka_Reset;
 	settouch(e, ka_TouchEvent);

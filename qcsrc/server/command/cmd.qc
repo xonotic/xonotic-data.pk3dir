@@ -30,8 +30,8 @@
 
 #include <common/minigames/sv_minigames.qh>
 
-#include <common/monsters/all.qc>
-#include <common/monsters/spawn.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 
 #include <lib/warpzone/common.qh>

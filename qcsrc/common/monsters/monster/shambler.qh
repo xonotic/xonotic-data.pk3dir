@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../all.qh"
+
 #ifdef GAMEQC
 MODEL(MON_SHAMBLER, M_Model("shambler.mdl"));
 #endif

@@ -166,6 +166,7 @@ spawnfunc(info_player_start)
 spawnfunc(info_player_deathmatch)
 {
 	this.classname = "info_player_deathmatch";
+	IL_PUSH(g_spawnpoints, this);
 	relocate_spawnpoint(this);
 }
 
@@ -333,7 +334,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	float teamcheck;
 	entity spot, firstspot;
 
-	spot = find (NULL, classname, "testplayerstart");
+	spot = find(NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 

@@ -34,7 +34,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	w.solid = SOLID_TRIGGER;
 	setorigin(w, (m1 + m2) * 0.5);
 	setsize(w, m1 - w.origin, m2 - w.origin);
-	if (vlen(w.size) > 0)
+	if (w.size)
 		w.wpisbox = true;
 
 	if(!w.wpisbox)
@@ -280,7 +280,7 @@ void waypoint_schedulerelink(entity wp)
 	}
 	else
 		wp.model = "";
-	wp.wpisbox = vlen(wp.size) > 0;
+	wp.wpisbox = vdist(wp.size, >, 0);
 	wp.enemy = NULL;
 	if (!(wp.wpflags & WAYPOINTFLAG_PERSONAL))
 		wp.owner = NULL;
@@ -1012,7 +1012,7 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 
 void botframe_deleteuselesswaypoints()
 {
-	FOREACH_ENTITY_FLOAT(bot_pickup, true,
+	IL_EACH(g_items, it.bot_pickup,
 	{
 		// NOTE: this protects waypoints if they're the ONLY nearest
 		// waypoint. That's the intention.

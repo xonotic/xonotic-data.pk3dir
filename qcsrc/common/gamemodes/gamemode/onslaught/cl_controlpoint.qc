@@ -104,7 +104,7 @@ void cpicon_damage(entity this, float hp)
 	setsize(this, CPICON_MIN, CPICON_MAX);
 }
 
-void cpicon_construct(entity this)
+void cpicon_construct(entity this, bool isnew)
 {
 	this.netname = "Control Point Icon";
 
@@ -133,6 +133,9 @@ void cpicon_construct(entity this)
 	this.cp_origin		= this.origin;
 	this.cp_bob_origin 	= '0 0 0.1';
 	this.cp_bob_spd 	= 0;
+
+	if(isnew)
+		IL_PUSH(g_drawables, this);
 }
 
 .vector glowmod;
@@ -174,7 +177,7 @@ NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
 			this.count = (this.health - this.max_health) * frametime;
 
 		cpicon_changeteam(this);
-		cpicon_construct(this);
+		cpicon_construct(this, isnew);
 	}
 
 	if(sf & CPSF_STATUS)

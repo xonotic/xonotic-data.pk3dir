@@ -137,14 +137,10 @@ void HUD_Radar_Mouse()
 		return;
 	}
 
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+	if (!autocvar_hud_cursormode)
+		update_mousepos();
 
-		mousepos_x = bound(0, mousepos_x, vid_conwidth);
-		mousepos_y = bound(0, mousepos_y, vid_conheight);
-	}
-
+	panel = HUD_PANEL(RADAR);
 	HUD_Panel_LoadCvars();
 
 

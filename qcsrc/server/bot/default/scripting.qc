@@ -230,17 +230,10 @@ void bot_commands_init()
 // Returns first bot with matching name
 entity find_bot_by_name(string name)
 {
-	entity bot;
-
-	bot = findchainflags(flags, FL_CLIENT);
-	while (bot)
+	FOREACH_CLIENT(IS_BOT_CLIENT(it) && it.netname == name,
 	{
-		if(IS_BOT_CLIENT(bot))
-		if(bot.netname==name)
-			return bot;
-
-		bot = bot.chain;
-	}
+		return it;
+	});
 
 	return NULL;
 }

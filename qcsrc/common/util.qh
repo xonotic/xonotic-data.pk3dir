@@ -5,6 +5,9 @@
 vector real_origin(entity ent);
 #endif
 
+IntrusiveList g_saved_cvars;
+STATIC_INIT(g_saved_cvars) { g_saved_cvars = IL_NEW(); }
+
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
 string wordwrap(string s, float l);
@@ -178,6 +181,7 @@ float get_model_parameters_species;
 string get_model_parameters_sex;
 float get_model_parameters_weight;
 float get_model_parameters_age;
+bool get_model_parameters_hidden;
 string get_model_parameters_description;
 string get_model_parameters_bone_upperbody;
 string get_model_parameters_bone_weapon;
