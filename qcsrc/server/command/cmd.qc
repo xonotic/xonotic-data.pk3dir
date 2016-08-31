@@ -160,7 +160,7 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 }
 
 bool spawnAllowed(entity this);
-void LeaveSpectatorMode(entity this);
+void JoinOrShowTeamSelection(entity this);
 void ClientCommand_join(entity caller, float request)
 {
 	switch (request)
@@ -170,7 +170,7 @@ void ClientCommand_join(entity caller, float request)
 			if (!gameover)
 			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
 			if (spawnAllowed(caller))
-				LeaveSpectatorMode(caller);
+				JoinOrShowTeamSelection(caller);
 
 			return;  // never fall through to usage
 		}

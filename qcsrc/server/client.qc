@@ -1867,7 +1867,7 @@ void ShowRespawnCountdown(entity this)
 }
 
 .int team_selected;
-void LeaveSpectatorMode(entity this)
+void JoinOrShowTeamSelection(entity this)
 {
 	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
 	{
@@ -2041,7 +2041,7 @@ void ObserverThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				LeaveSpectatorMode(this);
+				JoinOrShowTeamSelection(this);
 				return;
 			}
 		}
@@ -2099,7 +2099,7 @@ void SpectatorThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				LeaveSpectatorMode(this);
+				JoinOrShowTeamSelection(this);
 				return;
 			}
 		}
