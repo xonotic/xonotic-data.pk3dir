@@ -798,7 +798,7 @@ string find_last_color_code(string s)
 		if (carets & 1)
 		{
 			if(i+1 <= len)
-			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
+			if(IS_DIGIT(substring(s, i+1, 1)))
 				return substring(s, i, 2);
 
 			if(i+4 <= len)

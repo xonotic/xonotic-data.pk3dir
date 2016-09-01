@@ -70,7 +70,7 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 				while (i - 2 - carets >= 0 && substring(me.controlledTextbox.text, i - 2 - carets, 1) == "^")
 					++carets;
 				if (carets & 1)
-					if(strstrofs("0123456789", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
+					if(IS_DIGIT(substring(me.controlledTextbox.text, i-1, 1)))
 					{
 						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
 						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
