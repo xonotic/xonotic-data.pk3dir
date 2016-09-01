@@ -1866,7 +1866,7 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-.int team_selected;
+.bool team_selected;
 void JoinOrShowTeamSelection(entity this)
 {
 	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)

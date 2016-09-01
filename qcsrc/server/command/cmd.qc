@@ -312,7 +312,7 @@ void ClientCommand_say_team(entity caller, float request, float argc, string com
 	}
 }
 
-.int selectedteam;
+.bool team_selected;
 void ClientCommand_selectteam(entity caller, float request, float argc)
 {
 	switch (request)
