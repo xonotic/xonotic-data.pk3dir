@@ -703,9 +703,9 @@ int skipIncompleteTag(string theText, float pos, int len)
 	if(tag_start >= 0)
 	{
 		if(tag_start + 5 < len)
-		if(strstrofs("0123456789abcdefABCDEF", substring(theText, tag_start + 2, 1), 0) >= 0)
-		if(strstrofs("0123456789abcdefABCDEF", substring(theText, tag_start + 3, 1), 0) >= 0)
-		if(strstrofs("0123456789abcdefABCDEF", substring(theText, tag_start + 4, 1), 0) >= 0)
+		if(IS_HEXDIGIT(substring(theText, tag_start + 2, 1)))
+		if(IS_HEXDIGIT(substring(theText, tag_start + 3, 1)))
+		if(IS_HEXDIGIT(substring(theText, tag_start + 4, 1)))
 		{
 			if(!isCaretEscaped(theText, tag_start))
 				return 5 - (pos - tag_start); // ^xRGB color code found
@@ -803,9 +803,9 @@ string find_last_color_code(string s)
 
 			if(i+4 <= len)
 			if(substring(s, i+1, 1) == "x")
-			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+2, 1), 0) >= 0)
-			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+3, 1), 0) >= 0)
-			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+4, 1), 0) >= 0)
+			if(IS_HEXDIGIT(substring(s, i + 2, 1)))
+			if(IS_HEXDIGIT(substring(s, i + 3, 1)))
+			if(IS_HEXDIGIT(substring(s, i + 4, 1)))
 				return substring(s, i, 5);
 		}
 		i -= carets; // this also skips one char before the carets
