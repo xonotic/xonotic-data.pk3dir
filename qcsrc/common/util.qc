@@ -662,6 +662,58 @@ int cvar_settemp_restore()
 	return j;
 }
 
+bool isCaretEscaped(string theText, float pos)
+{
+	int i = 0;
+	while(pos - i >= 1 && substring(theText, pos - i - 1, 1) == "^")
+		++i;
+	return (i & 1);
+}
+
+int skipIncompleteTag(string theText, float pos, int len)
+{
+	int i = 0, ch = 0;
+	int tag_start = -1;
+
+	if(substring(theText, pos - 1, 1) == "^")
+	{
+		if(isCaretEscaped(theText, pos - 1) || pos >= len)
+			return 0;
+
+		ch = str2chr(theText, pos);
+		if(ch >= '0' && ch <= '9')
+			return 1; // ^[0-9] color code found
+		else if (ch == 'x')
+			tag_start = pos - 1; // ^x tag found
+		else
+			return 0;
+	}
+	else
+	{
+		for(i = 2; pos - i >= 0 && i <= 4; ++i)
+		{
+			if(substring(theText, pos - i, 2) == "^x")
+			{
+				tag_start = pos - i; // ^x tag found
+				break;
+			}
+		}
+	}
+
+	if(tag_start >= 0)
+	{
+		if(tag_start + 5 < len)
+		if(strstrofs("0123456789abcdefABCDEF", substring(theText, tag_start + 2, 1), 0) >= 0)
+		if(strstrofs("0123456789abcdefABCDEF", substring(theText, tag_start + 3, 1), 0) >= 0)
+		if(strstrofs("0123456789abcdefABCDEF", substring(theText, tag_start + 4, 1), 0) >= 0)
+		{
+			if(!isCaretEscaped(theText, tag_start))
+				return 5 - (pos - tag_start); // ^xRGB color code found
+		}
+	}
+	return 0;
+}
+
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
 {
 	// STOP.
@@ -672,56 +724,24 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	if(w(theText, theSize) <= maxWidth)
 		return strlen(theText); // yeah!
 
+	bool colors = (w("^7", theSize) == 0);
+
 	// binary search for right place to cut string
-	float ch;
-	float left, right, middle; // this always works
+	int len, left, right, middle;
 	left = 0;
-	right = strlen(theText); // this always fails
+	right = len = strlen(theText);
+	int ofs = 0;
 	do
 	{
 		middle = floor((left + right) / 2);
-		if(w(substring(theText, 0, middle), theSize) <= maxWidth)
-			left = middle;
+		if(colors)
+			ofs = skipIncompleteTag(theText, middle, len);
+		if(w(substring(theText, 0, middle + ofs), theSize) <= maxWidth)
+			left = middle + ofs;
 		else
 			right = middle;
 	}
 	while(left < right - 1);
-
-	if(w("^7", theSize) == 0) // detect color codes support in the width function
-	{
-		// NOTE: when color codes are involved, this binary search is,
-		// mathematically, BROKEN. However, it is obviously guaranteed to
-		// terminate, as the range still halves each time - but nevertheless, it is
-		// guaranteed that it finds ONE valid cutoff place (where "left" is in
-		// range, and "right" is outside).
-
-		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
-		// and decrease left on the basis of the chars detected of the truncated tag
-		// Even if the ^xrgb tag is not complete/correct, left is decreased
-		// (sometimes too much but with a correct result)
-		// it fixes also ^[0-9]
-		while(left >= 1 && substring(theText, left-1, 1) == "^")
-			left-=1;
-
-		if (left >= 2 && substring(theText, left-2, 2) == "^x") // ^x/
-			left-=2;
-		else if (left >= 3 && substring(theText, left-3, 2) == "^x")
-			{
-				ch = str2chr(theText, left-1);
-				if( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xr/
-					left-=3;
-			}
-		else if (left >= 4 && substring(theText, left-4, 2) == "^x")
-			{
-				ch = str2chr(theText, left-2);
-				if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') )
-				{
-					ch = str2chr(theText, left-1);
-					if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xrg/
-						left-=4;
-				}
-			}
-	}
 
 	return left;
 }
@@ -736,56 +756,24 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	if(w(theText) <= maxWidth)
 		return strlen(theText); // yeah!
 
+	bool colors = (w("^7") == 0);
+
 	// binary search for right place to cut string
-	float ch;
-	float left, right, middle; // this always works
+	int len, left, right, middle;
 	left = 0;
-	right = strlen(theText); // this always fails
+	right = len = strlen(theText);
+	int ofs = 0;
 	do
 	{
 		middle = floor((left + right) / 2);
-		if(w(substring(theText, 0, middle)) <= maxWidth)
-			left = middle;
+		if(colors)
+			ofs = skipIncompleteTag(theText, middle, len);
+		if(w(substring(theText, 0, middle + ofs)) <= maxWidth)
+			left = middle + ofs;
 		else
 			right = middle;
 	}
 	while(left < right - 1);
-
-	if(w("^7") == 0) // detect color codes support in the width function
-	{
-		// NOTE: when color codes are involved, this binary search is,
-		// mathematically, BROKEN. However, it is obviously guaranteed to
-		// terminate, as the range still halves each time - but nevertheless, it is
-		// guaranteed that it finds ONE valid cutoff place (where "left" is in
-		// range, and "right" is outside).
-
-		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
-		// and decrease left on the basis of the chars detected of the truncated tag
-		// Even if the ^xrgb tag is not complete/correct, left is decreased
-		// (sometimes too much but with a correct result)
-		// it fixes also ^[0-9]
-		while(left >= 1 && substring(theText, left-1, 1) == "^")
-			left-=1;
-
-		if (left >= 2 && substring(theText, left-2, 2) == "^x") // ^x/
-			left-=2;
-		else if (left >= 3 && substring(theText, left-3, 2) == "^x")
-			{
-				ch = str2chr(theText, left-1);
-				if( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xr/
-					left-=3;
-			}
-		else if (left >= 4 && substring(theText, left-4, 2) == "^x")
-			{
-				ch = str2chr(theText, left-2);
-				if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') )
-				{
-					ch = str2chr(theText, left-1);
-					if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xrg/
-						left-=4;
-				}
-			}
-	}
 
 	return left;
 }
