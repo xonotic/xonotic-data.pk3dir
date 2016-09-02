@@ -294,7 +294,7 @@ void viewmodel_draw(entity this)
 	wasinvehicle = invehicle;
 	Weapon wep = activeweapon;
 	int c = entcs_GetClientColors(current_player);
-	vector g = weaponentity_glowmod(wep, c);
+	vector g = weaponentity_glowmod(wep, NULL, c);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)
