@@ -57,9 +57,9 @@ CLASS(DamageText, Object)
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
             string s = autocvar_cl_damagetext_format;
-            s = strreplace("{health}", sprintf("%d", this.m_damage), s);
-            s = strreplace("{armor}",  sprintf("%d", this.m_armordamage), s);
-            s = strreplace("{total}",  sprintf("%d", this.m_damage + this.m_armordamage), s);
+            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / 100)), s);
+            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / 100)), s);
+            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / 100)), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
@@ -108,8 +108,12 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
         ) {
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
-            WriteShort(MSG_ONE, rint(health));
-            WriteShort(MSG_ONE, rint(armor));
+
+            // we need a few decimal places to avoid errors when accumulating damage
+            // sending them this way saves bandwidth compared to WriteCoord
+            WriteShort(MSG_ONE, health * 100);
+            WriteShort(MSG_ONE, armor * 100);
+
             WriteEntity(MSG_ONE, hit);
             WriteCoord(MSG_ONE, location.x);
             WriteCoord(MSG_ONE, location.y);
