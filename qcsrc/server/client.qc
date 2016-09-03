@@ -2009,7 +2009,7 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
-bool spawnAllowed(entity this)
+bool joinAllowed(entity this)
 {
 	if (this.version_mismatch) return false;
 	if (!nJoinAllowed(this, this)) return false;
@@ -2028,7 +2028,7 @@ void ObserverThink(entity this)
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && spawnAllowed(this)) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !this.version_mismatch) {
@@ -2069,7 +2069,7 @@ void SpectatorThink(entity this)
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && spawnAllowed(this)) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) || this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209)) {

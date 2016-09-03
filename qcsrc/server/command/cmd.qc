@@ -159,7 +159,7 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
-bool spawnAllowed(entity this);
+bool joinAllowed(entity this);
 void Join(entity this);
 void ClientCommand_join(entity caller, float request)
 {
@@ -169,7 +169,7 @@ void ClientCommand_join(entity caller, float request)
 		{
 			if (!gameover)
 			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
-			if (spawnAllowed(caller))
+			if (joinAllowed(caller))
 				Join(caller);
 
 			return;  // never fall through to usage
