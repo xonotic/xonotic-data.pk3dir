@@ -170,15 +170,11 @@ MUTATOR_HOOKFUNCTION(ca, ForbidSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (!allowed_to_spawn)
-	{
-		if (player.jointime != time && !player.caplayer) // not when connecting
-		{
-			player.caplayer = 0.5;
-			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
-		}
+	// spectators / observers that weren't playing can join; they are
+	// immediately forced to observe in the PutClientInServer hook
+	// this way they are put in a team and can play in the next round
+	if (!allowed_to_spawn && player.caplayer)
 		return true;
-	}
 	return false;
 }
 

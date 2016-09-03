@@ -1867,30 +1867,34 @@ void ShowRespawnCountdown(entity this)
 }
 
 .bool team_selected;
-void JoinOrShowTeamSelection(entity this)
+bool ShowTeamSelection(entity this)
 {
 	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
-	{
-		TRANSMUTE(Player, this);
+		return false;
+	stuffcmd(this, "menu_showteamselect\n");
+	return true;
+}
+void Join(entity this)
+{
+	TRANSMUTE(Player, this);
 
-		SetSpectatee(this, NULL);
+	SetSpectatee(this, NULL);
 
-		if(autocvar_g_campaign || autocvar_g_balance_teams)
-			JoinBestTeam(this, false, true);
+	if(!this.team_selected)
+	if(autocvar_g_campaign || autocvar_g_balance_teams)
+		JoinBestTeam(this, false, true);
 
-		if(autocvar_g_campaign)
-			campaign_bots_may_start = true;
+	if(autocvar_g_campaign)
+		campaign_bots_may_start = true;
 
-		Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
+	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
-		PutClientInServer(this);
-		PlayerScore_Clear(this);
+	PutClientInServer(this);
+	if(!this.team_selected)
+	PlayerScore_Clear(this);
 
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname);
-		this.team_selected = false;
-	}
-	else
-		stuffcmd(this, "menu_showteamselect\n");
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname);
+	this.team_selected = false;
 }
 
 /**
@@ -2010,6 +2014,7 @@ bool spawnAllowed(entity this)
 	if (this.version_mismatch) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
+	if (ShowTeamSelection(this)) return false;
 	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
 	return true;
 }
@@ -2041,7 +2046,7 @@ void ObserverThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				JoinOrShowTeamSelection(this);
+				Join(this);
 				return;
 			}
 		}
@@ -2099,7 +2104,7 @@ void SpectatorThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				JoinOrShowTeamSelection(this);
+				Join(this);
 				return;
 			}
 		}
