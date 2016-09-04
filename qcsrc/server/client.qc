@@ -1878,8 +1878,6 @@ void Join(entity this)
 {
 	TRANSMUTE(Player, this);
 
-	SetSpectatee(this, NULL);
-
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
 		JoinBestTeam(this, false, true);
@@ -1890,8 +1888,6 @@ void Join(entity this)
 	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
 	PutClientInServer(this);
-	if(!this.team_selected)
-	PlayerScore_Clear(this);
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname);
 	this.team_selected = false;
