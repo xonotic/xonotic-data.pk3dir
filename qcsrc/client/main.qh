@@ -3,30 +3,14 @@
 #include <common/constants.qh>
 #include <common/weapons/_all.qh>
 
-// --------------------------------------------------------------------------
-// MENU Functionality
-
-// --------------------------------------------------------------------------
-// Onslaught
-
 // Map coordinate base calculations need these
 vector mi_center;
 vector mi_scale;
 // Minimap
 string minimapname;
 
-// --------------------------------------------------------------------------
-// General stuff
-
 float postinit;
 entity gametype;
-
-//float sorted_players;
-//float sorted_teams;
-
-// Defs
-//.float ctf_state;
-//.float health;
 
 float FONT_USER = 8;
 
@@ -37,15 +21,11 @@ void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
 void draw_cursor_normal(vector pos, vector col, float a);
 void LoadMenuSkinValues();
 
-// --------------------------------------------------------------------------
-// Scoreboard stuff
-
 vector hud_fontsize;
 
 float RANKINGS_RECEIVED_CNT;
 string grecordholder[RANKINGS_CNT];
 float grecordtime[RANKINGS_CNT];
-//float csqc_flags;
 
 entity playerslots[255]; // 255 is engine limit on maxclients
 entity teamslots[17];    // 17 teams (including "spectator team")
