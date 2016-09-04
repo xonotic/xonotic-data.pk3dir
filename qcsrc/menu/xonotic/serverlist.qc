@@ -961,7 +961,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		isv6 = true;
 		me.seenIPv6 += 1;
 	}
-	else if(strstrofs("0123456789", substring(s, 0, 1), 0) >= 0)
+	else if(IS_DIGIT(substring(s, 0, 1)))
 	{
 		isv4 = true;
 		me.seenIPv4 += 1;
