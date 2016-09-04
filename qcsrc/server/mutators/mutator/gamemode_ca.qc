@@ -277,25 +277,20 @@ MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, ForbidPlayerScore_Clear)
-{
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
     entity player = M_ARGV(0, entity);
 
 	if (!IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
-	if (player.killindicator_teamchange == -2)
+	if (player.killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
 		player.frags = FRAGS_LMS_LOSER;
-    else
-        player.frags = FRAGS_SPECTATOR;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
+	if (!player.caplayer)
+		return false;  // allow team reset
 	return true;  // prevent team reset
 }
 
