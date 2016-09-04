@@ -58,9 +58,7 @@ bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
-bool autocvar_hud_panel_scoreboard_maxrows = true;
-int autocvar_hud_panel_scoreboard_maxrows_players = 20;
-int autocvar_hud_panel_scoreboard_maxrows_teamplayers = 9;
+bool autocvar_hud_panel_scoreboard_maxheight = 0.5;
 bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 
@@ -973,12 +971,12 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
 	int max_players = 999;
-	if(autocvar_hud_panel_scoreboard_maxrows)
+	if(autocvar_hud_panel_scoreboard_maxheight > 0)
 	{
+		max_players = autocvar_hud_panel_scoreboard_maxheight * vid_conheight;
 		if(teamplay)
-			max_players = autocvar_hud_panel_scoreboard_maxrows_teamplayers;
-		else
-			max_players = autocvar_hud_panel_scoreboard_maxrows_players;
+			max_players = (max_players - hud_fontsize.y * 1.25 - panel_bg_padding * 2) / 2;
+		max_players = floor(max_players / (hud_fontsize.y * 1.25));
 		if(max_players <= 1)
 			max_players = 1;
 		if(max_players == tm.team_size)
