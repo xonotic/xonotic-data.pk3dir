@@ -337,8 +337,8 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
 #define EV_PlayerDamaged(i, o) \
     /** attacker  */ i(entity, MUTATOR_ARGV_0_entity) \
     /** target    */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** health    */ i(int,    MUTATOR_ARGV_2_int) \
-    /** armor     */ i(int,    MUTATOR_ARGV_3_int) \
+    /** health    */ i(float,    MUTATOR_ARGV_2_float) \
+    /** armor     */ i(float,    MUTATOR_ARGV_3_float) \
     /** location  */ i(vector, MUTATOR_ARGV_4_vector) \
     /** deathtype */ i(int,    MUTATOR_ARGV_5_int) \
     /**/
