@@ -109,10 +109,10 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
 
-            // we need a few decimal places to avoid errors when accumulating damage
+            // we need to send a few decimal places to avoid errors when accumulating damage
             // sending them this way saves bandwidth compared to WriteCoord
-            WriteShort(MSG_ONE, health * 100);
-            WriteShort(MSG_ONE, armor * 100);
+            WriteInt24_t(MSG_ONE, health * 100);
+            WriteInt24_t(MSG_ONE, armor * 100);
 
             WriteEntity(MSG_ONE, hit);
             WriteCoord(MSG_ONE, location.x);
@@ -128,8 +128,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 #ifdef CSQC
 NET_HANDLE(damagetext, bool isNew)
 {
-    int health = ReadShort();
-    int armor = ReadShort();
+    int health = ReadInt24_t();
+    int armor = ReadInt24_t();
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
