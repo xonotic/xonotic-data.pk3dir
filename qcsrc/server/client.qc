@@ -1703,7 +1703,7 @@ void SpectateCopy(entity this, entity spectatee)
 bool SpectateUpdate(entity this)
 {
 	if(!this.enemy)
-	    return false;
+		return false;
 
 	if(!IS_PLAYER(this.enemy) || this == this.enemy)
 	{
@@ -1866,40 +1866,31 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-.float caplayer;
-
-void LeaveSpectatorMode(entity this)
+.bool team_selected;
+bool ShowTeamSelection(entity this)
 {
-	if(this.caplayer)
-		return;
-	if(nJoinAllowed(this, this))
-	{
-		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
-		{
-			TRANSMUTE(Player, this);
+	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
+		return false;
+	stuffcmd(this, "menu_showteamselect\n");
+	return true;
+}
+void Join(entity this)
+{
+	TRANSMUTE(Player, this);
 
-			SetSpectatee(this, NULL);
+	if(!this.team_selected)
+	if(autocvar_g_campaign || autocvar_g_balance_teams)
+		JoinBestTeam(this, false, true);
 
-			if(autocvar_g_campaign || autocvar_g_balance_teams)
-				{ JoinBestTeam(this, false, true); }
+	if(autocvar_g_campaign)
+		campaign_bots_may_start = true;
 
-			if(autocvar_g_campaign)
-				{ campaign_bots_may_start = true; }
+	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
+	PutClientInServer(this);
 
-			PutClientInServer(this);
-
-			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
-		}
-		else
-			stuffcmd(this, "menu_showteamselect\n");
-	}
-	else
-	{
-		// Player may not join because g_maxplayers is set
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
-	}
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname);
+	this.team_selected = false;
 }
 
 /**
@@ -1908,20 +1899,20 @@ void LeaveSpectatorMode(entity this)
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-bool nJoinAllowed(entity this, entity ignore)
+int nJoinAllowed(entity this, entity ignore)
 {
 	if(!ignore)
 	// this is called that way when checking if anyone may be able to join (to build qcstatus)
 	// so report 0 free slots if restricted
 	{
 		if(autocvar_g_forced_team_otherwise == "spectate")
-			return false;
+			return 0;
 		if(autocvar_g_forced_team_otherwise == "spectator")
-			return false;
+			return 0;
 	}
 
-	if(this.team_forced < 0)
-		return false; // forced spectators can never join
+	if(this && this.team_forced < 0)
+		return 0; // forced spectators can never join
 
 	// TODO simplify this
 	int totalClients = 0;
@@ -1934,13 +1925,20 @@ bool nJoinAllowed(entity this, entity ignore)
 			++currentlyPlaying;
 	));
 
+	float free_slots = 0;
 	if (!autocvar_g_maxplayers)
-		return maxclients - totalClients;
+		free_slots = maxclients - totalClients;
+	else if(currentlyPlaying < autocvar_g_maxplayers)
+		free_slots = min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
-	if(currentlyPlaying < autocvar_g_maxplayers)
-		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
+	static float join_prevent_msg_time = 0;
+	if(this && ignore && !free_slots && time > join_prevent_msg_time)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
+		join_prevent_msg_time = time + 3;
+	}
 
-	return false;
+	return free_slots;
 }
 
 /**
@@ -2007,6 +2005,16 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
+bool joinAllowed(entity this)
+{
+	if (this.version_mismatch) return false;
+	if (!nJoinAllowed(this, this)) return false;
+	if (teamplay && lockteams) return false;
+	if (ShowTeamSelection(this)) return false;
+	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
+	return true;
+}
+
 void ObserverThink(entity this)
 {
 	if ( this.impulse )
@@ -2014,8 +2022,9 @@ void ObserverThink(entity this)
 		MinigameImpulse(this, this.impulse);
 		this.impulse = 0;
 	}
+
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !this.version_mismatch) {
@@ -2033,7 +2042,7 @@ void ObserverThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				LeaveSpectatorMode(this);
+				Join(this);
 				return;
 			}
 		}
@@ -2054,8 +2063,9 @@ void SpectatorThink(entity this)
 			return;
 		}
 	}
+
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) || this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209)) {
@@ -2090,7 +2100,7 @@ void SpectatorThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				LeaveSpectatorMode(this);
+				Join(this);
 				return;
 			}
 		}
