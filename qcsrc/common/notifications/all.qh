@@ -75,6 +75,7 @@ USING(Notification, entity);
 
 // used for notification system multi-team identifiers
 #define APP_TEAM_NUM(num, prefix) ((num == NUM_TEAM_1) ? prefix##_RED : ((num == NUM_TEAM_2) ? prefix##_BLUE : ((num == NUM_TEAM_3) ? prefix##_YELLOW : prefix##_PINK)))
+#define APP_NUM(num, prefix) ((num) ? APP_TEAM_NUM(num, prefix) : prefix##_NEUTRAL)
 /** @deprecated use APP_TEAM_NUM */
 #define APP_TEAM_ENT(ent, prefix) APP_TEAM_NUM(ent.team, prefix)
 

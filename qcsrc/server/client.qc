@@ -1142,7 +1142,10 @@ void ClientConnect(entity this)
 
 	this.netname_previous = strzone(this.netname);
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && IS_PLAYER(this)) ? APP_TEAM_ENT(this, INFO_JOIN_CONNECT_TEAM) : INFO_JOIN_CONNECT), this.netname);
+	if(teamplay && IS_PLAYER(this))
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_CONNECT_TEAM), this.netname);
+	else
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1889,7 +1892,10 @@ void Join(entity this)
 
 	PutClientInServer(this);
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname);
+	if(teamplay && this.team != -1)
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
+	else
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
 	this.team_selected = false;
 }
 
