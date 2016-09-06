@@ -4,6 +4,7 @@
 #include "hud_config.qh"
 #include "../mapvoting.qh"
 #include "../teamradar.qh"
+#include <common/minigames/cl_minigames.qh>
 #include <common/t_items.qh>
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
@@ -409,8 +410,6 @@ void HUD_Vehicle()
 	}
 }
 
-bool HUD_Minigame_Showpanels();
-
 void HUD_Panel_Draw(entity panent)
 {
 	panel = panent;
@@ -425,7 +424,7 @@ void HUD_Panel_Draw(entity panent)
 	}
 
 	bool draw_allowed = false;
-	if (HUD_Minigame_Showpanels())
+	if (active_minigame && HUD_MinigameMenu_IsOpened())
 	{
 		if (panel.panel_showflags & PANEL_SHOW_MINIGAME)
 			draw_allowed = true;

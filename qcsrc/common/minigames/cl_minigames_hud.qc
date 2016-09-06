@@ -575,7 +575,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 	{
 		mousepos_x = nPrimary;
 		mousepos_y = nSecondary;
-		if ( minigame_isactive() && HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
+		if ( active_minigame && HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
 			active_minigame.minigame_event(active_minigame,"mouse_moved",mousepos);
 		return true;
 
@@ -607,7 +607,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 				return false;
 		}
 
-		if ( minigame_isactive() && ( bInputType == 0 || bInputType == 1 ) )
+		if ( active_minigame && ( bInputType == 0 || bInputType == 1 ) )
 		{
 			string device = "";
 			string action = bInputType == 0 ? "pressed" : "released";
@@ -689,9 +689,4 @@ void HUD_Minigame_Mouse()
 		HUD_MinigameMenu_MouseInput();
 
 	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
-}
-
-bool HUD_Minigame_Showpanels()
-{
-	return (HUD_MinigameMenu_IsOpened() && minigame_isactive());
 }
