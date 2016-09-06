@@ -1307,9 +1307,22 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 
 	panel_pos = pos;
 
+	float namesize = 0;
+	for(i = 0; i < RANKINGS_RECEIVED_CNT; ++i)
+	{
+		float f = stringwidth(grecordholder[i], true, hud_fontsize);
+		if(f > namesize)
+			namesize = f;
+	}
+	bool cut = false;
+	if(namesize > autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x)
+	{
+		namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
+		cut = true;
+	}
+
 	float ranksize = 3 * hud_fontsize.x;
 	float timesize = 5.5 * hud_fontsize.x;
-	float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
 	vector columnsize = eX * (ranksize + timesize + namesize) + eY * 1.25 * hud_fontsize.y;
 	int columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
 	columns = min(columns, RANKINGS_RECEIVED_CNT);
@@ -1356,7 +1369,9 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 		str = count_ordinal(i+1);
 		drawstring(pos, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * ranksize, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-		str = textShortenToWidth(grecordholder[i], namesize, hud_fontsize, stringwidth_colors);
+		str = grecordholder[i];
+		if(cut)
+			str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (ranksize + timesize), str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 
 		pos.y += 1.25 * hud_fontsize.y;
