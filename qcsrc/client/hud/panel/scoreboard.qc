@@ -1306,8 +1306,22 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 		pos.y += panel_bg_border;
 
 	panel_pos = pos;
-	panel_size.y = 1.25 * hud_fontsize.y * RANKINGS_RECEIVED_CNT;
+
+	float ranksize = 3 * hud_fontsize.x;
+	float timesize = 5.5 * hud_fontsize.x;
+	float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
+	vector columnsize = eX * (ranksize + timesize + namesize) + eY * 1.25 * hud_fontsize.y;
+	int columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
+	columns = min(columns, RANKINGS_RECEIVED_CNT);
+
+	// expand name column to fill the entire row
+	float available_space = (panel_size.x - 2 * panel_bg_padding - columnsize.x * columns) / columns;
+	namesize += available_space;
+	columnsize.x += available_space;
+
+	panel_size.y = ceil(RANKINGS_RECEIVED_CNT / columns) * 1.25 * hud_fontsize.y;
 	panel_size.y += panel_bg_padding * 2;
+
 	HUD_Panel_DrawBg();
 
 	vector end_pos = panel_pos + eY * (panel_size.y + hud_fontsize.y);
@@ -1321,29 +1335,39 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	}
 
 	pos = panel_pos;
-	vector tmp = panel_size;
 
 	if (sbt_bg_alpha)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, panel_size, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
 
-	// row highlighting
+	string str = "";
+	int column = 0, j = 0;
 	for(i = 0; i < RANKINGS_RECEIVED_CNT; ++i)
 	{
-		string n, p;
 		float t;
 		t = grecordtime[i];
 		if (t == 0)
 			continue;
-		n = grecordholder[i];
-		p = count_ordinal(i+1);
+
 		if(grecordholder[i] == entcs_GetName(player_localnum))
-			drawfill(pos, eX * panel_size.x + '0 1.25 0' * hud_fontsize.y, hl_rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
-		else if(!(i % 2) && sbt_highlight)
-			drawfill(pos, eX * panel_size.x + '0 1.25 0' * hud_fontsize.y, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos, p, '1 1 0' * hud_fontsize.y, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + '3 0 0' * hud_fontsize.y, TIME_ENCODED_TOSTRING(t), '1 1 0' * hud_fontsize.y, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-		drawcolorcodedstring(pos + '8 0 0' * hud_fontsize.y, n, '1 1 0' * hud_fontsize.y, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
+		else if(!((j + column) & 1) && sbt_highlight)
+			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
+
+		str = count_ordinal(i+1);
+		drawstring(pos, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + eX * ranksize, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		str = textShortenToWidth(grecordholder[i], namesize, hud_fontsize, stringwidth_colors);
+		drawcolorcodedstring(pos + eX * (ranksize + timesize), str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
+
 		pos.y += 1.25 * hud_fontsize.y;
+		j++;
+		if(j >= ceil(RANKINGS_RECEIVED_CNT / columns))
+		{
+			column++;
+			j = 0;
+			pos.x += panel_size.x / columns;
+			pos.y = panel_pos.y;
+		}
 	}
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
