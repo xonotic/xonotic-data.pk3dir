@@ -1323,7 +1323,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 
 	float ranksize = 3 * hud_fontsize.x;
 	float timesize = 5.5 * hud_fontsize.x;
-	vector columnsize = eX * (ranksize + timesize + namesize) + eY * 1.25 * hud_fontsize.y;
+	vector columnsize = eX * (ranksize + timesize + namesize + hud_fontsize.x) + eY * 1.25 * hud_fontsize.y;
 	int columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
 	columns = min(columns, RANKINGS_RECEIVED_CNT);
 
@@ -1352,6 +1352,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	if (sbt_bg_alpha)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, panel_size, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
 
+	vector text_ofs = eX * 0.5 * hud_fontsize.x + eY * (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
 	string str = "";
 	int column = 0, j = 0;
 	for(i = 0; i < RANKINGS_RECEIVED_CNT; ++i)
@@ -1367,12 +1368,12 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
 		str = count_ordinal(i+1);
-		drawstring(pos, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + eX * ranksize, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_ofs, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 		str = grecordholder[i];
 		if(cut)
 			str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
-		drawcolorcodedstring(pos + eX * (ranksize + timesize), str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + text_ofs + eX * (ranksize + timesize), str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 
 		pos.y += 1.25 * hud_fontsize.y;
 		j++;
