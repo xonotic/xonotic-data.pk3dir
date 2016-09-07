@@ -57,9 +57,9 @@ CLASS(DamageText, Object)
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
             string s = autocvar_cl_damagetext_format;
-            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / 100)), s);
-            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / 100)), s);
-            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / 100)), s);
+            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / 64)), s);
+            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / 64)), s);
+            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / 64)), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
@@ -109,10 +109,11 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
 
-            // we need to send a few decimal places to avoid errors when accumulating damage
-            // sending them this way saves bandwidth compared to WriteCoord
-            WriteInt24_t(MSG_ONE, health * 100);
-            WriteInt24_t(MSG_ONE, armor * 100);
+            // we need to send a few decimal places to minimize errors when accumulating damage
+            // sending them multiplied by 64 saves bandwidth compared to WriteCoord,
+            // allows 1024 max damage in one shot and only has errors after about 15 shots accumulate (if they have non-integer damage)
+            WriteShort(MSG_ONE, health * 64);
+            WriteShort(MSG_ONE, armor * 64);
 
             WriteEntity(MSG_ONE, hit);
             WriteCoord(MSG_ONE, location.x);
@@ -128,8 +129,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 #ifdef CSQC
 NET_HANDLE(damagetext, bool isNew)
 {
-    int health = ReadInt24_t();
-    int armor = ReadInt24_t();
+    int health = ReadShort();
+    int armor = ReadShort();
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
