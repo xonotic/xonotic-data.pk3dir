@@ -756,7 +756,10 @@ string Scoreboard_FixColumnWidth(int i, string str)
 void Scoreboard_initFieldSizes()
 {
 	for(int i = 0; i < sbt_num_fields; ++i)
+	{
+		sbt_field_size[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
 		Scoreboard_FixColumnWidth(i, "");
+	}
 }
 
 vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players)
