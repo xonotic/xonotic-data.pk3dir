@@ -710,7 +710,6 @@ float TrueAimCheck()
 
 void PostInit();
 void CSQC_Demo_Camera();
-float Scoreboard_WouldDraw();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
