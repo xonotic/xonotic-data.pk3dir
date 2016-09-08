@@ -1322,7 +1322,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	}
 
 	float ranksize = 3 * hud_fontsize.x;
-	float timesize = 5.5 * hud_fontsize.x;
+	float timesize = 5 * hud_fontsize.x;
 	vector columnsize = eX * (ranksize + timesize + namesize + hud_fontsize.x) + eY * 1.25 * hud_fontsize.y;
 	int columns = max(1, floor((panel_size.x - 2 * panel_bg_padding) / columnsize.x));
 	columns = min(columns, RANKINGS_RECEIVED_CNT);
