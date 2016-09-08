@@ -77,17 +77,13 @@ void HUD_Chat()
 
 	if(autocvar__hud_configure)
 	{
-		vector chatsize;
-		chatsize = '1 1 0' * autocvar_con_chatsize;
+		vector chatsize = '1 1 0' * autocvar_con_chatsize;
 		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
-		float i, a;
-		for(i = 0; i < autocvar_con_chat; ++i)
+		string str = textShortenToWidth(_("^3Player^7: This is the chat area."), mySize.x, chatsize, stringwidth_colors);
+		for(int i = 0; i < autocvar_con_chat; ++i)
 		{
-			if(i == autocvar_con_chat - 1)
-				a = panel_fg_alpha;
-			else
-				a = panel_fg_alpha * floor(((i + 1) * 7 + autocvar_con_chattime)/45);
-			drawcolorcodedstring(pos, textShortenToWidth(_("^3Player^7: This is the chat area."), mySize.x, chatsize, stringwidth_colors), chatsize, a, DRAWFLAG_NORMAL);
+			// engine displays chat text at full alpha
+			drawcolorcodedstring(pos, str, chatsize, 1, DRAWFLAG_NORMAL);
 			pos.y += chatsize.y;
 		}
 	}

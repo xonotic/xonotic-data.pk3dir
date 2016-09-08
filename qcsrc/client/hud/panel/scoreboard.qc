@@ -147,12 +147,10 @@ void Scoreboard_UpdatePlayerTeams()
 {
 	float Team;
 	entity pl, tmp;
-	float num;
-
-	num = 0;
+	//int num = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
-		num += 1;
+		//num += 1;
 		Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
 		{
@@ -372,8 +370,8 @@ void Cmd_Scoreboard_SetFields(int argc)
     TC(int, argc);
 	int i, slash;
 	string str, pattern;
-	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
-	float missing;
+	bool have_name = false, have_primary = false, have_secondary = false, have_separator = false;
+	int missing;
 
 	if(!gametype)
 		return; // do nothing, we don't know gametype and scores yet
@@ -476,9 +474,9 @@ LABEL(notfound)
 LABEL(found)
 				sbt_field[sbt_num_fields] = j;
 				if(j == ps_primary)
-					have_primary = 1;
+					have_primary = true;
 				if(j == ps_secondary)
-					have_secondary = 1;
+					have_secondary = true;
 
 			}
 		}
@@ -488,11 +486,11 @@ LABEL(found)
 	}
 
 	if(scores_flags(ps_primary) & SFL_ALLOW_HIDE)
-		have_primary = 1;
+		have_primary = true;
 	if(scores_flags(ps_secondary) & SFL_ALLOW_HIDE)
-		have_secondary = 1;
+		have_secondary = true;
 	if(ps_primary == ps_secondary)
-		have_secondary = 1;
+		have_secondary = true;
 	missing = (!have_primary) + (!have_secondary) + (!have_separator) + (!have_name);
 
 	if(sbt_num_fields + missing < MAX_SBT_FIELDS)
@@ -1053,22 +1051,23 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	return end_pos;
 }
 
-float Scoreboard_WouldDraw() {
+bool Scoreboard_WouldDraw()
+{
 	if (QuickMenu_IsOpened())
-		return 0;
+		return false;
 	else if (HUD_Radar_Clickable())
-		return 0;
+		return false;
 	else if (scoreboard_showscores)
-		return 1;
+		return true;
 	else if (intermission == 1)
-		return 1;
+		return true;
 	else if (intermission == 2)
-		return 0;
+		return false;
 	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS && !active_minigame)
-		return 1;
+		return true;
 	else if (scoreboard_showscores_force)
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 float average_accuracy;

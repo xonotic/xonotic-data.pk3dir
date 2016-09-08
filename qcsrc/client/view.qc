@@ -710,7 +710,6 @@ float TrueAimCheck()
 
 void PostInit();
 void CSQC_Demo_Camera();
-float Scoreboard_WouldDraw();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
@@ -2249,7 +2248,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
-	else if ( HUD_MinigameMenu_IsOpened() || minigame_isactive() )
+	else if (HUD_MinigameMenu_IsOpened() || active_minigame)
 		HUD_Minigame_Mouse();
 	else if(QuickMenu_IsOpened())
 		QuickMenu_Mouse();
