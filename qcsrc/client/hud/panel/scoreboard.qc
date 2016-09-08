@@ -58,9 +58,10 @@ bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
-bool autocvar_hud_panel_scoreboard_maxheight = 0.5;
+float autocvar_hud_panel_scoreboard_maxheight = 0.5;
 bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
+float autocvar_hud_panel_scoreboard_minwidth = 0.4;
 
 
 void drawstringright(vector, string, vector, vector, float, float);
@@ -1449,7 +1450,7 @@ void Scoreboard_Draw()
 		panel_pos.y = max((autocvar_con_notify * autocvar_con_notifysize), panel_pos.y);
 
 	float excess = max(0, max_namesize - autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x);
-	float fixed_scoreboard_width = bound(vid_conwidth * 0.4, vid_conwidth - excess, vid_conwidth * 0.93);
+	float fixed_scoreboard_width = bound(vid_conwidth * autocvar_hud_panel_scoreboard_minwidth, vid_conwidth - excess, vid_conwidth * 0.93);
 	panel_pos.x = 0.5 * (vid_conwidth - fixed_scoreboard_width);
 	panel_size.x = fixed_scoreboard_width;
 
