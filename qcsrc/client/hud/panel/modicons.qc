@@ -676,7 +676,9 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 			color = '1 0 1';
 			break;
 	}
-	float pps_ratio = stat / STAT(DOM_TOTAL_PPS);
+	float pps_ratio = 0;
+	if(STAT(DOM_TOTAL_PPS))
+		pps_ratio = stat / STAT(DOM_TOTAL_PPS);
 
 	if(mySize.x/mySize.y > aspect_ratio)
 	{
