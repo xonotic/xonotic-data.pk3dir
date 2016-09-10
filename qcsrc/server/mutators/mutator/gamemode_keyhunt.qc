@@ -40,7 +40,7 @@ const vector KH_KEY_MIN = '-10 -10 -46';
 const vector KH_KEY_MAX = '10 10 3';
 const float KH_KEY_BRIGHTNESS = 2;
 
-float kh_no_radar_circles;
+bool kh_no_radar_circles;
 
 // kh_state
 //     bits  0- 4: team of key 1, or 0 for no such key, or 30 for dropped, or 31 for self
@@ -80,6 +80,8 @@ float kh_interferemsg_time, kh_interferemsg_team;
 .float kh_cp_duration;
 
 float kh_key_dropped, kh_key_carried;
+
+int kh_Key_AllOwnedByWhichTeam();
 
 const float ST_KH_CAPS = 1;
 void kh_ScoreRules(int teams)
@@ -782,14 +784,11 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 }
 
 // -1 when no team completely owns all keys yet
-float kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all the keys are owned by the same team
+int kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all the keys are owned by the same team
 {
 	entity key;
-	float teem;
-	float keys;
-
-	teem = -1;
-	keys = NumTeams(kh_teams);
+	int teem = -1;
+	int keys = NumTeams(kh_teams);
 	FOR_EACH_KH_KEY(key)
 	{
 		if(!key.owner)
