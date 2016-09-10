@@ -855,24 +855,23 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 	}
 }
 
-float kh_CheckPlayers(float num)
+int kh_GetMissingTeams()
 {
-	if(num < NumTeams(kh_teams))
+	int missing_teams = 0;
+	for(int i = 0; i < NumTeams(kh_teams); ++i)
 	{
-		float t_team = kh_Team_ByID(num);
-		float players = 0;
+		int teem = kh_Team_ByID(i);
+		int players = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == t_team)
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
 				++players;
 		));
-
-		if (!players) { return t_team; }
+		if (!players)
+			missing_teams |= pow(2, i);
 	}
-	return 0;
+	return missing_teams;
 }
 
-#define KH_READY_TEAMS() (!p1 + !p2 + ((NumTeams(kh_teams) >= 3) ? !p3 : p3) + ((NumTeams(kh_teams) >= 4) ? !p4 : p4))
-#define KH_READY_TEAMS_OK() (KH_READY_TEAMS() == NumTeams(kh_teams))
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
 	if(time < game_starttime)
@@ -881,9 +880,9 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		return;
 	}
 
-	static float prev_missing_teams_mask;
-	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if(KH_READY_TEAMS_OK())
+	static int prev_missing_teams_mask;
+	int missing_teams_mask = kh_GetMissingTeams();
+	if(!missing_teams_mask)
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
@@ -901,15 +900,6 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		}
 		else
 		{
-			int missing_teams_mask = 0;
-			if(kh_teams & BIT(0))
-				missing_teams_mask += boolean(p1) * 1;
-			if(kh_teams & BIT(1))
-				missing_teams_mask += boolean(p2) * 2;
-			if(kh_teams & BIT(2))
-				missing_teams_mask += boolean(p3) * 4;
-			if(kh_teams & BIT(3))
-				missing_teams_mask += boolean(p4) * 8;
 			if(prev_missing_teams_mask != missing_teams_mask)
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
@@ -930,7 +920,7 @@ void kh_EnableTrackingDevice()  // runs after each round
 
 void kh_StartRound()  // runs at the start of each round
 {
-	float i, players, teem;
+	int i, players, teem;
 
 	if(time < game_starttime)
 	{
@@ -938,8 +928,7 @@ void kh_StartRound()  // runs at the start of each round
 		return;
 	}
 
-	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if(!KH_READY_TEAMS_OK())
+	if(kh_GetMissingTeams())
 	{
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
 		return;
