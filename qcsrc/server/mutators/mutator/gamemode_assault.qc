@@ -562,7 +562,7 @@ MUTATOR_HOOKFUNCTION(as, PlayHitsound)
 	return (frag_victim.classname == "func_assault_destructible");
 }
 
-MUTATOR_HOOKFUNCTION(as, GetTeamCount)
+MUTATOR_HOOKFUNCTION(as, CheckAllowedTeams)
 {
 	// assault always has 2 teams
 	c1 = c2 = 0;

@@ -2369,7 +2369,7 @@ MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ctf, GetTeamCount)
+MUTATOR_HOOKFUNCTION(ctf, CheckAllowedTeams)
 {
 	//M_ARGV(0, float) = ctf_teams;
 	M_ARGV(1, string) = "ctf_team";

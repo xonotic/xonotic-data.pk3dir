@@ -553,7 +553,7 @@ MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ft, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(ft, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = freezetag_teams;
 }

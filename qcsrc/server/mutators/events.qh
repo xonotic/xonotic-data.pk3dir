@@ -99,13 +99,13 @@ MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 
 /** should adjust number to contain the team count */
-#define EV_GetTeamCount(i, o) \
+#define EV_CheckAllowedTeams(i, o) \
     /** number of teams    */ i(float, MUTATOR_ARGV_0_float) \
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
     /**/
-MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
+MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
 
 /** copies variables for spectating "spectatee" to "this" */
 #define EV_SpectateCopy(i, o) \

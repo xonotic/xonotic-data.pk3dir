@@ -1871,7 +1871,7 @@ MUTATOR_HOOKFUNCTION(ons, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ons, GetTeamCount)
+MUTATOR_HOOKFUNCTION(ons, CheckAllowedTeams)
 {
 	// onslaught is special
 	for(entity tmp_entity = ons_worldgeneratorlist; tmp_entity; tmp_entity = tmp_entity.ons_worldgeneratornext)
