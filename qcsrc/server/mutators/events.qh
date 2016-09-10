@@ -98,9 +98,9 @@ MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 /** called when the match ends */
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 
-/** should adjust number to contain the team count */
+/** allows adjusting allowed teams */
 #define EV_CheckAllowedTeams(i, o) \
-    /** number of teams    */ i(float, MUTATOR_ARGV_0_float) \
+    /** mask of teams      */ i(float, MUTATOR_ARGV_0_float) \
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
