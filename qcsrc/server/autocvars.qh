@@ -92,6 +92,7 @@ float autocvar_g_balance_teams_scorefactor;
 float autocvar_g_ballistics_density_corpse;
 float autocvar_g_ballistics_density_player;
 float autocvar_g_ballistics_mindistance;
+bool autocvar_g_ballistics_penetrate_clips;
 float autocvar_g_ban_default_bantime;
 float autocvar_g_ban_default_masksize;
 float autocvar_g_ban_sync_interval;

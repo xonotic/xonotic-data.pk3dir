@@ -445,7 +445,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 			}
 		}
 
-		if (is_weapclip)
+		if (is_weapclip && !autocvar_g_ballistics_penetrate_clips)
 			break;
 
 		// go through solid!
