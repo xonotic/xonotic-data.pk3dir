@@ -827,7 +827,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 	{
 		if (this.isshielded)
 		{
-			// this is protected by a shield, so ignore the damage
+			// generator is protected by a shield, so ignore the damage
 			if (time > this.pain_finished)
 				if (IS_PLAYER(attacker))
 				{
