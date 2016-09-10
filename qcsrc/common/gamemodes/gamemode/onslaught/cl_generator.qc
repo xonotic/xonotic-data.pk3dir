@@ -14,6 +14,7 @@ void ons_generator_ray_draw(entity this)
 
 	if(this.count > 10)
 	{
+		IL_REMOVE(g_drawables, this);
 		delete(this);
 		return;
 	}
