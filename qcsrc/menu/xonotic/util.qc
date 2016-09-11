@@ -685,9 +685,13 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
-	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
-	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_CTS) \
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
+	/**/
+
+// hidden gametypes come last so indexing always works correctly
+#define HIDDEN_GAMETYPES \
+	GAMETYPE(MAPINFO_TYPE_RACE) \
+	GAMETYPE(MAPINFO_TYPE_CTS) \
 	/**/
 
 Gametype GameType_GetID(int cnt)
@@ -695,6 +699,7 @@ Gametype GameType_GetID(int cnt)
 	int i = 0;
 	#define GAMETYPE(it) { if (i++ == cnt) return it; }
 	GAMETYPES
+	HIDDEN_GAMETYPES
 	#undef GAMETYPE
 	return NULL;
 }
@@ -704,6 +709,19 @@ int GameType_GetCount()
 	int i = 0;
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
+	#undef GAMETYPE
+	#define GAMETYPE(it) if (cvar("developer")) ++i;
+	HIDDEN_GAMETYPES
+	#undef GAMETYPE
+	return i;
+}
+
+int GameType_GetTotalCount()
+{
+	int i = 0;
+	#define GAMETYPE(id) ++i;
+	GAMETYPES
+	HIDDEN_GAMETYPES
 	#undef GAMETYPE
 	return i;
 }

@@ -75,6 +75,10 @@ void viewloc_SetTags(entity this)
 }
 
 vector old_camera_angle = '0 0 0';
+bool autocvar_cam_snap_close;
+bool autocvar_cam_track;
+bool autocvar_cam_snap_hard;
+bool autocvar_cam_snap_unlock;
 void viewloc_SetViewLocation()
 {
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
@@ -82,7 +86,7 @@ void viewloc_SetViewLocation()
 	//NOTE: the "cam_" cvars sould probably be changed out with a spawnflag or an entity key. I have it like this for my testing -- Player_2
 	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
 	{
-		vector position_a, position_b, camera_position, camera_angle, forward, backward;
+		vector position_a, position_b, camera_position, camera_angle = '0 0 0', forward, backward;
 		//vector scratch;
 
 		position_a = view.viewloc.enemy.origin;
@@ -100,20 +104,18 @@ void viewloc_SetViewLocation()
 			camera_position = vec_bounds_in(view.origin, position_a, position_b);
 
 
-		camera_angle = '0 0 0';
-
 		// a tracking camera follows the player when it leaves the world box
-		if (cvar("cam_track")) {
+		if (autocvar_cam_track) {
 			camera_angle = aim_vec (camera_position, view.origin);
 		}
 
 		// hard snap changes the angle as soon as it crosses over the nearest 90 degree mark
-		if (cvar("cam_snap_hard")){
+		if (autocvar_cam_snap_hard){
 			camera_angle = angle_snap_vec(aim_vec(camera_position, view.origin), 90);
 		}
 
 		// tries to avoid snapping unless it *really* needs to
-		if (cvar("cam_snap_close")){
+		if (autocvar_cam_snap_close){
 
 			// like hard snap, but don't snap angles yet.
 			camera_angle = aim_vec(camera_position, view.origin);
@@ -131,7 +133,7 @@ void viewloc_SetViewLocation()
 		}
 
 		//unlocking this allows the camera to look up and down. this also allows a top-down view.
-		if (!cvar("cam_snap_unlock")) {
+		if (!autocvar_cam_snap_unlock) {
 			camera_angle_x = 0;
 			camera_angle_z = 0;
 		}

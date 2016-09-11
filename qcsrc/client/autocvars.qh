@@ -100,7 +100,6 @@ bool autocvar_cl_unpress_attack_on_weapon_switch = 1;
 bool autocvar_con_chat;
 bool autocvar_con_chatrect;
 float autocvar_con_chatsize;
-float autocvar_con_chattime;
 float autocvar_con_notify;
 float autocvar_con_notifysize;
 string autocvar_crosshair;

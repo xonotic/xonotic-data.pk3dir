@@ -6,7 +6,6 @@
 
 // Score (#7)
 
-void Scoreboard_UpdatePlayerTeams();
 void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;

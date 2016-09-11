@@ -675,16 +675,15 @@ void snake_hud_board(vector pos, vector mySize)
 void snake_hud_status(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg();
-	vector ts;
-	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
+	vector ts = minigame_drawstring_wrapped(mySize.x, pos, active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
-	ts_y += hud_fontsize_y;
-	pos_y += ts_y;
-	mySize_y -= ts_y;
+	ts.y += hud_fontsize.y;
+	pos.y += ts.y;
+	mySize.y -= ts.y;
 
 	vector player_fontsize = hud_fontsize * 1.75;
-	ts_y = ( mySize_y - SNAKE_TEAMS*player_fontsize_y ) / SNAKE_TEAMS;
-	ts_x = mySize_x;
+	ts.y = player_fontsize.y + (mySize.y - SNAKE_TEAMS * player_fontsize.y) / SNAKE_TEAMS;
+	ts.x = mySize_x;
 	vector mypos;
 
 	entity e;
@@ -692,22 +691,26 @@ void snake_hud_status(vector pos, vector mySize)
 	{
 		if ( e.classname == "minigame_player" )
 		{
-			mypos = pos;
-			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
+			mypos = pos + eY * (e.team - 1) * ts.y;
 
-			drawfill(mypos, ts, snake_teamcolor(e.team), 0.25, DRAWFLAG_ADDITIVE);
+			if (e == minigame_self)
+			{
+				const vector hl_size = '1 1 0';
+				drawfill(mypos + hl_size, ts - 2 * hl_size, snake_teamcolor(e.team), 0.25 * panel_fg_alpha, DRAWFLAG_ADDITIVE);
+				drawborderlines(hl_size.x, mypos + hl_size, ts - 2 * hl_size, snake_teamcolor(e.team), panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+			else
+				drawfill(mypos, ts, snake_teamcolor(e.team), 0.25 * panel_fg_alpha, DRAWFLAG_ADDITIVE);
 
-			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-				entcs_GetName(e.minigame_playerslot-1),
+			minigame_drawcolorcodedstring_trunc(mySize.x - hud_fontsize.x * 0.5, mypos + eX * hud_fontsize.x * 0.25,
+				entcs_GetName(e.minigame_playerslot - 1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
-			drawstring(mypos+eY*player_fontsize_y,ftos(e.snake_score),'48 48 0' * (SNAKE_TEAMS * 0.1),
-					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring(mypos+(eY*player_fontsize_y) + (eX*player_fontsize_x),strcat("1UP: ", ftos(active_minigame.snake_lives[e.team])),'48 48 0' * (SNAKE_TEAMS * 0.1),
-							 '1 0.44 0.54', panel_fg_alpha, DRAWFLAG_NORMAL);
-
-			if ( e == minigame_self )
-				drawborderlines(1, mypos, ts, snake_teamcolor(e.team), 1, DRAWFLAG_NORMAL);
+			mypos.y += player_fontsize.y;
+			drawstring_aspect(mypos, ftos(e.snake_score), ts - eY * player_fontsize.y - eX * ts.x * (3 / 4),
+								'0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(mypos + eX * ts.x * (1 / 4), strcat("1UP: ", ftos(active_minigame.snake_lives[e.team])), ts - eY * player_fontsize.y - eX * ts.x * (1 / 4),
+								'1 0.44 0.54', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 }

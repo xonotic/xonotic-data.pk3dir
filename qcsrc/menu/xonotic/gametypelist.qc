@@ -17,7 +17,7 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 
 	if(SKINBOOL_GAMETYPELIST_ICON_BLUR)
 	{
-		for(int i = 0; i < GameType_GetCount(); ++i)
+		for(int i = 0; i < GameType_GetTotalCount(); ++i)
 			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
 	}
 

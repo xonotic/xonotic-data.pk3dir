@@ -16,6 +16,14 @@ MUTATOR_HOOKABLE(MakePlayerObserver, EV_MakePlayerObserver)
     /**/
 MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
 
+/**
+ * return true to prevent a spectator/observer to spawn as player
+ */
+ #define EV_ForbidSpawn(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
+
 /** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
 #define EV_PlayerSpawn(i, o) \
 	/** player spawning */ i(entity, MUTATOR_ARGV_0_entity) \
