@@ -57,9 +57,9 @@ CLASS(DamageText, Object)
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
             string s = autocvar_cl_damagetext_format;
-            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / 64)), s);
-            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / 64)), s);
-            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / 64)), s);
+            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / 128)), s);
+            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / 128)), s);
+            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / 128)), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
@@ -106,21 +106,26 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(it) && it.enemy == attacker) ||
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(it))
         ) {
+            int flags = SAME_TEAM(hit, attacker); // first bit
+            if (health > 512) flags |= 2;
+            if (armor > 512) flags |= 4;
+
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
-
-            // we need to send a few decimal places to minimize errors when accumulating damage
-            // sending them multiplied by 64 saves bandwidth compared to WriteCoord,
-            // allows 1024 max damage in one shot and only has errors after about 15 shots accumulate (if they have non-integer damage)
-            WriteShort(MSG_ONE, health * 64);
-            WriteShort(MSG_ONE, armor * 64);
-
             WriteEntity(MSG_ONE, hit);
             WriteCoord(MSG_ONE, location.x);
             WriteCoord(MSG_ONE, location.y);
             WriteCoord(MSG_ONE, location.z);
             WriteInt24_t(MSG_ONE, deathtype);
-            WriteByte(MSG_ONE, SAME_TEAM(hit, attacker));
+            WriteByte(MSG_ONE, flags);
+
+            // we need to send a few decimal places to minimize errors when accumulating damage
+            // sending them multiplied saves bandwidth compared to using WriteCoord,
+            // however if the multiplied damage would be too much for short, we send an int24
+            if (health > 512) WriteInt24_t(MSG_ONE, health * 128);
+            else WriteShort(MSG_ONE, health * 128);
+            if (armor > 512) WriteInt24_t(MSG_ONE, armor * 128);
+            else WriteShort(MSG_ONE, armor * 128);
         }
     ));
 }
@@ -129,12 +134,18 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 #ifdef CSQC
 NET_HANDLE(damagetext, bool isNew)
 {
-    int health = ReadShort();
-    int armor = ReadShort();
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
-    bool friendlyfire = ReadByte();
+    int flags = ReadByte();
+    bool friendlyfire = flags & 1;
+
+    int health, armor;
+    if (flags & 2) health = ReadInt24_t();
+    else health = ReadShort();
+    if (flags & 4) armor = ReadInt24_t();
+    else armor = ReadShort();
+
     return = true;
     if (autocvar_cl_damagetext) {
         if (friendlyfire && !autocvar_cl_damagetext_friendlyfire) {
