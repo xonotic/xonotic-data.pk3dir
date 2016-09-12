@@ -4,7 +4,8 @@
 #include "../lib/csqcmodel/cl_player.qh"
 #include "../lib/warpzone/anglestransform.qh"
 
-.vector v_angle;
+.float v_angle_x;
+.float v_angle_save_x;
 
 class(Skeleton) .float skeleton_info_modelindex;
 class(Skeleton) .float skeleton_info_skin;
@@ -178,14 +179,23 @@ void skeleton_from_frames(entity e, bool is_dead)
 
 	if(!is_dead)
 	{
-		if(e == csqcplayer && !intermission)
-			e.v_angle_x = input_angles_x;
+		if(e == csqcplayer)
+		{
+			if(intermission)
+			{
+				if(!e.v_angle_save_x)
+					e.v_angle_save_x = input_angles.x;
+				e.v_angle_x = e.v_angle_save_x;
+			}
+			else
+				e.v_angle_x = input_angles.x;
+		}
 		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(e.(bone_aim[i]))
 			{
-				vector aim = '1 0 0' * bound(-90, e.v_angle.x, 90) * e.(bone_aimweight[i]);
+				vector aim = '1 0 0' * bound(-90, e.v_angle_x, 90) * e.(bone_aimweight[i]);
 				vector org = skel_get_boneabs(s, e.(bone_aim[i]));
 				vector ang_cur = fixedvectoangles2(v_forward, v_up);
 				vector ang = AnglesTransform_Multiply(aim, ang_cur);
