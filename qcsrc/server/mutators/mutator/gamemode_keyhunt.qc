@@ -157,7 +157,7 @@ void kh_Controller_SetThink(float t, kh_Think_t func)  // runs occasionaly
 void kh_WaitForPlayers();
 void kh_Controller_Think(entity this)  // called a lot
 {
-	if(intermission_running)
+	if(gameover)
 		return;
 	if(this.cnt > 0)
 	{ if(getthink(this) != kh_WaitForPlayers) { this.cnt -= 1; } }
@@ -174,7 +174,7 @@ void kh_Controller_Think(entity this)  // called a lot
 void kh_Scores_Event(entity player, entity key, string what, float frags_player, float frags_owner)  // update the score when a key is captured
 {
 	string s;
-	if(intermission_running)
+	if(gameover)
 		return;
 
 	if(frags_player)
@@ -449,7 +449,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 
 void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a key has been dropped and can be picked up
 {
-	if(intermission_running)
+	if(gameover)
 		return;
 
 	if(this.owner) // already carried
@@ -672,7 +672,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 
 void kh_Key_Think(entity this)  // runs all the time
 {
-	if(intermission_running)
+	if(gameover)
 		return;
 
 	if(this.owner)

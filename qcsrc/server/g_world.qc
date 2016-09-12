@@ -1485,9 +1485,6 @@ void FixIntermissionClient(entity e)
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
 		e.health = -2342;
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
-		e.solid = SOLID_NOT;
-		set_movetype(e, MOVETYPE_NONE);
-		e.takedamage = DAMAGE_NO;
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 		    .entity weaponentity = weaponentities[slot];
@@ -1525,7 +1522,7 @@ void NextLevel()
 
 	intermission_running = 1;
 
-// enforce a wait time before allowing changelevel
+	// enforce a wait time before allowing changelevel
 	if(player_count > 0)
 		intermission_exittime = time + autocvar_sv_mapchange_delay;
 	else
@@ -1832,7 +1829,7 @@ void CheckRules_World()
 
 	SetDefaultAlpha();
 
-	if (gameover)	// someone else quit the game already
+	if (intermission_running) // someone else quit the game already
 	{
 		if(player_count == 0) // Nobody there? Then let's go to the next map
 			MapVote_Start();
