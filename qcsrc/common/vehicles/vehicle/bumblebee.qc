@@ -395,6 +395,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 	{
 		vehic.velocity = '0 0 0';
 		vehic.avelocity = '0 0 0';
+		set_movetype(vehic, MOVETYPE_NONE);
 		return;
 	}
 
