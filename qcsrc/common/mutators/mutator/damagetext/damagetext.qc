@@ -1,7 +1,7 @@
 #include "damagetext.qh"
 
 #define DAMAGETEXT_PRECISION_MULTIPLIER 128
-#define DAMAGETEXT_MAX_SHORT 255 // 2^15 (signed short) / DAMAGETEXT_PRECISION_MULTIPLIER - 1
+#define DAMAGETEXT_SHORT_LIMIT 256 // the smallest value that we can't send as short - 2^15 (signed short) / DAMAGETEXT_PRECISION_MULTIPLIER
 
 REGISTER_MUTATOR(damagetext, true);
 
@@ -110,8 +110,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(it))
         ) {
             int flags = SAME_TEAM(hit, attacker); // BIT(0)
-            if (health > DAMAGETEXT_MAX_SHORT) flags |= BIT(1);
-            if (armor > DAMAGETEXT_MAX_SHORT) flags |= BIT(2);
+            if (health >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(1);
+            if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(2);
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
@@ -125,9 +125,9 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             // we need to send a few decimal places to minimize errors when accumulating damage
             // sending them multiplied saves bandwidth compared to using WriteCoord,
             // however if the multiplied damage would be too much for (signed) short, we send an int24
-            if (health > DAMAGETEXT_MAX_SHORT) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
+            if (health >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
             else WriteShort(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
-            if (armor > DAMAGETEXT_MAX_SHORT) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+            if (armor >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
             else WriteShort(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
         }
     ));
