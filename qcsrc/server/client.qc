@@ -2302,12 +2302,6 @@ void PlayerPreThink (entity this)
 		CheckRules_Player(this);
 
 		if (gameover || intermission_running) {
-			if(gameover)
-			{
-				this.solid = SOLID_NOT;
-				this.takedamage = DAMAGE_NO;
-				set_movetype(this, MOVETYPE_NONE);
-			}
 			if(intermission_running)
 				IntermissionThink(this);
 			return;
@@ -2604,6 +2598,13 @@ void PlayerPostThink (entity this)
 	CheatFrame(this);
 
 	//CheckPlayerJump();
+	if (gameover)
+	{
+		this.solid = SOLID_NOT;
+		this.takedamage = DAMAGE_NO;
+		set_movetype(this, MOVETYPE_NONE);
+		CSQCMODEL_AUTOUPDATE(this);
+	}
 
 	if (IS_PLAYER(this)) {
 		DrownPlayer(this);
