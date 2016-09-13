@@ -186,15 +186,6 @@ void assault_new_round(entity this)
 {
 	//bprint("ASSAULT: new round\n");
 
-	// Eject players from vehicles
-    FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, vehicles_exit(it.vehicle, VHEF_RELEASE));
-
-    IL_EACH(g_vehicles, true,
-    {
-        vehicles_clearreturn(it);
-        vehicles_spawn(it);
-    });
-
 	// up round counter
 	this.winning = this.winning + 1;
 
@@ -564,11 +555,13 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 		turret.team = 5; // this gets reversed when match starts?
 }
 
-MUTATOR_HOOKFUNCTION(as, VehicleSpawn)
+MUTATOR_HOOKFUNCTION(as, VehicleInit)
 {
 	entity veh = M_ARGV(0, entity);
 
-	veh.nextthink = time + 0.5;
+	if(veh.active != ACTIVE_NOT)
+		veh.nextthink = time + 0.5;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(as, HavocBot_ChooseRole)
