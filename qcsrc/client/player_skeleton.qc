@@ -4,7 +4,7 @@
 #include "../lib/csqcmodel/cl_player.qh"
 #include "../lib/warpzone/anglestransform.qh"
 
-.float v_angle_x;
+.vector v_angle;
 .float v_angle_save_x;
 
 class(Skeleton) .float skeleton_info_modelindex;
@@ -181,7 +181,7 @@ void skeleton_from_frames(entity e, bool is_dead)
 	{
 		if(e == csqcplayer)
 		{
-			if(intermission)
+			if(e.move_movetype == MOVETYPE_NONE)
 			{
 				if(!e.v_angle_save_x)
 					e.v_angle_save_x = input_angles.x;
