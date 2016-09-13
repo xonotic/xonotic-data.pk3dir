@@ -1,5 +1,8 @@
 #include "damagetext.qh"
 
+#define DAMAGETEXT_PRECISION_MULTIPLIER 128
+#define DAMAGETEXT_MAX_SHORT 255 // 2^15 (signed short) / DAMAGETEXT_PRECISION_MULTIPLIER - 1
+
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
@@ -57,9 +60,9 @@ CLASS(DamageText, Object)
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
             string s = autocvar_cl_damagetext_format;
-            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / 128)), s);
-            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / 128)), s);
-            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / 128)), s);
+            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
@@ -106,9 +109,9 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(it) && it.enemy == attacker) ||
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(it))
         ) {
-            int flags = SAME_TEAM(hit, attacker); // first bit
-            if (health > 512) flags |= 2;
-            if (armor > 512) flags |= 4;
+            int flags = SAME_TEAM(hit, attacker); // BIT(0)
+            if (health > DAMAGETEXT_MAX_SHORT) flags |= BIT(1);
+            if (armor > DAMAGETEXT_MAX_SHORT) flags |= BIT(2);
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
@@ -121,11 +124,11 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 
             // we need to send a few decimal places to minimize errors when accumulating damage
             // sending them multiplied saves bandwidth compared to using WriteCoord,
-            // however if the multiplied damage would be too much for short, we send an int24
-            if (health > 512) WriteInt24_t(MSG_ONE, health * 128);
-            else WriteShort(MSG_ONE, health * 128);
-            if (armor > 512) WriteInt24_t(MSG_ONE, armor * 128);
-            else WriteShort(MSG_ONE, armor * 128);
+            // however if the multiplied damage would be too much for (signed) short, we send an int24
+            if (health > DAMAGETEXT_MAX_SHORT) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
+            else WriteShort(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
+            if (armor > DAMAGETEXT_MAX_SHORT) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+            else WriteShort(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
         }
     ));
 }
@@ -141,9 +144,9 @@ NET_HANDLE(damagetext, bool isNew)
     bool friendlyfire = flags & 1;
 
     int health, armor;
-    if (flags & 2) health = ReadInt24_t();
+    if (flags & BIT(1)) health = ReadInt24_t();
     else health = ReadShort();
-    if (flags & 4) armor = ReadInt24_t();
+    if (flags & BIT(2)) armor = ReadInt24_t();
     else armor = ReadShort();
 
     return = true;
