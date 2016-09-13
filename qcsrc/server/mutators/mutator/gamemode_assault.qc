@@ -185,15 +185,6 @@ void assault_new_round(entity this)
 {
 	//bprint("ASSAULT: new round\n");
 
-	// Eject players from vehicles
-    FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, vehicles_exit(it.vehicle, VHEF_RELEASE));
-
-    IL_EACH(g_vehicles, true,
-    {
-        vehicles_clearreturn(it);
-        vehicles_spawn(it);
-    });
-
 	// up round counter
 	this.winning = this.winning + 1;
 
