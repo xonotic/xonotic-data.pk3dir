@@ -63,6 +63,16 @@ MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
     /**/
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
+/** allows overriding the frag centerprint messages */
+#define EV_FragCenterMessage(i, o) \
+    /** attacker       */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** target         */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** deathtype      */ i(float, MUTATOR_ARGV_2_float) \
+    /** attacker kcount*/ i(int,  MUTATOR_ARGV_3_int) \
+    /** targ killcount */ i(int,  MUTATOR_ARGV_4_int) \
+    /**/
+MUTATOR_HOOKABLE(FragCenterMessage, EV_FragCenterMessage);
+
 /** called when a player dies to e.g. remove stuff he was carrying */
 #define EV_PlayHitsound(i, o) \
     /** victim */ i(entity, MUTATOR_ARGV_0_entity) \

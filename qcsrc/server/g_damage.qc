@@ -264,6 +264,18 @@ float Obituary_WeaponDeath(
 	return false;
 }
 
+bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target)
+{
+	if(deathtype == DEATH_FIRE.m_id)
+	{
+		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : targ.ping));
+		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? -1 : attacker.ping));
+		return true;
+	}
+
+	return MUTATOR_CALLHOOK(FragCenterMessage, attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target);
+}
+
 .int buffs = _STAT(BUFFS); // TODO: remove
 entity buff_FirstFromFlags(int _buffs);
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
@@ -413,7 +425,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
 				);
 			}
-			else
+			else if(!frag_centermessage_override(attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target))
 			{
 				Send_Notification(
 					NOTIF_ONE,
