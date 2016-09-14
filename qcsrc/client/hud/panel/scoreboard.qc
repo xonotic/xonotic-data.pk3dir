@@ -61,6 +61,7 @@ bool autocvar_hud_panel_scoreboard_dynamichud = false;
 float autocvar_hud_panel_scoreboard_maxheight = 0.5;
 bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
+bool autocvar_hud_panel_scoreboard_spectators_aligned = false;
 float autocvar_hud_panel_scoreboard_minwidth = 0.4;
 
 
@@ -923,6 +924,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	if(!complete)
 		width_limit -= stringwidth("...", false, hud_fontsize);
 	float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
+	static float max_name_width = 0;
 	string field = "";
 	float fieldsize = 0;
 	float min_fieldsize = 0;
@@ -951,14 +953,20 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			field = ftos(pl.(scores(ps_primary)));
 
 		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
-		float str_width = stringwidth(str, true, hud_fontsize);
+		float column_width = stringwidth(str, true, hud_fontsize);
+		if((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
+		{
+			if(column_width > max_name_width)
+				max_name_width = column_width;
+			column_width = max_name_width;
+		}
 		if(field != "")
 		{
 			fieldsize = stringwidth(field, false, hud_fontsize);
-			str_width += hud_fontsize.x * 0.25 + max(fieldsize, min_fieldsize) + 2 * fieldpadding;
+			column_width += hud_fontsize.x * 0.25 + max(fieldsize, min_fieldsize) + 2 * fieldpadding;
 		}
 
-		if(pos.x + str_width > width_limit)
+		if(pos.x + column_width > width_limit)
 		{
 			++i;
 			if(!complete)
@@ -972,18 +980,24 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 				pos.y += hud_fontsize.y * 1.25;
 			}
 		}
-		drawcolorcodedstring(pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
-		pos.x += str_width;
+
+		vector name_pos = pos;
+		if((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned)
+			name_pos.x += max(fieldsize, min_fieldsize) + 2 * fieldpadding + hud_fontsize.x * 0.25;
+		drawcolorcodedstring(name_pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		if(field != "")
 		{
 			h_size.x = max(fieldsize, min_fieldsize) + 2 * fieldpadding;
 			h_size.y = hud_fontsize.y;
-			pos.x -= h_size.x;
+			vector field_pos = pos;
+			if(!((this_team == NUM_SPECTATOR) && autocvar_hud_panel_scoreboard_spectators_aligned))
+				field_pos.x += column_width - h_size.x;
 			if(sbt_highlight)
-				drawfill(pos, h_size, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
-			drawstring(pos + eX * (fieldpadding + (max(fieldsize, min_fieldsize) - fieldsize) * 0.5), field, hud_fontsize, sbt_field_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
-			pos.x += h_size.x;
+				drawfill(field_pos, h_size, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			field_pos.x += fieldpadding + (max(fieldsize, min_fieldsize) - fieldsize) * 0.5;
+			drawstring(field_pos, field, hud_fontsize, sbt_field_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
 		}
+		pos.x += column_width;
 		pos.x += hud_fontsize.x;
 	}
 	return eX * item_pos.x + eY * (item_pos.y + i * hud_fontsize.y * 1.25);
