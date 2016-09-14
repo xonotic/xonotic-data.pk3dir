@@ -923,8 +923,17 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	if(!complete)
 		width_limit -= stringwidth("...", false, hud_fontsize);
 	float namesize = autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x;
-	float ping_padding = 0;
-	float min_pingsize = stringwidth("999", false, hud_fontsize);
+	string field = "";
+	float fieldsize = 0;
+	float min_fieldsize = 0;
+	float fieldpadding = hud_fontsize.x * 0.25;
+	if(this_team == NUM_SPECTATOR)
+	{
+		if(autocvar_hud_panel_scoreboard_spectators_showping)
+			min_fieldsize = stringwidth("999", false, hud_fontsize);
+	}
+	else if(autocvar_hud_panel_scoreboard_others_showscore)
+		min_fieldsize = stringwidth("99", false, hud_fontsize);
 	for(i = 0; pl; pl = pl.sort_next)
 	{
 		if(pl.team != this_team)
@@ -932,23 +941,23 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 		if(pl == ignored_pl)
 			continue;
 
-		ping_padding = 0;
-		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
+		field = "";
 		if(this_team == NUM_SPECTATOR)
 		{
 			if(autocvar_hud_panel_scoreboard_spectators_showping)
-			{
-				string ping = Scoreboard_GetField(pl, SP_PING);
-				float pingsize = stringwidth(ping, false, hud_fontsize);
-				if(min_pingsize > pingsize)
-					ping_padding = min_pingsize - pingsize;
-				string col = rgb_to_hexcolor(sbt_field_rgb);
-				str = sprintf("%s ^7[%s%s^7]", str, col, ping);
-			}
+				field = Scoreboard_GetField(pl, SP_PING);
 		}
 		else if(autocvar_hud_panel_scoreboard_others_showscore)
-			str = sprintf("%s ^7(^3%s^7)", str, ftos(pl.(scores(ps_primary))));
+			field = ftos(pl.(scores(ps_primary)));
+
+		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
 		float str_width = stringwidth(str, true, hud_fontsize);
+		if(field != "")
+		{
+			fieldsize = stringwidth(field, false, hud_fontsize);
+			str_width += hud_fontsize.x * 0.25 + max(fieldsize, min_fieldsize) + 2 * fieldpadding;
+		}
+
 		if(pos.x + str_width > width_limit)
 		{
 			++i;
@@ -960,12 +969,22 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 			else
 			{
 				pos.x = item_pos.x + hud_fontsize.x * 0.5;
-				pos.y = item_pos.y + i * (hud_fontsize.y * 1.25);
+				pos.y += hud_fontsize.y * 1.25;
 			}
 		}
 		drawcolorcodedstring(pos, str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
-		pos.x += str_width + hud_fontsize.x * 0.5;
-		pos.x += ping_padding;
+		pos.x += str_width;
+		if(field != "")
+		{
+			h_size.x = max(fieldsize, min_fieldsize) + 2 * fieldpadding;
+			h_size.y = hud_fontsize.y;
+			pos.x -= h_size.x;
+			if(sbt_highlight)
+				drawfill(pos, h_size, '1 1 1', sbt_highlight_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * (fieldpadding + (max(fieldsize, min_fieldsize) - fieldsize) * 0.5), field, hud_fontsize, sbt_field_rgb, sbt_fg_alpha, DRAWFLAG_NORMAL);
+			pos.x += h_size.x;
+		}
+		pos.x += hud_fontsize.x;
 	}
 	return eX * item_pos.x + eY * (item_pos.y + i * hud_fontsize.y * 1.25);
 }
