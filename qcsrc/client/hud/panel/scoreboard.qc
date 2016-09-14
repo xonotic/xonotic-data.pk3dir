@@ -1544,8 +1544,12 @@ void Scoreboard_Draw()
 	{
 		if(pl.team == NUM_SPECTATOR)
 		{
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				if(tm.team == NUM_SPECTATOR)
+					break;
+			str = sprintf("%s (%d)", _("Spectators"), tm.team_size);
 			draw_beginBoldFont();
-			drawstring(pos, _("Spectators"), hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			draw_endBoldFont();
 			pos.y += 1.25 * hud_fontsize.y;
 
