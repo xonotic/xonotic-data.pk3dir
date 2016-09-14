@@ -21,7 +21,9 @@
 
 float W_WeaponRateFactor(entity this)
 {
-	float t = 1.0 / g_weaponratefactor;
+	float t = 1;
+	if(g_weaponratefactor > 0)
+		t = 1.0 / g_weaponratefactor;
 
 	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
 	t = M_ARGV(0, float);
