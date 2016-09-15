@@ -589,7 +589,7 @@
     MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,    1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(TYPEFRAGGED),    VERBOSE_MURDER(TYPEFRAGGED2)   )
     MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,       1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(TYPEFRAG),       VERBOSE_MURDER(TYPEFRAG2)      )
 
-    MSG_CENTER_NOTIF(NADE_THROW,                        1,      0, 0, "",               CPID_NADES,             "0 0",  _("^BGPress ^F2DROPWEAPON^BG again to toss the nade!"), "")
+    MSG_CENTER_NOTIF(NADE_THROW,                        1,      0, 0, "nade_key",       CPID_NADES,             "0 0",  _("^BGPress ^F2%s^BG again to toss the nade!"), "")
     MSG_CENTER_NOTIF(NADE_BONUS,                        1,      0, 0, "",               CPID_NADES,             "0 0",  _("^F2You got a ^K1BONUS GRENADE^F2!"), "")
 
     MSG_CENTER_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,         1,      0, 1, "death_team",     CPID_Null,              "0 0",  _("^BGYou have been moved into a different team\nYou are now on: %s"), "")
@@ -694,8 +694,6 @@
 
     MSG_CENTER_NOTIF(NIX_COUNTDOWN,                     1,      0, 2, "item_wepname",   CPID_NIX,               "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "")
     MSG_CENTER_NOTIF(NIX_NEWWEAPON,                     1,      0, 1, "item_wepname",   CPID_NIX,               "0 0",  _("^F2Active weapon: ^F1%s"), "")
-
-    MSG_CENTER_NOTIF(NADE,                              1,      0, 0, "",               CPID_Null,              "0 0",  _("^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"), "")
 
     MSG_CENTER_NOTIF(ONS_CAPTURE,                       1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^BGYou captured %s^BG control point"), "")
     MULTITEAM_CENTER(ONS_CAPTURE, 4,                    1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^TC^TT^BG team captured %s^BG control point"), "", NAME)
