@@ -352,6 +352,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	race_diff: show time difference between f2 and f3
 	missing_teams: show which teams still need players
 	pass_key: find the keybind for "passing" or "dropping" in CTF game mode
+	nade_key: find the keybind for nade throwing
 	frag_ping: show the ping of a player
 	frag_stats: show health/armor/ping of a player
 	frag_pos: show score status and position in the match of a player
@@ -412,6 +413,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
 	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
 	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) \
+	ARG_CASE(ARG_CS,        "nade_key",      getcommandkey(_("throw nade"), "dropweapon")) \
 	ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(true, f2)) \
 	ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) \
 	/*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \

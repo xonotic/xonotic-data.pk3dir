@@ -552,16 +552,45 @@
     MSG_CENTER_NOTIF(CTF_STALEMATE_CARRIER,             1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGStalemate! Enemies can now see you on radar!"), "")
     MSG_CENTER_NOTIF(CTF_STALEMATE_OTHER,               1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "")
 
-    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG,                 1,      1, 1, "spree_cen s1",               CPID_Null,  "0 0",  _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED,              1,      1, 1, "spree_cen s1",               CPID_Null,  "0 0",  _("^K1%sYou were fragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,      1,      1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  _("^K1%sYou were fragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_VERBOSE,         1,      1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  _("^K3%sYou fragged ^BG%s^BG%s"), _("^K3%sYou scored against ^BG%s^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG,             1,      1, 1, "spree_cen s1",               CPID_Null,  "0 0",  _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED,          1,      1, 1, "spree_cen s1",               CPID_Null,  "0 0",  _("^K1%sYou were typefragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing!"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,  1,      1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  _("^K1%sYou were typefragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,     1,      1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  _("^K1%sYou typefragged ^BG%s^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s"))
+    #define VERBOSE_MURDER(type) strcat(MURDER_##type, "^BG%s")
 
-    MSG_CENTER_NOTIF(NADE_THROW,                        1,      0, 0, "",               CPID_NADES,             "0 0",  _("^BGPress ^F2DROPWEAPON^BG again to toss the nade!"), "")
+    #define MURDER_FRAG             _("^K3%sYou fragged ^BG%s")
+    #define MURDER_FRAG2            _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAGGED          _("^K1%sYou were fragged by ^BG%s")
+    #define MURDER_FRAGGED2         _("^K1%sYou were scored against by ^BG%s")
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG,                   1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG,                    MURDER_FRAG2                   )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED,                1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAGGED,                 MURDER_FRAGGED2                )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,        1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED),        VERBOSE_MURDER(FRAGGED2)       )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_VERBOSE,           1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG),           VERBOSE_MURDER(FRAG2)          )
+
+    #define MURDER_FRAG_FIRE        _("^K3%sYou burned ^BG%s")
+    #define MURDER_FRAG_FIRE2       _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAGGED_FIRE     _("^K1%sYou were burned by ^BG%s")
+    #define MURDER_FRAGGED_FIRE2    _("^K1%sYou were scored against by ^BG%s")
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FIRE,              1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG_FIRE,               MURDER_FRAG_FIRE2              )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FIRE,           1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAGGED_FIRE,            MURDER_FRAGGED_FIRE2           )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FIRE_VERBOSE,   1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED_FIRE),   VERBOSE_MURDER(FRAGGED_FIRE2)  )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FIRE_VERBOSE,      1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG_FIRE),      VERBOSE_MURDER(FRAG_FIRE2)     )
+
+    #define MURDER_FRAG_FREEZE      _("^K3%sYou froze ^BG%s")
+    #define MURDER_FRAG_FREEZE2     _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAGGED_FREEZE   _("^K1%sYou were frozen by ^BG%s")
+    #define MURDER_FRAGGED_FREEZE2  _("^K1%sYou were scored against by ^BG%s")
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FREEZE,            1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG_FREEZE,             MURDER_FRAG_FREEZE2            )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FREEZE,         1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAGGED_FREEZE,          MURDER_FRAGGED_FREEZE2         )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FREEZE_VERBOSE, 1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED_FREEZE), VERBOSE_MURDER(FRAGGED_FREEZE2))
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FREEZE_VERBOSE,    1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG_FREEZE),    VERBOSE_MURDER(FRAG_FREEZE2)   )
+
+    #define MURDER_TYPEFRAG         _("^K1%sYou typefragged ^BG%s")
+    #define MURDER_TYPEFRAG2        _("^K1%sYou scored against ^BG%s^K1 while they were typing")
+    #define MURDER_TYPEFRAGGED      _("^K1%sYou were typefragged by ^BG%s")
+    #define MURDER_TYPEFRAGGED2     _("^K1%sYou were scored against by ^BG%s^K1 while typing")
+    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG,               1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_TYPEFRAG,                MURDER_TYPEFRAG2               )
+    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED,            1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_TYPEFRAGGED,             MURDER_TYPEFRAGGED2            )
+    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,    1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(TYPEFRAGGED),    VERBOSE_MURDER(TYPEFRAGGED2)   )
+    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,       1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(TYPEFRAG),       VERBOSE_MURDER(TYPEFRAG2)      )
+
+    MSG_CENTER_NOTIF(NADE_THROW,                        1,      0, 0, "nade_key",       CPID_NADES,             "0 0",  _("^BGPress ^F2%s^BG again to toss the nade!"), "")
     MSG_CENTER_NOTIF(NADE_BONUS,                        1,      0, 0, "",               CPID_NADES,             "0 0",  _("^F2You got a ^K1BONUS GRENADE^F2!"), "")
 
     MSG_CENTER_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,         1,      0, 1, "death_team",     CPID_Null,              "0 0",  _("^BGYou have been moved into a different team\nYou are now on: %s"), "")
@@ -611,8 +640,6 @@
 
     MSG_CENTER_NOTIF(EXTRALIVES,                        1,      0, 0, "",               CPID_Null,              "0 0",  _("^F2You picked up some extra lives"), "")
 
-    MSG_CENTER_NOTIF(FREEZETAG_FREEZE,                  1,      1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You froze ^BG%s"), "")
-    MSG_CENTER_NOTIF(FREEZETAG_FROZEN,                  1,      1, 0, "s1",             CPID_Null,              "0 0",  _("^K1You were frozen by ^BG%s"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE,                  1,      1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You revived ^BG%s"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE_SELF,             1,      0, 0, "",               CPID_Null,              "0 0",  _("^K3You revived yourself"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVED,                 1,      1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You were revived by ^BG%s"), "")
@@ -668,8 +695,6 @@
 
     MSG_CENTER_NOTIF(NIX_COUNTDOWN,                     1,      0, 2, "item_wepname",   CPID_NIX,               "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "")
     MSG_CENTER_NOTIF(NIX_NEWWEAPON,                     1,      0, 1, "item_wepname",   CPID_NIX,               "0 0",  _("^F2Active weapon: ^F1%s"), "")
-
-    MSG_CENTER_NOTIF(NADE,                              1,      0, 0, "",               CPID_Null,              "0 0",  _("^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"), "")
 
     MSG_CENTER_NOTIF(ONS_CAPTURE,                       1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^BGYou captured %s^BG control point"), "")
     MULTITEAM_CENTER(ONS_CAPTURE, 4,                    1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^TC^TT^BG team captured %s^BG control point"), "", NAME)
@@ -924,5 +949,9 @@
     MSG_CHOICE_NOTIF(CTF_PICKUP_ENEMY_TEAM,     1, 2,   MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_TEAM,       CENTER_CTF_PICKUP_ENEMY_TEAM_VERBOSE)
     MSG_CHOICE_NOTIF(FRAG,                      1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAG,           CENTER_DEATH_MURDER_FRAG_VERBOSE)
     MSG_CHOICE_NOTIF(FRAGGED,                   1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED,        CENTER_DEATH_MURDER_FRAGGED_VERBOSE)
+    MSG_CHOICE_NOTIF(FRAG_FIRE,                 1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAG_FIRE,      CENTER_DEATH_MURDER_FRAG_FIRE_VERBOSE)
+    MSG_CHOICE_NOTIF(FRAGGED_FIRE,              1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_FIRE,   CENTER_DEATH_MURDER_FRAGGED_FIRE_VERBOSE)
+    MSG_CHOICE_NOTIF(FRAG_FREEZE,               1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAG_FREEZE,    CENTER_DEATH_MURDER_FRAG_FREEZE_VERBOSE)
+    MSG_CHOICE_NOTIF(FRAGGED_FREEZE,            1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_FREEZE, CENTER_DEATH_MURDER_FRAGGED_FREEZE_VERBOSE)
     MSG_CHOICE_NOTIF(TYPEFRAG,                  1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG,       CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE)
     MSG_CHOICE_NOTIF(TYPEFRAGGED,               1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED,    CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE)

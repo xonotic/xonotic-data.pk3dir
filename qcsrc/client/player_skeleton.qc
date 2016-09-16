@@ -1,5 +1,6 @@
 #include "player_skeleton.qh"
 
+#include <common/physics/movetypes/movetypes.qh>
 #include "mutators/events.qh"
 #include "../lib/csqcmodel/cl_player.qh"
 #include "../lib/warpzone/anglestransform.qh"
