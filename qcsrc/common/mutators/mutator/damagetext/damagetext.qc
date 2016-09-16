@@ -74,7 +74,7 @@ CLASS(DamageText, Object)
         this.m_armordamage = _armor;
         this.m_deathtype = _deathtype;
         setorigin(this, _origin);
-        this.alpha = 1;
+        this.alpha = autocvar_cl_damagetext_alpha_start;
     }
 
     CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype, bool _friendlyfire) {
