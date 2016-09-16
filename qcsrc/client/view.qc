@@ -1743,8 +1743,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(!postinit)
 		PostInit();
 
-	if(intermission && !gameover_time)
-		gameover_time = time;
+	if(intermission && !intermission_time)
+		intermission_time = time;
 
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{
