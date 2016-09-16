@@ -911,7 +911,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 		setsize(_nade, '-16 -16 -16', '16 16 16');
 	set_movetype(_nade, MOVETYPE_BOUNCE);
 
-	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, false, _nade);
+	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, MOVE_NOMONSTERS, _nade);
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 
