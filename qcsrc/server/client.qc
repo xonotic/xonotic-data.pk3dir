@@ -2603,7 +2603,6 @@ void PlayerPostThink (entity this)
 		this.solid = SOLID_NOT;
 		this.takedamage = DAMAGE_NO;
 		set_movetype(this, MOVETYPE_NONE);
-		CSQCMODEL_AUTOUPDATE(this);
 	}
 
 	if (IS_PLAYER(this)) {
@@ -2611,7 +2610,11 @@ void PlayerPostThink (entity this)
 		CheckRules_Player(this);
 		UpdateChatBubble(this);
 		if (this.impulse) ImpulseCommands(this);
-		if (gameover) return;
+		if (gameover)
+		{
+			CSQCMODEL_AUTOUPDATE(this);
+			return;
+		}
 		GetPressedKeys(this);
 	}
 
