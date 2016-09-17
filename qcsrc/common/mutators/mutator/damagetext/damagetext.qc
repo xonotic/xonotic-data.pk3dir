@@ -7,22 +7,22 @@ REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
-AUTOCVAR_SAVE(cl_damagetext,                    bool,   true,      "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,             string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
+AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
+AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
 STATIC_INIT(DamageText_LegacyFormat) {
     if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
 }
-AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    "Damage text color");
-AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      "Damage text uses weapon color");
-AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          "Damage text font size");
-AUTOCVAR_SAVE(cl_damagetext_alpha_start,        float,  1,          "Damage text initial alpha");
-AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,     float,  3,          "Damage text lifetime in seconds");
-AUTOCVAR_SAVE(cl_damagetext_velocity,           vector, '0 0 20',   "Damage text move direction");
-AUTOCVAR_SAVE(cl_damagetext_offset,             vector, '0 -40 0',  "Damage text offset");
-AUTOCVAR_SAVE(cl_damagetext_accumulate_range,   float,  30,         "Damage text spawned within this range is accumulated");
-AUTOCVAR_SAVE(cl_damagetext_accumulate_visibility,   float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
-AUTOCVAR_SAVE(cl_damagetext_friendlyfire,       bool,   true,       "Show damage text for friendlyfire too");
-AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color, vector, '1 0 0',    "Damage text color for friendlyfire");
+AUTOCVAR_SAVE(cl_damagetext_color,                  vector, '1 1 0',    "Damage text color");
+AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,       bool,   false,      "Damage text uses weapon color");
+AUTOCVAR_SAVE(cl_damagetext_size,                   float,  8,          "Damage text font size");
+AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
+AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
+AUTOCVAR_SAVE(cl_damagetext_velocity,               vector, '0 0 20',   "Damage text move direction");
+AUTOCVAR_SAVE(cl_damagetext_offset,                 vector, '0 -40 0',  "Damage text offset");
+AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage text spawned within this range is accumulated");
+AUTOCVAR_SAVE(cl_damagetext_accumulate_visibility,  float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show damage text for friendlyfire too");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
 #endif
 
 #ifdef CSQC
