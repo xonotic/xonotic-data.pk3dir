@@ -20,7 +20,7 @@ AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage 
 AUTOCVAR_SAVE(cl_damagetext_velocity,               vector, '0 0 20',   "Damage text move direction");
 AUTOCVAR_SAVE(cl_damagetext_offset,                 vector, '0 -40 0',  "Damage text offset");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage text spawned within this range is accumulated");
-AUTOCVAR_SAVE(cl_damagetext_accumulate_visibility,  float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
+AUTOCVAR_SAVE(cl_damagetext_accumulate_alpha_rel,   float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show damage text for friendlyfire too");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
 #endif
@@ -157,7 +157,7 @@ NET_HANDLE(damagetext, bool isNew)
         }
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
-                if (e.instanceOfDamageText && e.m_group == group && e.alpha > autocvar_cl_damagetext_accumulate_visibility * autocvar_cl_damagetext_alpha_start) {
+                if (e.instanceOfDamageText && e.m_group == group && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
                     DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, deathtype);
                     return;
                 }
