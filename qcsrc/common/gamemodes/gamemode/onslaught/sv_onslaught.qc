@@ -28,10 +28,26 @@ float autocvar_g_onslaught_spawn_choose;
 float autocvar_g_onslaught_click_radius;
 
 void FixSize(entity e);
+entity cam;
 
 // =======================
 // CaptureShield Functions
 // =======================
+
+bool clientcamera_send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
+
+	WriteCoord(MSG_ENTITY, this.origin_x);
+	WriteCoord(MSG_ENTITY, this.origin_y);
+	WriteCoord(MSG_ENTITY, this.origin_z);
+
+	WriteAngle(MSG_ENTITY, this.angles_x);
+	WriteAngle(MSG_ENTITY, this.angles_y);
+	WriteAngle(MSG_ENTITY, this.angles_z);
+
+	return true;
+}
 
 bool ons_CaptureShield_Customize(entity this, entity client)
 {
@@ -817,6 +833,24 @@ void ons_Generator_UpdateSprite(entity e)
 	}
 }
 
+void ons_camSetup(entity this)
+{
+	if(cam) return;
+
+	cam = new(objective_camera);
+	cam.origin = this.origin;
+	setorigin(cam, cam.origin);
+	cam.angles = this.angles;
+	Net_LinkEntity(cam, false, 0, clientcamera_send);
+
+	FOREACH_CLIENT(true, it.clientcamera = cam;);
+
+	WriteByte(MSG_ALL, SVC_SETVIEWANGLES);
+	WriteAngle(MSG_ALL, cam.angles_x);
+	WriteAngle(MSG_ALL, cam.angles_y);
+	WriteAngle(MSG_ALL, cam.angles_z);
+}
+
 void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(damage <= 0) { return; }
@@ -877,6 +911,8 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		//WaypointSprite_Kill(this.sprite); // can't do this yet, code too poor
 
 		onslaught_updatelinks();
+
+		ons_camSetup(this);
 	}
 
 	// Throw some flaming gibs on damage, more damage = more chance for gib
