@@ -837,10 +837,31 @@ void ons_camSetup(entity this)
 {
 	if(cam) return;
 
+	vector dir;
+	vector ang = '0 0 0';
+	vector best_ang = '0 0 0';
+	float best_trace_fraction = 0;
+	while(ang.y < 360)
+	{
+		dir = eX * cos(ang.y * DEG2RAD) + eY * sin(ang.y * DEG2RAD);
+		dir *= 500;
+		traceline(this.origin, this.origin - dir, MOVE_WORLDONLY, this);
+		if(trace_fraction > best_trace_fraction)
+		{
+			best_trace_fraction = trace_fraction;
+			best_ang = ang;
+			if(trace_fraction == 1)
+				break;
+		}
+		ang.y += 90;
+		if(ang.y == 360)
+			ang.y = 45;
+	}
+
 	cam = new(objective_camera);
 	cam.origin = this.origin;
 	setorigin(cam, cam.origin);
-	cam.angles = this.angles;
+	cam.angles = best_ang;
 	Net_LinkEntity(cam, false, 0, clientcamera_send);
 
 	FOREACH_CLIENT(true, it.clientcamera = cam;);
