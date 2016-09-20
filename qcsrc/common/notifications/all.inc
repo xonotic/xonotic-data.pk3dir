@@ -742,7 +742,7 @@
     MSG_CENTER_NOTIF(TEAMCHANGE_SUICIDE,                1,      0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Suicide in ^COUNT"), "")
 
     MSG_CENTER_NOTIF(TIMEOUT_BEGINNING,                 1,      0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout begins in ^COUNT"), "")
-    MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    1,      0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout ends in ^COUNT"), "")
+    MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    1,      0, 1, "",               CPID_TIMEIN,            "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             1,      0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
