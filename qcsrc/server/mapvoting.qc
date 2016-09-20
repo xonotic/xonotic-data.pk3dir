@@ -14,7 +14,6 @@
 float mapvote_nextthink;
 float mapvote_keeptwotime;
 float mapvote_timeout;
-string mapvote_message;
 const float MAPVOTE_SCREENSHOT_DIRS_COUNT = 4;
 string mapvote_screenshot_dirs[MAPVOTE_SCREENSHOT_DIRS_COUNT];
 float mapvote_screenshot_dirs_count;
@@ -255,7 +254,6 @@ void MapVote_Init()
 	mapvote_timeout = time + autocvar_g_maplist_votable_timeout;
 	if(mapvote_count_real < 3 || mapvote_keeptwotime <= time)
 		mapvote_keeptwotime = 0;
-	mapvote_message = "Choose a map and press its key!";
 
 	MapVote_Spawn();
 }
@@ -561,7 +559,6 @@ float MapVote_CheckRules_2()
 		{
 			float didntvote;
 			MapVote_TouchMask();
-			mapvote_message = "Now decide between the TOP TWO!";
 			mapvote_keeptwotime = 0;
 			result = strcat(":vote:keeptwo:", mapvote_maps[firstPlace]);
 			result = strcat(result, ":", ftos(firstPlaceVotes));
