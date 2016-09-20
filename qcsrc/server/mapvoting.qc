@@ -592,10 +592,8 @@ float MapVote_CheckRules_2()
 
 void MapVote_Tick()
 {
-	float keeptwo;
 	float totalvotes;
 
-	keeptwo = mapvote_keeptwotime;
 	MapVote_CheckRules_1(); // count
 	if(MapVote_CheckRules_2()) // decide
 		return;
