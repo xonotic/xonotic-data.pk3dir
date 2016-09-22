@@ -21,7 +21,7 @@ float autocvar_g_overkill_ammo_charge_limit;
 .float ok_use_ammocharge = _STAT(OK_AMMO_CHARGE);
 .float ok_ammo_charge = _STAT(OK_AMMO_CHARGEPOOL);
 
-.float ok_pauseregen_finished;
+.float pauseregen_finished;
 
 void(entity ent, float wep) ok_DecreaseCharge;
 
@@ -122,7 +122,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
 	float damage_take = M_ARGV(4, float);
 
 	if(damage_take)
-		frag_target.ok_pauseregen_finished = max(frag_target.ok_pauseregen_finished, time + 2);
+		frag_target.pauseregen_finished = max(frag_target.pauseregen_finished, time + 2);
 }
 
 void ok_DropItem(entity this, entity targ)
@@ -170,26 +170,7 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 
 MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
 {
-	entity player = M_ARGV(0, entity);
-
-	// overkill's values are different, so use custom regen
-	if(!STAT(FROZEN, player))
-	{
-		player.armorvalue = CalcRotRegen(player.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear,
-			1 * frametime * (time > player.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > player.pauserotarmor_finished), autocvar_g_balance_armor_limit);
-		player.health = CalcRotRegen(player.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > player.ok_pauseregen_finished), 200, 0,
-			autocvar_g_balance_health_rotlinear, 1 * frametime * (time > player.pauserothealth_finished), autocvar_g_balance_health_limit);
-
-		float minf, maxf, limitf;
-
-		maxf = autocvar_g_balance_fuel_rotstable;
-		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = autocvar_g_balance_fuel_limit;
-
-		player.ammo_fuel = CalcRotRegen(player.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear,
-			frametime * (time > player.pauseregen_finished) * ((player.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > player.pauserotfuel_finished), limitf);
-	}
-	return true; // return true anyway, as frozen uses no regen
+	M_ARGV(4, float) = M_ARGV(1, float) = 1; // limit_mod = max_mod
 }
 
 MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
@@ -288,7 +269,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	if(player.impulse)
 		player.ok_lastwep = 0;
 
-	player.ok_pauseregen_finished = time + 2;
+	player.pauseregen_finished = time + 2;
 }
 
 void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
