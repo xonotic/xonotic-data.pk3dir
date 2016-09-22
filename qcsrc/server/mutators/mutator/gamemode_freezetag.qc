@@ -432,22 +432,13 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if(gameover)
 		return true;
 
-	entity player = M_ARGV(0, entity);
-
-	if(STAT(FROZEN, player) == 1)
-	{
-		// keep health = 1
-		player.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
-	}
-
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 		return true;
 
 	int n;
-
-	entity o;
-	o = NULL;
+	entity o = NULL;
+	entity player = M_ARGV(0, entity);
 	//if(STAT(FROZEN, player))
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
