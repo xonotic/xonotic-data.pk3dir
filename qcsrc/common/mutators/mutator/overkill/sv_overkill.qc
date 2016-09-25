@@ -168,11 +168,6 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 	ok_DropItem(mon, frag_attacker);
 }
 
-MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
-{
-	M_ARGV(4, float) = M_ARGV(1, float) = 1; // limit_mod = max_mod
-}
-
 MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 {
 	return true;
