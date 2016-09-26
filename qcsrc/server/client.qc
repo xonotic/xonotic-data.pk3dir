@@ -2333,7 +2333,7 @@ void PlayerPreThink (entity this)
 					{
 						if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
 							this.deadflag = DEAD_RESPAWNING;
-						else if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+						else if (!button_pressed || (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)))
 							this.deadflag = DEAD_DEAD;
 						break;
 					}
