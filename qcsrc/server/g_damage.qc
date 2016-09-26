@@ -572,7 +572,10 @@ void Unfreeze (entity targ)
 		return;
 
 	if(STAT(FROZEN, targ) && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
+	{
 		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
+		targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+	}
 
 	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
