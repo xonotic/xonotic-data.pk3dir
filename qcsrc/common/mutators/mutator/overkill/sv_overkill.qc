@@ -21,8 +21,6 @@ float autocvar_g_overkill_ammo_charge_limit;
 .float ok_use_ammocharge = _STAT(OK_AMMO_CHARGE);
 .float ok_ammo_charge = _STAT(OK_AMMO_CHARGEPOOL);
 
-.float pauseregen_finished;
-
 void(entity ent, float wep) ok_DecreaseCharge;
 
 void ok_Initialize();
@@ -114,15 +112,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 
 		M_ARGV(4, float) = 0; // damage
 	}
-}
-
-MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
-{
-	entity frag_target = M_ARGV(2, entity);
-	float damage_take = M_ARGV(4, float);
-
-	if(damage_take)
-		frag_target.pauseregen_finished = max(frag_target.pauseregen_finished, time + 2);
 }
 
 void ok_DropItem(entity this, entity targ)
@@ -264,8 +253,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	// if player changed their weapon while dead, don't switch to their death weapon
 	if(player.impulse)
 		player.ok_lastwep = 0;
-
-	player.pauseregen_finished = time + 2;
 }
 
 void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
