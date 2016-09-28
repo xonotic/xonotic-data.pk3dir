@@ -692,7 +692,8 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
-	if(this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
+	// update goal entity if lost
+	if(this.target2 && this.goalentity.targetname != this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
 
 	entity targ;
 
