@@ -144,6 +144,54 @@ vector findperpendicular(vector v)
 	return normalize(cliptoplane(p, v));
 }
 
+#ifdef SVQC
+	int W_GunAlign(entity this, int preferred_align)
+	{
+		entity own = this.owner;
+		// using wasfreed, as we don't actually clear .gunaligns yet
+		if(!own.gunaligns[preferred_align] || wasfreed(own.gunaligns[preferred_align]) || own.gunaligns[preferred_align] == this)
+		{
+			own.gunaligns[preferred_align] = this;
+			return preferred_align; // fall back if the good one is already choosable
+		}
+
+		for(int j = 4; j > 0; --j) // start from left and try the others
+		{
+			if(!own.gunaligns[j] || wasfreed(own.gunaligns[j]) || own.gunaligns[j] == this)
+			{
+				own.gunaligns[j] = this;
+				return j;
+			}
+		}
+
+		own.gunaligns[preferred_align] = this;
+		return preferred_align; // no other choice
+	}
+#else
+	int W_GunAlign(entity this, int preferred_align)
+	{
+		// using wasfreed, as we don't actually clear gunaligns yet
+		if(!gunaligns[preferred_align] || wasfreed(gunaligns[preferred_align]) || gunaligns[preferred_align] == this)
+		{
+			gunaligns[preferred_align] = this;
+			return preferred_align; // fall back if the good one is already choosable
+		}
+
+		for(int j = 4; j > 0; --j)
+		{
+			if(!gunaligns[j] || wasfreed(gunaligns[j]) || gunaligns[j] == this)
+			{
+				gunaligns[j] = this;
+				return j;
+			}
+		}
+
+		gunaligns[preferred_align] = this;
+		return preferred_align; // no other choice
+	}
+#endif
+
+#if 0
 int W_GetGunAlignment(entity player)
 {
 	int gunalign = STAT(GUNALIGN, player);
@@ -153,6 +201,7 @@ int W_GetGunAlignment(entity player)
 
 	return gunalign;
 }
+#endif
 
 vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle)
 {

@@ -153,7 +153,7 @@ void GrapplingHookThink(entity this)
 
 	this.nextthink = time;
 
-	int s = W_GetGunAlignment(this.realowner);
+	int s = W_GunAlign(this.realowner, STAT(GUNALIGN, this.realowner));
 	vs = hook_shotorigin[s];
 
 	makevectors(this.realowner.v_angle);
@@ -352,7 +352,7 @@ void FireGrapplingHook(entity actor)
 
 	makevectors(actor.v_angle);
 
-	int s = W_GetGunAlignment(actor);
+	int s = W_GunAlign(actor, STAT(GUNALIGN, actor));
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds

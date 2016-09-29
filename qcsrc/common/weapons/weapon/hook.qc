@@ -370,7 +370,7 @@ void Draw_GrapplingHook(entity this)
 
 	InterpolateOrigin_Do(this);
 
-	int s = W_GetGunAlignment(NULL);
+	int s = W_GunAlign(NULL, STAT(GUNALIGN));
 
 	switch(this.HookType)
 	{
