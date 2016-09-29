@@ -333,6 +333,12 @@ vector weaponentity_glowmod(Weapon wep, entity actor, int c)
     return g;
 }
 
+#ifdef SVQC
+.entity gunaligns[5];
+#else
+entity gunaligns[5];
+#endif
+
 //.int weapon; // current weapon
 .string weaponname; // name of .weapon
 

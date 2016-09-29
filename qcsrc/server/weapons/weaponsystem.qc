@@ -290,7 +290,7 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 	{
 		int slot = weaponslot(weaponentity);
 		// don't fire if previous attack is not finished
-		if (ATTACK_FINISHED(actor, slot) > time + actor.weapon_frametime * 0.5) return false;
+		if (ATTACK_FINISHED(actor, slot) > time + actor.(weaponentity).weapon_frametime * 0.5) return false;
 		entity this = actor.(weaponentity);
 		// don't fire while changing weapon
 		if (this.state != WS_READY) return false;
@@ -310,14 +310,14 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 	if (attacktime >= 0)
 	{
 		int slot = weaponslot(weaponentity);
-		if (ATTACK_FINISHED(actor, slot) < time - actor.weapon_frametime * 1.5)
+		if (ATTACK_FINISHED(actor, slot) < time - this.weapon_frametime * 1.5)
 		{
 			ATTACK_FINISHED(actor, slot) = time;
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
 		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor(actor);
 	}
-	actor.bulletcounter += 1;
+	actor.(weaponentity).bulletcounter += 1;
 	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, slot)), "\n");
 }
 
@@ -381,8 +381,8 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		this.weapon_nextthink = time;
 		// dprint("started firing at ", ftos(time), "\n");
 	}
-	if (this.weapon_nextthink < time - actor.weapon_frametime * 1.5
-	    || this.weapon_nextthink > time + actor.weapon_frametime * 1.5)
+	if (this.weapon_nextthink < time - this.weapon_frametime * 1.5
+	    || this.weapon_nextthink > time + this.weapon_frametime * 1.5)
 	{
 		this.weapon_nextthink = time;
 		// dprint("reset weapon animation timer at ", ftos(time), "\n");
@@ -401,8 +401,8 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		bool primary_melee = boolean(fr == WFRAME_FIRE1 && (actor.(weaponentity).m_weapon.spawnflags & WEP_TYPE_MELEE_PRI));
-		bool secondary_melee = boolean(fr == WFRAME_FIRE2 && (actor.(weaponentity).m_weapon.spawnflags & WEP_TYPE_MELEE_SEC));
+		bool primary_melee = boolean(fr == WFRAME_FIRE1 && (this.m_weapon.spawnflags & WEP_TYPE_MELEE_PRI));
+		bool secondary_melee = boolean(fr == WFRAME_FIRE2 && (this.m_weapon.spawnflags & WEP_TYPE_MELEE_SEC));
 		int act = (primary_melee || secondary_melee)
 			? ANIMACTION_MELEE
 			: ANIMACTION_SHOOT
@@ -434,14 +434,14 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
     TC(Player, actor);
     TC(PlayerState, PS(actor));
 	entity this = actor.(weaponentity);
-	if (frametime) actor.weapon_frametime = frametime;
+	if (frametime) this.weapon_frametime = frametime;
 
 	if (!this || actor.health < 1) return;  // Dead player can't use weapons and injure impulse commands
 
 
 	if (forbidWeaponUse(actor))
 	{
-		if (actor.(weaponentity).state != WS_CLEAR)
+		if (this.state != WS_CLEAR)
 		{
 			Weapon wpn = this.m_weapon;
 			w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
@@ -484,7 +484,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				// the two weapon entities will notice this has changed and update their models
 				this.m_weapon = newwep;
 				this.weaponname = newwep.mdl;
-				actor.bulletcounter = 0;
+				this.bulletcounter = 0;
 				actor.ammo_field = newwep.ammo_field;
 				newwep.wr_setup(newwep, actor);
 				this.state = WS_RAISE;
@@ -516,7 +516,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				entity oldwep = this.m_weapon;
 
 				// set up weapon switch think in the future, and start drop anim
-				if (INDEPENDENT_ATTACK_FINISHED || ATTACK_FINISHED(actor, weaponslot(weaponentity)) <= time + actor.weapon_frametime * 0.5)
+				if (INDEPENDENT_ATTACK_FINISHED || ATTACK_FINISHED(actor, weaponslot(weaponentity)) <= time + this.weapon_frametime * 0.5)
 				{
 					sound(actor, CH_WEAPON_SINGLE, SND_WEAPON_SWITCH, VOL_BASE, ATTN_NORM);
 					this.state = WS_DROP;
@@ -585,7 +585,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 			}
 		}
 
-		if (time + actor.weapon_frametime * 0.5 >= this.weapon_nextthink)
+		if (time + this.weapon_frametime * 0.5 >= this.weapon_nextthink)
 		{
 			if (this.weapon_think)
 			{

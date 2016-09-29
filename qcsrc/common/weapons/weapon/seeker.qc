@@ -337,7 +337,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, flac_ammo), weaponentity);
 
-	c = actor.bulletcounter % 4;
+	c = actor.(weaponentity).bulletcounter % 4;
 	switch(c)
 	{
 		case 0:

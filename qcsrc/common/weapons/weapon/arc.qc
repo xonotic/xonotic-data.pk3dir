@@ -159,6 +159,7 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 	if(drawlocal) { sf &= ~ARC_SF_LOCALMASK; }
 
 	WriteByte(MSG_ENTITY, sf);
+	WriteByte(MSG_ENTITY, weaponslot(this.weaponentity_fld));
 
 	if(sf & ARC_SF_SETTINGS) // settings information
 	{
@@ -674,7 +675,7 @@ void W_Arc_Beam_Think(entity this)
 		this.beam_type = new_beam_type;
 	}
 
-	this.owner.beam_prev = time;
+	this.owner.(weaponentity).beam_prev = time;
 	this.nextthink = time;
 }
 
@@ -682,7 +683,7 @@ void W_Arc_Beam(float burst, entity actor, .entity weaponentity)
 {
 
 	// only play fire sound if 1 sec has passed since player let go the fire button
-	if(time - actor.beam_prev > 1)
+	if(time - actor.(weaponentity).beam_prev > 1)
 		sound(actor, CH_WEAPON_A, SND_ARC_FIRE, VOL_BASE, ATTN_NORM);
 
 	entity beam = actor.(weaponentity).arc_beam = new(W_Arc_Beam);
@@ -1297,13 +1298,22 @@ void Remove_ArcBeam(entity this)
 NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 {
 	int sf = ReadByte();
+	int slot = ReadByte();
 	entity flash;
 
 	if(isnew)
 	{
 		int gunalign = W_GunAlign(NULL, STAT(GUNALIGN));
 
-		this.beam_shotorigin = arc_shotorigin[gunalign];
+		this.beam_shotorigin = arc_shotorigin[gunalign]; // quick
+		for(int j = 1; j < 5; ++j)
+		{
+			if(gunaligns[j] == viewmodels[slot])
+			{
+				this.beam_shotorigin = arc_shotorigin[j - 1]; // accurate
+				break;
+			}
+		}
 
 		// set other main attributes of the beam
 		this.draw = Draw_ArcBeam;

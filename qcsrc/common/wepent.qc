@@ -15,6 +15,7 @@ MACRO_END
 .Weapon w_m_switchingweapon;
 .Weapon w_m_weapon;
 //.float w_weapon_nextthink;
+.float w_m_alpha;
 
 // #define PROP(public, fld, set, sv, cl)
 #define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
@@ -29,6 +30,10 @@ MACRO_END
     PROP(false, m_weapon, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_weapon.m_id); }, \
 	{ (viewmodels[this.m_wepent_slot]).activeweapon = Weapons_from(ReadByte()); }) \
+    \
+    PROP(false, m_alpha, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.m_alpha * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).alpha = ReadByte() / 16; }) \
     \
 	/**/
 

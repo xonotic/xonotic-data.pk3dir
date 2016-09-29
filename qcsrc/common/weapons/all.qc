@@ -563,7 +563,6 @@ NET_HANDLE(wframe, bool isNew)
 	anim_set(wepent, a, !restartanim, restartanim, restartanim);
 	wepent.state = ReadByte();
 	wepent.weapon_nextthink = ReadFloat();
-	wepent.alpha = ReadByte() / 255;
 	switch (wepent.state)
 	{
 		case WS_RAISE:
@@ -594,7 +593,6 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);
 	WriteFloat(channel, weaponentity.weapon_nextthink);
-	WriteByte(channel, weaponentity.m_alpha * 255);
 }
 #endif
 

@@ -314,7 +314,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	vector f_diff;
 	float c;
 
-	c = actor.bulletcounter % 4;
+	c = actor.(weaponentity).bulletcounter % 4;
 	switch(c)
 	{
 		case 0:
