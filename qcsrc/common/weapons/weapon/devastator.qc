@@ -124,7 +124,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 			this.realowner.cnt = WEP_DEVASTATOR.m_id;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(this.realowner, slot) = time;
-			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner);
+			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
 		}
 	}
 	delete(this);
@@ -210,7 +210,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 			this.realowner.cnt = WEP_DEVASTATOR.m_id;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(this.realowner, slot) = time;
-			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner);
+			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
 		}
 	}
 	delete(this);

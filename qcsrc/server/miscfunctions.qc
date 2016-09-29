@@ -450,7 +450,7 @@ void GetCvars(entity this, int f)
 	{
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if (s == "cl_weaponpriority")
-			if (this.(weaponentity)) this.(weaponentity).m_switchweapon = w_getbestweapon(this);
+			if (this.(weaponentity)) this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
 		if (s == "cl_allow_uidtracking")
 			PlayerStats_GameReport_AddPlayer(this);
 	}

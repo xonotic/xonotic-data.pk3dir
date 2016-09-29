@@ -183,7 +183,7 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	if(!(this.weapons & set)) return;
 	this.weapons &= ~set;
 
-	W_SwitchWeapon_Force(this, w_getbestweapon(this), weaponentity);
+	W_SwitchWeapon_Force(this, w_getbestweapon(this, weaponentity), weaponentity);
 	string a = W_ThrowNewWeapon(this, w.m_id, doreduce, this.origin + delta, velo, weaponentity);
 
 	if(!a) return;

@@ -56,7 +56,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		accuracy_add(ent, ent.(weaponentity).m_weapon.m_id, maxdamage, 0);
 
 	if(IS_PLAYER(ent))
-		W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
+		W_HitPlotAnalysis(ent, weaponentity, v_forward, v_right, v_up);
 
 	vector md = ent.(weaponentity).movedir;
 	if(md.x > 0)

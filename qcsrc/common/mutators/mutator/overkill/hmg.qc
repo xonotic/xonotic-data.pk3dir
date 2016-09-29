@@ -22,7 +22,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	if((!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (!(actor.items & IT_SUPERWEAPON) && !(actor.items & IT_UNLIMITED_SUPERWEAPONS)))
 	{
-		W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}

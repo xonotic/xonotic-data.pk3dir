@@ -51,7 +51,7 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 	return ret;
 }
 
-void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, vector screenup)
+void W_HitPlotAnalysis(entity player, .entity weaponentity, vector screenforward, vector screenright, vector screenup)
 {
 	vector hitplot;
 	vector org;
@@ -73,7 +73,6 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 			antilag_takeback(trace_ent, store, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
 			antilag_restore(trace_ent, store);
-			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 			fputs(player.hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(player.(weaponentity).m_switchweapon.m_id), "\n"));
 			//print(strcat(ftos(hitplot_x), " ", ftos(hitplot_y), " ", ftos(hitplot_z), "\n"));
 		}

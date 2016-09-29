@@ -137,7 +137,7 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 			own.cnt = WEP_MINE_LAYER.m_id;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
-			own.(weaponentity).m_switchweapon = w_getbestweapon(own);
+			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
 		}
 	}
 	this.realowner.minelayer_mines -= 1;
@@ -169,7 +169,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 			own.cnt = WEP_MINE_LAYER.m_id;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
-			own.(weaponentity).m_switchweapon = w_getbestweapon(own);
+			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
 		}
 	}
 	this.realowner.minelayer_mines -= 1;

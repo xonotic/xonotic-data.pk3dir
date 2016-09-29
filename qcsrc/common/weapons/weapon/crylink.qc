@@ -638,7 +638,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             {
                 // ran out of ammo!
                 actor.cnt = WEP_CRYLINK.m_id;
-                actor.(weaponentity).m_switchweapon = w_getbestweapon(actor);
+                actor.(weaponentity).m_switchweapon = w_getbestweapon(actor, weaponentity);
             }
         }
     }

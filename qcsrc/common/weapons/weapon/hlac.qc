@@ -179,7 +179,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 		if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
+			W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}

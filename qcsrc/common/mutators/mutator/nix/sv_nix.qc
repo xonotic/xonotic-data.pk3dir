@@ -65,7 +65,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			it.weapons = start_weapons;
 			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 			if(!client_hasweapon(it, it.(weaponentity).m_weapon, weaponentity, true, false))
-				it.(weaponentity).m_switchweapon = w_getbestweapon(it);
+				it.(weaponentity).m_switchweapon = w_getbestweapon(it, weaponentity);
 		});
 	}
 

@@ -248,12 +248,12 @@ void W_SwitchToOtherWeapon(entity this, .entity weaponentity)
 	if (this.weapons & set)
 	{
 		this.weapons &= ~set;
-		ww = w_getbestweapon(this);
+		ww = w_getbestweapon(this, weaponentity);
 		this.weapons |= set;
 	}
 	else
 	{
-		ww = w_getbestweapon(this);
+		ww = w_getbestweapon(this, weaponentity);
 	}
 	if (ww == WEP_Null) return;
 	W_SwitchWeapon_Force(this, ww, weaponentity);

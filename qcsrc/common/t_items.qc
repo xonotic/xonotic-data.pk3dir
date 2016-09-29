@@ -684,7 +684,7 @@ float Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 	if (player.autoswitch)
-	if (player.(weaponentity).m_switchweapon == w_getbestweapon(player))
+	if (player.(weaponentity).m_switchweapon == w_getbestweapon(player, weaponentity))
 		_switchweapon = true;
 
 	if (!(player.weapons & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
@@ -767,8 +767,8 @@ LABEL(skip)
 	}
 
 	if (_switchweapon)
-		if (player.(weaponentity).m_switchweapon != w_getbestweapon(player))
-			W_SwitchWeapon_Force(player, w_getbestweapon(player), weaponentity);
+		if (player.(weaponentity).m_switchweapon != w_getbestweapon(player, weaponentity))
+			W_SwitchWeapon_Force(player, w_getbestweapon(player, weaponentity), weaponentity);
 
 	return 1;
 }
@@ -1659,7 +1659,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	_switchweapon = false;
 	if (e.autoswitch)
-		if (e.(weaponentity).m_switchweapon == w_getbestweapon(e))
+		if (e.(weaponentity).m_switchweapon == w_getbestweapon(e, weaponentity))
 			_switchweapon = true;
 
 	e.strength_finished = max(0, e.strength_finished - time);
@@ -1828,7 +1828,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	if (!(e.weapons & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
 		_switchweapon = true;
 	if(_switchweapon)
-		W_SwitchWeapon_Force(e, w_getbestweapon(e), weaponentity);
+		W_SwitchWeapon_Force(e, w_getbestweapon(e, weaponentity), weaponentity);
 
 	return got;
 }

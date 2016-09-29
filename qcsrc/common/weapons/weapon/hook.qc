@@ -251,7 +251,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
                     {
                         actor.ammo_fuel = 0;
                         actor.(weaponentity).hook_state |= HOOK_REMOVING;
-                        W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
+                        W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
                     }
                 }
             }

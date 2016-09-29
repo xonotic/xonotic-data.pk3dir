@@ -9,8 +9,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 .int weaponcomplainindex;
 float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing, .entity weaponentity);
 
-// TODO: unhardcode
-#define w_getbestweapon(ent) Weapons_from(W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true, weaponentities[0]))
+#define w_getbestweapon(ent,wepent) Weapons_from(W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true, wepent))
 
 void W_SwitchWeapon_Force(Player this, Weapon w, .entity weaponentity);
 

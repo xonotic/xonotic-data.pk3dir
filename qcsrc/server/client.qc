@@ -696,7 +696,7 @@ void PutClientInServer(entity this)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(slot == 0)
-				this.(weaponentity).m_switchweapon = w_getbestweapon(this);
+				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
 			else
 				this.(weaponentity).m_switchweapon = WEP_Null;
 			this.(weaponentity).weaponname = "";

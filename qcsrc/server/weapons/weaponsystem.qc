@@ -180,7 +180,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 
 	wepent_link(view);
 
-	if (weaponentity == weaponentities[0])
+	if (weaponentity == weaponentities[0]) // only one exterior model, thank you very much
 	{
 		entity exterior = actor.exteriorweaponentity = new(exteriorweaponentity);
 		exterior.solid = SOLID_NOT;
@@ -539,7 +539,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 	{
 		if (w != WEP_Null && !(actor.weapons & WepSet_FromWeapon(w)))
 		{
-			if (this.m_weapon == this.m_switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
+			if (this.m_weapon == this.m_switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w = WEP_Null;
 		}
 
