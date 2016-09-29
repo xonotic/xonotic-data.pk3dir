@@ -212,7 +212,7 @@ void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 
 void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(mortar, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(mortar, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -262,7 +262,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity gren;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(mortar, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(mortar, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please

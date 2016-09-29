@@ -354,7 +354,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(crylink, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(crylink, ammo), weaponentity);
 
 	maxdmg = WEP_CVAR_PRI(crylink, damage) * WEP_CVAR_PRI(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_PRI(crylink, bouncedamagefactor) * WEP_CVAR_PRI(crylink, bounces);
@@ -464,7 +464,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(crylink, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(crylink, ammo), weaponentity);
 
 	maxdmg = WEP_CVAR_SEC(crylink, damage) * WEP_CVAR_SEC(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_SEC(crylink, bouncedamagefactor) * WEP_CVAR_SEC(crylink, bounces);
@@ -631,7 +631,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             {
                 // ran out of ammo!
                 actor.cnt = WEP_CRYLINK.m_id;
-                PS(actor).m_switchweapon = w_getbestweapon(actor);
+                actor.(weaponentity).m_switchweapon = w_getbestweapon(actor);
             }
         }
     }

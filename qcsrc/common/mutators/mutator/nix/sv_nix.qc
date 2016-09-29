@@ -63,8 +63,9 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			it.ammo_rockets = start_ammo_rockets;
 			it.ammo_fuel = start_ammo_fuel;
 			it.weapons = start_weapons;
-			if(!client_hasweapon(it, PS(it).m_weapon, true, false))
-				PS(it).m_switchweapon = w_getbestweapon(it);
+			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+			if(!client_hasweapon(it, it.(weaponentity).m_weapon, true, false))
+				it.(weaponentity).m_switchweapon = w_getbestweapon(it);
 		});
 	}
 
@@ -204,12 +205,13 @@ void NIX_GiveCurrentWeapon(entity this)
 		this.weapons |= WEPSET(BLASTER);
 	this.weapons |= e.m_wepset;
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
     Weapon w = Weapons_from(nix_weapon);
-	if(PS(this).m_switchweapon != w)
-		if(!client_hasweapon(this, PS(this).m_switchweapon, true, false))
+	if(this.(weaponentity).m_switchweapon != w)
+		if(!client_hasweapon(this, this.(weaponentity).m_switchweapon, true, false))
 		{
 			if(client_hasweapon(this, w, true, false))
-				W_SwitchWeapon(this, w);
+				W_SwitchWeapon(this, w, weaponentity);
 		}
 }
 

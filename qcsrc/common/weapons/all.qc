@@ -557,21 +557,23 @@ NET_HANDLE(wframe, bool isNew)
 	a.x = ReadCoord();
     a.y = ReadCoord();
     a.z = ReadCoord();
+    int slot = ReadByte();
 	bool restartanim = ReadByte();
-	anim_set(viewmodel, a, !restartanim, restartanim, restartanim);
-	viewmodel.state = ReadByte();
-	viewmodel.weapon_nextthink = ReadFloat();
-	viewmodel.alpha = ReadByte() / 255;
-	switch (viewmodel.state)
+	entity wepent = viewmodels[slot];
+	anim_set(wepent, a, !restartanim, restartanim, restartanim);
+	wepent.state = ReadByte();
+	wepent.weapon_nextthink = ReadFloat();
+	wepent.alpha = ReadByte() / 255;
+	switch (wepent.state)
 	{
 		case WS_RAISE:
-			viewmodel.weapon_switchdelay = activeweapon.switchdelay_raise;
+			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_raise;
 			break;
 		case WS_DROP:
-			viewmodel.weapon_switchdelay = activeweapon.switchdelay_drop;
+			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_drop;
 			break;
         default:
-            viewmodel.weapon_switchdelay = 0;
+            wepent.weapon_switchdelay = 0;
             break;
 	}
 	return true;
@@ -588,6 +590,7 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteCoord(channel, a.x);
 	WriteCoord(channel, a.y);
 	WriteCoord(channel, a.z);
+	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);
 	WriteFloat(channel, weaponentity.weapon_nextthink);

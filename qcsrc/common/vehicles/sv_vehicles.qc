@@ -806,7 +806,12 @@ void vehicles_exit(entity vehic, bool eject)
 		player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
 		player.event_damage	= PlayerDamage;
 		player.hud				= HUD_NORMAL;
-		PS(player).m_switchweapon = vehic.m_switchweapon;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++ slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			player.(weaponentity).m_switchweapon = vehic.(weaponentity).m_switchweapon;
+			delete(vehic.(weaponentity)); // no longer needed
+		}
 		player.last_vehiclecheck = time + 3;
 		player.vehicle_enter_delay = time + 2;
 
@@ -976,7 +981,12 @@ void vehicles_enter(entity pl, entity veh)
 	veh.colormap		= pl.colormap;
 	if(veh.tur_head)
 		veh.tur_head.colormap = pl.colormap;
-	veh.m_switchweapon = PS(pl).m_switchweapon;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		veh.(weaponentity) = new(temp_wepent);
+		veh.(weaponentity).m_switchweapon = pl.(weaponentity).m_switchweapon;
+	}
 	pl.hud = veh.vehicleid;
 	pl.PlayerPhysplug = veh.PlayerPhysplug;
 

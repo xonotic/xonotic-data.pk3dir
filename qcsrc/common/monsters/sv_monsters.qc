@@ -412,16 +412,18 @@ bool Monster_Attack_Leap(entity this, vector anm, void(entity this, entity touch
 	return true;
 }
 
-void Monster_Attack_Check(entity this, entity targ)
+void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 {
+	int slot = weaponslot(weaponentity);
+
 	if((this == NULL || targ == NULL)
 	|| (!this.monster_attackfunc)
-	|| (time < this.attack_finished_single[0])
+	|| (time < this.attack_finished_single[slot])
 	) { return; }
 
 	if(vdist(targ.origin - this.origin, <=, this.attack_range))
 	{
-		bool attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ);
+		bool attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -430,7 +432,7 @@ void Monster_Attack_Check(entity this, entity targ)
 
 	if(vdist(targ.origin - this.origin, >, this.attack_range))
 	{
-		float attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ);
+		float attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -695,7 +697,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	// update goal entity if lost
 	if(this.target2 && this.goalentity.targetname != this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
 
-	entity targ;
+	entity targ = this.goalentity;
 
 	if(STAT(FROZEN, this) == 2)
 	{
@@ -780,8 +782,6 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 			set_movetype(this, MOVETYPE_WALK);
 		}
 	}
-
-	targ = this.goalentity;
 
 	if (MUTATOR_CALLHOOK(MonsterMove, this, runspeed, walkspeed, targ)
 		|| gameover
@@ -895,7 +895,8 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		this.angles_y += turny;
 	}
 
-	Monster_Attack_Check(this, this.enemy);
+	.entity weaponentity = weaponentities[0]; // TODO?
+	Monster_Attack_Check(this, this.enemy, weaponentity);
 }
 
 void Monster_Remove(entity this)
@@ -1037,7 +1038,10 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	mon.mr_death(mon, this);
 
 	if(this.candrop && this.weapon)
-		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325');
+	{
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325', weaponentity);
+	}
 }
 
 void Monster_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

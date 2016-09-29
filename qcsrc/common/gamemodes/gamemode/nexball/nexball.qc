@@ -190,12 +190,12 @@ void GiveBall(entity plyr, entity ball)
 	}
 
 	plyr.(weaponentity).weapons = plyr.weapons;
-	plyr.(weaponentity).m_switchweapon = PS(plyr).m_weapon;
+	plyr.m_switchweapon = plyr.(weaponentity).m_weapon;
 	plyr.weapons = WEPSET(NEXBALL);
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w, plyr);
-	PS(plyr).m_switchweapon = WEP_NEXBALL;
-	W_SwitchWeapon(plyr, WEP_NEXBALL);
+	plyr.(weaponentity).m_switchweapon = WEP_NEXBALL;
+	W_SwitchWeapon(plyr, WEP_NEXBALL, weaponentity);
 }
 
 void DropBall(entity ball, vector org, vector vel)
@@ -1000,8 +1000,8 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				player.weapons = player.(weaponentity).weapons;
 				Weapon w = WEP_NEXBALL;
 				w.wr_resetplayer(w, player);
-				PS(player).m_switchweapon = player.(weaponentity).m_switchweapon;
-				W_SwitchWeapon(player, PS(player).m_switchweapon);
+				player.(weaponentity).m_switchweapon = player.m_switchweapon;
+				W_SwitchWeapon(player, player.(weaponentity).m_switchweapon, weaponentity);
 
 				player.(weaponentity).weapons = '0 0 0';
 			}
@@ -1053,15 +1053,17 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
 {
 	entity player = M_ARGV(0, entity);
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
-	return PS(player).m_weapon == WEP_NEXBALL;
+	return player.(weaponentity).m_weapon == WEP_NEXBALL;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidDropCurrentWeapon)
 {
 	entity player = M_ARGV(0, entity);
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
-	return PS(player).m_weapon == WEP_MORTAR; // TODO: what is this for?
+	return player.(weaponentity).m_weapon == WEP_MORTAR; // TODO: what is this for?
 }
 
 MUTATOR_HOOKFUNCTION(nb, FilterItem)

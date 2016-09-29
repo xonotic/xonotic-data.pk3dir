@@ -115,7 +115,8 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	);
 
 	Weapon thiswep = WEP_DEVASTATOR;
-	if(PS(this.realowner).m_weapon == thiswep)
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		if(this.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -123,7 +124,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 			this.realowner.cnt = WEP_DEVASTATOR.m_id;
 			int slot = 0; // TODO: unhardcode
 			ATTACK_FINISHED(this.realowner, slot) = time;
-			PS(this.realowner).m_switchweapon = w_getbestweapon(this.realowner);
+			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner);
 		}
 	}
 	delete(this);
@@ -201,7 +202,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	);
 
 	Weapon thiswep = WEP_DEVASTATOR;
-	if(PS(this.realowner).m_weapon == thiswep)
+	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		if(this.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -209,7 +210,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 			this.realowner.cnt = WEP_DEVASTATOR.m_id;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(this.realowner, slot) = time;
-			PS(this.realowner).m_switchweapon = w_getbestweapon(this.realowner);
+			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner);
 		}
 	}
 	delete(this);
@@ -361,7 +362,7 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 
 void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -515,7 +516,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
             actor.rl_release[slot] = 1;
 
         if(fire & 2)
-        if(PS(actor).m_switchweapon == WEP_DEVASTATOR)
+        if(actor.(weaponentity).m_switchweapon == WEP_DEVASTATOR)
         {
             bool rockfound = false;
             IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",

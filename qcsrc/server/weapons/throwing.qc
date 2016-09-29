@@ -31,7 +31,7 @@ void thrown_wep_think(entity this)
 }
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
+string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
 {
 	float thisammo;
 	string s;
@@ -97,7 +97,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		if(doreduce && g_weapon_stay == 2)
 		{
 			// if our weapon is loaded, give its load back to the player
-			int i = PS(own).m_weapon.m_id;
+			int i = own.(weaponentity).m_weapon.m_id;
 			if(own.(weapon_load[i]) > 0)
 			{
 				own.(ammotype) += own.(weapon_load[i]);
@@ -109,7 +109,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		else if(doreduce)
 		{
 			// if our weapon is loaded, give its load back to the player
-			int i = PS(own).m_weapon.m_id;
+			int i = own.(weaponentity).m_weapon.m_id;
 			if(own.(weapon_load[i]) > 0)
 			{
 				own.(ammotype) += own.(weapon_load[i]);
@@ -167,7 +167,7 @@ bool W_IsWeaponThrowable(entity this, int w)
 // toss current weapon
 void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta, float doreduce)
 {
-	Weapon w = PS(this).m_weapon;
+	Weapon w = this.(weaponentity).m_weapon;
 	if (w == WEP_Null)
 		return; // just in case
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon, this))
@@ -183,16 +183,16 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	if(!(this.weapons & set)) return;
 	this.weapons &= ~set;
 
-	W_SwitchWeapon_Force(this, w_getbestweapon(this));
-	string a = W_ThrowNewWeapon(this, w.m_id, doreduce, this.origin + delta, velo);
+	W_SwitchWeapon_Force(this, w_getbestweapon(this), weaponentity);
+	string a = W_ThrowNewWeapon(this, w.m_id, doreduce, this.origin + delta, velo, weaponentity);
 
 	if(!a) return;
 	Send_Notification(NOTIF_ONE, this, MSG_MULTI, ITEM_WEAPON_DROP, a, w.m_id);
 }
 
-void SpawnThrownWeapon(entity this, vector org, float w)
+void SpawnThrownWeapon(entity this, vector org, float w, .entity weaponentity)
 {
-	if(this.weapons & WepSet_FromWeapon(PS(this).m_weapon))
-		if(W_IsWeaponThrowable(this, PS(this).m_weapon.m_id))
-			W_ThrowNewWeapon(this, PS(this).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200');
+	if(this.weapons & WepSet_FromWeapon(this.(weaponentity).m_weapon))
+		if(W_IsWeaponThrowable(this, this.(weaponentity).m_weapon.m_id))
+			W_ThrowNewWeapon(this, this.(weaponentity).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200', weaponentity);
 }

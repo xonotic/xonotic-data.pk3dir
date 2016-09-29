@@ -265,7 +265,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity proj;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(electro, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(electro, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(
 		actor,
@@ -410,7 +410,7 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 
 void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(electro, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(electro, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(
 		actor,

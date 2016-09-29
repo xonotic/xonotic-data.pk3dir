@@ -256,7 +256,7 @@ void W_Seeker_Missile_Animate(entity this)
 
 void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, vector f_diff, entity m_target)
 {
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, missile_ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, missile_ammo), weaponentity);
 
 	makevectors(actor.v_angle);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0);
@@ -335,7 +335,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 	vector f_diff;
 	float c;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, flac_ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, flac_ammo), weaponentity);
 
 	c = actor.bulletcounter % 4;
 	switch(c)
@@ -432,7 +432,8 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 	this.cnt = this.cnt - 1;
 
 	Weapon thiswep = WEP_SEEKER;
-	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && this.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (PS(this.realowner).m_switchweapon != WEP_SEEKER))
+	.entity weaponentity = this.weaponentity_fld;
+	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && this.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER))
 	{
 		delete(this);
 		return;
@@ -444,7 +445,6 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	oldenemy = own.enemy;
 	own.enemy = this.enemy;
-	.entity weaponentity = this.weaponentity_fld;
 
 	c = own.cnt % 4;
 	switch(c)
@@ -469,8 +469,9 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 void W_Seeker_Tracker_Think(entity this)
 {
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
-	if((IS_DEAD(this.realowner)) || (IS_DEAD(this.tag_target)) || (PS(this.realowner).m_switchweapon != WEP_SEEKER)
+	if((IS_DEAD(this.realowner)) || (IS_DEAD(this.tag_target)) || (this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER)
 	|| (time > this.tag_time + WEP_CVAR(seeker, tag_tracker_lifetime)))
 	{
 		if(this)
@@ -571,7 +572,7 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 
 void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, tag_ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(seeker, tag_ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_TAG_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 

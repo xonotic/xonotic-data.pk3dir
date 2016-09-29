@@ -196,7 +196,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         if(time > actor.hook_refire)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, -1))
         {
-            W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(hook, ammo));
+            W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(hook, ammo), weaponentity);
             actor.hook_state |= HOOK_FIRING;
             actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
@@ -243,7 +243,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
                 {
                     if( actor.ammo_fuel >= (time - actor.hook_time_fueldecrease) * hooked_fuel )
                     {
-                        W_DecreaseAmmo(thiswep, actor, (time - actor.hook_time_fueldecrease) * hooked_fuel);
+                        W_DecreaseAmmo(thiswep, actor, (time - actor.hook_time_fueldecrease) * hooked_fuel, weaponentity);
                         actor.hook_time_fueldecrease = time;
                         // decrease next frame again
                     }
@@ -251,7 +251,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
                     {
                         actor.ammo_fuel = 0;
                         actor.hook_state |= HOOK_REMOVING;
-                        W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+                        W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
                     }
                 }
             }

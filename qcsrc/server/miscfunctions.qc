@@ -259,6 +259,8 @@ string formatmessage(entity this, string msg)
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 		switch(escape)
 		{
 			case "%": replacement = "%"; break;
@@ -269,7 +271,7 @@ string formatmessage(entity this, string msg)
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
-			case "w": replacement = ((PS(this).m_weapon == WEP_Null) ? ((PS(this).m_switchweapon == WEP_Null) ? Weapons_from(this.cnt) : PS(this).m_switchweapon) : PS(this).m_weapon).m_name; break;
+			case "w": replacement = ((this.(weaponentity).m_weapon == WEP_Null) ? ((this.(weaponentity).m_switchweapon == WEP_Null) ? Weapons_from(this.cnt) : this.(weaponentity).m_switchweapon) : this.(weaponentity).m_weapon).m_name; break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
@@ -446,8 +448,9 @@ void GetCvars(entity this, int f)
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
 	{
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if (s == "cl_weaponpriority")
-			if (PS(this)) PS(this).m_switchweapon = w_getbestweapon(this);
+			if (this.(weaponentity)) this.(weaponentity).m_switchweapon = w_getbestweapon(this);
 		if (s == "cl_allow_uidtracking")
 			PlayerStats_GameReport_AddPlayer(this);
 	}

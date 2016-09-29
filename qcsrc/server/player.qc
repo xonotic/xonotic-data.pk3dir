@@ -486,6 +486,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	valid_damage_for_weaponstats = 0;
 	Weapon awep = WEP_Null;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
@@ -493,7 +494,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(DIFF_TEAM(this, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
-			awep = PS(attacker).m_weapon;
+			awep = attacker.(weaponentity).m_weapon;
 		else
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
@@ -503,7 +504,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	da = da - max(this.armorvalue, 0);
 	if(valid_damage_for_weaponstats)
 	{
-		WeaponStats_LogDamage(awep.m_id, abot, PS(this).m_weapon.m_id, vbot, dh + da);
+		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
 	if (dh + da)
 	{
@@ -522,7 +523,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		}
 
 		if(valid_damage_for_weaponstats)
-			WeaponStats_LogKill(awep.m_id, abot, PS(this).m_weapon.m_id, vbot);
+			WeaponStats_LogKill(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot);
 
 		if(autocvar_sv_gentle < 1)
 		if(sound_allowed(MSG_BROADCAST, attacker))
@@ -561,13 +562,12 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		excess = M_ARGV(4, float);
 
-		Weapon wep = PS(this).m_weapon;
+		Weapon wep = this.(weaponentity).m_weapon;
 		/*for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
 			wep.wr_playerdeath(wep, this, weaponentity);
 		}*/
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		wep.wr_playerdeath(wep, this, weaponentity);
 
 		RemoveGrapplingHook(this);
@@ -592,7 +592,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);
 		// throw a weapon
-		SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, PS(this).m_switchweapon.m_id);
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(weaponentity).m_switchweapon.m_id, weaponentity);
 
 		// become fully visible
 		this.alpha = default_player_alpha;

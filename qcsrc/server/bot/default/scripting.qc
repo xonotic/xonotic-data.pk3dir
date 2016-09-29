@@ -568,8 +568,10 @@ float bot_cmd_select_weapon(entity this)
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	if(client_hasweapon(this, Weapons_from(id), true, false))
-		PS(this).m_switchweapon = Weapons_from(id);
+		this.(weaponentity).m_switchweapon = Weapons_from(id);
 	else
 		return CMD_STATUS_ERROR;
 
@@ -1054,7 +1056,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '0 8 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, inhibited by weaponentity state\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state\n");
 		}
 	}
 	else if(ATTACK_FINISHED(this, slot) > time)
@@ -1062,7 +1064,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '8 0 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
 		}
 	}
 	else if(this.tuba_note)
@@ -1070,7 +1072,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '8 0 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, bot still has an active tuba note\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, bot still has an active tuba note\n");
 		}
 	}
 	else
@@ -1078,7 +1080,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(!f)
 		{
 			this.colormod = '8 8 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
 		}
 	}
 

@@ -412,7 +412,12 @@ NET_HANDLE(tuba_instrument, bool)
 	string s = (i == 0) ? "tuba" :
 	           (i == 1) ? "akordeon" :
 	                      "kleinbottle" ;
-	CL_WeaponEntity_SetModel(viewmodel, s, true);
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	entity wep = viewmodels[slot];
+    	if(wep.activeweapon == WEP_TUBA)
+    		CL_WeaponEntity_SetModel(wep, s, true);
+    }
 }
 #endif
 #ifdef SVQC
@@ -437,15 +442,15 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 		{
 			case 0:
 				actor.tuba_instrument = 1;
-				actor.weaponname = "akordeon";
+				actor.(weaponentity).weaponname = "akordeon";
 				break;
 			case 1:
 				actor.tuba_instrument = 2;
-				actor.weaponname = "kleinbottle";
+				actor.(weaponentity).weaponname = "kleinbottle";
 				break;
 			case 2:
 				actor.tuba_instrument = 0;
-				actor.weaponname = "tuba";
+				actor.(weaponentity).weaponname = "tuba";
 				break;
 		}
 		tuba_instrument_send(actor, actor.tuba_instrument);

@@ -66,7 +66,7 @@ void W_Porto_Success(entity this)
 	delete(this);
 }
 
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
+string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity);
 void W_Porto_Fail(entity this, float failhard)
 {
 	if(this.realowner == NULL)
@@ -95,7 +95,8 @@ void W_Porto_Fail(entity this, float failhard)
 			tracetoss(this, this);
 			if(vdist(trace_endpos - this.realowner.origin, <, 128))
 			{
-				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity);
+				.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity, weaponentity);
 				Send_Notification(NOTIF_ONE, this.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
 			}
 		}

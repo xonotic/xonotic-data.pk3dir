@@ -61,7 +61,7 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 {
 	float i;
 
-	W_DecreaseAmmo(thiswep, actor, pAmmo);
+	W_DecreaseAmmo(thiswep, actor, pAmmo, weaponentity);
 
 	W_SetupShot(actor, weaponentity, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
@@ -74,7 +74,7 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 	}
 
 	for(i = 0; i < pShots; ++i)
-		fireBullet(actor, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
 
 	if(autocvar_g_casings >= 2)
     {
@@ -101,14 +101,14 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 {
 	float r, af;
 
-	Weapon sw = PS(actor).m_switchweapon; // make it not detect weapon changes as reason to abort firing
+	Weapon sw = actor.(weaponentity).m_switchweapon; // make it not detect weapon changes as reason to abort firing
 	int slot = weaponslot(weaponentity);
 	af = ATTACK_FINISHED(actor, slot);
-	PS(actor).m_switchweapon = PS(actor).m_weapon;
+	actor.(weaponentity).m_switchweapon = actor.(weaponentity).m_weapon;
 	ATTACK_FINISHED(actor, slot) = time;
 	r = weapon_prepareattack(thiswep, actor, weaponentity, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
-	if(PS(actor).m_switchweapon == PS(actor).m_weapon)
-		PS(actor).m_switchweapon = sw;
+	if(actor.(weaponentity).m_switchweapon == actor.(weaponentity).m_weapon)
+		actor.(weaponentity).m_switchweapon = sw;
 	if(r)
 	{
 		actor.rifle_bullethail_attackfunc(actor, weaponentity);

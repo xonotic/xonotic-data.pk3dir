@@ -12,7 +12,7 @@ bool forbidWeaponUse(entity player);
 
 void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset);
 
-void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use);
+void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponentity);
 
 void W_DropEvent(.void(Weapon, entity actor) event, entity player, float weapon_type, entity weapon_item);
 

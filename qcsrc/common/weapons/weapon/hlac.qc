@@ -75,7 +75,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	entity missile;
     float spread;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hlac, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hlac, ammo), weaponentity);
 
     spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.misc_bulletcounter);
     spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
@@ -168,7 +168,7 @@ void W_HLAC_Attack2(entity actor, .entity weaponentity)
 // weapon frames
 void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(PS(actor).m_weapon != PS(actor).m_switchweapon) // abort immediately if switching
+	if(actor.(weaponentity).m_weapon != actor.(weaponentity).m_switchweapon) // abort immediately if switching
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
@@ -179,7 +179,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 		if(!thiswep.wr_checkammo1(thiswep, actor))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+			W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
@@ -200,7 +200,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep, entity actor, .entity weaponentity)
 {
     float i;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo), weaponentity);
 
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
         W_HLAC_Attack2(actor, weaponentity);

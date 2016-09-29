@@ -60,7 +60,11 @@ bool spiderbot_frame(entity this, float dt)
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
-	PS(this).m_switchweapon = WEP_Null;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		this.(weaponentity).m_switchweapon = WEP_Null;
+	}
 	this.vehicle_weapon2mode = vehic.vehicle_weapon2mode;
 
 
@@ -260,7 +264,8 @@ bool spiderbot_frame(entity this, float dt)
 			v_forward = normalize(v_forward);
 			v += v_forward * 50;
 
-			fireBullet(this, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
+			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+			fireBullet(this, weaponentity, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
 				autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 
 			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);

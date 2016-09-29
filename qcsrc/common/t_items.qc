@@ -675,6 +675,8 @@ float Item_GiveTo(entity item, entity player)
 	float _switchweapon;
 	float pickedup;
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	// if nothing happens to player, just return without taking the item
 	pickedup = false;
 	_switchweapon = false;
@@ -682,10 +684,10 @@ float Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 	if (player.autoswitch)
-	if (PS(player).m_switchweapon == w_getbestweapon(player))
+	if (player.(weaponentity).m_switchweapon == w_getbestweapon(player))
 		_switchweapon = true;
 
-	if (!(player.weapons & WepSet_FromWeapon(PS(player).m_switchweapon)))
+	if (!(player.weapons & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
 		_switchweapon = true;
 
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
@@ -760,13 +762,13 @@ LABEL(skip)
 	// crude hack to enforce switching weapons
 	if(g_cts && item.itemdef.instanceOfWeaponPickup)
 	{
-		W_SwitchWeapon_Force(player, Weapons_from(item.weapon));
+		W_SwitchWeapon_Force(player, Weapons_from(item.weapon), weaponentity);
 		return 1;
 	}
 
 	if (_switchweapon)
-		if (PS(player).m_switchweapon != w_getbestweapon(player))
-			W_SwitchWeapon_Force(player, w_getbestweapon(player));
+		if (player.(weaponentity).m_switchweapon != w_getbestweapon(player))
+			W_SwitchWeapon_Force(player, w_getbestweapon(player), weaponentity);
 
 	return 1;
 }
@@ -1653,9 +1655,11 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	got = 0;
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	_switchweapon = false;
 	if (e.autoswitch)
-		if (PS(e).m_switchweapon == w_getbestweapon(e))
+		if (e.(weaponentity).m_switchweapon == w_getbestweapon(e))
 			_switchweapon = true;
 
 	e.strength_finished = max(0, e.strength_finished - time);
@@ -1821,10 +1825,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 	else
 		e.superweapons_finished += time;
 
-	if (!(e.weapons & WepSet_FromWeapon(PS(e).m_switchweapon)))
+	if (!(e.weapons & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
 		_switchweapon = true;
 	if(_switchweapon)
-		W_SwitchWeapon_Force(e, w_getbestweapon(e));
+		W_SwitchWeapon_Force(e, w_getbestweapon(e), weaponentity);
 
 	return got;
 }

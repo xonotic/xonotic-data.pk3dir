@@ -2081,10 +2081,6 @@ void EndFrame()
 	{
 		antilag_record(it, it, altime);
 	});
-	FOREACH_CLIENT(PS(it), {
-		PlayerState s = PS(it);
-		s.ps_push(s, it);
-	});
 	systems_update();
 	IL_ENDFRAME();
 }

@@ -13,3 +13,4 @@
 #include "miscfunctions.qh"
 
 #include <common/ent_cs.qh>
+#include <common/wepent.qh>

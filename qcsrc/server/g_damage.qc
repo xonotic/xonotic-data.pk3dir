@@ -58,13 +58,15 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	if(targ != attacker) // not for suicides
 	if(g_weaponarena_random)
 	{
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		Weapon culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit) culprit = PS(attacker).m_weapon;
-		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = PS(attacker).m_weapon;
+		if(!culprit) culprit = attacker.(weaponentity).m_weapon;
+		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = attacker.(weaponentity).m_weapon;
 
 		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
@@ -97,8 +99,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		}
 
 		// after a frag, choose another random weapon set
-		if (!(attacker.weapons & WepSet_FromWeapon(PS(attacker).m_weapon)))
-			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
+		if (!(attacker.weapons & WepSet_FromWeapon(attacker.(weaponentity).m_weapon)))
+			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker), weaponentity);
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
@@ -115,7 +117,9 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 string AppendItemcodes(string s, entity player)
 {
-	int w = PS(player).m_weapon.m_id;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
+	int w = player.(weaponentity).m_weapon.m_id;
 	//if(w == 0)
 	//	w = player.switchweapon;
 	if(w == 0)

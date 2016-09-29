@@ -6,11 +6,13 @@ MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		if(frag_target.weapons & WepSet_FromWeapon(it))
-		if(PS(frag_target).m_switchweapon != it)
+		if(frag_target.(weaponentity).m_switchweapon != it)
 		if(W_IsWeaponThrowable(frag_target, it.m_id))
-			W_ThrowNewWeapon(frag_target, it.m_id, false, CENTER_OR_VIEWOFS(frag_target), randomvec() * 175 + '0 0 325');
+			W_ThrowNewWeapon(frag_target, it.m_id, false, CENTER_OR_VIEWOFS(frag_target), randomvec() * 175 + '0 0 325', weaponentity);
 	));
 
 	return true;

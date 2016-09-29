@@ -193,7 +193,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(actor, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
 
 	// do this now, as goodhits is disabled below
 	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
@@ -212,7 +212,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		W_RocketMinsta_Explosion(actor, trace_endpos);
 
-	W_DecreaseAmmo(thiswep, actor, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
+	W_DecreaseAmmo(thiswep, actor, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)), weaponentity);
 }
 
 void W_RocketMinsta_Laser_Explode (entity this)
@@ -253,10 +253,10 @@ void W_RocketMinsta_Attack2(entity actor, .entity weaponentity)
 	float spread = autocvar_g_rm_laser_spread;
 	float rndspread = autocvar_g_rm_laser_spread_random;
 
-	Weapon w = PS(actor).m_weapon;
-	PS(actor).m_weapon = WEP_ELECTRO;
+	Weapon w = actor.(weaponentity).m_weapon;
+	actor.(weaponentity).m_weapon = WEP_ELECTRO;
 	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage);
-	PS(actor).m_weapon = w;
+	actor.(weaponentity).m_weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -307,10 +307,10 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 	float counter = 0;
 	float total = 1;
 
-	Weapon w = PS(actor).m_weapon;
-	PS(actor).m_weapon = WEP_ELECTRO;
+	Weapon w = actor.(weaponentity).m_weapon;
+	actor.(weaponentity).m_weapon = WEP_ELECTRO;
 	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage);
-	PS(actor).m_weapon = w;
+	actor.(weaponentity).m_weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -404,12 +404,12 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 
             // decrease ammo for the laser?
             if(WEP_CVAR_SEC(vaporizer, ammo))
-                W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(vaporizer, ammo));
+                W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(vaporizer, ammo), weaponentity);
 
             // ugly instagib hack to reuse the fire mode of the laser
             makevectors(actor.v_angle);
-            Weapon oldwep = PS(actor).m_weapon; // we can't avoid this hack
-            PS(actor).m_weapon = WEP_BLASTER;
+            Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
+            actor.(weaponentity).m_weapon = WEP_BLASTER;
             W_Blaster_Attack(
                 actor,
                 weaponentity,
@@ -424,7 +424,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
                 WEP_CVAR_SEC(vaporizer, delay),
                 WEP_CVAR_SEC(vaporizer, lifetime)
             );
-            PS(actor).m_weapon = oldwep;
+            actor.(weaponentity).m_weapon = oldwep;
 
             // now do normal refire
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);

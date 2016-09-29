@@ -59,9 +59,7 @@ REGISTER_STAT(KH_KEYS, int)
 REGISTER_STAT(SWITCHWEAPON, int)
 /** weapon currently being switched to (is copied from switchweapon once switch is possible) */
 REGISTER_STAT(SWITCHINGWEAPON, int)
-REGISTER_STAT(WEAPON_NEXTTHINK, float)
 #ifdef SVQC
-SPECTATE_COPYFIELD(_STAT(WEAPON_NEXTTHINK))
 float W_WeaponRateFactor(entity this);
 #endif
 REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor(this))

@@ -13,7 +13,7 @@ const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
 const int MONSTER_SIZE_QUAKE = 8192;
 
 // entity properties of monsterinfo:
-.bool(int, entity actor, entity targ) monster_attackfunc;
+.bool(int, entity actor, entity targ, .entity weaponentity) monster_attackfunc;
 
 // animations
 .vector anim_blockend;

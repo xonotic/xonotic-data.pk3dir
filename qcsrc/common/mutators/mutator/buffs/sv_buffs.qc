@@ -841,9 +841,11 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		});
 	}
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	if(player.buffs & BUFF_AMMO.m_itemid)
 	if(player.clip_size)
-		player.clip_load = player.(weapon_load[PS(player).m_switchweapon.m_id]) = player.clip_size;
+		player.clip_load = player.(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.clip_size;
 
 	if((player.buffs & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
 	if(player.alpha != autocvar_g_buffs_invisible_alpha)
@@ -872,7 +874,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 			if(player.clip_load)
 				player.buff_ammo_prev_clipload = player.clip_load;
-			player.clip_load = player.(weapon_load[PS(player).m_switchweapon.m_id]) = player.clip_size;
+			player.clip_load = player.(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.clip_size;
 		}
 
 		BUFF_ONREM(BUFF_AMMO)

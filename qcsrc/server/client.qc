@@ -23,6 +23,7 @@
 #include "bot/api.qh"
 
 #include "../common/ent_cs.qh"
+#include "../common/wepent.qh"
 #include <common/state.qh>
 
 #include <common/effects/qc/globalsound.qh>
@@ -342,10 +343,10 @@ void PutObserverInServer(entity this)
 	this.weapons = '0 0 0';
 	this.drawonlytoclient = this;
 
-	this.weaponname = "";
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
+		this.weaponentities[slot].weaponname = "";
 		this.weaponentities[slot] = NULL;
 	}
 	this.exteriorweaponentity = NULL;
@@ -691,11 +692,18 @@ void PutClientInServer(entity this)
 			delete(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
-		PS(this).m_switchweapon = w_getbestweapon(this);
-		this.cnt = -1; // W_LastWeapon will not complain
-		PS(this).m_weapon = WEP_Null;
-		this.weaponname = "";
-		PS(this).m_switchingweapon = WEP_Null;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(slot == 0)
+				this.(weaponentity).m_switchweapon = w_getbestweapon(this);
+			else
+				this.(weaponentity).m_switchweapon = WEP_Null;
+			this.(weaponentity).weaponname = "";
+			this.(weaponentity).m_switchingweapon = WEP_Null;
+		}
+
+		this.cnt = -1; // TODO
 
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
@@ -2421,13 +2429,11 @@ void PlayerPreThink (entity this)
 		{
 			this.items &= ~this.items_added;
 
-			//for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			//{
-				//.entity weaponentity = weaponentities[slot];
-				//W_WeaponFrame(this, weaponentity);
-			//}
-			.entity weaponentity = weaponentities[0]; // TODO
-			W_WeaponFrame(this, weaponentity);
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				W_WeaponFrame(this, weaponentity);
+			}
 
 			this.items_added = 0;
 			if (this.items & ITEM_Jetpack.m_itemid && (this.items & ITEM_JetpackRegen.m_itemid || this.ammo_fuel >= 0.01))
@@ -2465,11 +2471,12 @@ void PlayerPreThink (entity this)
 	}
 
 	// WEAPONTODO: Add weapon request for this
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if (!zoomstate_set) {
 		SetZoomState(this,
 			PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this)
-			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_VORTEX)
-			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
+			|| (PHYS_INPUT_BUTTON_ATCK2(this) && this.(weaponentity).m_weapon == WEP_VORTEX)
+			|| (PHYS_INPUT_BUTTON_ATCK2(this) && this.(weaponentity).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
 		);
     }
 
@@ -2493,7 +2500,7 @@ void PlayerPreThink (entity this)
 
 	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	if (PS(this).m_weapon == WEP_Null)
+	if (this.(weaponentity).m_weapon == WEP_Null)
 		this.clip_load = this.clip_size = 0;
 }
 

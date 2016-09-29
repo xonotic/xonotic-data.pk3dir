@@ -88,9 +88,8 @@ void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher)
 	M_Wyvern_Attack_Fireball_Explode(this);
 }
 
-bool M_Wyvern_Attack(int attack_type, entity actor, entity targ)
+bool M_Wyvern_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:

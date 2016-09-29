@@ -126,17 +126,17 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), NULL, NULL, WEP_CVAR(minelayer, force), this.projectiledeathtype, directhitentity);
 
-	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
 	{
 		entity own = this.realowner;
 		Weapon w = WEP_MINE_LAYER;
 		if(!w.wr_checkammo1(w, own))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
-			.entity weaponentity = this.weaponentity_fld;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
-			PS(own).m_switchweapon = w_getbestweapon(own);
+			own.(weaponentity).m_switchweapon = w_getbestweapon(own);
 		}
 	}
 	this.realowner.minelayer_mines -= 1;
@@ -158,17 +158,17 @@ void W_MineLayer_DoRemoteExplode(entity this)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, NULL);
 
-	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
 	{
 		entity own = this.realowner;
 		Weapon w = WEP_MINE_LAYER;
 		if(!w.wr_checkammo1(w, own))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
-			.entity weaponentity = this.weaponentity_fld;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
-			PS(own).m_switchweapon = w_getbestweapon(own);
+			own.(weaponentity).m_switchweapon = w_getbestweapon(own);
 		}
 	}
 	this.realowner.minelayer_mines -= 1;
@@ -273,7 +273,8 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// remote detonation
-	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
 	if(!IS_DEAD(this.realowner))
 	if(this.minelayer_detonate)
 		W_MineLayer_RemoteExplode(this);
@@ -336,7 +337,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		}
 	}
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);

@@ -22,12 +22,12 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	if((!thiswep.wr_checkammo1(thiswep, actor) && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (!(actor.items & IT_SUPERWEAPON) && !(actor.items & IT_UNLIMITED_SUPERWEAPONS)))
 	{
-		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 
-	W_DecreaseAmmo(WEP_HMG, actor, WEP_CVAR(hmg, ammo));
+	W_DecreaseAmmo(WEP_HMG, actor, WEP_CVAR(hmg, ammo), weaponentity);
 
 	W_SetupShot (actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
@@ -38,7 +38,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 	}
 
 	float hmg_spread = bound(WEP_CVAR(hmg, spread_min), WEP_CVAR(hmg, spread_min) + (WEP_CVAR(hmg, spread_add) * actor.misc_bulletcounter), WEP_CVAR(hmg, spread_max));
-	fireBullet(actor, w_shotorg, w_shotdir, hmg_spread, WEP_CVAR(hmg, solidpenetration), WEP_CVAR(hmg, damage), WEP_CVAR(hmg, force), WEP_HMG.m_id, 0);
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, hmg_spread, WEP_CVAR(hmg, solidpenetration), WEP_CVAR(hmg, damage), WEP_CVAR(hmg, force), WEP_HMG.m_id, 0);
 
 	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 

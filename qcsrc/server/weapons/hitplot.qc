@@ -73,7 +73,8 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 			antilag_takeback(trace_ent, store, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
 			antilag_restore(trace_ent, store);
-			fputs(player.hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(PS(player).m_switchweapon.m_id), "\n"));
+			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+			fputs(player.hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(player.(weaponentity).m_switchweapon.m_id), "\n"));
 			//print(strcat(ftos(hitplot_x), " ", ftos(hitplot_y), " ", ftos(hitplot_z), "\n"));
 		}
 	}

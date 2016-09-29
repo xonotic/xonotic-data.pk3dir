@@ -196,8 +196,8 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
         {
             case 0: // switch to last used weapon
             {
-                if(PS(actor).m_switchweapon == WEP_BLASTER) // don't do this if already switching
-                    W_LastWeapon(actor);
+                if(actor.(weaponentity).m_switchweapon == WEP_BLASTER) // don't do this if already switching
+                    W_LastWeapon(actor, weaponentity);
                 break;
             }
 

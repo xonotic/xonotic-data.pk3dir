@@ -148,7 +148,8 @@ MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
 
 	// WEAPONTODO
 	float xyspeed = vlen(vec2(player.velocity));
-	if (PS(player).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
+    .entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	if (player.(weaponentity).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
 	{
 		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
 	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
@@ -193,7 +194,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(actor, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX.m_id);
+	FireRailgunBullet(actor, weaponentity, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX.m_id);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
@@ -208,7 +209,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
 
-	W_DecreaseAmmo(thiswep, actor, myammo);
+	W_DecreaseAmmo(thiswep, actor, myammo, weaponentity);
 }
 
 .float vortex_chargepool_pauseregen_finished;

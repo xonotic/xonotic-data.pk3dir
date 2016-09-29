@@ -139,7 +139,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hagar, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hagar, ammo), weaponentity);
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
@@ -183,7 +183,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo), weaponentity);
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
@@ -334,7 +334,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 			{
 				// if we pressed primary fire while loading, unload all rockets and abort
 				actor.(weaponentity).state = WS_READY;
-				W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo) * actor.hagar_load * -1); // give back ammo
+				W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo) * actor.hagar_load * -1, weaponentity); // give back ammo
 				actor.hagar_load = 0;
 				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
 
@@ -352,7 +352,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 			{
 				if(!actor.hagar_loadblock && actor.hagar_loadstep < time)
 				{
-					W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo));
+					W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo), weaponentity);
 					actor.(weaponentity).state = WS_INUSE;
 					actor.hagar_load += 1;
 					sound(actor, CH_WEAPON_B, SND_HAGAR_LOAD, VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
@@ -408,7 +408,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
-			W_SwitchToOtherWeapon(actor);
+			W_SwitchToOtherWeapon(actor, weaponentity);
 			return;
 		}
 	}
@@ -425,7 +425,7 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 	if(!thiswep.wr_checkammo1(thiswep, actor))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -490,7 +490,8 @@ METHOD(Hagar, wr_setup, void(entity thiswep, entity actor))
 
     if(actor.hagar_load)
     {
-        W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo) * actor.hagar_load * -1); // give back ammo if necessary
+    	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+        W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo) * actor.hagar_load * -1, weaponentity); // give back ammo if necessary
         actor.hagar_load = 0;
     }
 }

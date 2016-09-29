@@ -339,16 +339,18 @@ bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshott
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	shotspeed *= W_WeaponSpeedFactor(this);
 	shotspeedupward *= W_WeaponSpeedFactor(this);
 	if (!shotspeed)
 	{
-		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " shotspeed is zero!");
+		LOG_TRACE("bot_aim: WARNING: weapon ", this.(weaponentity).m_weapon.m_name, " shotspeed is zero!");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " maxshottime is zero!");
+		LOG_TRACE("bot_aim: WARNING: weapon ", this.(weaponentity).m_weapon.m_name, " maxshottime is zero!");
 		maxshottime = 1;
 	}
 	makevectors(this.v_angle);
