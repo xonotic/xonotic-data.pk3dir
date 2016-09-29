@@ -281,6 +281,8 @@ void viewmodel_animate(entity this)
 .float weapon_eta_last;
 .float weapon_switchdelay;
 
+.string name_last;
+
 void viewmodel_draw(entity this)
 {
 	if(!this.activeweapon || !autocvar_r_drawviewmodel)
@@ -294,7 +296,7 @@ void viewmodel_draw(entity this)
 	wasinvehicle = invehicle;
 	Weapon wep = this.activeweapon;
 	int c = entcs_GetClientColors(current_player);
-	vector g = weaponentity_glowmod(wep, NULL, c);
+	vector g = weaponentity_glowmod(wep, NULL, c, this);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)
@@ -309,12 +311,11 @@ void viewmodel_draw(entity this)
 		CSQCModel_Effects_Apply(e);
 	}
 	{
-		static string name_last;
 		string name = wep.mdl;
-		bool swap = name != name_last;
+		bool swap = name != this.name_last;
 		// if (swap)
 		{
-			name_last = name;
+			this.name_last = name;
 			CL_WeaponEntity_SetModel(this, name, swap);
 			this.viewmodel_origin = this.origin;
 			this.viewmodel_angles = this.angles;

@@ -2445,8 +2445,12 @@ void PlayerPreThink (entity this)
 
 		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
-		if (WEP_CVAR(vortex, charge_rot_rate) && this.vortex_charge > WEP_CVAR(vortex, charge_limit) && this.vortex_charge_rottime < time)
-			this.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		}
 
 		if (frametime) player_anim(this);
 

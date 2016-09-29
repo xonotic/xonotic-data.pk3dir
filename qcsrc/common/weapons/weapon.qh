@@ -118,7 +118,7 @@ CLASS(Weapon, Object)
         return false;
     }
     /** (CLIENT) weapon specific glow */
-    METHOD(Weapon, wr_glow, vector(Weapon this, entity actor)) { return '0 0 0'; }
+    METHOD(Weapon, wr_glow, vector(Weapon this, entity actor, entity wepent)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
     METHOD(Weapon, wr_drop, void(Weapon this, entity actor)) {}
     /** (SERVER) a weapon is picked up */

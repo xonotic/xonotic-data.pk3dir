@@ -3,6 +3,8 @@
 REGISTER_NET_LINKED(ENT_CLIENT_WEPENT)
 REGISTER_NET_TEMP(CLIENT_WEPENT)
 
+.float vortex_charge;
+
 #ifdef SVQC
 
 	bool wepent_send(entity this, entity to, int sf);
