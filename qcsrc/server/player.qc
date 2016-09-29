@@ -565,8 +565,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		Weapon wep = this.(weaponentity).m_weapon;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			.entity weaponentity = weaponentities[slot];
-			wep.wr_playerdeath(wep, this, weaponentity);
+			.entity wepent = weaponentities[slot];
+			wep.wr_playerdeath(wep, this, wepent);
 		}
 
 		RemoveGrapplingHooks(this);
@@ -591,8 +591,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);
 		// throw a weapon
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(weaponentity).m_switchweapon.m_id, weaponentity);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity wepent = weaponentities[slot];
+			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(wepent).m_switchweapon.m_id, wepent);
+		}
 
 		// become fully visible
 		this.alpha = default_player_alpha;

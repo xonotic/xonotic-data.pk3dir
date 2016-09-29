@@ -701,7 +701,7 @@ void PutClientInServer(entity this)
 				this.(weaponentity).m_switchweapon = WEP_Null;
 			this.(weaponentity).weaponname = "";
 			this.(weaponentity).m_switchingweapon = WEP_Null;
-			this.cnt = -1;
+			this.(weaponentity).cnt = -1;
 		}
 
 		if (!warmup_stage && !this.alivetime)
