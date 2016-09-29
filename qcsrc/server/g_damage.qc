@@ -123,7 +123,7 @@ string AppendItemcodes(string s, entity player)
 	//if(w == 0)
 	//	w = player.switchweapon;
 	if(w == 0)
-		w = player.cnt; // previous weapon!
+		w = player.(weaponentity).cnt; // previous weapon!
 	s = strcat(s, ftos(w));
 	if(time < player.strength_finished)
 		s = strcat(s, "S");

@@ -316,7 +316,7 @@ void W_PreviousWeapon(entity this, float list, .entity weaponentity)
 // previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon(entity this, .entity weaponentity)
 {
-	Weapon wep = Weapons_from(this.cnt);
+	Weapon wep = Weapons_from(this.(weaponentity).cnt);
 	if (client_hasweapon(this, wep, true, false))
 		W_SwitchWeapon(this, wep, weaponentity);
 	else
