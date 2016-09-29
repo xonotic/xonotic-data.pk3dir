@@ -37,10 +37,10 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 		actor.punchangle_y = random () - 0.5;
 	}
 
-	float hmg_spread = bound(WEP_CVAR(hmg, spread_min), WEP_CVAR(hmg, spread_min) + (WEP_CVAR(hmg, spread_add) * actor.misc_bulletcounter), WEP_CVAR(hmg, spread_max));
+	float hmg_spread = bound(WEP_CVAR(hmg, spread_min), WEP_CVAR(hmg, spread_min) + (WEP_CVAR(hmg, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(hmg, spread_max));
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, hmg_spread, WEP_CVAR(hmg, solidpenetration), WEP_CVAR(hmg, damage), WEP_CVAR(hmg, force), WEP_HMG.m_id, 0);
 
-	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
+	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -75,7 +75,7 @@ METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity wea
         if (fire & 1)
         if (weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
         {
-            actor.misc_bulletcounter = 0;
+            actor.(weaponentity).misc_bulletcounter = 0;
             W_HeavyMachineGun_Attack_Auto(thiswep, actor, weaponentity, fire);
         }
     }

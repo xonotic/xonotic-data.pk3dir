@@ -77,7 +77,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hlac, ammo), weaponentity);
 
-    spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.misc_bulletcounter);
+    spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.(weaponentity).misc_bulletcounter);
     spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
     if(actor.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
@@ -187,7 +187,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 		int slot = weaponslot(weaponentity);
 		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor(actor);
 		W_HLAC_Attack(WEP_HLAC, actor, weaponentity);
-		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
+		actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
 	else
@@ -224,7 +224,7 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hlac, refire)))
         {
-            actor.misc_bulletcounter = 0;
+            actor.(weaponentity).misc_bulletcounter = 0;
             W_HLAC_Attack(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
         }

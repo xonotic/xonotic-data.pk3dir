@@ -115,14 +115,14 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	);
 
 	Weapon thiswep = WEP_DEVASTATOR;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		if(this.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = WEP_DEVASTATOR.m_id;
-			int slot = 0; // TODO: unhardcode
+			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(this.realowner, slot) = time;
 			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner);
 		}
@@ -283,9 +283,9 @@ void W_Devastator_Think(entity this)
 		this.velocity = this.velocity + v_forward * min(WEP_CVAR(devastator, speedaccel) * W_WeaponSpeedFactor(this.realowner) * frametime, velspeed);
 
 	// laser guided, or remote detonation
-	if(PS(this.realowner).m_weapon == WEP_DEVASTATOR)
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).m_weapon == WEP_DEVASTATOR)
 	{
-		.entity weaponentity = this.weaponentity_fld;
 		int slot = weaponslot(weaponentity);
 
 		if(this == this.realowner.(weaponentity).lastrocket)

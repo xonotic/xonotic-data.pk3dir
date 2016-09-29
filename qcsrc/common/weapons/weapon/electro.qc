@@ -473,12 +473,12 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 
 void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(actor.electro_count > 1)
+	if(actor.(weaponentity).electro_count > 1)
 	if(PHYS_INPUT_BUTTON_ATCK2(actor))
 	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO, actor, weaponentity);
-		actor.electro_count -= 1;
+		actor.(weaponentity).electro_count -= 1;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
@@ -543,13 +543,13 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     }
     else if(fire & 2)
     {
-        if(time >= actor.electro_secondarytime)
+        if(time >= actor.(weaponentity).electro_secondarytime)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
         {
             W_Electro_Attack_Orb(thiswep, actor, weaponentity);
-            actor.electro_count = WEP_CVAR_SEC(electro, count);
+            actor.(weaponentity).electro_count = WEP_CVAR_SEC(electro, count);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
-            actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor);
+            actor.(weaponentity).electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor);
         }
     }
 }
@@ -576,7 +576,11 @@ METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Electro, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.electro_secondarytime = time;
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).electro_secondarytime = time;
+    }
 }
 METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
