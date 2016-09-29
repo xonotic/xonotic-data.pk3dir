@@ -523,7 +523,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 
 	if (this.movedir.x >= 0)
 	{
-		int algn = STAT(GUNALIGN, this.owner);
+		//int algn = STAT(GUNALIGN, this.owner);
+		int algn = W_GunAlign(this, STAT(GUNALIGN, this.owner));
+		this.m_gunalign = algn;
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;

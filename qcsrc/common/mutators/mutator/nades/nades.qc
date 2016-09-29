@@ -736,7 +736,7 @@ void nade_boom(entity this)
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 	{
-		RemoveGrapplingHook(it.realowner);
+		RemoveHook(it);
 	});
 
 	delete(this);
@@ -785,7 +785,7 @@ void nade_touch(entity this, entity toucher)
 	{
 		IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 		{
-			RemoveGrapplingHook(it.realowner);
+			RemoveHook(it);
 		});
 		delete(this);
 		return;

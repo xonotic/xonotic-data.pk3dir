@@ -481,8 +481,12 @@ void Portal_Think(entity this)
 		if(it != o || time >= this.portal_activatetime)
 			Portal_Think_TryTeleportPlayer(this, it, g);
 
-		if(it.hook)
-			Portal_Think_TryTeleportPlayer(this, it.hook, g);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook)
+	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g);
+	    }
 	));
 	this.solid = SOLID_TRIGGER;
 	this.aiment = o;

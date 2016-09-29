@@ -60,7 +60,6 @@ vector CL_Weapon_GetShotOrg(int wpn)
 	return ret;
 }
 
-..entity weaponentity_fld;
 .float m_alpha;
 .string w_weaponname;
 .int w_dmg;
@@ -317,7 +316,7 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 		}
 		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor(actor);
 	}
-	actor.(weaponentity).bulletcounter += 1;
+	this.bulletcounter += 1;
 	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, slot)), "\n");
 }
 

@@ -4,6 +4,8 @@ float internalteam;
 float weaponswapping;
 entity weapon_dropevent_item;
 
+..entity weaponentity_fld;
+
 void CL_SpawnWeaponentity(entity e, .entity weaponentity);
 
 vector CL_Weapon_GetShotOrg(float wpn);

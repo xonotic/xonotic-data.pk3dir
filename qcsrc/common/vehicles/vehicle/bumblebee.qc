@@ -309,7 +309,7 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	player.vehicle_energy 	= vehic.vehicle_energy;
 	UNSET_ONGROUND(player);
 
-	RemoveGrapplingHook(player);
+	RemoveGrapplingHooks(player);
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{

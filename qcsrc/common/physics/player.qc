@@ -89,8 +89,15 @@ void PM_ClientMovement_UpdateStatus(entity this)
 
 	// set crouched
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-	if(this.hook && !wasfreed(this.hook))
-		do_crouch = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wep = viewmodels[slot];
+		if(wep.hook && !wasfreed(wep.hook))
+		{
+			do_crouch = false;
+			break; // don't bother checking the others
+		}
+	}
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		do_crouch = false;
 	if(hud != HUD_NORMAL)
@@ -600,7 +607,12 @@ void PM_check_hitground(entity this)
     this.wasFlying = false;
     if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
     if (time < this.ladder_time) return;
-    if (this.hook) return;
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	if(this.(weaponentity).hook)
+    		return;
+    }
     this.nextstep = time + 0.3 + random() * 0.1;
     trace_dphitq3surfaceflags = 0;
     tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);

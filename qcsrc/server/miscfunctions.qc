@@ -1076,7 +1076,7 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 		if(this.classname == "nade")
 			return false; // no checks here
 		else if(this.classname == "grapplinghook")
-			RemoveGrapplingHook(this.realowner);
+			RemoveHook(this);
 		else if(this.classname == "spike")
 		{
 			W_Crylink_Dequeue(this);

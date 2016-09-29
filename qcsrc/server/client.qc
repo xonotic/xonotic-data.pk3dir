@@ -257,7 +257,7 @@ void PutObserverInServer(entity this)
         this.view_ofs = '0 0 0';
     }
 
-    RemoveGrapplingHook(this);
+    RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
 	Unfreeze(this);
 	SetSpectatee(this, NULL);
@@ -334,7 +334,6 @@ void PutObserverInServer(entity this)
 	this.istypefrag = 0;
 	setthink(this, func_null);
 	this.nextthink = 0;
-	this.hook_time = 0;
 	this.deadflag = DEAD_NO;
 	this.crouch = false;
 	this.revival_time = 0;
@@ -346,6 +345,7 @@ void PutObserverInServer(entity this)
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
+		this.weaponentities[slot].hook_time = 0;
 		this.weaponentities[slot].weaponname = "";
 		this.weaponentities[slot] = NULL;
 	}
@@ -695,10 +695,10 @@ void PutClientInServer(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			//if(slot == 0)
+			if(slot == 0)
 				this.(weaponentity).m_switchweapon = w_getbestweapon(this);
-			//else
-				//this.(weaponentity).m_switchweapon = WEP_Null;
+			else
+				this.(weaponentity).m_switchweapon = WEP_Null;
 			this.(weaponentity).weaponname = "";
 			this.(weaponentity).m_switchingweapon = WEP_Null;
 			this.cnt = -1;
@@ -1254,7 +1254,7 @@ void ClientDisconnect(entity this)
 
 	Unfreeze(this);
 
-	RemoveGrapplingHook(this);
+	RemoveGrapplingHooks(this);
 
 	// Here, everything has been done that requires this player to be a client.
 

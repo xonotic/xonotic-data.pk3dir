@@ -561,9 +561,17 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	Ice_Think(ice);
 
-	RemoveGrapplingHook(targ);
+	RemoveGrapplingHooks(targ);
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == targ)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	// add waypoint
 	if(show_waypoint)
@@ -590,7 +598,15 @@ void Unfreeze (entity targ)
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == targ)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	// remove the ice block
 	if(targ.iceblock)
@@ -616,10 +632,14 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	attacker_save = attacker;
 
 	if(IS_PLAYER(targ))
-		if(targ.hook)
-			if(targ.hook.aiment)
-				if(targ.hook.aiment == attacker)
-					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(targ.(weaponentity).hook && targ.(weaponentity).hook.aiment == attacker)
+	    		RemoveHook(targ.(weaponentity).hook);
+	    }
+	}
 
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))

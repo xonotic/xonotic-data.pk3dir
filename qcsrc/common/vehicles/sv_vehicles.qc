@@ -947,7 +947,7 @@ void vehicles_enter(entity pl, entity veh)
 	}
 	else return;
 
-	RemoveGrapplingHook(pl);
+	RemoveGrapplingHooks(pl);
 
 	veh.vehicle_ammo1 = 0;
 	veh.vehicle_ammo2 = 0;
@@ -1109,7 +1109,15 @@ void vehicles_spawn(entity this)
 	if(this.vehicle_controller)
 		this.team = this.vehicle_controller.team;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == this, RemoveGrapplingHook(it));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == this)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	vehicles_reset_colors(this);
 

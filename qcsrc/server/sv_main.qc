@@ -99,7 +99,17 @@ void CreatureFrame_FallDamage(entity this)
 	{
 		// check for falling damage
 		float velocity_len = vlen(this.velocity);
-		if(!this.hook.state)
+		bool have_hook = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(this.(weaponentity).hook && this.(weaponentity).hook.state)
+	    	{
+	    		have_hook = true;
+	    		break;
+	    	}
+	    }
+		if(!have_hook)
 		{
 			float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 			if (IS_DEAD(this))

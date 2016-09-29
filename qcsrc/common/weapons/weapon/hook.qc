@@ -191,19 +191,19 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     if (fire & 1) {
-        if(!actor.hook)
-        if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
-        if(time > actor.hook_refire)
+        if(!actor.(weaponentity).hook)
+        if(!(actor.(weaponentity).hook_state & HOOK_WAITING_FOR_RELEASE))
+        if(time > actor.(weaponentity).hook_refire)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, -1))
         {
             W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(hook, ammo), weaponentity);
-            actor.hook_state |= HOOK_FIRING;
-            actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
+            actor.(weaponentity).hook_state |= HOOK_FIRING;
+            actor.(weaponentity).hook_state |= HOOK_WAITING_FOR_RELEASE;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
         }
     } else {
-        actor.hook_state |= HOOK_REMOVING;
-        actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
+        actor.(weaponentity).hook_state |= HOOK_REMOVING;
+        actor.(weaponentity).hook_state &= ~HOOK_WAITING_FOR_RELEASE;
     }
 
     if(fire & 2)
@@ -215,42 +215,42 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         }
     }
 
-    if(actor.hook)
+    if(actor.(weaponentity).hook)
     {
         // if hooked, no bombs, and increase the timer
-        actor.hook_refire = max(actor.hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor(actor));
+        actor.(weaponentity).hook_refire = max(actor.(weaponentity).hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor(actor));
 
         // hook also inhibits health regeneration, but only for 1 second
         if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
             actor.pauseregen_finished = max(actor.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
     }
 
-    if(actor.hook && actor.hook.state == 1)
+    if(actor.(weaponentity).hook && actor.(weaponentity).hook.state == 1)
     {
         float hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);
         if(hooked_time_max > 0)
         {
-            if( time > actor.hook_time_hooked + hooked_time_max )
-                actor.hook_state |= HOOK_REMOVING;
+            if( time > actor.(weaponentity).hook_time_hooked + hooked_time_max )
+                actor.(weaponentity).hook_state |= HOOK_REMOVING;
         }
 
         float hooked_fuel = thiswep.ammo_factor * WEP_CVAR_PRI(hook, hooked_ammo);
         if(hooked_fuel > 0)
         {
-            if( time > actor.hook_time_fueldecrease )
+            if( time > actor.(weaponentity).hook_time_fueldecrease )
             {
                 if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
                 {
-                    if( actor.ammo_fuel >= (time - actor.hook_time_fueldecrease) * hooked_fuel )
+                    if( actor.ammo_fuel >= (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel )
                     {
-                        W_DecreaseAmmo(thiswep, actor, (time - actor.hook_time_fueldecrease) * hooked_fuel, weaponentity);
-                        actor.hook_time_fueldecrease = time;
+                        W_DecreaseAmmo(thiswep, actor, (time - actor.(weaponentity).hook_time_fueldecrease) * hooked_fuel, weaponentity);
+                        actor.(weaponentity).hook_time_fueldecrease = time;
                         // decrease next frame again
                     }
                     else
                     {
                         actor.ammo_fuel = 0;
-                        actor.hook_state |= HOOK_REMOVING;
+                        actor.(weaponentity).hook_state |= HOOK_REMOVING;
                         W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
                     }
                 }
@@ -259,38 +259,46 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     }
     else
     {
-        actor.hook_time_hooked = time;
-        actor.hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
+        actor.(weaponentity).hook_time_hooked = time;
+        actor.(weaponentity).hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
     }
 
-    actor.hook_state = BITSET(actor.hook_state, HOOK_PULLING, (!PHYS_INPUT_BUTTON_CROUCH(actor) || !autocvar_g_balance_grapplehook_crouchslide));
+    actor.(weaponentity).hook_state = BITSET(actor.(weaponentity).hook_state, HOOK_PULLING, (!PHYS_INPUT_BUTTON_CROUCH(actor) || !autocvar_g_balance_grapplehook_crouchslide));
 
-    if (actor.hook_state & HOOK_FIRING)
+    if (actor.(weaponentity).hook_state & HOOK_FIRING)
     {
-        if (actor.hook)
-            RemoveGrapplingHook(actor);
-        FireGrapplingHook(actor);
-        actor.hook_state &= ~HOOK_FIRING;
-        actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor(actor));
+        if (actor.(weaponentity).hook)
+            RemoveHook(actor.(weaponentity).hook);
+        FireGrapplingHook(actor, weaponentity);
+        actor.(weaponentity).hook_state &= ~HOOK_FIRING;
+        actor.(weaponentity).hook_refire = max(actor.(weaponentity).hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor(actor));
     }
-    else if (actor.hook_state & HOOK_REMOVING)
+    else if (actor.(weaponentity).hook_state & HOOK_REMOVING)
     {
-        if (actor.hook)
-            RemoveGrapplingHook(actor);
-        actor.hook_state &= ~HOOK_REMOVING;
+        if (actor.(weaponentity).hook)
+            RemoveHook(actor.(weaponentity).hook);
+        actor.(weaponentity).hook_state &= ~HOOK_REMOVING;
     }
 }
 METHOD(Hook, wr_setup, void(entity thiswep, entity actor))
 {
-    actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).hook_state &= ~HOOK_WAITING_FOR_RELEASE;
+    }
 }
 METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor))
 {
     if (!thiswep.ammo_factor) return true;
-    if(actor.hook)
-        return actor.ammo_fuel > 0;
-    else
-        return actor.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	if(actor.(weaponentity).hook)
+    		return actor.ammo_fuel > 0;
+    }
+
+    return actor.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
 }
 METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor))
 {
@@ -299,9 +307,13 @@ METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor))
 }
 METHOD(Hook, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    RemoveGrapplingHook(actor);
-    actor.hook_time = 0;
-    actor.hook_refire = time;
+    RemoveGrapplingHooks(actor);
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).hook_time = 0;
+    	actor.(weaponentity).hook_refire = time;
+    }
 }
 METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 {
@@ -510,10 +522,12 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 	if(sf & 1)
 	{
 		int myowner = ReadByte();
+		int slot = ReadByte();
 		this.owner = playerslots[myowner - 1];
 		this.sv_entnum = myowner;
-		if(csqcplayer && myowner == player_localentnum)
-			csqcplayer.hook = this;
+		if(myowner == player_localentnum)
+			viewmodels[slot].hook = this;
+		this.cnt = slot;
 		switch(this.HookType)
 		{
 			default:

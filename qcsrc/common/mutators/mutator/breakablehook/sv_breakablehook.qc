@@ -23,7 +23,7 @@ MUTATOR_HOOKFUNCTION(breakablehook, PlayerDamage_Calculate)
 		if(DIFF_TEAM(frag_attacker, frag_target.realowner))
 		{
 			Damage (frag_target.realowner, frag_attacker, frag_attacker, 5, WEP_HOOK.m_id | HITTYPE_SPLASH, frag_target.realowner.origin, '0 0 0');
-			RemoveGrapplingHook(frag_target.realowner);
+			RemoveHook(frag_target);
 			return; // dead
 		}
 	}

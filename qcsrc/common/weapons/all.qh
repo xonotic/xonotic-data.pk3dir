@@ -339,6 +339,8 @@ vector weaponentity_glowmod(Weapon wep, entity actor, int c)
 entity gunaligns[5];
 #endif
 
+.int m_gunalign;
+
 //.int weapon; // current weapon
 .string weaponname; // name of .weapon
 
