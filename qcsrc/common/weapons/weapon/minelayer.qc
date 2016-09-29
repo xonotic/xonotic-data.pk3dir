@@ -72,6 +72,7 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	entity newmine = spawn();
 	IL_PUSH(g_mines, newmine);
+	newmine.weaponentity_fld = this.weaponentity_fld;
 	newmine.classname = this.classname;
 
 	newmine.bot_dodge = this.bot_dodge;

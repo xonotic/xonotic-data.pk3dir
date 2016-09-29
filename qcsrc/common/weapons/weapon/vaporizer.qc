@@ -380,27 +380,27 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
         if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
         {
             bool rapid = autocvar_g_rm_laser_rapid;
-            if(actor.jump_interval <= time && !actor.held_down)
+            if(actor.(weaponentity).jump_interval <= time && !actor.(weaponentity).held_down)
             {
                 if(rapid)
-                    actor.held_down = true;
-                actor.jump_interval = time + autocvar_g_rm_laser_refire;
-                actor.jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
+                    actor.(weaponentity).held_down = true;
+                actor.(weaponentity).jump_interval = time + autocvar_g_rm_laser_refire;
+                actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
                 damage_goodhits = 0;
                 W_RocketMinsta_Attack2(actor, weaponentity);
             }
-            else if(rapid && actor.jump_interval2 <= time && actor.held_down)
+            else if(rapid && actor.(weaponentity).jump_interval2 <= time && actor.(weaponentity).held_down)
             {
-                actor.jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
+                actor.(weaponentity).jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
                 damage_goodhits = 0;
                 W_RocketMinsta_Attack3(actor, weaponentity);
                 //weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
             }
         }
-        else if (actor.jump_interval <= time)
+        else if (actor.(weaponentity).jump_interval <= time)
         {
             // handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
-            actor.jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor(actor);
+            actor.(weaponentity).jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor(actor);
 
             // decrease ammo for the laser?
             if(WEP_CVAR_SEC(vaporizer, ammo))
@@ -431,7 +431,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
         }
     }
     else
-        actor.held_down = false;
+        actor.(weaponentity).held_down = false;
 }
 METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor))
 {

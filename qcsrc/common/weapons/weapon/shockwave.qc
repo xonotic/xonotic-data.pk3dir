@@ -706,12 +706,12 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
 {
     if(fire & 1)
     {
-        if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
+        if(time >= actor.(weaponentity).shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
             {
                 W_Shockwave_Attack(actor, weaponentity);
-                actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
+                actor.(weaponentity).shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
             }
         }
