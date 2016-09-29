@@ -38,7 +38,7 @@ void Weapon_whereis(Weapon this, entity cl)
 	});
 }
 
-bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
+bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain)
 {
 	float f = 0;
 
@@ -69,7 +69,7 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 			}
 			else
 			{
-				f = wpn.wr_checkammo1(wpn, this) + wpn.wr_checkammo2(wpn, this);
+				f = wpn.wr_checkammo1(wpn, this, weaponentity) + wpn.wr_checkammo2(wpn, this, weaponentity);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				if(wpn == WEP_MINE_LAYER)
@@ -166,7 +166,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 
 		++c;
 
-		if(!skipmissing || client_hasweapon(this, wep, true, false))
+		if(!skipmissing || client_hasweapon(this, wep, weaponentity, true, false))
 		{
 			if(switchtonext)
 				return weaponwant;
@@ -223,7 +223,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 			--c;
 			if(c == 0)
 			{
-				client_hasweapon(this, wep, true, true);
+				client_hasweapon(this, wep, weaponentity, true, true);
 				break;
 			}
 		}
@@ -263,7 +263,7 @@ void W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 {
 	if(this.(weaponentity).m_switchweapon != w)
 	{
-		if(client_hasweapon(this, w, true, true))
+		if(client_hasweapon(this, w, weaponentity, true, true))
 			W_SwitchWeapon_Force(this, w, weaponentity);
 		else
 			this.(weaponentity).selectweapon = w.m_id; // update selectweapon anyway
@@ -317,7 +317,7 @@ void W_PreviousWeapon(entity this, float list, .entity weaponentity)
 void W_LastWeapon(entity this, .entity weaponentity)
 {
 	Weapon wep = Weapons_from(this.(weaponentity).cnt);
-	if (client_hasweapon(this, wep, true, false))
+	if (client_hasweapon(this, wep, weaponentity, true, false))
 		W_SwitchWeapon(this, wep, weaponentity);
 	else
 		W_SwitchToOtherWeapon(this, weaponentity);

@@ -20,7 +20,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 		return;
 	}
 
-	if((!thiswep.wr_checkammo1(thiswep, actor) && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (!(actor.items & IT_SUPERWEAPON) && !(actor.items & IT_UNLIMITED_SUPERWEAPONS)))
+	if((!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (!(actor.items & IT_SUPERWEAPON) && !(actor.items & IT_UNLIMITED_SUPERWEAPONS)))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -81,7 +81,7 @@ METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity wea
     }
 }
 
-METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.ammo_nails >= WEP_CVAR(hmg, ammo);
 
@@ -91,7 +91,7 @@ METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor))
     return ammo_amount;
 }
 
-METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.ammo_nails >= WEP_CVAR(hmg, ammo);
 

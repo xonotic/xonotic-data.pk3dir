@@ -378,7 +378,7 @@ void W_Arc_Beam_Think(entity this)
 		if(this == this.owner.(weaponentity).arc_beam) { this.owner.(weaponentity).arc_beam = NULL; }
 		entity own = this.owner;
 		Weapon w = WEP_ARC;
-		if(!w.wr_checkammo1(w, own) && !w.wr_checkammo2(w, own))
+		if(!w.wr_checkammo1(w, own, weaponentity) && !w.wr_checkammo2(w, own, weaponentity))
 		if(!(own.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -835,11 +835,11 @@ METHOD(Arc, wr_init, void(entity thiswep))
         arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
     }
 }
-METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return ((!WEP_CVAR(arc, beam_ammo)) || (actor.(thiswep.ammo_field) > 0));
 }
-METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(WEP_CVAR(arc, bolt))
     {
@@ -858,7 +858,7 @@ METHOD(Arc, wr_killmessage, Notification(entity thiswep))
     else
         return WEAPON_ARC_MURDER;
 }
-METHOD(Arc, wr_drop, void(entity thiswep, entity actor))
+METHOD(Arc, wr_drop, void(entity thiswep, entity actor, .entity weaponentity))
 {
     weapon_dropevent_item.arc_overheat = actor.arc_overheat;
     weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
@@ -867,9 +867,9 @@ METHOD(Arc, wr_drop, void(entity thiswep, entity actor))
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     	actor.arc_BUTTON_ATCK_prev[slot] = false;
 }
-METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
+METHOD(Arc, wr_pickup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if ( !client_hasweapon(actor, thiswep, false, false) &&
+    if ( !client_hasweapon(actor, thiswep, weaponentity, false, false) &&
         weapon_dropevent_item.arc_overheat > time )
     {
         actor.arc_overheat = weapon_dropevent_item.arc_overheat;

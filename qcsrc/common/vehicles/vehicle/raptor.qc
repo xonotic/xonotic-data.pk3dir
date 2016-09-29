@@ -356,11 +356,11 @@ bool raptor_frame(entity this, float dt)
 	*/
 
 	Weapon wep1 = WEP_RAPTOR;
+	.entity weaponentity = weaponentities[0];
 	if(!forbidWeaponUse(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
-	if (wep1.wr_checkammo1(wep1, vehic))
+	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
-	    .entity weaponentity = weaponentities[0];
 		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 

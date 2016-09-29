@@ -667,7 +667,7 @@ METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         }
     }
 }
-METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
@@ -682,7 +682,7 @@ METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor))
     }
     return ammo_amount;
 }
-METHOD(Seeker, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Seeker, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)

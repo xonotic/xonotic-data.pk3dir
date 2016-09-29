@@ -553,13 +553,13 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         }
     }
 }
-METHOD(Electro, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Electro, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(electro, ammo);
     ammo_amount += actor.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_PRI(electro, ammo);
     return ammo_amount;
 }
-METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount;
     if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.

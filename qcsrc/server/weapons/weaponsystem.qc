@@ -220,8 +220,8 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 {
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
 	bool ammo = false;
-	if (secondary) ammo = thiswep.wr_checkammo2(thiswep, actor);
-	else ammo = thiswep.wr_checkammo1(thiswep, actor);
+	if (secondary) ammo = thiswep.wr_checkammo2(thiswep, actor, weaponentity);
+	else ammo = thiswep.wr_checkammo1(thiswep, actor, weaponentity);
 	if (ammo) return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
@@ -243,8 +243,8 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 
 	// check if the other firing mode has enough ammo
 	bool ammo_other = false;
-	if (secondary) ammo_other = thiswep.wr_checkammo1(thiswep, actor);
-	else ammo_other = thiswep.wr_checkammo2(thiswep, actor);
+	if (secondary) ammo_other = thiswep.wr_checkammo1(thiswep, actor, weaponentity);
+	else ammo_other = thiswep.wr_checkammo2(thiswep, actor, weaponentity);
 	if (ammo_other)
 	{
 		if (time - actor.prevwarntime > 1)
@@ -742,7 +742,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 				}
 				// switch away if the amount of ammo is not enough to keep using this weapon
 				Weapon w = actor.(weaponentity).m_weapon;
-				if (!(w.wr_checkammo1(w, actor) + w.wr_checkammo2(w, actor)))
+				if (!(w.wr_checkammo1(w, actor, weaponentity) + w.wr_checkammo2(w, actor, weaponentity)))
 				{
 					actor.clip_load = -1;  // reload later
 					W_SwitchToOtherWeapon(actor, weaponentity);
@@ -778,9 +778,9 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	actor.clip_load = actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = -1;
 }
 
-void W_DropEvent(.void(Weapon, entity actor) event, entity player, float weapon_type, entity weapon_item)
+void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)
 {
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
-	w.event(w, player);
+	w.event(w, player, weaponentity);
 }

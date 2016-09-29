@@ -288,19 +288,16 @@ METHOD(Hook, wr_setup, void(entity thiswep, entity actor))
     	actor.(weaponentity).hook_state &= ~HOOK_WAITING_FOR_RELEASE;
     }
 }
-METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor))
+METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor, .entity weaponentity))
 {
     if (!thiswep.ammo_factor) return true;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	if(actor.(weaponentity).hook)
-    		return actor.ammo_fuel > 0;
-    }
+
+    if(actor.(weaponentity).hook)
+    	return actor.ammo_fuel > 0;
 
     return actor.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
 }
-METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor))
+METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor, .entity weaponentity))
 {
     // infinite ammo for now
     return true; // actor.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above

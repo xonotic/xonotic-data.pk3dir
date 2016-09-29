@@ -585,8 +585,10 @@ void havocbot_movetogoal(entity this)
 		}
 		else if(this.health>WEP_CVAR(devastator, damage)*0.5)
 		{
+			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 			if(this.velocity.z < 0)
-			if(client_hasweapon(this, WEP_DEVASTATOR, true, false))
+			if(client_hasweapon(this, WEP_DEVASTATOR, weaponentity, true, false))
 			{
 				this.movement_x = maxspeed;
 
@@ -600,7 +602,6 @@ void havocbot_movetogoal(entity this)
 					return;
 				}
 
-				.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 				this.(weaponentity).m_switchweapon = WEP_DEVASTATOR;
 				this.v_angle_x = 90;
 				PHYS_INPUT_BUTTON_ATCK(this) = true;
@@ -997,8 +998,9 @@ float havocbot_chooseweapon_checkreload(entity this, int new_weapon)
 	if (this.weapon_load[new_weapon] < 0)
 	{
 		bool other_weapon_available = false;
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			if(it.wr_checkammo1(it, this) + it.wr_checkammo2(it, this))
+			if(it.wr_checkammo1(it, this, weaponentity) + it.wr_checkammo2(it, this, weaponentity))
 				other_weapon_available = true;
 		));
 		if(other_weapon_available)
@@ -1027,7 +1029,7 @@ void havocbot_chooseweapon(entity this)
 		// If no weapon was chosen get the first available weapon
 		if(this.(weaponentity).m_weapon==WEP_Null)
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			if(client_hasweapon(this, it, true, false))
+			if(client_hasweapon(this, it, weaponentity, true, false))
 			{
 				this.(weaponentity).m_switchweapon = it;
 				return;
@@ -1073,7 +1075,7 @@ void havocbot_chooseweapon(entity this)
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(this, Weapons_from(w), true, false) )
+				if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
 				{
 					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, w))
 						continue;
@@ -1087,7 +1089,7 @@ void havocbot_chooseweapon(entity this)
 		if ( distance > bot_distance_close) {
 			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(this, Weapons_from(w), true, false) )
+				if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
 				{
 					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, w))
 						continue;
@@ -1100,7 +1102,7 @@ void havocbot_chooseweapon(entity this)
 		// Choose weapons for close distance
 		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(this, Weapons_from(w), true, false) )
+			if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
 			{
 				if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, w))
 					continue;

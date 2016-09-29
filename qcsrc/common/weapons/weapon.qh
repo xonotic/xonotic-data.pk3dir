@@ -89,9 +89,9 @@ CLASS(Weapon, Object)
     /** (SERVER) logic to run every frame */
     METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */
-    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor)) {return false;}
+    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
     /** (SERVER) checks ammo for weapon second */
-    METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor)) {return false;}
+    METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
     /** (SERVER) runs bot aiming code for this weapon */
     METHOD(Weapon, wr_aim, void(Weapon this, entity actor)) {}
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
@@ -120,9 +120,9 @@ CLASS(Weapon, Object)
     /** (CLIENT) weapon specific glow */
     METHOD(Weapon, wr_glow, vector(Weapon this, entity actor, entity wepent)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
-    METHOD(Weapon, wr_drop, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_drop, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) a weapon is picked up */
-    METHOD(Weapon, wr_pickup, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) update cvar based properties */
     METHOD(Weapon, wr_update, void(Weapon this)) {}
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {

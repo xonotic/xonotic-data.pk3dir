@@ -199,7 +199,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 // alternate secondary weapon frames
 void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (!thiswep.wr_checkammo2(thiswep, actor))
+	if (!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
@@ -213,7 +213,7 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (!thiswep.wr_checkammo2(thiswep, actor))
+	if (!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
@@ -285,13 +285,13 @@ METHOD(Shotgun, wr_setup, void(entity thiswep, entity actor))
 {
     actor.ammo_field = ammo_none;
 }
-METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
     ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
     return ammo_amount;
 }
-METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(IS_BOT_CLIENT(actor))
     if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))

@@ -30,7 +30,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
         weapon_thinkf(player, weaponentity, WFRAME_FIRE1, 0, w_ready);
     }
 }
-METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep, entity actor)) {
+METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep, entity actor, .entity weaponentity)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;

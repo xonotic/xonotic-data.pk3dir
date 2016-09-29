@@ -154,7 +154,7 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 	}
 	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
-		if(!thiswep.wr_checkammo2(thiswep, actor))
+		if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
@@ -180,7 +180,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		return;
 	}
 
-	if(!thiswep.wr_checkammo1(thiswep, actor))
+	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
@@ -278,7 +278,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
         if(fire & 2)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
-            if(!thiswep.wr_checkammo2(thiswep, actor))
+            if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
             if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
             {
                 W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
@@ -312,7 +312,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
         }
     }
 }
-METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
@@ -329,7 +329,7 @@ METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor))
     }
     return ammo_amount;
 }
-METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)

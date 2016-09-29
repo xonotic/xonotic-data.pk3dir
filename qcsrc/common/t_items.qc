@@ -711,7 +711,7 @@ float Item_GiveTo(entity item, entity player)
 			FOREACH(Weapons, it != WEP_Null, {
 				if(w & (it.m_wepset))
 				{
-					W_DropEvent(wr_pickup, player, it.m_id, item);
+					W_DropEvent(wr_pickup, player, it.m_id, item, weaponentity);
 					W_GiveWeapon(player, it.m_id);
 				}
 			});

@@ -409,7 +409,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 		actor.(weaponentity).hagar_warning = false;
 
 		// we aren't checking ammo during an attack, so we must do it here
-		if(!(thiswep.wr_checkammo1(thiswep, actor) + thiswep.wr_checkammo2(thiswep, actor)))
+		if(!(thiswep.wr_checkammo1(thiswep, actor, weaponentity) + thiswep.wr_checkammo2(thiswep, actor, weaponentity)))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -427,7 +427,7 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 		return;
 	}
 
-	if(!thiswep.wr_checkammo1(thiswep, actor))
+	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor), weaponentity);
@@ -505,13 +505,13 @@ METHOD(Hagar, wr_setup, void(entity thiswep, entity actor))
     	}
     }
 }
-METHOD(Hagar, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Hagar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(hagar, ammo);
     ammo_amount += actor.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
     return ammo_amount;
 }
-METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hagar, ammo);
     ammo_amount += actor.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);

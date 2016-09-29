@@ -233,12 +233,12 @@ METHOD(Blaster, wr_setup, void(entity thiswep, entity actor))
     actor.ammo_field = ammo_none;
 }
 
-METHOD(Blaster, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Blaster, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // infinite ammo
 }
 
-METHOD(Blaster, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Blaster, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // blaster has infinite ammo
 }

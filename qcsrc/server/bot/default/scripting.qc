@@ -570,7 +570,7 @@ float bot_cmd_select_weapon(entity this)
 
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
-	if(client_hasweapon(this, Weapons_from(id), true, false))
+	if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
 		this.(weaponentity).m_switchweapon = Weapons_from(id);
 	else
 		return CMD_STATUS_ERROR;

@@ -537,7 +537,7 @@ METHOD(Devastator, wr_setup, void(entity thiswep, entity actor))
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     	actor.rl_release[slot] = 1;
 }
-METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     #if 0
     // don't switch while guiding a missile
@@ -573,7 +573,7 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor))
     return ammo_amount;
     #endif
 }
-METHOD(Devastator, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Devastator, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return false;
 }

@@ -131,7 +131,7 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 	{
 		entity own = this.realowner;
 		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w, own))
+		if(!w.wr_checkammo1(w, own, weaponentity))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
 			int slot = weaponslot(weaponentity);
@@ -163,7 +163,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	{
 		entity own = this.realowner;
 		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w, own))
+		if(!w.wr_checkammo1(w, own, weaponentity))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
 			int slot = weaponslot(weaponentity);
@@ -524,7 +524,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
             sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
     }
 }
-METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     //int slot = 0; // TODO: unhardcode
     // actually do // don't switch while placing a mine
@@ -536,7 +536,7 @@ METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor))
     //}
     //return true;
 }
-METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(W_MineLayer_PlacedMines(actor, false))
         return true;
