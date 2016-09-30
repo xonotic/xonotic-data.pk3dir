@@ -391,7 +391,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 {
 	if (name == "")
 	{
-		this.model = "";
+		vector oldmin = this.mins, oldmax = this.maxs;
+		setmodel(this, MDL_Null);
+		setsize(this, oldmin, oldmax);
 		if (this.weaponchild) delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
