@@ -469,7 +469,7 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 void W_Seeker_Tracker_Think(entity this)
 {
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	.entity weaponentity = this.weaponentity_fld;
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
 	if((IS_DEAD(this.realowner)) || (IS_DEAD(this.tag_target)) || (this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER)
 	|| (time > this.tag_time + WEP_CVAR(seeker, tag_tracker_lifetime)))

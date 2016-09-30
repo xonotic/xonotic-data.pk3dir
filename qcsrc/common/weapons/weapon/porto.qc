@@ -95,7 +95,7 @@ void W_Porto_Fail(entity this, float failhard)
 			tracetoss(this, this);
 			if(vdist(trace_endpos - this.realowner.origin, <, 128))
 			{
-				.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+				.entity weaponentity = this.weaponentity_fld;
 				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity, weaponentity);
 				Send_Notification(NOTIF_ONE, this.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
 			}
@@ -148,7 +148,7 @@ void W_Porto_Touch(entity this, entity toucher)
 		sound(this, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 		delete(this);
 	}
-	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+	else if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
 	{
 		spamsound(this, CH_SHOTS, SND(PORTO_BOUNCE), VOL_BASE, ATTEN_NORM);
 		// just reflect
@@ -255,6 +255,7 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 	//Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = new(porto);
+	gren.weaponentity_fld = weaponentity;
 	gren.cnt = type;
 	gren.owner = gren.realowner = actor;
 	gren.playerid = actor.playerid;
