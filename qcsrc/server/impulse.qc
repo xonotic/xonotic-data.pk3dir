@@ -251,7 +251,7 @@ IMPULSE(weapon_best)
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_SwitchWeapon(this, w_getbestweapon(this), weaponentity);
+	W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 }
 
 IMPULSE(weapon_drop)
