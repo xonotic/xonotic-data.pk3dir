@@ -117,14 +117,15 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 string AppendItemcodes(string s, entity player)
 {
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-
-	int w = player.(weaponentity).m_weapon.m_id;
-	//if(w == 0)
-	//	w = player.switchweapon;
-	if(w == 0)
-		w = player.(weaponentity).cnt; // previous weapon!
-	s = strcat(s, ftos(w));
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		int w = player.(weaponentity).m_weapon.m_id;
+		if(w == 0)
+			w = player.(weaponentity).cnt; // previous weapon
+		if(w != 0 || slot == 0)
+			s = strcat(s, ftos(w));
+	}
 	if(time < player.strength_finished)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)

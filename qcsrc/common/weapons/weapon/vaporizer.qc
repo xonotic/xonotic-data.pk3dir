@@ -12,6 +12,7 @@ CLASS(Vaporizer, Weapon)
 #endif
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair, string, "gfx/crosshairminstanex");
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair_size, float, 0.6);
+/* reticle   */ ATTRIB(Vaporizer, w_reticle, string, "gfx/reticle_nex");
 /* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponminstanex");
 /* refname   */ ATTRIB(Vaporizer, netname, string, "vaporizer");
 /* wepname   */ ATTRIB(Vaporizer, m_name, string, _("Vaporizer"));
@@ -501,11 +502,10 @@ METHOD(Vaporizer, wr_init, void(entity thiswep))
         precache_pic("gfx/reticle_nex");
     }
 }
-METHOD(Vaporizer, wr_zoomreticle, bool(entity thiswep))
+METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 {
     if(button_zoom || zoomscript_caught)
     {
-        reticle_image = "gfx/reticle_nex";
         return true;
     }
     else

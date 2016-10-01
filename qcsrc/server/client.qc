@@ -2474,13 +2474,16 @@ void PlayerPreThink (entity this)
 	}
 
 	// WEAPONTODO: Add weapon request for this
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if (!zoomstate_set) {
-		SetZoomState(this,
-			PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this)
-			|| (PHYS_INPUT_BUTTON_ATCK2(this) && this.(weaponentity).m_weapon == WEP_VORTEX)
-			|| (PHYS_INPUT_BUTTON_ATCK2(this) && this.(weaponentity).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
-		);
+		bool wep_zoomed = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			Weapon thiswep = this.(weaponentity).m_weapon;
+			if(thiswep != WEP_Null && thiswep.wr_zoom)
+				wep_zoomed += thiswep.wr_zoom(thiswep, this);
+		}
+		SetZoomState(this, PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this) || wep_zoomed);
     }
 
 	if (this.teamkill_soundtime && time > this.teamkill_soundtime)
@@ -2503,6 +2506,7 @@ void PlayerPreThink (entity this)
 
 	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
+	.entity weaponentity = weaponentities[0];
 	if (this.(weaponentity).m_weapon == WEP_Null)
 		this.clip_load = this.clip_size = 0;
 }
