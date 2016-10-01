@@ -12,6 +12,7 @@ CLASS(Rifle, Weapon)
 #endif
 /* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");
 /* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
+/* reticle   */ ATTRIB(Rifle, w_reticle, string, "gfx/reticle_nex");
 /* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
 /* refname   */ ATTRIB(Rifle, netname, string, "rifle");
 /* wepname   */ ATTRIB(Rifle, m_name, string, _("Rifle"));
@@ -270,7 +271,6 @@ METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
 {
     if(button_zoom || zoomscript_caught)
     {
-        reticle_image = "gfx/reticle_nex";
         return true;
     }
     else

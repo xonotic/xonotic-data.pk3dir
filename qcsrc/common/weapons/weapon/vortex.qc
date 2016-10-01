@@ -12,6 +12,7 @@ CLASS(Vortex, Weapon)
 #endif
 /* crosshair */ ATTRIB(Vortex, w_crosshair, string, "gfx/crosshairnex");
 /* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);
+/* reticle   */ ATTRIB(Vortex, w_reticle, string, "gfx/reticle_nex");
 /* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
 /* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
@@ -386,7 +387,7 @@ METHOD(Vortex, wr_killmessage, Notification(entity thiswep))
 }
 METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
 {
-    return PHYS_INPUT_BUTTON_ATCK2(actor);
+    return PHYS_INPUT_BUTTON_ATCK2(actor) && !WEP_CVAR(vortex, secondary);
 }
 
 #endif
@@ -411,7 +412,6 @@ METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
 {
     if(button_zoom || zoomscript_caught || (!WEP_CVAR(vortex, secondary) && button_attack2))
     {
-        reticle_image = "gfx/reticle_nex";
         return true;
     }
     else
