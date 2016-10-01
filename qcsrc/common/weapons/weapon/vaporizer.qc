@@ -501,7 +501,7 @@ METHOD(Vaporizer, wr_init, void(entity thiswep))
         precache_pic("gfx/reticle_nex");
     }
 }
-METHOD(Vaporizer, wr_zoomreticle, bool(entity thiswep))
+METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
 {
     if(button_zoom || zoomscript_caught)
     {

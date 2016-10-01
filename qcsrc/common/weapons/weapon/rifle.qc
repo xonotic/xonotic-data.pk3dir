@@ -241,6 +241,10 @@ METHOD(Rifle, wr_killmessage, Notification(entity thiswep))
             return WEAPON_RIFLE_MURDER;
     }
 }
+METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
+{
+    return PHYS_INPUT_BUTTON_ATCK2(actor) && WEP_CVAR(rifle, secondary) == 0;
+}
 
 #endif
 #ifdef CSQC
@@ -262,7 +266,7 @@ METHOD(Rifle, wr_init, void(entity thiswep))
         precache_pic("gfx/reticle_nex");
     }
 }
-METHOD(Rifle, wr_zoomreticle, bool(entity thiswep))
+METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
 {
     if(button_zoom || zoomscript_caught)
     {

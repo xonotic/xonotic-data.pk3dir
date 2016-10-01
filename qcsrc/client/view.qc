@@ -451,12 +451,17 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	entity wepent = viewmodels[0]; // TODO: unhardcode
 
 	if(hud == HUD_NORMAL && !spectatee_status)
-	if(wepent.switchweapon == wepent.activeweapon)
-	if((wepent.activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (wepent.activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
-		zoomdir += button_attack2;
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			entity wepent = viewmodels[slot];
+			if(wepent.switchweapon == wepent.activeweapon)
+			if((wepent.activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (wepent.activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
+				zoomdir += button_attack2;
+		}
+	}
 	if(spectatee_status > 0 || isdemo())
 	{
 		if(spectatorbutton_zoom)
@@ -1943,7 +1948,14 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(autocvar_cl_reticle)
 	{
-		Weapon wep = wepent.activeweapon;
+		bool wep_zoomed = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			entity wepe = viewmodels[slot];
+			Weapon wep = wepe.activeweapon;
+			if(wep != WEP_Null && wep.wr_zoom)
+				wep_zoomed += wep.wr_zoom(wep, NULL);
+		}
 		// Draw the aiming reticle for weapons that use it
 		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
@@ -1953,7 +1965,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 			// no zoom reticle while dead
 			reticle_type = 0;
 		}
-		else if(wep.wr_zoomreticle(wep) && autocvar_cl_reticle_weapon)
+		else if(wep_zoomed && autocvar_cl_reticle_weapon)
 		{
 			if(reticle_image != "") { reticle_type = 2; }
 			else { reticle_type = 0; }

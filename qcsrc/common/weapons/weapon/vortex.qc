@@ -384,6 +384,10 @@ METHOD(Vortex, wr_killmessage, Notification(entity thiswep))
 {
     return WEAPON_VORTEX_MURDER;
 }
+METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
+{
+    return PHYS_INPUT_BUTTON_ATCK2(actor);
+}
 
 #endif
 #ifdef CSQC
@@ -403,7 +407,7 @@ METHOD(Vortex, wr_init, void(entity thiswep))
         precache_pic("gfx/reticle_nex");
     }
 }
-METHOD(Vortex, wr_zoomreticle, bool(entity thiswep))
+METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
 {
     if(button_zoom || zoomscript_caught || (!WEP_CVAR(vortex, secondary) && button_attack2))
     {
