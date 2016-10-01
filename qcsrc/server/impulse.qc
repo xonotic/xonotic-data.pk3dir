@@ -60,8 +60,11 @@
 			this.impulse = IMP_weapon_group_##slot.impulse; \
 			return; \
 		} \
-		.entity weaponentity = weaponentities[0]; \
-		W_NextWeaponOnImpulse(this, slot, weaponentity); \
+		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
+		{ \
+			.entity weaponentity = weaponentities[wepslot]; \
+			W_NextWeaponOnImpulse(this, slot, weaponentity); \
+		} \
 	}
 X(1)
 X(2)
@@ -89,8 +92,11 @@ X(0)
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
-		.entity weaponentity = weaponentities[0]; \
-		W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir, weaponentity); \
+		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
+		{ \
+			.entity weaponentity = weaponentities[wepslot]; \
+			W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir, weaponentity); \
+		} \
 	}
 X(0, prev)
 X(1, prev)
@@ -137,8 +143,11 @@ X(9, next)
 			this.impulse = IMP_weapon_byid_##i.impulse; \
 			return; \
 		} \
-		.entity weaponentity = weaponentities[0]; \
-		W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i), weaponentity); \
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) \
+		{ \
+			.entity weaponentity = weaponentities[slot]; \
+			W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i), weaponentity); \
+		} \
 	}
 X(0)
 X(1)
@@ -174,8 +183,11 @@ IMPULSE(weapon_next_byid)
 		this.impulse = IMP_weapon_next_byid.impulse;
 		return;
 	}
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_NextWeapon(this, 0, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_NextWeapon(this, 0, weaponentity);
+	}
 }
 
 IMPULSE(weapon_prev_byid)
@@ -186,8 +198,11 @@ IMPULSE(weapon_prev_byid)
 		this.impulse = IMP_weapon_prev_byid.impulse;
 		return;
 	}
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_PreviousWeapon(this, 0, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_PreviousWeapon(this, 0, weaponentity);
+	}
 }
 
 IMPULSE(weapon_next_bygroup)
@@ -198,8 +213,11 @@ IMPULSE(weapon_next_bygroup)
 		this.impulse = IMP_weapon_next_bygroup.impulse;
 		return;
 	}
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_NextWeapon(this, 1, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_NextWeapon(this, 1, weaponentity);
+	}
 }
 
 IMPULSE(weapon_prev_bygroup)
@@ -210,8 +228,11 @@ IMPULSE(weapon_prev_bygroup)
 		this.impulse = IMP_weapon_prev_bygroup.impulse;
 		return;
 	}
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_PreviousWeapon(this, 1, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_PreviousWeapon(this, 1, weaponentity);
+	}
 }
 
 IMPULSE(weapon_next_bypriority)
@@ -222,8 +243,11 @@ IMPULSE(weapon_next_bypriority)
 		this.impulse = IMP_weapon_next_bypriority.impulse;
 		return;
 	}
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_NextWeapon(this, 2, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_NextWeapon(this, 2, weaponentity);
+	}
 }
 
 IMPULSE(weapon_prev_bypriority)
@@ -234,32 +258,44 @@ IMPULSE(weapon_prev_bypriority)
 		this.impulse = IMP_weapon_prev_bypriority.impulse;
 		return;
 	}
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_PreviousWeapon(this, 2, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_PreviousWeapon(this, 2, weaponentity);
+	}
 }
 
 IMPULSE(weapon_last)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_LastWeapon(this, weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_LastWeapon(this, weaponentity);
+	}
 }
 
 IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_SwitchWeapon(this, w_getbestweapon(this), weaponentity);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
+	}
 }
 
 IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
+	}
 }
 
 IMPULSE(weapon_reload)
