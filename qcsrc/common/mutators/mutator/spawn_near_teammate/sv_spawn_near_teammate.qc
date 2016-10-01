@@ -139,41 +139,37 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 							//break;
 					}
 					vector prev_endpos = trace_endpos;
-
 					te_lightning1(NULL, it.origin, trace_endpos);
 					LOG_INFOF("    pc: %d trace_fraction %f\n", pc, trace_fraction);
+					if(trace_fraction != 1.0) continue;
 
-					if(trace_fraction == 1.0)
+					tracebox(trace_endpos + '0 0 4', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), trace_endpos - '0 0 400', MOVE_NORMAL, it);
+					te_lightning2(NULL, prev_endpos, trace_endpos);
+					LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
+					if (trace_startsolid) continue; // inside another player
+					if (trace_fraction == 1.0) continue; // above void or too high
+					// TODO not skybox or hurttriggers
+					if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 					{
-						traceline(trace_endpos + '0 0 4', trace_endpos - '0 0 100', MOVE_NOMONSTERS, it); // TODO tracebox to make sure enough space
-						te_lightning2(NULL, prev_endpos, trace_endpos);
-						LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
-
-						if(trace_fraction != 1.0) // TODO not skybox or hurttriggers
+						dist = vlen(trace_endpos - player.msnt_deathloc);
+						LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
+						if(dist < best_dist || best_dist == 0)
 						{
-							if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
-							{
-								dist = vlen(trace_endpos - player.msnt_deathloc);
-								LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
-								if(dist < best_dist || best_dist == 0)
-								{
-									LOG_INFOF("      new best dist - pos: %v\n", trace_endpos);
-									best_dist = dist;
-									best_pos = trace_endpos;
-									best_mate = it;
-								}
-							}
-							else // TODO random to avoid favoring players who joined early
-							{
-								setorigin(player, trace_endpos);
-								player.angles = it.angles;
-								player.angles_z = 0; // never spawn tilted even if the spot says to
-								it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
-								LOG_INFOF("      PlayerSpawn return %v\n", player.origin);
-								if (player.origin != trace_endpos) LOG_WARNF("wrong origin\n");
-								return;
-							}
+							LOG_INFOF("      new best dist - pos: %v\n", trace_endpos);
+							best_dist = dist;
+							best_pos = trace_endpos;
+							best_mate = it;
 						}
+					}
+					else // TODO random to avoid favoring players who joined early
+					{
+						setorigin(player, trace_endpos);
+						player.angles = it.angles;
+						player.angles_z = 0; // never spawn tilted even if the spot says to
+						it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
+						LOG_INFOF("      PlayerSpawn return %v\n", player.origin);
+						if (player.origin != trace_endpos) LOG_WARNF("wrong origin\n");
+						return;
 					}
 				}
 			}
