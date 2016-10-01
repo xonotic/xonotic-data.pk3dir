@@ -448,9 +448,15 @@ void GetCvars(entity this, int f)
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
 	{
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if (s == "cl_weaponpriority")
-			if (this.(weaponentity)) this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+		{
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if (this.(weaponentity) && (this.(weaponentity).m_weapon != WEP_Null || slot == 0))
+					this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+			}
+		}
 		if (s == "cl_allow_uidtracking")
 			PlayerStats_GameReport_AddPlayer(this);
 	}
