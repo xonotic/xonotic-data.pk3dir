@@ -22,6 +22,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	entity spawn_spot = M_ARGV(1, entity);
 	vector spawn_score = M_ARGV(2, vector);
 
+	//LOG_INFOF("Spawn_Score player: %s %v spawn_spot: %v spawn_score: %f\n", player.netname, player.origin, spawn_spot.origin, spawn_score);
+
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
 		return;
 
@@ -49,6 +51,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	else if(player.team == spawn_spot.team)
 		spawn_score.x += SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM; // prefer same team, if we can't find a spawn near teammate
 
+	//LOG_INFOF("Spawn_Score ret %v", spawn_score);
 	M_ARGV(2, vector) = spawn_score;
 }
 
@@ -58,6 +61,9 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 
+	LOG_INFOF("PlayerSpawn for player: %s %v spawn_spot: %v\n", player.netname, player.origin, spawn_spot.origin);
+
+	/*
 	int num_red = 0, num_blue = 0, num_yellow = 0, num_pink = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
@@ -72,6 +78,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 	if(num_red == 1 || num_blue == 1 || num_yellow == 1 || num_pink == 1)
 		return; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
+	*/ // // TODO DEBUGING
 
 	// Note: when entering this, fixangle is already set.
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
@@ -80,75 +87,91 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			player.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 
 		entity best_mate = NULL;
-		vector best_spot = '0 0 0';
+		vector best_pos = '0 0 0';
 		float pc = 0, best_dist = 0, dist = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if((autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health >= 0 && it.health >= autocvar_g_balance_health_regenstable) || autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health == 0)
-			if(!IS_DEAD(it))
-			if(it.msnt_timer < time)
-			if(SAME_TEAM(player, it))
-			if(time > it.spawnshieldtime) // spawn shielding
-			if(!forbidWeaponUse(it))
-			if(STAT(FROZEN, it) == 0)
-			if(it != player)
+			LOG_INFOF("  for client: %s %v\n", it.netname, it.origin);
+			//if (!SAME_TEAM(player, it)) continue; // TODO DEBUGING
+			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health >= 0 && it.health < autocvar_g_balance_health_regenstable) continue;
+			if (IS_DEAD(it)) continue;
+			if (time < it.msnt_timer) continue;
+			if (time < it.spawnshieldtime) continue;
+			if (forbidWeaponUse(it)) continue;
+			if (STAT(FROZEN, it)) continue;
+			if (it == player) continue;
+
+			// TODO all tracing: proper dphitcontentsmask???
+			// TODO check for nades
+
+			pc = pointcontents(trace_endpos + '0 0 1');
+			LOG_INFOF("    pointcontents %f\n", pc);
+			if(pc == CONTENT_EMPTY)
 			{
-				tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 100', MOVE_NOMONSTERS, it);
-				if(trace_fraction != 1.0)
-				if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+				// TODO ignore vertical velocity
+				// TODO higher limit - don't spawn in front of player when strafing slowly - or detect where he's looking?
+
+				if(vdist(it.velocity, >, 5)) {
+					fixedmakevectors(vectoangles(vec2(it.velocity)));
+					LOG_INFOF("    using velocity\n");
+				}
+				else
+					fixedmakevectors(it.angles);
+
+				// TODO go up - fix uneven surfaces
+				for(pc = 0; pc < 4; ++pc) // test 4 diffrent spots close to mate
 				{
-					pc = pointcontents(trace_endpos + '0 0 1');
-					if(pc == CONTENT_EMPTY)
+					switch(pc)
 					{
-						if(vdist(it.velocity, >, 5))
-							fixedmakevectors(vectoangles(it.velocity));
-						else
-							fixedmakevectors(it.angles);
+						case 0:
+							tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NOMONSTERS, it);
+							break;
+						case 1:
+							tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NOMONSTERS, it);
+							break;
+						case 2:
+							tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
+							break;
+						case 3:
+							tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
+							break;
+						//case 4:
+							//tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NOMONSTERS, it);
+							//break;
+					}
+					vector prev_endpos = trace_endpos;
 
-						for(pc = 0; pc < 4; ++pc) // test 4 diffrent spots close to mate
+					te_lightning1(NULL, it.origin, trace_endpos);
+					LOG_INFOF("    pc: %d trace_fraction %f\n", pc, trace_fraction);
+
+					if(trace_fraction == 1.0)
+					{
+						traceline(trace_endpos + '0 0 4', trace_endpos - '0 0 100', MOVE_NOMONSTERS, it); // TODO tracebox to make sure enough space
+						te_lightning2(NULL, prev_endpos, trace_endpos);
+						LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
+
+						if(trace_fraction != 1.0) // TODO not skybox or hurttriggers
 						{
-							switch(pc)
+							if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 							{
-								case 0:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NOMONSTERS, it);
-									break;
-								case 1:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NOMONSTERS, it);
-									break;
-								case 2:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
-									break;
-								case 3:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
-									break;
-								//case 4:
-									//tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NOMONSTERS, it);
-									//break;
-							}
-
-							if(trace_fraction == 1.0)
-							{
-								traceline(trace_endpos + '0 0 4', trace_endpos - '0 0 100', MOVE_NOMONSTERS, it);
-								if(trace_fraction != 1.0)
+								dist = vlen(trace_endpos - player.msnt_deathloc);
+								LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
+								if(dist < best_dist || best_dist == 0)
 								{
-									if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
-									{
-										dist = vlen(trace_endpos - player.msnt_deathloc);
-										if(dist < best_dist || best_dist == 0)
-										{
-											best_dist = dist;
-											best_spot = trace_endpos;
-											best_mate = it;
-										}
-									}
-									else
-									{
-										setorigin(player, trace_endpos);
-										player.angles = it.angles;
-										player.angles_z = 0; // never spawn tilted even if the spot says to
-										it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
-										return;
-									}
+									LOG_INFOF("      new best dist - pos: %v\n", trace_endpos);
+									best_dist = dist;
+									best_pos = trace_endpos;
+									best_mate = it;
 								}
+							}
+							else // TODO random to avoid favoring players who joined early
+							{
+								setorigin(player, trace_endpos);
+								player.angles = it.angles;
+								player.angles_z = 0; // never spawn tilted even if the spot says to
+								it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
+								LOG_INFOF("      PlayerSpawn return %v\n", player.origin);
+								if (player.origin != trace_endpos) LOG_WARNF("wrong origin\n");
+								return;
 							}
 						}
 					}
@@ -159,7 +182,12 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 		if(best_dist)
 		{
-			setorigin(player, best_spot);
+			tracebox(best_pos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), best_pos + '0 0 1', MOVE_NOMONSTERS, player);
+			if (trace_startsolid || trace_fraction != 1.0) LOG_WARNF("bad spawn? %d %f", trace_startsolid, trace_fraction);
+			setorigin(player, best_pos);
+			LOG_INFOF("PlayerSpawn best_dist: pos: %v\n", best_pos);
+			if (player.origin != best_pos) LOG_WARNF("wrong origin: %v", player.origin);
+
 			player.angles = best_mate.angles;
 			player.angles_z = 0; // never spawn tilted even if the spot says to
 			best_mate.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
@@ -176,6 +204,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		sprint(player, "angles: ", vtos(player.angles), "\n");
 		*/
 	}
+
+	LOG_INFOF("PlayerSpawn end player: %s %v spawn_spot: %v\n", player.netname, player.origin, spawn_spot.origin);
 }
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerDies)
