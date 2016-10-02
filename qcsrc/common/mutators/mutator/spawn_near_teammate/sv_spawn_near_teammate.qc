@@ -129,20 +129,20 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 				}
-				vector prev_endpos = trace_endpos;
+				vector horizontal_trace_endpos = trace_endpos;
 				te_lightning1(NULL, it.origin, trace_endpos);
 				LOG_INFOF("    pc: %d trace_fraction %f\n", pc, trace_fraction);
 				if(trace_fraction != 1.0) continue;
 
-				// 400 is slightly more than a typical laser jump (in overkill)
+				// 400 is about the height of a typical laser jump (in overkill)
 				tracebox(trace_endpos + '0 0 4', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), trace_endpos - '0 0 400', MOVE_NORMAL, it);
-				te_lightning2(NULL, prev_endpos, trace_endpos);
+				te_lightning2(NULL, horizontal_trace_endpos, trace_endpos);
 				LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
 				if (trace_startsolid) continue; // inside another player
 				if (trace_fraction == 1.0) continue; // above void or too high
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) continue;
 				if (pointcontents(trace_endpos + '0 0 1') != CONTENT_EMPTY) continue; // this also prevents spawning in water which i assume would be annoying
-				// TODO top of implosion towers
+				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), trace_endpos)) continue;
 
 				if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 				{
