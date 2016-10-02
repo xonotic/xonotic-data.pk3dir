@@ -103,74 +103,69 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			// TODO all tracing: proper dphitcontentsmask???
 			// TODO check for nades
 
-			pc = pointcontents(trace_endpos + '0 0 1');
-			LOG_INFOF("    pointcontents %f\n", pc);
-			if(pc == CONTENT_EMPTY)
+			// TODO ignore vertical velocity
+			// TODO higher limit - don't spawn in front of player when strafing slowly - or detect where he's looking?
+
+			if(vdist(it.velocity, >, 5)) {
+				fixedmakevectors(vectoangles(vec2(it.velocity)));
+				LOG_INFOF("    using velocity\n");
+			}
+			else
+				fixedmakevectors(it.angles);
+
+			// TODO go up - fix uneven surfaces
+			for(pc = 0; pc < 4; ++pc) // test 4 diffrent spots close to mate
 			{
-				// TODO ignore vertical velocity
-				// TODO higher limit - don't spawn in front of player when strafing slowly - or detect where he's looking?
-
-				if(vdist(it.velocity, >, 5)) {
-					fixedmakevectors(vectoangles(vec2(it.velocity)));
-					LOG_INFOF("    using velocity\n");
-				}
-				else
-					fixedmakevectors(it.angles);
-
-				// TODO go up - fix uneven surfaces
-				for(pc = 0; pc < 4; ++pc) // test 4 diffrent spots close to mate
+				switch(pc)
 				{
-					switch(pc)
-					{
-						case 0:
-							tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NOMONSTERS, it);
-							break;
-						case 1:
-							tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NOMONSTERS, it);
-							break;
-						case 2:
-							tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
-							break;
-						case 3:
-							tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
-							break;
-						//case 4:
-							//tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NOMONSTERS, it);
-							//break;
-					}
-					vector prev_endpos = trace_endpos;
-					te_lightning1(NULL, it.origin, trace_endpos);
-					LOG_INFOF("    pc: %d trace_fraction %f\n", pc, trace_fraction);
-					if(trace_fraction != 1.0) continue;
+					case 0:
+						tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NOMONSTERS, it);
+						break;
+					case 1:
+						tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NOMONSTERS, it);
+						break;
+					case 2:
+						tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
+						break;
+					case 3:
+						tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
+						break;
+					//case 4:
+						//tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NOMONSTERS, it);
+						//break;
+				}
+				vector prev_endpos = trace_endpos;
+				te_lightning1(NULL, it.origin, trace_endpos);
+				LOG_INFOF("    pc: %d trace_fraction %f\n", pc, trace_fraction);
+				if(trace_fraction != 1.0) continue;
 
-					tracebox(trace_endpos + '0 0 4', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), trace_endpos - '0 0 400', MOVE_NORMAL, it);
-					te_lightning2(NULL, prev_endpos, trace_endpos);
-					LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
-					if (trace_startsolid) continue; // inside another player
-					if (trace_fraction == 1.0) continue; // above void or too high
-					// TODO not skybox or hurttriggers
-					if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
+				tracebox(trace_endpos + '0 0 4', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), trace_endpos - '0 0 400', MOVE_NORMAL, it);
+				te_lightning2(NULL, prev_endpos, trace_endpos);
+				LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
+				if (trace_startsolid) continue; // inside another player
+				if (trace_fraction == 1.0) continue; // above void or too high
+				// TODO not skybox or hurttriggers
+				if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
+				{
+					dist = vlen(trace_endpos - player.msnt_deathloc);
+					LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
+					if(dist < best_dist || best_dist == 0)
 					{
-						dist = vlen(trace_endpos - player.msnt_deathloc);
-						LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
-						if(dist < best_dist || best_dist == 0)
-						{
-							LOG_INFOF("      new best dist - pos: %v\n", trace_endpos);
-							best_dist = dist;
-							best_pos = trace_endpos;
-							best_mate = it;
-						}
+						LOG_INFOF("      new best dist - pos: %v\n", trace_endpos);
+						best_dist = dist;
+						best_pos = trace_endpos;
+						best_mate = it;
 					}
-					else // TODO random to avoid favoring players who joined early
-					{
-						setorigin(player, trace_endpos);
-						player.angles = it.angles;
-						player.angles_z = 0; // never spawn tilted even if the spot says to
-						it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
-						LOG_INFOF("      PlayerSpawn return %v\n", player.origin);
-						if (player.origin != trace_endpos) LOG_WARNF("wrong origin\n");
-						return;
-					}
+				}
+				else // TODO random to avoid favoring players who joined early
+				{
+					setorigin(player, trace_endpos);
+					player.angles = it.angles;
+					player.angles_z = 0; // never spawn tilted even if the spot says to
+					it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
+					LOG_INFOF("      PlayerSpawn return %v\n", player.origin);
+					if (player.origin != trace_endpos) LOG_WARNF("wrong origin\n");
+					return;
 				}
 			}
 		));
