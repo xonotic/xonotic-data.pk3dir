@@ -57,7 +57,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {
-	if(!teamplay) { return; }
+	//if(!teamplay) { return; } // TODO DEBUGGING
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 
@@ -100,39 +100,34 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (STAT(FROZEN, it)) continue;
 			if (it == player) continue;
 
-			// TODO all tracing: proper dphitcontentsmask???
 			// TODO check for nades
 
-			// TODO ignore vertical velocity
-			// TODO higher limit - don't spawn in front of player when strafing slowly - or detect where he's looking?
-
-			if(vdist(it.velocity, >, 5)) {
-				fixedmakevectors(vectoangles(vec2(it.velocity)));
-				LOG_INFOF("    using velocity\n");
+			vector horiz_vel = vec2(it.velocity);
+			if(vdist(horiz_vel, >, 450)) {
+				fixedmakevectors(vectoangles(horiz_vel));
+				LOG_INFOF("    using velocity -> forward: %v\n", v_forward);
+			} else {
+				fixedmakevectors(it.angles); // .angles is the angle of the model - usually/always 0 pitch
+				LOG_INFOF("    using angles -> forward: %v\n", v_forward);
 			}
-			else
-				fixedmakevectors(it.angles);
 
-			// TODO go up - fix uneven surfaces
-			for(pc = 0; pc < 4; ++pc) // test 4 diffrent spots close to mate
+			// test diffrent spots close to mate - trace upwards so it works on uneven surfaces
+			for(pc = 0; pc < 4; ++pc)
 			{
 				switch(pc)
 				{
 					case 0:
-						tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 1:
-						tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 2:
-						tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 3:
-						tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
-					//case 4:
-						//tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NOMONSTERS, it);
-						//break;
 				}
 				vector prev_endpos = trace_endpos;
 				te_lightning1(NULL, it.origin, trace_endpos);
