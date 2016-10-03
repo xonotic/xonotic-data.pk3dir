@@ -87,7 +87,7 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, m_pickup, entity);
 
     /** (SERVER) setup weapon data */
-    METHOD(Weapon, wr_setup, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_setup, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) logic to run every frame */
     METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */

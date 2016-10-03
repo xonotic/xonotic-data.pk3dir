@@ -434,7 +434,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     else
         actor.(weaponentity).held_down = false;
 }
-METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor))
+METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
     actor.vaporizer_lasthit = 0;
 }

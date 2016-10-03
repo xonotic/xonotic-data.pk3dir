@@ -899,7 +899,7 @@ METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity we
     }
 }
 
-METHOD(BallStealer, wr_setup, void(BallStealer this, entity actor))
+METHOD(BallStealer, wr_setup, void(BallStealer this, entity actor, .entity weaponentity))
 {
     TC(BallStealer, this);
     //weapon_setup(WEP_PORTO.m_id);

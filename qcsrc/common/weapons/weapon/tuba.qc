@@ -56,23 +56,23 @@ REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
 
 spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(this, WEP_TUBA); }
 
-bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
+bool W_Tuba_HasPlayed(entity pl, .entity weaponentity, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
 	float i, j, mmin, mmax, nolength;
 	float n = tokenize_console(melody);
-	if(n > pl.tuba_lastnotes_cnt)
+	if(n > pl.(weaponentity).tuba_lastnotes_cnt)
 		return false;
 	float pitchshift = 0;
 
 	if(instrument >= 0)
-		if(pl.tuba_instrument != instrument)
+		if(pl.(weaponentity).tuba_instrument != instrument)
 			return false;
 
 	// verify notes...
 	nolength = false;
 	for(i = 0; i < n; ++i)
 	{
-		vector v = pl.(tuba_lastnotes[(pl.tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
+		vector v = pl.(weaponentity).(tuba_lastnotes[(pl.(weaponentity).tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
 		float ai = stof(argv(n - i - 1));
 		float np = floor(ai);
 		if(ai == np)
@@ -109,13 +109,13 @@ bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch
 
 		for(i = 0; i < n; ++i)
 		{
-			vector vi = pl.(tuba_lastnotes[(pl.tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
+			vector vi = pl.(weaponentity).(tuba_lastnotes[(pl.(weaponentity).tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
 			float ai = stof(argv(n - i - 1));
 			ti -= 1 / (ai - floor(ai));
 			float tj = ti;
 			for(j = i+1; j < n; ++j)
 			{
-				vector vj = pl.(tuba_lastnotes[(pl.tuba_lastnotes_last - j + MAX_TUBANOTES) % MAX_TUBANOTES]);
+				vector vj = pl.(weaponentity).(tuba_lastnotes[(pl.(weaponentity).tuba_lastnotes_last - j + MAX_TUBANOTES) % MAX_TUBANOTES]);
 				float aj = stof(argv(n - j - 1));
 				tj -= (aj - floor(aj));
 
@@ -142,7 +142,7 @@ bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch
 			return false;
 	}
 
-	pl.tuba_lastnotes_cnt = 0;
+	pl.(weaponentity).tuba_lastnotes_cnt = 0;
 
 	return true;
 }
@@ -154,12 +154,13 @@ void W_Tuba_NoteOff(entity this)
 	//   on: this.spawnshieldtime
 	//   off: time
 	//   note: this.cnt
-	if (actor.tuba_note == this)
+	.entity weaponentity = this.weaponentity_fld;
+	if (actor.(weaponentity).tuba_note == this)
 	{
-		actor.tuba_lastnotes_last = (actor.tuba_lastnotes_last + 1) % MAX_TUBANOTES;
-		actor.(tuba_lastnotes[actor.tuba_lastnotes_last]) = eX * this.spawnshieldtime + eY * time + eZ * this.cnt;
-		actor.tuba_note = NULL;
-		actor.tuba_lastnotes_cnt = bound(0, actor.tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
+		actor.(weaponentity).tuba_lastnotes_last = (actor.(weaponentity).tuba_lastnotes_last + 1) % MAX_TUBANOTES;
+		actor.(weaponentity).(tuba_lastnotes[actor.(weaponentity).tuba_lastnotes_last]) = eX * this.spawnshieldtime + eY * time + eZ * this.cnt;
+		actor.(weaponentity).tuba_note = NULL;
+		actor.(weaponentity).tuba_lastnotes_cnt = bound(0, actor.(weaponentity).tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
 
 		string s = trigger_magicear_processmessage_forallears(actor, 0, NULL, string_null);
 		if (s != "")
@@ -320,41 +321,43 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	n = W_Tuba_GetNote(actor, hittype);
 
 	hittype = 0;
-	if(actor.tuba_instrument & 1)
+	if(actor.(weaponentity).tuba_instrument & 1)
 		hittype |= HITTYPE_SECONDARY;
-	if(actor.tuba_instrument & 2)
+	if(actor.(weaponentity).tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
 
-	if(actor.tuba_note)
+	if(actor.(weaponentity).tuba_note)
 	{
-		if(actor.tuba_note.cnt != n || actor.tuba_note.tuba_instrument != actor.tuba_instrument)
+		if(actor.(weaponentity).tuba_note.cnt != n || actor.(weaponentity).tuba_note.tuba_instrument != actor.(weaponentity).tuba_instrument)
 		{
-			W_Tuba_NoteOff(actor.tuba_note);
+			W_Tuba_NoteOff(actor.(weaponentity).tuba_note);
 		}
 	}
 
-	if(!actor.tuba_note)
+	if(!actor.(weaponentity).tuba_note)
 	{
-		actor.tuba_note = new(tuba_note);
-		actor.tuba_note.owner = actor.tuba_note.realowner = actor;
-		actor.tuba_note.cnt = n;
-		actor.tuba_note.tuba_instrument = actor.tuba_instrument;
-		setthink(actor.tuba_note, W_Tuba_NoteThink);
-		actor.tuba_note.nextthink = time;
-		actor.tuba_note.spawnshieldtime = time;
-		Net_LinkEntity(actor.tuba_note, false, 0, W_Tuba_NoteSendEntity);
+		entity note = new(tuba_note);
+		note.weaponentity_fld = weaponentity;
+		actor.(weaponentity).tuba_note = note;
+		note.owner = note.realowner = actor;
+		note.cnt = n;
+		note.tuba_instrument = actor.(weaponentity).tuba_instrument;
+		setthink(note, W_Tuba_NoteThink);
+		note.nextthink = time;
+		note.spawnshieldtime = time;
+		Net_LinkEntity(note, false, 0, W_Tuba_NoteSendEntity);
 	}
 
-	actor.tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
+	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
 	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
 	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, NULL);
 
 	o = gettaginfo(actor.exteriorweaponentity, 0);
-	if(time > actor.tuba_smoketime)
+	if(time > actor.(weaponentity).tuba_smoketime)
 	{
 		Send_Effect(EFFECT_SMOKE_RING, o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
-		actor.tuba_smoketime = time + 0.25;
+		actor.(weaponentity).tuba_smoketime = time + 0.25;
 	}
 }
 #endif
@@ -387,18 +390,18 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 		W_Tuba_NoteOn(actor, weaponentity, HITTYPE_SECONDARY);
 		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 	}
-	if (actor.tuba_note)
+	if (actor.(weaponentity).tuba_note)
 	{
 		if (!(fire & 1) && !(fire & 2))
 		{
-			W_Tuba_NoteOff(actor.tuba_note);
+			W_Tuba_NoteOff(actor.(weaponentity).tuba_note);
 		}
 	}
 }
 
-METHOD(Tuba, wr_setup, void(Tuba this, entity actor))
+METHOD(Tuba, wr_setup, void(Tuba this, entity actor, .entity weaponentity))
 {
-	actor.tuba_instrument = 0;
+	actor.(weaponentity).tuba_instrument = 0;
 }
 #endif
 
@@ -407,52 +410,55 @@ REGISTER_NET_S2C(tuba_instrument)
 NET_HANDLE(tuba_instrument, bool)
 {
 	int i = ReadByte();
+	int slot = ReadByte();
 	return = true;
 	string s = (i == 0) ? "tuba" :
 	           (i == 1) ? "akordeon" :
 	                      "kleinbottle" ;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	entity wep = viewmodels[slot];
-    	if(wep.activeweapon == WEP_TUBA)
-    		CL_WeaponEntity_SetModel(wep, s, true);
-    }
+
+    entity wep = viewmodels[slot];
+    CL_WeaponEntity_SetModel(wep, s, true);
 }
 #endif
 #ifdef SVQC
-void tuba_instrument_send(entity this, int instr)
+void tuba_instrument_send(entity this, .entity weaponentity, int instr)
 {
 	msg_entity = this;
 	int chan = MSG_ONE;
 	WriteHeader(chan, tuba_instrument);
 	WriteByte(chan, instr);
+	WriteByte(chan, weaponslot(weaponentity));
 }
 SPECTATE_COPY()
 {
-	if (this.tuba_instrument != spectatee.tuba_instrument)
-		tuba_instrument_send(this, this.tuba_instrument = spectatee.tuba_instrument);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).tuba_instrument != spectatee.(weaponentity).tuba_instrument)
+			tuba_instrument_send(this, weaponentity, this.(weaponentity).tuba_instrument = spectatee.(weaponentity).tuba_instrument);
+	}
 }
 METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// switch to alternate instruments :)
 	if (actor.(weaponentity).state == WS_READY)
 	{
-		switch (actor.tuba_instrument)
+		switch (actor.(weaponentity).tuba_instrument)
 		{
 			case 0:
-				actor.tuba_instrument = 1;
+				actor.(weaponentity).tuba_instrument = 1;
 				actor.(weaponentity).weaponname = "akordeon";
 				break;
 			case 1:
-				actor.tuba_instrument = 2;
+				actor.(weaponentity).tuba_instrument = 2;
 				actor.(weaponentity).weaponname = "kleinbottle";
 				break;
 			case 2:
-				actor.tuba_instrument = 0;
+				actor.(weaponentity).tuba_instrument = 0;
 				actor.(weaponentity).weaponname = "tuba";
 				break;
 		}
-		tuba_instrument_send(actor, actor.tuba_instrument);
+		tuba_instrument_send(actor, weaponentity, actor.(weaponentity).tuba_instrument);
 		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;

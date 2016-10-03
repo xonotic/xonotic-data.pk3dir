@@ -491,18 +491,14 @@ METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor, .entity weaponent
     	W_Hagar_Attack2_Load_Release(actor, weaponentity);
     }
 }
-METHOD(Hagar, wr_setup, void(entity thiswep, entity actor))
+METHOD(Hagar, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	actor.hagar_load = 0;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    actor.(weaponentity).hagar_loadblock = false;
+    if(actor.(weaponentity).hagar_load)
     {
-    	.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).hagar_loadblock = false;
-    	if(actor.(weaponentity).hagar_load)
-    	{
-    		W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo) * actor.(weaponentity).hagar_load * -1, weaponentity); // give back ammo if necessary
-    		actor.(weaponentity).hagar_load = 0;
-    	}
+    	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo) * actor.(weaponentity).hagar_load * -1, weaponentity); // give back ammo if necessary
+    	actor.(weaponentity).hagar_load = 0;
     }
 }
 METHOD(Hagar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

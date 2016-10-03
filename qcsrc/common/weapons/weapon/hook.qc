@@ -280,13 +280,9 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         actor.(weaponentity).hook_state &= ~HOOK_REMOVING;
     }
 }
-METHOD(Hook, wr_setup, void(entity thiswep, entity actor))
+METHOD(Hook, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-    }
+	actor.(weaponentity).hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 }
 METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor, .entity weaponentity))
 {

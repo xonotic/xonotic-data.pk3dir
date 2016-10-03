@@ -331,7 +331,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         }
     }
 }
-METHOD(Vortex, wr_setup, void(entity thiswep, entity actor))
+METHOD(Vortex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
     actor.vortex_lasthit = 0;
 }
