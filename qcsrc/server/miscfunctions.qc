@@ -1077,6 +1077,8 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 {
 	if(SUB_OwnerCheck(this, toucher))
 		return true;
+	if(toucher.owner == this.owner)
+		return true;
 	if(SUB_NoImpactCheck(this, toucher))
 	{
 		if(this.classname == "nade")
