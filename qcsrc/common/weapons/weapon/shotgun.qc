@@ -225,7 +225,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
-.float shotgun_primarytime[MAX_WEAPONSLOTS];
+.float shotgun_primarytime;
 
 METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor))
 {
@@ -247,26 +247,24 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     {
         if(fire & 1)
         {
-        	int slot = weaponslot(weaponentity);
-            if(time >= actor.shotgun_primarytime[slot]) // handle refire separately so the secondary can be fired straight after a primary
+            if(time >= actor.(weaponentity).shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
                 {
                     W_Shotgun_Attack(thiswep, actor, weaponentity, true);
-                    actor.shotgun_primarytime[slot] = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
+                    actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
                 }
             }
         }
         else if((fire & 2) && WEP_CVAR(shotgun, secondary) == 2)
         {
-        	int slot = weaponslot(weaponentity);
-            if(time >= actor.shotgun_primarytime[slot]) // handle refire separately so the secondary can be fired straight after a primary
+            if(time >= actor.(weaponentity).shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
                 {
                     W_Shotgun_Attack(thiswep, actor, weaponentity, false);
-                    actor.shotgun_primarytime[slot] = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
+                    actor.(weaponentity).shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
                 }
             }

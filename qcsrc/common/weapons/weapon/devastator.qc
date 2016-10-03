@@ -62,7 +62,7 @@ ENDCLASS(Devastator)
 REGISTER_WEAPON(DEVASTATOR, devastator, NEW(Devastator));
 
 #ifdef SVQC
-.float rl_release[MAX_WEAPONSLOTS];
+.float rl_release;
 .float rl_detonate_later;
 #endif
 #endif
@@ -286,10 +286,8 @@ void W_Devastator_Think(entity this)
 	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == WEP_DEVASTATOR)
 	{
-		int slot = weaponslot(weaponentity);
-
 		if(this == this.realowner.(weaponentity).lastrocket)
-		if(!this.realowner.rl_release[slot])
+		if(!this.realowner.(weaponentity).rl_release)
 		if(!PHYS_INPUT_BUTTON_ATCK2(this))
 		if(WEP_CVAR(devastator, guiderate))
 		if(time > this.pushltime)
@@ -501,19 +499,18 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
     if(WEP_CVAR(devastator, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else {
-    	int slot = weaponslot(weaponentity);
         if(fire & 1)
         {
-            if(actor.rl_release[slot] || WEP_CVAR(devastator, guidestop))
+            if(actor.(weaponentity).rl_release || WEP_CVAR(devastator, guidestop))
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(devastator, refire)))
             {
                 W_Devastator_Attack(thiswep, actor, weaponentity);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
-                actor.rl_release[slot] = 0;
+                actor.(weaponentity).rl_release = 0;
             }
         }
         else
-            actor.rl_release[slot] = 1;
+            actor.(weaponentity).rl_release = 1;
 
         if(fire & 2)
         if(actor.(weaponentity).m_switchweapon == WEP_DEVASTATOR)
@@ -535,7 +532,10 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 METHOD(Devastator, wr_setup, void(entity thiswep, entity actor))
 {
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    	actor.rl_release[slot] = 1;
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).rl_release = 1;
+    }
 }
 METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -583,7 +583,7 @@ METHOD(Devastator, wr_resetplayer, void(entity thiswep, entity actor))
     {
     	.entity weaponentity = weaponentities[slot];
     	actor.(weaponentity).lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
-    	actor.rl_release[slot] = 0;
+    	actor.(weaponentity).rl_release = 0;
     }
 }
 METHOD(Devastator, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
