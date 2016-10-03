@@ -244,7 +244,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
     if(weaponslot(weaponentity) == 0)
         actor.vortex_chargepool_ammo = actor.(weaponentity).vortex_chargepool_ammo;
 
-    if(autocvar_g_balance_vortex_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
+    if(autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else
     {
@@ -291,13 +291,13 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                                 // if this weapon is reloadable, decrease its load. Else decrease the player's ammo
                                 if(autocvar_g_balance_vortex_reload_ammo)
                                 {
-                                    dt = min(dt, (actor.clip_load - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+                                    dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
                                     dt = max(0, dt);
                                     if(dt > 0)
                                     {
-                                        actor.clip_load = max(WEP_CVAR_SEC(vortex, ammo), actor.clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
+                                        actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(vortex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
                                     }
-                                    actor.(weapon_load[WEP_VORTEX.m_id]) = actor.clip_load;
+                                    actor.(weapon_load[WEP_VORTEX.m_id]) = actor.(weaponentity).clip_load;
                                 }
                                 else
                                 {
