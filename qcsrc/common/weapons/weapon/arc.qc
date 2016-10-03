@@ -102,7 +102,7 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 #endif
 #ifdef SVQC
 .entity arc_beam;
-.bool arc_BUTTON_ATCK_prev[MAX_WEAPONSLOTS]; // for better animation control
+.bool arc_BUTTON_ATCK_prev; // for better animation control
 .float beam_prev;
 .float beam_initialized;
 .float beam_bursting;
@@ -765,13 +765,12 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     Arc_Smoke(actor, weaponentity);
 
     bool beam_fire2 = ((fire & 2) && !WEP_CVAR(arc, bolt));
-    int slot = weaponslot(weaponentity);
 
     if (time >= actor.arc_overheat)
     if ((fire & 1) || beam_fire2 || actor.(weaponentity).arc_beam.beam_bursting)
     {
 
-        if(actor.arc_BUTTON_ATCK_prev[slot])
+        if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
         {
             #if 0
             if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
@@ -787,10 +786,10 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
             {
                 W_Arc_Beam(boolean(beam_fire2), actor, weaponentity);
 
-                if(!actor.arc_BUTTON_ATCK_prev[slot])
+                if(!actor.(weaponentity).arc_BUTTON_ATCK_prev)
                 {
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-                    actor.arc_BUTTON_ATCK_prev[slot] = true;
+                    actor.(weaponentity).arc_BUTTON_ATCK_prev = true;
                 }
             }
         }
@@ -806,13 +805,14 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
         }
     }
 
-    if(actor.arc_BUTTON_ATCK_prev[slot])
+    if(actor.(weaponentity).arc_BUTTON_ATCK_prev)
     {
+    	int slot = weaponslot(weaponentity);
         sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
         ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor(actor);
     }
-    actor.arc_BUTTON_ATCK_prev[slot] = false;
+    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 
     #if 0
     if(fire & 2)
@@ -864,8 +864,7 @@ METHOD(Arc, wr_drop, void(entity thiswep, entity actor, .entity weaponentity))
     weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
     actor.arc_overheat = 0;
     actor.arc_cooldown = 0;
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    	actor.arc_BUTTON_ATCK_prev[slot] = false;
+    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 }
 METHOD(Arc, wr_pickup, void(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -881,14 +880,16 @@ METHOD(Arc, wr_resetplayer, void(entity thiswep, entity actor))
     actor.arc_overheat = 0;
     actor.arc_cooldown = 0;
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    	actor.arc_BUTTON_ATCK_prev[slot] = false;
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
+    }
 }
 METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponentity))
 {
     actor.arc_overheat = 0;
     actor.arc_cooldown = 0;
-    int slot = weaponslot(weaponentity);
-    actor.arc_BUTTON_ATCK_prev[slot] = false;
+    actor.(weaponentity).arc_BUTTON_ATCK_prev = false;
 }
 #endif
 #ifdef CSQC

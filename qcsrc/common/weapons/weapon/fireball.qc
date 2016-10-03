@@ -56,7 +56,7 @@ REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
-.float fireball_primarytime[MAX_WEAPONSLOTS];
+.float fireball_primarytime;
 #endif
 #endif
 #ifdef IMPLEMENTATION
@@ -389,12 +389,11 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 {
     if(fire & 1)
     {
-    	int slot = weaponslot(weaponentity);
-        if(time >= actor.fireball_primarytime[slot])
+        if(time >= actor.(weaponentity).fireball_primarytime)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(fireball, refire)))
         {
             W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
-            actor.fireball_primarytime[slot] = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor(actor);
+            actor.(weaponentity).fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor(actor);
         }
     }
     else if(fire & 2)
@@ -417,7 +416,10 @@ METHOD(Fireball, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapo
 METHOD(Fireball, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    	actor.fireball_primarytime[slot] = time;
+	{
+		.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).fireball_primarytime = time;
+	}
 }
 METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
 {
