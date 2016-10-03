@@ -152,6 +152,9 @@ vector findperpendicular(vector v)
 
 		entity own = this.owner;
 
+		if(preferred_align < 1 || preferred_align > 4)
+			preferred_align = 3; // default
+
 		for(int j = 4; j > 1; --j) // > 1 as 1 is just center again
 		{
 			int taken = 0;
