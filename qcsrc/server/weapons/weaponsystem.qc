@@ -484,7 +484,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				this.m_weapon = newwep;
 				this.weaponname = newwep.mdl;
 				this.bulletcounter = 0;
-				newwep.wr_setup(newwep, actor);
+				newwep.wr_setup(newwep, actor, weaponentity);
 				this.state = WS_RAISE;
 
 				// set our clip load to the load of the weapon we switched to, if it's reloadable

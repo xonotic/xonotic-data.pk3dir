@@ -529,13 +529,9 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
         }
     }
 }
-METHOD(Devastator, wr_setup, void(entity thiswep, entity actor))
+METHOD(Devastator, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	actor.(weaponentity).rl_release = 1;
-    }
+    actor.(weaponentity).rl_release = 1;
 }
 METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {

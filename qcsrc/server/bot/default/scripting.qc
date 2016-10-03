@@ -1067,7 +1067,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
 		}
 	}
-	else if(this.tuba_note)
+	else if(this.(weaponentity).tuba_note)
 	{
 		if(f)
 		{
