@@ -335,8 +335,6 @@ vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
 
 #ifdef SVQC
 .entity gunaligns[5];
-#else
-entity gunaligns[5];
 #endif
 
 .int m_gunalign;
