@@ -362,7 +362,7 @@ MUTATOR_HOOKFUNCTION(ok, SpectateCopy)
 	client.ok_use_ammocharge = spectatee.ok_use_ammocharge;
 }
 
-MUTATOR_HOOKFUNCTION(ok, SetStartItems)
+MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 {
 	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
 
