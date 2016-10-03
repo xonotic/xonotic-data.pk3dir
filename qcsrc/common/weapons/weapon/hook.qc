@@ -379,7 +379,7 @@ void Draw_GrapplingHook(entity this)
 
 	InterpolateOrigin_Do(this);
 
-	int s = viewmodels[this.cnt].m_gunalign - 1; //W_GunAlign(NULL, STAT(GUNALIGN));
+	int s = W_GunAlign(viewmodels[this.cnt], STAT(GUNALIGN)) - 1;
 
 	switch(this.HookType)
 	{
