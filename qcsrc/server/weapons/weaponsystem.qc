@@ -490,7 +490,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				// set our clip load to the load of the weapon we switched to, if it's reloadable
 				if ((newwep.spawnflags & WEP_FLAG_RELOADABLE) && newwep.reloading_ammo)  // prevent accessing undefined cvars
 				{
-					this.clip_load = actor.(weaponentity).(weapon_load[this.m_switchweapon.m_id]);
+					this.clip_load = this.(weapon_load[this.m_switchweapon.m_id]);
 					this.clip_size = newwep.reloading_ammo;
 				}
 				else
