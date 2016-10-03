@@ -656,7 +656,8 @@ void PutClientInServer(entity this)
 
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			CL_SpawnWeaponentity(this, weaponentities[slot]);
+			.entity weaponentity = weaponentities[slot];
+			CL_SpawnWeaponentity(this, weaponentity);
 		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -703,6 +704,7 @@ void PutClientInServer(entity this)
 				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
 			else
 				this.(weaponentity).m_switchweapon = WEP_Null;
+			this.(weaponentity).m_weapon = WEP_Null;
 			this.(weaponentity).weaponname = "";
 			this.(weaponentity).m_switchingweapon = WEP_Null;
 			this.(weaponentity).cnt = -1;
