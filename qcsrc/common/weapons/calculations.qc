@@ -147,25 +147,30 @@ vector findperpendicular(vector v)
 #ifdef SVQC
 	int W_GunAlign(entity this, int preferred_align)
 	{
+		if(this.m_gunalign)
+			return this.m_gunalign; // no adjustment needed
+
 		entity own = this.owner;
-		// using wasfreed, as we don't actually clear .gunaligns yet
-		if(!own.gunaligns[preferred_align] || wasfreed(own.gunaligns[preferred_align]) || own.gunaligns[preferred_align] == this)
-		{
-			own.gunaligns[preferred_align] = this;
-			return preferred_align; // fall back if the good one is already choosable
-		}
 
-		for(int j = 4; j > 0; --j) // start from left and try the others
+		for(int j = 4; j > 1; --j) // > 1 as 1 is just center again
 		{
-			if(!own.gunaligns[j] || wasfreed(own.gunaligns[j]) || own.gunaligns[j] == this)
+			int taken = 0;
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
-				own.gunaligns[j] = this;
-				return j;
+				.entity weaponentity = weaponentities[slot];
+				if(own.(weaponentity).m_gunalign == j) // we know it can't be ours thanks to the above check
+					taken |= BIT(j);
+				if(own.(weaponentity).m_gunalign == preferred_align)
+					taken |= BIT(preferred_align);
 			}
+
+			if(!(taken & BIT(preferred_align)))
+				return preferred_align; // prefer the recommended
+			if(!(taken & BIT(j)))
+				return j; // or fall back if it's not available
 		}
 
-		own.gunaligns[preferred_align] = this;
-		return preferred_align; // no other choice
+		return preferred_align; // return it anyway
 	}
 #else
 	int W_GunAlign(entity this, int preferred_align)
