@@ -406,10 +406,6 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
         }
     }
 }
-METHOD(Fireball, wr_setup, void(entity thiswep, entity actor))
-{
-    actor.ammo_field = ammo_none;
-}
 METHOD(Fireball, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // infinite ammo

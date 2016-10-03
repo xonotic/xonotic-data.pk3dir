@@ -484,7 +484,6 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				this.m_weapon = newwep;
 				this.weaponname = newwep.mdl;
 				this.bulletcounter = 0;
-				actor.ammo_field = newwep.ammo_field;
 				newwep.wr_setup(newwep, actor);
 				this.state = WS_RAISE;
 
@@ -673,19 +672,21 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 {
 	// finish the reloading process, and do the ammo transfer
 
+	Weapon wpn = actor.(weaponentity).m_weapon;
+
 	actor.(weaponentity).clip_load = actor.(weaponentity).old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if (!actor.(weaponentity).reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || actor.ammo_field == ammo_none)
+	if (!actor.(weaponentity).reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || wpn.ammo_field == ammo_none)
 	{
 		actor.(weaponentity).clip_load = actor.(weaponentity).reload_ammo_amount;
 	}
 	else
 	{
 		// make sure we don't add more ammo than we have
-		float load = min(actor.(weaponentity).reload_ammo_amount - actor.(weaponentity).clip_load, actor.(actor.ammo_field));
+		float load = min(actor.(weaponentity).reload_ammo_amount - actor.(weaponentity).clip_load, actor.(wpn.ammo_field));
 		actor.(weaponentity).clip_load += load;
-		actor.(actor.ammo_field) -= load;
+		actor.(wpn.ammo_field) -= load;
 	}
 	actor.(weaponentity).(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
 
@@ -695,7 +696,6 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 	// ATTACK_FINISHED(actor, slot) -= actor.(weaponentity).reload_time - 1;
 
-	Weapon wpn = Weapons_from(actor.(weaponentity).m_weapon.m_id);
 	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
 
@@ -728,9 +728,9 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	if (actor.(weaponentity).clip_load >= actor.(weaponentity).reload_ammo_amount) return;
 
 	// no ammo, so nothing to load
-	if (actor.ammo_field != ammo_none)
+	if (e.ammo_field != ammo_none)
 	{
-		if (!actor.(actor.ammo_field) && actor.(weaponentity).reload_ammo_min)
+		if (!actor.(e.ammo_field) && actor.(weaponentity).reload_ammo_min)
 		{
 			if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
@@ -741,8 +741,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 					actor.reload_complain = time + 1;
 				}
 				// switch away if the amount of ammo is not enough to keep using this weapon
-				Weapon w = actor.(weaponentity).m_weapon;
-				if (!(w.wr_checkammo1(w, actor, weaponentity) + w.wr_checkammo2(w, actor, weaponentity)))
+				if (!(e.wr_checkammo1(e, actor, weaponentity) + e.wr_checkammo2(e, actor, weaponentity)))
 				{
 					actor.(weaponentity).clip_load = -1;  // reload later
 					W_SwitchToOtherWeapon(actor, weaponentity);
@@ -771,11 +770,11 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 
 	// ATTACK_FINISHED(actor, slot) = max(time, ATTACK_FINISHED(actor, slot)) + actor.(weaponentity).reload_time + 1;
 
-	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, actor.(weaponentity).reload_time, W_ReloadedAndReady);
+	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, this.reload_time, W_ReloadedAndReady);
 
 	if (this.clip_load < 0) this.clip_load = 0;
 	this.old_clip_load = this.clip_load;
-	this.clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_weapon.m_id]) = -1;
+	this.clip_load = this.(weapon_load[this.m_weapon.m_id]) = -1;
 }
 
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)

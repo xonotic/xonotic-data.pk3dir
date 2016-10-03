@@ -281,10 +281,6 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
     }
 }
-METHOD(Shotgun, wr_setup, void(entity thiswep, entity actor))
-{
-    actor.ammo_field = ammo_none;
-}
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);

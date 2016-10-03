@@ -372,10 +372,6 @@ METHOD(PortoLaunch, wr_checkammo2, bool(entity thiswep, entity this, .entity wea
     // always allow infinite ammo
     return true;
 }
-METHOD(PortoLaunch, wr_setup, void(entity thiswep, entity actor))
-{
-    actor.ammo_field = ammo_none;
-}
 METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 {
     actor.porto_current = NULL;
