@@ -2432,6 +2432,12 @@ void PlayerPreThink (entity this)
 			{
 				.entity weaponentity = weaponentities[slot];
 				W_WeaponFrame(this, weaponentity);
+
+				if(slot == 0)
+				{
+					this.clip_load = this.(weaponentity).clip_load;
+					this.clip_size = this.(weaponentity).clip_size;
+				}
 			}
 
 			this.items_added = 0;
@@ -2506,9 +2512,12 @@ void PlayerPreThink (entity this)
 
 	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	.entity weaponentity = weaponentities[0];
-	if (this.(weaponentity).m_weapon == WEP_Null)
-		this.clip_load = this.clip_size = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
+	}
 }
 
 void DrownPlayer(entity this)

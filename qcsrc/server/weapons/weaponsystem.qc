@@ -491,12 +491,12 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				// set our clip load to the load of the weapon we switched to, if it's reloadable
 				if ((newwep.spawnflags & WEP_FLAG_RELOADABLE) && newwep.reloading_ammo)  // prevent accessing undefined cvars
 				{
-					actor.clip_load = actor.(weapon_load[this.m_switchweapon.m_id]);
-					actor.clip_size = newwep.reloading_ammo;
+					this.clip_load = actor.(weapon_load[this.m_switchweapon.m_id]);
+					this.clip_size = newwep.reloading_ammo;
 				}
 				else
 				{
-					actor.clip_load = actor.clip_size = 0;
+					this.clip_load = this.clip_size = 0;
 				}
 
 				weapon_thinkf(actor, weaponentity, WFRAME_IDLE, newwep.switchdelay_raise, w_ready);
@@ -642,8 +642,8 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if (wep.reloading_ammo)
 	{
-		actor.clip_load -= ammo_use;
-		actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.clip_load;
+		actor.(weaponentity).clip_load -= ammo_use;
+		actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
 	}
 	else if (wep.ammo_field != ammo_none)
 	{
@@ -673,27 +673,27 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 {
 	// finish the reloading process, and do the ammo transfer
 
-	actor.clip_load = actor.old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	actor.(weaponentity).clip_load = actor.(weaponentity).old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if (!actor.reload_ammo_min || actor.items & IT_UNLIMITED_WEAPON_AMMO || actor.ammo_field == ammo_none)
+	if (!actor.(weaponentity).reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || actor.ammo_field == ammo_none)
 	{
-		actor.clip_load = actor.reload_ammo_amount;
+		actor.(weaponentity).clip_load = actor.(weaponentity).reload_ammo_amount;
 	}
 	else
 	{
 		// make sure we don't add more ammo than we have
-		float load = min(actor.reload_ammo_amount - actor.clip_load, actor.(actor.ammo_field));
-		actor.clip_load += load;
+		float load = min(actor.(weaponentity).reload_ammo_amount - actor.(weaponentity).clip_load, actor.(actor.ammo_field));
+		actor.(weaponentity).clip_load += load;
 		actor.(actor.ammo_field) -= load;
 	}
-	actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.clip_load;
+	actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
 	// so your weapon is disabled for a few seconds without reason
 
-	// ATTACK_FINISHED(actor, slot) -= actor.reload_time - 1;
+	// ATTACK_FINISHED(actor, slot) -= actor.(weaponentity).reload_time - 1;
 
 	Weapon wpn = Weapons_from(actor.(weaponentity).m_weapon.m_id);
 	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
@@ -707,9 +707,9 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 
 	if (MUTATOR_CALLHOOK(W_Reload, actor)) return;
 
-	actor.reload_ammo_min = sent_ammo_min;
-	actor.reload_ammo_amount = e.reloading_ammo;
-	actor.reload_time = e.reloading_time;
+	actor.(weaponentity).reload_ammo_min = sent_ammo_min;
+	actor.(weaponentity).reload_ammo_amount = e.reloading_ammo;
+	actor.(weaponentity).reload_time = e.reloading_time;
 	if (actor.reload_sound) strunzone(actor.reload_sound);
 	actor.reload_sound = strzone(Sound_fixpath(sent_sound));
 
@@ -722,15 +722,15 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	}
 
 	// return if reloading is disabled for this weapon
-	if (!actor.reload_ammo_amount) return;
+	if (!actor.(weaponentity).reload_ammo_amount) return;
 
 	// our weapon is fully loaded, no need to reload
-	if (actor.clip_load >= actor.reload_ammo_amount) return;
+	if (actor.(weaponentity).clip_load >= actor.(weaponentity).reload_ammo_amount) return;
 
 	// no ammo, so nothing to load
 	if (actor.ammo_field != ammo_none)
 	{
-		if (!actor.(actor.ammo_field) && actor.reload_ammo_min)
+		if (!actor.(actor.ammo_field) && actor.(weaponentity).reload_ammo_min)
 		{
 			if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
@@ -744,7 +744,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 				Weapon w = actor.(weaponentity).m_weapon;
 				if (!(w.wr_checkammo1(w, actor, weaponentity) + w.wr_checkammo2(w, actor, weaponentity)))
 				{
-					actor.clip_load = -1;  // reload later
+					actor.(weaponentity).clip_load = -1;  // reload later
 					W_SwitchToOtherWeapon(actor, weaponentity);
 				}
 				return;
@@ -769,13 +769,13 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
 	// so your weapon is disabled for a few seconds without reason
 
-	// ATTACK_FINISHED(actor, slot) = max(time, ATTACK_FINISHED(actor, slot)) + actor.reload_time + 1;
+	// ATTACK_FINISHED(actor, slot) = max(time, ATTACK_FINISHED(actor, slot)) + actor.(weaponentity).reload_time + 1;
 
-	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, actor.reload_time, W_ReloadedAndReady);
+	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, actor.(weaponentity).reload_time, W_ReloadedAndReady);
 
-	if (actor.clip_load < 0) actor.clip_load = 0;
-	actor.old_clip_load = actor.clip_load;
-	actor.clip_load = actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = -1;
+	if (this.clip_load < 0) this.clip_load = 0;
+	this.old_clip_load = this.clip_load;
+	this.clip_load = actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = -1;
 }
 
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)

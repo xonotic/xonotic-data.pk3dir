@@ -168,7 +168,7 @@ METHOD(Rifle, wr_aim, void(entity thiswep, entity actor))
 }
 METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_rifle_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
+    if(autocvar_g_balance_rifle_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else
     {

@@ -117,7 +117,7 @@ METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor))
 
 METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
+    if(WEP_CVAR(rpc, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(rpc, ammo)) {
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else
     {

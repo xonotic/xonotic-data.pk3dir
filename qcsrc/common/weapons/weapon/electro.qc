@@ -521,9 +521,9 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
     {
         float ammo_amount = 0;
-        if(actor.clip_load >= WEP_CVAR_PRI(electro, ammo))
+        if(actor.(weaponentity).clip_load >= WEP_CVAR_PRI(electro, ammo))
             ammo_amount = 1;
-        if(actor.clip_load >= WEP_CVAR_SEC(electro, ammo))
+        if(actor.(weaponentity).clip_load >= WEP_CVAR_SEC(electro, ammo))
             ammo_amount += 1;
 
         if(!ammo_amount)

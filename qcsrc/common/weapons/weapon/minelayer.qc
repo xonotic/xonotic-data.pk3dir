@@ -503,7 +503,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
 }
 METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
+    if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
     {
         // not if we're holding the minelayer without enough ammo, but can detonate existing mines
         if(!(W_MineLayer_PlacedMines(actor, false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {

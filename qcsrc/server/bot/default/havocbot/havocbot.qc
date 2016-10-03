@@ -156,17 +156,18 @@ void havocbot_ai(entity this)
 	// if the bot is not attacking, consider reloading weapons
 	if (!(this.aistatus & AI_STATUS_ATTACKING))
 	{
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 		// we are currently holding a weapon that's not fully loaded, reload it
 		if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
-		if(this.clip_load < this.clip_size)
+		if(this.(weaponentity).clip_load < this.(weaponentity).clip_size)
 			this.impulse = 20; // "press" the reload button, not sure if this is done right
 
 		// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
 		// the code above executes next frame, starting the reloading then
 		if(skill >= 5) // bots can only look for unloaded weapons past this skill
-		if(this.clip_load >= 0) // only if we're not reloading a weapon already
+		if(this.(weaponentity).clip_load >= 0) // only if we're not reloading a weapon already
 		{
-			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 			FOREACH(Weapons, it != WEP_Null, LAMBDA(
 				if((this.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.weapon_load[it.m_id] < it.reloading_ammo))
 					this.(weaponentity).m_switchweapon = it;
