@@ -673,12 +673,12 @@ METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapone
     if(WEP_CVAR(seeker, type) == 1)
     {
         ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, missile_ammo);
-        ammo_amount += actor.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
     }
     else
     {
         ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
-        ammo_amount += actor.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     return ammo_amount;
 }
@@ -688,12 +688,12 @@ METHOD(Seeker, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
     if(WEP_CVAR(seeker, type) == 1)
     {
         ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
-        ammo_amount += actor.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     else
     {
         ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, flac_ammo);
-        ammo_amount += actor.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
     }
     return ammo_amount;
 }

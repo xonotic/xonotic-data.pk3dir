@@ -169,7 +169,7 @@ void havocbot_ai(entity this)
 		if(this.(weaponentity).clip_load >= 0) // only if we're not reloading a weapon already
 		{
 			FOREACH(Weapons, it != WEP_Null, LAMBDA(
-				if((this.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.weapon_load[it.m_id] < it.reloading_ammo))
+				if((this.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
 					this.(weaponentity).m_switchweapon = it;
 			));
 		}
@@ -996,10 +996,10 @@ float havocbot_chooseweapon_checkreload(entity this, int new_weapon)
 		return false;
 
 	// if this weapon is scheduled for reloading, don't switch to it during combat
-	if (this.weapon_load[new_weapon] < 0)
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	if (this.(weaponentity).weapon_load[new_weapon] < 0)
 	{
 		bool other_weapon_available = false;
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
 			if(it.wr_checkammo1(it, this, weaponentity) + it.wr_checkammo2(it, this, weaponentity))
 				other_weapon_available = true;

@@ -532,7 +532,7 @@ METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weap
     //if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
     //{
         float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
-        ammo_amount += actor.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
         return ammo_amount;
     //}
     //return true;

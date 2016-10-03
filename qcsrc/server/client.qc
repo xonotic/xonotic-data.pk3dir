@@ -671,7 +671,11 @@ void PutClientInServer(entity this)
 			it.wr_resetplayer(it, this);
 			// reload all reloadable weapons
 			if (it.spawnflags & WEP_FLAG_RELOADABLE) {
-				this.weapon_load[it.m_id] = it.reloading_ammo;
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					.entity weaponentity = weaponentities[slot];
+					this.(weaponentity).weapon_load[it.m_id] = it.reloading_ammo;
+				}
 			}
 		));
 

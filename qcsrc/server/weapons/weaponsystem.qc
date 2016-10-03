@@ -491,7 +491,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				// set our clip load to the load of the weapon we switched to, if it's reloadable
 				if ((newwep.spawnflags & WEP_FLAG_RELOADABLE) && newwep.reloading_ammo)  // prevent accessing undefined cvars
 				{
-					this.clip_load = actor.(weapon_load[this.m_switchweapon.m_id]);
+					this.clip_load = actor.(weaponentity).(weapon_load[this.m_switchweapon.m_id]);
 					this.clip_size = newwep.reloading_ammo;
 				}
 				else
@@ -643,7 +643,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 	if (wep.reloading_ammo)
 	{
 		actor.(weaponentity).clip_load -= ammo_use;
-		actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
+		actor.(weaponentity).(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
 	}
 	else if (wep.ammo_field != ammo_none)
 	{
@@ -687,7 +687,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 		actor.(weaponentity).clip_load += load;
 		actor.(actor.ammo_field) -= load;
 	}
-	actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
+	actor.(weaponentity).(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
@@ -775,7 +775,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 
 	if (this.clip_load < 0) this.clip_load = 0;
 	this.old_clip_load = this.clip_load;
-	this.clip_load = actor.(weapon_load[actor.(weaponentity).m_weapon.m_id]) = -1;
+	this.clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_weapon.m_id]) = -1;
 }
 
 void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)

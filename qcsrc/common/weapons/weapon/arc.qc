@@ -844,7 +844,7 @@ METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponenti
     if(WEP_CVAR(arc, bolt))
     {
         float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(arc, bolt_ammo);
-        ammo_amount += actor.(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(arc, bolt_ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(arc, bolt_ammo);
         return ammo_amount;
     }
     else

@@ -86,7 +86,7 @@ METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entit
     float ammo_amount = actor.ammo_nails >= WEP_CVAR(hmg, ammo);
 
     if(autocvar_g_balance_hmg_reload_ammo)
-        ammo_amount += actor.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
 
     return ammo_amount;
 }
@@ -96,7 +96,7 @@ METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entit
     float ammo_amount = actor.ammo_nails >= WEP_CVAR(hmg, ammo);
 
     if(autocvar_g_balance_hmg_reload_ammo)
-        ammo_amount += actor.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
 
     return ammo_amount;
 }

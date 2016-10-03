@@ -165,7 +165,13 @@ void NIX_GiveCurrentWeapon(entity this)
 
 		// all weapons must be fully loaded when we spawn
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-			this.(weapon_load[nix_weapon]) = e.reloading_ammo;
+		{
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				this.(weaponentity).(weapon_load[nix_weapon]) = e.reloading_ammo;
+			}
+		}
 
 		// vortex too
 		if(WEP_CVAR(vortex, charge))

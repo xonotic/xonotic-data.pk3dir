@@ -443,7 +443,7 @@ METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weap
 {
     float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
     float ammo_amount = actor.(thiswep.ammo_field) >= vaporizer_ammo;
-    ammo_amount += actor.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
     return ammo_amount;
 }
 METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -451,7 +451,7 @@ METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weap
     if(!WEP_CVAR_SEC(vaporizer, ammo))
         return true;
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(vaporizer, ammo);
-    ammo_amount += actor.(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
     return ammo_amount;
 }
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep, entity actor))
