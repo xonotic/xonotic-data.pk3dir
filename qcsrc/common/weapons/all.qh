@@ -333,10 +333,6 @@ vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
     return g;
 }
 
-#ifdef SVQC
-.entity gunaligns[5];
-#endif
-
 .int m_gunalign;
 
 //.int weapon; // current weapon
