@@ -392,11 +392,11 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 // ============================
 // Begin: Tag and rocket controllers
 // ============================
-entity W_Seeker_Tagged_Info(entity isowner, entity istarget)
+entity W_Seeker_Tagged_Info(entity isowner, .entity weaponentity, entity istarget)
 {
 	entity tag;
 	for(tag = NULL; (tag = find(tag, classname, "tag_tracker")); )
-		if((tag.realowner == isowner) && (tag.tag_target == istarget))
+		if((tag.realowner == isowner) && (tag.tag_target == istarget) && (tag.weaponentity_fld == weaponentity))
 			return tag;
 
 	return NULL;
@@ -526,7 +526,8 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 	if(toucher.takedamage == DAMAGE_AIM && !IS_DEAD(toucher))
 	{
 		// check to see if this person is already tagged by me
-		entity tag = W_Seeker_Tagged_Info(this.realowner, toucher);
+		.entity weaponentity = this.weaponentity_fld;
+		entity tag = W_Seeker_Tagged_Info(this.realowner, weaponentity, toucher);
 
 		if(tag != NULL)
 		{
@@ -615,8 +616,9 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 
 METHOD(Seeker, wr_aim, void(entity thiswep, entity actor))
 {
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
     if(WEP_CVAR(seeker, type) == 1)
-        if(W_Seeker_Tagged_Info(actor, actor.enemy) != NULL)
+        if(W_Seeker_Tagged_Info(actor, weaponentity, actor.enemy) != NULL)
             PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
         else
             PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
