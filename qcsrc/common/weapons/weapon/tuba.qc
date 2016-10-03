@@ -398,7 +398,6 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 
 METHOD(Tuba, wr_setup, void(Tuba this, entity actor))
 {
-	actor.ammo_field = ammo_none;
 	actor.tuba_instrument = 0;
 }
 #endif
