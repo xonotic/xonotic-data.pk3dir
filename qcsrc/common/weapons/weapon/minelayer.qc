@@ -296,9 +296,9 @@ void W_MineLayer_Touch(entity this, entity toucher)
 		return;
 	}
 
-	if(toucher && IS_PLAYER(toucher) && !IS_DEAD(toucher))
+	if((toucher && IS_PLAYER(toucher) && !IS_DEAD(toucher)) || toucher.owner == this.owner)
 	{
-		// hit a player
+		// hit a player or other mine
 		// don't stick
 	}
 	else
