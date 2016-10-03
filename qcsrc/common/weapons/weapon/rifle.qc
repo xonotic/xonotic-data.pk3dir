@@ -204,13 +204,13 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(rifle, ammo);
-    ammo_amount += actor.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(rifle, ammo);
-    ammo_amount += actor.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_resetplayer, void(entity thiswep, entity actor))

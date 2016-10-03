@@ -297,7 +297,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                                     {
                                         actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(vortex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
                                     }
-                                    actor.(weapon_load[WEP_VORTEX.m_id]) = actor.(weaponentity).clip_load;
+                                    actor.(weaponentity).(weapon_load[WEP_VORTEX.m_id]) = actor.(weaponentity).clip_load;
                                 }
                                 else
                                 {
@@ -338,7 +338,7 @@ METHOD(Vortex, wr_setup, void(entity thiswep, entity actor))
 METHOD(Vortex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(vortex, ammo);
-    ammo_amount += (autocvar_g_balance_vortex_reload_ammo && actor.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
+    ammo_amount += (autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
     return ammo_amount;
 }
 METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -347,7 +347,7 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
     {
         // don't allow charging if we don't have enough ammo
         float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(vortex, ammo);
-        ammo_amount += actor.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
         return ammo_amount;
     }
     else

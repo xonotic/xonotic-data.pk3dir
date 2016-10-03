@@ -323,9 +323,9 @@ METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
     if(WEP_CVAR(machinegun, reload_ammo))
     {
         if(WEP_CVAR(machinegun, mode) == 1)
-            ammo_amount += actor.(weapon_load[WEP_MACHINEGUN.m_id]) >= WEP_CVAR(machinegun, sustained_ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_MACHINEGUN.m_id]) >= WEP_CVAR(machinegun, sustained_ammo);
         else
-            ammo_amount += actor.(weapon_load[WEP_MACHINEGUN.m_id]) >= WEP_CVAR(machinegun, first_ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_MACHINEGUN.m_id]) >= WEP_CVAR(machinegun, first_ammo);
     }
     return ammo_amount;
 }
@@ -340,9 +340,9 @@ METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity wea
     if(WEP_CVAR(machinegun, reload_ammo))
     {
         if(WEP_CVAR(machinegun, mode) == 1)
-            ammo_amount += actor.(weapon_load[WEP_MACHINEGUN.m_id]) >= WEP_CVAR(machinegun, burst_ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_MACHINEGUN.m_id]) >= WEP_CVAR(machinegun, burst_ammo);
         else
-            ammo_amount += actor.(weapon_load[WEP_MACHINEGUN.m_id]) >= WEP_CVAR(machinegun, first_ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_MACHINEGUN.m_id]) >= WEP_CVAR(machinegun, first_ammo);
     }
     return ammo_amount;
 }

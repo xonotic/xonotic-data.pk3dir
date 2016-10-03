@@ -288,7 +288,7 @@ METHOD(Shotgun, wr_setup, void(entity thiswep, entity actor))
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
-    ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
     return ammo_amount;
 }
 METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -302,7 +302,7 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
         case 2: // secondary triple shot
         {
             float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
-            ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
             return ammo_amount;
         }
         default: return false; // secondary unavailable

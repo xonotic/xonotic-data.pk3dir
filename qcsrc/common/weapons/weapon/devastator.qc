@@ -546,7 +546,7 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
         ammo_amount = false;
         if(WEP_CVAR(devastator, reload_ammo))
         {
-            if(actor.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo) && actor.(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
+            if(actor.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo) && actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
                 ammo_amount = true;
         }
         else if(actor.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
@@ -563,13 +563,13 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
     else
     {
         ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
-        ammo_amount += actor.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
         LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
         return ammo_amount;
     }
     #else
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
-    ammo_amount += actor.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
     return ammo_amount;
     #endif
 }
