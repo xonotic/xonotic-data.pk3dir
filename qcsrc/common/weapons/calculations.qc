@@ -170,24 +170,7 @@ vector findperpendicular(vector v)
 #else
 	int W_GunAlign(entity this, int preferred_align)
 	{
-		// using wasfreed, as we don't actually clear gunaligns yet
-		if(!gunaligns[preferred_align] || wasfreed(gunaligns[preferred_align]) || gunaligns[preferred_align] == this)
-		{
-			gunaligns[preferred_align] = this;
-			return preferred_align; // fall back if the good one is already choosable
-		}
-
-		for(int j = 4; j > 0; --j)
-		{
-			if(!gunaligns[j] || wasfreed(gunaligns[j]) || gunaligns[j] == this)
-			{
-				gunaligns[j] = this;
-				return j;
-			}
-		}
-
-		gunaligns[preferred_align] = this;
-		return preferred_align; // no other choice
+		return this.m_gunalign > 0 ? this.m_gunalign : preferred_align;
 	}
 #endif
 

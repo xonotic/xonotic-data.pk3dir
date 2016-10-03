@@ -17,6 +17,7 @@ MACRO_END
 //.float w_weapon_nextthink;
 .float w_m_alpha;
 .float w_vortex_charge;
+.int w_m_gunalign;
 
 // #define PROP(public, fld, set, sv, cl)
 #define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
@@ -39,6 +40,10 @@ MACRO_END
     PROP(false, vortex_charge, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.vortex_charge * 16); }, \
 	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 16; }) \
+    \
+    PROP(false, m_gunalign, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.m_gunalign); }, \
+	{ (viewmodels[this.m_wepent_slot]).m_gunalign = ReadByte(); }) \
     \
 	/**/
 
