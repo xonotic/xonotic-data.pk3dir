@@ -207,10 +207,10 @@ void W_MineLayer_ProximityExplode(entity this)
 	W_MineLayer_Explode(this, NULL);
 }
 
-int W_MineLayer_Count(entity e)
+int W_MineLayer_Count(entity e, .entity weaponentity)
 {
 	int minecount = 0;
-	IL_EACH(g_mines, it.realowner == e,
+	IL_EACH(g_mines, it.realowner == e && it.weaponentity_fld == weaponentity,
 	{
 		minecount += 1;
 	});
@@ -397,14 +397,14 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, mine);
 
-	actor.(weaponentity).minelayer_mines = W_MineLayer_Count(actor);
+	actor.(weaponentity).minelayer_mines = W_MineLayer_Count(actor, weaponentity);
 }
 
-bool W_MineLayer_PlacedMines(entity this, bool detonate)
+bool W_MineLayer_PlacedMines(entity this, .entity weaponentity, bool detonate)
 {
 	bool minfound = false;
 
-	IL_EACH(g_mines, it.realowner == this,
+	IL_EACH(g_mines, it.realowner == this && it.weaponentity_fld == weaponentity,
 	{
 		if(detonate)
 		{
@@ -513,7 +513,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
     {
         // not if we're holding the minelayer without enough ammo, but can detonate existing mines
-        if(!(W_MineLayer_PlacedMines(actor, false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
+        if(!(W_MineLayer_PlacedMines(actor, weaponentity, false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
             thiswep.wr_reload(thiswep, actor, weaponentity);
         }
     }
@@ -528,7 +528,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 
     if(fire & 2)
     {
-        if(W_MineLayer_PlacedMines(actor, true))
+        if(W_MineLayer_PlacedMines(actor, weaponentity, true))
             sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
     }
 }
@@ -546,7 +546,7 @@ METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weap
 }
 METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(W_MineLayer_PlacedMines(actor, false))
+    if(W_MineLayer_PlacedMines(actor, weaponentity, false))
         return true;
     else
         return false;
