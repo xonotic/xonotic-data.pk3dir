@@ -1304,7 +1304,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(isnew)
 	{
-		int gunalign = W_GunAlign(viewmodels[slot], STAT(GUNALIGN));
+		int gunalign = W_GunAlign(viewmodels[slot], STAT(GUNALIGN)) - 1;
 
 		this.beam_shotorigin = arc_shotorigin[gunalign];
 

@@ -172,7 +172,7 @@ void GrapplingHookThink(entity this)
 
 	this.nextthink = time;
 
-	int s = W_GunAlign(this.realowner.(weaponentity), STAT(GUNALIGN, this.realowner));
+	int s = W_GunAlign(this.realowner.(weaponentity), STAT(GUNALIGN, this.realowner)) - 1;
 	vs = hook_shotorigin[s];
 
 	makevectors(this.realowner.v_angle);
@@ -362,28 +362,24 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 
 void FireGrapplingHook(entity actor, .entity weaponentity)
 {
-	entity missile;
-	vector org;
-	vector vs;
-
 	if(forbidWeaponUse(actor)) return;
 	if(actor.vehicle) return;
 
 	makevectors(actor.v_angle);
 
-	int s = W_GunAlign(actor.(weaponentity), STAT(GUNALIGN, actor));
-	vs = hook_shotorigin[s];
+	int s = W_GunAlign(actor.(weaponentity), STAT(GUNALIGN, actor)) - 1;
+	vector vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
 	sound (actor, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
-	org = actor.origin + actor.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
+	vector org = actor.origin + actor.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
 	tracebox(actor.origin + actor.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, actor);
 	org = trace_endpos;
 
 	Send_Effect(EFFECT_HOOK_MUZZLEFLASH, org, '0 0 0', 1);
 
-	missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.owner = missile.realowner = actor;
 	actor.(weaponentity).hook = missile;
 	missile.weaponentity_fld = weaponentity;
