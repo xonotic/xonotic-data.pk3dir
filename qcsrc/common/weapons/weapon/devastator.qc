@@ -418,7 +418,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     // aim and decide to fire if appropriate
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
     {
         // decide whether to detonate rockets

@@ -63,9 +63,14 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			it.ammo_rockets = start_ammo_rockets;
 			it.ammo_fuel = start_ammo_fuel;
 			it.weapons = start_weapons;
-			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-			if(!client_hasweapon(it, it.(weaponentity).m_weapon, weaponentity, true, false))
-				it.(weaponentity).m_switchweapon = w_getbestweapon(it, weaponentity);
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(it.(weaponentity).m_weapon == WEP_Null && slot != 0)
+					continue;
+				if(!client_hasweapon(it, it.(weaponentity).m_weapon, weaponentity, true, false))
+					it.(weaponentity).m_switchweapon = w_getbestweapon(it, weaponentity);
+			}
 		});
 	}
 
@@ -215,14 +220,20 @@ void NIX_GiveCurrentWeapon(entity this)
 		this.weapons |= WEPSET(BLASTER);
 	this.weapons |= e.m_wepset;
 
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
     Weapon w = Weapons_from(nix_weapon);
-	if(this.(weaponentity).m_switchweapon != w)
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
+    		continue;
+
+		if(this.(weaponentity).m_switchweapon != w)
 		if(!client_hasweapon(this, this.(weaponentity).m_switchweapon, weaponentity, true, false))
 		{
 			if(client_hasweapon(this, w, weaponentity, true, false))
 				W_SwitchWeapon(this, w, weaponentity);
 		}
+	}
 }
 
 MUTATOR_HOOKFUNCTION(nix, ForbidThrowCurrentWeapon)

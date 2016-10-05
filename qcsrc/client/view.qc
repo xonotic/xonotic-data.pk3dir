@@ -1154,10 +1154,6 @@ void HUD_Crosshair(entity this)
 				weapon_clipload = STAT(WEAPON_CLIPLOAD);
 				weapon_clipsize = STAT(WEAPON_CLIPSIZE);
 
-				float ok_ammo_charge, ok_ammo_chargepool;
-				ok_ammo_charge = STAT(OK_AMMO_CHARGE);
-				ok_ammo_chargepool = STAT(OK_AMMO_CHARGEPOOL);
-
 				float vortex_charge, vortex_chargepool;
 				vortex_charge = STAT(VORTEX_CHARGE);
 				vortex_chargepool = STAT(VORTEX_CHARGEPOOL);
@@ -1201,13 +1197,6 @@ void HUD_Crosshair(entity this)
 				{
 					ring_value = bound(0, STAT(HAGAR_LOAD) / WEP_CVAR_SEC(hagar, load_max), 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
-					ring_rgb = wcross_color;
-					ring_image = "gfx/crosshair_ring.tga";
-				}
-				else if (ok_ammo_charge)
-				{
-					ring_value = ok_ammo_chargepool;
-					ring_alpha = autocvar_crosshair_ring_reload_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}

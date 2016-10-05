@@ -1025,8 +1025,11 @@ MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.metertime = 0;
-	.entity weaponentity = weaponentities[0];
-	player.(weaponentity).weapons = '0 0 0';
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		player.(weaponentity).weapons = '0 0 0';
+	}
 
 	if (nexball_mode & NBM_BASKETBALL)
 		player.weapons |= WEPSET(NEXBALL);

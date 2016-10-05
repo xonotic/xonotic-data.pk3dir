@@ -742,6 +742,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
     {
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
         	actor,
+        	weaponentity,
             WEP_CVAR(arc, beam_botaimspeed),
             0,
             WEP_CVAR(arc, beam_botaimlifetime),
@@ -752,6 +753,7 @@ METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
     {
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
         	actor,
+        	weaponentity,
             1000000,
             0,
             0.001,

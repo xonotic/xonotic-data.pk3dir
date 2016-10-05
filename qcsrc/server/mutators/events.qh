@@ -366,7 +366,8 @@ MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
  * Called by W_DecreaseAmmo
  */
 #define EV_W_DecreaseAmmo(i, o) \
-    /** actor */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** actor */            i(entity, MUTATOR_ARGV_0_entity) \
+    /** weapon entity */    i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(W_DecreaseAmmo, EV_W_DecreaseAmmo);
 

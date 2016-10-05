@@ -841,11 +841,15 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		});
 	}
 
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-
 	if(player.buffs & BUFF_AMMO.m_itemid)
-	if(player.(weaponentity).clip_size)
-		player.(weaponentity).clip_load = player.(weaponentity).(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.(weaponentity).clip_size;
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(player.(weaponentity).clip_size)
+				player.(weaponentity).clip_load = player.(weaponentity).(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.(weaponentity).clip_size;
+		}
+	}
 
 	if((player.buffs & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
 	if(player.alpha != autocvar_g_buffs_invisible_alpha)
@@ -872,9 +876,17 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_WEAPON_AMMO);
 			player.items |= IT_UNLIMITED_WEAPON_AMMO;
 
-			if(player.(weaponentity).clip_load)
-				player.(weaponentity).buff_ammo_prev_clipload = player.(weaponentity).clip_load;
-			player.(weaponentity).clip_load = player.(weaponentity).(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.(weaponentity).clip_size;
+			if(player.buffs & BUFF_AMMO.m_itemid)
+			{
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					.entity weaponentity = weaponentities[slot];
+					if(player.(weaponentity).clip_load)
+						player.(weaponentity).buff_ammo_prev_clipload = player.(weaponentity).clip_load;
+					if(player.(weaponentity).clip_size)
+						player.(weaponentity).clip_load = player.(weaponentity).(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.(weaponentity).clip_size;
+				}
+			}
 		}
 
 		BUFF_ONREM(BUFF_AMMO)
@@ -884,8 +896,15 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			else
 				player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
 
-			if(player.(weaponentity).buff_ammo_prev_clipload)
-				player.(weaponentity).clip_load = player.(weaponentity).buff_ammo_prev_clipload;
+			if(player.buffs & BUFF_AMMO.m_itemid)
+			{
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					.entity weaponentity = weaponentities[slot];
+					if(player.(weaponentity).buff_ammo_prev_clipload)
+						player.(weaponentity).clip_load = player.(weaponentity).buff_ammo_prev_clipload;
+				}
+			}
 		}
 
 		BUFF_ONADD(BUFF_INVISIBLE)

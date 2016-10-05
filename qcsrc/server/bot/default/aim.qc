@@ -323,7 +323,7 @@ vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, flo
 	return targorigin + targvelocity * (shotdelay + vlen(targorigin - shotorg) / shotspeed);
 }
 
-bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity)
+bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity)
 {
 	float f, r, hf, distanceratio;
 	vector v;
@@ -338,8 +338,6 @@ bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshott
 
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
 	shotspeed *= W_WeaponSpeedFactor(this);
 	shotspeedupward *= W_WeaponSpeedFactor(this);

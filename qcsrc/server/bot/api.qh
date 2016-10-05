@@ -46,7 +46,7 @@ float skill;
 .float wpcost;
 .int wpflags;
 
-bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
+bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
 void bot_clientconnect(entity this);
 void bot_clientdisconnect(entity this);
 void bot_cmdhelp(string scmd);

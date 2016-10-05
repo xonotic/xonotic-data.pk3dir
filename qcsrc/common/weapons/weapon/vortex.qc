@@ -148,16 +148,23 @@ MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
     entity player = M_ARGV(0, entity);
 
 	// WEAPONTODO
-	float xyspeed = vlen(vec2(player.velocity));
-    .entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	if (player.(weaponentity).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
-	{
-		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
-	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
-		float f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
-		// add the extra charge
-		player.(weaponentity).vortex_charge = min(1, player.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
-	}
+    if(!WEP_CVAR(vortex, charge) || !WEP_CVAR(vortex, charge_velocity_rate))
+        return;
+
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+        .entity weaponentity = weaponentities[slot];
+
+    	if (player.(weaponentity).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && vdist(vec2(player.velocity), >, WEP_CVAR(vortex, charge_minspeed)))
+    	{
+            float xyspeed = vlen(vec2(player.velocity));
+    		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
+    	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
+    		float f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
+    		// add the extra charge
+    		player.(weaponentity).vortex_charge = min(1, player.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
+    	}
+    }
 }
 
 void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float issecondary)
@@ -217,7 +224,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(bot_aim(actor, 1000000, 0, 1, false))
+    if(bot_aim(actor, weaponentity, 1000000, 0, 1, false))
         PHYS_INPUT_BUTTON_ATCK(actor) = true;
     else
     {
