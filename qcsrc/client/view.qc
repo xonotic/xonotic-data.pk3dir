@@ -280,6 +280,7 @@ void viewmodel_animate(entity this)
 .float weapon_nextthink;
 .float weapon_eta_last;
 .float weapon_switchdelay;
+.float tuba_instrument;
 
 void viewmodel_draw(entity this)
 {
@@ -312,6 +313,13 @@ void viewmodel_draw(entity this)
 		static string name_last;
 		string name = wep.mdl;
 		bool swap = name != name_last;
+		if (wep == WEP_TUBA)
+		{
+			int i = me.tuba_instrument;
+			name = (i == 0) ? "tuba" :
+			       (i == 1) ? "akordeon" :
+			                  "kleinbottle" ;
+		}
 // 		if (swap)
 		{
 			name_last = name;

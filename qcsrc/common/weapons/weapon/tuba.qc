@@ -42,11 +42,11 @@ REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
 
 #ifdef IMPLEMENTATION
 
+.float tuba_instrument;
 #ifdef SVQC
 
 .entity tuba_note;
 .float tuba_smoketime;
-.float tuba_instrument;
 
 #define MAX_TUBANOTES 32
 .float tuba_lastnotes_last;
@@ -394,12 +394,6 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 		}
 	}
 }
-
-METHOD(Tuba, wr_setup, void(Tuba this, entity actor))
-{
-	actor.ammo_field = ammo_none;
-// 	actor.tuba_instrument = 0;
-}
 #endif
 
 REGISTER_NET_S2C(tuba_instrument)
@@ -411,7 +405,7 @@ NET_HANDLE(tuba_instrument, bool)
 	string s = (i == 0) ? "tuba" :
 	           (i == 1) ? "akordeon" :
 	                      "kleinbottle" ;
-	activeweapon.mdl = s;
+	csqcplayer.tuba_instrument = i;
 	CL_WeaponEntity_SetModel(viewmodel, s, true);
 }
 #endif
@@ -428,6 +422,14 @@ SPECTATE_COPY()
 	if (this.tuba_instrument != spectatee.tuba_instrument)
 		tuba_instrument_send(this, this.tuba_instrument = spectatee.tuba_instrument);
 }
+
+METHOD(Tuba, wr_setup, void(Tuba this, entity actor))
+{
+	actor.ammo_field = ammo_none;
+	actor.tuba_instrument = 0;
+	tuba_instrument_send(actor, actor.tuba_instrument);
+}
+
 METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// switch to alternate instruments :)
