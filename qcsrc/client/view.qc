@@ -354,7 +354,6 @@ void viewmodel_draw(entity this)
 	setorigin(this, this.origin);
 }
 
-entity viewmodels[MAX_WEAPONSLOTS];
 STATIC_INIT(viewmodel) {
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     	viewmodels[slot] = new(viewmodel);

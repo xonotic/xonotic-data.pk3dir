@@ -25,6 +25,7 @@
 #include "../common/items/_mod.qh"
 #include "../common/state.qh"
 #include "../common/effects/qc/globalsound.qh"
+#include "../common/wepent.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/server.qh"

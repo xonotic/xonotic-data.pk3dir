@@ -14,6 +14,7 @@
 #include <common/weapons/_all.qh>
 #include <common/state.qh>
 #include <lib/csqcmodel/sv_model.qh>
+#include <common/wepent.qh>
 
 .int state;
 

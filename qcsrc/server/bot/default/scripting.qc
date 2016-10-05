@@ -4,6 +4,7 @@
 
 #include <common/state.qh>
 #include <common/physics/player.qh>
+#include <common/wepent.qh>
 
 #include "bot.qh"
 

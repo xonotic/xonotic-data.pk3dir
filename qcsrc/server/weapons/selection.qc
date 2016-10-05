@@ -8,6 +8,7 @@
 #include <common/weapons/_all.qh>
 #include <common/state.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/wepent.qh>
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)

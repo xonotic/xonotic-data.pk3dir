@@ -12,6 +12,7 @@
 #include <common/physics/player.qh>
 #include <common/state.qh>
 #include <common/items/_mod.qh>
+#include <common/wepent.qh>
 
 #include <common/triggers/teleporters.qh>
 #include <common/triggers/trigger/jumppads.qh>

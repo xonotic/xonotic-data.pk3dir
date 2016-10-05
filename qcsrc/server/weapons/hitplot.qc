@@ -4,6 +4,7 @@
 #include "../g_subs.qh"
 #include <common/weapons/_all.qh>
 #include <common/state.qh>
+#include <common/wepent.qh>
 
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
 {

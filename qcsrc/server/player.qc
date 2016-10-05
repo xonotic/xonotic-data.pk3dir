@@ -24,6 +24,7 @@
 #include "../common/effects/qc/all.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/triggers/include.qh"
+#include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"
 
