@@ -364,7 +364,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-METHOD(Fireball, wr_aim, void(entity thiswep, entity actor))
+METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;

@@ -449,7 +449,7 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 	weapon_thinkf(actor, weaponentity, theframe, WEP_CVAR_PRI(hagar, refire), W_Hagar_Attack_Auto);
 }
 
-METHOD(Hagar, wr_aim, void(entity thiswep, entity actor))
+METHOD(Hagar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(random()>0.15)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);

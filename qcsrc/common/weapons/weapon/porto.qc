@@ -298,7 +298,7 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor))
+METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;

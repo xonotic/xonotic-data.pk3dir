@@ -154,7 +154,7 @@ void W_Blaster_Attack(
 	}
 }
 
-METHOD(Blaster, wr_aim, void(entity thiswep, entity actor))
+METHOD(Blaster, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(WEP_CVAR(blaster, secondary))
     {

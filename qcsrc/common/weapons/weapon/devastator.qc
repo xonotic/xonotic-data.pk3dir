@@ -415,7 +415,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
+METHOD(Devastator, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     // aim and decide to fire if appropriate
     PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);

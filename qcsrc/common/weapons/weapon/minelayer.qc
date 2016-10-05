@@ -420,10 +420,9 @@ bool W_MineLayer_PlacedMines(entity this, .entity weaponentity, bool detonate)
 	return minfound;
 }
 
-METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
+METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     // aim and decide to fire if appropriate
-    .entity weaponentity = weaponentities[0]; // TODO: unhardcode
     if(actor.(weaponentity).minelayer_mines >= WEP_CVAR(minelayer, limit))
         PHYS_INPUT_BUTTON_ATCK(actor) = false;
     else

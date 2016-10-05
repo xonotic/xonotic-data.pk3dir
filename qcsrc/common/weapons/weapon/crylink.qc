@@ -579,7 +579,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	}
 }
 
-METHOD(Crylink, wr_aim, void(entity thiswep, entity actor))
+METHOD(Crylink, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(random() < 0.10)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);

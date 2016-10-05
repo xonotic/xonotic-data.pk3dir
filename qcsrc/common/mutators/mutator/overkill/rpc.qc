@@ -110,7 +110,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor))
+METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 }

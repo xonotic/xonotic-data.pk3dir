@@ -614,9 +614,8 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 // Begin: Genereal weapon functions
 // ============================
 
-METHOD(Seeker, wr_aim, void(entity thiswep, entity actor))
+METHOD(Seeker, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
     if(WEP_CVAR(seeker, type) == 1)
         if(W_Seeker_Tagged_Info(actor, weaponentity, actor.enemy) != NULL)
             PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);

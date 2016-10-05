@@ -143,7 +143,7 @@ void W_Rifle_BulletHail(entity actor, .entity weaponentity, float mode, void(ent
 
 .float bot_secondary_riflemooth;
 
-METHOD(Rifle, wr_aim, void(entity thiswep, entity actor))
+METHOD(Rifle, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;

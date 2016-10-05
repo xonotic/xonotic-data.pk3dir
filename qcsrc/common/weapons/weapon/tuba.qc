@@ -363,7 +363,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 #endif
 
 #ifdef SVQC
-METHOD(Tuba, wr_aim, void(Tuba this, entity actor))
+METHOD(Tuba, wr_aim, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// bots cannot play the Tuba well yet
 	// I think they should start with the recorder first

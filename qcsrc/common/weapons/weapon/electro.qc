@@ -488,7 +488,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 .float bot_secondary_electromooth;
 
-METHOD(Electro, wr_aim, void(entity thiswep, entity actor))
+METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(vdist(actor.origin - actor.enemy.origin, >, 1000)) { actor.bot_secondary_electromooth = 0; }

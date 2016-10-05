@@ -58,7 +58,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
-METHOD(HeavyMachineGun, wr_aim, void(entity thiswep, entity actor))
+METHOD(HeavyMachineGun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(vdist(actor.origin - actor.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);

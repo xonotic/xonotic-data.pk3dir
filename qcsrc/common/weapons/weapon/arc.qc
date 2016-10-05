@@ -736,7 +736,7 @@ void Arc_Smoke(entity actor, .entity weaponentity)
 	}
 }
 
-METHOD(Arc, wr_aim, void(entity thiswep, entity actor))
+METHOD(Arc, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(WEP_CVAR(arc, beam_botaimspeed))
     {

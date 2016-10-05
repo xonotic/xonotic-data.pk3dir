@@ -352,7 +352,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
     }
 }
 
-METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor))
+METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(actor.(thiswep.ammo_field) > 0)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 1, false);

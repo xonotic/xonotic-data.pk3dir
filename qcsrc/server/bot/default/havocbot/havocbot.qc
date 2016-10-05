@@ -84,10 +84,16 @@ void havocbot_ai(entity this)
 		return;
 
 	havocbot_chooseenemy(this);
-	if (this.bot_chooseweapontime < time )
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		this.bot_chooseweapontime = time + autocvar_bot_ai_chooseweaponinterval;
-		havocbot_chooseweapon(this);
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon != WEP_Null || slot == 0)
+		if(this.(weaponentity).bot_chooseweapontime < time)
+		{
+			this.(weaponentity).bot_chooseweapontime = time + autocvar_bot_ai_chooseweaponinterval;
+			havocbot_chooseweapon(this, weaponentity);
+		}
 	}
 	havocbot_aim(this);
 	lag_update(this);
@@ -98,9 +104,6 @@ void havocbot_ai(entity this)
 
 		if(this.weapons)
 		{
-			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-			Weapon w = this.(weaponentity).m_weapon;
-			w.wr_aim(w, this);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
 			{
 				PHYS_INPUT_BUTTON_ATCK(this) = false;
@@ -108,8 +111,16 @@ void havocbot_ai(entity this)
 			}
 			else
 			{
-				if(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this))
-					this.lastfiredweapon = this.(weaponentity).m_weapon.m_id;
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					.entity weaponentity = weaponentities[slot];
+					Weapon w = this.(weaponentity).m_weapon;
+					if(w == WEP_Null && slot != 0)
+						continue;
+					w.wr_aim(w, this, weaponentity);
+					if(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this)) // TODO: what if we didn't fire this weapon, but the previous?
+						this.(weaponentity).lastfiredweapon = this.(weaponentity).m_weapon.m_id;
+				}
 			}
 		}
 		else
@@ -156,22 +167,28 @@ void havocbot_ai(entity this)
 	// if the bot is not attacking, consider reloading weapons
 	if (!(this.aistatus & AI_STATUS_ATTACKING))
 	{
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-
-		// we are currently holding a weapon that's not fully loaded, reload it
-		if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
-		if(this.(weaponentity).clip_load < this.(weaponentity).clip_size)
-			this.impulse = 20; // "press" the reload button, not sure if this is done right
-
-		// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
-		// the code above executes next frame, starting the reloading then
-		if(skill >= 5) // bots can only look for unloaded weapons past this skill
-		if(this.(weaponentity).clip_load >= 0) // only if we're not reloading a weapon already
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
-				if((this.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
-					this.(weaponentity).m_switchweapon = it;
-			));
+			.entity weaponentity = weaponentities[slot];
+
+			if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
+				continue;
+
+			// we are currently holding a weapon that's not fully loaded, reload it
+			if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
+			if(this.(weaponentity).clip_load < this.(weaponentity).clip_size)
+				this.impulse = 20; // "press" the reload button, not sure if this is done right
+
+			// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
+			// the code above executes next frame, starting the reloading then
+			if(skill >= 5) // bots can only look for unloaded weapons past this skill
+			if(this.(weaponentity).clip_load >= 0) // only if we're not reloading a weapon already
+			{
+				FOREACH(Weapons, it != WEP_Null, LAMBDA(
+					if((this.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
+						this.(weaponentity).m_switchweapon = it;
+				));
+			}
 		}
 	}
 }
@@ -586,28 +603,36 @@ void havocbot_movetogoal(entity this)
 		}
 		else if(this.health>WEP_CVAR(devastator, damage)*0.5)
 		{
-			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-
 			if(this.velocity.z < 0)
-			if(client_hasweapon(this, WEP_DEVASTATOR, weaponentity, true, false))
 			{
-				this.movement_x = maxspeed;
-
-				if(this.rocketjumptime)
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 				{
-					if(time > this.rocketjumptime)
-					{
-						PHYS_INPUT_BUTTON_ATCK2(this) = true;
-						this.rocketjumptime = 0;
-					}
-					return;
-				}
+					.entity weaponentity = weaponentities[slot];
 
-				this.(weaponentity).m_switchweapon = WEP_DEVASTATOR;
-				this.v_angle_x = 90;
-				PHYS_INPUT_BUTTON_ATCK(this) = true;
-				this.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
-				return;
+					if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
+						continue;
+
+					if(client_hasweapon(this, WEP_DEVASTATOR, weaponentity, true, false))
+					{
+						this.movement_x = maxspeed;
+
+						if(this.rocketjumptime)
+						{
+							if(time > this.rocketjumptime)
+							{
+								PHYS_INPUT_BUTTON_ATCK2(this) = true;
+								this.rocketjumptime = 0;
+							}
+							return;
+						}
+
+						this.(weaponentity).m_switchweapon = WEP_DEVASTATOR;
+						this.v_angle_x = 90;
+						PHYS_INPUT_BUTTON_ATCK(this) = true;
+						this.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
+						return;
+					}
+				}
 			}
 		}
 		else
@@ -987,7 +1012,7 @@ LABEL(scan_targets)
 		this.havocbot_stickenemy = false;
 }
 
-float havocbot_chooseweapon_checkreload(entity this, int new_weapon)
+float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
 {
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
@@ -996,7 +1021,6 @@ float havocbot_chooseweapon_checkreload(entity this, int new_weapon)
 		return false;
 
 	// if this weapon is scheduled for reloading, don't switch to it during combat
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if (this.(weaponentity).weapon_load[new_weapon] < 0)
 	{
 		bool other_weapon_available = false;
@@ -1011,11 +1035,9 @@ float havocbot_chooseweapon_checkreload(entity this, int new_weapon)
 	return false;
 }
 
-void havocbot_chooseweapon(entity this)
+void havocbot_chooseweapon(entity this, .entity weaponentity)
 {
 	int i;
-
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
 	// ;)
 	if(g_weaponarena_weapons == WEPSET(TUBA))
@@ -1060,7 +1082,7 @@ void havocbot_chooseweapon(entity this)
 	combo = false;
 
 	if(autocvar_bot_ai_weapon_combo)
-	if(this.(weaponentity).m_weapon.m_id == this.lastfiredweapon)
+	if(this.(weaponentity).m_weapon.m_id == this.(weaponentity).lastfiredweapon)
 	if(af > combo_time)
 	{
 		combo = true;
@@ -1078,7 +1100,7 @@ void havocbot_chooseweapon(entity this)
 				w = bot_weapons_far[i];
 				if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
 				{
-					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, w))
+					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 						continue;
 					this.(weaponentity).m_switchweapon = Weapons_from(w);
 					return;
@@ -1092,7 +1114,7 @@ void havocbot_chooseweapon(entity this)
 				w = bot_weapons_mid[i];
 				if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
 				{
-					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, w))
+					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 						continue;
 					this.(weaponentity).m_switchweapon = Weapons_from(w);
 					return;
@@ -1105,7 +1127,7 @@ void havocbot_chooseweapon(entity this)
 			w = bot_weapons_close[i];
 			if ( client_hasweapon(this, Weapons_from(w), weaponentity, true, false) )
 			{
-				if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, w))
+				if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
 					continue;
 				this.(weaponentity).m_switchweapon = Weapons_from(w);
 				return;

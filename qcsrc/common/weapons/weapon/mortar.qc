@@ -309,7 +309,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 
 .float bot_secondary_grenademooth;
 
-METHOD(Mortar, wr_aim, void(entity thiswep, entity actor))
+METHOD(Mortar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;

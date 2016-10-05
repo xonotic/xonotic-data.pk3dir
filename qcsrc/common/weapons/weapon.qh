@@ -95,7 +95,7 @@ CLASS(Weapon, Object)
     /** (SERVER) checks ammo for weapon second */
     METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
     /** (SERVER) runs bot aiming code for this weapon */
-    METHOD(Weapon, wr_aim, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_aim, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
     METHOD(Weapon, wr_init, void(Weapon this)) {}
     /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */

@@ -215,7 +215,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float i
 
 .float vortex_chargepool_pauseregen_finished;
 
-METHOD(Vortex, wr_aim, void(entity thiswep, entity actor))
+METHOD(Vortex, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(bot_aim(actor, 1000000, 0, 1, false))
         PHYS_INPUT_BUTTON_ATCK(actor) = true;
