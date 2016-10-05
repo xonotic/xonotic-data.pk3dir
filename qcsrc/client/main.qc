@@ -493,16 +493,6 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 
 	spectatorbutton_zoom = (f & 4);
 
-	if(f & 8)
-	{
-		angles_held_status = 1;
-		angles_held.x = ReadAngle();
-		angles_held.y = ReadAngle();
-		angles_held.z = 0;
-	}
-	else
-		angles_held_status = 0;
-
 	if(f & 16)
 	{
 		num_spectators = ReadByte();

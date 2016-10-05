@@ -386,9 +386,9 @@ void Porto_Draw(entity this)
 
 		vector pos = view_origin;
 		vector dir = view_forward;
-		if (angles_held_status)
+		if (wepent.angles_held_status)
 		{
-			makevectors(angles_held);
+			makevectors(wepent.angles_held);
 			dir = v_forward;
 		}
 

@@ -330,27 +330,21 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
     }
     else
     {
-        if(actor.porto_v_angle_held)
+        if(actor.(weaponentity).porto_v_angle_held)
         {
             if(!(fire & 2))
-            {
-                actor.porto_v_angle_held = 0;
-
-                ClientData_Touch(actor);
-            }
+                actor.(weaponentity).porto_v_angle_held = 0;
         }
         else
         {
             if(fire & 2)
             {
-                actor.porto_v_angle = actor.v_angle;
-                actor.porto_v_angle_held = 1;
-
-                ClientData_Touch(actor);
+                actor.(weaponentity).porto_v_angle = actor.v_angle;
+                actor.(weaponentity).porto_v_angle_held = 1;
             }
         }
-        if(actor.porto_v_angle_held)
-            makevectors(actor.porto_v_angle); // override the previously set angles
+        if(actor.(weaponentity).porto_v_angle_held)
+            makevectors(actor.(weaponentity).porto_v_angle); // override the previously set angles
 
         if(fire & 1)
         if(!actor.porto_current)

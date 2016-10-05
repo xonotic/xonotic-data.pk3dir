@@ -10,14 +10,17 @@ MACRO_END
 	var = strzone(x); \
 MACRO_END
 
-.int w_sv_entnum;
-.Weapon w_m_switchweapon;
-.Weapon w_m_switchingweapon;
-.Weapon w_m_weapon;
-//.float w_weapon_nextthink;
-.float w_m_alpha;
-.float w_vortex_charge;
-.int w_m_gunalign;
+#ifdef SVQC
+	.int w_sv_entnum;
+	.Weapon w_m_switchweapon;
+	.Weapon w_m_switchingweapon;
+	.Weapon w_m_weapon;
+	//.float w_weapon_nextthink;
+	.float w_m_alpha;
+	.float w_vortex_charge;
+	.int w_m_gunalign;
+	.bool w_porto_v_angle_held;
+#endif
 
 // #define PROP(public, fld, set, sv, cl)
 #define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
@@ -44,6 +47,14 @@ MACRO_END
     PROP(false, m_gunalign, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_gunalign); }, \
 	{ (viewmodels[this.m_wepent_slot]).m_gunalign = ReadByte(); }) \
+    \
+    PROP(false, porto_v_angle_held, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.porto_v_angle_held); if(this.porto_v_angle_held) { \
+		 WriteAngle(chan, this.porto_v_angle.x); WriteAngle(chan, this.porto_v_angle.y); \
+		} }, \
+	{ (viewmodels[this.m_wepent_slot]).angles_held_status = ReadByte(); if((viewmodels[this.m_wepent_slot]).angles_held_status) { \
+		(viewmodels[this.m_wepent_slot]).angles_held_x = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_y = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_z = 0; } \
+		else { (viewmodels[this.m_wepent_slot]).angles_held = '0 0 0'; } }) \
     \
 	/**/
 

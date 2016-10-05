@@ -112,7 +112,6 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (e.race_completed)       sf |= 1; // forced scoreboard
 	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
 	if (e.zoomstate)            sf |= 4; // zoomed
-	if (e.porto_v_angle_held)   sf |= 8; // angles held
 	if (autocvar_sv_showspectators) sf |= 16; // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
@@ -121,11 +120,6 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (sf & 2)
 	{
 		WriteByte(MSG_ENTITY, to.spectatee_status);
-	}
-	if (sf & 8)
-	{
-		WriteAngle(MSG_ENTITY, e.v_angle.x);
-		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
 
 	if(sf & 16)

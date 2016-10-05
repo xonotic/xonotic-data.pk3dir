@@ -98,10 +98,6 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
 .void(entity this, float thisdmg, int hittype, vector org, vector thisforce) event_damage;
 
-// only for Porto
-float angles_held_status;
-vector angles_held;
-
 // weapons
 .bool silent;
 
