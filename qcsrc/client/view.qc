@@ -817,11 +817,18 @@ void HitSound()
 {
 	// varying sound pitch
 
-	entity wepent = viewmodels[0]; // TODO: unhardcode
+	bool have_arc = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wepent = viewmodels[slot];
+
+		if(wepent.activeweapon == WEP_ARC)
+			have_arc = true;
+	}
 
 	static float hitsound_time_prev = 0;
 	// HACK: the only way to get the arc to sound consistent with pitch shift is to ignore cl_hitsound_antispam_time
-	float arc_hack = wepent.activeweapon == WEP_ARC && autocvar_cl_hitsound >= 2;
+	bool arc_hack = have_arc && autocvar_cl_hitsound >= 2;
 	if (arc_hack || COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		if (autocvar_cl_hitsound && unaccounted_damage)
