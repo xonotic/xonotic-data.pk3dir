@@ -568,11 +568,22 @@ float bot_cmd_select_weapon(entity this)
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	bool success = false;
 
-	if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
-		this.(weaponentity).m_switchweapon = Weapons_from(id);
-	else
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
+			continue;
+
+		if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
+		{
+			success = true;
+			this.(weaponentity).m_switchweapon = Weapons_from(id);
+		}
+	}
+
+	if(!success)
 		return CMD_STATUS_ERROR;
 
 	return CMD_STATUS_FINISHED;
