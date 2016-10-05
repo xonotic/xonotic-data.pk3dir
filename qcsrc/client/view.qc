@@ -370,66 +370,70 @@ STATIC_INIT(Porto)
 }
 
 const int polyline_length = 16;
-vector polyline[polyline_length];
+.vector polyline[polyline_length];
 void Porto_Draw(entity this)
 {
-	entity wepent = viewmodels[0]; // TODO: unhardcode
-	if (wepent.activeweapon != WEP_PORTO) return;
-	if (spectatee_status) return;
-	if (WEP_CVAR(porto, secondary)) return;
-	if (intermission == 1) return;
-	if (intermission == 2) return;
-	if (STAT(HEALTH) <= 0) return;
-
-	vector pos = view_origin;
-	vector dir = view_forward;
-	if (angles_held_status)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		makevectors(angles_held);
-		dir = v_forward;
-	}
+		entity wepent = viewmodels[slot];
 
-	polyline[0] = pos;
+		if (wepent.activeweapon != WEP_PORTO) continue;
+		if (spectatee_status) continue;
+		if (WEP_CVAR(porto, secondary)) continue;
+		if (intermission == 1) continue;
+		if (intermission == 2) continue;
+		if (STAT(HEALTH) <= 0) continue;
 
-	int portal_number = 0, portal1_idx = 1, portal_max = 2;
-	int n = 1 + 2;  // 2 lines == 3 points
-	for (int idx = 0; idx < n && idx < polyline_length - 1; )
-	{
-		traceline(pos, pos + 65536 * dir, true, this);
-		dir = reflect(dir, trace_plane_normal);
-		pos = trace_endpos;
-		polyline[++idx] = pos;
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+		vector pos = view_origin;
+		vector dir = view_forward;
+		if (angles_held_status)
 		{
-			n += 1;
-			continue;
+			makevectors(angles_held);
+			dir = v_forward;
 		}
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+
+		wepent.polyline[0] = pos;
+
+		int portal_number = 0, portal1_idx = 1, portal_max = 2;
+		int n = 1 + 2;  // 2 lines == 3 points
+		for (int idx = 0; idx < n && idx < polyline_length - 1; )
 		{
-			n = max(2, idx);
-			break;
-		}
-		// check size
-		{
-			vector ang = vectoangles2(trace_plane_normal, dir);
-			ang.x = -ang.x;
-			makevectors(ang);
-			if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+			traceline(pos, pos + 65536 * dir, true, this);
+			dir = reflect(dir, trace_plane_normal);
+			pos = trace_endpos;
+			wepent.polyline[++idx] = pos;
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+			{
+				n += 1;
+				continue;
+			}
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 			{
 				n = max(2, idx);
 				break;
 			}
+			// check size
+			{
+				vector ang = vectoangles2(trace_plane_normal, dir);
+				ang.x = -ang.x;
+				makevectors(ang);
+				if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+				{
+					n = max(2, idx);
+					break;
+				}
+			}
+			portal_number += 1;
+			if (portal_number >= portal_max) break;
+			if (portal_number == 1) portal1_idx = idx;
 		}
-		portal_number += 1;
-		if (portal_number >= portal_max) break;
-		if (portal_number == 1) portal1_idx = idx;
-	}
-	for (int idx = 0; idx < n - 1; ++idx)
-	{
-		vector p = polyline[idx], q = polyline[idx + 1];
-		if (idx == 0) p -= view_up * 16;  // line from player
-		vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
-		Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
+		for (int idx = 0; idx < n - 1; ++idx)
+		{
+			vector p = wepent.polyline[idx], q = wepent.polyline[idx + 1];
+			if (idx == 0) p -= view_up * 16;  // line from player
+			vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
+			Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
+		}
 	}
 }
 
@@ -628,7 +632,7 @@ float EnemyHitCheck()
 	return SHOTTYPE_HITENEMY;
 }
 
-float TrueAimCheck()
+float TrueAimCheck(entity wepent)
 {
 	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
@@ -640,8 +644,6 @@ float TrueAimCheck()
 	mi = ma = '0 0 0';
 	ta = trueaim;
 	mv = MOVE_NOMONSTERS;
-
-	entity wepent = viewmodels[0]; // TODO: unhardcode
 
 	switch(wepent.activeweapon) // WEAPONTODO
 	{
@@ -992,8 +994,9 @@ void HUD_Crosshair(entity this)
 		if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;
+			entity thiswep = viewmodels[0]; // TODO: unhardcode
 			wcross_oldorigin = wcross_origin;
-			shottype = TrueAimCheck();
+			shottype = TrueAimCheck(thiswep);
 			if(shottype == SHOTTYPE_HITWORLD)
 			{
 				v = wcross_origin - wcross_oldorigin;
