@@ -103,7 +103,7 @@ void nexball_setstatus(entity this)
 	{
 		if(this.ballcarried.teamtime && (this.ballcarried.teamtime < time))
 		{
-			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_NEXBALL_RETURN_HELD));
 			entity e = this.ballcarried;
 			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
 			ResetBall(e);
@@ -256,7 +256,7 @@ void ResetBall(entity this)
 	if(this.cnt < 2)	// step 1
 	{
 		if(time == this.teamtime)
-			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_NEXBALL_RETURN_HELD));
 
 		settouch(this, func_null);
 		set_movetype(this, MOVETYPE_NOCLIP);

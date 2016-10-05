@@ -40,6 +40,7 @@ CLASS(Devastator, Weapon)
         P(class, prefix, remote_edgedamage, float, NONE) \
         P(class, prefix, remote_force, float, NONE) \
         P(class, prefix, remote_jump_damage, float, NONE) \
+        P(class, prefix, remote_jump_force, float, NONE) \
         P(class, prefix, remote_jump_radius, float, NONE) \
         P(class, prefix, remote_jump_velocity_z_add, float, NONE) \
         P(class, prefix, remote_jump_velocity_z_max, float, NONE) \
@@ -142,50 +143,56 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	float handled_as_rocketjump = false;
+	bool handled_as_rocketjump = false;
+	entity head = NULL;
 
-	entity head = WarpZone_FindRadius(
-		this.origin,
-		WEP_CVAR(devastator, remote_jump_radius),
-		false
-	);
-
-	while(head)
+	if(WEP_CVAR(devastator, remote_jump_radius))
 	{
-		if(head.takedamage && (head == this.realowner))
+		head = WarpZone_FindRadius(
+			this.origin,
+			WEP_CVAR(devastator, remote_jump_radius),
+			false
+		);
+
+		while(head)
 		{
-			float distance_to_head = vlen(this.origin - head.WarpZone_findradius_nearest);
-			if(distance_to_head <= WEP_CVAR(devastator, remote_jump_radius))
+			if(head.takedamage && (head == this.realowner))
 			{
-				// we handled this as a rocketjump :)
-				handled_as_rocketjump = true;
+				if(vdist(this.origin - head.WarpZone_findradius_nearest, <=, WEP_CVAR(devastator, remote_jump_radius)))
+				{
+					// we handled this as a rocketjump :)
+					handled_as_rocketjump = true;
 
-				// modify velocity
-				head.velocity_x *= 0.9;
-				head.velocity_y *= 0.9;
-				head.velocity_z = bound(
-					WEP_CVAR(devastator, remote_jump_velocity_z_min),
-					head.velocity.z + WEP_CVAR(devastator, remote_jump_velocity_z_add),
-					WEP_CVAR(devastator, remote_jump_velocity_z_max)
-				);
+					// modify velocity
+					if(WEP_CVAR(devastator, remote_jump_velocity_z_add))
+					{
+						head.velocity_x *= 0.9;
+						head.velocity_y *= 0.9;
+						head.velocity_z = bound(
+							WEP_CVAR(devastator, remote_jump_velocity_z_min),
+							head.velocity.z + WEP_CVAR(devastator, remote_jump_velocity_z_add),
+							WEP_CVAR(devastator, remote_jump_velocity_z_max)
+						);
+					}
 
-				// now do the damage
-				RadiusDamage(
-					this,
-					head,
-					WEP_CVAR(devastator, remote_jump_damage),
-					WEP_CVAR(devastator, remote_jump_damage),
-					WEP_CVAR(devastator, remote_jump_radius),
-					NULL,
-					head,
-					0,
-					this.projectiledeathtype | HITTYPE_BOUNCE,
-					NULL
-				);
-				break;
+					// now do the damage
+					RadiusDamage(
+						this,
+						head,
+						WEP_CVAR(devastator, remote_jump_damage),
+						WEP_CVAR(devastator, remote_jump_damage),
+						WEP_CVAR(devastator, remote_jump_radius),
+						NULL,
+						head,
+						(WEP_CVAR(devastator, remote_jump_force) ? WEP_CVAR(devastator, remote_jump_force) : 0),
+						this.projectiledeathtype | HITTYPE_BOUNCE,
+						NULL
+					);
+					break;
+				}
 			}
+			head = head.chain;
 		}
-		head = head.chain;
 	}
 
 	RadiusDamage(

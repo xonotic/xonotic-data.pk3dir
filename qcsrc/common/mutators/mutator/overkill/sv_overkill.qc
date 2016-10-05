@@ -285,7 +285,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ok, SetStartItems)
+MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 {
 	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
 
