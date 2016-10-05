@@ -55,10 +55,6 @@ REGISTER_STAT(PL_CROUCH_MAX, vector, autocvar_sv_player_crouch_maxs)
 
 REGISTER_STAT(KH_KEYS, int)
 
-/** weapon requested to switch to; next WANTED weapon (for HUD) */
-REGISTER_STAT(SWITCHWEAPON, int)
-/** weapon currently being switched to (is copied from switchweapon once switch is possible) */
-REGISTER_STAT(SWITCHINGWEAPON, int)
 #ifdef SVQC
 float W_WeaponRateFactor(entity this);
 #endif
