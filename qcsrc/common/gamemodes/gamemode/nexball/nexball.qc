@@ -104,8 +104,8 @@ void nexball_setstatus(entity this)
 		if(this.ballcarried.teamtime && (this.ballcarried.teamtime < time))
 		{
 			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
-			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
 			entity e = this.ballcarried;
+			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
 			ResetBall(e);
 		}
 		else
@@ -167,6 +167,7 @@ void GiveBall(entity plyr, entity ball)
 		ball.teamtime = time + autocvar_g_nexball_basketball_delay_hold_forteam;
 
 	ball.owner = ball.pusher = plyr; //"owner" is set to the player carrying, "pusher" to the last player who touched it
+	ball.weaponentity_fld = weaponentity;
 	ball.team = plyr.team;
 	plyr.ballcarried = ball;
 	ball.nb_dropper = plyr;
@@ -218,7 +219,7 @@ void DropBall(entity ball, vector org, vector vel)
 	if(ball.owner.metertime)
 	{
 		ball.owner.metertime = 0;
-		.entity weaponentity = weaponentities[0]; // TODO: find ballstealer
+		.entity weaponentity = ball.weaponentity_fld;
 		ball.owner.(weaponentity).state = WS_READY;
 	}
 
@@ -994,16 +995,20 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 		}
 		else
 		{
-			.entity weaponentity = weaponentities[0]; // TODO
-			if(player.(weaponentity).weapons)
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
-				player.weapons = player.(weaponentity).weapons;
-				Weapon w = WEP_NEXBALL;
-				w.wr_resetplayer(w, player);
-				player.(weaponentity).m_switchweapon = player.m_switchweapon;
-				W_SwitchWeapon(player, player.(weaponentity).m_switchweapon, weaponentity);
+				.entity weaponentity = weaponentities[slot];
 
-				player.(weaponentity).weapons = '0 0 0';
+				if(player.(weaponentity).weapons)
+				{
+					player.weapons = player.(weaponentity).weapons;
+					Weapon w = WEP_NEXBALL;
+					w.wr_resetplayer(w, player);
+					player.(weaponentity).m_switchweapon = player.m_switchweapon;
+					W_SwitchWeapon(player, player.(weaponentity).m_switchweapon, weaponentity);
+
+					player.(weaponentity).weapons = '0 0 0';
+				}
 			}
 		}
 
@@ -1055,18 +1060,18 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
 {
-	entity player = M_ARGV(0, entity);
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	//entity player = M_ARGV(0, entity);
+	entity wepent = M_ARGV(1, entity);
 
-	return player.(weaponentity).m_weapon == WEP_NEXBALL;
+	return wepent.m_weapon == WEP_NEXBALL;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidDropCurrentWeapon)
 {
-	entity player = M_ARGV(0, entity);
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	//entity player = M_ARGV(0, entity);
+	int wep = M_ARGV(1, int);
 
-	return player.(weaponentity).m_weapon == WEP_MORTAR; // TODO: what is this for?
+	return wep == WEP_MORTAR.m_id; // TODO: what is this for?
 }
 
 MUTATOR_HOOKFUNCTION(nb, FilterItem)

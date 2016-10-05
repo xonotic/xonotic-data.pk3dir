@@ -138,7 +138,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 bool W_IsWeaponThrowable(entity this, int w)
 {
-	if (MUTATOR_CALLHOOK(ForbidDropCurrentWeapon, this))
+	if (MUTATOR_CALLHOOK(ForbidDropCurrentWeapon, this, w))
 		return false;
 	if (!autocvar_g_pickup_items)
 		return false;
@@ -170,7 +170,7 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	Weapon w = this.(weaponentity).m_weapon;
 	if (w == WEP_Null)
 		return; // just in case
-	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon, this))
+	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon, this, this.(weaponentity)))
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
@@ -192,7 +192,9 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 
 void SpawnThrownWeapon(entity this, vector org, float w, .entity weaponentity)
 {
-	if(this.weapons & WepSet_FromWeapon(this.(weaponentity).m_weapon))
-		if(W_IsWeaponThrowable(this, this.(weaponentity).m_weapon.m_id))
-			W_ThrowNewWeapon(this, this.(weaponentity).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200', weaponentity);
+	entity wep = this.(weaponentity).m_weapon;
+
+	if(this.weapons & WepSet_FromWeapon(wep))
+		if(W_IsWeaponThrowable(this, wep.m_id))
+			W_ThrowNewWeapon(this, wep.m_id, false, org, randomvec() * 125 + '0 0 200', weaponentity);
 }

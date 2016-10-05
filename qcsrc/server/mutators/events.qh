@@ -137,12 +137,14 @@ MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
 /** returns true if throwing the current weapon shall not be allowed */
 #define EV_ForbidThrowCurrentWeapon(i, o) \
     /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** weapon entity */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_ForbidThrowCurrentWeapon);
 
 /** returns true if dropping the current weapon shall not be allowed at any time including death */
 #define EV_ForbidDropCurrentWeapon(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** player */        i(entity, MUTATOR_ARGV_0_entity) \
+    /** weapon id */     i(int, MUTATOR_ARGV_1_int) \
     /**/
 MUTATOR_HOOKABLE(ForbidDropCurrentWeapon, EV_ForbidDropCurrentWeapon);
 
