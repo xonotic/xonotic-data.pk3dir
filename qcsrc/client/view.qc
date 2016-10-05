@@ -1782,33 +1782,36 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 
-	entity wepent = viewmodels[0]; // TODO: unhardcode
-
-	if(last_switchweapon != wepent.switchweapon)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		weapontime = time;
-		last_switchweapon = wepent.switchweapon;
-		if(button_zoom && autocvar_cl_unpress_zoom_on_weapon_switch)
-		{
-			localcmd("-zoom\n");
-			button_zoom = false;
-		}
-		if(autocvar_cl_unpress_attack_on_weapon_switch)
-		{
-			localcmd("-fire\n");
-			localcmd("-fire2\n");
-			button_attack2 = false;
-		}
-	}
-	if(last_activeweapon != wepent.activeweapon)
-	{
-		last_activeweapon = wepent.activeweapon;
+		entity wepent = viewmodels[slot];
 
-		e = wepent.activeweapon;
-		if(e.netname != "")
-			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
-		else
-			localcmd("\ncl_hook_activeweapon none\n");
+		if(wepent.last_switchweapon != wepent.switchweapon)
+		{
+			weapontime = time;
+			wepent.last_switchweapon = wepent.switchweapon;
+			if(slot == 0 && button_zoom && autocvar_cl_unpress_zoom_on_weapon_switch)
+			{
+				localcmd("-zoom\n");
+				button_zoom = false;
+			}
+			if(slot == 0 && autocvar_cl_unpress_attack_on_weapon_switch)
+			{
+				localcmd("-fire\n");
+				localcmd("-fire2\n");
+				button_attack2 = false;
+			}
+		}
+		if(wepent.last_activeweapon != wepent.activeweapon)
+		{
+			wepent.last_activeweapon = wepent.activeweapon;
+
+			e = wepent.activeweapon;
+			if(e.netname != "")
+				localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
+			else if(slot == 0)
+				localcmd("\ncl_hook_activeweapon none\n");
+		}
 	}
 
 	// ALWAYS Clear Current Scene First
@@ -1936,7 +1939,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(autocvar_cl_reticle)
 	{
-		string reticle_image = wepent.activeweapon.w_reticle;
+		string reticle_image = "";
 		bool wep_zoomed = false;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1945,7 +1948,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 			if(wep != WEP_Null && wep.wr_zoom)
 			{
 				bool do_zoom = wep.wr_zoom(wep, NULL);
-				reticle_image = wep.w_reticle;
+				if(wep.w_reticle && wep.w_reticle != "")
+					reticle_image = wep.w_reticle;
 				wep_zoomed += do_zoom;
 			}
 		}
