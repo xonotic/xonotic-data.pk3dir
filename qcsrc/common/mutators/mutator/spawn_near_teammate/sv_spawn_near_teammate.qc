@@ -88,7 +88,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 		entity best_mate = NULL;
 		vector best_pos = '0 0 0';
-		float best_dist = 0, dist = 0;
+		float best_dist = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			LOG_INFOF("  for client: %s %v\n", it.netname, it.origin);
 			//if (!SAME_TEAM(player, it)) continue; // TODO DEBUGING
@@ -101,7 +101,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (it == player) continue;
 
 			vector horiz_vel = vec2(it.velocity);
-			if(vdist(horiz_vel, >, 450))
+			if (vdist(horiz_vel, >, 450))
 				fixedmakevectors(vectoangles(horiz_vel));
 			else
 				fixedmakevectors(it.angles); // .angles is the angle of the model - usually/always 0 pitch
@@ -113,16 +113,16 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				switch(i)
 				{
 					case 0:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
-						break;
-					case 1:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
-						break;
-					case 2:
 						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 64 + v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
-					case 3:
+					case 1:
 						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 64 - v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
+						break;
+					case 2:
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
+						break;
+					case 3:
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 4:
 						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128 + v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
@@ -167,7 +167,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 				if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 				{
-					dist = vlen(vectical_trace_endpos - player.msnt_deathloc);
+					float dist = vlen(vectical_trace_endpos - player.msnt_deathloc);
 					LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
 					if(dist < best_dist || best_dist == 0)
 					{
