@@ -20,6 +20,7 @@ MACRO_END
 	.float w_vortex_charge;
 	.int w_m_gunalign;
 	.bool w_porto_v_angle_held;
+	.int w_tuba_instrument;
 #endif
 
 // #define PROP(public, fld, set, sv, cl)
@@ -55,6 +56,10 @@ MACRO_END
 	{ (viewmodels[this.m_wepent_slot]).angles_held_status = ReadByte(); if((viewmodels[this.m_wepent_slot]).angles_held_status) { \
 		(viewmodels[this.m_wepent_slot]).angles_held_x = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_y = ReadAngle(); (viewmodels[this.m_wepent_slot]).angles_held_z = 0; } \
 		else { (viewmodels[this.m_wepent_slot]).angles_held = '0 0 0'; } }) \
+    \
+    PROP(false, tuba_instrument, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.tuba_instrument); }, \
+	{ (viewmodels[this.m_wepent_slot]).tuba_instrument = ReadByte(); }) \
     \
 	/**/
 

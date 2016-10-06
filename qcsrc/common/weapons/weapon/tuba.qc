@@ -47,7 +47,6 @@ REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
 
 .entity tuba_note;
 .float tuba_smoketime;
-.float tuba_instrument;
 
 #define MAX_TUBANOTES 32
 .float tuba_lastnotes_last;
@@ -403,39 +402,13 @@ METHOD(Tuba, wr_setup, void(Tuba this, entity actor, .entity weaponentity))
 {
 	actor.(weaponentity).tuba_instrument = 0;
 }
-#endif
 
-REGISTER_NET_S2C(tuba_instrument)
-#ifdef CSQC
-NET_HANDLE(tuba_instrument, bool)
-{
-	int i = ReadByte();
-	int slot = ReadByte();
-	return = true;
-	string s = (i == 0) ? "tuba" :
-	           (i == 1) ? "akordeon" :
-	                      "kleinbottle" ;
-
-    entity wep = viewmodels[slot];
-    CL_WeaponEntity_SetModel(wep, s, true);
-}
-#endif
-#ifdef SVQC
-void tuba_instrument_send(entity this, .entity weaponentity, int instr)
-{
-	msg_entity = this;
-	int chan = MSG_ONE;
-	WriteHeader(chan, tuba_instrument);
-	WriteByte(chan, instr);
-	WriteByte(chan, weaponslot(weaponentity));
-}
 SPECTATE_COPY()
 {
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).tuba_instrument != spectatee.(weaponentity).tuba_instrument)
-			tuba_instrument_send(this, weaponentity, this.(weaponentity).tuba_instrument = spectatee.(weaponentity).tuba_instrument);
+		this.(weaponentity).tuba_instrument = spectatee.(weaponentity).tuba_instrument;
 	}
 }
 METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
@@ -458,7 +431,6 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 				actor.(weaponentity).weaponname = "tuba";
 				break;
 		}
-		tuba_instrument_send(actor, weaponentity, actor.(weaponentity).tuba_instrument);
 		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
@@ -507,7 +479,6 @@ class(Tuba) .int note;
 class(Tuba) .bool tuba_attenuate;
 class(Tuba) .float tuba_volume;
 class(Tuba) .float tuba_volume_initial;
-class(Tuba) .int tuba_instrument;
 
 int Tuba_PitchStep;
 

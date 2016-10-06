@@ -312,6 +312,12 @@ void viewmodel_draw(entity this)
 	}
 	{
 		string name = wep.mdl;
+		if(wep == WEP_TUBA)
+		{
+			name = (this.tuba_instrument == 0) ? "tuba" :
+	           	   (this.tuba_instrument == 1) ? "akordeon" :
+	                                             "kleinbottle";
+		}
 		bool swap = name != this.name_last;
 		// if (swap)
 		{
