@@ -103,10 +103,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			vector horiz_vel = vec2(it.velocity);
 			if(vdist(horiz_vel, >, 450)) {
 				fixedmakevectors(vectoangles(horiz_vel));
-				LOG_INFOF("    using velocity -> forward: %v\n", v_forward);
 			} else {
 				fixedmakevectors(it.angles); // .angles is the angle of the model - usually/always 0 pitch
-				LOG_INFOF("    using angles -> forward: %v\n", v_forward);
 			}
 
 			// test diffrent spots close to mate - trace upwards so it works on uneven surfaces
@@ -137,7 +135,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				tracebox(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
 				vector vectical_trace_endpos = trace_endpos;
 				te_lightning1(NULL, horizontal_trace_endpos, vectical_trace_endpos);
-				LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
 				if (trace_startsolid) continue; // inside another player
 				if (trace_fraction == 1.0) continue; // above void or too high
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) continue;
@@ -151,7 +148,19 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				LOG_INFOF("      floor trace_fraction: %f\n", trace_fraction);
 				if (trace_fraction == 1.0) continue;
 
-				// TODO check for nades
+				if (autocvar_g_nades) {
+					LOG_INFOF("      nades test\n");
+					bool nade_in_range = false;
+					IL_EACH(g_projectiles, it.classname == "nade",
+					{
+						LOG_INFOF("        dist: %f\n", vlen(it.origin - vectical_trace_endpos));
+						if (vdist(it.origin - vectical_trace_endpos, <, autocvar_g_nades_nade_radius)) {
+							nade_in_range = true;
+							break;
+						}
+					});
+					if (nade_in_range) continue;
+				}
 
 				if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 				{
