@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 				// 400 is about the height of a typical laser jump (in overkill)
 				// not traceline because we need space for the whole payer, not just his origin
-				tracebox(horizontal_trace_endpos + '0 0 4', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
+				tracebox(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
 				vector vectical_trace_endpos = trace_endpos;
 				te_lightning1(NULL, horizontal_trace_endpos, vectical_trace_endpos);
 				LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
