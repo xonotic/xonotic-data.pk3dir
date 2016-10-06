@@ -100,8 +100,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (STAT(FROZEN, it)) continue;
 			if (it == player) continue;
 
-			// TODO check for nades
-
 			vector horiz_vel = vec2(it.velocity);
 			if(vdist(horiz_vel, >, 450)) {
 				fixedmakevectors(vectoangles(horiz_vel));
@@ -130,40 +128,51 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 						break;
 				}
 				vector horizontal_trace_endpos = trace_endpos;
-				te_lightning1(NULL, it.origin, trace_endpos);
+				te_lightning1(NULL, it.origin, horizontal_trace_endpos);
 				LOG_INFOF("    pc: %d trace_fraction %f\n", pc, trace_fraction);
 				if(trace_fraction != 1.0) continue;
 
 				// 400 is about the height of a typical laser jump (in overkill)
-				tracebox(trace_endpos + '0 0 4', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), trace_endpos - '0 0 400', MOVE_NORMAL, it);
-				te_lightning2(NULL, horizontal_trace_endpos, trace_endpos);
+				// not traceline because we need space for the whole payer, not just his origin
+				tracebox(horizontal_trace_endpos + '0 0 4', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
+				vector vectical_trace_endpos = trace_endpos;
+				te_lightning1(NULL, horizontal_trace_endpos, vectical_trace_endpos);
 				LOG_INFOF("      trace_fraction2 %f\n", trace_fraction);
 				if (trace_startsolid) continue; // inside another player
 				if (trace_fraction == 1.0) continue; // above void or too high
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) continue;
-				if (pointcontents(trace_endpos + '0 0 1') != CONTENT_EMPTY) continue; // this also prevents spawning in water which i assume would be annoying
-				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), trace_endpos)) continue;
+				if (pointcontents(vectical_trace_endpos) != CONTENT_EMPTY) continue; // this also prevents spawning in water which i assume would be annoying
+				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), vectical_trace_endpos)) continue;
+
+				// make sure the spawned player will have floor ahead (or at least a wall - he shouldn't fall as soon as he starts moving)
+				vector floor_test_start = vectical_trace_endpos + v_up * STAT(PL_MAX, NULL).z; // top of player's head - highest point we know is not inside solid
+				traceline(floor_test_start, floor_test_start + v_forward * 128 - v_up * 128, MOVE_NOMONSTERS, it);
+				te_beam(NULL, floor_test_start, trace_endpos);
+				LOG_INFOF("      floor trace_fraction: %f\n", trace_fraction);
+				if (trace_fraction == 1.0) continue;
+
+				// TODO check for nades
 
 				if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 				{
-					dist = vlen(trace_endpos - player.msnt_deathloc);
+					dist = vlen(vectical_trace_endpos - player.msnt_deathloc);
 					LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
 					if(dist < best_dist || best_dist == 0)
 					{
-						LOG_INFOF("      new best dist - pos: %v\n", trace_endpos);
+						LOG_INFOF("      new best dist - pos: %v\n", vectical_trace_endpos);
 						best_dist = dist;
-						best_pos = trace_endpos;
+						best_pos = vectical_trace_endpos;
 						best_mate = it;
 					}
 				}
 				else // TODO random to avoid favoring players who joined early
 				{
-					setorigin(player, trace_endpos);
+					setorigin(player, vectical_trace_endpos);
 					player.angles = it.angles;
 					player.angles_z = 0; // never spawn tilted even if the spot says to
 					it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 					LOG_INFOF("      PlayerSpawn return %v\n", player.origin);
-					if (player.origin != trace_endpos) LOG_WARNF("wrong origin\n");
+					if (player.origin != vectical_trace_endpos) LOG_WARNF("wrong origin\n");
 					return;
 				}
 			}
