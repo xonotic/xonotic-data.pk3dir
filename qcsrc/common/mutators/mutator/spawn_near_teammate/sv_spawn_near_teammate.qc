@@ -88,7 +88,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 		entity best_mate = NULL;
 		vector best_pos = '0 0 0';
-		float pc = 0, best_dist = 0, dist = 0;
+		float best_dist = 0, dist = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			LOG_INFOF("  for client: %s %v\n", it.netname, it.origin);
 			//if (!SAME_TEAM(player, it)) continue; // TODO DEBUGING
@@ -101,33 +101,39 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (it == player) continue;
 
 			vector horiz_vel = vec2(it.velocity);
-			if(vdist(horiz_vel, >, 450)) {
+			if(vdist(horiz_vel, >, 450))
 				fixedmakevectors(vectoangles(horiz_vel));
-			} else {
+			else
 				fixedmakevectors(it.angles); // .angles is the angle of the model - usually/always 0 pitch
-			}
 
 			// test diffrent spots close to mate - trace upwards so it works on uneven surfaces
-			for(pc = 0; pc < 4; ++pc)
+			// don't spawn in front of player or directly behind to avoid players shooting each other
+			for(int i = 0; i < 6; ++i)
 			{
-				switch(pc)
+				switch(i)
 				{
 					case 0:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 1:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 192 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 2:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 64 + v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 					case 3:
-						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64 + v_up * 64, MOVE_NOMONSTERS, it);
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 64 - v_right * 128 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
+					case 4:
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128 + v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
+						break;
+					case 5:
+						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128 - v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
+						break;
+
 				}
 				vector horizontal_trace_endpos = trace_endpos;
 				te_lightning1(NULL, it.origin, horizontal_trace_endpos);
-				LOG_INFOF("    pc: %d trace_fraction %f\n", pc, trace_fraction);
 				if(trace_fraction != 1.0) continue;
 
 				// 400 is about the height of a typical laser jump (in overkill)
@@ -142,18 +148,15 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), vectical_trace_endpos)) continue;
 
 				// make sure the spawned player will have floor ahead (or at least a wall - he shouldn't fall as soon as he starts moving)
-				vector floor_test_start = vectical_trace_endpos + v_up * STAT(PL_MAX, NULL).z; // top of player's head - highest point we know is not inside solid
-				traceline(floor_test_start, floor_test_start + v_forward * 128 - v_up * 128, MOVE_NOMONSTERS, it);
+				vector floor_test_start = vectical_trace_endpos + v_up * STAT(PL_MAX, NULL).z + v_forward * STAT(PL_MAX, NULL).x; // top front of player's bbox - highest point we know is not inside solid
+				traceline(floor_test_start, floor_test_start + v_forward * 100 - v_up * 128, MOVE_NOMONSTERS, it);
 				te_beam(NULL, floor_test_start, trace_endpos);
-				LOG_INFOF("      floor trace_fraction: %f\n", trace_fraction);
 				if (trace_fraction == 1.0) continue;
 
 				if (autocvar_g_nades) {
-					LOG_INFOF("      nades test\n");
 					bool nade_in_range = false;
 					IL_EACH(g_projectiles, it.classname == "nade",
 					{
-						LOG_INFOF("        dist: %f\n", vlen(it.origin - vectical_trace_endpos));
 						if (vdist(it.origin - vectical_trace_endpos, <, autocvar_g_nades_nade_radius)) {
 							nade_in_range = true;
 							break;
@@ -181,7 +184,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 					player.angles_z = 0; // never spawn tilted even if the spot says to
 					it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 					LOG_INFOF("      PlayerSpawn return %v\n", player.origin);
-					if (player.origin != vectical_trace_endpos) LOG_WARNF("wrong origin\n");
 					return;
 				}
 			}
@@ -190,12 +192,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 		if(best_dist)
 		{
-			tracebox(best_pos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), best_pos + '0 0 1', MOVE_NOMONSTERS, player);
-			if (trace_startsolid || trace_fraction != 1.0) LOG_WARNF("bad spawn? %d %f", trace_startsolid, trace_fraction);
 			setorigin(player, best_pos);
-			LOG_INFOF("PlayerSpawn best_dist: pos: %v\n", best_pos);
-			if (player.origin != best_pos) LOG_WARNF("wrong origin: %v", player.origin);
-
 			player.angles = best_mate.angles;
 			player.angles_z = 0; // never spawn tilted even if the spot says to
 			best_mate.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
