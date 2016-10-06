@@ -13,8 +13,6 @@ bool autocvar_g_overkill_100a_anyway;
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 .float ok_item;
 
-.float ok_pauseregen_finished;
-
 void ok_Initialize();
 
 REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
@@ -50,20 +48,11 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 		if(!IS_DEAD(frag_target))
 		{
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
-			M_ARGV(6, vector) = '0 0 0';
+			M_ARGV(6, vector) = '0 0 0'; // force
 		}
 
-		M_ARGV(4, float) = 0;
+		M_ARGV(4, float) = 0; // damage
 	}
-}
-
-MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
-{
-	entity frag_target = M_ARGV(2, entity);
-	float damage_take = M_ARGV(4, float);
-
-	if(damage_take)
-		frag_target.ok_pauseregen_finished = max(frag_target.ok_pauseregen_finished, time + 2);
 }
 
 void ok_DropItem(entity this, entity targ)
@@ -114,30 +103,6 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 	ok_DropItem(mon, frag_attacker);
 }
 
-MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
-{
-	entity player = M_ARGV(0, entity);
-
-	// overkill's values are different, so use custom regen
-	if(!STAT(FROZEN, player))
-	{
-		player.armorvalue = CalcRotRegen(player.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear,
-			1 * frametime * (time > player.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > player.pauserotarmor_finished), autocvar_g_balance_armor_limit);
-		player.health = CalcRotRegen(player.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > player.ok_pauseregen_finished), 200, 0,
-			autocvar_g_balance_health_rotlinear, 1 * frametime * (time > player.pauserothealth_finished), autocvar_g_balance_health_limit);
-
-		float minf, maxf, limitf;
-
-		maxf = autocvar_g_balance_fuel_rotstable;
-		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = autocvar_g_balance_fuel_limit;
-
-		player.ammo_fuel = CalcRotRegen(player.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear,
-			frametime * (time > player.pauseregen_finished) * ((player.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > player.pauserotfuel_finished), limitf);
-	}
-	return true; // return true anyway, as frozen uses no regen
-}
-
 MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 {
 	return true;
@@ -171,7 +136,8 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	}
 
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
-	if(!forbidWeaponUse(player) || player.weapon_blocked) // allow if weapon is blocked
+	if( !forbidWeaponUse(player) || player.weapon_blocked // allow if weapon is blocked
+		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
 	if(time >= player.jump_interval)
 	{
 		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
@@ -219,8 +185,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 			player.ok_lastwep[slot] = WEP_Null;
 		}
 	}
-
-	player.ok_pauseregen_finished = time + 2;
 }
 
 void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
