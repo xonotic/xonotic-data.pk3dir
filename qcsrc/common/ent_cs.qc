@@ -185,6 +185,7 @@ MACRO_END
 			{
 				// initial = temp
 				e = new_pure(entcs_receiver);
+				this = e;
 				X(e);
 			}
 			else
