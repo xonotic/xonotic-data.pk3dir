@@ -216,7 +216,7 @@ void buff_NewType(entity ent, float cb)
 	FOREACH(Buffs, buff_Available(it), LAMBDA(
 		it.buff_seencount += 1;
 		// if it's already been chosen, give it a lower priority
-		RandomSelection_Add(NULL, it.m_itemid, string_null, 1, max(0.2, 1 / it.buff_seencount));
+		RandomSelection_AddFloat(it.m_itemid, 1, max(0.2, 1 / it.buff_seencount));
 	));
 	ent.buffs = RandomSelection_chosen_float;
 }

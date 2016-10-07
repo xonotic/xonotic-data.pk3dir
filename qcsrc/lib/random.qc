@@ -9,7 +9,7 @@ void RandomSelection_Init()
 	RandomSelection_best_priority = -1;
 }
 
-void RandomSelection_Add(entity e, float f, string s, float weight, float priority)
+void RandomSelection_Add(entity e, float f, string s, vector v, float weight, float priority)
 {
 	if (priority > RandomSelection_best_priority)
 	{
@@ -17,6 +17,7 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 		RandomSelection_chosen_ent = e;
 		RandomSelection_chosen_float = f;
 		RandomSelection_chosen_string = s;
+		RandomSelection_chosen_vec = v;
 		RandomSelection_totalweight = weight;
 	}
 	else if (priority == RandomSelection_best_priority)
@@ -27,6 +28,7 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 			RandomSelection_chosen_ent = e;
 			RandomSelection_chosen_float = f;
 			RandomSelection_chosen_string = s;
+			RandomSelection_chosen_vec = v;
 		}
 	}
 }
