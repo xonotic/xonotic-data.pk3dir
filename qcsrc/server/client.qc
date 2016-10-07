@@ -339,6 +339,8 @@ void PutObserverInServer(entity this)
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
+		if(!this.weaponentities[slot])
+			continue; // first load
 		this.weaponentities[slot].hook_time = 0;
 		this.weaponentities[slot].weaponname = "";
 		this.weaponentities[slot] = NULL;
