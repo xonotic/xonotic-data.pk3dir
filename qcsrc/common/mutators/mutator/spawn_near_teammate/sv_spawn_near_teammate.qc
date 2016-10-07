@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 			continue;
 		if(!checkpvs(spawn_spot.origin, it))
 			continue;
-		RandomSelection_Add(it, 0, string_null, 1, 1);
+		RandomSelection_AddEnt(it, 1, 1);
 	));
 
 	if(RandomSelection_chosen_ent)

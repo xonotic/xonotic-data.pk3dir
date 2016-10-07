@@ -11,43 +11,43 @@ MACRO_END
 MACRO_END
 
 // #define PROP(public, fld, set, sv, cl)
-#define ENTCS_NETPROPS(PROP) PROP(false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */ \
+#define ENTCS_NETPROPS(ent, PROP) PROP(false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */ \
 	PROP(false, origin, ENTCS_SET_NORMAL, \
-	{ WriteShort(chan, this.origin.x);  WriteShort(chan, this.origin.y); \
-	  WriteShort(chan, this.origin.z); }, \
-	{ this.has_sv_origin = true; vector v; v.x = ReadShort(); v.y = ReadShort(); v.z = ReadShort(); setorigin(this, v); }) \
+	{ WriteShort(chan, ent.origin.x);  WriteShort(chan, ent.origin.y); \
+	  WriteShort(chan, ent.origin.z); }, \
+	{ ent.has_sv_origin = true; vector v; v.x = ReadShort(); v.y = ReadShort(); v.z = ReadShort(); setorigin(ent, v); }) \
     \
 	PROP(false, angles_y, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, this.angles.y / 360 * 256); }, \
-	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; this.angles = v; }) \
+	{ WriteByte(chan, ent.angles.y / 360 * 256); }, \
+	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; ent.angles = v; }) \
     \
 	PROP(false, health, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, bound(0, this.health / 10, 255));  /* FIXME: use a better scale? */ }, \
-	{ this.healthvalue = ReadByte() * 10; }) \
+	{ WriteByte(chan, bound(0, ent.health / 10, 255));  /* FIXME: use a better scale? */ }, \
+	{ ent.healthvalue = ReadByte() * 10; }) \
     \
 	PROP(false, armorvalue, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, bound(0, this.armorvalue / 10, 255));  /* FIXME: use a better scale? */ }, \
-	{ this.armorvalue = ReadByte() * 10; }) \
+	{ WriteByte(chan, bound(0, ent.armorvalue / 10, 255));  /* FIXME: use a better scale? */ }, \
+	{ ent.armorvalue = ReadByte() * 10; }) \
     \
 	PROP(true, netname, ENTCS_SET_MUTABLE_STRING, \
-	{ WriteString(chan, this.netname); }, \
-	{ if (this.netname) strunzone(this.netname); this.netname = strzone(ReadString()); }) \
+	{ WriteString(chan, ent.netname); }, \
+	{ if (ent.netname) strunzone(ent.netname); ent.netname = strzone(ReadString()); }) \
     \
 	PROP(true, model, ENTCS_SET_NORMAL, \
-	{ WriteString(chan, this.model); }, \
-	{ if (this.model) strunzone(this.model); this.model = strzone(ReadString()); }) \
+	{ WriteString(chan, ent.model); }, \
+	{ if (ent.model) strunzone(ent.model); ent.model = strzone(ReadString()); }) \
     \
 	PROP(true, skin, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, this.skin); }, \
-	{ this.skin = ReadByte(); }) \
+	{ WriteByte(chan, ent.skin); }, \
+	{ ent.skin = ReadByte(); }) \
     \
     PROP(true, clientcolors, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, this.clientcolors); }, \
-	{ this.colormap = ReadByte(); }) \
+	{ WriteByte(chan, ent.clientcolors); }, \
+	{ ent.colormap = ReadByte(); }) \
     \
     PROP(true, frags, ENTCS_SET_NORMAL, \
-	{ WriteShort(chan, this.frags); }, \
-	{ this.frags = ReadShort(); }) \
+	{ WriteShort(chan, ent.frags); }, \
+	{ ent.frags = ReadShort(); }) \
     \
 	/**/
 
@@ -63,7 +63,7 @@ MACRO_END
 			} \
 			i += 1; \
 		}
-		ENTCS_NETPROPS(X);
+		ENTCS_NETPROPS(this, X);
 	#undef X
 		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded ENTCS_NETPROPS limit");
 	}
@@ -93,7 +93,7 @@ MACRO_END
 			} \
 			i += 1; \
 		}
-		ENTCS_NETPROPS(X);
+		ENTCS_NETPROPS(this, X);
 	#undef X
 		return true;
 	}
@@ -115,7 +115,7 @@ MACRO_END
 			} \
 			i += 1; \
 		}
-		ENTCS_NETPROPS(X);
+		ENTCS_NETPROPS(this, X);
 	#undef X
 	    setorigin(this, this.origin);  // relink
 	}
@@ -214,7 +214,7 @@ MACRO_END
 			} \
 			i += 1; \
 		}
-		ENTCS_NETPROPS(X);
+		ENTCS_NETPROPS(e, X);
 	#undef X
 		e.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(e);

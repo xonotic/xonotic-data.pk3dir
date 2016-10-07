@@ -840,7 +840,7 @@ LABEL(pickup)
 				if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
 				{
 					Item_Show(it, -1);
-					RandomSelection_Add(it, 0, string_null, it.cnt, 0);
+					RandomSelection_AddEnt(it, it.cnt, 0);
 				}
 			});
 			e = RandomSelection_chosen_ent;
@@ -882,7 +882,7 @@ void Item_FindTeam(entity this)
 		IL_EACH(g_items, it.team == this.team,
 		{
 			if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
-				RandomSelection_Add(it, 0, string_null, it.cnt, 0);
+				RandomSelection_AddEnt(it, it.cnt, 0);
 		});
 
 		e = RandomSelection_chosen_ent;

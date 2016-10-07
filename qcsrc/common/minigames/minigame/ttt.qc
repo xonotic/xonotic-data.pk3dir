@@ -418,7 +418,7 @@ int ttt_ai_random(int piecemask)
 	for ( int i = 0; i < 9; i++ )
 	{
 		if ( piecemask & f )
-			RandomSelection_Add(NULL, f, string_null, 1, 1);
+			RandomSelection_AddFloat(f, 1, 1);
 		f <<= 1;
 	}
 

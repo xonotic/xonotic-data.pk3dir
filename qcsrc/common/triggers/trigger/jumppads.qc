@@ -155,9 +155,9 @@ void trigger_push_touch(entity this, entity toucher)
 		for(e = NULL; (e = find(e, targetname, this.target)); )
 		{
 			if(e.cnt)
-				RandomSelection_Add(e, 0, string_null, e.cnt, 1);
+				RandomSelection_AddEnt(e, e.cnt, 1);
 			else
-				RandomSelection_Add(e, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(e, 1, 1);
 		}
 		toucher.velocity = trigger_push_calculatevelocity(toucher.origin, RandomSelection_chosen_ent, this.height);
 	}

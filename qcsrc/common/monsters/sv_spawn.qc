@@ -24,7 +24,7 @@ entity spawnmonster (string monster, int monster_id, entity spawnedby, entity ow
 		RandomSelection_Init();	
 		FOREACH(Monsters, it != MON_Null,
 		{
-			RandomSelection_Add(it, 0, string_null, 1, 1);
+			RandomSelection_AddEnt(it, 1, 1);
 		});
 
 		monster_id = RandomSelection_chosen_ent.monsterid;
