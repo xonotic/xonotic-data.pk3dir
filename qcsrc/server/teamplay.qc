@@ -508,13 +508,13 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	// now t is the minimum, or A minimum!
 	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl))
-		RandomSelection_Add(NULL, 1, string_null, 1, 1);
+		RandomSelection_AddFloat(1, 1, 1);
 	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl))
-		RandomSelection_Add(NULL, 2, string_null, 1, 1);
+		RandomSelection_AddFloat(2, 1, 1);
 	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl))
-		RandomSelection_Add(NULL, 3, string_null, 1, 1);
+		RandomSelection_AddFloat(3, 1, 1);
 	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl))
-		RandomSelection_Add(NULL, 4, string_null, 1, 1);
+		RandomSelection_AddFloat(4, 1, 1);
 
 	return RandomSelection_chosen_float;
 }

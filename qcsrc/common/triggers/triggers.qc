@@ -260,7 +260,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 				{
 					if(this.target_random)
 					{
-						RandomSelection_Add(t, 0, string_null, 1, 0);
+						RandomSelection_AddEnt(t, 1, 0);
 					}
 					else
 					{
