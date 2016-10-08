@@ -261,7 +261,7 @@ bool independent_players;
 
 string clientstuff;
 .float phase;
-.int pressedkeys = _STAT(PRESSED_KEYS);
+.int pressedkeys;
 
 .string fog;
 
