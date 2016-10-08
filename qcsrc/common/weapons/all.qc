@@ -204,7 +204,7 @@ void W_RandomWeapons(entity e, float n)
 		RandomSelection_Init();
 		FOREACH(Weapons, it != WEP_Null, {
 			if (remaining & (it.m_wepset))
-				RandomSelection_Add(it, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(it, 1, 1);
 		});
 		Weapon w = RandomSelection_chosen_ent;
 		result |= WepSet_FromWeapon(w);
