@@ -320,12 +320,12 @@ void cvar_changes_init()
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
-		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_intermission_cdtrack");
 		BADCVAR("sv_minigames");
@@ -342,9 +342,11 @@ void cvar_changes_init()
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
+		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
 		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_minigames_");
+		BADPREFIX("sv_radio_");
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
