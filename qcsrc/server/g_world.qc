@@ -447,6 +447,7 @@ void cvar_changes_init()
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
 
+#undef BADPRESUFFIX
 #undef BADPREFIX
 #undef BADCVAR
 
