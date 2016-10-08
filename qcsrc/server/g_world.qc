@@ -372,6 +372,7 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
+		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_domination_point_limit");
