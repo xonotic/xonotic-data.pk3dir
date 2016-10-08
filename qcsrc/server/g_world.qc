@@ -333,6 +333,7 @@ void cvar_changes_init()
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
