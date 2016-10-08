@@ -322,6 +322,7 @@ void cvar_changes_init()
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
+		BADCVAR("g_piggyback");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
