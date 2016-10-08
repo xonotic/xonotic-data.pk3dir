@@ -626,8 +626,8 @@ void PutClientInServer(entity this)
 		this.drawonlytoclient = NULL;
 
 		this.crouch = false;
-		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
-		setsize(this, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		this.view_ofs = STAT(PL_VIEW_OFS, this);
+		setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
 		this.spawnorigin = spot.origin;
 		setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
