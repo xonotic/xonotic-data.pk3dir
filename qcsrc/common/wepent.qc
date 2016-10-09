@@ -10,19 +10,6 @@ MACRO_END
 	var = strzone(x); \
 MACRO_END
 
-#ifdef SVQC
-	.int w_sv_entnum;
-	.Weapon w_m_switchweapon;
-	.Weapon w_m_switchingweapon;
-	.Weapon w_m_weapon;
-	//.float w_weapon_nextthink;
-	.float w_m_alpha;
-	.float w_vortex_charge;
-	.int w_m_gunalign;
-	.bool w_porto_v_angle_held;
-	.int w_tuba_instrument;
-#endif
-
 // #define PROP(public, fld, set, sv, cl)
 #define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
 	PROP(false, m_switchweapon, WEPENT_SET_NORMAL, \
@@ -88,7 +75,7 @@ MACRO_END
 			WriteHeader(chan, ENT_CLIENT_WEPENT);
 		else
 			WriteHeader(chan, CLIENT_WEPENT);
-		.entity weaponentity = this.weaponentity_fld;
+		.entity weaponentity = this.owner.weaponentity_fld;
 		WriteByte(chan, weaponslot(weaponentity));
 		WriteShort(chan, sf);
 		int i = 0;
@@ -108,12 +95,22 @@ MACRO_END
 		return _wepent_send(this, to, sf, MSG_ENTITY);
 	}
 
-	void wepent_update(entity this)
+	void wepent_think(entity this)
 	{
+		if(wasfreed(this.owner) || !this.owner)
+		{
+			delete(this);
+			return;
+		}
+
+		this.nextthink = time;
+
+		entity o = this.owner;
+
 		int i = 0;
 		#define X(public, fld, set, sv, cl) { \
-			if (this.w_##fld != this.fld) { \
-				set(this.w_##fld, this.fld); \
+			if (this.fld != o.fld) { \
+				set(this.fld, o.fld); \
 				this.SendFlags |= BIT(i); \
 			} \
 			i += 1; \
@@ -124,7 +121,11 @@ MACRO_END
 
 	void wepent_link(entity wep)
 	{
-		Net_LinkEntity(wep, false, 0, wepent_send);
+		entity e = new(wepent_sender);
+		e.owner = wep;
+		setthink(e, wepent_think);
+		e.nextthink = time;
+		Net_LinkEntity(e, false, 0, wepent_send);
 	}
 
 #endif
@@ -133,7 +134,9 @@ MACRO_END
 
 	bool ReadWepent(entity this)
 	{
-		this.m_wepent_slot = ReadByte();
+		int slot = ReadByte();
+		this.m_wepent_slot = slot;
+		viewmodels[slot].m_wepent_slot = slot;
 		int sf = ReadShort();
 		int i = 0;
 		#define X(public, fld, set, sv, cl) { \

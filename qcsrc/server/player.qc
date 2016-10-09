@@ -566,8 +566,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		Weapon wep = this.(weaponentity).m_weapon;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			.entity wepent = weaponentities[slot];
-			wep.wr_playerdeath(wep, this, wepent);
+			.entity went = weaponentities[slot];
+			wep.wr_playerdeath(wep, this, went);
 		}
 
 		RemoveGrapplingHooks(this);
@@ -594,8 +594,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// throw a weapon
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			.entity wepent = weaponentities[slot];
-			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(wepent).m_switchweapon.m_id, wepent);
+			.entity went = weaponentities[slot];
+			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(went).m_switchweapon.m_id, went);
 		}
 
 		// become fully visible

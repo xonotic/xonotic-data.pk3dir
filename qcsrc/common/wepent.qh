@@ -10,8 +10,6 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 
 	bool wepent_send(entity this, entity to, int sf);
 
-	void wepent_update(entity this);
-
 	void wepent_link(entity wep);
 
 	.int m_forceupdate;

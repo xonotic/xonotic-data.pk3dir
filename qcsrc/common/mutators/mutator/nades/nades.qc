@@ -891,7 +891,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	makevectors(e.v_angle);
 
 	// NOTE: always throw from first weapon entity?
-	W_SetupShot(e, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
+	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0);
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 
@@ -1033,6 +1033,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	if(Nades_from(n.nade_type) == NADE_TYPE_Null)
 		n.nade_type = NADE_TYPE_NORMAL.m_id;
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	setmodel(n, MDL_PROJECTILE_NADE);
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
@@ -1047,9 +1049,9 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	setthink(n, nade_beep);
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE.m_id;
+	n.weaponentity_fld = weaponentity;
 
 	setmodel(fn, MDL_NADE_VIEW);
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	setattachment(fn, player.(weaponentity), "");
 	fn.realowner = fn.owner = player;
 	fn.colormod = Nades_from(n.nade_type).m_color;
@@ -1057,6 +1059,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	fn.glowmod = player.glowmod;
 	setthink(fn, SUB_Remove);
 	fn.nextthink = n.wait;
+	fn.weaponentity_fld = weaponentity;
 
 	player.nade = n;
 	player.fake_nade = fn;

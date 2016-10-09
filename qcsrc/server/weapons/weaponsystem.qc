@@ -108,15 +108,13 @@ void CL_Weaponentity_Think(entity this)
 		this.weaponchild.alpha = this.alpha;
 		this.weaponchild.effects = this.effects;
 	}
-
-	wepent_update(this);
 }
 
 void CL_ExteriorWeaponentity_Think(entity this)
 {
 	this.nextthink = time;
 	.entity weaponentity = this.weaponentity_fld;
-	entity wepent = this.owner.(weaponentity);
+	entity w_ent = this.owner.(weaponentity);
 	if (this.owner.exteriorweaponentity != this)
 	{
 		delete(this);
@@ -127,15 +125,15 @@ void CL_ExteriorWeaponentity_Think(entity this)
 		this.model = "";
 		return;
 	}
-	if (this.weaponname != wepent.weaponname || this.dmg != wepent.modelindex
-	    || this.deadflag != wepent.deadflag)
+	if (this.weaponname != w_ent.weaponname || this.dmg != w_ent.modelindex
+	    || this.deadflag != w_ent.deadflag)
 	{
-		this.weaponname = wepent.weaponname;
-		this.dmg = wepent.modelindex;
-		this.deadflag = wepent.deadflag;
-		if (wepent.weaponname != "")
+		this.weaponname = w_ent.weaponname;
+		this.dmg = w_ent.modelindex;
+		this.deadflag = w_ent.deadflag;
+		if (w_ent.weaponname != "")
 		{
-			_setmodel(this, W_Model(strcat("v_", wepent.weaponname, ".md3")));
+			_setmodel(this, W_Model(strcat("v_", w_ent.weaponname, ".md3")));
 			setsize(this, '0 0 0', '0 0 0');
 		}
 		else this.model = "";
