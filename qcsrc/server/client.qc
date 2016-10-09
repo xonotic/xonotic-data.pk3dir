@@ -619,8 +619,8 @@ void PutClientInServer(entity this)
 		this.drawonlytoclient = NULL;
 
 		this.crouch = false;
-		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
-		setsize(this, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		this.view_ofs = STAT(PL_VIEW_OFS, this);
+		setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
 		this.spawnorigin = spot.origin;
 		setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
@@ -1612,7 +1612,7 @@ void SetZoomState(entity this, float z)
 void GetPressedKeys(entity this)
 {
 	MUTATOR_CALLHOOK(GetPressedKeys, this);
-	int keys = this.pressedkeys;
+	int keys = STAT(PRESSED_KEYS, this);
 	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
 	keys = BITSET(keys, KEY_RIGHT, 		this.movement.y > 0);
@@ -1622,7 +1622,9 @@ void GetPressedKeys(entity this)
 	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
 	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
 	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
-	this.pressedkeys = keys;
+	this.pressedkeys = keys; // store for other users
+
+	STAT(PRESSED_KEYS, this) = keys;
 }
 
 /*
@@ -1655,7 +1657,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hit_time = spectatee.hit_time;
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
-	this.pressedkeys = spectatee.pressedkeys;
+	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
 	this.vortex_charge = spectatee.vortex_charge;
 	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;

@@ -39,6 +39,13 @@ void Physics_UpdateStats(entity this, float maxspd_mod)
 	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
 	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
 
+	STAT(PL_MIN, this) = autocvar_sv_player_mins;
+	STAT(PL_MAX, this) = autocvar_sv_player_maxs;
+	STAT(PL_VIEW_OFS, this) = autocvar_sv_player_viewoffset;
+	STAT(PL_CROUCH_MIN, this) = autocvar_sv_player_crouch_mins;
+	STAT(PL_CROUCH_MAX, this) = autocvar_sv_player_crouch_maxs;
+	STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_player_crouch_viewoffset;
+
 	// old stats
 	// fix some new settings
 	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor", autocvar_sv_airaccel_qw_stretchfactor);
