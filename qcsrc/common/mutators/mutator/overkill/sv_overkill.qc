@@ -13,8 +13,6 @@ bool autocvar_g_overkill_armormedium_remove;
 bool autocvar_g_overkill_armorbig_remove;
 bool autocvar_g_overkill_armorlarge_remove;
 
-.vector ok_deathloc;
-.float ok_spawnsys_timer;
 .float ok_lastwep;
 .float ok_item;
 
