@@ -4,7 +4,6 @@
 #include "rpc.qh"
 
 bool autocvar_g_overkill_powerups_replace;
-float autocvar_g_overkill_superguns_respawn_time;
 bool autocvar_g_overkill_100h_anyway;
 bool autocvar_g_overkill_100a_anyway;
 bool autocvar_g_overkill_ammo_charge;
@@ -274,7 +273,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.noalign = ent.noalign;
 			wep.cnt = ent.cnt;
 			wep.team = ent.team;
-			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.respawntime = g_pickup_respawntime_superweapon;
 			wep.pickup_anyway = true;
 			wep.spawnfunc_checked = true;
 			setthink(wep, self_spawnfunc_weapon_hmg);
@@ -291,7 +290,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.noalign = ent.noalign;
 			wep.cnt = ent.cnt;
 			wep.team = ent.team;
-			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.respawntime = g_pickup_respawntime_superweapon;
 			wep.pickup_anyway = true;
 			wep.spawnfunc_checked = true;
 			setthink(wep, self_spawnfunc_weapon_rpc);
