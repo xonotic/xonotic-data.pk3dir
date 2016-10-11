@@ -625,6 +625,8 @@ void PutClientInServer(entity this)
 		FixPlayermodel(this);
 		this.drawonlytoclient = NULL;
 
+		this.viewloc = NULL;
+
 		this.crouch = false;
 		this.view_ofs = STAT(PL_VIEW_OFS, this);
 		setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
@@ -1672,6 +1674,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.angles = spectatee.v_angle;
 	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
 	this.revive_progress = spectatee.revive_progress;
+	this.viewloc = spectatee.viewloc;
 	if(!PHYS_INPUT_BUTTON_USE(this) && STAT(CAMERA_SPECTATOR, this) != 2)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);
