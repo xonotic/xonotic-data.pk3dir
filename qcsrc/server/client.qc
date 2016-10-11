@@ -1208,6 +1208,9 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
+	// update physics stats (players can spawn before physics runs)
+	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
+
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
 	});

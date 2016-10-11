@@ -247,6 +247,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 
 	bool Physics_Valid(string thecvar);
 
+	void Physics_UpdateStats(entity this, float maxspd_mod);
+
 	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
 	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
 
