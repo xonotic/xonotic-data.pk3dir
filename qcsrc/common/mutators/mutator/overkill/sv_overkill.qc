@@ -8,10 +8,10 @@ bool autocvar_g_overkill_ammo_charge;
 float autocvar_g_overkill_ammo_charge_notice;
 float autocvar_g_overkill_ammo_charge_limit;
 
-bool autocvar_g_overkill_healthmega_remove;
-bool autocvar_g_overkill_armormedium_remove;
-bool autocvar_g_overkill_armorbig_remove;
-bool autocvar_g_overkill_armorlarge_remove;
+bool autocvar_g_overkill_filter_healthmega;
+bool autocvar_g_overkill_filter_armormedium;
+bool autocvar_g_overkill_filter_armorbig;
+bool autocvar_g_overkill_filter_armorlarge;
 
 .float ok_lastwep;
 .float ok_item;
@@ -310,12 +310,12 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 
 	switch(item.items)
 	{
-		case ITEM_HealthMega.m_itemid: return autocvar_g_overkill_healthmega_remove;
-		case ITEM_ArmorMedium.m_itemid: return autocvar_g_overkill_armormedium_remove;
+		case ITEM_HealthMega.m_itemid: return autocvar_g_overkill_filter_healthmega;
+		case ITEM_ArmorMedium.m_itemid: return autocvar_g_overkill_filter_armormedium;
 		// WARNING: next two statements look wrong because of inconsistency between cvar names and code
 		// armor cvars need renaming to be consistent with their health counterparts
-		case ITEM_ArmorLarge.m_itemid: return autocvar_g_overkill_armorbig_remove;
-		case ITEM_ArmorMega.m_itemid: return autocvar_g_overkill_armorlarge_remove;
+		case ITEM_ArmorLarge.m_itemid: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorMega.m_itemid: return autocvar_g_overkill_filter_armorlarge;
 	}
 
 	return true;
