@@ -308,14 +308,14 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	if(item.ok_item)
 		return false;
 
-	switch(item.items)
+	switch(item.itemdef)
 	{
-		case ITEM_HealthMega.m_itemid: return autocvar_g_overkill_filter_healthmega;
-		case ITEM_ArmorMedium.m_itemid: return autocvar_g_overkill_filter_armormedium;
+		case ITEM_HealthMega: return autocvar_g_overkill_filter_healthmega;
+		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
 		// WARNING: next two statements look wrong because of inconsistency between cvar names and code
 		// armor cvars need renaming to be consistent with their health counterparts
-		case ITEM_ArmorLarge.m_itemid: return autocvar_g_overkill_filter_armorbig;
-		case ITEM_ArmorMega.m_itemid: return autocvar_g_overkill_filter_armorlarge;
+		case ITEM_ArmorLarge: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armorlarge;
 	}
 
 	return true;
