@@ -618,6 +618,8 @@ void PutClientInServer(entity this)
 		FixPlayermodel(this);
 		this.drawonlytoclient = NULL;
 
+		this.viewloc = NULL;
+
 		this.crouch = false;
 		this.view_ofs = STAT(PL_VIEW_OFS, this);
 		setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
@@ -1213,6 +1215,9 @@ void ClientConnect(entity this)
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
 
+	// update physics stats (players can spawn before physics runs)
+	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
+
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
 	});
@@ -1674,6 +1679,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.angles = spectatee.v_angle;
 	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
 	this.revive_progress = spectatee.revive_progress;
+	this.viewloc = spectatee.viewloc;
 	if(!PHYS_INPUT_BUTTON_USE(this) && STAT(CAMERA_SPECTATOR, this) != 2)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);

@@ -97,6 +97,8 @@ bool IsFlying(entity a);
 
 #define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, s)
 
+#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY, s)
+
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)
 #define PHYS_INPUT_BUTTON_ATCK2(s)          PHYS_INPUT_BUTTON_BUTTON3(s)
@@ -156,6 +158,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 #define UNSET_JUMP_HELD(s)                  ((s).flags |= FL_JUMPRELEASED)
 
 #define WAS_ONGROUND(s)                     boolean((s).lastflags & FL_ONGROUND)
+#define WAS_ONSLICK(s)                      boolean((s).lastflags & FL_ONSLICK)
 
 #define ITEMS_STAT(s)                       ((s).items)
 
@@ -246,6 +249,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 	#define PHYS_FIXANGLE(s) ((s).fixangle)
 
 	bool Physics_Valid(string thecvar);
+
+	void Physics_UpdateStats(entity this, float maxspd_mod);
 
 	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
 	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
