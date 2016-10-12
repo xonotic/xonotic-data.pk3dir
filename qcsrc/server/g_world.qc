@@ -917,7 +917,8 @@ spawnfunc(worldspawn)
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
 	// extra mutators that deserve to count as mod
-	MUTATOR_CALLHOOK(SetModname);
+	MUTATOR_CALLHOOK(SetModname, modname);
+	modname = M_ARGV(0, string);
 
 	// save it for later
 	modname = strzone(modname);
