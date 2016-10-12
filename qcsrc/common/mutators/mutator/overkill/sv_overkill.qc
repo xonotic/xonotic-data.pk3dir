@@ -4,15 +4,15 @@
 #include "rpc.qh"
 
 bool autocvar_g_overkill_powerups_replace;
-float autocvar_g_overkill_superguns_respawn_time;
-bool autocvar_g_overkill_100h_anyway;
-bool autocvar_g_overkill_100a_anyway;
 bool autocvar_g_overkill_ammo_charge;
 float autocvar_g_overkill_ammo_charge_notice;
 float autocvar_g_overkill_ammo_charge_limit;
 
-.vector ok_deathloc;
-.float ok_spawnsys_timer;
+bool autocvar_g_overkill_filter_healthmega;
+bool autocvar_g_overkill_filter_armormedium;
+bool autocvar_g_overkill_filter_armorbig;
+bool autocvar_g_overkill_filter_armorlarge;
+
 .float ok_lastwep;
 .float ok_item;
 
@@ -274,7 +274,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.noalign = ent.noalign;
 			wep.cnt = ent.cnt;
 			wep.team = ent.team;
-			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.respawntime = g_pickup_respawntime_superweapon;
 			wep.pickup_anyway = true;
 			wep.spawnfunc_checked = true;
 			setthink(wep, self_spawnfunc_weapon_hmg);
@@ -291,7 +291,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.noalign = ent.noalign;
 			wep.cnt = ent.cnt;
 			wep.team = ent.team;
-			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.respawntime = g_pickup_respawntime_superweapon;
 			wep.pickup_anyway = true;
 			wep.spawnfunc_checked = true;
 			setthink(wep, self_spawnfunc_weapon_rpc);
@@ -306,12 +306,16 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	if(item.ok_item)
-		return;
+		return false;
 
 	switch(item.items)
 	{
-		case ITEM_HealthMega.m_itemid: return !(autocvar_g_overkill_100h_anyway);
-		case ITEM_ArmorMega.m_itemid: return !(autocvar_g_overkill_100a_anyway);
+		case ITEM_HealthMega.m_itemid: return autocvar_g_overkill_filter_healthmega;
+		case ITEM_ArmorMedium.m_itemid: return autocvar_g_overkill_filter_armormedium;
+		// WARNING: next two statements look wrong because of inconsistency between cvar names and code
+		// armor cvars need renaming to be consistent with their health counterparts
+		case ITEM_ArmorLarge.m_itemid: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorMega.m_itemid: return autocvar_g_overkill_filter_armorlarge;
 	}
 
 	return true;
