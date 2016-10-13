@@ -217,7 +217,7 @@ void sys_phys_simulate(entity this, float dt)
 	}
 	if (this.com_phys_ladder) {
 		if (this.viewloc) {
-			wishvel.z = this.oldmovement.x;
+			wishvel.z = this.movement_old.x;
 		}
 		if (this.ladder_entity.classname == "func_water") {
 			float f = vlen(wishvel);
