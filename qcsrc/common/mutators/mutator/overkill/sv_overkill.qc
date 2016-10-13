@@ -4,9 +4,6 @@
 #include "rpc.qh"
 
 bool autocvar_g_overkill_powerups_replace;
-bool autocvar_g_overkill_ammo_charge;
-float autocvar_g_overkill_ammo_charge_notice;
-float autocvar_g_overkill_ammo_charge_limit;
 
 bool autocvar_g_overkill_filter_healthmega;
 bool autocvar_g_overkill_filter_armormedium;
