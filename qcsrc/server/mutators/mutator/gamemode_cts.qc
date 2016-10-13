@@ -35,13 +35,13 @@ void cts_ScoreRules()
 	ScoreRules_basics(0, 0, 0, false);
 	if(g_race_qualifying)
 	{
-		ScoreInfo_SetLabel_PlayerScore(SP_CTS_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 	}
 	else
 	{
-		ScoreInfo_SetLabel_PlayerScore(SP_CTS_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_CTS_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_CTS_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
 	}
 	ScoreRules_basics_end();
 }
