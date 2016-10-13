@@ -1106,7 +1106,6 @@ void bot_setcurrentcommand(entity this)
 	if(!this.bot_cmd_current)
 	{
 		this.bot_cmd_current = new_pure(bot_cmd);
-		this.bot_cmd_current.is_bot_cmd = true;
 	}
 
 	bot_cmd = this.bot_cmd_current;
