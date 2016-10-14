@@ -4,7 +4,6 @@ void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
 	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
-	this.oldmovement = this.movement;
 }
 
 bool sys_phys_override(entity this, float dt)

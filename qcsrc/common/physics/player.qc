@@ -670,8 +670,6 @@ void PM_check_blocked(entity this)
 #endif
 }
 
-.vector oldmovement;
-
 void PM_jetpack(entity this, float maxspd_mod, float dt)
 {
 	//makevectors(this.v_angle.y * '0 1 0');
