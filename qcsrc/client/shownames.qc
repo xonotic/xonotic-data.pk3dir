@@ -179,7 +179,8 @@ void Draw_ShowNames_All()
 		assert(getthink(entcs), eprint(entcs));
 		getthink(entcs)(entcs);
 		if (!entcs.has_origin) continue;
-		if (entcs.m_entcs_private)
+		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
+		if (entcs.m_entcs_private && !dead)
 		{
 			it.healthvalue = entcs.healthvalue;
 			it.armorvalue = entcs.armorvalue;
@@ -191,7 +192,6 @@ void Draw_ShowNames_All()
 			it.armorvalue = 0;
 			it.sameteam = false;
 		}
-		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
 		if (!it.csqcmodel_isdead) setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
