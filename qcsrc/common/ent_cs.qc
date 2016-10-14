@@ -75,7 +75,7 @@ MACRO_END
 		do {
 			if (radar_showennemies) break;
 			if (SAME_TEAM(to, player)) break;
-			if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
+			if (!IS_PLAYER(to) && time > game_starttime) break;
 			sf &= ENTCS_PUBLICMASK; // no private updates
 		} while (0);
 		sf |= this.m_forceupdate;
