@@ -154,3 +154,6 @@ MUTATOR_HOOKABLE(Ent_Update, EV_Ent_Update);
 
 /** Return true to not draw crosshair */
 MUTATOR_HOOKABLE(DrawCrosshair, EV_NO_ARGS);
+
+/** Return true to not draw scoreboard */
+MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
