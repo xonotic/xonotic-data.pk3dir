@@ -21,9 +21,6 @@ const int MONSTER_SIZE_QUAKE = 8192;
 .vector anim_melee1;
 .vector anim_melee2;
 .vector anim_melee3;
-.vector anim_pain3;
-.vector anim_pain4;
-.vector anim_pain5;
 .vector anim_walk;
 .vector anim_spawn;
 
