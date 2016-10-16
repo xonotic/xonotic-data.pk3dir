@@ -271,8 +271,7 @@ int pp_server_event(entity minigame, string event, ...)
 
 string pp_curr_pos; // identifier of the tile under the mouse
 vector pp_boardpos; // HUD board position
-vector pp_boardsize;// HUD board size
-.int pp_checkwin; // Used to optimize checks to display a win
+vector pp_boardsize; // HUD board size
 
 // Required function, draw the game board
 void pp_hud_board(vector pos, vector mySize)
