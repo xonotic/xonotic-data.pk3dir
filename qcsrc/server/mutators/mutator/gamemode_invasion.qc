@@ -15,6 +15,8 @@ int autocvar_g_invasion_monster_count;
 bool autocvar_g_invasion_zombies_only;
 float autocvar_g_invasion_spawn_delay;
 
+.string spawnmob;
+
 spawnfunc(invasion_spawnpoint)
 {
 	if(!g_invasion) { delete(this); return; }
@@ -23,9 +25,12 @@ spawnfunc(invasion_spawnpoint)
 	IL_PUSH(g_invasion_spawns, this);
 
 	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
-	if(this.monsterid) {
-		Monster mon = get_monsterinfo(this.monsterid);
-		mon.mr_precache(mon);
+	if(this.spawnmob)
+	{
+		FOREACH(Monsters, it.netname == this.spawnmob,
+		{
+			it.mr_precache(it);
+		});
 	}
 }
 
@@ -40,7 +45,7 @@ int invasion_PickMonster(int supermonster_count)
 	{
 		if((it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM) || (it.spawnflags & MONSTER_SIZE_QUAKE) || ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
 			continue;
-        RandomSelection_Add(NULL, it.monsterid, string_null, 1, 1);
+        RandomSelection_AddFloat(it.monsterid, 1, 1);
 	});
 
 	return RandomSelection_chosen_float;
@@ -52,14 +57,14 @@ entity invasion_PickSpawn()
 
 	IL_EACH(g_invasion_spawns, true,
 	{
-		RandomSelection_Add(it, 0, string_null, 1, ((time >= it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
+		RandomSelection_AddEnt(it, 1, ((time >= it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
 		it.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
 	});
 
 	return RandomSelection_chosen_ent;
 }
 
-void invasion_SpawnChosenMonster(float mon)
+void invasion_SpawnChosenMonster(int mon)
 {
 	entity spawn_point, monster;
 
@@ -78,8 +83,8 @@ void invasion_SpawnChosenMonster(float mon)
 		setthink(e, SUB_Remove);
 		e.nextthink = time + 0.1;
 	}
-	else
-		monster = spawnmonster("", ((spawn_point.monsterid) ? spawn_point.monsterid : mon), spawn_point, spawn_point, spawn_point.origin, false, false, 2);
+	else // if spawnmob field falls through (unset), fallback to mon (relying on spawnmonster for that behaviour)
+		monster = spawnmonster(spawn_point.spawnmob, mon, spawn_point, spawn_point, spawn_point.origin, false, false, 2);
 
 	if(spawn_point) monster.target2 = spawn_point.target2;
 	monster.spawnshieldtime = time;
@@ -91,10 +96,10 @@ void invasion_SpawnChosenMonster(float mon)
 	else
 	{
 		RandomSelection_Init();
-		if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_Add(NULL, NUM_TEAM_1, string_null, 1, 1);
-		if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_Add(NULL, NUM_TEAM_2, string_null, 1, 1);
-		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_Add(NULL, NUM_TEAM_3, string_null, 1, 1); }
-		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_Add(NULL, NUM_TEAM_4, string_null, 1, 1); }
+		if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_AddFloat(NUM_TEAM_1, 1, 1);
+		if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_AddFloat(NUM_TEAM_2, 1, 1);
+		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_AddFloat(NUM_TEAM_3, 1, 1); }
+		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_AddFloat(NUM_TEAM_4, 1, 1); }
 
 		monster.team = RandomSelection_chosen_float;
 	}

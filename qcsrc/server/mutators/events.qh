@@ -480,6 +480,7 @@ MUTATOR_HOOKABLE(SV_StartFrame, EV_NO_ARGS);
 
 #define EV_SetModname(i, o) \
     /** name of the mutator/mod if it warrants showing as such in the server browser */ \
+    /**/ i(string, MUTATOR_ARGV_0_string) \
     /**/ o(string, MUTATOR_ARGV_0_string) \
     /**/
 MUTATOR_HOOKABLE(SetModname, EV_SetModname);

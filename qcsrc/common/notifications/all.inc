@@ -387,6 +387,8 @@
 
     MSG_INFO_NOTIF(MONSTERS_DISABLED,                       1,  0, 0, "", "",           "",     _("^BGMonsters are currently disabled"), "")
 
+    MULTITEAM_INFO(NEXBALL_RETURN_HELD, 4,                  1,  0, 0, "", "",           "",     _("^BGThe ^TC^TT^BG team held the ball for too long"), "", NAME)
+
     MSG_INFO_NOTIF(ONSLAUGHT_CAPTURE,                       1,  2, 0, "s1 s2", "",      "",     _("^BG%s^BG captured %s^BG control point"), "")
     MULTITEAM_INFO(ONSLAUGHT_CPDESTROYED, 4,                1,  2, 0, "s1 s2", "",      "",     _("^TC^TT^BG team %s^BG control point has been destroyed by %s"), "", NAME)
     MULTITEAM_INFO(ONSLAUGHT_GENDESTROYED, 4,               1,  0, 0, "", "",           "",     _("^TC^TT^BG generator has been destroyed"), "", GENERATOR)
@@ -743,7 +745,7 @@
     MSG_CENTER_NOTIF(TEAMCHANGE_SUICIDE,                1,      0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Suicide in ^COUNT"), "")
 
     MSG_CENTER_NOTIF(TIMEOUT_BEGINNING,                 1,      0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout begins in ^COUNT"), "")
-    MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    1,      0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout ends in ^COUNT"), "")
+    MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    1,      0, 1, "",               CPID_TIMEIN,            "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             1,      0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 

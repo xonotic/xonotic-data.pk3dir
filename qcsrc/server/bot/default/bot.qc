@@ -177,7 +177,7 @@ void bot_setnameandstuff(entity this)
 					break;
 				}
 			));
-			RandomSelection_Add(NULL, 0, readfile, 1, prio);
+			RandomSelection_AddString(readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
 		fclose(file);

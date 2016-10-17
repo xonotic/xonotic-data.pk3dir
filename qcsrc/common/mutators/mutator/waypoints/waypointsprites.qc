@@ -611,11 +611,9 @@ void Draw_WaypointSprite(entity this)
     (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o.x,
     (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o.y);
 
-    float vidscale = max(vid_conwidth / vid_width, vid_conheight / vid_height);
-
     float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
 
-    t = waypointsprite_scale * vidscale;
+    t = waypointsprite_scale;
     a *= waypointsprite_alpha;
 
     {

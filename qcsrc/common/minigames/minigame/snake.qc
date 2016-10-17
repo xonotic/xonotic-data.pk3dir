@@ -95,7 +95,7 @@ void snake_new_mouse(entity minigame)
 	{
 		string pos = minigame_tile_buildname(i, j);
 		if(!snake_find_piece(minigame, pos))
-			RandomSelection_Add(NULL, 0, pos, 1, 1);
+			RandomSelection_AddString(pos, 1, 1);
 	}
 
 	entity piece = msle_spawn(minigame,"minigame_board_piece");
@@ -175,7 +175,7 @@ void minigame_setup_snake(entity minigame, int pteam)
 	{
 		string pos = minigame_tile_buildname(i, j);
 		if(!snake_find_piece(minigame, pos))
-			RandomSelection_Add(NULL, 0, pos, 1, 1);
+			RandomSelection_AddString(pos, 1, 1);
 	}
 
 	entity piece = msle_spawn(minigame,"minigame_board_piece");

@@ -4,7 +4,6 @@ void sys_phys_fix(entity this, float dt)
 {
 	this.team = myteam + 1; // is this correct?
 	PHYS_WATERJUMP_TIME(this) -= dt;
-	this.oldmovement = this.movement;
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 	this.items = STAT(ITEMS, this);
 	this.spectatorspeed = STAT(SPECTATORSPEED, this);
