@@ -1090,7 +1090,9 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 
 bool Scoreboard_WouldDraw()
 {
-	if (QuickMenu_IsOpened())
+	if (MUTATOR_CALLHOOK(DrawScoreboard))
+		return false;
+	else if (QuickMenu_IsOpened())
 		return false;
 	else if (HUD_Radar_Clickable())
 		return false;
