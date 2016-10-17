@@ -554,10 +554,7 @@ void SpawnBall(entity this)
 	set_movetype(this, MOVETYPE_FLY);
 
 	if(autocvar_g_nexball_playerclip_collisions)
-	{
 		this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
-		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
-	}
 
 	if(!autocvar_g_nexball_sound_bounce)
 		this.noise = "";
