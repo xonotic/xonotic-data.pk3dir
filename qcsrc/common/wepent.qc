@@ -125,6 +125,7 @@ MACRO_END
 		e.owner = wep;
 		setthink(e, wepent_think);
 		e.nextthink = time;
+		e.drawonlytoclient = wep.owner;
 		Net_LinkEntity(e, false, 0, wepent_send);
 	}
 
