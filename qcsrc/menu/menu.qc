@@ -977,6 +977,8 @@ void m_goto(string itemname)
 
 		if ((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
+			if(!Menu_Active)
+				e.hideMenuOnClose = true;
 			m_hide();
 			m_activate_window(e);
 			m_setpointerfocus(e);
