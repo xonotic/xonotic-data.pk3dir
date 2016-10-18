@@ -1686,6 +1686,12 @@ void SpectateCopy(entity this, entity spectatee)
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(this, spectatee.zoomstate);
 
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		this.(weaponentity) = spectatee.(weaponentity);
+	}
+
     anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
