@@ -1213,7 +1213,7 @@ void Monster_Anim(entity this)
 void Monster_Think(entity this)
 {
 	setthink(this, Monster_Think);
-	this.nextthink = this.ticrate;
+	this.nextthink = time + this.ticrate;
 
 	if(this.monster_lifetime)
 	if(time >= this.monster_lifetime)
