@@ -17,7 +17,7 @@ const int BD_TILE_SIZE = 20;
 
 const int BD_TEAMS = 1;
 
-.vector bd_dir;
+.int bd_dir;
 
 .int bd_moves;
 
@@ -41,6 +41,11 @@ const int BD_TILE_BRICK6 = 9;
 const int BD_TILE_BRICK7 = 10;
 const int BD_TILE_BRICK8 = 11;
 const int BD_TILE_LAST = 11;
+
+const int BD_DIR_UP = 0;
+const int BD_DIR_DN = 1;
+const int BD_DIR_LF = 2;
+const int BD_DIR_RT = 3;
 
 string autocvar_sv_minigames_bulldozer_startlevel = "level1";
 
@@ -92,6 +97,44 @@ void bd_check_winner(entity minig)
 	}
 }
 
+vector bd_get_dir(int bdir)
+{
+	switch(bdir)
+	{
+		case BD_DIR_UP: return '0 1 0'; // up
+		default:
+		case BD_DIR_DN: return '0 -1 0'; // down
+		case BD_DIR_LF: return '-1 0 0'; // left
+		case BD_DIR_RT: return '1 0 0'; // right
+	}
+}
+
+string bd_get_dir_name(int bdir)
+{
+	switch(bdir)
+	{
+		case BD_DIR_UP: return "u"; // up
+		default:
+		case BD_DIR_DN: return "d"; // down
+		case BD_DIR_LF: return "l"; // left
+		case BD_DIR_RT: return "r"; // right
+	}
+}
+
+int bd_dir_fromname(string bdir)
+{
+	if(bdir == "up" || bdir == "u")
+		return BD_DIR_UP; // up
+	if(bdir == "down" || bdir == "dn" || bdir == "d")
+		return BD_DIR_DN; /// down
+	if(bdir == "left" || bdir == "lt" || bdir == "l")
+		return BD_DIR_LF; // left
+	if(bdir == "right" || bdir == "rt" || bdir == "r")
+		return BD_DIR_RT; // right
+
+	return BD_DIR_DN; // down
+}
+
 bool bd_canfill(int ttype)
 {
 	switch(ttype)
@@ -111,14 +154,16 @@ bool bd_canfill(int ttype)
 
 bool bd_move_dozer(entity minigame, entity dozer)
 {
-	if(!dozer.bd_dir_x && !dozer.bd_dir_y)
-		return false; // nope!
+	//if(!dozer.bd_dir)
+		//return false; // nope!
 
 	int myx = minigame_tile_letter(dozer.netname);
 	int myy = minigame_tile_number(dozer.netname);
 
-	myx += dozer.bd_dir_x;
-	myy += dozer.bd_dir_y;
+	vector dir = bd_get_dir(dozer.bd_dir);
+
+	myx += dir.x;
+	myy += dir.y;
 
 	string newpos = minigame_tile_buildname(myx, myy);
 	entity hit = bd_find_piece(minigame, newpos, false);
@@ -144,8 +189,8 @@ bool bd_move_dozer(entity minigame, entity dozer)
 			int tx = minigame_tile_letter(hit.netname);
 			int ty = minigame_tile_number(hit.netname);
 
-			tx += dozer.bd_dir_x;
-			ty += dozer.bd_dir_y;
+			tx += dir.x;
+			ty += dir.y;
 
 			testpos = minigame_tile_buildname(tx, ty);
 			entity testhit = bd_find_piece(minigame, testpos, false);
@@ -182,24 +227,15 @@ void bd_move(entity minigame, entity player, string dir)
 				return; // should not happen... TODO: end match?
 			}
 
-			int dxs = 0, dys = 0;
 			string thedir = strtolower(dir);
-			if(thedir == "up" || thedir == "u") { dxs = 0; dys = 1; }
-			if(thedir == "down" || thedir == "dn" || thedir == "d") { dxs = 0; dys = -1; }
-			if(thedir == "left" || thedir == "lt" || thedir == "l") { dxs = -1; dys = 0; }
-			if(thedir == "right" || thedir == "rt" || thedir == "r") { dxs = 1; dys = 0; }
-
-			int dx = bound(-1, dxs, 1);
-			int dy = bound(-1, dys, 1);
+			int bdir = bd_dir_fromname(thedir);
 
 			int moved = 0;
 			entity e = NULL;
 			while ( ( e = findentity(e,owner,minigame) ) )
 				if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_DOZER )
 				{
-					e.bd_dir_x = dx;
-					e.bd_dir_y = dy;
-					e.bd_dir_z = 0;
+					e.bd_dir = bdir;
 
 					if(bd_move_dozer(minigame, e))
 						++moved;
@@ -231,19 +267,10 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 
 			if(found_piece.bd_tiletype == BD_TILE_DOZER && thedir != "")
 			{
-				int dxs = 0, dys = 0;
 				string newdir = strtolower(thedir);
-				if(newdir == "up" || newdir == "u") { dxs = 0; dys = 1; }
-				if(newdir == "down" || newdir == "dn" || newdir == "d") { dxs = 0; dys = -1; }
-				if(newdir == "left" || newdir == "lt" || newdir == "l") { dxs = -1; dys = 0; }
-				if(newdir == "right" || newdir == "rt" || newdir == "r") { dxs = 1; dys = 0; }
+				int bdir = bd_dir_fromname(newdir);
 
-				int dx = bound(-1, dxs, 1);
-				int dy = bound(-1, dys, 1);
-
-				found_piece.bd_dir_x = dx;
-				found_piece.bd_dir_y = dy;
-				found_piece.bd_dir_z = 0;
+				found_piece.bd_dir = bdir;
 				minigame_server_sendflags(found_piece,MINIG_SF_UPDATE); // update anyway
 				return;
 			}
@@ -269,7 +296,7 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 			piece.team = 1;
 			piece.netname = strzone(pos);
 			piece.bd_tiletype = thetile;
-			piece.bd_dir = '0 -1 0';
+			piece.bd_dir = 0;
 			minigame_server_sendflags(piece,MINIG_SF_UPDATE);
 
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
@@ -465,7 +492,7 @@ string bd_save_piece(entity minigame, entity e)
 
 	bd_string = strcat(bd_string, "\"", e.netname, "\" ");
 	bd_string = strcat(bd_string, ftos(e.bd_tiletype), " ");
-	bd_string = strcat(bd_string, sprintf("\"%.9v\"", e.bd_dir));
+	bd_string = strcat(bd_string, ftos(e.bd_dir));
 
 	return bd_string;
 }
@@ -478,6 +505,16 @@ void bd_set_nextlevel(entity minigame, string s)
 	minigame.bd_nextlevel = strzone(argv(2));
 }
 
+int bd_fix_dir(vector dir)
+{
+	if(dir.x == 0 && dir.y == 1) { return BD_DIR_UP; } // up
+	if(dir.x == 0 && dir.y == -1) { return BD_DIR_DN; } // down
+	if(dir.x == -1 && dir.y == 0) { return BD_DIR_LF; } // left
+	if(dir.x == 1 && dir.y == 0) { return BD_DIR_RT; } // right
+
+	return BD_DIR_DN; // down if all else fails
+}
+
 entity bd_load_piece(entity minigame, string s)
 {
 	// separate pieces between the ; symbols
@@ -487,12 +524,12 @@ entity bd_load_piece(entity minigame, string s)
 
 	entity e = msle_spawn(minigame,"minigame_board_piece");
 	e.team = 1;
-	e.bd_dir = '0 -1 0';
+	e.bd_dir = 0;
 
 	int argv_num = 0;
 	e.netname = strzone(argv(argv_num)); ++argv_num;
 	e.bd_tiletype = stof(argv(argv_num)); ++argv_num;
-	e.bd_dir = stov(argv(argv_num)); ++argv_num;
+	e.bd_dir = stoi(argv(argv_num)); ++argv_num;
 
 	minigame_server_sendflags(e,MINIG_SF_ALL);
 
@@ -687,12 +724,7 @@ int bd_server_event(entity minigame, string event, ...)
 
 				WriteByte(MSG_ENTITY,sent.bd_tiletype);
 
-				int dx = sent.bd_dir_x;
-				int dy = sent.bd_dir_y;
-				if(dx == -1) dx = 2;
-				if(dy == -1) dy = 2;
-				WriteByte(MSG_ENTITY,dx);
-				WriteByte(MSG_ENTITY,dy);
+				WriteByte(MSG_ENTITY,sent.bd_dir);
 			}
 			else if(sent.classname == "minigame_player" && (sf & BD_SF_PLAYERMOVES))
 				WriteShort(MSG_ENTITY,sent.bd_moves);
@@ -793,12 +825,17 @@ void bd_hud_board(vector pos, vector mySize)
 			tile_pos = minigame_tile_pos(e.netname,BD_NUM_CNT,BD_LET_CNT);
 			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 
-			vector thedir = e.bd_dir;
+			int bdir = e.bd_dir;
 			float theang = 0;
 
-			if(thedir_y == -1) { theang = M_PI; }
-			if(thedir_x == 1) { theang = M_PI/2; }
-			if(thedir_x == -1) { theang = M_PI*3/2; }
+			switch(bdir)
+			{
+				case BD_DIR_UP: theang = 0; break;
+				default:
+				case BD_DIR_DN: theang = M_PI; break;
+				case BD_DIR_LF: theang = M_PI * 3 / 2; break;
+				case BD_DIR_RT: theang = M_PI / 2; break; 
+			}
 
 			drawrotpic(tile_pos, theang, minigame_texture("bd/dozer"),
 						tile_size, tile_size/2, '1 1 1',
@@ -986,14 +1023,15 @@ bool bd_change_dozer_angle(entity minigame)
 	if(!dozer || dozer.bd_tiletype != BD_TILE_DOZER)
 		return false;
 
-	string thedir = "";
-	vector dir = dozer.bd_dir;
-	if(dir.x == 0 && dir.y == 0) { thedir = "r"; }
-
-	if(dir.x == 0 && dir.y == 1) { thedir = "r"; }
-	if(dir.x == 0 && dir.y ==-1) { thedir = "l"; }
-	if(dir.x ==-1 && dir.y == 0) { thedir = "u"; }
-	if(dir.x == 1 && dir.y == 0) { thedir = "d"; }
+	switch(dozer.bd_dir)
+	{
+		case BD_DIR_UP: dozer.bd_dir = BD_DIR_LF; break; // up -> left
+		default:
+		case BD_DIR_DN: dozer.bd_dir = BD_DIR_RT; break; // down -> right
+		case BD_DIR_LF: dozer.bd_dir = BD_DIR_DN; break; // left -> down
+		case BD_DIR_RT: dozer.bd_dir = BD_DIR_UP; break; // right -> up
+	}
+	string thedir = bd_get_dir_name(dozer.bd_dir);
 
 	bd_editor_make_move(minigame, thedir);
 	return true;
@@ -1129,15 +1167,7 @@ int bd_client_event(entity minigame, string event, ...)
 
 					sent.bd_tiletype = ReadByte();
 
-					int dx = ReadByte();
-					int dy = ReadByte();
-
-					if(dx == 2) dx = -1;
-					if(dy == 2) dy = -1;
-
-					sent.bd_dir_x = dx;
-					sent.bd_dir_y = dy;
-					sent.bd_dir_z = 0;
+					sent.bd_dir = ReadByte();
 				}
 			}
 			else if(sent.classname == "minigame_player" && (sf & BD_SF_PLAYERMOVES))

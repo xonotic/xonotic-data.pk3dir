@@ -210,6 +210,7 @@ void timeout_handler_think(entity this)
 			}
 			else  // time to end the timeout
 			{
+				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEIN);
 				timeout_status = TIMEOUT_INACTIVE;
 
 				// reset the slowmo value back to normal

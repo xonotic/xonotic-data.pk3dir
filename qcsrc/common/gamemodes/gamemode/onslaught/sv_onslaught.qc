@@ -1742,7 +1742,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 		{
 			if(SAME_TEAM(tmp_entity, player))
 			if(random_target)
-				RandomSelection_Add(tmp_entity, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(tmp_entity, 1, 1);
 			else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
 				closest_target = tmp_entity;
 		}
@@ -1789,7 +1789,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 		for(tmp_entity = ons_worldgeneratorlist; tmp_entity; tmp_entity = tmp_entity.ons_worldgeneratornext)
 		{
 			if(random_target)
-				RandomSelection_Add(tmp_entity, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(tmp_entity, 1, 1);
 			else
 			{
 				if(SAME_TEAM(tmp_entity, player))

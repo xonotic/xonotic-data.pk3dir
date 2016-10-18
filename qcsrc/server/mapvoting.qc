@@ -14,7 +14,6 @@
 float mapvote_nextthink;
 float mapvote_keeptwotime;
 float mapvote_timeout;
-string mapvote_message;
 const float MAPVOTE_SCREENSHOT_DIRS_COUNT = 4;
 string mapvote_screenshot_dirs[MAPVOTE_SCREENSHOT_DIRS_COUNT];
 float mapvote_screenshot_dirs_count;
@@ -255,7 +254,6 @@ void MapVote_Init()
 	mapvote_timeout = time + autocvar_g_maplist_votable_timeout;
 	if(mapvote_count_real < 3 || mapvote_keeptwotime <= time)
 		mapvote_keeptwotime = 0;
-	mapvote_message = "Choose a map and press its key!";
 
 	MapVote_Spawn();
 }
@@ -524,7 +522,7 @@ float MapVote_CheckRules_2()
 	for(i = 0; i < mapvote_count_real; ++i)
 		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
 		{
-			RandomSelection_Add(NULL, i, string_null, 1, mapvote_selections[i]);
+			RandomSelection_AddFloat(i, 1, mapvote_selections[i]);
 			if ( gametypevote &&  mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
 			{
 				currentVotes = mapvote_selections[i];
@@ -544,7 +542,7 @@ float MapVote_CheckRules_2()
 	for(i = 0; i < mapvote_count_real; ++i)
 		if(i != firstPlace)
 		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
-			RandomSelection_Add(NULL, i, string_null, 1, mapvote_selections[i]);
+			RandomSelection_AddFloat(i, 1, mapvote_selections[i]);
 	secondPlace = RandomSelection_chosen_float;
 	secondPlaceVotes = RandomSelection_best_priority;
 	//dprint("Second place: ", ftos(secondPlace), "\n");
@@ -561,7 +559,6 @@ float MapVote_CheckRules_2()
 		{
 			float didntvote;
 			MapVote_TouchMask();
-			mapvote_message = "Now decide between the TOP TWO!";
 			mapvote_keeptwotime = 0;
 			result = strcat(":vote:keeptwo:", mapvote_maps[firstPlace]);
 			result = strcat(result, ":", ftos(firstPlaceVotes));
@@ -592,10 +589,8 @@ float MapVote_CheckRules_2()
 
 void MapVote_Tick()
 {
-	float keeptwo;
 	float totalvotes;
 
-	keeptwo = mapvote_keeptwotime;
 	MapVote_CheckRules_1(); // count
 	if(MapVote_CheckRules_2()) // decide
 		return;

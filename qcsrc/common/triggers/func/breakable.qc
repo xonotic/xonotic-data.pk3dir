@@ -146,6 +146,7 @@ void func_breakable_behave_destroyed(entity this)
 		stopsound (this, CH_TRIGGER_SINGLE);
 }
 
+void func_breakable_destroy(entity this, entity actor, entity trigger);
 void func_breakable_behave_restore(entity this)
 {
 	this.health = this.max_health;
@@ -162,6 +163,8 @@ void func_breakable_behave_restore(entity this)
 		this.bot_attack = true;
 		this.event_damage = func_breakable_damage;
 	}
+	if(this.spawnflags & 4)
+		this.use = func_breakable_destroy; // don't need to set it usually, as .use isn't reset
 	this.state = 0;
 	this.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod(this);

@@ -3,6 +3,9 @@
 #define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
 #define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
 #define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
+#define IS_ONSLICK(s)						boolean((s).flags & FL_ONSLICK)
+#define SET_ONSLICK(s)						((s).flags |= FL_ONSLICK)
+#define UNSET_ONSLICK(s)					((s).flags &= ~FL_ONSLICK)
 
 #ifdef CSQC
 .float bouncestop;
@@ -78,6 +81,8 @@ const int FL_ONGROUND				= 512;
 const int MOVETYPE_ANGLENOCLIP      = 1;
 const int MOVETYPE_ANGLECLIP        = 2;
 #endif
+
+const int FL_ONSLICK = BIT(20);
 
 const int MOVETYPE_FAKEPUSH         = 13;
 

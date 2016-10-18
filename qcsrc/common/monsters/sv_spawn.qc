@@ -8,9 +8,8 @@
     #include <server/autocvars.qh>
     #include <server/defs.qh>
 #endif
-entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
+entity spawnmonster (string monster, int monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, int moveflag)
 {
-       float i;
 	entity e = spawn();
 
 	e.spawnflags = MONSTERFLAG_SPAWNED;
@@ -22,26 +21,26 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 
 	if(monster == "random")
 	{
-		RandomSelection_Init();
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
-			RandomSelection_Add(NULL, i, string_null, 1, 1);
+		RandomSelection_Init();	
+		FOREACH(Monsters, it != MON_Null,
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
 
-           monster_id = RandomSelection_chosen_float;
+		monster_id = RandomSelection_chosen_ent.monsterid;
 	}
 	else if(monster != "")
 	{
-		float found = 0;
-		entity mon;
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
+		bool found = false;
+		FOREACH(Monsters, it != MON_Null,
 		{
-			mon = get_monsterinfo(i);
-			if(mon.netname == monster)
+			if(it.netname == monster)
 			{
 				found = true;
-				monster_id = mon.monsterid; // we have the monster, old monster id is no longer required
+				monster_id = it.monsterid; // we have the monster, old monster id is no longer required
 				break;
 			}
-		}
+		});
 		if(!found)
 			monster_id = ((monster_id > 0) ? monster_id : MON_FIRST);
 	}
