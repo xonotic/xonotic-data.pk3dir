@@ -119,13 +119,21 @@ MACRO_END
 	#undef X
 	}
 
+	bool wepent_customize(entity this, entity client)
+	{
+		//entity e = WaypointSprite_getviewentity(client);
+		.entity weaponentity = this.owner.weaponentity_fld;
+		return client.(weaponentity) == this.owner;
+	}
+
 	void wepent_link(entity wep)
 	{
 		entity e = new(wepent_sender);
 		e.owner = wep;
 		setthink(e, wepent_think);
 		e.nextthink = time;
-		e.drawonlytoclient = wep.owner;
+		//e.drawonlytoclient = wep.owner;
+		setcefc(e, wepent_customize);
 		Net_LinkEntity(e, false, 0, wepent_send);
 	}
 
