@@ -1346,13 +1346,13 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.oldtarget2			= this.target2;
 	this.pass_distance		= 0;
 	this.deadflag			= DEAD_NO;
-	this.noalign			= ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM));
 	this.spawn_time			= time;
 	this.gravity			= 1;
 	this.monster_moveto		= '0 0 0';
 	this.monster_face 		= '0 0 0';
 	this.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
+	if(!this.noalign) { this.noalign = ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM)); }
 	if(!this.scale) { this.scale = 1; }
 	if(autocvar_g_monsters_edit) { this.grab = 1; }
 	if(autocvar_g_fullbrightplayers) { this.effects |= EF_FULLBRIGHT; }
