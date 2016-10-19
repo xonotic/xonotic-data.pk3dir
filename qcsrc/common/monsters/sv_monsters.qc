@@ -1128,7 +1128,7 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 		return;
 	}
 
-	float reverse = false;
+	bool reverse = false;
 	vector a, b;
 
 	makevectors(this.angles);
@@ -1142,8 +1142,11 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 		reverse = true;
 
 		if(trace_ent)
-		if(IS_PLAYER(trace_ent) && !(trace_ent.items & IT_STRENGTH))
+		if(IS_PLAYER(trace_ent) && !(trace_ent.items & ITEM_Strength.m_itemid))
 			reverse = false;
+
+		if(trace_ent && IS_MONSTER(trace_ent))
+			reverse = true;
 	}
 
 	// TODO: fix this... tracing is broken if the floor is thin
