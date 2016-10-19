@@ -62,7 +62,7 @@ entity spawnmonster (string monster, int monster_id, entity spawnedby, entity ow
 	}
 
 	// Monster_Spawn checks if monster is valid
-	Monster_Spawn(e, monster_id);
+	Monster_Spawn(e, false, monster_id);
 
 	return e;
 }

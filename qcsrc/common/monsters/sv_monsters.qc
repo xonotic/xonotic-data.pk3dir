@@ -505,7 +505,7 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn(entity this) { Monster_Spawn(this, this.monsterid); }
+void Monster_Respawn(entity this) { Monster_Spawn(this, true, this.monsterid); }
 
 .vector	pos1, pos2;
 
@@ -934,8 +934,7 @@ void Monster_Dead_Think(entity this)
 void Monster_Appear(entity this, entity actor, entity trigger)
 {
 	this.enemy = actor;
-	this.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
-	Monster_Spawn(this, this.monsterid);
+	Monster_Spawn(this, false, this.monsterid);
 }
 
 bool Monster_Appear_Check(entity this, int monster_id)
@@ -1292,7 +1291,7 @@ bool Monster_Spawn_Setup(entity this)
 	return true;
 }
 
-bool Monster_Spawn(entity this, int mon_id)
+bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 {
 	// setup the basic required properties for a monster
 	entity mon = Monsters_from(mon_id);
@@ -1303,7 +1302,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 		IL_PUSH(g_monsters, this);
 
-	if(Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
+	if(check_appear && Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
 
 	if(!this.monster_skill)
 		this.monster_skill = cvar("g_monsters_skill");
