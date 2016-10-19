@@ -34,21 +34,21 @@ spawnfunc(invasion_spawnpoint)
 	}
 }
 
-int invasion_PickMonster(int supermonster_count)
+Monster invasion_PickMonster(int supermonster_count)
 {
 	if(autocvar_g_invasion_zombies_only)
-		return MON_ZOMBIE.monsterid;
+		return MON_ZOMBIE;
 
 	RandomSelection_Init();
 
 	FOREACH(Monsters, it != MON_Null,
 	{
-		if((it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM) || (it.spawnflags & MONSTER_SIZE_QUAKE) || ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
+		if((it.spawnflags & MONSTER_TYPE_PASSIVE) || (it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM) || (it.spawnflags & MONSTER_SIZE_QUAKE) || ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
 			continue;
-        RandomSelection_AddFloat(it.monsterid, 1, 1);
+        RandomSelection_AddEnt(it, 1, 1);
 	});
 
-	return RandomSelection_chosen_float;
+	return RandomSelection_chosen_ent;
 }
 
 entity invasion_PickSpawn()
@@ -64,7 +64,7 @@ entity invasion_PickSpawn()
 	return RandomSelection_chosen_ent;
 }
 
-void invasion_SpawnChosenMonster(int mon)
+void invasion_SpawnChosenMonster(Monster mon)
 {
 	entity spawn_point, monster;
 
@@ -74,17 +74,17 @@ void invasion_SpawnChosenMonster(int mon)
 	{
 		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations");
 		entity e = spawn();
-		setsize(e, (get_monsterinfo(mon)).mins, (get_monsterinfo(mon)).maxs);
+		setsize(e, mon.mins, mon.maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-			monster = spawnmonster("", mon, NULL, NULL, e.origin, false, false, 2);
+			monster = spawnmonster("", mon.m_id, NULL, NULL, e.origin, false, false, 2);
 		else return;
 
 		setthink(e, SUB_Remove);
 		e.nextthink = time + 0.1;
 	}
 	else // if spawnmob field falls through (unset), fallback to mon (relying on spawnmonster for that behaviour)
-		monster = spawnmonster(spawn_point.spawnmob, mon, spawn_point, spawn_point, spawn_point.origin, false, false, 2);
+		monster = spawnmonster(spawn_point.spawnmob, mon.m_id, spawn_point, spawn_point, spawn_point.origin, false, false, 2);
 
 	if(spawn_point) monster.target2 = spawn_point.target2;
 	monster.spawnshieldtime = time;
@@ -125,7 +125,7 @@ void invasion_SpawnChosenMonster(int mon)
 
 void invasion_SpawnMonsters(int supermonster_count)
 {
-	int chosen_monster = invasion_PickMonster(supermonster_count);
+	Monster chosen_monster = invasion_PickMonster(supermonster_count);
 
 	invasion_SpawnChosenMonster(chosen_monster);
 }
