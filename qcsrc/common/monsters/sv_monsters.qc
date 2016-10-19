@@ -1319,8 +1319,9 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.flags				= FL_MONSTER;
 	this.classname			= "monster";
 	this.takedamage			= DAMAGE_AIM;
+	if(!this.bot_attack)
+		IL_PUSH(g_bot_targets, this);
 	this.bot_attack			= true;
-	IL_PUSH(g_bot_targets, this);
 	this.iscreature			= true;
 	this.teleportable		= true;
 	this.damagedbycontents	= true;
