@@ -1128,21 +1128,17 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 		return;
 	}
 
-	bool reverse = false;
-	vector a, b;
-
 	makevectors(this.angles);
-	a = this.origin + '0 0 16';
-	b = this.origin + '0 0 16' + v_forward * 32;
+	vector a = CENTER_OR_VIEWOFS(this);
+	vector b = CENTER_OR_VIEWOFS(this) + v_forward * 32;
 
 	traceline(a, b, MOVE_NORMAL, this);
 
+	bool reverse = false;
 	if(trace_fraction != 1.0)
 		reverse = true;
-
 	if(trace_ent && IS_PLAYER(trace_ent) && !(trace_ent.items & ITEM_Strength.m_itemid))
 		reverse = false;
-
 	if(trace_ent && IS_MONSTER(trace_ent))
 		reverse = true;
 
