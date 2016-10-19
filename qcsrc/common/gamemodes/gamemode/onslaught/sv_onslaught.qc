@@ -835,8 +835,6 @@ void ons_Generator_UpdateSprite(entity e)
 
 void ons_camSetup(entity this)
 {
-	if(cam) return;
-
 	vector dir;
 	vector ang = '0 0 0';
 	vector best_ang = '0 0 0';
@@ -857,8 +855,6 @@ void ons_camSetup(entity this)
 		if(ang.y == 360)
 			ang.y = 45;
 	}
-
-	cam = new(objective_camera);
 	cam.origin = this.origin;
 	setorigin(cam, cam.origin);
 	cam.angles = best_ang;
@@ -1678,6 +1674,7 @@ MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 		STAT(ROUNDLOST, it) = false;
 		it.ons_deathloc = '0 0 0';
 		PutClientInServer(it);
+		it.clientcamera = it;
 	});
 	return false;
 }
@@ -2193,6 +2190,8 @@ void ons_Initialize()
 {
 	g_onslaught = true;
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;
+
+	cam = new(objective_camera);
 
 	InitializeEntity(NULL, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
