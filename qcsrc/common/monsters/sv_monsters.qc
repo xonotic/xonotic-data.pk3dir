@@ -1138,16 +1138,13 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	traceline(a, b, MOVE_NORMAL, this);
 
 	if(trace_fraction != 1.0)
-	{
 		reverse = true;
 
-		if(trace_ent)
-		if(IS_PLAYER(trace_ent) && !(trace_ent.items & ITEM_Strength.m_itemid))
-			reverse = false;
+	if(trace_ent && IS_PLAYER(trace_ent) && !(trace_ent.items & ITEM_Strength.m_itemid))
+		reverse = false;
 
-		if(trace_ent && IS_MONSTER(trace_ent))
-			reverse = true;
-	}
+	if(trace_ent && IS_MONSTER(trace_ent))
+		reverse = true;
 
 	// TODO: fix this... tracing is broken if the floor is thin
 	/*
