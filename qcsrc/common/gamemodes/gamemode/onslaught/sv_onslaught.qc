@@ -926,7 +926,8 @@ void ons_GeneratorReset(entity this)
 	this.lasthealth = this.max_health = this.health = autocvar_g_onslaught_gen_health;
 	this.takedamage = DAMAGE_AIM;
 	this.bot_attack = true;
-	IL_PUSH(g_bot_targets, this);
+	if(!IL_CONTAINS(g_bot_targets, this))
+		IL_PUSH(g_bot_targets, this);
 	this.iscaptured = true;
 	this.islinked = true;
 	this.isshielded = true;
