@@ -5,6 +5,8 @@
 bool cpicon_send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CONTROLPOINT_ICON);
+	if(sf & CPSF_SETUP)
+		sf &= ~CPSF_STATUS;
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & CPSF_SETUP)
 	{

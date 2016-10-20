@@ -1151,12 +1151,14 @@ Gametype MapInfo_CurrentGametype()
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }
 
-float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
+float _MapInfo_CheckMap(string s, bool gametype_only) // returns 0 if the map can't be played with the current settings, 1 otherwise
 {
 	if(!MapInfo_Get_ByName(s, 1, NULL))
 		return 0;
 	if((MapInfo_Map_supportedGametypes & MapInfo_CurrentGametype().m_flags) == 0)
 		return 0;
+	if (gametype_only)
+		return 1;
 	if((MapInfo_Map_supportedFeatures & MapInfo_CurrentFeatures()) != MapInfo_CurrentFeatures())
 		return 0;
 	return 1;
@@ -1165,7 +1167,7 @@ float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with t
 float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
 {
 	float r;
-	r = _MapInfo_CheckMap(s);
+	r = _MapInfo_CheckMap(s, false);
 	MapInfo_ClearTemps();
 	return r;
 }
@@ -1237,7 +1239,7 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 	Gametype t = MapInfo_CurrentGametype();
 	MapInfo_LoadMapSettings_SaveGameType(t);
 
-	if(!_MapInfo_CheckMap(s)) // with underscore, it keeps temps
+	if(!_MapInfo_CheckMap(s, true)) // with underscore, it keeps temps
 	{
 		if(cvar("g_mapinfo_allow_unsupported_modes_and_let_stuff_break"))
 		{
@@ -1267,6 +1269,9 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 		// t is now a supported mode!
 		LOG_WARNF("can't play the selected map in the given game mode (%s). Falling back to a supported mode (%s).", t_prev.mdl, t.mdl);
 		MapInfo_LoadMapSettings_SaveGameType(t);
+	}
+	if(!_MapInfo_CheckMap(s, false)) { // with underscore, it keeps temps
+		LOG_WARNF("the selected map lacks features required by current settings; playing anyway.");
 	}
 	MapInfo_Get_ByName(s, 1, t);
 }

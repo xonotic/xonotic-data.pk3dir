@@ -419,6 +419,8 @@ NET_HANDLE(tuba_instrument, bool)
 void tuba_instrument_send(entity this, int instr)
 {
 	msg_entity = this;
+	if (!IS_REAL_CLIENT(this))
+		return;
 	int chan = MSG_ONE;
 	WriteHeader(chan, tuba_instrument);
 	WriteByte(chan, instr);

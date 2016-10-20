@@ -1,3 +1,3 @@
 #pragma once
 
-entity spawnmonster (string monster, int monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, int moveflag);
+entity spawnmonster (entity e, string monster, int monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, int moveflag);

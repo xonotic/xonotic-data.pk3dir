@@ -106,7 +106,7 @@ bool M_Wyvern_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_wyvern) { Monster_Spawn(this, MON_WYVERN.monsterid); }
+spawnfunc(monster_wyvern) { Monster_Spawn(this, true, MON_WYVERN.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC

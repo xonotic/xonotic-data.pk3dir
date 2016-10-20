@@ -200,7 +200,7 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_shambler) { Monster_Spawn(this, MON_SHAMBLER.monsterid); }
+spawnfunc(monster_shambler) { Monster_Spawn(this, true, MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
