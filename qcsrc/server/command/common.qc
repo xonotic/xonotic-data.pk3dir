@@ -381,11 +381,11 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
 
 					bool found = false;
-					for (int i = MON_FIRST; i <= MON_LAST; ++i)
+					FOREACH(Monsters, it != MON_Null && it.netname == arg_lower,
 					{
-						mon = get_monsterinfo(i);
-						if (mon.netname == arg_lower) { found = true; break; }
-					}
+						found = true;
+						break;
+					});
 
 					if (!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
 
