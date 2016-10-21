@@ -508,6 +508,7 @@ void Item_Respawn (entity this)
 			break;
 		default:
 			sound(this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+			break;
 	}
 	setorigin(this, this.origin);
 
