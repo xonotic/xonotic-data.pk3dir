@@ -1,6 +1,30 @@
 #include "onslaught.qh"
 
+#ifndef MENUQC
+REGISTER_NET_LINKED(ENT_ONSCAMERA)
+#endif
+
 #ifdef CSQC
+
+entity generator_camera;
+NET_HANDLE(ENT_ONSCAMERA, bool isnew)
+{
+	this.origin_x = ReadCoord();
+	this.origin_y = ReadCoord();
+	this.origin_z = ReadCoord();
+	setorigin(this, this.origin);
+
+	this.angles_x = ReadAngle();
+	this.angles_y = ReadAngle();
+	this.angles_z = ReadAngle();
+
+	this.drawmask  = MASK_NORMAL;
+	setmodel(this, MDL_Null); // give it a size for clientcamera
+	setsize(this, '-1 -1 -1', '1 1 1');
+
+	generator_camera = this;
+	return true;
+}
 
 REGISTER_MUTATOR(cl_ons, true);
 
@@ -35,7 +59,7 @@ MUTATOR_HOOKFUNCTION(cl_ons, CustomizeEventchase)
 {
 	if(ons_roundlost)
 	{
-		M_ARGV(0, vector) = generator_origin;
+		M_ARGV(0, vector) = generator_camera.origin;
 		M_ARGV(1, vector) = autocvar_cl_eventchase_generator_viewoffset;
 		M_ARGV(0, float) = autocvar_cl_eventchase_generator_distance;
 		return true;

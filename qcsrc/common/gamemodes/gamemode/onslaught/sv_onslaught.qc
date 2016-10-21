@@ -28,10 +28,26 @@ float autocvar_g_onslaught_spawn_choose;
 float autocvar_g_onslaught_click_radius;
 
 void FixSize(entity e);
+entity cam;
 
 // =======================
 // CaptureShield Functions
 // =======================
+
+bool clientcamera_send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_ONSCAMERA);
+
+	WriteCoord(MSG_ENTITY, this.origin_x);
+	WriteCoord(MSG_ENTITY, this.origin_y);
+	WriteCoord(MSG_ENTITY, this.origin_z);
+
+	WriteAngle(MSG_ENTITY, this.angles_x);
+	WriteAngle(MSG_ENTITY, this.angles_y);
+	WriteAngle(MSG_ENTITY, this.angles_z);
+
+	return true;
+}
 
 bool ons_CaptureShield_Customize(entity this, entity client)
 {
@@ -817,6 +833,41 @@ void ons_Generator_UpdateSprite(entity e)
 	}
 }
 
+void ons_camSetup(entity this)
+{
+	vector dir;
+	vector ang = '0 0 0';
+	vector best_ang = '0 0 0';
+	float best_trace_fraction = 0;
+	while(ang.y < 360)
+	{
+		dir = eX * cos(ang.y * DEG2RAD) + eY * sin(ang.y * DEG2RAD);
+		dir *= 500;
+		traceline(this.origin, this.origin - dir, MOVE_WORLDONLY, this);
+		if(trace_fraction > best_trace_fraction)
+		{
+			best_trace_fraction = trace_fraction;
+			best_ang = ang;
+			if(trace_fraction == 1)
+				break;
+		}
+		ang.y += 90;
+		if(ang.y == 360)
+			ang.y = 45;
+	}
+	cam.origin = this.origin;
+	setorigin(cam, cam.origin);
+	cam.angles = best_ang;
+	Net_LinkEntity(cam, false, 0, clientcamera_send);
+
+	FOREACH_CLIENT(true, it.clientcamera = cam;);
+
+	WriteByte(MSG_ALL, SVC_SETVIEWANGLES);
+	WriteAngle(MSG_ALL, cam.angles_x);
+	WriteAngle(MSG_ALL, cam.angles_y);
+	WriteAngle(MSG_ALL, cam.angles_z);
+}
+
 void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(damage <= 0) { return; }
@@ -877,6 +928,8 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		//WaypointSprite_Kill(this.sprite); // can't do this yet, code too poor
 
 		onslaught_updatelinks();
+
+		ons_camSetup(this);
 	}
 
 	// Throw some flaming gibs on damage, more damage = more chance for gib
@@ -1622,6 +1675,7 @@ MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 		STAT(ROUNDLOST, it) = false;
 		it.ons_deathloc = '0 0 0';
 		PutClientInServer(it);
+		it.clientcamera = it;
 	});
 	return false;
 }
@@ -2137,6 +2191,8 @@ void ons_Initialize()
 {
 	g_onslaught = true;
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;
+
+	cam = new(objective_camera);
 
 	InitializeEntity(NULL, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
