@@ -423,6 +423,7 @@ void Item_Show (entity e, float mode)
 {
 	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
 	e.ItemStatus &= ~ITS_STAYWEP;
+	entity def = e.itemdef;
 	if (mode > 0)
 	{
 		// make the item look normal, and be touchable
@@ -440,7 +441,6 @@ void Item_Show (entity e, float mode)
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
 	else {
-	entity def = e.itemdef;
 	bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.weapons & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
 		|| e.team // weapon stay isn't supported for teamed weapons
 		;
@@ -463,7 +463,7 @@ void Item_Show (entity e, float mode)
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}}
 
-	if (e.items & ITEM_Strength.m_itemid || e.items & ITEM_Shield.m_itemid)
+	if (def == ITEM_Strength || def == ITEM_Shield)
 		e.ItemStatus |= ITS_POWERUP;
 
 	if (autocvar_g_nodepthtestitems)
@@ -498,12 +498,17 @@ void Item_Respawn (entity this)
 {
 	Item_Show(this, 1);
 	// this is ugly...
-	if(this.items == ITEM_Strength.m_itemid)
-		sound (this, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	else if(this.items == ITEM_Shield.m_itemid)
-		sound (this, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	else
-		sound (this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	switch(this.itemdef)
+	{
+		case ITEM_Strength:
+			sound(this, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+			break;
+		case ITEM_Shield:
+			sound(this, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+			break;
+		default:
+			sound(this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	}
 	setorigin(this, this.origin);
 
     if (Item_ItemsTime_Allow(this.itemdef) || this.weapons & WEPSET_SUPERWEAPONS)
