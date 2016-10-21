@@ -713,7 +713,6 @@ void PutClientInServer(entity this)
 
 void ClientInit_misc(entity this);
 
-.float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
 bool ClientInit_SendEntity(entity this, entity to, int sf)

@@ -403,14 +403,6 @@ METHOD(Tuba, wr_setup, void(Tuba this, entity actor, .entity weaponentity))
 	actor.(weaponentity).tuba_instrument = 0;
 }
 
-SPECTATE_COPY()
-{
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		this.(weaponentity).tuba_instrument = spectatee.(weaponentity).tuba_instrument;
-	}
-}
 METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// switch to alternate instruments :)

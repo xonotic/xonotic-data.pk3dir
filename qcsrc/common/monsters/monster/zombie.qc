@@ -125,7 +125,7 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	return false;
 }
 
-spawnfunc(monster_zombie) { Monster_Spawn(this, MON_ZOMBIE.monsterid); }
+spawnfunc(monster_zombie) { Monster_Spawn(this, true, MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -187,6 +187,8 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     if(actor.spawnflags & MONSTERFLAG_NORESPAWN)
         actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
+
+    actor.spawnflags &= ~MONSTERFLAG_APPEAR; // once it's appeared, it will respawn quickly, we don't want it to appear
 
     actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 

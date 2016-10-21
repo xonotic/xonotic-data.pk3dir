@@ -294,7 +294,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 	// Set final information for the death
 	targ.death_origin = targ.origin;
-	if(targ != attacker) { targ.killer_origin = attacker.origin; }
 	string deathlocation = (autocvar_notification_server_allows_location ? NearestLocation(targ.death_origin) : "");
 
 	#ifdef NOTIFICATIONS_DEBUG

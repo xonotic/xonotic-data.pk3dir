@@ -341,6 +341,8 @@ void W_Arc_Beam_Think(entity this)
 		||
 		forbidWeaponUse(this.owner)
 		||
+		this.owner.(weaponentity).m_switchweapon != WEP_ARC
+		||
 		(!PHYS_INPUT_BUTTON_ATCK(this.owner) && !burst )
 		||
 		this.owner.vehicle

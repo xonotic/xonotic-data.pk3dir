@@ -160,7 +160,6 @@ bool nJoinAllowed(entity this, entity ignore);
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .vector death_origin;
-.vector killer_origin;
 
 float default_player_alpha;
 float default_weapon_alpha;
@@ -417,12 +416,6 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 #define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? true : false)
 
 ////
-
-.entity player_stats;
-//.float playerid;
-.string playernick;
-.float elos;
-.float ranks;
 
 .string cvar_cl_physics;
 
