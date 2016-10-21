@@ -22,9 +22,6 @@ const int MONSTER_TYPE_PASSIVE = BIT(14); // doesn't target or chase enemies
 .vector anim_melee1;
 .vector anim_melee2;
 .vector anim_melee3;
-.vector anim_pain3;
-.vector anim_pain4;
-.vector anim_pain5;
 .vector anim_walk;
 .vector anim_spawn;
 
