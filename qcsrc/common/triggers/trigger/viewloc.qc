@@ -102,9 +102,9 @@ bool viewloc_send(entity this, entity to, int sf)
 	WriteCoord(MSG_ENTITY, this.origin_y);
 	WriteCoord(MSG_ENTITY, this.origin_z);
 
-	WriteCoord(MSG_ENTITY, this.angles_x);
-	WriteCoord(MSG_ENTITY, this.angles_y);
-	WriteCoord(MSG_ENTITY, this.angles_z);
+	WriteAngle(MSG_ENTITY, this.angles_x);
+	WriteAngle(MSG_ENTITY, this.angles_y);
+	WriteAngle(MSG_ENTITY, this.angles_z);
 
 	return true;
 }
@@ -176,9 +176,9 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC, bool isnew)
 	this.origin_z = ReadCoord();
 	setorigin(this, this.origin);
 
-	this.movedir_x = ReadCoord();
-	this.movedir_y = ReadCoord();
-	this.movedir_z = ReadCoord();
+	this.movedir_x = ReadAngle();
+	this.movedir_y = ReadAngle();
+	this.movedir_z = ReadAngle();
 
 	return = true;
 

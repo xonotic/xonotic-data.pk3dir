@@ -8,42 +8,48 @@
     #include <server/autocvars.qh>
     #include <server/defs.qh>
 #endif
-entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
+entity spawnmonster (entity e, string monster, int monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
 {
-       float i;
-	entity e = spawn();
-
 	e.spawnflags = MONSTERFLAG_SPAWNED;
 
 	if(!respwn) { e.spawnflags |= MONSTERFLAG_NORESPAWN; }
-	if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
+	//if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
 
 	setorigin(e, orig);
 
 	if(monster == "random")
 	{
-		RandomSelection_Init();
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
-			RandomSelection_Add(NULL, i, string_null, 1, 1);
+		RandomSelection_Init();	
+		FOREACH(Monsters, it != MON_Null && !(it.spawnflags & MONSTER_TYPE_PASSIVE),
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
 
-           monster_id = RandomSelection_chosen_float;
+		monster_id = RandomSelection_chosen_ent.monsterid;
 	}
 	else if(monster != "")
 	{
-		float found = 0;
-		entity mon;
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
+		bool found = false;
+		FOREACH(Monsters, it != MON_Null,
 		{
-			mon = get_monsterinfo(i);
-			if(mon.netname == monster)
+			if(it.netname == monster)
 			{
 				found = true;
-				monster_id = mon.monsterid; // we have the monster, old monster id is no longer required
+				monster_id = it.monsterid; // we have the monster, old monster id is no longer required
 				break;
 			}
+		});
+
+		if(!found && !monster_id)
+		{
+			if(removeifinvalid)
+			{
+				delete(e);
+				return NULL; // no good
+			}
+			else
+				monster_id = MON_FIRST;
 		}
-		if(!found)
-			monster_id = ((monster_id > 0) ? monster_id : MON_FIRST);
 	}
 
 	e.realowner = spawnedby;
@@ -63,7 +69,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	}
 
 	// Monster_Spawn checks if monster is valid
-	Monster_Spawn(e, monster_id);
+	Monster_Spawn(e, false, monster_id);
 
 	return e;
 }

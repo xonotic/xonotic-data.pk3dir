@@ -191,7 +191,7 @@ bool M_Spider_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_spider) { Monster_Spawn(this, MON_SPIDER.monsterid); }
+spawnfunc(monster_spider) { Monster_Spawn(this, true, MON_SPIDER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC

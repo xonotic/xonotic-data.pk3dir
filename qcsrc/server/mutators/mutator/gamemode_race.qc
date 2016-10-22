@@ -343,7 +343,7 @@ MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
 		return true; // in qualifying, you don't lose score by observing
 }
 
-MUTATOR_HOOKFUNCTION(rc, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(rc, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = race_teams;
 }

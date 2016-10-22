@@ -29,6 +29,7 @@ void StartItem(entity this, entity a);
 
 #ifdef CSQC
 
+bool   autocvar_cl_items_nofade;
 float  autocvar_cl_animate_items = 1;
 float  autocvar_cl_ghost_items = 0.45;
 vector autocvar_cl_ghost_items_color = '-1 -1 -1';

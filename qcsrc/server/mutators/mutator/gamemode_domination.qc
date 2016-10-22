@@ -411,7 +411,7 @@ void havocbot_role_dom(entity this)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
+MUTATOR_HOOKFUNCTION(dom, CheckAllowedTeams)
 {
 	// fallback?
 	M_ARGV(0, float) = domination_teams;

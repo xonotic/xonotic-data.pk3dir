@@ -162,7 +162,7 @@ void M_Mage_Attack_Spike_Think(entity this)
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
 		if ((autocvar_g_monster_mage_attack_spike_smart) && vdist(eorg - this.origin, >, autocvar_g_monster_mage_attack_spike_smart_mindist))
 		{
-			// Is it a better idea (shorter distance) to trace to the target itthis?
+			// Is it a better idea (shorter distance) to trace to the target itself?
 			if ( vlen2(this.origin + olddir * this.wait) < vlen2(eorg - this.origin))
 				traceline(this.origin, this.origin + olddir * this.wait, false, this);
 			else
@@ -371,7 +371,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_mage) { Monster_Spawn(this, MON_MAGE.monsterid); }
+spawnfunc(monster_mage) { Monster_Spawn(this, true, MON_MAGE.monsterid); }
 
 #endif // SVQC
 

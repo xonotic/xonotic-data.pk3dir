@@ -99,10 +99,10 @@ bool Monster_ValidTarget(entity this, entity targ)
 		return false;
 	}
 
-	traceline(this.origin + this.view_ofs, targ.origin, 0, this);
+	traceline(this.origin + this.view_ofs, targ.origin, MOVE_NOMONSTERS, this);
 
-	if((trace_fraction < 1) && (trace_ent != targ))
-		return false;
+	if(trace_fraction < 1)
+		return false; // solid
 
 	if(autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT))
 	if(this.enemy != targ)
@@ -505,7 +505,7 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn(entity this) { Monster_Spawn(this, this.monsterid); }
+void Monster_Respawn(entity this) { Monster_Spawn(this, true, this.monsterid); }
 
 .vector	pos1, pos2;
 
@@ -692,7 +692,8 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
-	if(this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
+	// update goal entity if lost
+	if(this.target2 && this.goalentity.targetname != this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
 
 	entity targ;
 
@@ -868,10 +869,10 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	}
 	else
 	{
-		entity e = find(NULL, targetname, this.target2);
+		entity e = this.goalentity; //find(NULL, targetname, this.target2);
 		if(e.target2)
 			this.target2 = e.target2;
-		else if(e.target)
+		else if(e.target) // compatibility
 			this.target2 = e.target;
 
 		movelib_brake_simple(this, stpspeed);
@@ -933,8 +934,7 @@ void Monster_Dead_Think(entity this)
 void Monster_Appear(entity this, entity actor, entity trigger)
 {
 	this.enemy = actor;
-	this.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
-	Monster_Spawn(this, this.monsterid);
+	Monster_Spawn(this, false, this.monsterid);
 }
 
 bool Monster_Appear_Check(entity this, int monster_id)
@@ -1128,23 +1128,19 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 		return;
 	}
 
-	float reverse = false;
-	vector a, b;
-
 	makevectors(this.angles);
-	a = this.origin + '0 0 16';
-	b = this.origin + '0 0 16' + v_forward * 32;
+	vector a = CENTER_OR_VIEWOFS(this);
+	vector b = CENTER_OR_VIEWOFS(this) + v_forward * 32;
 
 	traceline(a, b, MOVE_NORMAL, this);
 
+	bool reverse = false;
 	if(trace_fraction != 1.0)
-	{
 		reverse = true;
-
-		if(trace_ent)
-		if(IS_PLAYER(trace_ent) && !(trace_ent.items & IT_STRENGTH))
-			reverse = false;
-	}
+	if(trace_ent && IS_PLAYER(trace_ent) && !(trace_ent.items & ITEM_Strength.m_itemid))
+		reverse = false;
+	if(trace_ent && IS_MONSTER(trace_ent))
+		reverse = true;
 
 	// TODO: fix this... tracing is broken if the floor is thin
 	/*
@@ -1212,7 +1208,7 @@ void Monster_Anim(entity this)
 void Monster_Think(entity this)
 {
 	setthink(this, Monster_Think);
-	this.nextthink = this.ticrate;
+	this.nextthink = time + this.ticrate;
 
 	if(this.monster_lifetime)
 	if(time >= this.monster_lifetime)
@@ -1291,7 +1287,7 @@ bool Monster_Spawn_Setup(entity this)
 	return true;
 }
 
-bool Monster_Spawn(entity this, int mon_id)
+bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 {
 	// setup the basic required properties for a monster
 	entity mon = Monsters_from(mon_id);
@@ -1305,7 +1301,7 @@ bool Monster_Spawn(entity this, int mon_id)
 		IL_PUSH(g_damagedbycontents, this);
 	}
 
-	if(Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
+	if(check_appear && Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
 
 	if(!this.monster_skill)
 		this.monster_skill = cvar("g_monsters_skill");
@@ -1326,8 +1322,9 @@ bool Monster_Spawn(entity this, int mon_id)
 	this.flags				= FL_MONSTER;
 	this.classname			= "monster";
 	this.takedamage			= DAMAGE_AIM;
+	if(!this.bot_attack)
+		IL_PUSH(g_bot_targets, this);
 	this.bot_attack			= true;
-	IL_PUSH(g_bot_targets, this);
 	this.iscreature			= true;
 	this.teleportable		= true;
 	this.damagedbycontents	= true;
@@ -1352,13 +1349,13 @@ bool Monster_Spawn(entity this, int mon_id)
 	this.oldtarget2			= this.target2;
 	this.pass_distance		= 0;
 	this.deadflag			= DEAD_NO;
-	this.noalign			= ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM));
 	this.spawn_time			= time;
 	this.gravity			= 1;
 	this.monster_moveto		= '0 0 0';
 	this.monster_face 		= '0 0 0';
 	this.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
+	if(!this.noalign) { this.noalign = ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM)); }
 	if(!this.scale) { this.scale = 1; }
 	if(autocvar_g_monsters_edit) { this.grab = 1; }
 	if(autocvar_g_fullbrightplayers) { this.effects |= EF_FULLBRIGHT; }

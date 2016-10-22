@@ -559,9 +559,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
         // increment frag counter for used weapon type
         Weapon w = DEATH_WEAPONOF(deathtype);
-        if(w != WEP_Null)
-	if(accuracy_isgooddamage(attacker, this))
-        attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
+		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
+			attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		excess = M_ARGV(4, float);
@@ -689,7 +688,7 @@ void dedicated_print(string input)
  */
 int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
-	if (!teamsay && !privatesay) if (substring(msgin, 0, 1) == " ")
+	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
         msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
 	msgin = formatmessage(source, msgin);

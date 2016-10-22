@@ -294,7 +294,7 @@ void viewmodel_draw(entity this)
 	wasinvehicle = invehicle;
 	Weapon wep = activeweapon;
 	int c = entcs_GetClientColors(current_player);
-	vector g = weaponentity_glowmod(wep, c);
+	vector g = weaponentity_glowmod(wep, NULL, c);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)
@@ -710,7 +710,6 @@ float TrueAimCheck()
 
 void PostInit();
 void CSQC_Demo_Camera();
-float Scoreboard_WouldDraw();
 float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
@@ -980,7 +979,7 @@ void HUD_Crosshair(entity this)
 				v = wcross_origin - wcross_oldorigin;
 				v.x /= vid_conwidth;
 				v.y /= vid_conheight;
-				if(vlen(v) > 0.01)
+				if(vdist(v, >, 0.01))
 					shottype = SHOTTYPE_HITOBSTRUCTION;
 			}
 			if(!autocvar_crosshair_hittest_showimpact)
@@ -1491,8 +1490,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 			cvar_set("chase_active", "0");
 
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
-		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
-		entity gen = NULL;
 
 		float vehicle_viewdist = 0;
 		vector vehicle_viewofs = '0 0 0';
@@ -1507,18 +1504,18 @@ void CSQC_UpdateView(entity this, float w, float h)
 			}
 		}
 
-		if(ons_roundlost) // TODO: move this junk to a client mutator for onslaught (possible using the WantEventchase hook)
+		if(WantEventchase(this))
 		{
-			IL_EACH(g_onsgenerators, it.health <= 0,
+			vector current_view_origin_override = '0 0 0';
+			vector view_offset_override = '0 0 0';
+			float chase_distance_override = 0;
+			bool custom_eventchase = MUTATOR_CALLHOOK(CustomizeEventchase, this);
+			if(custom_eventchase)
 			{
-				gen = it;
-				break;
-			});
-			if(!gen)
-				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
-		}
-		if(WantEventchase(this) || (!autocvar_cl_orthoview && ons_roundlost))
-		{
+				current_view_origin_override = M_ARGV(0, vector);
+				view_offset_override = M_ARGV(1, vector);
+				chase_distance_override = M_ARGV(0, float);
+			}
 			eventchase_running = true;
 
 			entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
@@ -1527,7 +1524,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
-			if(ons_roundlost) { current_view_origin = gen.origin; }
+			if (custom_eventchase)
+				current_view_origin = current_view_origin_override;
 
 			// detect maximum viewoffset and use it
 			vector view_offset = autocvar_cl_eventchase_viewoffset;
@@ -1538,7 +1536,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 				else
 					view_offset = autocvar_cl_eventchase_vehicle_viewoffset;
 			}
-			if(ons_roundlost) { view_offset = autocvar_cl_eventchase_generator_viewoffset; }
+			if (custom_eventchase)
+				view_offset = view_offset_override;
 
 			if(view_offset)
 			{
@@ -1561,7 +1560,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 				else
 					chase_distance = autocvar_cl_eventchase_vehicle_distance;
 			}
-			if(ons_roundlost) { chase_distance = autocvar_cl_eventchase_generator_distance; }
+			if (custom_eventchase)
+				chase_distance = chase_distance_override;
 
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < chase_distance)
 				eventchase_current_distance += autocvar_cl_eventchase_speed * (chase_distance - eventchase_current_distance) * frametime; // slow down the further we get
@@ -2249,7 +2249,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
-	else if ( HUD_MinigameMenu_IsOpened() || minigame_isactive() )
+	else if (HUD_MinigameMenu_IsOpened() || active_minigame)
 		HUD_Minigame_Mouse();
 	else if(QuickMenu_IsOpened())
 		QuickMenu_Mouse();

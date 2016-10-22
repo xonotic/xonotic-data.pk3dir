@@ -164,7 +164,7 @@ float CheatImpulse(entity this, int imp)
 			this.personal.strength_finished = this.strength_finished;
 			this.personal.invincible_finished = this.invincible_finished;
 			this.personal.teleport_time = time;
-			break; // this part itthis doesn't cheat, so let's not count this
+			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			makevectors (this.v_angle);
@@ -262,7 +262,7 @@ float CheatImpulse(entity this, int imp)
 		case CHIMPULSE_R00T.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			RandomSelection_Init();
-			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), LAMBDA(RandomSelection_AddEnt(it, 1, 1)));
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else
@@ -475,9 +475,9 @@ float CheatCommand(entity this, int argc)
 			RandomSelection_Init();
 			crosshair_trace(this);
 			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
-				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
+				RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
-				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
+				RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			if(RandomSelection_chosen_ent)
 			{
 				delete(RandomSelection_chosen_ent.killindicator.killindicator);
@@ -497,9 +497,9 @@ float CheatCommand(entity this, int argc)
 				RandomSelection_Init();
 				crosshair_trace(this);
 				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
-					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
+					RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
-					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
+					RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				if(RandomSelection_chosen_ent)
 				{
 					if(substring(argv(1), 0, 1) == "*")

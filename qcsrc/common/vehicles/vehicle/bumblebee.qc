@@ -393,8 +393,9 @@ bool bumblebee_pilot_frame(entity this, float dt)
 
 	if(intermission_running)
 	{
-		vehic.velocity = '0 0 0';
-		vehic.avelocity = '0 0 0';
+		vehic.solid = SOLID_NOT;
+		vehic.takedamage = DAMAGE_NO;
+		set_movetype(vehic, MOVETYPE_NONE);
 		return;
 	}
 

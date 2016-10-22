@@ -900,7 +900,7 @@ bool vehicle_impulse(entity this, int imp)
 
 void vehicles_enter(entity pl, entity veh)
 {
-   // Remove this when bots know how to use vehicles
+	// Remove this when bots know how to use vehicles
 	if((IS_BOT_CLIENT(pl) && !autocvar_g_vehicles_allow_bots))
 		return;
 
@@ -1225,7 +1225,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	else
 		this.nextthink = time + game_starttime;
 
-	if(MUTATOR_CALLHOOK(VehicleSpawn, this))
+	if(!MUTATOR_CALLHOOK(VehicleInit, this))
 		return false;
 
 	return true;

@@ -56,9 +56,9 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, max(1, e.ping));
-		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
-		WriteByte(MSG_BROADCAST, ceil(e.ping_movementloss * 255));
+		WriteShort(MSG_BROADCAST, bound(1, e.ping, 65535));
+		WriteByte(MSG_BROADCAST, min(ceil(e.ping_packetloss * 255), 255));
+		WriteByte(MSG_BROADCAST, min(ceil(e.ping_movementloss * 255), 255));
 
 		// record latency times for clients throughout the match so we can report it to playerstats
 		if(time > (e.latency_time + LATENCY_THINKRATE))
@@ -320,17 +320,20 @@ void cvar_changes_init()
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_new_toys_use_pickupsound");
+		BADCVAR("g_physics_predictall");
+		BADCVAR("g_piggyback");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
-		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_intermission_cdtrack");
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
@@ -342,9 +345,11 @@ void cvar_changes_init()
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
+		BADPREFIX("sv_allow_");
 		BADPREFIX("sv_cullentities_");
 		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_minigames_");
+		BADPREFIX("sv_radio_");
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
@@ -369,6 +374,7 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
+		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_domination_point_limit");
@@ -391,6 +397,8 @@ void cvar_changes_init()
 		BADCVAR("g_maxplayers");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
+		BADCVAR("g_norecoil");
+		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_powerups");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
@@ -443,6 +451,7 @@ void cvar_changes_init()
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
 
+#undef BADPRESUFFIX
 #undef BADPREFIX
 #undef BADCVAR
 
@@ -908,7 +917,8 @@ spawnfunc(worldspawn)
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
 	// extra mutators that deserve to count as mod
-	MUTATOR_CALLHOOK(SetModname);
+	MUTATOR_CALLHOOK(SetModname, modname);
+	modname = M_ARGV(0, string);
 
 	// save it for later
 	modname = strzone(modname);
@@ -1334,32 +1344,32 @@ entity FindIntermission()
 	local	float cyc;
 
 // look for info_intermission first
-	spot = find (NULL, classname, "info_intermission");
+	spot = find(NULL, classname, "info_intermission");
 	if (spot)
 	{	// pick a random one
 		cyc = random() * 4;
 		while (cyc > 1)
 		{
-			spot = find (spot, classname, "info_intermission");
+			spot = find(spot, classname, "info_intermission");
 			if (!spot)
-				spot = find (spot, classname, "info_intermission");
+				spot = find(spot, classname, "info_intermission");
 			cyc = cyc - 1;
 		}
 		return spot;
 	}
 
 // then look for the start position
-	spot = find (NULL, classname, "info_player_start");
+	spot = find(NULL, classname, "info_player_start");
 	if (spot)
 		return spot;
 
 // testinfo_player_start is only found in regioned levels
-	spot = find (NULL, classname, "testplayerstart");
+	spot = find(NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
 // then look for the start position
-	spot = find (NULL, classname, "info_player_deathmatch");
+	spot = find(NULL, classname, "info_player_deathmatch");
 	if (spot)
 		return spot;
 
@@ -1503,7 +1513,7 @@ void FixIntermissionClient(entity e)
 			stuffcmd(e, "\nscr_printspeed 1000000\n");
 			RandomSelection_Init();
 			FOREACH_WORD(autocvar_sv_intermission_cdtrack, true, LAMBDA(
-				RandomSelection_Add(NULL, 0, it, 1, 1);
+				RandomSelection_AddString(it, 1, 1);
 			));
 			if (RandomSelection_chosen_string != "")
 			{

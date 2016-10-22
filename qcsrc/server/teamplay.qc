@@ -216,23 +216,23 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
 {
-	int dm = 0;
+	int teams_mask = 0;
 
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
 	string teament_name = string_null;
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(GetTeamCount, dm, teament_name);
-	dm = M_ARGV(0, float);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name);
+	teams_mask = M_ARGV(0, float);
 	teament_name = M_ARGV(1, string);
 
 	if(!mutator_returnvalue)
 	{
-		if(dm & BIT(0)) c1 = 0;
-		if(dm & BIT(1)) c2 = 0;
-		if(dm & BIT(2)) c3 = 0;
-		if(dm & BIT(3)) c4 = 0;
+		if(teams_mask & BIT(0)) c1 = 0;
+		if(teams_mask & BIT(1)) c2 = 0;
+		if(teams_mask & BIT(2)) c3 = 0;
+		if(teams_mask & BIT(3)) c4 = 0;
 	}
 
 	// find out what teams are allowed if necessary
@@ -508,13 +508,13 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	// now t is the minimum, or A minimum!
 	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl))
-		RandomSelection_Add(NULL, 1, string_null, 1, 1);
+		RandomSelection_AddFloat(1, 1, 1);
 	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl))
-		RandomSelection_Add(NULL, 2, string_null, 1, 1);
+		RandomSelection_AddFloat(2, 1, 1);
 	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl))
-		RandomSelection_Add(NULL, 3, string_null, 1, 1);
+		RandomSelection_AddFloat(3, 1, 1);
 	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl))
-		RandomSelection_Add(NULL, 4, string_null, 1, 1);
+		RandomSelection_AddFloat(4, 1, 1);
 
 	return RandomSelection_chosen_float;
 }

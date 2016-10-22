@@ -210,6 +210,7 @@ void timeout_handler_think(entity this)
 			}
 			else  // time to end the timeout
 			{
+				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEIN);
 				timeout_status = TIMEOUT_INACTIVE;
 
 				// reset the slowmo value back to normal
@@ -380,17 +381,17 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
 
 					bool found = false;
-					for (int i = MON_FIRST; i <= MON_LAST; ++i)
+					FOREACH(Monsters, it != MON_Null && it.netname == arg_lower,
 					{
-						mon = get_monsterinfo(i);
-						if (mon.netname == arg_lower) { found = true; break; }
-					}
+						found = true;
+						break;
+					});
 
 					if (!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
-					mon = spawnmonster(arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
+					mon = spawnmonster(spawn(), arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
 					print_to(caller, strcat("Spawned ", mon.monster_name));
 					return;
 				}

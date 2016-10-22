@@ -14,6 +14,7 @@ void ons_generator_ray_draw(entity this)
 
 	if(this.count > 10)
 	{
+		IL_REMOVE(g_drawables, this);
 		delete(this);
 		return;
 	}
@@ -149,7 +150,10 @@ void generator_construct(entity this, bool isnew)
 	this.classname = "onslaught_generator";
 
 	if(isnew)
+	{
 		IL_PUSH(g_onsgenerators, this);
+		IL_PUSH(g_drawables, this);
+	}
 
 	setorigin(this, this.origin);
 	setmodel(this, MDL_ONS_GEN);

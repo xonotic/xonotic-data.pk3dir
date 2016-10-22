@@ -1,8 +1,8 @@
 #include "sv_melee_only.qh"
 
-REGISTER_MUTATOR(melee_only, cvar("g_melee_only") && !cvar("g_instagib") && !g_nexball);
+REGISTER_MUTATOR(melee_only, cvar("g_melee_only") && !cvar("g_instagib") && !cvar("g_overkill") && !g_nexball);
 
-MUTATOR_HOOKFUNCTION(melee_only, SetStartItems)
+MUTATOR_HOOKFUNCTION(melee_only, SetStartItems, CBC_ORDER_LAST)
 {
 	start_ammo_shells = warmup_start_ammo_shells = 0;
 	start_weapons = warmup_start_weapons = WEPSET(SHOTGUN);

@@ -92,7 +92,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 					RandomSelection_Init();
 					FOREACH_WORD(teleporter.noise, true,
 					{
-						RandomSelection_Add(NULL, 0, it, 1, 1);
+						RandomSelection_AddString(it, 1, 1);
 					});
 					thesound = RandomSelection_chosen_string;
 				}
@@ -198,7 +198,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
 					p = 0;
 			}
-			RandomSelection_Add(it, 0, string_null, (it.cnt ? it.cnt : 1), p);
+			RandomSelection_AddEnt(it, (it.cnt ? it.cnt : 1), p);
 		});
 		e = RandomSelection_chosen_ent;
 	}

@@ -399,7 +399,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 		entity hit = trace_ent;
 
 		// When hitting sky, stop.
-		if (pointcontents(start) == CONTENT_SKY)
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
 			break;
 
 		// can't use noimpact, as we need to pass through walls
@@ -445,7 +445,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 			}
 		}
 
-		if (is_weapclip)
+		if (is_weapclip && !autocvar_g_ballistics_penetrate_clips)
 			break;
 
 		// go through solid!

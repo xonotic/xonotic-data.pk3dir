@@ -4,15 +4,15 @@
 #include "rpc.qh"
 
 bool autocvar_g_overkill_powerups_replace;
-float autocvar_g_overkill_superguns_respawn_time;
-bool autocvar_g_overkill_100h_anyway;
-bool autocvar_g_overkill_100a_anyway;
 bool autocvar_g_overkill_ammo_charge;
 float autocvar_g_overkill_ammo_charge_notice;
 float autocvar_g_overkill_ammo_charge_limit;
 
-.vector ok_deathloc;
-.float ok_spawnsys_timer;
+bool autocvar_g_overkill_filter_healthmega;
+bool autocvar_g_overkill_filter_armormedium;
+bool autocvar_g_overkill_filter_armorbig;
+bool autocvar_g_overkill_filter_armorlarge;
+
 .float ok_lastwep;
 .float ok_item;
 
@@ -20,8 +20,6 @@ float autocvar_g_overkill_ammo_charge_limit;
 .float ammo_charge[Weapons_MAX];
 .float ok_use_ammocharge = _STAT(OK_AMMO_CHARGE);
 .float ok_ammo_charge = _STAT(OK_AMMO_CHARGEPOOL);
-
-.float ok_pauseregen_finished;
 
 void(entity ent, float wep) ok_DecreaseCharge;
 
@@ -109,20 +107,11 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 		if(!IS_DEAD(frag_target))
 		{
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
-			M_ARGV(6, vector) = '0 0 0';
+			M_ARGV(6, vector) = '0 0 0'; // force
 		}
 
-		M_ARGV(4, float) = 0;
+		M_ARGV(4, float) = 0; // damage
 	}
-}
-
-MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
-{
-	entity frag_target = M_ARGV(2, entity);
-	float damage_take = M_ARGV(4, float);
-
-	if(damage_take)
-		frag_target.ok_pauseregen_finished = max(frag_target.ok_pauseregen_finished, time + 2);
 }
 
 void ok_DropItem(entity this, entity targ)
@@ -168,30 +157,6 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 	ok_DropItem(mon, frag_attacker);
 }
 
-MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
-{
-	entity player = M_ARGV(0, entity);
-
-	// overkill's values are different, so use custom regen
-	if(!STAT(FROZEN, player))
-	{
-		player.armorvalue = CalcRotRegen(player.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear,
-			1 * frametime * (time > player.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > player.pauserotarmor_finished), autocvar_g_balance_armor_limit);
-		player.health = CalcRotRegen(player.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > player.ok_pauseregen_finished), 200, 0,
-			autocvar_g_balance_health_rotlinear, 1 * frametime * (time > player.pauserothealth_finished), autocvar_g_balance_health_limit);
-
-		float minf, maxf, limitf;
-
-		maxf = autocvar_g_balance_fuel_rotstable;
-		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = autocvar_g_balance_fuel_limit;
-
-		player.ammo_fuel = CalcRotRegen(player.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear,
-			frametime * (time > player.pauseregen_finished) * ((player.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > player.pauserotfuel_finished), limitf);
-	}
-	return true; // return true anyway, as frozen uses no regen
-}
-
 MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 {
 	return true;
@@ -221,7 +186,8 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	ok_IncreaseCharge(player, PS(player).m_weapon.m_id);
 
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
-	if(!forbidWeaponUse(player) || player.weapon_blocked) // allow if weapon is blocked
+	if( !forbidWeaponUse(player) || player.weapon_blocked // allow if weapon is blocked
+		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
 	if(time >= player.jump_interval)
 	{
 		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
@@ -287,8 +253,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	// if player changed their weapon while dead, don't switch to their death weapon
 	if(player.impulse)
 		player.ok_lastwep = 0;
-
-	player.ok_pauseregen_finished = time + 2;
 }
 
 void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
@@ -310,7 +274,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.noalign = ent.noalign;
 			wep.cnt = ent.cnt;
 			wep.team = ent.team;
-			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.respawntime = g_pickup_respawntime_superweapon;
 			wep.pickup_anyway = true;
 			wep.spawnfunc_checked = true;
 			setthink(wep, self_spawnfunc_weapon_hmg);
@@ -327,7 +291,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.noalign = ent.noalign;
 			wep.cnt = ent.cnt;
 			wep.team = ent.team;
-			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.respawntime = g_pickup_respawntime_superweapon;
 			wep.pickup_anyway = true;
 			wep.spawnfunc_checked = true;
 			setthink(wep, self_spawnfunc_weapon_rpc);
@@ -342,12 +306,16 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	if(item.ok_item)
-		return;
+		return false;
 
-	switch(item.items)
+	switch(item.itemdef)
 	{
-		case ITEM_HealthMega.m_itemid: return !(autocvar_g_overkill_100h_anyway);
-		case ITEM_ArmorMega.m_itemid: return !(autocvar_g_overkill_100a_anyway);
+		case ITEM_HealthMega: return autocvar_g_overkill_filter_healthmega;
+		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
+		// WARNING: next two statements look wrong because of inconsistency between cvar names and code
+		// armor cvars need renaming to be consistent with their health counterparts
+		case ITEM_ArmorLarge: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armorlarge;
 	}
 
 	return true;
@@ -362,7 +330,7 @@ MUTATOR_HOOKFUNCTION(ok, SpectateCopy)
 	client.ok_use_ammocharge = spectatee.ok_use_ammocharge;
 }
 
-MUTATOR_HOOKFUNCTION(ok, SetStartItems)
+MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 {
 	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
 

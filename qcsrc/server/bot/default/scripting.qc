@@ -587,16 +587,12 @@ const int CMD_CONDITION_false_BLOCK = 8;
 float bot_cmd_eval(entity this, string expr)
 {
 	// Search for numbers
-	if(strstrofs("0123456789", substring(expr, 0, 1), 0) >= 0)
-	{
+	if(IS_DIGIT(substring(expr, 0, 1)))
 		return stof(expr);
-	}
 
 	// Search for cvars
 	if(substring(expr, 0, 5)=="cvar.")
-	{
 		return cvar(substring(expr, 5, strlen(expr)));
-	}
 
 	// Search for fields
 	switch(expr)
@@ -1110,7 +1106,6 @@ void bot_setcurrentcommand(entity this)
 	if(!this.bot_cmd_current)
 	{
 		this.bot_cmd_current = new_pure(bot_cmd);
-		this.bot_cmd_current.is_bot_cmd = true;
 	}
 
 	bot_cmd = this.bot_cmd_current;

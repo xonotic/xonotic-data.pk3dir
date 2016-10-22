@@ -35,7 +35,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 	else
 		me.previewImage.src = me.currentMapPreviewImage;
 
-	for(i = 0; i < GameType_GetCount(); ++i)
+	for(i = 0; i < GameType_GetTotalCount(); ++i)
 	{
 		entity e;
 		e = me.(typeLabels[i]);
@@ -69,9 +69,9 @@ void XonoticMapInfoDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
 
-	n = ceil(GameType_GetCount() / (me.rows - 6));
+	n = ceil(GameType_GetTotalCount() / (me.rows - 6));
 	wgt = (w - 0.2) / n;
-	for(i = 0; i < GameType_GetCount(); ++i)
+	for(i = 0; i < GameType_GetTotalCount(); ++i)
 	{
 		if(mod(i, n) == 0)
 		{

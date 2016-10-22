@@ -16,27 +16,11 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 	vector color = '0 0 0';
 	switch(i)
 	{
-		case 0:
-			stat = STAT(REDALIVE);
-			pic = "player_red.tga";
-			color = '1 0 0';
-			break;
-		case 1:
-			stat = STAT(BLUEALIVE);
-			pic = "player_blue.tga";
-			color = '0 0 1';
-			break;
-		case 2:
-			stat = STAT(YELLOWALIVE);
-			pic = "player_yellow.tga";
-			color = '1 1 0';
-			break;
+		case 0: stat = STAT(REDALIVE); pic = "player_red"; color = '1 0 0'; break;
+		case 1: stat = STAT(BLUEALIVE); pic = "player_blue"; color = '0 0 1'; break;
+		case 2: stat = STAT(YELLOWALIVE); pic = "player_yellow"; color = '1 1 0'; break;
 		default:
-		case 3:
-			stat = STAT(PINKALIVE);
-			pic = "player_pink.tga";
-			color = '1 0 1';
-			break;
+		case 3: stat = STAT(PINKALIVE); pic = "player_pink"; color = '1 0 1'; break;
 	}
 
 	if(mySize.x/mySize.y > aspect_ratio)
@@ -654,29 +638,15 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 	vector color = '0 0 0';
 	switch(i)
 	{
-		case 0:
-			stat = STAT(DOM_PPS_RED);
-			pic = "dom_icon_red";
-			color = '1 0 0';
-			break;
-		case 1:
-			stat = STAT(DOM_PPS_BLUE);
-			pic = "dom_icon_blue";
-			color = '0 0 1';
-			break;
-		case 2:
-			stat = STAT(DOM_PPS_YELLOW);
-			pic = "dom_icon_yellow";
-			color = '1 1 0';
-			break;
+		case 0: stat = STAT(DOM_PPS_RED); pic = "dom_icon_red"; color = '1 0 0'; break;
+		case 1: stat = STAT(DOM_PPS_BLUE); pic = "dom_icon_blue"; color = '0 0 1'; break;
+		case 2: stat = STAT(DOM_PPS_YELLOW); pic = "dom_icon_yellow"; color = '1 1 0'; break;
 		default:
-		case 3:
-			stat = STAT(DOM_PPS_PINK);
-			pic = "dom_icon_pink";
-			color = '1 0 1';
-			break;
+		case 3: stat = STAT(DOM_PPS_PINK); pic = "dom_icon_pink"; color = '1 0 1'; break;
 	}
-	float pps_ratio = stat / STAT(DOM_TOTAL_PPS);
+	float pps_ratio = 0;
+	if(STAT(DOM_TOTAL_PPS))
+		pps_ratio = stat / STAT(DOM_TOTAL_PPS);
 
 	if(mySize.x/mySize.y > aspect_ratio)
 	{

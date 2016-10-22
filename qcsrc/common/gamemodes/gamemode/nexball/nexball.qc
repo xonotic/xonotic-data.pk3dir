@@ -34,6 +34,7 @@ float autocvar_g_nexball_football_bouncestop;
 bool autocvar_g_nexball_radar_showallplayers;
 bool autocvar_g_nexball_sound_bounce;
 int autocvar_g_nexball_trail_color;
+bool autocvar_g_nexball_playerclip_collisions = true;
 
 float autocvar_g_nexball_safepass_turnrate;
 float autocvar_g_nexball_safepass_maxdist;
@@ -103,9 +104,9 @@ void nexball_setstatus(entity this)
 	{
 		if(this.ballcarried.teamtime && (this.ballcarried.teamtime < time))
 		{
-			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
-			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_NEXBALL_RETURN_HELD));
 			entity e = this.ballcarried;
+			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
 			ResetBall(e);
 		}
 		else
@@ -255,7 +256,7 @@ void ResetBall(entity this)
 	if(this.cnt < 2)	// step 1
 	{
 		if(time == this.teamtime)
-			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_NEXBALL_RETURN_HELD));
 
 		settouch(this, func_null);
 		set_movetype(this, MOVETYPE_NOCLIP);
@@ -551,6 +552,9 @@ void SpawnBall(entity this)
 	}
 
 	set_movetype(this, MOVETYPE_FLY);
+
+	if(autocvar_g_nexball_playerclip_collisions)
+		this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 
 	if(!autocvar_g_nexball_sound_bounce)
 		this.noise = "";
@@ -1086,7 +1090,7 @@ MUTATOR_HOOKFUNCTION(nb, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(nb, GetTeamCount)
+MUTATOR_HOOKFUNCTION(nb, CheckAllowedTeams)
 {
 	M_ARGV(1, string) = "nexball_team";
 	return true;

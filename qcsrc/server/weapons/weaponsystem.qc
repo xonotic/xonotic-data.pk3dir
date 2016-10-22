@@ -21,7 +21,9 @@
 
 float W_WeaponRateFactor(entity this)
 {
-	float t = 1.0 / g_weaponratefactor;
+	float t = 1;
+	if(g_weaponratefactor > 0)
+		t = 1.0 / g_weaponratefactor;
 
 	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
 	t = M_ARGV(0, float);
@@ -150,7 +152,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	else this.alpha = 1;
 
     Weapon wep = PS(this.owner).m_weapon;
-	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner.clientcolors);
+	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner, this.owner.clientcolors);
 	this.colormap = this.owner.colormap;
 
 	CSQCMODEL_AUTOUPDATE(this);

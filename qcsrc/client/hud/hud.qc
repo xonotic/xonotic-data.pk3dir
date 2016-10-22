@@ -4,6 +4,7 @@
 #include "hud_config.qh"
 #include "../mapvoting.qh"
 #include "../teamradar.qh"
+#include <common/minigames/cl_minigames.qh>
 #include <common/t_items.qh>
 #include <common/deathtypes/all.qh>
 #include <common/items/_mod.qh>
@@ -119,6 +120,59 @@ vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspe
 HUD panels
 ==================
 */
+
+void HUD_Panel_LoadCvars()
+{
+	// NOTE: in hud_configure mode cvars must be reloaded every frame
+	if (panel.update_time <= time)
+	{
+		panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos")));
+		panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size")));
+		HUD_Panel_ScalePosSize();
+		panel_bg_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg"));
+		panel_bg_color_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_color"));
+		panel_bg_color_team_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_color_team"));
+		panel_bg_alpha_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_alpha"));
+		panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border"));
+		panel_bg_padding_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_padding"));
+		HUD_Panel_GetBg();
+		if (panel.current_panel_bg != "0")
+		{
+			HUD_Panel_GetBgAlpha();
+			HUD_Panel_GetBorder();
+		}
+		HUD_Panel_GetColorTeam();
+		HUD_Panel_GetColor();
+		HUD_Panel_GetFgAlpha();
+		HUD_Panel_GetPadding();
+		panel.current_panel_bg_alpha = panel_bg_alpha;
+		panel.current_panel_fg_alpha = panel_fg_alpha;
+		if (hud_configure_menu_open == 2 && panel == highlightedPanel)
+			HUD_Panel_UpdatePosSize_ForMenu();
+		else
+		{
+			panel_bg_alpha *= hud_fade_alpha * panel_fade_alpha;
+			panel_fg_alpha *= hud_fade_alpha * panel_fade_alpha;
+		}
+		panel.current_panel_pos = panel_pos;
+		panel.current_panel_size = panel_size;
+		panel.current_panel_bg_border = panel_bg_border;
+		panel.current_panel_bg_color = panel_bg_color;
+		panel.current_panel_bg_color_team = panel_bg_color_team;
+		panel.current_panel_bg_padding = panel_bg_padding;
+		panel.update_time = (autocvar__hud_configure) ? time : time + autocvar_hud_panel_update_interval;
+		return;
+	}
+
+	panel_pos = panel.current_panel_pos;
+	panel_size = panel.current_panel_size;
+	panel_bg_alpha = panel.current_panel_bg_alpha * hud_fade_alpha * panel_fade_alpha;
+	panel_bg_border = panel.current_panel_bg_border;
+	panel_bg_color = panel.current_panel_bg_color;
+	panel_bg_color_team = panel.current_panel_bg_color_team;
+	panel_bg_padding = panel.current_panel_bg_padding;
+	panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha * panel_fade_alpha;
+}
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
@@ -356,8 +410,6 @@ void HUD_Vehicle()
 	}
 }
 
-bool HUD_Minigame_Showpanels();
-
 void HUD_Panel_Draw(entity panent)
 {
 	panel = panent;
@@ -372,7 +424,7 @@ void HUD_Panel_Draw(entity panent)
 	}
 
 	bool draw_allowed = false;
-	if (HUD_Minigame_Showpanels())
+	if (active_minigame && HUD_MinigameMenu_IsOpened())
 	{
 		if (panel.panel_showflags & PANEL_SHOW_MINIGAME)
 			draw_allowed = true;

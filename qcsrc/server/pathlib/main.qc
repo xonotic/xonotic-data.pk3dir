@@ -55,7 +55,6 @@ entity pathlib_mknode(vector where,entity parent)
     setsize(node, '0 0 0', '0 0 0');
 
     setorigin(node, where);
-    node.medium = pointcontents(where);
 #if DEBUGPATHING
     pathlib_showsquare(where, 1 ,15);
 #endif

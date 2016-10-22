@@ -56,7 +56,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 			setDependentAND(e, "notification_show_sprees", 1, 1, "notification_show_sprees_info", 1, 3);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_FRAG", _("Add extra frag information to centerprint when available"), "-"));
-			makeMulti(e, "notification_CHOICE_FRAGGED notification_CHOICE_TYPEFRAG notification_CHOICE_TYPEFRAGGED");
+			makeMulti(e, "notification_CHOICE_FRAGGED notification_CHOICE_TYPEFRAG notification_CHOICE_TYPEFRAGGED notification_CHOICE_FRAG_FIRE notification_CHOICE_FRAGGED_FIRE notification_CHOICE_FRAG_FREEZE notification_CHOICE_FRAGGED_FREEZE");
 			e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "notification_show_location", _("Add frag location to death messages when available"), "-"));

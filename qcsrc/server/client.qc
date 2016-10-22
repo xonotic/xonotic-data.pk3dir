@@ -629,9 +629,11 @@ void PutClientInServer(entity this)
 		FixPlayermodel(this);
 		this.drawonlytoclient = NULL;
 
+		this.viewloc = NULL;
+
 		this.crouch = false;
-		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
-		setsize(this, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		this.view_ofs = STAT(PL_VIEW_OFS, this);
+		setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
 		this.spawnorigin = spot.origin;
 		setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
@@ -710,7 +712,6 @@ void PutClientInServer(entity this)
 
 void ClientInit_misc(entity this);
 
-.float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
 bool ClientInit_SendEntity(entity this, entity to, int sf)
@@ -1146,7 +1147,10 @@ void ClientConnect(entity this)
 
 	this.netname_previous = strzone(this.netname);
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && IS_PLAYER(this)) ? APP_TEAM_ENT(this, INFO_JOIN_CONNECT_TEAM) : INFO_JOIN_CONNECT), this.netname);
+	if(teamplay && IS_PLAYER(this))
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_CONNECT_TEAM), this.netname);
+	else
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_CONNECT, this.netname);
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1208,6 +1212,9 @@ void ClientConnect(entity this)
 
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
+
+	// update physics stats (players can spawn before physics runs)
+	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
 
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
@@ -1608,7 +1615,7 @@ void SetZoomState(entity this, float z)
 void GetPressedKeys(entity this)
 {
 	MUTATOR_CALLHOOK(GetPressedKeys, this);
-	int keys = this.pressedkeys;
+	int keys = STAT(PRESSED_KEYS, this);
 	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
 	keys = BITSET(keys, KEY_RIGHT, 		this.movement.y > 0);
@@ -1618,7 +1625,9 @@ void GetPressedKeys(entity this)
 	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
 	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
 	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
-	this.pressedkeys = keys;
+	this.pressedkeys = keys; // store for other users
+
+	STAT(PRESSED_KEYS, this) = keys;
 }
 
 /*
@@ -1651,7 +1660,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hit_time = spectatee.hit_time;
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
-	this.pressedkeys = spectatee.pressedkeys;
+	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
 	this.vortex_charge = spectatee.vortex_charge;
 	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
@@ -1668,6 +1677,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.angles = spectatee.v_angle;
 	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
 	this.revive_progress = spectatee.revive_progress;
+	this.viewloc = spectatee.viewloc;
 	if(!PHYS_INPUT_BUTTON_USE(this) && STAT(CAMERA_SPECTATOR, this) != 2)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);
@@ -1707,7 +1717,7 @@ void SpectateCopy(entity this, entity spectatee)
 bool SpectateUpdate(entity this)
 {
 	if(!this.enemy)
-	    return false;
+		return false;
 
 	if(!IS_PLAYER(this.enemy) || this == this.enemy)
 	{
@@ -1870,40 +1880,34 @@ void ShowRespawnCountdown(entity this)
 	}
 }
 
-.float caplayer;
-
-void LeaveSpectatorMode(entity this)
+.bool team_selected;
+bool ShowTeamSelection(entity this)
 {
-	if(this.caplayer)
-		return;
-	if(nJoinAllowed(this, this))
-	{
-		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
-		{
-			TRANSMUTE(Player, this);
+	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
+		return false;
+	stuffcmd(this, "menu_showteamselect\n");
+	return true;
+}
+void Join(entity this)
+{
+	TRANSMUTE(Player, this);
 
-			SetSpectatee(this, NULL);
+	if(!this.team_selected)
+	if(autocvar_g_campaign || autocvar_g_balance_teams)
+		JoinBestTeam(this, false, true);
 
-			if(autocvar_g_campaign || autocvar_g_balance_teams)
-				{ JoinBestTeam(this, false, true); }
+	if(autocvar_g_campaign)
+		campaign_bots_may_start = true;
 
-			if(autocvar_g_campaign)
-				{ campaign_bots_may_start = true; }
+	Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
-			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
+	PutClientInServer(this);
 
-			PutClientInServer(this);
-
-			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
-		}
-		else
-			stuffcmd(this, "menu_showteamselect\n");
-	}
+	if(teamplay && this.team != -1)
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	else
-	{
-		// Player may not join because g_maxplayers is set
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
-	}
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, this.netname);
+	this.team_selected = false;
 }
 
 /**
@@ -1912,20 +1916,20 @@ void LeaveSpectatorMode(entity this)
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-bool nJoinAllowed(entity this, entity ignore)
+int nJoinAllowed(entity this, entity ignore)
 {
 	if(!ignore)
 	// this is called that way when checking if anyone may be able to join (to build qcstatus)
 	// so report 0 free slots if restricted
 	{
 		if(autocvar_g_forced_team_otherwise == "spectate")
-			return false;
+			return 0;
 		if(autocvar_g_forced_team_otherwise == "spectator")
-			return false;
+			return 0;
 	}
 
-	if(this.team_forced < 0)
-		return false; // forced spectators can never join
+	if(this && this.team_forced < 0)
+		return 0; // forced spectators can never join
 
 	// TODO simplify this
 	int totalClients = 0;
@@ -1938,13 +1942,20 @@ bool nJoinAllowed(entity this, entity ignore)
 			++currentlyPlaying;
 	));
 
+	float free_slots = 0;
 	if (!autocvar_g_maxplayers)
-		return maxclients - totalClients;
+		free_slots = maxclients - totalClients;
+	else if(currentlyPlaying < autocvar_g_maxplayers)
+		free_slots = min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
-	if(currentlyPlaying < autocvar_g_maxplayers)
-		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
+	static float join_prevent_msg_time = 0;
+	if(this && ignore && !free_slots && time > join_prevent_msg_time)
+	{
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT);
+		join_prevent_msg_time = time + 3;
+	}
 
-	return false;
+	return free_slots;
 }
 
 /**
@@ -2011,6 +2022,16 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
+bool joinAllowed(entity this)
+{
+	if (this.version_mismatch) return false;
+	if (!nJoinAllowed(this, this)) return false;
+	if (teamplay && lockteams) return false;
+	if (ShowTeamSelection(this)) return false;
+	if (MUTATOR_CALLHOOK(ForbidSpawn, this)) return false;
+	return true;
+}
+
 void ObserverThink(entity this)
 {
 	if ( this.impulse )
@@ -2018,8 +2039,9 @@ void ObserverThink(entity this)
 		MinigameImpulse(this, this.impulse);
 		this.impulse = 0;
 	}
+
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !this.version_mismatch) {
@@ -2037,7 +2059,7 @@ void ObserverThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				LeaveSpectatorMode(this);
+				Join(this);
 				return;
 			}
 		}
@@ -2058,8 +2080,9 @@ void SpectatorThink(entity this)
 			return;
 		}
 	}
+
 	if (this.flags & FL_JUMPRELEASED) {
-		if (PHYS_INPUT_BUTTON_JUMP(this) && !this.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) || this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209)) {
@@ -2094,7 +2117,7 @@ void SpectatorThink(entity this)
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				LeaveSpectatorMode(this);
+				Join(this);
 				return;
 			}
 		}
@@ -2321,7 +2344,7 @@ void PlayerPreThink (entity this)
 					{
 						if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
 							this.deadflag = DEAD_RESPAWNING;
-						else if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+						else if (!button_pressed || (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)))
 							this.deadflag = DEAD_DEAD;
 						break;
 					}

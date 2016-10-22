@@ -264,6 +264,18 @@ float Obituary_WeaponDeath(
 	return false;
 }
 
+bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target)
+{
+	if(deathtype == DEATH_FIRE.m_id)
+	{
+		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : targ.ping));
+		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? -1 : attacker.ping));
+		return true;
+	}
+
+	return MUTATOR_CALLHOOK(FragCenterMessage, attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target);
+}
+
 .int buffs = _STAT(BUFFS); // TODO: remove
 entity buff_FirstFromFlags(int _buffs);
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
@@ -277,7 +289,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 	// Set final information for the death
 	targ.death_origin = targ.origin;
-	if(targ != attacker) { targ.killer_origin = attacker.origin; }
 	string deathlocation = (autocvar_notification_server_allows_location ? NearestLocation(targ.death_origin) : "");
 
 	#ifdef NOTIFICATIONS_DEBUG
@@ -413,7 +424,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
 				);
 			}
-			else
+			else if(!frag_centermessage_override(attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target))
 			{
 				Send_Notification(
 					NOTIF_ONE,
@@ -560,7 +571,10 @@ void Unfreeze (entity targ)
 		return;
 
 	if(STAT(FROZEN, targ) && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
+	{
 		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
+		targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+	}
 
 	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
@@ -839,7 +853,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 	// apply push
 	if (targ.damageforcescale)
-	if (vlen(force))
+	if (force)
 	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
@@ -863,7 +877,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		UpdateCSQCProjectile(targ);
 	}
 	// apply damage
-	if (damage != 0 || (targ.damageforcescale && vlen(force)))
+	if (damage != 0 || (targ.damageforcescale && force))
 	if (targ.event_damage)
 		targ.event_damage (targ, inflictor, attacker, damage, deathtype, hitloc, force);
 
@@ -1038,7 +1052,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
 					//	print(" (", ftos(a), ")\n");
 					//}
-					if(finaldmg || vlen(force))
+					if(finaldmg || force)
 					{
 						if(targ.iscreature)
 						{

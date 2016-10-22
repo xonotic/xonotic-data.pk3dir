@@ -16,6 +16,14 @@ MUTATOR_HOOKABLE(MakePlayerObserver, EV_MakePlayerObserver)
     /**/
 MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
 
+/**
+ * return true to prevent a spectator/observer to spawn as player
+ */
+ #define EV_ForbidSpawn(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
+
 /** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
 #define EV_PlayerSpawn(i, o) \
 	/** player spawning */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -55,6 +63,16 @@ MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
     /**/
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
+/** allows overriding the frag centerprint messages */
+#define EV_FragCenterMessage(i, o) \
+    /** attacker       */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** target         */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** deathtype      */ i(float, MUTATOR_ARGV_2_float) \
+    /** attacker kcount*/ i(int,  MUTATOR_ARGV_3_int) \
+    /** targ killcount */ i(int,  MUTATOR_ARGV_4_int) \
+    /**/
+MUTATOR_HOOKABLE(FragCenterMessage, EV_FragCenterMessage);
+
 /** called when a player dies to e.g. remove stuff he was carrying */
 #define EV_PlayHitsound(i, o) \
     /** victim */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -90,14 +108,14 @@ MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 /** called when the match ends */
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 
-/** should adjust number to contain the team count */
-#define EV_GetTeamCount(i, o) \
-    /** number of teams    */ i(float, MUTATOR_ARGV_0_float) \
+/** allows adjusting allowed teams */
+#define EV_CheckAllowedTeams(i, o) \
+    /** mask of teams      */ i(float, MUTATOR_ARGV_0_float) \
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
     /**/
-MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
+MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
 
 /** copies variables for spectating "spectatee" to "this" */
 #define EV_SpectateCopy(i, o) \
@@ -337,8 +355,8 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
 #define EV_PlayerDamaged(i, o) \
     /** attacker  */ i(entity, MUTATOR_ARGV_0_entity) \
     /** target    */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** health    */ i(int,    MUTATOR_ARGV_2_int) \
-    /** armor     */ i(int,    MUTATOR_ARGV_3_int) \
+    /** health    */ i(float,    MUTATOR_ARGV_2_float) \
+    /** armor     */ i(float,    MUTATOR_ARGV_3_float) \
     /** location  */ i(vector, MUTATOR_ARGV_4_vector) \
     /** deathtype */ i(int,    MUTATOR_ARGV_5_int) \
     /**/
@@ -462,6 +480,7 @@ MUTATOR_HOOKABLE(SV_StartFrame, EV_NO_ARGS);
 
 #define EV_SetModname(i, o) \
     /** name of the mutator/mod if it warrants showing as such in the server browser */ \
+    /**/ i(string, MUTATOR_ARGV_0_string) \
     /**/ o(string, MUTATOR_ARGV_0_string) \
     /**/
 MUTATOR_HOOKABLE(SetModname, EV_SetModname);
@@ -521,12 +540,12 @@ MUTATOR_HOOKABLE(HelpMePing, EV_HelpMePing);
 
 /**
  * called when a vehicle initializes
- * return true to remove the vehicle
+ * return false to remove the vehicle
  */
-#define EV_VehicleSpawn(i, o) \
+#define EV_VehicleInit(i, o) \
     /** vehicle */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
-MUTATOR_HOOKABLE(VehicleSpawn, EV_VehicleSpawn);
+MUTATOR_HOOKABLE(VehicleInit, EV_VehicleInit);
 
 /**
  * called when a player enters a vehicle

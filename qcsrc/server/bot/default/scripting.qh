@@ -59,7 +59,6 @@ string bot_cmd_string[BOT_CMD_COUNTER];
 entity bot_cmd;	// global current command
 .entity bot_cmd_current; // current command of this bot
 
-.float is_bot_cmd;			// Tells if the entity is a bot command
 .float bot_cmd_index;			// Position of the command in the queue
 .int bot_cmd_type;			// If of command (see the BOT_CMD_* defines)
 .float bot_cmd_parm_float;		// Field to store a float parameter

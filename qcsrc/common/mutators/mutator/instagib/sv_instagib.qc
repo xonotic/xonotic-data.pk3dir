@@ -1,6 +1,10 @@
 #include "sv_instagib.qh"
 
 int autocvar_g_instagib_ammo_drop;
+bool autocvar_g_instagib_ammo_convert_cells;
+bool autocvar_g_instagib_ammo_convert_rockets;
+bool autocvar_g_instagib_ammo_convert_shells;
+bool autocvar_g_instagib_ammo_convert_bullets;
 int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
@@ -356,12 +360,53 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 }
 
+void replace_with_insta_cells(entity item)
+{
+	entity e = spawn();
+	setorigin(e, item.origin);
+	e.noalign = item.noalign;
+	e.cnt = item.cnt;
+	e.team = item.team;
+	e.spawnfunc_checked = true;
+	spawnfunc_item_minst_cells(e);
+}
+
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
 	if(item.classname == "item_cells")
-		return true; // no normal cells?
+	{
+		if(autocvar_g_instagib_ammo_convert_cells)
+		{
+			replace_with_insta_cells(item);
+		}
+		return true;
+	}
+	else if(item.classname == "item_rockets")
+	{
+		if(autocvar_g_instagib_ammo_convert_rockets)
+		{
+			replace_with_insta_cells(item);
+		}
+		return true;
+	}
+	else if(item.classname == "item_shells")
+	{
+		if(autocvar_g_instagib_ammo_convert_shells)
+		{
+			replace_with_insta_cells(item);
+		}
+		return true;
+	}
+	else if(item.classname == "item_bullets")
+	{
+		if(autocvar_g_instagib_ammo_convert_bullets)
+		{
+			replace_with_insta_cells(item);
+		}
+		return true;
+	}
 
 	if(item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon")
 	{
@@ -371,13 +416,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 
 	if(item.weapon == WEP_DEVASTATOR.m_id || item.weapon == WEP_VORTEX.m_id)
 	{
-		entity e = spawn();
-		setorigin(e, item.origin);
-		e.noalign = item.noalign;
-        e.cnt = item.cnt;
-        e.team = item.team;
-        e.spawnfunc_checked = true;
-		spawnfunc_item_minst_cells(e);
+		replace_with_insta_cells(item);
 		return true;
 	}
 
