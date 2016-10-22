@@ -46,7 +46,6 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 		
 		if(plane_normal != '0 0 0')
 		{
-			STAT(LASTWJ, player) = time;
 			float wj_force = PHYS_WALLJUMP_FORCE(player);
 			float wj_xy_factor = PHYS_WALLJUMP_VELOCITY_XY_FACTOR(player);
 			float wj_z_factor = PHYS_WALLJUMP_VELOCITY_Z_FACTOR(player);
@@ -58,6 +57,7 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 			if(PHYS_INPUT_BUTTON_CROUCH(player)) player.velocity_z *= -1;
 
 #ifdef SVQC
+			STAT(LASTWJ, player) = time;
 			player.oldvelocity = player.velocity;
 			Send_Effect(EFFECT_SMOKE_RING, trace_endpos, plane_normal, 5);
 			PlayerSound(player, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
