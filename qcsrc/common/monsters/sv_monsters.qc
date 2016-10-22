@@ -1296,10 +1296,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
-	{
 		IL_PUSH(g_monsters, this);
-		IL_PUSH(g_damagedbycontents, this);
-	}
 
 	if(check_appear && Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
 
@@ -1327,6 +1324,8 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.bot_attack			= true;
 	this.iscreature			= true;
 	this.teleportable		= true;
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
 	this.damagedbycontents	= true;
 	this.monsterid			= mon_id;
 	this.event_damage		= Monster_Damage;

@@ -421,9 +421,6 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .void(entity this, entity player) init_for_player;
 
-IntrusiveList g_damagedbycontents;
-STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
-
 IntrusiveList g_monsters;
 STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
 
@@ -468,3 +465,6 @@ STATIC_INIT(g_bot_targets) { g_bot_targets = IL_NEW(); }
 
 IntrusiveList g_bot_dodge;
 STATIC_INIT(g_bot_dodge) { g_bot_dodge = IL_NEW(); }
+
+IntrusiveList g_damagedbycontents;
+STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
