@@ -243,6 +243,20 @@ REGISTER_STAT(JETPACK_REVERSE_THRUST, float, autocvar_g_jetpack_reverse_thrust)
 
 REGISTER_STAT(MOVEVARS_HIGHSPEED, float, autocvar_g_movement_highspeed)
 
+#ifdef SVQC
+AUTOCVAR(g_walljump, bool, false, "Enable wall jumping mutator");
+AUTOCVAR(g_walljump_delay, float, 1, "Minimum delay between wall jumps");
+AUTOCVAR(g_walljump_force, float, 300, "How far to bounce/jump off the wall");
+AUTOCVAR(g_walljump_velocity_xy_factor, float, 1.15, "How much to slow down along horizontal axis, higher value = higher deceleration, if factor is < 1, you accelerate by wall jumping");
+AUTOCVAR(g_walljump_velocity_z_factor, float, 0.5, "Upwards velocity factor, multiplied by normal jump velocity");
+#endif
+REGISTER_STAT(WALLJUMP, int, autocvar_g_walljump)
+REGISTER_STAT(WALLJUMP_VELOCITY_Z_FACTOR, float, autocvar_g_walljump_velocity_z_factor)
+REGISTER_STAT(WALLJUMP_VELOCITY_XY_FACTOR, float, autocvar_g_walljump_velocity_xy_factor)
+REGISTER_STAT(WALLJUMP_DELAY, float, autocvar_g_walljump_delay)
+REGISTER_STAT(WALLJUMP_FORCE, float, autocvar_g_walljump_force)
+REGISTER_STAT(LASTWJ, float)
+
 // freeze tag, clan arena
 REGISTER_STAT(REDALIVE, int)
 REGISTER_STAT(BLUEALIVE, int)
