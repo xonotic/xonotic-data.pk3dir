@@ -803,10 +803,19 @@ void WarpZone_StartFrame()
 		WarpZone_PostInitialize_Callback();
 	}
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
+	if(warpzone_warpzones_exist)
+	{
+		IL_EACH(g_projectiles, true,
+		{
+			WarpZone_StoreProjectileData(it);
+		});
+	}
+		
+
+	FOREACH_CLIENT(true,
 	{
 		if(warpzone_warpzones_exist)
-			WarpZone_StoreProjectileData(it);
+			WarpZone_StoreProjectileData(it); // TODO: not actually needed
 
 		if(IS_OBSERVER(it) || it.solid == SOLID_NOT)
 		if(IS_CLIENT(it)) // we don't care about it being a bot
