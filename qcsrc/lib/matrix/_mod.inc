@@ -1,3 +1,5 @@
 // generated file; do not modify
-#include <lib/matrix/command.qc>
+#if XONOTIC
+	#include <lib/matrix/command.qc>
+#endif
 #include <lib/matrix/matrix.qc>

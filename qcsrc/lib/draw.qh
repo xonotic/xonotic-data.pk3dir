@@ -5,8 +5,6 @@
 	#include "i18n.qh"
 	#include "vector.qh"
 
-	#include <client/defs.qh>
-
 	void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 	{
 		// I want to draw a quad...
@@ -123,6 +121,7 @@
 		drawstring_builtin(position, text, theScale, rgb, theAlpha, flag);
 	}
 
+	float vid_conwidth; // TODO
 	void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
 	{
 		position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);

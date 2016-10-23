@@ -313,12 +313,13 @@ USING(Stream, int);
 		#define ReadInt48_t() vec3(ReadInt24_t(), ReadInt24_t(), 0)
 		#define ReadInt72_t() vec3(ReadInt24_t(), ReadInt24_t(), ReadInt24_t())
 
-		int _ReadSByte;
+		noref int _ReadSByte;
 		#define ReadSByte() (_ReadSByte = ReadByte(), (_ReadSByte & BIT(7) ? -128 : 0) + (_ReadSByte & BITS(7)))
 		#define ReadFloat() ReadCoord()
 		#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
 		#define ReadVector2D() vec3(ReadFloat(), ReadFloat(), 0)
 
+		float servertime; // TODO
 		float ReadApproxPastTime()
 		{
 			float dt = ReadByte();
