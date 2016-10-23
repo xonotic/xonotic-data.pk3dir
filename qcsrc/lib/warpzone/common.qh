@@ -3,6 +3,9 @@
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL
 
+IntrusiveList g_warpzones;
+STATIC_INIT(g_warpzones) { g_warpzones = IL_NEW(); }
+
 float warpzone_warpzones_exist;
 float warpzone_cameras_exist;
 

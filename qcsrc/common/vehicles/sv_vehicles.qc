@@ -1167,6 +1167,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.iscreature				= true;
 	this.teleportable			= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents		= true;
+	IL_PUSH(g_damagedbycontents, this);
 	this.vehicleid				= info.vehicleid;
 	this.PlayerPhysplug			= info.PlayerPhysplug;
 	this.event_damage			= func_null;
