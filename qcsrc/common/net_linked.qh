@@ -20,7 +20,6 @@ const int RACE_NET_SPEED_AWARD = 9; // speed award, sent to client
 const int RACE_NET_SPEED_AWARD_BEST = 10; // all time best speed award, sent to client
 const int RACE_NET_SERVER_RANKINGS = 11;
 const int RACE_NET_SERVER_STATUS = 12;
-const int RANKINGS_CNT = 15;
 
 REGISTER_NET_LINKED(_ENT_CLIENT_INIT)
 #ifdef CSQC

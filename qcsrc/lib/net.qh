@@ -298,6 +298,7 @@ USING(Stream, int);
 	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 
 	#ifdef CSQC
+		float servertime;
 		entity ReadCSQCEntity()
 		{
 			int f = ReadShort();
@@ -319,7 +320,6 @@ USING(Stream, int);
 		#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
 		#define ReadVector2D() vec3(ReadFloat(), ReadFloat(), 0)
 
-		float servertime; // TODO
 		float ReadApproxPastTime()
 		{
 			float dt = ReadByte();

@@ -7,7 +7,7 @@ WORKDIR ?= ../.tmp
 QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='~')
 VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
 NDEBUG ?= 1
-XONOTIC ?= 0
+XONOTIC ?= 1
 BUILD_MOD ?=
 
 ifndef ZIP

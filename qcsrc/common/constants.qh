@@ -1,5 +1,7 @@
 #pragma once
 
+const int RANKINGS_CNT = 15;
+
 const int SPRITERULE_DEFAULT = 0;
 const int SPRITERULE_TEAMPLAY = 1;
 const int SPRITERULE_SPECTATOR = 2;
