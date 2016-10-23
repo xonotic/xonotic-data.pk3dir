@@ -529,13 +529,11 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 		turret.team = 5; // this gets reversed when match starts?
 }
 
-MUTATOR_HOOKFUNCTION(as, VehicleInit)
+MUTATOR_HOOKFUNCTION(as, VehicleSpawn)
 {
 	entity veh = M_ARGV(0, entity);
 
-	if(veh.active != ACTIVE_NOT)
-		veh.nextthink = time + 0.5;
-	return true;
+	veh.nextthink = time + 0.5;
 }
 
 MUTATOR_HOOKFUNCTION(as, HavocBot_ChooseRole)
