@@ -529,7 +529,7 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 		turret.team = 5; // this gets reversed when match starts?
 }
 
-MUTATOR_HOOKFUNCTION(as, VehicleSpawn)
+MUTATOR_HOOKFUNCTION(as, VehicleInit)
 {
 	entity veh = M_ARGV(0, entity);
 

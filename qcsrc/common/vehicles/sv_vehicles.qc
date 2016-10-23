@@ -1224,7 +1224,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	else
 		this.nextthink = time + game_starttime;
 
-	if(MUTATOR_CALLHOOK(VehicleSpawn, this))
+	if(MUTATOR_CALLHOOK(VehicleInit, this))
 		return false;
 
 	return true;
