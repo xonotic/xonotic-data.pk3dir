@@ -179,8 +179,6 @@ void assault_wall_think(entity this)
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
-void vehicles_clearreturn(entity veh);
-void vehicles_spawn(entity this);
 void assault_new_round(entity this)
 {
 	//bprint("ASSAULT: new round\n");
