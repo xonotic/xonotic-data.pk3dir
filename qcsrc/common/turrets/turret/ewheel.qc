@@ -198,6 +198,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
     it.iscreature				= true;
     it.teleportable			= TELEPORT_NORMAL;
     it.damagedbycontents		= true;
+    IL_PUSH(g_damagedbycontents, it);
     set_movetype(it, MOVETYPE_WALK);
     it.solid					= SOLID_SLIDEBOX;
     it.takedamage				= DAMAGE_AIM;

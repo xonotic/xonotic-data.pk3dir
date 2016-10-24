@@ -161,6 +161,7 @@ void M_Spider_Attack_Web(entity this)
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
 	proj.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, proj);
 
 	proj.bouncefactor = 0.3;
 	proj.bouncestop = 0.05;

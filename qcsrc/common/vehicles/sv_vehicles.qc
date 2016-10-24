@@ -900,7 +900,7 @@ bool vehicle_impulse(entity this, int imp)
 
 void vehicles_enter(entity pl, entity veh)
 {
-	// Remove this when bots know how to use vehicles
+   // Remove this when bots know how to use vehicles
 	if((IS_BOT_CLIENT(pl) && !autocvar_g_vehicles_allow_bots))
 		return;
 
@@ -1167,6 +1167,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.iscreature				= true;
 	this.teleportable			= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents		= true;
+	IL_PUSH(g_damagedbycontents, this);
 	this.vehicleid				= info.vehicleid;
 	this.PlayerPhysplug			= info.PlayerPhysplug;
 	this.event_damage			= func_null;
@@ -1224,7 +1225,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	else
 		this.nextthink = time + game_starttime;
 
-	if(!MUTATOR_CALLHOOK(VehicleInit, this))
+	if(MUTATOR_CALLHOOK(VehicleInit, this))
 		return false;
 
 	return true;

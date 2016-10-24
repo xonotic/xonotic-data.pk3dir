@@ -540,7 +540,7 @@ MUTATOR_HOOKABLE(HelpMePing, EV_HelpMePing);
 
 /**
  * called when a vehicle initializes
- * return false to remove the vehicle
+ * return true to remove the vehicle
  */
 #define EV_VehicleInit(i, o) \
     /** vehicle */ i(entity, MUTATOR_ARGV_0_entity) \
