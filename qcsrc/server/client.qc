@@ -1276,6 +1276,8 @@ void ClientDisconnect(entity this)
 	this.playerid = 0;
 	ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
+
+	ONREMOVE(this);
 }
 
 void ChatBubbleThink(entity this)
