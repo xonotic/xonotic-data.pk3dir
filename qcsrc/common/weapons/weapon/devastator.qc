@@ -390,6 +390,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.health = WEP_CVAR(devastator, health);
 	missile.event_damage = W_Devastator_Damage;
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 
 	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);

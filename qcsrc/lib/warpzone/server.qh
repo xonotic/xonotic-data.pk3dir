@@ -1,6 +1,8 @@
 #pragma once
 
 #ifdef SVQC
+entity warpzone_first; .entity warpzone_next;
+
 void WarpZone_StartFrame();
 float WarpZone_Projectile_Touch(entity this, entity toucher);
 

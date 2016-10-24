@@ -93,6 +93,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	newmine.event_damage = this.event_damage;
 	newmine.spawnshieldtime = this.spawnshieldtime;
 	newmine.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, newmine);
 
 	set_movetype(newmine, MOVETYPE_NONE); // lock the mine in place
 	newmine.projectiledeathtype = this.projectiledeathtype;
@@ -363,6 +364,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	mine.health = WEP_CVAR(minelayer, health);
 	mine.event_damage = W_MineLayer_Damage;
 	mine.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, mine);
 
 	set_movetype(mine, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(mine);

@@ -414,6 +414,8 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
 	missile.damagedbycontents = (autocvar_g_balance_grapplehook_damagedbycontents);
+	if(missile.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, missile);
 
 	missile.hook_start = missile.hook_end = missile.origin;
 

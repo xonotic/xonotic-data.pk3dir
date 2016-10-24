@@ -63,6 +63,8 @@ void CopyBody(entity this, float keepvelocity)
 	clone.iscreature = this.iscreature;
 	clone.teleportable = this.teleportable;
 	clone.damagedbycontents = this.damagedbycontents;
+	if(clone.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, clone);
 	clone.angles = this.angles;
 	clone.v_angle = this.v_angle;
 	clone.avelocity = this.avelocity;
@@ -213,6 +215,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 		this.alpha = -1;
 		this.solid = SOLID_NOT; // restore later
 		this.takedamage = DAMAGE_NO; // restore later
+		if(this.damagedbycontents)
+			IL_REMOVE(g_damagedbycontents, this);
 		this.damagedbycontents = false;
 	}
 }

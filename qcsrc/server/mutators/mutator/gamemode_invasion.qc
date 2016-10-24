@@ -77,11 +77,8 @@ void invasion_SpawnChosenMonster(Monster mon)
 		setsize(e, mon.mins, mon.maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-			monster = spawnmonster(spawn(), "", mon.m_id, NULL, NULL, e.origin, false, false, 2);
+			monster = spawnmonster(e, "", mon.m_id, NULL, NULL, e.origin, false, false, 2);
 		else return;
-
-		setthink(e, SUB_Remove);
-		e.nextthink = time + 0.1;
 	}
 	else // if spawnmob field falls through (unset), fallback to mon (relying on spawnmonster for that behaviour)
 		monster = spawnmonster(spawn(), spawn_point.spawnmob, mon.m_id, spawn_point, spawn_point, spawn_point.origin, false, false, 2);

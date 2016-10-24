@@ -169,6 +169,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 
 	gren.velocity = '0 0 1' * WEP_CVAR_SEC(hook, speed);

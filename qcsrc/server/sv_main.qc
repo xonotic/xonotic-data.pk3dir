@@ -127,7 +127,8 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-	FOREACH_ENTITY_FLOAT(damagedbycontents, true, {
+	IL_EACH(g_damagedbycontents, it.damagedbycontents,
+	{
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
 		CreatureFrame_FallDamage(it);
@@ -412,8 +413,8 @@ LABEL(cvar_fail)
 void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
-	entity e;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
+	//for(entity e = warpzone_first; e; e = e.warpzone_next)
+	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
 	{
 		vector src, dst;
 		src = (e.absmin + e.absmax) * 0.5;

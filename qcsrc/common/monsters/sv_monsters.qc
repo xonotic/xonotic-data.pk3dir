@@ -1328,6 +1328,8 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.bot_attack			= true;
 	this.iscreature			= true;
 	this.teleportable		= true;
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
 	this.damagedbycontents	= true;
 	this.monsterid			= mon_id;
 	this.event_damage		= Monster_Damage;

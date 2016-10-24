@@ -109,6 +109,7 @@ void func_breakable_look_destroyed(entity this)
 			this.origin_z = floorZ;
 		}
 		_setmodel(this, this.mdl_dead);
+		ApplyMinMaxScaleAngles(this);
 		this.effects &= ~EF_NODRAW;
 	}
 
@@ -120,6 +121,7 @@ void func_breakable_look_destroyed(entity this)
 void func_breakable_look_restore(entity this)
 {
 	_setmodel(this, this.mdl);
+	ApplyMinMaxScaleAngles(this);
 	this.effects &= ~EF_NODRAW;
 
 	if(this.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
