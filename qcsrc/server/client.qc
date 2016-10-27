@@ -36,6 +36,7 @@
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
+#include "../common/net_linked.qh"
 #include "../common/physics/player.qh"
 
 #include "../common/items/_mod.qh"

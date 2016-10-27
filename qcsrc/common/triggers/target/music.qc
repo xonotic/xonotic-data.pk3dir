@@ -3,6 +3,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/constants.qh>
+    #include <common/net_linked.qh>
     #include <server/constants.qh>
     #include <server/defs.qh>
 #endif
