@@ -654,7 +654,7 @@ void nade_heal_boom(entity this)
 
 void nade_monster_boom(entity this)
 {
-	entity e = spawnmonster(this.pokenade_type, 0, this.realowner, this.realowner, this.origin, false, false, 1);
+	entity e = spawnmonster(spawn(), this.pokenade_type, 0, this.realowner, this.realowner, this.origin, false, false, 1);
 
 	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
@@ -941,6 +941,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.gravity = 1;
 	_nade.missile_flags = MIF_SPLASH | MIF_ARC;
 	_nade.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, _nade);
 	_nade.angles = vectoangles(_nade.velocity);
 	_nade.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, _nade);

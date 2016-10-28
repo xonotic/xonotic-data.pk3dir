@@ -290,6 +290,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.damageforcescale = WEP_CVAR(arc, bolt_damageforcescale);
 	missile.event_damage = W_Arc_Bolt_Damage;
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 
 	settouch(missile, W_Arc_Bolt_Touch);
 	missile.use = W_Arc_Bolt_Explode_use;
@@ -339,6 +340,8 @@ void W_Arc_Beam_Think(entity this)
 		IS_DEAD(this.owner)
 		||
 		forbidWeaponUse(this.owner)
+		||
+		PS(this.owner).m_switchweapon != WEP_ARC
 		||
 		(!PHYS_INPUT_BUTTON_ATCK(this.owner) && !burst )
 		||

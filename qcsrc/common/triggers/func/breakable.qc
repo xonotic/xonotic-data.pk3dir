@@ -109,6 +109,7 @@ void func_breakable_look_destroyed(entity this)
 			this.origin_z = floorZ;
 		}
 		_setmodel(this, this.mdl_dead);
+		ApplyMinMaxScaleAngles(this);
 		this.effects &= ~EF_NODRAW;
 	}
 
@@ -120,6 +121,7 @@ void func_breakable_look_destroyed(entity this)
 void func_breakable_look_restore(entity this)
 {
 	_setmodel(this, this.mdl);
+	ApplyMinMaxScaleAngles(this);
 	this.effects &= ~EF_NODRAW;
 
 	if(this.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
@@ -146,6 +148,7 @@ void func_breakable_behave_destroyed(entity this)
 		stopsound (this, CH_TRIGGER_SINGLE);
 }
 
+void func_breakable_destroy(entity this, entity actor, entity trigger);
 void func_breakable_behave_restore(entity this)
 {
 	this.health = this.max_health;
@@ -162,6 +165,8 @@ void func_breakable_behave_restore(entity this)
 		this.bot_attack = true;
 		this.event_damage = func_breakable_damage;
 	}
+	if(this.spawnflags & 4)
+		this.use = func_breakable_destroy; // don't need to set it usually, as .use isn't reset
 	this.state = 0;
 	this.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod(this);

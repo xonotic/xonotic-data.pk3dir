@@ -164,7 +164,7 @@ float CheatImpulse(entity this, int imp)
 			this.personal.strength_finished = this.strength_finished;
 			this.personal.invincible_finished = this.invincible_finished;
 			this.personal.teleport_time = time;
-			break; // this part itthis doesn't cheat, so let's not count this
+			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			makevectors (this.v_angle);

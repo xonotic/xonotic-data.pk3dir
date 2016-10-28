@@ -392,8 +392,6 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 	if(this.tag_entity && wasfreed(this.tag_entity))
 		this.tag_entity = NULL;
 
-	viewloc_SetTags(this);
-
 	MUTATOR_CALLHOOK(TagIndex_Update, this);
 
 	if(this.tag_networkentity)

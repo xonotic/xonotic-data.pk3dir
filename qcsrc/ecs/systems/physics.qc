@@ -62,6 +62,8 @@ void sys_phys_update(entity this, float dt)
 		goto end;
 	}
 
+	PM_check_slick(this);
+
 	if (IS_SVQC && !PHYS_FIXANGLE(this)) { this.angles = '0 1 0' * this.v_angle.y; }
 	if (IS_PLAYER(this)) {
 		if (IS_ONGROUND(this)) {
@@ -215,7 +217,7 @@ void sys_phys_simulate(entity this, float dt)
 	}
 	if (this.com_phys_ladder) {
 		if (this.viewloc) {
-			wishvel.z = this.oldmovement.x;
+			wishvel.z = this.movement_old.x;
 		}
 		if (this.ladder_entity.classname == "func_water") {
 			float f = vlen(wishvel);

@@ -93,7 +93,7 @@ bool check_close_to_wall(entity this, float threshold)
 
 #define X(OFFSET) \
 	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this); \
-	if(trace_fraction < 1 && vdist(this.origin - trace_endpos, <, threshold)) \
+	if(trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) && vdist(this.origin - trace_endpos, <, threshold)) \
 		return true;
 	X(1000*v_right);
 	X(-1000*v_right);

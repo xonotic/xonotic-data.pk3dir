@@ -165,6 +165,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, sound1) \
 		FIELD_SCALAR(fld, sounds) \
 		FIELD_SCALAR(fld, spawnflags) \
+		FIELD_SCALAR(fld, spawnmob) \
 		FIELD_SCALAR(fld, speed) \
 		FIELD_SCALAR(fld, strength) \
 		FIELD_SCALAR(fld, target2) \

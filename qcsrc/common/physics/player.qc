@@ -39,6 +39,13 @@ void Physics_UpdateStats(entity this, float maxspd_mod)
 	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw", autocvar_sv_airspeedlimit_nonqw) * maxspd_mod;
 	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed", autocvar_sv_maxspeed) * maxspd_mod; // also slow walking
 
+	STAT(PL_MIN, this) = autocvar_sv_player_mins;
+	STAT(PL_MAX, this) = autocvar_sv_player_maxs;
+	STAT(PL_VIEW_OFS, this) = autocvar_sv_player_viewoffset;
+	STAT(PL_CROUCH_MIN, this) = autocvar_sv_player_crouch_mins;
+	STAT(PL_CROUCH_MAX, this) = autocvar_sv_player_crouch_maxs;
+	STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_player_crouch_viewoffset;
+
 	// old stats
 	// fix some new settings
 	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor", autocvar_sv_airaccel_qw_stretchfactor);
@@ -300,7 +307,7 @@ bool PlayerJump(entity this)
 	}
 
 	if (!doublejump)
-		if (!IS_ONGROUND(this))
+		if (!IS_ONGROUND(this) && !IS_ONSLICK(this))
 			return IS_JUMP_HELD(this);
 
 	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
@@ -337,7 +344,7 @@ bool PlayerJump(entity this)
 		}
 	}
 
-	if (!WAS_ONGROUND(this))
+	if (!WAS_ONGROUND(this) && !WAS_ONSLICK(this))
 	{
 #ifdef SVQC
 		if(autocvar_speedmeter)
@@ -359,6 +366,7 @@ bool PlayerJump(entity this)
 	this.velocity_z += mjumpheight;
 
 	UNSET_ONGROUND(this);
+	UNSET_ONSLICK(this);
 	SET_JUMP_HELD(this);
 
 #ifdef SVQC
@@ -634,6 +642,24 @@ void PM_Footsteps(entity this)
 #endif
 }
 
+void PM_check_slick(entity this)
+{
+	if(!IS_ONGROUND(this))
+		return;
+
+	if(!PHYS_SLICK_APPLYGRAVITY(this))
+		return;
+
+	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+	{
+		UNSET_ONGROUND(this);
+		SET_ONSLICK(this);
+	}
+	else
+		UNSET_ONSLICK(this);
+}
+
 void PM_check_blocked(entity this)
 {
 #ifdef SVQC
@@ -643,8 +669,6 @@ void PM_check_blocked(entity this)
 	this.disableclientprediction = 1;
 #endif
 }
-
-.vector oldmovement;
 
 void PM_jetpack(entity this, float maxspd_mod, float dt)
 {

@@ -154,31 +154,33 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 entity WarpZone_Find(vector mi, vector ma)
 {
 	// if we are near any warpzone planes - MOVE AWAY (work around nearclip)
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return NULL;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, NULL))
-			return e;
+	IL_EACH(g_warpzones, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL),
+	{
+		return it;
+	});
 	return NULL;
 }
 
 void WarpZone_MakeAllSolid()
 {
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		e.solid = SOLID_BSP;
+	IL_EACH(g_warpzones, true,
+	{
+		it.solid = SOLID_BSP;
+	});
 }
 
 void WarpZone_MakeAllOther()
 {
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		e.solid = SOLID_TRIGGER;
+	IL_EACH(g_warpzones, true,
+	{
+		it.solid = SOLID_TRIGGER;
+	});
 }
 
 void WarpZone_Trace_InitTransform()

@@ -34,6 +34,7 @@ float autocvar_g_nexball_football_bouncestop;
 bool autocvar_g_nexball_radar_showallplayers;
 bool autocvar_g_nexball_sound_bounce;
 int autocvar_g_nexball_trail_color;
+bool autocvar_g_nexball_playerclip_collisions = true;
 
 float autocvar_g_nexball_safepass_turnrate;
 float autocvar_g_nexball_safepass_maxdist;
@@ -551,6 +552,9 @@ void SpawnBall(entity this)
 	}
 
 	set_movetype(this, MOVETYPE_FLY);
+
+	if(autocvar_g_nexball_playerclip_collisions)
+		this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 
 	if(!autocvar_g_nexball_sound_bounce)
 		this.noise = "";

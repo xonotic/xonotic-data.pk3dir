@@ -50,7 +50,12 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force player colors to mine")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_forceplayercolors"));
+			e.addValue(e, _("Never"), "0");
+			e.addValue(e, _("In non teamplay modes only"), "1");
+			e.addValue(e, _("Always"), "2");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Body fading:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 0.2, "cl_deathglow"));

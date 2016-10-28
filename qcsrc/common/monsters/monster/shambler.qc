@@ -142,6 +142,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.damageforcescale = 0;
 	gren.event_damage = M_Shambler_Attack_Lightning_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_Explicit(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, false);
 
@@ -200,7 +201,7 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_shambler) { Monster_Spawn(this, MON_SHAMBLER.monsterid); }
+spawnfunc(monster_shambler) { Monster_Spawn(this, true, MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC

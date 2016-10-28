@@ -203,6 +203,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		t.target2 = this.target2;
 		t.target3 = this.target3;
 		t.target4 = this.target4;
+		t.antiwall_flag = this.antiwall_flag;
 		return;
 	}
 

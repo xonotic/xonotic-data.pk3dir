@@ -33,5 +33,6 @@
 #include <common/mutators/mutator/touchexplode/_mod.inc>
 #include <common/mutators/mutator/vampire/_mod.inc>
 #include <common/mutators/mutator/vampirehook/_mod.inc>
+#include <common/mutators/mutator/walljump/_mod.inc>
 #include <common/mutators/mutator/waypoints/_mod.inc>
 #include <common/mutators/mutator/weaponarena_random/_mod.inc>

@@ -152,11 +152,11 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 			WriteCoord(MSG_ENTITY, this.movedir.z);
 			WriteByte(MSG_ENTITY, floor(this.lip * 255));
 		}
-		WriteShort(MSG_ENTITY, this.fade_start);
-		WriteShort(MSG_ENTITY, this.fade_end);
-		WriteShort(MSG_ENTITY, this.alpha_max);
-		WriteShort(MSG_ENTITY, this.alpha_min);
-		WriteShort(MSG_ENTITY, this.inactive);
+		WriteByte(MSG_ENTITY, this.fade_start);
+		WriteByte(MSG_ENTITY, this.fade_end);
+		WriteByte(MSG_ENTITY, this.alpha_max);
+		WriteByte(MSG_ENTITY, this.alpha_min);
+		WriteByte(MSG_ENTITY, this.inactive);
 		WriteShort(MSG_ENTITY, this.fade_vertical_offset);
 	}
 

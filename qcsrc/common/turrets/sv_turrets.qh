@@ -8,7 +8,6 @@ entity turret_select_target(entity this);
 
 // turret fields
 .float ticrate; // interal ai think rate
-.vector aim_idle; // where to aim while idle
 .entity tur_head; // top part of the turret
 .entity tur_defend; // defend this entity
 .vector tur_shotorg; // shot origin

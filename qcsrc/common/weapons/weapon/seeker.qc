@@ -152,7 +152,7 @@ void W_Seeker_Missile_Think(entity this)
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
 		if(WEP_CVAR(seeker, missile_smart) && (dist > WEP_CVAR(seeker, missile_smart_mindist)))
 		{
-			// Is it a better idea (shorter distance) to trace to the target itthis?
+			// Is it a better idea (shorter distance) to trace to the target itself?
 			if( vdist(this.origin + olddir * this.wait, <, dist))
 				traceline(this.origin, this.origin + olddir * this.wait, false, this);
 			else
@@ -282,6 +282,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.health          = WEP_CVAR(seeker, missile_health);
 	missile.damageforcescale = WEP_CVAR(seeker, missile_damageforcescale);
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 	//missile.think           = W_Seeker_Missile_Animate; // csqc projectiles.
 
 	if(missile.enemy != NULL)
