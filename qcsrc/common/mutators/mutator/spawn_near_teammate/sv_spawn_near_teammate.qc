@@ -58,8 +58,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 
-	//LOG_INFOF("PlayerSpawn for player: %s %v spawn_spot: %v\n", player.netname, player.origin, spawn_spot.origin);
-
 	int num_red = 0, num_blue = 0, num_yellow = 0, num_pink = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
@@ -102,6 +100,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 			// test different spots close to mate - trace upwards so it works on uneven surfaces
 			// don't spawn in front of player or directly behind to avoid players shooting each other
+			// test the potential spots in pairs but don't prefer one side
+			RandomSelection_Init();
 			for(int i = 0; i < 6; ++i)
 			{
 				switch(i)
@@ -125,59 +125,69 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128 - v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
 				}
-				vector horizontal_trace_endpos = trace_endpos;
-				//te_lightning1(NULL, it.origin, horizontal_trace_endpos);
-				if(trace_fraction != 1.0) continue;
+				do {
+					vector horizontal_trace_endpos = trace_endpos;
+					//te_lightning1(NULL, it.origin, horizontal_trace_endpos);
+					if (trace_fraction != 1.0) break;
 
-				// 400 is about the height of a typical laser jump (in overkill)
-				// not traceline because we need space for the whole player, not just his origin
-				tracebox(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
-				vector vectical_trace_endpos = trace_endpos;
-				//te_lightning1(NULL, horizontal_trace_endpos, vectical_trace_endpos);
-				if (trace_startsolid) continue; // inside another player
-				if (trace_fraction == 1.0) continue; // above void or too high
-				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) continue;
-				if (pointcontents(vectical_trace_endpos) != CONTENT_EMPTY) continue; // no lava or slime (this also prevents spawning in water which i assume would be annoying)
-				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), vectical_trace_endpos)) continue;
+					// 400 is about the height of a typical laser jump (in overkill)
+					// not traceline because we need space for the whole player, not just his origin
+					tracebox(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), horizontal_trace_endpos - '0 0 400', MOVE_NORMAL, it);
+					vector vectical_trace_endpos = trace_endpos;
+					//te_lightning1(NULL, horizontal_trace_endpos, vectical_trace_endpos);
+					if (trace_startsolid) break; // inside another player
+					if (trace_fraction == 1.0) break; // above void or too high
+					if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) break;
+					if (pointcontents(vectical_trace_endpos) != CONTENT_EMPTY) break; // no lava or slime (or water which i assume would be annoying anyway)
+					if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), vectical_trace_endpos)) break;
 
-				// make sure the spawned player will have floor ahead (or at least a wall - he shouldn't fall as soon as he starts moving)
-				vector floor_test_start = vectical_trace_endpos + v_up * STAT(PL_MAX, NULL).z + v_forward * STAT(PL_MAX, NULL).x; // top front of player's bbox - highest point we know is not inside solid
-				traceline(floor_test_start, floor_test_start + v_forward * 100 - v_up * 128, MOVE_NOMONSTERS, it);
-				//te_beam(NULL, floor_test_start, trace_endpos);
-				if (trace_fraction == 1.0) continue;
+					// make sure the spawned player will have floor ahead (or at least a wall - he shouldn't fall as soon as he starts moving)
+					vector floor_test_start = vectical_trace_endpos + v_up * STAT(PL_MAX, NULL).z + v_forward * STAT(PL_MAX, NULL).x; // top front of player's bbox - highest point we know is not inside solid
+					traceline(floor_test_start, floor_test_start + v_forward * 100 - v_up * 128, MOVE_NOMONSTERS, it);
+					//te_beam(NULL, floor_test_start, trace_endpos);
+					if (trace_fraction == 1.0) break;
 
-				if (autocvar_g_nades) {
-					bool nade_in_range = false;
-					IL_EACH(g_projectiles, it.classname == "nade",
-					{
-						if (vdist(it.origin - vectical_trace_endpos, <, autocvar_g_nades_nade_radius)) {
-							nade_in_range = true;
-							break;
-						}
-					});
-					if (nade_in_range) continue;
-				}
-
-				if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
-				{
-					float dist = vlen(vectical_trace_endpos - player.msnt_deathloc);
-					//LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
-					if(dist < best_dist || best_dist == 0)
-					{
-						//LOG_INFOF("      new best dist - pos: %v\n", vectical_trace_endpos);
-						best_dist = dist;
-						best_pos = vectical_trace_endpos;
-						best_mate = it;
+					if (autocvar_g_nades) {
+						bool nade_in_range = false;
+						IL_EACH(g_projectiles, it.classname == "nade",
+						{
+							if (vdist(it.origin - vectical_trace_endpos, <, autocvar_g_nades_nade_radius)) {
+								nade_in_range = true;
+								break;
+							}
+						});
+						if (nade_in_range) break;
 					}
-				}
-				else
+
+					// here, we know we found a good spot
+					RandomSelection_Add(it, 0, string_null, vectical_trace_endpos, 1, 1);
+					//te_lightning1(NULL, vectical_trace_endpos, vectical_trace_endpos + v_forward * 10);
+					//LOG_INFOF("mod: %d, ent: %d\n", i % 2 == 1, etof(RandomSelection_chosen_ent));
+				} while(0);
+
+				if (i % 2 == 1 && RandomSelection_chosen_ent)
 				{
-					setorigin(player, vectical_trace_endpos);
-					player.angles = it.angles;
-					player.angles_z = 0; // never spawn tilted even if the spot says to
-					it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
-					//LOG_INFOF("      PlayerSpawn return %v\n", player.origin);
-					return;
+					if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
+					{
+						float dist = vlen(RandomSelection_chosen_ent.origin - player.msnt_deathloc);
+						//LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
+						if (dist < best_dist || best_dist == 0)
+						{
+							//LOG_INFOF("      new best dist - pos: %v\n", RandomSelection_chosen_vec);
+							best_dist = dist;
+							best_pos = RandomSelection_chosen_vec;
+							best_mate = RandomSelection_chosen_ent;
+						}
+					}
+					else
+					{
+						setorigin(player, RandomSelection_chosen_vec);
+						player.angles = RandomSelection_chosen_ent.angles;
+						player.angles_z = 0; // never spawn tilted even if the spot says to
+						RandomSelection_chosen_ent.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
+						return;
+					}
+					continue; // don't test the other spots near this teammate, go to the next one
 				}
 			}
 		));
