@@ -43,6 +43,33 @@ const string STR_OBSERVER = "observer";
 
 #define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), body)
 
+// using the "inside out" version of knuth-fisher-yates shuffle
+// https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
+#define FOREACH_CLIENT_RANDOM(cond, body) \
+	MACRO_BEGIN { \
+		float _clients[255]; \
+		int _cnt = 0; \
+		FOREACH_CLIENT(cond, LAMBDA( \
+			int _j = floor(random() * (_cnt + 1)); \
+			if (_j == _cnt) \
+			{ \
+				_clients[_cnt] = etof(it); \
+			} \
+			else \
+			{ \
+				_clients[_cnt] = _clients[_j]; \
+				_clients[_j] = etof(it); \
+			} \
+			_cnt++; \
+		)); \
+		for (int _i = 0; _i < _cnt; ++_i) \
+		{ \
+			const noref int i = _clients[_i]; \
+			ITER_CONST noref entity it = ftoe(i); \
+			if (cond) { LAMBDA(body) } \
+		} \
+	} MACRO_END
+
 // NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: IL_EACH(g_monsters, true, { code; });
 
 #include <common/effects/all.qh>

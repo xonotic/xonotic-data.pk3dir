@@ -84,7 +84,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		entity best_mate = NULL;
 		vector best_pos = '0 0 0';
 		float best_dist = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), LAMBDA(
 			//LOG_INFOF("  for client: %s %v\n", it.netname, it.origin);
 			if (!SAME_TEAM(player, it)) continue;
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health >= 0 && it.health < autocvar_g_balance_health_regenstable) continue;
@@ -172,7 +172,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 						best_mate = it;
 					}
 				}
-				else // TODO randomize to avoid favoring players who joined early
+				else
 				{
 					setorigin(player, vectical_trace_endpos);
 					player.angles = it.angles;
