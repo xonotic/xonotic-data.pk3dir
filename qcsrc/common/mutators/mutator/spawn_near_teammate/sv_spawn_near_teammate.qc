@@ -92,7 +92,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (time < it.msnt_timer) continue;
 			if (time < it.spawnshieldtime) continue;
 			if (forbidWeaponUse(it)) continue;
-			if (STAT(FROZEN, it)) continue;
 			if (it == player) continue;
 
 			vector horiz_vel = vec2(it.velocity);
