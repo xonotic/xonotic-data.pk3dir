@@ -124,7 +124,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 					case 5:
 						tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128 - v_right * 64 + v_up * 64, MOVE_NOMONSTERS, it);
 						break;
-
 				}
 				vector horizontal_trace_endpos = trace_endpos;
 				//te_lightning1(NULL, it.origin, horizontal_trace_endpos);
@@ -138,7 +137,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				if (trace_startsolid) continue; // inside another player
 				if (trace_fraction == 1.0) continue; // above void or too high
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) continue;
-				if (pointcontents(vectical_trace_endpos) != CONTENT_EMPTY) continue; // this also prevents spawning in water which i assume would be annoying
+				if (pointcontents(vectical_trace_endpos) != CONTENT_EMPTY) continue; // no lava or slime (this also prevents spawning in water which i assume would be annoying)
 				if (tracebox_hits_trigger_hurt(horizontal_trace_endpos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), vectical_trace_endpos)) continue;
 
 				// make sure the spawned player will have floor ahead (or at least a wall - he shouldn't fall as soon as he starts moving)
