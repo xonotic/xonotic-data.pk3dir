@@ -1351,11 +1351,11 @@ spawnfunc(item_armor_big)
 spawnfunc(item_armor_large)
 {
 	if(!this.armorvalue)
-		this.armorvalue = g_pickup_armorlarge;
+		this.armorvalue = g_pickup_armormega;
 	if(!this.max_armorvalue)
-		this.max_armorvalue = g_pickup_armorlarge_max;
+		this.max_armorvalue = g_pickup_armormega_max;
 	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_armorlarge_anyway;
+		this.pickup_anyway = g_pickup_armormega_anyway;
 	StartItem(this, ITEM_ArmorMega);
 }
 

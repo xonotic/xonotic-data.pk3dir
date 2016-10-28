@@ -11,7 +11,7 @@ float autocvar_g_overkill_ammo_charge_limit;
 bool autocvar_g_overkill_filter_healthmega;
 bool autocvar_g_overkill_filter_armormedium;
 bool autocvar_g_overkill_filter_armorbig;
-bool autocvar_g_overkill_filter_armorlarge;
+bool autocvar_g_overkill_filter_armormega;
 
 .float ok_lastwep;
 .float ok_item;
@@ -315,7 +315,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		// WARNING: next two statements look wrong because of inconsistency between cvar names and code
 		// armor cvars need renaming to be consistent with their health counterparts
 		case ITEM_ArmorLarge: return autocvar_g_overkill_filter_armorbig;
-		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armorlarge;
+		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armormega;
 	}
 
 	return true;
