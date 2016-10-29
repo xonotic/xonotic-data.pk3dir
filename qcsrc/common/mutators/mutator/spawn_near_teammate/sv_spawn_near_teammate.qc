@@ -1,5 +1,7 @@
 #include "sv_spawn_near_teammate.qh"
 
+const float FLOAT_MAX = 340282346638528859811704183484516925440.0f;
+
 float autocvar_g_spawn_near_teammate_distance;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint;
 float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
@@ -12,7 +14,6 @@ REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
 .entity msnt_lookat;
 
 .float msnt_timer;
-.vector msnt_deathloc;
 
 .float cvar_cl_spawn_near_teammate;
 
@@ -81,7 +82,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 		entity best_mate = NULL;
 		vector best_pos = '0 0 0';
-		float best_vlen2 = 1000000000;
+		float best_dist2 = FLOAT_MAX;
 		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), LAMBDA(
 			//LOG_INFOF("  for client: %s %v\n", it.netname, it.origin);
 			if (!SAME_TEAM(player, it)) continue;
@@ -93,6 +94,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (it == player) continue;
 
 			vector horiz_vel = vec2(it.velocity);
+			// when walking slowly sideways, we assume the player wants a clear shot ahead - spawn behind him according to where he's looking
+			// when running fast, spawn behind him according to his direction of movement to prevent colliding with the newly spawned player
 			if (vdist(horiz_vel, >, 450))
 				fixedmakevectors(vectoangles(horiz_vel));
 			else
@@ -162,19 +165,16 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 					// here, we know we found a good spot
 					RandomSelection_Add(it, 0, string_null, vectical_trace_endpos, 1, 1);
 					//te_lightning1(NULL, vectical_trace_endpos, vectical_trace_endpos + v_forward * 10);
-					//LOG_INFOF("mod: %d, ent: %d\n", i % 2 == 1, etof(RandomSelection_chosen_ent));
 				} while(0);
 
 				if (i % 2 == 1 && RandomSelection_chosen_ent)
 				{
 					if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 					{
-						float dist2 = vlen2(RandomSelection_chosen_ent.origin - player.msnt_deathloc);
-						LOG_INFOF("      dist: %f, best_vlen2 %f\n", dist2, best_vlen2);
-						if (dist2 < best_vlen2)
+						float dist2 = vlen2(RandomSelection_chosen_ent.origin - player.death_origin);
+						if (dist2 < best_dist2)
 						{
-							LOG_INFOF("      new best dist - pos: %v\n", RandomSelection_chosen_vec);
-							best_vlen2 = dist2;
+							best_dist2 = dist2;
 							best_pos = RandomSelection_chosen_vec;
 							best_mate = RandomSelection_chosen_ent;
 						}
@@ -187,7 +187,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 						RandomSelection_chosen_ent.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 						return;
 					}
-					continue; // don't test the other spots near this teammate, go to the next one
+					break; // don't test the other spots near this teammate, go to the next one
 				}
 			}
 		));
@@ -212,13 +212,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		sprint(player, "angles: ", vtos(player.angles), "\n");
 		*/
 	}
-}
-
-MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerDies)
-{
-	entity frag_target = M_ARGV(0, entity);
-
-	frag_target.msnt_deathloc = frag_target.origin;
 }
 
 REPLICATE(cvar_cl_spawn_near_teammate, bool, "cl_spawn_near_teammate");
