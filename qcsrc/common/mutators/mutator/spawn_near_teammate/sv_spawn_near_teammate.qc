@@ -81,7 +81,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 
 		entity best_mate = NULL;
 		vector best_pos = '0 0 0';
-		float best_dist = 0;
+		float best_vlen2 = 1000000000;
 		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), LAMBDA(
 			//LOG_INFOF("  for client: %s %v\n", it.netname, it.origin);
 			if (!SAME_TEAM(player, it)) continue;
@@ -169,12 +169,12 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 				{
 					if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 					{
-						float dist = vlen(RandomSelection_chosen_ent.origin - player.msnt_deathloc);
-						//LOG_INFOF("      dist: %f, best_dist %f\n", dist, best_dist);
-						if (dist < best_dist || best_dist == 0)
+						float dist2 = vlen2(RandomSelection_chosen_ent.origin - player.msnt_deathloc);
+						LOG_INFOF("      dist: %f, best_vlen2 %f\n", dist2, best_vlen2);
+						if (dist2 < best_vlen2)
 						{
-							//LOG_INFOF("      new best dist - pos: %v\n", RandomSelection_chosen_vec);
-							best_dist = dist;
+							LOG_INFOF("      new best dist - pos: %v\n", RandomSelection_chosen_vec);
+							best_vlen2 = dist2;
 							best_pos = RandomSelection_chosen_vec;
 							best_mate = RandomSelection_chosen_ent;
 						}
@@ -193,7 +193,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		));
 
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
-		if(best_dist)
+		if(best_mate)
 		{
 			setorigin(player, best_pos);
 			player.angles = best_mate.angles;
