@@ -64,44 +64,26 @@ void train_wait(entity this)
 
 void train_next(entity this)
 {
-	entity targ, cp = NULL;
+	entity targ = NULL, cp = NULL;
 	vector cp_org = '0 0 0';
-	string next_target = "";
 
-	targ = find(NULL, targetname, this.target);
-	if(targ.target_random)
+	if(this.target_random)
 	{
 		RandomSelection_Init();
-		for(int i = 0; i < 4; ++i)
+		for(entity t = NULL; (t = find(t, targetname, this.target));)
 		{
-			switch(i)
-			{
-				case 0:
-					next_target = targ.target;
-					break;
-				case 1:
-					next_target = targ.target2;
-					break;
-				case 2:
-					next_target = targ.target3;
-					break;
-				case 3:
-					next_target = targ.target4;
-					break;
-			}
-			if (next_target != "")
-			{
-				RandomSelection_AddString(next_target, 1, 1);
-			}
+			RandomSelection_AddEnt(t, 1, 0);
 		}
-		next_target = RandomSelection_chosen_string;
+		targ = RandomSelection_chosen_ent;
 	}
 	else
 	{
-		next_target = targ.target;
+		targ = find(NULL, targetname, this.target);
 	}
 
-	this.target = next_target;
+	this.target = targ.target;
+	this.target_random = targ.target_random;
+
 	if (this.spawnflags & 1)
 	{
 		if(targ.curvetarget)
@@ -222,6 +204,7 @@ void func_train_find(entity this)
 	entity targ;
 	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
+	this.target_random = targ.target_random;
 	if (this.target == "")
 		objerror(this, "func_train_find: no next target");
 	SUB_SETORIGIN(this, targ.origin - this.view_ofs);
