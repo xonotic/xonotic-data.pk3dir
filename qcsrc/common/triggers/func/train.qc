@@ -66,9 +66,42 @@ void train_next(entity this)
 {
 	entity targ, cp = NULL;
 	vector cp_org = '0 0 0';
+	string next_target = "";
 
 	targ = find(NULL, targetname, this.target);
-	this.target = targ.target;
+	if(targ.target_random)
+	{
+		RandomSelection_Init();
+		for(int i = 0; i < 4; ++i)
+		{
+			switch(i)
+			{
+				case 0:
+					next_target = targ.target;
+					break;
+				case 1:
+					next_target = targ.target2;
+					break;
+				case 2:
+					next_target = targ.target3;
+					break;
+				case 3:
+					next_target = targ.target4;
+					break;
+			}
+			if (next_target != "")
+			{
+				RandomSelection_AddString(next_target, 1, 1);
+			}
+		}
+		next_target = RandomSelection_chosen_string;
+	}
+	else
+	{
+		next_target = targ.target;
+	}
+
+	this.target = next_target;
 	if (this.spawnflags & 1)
 	{
 		if(targ.curvetarget)
