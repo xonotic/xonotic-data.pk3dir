@@ -62,11 +62,8 @@ void train_wait(entity this)
 	}
 }
 
-void train_next(entity this)
+entity train_next_find(entity this)
 {
-	entity targ = NULL, cp = NULL;
-	vector cp_org = '0 0 0';
-
 	if(this.target_random)
 	{
 		RandomSelection_Init();
@@ -74,12 +71,20 @@ void train_next(entity this)
 		{
 			RandomSelection_AddEnt(t, 1, 0);
 		}
-		targ = RandomSelection_chosen_ent;
+		return = RandomSelection_chosen_ent;
 	}
 	else
 	{
-		targ = find(NULL, targetname, this.target);
+		return find(NULL, targetname, this.target);
 	}
+}
+
+void train_next(entity this)
+{
+	entity targ = NULL, cp = NULL;
+	vector cp_org = '0 0 0';
+
+	targ = train_next_find(this);
 
 	this.target = targ.target;
 	this.target_random = targ.target_random;
@@ -201,8 +206,7 @@ void train_use(entity this, entity actor, entity trigger)
 
 void func_train_find(entity this)
 {
-	entity targ;
-	targ = find(NULL, targetname, this.target);
+	entity targ = train_next_find(this);
 	this.target = targ.target;
 	this.target_random = targ.target_random;
 	if (this.target == "")
