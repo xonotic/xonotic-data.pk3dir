@@ -1,5 +1,6 @@
 #include "train.qh"
 .float train_wait_turning;
+.entity future_target;
 void train_next(entity this);
 #ifdef SVQC
 void train_use(entity this, entity actor, entity trigger);
@@ -14,7 +15,7 @@ void train_wait(entity this)
 	{
 		entity targ, cp;
 		vector ang;
-		targ = find(NULL, targetname, this.target);
+		targ = this.future_target;
 		if((this.spawnflags & 1) && targ.curvetarget)
 			cp = find(NULL, targetname, targ.curvetarget);
 		else
@@ -41,7 +42,7 @@ void train_wait(entity this)
 #endif
 
 #ifdef SVQC
-	entity tg = find(NULL, targetname, this.target);
+	entity tg = this.future_target;
 	if(tg.spawnflags & 4)
 	{
 		this.use = train_use;
@@ -84,10 +85,11 @@ void train_next(entity this)
 	entity targ = NULL, cp = NULL;
 	vector cp_org = '0 0 0';
 
-	targ = train_next_find(this);
+	targ = this.future_target;
 
 	this.target = targ.target;
 	this.target_random = targ.target_random;
+	this.future_target = train_next_find(targ);
 
 	if (this.spawnflags & 1)
 	{
@@ -209,6 +211,8 @@ void func_train_find(entity this)
 	entity targ = train_next_find(this);
 	this.target = targ.target;
 	this.target_random = targ.target_random;
+	// save the future target for later
+	this.future_target = train_next_find(targ);
 	if (this.target == "")
 		objerror(this, "func_train_find: no next target");
 	SUB_SETORIGIN(this, targ.origin - this.view_ofs);
