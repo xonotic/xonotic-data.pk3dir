@@ -71,7 +71,7 @@ entity train_next_find(entity this)
 		{
 			RandomSelection_AddEnt(t, 1, 0);
 		}
-		return = RandomSelection_chosen_ent;
+		return RandomSelection_chosen_ent;
 	}
 	else
 	{
