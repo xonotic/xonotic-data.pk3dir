@@ -4,6 +4,7 @@ const float FLOAT_MAX = 340282346638528859811704183484516925440.0f;
 
 float autocvar_g_spawn_near_teammate_distance;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint;
+int autocvar_g_spawn_near_teammate_ignore_spawnpoint_max;
 float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health;
@@ -83,7 +84,9 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		entity best_mate = NULL;
 		vector best_pos = '0 0 0';
 		float best_dist2 = FLOAT_MAX;
+		int tested = 0;
 		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), LAMBDA(
+			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_max && tested >= autocvar_g_spawn_near_teammate_ignore_spawnpoint_max) break;
 			if (!SAME_TEAM(player, it)) continue;
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && it.health < autocvar_g_balance_health_regenstable) continue;
 			if (IS_DEAD(it)) continue;
@@ -91,6 +94,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (time < it.spawnshieldtime) continue;
 			if (forbidWeaponUse(it)) continue;
 			if (it == player) continue;
+
+			tested++; // i consider a teammate to be available when he passes the checks above
 
 			vector horiz_vel = vec2(it.velocity);
 			// when walking slowly sideways, we assume the player wants a clear shot ahead - spawn behind him according to where he's looking
