@@ -49,7 +49,6 @@ const int HAVOCBOT_AST_ROLE_OFFENSE = 4;
 
 void(entity this) havocbot_role_ast_defense;
 void(entity this) havocbot_role_ast_offense;
-.entity havocbot_ast_target;
 
 void(entity bot) havocbot_ast_reset_role;
 

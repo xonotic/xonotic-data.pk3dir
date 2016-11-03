@@ -13,6 +13,7 @@
 #include "../common/vehicles/all.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
+#include <common/net_linked.qh>
 #include <common/weapons/_all.qh>
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
@@ -398,6 +399,8 @@ void FireGrapplingHook(entity actor)
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
 	missile.damagedbycontents = (autocvar_g_balance_grapplehook_damagedbycontents);
+	if(missile.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, missile);
 
 	missile.hook_start = missile.hook_end = missile.origin;
 

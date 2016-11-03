@@ -8,21 +8,19 @@
     #include <server/autocvars.qh>
     #include <server/defs.qh>
 #endif
-entity spawnmonster (string monster, int monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool invincible, int moveflag)
+entity spawnmonster (entity e, string monster, int monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag)
 {
-	entity e = spawn();
-
 	e.spawnflags = MONSTERFLAG_SPAWNED;
 
 	if(!respwn) { e.spawnflags |= MONSTERFLAG_NORESPAWN; }
-	if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
+	//if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
 
 	setorigin(e, orig);
 
 	if(monster == "random")
 	{
 		RandomSelection_Init();	
-		FOREACH(Monsters, it != MON_Null,
+		FOREACH(Monsters, it != MON_Null && !(it.spawnflags & MONSTER_TYPE_PASSIVE),
 		{
 			RandomSelection_AddEnt(it, 1, 1);
 		});
@@ -41,8 +39,17 @@ entity spawnmonster (string monster, int monster_id, entity spawnedby, entity ow
 				break;
 			}
 		});
-		if(!found)
-			monster_id = ((monster_id > 0) ? monster_id : MON_FIRST);
+
+		if(!found && !monster_id)
+		{
+			if(removeifinvalid)
+			{
+				delete(e);
+				return NULL; // no good
+			}
+			else
+				monster_id = MON_FIRST;
+		}
 	}
 
 	e.realowner = spawnedby;
@@ -62,7 +69,7 @@ entity spawnmonster (string monster, int monster_id, entity spawnedby, entity ow
 	}
 
 	// Monster_Spawn checks if monster is valid
-	Monster_Spawn(e, monster_id);
+	Monster_Spawn(e, false, monster_id);
 
 	return e;
 }

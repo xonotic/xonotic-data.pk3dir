@@ -36,6 +36,7 @@
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
+#include "../common/net_linked.qh"
 #include "../common/physics/player.qh"
 
 #include "../common/items/_mod.qh"
@@ -303,6 +304,8 @@ void PutObserverInServer(entity this)
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
+	if(this.damagedbycontents)
+		IL_REMOVE(g_damagedbycontents, this);
 	this.damagedbycontents = false;
 	this.health = FRAGS_SPECTATOR;
 	SetSpectatee_status(this, etof(this));
@@ -524,6 +527,8 @@ void PutClientInServer(entity this)
 		this.wasplayer = true;
 		this.iscreature = true;
 		this.teleportable = TELEPORT_NORMAL;
+		if(!this.damagedbycontents)
+			IL_PUSH(g_damagedbycontents, this);
 		this.damagedbycontents = true;
 		set_movetype(this, MOVETYPE_WALK);
 		this.solid = SOLID_SLIDEBOX;
@@ -708,7 +713,6 @@ void PutClientInServer(entity this)
 
 void ClientInit_misc(entity this);
 
-.float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
 bool ClientInit_SendEntity(entity this, entity to, int sf)
@@ -1273,6 +1277,8 @@ void ClientDisconnect(entity this)
 	this.playerid = 0;
 	ReadyCount();
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
+
+	ONREMOVE(this);
 }
 
 void ChatBubbleThink(entity this)

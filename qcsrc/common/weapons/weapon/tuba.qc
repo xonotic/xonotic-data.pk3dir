@@ -396,10 +396,12 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 	}
 }
 
+void tuba_instrument_send(entity this, int instr);
 METHOD(Tuba, wr_setup, void(Tuba this, entity actor))
 {
 	actor.ammo_field = ammo_none;
 	actor.tuba_instrument = 0;
+	tuba_instrument_send(actor, actor.tuba_instrument);
 }
 #endif
 
@@ -412,6 +414,7 @@ NET_HANDLE(tuba_instrument, bool)
 	string s = (i == 0) ? "tuba" :
 	           (i == 1) ? "akordeon" :
 	                      "kleinbottle" ;
+    viewmodel.tuba_instrument = i;
 	CL_WeaponEntity_SetModel(viewmodel, s, true);
 }
 #endif
@@ -419,6 +422,8 @@ NET_HANDLE(tuba_instrument, bool)
 void tuba_instrument_send(entity this, int instr)
 {
 	msg_entity = this;
+	if (!IS_REAL_CLIENT(this))
+		return;
 	int chan = MSG_ONE;
 	WriteHeader(chan, tuba_instrument);
 	WriteByte(chan, instr);
@@ -491,13 +496,6 @@ METHOD(Tuba, wr_killmessage, Notification(Tuba this))
 const int TUBA_MIN = -18;
 const int TUBA_MAX = 27;
 const int TUBA_INSTRUMENTS = 3;
-
-entityclass(Tuba);
-class(Tuba) .int note;
-class(Tuba) .bool tuba_attenuate;
-class(Tuba) .float tuba_volume;
-class(Tuba) .float tuba_volume_initial;
-class(Tuba) .int tuba_instrument;
 
 int Tuba_PitchStep;
 

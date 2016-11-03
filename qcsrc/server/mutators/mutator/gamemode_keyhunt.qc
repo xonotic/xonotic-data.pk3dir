@@ -77,7 +77,6 @@ float kh_interferemsg_time, kh_interferemsg_team;
 .float kh_dropperteam;
 .entity kh_previous_owner;
 .float kh_previous_owner_playerid;
-.float kh_cp_duration;
 
 float kh_key_dropped, kh_key_carried;
 

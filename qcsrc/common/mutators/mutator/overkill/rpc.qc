@@ -82,6 +82,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	missile.health = WEP_CVAR(rpc, health);
 	missile.event_damage = W_RocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 	set_movetype(missile, MOVETYPE_FLY);
 
 	missile.projectiledeathtype = WEP_RPC.m_id;

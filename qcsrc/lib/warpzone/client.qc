@@ -35,6 +35,9 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 	}
 	this.classname = "trigger_warpzone";
 
+	if(isnew)
+		IL_PUSH(g_warpzones, this);
+
 	int f = ReadByte();
 	this.warpzone_isboxy = (f & 1);
 	if(f & 4)

@@ -5,9 +5,9 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include <common/constants.qh>
+	#include <common/net_linked.qh>
 	#include <common/triggers/subs.qh>
 	#include <common/util.qh>
-	#include <server/command/_mod.qh>
 	#include <server/constants.qh>
 	#include <server/defs.qh>
 #endif
@@ -631,7 +631,6 @@ void WarpZone_InitStep_ClearTarget(entity this)
 	this.enemy = NULL;
 }
 
-entity warpzone_first; .entity warpzone_next;
 void WarpZone_InitStep_FindTarget(entity this)
 {
 	float i;
@@ -731,6 +730,8 @@ spawnfunc(trigger_warpzone)
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.warpzone_next = warpzone_first;
 	warpzone_first = this;
+
+	IL_PUSH(g_warpzones, this);
 }
 spawnfunc(func_camera)
 {
@@ -803,10 +804,19 @@ void WarpZone_StartFrame()
 		WarpZone_PostInitialize_Callback();
 	}
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
+	if(warpzone_warpzones_exist)
+	{
+		IL_EACH(g_projectiles, true,
+		{
+			WarpZone_StoreProjectileData(it);
+		});
+	}
+		
+
+	FOREACH_CLIENT(true,
 	{
 		if(warpzone_warpzones_exist)
-			WarpZone_StoreProjectileData(it);
+			WarpZone_StoreProjectileData(it); // TODO: not actually needed
 
 		if(IS_OBSERVER(it) || it.solid == SOLID_NOT)
 		if(IS_CLIENT(it)) // we don't care about it being a bot

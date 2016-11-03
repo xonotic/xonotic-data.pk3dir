@@ -4,6 +4,7 @@
 
 #include <common/ent_cs.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
 #include <common/teams.qh>
 

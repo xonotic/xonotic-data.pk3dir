@@ -155,6 +155,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.damageforcescale = WEP_CVAR_PRI(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 
 	settouch(missile, W_Hagar_Touch);
 	missile.use = W_Hagar_Explode_use;
@@ -199,6 +200,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 
 	settouch(missile, W_Hagar_Touch2);
 	missile.cnt = 0;
@@ -260,6 +262,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 		missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 		missile.event_damage = W_Hagar_Damage;
 		missile.damagedbycontents = true;
+		IL_PUSH(g_damagedbycontents, missile);
 
 		settouch(missile, W_Hagar_Touch); // not bouncy
 		missile.use = W_Hagar_Explode2_use;
@@ -310,7 +313,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	// loadable hagar secondary attack, must always run each frame
 
-	if(time < game_starttime)
+	if(time < game_starttime || PS(actor).m_switchweapon != WEP_HAGAR)
 		return;
 
 	bool loaded = actor.hagar_load >= WEP_CVAR_SEC(hagar, load_max);
@@ -416,7 +419,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 
 void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(!(fire & 1) || actor.hagar_load || actor.hagar_loadblock)
+	if(!(fire & 1) || actor.hagar_load || actor.hagar_loadblock || PS(actor).m_switchweapon != WEP_HAGAR)
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;

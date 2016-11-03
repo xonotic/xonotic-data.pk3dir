@@ -27,6 +27,7 @@
 
 #include <common/physics/player.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
 #include <common/teams.qh>
 #include <common/util.qh>

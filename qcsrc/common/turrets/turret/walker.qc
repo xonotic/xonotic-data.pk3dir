@@ -570,6 +570,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
     it.iscreature = true;
     it.teleportable = TELEPORT_NORMAL;
     it.damagedbycontents = true;
+    IL_PUSH(g_damagedbycontents, it);
     it.solid = SOLID_SLIDEBOX;
     it.takedamage = DAMAGE_AIM;
     if(it.move_movetype != MOVETYPE_WALK)

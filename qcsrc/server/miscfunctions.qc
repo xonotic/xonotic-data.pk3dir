@@ -11,6 +11,7 @@
 #include "weapons/selection.qh"
 #include "../common/command/_mod.qh"
 #include "../common/constants.qh"
+#include <common/net_linked.qh>
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications/all.qh"

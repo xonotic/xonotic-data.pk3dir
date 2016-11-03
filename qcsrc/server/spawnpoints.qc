@@ -4,6 +4,7 @@
 #include "g_world.qh"
 #include "race.qh"
 #include "../common/constants.qh"
+#include <common/net_linked.qh>
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"

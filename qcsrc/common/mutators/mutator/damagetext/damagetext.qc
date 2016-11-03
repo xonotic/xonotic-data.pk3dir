@@ -1,24 +1,28 @@
 #include "damagetext.qh"
 
+#define DAMAGETEXT_PRECISION_MULTIPLIER 128
+#define DAMAGETEXT_SHORT_LIMIT 256 // the smallest value that we can't send as short - 2^15 (signed short) / DAMAGETEXT_PRECISION_MULTIPLIER
+
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
-AUTOCVAR_SAVE(cl_damagetext,                    bool,   true,      "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,             string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
+AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
+AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
 STATIC_INIT(DamageText_LegacyFormat) {
     if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
 }
-AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    "Damage text color");
-AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      "Damage text uses weapon color");
-AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          "Damage text font size");
-AUTOCVAR_SAVE(cl_damagetext_alpha_start,        float,  1,          "Damage text initial alpha");
-AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,     float,  3,          "Damage text lifetime in seconds");
-AUTOCVAR_SAVE(cl_damagetext_velocity,           vector, '0 0 20',   "Damage text move direction");
-AUTOCVAR_SAVE(cl_damagetext_offset,             vector, '0 -40 0',  "Damage text offset");
-AUTOCVAR_SAVE(cl_damagetext_accumulate_range,   float,  30,         "Damage text spawned within this range is accumulated");
-AUTOCVAR_SAVE(cl_damagetext_friendlyfire,       bool,   true,       "Show damage text for friendlyfire too");
-AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color, vector, '1 0 0',    "Damage text color for friendlyfire");
+AUTOCVAR_SAVE(cl_damagetext_color,                  vector, '1 1 0',    "Damage text color");
+AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,       bool,   false,      "Damage text uses weapon color");
+AUTOCVAR_SAVE(cl_damagetext_size,                   float,  8,          "Damage text font size");
+AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
+AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
+AUTOCVAR_SAVE(cl_damagetext_velocity,               vector, '0 0 20',   "Damage text move direction");
+AUTOCVAR_SAVE(cl_damagetext_offset,                 vector, '0 -40 0',  "Damage text offset");
+AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage text spawned within this range is accumulated");
+AUTOCVAR_SAVE(cl_damagetext_accumulate_alpha_rel,   float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show damage text for friendlyfire too");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
 #endif
 
 #ifdef CSQC
@@ -57,9 +61,9 @@ CLASS(DamageText, Object)
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
             string s = autocvar_cl_damagetext_format;
-            s = strreplace("{health}", sprintf("%d", this.m_damage), s);
-            s = strreplace("{armor}",  sprintf("%d", this.m_armordamage), s);
-            s = strreplace("{total}",  sprintf("%d", this.m_damage + this.m_armordamage), s);
+            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
@@ -70,7 +74,7 @@ CLASS(DamageText, Object)
         this.m_armordamage = _armor;
         this.m_deathtype = _deathtype;
         setorigin(this, _origin);
-        this.alpha = 1;
+        this.alpha = autocvar_cl_damagetext_alpha_start;
     }
 
     CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype, bool _friendlyfire) {
@@ -95,8 +99,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     if (SV_DAMAGETEXT_DISABLED()) return;
     const entity attacker = M_ARGV(0, entity);
     const entity hit = M_ARGV(1, entity); if (hit == attacker) return;
-    const int health = M_ARGV(2, int);
-    const int armor = M_ARGV(3, int);
+    const float health = M_ARGV(2, float);
+    const float armor = M_ARGV(3, float);
     const int deathtype = M_ARGV(5, int);
     const vector location = hit.origin;
     FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
@@ -106,16 +110,26 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(it) && it.enemy == attacker) ||
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(it))
         ) {
+            int flags = SAME_TEAM(hit, attacker); // BIT(0)
+            if (health >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(1);
+            if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(2);
+
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
-            WriteShort(MSG_ONE, rint(health));
-            WriteShort(MSG_ONE, rint(armor));
             WriteEntity(MSG_ONE, hit);
             WriteCoord(MSG_ONE, location.x);
             WriteCoord(MSG_ONE, location.y);
             WriteCoord(MSG_ONE, location.z);
             WriteInt24_t(MSG_ONE, deathtype);
-            WriteByte(MSG_ONE, SAME_TEAM(hit, attacker));
+            WriteByte(MSG_ONE, flags);
+
+            // we need to send a few decimal places to minimize errors when accumulating damage
+            // sending them multiplied saves bandwidth compared to using WriteCoord,
+            // however if the multiplied damage would be too much for (signed) short, we send an int24
+            if (health >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
+            else WriteShort(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
+            if (armor >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+            else WriteShort(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
         }
     ));
 }
@@ -124,12 +138,18 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 #ifdef CSQC
 NET_HANDLE(damagetext, bool isNew)
 {
-    int health = ReadShort();
-    int armor = ReadShort();
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
-    bool friendlyfire = ReadByte();
+    int flags = ReadByte();
+    bool friendlyfire = flags & 1;
+
+    int health, armor;
+    if (flags & BIT(1)) health = ReadInt24_t();
+    else health = ReadShort();
+    if (flags & BIT(2)) armor = ReadInt24_t();
+    else armor = ReadShort();
+
     return = true;
     if (autocvar_cl_damagetext) {
         if (friendlyfire && !autocvar_cl_damagetext_friendlyfire) {
@@ -137,7 +157,7 @@ NET_HANDLE(damagetext, bool isNew)
         }
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
-                if (e.instanceOfDamageText && e.m_group == group) {
+                if (e.instanceOfDamageText && e.m_group == group && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
                     DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, deathtype);
                     return;
                 }

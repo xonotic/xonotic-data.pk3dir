@@ -10,6 +10,7 @@
 #include <common/items/_mod.qh>
 
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/triggers/trigger/jumppads.qh>
 
 .float speed;
@@ -908,7 +909,7 @@ void navigation_poptouchedgoals(entity this)
 	}
 
 	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
-	// TODO: rate waypoints near the targetted player at that moment, instead of the player itthis
+	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
 	if(IS_PLAYER(this.goalcurrent))
 		navigation_poproute(this);
 

@@ -180,8 +180,6 @@ void assault_wall_think(entity this)
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
-void vehicles_clearreturn(entity veh);
-void vehicles_spawn(entity this);
 void assault_new_round(entity this)
 {
 	//bprint("ASSAULT: new round\n");
@@ -559,9 +557,7 @@ MUTATOR_HOOKFUNCTION(as, VehicleInit)
 {
 	entity veh = M_ARGV(0, entity);
 
-	if(veh.active != ACTIVE_NOT)
-		veh.nextthink = time + 0.5;
-	return true;
+	veh.nextthink = time + 0.5;
 }
 
 MUTATOR_HOOKFUNCTION(as, HavocBot_ChooseRole)
