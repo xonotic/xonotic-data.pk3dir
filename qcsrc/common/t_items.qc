@@ -1348,7 +1348,7 @@ spawnfunc(item_armor_big)
 	StartItem(this, ITEM_ArmorLarge);
 }
 
-spawnfunc(item_armor_large)
+spawnfunc(item_armor_mega)
 {
 	if(!this.armorvalue)
 		this.armorvalue = g_pickup_armormega;
@@ -1405,7 +1405,8 @@ spawnfunc(item_health_mega)
 
 // support old misnamed entities
 spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-spawnfunc(item_armor25) { spawnfunc_item_armor_large(this); }
+spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
+spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
 spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
 spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
 spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
