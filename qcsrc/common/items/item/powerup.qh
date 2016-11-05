@@ -33,6 +33,7 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_waypoint         =   _("Strength");
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_STRENGTH;
+    this.m_glow             =   true;
 }
 
 #ifdef GAMEQC
@@ -51,4 +52,5 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_waypoint         =   _("Shield");
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_INVINCIBLE;
+    this.m_glow             =   true;
 }

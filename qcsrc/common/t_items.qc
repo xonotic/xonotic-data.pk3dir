@@ -183,7 +183,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             if(this.ItemStatus & ITS_ALLOWFB)
                 this.effects |= EF_FULLBRIGHT;
 
-        if(this.ItemStatus & ITS_POWERUP)
+        if(this.ItemStatus & ITS_GLOW)
         {
             if(this.ItemStatus & ITS_AVAILABLE)
                 this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
@@ -463,8 +463,8 @@ void Item_Show (entity e, float mode)
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}}
 
-	if (def == ITEM_Strength || def == ITEM_Shield)
-		e.ItemStatus |= ITS_POWERUP;
+	if (def.m_glow)
+		e.ItemStatus |= ITS_GLOW;
 
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
