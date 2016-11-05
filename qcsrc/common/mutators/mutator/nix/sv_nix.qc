@@ -236,7 +236,7 @@ MUTATOR_HOOKFUNCTION(nix, FilterItem)
 	{
 		return !autocvar_g_nix_with_healtharmor;
 	}
-	else if(item.itemdef == ITEM_Strength || item.itemdef == ITEM_Shield)
+	else if(item.itemdef.instanceOfPowerup)
 	{
 		return !autocvar_g_nix_with_powerups;
 	}

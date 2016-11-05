@@ -463,7 +463,7 @@ void Item_Show (entity e, float mode)
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}}
 
-	if (def == ITEM_Strength || def == ITEM_Shield)
+	if (def.instanceOfPowerup)
 		e.ItemStatus |= ITS_POWERUP;
 
 	if (autocvar_g_nodepthtestitems)
