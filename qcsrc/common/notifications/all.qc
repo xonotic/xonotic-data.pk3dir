@@ -4,6 +4,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include <common/constants.qh>
+	#include <common/net_linked.qh>
 	#include <common/teams.qh>
 	#include <server/autocvars.qh>
 	#include <server/constants.qh>

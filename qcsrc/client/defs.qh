@@ -27,7 +27,7 @@ float		dmg_take;
 .int team;
 .int team_size;
 
-float vid_conwidth, vid_conheight;
+float vid_conheight;
 int binddb;
 
 // QUALIFYING
@@ -88,7 +88,7 @@ vector lightning_shotorigin[4];
 float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
 #endif
 
-float servertime, serverprevtime, serverdeltatime;
+float serverprevtime, serverdeltatime;
 
 float ticrate;
 

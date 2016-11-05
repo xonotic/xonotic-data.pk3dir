@@ -89,8 +89,6 @@ void func_breakable_colormod(entity this)
 		this.colormod = '1 0 0' + '0 1 0' * (2 * h - 0.5);
 	else
 		this.colormod = '1 1 1';
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void func_breakable_look_destroyed(entity this)
@@ -113,8 +111,6 @@ void func_breakable_look_destroyed(entity this)
 		this.effects &= ~EF_NODRAW;
 	}
 
-	CSQCMODEL_AUTOUPDATE(this);
-
 	this.solid = SOLID_NOT;
 }
 
@@ -126,8 +122,6 @@ void func_breakable_look_restore(entity this)
 
 	if(this.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
 		setorigin(this, this.dropped_origin);
-
-	CSQCMODEL_AUTOUPDATE(this);
 
 	this.solid = SOLID_BSP;
 }
@@ -146,6 +140,12 @@ void func_breakable_behave_destroyed(entity this)
 	func_breakable_colormod(this);
 	if (this.noise1)
 		stopsound (this, CH_TRIGGER_SINGLE);
+}
+
+void func_breakable_think(entity this)
+{
+	this.nextthink = time;
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void func_breakable_destroy(entity this, entity actor, entity trigger);
@@ -168,7 +168,9 @@ void func_breakable_behave_restore(entity this)
 	if(this.spawnflags & 4)
 		this.use = func_breakable_destroy; // don't need to set it usually, as .use isn't reset
 	this.state = 0;
-	this.nextthink = 0; // cancel auto respawn
+	//this.nextthink = 0; // cancel auto respawn
+	setthink(this, func_breakable_think);
+	this.nextthink = time + 0.1;
 	func_breakable_colormod(this);
 	if (this.noise1)
 		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
@@ -187,16 +189,12 @@ void func_breakable_destroyed(entity this)
 {
 	func_breakable_look_destroyed(this);
 	func_breakable_behave_destroyed(this);
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void func_breakable_restore(entity this, entity actor, entity trigger)
 {
 	func_breakable_look_restore(this);
 	func_breakable_behave_restore(this);
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void func_breakable_restore_self(entity this)
@@ -231,6 +229,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 
 	if(this.respawntime)
 	{
+		CSQCMODEL_AUTOUPDATE(this);
 		setthink(this, func_breakable_restore_self);
 		this.nextthink = time + this.respawntime + crandom() * this.respawntimejitter;
 	}
@@ -281,6 +280,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		// do not explode NOW but in the NEXT FRAME!
 		// because recursive calls to RadiusDamage are not allowed
 		this.nextthink = time;
+		CSQCMODEL_AUTOUPDATE(this);
 		setthink(this, func_breakable_destroy_self);
 	}
 }
@@ -293,8 +293,6 @@ void func_breakable_reset(entity this)
 		func_breakable_behave_destroyed(this);
 	else
 		func_breakable_behave_restore(this);
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 // destructible walls that can be used to trigger target_objective_decrease

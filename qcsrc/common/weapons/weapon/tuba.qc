@@ -466,12 +466,6 @@ const int TUBA_MIN = -18;
 const int TUBA_MAX = 27;
 const int TUBA_INSTRUMENTS = 3;
 
-entityclass(Tuba);
-class(Tuba) .int note;
-class(Tuba) .bool tuba_attenuate;
-class(Tuba) .float tuba_volume;
-class(Tuba) .float tuba_volume_initial;
-
 int Tuba_PitchStep;
 
 void tubasound(entity e, bool restart)

@@ -2,6 +2,7 @@
 
 #include <common/t_items.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/deathtypes/all.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>

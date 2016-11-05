@@ -10,6 +10,7 @@
 #include "../../antilag.qh"
 
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>

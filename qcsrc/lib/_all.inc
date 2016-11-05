@@ -266,6 +266,8 @@ void make_safe_for_remove(entity this);
 #endif
 #undef ENGINE_EVENT
 
+#if XONOTIC
 #ifdef GAMEQC
 	#include <ecs/_mod.qh>
+#endif
 #endif

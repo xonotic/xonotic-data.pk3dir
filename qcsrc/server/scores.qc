@@ -2,6 +2,7 @@
 
 #include "command/common.qh"
 #include "mutators/_mod.qh"
+#include <common/net_linked.qh>
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 

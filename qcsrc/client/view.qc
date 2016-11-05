@@ -13,6 +13,7 @@
 #include <common/ent_cs.qh>
 #include <common/anim.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
 #include <common/gamemodes/_mod.qh>
@@ -20,6 +21,8 @@
 #include <common/stats.qh>
 #include <common/triggers/target/music.qh>
 #include <common/teams.qh>
+
+#include <common/weapons/weapon/tuba.qh>
 
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
