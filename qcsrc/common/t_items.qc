@@ -1389,7 +1389,7 @@ spawnfunc(item_health_big)
 		this.health = g_pickup_healthbig;
 	if(!this.pickup_anyway)
 		this.pickup_anyway = g_pickup_healthbig_anyway;
-	StartItem(this, ITEM_HealthLarge);
+	StartItem(this, ITEM_HealthBig);
 }
 
 spawnfunc(item_health_mega)

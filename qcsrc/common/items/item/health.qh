@@ -54,19 +54,19 @@ REGISTER_ITEM(HealthMedium, Health) {
 }
 
 #ifdef GAMEQC
-MODEL(HealthLarge_ITEM, Item_Model("g_h50.md3"));
-SOUND(HealthLarge, "misc/mediumhealth");
+MODEL(HealthBig_ITEM, Item_Model("g_h50.md3"));
+SOUND(HealthBig, "misc/mediumhealth");
 #endif
 
-REGISTER_ITEM(HealthLarge, Health) {
+REGISTER_ITEM(HealthBig, Health) {
 #ifdef GAMEQC
-    this.m_model                =   MDL_HealthLarge_ITEM;
-    this.m_sound                =   SND_HealthLarge;
+    this.m_model                =   MDL_HealthBig_ITEM;
+    this.m_sound                =   SND_HealthBig;
 #endif
     this.m_name                 =   "50 Health";
     this.m_icon                 =   "health";
     this.m_color                =   '1 0 0';
-    this.m_waypoint             =   _("Large health");
+    this.m_waypoint             =   _("Big health");
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_MID;
     this.m_itemid               =   IT_25HP;

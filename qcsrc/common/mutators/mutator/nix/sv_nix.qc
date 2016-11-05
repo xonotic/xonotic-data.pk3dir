@@ -236,7 +236,7 @@ MUTATOR_HOOKFUNCTION(nix, FilterItem)
 	{
 		case ITEM_HealthSmall.m_itemid:
 		case ITEM_HealthMedium.m_itemid:
-		case ITEM_HealthLarge.m_itemid:
+		case ITEM_HealthBig.m_itemid:
 		case ITEM_HealthMega.m_itemid:
 		case ITEM_ArmorSmall.m_itemid:
 		case ITEM_ArmorMedium.m_itemid:
