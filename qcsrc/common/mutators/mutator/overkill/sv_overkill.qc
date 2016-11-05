@@ -314,7 +314,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
 		// WARNING: next two statements look wrong because of inconsistency between cvar names and code
 		// armor cvars need renaming to be consistent with their health counterparts
-		case ITEM_ArmorLarge: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorBig: return autocvar_g_overkill_filter_armorbig;
 		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armormega;
 	}
 

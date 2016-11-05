@@ -54,19 +54,19 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 }
 
 #ifdef GAMEQC
-MODEL(ArmorLarge_ITEM, Item_Model("item_armor_big.md3"));
-SOUND(ArmorLarge, "misc/armor17_5");
+MODEL(ArmorBig_ITEM, Item_Model("item_armor_big.md3"));
+SOUND(ArmorBig, "misc/armor17_5");
 #endif
 
-REGISTER_ITEM(ArmorLarge, Armor) {
+REGISTER_ITEM(ArmorBig, Armor) {
 #ifdef GAMEQC
-    this.m_model                =   MDL_ArmorLarge_ITEM;
-    this.m_sound                =   SND_ArmorLarge;
+    this.m_model                =   MDL_ArmorBig_ITEM;
+    this.m_sound                =   SND_ArmorBig;
 #endif
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
     this.m_color                =   '0 1 0';
-    this.m_waypoint             =   _("Large armor");
+    this.m_waypoint             =   _("Big armor");
 #ifdef SVQC
     this.m_botvalue             =   20000; // FIXME: higher than BOT_PICKUP_RATING_HIGH?
     this.m_itemid               =   IT_ARMOR;

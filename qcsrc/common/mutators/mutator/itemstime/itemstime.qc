@@ -59,7 +59,7 @@ int autocvar_hud_panel_itemstime_text = 1;
 bool Item_ItemsTime_SpectatorOnly(GameItem it)
 {
     return (false
-    || it == ITEM_ArmorMega     || (it == ITEM_ArmorLarge && !hud_panel_itemstime_hidelarge)
+    || it == ITEM_ArmorMega     || (it == ITEM_ArmorBig && !hud_panel_itemstime_hidelarge)
     || it == ITEM_HealthMega    || (it == ITEM_HealthLarge && !hud_panel_itemstime_hidelarge)
     );
 }

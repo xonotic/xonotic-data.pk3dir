@@ -240,7 +240,7 @@ MUTATOR_HOOKFUNCTION(nix, FilterItem)
 		case ITEM_HealthMega.m_itemid:
 		case ITEM_ArmorSmall.m_itemid:
 		case ITEM_ArmorMedium.m_itemid:
-		case ITEM_ArmorLarge.m_itemid:
+		case ITEM_ArmorBig.m_itemid:
 		case ITEM_ArmorMega.m_itemid:
 			if (autocvar_g_nix_with_healtharmor)
 				return false;
