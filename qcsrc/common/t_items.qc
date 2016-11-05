@@ -1384,11 +1384,11 @@ spawnfunc(item_health_medium)
 spawnfunc(item_health_large)
 {
 	if(!this.max_health)
-		this.max_health = g_pickup_healthlarge_max;
+		this.max_health = g_pickup_healthbig_max;
 	if(!this.health)
-		this.health = g_pickup_healthlarge;
+		this.health = g_pickup_healthbig;
 	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_healthlarge_anyway;
+		this.pickup_anyway = g_pickup_healthbig_anyway;
 	StartItem(this, ITEM_HealthLarge);
 }
 
