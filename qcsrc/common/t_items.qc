@@ -1381,7 +1381,7 @@ spawnfunc(item_health_medium)
     StartItem(this, ITEM_HealthMedium);
 }
 
-spawnfunc(item_health_large)
+spawnfunc(item_health_big)
 {
 	if(!this.max_health)
 		this.max_health = g_pickup_healthbig_max;
@@ -1409,6 +1409,7 @@ spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
 spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
 spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
 spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
+spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
 spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
 
 spawnfunc(item_strength)
