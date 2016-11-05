@@ -145,7 +145,11 @@ void lms_RemovePlayer(entity player)
 	if(PlayerScore_Add(player, SP_LMS_RANK, 0) == 666)
 		player.frags = FRAGS_SPECTATOR;
 	else
+	{
+		if(IS_BOT_CLIENT(player))
+			bot_clear(player);
 		player.frags = FRAGS_LMS_LOSER;
+	}
 
 	if(player.killcount != FRAGS_SPECTATOR)
 		if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
