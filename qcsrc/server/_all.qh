@@ -45,7 +45,7 @@ const string STR_OBSERVER = "observer";
 
 // using the "inside out" version of knuth-fisher-yates shuffle
 // https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
-float _FCR_clients[255];
+entity _FCR_clients[255];
 bool _FCR_entered = false;
 #define FOREACH_CLIENT_RANDOM(cond, body) \
 	MACRO_BEGIN { \
@@ -56,19 +56,19 @@ bool _FCR_entered = false;
 			int _j = floor(random() * (_cnt + 1)); \
 			if (_j == _cnt) \
 			{ \
-				_FCR_clients[_cnt] = etof(it); \
+				_FCR_clients[_cnt] = it; \
 			} \
 			else \
 			{ \
 				_FCR_clients[_cnt] = _FCR_clients[_j]; \
-				_FCR_clients[_j] = etof(it); \
+				_FCR_clients[_j] = it; \
 			} \
 			_cnt++; \
 		)); \
 		for (int _i = 0; _i < _cnt; ++_i) \
 		{ \
-			const noref int i = _FCR_clients[_i]; \
-			ITER_CONST noref entity it = ftoe(i); \
+			const noref int i = _i; \
+			ITER_CONST noref entity it = _FCR_clients[i]; \
 			if (cond) { LAMBDA(body) } \
 		} \
 		_FCR_entered = false; \
