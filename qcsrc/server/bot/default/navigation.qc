@@ -10,6 +10,7 @@
 #include <common/items/_mod.qh>
 
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/triggers/trigger/jumppads.qh>
 
 .float speed;

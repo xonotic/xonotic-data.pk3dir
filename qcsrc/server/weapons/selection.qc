@@ -3,6 +3,7 @@
 #include "weaponsystem.qh"
 #include <common/t_items.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/util.qh>
 #include <common/items/item.qh>
 #include <common/weapons/_all.qh>

@@ -6,6 +6,7 @@
 #include "../mutators/events.qh"
 
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
 
 #include <lib/csqcmodel/interpolate.qh>

@@ -13,6 +13,7 @@
 #include <common/ent_cs.qh>
 #include <common/anim.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/debug.qh>
 #include <common/mapinfo.qh>
 #include <common/gamemodes/_mod.qh>
@@ -20,6 +21,8 @@
 #include <common/stats.qh>
 #include <common/triggers/target/music.qh>
 #include <common/teams.qh>
+
+#include <common/weapons/weapon/tuba.qh>
 
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
@@ -311,6 +314,12 @@ void viewmodel_draw(entity this)
 	{
 		static string name_last;
 		string name = wep.mdl;
+		if(wep == WEP_TUBA)
+		{
+			name = (this.tuba_instrument == 0) ? "tuba" :
+	           	   (this.tuba_instrument == 1) ? "akordeon" :
+	                                             "kleinbottle";
+		}
 		bool swap = name != name_last;
 		// if (swap)
 		{

@@ -2,9 +2,9 @@
 
 #if XONOTIC
 #include <server/_all.inc>
-#endif
 
 #include <ecs/_mod.inc>
+#endif
 
 #ifdef BUILD_MOD
 #include <mod/server/progs.inc>
