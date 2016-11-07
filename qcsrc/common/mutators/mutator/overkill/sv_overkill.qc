@@ -341,6 +341,12 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 	start_weapons = warmup_start_weapons = ok_start_items;
 }
 
+MUTATOR_HOOKFUNCTION(ok, SetWeaponArena)
+{
+	// turn weapon arena off
+	M_ARGV(0, string) = "off";
+}
+
 MUTATOR_HOOKFUNCTION(ok, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":OK");
