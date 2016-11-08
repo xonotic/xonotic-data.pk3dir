@@ -1121,11 +1121,11 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
-		if (weapon_stats < 0)
+		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 		{
-			if (!(weapons_stat & set) && (it.spawnflags & WEP_FLAG_HIDDEN || it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				nHidden += 1;
-			else if (!(weapons_stat & set || weapons_inmap & set))
+			if (((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)))
+				++nHidden;
+			else
 				++disownedcnt;
 		}
 	});
@@ -1199,7 +1199,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
-		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
+		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 			continue;
 
 		float weapon_alpha;

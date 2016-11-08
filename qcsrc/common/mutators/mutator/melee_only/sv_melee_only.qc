@@ -8,6 +8,12 @@ MUTATOR_HOOKFUNCTION(melee_only, SetStartItems, CBC_ORDER_LAST)
 	start_weapons = warmup_start_weapons = WEPSET(SHOTGUN);
 }
 
+MUTATOR_HOOKFUNCTION(melee_only, SetWeaponArena)
+{
+	// turn weapon arena off
+	M_ARGV(0, string) = "off";
+}
+
 MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
 {
 	return true;

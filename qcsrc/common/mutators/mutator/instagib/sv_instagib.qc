@@ -360,6 +360,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 }
 
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
+{
+	// turn weapon arena off
+	M_ARGV(0, string) = "off";
+}
+
 void replace_with_insta_cells(entity item)
 {
 	entity e = spawn();
