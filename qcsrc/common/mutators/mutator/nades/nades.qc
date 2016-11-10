@@ -1177,18 +1177,6 @@ CLASS(NadeOffhand, OffhandWeapon)
     METHOD(NadeOffhand, offhand_think, void(NadeOffhand this, entity player, bool key_pressed))
     {
     	entity held_nade = player.nade;
-		if (held_nade)
-		{
-			player.nade_timer = bound(0, (time - held_nade.nade_time_primed) / autocvar_g_nades_nade_lifetime, 1);
-			// LOG_TRACEF("%d %d", player.nade_timer, time - held_nade.nade_time_primed);
-			makevectors(player.angles);
-			held_nade.velocity = player.velocity;
-			setorigin(held_nade, player.origin + player.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);
-			held_nade.angles_y = player.angles.y;
-
-			if (time + 0.1 >= held_nade.wait)
-				toss_nade(player, false, '0 0 0', time + 0.05);
-		}
 
         if (!CanThrowNade(player)) return;
         if (!(time > player.nade_refire)) return;
@@ -1229,6 +1217,20 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	if (!IS_PLAYER(player)) { return; }
 
 	if (player.nade && (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
+
+	entity held_nade = player.nade;
+	if (held_nade)
+	{
+		player.nade_timer = bound(0, (time - held_nade.nade_time_primed) / autocvar_g_nades_nade_lifetime, 1);
+		// LOG_TRACEF("%d %d", player.nade_timer, time - held_nade.nade_time_primed);
+		makevectors(player.angles);
+		held_nade.velocity = player.velocity;
+		setorigin(held_nade, player.origin + player.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);
+		held_nade.angles_y = player.angles.y;
+
+		if (time + 0.1 >= held_nade.wait)
+			toss_nade(player, false, '0 0 0', time + 0.05);
+	}
 
 	if(IS_PLAYER(player))
 	{
