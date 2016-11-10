@@ -26,6 +26,7 @@ REGISTER_ITEM(Strength, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Strength_ITEM;
     this.m_sound            =   SND_Strength;
+    this.m_glow             =   true;
 #endif
     this.m_name             =   "Strength Powerup";
     this.m_icon             =   "strength";
@@ -33,7 +34,6 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_waypoint         =   _("Strength");
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_STRENGTH;
-    this.m_glow             =   true;
 }
 
 #ifdef GAMEQC
@@ -45,6 +45,7 @@ REGISTER_ITEM(Shield, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Shield_ITEM;
     this.m_sound            =   SND_Shield;
+    this.m_glow             =   true;
 #endif
     this.m_name             =   "Shield";
     this.m_icon             =   "shield";
@@ -52,5 +53,4 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_waypoint         =   _("Shield");
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_INVINCIBLE;
-    this.m_glow             =   true;
 }

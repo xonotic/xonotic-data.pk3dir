@@ -1,4 +1,5 @@
 #pragma once
+#include <common/t_items.qh>
 
 const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
@@ -45,7 +46,9 @@ CLASS(GameItem, Object)
     ATTRIB(GameItem, m_color, vector, '1 1 1');
     ATTRIB(GameItem, m_waypoint, string);
     ATTRIB(GameItem, m_waypointblink, int, 1);
+#ifdef GAMEQC
     ATTRIB(GameItem, m_glow, bool, false);
+#endif
     METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
     {
         TC(GameItem, this);
