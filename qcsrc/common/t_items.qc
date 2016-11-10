@@ -497,19 +497,7 @@ void Item_ItemsTime_SetTimesForAllPlayers();
 void Item_Respawn (entity this)
 {
 	Item_Show(this, 1);
-	// this is ugly...
-	switch(this.itemdef)
-	{
-		case ITEM_Strength:
-			sound(this, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-			break;
-		case ITEM_Shield:
-			sound(this, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-			break;
-		default:
-			sound(this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-			break;
-	}
+	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin(this, this.origin);
 
     if (Item_ItemsTime_Allow(this.itemdef) || this.weapons & WEPSET_SUPERWEAPONS)

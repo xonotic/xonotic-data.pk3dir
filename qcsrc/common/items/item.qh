@@ -48,6 +48,7 @@ CLASS(GameItem, Object)
     ATTRIB(GameItem, m_waypointblink, int, 1);
 #ifdef GAMEQC
     ATTRIB(GameItem, m_glow, bool, false);
+    ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
 #endif
     METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
     {
