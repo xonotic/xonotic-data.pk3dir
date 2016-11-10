@@ -8,7 +8,7 @@ REGISTER_MUTATOR(damagetext, true);
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,             string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}, {potential_health}");
+AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}, {potential_health}");
 STATIC_INIT(DamageText_LegacyFormat) {
     if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
 }
@@ -119,6 +119,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             if (health >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(1);
             if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(2);
             if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(3);
+            if (!armor) flags |= BIT(4);
+            if (fabs((armor + health) - potential_damage) < 0.0001) flags |= BIT(5);
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
@@ -134,10 +136,16 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             // however if the multiplied damage would be too much for (signed) short, we send an int24
             if (health >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
             else WriteShort(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
-            if (armor >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
-            else WriteShort(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
-            if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
-            else WriteShort(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
+            if (armor)
+            {
+                if (armor >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+                else WriteShort(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+            }
+            if (fabs((armor + health) - potential_damage) >= 0.0001)
+            {
+                if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
+                else WriteShort(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
+			}
         }
     ));
 }
@@ -155,9 +163,11 @@ NET_HANDLE(damagetext, bool isNew)
     int health, armor, potential_damage;
     if (flags & BIT(1)) health = ReadInt24_t();
     else health = ReadShort();
-    if (flags & BIT(2)) armor = ReadInt24_t();
+    if (flags & BIT(4)) armor = 0;
+    else if (flags & BIT(2)) armor = ReadInt24_t();
     else armor = ReadShort();
-    if (flags & BIT(3)) potential_damage = ReadInt24_t();
+    if (flags & BIT(5)) potential_damage = health + armor;
+    else if (flags & BIT(3)) potential_damage = ReadInt24_t();
     else potential_damage = ReadShort();
 
     return = true;
