@@ -3,6 +3,13 @@
 #define DAMAGETEXT_PRECISION_MULTIPLIER 128
 #define DAMAGETEXT_SHORT_LIMIT 256 // the smallest value that we can't send as short - 2^15 (signed short) / DAMAGETEXT_PRECISION_MULTIPLIER
 
+const int DTFLAG_SAMETEAM = BIT(0);
+const int DTFLAG_BIG_HEALTH = BIT(1);
+const int DTFLAG_BIG_ARMOR = BIT(2);
+const int DTFLAG_BIG_POTENTIAL = BIT(3);
+const int DTFLAG_NO_ARMOR = BIT(4);
+const int DTFLAG_NO_POTENTIAL = BIT(5);
+
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
@@ -115,12 +122,13 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(it) && it.enemy == attacker) ||
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(it))
         ) {
-            int flags = SAME_TEAM(hit, attacker); // BIT(0)
-            if (health >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(1);
-            if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(2);
-            if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(3);
-            if (!armor) flags |= BIT(4);
-            if (fabs((armor + health) - potential_damage) < 0.0001) flags |= BIT(5);
+            int flags = 0;
+            if (SAME_TEAM(hit, attacker)) flags |= DTFLAG_SAMETEAM;
+            if (health >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_HEALTH;
+            if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_ARMOR;
+            if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_POTENTIAL;
+            if (!armor) flags |= DTFLAG_NO_ARMOR;
+            if (fabs((armor + health) - potential_damage) < 0.0001) flags |= DTFLAG_NO_POTENTIAL;
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
@@ -134,16 +142,16 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             // we need to send a few decimal places to minimize errors when accumulating damage
             // sending them multiplied saves bandwidth compared to using WriteCoord,
             // however if the multiplied damage would be too much for (signed) short, we send an int24
-            if (health >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
+            if (flags & DTFLAG_BIG_HEALTH) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
             else WriteShort(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
-            if (armor)
+            if (!(flags & DTFLAG_NO_ARMOR))
             {
-                if (armor >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+                if (flags & DTFLAG_BIG_ARMOR) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
                 else WriteShort(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
             }
-            if (fabs((armor + health) - potential_damage) >= 0.0001)
+            if (!(flags & DTFLAG_NO_POTENTIAL))
             {
-                if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
+                if (flags & DTFLAG_BIG_POTENTIAL) WriteInt24_t(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
                 else WriteShort(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
 			}
         }
@@ -158,16 +166,16 @@ NET_HANDLE(damagetext, bool isNew)
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
     int flags = ReadByte();
-    bool friendlyfire = flags & 1;
+    bool friendlyfire = flags & DTFLAG_SAMETEAM;
 
     int health, armor, potential_damage;
-    if (flags & BIT(1)) health = ReadInt24_t();
+    if (flags & DTFLAG_BIG_HEALTH) health = ReadInt24_t();
     else health = ReadShort();
-    if (flags & BIT(4)) armor = 0;
-    else if (flags & BIT(2)) armor = ReadInt24_t();
+    if (flags & DTFLAG_NO_ARMOR) armor = 0;
+    else if (flags & DTFLAG_BIG_ARMOR) armor = ReadInt24_t();
     else armor = ReadShort();
-    if (flags & BIT(5)) potential_damage = health + armor;
-    else if (flags & BIT(3)) potential_damage = ReadInt24_t();
+    if (flags & DTFLAG_NO_POTENTIAL) potential_damage = health + armor;
+    else if (flags & DTFLAG_BIG_POTENTIAL) potential_damage = ReadInt24_t();
     else potential_damage = ReadShort();
 
     return = true;
