@@ -15,7 +15,7 @@ REGISTER_MUTATOR(damagetext, true);
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}, {potential_health}");
+AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}: full damage not capped to target's health, {potential_health}: health damage not capped to target's health, {health(ph)}: shows potential_health too if different from health, {total(p)}: shows potential too if different from total");
 STATIC_INIT(DamageText_LegacyFormat) {
     if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
 }
@@ -74,6 +74,17 @@ CLASS(DamageText, Object)
             s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
             s = strreplace("{potential}",  sprintf("%d", rint(this.m_potential_damage/DAMAGETEXT_PRECISION_MULTIPLIER)), s);
             s = strreplace("{potential_health}",  sprintf("%d", rint((this.m_potential_damage - this.m_armordamage)/DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+
+            s = strreplace("{health(ph)}", (
+				(rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER) == rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER))
+				? sprintf("%d",      rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER))
+				: sprintf("%d (%d)", rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER), rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER))
+            	), s);
+            s = strreplace("{total(p)}", (
+				(rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER) == rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER))
+				? sprintf("%d",      rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER))
+				: sprintf("%d (%d)", rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER), rint(this.m_potential_damage/DAMAGETEXT_PRECISION_MULTIPLIER))
+            	), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
