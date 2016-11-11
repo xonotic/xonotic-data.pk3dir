@@ -255,24 +255,13 @@ MUTATOR_HOOKFUNCTION(nix, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	switch (item.items)
+	if(item.itemdef.instanceOfHealth || item.itemdef.instanceOfArmor)
 	{
-		case ITEM_HealthSmall.m_itemid:
-		case ITEM_HealthMedium.m_itemid:
-		case ITEM_HealthLarge.m_itemid:
-		case ITEM_HealthMega.m_itemid:
-		case ITEM_ArmorSmall.m_itemid:
-		case ITEM_ArmorMedium.m_itemid:
-		case ITEM_ArmorLarge.m_itemid:
-		case ITEM_ArmorMega.m_itemid:
-			if (autocvar_g_nix_with_healtharmor)
-				return false;
-			break;
-		case ITEM_Strength.m_itemid:
-		case ITEM_Shield.m_itemid:
-			if (autocvar_g_nix_with_powerups)
-				return false;
-			break;
+		return !autocvar_g_nix_with_healtharmor;
+	}
+	else if(item.itemdef.instanceOfPowerup)
+	{
+		return !autocvar_g_nix_with_powerups;
 	}
 
 	return true; // delete all other items

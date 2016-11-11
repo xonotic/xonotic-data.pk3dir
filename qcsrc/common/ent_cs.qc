@@ -175,33 +175,26 @@ MACRO_END
 	{
 		int n = ReadByte();
 		entity e = entcs_receiver(n);
-		#define X(e) { \
-			setthink(e, entcs_think); \
-			entcs_receiver(n, e); \
-		}
 		if (e == NULL)
 		{
 			if (!this)
-			{
 				// initial = temp
 				e = new_pure(entcs_receiver);
-				X(e);
-			}
 			else
-			{
 				// initial = linked
 				e = this;
-				X(e);
-			}
+			setthink(e, entcs_think);
+			entcs_receiver(n, e);
 		}
 		else if (e != this && this)
 		{
 			// upgrade to linked
 			delete(e);
 			e = this;
-			X(e);
+			setthink(e, entcs_think);
+			entcs_receiver(n, e);
 		}
-		#undef X
+
 		InterpolateOrigin_Undo(e);
 		e.sv_entnum = n;
 		int sf = ReadShort();
