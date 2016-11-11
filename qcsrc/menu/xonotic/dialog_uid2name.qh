@@ -3,7 +3,7 @@
 #include "rootdialog.qh"
 CLASS(XonoticUid2NameDialog, XonoticRootDialog)
 	METHOD(XonoticUid2NameDialog, fill, void(entity));
-	ATTRIB(XonoticUid2NameDialog, title, string);
+	ATTRIB(XonoticUid2NameDialog, title, string, "");
 	ATTRIB(XonoticUid2NameDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticUid2NameDialog, intendedWidth, float, 0.5);
 	ATTRIB(XonoticUid2NameDialog, rows, float, 4);

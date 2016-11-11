@@ -3,12 +3,19 @@
 #define DAMAGETEXT_PRECISION_MULTIPLIER 128
 #define DAMAGETEXT_SHORT_LIMIT 256 // the smallest value that we can't send as short - 2^15 (signed short) / DAMAGETEXT_PRECISION_MULTIPLIER
 
+const int DTFLAG_SAMETEAM = BIT(0);
+const int DTFLAG_BIG_HEALTH = BIT(1);
+const int DTFLAG_BIG_ARMOR = BIT(2);
+const int DTFLAG_BIG_POTENTIAL = BIT(3);
+const int DTFLAG_NO_ARMOR = BIT(4);
+const int DTFLAG_NO_POTENTIAL = BIT(5);
+
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
+AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}: full damage not capped to target's health, {potential_health}: health damage not capped to target's health, {health(ph)}: shows potential_health too if different from health, {total(p)}: shows potential too if different from total");
 STATIC_INIT(DamageText_LegacyFormat) {
     if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
 }
@@ -37,6 +44,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, m_friendlyfire, bool, false);
     ATTRIB(DamageText, m_damage, int, 0);
     ATTRIB(DamageText, m_armordamage, int, 0);
+    ATTRIB(DamageText, m_potential_damage, int, 0);
     ATTRIB(DamageText, m_deathtype, int, 0);
     ATTRIB(DamageText, time_prev, float, time);
 
@@ -60,28 +68,47 @@ CLASS(DamageText, Object)
                 Weapon w = DEATH_WEAPONOF(this.m_deathtype);
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
+            int health = rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int total = rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int potential = rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int potential_health = rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+
             string s = autocvar_cl_damagetext_format;
-            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{health}", sprintf("%d", health), s);
             s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{total}",  sprintf("%d", total), s);
+            s = strreplace("{potential}",  sprintf("%d", potential), s);
+            s = strreplace("{potential_health}",  sprintf("%d", potential_health), s);
+
+            s = strreplace("{health(ph)}", (
+				(health == potential_health)
+				? sprintf("%d",      health)
+				: sprintf("%d (%d)", health, potential_health)
+            	), s);
+            s = strreplace("{total(p)}", (
+				(total == potential)
+				? sprintf("%d",      total)
+				: sprintf("%d (%d)", total, potential)
+            	), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d);
 
-    void DamageText_update(DamageText this, vector _origin, int _health, int _armor, int _deathtype) {
+    void DamageText_update(DamageText this, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype) {
         this.m_damage = _health;
         this.m_armordamage = _armor;
+        this.m_potential_damage = _potential_damage;
         this.m_deathtype = _deathtype;
         setorigin(this, _origin);
         this.alpha = autocvar_cl_damagetext_alpha_start;
     }
 
-    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype, bool _friendlyfire) {
+    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype, bool _friendlyfire) {
         CONSTRUCT(DamageText);
         this.m_group = _group;
         this.m_friendlyfire = _friendlyfire;
-        DamageText_update(this, _origin, _health, _armor, _deathtype);
+        DamageText_update(this, _origin, _health, _armor, _potential_damage, _deathtype);
 		IL_PUSH(g_drawables_2d, this);
     }
 ENDCLASS(DamageText)
@@ -102,6 +129,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const float health = M_ARGV(2, float);
     const float armor = M_ARGV(3, float);
     const int deathtype = M_ARGV(5, int);
+    const float potential_damage = M_ARGV(6, float);
     const vector location = hit.origin;
     FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
         if (
@@ -110,9 +138,13 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(it) && it.enemy == attacker) ||
             (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(it))
         ) {
-            int flags = SAME_TEAM(hit, attacker); // BIT(0)
-            if (health >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(1);
-            if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= BIT(2);
+            int flags = 0;
+            if (SAME_TEAM(hit, attacker)) flags |= DTFLAG_SAMETEAM;
+            if (health >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_HEALTH;
+            if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_ARMOR;
+            if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_POTENTIAL;
+            if (!armor) flags |= DTFLAG_NO_ARMOR;
+            if (fabs((armor + health) - potential_damage) < 0.0001) flags |= DTFLAG_NO_POTENTIAL;
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
@@ -126,10 +158,18 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             // we need to send a few decimal places to minimize errors when accumulating damage
             // sending them multiplied saves bandwidth compared to using WriteCoord,
             // however if the multiplied damage would be too much for (signed) short, we send an int24
-            if (health >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
+            if (flags & DTFLAG_BIG_HEALTH) WriteInt24_t(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
             else WriteShort(MSG_ONE, health * DAMAGETEXT_PRECISION_MULTIPLIER);
-            if (armor >= DAMAGETEXT_SHORT_LIMIT) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
-            else WriteShort(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+            if (!(flags & DTFLAG_NO_ARMOR))
+            {
+                if (flags & DTFLAG_BIG_ARMOR) WriteInt24_t(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+                else WriteShort(MSG_ONE, armor * DAMAGETEXT_PRECISION_MULTIPLIER);
+            }
+            if (!(flags & DTFLAG_NO_POTENTIAL))
+            {
+                if (flags & DTFLAG_BIG_POTENTIAL) WriteInt24_t(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
+                else WriteShort(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
+			}
         }
     ));
 }
@@ -142,13 +182,17 @@ NET_HANDLE(damagetext, bool isNew)
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
     int flags = ReadByte();
-    bool friendlyfire = flags & 1;
+    bool friendlyfire = flags & DTFLAG_SAMETEAM;
 
-    int health, armor;
-    if (flags & BIT(1)) health = ReadInt24_t();
+    int health, armor, potential_damage;
+    if (flags & DTFLAG_BIG_HEALTH) health = ReadInt24_t();
     else health = ReadShort();
-    if (flags & BIT(2)) armor = ReadInt24_t();
+    if (flags & DTFLAG_NO_ARMOR) armor = 0;
+    else if (flags & DTFLAG_BIG_ARMOR) armor = ReadInt24_t();
     else armor = ReadShort();
+    if (flags & DTFLAG_NO_POTENTIAL) potential_damage = health + armor;
+    else if (flags & DTFLAG_BIG_POTENTIAL) potential_damage = ReadInt24_t();
+    else potential_damage = ReadShort();
 
     return = true;
     if (autocvar_cl_damagetext) {
@@ -158,12 +202,12 @@ NET_HANDLE(damagetext, bool isNew)
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
                 if (e.instanceOfDamageText && e.m_group == group && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
-                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, deathtype);
+                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
                     return;
                 }
             }
         }
-        make_impure(NEW(DamageText, group, location, health, armor, deathtype, friendlyfire));
+        make_impure(NEW(DamageText, group, location, health, armor, potential_damage, deathtype, friendlyfire));
     }
 }
 #endif
@@ -207,6 +251,7 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
                 setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
         this.TR(this);
+        // friendly fire
             this.TD(this, 1, 3, e = makeXonoticCheckBox(0, "cl_damagetext_friendlyfire", _("Draw damage numbers for friendly fire")));
                 setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
