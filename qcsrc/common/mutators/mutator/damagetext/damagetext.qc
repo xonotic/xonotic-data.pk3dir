@@ -68,22 +68,27 @@ CLASS(DamageText, Object)
                 Weapon w = DEATH_WEAPONOF(this.m_deathtype);
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
+            int health = rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int total = rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int potential = rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int potential_health = rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+
             string s = autocvar_cl_damagetext_format;
-            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{health}", sprintf("%d", health), s);
             s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{potential}",  sprintf("%d", rint(this.m_potential_damage/DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{potential_health}",  sprintf("%d", rint((this.m_potential_damage - this.m_armordamage)/DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{total}",  sprintf("%d", total), s);
+            s = strreplace("{potential}",  sprintf("%d", potential), s);
+            s = strreplace("{potential_health}",  sprintf("%d", potential_health), s);
 
             s = strreplace("{health(ph)}", (
-				(rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER) == rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER))
-				? sprintf("%d",      rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER))
-				: sprintf("%d (%d)", rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER), rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER))
+				(health == potential_health)
+				? sprintf("%d",      health)
+				: sprintf("%d (%d)", health, potential_health)
             	), s);
             s = strreplace("{total(p)}", (
-				(rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER) == rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER))
-				? sprintf("%d",      rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER))
-				: sprintf("%d (%d)", rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER), rint(this.m_potential_damage/DAMAGETEXT_PRECISION_MULTIPLIER))
+				(total == potential)
+				? sprintf("%d",      total)
+				: sprintf("%d (%d)", total, potential)
             	), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
