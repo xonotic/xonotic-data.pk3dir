@@ -29,6 +29,10 @@ void havocbot_ai(entity this)
 	if(bot_execute_commands(this))
 		return;
 
+	if(this.goalcurrent)
+	if(wasfreed(this.goalcurrent))
+		navigation_poproute(this);
+
 	if (bot_strategytoken == this)
 	if (!bot_strategytoken_taken)
 	{
