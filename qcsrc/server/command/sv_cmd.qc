@@ -226,7 +226,7 @@ void GameCommand_anticheat(float request, float argc)
 
 			if (accepted > 0)
 			{
-				anticheat_report(client);
+				anticheat_report_to_eventlog(client);
 				return;
 			}
 			else
