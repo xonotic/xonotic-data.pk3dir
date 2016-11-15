@@ -172,53 +172,51 @@ string anticheat_display(float f, float t, float tmin, float mi, float ma)
 	return strcat(s, ":-");
 }
 
-#define ANTICHEATS(this, f) \
-	f(this, "speedhack", MEAN_EVALUATE(CS(this), anticheat_speedhack), 240, 0, 9999); /* Actually this one seems broken. */ \
-	f(this, "speedhack_m1", MEAN_EVALUATE(CS(this), anticheat_speedhack_m1), 240, 1.01, 1.25); \
-	f(this, "speedhack_m2", MEAN_EVALUATE(CS(this), anticheat_speedhack_m2), 240, 1.01, 1.25); \
-	f(this, "speedhack_m3", MEAN_EVALUATE(CS(this), anticheat_speedhack_m3), 240, 1.01, 1.25); \
-	f(this, "speedhack_m4", MEAN_EVALUATE(CS(this), anticheat_speedhack_m4), 240, 1.01, 1.25); \
-	f(this, "speedhack_m5", MEAN_EVALUATE(CS(this), anticheat_speedhack_m5), 240, 1.01, 1.25); \
-	f(this, "div0_strafebot_old", MEAN_EVALUATE(CS(this), anticheat_div0_strafebot_old), 120, 0.15, 0.4); \
-	f(this, "div0_strafebot_new", MEAN_EVALUATE(CS(this), anticheat_div0_strafebot_new), 120, 0.25, 0.8); \
-	f(this, "div0_evade", MEAN_EVALUATE(CS(this), anticheat_div0_evade), 120, 0.2, 0.5); \
-	f(this, "idle_snapaim", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_signal) - MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_noise), 120, 0, 9999); \
-	f(this, "idle_snapaim_signal", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_signal), 120, 0, 9999); \
-	f(this, "idle_snapaim_noise", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_noise), 120, 0, 9999); \
-	f(this, "idle_snapaim_m2", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m2), 120, 0, 9999); \
-	f(this, "idle_snapaim_m3", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m3), 120, 0, 9999); \
-	f(this, "idle_snapaim_m4", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m4), 120, 0, 9999); \
-	f(this, "idle_snapaim_m7", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m7), 120, 0, 9999); \
-	f(this, "idle_snapaim_m10", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m10), 120, 0, 9999)
-
-void anticheat_report_one_to_eventlog(entity this, string name, float f, float tmin, float mi, float ma) {
-	GameLogEcho(strcat(":anticheat:", name, ":", anticheat_display(f, servertime - CS(this).anticheat_jointime, tmin, mi, ma)));
-}
+#define ANTICHEATS(ANTICHEAT) \
+	ANTICHEAT("speedhack", MEAN_EVALUATE(CS(this), anticheat_speedhack), 240, 0, 9999); /* Actually this one seems broken. */ \
+	ANTICHEAT("speedhack_m1", MEAN_EVALUATE(CS(this), anticheat_speedhack_m1), 240, 1.01, 1.25); \
+	ANTICHEAT("speedhack_m2", MEAN_EVALUATE(CS(this), anticheat_speedhack_m2), 240, 1.01, 1.25); \
+	ANTICHEAT("speedhack_m3", MEAN_EVALUATE(CS(this), anticheat_speedhack_m3), 240, 1.01, 1.25); \
+	ANTICHEAT("speedhack_m4", MEAN_EVALUATE(CS(this), anticheat_speedhack_m4), 240, 1.01, 1.25); \
+	ANTICHEAT("speedhack_m5", MEAN_EVALUATE(CS(this), anticheat_speedhack_m5), 240, 1.01, 1.25); \
+	ANTICHEAT("div0_strafebot_old", MEAN_EVALUATE(CS(this), anticheat_div0_strafebot_old), 120, 0.15, 0.4); \
+	ANTICHEAT("div0_strafebot_new", MEAN_EVALUATE(CS(this), anticheat_div0_strafebot_new), 120, 0.25, 0.8); \
+	ANTICHEAT("div0_evade", MEAN_EVALUATE(CS(this), anticheat_div0_evade), 120, 0.2, 0.5); \
+	ANTICHEAT("idle_snapaim", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_signal) - MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_noise), 120, 0, 9999); \
+	ANTICHEAT("idle_snapaim_signal", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_signal), 120, 0, 9999); \
+	ANTICHEAT("idle_snapaim_noise", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_noise), 120, 0, 9999); \
+	ANTICHEAT("idle_snapaim_m2", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m2), 120, 0, 9999); \
+	ANTICHEAT("idle_snapaim_m3", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m3), 120, 0, 9999); \
+	ANTICHEAT("idle_snapaim_m4", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m4), 120, 0, 9999); \
+	ANTICHEAT("idle_snapaim_m7", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m7), 120, 0, 9999); \
+	ANTICHEAT("idle_snapaim_m10", MEAN_EVALUATE(CS(this), anticheat_idle_snapaim_m10), 120, 0, 9999)
 
 void anticheat_report_to_eventlog(entity this) {
 	if(!autocvar_sv_eventlog)
 		return;
 	GameLogEcho(strcat(":anticheat:_time:", ftos(this.playerid), ":", ftos(servertime - CS(this).anticheat_jointime)));
-	ANTICHEATS(this, anticheat_report_one_to_eventlog);
-}
-
-void anticheat_report_one_to_playerstats(entity this, string name, float f, float tmin, float mi, float ma) {
-	PS_GR_P_ADDVAL(this, strcat(PLAYERSTATS_ANTICHEAT, name), f);
+#define ANTICHEAT_REPORT_ONE(name, f, tmin, mi, ma) \
+	GameLogEcho(strcat(":anticheat:", name, ":", anticheat_display(f, servertime - CS(this).anticheat_jointime, tmin, mi, ma)))
+	ANTICHEATS(ANTICHEAT_REPORT_ONE);
+#undef ANTICHEAT_REPORT_ONE
 }
 
 void anticheat_report_to_playerstats(entity this) {
 	PS_GR_P_ADDVAL(this, strcat(PLAYERSTATS_ANTICHEAT, "_time"), servertime - CS(this).anticheat_jointime);
-	ANTICHEATS(this, anticheat_report_one_to_playerstats);
+#define ANTICHEAT_REPORT_ONE(name, f, tmin, mi, ma) \
+	PS_GR_P_ADDVAL(this, strcat(PLAYERSTATS_ANTICHEAT, name), f)
+	ANTICHEATS(ANTICHEAT_REPORT_ONE);
+#undef ANTICHEAT_REPORT_ONE
 }
 
-#define ANTICHEAT_REGISTER_ONE_TO_PLAYERSTATS(unused_this, name, unused_f, unused_tmin, unused_mi, unused_ma) \
-	PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_ANTICHEAT, name))
 void anticheat_register_to_playerstats() {
 	PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_ANTICHEAT, "_time"));
-	ANTICHEATS(world, ANTICHEAT_REGISTER_ONE_TO_PLAYERSTATS);
+#define ANTICHEAT_REGISTER_ONE(name, unused_f, unused_tmin, unused_mi, unused_ma) \
+	PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_ANTICHEAT, name))
+	ANTICHEATS(ANTICHEAT_REGISTER_ONE);
+#undef ANTICHEAT_REGISTER_ONE
 }
 
-#undef ANTICHEAT_REGISTER_ONE_TO_PLAYERSTATS
 #undef ANTICHEATS
 
 void anticheat_startframe()
