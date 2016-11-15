@@ -109,13 +109,13 @@ bool check_close_to_ground(entity this, float threshold)
 	return IS_ONGROUND(this) ? true : false;
 }
 
-float PM_dodging_checkpressedkeys(entity this)
+bool PM_dodging_checkpressedkeys(entity this)
 {
 	if(!PHYS_DODGING)
 		return false;
 
-	float frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
-	float frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
+	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
+	bool frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
@@ -138,7 +138,9 @@ float PM_dodging_checkpressedkeys(entity this)
 		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
 				tap_direction_##RESULT;													\
 				if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap)	\
-					dodge_detected = true;													\
+					dodge_detected = true;												\
+				if(PHYS_INPUT_BUTTON_DODGE(this))										\
+					dodge_detected = true;												\
 				this.last_##BTN##_KEY_time = time;										\
 		}
  	X(x < 0, BACKWARD,	x--);
