@@ -826,7 +826,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if(player.buffs & BUFF_MAGNET.m_itemid)
 	{
 		vector pickup_size;
-		IL_EACH(g_items, it.classname != "item_flag_team" && it.classname != "item_kh_key",
+		IL_EACH(g_items, it.itemdef,
 		{
 			if(it.buffs)
 				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;

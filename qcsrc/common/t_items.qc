@@ -838,7 +838,7 @@ LABEL(pickup)
 			RandomSelection_Init();
 			IL_EACH(g_items, it.team == this.team,
 			{
-				if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+				if(it.itemdef) // is a registered item
 				{
 					Item_Show(it, -1);
 					RandomSelection_AddEnt(it, it.cnt, 0);
@@ -882,7 +882,7 @@ void Item_FindTeam(entity this)
 		RandomSelection_Init();
 		IL_EACH(g_items, it.team == this.team,
 		{
-			if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+			if(it.itemdef) // is a registered item
 				RandomSelection_AddEnt(it, it.cnt, 0);
 		});
 
@@ -892,7 +892,7 @@ void Item_FindTeam(entity this)
 
 		IL_EACH(g_items, it.team == this.team,
 		{
-			if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+			if(it.itemdef) // is a registered item
 			{
 				if(it != e)
 				{
