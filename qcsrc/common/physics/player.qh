@@ -121,12 +121,19 @@ STATIC_INIT(PHYS_INPUT_BUTTON_HOOK)
 #define PHYS_INPUT_BUTTON_PRYDON(s)         PHYS_INPUT_BUTTON_BUTTON_PRYDON(s)
 #define PHYS_INPUT_BUTTON_ZOOMSCRIPT(s)     PHYS_INPUT_BUTTON_BUTTON9(s)
 #define PHYS_INPUT_BUTTON_JETPACK(s)        PHYS_INPUT_BUTTON_BUTTON10(s)
+#define PHYS_INPUT_BUTTON_DODGE(s)			PHYS_INPUT_BUTTON_BUTTON11(s)
 
 #ifdef CSQC
 STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 {
 	localcmd("alias +jetpack +button10\n");
     localcmd("alias -jetpack -button10\n");
+}
+
+STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
+{
+    localcmd("alias +dodge +button11\n");
+    localcmd("alias -dodge -button11\n");
 }
 #endif
 

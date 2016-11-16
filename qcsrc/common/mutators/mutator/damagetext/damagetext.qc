@@ -15,7 +15,8 @@ REGISTER_MUTATOR(damagetext, true);
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}, {potential_health}");
+AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}: full damage not capped to target's health, {potential_health}: health damage not capped to target's health");
+AUTOCVAR_SAVE(cl_damagetext_format_verbose,         bool,   false,      "{health} shows {potential_health} too when they differ; {total} shows {potential} too when they differ");
 STATIC_INIT(DamageText_LegacyFormat) {
     if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
 }
@@ -68,12 +69,26 @@ CLASS(DamageText, Object)
                 Weapon w = DEATH_WEAPONOF(this.m_deathtype);
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
+            int health = rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int total = rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int potential = rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int potential_health = rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+
             string s = autocvar_cl_damagetext_format;
-            s = strreplace("{health}", sprintf("%d", rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
             s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{total}",  sprintf("%d", rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{potential}",  sprintf("%d", rint(this.m_potential_damage/DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{potential_health}",  sprintf("%d", rint((this.m_potential_damage - this.m_armordamage)/DAMAGETEXT_PRECISION_MULTIPLIER)), s);
+            s = strreplace("{potential}",  sprintf("%d", potential), s);
+            s = strreplace("{potential_health}",  sprintf("%d", potential_health), s);
+
+            s = strreplace("{health}", (
+				(health == potential_health || !autocvar_cl_damagetext_format_verbose)
+				? sprintf("%d",      health)
+				: sprintf("%d (%d)", health, potential_health)
+            	), s);
+            s = strreplace("{total}", (
+				(total == potential || !autocvar_cl_damagetext_format_verbose)
+				? sprintf("%d",      total)
+				: sprintf("%d (%d)", total, potential)
+            	), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }

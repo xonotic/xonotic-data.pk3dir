@@ -69,7 +69,11 @@ entity spawnmonster (entity e, string monster, int monster_id, entity spawnedby,
 	}
 
 	// Monster_Spawn checks if monster is valid
-	Monster_Spawn(e, false, monster_id);
+	if(!Monster_Spawn(e, false, monster_id))
+	{
+		delete(e);
+		return NULL; // remove even if told not to, as we didn't spawn any kind of monster
+	}
 
 	return e;
 }

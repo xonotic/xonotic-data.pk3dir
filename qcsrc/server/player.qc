@@ -324,6 +324,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
 	}
 
+	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+		damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
+
 	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
 		// tuba causes blood to come out of the ears
@@ -358,7 +361,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-
 	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
@@ -385,13 +387,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		this.pushltime = 0;
 		this.istypefrag = 0;
-	}
-
-	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
-	{
-		vector v = healtharmor_applydamage(this.armorvalue, max(0, autocvar_g_spawnshield_blockdamage), deathtype, damage);
-		take = v.x;
-		save = v.y;
 	}
 
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
