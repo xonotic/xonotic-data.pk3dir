@@ -80,6 +80,7 @@
 #include <menu/xonotic/dialog_singleplayer_winner.qc>
 #include <menu/xonotic/dialog_teamselect.qc>
 #include <menu/xonotic/dialog_uid2name.qc>
+#include <menu/xonotic/dialog_welcome.qc>
 #include <menu/xonotic/gametypelist.qc>
 #include <menu/xonotic/hudskinlist.qc>
 #include <menu/xonotic/image.qc>
@@ -110,6 +111,7 @@
 #include <menu/xonotic/statslist.qc>
 #include <menu/xonotic/tab.qc>
 #include <menu/xonotic/tabcontroller.qc>
+#include <menu/xonotic/textbox.qc>
 #include <menu/xonotic/textlabel.qc>
 #include <menu/xonotic/textslider.qc>
 #include <menu/xonotic/util.qc>

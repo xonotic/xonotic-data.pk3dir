@@ -812,6 +812,35 @@ void DecodeLevelParms(entity this)
 
 	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
+ 
+void serverinfo_welcomemessage_send(entity this)
+{
+	msg_entity = this;
+	WriteHeader(MSG_ONE, TE_CSQC_SERVERINFO);
+	WriteString(MSG_ONE, "128.03.192.999"); // FIXME: send the real server ip
+	WriteString(MSG_ONE, autocvar_hostname);
+	WriteString(MSG_ONE, getwelcomemessage(this));
+	string pic = strcat("128.03.192.999", "/banner");
+	if(!ImageExists(pic))
+	{
+		print("Warning: image %s doesn't exist!\n", pic);
+		pic = "";
+	}
+	WriteString(MSG_ONE, pic);
+}
+
+void serverinfo_pic_send(entity this)
+{
+	string pic = strcat("128.03.192.999", "/banner");
+	if(!ImageExists(pic))
+	{
+		print("Cannot send %s, file doesn't exist!\n", pic);
+		return;
+	}
+	msg_entity = this;
+	WriteHeader(MSG_ONE, TE_CSQC_SERVERINFO_PIC);
+	WritePicture(MSG_ONE, pic, 3072);
+}
 
 /*
 =============
@@ -1212,7 +1241,10 @@ void ClientConnect(entity this)
 	this.model_randomizer = random();
 
 	if (IS_REAL_CLIENT(this))
+	{
+		serverinfo_welcomemessage_send(this);
 		sv_notice_join(this);
+	}
 
 	// update physics stats (players can spawn before physics runs)
 	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));

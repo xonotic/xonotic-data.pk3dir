@@ -133,6 +133,26 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 		}
 	}
 }
+ 
+void ClientCommand_getserverpic(entity caller, float request) // internal command, used only by code
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			serverinfo_pic_send(caller);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd getserverpic\n");
+			sprint(caller, "  No arguments required.\n");
+			return;
+		}
+	}
+}
 
 void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // internal command, used only by code
 {
@@ -635,6 +655,7 @@ void ClientCommand_(entity caller, float request)
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
+	CLIENT_COMMAND("getserverpic", ClientCommand_getserverpic(ent, request), "Retrieve server banner from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
@@ -721,6 +742,7 @@ void SV_ParseClientCommand(entity this, string command)
 		// exempt commands which are not subject to floodcheck
 		case "begin": break;                               // handled by engine in host_cmd.c
 		case "download": break;                            // handled by engine in cl_parse.c
+		case "getserverpic": break; // handled by server in this file
 		case "mv_getpicture": break;                       // handled by server in this file
 		case "pause": break;                               // handled by engine in host_cmd.c
 		case "prespawn": break;                            // handled by engine in host_cmd.c

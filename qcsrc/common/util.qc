@@ -37,6 +37,16 @@ vector real_origin(entity ent)
 	return v;
 }
 #endif
+ 
+bool ImageExists(string img)
+{
+	if(fexists(strcat(img, ".tga"))) return true;
+	if(fexists(strcat(img, ".png"))) return true;
+	if(fexists(strcat(img, ".jpg"))) return true;
+	if(fexists(strcat(img, ".pcx"))) return true;
+
+	return false;
+}
 
 string wordwrap_buffer;
 

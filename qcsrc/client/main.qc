@@ -1226,6 +1226,42 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
+string welcomedialog_args;
+NET_HANDLE(TE_CSQC_SERVERINFO, bool isNew)
+{
+	if(welcomedialog_args)
+		strunzone(welcomedialog_args);
+	welcomedialog_args = strcat("name \"", ReadString(), "\"");
+	welcomedialog_args = strcat(welcomedialog_args, " ip \"", ReadString(), "\"");
+	welcomedialog_args = strcat(welcomedialog_args, " motd \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())), "\"");
+	string pic = ReadString();
+	if(pic == "" || PreviewExists(pic) )
+	{
+		if(pic != "")
+			welcomedialog_args = strcat(welcomedialog_args, " pic \"", pic, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		welcomedialog_args = string_null;
+	} else {
+		welcomedialog_args = strzone(welcomedialog_args);
+		print(_("Requesting server banner...\n"));
+		localcmd("\ncmd getserverpic\n");
+	}
+	return true;
+}
+
+NET_HANDLE(TE_CSQC_SERVERINFO_PIC, bool isNew)
+{
+	if(welcomedialog_args)
+	{
+		localcmd("\nmenu_cmd directmenu Welcome ", strcat(welcomedialog_args, " pic \"", ReadPicture(), "\""), "\n");
+		strunzone(welcomedialog_args);
+		welcomedialog_args = string_null;
+	}
+	else // just get the image, we don't want to display the welcome dialog
+		ReadPicture();
+	return true;
+}
+
 string _getcommandkey(string cmd_name, string command, bool forcename)
 {
 	string keys;

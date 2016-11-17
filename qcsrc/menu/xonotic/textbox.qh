@@ -1,0 +1,30 @@
+#pragma once
+
+#include "../item/listbox.qh"
+CLASS(XonoticTextBox, ListBox)
+	METHOD(XonoticTextBox, configureXonoticTextBox, void(entity));
+	ATTRIB(XonoticTextBox, fontSize, float, SKINFONTSIZE_NORMAL);
+	ATTRIB(XonoticTextBox, scrollbarWidth, float, SKINWIDTH_SCROLLBAR);
+	ATTRIB(XonoticTextBox, src, string, SKINGFX_SCROLLBAR);
+	ATTRIB(XonoticTextBox, tolerance, vector, SKINTOLERANCE_SLIDER);
+	ATTRIB(XonoticTextBox, rowsPerItem, float, 1);
+	METHOD(XonoticTextBox, resizeNotify, void(entity, vector, vector, vector, vector));
+	ATTRIB(XonoticTextBox, color, vector, SKINCOLOR_SCROLLBAR_N);
+	ATTRIB(XonoticTextBox, colorF, vector, SKINCOLOR_SCROLLBAR_F);
+	ATTRIB(XonoticTextBox, color2, vector, SKINCOLOR_SCROLLBAR_S);
+	ATTRIB(XonoticTextBox, colorC, vector, SKINCOLOR_SCROLLBAR_C);
+	ATTRIB(XonoticTextBox, colorBG, vector, SKINCOLOR_LISTBOX_BACKGROUND);
+	ATTRIB(XonoticTextBox, alphaBG, float, SKINALPHA_LISTBOX_BACKGROUND);
+
+	ATTRIB(XonoticTextBox, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticTextBox, realUpperMargin, float, 0);
+
+	METHOD(XonoticTextBox, setSelected, void(entity, float));
+	METHOD(XonoticTextBox, destroy, void(entity));
+	ATTRIB(XonoticTextBox, textbuf, int, -1);
+	ATTRIB(XonoticTextBox, textbufSize, int, 0);
+	ATTRIB(XonoticTextBox, allowColors, bool, 0);
+	METHOD(XonoticTextBox, setText, void(entity, string));
+	METHOD(XonoticTextBox, drawListBoxItem, void(entity, int, vector, bool, bool)); // item number, width/height, isSelected, isFocused
+ENDCLASS(XonoticTextBox)
+entity makeXonoticTextBox();

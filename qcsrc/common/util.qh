@@ -32,6 +32,7 @@ string ftos_decimals(float number, float decimals);
 string ftos_mindecimals(float number);
 
 bool fexists(string f);
+bool ImageExists(string img);
 
 // unzone the string, and return it as tempstring. Safe to be called on string_null
 string fstrunzone(string s);
