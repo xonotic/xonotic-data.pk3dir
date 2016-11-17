@@ -17,6 +17,7 @@ REGISTER_MUTATOR(damagetext, true);
 AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
 AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}: full damage not capped to target's health, {potential_health}: health damage not capped to target's health");
 AUTOCVAR_SAVE(cl_damagetext_format_verbose,         bool,   false,      "{health} shows {potential_health} too when they differ; {total} shows {potential} too when they differ");
+AUTOCVAR_SAVE(cl_damagetext_format_hide_redundant,  bool,   false,      "hide {armor} if 0 and potential when same as actual"); // TODO cfg
 STATIC_INIT(DamageText_LegacyFormat) {
     if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
 }
@@ -43,7 +44,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity);
     ATTRIB(DamageText, m_group, int, 0);
     ATTRIB(DamageText, m_friendlyfire, bool, false);
-    ATTRIB(DamageText, m_damage, int, 0);
+    ATTRIB(DamageText, m_healthdamage, int, 0);
     ATTRIB(DamageText, m_armordamage, int, 0);
     ATTRIB(DamageText, m_potential_damage, int, 0);
     ATTRIB(DamageText, m_deathtype, int, 0);
@@ -69,33 +70,47 @@ CLASS(DamageText, Object)
                 Weapon w = DEATH_WEAPONOF(this.m_deathtype);
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
-            int health = rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
-            int total = rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+
+            int health = rint(this.m_healthdamage / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int armor = rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER);
+            int total = rint((this.m_healthdamage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
             int potential = rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
             int potential_health = rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
 
-            string s = autocvar_cl_damagetext_format;
-            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{potential}",  sprintf("%d", potential), s);
-            s = strreplace("{potential_health}",  sprintf("%d", potential_health), s);
+            string s = autocvar_cl_damagetext_format; // TODO move to update?
+            s = strreplace("{armor}", (
+                (this.m_armordamage == 0 && autocvar_cl_damagetext_format_hide_redundant)
+                    ? ""
+                    : sprintf("%d", armor)
+                ), s);
+            s = strreplace("{potential}", (
+                (this.m_potential_damage == this.m_healthdamage + this.m_armordamage && autocvar_cl_damagetext_format_hide_redundant)
+                    ? ""
+                    : sprintf("%d", potential)
+                ), s);
+            s = strreplace("{potential_health}", (
+                (this.m_potential_damage - this.m_armordamage == this.m_healthdamage && autocvar_cl_damagetext_format_hide_redundant)
+                    ? ""
+                    : sprintf("%d", potential_health)
+                ), s);
 
             s = strreplace("{health}", (
-				(health == potential_health || !autocvar_cl_damagetext_format_verbose)
-				? sprintf("%d",      health)
-				: sprintf("%d (%d)", health, potential_health)
-            	), s);
+                (health == potential_health || !autocvar_cl_damagetext_format_verbose)
+                    ? sprintf("%d",      health)
+                    : sprintf("%d (%d)", health, potential_health)
+                ), s);
             s = strreplace("{total}", (
-				(total == potential || !autocvar_cl_damagetext_format_verbose)
-				? sprintf("%d",      total)
-				: sprintf("%d (%d)", total, potential)
-            	), s);
+                (total == potential || !autocvar_cl_damagetext_format_verbose)
+                    ? sprintf("%d",      total)
+                    : sprintf("%d (%d)", total, potential)
+                ), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d);
 
     void DamageText_update(DamageText this, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype) {
-        this.m_damage = _health;
+        this.m_healthdamage = _health;
         this.m_armordamage = _armor;
         this.m_potential_damage = _potential_damage;
         this.m_deathtype = _deathtype;
@@ -201,7 +216,7 @@ NET_HANDLE(damagetext, bool isNew)
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
                 if (e.instanceOfDamageText && e.m_group == group && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
-                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
+                    DamageText_update(e, location, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
                     return;
                 }
             }
