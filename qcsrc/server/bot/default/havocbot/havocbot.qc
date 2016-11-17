@@ -864,9 +864,6 @@ entity havocbot_gettarget(entity this, bool secondary)
 
 void havocbot_chooseenemy(entity this)
 {
-	entity head, best, head2;
-	float rating, bestrating, hf;
-	vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
 	{
 		this.enemy = NULL;
@@ -905,13 +902,12 @@ void havocbot_chooseenemy(entity this)
 	if (time < this.havocbot_chooseenemy_finished)
 		return;
 	this.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
-	eye = this.origin + this.view_ofs;
-	best = NULL;
-	bestrating = 100000000;
-	head = head2 = findchainfloat(bot_attack, true);
+	vector eye = this.origin + this.view_ofs;
+	entity best = NULL;
+	float bestrating = 100000000;
 
 	// Backup hit flags
-	hf = this.dphitcontentsmask;
+	int hf = this.dphitcontentsmask;
 
 	// Search for enemies, if no enemy can be seen directly try to look through transparent objects
 
@@ -924,42 +920,38 @@ void havocbot_chooseenemy(entity this)
 	{
 		scan_secondary_targets = false;
 LABEL(scan_targets)
-		for( ; head; head = head.chain)
+		IL_EACH(g_bot_targets, it.bot_attack,
 		{
 			if(!scan_secondary_targets)
 			{
-				if(head.classname == "misc_breakablemodel")
+				if(it.classname == "misc_breakablemodel")
 				{
 					have_secondary_targets = true;
 					continue;
 				}
 			}
-			else
-			{
-				if(head.classname != "misc_breakablemodel")
-					continue;
-			}
+			else if(it.classname != "misc_breakablemodel")
+				continue;
 
-			v = (head.absmin + head.absmax) * 0.5;
-			rating = vlen(v - eye);
-			if (rating<autocvar_bot_ai_enemydetectionradius)
+			vector v = (it.absmin + it.absmax) * 0.5;
+			float rating = vlen2(v - eye);
+			if (vdist(v - eye, <, autocvar_bot_ai_enemydetectionradius))
 			if (bestrating > rating)
-			if (bot_shouldattack(this, head))
+			if (bot_shouldattack(this, it))
 			{
 				traceline(eye, v, true, this);
-				if (trace_ent == head || trace_fraction >= 1)
+				if (trace_ent == it || trace_fraction >= 1)
 				{
-					best = head;
+					best = it;
 					bestrating = rating;
 				}
 			}
-		}
+		});
 
 		if(!best && have_secondary_targets && !scan_secondary_targets)
 		{
 			scan_secondary_targets = true;
 			// restart the loop
-			head = head2;
 			bestrating = 100000000;
 			goto scan_targets;
 		}
@@ -974,7 +966,6 @@ LABEL(scan_targets)
 		// Set flags to see through transparent objects
 		this.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
-		head = head2;
 		scan_transparent = true;
 	}
 
