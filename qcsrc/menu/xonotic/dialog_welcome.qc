@@ -93,9 +93,10 @@ void XonoticWelcomeDialog_fill(entity me)
 		me.TD(me, me.rows - 4 - 1, me.columns, me.serverinfo_MOTD_ent = makeXonoticTextBox());
 			me.serverinfo_MOTD_ent.allowColors = 1;
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns / 2, e = makeXonoticCommandButton(_("Disconnect"), '0 0 0', "disconnect", COMMANDBUTTON_CLOSE));
-		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("OK"), '0 0 0'));
+		me.TD(me, 1, me.columns / 3, e = makeXonoticCommandButton(_("Disconnect"), '0 0 0', "disconnect", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, me.columns / 3, e = makeXonoticCommandButton(_("Join the game"), '0 0 0', "join", COMMANDBUTTON_CLOSE));
+			e.preferredFocusPriority = 1;
+		me.TD(me, 1, me.columns / 3, e = makeXonoticButton(_("Spectate"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
-			e.preferredFocusPriority = 1;
 }
