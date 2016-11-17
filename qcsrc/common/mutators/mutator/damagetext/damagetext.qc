@@ -117,6 +117,7 @@ CLASS(DamageText, Object)
                 ? sprintf("%d",      total)
                 : sprintf("%d (%d)", total, potential)
             ), s);
+        if (this.text) strunzone(this.text);
         this.text = strzone(s);
     }
 
@@ -129,7 +130,7 @@ CLASS(DamageText, Object)
     }
 
     DESTRUCTOR(DamageText) {
-        strunzone(this.text);
+        if (this.text) strunzone(this.text);
     }
 ENDCLASS(DamageText)
 #endif
