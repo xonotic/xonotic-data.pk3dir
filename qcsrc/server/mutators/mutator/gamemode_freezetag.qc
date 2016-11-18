@@ -3,7 +3,7 @@
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
-int autocvar_g_freezetag_teams;
+//int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
 
@@ -573,7 +573,7 @@ void freezetag_Initialize()
 {
 	freezetag_teams = autocvar_g_freezetag_teams_override;
 	if(freezetag_teams < 2)
-		freezetag_teams = autocvar_g_freezetag_teams;
+		freezetag_teams = cvar("g_freezetag_teams"); // read the cvar directly as it gets written earlier in the same frame
 	freezetag_teams = bound(2, freezetag_teams, 4);
 
 	int teams = 0;

@@ -17,7 +17,7 @@ int autocvar_g_balance_keyhunt_score_destroyed_ownfactor;
 int autocvar_g_balance_keyhunt_score_push;
 float autocvar_g_balance_keyhunt_throwvelocity;
 
-int autocvar_g_keyhunt_teams;
+//int autocvar_g_keyhunt_teams;
 int autocvar_g_keyhunt_teams_override;
 
 // #define KH_PLAYER_USE_ATTACHMENT
@@ -992,7 +992,7 @@ void kh_Initialize()  // sets up th KH environment
 	// setup variables
 	kh_teams = autocvar_g_keyhunt_teams_override;
 	if(kh_teams < 2)
-		kh_teams = autocvar_g_keyhunt_teams;
+		kh_teams = cvar("g_keyhunt_teams"); // read the cvar directly as it gets written earlier in the same frame
 	kh_teams = bound(2, kh_teams, 4);
 
 	int teams = 0;
