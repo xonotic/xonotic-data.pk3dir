@@ -1,5 +1,6 @@
 #include "round_handler.qh"
 
+#include "campaign.qh"
 #include "command/vote.qh"
 #include "../common/util.qh"
 
@@ -28,7 +29,7 @@ void round_handler_Think(entity this)
 
 	if (this.cnt > 0)  // countdown running
 	{
-		if (this.canRoundStart())
+		if (this.canRoundStart() && !(autocvar_g_campaign && !campaign_bots_may_start))
 		{
 			if (this.cnt == this.count + 1) round_starttime = time + this.count;
 			int f = this.cnt - 1;
