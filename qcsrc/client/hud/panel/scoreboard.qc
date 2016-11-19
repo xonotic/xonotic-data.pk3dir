@@ -31,14 +31,14 @@ float sbt_highlight_alpha_self;
 
 // provide basic panel cvars to old clients
 // TODO remove them after a future release (0.8.2+)
-string autocvar_hud_panel_scoreboard_pos = "0.150000 0.150000";
-string autocvar_hud_panel_scoreboard_size = "0.700000 0.700000";
-string autocvar_hud_panel_scoreboard_bg = "border_default";
-string autocvar_hud_panel_scoreboard_bg_color = "0 0.3 0.5";
-string autocvar_hud_panel_scoreboard_bg_color_team = "";
-string autocvar_hud_panel_scoreboard_bg_alpha = "0.7";
-string autocvar_hud_panel_scoreboard_bg_border = "";
-string autocvar_hud_panel_scoreboard_bg_padding = "";
+noref string autocvar_hud_panel_scoreboard_pos = "0.150000 0.150000";
+noref string autocvar_hud_panel_scoreboard_size = "0.700000 0.700000";
+noref string autocvar_hud_panel_scoreboard_bg = "border_default";
+noref string autocvar_hud_panel_scoreboard_bg_color = "0 0.3 0.5";
+noref string autocvar_hud_panel_scoreboard_bg_color_team = "";
+noref string autocvar_hud_panel_scoreboard_bg_alpha = "0.7";
+noref string autocvar_hud_panel_scoreboard_bg_border = "";
+noref string autocvar_hud_panel_scoreboard_bg_padding = "";
 
 float autocvar_hud_panel_scoreboard_fadeinspeed = 10;
 float autocvar_hud_panel_scoreboard_fadeoutspeed = 5;
