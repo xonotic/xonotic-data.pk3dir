@@ -228,13 +228,13 @@ string ScoreString(int pFlags, float pValue)
 
 float lengthLogTable[128];
 
-float invertLengthLog(float x)
+float invertLengthLog(float dist)
 {
 	int l, r, m;
 
-	if(x >= lengthLogTable[127])
+	if(dist >= lengthLogTable[127])
 		return 127;
-	if(x <= lengthLogTable[0])
+	if(dist <= lengthLogTable[0])
 		return 0;
 
 	l = 0;
@@ -243,15 +243,15 @@ float invertLengthLog(float x)
 	while(r - l > 1)
 	{
 		m = floor((l + r) / 2);
-		if(lengthLogTable[m] < x)
+		if(lengthLogTable[m] < dist)
 			l = m;
 		else
 			r = m;
 	}
 
 	// now: r is >=, l is <
-	float lerr = (x - lengthLogTable[l]);
-	float rerr = (lengthLogTable[r] - x);
+	float lerr = (dist - lengthLogTable[l]);
+	float rerr = (lengthLogTable[r] - dist);
 	if(lerr < rerr)
 		return l;
 	return r;
@@ -263,26 +263,26 @@ vector decompressShortVector(int data)
 	if(data == 0)
 		return '0 0 0';
 	float p	= (data & 0xF000) / 0x1000;
-	float y	= (data & 0x0F80) / 0x80;
+	float q	= (data & 0x0F80) / 0x80;
 	int len = (data & 0x007F);
 
-	//print("\ndecompress: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
+	//print("\ndecompress: p ", ftos(p)); print("q ", ftos(q)); print("len ", ftos(len), "\n");
 
 	if(p == 0)
 	{
 		out.x = 0;
 		out.y = 0;
-		if(y == 31)
+		if(q == 31)
 			out.z = -1;
 		else
 			out.z = +1;
 	}
 	else
 	{
-		y   = .19634954084936207740 * y;
+		q   = .19634954084936207740 * q;
 		p = .19634954084936207740 * p - 1.57079632679489661922;
-		out.x = cos(y) *  cos(p);
-		out.y = sin(y) *  cos(p);
+		out.x = cos(q) *  cos(p);
+		out.y = sin(q) *  cos(p);
 		out.z =          -sin(p);
 	}
 
@@ -1073,26 +1073,25 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 
 float compressShotOrigin(vector v)
 {
-	float x, y, z;
-	x = rint(v.x * 2);
-	y = rint(v.y * 4) + 128;
-	z = rint(v.z * 4) + 128;
-	if(x > 255 || x < 0)
+	float rx = rint(v.x * 2);
+	float ry = rint(v.y * 4) + 128;
+	float rz = rint(v.z * 4) + 128;
+	if(rx > 255 || rx < 0)
 	{
 		LOG_INFO("shot origin ", vtos(v), " x out of bounds\n");
-		x = bound(0, x, 255);
+		rx = bound(0, rx, 255);
 	}
-	if(y > 255 || y < 0)
+	if(ry > 255 || ry < 0)
 	{
 		LOG_INFO("shot origin ", vtos(v), " y out of bounds\n");
-		y = bound(0, y, 255);
+		ry = bound(0, ry, 255);
 	}
-	if(z > 255 || z < 0)
+	if(rz > 255 || rz < 0)
 	{
 		LOG_INFO("shot origin ", vtos(v), " z out of bounds\n");
-		z = bound(0, z, 255);
+		rz = bound(0, rz, 255);
 	}
-	return x * 0x10000 + y * 0x100 + z;
+	return rx * 0x10000 + ry * 0x100 + rz;
 }
 vector decompressShotOrigin(int f)
 {
