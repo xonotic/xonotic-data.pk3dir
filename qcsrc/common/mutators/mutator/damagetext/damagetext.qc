@@ -23,7 +23,10 @@ STATIC_INIT(DamageText_LegacyFormat) {
 }
 AUTOCVAR_SAVE(cl_damagetext_color,                  vector, '1 1 0',    "Damage text color");
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,       bool,   false,      "Damage text uses weapon color");
-AUTOCVAR_SAVE(cl_damagetext_size,                   float,  8,          "Damage text font size");
+AUTOCVAR_SAVE(cl_damagetext_size_min,               float,  8,          "Damage text font size for small damage");
+AUTOCVAR_SAVE(cl_damagetext_size_min_damage,        float,  0,          "How much damage is considered small");
+AUTOCVAR_SAVE(cl_damagetext_size_max,               float,  16,         "Damage text font size for large damage");
+AUTOCVAR_SAVE(cl_damagetext_size_max_damage,        float,  100,        "How much damage is considered large");
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
 AUTOCVAR_SAVE(cl_damagetext_velocity,               vector, '0 0 20',   "Damage text move direction");
@@ -38,7 +41,7 @@ AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage 
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color);
     ATTRIB(DamageText, m_color_friendlyfire, vector, autocvar_cl_damagetext_friendlyfire_color);
-    ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size);
+    ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size_min);
     ATTRIB(DamageText, alpha, float, autocvar_cl_damagetext_alpha_start);
     ATTRIB(DamageText, fade_rate, float, 1 / autocvar_cl_damagetext_alpha_lifetime);
     ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity);
@@ -119,6 +122,17 @@ CLASS(DamageText, Object)
             ), s);
         if (this.text) strunzone(this.text);
         this.text = strzone(s);
+
+        if (potential < autocvar_cl_damagetext_size_min_damage) {
+            this.m_size = autocvar_cl_damagetext_size_min;
+        } else if (potential > autocvar_cl_damagetext_size_max_damage) {
+            this.m_size = autocvar_cl_damagetext_size_max;
+        } else {
+            float size_range = autocvar_cl_damagetext_size_max - autocvar_cl_damagetext_size_min;
+            float damage_range = autocvar_cl_damagetext_size_max_damage - autocvar_cl_damagetext_size_min_damage;
+            float scale_factor = size_range / damage_range;
+            this.m_size = (potential - autocvar_cl_damagetext_size_min_damage) * scale_factor + autocvar_cl_damagetext_size_min;
+        }
     }
 
     CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype, bool _friendlyfire) {
@@ -251,9 +265,14 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
         this.gotoRC(this, 0, 1); this.setFirstColumn(this, this.currentColumn);
             this.TD(this, 1, 3, makeXonoticCheckBox(0, "cl_damagetext", _("Draw damage numbers")));
         this.TR(this);
-            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size:")));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size minimum:")));
                 setDependent(e, "cl_damagetext", 1, 1);
-            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size_min"));
+                setDependent(e, "cl_damagetext", 1, 1);
+        this.TR(this);
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size maximum:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size_max"));
                 setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
             this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Accumulate range:")));
