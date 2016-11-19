@@ -169,8 +169,7 @@ vector lgamma(float e)
 }
 float tgamma(float e)
 {
-	vector v;
-	v = lgamma(e);
+	vector v = lgamma(e);
 	return exp(v.x) * v.y;
 }
 

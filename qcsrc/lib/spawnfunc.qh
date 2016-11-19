@@ -29,7 +29,7 @@ noref bool require_spawnfunc_prefix;
 
 	noref bool __spawnfunc_expecting;
 	noref entity __spawnfunc_expect;
-	bool __spawnfunc_unreachable_workaround = true;
+	noref bool __spawnfunc_unreachable_workaround = true;
 
 	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
 	#define spawnfunc_2(id, whitelist) \

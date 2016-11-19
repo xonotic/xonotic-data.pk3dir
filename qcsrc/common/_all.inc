@@ -1,4 +1,4 @@
-float autocvar_net_connecttimeout = 30;
+noref float autocvar_net_connecttimeout = 30;
 
 #ifdef GAMEQC
 #include "anim.qc"
