@@ -1050,8 +1050,8 @@ ClientPreConnect
 Called once (not at each match start) when a client begins a connection to the server
 =============
 */
-void ClientPreConnect ()
-{ENGINE_EVENT();
+void ClientPreConnect(entity this)
+{
 	if(autocvar_sv_eventlog)
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
