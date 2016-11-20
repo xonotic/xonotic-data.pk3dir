@@ -314,12 +314,9 @@ void viewmodel_draw(entity this)
 	{
 		static string name_last;
 		string name = wep.mdl;
-		if(wep == WEP_TUBA)
-		{
-			name = (this.tuba_instrument == 0) ? "tuba" :
-	           	   (this.tuba_instrument == 1) ? "akordeon" :
-	                                             "kleinbottle";
-		}
+		string newname = wep.wr_viewmodel(wep, this);
+		if(newname)
+			name = newname;
 		bool swap = name != name_last;
 		// if (swap)
 		{
