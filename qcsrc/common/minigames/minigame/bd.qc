@@ -47,7 +47,9 @@ const int BD_DIR_DN = 1;
 const int BD_DIR_LF = 2;
 const int BD_DIR_RT = 3;
 
+#ifdef SVQC
 string autocvar_sv_minigames_bulldozer_startlevel = "level1";
+#endif
 
 // find same game piece given its tile name
 entity bd_find_piece(entity minig, string tile, bool check_target)

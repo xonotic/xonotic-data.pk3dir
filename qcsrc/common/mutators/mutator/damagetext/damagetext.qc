@@ -12,7 +12,8 @@ const int DTFLAG_NO_POTENTIAL = BIT(5);
 
 REGISTER_MUTATOR(damagetext, true);
 
-#if defined(CSQC) || defined(MENUQC)
+// || defined(MENUQC)
+#if defined(CSQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
 AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}: full damage not capped to target's health, {potential_health}: health damage not capped to target's health");

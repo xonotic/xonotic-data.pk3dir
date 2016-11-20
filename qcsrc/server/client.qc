@@ -1055,8 +1055,8 @@ ClientPreConnect
 Called once (not at each match start) when a client begins a connection to the server
 =============
 */
-void ClientPreConnect ()
-{ENGINE_EVENT();
+void ClientPreConnect(entity this)
+{
 	if(autocvar_sv_eventlog)
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
@@ -1610,11 +1610,11 @@ void player_regen(entity this)
 }
 
 bool zoomstate_set;
-void SetZoomState(entity this, float z)
+void SetZoomState(entity this, float newzoom)
 {
-	if(z != this.zoomstate)
+	if(newzoom != this.zoomstate)
 	{
-		this.zoomstate = z;
+		this.zoomstate = newzoom;
 		ClientData_Touch(this);
 	}
 	zoomstate_set = true;

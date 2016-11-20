@@ -424,9 +424,9 @@ void buff_Medic_Heal(entity this)
 	});
 }
 
-float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
+float buff_Inferno_CalculateTime(float damg, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
 {
-	return offset_y + (intersect_y - offset_y) * logn(((x - offset_x) * ((base - 1) / intersect_x)) + 1, base);
+	return offset_y + (intersect_y - offset_y) * logn(((damg - offset_x) * ((base - 1) / intersect_x)) + 1, base);
 }
 
 // mutator hooks

@@ -22,34 +22,34 @@ Misc HUD functions
 ==================
 */
 
-vector HUD_Get_Num_Color (float x, float maxvalue)
+vector HUD_Get_Num_Color (float hp, float maxvalue)
 {
 	float blinkingamt;
 	vector color;
-	if(x >= maxvalue) {
+	if(hp >= maxvalue) {
 		color.x = sin(2*M_PI*time);
 		color.y = 1;
 		color.z = sin(2*M_PI*time);
 	}
-	else if(x > maxvalue * 0.75) {
-		color.x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
-		color.y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
+	else if(hp > maxvalue * 0.75) {
+		color.x = 0.4 - (hp-150)*0.02 * 0.4; //red value between 0.4 -> 0
+		color.y = 0.9 + (hp-150)*0.02 * 0.1; // green value between 0.9 -> 1
 		color.z = 0;
 	}
-	else if(x > maxvalue * 0.5) {
-		color.x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
-		color.y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
-		color.z = 1 - (x-100)*0.02; // blue value between 1 -> 0
+	else if(hp > maxvalue * 0.5) {
+		color.x = 1 - (hp-100)*0.02 * 0.6; //red value between 1 -> 0.4
+		color.y = 1 - (hp-100)*0.02 * 0.1; // green value between 1 -> 0.9
+		color.z = 1 - (hp-100)*0.02; // blue value between 1 -> 0
 	}
-	else if(x > maxvalue * 0.25) {
+	else if(hp > maxvalue * 0.25) {
 		color.x = 1;
 		color.y = 1;
-		color.z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
+		color.z = 0.2 + (hp-50)*0.02 * 0.8; // blue value between 0.2 -> 1
 	}
-	else if(x > maxvalue * 0.1) {
+	else if(hp > maxvalue * 0.1) {
 		color.x = 1;
-		color.y = (x-20)*90/27/100; // green value between 0 -> 1
-		color.z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
+		color.y = (hp-20)*90/27/100; // green value between 0 -> 1
+		color.z = (hp-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
 	}
 	else {
 		color.x = 1;
@@ -57,7 +57,7 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 		color.z = 0;
 	}
 
-	blinkingamt = (1 - x/maxvalue/0.25);
+	blinkingamt = (1 - hp/maxvalue/0.25);
 	if(blinkingamt > 0)
 	{
 		color.x = color.x - color.x * blinkingamt * sin(2*M_PI*time);
@@ -303,7 +303,7 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 	drawsubpic(pos + eX * mySize.x - eX * min(mySize.x * 0.5, mySize.y), eX * min(mySize.x * 0.5, mySize.y) + eY * mySize.y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
 {
     TC(bool, vertical); TC(int, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
@@ -345,7 +345,7 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bo
 		// reduce only y to draw numbers with different number of digits with the same y size
 		numpos.y += newSize.y * ((1 - 0.7) / 2);
 		newSize.y *= 0.7;
-		drawstring_aspect(numpos, ftos(x), newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(numpos, ftos(theTime), newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		return;
 	}
 
@@ -379,14 +379,14 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bo
 
 	// NOTE: newSize_x is always equal to 3 * mySize_y so we can use
 	// '2 1 0' * newSize_y instead of eX * (2/3) * newSize_x + eY * newSize_y
-	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize.y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
+	drawstring_aspect_expanding(numpos, ftos(theTime), '2 1 0' * newSize.y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
+void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
 {
     TC(bool, vertical); TC(int, icon_right_align);
-	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
+	DrawNumIcon_expanding(myPos, mySize, theTime, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
 /*

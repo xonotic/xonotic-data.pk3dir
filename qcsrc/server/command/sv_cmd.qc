@@ -1328,7 +1328,7 @@ void GameCommand_shuffleteams(float request)
 		{
 			if (teamplay)
 			{
-				float x, t_teams, t_players, team_color;
+				float t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
 				t_players = 0;
@@ -1366,15 +1366,15 @@ void GameCommand_shuffleteams(float request)
 				for (int i = 1; i <= t_teams; ++i)
 				{
 					// find out how many players to assign to this team
-					x = (t_players / t_teams);
-					x = ((i == 1) ? ceil(x) : floor(x));
+					int pnum = (t_players / t_teams);
+					pnum = ((i == 1) ? ceil(pnum) : floor(pnum));
 
 					team_color = Team_NumberToTeam(i);
 
 					// sort through the random list of players made earlier
 					for (int z = 1; z <= maxclients; ++z)
 					{
-						if (!(shuffleteams_teams[i] >= x))
+						if (!(shuffleteams_teams[i] >= pnum))
 						{
 							if (!(shuffleteams_players[z])) continue;  // not a player, move on to next random slot
 

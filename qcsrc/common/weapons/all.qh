@@ -143,10 +143,12 @@ X(weaponreplace, string)
 X(weaponstartoverride, float)
 X(weaponstart, float)
 X(weaponthrowable, float)
+#ifdef SVQC
 X(reload_ammo, float)
 .float reloading_ammo = reload_ammo;
 X(reload_time, float)
 .float reloading_time = reload_time;
+#endif
 #undef X
 
 

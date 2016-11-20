@@ -456,6 +456,15 @@ METHOD(Tuba, wr_killmessage, Notification(Tuba this))
 		return WEAPON_TUBA_MURDER;
 }
 
+#elif defined(CSQC)
+
+METHOD(Tuba, wr_viewmodel, string(Tuba this, entity wep))
+{
+	return (wep.tuba_instrument == 0) ? "tuba" :
+	       (wep.tuba_instrument == 1) ? "akordeon" :
+	                                    "kleinbottle";
+}
+
 #endif
 
 #ifdef CSQC

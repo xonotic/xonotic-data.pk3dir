@@ -35,7 +35,7 @@ float autocvar_g_vehicle_racer_friction = 0.45;
 
 float autocvar_g_vehicle_racer_water_time = 5;
 
-float autocvar_g_vehicle_racer_collision_multiplier = 0.05;
+//float autocvar_g_vehicle_racer_collision_multiplier = 0.05;
 
 // 0 = hover, != 0 = maglev
 int autocvar_g_vehicle_racer_hovertype = 0;

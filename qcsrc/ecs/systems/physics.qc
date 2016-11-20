@@ -160,9 +160,6 @@ void sys_phys_update(entity this, float dt)
 /** for players */
 void sys_phys_simulate(entity this, float dt)
 {
-	const vector g = -this.com_phys_gravity;
-	const bool jump = this.com_in_jump;
-
 	if (!this.com_phys_ground && !this.com_phys_air) {
 		// noclipping
 		// flying
@@ -172,6 +169,7 @@ void sys_phys_simulate(entity this, float dt)
 		UNSET_ONGROUND(this);
 
 		if (this.com_phys_friction_air) {
+			const vector g = -this.com_phys_gravity;
 			this.velocity_z += g.z / 2;
 			this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
 			this.velocity_z += g.z / 2;
@@ -181,7 +179,7 @@ void sys_phys_simulate(entity this, float dt)
 	if (this.com_phys_water) {
 		// water jump only in certain situations
 		// this mimics quakeworld code
-		if (jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc) {
+		if (this.com_in_jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc) {
 			vector yawangles = '0 1 0' * this.v_angle.y;
 			makevectors(yawangles);
 			vector forward = v_forward;
@@ -320,7 +318,7 @@ void sys_phys_simulate(entity this, float dt)
 				}
 
 				// holding jump button swims upward slowly
-				if (jump && !this.viewloc) {
+				if (this.com_in_jump && !this.viewloc) {
 					// was:
 					// lava: 50
 					// slime: 80

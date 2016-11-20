@@ -315,12 +315,9 @@ void viewmodel_draw(entity this)
 	}
 	{
 		string name = wep.mdl;
-		if(wep == WEP_TUBA)
-		{
-			name = (this.tuba_instrument == 0) ? "tuba" :
-	           	   (this.tuba_instrument == 1) ? "akordeon" :
-	                                             "kleinbottle";
-		}
+		string newname = wep.wr_viewmodel(wep, this);
+		if(newname)
+			name = newname;
 		bool swap = name != this.name_last;
 		// if (swap)
 		{
@@ -847,8 +844,8 @@ void HitSound()
 			float a = autocvar_cl_hitsound_max_pitch;
 			float b = autocvar_cl_hitsound_min_pitch;
 			float c = autocvar_cl_hitsound_nom_damage;
-			float x = unaccounted_damage;
-			float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
+			float d = unaccounted_damage;
+			float pitch_shift = (b*d*(a-1) + a*c*(1-b)) / (d*(a-1) + c*(1-b));
 
 			// if sound variation is disabled, set pitch_shift to 1
 			if (autocvar_cl_hitsound == 1)
@@ -900,7 +897,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 
 		case 2: // crosshair_color_by_health
 		{
-			float x = health_stat;
+			float hp = health_stat;
 
 			//x = red
 			//y = green
@@ -908,33 +905,33 @@ vector crosshair_getcolor(entity this, float health_stat)
 
 			wcross_color.z = 0;
 
-			if(x > 200)
+			if(hp > 200)
 			{
 				wcross_color.x = 0;
 				wcross_color.y = 1;
 			}
-			else if(x > 150)
+			else if(hp > 150)
 			{
-				wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
-				wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
+				wcross_color.x = 0.4 - (hp-150)*0.02 * 0.4;
+				wcross_color.y = 0.9 + (hp-150)*0.02 * 0.1;
 			}
-			else if(x > 100)
+			else if(hp > 100)
 			{
-				wcross_color.x = 1 - (x-100)*0.02 * 0.6;
-				wcross_color.y = 1 - (x-100)*0.02 * 0.1;
-				wcross_color.z = 1 - (x-100)*0.02;
+				wcross_color.x = 1 - (hp-100)*0.02 * 0.6;
+				wcross_color.y = 1 - (hp-100)*0.02 * 0.1;
+				wcross_color.z = 1 - (hp-100)*0.02;
 			}
-			else if(x > 50)
+			else if(hp > 50)
 			{
 				wcross_color.x = 1;
 				wcross_color.y = 1;
-				wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
+				wcross_color.z = 0.2 + (hp-50)*0.02 * 0.8;
 			}
-			else if(x > 20)
+			else if(hp > 20)
 			{
 				wcross_color.x = 1;
-				wcross_color.y = (x-20)*90/27/100;
-				wcross_color.z = (x-20)*90/27/100 * 0.2;
+				wcross_color.y = (hp-20)*90/27/100;
+				wcross_color.z = (hp-20)*90/27/100 * 0.2;
 			}
 			else
 			{
