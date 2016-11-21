@@ -339,6 +339,7 @@ void PutObserverInServer(entity this)
 	this.hook_time = 0;
 	this.deadflag = DEAD_NO;
 	this.crouch = false;
+	this.revive_progress = 0;
 	this.revival_time = 0;
 
 	this.items = 0;
@@ -616,6 +617,7 @@ void PutClientInServer(entity this)
 		this.strength_finished = 0;
 		this.invincible_finished = 0;
 		this.fire_endtime = -1;
+		this.revive_progress = 0;
 		this.revival_time = 0;
 		this.air_finished = time + 12;
 
