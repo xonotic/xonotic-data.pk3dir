@@ -267,7 +267,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		frag_target.frags = FRAGS_LMS_LOSER;
 		PlayerScore_Add(frag_target, SP_LMS_RANK, pl_cnt);
 	}
-	M_ARGV(2, float) = 0;
+	M_ARGV(2, float) = 0; // frag score
 
 	return true;
 }
@@ -346,8 +346,8 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
-		++M_ARGV(0, int);
-		++M_ARGV(1, int);
+		++M_ARGV(0, int); // activerealplayers
+		++M_ARGV(1, int); // realplayers
 	));
 
 	return true;
@@ -364,8 +364,11 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 	}
 	else
 	{
-		player.lms_spectate_warning = 1;
-		sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+		if(player.frags != FRAGS_SPECTATOR && player.frags != FRAGS_LMS_LOSER)
+		{
+			player.lms_spectate_warning = 1;
+			sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+		}
 		return MUT_SPECCMD_RETURN;
 	}
 	return MUT_SPECCMD_CONTINUE;
