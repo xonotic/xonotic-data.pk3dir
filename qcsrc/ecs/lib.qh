@@ -28,8 +28,8 @@
  */
 #define SYSTEM(sys, frameLimit, minfps) \
 	void sys_##sys##_update(entity this, float dt); \
-	float autocvar_xon_sys_##sys##_dt = ((frameLimit) ? (1 / (frameLimit)) : 0); \
-	float autocvar_xon_sys_##sys##_minfps = (1 / (1 / (minfps)))
+	noref float autocvar_xon_sys_##sys##_dt = ((frameLimit) ? (1 / (frameLimit)) : 0); \
+	noref float autocvar_xon_sys_##sys##_minfps = (1 / (1 / (minfps)))
 
 #define SYSTEM_UPDATE(sys) \
 	MACRO_BEGIN \
