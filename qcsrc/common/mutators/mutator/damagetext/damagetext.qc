@@ -74,7 +74,10 @@ CLASS(DamageText, Object)
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
 
-            drawcolorcodedstring2_builtin(pos, this.text, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
+            vector drawfontscale_save = drawfontscale;
+            drawfontscale = (this.m_size / autocvar_cl_damagetext_size_max) * '1 1 0';
+            drawcolorcodedstring2_builtin(pos, this.text, autocvar_cl_damagetext_size_max * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
+            drawfontscale = drawfontscale_save;
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d);
