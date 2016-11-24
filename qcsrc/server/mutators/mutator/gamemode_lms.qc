@@ -72,7 +72,10 @@ int WinningCondition_LMS()
 				// a winner!
 				// and assign him his first place
 				PlayerScore_Add(head, SP_LMS_RANK, 1);
-				return WINNING_YES;
+				if(warmup_stage)
+					return WINNING_NO;
+				else
+					return WINNING_YES;
 			}
 		}
 	}
@@ -114,8 +117,12 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 {
-	if(restart_mapalreadyrestarted || (time < game_starttime))
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives())));
+	FOREACH_CLIENT(true, {
+		TRANSMUTE(Player, it);
+		it.frags = FRAGS_PLAYER;
+		PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives());
+		PutClientInServer(it);
+	});
 }
 
 MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
@@ -131,6 +138,8 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 			lms_lowest_lives = tl;
 		if(tl <= 0)
 			TRANSMUTE(Observer, player);
+		if(warmup_stage)
+			PlayerScore_Add(player, SP_LMS_RANK, -PlayerScore_Add(player, SP_LMS_RANK, 0));
 	}
 }
 
@@ -138,6 +147,8 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	if(warmup_stage)
+		return false;
 	if(player.frags == FRAGS_SPECTATOR)
 		return true;
 	if(PlayerScore_Add(player, SP_LMS_LIVES, 0) <= 0)
@@ -185,12 +196,13 @@ void lms_RemovePlayer(entity player)
 						lms_lowest_lives = tl;
 				}
 			});
-			PlayerScore_Add(player, SP_LMS_LIVES, -PlayerScore_Add(player, SP_LMS_LIVES, 0));
+			if(!warmup_stage)
+				PlayerScore_Add(player, SP_LMS_LIVES, -PlayerScore_Add(player, SP_LMS_LIVES, 0));
 			PlayerScore_Add(player, SP_LMS_RANK, 665); // different from 666
 			player.frags = FRAGS_LMS_LOSER;
 			TRANSMUTE(Observer, player);
 		}
-		if (pl_cnt == 2) // a player is forfeiting leaving only one player
+		if (pl_cnt == 2 && !warmup_stage) // a player is forfeiting leaving only one player
 			lms_lowest_lives = 0; // end the game now!
 	}
 
@@ -255,17 +267,19 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 {
 	entity frag_target = M_ARGV(1, entity);
 
-	// remove a life
-	float tl;
-	tl = PlayerScore_Add(frag_target, SP_LMS_LIVES, -1);
-	if(tl < lms_lowest_lives)
-		lms_lowest_lives = tl;
-	if(tl <= 0)
+	if (!warmup_stage)
 	{
-		int pl_cnt = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
-		frag_target.frags = FRAGS_LMS_LOSER;
-		PlayerScore_Add(frag_target, SP_LMS_RANK, pl_cnt);
+		// remove a life
+		int tl = PlayerScore_Add(frag_target, SP_LMS_LIVES, -1);
+		if(tl < lms_lowest_lives)
+			lms_lowest_lives = tl;
+		if(tl <= 0)
+		{
+			int pl_cnt = 0;
+			FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
+			frag_target.frags = FRAGS_LMS_LOSER;
+			PlayerScore_Add(frag_target, SP_LMS_RANK, pl_cnt);
+		}
 	}
 	M_ARGV(2, float) = 0; // frag score
 
@@ -357,7 +371,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 {
     entity player = M_ARGV(0, entity);
 
-	if(player.lms_spectate_warning)
+	if(warmup_stage || player.lms_spectate_warning)
 	{
 		// for the forfeit message...
 		player.lms_spectate_warning = 2;
