@@ -174,7 +174,7 @@ void lms_RemovePlayer(entity player)
 				if (it.frags == FRAGS_LMS_LOSER)
 				{
 					float it_rank = PlayerScore_Add(it, SP_LMS_RANK, 0);
-					if (it_rank > player_rank && it_rank < 666)
+					if (it_rank > player_rank && it_rank < 665)
 						PlayerScore_Add(it, SP_LMS_RANK, -1);
 					lms_lowest_lives = 0;
 				}
@@ -186,7 +186,7 @@ void lms_RemovePlayer(entity player)
 				}
 			});
 			PlayerScore_Add(player, SP_LMS_LIVES, -PlayerScore_Add(player, SP_LMS_LIVES, 0));
-			PlayerScore_Add(player, SP_LMS_RANK, 666);
+			PlayerScore_Add(player, SP_LMS_RANK, 665); // different from 666
 			player.frags = FRAGS_LMS_LOSER;
 			TRANSMUTE(Observer, player);
 		}
@@ -225,7 +225,7 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 
 	if(PlayerScore_Add(player, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
-		PlayerScore_Add(player, SP_LMS_RANK, 666);
+		PlayerScore_Add(player, SP_LMS_RANK, 666); // mark as forced spectator for the hud code
 		player.frags = FRAGS_SPECTATOR;
 	}
 }
