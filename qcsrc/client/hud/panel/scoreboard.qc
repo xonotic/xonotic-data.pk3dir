@@ -59,7 +59,7 @@ bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
-float autocvar_hud_panel_scoreboard_maxheight = 0.5;
+float autocvar_hud_panel_scoreboard_maxheight = 0.6;
 bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 bool autocvar_hud_panel_scoreboard_spectators_aligned = false;
