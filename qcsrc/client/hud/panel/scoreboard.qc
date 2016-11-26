@@ -670,7 +670,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 		case SP_DMG: case SP_DMGTAKEN:
 			return sprintf("%.1f k", pl.(scores(field)) / 1000);
 
-		default:
+		default: case SP_SCORE:
 			tmp = pl.(scores(field));
 			f = scores_flags(field);
 			if(field == ps_primary)
@@ -951,7 +951,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 				field = Scoreboard_GetField(pl, SP_PING);
 		}
 		else if(autocvar_hud_panel_scoreboard_others_showscore)
-			field = ftos(pl.(scores(ps_primary)));
+			field = Scoreboard_GetField(pl, SP_SCORE);
 
 		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
 		float column_width = stringwidth(str, true, hud_fontsize);
