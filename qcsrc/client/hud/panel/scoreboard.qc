@@ -1009,10 +1009,16 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	int max_players = 999;
 	if(autocvar_hud_panel_scoreboard_maxheight > 0)
 	{
-		max_players = autocvar_hud_panel_scoreboard_maxheight * vid_conheight;
+		float height = autocvar_hud_panel_scoreboard_maxheight * vid_conheight;
 		if(teamplay)
-			max_players = (max_players - hud_fontsize.y * 1.25 - panel_bg_padding * 2) / 2;
-		max_players = floor(max_players / (hud_fontsize.y * 1.25));
+		{
+			height -= (panel_bg_padding * 2 + hud_fontsize.y * 1.25) * team_count; // - padding and header
+			height -= hud_fontsize.y * (team_count - 1); // - spacing between tables
+			height /= team_count;
+		}
+		else
+			height -= panel_bg_padding * 2; // - padding
+		max_players = floor(height / (hud_fontsize.y * 1.25));
 		if(max_players <= 1)
 			max_players = 1;
 		if(max_players == tm.team_size)
