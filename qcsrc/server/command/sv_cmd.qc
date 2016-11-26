@@ -1331,6 +1331,16 @@ void GameCommand_shuffleteams(float request)
 				return;
 			}
 
+			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
+				if (it.team_forced) {
+					// we could theoretically assign forced players to their teams
+					// and shuffle the rest to fill the empty spots but in practise
+					// either all players or none are gonna have forced teams
+					LOG_INFO("Can't shuffle teams because at least one player has a forced team.\n");
+					return;
+				}
+			));
+
 			int number_of_teams = 0;
 			CheckAllowedTeams(NULL);
 			if (c1 >= 0) number_of_teams = max(1, number_of_teams);
