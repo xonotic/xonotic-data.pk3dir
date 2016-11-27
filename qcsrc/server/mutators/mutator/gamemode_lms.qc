@@ -168,6 +168,7 @@ MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 
 void lms_RemovePlayer(entity player)
 {
+	static int quitters = 0;
 	float player_rank = PlayerScore_Add(player, SP_LMS_RANK, 0);
 	if (!player_rank)
 	{
@@ -185,7 +186,7 @@ void lms_RemovePlayer(entity player)
 				if (it.frags == FRAGS_LMS_LOSER)
 				{
 					float it_rank = PlayerScore_Add(it, SP_LMS_RANK, 0);
-					if (it_rank > player_rank && it_rank < 665)
+					if (it_rank > player_rank && it_rank <= 256)
 						PlayerScore_Add(it, SP_LMS_RANK, -1);
 					lms_lowest_lives = 0;
 				}
@@ -196,9 +197,12 @@ void lms_RemovePlayer(entity player)
 						lms_lowest_lives = tl;
 				}
 			});
+			PlayerScore_Add(player, SP_LMS_RANK, 665 - quitters); // different from 666
 			if(!warmup_stage)
+			{
 				PlayerScore_Add(player, SP_LMS_LIVES, -PlayerScore_Add(player, SP_LMS_LIVES, 0));
-			PlayerScore_Add(player, SP_LMS_RANK, 665); // different from 666
+				++quitters;
+			}
 			player.frags = FRAGS_LMS_LOSER;
 			TRANSMUTE(Observer, player);
 		}
