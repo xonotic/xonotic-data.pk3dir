@@ -6,7 +6,7 @@ int autocvar_g_ca_point_limit;
 int autocvar_g_ca_point_leadlimit;
 float autocvar_g_ca_round_timelimit;
 bool autocvar_g_ca_team_spawns;
-int autocvar_g_ca_teams;
+//int autocvar_g_ca_teams;
 int autocvar_g_ca_teams_override;
 float autocvar_g_ca_warmup;
 
@@ -33,7 +33,8 @@ REGISTER_MUTATOR(ca, false)
 		allowed_to_spawn = true;
 
 		ca_teams = autocvar_g_ca_teams_override;
-		if (ca_teams < 2) ca_teams = autocvar_g_ca_teams;
+		if (ca_teams < 2)
+			ca_teams = cvar("g_ca_teams"); // read the cvar directly as it gets written earlier in the same frame
 		ca_teams = bound(2, ca_teams, 4);
 
 		int teams = 0;

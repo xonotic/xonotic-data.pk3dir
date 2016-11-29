@@ -510,9 +510,9 @@ void makevectors_matrix(vector myangles)  // AngleVectorsFLU
 {
 	v_forward = v_right = v_up = '0 0 0';
 
-	float y = myangles.y * (M_PI * 2 / 360);
-	float sy = sin(y);
-	float cy = cos(y);
+	float yy = myangles.y * (M_PI * 2 / 360);
+	float sy = sin(yy);
+	float cy = cos(yy);
 	float p = myangles.x * (M_PI * 2 / 360);
 	float sp = sin(p);
 	float cp = cos(p);

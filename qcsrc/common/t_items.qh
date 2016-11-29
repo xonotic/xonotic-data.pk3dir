@@ -20,6 +20,7 @@ const int ISF_SIZE 				= BIT(7);
 
 .int ItemStatus;
 
+.float onground_time;
 .float fade_start;
 .float fade_end;
 

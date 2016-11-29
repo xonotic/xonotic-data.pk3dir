@@ -32,7 +32,7 @@ vector teamradar_3dcoord_to_texcoord(vector in);
 
 vector teamradar_texcoord_to_2dcoord(vector in);
 
-vector teamradar_texcoord_to_3dcoord(vector in,float z);
+vector teamradar_texcoord_to_3dcoord(vector in,float oz);
 
 void draw_teamradar_background(float fg);
 

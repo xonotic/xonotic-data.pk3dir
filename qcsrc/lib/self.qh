@@ -48,7 +48,7 @@
 
 #define SELFWRAP(T, R, oldargs, args, forward) \
     .R oldargs T; \
-    .R oldargs __##T = T; \
+    noref .R oldargs __##T = T; \
     .R args self##T; \
     R T##_self oldargs { ENGINE_EVENT(); return this.self##T forward; }
 

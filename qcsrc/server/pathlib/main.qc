@@ -297,11 +297,11 @@ void pathlib_cleanup()
 
 }
 
-float Cosine_Interpolate(float a, float b, float x)
+float Cosine_Interpolate(float a, float b, float c)
 {
     float ft,f;
 
-	ft = x * 3.1415927;
+	ft = c * 3.1415927;
 	f = (1 - cos(ft)) * 0.5;
 
 	return  a*(1-f) + b*f;

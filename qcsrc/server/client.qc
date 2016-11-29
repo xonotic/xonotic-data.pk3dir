@@ -339,6 +339,7 @@ void PutObserverInServer(entity this)
 	this.hook_time = 0;
 	this.deadflag = DEAD_NO;
 	this.crouch = false;
+	this.revive_progress = 0;
 	this.revival_time = 0;
 
 	this.items = 0;
@@ -616,6 +617,7 @@ void PutClientInServer(entity this)
 		this.strength_finished = 0;
 		this.invincible_finished = 0;
 		this.fire_endtime = -1;
+		this.revive_progress = 0;
 		this.revival_time = 0;
 		this.air_finished = time + 12;
 
@@ -1050,8 +1052,8 @@ ClientPreConnect
 Called once (not at each match start) when a client begins a connection to the server
 =============
 */
-void ClientPreConnect ()
-{ENGINE_EVENT();
+void ClientPreConnect(entity this)
+{
 	if(autocvar_sv_eventlog)
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
@@ -1190,12 +1192,6 @@ void ClientConnect(entity this)
 
 	if (IS_REAL_CLIENT(this))
 	{
-		if (!autocvar_g_campaign)
-		{
-			this.motd_actived_time = -1;
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
-		}
-
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 	}
@@ -1222,6 +1218,15 @@ void ClientConnect(entity this)
 	});
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
+
+	if (IS_REAL_CLIENT(this))
+	{
+		if (!autocvar_g_campaign && !IS_PLAYER(this))
+		{
+			this.motd_actived_time = -1;
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
+		}
+	}
 }
 /*
 =============
@@ -1605,11 +1610,11 @@ void player_regen(entity this)
 }
 
 bool zoomstate_set;
-void SetZoomState(entity this, float z)
+void SetZoomState(entity this, float newzoom)
 {
-	if(z != this.zoomstate)
+	if(newzoom != this.zoomstate)
 	{
-		this.zoomstate = z;
+		this.zoomstate = newzoom;
 		ClientData_Touch(this);
 	}
 	zoomstate_set = true;

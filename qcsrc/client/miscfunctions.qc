@@ -389,15 +389,15 @@ void PolyDrawModel(entity e)
 
 void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag)
 {
-	float x, y, q, d;
+	float d;
 	vector ringsize, v, t;
 	ringsize = radi * '1 1 0';
 
-	x = cos(f * 2 * M_PI);
-	y = sin(f * 2 * M_PI);
-	q = fabs(x) + fabs(y);
-	x /= q;
-	y /= q;
+	float co = cos(f * 2 * M_PI);
+	float si = sin(f * 2 * M_PI);
+	float q = fabs(co) + fabs(si);
+	co /= q;
+	si /= q;
 
 	if(f >= 1)
 	{
@@ -530,8 +530,8 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	if(d > 0)
 	{
 			v = centre;			t = '0.5 0.5 0';
-			v.x += x * 0.5 * ringsize.x;	t += x * '0.5 0.5 0';
-			v.y += y * 0.5 * ringsize.y;	t += y * '0.5 -0.5 0';
+			v.x += co * 0.5 * ringsize.x;	t += co * '0.5 0.5 0';
+			v.y += si * 0.5 * ringsize.y;	t += si * '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 	}

@@ -200,8 +200,8 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 	}
 }
 
-float autocvar_notification_debug = false;
 #ifdef NOTIFICATIONS_DEBUG
+bool autocvar_notification_debug = false;
 void Debug_Notification(string input)
 {
 	switch (autocvar_notification_debug)
@@ -297,8 +297,10 @@ float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2
 float autocvar_notification_show_sprees_info_newline = true;
 float autocvar_notification_show_sprees_info_specialonly = true;
 float autocvar_notification_errors_are_fatal = true;
+#ifdef SVQC
 float autocvar_notification_lifetime_runtime = 0.5;
 float autocvar_notification_lifetime_mapload = 10;
+#endif
 
 #ifdef SVQC
 .float FRAG_VERBOSE;

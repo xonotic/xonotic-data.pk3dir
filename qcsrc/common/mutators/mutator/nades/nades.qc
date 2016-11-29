@@ -153,12 +153,14 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 REGISTER_MUTATOR(nades, cvar("g_nades"));
 
 .float nade_time_primed;
+.float nade_lifetime;
 
 .entity nade_spawnloc;
 
+
 void nade_timer_think(entity this)
 {
-	this.skin = 8 - (this.owner.wait - time) / (autocvar_g_nades_nade_lifetime / 10);
+	this.skin = 8 - (this.owner.wait - time) / (this.owner.nade_lifetime / 10);
 	this.nextthink = time;
 	if(!this.owner || wasfreed(this.owner))
 		delete(this);
@@ -862,7 +864,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(this.health == this.max_health)
 	{
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
-		this.nextthink = max(time + autocvar_g_nades_nade_lifetime, time);
+		this.nextthink = max(time + this.nade_lifetime, time);
 		setthink(this, nade_beep);
 	}
 
@@ -1048,6 +1050,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	setthink(n, nade_beep);
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE.m_id;
+	n.nade_lifetime = ntime;
 
 	setmodel(fn, MDL_NADE_VIEW);
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
@@ -1218,7 +1221,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	entity held_nade = player.nade;
 	if (held_nade)
 	{
-		player.nade_timer = bound(0, (time - held_nade.nade_time_primed) / autocvar_g_nades_nade_lifetime, 1);
+		player.nade_timer = bound(0, (time - held_nade.nade_time_primed) / held_nade.nade_lifetime, 1);
 		// LOG_TRACEF("%d %d", player.nade_timer, time - held_nade.nade_time_primed);
 		makevectors(player.angles);
 		held_nade.velocity = player.velocity;

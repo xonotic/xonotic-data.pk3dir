@@ -5,9 +5,10 @@
     #include "constants.qh"
     #include "util.qh"
     #include <common/weapons/_all.qh>
-    #include "../server/weapons/accuracy.qh"
+    #include "../server/anticheat.qh"
     #include "../server/defs.qh"
     #include "../server/scores.qh"
+    #include "../server/weapons/accuracy.qh"
 #endif
 
 #ifdef SVQC
@@ -141,6 +142,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 		PS_GR_P_ADDVAL(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_GameReport_Accuracy(p);
+	anticheat_report_to_playerstats(p);
 
 	if(IS_REAL_CLIENT(p))
 	{
@@ -249,6 +251,8 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_BOTLIKE);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
+
+		anticheat_register_to_playerstats();
 	}
 	else { PlayerStats_GameReport_DelayMapVote = false; }
 }

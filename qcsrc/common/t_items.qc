@@ -82,6 +82,11 @@ void ItemDraw(entity this)
                 if(this.ItemStatus & ITS_ANIMATE2)
                     this.avelocity = '0 -90 0';
             }
+
+            // delay is for blocking item's position for a while;
+            // it's a workaround for dropped weapons that receive the position
+            // another time right after they spawn overriding animation position
+            this.onground_time = time + 0.5;
         }
     }
     else if (autocvar_cl_animate_items)
@@ -89,13 +94,15 @@ void ItemDraw(entity this)
         if(this.ItemStatus & ITS_ANIMATE1)
         {
             this.angles += this.avelocity * frametime;
-            setorigin(this, '0 0 10' + this.oldorigin + '0 0 8' * sin(time * 2));
+            float fade_in = bound(0, time - this.onground_time, 1);
+            setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
             this.angles += this.avelocity * frametime;
-            setorigin(this, '0 0 8' + this.oldorigin + '0 0 4' * sin(time * 3));
+            float fade_in = bound(0, time - this.onground_time, 1);
+            setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
         }
     }
 
@@ -831,7 +838,7 @@ LABEL(pickup)
 			RandomSelection_Init();
 			IL_EACH(g_items, it.team == this.team,
 			{
-				if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+				if(it.itemdef) // is a registered item
 				{
 					Item_Show(it, -1);
 					RandomSelection_AddEnt(it, it.cnt, 0);
@@ -875,7 +882,7 @@ void Item_FindTeam(entity this)
 		RandomSelection_Init();
 		IL_EACH(g_items, it.team == this.team,
 		{
-			if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+			if(it.itemdef) // is a registered item
 				RandomSelection_AddEnt(it, it.cnt, 0);
 		});
 
@@ -885,7 +892,7 @@ void Item_FindTeam(entity this)
 
 		IL_EACH(g_items, it.team == this.team,
 		{
-			if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+			if(it.itemdef) // is a registered item
 			{
 				if(it != e)
 				{
@@ -1789,6 +1796,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	});
 	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_VALUE(e, invincible_finished, 1, SND_Shield, SND_POWEROFF);
+	//POSTGIVE_VALUE(e, superweapons_finished, 1, SND_Null, SND_Null);
 	POSTGIVE_VALUE(e, ammo_nails, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_VALUE(e, ammo_cells, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_VALUE(e, ammo_plasma, 0, SND_ITEMPICKUP, SND_Null);

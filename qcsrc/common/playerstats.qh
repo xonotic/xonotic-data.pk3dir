@@ -40,6 +40,7 @@ const string PLAYERSTATS_SCOREBOARD_POS = "scoreboardpos";
 
 const string PLAYERSTATS_TOTAL = "total-";
 const string PLAYERSTATS_SCOREBOARD = "scoreboard-";
+const string PLAYERSTATS_ANTICHEAT = "anticheat-";
 
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3 = "achievement-kill-spree-3";
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5 = "achievement-kill-spree-5";
