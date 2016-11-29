@@ -114,7 +114,7 @@ void HUD_InfoMessages()
 				InfoMessage(s);
 			}
 
-			if(gametype == MAPINFO_TYPE_LMS)
+			if(!warmup_stage && gametype == MAPINFO_TYPE_LMS)
 			{
 				entity sk;
 				sk = playerslots[player_localnum];
