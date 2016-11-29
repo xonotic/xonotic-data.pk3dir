@@ -67,13 +67,12 @@ void turret_draw2d(entity this)
 		return;
 
 	float dist = vlen(this.origin - view_origin);
-	float t = (entcs_GetTeam(player_localnum) + 1);
 
 	vector o;
 	string txt;
 
 	if(autocvar_cl_vehicles_hud_tactical)
-	if(dist < 10240 && t != this.team)
+	if(dist < 10240 && (myteam + 1 != this.team))
 	{
 		// TODO: Vehicle tactical hud
 		o = project_3d_to_2d(this.origin + '0 0 32');
@@ -121,7 +120,7 @@ void turret_draw2d(entity this)
 	else
 		txt = spritelookuptext(this, spriteimage);
 
-	if(time - floor(time) > 0.5 && t == this.team)
+	if(time - floor(time) > 0.5 && (myteam + 1 == this.team))
 	{
 		if(this.helpme && time < this.helpme)
 		{
@@ -163,7 +162,7 @@ void turret_draw2d(entity this)
 
 	float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
 
-	t = waypointsprite_scale;
+	float t = waypointsprite_scale;
 	a *= waypointsprite_alpha;
 
 	{

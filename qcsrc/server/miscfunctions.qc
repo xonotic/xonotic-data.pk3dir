@@ -239,6 +239,9 @@ string formatmessage(entity this, string msg)
 	cursor = trace_endpos;
 	cursor_ent = trace_ent;
 
+	MUTATOR_CALLHOOK(PreFormatMessage, this, msg);
+	msg = M_ARGV(1, string);
+
 	while (1) {
 		if (n < 1)
 			break; // too many replacements

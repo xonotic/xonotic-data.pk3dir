@@ -333,6 +333,7 @@ void PutObserverInServer(entity this)
 	this.nextthink = 0;
 	this.deadflag = DEAD_NO;
 	this.crouch = false;
+	this.revive_progress = 0;
 	this.revival_time = 0;
 
 	this.items = 0;
@@ -609,6 +610,7 @@ void PutClientInServer(entity this)
 		this.strength_finished = 0;
 		this.invincible_finished = 0;
 		this.fire_endtime = -1;
+		this.revive_progress = 0;
 		this.revival_time = 0;
 		this.air_finished = time + 12;
 
@@ -1195,12 +1197,6 @@ void ClientConnect(entity this)
 
 	if (IS_REAL_CLIENT(this))
 	{
-		if (!autocvar_g_campaign)
-		{
-			this.motd_actived_time = -1;
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
-		}
-
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 	}
@@ -1227,6 +1223,15 @@ void ClientConnect(entity this)
 	});
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
+
+	if (IS_REAL_CLIENT(this))
+	{
+		if (!autocvar_g_campaign && !IS_PLAYER(this))
+		{
+			this.motd_actived_time = -1;
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
+		}
+	}
 }
 /*
 =============

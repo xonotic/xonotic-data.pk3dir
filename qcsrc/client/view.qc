@@ -125,7 +125,6 @@ void calc_followmodel_ofs(entity view)
 	float frac;
 	vector gunorg = '0 0 0';
 	static vector vel_average;
-	static vector gunorg_prev = '0 0 0';
 	static vector gunorg_adjustment_highpass;
 	static vector gunorg_adjustment_lowpass;
 
