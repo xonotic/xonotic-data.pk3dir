@@ -659,6 +659,7 @@ void bot_clear(entity this)
 	bot_remove_from_bot_list(this);
 	if(bot_waypoint_queue_owner == this)
 		bot_waypoint_queue_owner = NULL;
+	this.aistatus &= ~AI_STATUS_STUCK; // otherwise bot_waypoint_queue_owner will be set again to this by navigation_unstuck
 }
 
 void bot_serverframe()
