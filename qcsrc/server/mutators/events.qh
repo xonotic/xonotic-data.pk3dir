@@ -134,6 +134,14 @@ MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
     /**/
 MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
 
+/** called before any formatting is applied, handy for tweaking the message before scripts get ahold of it */
+#define EV_PreFormatMessage(i, o) \
+    /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** message       */ i(string, MUTATOR_ARGV_1_string) \
+    /**/                 o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(PreFormatMessage, EV_PreFormatMessage);
+
 /** returns true if throwing the current weapon shall not be allowed */
 #define EV_ForbidThrowCurrentWeapon(i, o) \
     /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
