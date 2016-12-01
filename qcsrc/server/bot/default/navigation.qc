@@ -1032,7 +1032,7 @@ void navigation_unstuck(entity this)
 
 	if (!bot_waypoint_queue_owner)
 	{
-		LOG_DEBUG(this.netname, " sutck, taking over the waypoints queue");
+		LOG_DEBUG(this.netname, " stuck, taking over the waypoints queue");
 		bot_waypoint_queue_owner = this;
 		bot_waypoint_queue_bestgoal = NULL;
 		bot_waypoint_queue_bestgoalrating = 0;
@@ -1044,7 +1044,7 @@ void navigation_unstuck(entity this)
 	if (bot_waypoint_queue_goal)
 	{
 		// evaluate the next goal on the queue
-		float d = vlen(this.origin - bot_waypoint_queue_goal.origin);
+		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
 		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
 		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), bot_waypoint_queue_goal.origin, bot_navigation_movemode))
 		{
