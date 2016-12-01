@@ -69,17 +69,6 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	/**
      * @param i zero indexed player
      */
-    .int frags;
-	bool entcs_IsEliminated(int i)
-	{
-		bool unconnected = !playerslots[i].gotscores;
-		entity e = entcs_receiver(i);
-		return unconnected || ((e) ? e.frags : stof(getplayerkeyvalue(i, "frags"))) == FRAGS_LMS_LOSER;
-	}
-
-	/**
-     * @param i zero indexed player
-     */
 	int entcs_GetClientColors(int i)
 	{
 		entity e = entcs_receiver(i);
