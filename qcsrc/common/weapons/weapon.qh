@@ -175,7 +175,8 @@ ENDCLASS(OffhandWeapon)
 .OffhandWeapon offhand;
 #endif
 
-const int MAX_SHOT_DISTANCE = 32768;
+// distance from one corner of a 65536qu cube to the opposite corner is approx. 113512 qu
+const int MAX_SHOT_DISTANCE = 120000;
 
 // weapon flags
 const int WEP_TYPE_OTHER          =  0x00; // not for damaging people

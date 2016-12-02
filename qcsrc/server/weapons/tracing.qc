@@ -399,6 +399,10 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 		start = trace_endpos;
 		entity hit = trace_ent;
 
+		// traced up to MAX_SHOT_DISTANCE and didn't hit anything at all
+		if (trace_fraction == 1.0)
+			break;
+
 		// When hitting sky, stop.
 		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
 			break;
