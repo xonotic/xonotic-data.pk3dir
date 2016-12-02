@@ -78,8 +78,10 @@ void Draw_ShowNames(entity this)
 		float w = o.x - vid_conwidth / 2;
 		float h = o.y - vid_conheight / 2;
 		if (d * d > w * w + h * h) this.pointtime = time;
-		if (this.pointtime + autocvar_hud_shownames_crosshairdistance_time <= time) overlap = true;
-		else overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : false); // override what antioverlap says unless allowed by cvar.
+		if (this.pointtime + autocvar_hud_shownames_crosshairdistance_time <= time)
+			overlap = true;
+		else if(!autocvar_hud_shownames_crosshairdistance_antioverlap)
+			overlap = false;
 	}
 	if (!this.fadedelay) this.fadedelay = time + SHOWNAMES_FADEDELAY;
 	if (this.csqcmodel_isdead)                                                                   // dead player, fade out slowly
