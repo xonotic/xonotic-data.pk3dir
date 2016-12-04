@@ -48,7 +48,7 @@ void havocbot_ai(entity this)
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(IS_DEAD(this))
+		if(!(IS_DEAD(this)))
 		if(!this.goalcurrent)
 		if(this.waterlevel == WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
 		{
