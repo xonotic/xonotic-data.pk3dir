@@ -922,11 +922,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 		else if(privatesay) // private message, between 2 people only
 		{
+			sprint(source, sourcemsgstr);
+			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
 			{
-				sprint(source, sourcemsgstr);
 				sprint(privatesay, msgstr);
-				if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 				if(cmsgstr != "")
 					centerprint(privatesay, cmsgstr);
 			}
