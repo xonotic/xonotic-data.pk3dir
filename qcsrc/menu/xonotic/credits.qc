@@ -402,7 +402,6 @@ void XonoticCreditsList_resizeNotify(entity me, vector relOrigin, vector relSize
 }
 void XonoticCreditsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	// layout: Ping, Credits name, Map name, NP, TP, MP
 	string s;
 	float theAlpha;
 	vector theColor;
