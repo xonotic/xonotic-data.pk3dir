@@ -73,6 +73,11 @@ MACRO_END
 		entity player = this.owner;
 		sf |= BIT(0); // assume private
 		do {
+			if (!(IS_PLAYER(player)))
+			{
+				sf &= ENTCS_PUBLICMASK; // no private updates
+				break;
+			}
 			if (radar_showennemies) break;
 			if (SAME_TEAM(to, player)) break;
 			if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;

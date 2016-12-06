@@ -2,6 +2,7 @@
 
 #include "../gamemode.qh"
 
+.float lms_spectate_warning;
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
 void lms_Initialize();
 
@@ -34,5 +35,4 @@ REGISTER_MUTATOR(lms, false)
 
 // lives related defs
 float lms_lowest_lives;
-float lms_next_place;
 float LMS_NewPlayerLives();

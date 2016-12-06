@@ -894,3 +894,18 @@ MUTATOR_HOOKABLE(ForbidWeaponUse, EV_ForbidWeaponUse);
     /** keepvelocity? */        i(bool, MUTATOR_ARGV_2_bool) \
     /**/
 MUTATOR_HOOKABLE(CopyBody, EV_CopyBody);
+
+/** called when sending a chat message, ret argument can be changed to prevent the message */
+#define EV_ChatMessage(i, o) \
+    /** sender */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** ret */ i(int, MUTATOR_ARGV_1_int) \
+    /**/ o(int, MUTATOR_ARGV_1_int) \
+    /**/
+MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
+
+/** return true to prevent sending a chat (private, team or regular) message from reaching a certain player */
+#define EV_ChatMessageTo(i, o) \
+    /** destination player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** sender */ i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);

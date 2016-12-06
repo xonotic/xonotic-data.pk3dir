@@ -231,6 +231,7 @@ void buff_Think(entity this)
 		this.skin = buff.m_skin;
 
 		setmodel(this, MDL_BUFF);
+		setsize(this, BUFF_MIN, BUFF_MAX);
 
 		if(this.buff_waypoint)
 		{

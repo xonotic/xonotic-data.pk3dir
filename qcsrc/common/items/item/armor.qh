@@ -91,6 +91,7 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_waypoint             =   _("Mega armor");
     this.m_waypointblink        =   2;
 #ifdef SVQC
+    this.m_maxs                 =   '16 16 70';
     this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);

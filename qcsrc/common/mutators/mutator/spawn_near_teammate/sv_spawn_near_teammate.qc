@@ -87,6 +87,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		int tested = 0;
 		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), LAMBDA(
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_max && tested >= autocvar_g_spawn_near_teammate_ignore_spawnpoint_max) break;
+
+			if (PHYS_INPUT_BUTTON_CHAT(it)) continue;
 			if (!SAME_TEAM(player, it)) continue;
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health && it.health < autocvar_g_balance_health_regenstable) continue;
 			if (IS_DEAD(it)) continue;
