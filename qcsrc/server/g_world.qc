@@ -2072,6 +2072,8 @@ void EndFrame()
 		entity e = IS_SPEC(it) ? it.enemy : it;
 		if (e.typehitsound) {
 			it.typehit_time = time;
+		} else if (e.killsound) {
+			it.kill_time = time;
 		} else if (e.damage_dealt) {
 			it.hit_time = time;
 			it.damage_dealt_total += ceil(e.damage_dealt);
@@ -2086,6 +2088,7 @@ void EndFrame()
 	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
 		it.damage_dealt = 0;
+		it.killsound = false;
 		antilag_record(it, CS(it), altime);
 	});
 	IL_EACH(g_monsters, true,

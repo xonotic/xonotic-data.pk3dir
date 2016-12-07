@@ -854,6 +854,14 @@ void HitSound()
 		sound(NULL, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
 		typehit_time_prev = typehit_time;
 	}
+
+	static float kill_time_prev = 0;
+	float kill_time = STAT(KILL_TIME);
+	if (COMPARE_INCREASING(kill_time, kill_time_prev) > autocvar_cl_hitsound_antispam_time)
+	{
+		sound(NULL, CH_INFO, SND_KILL, VOL_BASE, ATTN_NONE);
+		kill_time_prev = kill_time;
+	}
 }
 
 vector crosshair_getcolor(entity this, float health_stat)
