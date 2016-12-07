@@ -647,7 +647,10 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 	}
 
 	int realteam = kh_Team_ByID(lostkey.count);
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_LOST), lostkey.kh_previous_owner.netname);
+	if(attacker)
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_PUSHED), attacker.netname, lostkey.kh_previous_owner.netname);
+	else
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DESTROYED), lostkey.kh_previous_owner.netname);
 
 	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);

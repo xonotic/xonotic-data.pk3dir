@@ -380,6 +380,8 @@
     MULTITEAM_INFO(KEYHUNT_CAPTURE, 4,                      1,  1, 0, "s1", "",         "",     _("^BG%s^BG captured the keys for the ^TC^TT team"), "", NAME)
     MULTITEAM_INFO(KEYHUNT_DROP, 4,                         1,  1, 0, "s1", "",         "",     _("^BG%s^BG dropped the ^TC^TT Key"), "", KEY)
     MULTITEAM_INFO(KEYHUNT_LOST, 4,                         1,  1, 0, "s1", "",         "",     _("^BG%s^BG lost the ^TC^TT Key"), "", KEY)
+    MULTITEAM_INFO(KEYHUNT_PUSHED, 4,                       1,  2, 0, "s1 s2", "",      "",     _("^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"), "", KEY)
+    MULTITEAM_INFO(KEYHUNT_DESTROYED, 4,                    1,  1, 0, "s1", "",         "",     _("^BG%s^BG destroyed the ^TC^TT Key"), "", KEY)
     MULTITEAM_INFO(KEYHUNT_PICKUP, 4,                       1,  1, 0, "s1", "",         "",     _("^BG%s^BG picked up the ^TC^TT Key"), "", KEY)
 
     MSG_INFO_NOTIF(LMS_FORFEIT,                             1,  1, 0, "s1", "",         "",     _("^BG%s^F3 forfeited"), "")
