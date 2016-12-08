@@ -865,13 +865,16 @@ int kh_GetMissingTeams()
 
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
+	static int prev_missing_teams_mask;
 	if(time < game_starttime)
 	{
+		if (prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
 		kh_Controller_SetThink(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
-	static int prev_missing_teams_mask;
 	int missing_teams_mask = kh_GetMissingTeams();
 	if(!missing_teams_mask)
 	{
@@ -1314,5 +1317,5 @@ MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 
 MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 {
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
+	kh_WaitForPlayers(); // takes care of killing the "missing teams" message
 }
