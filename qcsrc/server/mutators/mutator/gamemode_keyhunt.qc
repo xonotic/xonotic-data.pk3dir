@@ -545,6 +545,7 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 			first = false;
 		}
 
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_KEYHUNT_CAPTURE), keyowner);
 
 	first = true;
@@ -647,6 +648,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 	}
 
 	int realteam = kh_Team_ByID(lostkey.count);
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(loser_team, CENTER_ROUND_TEAM_LOSS));
 	if(attacker)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_PUSHED), attacker.netname, lostkey.kh_previous_owner.netname);
 	else

@@ -650,6 +650,7 @@
 
     MSG_CENTER_NOTIF(GENERATOR_UNDERATTACK,             1,      0, 0, "",               CPID_Null,              "0 0",  _("^BGThe generator is under attack!"), "")
 
+    MULTITEAM_CENTER(ROUND_TEAM_LOSS, 4,                1,      0, 0, "",               CPID_ROUND,             "0 0",  _("^TC^TT^BG team loses the round"), "", NAME)
     MULTITEAM_CENTER(ROUND_TEAM_WIN, 4,                 1,      0, 0, "",               CPID_ROUND,             "0 0",  _("^TC^TT^BG team wins the round"), "", NAME)
     MSG_CENTER_NOTIF(ROUND_PLAYER_WIN,                  1,      1, 0, "s1",             CPID_ROUND,             "0 0",  _("^BG%s^BG wins the round"), "")
 
