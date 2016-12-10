@@ -634,7 +634,7 @@ float bot_fixcount()
 
 void bot_serverframe()
 {
-	if (intermission_running)
+	if (gameover)
 		return;
 
 	if (time < 2)
