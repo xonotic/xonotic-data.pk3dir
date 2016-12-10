@@ -1,0 +1,35 @@
+#pragma once
+
+void __static_init() {}
+#define static_init() CALL_ACCUMULATED_FUNCTION(__static_init)
+void __static_init_late() {}
+#define static_init_late() CALL_ACCUMULATED_FUNCTION(__static_init_late)
+void __static_init_precache() {}
+#define static_init_precache() CALL_ACCUMULATED_FUNCTION(__static_init_precache)
+void __shutdown() {}
+#define shutdownhooks() CALL_ACCUMULATED_FUNCTION(__shutdown)
+
+#define GETTIME_REALTIME 1
+#ifdef MENUQC
+float(int tmr) _gettime = #67;
+#else
+float(int tmr) _gettime = #519;
+#endif
+
+void profile(string s)
+{
+	static float g_starttime;
+	float rt = _gettime(GETTIME_REALTIME);
+	if (!g_starttime) g_starttime = rt;
+	LOG_TRACEF("[%f] %s", rt - g_starttime, s);
+}
+
+#define _STATIC_INIT(where, func) \
+	[[accumulate]] void _static_##func() { profile(#func); } \
+	ACCUMULATE_FUNCTION(where, _static_##func) \
+	void _static_##func()
+
+#define STATIC_INIT(func) _STATIC_INIT(__static_init,           func)
+#define STATIC_INIT_LATE(func) _STATIC_INIT(__static_init_late, func##_late)
+#define PRECACHE(func) _STATIC_INIT(__static_init_precache,     func##_precache)
+#define SHUTDOWN(func) _STATIC_INIT(__shutdown,     			func##_shutdown)

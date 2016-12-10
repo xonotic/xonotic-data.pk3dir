@@ -1,0 +1,11 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticDemoStartConfirmDialog, XonoticDialog)
+	METHOD(XonoticDemoStartConfirmDialog, fill, void(entity));
+	ATTRIB(XonoticDemoStartConfirmDialog, title, string, _("Disconnect"));
+	ATTRIB(XonoticDemoStartConfirmDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM);
+	ATTRIB(XonoticDemoStartConfirmDialog, intendedWidth, float, 0.5);
+	ATTRIB(XonoticDemoStartConfirmDialog, rows, float, 4);
+	ATTRIB(XonoticDemoStartConfirmDialog, columns, float, 2);
+ENDCLASS(XonoticDemoStartConfirmDialog)

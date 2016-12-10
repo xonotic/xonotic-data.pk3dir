@@ -1,0 +1,4 @@
+// generated file; do not modify
+#ifdef SVQC
+    #include <common/mutators/mutator/weaponarena_random/sv_weaponarena_random.qc>
+#endif

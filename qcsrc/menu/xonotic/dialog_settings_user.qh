@@ -1,0 +1,10 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticUserSettingsTab, XonoticTab)
+	METHOD(XonoticUserSettingsTab, fill, void(entity));
+	ATTRIB(XonoticUserSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticUserSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticUserSettingsTab, columns, float, 6);
+ENDCLASS(XonoticUserSettingsTab)
+entity makeXonoticUserSettingsTab();

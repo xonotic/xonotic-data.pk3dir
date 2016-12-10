@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDVoteDialog, XonoticRootDialog)
+	METHOD(XonoticHUDVoteDialog, fill, void(entity));
+	ATTRIB(XonoticHUDVoteDialog, title, string, _("Vote Panel"));
+	ATTRIB(XonoticHUDVoteDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDVoteDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDVoteDialog, rows, float, 15);
+	ATTRIB(XonoticHUDVoteDialog, columns, float, 4);
+	ATTRIB(XonoticHUDVoteDialog, name, string, "HUDvote");
+	ATTRIB(XonoticHUDVoteDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDVoteDialog)

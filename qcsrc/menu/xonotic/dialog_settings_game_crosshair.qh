@@ -1,0 +1,15 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticGameCrosshairSettingsTab, XonoticTab)
+	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity));
+	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGameCrosshairSettingsTab, title, string, _("Crosshair"));
+	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2);
+ENDCLASS(XonoticGameCrosshairSettingsTab)
+entity makeXonoticGameCrosshairSettingsTab();
+
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(Crosshair, makeXonoticGameCrosshairSettingsTab());

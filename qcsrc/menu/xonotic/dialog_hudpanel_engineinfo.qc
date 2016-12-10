@@ -1,19 +1,8 @@
-#ifndef DIALOG_HUDPANEL_ENGINEINFO_H
-#define DIALOG_HUDPANEL_ENGINEINFO_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDEngineInfoDialog, XonoticRootDialog)
-	METHOD(XonoticHUDEngineInfoDialog, fill, void(entity));
-	ATTRIB(XonoticHUDEngineInfoDialog, title, string, _("Engine Info Panel"))
-	ATTRIB(XonoticHUDEngineInfoDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDEngineInfoDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDEngineInfoDialog, rows, float, 15)
-	ATTRIB(XonoticHUDEngineInfoDialog, columns, float, 4)
-	ATTRIB(XonoticHUDEngineInfoDialog, name, string, "HUDengineinfo")
-	ATTRIB(XonoticHUDEngineInfoDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDEngineInfoDialog)
-#endif
+#include "dialog_hudpanel_engineinfo.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+
 void XonoticHUDEngineInfoDialog_fill(entity me)
 {
 	entity e;
@@ -27,4 +16,3 @@ void XonoticHUDEngineInfoDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_engineinfo_framecounter_exponentialmovingaverage", _("Use an averaging algorithm for fps")));
 }
-#endif

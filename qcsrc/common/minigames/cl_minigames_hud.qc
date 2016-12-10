@@ -1,12 +1,20 @@
+#include "cl_minigames_hud.qh"
+
+#include <common/ent_cs.qh>
+
 #include "minigames.qh"
-#include "../../client/mapvoting.qh"
+
+.vector colormod;
+
+#include <client/hud/hud_config.qh>
+#include <client/mapvoting.qh>
 
 // whether the mouse is over the given panel
 bool HUD_mouse_over(entity somepanel)
 {
 	vector pos = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_pos")));
 	vector sz = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_size")));
-	return mousepos_x >= pos_x*vid_conwidth  && mousepos_x <= (pos_x+sz_x)*vid_conwidth && 
+	return mousepos_x >= pos_x*vid_conwidth  && mousepos_x <= (pos_x+sz_x)*vid_conwidth &&
 	       mousepos_y >= pos_y*vid_conheight && mousepos_y <= (pos_y+sz_y)*vid_conheight ;
 }
 
@@ -17,23 +25,23 @@ bool HUD_mouse_over(entity somepanel)
 // Draws the minigame game board
 void HUD_MinigameBoard ()
 {
-	entity hud_minigame = world;
-	
+	entity hud_minigame = NULL;
+
 	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame.descriptor;
 	else
 		hud_minigame = minigame_get_descriptor("nmm");
-	
+
 	if ( !hud_minigame )
 		return;
-	
-	HUD_Panel_UpdateCvars();
-	
-	
+
+	HUD_Panel_LoadCvars();
+
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
-	
+
 	hud_minigame.minigame_hud_board(pos,mySize);
 }
 
@@ -43,29 +51,30 @@ void HUD_MinigameBoard ()
 // Draws the minigame status panel
 void HUD_MinigameStatus ()
 {
-	entity hud_minigame = world;
-	
+	entity hud_minigame = NULL;
+
 	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame.descriptor;
 	else
 		hud_minigame = minigame_get_descriptor("nmm");
-	
+
 	if ( !hud_minigame )
 		return;
-	
-	HUD_Panel_UpdateCvars();
-	
-	
+
+	HUD_Panel_LoadCvars();
+
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
-	
+
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
-	
+
+	HUD_Scale_Disable();
 	hud_minigame.minigame_hud_status(pos,mySize);
 }
 
@@ -87,7 +96,7 @@ void HUD_MinigameMenu_InsertEntry(entity newentry, entity prev)
 		HUD_MinigameMenu_last_entry = newentry;
 		return;
 	}
-	
+
 	newentry.list_prev = prev;
 	newentry.list_next = prev.list_next;
 	if ( prev.list_next )
@@ -95,7 +104,7 @@ void HUD_MinigameMenu_InsertEntry(entity newentry, entity prev)
 	else
 		HUD_MinigameMenu_last_entry = newentry;
 	prev.list_next = newentry;
-	
+
 }
 
 
@@ -107,10 +116,7 @@ void HUD_MinigameMenu_Click(entity menuitem)
 {
 	if ( menuitem )
 	{
-		entity e = self;
-		self = menuitem;
-		menuitem.use();
-		self = e;
+		menuitem.use(menuitem, NULL, NULL);
 	}
 }
 
@@ -123,25 +129,25 @@ void HUD_MinigameMenu_EraseEntry ( entity e )
 	{
 		HUD_MinigameMenu_Click(e);
 	}
-	
+
 	if ( e.list_prev )
 		e.list_prev.list_next = e.list_next;
 	else
 		HUD_MinigameMenu_entries = e.list_next;
-				
+
 	if ( e.list_next )
 		e.list_next.list_prev = e.list_prev;
 	else
 		HUD_MinigameMenu_last_entry = e.list_prev;
-	
+
 	if ( HUD_MinigameMenu_activeitem == e )
-		HUD_MinigameMenu_activeitem = world;
-	
-	remove(e);
+		HUD_MinigameMenu_activeitem = NULL;
+
+	delete(e);
 }
 
 // Minigame menu options: create entry
-entity HUD_MinigameMenu_SpawnEntry(string s, vector offset, vector fontsize, vector color,void() click)
+entity HUD_MinigameMenu_SpawnEntry(string s, vector offset, vector fontsize, vector color,void(entity, entity, entity) click)
 {
 	entity entry = spawn();
 	entry.message = s;
@@ -155,7 +161,7 @@ entity HUD_MinigameMenu_SpawnEntry(string s, vector offset, vector fontsize, vec
 }
 
 // Spawn a child entry of a collapsable entry
-entity HUD_MinigameMenu_SpawnSubEntry(string s, void() click, entity parent)
+entity HUD_MinigameMenu_SpawnSubEntry(string s, void(entity, entity, entity) click, entity parent)
 {
 	vector item_fontsize = hud_fontsize*1.25;
 	vector item_offset = '1 0 0' * item_fontsize_x;
@@ -166,90 +172,87 @@ entity HUD_MinigameMenu_SpawnSubEntry(string s, void() click, entity parent)
 }
 
 // Click action for Create sub-entries
-void HUD_MinigameMenu_ClickCreate_Entry()
+void HUD_MinigameMenu_ClickCreate_Entry(entity this, entity actor, entity trigger)
 {
-	minigame_cmd("create ",self.netname);
+	minigame_cmd("create ", this.netname);
 }
 
 // Helper click action for collapsible entries
 // returns true when you have to create the sub-entries
-bool HUD_MinigameMenu_Click_ExpandCollapse()
+bool HUD_MinigameMenu_Click_ExpandCollapse(entity this)
 {
 	entity e;
-	if ( self.flags & 2 )
+	if ( this.flags & 2 )
 	{
-		if ( HUD_MinigameMenu_activeitem && 
-				HUD_MinigameMenu_activeitem.owner == self )
-			HUD_MinigameMenu_activeitem = world;
-		self.flags &= ~2;
-		for ( e = self.list_next; e != world && e.owner == self; e = self.list_next )
+		if ( HUD_MinigameMenu_activeitem &&
+				HUD_MinigameMenu_activeitem.owner == this )
+			HUD_MinigameMenu_activeitem = NULL;
+		this.flags &= ~2;
+		for ( e = this.list_next; e != NULL && e.owner == this; e = this.list_next )
 		{
 			if ( e.flags & 2 )
 				HUD_MinigameMenu_Click(e);
-			self.list_next = e.list_next;
-			remove(e);
+			this.list_next = e.list_next;
+			delete(e);
 		}
-		if ( self.list_next )
-			self.list_next.list_prev = self;
+		if ( this.list_next )
+			this.list_next.list_prev = this;
 		else
-			HUD_MinigameMenu_last_entry = self;
+			HUD_MinigameMenu_last_entry = this;
 	}
 	else
 	{
-		for ( e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
+		for ( e = HUD_MinigameMenu_entries; e != NULL; e = e.list_next )
 		{
-			if ( e.flags & 2 && e.origin_x == self.origin_x)
+			if ( e.flags & 2 && e.origin_x == this.origin_x)
 				HUD_MinigameMenu_Click(e);
 		}
-		
-		self.flags |= 2;
-		
+
+		this.flags |= 2;
+
 		return true;
 	}
 	return false;
 }
 
 // Click action for the Create menu
-void HUD_MinigameMenu_ClickCreate()
+void HUD_MinigameMenu_ClickCreate(entity this, entity actor, entity trigger)
 {
-	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
+	if ( HUD_MinigameMenu_Click_ExpandCollapse(this) )
 	{
-		entity e;
 		entity curr;
-		entity prev = self;
-		for ( e = minigame_descriptors; e != world; e = e.list_next )
-		{
-			curr = HUD_MinigameMenu_SpawnSubEntry(
-				e.message, HUD_MinigameMenu_ClickCreate_Entry,  self );
-			curr.netname = e.netname;
-			curr.model = strzone(minigame_texture(strcat(e.netname,"/icon")));
+		entity prev = this;
+		FOREACH(Minigames, true, {
+			curr = HUD_MinigameMenu_SpawnSubEntry(it.message, HUD_MinigameMenu_ClickCreate_Entry, this);
+			curr.netname = it.netname;
+			curr.model = strzone(minigame_texture(strcat(it.netname,"/icon")));
 			HUD_MinigameMenu_InsertEntry( curr, prev );
 			prev = curr;
-		}
+		});
 	}
 }
 
 // Click action for Join sub-entries
-void HUD_MinigameMenu_ClickJoin_Entry()
+void HUD_MinigameMenu_ClickJoin_Entry(entity this, entity actor, entity trigger)
 {
-	minigame_cmd("join ",self.netname);
-	HUD_MinigameMenu_EraseEntry(self);
+	minigame_cmd("join ",this.netname);
+	HUD_MinigameMenu_EraseEntry(this);
 }
 
 // Click action for the Join menu
-void HUD_MinigameMenu_ClickJoin()
+void HUD_MinigameMenu_ClickJoin(entity this, entity actor, entity trigger)
 {
-	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
+	if ( HUD_MinigameMenu_Click_ExpandCollapse(this) )
 	{
-		entity e = world;
+		entity e = NULL;
 		entity curr;
-		entity prev = self;
+		entity prev = this;
 		while( (e = find(e,classname,"minigame")) )
 		{
 			if ( e != active_minigame )
 			{
 				curr = HUD_MinigameMenu_SpawnSubEntry(
-					e.netname, HUD_MinigameMenu_ClickJoin_Entry, self );
+					e.netname, HUD_MinigameMenu_ClickJoin_Entry, this );
 				curr.netname = e.netname;
 				curr.model = strzone(minigame_texture(strcat(e.descriptor.netname,"/icon")));
 				HUD_MinigameMenu_InsertEntry( curr, prev );
@@ -262,37 +265,37 @@ void HUD_MinigameMenu_ClickJoin()
 /*// Temporary placeholder for un-implemented Click actions
 void HUD_MinigameMenu_ClickNoop()
 {
-	dprint("Placeholder for ",self.message,"\n");
+	dprint("Placeholder for ",this.message,"\n");
 }*/
 
 // Click action for Quit
-void HUD_MinigameMenu_ClickQuit()
+void HUD_MinigameMenu_ClickQuit(entity this, entity actor, entity trigger)
 {
 	deactivate_minigame();
 	minigame_cmd("end");
 }
 
 // Click action for Invite sub-entries
-void HUD_MinigameMenu_ClickInvite_Entry()
+void HUD_MinigameMenu_ClickInvite_Entry(entity this, entity actor, entity trigger)
 {
-	minigame_cmd("invite #",self.netname);
+	minigame_cmd("invite #",this.netname);
 }
 
 // Click action for the Invite menu
-void HUD_MinigameMenu_ClickInvite()
+void HUD_MinigameMenu_ClickInvite(entity this, entity actor, entity trigger)
 {
-	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
+	if ( HUD_MinigameMenu_Click_ExpandCollapse(this) )
 	{
 		entity e;
-		entity prev = self;
+		entity prev = this;
 		for(int i = 0; i < maxclients; ++i)
 		{
-			if ( player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
-				!findfloat(world,minigame_playerslot,i+1) && playerslots[i].ping )
+			if ( player_localnum != i && playerslots[i] && entcs_GetName(i) != "" &&
+				!findfloat(NULL,minigame_playerslot,i+1) && playerslots[i].ping )
 			{
 				e = HUD_MinigameMenu_SpawnSubEntry(
-					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickInvite_Entry,
-					self );
+					strzone(entcs_GetName(i)), HUD_MinigameMenu_ClickInvite_Entry,
+					this );
 				e.flags |= 1;
 				e.netname = strzone(ftos(i+1));
 				e.origin_x *= 2;
@@ -303,10 +306,10 @@ void HUD_MinigameMenu_ClickInvite()
 	}
 }
 
-void HUD_MinigameMenu_ClickCustomEntry()
+void HUD_MinigameMenu_ClickCustomEntry(entity this, entity actor, entity trigger)
 {
 	if ( active_minigame )
-		active_minigame.minigame_event(active_minigame,"menu_click",self.netname);
+		active_minigame.minigame_event(active_minigame,"menu_click",this.netname);
 }
 
 // Adds a game-specific entry to the menu
@@ -320,39 +323,39 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string menumessage, string even
 }
 
 // Click action for the Current Game menu
-void HUD_MinigameMenu_ClickCurrentGame()
+void HUD_MinigameMenu_ClickCurrentGame(entity this, entity actor, entity trigger)
 {
-	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
+	if ( HUD_MinigameMenu_Click_ExpandCollapse(this) )
 	{
 		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
-			_("Quit"), HUD_MinigameMenu_ClickQuit, self ), self);
-		
-		active_minigame.minigame_event(active_minigame,"menu_show",self);
-		
+			_("Quit"), HUD_MinigameMenu_ClickQuit, this ), this);
+
+		active_minigame.minigame_event(active_minigame,"menu_show",this);
+
 		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
-			_("Invite"), HUD_MinigameMenu_ClickInvite, self), self);
+			_("Invite"), HUD_MinigameMenu_ClickInvite, this), this);
 	}
 }
 // Whether the minigame menu panel is open
 bool HUD_MinigameMenu_IsOpened()
 {
-	return !!HUD_MinigameMenu_entries;
+	return HUD_MinigameMenu_entries != NULL;
 }
 
 // Close the minigame menu panel
-void HUD_MinigameMenu_Close()
+void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger)
 {
 	if ( HUD_MinigameMenu_IsOpened() )
 	{
 		entity e, p;
-		for ( e = HUD_MinigameMenu_entries; e != world; e = p )
+		for ( e = HUD_MinigameMenu_entries; e != NULL; e = p )
 		{
 			p = e.list_next;
-			remove(e);
+			delete(e);
 		}
-		HUD_MinigameMenu_entries = world;
-		HUD_MinigameMenu_last_entry = world;
-		HUD_MinigameMenu_activeitem = world;
+		HUD_MinigameMenu_entries = NULL;
+		HUD_MinigameMenu_last_entry = NULL;
+		HUD_MinigameMenu_activeitem = NULL;
 		if(autocvar_hud_cursormode)
 		if ( !autocvar__hud_configure )
 			setcursormode(0);
@@ -365,7 +368,7 @@ void HUD_MinigameMenu_CurrentButton()
 	entity e;
 	if ( active_minigame )
 	{
-		for ( e = HUD_MinigameMenu_last_entry; e != world; e = e.list_prev )
+		for ( e = HUD_MinigameMenu_last_entry; e != NULL; e = e.list_prev )
 			if ( e.classname == "hud_minigamemenu_exit" )
 			{
 				HUD_MinigameMenu_EraseEntry(e);
@@ -378,10 +381,10 @@ void HUD_MinigameMenu_CurrentButton()
 		HUD_MinigameMenu_InsertEntry(currb,HUD_MinigameMenu_last_entry);
 		HUD_MinigameMenu_Click(currb);
 	}
-	else 
+	else
 	{
 		entity p;
-		for ( e = HUD_MinigameMenu_last_entry; e != world; e = p.list_prev )
+		for ( e = HUD_MinigameMenu_last_entry; e != NULL; e = p.list_prev )
 		{
 			p = e;
 			if ( e.classname == "hud_minigamemenu_current" )
@@ -393,7 +396,7 @@ void HUD_MinigameMenu_CurrentButton()
 				break;
 			}
 		}
-		for ( e = HUD_MinigameMenu_last_entry; e != world; e = e.list_prev )
+		for ( e = HUD_MinigameMenu_last_entry; e != NULL; e = e.list_prev )
 			if ( e.classname == "hud_minigamemenu_exit" )
 				return;
 		entity exit = HUD_MinigameMenu_SpawnEntry(
@@ -415,7 +418,7 @@ void HUD_MinigameMenu_Open()
 			_("Join"),'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickJoin),
 			HUD_MinigameMenu_last_entry );
 		HUD_MinigameMenu_CurrentButton();
-		HUD_MinigameMenu_activeitem = world;
+		HUD_MinigameMenu_activeitem = NULL;
 		if(autocvar_hud_cursormode)
 			setcursormode(1);
 	}
@@ -426,21 +429,21 @@ void HUD_MinigameMenu_MouseInput()
 {
 	panel = HUD_PANEL(MINIGAME_MENU);
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
-	
+
 	entity e;
-	
+
 	panel_pos_y += hud_fontsize_y*2;
-	
-	HUD_MinigameMenu_activeitem = world;
+
+	HUD_MinigameMenu_activeitem = NULL;
 	vector sz;
-	for ( e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
+	for ( e = HUD_MinigameMenu_entries; e != NULL; e = e.list_next )
 	{
 		sz = eX*panel_size_x + eY*e.size_y;
 		if ( e.model )
@@ -468,14 +471,15 @@ void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
 
 // Minigame menu panel UI
 void HUD_MinigameMenu ()
-{	
+{
 	if ( !HUD_MinigameMenu_IsOpened() )
 		return;
-	
-	HUD_Panel_UpdateCvars();
-	
-	HUD_Panel_DrawBg(1);
-	
+
+	HUD_Panel_LoadCvars();
+
+	HUD_Scale_Disable();
+	HUD_Panel_DrawBg();
+
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
@@ -489,19 +493,19 @@ void HUD_MinigameMenu ()
 	vector offset;
 	float itemh;
 	vector imgsz = '22 22 0'; // NOTE: if changed, edit where HUD_MinigameMenu_activeitem is selected
-	for ( entity e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
+	for ( entity e = HUD_MinigameMenu_entries; e != NULL; e = e.list_next )
 	{
 		color = e.colormod;
-		
+
 		offset = e.origin;
 		itemh = e.size_y;
-		
+
 		if ( e.model )
 			itemh = imgsz_y;
-		
+
 		if ( e.flags & 2 )
 		{
-			drawfill(panel_pos, eX*panel_size_x + eY*itemh, e.colormod, 
+			drawfill(panel_pos, eX*panel_size_x + eY*itemh, e.colormod,
 					panel_fg_alpha, DRAWFLAG_NORMAL);
 			color = '0 0 0';
 		}
@@ -512,15 +516,15 @@ void HUD_MinigameMenu ()
 			offset_x += imgsz_x;
 			offset_y = (imgsz_y-e.size_y) / 2;
 		}
-		
+
 		if ( e.flags & 1 )
 			HUD_MinigameMenu_DrawColoredEntry(panel_pos+offset,e.message,e.size);
 		else
 			HUD_MinigameMenu_DrawEntry(panel_pos+offset,e.message,e.size,color);
-		
+
 		if ( e == HUD_MinigameMenu_activeitem )
 			drawfill(panel_pos, eX*panel_size_x + eY*itemh,'1 1 1', 0.25, DRAWFLAG_ADDITIVE);
-		
+
 		panel_pos_y += itemh;
 	}
 }
@@ -532,29 +536,29 @@ void HUD_MinigameMenu ()
 void HUD_MinigameHelp()
 {
 	string help_message;
-	
+
 	if(!autocvar__hud_configure)
 		help_message = active_minigame.message;
 	else
 		help_message = "Minigame message";
-	
+
 	if ( !help_message )
 		return;
-	
-	HUD_Panel_UpdateCvars();
-	
-	
+
+	HUD_Panel_LoadCvars();
+
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
-	
+
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
-	
-	minigame_drawcolorcodedstring_wrapped( mySize_x, pos, help_message, 
+
+	minigame_drawcolorcodedstring_wrapped( mySize_x, pos, help_message,
 		hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5 );
 }
 
@@ -563,7 +567,7 @@ void HUD_MinigameHelp()
 // ====================================================================
 float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
-		
+
 	if( !HUD_MinigameMenu_IsOpened() || autocvar__hud_configure )
 		return false;
 
@@ -571,10 +575,10 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 	{
 		mousepos_x = nPrimary;
 		mousepos_y = nSecondary;
-		if ( minigame_isactive() && HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
+		if ( active_minigame && HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
 			active_minigame.minigame_event(active_minigame,"mouse_moved",mousepos);
 		return true;
-		
+
 	}
 	else
 	{
@@ -592,18 +596,18 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
 			if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
 		}
-		
+
 		// allow some binds
-		string con_keys;
-		con_keys = findkeysforcommand("toggleconsole", 0);
+		string con_keys = findkeysforcommand("toggleconsole", 0);
 		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-		for (int i = 0; i < keys; ++i)
+		int i;
+		for (i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
 				return false;
 		}
-		
-		if ( minigame_isactive() && ( bInputType == 0 || bInputType == 1 ) )
+
+		if ( active_minigame && ( bInputType == 0 || bInputType == 1 ) )
 		{
 			string device = "";
 			string action = bInputType == 0 ? "pressed" : "released";
@@ -614,14 +618,14 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			}
 			else
 				device = "key";
-			
+
 			if ( device && active_minigame.minigame_event(
 					active_minigame,strcat(device,"_",action),nPrimary) )
 				return true;
-			
+
 			/// TODO: bInputType == 2?
 		}
-		
+
 		if ( bInputType == 0 )
 		{
 			if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
@@ -663,38 +667,26 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			}
 			else if ( nPrimary == K_ESCAPE )
 			{
-				HUD_MinigameMenu_Close();
+				HUD_MinigameMenu_Close(NULL, NULL, NULL);
 				return true;
 			}
 		}
 	}
-	
+
 	return false;
 
 }
 
 void HUD_Minigame_Mouse()
-{		
+{
 	if( !HUD_MinigameMenu_IsOpened() || autocvar__hud_configure || mv_active )
 		return;
-	
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
 
-		mousepos_x = bound(0, mousepos_x, vid_conwidth);
-		mousepos_y = bound(0, mousepos_y, vid_conheight);
-	}
-	
+	if (!autocvar_hud_cursormode)
+		update_mousepos();
+
 	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
 		HUD_MinigameMenu_MouseInput();
-	
-	vector cursorsize = '32 32 0';
-	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), 
-			cursorsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-}
 
-bool HUD_Minigame_Showpanels()
-{
-	return HUD_MinigameMenu_IsOpened() && ( autocvar__hud_configure || minigame_isactive() );
+	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
 }

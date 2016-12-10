@@ -1,9 +1,9 @@
+#include "spawn.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../../server/_all.qh"
-    #include "../../util.qh"
-    #include "../../../server/defs.qh"
+    #include <common/util.qh>
+    #include <server/defs.qh>
 #endif
 
 #ifdef SVQC
@@ -16,30 +16,28 @@
 //   2 = trigger on map load
 
 float target_spawn_initialized;
-.void() target_spawn_spawnfunc;
+.void(entity this) target_spawn_spawnfunc;
 float target_spawn_spawnfunc_field;
 .entity target_spawn_activator;
 .float target_spawn_id;
 float target_spawn_count;
 
-void target_spawn_helper_setmodel()
+void target_spawn_helper_setmodel(entity this)
 {
-	setmodel(self, self.model);
+	_setmodel(this, this.model);
 }
 
-void target_spawn_helper_setsize()
+void target_spawn_helper_setsize(entity this)
 {
-	setsize(self, self.mins, self.maxs);
+	setsize(this, this.mins, this.maxs);
 }
 
-void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act)
+void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act, entity trigger)
 {
 	float i, n, valuefieldpos;
 	string key, value, valuefield, valueoffset, valueoffsetrandom;
 	entity valueent;
 	vector data, data2;
-	entity oldself;
-	entity oldactivator;
 
 	n = tokenize_console(msg);
 
@@ -57,7 +55,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 			data = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", key)));
 			if(data.y == 0) // undefined field, i.e., invalid type
 			{
-				print("target_spawn: invalid/unknown entity key ", key, " specified, ignored!\n");
+				LOG_INFO("target_spawn: invalid/unknown entity key ", key, " specified, ignored!\n");
 				continue;
 			}
 		}
@@ -99,7 +97,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 
 				if(value == "self")
 				{
-					valueent = self;
+					valueent = this;
 					value = "";
 				}
 				else if(value == "activator")
@@ -109,7 +107,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 				}
 				else if(value == "other")
 				{
-					valueent = other;
+					valueent = trigger;
 					value = "";
 				}
 				else if(value == "pusher")
@@ -117,7 +115,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 					if(time < act.pushltime)
 						valueent = act.pusher;
 					else
-						valueent = world;
+						valueent = NULL;
 					value = "";
 				}
 				else if(value == "target")
@@ -147,31 +145,31 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 				}
 				else if(value == "time")
 				{
-					valueent = world;
+					valueent = NULL;
 					value = ftos(time);
 				}
 				else
 				{
-					print("target_spawn: invalid/unknown variable replacement ", value, " specified, ignored!\n");
+					LOG_INFO("target_spawn: invalid/unknown variable replacement ", value, " specified, ignored!\n");
 					continue;
 				}
 
 				if(valuefield == "")
 				{
 					if(value == "")
-						value = ftos(num_for_edict(valueent));
+						value = ftos(etof(valueent));
 				}
 				else
 				{
 					if(value != "")
 					{
-						print("target_spawn: try to get a field of a non-entity, ignored!\n");
+						LOG_INFO("target_spawn: try to get a field of a non-entity, ignored!\n");
 						continue;
 					}
 					data2 = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", valuefield)));
 					if(data2_y == 0) // undefined field, i.e., invalid type
 					{
-						print("target_spawn: invalid/unknown entity key replacement ", valuefield, " specified, ignored!\n");
+						LOG_INFO("target_spawn: invalid/unknown entity key replacement ", valuefield, " specified, ignored!\n");
 						continue;
 					}
 					value = getentityfieldstring(data2_x, valueent);
@@ -191,7 +189,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 							value = vtos(stov(value) + stov(valueoffset));
 							break;
 						default:
-							print("target_spawn: only string, float and vector fields can do calculations, calculation ignored!\n");
+							LOG_INFO("target_spawn: only string, float and vector fields can do calculations, calculation ignored!\n");
 							break;
 					}
 				}
@@ -208,7 +206,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 							value = vtos(stov(value) + random() * data2_x * '1 0 0' + random() * data2_y * '0 1 0' + random() * data2_z * '0 0 1');
 							break;
 						default:
-							print("target_spawn: only float and vector fields can do random calculations, calculation ignored!\n");
+							LOG_INFO("target_spawn: only float and vector fields can do random calculations, calculation ignored!\n");
 							break;
 					}
 				}
@@ -220,16 +218,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 				value = strcat("target_spawn_helper", value);
 			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
 
-			oldself = self;
-			oldactivator = activator;
-
-			self = e;
-			activator = act;
-
-			self.target_spawn_spawnfunc();
-
-			self = oldself;
-			activator = oldactivator;
+			e.target_spawn_spawnfunc(e);
 
 			// We called an external function, so we have to re-tokenize msg.
 			n = tokenize_console(msg);
@@ -243,71 +232,74 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 	}
 }
 
-void target_spawn_useon(entity e)
+void target_spawn_useon(entity e, entity this, entity actor, entity trigger)
 {
-	self.target_spawn_activator = activator;
+	this.target_spawn_activator = actor;
 	target_spawn_edit_entity(
+		this,
 		e,
-		self.message,
-		find(world, targetname, self.killtarget),
-		find(world, targetname, self.target2),
-		find(world, targetname, self.target3),
-		find(world, targetname, self.target4),
-		activator
+		this.message,
+		find(NULL, targetname, this.killtarget),
+		find(NULL, targetname, this.target2),
+		find(NULL, targetname, this.target3),
+		find(NULL, targetname, this.target4),
+		actor,
+		trigger
 	);
 }
 
-float target_spawn_cancreate()
+bool target_spawn_cancreate(entity this)
 {
 	float c;
 	entity e;
 
-	c = self.count;
+	c = this.count;
 	if(c == 0) // no limit?
-		return 1;
+		return true;
 
 	++c; // increase count to not include MYSELF
-	for(e = world; (e = findfloat(e, target_spawn_id, self.target_spawn_id)); --c)
+	for(e = NULL; (e = findfloat(e, target_spawn_id, this.target_spawn_id)); --c)
 		;
 
 	// if c now is 0, we have AT LEAST the given count (maybe more), so don't spawn any more
 	if(c == 0)
-		return 0;
-	return 1;
+		return false;
+	return true;
 }
 
-void target_spawn_use()
+void target_spawn_use(entity this, entity actor, entity trigger)
 {
-	entity e;
-
-	if(self.target == "")
+	if(this.target == "")
 	{
 		// spawn new entity
-		if(!target_spawn_cancreate())
+		if(!target_spawn_cancreate(this))
 			return;
-		e = spawn();
-		target_spawn_useon(e);
-		e.target_spawn_id = self.target_spawn_id;
+		entity e = spawn();
+		e.spawnfunc_checked = true;
+		target_spawn_useon(e, this, actor, trigger);
+		e.target_spawn_id = this.target_spawn_id;
 	}
-	else if(self.target == "*activator")
+	else if(this.target == "*activator")
 	{
 		// edit entity
-		if(activator)
-			target_spawn_useon(activator);
+		if(actor)
+			target_spawn_useon(actor, this, actor, trigger);
 	}
 	else
 	{
 		// edit entity
-		for(e = world; (e = find(e, targetname, self.target)); )
-			target_spawn_useon(e);
+		FOREACH_ENTITY_STRING(targetname, this.target,
+		{
+			target_spawn_useon(it, this, actor, trigger);
+		});
 	}
 }
 
-void target_spawn_spawnfirst()
+void target_spawn_spawnfirst(entity this)
 {
-	activator = self.target_spawn_activator;
-	if(self.spawnflags & 2)
-		target_spawn_use();
+	entity act = this.target_spawn_activator;
+	if(this.spawnflags & 2)
+		target_spawn_use(this, act, NULL);
 }
 
 void initialize_field_db()
@@ -338,12 +330,12 @@ void initialize_field_db()
 	}
 }
 
-void spawnfunc_target_spawn()
+spawnfunc(target_spawn)
 {
 	initialize_field_db();
-	self.use = target_spawn_use;
-	self.message = strzone(strreplace("'", "\"", self.message));
-	self.target_spawn_id = ++target_spawn_count;
-	InitializeEntity(self, target_spawn_spawnfirst, INITPRIO_LAST);
+	this.use = target_spawn_use;
+	this.message = strzone(strreplace("'", "\"", this.message));
+	this.target_spawn_id = ++target_spawn_count;
+	InitializeEntity(this, target_spawn_spawnfirst, INITPRIO_LAST);
 }
 #endif

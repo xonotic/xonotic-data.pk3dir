@@ -1,0 +1,26 @@
+#pragma once
+
+#include <menu/item/modalcontroller.qh>
+
+CLASS(MainWindow, ModalController)
+	METHOD(MainWindow, configureMainWindow, void(entity));
+	METHOD(MainWindow, draw, void(entity));
+	ATTRIB(MainWindow, firstRunDialog, entity);
+	ATTRIB(MainWindow, advancedDialog, entity);
+	ATTRIB(MainWindow, mutatorsDialog, entity);
+	ATTRIB(MainWindow, mapInfoDialog, entity);
+	ATTRIB(MainWindow, userbindEditDialog, entity);
+	ATTRIB(MainWindow, winnerDialog, entity);
+	ATTRIB(MainWindow, serverInfoDialog, entity);
+	ATTRIB(MainWindow, cvarsDialog, entity);
+	ATTRIB(MainWindow, screenshotViewerDialog, entity);
+	ATTRIB(MainWindow, viewDialog, entity);
+	ATTRIB(MainWindow, hudconfirmDialog, entity);
+	ATTRIB(MainWindow, languageWarningDialog, entity);
+	ATTRIB(MainWindow, mainNexposee, entity);
+	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND);
+	ATTRIB(MainWindow, dialogToShow, entity);
+	ATTRIB(MainWindow, demostartconfirmDialog, entity);
+	ATTRIB(MainWindow, demotimeconfirmDialog, entity);
+	ATTRIB(MainWindow, resetDialog, entity);
+ENDCLASS(MainWindow)

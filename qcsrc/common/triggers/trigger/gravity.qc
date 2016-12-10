@@ -1,3 +1,4 @@
+#include "gravity.qh"
 #ifdef SVQC
 .entity trigger_gravity_check;
 void trigger_gravity_remove(entity own)
@@ -6,101 +7,101 @@ void trigger_gravity_remove(entity own)
 	{
 		UpdateCSQCProjectile(own);
 		own.gravity = own.trigger_gravity_check.gravity;
-		remove(own.trigger_gravity_check);
+		delete(own.trigger_gravity_check);
 	}
 	else
 		backtrace("Removing a trigger_gravity_check with no valid owner");
-	own.trigger_gravity_check = world;
+	own.trigger_gravity_check = NULL;
 }
-void trigger_gravity_check_think()
+void trigger_gravity_check_think(entity this)
 {
 	// This spawns when a player enters the gravity zone and checks if he left.
-	// Each frame, self.count is set to 2 by trigger_gravity_touch() and decreased by 1 here.
+	// Each frame, this.count is set to 2 by trigger_gravity_touch() and decreased by 1 here.
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
-	if(self.count <= 0)
+	if(this.count <= 0)
 	{
-		if(self.owner.trigger_gravity_check == self)
-			trigger_gravity_remove(self.owner);
+		if(this.owner.trigger_gravity_check == this)
+			trigger_gravity_remove(this.owner);
 		else
-			remove(self);
+			delete(this);
 		return;
 	}
 	else
 	{
-		self.count -= 1;
-		self.nextthink = time;
+		this.count -= 1;
+		this.nextthink = time;
 	}
 }
 
-void trigger_gravity_use()
+void trigger_gravity_use(entity this, entity actor, entity trigger)
 {
-	self.state = !self.state;
+	this.state = !this.state;
 }
 
-void trigger_gravity_touch()
+void trigger_gravity_touch(entity this, entity toucher)
 {
 	float g;
 
-	if(self.state != true)
+	if(this.state != true)
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
-	g = self.gravity;
+	g = this.gravity;
 
-	if (!(self.spawnflags & 1))
+	if (!(this.spawnflags & 1))
 	{
-		if(other.trigger_gravity_check)
+		if(toucher.trigger_gravity_check)
 		{
-			if(self == other.trigger_gravity_check.enemy)
+			if(this == toucher.trigger_gravity_check.enemy)
 			{
 				// same?
-				other.trigger_gravity_check.count = 2; // gravity one more frame...
+				toucher.trigger_gravity_check.count = 2; // gravity one more frame...
 				return;
 			}
 
 			// compare prio
-			if(self.cnt > other.trigger_gravity_check.enemy.cnt)
-				trigger_gravity_remove(other);
+			if(this.cnt > toucher.trigger_gravity_check.enemy.cnt)
+				trigger_gravity_remove(toucher);
 			else
 				return;
 		}
-		other.trigger_gravity_check = spawn();
-		other.trigger_gravity_check.enemy = self;
-		other.trigger_gravity_check.owner = other;
-		other.trigger_gravity_check.gravity = other.gravity;
-		other.trigger_gravity_check.think = trigger_gravity_check_think;
-		other.trigger_gravity_check.nextthink = time;
-		other.trigger_gravity_check.count = 2;
-		if(other.gravity)
-			g *= other.gravity;
+		toucher.trigger_gravity_check = spawn();
+		toucher.trigger_gravity_check.enemy = this;
+		toucher.trigger_gravity_check.owner = toucher;
+		toucher.trigger_gravity_check.gravity = toucher.gravity;
+		setthink(toucher.trigger_gravity_check, trigger_gravity_check_think);
+		toucher.trigger_gravity_check.nextthink = time;
+		toucher.trigger_gravity_check.count = 2;
+		if(toucher.gravity)
+			g *= toucher.gravity;
 	}
 
-	if (other.gravity != g)
+	if (toucher.gravity != g)
 	{
-		other.gravity = g;
-		if(self.noise != "")
-			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
-		UpdateCSQCProjectile(self.owner);
+		toucher.gravity = g;
+		if(this.noise != "")
+			_sound (toucher, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+		UpdateCSQCProjectile(this.owner);
 	}
 }
 
-void spawnfunc_trigger_gravity()
+spawnfunc(trigger_gravity)
 {
-	if(self.gravity == 1)
+	if(this.gravity == 1)
 		return;
 
 	EXACTTRIGGER_INIT;
-	self.touch = trigger_gravity_touch;
-	if(self.noise != "")
-		precache_sound(self.noise);
+	settouch(this, trigger_gravity_touch);
+	if(this.noise != "")
+		precache_sound(this.noise);
 
-	self.state = true;
+	this.state = true;
 	IFTARGETED
 	{
-		self.use = trigger_gravity_use;
-		if(self.spawnflags & 2)
-			self.state = false;
+		this.use = trigger_gravity_use;
+		if(this.spawnflags & 2)
+			this.state = false;
 	}
 }
 #endif

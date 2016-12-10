@@ -1,0 +1,13 @@
+// generated file; do not modify
+#include <lib/csqcmodel/interpolate.qc>
+#include <lib/csqcmodel/model.qc>
+#ifdef CSQC
+    #include <lib/csqcmodel/cl_model.qc>
+#endif
+#ifdef SVQC
+    #include <lib/csqcmodel/sv_model.qc>
+#endif
+#include <lib/csqcmodel/player.qc>
+#ifdef CSQC
+    #include <lib/csqcmodel/cl_player.qc>
+#endif

@@ -1,0 +1,24 @@
+#pragma once
+
+#include "../item/checkbox.qh"
+CLASS(XonoticSliderCheckBox, CheckBox)
+	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string));
+	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float));
+	METHOD(XonoticSliderCheckBox, draw, void(entity));
+	ATTRIB(XonoticSliderCheckBox, fontSize, float, SKINFONTSIZE_NORMAL);
+	ATTRIB(XonoticSliderCheckBox, image, string, SKINGFX_CHECKBOX);
+
+	ATTRIB(XonoticSliderCheckBox, color, vector, SKINCOLOR_CHECKBOX_N);
+	ATTRIB(XonoticSliderCheckBox, colorC, vector, SKINCOLOR_CHECKBOX_C);
+	ATTRIB(XonoticSliderCheckBox, colorF, vector, SKINCOLOR_CHECKBOX_F);
+	ATTRIB(XonoticSliderCheckBox, colorD, vector, SKINCOLOR_CHECKBOX_D);
+
+	ATTRIB(XonoticSliderCheckBox, alpha, float, SKINALPHA_TEXT);
+	ATTRIB(XonoticSliderCheckBox, disabledAlpha, float, SKINALPHA_DISABLED);
+
+	ATTRIB(XonoticSliderCheckBox, controlledSlider, entity);
+	ATTRIB(XonoticSliderCheckBox, offValue, float, -1);
+	ATTRIB(XonoticSliderCheckBox, inverted, float, 0);
+	ATTRIB(XonoticSliderCheckBox, savedValue, float, -1);
+ENDCLASS(XonoticSliderCheckBox)
+entity makeXonoticSliderCheckBox(float, float, entity, string);

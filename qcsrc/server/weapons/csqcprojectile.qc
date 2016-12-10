@@ -1,56 +1,56 @@
 #include "csqcprojectile.qh"
-#include "../_all.qh"
 
-#include "../t_items.qh"
+#include <common/t_items.qh>
 
 #include "../command/common.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/weapons/all.qh"
+#include <common/constants.qh>
+#include <common/net_linked.qh>
+#include <common/weapons/_all.qh>
 
 .float csqcprojectile_type;
 
-bool CSQCProjectile_SendEntity(entity to, int sf)
+bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 {
 	float ft, fr;
 
 	// note: flag 0x08 = no trail please (teleport bit)
 	sf = sf & 0x0F;
 
-	if(self.csqcprojectile_clientanimate)
+	if(this.csqcprojectile_clientanimate)
 		sf |= 0x80; // client animated, not interpolated
 
-	if(self.flags & FL_ONGROUND)
+	if(IS_ONGROUND(this))
 		sf |= 0x40;
 
 	ft = fr = 0;
-	if(self.fade_time != 0 || self.fade_rate != 0)
+	if(this.fade_time != 0 || this.fade_rate != 0)
 	{
-		ft = (self.fade_time - time) / sys_frametime;
-		fr = (1 / self.fade_rate) / sys_frametime;
+		ft = (this.fade_time - time) / sys_frametime;
+		fr = (1 / this.fade_rate) / sys_frametime;
 		if(ft <= 255 && fr <= 255 && fr >= 1)
 			sf |= 0x20;
 	}
 
-	if(self.gravity != 0)
+	if(this.gravity != 0)
 		sf |= 0x10;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin.x);
-		WriteCoord(MSG_ENTITY, self.origin.y);
-		WriteCoord(MSG_ENTITY, self.origin.z);
+		WriteCoord(MSG_ENTITY, this.origin.x);
+		WriteCoord(MSG_ENTITY, this.origin.y);
+		WriteCoord(MSG_ENTITY, this.origin.z);
 
 		if(sf & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, self.velocity.x);
-			WriteCoord(MSG_ENTITY, self.velocity.y);
-			WriteCoord(MSG_ENTITY, self.velocity.z);
+			WriteCoord(MSG_ENTITY, this.velocity.x);
+			WriteCoord(MSG_ENTITY, this.velocity.y);
+			WriteCoord(MSG_ENTITY, this.velocity.z);
 			if(sf & 0x10)
-				WriteCoord(MSG_ENTITY, self.gravity);
+				WriteCoord(MSG_ENTITY, this.gravity);
 		}
 
 		if(sf & 0x20)
@@ -59,11 +59,11 @@ bool CSQCProjectile_SendEntity(entity to, int sf)
 			WriteByte(MSG_ENTITY, fr);
 		}
 
-		WriteByte(MSG_ENTITY, self.realowner.team);
+		WriteByte(MSG_ENTITY, this.realowner.team);
 	}
 
 	if(sf & 2)
-		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
+		WriteByte(MSG_ENTITY, this.csqcprojectile_type); // TODO maybe put this into sf?
 
 	return true;
 }
@@ -72,7 +72,7 @@ bool CSQCProjectile_SendEntity(entity to, int sf)
 void CSQCProjectile_Check(entity e)
 {
 	if(e.csqcprojectile_clientanimate)
-	if(e.flags & FL_ONGROUND)
+	if(IS_ONGROUND(e))
 	if(e.origin != e.csqcprojectile_oldorigin)
 		UpdateCSQCProjectile(e);
 	e.csqcprojectile_oldorigin = e.origin;
@@ -84,7 +84,7 @@ void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 
 	e.csqcprojectile_clientanimate = clientanimate;
 
-	if(e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
+	if(e.move_movetype == MOVETYPE_TOSS || e.move_movetype == MOVETYPE_BOUNCE)
 	{
 		if(e.gravity == 0)
 			e.gravity = 1;
@@ -99,13 +99,13 @@ void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 
 void UpdateCSQCProjectile(entity e)
 {
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+	if(getSendEntity(e) == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;
 	}
 // FIXME HACK
-	else if(e.SendEntity == ItemSend)
+	else if(getSendEntity(e) == ItemSend)
 	{
 		ItemUpdate(e);
 	}
@@ -114,7 +114,7 @@ void UpdateCSQCProjectile(entity e)
 
 void UpdateCSQCProjectileAfterTeleport(entity e)
 {
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+	if(getSendEntity(e) == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;

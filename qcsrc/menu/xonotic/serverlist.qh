@@ -1,0 +1,166 @@
+#pragma once
+
+#include "listbox.qh"
+CLASS(XonoticServerList, XonoticListBox)
+	METHOD(XonoticServerList, configureXonoticServerList, void(entity));
+	ATTRIB(XonoticServerList, rowsPerItem, float, 1);
+	METHOD(XonoticServerList, draw, void(entity));
+	METHOD(XonoticServerList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticServerList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticServerList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticServerList, toggleFavorite, void(entity, string));
+
+	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85);
+	METHOD(XonoticServerList, mouseMove, float(entity, vector));
+	ATTRIB(XonoticServerList, mouseOverIcons, bool, false);
+	METHOD(XonoticServerList, focusedItemChangeNotify, void(entity));
+
+	ATTRIB(XonoticServerList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticServerList, realUpperMargin, float, 0);
+	ATTRIB(XonoticServerList, columnIconsOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnIconsSize, float, 0);
+	ATTRIB(XonoticServerList, columnPingOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnPingSize, float, 0);
+	ATTRIB(XonoticServerList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnNameSize, float, 0);
+	ATTRIB(XonoticServerList, columnMapOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnMapSize, float, 0);
+	ATTRIB(XonoticServerList, columnTypeOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnTypeSize, float, 0);
+	ATTRIB(XonoticServerList, columnPlayersOrigin, float, 0);
+	ATTRIB(XonoticServerList, columnPlayersSize, float, 0);
+	ATTRIB(XonoticServerList, lockedSelectedItem, bool, true);      // initially keep selected the first item of the list, avoiding an unwanted scrolling
+
+	ATTRIB(XonoticServerList, selectedServer, string); // to restore selected server when needed
+	METHOD(XonoticServerList, setSelected, void(entity, float));
+	METHOD(XonoticServerList, setSortOrder, void(entity, float, float));
+	ATTRIB(XonoticServerList, filterShowEmpty, float, 1);
+	ATTRIB(XonoticServerList, filterShowFull, float, 1);
+	ATTRIB(XonoticServerList, filterString, string);
+	ATTRIB(XonoticServerList, controlledTextbox, entity);
+	ATTRIB(XonoticServerList, ipAddressBox, entity);
+	ATTRIB(XonoticServerList, favoriteButton, entity);
+	ATTRIB(XonoticServerList, nextRefreshTime, float, 0);
+	METHOD(XonoticServerList, refreshServerList, void(entity, float));  // refresh mode: REFRESHSERVERLIST_*
+	ATTRIB(XonoticServerList, needsRefresh, float, 1);
+	METHOD(XonoticServerList, focusEnter, void(entity));
+	METHOD(XonoticServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)));
+	ATTRIB(XonoticServerList, sortButton1, entity);
+	ATTRIB(XonoticServerList, sortButton2, entity);
+	ATTRIB(XonoticServerList, sortButton3, entity);
+	ATTRIB(XonoticServerList, sortButton4, entity);
+	ATTRIB(XonoticServerList, sortButton5, entity);
+	ATTRIB(XonoticServerList, connectButton, entity);
+	ATTRIB(XonoticServerList, infoButton, entity);
+	ATTRIB(XonoticServerList, currentSortOrder, float, 0);
+	ATTRIB(XonoticServerList, currentSortField, float, -1);
+
+	ATTRIB(XonoticServerList, ipAddressBoxFocused, float, -1);
+
+	ATTRIB(XonoticServerList, seenIPv4, float, 0);
+	ATTRIB(XonoticServerList, seenIPv6, float, 0);
+	ATTRIB(XonoticServerList, categoriesHeight, float, 1.25);
+
+	METHOD(XonoticServerList, getTotalHeight, float(entity));
+	METHOD(XonoticServerList, getItemAtPos, float(entity, float));
+	METHOD(XonoticServerList, getItemStart, float(entity, float));
+	METHOD(XonoticServerList, getItemHeight, float(entity, float));
+ENDCLASS(XonoticServerList)
+entity makeXonoticServerList();
+
+void RegisterSLCategories();
+float CheckCategoryForEntry(float entry);
+void ServerList_Filter_Change(entity box, entity me);
+void ServerList_Categories_Click(entity box, entity me);
+void ServerList_ShowEmpty_Click(entity box, entity me);
+void ServerList_ShowFull_Click(entity box, entity me);
+void ServerList_Connect_Click(entity btn, entity me);
+void ServerList_Update_favoriteButton(entity btn, entity me);
+void ServerList_Favorite_Click(entity btn, entity me);
+void ServerList_Info_Click(entity btn, entity me);
+
+// server cache fields
+#define SLIST_FIELDS \
+	SLIST_FIELD(CNAME,       "cname") \
+	SLIST_FIELD(PING,        "ping") \
+	SLIST_FIELD(GAME,        "game") \
+	SLIST_FIELD(MOD,         "mod") \
+	SLIST_FIELD(MAP,         "map") \
+	SLIST_FIELD(NAME,        "name") \
+	SLIST_FIELD(MAXPLAYERS,  "maxplayers") \
+	SLIST_FIELD(NUMPLAYERS,  "numplayers") \
+	SLIST_FIELD(NUMHUMANS,   "numhumans") \
+	SLIST_FIELD(NUMBOTS,     "numbots") \
+	SLIST_FIELD(PROTOCOL,    "protocol") \
+	SLIST_FIELD(FREESLOTS,   "freeslots") \
+	SLIST_FIELD(PLAYERS,     "players") \
+	SLIST_FIELD(QCSTATUS,    "qcstatus") \
+	SLIST_FIELD(CATEGORY,    "category") \
+	SLIST_FIELD(ISFAVORITE,  "isfavorite")
+
+#define SLIST_FIELD(suffix,name) float SLIST_FIELD_##suffix;
+SLIST_FIELDS
+#undef SLIST_FIELD
+
+float autocvar_menu_slist_categories;
+float autocvar_menu_slist_categories_onlyifmultiple;
+float autocvar_menu_slist_purethreshold;
+float autocvar_menu_slist_modimpurity;
+float autocvar_menu_slist_recommendations;
+float autocvar_menu_slist_recommendations_maxping;
+float autocvar_menu_slist_recommendations_minfreeslots;
+float autocvar_menu_slist_recommendations_minhumans;
+float autocvar_menu_slist_recommendations_purethreshold;
+
+const float REFRESHSERVERLIST_RESORT = 0;    // sort the server list again to update for changes to e.g. favorite status, categories
+const float REFRESHSERVERLIST_REFILTER = 1;  // ..., also update filter and sort criteria
+const float REFRESHSERVERLIST_ASK = 2;       // ..., also suggest querying servers now
+const float REFRESHSERVERLIST_RESET = 3;     // ..., also clear the list first
+
+// function declarations
+float IsServerInList(string list, string srv);
+#define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
+#define IsPromoted(srv) IsServerInList(_Nex_ExtResponseSystem_PromotedServers, srv)
+#define IsRecommended(srv) IsServerInList(_Nex_ExtResponseSystem_RecommendedServers, srv)
+
+entity RetrieveCategoryEnt(float catnum);
+
+float CheckCategoryOverride(float cat);
+float m_gethostcachecategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
+
+
+// fields for category entities
+const int MAX_CATEGORIES = 9;
+const int CATEGORY_FIRST = 1;
+entity categories[MAX_CATEGORIES];
+int category_ent_count;
+.string cat_name;
+.string cat_string;
+.string cat_enoverride_string;
+.string cat_dioverride_string;
+.float cat_enoverride;
+.float cat_dioverride;
+
+// fields for drawing categories
+int category_name[MAX_CATEGORIES];
+int category_item[MAX_CATEGORIES];
+int category_draw_count;
+
+#define SLIST_CATEGORIES \
+	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             CTX(_("SLCAT^Favorites"))) \
+	SLIST_CATEGORY(CAT_RECOMMENDED,  "",            "",             CTX(_("SLCAT^Recommended"))) \
+	SLIST_CATEGORY(CAT_NORMAL,       "",            "CAT_SERVERS",  CTX(_("SLCAT^Normal Servers"))) \
+	SLIST_CATEGORY(CAT_SERVERS,      "CAT_NORMAL",  "CAT_SERVERS",  CTX(_("SLCAT^Servers"))) \
+	SLIST_CATEGORY(CAT_XPM,          "CAT_NORMAL",  "CAT_SERVERS",  CTX(_("SLCAT^Competitive Mode"))) \
+	SLIST_CATEGORY(CAT_MODIFIED,     "",            "CAT_SERVERS",  CTX(_("SLCAT^Modified Servers"))) \
+	SLIST_CATEGORY(CAT_OVERKILL,     "",            "CAT_SERVERS",  CTX(_("SLCAT^Overkill"))) \
+	SLIST_CATEGORY(CAT_INSTAGIB,     "",            "CAT_SERVERS",  CTX(_("SLCAT^InstaGib"))) \
+	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  CTX(_("SLCAT^Defrag Mode")))
+
+#define SLIST_CATEGORY_AUTOCVAR(name) autocvar_menu_slist_categories_##name##_override
+#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
+	int name; \
+	string SLIST_CATEGORY_AUTOCVAR(name) = enoverride;
+SLIST_CATEGORIES
+#undef SLIST_CATEGORY

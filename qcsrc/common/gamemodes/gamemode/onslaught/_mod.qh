@@ -1,0 +1,19 @@
+// generated file; do not modify
+#include <common/gamemodes/gamemode/onslaught/controlpoint.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/onslaught/cl_controlpoint.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/onslaught/sv_controlpoint.qh>
+#endif
+#include <common/gamemodes/gamemode/onslaught/generator.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/onslaught/cl_generator.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/onslaught/sv_generator.qh>
+#endif
+#include <common/gamemodes/gamemode/onslaught/onslaught.qh>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/onslaught/sv_onslaught.qh>
+#endif

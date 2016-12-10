@@ -1,5 +1,4 @@
-#ifndef PLAYERSTATS_H
-#define PLAYERSTATS_H
+#pragma once
 
 #ifdef SVQC
 //float PS_PM_IN_DB = -1;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
@@ -41,6 +40,7 @@ const string PLAYERSTATS_SCOREBOARD_POS = "scoreboardpos";
 
 const string PLAYERSTATS_TOTAL = "total-";
 const string PLAYERSTATS_SCOREBOARD = "scoreboard-";
+const string PLAYERSTATS_ANTICHEAT = "anticheat-";
 
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3 = "achievement-kill-spree-3";
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5 = "achievement-kill-spree-5";
@@ -112,8 +112,7 @@ const float PS_D_STATUS_RECEIVED = 1;
 float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
 string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
 float autocvar_g_playerstats_playerdetail_autoupdatetime = 1800; // automatically update every 30 minutes anyway
-void PlayerStats_PlayerDetail(void);
-void PlayerStats_PlayerDetail_CheckUpdate(void);
+void PlayerStats_PlayerDetail();
+void PlayerStats_PlayerDetail_CheckUpdate();
 void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
-#endif
 #endif

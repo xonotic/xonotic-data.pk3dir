@@ -1,20 +1,20 @@
+#include "relay_if.qh"
 #ifdef SVQC
-void trigger_relay_if_use()
+void trigger_relay_if_use(entity this, entity actor, entity trigger)
 {
-	float n;
-	n = self.count;
+	int n = this.count;
 
 	// TODO make this generic AND faster than nextent()ing through all, if somehow possible
-	n = (cvar_string(self.netname) == cvar_string(self.message));
-	if(self.spawnflags & 1)
+	n = (cvar_string(this.netname) == cvar_string(this.message));
+	if(this.spawnflags & 1)
 		n = !n;
 
 	if(n)
-		SUB_UseTargets();
+		SUB_UseTargets(this, actor, trigger);
 }
 
-void spawnfunc_trigger_relay_if()
+spawnfunc(trigger_relay_if)
 {
-	self.use = trigger_relay_if_use;
+	this.use = trigger_relay_if_use;
 }
 #endif

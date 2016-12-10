@@ -1,0 +1,9 @@
+#pragma once
+
+void WarpZone_FixPMove();
+void WarpZone_FixView();
+
+void WarpZone_Shutdown();
+
+vector warpzone_save_view_origin;
+vector warpzone_save_view_angles;

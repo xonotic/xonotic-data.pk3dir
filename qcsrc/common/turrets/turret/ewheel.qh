@@ -1,0 +1,18 @@
+#pragma once
+
+//#define EWHEEL_FANCYPATH
+
+#include "ewheel_weapon.qh"
+
+CLASS(EWheel, Turret)
+/* spawnflags */ ATTRIB(EWheel, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE | TUR_FLAG_ROAM);
+/* mins       */ ATTRIB(EWheel, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(EWheel, maxs, vector, '32 32 48');
+/* modelname  */ ATTRIB(EWheel, mdl, string, "ewheel-base2.md3");
+/* model      */ ATTRIB_STRZONE(EWheel, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(EWheel, head_model, string, strcat("models/turrets/", "ewheel-gun1.md3"));
+/* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
+/* fullname   */ ATTRIB(EWheel, turret_name, string, _("eWheel Turret"));
+    ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
+ENDCLASS(EWheel)
+REGISTER_TURRET(EWHEEL, NEW(EWheel));

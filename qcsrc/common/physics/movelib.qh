@@ -1,0 +1,50 @@
+#pragma once
+
+#ifdef SVQC
+.vector moveto;
+
+/**
+    Simulate drag
+    this.velocity = movelib_dragvec(this.velocity,0.02,0.5);
+**/
+vector movelib_dragvec(entity this, float drag, float exp_);
+
+/**
+    Simulate drag
+    this.velocity *= movelib_dragflt(somespeed,0.01,0.7);
+**/
+float movelib_dragflt(float fspeed,float drag,float exp_);
+
+/**
+    Do a inertia simulation based on velocity.
+    Basicaly, this allows you to simulate loss of steering with higher speed.
+    this.velocity = movelib_inertmove_byspeed(this.velocity,newvel,1000,0.1,0.9);
+**/
+vector movelib_inertmove_byspeed(entity this, vector vel_new, float vel_max, float newmin, float oldmax);
+
+vector movelib_inertmove(entity this, vector new_vel, float new_bias);
+
+.float  movelib_lastupdate;
+void movelib_move(entity this, vector force, float max_velocity, float drag, float theMass, float breakforce);
+
+/*
+void movelib_move_simple(vector newdir,float velo,float blendrate)
+{
+    this.velocity = this.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
+}
+*/
+#define movelib_move_simple(e,newdir,velo,blendrate) \
+    e.velocity = e.velocity * (1 - blendrate) + (newdir * blendrate) * velo
+
+#define movelib_move_simple_gravity(e,newdir,velo,blendrate) \
+    if(IS_ONGROUND(e)) movelib_move_simple(e,newdir,velo,blendrate)
+
+void movelib_brake_simple(entity this, float force);
+
+/**
+Pitches and rolls the entity to match the gound.
+Yed need to set v_up and v_forward (generally by calling makevectors) before calling this.
+**/
+#endif
+
+void movelib_groundalign4point(entity this, float spring_length, float spring_up, float blendrate, float _max);

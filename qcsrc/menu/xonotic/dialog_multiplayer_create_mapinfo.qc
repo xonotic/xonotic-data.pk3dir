@@ -1,33 +1,11 @@
-#ifndef DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
-#define DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
-#include "dialog.qc"
-CLASS(XonoticMapInfoDialog, XonoticDialog)
-	METHOD(XonoticMapInfoDialog, fill, void(entity));
-	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity));
-	ATTRIB(XonoticMapInfoDialog, title, string, _("Map Information"))
-	ATTRIB(XonoticMapInfoDialog, color, vector, SKINCOLOR_DIALOG_MAPINFO)
-	ATTRIB(XonoticMapInfoDialog, intendedWidth, float, 1.0)
-	ATTRIB(XonoticMapInfoDialog, rows, float, 11)
-	ATTRIB(XonoticMapInfoDialog, columns, float, 10)
+#include "dialog_multiplayer_create_mapinfo.qh"
 
-	ATTRIB(XonoticMapInfoDialog, previewImage, entity, NULL)
-	ATTRIB(XonoticMapInfoDialog, titleLabel, entity, NULL)
-	ATTRIB(XonoticMapInfoDialog, authorLabel, entity, NULL)
-	ATTRIB(XonoticMapInfoDialog, descriptionLabel, entity, NULL)
-	ATTRIB(XonoticMapInfoDialog, featuresLabel, entity, NULL)
+#include "button.qh"
+#include "image.qh"
+#include "maplist.qh"
+#include "textlabel.qh"
+#include <common/mapinfo.qh>
 
-	ATTRIBARRAY(XonoticMapInfoDialog, typeLabels, entity, 24)
-
-	ATTRIB(XonoticMapInfoDialog, currentMapIndex, float, 0)
-	ATTRIB(XonoticMapInfoDialog, currentMapBSPName, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapTitle, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapAuthor, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapDescription, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapPreviewImage, string, string_null)
-ENDCLASS(XonoticMapInfoDialog)
-#endif
-
-#ifdef IMPLEMENTATION
 void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 {
 	me.currentMapIndex = i;
@@ -57,11 +35,11 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 	else
 		me.previewImage.src = me.currentMapPreviewImage;
 
-	for(i = 0; i < GameType_GetCount(); ++i)
+	for(i = 0; i < GameType_GetTotalCount(); ++i)
 	{
 		entity e;
 		e = me.(typeLabels[i]);
-		e.disabled = !(MapInfo_Map_supportedGametypes & GameType_GetID(i));
+		e.disabled = !(MapInfo_Map_supportedGametypes & GameType_GetID(i).m_flags);
 	}
 
 	MapInfo_ClearTemps();
@@ -91,9 +69,9 @@ void XonoticMapInfoDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
 
-	n = ceil(GameType_GetCount() / (me.rows - 6));
+	n = ceil(GameType_GetTotalCount() / (me.rows - 6));
 	wgt = (w - 0.2) / n;
-	for(i = 0; i < GameType_GetCount(); ++i)
+	for(i = 0; i < GameType_GetTotalCount(); ++i)
 	{
 		if(mod(i, n) == 0)
 		{
@@ -119,4 +97,3 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.startButton.onClick = MapList_LoadMap;
 			me.startButton.onClickEntity = NULL; // filled later
 }
-#endif

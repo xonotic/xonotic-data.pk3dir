@@ -1,0 +1,4 @@
+#pragma once
+#include "../panel.qh"
+
+void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime);

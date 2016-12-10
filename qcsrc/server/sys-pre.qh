@@ -1,14 +1,33 @@
-#ifndef SERVER_SYS_PRE_H
-#define SERVER_SYS_PRE_H
+#pragma once
 
-#define objerror builtin_objerror
 #define droptofloor builtin_droptofloor
-#define sound builtin_sound
-#define remove builtin_remove
 #define cvar_set builtin_cvar_set
 #define cvar_string builtin_cvar_string
 #define cvar builtin_cvar
 
-#pragma noref 1
+#define IT_SHOTGUN          _IT_SHOTGUN /* BIT(0) */
+#define IT_SUPER_SHOTGUN    _IT_SUPER_SHOTGUN /* BIT(1) */
+#define IT_NAILGUN          _IT_NAILGUN /* BIT(2) */
+#define IT_SUPER_NAILGUN    _IT_SUPER_NAILGUN /* BIT(3) */
+#define IT_GRENADE_LAUNCHER _IT_GRENADE_LAUNCHER /* BIT(4) */
+#define IT_ROCKET_LAUNCHER  _IT_ROCKET_LAUNCHER /* BIT(5) */
+#define IT_LIGHTNING        _IT_LIGHTNING /* BIT(6) */
+#define IT_EXTRA_WEAPON     _IT_EXTRA_WEAPON /* BIT(7) */
+#define IT_SHELLS           _IT_SHELLS /* BIT(8) */
+#define IT_NAILS            _IT_NAILS /* BIT(9) */
+#define IT_ROCKETS          _IT_ROCKETS /* BIT(10) */
+#define IT_CELLS            _IT_CELLS /* BIT(11) */
+#define IT_AXE              _IT_AXE /* BIT(12) */
+#define IT_ARMOR1           _IT_ARMOR1 /* BIT(13) */
+#define IT_ARMOR2           _IT_ARMOR2 /* BIT(14) */
+#define IT_ARMOR3           _IT_ARMOR3 /* BIT(15) */
+#define IT_SUPERHEALTH      _IT_SUPERHEALTH /* BIT(16) */
+#define IT_KEY1             _IT_KEY1 /* BIT(17) */
+#define IT_KEY2             _IT_KEY2 /* BIT(18) */
+// FIXME: special meaning when used in client items stat
+#define IT_INVISIBILITY     _IT_INVISIBILITY /* BIT(19) */
+#define IT_INVULNERABILITY  _IT_INVULNERABILITY /* BIT(20) */
+#define IT_SUIT             _IT_SUIT /* BIT(21) */
+#define IT_QUAD             _IT_QUAD /* BIT(22) */
 
-#endif
+#pragma noref 1

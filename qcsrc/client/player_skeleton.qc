@@ -1,8 +1,12 @@
 #include "player_skeleton.qh"
 
-#include "../common/csqcmodel_settings.qh"
+#include <common/physics/movetypes/movetypes.qh>
+#include "mutators/events.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../lib/warpzone/anglestransform.qh"
 
-#include "../warpzonelib/anglestransform.qh"
+.vector v_angle;
+.float v_angle_save_x;
 
 class(Skeleton) .float skeleton_info_modelindex;
 class(Skeleton) .float skeleton_info_skin;
@@ -48,7 +52,7 @@ void skeleton_loadinfo(entity e)
 		}
 	}
 	else
-		dprint("No model parameters for ", e.model, "\n");
+		LOG_TRACE("No model parameters for ", e.model);
 	//dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
 	get_model_parameters(string_null, 0);
 	e.skeleton_info_modelindex = e.modelindex;
@@ -77,8 +81,9 @@ void skeleton_markbones(entity e)
 	}
 }
 
-void skel_set_boneabs(float s, float bone, vector absorg)
+void skel_set_boneabs(float s, int bone, vector absorg)
 {
+    TC(int, bone);
 	vector absang = fixedvectoangles2(v_forward, v_up);
 
 	vector parentorg = skel_get_boneabs(s, skel_get_boneparent(s, bone));
@@ -106,8 +111,9 @@ void free_skeleton_from_frames(entity e)
 	}
 }
 
-void skeleton_from_frames(entity e, float is_dead)
+void skeleton_from_frames(entity e, bool is_dead)
 {
+    TC(bool, is_dead);
 	float m = e.modelindex;
 	if(!e.skeletonindex)
 	{
@@ -174,14 +180,23 @@ void skeleton_from_frames(entity e, float is_dead)
 
 	if(!is_dead)
 	{
-		if(self == csqcplayer)
-			self.v_angle_x = input_angles_x;
+		if(e == csqcplayer)
+		{
+			if(e.move_movetype == MOVETYPE_NONE)
+			{
+				if(!e.v_angle_save_x)
+					e.v_angle_save_x = input_angles.x;
+				e.v_angle_x = e.v_angle_save_x;
+			}
+			else
+				e.v_angle_x = input_angles.x;
+		}
 		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(e.(bone_aim[i]))
 			{
-				vector aim = '1 0 0' * bound(-90, self.v_angle.x, 90) * e.(bone_aimweight[i]);
+				vector aim = '1 0 0' * bound(-90, e.v_angle_x, 90) * e.(bone_aimweight[i]);
 				vector org = skel_get_boneabs(s, e.(bone_aim[i]));
 				vector ang_cur = fixedvectoangles2(v_forward, v_up);
 				vector ang = AnglesTransform_Multiply(aim, ang_cur);

@@ -1,25 +1,5 @@
-#ifndef SCREENSHOTIMAGE_H
-#define SCREENSHOTIMAGE_H
-#include "image.qc"
-CLASS(XonoticScreenshotImage, XonoticImage)
-	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity));
-	METHOD(XonoticScreenshotImage, load, void(entity, string));
-	METHOD(XonoticScreenshotImage, draw, void(entity));
-	ATTRIB(XonoticScreenshotImage, focusable, float, 1) // mousePress and mouseDrag work only if focusable is set
-	METHOD(XonoticScreenshotImage, mousePress, float(entity, vector));
-	METHOD(XonoticScreenshotImage, mouseDrag, float(entity, vector));
-	METHOD(XonoticScreenshotImage, mouseMove, float(entity, vector));
-	METHOD(XonoticScreenshotImage, resizeNotify, void(entity, vector, vector, vector, vector));
-	ATTRIB(XonoticScreenshotImage, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticScreenshotImage, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticScreenshotImage, showTitle, float, 1)
-	ATTRIB(XonoticScreenshotImage, screenshotTime, float, 0)
-	ATTRIB(XonoticScreenshotImage, screenshotTitle, string, string_null)
-ENDCLASS(XonoticScreenshotImage)
-entity makeXonoticScreenshotImage();
-#endif
+#include "screenshotimage.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticScreenshotImage()
 {
 	entity me;
@@ -76,12 +56,11 @@ void XonoticScreenshotImage_draw(entity me)
 		if (time < me.zoomTime + 2) // 1 seconds at full alpha, 1 second fading out
 		{
 			string zoomString;
-			float z;
-			z = me.zoomFactor * 100;
-			if (z - floor(z) == 0)
-				zoomString = sprintf("%d%%", z);
+			float myzoom = me.zoomFactor * 100;
+			if (myzoom - floor(myzoom) == 0)
+				zoomString = sprintf("%d%%", myzoom);
 			else
-				zoomString = sprintf("%.2f%%", z);
+				zoomString = sprintf("%.2f%%", myzoom);
 			theAlpha = (2 - (time - me.zoomTime));
 			draw_Text('0.05 0.95 0', zoomString, me.realFontSize, '1 1 1', theAlpha, false);
 		}
@@ -94,4 +73,3 @@ void XonoticScreenshotImage_resizeNotify(entity me, vector relOrigin, vector rel
 	me.realFontSize_y = me.fontSize / absSize.y;
 	me.realFontSize_x = me.fontSize / absSize.x;
 }
-#endif

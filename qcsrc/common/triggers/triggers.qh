@@ -1,5 +1,4 @@
-#ifndef TRIGGERS_H
-#define TRIGGERS_H
+#pragma once
 
 const float SF_TRIGGER_INIT = 1;
 const float SF_TRIGGER_UPDATE = 2;
@@ -8,7 +7,7 @@ const float SF_TRIGGER_RESET = 4;
 const float	SPAWNFLAG_NOMESSAGE = 1;
 const float	SPAWNFLAG_NOTOUCH = 1;
 
-.void() trigger_touch;
+.bool pushable;
 
 .float antiwall_flag; // Variable to define what to do with func_clientwall
 // 0 == do nothing, 1 == deactivate, 2 == activate
@@ -16,19 +15,23 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 .float height;
 
 .float nottargeted;
-#define IFTARGETED if(!self.nottargeted && self.targetname != "")
+#define IFTARGETED if(!this.nottargeted && this.targetname != "")
 
 .float lip;
 
 // used elsewhere (will fix)
 #ifdef SVQC
-void trigger_common_write(bool withtarget);
+void trigger_common_write(entity this, bool withtarget);
 
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
 
 void target_voicescript_next(entity pl);
 void target_voicescript_clear(entity pl);
+
+void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger);
 #endif
+
+.float sub_target_used;
 
 .float volume, atten;
 
@@ -37,8 +40,8 @@ void target_voicescript_clear(entity pl);
 void FixSize(entity e);
 
 #ifdef CSQC
-void trigger_common_read(bool withtarget);
-void trigger_remove_generic();
+void trigger_common_read(entity this, bool withtarget);
+void trigger_remove_generic(entity this);
 
 .float active;
 .string target;
@@ -49,6 +52,4 @@ const int ACTIVE_ACTIVE 	= 1;
 const int ACTIVE_IDLE 		= 2;
 const int ACTIVE_BUSY 		= 2;
 const int ACTIVE_TOGGLE		= 3;
-#endif
-
 #endif

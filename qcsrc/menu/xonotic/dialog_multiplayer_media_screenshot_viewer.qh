@@ -1,0 +1,22 @@
+#pragma once
+
+#include "dialog.qh"
+
+#include "screenshotimage.qh"
+
+CLASS(XonoticScreenshotViewerDialog, XonoticDialog)
+	METHOD(XonoticScreenshotViewerDialog, fill, void(entity));
+	METHOD(XonoticScreenshotViewerDialog, keyDown, float(entity, float, float, float));
+	METHOD(XonoticScreenshotViewerDialog, loadScreenshot, void(entity, string));
+	METHOD(XonoticScreenshotViewerDialog, close, void(entity));
+	ATTRIB(XonoticScreenshotViewerDialog, title, string, "Screenshot Viewer");
+	ATTRIB(XonoticScreenshotViewerDialog, name, string, "ScreenshotViewer");
+	ATTRIB(XonoticScreenshotViewerDialog, intendedWidth, float, 1);
+	ATTRIB(XonoticScreenshotViewerDialog, rows, float, 25);
+	ATTRIB(XonoticScreenshotViewerDialog, columns, float, 4);
+	ATTRIB(XonoticScreenshotViewerDialog, color, vector, SKINCOLOR_DIALOG_SCREENSHOTVIEWER);
+	ATTRIB(XonoticScreenshotViewerDialog, scrList, entity);
+	ATTRIB(XonoticScreenshotViewerDialog, screenshotImage, entity);
+	ATTRIB(XonoticScreenshotViewerDialog, slideShowButton, entity);
+	ATTRIB(XonoticScreenshotViewerDialog, currentScrPath, string);
+ENDCLASS(XonoticScreenshotViewerDialog)

@@ -1,15 +1,5 @@
-#ifndef SLIDER_SBFADETIME_H
-#define SLIDER_SBFADETIME_H
-#include "textslider.qc"
-CLASS(XonoticScoreboardFadeTimeSlider, XonoticTextSlider)
-	METHOD(XonoticScoreboardFadeTimeSlider, configureXonoticScoreboardFadeTimeSlider, void(entity));
-	METHOD(XonoticScoreboardFadeTimeSlider, loadCvars, void(entity));
-	METHOD(XonoticScoreboardFadeTimeSlider, saveCvars, void(entity));
-ENDCLASS(XonoticScoreboardFadeTimeSlider)
-entity makeXonoticScoreboardFadeTimeSlider();
-#endif
+#include "slider_sbfadetime.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticScoreboardFadeTimeSlider()
 {
 	entity me;
@@ -19,7 +9,7 @@ entity makeXonoticScoreboardFadeTimeSlider()
 }
 void XonoticScoreboardFadeTimeSlider_configureXonoticScoreboardFadeTimeSlider(entity me)
 {
-	me.configureXonoticTextSlider(me, "scoreboard_fadeinspeed");
+	me.configureXonoticTextSlider(me, "hud_panel_scoreboard_fadeinspeed", string_null);
 	me.addValue(me, ZCTX(_("PART^Slow")),     "5 2.5");
 	me.addValue(me, ZCTX(_("PART^Normal")),   "10 5");
 	me.addValue(me, ZCTX(_("PART^Fast")),     "15 7.5");
@@ -28,9 +18,9 @@ void XonoticScoreboardFadeTimeSlider_configureXonoticScoreboardFadeTimeSlider(en
 }
 void XonoticScoreboardFadeTimeSlider_loadCvars(entity me)
 {
-	me.setValueFromIdentifier(me, sprintf("%s %s",
-		cvar_string("scoreboard_fadeinspeed"),
-		cvar_string("scoreboard_fadeoutspeed")
+	me.setValueFromIdentifier_noAnim(me, sprintf("%s %s",
+		cvar_string("hud_panel_scoreboard_fadeinspeed"),
+		cvar_string("hud_panel_scoreboard_fadeoutspeed")
 	));
 }
 void XonoticScoreboardFadeTimeSlider_saveCvars(entity me)
@@ -38,8 +28,7 @@ void XonoticScoreboardFadeTimeSlider_saveCvars(entity me)
 	if(me.value >= 0 || me.value < me.nValues)
 	{
 		tokenize_console(me.getIdentifier(me));
-		cvar_set("scoreboard_fadeinspeed", argv(0));
-		cvar_set("scoreboard_fadeoutspeed", argv(1));
+		cvar_set("hud_panel_scoreboard_fadeinspeed", argv(0));
+		cvar_set("hud_panel_scoreboard_fadeoutspeed", argv(1));
 	}
 }
-#endif

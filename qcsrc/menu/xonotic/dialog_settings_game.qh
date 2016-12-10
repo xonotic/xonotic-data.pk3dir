@@ -1,0 +1,49 @@
+#pragma once
+
+#include "datasource.qh"
+CLASS(SettingSource, DataSource)
+	METHOD(SettingSource, getEntry, entity(entity this, int i, void(string name, string icon) returns));
+	METHOD(SettingSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns));
+	METHOD(SettingSource, reload, int(entity this, string filter));
+ENDCLASS(SettingSource)
+
+#include "listbox.qh"
+CLASS(XonoticRegisteredSettingsList, XonoticListBox)
+	ATTRIB(XonoticRegisteredSettingsList, alphaBG, float, 0);
+	ATTRIB(XonoticRegisteredSettingsList, itemAbsSize, vector, '0 0 0');
+	ATTRIB(XonoticRegisteredSettingsList, origin, vector, '0 0 0');
+	ATTRIB(XonoticRegisteredSettingsList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticRegisteredSettingsList, realUpperMargin, float, 0);
+	ATTRIB(XonoticRegisteredSettingsList, rowsPerItem, float, 2);
+	ATTRIB(XonoticRegisteredSettingsList, stringFilterBox, entity);
+	ATTRIB(XonoticRegisteredSettingsList, stringFilter, string);
+	ATTRIB(XonoticRegisteredSettingsList, typeToSearchString, string);
+	ATTRIB(XonoticRegisteredSettingsList, typeToSearchTime, float, 0);
+	ATTRIB(XonoticRegisteredSettingsList, source, DataSource);
+	ATTRIB(XonoticRegisteredSettingsList, onChange, void(entity, entity));
+	ATTRIB(XonoticRegisteredSettingsList, onChangeEntity, entity);
+	METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity));
+	METHOD(XonoticRegisteredSettingsList, drawListBoxItem, void(entity this, int i, vector absSize, bool isSelected, bool isFocused));
+	METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity this));
+	METHOD(XonoticRegisteredSettingsList, refilter, void(entity this));
+	METHOD(XonoticRegisteredSettingsList, resizeNotify, void(entity this, vector relOrigin, vector relSize, vector absOrigin, vector absSize));
+	METHOD(XonoticRegisteredSettingsList, setSelected, void(entity this, int i));
+	CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source);
+ENDCLASS(XonoticRegisteredSettingsList)
+
+#include "tab.qh"
+CLASS(XonoticGameSettingsTab, XonoticTab)
+	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGameSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5);
+	ATTRIB(XonoticGameSettingsTab, source, DataSource, NEW(SettingSource));
+	ATTRIB(XonoticGameSettingsTab, topicList, entity, NEW(XonoticRegisteredSettingsList, this.source));
+	ATTRIB(XonoticGameSettingsTab, currentPanel, entity, NEW(XonoticTab));
+	ATTRIB(XonoticGameSettingsTab, currentItem, entity);
+	METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this));
+	METHOD(XonoticGameSettingsTab, fill, void(entity this));
+	INIT(XonoticGameSettingsTab)
+    {
+        this.configureDialog(this);
+    }
+ENDCLASS(XonoticGameSettingsTab)

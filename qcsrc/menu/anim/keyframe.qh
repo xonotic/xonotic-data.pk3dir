@@ -1,0 +1,16 @@
+#pragma once
+
+#include "animation.qh"
+CLASS(Keyframe, Animation)
+	METHOD(Keyframe, addEasing, entity(entity, float, float, float(float, float, float, float)));
+	METHOD(Keyframe, addAnim, void(entity, entity));
+	METHOD(Keyframe, calcValue, float(entity, float, float, float, float));
+	ATTRIB(Keyframe, currentChild, entity);
+	ATTRIB(Keyframe, firstChild, entity);
+	ATTRIB(Keyframe, lastChild, entity);
+ENDCLASS(Keyframe)
+entity makeHostedKeyframe(entity, void(entity, float), float, float, float);
+entity makeKeyframe(entity, void(entity, float), float, float, float);
+float getNewChildStart(entity);
+float getNewChildDuration(entity, float);
+float getNewChildValue(entity);

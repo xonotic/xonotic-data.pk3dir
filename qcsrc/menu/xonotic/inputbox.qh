@@ -1,0 +1,37 @@
+#pragma once
+
+#include "../item/inputbox.qh"
+CLASS(XonoticInputBox, InputBox)
+	METHOD(XonoticInputBox, configureXonoticInputBox, void(entity, float, string, string));
+	METHOD(XonoticInputBox, focusLeave, void(entity));
+	METHOD(XonoticInputBox, setText, void(entity, string));
+	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float));
+	ATTRIB(XonoticInputBox, fontSize, float, SKINFONTSIZE_NORMAL);
+	ATTRIB(XonoticInputBox, image, string, SKINGFX_INPUTBOX);
+	ATTRIB(XonoticInputBox, onChange, void(entity, entity));
+	ATTRIB(XonoticInputBox, onChangeEntity, entity);
+	ATTRIB(XonoticInputBox, onEnter, void(entity, entity));
+	ATTRIB(XonoticInputBox, onEnterEntity, entity);
+	ATTRIB(XonoticInputBox, marginLeft, float, SKINMARGIN_INPUTBOX_CHARS);
+	ATTRIB(XonoticInputBox, marginRight, float, SKINMARGIN_INPUTBOX_CHARS);
+	ATTRIB(XonoticInputBox, color, vector, SKINCOLOR_INPUTBOX_N);
+	ATTRIB(XonoticInputBox, colorF, vector, SKINCOLOR_INPUTBOX_F);
+
+	ATTRIB(XonoticInputBox, alpha, float, SKINALPHA_TEXT);
+
+	// Clear button attributes
+	ATTRIB(XonoticInputBox, cb_offset, float, SKINOFFSET_CLEARBUTTON);  // bound to range -1, 0
+	ATTRIB(XonoticInputBox, cb_src, string, SKINGFX_CLEARBUTTON);
+	ATTRIB(XonoticInputBox, cb_color, vector, SKINCOLOR_CLEARBUTTON_N);
+	ATTRIB(XonoticInputBox, cb_colorF, vector, SKINCOLOR_CLEARBUTTON_F);
+	ATTRIB(XonoticInputBox, cb_colorC, vector, SKINCOLOR_CLEARBUTTON_C);
+
+	ATTRIB(XonoticInputBox, cvarName, string);
+	METHOD(XonoticInputBox, loadCvars, void(entity));
+	METHOD(XonoticInputBox, saveCvars, void(entity));
+	ATTRIB(XonoticInputBox, sendCvars, float, 0);
+
+	ATTRIB(XonoticInputBox, saveImmediately, float, 0);
+ENDCLASS(XonoticInputBox)
+entity makeXonoticInputBox_T(float, string, string theTooltip);
+entity makeXonoticInputBox(float, string);

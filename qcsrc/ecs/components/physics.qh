@@ -1,0 +1,26 @@
+#pragma once
+
+COMPONENT(phys);
+.vector com_phys_pos, com_phys_pos_prev;
+.vector com_phys_ang, com_phys_ang_prev;
+.vector com_phys_vel;
+.float com_phys_vel_max;
+.float com_phys_vel_max_air;
+.float com_phys_vel_max_air_strafe;
+.vector com_phys_acc;
+.float com_phys_acc_rate;
+.float com_phys_acc_rate_air;
+.float com_phys_acc_rate_air_strafe;
+.float com_phys_acc_rate_air_stop;
+.float com_phys_friction;
+
+.vector com_phys_gravity;
+.float com_phys_gravity_factor;
+// TODO: remove
+.bool com_phys_ground;
+.bool com_phys_air;
+.bool com_phys_ladder;
+.bool com_phys_vel_2d;
+.bool com_phys_water;
+.bool com_phys_friction_air;
+.bool move_qcphysics;

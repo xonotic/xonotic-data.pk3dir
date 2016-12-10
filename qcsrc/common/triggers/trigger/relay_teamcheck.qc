@@ -1,35 +1,36 @@
+#include "relay_teamcheck.qh"
 #ifdef SVQC
-void trigger_relay_teamcheck_use()
+void trigger_relay_teamcheck_use(entity this, entity actor, entity trigger)
 {
-	if(activator.team)
+	if(actor.team)
 	{
-		if(self.spawnflags & 2)
+		if(this.spawnflags & 2)
 		{
-			if(DIFF_TEAM(activator, self))
-				SUB_UseTargets();
+			if(DIFF_TEAM(actor, this))
+				SUB_UseTargets(this, actor, trigger);
 		}
 		else
 		{
-			if(SAME_TEAM(activator, self))
-				SUB_UseTargets();
+			if(SAME_TEAM(actor, this))
+				SUB_UseTargets(this, actor, trigger);
 		}
 	}
 	else
 	{
-		if(self.spawnflags & 1)
-			SUB_UseTargets();
+		if(this.spawnflags & 1)
+			SUB_UseTargets(this, actor, trigger);
 	}
 }
 
-void trigger_relay_teamcheck_reset()
+void trigger_relay_teamcheck_reset(entity this)
 {
-	self.team = self.team_saved;
+	this.team = this.team_saved;
 }
 
-void spawnfunc_trigger_relay_teamcheck()
+spawnfunc(trigger_relay_teamcheck)
 {
-	self.team_saved = self.team;
-	self.use = trigger_relay_teamcheck_use;
-	self.reset = trigger_relay_teamcheck_reset;
+	this.team_saved = this.team;
+	this.use = trigger_relay_teamcheck_use;
+	this.reset = trigger_relay_teamcheck_reset;
 }
 #endif

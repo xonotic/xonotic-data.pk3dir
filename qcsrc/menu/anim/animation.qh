@@ -1,0 +1,28 @@
+#pragma once
+
+CLASS(Animation, Object)
+	METHOD(Animation, configureAnimation, void(Animation this, entity, void(entity, float), float, float, float, float));
+	METHOD(Animation, update, void(Animation this, float, float, float));
+	METHOD(Animation, setTimeStartEnd, void(Animation this, float, float));
+	METHOD(Animation, setTimeStartDuration, void(Animation this, float, float));
+	METHOD(Animation, setValueStartEnd, void(Animation this, float, float));
+	METHOD(Animation, setValueStartDelta, void(Animation this, float, float));
+	METHOD(Animation, setObjectSetter, void(Animation this, entity, void(entity, float)));
+	METHOD(Animation, tick, void(Animation this, float));
+	METHOD(Animation, calcValue, float(Animation this, float, float, float, float));
+	METHOD(Animation, isStopped, float(Animation this));
+	METHOD(Animation, stopAnim, void(Animation this));
+	METHOD(Animation, resumeAnim, void(Animation this));
+	METHOD(Animation, isFinished, float(Animation this));
+	METHOD(Animation, finishAnim, void(Animation this));
+	ATTRIB(Animation, object, entity);
+	void setterDummy(Animation this, float) {}
+	ATTRIB(Animation, setter, void(Animation this, float), setterDummy);
+	ATTRIB(Animation, value, float, 0);
+	ATTRIB(Animation, startTime, float, 0);
+	ATTRIB(Animation, duration, float, 0);
+	ATTRIB(Animation, startValue, float, 0);
+	ATTRIB(Animation, delta, float, 0);
+	ATTRIB(Animation, stopped, float, false);
+	ATTRIB(Animation, finished, float, false);
+ENDCLASS(Animation)

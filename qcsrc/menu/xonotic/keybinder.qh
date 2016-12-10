@@ -1,0 +1,36 @@
+#pragma once
+
+#include "listbox.qh"
+CLASS(XonoticKeyBinder, XonoticListBox)
+	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity));
+	ATTRIB(XonoticKeyBinder, rowsPerItem, int, 1);
+	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticKeyBinder, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticKeyBinder, showNotify, void(entity));
+	METHOD(XonoticKeyBinder, setSelected, void(entity, float));
+	METHOD(XonoticKeyBinder, keyDown, float(entity, float, float, float));
+	METHOD(XonoticKeyBinder, keyGrabbed, void(entity, float, float));
+	METHOD(XonoticKeyBinder, destroy, void(entity));
+
+	ATTRIB(XonoticKeyBinder, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticKeyBinder, realUpperMargin, float, 0);
+	ATTRIB(XonoticKeyBinder, columnFunctionOrigin, float, 0);
+	ATTRIB(XonoticKeyBinder, columnFunctionSize, float, 0);
+	ATTRIB(XonoticKeyBinder, columnKeysOrigin, float, 0);
+	ATTRIB(XonoticKeyBinder, columnKeysSize, float, 0);
+
+	METHOD(XonoticKeyBinder, loadKeyBinds, void(entity));
+	ATTRIB(XonoticKeyBinder, previouslySelected, int, -1);
+	ATTRIB(XonoticKeyBinder, inMouseHandler, float, 0);
+	ATTRIB(XonoticKeyBinder, userbindEditButton, entity);
+	ATTRIB(XonoticKeyBinder, keyGrabButton, entity);
+	ATTRIB(XonoticKeyBinder, clearButton, entity);
+	ATTRIB(XonoticKeyBinder, userbindEditDialog, entity);
+	METHOD(XonoticKeyBinder, editUserbind, void(entity, string, string, string));
+ENDCLASS(XonoticKeyBinder)
+entity makeXonoticKeyBinder();
+void KeyBinder_Bind_Change(entity btn, entity me);
+void KeyBinder_Bind_Clear(entity btn, entity me);
+void KeyBinder_Bind_Edit(entity btn, entity me);
+void KeyBinder_Bind_Reset_All(entity btn, entity me);

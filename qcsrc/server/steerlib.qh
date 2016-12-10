@@ -1,10 +1,7 @@
-#ifndef STEERLIB_H
-#define STEERLIB_H
+#pragma once
 
 .vector steerto;
 
-vector steerlib_arrive(vector point,float maximal_distance);
-vector steerlib_attract2(vector point, float min_influense,float max_distance,float max_influense);
-vector steerlib_pull(vector point);
-
-#endif
+vector steerlib_arrive(entity this, vector point, float maximal_distance);
+vector steerlib_attract2(entity this, vector point, float min_influense, float max_distance, float max_influense);
+//vector steerlib_pull(entity this, vector point);

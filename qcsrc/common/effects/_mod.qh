@@ -1,0 +1,5 @@
+// generated file; do not modify
+#include <common/effects/all.qh>
+#include <common/effects/effectinfo.qh>
+
+#include <common/effects/qc/_mod.qh>

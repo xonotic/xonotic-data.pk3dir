@@ -1,11 +1,10 @@
-#ifndef MAPVOTING_H
-#define MAPVOTING_H
+#pragma once
 
 // definitions for functions used outside mapvoting.qc
 void MapVote_Start();
 void MapVote_Spawn();
 void MapVote_Think();
-void MapVote_SendPicture(float id);
+void MapVote_SendPicture(entity to, int id);
 float GameTypeVote_Start();
 float GameTypeVote_Finished(float pos);
 string GameTypeVote_MapInfo_FixName(string m);
@@ -13,4 +12,3 @@ string GameTypeVote_MapInfo_FixName(string m);
 float gametypevote;
 string getmapname_stored;
 float mapvote_initialized;
-#endif

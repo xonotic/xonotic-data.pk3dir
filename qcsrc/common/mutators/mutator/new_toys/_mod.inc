@@ -1,0 +1,4 @@
+// generated file; do not modify
+#ifdef SVQC
+    #include <common/mutators/mutator/new_toys/sv_new_toys.qc>
+#endif

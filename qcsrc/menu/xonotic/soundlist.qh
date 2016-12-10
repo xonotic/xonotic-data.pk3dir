@@ -1,0 +1,35 @@
+#pragma once
+
+#include "listbox.qh"
+CLASS(XonoticSoundList, XonoticListBox)
+	METHOD(XonoticSoundList, configureXonoticSoundList, void(entity));
+	ATTRIB(XonoticSoundList, rowsPerItem, float, 1);
+	METHOD(XonoticSoundList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticSoundList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticSoundList, getSounds, void(entity));
+	METHOD(XonoticSoundList, soundName, string(entity, int));
+	METHOD(XonoticSoundList, doubleClickListBoxItem, void(entity, int, vector));
+	METHOD(XonoticSoundList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticSoundList, destroy, void(entity));
+	METHOD(XonoticSoundList, showNotify, void(entity));
+
+	ATTRIB(XonoticSoundList, listSound, int, -1);
+	ATTRIB(XonoticSoundList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticSoundList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticSoundList, columnNameSize, float, 0);
+	ATTRIB(XonoticSoundList, columnNumberOrigin, float, 0);
+	ATTRIB(XonoticSoundList, columnNumberSize, float, 0);
+	ATTRIB(XonoticSoundList, realUpperMargin, float, 0);
+	ATTRIB(XonoticSoundList, origin, vector, '0 0 0');
+	ATTRIB(XonoticSoundList, itemAbsSize, vector, '0 0 0');
+
+	ATTRIB(XonoticSoundList, filterString, string);
+	ATTRIB(XonoticSoundList, playlist, entity);
+ENDCLASS(XonoticSoundList)
+
+entity makeXonoticSoundList();
+void SoundList_Filter_Change(entity box, entity me);
+void SoundList_Add(entity box, entity me);
+void SoundList_Add_All(entity box, entity me);
+void SoundList_Menu_Track_Change(entity box, entity me);
+void SoundList_Menu_Track_Reset(entity box, entity me);

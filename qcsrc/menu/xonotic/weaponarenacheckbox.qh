@@ -1,0 +1,14 @@
+#pragma once
+
+#include "../item/checkbox.qh"
+CLASS(XonoticWeaponarenaCheckBox, CheckBox)
+	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string));
+	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float));
+	ATTRIB(XonoticWeaponarenaCheckBox, fontSize, float, SKINFONTSIZE_NORMAL);
+	ATTRIB(XonoticWeaponarenaCheckBox, image, string, SKINGFX_CHECKBOX);
+	ATTRIB(XonoticWeaponarenaCheckBox, netname, string);
+
+	METHOD(XonoticWeaponarenaCheckBox, loadCvars, void(entity));
+	METHOD(XonoticWeaponarenaCheckBox, saveCvars, void(entity));
+ENDCLASS(XonoticWeaponarenaCheckBox)
+entity makeXonoticWeaponarenaCheckBox(string, string);

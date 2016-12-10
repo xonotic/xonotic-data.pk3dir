@@ -1,5 +1,4 @@
-#ifndef TEAMRADAR_H
-#define TEAMRADAR_H
+#pragma once
 
 const int MAX_TEAMRADAR_TIMES = 32;
 
@@ -33,22 +32,14 @@ vector teamradar_3dcoord_to_texcoord(vector in);
 
 vector teamradar_texcoord_to_2dcoord(vector in);
 
-vector teamradar_texcoord_to_3dcoord(vector in,float z);
-
-vector yinvert(vector v);
+vector teamradar_texcoord_to_3dcoord(vector in,float oz);
 
 void draw_teamradar_background(float fg);
 
 void draw_teamradar_player(vector coord3d, vector pangles, vector rgb);
 
-void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a);
+void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb, float a);
 
 void draw_teamradar_link(vector start, vector end, int colors);
 
 void teamradar_loadcvars();
-
-// radar links
-
-void Ent_RadarLink();
-
-#endif

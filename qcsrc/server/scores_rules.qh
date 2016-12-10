@@ -1,8 +1,7 @@
-#ifndef SCORES_RULES_H
-#define SCORES_RULES_H
+#pragma once
 
-void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabled);
+int NumTeams(int teams);
+int AvailableTeams();
+void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled);
 void ScoreRules_basics_end();
 void ScoreRules_generic();
-
-#endif

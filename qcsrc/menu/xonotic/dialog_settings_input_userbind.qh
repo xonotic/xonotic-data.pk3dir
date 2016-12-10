@@ -1,0 +1,17 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticUserbindEditDialog, XonoticDialog)
+	METHOD(XonoticUserbindEditDialog, loadUserBind, void(entity, string, string, string));
+	METHOD(XonoticUserbindEditDialog, fill, void(entity));
+	ATTRIB(XonoticUserbindEditDialog, title, string, _("User defined key bind"));
+	ATTRIB(XonoticUserbindEditDialog, color, vector, SKINCOLOR_DIALOG_USERBIND);
+	ATTRIB(XonoticUserbindEditDialog, intendedWidth, float, 0.7);
+	ATTRIB(XonoticUserbindEditDialog, rows, float, 4);
+	ATTRIB(XonoticUserbindEditDialog, columns, float, 3);
+	ATTRIB(XonoticUserbindEditDialog, keybindBox, entity);
+
+	ATTRIB(XonoticUserbindEditDialog, nameBox, entity);
+	ATTRIB(XonoticUserbindEditDialog, commandPressBox, entity);
+	ATTRIB(XonoticUserbindEditDialog, commandReleaseBox, entity);
+ENDCLASS(XonoticUserbindEditDialog)

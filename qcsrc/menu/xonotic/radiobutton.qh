@@ -1,0 +1,26 @@
+#pragma once
+
+#include "../item/radiobutton.qh"
+CLASS(XonoticRadioButton, RadioButton)
+	METHOD(XonoticRadioButton, configureXonoticRadioButton, void(entity, float, string, string, string, string));
+	METHOD(XonoticRadioButton, draw, void(entity));
+	METHOD(XonoticRadioButton, setChecked, void(entity, float));
+	ATTRIB(XonoticRadioButton, fontSize, float, SKINFONTSIZE_NORMAL);
+	ATTRIB(XonoticRadioButton, image, string, SKINGFX_RADIOBUTTON);
+	ATTRIB(XonoticRadioButton, color, vector, SKINCOLOR_RADIOBUTTON_N);
+	ATTRIB(XonoticRadioButton, colorC, vector, SKINCOLOR_RADIOBUTTON_C);
+	ATTRIB(XonoticRadioButton, colorF, vector, SKINCOLOR_RADIOBUTTON_F);
+	ATTRIB(XonoticRadioButton, colorD, vector, SKINCOLOR_RADIOBUTTON_D);
+
+	ATTRIB(XonoticRadioButton, cvarName, string);
+	ATTRIB(XonoticRadioButton, cvarValue, string);
+	ATTRIB(XonoticRadioButton, cvarOffValue, string);
+	ATTRIB(XonoticRadioButton, cvarValueIsAnotherCvar, float, 0);
+	METHOD(XonoticRadioButton, loadCvars, void(entity));
+	METHOD(XonoticRadioButton, saveCvars, void(entity));
+
+	ATTRIB(XonoticRadioButton, alpha, float, SKINALPHA_TEXT);
+	ATTRIB(XonoticRadioButton, disabledAlpha, float, SKINALPHA_DISABLED);
+ENDCLASS(XonoticRadioButton)
+entity makeXonoticRadioButton_T(float, string, string, string, string theTooltip);
+entity makeXonoticRadioButton(float, string, string, string);

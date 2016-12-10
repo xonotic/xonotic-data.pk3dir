@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDExitDialog, XonoticRootDialog)
+	METHOD(XonoticHUDExitDialog, fill, void(entity));
+	ATTRIB(XonoticHUDExitDialog, title, string, _("Panel HUD Setup"));
+	ATTRIB(XonoticHUDExitDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDExitDialog, intendedWidth, float, 0.8);
+	ATTRIB(XonoticHUDExitDialog, rows, float, 18);
+	ATTRIB(XonoticHUDExitDialog, columns, float, 8.2);
+	ATTRIB(XonoticHUDExitDialog, name, string, "HUDExit");
+	ATTRIB(XonoticHUDExitDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDExitDialog)

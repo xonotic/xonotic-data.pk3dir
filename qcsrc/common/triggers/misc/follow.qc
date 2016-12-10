@@ -1,53 +1,54 @@
+#include "follow.qh"
 // the way this entity works makes it no use to CSQC, as it removes itself instantly
 
 #ifdef SVQC
-void follow_init()
+void follow_init(entity this)
 {
 	entity src, dst;
-	src = world;
-	dst = world;
-	if(self.killtarget != "")
-		src = find(world, targetname, self.killtarget);
-	if(self.target != "")
-		dst = find(world, targetname, self.target);
+	src = NULL;
+	dst = NULL;
+	if(this.killtarget != "")
+		src = find(NULL, targetname, this.killtarget);
+	if(this.target != "")
+		dst = find(NULL, targetname, this.target);
 
 	if(!src && !dst)
 	{
-		objerror("follow: could not find target/killtarget");
+		objerror(this, "follow: could not find target/killtarget");
 		return;
 	}
 
-	if(self.jointtype)
+	if(this.jointtype)
 	{
 		// already done :P entity must stay
-		self.aiment = src;
-		self.enemy = dst;
+		this.aiment = src;
+		this.enemy = dst;
 	}
 	else if(!src || !dst)
 	{
-		objerror("follow: could not find target/killtarget");
+		objerror(this, "follow: could not find target/killtarget");
 		return;
 	}
-	else if(self.spawnflags & 1)
+	else if(this.spawnflags & 1)
 	{
 		// attach
-		if(self.spawnflags & 2)
+		if(this.spawnflags & 2)
 		{
-			setattachment(dst, src, self.message);
+			setattachment(dst, src, this.message);
 		}
 		else
 		{
-			attach_sameorigin(dst, src, self.message);
+			attach_sameorigin(dst, src, this.message);
 		}
 
 		dst.solid = SOLID_NOT; // solid doesn't work with attachment
-		remove(self);
+		delete(this);
 	}
 	else
 	{
-		if(self.spawnflags & 2)
+		if(this.spawnflags & 2)
 		{
-			dst.movetype = MOVETYPE_FOLLOW;
+			set_movetype(dst, MOVETYPE_FOLLOW);
 			dst.aiment = src;
 			// dst.punchangle = '0 0 0'; // keep unchanged
 			dst.view_ofs = dst.origin;
@@ -58,12 +59,12 @@ void follow_init()
 			follow_sameorigin(dst, src);
 		}
 
-		remove(self);
+		delete(this);
 	}
 }
 
-void spawnfunc_misc_follow()
+spawnfunc(misc_follow)
 {
-	InitializeEntity(self, follow_init, INITPRIO_FINDTARGET);
+	InitializeEntity(this, follow_init, INITPRIO_FINDTARGET);
 }
 #endif

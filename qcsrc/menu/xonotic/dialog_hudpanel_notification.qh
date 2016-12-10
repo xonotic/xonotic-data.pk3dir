@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDNotificationDialog, XonoticRootDialog)
+	METHOD(XonoticHUDNotificationDialog, fill, void(entity));
+	ATTRIB(XonoticHUDNotificationDialog, title, string, _("Notification Panel"));
+	ATTRIB(XonoticHUDNotificationDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDNotificationDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDNotificationDialog, rows, float, 15);
+	ATTRIB(XonoticHUDNotificationDialog, columns, float, 4);
+	ATTRIB(XonoticHUDNotificationDialog, name, string, "HUDnotify");
+	ATTRIB(XonoticHUDNotificationDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDNotificationDialog)

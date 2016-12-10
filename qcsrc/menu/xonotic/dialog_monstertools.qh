@@ -1,0 +1,12 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticMonsterToolsDialog, XonoticRootDialog)
+	METHOD(XonoticMonsterToolsDialog, fill, void(entity));
+	ATTRIB(XonoticMonsterToolsDialog, title, string, _("Monster Tools"));
+	ATTRIB(XonoticMonsterToolsDialog, color, vector, SKINCOLOR_DIALOG_SANDBOXTOOLS);
+	ATTRIB(XonoticMonsterToolsDialog, intendedWidth, float, 0.8);
+	ATTRIB(XonoticMonsterToolsDialog, rows, float, 16);
+	ATTRIB(XonoticMonsterToolsDialog, columns, float, 4);
+	ATTRIB(XonoticMonsterToolsDialog, name, string, "MonsterTools");
+ENDCLASS(XonoticMonsterToolsDialog)

@@ -1,3 +1,4 @@
+#include "config.qh"
 // ==========================
 //  Turret Config Generator
 // ==========================
@@ -25,38 +26,37 @@ float T_Config_Queue_Compare(float root, float child, entity pass)
 	return 0;
 }
 
-void Dump_Turret_Settings(void)
+void Dump_Turret_Settings()
 {
-	float i, x, totalsettings = 0;
-	for(i = TUR_FIRST; i <= TUR_LAST; ++i)
-	{
+	int totalsettings = 0;
+	FOREACH(Turrets, it != TUR_Null, {
 		// step 1: clear the queue
 		TUR_CONFIG_COUNT = 0;
-		for(x = 0; x <= MAX_TUR_CONFIG; ++x)
-			{ tur_config_queue[x] = string_null; }
+		for(int j = 0; j <= MAX_TUR_CONFIG; ++j)
+			{ tur_config_queue[j] = string_null; }
 
 		// step 2: build new queue
-		TUR_ACTION(i, TR_CONFIG);
+		it.tr_config(it);
 
 		// step 3: sort queue
-		heapsort(TUR_CONFIG_COUNT, T_Config_Queue_Swap, T_Config_Queue_Compare, world);
+		heapsort(TUR_CONFIG_COUNT, T_Config_Queue_Swap, T_Config_Queue_Compare, NULL);
 
 		// step 4: write queue
-		TUR_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n", i, TUR_NAME(i)))
-		for(x = 0; x <= TUR_CONFIG_COUNT; ++x)
-			{ TUR_CONFIG_WRITETOFILE(tur_config_queue[x]) }
+		TUR_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n", i, it.turret_name))
+		for(int j = 0; j <= TUR_CONFIG_COUNT; ++j)
+			{ TUR_CONFIG_WRITETOFILE(tur_config_queue[j]) }
 		TUR_CONFIG_WRITETOFILE("// }}}\n")
 
 		// step 5: debug info
-		print(sprintf("#%d: %s: %d settings...\n", i, TUR_NAME(i), TUR_CONFIG_COUNT));
+		LOG_INFO(sprintf("#%d: %s: %d settings...\n", i, it.turret_name, TUR_CONFIG_COUNT));
 		totalsettings += TUR_CONFIG_COUNT;
-	}
+	});
 
 	// clear queue now that we're finished
 	TUR_CONFIG_COUNT = 0;
-	for(x = 0; x <= MAX_TUR_CONFIG; ++x)
-		{ tur_config_queue[x] = string_null; }
+	for(int j = 0; j <= MAX_TUR_CONFIG; ++j)
+		{ tur_config_queue[j] = string_null; }
 
 	// extra information
-	print(sprintf("Totals: %d turrets, %d settings\n", (i - 1), totalsettings));
+	LOG_INFO(sprintf("Totals: %d turrets, %d settings\n", (Turrets_COUNT - 1), totalsettings));
 }

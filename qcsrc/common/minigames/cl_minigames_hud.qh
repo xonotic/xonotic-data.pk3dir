@@ -1,0 +1,4 @@
+#pragma once
+
+float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary);
+void HUD_Minigame_Mouse();

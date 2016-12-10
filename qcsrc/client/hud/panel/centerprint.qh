@@ -1,0 +1,4 @@
+#pragma once
+#include "../panel.qh"
+
+void reset_centerprint_messages();

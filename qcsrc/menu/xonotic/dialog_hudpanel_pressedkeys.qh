@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDPressedKeysDialog, XonoticRootDialog)
+	METHOD(XonoticHUDPressedKeysDialog, fill, void(entity));
+	ATTRIB(XonoticHUDPressedKeysDialog, title, string, _("Pressed Keys Panel"));
+	ATTRIB(XonoticHUDPressedKeysDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDPressedKeysDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDPressedKeysDialog, rows, float, 15);
+	ATTRIB(XonoticHUDPressedKeysDialog, columns, float, 4);
+	ATTRIB(XonoticHUDPressedKeysDialog, name, string, "HUDpressedkeys");
+	ATTRIB(XonoticHUDPressedKeysDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDPressedKeysDialog)

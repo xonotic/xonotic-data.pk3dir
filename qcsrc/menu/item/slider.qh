@@ -1,0 +1,50 @@
+#pragma once
+
+// Note:
+//   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
+#include "label.qh"
+CLASS(Slider, Label)
+	METHOD(Slider, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Slider, configureSliderVisuals, void(entity, float, float, float, string));
+	METHOD(Slider, configureSliderValues, void(entity, float, float, float, float, float, float));
+	METHOD(Slider, draw, void(entity));
+	METHOD(Slider, keyDown, float(entity, float, float, float));
+	METHOD(Slider, keyUp, float(entity, float, float, float));
+	METHOD(Slider, mousePress, float(entity, vector));
+	METHOD(Slider, mouseDrag, float(entity, vector));
+	METHOD(Slider, mouseRelease, float(entity, vector));
+	METHOD(Slider, valueToText, string(entity, float));
+	METHOD(Slider, toString, string(entity));
+	METHOD(Slider, setValue_allowAnim, void(entity, float, bool));
+	METHOD(Slider, setValue_noAnim, void(entity, float));
+	METHOD(Slider, setValue, void(entity, float));
+	METHOD(Slider, setSliderValue, void(entity, float));
+	METHOD(Slider, showNotify, void(entity));
+	ATTRIB(Slider, src, string);
+	ATTRIB(Slider, focusable, float, 1);
+	ATTRIB(Slider, allowFocusSound, float, 1);
+	ATTRIB(Slider, value, float, 0);
+	ATTRIB(Slider, animated, float, 1);
+	ATTRIB(Slider, sliderValue, float, 0);
+	ATTRIB(Slider, sliderAnim, entity);
+	ATTRIB(Slider, valueMin, float, 0);
+	ATTRIB(Slider, valueMax, float, 0);
+	ATTRIB(Slider, valueStep, float, 0);
+	ATTRIB(Slider, valueDigits, float, 0);
+	ATTRIB(Slider, valueKeyStep, float, 0);
+	ATTRIB(Slider, valuePageStep, float, 0);
+	ATTRIB(Slider, valueDisplayMultiplier, float, 1.0);
+	ATTRIB(Slider, textSpace, float, 0);
+	ATTRIB(Slider, controlWidth, float, 0);
+	ATTRIB(Slider, pressed, float, 0);
+	ATTRIB(Slider, pressOffset, float, 0);
+	ATTRIB(Slider, previousValue, float, 0);
+	ATTRIB(Slider, tolerance, vector, '0 0 0');
+	ATTRIB(Slider, disabled, float, 0);
+	ATTRIB(Slider, color, vector, '1 1 1');
+	ATTRIB(Slider, color2, vector, '1 1 1');
+	ATTRIB(Slider, colorD, vector, '1 1 1');
+	ATTRIB(Slider, colorC, vector, '1 1 1');
+	ATTRIB(Slider, colorF, vector, '1 1 1');
+	ATTRIB(Slider, disabledAlpha, float, 0.3);
+ENDCLASS(Slider)

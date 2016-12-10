@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../item/tab.qh"
+CLASS(XonoticTab, Tab)
+	// still to be customized by user
+	/*
+	ATTRIB(XonoticTab, intendedWidth, float, 0);
+	ATTRIB(XonoticTab, rows, float, 3);
+	ATTRIB(XonoticTab, columns, float, 2);
+	*/
+	METHOD(XonoticTab, showNotify, void(entity));
+
+	ATTRIB(XonoticTab, marginTop, float, 0);                                       // pixels
+	ATTRIB(XonoticTab, marginBottom, float, 0);                                    // pixels
+	ATTRIB(XonoticTab, marginLeft, float, 0);                                      // pixels
+	ATTRIB(XonoticTab, marginRight, float, 0);                                     // pixels
+	ATTRIB(XonoticTab, columnSpacing, float, SKINMARGIN_COLUMNS);                  // pixels
+	ATTRIB(XonoticTab, rowSpacing, float, SKINMARGIN_ROWS);                        // pixels
+	ATTRIB(XonoticTab, rowHeight, float, SKINFONTSIZE_NORMAL * SKINHEIGHT_NORMAL); // pixels
+
+	ATTRIB(XonoticTab, backgroundImage, string);
+
+	// using "titleTooltip" instead of "tooltip" so that
+	// the tooltip search function doesn't find it
+	// .tooltip should be set only in the item displaying the tab title
+	ATTRIB(XonoticTab, titleTooltip, string);
+ENDCLASS(XonoticTab)

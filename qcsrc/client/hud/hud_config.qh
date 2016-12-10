@@ -1,0 +1,25 @@
+#pragma once
+
+const int S_MOUSE1 = 1;
+const int S_MOUSE2 = 2;
+const int S_MOUSE3 = 4;
+int mouseClicked;
+int prevMouseClicked; // previous state
+float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
+vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
+
+float hud_configure_prev;
+float hud_configure_checkcollisions;
+vector hud_configure_gridSize;
+vector hud_configure_realGridSize;
+float hud_configure_menu_open; // 1 showing the entire HUD, 2 showing only the clicked panel
+
+void HUD_Panel_ExportCfg(string cfgname);
+
+void HUD_Panel_Mouse();
+
+void HUD_Configure_Frame();
+
+void HUD_Configure_PostDraw();
+
+float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary);

@@ -1,59 +1,23 @@
-#ifndef INPUTBOX_H
-#define INPUTBOX_H
-#include "../item/inputbox.qc"
-CLASS(XonoticInputBox, InputBox)
-	METHOD(XonoticInputBox, configureXonoticInputBox, void(entity, float, string));
-	METHOD(XonoticInputBox, focusLeave, void(entity));
-	METHOD(XonoticInputBox, setText, void(entity, string));
-	ATTRIB(XonoticInputBox, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticInputBox, image, string, SKINGFX_INPUTBOX)
-	ATTRIB(XonoticInputBox, onChange, void(entity, entity), func_null)
-	ATTRIB(XonoticInputBox, onChangeEntity, entity, NULL)
-	ATTRIB(XonoticInputBox, onEnter, void(entity, entity), func_null)
-	ATTRIB(XonoticInputBox, onEnterEntity, entity, NULL)
-	ATTRIB(XonoticInputBox, marginLeft, float, SKINMARGIN_INPUTBOX_CHARS)
-	ATTRIB(XonoticInputBox, marginRight, float, SKINMARGIN_INPUTBOX_CHARS)
-	ATTRIB(XonoticInputBox, color, vector, SKINCOLOR_INPUTBOX_N)
-	ATTRIB(XonoticInputBox, colorF, vector, SKINCOLOR_INPUTBOX_F)
+#include "inputbox.qh"
 
-	ATTRIB(XonoticInputBox, alpha, float, SKINALPHA_TEXT)
-
-	// Clear button attributes
-	ATTRIB(XonoticInputBox, cb_offset, float, SKINOFFSET_CLEARBUTTON) // bound to range -1, 0
-	ATTRIB(XonoticInputBox, cb_src, string, SKINGFX_CLEARBUTTON)
-	ATTRIB(XonoticInputBox, cb_color, vector, SKINCOLOR_CLEARBUTTON_N)
-	ATTRIB(XonoticInputBox, cb_colorF, vector, SKINCOLOR_CLEARBUTTON_F)
-	ATTRIB(XonoticInputBox, cb_colorC, vector, SKINCOLOR_CLEARBUTTON_C)
-
-	ATTRIB(XonoticInputBox, cvarName, string, string_null)
-	METHOD(XonoticInputBox, loadCvars, void(entity));
-	METHOD(XonoticInputBox, saveCvars, void(entity));
-	ATTRIB(XonoticInputBox, sendCvars, float, 0)
-	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float));
-
-	ATTRIB(XonoticInputBox, saveImmediately, float, 0)
-ENDCLASS(XonoticInputBox)
-entity makeXonoticInputBox(float, string);
-#endif
-
-#ifdef IMPLEMENTATION
-entity makeXonoticInputBox(float doEditColorCodes, string theCvar)
+entity makeXonoticInputBox_T(float doEditColorCodes, string theCvar, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticInputBox);
-	me.configureXonoticInputBox(me, doEditColorCodes, theCvar);
+	me.configureXonoticInputBox(me, doEditColorCodes, theCvar, theTooltip);
 	return me;
 }
-void XonoticInputBox_configureXonoticInputBox(entity me, float doEditColorCodes, string theCvar)
+entity makeXonoticInputBox(float doEditColorCodes, string theCvar)
+{
+	return makeXonoticInputBox_T(doEditColorCodes, theCvar, string_null);
+}
+void XonoticInputBox_configureXonoticInputBox(entity me, float doEditColorCodes, string theCvar, string theTooltip)
 {
 	me.configureInputBox(me, "", 0, me.fontSize, me.image);
 	me.editColorCodes = doEditColorCodes;
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
+	setZonedTooltip(me, theTooltip, theCvar);
 	me.cursorPos = strlen(me.text);
 }
 void XonoticInputBox_focusLeave(entity me)
@@ -104,4 +68,3 @@ float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 		r = 1;
 	return r;
 }
-#endif

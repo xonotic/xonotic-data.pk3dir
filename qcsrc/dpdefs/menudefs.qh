@@ -1,5 +1,4 @@
-#ifndef MENUDEFS_H
-#define MENUDEFS_H
+#pragma once
 
 #pragma noref 1
 
@@ -18,6 +17,8 @@
 #undef FALSE
 
 #undef spawn
+
+#define localcmd cmd
 
 int(string str, string sub, int startpos) _strstrofs = #221;
 #define strstrofs _strstrofs
@@ -38,6 +39,6 @@ int(string s1, string s2, int len) _strncasecmp = #230;
 int() _buf_create = #440;
 #define buf_create _buf_create
 
-#pragma noref 0
+bool(entity ent) wasfreed = #353;
 
-#endif
+#pragma noref 0

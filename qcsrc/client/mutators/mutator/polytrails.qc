@@ -4,13 +4,13 @@ float autocvar_cl_polytrail_lifetime = .2;
 float autocvar_cl_polytrail_noise = 10;
 
 CLASS(PolyTrail, Object)
-    ATTRIB(PolyTrail, polytrail_follow, entity, NULL)
-    ATTRIB(PolyTrail, polytrail_tex, string, string_null)
+    ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
+    ATTRIB(PolyTrail, polytrail_tex, string, string_null);
     /** Lifetime per segment */
-    ATTRIB(PolyTrail, polytrail_lifetime, float, autocvar_cl_polytrail_lifetime)
-    ATTRIBARRAY(PolyTrail, polytrail_rgb, vector, 3)
-    ATTRIBARRAY(PolyTrail, polytrail_alpha, float, 3)
-    ATTRIBARRAY(PolyTrail, polytrail_thickness, float, 3)
+    ATTRIB(PolyTrail, polytrail_lifetime, float, autocvar_cl_polytrail_lifetime);
+    ATTRIBARRAY(PolyTrail, polytrail_rgb, vector, 3);
+    ATTRIBARRAY(PolyTrail, polytrail_alpha, float, 3);
+    ATTRIBARRAY(PolyTrail, polytrail_thickness, float, 3);
 
     /**
      * Increase as necessary if the buffer is overflowing
@@ -19,26 +19,25 @@ CLASS(PolyTrail, Object)
      */
     const int POLYTRAIL_BUFSIZE = 1 << 7;
     /** One or more positional points */
-    ATTRIBARRAY(PolyTrail, polytrail_bufpos, vector, POLYTRAIL_BUFSIZE)
+    ATTRIBARRAY(PolyTrail, polytrail_bufpos, vector, POLYTRAIL_BUFSIZE);
     /** Noise for ending position */
-    ATTRIBARRAY(PolyTrail, polytrail_bufnoise, vector, POLYTRAIL_BUFSIZE)
+    ATTRIBARRAY(PolyTrail, polytrail_bufnoise, vector, POLYTRAIL_BUFSIZE);
     /** Time of input */
-    ATTRIBARRAY(PolyTrail, polytrail_buftime, float, POLYTRAIL_BUFSIZE)
+    ATTRIBARRAY(PolyTrail, polytrail_buftime, float, POLYTRAIL_BUFSIZE);
     /** Current read index */
-    ATTRIB(PolyTrail, polytrail_bufidx, float, -1)
+    ATTRIB(PolyTrail, polytrail_bufidx, float, -1);
     /** Counts positions stored */
-    ATTRIB(PolyTrail, polytrail_cnt, float, 0)
+    ATTRIB(PolyTrail, polytrail_cnt, float, 0);
     #define POLYTRAIL_SEEK(_p, _rel) ((POLYTRAIL_BUFSIZE + (_p).polytrail_bufidx + (_rel)) % POLYTRAIL_BUFSIZE)
 
-    void Trail_draw();
-    ATTRIB(PolyTrail, draw, void(), Trail_draw)
-    void Trail_draw() {
-        PolyTrail this = self;
+    void Trail_draw(entity this);
+    ATTRIB(PolyTrail, draw, void(entity this), Trail_draw);
+    void Trail_draw(entity this) {
         if (wasfreed(this.polytrail_follow)) this.polytrail_follow = NULL;
         if (!this.polytrail_follow) {
             float when = this.polytrail_buftime[this.polytrail_bufidx];
             if (time - when > this.polytrail_lifetime) {
-                remove(this);
+                delete(this);
                 return;
             }
         } else {
@@ -101,7 +100,8 @@ REGISTER_MUTATOR(polytrails, true);
 MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
     return = false;
     if (!autocvar_cl_polytrails) return;
-    PolyTrail t = NEW(PolyTrail, self);
+    entity proj = M_ARGV(0, entity);
+    PolyTrail t = NEW(PolyTrail, proj);
     t.polytrail_tex = "gfx/trails/plain.tga";
     t.polytrail_rgb[0] = '1 0 0';
     t.polytrail_rgb[1] = '0 1 0';
@@ -112,4 +112,6 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
     t.polytrail_thickness[0] = 10;
     t.polytrail_thickness[1] = 5;
     t.polytrail_thickness[2] = 0;
+
+    IL_PUSH(g_drawables, t);
 }

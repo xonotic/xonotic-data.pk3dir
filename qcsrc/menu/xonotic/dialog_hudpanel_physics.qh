@@ -1,0 +1,14 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDPhysicsDialog, XonoticRootDialog)
+	METHOD(XonoticHUDPhysicsDialog, fill, void(entity));
+	ATTRIB(XonoticHUDPhysicsDialog, title, string, _("Physics Panel"));
+	ATTRIB(XonoticHUDPhysicsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDPhysicsDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDPhysicsDialog, rows, float, 15);
+	ATTRIB(XonoticHUDPhysicsDialog, columns, float, 4);
+	ATTRIB(XonoticHUDPhysicsDialog, name, string, "HUDphysics");
+	ATTRIB(XonoticHUDPhysicsDialog, sliderTopspeedTime, entity);
+	ATTRIB(XonoticHUDPhysicsDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDPhysicsDialog)

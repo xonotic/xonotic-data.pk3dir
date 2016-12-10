@@ -1,8 +1,7 @@
+#include "campaign_file.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "util.qh"
     #include "campaign_common.qh"
 #endif

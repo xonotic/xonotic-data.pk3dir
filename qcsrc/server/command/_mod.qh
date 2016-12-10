@@ -1,0 +1,11 @@
+// generated file; do not modify
+#include <server/command/banning.qh>
+#include <server/command/cmd.qh>
+#ifdef SVQC
+    #include <server/command/sv_cmd.qh>
+#endif
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/radarmap.qh>
+#include <server/command/reg.qh>
+#include <server/command/vote.qh>

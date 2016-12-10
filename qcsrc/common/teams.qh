@@ -1,5 +1,4 @@
-#ifndef TEAMS_H
-#define TEAMS_H
+#pragma once
 
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
 const int NUM_TEAM_1 = 1;  // red
@@ -26,12 +25,27 @@ const string COL_TEAM_1 = "^1";
 const string COL_TEAM_2 = "^4";
 const string COL_TEAM_3 = "^3";
 const string COL_TEAM_4 = "^6";
-const string NAME_TEAM_1 = _("Red");
-const string NAME_TEAM_2 = _("Blue");
-const string NAME_TEAM_3 = _("Yellow");
-const string NAME_TEAM_4 = _("Pink");
-const string NAME_TEAM = _("Team");
-const string NAME_NEUTRAL = _("Neutral");
+// must be #defined, const globals drop the translation attribute
+#define NAME_TEAM_1 CTX(_("TEAM^Red"))
+#define NAME_TEAM_2 CTX(_("TEAM^Blue"))
+#define NAME_TEAM_3 CTX(_("TEAM^Yellow"))
+#define NAME_TEAM_4 CTX(_("TEAM^Pink"))
+#define NAME_TEAM _("Team")
+#define NAME_NEUTRAL _("Neutral")
+
+// items colors, so they are handled properly in languages which decline things with grammatical gender
+#define KEY_TEAM_1 CTX(_("KEY^Red"))
+#define KEY_TEAM_2 CTX(_("KEY^Blue"))
+#define KEY_TEAM_3 CTX(_("KEY^Yellow"))
+#define KEY_TEAM_4 CTX(_("KEY^Pink"))
+#define FLAG_TEAM_1 CTX(_("FLAG^Red"))
+#define FLAG_TEAM_2 CTX(_("FLAG^Blue"))
+#define FLAG_TEAM_3 CTX(_("FLAG^Yellow"))
+#define FLAG_TEAM_4 CTX(_("FLAG^Pink"))
+#define GENERATOR_TEAM_1 CTX(_("GENERATOR^Red"))
+#define GENERATOR_TEAM_2 CTX(_("GENERATOR^Blue"))
+#define GENERATOR_TEAM_3 CTX(_("GENERATOR^Yellow"))
+#define GENERATOR_TEAM_4 CTX(_("GENERATOR^Pink"))
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
 const string STATIC_NAME_TEAM_1 = "Red";
@@ -46,12 +60,12 @@ float myteam;
 
 string Team_ColorCode(float teamid)
 {
-    switch(teamid)
-    {
+	switch(teamid)
+	{
 		case NUM_TEAM_1: return COL_TEAM_1;
-    	case NUM_TEAM_2: return COL_TEAM_2;
-    	case NUM_TEAM_3: return COL_TEAM_3;
-    	case NUM_TEAM_4: return COL_TEAM_4;
+		case NUM_TEAM_2: return COL_TEAM_2;
+		case NUM_TEAM_3: return COL_TEAM_3;
+		case NUM_TEAM_4: return COL_TEAM_4;
 	}
 
 	return "^7";
@@ -72,12 +86,12 @@ vector Team_ColorRGB(float teamid)
 
 string Team_ColorName(float teamid)
 {
-    switch(teamid)
-    {
+	switch(teamid)
+	{
 		case NUM_TEAM_1: return NAME_TEAM_1;
-    	case NUM_TEAM_2: return NAME_TEAM_2;
-    	case NUM_TEAM_3: return NAME_TEAM_3;
-    	case NUM_TEAM_4: return NAME_TEAM_4;
+		case NUM_TEAM_2: return NAME_TEAM_2;
+		case NUM_TEAM_3: return NAME_TEAM_3;
+		case NUM_TEAM_4: return NAME_TEAM_4;
 	}
 
     return NAME_NEUTRAL;
@@ -86,12 +100,12 @@ string Team_ColorName(float teamid)
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
 string Static_Team_ColorName(float teamid)
 {
-    switch(teamid)
-    {
+	switch(teamid)
+	{
 		case NUM_TEAM_1: return STATIC_NAME_TEAM_1;
-    	case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
-    	case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
-    	case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
+		case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
+		case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
+		case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
 	}
 
     return NAME_NEUTRAL;
@@ -102,10 +116,10 @@ float Team_ColorToTeam(string team_color)
 	switch(strtolower(team_color))
 	{
 		case "red": return NUM_TEAM_1;
-    	case "blue": return NUM_TEAM_2;
-    	case "yellow": return NUM_TEAM_3;
-    	case "pink": return NUM_TEAM_4;
-    	case "auto": return 0;
+		case "blue": return NUM_TEAM_2;
+		case "yellow": return NUM_TEAM_3;
+		case "pink": return NUM_TEAM_4;
+		case "auto": return 0;
 	}
 
 	return -1;
@@ -157,15 +171,8 @@ float Team_TeamToNumber(float teamid)
 #define Team_NumberToColoredFullName(number) Team_ColoredFullName(Team_NumberToTeam(number))
 
 // replace these flags in a string with the strings provided
-#define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))
+#define TCR(input,type,team) strreplace("^TC", COL_TEAM_##team, strreplace("^TT", strtoupper(type##_TEAM_##team), input))
 
 // safe team comparisons
-#define SAME_TEAM(a,b) (teamplay ? ((a.team == b.team) ? 1 : 0) : ((a == b) ? 1 : 0))
-#define DIFF_TEAM(a,b) (teamplay ? ((a.team != b.team) ? 1 : 0) : ((a != b) ? 1 : 0))
-
-// used for notification system multi-team identifiers
-#define APP_TEAM_NUM_2(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
-#define APP_TEAM_NUM_4(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : ((num == NUM_TEAM_2) ? prefix##BLUE : ((num == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
-#define APP_TEAM_ENT_2(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
-#define APP_TEAM_ENT_4(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : ((ent.team == NUM_TEAM_2) ? prefix##BLUE : ((ent.team == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
-#endif
+#define SAME_TEAM(a,b) (teamplay ? (a.team == b.team) : (a == b))
+#define DIFF_TEAM(a,b) (teamplay ? (a.team != b.team) : (a != b))

@@ -1,0 +1,15 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticMutatorsDialog, XonoticDialog)
+	METHOD(XonoticMutatorsDialog, toString, string(entity));
+	METHOD(XonoticMutatorsDialog, fill, void(entity));
+	METHOD(XonoticMutatorsDialog, showNotify, void(entity));
+	METHOD(XonoticMutatorsDialog, close, void(entity));
+	ATTRIB(XonoticMutatorsDialog, title, string, _("Mutators"));
+	ATTRIB(XonoticMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS);
+	ATTRIB(XonoticMutatorsDialog, intendedWidth, float, 0.9);
+	ATTRIB(XonoticMutatorsDialog, rows, float, 20);
+	ATTRIB(XonoticMutatorsDialog, columns, float, 6);
+	ATTRIB(XonoticMutatorsDialog, refilterEntity, entity);
+ENDCLASS(XonoticMutatorsDialog)

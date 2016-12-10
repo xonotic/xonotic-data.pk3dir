@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include <common/mutators/mutator/buffs/buffs.qh>
+#ifdef CSQC
+    #include <common/mutators/mutator/buffs/cl_buffs.qh>
+#endif
+#ifdef SVQC
+    #include <common/mutators/mutator/buffs/sv_buffs.qh>
+#endif

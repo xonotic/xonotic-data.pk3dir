@@ -1,4 +1,4 @@
-#include "../pathlib.qh"
+#include "costs.qh"
 
 float pathlib_g_static(entity parent,vector to, float static_cost)
 {

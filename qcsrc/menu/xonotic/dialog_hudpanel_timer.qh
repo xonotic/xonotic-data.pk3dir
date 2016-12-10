@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDTimerDialog, XonoticRootDialog)
+	METHOD(XonoticHUDTimerDialog, fill, void(entity));
+	ATTRIB(XonoticHUDTimerDialog, title, string, _("Timer Panel"));
+	ATTRIB(XonoticHUDTimerDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDTimerDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDTimerDialog, rows, float, 15);
+	ATTRIB(XonoticHUDTimerDialog, columns, float, 4);
+	ATTRIB(XonoticHUDTimerDialog, name, string, "HUDtimer");
+	ATTRIB(XonoticHUDTimerDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDTimerDialog)

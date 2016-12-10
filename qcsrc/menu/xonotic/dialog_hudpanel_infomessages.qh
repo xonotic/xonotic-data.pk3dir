@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDInfoMessagesDialog, XonoticRootDialog)
+	METHOD(XonoticHUDInfoMessagesDialog, fill, void(entity));
+	ATTRIB(XonoticHUDInfoMessagesDialog, title, string, _("Info Messages Panel"));
+	ATTRIB(XonoticHUDInfoMessagesDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDInfoMessagesDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDInfoMessagesDialog, rows, float, 15);
+	ATTRIB(XonoticHUDInfoMessagesDialog, columns, float, 4);
+	ATTRIB(XonoticHUDInfoMessagesDialog, name, string, "HUDinfomessages");
+	ATTRIB(XonoticHUDInfoMessagesDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDInfoMessagesDialog)

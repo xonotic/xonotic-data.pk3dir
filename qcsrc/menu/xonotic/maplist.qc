@@ -1,73 +1,17 @@
-#ifndef MAPLIST_H
-#define MAPLIST_H
-#include "listbox.qc"
-CLASS(XonoticMapList, XonoticListBox)
-	METHOD(XonoticMapList, configureXonoticMapList, void(entity));
-	ATTRIB(XonoticMapList, rowsPerItem, float, 4)
-	METHOD(XonoticMapList, draw, void(entity));
-	METHOD(XonoticMapList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticMapList, refilter, void(entity));
-	METHOD(XonoticMapList, refilterCallback, void(entity, entity));
-	METHOD(XonoticMapList, keyDown, float(entity, float, float, float));
+#include "maplist.qh"
 
-	ATTRIB(XonoticMapList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticMapList, columnPreviewOrigin, float, 0)
-	ATTRIB(XonoticMapList, columnPreviewSize, float, 0)
-	ATTRIB(XonoticMapList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticMapList, columnNameSize, float, 0)
-	ATTRIB(XonoticMapList, checkMarkOrigin, vector, '0 0 0')
-	ATTRIB(XonoticMapList, checkMarkSize, vector, '0 0 0')
-	ATTRIB(XonoticMapList, realUpperMargin1, float, 0)
-	ATTRIB(XonoticMapList, realUpperMargin2, float, 0)
+#include <common/mapinfo.qh>
+#include "dialog_multiplayer_create_mapinfo.qh"
+#include "mainwindow.qh"
+#include "inputbox.qh"
 
-	ATTRIB(XonoticMapList, lastGametype, float, 0)
-	ATTRIB(XonoticMapList, lastFeatures, float, 0)
+.bool disabled;
 
-	ATTRIB(XonoticMapList, origin, vector, '0 0 0')
-	ATTRIB(XonoticMapList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(XonoticMapList, g_maplistCache, string, string_null)
-	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float));
-	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float));
-
-	ATTRIB(XonoticMapList, stringFilter, string, string_null)
-	ATTRIB(XonoticMapList, stringFilterBox, entity, NULL)
-
-	ATTRIB(XonoticMapList, startButton, entity, NULL)
-
-	METHOD(XonoticMapList, loadCvars, void(entity));
-
-	ATTRIB(XonoticMapList, typeToSearchString, string, string_null)
-	ATTRIB(XonoticMapList, typeToSearchTime, float, 0)
-
-	METHOD(XonoticMapList, destroy, void(entity));
-
-	ATTRIB(XonoticMapList, alphaBG, float, 0)
-ENDCLASS(XonoticMapList)
-entity makeXonoticMapList();
-entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar);
-void MapList_StringFilterBox_Change(entity box, entity me);
-float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
-void MapList_Add_Shown(entity btn, entity me);
-void MapList_Remove_Shown(entity btn, entity me);
-void MapList_Add_All(entity btn, entity me);
-void MapList_Remove_All(entity btn, entity me);
-void MapList_LoadMap(entity btn, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
 void XonoticMapList_destroy(entity me)
 {
 	MapInfo_Shutdown();
 }
 
-entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar)
-{
-	return makeXonoticInputBox(doEditColorCodes, theCvar);
-}
 entity makeXonoticMapList()
 {
 	entity me;
@@ -228,9 +172,8 @@ void XonoticMapList_refilter(entity me)
 {
 	float i, j, n;
 	string s;
-	float gt, f;
-	gt = MapInfo_CurrentGametype();
-	f = MapInfo_CurrentFeatures();
+	Gametype gt = MapInfo_CurrentGametype();
+	int f = MapInfo_CurrentFeatures();
 	MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	if (me.stringFilter)
 		MapInfo_FilterString(me.stringFilter);
@@ -312,7 +255,7 @@ void MapList_Add_All(entity btn, entity me)
 {
 	float i;
 	string s;
-	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
+	_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
 		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
@@ -345,7 +288,7 @@ void MapList_LoadMap(entity btn, entity me)
 	m = MapInfo_BSPName_ByID(i);
 	if (!m)
 	{
-		print(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"));
+		LOG_INFO(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"));
 		me.refilter(me);
 		return;
 	}
@@ -358,7 +301,7 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 	else
 	{
-		print(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n"));
+		LOG_INFO(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n"));
 		me.refilter(me);
 		return;
 	}
@@ -463,4 +406,3 @@ float MapList_StringFilterBox_keyDown(entity me, float scan, float ascii, float 
 	}
 	return SUPER(XonoticInputBox).keyDown(me, scan, ascii, shift);
 }
-#endif

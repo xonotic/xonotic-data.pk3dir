@@ -1,3 +1,6 @@
+#include "pong.qh"
+REGISTER_MINIGAME(pong, "Pong");
+
 // minigame flags
 const int PONG_STATUS_WAIT = 0x0010; // waiting for players to join
 const int PONG_STATUS_PLAY = 0x0020; // playing
@@ -34,7 +37,7 @@ float autocvar_sv_minigames_pong_ball_number;
 float autocvar_sv_minigames_pong_ai_thinkspeed;
 float autocvar_sv_minigames_pong_ai_tolerance;
 
-void pong_ball_think();
+void pong_ball_think(entity this);
 
 // Throws a ball in a random direction and sets the think function
 void pong_ball_throw(entity ball)
@@ -45,16 +48,16 @@ void pong_ball_throw(entity ball)
 	while ( fabs(sin(angle)) < 0.17 || fabs(cos(angle)) < 0.17 );
 	ball.velocity_x = cos(angle)*autocvar_sv_minigames_pong_ball_speed;
 	ball.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ball_speed;
-	ball.think = pong_ball_think;
+	setthink(ball, pong_ball_think);
 	ball.nextthink = time;
 	ball.team = 0;
 	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
 }
 
 // Think equivalent of pong_ball_throw, used to delay throws
-void pong_ball_throwthink()
+void pong_ball_throwthink(entity this)
 {
-	pong_ball_throw(self);
+	pong_ball_throw(this);
 }
 
 // Moves ball to the center and stops its motion
@@ -62,10 +65,10 @@ void pong_ball_reset(entity ball)
 {
 	ball.velocity = '0 0 0';
 	ball.origin = '0.5 0.5 0';
-	ball.think = SUB_NullThink;
+	setthink(ball, SUB_NullThink);
 	ball.team = 0;
 	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
-	ball.think = pong_ball_throwthink;
+	setthink(ball, pong_ball_throwthink);
 	ball.nextthink = time + autocvar_sv_minigames_pong_ball_wait;
 }
 
@@ -74,13 +77,13 @@ void pong_add_score(entity minigame, int team_thrower, int team_receiver, int de
 {
 	if ( !minigame )
 		return;
-	
+
 	if ( team_thrower == 0 )
 		team_thrower = team_receiver;
-	
+
 	if ( team_thrower == team_receiver )
 		delta *= -1;
-	
+
 	entity paddle_thrower = minigame.pong_paddles[team_thrower-1];
 	if ( paddle_thrower.realowner.minigame_players )
 	{
@@ -105,11 +108,11 @@ void pong_paddle_bounce(entity ball, int pteam)
 		case 3: ball.velocity_y = fabs(ball.velocity_y); break;
 		case 4: ball.velocity_y = -fabs(ball.velocity_y); break;
 	}
-	
+
 	float angle = atan2(ball.velocity_y, ball.velocity_x);
 	angle += ( random() - 0.5 ) * 2 * M_PI/6;
 	float speed = vlen(ball.velocity);
-	
+
 	ball.velocity_y = speed * sin(angle);
 	ball.velocity_x = speed * cos(angle);
 }
@@ -120,9 +123,9 @@ bool pong_paddle_hit(entity ball, int pteam)
 	entity paddle = ball.owner.pong_paddles[pteam-1];
 	if (!paddle)
 		return false;
-	vector near_point = box_nearest(paddle.mins+paddle.origin, 
+	vector near_point = box_nearest(paddle.mins+paddle.origin,
 									paddle.maxs+paddle.origin, ball.origin);
-	return vlen(near_point-ball.origin) <= ball.pong_length ;
+	return vdist(near_point - ball.origin, <=, ball.pong_length);
 }
 
 // Checks for a goal, when that happes adds scores and resets the ball
@@ -131,122 +134,122 @@ bool pong_goal(entity ball, int pteam)
 	entity paddle = ball.owner.pong_paddles[pteam-1];
 	if (!paddle)
 		return false;
-	
+
 	if ( !pong_paddle_hit(ball, pteam) )
 	{
 		pong_add_score(ball.owner ,ball.team, pteam, 1);
 		pong_ball_reset(ball);
 		return true;
 	}
-	
+
 	return false;
 }
 
 // Moves the ball around
-void pong_ball_think()
+void pong_ball_think(entity this)
 {
 	float think_speed = autocvar_sys_ticrate;
-	self.nextthink = time + think_speed;
-	
-	self.origin_x += self.velocity_x * think_speed;
-	self.origin_y += self.velocity_y * think_speed;
-	self.SendFlags |= MINIG_SF_UPDATE;
-	
+	this.nextthink = time + think_speed;
+
+	this.origin_x += this.velocity_x * think_speed;
+	this.origin_y += this.velocity_y * think_speed;
+	this.SendFlags |= MINIG_SF_UPDATE;
+
 	int i;
 	for ( i = 1; i <= PONG_MAX_PLAYERS; i++ )
-		if ( pong_paddle_hit(self, i) )
+		if ( pong_paddle_hit(this, i) )
 		{
-			pong_paddle_bounce(self,i);
-			self.team = i;
-			self.SendFlags |= PONG_SF_BALLTEAM;
+			pong_paddle_bounce(this,i);
+			this.team = i;
+			this.SendFlags |= PONG_SF_BALLTEAM;
 			return;
 		}
-	
-	if ( self.origin_y <= self.pong_length )
+
+	if ( this.origin_y <= this.pong_length )
 	{
-		if ( !pong_goal(self,3) )
+		if ( !pong_goal(this,3) )
 		{
-			self.origin_y = self.pong_length;
-			self.velocity_y *= -1;
+			this.origin_y = this.pong_length;
+			this.velocity_y *= -1;
 		}
 	}
-	else if ( self.origin_y >= 1-self.pong_length )
+	else if ( this.origin_y >= 1-this.pong_length )
 	{
-		if ( !pong_goal(self,4) )
+		if ( !pong_goal(this,4) )
 		{
-			self.origin_y = 1-self.pong_length;
-			self.velocity_y *= -1;
+			this.origin_y = 1-this.pong_length;
+			this.velocity_y *= -1;
 		}
 	}
-	
-	if ( self.origin_x <= self.pong_length )
+
+	if ( this.origin_x <= this.pong_length )
 	{
-		if ( !pong_goal(self,2) )
+		if ( !pong_goal(this,2) )
 		{
-			 self.origin_x = self.pong_length;
-			 self.velocity_x *= -1;
+			 this.origin_x = this.pong_length;
+			 this.velocity_x *= -1;
 		}
 	}
-	else if ( self.origin_x >= 1-self.pong_length )
+	else if ( this.origin_x >= 1-this.pong_length )
 	{
-		if ( !pong_goal(self,1) )
+		if ( !pong_goal(this,1) )
 		{
-			 self.origin_x = 1-self.pong_length;
-			 self.velocity_x *= -1;
+			 this.origin_x = 1-this.pong_length;
+			 this.velocity_x *= -1;
 		}
 	}
-	
+
 }
 
 // AI action
-void pong_ai_think()
+void pong_ai_think(entity this)
 {
 	float think_speed = autocvar_sv_minigames_pong_ai_thinkspeed;
-	self.nextthink = time + think_speed;
-	
+	this.nextthink = time + think_speed;
+
 	float distance;
 	float next_distance;
 	float min_distance = 1;
-	entity ball = world;
-	entity mayball = world;
-	while ( ( mayball = findentity(mayball,owner,self.owner) ) )
+	entity ball = NULL;
+	entity mayball = NULL;
+	while ( ( mayball = findentity(mayball,owner,this.owner) ) )
 		if ( mayball.classname == "pong_ball" )
 		{
-			distance = vlen(mayball.origin-self.pong_ai_paddle.origin);
-			next_distance = vlen(mayball.origin+mayball.velocity-self.pong_ai_paddle.origin);
+			distance = vlen(mayball.origin-this.pong_ai_paddle.origin);
+			next_distance = vlen(mayball.origin+mayball.velocity-this.pong_ai_paddle.origin);
 			if (  distance < min_distance && ( distance < 0.5 || next_distance < distance ) )
 			{
 				min_distance = distance;
 				ball = mayball;
 			}
 		}
-	
+
 	float target = 0.5;
-	float self_pos;
-	
-	
-	if ( self.team <= 2 )
+	float my_pos;
+
+
+	if ( this.team <= 2 )
 	{
 		if ( ball )
 			target = ball.origin_y + ball.velocity_y*think_speed;
-		self_pos = self.pong_ai_paddle.origin_y;
+		my_pos = this.pong_ai_paddle.origin_y;
 	}
 	else
 	{
 		if ( ball )
 			target = ball.origin_x + ball.velocity_x*think_speed;
-		self_pos = self.pong_ai_paddle.origin_x;
+		my_pos = this.pong_ai_paddle.origin_x;
 	}
-	
-	distance = self.pong_length/2 * autocvar_sv_minigames_pong_ai_tolerance
+
+	distance = this.pong_length/2 * autocvar_sv_minigames_pong_ai_tolerance
 		+ autocvar_sv_minigames_pong_paddle_speed * think_speed;
 
-	if (target < self_pos - distance)
-		self.pong_keys = PONG_KEY_DECREASE;
-	else if (target > self_pos + distance)
-		self.pong_keys = PONG_KEY_INCREASE;
+	if (target < my_pos - distance)
+		this.pong_keys = PONG_KEY_DECREASE;
+	else if (target > my_pos + distance)
+		this.pong_keys = PONG_KEY_INCREASE;
 	else
-		self.pong_keys = 0;
+		this.pong_keys = 0;
 }
 
 entity pong_ai_spawn(entity paddle)
@@ -254,36 +257,36 @@ entity pong_ai_spawn(entity paddle)
 	entity ai = msle_spawn(paddle.owner,"pong_ai");
 	ai.minigame_players = ai;
 	ai.team = paddle.team;
-	ai.think = pong_ai_think;
+	setthink(ai, pong_ai_think);
 	ai.nextthink = time;
 	ai.pong_ai_paddle = paddle;
-	
+
 	paddle.realowner = ai;
-	
+
 	return ai;
 }
 
 // Moves the paddle
-void pong_paddle_think()
+void pong_paddle_think(entity this)
 {
 	float think_speed = autocvar_sys_ticrate;
-	self.nextthink = time + think_speed;
+	this.nextthink = time + think_speed;
 
-	if ( self.realowner.minigame_players.pong_keys == PONG_KEY_INCREASE || 
-		 self.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
+	if ( this.realowner.minigame_players.pong_keys == PONG_KEY_INCREASE ||
+		 this.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
 	{
 		float movement = autocvar_sv_minigames_pong_paddle_speed * think_speed;
-		float halflen = self.pong_length/2;
-	
-		if ( self.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
+		float halflen = this.pong_length/2;
+
+		if ( this.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
 			movement *= -1;
-		
-		if ( self.team > 2 )
-			self.origin_x = bound(halflen, self.origin_x+movement, 1-halflen);
+
+		if ( this.team > 2 )
+			this.origin_x = bound(halflen, this.origin_x+movement, 1-halflen);
 		else
-			self.origin_y = bound(halflen, self.origin_y+movement, 1-halflen);
-		
-		self.SendFlags |= MINIG_SF_UPDATE;
+			this.origin_y = bound(halflen, this.origin_y+movement, 1-halflen);
+
+		this.SendFlags |= MINIG_SF_UPDATE;
 	}
 }
 
@@ -307,25 +310,25 @@ vector pong_team_to_paddlepos(int nteam)
 }
 
 // Spawns a pong paddle
-// if real_player is world, the paddle is controlled by AI
+// if real_player is NULL, the paddle is controlled by AI
 entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 {
 	entity paddle = msle_spawn(minigame,"pong_paddle");
 	paddle.pong_length = autocvar_sv_minigames_pong_paddle_size;
 	paddle.origin = pong_team_to_paddlepos(pl_team);
-	paddle.think = pong_paddle_think;
+	setthink(paddle, pong_paddle_think);
 	paddle.nextthink = time;
 	paddle.team = pl_team;
 	paddle.mins = pong_team_to_box_halfsize(pl_team,-paddle.pong_length,-1/16);
 	paddle.maxs = pong_team_to_box_halfsize(pl_team,paddle.pong_length,1/16);
-	
-	if ( real_player == world )
+
+	if ( real_player == NULL )
 		pong_ai_spawn(paddle);
 	else
 		paddle.realowner = real_player;
-	
+
 	minigame.pong_paddles[pl_team-1] = paddle;
-	
+
 	return paddle;
 
 }
@@ -345,18 +348,18 @@ int pong_server_event(entity minigame, string event, ...)
 			// Don't allow joining a match that is already running
 			if ( minigame.minigame_flags & PONG_STATUS_PLAY )
 				return false;
-			
+
 			entity player = ...(0,entity);
 			int i;
 			for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
 			{
-				if ( minigame.pong_paddles[i] == world )
+				if ( minigame.pong_paddles[i] == NULL )
 				{
 					pong_paddle_spawn(minigame,i+1,player);
 					return i+1;
 				}
 			}
-			
+
 			return false;
 		}
 		case "part":
@@ -368,13 +371,13 @@ int pong_server_event(entity minigame, string event, ...)
 			for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
 			{
 				paddle = minigame.pong_paddles[i];
-				if ( paddle != world && paddle.realowner == player )
+				if ( paddle != NULL && paddle.realowner == player )
 				{
 					ai = pong_ai_spawn(paddle);
 					ai.pong_score = player.minigame_players.pong_score;
 					break;
 				}
-					
+
 			}
 			return false;
 		}
@@ -389,7 +392,7 @@ int pong_server_event(entity minigame, string event, ...)
 						minigame.minigame_flags = PONG_STATUS_PLAY |
 							(minigame.minigame_flags & ~PONG_STATUS_WAIT);
 						minigame.SendFlags |= MINIG_SF_UPDATE;
-						
+
 						int i;
 						entity ball;
 						for ( i = 0; i < autocvar_sv_minigames_pong_ball_number; i++ )
@@ -418,9 +421,9 @@ int pong_server_event(entity minigame, string event, ...)
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
 						for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
 						{
-							if ( minigame.pong_paddles[i] == world )
+							if ( minigame.pong_paddles[i] == NULL )
 							{
-								pong_paddle_spawn(minigame,i+1,world);
+								pong_paddle_spawn(minigame,i+1,NULL);
 								return true;
 							}
 						}
@@ -436,12 +439,12 @@ int pong_server_event(entity minigame, string event, ...)
 						for ( i = PONG_MAX_PLAYERS-1; i >= 0; i-- )
 						{
 							paddle = minigame.pong_paddles[i];
-							if ( paddle != world && 
+							if ( paddle != NULL &&
 								paddle.realowner.classname == "pong_ai" )
 							{
-								minigame.pong_paddles[i] = world;
-								remove(paddle.realowner);
-								remove(paddle);
+								minigame.pong_paddles[i] = NULL;
+								delete(paddle.realowner);
+								delete(paddle);
 								return true;
 							}
 						}
@@ -449,7 +452,7 @@ int pong_server_event(entity minigame, string event, ...)
 					sprint(player.minigame_players,"Cannot remove AI\n");
 					return true;
 				}
-						
+
 			}
 			return false;
 		}
@@ -501,7 +504,7 @@ void pong_hud_board(vector pos, vector mySize)
 {
 	minigame_hud_fitsqare(pos, mySize);
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("pong/board"));
-	
+
 	entity e;
 	vector obj_pos;
 	vector obj_size;
@@ -512,27 +515,27 @@ void pong_hud_board(vector pos, vector mySize)
 			// Note: 4*radius = 2*diameter because the image is large enough to fit the glow around the ball
 			obj_size =  minigame_hud_denormalize_size('4 4 0'*e.pong_length,pos,mySize);
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
-			
+
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball"),
 					obj_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-			
+
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball-glow"),
-					obj_size, pong_team_to_color(e.team), 
+					obj_size, pong_team_to_color(e.team),
 					panel_fg_alpha, DRAWFLAG_ADDITIVE );
 		}
 		else if ( e.classname == "pong_paddle" )
 		{
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
 			obj_size = minigame_hud_denormalize_size(eX / 16 + eY*e.pong_length,pos,mySize);
-			
-			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle-glow"), 
-				obj_size, obj_size/2, pong_team_to_color(e.team), 
+
+			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle-glow"),
+				obj_size, obj_size/2, pong_team_to_color(e.team),
 				panel_fg_alpha, DRAWFLAG_ADDITIVE );
-			
-			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle"), 
-				obj_size, obj_size/2, '1 1 1', 
+
+			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle"),
+				obj_size, obj_size/2, '1 1 1',
 				panel_fg_alpha, DRAWFLAG_NORMAL );
-			
+
 		}
 	}
 }
@@ -540,14 +543,14 @@ void pong_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void pong_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
 	ts_y += hud_fontsize_y;
 	pos_y += ts_y;
 	mySize_y -= ts_y;
-	
+
 	vector player_fontsize = hud_fontsize * 1.75;
 	ts_y = ( mySize_y - PONG_MAX_PLAYERS*player_fontsize_y ) / PONG_MAX_PLAYERS;
 	ts_x = mySize_x;
@@ -560,16 +563,16 @@ void pong_hud_status(vector pos, vector mySize)
 		{
 			mypos = pos;
 			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
-			
+
 			drawfill(mypos, ts, pong_team_to_color(e.team), 0.25, DRAWFLAG_ADDITIVE);
-			
+
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-				(e.minigame_playerslot ? GetPlayerName(e.minigame_playerslot-1) : _("AI")),
+				(e.minigame_playerslot ? entcs_GetName(e.minigame_playerslot-1) : _("AI")),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			
+
 			drawstring(mypos+eY*player_fontsize_y,ftos(e.pong_score),'48 48 0',
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			
+
 			if ( e == minigame_self )
 				drawborderlines(1, mypos, ts, pong_team_to_color(e.team), 1, DRAWFLAG_NORMAL);
 		}

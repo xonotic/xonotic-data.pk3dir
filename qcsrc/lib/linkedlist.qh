@@ -1,0 +1,84 @@
+#pragma once
+
+CLASS(LinkedListNode, Object)
+	ATTRIB(LinkedListNode, ll_data, entity);
+	ATTRIB(LinkedListNode, ll_prev, LinkedListNode);
+	ATTRIB(LinkedListNode, ll_next, LinkedListNode);
+ENDCLASS(LinkedListNode)
+
+CLASS(LinkedList, Object)
+	ATTRIB(LinkedList, ll_head, LinkedListNode);
+	ATTRIB(LinkedList, ll_tail, LinkedListNode);
+ENDCLASS(LinkedList)
+
+#define LL_NEW() NEW(LinkedList)
+
+#define LL_EMPTY(ll) (ll.ll_head == NULL)
+
+/**
+ * Push to tail
+ */
+entity LL_PUSH(LinkedList this, entity e)
+{
+	assert(this);
+	LinkedListNode n = NEW(LinkedListNode);
+	n.ll_data = e;
+	LinkedListNode tail = n.ll_prev = this.ll_tail;
+	this.ll_tail = (tail) ? tail.ll_next = n : this.ll_head = n;
+	return e;
+}
+
+/**
+ * Pop from tail
+ */
+entity LL_POP(LinkedList this)
+{
+	assert(this);
+	if (!this.ll_tail) return NULL;
+	LinkedListNode n = this.ll_tail;
+	entity e = n.ll_data;
+	LinkedListNode prev = n.ll_prev;
+	if (prev) (this.ll_tail = prev).ll_next = NULL;
+	else this.ll_head = this.ll_tail = NULL;
+	delete(n);
+	return e;
+}
+
+#define LL_CLEAR(...) EVAL_LL_CLEAR(OVERLOAD(LL_CLEAR, __VA_ARGS__))
+#define EVAL_LL_CLEAR(...) __VA_ARGS__
+#define LL_CLEAR_1(this) LL_CLEAR_2(this, LAMBDA())
+#define LL_CLEAR_2(this, dtor) \
+	MACRO_BEGIN \
+	{ \
+		LinkedList _ll = this; \
+		assert(_ll); \
+		while (_ll.ll_tail) \
+		{ \
+			entity it = LL_POP(_ll); \
+			if (!it) continue; \
+			dtor \
+			delete(it); \
+		} \
+	} MACRO_END
+
+#define LL_DELETE(...) EVAL_LL_DELETE(OVERLOAD(LL_DELETE, __VA_ARGS__))
+#define EVAL_LL_DELETE(...) __VA_ARGS__
+#define LL_DELETE_1(this) LL_DELETE_2(this, LAMBDA())
+#define LL_DELETE_2(this, dtor) \
+	MACRO_BEGIN \
+	{ \
+		LL_CLEAR_2(this, dtor); \
+		delete(this); \
+		this = NULL; \
+	} MACRO_END
+
+#define LL_EACH(list, cond, body) \
+	MACRO_BEGIN                                                         \
+	{                                                                   \
+		noref int i = 0;                                                \
+		for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i))  \
+		{                                                               \
+			ITER_CONST noref entity it = _it.ll_data;                   \
+			if (cond) { body }                                          \
+		}                                                               \
+	} MACRO_END

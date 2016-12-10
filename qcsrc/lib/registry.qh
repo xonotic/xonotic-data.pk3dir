@@ -1,0 +1,191 @@
+#pragma once
+
+#include "oo.qh"
+
+#if 1
+	#define _R_MAP(r, max) ArrayList r; STATIC_INIT(r) { AL_NEW(r, max, NULL, e); }
+	#define _R_GET(r, i) AL_gete(r, i)
+	#define _R_SET(r, i, e) AL_sete(r, i, e)
+	#define _R_DEL(r) AL_DELETE(r)
+#else
+	#define _R_MAP(r, max) entity r[max]
+	#define _R_GET(r, i) r[i]
+	#define _R_SET(r, i, e) r[i] = e
+	#define _R_DEL(r)
+#endif
+
+/**
+ * Declare a new registry.
+ *
+ * Don't forget to call `REGISTER_REGISTRY`:
+ *     REGISTER_REGISTRY(Foos)
+ */
+#define REGISTRY(id, max) \
+	void Register##id(); \
+	[[accumulate]] REGISTRY_BEGIN(id) {} \
+	[[accumulate]] REGISTRY_END(id) {} \
+	void _Register##id() {} \
+	void Register##id() { REGISTRY_BEGIN_(id); _Register##id(); REGISTRY_END_(id); } \
+	const int id##_MAX = max; \
+	int id##_COUNT; \
+	noref entity id##_first, id##_last; \
+	_R_MAP(_##id, id##_MAX); \
+	SHUTDOWN(id) { _R_DEL(_##id); } \
+	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+
+/** Called before initializing a registry. */
+#define REGISTRY_BEGIN(id) [[accumulate]] void REGISTRY_BEGIN_(id) { noref void() f = Register##id; } void REGISTRY_BEGIN_(id)
+#define REGISTRY_BEGIN_(id) Register##id##_First()
+
+/** Called after initializing a registry. */
+#define REGISTRY_END(id) [[accumulate]] void REGISTRY_END_(id) { noref void() f = Register##id; } void REGISTRY_END_(id)
+#define REGISTRY_END_(id) Register##id##_Done()
+
+REGISTRY(Registries, BITS(8))
+
+/** registered item identifier */
+.string registered_id;
+
+/**
+ * Register a new entity with a registry.
+ * Must be followed by a semicolon or a function body with a `this` parameter.
+ * Wrapper macros may perform actions after user initialization like so:
+ *     #define REGISTER_FOO(id) \
+ *         REGISTER(Foos, FOO, id, m_id, NEW(Foo)) { \
+ *             print("Registering foo #", this.m_id + 1, "\n"); \
+ *         } \
+ *         REGISTER_INIT(FOO, id)
+ *
+ *
+ * @param registry  The registry to add each entity to.
+ * @param ns        Short for namespace, prefix for each global (ns##_##id)
+ * @param id        The identifier of the current entity being registered
+ * @param fld       The field to store the locally unique unique entity id
+ * @param inst      An expression to create a new instance, invoked for every registration
+ */
+#define REGISTER(...) EVAL_REGISTER(OVERLOAD_(REGISTER, __VA_ARGS__))
+#define EVAL_REGISTER(...) __VA_ARGS__
+#define REGISTER_5(registry, ns, id, fld, inst) REGISTER_4(registry, ns##_##id, fld, inst)
+#define REGISTER_4(registry, id, fld, inst) \
+	entity id; \
+	REGISTER_INIT(id) {} \
+	void Register_##id() \
+	{ \
+		entity this = id; \
+		if (this == NULL) { \
+			if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
+			this = id = inst; \
+			this.registered_id = #id; \
+			REGISTRY_PUSH(registry, fld, this); \
+		} \
+		Register_##id##_init(this); \
+	} \
+	ACCUMULATE_FUNCTION(_Register##registry, Register_##id) \
+	REGISTER_INIT(id)
+
+#define REGISTRY_PUSH(registry, fld, it) MACRO_BEGIN { \
+	it.fld = registry##_COUNT; \
+	_R_SET(_##registry, registry##_COUNT, it); \
+	++registry##_COUNT; \
+	if (!registry##_first) registry##_first = it; \
+	if (registry##_last)   registry##_last.REGISTRY_NEXT = it; \
+	registry##_last = it; \
+} MACRO_END
+
+#define REGISTRY_RESERVE(registry, fld, id, suffix) MACRO_BEGIN { \
+	entity e = new_pure(registry_reserved); \
+	e.registered_id = #id "/" #suffix; \
+	REGISTRY_PUSH(registry, fld, e); \
+} MACRO_END
+
+#define REGISTER_INIT(id) [[accumulate]] void Register_##id##_init(entity this)
+
+/** internal next pointer */
+#define REGISTRY_NEXT enemy
+.entity REGISTRY_NEXT;
+
+#define REGISTRY_SORT(...) EVAL_REGISTRY_SORT(OVERLOAD(REGISTRY_SORT, __VA_ARGS__))
+#define EVAL_REGISTRY_SORT(...) __VA_ARGS__
+#define REGISTRY_SORT_1(id) REGISTRY_SORT_2(id, 0)
+#define REGISTRY_SORT_2(id, skip) \
+	void _REGISTRY_SWAP_##id(int i, int j, entity pass) \
+	{ \
+		i += skip; j += skip; \
+		\
+		entity a = _R_GET(_##id, i), b = _R_GET(_##id, j); \
+		_R_SET(_##id, i, b); \
+		_R_SET(_##id, j, a); \
+        \
+		entity a_next = a.REGISTRY_NEXT, b_next = b.REGISTRY_NEXT; \
+		a.REGISTRY_NEXT = b_next; \
+		b.REGISTRY_NEXT = a_next; \
+        \
+		if (i == 0) id##_first = b; \
+		else _R_GET(_##id, i - 1).REGISTRY_NEXT = b; \
+        \
+		if (j == 0) id##_first = a; \
+		else _R_GET(_##id, j - 1).REGISTRY_NEXT = a; \
+	} \
+	int _REGISTRY_CMP_##id(int i, int j, entity pass) \
+	{ \
+		i += skip; j += skip; \
+		string a = _R_GET(_##id, i).registered_id; \
+		string b = _R_GET(_##id, j).registered_id; \
+		return strcmp(a, b); \
+	} \
+	STATIC_INIT(Registry_sort_##id) \
+	{ \
+		heapsort(id##_COUNT - (skip), _REGISTRY_SWAP_##id, _REGISTRY_CMP_##id, NULL); \
+	}
+
+#define REGISTRY_HASH(id) Registry_hash_##id
+
+[[accumulate]] void Registry_check(string r, string server) { }
+[[accumulate]] void Registry_send_all() { }
+
+#ifdef SVQC
+void Registry_send(string id, string hash);
+#else
+#define Registry_send(id, hash)
+#endif
+
+#define REGISTRY_CHECK(id) \
+	string REGISTRY_HASH(id); \
+	STATIC_INIT(Registry_check_##id) \
+	{ \
+		/* Note: SHA256 isn't always available, use MD4 instead */ \
+		string algo = "MD4"; \
+		string join = ":"; \
+		string s = ""; \
+		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
+		s = substring(s, strlen(join), -1); \
+		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
+		LOG_DEBUGF(#id ": %s\n[%s]", h, s); \
+	} \
+	void Registry_check(string r, string sv) \
+	{ \
+		if (r == #id) \
+		{ \
+			string cl = REGISTRY_HASH(id); \
+			if (cl != sv) \
+			{ \
+				LOG_FATALF("client/server mismatch (%s).\nCL: %s\nSV: %s", r, cl, sv); \
+			} \
+		} \
+	} \
+	void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
+
+#define REGISTER_REGISTRY(...) EVAL_REGISTER_REGISTRY(OVERLOAD(REGISTER_REGISTRY, __VA_ARGS__))
+#define EVAL_REGISTER_REGISTRY(...) __VA_ARGS__
+#define REGISTER_REGISTRY_1(id) REGISTER_REGISTRY_2(id, #id)
+#define REGISTER_REGISTRY_2(id, str) \
+	ACCUMULATE_FUNCTION(__static_init, Register##id) \
+	CLASS(id##Registry, Object) \
+		ATTRIB(id##Registry, m_name, string, str); \
+		ATTRIB(id##Registry, REGISTRY_NEXT, entity, id##_first); \
+		METHOD(id##Registry, m_reload, void()); \
+	ENDCLASS(id##Registry) \
+	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry)); \
+	METHOD(id##Registry, m_reload, void()) { \
+		Register##id(); \
+	}

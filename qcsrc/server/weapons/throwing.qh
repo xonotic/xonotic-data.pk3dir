@@ -1,16 +1,14 @@
-#ifndef THROWING_H
-#define THROWING_H
+#pragma once
 
 .float savenextthink;
-void thrown_wep_think();
+void thrown_wep_think(entity this);
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
 
-float W_IsWeaponThrowable(float w);
+bool W_IsWeaponThrowable(entity this, int w);
 
 // toss current weapon
-void W_ThrowWeapon(vector velo, vector delta, float doreduce);
+void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta, float doreduce);
 
-void SpawnThrownWeapon(vector org, float w);
-#endif
+void SpawnThrownWeapon(entity this, vector org, float w);

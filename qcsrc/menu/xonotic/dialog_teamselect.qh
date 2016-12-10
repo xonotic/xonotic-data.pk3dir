@@ -1,0 +1,18 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
+	METHOD(XonoticTeamSelectDialog, fill, void(entity));
+	METHOD(XonoticTeamSelectDialog, showNotify, void(entity));
+	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection"));
+	ATTRIB(XonoticTeamSelectDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticTeamSelectDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticTeamSelectDialog, rows, float, 5);
+	ATTRIB(XonoticTeamSelectDialog, columns, float, 4);
+	ATTRIB(XonoticTeamSelectDialog, name, string, "TeamSelect");
+	ATTRIB(XonoticTeamSelectDialog, team1, entity);
+	ATTRIB(XonoticTeamSelectDialog, team2, entity);
+	ATTRIB(XonoticTeamSelectDialog, team3, entity);
+	ATTRIB(XonoticTeamSelectDialog, team4, entity);
+	ATTRIB(XonoticTeamSelectDialog, requiresConnection, float, true);
+ENDCLASS(XonoticTeamSelectDialog)

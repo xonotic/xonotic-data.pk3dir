@@ -1,20 +1,10 @@
-#ifndef DIALOG_SETTINGS_GAME_MODEL_H
-#define DIALOG_SETTINGS_GAME_MODEL_H
-#include "tab.qc"
-CLASS(XonoticGameModelSettingsTab, XonoticTab)
-	METHOD(XonoticGameModelSettingsTab, fill, void(entity));
-	METHOD(XonoticGameModelSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameModelSettingsTab, title, string, _("Models"))
-	ATTRIB(XonoticGameModelSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameModelSettingsTab, rows, float, 13)
-	ATTRIB(XonoticGameModelSettingsTab, columns, float, 5)
-ENDCLASS(XonoticGameModelSettingsTab)
-entity makeXonoticGameModelSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Models, makeXonoticGameModelSettingsTab());
-#endif
+#include "dialog_settings_game_model.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "textslider.qh"
+#include "slider.qh"
+
 void XonoticGameModelSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
@@ -60,7 +50,12 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force player colors to mine")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_forceplayercolors"));
+			e.addValue(e, _("Never"), "0");
+			e.addValue(e, _("In non teamplay modes only"), "1");
+			e.addValue(e, _("Always"), "2");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Body fading:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 0.2, "cl_deathglow"));
@@ -74,4 +69,3 @@ void XonoticGameModelSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
 }
-#endif

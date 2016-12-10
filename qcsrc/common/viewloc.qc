@@ -1,7 +1,7 @@
+#include "viewloc.qh"
 #include "util.qh"
 
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
 #elif defined(MENUQC)
@@ -10,74 +10,83 @@
 #endif
 
 // client movement
-void viewloc_PlayerPhysics()
+void viewloc_PlayerPhysics(entity this)
 {
-	if(self.viewloc)
+	if(this.viewloc)
 	{
-		vector oldmovement = self.movement;
-		self.movement_x = oldmovement_y;
-		self.movement_y = 0;
+		vector old_movement = this.movement;
+		this.movement_x = old_movement_y;
+		this.movement_y = 0;
 
-		if(self.movement_x < 0)
-			self.movement_x = -self.movement_x;
+		if(this.movement_x < 0)
+			this.movement_x = -this.movement_x;
 
 		vector level_start, level_end;
-		level_start = self.viewloc.enemy.origin;
-		level_end = self.viewloc.goalentity.origin;
+		level_start = this.viewloc.enemy.origin;
+		level_end = this.viewloc.goalentity.origin;
 		vector forward, backward;
 		forward = vectoangles(normalize(level_end - level_start));
 		backward = vectoangles(normalize(level_start - level_end));
 
-		if(self.movement_x < 0) // left
-			self.angles_y = backward_y;
-		if(self.movement_x > 0) // right
-			self.angles_y = forward_y;
+		if(this.movement_x < 0) // left
+			this.angles_y = backward_y;
+		if(this.movement_x > 0) // right
+			this.angles_y = forward_y;
 
-		if(oldmovement_x > 0)
+		if(old_movement_x > 0)
 #ifdef CSQC
 			input_angles_x =
 #endif
-			self.v_angle_x = self.angles_x = -50;
-		else if(oldmovement_x < 0)
+			this.v_angle_x = this.angles_x = -50;
+		else if(old_movement_x < 0)
 #ifdef CSQC
 			input_angles_x =
 #endif
-			self.v_angle_x = self.angles_x = 50;
+			this.v_angle_x = this.angles_x = 50;
 
-		//if(!PHYS_INPUT_BUTTON_CROUCH(self) && !IS_DUCKED(self))
+		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
 #ifdef SVQC
-			//self.BUTTON_CROUCH = (oldmovement_x < 0);
-			if(oldmovement_x < 0)
-				self.BUTTON_CROUCH = true;
+			//PHYS_INPUT_BUTTON_CROUCH(this) = (old_movement_x < 0);
+			if (old_movement.x < 0)
+				PHYS_INPUT_BUTTON_CROUCH(this) = true;
 #elif defined(CSQC)
-			if(oldmovement_x < 0) { input_buttons |= 16; self.flags |= FL_DUCKED; } //else { input_buttons &= ~16; self.flags &= ~FL_DUCKED; }
+			if (old_movement.x < 0)
+			{
+				input_buttons |= BIT(4);
+				this.flags |= FL_DUCKED;
+			}
+			//else { input_buttons &= ~16; this.flags &= ~FL_DUCKED; }
 #endif
 	}
 }
 
 #ifdef CSQC
 
-void viewloc_SetTags()
+void viewloc_SetTags(entity this)
 {
-	if(self.viewloc && wasfreed(self.viewloc))
-		self.viewloc = world;
+	if(this.viewloc && wasfreed(this.viewloc))
+		this.viewloc = NULL;
 
-	if(self.viewloc.entnum != self.tag_networkviewloc)
-	if(self.tag_networkviewloc == 0)
-		self.viewloc = world;
+	if(this.viewloc.entnum != this.tag_networkviewloc)
+	if(this.tag_networkviewloc == 0)
+		this.viewloc = NULL;
 	else
-		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+		this.viewloc = findfloat(NULL, entnum, this.tag_networkviewloc);
 }
 
 vector old_camera_angle = '0 0 0';
+bool autocvar_cam_snap_close;
+bool autocvar_cam_track;
+bool autocvar_cam_snap_hard;
+bool autocvar_cam_snap_unlock;
 void viewloc_SetViewLocation()
 {
-	entity view = CSQCModel_server2csqc(player_localentnum);
-	if(!view) { return; }
+	entity view = CSQCModel_server2csqc(player_localentnum - 1);
+	if (!view) return;
 	//NOTE: the "cam_" cvars sould probably be changed out with a spawnflag or an entity key. I have it like this for my testing -- Player_2
 	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
 	{
-		vector position_a, position_b, camera_position, camera_angle, forward, backward;
+		vector position_a, position_b, camera_position, camera_angle = '0 0 0', forward, backward;
 		//vector scratch;
 
 		position_a = view.viewloc.enemy.origin;
@@ -95,20 +104,18 @@ void viewloc_SetViewLocation()
 			camera_position = vec_bounds_in(view.origin, position_a, position_b);
 
 
-		camera_angle = '0 0 0';
-
 		// a tracking camera follows the player when it leaves the world box
-		if (cvar("cam_track")) {
+		if (autocvar_cam_track) {
 			camera_angle = aim_vec (camera_position, view.origin);
 		}
 
 		// hard snap changes the angle as soon as it crosses over the nearest 90 degree mark
-		if (cvar("cam_snap_hard")){
+		if (autocvar_cam_snap_hard){
 			camera_angle = angle_snap_vec(aim_vec(camera_position, view.origin), 90);
 		}
 
 		// tries to avoid snapping unless it *really* needs to
-		if (cvar("cam_snap_close")){
+		if (autocvar_cam_snap_close){
 
 			// like hard snap, but don't snap angles yet.
 			camera_angle = aim_vec(camera_position, view.origin);
@@ -126,15 +133,15 @@ void viewloc_SetViewLocation()
 		}
 
 		//unlocking this allows the camera to look up and down. this also allows a top-down view.
-		if (!cvar("cam_snap_unlock")) {
+		if (!autocvar_cam_snap_unlock) {
 			camera_angle_x = 0;
 			camera_angle_z = 0;
 		}
 
 #if 0
-		dprint(vtos(camera_position), "\n");
-		dprint(vtos(old_camera_angle), "\n");
-		dprint(vtos(camera_angle), "\n");
+		LOG_TRACE(vtos(camera_position));
+		LOG_TRACE(vtos(old_camera_angle));
+		LOG_TRACE(vtos(camera_angle));
 #endif
 
 		freeze_org = getpropertyvec(VF_ORIGIN);

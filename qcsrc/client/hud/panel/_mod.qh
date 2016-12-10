@@ -1,0 +1,21 @@
+// generated file; do not modify
+#include <client/hud/panel/ammo.qh>
+#include <client/hud/panel/centerprint.qh>
+#include <client/hud/panel/chat.qh>
+#include <client/hud/panel/engineinfo.qh>
+#include <client/hud/panel/healtharmor.qh>
+#include <client/hud/panel/infomessages.qh>
+#include <client/hud/panel/minigame.qh>
+#include <client/hud/panel/modicons.qh>
+#include <client/hud/panel/notify.qh>
+#include <client/hud/panel/physics.qh>
+#include <client/hud/panel/powerups.qh>
+#include <client/hud/panel/pressedkeys.qh>
+#include <client/hud/panel/quickmenu.qh>
+#include <client/hud/panel/racetimer.qh>
+#include <client/hud/panel/radar.qh>
+#include <client/hud/panel/score.qh>
+#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/timer.qh>
+#include <client/hud/panel/vote.qh>
+#include <client/hud/panel/weapons.qh>

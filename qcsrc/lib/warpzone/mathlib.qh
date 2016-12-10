@@ -1,0 +1,115 @@
+#pragma once
+
+// <math.h>
+
+// The commented-out functions need no implementation because DarkPlaces offers
+// them as builtins. They are listed here anyway for completeness sake.
+
+const int FP_NAN = 0;
+const int FP_INFINITE = 1;
+const int FP_ZERO = 2;
+const int FP_SUBNORMAL = 3;
+const int FP_NORMAL = 4;
+int fpclassify(float e);
+bool isfinite(float e);
+bool isinf(float e);
+bool isnan(float e);
+bool isnormal(float e);
+bool signbit(float e);
+
+//float acos(float e);
+//float asin(float e);
+//float atan(float e);
+//float atan2(float f, float e);
+//float cos(float e);
+//float sin(float e);
+//float tan(float e);
+
+float acosh(float e);
+float asinh(float e);
+float atanh(float e);
+float cosh(float e);
+float sinh(float e);
+float tanh(float e);
+
+float exp(float e);
+float exp2(float e);
+float expm1(float e);
+
+vector frexp(float e); // returns mantissa as _x, exponent as _y
+int ilogb(float e);
+float ldexp(float e, int e);
+//float log(float e);
+float logn(float e, float base);
+float log10(float e);
+float log1p(float e);
+float log2(float e);
+float logb(float e);
+vector modf(float f); // fraction as _x, integer as _y
+
+float scalbn(float e, int n);
+
+float cbrt(float e);
+//float fabs(float e);
+float hypot(float e, float f);
+//float pow(float e, float f);
+//float sqrt(float e, float f);
+
+float erf(float e);
+float erfc(float e);
+vector lgamma(float e); // value in _x, sign in _y
+float tgamma(float e);
+
+/**
+ * Pythonic mod:
+ * TODO: %% operator?
+ *
+ *  1 %  2 ==  1
+ * -1 %  2 ==  1
+ *  1 % -2 == -1
+ * -1 % -2 == -1
+ */
+float pymod(float e, float f);
+
+//float ceil(float e);
+//float floor(float e);
+float nearbyint(float e);
+//float rint(float e);
+//float round(float e);
+float trunc(float e);
+
+float fmod(float e, float f);
+float remainder(float e, float f);
+vector remquo(float e, float f);
+
+float copysign(float e, float f);
+float nan(string tag);
+float nextafter(float e, float f);
+float nexttoward(float e, float f);
+
+float fdim(float e, float f);
+float fmax(float e, float f);
+float fmin(float e, float f);
+float fma(float e, float f, float g);
+
+int isgreater(float e, float f);
+int isgreaterequal(float e, float f);
+int isless(float e, float f);
+int islessequal(float e, float f);
+int islessgreater(float e, float f);
+int isunordered(float e, float f);
+
+const float M_E        = 2.7182818284590452354;   /* e */
+const float M_LOG2E    = 1.4426950408889634074;   /* log_2 e */
+const float M_LOG10E   = 0.43429448190325182765;  /* log_10 e */
+const float M_LN2      = 0.69314718055994530942;  /* log_e 2 */
+const float M_LN10     = 2.30258509299404568402;  /* log_e 10 */
+// -Wdouble-declaration
+#define M_PI             3.14159265358979323846   /* pi */
+const float M_PI_2     = 1.57079632679489661923;  /* pi/2 */
+const float M_PI_4     = 0.78539816339744830962;  /* pi/4 */
+const float M_1_PI     = 0.31830988618379067154;  /* 1/pi */
+const float M_2_PI     = 0.63661977236758134308;  /* 2/pi */
+const float M_2_SQRTPI = 1.12837916709551257390;  /* 2/sqrt(pi) */
+const float M_SQRT2    = 1.41421356237309504880;  /* sqrt(2) */
+const float M_SQRT1_2  = 0.70710678118654752440;  /* 1/sqrt(2) */

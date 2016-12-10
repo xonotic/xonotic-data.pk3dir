@@ -1,7 +1,7 @@
+#include "campaign_setup.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
     #include "campaign_common.qh"
     #include "mapinfo.qh"
 #endif

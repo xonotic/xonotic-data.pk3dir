@@ -1,0 +1,34 @@
+#pragma once
+
+#include "../item.qh"
+CLASS(Label, Item)
+	METHOD(Label, configureLabel, void(entity, string, float, float));
+	METHOD(Label, draw, void(entity));
+	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Label, setText, void(entity, string));
+	METHOD(Label, toString, string(entity));
+	METHOD(Label, recalcPositionWithText, void(entity, string));
+	ATTRIB(Label, isBold, float, 0);
+	ATTRIB(Label, text, string);
+	ATTRIB(Label, currentText, string);
+	ATTRIB(Label, fontSize, float, 8);
+	ATTRIB(Label, align, float, 0.5);
+	ATTRIB(Label, allowCut, float, 0);
+	ATTRIB(Label, allowColors, float, 0);
+	ATTRIB(Label, keepspaceLeft, float, 0); // for use by subclasses (radiobuttons for example);
+	ATTRIB(Label, keepspaceRight, float, 0);
+	ATTRIB(Label, marginLeft, float, 0);    // alternate way to specify keepspace* (in characters from the font);
+	ATTRIB(Label, marginRight, float, 0);
+	ATTRIB(Label, realFontSize, vector, '0 0 0');
+	ATTRIB(Label, realOrigin, vector, '0 0 0');
+	ATTRIB(Label, alpha, float, 0.7);
+	ATTRIB(Label, colorL, vector, SKINCOLOR_TEXT);
+	ATTRIB(Label, disabled, float, 0);
+	ATTRIB(Label, disabledAlpha, float, 0.3);
+	ATTRIB(Label, textEntity, entity);
+	ATTRIB(Label, allowWrap, float, 0);
+	ATTRIB(Label, recalcPos, float, 0);
+	ATTRIB(Label, condenseFactor, float, 1);
+	ATTRIB(Label, overrideRealOrigin, vector, '0 0 0');
+	ATTRIB(Label, overrideCondenseFactor, float, 0);
+ENDCLASS(Label)

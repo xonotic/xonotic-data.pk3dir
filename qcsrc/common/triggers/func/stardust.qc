@@ -1,8 +1,9 @@
+#include "stardust.qh"
 #ifdef SVQC
-void spawnfunc_func_stardust()
+spawnfunc(func_stardust)
 {
-	self.effects = EF_STARDUST;
+	this.effects = EF_STARDUST;
 
-	CSQCMODEL_AUTOINIT();
+	CSQCMODEL_AUTOINIT(this);
 }
 #endif

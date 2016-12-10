@@ -1,0 +1,25 @@
+#pragma once
+
+#include "label.qh"
+CLASS(BorderImage, Label)
+	METHOD(BorderImage, configureBorderImage, void(entity, string, float, vector, string, float));
+	METHOD(BorderImage, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(BorderImage, recalcPositionWithText, void(entity, string));
+	ATTRIB(BorderImage, isBold, float, 1);
+	METHOD(BorderImage, draw, void(entity));
+	ATTRIB(BorderImage, src, string);
+	ATTRIB(BorderImage, borderHeight, float, 0);
+	ATTRIB(BorderImage, borderVec, vector, '0 0 0');
+	ATTRIB(BorderImage, color, vector, '1 1 1');
+	ATTRIB(BorderImage, closeButton, entity);
+	ATTRIB(BorderImage, realFontSize_Nexposeed, vector, '0 0 0');
+	ATTRIB(BorderImage, realOrigin_Nexposeed, vector, '0 0 0');
+	ATTRIB(BorderImage, isNexposeeTitleBar, float, 0);
+	ATTRIB(BorderImage, zoomedOutTitleBarPosition, float, 0);
+	ATTRIB(BorderImage, zoomedOutTitleBar, float, 0);
+	ATTRIB(BorderImage, overrideRealOrigin, vector, '0 1 0');
+	ATTRIB(BorderImage, saveRelOrigin, vector, '0 0 0');
+	ATTRIB(BorderImage, saveRelSize, vector, '0 0 0');
+ENDCLASS(BorderImage)
+
+.vector colorC, colorF;

@@ -1,0 +1,109 @@
+#pragma once
+
+// Transition from global 'self' to local 'this'
+
+// Step 1: auto oldself
+#if 1
+    #define SELFPARAM() noref const entity this = self
+#endif
+
+// Step 2: const self
+#if 1
+    #define self (0, self)
+    [[alias("self")]] entity __self;
+    #define setself(s) (__self = s)
+    #define WITHSELF(value, block) WITH(entity, __self, value, (0, block))
+#endif
+
+// Step 3: propagate SELFPARAM()
+#if 1
+    #undef self
+    #define self (this, self)
+    #undef SELFPARAM
+    #define SELFPARAM() const entity this = __self
+    #define ENGINE_EVENT() const entity this = __self
+#endif
+
+// Step 4: kill unstructured setself
+#if 1
+    #undef setself
+#endif
+
+// Step 5: this should work
+#if 1
+    #undef self
+    #define self (0, this)
+#endif
+
+// Step 6: remove SELFPARAM, add parameters
+#if 1
+    #undef SELFPARAM
+#endif
+
+// Step 7: remove WITHSELF, no replacement
+#if 0
+    #undef WITHSELF
+    #define WITHSELF(value, block) block
+#endif
+
+#define SELFWRAP(T, R, oldargs, args, forward) \
+    .R oldargs T; \
+    noref .R oldargs __##T = T; \
+    .R args self##T; \
+    R T##_self oldargs { ENGINE_EVENT(); return this.self##T forward; }
+
+noref entity _selftemp;
+#define SELFWRAP_SET(T, e, f) \
+    (_selftemp = (e), _selftemp.__##T = ((f) ? T##_self : func_null), _selftemp.self##T = (f))
+#define SELFWRAP_GET(T, e) \
+    (0, (e).self##T)
+#define _SELFWRAP_SET(T, e, f) \
+    ((e).__##T = (f))
+#define _SELFWRAP_GET(T, e) \
+    (0, (e).__##T)
+
+SELFWRAP(think, void, (), (entity this), (this))
+#define setthink(e, f) SELFWRAP_SET(think, e, f)
+#define getthink(e) SELFWRAP_GET(think, e)
+
+#ifdef GAMEQC
+SELFWRAP(touch, void, (), (entity this, entity toucher), (this, other))
+#define settouch(e, f) SELFWRAP_SET(touch, e, f)
+#define gettouch(e) SELFWRAP_GET(touch, e)
+#endif
+
+#ifdef GAMEQC
+SELFWRAP(blocked, void, (), (entity this, entity blocker), (this, other))
+#define setblocked(e, f) SELFWRAP_SET(blocked, e, f)
+#define blocked stopusingthis
+#endif
+
+SELFWRAP(predraw, void, (), (entity this), (this))
+#define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
+
+#ifdef GAMEQC
+SELFWRAP(customizeentityforclient, bool, (), (entity this, entity client), (this, other))
+#define setcefc(e, f) SELFWRAP_SET(customizeentityforclient, e, f)
+#define getcefc(e) SELFWRAP_GET(customizeentityforclient, e)
+#endif
+
+SELFWRAP(camera_transform, vector, (vector org, vector ang), (entity this, vector org, vector ang), (this, org, ang))
+#define setcamera_transform(e, f) SELFWRAP_SET(camera_transform, e, f)
+
+/** return false to remove from the client */
+SELFWRAP(SendEntity, bool, (entity to, int sendflags), (entity this, entity to, int sendflags), (this, to, sendflags))
+#define setSendEntity(e, f) SELFWRAP_SET(SendEntity, e, f)
+#define getSendEntity(e) SELFWRAP_GET(SendEntity, e)
+
+#define ChangeYaw(e, ...) (__self = (e), builtin_ChangeYaw(__VA_ARGS__))
+#define checkclient(e, ...) (__self = (e), builtin_checkclient(__VA_ARGS__))
+#ifndef SVQC
+    #define droptofloor(e, ...) (__self = (e), builtin_droptofloor(__VA_ARGS__))
+#endif
+#define error(...) (__self = (NULL), builtin_error(__VA_ARGS__))
+#define movetogoal(e, ...) (__self = (e), builtin_movetogoal(__VA_ARGS__))
+#define walkmove(e, ...) (__self = (e), builtin_walkmove(__VA_ARGS__))
+
+#ifdef GAMEQC
+void adaptor_think2use(entity this) { if (this.use) this.use(this, NULL, NULL); }
+#endif

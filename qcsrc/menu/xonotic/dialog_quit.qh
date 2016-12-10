@@ -1,0 +1,13 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticQuitDialog, XonoticDialog)
+	METHOD(XonoticQuitDialog, fill, void(entity));
+	ATTRIB(XonoticQuitDialog, title, string, _("Quit"));
+	ATTRIB(XonoticQuitDialog, tooltip, string, _("Quit the game"));
+	ATTRIB(XonoticQuitDialog, color, vector, SKINCOLOR_DIALOG_QUIT);
+	ATTRIB(XonoticQuitDialog, intendedWidth, float, 0.5);
+	ATTRIB(XonoticQuitDialog, rows, float, 3);
+	ATTRIB(XonoticQuitDialog, columns, float, 2);
+	ATTRIB(XonoticQuitDialog, name, string, "Quit");
+ENDCLASS(XonoticQuitDialog)

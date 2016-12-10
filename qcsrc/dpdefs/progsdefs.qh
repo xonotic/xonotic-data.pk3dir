@@ -1,5 +1,4 @@
-#ifndef PROGSDEFS_H
-#define PROGSDEFS_H
+#pragma once
 
 #pragma noref 1
 
@@ -9,6 +8,7 @@
 #define FALSE _FALSE
 
 #define spawn _spawn
+#define setmodel _setmodel
 
 #include "upstream/progsdefs.qc"
 
@@ -18,9 +18,14 @@
 #undef FALSE
 
 #undef spawn
+#undef setmodel
+
+#define stuffcmd(cl, ...) MACRO_BEGIN \
+    entity _cl = (cl); \
+    if (IS_REAL_CLIENT(_cl)) stuffcmd(_cl, __VA_ARGS__); \
+MACRO_END
 
 #pragma noref 0
 
-#define WriteFloat(to, f) WriteCoord(to, f)
-
-#endif
+#define use use1
+.void(entity this, entity actor, entity trigger) use;

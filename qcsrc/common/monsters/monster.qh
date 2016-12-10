@@ -1,15 +1,75 @@
-#ifndef MONSTER_H
-#define MONSTER_H
+#pragma once
 
-bool m_null(int) { return false; }
+// special spawn flags
+const int MONSTER_RESPAWN_DEATHPOINT = BIT(4); // re-spawn where we died
+const int MONSTER_TYPE_FLY = BIT(5);
+const int MONSTER_TYPE_SWIM = BIT(6);
+const int MONSTER_SIZE_BROKEN = BIT(7); // TODO: remove when bad models are replaced
+const int MON_FLAG_SUPERMONSTER = BIT(8); // incredibly powerful monster
+const int MON_FLAG_RANGED = BIT(9); // monster shoots projectiles
+const int MON_FLAG_MELEE = BIT(10);
+const int MON_FLAG_CRUSH = BIT(11); // monster can be stomped in special modes
+const int MON_FLAG_RIDE = BIT(12); // monster can be ridden in special modes
+const int MONSTER_SIZE_QUAKE = BIT(13);
+const int MONSTER_TYPE_PASSIVE = BIT(14); // doesn't target or chase enemies
+const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)
 
-/** If you register a new monster, make sure to add it to all.inc */
+// entity properties of monsterinfo:
+.bool(int, entity actor, entity targ) monster_attackfunc;
+
+// animations
+.vector anim_blockend;
+.vector anim_blockstart;
+.vector anim_melee1;
+.vector anim_melee2;
+.vector anim_melee3;
+.vector anim_walk;
+.vector anim_spawn;
+
 CLASS(Monster, Object)
-    ATTRIB(Monster, monsterid, int, 0)
-    ATTRIB(Monster, classname, string, "monster_info")
+    ATTRIB(Monster, monsterid, int, 0);
+    /** attributes */
+    ATTRIB(Monster, spawnflags, int, 0);
     /** human readable name */
-    ATTRIB(Monster, monster_name, string, string_null)
-    ATTRIB(Monster, monster_func, bool(int), m_null)
+    ATTRIB(Monster, monster_name, string, "Monster");
+    /** short name */
+    ATTRIB(Monster, netname, string, "");
+    /** model */
+    ATTRIB(Monster, m_model, entity);
+    /** hitbox size */
+    ATTRIB(Monster, mins, vector, '-0 -0 -0');
+    /** hitbox size */
+    ATTRIB(Monster, maxs, vector, '0 0 0');
+
+    /** (SERVER) setup monster data */
+    METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+    /** (SERVER) logic to run every frame */
+    METHOD(Monster, mr_think, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+    /** (SERVER) called when monster dies */
+    METHOD(Monster, mr_death, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+    /** (BOTH) precaches models/sounds used by this monster */
+    METHOD(Monster, mr_precache, bool(Monster this)) { TC(Monster, this); return false; }
+    /** (SERVER) called when monster is damaged */
+    METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
+    /** (BOTH?) sets animations for monster */
+    METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+
 ENDCLASS(Monster)
 
+
+#ifdef SVQC
+#include "sv_monsters.qh"
+#include <server/g_damage.qh>
+#include <server/bot/api.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <lib/warpzone/server.qh>
+#endif
+
+#ifdef GAMEQC
+#include "../animdecide.qh"
+#include "../anim.qh"
+vector animfixfps(entity e, vector a, vector b);
 #endif

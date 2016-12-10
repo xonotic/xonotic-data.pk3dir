@@ -1,11 +1,8 @@
-#ifndef SCORES_H
-#define SCORES_H
+#pragma once
 
-#include "../common/constants.qh"
+#include <common/constants.qh>
 
-entity scores_initialized; // non-world when scores labels/rules have been set
-.float scores[MAX_SCORE];
-.float teamscores[MAX_TEAMSCORE];
+entity scores_initialized; // non-NULL when scores labels/rules have been set
 .float scoreboard_pos;
 
 /**
@@ -25,7 +22,7 @@ void PlayerScore_Detach(entity player);
  * Means: FIXME make players unable to join the game when not called ClientConnect yet.
  * Returns the new score.
  */
-float PlayerScore_Add(entity player, float scorefield, float score);
+float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score);
 
 /**
  * Initialize the score of this player if needed.
@@ -58,12 +55,12 @@ float TeamScore_GetCompareValue(float t);
  * Adds a score to both the player and the team. Returns the team score if
  * possible, otherwise the player score.
  */
-float PlayerTeamScore_Add(entity player, float pscorefield, float tscorefield, float score);
+float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score);
 
 /**
  * Adds to the generic score fields for both the player and the team.
  */
-#define PlayerTeamScore_AddScore(p,s) PlayerTeamScore_Add(p, SP_SCORE, ST_SCORE, s)
+#define PlayerTeamScore_AddScore(p, s) PlayerTeamScore_Add(p, SP_SCORE, ST_SCORE, s)
 
 /**
  * Set the label of a team score item, as well as the scoring flags.
@@ -73,7 +70,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags);
 /**
  * Set the label of a player score item, as well as the scoring flags.
  */
-void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags);
+void ScoreInfo_SetLabel_PlayerScore(PlayerScoreField i, string label, float scoreflags);
 
 /**
  * Initialize the scores info for the given number of teams.
@@ -94,21 +91,21 @@ void Score_NicePrint(entity to);
 /**
  * Sets the following results for the current scores entities.
  */
-void WinningConditionHelper();
+void WinningConditionHelper(entity this);
 float WinningConditionHelper_topscore;      ///< highest score
 float WinningConditionHelper_secondscore;   ///< second highest score
 float WinningConditionHelper_winnerteam;    ///< the color of the winning team, or -1 if none
 float WinningConditionHelper_secondteam;    ///< the color of the second team, or -1 if none
 float WinningConditionHelper_equality;      ///< we have no winner
-entity WinningConditionHelper_winner;       ///< the winning player, or world if none
-entity WinningConditionHelper_second;       ///< the second player, or world if none
+entity WinningConditionHelper_winner;       ///< the winning player, or NULL if none
+entity WinningConditionHelper_second;       ///< the second player, or NULL if none
 float WinningConditionHelper_lowerisbetter; ///< lower is better, duh
 float WinningConditionHelper_zeroisworst;   ///< zero is worst, duh
 #define WINNINGCONDITIONHELPER_LOWERISBETTER_WORST 999999999
 
 /**
  * Returns score strings for eventlog etc.
- * When called with world, or 0, as argument, they return the labels in the
+ * When called with NULL, or 0, as argument, they return the labels in the
  * same order.
  * The strings are comma separated; labels that end with !! designate primary,
  * labels that end with ! designate high priority.
@@ -129,4 +126,3 @@ string GetTeamScoreString(float tm, float shortString);
  * nospectators: exclude spectators
  */
 entity PlayerScore_Sort(.float field, float teams, float strict, float nospectators);
-#endif

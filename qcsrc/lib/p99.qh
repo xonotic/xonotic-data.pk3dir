@@ -1,0 +1,84 @@
+/* This may look like nonsense, but it really is -*- mode: C -*-              */
+/*                                                                            */
+/* Except for parts copied from previous work and as explicitly stated below, */
+/* the authors and copyright holders for this work are as follows:            */
+/* (C) copyright  2010-2013 Jens Gustedt, INRIA, France                       */
+/* (C) copyright  2013 Pierre-Nicolas Clauss                                  */
+/* (C) copyright  2012 William Morris                                         */
+/*                                                                            */
+/* This file is free software; it is part of the P99 project.                 */
+/* You can redistribute it and/or modify it under the terms of the QPL as     */
+/* given in the file LICENSE. It is distributed without any warranty;         */
+/* without even the implied warranty of merchantability or fitness for a      */
+/* particular purpose.                                                        */
+/*                                                                            */
+#pragma once
+
+#define P99_MAX_NUMBER 16
+#define P00_ARG(                            \
+    _01, _02, _03, _04, _05, _06, _07, _08, \
+    _09, _10, _11, _12, _13, _14, _15, _16, \
+    _00, ...) _00
+#define P00_NARG(...) P00_ARG(__VA_ARGS__,  \
+    16, 15, 14, 13, 12, 11, 10,  9,         \
+     8,  7,  6,  5,  4,  3,  2,  1,         \
+     0, )
+#define P99_HAS_COMMA(...) P00_ARG(__VA_ARGS__, \
+    1, 1, 1, 1, 1, 1, 1, 1,                     \
+    1, 1, 1, 1, 1, 1, 1, 0,                     \
+    0)
+
+#define P99_IF_EMPTY(...) P99_IF_EQ(1, P99_IS_EMPTY(__VA_ARGS__))
+    // P99_HAS_COMMA(__VA_ARGS__),                         : test if there is just one argument, that might be empty
+    // P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__),            : test if P99_IS__EQ__ together with the argument adds a comma
+    // P99_HAS_COMMA(__VA_ARGS__ (/*empty*/)),             : test if the argument together with a parenthesis adds a comma
+    // P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__ (/*empty*/)) : test if placing it between P99_IS__EQ__ and the parenthesis adds a comma
+    #define P99_IS_EMPTY(...)                                                               \
+        P00_ISEMPTY(                                                                        \
+            P99_HAS_COMMA(__VA_ARGS__),                                                     \
+            P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__),                                        \
+            P99_HAS_COMMA(__VA_ARGS__ (/*empty*/)),                                         \
+            P99_HAS_COMMA(P00_IS__EQ__ __VA_ARGS__ (/*empty*/))                             \
+        )
+        #define P00_IS__EQ__(...) ,
+        #define P00_ISEMPTY(_1, _2, _3, _4) P99_HAS_COMMA(P99_PASTE5(P00_IS_EMPTY_CASE_, _1, _2, _3, _4))
+            #define P00_IS_EMPTY_CASE_0000 P00_IS_EMPTY_CASE_0000
+            #define P00_IS_EMPTY_CASE_0001 ,
+            #define P00_IS_EMPTY_CASE_0010 P00_IS_EMPTY_CASE_0010
+            #define P00_IS_EMPTY_CASE_0011 P00_IS_EMPTY_CASE_0011
+            #define P00_IS_EMPTY_CASE_0100 P00_IS_EMPTY_CASE_0100
+            #define P00_IS_EMPTY_CASE_0101 P00_IS_EMPTY_CASE_0101
+            #define P00_IS_EMPTY_CASE_0110 P00_IS_EMPTY_CASE_0110
+            #define P00_IS_EMPTY_CASE_0111 P00_IS_EMPTY_CASE_0111
+            #define P00_IS_EMPTY_CASE_1000 P00_IS_EMPTY_CASE_1000
+            #define P00_IS_EMPTY_CASE_1001 P00_IS_EMPTY_CASE_1001
+            #define P00_IS_EMPTY_CASE_1010 P00_IS_EMPTY_CASE_1010
+            #define P00_IS_EMPTY_CASE_1011 P00_IS_EMPTY_CASE_1011
+            #define P00_IS_EMPTY_CASE_1100 P00_IS_EMPTY_CASE_1100
+            #define P00_IS_EMPTY_CASE_1101 P00_IS_EMPTY_CASE_1101
+            #define P00_IS_EMPTY_CASE_1110 P00_IS_EMPTY_CASE_1110
+            #define P00_IS_EMPTY_CASE_1111 P00_IS_EMPTY_CASE_1111
+
+
+#define P00_IF_CLAUSE(EXP) P00__IF_CLAUSE(EXP, P00_CLAUSE1, P00_CLAUSE2, ~)
+    #define P00__IF_CLAUSE(A, B, C, ...) C
+    #define P00_CLAUSE1(...) __VA_ARGS__ P00_IGNORE
+        #define P00_IGNORE(...)
+    #define P00_CLAUSE2(...) P00_IDENT
+        #define P00_IDENT(...) __VA_ARGS__
+
+
+#define P99_IF_EQ(A, B) P00_IF_CLAUSE(P99_PASTE4(P00_IS_, A, _EQ_, B)())
+    #define P00_IS_0_EQ_0(...) ,
+    #define P00_IS_1_EQ_1(...) ,
+
+
+#define P99_CAT2(_1, _2) _1 ## _2
+#define P99_PASTE2(_1, _2) \
+    P99_CAT2(_1, _2)
+#define P99_PASTE3(_1, _2, _3) \
+    P99_PASTE2(P99_PASTE2(_1, _2), _3)
+#define P99_PASTE4(_1, _2, _3, _4) \
+    P99_PASTE2(P99_PASTE3(_1, _2, _3), _4)
+#define P99_PASTE5(_1, _2, _3, _4, _5) \
+    P99_PASTE2(P99_PASTE4(_1, _2, _3, _4), _5)

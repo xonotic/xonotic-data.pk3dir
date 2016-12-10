@@ -1,23 +1,7 @@
-#ifndef COLORPICKER_H
-#define COLORPICKER_H
-#include "../item/image.qc"
-CLASS(XonoticColorpicker, Image)
-	METHOD(XonoticColorpicker, configureXonoticColorpicker, void(entity, entity));
-	METHOD(XonoticColorpicker, mousePress, float(entity, vector));
-	METHOD(XonoticColorpicker, mouseRelease, float(entity, vector));
-	METHOD(XonoticColorpicker, mouseDrag, float(entity, vector));
-	ATTRIB(XonoticColorpicker, controlledTextbox, entity, NULL)
-	ATTRIB(XonoticColorpicker, image, string, SKINGFX_COLORPICKER)
-	ATTRIB(XonoticColorpicker, imagemargin, vector, SKINMARGIN_COLORPICKER)
-	ATTRIB(XonoticColorpicker, focusable, float, 1)
-	METHOD(XonoticColorpicker, focusLeave, void(entity));
-	METHOD(XonoticColorpicker, keyDown, float(entity, float, float, float));
-	METHOD(XonoticColorpicker, draw, void(entity));
-ENDCLASS(XonoticColorpicker)
-entity makeXonoticColorpicker(entity theTextbox);
-#endif
+#include "colorpicker.qh"
 
-#ifdef IMPLEMENTATION
+#include "inputbox.qh"
+
 entity makeXonoticColorpicker(entity theTextbox)
 {
 	entity me;
@@ -86,7 +70,7 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 				while (i - 2 - carets >= 0 && substring(me.controlledTextbox.text, i - 2 - carets, 1) == "^")
 					++carets;
 				if (carets & 1)
-					if(strstrofs("0123456789", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
+					if(IS_DIGIT(substring(me.controlledTextbox.text, i-1, 1)))
 					{
 						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
 						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
@@ -103,9 +87,9 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 				while (i - 5 - carets >= 0 && substring(me.controlledTextbox.text, i - 5 - carets, 1) == "^")
 					++carets;
 				if (carets & 1)
-					if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-3, 1), 0) >= 0)
-						if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-2, 1), 0) >= 0)
-							if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
+					if(IS_HEXDIGIT(substring(me.controlledTextbox.text, i - 3, 1)))
+						if(IS_HEXDIGIT(substring(me.controlledTextbox.text, i - 2, 1)))
+							if(IS_HEXDIGIT(substring(me.controlledTextbox.text, i - 1, 1)))
 							{
 								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
 								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
@@ -174,4 +158,3 @@ void XonoticColorpicker_draw(entity me)
 	draw_Picture(me.imgOrigin, strcat(me.src, "_m"), me.imgSize, '0 0 0', aC);
 	draw_Picture(me.imgOrigin, strcat(me.src, "_m"), me.imgSize, me.color, B);
 }
-#endif

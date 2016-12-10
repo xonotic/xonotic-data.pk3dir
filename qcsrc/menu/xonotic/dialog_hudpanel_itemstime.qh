@@ -1,0 +1,12 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDItemsTimeDialog, XonoticRootDialog)
+	METHOD(XonoticHUDItemsTimeDialog, fill, void(entity));
+	ATTRIB(XonoticHUDItemsTimeDialog, title, string, _("Items Time Panel"));
+	ATTRIB(XonoticHUDItemsTimeDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDItemsTimeDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDItemsTimeDialog, rows, float, 15);
+	ATTRIB(XonoticHUDItemsTimeDialog, columns, float, 4);
+	ATTRIB(XonoticHUDItemsTimeDialog, name, string, "HUDitemstime");
+ENDCLASS(XonoticHUDItemsTimeDialog)

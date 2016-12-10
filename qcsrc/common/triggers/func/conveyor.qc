@@ -1,197 +1,207 @@
-void conveyor_think()
+#include "conveyor.qh"
+REGISTER_NET_LINKED(ENT_CLIENT_CONVEYOR)
+
+void conveyor_think(entity this)
 {
 #ifdef CSQC
 	// TODO: check if this is what is causing the glitchiness when switching between them
-	float dt = time - self.move_time;
-	self.move_time = time;
+	float dt = time - this.move_time;
+	this.move_time = time;
 	if(dt <= 0) { return; }
 #endif
-	entity e;
 
-	// set myself as current conveyor where possible
-	for(e = world; (e = findentity(e, conveyor, self)); )
-		e.conveyor = world;
-
-	if(self.state)
+	// set mythis as current conveyor where possible
+	IL_EACH(g_conveyed, it.conveyor == this,
 	{
-		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
-			if(!e.conveyor.state)
-				if(isPushable(e))
-				{
-					vector emin = e.absmin;
-					vector emax = e.absmax;
-					if(self.solid == SOLID_BSP)
-					{
-						emin -= '1 1 1';
-						emax += '1 1 1';
-					}
-					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
-							e.conveyor = self;
-				}
+		it.conveyor = NULL;
+		IL_REMOVE(g_conveyed, it);
+	});
 
-		for(e = world; (e = findentity(e, conveyor, self)); )
+	if(this.state)
+	{
+		FOREACH_ENTITY_RADIUS((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1, !it.conveyor.state && isPushable(it),
 		{
-			if(IS_CLIENT(e)) // doing it via velocity has quite some advantages
+			vector emin = it.absmin;
+			vector emax = it.absmax;
+			if(this.solid == SOLID_BSP)
+			{
+				emin -= '1 1 1';
+				emax += '1 1 1';
+			}
+			if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+				if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
+				{
+					if(!it.conveyor)
+						IL_PUSH(g_conveyed, it);
+					it.conveyor = this;
+				}
+		});
+
+		IL_EACH(g_conveyed, it.conveyor == this,
+		{
+			if(IS_CLIENT(it)) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics	continue;
 
-			setorigin(e, e.origin + self.movedir * PHYS_INPUT_FRAMETIME);
-			move_out_of_solid(e);
+			setorigin(it, it.origin + this.movedir * PHYS_INPUT_FRAMETIME);
+			move_out_of_solid(it);
 #ifdef SVQC
-			UpdateCSQCProjectile(e);
+			UpdateCSQCProjectile(it);
 #endif
 			/*
 			// stupid conveyor code
-			tracebox(e.origin, e.mins, e.maxs, e.origin + self.movedir * sys_frametime, MOVE_NORMAL, e);
+			tracebox(it.origin, it.mins, it.maxs, it.origin + this.movedir * sys_frametime, MOVE_NORMAL, it);
 			if(trace_fraction > 0)
-				setorigin(e, trace_endpos);
+				setorigin(it, trace_endpos);
 			*/
-		}
+		});
 	}
 
 #ifdef SVQC
-	self.nextthink = time;
+	this.nextthink = time;
 #endif
 }
 
 #ifdef SVQC
 
-void conveyor_use()
+void conveyor_use(entity this, entity actor, entity trigger)
 {
-	self.state = !self.state;
+	this.state = !this.state;
 
-	self.SendFlags |= 2;
+	this.SendFlags |= 2;
 }
 
-void conveyor_reset()
+void conveyor_reset(entity this)
 {
-	self.state = (self.spawnflags & 1);
+	this.state = (this.spawnflags & 1);
 
-	self.SendFlags |= 2;
+	this.SendFlags |= 2;
 }
 
-bool conveyor_send(entity to, int sf)
+bool conveyor_send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)
 	{
-		WriteByte(MSG_ENTITY, self.warpzone_isboxy);
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteByte(MSG_ENTITY, this.warpzone_isboxy);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 
-		WriteCoord(MSG_ENTITY, self.mins_x);
-		WriteCoord(MSG_ENTITY, self.mins_y);
-		WriteCoord(MSG_ENTITY, self.mins_z);
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-		WriteCoord(MSG_ENTITY, self.maxs_y);
-		WriteCoord(MSG_ENTITY, self.maxs_z);
+		WriteCoord(MSG_ENTITY, this.mins_x);
+		WriteCoord(MSG_ENTITY, this.mins_y);
+		WriteCoord(MSG_ENTITY, this.mins_z);
+		WriteCoord(MSG_ENTITY, this.maxs_x);
+		WriteCoord(MSG_ENTITY, this.maxs_y);
+		WriteCoord(MSG_ENTITY, this.maxs_z);
 
-		WriteCoord(MSG_ENTITY, self.movedir_x);
-		WriteCoord(MSG_ENTITY, self.movedir_y);
-		WriteCoord(MSG_ENTITY, self.movedir_z);
+		WriteCoord(MSG_ENTITY, this.movedir_x);
+		WriteCoord(MSG_ENTITY, this.movedir_y);
+		WriteCoord(MSG_ENTITY, this.movedir_z);
 
-		WriteByte(MSG_ENTITY, self.speed);
-		WriteByte(MSG_ENTITY, self.state);
+		WriteByte(MSG_ENTITY, this.speed);
+		WriteByte(MSG_ENTITY, this.state);
 
-		WriteString(MSG_ENTITY, self.targetname);
-		WriteString(MSG_ENTITY, self.target);
+		WriteString(MSG_ENTITY, this.targetname);
+		WriteString(MSG_ENTITY, this.target);
 	}
 
 	if(sf & 2)
-		WriteByte(MSG_ENTITY, self.state);
+		WriteByte(MSG_ENTITY, this.state);
 
 	return true;
 }
 
-void conveyor_init()
+void conveyor_init(entity this)
 {
-	if (!self.speed)
-		self.speed = 200;
-	self.movedir = self.movedir * self.speed;
-	self.think = conveyor_think;
-	self.nextthink = time;
+	if (!this.speed) this.speed = 200;
+	this.movedir *= this.speed;
+	setthink(this, conveyor_think);
+	this.nextthink = time;
 	IFTARGETED
 	{
-		self.use = conveyor_use;
-		self.reset = conveyor_reset;
-		conveyor_reset();
+		this.use = conveyor_use;
+		this.reset = conveyor_reset;
+		this.reset(this);
 	}
 	else
-		self.state = 1;
+		this.state = 1;
 
-	FixSize(self);
+	FixSize(this);
 
-	Net_LinkEntity(self, 0, false, conveyor_send);
+	Net_LinkEntity(this, 0, false, conveyor_send);
 
-	self.SendFlags |= 1;
+	this.SendFlags |= 1;
 }
 
-void spawnfunc_trigger_conveyor()
+spawnfunc(trigger_conveyor)
 {
-	SetMovedir();
+	SetMovedir(this);
 	EXACTTRIGGER_INIT;
-	conveyor_init();
+	conveyor_init(this);
 }
 
-void spawnfunc_func_conveyor()
+spawnfunc(func_conveyor)
 {
-	SetMovedir();
-	InitMovingBrushTrigger();
-	self.movetype = MOVETYPE_NONE;
-	conveyor_init();
+	SetMovedir(this);
+	InitMovingBrushTrigger(this);
+	set_movetype(this, MOVETYPE_NONE);
+	conveyor_init(this);
 }
 
 #elif defined(CSQC)
 
-void conveyor_init()
-{
-	self.draw = conveyor_think;
-	self.drawmask = MASK_NORMAL;
+void conveyor_draw(entity this) { conveyor_think(this); }
 
-	self.movetype = MOVETYPE_NONE;
-	self.model = "";
-	self.solid = SOLID_TRIGGER;
-	self.move_origin = self.origin;
-	self.move_time = time;
+void conveyor_init(entity this)
+{
+	this.draw = conveyor_draw;
+	IL_PUSH(g_drawables, this);
+	this.drawmask = MASK_NORMAL;
+
+	set_movetype(this, MOVETYPE_NONE);
+	this.model = "";
+	this.solid = SOLID_TRIGGER;
+	this.move_time = time;
 }
 
-void ent_conveyor()
+NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 {
-	float sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & 1)
 	{
-		self.warpzone_isboxy = ReadByte();
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.warpzone_isboxy = ReadByte();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
-		setsize(self, self.mins, self.maxs);
+		this.mins_x = ReadCoord();
+		this.mins_y = ReadCoord();
+		this.mins_z = ReadCoord();
+		this.maxs_x = ReadCoord();
+		this.maxs_y = ReadCoord();
+		this.maxs_z = ReadCoord();
+		setsize(this, this.mins, this.maxs);
 
-		self.movedir_x = ReadCoord();
-		self.movedir_y = ReadCoord();
-		self.movedir_z = ReadCoord();
+		this.movedir_x = ReadCoord();
+		this.movedir_y = ReadCoord();
+		this.movedir_z = ReadCoord();
 
-		self.speed = ReadByte();
-		self.state = ReadByte();
+		this.speed = ReadByte();
+		this.state = ReadByte();
 
-		self.targetname = strzone(ReadString());
-		self.target = strzone(ReadString());
+		this.targetname = strzone(ReadString());
+		this.target = strzone(ReadString());
 
-		conveyor_init();
+		conveyor_init(this);
 	}
 
 	if(sf & 2)
-		self.state = ReadByte();
+		this.state = ReadByte();
+
+	return true;
 }
 #endif

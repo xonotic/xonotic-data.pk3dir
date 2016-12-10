@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDPowerupsDialog, XonoticRootDialog)
+	METHOD(XonoticHUDPowerupsDialog, fill, void(entity));
+	ATTRIB(XonoticHUDPowerupsDialog, title, string, _("Powerups Panel"));
+	ATTRIB(XonoticHUDPowerupsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDPowerupsDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDPowerupsDialog, rows, float, 14);
+	ATTRIB(XonoticHUDPowerupsDialog, columns, float, 4);
+	ATTRIB(XonoticHUDPowerupsDialog, name, string, "HUDpowerups");
+	ATTRIB(XonoticHUDPowerupsDialog, requiresConnection, float, true);
+ENDCLASS(XonoticHUDPowerupsDialog)

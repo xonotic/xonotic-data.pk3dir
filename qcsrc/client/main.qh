@@ -1,27 +1,7 @@
-#ifndef MAIN_H
-#define MAIN_H
+#pragma once
 
-#include "../common/constants.qh"
-
-// --------------------------------------------------------------------------
-// MENU Functionality
-
-const float DATABUF_PING = 0;
-#define DATABUF_CAPTURES (1*maxclients)
-#define DATABUF_DEATHS (2*maxclients)
-#define DATABUF_RETURNS (3*maxclients)
-
-#define DATABUF_NEXT (5*maxclients)
-
-void() menu_show_error;
-void() menu_sub_null;
-
-float menu_visible;
-var void() menu_show;
-var float(float bInputType, float nPrimary, float nSecondary) menu_action;
-
-// --------------------------------------------------------------------------
-// Onslaught
+#include <common/constants.qh>
+#include <common/weapons/_all.qh>
 
 // Map coordinate base calculations need these
 vector mi_center;
@@ -29,60 +9,23 @@ vector mi_scale;
 // Minimap
 string minimapname;
 
-// --------------------------------------------------------------------------
-// General stuff
-
 float postinit;
-float gametype;
-
-//float sorted_players;
-//float sorted_teams;
-
-// Defs
-//.float ctf_state;
-//.float health;
+entity gametype;
 
 float FONT_USER = 8;
 
-// --------------------------------------------------------------------------
-// Scoreboard stuff
 
-const int MAX_HUD_FIELDS = 16;
-
-const int SP_END = -1;
-
-const int SP_PING = -2;
-const int SP_NAME = -3;
-const int SP_KDRATIO = -4;
-const int SP_CLRATIO = -5;
-const int SP_PL = -6;
-const int SP_FRAGS = -7;
-const int SP_SUM = -8;
-
-const int SP_SEPARATOR = -100;
-
-float hud_field[MAX_HUD_FIELDS + 1];
-float hud_size[MAX_HUD_FIELDS + 1];
-string hud_title[MAX_HUD_FIELDS + 1];
-int hud_num_fields;
-
-string scores_label[MAX_SCORE];
-int scores_flags[MAX_SCORE];
-string teamscores_label[MAX_SCORE];
-int teamscores_flags[MAX_SCORE];
-.int scores[MAX_SCORE];
-.float teamscores[MAX_TEAMSCORE];
-
-#define IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
-#define IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
-
+vector OFFSET_CURSOR = '0 0 0';
+vector SIZE_CURSOR = '32 32 0';
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
+void draw_cursor_normal(vector pos, vector col, float a);
+void LoadMenuSkinValues();
 
 vector hud_fontsize;
 
 float RANKINGS_RECEIVED_CNT;
 string grecordholder[RANKINGS_CNT];
 float grecordtime[RANKINGS_CNT];
-//float csqc_flags;
 
 entity playerslots[255]; // 255 is engine limit on maxclients
 entity teamslots[17];    // 17 teams (including "spectator team")
@@ -91,26 +34,37 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .float ready;
 .float eliminated;
 
-.void(void) draw;
-.void(void) draw2d;
-.void(void) entremove;
+.void(entity) draw;
+IntrusiveList g_drawables;
+STATIC_INIT(g_drawables) { g_drawables = IL_NEW(); }
+.void(entity) draw2d;
+IntrusiveList g_drawables_2d;
+STATIC_INIT(g_drawables_2d) { g_drawables_2d = IL_NEW(); }
+.void(entity) entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
-float button_zoom;
-float spectatorbutton_zoom;
-float button_attack2;
+IntrusiveList g_radarlinks;
+STATIC_INIT(g_radarlinks) { g_radarlinks = IL_NEW(); }
+IntrusiveList g_radaricons;
+STATIC_INIT(g_radaricons) { g_radaricons = IL_NEW(); }
 
-int activeweapon;
-int switchingweapon;
-int switchweapon;
+bool button_zoom;
+bool spectatorbutton_zoom;
+bool button_attack2;
+
+Weapon activeweapon;
+Weapon switchingweapon;
+Weapon switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
 
 void Fog_Force();
 
-string getcommandkey(string text, string command);
+string _getcommandkey(string text, string command, bool forcename);
+#define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)
+#define getcommandkey_forcename(cmd_name, command) _getcommandkey(cmd_name, command, true)
 
 string vote_called_vote;
 float ready_waiting;
@@ -129,6 +83,7 @@ float camera_roll;
 vector camera_direction;
 
 void centerprint_hud(string strMessage);
+void centerprint_kill(float id);
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 const float ALPHA_MIN_VISIBLE = 0.003;
@@ -142,17 +97,17 @@ const int HOOK_END =      2;
 
 .float ping, ping_packetloss, ping_movementloss;
 
-float g_balance_mortar_bouncefactor;
-float g_balance_mortar_bouncestop;
-float g_balance_electro_secondary_bouncefactor;
-float g_balance_electro_secondary_bouncestop;
 float g_trueaim_minrange;
 
-entity entcs_receiver[255]; // 255 is the engine limit on maxclients
-
-float hud;
+int hud;
 float view_quality;
+
+int num_spectators;
+const int MAX_SPECTATORS = 7;
+int spectatorlist[MAX_SPECTATORS];
+
 int framecount;
 .float health;
 
-#endif
+float GetSpeedUnitFactor(int speed_unit);
+string GetSpeedUnit(int speed_unit);

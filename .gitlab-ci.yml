@@ -1,0 +1,79 @@
+before_script:
+  - ln -s $PWD data/xonotic-data.pk3dir
+
+  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
+  - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
+  - cd ..
+
+report_cloc:
+  stage: test
+  script:
+    - cloc --force-lang-def=qcsrc/tools/cloc.txt --sql 1 --sql-project xonotic qcsrc | sqlite3 code.db
+    - sqlite3 code.db 'select file,nCode from t where nCode > 1000 order by nBlank+nComment+nCode desc'
+
+test_compilation_units:
+  stage: test
+  script:
+    - ./qcsrc/tools/compilationunits.sh
+
+test_sv_game:
+  stage: test
+  script:
+    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
+    - cd ..
+
+    - mkdir -p data/maps
+    - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
+    - wget -O data/maps/g-23.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.mapinfo
+    - wget -O data/maps/g-23.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints
+    - wget -O data/maps/g-23.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.cache
+    - wget -O data/maps/g-23.waypoints.hardwired https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.hardwired
+    - make
+    - EXPECT=b58f9c7587f1a14e5c52176d4e62a9fb
+    - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
+      | tee /dev/stderr
+      | grep '^:'
+      | grep -v '^:gamestart:'
+      | grep -v '^:anticheat:'
+      | md5sum | awk '{ print $1 }')
+    - echo 'expected:' $EXPECT
+    - echo '  actual:' $HASH
+    - test "$HASH" == "$EXPECT"
+    - exit $?
+
+test_sv_unit:
+  stage: test
+  script:
+    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
+    - cd ..
+
+    - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+    - make
+    - while read line; do
+        echo $line;
+        if [[ $line == "All tests OK" ]]; then exit 0; fi;
+      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
+    - exit 1
+
+doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
+  stage: deploy
+  script:
+    - cd qcsrc && doxygen
+    - mv html ../public
+    - for i in {0..0}; do eval $(printf "echo \$id_rsa_%02d\n" $i) >> ~/.ssh/id_rsa_base64; done
+    - base64 --decode ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\tLogLevel ERROR\n" >> ~/.ssh/config
+    - git config --global user.name "Gitlab CI"
+    - git config --global user.email "<>"
+    - git clone --single-branch --depth 1 ${DEPLOY_HOST}:${DEPLOY_REPO} ~/deploy_
+    - mkdir ~/deploy && mv ~/deploy_/.git ~/deploy && rm -r ~/deploy_
+    - cp -r ../public/* ~/deploy
+    - cd ~/deploy && git add -A . && git commit -m "Deploy ${CI_BUILD_REF}" && git push origin gh-pages
+  artifacts:
+    paths:
+      - public
+  only:
+    - master

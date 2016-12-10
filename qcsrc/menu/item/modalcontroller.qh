@@ -1,0 +1,50 @@
+#pragma once
+
+// modal dialog controller
+// handles a stack of dialog elements
+// each element can have one of the following states:
+//   0: hidden (fading out)
+//   1: visible (zooming in)
+//   2: greyed out (inactive)
+// While an animation is running, no item has focus. When an animation is done,
+// the topmost item gets focus.
+// The items are assumed to be added in overlapping order, that is, the lowest
+// window must get added first.
+//
+// Possible uses:
+// - to control a modal dialog:
+//   - show modal dialog: me.showChild(me, childItem, buttonAbsOrigin, buttonAbsSize, 0) // childItem also gets focus
+//   - dismiss modal dialog: me.hideChild(me, childItem, 0) // childItem fades out and relinquishes focus
+//   - show first screen in m_show: me.hideAll(me, 1); me.showChild(me, me.firstChild, '0 0 0', '0 0 0', 1);
+// - to show a temporary dialog instead of the menu (teamselect): me.hideAll(me, 1); me.showChild(me, teamSelectDialog, '0 0 0', '0 0 0', 1);
+// - as a tabbed dialog control:
+//   - to initialize: me.hideAll(me, 1); me.showChild(me, me.firstChild, '0 0 0', '0 0 0', 1);
+//   - to show a tab: me.hideChild(me, currentTab, 0); me.showChild(me, newTab, buttonAbsOrigin, buttonAbsSize, 0);
+
+#include "container.qh"
+CLASS(ModalController, Container)
+	METHOD(ModalController, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(ModalController, draw, void(entity));
+	METHOD(ModalController, showChild, void(entity, entity, vector, vector, float));
+	METHOD(ModalController, hideChild, void(entity, entity, float));
+	METHOD(ModalController, hideAll, void(entity, float));
+	METHOD(ModalController, addItem, void(entity, entity, vector, vector, float));
+	METHOD(ModalController, addTab, void(entity, entity, entity));
+
+	METHOD(ModalController, initializeDialog, void(entity, entity));
+
+	METHOD(ModalController, switchState, void(entity, entity, float, float));
+	ATTRIB(ModalController, origin, vector, '0 0 0');
+	ATTRIB(ModalController, size, vector, '0 0 0');
+	ATTRIB(ModalController, previousButton, entity);
+	ATTRIB(ModalController, fadedAlpha, float, 0.3);
+ENDCLASS(ModalController)
+
+.float ModalController_state;
+.entity tabSelectingButton;
+.vector origin;
+.vector size;
+void TabButton_Click(entity button, entity tab);         // assumes a button has set the above fields to its own absolute origin, its size, and the tab to activate
+void DialogOpenButton_Click(entity button, entity tab);  // assumes a button has set the above fields to its own absolute origin, its size, and the tab to activate
+void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrigin, vector theSize);
+void DialogCloseButton_Click(entity button, entity tab); // assumes a button has set the above fields to the tab to close

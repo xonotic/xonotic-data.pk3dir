@@ -1,0 +1,28 @@
+#pragma once
+
+#include "../item.qh"
+CLASS(Image, Item)
+	METHOD(Image, configureImage, void(entity, string));
+	METHOD(Image, draw, void(entity));
+	METHOD(Image, toString, string(entity));
+	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Image, updateAspect, void(entity));
+	METHOD(Image, initZoom, void(entity));
+	METHOD(Image, setZoom, void(entity, float, float));
+	METHOD(Image, drag_setStartPos, float(entity, vector));
+	METHOD(Image, drag, float(entity, vector));
+	ATTRIB(Image, src, string);
+	ATTRIB(Image, color, vector, '1 1 1');
+	ATTRIB(Image, forcedAspect, float, 0);        // special values: -1 keep image aspect ratio, -2 keep image size but bound to the containing box, -3 always keep image size
+	ATTRIB(Image, zoomBox, float, 0);             // used by forcedAspect -2 when the image is larger than the containing box
+	ATTRIB(Image, zoomFactor, float, 1);
+	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0');
+	ATTRIB(Image, zoomSnapToTheBox, float, 1);    // snap the zoomed in image to the box borders when zooming/dragging it
+	ATTRIB(Image, zoomTime, float, 0);
+	ATTRIB(Image, zoomLimitedByTheBox, float, 0); // forbids zoom if image would be larger than the containing box
+	ATTRIB(Image, zoomMax, float, 0);
+	ATTRIB(Image, start_zoomOffset, vector, '0 0 0');
+	ATTRIB(Image, start_coords, vector, '0 0 0');
+	ATTRIB(Image, imgOrigin, vector, '0 0 0');
+	ATTRIB(Image, imgSize, vector, '0 0 0');
+ENDCLASS(Image)

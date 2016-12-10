@@ -1,0 +1,36 @@
+#pragma once
+
+float RandomSelection_totalweight;
+float RandomSelection_best_priority;
+entity RandomSelection_chosen_ent;
+float RandomSelection_chosen_float;
+string RandomSelection_chosen_string;
+vector RandomSelection_chosen_vec;
+
+void RandomSelection_Init();
+void RandomSelection_Add(entity e, float f, string s, vector v, float weight, float priority);
+#define RandomSelection_AddEnt(e, weight, priority) RandomSelection_Add(e, 0, string_null, '0 0 0', weight, priority)
+#define RandomSelection_AddFloat(f, weight, priority) RandomSelection_Add(NULL, f, string_null, '0 0 0', weight, priority)
+#define RandomSelection_AddString(s, weight, priority) RandomSelection_Add(NULL, 0, s, '0 0 0', weight, priority)
+#define RandomSelection_AddVec(v, weight, priority) RandomSelection_Add(NULL, 0, string_null, v, weight, priority)
+
+// prandom - PREDICTABLE random number generator
+
+#define USE_PRANDOM
+
+#ifdef USE_PRANDOM
+	float prandom();
+	vector prandomvec();
+
+	void psrandom(float seed);
+	#ifdef USE_PRANDOM_DEBUG
+		void prandom_debug();
+	#else
+		#define prandom_debug()
+	#endif
+#else
+	#define prandom random
+	#define prandomvec randomvec
+	#define psrandom(x)
+	#define prandom_debug()
+#endif

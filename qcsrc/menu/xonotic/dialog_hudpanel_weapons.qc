@@ -1,19 +1,12 @@
-#ifndef DIALOG_HUDPANEL_WEAPONS_H
-#define DIALOG_HUDPANEL_WEAPONS_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDWeaponsDialog, XonoticRootDialog)
-	METHOD(XonoticHUDWeaponsDialog, fill, void(entity));
-	ATTRIB(XonoticHUDWeaponsDialog, title, string, _("Weapons Panel"))
-	ATTRIB(XonoticHUDWeaponsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDWeaponsDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 21)
-	ATTRIB(XonoticHUDWeaponsDialog, columns, float, 4)
-	ATTRIB(XonoticHUDWeaponsDialog, name, string, "HUDweapons")
-	ATTRIB(XonoticHUDWeaponsDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDWeaponsDialog)
-#endif
+#include "dialog_hudpanel_weapons.qh"
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "textlabel.qh"
+#include "textslider.qh"
+#include "slider.qh"
+#include "radiobutton.qh"
+#include "colorpicker_string.qh"
+
 void XonoticHUDWeaponsDialog_fill(entity me)
 {
 	entity e;
@@ -63,6 +56,7 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Weapon ID scale:")));
+			setDependent(e, "hud_panel_weapons_label", 1, 2);
 			me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.05, "hud_panel_weapons_label_scale"));
 			setDependent(e, "hud_panel_weapons_label", 1, 2);
 	me.TR(me);
@@ -72,13 +66,14 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Ammo bar alpha:")));
+			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 			me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_weapons_ammo_alpha"));
 			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Ammo bar color:")));
+			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_panel_weapons_ammo_color", "hud_panel_weapons_ammo_color"));
 			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 		me.TR(me);
 }
-#endif

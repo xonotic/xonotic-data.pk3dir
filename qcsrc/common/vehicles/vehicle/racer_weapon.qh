@@ -1,0 +1,37 @@
+#pragma once
+
+#include <common/weapons/_all.qh>
+
+CLASS(RacerAttack, PortoLaunch)
+/* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* impulse   */ ATTRIB(RacerAttack, impulse, int, 3);
+/* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
+/* wepname   */ ATTRIB(RacerAttack, m_name, string, _("Racer cannon"));
+ENDCLASS(RacerAttack)
+REGISTER_WEAPON(RACER, NEW(RacerAttack));
+
+// TODO: move into implementation
+#ifdef SVQC
+void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
+#endif
+
+#ifdef SVQC
+float autocvar_g_vehicle_racer_cannon_cost = 2;
+float autocvar_g_vehicle_racer_cannon_damage = 15;
+float autocvar_g_vehicle_racer_cannon_radius = 100;
+float autocvar_g_vehicle_racer_cannon_refire = 0.05;
+float autocvar_g_vehicle_racer_cannon_speed = 15000;
+float autocvar_g_vehicle_racer_cannon_spread = 0.0125;
+float autocvar_g_vehicle_racer_cannon_force = 50;
+
+float autocvar_g_vehicle_racer_rocket_accel = 1600;
+float autocvar_g_vehicle_racer_rocket_damage = 100;
+float autocvar_g_vehicle_racer_rocket_radius = 125;
+float autocvar_g_vehicle_racer_rocket_force = 350;
+float autocvar_g_vehicle_racer_rocket_speed = 900;
+float autocvar_g_vehicle_racer_rocket_turnrate = 0.2;
+float autocvar_g_vehicle_racer_rocket_refire = 3;
+
+float autocvar_g_vehicle_racer_rocket_climbspeed = 1600;
+float autocvar_g_vehicle_racer_rocket_locked_maxangle = 1.8;
+#endif

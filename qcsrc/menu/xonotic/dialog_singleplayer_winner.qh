@@ -1,0 +1,12 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticWinnerDialog, XonoticDialog)
+	METHOD(XonoticWinnerDialog, fill, void(entity));
+	METHOD(XonoticWinnerDialog, focusEnter, void(entity));
+	ATTRIB(XonoticWinnerDialog, title, string, _("Winner"));
+	ATTRIB(XonoticWinnerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER);
+	ATTRIB(XonoticWinnerDialog, intendedWidth, float, 0.32);
+	ATTRIB(XonoticWinnerDialog, rows, float, 12);
+	ATTRIB(XonoticWinnerDialog, columns, float, 3);
+ENDCLASS(XonoticWinnerDialog)

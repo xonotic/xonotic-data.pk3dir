@@ -1,3 +1,1 @@
-#ifdef CSQC
-void Ent_Laser();
-#endif
+#pragma once

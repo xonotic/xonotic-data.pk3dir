@@ -1,0 +1,57 @@
+#pragma once
+
+#include "listbox.qh"
+CLASS(XonoticMapList, XonoticListBox)
+	METHOD(XonoticMapList, configureXonoticMapList, void(entity));
+	ATTRIB(XonoticMapList, rowsPerItem, float, 4);
+	METHOD(XonoticMapList, draw, void(entity));
+	METHOD(XonoticMapList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticMapList, refilter, void(entity));
+	METHOD(XonoticMapList, refilterCallback, void(entity, entity));
+	METHOD(XonoticMapList, keyDown, float(entity, float, float, float));
+
+	ATTRIB(XonoticMapList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticMapList, columnPreviewOrigin, float, 0);
+	ATTRIB(XonoticMapList, columnPreviewSize, float, 0);
+	ATTRIB(XonoticMapList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticMapList, columnNameSize, float, 0);
+	ATTRIB(XonoticMapList, checkMarkOrigin, vector, '0 0 0');
+	ATTRIB(XonoticMapList, checkMarkSize, vector, '0 0 0');
+	ATTRIB(XonoticMapList, realUpperMargin1, float, 0);
+	ATTRIB(XonoticMapList, realUpperMargin2, float, 0);
+
+	ATTRIB(XonoticMapList, lastGametype, entity);
+	ATTRIB(XonoticMapList, lastFeatures, float, 0);
+
+	ATTRIB(XonoticMapList, origin, vector, '0 0 0');
+	ATTRIB(XonoticMapList, itemAbsSize, vector, '0 0 0');
+
+	ATTRIB(XonoticMapList, g_maplistCache, string);
+	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float));
+	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float));
+
+	ATTRIB(XonoticMapList, stringFilter, string);
+	ATTRIB(XonoticMapList, stringFilterBox, entity);
+
+	ATTRIB(XonoticMapList, startButton, entity);
+
+	METHOD(XonoticMapList, loadCvars, void(entity));
+
+	ATTRIB(XonoticMapList, typeToSearchString, string);
+	ATTRIB(XonoticMapList, typeToSearchTime, float, 0);
+
+	METHOD(XonoticMapList, destroy, void(entity));
+
+	ATTRIB(XonoticMapList, alphaBG, float, 0);
+ENDCLASS(XonoticMapList)
+entity makeXonoticMapList();
+void MapList_StringFilterBox_Change(entity box, entity me);
+float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
+void MapList_Add_Shown(entity btn, entity me);
+void MapList_Remove_Shown(entity btn, entity me);
+void MapList_Add_All(entity btn, entity me);
+void MapList_Remove_All(entity btn, entity me);
+void MapList_LoadMap(entity btn, entity me);

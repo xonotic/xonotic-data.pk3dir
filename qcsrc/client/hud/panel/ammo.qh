@@ -1,0 +1,4 @@
+#pragma once
+#include "../panel.qh"
+
+void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector color);

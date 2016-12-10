@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticSandboxToolsDialog, XonoticRootDialog)
+	METHOD(XonoticSandboxToolsDialog, fill, void(entity));
+	ATTRIB(XonoticSandboxToolsDialog, title, string, _("Sandbox Tools"));
+	ATTRIB(XonoticSandboxToolsDialog, color, vector, SKINCOLOR_DIALOG_SANDBOXTOOLS);
+	ATTRIB(XonoticSandboxToolsDialog, intendedWidth, float, 0.8);
+	ATTRIB(XonoticSandboxToolsDialog, rows, float, 16);
+	ATTRIB(XonoticSandboxToolsDialog, columns, float, 4);
+	ATTRIB(XonoticSandboxToolsDialog, name, string, "SandboxTools");
+	ATTRIB(XonoticSandboxToolsDialog, requiresConnection, float, true);
+ENDCLASS(XonoticSandboxToolsDialog)

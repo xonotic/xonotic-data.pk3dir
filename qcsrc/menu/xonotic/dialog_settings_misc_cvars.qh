@@ -1,0 +1,12 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticCvarsDialog, XonoticDialog)
+	METHOD(XonoticCvarsDialog, fill, void(entity));
+	METHOD(XonoticCvarsDialog, showNotify, void(entity));
+	ATTRIB(XonoticCvarsDialog, title, string, _("Advanced settings"));
+	ATTRIB(XonoticCvarsDialog, color, vector, SKINCOLOR_DIALOG_CVARS);
+	ATTRIB(XonoticCvarsDialog, intendedWidth, float, 0.8);
+	ATTRIB(XonoticCvarsDialog, rows, float, 24);
+	ATTRIB(XonoticCvarsDialog, columns, float, 6);
+ENDCLASS(XonoticCvarsDialog)

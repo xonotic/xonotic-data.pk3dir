@@ -1,0 +1,58 @@
+#pragma once
+
+#include "log.qh"
+#include "map.qh"
+#include "unsafe.qh"
+
+// translation helpers
+string prvm_language;
+
+/**
+ * @deprecated prefer _("translated")
+ */
+string language_filename(string s)
+{
+	string fn = prvm_language;
+	if (fn == "" || fn == "dump") return s;
+	fn = strcat(s, ".", fn);
+	int fh = fopen(fn, FILE_READ);
+	if (fh >= 0)
+	{
+		fclose(fh);
+		return fn;
+	}
+	return s;
+}
+
+#ifndef CTX_CACHE
+	#define CTX_CACHE 1
+#endif
+
+#if CTX_CACHE
+	HashMap CTX_cache;
+	STATIC_INIT(CTX_cache)
+	{
+		HM_NEW(CTX_cache);
+	}
+	SHUTDOWN(CTX_cache)
+	{
+		HM_DELETE(CTX_cache);
+	}
+#endif
+
+string CTX(string s)
+{
+#if CTX_CACHE
+		string c = HM_gets(CTX_cache, s);
+		if (c != "") return c;
+#endif
+	int p = strstrofs(s, "^", 0);
+	string ret = (p < 0) ? s : substring(s, p + 1, -1);
+#if CTX_CACHE
+        LOG_DEBUGF("CTX(\"%s\")", s);
+		HM_sets(CTX_cache, s, ret);
+#endif
+	return ret;
+}
+
+#define ZCTX(s) strzone(CTX(s))

@@ -1,0 +1,5 @@
+// generated file; do not modify
+#include <server/bot/api.qh>
+
+#include <server/bot/default/_mod.qh>
+#include <server/bot/null/_mod.qh>

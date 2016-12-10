@@ -1,20 +1,14 @@
-#ifndef DIALOG_SETTINGS_MISC_CVARS_H
-#define DIALOG_SETTINGS_MISC_CVARS_H
-#include "dialog.qc"
-CLASS(XonoticCvarsDialog, XonoticDialog)
-	METHOD(XonoticCvarsDialog, fill, void(entity));
-	METHOD(XonoticCvarsDialog, showNotify, void(entity));
-	ATTRIB(XonoticCvarsDialog, title, string, _("Advanced settings"))
-	ATTRIB(XonoticCvarsDialog, color, vector, SKINCOLOR_DIALOG_CVARS)
-	ATTRIB(XonoticCvarsDialog, intendedWidth, float, 0.8)
-	ATTRIB(XonoticCvarsDialog, rows, float, 24)
-	ATTRIB(XonoticCvarsDialog, columns, float, 6)
-ENDCLASS(XonoticCvarsDialog)
-#endif
+#include "dialog_settings_misc_cvars.qh"
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "cvarlist.qh"
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "button.qh"
+
 void XonoticCvarsDialog_showNotify(entity me)
 {
+	SUPER(XonoticCvarsDialog).showNotify(me);
 	loadAllCvars(me);
 }
 void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIST_CONTROLS to color ALL controls
@@ -35,15 +29,16 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Cvar filter:")));
-		me.TD(me, 1, me.columns - 1, e = makeXonoticInputBox(0, string_null));
-			e.color = SKINCOLOR_CVARLIST_CONTROLS;
-			e.colorF = SKINCOLOR_CVARLIST_CONTROLS;
-			e.cb_color = SKINCOLOR_CVARLIST_CONTROLS;
-			e.cb_colorC = SKINCOLOR_CVARLIST_CONTROLS;
-			e.cb_colorF = SKINCOLOR_CVARLIST_CONTROLS;
+		me.TD(me, 1, 3, e = makeXonoticInputBox(0, string_null));
+			e.color = e.colorF = SKINCOLOR_CVARLIST_CONTROLS;
+			e.cb_color = e.cb_colorC = e.cb_colorF = SKINCOLOR_CVARLIST_CONTROLS;
 			e.onChange = CvarList_Filter_Change;
 			e.onChangeEntity = cvarlist;
 			cvarlist.controlledTextbox = e; // this COULD also be the Value box, but this leads to accidentally editing stuff
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "menu_cvarlist_onlymodified", _("Modified cvars only")));
+			e.color = e.colorC = e.colorF = e.colorD = SKINCOLOR_CVARLIST_CONTROLS;
+			e.onClickEntity = cvarlist;
+			e.onClick = CvarList_Filter_ModifiedCvars;
 	me.TR(me);
 		me.TD(me, me.rows - me.currentRow - 9, me.columns, cvarlist);
 	me.gotoRC(me, me.rows - 8, 0);
@@ -58,11 +53,8 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Value:")));
 		me.TD(me, 1, me.columns - 2, e = makeXonoticInputBox(0, string_null));
 			cvarlist.cvarValueBox = e;
-			e.color = SKINCOLOR_CVARLIST_CONTROLS;
-			e.colorF = SKINCOLOR_CVARLIST_CONTROLS;
-			e.cb_color = SKINCOLOR_CVARLIST_CONTROLS;
-			e.cb_colorC = SKINCOLOR_CVARLIST_CONTROLS;
-			e.cb_colorF = SKINCOLOR_CVARLIST_CONTROLS;
+			e.color = e.colorF = SKINCOLOR_CVARLIST_CONTROLS;
+			e.cb_color = e.cb_colorC = e.cb_colorF = SKINCOLOR_CVARLIST_CONTROLS;
 			e.onChange = CvarList_Value_Change;
 			e.onChangeEntity = cvarlist;
 			e.onEnter = CvarList_End_Editing;
@@ -84,5 +76,3 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-
-#endif

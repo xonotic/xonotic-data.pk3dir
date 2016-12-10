@@ -1,0 +1,27 @@
+#pragma once
+
+#include "dialog.qh"
+CLASS(XonoticMapInfoDialog, XonoticDialog)
+	METHOD(XonoticMapInfoDialog, fill, void(entity));
+	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity));
+	ATTRIB(XonoticMapInfoDialog, title, string, _("Map Information"));
+	ATTRIB(XonoticMapInfoDialog, color, vector, SKINCOLOR_DIALOG_MAPINFO);
+	ATTRIB(XonoticMapInfoDialog, intendedWidth, float, 1.0);
+	ATTRIB(XonoticMapInfoDialog, rows, float, 11);
+	ATTRIB(XonoticMapInfoDialog, columns, float, 10);
+
+	ATTRIB(XonoticMapInfoDialog, previewImage, entity);
+	ATTRIB(XonoticMapInfoDialog, titleLabel, entity);
+	ATTRIB(XonoticMapInfoDialog, authorLabel, entity);
+	ATTRIB(XonoticMapInfoDialog, descriptionLabel, entity);
+	ATTRIB(XonoticMapInfoDialog, featuresLabel, entity);
+
+	ATTRIBARRAY(XonoticMapInfoDialog, typeLabels, entity, 24);
+
+	ATTRIB(XonoticMapInfoDialog, currentMapIndex, float, 0);
+	ATTRIB(XonoticMapInfoDialog, currentMapBSPName, string);
+	ATTRIB(XonoticMapInfoDialog, currentMapTitle, string);
+	ATTRIB(XonoticMapInfoDialog, currentMapAuthor, string);
+	ATTRIB(XonoticMapInfoDialog, currentMapDescription, string);
+	ATTRIB(XonoticMapInfoDialog, currentMapPreviewImage, string);
+ENDCLASS(XonoticMapInfoDialog)

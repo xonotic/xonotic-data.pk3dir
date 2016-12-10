@@ -1,0 +1,12 @@
+#pragma once
+
+#include "../item.qh"
+CLASS(XonoticCrosshairPreview, Item)
+	METHOD(XonoticCrosshairPreview, configureXonoticCrosshairPreview, void(entity));
+	METHOD(XonoticCrosshairPreview, draw, void(entity));
+	ATTRIB(XonoticCrosshairPreview, src, string);
+	ATTRIB(XonoticCrosshairPreview, src2, string);
+	ATTRIB(XonoticCrosshairPreview, disabled, float, 0);
+	ATTRIB(XonoticCrosshairPreview, disabledAlpha, float, SKINALPHA_DISABLED);
+ENDCLASS(XonoticCrosshairPreview)
+entity makeXonoticCrosshairPreview();

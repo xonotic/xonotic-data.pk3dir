@@ -1,0 +1,5 @@
+// generated file; do not modify
+#include <common/mutators/mutator/campcheck/campcheck.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/campcheck/sv_campcheck.qc>
+#endif

@@ -1,0 +1,16 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticFirstRunDialog, XonoticRootDialog)
+	METHOD(XonoticFirstRunDialog, fill, void(entity));
+	ATTRIB(XonoticFirstRunDialog, title, string, _("Welcome"));
+	ATTRIB(XonoticFirstRunDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN);
+	ATTRIB(XonoticFirstRunDialog, intendedWidth, float, 0.7);
+	ATTRIB(XonoticFirstRunDialog, rows, float, 16);
+	ATTRIB(XonoticFirstRunDialog, columns, float, 6);
+	ATTRIB(XonoticFirstRunDialog, name, string, "FirstRun");
+	ATTRIB(XonoticFirstRunDialog, playerNameLabel, entity);
+	ATTRIB(XonoticFirstRunDialog, playerNameLabelAlpha, float, 0);
+
+	ATTRIB(XonoticFirstRunDialog, closable, float, 0);
+ENDCLASS(XonoticFirstRunDialog)

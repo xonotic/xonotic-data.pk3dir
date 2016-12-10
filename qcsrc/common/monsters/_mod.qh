@@ -1,0 +1,10 @@
+// generated file; do not modify
+#include <common/monsters/all.qh>
+#ifdef SVQC
+    #include <common/monsters/sv_monsters.qh>
+#endif
+#ifdef SVQC
+    #include <common/monsters/sv_spawn.qh>
+#endif
+
+#include <common/monsters/monster/_mod.qh>

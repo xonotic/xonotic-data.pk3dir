@@ -1,0 +1,15 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticGameModelSettingsTab, XonoticTab)
+	METHOD(XonoticGameModelSettingsTab, fill, void(entity));
+	METHOD(XonoticGameModelSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGameModelSettingsTab, title, string, _("Models"));
+	ATTRIB(XonoticGameModelSettingsTab, titleTooltip, string, _("Customize how players and items are displayed in game"));
+	ATTRIB(XonoticGameModelSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGameModelSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGameModelSettingsTab, columns, float, 5);
+ENDCLASS(XonoticGameModelSettingsTab)
+entity makeXonoticGameModelSettingsTab();
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(Models, makeXonoticGameModelSettingsTab());
