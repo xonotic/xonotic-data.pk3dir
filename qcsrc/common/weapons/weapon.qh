@@ -117,6 +117,8 @@ CLASS(Weapon, Object)
         // no weapon specific image for this weapon
         return false;
     }
+    /** (CLIENT) weapon specific view model */
+    METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
     /** (CLIENT) weapon specific glow */
     METHOD(Weapon, wr_glow, vector(Weapon this, entity actor)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */

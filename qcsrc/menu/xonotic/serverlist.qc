@@ -471,9 +471,8 @@ void XonoticServerList_draw(entity me)
 		// entire list, otherwise there is no way to know which item is first in its category.
 
 		// binary search method suggested by div
-		float x;
 		float begin = 0;
-		for(x = 1; x <= category_ent_count; ++x) {
+		for(int j = 1; j <= category_ent_count; ++j) {
 			float first = begin;
 			float last = (itemcount - 1);
 			if (first > last) {
@@ -482,42 +481,42 @@ void XonoticServerList_draw(entity me)
 			}
 			float catf = gethostcachenumber(SLIST_FIELD_CATEGORY, first);
 			float catl = gethostcachenumber(SLIST_FIELD_CATEGORY, last);
-			if (catf > x) {
-				// The first one is already > x.
-				// Therefore, category x does not exist.
+			if (catf > j) {
+				// The first one is already > j.
+				// Therefore, category j does not exist.
 				// Higher numbered categories do exist though.
-			} else if (catl < x) {
-				// The last one is < x.
+			} else if (catl < j) {
+				// The last one is < j.
 				// Thus this category - and any following -
 				// don't exist.
 				break;
-			} else if (catf == x) {
+			} else if (catf == j) {
 				// Starts at first. This breaks the loop
 				// invariant in the binary search and thus has
 				// to be handled separately.
-				if(gethostcachenumber(SLIST_FIELD_CATEGORY, first) != x)
+				if(gethostcachenumber(SLIST_FIELD_CATEGORY, first) != j)
 					error("Category mismatch I");
 				if(first > 0)
-					if(gethostcachenumber(SLIST_FIELD_CATEGORY, first - 1) == x)
+					if(gethostcachenumber(SLIST_FIELD_CATEGORY, first - 1) == j)
 						error("Category mismatch II");
-				category_name[category_draw_count] = x;
+				category_name[category_draw_count] = j;
 				category_item[category_draw_count] = first;
 				++category_draw_count;
 				begin = first + 1;
 			} else {
-				// At this point, catf <= x < catl, thus
+				// At this point, catf <= j < catl, thus
 				// catf < catl, thus first < last.
 				// INVARIANTS:
 				// last - first >= 1
 				// catf == gethostcachenumber(SLIST_FIELD_CATEGORY(first)
 				// catl == gethostcachenumber(SLIST_FIELD_CATEGORY(last)
-				// catf < x
-				// catl >= x
+				// catf < j
+				// catl >= j
 				while (last - first > 1) {
 					float middle = floor((first + last) / 2);
 					// By loop condition, middle != first && middle != last.
 					float cat = gethostcachenumber(SLIST_FIELD_CATEGORY, middle);
-					if (cat >= x) {
+					if (cat >= j) {
 						last = middle;
 						catl = cat;
 					} else {
@@ -525,13 +524,13 @@ void XonoticServerList_draw(entity me)
 						catf = cat;
 					}
 				}
-				if (catl == x) {
-					if(gethostcachenumber(SLIST_FIELD_CATEGORY, last) != x)
+				if (catl == j) {
+					if(gethostcachenumber(SLIST_FIELD_CATEGORY, last) != j)
 						error("Category mismatch III");
 					if(last > 0)
-						if(gethostcachenumber(SLIST_FIELD_CATEGORY, last - 1) == x)
+						if(gethostcachenumber(SLIST_FIELD_CATEGORY, last - 1) == j)
 							error("Category mismatch IV");
-					category_name[category_draw_count] = x;
+					category_name[category_draw_count] = j;
 					category_item[category_draw_count] = last;
 					++category_draw_count;
 					begin = last + 1; // already scanned through these, skip 'em

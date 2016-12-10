@@ -49,12 +49,12 @@ vector teamradar_2dcoord_to_texcoord(vector in)
 	return out;
 }
 
-vector teamradar_texcoord_to_3dcoord(vector in,float z)
+vector teamradar_texcoord_to_3dcoord(vector in,float oz)
 {
 	vector out;
 	out_x = in_x * (mi_picmax_x - mi_picmin_x) + mi_picmin_x;
 	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
-	out_z = z;
+	out_z = oz;
 	return out;
 }
 

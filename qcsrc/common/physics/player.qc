@@ -481,15 +481,15 @@ float racecar_angle(float forward, float down)
 		return ret * angle_mult;
 }
 
+#ifdef SVQC
 string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
 void SpecialCommand(entity this)
 {
-#ifdef SVQC
 	if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
 		LOG_INFO("A hollow voice says \"Plugh\".\n");
-#endif
 }
+#endif
 
 bool PM_check_specialcommand(entity this, int buttons)
 {

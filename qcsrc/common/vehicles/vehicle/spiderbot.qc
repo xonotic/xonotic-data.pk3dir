@@ -603,8 +603,8 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 
 #endif // SVQC
 #ifdef CSQC
-float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
-float autocvar_cl_vehicle_spiderbot_cross_size = 1;
+//float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
+//float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 METHOD(Spiderbot, vr_hud, void(Spiderbot thisveh))
 {

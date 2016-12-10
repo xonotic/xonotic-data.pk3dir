@@ -21,7 +21,9 @@ bool autocvar_sv_minigames_snake_wrap = false;
 float autocvar_sv_minigames_snake_delay_initial = 0.7;
 float autocvar_sv_minigames_snake_delay_multiplier = 50;
 float autocvar_sv_minigames_snake_delay_min = 0.1;
+#ifdef SVQC
 int autocvar_sv_minigames_snake_lives = 3;
+#endif
 
 .int snake_score;
 

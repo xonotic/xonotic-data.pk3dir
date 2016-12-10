@@ -323,6 +323,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
 	}
 
+	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+		damage *= 1 - max(0, autocvar_g_spawnshield_blockdamage);
+
 	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
 		// tuba causes blood to come out of the ears
@@ -357,7 +360,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-
 	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
@@ -384,13 +386,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		this.pushltime = 0;
 		this.istypefrag = 0;
-	}
-
-	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
-	{
-		vector v = healtharmor_applydamage(this.armorvalue, max(0, autocvar_g_spawnshield_blockdamage), deathtype, damage);
-		take = v.x;
-		save = v.y;
 	}
 
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
@@ -509,9 +504,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, PS(this).m_weapon.m_id, vbot, dh + da);
 	}
-	if (dh + da)
+	if (damage)
 	{
-		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype);
+		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 	}
 
 	if (this.health < 1)
@@ -914,6 +909,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = 1;
 	}
 
+	MUTATOR_CALLHOOK(ChatMessage, source, ret);
+	ret = M_ARGV(1, int);
+
 	if(sourcemsgstr != "" && ret != 0)
 	{
 		if(ret < 0) // faked message, because the player is muted
@@ -925,16 +923,19 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		else if(privatesay) // private message, between 2 people only
 		{
 			sprint(source, sourcemsgstr);
-			sprint(privatesay, msgstr);
 			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
-			if(cmsgstr != "")
-				centerprint(privatesay, cmsgstr);
+			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
+			{
+				sprint(privatesay, msgstr);
+				if(cmsgstr != "")
+					centerprint(privatesay, cmsgstr);
+			}
 		}
 		else if ( teamsay && source.active_minigame )
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, sprint(it, msgstr));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -942,7 +943,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, {
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
@@ -952,7 +953,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
+			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
 		}
 		else
 		{
@@ -961,7 +962,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
                 dedicated_print(msgstr); // send to server console too
                 MX_Say(strcat(playername(source), "^7: ", msgin));
             }
-            FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
+            FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
         }
 	}
 

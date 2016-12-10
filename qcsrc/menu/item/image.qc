@@ -137,13 +137,13 @@
 		}
 		return 1;
 	}
-	void Image_setZoom(entity me, float z, float atMousePosition)
+	void Image_setZoom(entity me, float newzoom, float atMousePosition)
 	{
 		float prev_zoomFactor;
 		prev_zoomFactor = me.zoomFactor;
-		if (z < 0)  // multiply by the current zoomFactor (but can also snap to real dimensions or to box)
+		if (newzoom < 0)  // multiply by the current zoomFactor (but can also snap to real dimensions or to box)
 		{
-			me.zoomFactor *= -z;
+			me.zoomFactor *= -newzoom;
 			float realSize_in_the_middle, boxSize_in_the_middle;
 			realSize_in_the_middle = ((prev_zoomFactor - 1) * (me.zoomFactor - 1) < 0);
 			boxSize_in_the_middle = (me.zoomBox > 0 && (prev_zoomFactor - me.zoomBox) * (me.zoomFactor - me.zoomBox) < 0);
@@ -162,14 +162,14 @@
 				me.zoomFactor = me.zoomBox; // snap to box
 			}
 		}
-		else if (z == 0)                    // reset (no zoom)
+		else if (newzoom == 0)                    // reset (no zoom)
 		{
 			if (me.zoomBox > 0) me.zoomFactor = me.zoomBox;
 			else me.zoomFactor = 1;
 		}
 		else  // directly set
 		{
-			me.zoomFactor = z;
+			me.zoomFactor = newzoom;
 		}
 		me.zoomFactor = bound(1 / 16, me.zoomFactor, 16);
 		if (me.zoomMax > 0 && me.zoomFactor > me.zoomMax) me.zoomFactor = me.zoomMax;

@@ -82,12 +82,12 @@ vector bezier_quadratic_getderivative(vector a, vector b, vector c, float t)
 	       + (b - a) * 2;
 }
 
-float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x)
+float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float spd)
 {
 	return (((startspeedfactor + endspeedfactor - 2
-	         ) * x - 2 * startspeedfactor - endspeedfactor + 3
-	        ) * x + startspeedfactor
-	       ) * x;
+	         ) * spd - 2 * startspeedfactor - endspeedfactor + 3
+	        ) * spd + startspeedfactor
+	       ) * spd;
 }
 
 bool cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
@@ -195,54 +195,54 @@ float power2of(float e)
 	return pow(2, e);
 }
 
-float log2of(float x)
+float log2of(float e)
 {
 	// NOTE: generated code
-	if (x > 2048)
-		if (x > 131072)
-			if (x > 1048576)
-				if (x > 4194304) return 23;
+	if (e > 2048)
+		if (e > 131072)
+			if (e > 1048576)
+				if (e > 4194304) return 23;
 				else
-					if (x > 2097152) return 22;
+					if (e > 2097152) return 22;
 					else return 21;
 			else
-				if (x > 524288) return 20;
+				if (e > 524288) return 20;
 				else
-					if (x > 262144) return 19;
+					if (e > 262144) return 19;
 					else return 18;
 		else
-			if (x > 16384)
-				if (x > 65536) return 17;
+			if (e > 16384)
+				if (e > 65536) return 17;
 				else
-					if (x > 32768) return 16;
+					if (e > 32768) return 16;
 					else return 15;
 			else
-				if (x > 8192) return 14;
+				if (e > 8192) return 14;
 				else
-					if (x > 4096) return 13;
+					if (e > 4096) return 13;
 					else return 12;
 	else
-		if (x > 32)
-			if (x > 256)
-				if (x > 1024) return 11;
+		if (e > 32)
+			if (e > 256)
+				if (e > 1024) return 11;
 				else
-					if (x > 512) return 10;
+					if (e > 512) return 10;
 					else return 9;
 			else
-				if (x > 128) return 8;
+				if (e > 128) return 8;
 				else
-					if (x > 64) return 7;
+					if (e > 64) return 7;
 					else return 6;
 		else
-			if (x > 4)
-				if (x > 16) return 5;
+			if (e > 4)
+				if (e > 16) return 5;
 				else
-					if (x > 8) return 4;
+					if (e > 8) return 4;
 					else return 3;
 			else
-				if (x > 2) return 2;
+				if (e > 2) return 2;
 				else
-					if (x > 1) return 1;
+					if (e > 1) return 1;
 					else return 0;
 }
 

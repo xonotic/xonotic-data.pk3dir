@@ -134,6 +134,14 @@ MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
     /**/
 MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
 
+/** called before any formatting is applied, handy for tweaking the message before scripts get ahold of it */
+#define EV_PreFormatMessage(i, o) \
+    /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** message       */ i(string, MUTATOR_ARGV_1_string) \
+    /**/                 o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(PreFormatMessage, EV_PreFormatMessage);
+
 /** returns true if throwing the current weapon shall not be allowed */
 #define EV_ForbidThrowCurrentWeapon(i, o) \
     /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -359,6 +367,7 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
     /** armor     */ i(float,    MUTATOR_ARGV_3_float) \
     /** location  */ i(vector, MUTATOR_ARGV_4_vector) \
     /** deathtype */ i(int,    MUTATOR_ARGV_5_int) \
+    /** potential_damage     */ i(float,    MUTATOR_ARGV_6_float) \
     /**/
 MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
 
@@ -882,3 +891,18 @@ MUTATOR_HOOKABLE(ForbidWeaponUse, EV_ForbidWeaponUse);
     /** keepvelocity? */        i(bool, MUTATOR_ARGV_2_bool) \
     /**/
 MUTATOR_HOOKABLE(CopyBody, EV_CopyBody);
+
+/** called when sending a chat message, ret argument can be changed to prevent the message */
+#define EV_ChatMessage(i, o) \
+    /** sender */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** ret */ i(int, MUTATOR_ARGV_1_int) \
+    /**/ o(int, MUTATOR_ARGV_1_int) \
+    /**/
+MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
+
+/** return true to prevent sending a chat (private, team or regular) message from reaching a certain player */
+#define EV_ChatMessageTo(i, o) \
+    /** destination player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** sender */ i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);

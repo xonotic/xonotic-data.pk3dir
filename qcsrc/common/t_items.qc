@@ -82,6 +82,11 @@ void ItemDraw(entity this)
                 if(this.ItemStatus & ITS_ANIMATE2)
                     this.avelocity = '0 -90 0';
             }
+
+            // delay is for blocking item's position for a while;
+            // it's a workaround for dropped weapons that receive the position
+            // another time right after they spawn overriding animation position
+            this.onground_time = time + 0.5;
         }
     }
     else if (autocvar_cl_animate_items)
@@ -89,13 +94,15 @@ void ItemDraw(entity this)
         if(this.ItemStatus & ITS_ANIMATE1)
         {
             this.angles += this.avelocity * frametime;
-            setorigin(this, '0 0 10' + this.oldorigin + '0 0 8' * sin(time * 2));
+            float fade_in = bound(0, time - this.onground_time, 1);
+            setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
             this.angles += this.avelocity * frametime;
-            setorigin(this, '0 0 8' + this.oldorigin + '0 0 4' * sin(time * 3));
+            float fade_in = bound(0, time - this.onground_time, 1);
+            setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
         }
     }
 
@@ -183,7 +190,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             if(this.ItemStatus & ITS_ALLOWFB)
                 this.effects |= EF_FULLBRIGHT;
 
-        if(this.ItemStatus & ITS_POWERUP)
+        if(this.ItemStatus & ITS_GLOW)
         {
             if(this.ItemStatus & ITS_AVAILABLE)
                 this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
@@ -423,6 +430,7 @@ void Item_Show (entity e, float mode)
 {
 	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
 	e.ItemStatus &= ~ITS_STAYWEP;
+	entity def = e.itemdef;
 	if (mode > 0)
 	{
 		// make the item look normal, and be touchable
@@ -440,7 +448,6 @@ void Item_Show (entity e, float mode)
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
 	else {
-	entity def = e.itemdef;
 	bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.weapons & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
 		|| e.team // weapon stay isn't supported for teamed weapons
 		;
@@ -463,8 +470,8 @@ void Item_Show (entity e, float mode)
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}}
 
-	if (e.items & ITEM_Strength.m_itemid || e.items & ITEM_Shield.m_itemid)
-		e.ItemStatus |= ITS_POWERUP;
+	if (def.m_glow)
+		e.ItemStatus |= ITS_GLOW;
 
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
@@ -497,13 +504,7 @@ void Item_ItemsTime_SetTimesForAllPlayers();
 void Item_Respawn (entity this)
 {
 	Item_Show(this, 1);
-	// this is ugly...
-	if(this.items == ITEM_Strength.m_itemid)
-		sound (this, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	else if(this.items == ITEM_Shield.m_itemid)
-		sound (this, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	else
-		sound (this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin(this, this.origin);
 
     if (Item_ItemsTime_Allow(this.itemdef) || this.weapons & WEPSET_SUPERWEAPONS)
@@ -837,7 +838,7 @@ LABEL(pickup)
 			RandomSelection_Init();
 			IL_EACH(g_items, it.team == this.team,
 			{
-				if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+				if(it.itemdef) // is a registered item
 				{
 					Item_Show(it, -1);
 					RandomSelection_AddEnt(it, it.cnt, 0);
@@ -881,7 +882,7 @@ void Item_FindTeam(entity this)
 		RandomSelection_Init();
 		IL_EACH(g_items, it.team == this.team,
 		{
-			if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+			if(it.itemdef) // is a registered item
 				RandomSelection_AddEnt(it, it.cnt, 0);
 		});
 
@@ -891,7 +892,7 @@ void Item_FindTeam(entity this)
 
 		IL_EACH(g_items, it.team == this.team,
 		{
-			if(it.classname != "item_flag_team" && it.classname != "item_kh_key")
+			if(it.itemdef) // is a registered item
 			{
 				if(it != e)
 				{
@@ -1797,6 +1798,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	});
 	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_VALUE(e, invincible_finished, 1, SND_Shield, SND_POWEROFF);
+	//POSTGIVE_VALUE(e, superweapons_finished, 1, SND_Null, SND_Null);
 	POSTGIVE_VALUE(e, ammo_nails, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_VALUE(e, ammo_cells, 0, SND_ITEMPICKUP, SND_Null);
 	POSTGIVE_VALUE(e, ammo_plasma, 0, SND_ITEMPICKUP, SND_Null);

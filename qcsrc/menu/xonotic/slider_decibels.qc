@@ -7,9 +7,9 @@ float toDecibelOfSquare(float f, float mi)
 	{
 		// linear scale part
 		float t = 1 / A + mi;
-		float y = exp(1 + A * mi);
-		if(f <= y)
-			return mi + (t - mi) * (f / y);
+		float u = exp(1 + A * mi);
+		if(f <= u)
+			return mi + (t - mi) * (f / u);
 	}
 	return log(f) / A;
 }
@@ -21,9 +21,9 @@ float fromDecibelOfSquare(float f, float mi)
 	{
 		// linear scale part
 		float t = 1 / A + mi;
-		float y = exp(1 + A * mi);
+		float u = exp(1 + A * mi);
 		if(f <= t)
-			return y * ((f - mi) / (t - mi));
+			return u * ((f - mi) / (t - mi));
 	}
 	return exp(A * f);
 }
