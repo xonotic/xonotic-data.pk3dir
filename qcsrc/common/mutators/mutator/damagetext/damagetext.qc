@@ -126,16 +126,13 @@ CLASS(DamageText, Object)
         if (this.text) strunzone(this.text);
         this.text = strzone(s);
 
-        if (potential < autocvar_cl_damagetext_size_min_damage) {
-            this.m_size = autocvar_cl_damagetext_size_min;
-        } else if (potential > autocvar_cl_damagetext_size_max_damage) {
-            this.m_size = autocvar_cl_damagetext_size_max;
-        } else {
-            float size_range = autocvar_cl_damagetext_size_max - autocvar_cl_damagetext_size_min;
-            float damage_range = autocvar_cl_damagetext_size_max_damage - autocvar_cl_damagetext_size_min_damage;
-            float scale_factor = size_range / damage_range;
-            this.m_size = (potential - autocvar_cl_damagetext_size_min_damage) * scale_factor + autocvar_cl_damagetext_size_min;
-        }
+        float size_range = autocvar_cl_damagetext_size_max - autocvar_cl_damagetext_size_min;
+        float damage_range = autocvar_cl_damagetext_size_max_damage - autocvar_cl_damagetext_size_min_damage;
+        float scale_factor = size_range / damage_range;
+        this.m_size = bound(
+            autocvar_cl_damagetext_size_min,
+            (potential - autocvar_cl_damagetext_size_min_damage) * scale_factor + autocvar_cl_damagetext_size_min,
+            autocvar_cl_damagetext_size_max);
     }
 
     CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype, bool _friendlyfire) {
