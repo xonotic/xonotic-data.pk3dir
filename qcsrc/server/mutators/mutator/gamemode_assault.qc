@@ -106,7 +106,7 @@ void target_objective_decrease_activate(entity this)
 				it.sprite = NULL; // TODO: just unsetting it?!
 		}
 
-		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
+		spr = WaypointSprite_SpawnFixed(WP_AssaultDefend, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
 		spr.assault_decreaser = this;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
