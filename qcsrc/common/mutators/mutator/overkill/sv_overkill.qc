@@ -8,7 +8,7 @@ bool autocvar_g_overkill_powerups_replace;
 bool autocvar_g_overkill_filter_healthmega;
 bool autocvar_g_overkill_filter_armormedium;
 bool autocvar_g_overkill_filter_armorbig;
-bool autocvar_g_overkill_filter_armorlarge;
+bool autocvar_g_overkill_filter_armormega;
 
 .float ok_item;
 
@@ -111,7 +111,7 @@ MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 {
-	if(intermission_running || gameover)
+	if(gameover)
 		return;
 
 	entity player = M_ARGV(0, entity);
@@ -245,10 +245,8 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	{
 		case ITEM_HealthMega: return autocvar_g_overkill_filter_healthmega;
 		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
-		// WARNING: next two statements look wrong because of inconsistency between cvar names and code
-		// armor cvars need renaming to be consistent with their health counterparts
-		case ITEM_ArmorLarge: return autocvar_g_overkill_filter_armorbig;
-		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armorlarge;
+		case ITEM_ArmorBig: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armormega;
 	}
 
 	return true;

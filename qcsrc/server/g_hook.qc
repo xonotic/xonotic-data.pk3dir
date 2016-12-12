@@ -163,7 +163,7 @@ void GrapplingHookThink(entity this)
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(this) || intermission_running || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || ((this.aiment.flags & FL_PROJECTILE) && this.aiment.classname != "nade"))
+	if(LostMovetypeFollow(this) || gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || ((this.aiment.flags & FL_PROJECTILE) && this.aiment.classname != "nade"))
 	{
 		RemoveHook(this);
 		return;

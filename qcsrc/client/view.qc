@@ -759,7 +759,7 @@ bool WantEventchase(entity this)
 {
 	if(autocvar_cl_orthoview)
 		return false;
-	if(intermission)
+	if(STAT(GAMEOVER) || intermission)
 		return true;
 	if(this.viewloc)
 		return true;
@@ -961,7 +961,7 @@ void HUD_Crosshair(entity this)
 {
 	float f, i, j;
 	vector v;
-	if(!scoreboard_active && !camera_active && intermission != 2 &&
+	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAMEOVER) &&
 		spectatee_status != -1 && !csqcplayer.viewloc && !MUTATOR_CALLHOOK(DrawCrosshair) &&
 		!HUD_MinigameMenu_IsOpened() )
 	{
@@ -1762,8 +1762,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(!postinit)
 		PostInit();
 
-	if(intermission && !gameover_time)
-		gameover_time = time;
+	if(intermission && !intermission_time)
+		intermission_time = time;
 
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{

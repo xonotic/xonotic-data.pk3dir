@@ -1,6 +1,7 @@
 #include "gamemode_assault.qh"
 
 .entity sprite;
+#define AS_ROUND_DELAY 5
 
 // random functions
 void assault_objective_use(entity this, entity actor, entity trigger)
@@ -202,14 +203,27 @@ void assault_new_round(entity this)
 	});
 
 	// reset the level with a countdown
-	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
+	cvar_set("timelimit", ftos(ceil(time - AS_ROUND_DELAY - game_starttime) / 60));
 	ReadyRestart_force(); // sets game_starttime
+}
+
+entity as_round;
+.entity ent_winning;
+void as_round_think()
+{
+	gameover = false;
+	assault_new_round(as_round.ent_winning);
+	delete(as_round);
+	as_round = NULL;
 }
 
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win. Otherwise the defending team wins once the timelimit passes.
 int WinningCondition_Assault()
 {
+	if(as_round)
+		return WINNING_NO;
+
 	WinningConditionHelper(NULL); // set worldstatus
 
 	int status = WINNING_NO;
@@ -229,7 +243,7 @@ int WinningCondition_Assault()
 	{
 		if(ent.winning)	// round end has been triggered by attacking team
 		{
-			bprint("ASSAULT: round completed...\n");
+			bprint("Assault: round completed.\n");
 			SetWinners(team, assault_attacker_team);
 
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
@@ -240,7 +254,17 @@ int WinningCondition_Assault()
 			}
 			else
 			{
-				assault_new_round(ent);
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ASSAULT_OBJ_DESTROYED, ceil(time - game_starttime));
+				as_round = new(as_round);
+				as_round.think = as_round_think;
+				as_round.ent_winning = ent;
+				as_round.nextthink = time + AS_ROUND_DELAY;
+				gameover = true;
+
+				// make sure timelimit isn't hit while the game is blocked
+				if(autocvar_timelimit > 0)
+				if(time + AS_ROUND_DELAY >= game_starttime + autocvar_timelimit * 60)
+					cvar_set("timelimit", ftos(autocvar_timelimit + AS_ROUND_DELAY / 60));
 			}
 		}
 	}

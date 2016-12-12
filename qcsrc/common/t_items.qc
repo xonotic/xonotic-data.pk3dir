@@ -1372,17 +1372,17 @@ spawnfunc(item_armor_big)
 		this.max_armorvalue = g_pickup_armorbig_max;
 	if(!this.pickup_anyway)
 		this.pickup_anyway = g_pickup_armorbig_anyway;
-	StartItem(this, ITEM_ArmorLarge);
+	StartItem(this, ITEM_ArmorBig);
 }
 
-spawnfunc(item_armor_large)
+spawnfunc(item_armor_mega)
 {
 	if(!this.armorvalue)
-		this.armorvalue = g_pickup_armorlarge;
+		this.armorvalue = g_pickup_armormega;
 	if(!this.max_armorvalue)
-		this.max_armorvalue = g_pickup_armorlarge_max;
+		this.max_armorvalue = g_pickup_armormega_max;
 	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_armorlarge_anyway;
+		this.pickup_anyway = g_pickup_armormega_anyway;
 	StartItem(this, ITEM_ArmorMega);
 }
 
@@ -1408,15 +1408,15 @@ spawnfunc(item_health_medium)
     StartItem(this, ITEM_HealthMedium);
 }
 
-spawnfunc(item_health_large)
+spawnfunc(item_health_big)
 {
 	if(!this.max_health)
-		this.max_health = g_pickup_healthlarge_max;
+		this.max_health = g_pickup_healthbig_max;
 	if(!this.health)
-		this.health = g_pickup_healthlarge;
+		this.health = g_pickup_healthbig;
 	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_healthlarge_anyway;
-	StartItem(this, ITEM_HealthLarge);
+		this.pickup_anyway = g_pickup_healthbig_anyway;
+	StartItem(this, ITEM_HealthBig);
 }
 
 spawnfunc(item_health_mega)
@@ -1432,9 +1432,11 @@ spawnfunc(item_health_mega)
 
 // support old misnamed entities
 spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-spawnfunc(item_armor25) { spawnfunc_item_armor_large(this); }
+spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
+spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
 spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
 spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
+spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
 spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
 
 spawnfunc(item_strength)

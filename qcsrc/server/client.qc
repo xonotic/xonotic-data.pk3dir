@@ -279,8 +279,8 @@ void PutObserverInServer(entity this)
 	if (this.killcount != FRAGS_SPECTATOR)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
-		if(!intermission_running)
-		if(autocvar_g_chat_nospectators == 1 || (!(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
+		if(!gameover)
+		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 		if(this.just_joined == false) {
@@ -2331,8 +2331,9 @@ void PlayerPreThink (entity this)
 	if (IS_PLAYER(this)) {
 		CheckRules_Player(this);
 
-		if (intermission_running) {
-			IntermissionThink(this);
+		if (gameover || intermission_running) {
+			if(intermission_running)
+				IntermissionThink(this);
 			return;
 		}
 
@@ -2491,8 +2492,9 @@ void PlayerPreThink (entity this)
 
 		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
-	else if (gameover) {
-		if (intermission_running) IntermissionThink(this);
+	else if (gameover || intermission_running) {
+		if(intermission_running)
+			IntermissionThink(this);
 		return;
 	}
 	else if (IS_OBSERVER(this)) {
@@ -2642,13 +2644,23 @@ void PlayerPostThink (entity this)
 	CheatFrame(this);
 
 	//CheckPlayerJump();
+	if (gameover)
+	{
+		this.solid = SOLID_NOT;
+		this.takedamage = DAMAGE_NO;
+		set_movetype(this, MOVETYPE_NONE);
+	}
 
 	if (IS_PLAYER(this)) {
 		DrownPlayer(this);
 		CheckRules_Player(this);
 		UpdateChatBubble(this);
 		if (this.impulse) ImpulseCommands(this);
-		if (intermission_running) return; // intermission or finale
+		if (gameover)
+		{
+			CSQCMODEL_AUTOUPDATE(this);
+			return;
+		}
 		GetPressedKeys(this);
 	}
 

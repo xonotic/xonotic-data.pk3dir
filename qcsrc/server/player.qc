@@ -703,7 +703,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		teamsay = false;
 	}
 
-	if(intermission_running)
+	if(gameover)
 		teamsay = false;
 
     if (!source) {
@@ -880,9 +880,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	if (!privatesay && source && !IS_PLAYER(source))
 	{
-		if (!intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
-				teamsay = -1; // spectators
+		if (!gameover)
+		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			teamsay = -1; // spectators
 	}
 
 	if(flood)

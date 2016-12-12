@@ -129,7 +129,6 @@ const int W_TICSPERFRAME = 2;
 
 void weapon_defaultspawnfunc(entity this, Weapon e);
 
-float gameover;
 float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
