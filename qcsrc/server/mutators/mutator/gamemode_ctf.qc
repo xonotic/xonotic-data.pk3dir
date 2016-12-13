@@ -155,6 +155,16 @@ void ctf_CaptureRecord(entity flag, entity player)
 	}
 }
 
+bool ctf_Immediate_Return_Allowed(entity flag, entity toucher)
+{
+	int num_perteam = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(toucher, it), { ++num_perteam; });
+
+	// automatically return if there's only 1 player on the team
+	return ((autocvar_g_ctf_flag_return || num_perteam <= 1 || (autocvar_g_ctf_flag_return_carrying && toucher.flagcarried))
+		&& flag.team);
+}
+
 bool ctf_Return_Customize(entity this, entity client)
 {
 	// only to the carrier
@@ -1044,9 +1054,6 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 		if(!flag.ctf_flagdamaged_byworld) { return; }
 	}
 
-	int num_perteam = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(toucher, it), LAMBDA(++num_perteam));
-
 	// special touch behaviors
 	if(STAT(FROZEN, toucher)) { return; }
 	else if(IS_VEHICLE(toucher))
@@ -1098,7 +1105,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 
 		case FLAG_DROPPED:
 		{
-			if(CTF_SAMETEAM(toucher, flag) && (autocvar_g_ctf_flag_return || num_perteam <= 1 || (autocvar_g_ctf_flag_return_carrying && toucher.flagcarried)) && flag.team) // automatically return if there's only 1 player on the team
+			if(CTF_SAMETEAM(toucher, flag) && ctf_Immediate_Return_Allowed(flag, toucher))
 				ctf_Handle_Return(flag, toucher); // toucher just returned his own flag
 			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != flag.ctf_dropper) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
@@ -1116,7 +1123,12 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 			if((IS_PLAYER(toucher)) && !IS_DEAD(toucher) && (toucher != flag.pass_sender))
 			{
 				if(DIFF_TEAM(toucher, flag.pass_sender))
-					ctf_Handle_Return(flag, toucher);
+				{
+					if(ctf_Immediate_Return_Allowed(flag, toucher))
+						ctf_Handle_Return(flag, toucher);
+					else if(is_not_monster && (!toucher.flagcarried))
+						ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED);
+				}
 				else
 					ctf_Handle_Retrieve(flag, toucher);
 			}
