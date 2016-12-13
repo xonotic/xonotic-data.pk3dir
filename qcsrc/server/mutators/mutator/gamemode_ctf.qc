@@ -871,9 +871,7 @@ void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		if(autocvar_g_ctf_flag_return_damage_delay)
-		{
-			this.ctf_flagdamaged = true;
-		}
+			this.ctf_flagdamaged_byworld = true;
 		else
 		{
 			this.health = 0;
@@ -906,17 +904,7 @@ void ctf_FlagThink(entity this)
 		LOG_TRACE("wtf the flag got squashed?");
 		tracebox(this.origin, CTF_FLAG.m_mins, CTF_FLAG.m_maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(!trace_startsolid || this.noalign) // can we resize it without getting stuck?
-			setsize(this, CTF_FLAG.m_mins, CTF_FLAG.m_maxs); }
-
-	switch(this.ctf_status) // reset flag angles in case warpzones adjust it
-	{
-		case FLAG_DROPPED:
-		{
-			this.angles = '0 0 0';
-			break;
-		}
-
-		default: break;
+			setsize(this, CTF_FLAG.m_mins, CTF_FLAG.m_maxs);
 	}
 
 	// main think method
@@ -937,6 +925,8 @@ void ctf_FlagThink(entity this)
 
 		case FLAG_DROPPED:
 		{
+			this.angles = '0 0 0'; // reset flag angles in case warpzones adjust it
+
 			if(autocvar_g_ctf_flag_dropped_floatinwater)
 			{
 				vector midpoint = ((this.absmin + this.absmax) * 0.5);
@@ -960,7 +950,7 @@ void ctf_FlagThink(entity this)
 					return;
 				}
 			}
-			if(this.ctf_flagdamaged)
+			if(this.ctf_flagdamaged_byworld)
 			{
 				this.health -= ((this.max_flag_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
@@ -1051,7 +1041,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 			flag.health = 0;
 			ctf_CheckFlagReturn(flag, RETURN_NEEDKILL);
 		}
-		if(!flag.ctf_flagdamaged) { return; }
+		if(!flag.ctf_flagdamaged_byworld) { return; }
 	}
 
 	int num_perteam = 0;
@@ -1183,7 +1173,7 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = NULL;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
-	flag.ctf_flagdamaged = 0;
+	flag.ctf_flagdamaged_byworld = false;
 
 	ctf_CheckStalemate();
 }
