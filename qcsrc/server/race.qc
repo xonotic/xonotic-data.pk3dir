@@ -953,7 +953,6 @@ spawnfunc(trigger_race_checkpoint)
 
 spawnfunc(target_checkpoint) // defrag entity
 {
-	vector o;
 	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
 
