@@ -96,6 +96,14 @@ MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
     /**/
 MUTATOR_HOOKABLE(ItemModel, EV_ItemModel);
 
+/** called when an item sound is about to be played, allows custom paths etc. */
+#define EV_ItemSound(i, o) \
+    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
+    /** output      */ i(string, MUTATOR_ARGV_1_string) \
+    /**/               o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
+
 /** called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill */
 #define EV_GiveFragsForKill(i, o) \
     /** attacker   */ i(entity, MUTATOR_ARGV_0_entity) \
