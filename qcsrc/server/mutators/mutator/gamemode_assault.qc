@@ -608,6 +608,12 @@ MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
+{
+	// readyrestart not supported (yet)
+	return true;
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {

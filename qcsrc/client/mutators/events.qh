@@ -157,3 +157,6 @@ MUTATOR_HOOKABLE(DrawCrosshair, EV_NO_ARGS);
 
 /** Return true to not draw scoreboard */
 MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
+
+/** Called when drawing info messages, allows adding new info messages */
+MUTATOR_HOOKABLE(DrawInfoMessages, EV_NO_ARGS);

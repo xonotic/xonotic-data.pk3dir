@@ -914,3 +914,6 @@ MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
     /** sender */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);
+
+/** return true to just restart the match, for modes that don't support readyrestart */
+MUTATOR_HOOKABLE(ReadyRestart_Deny, EV_NO_ARGS);
