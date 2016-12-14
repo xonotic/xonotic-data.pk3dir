@@ -159,4 +159,8 @@ MUTATOR_HOOKABLE(DrawCrosshair, EV_NO_ARGS);
 MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
 
 /** Called when drawing info messages, allows adding new info messages */
-MUTATOR_HOOKABLE(DrawInfoMessages, EV_NO_ARGS);
+#define EV_DrawInfoMessages(i, o) \
+	/** pos */ 			    i(vector, MUTATOR_ARGV_0_vector) \
+	/** mySize */ 			i(vector, MUTATOR_ARGV_1_vector) \
+	/**/
+MUTATOR_HOOKABLE(DrawInfoMessages, EV_DrawInfoMessages);

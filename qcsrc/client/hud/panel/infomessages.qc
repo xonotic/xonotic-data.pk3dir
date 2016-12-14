@@ -114,7 +114,7 @@ void HUD_InfoMessages()
 				InfoMessage(s);
 			}
 
-			MUTATOR_CALLHOOK(DrawInfoMessages);
+			MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize);
 
 			if(!warmup_stage && gametype == MAPINFO_TYPE_LMS)
 			{
