@@ -29,9 +29,12 @@ void havocbot_ai(entity this)
 	if(bot_execute_commands(this))
 		return;
 
-	if(this.goalcurrent)
-	if(wasfreed(this.goalcurrent))
+	while(this.goalcurrent && wasfreed(this.goalcurrent))
+	{
 		navigation_poproute(this);
+		if(!this.goalcurrent)
+			this.bot_strategytime = 0;
+	}
 
 	if (bot_strategytoken == this)
 	if (!bot_strategytoken_taken)
@@ -134,7 +137,7 @@ void havocbot_ai(entity this)
 		//heading = this.velocity;
 		//dprint(this.goalstack01.classname,etos(this.goalstack01),"\n");
 		if(
-			this.goalstack01 != this && this.goalstack01 != NULL && ((this.aistatus & AI_STATUS_RUNNING) == 0) &&
+			this.goalstack01 != this && this.goalstack01 && !wasfreed(this.goalstack01) && ((this.aistatus & AI_STATUS_RUNNING) == 0) &&
 			!(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 		)
 			next = ((this.goalstack01.absmin + this.goalstack01.absmax) * 0.5) - (this.origin + this.view_ofs);
@@ -325,7 +328,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if(this.goalcurrent.classname=="waypoint")
 					if (!(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL))
 					if(fabs(gco.z - this.origin.z) < this.maxs.z - this.mins.z)
-					if(this.goalstack01!=NULL)
+					if(this.goalstack01 && !wasfreed(this.goalstack01))
 					{
 						gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
 						deviation = vectoangles(gno - this.origin) - vectoangles(gco - this.origin);
