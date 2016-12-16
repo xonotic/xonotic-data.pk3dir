@@ -635,14 +635,15 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponentity)
 {
 	if (MUTATOR_CALLHOOK(W_DecreaseAmmo, actor, actor.(weaponentity))) return;
-
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO) && !wep.reloading_ammo) return;
+
+	entity w_ent = actor.(weaponentity);
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if (wep.reloading_ammo)
 	{
-		actor.(weaponentity).clip_load -= ammo_use;
-		actor.(weaponentity).(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
+		w_ent.clip_load -= ammo_use;
+		w_ent.(weapon_load[w_ent.m_weapon.m_id]) = w_ent.clip_load;
 	}
 	else if (wep.ammo_field != ammo_none)
 	{
@@ -672,29 +673,30 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 {
 	// finish the reloading process, and do the ammo transfer
 
-	Weapon wpn = actor.(weaponentity).m_weapon;
+	entity w_ent = actor.(weaponentity);
+	Weapon wpn = w_ent.m_weapon;
 
-	actor.(weaponentity).clip_load = actor.(weaponentity).old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
+	w_ent.clip_load = w_ent.old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if (!actor.(weaponentity).reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || wpn.ammo_field == ammo_none)
+	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || wpn.ammo_field == ammo_none)
 	{
-		actor.(weaponentity).clip_load = actor.(weaponentity).reload_ammo_amount;
+		w_ent.clip_load = w_ent.reload_ammo_amount;
 	}
 	else
 	{
 		// make sure we don't add more ammo than we have
-		float load = min(actor.(weaponentity).reload_ammo_amount - actor.(weaponentity).clip_load, actor.(wpn.ammo_field));
-		actor.(weaponentity).clip_load += load;
+		float load = min(w_ent.reload_ammo_amount - w_ent.clip_load, actor.(wpn.ammo_field));
+		w_ent.clip_load += load;
 		actor.(wpn.ammo_field) -= load;
 	}
-	actor.(weaponentity).(weapon_load[actor.(weaponentity).m_weapon.m_id]) = actor.(weaponentity).clip_load;
+	w_ent.(weapon_load[w_ent.m_weapon.m_id]) = w_ent.clip_load;
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
 	// so your weapon is disabled for a few seconds without reason
 
-	// ATTACK_FINISHED(actor, slot) -= actor.(weaponentity).reload_time - 1;
+	// ATTACK_FINISHED(actor, slot) -= w_ent.reload_time - 1;
 
 	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
@@ -703,13 +705,14 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 {
     TC(Sound, sent_sound);
 	// set global values to work with
-	Weapon e = actor.(weaponentity).m_weapon;
+	entity this = actor.(weaponentity);
+	Weapon e = this.m_weapon;
 
 	if (MUTATOR_CALLHOOK(W_Reload, actor)) return;
 
-	actor.(weaponentity).reload_ammo_min = sent_ammo_min;
-	actor.(weaponentity).reload_ammo_amount = e.reloading_ammo;
-	actor.(weaponentity).reload_time = e.reloading_time;
+	this.reload_ammo_min = sent_ammo_min;
+	this.reload_ammo_amount = e.reloading_ammo;
+	this.reload_time = e.reloading_time;
 	if (actor.reload_sound) strunzone(actor.reload_sound);
 	actor.reload_sound = strzone(Sound_fixpath(sent_sound));
 
@@ -722,28 +725,28 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	}
 
 	// return if reloading is disabled for this weapon
-	if (!actor.(weaponentity).reload_ammo_amount) return;
+	if (!this.reload_ammo_amount) return;
 
 	// our weapon is fully loaded, no need to reload
-	if (actor.(weaponentity).clip_load >= actor.(weaponentity).reload_ammo_amount) return;
+	if (this.clip_load >= this.reload_ammo_amount) return;
 
 	// no ammo, so nothing to load
 	if (e.ammo_field != ammo_none)
 	{
-		if (!actor.(e.ammo_field) && actor.(weaponentity).reload_ammo_min)
+		if (!actor.(e.ammo_field) && this.reload_ammo_min)
 		{
 			if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
 				if (IS_REAL_CLIENT(actor) && actor.reload_complain < time)
 				{
 					play2(actor, SND(UNAVAILABLE));
-					sprint(actor, strcat("You don't have enough ammo to reload the ^2", actor.(weaponentity).m_weapon.m_name, "\n"));
+					sprint(actor, strcat("You don't have enough ammo to reload the ^2", this.m_weapon.m_name, "\n"));
 					actor.reload_complain = time + 1;
 				}
 				// switch away if the amount of ammo is not enough to keep using this weapon
 				if (!(e.wr_checkammo1(e, actor, weaponentity) + e.wr_checkammo2(e, actor, weaponentity)))
 				{
-					actor.(weaponentity).clip_load = -1;  // reload later
+					this.clip_load = -1;  // reload later
 					W_SwitchToOtherWeapon(actor, weaponentity);
 				}
 				return;
@@ -751,7 +754,6 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 		}
 	}
 
-	entity this = actor.(weaponentity);
 	if (this)
 	{
 		if (this.wframe == WFRAME_RELOAD) return;
@@ -768,7 +770,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
 	// so your weapon is disabled for a few seconds without reason
 
-	// ATTACK_FINISHED(actor, slot) = max(time, ATTACK_FINISHED(actor, slot)) + actor.(weaponentity).reload_time + 1;
+	// ATTACK_FINISHED(actor, slot) = max(time, ATTACK_FINISHED(actor, slot)) + this.reload_time + 1;
 
 	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, this.reload_time, W_ReloadedAndReady);
 
