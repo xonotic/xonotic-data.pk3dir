@@ -15,7 +15,7 @@ ENDCLASS(Health)
 
 #ifdef GAMEQC
 MODEL(HealthSmall_ITEM, Item_Model("g_h1.md3"));
-SOUND(HealthSmall, "misc/minihealth");
+SOUND(HealthSmall, Item_Sound("minihealth"));
 #endif
 
 REGISTER_ITEM(HealthSmall, Health) {
@@ -35,7 +35,7 @@ REGISTER_ITEM(HealthSmall, Health) {
 
 #ifdef GAMEQC
 MODEL(HealthMedium_ITEM, Item_Model("g_h25.md3"));
-SOUND(HealthMedium, "misc/mediumhealth");
+SOUND(HealthMedium, Item_Sound("mediumhealth"));
 #endif
 
 REGISTER_ITEM(HealthMedium, Health) {
@@ -55,7 +55,7 @@ REGISTER_ITEM(HealthMedium, Health) {
 
 #ifdef GAMEQC
 MODEL(HealthBig_ITEM, Item_Model("g_h50.md3"));
-SOUND(HealthBig, "misc/mediumhealth");
+SOUND(HealthBig, Item_Sound("mediumhealth"));
 #endif
 
 REGISTER_ITEM(HealthBig, Health) {
@@ -77,7 +77,7 @@ REGISTER_ITEM(HealthBig, Health) {
 
 #ifdef GAMEQC
 MODEL(HealthMega_ITEM, Item_Model("g_h100.md3"));
-SOUND(HealthMega, "misc/megahealth");
+SOUND(HealthMega, Item_Sound("megahealth"));
 #endif
 
 REGISTER_ITEM(HealthMega, Health) {

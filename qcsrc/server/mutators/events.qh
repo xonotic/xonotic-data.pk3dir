@@ -96,6 +96,14 @@ MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
     /**/
 MUTATOR_HOOKABLE(ItemModel, EV_ItemModel);
 
+/** called when an item sound is about to be played, allows custom paths etc. */
+#define EV_ItemSound(i, o) \
+    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
+    /** output      */ i(string, MUTATOR_ARGV_1_string) \
+    /**/               o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
+
 /** called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill */
 #define EV_GiveFragsForKill(i, o) \
     /** attacker   */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -909,3 +917,6 @@ MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
     /** sender */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);
+
+/** return true to just restart the match, for modes that don't support readyrestart */
+MUTATOR_HOOKABLE(ReadyRestart_Deny, EV_NO_ARGS);

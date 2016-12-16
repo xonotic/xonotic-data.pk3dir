@@ -23,7 +23,7 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 void Weapon_whereis(Weapon this, entity cl)
 {
 	if (!autocvar_g_showweaponspawns) return;
-	IL_EACH(g_items, it.weapon == this.m_id && (it.ItemStatus & ITS_AVAILABLE),
+	IL_EACH(g_items, it.weapon == this.m_id && (!it.team || (it.ItemStatus & ITS_AVAILABLE)),
 	{
 		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
 			continue;

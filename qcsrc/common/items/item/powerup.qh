@@ -19,7 +19,7 @@ ENDCLASS(Powerup)
 
 #ifdef GAMEQC
 MODEL(Strength_ITEM, Item_Model("g_strength.md3"));
-SOUND(Strength, "misc/powerup");
+SOUND(Strength, Item_Sound("powerup"));
 #endif
 
 REGISTER_ITEM(Strength, Powerup) {
@@ -39,7 +39,7 @@ REGISTER_ITEM(Strength, Powerup) {
 
 #ifdef GAMEQC
 MODEL(Shield_ITEM, Item_Model("g_invincible.md3"));
-SOUND(Shield, "misc/powerup_shield");
+SOUND(Shield, Item_Sound("powerup_shield"));
 #endif
 
 REGISTER_ITEM(Shield, Powerup) {
