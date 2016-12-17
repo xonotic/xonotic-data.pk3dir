@@ -879,7 +879,7 @@ void navigation_poptouchedgoals(entity this)
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
 		if(this.lastteleporttime>0)
-		if(time-this.lastteleporttime<(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL)?2:0.15)
+		if(time - this.lastteleporttime < ((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15))
 		{
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
