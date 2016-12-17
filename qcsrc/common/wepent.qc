@@ -4,12 +4,6 @@
 	var = x; \
 MACRO_END
 
-/** the engine player name strings are mutable! */
-#define WEPENT_SET_MUTABLE_STRING(var, x) MACRO_BEGIN \
-	if (var) strunzone(var); \
-	var = strzone(x); \
-MACRO_END
-
 // #define PROP(public, fld, set, sv, cl)
 #define WEPENT_NETPROPS(PROP) PROP(false, sv_entnum, WEPENT_SET_NORMAL, {}, {}) /* sentinel */ \
 	PROP(false, m_switchweapon, WEPENT_SET_NORMAL, \
