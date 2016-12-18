@@ -242,16 +242,22 @@ string getmaplist()
 	return sprintf("^7Maps in list: %s\n", maplist);
 }
 
-
+const int LSMAPS_MAX = 250;
 string getlsmaps()
 {
 	string lsmaps = "", col;
-	float i, newmaps = 0;
+	bool newmaps = false;
+	int added = 0;
 
-	for (i = 0; i < MapInfo_count; ++i)
+	for (int i = 0; i < MapInfo_count; ++i)
 	{
 		if ((MapInfo_Get_ByID(i)) && !(MapInfo_Map_flags & MapInfo_ForbiddenFlags()))
 		{
+			++added;
+
+			if(added > LSMAPS_MAX)
+				continue; // we still get the added count, but skip the actual processing
+
 			// todo: Check by play count of maps for other game types?
 			if (
 			    (g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
@@ -271,8 +277,11 @@ string getlsmaps()
 		}
 	}
 
+	if(added > LSMAPS_MAX)
+		lsmaps = sprintf("%s^7(%d not listed)", lsmaps, added - LSMAPS_MAX);
+
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps available (%d)%s: %s\n", tokenize_console(lsmaps), (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
+	return sprintf("^7Maps available (%d)%s: %s\n", added, (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
 }
 
 string getmonsterlist()
