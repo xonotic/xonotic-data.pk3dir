@@ -286,13 +286,13 @@ string getlsmaps()
 
 string getmonsterlist()
 {
-	string monsterlist = "", col;
+	string monsterlist = "";
 
-	for (int i = MON_FIRST; i <= MON_LAST; ++i)
+	FOREACH(Monsters, it != MON_Null,
 	{
-		if (i % 2) col = "^2"; else col = "^3";
-		monsterlist = sprintf("%s%s%s ", monsterlist, col, (get_monsterinfo(i)).netname);
-	}
+		string col = ((i % 2) ? "^2" : "^3");
+		monsterlist = sprintf("%s%s%s ", monsterlist, col, it.netname);
+	});
 
 	return sprintf("^7Monsters available: %s\n", monsterlist);
 }
