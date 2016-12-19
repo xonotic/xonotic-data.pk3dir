@@ -492,6 +492,7 @@ void havocbot_movetogoal(entity this)
 	if(this.jumppadcount)
 	{
 		// If got stuck on the jump pad try to reach the farthest visible waypoint
+		// but with some randomness so it can try out different paths
 		if(this.aistatus & AI_STATUS_OUT_JUMPPAD)
 		{
 			if(fabs(this.velocity.z)<50)
@@ -504,7 +505,7 @@ void havocbot_movetogoal(entity this)
 					if(trace_fraction < 1)
 						continue;
 
-					if(!newgoal || vlen2(it.origin - this.origin) > vlen2(newgoal.origin - this.origin))
+					if(!newgoal || ((random() < 0.8) && vlen2(it.origin - this.origin) > vlen2(newgoal.origin - this.origin)))
 						newgoal = it;
 				});
 
@@ -514,6 +515,8 @@ void havocbot_movetogoal(entity this)
 					this.ignoregoaltime = time + autocvar_bot_ai_ignoregoal_timeout;
 					navigation_clearroute(this);
 					navigation_routetogoal(this, newgoal, this.origin);
+					if(autocvar_bot_debug_goalstack)
+						debuggoalstack(this);
 					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
 				}
 			}
