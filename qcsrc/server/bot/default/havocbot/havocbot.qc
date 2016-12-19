@@ -350,7 +350,8 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if(checkdistance)
 					{
 						this.aistatus &= ~AI_STATUS_RUNNING;
-						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance)
+						// increase stop distance in case the goal is on a slope or a lower platform 
+						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance + (this.origin.z - gco.z))
 							PHYS_INPUT_BUTTON_JUMP(this) = true;
 					}
 					else
@@ -721,10 +722,8 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// avoiding dangers and obstacles
-			vector dst_ahead, dst_down;
-			makevectors(this.v_angle.y * '0 1 0');
-			dst_ahead = this.origin + this.view_ofs + (this.velocity * 0.4) + (v_forward * 32 * 3);
-			dst_down = dst_ahead - '0 0 1500';
+			vector dst_ahead = this.origin + this.view_ofs + this.velocity * 0.5;
+			vector dst_down = dst_ahead - '0 0 3000';
 
 			// Look ahead
 			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
@@ -761,12 +760,12 @@ void havocbot_movetogoal(entity this)
 			this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
 			if(trace_fraction == 1 && this.jumppadcount == 0 && !this.goalcurrent.wphardwired )
-			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || PHYS_INPUT_BUTTON_JUMP(this))
+			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
 			{
 				// Look downwards
 				traceline(dst_ahead , dst_down, true, NULL);
-			//	te_lightning2(NULL, this.origin, dst_ahead);	// Draw "ahead" look
-			//	te_lightning2(NULL, dst_ahead, dst_down);		// Draw "downwards" look
+				//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
+				//te_lightning2(NULL, dst_ahead, dst_down); // Draw "downwards" look
 				if(trace_endpos.z < this.origin.z + this.mins.z)
 				{
 					s = pointcontents(trace_endpos + '0 0 1');
@@ -775,18 +774,11 @@ void havocbot_movetogoal(entity this)
 						evadelava = normalize(this.velocity) * -1;
 					else if (s == CONTENT_SKY)
 						evadeobstacle = normalize(this.velocity) * -1;
-					else if (!boxesoverlap(dst_ahead - this.view_ofs + this.mins, dst_ahead - this.view_ofs + this.maxs,
-								this.goalcurrent.absmin, this.goalcurrent.absmax))
+					else
 					{
-						// if ain't a safe goal with "holes" (like the jumpad on soylent)
-						// and there is a trigger_hurt below
-						if(tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
-						{
-							// Remove dangerous dynamic goals from stack
-							LOG_TRACE("bot ", this.netname, " avoided the goal ", this.goalcurrent.classname, " ", etos(this.goalcurrent), " because it led to a dangerous path; goal stack cleared");
-							navigation_clearroute(this);
-							return;
-						}
+						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
+						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+							evadelava = normalize(this.velocity) * -1;
 					}
 				}
 			}
