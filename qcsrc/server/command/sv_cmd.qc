@@ -383,10 +383,16 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 						}
 						else
 						{
-							// let's start at token 2 so we can skip sv_cmd bot_cmd
-							bot = find_bot_by_number(stof(argv(2)));
-							if (bot == NULL) bot = find_bot_by_name(argv(2));
-							if (bot) bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
+							if(argv(2) == "*" || argv(2) == "all")
+								FOREACH_CLIENT(IS_BOT_CLIENT(it), {
+									bot_queuecommand(it, substring(s, argv_start_index(3), -1));
+								});
+							else
+							{
+								bot = find_bot_by_number(stof(argv(2)));
+								if (bot == NULL) bot = find_bot_by_name(argv(2));
+								if (bot) bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
+							}
 						}
 					}
 					else
@@ -408,17 +414,31 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 			}
 			else if (argc >= 3)  // this comes last
 			{
-				bot = find_bot_by_number(stof(argv(1)));
-				if (bot == NULL) bot = find_bot_by_name(argv(1));
-				if (bot)
+				if(argv(1) == "*" || argv(1) == "all")
 				{
-					LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
-					bot_queuecommand(bot, substring(command, argv_start_index(2), -1));
+					int bot_num = 0;
+					FOREACH_CLIENT(IS_BOT_CLIENT(it), {
+						bot_queuecommand(it, substring(command, argv_start_index(2), -1));
+						bot_num++;
+					});
+					if(bot_num)
+						LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to all bots (", ftos(bot_num), ")\n"));
 					return;
 				}
 				else
 				{
-					LOG_INFO(strcat("Error: Can't find bot with the name or id '", argv(1), "' - Did you mistype the command?\n"));  // don't return so that usage is shown
+					bot = find_bot_by_number(stof(argv(1)));
+					if (bot == NULL) bot = find_bot_by_name(argv(1));
+					if (bot)
+					{
+						LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
+						bot_queuecommand(bot, substring(command, argv_start_index(2), -1));
+						return;
+					}
+					else
+					{
+						LOG_INFO(strcat("Error: Can't find bot with the name or id '", argv(1), "' - Did you mistype the command?\n"));  // don't return so that usage is shown
+					}
 				}
 			}
 		}
@@ -428,10 +448,12 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_INFO("\nUsage:^3 sv_cmd bot_cmd client command [argument]\n");
-			LOG_INFO("  'client' can be either the name or entity id of the bot\n");
+			LOG_INFO("  'client' can be either the name of the bot or a progressive number (not the entity number!)\n");
+			LOG_INFO("           can also be '*' or 'all' to allow sending the command to all the bots\n");
 			LOG_INFO("  For full list of commands, see bot_cmd help [command].\n");
-			LOG_INFO("Examples: sv_cmd bot_cmd client cc \"say something\"\n");
-			LOG_INFO("          sv_cmd bot_cmd client presskey jump\n");
+			LOG_INFO("Examples: sv_cmd bot_cmd 1 cc \"say something\"\n");
+			LOG_INFO("          sv_cmd bot_cmd 1 presskey jump\n");
+			LOG_INFO("          sv_cmd bot_cmd * pause\n");
 			return;
 		}
 	}

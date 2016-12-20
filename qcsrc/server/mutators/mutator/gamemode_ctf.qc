@@ -1825,6 +1825,11 @@ void havocbot_role_ctf_retriever(entity this)
 	mf = havocbot_ctf_find_flag(this);
 	if(mf.ctf_status==FLAG_BASE)
 	{
+		if(this.goalcurrent == mf)
+		{
+			navigation_clearroute(this);
+			this.bot_strategytime = 0;
+		}
 		havocbot_ctf_reset_role(this);
 		return;
 	}
