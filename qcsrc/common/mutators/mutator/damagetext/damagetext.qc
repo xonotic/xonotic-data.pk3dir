@@ -19,7 +19,12 @@ AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to 
 AUTOCVAR_SAVE(cl_damagetext_format_verbose,         bool,   false,      "{health} shows {potential_health} too when they differ; {total} shows {potential} too when they differ");
 AUTOCVAR_SAVE(cl_damagetext_format_hide_redundant,  bool,   false,      "hide {armor} if 0; hide {potential} and {potential_health} when same as actual");
 STATIC_INIT(DamageText_LegacyFormat) {
-    if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
+    // damagetext used to be off by default and the cvar got saved in people's configs along with the old format
+    // enable damagetext while updating the format for a one time effect
+    if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) {
+        localcmd("\nseta cl_damagetext 1\n");
+        localcmd("\nseta cl_damagetext_format -{total}\n");
+    };
 }
 AUTOCVAR_SAVE(cl_damagetext_color,                  vector, '1 1 0',    "Damage text color");
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,       bool,   false,      "Damage text uses weapon color");
