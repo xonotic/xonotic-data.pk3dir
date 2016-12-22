@@ -128,6 +128,20 @@ CLASS(DamageText, Object)
                 ? sprintf("%d",      total)
                 : sprintf("%d (%d)", total, potential)
             ), s);
+
+        // futureproofing: remove any remaining (unknown) format strings in case we add new ones in the future
+        // so players can use them on new servers and still have working damagetext on old ones
+        while (true) {
+            int opening_pos = strstrofs(s, "{", 0);
+            if (opening_pos == -1) break;
+            int closing_pos = strstrofs(s, "}", opening_pos);
+            if (closing_pos == -1 || closing_pos <= opening_pos) break;
+            s = strcat(
+                substring(s, 0, opening_pos),
+                substring(s, closing_pos + 1, strlen(s))
+            );
+        }
+
         if (this.text) strunzone(this.text);
         this.text = strzone(s);
 
