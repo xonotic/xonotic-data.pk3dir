@@ -63,7 +63,7 @@ void HUD_Powerups()
 {
 	int allItems = STAT(ITEMS);
 	int allBuffs = STAT(BUFFS);
-	int strengthTime, shieldTime, superTime;
+	float strengthTime, shieldTime, superTime;
 
 	// Initialize items
 	if(!autocvar__hud_configure)
@@ -72,7 +72,7 @@ void HUD_Powerups()
 			return;
 		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_powerups_hide_ondeath)
 			return;
-		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
+		//if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);
 		shieldTime = bound(0, STAT(INVINCIBLE_FINISHED) - time, 99);
