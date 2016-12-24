@@ -61,7 +61,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 
 	if(!w.wpisbox)
 	{
-		setsize(w, STAT(PL_MIN, NULL) - '1 1 0', STAT(PL_MAX, NULL) + '1 1 0');
+		setsize(w, PL_MIN_CONST - '1 1 0', PL_MAX_CONST + '1 1 0');
 		if(!move_out_of_solid(w))
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
@@ -216,7 +216,7 @@ void waypoint_think(entity this)
 			navigation_testtracewalk = 0;
 			if (!this.wpisbox)
 			{
-				tracebox(sv - STAT(PL_MIN, NULL).z * '0 0 1', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, false, this);
+				tracebox(sv - PL_MIN_CONST.z * '0 0 1', PL_MIN_CONST, PL_MAX_CONST, sv, false, this);
 				if (!trace_startsolid)
 				{
 					//dprint("sv deviation", vtos(trace_endpos - sv), "\n");
@@ -225,7 +225,7 @@ void waypoint_think(entity this)
 			}
 			if (!it.wpisbox)
 			{
-				tracebox(ev - STAT(PL_MIN, NULL).z * '0 0 1', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, false, it);
+				tracebox(ev - PL_MIN_CONST.z * '0 0 1', PL_MIN_CONST, PL_MAX_CONST, ev, false, it);
 				if (!trace_startsolid)
 				{
 					//dprint("ev deviation", vtos(trace_endpos - ev), "\n");
@@ -234,11 +234,11 @@ void waypoint_think(entity this)
 			}
 			//traceline(this.origin, it.origin, false, NULL);
 			//if (trace_fraction == 1)
-			if (!this.wpisbox && tracewalk(this, sv, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, MOVE_NOMONSTERS))
+			if (!this.wpisbox && tracewalk(this, sv, PL_MIN_CONST, PL_MAX_CONST, ev, MOVE_NOMONSTERS))
 				waypoint_addlink(this, it);
 			else
 				relink_walkculled += 0.5;
-			if (!it.wpisbox && tracewalk(it, ev, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, MOVE_NOMONSTERS))
+			if (!it.wpisbox && tracewalk(it, ev, PL_MIN_CONST, PL_MAX_CONST, sv, MOVE_NOMONSTERS))
 				waypoint_addlink(it, this);
 			else
 				relink_walkculled += 0.5;
@@ -685,7 +685,7 @@ float waypoint_loadall()
 
 vector waypoint_fixorigin(vector position)
 {
-	tracebox(position + '0 0 1' * (1 - STAT(PL_MIN, NULL).z), STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), position + '0 0 -512', MOVE_NOMONSTERS, NULL);
+	tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z), PL_MIN_CONST, PL_MAX_CONST, position + '0 0 -512', MOVE_NOMONSTERS, NULL);
 	if(trace_fraction < 1)
 		position = trace_endpos;
 	//traceline(position, position + '0 0 -512', MOVE_NOMONSTERS, NULL);
@@ -833,7 +833,7 @@ void botframe_showwaypointlinks()
 
 float botframe_autowaypoints_fixdown(vector v)
 {
-	tracebox(v, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v + '0 0 -64', MOVE_NOMONSTERS, NULL);
+	tracebox(v, PL_MIN_CONST, PL_MAX_CONST, v + '0 0 -64', MOVE_NOMONSTERS, NULL);
 	if(trace_fraction >= 1)
 		return 0;
 	return 1;

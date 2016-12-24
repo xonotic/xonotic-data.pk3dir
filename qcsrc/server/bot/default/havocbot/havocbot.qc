@@ -501,7 +501,7 @@ void havocbot_movetogoal(entity this)
 
 		// Flying
 		PHYS_INPUT_BUTTON_HOOK(this) = true;
-		if(this.navigation_jetpack_point.z - STAT(PL_MAX, NULL).z + STAT(PL_MIN, NULL).z < this.origin.z)
+		if(this.navigation_jetpack_point.z - STAT(PL_MAX, this).z + STAT(PL_MIN, this).z < this.origin.z)
 		{
 			this.movement_x = dir * v_forward * maxspeed;
 			this.movement_y = dir * v_right * maxspeed;

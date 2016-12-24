@@ -277,7 +277,7 @@ void trigger_push_findtarget(entity this)
 {
 	// first calculate a typical start point for the jump
 	vector org = (this.absmin + this.absmax) * 0.5;
-	org_z = this.absmax.z - STAT(PL_MIN, NULL).z;
+	org.z = this.absmax.z - PL_MIN_CONST.z;
 
 	if (this.target)
 	{
@@ -288,7 +288,7 @@ void trigger_push_findtarget(entity this)
 #ifdef SVQC
 			entity e = spawn();
 			setorigin(e, org);
-			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
 			tracetoss(e, e);
 			if(e.move_movetype == MOVETYPE_NONE)
@@ -321,7 +321,7 @@ void trigger_push_findtarget(entity this)
 	{
 		entity e = spawn();
 		setorigin(e, org);
-		setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 		e.velocity = this.movedir;
 		tracetoss(e, e);
 		waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
