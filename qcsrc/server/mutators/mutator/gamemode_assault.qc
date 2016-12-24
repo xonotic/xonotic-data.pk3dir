@@ -1,5 +1,7 @@
 #include "gamemode_assault.qh"
 
+#include <lib/float.qh>
+
 .entity sprite;
 
 // random functions
@@ -525,7 +527,7 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 {
 	entity turret = M_ARGV(0, entity);
 
-	if(!turret.team || turret.team == MAX_SHOT_DISTANCE)
+	if(!turret.team || turret.team == FLOAT_MAX)
 		turret.team = 5; // this gets reversed when match starts?
 }
 

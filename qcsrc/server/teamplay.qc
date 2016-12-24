@@ -52,6 +52,7 @@ void InitGameplayMode()
 	get_mi_min_max(1);
 	world.mins = mi_min;
 	world.maxs = mi_max;
+	max_shot_distance = vlen(world.maxs - world.mins);
 
 	MapInfo_LoadMapSettings(mapname);
 	serverflags &= ~SERVERFLAG_TEAMPLAY;

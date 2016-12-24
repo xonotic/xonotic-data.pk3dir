@@ -1,6 +1,6 @@
 #include "sv_spawn_near_teammate.qh"
 
-const float FLOAT_MAX = 340282346638528859811704183484516925440.0f;
+#include <lib/float.qh>
 
 float autocvar_g_spawn_near_teammate_distance;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint;

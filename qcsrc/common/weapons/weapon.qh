@@ -175,9 +175,7 @@ ENDCLASS(OffhandWeapon)
 .OffhandWeapon offhand;
 #endif
 
-// currently, NetRadiant's limit is 131072 qu for each side
-// distance from one corner of a 131072qu cube to the opposite corner is approx. 227023 qu
-const int MAX_SHOT_DISTANCE = 230000;
+int max_shot_distance = 32768; // determined by world mins/maxs when map loads
 
 // weapon flags
 const int WEP_TYPE_OTHER          =  0x00; // not for damaging people
