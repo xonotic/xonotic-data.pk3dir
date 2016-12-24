@@ -1962,11 +1962,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 			if(wep != WEP_Null && wep.wr_zoom)
 			{
 				bool do_zoom = wep.wr_zoom(wep, NULL);
-				if(wep.w_reticle && wep.w_reticle != "")
-				{
+				if(reticle_image == "" && wep.w_reticle && wep.w_reticle != "")
 					reticle_image = wep.w_reticle;
-					break; // we can only draw 1 reticle
-				}
 				wep_zoomed += do_zoom;
 			}
 		}
