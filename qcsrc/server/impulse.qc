@@ -554,7 +554,7 @@ IMPULSE(navwaypoint_unreachable)
 	IL_EACH(g_spawnpoints, true,
 	{
 		vector org = it.origin;
-		tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
+		tracebox(it.origin, PL_MIN_CONST, PL_MAX_CONST, it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
 		setorigin(it, trace_endpos);
 		if (navigation_findnearestwaypoint(it, false))
 		{
