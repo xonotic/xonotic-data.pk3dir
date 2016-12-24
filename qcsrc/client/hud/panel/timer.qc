@@ -50,15 +50,15 @@ void HUD_Timer()
 	}
 
 	vector timer_color;
-	if(gameover_time || minutesLeft >= 5 || warmup_stage || timelimit == 0)
+	if(intermission_time || minutesLeft >= 5 || warmup_stage || timelimit == 0)
 		timer_color = '1 1 1'; //white
 	else if(minutesLeft >= 1)
 		timer_color = '1 1 0'; //yellow
 	else
 		timer_color = '1 0 0'; //red
 
-	if (gameover_time) {
-		timer = seconds_tostring(max(0, floor(gameover_time - STAT(GAMESTARTTIME))));
+	if (intermission_time) {
+		timer = seconds_tostring(max(0, floor(intermission_time - STAT(GAMESTARTTIME))));
 	} else if (autocvar_hud_panel_timer_increment || (!warmup_stage && timelimit == 0) || (warmup_stage && warmup_timeleft <= 0)) {
 		if (time < STAT(GAMESTARTTIME))
 			timer = seconds_tostring(0); //while restart is still active, show 00:00

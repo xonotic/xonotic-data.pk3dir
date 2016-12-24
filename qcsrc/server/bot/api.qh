@@ -54,6 +54,7 @@ void bot_endgame();
 bool bot_fixcount();
 void bot_list_commands();
 void bot_queuecommand(entity bot, string cmdstring);
+void bot_clear(entity this);
 void bot_relinkplayerlist();
 void bot_resetqueues();
 void bot_serverframe();
@@ -84,3 +85,6 @@ void waypoint_spawnforitem_force(entity e, vector org);
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken);
 void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken);
 entity waypoint_spawn(vector m1, vector m2, float f);
+
+.entity goalcurrent;
+void navigation_clearroute(entity this);

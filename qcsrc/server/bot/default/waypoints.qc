@@ -15,6 +15,27 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+void waypoint_setupmodel(entity wp)
+{
+	if (autocvar_g_waypointeditor)
+	{
+		// TODO: add some sort of visible box in edit mode for box waypoints
+		vector m1 = wp.mins;
+		vector m2 = wp.maxs;
+		setmodel(wp, MDL_WAYPOINT);
+		setsize(wp, m1, m2);
+		wp.effects = EF_LOWPRECISION;
+		if (wp.wpflags & WAYPOINTFLAG_ITEM)
+			wp.colormod = '1 0 0';
+		else if (wp.wpflags & WAYPOINTFLAG_GENERATED)
+			wp.colormod = '1 1 0';
+		else
+			wp.colormod = '1 1 1';
+	}
+	else
+		wp.model = "";
+}
+
 // create a new spawnfunc_waypoint and automatically link it to other waypoints, and link
 // them back to it as well
 // (suitable for spawnfunc_waypoint editor)
@@ -64,21 +85,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	waypoint_clearlinks(w);
 	//waypoint_schedulerelink(w);
 
-	if (autocvar_g_waypointeditor)
-	{
-		m1 = w.mins;
-		m2 = w.maxs;
-		setmodel(w, MDL_WAYPOINT); w.effects = EF_LOWPRECISION;
-		setsize(w, m1, m2);
-		if (w.wpflags & WAYPOINTFLAG_ITEM)
-			w.colormod = '1 0 0';
-		else if (w.wpflags & WAYPOINTFLAG_GENERATED)
-			w.colormod = '1 1 0';
-		else
-			w.colormod = '1 1 1';
-	}
-	else
-		w.model = "";
+	waypoint_setupmodel(w);
 
 	return w;
 }
@@ -264,23 +271,8 @@ void waypoint_schedulerelink(entity wp)
 {
 	if (wp == NULL)
 		return;
-	// TODO: add some sort of visible box in edit mode for box waypoints
-	if (autocvar_g_waypointeditor)
-	{
-		vector m1, m2;
-		m1 = wp.mins;
-		m2 = wp.maxs;
-		setmodel(wp, MDL_WAYPOINT); wp.effects = EF_LOWPRECISION;
-		setsize(wp, m1, m2);
-		if (wp.wpflags & WAYPOINTFLAG_ITEM)
-			wp.colormod = '1 0 0';
-		else if (wp.wpflags & WAYPOINTFLAG_GENERATED)
-			wp.colormod = '1 1 0';
-		else
-			wp.colormod = '1 1 1';
-	}
-	else
-		wp.model = "";
+
+	waypoint_setupmodel(wp);
 	wp.wpisbox = vdist(wp.size, >, 0);
 	wp.enemy = NULL;
 	if (!(wp.wpflags & WAYPOINTFLAG_PERSONAL))

@@ -485,6 +485,7 @@ float bot_cmd_impulse(entity this)
 
 float bot_cmd_continue(entity this)
 {
+	bot_relinkplayerlist();
 	this.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
 	return CMD_STATUS_FINISHED;
 }
@@ -991,6 +992,7 @@ float bot_cmd_pause(entity this)
 	this.movement = '0 0 0';
 	this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 
+	bot_clear(this);
 	this.bot_exec_status |= BOT_EXEC_STATUS_PAUSED;
 	return CMD_STATUS_FINISHED;
 }

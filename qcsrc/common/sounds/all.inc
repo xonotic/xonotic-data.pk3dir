@@ -3,6 +3,7 @@
 
 #include "../teams.qh"
 string W_Sound(string w_snd);
+string Item_Sound(string it_snd);
 
 SOUND(ARC_FIRE, W_Sound("arc_fire"));
 SOUND(ARC_LOOP, W_Sound("arc_loop"));
@@ -236,20 +237,20 @@ SOUND(NADE_BEEP, "overkill/grenadebip");
 
 SOUND(BUFF_LOST, "relics/relic_effect");
 
-SOUND(POWEROFF, "misc/poweroff");
-SOUND(POWERUP, "misc/powerup");
-SOUND(SHIELD_RESPAWN, "misc/shield_respawn");
-SOUND(STRENGTH_RESPAWN, "misc/strength_respawn");
+SOUND(POWEROFF, Item_Sound("poweroff"));
+SOUND(POWERUP, Item_Sound("powerup"));
+SOUND(SHIELD_RESPAWN, Item_Sound("shield_respawn"));
+SOUND(STRENGTH_RESPAWN, Item_Sound("strength_respawn"));
 
-SOUND(ARMOR25, "misc/armor25");
+SOUND(ARMOR25, Item_Sound("armor25"));
 SOUND(ARMORIMPACT, "misc/armorimpact");
 SOUND(BODYIMPACT1, "misc/bodyimpact1");
 SOUND(BODYIMPACT2, "misc/bodyimpact2");
 
-SOUND(ITEMPICKUP, "misc/itempickup");
-SOUND(ITEMRESPAWNCOUNTDOWN, "misc/itemrespawncountdown");
-SOUND(ITEMRESPAWN, "misc/itemrespawn");
-SOUND(MEGAHEALTH, "misc/megahealth");
+SOUND(ITEMPICKUP, Item_Sound("itempickup"));
+SOUND(ITEMRESPAWNCOUNTDOWN, Item_Sound("itemrespawncountdown"));
+SOUND(ITEMRESPAWN, Item_Sound("itemrespawn"));
+SOUND(MEGAHEALTH, Item_Sound("megahealth"));
 
 SOUND(LAVA, "player/lava");
 SOUND(SLIME, "player/slime");

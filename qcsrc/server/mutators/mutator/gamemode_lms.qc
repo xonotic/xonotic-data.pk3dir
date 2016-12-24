@@ -176,6 +176,8 @@ void lms_RemovePlayer(entity player)
 		FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
 		if (player.lms_spectate_warning != 2)
 		{
+			if(IS_BOT_CLIENT(player))
+				bot_clear(player);
 			player.frags = FRAGS_LMS_LOSER;
 			PlayerScore_Add(player, SP_LMS_RANK, pl_cnt + 1);
 		}
@@ -281,6 +283,8 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		{
 			int pl_cnt = 0;
 			FOREACH_CLIENT(IS_PLAYER(it), { pl_cnt++; });
+			if(IS_BOT_CLIENT(frag_target))
+				bot_clear(frag_target);
 			frag_target.frags = FRAGS_LMS_LOSER;
 			PlayerScore_Add(frag_target, SP_LMS_RANK, pl_cnt);
 		}

@@ -49,18 +49,18 @@ float autocvar_hud_panel_itemstime_progressbar_maxtime = 30;
 string autocvar_hud_panel_itemstime_progressbar_name = "progressbar";
 float autocvar_hud_panel_itemstime_progressbar_reduced;
 bool autocvar_hud_panel_itemstime_hidespawned = 1;
-bool autocvar_hud_panel_itemstime_hidelarge = false;
+bool autocvar_hud_panel_itemstime_hidebig = false;
 int autocvar_hud_panel_itemstime_text = 1;
-#define hud_panel_itemstime_hidelarge autocvar_hud_panel_itemstime_hidelarge
+#define hud_panel_itemstime_hidebig autocvar_hud_panel_itemstime_hidebig
 #else
-#define hud_panel_itemstime_hidelarge false
+#define hud_panel_itemstime_hidebig false
 #endif
 
 bool Item_ItemsTime_SpectatorOnly(GameItem it)
 {
     return (false
-    || it == ITEM_ArmorMega     || (it == ITEM_ArmorLarge && !hud_panel_itemstime_hidelarge)
-    || it == ITEM_HealthMega    || (it == ITEM_HealthLarge && !hud_panel_itemstime_hidelarge)
+    || it == ITEM_ArmorMega     || (it == ITEM_ArmorBig && !hud_panel_itemstime_hidebig)
+    || it == ITEM_HealthMega    || (it == ITEM_HealthBig && !hud_panel_itemstime_hidebig)
     );
 }
 

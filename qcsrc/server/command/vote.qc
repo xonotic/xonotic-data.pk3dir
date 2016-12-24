@@ -464,8 +464,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	// no assault support yet...
-	if (g_assault | gameover | intermission_running | race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || gameover || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_gamerestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!

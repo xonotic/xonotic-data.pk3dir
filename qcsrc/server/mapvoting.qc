@@ -270,14 +270,14 @@ void MapVote_SendPicture(entity to, int id)
 
 void MapVote_WriteMask()
 {
-	float i;
 	if ( mapvote_count < 24 )
 	{
-		float mask,power;
-		mask = 0;
-		for(i = 0, power = 1; i < mapvote_count; ++i, power *= 2)
-			if(mapvote_maps_flags[i] & GTV_AVAILABLE )
-				mask |= power;
+		int mask = 0;
+		for(int j = 0; j < mapvote_count; ++j)
+		{
+			if(mapvote_maps_flags[j] & GTV_AVAILABLE)
+				mask |= BIT(j);
+		}
 
 		if(mapvote_count < 8)
 			WriteByte(MSG_ENTITY, mask);
@@ -288,8 +288,8 @@ void MapVote_WriteMask()
 	}
 	else
 	{
-		for ( i = 0; i < mapvote_count; ++i )
-			WriteByte(MSG_ENTITY, mapvote_maps_flags[i]);
+		for (int j = 0; j < mapvote_count; ++j)
+			WriteByte(MSG_ENTITY, mapvote_maps_flags[j]);
 	}
 }
 
