@@ -2,3 +2,4 @@
 #include <server/compat/halflife.qc>
 #include <server/compat/quake.qc>
 #include <server/compat/quake3.qc>
+#include <server/compat/wop.qc>
