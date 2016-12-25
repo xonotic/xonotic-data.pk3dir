@@ -71,7 +71,7 @@
 		PERSON(Cortez) \
 		PERSON(Cuinn "Cuinnton" Herrick) \
 		PERSON(Debugger) \
-		PERSON(Hugo "Calinou" Locurcio") \
+		PERSON(Hugo "Calinou" Locurcio) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
 		PERSON(Konrad "Justin" Slawinski) \
 		PERSON(Maddin) \
