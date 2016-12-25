@@ -1,0 +1,4 @@
+// generated file; do not modify
+#include <server/compat/halflife.qh>
+#include <server/compat/quake.qh>
+#include <server/compat/quake3.qh>

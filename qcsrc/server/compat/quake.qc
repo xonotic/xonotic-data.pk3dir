@@ -1,4 +1,4 @@
-#include "t_quake.qh"
+#include "quake.qh"
 
 #include <common/weapons/_all.qh>
 

@@ -30,6 +30,3 @@
 #endif
 #include <server/teamplay.qc>
 #include <server/tests.qc>
-#include <server/t_halflife.qc>
-#include <server/t_quake.qc>
-#include <server/t_quake3.qc>
