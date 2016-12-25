@@ -778,7 +778,17 @@ void havocbot_movetogoal(entity this)
 					{
 						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
 						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
-							evadelava = normalize(this.velocity) * -1;
+						{
+							if (gco.z > this.origin.z + jumpstepheightvec.z)
+							{ 
+								// the goal is probably on an upper platform, assume bot can't get there
+								LOG_TRACE("bot ", this.netname, " avoided the goal ", this.goalcurrent.classname, " ", etos(this.goalcurrent), " because it led to a dangerous path; goal stack cleared");
+								navigation_clearroute(this);
+								this.bot_strategytime = 0;
+							}
+							else
+								evadelava = normalize(this.velocity) * -1;
+						}
 					}
 				}
 			}
