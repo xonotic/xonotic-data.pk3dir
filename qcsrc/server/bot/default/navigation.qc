@@ -360,12 +360,12 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 		{
 			if (walkfromwp)
 			{
-				if (tracewalk(ent, v, STAT(PL_MIN, ent), STAT(PL_MAX, ent), org, bot_navigation_movemode))
+				if (tracewalk(ent, v, PL_MIN_CONST, PL_MAX_CONST, org, bot_navigation_movemode))
 					return true;
 			}
 			else
 			{
-				if (tracewalk(ent, org, STAT(PL_MIN, ent), STAT(PL_MAX, ent), v, bot_navigation_movemode))
+				if (tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v, bot_navigation_movemode))
 					return true;
 			}
 		}
@@ -387,7 +387,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	});
 
 	vector org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org.z = ent.origin.z + ent.mins.z - STAT(PL_MIN, ent).z; // player height
+	org.z = ent.origin.z + ent.mins.z - PL_MIN_CONST.z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
