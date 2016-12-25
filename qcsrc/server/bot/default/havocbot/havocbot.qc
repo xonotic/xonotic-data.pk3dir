@@ -29,13 +29,6 @@ void havocbot_ai(entity this)
 	if(bot_execute_commands(this))
 		return;
 
-	while(this.goalcurrent && wasfreed(this.goalcurrent))
-	{
-		navigation_poproute(this);
-		if(!this.goalcurrent)
-			this.bot_strategytime = 0;
-	}
-
 	if (bot_strategytoken == this)
 	if (!bot_strategytoken_taken)
 	{
@@ -646,8 +639,7 @@ void havocbot_movetogoal(entity this)
 	if (this.goalcurrent == NULL)
 		return;
 
-	if (this.goalcurrent)
-		navigation_poptouchedgoals(this);
+	navigation_poptouchedgoals(this);
 
 	// if ran out of goals try to use an alternative goal or get a new strategy asap
 	if(this.goalcurrent == NULL)

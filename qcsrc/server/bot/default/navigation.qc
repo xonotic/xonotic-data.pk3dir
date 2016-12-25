@@ -876,6 +876,9 @@ void navigation_poptouchedgoals(entity this)
 	m1 = org + this.mins;
 	m2 = org + this.maxs;
 
+	while(this.goalcurrent && wasfreed(this.goalcurrent))
+		navigation_poproute(this);
+
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
 		// make sure jumppad is really hit, don't rely on distance based checks
