@@ -926,7 +926,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	float c;
 
 	// See if I have it already
-	if(item.weapons & ~player.weapons)
+	if(!(item.weapons & ~player.weapons))
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
