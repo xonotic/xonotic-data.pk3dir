@@ -216,24 +216,24 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_DecreaseAmmo(thiswep, actor, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)), weaponentity);
 }
 
-void W_RocketMinsta_Laser_Explode (entity this)
+void W_RocketMinsta_Laser_Explode (entity this, entity directhitentity)
 {
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(this.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
-	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, directhitentity);
 	delete(this);
 }
 
 void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
 {
-	W_RocketMinsta_Laser_Explode(this);
+	W_RocketMinsta_Laser_Explode(this, trigger); // we probably don't want trigger used here, but this matches closest to old behaviour
 }
 
 void W_RocketMinsta_Laser_Touch(entity this, entity toucher)
