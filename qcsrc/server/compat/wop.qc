@@ -23,6 +23,8 @@ spawnfunc(item_quad);
 spawnfunc(item_rockets);
 spawnfunc(item_shells);
 
+spawnfunc(item_jetpack);
+
 spawnfunc(item_haste);
 spawnfunc(item_health_medium);
 spawnfunc(item_health_mega);
