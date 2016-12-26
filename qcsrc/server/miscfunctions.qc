@@ -566,6 +566,15 @@ void readplayerstartcvars()
 				g_weaponarena_weapons |= (it.m_wepset);
 		));
 	}
+	else if (s == "devall")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "All Weapons"; // TODO: report as more than just all weapons?
+		FOREACH(Weapons, it != WEP_Null,
+		{
+			g_weaponarena_weapons |= (it.m_wepset);
+		});
+	}
 	else if (s == "most")
 	{
 		g_weaponarena = 1;
