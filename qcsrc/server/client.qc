@@ -2418,8 +2418,18 @@ void PlayerPreThink (entity this)
 
 		this.prevorigin = this.origin;
 
+		bool have_hook = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.(weaponentity).hook.state)
+			{
+				have_hook = true;
+				break;
+			}
+		}
 		bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-		if (this.hook.state) {
+		if (have_hook) {
 			do_crouch = false;
 		} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
 			do_crouch = false;
