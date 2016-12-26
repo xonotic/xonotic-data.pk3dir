@@ -76,6 +76,7 @@ void CL_Weaponentity_Think(entity this)
 	{
 		// owner has new gun; remove old one
 		if (this.weaponchild) delete(this.weaponchild);
+		if (this.hook) delete(this.hook);
 		delete(this);
 		return;
 	}
