@@ -947,24 +947,22 @@ float weapon_pickupevalfunc(entity player, entity item)
 	{
 		// Find the highest position on any range
 		int position = -1;
+		int wep_count = 0;
+		int wpn = item.weapon;
 		for (int j = 0; j < WEP_LAST ; ++j){
-			if(
-					bot_weapons_far[j] == item.weapon ||
-					bot_weapons_mid[j] == item.weapon ||
-					bot_weapons_close[j] == item.weapon
-			  )
-			{
-				position = j;
-				break;
-			}
+			if (position == -1)
+			if (bot_weapons_far[j] == wpn || bot_weapons_mid[j] == wpn || bot_weapons_close[j] == wpn)
+				position = wep_count;
+			if (bot_weapons_far[j] > 0 || bot_weapons_mid[j] > 0 || bot_weapons_close[j] > 0)
+				wep_count++;
 		}
 
 		// Rate it
 		if (position >= 0 )
 		{
-			position = WEP_LAST - position;
+			position = wep_count - position;
 			// item.bot_pickupbasevalue is overwritten here
-			return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / WEP_LAST ))) * c;
+			return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / wep_count) )) * c;
 		}
 	}
 
