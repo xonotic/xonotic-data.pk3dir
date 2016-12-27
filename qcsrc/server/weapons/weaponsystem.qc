@@ -447,7 +447,6 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		PS(actor).m_switchingweapon = WEP_Null;
 		this.state = WS_CLEAR;
 		actor.weaponname = "";
-		// actor.items &= ~IT_AMMO;
 		return;
 	}
 
