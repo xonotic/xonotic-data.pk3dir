@@ -945,25 +945,44 @@ float weapon_pickupevalfunc(entity player, entity item)
 	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
 	if( bot_custom_weapon && c )
 	{
-		// Find the highest position on any range
-		int position = -1;
-		int wep_count = 0;
-		int wpn = item.weapon;
-		for (int j = 0; j < WEP_LAST ; ++j){
+		int best_ratio = 0;
+		int missing = 0;
+
+		// evaluate weapon usefulness in all ranges
+		for(int list = 0; list < 3; list++)
+		{
+			int position = -1;
+			int wep_count = 0;
+			int wpn = item.weapon;
+			for (int j = 0; j < WEP_LAST; ++j)
+			{
+				int list_wpn = 0;
+				if (list == 0) list_wpn = bot_weapons_far[j];
+				else if (list == 1) list_wpn = bot_weapons_mid[j];
+				else list_wpn = bot_weapons_close[j];
+
+				if (weaponsInMap & Weapons_from(list_wpn).m_wepset) // only if available
+				{
+					if (list_wpn > 0)
+						wep_count++;
+					if (position == -1 && list_wpn == wpn)
+						position = wep_count;
+				}
+			}
 			if (position == -1)
-			if (bot_weapons_far[j] == wpn || bot_weapons_mid[j] == wpn || bot_weapons_close[j] == wpn)
-				position = wep_count;
-			if (bot_weapons_far[j] > 0 || bot_weapons_mid[j] > 0 || bot_weapons_close[j] > 0)
-				wep_count++;
+			{
+				missing++;
+				position = wep_count; // if missing assume last
+			}
+			if (wep_count)
+			{
+				if (!best_ratio || position / wep_count < best_ratio)
+					best_ratio = position / wep_count;
+			}
 		}
 
-		// Rate it
-		if (position >= 0 )
-		{
-			position = wep_count - position;
-			// item.bot_pickupbasevalue is overwritten here
-			return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / wep_count) )) * c;
-		}
+		if (missing < 3 && best_ratio)
+			return (BOT_PICKUP_RATING_HIGH - ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * best_ratio )) * c;
 	}
 
 	return item.bot_pickupbasevalue * c;
