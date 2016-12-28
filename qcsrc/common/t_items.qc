@@ -1001,18 +1001,15 @@ float commodity_pickupevalfunc(entity player, entity item)
 		if(!(player.weapons & (it.m_wepset)))
 			continue;
 
-		if(it.items & ITEM_Shells.m_itemid)
-			need_shells = true;
-		else if(it.items & ITEM_Bullets.m_itemid)
-			need_nails = true;
-		else if(it.items & ITEM_Rockets.m_itemid)
-			need_rockets = true;
-		else if(it.items & ITEM_Cells.m_itemid)
-			need_cells = true;
-		else if(it.items & ITEM_Plasma.m_itemid)
-			need_plasma = true;
-		else if(it.items & ITEM_JetpackFuel.m_itemid)
-			need_fuel = true;
+		switch(it.ammo_field)
+		{
+			case ammo_shells:  need_shells  = true; break;
+			case ammo_nails:   need_nails   = true; break;
+			case ammo_rockets: need_rockets = true; break;
+			case ammo_cells:   need_cells   = true; break;
+			case ammo_plasma:  need_plasma  = true; break;
+			case ammo_fuel:    need_fuel    = true; break;
+		}
 	});
 
 	// TODO: figure out if the player even has the weapon this ammo is for?
