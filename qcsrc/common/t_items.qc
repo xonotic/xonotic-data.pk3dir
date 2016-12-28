@@ -926,7 +926,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	float c;
 
 	// See if I have it already
-	if(!(item.weapons & ~player.weapons))
+	if(player.weapons & item.weapons)
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
@@ -942,8 +942,11 @@ float weapon_pickupevalfunc(entity player, entity item)
 	else
 		c = 1;
 
+	if (c <= 0)
+		return 0;
+
 	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
-	if( bot_custom_weapon && c )
+	if(bot_custom_weapon)
 	{
 		int best_ratio = 0;
 		int missing = 0;
@@ -990,9 +993,8 @@ float weapon_pickupevalfunc(entity player, entity item)
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
-	float c;
-	float need_shells = false, need_nails = false, need_rockets = false, need_cells = false, need_plasma = false, need_fuel = false;
-	c = 0;
+	bool need_shells = false, need_nails = false, need_rockets = false, need_cells = false, need_plasma = false, need_fuel = false;
+	float c = 0;
 
 	// Detect needed ammo
 	FOREACH(Weapons, it != WEP_Null, {
