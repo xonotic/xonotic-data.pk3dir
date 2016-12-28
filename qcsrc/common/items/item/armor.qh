@@ -68,7 +68,7 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_color                =   '0 1 0';
     this.m_waypoint             =   _("Big armor");
 #ifdef SVQC
-    this.m_botvalue             =   20000; // FIXME: higher than BOT_PICKUP_RATING_HIGH?
+    this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
