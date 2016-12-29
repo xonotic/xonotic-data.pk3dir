@@ -34,7 +34,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 			traceline(o, o + '0 0 -1500', true, NULL);
 
 			d = pointcontents(trace_endpos + '0 0 1');
-			if(d & CONTENT_WATER || d & CONTENT_SLIME || d & CONTENT_LAVA)
+			if(d == CONTENT_WATER || d == CONTENT_SLIME || d == CONTENT_LAVA)
 				continue;
 			if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
 				continue;
@@ -145,12 +145,12 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 			continue;
 
 		// not falling
-		if((IS_ONGROUND(it)) == 0)
+		if(!IS_ONGROUND(it))
 		{
 			traceline(it.origin, it.origin + '0 0 -1500', true, NULL);
 			t = pointcontents(trace_endpos + '0 0 1');
 			if(t != CONTENT_SOLID )
-			if(t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)
+			if(t == CONTENT_WATER || t == CONTENT_SLIME || t == CONTENT_LAVA)
 				continue;
 			if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
 				continue;
