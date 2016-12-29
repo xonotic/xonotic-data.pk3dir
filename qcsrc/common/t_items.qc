@@ -924,6 +924,7 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 float weapon_pickupevalfunc(entity player, entity item)
 {
 	float c;
+	int rating = item.bot_pickupbasevalue;
 
 	// See if I have it already
 	if(player.weapons & item.weapons)
@@ -933,8 +934,10 @@ float weapon_pickupevalfunc(entity player, entity item)
 			c = 0;
 		else if(player.ammo_cells || player.ammo_shells || player.ammo_plasma || player.ammo_nails || player.ammo_rockets)
 		{
+			if (rating > 0)
+				rating = BOT_PICKUP_RATING_LOW * 0.5 * (1 + rating / BOT_PICKUP_RATING_HIGH);
 			// Skilled bots will grab more
-			c = bound(0, skill / 10, 1) * 0.5;
+			c = 1 + bound(0, skill / 10, 1) * 0.5;
 		}
 		else
 			c = 0;
@@ -985,10 +988,10 @@ float weapon_pickupevalfunc(entity player, entity item)
 		}
 
 		if (missing < 3 && best_ratio)
-			return (BOT_PICKUP_RATING_HIGH - ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * best_ratio )) * c;
+			c = c - best_ratio * 0.3;
 	}
 
-	return item.bot_pickupbasevalue * c;
+	return rating * c;
 }
 
 float commodity_pickupevalfunc(entity player, entity item)
