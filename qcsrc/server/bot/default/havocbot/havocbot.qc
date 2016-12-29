@@ -766,8 +766,10 @@ void havocbot_movetogoal(entity this)
 						evadelava = normalize(this.velocity) * -1;
 					else if (s == CONTENT_SKY)
 						evadeobstacle = normalize(this.velocity) * -1;
-					else
+					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 					{
+						// the traceline check isn't enough but is good as optimization,
+						// when not true (most of the time) this tracebox call is avoided
 						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
 						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 						{
