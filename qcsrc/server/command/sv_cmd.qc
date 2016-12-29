@@ -1528,15 +1528,15 @@ void GameCommand_trace(float request, float argc)
 						start = stov(vtos(start));
 						end = stov(vtos(end));
 
-						tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, NULL);
+						tracebox(start, PL_MIN_CONST, PL_MAX_CONST, end, MOVE_NOMONSTERS, NULL);
 						if (!trace_startsolid && trace_fraction < 1)
 						{
 							p = trace_endpos;
-							tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), p, MOVE_NOMONSTERS, NULL);
+							tracebox(p, PL_MIN_CONST, PL_MAX_CONST, p, MOVE_NOMONSTERS, NULL);
 							if (trace_startsolid)
 							{
 								rint(42);  // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
-								tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, NULL);
+								tracebox(start, PL_MIN_CONST, PL_MAX_CONST, end, MOVE_NOMONSTERS, NULL);
 
 								// how much do we need to back off?
 								safe = 1;
@@ -1544,7 +1544,7 @@ void GameCommand_trace(float request, float argc)
 								for ( ; ; )
 								{
 									pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
-									tracebox(pos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pos, MOVE_NOMONSTERS, NULL);
+									tracebox(pos, PL_MIN_CONST, PL_MAX_CONST, pos, MOVE_NOMONSTERS, NULL);
 									if (trace_startsolid)
 									{
 										if ((safe + unsafe) * 0.5 == unsafe) break;
@@ -1560,7 +1560,7 @@ void GameCommand_trace(float request, float argc)
 								LOG_INFO("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
 								LOG_INFO("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
 
-								tracebox(p, STAT(PL_MIN, NULL) + '0.1 0.1 0.1', STAT(PL_MAX, NULL) - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, NULL);
+								tracebox(p, PL_MIN_CONST + '0.1 0.1 0.1', PL_MAX_CONST - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, NULL);
 								if (trace_startsolid) LOG_INFO("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 								else LOG_INFO("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 								if (++hitcount >= 10) break;
@@ -1574,7 +1574,7 @@ void GameCommand_trace(float request, float argc)
 								{
 									q = p + normalize(end - p) * (dq + dqf);
 									if (q == q0) break;
-									tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), q, MOVE_NOMONSTERS, NULL);
+									tracebox(p, PL_MIN_CONST, PL_MAX_CONST, q, MOVE_NOMONSTERS, NULL);
 									if (trace_startsolid) error("THIS ONE cannot happen");
 									if (trace_fraction > 0) dq += dqf * trace_fraction;
 									dqf *= 0.5;

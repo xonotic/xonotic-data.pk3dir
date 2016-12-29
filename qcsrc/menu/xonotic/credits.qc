@@ -14,17 +14,21 @@
 		PERSON(Zac "Mario" Jardine) \
 	NL() \
 	TITLE(_("Extended Team")) \
+		PERSON(AllieWay) \
 		PERSON(Antonio "terencehill" Piu) \
 		PERSON(Archer) \
 		PERSON(BuddyFriendGuy) \
 		PERSON(Debugger) \
+		PERSON(Diomedes) \
+		PERSON(Freddy) \
 		PERSON(GATTS) \
 		PERSON(Halogene) \
 		PERSON(IDWMaster) \
 		PERSON(Jan "zykure" Behrens) \
 		PERSON(JH0nny) \
-		PERSON(Luigi) \
+		PERSON(Jubilant) \
 		PERSON(Łukasz "kuniu the frogg" Polek) \
+		PERSON(martin-t) \
 		PERSON(Matthias "matthiaskrgr" Krüger) \
 		PERSON(Mattia "Melanosuchus" Basaglia) \
 		PERSON(MrBougo) \
@@ -64,10 +68,10 @@
 	FUNCTION(_("Level Design")) \
 		PERSON(Amadeusz "amade/proraide" Sławiński) \
 		PERSON(Ben "MooKow" Banker) \
-		PERSON(Calinou) \
 		PERSON(Cortez) \
 		PERSON(Cuinn "Cuinnton" Herrick) \
 		PERSON(Debugger) \
+		PERSON(Hugo "Calinou" Locurcio) \
 		PERSON(Jakob "tZork" Markström Gröhn) \
 		PERSON(Konrad "Justin" Slawinski) \
 		PERSON(Maddin) \
@@ -149,13 +153,23 @@
 			PERSON(Mihail "meequz" Varantsou) \
 		NL() \
 		FUNCTION(_("Bulgarian")) \
+			PERSON(Alexander "alex4o" Bonin) \
+			PERSON(ifohancroft) \
 			PERSON(lokster) \
 			PERSON(set_killer) \
+			PERSON(ubone) \
 		NL() \
 		FUNCTION(_("Chinese (China)")) \
-			PERSON(Antonidas) \
 			PERSON(kalawore) \
 			PERSON(sapphireliu) \
+		NL() \
+		FUNCTION(_("Chinese (Taiwan)")) \
+			PERSON(Alisha) \
+			PERSON(Armcoon) \
+			PERSON(Jeff "s8321414" Huang) \
+		NL() \
+		FUNCTION(_("Cornish")) \
+			PERSON(Nicky "nrowe" Rowe) \
 		NL() \
 		FUNCTION(_("Czech")) \
 			PERSON(shogun assassin/woky) \
@@ -164,21 +178,26 @@
 		NL() \
 		FUNCTION(_("Dutch")) \
 			PERSON(Alexander "freefang" van Dam) \
+			PERSON(Jonathan "Jonakeys" van der Steege) \
 			PERSON(PinkRobot) \
 			PERSON(vegiburger) \
 		NL() \
 		FUNCTION(_("English (Australia)")) \
 			PERSON(Laurene "sunflowers" Albrand) \
+			PERSON(Stuart "Cefiar" Young) \
 			PERSON(Zac "Mario" Jardine) \
 		NL() \
 		FUNCTION(_("Finnish")) \
+			PERSON(Jonas "PowaTree" Sahlberg) \
 			PERSON(Henry "Exitium" Sanmark) \
 			PERSON(Rasmus "FruitieX" Eskola) \
 		NL() \
 		FUNCTION(_("French")) \
-			PERSON(Calinou) \
+			PERSON(Hugo "Calinou" Locurcio) \
+			PERSON(Kim "coughingmouse" Lee) \
 			PERSON(Maxime "Taximus" Paradis) \
 			PERSON(RedGuff) \
+			PERSON(Thomas "illwieckz" Debesse) \
 			PERSON(Yannick "SpiKe" Le Guen) \
 		NL() \
 		FUNCTION(_("German")) \
@@ -187,7 +206,9 @@
 			PERSON(Erik "Ablu" Schilling) \
 			PERSON(Jope "Sless" Withers) \
 			PERSON(Marvin "Mirio" Beck) \
+			PERSON(Paul "Snapper") \
 			PERSON(Rudolf "divVerent" Polzer) \
+			PERSON(Wuzzy) \
 			PERSON(Yepoleb) \
 		NL() \
 		FUNCTION(_("Greek")) \
@@ -206,12 +227,23 @@
 			PERSON(stdi) \
 			PERSON(XCostaX) \
 		NL() \
+		FUNCTION(_("Kazakh")) \
+			PERSON("Артем \"bystrov.arterm\" Быстров") \
+		NL() \
+		FUNCTION(_("Korean")) \
+			PERSON(Jisoo "s6e9x" Lim) \
+			PERSON(Kim "coughingmouse" Lee) \
+		NL() \
 		FUNCTION(_("Polish")) \
 			PERSON(4m) \
 			PERSON(Alex "tiprogrammierer.alex" Progger) \
 			PERSON(Amadeusz "amade/proraide" Sławiński) \
+			PERSON(Artur "artur9010" Motyka) \
+			PERSON(Jakub "KubeQ11" Pędziszewski) \
 		NL() \
 		FUNCTION(_("Portuguese")) \
+			PERSON(Ivan Paulos "greylica" Tomé) \
+			PERSON(Jean Trindade "Muleke_Trairao" Pereira) \
 			PERSON(Ricardo Manuel "Hellgardia" da Cruz Coelho da Silva) \
 			PERSON(xXxCHAOTICxXx) \
 		NL() \
@@ -219,12 +251,14 @@
 			PERSON(Adrian-Ciprian "adrian.tinjala" Tînjală) \
 			PERSON(BusterDBK) \
 			PERSON(Mircea "Taoki" Kitsune) \
+			PERSON(Sorin "unic_sorin" Botirla) \
 			PERSON(Tudor "TropiKo" Ionel) \
 		NL() \
 		FUNCTION(_("Russian")) \
 			PERSON(Alex "alextalker7" Talker) \
 			PERSON(Alexandr "zrg") \
 			PERSON(Andrei "adem4ik" Stepanov) \
+			PERSON(Andrey "dekrY" P.) \
 			PERSON(gravicappa) \
 			PERSON(Hot Dog) \
 			PERSON(Lord Canistra) \
@@ -251,6 +285,7 @@
 			PERSON(marcus256) \
 		NL() \
 		FUNCTION(_("Ukrainian")) \
+			PERSON(Dmitro "Gamebot" Sokhin) \
 			PERSON(Oleh "BlaXpirit" Prypin) \
 			PERSON(Vasyl "Harmata" Melnyk) \
 			PERSON(Yuriy "herrniemand" Ackermann) \

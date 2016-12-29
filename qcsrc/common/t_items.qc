@@ -393,7 +393,7 @@ bool have_pickup_item(entity this)
 		if(autocvar_g_pickup_items == 0)
 			return false;
 		if(g_weaponarena)
-			if(this.weapons || (this.items & IT_AMMO)) // no item or ammo pickups in weaponarena
+			if(this.weapons || this.itemdef.instanceOfAmmo) // no item or ammo pickups in weaponarena
 				return false;
 	}
 	return true;

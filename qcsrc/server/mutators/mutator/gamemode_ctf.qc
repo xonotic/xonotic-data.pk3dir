@@ -2592,6 +2592,14 @@ spawnfunc(team_CTF_bluespawn)  { spawnfunc_info_player_team2(this);  }
 spawnfunc(team_CTF_neutralflag)	{ spawnfunc_item_flag_neutral(this);  }
 spawnfunc(team_neutralobelisk)	{ spawnfunc_item_flag_neutral(this);  }
 
+// compatibility for wop maps
+spawnfunc(team_redplayer)      { spawnfunc_info_player_team1(this);  }
+spawnfunc(team_blueplayer)     { spawnfunc_info_player_team2(this);  }
+spawnfunc(team_ctl_redlolly)   { spawnfunc_item_flag_team1(this);    }
+spawnfunc(team_CTL_redlolly)   { spawnfunc_item_flag_team1(this);    }
+spawnfunc(team_ctl_bluelolly)  { spawnfunc_item_flag_team2(this);    }
+spawnfunc(team_CTL_bluelolly)  { spawnfunc_item_flag_team2(this);    }
+
 
 // ==============
 // Initialization
