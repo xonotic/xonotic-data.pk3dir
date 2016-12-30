@@ -475,13 +475,13 @@ void Draw_WaypointSprite(entity this)
 
     InterpolateOrigin_Do(this);
 
+    float t = entcs_GetTeam(player_localnum) + 1;
     string spriteimage = "";
 
     // choose the sprite
     switch (this.rule)
     {
         case SPRITERULE_SPECTATOR:
-            float t = entcs_GetTeam(player_localnum) + 1;
             if (!(
                 (autocvar_g_waypointsprite_itemstime == 1 && t == NUM_SPECTATOR + 1)
             ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage || STAT(ITEMSTIME) == 2))
@@ -492,7 +492,7 @@ void Draw_WaypointSprite(entity this)
         case SPRITERULE_DEFAULT:
             if (this.team)
             {
-                if (this.team == myteam + 1)
+                if (this.team == t)
                     spriteimage = this.netname;
                 else
                     spriteimage = "";
@@ -501,9 +501,9 @@ void Draw_WaypointSprite(entity this)
                 spriteimage = this.netname;
             break;
         case SPRITERULE_TEAMPLAY:
-            if (myteam == NUM_SPECTATOR)
+            if (t == NUM_SPECTATOR + 1)
                 spriteimage = this.netname3;
-            else if (this.team == myteam + 1)
+            else if (this.team == t)
                 spriteimage = this.netname2;
             else
                 spriteimage = this.netname;
@@ -613,7 +613,7 @@ void Draw_WaypointSprite(entity this)
 
     float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
 
-    float t = waypointsprite_scale;
+    t = waypointsprite_scale;
     a *= waypointsprite_alpha;
 
     {
