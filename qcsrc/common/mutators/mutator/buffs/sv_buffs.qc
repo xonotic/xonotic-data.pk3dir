@@ -6,11 +6,14 @@
 .float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit(entity this);
 
-REGISTER_MUTATOR(buffs, cvar("g_buffs"))
+AUTOCVAR(g_buffs, int, -1, _("Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them"));
+
+REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 {
 	MUTATOR_ONADD
 	{
-		InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
+		if(autocvar_g_buffs > 0)
+			InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
 	}
 }
 
@@ -592,6 +595,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerJump)
 
 	if(player.buffs & BUFF_JUMP.m_itemid)
 		M_ARGV(1, float) = autocvar_g_buffs_jump_height;
+
+	if(player.buffs & BUFF_FLIGHT.m_itemid)
+	if(!IS_JUMP_HELD(player) && PHYS_INPUT_BUTTON_CROUCH(player))
+		player.gravity *= -1;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
@@ -744,6 +751,9 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {
+	if(autocvar_g_buffs < 0)
+		return; // no auto replacing of entities in this mode
+
 	entity ent = M_ARGV(0, entity);
 
 	if(autocvar_g_buffs_replace_powerups)
@@ -899,6 +909,16 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		BUFF_ONREM(BUFF_INVISIBLE)
 			player.alpha = player.buff_invisible_prev_alpha;
 
+		BUFF_ONADD(BUFF_FLIGHT)
+		{
+			player.buff_flight_oldgravity = player.gravity;
+			if(!player.gravity)
+				player.gravity = 1;
+		}
+
+		BUFF_ONREM(BUFF_FLIGHT)
+			player.gravity = ((player.trigger_gravity_check) ? player.trigger_gravity_check.enemy.gravity : player.buff_flight_oldgravity);
+
 		player.oldbuffs = player.buffs;
 		if(player.buffs)
 		{
@@ -982,12 +1002,14 @@ REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Buffs");
+	if(autocvar_g_buffs > 0) // only report as a mutator if they're enabled
+		M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Buffs");
 }
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Buffs");
+	if(autocvar_g_buffs > 0)
+		M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Buffs");
 }
 
 void buffs_DelayedInit(entity this)
