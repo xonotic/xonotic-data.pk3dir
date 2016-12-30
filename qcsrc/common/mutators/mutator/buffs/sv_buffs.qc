@@ -447,7 +447,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

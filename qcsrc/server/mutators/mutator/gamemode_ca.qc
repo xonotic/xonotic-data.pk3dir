@@ -321,7 +321,7 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 }
 
-MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
