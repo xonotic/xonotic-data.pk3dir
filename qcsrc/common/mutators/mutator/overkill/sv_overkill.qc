@@ -281,8 +281,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.nextthink = time + 0.1;
 			return true;
 		}
-
-		if(ent.classname == "item_invincible")
+		else if(ent.classname == "item_invincible")
 		{
 			entity wep = new(weapon_rpc);
 			setorigin(wep, ent.origin);
