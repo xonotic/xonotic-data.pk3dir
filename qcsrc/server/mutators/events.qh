@@ -31,6 +31,12 @@ MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
     /**/
 MUTATOR_HOOKABLE(PlayerSpawn, EV_PlayerSpawn);
 
+/** called after a player's weapon is chosen so it can be overriden here */
+#define EV_PlayerWeaponSelect(i, o) \
+	/** player spawning */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerWeaponSelect, EV_PlayerWeaponSelect);
+
 /** called in reset_map */
 #define EV_reset_map_global(i, o) \
     /**/

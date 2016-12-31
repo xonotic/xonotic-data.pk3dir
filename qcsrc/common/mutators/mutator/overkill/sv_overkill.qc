@@ -172,17 +172,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
 		return;
 
-	if(player.ok_lastwep)
-	{
-		Weapon newwep = Weapons_from(player.ok_lastwep);
-		if(player.ok_lastwep == WEP_HMG.m_id)
-			newwep = WEP_MACHINEGUN;
-		if(player.ok_lastwep == WEP_RPC.m_id)
-			newwep = WEP_VORTEX;
-		PS(player).m_switchweapon = newwep;
-		player.ok_lastwep = 0;
-	}
-
 	ok_IncreaseCharge(player, PS(player).m_weapon.m_id);
 
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
@@ -249,10 +238,22 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	}
 	else
 		player.ok_use_ammocharge = 0;
+}
 
-	// if player changed their weapon while dead, don't switch to their death weapon
-	if(player.impulse)
+MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.ok_lastwep)
+	{
+		Weapon newwep = Weapons_from(player.ok_lastwep);
+		if(player.ok_lastwep == WEP_HMG.m_id)
+			newwep = WEP_MACHINEGUN;
+		if(player.ok_lastwep == WEP_RPC.m_id)
+			newwep = WEP_VORTEX;
+		PS(player).m_switchweapon = newwep;
 		player.ok_lastwep = 0;
+	}
 }
 
 void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
