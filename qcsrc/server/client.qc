@@ -345,8 +345,6 @@ void PutObserverInServer(entity this)
 	{
 		if(!this.weaponentities[slot])
 			continue; // first load
-		this.weaponentities[slot].hook_time = 0;
-		this.weaponentities[slot].weaponname = "";
 		this.weaponentities[slot] = NULL;
 	}
 	this.exteriorweaponentity = NULL;
