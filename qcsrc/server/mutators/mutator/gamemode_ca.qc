@@ -209,6 +209,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			PutClientInServer(it);
 		}
 	});
+	bot_relinkplayerlist();
 	return true;
 }
 
@@ -265,6 +266,8 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 		frag_target.respawn_flags =  RESPAWN_SILENT;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
+	if(IS_BOT_CLIENT(frag_target))
+		bot_clear(frag_target);
 	return true;
 }
 
@@ -318,7 +321,7 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 }
 
-MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

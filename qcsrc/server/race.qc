@@ -913,7 +913,7 @@ spawnfunc(trigger_race_checkpoint)
 		settouch(this, checkpoint_touch);
 
 	o = (this.absmin + this.absmax) * 0.5;
-	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
+	tracebox(o, PL_MIN_CONST, PL_MAX_CONST, o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
 	waypoint_spawnforitem_force(this, trace_endpos);
 	this.nearestwaypointtimeout = time + 1000000000;
 
@@ -953,20 +953,29 @@ spawnfunc(trigger_race_checkpoint)
 
 spawnfunc(target_checkpoint) // defrag entity
 {
-	vector o;
 	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
 
-	EXACTTRIGGER_INIT;
+	// if this is targeted, then it probably isn't a trigger
+	bool is_trigger = !boolean(!this.nottargeted && this.targetname != "");
+
+	if(is_trigger)
+		EXACTTRIGGER_INIT;
 
 	this.use = checkpoint_use;
-	if (!(this.spawnflags & 1))
+	if (is_trigger && !(this.spawnflags & 1))
 		settouch(this, checkpoint_touch);
 
-	o = (this.absmin + this.absmax) * 0.5;
-	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
-	waypoint_spawnforitem_force(this, trace_endpos);
-	this.nearestwaypointtimeout = time + 1000000000;
+	vector org = this.origin;
+
+	// bots should only pathfind to this if it is a valid touchable trigger
+	if(is_trigger)
+	{
+		org = (this.absmin + this.absmax) * 0.5;
+		tracebox(org, PL_MIN_CONST, PL_MAX_CONST, org - '0 0 1' * (org.z - this.absmin.z), MOVE_NORMAL, this);
+		waypoint_spawnforitem_force(this, trace_endpos);
+		this.nearestwaypointtimeout = time + 1000000000;
+	}
 
 	if(this.message == "")
 		this.message = "went backwards";
@@ -983,9 +992,9 @@ spawnfunc(target_checkpoint) // defrag entity
 	race_timed_checkpoint = 1;
 
 	if(this.race_checkpoint == 0)
-		WaypointSprite_SpawnFixed(WP_RaceStart, o, this, sprite, RADARICON_NONE);
+		WaypointSprite_SpawnFixed(WP_RaceStart, org, this, sprite, RADARICON_NONE);
 	else
-		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, this, sprite, RADARICON_NONE);
+		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, this, sprite, RADARICON_NONE);
 
 	this.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 

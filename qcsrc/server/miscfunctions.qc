@@ -229,10 +229,15 @@ string formatmessage(entity this, string msg)
 	n = 7;
 
 	ammoitems = "batteries";
-	if(this.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
-	if(this.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
-	if(this.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
-	if(this.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
+	switch((PS(this).m_weapon).ammo_field)
+	{
+		case ammo_shells:  ammoitems = ITEM_Shells.m_name;      break;
+		case ammo_nails:   ammoitems = ITEM_Bullets.m_name;     break;
+		case ammo_rockets: ammoitems = ITEM_Rockets.m_name;     break;
+		case ammo_cells:   ammoitems = ITEM_Cells.m_name;       break;
+		case ammo_plasma:  ammoitems = ITEM_Plasma.m_name;      break;
+		case ammo_fuel:    ammoitems = ITEM_JetpackFuel.m_name; break;
+	}
 
 	WarpZone_crosshair_trace(this);
 	cursor = trace_endpos;
@@ -461,7 +466,7 @@ void GetCvars(entity this, int f)
 string playername(entity p)
 {
     string t;
-    if (teamplay && !intermission_running && IS_PLAYER(p))
+    if (teamplay && !gameover && IS_PLAYER(p))
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));

@@ -115,7 +115,7 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		// wants to stand, if currently crouching we need to check for a low ceiling first
 		if (IS_DUCKED(this))
 		{
-			tracebox(this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), this.origin, MOVE_NORMAL, this);
+			tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
 			if (!trace_startsolid) UNSET_DUCKED(this);
 		}
 	}
@@ -803,5 +803,10 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 
 #ifdef SVQC
 	this.pm_frametime = frametime;
+#elif defined(CSQC)
+	if((ITEMS_STAT(this) & IT_USING_JETPACK) && !IS_DEAD(this) && !intermission)
+		this.csqcmodel_modelflags |= MF_ROCKET;
+	else
+		this.csqcmodel_modelflags &= ~MF_ROCKET;
 #endif
 }
