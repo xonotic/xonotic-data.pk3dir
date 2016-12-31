@@ -64,6 +64,8 @@ void bot_think(entity this)
 		this.flags |= FL_GODMODE;
 
 	this.bot_nextthink = this.bot_nextthink + autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill);
+	if(this.bot_nextthink < time)
+		this.bot_nextthink = time + autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill);
 	//if (this.bot_painintensity > 0)
 	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
 
