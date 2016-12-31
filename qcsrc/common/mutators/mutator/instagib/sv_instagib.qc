@@ -257,7 +257,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

@@ -318,9 +318,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= sqrt(bound(1.0, this.cvar_cl_handicap, 100.0));
+		damage *= bound(1.0, this.cvar_cl_handicap, 10.0);
 		if(this != attacker)
-			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
+			damage /= bound(1.0, attacker.cvar_cl_handicap, 10.0);
 	}
 
 	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)

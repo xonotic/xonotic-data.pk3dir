@@ -92,18 +92,17 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
-MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
+MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);
 
-	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
+	if(IS_PLAYER(frag_attacker) && (IS_PLAYER(frag_target) || IS_VEHICLE(frag_target) || IS_TURRET(frag_target)))
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 	{
 		if(frag_attacker != frag_target)
-		if(frag_target.health > 0)
-		if(STAT(FROZEN, frag_target) == 0)
+		if(!STAT(FROZEN, frag_target))
 		if(!IS_DEAD(frag_target))
 		{
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
@@ -281,8 +280,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.nextthink = time + 0.1;
 			return true;
 		}
-
-		if(ent.classname == "item_invincible")
+		else if(ent.classname == "item_invincible")
 		{
 			entity wep = new(weapon_rpc);
 			setorigin(wep, ent.origin);

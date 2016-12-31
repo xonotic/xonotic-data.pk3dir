@@ -5,7 +5,7 @@
 
 REGISTER_MUTATOR(rm, cvar("g_instagib"));
 
-MUTATOR_HOOKFUNCTION(rm, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(rm, Damage_Calculate)
 {
 	// we do it this way, so rm can be toggled during the match
 	if(!autocvar_g_rm) { return; }
