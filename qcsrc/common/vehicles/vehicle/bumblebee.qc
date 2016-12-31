@@ -167,7 +167,7 @@ bool bumblebee_gunner_frame(entity this, float dt)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, bumblebee);
 
 	ad = gettaginfo(gun, gettagindex(gun, "fire"));
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, gun);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, gun);
 
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' *(1 - this.vehicle_reload1)), 0);
 

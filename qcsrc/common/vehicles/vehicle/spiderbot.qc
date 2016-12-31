@@ -76,15 +76,15 @@ bool spiderbot_frame(entity this, float dt)
 	vf += v_forward;
 	ad = ad * 0.5;
 	v_forward = vf * 0.5;
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, vehic);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' * (1 - this.vehicle_reload1)), 0);
 #else
 	vector ad = gettaginfo(vehic.gun1, gettagindex(vehic.gun1, "barrels"));
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, vehic);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' * (1 - this.vehicle_reload1)), 0);
 	vector vf = ad;
 	ad = gettaginfo(vehic.gun2, gettagindex(vehic.gun2, "barrels"));
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, vehic);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' * (1 - this.vehicle_reload1)), 1);
 	ad = 0.5 * (ad + vf);
 #endif

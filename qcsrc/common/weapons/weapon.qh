@@ -177,7 +177,9 @@ ENDCLASS(OffhandWeapon)
 .OffhandWeapon offhand;
 #endif
 
-const int MAX_SHOT_DISTANCE = 32768;
+#ifdef GAMEQC
+int max_shot_distance = 32768; // determined by world mins/maxs when map loads
+#endif
 
 // weapon flags
 const int WEP_TYPE_OTHER          =  0x00; // not for damaging people

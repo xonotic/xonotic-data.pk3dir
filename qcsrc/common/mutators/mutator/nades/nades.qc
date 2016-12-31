@@ -1403,7 +1403,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	nades_RemoveBonus(frag_target);
 }
 
-MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 {
 	entity frag_inflictor = M_ARGV(0, entity);
 	entity frag_attacker = M_ARGV(1, entity);

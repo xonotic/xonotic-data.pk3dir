@@ -1224,13 +1224,13 @@ void turret_initparams(entity tur)
 	tur.shot_force                  = bound(0.001,           (TRY(tur.shot_force)                :  tur.shot_dmg * 0.5 + tur.shot_radius * 0.5 ), 5000);
 	tur.shot_volly                  = bound(1,               (TRY(tur.shot_volly)                :  1                                          ), floor(tur.ammo_max / tur.shot_dmg));
 	tur.shot_volly_refire           = bound(tur.shot_refire, (TRY(tur.shot_volly_refire)         :  tur.shot_refire * tur.shot_volly           ), 60);
-	tur.target_range                = bound(0,               (TRY(tur.target_range)              :  tur.shot_speed * 0.5                       ), MAX_SHOT_DISTANCE);
-	tur.target_range_min            = bound(0,               (TRY(tur.target_range_min)          :  tur.shot_radius * 2                        ), MAX_SHOT_DISTANCE);
-	tur.target_range_optimal        = bound(0,               (TRY(tur.target_range_optimal)      :  tur.target_range * 0.5                     ), MAX_SHOT_DISTANCE);
+	tur.target_range                = bound(0,               (TRY(tur.target_range)              :  tur.shot_speed * 0.5                       ), max_shot_distance);
+	tur.target_range_min            = bound(0,               (TRY(tur.target_range_min)          :  tur.shot_radius * 2                        ), max_shot_distance);
+	tur.target_range_optimal        = bound(0,               (TRY(tur.target_range_optimal)      :  tur.target_range * 0.5                     ), max_shot_distance);
 	tur.aim_maxrotate               = bound(0,               (TRY(tur.aim_maxrotate)             :  90                                         ), 360);
 	tur.aim_maxpitch                = bound(0,               (TRY(tur.aim_maxpitch)              :  20                                         ), 90);
 	tur.aim_speed                   = bound(0.1,             (TRY(tur.aim_speed)                 :  36                                         ), 1000);
-	tur.aim_firetolerance_dist      = bound(0.1,             (TRY(tur.aim_firetolerance_dist)    :  5 + (tur.shot_radius * 2)                  ), MAX_SHOT_DISTANCE);
+	tur.aim_firetolerance_dist      = bound(0.1,             (TRY(tur.aim_firetolerance_dist)    :  5 + (tur.shot_radius * 2)                  ), max_shot_distance);
 	tur.target_select_rangebias     = bound(-10,             (TRY(tur.target_select_rangebias)   :  1                                          ), 10);
 	tur.target_select_samebias      = bound(-10,             (TRY(tur.target_select_samebias)    :  1                                          ), 10);
 	tur.target_select_anglebias     = bound(-10,             (TRY(tur.target_select_anglebias)   :  1                                          ), 10);
@@ -1270,7 +1270,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.netname = tur.netname;
 	load_unit_settings(this, 0);
 
-	if(!this.team || !teamplay)		{ this.team = MAX_SHOT_DISTANCE; }
+	if(!this.team || !teamplay)		{ this.team = FLOAT_MAX; }
 	if(!this.ticrate)				{ this.ticrate = ((this.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
 	if(!this.health)				{ this.health = 1000; }
 	if(!this.shot_refire)			{ this.shot_refire = 1; }

@@ -8,7 +8,7 @@ REGISTER_MUTATOR(breakablehook, cvar("g_breakablehook"));
 bool autocvar_g_breakablehook; // allow toggling mid match?
 bool autocvar_g_breakablehook_owner;
 
-MUTATOR_HOOKFUNCTION(breakablehook, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(breakablehook, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
