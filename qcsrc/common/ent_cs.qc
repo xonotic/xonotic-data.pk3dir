@@ -13,9 +13,9 @@ MACRO_END
 // #define PROP(public, fld, set, sv, cl)
 #define ENTCS_NETPROPS(ent, PROP) PROP(false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */ \
 	PROP(false, origin, ENTCS_SET_NORMAL, \
-	{ WriteShort(chan, ent.origin.x);  WriteShort(chan, ent.origin.y); \
-	  WriteShort(chan, ent.origin.z); }, \
-	{ ent.has_sv_origin = true; vector v; v.x = ReadShort(); v.y = ReadShort(); v.z = ReadShort(); setorigin(ent, v); }) \
+	{ WriteCoord(chan, ent.origin.x);  WriteCoord(chan, ent.origin.y); \
+	  WriteCoord(chan, ent.origin.z); }, \
+	{ ent.has_sv_origin = true; vector v; v.x = ReadCoord(); v.y = ReadCoord(); v.z = ReadCoord(); setorigin(ent, v); }) \
     \
 	PROP(false, angles_y, ENTCS_SET_NORMAL, \
 	{ WriteByte(chan, ent.angles.y / 360 * 256); }, \
@@ -73,6 +73,11 @@ MACRO_END
 		entity player = this.owner;
 		sf |= BIT(0); // assume private
 		do {
+			if (!(IS_PLAYER(player)))
+			{
+				sf &= ENTCS_PUBLICMASK; // no private updates
+				break;
+			}
 			if (radar_showennemies) break;
 			if (SAME_TEAM(to, player)) break;
 			if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;

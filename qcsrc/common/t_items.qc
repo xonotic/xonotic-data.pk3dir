@@ -393,7 +393,7 @@ bool have_pickup_item(entity this)
 		if(autocvar_g_pickup_items == 0)
 			return false;
 		if(g_weaponarena)
-			if(this.weapons || (this.items & IT_AMMO)) // no item or ammo pickups in weaponarena
+			if(this.weapons || this.itemdef.instanceOfAmmo) // no item or ammo pickups in weaponarena
 				return false;
 	}
 	return true;
@@ -924,17 +924,20 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 float weapon_pickupevalfunc(entity player, entity item)
 {
 	float c;
+	int rating = item.bot_pickupbasevalue;
 
 	// See if I have it already
-	if(item.weapons & ~player.weapons)
+	if(player.weapons & item.weapons)
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
 			c = 0;
 		else if(player.ammo_cells || player.ammo_shells || player.ammo_plasma || player.ammo_nails || player.ammo_rockets)
 		{
+			if (rating > 0)
+				rating = BOT_PICKUP_RATING_LOW * 0.5 * (1 + rating / BOT_PICKUP_RATING_HIGH);
 			// Skilled bots will grab more
-			c = bound(0, skill / 10, 1) * 0.5;
+			c = 1 + bound(0, skill / 10, 1) * 0.5;
 		}
 		else
 			c = 0;
@@ -942,58 +945,74 @@ float weapon_pickupevalfunc(entity player, entity item)
 	else
 		c = 1;
 
+	if (c <= 0)
+		return 0;
+
 	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
-	if( bot_custom_weapon && c )
+	if(bot_custom_weapon)
 	{
-		// Find the highest position on any range
-		int position = -1;
-		for (int j = 0; j < WEP_LAST ; ++j){
-			if(
-					bot_weapons_far[j] == item.weapon ||
-					bot_weapons_mid[j] == item.weapon ||
-					bot_weapons_close[j] == item.weapon
-			  )
+		int best_ratio = 0;
+		int missing = 0;
+
+		// evaluate weapon usefulness in all ranges
+		for(int list = 0; list < 3; list++)
+		{
+			int position = -1;
+			int wep_count = 0;
+			int wpn = item.weapon;
+			for (int j = 0; j < WEP_LAST; ++j)
 			{
-				position = j;
-				break;
+				int list_wpn = 0;
+				if (list == 0) list_wpn = bot_weapons_far[j];
+				else if (list == 1) list_wpn = bot_weapons_mid[j];
+				else list_wpn = bot_weapons_close[j];
+
+				if (weaponsInMap & Weapons_from(list_wpn).m_wepset) // only if available
+				{
+					if (list_wpn > 0)
+						wep_count++;
+					if (position == -1 && list_wpn == wpn)
+						position = wep_count;
+				}
+			}
+			if (position == -1)
+			{
+				missing++;
+				position = wep_count; // if missing assume last
+			}
+			if (wep_count)
+			{
+				if (!best_ratio || position / wep_count < best_ratio)
+					best_ratio = position / wep_count;
 			}
 		}
 
-		// Rate it
-		if (position >= 0 )
-		{
-			position = WEP_LAST - position;
-			// item.bot_pickupbasevalue is overwritten here
-			return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / WEP_LAST ))) * c;
-		}
+		if (missing < 3 && best_ratio)
+			c = c - best_ratio * 0.3;
 	}
 
-	return item.bot_pickupbasevalue * c;
+	return rating * c;
 }
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
-	float c;
-	float need_shells = false, need_nails = false, need_rockets = false, need_cells = false, need_plasma = false, need_fuel = false;
-	c = 0;
+	bool need_shells = false, need_nails = false, need_rockets = false, need_cells = false, need_plasma = false, need_fuel = false;
+	float c = 0;
 
 	// Detect needed ammo
 	FOREACH(Weapons, it != WEP_Null, {
 		if(!(player.weapons & (it.m_wepset)))
 			continue;
 
-		if(it.items & ITEM_Shells.m_itemid)
-			need_shells = true;
-		else if(it.items & ITEM_Bullets.m_itemid)
-			need_nails = true;
-		else if(it.items & ITEM_Rockets.m_itemid)
-			need_rockets = true;
-		else if(it.items & ITEM_Cells.m_itemid)
-			need_cells = true;
-		else if(it.items & ITEM_Plasma.m_itemid)
-			need_plasma = true;
-		else if(it.items & ITEM_JetpackFuel.m_itemid)
-			need_fuel = true;
+		switch(it.ammo_field)
+		{
+			case ammo_shells:  need_shells  = true; break;
+			case ammo_nails:   need_nails   = true; break;
+			case ammo_rockets: need_rockets = true; break;
+			case ammo_cells:   need_cells   = true; break;
+			case ammo_plasma:  need_plasma  = true; break;
+			case ammo_fuel:    need_fuel    = true; break;
+		}
 	});
 
 	// TODO: figure out if the player even has the weapon this ammo is for?
@@ -1346,17 +1365,17 @@ spawnfunc(item_armor_big)
 		this.max_armorvalue = g_pickup_armorbig_max;
 	if(!this.pickup_anyway)
 		this.pickup_anyway = g_pickup_armorbig_anyway;
-	StartItem(this, ITEM_ArmorLarge);
+	StartItem(this, ITEM_ArmorBig);
 }
 
-spawnfunc(item_armor_large)
+spawnfunc(item_armor_mega)
 {
 	if(!this.armorvalue)
-		this.armorvalue = g_pickup_armorlarge;
+		this.armorvalue = g_pickup_armormega;
 	if(!this.max_armorvalue)
-		this.max_armorvalue = g_pickup_armorlarge_max;
+		this.max_armorvalue = g_pickup_armormega_max;
 	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_armorlarge_anyway;
+		this.pickup_anyway = g_pickup_armormega_anyway;
 	StartItem(this, ITEM_ArmorMega);
 }
 
@@ -1382,15 +1401,15 @@ spawnfunc(item_health_medium)
     StartItem(this, ITEM_HealthMedium);
 }
 
-spawnfunc(item_health_large)
+spawnfunc(item_health_big)
 {
 	if(!this.max_health)
-		this.max_health = g_pickup_healthlarge_max;
+		this.max_health = g_pickup_healthbig_max;
 	if(!this.health)
-		this.health = g_pickup_healthlarge;
+		this.health = g_pickup_healthbig;
 	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_healthlarge_anyway;
-	StartItem(this, ITEM_HealthLarge);
+		this.pickup_anyway = g_pickup_healthbig_anyway;
+	StartItem(this, ITEM_HealthBig);
 }
 
 spawnfunc(item_health_mega)
@@ -1406,9 +1425,11 @@ spawnfunc(item_health_mega)
 
 // support old misnamed entities
 spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-spawnfunc(item_armor25) { spawnfunc_item_armor_large(this); }
+spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
+spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
 spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
 spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
+spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
 spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
 
 spawnfunc(item_strength)

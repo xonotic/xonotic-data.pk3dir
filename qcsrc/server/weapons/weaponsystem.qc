@@ -67,7 +67,7 @@ vector CL_Weapon_GetShotOrg(int wpn)
 void CL_Weaponentity_Think(entity this)
 {
 	this.nextthink = time;
-	if (intermission_running) this.frame = this.anim_idle.x;
+	if (gameover) this.frame = this.anim_idle.x;
 	.entity weaponentity = this.weaponentity_fld;
 	if (this.owner.(weaponentity) != this)
 	{
@@ -447,7 +447,6 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		PS(actor).m_switchingweapon = WEP_Null;
 		this.state = WS_CLEAR;
 		actor.weaponname = "";
-		// actor.items &= ~IT_AMMO;
 		return;
 	}
 

@@ -283,7 +283,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(Shotgun, wr_setup, void(entity thiswep, entity actor))
 {
-    actor.ammo_field = ammo_none;
+    actor.ammo_field = ammo_shells;
 }
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {

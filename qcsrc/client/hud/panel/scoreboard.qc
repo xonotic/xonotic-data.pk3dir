@@ -59,7 +59,7 @@ bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
-float autocvar_hud_panel_scoreboard_maxheight = 0.5;
+float autocvar_hud_panel_scoreboard_maxheight = 0.6;
 bool autocvar_hud_panel_scoreboard_others_showscore = true;
 bool autocvar_hud_panel_scoreboard_spectators_showping = true;
 bool autocvar_hud_panel_scoreboard_spectators_aligned = false;
@@ -670,7 +670,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 		case SP_DMG: case SP_DMGTAKEN:
 			return sprintf("%.1f k", pl.(scores(field)) / 1000);
 
-		default:
+		default: case SP_SCORE:
 			tmp = pl.(scores(field));
 			f = scores_flags(field);
 			if(field == ps_primary)
@@ -951,7 +951,7 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 				field = Scoreboard_GetField(pl, SP_PING);
 		}
 		else if(autocvar_hud_panel_scoreboard_others_showscore)
-			field = ftos(pl.(scores(ps_primary)));
+			field = Scoreboard_GetField(pl, SP_SCORE);
 
 		string str = textShortenToWidth(entcs_GetName(pl.sv_entnum), namesize, hud_fontsize, stringwidth_colors);
 		float column_width = stringwidth(str, true, hud_fontsize);
@@ -1009,10 +1009,16 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	int max_players = 999;
 	if(autocvar_hud_panel_scoreboard_maxheight > 0)
 	{
-		max_players = autocvar_hud_panel_scoreboard_maxheight * vid_conheight;
+		float height = autocvar_hud_panel_scoreboard_maxheight * vid_conheight;
 		if(teamplay)
-			max_players = (max_players - hud_fontsize.y * 1.25 - panel_bg_padding * 2) / 2;
-		max_players = floor(max_players / (hud_fontsize.y * 1.25));
+		{
+			height -= (panel_bg_padding * 2 + hud_fontsize.y * 1.25) * team_count; // - padding and header
+			height -= hud_fontsize.y * (team_count - 1); // - spacing between tables
+			height /= team_count;
+		}
+		else
+			height -= panel_bg_padding * 2; // - padding
+		max_players = floor(height / (hud_fontsize.y * 1.25));
 		if(max_players <= 1)
 			max_players = 1;
 		if(max_players == tm.team_size)

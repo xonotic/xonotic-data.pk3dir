@@ -342,7 +342,7 @@ MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
 	player.bot_attack = false;
 }
 
-MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(inv, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

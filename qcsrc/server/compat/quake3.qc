@@ -1,4 +1,4 @@
-#include "t_quake3.qh"
+#include "quake3.qh"
 
 #include <common/weapons/_all.qh>
 
@@ -18,7 +18,7 @@ spawnfunc(item_shells);
 spawnfunc(item_jetpack);
 
 spawnfunc(item_armor_big);
-spawnfunc(item_armor_large);
+spawnfunc(item_armor_mega);
 spawnfunc(item_armor_small);
 
 spawnfunc(item_health_medium);
@@ -59,7 +59,7 @@ spawnfunc(ammo_bfg)            { spawnfunc_item_cells(this);          }
 spawnfunc(ammo_rockets)        { spawnfunc_item_rockets(this);        }
 
 // Armor
-spawnfunc(item_armor_body)     { spawnfunc_item_armor_large(this);    }
+spawnfunc(item_armor_body)     { spawnfunc_item_armor_mega(this);    }
 spawnfunc(item_armor_combat)   { spawnfunc_item_armor_big(this);      }
 spawnfunc(item_armor_shard)    { spawnfunc_item_armor_small(this);    }
 spawnfunc(item_enviro)         { spawnfunc_item_invincible(this);     }

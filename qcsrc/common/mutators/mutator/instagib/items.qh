@@ -11,7 +11,7 @@ GETTER(float, instagib_respawntimejitter_ammo)
 
 #ifdef GAMEQC
 MODEL(VaporizerCells_ITEM, Item_Model("a_cells.md3"));
-SOUND(VaporizerCells, "misc/itempickup");
+SOUND(VaporizerCells, Item_Sound("itempickup"));
 #endif
 
 REGISTER_ITEM(VaporizerCells, Ammo) {
@@ -31,7 +31,7 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
 
 #ifdef GAMEQC
 MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));
-SOUND(ExtraLife, "misc/megahealth");
+SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
 REGISTER_ITEM(ExtraLife, Powerup) {
@@ -49,7 +49,7 @@ REGISTER_ITEM(ExtraLife, Powerup) {
 
 #ifdef GAMEQC
 MODEL(Invisibility_ITEM, Item_Model("g_strength.md3"));
-SOUND(Invisibility, "misc/powerup");
+SOUND(Invisibility, Item_Sound("powerup"));
 #endif
 
 REGISTER_ITEM(Invisibility, Powerup) {
@@ -67,7 +67,7 @@ REGISTER_ITEM(Invisibility, Powerup) {
 
 #ifdef GAMEQC
 MODEL(Speed_ITEM, Item_Model("g_invincible.md3"));
-SOUND(Speed, "misc/powerup_shield");
+SOUND(Speed, Item_Sound("powerup_shield"));
 #endif
 
 REGISTER_ITEM(Speed, Powerup) {

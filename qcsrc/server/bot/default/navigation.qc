@@ -360,12 +360,12 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 		{
 			if (walkfromwp)
 			{
-				if (tracewalk(ent, v, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), org, bot_navigation_movemode))
+				if (tracewalk(ent, v, PL_MIN_CONST, PL_MAX_CONST, org, bot_navigation_movemode))
 					return true;
 			}
 			else
 			{
-				if (tracewalk(ent, org, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, bot_navigation_movemode))
+				if (tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v, bot_navigation_movemode))
 					return true;
 			}
 		}
@@ -387,7 +387,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	});
 
 	vector org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org.z = ent.origin.z + ent.mins.z - STAT(PL_MIN, NULL).z; // player height
+	org.z = ent.origin.z + ent.mins.z - PL_MIN_CONST.z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
@@ -684,7 +684,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			float zdistance, xydistance, cost, t, fuel;
 			vector down, npa, npb;
 
-			down = '0 0 -1' * (STAT(PL_MAX, NULL).z - STAT(PL_MIN, NULL).z) * 10;
+			down = '0 0 -1' * (STAT(PL_MAX, this).z - STAT(PL_MIN, this).z) * 10;
 
 			do{
 				npa = pointa + down;
@@ -842,7 +842,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
-	if (tracewalk(this, startposition, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
+	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
 		return true;
 
 	// see if there are waypoints describing a path to the item
@@ -876,10 +876,15 @@ void navigation_poptouchedgoals(entity this)
 	m1 = org + this.mins;
 	m2 = org + this.maxs;
 
+	while(this.goalcurrent && wasfreed(this.goalcurrent))
+		navigation_poproute(this);
+
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
+		// make sure jumppad is really hit, don't rely on distance based checks
+		// as they may report a touch even if it didn't really happen
 		if(this.lastteleporttime>0)
-		if(time-this.lastteleporttime<(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL)?2:0.15)
+		if(time - this.lastteleporttime < ((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15))
 		{
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
@@ -893,7 +898,7 @@ void navigation_poptouchedgoals(entity this)
 	}
 
 	// If for some reason the bot is closer to the next goal, pop the current one
-	if(this.goalstack01)
+	if(this.goalstack01 && !wasfreed(this.goalstack01))
 	if(vlen2(this.goalcurrent.origin - this.origin) > vlen2(this.goalstack01.origin - this.origin))
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
 	if(tracewalk(this, this.origin, this.mins, this.maxs, (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5, bot_navigation_movemode))
@@ -913,14 +918,11 @@ void navigation_poptouchedgoals(entity this)
 	if(IS_PLAYER(this.goalcurrent))
 		navigation_poproute(this);
 
-	// aid for detecting jump pads better (distance based check fails sometimes)
-	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT && this.jumppadcount > 0 )
-		navigation_poproute(this);
-
 	// Loose goal touching check when running
 	if(this.aistatus & AI_STATUS_RUNNING)
 	if(this.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(this.goalcurrent.classname=="waypoint")
+	if(!(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 	{
 		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
 		{
@@ -942,6 +944,9 @@ void navigation_poptouchedgoals(entity this)
 
 	while (this.goalcurrent && boxesoverlap(m1, m2, this.goalcurrent.absmin, this.goalcurrent.absmax))
 	{
+		if((this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
+			break;
+
 		// Detect personal waypoints
 		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 		if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
@@ -1032,7 +1037,7 @@ void navigation_unstuck(entity this)
 
 	if (!bot_waypoint_queue_owner)
 	{
-		LOG_DEBUG(this.netname, " sutck, taking over the waypoints queue");
+		LOG_DEBUG(this.netname, " stuck, taking over the waypoints queue");
 		bot_waypoint_queue_owner = this;
 		bot_waypoint_queue_bestgoal = NULL;
 		bot_waypoint_queue_bestgoalrating = 0;
@@ -1044,9 +1049,9 @@ void navigation_unstuck(entity this)
 	if (bot_waypoint_queue_goal)
 	{
 		// evaluate the next goal on the queue
-		float d = vlen(this.origin - bot_waypoint_queue_goal.origin);
+		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
 		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
-		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), bot_waypoint_queue_goal.origin, bot_navigation_movemode))
+		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), bot_waypoint_queue_goal.origin, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
 			{

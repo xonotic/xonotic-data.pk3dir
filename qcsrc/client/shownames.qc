@@ -49,34 +49,41 @@ void Draw_ShowNames(entity this)
 		hit = !(trace_fraction < 1 && (trace_networkentity != this.sv_entnum && trace_ent.entnum != this.sv_entnum));
 	}
 	// handle tag fading
-	bool overlap = false;
+	int overlap = -1;
 	vector o = project_3d_to_2d(this.origin + eZ * autocvar_hud_shownames_offset);
-	float dist = vlen(this.origin - view_origin);
-	if (autocvar_hud_shownames_antioverlap)
-	{
-		// fade tag out if another tag that is closer to you overlaps
-		LL_EACH(shownames_ent, it != this && entcs_receiver(i), {
-			vector eo = project_3d_to_2d(it.origin);
-			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
-			eo.z = 0;
-			if (vdist(((eX * o.x + eY * o.y) - eo), <, autocvar_hud_shownames_antioverlap_distance)
-			    && vdist((it.origin - view_origin), <, dist))
-			{
-				overlap = true;
-				break;
-			}
-		});
-	}
-	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
 	if (autocvar_hud_shownames_crosshairdistance)
 	{
 		float d = autocvar_hud_shownames_crosshairdistance;
 		float w = o.x - vid_conwidth / 2;
 		float h = o.y - vid_conheight / 2;
 		if (d * d > w * w + h * h) this.pointtime = time;
-		if (this.pointtime + autocvar_hud_shownames_crosshairdistance_time <= time) overlap = true;
-		else overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : false); // override what antioverlap says unless allowed by cvar.
+		if (this.pointtime + autocvar_hud_shownames_crosshairdistance_time <= time)
+			overlap = 1;
+		else if(!autocvar_hud_shownames_crosshairdistance_antioverlap)
+			overlap = 0;
 	}
+
+	float dist = vlen(this.origin - view_origin);
+	if (overlap == -1 && autocvar_hud_shownames_antioverlap)
+	{
+		// fade tag out if another tag that is closer to you overlaps
+		entity entcs = NULL;
+		LL_EACH(shownames_ent, it != this, {
+			entcs = entcs_receiver(i);
+			if (!(entcs && entcs.has_sv_origin))
+				continue;
+			vector eo = project_3d_to_2d(it.origin);
+			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
+			eo.z = 0;
+			if (vdist(((eX * o.x + eY * o.y) - eo), <, autocvar_hud_shownames_antioverlap_distance)
+			    && vdist((it.origin - view_origin), <, dist))
+			{
+				overlap = 1;
+				break;
+			}
+		});
+	}
+	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
 	if (!this.fadedelay) this.fadedelay = time + SHOWNAMES_FADEDELAY;
 	if (this.csqcmodel_isdead)                                                                   // dead player, fade out slowly
 	{
@@ -87,7 +94,7 @@ void Draw_ShowNames(entity this)
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
 		this.fadedelay = 0;                         // reset fade in delay, enemy has left the view
 	}
-	else if (overlap)                               // tag overlap detected, fade out
+	else if (overlap > 0) // tag overlap detected, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
 	}
@@ -193,8 +200,6 @@ void Draw_ShowNames_All()
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
-		if(gametype == MAPINFO_TYPE_CA)
-			dead = (dead || entcs_IsEliminated(i));
 		if (!it.csqcmodel_isdead) setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);

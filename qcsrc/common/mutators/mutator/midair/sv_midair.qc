@@ -6,7 +6,7 @@ REGISTER_MUTATOR(midair, cvar("g_midair"));
 
 .float midair_shieldtime;
 
-MUTATOR_HOOKFUNCTION(midair, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(midair, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

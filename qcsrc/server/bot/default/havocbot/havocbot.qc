@@ -29,10 +29,6 @@ void havocbot_ai(entity this)
 	if(bot_execute_commands(this))
 		return;
 
-	if(this.goalcurrent)
-	if(wasfreed(this.goalcurrent))
-		navigation_poproute(this);
-
 	if (bot_strategytoken == this)
 	if (!bot_strategytoken_taken)
 	{
@@ -48,7 +44,7 @@ void havocbot_ai(entity this)
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(IS_DEAD(this))
+		if(!(IS_DEAD(this)))
 		if(!this.goalcurrent)
 		if(this.waterlevel == WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
 		{
@@ -134,7 +130,7 @@ void havocbot_ai(entity this)
 		//heading = this.velocity;
 		//dprint(this.goalstack01.classname,etos(this.goalstack01),"\n");
 		if(
-			this.goalstack01 != this && this.goalstack01 != NULL && ((this.aistatus & AI_STATUS_RUNNING) == 0) &&
+			this.goalstack01 != this && this.goalstack01 && !wasfreed(this.goalstack01) && ((this.aistatus & AI_STATUS_RUNNING) == 0) &&
 			!(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 		)
 			next = ((this.goalstack01.absmin + this.goalstack01.absmax) * 0.5) - (this.origin + this.view_ofs);
@@ -325,7 +321,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if(this.goalcurrent.classname=="waypoint")
 					if (!(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL))
 					if(fabs(gco.z - this.origin.z) < this.maxs.z - this.mins.z)
-					if(this.goalstack01!=NULL)
+					if(this.goalstack01 && !wasfreed(this.goalstack01))
 					{
 						gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
 						deviation = vectoangles(gno - this.origin) - vectoangles(gco - this.origin);
@@ -347,7 +343,8 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if(checkdistance)
 					{
 						this.aistatus &= ~AI_STATUS_RUNNING;
-						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance)
+						// increase stop distance in case the goal is on a slope or a lower platform 
+						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance + (this.origin.z - gco.z))
 							PHYS_INPUT_BUTTON_JUMP(this) = true;
 					}
 					else
@@ -477,7 +474,7 @@ void havocbot_movetogoal(entity this)
 
 		// Flying
 		PHYS_INPUT_BUTTON_HOOK(this) = true;
-		if(this.navigation_jetpack_point.z - STAT(PL_MAX, NULL).z + STAT(PL_MIN, NULL).z < this.origin.z)
+		if(this.navigation_jetpack_point.z - STAT(PL_MAX, this).z + STAT(PL_MIN, this).z < this.origin.z)
 		{
 			this.movement_x = dir * v_forward * maxspeed;
 			this.movement_y = dir * v_right * maxspeed;
@@ -489,6 +486,7 @@ void havocbot_movetogoal(entity this)
 	if(this.jumppadcount)
 	{
 		// If got stuck on the jump pad try to reach the farthest visible waypoint
+		// but with some randomness so it can try out different paths
 		if(this.aistatus & AI_STATUS_OUT_JUMPPAD)
 		{
 			if(fabs(this.velocity.z)<50)
@@ -501,7 +499,7 @@ void havocbot_movetogoal(entity this)
 					if(trace_fraction < 1)
 						continue;
 
-					if(!newgoal || vlen2(it.origin - this.origin) > vlen2(newgoal.origin - this.origin))
+					if(!newgoal || ((random() < 0.8) && vlen2(it.origin - this.origin) > vlen2(newgoal.origin - this.origin)))
 						newgoal = it;
 				});
 
@@ -511,6 +509,8 @@ void havocbot_movetogoal(entity this)
 					this.ignoregoaltime = time + autocvar_bot_ai_ignoregoal_timeout;
 					navigation_clearroute(this);
 					navigation_routetogoal(this, newgoal, this.origin);
+					if(autocvar_bot_debug_goalstack)
+						debuggoalstack(this);
 					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
 				}
 			}
@@ -639,8 +639,7 @@ void havocbot_movetogoal(entity this)
 	if (this.goalcurrent == NULL)
 		return;
 
-	if (this.goalcurrent)
-		navigation_poptouchedgoals(this);
+	navigation_poptouchedgoals(this);
 
 	// if ran out of goals try to use an alternative goal or get a new strategy asap
 	if(this.goalcurrent == NULL)
@@ -715,10 +714,8 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// avoiding dangers and obstacles
-			vector dst_ahead, dst_down;
-			makevectors(this.v_angle.y * '0 1 0');
-			dst_ahead = this.origin + this.view_ofs + (this.velocity * 0.4) + (v_forward * 32 * 3);
-			dst_down = dst_ahead - '0 0 1500';
+			vector dst_ahead = this.origin + this.view_ofs + this.velocity * 0.5;
+			vector dst_down = dst_ahead - '0 0 3000';
 
 			// Look ahead
 			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
@@ -755,12 +752,12 @@ void havocbot_movetogoal(entity this)
 			this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
 			if(trace_fraction == 1 && this.jumppadcount == 0 && !this.goalcurrent.wphardwired )
-			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || PHYS_INPUT_BUTTON_JUMP(this))
+			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
 			{
 				// Look downwards
 				traceline(dst_ahead , dst_down, true, NULL);
-			//	te_lightning2(NULL, this.origin, dst_ahead);	// Draw "ahead" look
-			//	te_lightning2(NULL, dst_ahead, dst_down);		// Draw "downwards" look
+				//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
+				//te_lightning2(NULL, dst_ahead, dst_down); // Draw "downwards" look
 				if(trace_endpos.z < this.origin.z + this.mins.z)
 				{
 					s = pointcontents(trace_endpos + '0 0 1');
@@ -769,17 +766,22 @@ void havocbot_movetogoal(entity this)
 						evadelava = normalize(this.velocity) * -1;
 					else if (s == CONTENT_SKY)
 						evadeobstacle = normalize(this.velocity) * -1;
-					else if (!boxesoverlap(dst_ahead - this.view_ofs + this.mins, dst_ahead - this.view_ofs + this.maxs,
-								this.goalcurrent.absmin, this.goalcurrent.absmax))
+					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 					{
-						// if ain't a safe goal with "holes" (like the jumpad on soylent)
-						// and there is a trigger_hurt below
-						if(tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
+						// the traceline check isn't enough but is good as optimization,
+						// when not true (most of the time) this tracebox call is avoided
+						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
+						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 						{
-							// Remove dangerous dynamic goals from stack
-							LOG_TRACE("bot ", this.netname, " avoided the goal ", this.goalcurrent.classname, " ", etos(this.goalcurrent), " because it led to a dangerous path; goal stack cleared");
-							navigation_clearroute(this);
-							return;
+							if (gco.z > this.origin.z + jumpstepheightvec.z)
+							{ 
+								// the goal is probably on an upper platform, assume bot can't get there
+								LOG_TRACE("bot ", this.netname, " avoided the goal ", this.goalcurrent.classname, " ", etos(this.goalcurrent), " because it led to a dangerous path; goal stack cleared");
+								navigation_clearroute(this);
+								this.bot_strategytime = 0;
+							}
+							else
+								evadelava = normalize(this.velocity) * -1;
 						}
 					}
 				}

@@ -323,7 +323,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

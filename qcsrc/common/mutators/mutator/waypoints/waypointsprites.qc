@@ -282,10 +282,10 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
     // rotate them, and make them absolute
     rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-    v1 = rotate(v1, rot) + org;
-    v2 = rotate(v2, rot) + org;
-    v3 = rotate(v3, rot) + org;
-    v4 = rotate(v4, rot) + org;
+    v1 = Rotate(v1, rot) + org;
+    v2 = Rotate(v2, rot) + org;
+    v3 = Rotate(v3, rot) + org;
+    v4 = Rotate(v4, rot) + org;
 
     // draw them
     R_BeginPolygon(pic, f);
@@ -319,9 +319,9 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
     up = '0 1 0';
 
     rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-    o = rotate(o, rot) + org;
-    ri = rotate(ri, rot);
-    up = rotate(up, rot);
+    o = Rotate(o, rot) + org;
+    ri = Rotate(ri, rot);
+    up = Rotate(up, rot);
 
     owidth = width + 2 * border;
     o = o - up * (margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
@@ -348,19 +348,19 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 
     R_BeginPolygon("", DRAWFLAG_NORMAL);
     R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
     R_EndPolygon();
 
     R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-    R_PolygonVertex(o + rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
     R_EndPolygon();
 
-    return o + rotate(eY * (borderDiag+size+margin), ang);
+    return o + Rotate(eY * (borderDiag+size+margin), ang);
 }
 
 // returns location of sprite healthbar

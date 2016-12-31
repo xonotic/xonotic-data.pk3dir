@@ -116,3 +116,11 @@ REGISTER_BUFF(LUCK) {
     this.m_color = '1 0.23 0.44';
 }
 BUFF_SPAWNFUNCS(luck, BUFF_LUCK)
+
+REGISTER_BUFF(FLIGHT) {
+    this.m_prettyName = _("Flight");
+    this.m_name = "flight";
+    this.m_skin = 11;
+    this.m_color = '0.23 0.44 1';
+}
+BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)

@@ -256,7 +256,7 @@ MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(!intermission_running)
+	if(!gameover)
 	if(!IS_DEAD(player))
 	if(IS_PLAYER(player))
 		NIX_GiveCurrentWeapon(player);
