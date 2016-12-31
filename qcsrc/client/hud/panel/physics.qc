@@ -1,9 +1,10 @@
 #include "physics.qh"
 
+#include <client/main.qh>
 #include <common/mapinfo.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
-// Physics panel (#15)
+// Physics (#15)
 
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;
@@ -17,7 +18,7 @@ void HUD_Physics()
 		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	draw_beginBoldFont();
 
@@ -25,7 +26,7 @@ void HUD_Physics()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
@@ -43,34 +44,8 @@ void HUD_Physics()
 		text_scale = min(autocvar_hud_panel_physics_text_scale, 1);
 
 	//compute speed
-	float speed, conversion_factor;
-	string unit;
-
-	switch(autocvar_hud_panel_physics_speed_unit)
-	{
-		default:
-		case 1:
-			unit = _(" qu/s");
-			conversion_factor = 1.0;
-			break;
-		case 2:
-			unit = _(" m/s");
-			conversion_factor = 0.0254;
-			break;
-		case 3:
-			unit = _(" km/h");
-			conversion_factor = 0.0254 * 3.6;
-			break;
-		case 4:
-			unit = _(" mph");
-			conversion_factor = 0.0254 * 3.6 * 0.6213711922;
-			break;
-		case 5:
-			unit = _(" knots");
-			conversion_factor = 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
-			break;
-	}
-
+	float speed, conversion_factor = GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
+	string unit = GetSpeedUnit(autocvar_hud_panel_physics_speed_unit);
 	vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
 
 	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );

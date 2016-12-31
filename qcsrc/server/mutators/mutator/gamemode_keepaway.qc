@@ -1,48 +1,4 @@
 #include "gamemode_keepaway.qh"
-#ifndef GAMEMODE_KEEPAWAY_H
-#define GAMEMODE_KEEPAWAY_H
-
-void ka_Initialize();
-
-REGISTER_MUTATOR(ka, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		ka_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ka_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return false;
-}
-
-
-entity ka_ball;
-
-const float SP_KEEPAWAY_PICKUPS = 4;
-const float SP_KEEPAWAY_CARRIERKILLS = 5;
-const float SP_KEEPAWAY_BCTIME = 6;
-
-void(entity this) havocbot_role_ka_carrier;
-void(entity this) havocbot_role_ka_collector;
-
-void ka_DropEvent(entity plyr);
-#endif
-
-#ifdef IMPLEMENTATION
 
 int autocvar_g_keepaway_ballcarrier_effects;
 float autocvar_g_keepaway_ballcarrier_damage;
@@ -81,7 +37,7 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 		GameLogEcho(strcat(":ka:", mode, ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-void ka_TouchEvent(entity this);
+void ka_TouchEvent(entity this, entity toucher);
 void ka_RespawnBall(entity this);
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
@@ -96,7 +52,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	}
 
 	makevectors(this.angles);
-	this.movetype = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	this.velocity = '0 0 200';
 	this.angles = '0 0 0';
 	this.effects = autocvar_g_keepawayball_effects;
@@ -125,7 +81,7 @@ void ka_TimeScoring(entity this)
 	}
 }
 
-void ka_TouchEvent(entity this) // runs any time that the ball comes in contact with something
+void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
 {
 	if(gameover) { return; }
 	if(!this) { return; }
@@ -134,9 +90,9 @@ void ka_TouchEvent(entity this) // runs any time that the ball comes in contact 
 		ka_RespawnBall(this);
 		return;
 	}
-	if(IS_DEAD(other)) { return; }
-	if(STAT(FROZEN, other)) { return; }
-	if (!IS_PLAYER(other))
+	if(IS_DEAD(toucher)) { return; }
+	if(STAT(FROZEN, toucher)) { return; }
+	if (!IS_PLAYER(toucher))
 	{  // The ball just touched an object, most likely the world
 		Send_Effect(EFFECT_BALL_SPARKS, this.origin, '0 0 0', 1);
 		sound(this, CH_TRIGGER, SND_KA_TOUCH, VOL_BASE, ATTEN_NORM);
@@ -145,14 +101,14 @@ void ka_TouchEvent(entity this) // runs any time that the ball comes in contact 
 	else if(this.wait > time) { return; }
 
 	// attach the ball to the player
-	this.owner = other;
-	other.ballcarried = this;
-	setattachment(this, other, "");
+	this.owner = toucher;
+	toucher.ballcarried = this;
+	setattachment(this, toucher, "");
 	setorigin(this, '0 0 0');
 
 	// make the ball invisible/unable to do anything/set up time scoring
 	this.velocity = '0 0 0';
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.effects |= EF_NODRAW;
 	settouch(this, func_null);
 	setthink(this, ka_TimeScoring);
@@ -160,25 +116,25 @@ void ka_TouchEvent(entity this) // runs any time that the ball comes in contact 
 	this.takedamage = DAMAGE_NO;
 
 	// apply effects to player
-	other.glow_color = autocvar_g_keepawayball_trail_color;
-	other.glow_trail = true;
-	other.effects |= autocvar_g_keepaway_ballcarrier_effects;
+	toucher.glow_color = autocvar_g_keepawayball_trail_color;
+	toucher.glow_trail = true;
+	toucher.effects |= autocvar_g_keepaway_ballcarrier_effects;
 
 	// messages and sounds
-	ka_EventLog("pickup", other);
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
-	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
-	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
+	ka_EventLog("pickup", toucher);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_PICKUP, toucher.netname);
+	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, toucher.netname);
+	Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
 	sound(this.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
-	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
+	PlayerScore_Add(toucher, SP_KEEPAWAY_PICKUPS, 1);
 
 	// waypoints
-	WaypointSprite_AttachCarrier(WP_KaBallCarrier, other, RADARICON_FLAGCARRIER);
-	other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ka_ballcarrier_waypointsprite_visible_for_player;
-	WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_Ping(other.waypointsprite_attachedforcarrier);
+	WaypointSprite_AttachCarrier(WP_KaBallCarrier, toucher, RADARICON_FLAGCARRIER);
+	toucher.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ka_ballcarrier_waypointsprite_visible_for_player;
+	WaypointSprite_UpdateRule(toucher.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+	WaypointSprite_Ping(toucher.waypointsprite_attachedforcarrier);
 	WaypointSprite_Kill(this.waypointsprite_attachedforcarrier);
 }
 
@@ -191,7 +147,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 
 	// reset the ball
 	setattachment(ball, NULL, "");
-	ball.movetype = MOVETYPE_BOUNCE;
+	set_movetype(ball, MOVETYPE_BOUNCE);
 	ball.wait = time + 1;
 	settouch(ball, ka_TouchEvent);
 	setthink(ball, ka_RespawnBall);
@@ -211,7 +167,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ka_EventLog("dropped", plyr);
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
-	sound(other, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE);	// ATTEN_NONE (it's a sound intended to be heard anywhere)
+	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
@@ -470,11 +426,12 @@ MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	if(frag_target.ballcarried)
 		ka_DropEvent(frag_target);
 }
 
+.bool pushable;
 
 // ==============
 // Initialization
@@ -490,10 +447,11 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
 	e.solid = SOLID_TRIGGER;
-	e.movetype = MOVETYPE_BOUNCE;
+	set_movetype(e, MOVETYPE_BOUNCE);
 	e.glow_color = autocvar_g_keepawayball_trail_color;
 	e.glow_trail = true;
 	e.flags = FL_ITEM;
+	IL_PUSH(g_items, e);
 	e.pushable = true;
 	e.reset = ka_Reset;
 	settouch(e, ka_TouchEvent);
@@ -506,9 +464,9 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 void ka_ScoreRules()
 {
 	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, true); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,			"pickups",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,			"bctime",		SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,		"pickups",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,   "bckills",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,		    "bctime",		SFL_SORT_PRIO_SECONDARY);
 	ScoreRules_basics_end();
 }
 
@@ -517,5 +475,3 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 	ka_ScoreRules();
 	ka_SpawnBall();
 }
-
-#endif

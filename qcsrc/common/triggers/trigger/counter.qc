@@ -1,3 +1,4 @@
+#include "counter.qh"
 #ifdef SVQC
 void counter_use(entity this, entity actor, entity trigger)
 {

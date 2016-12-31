@@ -1,12 +1,13 @@
+#include "vortex.qh"
 #ifndef IMPLEMENTATION
 CLASS(Vortex, Weapon)
-/* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells)
-/* impulse   */ ATTRIB(Vortex, impulse, int, 7)
+/* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells);
+/* impulse   */ ATTRIB(Vortex, impulse, int, 7);
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);
 #endif
 /* crosshair */ ATTRIB(Vortex, w_crosshair, string, "gfx/crosshairnex");
@@ -68,7 +69,7 @@ REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
 REGISTER_STAT(WEP_CVAR_vortex_charge, bool, WEP_CVAR(vortex, charge))
 REGISTER_STAT(WEP_CVAR_vortex_charge_animlimit, float, WEP_CVAR(vortex, charge_animlimit))
 
-#if defined(CSQC)
+#if defined(GAMEQC)
 float autocvar_g_weapon_charge_colormod_red_full;
 float autocvar_g_weapon_charge_colormod_red_half;
 float autocvar_g_weapon_charge_colormod_green_full;
@@ -77,11 +78,11 @@ float autocvar_g_weapon_charge_colormod_blue_half;
 float autocvar_g_weapon_charge_colormod_green_half;
 float autocvar_g_weapon_charge_colormod_hdrmultiplier;
 
-METHOD(Vortex, wr_glow, vector(Vortex this))
+METHOD(Vortex, wr_glow, vector(Vortex this, entity actor))
 {
-	if (!STAT(WEP_CVAR_vortex_charge)) return '0 0 0';
-	float charge = STAT(VORTEX_CHARGE);
-	float animlimit = STAT(WEP_CVAR_vortex_charge_animlimit);
+	if (!STAT(WEP_CVAR_vortex_charge, actor)) return '0 0 0';
+	float charge = STAT(VORTEX_CHARGE, actor);
+	float animlimit = STAT(WEP_CVAR_vortex_charge_animlimit, actor);
 	vector g;
 	g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, charge / animlimit);
 	g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, charge / animlimit);
@@ -157,7 +158,7 @@ MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
 	}
 }
 
-void W_Vortex_Attack(Weapon thiswep, entity actor, float issecondary)
+void W_Vortex_Attack(Weapon thiswep, entity actor, .entity weaponentity, float issecondary)
 {
 	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
 
@@ -184,7 +185,7 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(actor, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
+	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
 		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
@@ -243,7 +244,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)))
             {
-                W_Vortex_Attack(thiswep, actor, 0);
+                W_Vortex_Attack(thiswep, actor, weaponentity, 0);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
             }
         }
@@ -315,7 +316,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(vortex, refire)))
                 {
-                    W_Vortex_Attack(thiswep, actor, 1);
+                    W_Vortex_Attack(thiswep, actor, weaponentity, 1);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
                 }
             }
@@ -358,7 +359,7 @@ METHOD(Vortex, wr_resetplayer, void(entity thiswep, entity actor))
 }
 METHOD(Vortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND_RELOAD);
+    W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND_RELOAD);
 }
 METHOD(Vortex, wr_suicidemessage, Notification(entity thiswep))
 {

@@ -1,6 +1,7 @@
 #include "g_models.qh"
 
 #include "g_subs.qh"
+#include <common/net_linked.qh>
 #include "../common/triggers/subs.qh"
 #include "../common/triggers/triggers.qh"
 
@@ -152,11 +153,11 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 			WriteCoord(MSG_ENTITY, this.movedir.z);
 			WriteByte(MSG_ENTITY, floor(this.lip * 255));
 		}
-		WriteShort(MSG_ENTITY, this.fade_start);
-		WriteShort(MSG_ENTITY, this.fade_end);
-		WriteShort(MSG_ENTITY, this.alpha_max);
-		WriteShort(MSG_ENTITY, this.alpha_min);
-		WriteShort(MSG_ENTITY, this.inactive);
+		WriteByte(MSG_ENTITY, this.fade_start);
+		WriteByte(MSG_ENTITY, this.fade_end);
+		WriteByte(MSG_ENTITY, this.alpha_max);
+		WriteByte(MSG_ENTITY, this.alpha_min);
+		WriteByte(MSG_ENTITY, this.inactive);
 		WriteShort(MSG_ENTITY, this.fade_vertical_offset);
 	}
 
@@ -165,7 +166,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 
 
 #define G_MODEL_INIT(ent,sol) \
-	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) ent.movetype = MOVETYPE_PHYSICS; \
+	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
 	SetBrushEntityModel(ent); \
 	ent.use = g_model_setcolormaptoactivator; \
@@ -173,7 +174,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(!ent.solid) ent.solid = (sol); else if(ent.solid < 0) ent.solid = SOLID_NOT;
 
 #define G_CLIENTMODEL_INIT(ent,sol) \
-	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) ent.movetype = MOVETYPE_PHYSICS; \
+	if(ent.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) set_movetype(ent, MOVETYPE_PHYSICS); \
 	if(!ent.scale) ent.scale = ent.modelscale; \
 	SetBrushEntityModel(ent); \
 	ent.use = g_clientmodel_use; \

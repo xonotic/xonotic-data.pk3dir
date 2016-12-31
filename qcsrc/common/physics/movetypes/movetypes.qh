@@ -1,36 +1,37 @@
-#ifndef MOVETYPES_H
-#define MOVETYPES_H
+#pragma once
 
 #define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
 #define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
 #define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
+#define IS_ONSLICK(s)						boolean((s).flags & FL_ONSLICK)
+#define SET_ONSLICK(s)						((s).flags |= FL_ONSLICK)
+#define UNSET_ONSLICK(s)					((s).flags &= ~FL_ONSLICK)
 
-.float move_ltime;
-.void(entity this) move_think;
-.float move_nextthink;
-.void(entity this) move_blocked;
+#ifdef CSQC
+.float bouncestop;
+.float bouncefactor;
+#endif
+
+void set_movetype(entity this, int mt);
 
 .float move_movetype;
 .float move_time;
-.vector move_origin;
-.vector move_angles;
-.vector move_velocity;
-.vector move_avelocity;
-.int move_flags;
-.int move_watertype;
-.int move_waterlevel;
+//.vector move_origin;
+//.vector move_angles;
+//.vector move_velocity;
+//.vector move_avelocity;
+//.int move_flags;
+//.int move_watertype;
+//.int move_waterlevel;
 .void(float, float)contentstransition;
-.float move_bounce_factor;
-.float move_bounce_stopspeed;
+//.float move_bounce_factor;
+//.float move_bounce_stopspeed;
 .float move_nomonsters;  // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
 
-.entity move_aiment;
-.vector move_punchangle;
+.entity aiment;
+.vector punchangle;
 
-// should match sv_gameplayfix_fixedcheckwatertransition
-float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
-
-.entity move_groundentity;  // FIXME add move_groundnetworkentity?
+.entity groundentity;  // FIXME add move_groundnetworkentity?
 .float move_suspendedinair;
 .float move_didgravity;
 
@@ -46,6 +47,7 @@ void _Movetype_PushEntityTrace(entity this, vector push);
 float _Movetype_PushEntity(entity this, vector push, float failonstartsolid);
 void makevectors_matrix(vector myangles);
 
+void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient);
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy);
 void Movetype_Physics_MatchServer(entity this, bool sloppy);
 void Movetype_Physics_NoMatchServer(entity this);
@@ -75,7 +77,12 @@ const int MOVETYPE_FLY_WORLDONLY    = 33;
 
 const int FL_ITEM                   = 256;
 const int FL_ONGROUND				= 512;
+#elif defined(SVQC)
+const int MOVETYPE_ANGLENOCLIP      = 1;
+const int MOVETYPE_ANGLECLIP        = 2;
 #endif
+
+const int FL_ONSLICK = BIT(20);
 
 const int MOVETYPE_FAKEPUSH         = 13;
 
@@ -86,6 +93,4 @@ const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = BIT(2);
 
 #ifdef CSQC
 #define moveflags STAT(MOVEFLAGS)
-#endif
-
 #endif

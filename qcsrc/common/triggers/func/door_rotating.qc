@@ -1,3 +1,4 @@
+#include "door_rotating.qh"
 #ifdef SVQC
 /*QUAKED spawnfunc_func_door_rotating (0 .5 .8) ? START_OPEN BIDIR DOOR_DONT_LINK BIDIR_IN_DOWN x TOGGLE X_AXIS Y_AXIS
 if two doors touch, they are assumed to be connected and operate as a unit.

@@ -3,15 +3,16 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 #include "../round_handler.qh"
 #include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
-#include <common/monsters/all.qh>
+#include <common/net_linked.qh>
+#include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/util.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/state.qh>
 #include <lib/csqcmodel/sv_model.qh>
 
@@ -21,7 +22,9 @@
 
 float W_WeaponRateFactor(entity this)
 {
-	float t = 1.0 / g_weaponratefactor;
+	float t = 1;
+	if(g_weaponratefactor > 0)
+		t = 1.0 / g_weaponratefactor;
 
 	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
 	t = M_ARGV(0, float);
@@ -40,10 +43,10 @@ float W_WeaponSpeedFactor(entity this)
 }
 
 
-bool CL_Weaponentity_CustomizeEntityForClient(entity this)
+bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 {
 	this.viewmodelforclient = this.owner;
-	if (IS_SPEC(other) && other.enemy == this.owner) this.viewmodelforclient = other;
+	if (IS_SPEC(client) && client.enemy == this.owner) this.viewmodelforclient = client;
 	return true;
 }
 
@@ -54,7 +57,7 @@ vector CL_Weapon_GetShotOrg(int wpn)
 	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
 	CL_WeaponEntity_SetModel(e, "", false);
-	remove(e);
+	delete(e);
 	return ret;
 }
 
@@ -64,13 +67,13 @@ vector CL_Weapon_GetShotOrg(int wpn)
 void CL_Weaponentity_Think(entity this)
 {
 	this.nextthink = time;
-	if (intermission_running) this.frame = this.anim_idle.x;
+	if (gameover) this.frame = this.anim_idle.x;
 	.entity weaponentity = this.weaponentity_fld;
 	if (this.owner.(weaponentity) != this)
 	{
 		// owner has new gun; remove old one
-		if (this.weaponchild) remove(this.weaponchild);
-		remove(this);
+		if (this.weaponchild) delete(this.weaponchild);
+		delete(this);
 		return;
 	}
 	if (IS_DEAD(this.owner))
@@ -110,7 +113,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	this.nextthink = time;
 	if (this.owner.exteriorweaponentity != this)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	if (IS_DEAD(this.owner))
@@ -150,7 +153,7 @@ void CL_ExteriorWeaponentity_Think(entity this)
 	else this.alpha = 1;
 
     Weapon wep = PS(this.owner).m_weapon;
-	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner.clientcolors);
+	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner, this.owner.clientcolors);
 	this.colormap = this.owner.colormap;
 
 	CSQCMODEL_AUTOUPDATE(this);
@@ -214,8 +217,12 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	if (ammo) return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
-		for (entity mine; (mine = find(mine, classname, "mine")); )
-			if (mine.owner == actor) return false;
+	{
+		IL_EACH(g_mines, it.owner == actor,
+		{
+			return false;
+		});
+	}
 
 	if (thiswep == WEP_SHOTGUN)
 		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;           // no clicking, just allow
@@ -386,7 +393,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		int act = (fr == WFRAME_FIRE2 && (PS(actor).m_weapon == WEP_SHOCKWAVE || PS(actor).m_weapon == WEP_SHOTGUN))
+		bool primary_melee = boolean(fr == WFRAME_FIRE1 && (PS(actor).m_weapon.spawnflags & WEP_TYPE_MELEE_PRI));
+		bool secondary_melee = boolean(fr == WFRAME_FIRE2 && (PS(actor).m_weapon.spawnflags & WEP_TYPE_MELEE_SEC));
+		int act = (primary_melee || secondary_melee)
 			? ANIMACTION_MELEE
 			: ANIMACTION_SHOOT
 			;
@@ -403,18 +412,19 @@ bool forbidWeaponUse(entity player)
 	if (time < game_starttime && !autocvar_sv_ready_restart_after_countdown) return true;
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
 	if (player.player_blocked) return true;
+	if (gameover) return true;
 	if (STAT(FROZEN, player)) return true;
 	if (player.weapon_blocked) return true;
+	if (MUTATOR_CALLHOOK(ForbidWeaponUse, player)) return true;
 	return false;
 }
 
 .bool hook_switchweapon;
 
-void W_WeaponFrame(Player actor)
+void W_WeaponFrame(Player actor, .entity weaponentity)
 {
     TC(Player, actor);
     TC(PlayerState, PS(actor));
-	.entity weaponentity = weaponentities[0];  // TODO: unhardcode
 	entity this = actor.(weaponentity);
 	if (frametime) actor.weapon_frametime = frametime;
 
@@ -437,7 +447,6 @@ void W_WeaponFrame(Player actor)
 		PS(actor).m_switchingweapon = WEP_Null;
 		this.state = WS_CLEAR;
 		actor.weaponname = "";
-		// actor.items &= ~IT_AMMO;
 		return;
 	}
 
@@ -452,7 +461,7 @@ void W_WeaponFrame(Player actor)
 		switch (this.state)
 		{
 			default:
-				LOG_WARNINGF("unhandled weaponentity (%i) state for player (%i): %d\n", this, actor, this.state);
+				LOG_WARNF("unhandled weaponentity (%i) state for player (%i): %d", this, actor, this.state);
 				break;
 			case WS_INUSE:
 			case WS_RAISE:
@@ -563,7 +572,7 @@ void W_WeaponFrame(Player actor)
 			}
 			else if (e)
 			{
-				e.wr_gonethink(e, actor);
+				e.wr_gonethink(e, actor, weaponentity);
 			}
 		}
 
@@ -586,9 +595,8 @@ void W_WeaponFrame(Player actor)
 	}
 }
 
-void W_AttachToShotorg(entity actor, entity flash, vector offset)
+void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset)
 {
-	.entity weaponentity = weaponentities[0];
 	flash.owner = actor;
 	flash.angles_z = random() * 360;
 
@@ -683,10 +691,9 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
 
-void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
+void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sent_sound)
 {
     TC(Sound, sent_sound);
-	.entity weaponentity = weaponentities[0];
 	// set global values to work with
 	Weapon e = PS(actor).m_weapon;
 

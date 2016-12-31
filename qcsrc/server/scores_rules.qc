@@ -1,19 +1,32 @@
 #include "scores_rules.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "scores.qh"
+
+int ScoreRules_teams;
 
 void CheckAllowedTeams (entity for_whom);
 
-// NOTE: SP_ constants may not be >= MAX_SCORE; ST_constants may not be >= MAX_TEAMSCORE
-// scores that should be in all modes:
-float ScoreRules_teams;
-void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabled)
+int NumTeams(int teams)
 {
-	float i;
-	for(i = 0; i < MAX_SCORE; ++i)
-		ScoreInfo_SetLabel_PlayerScore(i, "", 0);
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
+	return boolean(teams & BIT(0)) + boolean(teams & BIT(1)) + boolean(teams & BIT(2)) + boolean(teams & BIT(3));
+}
+
+int AvailableTeams()
+{
+	return NumTeams(ScoreRules_teams);
+	// NOTE: this method is unreliable, as forced teams set the c* globals to weird values
+	//return boolean(c1 >= 0) + boolean(c2 >= 0) + boolean(c3 >= 0) + boolean(c4 >= 0);
+}
+
+// NOTE: ST_constants may not be >= MAX_TEAMSCORE
+// scores that should be in all modes:
+void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled)
+{
+	FOREACH(Scores, true, {
+		ScoreInfo_SetLabel_PlayerScore(it, "", 0);
+    });
+	for(int i = 0; i < MAX_TEAMSCORE; ++i)
 		ScoreInfo_SetLabel_TeamScore(i, "", 0);
 
 	ScoreRules_teams = teams;
@@ -32,8 +45,9 @@ void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabl
 	if(score_enabled)
 		ScoreInfo_SetLabel_PlayerScore(SP_SCORE,        "score",     sprio);
 
-	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "damage", 0);
-	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "damagetaken", SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "dmg", 0);
+	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "dmgtaken", SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", 0);
 }
 void ScoreRules_basics_end()
 {
@@ -44,7 +58,12 @@ void ScoreRules_generic()
 	if(teamplay)
 	{
 		CheckAllowedTeams(NULL);
-		ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
+		int teams = 0;
+		if(c1 >= 0) teams |= BIT(0);
+		if(c2 >= 0) teams |= BIT(1);
+		if(c3 >= 0) teams |= BIT(2);
+		if(c4 >= 0) teams |= BIT(3);
+		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
 	}
 	else
 		ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);

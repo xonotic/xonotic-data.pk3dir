@@ -1,5 +1,4 @@
-#ifndef TEAMS_H
-#define TEAMS_H
+#pragma once
 
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
 const int NUM_TEAM_1 = 1;  // red
@@ -177,5 +176,3 @@ float Team_TeamToNumber(float teamid)
 // safe team comparisons
 #define SAME_TEAM(a,b) (teamplay ? (a.team == b.team) : (a == b))
 #define DIFF_TEAM(a,b) (teamplay ? (a.team != b.team) : (a != b))
-
-#endif

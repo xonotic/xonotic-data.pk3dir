@@ -1,3 +1,4 @@
+#include "door_secret.qh"
 #ifdef SVQC
 void fd_secret_move1(entity this);
 void fd_secret_move2(entity this);
@@ -19,6 +20,8 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	string message_save;
 
 	this.health = 10000;
+	if(!this.bot_attack)
+		IL_PUSH(g_bot_targets, this);
 	this.bot_attack = true;
 
 	// exit if still moving around...
@@ -135,7 +138,7 @@ void fd_secret_done(entity this)
 
 .float door_finished;
 
-void secret_blocked(entity this)
+void secret_blocked(entity this, entity blocker)
 {
 	if (time < this.door_finished)
 		return;
@@ -150,9 +153,9 @@ secret_touch
 Prints messages
 ================
 */
-void secret_touch(entity this)
+void secret_touch(entity this, entity toucher)
 {
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
 	if (this.door_finished > time)
 		return;
@@ -161,9 +164,9 @@ void secret_touch(entity this)
 
 	if (this.message)
 	{
-		if (IS_CLIENT(other))
-			centerprint(other, this.message);
-		play2(other, this.noise);
+		if (IS_CLIENT(toucher))
+			centerprint(toucher, this.message);
+		play2(toucher, this.noise);
 	}
 }
 

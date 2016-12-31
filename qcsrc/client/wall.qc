@@ -213,11 +213,11 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 			this.movedir_z = ReadCoord();
 			this.lip = ReadByte() / 255.0;
 		}
-		this.fade_start = ReadShort();
-		this.fade_end = ReadShort();
-		this.alpha_max = ReadShort();
-		this.alpha_min = ReadShort();
-		this.inactive = ReadShort();
+		this.fade_start = ReadByte();
+		this.fade_end = ReadByte();
+		this.alpha_max = ReadByte();
+		this.alpha_min = ReadByte();
+		this.inactive = ReadByte();
 		this.fade_vertical_offset = ReadShort();
 		BGMScript_InitEntity(this);
 	}
@@ -230,5 +230,6 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 
 	this.entremove = Ent_Wall_Remove;
 	this.draw = Ent_Wall_Draw;
+	if (isnew) IL_PUSH(g_drawables, this);
 	setpredraw(this, Ent_Wall_PreDraw);
 }

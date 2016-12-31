@@ -1,28 +1,10 @@
-#ifndef TURRET_HELLION_H
-#define TURRET_HELLION_H
-
-#include "hellion_weapon.qh"
-
-CLASS(Hellion, Turret)
-/* spawnflags */ ATTRIB(Hellion, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
-/* mins       */ ATTRIB(Hellion, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(Hellion, maxs, vector, '32 32 64');
-/* modelname  */ ATTRIB(Hellion, mdl, string, "base.md3");
-/* model      */ ATTRIB_STRZONE(Hellion, model, string, strcat("models/turrets/", this.mdl));
-/* head_model */ ATTRIB_STRZONE(Hellion, head_model, string, strcat("models/turrets/", "hellion.md3"));
-/* netname    */ ATTRIB(Hellion, netname, string, "hellion");
-/* fullname   */ ATTRIB(Hellion, turret_name, string, _("Hellion Missile Turret"));
-    ATTRIB(Hellion, m_weapon, Weapon, WEP_HELLION);
-ENDCLASS(Hellion)
-REGISTER_TURRET(HELLION, NEW(Hellion));
-
-#endif
+#include "hellion.qh"
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
 
-spawnfunc(turret_hellion) { if (!turret_initialize(this, TUR_HELLION)) remove(this); }
+spawnfunc(turret_hellion) { if (!turret_initialize(this, TUR_HELLION)) delete(this); }
 
 METHOD(Hellion, tr_think, void(Hellion thistur, entity it))
 {

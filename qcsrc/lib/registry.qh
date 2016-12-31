@@ -71,10 +71,13 @@ REGISTRY(Registries, BITS(8))
 	REGISTER_INIT(id) {} \
 	void Register_##id() \
 	{ \
-		if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
-		entity this = id = inst; \
-		this.registered_id = #id; \
-		REGISTRY_PUSH(registry, fld, this); \
+		entity this = id; \
+		if (this == NULL) { \
+			if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
+			this = id = inst; \
+			this.registered_id = #id; \
+			REGISTRY_PUSH(registry, fld, this); \
+		} \
 		Register_##id##_init(this); \
 	} \
 	ACCUMULATE_FUNCTION(_Register##registry, Register_##id) \
@@ -157,7 +160,7 @@ void Registry_send(string id, string hash);
 		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
 		s = substring(s, strlen(join), -1); \
 		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
-		LOG_DEBUGF(#id ": %s\n[%s]\n", h, s); \
+		LOG_DEBUGF(#id ": %s\n[%s]", h, s); \
 	} \
 	void Registry_check(string r, string sv) \
 	{ \
@@ -166,7 +169,7 @@ void Registry_send(string id, string hash);
 			string cl = REGISTRY_HASH(id); \
 			if (cl != sv) \
 			{ \
-				LOG_FATALF("client/server mismatch (%s).\nCL: %s\nSV: %s\n", r, cl, sv); \
+				LOG_FATALF("client/server mismatch (%s).\nCL: %s\nSV: %s", r, cl, sv); \
 			} \
 		} \
 	} \
@@ -178,7 +181,11 @@ void Registry_send(string id, string hash);
 #define REGISTER_REGISTRY_2(id, str) \
 	ACCUMULATE_FUNCTION(__static_init, Register##id) \
 	CLASS(id##Registry, Object) \
-		ATTRIB(id##Registry, m_name, string, str) \
-		ATTRIB(id##Registry, REGISTRY_NEXT, entity, id##_first) \
+		ATTRIB(id##Registry, m_name, string, str); \
+		ATTRIB(id##Registry, REGISTRY_NEXT, entity, id##_first); \
+		METHOD(id##Registry, m_reload, void()); \
 	ENDCLASS(id##Registry) \
-	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry));
+	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry)); \
+	METHOD(id##Registry, m_reload, void()) { \
+		Register##id(); \
+	}

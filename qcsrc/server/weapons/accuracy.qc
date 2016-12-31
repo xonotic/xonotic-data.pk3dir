@@ -1,10 +1,11 @@
 #include "accuracy.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 int accuracy_byte(float n, float d)
 {
@@ -47,7 +48,7 @@ void accuracy_init(entity e)
 
 void accuracy_free(entity e)
 {
-	remove(e.accuracy);
+	delete(e.accuracy);
 }
 
 // force a resend of a player's accuracy stats

@@ -6,7 +6,7 @@
 	#include <common/animdecide.qh>
 
 	#ifdef SVQC
-		#include <server/cl_player.qh>
+		#include <server/player.qh>
 	#endif
 
 	REGISTER_NET_TEMP(globalsound)
@@ -114,7 +114,7 @@
 			else
 			{
 				// Can this happen?
-				LOG_WARNINGF("Missing entcs data for player %d\n", who);
+				LOG_WARNF("Missing entcs data for player %d", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
 			}
 			return true;
@@ -146,7 +146,7 @@
 			else
 			{
 				// Can this happen?
-				LOG_WARNINGF("Missing entcs data for player %d\n", who);
+				LOG_WARNF("Missing entcs data for player %d", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
 			}
 			return true;
@@ -219,7 +219,7 @@
 		int fh = fopen(f, FILE_READ);
 		if (fh < 0)
 		{
-			LOG_WARNINGF("Player sound file not found: %s\n", f);
+			LOG_WARNF("Player sound file not found: %s", f);
 			return;
 		}
 		for (string s; (s = fgets(fh)); )
@@ -227,7 +227,7 @@
 			int n = tokenize_console(s);
 			if (n != 3)
 			{
-				if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
+				if (n != 0) LOG_WARNF("Invalid sound info line: %s", s);
 				continue;
 			}
 			string file = argv(1);
@@ -261,7 +261,7 @@
 			int fh = fopen(f, FILE_READ);
 			if (fh < 0)
 			{
-				if (strict) LOG_WARNINGF("Player sound file not found: %s\n", f);
+				if (strict) LOG_WARNF("Player sound file not found: %s", f);
 				return false;
 			}
 			for (string s; (s = fgets(fh)); )
@@ -269,7 +269,7 @@
 				int n = tokenize_console(s);
 				if (n != 3)
 				{
-					if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
+					if (n != 0) LOG_WARNF("Invalid sound info line: %s", s);
 					continue;
 				}
 				string key = argv(0);
@@ -277,7 +277,7 @@
 				if (GetPlayerSoundSampleField_notFound) field = GetVoiceMessageSampleField(key);
 				if (GetPlayerSoundSampleField_notFound)
 				{
-					LOG_TRACEF("Invalid sound info field: %s\n", key);
+					LOG_TRACEF("Invalid sound info field: %s", key);
 					continue;
 				}
 				string file = argv(1);
@@ -316,7 +316,7 @@
 
 	#ifdef SVQC
 
-		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
+		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, float vol, int voicetype, bool fake)
 		{
 			if (gs == NULL && ps == NULL && sample == "") return;
 			if(this.classname == "body") return;
@@ -334,9 +334,9 @@
 						if (IS_REAL_CLIENT(msg_entity))
 						{
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
-							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten);
-							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten);
-							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
+							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten);
+							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten);
+							else soundto(MSG_ONE, this, chan, sample, vol, atten);
 						}
 					}
 					if (voicetype == VOICETYPE_LASTATTACKER_ONLY) break;
@@ -355,15 +355,15 @@
 						MACRO_BEGIN \
 						{ \
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
-							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
-							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
-							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
+							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
+							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
+							else soundto(MSG_ONE, this, chan, sample, vol, atten); \
 						} MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
 					else
 					{
-						FOREACH_CLIENT(IS_REAL_CLIENT(it) && (!teamplay || msg_entity.team == this.team), {
+						FOREACH_CLIENT(IS_REAL_CLIENT(it) && SAME_TEAM(it, this), {
 							msg_entity = it;
 							X();
 						});
@@ -390,9 +390,9 @@
 								    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
-								if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
-								else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
-								else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
+								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
+								else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
+								else soundto(MSG_ONE, this, chan, sample, vol, atten); \
 							} \
 						} MACRO_END
 					if (fake)
@@ -415,15 +415,15 @@
 					msg_entity = this;
 					if (fake)
 					{
-						if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
-						else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
-						else soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NORM);
+						if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, ATTEN_NORM);
+						else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, ATTEN_NORM);
+						else soundto(MSG_ONE, this, chan, sample, vol, ATTEN_NORM);
 					}
 					else
 					{
-						if (gs) globalsound(MSG_ALL, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
-						else if (ps) playersound(MSG_ALL, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
-						else _sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
+						if (gs) globalsound(MSG_ALL, this, gs, r, chan, vol, ATTEN_NORM);
+						else if (ps) playersound(MSG_ALL, this, ps, r, chan, vol, ATTEN_NORM);
+						else _sound(this, chan, sample, vol, ATTEN_NORM);
 					}
 					break;
 				}

@@ -1,3 +1,4 @@
+#include "nmm.qh"
 REGISTER_MINIGAME(nmm, "Nine Men's Morris");
 
 const int NMM_TURN_PLACE = 0x0100; // player has to place a piece on the board
@@ -123,7 +124,7 @@ void nmm_kill_tiles(entity minig)
 			strunzone(e.netname);
 			strunzone(e.nmm_tile_hmill);
 			strunzone(e.nmm_tile_vmill);
-			remove(e);
+			delete(e);
 		}
 }
 
@@ -369,7 +370,7 @@ int nmm_server_event(entity minigame, string event, ...)
 				minigame.SendFlags |= MINIG_SF_UPDATE;
 			}
 			else
-				LOG_TRACE("Invalid move: ",...(2,string),"\n");
+				LOG_TRACE("Invalid move: ", ...(2, string));
 			return 1;
 		}
 	}
@@ -496,9 +497,8 @@ void nmm_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void nmm_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
-
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
 	pos_y += ts_y;

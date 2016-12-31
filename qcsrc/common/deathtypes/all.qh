@@ -1,5 +1,4 @@
-#ifndef DEATHTYPES_ALL_H
-#define DEATHTYPES_ALL_H
+#pragma once
 
 #include <common/notifications/all.qh>
 
@@ -47,5 +46,3 @@ const int DT_FIRST = BIT(13);
 string Deathtype_Name(int deathtype);
 
 #include "all.inc"
-
-#endif

@@ -1,4 +1,6 @@
+#include "train.qh"
 .float train_wait_turning;
+.entity future_target;
 void train_next(entity this);
 #ifdef SVQC
 void train_use(entity this, entity actor, entity trigger);
@@ -13,7 +15,7 @@ void train_wait(entity this)
 	{
 		entity targ, cp;
 		vector ang;
-		targ = find(NULL, targetname, this.target);
+		targ = this.future_target;
 		if((this.spawnflags & 1) && targ.curvetarget)
 			cp = find(NULL, targetname, targ.curvetarget);
 		else
@@ -40,7 +42,7 @@ void train_wait(entity this)
 #endif
 
 #ifdef SVQC
-	entity tg = find(NULL, targetname, this.target);
+	entity tg = this.future_target;
 	if(tg.spawnflags & 4)
 	{
 		this.use = train_use;
@@ -61,13 +63,34 @@ void train_wait(entity this)
 	}
 }
 
+entity train_next_find(entity this)
+{
+	if(this.target_random)
+	{
+		RandomSelection_Init();
+		for(entity t = NULL; (t = find(t, targetname, this.target));)
+		{
+			RandomSelection_AddEnt(t, 1, 0);
+		}
+		return RandomSelection_chosen_ent;
+	}
+	else
+	{
+		return find(NULL, targetname, this.target);
+	}
+}
+
 void train_next(entity this)
 {
-	entity targ, cp = NULL;
+	entity targ = NULL, cp = NULL;
 	vector cp_org = '0 0 0';
 
-	targ = find(NULL, targetname, this.target);
+	targ = this.future_target;
+
 	this.target = targ.target;
+	this.target_random = targ.target_random;
+	this.future_target = train_next_find(targ);
+
 	if (this.spawnflags & 1)
 	{
 		if(targ.curvetarget)
@@ -185,9 +208,11 @@ void train_use(entity this, entity actor, entity trigger)
 
 void func_train_find(entity this)
 {
-	entity targ;
-	targ = find(NULL, targetname, this.target);
+	entity targ = train_next_find(this);
 	this.target = targ.target;
+	this.target_random = targ.target_random;
+	// save the future target for later
+	this.future_target = train_next_find(targ);
 	if (this.target == "")
 		objerror(this, "func_train_find: no next target");
 	SUB_SETORIGIN(this, targ.origin - this.view_ofs);
@@ -307,9 +332,10 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 
 		this.classname = "func_train";
 		this.solid = SOLID_BSP;
-		this.movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.drawmask = MASK_NORMAL;
 		this.draw = train_draw;
+		if (isnew) IL_PUSH(g_drawables, this);
 		this.entremove = trigger_remove_generic;
 
 		if(set_platmovetype(this, this.platmovetype))
@@ -322,13 +348,9 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 		//func_train_find();
 
 		// but we will need these
-		//this.move_nextthink = this.move_ltime + 0.1;
-		//this.move_think = train_next;
 		train_next(this);
 
-		this.move_movetype = MOVETYPE_PUSH;
-		this.move_origin = this.origin;
-		this.move_angles = this.angles;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.move_time = time;
 	}
 

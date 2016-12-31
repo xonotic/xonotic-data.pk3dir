@@ -1,0 +1,34 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_SPIDER, M_Model("spider.dpm"));
+#endif
+
+CLASS(Spider, Monster)
+    ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
+    ATTRIB(Spider, mins, vector, '-18 -18 -25');
+    ATTRIB(Spider, maxs, vector, '18 18 30');
+#ifdef GAMEQC
+    ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
+#endif
+    ATTRIB(Spider, netname, string, "spider");
+    ATTRIB(Spider, monster_name, string, _("Spider"));
+ENDCLASS(Spider)
+
+REGISTER_MONSTER(SPIDER, NEW(Spider)) {
+#ifdef GAMEQC
+    this.mr_precache(this);
+#endif
+}
+
+#include <common/weapons/_all.qh>
+
+CLASS(SpiderAttack, PortoLaunch)
+/* flags     */ ATTRIB(SpiderAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* impulse   */ ATTRIB(SpiderAttack, impulse, int, 9);
+/* refname   */ ATTRIB(SpiderAttack, netname, string, "spider");
+/* wepname   */ ATTRIB(SpiderAttack, m_name, string, _("Spider attack"));
+ENDCLASS(SpiderAttack)
+REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));

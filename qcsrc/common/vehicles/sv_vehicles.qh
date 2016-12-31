@@ -1,5 +1,4 @@
-#ifndef VEHICLES_DEF_H
-#define VEHICLES_DEF_H
+#pragma once
 #ifdef SVQC
 
 #include <common/turrets/sv_turrets.qh>
@@ -16,6 +15,8 @@ float autocvar_g_vehicles_crush_force = 50;
 bool autocvar_g_vehicles_delayspawn = true;
 float autocvar_g_vehicles_delayspawn_jitter = 10;
 float autocvar_g_vehicles_allow_bots;
+int autocvar_g_vehicles_exit_attempts = 25;
+float autocvar_g_vehicles_thinkrate = 0.1;
 
 AUTOCVAR(g_vehicles_teams, bool, true, "allow team specific vehicles");
 float autocvar_g_vehicles_teleportable;
@@ -105,6 +106,9 @@ void vehicles_exit(entity vehic, int eject);
 bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
+float vehicle_altitude(entity this, float amax);
 
-#endif
+IntrusiveList g_vehicle_returners;
+STATIC_INIT(g_vehicle_returners) { g_vehicle_returners = IL_NEW(); }
+
 #endif

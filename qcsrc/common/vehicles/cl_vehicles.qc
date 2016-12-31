@@ -1,3 +1,4 @@
+#include "cl_vehicles.qh"
 const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
 const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
 const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
@@ -33,7 +34,7 @@ void AuxiliaryXhair_Draw2D(entity this)
 		return;
 
 	vector size = draw_getimagesize(this.axh_image) * autocvar_cl_vehicles_crosshair_size;
-	vector pos = project_3d_to_2d(this.move_origin) - 0.5 * size;
+	vector pos = project_3d_to_2d(this.origin) - 0.5 * size;
 
 	if (!(pos.z < 0 || pos.x < 0 || pos.y < 0 || pos.x > vid_conwidth || pos.y > vid_conheight))
 	{
@@ -48,12 +49,14 @@ void AuxiliaryXhair_Draw2D(entity this)
 
 NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 {
-	int axh_id	= bound(0, ReadByte(), MAX_AXH);
-	entity axh 		= AuxiliaryXhair[axh_id];
+	int sf = ReadByte();
 
-	if(axh == NULL || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+	int axh_id	= bound(0, ReadByte(), MAX_AXH);
+	entity axh = AuxiliaryXhair[axh_id];
+
+	if(axh == NULL || wasfreed(axh))
 	{
-		axh					= spawn();
+		axh					= new(auxiliary_crosshair);
 		axh.draw2d			= func_null;
 		axh.drawmask 		= MASK_NORMAL;
 		axh.axh_drawflag	= DRAWFLAG_ADDITIVE;
@@ -61,14 +64,23 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 		axh.axh_image		= vCROSS_HINT;
 		axh.alpha			= 1;
 		AuxiliaryXhair[axh_id] = axh;
+		IL_PUSH(g_drawables_2d, axh);
 	}
 
-	axh.move_origin_x	= ReadCoord();
-	axh.move_origin_y	= ReadCoord();
-	axh.move_origin_z	= ReadCoord();
-	axh.colormod_x		= ReadByte() / 255;
-	axh.colormod_y		= ReadByte() / 255;
-	axh.colormod_z		= ReadByte() / 255;
+	if(sf & 2)
+	{
+		axh.origin_x = ReadCoord();
+		axh.origin_y = ReadCoord();
+		axh.origin_z = ReadCoord();
+	}
+
+	if(sf & 4)
+	{
+		axh.colormod_x = ReadByte() / 255;
+		axh.colormod_y = ReadByte() / 255;
+		axh.colormod_z = ReadByte() / 255;
+	}
+
 	axh.cnt 			= time;
 	axh.draw2d			= AuxiliaryXhair_Draw2D;
 	return true;
@@ -80,10 +92,22 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 	return = true;
 
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
-	if(hud_id == 0)
+	// note: HUD_NORMAL is set to 0 currently too, but we'll check both just in case
+	if(hud_id == 0 || hud_id == HUD_NORMAL)
 	{
 		sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
 		sound(this, CH_PAIN_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
+
+		for(int i = 0; i < MAX_AXH; ++i)
+		{
+			entity axh = AuxiliaryXhair[i];
+
+			if(axh != NULL && !wasfreed(axh))
+			{
+				AuxiliaryXhair[i] = NULL;
+				delete(axh);
+			}
+		}
 		return;
 	}
 
@@ -93,7 +117,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		entity axh = AuxiliaryXhair[i];
 
 		if(axh != NULL && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
-			remove(axh);
+			delete(axh);
 
 		axh              = spawn();
 		axh.draw2d       = func_null;
@@ -103,6 +127,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		axh.axh_image    = vCROSS_HINT;
 		axh.alpha        = 1;
 		AuxiliaryXhair[i] = axh;
+		IL_PUSH(g_drawables_2d, axh);
 	}
 
 	if(hud_id == HUD_BUMBLEBEE_GUN)
@@ -163,7 +188,7 @@ void Vehicles_drawHUD(
 		tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (96/256) - tmpSize.x;
 		tmpPos.y = vehicleHud_Pos.y;
 		tmpSize = '1 1 1' * hud_fontsize;
-		drawstring(tmpPos, sprintf(_("Press %s"), getcommandkey("dropweapon", "dropweapon")), tmpSize, '1 0 0' + '0 1 1' * tmpblinkValue, hudAlpha, DRAWFLAG_NORMAL);
+		drawstring(tmpPos, sprintf(_("Press %s"), getcommandkey(_("drop weapon"), "dropweapon")), tmpSize, '1 0 0' + '0 1 1' * tmpblinkValue, hudAlpha, DRAWFLAG_NORMAL);
 	}
 
 	// Model

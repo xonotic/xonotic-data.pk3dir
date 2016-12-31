@@ -1,3 +1,4 @@
+#include "follow.qh"
 // the way this entity works makes it no use to CSQC, as it removes itself instantly
 
 #ifdef SVQC
@@ -41,13 +42,13 @@ void follow_init(entity this)
 		}
 
 		dst.solid = SOLID_NOT; // solid doesn't work with attachment
-		remove(this);
+		delete(this);
 	}
 	else
 	{
 		if(this.spawnflags & 2)
 		{
-			dst.movetype = MOVETYPE_FOLLOW;
+			set_movetype(dst, MOVETYPE_FOLLOW);
 			dst.aiment = src;
 			// dst.punchangle = '0 0 0'; // keep unchanged
 			dst.view_ofs = dst.origin;
@@ -58,7 +59,7 @@ void follow_init(entity this)
 			follow_sameorigin(dst, src);
 		}
 
-		remove(this);
+		delete(this);
 	}
 }
 

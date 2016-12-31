@@ -5,7 +5,8 @@
 #include "../command/common.qh"
 
 #include <common/constants.qh>
-#include <common/weapons/all.qh>
+#include <common/net_linked.qh>
+#include <common/weapons/_all.qh>
 
 .float csqcprojectile_type;
 
@@ -83,7 +84,7 @@ void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 
 	e.csqcprojectile_clientanimate = clientanimate;
 
-	if(e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
+	if(e.move_movetype == MOVETYPE_TOSS || e.move_movetype == MOVETYPE_BOUNCE)
 	{
 		if(e.gravity == 0)
 			e.gravity = 1;

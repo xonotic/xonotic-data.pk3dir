@@ -1,3 +1,4 @@
+#include "pp.qh"
 REGISTER_MINIGAME(pp, "Push-Pull");
 
 const int PP_TURN_PLACE = 0x0100; // player has to place a piece on the board
@@ -121,7 +122,7 @@ void pp_move(entity minigame, entity player, string pos )
 			if(existing)
 			{
 				if(existing.netname) { strunzone(existing.netname); }
-				remove(existing);
+				delete(existing);
 			}
 
 			entity piece = msle_spawn(minigame,"minigame_board_piece");
@@ -186,7 +187,7 @@ void pp_next_match(entity minigame, entity player)
 		entity e = NULL;
 		while ( ( e = findentity(e,owner,minigame) ) )
 			if ( e.classname == "minigame_board_piece" )
-				remove(e);
+				delete(e);
 		minigame.pp_team1_score = 0;
 		minigame.pp_team2_score = 0;
 
@@ -215,7 +216,7 @@ int pp_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}
@@ -270,8 +271,7 @@ int pp_server_event(entity minigame, string event, ...)
 
 string pp_curr_pos; // identifier of the tile under the mouse
 vector pp_boardpos; // HUD board position
-vector pp_boardsize;// HUD board size
-.int pp_checkwin; // Used to optimize checks to display a win
+vector pp_boardsize; // HUD board size
 
 // Required function, draw the game board
 void pp_hud_board(vector pos, vector mySize)
@@ -374,7 +374,7 @@ void pp_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void pp_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);

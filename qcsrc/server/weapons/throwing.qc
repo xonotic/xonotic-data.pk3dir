@@ -1,7 +1,7 @@
 #include "throwing.qh"
 
 #include "weaponsystem.qh"
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 #include <common/t_items.qh>
 #include "../g_damage.qh"
 #include <common/items/item.qh>
@@ -9,7 +9,7 @@
 #include <common/notifications/all.qh>
 #include <common/triggers/subs.qh>
 #include <common/util.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/state.qh>
 
 void thrown_wep_think(entity this)
@@ -19,7 +19,10 @@ void thrown_wep_think(entity this)
 	{
 		this.SendFlags |= ISF_LOCATION;
 		this.oldorigin = this.origin;
+		this.bot_pickup = false;
 	}
+	else
+		this.bot_pickup = true;
 	this.owner = NULL;
 	float timeleft = this.savenextthink - time;
 	if(timeleft > 1)
@@ -45,6 +48,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
+	wep.glowmod = weaponentity_glowmod(info, own, own.clientcolors);
 
 	W_DropEvent(wr_drop,own,wpn,wep);
 
@@ -79,7 +83,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	weapon_defaultspawnfunc(wep, info);
 	if(startitem_failed)
 		return string_null;
-	wep.glowmod = weaponentity_glowmod(info, own.clientcolors);
 	setthink(wep, thrown_wep_think);
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
@@ -165,7 +168,7 @@ bool W_IsWeaponThrowable(entity this, int w)
 }
 
 // toss current weapon
-void W_ThrowWeapon(entity this, vector velo, vector delta, float doreduce)
+void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta, float doreduce)
 {
 	Weapon w = PS(this).m_weapon;
 	if (w == WEP_Null)
@@ -174,7 +177,6 @@ void W_ThrowWeapon(entity this, vector velo, vector delta, float doreduce)
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if(this.(weaponentity).state != WS_READY)
 		return;
 	if(!W_IsWeaponThrowable(this, w.m_id))

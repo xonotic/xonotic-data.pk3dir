@@ -1,11 +1,12 @@
+#include "tuba.qh"
 #ifndef IMPLEMENTATION
 CLASS(Tuba, Weapon)
-/* impulse   */ ATTRIB(Tuba, impulse, int, 1)
+/* impulse   */ ATTRIB(Tuba, impulse, int, 1);
 /* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
 /* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Tuba, m_model, Model, MDL_TUBA_ITEM);
 #endif
 /* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairtuba");
@@ -179,7 +180,7 @@ void W_Tuba_NoteOff(entity this)
 			}
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 int W_Tuba_GetNote(entity pl, int hittype)
@@ -309,12 +310,12 @@ void W_Tuba_NoteThink(entity this)
 	});
 }
 
-void W_Tuba_NoteOn(entity actor, float hittype)
+void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 {
 	vector o;
 	float n;
 
-	W_SetupShot(actor, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
+	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
 
 	n = W_Tuba_GetNote(actor, hittype);
 
@@ -377,13 +378,13 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 	if (fire & 1)
 	if (weapon_prepareattack(this, actor, weaponentity, false, WEP_CVAR(tuba, refire)))
 	{
-		W_Tuba_NoteOn(actor, 0);
+		W_Tuba_NoteOn(actor, weaponentity, 0);
 		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 	}
 	if (fire & 2)
 	if (weapon_prepareattack(this, actor, weaponentity, true, WEP_CVAR(tuba, refire)))
 	{
-		W_Tuba_NoteOn(actor, HITTYPE_SECONDARY);
+		W_Tuba_NoteOn(actor, weaponentity, HITTYPE_SECONDARY);
 		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 	}
 	if (actor.tuba_note)
@@ -395,10 +396,12 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 	}
 }
 
+void tuba_instrument_send(entity this, int instr);
 METHOD(Tuba, wr_setup, void(Tuba this, entity actor))
 {
 	actor.ammo_field = ammo_none;
 	actor.tuba_instrument = 0;
+	tuba_instrument_send(actor, actor.tuba_instrument);
 }
 #endif
 
@@ -411,6 +414,7 @@ NET_HANDLE(tuba_instrument, bool)
 	string s = (i == 0) ? "tuba" :
 	           (i == 1) ? "akordeon" :
 	                      "kleinbottle" ;
+    viewmodel.tuba_instrument = i;
 	CL_WeaponEntity_SetModel(viewmodel, s, true);
 }
 #endif
@@ -418,6 +422,8 @@ NET_HANDLE(tuba_instrument, bool)
 void tuba_instrument_send(entity this, int instr)
 {
 	msg_entity = this;
+	if (!IS_REAL_CLIENT(this))
+		return;
 	int chan = MSG_ONE;
 	WriteHeader(chan, tuba_instrument);
 	WriteByte(chan, instr);
@@ -448,7 +454,7 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 				break;
 		}
 		tuba_instrument_send(actor, actor.tuba_instrument);
-		W_SetupShot(actor, false, 0, SND_Null, 0, 0);
+		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
@@ -481,6 +487,15 @@ METHOD(Tuba, wr_killmessage, Notification(Tuba this))
 		return WEAPON_TUBA_MURDER;
 }
 
+#elif defined(CSQC)
+
+METHOD(Tuba, wr_viewmodel, string(Tuba this, entity wep))
+{
+	return (wep.tuba_instrument == 0) ? "tuba" :
+	       (wep.tuba_instrument == 1) ? "akordeon" :
+	                                    "kleinbottle";
+}
+
 #endif
 
 #ifdef CSQC
@@ -490,13 +505,6 @@ METHOD(Tuba, wr_killmessage, Notification(Tuba this))
 const int TUBA_MIN = -18;
 const int TUBA_MAX = 27;
 const int TUBA_INSTRUMENTS = 3;
-
-entityclass(Tuba);
-class(Tuba) .int note;
-class(Tuba) .bool tuba_attenuate;
-class(Tuba) .float tuba_volume;
-class(Tuba) .float tuba_volume_initial;
-class(Tuba) .int tuba_instrument;
 
 int Tuba_PitchStep;
 
@@ -563,9 +571,9 @@ void Ent_TubaNote_Think(entity this)
 		sound(this, CH_TUBA_SINGLE, SND_Null, 0, 0);
 		if (this.enemy) {
 			sound(this.enemy, CH_TUBA_SINGLE, SND_Null, 0, 0);
-			remove(this.enemy);
+			delete(this.enemy);
 		}
-		remove(this);
+		delete(this);
 	} else {
 		tubasound(this, 0);
 	}
@@ -643,7 +651,7 @@ PRECACHE(Tuba)
 	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
 	if (Tuba_PitchStep) {
 		if (!checkextension("DP_SND_SOUND7_WIP2") && !checkextension("DP_SND_SOUND7")) {
-			LOG_WARNING("requested pitch shifting, but not supported by this engine build");
+			LOG_WARN("requested pitch shifting, but not supported by this engine build");
 			Tuba_PitchStep = 0;
 		}
 	}

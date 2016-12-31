@@ -1,70 +1,4 @@
 #include "gamemode_domination.qh"
-#ifndef GAMEMODE_DOMINATION_H
-#define GAMEMODE_DOMINATION_H
-
-#define autocvar_g_domination_point_limit cvar("g_domination_point_limit")
-bool autocvar_g_domination_roundbased;
-int autocvar_g_domination_roundbased_point_limit;
-int autocvar_g_domination_point_leadlimit;
-
-void dom_Initialize();
-
-REGISTER_MUTATOR(dom, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		dom_Initialize();
-
-		int fraglimit_override = autocvar_g_domination_point_limit;
-		if (autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
-			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
-
-		ActivateTeamplay();
-		SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, autocvar_timelimit_override, -1);
-		have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-// score rule declarations
-const float ST_DOM_TICKS = 1;
-const float SP_DOM_TICKS = 4;
-const float SP_DOM_TAKES = 5;
-const float ST_DOM_CAPS = 1;
-const float SP_DOM_CAPS = 4;
-
-// pps: points per second
-.float dom_total_pps = _STAT(DOM_TOTAL_PPS);
-.float dom_pps_red = _STAT(DOM_PPS_RED);
-.float dom_pps_blue = _STAT(DOM_PPS_BLUE);
-.float dom_pps_yellow = _STAT(DOM_PPS_YELLOW);
-.float dom_pps_pink = _STAT(DOM_PPS_PINK);
-float total_pps;
-float pps_red;
-float pps_blue;
-float pps_yellow;
-float pps_pink;
-
-// capture declarations
-.float enemy_playerid;
-.entity sprite;
-.float captime;
-
-// misc globals
-float domination_roundbased;
-float domination_teams;
-#endif
-
-#ifdef IMPLEMENTATION
 
 #include <server/teamplay.qh>
 
@@ -165,8 +99,8 @@ void dompoint_captured(entity this)
 	WaypointSprite_UpdateSprites(this.sprite, msg, WP_Null, WP_Null);
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	for(head = NULL; (head = find(head, classname, "dom_controlpoint")) != NULL; )
-	FOREACH_ENTITY_CLASS("dom_controlpoint", true, LAMBDA(
+	IL_EACH(g_dompoints, true,
+	{
 		if (autocvar_g_domination_point_amt)
 			points = autocvar_g_domination_point_amt;
 		else
@@ -183,7 +117,7 @@ void dompoint_captured(entity this)
 			case NUM_TEAM_4: pps_pink += points/wait_time; break;
 		}
 		total_pps += points/wait_time;
-	));
+	});
 
 	WaypointSprite_UpdateTeamRadar(this.sprite, RADARICON_DOMPOINT, colormapPaletteColor(this.goalentity.team - 1, 0));
 	WaypointSprite_Ping(this.sprite);
@@ -250,11 +184,11 @@ void dompointthink(entity this)
 	}
 }
 
-void dompointtouch(entity this)
+void dompointtouch(entity this, entity toucher)
 {
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
-	if (other.health < 1)
+	if (toucher.health < 1)
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
@@ -265,7 +199,7 @@ void dompointtouch(entity this)
 
 	// only valid teams can claim it
 	entity head = find(NULL, classname, "dom_team");
-	while (head && head.team != other.team)
+	while (head && head.team != toucher.team)
 		head = find(head, classname, "dom_team");
 	if (!head || head.netname == "" || head == this.goalentity)
 		return;
@@ -274,9 +208,9 @@ void dompointtouch(entity this)
 
 	this.team = this.goalentity.team; // this stores the PREVIOUS team!
 
-	this.cnt = other.team;
+	this.cnt = toucher.team;
 	this.owner = head; // team to switch to after the delay
-	this.dmg_inflictor = other;
+	this.dmg_inflictor = toucher;
 
 	// this.state = 1;
 	// this.delay = time + cvar("g_domination_point_capturetime");
@@ -299,8 +233,8 @@ void dompointtouch(entity this)
 	this.modelindex = head.dmg;
 	this.skin = head.skin;
 
-	this.enemy = other; // individual player scoring
-	this.enemy_playerid = other.playerid;
+	this.enemy = toucher; // individual player scoring
+	this.enemy_playerid = toucher.playerid;
 	dompoint_captured(this);
 }
 
@@ -350,6 +284,8 @@ void dom_controlpoint_setup(entity this)
 	this.nextthink = time;
 	settouch(this, dompointtouch);
 	this.solid = SOLID_TRIGGER;
+	if(!this.flags & FL_ITEM)
+		IL_PUSH(g_items, this);
 	this.flags = FL_ITEM;
 	setsize(this, '-32 -32 -32', '32 32 32');
 	setorigin(this, this.origin + '0 0 20');
@@ -362,16 +298,15 @@ void dom_controlpoint_setup(entity this)
 float total_controlpoints;
 void Domination_count_controlpoints()
 {
-	entity e;
 	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
-	for(e = NULL; (e = find(e, classname, "dom_controlpoint")) != NULL; )
+	IL_EACH(g_dompoints, true,
 	{
 		++total_controlpoints;
-		redowned += (e.goalentity.team == NUM_TEAM_1);
-		blueowned += (e.goalentity.team == NUM_TEAM_2);
-		yellowowned += (e.goalentity.team == NUM_TEAM_3);
-		pinkowned += (e.goalentity.team == NUM_TEAM_4);
-	}
+		redowned += (it.goalentity.team == NUM_TEAM_1);
+		blueowned += (it.goalentity.team == NUM_TEAM_2);
+		yellowowned += (it.goalentity.team == NUM_TEAM_3);
+		pinkowned += (it.goalentity.team == NUM_TEAM_4);
+	});
 }
 
 float Domination_GetWinnerTeam()
@@ -446,6 +381,19 @@ void Domination_RoundStart()
 }
 
 //go to best items, or control points you don't own
+void havocbot_goalrating_controlpoints(entity this, float ratingscale, vector org, float sradius)
+{
+	IL_EACH(g_dompoints, vdist((((it.absmin + it.absmax) * 0.5) - org), <, sradius),
+	{
+		if(it.cnt > -1) // this is just being fought
+			navigation_routerating(this, it, ratingscale, 5000);
+		else if(it.goalentity.cnt == 0) // unclaimed
+			navigation_routerating(this, it, ratingscale * 0.5, 5000);
+		else if(it.goalentity.team != this.team) // other team's point
+			navigation_routerating(this, it, ratingscale * 0.2, 5000);
+	});
+}
+
 void havocbot_role_dom(entity this)
 {
 	if(IS_DEAD(this))
@@ -463,7 +411,7 @@ void havocbot_role_dom(entity this)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
+MUTATOR_HOOKFUNCTION(dom, CheckAllowedTeams)
 {
 	// fallback?
 	M_ARGV(0, float) = domination_teams;
@@ -495,7 +443,7 @@ MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 {
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		WITHSELF(it, PutClientInServer());
+		PutClientInServer(it);
 		if(domination_roundbased)
 			it.player_blocked = 1;
 		if(IS_REAL_CLIENT(it))
@@ -537,7 +485,7 @@ spawnfunc(dom_controlpoint)
 {
 	if(!g_domination)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	setthink(this, dom_controlpoint_setup);
@@ -550,6 +498,8 @@ spawnfunc(dom_controlpoint)
 	this.effects = this.effects | EF_LOWPRECISION;
 	if (autocvar_g_domination_point_fullbright)
 		this.effects |= EF_FULLBRIGHT;
+
+	IL_PUSH(g_dompoints, this);
 }
 
 /*QUAKED spawnfunc_dom_team (0 .5 .8) (-32 -32 -24) (32 32 32)
@@ -582,7 +532,7 @@ spawnfunc(dom_team)
 {
 	if(!g_domination || autocvar_g_domination_teams_override >= 2)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	precache_model(this.model);
@@ -602,7 +552,7 @@ spawnfunc(dom_team)
 }
 
 // scoreboard setup
-void ScoreRules_dom(float teams)
+void ScoreRules_dom(int teams)
 {
 	if(domination_roundbased)
 	{
@@ -680,13 +630,23 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "dom_team") == NULL || autocvar_g_domination_teams_override >= 2)
 	{
-		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.\n");
-		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
+		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.");
+		domination_teams = autocvar_g_domination_teams_override;
+		if (domination_teams < 2)
+			domination_teams = autocvar_g_domination_default_teams;
+		domination_teams = bound(2, domination_teams, 4);
 		dom_spawnteams(domination_teams);
 	}
 
 	CheckAllowedTeams(NULL);
-	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
+	//domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
+
+	int teams = 0;
+	if(c1 >= 0) teams |= BIT(0);
+	if(c2 >= 0) teams |= BIT(1);
+	if(c3 >= 0) teams |= BIT(2);
+	if(c4 >= 0) teams |= BIT(3);
+	domination_teams = teams;
 
 	domination_roundbased = autocvar_g_domination_roundbased;
 
@@ -704,5 +664,3 @@ void dom_Initialize()
 	g_domination = true;
 	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
-
-#endif

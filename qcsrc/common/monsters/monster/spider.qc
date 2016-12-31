@@ -1,40 +1,4 @@
-#ifndef SPIDER_H
-#define SPIDER_H
-
-#ifndef MENUQC
-MODEL(MON_SPIDER, M_Model("spider.dpm"));
-#endif
-
-CLASS(Spider, Monster)
-    ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
-    ATTRIB(Spider, mins, vector, '-18 -18 -25');
-    ATTRIB(Spider, maxs, vector, '18 18 30');
-#ifndef MENUQC
-    ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
-#endif
-    ATTRIB(Spider, netname, string, "spider");
-    ATTRIB(Spider, monster_name, string, _("Spider"));
-ENDCLASS(Spider)
-
-REGISTER_MONSTER(SPIDER, NEW(Spider)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#include <common/weapons/all.qh>
-
-CLASS(SpiderAttack, PortoLaunch)
-/* flags     */ ATTRIB(SpiderAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(SpiderAttack, impulse, int, 9);
-/* refname   */ ATTRIB(SpiderAttack, netname, string, "spider");
-/* wepname   */ ATTRIB(SpiderAttack, m_name, string, _("Spider attack"));
-ENDCLASS(SpiderAttack)
-REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "spider.qh"
 
 #ifdef SVQC
 
@@ -106,7 +70,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 			actor.anim_finished = time + 1;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web(actor);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -143,10 +107,12 @@ void M_Spider_Attack_Web_Explode(entity this)
 		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 		RadiusDamage(this, this.realowner, 0, 0, 25, NULL, NULL, 25, this.projectiledeathtype, NULL);
 
-		for(entity e = findradius(this.origin, 25); e; e = e.chain) if(e != this) if(e.takedamage && !IS_DEAD(e)) if(e.health > 0) if(e.monsterid != MON_SPIDER.monsterid)
-			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
+		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && it.health > 0 && it.monsterid != MON_SPIDER.monsterid,
+		{
+			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
+		});
 
-		remove(this);
+		delete(this);
 	}
 }
 
@@ -155,9 +121,9 @@ void M_Spider_Attack_Web_Explode_use(entity this, entity actor, entity trigger)
 	M_Spider_Attack_Web_Explode(this);
 }
 
-void M_Spider_Attack_Web_Touch(entity this)
+void M_Spider_Attack_Web_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	M_Spider_Attack_Web_Explode(this);
 }
@@ -183,7 +149,7 @@ void M_Spider_Attack_Web(entity this)
 
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
-	proj.movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	W_SetupProjVelocity_Explicit(proj, v_forward, v_up, (autocvar_g_monster_spider_attack_web_speed), (autocvar_g_monster_spider_attack_web_speed_up), 0, 0, false);
 	settouch(proj, M_Spider_Attack_Web_Touch);
 	setsize(proj, '-4 -4 -4', '4 4 4');
@@ -192,7 +158,10 @@ void M_Spider_Attack_Web(entity this)
 	proj.health = 500;
 	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, proj);
 
 	proj.bouncefactor = 0.3;
 	proj.bouncestop = 0.05;
@@ -222,7 +191,7 @@ bool M_Spider_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_spider) { Monster_Spawn(this, MON_SPIDER.monsterid); }
+spawnfunc(monster_spider) { Monster_Spawn(this, true, MON_SPIDER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -246,7 +215,7 @@ METHOD(Spider, mr_death, bool(Spider this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 {
     TC(Spider, this);
@@ -281,6 +250,4 @@ METHOD(Spider, mr_precache, bool(Spider this))
     TC(Spider, this);
     return true;
 }
-#endif
-
 #endif

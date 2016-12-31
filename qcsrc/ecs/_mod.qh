@@ -1,0 +1,6 @@
+// generated file; do not modify
+#include <ecs/main.qh>
+
+#include <ecs/components/_mod.qh>
+#include <ecs/events/_mod.qh>
+#include <ecs/systems/_mod.qh>

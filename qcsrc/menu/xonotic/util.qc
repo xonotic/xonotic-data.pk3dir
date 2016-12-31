@@ -7,7 +7,7 @@
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/util.qh>
-#include <common/command/generic.qh>
+#include <common/command/_mod.qh>
 
 float GL_CheckExtension(string ext)
 {
@@ -321,22 +321,22 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 	if(_Nex_ExtResponseSystem_UpdateTo)
 	{
-		LOG_TRACE("error: UpdateNotification_URI_Get_Callback has been called before\n");
+		LOG_TRACE("error: UpdateNotification_URI_Get_Callback has been called before");
 		return;
 	}
 	if(status != 0)
 	{
-		LOG_TRACEF("error receiving update notification: status is %d\n", status);
+		LOG_TRACEF("error receiving update notification: status is %d", status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		LOG_TRACE("error: received HTML instead of an update notification\n");
+		LOG_TRACE("error: received HTML instead of an update notification");
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		LOG_TRACE("error: received carriage returns from update notification server\n");
+		LOG_TRACE("error: received carriage returns from update notification server");
 		return;
 	}
 
@@ -429,6 +429,12 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		}
 	}
 
+	if(un_bannedservers != "")
+	{
+		_Nex_ExtResponseSystem_BannedServers = strzone(un_bannedservers);
+		_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
+	}
+
 	if(un_emergency_pk3s != "")
 	{
 		_Nex_ExtResponseSystem_Packs = strzone(un_emergency_pk3s);
@@ -509,7 +515,7 @@ float preMenuInit()
 
 	MapInfo_Cache_Create();
 	MapInfo_Enumerate();
-	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
+	if(!_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
 	{
 		draw_reset_cropped();
 
@@ -679,53 +685,57 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
-	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
-	GAMETYPE(MAPINFO_TYPE_CTS) \
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
 	/**/
 
-int GameType_GetID(int cnt)
+// hidden gametypes come last so indexing always works correctly
+#define HIDDEN_GAMETYPES \
+	GAMETYPE(MAPINFO_TYPE_RACE) \
+	GAMETYPE(MAPINFO_TYPE_CTS) \
+	/**/
+
+Gametype GameType_GetID(int cnt)
 {
 	int i = 0;
-
-	#define GAMETYPE(id) { if (i++ == cnt) return id; }
+	#define GAMETYPE(it) { if (i++ == cnt) return it; }
 	GAMETYPES
+	HIDDEN_GAMETYPES
 	#undef GAMETYPE
-
-	unused_float = i;
-
-	return 0;
+	return NULL;
 }
 
 int GameType_GetCount()
 {
 	int i = 0;
-
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
+	#define GAMETYPE(it) if (cvar("developer")) ++i;
+	HIDDEN_GAMETYPES
+	#undef GAMETYPE
+	return i;
+}
 
+int GameType_GetTotalCount()
+{
+	int i = 0;
+	#define GAMETYPE(id) ++i;
+	GAMETYPES
+	HIDDEN_GAMETYPES
+	#undef GAMETYPE
 	return i;
 }
 
 string GameType_GetName(int cnt)
 {
-	int i = GameType_GetID(cnt);
-
-	if(i)
-		return MapInfo_Type_ToText(i);
-
-	return "";
+	Gametype i = GameType_GetID(cnt);
+	return i ? MapInfo_Type_ToText(i) : "";
 }
 
 string GameType_GetIcon(int cnt)
 {
-	int i = GameType_GetID(cnt);
-
-	if(i)
-		return strcat("gametype_", MapInfo_Type_ToString(i));
-
-	return "";
+	Gametype i = GameType_GetID(cnt);
+	return i ? strcat("gametype_", MapInfo_Type_ToString(i)) : "";
 }
 
 .void(entity) TR;

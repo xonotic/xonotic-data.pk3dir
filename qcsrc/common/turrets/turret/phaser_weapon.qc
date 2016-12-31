@@ -14,7 +14,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, SND_PhaserTurretAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_PhaserTurretAttack_FIRE, CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -33,9 +33,10 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
         beam.owner = actor;
         beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / beam.ticrate);
         beam.scale = actor.target_range / 256;
-        beam.movetype = MOVETYPE_NONE;
+        set_movetype(beam, MOVETYPE_NONE);
         beam.enemy = actor.enemy;
         beam.bot_dodge = true;
+        IL_PUSH(g_bot_dodge, beam);
         beam.bot_dodgerating = beam.shot_dmg;
         sound (beam, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
         actor.fireflag = 1;
@@ -60,7 +61,7 @@ void beam_think(entity this)
         this.owner.fireflag = 2;
         this.owner.tur_head.frame = 10;
         sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-        remove(this);
+        delete(this);
         return;
     }
 

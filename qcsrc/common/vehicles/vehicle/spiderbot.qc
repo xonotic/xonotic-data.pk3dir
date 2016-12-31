@@ -1,29 +1,4 @@
-#ifndef VEHICLE_SPIDERBOT
-#define VEHICLE_SPIDERBOT
-
-#include "spiderbot_weapons.qh"
-
-CLASS(Spiderbot, Vehicle)
-/* spawnflags */ ATTRIB(Spiderbot, spawnflags, int, VHF_DMGSHAKE);
-/* mins       */ ATTRIB(Spiderbot, mins, vector, '-75 -75 10');
-/* maxs       */ ATTRIB(Spiderbot, maxs, vector, '75 75 125');
-/* view offset*/ ATTRIB(Spiderbot, view_ofs, vector, '0 0 70');
-/* view dist  */ ATTRIB(Spiderbot, height, float, 170);
-/* model	  */ ATTRIB(Spiderbot, mdl, string, "models/vehicles/spiderbot.dpm");
-/* model	  */ ATTRIB(Spiderbot, model, string, "models/vehicles/spiderbot.dpm");
-/* head_model */ ATTRIB(Spiderbot, head_model, string, "models/vehicles/spiderbot_top.dpm");
-/* hud_model  */ ATTRIB(Spiderbot, hud_model, string, "models/vehicles/spiderbot_cockpit.dpm");
-/* tags       */ ATTRIB(Spiderbot, tag_head, string, "tag_head");
-/* tags       */ ATTRIB(Spiderbot, tag_hud, string, "tag_hud");
-/* tags       */ ATTRIB(Spiderbot, tag_view, string, "");
-/* netname    */ ATTRIB(Spiderbot, netname, string, "spiderbot");
-/* fullname   */ ATTRIB(Spiderbot, vehicle_name, string, _("Spiderbot"));
-/* icon       */ ATTRIB(Spiderbot, m_icon, string, "vehicle_spider");
-ENDCLASS(Spiderbot)
-
-REGISTER_VEHICLE(SPIDERBOT, NEW(Spiderbot));
-
-#endif
+#include "spiderbot.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -68,15 +43,16 @@ float autocvar_g_vehicle_spiderbot_shield_regen_pause = 0.35;
 vector autocvar_g_vehicle_spiderbot_bouncepain = '0 0 0';
 
 .float jump_delay;
-bool spiderbot_frame(entity this)
+bool spiderbot_frame(entity this, float dt)
 {
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(intermission_running)
+	if(gameover)
 	{
-		vehic.velocity = '0 0 0';
-		vehic.avelocity = '0 0 0';
+		vehic.solid = SOLID_NOT;
+		vehic.takedamage = DAMAGE_NO;
+		set_movetype(vehic, MOVETYPE_NONE);
 		return;
 	}
 
@@ -116,7 +92,7 @@ bool spiderbot_frame(entity this)
 	//UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload2) + ('0 1 0' * (1 - this.vehicle_reload2)), 2);
 
 	// Rotate head
-	float ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * sys_frametime;
+	float ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * PHYS_INPUT_FRAMETIME;
 	ad_y = bound(-ftmp, ad_y, ftmp);
 	vehic.tur_head.angles_y = bound(autocvar_g_vehicle_spiderbot_head_turnlimit * -1, vehic.tur_head.angles_y + ad_y, autocvar_g_vehicle_spiderbot_head_turnlimit);
 
@@ -193,9 +169,9 @@ bool spiderbot_frame(entity this)
 			{
 				// Turn Body
 				if(this.movement_x == 0 && this.movement_y != 0)
-					ftmp = autocvar_g_vehicle_spiderbot_turnspeed_strafe * sys_frametime;
+					ftmp = autocvar_g_vehicle_spiderbot_turnspeed_strafe * PHYS_INPUT_FRAMETIME;
 				else
-					ftmp = autocvar_g_vehicle_spiderbot_turnspeed * sys_frametime;
+					ftmp = autocvar_g_vehicle_spiderbot_turnspeed * PHYS_INPUT_FRAMETIME;
 
 				ftmp = bound(-ftmp, vehic.tur_head.angles_y, ftmp);
 				vehic.angles_y = anglemods(vehic.angles_y + ftmp);
@@ -221,7 +197,7 @@ bool spiderbot_frame(entity this)
 					vehic.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(vehic.velocity_z <= 20) // not while jumping
-						vehic.velocity_z -= g * sys_frametime * autocvar_sv_gravity;
+						vehic.velocity_z -= g * PHYS_INPUT_FRAMETIME * autocvar_sv_gravity;
 					if(IS_ONGROUND(vehic))
 					if(vehic.sound_nexttime < time || vehic.delay != 1)
 					{
@@ -251,7 +227,7 @@ bool spiderbot_frame(entity this)
 					vehic.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(vehic.velocity_z <= 20) // not while jumping
-						vehic.velocity_z -= g * sys_frametime * autocvar_sv_gravity;
+						vehic.velocity_z -= g * PHYS_INPUT_FRAMETIME * autocvar_sv_gravity;
 					if(IS_ONGROUND(vehic))
 					if(vehic.sound_nexttime < time || vehic.delay != 2)
 					{
@@ -306,16 +282,16 @@ bool spiderbot_frame(entity this)
 	else
 		vehicles_regen(vehic, vehic.cnt, vehicle_ammo1, autocvar_g_vehicle_spiderbot_minigun_ammo_max,
 										   autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause,
-										   autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime, false);
+										   autocvar_g_vehicle_spiderbot_minigun_ammo_regen, dt, false);
 
 
 	spiderbot_rocket_do(vehic);
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, frametime, true);
+		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, false);
+		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, dt, false);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	//this.vehicle_ammo2 = vehic.tur_head.frame;
@@ -337,24 +313,18 @@ bool spiderbot_frame(entity this)
 
 void spiderbot_exit(entity this, int eject)
 {
-	entity e;
 	vector spot;
 
-	e = findchain(classname,"spiderbot_rocket");
-	while(e)
+	IL_EACH(g_projectiles, it.owner == this.owner && it.classname == "spiderbot_rocket",
 	{
-		if(e.owner == this.owner)
-		{
-			e.realowner = this.owner;
-			e.owner = NULL;
-		}
-		e = e.chain;
-	}
+		it.realowner = this.owner;
+		it.owner = NULL;
+	});
 
 	setthink(this, vehicles_think);
 	this.nextthink = time;
 	this.frame = 5;
-	this.movetype = MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 
 	if(!this.owner)
 		return;
@@ -405,7 +375,7 @@ void spiderbot_headfade(entity this)
 			sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 			Send_Effect(EFFECT_EXPLOSION_BIG, this.origin + '0 0 100', '0 0 0', 1);
 		}
-		remove(this);
+		delete(this);
 	}
 }
 
@@ -440,7 +410,7 @@ void spiderbot_blowup(entity this)
 
 	vector org = gettaginfo(this, gettagindex(this, "tag_head"));
 	setorigin(h, org);
-	h.movetype = MOVETYPE_BOUNCE;
+	set_movetype(h, MOVETYPE_BOUNCE);
 	h.solid = SOLID_BBOX;
 	h.velocity = v_up * (500 + random() * 500) + randomvec() * 128;
 	h.modelflags = MF_ROCKET;
@@ -456,14 +426,14 @@ void spiderbot_blowup(entity this)
 
 	org = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_hardpoint01"));
 	setorigin(g1, org);
-	g1.movetype = MOVETYPE_TOSS;
+	set_movetype(g1, MOVETYPE_TOSS);
 	g1.solid = SOLID_CORPSE;
 	g1.velocity = v_forward * 700 + (randomvec() * 32);
 	g1.avelocity = randomvec() * 180;
 
 	org = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_hardpoint02"));
 	setorigin(g2, org);
-	g2.movetype = MOVETYPE_TOSS;
+	set_movetype(g2, MOVETYPE_TOSS);
 	g2.solid = SOLID_CORPSE;
 	g2.velocity = v_forward * 700 + (randomvec() * 32);
 	g2.avelocity = randomvec() * 180;
@@ -478,7 +448,7 @@ void spiderbot_blowup(entity this)
 	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_SPID_DEATH.m_id, NULL);
 
 	this.alpha = this.tur_head.alpha = this.gun1.alpha = this.gun2.alpha = -1;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.deadflag = DEAD_DEAD;
 	this.solid = SOLID_NOT;
 	this.tur_head.effects &= ~EF_FLAME;
@@ -536,8 +506,8 @@ bool spiderbot_impulse(entity this, int _imp)
 
 spawnfunc(vehicle_spiderbot)
 {
-	if(!autocvar_g_vehicle_spiderbot) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_SPIDERBOT, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_spiderbot) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_SPIDERBOT, false)) { delete(this); return; }
 }
 
 METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
@@ -548,7 +518,7 @@ METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
 METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 {
     instance.vehicle_weapon2mode = SBRM_GUIDE;
-    instance.movetype = MOVETYPE_WALK;
+    set_movetype(instance, MOVETYPE_WALK);
     CSQCVehicleSetup(instance.owner, 0);
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
@@ -578,7 +548,7 @@ METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
     instance.tur_head.effects  |= EF_FLAME;
     instance.colormod			= instance.tur_head.colormod = '-1 -1 -1';
     instance.frame				= 10;
-    instance.movetype			= MOVETYPE_TOSS;
+    set_movetype(instance, MOVETYPE_TOSS);
 
     CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 }
@@ -599,7 +569,7 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 
     instance.frame = 5;
     instance.tur_head.frame = 1;
-    instance.movetype = MOVETYPE_WALK;
+    set_movetype(instance, MOVETYPE_WALK);
     instance.solid = SOLID_SLIDEBOX;
     instance.alpha = instance.tur_head.alpha = instance.gun1.alpha = instance.gun2.alpha = 1;
     instance.tur_head.angles = '0 0 0';
@@ -633,8 +603,8 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 
 #endif // SVQC
 #ifdef CSQC
-float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
-float autocvar_cl_vehicle_spiderbot_cross_size = 1;
+//float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
+//float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 METHOD(Spiderbot, vr_hud, void(Spiderbot thisveh))
 {

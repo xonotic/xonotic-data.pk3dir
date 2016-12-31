@@ -17,7 +17,7 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 
 	if(SKINBOOL_GAMETYPELIST_ICON_BLUR)
 	{
-		for(int i = 0; i < GameType_GetCount(); ++i)
+		for(int i = 0; i < GameType_GetTotalCount(); ++i)
 			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
 	}
 
@@ -30,8 +30,7 @@ void XonoticGametypeList_setSelected(entity me, float i)
 }
 void XonoticGametypeList_loadCvars(entity me)
 {
-	float t;
-	t = MapInfo_CurrentGametype();
+	Gametype t = MapInfo_CurrentGametype();
 	float i;
 	for(i = 0; i < GameType_GetCount(); ++i)
 		if(t == GameType_GetID(i))
@@ -49,7 +48,7 @@ void XonoticGametypeList_loadCvars(entity me)
 }
 void XonoticGametypeList_saveCvars(entity me)
 {
-	int t = GameType_GetID(me.selectedItem);
+	Gametype t = GameType_GetID(me.selectedItem);
 	if (t == MapInfo_CurrentGametype()) {
 		return;
 	}
@@ -58,6 +57,15 @@ void XonoticGametypeList_saveCvars(entity me)
 	if (owner) { // not set immediately
 		owner.gameTypeChangeNotify(owner);
 	}
+}
+void XonoticGametypeList_draw(entity me)
+{
+	if(me.nItems != GameType_GetCount())
+	{
+		me.nItems = GameType_GetCount();
+		me.setSelected(me, 0);
+	}
+	SUPER(XonoticGametypeList).draw(me);
 }
 void XonoticGametypeList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {

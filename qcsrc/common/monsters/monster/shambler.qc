@@ -1,30 +1,4 @@
-#ifndef SHAMBLER_H
-#define SHAMBLER_H
-
-#ifndef MENUQC
-MODEL(MON_SHAMBLER, M_Model("shambler.mdl"));
-#endif
-
-CLASS(Shambler, Monster)
-    ATTRIB(Shambler, spawnflags, int, MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Shambler, mins, vector, '-41 -41 -31');
-    ATTRIB(Shambler, maxs, vector, '41 41 65');
-#ifndef MENUQC
-    ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
-#endif
-    ATTRIB(Shambler, netname, string, "shambler");
-    ATTRIB(Shambler, monster_name, string, _("Shambler"));
-ENDCLASS(Shambler)
-
-REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "shambler.qh"
 
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
@@ -78,28 +52,27 @@ void M_Shambler_Attack_Swing(entity this)
 
 #include <common/effects/qc/all.qh>
 
-void M_Shambler_Attack_Lightning_Explode(entity this)
+void M_Shambler_Attack_Lightning_Explode(entity this, entity directhitentity)
 {
-	entity head;
-
 	sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.velocity = '0 0 0';
 
-	if(this.movetype == MOVETYPE_NONE)
+	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius),
+					NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, directhitentity);
 
-	for(head = findradius(this.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != this.realowner) if(head.takedamage)
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_shambler_attack_lightning_radius_zap, it != this.realowner && it.takedamage,
 	{
-		te_csqc_lightningarc(this.origin, head.origin);
-		Damage(head, this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
-	}
+		te_csqc_lightningarc(this.origin, it.origin);
+		Damage(it, this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_ZAP.m_id, it.origin, '0 0 0');
+	});
 
 	setthink(this, SUB_Remove);
 	this.nextthink = time + 0.2;
@@ -107,7 +80,7 @@ void M_Shambler_Attack_Lightning_Explode(entity this)
 
 void M_Shambler_Attack_Lightning_Explode_use(entity this, entity actor, entity trigger)
 {
-	M_Shambler_Attack_Lightning_Explode(this);
+	M_Shambler_Attack_Lightning_Explode(this, trigger);
 }
 
 void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -124,11 +97,11 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
-void M_Shambler_Attack_Lightning_Touch(entity this)
+void M_Shambler_Attack_Lightning_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
-	this.use(this, NULL, NULL);
+	this.use(this, NULL, toucher);
 }
 
 void M_Shambler_Attack_Lightning_Think(entity this)
@@ -136,8 +109,7 @@ void M_Shambler_Attack_Lightning_Think(entity this)
 	this.nextthink = time;
 	if (time > this.cnt)
 	{
-		other = NULL;
-		M_Shambler_Attack_Lightning_Explode(this);
+		M_Shambler_Attack_Lightning_Explode(this, NULL);
 		return;
 	}
 }
@@ -152,7 +124,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.owner = gren.realowner = this;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
-	gren.movetype = MOVETYPE_BOUNCE;
+	set_movetype(gren, MOVETYPE_BOUNCE);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = DEATH_MONSTER_SHAMBLER_ZAP.m_id;
 	setorigin(gren, CENTER_OR_VIEWOFS(this));
@@ -170,11 +142,14 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.damageforcescale = 0;
 	gren.event_damage = M_Shambler_Attack_Lightning_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_Explicit(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, false);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
@@ -226,7 +201,7 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_shambler) { Monster_Spawn(this, MON_SHAMBLER.monsterid); }
+spawnfunc(monster_shambler) { Monster_Spawn(this, true, MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -251,7 +226,7 @@ METHOD(Shambler, mr_death, bool(Shambler this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
 {
     TC(Shambler, this);
@@ -297,6 +272,4 @@ METHOD(Shambler, mr_precache, bool(Shambler this))
     TC(Shambler, this);
     return true;
 }
-#endif
-
 #endif

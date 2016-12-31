@@ -92,7 +92,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 					RandomSelection_Init();
 					FOREACH_WORD(teleporter.noise, true,
 					{
-						RandomSelection_Add(NULL, 0, it, 1, 1);
+						RandomSelection_AddString(it, 1, 1);
 					});
 					thesound = RandomSelection_chosen_string;
 				}
@@ -124,22 +124,20 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	UpdateCSQCProjectileAfterTeleport(player);
 	UpdateItemAfterTeleport(player);
 #elif defined(CSQC)
-	from = player.move_origin;
-	player.move_origin = to;
-	player.move_angles = to_angles;
-	player.move_velocity = to_velocity;
-	player.move_flags &= ~FL_ONGROUND;
+	from = player.origin;
+	setorigin(player, to);
+	player.angles = to_angles;
+	player.velocity = to_velocity;
+	UNSET_ONGROUND(player);
 	player.iflags |= IFLAG_TELEPORTED | IFLAG_V_ANGLE | IFLAG_ANGLES;
 	player.csqcmodel_teleported = 1;
 	player.v_angle = to_angles;
 
-	if(player.isplayermodel) // not for anything but the main player
+	if(player == csqcplayer) // not for anything but the main player
 	{
-		setproperty(VF_ANGLES, player.move_angles);
-		setproperty(VF_CL_VIEWANGLES, player.move_angles);
+		setproperty(VF_ANGLES, player.angles);
+		setproperty(VF_CL_VIEWANGLES, player.angles);
 	}
-
-	makevectors(player.move_angles);
 #endif
 
 #ifdef SVQC
@@ -187,21 +185,21 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	else
 	{
 		RandomSelection_Init();
-		for(e = NULL; (e = find(e, targetname, teleporter.target)); )
+		FOREACH_ENTITY_STRING(targetname, teleporter.target,
 		{
 			p = 1;
 			if(STAT(TELEPORT_TELEFRAG_AVOID, player))
 			{
 			#ifdef SVQC
-				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
+				locout = it.origin + '0 0 1' * (1 - player.mins.z - 24);
 			#elif defined(CSQC)
-				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
+				locout = it.origin + '0 0 1' * (1 - player.mins.z - 24);
 			#endif
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
 					p = 0;
 			}
-			RandomSelection_Add(e, 0, string_null, (e.cnt ? e.cnt : 1), p);
-		}
+			RandomSelection_AddEnt(it, (it.cnt ? it.cnt : 1), p);
+		});
 		e = RandomSelection_chosen_ent;
 	}
 
@@ -213,35 +211,17 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 
 	makevectors(e.mangle);
 
-#ifdef SVQC
 	if(e.speed)
 		if(vdist(player.velocity, >, e.speed))
 			player.velocity = normalize(player.velocity) * max(0, e.speed);
-#elif defined(CSQC)
-	if(e.speed)
-		if(vdist(player.move_velocity, >, e.speed))
-			player.move_velocity = normalize(player.move_velocity) * max(0, e.speed);
-#endif
 
-#ifdef SVQC
 	if(STAT(TELEPORT_MAXSPEED, player))
 		if(vdist(player.velocity, >, STAT(TELEPORT_MAXSPEED, player)))
 			player.velocity = normalize(player.velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
-#elif defined(CSQC)
-	if(STAT(TELEPORT_MAXSPEED, player))
-		if(vdist(player.move_velocity, >, STAT(TELEPORT_MAXSPEED, player)))
-			player.move_velocity = normalize(player.move_velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
-#endif
 
-#ifdef SVQC
 	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 
 	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
-#elif defined(CSQC)
-	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
-
-	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.move_velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
-#endif
 
 	return e;
 }
@@ -254,7 +234,7 @@ void teleport_findtarget(entity this)
 	{
 		++n;
 #ifdef SVQC
-		if(e.movetype == MOVETYPE_NONE)
+		if(e.move_movetype == MOVETYPE_NONE)
 			waypoint_spawnforteleporter(this, e.origin, 0);
 		if(e.classname != "info_teleport_destination")
 			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
@@ -287,10 +267,10 @@ void teleport_findtarget(entity this)
 
 entity Teleport_Find(vector mi, vector ma)
 {
-	entity e;
-	for(e = NULL; (e = find(e, classname, "trigger_teleport")); )
-		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, NULL))
-			return e;
+	IL_EACH(g_teleporters, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL),
+	{
+		return it;
+	});
 	return NULL;
 }
 
@@ -310,7 +290,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	#ifdef SVQC
 		if(!(pl.flags & FL_PROJECTILE))
 	#elif defined(CSQC)
-		if(!(pl.move_flags & BIT(15))) // FL_PROJECTILE
+		if(!(pl.flags & BIT(15))) // FL_PROJECTILE
 	#endif
 			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
 		pl.owner = NULL;

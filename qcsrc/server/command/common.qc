@@ -1,10 +1,10 @@
 #include "common.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "common.qh"
 
 #include "../scores.qh"
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <lib/warpzone/common.qh>
 
@@ -189,7 +189,7 @@ void timeout_handler_reset(entity this)
 	timeout_time = 0;
 	timeout_leadtime = 0;
 
-	remove(this);
+	delete(this);
 }
 
 void timeout_handler_think(entity this)
@@ -210,6 +210,7 @@ void timeout_handler_think(entity this)
 			}
 			else  // time to end the timeout
 			{
+				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEIN);
 				timeout_status = TIMEOUT_INACTIVE;
 
 				// reset the slowmo value back to normal
@@ -364,10 +365,10 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					if (arg_lower == "list") { print_to(caller, monsterlist_reply); return; }
 
-					FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-						if(it.realowner == caller)
-							++tmp_moncount;
-					));
+					IL_EACH(g_monsters, it.realowner == caller,
+					{
+						++tmp_moncount;
+					});
 
 					if (!autocvar_g_monsters) { print_to(caller, "Monsters are disabled"); return; }
 					if (autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { print_to(caller, "Monster spawning is disabled"); return; }
@@ -380,17 +381,17 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
 
 					bool found = false;
-					for (int i = MON_FIRST; i <= MON_LAST; ++i)
+					FOREACH(Monsters, it != MON_Null && it.netname == arg_lower,
 					{
-						mon = get_monsterinfo(i);
-						if (mon.netname == arg_lower) { found = true; break; }
-					}
+						found = true;
+						break;
+					});
 
 					if (!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
-					mon = spawnmonster(arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
+					mon = spawnmonster(spawn(), arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
 					print_to(caller, strcat("Spawned ", mon.monster_name));
 					return;
 				}
@@ -436,10 +437,12 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					int tmp_remcount = 0;
 
-					FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+					IL_EACH(g_monsters, true,
+					{
 						Monster_Remove(it);
 						++tmp_remcount;
-					));
+					});
+					IL_CLEAR(g_monsters);
 
 					monsters_total = monsters_killed = totalspawned = 0;
 

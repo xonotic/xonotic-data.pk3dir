@@ -1,9 +1,10 @@
 #include "spawnpoints.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 #include "g_world.qh"
 #include "race.qh"
 #include "../common/constants.qh"
+#include <common/net_linked.qh>
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"
@@ -166,6 +167,7 @@ spawnfunc(info_player_start)
 spawnfunc(info_player_deathmatch)
 {
 	this.classname = "info_player_deathmatch";
+	IL_PUSH(g_spawnpoints, this);
 	relocate_spawnpoint(this);
 }
 
@@ -249,17 +251,15 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
-	if(spot.target != "") {
-		entity ent;
-		float found;
-
-		found = 0;
-		for(ent = NULL; (ent = find(ent, targetname, spot.target)); )
+	if(spot.target != "")
+	{
+		int found = 0;
+		for(entity targ = findchain(targetname, spot.target); targ; targ = targ.chain)
 		{
 			++found;
-			if(ent.spawn_evalfunc)
+			if(targ.spawn_evalfunc)
 			{
-				spawn_score = ent.spawn_evalfunc(ent, this, spot, spawn_score);
+				spawn_score = targ.spawn_evalfunc(targ, this, spot, spawn_score);
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}
@@ -267,7 +267,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 
 		if(!found)
 		{
-			LOG_TRACE("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target, "\n");
+			LOG_TRACE("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target);
 			return '-1 0 0';
 		}
 	}
@@ -318,7 +318,7 @@ entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exp
 
 	RandomSelection_Init();
 	for(spot = firstspot; spot; spot = spot.chain)
-		RandomSelection_Add(spot, 0, string_null, pow(bound(lower, spot.spawnpoint_score.y, upper), exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
+		RandomSelection_AddEnt(spot, pow(bound(lower, spot.spawnpoint_score.y, upper), exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
 
 	return RandomSelection_chosen_ent;
 }
@@ -335,7 +335,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	float teamcheck;
 	entity spot, firstspot;
 
-	spot = find (NULL, classname, "testplayerstart");
+	spot = find(NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 

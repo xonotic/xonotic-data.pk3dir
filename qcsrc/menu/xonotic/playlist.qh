@@ -3,7 +3,7 @@
 #include "listbox.qh"
 CLASS(XonoticPlayList, XonoticListBox)
 	METHOD(XonoticPlayList, configureXonoticPlayList, void(entity));
-	ATTRIB(XonoticPlayList, rowsPerItem, float, 1)
+	ATTRIB(XonoticPlayList, rowsPerItem, float, 1);
 	METHOD(XonoticPlayList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticPlayList, draw, void(entity));
 	METHOD(XonoticPlayList, drawListBoxItem, void(entity, int, vector, bool, bool));
@@ -17,16 +17,16 @@ CLASS(XonoticPlayList, XonoticListBox)
 
 	METHOD(XonoticPlayList, addToPlayList, void(entity, string));
 	METHOD(XonoticPlayList, removeSelectedFromPlayList, void(entity));
-	ATTRIB(XonoticPlayList, playingTrack, float, -1)
+	ATTRIB(XonoticPlayList, playingTrack, float, -1);
 
-	ATTRIB(XonoticPlayList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticPlayList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticPlayList, columnNameSize, float, 0)
-	ATTRIB(XonoticPlayList, columnNumberOrigin, float, 0)
-	ATTRIB(XonoticPlayList, columnNumberSize, float, 0)
-	ATTRIB(XonoticPlayList, realUpperMargin, float, 0)
-	ATTRIB(XonoticPlayList, origin, vector, '0 0 0')
-	ATTRIB(XonoticPlayList, itemAbsSize, vector, '0 0 0')
+	ATTRIB(XonoticPlayList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticPlayList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticPlayList, columnNameSize, float, 0);
+	ATTRIB(XonoticPlayList, columnNumberOrigin, float, 0);
+	ATTRIB(XonoticPlayList, columnNumberSize, float, 0);
+	ATTRIB(XonoticPlayList, realUpperMargin, float, 0);
+	ATTRIB(XonoticPlayList, origin, vector, '0 0 0');
+	ATTRIB(XonoticPlayList, itemAbsSize, vector, '0 0 0');
 ENDCLASS(XonoticPlayList)
 
 entity makeXonoticPlayList();

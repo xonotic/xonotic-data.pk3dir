@@ -1,17 +1,18 @@
+#include "shockwave.qh"
 #ifndef IMPLEMENTATION
 CLASS(Shockwave, Weapon)
-/* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none)
-/* impulse   */ ATTRIB(Shockwave, impulse, int, 2)
-/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED);
+/* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none);
+/* impulse   */ ATTRIB(Shockwave, impulse, int, 2);
+/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Shockwave, m_model, Model, MDL_SHOCKWAVE_ITEM);
 #endif
 /* crosshair */ ATTRIB(Shockwave, w_crosshair, string, "gfx/crosshairshotgun");
 /* crosshair */ ATTRIB(Shockwave, w_crosshair_size, float, 0.7);
-/* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshotgun");
+/* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshockwave");
 /* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
 /* wepname   */ ATTRIB(Shockwave, m_name, string, _("Shockwave"));
 
@@ -122,7 +123,7 @@ void W_Shockwave_Melee_Think(entity this)
 	// check to see if we can still continue, otherwise give up now
 	if(IS_DEAD(this.realowner) && WEP_CVAR(shockwave, melee_no_doubleslap))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -214,7 +215,7 @@ void W_Shockwave_Melee_Think(entity this)
 			}
 			else
 			{
-				remove(this);
+				delete(this);
 				return;
 			}
 		}
@@ -223,7 +224,7 @@ void W_Shockwave_Melee_Think(entity this)
 	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		remove(this);
+		delete(this);
 		return;
 	}
 	else
@@ -243,7 +244,7 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shockwave_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
 }
 
 // SHOCKWAVE ATTACK MODE
@@ -355,7 +356,7 @@ void W_Shockwave_Send(entity actor)
 	WriteByte(MSG_BROADCAST, etof(actor));
 }
 
-void W_Shockwave_Attack(entity actor)
+void W_Shockwave_Attack(entity actor, .entity weaponentity)
 {
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
@@ -366,7 +367,7 @@ void W_Shockwave_Attack(entity actor)
 	float i, queue = 0;
 
 	// set up the shot direction
-	W_SetupShot(actor, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
+	W_SetupShot(actor, weaponentity, true, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(shockwave, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, actor);
 	vector attack_hitpos = trace_endpos;
@@ -396,6 +397,22 @@ void W_Shockwave_Attack(entity actor)
 		),
 		false
 	);
+
+	float lag = ANTILAG_LATENCY(actor);
+	if(lag < 0.001)
+		lag = 0;
+	if (!IS_REAL_CLIENT(actor))
+		lag = 0;
+	if(autocvar_g_antilag == 0 || actor.cvar_cl_noantilag)
+		lag = 0; // only do hitscan, but no antilag
+	if(lag)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && it != actor, antilag_takeback(it, CS(it), time - lag));
+		IL_EACH(g_monsters, it != actor,
+		{
+			antilag_takeback(it, it, time - lag);
+		});
+	}
 
 	while(head)
 	{
@@ -570,7 +587,7 @@ void W_Shockwave_Attack(entity actor)
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 
-			if((vlen(head.WarpZone_findradius_dist) <= WEP_CVAR(shockwave, blast_distance))
+			if((vdist(head.WarpZone_findradius_dist, <=, WEP_CVAR(shockwave, blast_distance)))
 				&& (W_Shockwave_Attack_IsVisible(actor, head, nearest_on_line, w_shotorg, attack_endpos)))
 			{
 				// calculate importance of distance and accuracy for this attack
@@ -651,11 +668,8 @@ void W_Shockwave_Attack(entity actor)
 			final_force
 		);
 
-		if(accuracy_isgooddamage(actor.realowner, head))
-		{
-			LOG_INFO("wtf\n");
-			accuracy_add(actor.realowner, WEP_SHOCKWAVE.m_id, 0, final_damage);
-		}
+		if(accuracy_isgooddamage(actor, head))
+			accuracy_add(actor, WEP_SHOCKWAVE.m_id, 0, final_damage);
 
 		#ifdef DEBUG_SHOCKWAVE
 		LOG_INFO(sprintf(
@@ -669,6 +683,15 @@ void W_Shockwave_Attack(entity actor)
 		shockwave_hit[i-1] = NULL;
 		shockwave_hit_force[i-1] = '0 0 0';
 		shockwave_hit_damage[i-1] = 0;
+	}
+
+	if(lag)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it) && it != actor, antilag_restore(it, CS(it)));
+		IL_EACH(g_monsters, it != actor,
+		{
+			antilag_restore(it, it);
+		});
 	}
 }
 
@@ -687,7 +710,7 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
             {
-                W_Shockwave_Attack(actor);
+                W_Shockwave_Attack(actor, weaponentity);
                 actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
             }
@@ -696,7 +719,6 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
     else if(fire & 2)
     {
         //if(actor.clip_load >= 0) // we are not currently reloading
-        if(!actor.crouch) // no crouchmelee please
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(shockwave, melee_refire)))
         {
             // attempt forcing playback of the anim by switching to another anim (that we never play) here...
@@ -735,7 +757,7 @@ void Draw_Shockwave(entity this)
 {
 	// fading/removal control
 	float a = bound(0, (SW_MAXALPHA - ((time - this.sw_time) / SW_FADETIME)), SW_MAXALPHA);
-	if(a < ALPHA_MIN_VISIBLE) { remove(this); }
+	if(a < ALPHA_MIN_VISIBLE) { delete(this); }
 
 	// WEAPONTODO: save this only once when creating the entity
 	vector sw_color = entcs_GetColor(this.sv_entnum - 1); // GetTeamRGB(entcs_GetTeam(this.sv_entnum));
@@ -840,6 +862,7 @@ void Net_ReadShockwaveParticle()
 	entity shockwave;
 	shockwave = spawn();
 	shockwave.draw = Draw_Shockwave;
+	IL_PUSH(g_drawables, shockwave);
 
 	shockwave.sw_shotorg_x = ReadCoord(); shockwave.sw_shotorg_y = ReadCoord(); shockwave.sw_shotorg_z = ReadCoord();
 	shockwave.sw_shotdir_x = ReadCoord(); shockwave.sw_shotdir_y = ReadCoord(); shockwave.sw_shotdir_z = ReadCoord();

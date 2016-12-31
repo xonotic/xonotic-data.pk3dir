@@ -98,11 +98,13 @@ void HUD_Ammo()
 	if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_ammo) return;
-		if(spectatee_status == -1) return;
+		if((!autocvar_hud_panel_ammo) || (spectatee_status == -1))
+			return;
+		if(STAT(HEALTH) < 1 && autocvar_hud_panel_ammo_hide_ondeath)
+			return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	draw_beginBoldFont();
 
@@ -114,7 +116,7 @@ void HUD_Ammo()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;

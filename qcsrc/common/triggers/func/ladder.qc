@@ -1,21 +1,22 @@
+#include "ladder.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_LADDER)
 
-void func_ladder_touch(entity this)
+void func_ladder_touch(entity this, entity toucher)
 {
 #ifdef SVQC
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
-	if(IS_VEHICLE(other))
+	if(IS_VEHICLE(toucher))
 		return;
 #elif defined(CSQC)
-	if(!other.isplayermodel)
+	if(!toucher.isplayermodel)
 		return;
 #endif
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
-	other.ladder_time = time + 0.1;
-	other.ladder_entity = this;
+	toucher.ladder_time = time + 0.1;
+	toucher.ladder_entity = this;
 }
 
 #ifdef SVQC

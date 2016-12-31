@@ -1,5 +1,4 @@
-#ifndef COMMON_MUTATORS_EVENTS_H
-#define COMMON_MUTATORS_EVENTS_H
+#pragma once
 
 #define EV_NO_ARGS(i, o)
 
@@ -75,6 +74,7 @@ MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
  */
 #define EV_PlayerPhysics(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** ticrate*/ i(float, MUTATOR_ARGV_1_float) \
     /**/
 MUTATOR_HOOKABLE(PlayerPhysics, EV_PlayerPhysics);
 
@@ -92,6 +92,7 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 #define EV_PM_Physics(i, o) \
     /** player */       i(entity, MUTATOR_ARGV_0_entity) \
     /** maxspeed_mod */ i(float, MUTATOR_ARGV_1_float) \
+    /** tick rate */    i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
 
@@ -102,5 +103,3 @@ MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
     /**/          o(string, MUTATOR_ARGV_1_string) \
     /**/
 MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);
-
-#endif

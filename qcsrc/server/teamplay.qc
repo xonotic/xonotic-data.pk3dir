@@ -1,18 +1,18 @@
 #include "teamplay.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
 
-#include "bot/bot.qh"
+#include "bot/api.qh"
 
 #include "command/vote.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 
 #include "../common/deathtypes/all.qh"
-#include "../common/gamemodes/all.qh"
+#include "../common/gamemodes/_mod.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
@@ -109,7 +109,7 @@ string getwelcomemessage(entity this)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	else if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -156,6 +156,16 @@ string getwelcomemessage(entity this)
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
 	return s;
+}
+
+void setcolor(entity this, int clr)
+{
+#if 0
+	this.clientcolors = clr;
+	this.team = (clr & 15) + 1;
+#else
+	builtin_setcolor(this, clr);
+#endif
 }
 
 void SetPlayerColors(entity pl, float _color)
@@ -206,25 +216,23 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
 {
-	int dm = 0;
+	int teams_mask = 0;
 
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
 	string teament_name = string_null;
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(GetTeamCount, dm, teament_name);
-	dm = M_ARGV(0, float);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name);
+	teams_mask = M_ARGV(0, float);
 	teament_name = M_ARGV(1, string);
 
 	if(!mutator_returnvalue)
 	{
-		if(dm >= 4)
-			c1 = c2 = c3 = c4 = 0;
-		else if(dm >= 3)
-			c1 = c2 = c3 = 0;
-		else
-			c1 = c2 = 0;
+		if(teams_mask & BIT(0)) c1 = 0;
+		if(teams_mask & BIT(1)) c2 = 0;
+		if(teams_mask & BIT(2)) c3 = 0;
+		if(teams_mask & BIT(3)) c4 = 0;
 	}
 
 	// find out what teams are allowed if necessary
@@ -246,24 +254,46 @@ void CheckAllowedTeams (entity for_whom)
 	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if(c3==-1 && c4==-1)
+	if(AvailableTeams() == 2)
 	if(autocvar_bot_vs_human && for_whom)
 	{
 		if(autocvar_bot_vs_human > 0)
 		{
-			// bots are all blue
+			// find last team available
+
 			if(IS_BOT_CLIENT(for_whom))
-				c1 = c3 = c4 = -1;
+			{
+				if(c4 >= 0) { c3 = c2 = c1 = -1; }
+				else if(c3 >= 0) { c4 = c2 = c1 = -1; }
+				else { c4 = c3 = c1 = -1; }
+				// no further cases, we know at least 2 teams exist
+			}
 			else
-				c2 = -1;
+			{
+				if(c1 >= 0) { c2 = c3 = c4 = -1; }
+				else if(c2 >= 0) { c1 = c3 = c4 = -1; }
+				else { c1 = c2 = c4 = -1; }
+				// no further cases, bots have one of the teams
+			}
 		}
 		else
 		{
-			// bots are all red
+			// find first team available
+
 			if(IS_BOT_CLIENT(for_whom))
-				c2 = c3 = c4 = -1;
+			{
+				if(c1 >= 0) { c2 = c3 = c4 = -1; }
+				else if(c2 >= 0) { c1 = c3 = c4 = -1; }
+				else { c1 = c2 = c4 = -1; }
+				// no further cases, we know at least 2 teams exist
+			}
 			else
-				c1 = -1;
+			{
+				if(c4 >= 0) { c3 = c2 = c1 = -1; }
+				else if(c3 >= 0) { c4 = c2 = c1 = -1; }
+				else { c4 = c3 = c1 = -1; }
+				// no further cases, bots have one of the teams
+			}
 		}
 	}
 
@@ -426,8 +456,12 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl)
 {
-	float totalteams, t;
-	totalteams = 0;
+	int totalteams = 0;
+	int t = 1; // initialize with a random team?
+	if(c4 >= 0) t = 4;
+	if(c3 >= 0) t = 3;
+	if(c2 >= 0) t = 2;
+	if(c1 >= 0) t = 1;
 
 	// find out what teams are available
 	//CheckAllowedTeams();
@@ -449,8 +483,10 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
-		else
-			error(sprintf("Too few teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
+		else if(totalteams == 1) // single team
+			LOG_TRACEF("Only 1 team available for %s, you may need to fix your map", MapInfo_Type_ToString(MapInfo_CurrentGametype()));
+		else // no teams, major no no
+			error(sprintf("No teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
 	}
 
 	// count how many players are in each team
@@ -461,7 +497,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	RandomSelection_Init();
 
-	t = 1;
+	if(TeamSmallerEqThanTeam(1, t, pl))
+		t = 1;
 	if(TeamSmallerEqThanTeam(2, t, pl))
 		t = 2;
 	if(TeamSmallerEqThanTeam(3, t, pl))
@@ -471,13 +508,13 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	// now t is the minimum, or A minimum!
 	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl))
-		RandomSelection_Add(NULL, 1, string_null, 1, 1);
+		RandomSelection_AddFloat(1, 1, 1);
 	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl))
-		RandomSelection_Add(NULL, 2, string_null, 1, 1);
+		RandomSelection_AddFloat(2, 1, 1);
 	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl))
-		RandomSelection_Add(NULL, 3, string_null, 1, 1);
+		RandomSelection_AddFloat(3, 1, 1);
 	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl))
-		RandomSelection_Add(NULL, 4, string_null, 1, 1);
+		RandomSelection_AddFloat(4, 1, 1);
 
 	return RandomSelection_chosen_float;
 }
@@ -515,7 +552,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 				SetPlayerColors(this, selectedteam - 1);
 
 				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
-				// when JoinBestTeam is called by cl_client.qc/ClientConnect the player_id is 0 the log attempt is rejected
+				// when JoinBestTeam is called by client.qc/ClientConnect the player_id is 0 the log attempt is rejected
 				LogTeamchange(this.playerid, this.team, 99);
 			}
 			return selectedteam;
@@ -559,8 +596,8 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 }
 
 //void() ctf_playerchanged;
-void SV_ChangeTeam(float _color)
-{ENGINE_EVENT();
+void SV_ChangeTeam(entity this, float _color)
+{
 	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done

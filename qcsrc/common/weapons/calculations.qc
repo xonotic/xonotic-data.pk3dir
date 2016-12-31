@@ -1,3 +1,5 @@
+#include "calculations.qh"
+
 // =============================
 //  Explosion Force Calculation
 // =============================
@@ -256,7 +258,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 		default:
 			error("g_projectiles_spread_style must be 0 (sphere), 1 (flattened sphere), 2 (circle), 3 (gauss 3D), 4 (gauss plane), 5 (linear falloff), 6 (quadratic falloff), 7 (stronger falloff)!");
 	}
-		
+
 	return '0 0 0';
 	/*
 	 * how to derive falloff functions:

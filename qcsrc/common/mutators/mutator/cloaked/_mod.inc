@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/cloaked/cloaked.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/cloaked/sv_cloaked.qc>
+#endif

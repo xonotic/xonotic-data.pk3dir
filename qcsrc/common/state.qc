@@ -15,9 +15,15 @@ void PlayerState_detach(entity this)
     PlayerState ps = PS(this);
 	if (!ps) return;  // initial connect
 	PS(this) = NULL;
+
 	if (ps.m_client != this) return;  // don't own state, spectator
+	ps.m_switchweapon = WEP_Null;
+	ps.m_weapon = WEP_Null;
+	ps.m_switchingweapon = WEP_Null;
+	ps.ps_push(ps, this);
+	
 	FOREACH_CLIENT(PS(it) == ps, { PS(it) = NULL; });
-	remove(ps);
+	delete(ps);
 
     Inventory_delete(this);
 }
@@ -39,13 +45,12 @@ void ClientState_attach(entity this)
 
     GetCvars(this, 0);  // get other cvars from player
 
-	if (IS_REAL_CLIENT(this)) { PlayerStats_PlayerBasic_CheckUpdate(this); }
-
 	// TODO: fold all of these into ClientState
 
 	DecodeLevelParms(this);
 
 	PlayerScore_Attach(this);
+	PlayerStats_PlayerBasic_CheckUpdate(this);
 	ClientData_Attach(this);
 	accuracy_init(this);
 	entcs_attach(this);
@@ -58,7 +63,7 @@ void ClientState_attach(entity this)
 
 void bot_clientdisconnect(entity this);
 void W_HitPlotClose(entity this);
-void anticheat_report(entity this);
+void anticheat_report_to_eventlog(entity this);
 void playerdemo_shutdown(entity this);
 void entcs_detach(entity this);
 void accuracy_free(entity this);
@@ -67,7 +72,7 @@ void PlayerScore_Detach(entity this);
 
 void ClientState_detach(entity this)
 {
-	remove(CS(this));
+	delete(CS(this));
 	this._cs = NULL;
 
     GetCvars(this, -1);  // free cvars
@@ -75,7 +80,7 @@ void ClientState_detach(entity this)
     bot_clientdisconnect(this);
 
     W_HitPlotClose(this);
-    anticheat_report(this);
+    anticheat_report_to_eventlog(this);
     playerdemo_shutdown(this);
     entcs_detach(this);
     accuracy_free(this);

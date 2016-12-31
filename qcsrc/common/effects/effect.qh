@@ -1,5 +1,4 @@
-#ifndef EFFECT_H
-#define EFFECT_H
+#pragma once
 
 #define particleeffectnum(e) \
 	_particleeffectnum(e.eent_eff_name)
@@ -32,5 +31,3 @@ entity Create_Effect_Entity(string eff_name, bool eff_trail)
 	this.eent_eff_trail = eff_trail;
 	return this;
 }
-
-#endif

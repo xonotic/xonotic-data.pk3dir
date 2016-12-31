@@ -37,7 +37,7 @@ flags:
 void dynlight_think(entity this)
 {
 	if(!this.owner)
-		remove(this);
+		delete(this);
 
 	this.nextthink = time + 0.1;
 }
@@ -48,7 +48,7 @@ void dynlight_find_aiment(entity this)
 		objerror (this, "dynlight: no target to follow");
 
 	targ = find(NULL, targetname, this.target);
-	this.movetype = MOVETYPE_FOLLOW;
+	set_movetype(this, MOVETYPE_FOLLOW);
 	this.aiment = targ;
 	this.owner = targ;
 	this.punchangle = targ.angles;
@@ -123,7 +123,7 @@ spawnfunc(dynlight)
 	if (this.target)
 //	if (!(this.spawnflags & DFOLLOW))
 	{
-		this.movetype = MOVETYPE_NOCLIP;
+		set_movetype(this, MOVETYPE_NOCLIP);
 		if (!this.speed)
 			this.speed = 100;
 		InitializeEntity(this, dynlight_find_path, INITPRIO_FINDTARGET);

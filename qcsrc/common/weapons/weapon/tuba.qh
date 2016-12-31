@@ -1,0 +1,10 @@
+#pragma once
+
+#ifdef CSQC
+entityclass(Tuba);
+class(Tuba) .int note;
+class(Tuba) .bool tuba_attenuate;
+class(Tuba) .float tuba_volume;
+class(Tuba) .float tuba_volume_initial;
+class(Tuba) .int tuba_instrument;
+#endif

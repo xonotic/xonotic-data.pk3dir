@@ -1,5 +1,6 @@
+#include "impulse.qh"
 // targeted (directional) mode
-void trigger_impulse_touch1(entity this)
+void trigger_impulse_touch1(entity this, entity toucher)
 {
 	entity targ;
 	float pushdeltatime;
@@ -8,24 +9,20 @@ void trigger_impulse_touch1(entity this)
 	if (this.active != ACTIVE_ACTIVE)
 		return;
 
-	if (!isPushable(other))
+	if (!isPushable(toucher))
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
 	targ = find(NULL, targetname, this.target);
 	if(!targ)
 	{
 		objerror(this, "trigger_force without a (valid) .target!\n");
-		remove(this);
+		delete(this);
 		return;
 	}
 
-#ifdef SVQC
-	str = min(this.radius, vlen(this.origin - other.origin));
-#elif defined(CSQC)
-	str = min(this.radius, vlen(this.origin - other.move_origin));
-#endif
+	str = min(this.radius, vlen(this.origin - toucher.origin));
 
 	if(this.falloff == 1)
 		str = (str / this.radius) * this.strength;
@@ -34,75 +31,58 @@ void trigger_impulse_touch1(entity this)
 	else
 		str = this.strength;
 
-	pushdeltatime = time - other.lastpushtime;
+	pushdeltatime = time - toucher.lastpushtime;
 	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	other.lastpushtime = time;
+	toucher.lastpushtime = time;
 	if(!pushdeltatime) return;
 
 	if(this.spawnflags & 64)
 	{
-#ifdef SVQC
-		float addspeed = str - other.velocity * normalize(targ.origin - this.origin);
+		float addspeed = str - toucher.velocity * normalize(targ.origin - this.origin);
 		if (addspeed > 0)
 		{
 			float accelspeed = min(8 * pushdeltatime * str, addspeed);
-			other.velocity += accelspeed * normalize(targ.origin - this.origin);
+			toucher.velocity += accelspeed * normalize(targ.origin - this.origin);
 		}
-#elif defined(CSQC)
-		float addspeed = str - other.move_velocity * normalize(targ.origin - this.origin);
-		if (addspeed > 0)
-		{
-			float accelspeed = min(8 * pushdeltatime * str, addspeed);
-			other.move_velocity += accelspeed * normalize(targ.origin - this.origin);
-		}
-#endif
 	}
 	else
-#ifdef SVQC
-		other.velocity = other.velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
-#elif defined(CSQC)
-		other.move_velocity = other.move_velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
-#endif
+		toucher.velocity = toucher.velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
+
+	UNSET_ONGROUND(toucher);
 
 #ifdef SVQC
-	UNSET_ONGROUND(other);
-
-	UpdateCSQCProjectile(other);
-#elif defined(CSQC)
-	other.move_flags &= ~FL_ONGROUND;
+	UpdateCSQCProjectile(toucher);
 #endif
 }
 
 // Directionless (accelerator/decelerator) mode
-void trigger_impulse_touch2(entity this)
+void trigger_impulse_touch2(entity this, entity toucher)
 {
 	float pushdeltatime;
 
 	if (this.active != ACTIVE_ACTIVE)
 		return;
 
-	if (!isPushable(other))
+	if (!isPushable(toucher))
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
-	pushdeltatime = time - other.lastpushtime;
+	pushdeltatime = time - toucher.lastpushtime;
 	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	other.lastpushtime = time;
+	toucher.lastpushtime = time;
 	if(!pushdeltatime) return;
 
 	// div0: ticrate independent, 1 = identity (not 20)
-#ifdef SVQC
-	other.velocity = other.velocity * pow(this.strength, pushdeltatime);
+	toucher.velocity = toucher.velocity * pow(this.strength, pushdeltatime);
 
-	UpdateCSQCProjectile(other);
-#elif defined(CSQC)
-	other.move_velocity = other.move_velocity * pow(this.strength, pushdeltatime);
+#ifdef SVQC
+	UpdateCSQCProjectile(toucher);
 #endif
 }
 
 // Spherical (gravity/repulsor) mode
-void trigger_impulse_touch3(entity this)
+void trigger_impulse_touch3(entity this, entity toucher)
 {
 	float pushdeltatime;
 	float str;
@@ -110,23 +90,19 @@ void trigger_impulse_touch3(entity this)
 	if (this.active != ACTIVE_ACTIVE)
 		return;
 
-	if (!isPushable(other))
+	if (!isPushable(toucher))
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
-	pushdeltatime = time - other.lastpushtime;
+	pushdeltatime = time - toucher.lastpushtime;
 	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	other.lastpushtime = time;
+	toucher.lastpushtime = time;
 	if(!pushdeltatime) return;
 
 	setsize(this, '-1 -1 -1' * this.radius,'1 1 1' * this.radius);
 
-#ifdef SVQC
-	str = min(this.radius, vlen(this.origin - other.origin));
-#elif defined(CSQC)
-	str = min(this.radius, vlen(this.origin - other.move_origin));
-#endif
+	str = min(this.radius, vlen(this.origin - toucher.origin));
 
 	if(this.falloff == 1)
 		str = (1 - str / this.radius) * this.strength; // 1 in the inside
@@ -135,12 +111,10 @@ void trigger_impulse_touch3(entity this)
 	else
 		str = this.strength;
 
-#ifdef SVQC
-	other.velocity = other.velocity + normalize(other.origin - this.origin) * str * pushdeltatime;
+	toucher.velocity = toucher.velocity + normalize(toucher.origin - this.origin) * str * pushdeltatime;
 
-	UpdateCSQCProjectile(other);
-#elif defined(CSQC)
-	other.move_velocity = other.move_velocity + normalize(other.move_origin - this.origin) * str * pushdeltatime;
+#ifdef SVQC
+	UpdateCSQCProjectile(toucher);
 #endif
 }
 

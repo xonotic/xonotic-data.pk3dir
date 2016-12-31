@@ -3,9 +3,10 @@
 #include "weaponsystem.qh"
 #include <common/t_items.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/util.qh>
 #include <common/items/item.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/state.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 
@@ -21,15 +22,13 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 void Weapon_whereis(Weapon this, entity cl)
 {
 	if (!autocvar_g_showweaponspawns) return;
-	for (entity it = NULL; (it = findfloat(it, weapon, this.m_id)); )
+	IL_EACH(g_items, it.weapon == this.m_id && (!it.team || (it.ItemStatus & ITS_AVAILABLE)),
 	{
 		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
 			continue;
-		if (!(it.flags & FL_ITEM))
-			continue;
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,
-			1, 0,
+			-2, 0,
 			NULL, it.origin + ('0 0 1' * it.maxs.z) * 1.2,
 			cl, 0,
 			NULL, enemy,
@@ -37,7 +36,7 @@ void Weapon_whereis(Weapon this, entity cl)
 			RADARICON_NONE
 		);
 		wp.wp_extra = this.m_id;
-	}
+	});
 }
 
 bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
@@ -75,7 +74,7 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				if(wpn == WEP_MINE_LAYER)
-					FOREACH_ENTITY_CLASS("mine", it.owner == this,
+					IL_EACH(g_mines, it.owner == this,
 					{
 						f = 1;
 						break; // no need to continue
@@ -101,7 +100,15 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(this, wpn.m_id, 1);
-			Weapon_whereis(wpn, this);
+			if(autocvar_g_showweaponspawns < 3)
+				Weapon_whereis(wpn, this);
+			else
+			{
+				FOREACH(Weapons, it.impulse == wpn.impulse,
+				{
+					Weapon_whereis(it, this);
+				});
+			}
 		}
 		else
 		{
@@ -264,8 +271,11 @@ void W_SwitchWeapon(entity this, Weapon w)
 	}
 	else if(!forbidWeaponUse(this)) {
 		entity actor = this;
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		w.wr_reload(w, actor, weaponentity);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			w.wr_reload(w, actor, weaponentity);
+		}
 	}
 }
 

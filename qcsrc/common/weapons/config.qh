@@ -1,5 +1,4 @@
-#ifndef WEAPONS_CONFIG_H
-#define WEAPONS_CONFIG_H
+#pragma once
 
 #ifdef SVQC
 // ==========================
@@ -36,5 +35,4 @@ string wep_config_queue[MAX_WEP_CONFIG];
 		sprintf("set g_balance_%s_%s %g\n", #wepname, #name, \
 		cvar(sprintf("g_balance_%s_%s", #wepname, #name)))) }
 
-#endif
 #endif

@@ -1,5 +1,7 @@
-#ifndef T_TELEPORTERS_H
-#define T_TELEPORTERS_H
+#pragma once
+
+IntrusiveList g_teleporters;
+STATIC_INIT(g_teleporters) { g_teleporters = IL_NEW(); }
 
 .entity pusher;
 const float TELEPORT_FLAG_SOUND = 1;
@@ -17,7 +19,7 @@ const float TELEPORT_SIMPLE = 2; // only do teleport, nothing special
 
 entity Simple_TeleportPlayer(entity teleporter, entity player);
 
-void Teleport_Touch (entity this);
+void Teleport_Touch(entity this, entity toucher);
 
 void teleport_findtarget(entity this);
 
@@ -91,6 +93,4 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl);
 		if(head != player) \
 			if(head.isplayermodel) \
 				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
-#endif
-
 #endif

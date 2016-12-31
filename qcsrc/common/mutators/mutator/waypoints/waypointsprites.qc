@@ -1,7 +1,5 @@
 #include "waypointsprites.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_MUTATOR(waypointsprites, true);
 
 REGISTER_NET_LINKED(waypointsprites)
@@ -18,12 +16,16 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
         sendflags |= 0x80;
 
     int f = 0;
-    if(this.currentammo)
+    if(this.currentammo == 1)
         f |= 1; // hideable
     if(this.exteriormodeltoclient == to)
         f |= 2; // my own
+    if(this.currentammo == 2)
+        f |= 2; // radar only
 
     MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
+    sendflags = M_ARGV(2, int);
+    f = M_ARGV(3, int);
 
     WriteByte(MSG_ENTITY, sendflags);
     WriteByte(MSG_ENTITY, this.wp_extra);
@@ -98,9 +100,9 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 #endif
 
 #ifdef CSQC
-void Ent_WaypointSprite(entity this);
+void Ent_WaypointSprite(entity this, bool isnew);
 NET_HANDLE(waypointsprites, bool isnew) {
-    Ent_WaypointSprite(this);
+    Ent_WaypointSprite(this, isnew);
     return true;
 }
 
@@ -112,7 +114,7 @@ void Ent_RemoveWaypointSprite(entity this)
 }
 
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
-void Ent_WaypointSprite(entity this)
+void Ent_WaypointSprite(entity this, bool isnew)
 {
     int sendflags = ReadByte();
     this.wp_extra = ReadByte();
@@ -121,6 +123,10 @@ void Ent_WaypointSprite(entity this)
         this.spawntime = time;
 
     this.draw2d = Draw_WaypointSprite;
+    if (isnew) {
+		IL_PUSH(g_drawables_2d, this);
+		IL_PUSH(g_radaricons, this);
+    }
 
     InterpolateOrigin_Undo(this);
     this.iflags |= IFLAG_ORIGIN;
@@ -225,6 +231,7 @@ float spritelookupblinkvalue(entity this, string s)
             return 2;
     }
     if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypointblink;
+    if(s == WP_FlagReturn.netname) return 2;
 
     return 1;
 }
@@ -275,10 +282,10 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
     // rotate them, and make them absolute
     rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-    v1 = rotate(v1, rot) + org;
-    v2 = rotate(v2, rot) + org;
-    v3 = rotate(v3, rot) + org;
-    v4 = rotate(v4, rot) + org;
+    v1 = Rotate(v1, rot) + org;
+    v2 = Rotate(v2, rot) + org;
+    v3 = Rotate(v3, rot) + org;
+    v4 = Rotate(v4, rot) + org;
 
     // draw them
     R_BeginPolygon(pic, f);
@@ -312,9 +319,9 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
     up = '0 1 0';
 
     rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-    o = rotate(o, rot) + org;
-    ri = rotate(ri, rot);
-    up = rotate(up, rot);
+    o = Rotate(o, rot) + org;
+    ri = Rotate(ri, rot);
+    up = Rotate(up, rot);
 
     owidth = width + 2 * border;
     o = o - up * (margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
@@ -341,19 +348,19 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 
     R_BeginPolygon("", DRAWFLAG_NORMAL);
     R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
     R_EndPolygon();
 
     R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-    R_PolygonVertex(o + rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
     R_EndPolygon();
 
-    return o + rotate(eY * (borderDiag+size+margin), ang);
+    return o + Rotate(eY * (borderDiag+size+margin), ang);
 }
 
 // returns location of sprite healthbar
@@ -452,7 +459,7 @@ vector fixrgbexcess(vector rgb)
 
 void Draw_WaypointSprite(entity this)
 {
-    if (this.lifetime)
+    if (this.lifetime > 0)
         this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
     else
         this.alpha = 1;
@@ -463,14 +470,12 @@ void Draw_WaypointSprite(entity this)
     if (autocvar_cl_hidewaypoints >= 2)
         return;
 
-    if (this.hideflags & 1)
-        if (autocvar_cl_hidewaypoints)
-            return; // fixed waypoint
+    if (this.hideflags & 1 && autocvar_cl_hidewaypoints)
+        return; // fixed waypoint
 
     InterpolateOrigin_Do(this);
 
     float t = entcs_GetTeam(player_localnum) + 1;
-
     string spriteimage = "";
 
     // choose the sprite
@@ -479,7 +484,7 @@ void Draw_WaypointSprite(entity this)
         case SPRITERULE_SPECTATOR:
             if (!(
                 (autocvar_g_waypointsprite_itemstime == 1 && t == NUM_SPECTATOR + 1)
-            ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage))
+            ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage || STAT(ITEMSTIME) == 2))
                 ))
                 return;
             spriteimage = this.netname;
@@ -513,11 +518,8 @@ void Draw_WaypointSprite(entity this)
 
     ++waypointsprite_newcount;
 
-    float dist;
-    dist = vlen(this.origin - view_origin);
-
-    float a;
-    a = this.alpha * autocvar_hud_panel_fg_alpha;
+    float dist = vlen(this.origin - view_origin);
+    float a = this.alpha * autocvar_hud_panel_fg_alpha;
 
     if (this.maxdistance > waypointsprite_normdistance)
         a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
@@ -535,7 +537,7 @@ void Draw_WaypointSprite(entity this)
     {
         if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
-        else if (!this.lifetime) // fading out waypoints don't blink
+        else if (this.lifetime > 0) // fading out waypoints don't blink
             a *= spritelookupblinkvalue(this, spriteimage);
     }
 
@@ -609,11 +611,9 @@ void Draw_WaypointSprite(entity this)
     (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o.x,
     (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o.y);
 
-    float vidscale = max(vid_conwidth / vid_width, vid_conheight / vid_height);
-
     float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
 
-    t = waypointsprite_scale * vidscale;
+    t = waypointsprite_scale;
     a *= waypointsprite_alpha;
 
     {
@@ -861,9 +861,10 @@ void WaypointSprite_FadeOutIn(entity e, float t)
         // ensure:
         //   (e.teleport_time - time) / wp.fade_time stays
         //   e.teleport_time = time + fadetime
-        float current_fadetime;
-        current_fadetime = e.teleport_time - time;
+        float current_fadetime = e.teleport_time - time;
         e.teleport_time = time + t;
+        if (e.fade_time < 0)
+        	e.fade_time = -e.fade_time;
         e.fade_time = e.fade_time * t / current_fadetime;
     }
 
@@ -881,7 +882,7 @@ void WaypointSprite_Kill(entity wp)
 {
     if (!wp) return;
     if (wp.owner) wp.owner.(wp.owned_by_field) = NULL;
-    remove(wp);
+    delete(wp);
 }
 
 void WaypointSprite_Disown(entity wp, float fadetime)
@@ -932,7 +933,7 @@ bool WaypointSprite_visible_for_player(entity this, entity player, entity view)
     {
         if (!autocvar_sv_itemstime)
             return false;
-        if (!warmup_stage && IS_PLAYER(view))
+        if (!warmup_stage && IS_PLAYER(view) && autocvar_sv_itemstime != 2)
             return false;
     }
     else if (this.team && this.rule == SPRITERULE_DEFAULT)
@@ -963,17 +964,17 @@ float WaypointSprite_isteammate(entity e, entity e2)
     return e2 == e;
 }
 
-float WaypointSprite_Customize(entity this)
+bool WaypointSprite_Customize(entity this, entity client)
 {
     // this is not in SendEntity because it shall run every frame, not just every update
 
     // make spectators see what the player would see
-    entity e = WaypointSprite_getviewentity(other);
+    entity e = WaypointSprite_getviewentity(client);
 
-    if (MUTATOR_CALLHOOK(CustomizeWaypoint, this, other))
+    if (MUTATOR_CALLHOOK(CustomizeWaypoint, this, client))
         return false;
 
-    return this.waypointsprite_visible_for_player(this, other, e);
+    return this.waypointsprite_visible_for_player(this, client, e);
 }
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
@@ -997,8 +998,10 @@ entity WaypointSprite_Spawn(
 )
 {
     entity wp = new(sprite_waypoint);
+    wp.fade_time = _lifetime; // if negative tells client not to fade it out
+    if(_lifetime < 0)
+    	_lifetime = -_lifetime;
     wp.teleport_time = time + _lifetime;
-    wp.fade_time = _lifetime;
     wp.exteriormodeltoclient = ref;
     if (ref)
     {
@@ -1014,7 +1017,7 @@ entity WaypointSprite_Spawn(
     if (own)
     {
         if (own.(ownfield))
-            remove(own.(ownfield));
+            delete(own.(ownfield));
         own.(ownfield) = wp;
         wp.owned_by_field = ownfield;
     }
@@ -1141,5 +1144,4 @@ void WaypointSprite_PlayerGone(entity this)
     WaypointSprite_Disown(this.waypointsprite_attached, waypointsprite_deadlifetime);
     WaypointSprite_DetachCarrier(this);
 }
-#endif
 #endif

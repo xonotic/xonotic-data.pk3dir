@@ -1,5 +1,6 @@
+#include "casings.qh"
 #ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner);
+void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -14,9 +15,8 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 REGISTER_NET_TEMP(casings)
 
 #ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
+void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
-    .entity weaponentity = weaponentities[0]; // TODO: parameter
     entity wep = casingowner.(weaponentity);
     vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
@@ -44,16 +44,16 @@ class(Casing) .float cnt;
 
 void Casing_Delete(entity this)
 {
-    remove(this);
+    delete(this);
 }
 
 void Casing_Draw(entity this)
 {
-    if (this.move_flags & FL_ONGROUND)
+    if (IS_ONGROUND(this))
     {
-        this.move_angles_x = 0;
-        this.move_angles_z = 0;
-        UNSET_ONGROUND(this);
+        this.angles_x = 0;
+        this.angles_z = 0;
+        //UNSET_ONGROUND(this);
     }
 
     Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
@@ -83,7 +83,7 @@ Sound SND_CASINGS_RANDOM() {
     return Sounds_from(SND_CASINGS1.m_id + floor(prandom() * 3));
 }
 
-void Casing_Touch(entity this)
+void Casing_Touch(entity this, entity toucher)
 {
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
@@ -121,8 +121,8 @@ void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector t
 {
     if (thisforce.z < 0)
         thisforce.z = 0;
-    this.move_velocity = this.move_velocity + thisforce + '0 0 100';
-    this.move_flags &= ~FL_ONGROUND;
+    this.velocity = this.velocity + thisforce + '0 0 100';
+    UNSET_ONGROUND(this);
 }
 
 NET_HANDLE(casings, bool isNew)
@@ -151,11 +151,10 @@ NET_HANDLE(casings, bool isNew)
     casing.drawmask = MASK_NORMAL;
 
     casing.draw = Casing_Draw;
-    casing.move_origin = casing.origin;
-    casing.move_velocity = casing.velocity + 2 * prandomvec();
-    casing.move_angles = casing.angles;
-    casing.move_avelocity = '0 250 0' + 100 * prandomvec();
-    casing.move_movetype = MOVETYPE_BOUNCE;
+    if (isNew) IL_PUSH(g_drawables, casing);
+    casing.velocity = casing.velocity + 2 * prandomvec();
+    casing.avelocity = '0 250 0' + 100 * prandomvec();
+    set_movetype(casing, MOVETYPE_BOUNCE);
     settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;

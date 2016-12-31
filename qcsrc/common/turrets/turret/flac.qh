@@ -1,0 +1,16 @@
+#pragma once
+
+#include "flac_weapon.qh"
+
+CLASS(Flac, Turret)
+/* spawnflags */ ATTRIB(Flac, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_MISSILE);
+/* mins       */ ATTRIB(Flac, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(Flac, maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(Flac, mdl, string, "base.md3");
+/* model      */ ATTRIB_STRZONE(Flac, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(Flac, head_model, string, strcat("models/turrets/", "flac.md3"));
+/* netname    */ ATTRIB(Flac, netname, string, "flac");
+/* fullname   */ ATTRIB(Flac, turret_name, string, _("FLAC Cannon"));
+    ATTRIB(Flac, m_weapon, Weapon, WEP_FLAC);
+ENDCLASS(Flac)
+REGISTER_TURRET(FLAC, NEW(Flac));

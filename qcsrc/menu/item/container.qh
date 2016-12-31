@@ -25,12 +25,12 @@ CLASS(Container, Item)
 	METHOD(Container, showNotify, void(entity));
 	METHOD(Container, hideNotify, void(entity));
 	METHOD(Container, preferredFocusedGrandChild, entity(entity));
-	ATTRIB(Container, focusable, float, 0)
-	ATTRIB(Container, firstChild, entity, NULL)
-	ATTRIB(Container, lastChild, entity, NULL)
-	ATTRIB(Container, focusedChild, entity, NULL)
-	ATTRIB(Container, savedFocus, entity, NULL)
-	ATTRIB(Container, shown, float, 0)
+	ATTRIB(Container, focusable, float, 0);
+	ATTRIB(Container, firstChild, entity);
+	ATTRIB(Container, lastChild, entity);
+	ATTRIB(Container, focusedChild, entity);
+	ATTRIB(Container, savedFocus, entity);
+	ATTRIB(Container, shown, float, 0);
 
 	METHOD(Container, enterSubitem, void(entity, entity));
 	METHOD(Container, enterLieSubitem, void(entity, vector, vector, vector, float));

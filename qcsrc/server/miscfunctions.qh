@@ -121,7 +121,7 @@ void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomo
 #define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 #define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER.m_id) || ((dt) == DEATH_SLIME.m_id) || ((dt) == DEATH_LAVA.m_id) || ((dt) == DEATH_SWAMP.m_id))
 
-#define PROJECTILE_TOUCH(this) MACRO_BEGIN if (WarpZone_Projectile_Touch(this)) return; MACRO_END
+#define PROJECTILE_TOUCH(e,t) MACRO_BEGIN if (WarpZone_Projectile_Touch(e,t)) return; MACRO_END
 
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
@@ -182,18 +182,18 @@ float g_pickup_armormedium_anyway;
 float g_pickup_armorbig;
 float g_pickup_armorbig_max;
 float g_pickup_armorbig_anyway;
-float g_pickup_armorlarge;
-float g_pickup_armorlarge_max;
-float g_pickup_armorlarge_anyway;
+float g_pickup_armormega;
+float g_pickup_armormega_max;
+float g_pickup_armormega_anyway;
 float g_pickup_healthsmall;
 float g_pickup_healthsmall_max;
 float g_pickup_healthsmall_anyway;
 float g_pickup_healthmedium;
 float g_pickup_healthmedium_max;
 float g_pickup_healthmedium_anyway;
-float g_pickup_healthlarge;
-float g_pickup_healthlarge_max;
-float g_pickup_healthlarge_anyway;
+float g_pickup_healthbig;
+float g_pickup_healthbig_max;
+float g_pickup_healthbig_anyway;
 float g_pickup_healthmega;
 float g_pickup_healthmega_max;
 float g_pickup_healthmega_anyway;
@@ -256,6 +256,8 @@ void readlevelcvars()
 	g_jetpack = cvar("g_jetpack");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
+	sv_maxidle_slots = cvar("sv_maxidle_slots");
+	sv_maxidle_slots_countbots = cvar("sv_maxidle_slots_countbots");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
 
@@ -310,18 +312,18 @@ void readlevelcvars()
 	g_pickup_armorbig = cvar("g_pickup_armorbig");
 	g_pickup_armorbig_max = cvar("g_pickup_armorbig_max");
 	g_pickup_armorbig_anyway = cvar("g_pickup_armorbig_anyway");
-	g_pickup_armorlarge = cvar("g_pickup_armorlarge");
-	g_pickup_armorlarge_max = cvar("g_pickup_armorlarge_max");
-	g_pickup_armorlarge_anyway = cvar("g_pickup_armorlarge_anyway");
+	g_pickup_armormega = cvar("g_pickup_armormega");
+	g_pickup_armormega_max = cvar("g_pickup_armormega_max");
+	g_pickup_armormega_anyway = cvar("g_pickup_armormega_anyway");
 	g_pickup_healthsmall = cvar("g_pickup_healthsmall");
 	g_pickup_healthsmall_max = cvar("g_pickup_healthsmall_max");
 	g_pickup_healthsmall_anyway = cvar("g_pickup_healthsmall_anyway");
 	g_pickup_healthmedium = cvar("g_pickup_healthmedium");
 	g_pickup_healthmedium_max = cvar("g_pickup_healthmedium_max");
 	g_pickup_healthmedium_anyway = cvar("g_pickup_healthmedium_anyway");
-	g_pickup_healthlarge = cvar("g_pickup_healthlarge");
-	g_pickup_healthlarge_max = cvar("g_pickup_healthlarge_max");
-	g_pickup_healthlarge_anyway = cvar("g_pickup_healthlarge_anyway");
+	g_pickup_healthbig = cvar("g_pickup_healthbig");
+	g_pickup_healthbig_max = cvar("g_pickup_healthbig_max");
+	g_pickup_healthbig_anyway = cvar("g_pickup_healthbig_anyway");
 	g_pickup_healthmega = cvar("g_pickup_healthmega");
 	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
 	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");

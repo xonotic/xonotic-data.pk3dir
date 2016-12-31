@@ -4,12 +4,12 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "cl_cmd.qh"
 
 #include "../autocvars.qh"
 #include "../defs.qh"
-#include <client/hud/all.qh>
+#include <client/hud/_mod.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
@@ -17,8 +17,6 @@
 #include "../mutators/events.qh"
 
 #include <common/mapinfo.qh>
-
-#include <common/command/generic.qh>
 
 void DrawDebugModel(entity this)
 {
@@ -183,6 +181,7 @@ void LocalCommand_debugmodel(int request, int argc)
 			setorigin(debugmodel_entity, view_origin);
 			debugmodel_entity.angles = view_angles;
 			debugmodel_entity.draw = DrawDebugModel;
+			IL_PUSH(g_drawables, debugmodel_entity);
 
 			return;
 		}
@@ -306,13 +305,13 @@ void LocalCommand_hud(int request, int argc)
 
 				case "scoreboard_columns_set":
 				{
-					Cmd_HUD_SetFields(argc);
+					Cmd_Scoreboard_SetFields(argc);
 					return;
 				}
 
 				case "scoreboard_columns_help":
 				{
-					Cmd_HUD_Help();
+					Cmd_Scoreboard_Help();
 					return;
 				}
 

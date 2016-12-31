@@ -1,5 +1,4 @@
-#ifndef MUTATORS_BASE_H
-#define MUTATORS_BASE_H
+#pragma once
 
 const int CBC_ORDER_FIRST = 1;
 const int CBC_ORDER_LAST = 2;
@@ -20,7 +19,7 @@ CLASS(Callback, Object)
      *     return false;
      * }
      */
-    ATTRIB(Callback, cbc_func, bool(), func_null)
+    ATTRIB(Callback, cbc_func, bool());
     CONSTRUCTOR(Callback, bool() func) {
         CONSTRUCT(Callback);
         this.cbc_func = func;
@@ -32,9 +31,9 @@ ENDCLASS(Callback)
  */
 CLASS(CallbackChain, Object)
     CLASS(CallbackNode, Object)
-        ATTRIB(CallbackNode, cbc, Callback, NULL)
-        ATTRIB(CallbackNode, cbc_next, CallbackNode, NULL)
-        ATTRIB(CallbackNode, cbc_order, int, 0)
+        ATTRIB(CallbackNode, cbc, Callback);
+        ATTRIB(CallbackNode, cbc_next, CallbackNode);
+        ATTRIB(CallbackNode, cbc_order, int, 0);
         CONSTRUCTOR(CallbackNode, Callback it, int order) {
             CONSTRUCT(CallbackNode);
             this.cbc = it;
@@ -42,8 +41,8 @@ CLASS(CallbackChain, Object)
         }
     ENDCLASS(CallbackNode)
 
-    ATTRIB(CallbackChain, cbc_next, CallbackNode, NULL)
-    ATTRIB(CallbackChain, cbc_order, int, 0)
+    ATTRIB(CallbackChain, cbc_next, CallbackNode);
+    ATTRIB(CallbackChain, cbc_order, int, 0);
     CONSTRUCTOR(CallbackChain, string _name) {
         CONSTRUCT(CallbackChain);
         this.netname = _name;
@@ -120,9 +119,10 @@ ENDCLASS(CallbackChain)
 void RegisterHooks() {};
 void RegisterCallbacks() {};
 
-#define _MUTATOR_HOOKABLE(id, ...) CallbackChain HOOK_##id; bool __Mutator_Send_##id(__VA_ARGS__)
-#define MUTATOR_HOOKABLE(id, params) \
-    _MUTATOR_HOOKABLE(id, int params(_MUTATOR_HANDLE_PARAMS, _MUTATOR_HANDLE_NOP)) { \
+#define MUTATOR_HOOKABLE(id, params) _MUTATOR_HOOKABLE(id, params)
+#define _MUTATOR_HOOKABLE(id, params) \
+    CallbackChain HOOK_##id;  \
+    bool __Mutator_Send_##id(int params(_MUTATOR_HANDLE_PARAMS, _MUTATOR_HANDLE_NOP)) { \
         params(_MUTATOR_HANDLE_PUSHTMP, _MUTATOR_HANDLE_NOP) \
         params(_MUTATOR_HANDLE_PREPARE, _MUTATOR_HANDLE_NOP) \
         bool ret = CallbackChain_Call(HOOK_##id); \
@@ -132,10 +132,12 @@ void RegisterCallbacks() {};
         return ret; \
     } \
     [[accumulate]] void RegisterHooks() { HOOK_##id = NEW(CallbackChain, #id); }
+
+#define MUTATOR_CALLHOOK(id, ...) _MUTATOR_CALLHOOK(id, __VA_ARGS__)
 #ifdef __STDC__
-    #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0 P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+    #define _MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0 P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 #else
-    #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
+    #define _MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
 #endif
 
 enum {
@@ -147,10 +149,10 @@ enum {
 USING(mutatorfunc_t, bool(int));
 
 CLASS(Mutator, Object)
-    ATTRIB(Mutator, m_id, int, 0)
-    ATTRIB(Mutator, m_name, string, string_null)
-    ATTRIB(Mutator, mutatorfunc, mutatorfunc_t, func_null)
-    ATTRIB(Mutator, mutatorcheck, bool(), func_null)
+    ATTRIB(Mutator, m_id, int, 0);
+    ATTRIB(Mutator, m_name, string);
+    ATTRIB(Mutator, mutatorfunc, mutatorfunc_t);
+    ATTRIB(Mutator, mutatorcheck, bool());
     CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
         CONSTRUCT(Mutator);
         this.m_name = _name;
@@ -165,7 +167,7 @@ bool Mutator_Add(Mutator mut);
 void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 
-#ifndef MENUQC
+#ifdef GAMEQC
 /** server mutators activate corresponding client mutators for all clients */
 REGISTER_NET_LINKED(Mutator)
 
@@ -200,7 +202,7 @@ NET_HANDLE(Mutator, bool isNew)
         WITH(bool, mutator_log, true, LAMBDA(
             FOREACH(Mutators, it.registered_id == s, { Mutator_Add(it); ++added; });
         ));
-        if (added > 1) LOG_WARNINGF("Added more than one mutator for %s\n", s);
+        if (added > 1) LOG_WARNF("Added more than one mutator for %s", s);
     }
 }
 #endif
@@ -224,7 +226,7 @@ bool Mutator_Add(Mutator mut)
     mutatorfunc_t func = mut.mutatorfunc;
     if (!func(MUTATOR_ADDING)) {
         // good
-        if (mutator_log) LOG_TRACEF("Mutator: added %s\n", mut.m_name);
+        if (mutator_log) LOG_TRACEF("Mutator: added %s", mut.m_name);
 #ifdef SVQC
         Net_LinkEntity(mut, false, 0, Mutator_SendEntity);
 #endif
@@ -254,7 +256,7 @@ void Mutator_Remove(Mutator mut)
         // baaaaad
         error("Mutator_Remove: removing mutator failed");
     }
-    if (mutator_log) LOG_TRACEF("Mutator: removed %s\n", mut.m_name);
+    if (mutator_log) LOG_TRACEF("Mutator: removed %s", mut.m_name);
 #ifdef SVQC
     Net_UnlinkEntity(mut);
 #endif
@@ -319,5 +321,3 @@ STATIC_INIT_LATE(Mutators) {
 } MACRO_END
 
 #include "events.qh"
-
-#endif

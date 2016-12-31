@@ -1,7 +1,6 @@
+#include "all.qh"
 #ifndef VEHICLES_ALL_C
 #define VEHICLES_ALL_C
-
-#include "all.qh"
 
 REGISTER_NET_LINKED(ENT_CLIENT_AUXILIARYXHAIR)
 

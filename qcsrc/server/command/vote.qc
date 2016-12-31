@@ -1,5 +1,5 @@
 #include "vote.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "vote.qh"
 
 #include "common.qh"
@@ -10,9 +10,10 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
 #include <common/notifications/all.qh>
 #include <common/playerstats.qh>
@@ -333,7 +334,13 @@ void VoteThink()
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
 void reset_map(bool dorespawn)
 {
-	if (time <= game_starttime && round_handler_IsActive()) round_handler_Reset(game_starttime);
+	if (time <= game_starttime)
+	{
+		if (gameover)
+			return;
+		if (round_handler_IsActive())
+			round_handler_Reset(game_starttime);
+	}
 
 	MUTATOR_CALLHOOK(reset_map_global);
 
@@ -344,7 +351,7 @@ void reset_map(bool dorespawn)
 			continue;
 		}
 		if (it.team_saved) it.team = it.team_saved;
-		if (it.flags & FL_PROJECTILE) remove(it);  // remove any projectiles left
+		if (it.flags & FL_PROJECTILE) delete(it);  // remove any projectiles left
 	});
 
 	// Waypoints and assault start come LAST
@@ -378,7 +385,7 @@ void reset_map(bool dorespawn)
 						it.velocity = '0 0 0';
 						it.avelocity = '0 0 0';
 						it.movement = '0 0 0';
-						WITHSELF(it, PutClientInServer());
+						PutClientInServer(it);
 					}
 				}
 			));
@@ -392,12 +399,15 @@ void ReadyRestart_think(entity this)
 	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
-	remove(this);
+	delete(this);
 }
 
 // Forces a restart of the game without actually reloading the map // this is a mess...
 void ReadyRestart_force()
 {
+	if (time <= game_starttime && gameover)
+		return;
+
 	bprint("^1Server is restarting...\n");
 
 	VoteReset();
@@ -454,8 +464,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	// no assault support yet...
-	if (g_assault | gameover | intermission_running | race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || gameover || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_gamerestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!

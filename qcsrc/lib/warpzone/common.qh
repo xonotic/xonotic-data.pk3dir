@@ -1,8 +1,10 @@
-#ifndef LIB_WARPZONE_COMMON_H
-#define LIB_WARPZONE_COMMON_H
+#pragma once
 
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL
+
+IntrusiveList g_warpzones;
+STATIC_INIT(g_warpzones) { g_warpzones = IL_NEW(); }
 
 float warpzone_warpzones_exist;
 float warpzone_cameras_exist;
@@ -111,6 +113,5 @@ float WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher);
 void WarpZoneLib_ExactTrigger_Init(entity this);
 
 // WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch(this, other)) return
+#define EXACTTRIGGER_TOUCH(e,t) if(WarpZoneLib_ExactTrigger_Touch((e), (t))) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init(this)
-#endif

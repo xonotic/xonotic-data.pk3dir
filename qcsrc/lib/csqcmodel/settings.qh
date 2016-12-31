@@ -1,5 +1,4 @@
-#ifndef LIB_CSQCMODEL_SETTINGS_H
-#define LIB_CSQCMODEL_SETTINGS_H
+#pragma once
 // define this if svqc code wants to use .frame2 and .lerpfrac
 //#define CSQCMODEL_HAVE_TWO_FRAMES
 
@@ -24,4 +23,3 @@
 //vector PL_CROUCH_MIN  = ...;
 //vector PL_CROUCH_MAX  = ...;
 //vector PL_CROUCH_VIEW_OFS  = ...;
-#endif

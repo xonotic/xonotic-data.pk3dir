@@ -1,3 +1,4 @@
+#include "button.qh"
 #ifdef SVQC
 // button and multiple button
 
@@ -28,7 +29,7 @@ void button_return(entity this)
 }
 
 
-void button_blocked(entity this)
+void button_blocked(entity this, entity blocker)
 {
 	// do nothing, just don't come all the way back out
 }
@@ -68,17 +69,17 @@ void button_use(entity this, entity actor, entity trigger)
 	button_fire(this);
 }
 
-void button_touch(entity this)
+void button_touch(entity this, entity toucher)
 {
-	if (!other)
+	if (!toucher)
 		return;
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
-	if(other.velocity * this.movedir < 0)
+	if(toucher.velocity * this.movedir < 0)
 		return;
-	this.enemy = other;
-	if (other.owner)
-		this.enemy = other.owner;
+	this.enemy = toucher;
+	if (toucher.owner)
+		this.enemy = toucher.owner;
 	button_fire (this);
 }
 

@@ -1,72 +1,30 @@
-#ifndef IMPLEMENTATION
-CLASS(RocketPropelledChainsaw, Weapon)
-/* ammotype  */ ATTRIB(RocketPropelledChainsaw, ammo_field, .int, ammo_rockets)
-/* impulse   */ ATTRIB(RocketPropelledChainsaw, impulse, int, 7)
-/* flags     */ ATTRIB(RocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
-/* rating    */ ATTRIB(RocketPropelledChainsaw, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
-/* color     */ ATTRIB(RocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
-/* modelname */ ATTRIB(RocketPropelledChainsaw, mdl, string, "ok_rl");
-#ifndef MENUQC
-/* model     */ ATTRIB(RocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
-#endif
-/* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair, string, "gfx/crosshairrocketlauncher");
-/* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(RocketPropelledChainsaw, model2, string, "weaponrpc");
-/* refname   */ ATTRIB(RocketPropelledChainsaw, netname, string, "rpc");
-/* wepname   */ ATTRIB(RocketPropelledChainsaw, m_name, string, _("Rocket Propelled Chainsaw"));
+#include "rpc.qh"
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, NONE) \
-		P(class, prefix, animtime, float, NONE) \
-		P(class, prefix, damage2, float, NONE) \
-		P(class, prefix, damageforcescale, float, NONE) \
-		P(class, prefix, damage, float, NONE) \
-		P(class, prefix, edgedamage, float, NONE) \
-		P(class, prefix, force, float, NONE) \
-		P(class, prefix, health, float, NONE) \
-		P(class, prefix, lifetime, float, NONE) \
-		P(class, prefix, radius, float, NONE) \
-		P(class, prefix, refire, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, speedaccel, float, NONE) \
-		P(class, prefix, speed, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-    END()
-    W_PROPS(X, RocketPropelledChainsaw, rpc)
-#undef X
-
-ENDCLASS(RocketPropelledChainsaw)
-REGISTER_WEAPON(RPC, rpc, NEW(RocketPropelledChainsaw));
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(this, WEP_RPC); }
 
-void W_RocketPropelledChainsaw_Explode(entity this)
+void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
 
-	remove (this);
+	delete (this);
 }
 
-void W_RocketPropelledChainsaw_Touch (entity this)
+void W_RocketPropelledChainsaw_Explode_think(entity this)
 {
-	if(WarpZone_Projectile_Touch(this))
+	W_RocketPropelledChainsaw_Explode(this, NULL);
+}
+
+void W_RocketPropelledChainsaw_Touch (entity this, entity toucher)
+{
+	if(WarpZone_Projectile_Touch(this, toucher))
 		if(wasfreed(this))
 			return;
 
-	W_RocketPropelledChainsaw_Explode(this);
+	W_RocketPropelledChainsaw_Explode(this, toucher);
 }
 
 void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -80,14 +38,14 @@ void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity atta
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		W_PrepareExplosionByDamage(this, attacker, W_RocketPropelledChainsaw_Explode);
+		W_PrepareExplosionByDamage(this, attacker, W_RocketPropelledChainsaw_Explode_think);
 }
 
 void W_RocketPropelledChainsaw_Think(entity this)
 {
 	if(this.cnt <= time)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -105,13 +63,13 @@ void W_RocketPropelledChainsaw_Think(entity this)
 	this.nextthink = time;
 }
 
-void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
+void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo));
-	W_SetupShot_ProjectileSize (actor, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -124,7 +82,8 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
 	missile.health = WEP_CVAR(rpc, health);
 	missile.event_damage = W_RocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
-	missile.movetype = MOVETYPE_FLY;
+	IL_PUSH(g_damagedbycontents, missile);
+	set_movetype(missile, MOVETYPE_FLY);
 
 	missile.projectiledeathtype = WEP_RPC.m_id;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
@@ -138,13 +97,15 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
 	missile.cnt = time + WEP_CVAR(rpc, lifetime);
 	missile.nextthink = time;
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 
 	CSQCProjectile(missile, true, PROJECTILE_RPC, false);
 
 	setmodel(flash, MDL_RPC_MUZZLEFLASH); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, flash, '5 0 0');
+	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 	missile.pos1 = missile.velocity;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
@@ -165,7 +126,7 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(rpc, refire)))
             {
-                W_RocketPropelledChainsaw_Attack(thiswep, actor);
+                W_RocketPropelledChainsaw_Attack(thiswep, actor, weaponentity);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
             }
         }
@@ -191,7 +152,7 @@ METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor
 
 METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, WEP_CVAR(rpc, ammo), SND_RELOAD);
+    W_Reload(actor, weaponentity, WEP_CVAR(rpc, ammo), SND_RELOAD);
 }
 
 METHOD(RocketPropelledChainsaw, wr_suicidemessage, Notification(entity thiswep))
@@ -225,5 +186,4 @@ METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, entity act
         sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 }
 
-#endif
 #endif

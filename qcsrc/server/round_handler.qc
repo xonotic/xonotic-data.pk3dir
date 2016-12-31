@@ -1,5 +1,6 @@
 #include "round_handler.qh"
 
+#include "campaign.qh"
 #include "command/vote.qh"
 #include "../common/util.qh"
 
@@ -12,6 +13,9 @@ void round_handler_Think(entity this)
 	}
 
 	if (gameover)
+		gameover = false;
+
+	if (intermission_running)
 	{
 		round_handler_Reset(0);
 		round_handler_Remove();
@@ -28,7 +32,7 @@ void round_handler_Think(entity this)
 
 	if (this.cnt > 0)  // countdown running
 	{
-		if (this.canRoundStart())
+		if (this.canRoundStart() && !(autocvar_g_campaign && !campaign_bots_may_start))
 		{
 			if (this.cnt == this.count + 1) round_starttime = time + this.count;
 			int f = this.cnt - 1;
@@ -55,6 +59,7 @@ void round_handler_Think(entity this)
 			// schedule a new round
 			this.wait = true;
 			this.nextthink = time + this.delay;
+			gameover = true;
 		}
 		else
 		{
@@ -111,6 +116,6 @@ void round_handler_Reset(float next_think)
 
 void round_handler_Remove()
 {
-	remove(round_handler);
+	delete(round_handler);
 	round_handler = NULL;
 }

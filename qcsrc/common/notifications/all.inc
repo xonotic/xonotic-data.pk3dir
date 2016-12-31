@@ -387,6 +387,8 @@
 
     MSG_INFO_NOTIF(MONSTERS_DISABLED,                       1,  0, 0, "", "",           "",     _("^BGMonsters are currently disabled"), "")
 
+    MULTITEAM_INFO(NEXBALL_RETURN_HELD, 4,                  1,  0, 0, "", "",           "",     _("^BGThe ^TC^TT^BG team held the ball for too long"), "", NAME)
+
     MSG_INFO_NOTIF(ONSLAUGHT_CAPTURE,                       1,  2, 0, "s1 s2", "",      "",     _("^BG%s^BG captured %s^BG control point"), "")
     MULTITEAM_INFO(ONSLAUGHT_CPDESTROYED, 4,                1,  2, 0, "s1 s2", "",      "",     _("^TC^TT^BG team %s^BG control point has been destroyed by %s"), "", NAME)
     MULTITEAM_INFO(ONSLAUGHT_GENDESTROYED, 4,               1,  0, 0, "", "",           "",     _("^TC^TT^BG generator has been destroyed"), "", GENERATOR)
@@ -478,7 +480,7 @@
     MSG_INFO_NOTIF(WEAPON_SEEKER_MURDER_SPRAY,              1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponseeker",             _("^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SEEKER_MURDER_TAG,                1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponseeker",             _("^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SEEKER_SUICIDE,                   1,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponseeker",             _("^BG%s^K1 played with tiny Seeker rockets%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER,                 1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshotgun",            _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"), "")
+    MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER,                 1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshockwave",          _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOCKWAVE_MURDER_SLAP,            1,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_shotgun",     _("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOTGUN_MURDER,                   1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponshotgun",            _("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_SHOTGUN_MURDER_SLAP,              1,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_shotgun",     _("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"), "")
@@ -505,6 +507,7 @@
 
     MSG_CENTER_NOTIF(ASSAULT_ATTACKING,                 1,      0, 0, "",               CPID_ASSAULT_ROLE,      "0 0",  _("^BGYou are attacking!"), "")
     MSG_CENTER_NOTIF(ASSAULT_DEFENDING,                 1,      0, 0, "",               CPID_ASSAULT_ROLE,      "0 0",  _("^BGYou are defending!"), "")
+    MSG_CENTER_NOTIF(ASSAULT_OBJ_DESTROYED,             1,      0, 1, "f1time",         CPID_ASSAULT_ROLE,      "0 0",  _("^BGObjective destroyed in ^F4%s^BG!"), "")
 
     MSG_CENTER_NOTIF(COUNTDOWN_BEGIN,                   1,      0, 0, "",               CPID_ROUND,             "2 0",  _("^F4Begin!"), "")
     MSG_CENTER_NOTIF(COUNTDOWN_GAMESTART,               1,      0, 1, "",               CPID_ROUND,             "1 f1", _("^F4Game starts in ^COUNT"), "")
@@ -528,7 +531,7 @@
     MSG_CENTER_NOTIF(CTF_PASS_OTHER_NEUTRAL,            1,      2, 0, "s1 s2",          CPID_CTF_PASS,          "0 0",  _("^BG%s^BG passed the flag to %s"), "")
     MULTITEAM_CENTER(CTF_PASS_RECEIVED, 4,              1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou received the ^TC^TT^BG flag from %s"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PASS_RECEIVED_NEUTRAL,         1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou received the flag from %s"), "")
-    MSG_CENTER_NOTIF(CTF_PASS_REQUESTED,                1,      1, 0, "s1 pass_key",    CPID_CTF_PASS,          "0 0",  _("^BG%s^BG requests you to pass the flag%s"), "")
+    MSG_CENTER_NOTIF(CTF_PASS_REQUESTED,                1,      1, 0, "pass_key s1",    CPID_CTF_PASS,          "0 0",  _("^BGPress ^F2%s^BG to receive the flag from %s^BG"), "")
     MSG_CENTER_NOTIF(CTF_PASS_REQUESTING,               1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGRequesting %s^BG to pass you the flag"), "")
     MULTITEAM_CENTER(CTF_PASS_SENT, 4,                  1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou passed the ^TC^TT^BG flag to %s"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PASS_SENT_NEUTRAL,             1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou passed the flag to %s"), "")
@@ -546,20 +549,50 @@
     MULTITEAM_CENTER(CTF_PICKUP_TEAM_VERBOSE, 4,        1,      2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_NEUTRAL,           1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate^BG got the flag! Protect them!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_VERBOSE_NEUTRAL,   1,      2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "")
+    MSG_CENTER_NOTIF(CTF_PICKUP_VISIBLE,                1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGEnemies can now see you on radar!"), "")
     MULTITEAM_CENTER(CTF_RETURN, 4,                     1,      0, 0, "",               CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou returned the ^TC^TT^BG flag!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_STALEMATE_CARRIER,             1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGStalemate! Enemies can now see you on radar!"), "")
     MSG_CENTER_NOTIF(CTF_STALEMATE_OTHER,               1,      0, 0, "",               CPID_STALEMATE,         "0 0",  _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "")
 
-    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG,                 1,      1, 1, "spree_cen s1",               CPID_Null,  "0 0",  _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED,              1,      1, 1, "spree_cen s1",               CPID_Null,  "0 0",  _("^K1%sYou were fragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,      1,      1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  _("^K1%sYou were fragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_VERBOSE,         1,      1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  _("^K3%sYou fragged ^BG%s^BG%s"), _("^K3%sYou scored against ^BG%s^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG,             1,      1, 1, "spree_cen s1",               CPID_Null,  "0 0",  _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED,          1,      1, 1, "spree_cen s1",               CPID_Null,  "0 0",  _("^K1%sYou were typefragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing!"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,  1,      1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  _("^K1%sYou were typefragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s"))
-    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,     1,      1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  _("^K1%sYou typefragged ^BG%s^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s"))
+    #define VERBOSE_MURDER(type) strcat(MURDER_##type, "^BG%s")
 
-    MSG_CENTER_NOTIF(NADE_THROW,                        1,      0, 0, "",               CPID_NADES,             "0 0",  _("^BGPress ^F2DROPWEAPON^BG again to toss the nade!"), "")
+    #define MURDER_FRAG             _("^K3%sYou fragged ^BG%s")
+    #define MURDER_FRAG2            _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAGGED          _("^K1%sYou were fragged by ^BG%s")
+    #define MURDER_FRAGGED2         _("^K1%sYou were scored against by ^BG%s")
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG,                   1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG,                    MURDER_FRAG2                   )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED,                1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAGGED,                 MURDER_FRAGGED2                )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,        1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED),        VERBOSE_MURDER(FRAGGED2)       )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_VERBOSE,           1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG),           VERBOSE_MURDER(FRAG2)          )
+
+    #define MURDER_FRAG_FIRE        _("^K3%sYou burned ^BG%s")
+    #define MURDER_FRAG_FIRE2       _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAGGED_FIRE     _("^K1%sYou were burned by ^BG%s")
+    #define MURDER_FRAGGED_FIRE2    _("^K1%sYou were scored against by ^BG%s")
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FIRE,              1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG_FIRE,               MURDER_FRAG_FIRE2              )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FIRE,           1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAGGED_FIRE,            MURDER_FRAGGED_FIRE2           )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FIRE_VERBOSE,   1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED_FIRE),   VERBOSE_MURDER(FRAGGED_FIRE2)  )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FIRE_VERBOSE,      1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG_FIRE),      VERBOSE_MURDER(FRAG_FIRE2)     )
+
+    #define MURDER_FRAG_FREEZE      _("^K3%sYou froze ^BG%s")
+    #define MURDER_FRAG_FREEZE2     _("^K3%sYou scored against ^BG%s")
+    #define MURDER_FRAGGED_FREEZE   _("^K1%sYou were frozen by ^BG%s")
+    #define MURDER_FRAGGED_FREEZE2  _("^K1%sYou were scored against by ^BG%s")
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FREEZE,            1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAG_FREEZE,             MURDER_FRAG_FREEZE2            )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FREEZE,         1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_FRAGGED_FREEZE,          MURDER_FRAGGED_FREEZE2         )
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAGGED_FREEZE_VERBOSE, 1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(FRAGGED_FREEZE), VERBOSE_MURDER(FRAGGED_FREEZE2))
+    MSG_CENTER_NOTIF(DEATH_MURDER_FRAG_FREEZE_VERBOSE,    1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(FRAG_FREEZE),    VERBOSE_MURDER(FRAG_FREEZE2)   )
+
+    #define MURDER_TYPEFRAG         _("^K1%sYou typefragged ^BG%s")
+    #define MURDER_TYPEFRAG2        _("^K1%sYou scored against ^BG%s^K1 while they were typing")
+    #define MURDER_TYPEFRAGGED      _("^K1%sYou were typefragged by ^BG%s")
+    #define MURDER_TYPEFRAGGED2     _("^K1%sYou were scored against by ^BG%s^K1 while typing")
+    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG,               1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_TYPEFRAG,                MURDER_TYPEFRAG2               )
+    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED,            1,    1, 1, "spree_cen s1",               CPID_Null,  "0 0",  MURDER_TYPEFRAGGED,             MURDER_TYPEFRAGGED2            )
+    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,    1,    1, 4, "spree_cen s1 frag_stats",    CPID_Null,  "0 0",  VERBOSE_MURDER(TYPEFRAGGED),    VERBOSE_MURDER(TYPEFRAGGED2)   )
+    MSG_CENTER_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,       1,    1, 2, "spree_cen s1 frag_ping",     CPID_Null,  "0 0",  VERBOSE_MURDER(TYPEFRAG),       VERBOSE_MURDER(TYPEFRAG2)      )
+
+    MSG_CENTER_NOTIF(NADE_THROW,                        1,      0, 0, "nade_key",       CPID_NADES,             "0 0",  _("^BGPress ^F2%s^BG again to toss the nade!"), "")
     MSG_CENTER_NOTIF(NADE_BONUS,                        1,      0, 0, "",               CPID_NADES,             "0 0",  _("^F2You got a ^K1BONUS GRENADE^F2!"), "")
 
     MSG_CENTER_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,         1,      0, 1, "death_team",     CPID_Null,              "0 0",  _("^BGYou have been moved into a different team\nYou are now on: %s"), "")
@@ -609,8 +642,6 @@
 
     MSG_CENTER_NOTIF(EXTRALIVES,                        1,      0, 0, "",               CPID_Null,              "0 0",  _("^F2You picked up some extra lives"), "")
 
-    MSG_CENTER_NOTIF(FREEZETAG_FREEZE,                  1,      1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You froze ^BG%s"), "")
-    MSG_CENTER_NOTIF(FREEZETAG_FROZEN,                  1,      1, 0, "s1",             CPID_Null,              "0 0",  _("^K1You were frozen by ^BG%s"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE,                  1,      1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You revived ^BG%s"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVE_SELF,             1,      0, 0, "",               CPID_Null,              "0 0",  _("^K3You revived yourself"), "")
     MSG_CENTER_NOTIF(FREEZETAG_REVIVED,                 1,      1, 0, "s1",             CPID_Null,              "0 0",  _("^K3You were revived by ^BG%s"), "")
@@ -667,15 +698,13 @@
     MSG_CENTER_NOTIF(NIX_COUNTDOWN,                     1,      0, 2, "item_wepname",   CPID_NIX,               "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "")
     MSG_CENTER_NOTIF(NIX_NEWWEAPON,                     1,      0, 1, "item_wepname",   CPID_NIX,               "0 0",  _("^F2Active weapon: ^F1%s"), "")
 
-    MSG_CENTER_NOTIF(NADE,                              1,      0, 0, "",               CPID_Null,              "0 0",  _("^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"), "")
-
     MSG_CENTER_NOTIF(ONS_CAPTURE,                       1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^BGYou captured %s^BG control point"), "")
     MULTITEAM_CENTER(ONS_CAPTURE, 4,                    1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^TC^TT^BG team captured %s^BG control point"), "", NAME)
     MSG_CENTER_NOTIF(ONS_CONTROLPOINT_SHIELDED,         1,      0, 0, "",               CPID_ONS_CAPSHIELD,     "0 0",  _("^BGThis control point currently cannot be captured"), "")
     MSG_CENTER_NOTIF(ONS_GENERATOR_SHIELDED,            1,      0, 0, "",               CPID_ONS_CAPSHIELD,     "0 0",  _("^BGThe enemy generator cannot be destroyed yet\n^F2Capture some control points to unshield it"), "")
     MULTITEAM_CENTER(ONS_NOTSHIELDED, 4,                1,      0, 0, "",               CPID_ONSLAUGHT,         "0 0",  _("^BGThe ^TCenemy^BG generator is no longer shielded!"), "", NAME)
     MSG_CENTER_NOTIF(ONS_NOTSHIELDED_TEAM,              1,      0, 0, "",               CPID_ONSLAUGHT,         "0 0",  _("^K1Your generator is NOT shielded!\n^BGRe-capture control points to shield it!"), "")
-    MSG_CENTER_NOTIF(ONS_TELEPORT,                      1,      0, 0, "pass_key",       CPID_ONSLAUGHT,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to teleport"), "")
+    MSG_CENTER_NOTIF(ONS_TELEPORT,                      1,      0, 0, "pass_key",       CPID_ONSLAUGHT,         "0 0",  _("^BGPress ^F2%s^BG to teleport"), "")
     MSG_CENTER_NOTIF(ONS_TELEPORT_ANTISPAM,             1,      0, 1, "f1secs",         CPID_ONSLAUGHT,         "0 0",  _("^BGTeleporting disabled for %s"), "")
 
     MSG_CENTER_NOTIF(OVERTIME_FRAG,                     1,      0, 0, "",               CPID_OVERTIME,          "0 0",  _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!"))
@@ -716,13 +745,13 @@
     MSG_CENTER_NOTIF(TEAMCHANGE_SUICIDE,                1,      0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Suicide in ^COUNT"), "")
 
     MSG_CENTER_NOTIF(TIMEOUT_BEGINNING,                 1,      0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout begins in ^COUNT"), "")
-    MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    1,      0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout ends in ^COUNT"), "")
+    MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    1,      0, 1, "",               CPID_TIMEIN,            "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
     MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             1,      0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
-    MSG_CENTER_NOTIF(VEHICLE_ENTER,                     1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter/exit the vehicle"), "")
-    MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter the vehicle gunner"), "")
-    MSG_CENTER_NOTIF(VEHICLE_ENTER_STEAL,               1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to steal this vehicle"), "")
+    MSG_CENTER_NOTIF(VEHICLE_ENTER,                     1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter/exit the vehicle"), "")
+    MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter the vehicle gunner"), "")
+    MSG_CENTER_NOTIF(VEHICLE_ENTER_STEAL,               1,      0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to steal this vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL,                     1,      0, 0, "",               CPID_VEHICLES_OTHER,    "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL_SELF,                1,      0, 0, "",               CPID_VEHICLES_OTHER,    "4 0",  _("^F2You have stolen the enemy's vehicle, you are now visible on their radar!"), "")
 
@@ -922,5 +951,9 @@
     MSG_CHOICE_NOTIF(CTF_PICKUP_ENEMY_TEAM,     1, 2,   MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_TEAM,       CENTER_CTF_PICKUP_ENEMY_TEAM_VERBOSE)
     MSG_CHOICE_NOTIF(FRAG,                      1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAG,           CENTER_DEATH_MURDER_FRAG_VERBOSE)
     MSG_CHOICE_NOTIF(FRAGGED,                   1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED,        CENTER_DEATH_MURDER_FRAGGED_VERBOSE)
+    MSG_CHOICE_NOTIF(FRAG_FIRE,                 1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAG_FIRE,      CENTER_DEATH_MURDER_FRAG_FIRE_VERBOSE)
+    MSG_CHOICE_NOTIF(FRAGGED_FIRE,              1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_FIRE,   CENTER_DEATH_MURDER_FRAGGED_FIRE_VERBOSE)
+    MSG_CHOICE_NOTIF(FRAG_FREEZE,               1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAG_FREEZE,    CENTER_DEATH_MURDER_FRAG_FREEZE_VERBOSE)
+    MSG_CHOICE_NOTIF(FRAGGED_FREEZE,            1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_FREEZE, CENTER_DEATH_MURDER_FRAGGED_FREEZE_VERBOSE)
     MSG_CHOICE_NOTIF(TYPEFRAG,                  1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG,       CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE)
     MSG_CHOICE_NOTIF(TYPEFRAGGED,               1, 1,   MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED,    CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE)

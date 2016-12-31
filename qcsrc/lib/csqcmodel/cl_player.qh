@@ -19,10 +19,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef LIB_CSQCMODEL_CL_PLAYER_H
-#define LIB_CSQCMODEL_CL_PLAYER_H
+#pragma once
 
-int autocvar_cl_movement = 1;
+bool autocvar_cl_movement = true;
 
 entity csqcplayer;
 float csqcplayer_status;
@@ -42,4 +41,3 @@ void CSQCPlayer_SetCamera();
 float CSQCPlayer_PreUpdate(entity this);
 float CSQCPlayer_PostUpdate(entity this);
 float CSQCPlayer_IsLocalPlayer(entity this);
-#endif

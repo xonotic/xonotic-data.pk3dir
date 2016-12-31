@@ -1,5 +1,5 @@
 #include "radarmap.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "radarmap.qh"
 
 #include "../g_world.qh"
@@ -26,7 +26,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 	float n, m;
 	n = m = 0;
 
-	while (vlen(c - b) > 1)
+	while (vdist(c - b, >, 1))
 	{
 		++m;
 
@@ -45,22 +45,22 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 		c = trace_endpos;
 	}
 
-	if (n > 200) LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations\n");
+	if (n > 200) LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations");
 
 	return white / (black + white);
 }
-float RadarMapAtPoint_Trace(float x, float y, float w, float h, float zmin, float zsize, float q)
+float RadarMapAtPoint_Trace(float e, float f, float w, float h, float zmin, float zsize, float q)
 {
 	vector a, b, mi, ma;
 
 	mi = '0 0 0';
 	ma = '1 0 0' * w + '0 1 0' * h;
-	a = '1 0 0' * x + '0 1 0' * y + '0 0 1' * zmin;
-	b = '1 0 0' * x + '0 1 0' * y + '0 0 1' * (zsize + zmin);
+	a = '1 0 0' * e + '0 1 0' * f + '0 0 1' * zmin;
+	b = '1 0 0' * e + '0 1 0' * f + '0 0 1' * (zsize + zmin);
 
 	return FullTraceFraction(a, mi, ma, b);
 }
-float RadarMapAtPoint_LineBlock(float x, float y, float w, float h, float zmin, float zsize, float q)
+float RadarMapAtPoint_LineBlock(float e, float f, float w, float h, float zmin, float zsize, float q)
 {
 	vector o, mi, ma;
 	float i, r;
@@ -72,12 +72,12 @@ float RadarMapAtPoint_LineBlock(float x, float y, float w, float h, float zmin, 
 	mi = '0 0 0';
 	dz = (zsize / q) * '0 0 1';
 	ma = '1 0 0' * w + '0 1 0' * h + dz;
-	o = '1 0 0' * x + '0 1 0' * y + '0 0 1' * zmin;
+	o = '1 0 0' * e + '0 1 0' * f + '0 0 1' * zmin;
 
-	if (x < world.absmin.x - w) return 0;
-	if (y < world.absmin.y - h) return 0;
-	if (x > world.absmax.x) return 0;
-	if (y > world.absmax.y) return 0;
+	if (e < world.absmin.x - w) return 0;
+	if (f < world.absmin.y - h) return 0;
+	if (e > world.absmax.x) return 0;
+	if (f > world.absmax.y) return 0;
 
 	r = 0;
 	for (i = 0; i < q; ++i)
@@ -95,7 +95,7 @@ float RadarMapAtPoint_LineBlock(float x, float y, float w, float h, float zmin, 
 	}
 	return r / q;
 }
-float RadarMapAtPoint_Block(float x, float y, float w, float h, float zmin, float zsize, float q)
+float RadarMapAtPoint_Block(float e, float f, float w, float h, float zmin, float zsize, float q)
 {
 	vector o, mi, ma;
 	float i, r;
@@ -107,12 +107,12 @@ float RadarMapAtPoint_Block(float x, float y, float w, float h, float zmin, floa
 	mi = '0 0 0';
 	dz = (zsize / q) * '0 0 1';
 	ma = '1 0 0' * w + '0 1 0' * h + dz;
-	o = '1 0 0' * x + '0 1 0' * y + '0 0 1' * zmin;
+	o = '1 0 0' * e + '0 1 0' * f + '0 0 1' * zmin;
 
-	if (x < world.absmin.x - w) return 0;
-	if (y < world.absmin.y - h) return 0;
-	if (x > world.absmax.x) return 0;
-	if (y > world.absmax.y) return 0;
+	if (e < world.absmin.x - w) return 0;
+	if (f < world.absmin.y - h) return 0;
+	if (e > world.absmax.x) return 0;
+	if (f > world.absmax.y) return 0;
 
 	r = 0;
 	for (i = 0; i < q; ++i)
@@ -122,7 +122,7 @@ float RadarMapAtPoint_Block(float x, float y, float w, float h, float zmin, floa
 	}
 	return r / q;
 }
-float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, float zsize, float q)
+float RadarMapAtPoint_Sample(float e, float f, float w, float h, float zmin, float zsize, float q)
 {
 	vector a, b, mi, ma;
 
@@ -133,7 +133,7 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 
 	mi = '0 0 0';
 	ma = '1 0 0' * w + '0 1 0' * h;
-	a = '1 0 0' * x + '0 1 0' * y + '0 0 1' * zmin;
+	a = '1 0 0' * e + '0 1 0' * f + '0 0 1' * zmin;
 	b = '1 0 0' * w + '0 1 0' * h + '0 0 1' * zsize;
 
 	float c, i;
@@ -151,31 +151,31 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 
 	return c / q;
 }
-void sharpen_set(int x, float v)
+void sharpen_set(int b, float v)
 {
-	sharpen_buffer[x + 2 * RADAR_WIDTH_MAX] = v;
+	sharpen_buffer[b + 2 * RADAR_WIDTH_MAX] = v;
 }
-float sharpen_getpixel(int x, int y)
+float sharpen_getpixel(int b, int c)
 {
-	if (x < 0) return 0;
-	if (x >= RADAR_WIDTH_MAX) return 0;
-	if (y < 0) return 0;
-	if (y > 2) return 0;
-	return sharpen_buffer[x + y * RADAR_WIDTH_MAX];
+	if (b < 0) return 0;
+	if (b >= RADAR_WIDTH_MAX) return 0;
+	if (c < 0) return 0;
+	if (c > 2) return 0;
+	return sharpen_buffer[b + c * RADAR_WIDTH_MAX];
 }
-float sharpen_get(float x, float a)
+float sharpen_get(float b, float a)
 {
-	float sum = sharpen_getpixel(x, 1);
+	float sum = sharpen_getpixel(b, 1);
 	if (a == 0) return sum;
 	sum *= (8 + 1 / a);
-	sum -= sharpen_getpixel(x - 1, 0);
-	sum -= sharpen_getpixel(x - 1, 1);
-	sum -= sharpen_getpixel(x - 1, 2);
-	sum -= sharpen_getpixel(x + 1, 0);
-	sum -= sharpen_getpixel(x + 1, 1);
-	sum -= sharpen_getpixel(x + 1, 2);
-	sum -= sharpen_getpixel(x, 0);
-	sum -= sharpen_getpixel(x, 2);
+	sum -= sharpen_getpixel(b - 1, 0);
+	sum -= sharpen_getpixel(b - 1, 1);
+	sum -= sharpen_getpixel(b - 1, 2);
+	sum -= sharpen_getpixel(b + 1, 0);
+	sum -= sharpen_getpixel(b + 1, 1);
+	sum -= sharpen_getpixel(b + 1, 2);
+	sum -= sharpen_getpixel(b, 0);
+	sum -= sharpen_getpixel(b, 2);
 	return bound(0, sum * a, 1);
 }
 void sharpen_shift(int w)
@@ -207,7 +207,7 @@ void RadarMap_Next()
 		localcmd(strcat("defer 1 \"sv_cmd radarmap --flags ", ftos(radarmapper.count), strcat(" --res ", ftos(radarmapper.size.x), " ", ftos(radarmapper.size.y), " --sharpen ", ftos(radarmapper.ltime), " --qual ", ftos(radarmapper.size.z)), "\"\n"));
 		GotoNextMap(0);
 	}
-	remove(radarmapper);
+	delete(radarmapper);
 	radarmapper = NULL;
 }
 void RadarMap_Think(entity this)
@@ -253,7 +253,7 @@ void RadarMap_Think(entity this)
 		if (this.cnt < 0)
 		{
 			LOG_INFO("Error writing ", this.netname, "\n");
-			remove(this);
+			delete(this);
 			radarmapper = NULL;
 			return;
 		}
@@ -439,7 +439,7 @@ float RadarMap_Make(float argc)
 
 				default:
 					i = argc;
-					remove(radarmapper);
+					delete(radarmapper);
 					radarmapper = NULL;
 					break;
 			}

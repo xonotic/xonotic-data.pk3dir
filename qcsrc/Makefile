@@ -7,7 +7,8 @@ WORKDIR ?= ../.tmp
 QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='~')
 VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
 NDEBUG ?= 1
-BUILD_MOD ?= 0
+XONOTIC ?= 1
+BUILD_MOD ?=
 
 ifndef ZIP
 	ifneq ($(shell which zip),)
@@ -30,9 +31,10 @@ QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
 
 QCCDEFS ?= \
+	-DXONOTIC=$(XONOTIC) \
 	-DWATERMARK="$(QCCFLAGS_WATERMARK)" \
 	-DNDEBUG=$(NDEBUG) \
-	-DBUILD_MOD=$(BUILD_MOD) \
+	$(if $(BUILD_MOD), -DBUILD_MOD="$(BUILD_MOD)" -I$(BUILD_MOD), ) \
 	$(QCCDEFS_EXTRA)
 
 # -Ooverlap-locals is required

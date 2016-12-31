@@ -2,7 +2,6 @@
 
 #undef droptofloor
 #undef sound
-#undef remove
 #undef cvar_set
 #undef cvar_string
 #undef cvar
@@ -10,7 +9,7 @@
 var float(string name) cvar;
 var string(string name) cvar_string;
 var void(string name, string value) cvar_set;
-var void remove(entity e);
+var void delete_fn(entity e);
 
 #undef IT_SHOTGUN
 #undef IT_SUPER_SHOTGUN

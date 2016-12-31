@@ -1,24 +1,4 @@
-#ifndef TURRET_EWHEEL_H
-#define TURRET_EWHEEL_H
-
-//#define EWHEEL_FANCYPATH
-
-#include "ewheel_weapon.qh"
-
-CLASS(EWheel, Turret)
-/* spawnflags */ ATTRIB(EWheel, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE | TUR_FLAG_ROAM);
-/* mins       */ ATTRIB(EWheel, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(EWheel, maxs, vector, '32 32 48');
-/* modelname  */ ATTRIB(EWheel, mdl, string, "ewheel-base2.md3");
-/* model      */ ATTRIB_STRZONE(EWheel, model, string, strcat("models/turrets/", this.mdl));
-/* head_model */ ATTRIB_STRZONE(EWheel, head_model, string, strcat("models/turrets/", "ewheel-gun1.md3"));
-/* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
-/* fullname   */ ATTRIB(EWheel, turret_name, string, _("eWheel Turret"));
-    ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
-ENDCLASS(EWheel)
-REGISTER_TURRET(EWHEEL, NEW(EWheel));
-
-#endif
+#include "ewheel.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -133,7 +113,7 @@ void ewheel_move_idle(entity this)
         movelib_brake_simple(this, (autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
-spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) remove(this); }
+spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) delete(this); }
 
 METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 {
@@ -184,7 +164,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 {
     entity e;
 
-    if(it.movetype == MOVETYPE_WALK)
+    if(it.move_movetype == MOVETYPE_WALK)
     {
         it.velocity = '0 0 0';
         it.enemy = NULL;
@@ -196,12 +176,12 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
             e = find(NULL, targetname, it.target);
             if (!e)
             {
-                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
+                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!");
                 it.target = "";
             }
 
             if (e.classname != "turret_checkpoint")
-                LOG_TRACE("Warning: not a turrret path\n");
+                LOG_TRACE("Warning: not a turrret path");
             else
             {
 
@@ -218,7 +198,8 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
     it.iscreature				= true;
     it.teleportable			= TELEPORT_NORMAL;
     it.damagedbycontents		= true;
-    it.movetype				= MOVETYPE_WALK;
+    IL_PUSH(g_damagedbycontents, it);
+    set_movetype(it, MOVETYPE_WALK);
     it.solid					= SOLID_SLIDEBOX;
     it.takedamage				= DAMAGE_AIM;
     it.idle_aim				= '0 0 0';
@@ -247,8 +228,7 @@ void ewheel_draw(entity this)
 
     fixedmakevectors(this.angles);
     setorigin(this, this.origin + this.velocity * dt);
-    this.tur_head.angles += dt * this.tur_head.move_avelocity;
-    this.angles_y = this.move_angles_y;
+    this.tur_head.angles += dt * this.tur_head.avelocity;
 
     if (this.health < 127)
     if(random() < 0.05)
@@ -258,9 +238,7 @@ void ewheel_draw(entity this)
         METHOD(EWheel, tr_setup, void(EWheel this, entity it))
         {
             it.gravity		= 1;
-            it.movetype		= MOVETYPE_BOUNCE;
-            it.move_movetype	= MOVETYPE_BOUNCE;
-            it.move_origin	= it.origin;
+            set_movetype(it, MOVETYPE_BOUNCE);
             it.move_time		= time;
             it.draw			= ewheel_draw;
         }

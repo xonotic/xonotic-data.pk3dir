@@ -8,19 +8,13 @@ void ctf_RespawnFlag(entity flag);
 
 // score rule declarations
 const int ST_CTF_CAPS = 1;
-const int SP_CTF_CAPS = 4;
-const int SP_CTF_CAPTIME = 5;
-const int SP_CTF_PICKUPS = 6;
-const int SP_CTF_DROPS = 7;
-const int SP_CTF_FCKILLS = 8;
-const int SP_CTF_RETURNS = 9;
 
 CLASS(Flag, Pickup)
-    ATTRIB(Flag, m_mins, vector, PL_MIN_CONST + '0 0 -13')
-    ATTRIB(Flag, m_maxs, vector, PL_MAX_CONST + '0 0 -13')
+    ATTRIB(Flag, m_mins, vector, PL_MIN_CONST + '0 0 -13');
+    ATTRIB(Flag, m_maxs, vector, PL_MAX_CONST + '0 0 -13');
 ENDCLASS(Flag)
 Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
-void ctf_FlagTouch(entity this) { ITEM_HANDLE(Pickup, CTF_FLAG, this, other); }
+void ctf_FlagTouch(entity this, entity toucher) { ITEM_HANDLE(Pickup, CTF_FLAG, this, toucher); }
 
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
 
@@ -70,6 +64,7 @@ entity ctf_worldflaglist;
 .entity wps_flagbase;
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
+.entity wps_flagreturn;
 .entity wps_enemyflagcarrier;
 .float wps_helpme_time;
 bool wpforenemy_announced;
@@ -98,6 +93,8 @@ const int RETURN_DAMAGE = 3;
 const int RETURN_SPEEDRUN = 4;
 const int RETURN_NEEDKILL = 5;
 
+bool ctf_Stalemate_Customize(entity this, entity client);
+
 void ctf_Handle_Throw(entity player, entity receiver, float droptype);
 
 // flag properties
@@ -110,7 +107,7 @@ float ctf_captimerecord; // record time for capturing the flag
 .entity ctf_dropper; // don't allow spam of dropping the flag
 .int max_flag_health;
 .float next_take_time;
-.bool ctf_flagdamaged;
+.bool ctf_flagdamaged_byworld;
 int ctf_teams;
 
 // passing/throwing properties
@@ -171,3 +168,4 @@ const int CTF_NEUTRAL_FLAG_LOST			= 512;
 const int CTF_NEUTRAL_FLAG_CARRYING		= 768;
 const int CTF_FLAG_NEUTRAL				= 2048;
 const int CTF_SHIELDED					= 4096;
+const int CTF_STALEMATE					= 8192;

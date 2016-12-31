@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 	#include "oo.qh"
 	#include "self.qh"
@@ -12,7 +12,7 @@
 	/** Remove entity */
 	void SUB_Remove(entity this)
 	{
-		remove(this);
+		delete(this);
 	}
 
 	void defer_think(entity this)

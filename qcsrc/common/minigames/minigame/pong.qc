@@ -1,3 +1,4 @@
+#include "pong.qh"
 REGISTER_MINIGAME(pong, "Pong");
 
 // minigame flags
@@ -442,8 +443,8 @@ int pong_server_event(entity minigame, string event, ...)
 								paddle.realowner.classname == "pong_ai" )
 							{
 								minigame.pong_paddles[i] = NULL;
-								remove(paddle.realowner);
-								remove(paddle);
+								delete(paddle.realowner);
+								delete(paddle);
 								return true;
 							}
 						}
@@ -542,7 +543,7 @@ void pong_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void pong_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);

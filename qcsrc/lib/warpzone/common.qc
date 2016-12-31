@@ -4,7 +4,7 @@
     #include <common/t_items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <common/weapons/all.qh>
+    #include <common/weapons/_all.qh>
 #endif
 
 void WarpZone_Accumulator_Clear(entity acc)
@@ -112,7 +112,7 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 #ifdef CSQC
 	if (trace_networkentity)
 	{
-		LOG_TRACE("hit a network ent, cannot continue WarpZoneLib_BoxTouchesBrush\n");
+		LOG_TRACE("hit a network ent, cannot continue WarpZoneLib_BoxTouchesBrush");
 		// we cannot continue, as a player blocks us...
 		// so, abort
 		return 0;
@@ -154,31 +154,33 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 entity WarpZone_Find(vector mi, vector ma)
 {
 	// if we are near any warpzone planes - MOVE AWAY (work around nearclip)
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return NULL;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, NULL))
-			return e;
+	IL_EACH(g_warpzones, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL),
+	{
+		return it;
+	});
 	return NULL;
 }
 
 void WarpZone_MakeAllSolid()
 {
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		e.solid = SOLID_BSP;
+	IL_EACH(g_warpzones, true,
+	{
+		it.solid = SOLID_BSP;
+	});
 }
 
 void WarpZone_MakeAllOther()
 {
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		e.solid = SOLID_TRIGGER;
+	IL_EACH(g_warpzones, true,
+	{
+		it.solid = SOLID_TRIGGER;
+	});
 }
 
 void WarpZone_Trace_InitTransform()
@@ -271,7 +273,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	{
 		if(--i < 1)
 		{
-			LOG_TRACE("Too many warpzones in sequence, aborting trace.\n");
+			LOG_TRACE("Too many warpzones in sequence, aborting trace.");
 			trace_ent = NULL;
 			break;
 		}
@@ -299,7 +301,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		if(trace_ent == wz)
 		{
 			// FIXME can this check be removed? Do we really need it?
-			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace\n");
+			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace");
 			trace_ent = NULL;
 			break;
 		}
@@ -395,7 +397,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	{
 		if(--i < 1)
 		{
-			LOG_TRACE("Too many warpzones in sequence, aborting trace.\n");
+			LOG_TRACE("Too many warpzones in sequence, aborting trace.");
 			trace_ent = NULL;
 			break;
 		}
@@ -413,7 +415,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		if(trace_ent == wz)
 		{
 			// FIXME can this check be removed? Do we really need it?
-			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace\n");
+			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace");
 			trace_ent = NULL;
 			break;
 		}
@@ -671,7 +673,7 @@ void WarpZone_RefSys_GC(entity this)
 	// garbage collect unused reference systems
 	this.nextthink = time + 1;
 	if(this.owner.WarpZone_refsys != this)
-		remove(this);
+		delete(this);
 }
 void WarpZone_RefSys_CheckCreate(entity me)
 {
@@ -688,7 +690,7 @@ void WarpZone_RefSys_Clear(entity me)
 {
 	if(me.WarpZone_refsys)
 	{
-		remove(me.WarpZone_refsys);
+		delete(me.WarpZone_refsys);
 		me.WarpZone_refsys = NULL;
 	}
 }

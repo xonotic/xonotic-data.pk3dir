@@ -1,3 +1,4 @@
+#include "pointparticles.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_POINTPARTICLES)
 
 #ifdef SVQC
@@ -378,6 +379,7 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 	setsize(this, this.mins, this.maxs);
 	this.solid = SOLID_NOT;
 	this.draw = Draw_PointParticles;
+	if (isnew) IL_PUSH(g_drawables, this);
 	this.entremove = Ent_PointParticles_Remove;
 }
 #endif

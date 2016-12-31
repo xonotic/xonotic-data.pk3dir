@@ -1,7 +1,6 @@
-#ifndef NOTIFICATIONS_H
-#define NOTIFICATIONS_H
+#pragma once
 
-#include <common/command/all.qh>
+#include <common/command/_mod.qh>
 
 #include <common/constants.qh>
 #include <common/teams.qh>
@@ -33,7 +32,7 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
 	}
-	LOG_WARNINGF("Get_Notif_TypeName(%d): Improper net type!\n", ORDINAL(net_type));
+	LOG_WARNF("Get_Notif_TypeName(%d): Improper net type!", ORDINAL(net_type));
 	return "";
 }
 
@@ -66,6 +65,7 @@ ENUMCLASS(CPID)
 	CASE(CPID, RACE_FINISHLAP)
 	CASE(CPID, TEAMCHANGE)
 	CASE(CPID, TIMEOUT)
+	CASE(CPID, TIMEIN)
 	CASE(CPID, VEHICLES)
 	CASE(CPID, VEHICLES_OTHER)
 	/** always last */
@@ -76,8 +76,7 @@ USING(Notification, entity);
 
 // used for notification system multi-team identifiers
 #define APP_TEAM_NUM(num, prefix) ((num == NUM_TEAM_1) ? prefix##_RED : ((num == NUM_TEAM_2) ? prefix##_BLUE : ((num == NUM_TEAM_3) ? prefix##_YELLOW : prefix##_PINK)))
-/** @deprecated use APP_TEAM_NUM */
-#define APP_TEAM_ENT(ent, prefix) APP_TEAM_NUM(ent.team, prefix)
+#define APP_NUM(num, prefix) ((num) ? APP_TEAM_NUM(num, prefix) : prefix##_NEUTRAL)
 
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
 	VARITEM(1, 0, s1) \
@@ -160,7 +159,7 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			#ifndef MENUQC
+			#ifdef GAMEQC
 			string filename = argv(1);
 			bool alsoprint = false;
 			if (filename == "")
@@ -201,8 +200,8 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 	}
 }
 
-float autocvar_notification_debug = false;
 #ifdef NOTIFICATIONS_DEBUG
+bool autocvar_notification_debug = false;
 void Debug_Notification(string input)
 {
 	switch (autocvar_notification_debug)
@@ -224,6 +223,11 @@ void Local_Notification_WOVA(
 #ifdef CSQC
 string prev_soundfile;
 float prev_soundtime;
+#endif
+
+#ifdef SVQC
+IntrusiveList g_notifications;
+STATIC_INIT(g_notifications) { g_notifications = IL_NEW(); }
 #endif
 
 #ifdef SVQC
@@ -253,7 +257,7 @@ string Get_Notif_BroadcastName(NOTIF broadcast)
 		case NOTIF_TEAM: return "NOTIF_TEAM";
 		case NOTIF_TEAM_EXCEPT: return "NOTIF_TEAM_EXCEPT";
 	}
-	LOG_WARNINGF("Get_Notif_BroadcastName(%d): Improper broadcast!\n", broadcast);
+	LOG_WARNF("Get_Notif_BroadcastName(%d): Improper broadcast!", broadcast);
 	return "";
 }
 
@@ -293,8 +297,10 @@ float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2
 float autocvar_notification_show_sprees_info_newline = true;
 float autocvar_notification_show_sprees_info_specialonly = true;
 float autocvar_notification_errors_are_fatal = true;
+#ifdef SVQC
 float autocvar_notification_lifetime_runtime = 0.5;
 float autocvar_notification_lifetime_mapload = 10;
+#endif
 
 #ifdef SVQC
 .float FRAG_VERBOSE;
@@ -349,6 +355,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	race_diff: show time difference between f2 and f3
 	missing_teams: show which teams still need players
 	pass_key: find the keybind for "passing" or "dropping" in CTF game mode
+	nade_key: find the keybind for nade throwing
 	frag_ping: show the ping of a player
 	frag_stats: show health/armor/ping of a player
 	frag_pos: show score status and position in the match of a player
@@ -408,7 +415,8 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) \
 	ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
 	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
-	ARG_CASE(ARG_CS,        "pass_key",      ((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
+	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) \
+	ARG_CASE(ARG_CS,        "nade_key",      getcommandkey(_("throw nade"), "dropweapon")) \
 	ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(true, f2)) \
 	ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) \
 	/*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
@@ -685,7 +693,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 {
 	Notification it = _Notifications_from(net_name, NULL);
 	if (it.nent_type != net_type) {
-		LOG_WARNINGF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!\n",
+		LOG_WARNF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!",
 			Get_Notif_TypeName(net_type), net_type,
 			it.registered_id, net_name,
 			Get_Notif_TypeName(it.nent_type)
@@ -800,5 +808,3 @@ REGISTRY_END(Notifications)
 }
 
 #include "all.inc"
-
-#endif

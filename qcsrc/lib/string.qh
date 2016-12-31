@@ -339,7 +339,12 @@ int vercmp(string v1, string v2)
 	return vercmp_recursive(v1, v2);
 }
 
+const string HEXDIGITS_MINSET = "0123456789ABCDEFabcdef";
 const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
 #define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
 #define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
-#define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))
+#define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS_MINSET, (d), 1))
+#define IS_HEXDIGIT(d) (strstrofs(HEXDIGITS_MINSET, (d), 0) >= 0)
+
+const string DIGITS = "0123456789";
+#define IS_DIGIT(d) (strstrofs(DIGITS, (d), 0) >= 0)

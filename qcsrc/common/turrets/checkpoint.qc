@@ -1,3 +1,4 @@
+#include "checkpoint.qh"
 /**
     turret_checkpoint
 **/
@@ -56,7 +57,7 @@ void turret_checkpoint_init(entity this)
     {
         this.enemy = find(NULL, targetname, this.target);
         if(this.enemy == NULL)
-            LOG_TRACE("A turret_checkpoint faild to find its target!\n");
+            LOG_TRACE("A turret_checkpoint faild to find its target!");
     }
     //setthink(this, turret_checkpoint_think);
     //this.nextthink = time + tc_acum + 0.25;

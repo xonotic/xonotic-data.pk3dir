@@ -1,4 +1,7 @@
-#ifdef IMPLEMENTATION
+#include "multijump.qh"
+
+#ifdef GAMEQC
+
 #ifdef SVQC
 	#include <server/antilag.qh>
 #endif
@@ -60,7 +63,7 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 
 	int phys_multijump = PHYS_MULTIJUMP(player);
 
-	if(!M_ARGV(2, bool) && player.multijump_ready && (PHYS_MULTIJUMP_COUNT(player) < phys_multijump || phys_multijump == -1) && player.velocity_z > PHYS_MULTIJUMP_SPEED(player) && 
+	if(!M_ARGV(2, bool) && player.multijump_ready && (PHYS_MULTIJUMP_COUNT(player) < phys_multijump || phys_multijump == -1) && player.velocity_z > PHYS_MULTIJUMP_SPEED(player) &&
 		(!PHYS_MULTIJUMP_MAXSPEED(player) || vdist(player.velocity, <=, PHYS_MULTIJUMP_MAXSPEED(player))))
 	{
 		if (PHYS_MULTIJUMP(player))
@@ -126,4 +129,5 @@ MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsPrettyString)
 }
 
 #endif
+
 #endif

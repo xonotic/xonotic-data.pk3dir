@@ -74,8 +74,8 @@ MINIGAME_SIMPLELINKED_ENTITIES
 
 void minigame_autoclean_entity(entity e)
 {
-	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
-	remove(e);
+	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")");
+	delete(e);
 }
 
 void HUD_MinigameMenu_CurrentButton();
@@ -121,7 +121,7 @@ void activate_minigame(entity minigame)
 
 	if ( !minigame.descriptor || minigame.classname != "minigame" )
 	{
-		LOG_TRACE("Trying to activate unregistered minigame ",minigame.netname," in client\n");
+		LOG_TRACE("Trying to activate unregistered minigame ",minigame.netname," in client");
 		return;
 	}
 
@@ -174,7 +174,7 @@ void minigame_read_owner(entity this)
 		this.owner = find(this.owner,netname,owner_name);
 	while ( this.owner && this.owner.classname != "minigame" );
 	if ( !this.owner )
-		LOG_TRACE("Got a minigame entity without a minigame!\n");
+		LOG_TRACE("Got a minigame entity without a minigame!");
 }
 NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 {
@@ -196,7 +196,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 			this.entremove = minigame_entremove;
 			this.descriptor = minigame_get_descriptor(ReadString_Raw());
 			if ( !this.descriptor )
-				LOG_TRACE("Got a minigame without a client-side descriptor!\n");
+				LOG_TRACE("Got a minigame without a client-side descriptor!");
 			else
 				this.minigame_event = this.descriptor.minigame_event;
 		}
@@ -212,7 +212,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 			minigame_read_owner(this);
 			float ent = ReadLong();
 			this.minigame_playerslot = ent;
-			LOG_DEBUG("Player: ",entcs_GetName(ent-1),"\n");
+			LOG_DEBUG("Player: ",entcs_GetName(ent-1));
 
 			activate = (ent == player_localnum+1 && this.owner && this.owner != active_minigame);
 
@@ -226,6 +226,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 		{
 			minigame_self = this;
 			activate_minigame(this.owner);
+			minigame_self = this; // set it again (needed before, but may also be reset)
 		}
 	}
 	MINIGAME_SIMPLELINKED_ENTITIES
@@ -237,7 +238,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 	{
 		LOG_DEBUG("CL Reading entity: ",ftos(etof(this)),
 			" classname:",this.classname," enttype:",ftos(this.enttype) );
-		LOG_DEBUG(" sf:",ftos(sf)," netname:",this.netname,"\n\n");
+		LOG_DEBUG(" sf:",ftos(sf)," netname:",this.netname);
 	}
 	return true;
 }

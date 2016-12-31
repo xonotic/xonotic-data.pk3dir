@@ -1,12 +1,13 @@
+#include "hook.qh"
 #ifndef IMPLEMENTATION
 CLASS(Hook, Weapon)
-/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel)
-/* impulse   */ ATTRIB(Hook, impulse, int, 0)
+/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel);
+/* impulse   */ ATTRIB(Hook, impulse, int, 0);
 /* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
 /* modelname */ ATTRIB(Hook, mdl, string, "hookgun");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Hook, m_model, Model, MDL_HOOK_ITEM);
 #endif
 /* crosshair */ ATTRIB(Hook, w_crosshair, string, "gfx/crosshairhook");
@@ -14,7 +15,7 @@ CLASS(Hook, Weapon)
 /* wepimg    */ ATTRIB(Hook, model2, string, "weaponhook");
 /* refname   */ ATTRIB(Hook, netname, string, "hook");
 /* wepname   */ ATTRIB(Hook, m_name, string, _("Grappling Hook"));
-	ATTRIB(Hook, ammo_factor, float, 1)
+	ATTRIB(Hook, ammo_factor, float, 1);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
@@ -96,7 +97,7 @@ void W_Hook_ExplodeThink(entity this)
 	if(dt < this.dmg_duration)
 		this.nextthink = time + 0.05; // soon
 	else
-		remove(this);
+		delete(this);
 }
 
 void W_Hook_Explode2(entity this)
@@ -115,7 +116,7 @@ void W_Hook_Explode2(entity this)
 	this.dmg_duration = WEP_CVAR_SEC(hook, duration);
 	this.teleport_time = time;
 	this.dmg_last = 1;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 }
 
 void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
@@ -137,22 +138,22 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
-void W_Hook_Touch2(entity this)
+void W_Hook_Touch2(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 	this.use(this, NULL, NULL);
 }
 
-void W_Hook_Attack2(Weapon thiswep, entity actor)
+void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(actor, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	entity gren = new(hookbomb);
 	gren.owner = gren.realowner = actor;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
-	gren.movetype = MOVETYPE_TOSS;
+	set_movetype(gren, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
@@ -168,6 +169,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 
 	gren.velocity = '0 0 1' * WEP_CVAR_SEC(hook, speed);
@@ -179,6 +181,8 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 	gren.angles = '0 0 0';
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_HOOKBOMB, true);
 
@@ -207,7 +211,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hook, refire)))
         {
-            W_Hook_Attack2(thiswep, actor);
+            W_Hook_Attack2(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
         }
     }
@@ -380,13 +384,16 @@ void Draw_GrapplingHook(entity this)
 			break;
 	}
 
-	if((this.owner.sv_entnum == player_localentnum - 1) && autocvar_chase_active <= 0)
+	if((this.owner.sv_entnum == player_localentnum - 1))
 	{
 		switch(this.HookType)
 		{
 			default:
 			case NET_ENT_CLIENT_HOOK:
-				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
+				if(autocvar_chase_active > 0)
+					a = csqcplayer.origin;
+				else
+					a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				b = this.origin;
 				break;
 			case NET_ENT_CLIENT_ARC_BEAM:
@@ -440,6 +447,10 @@ void Draw_GrapplingHook(entity this)
 			rgb = '1 1 1';
 			break;
 	}
+
+	MUTATOR_CALLHOOK(DrawGrapplingHook, this, tex, rgb, t);
+	tex = M_ARGV(1, string);
+	rgb = M_ARGV(2, vector);
 
 	Draw_GrapplingHook_trace_callback_tex = tex;
 	Draw_GrapplingHook_trace_callback_rnd = offset;
@@ -537,6 +548,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 	if(bIsNew || !this.teleport_time)
 	{
 		this.draw = Draw_GrapplingHook;
+		IL_PUSH(g_drawables, this);
 		this.entremove = Remove_GrapplingHook;
 
 		switch(this.HookType)

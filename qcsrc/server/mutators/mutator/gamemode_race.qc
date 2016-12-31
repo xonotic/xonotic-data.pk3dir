@@ -1,42 +1,5 @@
 #include "gamemode_race.qh"
 
-#ifndef GAMEMODE_RACE_H
-#define GAMEMODE_RACE_H
-
-void rc_SetLimits();
-void race_Initialize();
-
-REGISTER_MUTATOR(rc, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-
-		rc_SetLimits();
-		race_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back race_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-#endif
-
-#ifdef IMPLEMENTATION
-
 #include <server/race.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
@@ -51,23 +14,22 @@ void havocbot_role_race(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	entity e;
 	if (this.bot_strategytime < time)
 	{
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
-		for(e = NULL; (e = find(e, classname, "trigger_race_checkpoint")) != NULL; )
+		IL_EACH(g_racecheckpoints, true,
 		{
-			if(e.cnt == this.race_checkpoint)
+			if(it.cnt == this.race_checkpoint)
 			{
-				navigation_routerating(this, e, 1000000, 5000);
+				navigation_routerating(this, it, 1000000, 5000);
 			}
 			else if(this.race_checkpoint == -1)
 			{
-				navigation_routerating(this, e, 1000000, 5000);
+				navigation_routerating(this, it, 1000000, 5000);
 			}
-		}
+		});
 
 		navigation_goalrating_end(this);
 	}
@@ -78,7 +40,7 @@ void race_ScoreRules()
 	ScoreRules_basics(race_teams, 0, 0, false);
 	if(race_teams)
 	{
-		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",       SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
@@ -143,8 +105,9 @@ float WinningCondition_QualifyingThenRace(float limit)
 MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
+	float dt = M_ARGV(1, float);
 
-	player.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
+	player.race_movetime_frac += dt;
 	float f = floor(player.race_movetime_frac);
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;
@@ -159,7 +122,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 		if(player.race_penalty)
 		{
 			player.velocity = '0 0 0';
-			player.movetype = MOVETYPE_NONE;
+			set_movetype(player, MOVETYPE_NONE);
 			player.disableclientprediction = 2;
 		}
 	}
@@ -318,7 +281,7 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
 }
@@ -380,7 +343,7 @@ MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
 		return true; // in qualifying, you don't lose score by observing
 }
 
-MUTATOR_HOOKFUNCTION(rc, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(rc, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = race_teams;
 }
@@ -463,6 +426,14 @@ void rc_SetLimits()
 	{
 		ActivateTeamplay();
 		race_teams = bound(2, autocvar_g_race_teams, 4);
+		int teams = 0;
+		if(race_teams >= 1) teams |= BIT(0);
+		if(race_teams >= 2) teams |= BIT(1);
+		if(race_teams >= 3) teams |= BIT(2);
+		if(race_teams >= 4) teams |= BIT(3);
+
+		race_teams = teams; // now set it?
+
 		have_team_spawns = -1; // request team spawns
 	}
 	else
@@ -496,5 +467,3 @@ void rc_SetLimits()
 		g_race_qualifying = 0;
 	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
 }
-
-#endif

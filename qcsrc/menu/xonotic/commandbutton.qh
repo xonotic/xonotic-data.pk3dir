@@ -3,8 +3,8 @@
 #include "button.qh"
 CLASS(XonoticCommandButton, XonoticButton)
 	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float, string));
-	ATTRIB(XonoticCommandButton, onClickCommand, string, string_null)
-	ATTRIB(XonoticCommandButton, flags, float, 0)
+	ATTRIB(XonoticCommandButton, onClickCommand, string);
+	ATTRIB(XonoticCommandButton, flags, float, 0);
 ENDCLASS(XonoticCommandButton)
 
 entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, float closesMenu, string theTooltip);

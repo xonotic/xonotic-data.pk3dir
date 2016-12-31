@@ -1,3 +1,4 @@
+#include "speaker.qh"
 #ifdef SVQC
 // TODO add a way to do looped sounds with sound(); then complete this entity
 void target_speaker_use_off(entity this, entity actor, entity trigger);
@@ -115,7 +116,7 @@ spawnfunc(target_speaker)
 	else if(this.spawnflags & 1) // LOOPED_ON
 	{
 		ambientsound (this.origin, this.noise, VOL_BASE * this.volume, this.atten);
-		remove(this);
+		delete(this);
 	}
 	else if(this.spawnflags & 2) // LOOPED_OFF
 	{
@@ -125,7 +126,7 @@ spawnfunc(target_speaker)
 	{
 		// Quake/Nexuiz fallback
 		ambientsound (this.origin, this.noise, VOL_BASE * this.volume, this.atten);
-		remove(this);
+		delete(this);
 	}
 }
 #endif
