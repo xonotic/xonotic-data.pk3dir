@@ -117,7 +117,7 @@ ENDCLASS(DamageText)
 REGISTER_NET_TEMP(damagetext)
 
 #ifdef SVQC
-AUTOCVAR(sv_damagetext, int, 2, _("<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players"));
+AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players");
 #define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
 #define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1 /* spectators only */)
 #define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)

@@ -6,7 +6,7 @@
 .float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit(entity this);
 
-AUTOCVAR(g_buffs, int, -1, _("Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them"));
+AUTOCVAR(g_buffs, int, -1, "Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them");
 
 REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 {
