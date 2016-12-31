@@ -20,7 +20,10 @@ void thrown_wep_think(entity this)
 	{
 		this.SendFlags |= ISF_LOCATION;
 		this.oldorigin = this.origin;
+		this.bot_pickup = false;
 	}
+	else
+		this.bot_pickup = true;
 	this.owner = NULL;
 	float timeleft = this.savenextthink - time;
 	if(timeleft > 1)

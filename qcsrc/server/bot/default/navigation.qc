@@ -876,10 +876,15 @@ void navigation_poptouchedgoals(entity this)
 	m1 = org + this.mins;
 	m2 = org + this.maxs;
 
+	while(this.goalcurrent && wasfreed(this.goalcurrent))
+		navigation_poproute(this);
+
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
+		// make sure jumppad is really hit, don't rely on distance based checks
+		// as they may report a touch even if it didn't really happen
 		if(this.lastteleporttime>0)
-		if(time-this.lastteleporttime<(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL)?2:0.15)
+		if(time - this.lastteleporttime < ((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15))
 		{
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
@@ -913,14 +918,11 @@ void navigation_poptouchedgoals(entity this)
 	if(IS_PLAYER(this.goalcurrent))
 		navigation_poproute(this);
 
-	// aid for detecting jump pads better (distance based check fails sometimes)
-	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT && this.jumppadcount > 0 )
-		navigation_poproute(this);
-
 	// Loose goal touching check when running
 	if(this.aistatus & AI_STATUS_RUNNING)
 	if(this.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(this.goalcurrent.classname=="waypoint")
+	if(!(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 	{
 		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
 		{
@@ -942,6 +944,9 @@ void navigation_poptouchedgoals(entity this)
 
 	while (this.goalcurrent && boxesoverlap(m1, m2, this.goalcurrent.absmin, this.goalcurrent.absmax))
 	{
+		if((this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
+			break;
+
 		// Detect personal waypoints
 		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 		if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
