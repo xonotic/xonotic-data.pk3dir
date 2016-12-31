@@ -739,7 +739,8 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 // vehicle enter/exit handling
 vector vehicles_findgoodexit(entity this, vector prefer_spot)
 {
-	tracebox(this.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, this.owner);
+	// TODO: we actually want the player's size here
+	tracebox(this.origin + '0 0 32', PL_MIN_CONST, PL_MAX_CONST, prefer_spot, MOVE_NORMAL, this.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
@@ -751,7 +752,7 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, this.owner);
+		tracebox(v2, PL_MIN_CONST, PL_MAX_CONST, v, MOVE_NORMAL, this.owner);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -793,7 +794,7 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		setsize(player, STAT(PL_MIN,player), STAT(PL_MAX, player));
 
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
@@ -803,7 +804,7 @@ void vehicles_exit(entity vehic, bool eject)
 		player.alpha			= 1;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
-		player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
+		player.view_ofs		= STAT(PL_VIEW_OFS, player);
 		player.event_damage	= PlayerDamage;
 		player.hud				= HUD_NORMAL;
 		PS(player).m_switchweapon = vehic.m_switchweapon;
@@ -959,8 +960,8 @@ void vehicles_enter(entity pl, entity veh)
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
 	pl.crouch = false;
-	pl.view_ofs = STAT(PL_VIEW_OFS, NULL);
-	setsize (pl, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
+	setsize (pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;

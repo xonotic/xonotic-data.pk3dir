@@ -312,7 +312,7 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 		return true;
 }
 
-MUTATOR_HOOKFUNCTION(cts, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

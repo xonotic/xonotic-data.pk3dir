@@ -653,7 +653,7 @@ float TrueAimCheck()
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
 			{
-				tracebox(view_origin, '0 0 0', '0 0 0', view_origin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
+				tracebox(view_origin, '0 0 0', '0 0 0', view_origin + view_forward * max_shot_distance, mv, ta);
 				return EnemyHitCheck();
 			}
 			break;
@@ -679,7 +679,7 @@ float TrueAimCheck()
 
 	vecs = decompressShotOrigin(STAT(SHOTORG));
 
-	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
+	traceline(traceorigin, traceorigin + view_forward * max_shot_distance, mv, ta);
 	trueaimpoint = trace_endpos;
 
 	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
@@ -747,7 +747,7 @@ bool WantEventchase(entity this)
 {
 	if(autocvar_cl_orthoview)
 		return false;
-	if(intermission)
+	if(STAT(GAMEOVER) || intermission)
 		return true;
 	if(this.viewloc)
 		return true;
@@ -940,7 +940,7 @@ void HUD_Crosshair(entity this)
 {
 	float f, i, j;
 	vector v;
-	if(!scoreboard_active && !camera_active && intermission != 2 &&
+	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAMEOVER) &&
 		spectatee_status != -1 && !csqcplayer.viewloc && !MUTATOR_CALLHOOK(DrawCrosshair) &&
 		!HUD_MinigameMenu_IsOpened() )
 	{
@@ -972,7 +972,7 @@ void HUD_Crosshair(entity this)
 		float shottype;
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
+		wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
 		if(autocvar_crosshair_hittest)
 		{
@@ -1748,8 +1748,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(!postinit)
 		PostInit();
 
-	if(intermission && !gameover_time)
-		gameover_time = time;
+	if(intermission && !intermission_time)
+		intermission_time = time;
 
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{

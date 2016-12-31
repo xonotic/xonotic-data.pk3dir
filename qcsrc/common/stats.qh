@@ -44,14 +44,14 @@ const int MAX_CL_STATS = 256;
 REGISTER_STAT(WEAPONS, vectori)
 REGISTER_STAT(WEAPONSINMAP, vectori)
 
-REGISTER_STAT(PL_VIEW_OFS, vector, autocvar_sv_player_viewoffset)
-REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector, autocvar_sv_player_crouch_viewoffset)
+REGISTER_STAT(PL_VIEW_OFS, vector)
+REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector)
 
-REGISTER_STAT(PL_MIN, vector, autocvar_sv_player_mins)
-REGISTER_STAT(PL_CROUCH_MIN, vector, autocvar_sv_player_crouch_mins)
+REGISTER_STAT(PL_MIN, vector)
+REGISTER_STAT(PL_CROUCH_MIN, vector)
 
-REGISTER_STAT(PL_MAX, vector, autocvar_sv_player_maxs)
-REGISTER_STAT(PL_CROUCH_MAX, vector, autocvar_sv_player_crouch_maxs)
+REGISTER_STAT(PL_MAX, vector)
+REGISTER_STAT(PL_CROUCH_MAX, vector)
 
 REGISTER_STAT(KH_KEYS, int)
 
@@ -63,9 +63,10 @@ REGISTER_STAT(WEAPON_NEXTTHINK, float)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(WEAPON_NEXTTHINK))
 float W_WeaponRateFactor(entity this);
+float gameover;
 #endif
 REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor(this))
-
+REGISTER_STAT(GAMEOVER, int, gameover)
 REGISTER_STAT(GAMESTARTTIME, float)
 REGISTER_STAT(STRENGTH_FINISHED, float)
 REGISTER_STAT(INVINCIBLE_FINISHED, float)

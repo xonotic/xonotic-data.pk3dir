@@ -318,9 +318,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= sqrt(bound(1.0, this.cvar_cl_handicap, 100.0));
+		damage *= bound(1.0, this.cvar_cl_handicap, 10.0);
 		if(this != attacker)
-			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
+			damage /= bound(1.0, attacker.cvar_cl_handicap, 10.0);
 	}
 
 	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
@@ -699,7 +699,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		teamsay = false;
 	}
 
-	if(intermission_running)
+	if(gameover)
 		teamsay = false;
 
     if (!source) {
@@ -876,9 +876,9 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	if (!privatesay && source && !IS_PLAYER(source))
 	{
-		if (!intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
-				teamsay = -1; // spectators
+		if (!gameover)
+		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			teamsay = -1; // spectators
 	}
 
 	if(flood)

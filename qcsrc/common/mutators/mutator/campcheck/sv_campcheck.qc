@@ -16,7 +16,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
 	Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CPID_CAMPCHECK);
 }
 
-MUTATOR_HOOKFUNCTION(campcheck, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(campcheck, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

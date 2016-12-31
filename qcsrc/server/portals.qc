@@ -208,8 +208,8 @@ float Portal_FindSafeOrigin(entity portal)
 {
 	vector o;
 	o = portal.origin;
-	portal.mins = STAT(PL_MIN, NULL) - SAFERNUDGE;
-	portal.maxs = STAT(PL_MAX, NULL) + SAFERNUDGE;
+	portal.mins = PL_MIN_CONST - SAFERNUDGE;
+	portal.maxs = PL_MAX_CONST + SAFERNUDGE;
 	fixedmakevectors(portal.mangle);
 	portal.origin += 16 * v_forward;
 	if(!move_out_of_solid(portal))

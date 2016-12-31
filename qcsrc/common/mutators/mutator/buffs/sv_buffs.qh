@@ -59,6 +59,8 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
+// flight
+.float buff_flight_oldgravity;
 // common buff variables
 .float buff_effect_delay;
 

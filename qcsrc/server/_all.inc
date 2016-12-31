@@ -3,6 +3,7 @@
 
 #include "bot/_mod.inc"
 #include "command/_mod.inc"
+#include "compat/_mod.inc"
 #include "mutators/_mod.inc"
 #include "pathlib/_mod.inc"
 #include "weapons/_mod.inc"

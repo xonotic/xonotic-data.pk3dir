@@ -283,8 +283,9 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	mod_active = 1; // keyhunt should never hide the mod icons panel
 
 	// Read current state
-
 	int state = STAT(KH_KEYS);
+	if(!state) return;
+
 	int i, key_state;
 	int all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
 	all_keys = team1_keys = team2_keys = team3_keys = team4_keys = dropped_keys = carrying_keys = 0;
@@ -315,9 +316,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	}
 
 	// Calculate slot measurements
-
 	vector slot_size;
-
 	if(all_keys == 4 && mySize.x * 0.5 < mySize.y && mySize.y * 0.5 < mySize.x)
 	{
 		// Quadratic arrangement
@@ -347,11 +346,10 @@ void HUD_Mod_KH(vector pos, vector mySize)
 
 	// Make icons blink in case of RUN HERE
 
-	float blink = 0.6 + sin(2*M_PI*time) / 2.5; // Oscillate between 0.2 and 1
-	float alpha;
-	alpha = 1;
-
+	float alpha = 1;
 	if(carrying_keys)
+	{
+		float blink = 0.6 + sin(2 * M_PI * time) * 0.4; // Oscillate between 0.2 and 1
 		switch(myteam)
 		{
 			case NUM_TEAM_1: if(team1_keys == all_keys) alpha = blink; break;
@@ -359,6 +357,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 			case NUM_TEAM_3: if(team3_keys == all_keys) alpha = blink; break;
 			case NUM_TEAM_4: if(team4_keys == all_keys) alpha = blink; break;
 		}
+	}
 
 	// Draw icons
 

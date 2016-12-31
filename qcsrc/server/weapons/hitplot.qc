@@ -66,7 +66,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 			lag = 0; // only antilag for clients
 
 		org = player.origin + player.view_ofs;
-		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
+		traceline_antilag_force(player, org, org + screenforward * max_shot_distance, MOVE_NORMAL, player, lag);
 		if(IS_CLIENT(trace_ent) || IS_MONSTER(trace_ent))
 		{
 		    entity store = IS_CLIENT(trace_ent) ? CS(trace_ent) : trace_ent;

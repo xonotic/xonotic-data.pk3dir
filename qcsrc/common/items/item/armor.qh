@@ -15,7 +15,7 @@ ENDCLASS(Armor)
 
 #ifdef GAMEQC
 MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
-SOUND(ArmorSmall, "misc/armor1");
+SOUND(ArmorSmall, Item_Sound("armor1"));
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
@@ -35,7 +35,7 @@ REGISTER_ITEM(ArmorSmall, Armor) {
 
 #ifdef GAMEQC
 MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
-SOUND(ArmorMedium, "misc/armor10");
+SOUND(ArmorMedium, Item_Sound("armor10"));
 #endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
@@ -54,21 +54,21 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 }
 
 #ifdef GAMEQC
-MODEL(ArmorLarge_ITEM, Item_Model("item_armor_big.md3"));
-SOUND(ArmorLarge, "misc/armor17_5");
+MODEL(ArmorBig_ITEM, Item_Model("item_armor_big.md3"));
+SOUND(ArmorBig, Item_Sound("armor17_5"));
 #endif
 
-REGISTER_ITEM(ArmorLarge, Armor) {
+REGISTER_ITEM(ArmorBig, Armor) {
 #ifdef GAMEQC
-    this.m_model                =   MDL_ArmorLarge_ITEM;
-    this.m_sound                =   SND_ArmorLarge;
+    this.m_model                =   MDL_ArmorBig_ITEM;
+    this.m_sound                =   SND_ArmorBig;
 #endif
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
     this.m_color                =   '0 1 0';
-    this.m_waypoint             =   _("Large armor");
+    this.m_waypoint             =   _("Big armor");
 #ifdef SVQC
-    this.m_botvalue             =   20000; // FIXME: higher than BOT_PICKUP_RATING_HIGH?
+    this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
@@ -77,7 +77,7 @@ REGISTER_ITEM(ArmorLarge, Armor) {
 
 #ifdef GAMEQC
 MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
-SOUND(ArmorMega, "misc/armor25");
+SOUND(ArmorMega, Item_Sound("armor25"));
 #endif
 
 REGISTER_ITEM(ArmorMega, Armor) {

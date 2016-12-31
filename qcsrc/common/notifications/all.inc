@@ -509,6 +509,7 @@
 
     MSG_CENTER_NOTIF(ASSAULT_ATTACKING,                 1,      0, 0, "",               CPID_ASSAULT_ROLE,      "0 0",  _("^BGYou are attacking!"), "")
     MSG_CENTER_NOTIF(ASSAULT_DEFENDING,                 1,      0, 0, "",               CPID_ASSAULT_ROLE,      "0 0",  _("^BGYou are defending!"), "")
+    MSG_CENTER_NOTIF(ASSAULT_OBJ_DESTROYED,             1,      0, 1, "f1time",         CPID_ASSAULT_ROLE,      "0 0",  _("^BGObjective destroyed in ^F4%s^BG!"), "")
 
     MSG_CENTER_NOTIF(COUNTDOWN_BEGIN,                   1,      0, 0, "",               CPID_ROUND,             "2 0",  _("^F4Begin!"), "")
     MSG_CENTER_NOTIF(COUNTDOWN_GAMESTART,               1,      0, 1, "",               CPID_ROUND,             "1 f1", _("^F4Game starts in ^COUNT"), "")

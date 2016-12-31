@@ -354,7 +354,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 	vector  end;
 
 	dir = normalize(dir + randomvec() * spread);
-	end = start + dir * MAX_SHOT_DISTANCE;
+	end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
 	float solid_penetration_left = 1;
@@ -398,6 +398,10 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 		start = trace_endpos;
 		entity hit = trace_ent;
+
+		// traced up to max_shot_distance and didn't hit anything at all
+		if (trace_fraction == 1.0)
+			break;
 
 		// When hitting sky, stop.
 		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
