@@ -138,7 +138,7 @@ CLASS(DamageText, Object)
             if (closing_pos == -1 || closing_pos <= opening_pos) break;
             s = strcat(
                 substring(s, 0, opening_pos),
-                substring(s, closing_pos + 1, strlen(s))
+                substring_range(s, closing_pos + 1, strlen(s))
             );
         }
 
