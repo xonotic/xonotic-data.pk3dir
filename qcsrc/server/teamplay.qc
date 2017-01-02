@@ -87,25 +87,23 @@ void InitGameplayMode()
 
 string GetClientVersionMessage(entity this)
 {
-	string versionmsg;
 	if (this.version_mismatch) {
 		if(this.version < autocvar_gameversion) {
-			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
 		} else {
-			versionmsg = "^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8";
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8");
 		}
 	} else {
-		versionmsg = "^2client version and server version are compatible.^8";
+		return strcat("Welcome to Xonotic ", autocvar_g_xonoticversion);
 	}
-	return versionmsg;
 }
 
 string getwelcomemessage(entity this)
 {
-	string s, modifications, motd;
-
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
-	modifications = M_ARGV(0, string);
+	string modifications = M_ARGV(0, string);
 
 	if(g_weaponarena)
 	{
@@ -129,9 +127,7 @@ string getwelcomemessage(entity this)
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage = GetClientVersionMessage(this);
-
-	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
-	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
+	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
@@ -156,7 +152,7 @@ string getwelcomemessage(entity this)
 
 	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
 
-	motd = autocvar_sv_motd;
+	string motd = autocvar_sv_motd;
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
