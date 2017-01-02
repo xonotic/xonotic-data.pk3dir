@@ -222,7 +222,7 @@ bool jumppad_push(entity this, entity targ)
 	}
 
 	if(this.enemy.target)
-		SUB_UseTargets(this.enemy, targ, targ); // TODO: do we need targ as trigger too?
+		SUB_UseTargets(this.enemy, targ, this);
 
 	if (targ.flags & FL_PROJECTILE)
 	{
@@ -418,6 +418,9 @@ bool target_push_send(entity this, entity to, float sf)
 
 void target_push_use(entity this, entity actor, entity trigger)
 {
+	if(trigger.classname == "trigger_push" || trigger == this)
+		return; // WTF, why is this a thing
+
 	jumppad_push(this, actor);
 }
 
