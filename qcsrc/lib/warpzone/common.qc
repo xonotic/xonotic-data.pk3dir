@@ -298,13 +298,13 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			}
 			break;
 		}
-		if(trace_ent == wz)
+		/*if(trace_ent == wz)
 		{
 			// FIXME can this check be removed? Do we really need it?
 			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace");
 			trace_ent = NULL;
 			break;
-		}
+		}*/
 		wz = trace_ent;
 		if(!WarpZone_trace_firstzone)
 			WarpZone_trace_firstzone = wz;
