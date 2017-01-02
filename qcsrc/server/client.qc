@@ -706,6 +706,8 @@ void PutClientInServer(entity this)
 		this.weaponname = "";
 		PS(this).m_switchingweapon = WEP_Null;
 
+		MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
+
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
 
