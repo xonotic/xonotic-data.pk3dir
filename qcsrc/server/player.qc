@@ -436,7 +436,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 					}
 
 					if(sound_allowed(MSG_BROADCAST, attacker))
-					if((this.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || attacker != this) // WEAPONTODO: create separate limit for pain notification with laser
+					if(this.health < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
 					if(this.health > 1)
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{

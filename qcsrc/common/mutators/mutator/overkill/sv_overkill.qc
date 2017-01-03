@@ -118,23 +118,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
 		return;
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		entity thiswep = player.(weaponentity);
-
-		if(player.ok_lastwep[slot] && player.ok_lastwep[slot] != WEP_Null)
-		{
-			Weapon newwep = player.ok_lastwep[slot];
-			if(player.ok_lastwep[slot] == WEP_HMG)
-				newwep = WEP_MACHINEGUN;
-			if(player.ok_lastwep[slot] == WEP_RPC)
-				newwep = WEP_VORTEX;
-			thiswep.m_switchweapon = newwep;
-			player.ok_lastwep[slot] = WEP_Null;
-		}
-	}
-
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
 	if( !forbidWeaponUse(player) || player.weapon_blocked // allow if weapon is blocked
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
@@ -173,15 +156,23 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	PHYS_INPUT_BUTTON_ATCK2(player) = false;
 }
 
-MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 {
 	entity player = M_ARGV(0, entity);
 
-	// if player changed their weapon while dead, don't switch to their death weapon
-	if(player.impulse)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		.entity weaponentity = weaponentities[slot];
+		entity thiswep = player.(weaponentity);
+
+		if(player.ok_lastwep[slot] && player.ok_lastwep[slot] != WEP_Null)
 		{
+			Weapon newwep = player.ok_lastwep[slot];
+			if(player.ok_lastwep[slot] == WEP_HMG)
+				newwep = WEP_MACHINEGUN;
+			if(player.ok_lastwep[slot] == WEP_RPC)
+				newwep = WEP_VORTEX;
+			thiswep.m_switchweapon = newwep;
 			player.ok_lastwep[slot] = WEP_Null;
 		}
 	}

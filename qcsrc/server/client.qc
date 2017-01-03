@@ -707,6 +707,8 @@ void PutClientInServer(entity this)
 			this.(weaponentity).cnt = -1;
 		}
 
+		MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
+
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
 

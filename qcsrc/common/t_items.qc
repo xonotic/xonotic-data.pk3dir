@@ -1084,6 +1084,12 @@ void Item_Damage(entity this, entity inflictor, entity attacker, float damage, i
 		RemoveItem(this);
 }
 
+void item_use(entity this, entity actor, entity trigger)
+{
+	// use the touch function to handle collection
+	gettouch(this)(this, actor);
+}
+
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
 {
 	string itemname = def.m_name;
@@ -1204,6 +1210,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			return;
 		}
 		*/
+
+		if(this.targetname != "" && (this.spawnflags & 16))
+			this.use = item_use;
 
 		if(autocvar_spawn_debug >= 2)
 		{
