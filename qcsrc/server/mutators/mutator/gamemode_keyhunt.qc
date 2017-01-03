@@ -2,9 +2,11 @@
 
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
+float autocvar_g_balance_keyhunt_delay_damage_return;
 float autocvar_g_balance_keyhunt_delay_return;
 float autocvar_g_balance_keyhunt_delay_round;
 float autocvar_g_balance_keyhunt_delay_tracking;
+float autocvar_g_balance_keyhunt_return_when_unreachable;
 float autocvar_g_balance_keyhunt_dropvelocity;
 float autocvar_g_balance_keyhunt_maxdist;
 float autocvar_g_balance_keyhunt_protecttime;
@@ -418,10 +420,8 @@ void kh_Key_Damage(entity this, entity inflictor, entity attacker, float damage,
 		return;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
-		// touching lava, or hurt trigger
-		// what shall we do?
-		// immediately return is bad
-		// maybe start a shorter countdown?
+		this.pain_finished = bound(time, time + autocvar_g_balance_keyhunt_delay_damage_return, this.pain_finished);
+		return;
 	}
 	if(force == '0 0 0')
 		return;
@@ -456,10 +456,8 @@ void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a 
 
 	if(ITEM_TOUCH_NEEDKILL())
 	{
-		// touching sky, or nodrop
-		// what shall we do?
-		// immediately return is bad
-		// maybe start a shorter countdown?
+		this.pain_finished = bound(time, time + autocvar_g_balance_keyhunt_delay_damage_return, this.pain_finished);
+		return;
 	}
 
 	if (!IS_PLAYER(toucher))
@@ -547,6 +545,7 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 			first = false;
 		}
 
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_KEYHUNT_CAPTURE), keyowner);
 
 	first = true;
@@ -649,7 +648,11 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 	}
 
 	int realteam = kh_Team_ByID(lostkey.count);
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_LOST), lostkey.kh_previous_owner.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(loser_team, CENTER_ROUND_TEAM_LOSS));
+	if(attacker)
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_PUSHED), attacker.netname, lostkey.kh_previous_owner.netname);
+	else
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DESTROYED), lostkey.kh_previous_owner.netname);
 
 	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);
@@ -730,6 +733,8 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	key.angles = '0 360 0' * random();
 	key.event_damage = kh_Key_Damage;
 	key.takedamage = DAMAGE_YES;
+	key.damagedbytriggers = autocvar_g_balance_keyhunt_return_when_unreachable;
+	key.damagedbycontents = autocvar_g_balance_keyhunt_return_when_unreachable;
 	key.modelindex = kh_key_dropped;
 	key.model = "key";
 	key.kh_dropperteam = 0;
@@ -860,13 +865,16 @@ int kh_GetMissingTeams()
 
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
+	static int prev_missing_teams_mask;
 	if(time < game_starttime)
 	{
+		if (prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
 		kh_Controller_SetThink(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
-	static int prev_missing_teams_mask;
 	int missing_teams_mask = kh_GetMissingTeams();
 	if(!missing_teams_mask)
 	{
@@ -1309,5 +1317,5 @@ MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 
 MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 {
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
+	kh_WaitForPlayers(); // takes care of killing the "missing teams" message
 }
