@@ -33,6 +33,10 @@ CLASS(ClientState, Object)
 		CONSTRUCT(ClientState);
 		this.m_client = client;
 	}
+	METHOD(PlayerState, ps_push, void(PlayerState this, entity cl))
+	{
+		TC(PlayerState, this);
+	}
 ENDCLASS(ClientState)
 
 .ClientState _cs;
