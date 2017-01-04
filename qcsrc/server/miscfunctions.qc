@@ -479,7 +479,7 @@ void GetCvars(entity this, int f)
 string playername(entity p)
 {
     string t;
-    if (teamplay && !game_stopped && IS_PLAYER(p))
+    if (teamplay && !intermission_running && IS_PLAYER(p))
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));
