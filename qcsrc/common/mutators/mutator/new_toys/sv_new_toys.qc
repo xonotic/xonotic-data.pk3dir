@@ -109,11 +109,6 @@ const float NT_AUTOREPLACE_NEVER = 0;
 const float NT_AUTOREPLACE_ALWAYS = 1;
 const float NT_AUTOREPLACE_RANDOM = 2;
 
-MUTATOR_HOOKFUNCTION(nt, SetModname)
-{
-	M_ARGV(0, string) = "NewToys";
-}
-
 bool nt_IsNewToy(int w)
 {
 	switch(w)
