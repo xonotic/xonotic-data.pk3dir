@@ -418,7 +418,6 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 bool forbidWeaponUse(entity player)
 {
 	if (time < game_starttime && !autocvar_sv_ready_restart_after_countdown) return true;
-	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
 	if (player.player_blocked) return true;
 	if (gameover) return true;
 	if (STAT(FROZEN, player)) return true;
@@ -438,13 +437,18 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 
 	if (!this || actor.health < 1) return;  // Dead player can't use weapons and injure impulse commands
 
+	int button_atck = PHYS_INPUT_BUTTON_ATCK(actor);
+	int button_atck2 = PHYS_INPUT_BUTTON_ATCK2(actor);
+
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+		button_atck = button_atck2 = 0; // forbid primary and secondary fire, switching is allowed
 
 	if (forbidWeaponUse(actor))
 	{
 		if (this.state != WS_CLEAR)
 		{
 			Weapon wpn = this.m_weapon;
-			w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
+			w_ready(wpn, actor, weaponentity, button_atck | (button_atck2 << 1));
 			return;
 		}
 	}
@@ -549,6 +553,9 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		bool block_weapon = false;
 		{
 			bool key_pressed = PHYS_INPUT_BUTTON_HOOK(actor) && !actor.vehicle;
+			if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+				key_pressed = false;
+
 			Weapon off = actor.offhand;
 			if (off && !(actor.weapons & WEPSET(HOOK)))
 			{
@@ -560,7 +567,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 					W_SwitchWeapon(actor, WEP_HOOK, weaponentity);
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;
-				block_weapon = (this.m_weapon == h && (PHYS_INPUT_BUTTON_ATCK(actor) || key_pressed));
+				block_weapon = (this.m_weapon == h && (button_atck || key_pressed));
 				h.wr_think(h, actor, weaponentity, block_weapon ? 1 : 0);
 			}
 		}
@@ -575,7 +582,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
             TC(Weapon, e);
 			if (w != WEP_Null)
 			{
-				e.wr_think(e, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
+				e.wr_think(e, actor, weaponentity, button_atck | (button_atck2 << 1));
 			}
 			else if (e)
 			{
@@ -592,7 +599,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				v_up = up;
 				Weapon wpn = this.m_weapon;
 				this.weapon_think(wpn, actor, weaponentity,
-					PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
+					button_atck | (button_atck2 << 1));
 			}
 			else
 			{
