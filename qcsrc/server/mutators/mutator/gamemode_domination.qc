@@ -153,7 +153,7 @@ void dompointthink(entity this)
 
 	// give points
 
-	if (gameover || this.delay > time || time < game_starttime)	// game has ended, don't keep giving points
+	if (game_stopped || this.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
 	if(autocvar_g_domination_point_rate)

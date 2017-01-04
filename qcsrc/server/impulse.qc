@@ -352,7 +352,7 @@ IMPULSE(weapon_reload)
 
 void ImpulseCommands(entity this)
 {
-	if (gameover) return;
+	if (game_stopped) return;
 
 	int imp = this.impulse;
 	if (!imp) return;

@@ -70,7 +70,7 @@ vector CL_Weapon_GetShotOrg(int wpn)
 void CL_Weaponentity_Think(entity this)
 {
 	this.nextthink = time;
-	if (gameover) this.frame = this.anim_idle.x;
+	if (game_stopped) this.frame = this.anim_idle.x;
 	.entity weaponentity = this.weaponentity_fld;
 	if (this.owner.(weaponentity) != this)
 	{
@@ -419,7 +419,7 @@ bool forbidWeaponUse(entity player)
 {
 	if (time < game_starttime && !autocvar_sv_ready_restart_after_countdown) return true;
 	if (player.player_blocked) return true;
-	if (gameover) return true;
+	if (game_stopped) return true;
 	if (STAT(FROZEN, player)) return true;
 	if (player.weapon_blocked) return true;
 	if (MUTATOR_CALLHOOK(ForbidWeaponUse, player)) return true;

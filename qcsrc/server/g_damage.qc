@@ -33,7 +33,7 @@ void UpdateFrags(entity player, int f)
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 {
 	// TODO route through PlayerScores instead
-	if(gameover) return;
+	if(game_stopped) return;
 
 	if(f < 0)
 	{
@@ -623,7 +623,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	mirrordamage = 0;
 	mirrorforce = 0;
 
-	if (gameover || targ.killcount == FRAGS_SPECTATOR)
+	if (game_stopped || targ.killcount == FRAGS_SPECTATOR)
 		return;
 
     damage_targ = targ;

@@ -1038,7 +1038,7 @@ void ctf_FlagThink(entity this)
 METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 {
 	return = false;
-	if(gameover) { return; }
+	if(game_stopped) return;
 	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	bool is_not_monster = (!IS_MONSTER(toucher));
@@ -2181,7 +2181,7 @@ MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return; }
+	if(MUTATOR_RETURNVALUE || game_stopped) return;
 
 	entity player = M_ARGV(0, entity);
 

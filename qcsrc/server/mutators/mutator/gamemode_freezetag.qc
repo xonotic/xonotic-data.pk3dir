@@ -429,7 +429,7 @@ MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 {
-	if(gameover)
+	if(game_stopped)
 		return true;
 
 	if(round_handler_IsActive())

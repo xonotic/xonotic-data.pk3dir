@@ -167,7 +167,7 @@ void ClientCommand_join(entity caller, float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!gameover)
+			if (!game_stopped)
 			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
 			if (joinAllowed(caller))
 				Join(caller);

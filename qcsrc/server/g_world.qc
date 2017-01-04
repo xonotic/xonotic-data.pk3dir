@@ -1528,9 +1528,8 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
-	gameover = true;
-
-	intermission_running = 1;
+	game_stopped = true;
+	intermission_running = 1; // game over
 
 	// enforce a wait time before allowing changelevel
 	if(player_count > 0)
@@ -1587,7 +1586,7 @@ Exit deathmatch games upon conditions
 */
 void CheckRules_Player(entity this)
 {
-	if (gameover)	// someone else quit the game already
+	if (game_stopped) // someone else quit the game already
 		return;
 
 	if(!IS_DEAD(this))
@@ -2160,7 +2159,7 @@ void RestoreGame()
 
 void Shutdown()
 {
-	gameover = 2;
+	game_stopped = 2;
 
 	if(world_initialized > 0)
 	{

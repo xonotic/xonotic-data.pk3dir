@@ -234,7 +234,7 @@ void DropBall(entity ball, vector org, vector vel)
 
 void InitBall(entity this)
 {
-	if(gameover) return;
+	if(game_stopped) return;
 	UNSET_ONGROUND(this);
 	set_movetype(this, MOVETYPE_BOUNCE);
 	if(this.classname == "nexball_basketball")
@@ -362,7 +362,7 @@ void GoalTouch(entity this, entity toucher)
 	float isclient, pscore, otherteam;
 	string pname;
 
-	if(gameover) return;
+	if(game_stopped) return;
 	if((this.spawnflags & GOAL_TOUCHPLAYER) && toucher.ballcarried)
 		ball = toucher.ballcarried;
 	else

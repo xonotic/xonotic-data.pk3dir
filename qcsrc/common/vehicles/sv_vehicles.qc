@@ -541,7 +541,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 	else
 		this.active = ACTIVE_ACTIVE;
 
-	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !gameover)
+	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !game_stopped)
 	{
 		LOG_DEBUG("Respawning vehicle: ", this.netname);
 		if(this.effects & EF_NODRAW)

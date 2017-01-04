@@ -213,7 +213,7 @@ entity as_round;
 .entity ent_winning;
 void as_round_think()
 {
-	gameover = false;
+	game_stopped = false;
 	assault_new_round(as_round.ent_winning);
 	delete(as_round);
 	as_round = NULL;
@@ -261,7 +261,7 @@ int WinningCondition_Assault()
 				as_round.think = as_round_think;
 				as_round.ent_winning = ent;
 				as_round.nextthink = time + AS_ROUND_DELAY;
-				gameover = true;
+				game_stopped = true;
 
 				// make sure timelimit isn't hit while the game is blocked
 				if(autocvar_timelimit > 0)

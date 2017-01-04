@@ -12,8 +12,8 @@ void round_handler_Think(entity this)
 		return;
 	}
 
-	if (gameover)
-		gameover = false;
+	if (game_stopped)
+		game_stopped = false;
 
 	if (intermission_running)
 	{
@@ -59,7 +59,7 @@ void round_handler_Think(entity this)
 			// schedule a new round
 			this.wait = true;
 			this.nextthink = time + this.delay;
-			gameover = true;
+			game_stopped = true;
 		}
 		else
 		{

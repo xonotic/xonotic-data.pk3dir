@@ -279,7 +279,7 @@ void PutObserverInServer(entity this)
 	if (this.killcount != FRAGS_SPECTATOR)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
-		if(!gameover)
+		if(!game_stopped)
 		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
@@ -484,9 +484,8 @@ void PutClientInServer(entity this)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
 	}
-	if (gameover) {
+	if (game_stopped)
 		TRANSMUTE(Observer, this);
-	}
 
 	SetSpectatee(this, NULL);
 
@@ -871,7 +870,7 @@ void ClientKill_Now(entity this)
 }
 void KillIndicator_Think(entity this)
 {
-	if (gameover)
+	if (game_stopped)
 	{
 		this.owner.killindicator = NULL;
 		delete(this);
@@ -915,7 +914,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 	float killtime;
 	float starttime;
 
-	if (gameover)
+	if (game_stopped)
 		return;
 
 	killtime = autocvar_g_balance_kill_delay;
@@ -1007,7 +1006,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 void ClientKill (entity this)
 {
-	if(gameover) return;
+	if(game_stopped) return;
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
 
@@ -1389,7 +1388,7 @@ void player_powerups(entity this)
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = this.items;
 
-	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !gameover)
+	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
 		this.modelflags |= MF_ROCKET;
 	else
 		this.modelflags &= ~MF_ROCKET;
@@ -2153,7 +2152,7 @@ void PlayerUseKey(entity this)
 
 	if(this.vehicle)
 	{
-		if(!gameover)
+		if(!game_stopped)
 		{
 			vehicles_exit(this.vehicle, VHEF_NORMAL);
 			return;
@@ -2163,7 +2162,7 @@ void PlayerUseKey(entity this)
 	{
 		if(!STAT(FROZEN, this))
 		if(!IS_DEAD(this))
-		if(!gameover)
+		if(!game_stopped)
 		{
 			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
@@ -2294,7 +2293,7 @@ void PlayerPreThink (entity this)
 
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
 
-	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !gameover && !this.vehicle)
+	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
 	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this))
 	{
 		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it),
@@ -2329,7 +2328,7 @@ void PlayerPreThink (entity this)
 	if (IS_PLAYER(this)) {
 		CheckRules_Player(this);
 
-		if (gameover || intermission_running) {
+		if (game_stopped || intermission_running) {
 			if(intermission_running)
 				IntermissionThink(this);
 			return;
@@ -2500,7 +2499,7 @@ void PlayerPreThink (entity this)
 
 		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
-	else if (gameover || intermission_running) {
+	else if (game_stopped || intermission_running) {
 		if(intermission_running)
 			IntermissionThink(this);
 		return;
@@ -2652,7 +2651,7 @@ void PlayerPostThink (entity this)
 	CheatFrame(this);
 
 	//CheckPlayerJump();
-	if (gameover)
+	if (game_stopped)
 	{
 		this.solid = SOLID_NOT;
 		this.takedamage = DAMAGE_NO;
@@ -2664,7 +2663,7 @@ void PlayerPostThink (entity this)
 		CheckRules_Player(this);
 		UpdateChatBubble(this);
 		if (this.impulse) ImpulseCommands(this);
-		if (gameover)
+		if (game_stopped)
 		{
 			CSQCMODEL_AUTOUPDATE(this);
 			return;

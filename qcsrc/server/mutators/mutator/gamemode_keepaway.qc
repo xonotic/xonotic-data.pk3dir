@@ -41,7 +41,7 @@ void ka_TouchEvent(entity this, entity toucher);
 void ka_RespawnBall(entity this);
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
-	if(gameover) { return; }
+	if(game_stopped) return;
 	vector oldballorigin = this.origin;
 
 	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
@@ -83,8 +83,8 @@ void ka_TimeScoring(entity this)
 
 void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
 {
-	if(gameover) { return; }
-	if(!this) { return; }
+	if(game_stopped) return;
+	if(!this) return;
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The ball fell off the map, respawn it since players can't get to it
 		ka_RespawnBall(this);

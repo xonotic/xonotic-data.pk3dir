@@ -24,7 +24,7 @@ float gravity_delay;
 
 MUTATOR_HOOKFUNCTION(random_gravity, SV_StartFrame)
 {
-	if(gameover || !cvar("g_random_gravity")) return false;
+	if(game_stopped || !cvar("g_random_gravity")) return false;
 	if(time < gravity_delay) return false;
 	if(time < game_starttime) return false;
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted()) return false;

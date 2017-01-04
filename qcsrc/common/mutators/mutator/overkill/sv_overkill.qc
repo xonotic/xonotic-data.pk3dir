@@ -110,7 +110,7 @@ MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 {
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	entity player = M_ARGV(0, entity);

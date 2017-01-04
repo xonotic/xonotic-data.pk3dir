@@ -870,9 +870,9 @@ void ons_camSetup(entity this)
 
 void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	if(damage <= 0) { return; }
-	if(warmup_stage || gameover) { return; }
-	if(!round_handler_IsRoundStarted()) { return; }
+	if(damage <= 0) return;
+	if(warmup_stage || game_stopped) return;
+	if(!round_handler_IsRoundStarted()) return;
 
 	if (attacker != this)
 	{
@@ -955,7 +955,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 void ons_GeneratorThink(entity this)
 {
 	this.nextthink = time + GEN_THINKRATE;
-	if (!gameover)
+	if (!game_stopped)
 	{
 		if(!this.isshielded && this.wait < time)
 		{
@@ -2021,7 +2021,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+	if(MUTATOR_RETURNVALUE || game_stopped) return false;
 
 	entity player = M_ARGV(0, entity);
 

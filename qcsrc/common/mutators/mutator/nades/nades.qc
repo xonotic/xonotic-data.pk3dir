@@ -1106,7 +1106,7 @@ bool CanThrowNade(entity this)
 	if(this.vehicle)
 		return false;
 
-	if(gameover)
+	if(game_stopped)
 		return false;
 
 	if(IS_DEAD(this))

@@ -34,7 +34,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(!gameover)
+	if(!game_stopped)
 	if(!warmup_stage) // don't consider it camping during warmup?
 	if(time >= game_starttime)
 	if(IS_PLAYER(player))

@@ -668,7 +668,7 @@ void bot_clear(entity this)
 
 void bot_serverframe()
 {
-	if (gameover)
+	if (game_stopped)
 		return;
 
 	if (time < 2)

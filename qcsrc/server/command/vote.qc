@@ -336,7 +336,7 @@ void reset_map(bool dorespawn)
 {
 	if (time <= game_starttime)
 	{
-		if (gameover)
+		if (game_stopped)
 			return;
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
@@ -405,7 +405,7 @@ void ReadyRestart_think(entity this)
 // Forces a restart of the game without actually reloading the map // this is a mess...
 void ReadyRestart_force()
 {
-	if (time <= game_starttime && gameover)
+	if (time <= game_starttime && game_stopped)
 		return;
 
 	bprint("^1Server is restarting...\n");
@@ -464,7 +464,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || gameover || race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_gamerestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!

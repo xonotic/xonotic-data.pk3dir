@@ -782,7 +782,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	entity targ = this.goalentity;
 
 	if (MUTATOR_CALLHOOK(MonsterMove, this, runspeed, walkspeed, targ)
-		|| gameover
+		|| game_stopped
 		|| this.draggedby != NULL
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted())
 		|| time < game_starttime
@@ -1115,7 +1115,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 // don't check for enemies, just keep walking in a straight line
 void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 {
-	if(gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || this.draggedby != NULL || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < this.spawn_time)
+	if(game_stopped || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || this.draggedby != NULL || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < this.spawn_time)
 	{
 		mspeed = 0;
 		if(time >= this.spawn_time)

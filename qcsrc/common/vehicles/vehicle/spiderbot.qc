@@ -48,7 +48,7 @@ bool spiderbot_frame(entity this, float dt)
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(gameover)
+	if(game_stopped)
 	{
 		vehic.solid = SOLID_NOT;
 		vehic.takedamage = DAMAGE_NO;
