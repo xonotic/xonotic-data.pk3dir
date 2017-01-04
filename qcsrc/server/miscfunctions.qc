@@ -26,6 +26,7 @@
 #include "../common/items/_mod.qh"
 #include "../common/state.qh"
 #include "../common/effects/qc/globalsound.qh"
+#include "../common/wepent.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/server.qh"
@@ -216,20 +217,10 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string formatmessage(entity this, string msg)
+string AmmoNameFromWeaponentity(entity wpn)
 {
-	float p, p1, p2;
-	float n;
-	vector cursor;
-	entity cursor_ent;
-	string escape;
-	string replacement;
-	string ammoitems;
-	p = 0;
-	n = 7;
-
-	ammoitems = "batteries";
-	switch((PS(this).m_weapon).ammo_field)
+	string ammoitems = "batteries";
+	switch((wpn.m_weapon).ammo_field)
 	{
 		case ammo_shells:  ammoitems = ITEM_Shells.m_name;      break;
 		case ammo_nails:   ammoitems = ITEM_Bullets.m_name;     break;
@@ -238,6 +229,19 @@ string formatmessage(entity this, string msg)
 		case ammo_plasma:  ammoitems = ITEM_Plasma.m_name;      break;
 		case ammo_fuel:    ammoitems = ITEM_JetpackFuel.m_name; break;
 	}
+	return ammoitems;
+}
+
+string formatmessage(entity this, string msg)
+{
+	float p, p1, p2;
+	float n;
+	vector cursor;
+	entity cursor_ent;
+	string escape;
+	string replacement;
+	p = 0;
+	n = 7;
 
 	WarpZone_crosshair_trace(this);
 	cursor = trace_endpos;
@@ -268,6 +272,8 @@ string formatmessage(entity this, string msg)
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 		switch(escape)
 		{
 			case "%": replacement = "%"; break;
@@ -278,8 +284,8 @@ string formatmessage(entity this, string msg)
 			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(this.death_origin); break;
-			case "w": replacement = ((PS(this).m_weapon == WEP_Null) ? ((PS(this).m_switchweapon == WEP_Null) ? Weapons_from(this.cnt) : PS(this).m_switchweapon) : PS(this).m_weapon).m_name; break;
-			case "W": replacement = ammoitems; break;
+			case "w": replacement = ((this.(weaponentity).m_weapon == WEP_Null) ? ((this.(weaponentity).m_switchweapon == WEP_Null) ? Weapons_from(this.(weaponentity).cnt) : this.(weaponentity).m_switchweapon) : this.(weaponentity).m_weapon).m_name; break;
+			case "W": replacement = AmmoNameFromWeaponentity(this.(weaponentity)); break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(this.velocity)); break;
@@ -456,7 +462,14 @@ void GetCvars(entity this, int f)
 	if (f > 0)
 	{
 		if (s == "cl_weaponpriority")
-			if (PS(this)) PS(this).m_switchweapon = w_getbestweapon(this);
+		{
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if (this.(weaponentity) && (this.(weaponentity).m_weapon != WEP_Null || slot == 0))
+					this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+			}
+		}
 		if (s == "cl_allow_uidtracking")
 			PlayerStats_GameReport_AddPlayer(this);
 	}
@@ -560,6 +573,15 @@ void readplayerstartcvars()
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				g_weaponarena_weapons |= (it.m_wepset);
 		));
+	}
+	else if (s == "devall")
+	{
+		g_weaponarena = 1;
+		g_weaponarena_list = "All Weapons"; // TODO: report as more than just all weapons?
+		FOREACH(Weapons, it != WEP_Null,
+		{
+			g_weaponarena_weapons |= (it.m_wepset);
+		});
 	}
 	else if (s == "most")
 	{
@@ -1082,7 +1104,7 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 		if(this.classname == "nade")
 			return false; // no checks here
 		else if(this.classname == "grapplinghook")
-			RemoveGrapplingHook(this.realowner);
+			RemoveHook(this);
 		else if(this.classname == "spike")
 		{
 			W_Crylink_Dequeue(this);

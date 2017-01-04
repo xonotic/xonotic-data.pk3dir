@@ -4,6 +4,7 @@
 
 #include <common/state.qh>
 #include <common/physics/player.qh>
+#include <common/wepent.qh>
 
 #include "bot.qh"
 
@@ -569,9 +570,22 @@ float bot_cmd_select_weapon(entity this)
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
-	if(client_hasweapon(this, Weapons_from(id), true, false))
-		PS(this).m_switchweapon = Weapons_from(id);
-	else
+	bool success = false;
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
+			continue;
+
+		if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
+		{
+			success = true;
+			this.(weaponentity).m_switchweapon = Weapons_from(id);
+		}
+	}
+
+	if(!success)
 		return CMD_STATUS_ERROR;
 
 	return CMD_STATUS_FINISHED;
@@ -1056,7 +1070,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '0 8 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, inhibited by weaponentity state\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state\n");
 		}
 	}
 	else if(ATTACK_FINISHED(this, slot) > time)
@@ -1064,15 +1078,15 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '8 0 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
 		}
 	}
-	else if(this.tuba_note)
+	else if(this.(weaponentity).tuba_note)
 	{
 		if(f)
 		{
 			this.colormod = '8 0 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, bot still has an active tuba note\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, bot still has an active tuba note\n");
 		}
 	}
 	else
@@ -1080,7 +1094,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(!f)
 		{
 			this.colormod = '8 8 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
 		}
 	}
 

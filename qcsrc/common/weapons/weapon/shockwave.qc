@@ -695,23 +695,23 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 	}
 }
 
-METHOD(Shockwave, wr_aim, void(entity thiswep, entity actor))
+METHOD(Shockwave, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(shockwave, melee_range)))
-        { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false); }
+        { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false); }
     else
-        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false); }
+        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false); }
 }
 METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     if(fire & 1)
     {
-        if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
+        if(time >= actor.(weaponentity).shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
             {
                 W_Shockwave_Attack(actor, weaponentity);
-                actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
+                actor.(weaponentity).shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
             }
         }
@@ -726,11 +726,11 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
         }
     }
 }
-METHOD(Shockwave, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Shockwave, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // infinite ammo
 }
-METHOD(Shockwave, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Shockwave, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     // shockwave has infinite ammo
     return true;

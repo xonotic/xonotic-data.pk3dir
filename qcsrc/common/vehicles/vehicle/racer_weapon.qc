@@ -34,7 +34,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
     }
 }
 
-METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep, entity actor))
+METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep, entity actor, .entity weaponentity))
 {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;

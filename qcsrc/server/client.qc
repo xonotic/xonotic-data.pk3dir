@@ -23,6 +23,7 @@
 #include "bot/api.qh"
 
 #include "../common/ent_cs.qh"
+#include "../common/wepent.qh"
 #include <common/state.qh>
 
 #include <common/effects/qc/globalsound.qh>
@@ -112,7 +113,6 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (e.race_completed)       sf |= 1; // forced scoreboard
 	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
 	if (e.zoomstate)            sf |= 4; // zoomed
-	if (e.porto_v_angle_held)   sf |= 8; // angles held
 	if (autocvar_sv_showspectators) sf |= 16; // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
@@ -121,11 +121,6 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (sf & 2)
 	{
 		WriteByte(MSG_ENTITY, to.spectatee_status);
-	}
-	if (sf & 8)
-	{
-		WriteAngle(MSG_ENTITY, e.v_angle.x);
-		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
 
 	if(sf & 16)
@@ -257,7 +252,7 @@ void PutObserverInServer(entity this)
         this.view_ofs = '0 0 0';
     }
 
-    RemoveGrapplingHook(this);
+    RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
 	Unfreeze(this);
 	SetSpectatee(this, NULL);
@@ -336,7 +331,6 @@ void PutObserverInServer(entity this)
 	this.istypefrag = 0;
 	setthink(this, func_null);
 	this.nextthink = 0;
-	this.hook_time = 0;
 	this.deadflag = DEAD_NO;
 	this.crouch = false;
 	this.revive_progress = 0;
@@ -346,7 +340,6 @@ void PutObserverInServer(entity this)
 	this.weapons = '0 0 0';
 	this.drawonlytoclient = this;
 
-	this.weaponname = "";
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -361,10 +354,6 @@ void PutObserverInServer(entity this)
 	this.oldvelocity = this.velocity;
 	this.fire_endtime = -1;
 	this.event_damage = func_null;
-
-	STAT(ACTIVEWEAPON, this) = WEP_Null.m_id;
-	STAT(SWITCHINGWEAPON, this) = WEP_Null.m_id;
-	STAT(SWITCHWEAPON, this) = WEP_Null.m_id;
 }
 
 int player_getspecies(entity this)
@@ -664,7 +653,8 @@ void PutClientInServer(entity this)
 
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			CL_SpawnWeaponentity(this, weaponentities[slot]);
+			.entity weaponentity = weaponentities[slot];
+			CL_SpawnWeaponentity(this, weaponentity);
 		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -679,7 +669,11 @@ void PutClientInServer(entity this)
 			it.wr_resetplayer(it, this);
 			// reload all reloadable weapons
 			if (it.spawnflags & WEP_FLAG_RELOADABLE) {
-				this.weapon_load[it.m_id] = it.reloading_ammo;
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					.entity weaponentity = weaponentities[slot];
+					this.(weaponentity).weapon_load[it.m_id] = it.reloading_ammo;
+				}
 			}
 		));
 
@@ -700,11 +694,18 @@ void PutClientInServer(entity this)
 			delete(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
-		PS(this).m_switchweapon = w_getbestweapon(this);
-		this.cnt = -1; // W_LastWeapon will not complain
-		PS(this).m_weapon = WEP_Null;
-		this.weaponname = "";
-		PS(this).m_switchingweapon = WEP_Null;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(slot == 0)
+				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+			else
+				this.(weaponentity).m_switchweapon = WEP_Null;
+			this.(weaponentity).m_weapon = WEP_Null;
+			this.(weaponentity).weaponname = "";
+			this.(weaponentity).m_switchingweapon = WEP_Null;
+			this.(weaponentity).cnt = -1;
+		}
 
 		MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
 
@@ -1263,7 +1264,7 @@ void ClientDisconnect(entity this)
 
 	Unfreeze(this);
 
-	RemoveGrapplingHook(this);
+	RemoveGrapplingHooks(this);
 
 	// Here, everything has been done that requires this player to be a client.
 
@@ -1693,6 +1694,12 @@ void SpectateCopy(entity this, entity spectatee)
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(this, spectatee.zoomstate);
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		this.(weaponentity) = spectatee.(weaponentity);
+	}
 
     anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;
@@ -2409,8 +2416,18 @@ void PlayerPreThink (entity this)
 
 		this.prevorigin = this.origin;
 
+		bool have_hook = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.(weaponentity).hook.state)
+			{
+				have_hook = true;
+				break;
+			}
+		}
 		bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-		if (this.hook.state) {
+		if (have_hook) {
 			do_crouch = false;
 		} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
 			do_crouch = false;
@@ -2443,13 +2460,17 @@ void PlayerPreThink (entity this)
 		{
 			this.items &= ~this.items_added;
 
-			//for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			//{
-				//.entity weaponentity = weaponentities[slot];
-				//W_WeaponFrame(this, weaponentity);
-			//}
-			.entity weaponentity = weaponentities[0]; // TODO
-			W_WeaponFrame(this, weaponentity);
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				W_WeaponFrame(this, weaponentity);
+
+				if(slot == 0)
+				{
+					this.clip_load = this.(weaponentity).clip_load;
+					this.clip_size = this.(weaponentity).clip_size;
+				}
+			}
 
 			this.items_added = 0;
 			if (this.items & ITEM_Jetpack.m_itemid && (this.items & ITEM_JetpackRegen.m_itemid || this.ammo_fuel >= 0.01))
@@ -2462,8 +2483,12 @@ void PlayerPreThink (entity this)
 
 		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
-		if (WEP_CVAR(vortex, charge_rot_rate) && this.vortex_charge > WEP_CVAR(vortex, charge_limit) && this.vortex_charge_rottime < time)
-			this.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		}
 
 		if (frametime) player_anim(this);
 
@@ -2489,11 +2514,15 @@ void PlayerPreThink (entity this)
 
 	// WEAPONTODO: Add weapon request for this
 	if (!zoomstate_set) {
-		SetZoomState(this,
-			PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this)
-			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_VORTEX)
-			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
-		);
+		bool wep_zoomed = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			Weapon thiswep = this.(weaponentity).m_weapon;
+			if(thiswep != WEP_Null && thiswep.wr_zoom)
+				wep_zoomed += thiswep.wr_zoom(thiswep, this);
+		}
+		SetZoomState(this, PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this) || wep_zoomed);
     }
 
 	if (this.teamkill_soundtime && time > this.teamkill_soundtime)
@@ -2516,8 +2545,12 @@ void PlayerPreThink (entity this)
 
 	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	if (PS(this).m_weapon == WEP_Null)
-		this.clip_load = this.clip_size = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
+	}
 }
 
 void DrownPlayer(entity this)

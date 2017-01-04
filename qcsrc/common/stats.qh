@@ -55,13 +55,7 @@ REGISTER_STAT(PL_CROUCH_MAX, vector)
 
 REGISTER_STAT(KH_KEYS, int)
 
-/** weapon requested to switch to; next WANTED weapon (for HUD) */
-REGISTER_STAT(SWITCHWEAPON, int)
-/** weapon currently being switched to (is copied from switchweapon once switch is possible) */
-REGISTER_STAT(SWITCHINGWEAPON, int)
-REGISTER_STAT(WEAPON_NEXTTHINK, float)
 #ifdef SVQC
-SPECTATE_COPYFIELD(_STAT(WEAPON_NEXTTHINK))
 float W_WeaponRateFactor(entity this);
 float gameover;
 #endif
@@ -115,8 +109,6 @@ REGISTER_STAT(NADE_BONUS_SCORE, float)
 REGISTER_STAT(HEALING_ORB, float)
 REGISTER_STAT(HEALING_ORB_ALPHA, float)
 REGISTER_STAT(PLASMA, int)
-REGISTER_STAT(OK_AMMO_CHARGE, float)
-REGISTER_STAT(OK_AMMO_CHARGEPOOL, float)
 REGISTER_STAT(FROZEN, int)
 REGISTER_STAT(REVIVE_PROGRESS, float)
 REGISTER_STAT(ROUNDLOST, int)

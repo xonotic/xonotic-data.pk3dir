@@ -170,9 +170,8 @@ void M_Spider_Attack_Web(entity this)
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, true);
 }
 
-bool M_Spider_Attack(int attack_type, entity actor, entity targ)
+bool M_Spider_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-    .entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		Weapon wep = WEP_SPIDER_ATTACK;

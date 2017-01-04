@@ -673,21 +673,30 @@ LABEL(YEAH)
 
 float Item_GiveTo(entity item, entity player)
 {
-	float _switchweapon;
 	float pickedup;
 
 	// if nothing happens to player, just return without taking the item
 	pickedup = false;
-	_switchweapon = false;
+	int _switchweapon = 0;
 	// in case the player has autoswitch enabled do the following:
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
-	if (player.autoswitch)
-	if (PS(player).m_switchweapon == w_getbestweapon(player))
-		_switchweapon = true;
 
-	if (!(player.weapons & WepSet_FromWeapon(PS(player).m_switchweapon)))
-		_switchweapon = true;
+	if(player.autoswitch)
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
+			{
+				if(player.(weaponentity).m_switchweapon == w_getbestweapon(player, weaponentity))
+					_switchweapon |= BIT(slot);
+
+				if(!(player.weapons & WepSet_FromWeapon(player.(weaponentity).m_switchweapon)))
+					_switchweapon |= BIT(slot);
+			}
+		}
+	}
 
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
@@ -710,7 +719,12 @@ float Item_GiveTo(entity item, entity player)
 			FOREACH(Weapons, it != WEP_Null, {
 				if(w & (it.m_wepset))
 				{
-					W_DropEvent(wr_pickup, player, it.m_id, item);
+					for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+					{
+						.entity weaponentity = weaponentities[slot];
+						if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
+							W_DropEvent(wr_pickup, player, it.m_id, item, weaponentity);
+					}
 					W_GiveWeapon(player, it.m_id);
 				}
 			});
@@ -761,13 +775,25 @@ LABEL(skip)
 	// crude hack to enforce switching weapons
 	if(g_cts && item.itemdef.instanceOfWeaponPickup)
 	{
-		W_SwitchWeapon_Force(player, Weapons_from(item.weapon));
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(player.(weaponentity).m_weapon != WEP_Null || slot == 0)
+				W_SwitchWeapon_Force(player, Weapons_from(item.weapon), weaponentity);
+		}
 		return 1;
 	}
 
-	if (_switchweapon)
-		if (PS(player).m_switchweapon != w_getbestweapon(player))
-			W_SwitchWeapon_Force(player, w_getbestweapon(player));
+	if(_switchweapon)
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(_switchweapon & BIT(slot))
+			if(player.(weaponentity).m_switchweapon != w_getbestweapon(player, weaponentity))
+				W_SwitchWeapon_Force(player, w_getbestweapon(player, weaponentity), weaponentity);
+		}
+	}
 
 	return 1;
 }
@@ -1676,7 +1702,6 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 float GiveItems(entity e, float beginarg, float endarg)
 {
 	float got, i, val, op;
-	float _switchweapon;
 	string cmd;
 
 	val = 999;
@@ -1684,10 +1709,18 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	got = 0;
 
-	_switchweapon = false;
-	if (e.autoswitch)
-		if (PS(e).m_switchweapon == w_getbestweapon(e))
-			_switchweapon = true;
+	int _switchweapon = 0;
+
+	if(e.autoswitch)
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
+			if(e.(weaponentity).m_switchweapon == w_getbestweapon(e, weaponentity))
+				_switchweapon |= BIT(slot);
+		}
+	}
 
 	e.strength_finished = max(0, e.strength_finished - time);
 	e.invincible_finished = max(0, e.invincible_finished - time);
@@ -1853,10 +1886,23 @@ float GiveItems(entity e, float beginarg, float endarg)
 	else
 		e.superweapons_finished += time;
 
-	if (!(e.weapons & WepSet_FromWeapon(PS(e).m_switchweapon)))
-		_switchweapon = true;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(e.(weaponentity).m_weapon != WEP_Null || slot == 0)
+		if(!(e.weapons & WepSet_FromWeapon(e.(weaponentity).m_switchweapon)))
+			_switchweapon |= BIT(slot);
+	}
+
 	if(_switchweapon)
-		W_SwitchWeapon_Force(e, w_getbestweapon(e));
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(_switchweapon & BIT(slot))
+				W_SwitchWeapon_Force(e, w_getbestweapon(e, weaponentity), weaponentity);
+		}
+	}
 
 	return got;
 }

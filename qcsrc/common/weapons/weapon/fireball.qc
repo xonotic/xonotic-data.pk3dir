@@ -56,7 +56,7 @@ REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
-.float fireball_primarytime[MAX_WEAPONSLOTS];
+.float fireball_primarytime;
 #endif
 #endif
 #ifdef IMPLEMENTATION
@@ -314,7 +314,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	vector f_diff;
 	float c;
 
-	c = actor.bulletcounter % 4;
+	c = actor.(weaponentity).bulletcounter % 4;
 	switch(c)
 	{
 		case 0:
@@ -364,13 +364,13 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-METHOD(Fireball, wr_aim, void(entity thiswep, entity actor))
+METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(actor.bot_primary_fireballmooth == 0)
     {
-        if(bot_aim(actor, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
         {
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
             if(random() < 0.02) actor.bot_primary_fireballmooth = 0;
@@ -378,7 +378,7 @@ METHOD(Fireball, wr_aim, void(entity thiswep, entity actor))
     }
     else
     {
-        if(bot_aim(actor, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
         {
             PHYS_INPUT_BUTTON_ATCK2(actor) = true;
             if(random() < 0.01) actor.bot_primary_fireballmooth = 1;
@@ -389,12 +389,11 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 {
     if(fire & 1)
     {
-    	int slot = weaponslot(weaponentity);
-        if(time >= actor.fireball_primarytime[slot])
+        if(time >= actor.(weaponentity).fireball_primarytime)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(fireball, refire)))
         {
             W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
-            actor.fireball_primarytime[slot] = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor(actor);
+            actor.(weaponentity).fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor(actor);
         }
     }
     else if(fire & 2)
@@ -406,22 +405,21 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
         }
     }
 }
-METHOD(Fireball, wr_setup, void(entity thiswep, entity actor))
-{
-    actor.ammo_field = ammo_none;
-}
-METHOD(Fireball, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Fireball, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // infinite ammo
 }
-METHOD(Fireball, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Fireball, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // fireball has infinite ammo
 }
 METHOD(Fireball, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    	actor.fireball_primarytime[slot] = time;
+	{
+		.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).fireball_primarytime = time;
+	}
 }
 METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
 {

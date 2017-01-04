@@ -289,9 +289,10 @@ bool racer_frame(entity this, float dt)
 #ifdef SVQC
 
 	Weapon wep1 = WEP_RACER;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if (!forbidWeaponUse(this))
 	if (PHYS_INPUT_BUTTON_ATCK(this))
-	if (wep1.wr_checkammo1(wep1, vehic))
+	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
 		string tagname = (vehic.cnt)
 		    ? (vehic.cnt = 0, "tag_fire1")
@@ -302,7 +303,6 @@ bool racer_frame(entity this, float dt)
 		// Fix z-aim (for chase mode)
 		crosshair_trace(this);
 		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
-		.entity weaponentity = weaponentities[0];
 		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 

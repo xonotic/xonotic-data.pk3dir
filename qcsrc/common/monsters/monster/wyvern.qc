@@ -46,7 +46,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
     }
 }
 
-METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor)) {
+METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor, .entity weaponentity)) {
     TC(WyvernAttack, this);
 	return true;
 }
@@ -88,9 +88,8 @@ void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher)
 	M_Wyvern_Attack_Fireball_Explode(this);
 }
 
-bool M_Wyvern_Attack(int attack_type, entity actor, entity targ)
+bool M_Wyvern_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:

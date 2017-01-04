@@ -373,10 +373,12 @@ void HUD_Weapons()
 		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
-	if(switchweapon == WEP_Null)
+	entity wepent = viewmodels[0]; // TODO: unhardcode
+
+	if(wepent.switchweapon == WEP_Null)
 		panel_switchweapon = NULL;
 	else if(!panel_switchweapon)
-		panel_switchweapon = switchweapon;
+		panel_switchweapon = wepent.switchweapon;
 
 	// draw background behind currently selected weapon
 	// do it earlier to make sure bg is drawn behind every weapon icons while it's moving

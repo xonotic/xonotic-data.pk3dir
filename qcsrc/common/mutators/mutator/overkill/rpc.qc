@@ -68,7 +68,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
 	entity flash = spawn ();
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo), weaponentity);
 	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
@@ -111,14 +111,14 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor))
+METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 }
 
 METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
+    if(WEP_CVAR(rpc, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(rpc, ammo)) {
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else
     {
@@ -138,14 +138,14 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
     }
 }
 
-METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
-    ammo_amount += actor.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
     return ammo_amount;
 }
 
-METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return false;
 }
