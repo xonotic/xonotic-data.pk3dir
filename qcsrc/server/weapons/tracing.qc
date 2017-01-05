@@ -436,7 +436,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 		{
 			fireBullet_last_hit = hit;
 			yoda = 0;
-			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage);
+			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
 			float g = accuracy_isgooddamage(this, hit);
 			Damage(hit, this, this, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);

@@ -664,6 +664,7 @@ MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
     /** end pos */      i(vector, MUTATOR_ARGV_3_vector) \
     /** damage */       i(float, MUTATOR_ARGV_4_float) \
     /**/                o(float, MUTATOR_ARGV_4_float) \
+    /** wep entity */   i(entity, MUTATOR_ARGV_5_entity) \
     /**/
 MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
 
