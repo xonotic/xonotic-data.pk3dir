@@ -88,14 +88,14 @@
 */
 
 #define MULTITEAM_ANNCE2(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF(prefix##RED, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position) \
-    MSG_ANNCE_NOTIF(prefix##BLUE, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position)
+    MSG_ANNCE_NOTIF(prefix##_RED, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position) \
+    MSG_ANNCE_NOTIF(prefix##_BLUE, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position)
 #define MULTITEAM_ANNCE3(prefix, default, sound, channel, volume, position) \
     MULTITEAM_ANNCE2(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF(prefix##YELLOW, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position)
+    MSG_ANNCE_NOTIF(prefix##_YELLOW, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position)
 #define MULTITEAM_ANNCE4(prefix, default, sound, channel, volume, position) \
     MULTITEAM_ANNCE3(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF(prefix##PINK, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
+    MSG_ANNCE_NOTIF(prefix##_PINK, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
 #define MULTITEAM_ANNCE(prefix, teams, default, sound, channel, volume, position) \
     MULTITEAM_ANNCE##teams(prefix, default, sound, channel, volume, position)
 
@@ -765,7 +765,7 @@
     MSG_MULTI_NOTIF(prefix##_BLUE, default, anncepre##_BLUE, infopre##_BLUE, centerpre##_BLUE)
 #define MULTITEAM_MULTI3(prefix, default, anncepre, infopre, centerpre) \
     MULTITEAM_MULTI2(prefix, default, anncepre, infopre, centerpre) \
-    MSG_MULTI_NOTIF(default, prefix##_YELLOW, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW)
+    MSG_MULTI_NOTIF(prefix##_YELLOW, default, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW)
 #define MULTITEAM_MULTI4(prefix, default, anncepre, infopre, centerpre) \
     MULTITEAM_MULTI3(prefix, default, anncepre, infopre, centerpre) \
     MSG_MULTI_NOTIF(prefix##_PINK, default, anncepre##PINK, infopre##PINK, centerpre##PINK)
