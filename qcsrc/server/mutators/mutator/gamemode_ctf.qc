@@ -703,7 +703,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	else if(CTF_DIFFTEAM(player, flag))
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(flag.team, CENTER_CTF_PICKUP));
 	else
-		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((SAME_TEAM(player, flag)) ? CENTER_CTF_PICKUP_TEAM : CENTER_CTF_PICKUP_TEAM_ENEMY), Team_ColorCode(flag.team));
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((SAME_TEAM(player, flag)) ? CENTER_CTF_PICKUP_RETURN : CENTER_CTF_PICKUP_RETURN_ENEMY), Team_ColorCode(flag.team));
 
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
 
