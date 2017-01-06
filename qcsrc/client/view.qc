@@ -1953,7 +1953,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(autocvar_cl_reticle)
 	{
-		string reticle_image = "";
+		string reticle_image = string_null;
 		bool wep_zoomed = false;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -1962,7 +1962,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 			if(wep != WEP_Null && wep.wr_zoom)
 			{
 				bool do_zoom = wep.wr_zoom(wep, NULL);
-				if(reticle_image == "" && wep.w_reticle && wep.w_reticle != "")
+				if(!reticle_image && wep.w_reticle && wep.w_reticle != "")
 					reticle_image = wep.w_reticle;
 				wep_zoomed += do_zoom;
 			}
@@ -1978,7 +1978,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		}
 		else if(wep_zoomed && autocvar_cl_reticle_weapon)
 		{
-			if(reticle_image != "") { reticle_type = 2; }
+			if(reticle_image) { reticle_type = 2; }
 			else { reticle_type = 0; }
 		}
 		else if(button_zoom || zoomscript_caught)
