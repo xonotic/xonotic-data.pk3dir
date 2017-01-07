@@ -6,6 +6,13 @@
 
 void round_handler_Think(entity this)
 {
+	if (intermission_running)
+	{
+		round_handler_Reset(0);
+		round_handler_Remove();
+		return;
+	}
+
 	if (time < game_starttime)
 	{
 		round_handler_Reset(game_starttime);
@@ -14,13 +21,6 @@ void round_handler_Think(entity this)
 
 	if (game_stopped)
 		game_stopped = false;
-
-	if (intermission_running)
-	{
-		round_handler_Reset(0);
-		round_handler_Remove();
-		return;
-	}
 
 	if (this.wait)
 	{
