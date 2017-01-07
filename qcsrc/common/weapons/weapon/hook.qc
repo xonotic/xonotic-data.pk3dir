@@ -501,8 +501,12 @@ void Remove_GrapplingHook(entity this)
 {
 	sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 
-	if(csqcplayer && csqcplayer.hook == this)
-		csqcplayer.hook = NULL;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wep = viewmodels[slot];
+		if(wep.hook == this)
+			wep.hook = NULL;
+	}
 }
 
 NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
