@@ -64,7 +64,7 @@ MACRO_END
 			i += 1; \
 		}
 		ENTCS_NETPROPS(this, X);
-	#undef X
+		#undef X
 		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded ENTCS_NETPROPS limit");
 	}
 
@@ -73,16 +73,15 @@ MACRO_END
 		entity player = this.owner;
 		sf |= BIT(0); // assume private
 		do {
-			if (!(IS_PLAYER(player)))
+			if (IS_PLAYER(player))
 			{
-				sf &= ENTCS_PUBLICMASK; // no private updates
-				break;
+				if (radar_showennemies) break;
+				if (SAME_TEAM(to, player)) break;
+				if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
 			}
-			if (radar_showennemies) break;
-			if (SAME_TEAM(to, player)) break;
-			if (!(IS_PLAYER(to) || to.caplayer) && time > game_starttime) break;
 			sf &= ENTCS_PUBLICMASK; // no private updates
 		} while (0);
+
 		sf |= this.m_forceupdate;
 		this.m_forceupdate = 0;
 		if (chan == MSG_ENTITY)
@@ -99,7 +98,7 @@ MACRO_END
 			i += 1; \
 		}
 		ENTCS_NETPROPS(this, X);
-	#undef X
+		#undef X
 		return true;
 	}
 
@@ -121,7 +120,7 @@ MACRO_END
 			i += 1; \
 		}
 		ENTCS_NETPROPS(this, X);
-	#undef X
+		#undef X
 	    setorigin(this, this.origin);  // relink
 	}
 
@@ -213,7 +212,7 @@ MACRO_END
 			i += 1; \
 		}
 		ENTCS_NETPROPS(e, X);
-	#undef X
+		#undef X
 		e.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(e);
 		getthink(e)(e);
