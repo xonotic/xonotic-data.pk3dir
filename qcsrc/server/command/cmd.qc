@@ -471,7 +471,7 @@ void ClientCommand_spectate(entity caller, float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
+			if (!intermission_running && IS_CLIENT(caller))
 			{
 				int mutator_returnvalue = MUTATOR_CALLHOOK(ClientCommand_Spectate, caller);
 
