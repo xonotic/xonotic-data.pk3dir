@@ -48,7 +48,7 @@ entity invasion_PickSpawn()
 
 	IL_EACH(g_invasion_spawns, true,
 	{
-		RandomSelection_AddEnt(it, 1, ((time >= it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
+		RandomSelection_AddEnt(it, 1, ((time < it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
 		it.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
 	});
 
@@ -317,6 +317,7 @@ MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
 {
 	entity ent = M_ARGV(0, entity);
 
+	// TODO: allow these as "rogues" or something
 	if(startsWith(ent.classname, "monster_"))
 	if(!(ent.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;

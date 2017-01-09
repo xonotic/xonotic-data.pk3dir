@@ -367,28 +367,26 @@ void reset_map(bool dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			FOREACH_CLIENT(true, LAMBDA(
-				/*
-				only reset players if a restart countdown is active
-				this can either be due to cvar sv_ready_restart_after_countdown having set
-				restart_mapalreadyrestarted to 1 after the countdown ended or when
-				sv_ready_restart_after_countdown is not used and countdown is still running
-				*/
-				if (restart_mapalreadyrestarted || (time < game_starttime))
+			//if (restart_mapalreadyrestarted || (time < game_starttime))
+			//{
+				FOREACH_CLIENT(IS_PLAYER(it),
 				{
+					/*
+					only reset players if a restart countdown is active
+					this can either be due to cvar sv_ready_restart_after_countdown having set
+					restart_mapalreadyrestarted to 1 after the countdown ended or when
+					sv_ready_restart_after_countdown is not used and countdown is still running
+					*/
 					// NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-					if (IS_PLAYER(it))
-					{
-						// PlayerScore_Clear(it);
-						it.killcount = 0;
-						// stop the player from moving so that he stands still once he gets respawned
-						it.velocity = '0 0 0';
-						it.avelocity = '0 0 0';
-						it.movement = '0 0 0';
-						PutClientInServer(it);
-					}
-				}
-			));
+					// PlayerScore_Clear(it);
+					it.killcount = 0;
+					// stop the player from moving so that he stands still once he gets respawned
+					it.velocity = '0 0 0';
+					it.avelocity = '0 0 0';
+					it.movement = '0 0 0';
+					PutClientInServer(it);
+				});
+			//}
 		}
 	}
 }
