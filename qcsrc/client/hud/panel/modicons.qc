@@ -715,9 +715,7 @@ void HUD_ModIcons_SetFunc()
 	HUD_ModIcons_GameType = gametype.m_modicons;
 }
 
-int mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
-float mod_change; // "time" when mod_active changed
 
 void HUD_ModIcons()
 {
@@ -727,16 +725,10 @@ void HUD_ModIcons()
 		if(!HUD_ModIcons_GameType) return;
 	}
 
-
-	if(mod_active != mod_prev) {
-		mod_change = time;
-		mod_prev = mod_active;
-	}
-
 	if(mod_active || autocvar__hud_configure)
-		mod_alpha = bound(0, (time - mod_change) * 2, 1);
+		mod_alpha = min(mod_alpha + frametime * 2, 1);
 	else
-		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
+		mod_alpha = max(mod_alpha - frametime * 2, 0);
 
 	//if(mod_alpha <= 0)
 	//	return;
