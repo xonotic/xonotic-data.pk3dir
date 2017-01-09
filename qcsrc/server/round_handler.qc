@@ -19,8 +19,7 @@ void round_handler_Think(entity this)
 		return;
 	}
 
-	if (game_stopped)
-		game_stopped = false;
+	game_stopped = false;
 
 	if (this.wait)
 	{
