@@ -58,7 +58,7 @@ void round_handler_Think(entity this)
 			// schedule a new round
 			this.wait = true;
 			this.nextthink = time + this.delay;
-			game_stopped = true;
+			//game_stopped = true; // not all modes actually pause during round intermission
 		}
 		else
 		{
