@@ -20,8 +20,13 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
     if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
         if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
-			actor.attack_finished_single[0] = time + 1.2;
-			actor.anim_finished = time + 1.2;
+			//actor.anim_finished = time + 1.2;
+			setanim(actor, actor.anim_shoot, false, true, true);
+			if(actor.animstate_endtime > time)
+				actor.anim_finished = actor.animstate_endtime;
+			else
+				actor.anim_finished = time + 1.2;
+			actor.attack_finished_single[0] = actor.anim_finished + 0.2;
 			monster_makevectors(actor, actor.enemy);
 		}
 
@@ -138,12 +143,15 @@ METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
 {
     TC(Wyvern, this);
     vector none = '0 0 0';
-    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
-    actor.anim_walk = animfixfps(actor, '1 1 1', none);
     actor.anim_idle = animfixfps(actor, '0 1 1', none);
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_run = animfixfps(actor, '2 1 1', none);
     actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
-    actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-    actor.anim_run = animfixfps(actor, '1 1 1', none);
+    actor.anim_pain2 = animfixfps(actor, '4 1 2', none); // 0.5 seconds
+    actor.anim_melee = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+    actor.anim_shoot = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+    actor.anim_die1 = animfixfps(actor, '7 1 0.5', none); // 2 seconds
+    //actor.anim_dead = animfixfps(actor, '8 1 0.5', none); // 2 seconds
     return true;
 }
 #endif

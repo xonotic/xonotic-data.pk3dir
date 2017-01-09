@@ -264,6 +264,7 @@ void M_Mage_Defend_Heal(entity this)
 	{
 		setanim(this, this.anim_shoot, true, true, true);
 		this.attack_finished_single[0] = time + (autocvar_g_monster_mage_heal_delay);
+		this.state = MONSTER_ATTACK_MELEE;
 		this.anim_finished = time + 1.5;
 	}
 }
@@ -439,12 +440,20 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 {
     TC(Mage, this);
     vector none = '0 0 0';
-    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
-    actor.anim_walk = animfixfps(actor, '1 1 1', none);
     actor.anim_idle = animfixfps(actor, '0 1 1', none);
-    actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_run = animfixfps(actor, '1 1 1', none);
     actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-    actor.anim_run = animfixfps(actor, '5 1 1', none);
+    //actor.anim_fire1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+    //actor.anim_fire2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    //actor.anim_fire3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+    actor.anim_pain1 = animfixfps(actor, '6 1 2', none); // 0.5 seconds
+    actor.anim_pain2 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
+    //actor.anim_pain3 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
+    actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
+    actor.anim_die2 = animfixfps(actor, '10 1 0.5', none); // 2 seconds
+    //actor.anim_dead1 = animfixfps(actor, '11 1 0.5', none); // 2 seconds
+    //actor.anim_dead2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
     return true;
 }
 #endif

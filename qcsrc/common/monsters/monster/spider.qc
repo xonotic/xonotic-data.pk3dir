@@ -219,11 +219,25 @@ METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 {
     TC(Spider, this);
     vector none = '0 0 0';
-    actor.anim_walk = animfixfps(actor, '1 1 1', none);
-    actor.anim_idle = animfixfps(actor, '0 1 1', none);
-    actor.anim_melee = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-    actor.anim_shoot = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
-    actor.anim_run = animfixfps(actor, '1 1 1', none);
+    actor.anim_melee = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
+    actor.anim_die1 = animfixfps(actor, '1 1 1', none);
+    actor.anim_die1 = animfixfps(actor, '2 1 1', none);
+    actor.anim_shoot = animfixfps(actor, '3 1 1', none);
+    //actor.anim_fire2 = animfixfps(actor, '4 1 1', none);
+    actor.anim_idle = animfixfps(actor, '5 1 1', none);
+    //actor.anim_sight = animfixfps(actor, '6 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '7 1 1', none);
+    actor.anim_pain2 = animfixfps(actor, '8 1 1', none);
+    //actor.anim_pain3 = animfixfps(actor, '9 1 1', none);
+    actor.anim_walk = animfixfps(actor, '10 1 1', none);
+    actor.anim_run = animfixfps(actor, '10 1 1', none); // temp?
+    //actor.anim_forwardright = animfixfps(actor, '11 1 1', none);
+    //actor.anim_walkright = animfixfps(actor, '12 1 1', none);
+    //actor.anim_walkbackright = animfixfps(actor, '13 1 1', none);
+    //actor.anim_walkback = animfixfps(actor, '14 1 1', none);
+    //actor.anim_walkbackleft = animfixfps(actor, '15 1 1', none);
+    //actor.anim_walkleft = animfixfps(actor, '16 1 1', none);
+    //actor.anim_forwardleft = animfixfps(actor, '17 1 1', none);
     return true;
 }
 #endif

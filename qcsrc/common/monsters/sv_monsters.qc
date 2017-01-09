@@ -165,6 +165,11 @@ void monster_setupcolors(entity this)
 		else
 			this.colormap = 1024;
 	}
+
+	if(this.colormap > 0)
+		this.glowmod = colormapPaletteColor(this.colormap & 0x0F, false);
+	else
+		this.glowmod = '1 1 1';
 }
 
 void monster_changeteam(entity this, int newteam)
