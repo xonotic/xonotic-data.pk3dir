@@ -367,8 +367,8 @@ void reset_map(bool dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			//if (restart_mapalreadyrestarted || (time < game_starttime))
-			//{
+			if (restart_mapalreadyrestarted || (time < game_starttime))
+			{
 				FOREACH_CLIENT(IS_PLAYER(it),
 				{
 					/*
@@ -386,7 +386,7 @@ void reset_map(bool dorespawn)
 					it.movement = '0 0 0';
 					PutClientInServer(it);
 				});
-			//}
+			}
 		}
 	}
 }
