@@ -318,11 +318,12 @@ bool spiderbot_frame(entity this, float dt)
 
 void spiderbot_exit(entity this, int eject)
 {
-	vector spot;
+	entity player = this.owner;
+	this.owner = NULL;
 
-	IL_EACH(g_projectiles, it.owner == this.owner && it.classname == "spiderbot_rocket",
+	IL_EACH(g_projectiles, it.owner == player && it.classname == "spiderbot_rocket",
 	{
-		it.realowner = this.owner;
+		it.realowner = player;
 		it.owner = NULL;
 	});
 
@@ -331,40 +332,40 @@ void spiderbot_exit(entity this, int eject)
 	this.frame = 5;
 	set_movetype(this, MOVETYPE_WALK);
 
-	if(!this.owner)
+	if(!player)
 		return;
 
 	makevectors(this.angles);
+	vector spot;
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
 		spot = vehicles_findgoodexit(this, spot);
-		setorigin(this.owner , spot);
-		this.owner.velocity = (v_up + v_forward * 0.25) * 750;
-		this.owner.oldvelocity = this.owner.velocity;
+		setorigin(player, spot);
+		player.velocity = (v_up + v_forward * 0.25) * 750;
+		player.oldvelocity = player.velocity;
 	}
 	else
 	{
 		if(vdist(this.velocity, >, autocvar_g_vehicle_spiderbot_speed_strafe))
 		{
-			this.owner.velocity = normalize(this.velocity) * vlen(this.velocity);
-			this.owner.velocity_z += 200;
+			player.velocity = normalize(this.velocity) * vlen(this.velocity);
+			player.velocity_z += 200;
 			spot = this.origin + v_forward * 128 + '0 0 64';
 			spot = vehicles_findgoodexit(this, spot);
 		}
 		else
 		{
-			this.owner.velocity = this.velocity * 0.5;
-			this.owner.velocity_z += 10;
+			player.velocity = this.velocity * 0.5;
+			player.velocity_z += 10;
 			spot = this.origin + v_forward * 256 + '0 0 64';
 			spot = vehicles_findgoodexit(this, spot);
 		}
-		this.owner.oldvelocity = this.owner.velocity;
-		setorigin(this.owner , spot);
+		player.oldvelocity = player.velocity;
+		setorigin(player, spot);
 	}
 
-	antilag_clear(this.owner, CS(this.owner));
-	this.owner = NULL;
+	antilag_clear(player, CS(player));
 }
 
 void spiderbot_headfade(entity this)
@@ -397,11 +398,7 @@ void spiderbot_blowup(entity this)
 		return;
 	}
 
-	entity h, g1, g2, b;
-	b = spawn();
-	h = spawn();
-	g1 = spawn();
-	g2 = spawn();
+	entity h = spawn(), g1 = spawn(), g2 = spawn(), b = spawn();
 
 	setmodel(b, MDL_VEH_SPIDERBOT_BODY);
 	setmodel(h, MDL_VEH_SPIDERBOT_TOP);
