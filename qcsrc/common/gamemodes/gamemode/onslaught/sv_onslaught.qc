@@ -553,7 +553,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		if(IS_PLAYER(this.owner.ons_toucher))
 		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
-			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE), this.owner.message);
+			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM), this.owner.message);
 			Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
 			PlayerScore_Add(this.owner.ons_toucher, SP_ONS_CAPS, 1);
 			PlayerTeamScore_AddScore(this.owner.ons_toucher, 10);
