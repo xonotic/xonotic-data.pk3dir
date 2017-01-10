@@ -949,133 +949,106 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 
 float weapon_pickupevalfunc(entity player, entity item)
 {
-	float c;
-	int rating = item.bot_pickupbasevalue;
-
 	// See if I have it already
 	if(player.weapons & item.weapons)
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
-			c = 0;
-		else if(player.ammo_cells || player.ammo_shells || player.ammo_plasma || player.ammo_nails || player.ammo_rockets)
-		{
-			if (rating > 0)
-				rating = BOT_PICKUP_RATING_LOW * 0.5 * (1 + rating / BOT_PICKUP_RATING_HIGH);
-			// Skilled bots will grab more
-			c = 1 + bound(0, skill / 10, 1) * 0.5;
-		}
-		else
-			c = 0;
+			return 0;
+		return ammo_pickupevalfunc(player, item);
 	}
-	else
-		c = 1;
-
-	if (c <= 0)
-		return 0;
-
-	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
-	if(bot_custom_weapon)
-	{
-		int best_ratio = 0;
-		int missing = 0;
-
-		// evaluate weapon usefulness in all ranges
-		for(int list = 0; list < 3; list++)
-		{
-			int position = -1;
-			int wep_count = 0;
-			int wpn = item.weapon;
-			for (int j = 0; j < WEP_LAST; ++j)
-			{
-				int list_wpn = 0;
-				if (list == 0) list_wpn = bot_weapons_far[j];
-				else if (list == 1) list_wpn = bot_weapons_mid[j];
-				else list_wpn = bot_weapons_close[j];
-
-				if (weaponsInMap & Weapons_from(list_wpn).m_wepset) // only if available
-				{
-					if (list_wpn > 0)
-						wep_count++;
-					if (position == -1 && list_wpn == wpn)
-						position = wep_count;
-				}
-			}
-			if (position == -1)
-			{
-				missing++;
-				position = wep_count; // if missing assume last
-			}
-			if (wep_count)
-			{
-				if (!best_ratio || position / wep_count < best_ratio)
-					best_ratio = position / wep_count;
-			}
-		}
-
-		if (missing < 3 && best_ratio)
-			c = c - best_ratio * 0.3;
-	}
-
-	return rating * c;
+	return item.bot_pickupbasevalue;
 }
 
-float commodity_pickupevalfunc(entity player, entity item)
+float ammo_pickupevalfunc(entity player, entity item)
 {
 	bool need_shells = false, need_nails = false, need_rockets = false, need_cells = false, need_plasma = false, need_fuel = false;
+	entity wpn = NULL;
 	float c = 0;
+	float rating = 0;
 
 	// Detect needed ammo
-	FOREACH(Weapons, it != WEP_Null, {
-		if(!(player.weapons & (it.m_wepset)))
-			continue;
+	if(item.itemdef.instanceOfWeaponPickup)
+	{
+		entity ammo = NULL;
+		if(item.ammo_shells)       { need_shells  = true; ammo = ITEM_Shells;      }
+		else if(item.ammo_nails)   { need_nails   = true; ammo = ITEM_Bullets;     }
+		else if(item.ammo_rockets) { need_rockets = true; ammo = ITEM_Rockets;     }
+		else if(item.ammo_cells)   { need_cells   = true; ammo = ITEM_Cells;       }
+		else if(item.ammo_plasma)  { need_plasma  = true; ammo = ITEM_Plasma;      }
+		else if(item.ammo_fuel)    { need_fuel    = true; ammo = ITEM_JetpackFuel; }
 
-		switch(it.ammo_field)
-		{
-			case ammo_shells:  need_shells  = true; break;
-			case ammo_nails:   need_nails   = true; break;
-			case ammo_rockets: need_rockets = true; break;
-			case ammo_cells:   need_cells   = true; break;
-			case ammo_plasma:  need_plasma  = true; break;
-			case ammo_fuel:    need_fuel    = true; break;
-		}
-	});
+		if(!ammo)
+			return 0;
+		wpn = item;
+		rating = ammo.m_botvalue;
+	}
+	else
+	{
+		FOREACH(Weapons, it != WEP_Null, {
+			if(!(player.weapons & (it.m_wepset)))
+				continue;
 
-	// TODO: figure out if the player even has the weapon this ammo is for?
-	// may not affect strategy much though...
-	// find out how much more ammo/armor/health the player can hold
+			switch(it.ammo_field)
+			{
+				case ammo_shells:  need_shells  = true; break;
+				case ammo_shells:  need_shells  = true; break;
+				case ammo_nails:   need_nails   = true; break;
+				case ammo_rockets: need_rockets = true; break;
+				case ammo_cells:   need_cells   = true; break;
+				case ammo_plasma:  need_plasma  = true; break;
+				case ammo_fuel:    need_fuel    = true; break;
+			}
+		});
+		rating = item.bot_pickupbasevalue;
+	}
+
 	if (need_shells)
 	if (item.ammo_shells)
 	if (player.ammo_shells < g_pickup_shells_max)
-		c = c + max(0, 1 - player.ammo_shells / g_pickup_shells_max);
+		c = (player.ammo_shells + item.ammo_shells) / player.ammo_shells;
 	if (need_nails)
 	if (item.ammo_nails)
 	if (player.ammo_nails < g_pickup_nails_max)
-		c = c + max(0, 1 - player.ammo_nails / g_pickup_nails_max);
+		c = (player.ammo_nails + item.ammo_nails) / player.ammo_nails;
 	if (need_rockets)
 	if (item.ammo_rockets)
 	if (player.ammo_rockets < g_pickup_rockets_max)
-		c = c + max(0, 1 - player.ammo_rockets / g_pickup_rockets_max);
+		c = (player.ammo_rockets + item.ammo_rockets) / player.ammo_rockets;
 	if (need_cells)
 	if (item.ammo_cells)
 	if (player.ammo_cells < g_pickup_cells_max)
-		c = c + max(0, 1 - player.ammo_cells / g_pickup_cells_max);
+		c = (player.ammo_cells + item.ammo_cells) / player.ammo_cells;
 	if (need_plasma)
 	if (item.ammo_plasma)
 	if (player.ammo_plasma < g_pickup_plasma_max)
-		c = c + max(0, 1 - player.ammo_plasma / g_pickup_plasma_max);
+		c = (player.ammo_plasma + item.ammo_plasma) / player.ammo_plasma;
 	if (need_fuel)
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
-		c = c + max(0, 1 - player.ammo_fuel / g_pickup_fuel_max);
+		c = (player.ammo_fuel + item.ammo_fuel) / player.ammo_fuel;
+
+	rating *= min(3, c);
+	if(wpn)
+		// Skilled bots will grab more
+		rating += wpn.bot_pickupbasevalue * (0.1 + 0.1 * bound(0, skill / 10, 1));
+	return rating;
+}
+
+float healtharmor_pickupevalfunc(entity player, entity item)
+{
+	float c = 0;
+	float rating = item.bot_pickupbasevalue;
+
 	if (item.armorvalue)
 	if (player.armorvalue < item.max_armorvalue)
-		c = c + max(0, 1 - player.armorvalue / item.max_armorvalue);
+		c = (player.armorvalue + player.health + item.armorvalue) / (max(1, player.armorvalue + player.health));
 	if (item.health)
 	if (player.health < item.max_health)
-		c = c + max(0, 1 - player.health / item.max_health);
+		c = (player.health + item.health) / (max(1, player.health));
 
-	return item.bot_pickupbasevalue * c;
+	rating *= min(3, c);
+	return rating;
 }
 
 void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

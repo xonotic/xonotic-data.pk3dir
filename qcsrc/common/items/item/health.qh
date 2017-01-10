@@ -5,7 +5,8 @@ CLASS(Health, Pickup)
 #ifdef SVQC
     ATTRIB(Health, m_mins, vector, '-16 -16 0');
     ATTRIB(Health, m_maxs, vector, '16 16 48');
-    ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), commodity_pickupevalfunc);
+    ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
+    ATTRIB(Health, m_botvalue, int, 2500);
 #endif
 ENDCLASS(Health)
 
@@ -26,7 +27,6 @@ REGISTER_ITEM(HealthSmall, Health) {
     this.m_name                 =   "5 Health";
     this.m_icon                 =   "health";
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
     this.m_itemid               =   IT_5HP;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
@@ -46,7 +46,6 @@ REGISTER_ITEM(HealthMedium, Health) {
     this.m_name                 =   "25 Health";
     this.m_icon                 =   "health";
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_MID;
     this.m_itemid               =   IT_25HP;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
@@ -68,7 +67,6 @@ REGISTER_ITEM(HealthBig, Health) {
     this.m_color                =   '1 0 0';
     this.m_waypoint             =   _("Big health");
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_MID;
     this.m_itemid               =   IT_25HP;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
@@ -92,7 +90,6 @@ REGISTER_ITEM(HealthMega, Health) {
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_maxs                 =   '16 16 70';
-    this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_HEALTH;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);

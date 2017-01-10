@@ -4,7 +4,7 @@ CLASS(Electro, Weapon)
 /* ammotype  */ ATTRIB(Electro, ammo_field, .int, ammo_cells);
 /* impulse   */ ATTRIB(Electro, impulse, int, 5);
 /* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, 5000);
 /* color     */ ATTRIB(Electro, wpcolor, vector, '0 0.5 1');
 /* modelname */ ATTRIB(Electro, mdl, string, "electro");
 #ifdef GAMEQC
