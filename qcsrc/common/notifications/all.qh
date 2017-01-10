@@ -631,7 +631,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 .string nent_name;
 .int nent_stringcount;
 .int nent_floatcount;
-.bool nent_teamnum;
+.int nent_teamnum;
 
 // MSG_ANNCE entity values
 .int nent_channel;
