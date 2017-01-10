@@ -1146,7 +1146,7 @@ int MapInfo_CurrentFeatures()
 
 Gametype MapInfo_CurrentGametype()
 {
-	Gametype prev = Gametypes_from(cvar("gamecfg"));
+	Gametype prev = Gametypes_from(cvar("gamecfg") - 1);
 	FOREACH(Gametypes, cvar(it.netname) && it != prev, return it);
 	return prev ? prev : MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1230,7 +1230,7 @@ string MapInfo_ListAllAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
 void MapInfo_LoadMapSettings_SaveGameType(Gametype t)
 {
 	MapInfo_SwitchGameType(t);
-	cvar_set("gamecfg", ftos(t.m_id));
+	cvar_set("gamecfg", ftos(t.m_id + 1));
 	MapInfo_LoadedGametype = t;
 }
 
