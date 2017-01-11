@@ -119,7 +119,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		return;
 
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
-	if( !forbidWeaponUse(player) || player.weapon_blocked // allow if weapon is reloading
+	if( !forbidWeaponUse(player)
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
 	if(time >= player.jump_interval)
 	{

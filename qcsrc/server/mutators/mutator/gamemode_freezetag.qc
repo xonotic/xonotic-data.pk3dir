@@ -110,6 +110,7 @@ float freezetag_CheckWinner()
 			it.freezetag_frozen_timeout = 0;
 			nades_Clear(it);
 		));
+		game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return 1;
 	}
@@ -134,6 +135,8 @@ float freezetag_CheckWinner()
 		it.freezetag_frozen_timeout = 0;
 		nades_Clear(it);
 	));
+
+	game_stopped = true;
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
 }

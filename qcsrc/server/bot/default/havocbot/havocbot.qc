@@ -179,7 +179,7 @@ void havocbot_ai(entity this)
 			// we are currently holding a weapon that's not fully loaded, reload it
 			if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
 			if(this.(weaponentity).clip_load < this.(weaponentity).clip_size)
-				this.impulse = 20; // "press" the reload button, not sure if this is done right
+				this.impulse = IMP_weapon_reload.impulse; // not sure if this is done right
 
 			// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
 			// the code above executes next frame, starting the reloading then
@@ -188,7 +188,10 @@ void havocbot_ai(entity this)
 			{
 				FOREACH(Weapons, it != WEP_Null, LAMBDA(
 					if((this.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
+					{
 						this.(weaponentity).m_switchweapon = it;
+						break;
+					}
 				));
 			}
 		}
@@ -1022,13 +1025,10 @@ float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int n
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (this.(weaponentity).weapon_load[new_weapon] < 0)
 	{
-		bool other_weapon_available = false;
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
 			if(it.wr_checkammo1(it, this, weaponentity) + it.wr_checkammo2(it, this, weaponentity))
-				other_weapon_available = true;
+				return true; // other weapon available
 		));
-		if(other_weapon_available)
-			return true;
 	}
 
 	return false;

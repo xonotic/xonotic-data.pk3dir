@@ -58,9 +58,11 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		allowed_to_spawn = false;
-		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
+
+		allowed_to_spawn = false;
+		game_stopped = true;
+		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		return 1;
 	}
 
@@ -82,6 +84,7 @@ float CA_CheckWinner()
 	}
 
 	allowed_to_spawn = false;
+	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));

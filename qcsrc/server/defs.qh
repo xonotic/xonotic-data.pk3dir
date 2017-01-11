@@ -377,7 +377,6 @@ const float ACTIVE_TOGGLE 	= 3;
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float player_blocked;
-.float weapon_blocked; // weapon use disabled
 
 .float revive_progress = _STAT(REVIVE_PROGRESS);
 .float revival_time; // time at which player was last revived

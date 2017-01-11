@@ -595,10 +595,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerJump)
 
 	if(player.buffs & BUFF_JUMP.m_itemid)
 		M_ARGV(1, float) = autocvar_g_buffs_jump_height;
-
-	if(player.buffs & BUFF_FLIGHT.m_itemid)
-	if(!IS_JUMP_HELD(player) && PHYS_INPUT_BUTTON_CROUCH(player))
-		player.gravity *= -1;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
@@ -791,11 +787,24 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
 
+.bool buff_flight_crouchheld;
+
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
 	if(game_stopped || IS_DEAD(player)) return;
+
+	if(player.buffs & BUFF_FLIGHT.m_itemid)
+	{
+		if(!PHYS_INPUT_BUTTON_CROUCH(player))
+			player.buff_flight_crouchheld = false;
+		else if(!player.buff_flight_crouchheld)
+		{
+			player.buff_flight_crouchheld = true;
+			player.gravity *= -1;
+		}
+	}
 
 	if(time < player.buff_disability_time)
 	if(time >= player.buff_disability_effect_time)

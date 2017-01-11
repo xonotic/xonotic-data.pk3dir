@@ -398,7 +398,8 @@ void Create_Notification_Entity(entity notif,
 	float var_default,
 	float var_cvar,
 	MSG typeId,
-	string namestring)
+	string namestring,
+	int teamnum)
 {
 	// =====================
 	//  Global Entity Setup
@@ -407,6 +408,7 @@ void Create_Notification_Entity(entity notif,
 	notif.nent_enabled = (var_cvar >= 1);
 	notif.nent_type = typeId;
 	notif.nent_name = strzone(namestring);
+	notif.nent_teamnum = teamnum;
 
 	// Other pre-notif-setup requisites
 	notif_error = false;
@@ -761,13 +763,13 @@ void Create_Notification_Entity_Choice(entity notif,
 #ifdef SVQC
 void Notification_GetCvars(entity this)
 {
-	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
+	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		GetCvars_handleFloat(
 			this,
 			get_cvars_s,
 			get_cvars_f,
 			msg_choice_choices[it.nent_choice_idx],
-			sprintf("notification_%s", it.nent_name)
+			sprintf("notification_%s", Get_Notif_CvarName(it))
 		);
 	});
 }
@@ -784,7 +786,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 	#define NOTIF_WRITE_ENTITY(e, description) MACRO_BEGIN { \
 		string notif_msg = sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n", \
-			e.nent_name, e.nent_default, description \
+			Get_Notif_CvarName(e), e.nent_default, description \
 		); \
 		NOTIF_WRITE(notif_msg); \
 	} MACRO_END
@@ -793,8 +795,8 @@ void Dump_Notifications(int fh, bool alsoprint)
 		string notif_msg = sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n" \
 			"seta notification_%s_ALLOWED \"%d\" \"%s\"\n", \
-			e.nent_name, e.nent_default, descriptiona, \
-			e.nent_name, e.nent_challow_def, descriptionb \
+			Get_Notif_CvarName(e), e.nent_default, descriptiona, \
+			Get_Notif_CvarName(e), e.nent_challow_def, descriptionb \
 		); \
 		NOTIF_WRITE(notif_msg); \
 	} MACRO_END
@@ -831,7 +833,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_ANNCE_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE, { ++NOTIF_ANNCE_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications (count = %d):\n", NOTIF_ANNCE_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_ANNCE, {
+	FOREACH(Notifications, it.nent_type == MSG_ANNCE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
 		);
@@ -839,7 +841,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_INFO_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_INFO, { ++NOTIF_INFO_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_INFO, {
+	FOREACH(Notifications, it.nent_type == MSG_INFO && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = off, 1 = print to console, "
 			"2 = print to console and chatbox (if notification_allow_chatboxprint is enabled)"
@@ -848,7 +850,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_CENTER_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER, { ++NOTIF_CENTER_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_CENTER, {
+	FOREACH(Notifications, it.nent_type == MSG_CENTER && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = off, 1 = centerprint"
 		);
@@ -856,7 +858,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_MULTI_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_MULTI, { ++NOTIF_MULTI_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications (count = %d):\n", NOTIF_MULTI_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_MULTI, {
+	FOREACH(Notifications, it.nent_type == MSG_MULTI && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"Enable this multiple notification"
 		);
@@ -864,7 +866,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_CHOICE_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_CHOICE, { ++NOTIF_CHOICE_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications (count = %d):\n", NOTIF_CHOICE_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
+	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY_CHOICE(it,
 			"Choice for this notification 0 = off, 1 = default message, 2 = verbose message",
 			"Allow choice for this notification 0 = off, 1 = only in warmup mode, 2 = always"
@@ -876,7 +878,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	NOTIF_WRITE_HARDCODED(
 		"allow_chatboxprint", "1",
-		"Allow INFO notifications to be printed to chat box"
+		"Allow INFO notifications to be printed to chat box "
 		"0 = do not allow, "
 		"1 = allow only if allowed by individual notification_INFO* cvars, "
 		"2 = force all INFO notifications to be printed to the chatbox"
@@ -1367,7 +1369,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		{
 			entity found_choice = notif.nent_optiona;
 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) {
-				switch (cvar(sprintf("notification_%s", notif.nent_name)))
+				switch (cvar(sprintf("notification_%s", Get_Notif_CvarName(notif))))
 				{
 					case 1: break;
 					case 2: found_choice = notif.nent_optionb; break;
