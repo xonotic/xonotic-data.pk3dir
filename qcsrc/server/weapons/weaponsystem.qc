@@ -421,7 +421,6 @@ bool forbidWeaponUse(entity player)
 	if (player.player_blocked) return true;
 	if (game_stopped) return true;
 	if (STAT(FROZEN, player)) return true;
-	if (player.weapon_blocked) return true;
 	if (MUTATOR_CALLHOOK(ForbidWeaponUse, player)) return true;
 	return false;
 }
