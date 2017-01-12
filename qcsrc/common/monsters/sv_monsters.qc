@@ -1073,7 +1073,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 	this.dmg_time = time;
 
-	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN.m_id && deathtype != DEATH_FIRE.m_id)
+	if(deathtype != DEATH_DROWN.m_id && deathtype != DEATH_FIRE.m_id && sound_allowed(MSG_BROADCAST, attacker))
 		spamsound (this, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	this.velocity += force * this.damageforcescale;
