@@ -9,6 +9,7 @@
 #include "../waypoints.qh"
 
 #include <common/constants.qh>
+#include <common/impulses/all.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
 #include <common/state.qh>
