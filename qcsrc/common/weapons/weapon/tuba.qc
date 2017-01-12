@@ -3,7 +3,7 @@
 CLASS(Tuba, Weapon)
 /* impulse   */ ATTRIB(Tuba, impulse, int, 1);
 /* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, 2000);
 /* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
 /* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
 #ifdef GAMEQC

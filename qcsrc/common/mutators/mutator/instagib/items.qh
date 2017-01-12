@@ -22,7 +22,7 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
     this.m_name                 =   "Vaporizer Ammo";
     this.m_icon                 =   "ammo_supercells";
 #ifdef SVQC
-    this.m_botvalue             =   100;
+    this.m_botvalue             =   2000;
     this.m_itemid               =   IT_CELLS;
     this.m_respawntime          =   GET(instagib_respawntime_ammo);
     this.m_respawntimejitter    =   GET(instagib_respawntimejitter_ammo);

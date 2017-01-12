@@ -5,7 +5,8 @@ CLASS(Armor, Pickup)
 #ifdef SVQC
     ATTRIB(Armor, m_mins, vector, '-16 -16 0');
     ATTRIB(Armor, m_maxs, vector, '16 16 48');
-    ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), commodity_pickupevalfunc);
+    ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
+    ATTRIB(Armor, m_botvalue, int, 3000);
 #endif
 ENDCLASS(Armor)
 
@@ -26,7 +27,6 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_name                 =   "5 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
     this.m_itemid               =   IT_ARMOR_SHARD;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
@@ -46,7 +46,6 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_name                 =   "25 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_MID;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
@@ -68,7 +67,6 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_color                =   '0 1 0';
     this.m_waypoint             =   _("Big armor");
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
@@ -92,7 +90,6 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_maxs                 =   '16 16 70';
-    this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);

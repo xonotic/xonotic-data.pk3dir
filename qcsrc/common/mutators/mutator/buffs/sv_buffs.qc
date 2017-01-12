@@ -350,7 +350,7 @@ void buff_Init(entity this)
 	this.solid = SOLID_TRIGGER;
 	this.flags = FL_ITEM;
 	this.bot_pickup = true;
-	this.bot_pickupevalfunc = commodity_pickupevalfunc;
+	this.bot_pickupevalfunc = generic_pickupevalfunc;
 	this.bot_pickupbasevalue = 1000;
 	IL_PUSH(g_items, this);
 	setthink(this, buff_Think);

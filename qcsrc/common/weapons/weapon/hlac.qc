@@ -4,7 +4,7 @@ CLASS(HLAC, Weapon)
 /* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells);
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
 /* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
 #ifdef GAMEQC

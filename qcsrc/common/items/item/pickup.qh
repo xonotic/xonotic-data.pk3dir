@@ -17,11 +17,6 @@ PROPERTY(float, g_pickup_respawntimejitter_long)
 PROPERTY(float, g_pickup_respawntimejitter_powerup)
 #endif
 
-// pickup ratings for bot logic
-const int BOT_PICKUP_RATING_LOW  =  2500;
-const int BOT_PICKUP_RATING_MID  =  5000;
-const int BOT_PICKUP_RATING_HIGH = 10000;
-
 #include <common/items/inventory.qh>
 #include <common/items/item.qh>
 #include <common/t_items.qh>

@@ -4,7 +4,7 @@ CLASS(MineLayer, Weapon)
 /* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets);
 /* impulse   */ ATTRIB(MineLayer, impulse, int, 4);
 /* flags     */ ATTRIB(MineLayer, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(MineLayer, wpcolor, vector, '0.75 1 0');
 /* modelname */ ATTRIB(MineLayer, mdl, string, "minelayer");
 #ifdef GAMEQC

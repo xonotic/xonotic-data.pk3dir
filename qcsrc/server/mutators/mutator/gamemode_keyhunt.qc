@@ -1051,11 +1051,11 @@ void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingsca
 			}
 		}
 		if(!head.owner)
-			navigation_routerating(this, head, ratingscale_dropped * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
 		else if(head.team == this.team)
-			navigation_routerating(this, head.owner, ratingscale_team * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
 		else
-			navigation_routerating(this, head.owner, ratingscale_enemy * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 	}
 
 	havocbot_goalrating_items(this, 1, this.origin, 10000);
