@@ -1565,7 +1565,12 @@ void Scoreboard_Draw()
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
 
-	if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE) {
+	bool show_accuracy = (gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_NEXBALL);
+
+	if (show_accuracy && autocvar_hud_panel_scoreboard_accuracy && !warmup_stage)
+		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
+
+	if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (gametype == MAPINFO_TYPE_CTF && STAT(CTF_SHOWLEADERBOARD))) {
 		if(race_speedaward) {
 			drawcolorcodedstring(pos, sprintf(_("Speed award: %d%s ^7(%s^7)"), race_speedaward, race_speedaward_unit, race_speedaward_holder), hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y;
@@ -1576,8 +1581,6 @@ void Scoreboard_Draw()
 		}
 		pos = Scoreboard_Rankings_Draw(pos, playerslots[player_localnum], panel_bg_color, bg_size);
 	}
-	else if (autocvar_hud_panel_scoreboard_accuracy && !warmup_stage && gametype != MAPINFO_TYPE_NEXBALL)
-		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
 
 	pos = Scoreboard_MapStats_Draw(pos, panel_bg_color, bg_size);
 

@@ -59,6 +59,7 @@ const float TIME_FACTOR = 100;
 #define TIME_ENCODED_TOSTRING(n) mmssss(n)
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
+#define CTF_RECORD "/ctf100record/"
 #define TIME_ENCODE(t) TIME_TO_NTHS(t, TIME_FACTOR)
 #define TIME_DECODE(n) ((n) / TIME_FACTOR)
 
