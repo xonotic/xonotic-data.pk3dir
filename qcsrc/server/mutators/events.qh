@@ -308,6 +308,7 @@ MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
     /** walk speed */    i(float, MUTATOR_ARGV_2_float) \
     /**/                 o(float, MUTATOR_ARGV_2_float) \
     /** move target */   i(entity, MUTATOR_ARGV_3_entity) \
+    /**/                 o(entity, MUTATOR_ARGV_3_entity) \
     /**/
 MUTATOR_HOOKABLE(MonsterMove, EV_MonsterMove);
 

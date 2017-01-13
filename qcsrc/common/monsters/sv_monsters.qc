@@ -99,9 +99,10 @@ bool Monster_ValidTarget(entity this, entity targ)
 		return false;
 	}
 
-	traceline(this.origin + this.view_ofs, targ.origin, MOVE_NOMONSTERS, this);
+	vector targ_origin = ((targ.absmin + targ.absmax) * 0.5);
+	traceline(this.origin + this.view_ofs, targ_origin, MOVE_NOMONSTERS, this);
 
-	if(trace_fraction < 1)
+	if(trace_fraction < 1 && trace_ent != targ)
 		return false; // solid
 
 	if(autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT))
@@ -693,7 +694,8 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
 	// update goal entity if lost
-	if(this.target2 && this.goalentity.targetname != this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
+	if(this.target2 && this.target2 != "" && this.goalentity.targetname != this.target2)
+		this.goalentity = find(NULL, targetname, this.target2);
 
 	if(STAT(FROZEN, this) == 2)
 	{
@@ -866,9 +868,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	else
 	{
 		entity e = this.goalentity; //find(NULL, targetname, this.target2);
-		if(e.target2)
+		if(e.target2 && e.target2 != "")
 			this.target2 = e.target2;
-		else if(e.target) // compatibility
+		else if(e.target && e.target != "") // compatibility
 			this.target2 = e.target;
 
 		movelib_brake_simple(this, stpspeed);
