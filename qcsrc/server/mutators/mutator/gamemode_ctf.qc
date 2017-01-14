@@ -1357,7 +1357,7 @@ void havocbot_calculate_middlepoint()
 	entity f;
 	vector s = '0 0 0';
 	vector fo = '0 0 0';
-	float n = 0;
+	int n = 0;
 
 	f = ctf_worldflaglist;
 	while (f)
@@ -1365,11 +1365,12 @@ void havocbot_calculate_middlepoint()
 		fo = f.origin;
 		s = s + fo;
 		f = f.ctf_worldflagnext;
+		n++;
 	}
 	if(!n)
 		return;
-	havocbot_ctf_middlepoint = s * (1.0 / n);
-	havocbot_ctf_middlepoint_radius	 = vlen(fo - havocbot_ctf_middlepoint);
+	havocbot_ctf_middlepoint = s / n;
+	havocbot_ctf_middlepoint_radius = vlen(fo - havocbot_ctf_middlepoint);
 }
 
 
