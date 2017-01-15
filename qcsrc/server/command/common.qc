@@ -575,8 +575,14 @@ void CommonCommand_records(float request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			for (int i = 0; i < 10; ++i)
-				if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			int num = stoi(argv(1));
+			if(num > 0 && num <= 10 && records_reply[num - 1] != "")
+				print_to(caller, records_reply[num - 1]);
+			else
+			{
+				for (int i = 0; i < 10; ++i)
+					if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			}
 
 			return;  // never fall through to usage
 		}
