@@ -470,11 +470,11 @@ string notif_arg_frag_stats(float fhealth, float farmor, float fping)
 
 string notif_arg_missing_teams(float f1)
 {
-	return sprintf("%s%s%s%s",
-		((f1 & BIT(0)) ? sprintf("%s%s", Team_ColoredFullName(NUM_TEAM_1), (f1 & (BIT(1) | BIT(2) | BIT(3)) ? ", " : "")) : ""),
-		((f1 & BIT(1)) ? sprintf("%s%s", Team_ColoredFullName(NUM_TEAM_2), (f1 & (         BIT(2) | BIT(3)) ? ", " : "")) : ""),
-		((f1 & BIT(2)) ? sprintf("%s%s", Team_ColoredFullName(NUM_TEAM_3), (f1 & (                  BIT(3)) ? ", " : "")) : ""),
-		((f1 & BIT(3)) ?                 Team_ColoredFullName(NUM_TEAM_4)                                                 : "")
+	return strcat(
+		((f1 & BIT(0)) ? strcat(Team_ColoredFullName(NUM_TEAM_1), (f1 >> 1) ? ", " : "") : ""),
+		((f1 & BIT(1)) ? strcat(Team_ColoredFullName(NUM_TEAM_2), (f1 >> 2) ? ", " : "") : ""),
+		((f1 & BIT(2)) ? strcat(Team_ColoredFullName(NUM_TEAM_3), (f1 >> 3) ? ", " : "") : ""),
+		((f1 & BIT(3)) ?        Team_ColoredFullName(NUM_TEAM_4)                         : "")
 	);
 }
 
