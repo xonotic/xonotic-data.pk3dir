@@ -415,6 +415,7 @@
     MSG_INFO_NOTIF(RACE_NEW_BROKEN,                         1,  2, 3, "s1 s2 race_col f1ord race_col f2race_time race_diff",  "s1 f2race_time",     "race_newrankyellow",       _("^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"), "")
     MSG_INFO_NOTIF(RACE_NEW_IMPROVED,                       1,  1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1 f2race_time",         "race_newtime",             _("^BG%s^BG improved their %s%s^BG place record with %s%s %s"), "")
     MSG_INFO_NOTIF(RACE_NEW_MISSING_UID,                    1,  1, 1, "s1 f1race_time", "s1 f1race_time",                                           "race_newfail",             _("^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID and will be lost."), "")
+    MSG_INFO_NOTIF(RACE_NEW_MISSING_NAME,                   1,  1, 1, "s1 f1race_time", "s1 f1race_time",                                           "race_newfail",             _("^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be lost."), "")
     MSG_INFO_NOTIF(RACE_NEW_SET,                            1,  1, 2, "s1 race_col f1ord race_col f2race_time", "s1 f2race_time",                   "race_newrecordserver",     _("^BG%s^BG set the %s%s^BG place record with %s%s"), "")
 
     MULTIICON_INFO(MINIGAME_INVITE,                         1,  2, 0, "s2 minigame1_name s1", "s2", "minigame1_d", "minigames/%s/icon_notif",   _("^F4You have been invited by ^BG%s^F4 to join their game of ^F2%s^F4 (^F1%s^F4)"), "")
