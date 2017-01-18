@@ -957,7 +957,16 @@ float weapon_pickupevalfunc(entity player, entity item)
 			return 0;
 		return ammo_pickupevalfunc(player, item);
 	}
-	return item.bot_pickupbasevalue;
+
+	// reduce weapon value if bot already got a good arsenal
+	float c = 1;
+	int weapons_value = 0;
+	FOREACH(Weapons, it != WEP_Null && (player.weapons & it.m_wepset), {
+		weapons_value += it.bot_pickupbasevalue;
+	});
+	c -= bound(0, weapons_value / 20000, 1) * 0.5;
+
+	return item.bot_pickupbasevalue * c;
 }
 
 float ammo_pickupevalfunc(entity player, entity item)
@@ -1030,8 +1039,7 @@ float ammo_pickupevalfunc(entity player, entity item)
 
 	rating *= min(2, c);
 	if(wpn)
-		// Skilled bots will grab more
-		rating += wpn.bot_pickupbasevalue * (0.1 + 0.1 * bound(0, skill / 10, 1));
+		rating += wpn.bot_pickupbasevalue * 0.1;
 	return rating;
 }
 
