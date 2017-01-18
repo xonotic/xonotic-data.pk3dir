@@ -114,6 +114,8 @@ float healtharmor_pickupevalfunc(entity player, entity item);
 .entity itemdef;
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 
+void setItemGroup(entity this);
+void setItemGroupCount();
 
 float GiveWeapon(entity e, float wpn, float op, float val);
 

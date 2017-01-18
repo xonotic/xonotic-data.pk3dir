@@ -46,6 +46,7 @@ entity bot_spawn()
 	entity bot = spawnclient();
 	if (bot)
 	{
+		setItemGroupCount();
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);

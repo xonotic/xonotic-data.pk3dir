@@ -1043,17 +1043,26 @@ float ammo_pickupevalfunc(entity player, entity item)
 	return rating;
 }
 
+.int item_group;
+.int item_group_count;
 float healtharmor_pickupevalfunc(entity player, entity item)
 {
 	float c = 0;
 	float rating = item.bot_pickupbasevalue;
 
-	if (item.armorvalue)
+	float itemarmor = item.armorvalue;
+	float itemhealth = item.health;
+	if(item.item_group)
+	{
+		itemarmor *= min(4, item.item_group_count);
+		itemhealth *= min(4, item.item_group_count);
+	}
+	if (itemarmor)
 	if (player.armorvalue < item.max_armorvalue)
-		c = item.armorvalue / max(1, player.armorvalue * 2/3 + player.health * 1/3);
-	if (item.health)
+		c = itemarmor / max(1, player.armorvalue * 2/3 + player.health * 1/3);
+	if (itemhealth)
 	if (player.health < item.max_health)
-		c = item.health / max(1, player.health);
+		c = itemhealth / max(1, player.health);
 
 	rating *= min(2, c);
 	return rating;
@@ -1274,6 +1283,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		delete(this);
 		return;
 	}
+
+	setItemGroup(this);
 }
 
 void StartItem(entity this, GameItem def)
@@ -1284,6 +1295,54 @@ void StartItem(entity this, GameItem def)
     	def.m_respawntime(), // defaultrespawntime
     	def.m_respawntimejitter() // defaultrespawntimejitter
 	);
+}
+
+#define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))
+int group_count = 1;
+
+void setItemGroup(entity this)
+{
+	if(!IS_SMALL(this.itemdef))
+		return;
+
+	FOREACH_ENTITY_RADIUS(this.origin, 120, (it != this) && IS_SMALL(it.itemdef),
+	{
+		if(!this.item_group)
+		{
+			if(!it.item_group)
+			{
+				it.item_group = group_count;
+				group_count++;
+			}
+			this.item_group = it.item_group;
+		}
+		else // spawning item is already part of a item_group X
+		{
+			if(!it.item_group)
+				it.item_group = this.item_group;
+			else if(it.item_group != this.item_group) // found an item near the spawning item that is part of a different item_group Y
+			{
+				int grY = it.item_group;
+				// move all items of item_group Y to item_group X
+				FOREACH_ENTITY(IS_SMALL(it.itemdef),
+				{
+					if(it.item_group == grY)
+						it.item_group = this.item_group;
+				});
+			}
+		}
+	});
+}
+
+void setItemGroupCount()
+{
+	for (int k = 1; k <= group_count; k++)
+	{
+		int count = 0;
+		FOREACH_ENTITY(IS_SMALL(it.itemdef) && it.item_group == k, { count++; });
+		if (count)
+			FOREACH_ENTITY(IS_SMALL(it.itemdef) && it.item_group == k, { it.item_group_count = count; });
+	}
 }
 
 spawnfunc(item_rockets)
