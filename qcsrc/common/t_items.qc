@@ -1006,29 +1006,29 @@ float ammo_pickupevalfunc(entity player, entity item)
 	if (need_shells)
 	if (item.ammo_shells)
 	if (player.ammo_shells < g_pickup_shells_max)
-		c = (player.ammo_shells + item.ammo_shells) / player.ammo_shells;
+		c = item.ammo_shells / player.ammo_shells;
 	if (need_nails)
 	if (item.ammo_nails)
 	if (player.ammo_nails < g_pickup_nails_max)
-		c = (player.ammo_nails + item.ammo_nails) / player.ammo_nails;
+		c = item.ammo_nails / player.ammo_nails;
 	if (need_rockets)
 	if (item.ammo_rockets)
 	if (player.ammo_rockets < g_pickup_rockets_max)
-		c = (player.ammo_rockets + item.ammo_rockets) / player.ammo_rockets;
+		c = item.ammo_rockets / player.ammo_rockets;
 	if (need_cells)
 	if (item.ammo_cells)
 	if (player.ammo_cells < g_pickup_cells_max)
-		c = (player.ammo_cells + item.ammo_cells) / player.ammo_cells;
+		c = item.ammo_cells / player.ammo_cells;
 	if (need_plasma)
 	if (item.ammo_plasma)
 	if (player.ammo_plasma < g_pickup_plasma_max)
-		c = (player.ammo_plasma + item.ammo_plasma) / player.ammo_plasma;
+		c = item.ammo_plasma / player.ammo_plasma;
 	if (need_fuel)
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
-		c = (player.ammo_fuel + item.ammo_fuel) / player.ammo_fuel;
+		c = item.ammo_fuel / player.ammo_fuel;
 
-	rating *= min(3, c);
+	rating *= min(3, 1 + c);
 	if(wpn)
 		// Skilled bots will grab more
 		rating += wpn.bot_pickupbasevalue * (0.1 + 0.1 * bound(0, skill / 10, 1));
@@ -1042,12 +1042,12 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 
 	if (item.armorvalue)
 	if (player.armorvalue < item.max_armorvalue)
-		c = (player.armorvalue + player.health + item.armorvalue) / (max(1, player.armorvalue + player.health));
+		c = item.armorvalue / (max(1, player.armorvalue + player.health));
 	if (item.health)
 	if (player.health < item.max_health)
-		c = (player.health + item.health) / (max(1, player.health));
+		c = item.health / max(1, player.health);
 
-	rating *= min(3, c);
+	rating *= min(3, 1 + c);
 	return rating;
 }
 
