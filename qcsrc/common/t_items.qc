@@ -1028,7 +1028,7 @@ float ammo_pickupevalfunc(entity player, entity item)
 	if (player.ammo_fuel < g_pickup_fuel_max)
 		c = item.ammo_fuel / player.ammo_fuel;
 
-	rating *= min(3, 1 + c);
+	rating *= min(2, c);
 	if(wpn)
 		// Skilled bots will grab more
 		rating += wpn.bot_pickupbasevalue * (0.1 + 0.1 * bound(0, skill / 10, 1));
@@ -1042,12 +1042,12 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 
 	if (item.armorvalue)
 	if (player.armorvalue < item.max_armorvalue)
-		c = item.armorvalue / (max(1, player.armorvalue + player.health));
+		c = item.armorvalue / max(1, player.armorvalue * 2/3 + player.health * 1/3);
 	if (item.health)
 	if (player.health < item.max_health)
 		c = item.health / max(1, player.health);
 
-	rating *= min(3, 1 + c);
+	rating *= min(2, c);
 	return rating;
 }
 

@@ -6,7 +6,7 @@ CLASS(Health, Pickup)
     ATTRIB(Health, m_mins, vector, '-16 -16 0');
     ATTRIB(Health, m_maxs, vector, '16 16 48');
     ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
-    ATTRIB(Health, m_botvalue, int, 2500);
+    ATTRIB(Health, m_botvalue, int, 5000);
 #endif
 ENDCLASS(Health)
 
