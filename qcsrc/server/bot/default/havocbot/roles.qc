@@ -74,7 +74,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 					if (picker.health && it.health > this.health) continue;
 					if (picker.armorvalue && it.armorvalue > this.armorvalue) continue;
 
-					if (picker.weapons && (picker.weapons & ~it.weapons) continue;
+					if (picker.weapons && (picker.weapons & ~it.weapons)) continue;
 
 					if (picker.ammo_shells && it.ammo_shells > this.ammo_shells) continue;
 					if (picker.ammo_nails && it.ammo_nails > this.ammo_nails) continue;
