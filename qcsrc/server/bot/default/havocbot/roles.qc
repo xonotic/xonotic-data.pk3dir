@@ -23,8 +23,24 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 	{
 		rating = 0;
 
+		if(!it.solid)
+		{
+			if(!it.scheduledrespawntime)
+				continue;
+			if(it.respawntime < 30 || (it.respawntimejitter && !it.itemdef.instanceOfPowerup))
+				continue;
+
+			float t = 0;
+			if(it.itemdef.instanceOfPowerup)
+				t = bound(0, skill / 10, 1) * 6;
+			else if(skill >= 9)
+				t = 4;
+
+			if(time < it.scheduledrespawntime - t)
+				continue;
+		}
 		o = (it.absmin + it.absmax) * 0.5;
-		if(!it.solid || vdist(o - org, >, sradius) || (it == this.ignoregoal && time < this.ignoregoaltime) )
+		if(vdist(o - org, >, sradius) || (it == this.ignoregoal && time < this.ignoregoaltime) )
 			continue;
 
 		// Check if the item can be picked up safely
