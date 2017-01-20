@@ -16,20 +16,20 @@
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
 	float rating, d, discard, friend_distance, enemy_distance;
-	vector o = '0 0 0';
+	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
 		rating = 0;
 
+		o = (it.absmin + it.absmax) * 0.5;
 		if(!it.solid || vdist(o - org, >, sradius) || (it == this.ignoregoal && time < this.ignoregoaltime) )
 			continue;
 
 		// Check if the item can be picked up safely
 		if(it.classname == "droppedweapon")
 		{
-			o = (it.absmin + it.absmax) * 0.5;
 			traceline(o, o + '0 0 -1500', true, NULL);
 
 			d = pointcontents(trace_endpos + '0 0 1');
@@ -51,7 +51,6 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 		if(teamplay)
 		{
-			o = (it.absmin + it.absmax) * 0.5;
 			friend_distance = 10000; enemy_distance = 10000;
 			discard = false;
 
