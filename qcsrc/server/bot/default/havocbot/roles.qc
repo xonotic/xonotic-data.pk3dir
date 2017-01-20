@@ -36,8 +36,11 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 			d = pointcontents(trace_endpos + '0 0 1');
 			if(d == CONTENT_WATER || d == CONTENT_SLIME || d == CONTENT_LAVA)
 				continue;
-			if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
-				continue;
+			// this tracebox_hits_trigger_hurt call isn't needed:
+			// dropped weapons are removed as soon as they fall on a trigger_hurt
+			// and can't be rated while they are in the air
+			//if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
+			//	continue;
 		}
 		else
 		{
