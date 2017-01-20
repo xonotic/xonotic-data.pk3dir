@@ -21,10 +21,9 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
-		o = (it.absmin + it.absmax) * 0.5;
-		friend_distance = 10000; enemy_distance = 10000;
 		rating = 0;
 
+		o = (it.absmin + it.absmax) * 0.5;
 		if(!it.solid || vdist(o - org, >, sradius) || (it == this.ignoregoal && time < this.ignoregoaltime) )
 			continue;
 
@@ -36,8 +35,11 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 			d = pointcontents(trace_endpos + '0 0 1');
 			if(d == CONTENT_WATER || d == CONTENT_SLIME || d == CONTENT_LAVA)
 				continue;
-			if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
-				continue;
+			// this tracebox_hits_trigger_hurt call isn't needed:
+			// dropped weapons are removed as soon as they fall on a trigger_hurt
+			// and can't be rated while they are in the air
+			//if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
+			//	continue;
 		}
 		else
 		{
@@ -49,6 +51,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 		if(teamplay)
 		{
+			friend_distance = 10000; enemy_distance = 10000;
 			discard = false;
 
 			entity picker = it;
@@ -65,33 +68,18 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 						continue;
 
 					friend_distance = d;
-
 					discard = true;
 
-					if( picker.health && it.health > this.health )
-						continue;
+					if (picker.health && it.health > this.health) continue;
+					if (picker.armorvalue && it.armorvalue > this.armorvalue) continue;
 
-					if( picker.armorvalue && it.armorvalue > this.armorvalue)
-						continue;
+					if (picker.weapons && (picker.weapons & ~it.weapons)) continue;
 
-					if( picker.weapons )
-					if( picker.weapons & ~it.weapons )
-						continue;
-
-					if (picker.ammo_shells && it.ammo_shells > this.ammo_shells)
-						continue;
-
-					if (picker.ammo_nails && it.ammo_nails > this.ammo_nails)
-						continue;
-
-					if (picker.ammo_rockets && it.ammo_rockets > this.ammo_rockets)
-						continue;
-
-					if (picker.ammo_cells && it.ammo_cells > this.ammo_cells)
-						continue;
-
-					if (picker.ammo_plasma && it.ammo_plasma > this.ammo_plasma)
-						continue;
+					if (picker.ammo_shells && it.ammo_shells > this.ammo_shells) continue;
+					if (picker.ammo_nails && it.ammo_nails > this.ammo_nails) continue;
+					if (picker.ammo_rockets && it.ammo_rockets > this.ammo_rockets) continue;
+					if (picker.ammo_cells && it.ammo_cells > this.ammo_cells) continue;
+					if (picker.ammo_plasma && it.ammo_plasma > this.ammo_plasma) continue;
 
 					discard = false;
 				}
@@ -108,7 +96,6 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 			if ( (enemy_distance < friend_distance && vdist(o - org, <, enemy_distance)) ||
 				(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ) || !discard )
 				rating = it.bot_pickupevalfunc(this, it);
-
 		}
 		else
 			rating = it.bot_pickupevalfunc(this, it);

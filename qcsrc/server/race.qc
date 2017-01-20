@@ -285,6 +285,12 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 		return;
 	}
 
+	if(uid2name(myuid) == "^1Unregistered Player")
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_NAME, mynetname, t);
+		return;
+	}
+
 	oldrec = race_readTime(GetMapname(), newpos);
 	oldrec_holder = race_readName(GetMapname(), newpos);
 

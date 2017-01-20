@@ -343,7 +343,7 @@ void buff_Init(entity this)
 
 	entity buff = buff_FirstFromFlags(this.buffs);
 
-	if(!this.buffs || buff_Available(buff))
+	if(!this.buffs || !buff_Available(buff))
 		buff_NewType(this, 0);
 
 	this.classname = "item_buff";
