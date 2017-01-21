@@ -121,6 +121,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 	});
 }
 
+#define BOT_RATING_ENEMY 2500
 void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius)
 {
 	if (autocvar_bot_nofire)
@@ -129,6 +130,8 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 	// don't chase players if we're under water
 	if(this.waterlevel>WATERLEVEL_WETFEET)
 		return;
+
+	ratingscale = ratingscale * 0.00005; // enemies are rated around 20000 already
 
 	int t;
 
@@ -163,8 +166,17 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		//		 adding a player as a goal seems to be quite dangerous, especially on space maps
 		//		 remove hack in navigation_poptouchedgoals() after performing this change
 
-		t = (this.health + this.armorvalue ) / (it.health + it.armorvalue );
-		navigation_routerating(this, it, t * ratingscale, 2000);
+		t = ((this.health + this.armorvalue) - (it.health + it.armorvalue)) / 150;
+		t = bound(0, 1 + t, 3);
+		if (skill > 3)
+		{
+			if (time < this.strength_finished - 1) t += 0.5;
+			if (time < it.strength_finished - 1) t -= 0.5;
+		}
+		t += max(0, 8 - skill) * 0.05; // less skilled bots attack more mindlessly
+		ratingscale *= t;
+		if (ratingscale > 0)
+			navigation_routerating(this, it, ratingscale * BOT_RATING_ENEMY, 2000);
 	));
 }
 
