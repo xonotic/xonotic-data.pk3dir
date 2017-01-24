@@ -289,10 +289,25 @@ bool bd_move_dozer(entity minigame, entity dozer)
 			ty += dir.y;
 
 			testpos = minigame_tile_buildname(tx, ty);
-			entity testhit = bd_find_piece(minigame, testpos, false);
-
-			if(!bd_valid_tile(testpos) || testhit)
+			if(!bd_valid_tile(testpos))
 				return false;
+			entity testhit = bd_find_piece(minigame, testpos, false);
+			if(testhit)
+				return false;
+
+			entity controller = bd_find_controller(minigame, minigame_tile_letter(testpos));
+			int tnum = minigame_tile_number(testpos);
+			switch(controller.bd_tiletypes[tnum])
+			{
+				case BD_TILE_BRICK8:
+				case BD_TILE_BRICK7:
+				case BD_TILE_BRICK6:
+				case BD_TILE_BRICK5:
+				case BD_TILE_BRICK4:
+				case BD_TILE_BRICK3:
+				case BD_TILE_BRICK2:
+				case BD_TILE_BRICK1: return false;
+			}
 
 			if(hit.netname) { strunzone(hit.netname); }
 			hit.netname = strzone(testpos);
