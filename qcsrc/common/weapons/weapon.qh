@@ -72,7 +72,7 @@ CLASS(Weapon, Object)
     /** M: model MDL_id_ITEM */
     ATTRIB(Weapon, m_model, entity);
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
-    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshair1");
+    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshairmoustache");
     /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
     ATTRIB(Weapon, w_crosshair_size, float, 1);
     /** A: reticle   : per-weapon zoom reticle */
