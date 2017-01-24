@@ -38,6 +38,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 			if(time < it.scheduledrespawntime - t)
 				continue;
+
+			it.bot_pickup_respawning = true;
 		}
 		o = (it.absmin + it.absmax) * 0.5;
 		if(vdist(o - org, >, sradius) || (it == this.ignoregoal && time < this.ignoregoaltime) )

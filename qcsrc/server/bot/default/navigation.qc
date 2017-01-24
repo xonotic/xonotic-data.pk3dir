@@ -897,6 +897,13 @@ void navigation_poptouchedgoals(entity this)
 		}
 	}
 
+	if(this.goalcurrent.bot_pickup_respawning)
+	{
+		if(!this.goalcurrent.solid)
+			return;
+		this.goalcurrent.bot_pickup_respawning = false;
+	}
+
 	// If for some reason the bot is closer to the next goal, pop the current one
 	if(this.goalstack01 && !wasfreed(this.goalstack01))
 	if(vlen2(this.goalcurrent.origin - this.origin) > vlen2(this.goalstack01.origin - this.origin))
