@@ -84,7 +84,6 @@ void raptor_land(entity this)
 void raptor_exit(entity this, int eject)
 {
 	entity player = this.owner;
-	this.owner = NULL;
 
 	this.tur_head.exteriormodeltoclient = NULL;
 
@@ -127,6 +126,7 @@ void raptor_exit(entity this, int eject)
 		setorigin(player, spot);
 	}
 
+	this.owner = NULL;
 	antilag_clear(player, CS(player));
 }
 

@@ -319,7 +319,6 @@ bool spiderbot_frame(entity this, float dt)
 void spiderbot_exit(entity this, int eject)
 {
 	entity player = this.owner;
-	this.owner = NULL;
 
 	IL_EACH(g_projectiles, it.owner == player && it.classname == "spiderbot_rocket",
 	{
@@ -333,7 +332,10 @@ void spiderbot_exit(entity this, int eject)
 	set_movetype(this, MOVETYPE_WALK);
 
 	if(!player)
+	{
+		this.owner = NULL; // reset owner anyway?
 		return;
+	}
 
 	makevectors(this.angles);
 	vector spot;
@@ -366,6 +368,7 @@ void spiderbot_exit(entity this, int eject)
 	}
 
 	antilag_clear(player, CS(player));
+	this.owner = NULL;
 }
 
 void spiderbot_headfade(entity this)
