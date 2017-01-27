@@ -1,11 +1,16 @@
 #pragma once
 
 #include "pickup.qh"
+#ifdef SVQC
+PROPERTY(float, g_pickup_ammo_anyway);
+#endif
+
 CLASS(Ammo, Pickup)
 #ifdef SVQC
     ATTRIB(Ammo, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
     ATTRIB(Ammo, m_respawntime, float(), GET(g_pickup_respawntime_ammo));
     ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo));
+    ATTRIB(Ammo, m_pickupanyway, float(), GET(g_pickup_ammo_anyway));
 #endif
 ENDCLASS(Ammo)
 

@@ -18,6 +18,9 @@ ENDCLASS(Health)
 MODEL(HealthSmall_ITEM, Item_Model("g_h1.md3"));
 SOUND(HealthSmall, Item_Sound("minihealth"));
 #endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_healthsmall_anyway);
+#endif
 
 REGISTER_ITEM(HealthSmall, Health) {
 #ifdef GAMEQC
@@ -30,12 +33,16 @@ REGISTER_ITEM(HealthSmall, Health) {
     this.m_itemid               =   IT_5HP;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
+    this.m_pickupanyway         =   GET(g_pickup_healthsmall_anyway);
 #endif
 }
 
 #ifdef GAMEQC
 MODEL(HealthMedium_ITEM, Item_Model("g_h25.md3"));
 SOUND(HealthMedium, Item_Sound("mediumhealth"));
+#endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_healthmedium_anyway);
 #endif
 
 REGISTER_ITEM(HealthMedium, Health) {
@@ -49,12 +56,16 @@ REGISTER_ITEM(HealthMedium, Health) {
     this.m_itemid               =   IT_25HP;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
+    this.m_pickupanyway         =   GET(g_pickup_healthmedium_anyway);
 #endif
 }
 
 #ifdef GAMEQC
 MODEL(HealthBig_ITEM, Item_Model("g_h50.md3"));
 SOUND(HealthBig, Item_Sound("mediumhealth"));
+#endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_healthbig_anyway);
 #endif
 
 REGISTER_ITEM(HealthBig, Health) {
@@ -70,12 +81,16 @@ REGISTER_ITEM(HealthBig, Health) {
     this.m_itemid               =   IT_25HP;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
+    this.m_pickupanyway         =   GET(g_pickup_healthbig_anyway);
 #endif
 }
 
 #ifdef GAMEQC
 MODEL(HealthMega_ITEM, Item_Model("g_h100.md3"));
 SOUND(HealthMega, Item_Sound("megahealth"));
+#endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_healthmega_anyway);
 #endif
 
 REGISTER_ITEM(HealthMega, Health) {
@@ -93,5 +108,6 @@ REGISTER_ITEM(HealthMega, Health) {
     this.m_itemid               =   IT_HEALTH;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
+    this.m_pickupanyway         =   GET(g_pickup_healthmega_anyway);
 #endif
 }
