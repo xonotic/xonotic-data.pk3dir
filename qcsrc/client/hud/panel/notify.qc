@@ -1,5 +1,7 @@
 #include "notify.qh"
-// Notification area (#4)
+
+
+// Notifications (#4)
 
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
@@ -47,12 +49,13 @@ void HUD_Notify()
 		if (!autocvar_hud_panel_notify)
 			return;
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
+
 	if (autocvar_hud_panel_notify_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if (!autocvar__hud_configure)
 		if (notify_count == 0)

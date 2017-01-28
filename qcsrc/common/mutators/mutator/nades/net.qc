@@ -1,6 +1,8 @@
-#include "nades.qh"
+#include "net.qh"
 
-#ifdef IMPLEMENTATION
+#ifdef GAMEQC
+
+#include "nades.qh"
 
 #ifdef CSQC
 .float ltime;
@@ -31,7 +33,7 @@ void orb_setup(entity e)
 	e.draw = orb_draw;
 	IL_PUSH(g_drawables, e);
 	e.health = 255;
-	e.move_movetype = MOVETYPE_NONE;
+	set_movetype(e, MOVETYPE_NONE);
 	e.solid = SOLID_NOT;
 	e.drawmask = MASK_NORMAL;
 	e.scale = 0.01;

@@ -1,0 +1,33 @@
+#pragma once
+
+REGISTER_NET_LINKED(ENT_CLIENT_WEPENT)
+REGISTER_NET_TEMP(CLIENT_WEPENT)
+
+.float vortex_charge;
+.int tuba_instrument;
+
+#ifdef SVQC
+
+	bool wepent_send(entity this, entity to, int sf);
+
+	void wepent_link(entity wep);
+
+	.int m_forceupdate;
+
+	.Weapon m_switchweapon;
+	.Weapon m_weapon;
+	.Weapon m_switchingweapon;
+
+#endif
+
+#ifdef CSQC
+	.int m_wepent_slot;
+
+	.Weapon activeweapon;
+	.Weapon switchingweapon;
+	.Weapon switchweapon;
+
+	// only for Porto
+	.bool angles_held_status;
+	.vector angles_held;
+#endif

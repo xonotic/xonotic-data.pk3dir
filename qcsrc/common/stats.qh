@@ -1,8 +1,7 @@
-#ifndef STATS_H
-#define STATS_H
+#pragma once
 
 #ifdef SVQC
-#include <server/cl_client.qh>
+#include <server/client.qh>
 #endif
 
 // Full list of all stat constants, included in a single location for easy reference
@@ -45,28 +44,23 @@ const int MAX_CL_STATS = 256;
 REGISTER_STAT(WEAPONS, vectori)
 REGISTER_STAT(WEAPONSINMAP, vectori)
 
-REGISTER_STAT(PL_VIEW_OFS, vector, autocvar_sv_player_viewoffset)
-REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector, autocvar_sv_player_crouch_viewoffset)
+REGISTER_STAT(PL_VIEW_OFS, vector)
+REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector)
 
-REGISTER_STAT(PL_MIN, vector, autocvar_sv_player_mins)
-REGISTER_STAT(PL_CROUCH_MIN, vector, autocvar_sv_player_crouch_mins)
+REGISTER_STAT(PL_MIN, vector)
+REGISTER_STAT(PL_CROUCH_MIN, vector)
 
-REGISTER_STAT(PL_MAX, vector, autocvar_sv_player_maxs)
-REGISTER_STAT(PL_CROUCH_MAX, vector, autocvar_sv_player_crouch_maxs)
+REGISTER_STAT(PL_MAX, vector)
+REGISTER_STAT(PL_CROUCH_MAX, vector)
 
 REGISTER_STAT(KH_KEYS, int)
 
-/** weapon requested to switch to; next WANTED weapon (for HUD) */
-REGISTER_STAT(SWITCHWEAPON, int)
-/** weapon currently being switched to (is copied from switchweapon once switch is possible) */
-REGISTER_STAT(SWITCHINGWEAPON, int)
-REGISTER_STAT(WEAPON_NEXTTHINK, float)
 #ifdef SVQC
-SPECTATE_COPYFIELD(_STAT(WEAPON_NEXTTHINK))
 float W_WeaponRateFactor(entity this);
+float game_stopped;
 #endif
 REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor(this))
-
+REGISTER_STAT(GAME_STOPPED, int, game_stopped)
 REGISTER_STAT(GAMESTARTTIME, float)
 REGISTER_STAT(STRENGTH_FINISHED, float)
 REGISTER_STAT(INVINCIBLE_FINISHED, float)
@@ -115,13 +109,12 @@ REGISTER_STAT(NADE_BONUS_SCORE, float)
 REGISTER_STAT(HEALING_ORB, float)
 REGISTER_STAT(HEALING_ORB_ALPHA, float)
 REGISTER_STAT(PLASMA, int)
-REGISTER_STAT(OK_AMMO_CHARGE, float)
-REGISTER_STAT(OK_AMMO_CHARGEPOOL, float)
 REGISTER_STAT(FROZEN, int)
 REGISTER_STAT(REVIVE_PROGRESS, float)
 REGISTER_STAT(ROUNDLOST, int)
 REGISTER_STAT(BUFF_TIME, float)
 REGISTER_STAT(CTF_FLAGSTATUS, int)
+REGISTER_STAT(CAPTURE_PROGRESS, float)
 REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
@@ -243,6 +236,20 @@ REGISTER_STAT(JETPACK_REVERSE_THRUST, float, autocvar_g_jetpack_reverse_thrust)
 
 REGISTER_STAT(MOVEVARS_HIGHSPEED, float, autocvar_g_movement_highspeed)
 
+#ifdef SVQC
+AUTOCVAR(g_walljump, bool, false, "Enable wall jumping mutator");
+AUTOCVAR(g_walljump_delay, float, 1, "Minimum delay between wall jumps");
+AUTOCVAR(g_walljump_force, float, 300, "How far to bounce/jump off the wall");
+AUTOCVAR(g_walljump_velocity_xy_factor, float, 1.15, "How much to slow down along horizontal axis, higher value = higher deceleration, if factor is < 1, you accelerate by wall jumping");
+AUTOCVAR(g_walljump_velocity_z_factor, float, 0.5, "Upwards velocity factor, multiplied by normal jump velocity");
+#endif
+REGISTER_STAT(WALLJUMP, int, autocvar_g_walljump)
+REGISTER_STAT(WALLJUMP_VELOCITY_Z_FACTOR, float, autocvar_g_walljump_velocity_z_factor)
+REGISTER_STAT(WALLJUMP_VELOCITY_XY_FACTOR, float, autocvar_g_walljump_velocity_xy_factor)
+REGISTER_STAT(WALLJUMP_DELAY, float, autocvar_g_walljump_delay)
+REGISTER_STAT(WALLJUMP_FORCE, float, autocvar_g_walljump_force)
+REGISTER_STAT(LASTWJ, float)
+
 // freeze tag, clan arena
 REGISTER_STAT(REDALIVE, int)
 REGISTER_STAT(BLUEALIVE, int)
@@ -264,6 +271,11 @@ REGISTER_STAT(CAMERA_SPECTATOR, int)
 REGISTER_STAT(SPECTATORSPEED, float)
 
 #ifdef SVQC
+bool autocvar_sv_slick_applygravity;
+#endif
+REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
+
+#ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
 #endif
 
@@ -272,6 +284,7 @@ REGISTER_STAT(MOVEVARS_AIRCONTROL_PENALTY, float)
 REGISTER_STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, float)
 REGISTER_STAT(MOVEVARS_AIRSTRAFEACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL_POWER, float)
+REGISTER_STAT(MOVEVARS_AIRCONTROL_BACKWARDS, bool)
 noref bool autocvar_sv_gameplayfix_nogravityonground;
 REGISTER_STAT(MOVEFLAGS, int, MOVEFLAG_VALID
                               | (autocvar_sv_gameplayfix_q2airaccelerate ? MOVEFLAG_Q2AIRACCELERATE : 0)
@@ -322,7 +335,4 @@ REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 REGISTER_STAT(GUNALIGN, int, this.cvar_cl_gunalign)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))
-#endif
-
-
 #endif

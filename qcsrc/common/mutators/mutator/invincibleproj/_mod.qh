@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/invincibleproj/invincibleproj.qh>
+#ifdef SVQC
+    #include <common/mutators/mutator/invincibleproj/sv_invincibleproj.qh>
+#endif

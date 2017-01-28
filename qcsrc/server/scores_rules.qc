@@ -1,6 +1,6 @@
 #include "scores_rules.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "scores.qh"
 
 int ScoreRules_teams;
@@ -19,14 +19,14 @@ int AvailableTeams()
 	//return boolean(c1 >= 0) + boolean(c2 >= 0) + boolean(c3 >= 0) + boolean(c4 >= 0);
 }
 
-// NOTE: SP_ constants may not be >= MAX_SCORE; ST_constants may not be >= MAX_TEAMSCORE
+// NOTE: ST_constants may not be >= MAX_TEAMSCORE
 // scores that should be in all modes:
 void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled)
 {
-	float i;
-	for(i = 0; i < MAX_SCORE; ++i)
-		ScoreInfo_SetLabel_PlayerScore(i, "", 0);
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
+	FOREACH(Scores, true, {
+		ScoreInfo_SetLabel_PlayerScore(it, "", 0);
+    });
+	for(int i = 0; i < MAX_TEAMSCORE; ++i)
 		ScoreInfo_SetLabel_TeamScore(i, "", 0);
 
 	ScoreRules_teams = teams;
@@ -45,8 +45,9 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 	if(score_enabled)
 		ScoreInfo_SetLabel_PlayerScore(SP_SCORE,        "score",     sprio);
 
-	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "damage", 0);
-	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "damagetaken", SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "dmg", 0);
+	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "dmgtaken", SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", 0);
 }
 void ScoreRules_basics_end()
 {

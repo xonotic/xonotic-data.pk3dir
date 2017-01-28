@@ -4,7 +4,6 @@ void sys_phys_fix(entity this, float dt)
 {
 	this.team = myteam + 1; // is this correct?
 	PHYS_WATERJUMP_TIME(this) -= dt;
-	this.oldmovement = this.movement;
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 	this.items = STAT(ITEMS, this);
 	this.spectatorspeed = STAT(SPECTATORSPEED, this);
@@ -13,13 +12,13 @@ void sys_phys_fix(entity this, float dt)
 	PM_ClientMovement_UpdateStatus(this);
 }
 
-bool sys_phys_override(entity this)
+bool sys_phys_override(entity this, float dt)
 {
 	// no vehicle prediction
 	return hud != HUD_NORMAL;
 }
 
-void sys_phys_monitor(entity this) {}
+void sys_phys_monitor(entity this, float dt) {}
 
 void sys_phys_ai(entity this) {}
 

@@ -2,24 +2,18 @@
 
 #include <common/mutators/base.qh>
 
-#include <server/cl_client.qh>
-#include <server/cl_player.qh>
-#include <server/cl_impulse.qh>
+#include <server/client.qh>
+#include <server/player.qh>
+#include <server/impulse.qh>
 #include <server/cheats.qh>
 #include <server/g_damage.qh>
 #include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 
-#include <server/bot/bot.qh>
-#include <server/bot/navigation.qh>
-#include <server/bot/waypoints.qh>
+#include <server/bot/api.qh>
 
-#include <server/bot/havocbot/havocbot.qh>
-#include <server/bot/havocbot/roles.qh>
-
-#include <server/command/vote.qh>
-#include <server/command/common.qh>
+#include <server/command/_mod.qh>
 
 #include <server/weapons/common.qh>
 #include <server/weapons/tracing.qh>
@@ -33,7 +27,7 @@
 #include <common/stats.qh>
 #include <common/teams.qh>
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 
 #include <lib/warpzone/anglestransform.qh>
 #include <lib/warpzone/server.qh>

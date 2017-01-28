@@ -1,3 +1,4 @@
+#include "voicescript.qh"
 #ifdef SVQC
 .entity voicescript; // attached voice script
 .float voicescript_index; // index of next voice, or -1 to use the randomized ones
@@ -31,7 +32,7 @@ void target_voicescript_next(entity pl)
 		return;
 	if (!IS_PLAYER(pl))
 		return;
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	if(time >= pl.voicescript_voiceend)

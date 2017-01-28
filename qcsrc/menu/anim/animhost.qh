@@ -14,6 +14,6 @@ CLASS(AnimHost, Object)
 	METHOD(AnimHost, finishAllAnim, void(entity));
 	METHOD(AnimHost, finishObjAnim, void(entity, entity));
 	METHOD(AnimHost, tickAll, void(entity));
-	ATTRIB(AnimHost, firstChild, entity, NULL)
-	ATTRIB(AnimHost, lastChild, entity, NULL)
+	ATTRIB(AnimHost, firstChild, entity);
+	ATTRIB(AnimHost, lastChild, entity);
 ENDCLASS(AnimHost)

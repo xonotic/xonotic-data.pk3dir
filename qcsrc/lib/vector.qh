@@ -101,7 +101,7 @@ noref vector _vec2;
 noref vector _vec3;
 #define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
 
-vector rotate(vector v, float a)
+vector Rotate(vector v, float a)
 {
 	float a_sin = sin(a), a_cos = cos(a);
 	vector r = '0 0 0';
@@ -142,7 +142,7 @@ vector vec_epsilon(vector this, float eps)
 #define ClipVelocity(in, normal, out, overbounce) \
 	(out = vec_epsilon(vec_reflect(in, normal, (overbounce) - 1), 0.1))
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	vector get_corner_position(entity box, int corner)
 	{
 		switch (corner)

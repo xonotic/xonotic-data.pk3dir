@@ -1,7 +1,5 @@
 #include "nades.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
 float autocvar_g_nades_spread = 0.04;
@@ -9,7 +7,7 @@ float autocvar_g_nades_spread = 0.04;
 
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
 
-#ifndef MENUQC
+#ifdef GAMEQC
 entity Nade_TrailEffect(int proj, int nade_team)
 {
     switch (proj)
@@ -147,23 +145,25 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 
 #ifdef SVQC
 
-#include <common/gamemodes/all.qh>
-#include <common/monsters/spawn.qh>
+#include <common/gamemodes/_mod.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <server/g_subs.qh>
 
 REGISTER_MUTATOR(nades, cvar("g_nades"));
 
 .float nade_time_primed;
+.float nade_lifetime;
 
 .entity nade_spawnloc;
 
+
 void nade_timer_think(entity this)
 {
-	this.skin = 8 - (this.owner.wait - time) / (autocvar_g_nades_nade_lifetime / 10);
+	this.skin = 8 - (this.owner.wait - time) / (this.owner.nade_lifetime / 10);
 	this.nextthink = time;
 	if(!this.owner || wasfreed(this.owner))
-		remove(this);
+		delete(this);
 }
 
 void nade_burn_spawn(entity _nade)
@@ -213,7 +213,7 @@ void napalm_damage(entity this, float dist, float damage, float edgedamage, floa
 			if(d < dist)
 			{
 				e.fireball_impactvec = p;
-				RandomSelection_Add(e, 0, string_null, 1 / (1 + d), !Fire_IsBurning(e));
+				RandomSelection_AddEnt(e, 1 / (1 + d), !Fire_IsBurning(e));
 			}
 		}
 	if(RandomSelection_chosen_ent)
@@ -232,13 +232,13 @@ void napalm_ball_think(entity this)
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
 	if(time > this.pushltime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -294,6 +294,8 @@ void nade_napalm_ball(entity this)
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	//CSQCProjectile(proj, true, PROJECTILE_NAPALM_FIRE, true);
@@ -306,13 +308,13 @@ void napalm_fountain_think(entity this)
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
 	if(time >= this.ltime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -350,6 +352,9 @@ void nade_napalm_boom(entity this)
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
+	IL_PUSH(g_bot_dodge, fountain);
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, napalm_fountain_think);
 	fountain.nextthink = time;
@@ -379,7 +384,7 @@ void nade_ice_think(entity this)
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -396,7 +401,7 @@ void nade_ice_think(entity this)
 			Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 		}
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -502,7 +507,7 @@ void nade_spawn_boom(entity this)
 
 	if(this.realowner.nade_spawnloc)
 	{
-		remove(this.realowner.nade_spawnloc);
+		delete(this.realowner.nade_spawnloc);
 		this.realowner.nade_spawnloc = NULL;
 	}
 
@@ -513,7 +518,7 @@ void nades_orb_think(entity this)
 {
 	if(time >= this.ltime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -651,7 +656,7 @@ void nade_heal_boom(entity this)
 
 void nade_monster_boom(entity this)
 {
-	entity e = spawnmonster(this.pokenade_type, 0, this.realowner, this.realowner, this.origin, false, false, 1);
+	entity e = spawnmonster(spawn(), this.pokenade_type, 0, this.realowner, this.realowner, this.origin, false, false, 1);
 
 	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
@@ -731,13 +736,12 @@ void nade_boom(entity this)
 		case NADE_TYPE_ENTRAP: nade_entrap_boom(this); break;
 	}
 
-	FOREACH_ENTITY_ENT(aiment, this,
+	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 	{
-		if(it.classname == "grapplinghook")
-			RemoveGrapplingHook(it.realowner);
+		RemoveHook(it);
 	});
 
-	remove(this);
+	delete(this);
 }
 
 void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype);
@@ -765,13 +769,12 @@ void nade_touch(entity this, entity toucher)
 	if(autocvar_g_nades_pickup)
 	if(time >= this.spawnshieldtime)
 	if(!toucher.nade && this.health == this.max_health) // no boosted shot pickups, thank you very much
-	if(!STAT(FROZEN, toucher))
 	if(CanThrowNade(toucher)) // prevent some obvious things, like dead players
 	if(IS_REAL_CLIENT(toucher)) // above checks for IS_PLAYER, don't need to do it here
 	{
 		nade_pickup(toucher, this);
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
-		remove(this);
+		delete(this);
 		return;
 	}
 	/*float is_weapclip = 0;
@@ -781,12 +784,11 @@ void nade_touch(entity this, entity toucher)
 		is_weapclip = 1;*/
 	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
-		FOREACH_ENTITY_ENT(aiment, this,
+		IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 		{
-			if(it.classname == "grapplinghook")
-				RemoveGrapplingHook(it.realowner);
+			RemoveHook(it);
 		});
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -861,7 +863,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(this.health == this.max_health)
 	{
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
-		this.nextthink = max(time + autocvar_g_nades_nade_lifetime, time);
+		this.nextthink = max(time + this.nade_lifetime, time);
 		setthink(this, nade_beep);
 	}
 
@@ -884,12 +886,13 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	entity _nade = e.nade;
 	e.nade = NULL;
 
-	remove(e.fake_nade);
+	delete(e.fake_nade);
 	e.fake_nade = NULL;
 
 	makevectors(e.v_angle);
 
-	W_SetupShot(e, false, false, SND_Null, CH_WEAPON_A, 0);
+	// NOTE: always throw from first weapon entity?
+	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0);
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 
@@ -909,7 +912,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 		setsize(_nade, '-16 -16 -16', '16 16 16');
 	set_movetype(_nade, MOVETYPE_BOUNCE);
 
-	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, false, _nade);
+	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, MOVE_NOMONSTERS, _nade);
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 
@@ -939,8 +942,11 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.gravity = 1;
 	_nade.missile_flags = MIF_SPLASH | MIF_ARC;
 	_nade.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, _nade);
 	_nade.angles = vectoangles(_nade.velocity);
 	_nade.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, _nade);
+	IL_PUSH(g_bot_dodge, _nade);
 	_nade.projectiledeathtype = DEATH_NADE.m_id;
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
@@ -1029,6 +1035,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	if(Nades_from(n.nade_type) == NADE_TYPE_Null)
 		n.nade_type = NADE_TYPE_NORMAL.m_id;
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	setmodel(n, MDL_PROJECTILE_NADE);
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
@@ -1043,9 +1051,10 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	setthink(n, nade_beep);
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE.m_id;
+	n.weaponentity_fld = weaponentity;
+	n.nade_lifetime = ntime;
 
 	setmodel(fn, MDL_NADE_VIEW);
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	setattachment(fn, player.(weaponentity), "");
 	fn.realowner = fn.owner = player;
 	fn.colormod = Nades_from(n.nade_type).m_color;
@@ -1053,6 +1062,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	fn.glowmod = player.glowmod;
 	setthink(fn, SUB_Remove);
 	fn.nextthink = n.wait;
+	fn.weaponentity_fld = weaponentity;
 
 	player.nade = n;
 	player.fake_nade = fn;
@@ -1065,10 +1075,10 @@ void nade_prime(entity this)
 		return; // only allow bonus nades
 
 	if(this.nade)
-		remove(this.nade);
+		delete(this.nade);
 
 	if(this.fake_nade)
-		remove(this.fake_nade);
+		delete(this.fake_nade);
 
 	int ntype;
 	string pntype = this.pokenade_type;
@@ -1093,9 +1103,6 @@ void nade_prime(entity this)
 bool CanThrowNade(entity this)
 {
 	if(this.vehicle)
-		return false;
-
-	if(gameover)
 		return false;
 
 	if(IS_DEAD(this))
@@ -1149,9 +1156,9 @@ void nades_CheckThrow(entity this)
 void nades_Clear(entity player)
 {
 	if(player.nade)
-		remove(player.nade);
+		delete(player.nade);
 	if(player.fake_nade)
-		remove(player.fake_nade);
+		delete(player.fake_nade);
 
 	player.nade = player.fake_nade = NULL;
 	player.nade_timer = 0;
@@ -1169,18 +1176,6 @@ CLASS(NadeOffhand, OffhandWeapon)
     METHOD(NadeOffhand, offhand_think, void(NadeOffhand this, entity player, bool key_pressed))
     {
     	entity held_nade = player.nade;
-		if (held_nade)
-		{
-			player.nade_timer = bound(0, (time - held_nade.nade_time_primed) / autocvar_g_nades_nade_lifetime, 1);
-			// LOG_TRACEF("%d %d\n", player.nade_timer, time - held_nade.nade_time_primed);
-			makevectors(player.angles);
-			held_nade.velocity = player.velocity;
-			setorigin(held_nade, player.origin + player.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);
-			held_nade.angles_y = player.angles.y;
-
-			if (time + 0.1 >= held_nade.wait)
-				toss_nade(player, false, '0 0 0', time + 0.05);
-		}
 
         if (!CanThrowNade(player)) return;
         if (!(time > player.nade_refire)) return;
@@ -1221,6 +1216,20 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	if (!IS_PLAYER(player)) { return; }
 
 	if (player.nade && (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
+
+	entity held_nade = player.nade;
+	if (held_nade)
+	{
+		player.nade_timer = bound(0, (time - held_nade.nade_time_primed) / held_nade.nade_lifetime, 1);
+		// LOG_TRACEF("%d %d", player.nade_timer, time - held_nade.nade_time_primed);
+		makevectors(player.angles);
+		held_nade.velocity = player.velocity;
+		setorigin(held_nade, player.origin + player.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);
+		held_nade.angles_y = player.angles.y;
+
+		if (time + 0.1 >= held_nade.wait)
+			toss_nade(player, false, '0 0 0', time + 0.05);
+	}
 
 	if(IS_PLAYER(player))
 	{
@@ -1349,7 +1358,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 
 		if(player.nade_spawnloc.cnt <= 0)
 		{
-			remove(player.nade_spawnloc);
+			delete(player.nade_spawnloc);
 			player.nade_spawnloc = NULL;
 		}
 	}
@@ -1390,7 +1399,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	nades_RemoveBonus(frag_target);
 }
 
-MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 {
 	entity frag_inflictor = M_ARGV(0, entity);
 	entity frag_attacker = M_ARGV(1, entity);
@@ -1427,7 +1436,7 @@ MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	if(frag_target.nade)
 		toss_nade(frag_target, true, '0 0 0', time + 0.05);
 }
@@ -1482,5 +1491,4 @@ MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3nades^8 are enabled, press 'g' to use them\n");
 }
 
-#endif
 #endif

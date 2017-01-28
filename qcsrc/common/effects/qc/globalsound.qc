@@ -6,7 +6,7 @@
 	#include <common/animdecide.qh>
 
 	#ifdef SVQC
-		#include <server/cl_player.qh>
+		#include <server/player.qh>
 	#endif
 
 	REGISTER_NET_TEMP(globalsound)
@@ -114,7 +114,7 @@
 			else
 			{
 				// Can this happen?
-				LOG_WARNINGF("Missing entcs data for player %d\n", who);
+				LOG_WARNF("Missing entcs data for player %d", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
 			}
 			return true;
@@ -146,7 +146,7 @@
 			else
 			{
 				// Can this happen?
-				LOG_WARNINGF("Missing entcs data for player %d\n", who);
+				LOG_WARNF("Missing entcs data for player %d", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
 			}
 			return true;
@@ -219,7 +219,7 @@
 		int fh = fopen(f, FILE_READ);
 		if (fh < 0)
 		{
-			LOG_WARNINGF("Player sound file not found: %s\n", f);
+			LOG_WARNF("Player sound file not found: %s", f);
 			return;
 		}
 		for (string s; (s = fgets(fh)); )
@@ -227,7 +227,7 @@
 			int n = tokenize_console(s);
 			if (n != 3)
 			{
-				if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
+				if (n != 0) LOG_WARNF("Invalid sound info line: %s", s);
 				continue;
 			}
 			string file = argv(1);
@@ -261,7 +261,7 @@
 			int fh = fopen(f, FILE_READ);
 			if (fh < 0)
 			{
-				if (strict) LOG_WARNINGF("Player sound file not found: %s\n", f);
+				if (strict) LOG_WARNF("Player sound file not found: %s", f);
 				return false;
 			}
 			for (string s; (s = fgets(fh)); )
@@ -269,7 +269,7 @@
 				int n = tokenize_console(s);
 				if (n != 3)
 				{
-					if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
+					if (n != 0) LOG_WARNF("Invalid sound info line: %s", s);
 					continue;
 				}
 				string key = argv(0);
@@ -277,7 +277,7 @@
 				if (GetPlayerSoundSampleField_notFound) field = GetVoiceMessageSampleField(key);
 				if (GetPlayerSoundSampleField_notFound)
 				{
-					LOG_TRACEF("Invalid sound info field: %s\n", key);
+					LOG_TRACEF("Invalid sound info field: %s", key);
 					continue;
 				}
 				string file = argv(1);

@@ -5,6 +5,12 @@ before_script:
   - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
   - cd ..
 
+report_cloc:
+  stage: test
+  script:
+    - cloc --force-lang-def=qcsrc/tools/cloc.txt --sql 1 --sql-project xonotic qcsrc | sqlite3 code.db
+    - sqlite3 code.db 'select file,nCode from t where nCode > 1000 order by nBlank+nComment+nCode desc'
+
 test_compilation_units:
   stage: test
   script:
@@ -24,7 +30,7 @@ test_sv_game:
     - wget -O data/maps/g-23.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.cache
     - wget -O data/maps/g-23.waypoints.hardwired https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.hardwired
     - make
-    - EXPECT=56bf79831a0a35ab6a3a420e26b09945
+    - EXPECT=86720b1d38512b4e92183d30662bab41
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'

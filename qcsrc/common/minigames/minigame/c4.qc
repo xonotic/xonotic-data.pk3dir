@@ -1,3 +1,4 @@
+#include "c4.qh"
 REGISTER_MINIGAME(c4, "Connect Four");
 
 const float C4_TURN_PLACE = 0x0100; // player has to place a piece on the board
@@ -201,7 +202,7 @@ int c4_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}
@@ -322,7 +323,7 @@ void c4_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void c4_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);

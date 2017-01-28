@@ -1,14 +1,14 @@
 #include "portals.qh"
 
 #include "g_hook.qh"
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
 #include "../common/triggers/teleporters.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/util_server.qh"
@@ -208,8 +208,8 @@ float Portal_FindSafeOrigin(entity portal)
 {
 	vector o;
 	o = portal.origin;
-	portal.mins = STAT(PL_MIN, NULL) - SAFERNUDGE;
-	portal.maxs = STAT(PL_MAX, NULL) + SAFERNUDGE;
+	portal.mins = PL_MIN_CONST - SAFERNUDGE;
+	portal.maxs = PL_MAX_CONST + SAFERNUDGE;
 	fixedmakevectors(portal.mangle);
 	portal.origin += 16 * v_forward;
 	if(!move_out_of_solid(portal))
@@ -418,7 +418,7 @@ void Portal_Remove(entity portal, float killed)
 		fixedmakevectors(portal.mangle);
 		sound(portal, CH_SHOTS, SND_PORTO_EXPLODE, VOL_BASE, ATTEN_NORM);
 		Send_Effect(EFFECT_ROCKET_EXPLODE, portal.origin + v_forward * 16, v_forward * 1024, 4);
-		remove(portal);
+		delete(portal);
 	}
 	else
 	{
@@ -481,8 +481,12 @@ void Portal_Think(entity this)
 		if(it != o || time >= this.portal_activatetime)
 			Portal_Think_TryTeleportPlayer(this, it, g);
 
-		if(it.hook)
-			Portal_Think_TryTeleportPlayer(this, it.hook, g);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook)
+	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g);
+	    }
 	));
 	this.solid = SOLID_TRIGGER;
 	this.aiment = o;
@@ -642,7 +646,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 
 	if(!Portal_FindSafeOrigin(portal))
 	{
-		remove(portal);
+		delete(portal);
 		return NULL;
 	}
 

@@ -1,5 +1,5 @@
 #include "vote.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "vote.qh"
 
 #include "common.qh"
@@ -10,9 +10,10 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
 #include <common/notifications/all.qh>
 #include <common/playerstats.qh>
@@ -197,12 +198,12 @@ void VoteSpam(float notvoters, float mincount, string result)
 	}
 }
 
+#define spectators_allowed (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || intermission_running)))
+
 void VoteCount(float first_count)
 {
 	// declarations
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
-
-	bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
 
 	float vote_player_count = 0, notvoters = 0;
 	float vote_real_player_count = 0, vote_real_accept_count = 0;
@@ -333,7 +334,13 @@ void VoteThink()
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
 void reset_map(bool dorespawn)
 {
-	if (time <= game_starttime && round_handler_IsActive()) round_handler_Reset(game_starttime);
+	if (time <= game_starttime)
+	{
+		if (game_stopped)
+			return;
+		if (round_handler_IsActive())
+			round_handler_Reset(game_starttime);
+	}
 
 	MUTATOR_CALLHOOK(reset_map_global);
 
@@ -344,7 +351,7 @@ void reset_map(bool dorespawn)
 			continue;
 		}
 		if (it.team_saved) it.team = it.team_saved;
-		if (it.flags & FL_PROJECTILE) remove(it);  // remove any projectiles left
+		if (it.flags & FL_PROJECTILE) delete(it);  // remove any projectiles left
 	});
 
 	// Waypoints and assault start come LAST
@@ -360,28 +367,26 @@ void reset_map(bool dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			FOREACH_CLIENT(true, LAMBDA(
-				/*
-				only reset players if a restart countdown is active
-				this can either be due to cvar sv_ready_restart_after_countdown having set
-				restart_mapalreadyrestarted to 1 after the countdown ended or when
-				sv_ready_restart_after_countdown is not used and countdown is still running
-				*/
-				if (restart_mapalreadyrestarted || (time < game_starttime))
+			if (restart_mapalreadyrestarted || (time < game_starttime))
+			{
+				FOREACH_CLIENT(IS_PLAYER(it),
 				{
+					/*
+					only reset players if a restart countdown is active
+					this can either be due to cvar sv_ready_restart_after_countdown having set
+					restart_mapalreadyrestarted to 1 after the countdown ended or when
+					sv_ready_restart_after_countdown is not used and countdown is still running
+					*/
 					// NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-					if (IS_PLAYER(it))
-					{
-						// PlayerScore_Clear(it);
-						it.killcount = 0;
-						// stop the player from moving so that he stands still once he gets respawned
-						it.velocity = '0 0 0';
-						it.avelocity = '0 0 0';
-						it.movement = '0 0 0';
-						PutClientInServer(it);
-					}
-				}
-			));
+					// PlayerScore_Clear(it);
+					it.killcount = 0;
+					// stop the player from moving so that he stands still once he gets respawned
+					it.velocity = '0 0 0';
+					it.avelocity = '0 0 0';
+					it.movement = '0 0 0';
+					PutClientInServer(it);
+				});
+			}
 		}
 	}
 }
@@ -392,12 +397,15 @@ void ReadyRestart_think(entity this)
 	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
-	remove(this);
+	delete(this);
 }
 
 // Forces a restart of the game without actually reloading the map // this is a mess...
 void ReadyRestart_force()
 {
+	if (time <= game_starttime && game_stopped)
+		return;
+
 	bprint("^1Server is restarting...\n");
 
 	VoteReset();
@@ -454,8 +462,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	// no assault support yet...
-	if (g_assault | gameover | intermission_running | race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_gamerestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
@@ -744,8 +751,6 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
-
 			float tmp_playercount = 0;
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
@@ -882,8 +887,6 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 
 					default:  // calling a vote for master
 					{
-						bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
-
 						if (!autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if (vote_called)
 						{

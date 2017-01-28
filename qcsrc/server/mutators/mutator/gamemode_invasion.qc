@@ -1,72 +1,15 @@
 #include "gamemode_invasion.qh"
-#ifndef GAMEMODE_INVASION_H
-#define GAMEMODE_INVASION_H
 
-#define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
-int autocvar_g_invasion_teams;
-bool autocvar_g_invasion_team_spawns;
-bool g_invasion;
-void invasion_Initialize();
-
-REGISTER_MUTATOR(inv, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		g_invasion = true;
-		invasion_Initialize();
-
-		cvar_settemp("g_monsters", "1");
-
-		SetLimits(autocvar_g_invasion_point_limit, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
-		if (autocvar_g_invasion_teams >= 2)
-		{
-			ActivateTeamplay();
-			if (autocvar_g_invasion_team_spawns)
-				have_team_spawns = -1; // request team spawns
-		}
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back invasion_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-float inv_numspawned;
-float inv_maxspawned;
-float inv_roundcnt;
-float inv_maxrounds;
-float inv_numkilled;
-float inv_lastcheck;
-float inv_maxcurrent;
-
-float invasion_teams;
-float inv_monsters_perteam[17];
-
-float inv_monsterskill;
-
-const float ST_INV_KILLS = 1;
-#endif
-
-#ifdef IMPLEMENTATION
-
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 
 #include <server/teamplay.qh>
 
+IntrusiveList g_invasion_waves;
+STATIC_INIT(g_invasion_waves) { g_invasion_waves = IL_NEW(); }
+
+IntrusiveList g_invasion_spawns;
+STATIC_INIT(g_invasion_spawns) { g_invasion_spawns = IL_NEW(); }
 
 float autocvar_g_invasion_round_timelimit;
 float autocvar_g_invasion_spawnpoint_spawn_delay;
@@ -75,96 +18,133 @@ int autocvar_g_invasion_monster_count;
 bool autocvar_g_invasion_zombies_only;
 float autocvar_g_invasion_spawn_delay;
 
-spawnfunc(invasion_spawnpoint)
+.string spawnmob;
+
+spawnfunc(invasion_wave)
 {
-	if(!g_invasion) { remove(this); return; }
+	if(!g_invasion) { delete(this); return; }
 
-	this.classname = "invasion_spawnpoint";
-
-	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
-	if(this.monsterid) {
-		Monster mon = get_monsterinfo(this.monsterid);
-		mon.mr_precache(mon);
-	}
+	IL_PUSH(g_invasion_waves, this);
 }
 
-float invasion_PickMonster(float supermonster_count)
+spawnfunc(invasion_spawnpoint)
 {
-	if(autocvar_g_invasion_zombies_only)
-		return MON_ZOMBIE.monsterid;
+	if(!g_invasion) { delete(this); return; }
 
-	float i;
-	entity mon;
+	this.classname = "invasion_spawnpoint";
+	IL_PUSH(g_invasion_spawns, this);
+}
 
+Monster invasion_PickMonster(int supermonster_count)
+{
 	RandomSelection_Init();
 
-	for(i = MON_FIRST; i <= MON_LAST; ++i)
+	FOREACH(Monsters, it != MON_Null,
 	{
-		mon = get_monsterinfo(i);
-		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || ((mon.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
-			continue; // flying/swimming monsters not yet supported
+		if((it.spawnflags & MON_FLAG_HIDDEN) || (it.spawnflags & MONSTER_TYPE_PASSIVE) || (it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM) ||
+			(it.spawnflags & MONSTER_SIZE_QUAKE) || ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
+			continue;
+		if(autocvar_g_invasion_zombies_only && !(it.spawnflags & MONSTER_TYPE_UNDEAD))
+			continue;
+        RandomSelection_AddEnt(it, 1, 1);
+	});
 
-		RandomSelection_Add(NULL, i, string_null, 1, 1);
-	}
-
-	return RandomSelection_chosen_float;
+	return RandomSelection_chosen_ent;
 }
 
 entity invasion_PickSpawn()
 {
 	RandomSelection_Init();
 
-	FOREACH_ENTITY_CLASS("invasion_spawnpoint", true,
+	IL_EACH(g_invasion_spawns, true,
 	{
-		RandomSelection_Add(it, 0, string_null, 1, ((time >= it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
+		RandomSelection_AddEnt(it, 1, ((time < it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
 		it.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
 	});
 
 	return RandomSelection_chosen_ent;
 }
 
-void invasion_SpawnChosenMonster(float mon)
+entity invasion_GetWaveEntity(int wavenum)
 {
-	entity spawn_point, monster;
+	IL_EACH(g_invasion_waves, it.cnt == wavenum,
+	{
+		return it; // found one
+	});
 
-	spawn_point = invasion_PickSpawn();
+	// if no specific one is found, find the last existing wave ent
+	entity best = NULL;
+	IL_EACH(g_invasion_waves, it.cnt <= wavenum,
+	{
+		if(!best || it.cnt > best.cnt)
+			best = it;
+	});
+
+	return best;
+}
+
+void invasion_SpawnChosenMonster(Monster mon)
+{
+	entity monster;
+	entity spawn_point = invasion_PickSpawn();
+	entity wave_ent = invasion_GetWaveEntity(inv_roundcnt);
+
+	string tospawn = "";
+	if(wave_ent && wave_ent.spawnmob && wave_ent.spawnmob != "")
+	{
+		RandomSelection_Init();
+		FOREACH_WORD(wave_ent.spawnmob, true,
+		{
+			RandomSelection_AddString(it, 1, 1);
+		});
+
+		tospawn = RandomSelection_chosen_string;
+	}
 
 	if(spawn_point == NULL)
 	{
-		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations\n");
+		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations");
 		entity e = spawn();
-		setsize(e, (get_monsterinfo(mon)).mins, (get_monsterinfo(mon)).maxs);
+		setsize(e, mon.mins, mon.maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-			monster = spawnmonster("", mon, NULL, NULL, e.origin, false, false, 2);
-		else return;
-
-		setthink(e, SUB_Remove);
-		e.nextthink = time + 0.1;
+			monster = spawnmonster(e, tospawn, mon.monsterid, NULL, NULL, e.origin, false, false, 2);
+		else
+		{
+			delete(e);
+			return;
+		}
 	}
-	else
-		monster = spawnmonster("", ((spawn_point.monsterid) ? spawn_point.monsterid : mon), spawn_point, spawn_point, spawn_point.origin, false, false, 2);
+	else // if spawnmob field falls through (unset), fallback to mon (relying on spawnmonster for that behaviour)
+		monster = spawnmonster(spawn(), ((spawn_point.spawnmob && spawn_point.spawnmob != "") ? spawn_point.spawnmob : tospawn), mon.monsterid, spawn_point, spawn_point, spawn_point.origin, false, false, 2);
 
-	if(spawn_point) monster.target2 = spawn_point.target2;
+	if(!monster)
+		return;
+
 	monster.spawnshieldtime = time;
-	if(spawn_point && spawn_point.target_range) monster.target_range = spawn_point.target_range;
 
-	if(teamplay)
-	if(spawn_point && spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
-		monster.team = spawn_point.team;
-	else
+	if(spawn_point)
 	{
-		RandomSelection_Init();
-		if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_Add(NULL, NUM_TEAM_1, string_null, 1, 1);
-		if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_Add(NULL, NUM_TEAM_2, string_null, 1, 1);
-		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_Add(NULL, NUM_TEAM_3, string_null, 1, 1); }
-		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_Add(NULL, NUM_TEAM_4, string_null, 1, 1); }
-
-		monster.team = RandomSelection_chosen_float;
+		if(spawn_point.target_range)
+			monster.target_range = spawn_point.target_range;
+		monster.target2 = spawn_point.target2;
 	}
 
 	if(teamplay)
 	{
+		if(spawn_point && spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
+			monster.team = spawn_point.team;
+		else
+		{
+			RandomSelection_Init();
+			if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_AddFloat(NUM_TEAM_1, 1, 1);
+			if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_AddFloat(NUM_TEAM_2, 1, 1);
+			if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_AddFloat(NUM_TEAM_3, 1, 1); }
+			if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_AddFloat(NUM_TEAM_4, 1, 1); }
+
+			monster.team = RandomSelection_chosen_float;
+		}
+
 		monster_setupcolors(monster);
 
 		if(monster.sprite)
@@ -182,14 +162,14 @@ void invasion_SpawnChosenMonster(float mon)
 		monster.spawnflags |= MONSTERFLAG_MINIBOSS; // last round spawns minibosses
 }
 
-void invasion_SpawnMonsters(float supermonster_count)
+void invasion_SpawnMonsters(int supermonster_count)
 {
-	float chosen_monster = invasion_PickMonster(supermonster_count);
+	Monster chosen_monster = invasion_PickMonster(supermonster_count);
 
 	invasion_SpawnChosenMonster(chosen_monster);
 }
 
-float Invasion_CheckWinner()
+bool Invasion_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
@@ -381,6 +361,7 @@ MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
 {
 	entity ent = M_ARGV(0, entity);
 
+	// TODO: allow these as "rogues" or something
 	if(startsWith(ent.classname, "monster_"))
 	if(!(ent.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
@@ -402,10 +383,12 @@ MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
+	if(player.bot_attack)
+		IL_REMOVE(g_bot_targets, player);
 	player.bot_attack = false;
 }
 
-MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(inv, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -474,7 +457,7 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobSpawning)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(inv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(inv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = invasion_teams;
 }
@@ -525,24 +508,5 @@ void invasion_DelayedInit(entity this) // Do this check with a delay so we can w
 
 void invasion_Initialize()
 {
-	if(autocvar_g_invasion_zombies_only) {
-		Monster mon = MON_ZOMBIE;
-		mon.mr_precache(mon);
-	} else
-	{
-		float i;
-		entity mon;
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
-		{
-			mon = get_monsterinfo(i);
-			if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM))
-				continue; // flying/swimming monsters not yet supported
-
-			mon.mr_precache(mon);
-		}
-	}
-
 	InitializeEntity(NULL, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
-
-#endif

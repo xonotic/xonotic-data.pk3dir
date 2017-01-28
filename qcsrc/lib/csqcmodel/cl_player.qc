@@ -28,6 +28,7 @@
 #include <client/defs.qh>
 #include <client/main.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
 #include <common/triggers/trigger/viewloc.qh>
@@ -97,7 +98,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 void CSQCPlayer_Unpredict(entity this)
 {
 	if (csqcplayer_status == CSQCPLAYERSTATUS_UNPREDICTED) return;
-	if (csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED) LOG_FATALF("Cannot unpredict in current status (%d)\n", csqcplayer_status);
+	if (csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED) LOG_FATALF("Cannot unpredict in current status (%d)", csqcplayer_status);
 	this.origin = csqcplayer_origin;
 	this.velocity = csqcplayer_velocity;
 	csqcplayer_moveframe = csqcplayer_sequence + 1; // + 1 because the recieved frame has the move already done (server side)
@@ -108,15 +109,15 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 {
 	if (IS_DUCKED(this) || !this.isplayermodel)
 	{
-		this.mins = STAT(PL_CROUCH_MIN, NULL);
-		this.maxs = STAT(PL_CROUCH_MAX, NULL);
-		this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, NULL);
+		this.mins = STAT(PL_CROUCH_MIN, this);
+		this.maxs = STAT(PL_CROUCH_MAX, this);
+		this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
 	}
 	else
 	{
-		this.mins = STAT(PL_MIN, NULL);
-		this.maxs = STAT(PL_MAX, NULL);
-		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
+		this.mins = STAT(PL_MIN, this);
+		this.maxs = STAT(PL_MAX, this);
+		this.view_ofs = STAT(PL_VIEW_OFS, this);
 	}
 }
 
@@ -225,8 +226,8 @@ void CSQCPlayer_SetCamera()
 {
 	const vector v0 = ((intermission && !autocvar_cl_movement_intermissionrunning) ? '0 0 0' : pmove_vel); // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
 	const float vh = STAT(VIEWHEIGHT);
-	const vector pl_viewofs = STAT(PL_VIEW_OFS, NULL);
-	const vector pl_viewofs_crouch = STAT(PL_CROUCH_VIEW_OFS, NULL);
+	const vector pl_viewofs = STAT(PL_VIEW_OFS);
+	const vector pl_viewofs_crouch = STAT(PL_CROUCH_VIEW_OFS);
 	const entity e = csqcplayer;
 	if (e)
 	{

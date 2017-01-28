@@ -1,12 +1,13 @@
 #include "hud.qh"
 
+#include "panel/scoreboard.qh"
 #include "hud_config.qh"
 #include "../mapvoting.qh"
-#include "../scoreboard.qh"
 #include "../teamradar.qh"
+#include <common/minigames/cl_minigames.qh>
 #include <common/t_items.qh>
 #include <common/deathtypes/all.qh>
-#include <common/items/all.qc>
+#include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/vehicles/all.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
@@ -21,34 +22,34 @@ Misc HUD functions
 ==================
 */
 
-vector HUD_Get_Num_Color (float x, float maxvalue)
+vector HUD_Get_Num_Color (float hp, float maxvalue)
 {
 	float blinkingamt;
 	vector color;
-	if(x >= maxvalue) {
+	if(hp >= maxvalue) {
 		color.x = sin(2*M_PI*time);
 		color.y = 1;
 		color.z = sin(2*M_PI*time);
 	}
-	else if(x > maxvalue * 0.75) {
-		color.x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
-		color.y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
+	else if(hp > maxvalue * 0.75) {
+		color.x = 0.4 - (hp-150)*0.02 * 0.4; //red value between 0.4 -> 0
+		color.y = 0.9 + (hp-150)*0.02 * 0.1; // green value between 0.9 -> 1
 		color.z = 0;
 	}
-	else if(x > maxvalue * 0.5) {
-		color.x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
-		color.y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
-		color.z = 1 - (x-100)*0.02; // blue value between 1 -> 0
+	else if(hp > maxvalue * 0.5) {
+		color.x = 1 - (hp-100)*0.02 * 0.6; //red value between 1 -> 0.4
+		color.y = 1 - (hp-100)*0.02 * 0.1; // green value between 1 -> 0.9
+		color.z = 1 - (hp-100)*0.02; // blue value between 1 -> 0
 	}
-	else if(x > maxvalue * 0.25) {
+	else if(hp > maxvalue * 0.25) {
 		color.x = 1;
 		color.y = 1;
-		color.z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
+		color.z = 0.2 + (hp-50)*0.02 * 0.8; // blue value between 0.2 -> 1
 	}
-	else if(x > maxvalue * 0.1) {
+	else if(hp > maxvalue * 0.1) {
 		color.x = 1;
-		color.y = (x-20)*90/27/100; // green value between 0 -> 1
-		color.z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
+		color.y = (hp-20)*90/27/100; // green value between 0 -> 1
+		color.z = (hp-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
 	}
 	else {
 		color.x = 1;
@@ -56,7 +57,7 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 		color.z = 0;
 	}
 
-	blinkingamt = (1 - x/maxvalue/0.25);
+	blinkingamt = (1 - hp/maxvalue/0.25);
 	if(blinkingamt > 0)
 	{
 		color.x = color.x - color.x * blinkingamt * sin(2*M_PI*time);
@@ -119,6 +120,59 @@ vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspe
 HUD panels
 ==================
 */
+
+void HUD_Panel_LoadCvars()
+{
+	// NOTE: in hud_configure mode cvars must be reloaded every frame
+	if (panel.update_time <= time)
+	{
+		panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos")));
+		panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size")));
+		HUD_Panel_ScalePosSize();
+		panel_bg_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg"));
+		panel_bg_color_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_color"));
+		panel_bg_color_team_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_color_team"));
+		panel_bg_alpha_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_alpha"));
+		panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border"));
+		panel_bg_padding_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_padding"));
+		HUD_Panel_GetBg();
+		if (panel.current_panel_bg != "0")
+		{
+			HUD_Panel_GetBgAlpha();
+			HUD_Panel_GetBorder();
+		}
+		HUD_Panel_GetColorTeam();
+		HUD_Panel_GetColor();
+		HUD_Panel_GetFgAlpha();
+		HUD_Panel_GetPadding();
+		panel.current_panel_bg_alpha = panel_bg_alpha;
+		panel.current_panel_fg_alpha = panel_fg_alpha;
+		if (hud_configure_menu_open == 2 && panel == highlightedPanel)
+			HUD_Panel_UpdatePosSize_ForMenu();
+		else
+		{
+			panel_bg_alpha *= hud_fade_alpha * panel_fade_alpha;
+			panel_fg_alpha *= hud_fade_alpha * panel_fade_alpha;
+		}
+		panel.current_panel_pos = panel_pos;
+		panel.current_panel_size = panel_size;
+		panel.current_panel_bg_border = panel_bg_border;
+		panel.current_panel_bg_color = panel_bg_color;
+		panel.current_panel_bg_color_team = panel_bg_color_team;
+		panel.current_panel_bg_padding = panel_bg_padding;
+		panel.update_time = (autocvar__hud_configure) ? time : time + autocvar_hud_panel_update_interval;
+		return;
+	}
+
+	panel_pos = panel.current_panel_pos;
+	panel_size = panel.current_panel_size;
+	panel_bg_alpha = panel.current_panel_bg_alpha * hud_fade_alpha * panel_fade_alpha;
+	panel_bg_border = panel.current_panel_bg_border;
+	panel_bg_color = panel.current_panel_bg_color;
+	panel_bg_color_team = panel.current_panel_bg_color_team;
+	panel_bg_padding = panel.current_panel_bg_padding;
+	panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha * panel_fade_alpha;
+}
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
@@ -249,7 +303,7 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 	drawsubpic(pos + eX * mySize.x - eX * min(mySize.x * 0.5, mySize.y), eX * min(mySize.x * 0.5, mySize.y) + eY * mySize.y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
 {
     TC(bool, vertical); TC(int, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
@@ -291,7 +345,7 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bo
 		// reduce only y to draw numbers with different number of digits with the same y size
 		numpos.y += newSize.y * ((1 - 0.7) / 2);
 		newSize.y *= 0.7;
-		drawstring_aspect(numpos, ftos(x), newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(numpos, ftos(theTime), newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		return;
 	}
 
@@ -325,17 +379,15 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bo
 
 	// NOTE: newSize_x is always equal to 3 * mySize_y so we can use
 	// '2 1 0' * newSize_y instead of eX * (2/3) * newSize_x + eY * newSize_y
-	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize.y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
+	drawstring_aspect_expanding(numpos, ftos(theTime), '2 1 0' * newSize.y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
+void DrawNumIcon(vector myPos, vector mySize, float theTime, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
 {
     TC(bool, vertical); TC(int, icon_right_align);
-	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
+	DrawNumIcon_expanding(myPos, mySize, theTime, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
-
-#include "all.inc"
 
 /*
 ==================
@@ -358,33 +410,52 @@ void HUD_Vehicle()
 	}
 }
 
-bool HUD_Panel_CheckFlags(int showflags)
-{
-    TC(int, showflags);
-	if ( HUD_Minigame_Showpanels() )
-		return showflags & PANEL_SHOW_MINIGAME;
-	if(intermission == 2)
-		return showflags & PANEL_SHOW_MAPVOTE;
-	return showflags & PANEL_SHOW_MAINGAME;
-}
-
 void HUD_Panel_Draw(entity panent)
 {
 	panel = panent;
-	if(autocvar__hud_configure)
+	if (autocvar__hud_configure)
 	{
-		if(panel.panel_configflags & PANEL_CONFIG_MAIN)
-			panel.panel_draw();
-	}
-	else if(HUD_Panel_CheckFlags(panel.panel_showflags))
+		if (!(panel.panel_configflags & PANEL_CONFIG_MAIN))
+			return;
+		panel_fade_alpha = 1;
+		Hud_Panel_GetPanelEnabled();
 		panel.panel_draw();
+		return;
+	}
+
+	bool draw_allowed = false;
+	if (active_minigame && HUD_MinigameMenu_IsOpened())
+	{
+		if (panel.panel_showflags & PANEL_SHOW_MINIGAME)
+			draw_allowed = true;
+	}
+	else if(intermission == 2)
+	{
+		if(panel.panel_showflags & PANEL_SHOW_MAPVOTE)
+			draw_allowed = true;
+	}
+	else if (panel.panel_showflags & PANEL_SHOW_MAINGAME)
+		draw_allowed = true;
+
+	if (draw_allowed)
+	{
+		if (panel.panel_showflags & PANEL_SHOW_WITH_SB)
+			panel_fade_alpha = 1;
+		else
+		{
+			panel_fade_alpha = 1 - scoreboard_fade_alpha;
+			if(!panel_fade_alpha)
+				return;
+		}
+		panel.panel_draw();
+	}
 }
 
 void HUD_Reset()
 {
 	// reset gametype specific icons
-	if(gametype == MAPINFO_TYPE_CTF)
-		HUD_Mod_CTF_Reset();
+	if(gametype.m_modicons_reset)
+		gametype.m_modicons_reset();
 }
 
 float autocvar_hud_dynamic_shake = 1;
@@ -414,6 +485,7 @@ bool Hud_Shake_Update()
 	return true;
 }
 
+entity CSQCModel_server2csqc(int i);
 void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {
@@ -493,34 +565,18 @@ void Hud_Dynamic_Frame()
 void HUD_Main()
 {
 	int i;
-	// global hud alpha fade
-	if(menu_enabled == 1)
+	if(hud_configure_menu_open == 1)
 		hud_fade_alpha = 1;
 	else
-		hud_fade_alpha = (1 - autocvar__menu_alpha);
-
-	if(scoreboard_fade_alpha)
-		hud_fade_alpha = (1 - scoreboard_fade_alpha);
+		hud_fade_alpha = 1 - autocvar__menu_alpha;
 
 	HUD_Configure_Frame();
 
 	Hud_Dynamic_Frame();
 
-	// panels that we want to be active together with the scoreboard
-	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
-	{
-		HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
-		return;
-	}
-
-	if(!autocvar__hud_configure && !hud_fade_alpha)
-	{
-		hud_fade_alpha = 1;
-		HUD_Panel_Draw(HUD_PANEL(VOTE));
-		hud_fade_alpha = 0;
-		return;
-	}
+		if(autocvar__menu_alpha == 1)
+			return;
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
@@ -552,11 +608,11 @@ void HUD_Main()
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkeyvalue(current_player, "colors"));
+				f = entcs_GetClientColors(current_player);
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkeyvalue(current_player, "colors"));
+				f = entcs_GetClientColors(current_player);
 				color = colormapPaletteColor(f % 16, 1);
 			}
 			else
@@ -602,7 +658,7 @@ void HUD_Main()
 			}
 		}
 		if (warning)
-			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
+			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder");
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)
@@ -631,8 +687,9 @@ void HUD_Main()
 		HUD_Panel_Draw(HUD_PANEL(CHAT));
 	if(hud_panel_quickmenu)
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
+	HUD_Panel_Draw(HUD_PANEL(SCOREBOARD));
 
-	if (scoreboard_active || intermission == 2)
+	if (intermission == 2)
 		HUD_Reset();
 
 	HUD_Configure_PostDraw();

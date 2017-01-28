@@ -7,10 +7,11 @@
 /**
     Uniform pull towards a point
 **/
-vector steerlib_pull(entity this, vector point)
+#define steerlib_pull(ent,point) normalize(point - (ent).origin)
+/*vector steerlib_pull(entity this, vector point)
 {
     return normalize(point - this.origin);
-}
+}*/
 
 /**
     Uniform push from a point
@@ -143,7 +144,7 @@ vector steerlib_wander(entity this, float range, float tresh, vector oldpoint)
     vector wander_point;
     wander_point = v_forward - oldpoint;
 
-    if (vlen(wander_point) > tresh)
+    if (vdist(wander_point, >, tresh))
         return oldpoint;
 
     range = bound(0,range,1);
@@ -339,24 +340,30 @@ vector steerlib_traceavoid_flat(entity this, float pitch, float length, vector v
     return normalize(leftwish + rightwish + frontwish);
 }
 
-float beamsweep_badpoint(vector point,float waterok)
+bool beamsweep_badpoint(vector point, bool waterok)
 {
-    float pc,pc2;
-
     if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-        return 1;
+        return true;
 
-    pc  = pointcontents(point);
-    pc2 = pointcontents(point - '0 0 1');
+    int pc = pointcontents(point);
+    int pc2 = pointcontents(point - '0 0 1');
+    
+    if(pc == CONTENT_EMPTY && pc2 == CONTENT_SOLID)
+        return false;
+    if(pc == CONTENT_EMPTY && pc2 == CONTENT_WATER && waterok)
+        return false;
+    if(pc == CONTENT_WATER && waterok)
+        return false;
+    return true;
 
-    switch(pc)
+    /*switch(pc)
     {
         case CONTENT_SOLID: break;
         case CONTENT_SLIME: break;
         case CONTENT_LAVA:  break;
 
         case CONTENT_SKY:
-            return 1;
+            return true;
 
         case CONTENT_EMPTY:
             if (pc2 == CONTENT_SOLID)
@@ -375,14 +382,14 @@ float beamsweep_badpoint(vector point,float waterok)
             break;
     }
 
-    return 1;
+    return true;*/
 }
 
 //#define BEAMSTEER_VISUAL
 float beamsweep(entity this, vector from, vector dir,float length, float step,float step_up, float step_down)
 {
     float i;
-    vector a,b,u,d;
+    vector a, b, u, d;
 
     u = '0 0 1' * step_up;
     d = '0 0 1' * step_down;
@@ -464,8 +471,8 @@ vector steerlib_beamsteer(entity this, vector dir, float length, float step, flo
 
     if(bm_left + bm_right < 0.15)
     {
-        vr = normalize((v_forward*-1) + v_right * 0.75);
-        vl = normalize((v_forward*-1) - v_right * 0.75);
+        vr = normalize((v_forward*-1) + v_right * 0.90);
+        vl = normalize((v_forward*-1) - v_right * 0.90);
 
         bm_right = beamsweep(this, this.origin, vr, length, step, step_up, step_down);
         bm_left  = beamsweep(this, this.origin, vl, length, step, step_up, step_down);

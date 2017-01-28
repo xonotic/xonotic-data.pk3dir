@@ -1,3 +1,4 @@
+#include "teleport.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_TELEPORT)
 
 #ifdef SVQC
@@ -42,7 +43,7 @@ void Teleport_Touch(entity this, entity toucher)
 
 #ifdef SVQC
 	if(IS_PLAYER(toucher))
-		RemoveGrapplingHook(toucher);
+		RemoveGrapplingHooks(toucher);
 #endif
 
 	entity e;
@@ -98,6 +99,8 @@ spawnfunc(trigger_teleport)
 		return;
 	}
 
+	IL_PUSH(g_teleporters, this);
+
 	this.teleport_next = teleport_first;
 	teleport_first = this;
 }
@@ -105,6 +108,8 @@ spawnfunc(trigger_teleport)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 {
 	this.classname = "trigger_teleport";
+	if(isnew)
+		IL_PUSH(g_teleporters, this);
 	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();

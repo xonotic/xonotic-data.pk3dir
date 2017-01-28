@@ -1,3 +1,4 @@
+#include "cl_vehicles.qh"
 const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
 const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
 const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
@@ -104,7 +105,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 			if(axh != NULL && !wasfreed(axh))
 			{
 				AuxiliaryXhair[i] = NULL;
-				remove(axh);
+				delete(axh);
 			}
 		}
 		return;
@@ -116,7 +117,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		entity axh = AuxiliaryXhair[i];
 
 		if(axh != NULL && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
-			remove(axh);
+			delete(axh);
 
 		axh              = spawn();
 		axh.draw2d       = func_null;
@@ -187,7 +188,7 @@ void Vehicles_drawHUD(
 		tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (96/256) - tmpSize.x;
 		tmpPos.y = vehicleHud_Pos.y;
 		tmpSize = '1 1 1' * hud_fontsize;
-		drawstring(tmpPos, sprintf(_("Press %s"), getcommandkey("dropweapon", "dropweapon")), tmpSize, '1 0 0' + '0 1 1' * tmpblinkValue, hudAlpha, DRAWFLAG_NORMAL);
+		drawstring(tmpPos, sprintf(_("Press %s"), getcommandkey(_("drop weapon"), "dropweapon")), tmpSize, '1 0 0' + '0 1 1' * tmpblinkValue, hudAlpha, DRAWFLAG_NORMAL);
 	}
 
 	// Model

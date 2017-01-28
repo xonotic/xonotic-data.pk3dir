@@ -55,7 +55,7 @@
 #else
 	#define TC(T, sym) MACRO_BEGIN \
 		if (!is_##T(sym)) { \
-			LOG_WARNINGF("Type check failed: " #sym " :: " #T); \
+			LOG_WARNF("Type check failed: " #sym " :: " #T); \
 			isnt_##T(sym); \
 		} \
 	MACRO_END
@@ -132,12 +132,12 @@ void make_safe_for_remove(entity this);
 #endif
 
 #define objerror(this, msg) MACRO_BEGIN { \
-	LOG_WARNING("======OBJECT ERROR======"); \
+	LOG_WARN("======OBJECT ERROR======"); \
 	entity _e = (this); \
 	eprint(_e); \
 	objerror_safe(_e); \
 	delete(_e); \
-	LOG_WARNINGF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); \
+	LOG_WARNF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); \
 } MACRO_END
 
 #ifdef MENUQC
@@ -182,6 +182,12 @@ void make_safe_for_remove(entity this);
 	void _SetChangeParms(entity this);
 	void SetChangeParms() { ENGINE_EVENT(); if (_SetChangeParms) _SetChangeParms(this); }
 	#define SetChangeParms _SetChangeParms
+
+#ifdef DP_EXT_PRECONNECT
+	void _ClientPreConnect(entity this);
+	void ClientPreConnect() { ENGINE_EVENT(); if (_ClientPreConnect) _ClientPreConnect(this); }
+	#define ClientPreConnect _ClientPreConnect
+#endif
 
 	void _ClientConnect(entity this);
 	void ClientConnect() { ENGINE_EVENT(); if (_ClientConnect) _ClientConnect(this); }
@@ -266,7 +272,8 @@ void make_safe_for_remove(entity this);
 #endif
 #undef ENGINE_EVENT
 
-#ifndef MENUQC
-	#include <ecs/_lib.qh>
-	#include <ecs/components/_mod.qh>
+#if XONOTIC
+#ifdef GAMEQC
+	#include <ecs/_mod.qh>
+#endif
 #endif

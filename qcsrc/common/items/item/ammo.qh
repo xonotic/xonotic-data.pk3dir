@@ -1,11 +1,99 @@
-#ifndef AMMO_H
-#define AMMO_H
+#pragma once
+
 #include "pickup.qh"
+#ifdef SVQC
+PROPERTY(float, g_pickup_ammo_anyway);
+#endif
+
 CLASS(Ammo, Pickup)
 #ifdef SVQC
-    ATTRIB(Ammo, m_pickupevalfunc, float(entity player, entity item), commodity_pickupevalfunc)
-    ATTRIB(Ammo, m_respawntime, float(), GET(g_pickup_respawntime_ammo))
-    ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo))
+    ATTRIB(Ammo, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
+    ATTRIB(Ammo, m_respawntime, float(), GET(g_pickup_respawntime_ammo));
+    ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo));
+    ATTRIB(Ammo, m_pickupanyway, float(), GET(g_pickup_ammo_anyway));
 #endif
 ENDCLASS(Ammo)
+
+#ifdef SVQC
+    #include <common/t_items.qh>
 #endif
+
+#ifdef GAMEQC
+MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
+#endif
+
+REGISTER_ITEM(Bullets, Ammo) {
+#ifdef GAMEQC
+    this.m_model    =   MDL_Bullets_ITEM;
+#endif
+    this.m_name     =   "bullets";
+    this.m_icon     =   "ammo_bullets";
+#ifdef SVQC
+    this.m_botvalue =   1500;
+    this.m_itemid   =   IT_NAILS;
+#endif
+}
+
+#ifdef GAMEQC
+MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
+#endif
+
+REGISTER_ITEM(Cells, Ammo) {
+#ifdef GAMEQC
+    this.m_model    =   MDL_Cells_ITEM;
+#endif
+    this.m_name     =   "cells";
+    this.m_icon     =   "ammo_cells";
+#ifdef SVQC
+    this.m_botvalue =   1500;
+    this.m_itemid   =   IT_CELLS;
+#endif
+}
+
+#ifdef GAMEQC
+MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
+#endif
+
+REGISTER_ITEM(Plasma, Ammo) {
+#ifdef GAMEQC
+    this.m_model    =   MDL_Plasma_ITEM;
+#endif
+    this.m_name     =   "plasma";
+    this.m_icon     =   "ammo_plasma";
+#ifdef SVQC
+    this.m_botvalue =   1500;
+    this.m_itemid   =   IT_PLASMA;
+#endif
+}
+
+#ifdef GAMEQC
+MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
+#endif
+
+REGISTER_ITEM(Rockets, Ammo) {
+#ifdef GAMEQC
+    this.m_model    =   MDL_Rockets_ITEM;
+#endif
+    this.m_name     =   "rockets";
+    this.m_icon     =   "ammo_rockets";
+#ifdef SVQC
+    this.m_botvalue =   1500;
+    this.m_itemid   =   IT_ROCKETS;
+#endif
+}
+
+#ifdef GAMEQC
+MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
+#endif
+
+REGISTER_ITEM(Shells, Ammo) {
+#ifdef GAMEQC
+    this.m_model    =   MDL_Shells_ITEM;
+#endif
+    this.m_name     =   "shells";
+    this.m_icon     =   "ammo_shells";
+#ifdef SVQC
+    this.m_botvalue =   1000;
+    this.m_itemid   =   IT_SHELLS;
+#endif
+}

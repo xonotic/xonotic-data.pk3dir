@@ -4,7 +4,7 @@
 #include <common/mapinfo.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
-// Physics panel (#15)
+// Physics (#15)
 
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;
@@ -18,7 +18,7 @@ void HUD_Physics()
 		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	draw_beginBoldFont();
 
@@ -26,7 +26,7 @@ void HUD_Physics()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;

@@ -16,7 +16,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
             veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
             veh.wait = time;
         }
-        if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
+        if (isPlayer) W_SetupShot_Dir(player, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
         vector org = w_shotorg;
         vector dir = w_shotdir;
         entity bolt = vehicles_projectile(veh, EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
@@ -28,13 +28,13 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
     }
     if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
-        if (isPlayer) W_SetupShot_Dir(actor, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
+        if (isPlayer) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
         racer_fire_rocket(player, w_shotorg, w_shotdir, NULL);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
 
-METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep, entity actor))
+METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep, entity actor, .entity weaponentity))
 {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;

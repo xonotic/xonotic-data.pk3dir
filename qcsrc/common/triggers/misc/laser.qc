@@ -1,3 +1,4 @@
+#include "laser.qh"
 #if defined(CSQC)
 	#include <lib/csqcmodel/interpolate.qh>
 	#include <client/main.qh>

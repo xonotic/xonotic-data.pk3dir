@@ -1,41 +1,4 @@
-#ifndef MAGE_H
-#define MAGE_H
-
-#ifndef MENUQC
-MODEL(MON_MAGE, M_Model("mage.dpm"));
-#endif
-
-CLASS(Mage, Monster)
-    ATTRIB(Mage, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Mage, mins, vector, '-36 -36 -24');
-    ATTRIB(Mage, maxs, vector, '36 36 50');
-#ifndef MENUQC
-    ATTRIB(Mage, m_model, Model, MDL_MON_MAGE);
-#endif
-    ATTRIB(Mage, netname, string, "mage");
-    ATTRIB(Mage, monster_name, string, _("Mage"));
-ENDCLASS(Mage)
-
-REGISTER_MONSTER(MAGE, NEW(Mage)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#include <common/weapons/all.qh>
-#include <common/items/all.qc>
-
-CLASS(MageSpike, PortoLaunch)
-/* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(MageSpike, impulse, int, 9);
-/* refname   */ ATTRIB(MageSpike, netname, string, "magespike");
-/* wepname   */ ATTRIB(MageSpike, m_name, string, _("Mage spike"));
-ENDCLASS(MageSpike)
-REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "mage.qh"
 
 #ifdef SVQC
 
@@ -49,7 +12,7 @@ METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weapon
     if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Mage_Attack_Spike(actor, w_shotdir);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -157,7 +120,7 @@ void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
 	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
 
-	remove (this);
+	delete (this);
 }
 
 void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
@@ -199,7 +162,7 @@ void M_Mage_Attack_Spike_Think(entity this)
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
 		if ((autocvar_g_monster_mage_attack_spike_smart) && vdist(eorg - this.origin, >, autocvar_g_monster_mage_attack_spike_smart_mindist))
 		{
-			// Is it a better idea (shorter distance) to trace to the target itthis?
+			// Is it a better idea (shorter distance) to trace to the target itself?
 			if ( vlen2(this.origin + olddir * this.wait) < vlen2(eorg - this.origin))
 				traceline(this.origin, this.origin + olddir * this.wait, false, this);
 			else
@@ -235,6 +198,8 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 	setorigin(missile, this.origin + v_forward * 14 + '0 0 30' + v_right * -14);
 	setsize(missile, '0 0 0', '0 0 0');
 	missile.velocity = dir * 400;
@@ -358,9 +323,8 @@ void M_Mage_Defend_Shield(entity this)
 	this.anim_finished = time + 1;
 }
 
-bool M_Mage_Attack(int attack_type, entity actor, entity targ)
+bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-    .entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -406,7 +370,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_mage) { Monster_Spawn(this, MON_MAGE.monsterid); }
+spawnfunc(monster_mage) { Monster_Spawn(this, true, MON_MAGE.monsterid); }
 
 #endif // SVQC
 
@@ -416,16 +380,28 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
     TC(Mage, thismon);
     bool need_help = false;
 
-    FOREACH_ENTITY_FLOAT(iscreature, true,
+    FOREACH_CLIENT(IS_PLAYER(it) && it != actor,
     {
-        if(it != actor)
-        if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+    	if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
         if(M_Mage_Defend_Heal_Check(actor, it))
         {
             need_help = true;
             break;
         }
     });
+
+    if(!need_help)
+    {
+    	IL_EACH(g_monsters, it != actor,
+    	{
+    		if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+	        if(M_Mage_Defend_Heal_Check(actor, it))
+	        {
+	            need_help = true;
+	            break;
+	        }
+    	});
+    }
 
     if(actor.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
     if(time >= actor.attack_finished_single[0])
@@ -458,7 +434,7 @@ METHOD(Mage, mr_death, bool(Mage this, entity actor))
 }
 
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 {
     TC(Mage, this);
@@ -474,7 +450,7 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 #endif
 #ifdef SVQC
 .float speed;
-spawnfunc(item_health_large);
+spawnfunc(item_health_big);
 METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 {
     TC(Mage, this);
@@ -484,7 +460,7 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
 
-    actor.monster_loot = spawnfunc_item_health_large;
+    actor.monster_loot = spawnfunc_item_health_big;
     actor.monster_attackfunc = M_Mage_Attack;
 
     return true;
@@ -495,6 +471,4 @@ METHOD(Mage, mr_precache, bool(Mage this))
     TC(Mage, this);
     return true;
 }
-#endif
-
 #endif

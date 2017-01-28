@@ -1,3 +1,4 @@
+#include "gravity.qh"
 #ifdef SVQC
 .entity trigger_gravity_check;
 void trigger_gravity_remove(entity own)
@@ -6,7 +7,7 @@ void trigger_gravity_remove(entity own)
 	{
 		UpdateCSQCProjectile(own);
 		own.gravity = own.trigger_gravity_check.gravity;
-		remove(own.trigger_gravity_check);
+		delete(own.trigger_gravity_check);
 	}
 	else
 		backtrace("Removing a trigger_gravity_check with no valid owner");
@@ -22,7 +23,7 @@ void trigger_gravity_check_think(entity this)
 		if(this.owner.trigger_gravity_check == this)
 			trigger_gravity_remove(this.owner);
 		else
-			remove(this);
+			delete(this);
 		return;
 	}
 	else

@@ -17,8 +17,8 @@
 
 #include "xonotic/util.qh"
 
-#include "../common/items/all.qh"
-#include <common/weapons/all.qh>
+#include "../common/items/_mod.qh"
+#include <common/weapons/_all.qh>
 #include "../common/mapinfo.qh"
 #include "../common/mutators/base.qh"
 
@@ -237,7 +237,7 @@ void m_keyup(float key, float ascii)
 		if (mouseButtonsPressed < 0)
 		{
 			mouseButtonsPressed = 0;
-			LOG_TRACE("Warning: released an already released button\n");
+			LOG_TRACE("Warning: released an already released button");
 		}
 	}
 	if (key == K_ALT) menuShiftState &= ~S_ALT;
@@ -286,7 +286,7 @@ void m_keydown(float key, float ascii)
 		if (mouseButtonsPressed > 10)
 		{
 			mouseButtonsPressed = 10;
-			LOG_TRACE("Warning: pressed an already pressed button\n");
+			LOG_TRACE("Warning: pressed an already pressed button");
 		}
 	}
 	if (key == K_ALT) menuShiftState |= S_ALT;
@@ -977,6 +977,8 @@ void m_goto(string itemname)
 
 		if ((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
+			if(!Menu_Active)
+				e.hideMenuOnClose = true;
 			m_hide();
 			m_activate_window(e);
 			m_setpointerfocus(e);

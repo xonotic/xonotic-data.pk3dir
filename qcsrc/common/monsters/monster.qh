@@ -1,37 +1,22 @@
-#ifndef MONSTER_H
-#define MONSTER_H
-
-#ifdef SVQC
-#include "sv_monsters.qh"
-#include <server/g_damage.qh>
-#include <server/bot/bot.qh>
-#include <server/weapons/common.qh>
-#include <server/weapons/tracing.qh>
-#include <server/weapons/weaponsystem.qh>
-#include <common/mutators/mutator/waypoints/waypointsprites.qh>
-#include <lib/warpzone/server.qh>
-#endif
-
-#ifndef MENUQC
-#include "../animdecide.qh"
-#include "../anim.qh"
-vector animfixfps(entity e, vector a, vector b);
-#endif
+#pragma once
 
 // special spawn flags
-const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
-const int MONSTER_TYPE_FLY = 32;
-const int MONSTER_TYPE_SWIM = 64;
-const int MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are replaced
-const int MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
-const int MON_FLAG_RANGED = 512; // monster shoots projectiles
-const int MON_FLAG_MELEE = 1024;
-const int MON_FLAG_CRUSH = 2048; // monster can be stomped in special modes
-const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
-const int MONSTER_SIZE_QUAKE = 8192;
+const int MONSTER_RESPAWN_DEATHPOINT = BIT(4); // re-spawn where we died
+const int MONSTER_TYPE_FLY = BIT(5);
+const int MONSTER_TYPE_SWIM = BIT(6);
+const int MONSTER_SIZE_BROKEN = BIT(7); // TODO: remove when bad models are replaced
+const int MON_FLAG_SUPERMONSTER = BIT(8); // incredibly powerful monster
+const int MON_FLAG_RANGED = BIT(9); // monster shoots projectiles
+const int MON_FLAG_MELEE = BIT(10);
+const int MON_FLAG_CRUSH = BIT(11); // monster can be stomped in special modes
+const int MON_FLAG_RIDE = BIT(12); // monster can be ridden in special modes
+const int MONSTER_SIZE_QUAKE = BIT(13);
+const int MONSTER_TYPE_PASSIVE = BIT(14); // doesn't target or chase enemies
+const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)
+const int MON_FLAG_HIDDEN = BIT(16);
 
 // entity properties of monsterinfo:
-.bool(int, entity actor, entity targ) monster_attackfunc;
+.bool(int, entity actor, entity targ, .entity weaponentity) monster_attackfunc;
 
 // animations
 .vector anim_blockend;
@@ -39,26 +24,23 @@ const int MONSTER_SIZE_QUAKE = 8192;
 .vector anim_melee1;
 .vector anim_melee2;
 .vector anim_melee3;
-.vector anim_pain3;
-.vector anim_pain4;
-.vector anim_pain5;
 .vector anim_walk;
 .vector anim_spawn;
 
 CLASS(Monster, Object)
-    ATTRIB(Monster, monsterid, int, 0)
+    ATTRIB(Monster, monsterid, int, 0);
     /** attributes */
-    ATTRIB(Monster, spawnflags, int, 0)
+    ATTRIB(Monster, spawnflags, int, 0);
     /** human readable name */
-    ATTRIB(Monster, monster_name, string, "Monster")
+    ATTRIB(Monster, monster_name, string, "Monster");
     /** short name */
-    ATTRIB(Monster, netname, string, "")
+    ATTRIB(Monster, netname, string, "");
     /** model */
-    ATTRIB(Monster, m_model, entity, NULL)
+    ATTRIB(Monster, m_model, entity);
     /** hitbox size */
-    ATTRIB(Monster, mins, vector, '-0 -0 -0')
+    ATTRIB(Monster, mins, vector, '-0 -0 -0');
     /** hitbox size */
-    ATTRIB(Monster, maxs, vector, '0 0 0')
+    ATTRIB(Monster, maxs, vector, '0 0 0');
 
     /** (SERVER) setup monster data */
     METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
@@ -75,4 +57,20 @@ CLASS(Monster, Object)
 
 ENDCLASS(Monster)
 
+
+#ifdef SVQC
+#include "sv_monsters.qh"
+#include <server/g_damage.qh>
+#include <server/bot/api.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <lib/warpzone/server.qh>
+#endif
+
+#ifdef GAMEQC
+#include "../animdecide.qh"
+#include "../anim.qh"
+vector animfixfps(entity e, vector a, vector b);
 #endif

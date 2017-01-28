@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
     /**
      * Replicate a client cvar into a server field

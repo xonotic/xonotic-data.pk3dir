@@ -1,5 +1,4 @@
-#ifndef CAMPAIGN_COMMON_H
-#define CAMPAIGN_COMMON_H
+#pragma once
 
 #ifndef CAMPAIGN_MAX_ENTRIES
 #define CAMPAIGN_MAX_ENTRIES 64
@@ -31,4 +30,3 @@ void CampaignFile_Unload();
 // Sets up the campaign for the n-th array item (meaning: campaign_offset+nth
 // level) using localcmd()
 void CampaignSetup(float n);
-#endif

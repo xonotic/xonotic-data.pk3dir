@@ -1,9 +1,8 @@
-#ifndef WAYPOINTS_ALL_H
-#define WAYPOINTS_ALL_H
+#pragma once
 
 #include "waypointsprites.qh"
 
-REGISTRY(Waypoints, BITS(6))
+REGISTRY(Waypoints, BITS(7))
 #define Waypoints_from(i) _Waypoints_from(i, WP_Null)
 REGISTER_REGISTRY(Waypoints)
 REGISTRY_CHECK(Waypoints)
@@ -12,11 +11,11 @@ REGISTRY_CHECK(Waypoints)
 #define REGISTER_WAYPOINT_(id, init) REGISTER(Waypoints, WP, id, m_id, init)
 
 CLASS(Waypoint, Object)
-    ATTRIB(Waypoint, m_id, int, 0)
-    ATTRIB(Waypoint, netname, string, string_null)
-    ATTRIB(Waypoint, m_name, string, string_null)
-    ATTRIB(Waypoint, m_color, vector, '1 1 1')
-    ATTRIB(Waypoint, m_blink, int, 1)
+    ATTRIB(Waypoint, m_id, int, 0);
+    ATTRIB(Waypoint, netname, string);
+    ATTRIB(Waypoint, m_name, string);
+    ATTRIB(Waypoint, m_color, vector, '1 1 1');
+    ATTRIB(Waypoint, m_blink, int, 1);
     CONSTRUCTOR(Waypoint, string _netname, string _name, vector _color, int _blink) {
         CONSTRUCT(Waypoint);
         this.netname = _netname;
@@ -58,5 +57,3 @@ REGISTER_RADARICON(Vehicle,         1);
 REGISTER_RADARICON(Weapon,          1);
 
 #include "all.inc"
-
-#endif

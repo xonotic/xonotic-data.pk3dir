@@ -1,28 +1,10 @@
-#ifndef TURRET_MACHINEGUN_H
-#define TURRET_MACHINEGUN_H
-
-#include "machinegun_weapon.qh"
-
-CLASS(MachineGunTurret, Turret)
-/* spawnflags */ ATTRIB(MachineGunTurret, spawnflags, int, TUR_FLAG_PLAYER);
-/* mins       */ ATTRIB(MachineGunTurret, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(MachineGunTurret, maxs, vector, '32 32 64');
-/* modelname  */ ATTRIB(MachineGunTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB_STRZONE(MachineGunTurret, model, string, strcat("models/turrets/", this.mdl));
-/* head_model */ ATTRIB_STRZONE(MachineGunTurret, head_model, string, strcat("models/turrets/", "machinegun.md3"));
-/* netname    */ ATTRIB(MachineGunTurret, netname, string, "machinegun");
-/* fullname   */ ATTRIB(MachineGunTurret, turret_name, string, _("Machinegun Turret"));
-    ATTRIB(MachineGunTurret, m_weapon, Weapon, WEP_TUR_MACHINEGUN);
-ENDCLASS(MachineGunTurret)
-REGISTER_TURRET(MACHINEGUN, NEW(MachineGunTurret));
-
-#endif
+#include "machinegun.qh"
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
 
-spawnfunc(turret_machinegun) { if (!turret_initialize(this, TUR_MACHINEGUN)) remove(this); }
+spawnfunc(turret_machinegun) { if (!turret_initialize(this, TUR_MACHINEGUN)) delete(this); }
 
 METHOD(MachineGunTurret, tr_setup, void(MachineGunTurret this, entity it))
 {

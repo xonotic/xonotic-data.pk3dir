@@ -1,3 +1,4 @@
+#include "fourier.qh"
 #ifdef SVQC
 /*QUAKED spawnfunc_func_fourier (0 .5 .8) ?
 Brush model that moves in a pattern of added up sine waves, can be used e.g. for circular motions.

@@ -1,30 +1,4 @@
-#ifndef SHAMBLER_H
-#define SHAMBLER_H
-
-#ifndef MENUQC
-MODEL(MON_SHAMBLER, M_Model("shambler.mdl"));
-#endif
-
-CLASS(Shambler, Monster)
-    ATTRIB(Shambler, spawnflags, int, MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Shambler, mins, vector, '-41 -41 -31');
-    ATTRIB(Shambler, maxs, vector, '41 41 65');
-#ifndef MENUQC
-    ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
-#endif
-    ATTRIB(Shambler, netname, string, "shambler");
-    ATTRIB(Shambler, monster_name, string, _("Shambler"));
-ENDCLASS(Shambler)
-
-REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "shambler.qh"
 
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
@@ -91,7 +65,7 @@ void M_Shambler_Attack_Lightning_Explode(entity this, entity directhitentity)
 	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), 
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius),
 					NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, directhitentity);
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_shambler_attack_lightning_radius_zap, it != this.realowner && it.takedamage,
@@ -168,18 +142,21 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.damageforcescale = 0;
 	gren.event_damage = M_Shambler_Attack_Lightning_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_Explicit(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, false);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
 
 .int state;
 
-bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
+bool M_Shambler_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{
@@ -224,7 +201,7 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_shambler) { Monster_Spawn(this, MON_SHAMBLER.monsterid); }
+spawnfunc(monster_shambler) { Monster_Spawn(this, true, MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -249,7 +226,7 @@ METHOD(Shambler, mr_death, bool(Shambler this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
 {
     TC(Shambler, this);
@@ -295,6 +272,4 @@ METHOD(Shambler, mr_precache, bool(Shambler this))
     TC(Shambler, this);
     return true;
 }
-#endif
-
 #endif

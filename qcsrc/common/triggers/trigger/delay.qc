@@ -1,8 +1,9 @@
+#include "delay.qh"
 #ifdef SVQC
 void delay_use(entity this, entity actor, entity trigger)
 {
    setthink(this, SUB_UseTargets_self);
-   this.nextthink = this.wait;
+   this.nextthink = time + this.wait;
 }
 
 void delay_reset(entity this)

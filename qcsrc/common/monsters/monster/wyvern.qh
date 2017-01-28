@@ -1,0 +1,34 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_WYVERN, M_Model("wizard.mdl"));
+#endif
+
+CLASS(Wyvern, Monster)
+    ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE);
+    ATTRIB(Wyvern, mins, vector, '-20 -20 -58');
+    ATTRIB(Wyvern, maxs, vector, '20 20 20');
+#ifdef GAMEQC
+    ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
+#endif
+    ATTRIB(Wyvern, netname, string, "wyvern");
+    ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
+ENDCLASS(Wyvern)
+
+REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
+#ifdef GAMEQC
+    this.mr_precache(this);
+#endif
+}
+
+#include <common/weapons/_all.qh>
+
+CLASS(WyvernAttack, PortoLaunch)
+/* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* impulse   */ ATTRIB(WyvernAttack, impulse, int, 9);
+/* refname   */ ATTRIB(WyvernAttack, netname, string, "wyvern");
+/* wepname   */ ATTRIB(WyvernAttack, m_name, string, _("Wyvern attack"));
+ENDCLASS(WyvernAttack)
+REGISTER_WEAPON(WYVERN_ATTACK, NEW(WyvernAttack));

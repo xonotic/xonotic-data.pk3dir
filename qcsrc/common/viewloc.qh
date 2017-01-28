@@ -1,5 +1,4 @@
-#ifndef VIEWLOC_H
-#define VIEWLOC_H
+#pragma once
 
 .entity viewloc;
 
@@ -9,7 +8,5 @@ void viewloc_PlayerPhysics(entity this);
 
 void viewloc_SetViewLocation();
 void viewloc_SetTags(entity this);
-
-#endif
 
 #endif

@@ -1,24 +1,4 @@
-#ifndef TURRET_HK_H
-#define TURRET_HK_H
-
-//#define TURRET_DEBUG_HK
-
-#include "hk_weapon.qh"
-
-CLASS(HunterKiller, Turret)
-/* spawnflags */ ATTRIB(HunterKiller, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS);
-/* mins       */ ATTRIB(HunterKiller, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(HunterKiller, maxs, vector, '32 32 64');
-/* modelname  */ ATTRIB(HunterKiller, mdl, string, "base.md3");
-/* model      */ ATTRIB_STRZONE(HunterKiller, model, string, strcat("models/turrets/", this.mdl));
-/* head_model */ ATTRIB_STRZONE(HunterKiller, head_model, string, strcat("models/turrets/", "hk.md3"));
-/* netname    */ ATTRIB(HunterKiller, netname, string, "hk");
-/* fullname   */ ATTRIB(HunterKiller, turret_name, string, _("Hunter-Killer Turret"));
-    ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
-ENDCLASS(HunterKiller)
-REGISTER_TURRET(HK, NEW(HunterKiller));
-
-#endif
+#include "hk.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -28,7 +8,7 @@ REGISTER_TURRET(HK, NEW(HunterKiller));
 .float atime;
 #endif
 
-spawnfunc(turret_hk) { if(!turret_initialize(this, TUR_HK)) remove(this); }
+spawnfunc(turret_hk) { if(!turret_initialize(this, TUR_HK)) delete(this); }
 
 METHOD(HunterKiller, tr_think, void(HunterKiller thistur, entity it))
 {

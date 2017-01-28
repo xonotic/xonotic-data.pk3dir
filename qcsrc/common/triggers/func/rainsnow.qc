@@ -1,3 +1,4 @@
+#include "rainsnow.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_RAINSNOW)
 
 #ifdef SVQC

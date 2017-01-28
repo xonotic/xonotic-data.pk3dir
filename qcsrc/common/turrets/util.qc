@@ -1,3 +1,4 @@
+#include "util.qh"
 /*
 * Update this.tur_shotorg by getting up2date bone info
 * NOTICE this func overwrites the global v_forward, v_right and v_up vectors.
@@ -6,7 +7,7 @@ float turret_tag_fire_update(entity this)
 {
 	if(!this.tur_head)
 	{
-		LOG_DEBUG("Call to turret_tag_fire_update with this.tur_head missing!\n");
+		LOG_DEBUG("Call to turret_tag_fire_update with this.tur_head missing!");
 		this.tur_shotorg = '0 0 0';
 		return false;
 	}

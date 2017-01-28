@@ -1,5 +1,4 @@
-#ifndef WAYPOINTSPRITES_H
-#define WAYPOINTSPRITES_H
+#pragma once
 
 #include "all.qh"
 
@@ -74,8 +73,8 @@ float waypointsprite_distancefadescale;
 float waypointsprite_distancefadedistance;
 float waypointsprite_alpha;
 
-const float SPRITE_HEALTHBAR_WIDTH = 144;
-const float SPRITE_HEALTHBAR_HEIGHT = 9;
+const float SPRITE_HEALTHBAR_WIDTH = 104;
+const float SPRITE_HEALTHBAR_HEIGHT = 7;
 const float SPRITE_HEALTHBAR_MARGIN = 6;
 const float SPRITE_HEALTHBAR_BORDER = 2;
 const float SPRITE_HEALTHBAR_BORDERALPHA = 1;
@@ -118,6 +117,8 @@ void Draw_WaypointSprite(entity this);
 #endif
 
 #ifdef SVQC
+.entity sprite;
+
 float autocvar_sv_waypointsprite_deadlifetime;
 float autocvar_sv_waypointsprite_deployed_lifetime;
 float autocvar_sv_waypointsprite_limitedrange;
@@ -233,6 +234,4 @@ void WaypointSprite_ClearOwned(entity this);
 void WaypointSprite_PlayerDead(entity this);
 
 void WaypointSprite_PlayerGone(entity this);
-#endif
-
 #endif

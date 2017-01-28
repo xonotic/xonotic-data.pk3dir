@@ -1,3 +1,4 @@
+#include "impulse.qh"
 // targeted (directional) mode
 void trigger_impulse_touch1(entity this, entity toucher)
 {
@@ -17,7 +18,7 @@ void trigger_impulse_touch1(entity this, entity toucher)
 	if(!targ)
 	{
 		objerror(this, "trigger_force without a (valid) .target!\n");
-		remove(this);
+		delete(this);
 		return;
 	}
 

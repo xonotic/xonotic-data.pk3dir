@@ -1,5 +1,4 @@
-#ifndef CSPROGSDEFS_H
-#define CSPROGSDEFS_H
+#pragma once
 
 #pragma noref 1
 
@@ -44,5 +43,3 @@
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
 #define touch move_touch
-
-#endif

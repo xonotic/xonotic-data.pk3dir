@@ -4,7 +4,7 @@
 #include <common/ent_cs.qh>
 #include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
 
-// Mod icons panel (#10)
+// Mod icons (#10)
 
 bool mod_active; // is there any active mod icon?
 
@@ -16,27 +16,11 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 	vector color = '0 0 0';
 	switch(i)
 	{
-		case 0:
-			stat = STAT(REDALIVE);
-			pic = "player_red.tga";
-			color = '1 0 0';
-			break;
-		case 1:
-			stat = STAT(BLUEALIVE);
-			pic = "player_blue.tga";
-			color = '0 0 1';
-			break;
-		case 2:
-			stat = STAT(YELLOWALIVE);
-			pic = "player_yellow.tga";
-			color = '1 1 0';
-			break;
+		case 0: stat = STAT(REDALIVE); pic = "player_red"; color = '1 0 0'; break;
+		case 1: stat = STAT(BLUEALIVE); pic = "player_blue"; color = '0 0 1'; break;
+		case 2: stat = STAT(YELLOWALIVE); pic = "player_yellow"; color = '1 1 0'; break;
 		default:
-		case 3:
-			stat = STAT(PINKALIVE);
-			pic = "player_pink.tga";
-			color = '1 0 1';
-			break;
+		case 3: stat = STAT(PINKALIVE); pic = "player_pink"; color = '1 0 1'; break;
 	}
 
 	if(mySize.x/mySize.y > aspect_ratio)
@@ -299,8 +283,9 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	mod_active = 1; // keyhunt should never hide the mod icons panel
 
 	// Read current state
-
 	int state = STAT(KH_KEYS);
+	if(!state) return;
+
 	int i, key_state;
 	int all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
 	all_keys = team1_keys = team2_keys = team3_keys = team4_keys = dropped_keys = carrying_keys = 0;
@@ -331,9 +316,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	}
 
 	// Calculate slot measurements
-
 	vector slot_size;
-
 	if(all_keys == 4 && mySize.x * 0.5 < mySize.y && mySize.y * 0.5 < mySize.x)
 	{
 		// Quadratic arrangement
@@ -363,11 +346,10 @@ void HUD_Mod_KH(vector pos, vector mySize)
 
 	// Make icons blink in case of RUN HERE
 
-	float blink = 0.6 + sin(2*M_PI*time) / 2.5; // Oscillate between 0.2 and 1
-	float alpha;
-	alpha = 1;
-
+	float alpha = 1;
 	if(carrying_keys)
+	{
+		float blink = 0.6 + sin(2 * M_PI * time) * 0.4; // Oscillate between 0.2 and 1
 		switch(myteam)
 		{
 			case NUM_TEAM_1: if(team1_keys == all_keys) alpha = blink; break;
@@ -375,6 +357,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 			case NUM_TEAM_3: if(team3_keys == all_keys) alpha = blink; break;
 			case NUM_TEAM_4: if(team4_keys == all_keys) alpha = blink; break;
 		}
+	}
 
 	// Draw icons
 
@@ -532,9 +515,9 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	entity me;
 	me = playerslots[player_localnum];
 	float score;
-	score = me.(scores[ps_primary]);
+	score = me.(scores(ps_primary));
 
-	if(!(scores_flags[ps_primary] & SFL_TIME) || teamplay) // race/cts record display on HUD
+	if(!(scores_flags(ps_primary) & SFL_TIME) || teamplay) // race/cts record display on HUD
 		return; // no records in the actual race
 
 	// clientside personal record
@@ -654,29 +637,15 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 	vector color = '0 0 0';
 	switch(i)
 	{
-		case 0:
-			stat = STAT(DOM_PPS_RED);
-			pic = "dom_icon_red";
-			color = '1 0 0';
-			break;
-		case 1:
-			stat = STAT(DOM_PPS_BLUE);
-			pic = "dom_icon_blue";
-			color = '0 0 1';
-			break;
-		case 2:
-			stat = STAT(DOM_PPS_YELLOW);
-			pic = "dom_icon_yellow";
-			color = '1 1 0';
-			break;
+		case 0: stat = STAT(DOM_PPS_RED); pic = "dom_icon_red"; color = '1 0 0'; break;
+		case 1: stat = STAT(DOM_PPS_BLUE); pic = "dom_icon_blue"; color = '0 0 1'; break;
+		case 2: stat = STAT(DOM_PPS_YELLOW); pic = "dom_icon_yellow"; color = '1 1 0'; break;
 		default:
-		case 3:
-			stat = STAT(DOM_PPS_PINK);
-			pic = "dom_icon_pink";
-			color = '1 0 1';
-			break;
+		case 3: stat = STAT(DOM_PPS_PINK); pic = "dom_icon_pink"; color = '1 0 1'; break;
 	}
-	float pps_ratio = stat / STAT(DOM_TOTAL_PPS);
+	float pps_ratio = 0;
+	if(STAT(DOM_TOTAL_PPS))
+		pps_ratio = stat / STAT(DOM_TOTAL_PPS);
 
 	if(mySize.x/mySize.y > aspect_ratio)
 	{
@@ -743,23 +712,10 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 
 void HUD_ModIcons_SetFunc()
 {
-	switch(gametype)
-	{
-		case MAPINFO_TYPE_KEYHUNT:		HUD_ModIcons_GameType = HUD_Mod_KH; break;
-		case MAPINFO_TYPE_CTF:			HUD_ModIcons_GameType = HUD_Mod_CTF; break;
-		case MAPINFO_TYPE_NEXBALL:		HUD_ModIcons_GameType = HUD_Mod_NexBall; break;
-		case MAPINFO_TYPE_CTS:
-		case MAPINFO_TYPE_RACE:		HUD_ModIcons_GameType = HUD_Mod_Race; break;
-		case MAPINFO_TYPE_CA:
-		case MAPINFO_TYPE_FREEZETAG:	HUD_ModIcons_GameType = HUD_Mod_CA; break;
-		case MAPINFO_TYPE_DOMINATION:	HUD_ModIcons_GameType = HUD_Mod_Dom; break;
-		case MAPINFO_TYPE_KEEPAWAY:	HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
-	}
+	HUD_ModIcons_GameType = gametype.m_modicons;
 }
 
-int mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
-float mod_change; // "time" when mod_active changed
 
 void HUD_ModIcons()
 {
@@ -769,26 +725,24 @@ void HUD_ModIcons()
 		if(!HUD_ModIcons_GameType) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	if(mod_active || autocvar__hud_configure)
+		mod_alpha = min(mod_alpha + frametime * 2, 1);
+	else
+		mod_alpha = max(mod_alpha - frametime * 2, 0);
+
+	//if(mod_alpha <= 0)
+	//	return;
+	panel_fade_alpha *= mod_alpha;
+	HUD_Panel_LoadCvars();
 
 	draw_beginBoldFont();
-
-	if(mod_active != mod_prev) {
-		mod_change = time;
-		mod_prev = mod_active;
-	}
-
-	if(mod_active || autocvar__hud_configure)
-		mod_alpha = bound(0, (time - mod_change) * 2, 1);
-	else
-		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
 
 	if (autocvar_hud_panel_modicons_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	if(mod_alpha)
-		HUD_Panel_DrawBg(mod_alpha);
+
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{

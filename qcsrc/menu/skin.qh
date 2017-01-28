@@ -19,7 +19,7 @@
 //#define SKINSTRING(name,def) case #name: break
 #define SKINSTRING(name,def) case #name: SKIN##name = strzone(_value); break
 	// I know this leaks memory when skin is read multiple times. Screw it.
-#define SKINEND case "": break; case "//": break; default: LOG_TRACE("Invalid key in skin file: ", key, "\n"); } }
+#define SKINEND case "": break; case "//": break; default: LOG_TRACE("Invalid key in skin file: ", key); } }
 #include "skin-customizables.inc"
 #undef SKINEND
 #undef SKINSTRING

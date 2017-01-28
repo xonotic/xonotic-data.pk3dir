@@ -1,7 +1,7 @@
 #pragma once
 
 float warmup_limit;
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/stats.qh>
 
 #define INDEPENDENT_ATTACK_FINISHED 1
@@ -12,20 +12,6 @@ float g_footsteps, g_grappling_hook, g_instagib;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
-PROPERTY(float, g_pickup_respawntime_weapon)
-PROPERTY(float, g_pickup_respawntime_superweapon)
-PROPERTY(float, g_pickup_respawntime_ammo)
-PROPERTY(float, g_pickup_respawntime_short)
-PROPERTY(float, g_pickup_respawntime_medium)
-PROPERTY(float, g_pickup_respawntime_long)
-PROPERTY(float, g_pickup_respawntime_powerup)
-PROPERTY(float, g_pickup_respawntimejitter_weapon)
-PROPERTY(float, g_pickup_respawntimejitter_superweapon)
-PROPERTY(float, g_pickup_respawntimejitter_ammo)
-PROPERTY(float, g_pickup_respawntimejitter_short)
-PROPERTY(float, g_pickup_respawntimejitter_medium)
-PROPERTY(float, g_pickup_respawntimejitter_long)
-PROPERTY(float, g_pickup_respawntimejitter_powerup)
 float g_jetpack;
 
 float sv_clones;
@@ -35,7 +21,7 @@ float player_count;
 float currentbots;
 float bots_would_leave;
 
-void UpdateFrags(entity player, float f);
+void UpdateFrags(entity player, int f);
 .float totalfrags;
 
 float team1_score, team2_score, team3_score, team4_score;
@@ -130,7 +116,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 // WEAPONTODO
 .float autoswitch;
-bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain);
+bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain);
 void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
@@ -143,7 +129,6 @@ const int W_TICSPERFRAME = 2;
 
 void weapon_defaultspawnfunc(entity this, Weapon e);
 
-float gameover;
 float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
@@ -174,7 +159,6 @@ bool nJoinAllowed(entity this, entity ignore);
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .vector death_origin;
-.vector killer_origin;
 
 float default_player_alpha;
 float default_weapon_alpha;
@@ -224,7 +208,7 @@ float bot_waypoints_for_items;
 #else
 #define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
 #endif
-#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, PS(ent).m_weapon.m_id, slot)
+#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, ent.(weaponentity).m_weapon.m_id, slot)
 
 // assault game mode: Which team is attacking in this round?
 float assault_attacker_team;
@@ -275,7 +259,7 @@ bool independent_players;
 
 string clientstuff;
 .float phase;
-.int pressedkeys = _STAT(PRESSED_KEYS);
+.int pressedkeys;
 
 .string fog;
 
@@ -393,7 +377,6 @@ const float ACTIVE_TOGGLE 	= 3;
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float player_blocked;
-.float weapon_blocked; // weapon use disabled
 
 .float revive_progress = _STAT(REVIVE_PROGRESS);
 .float revival_time; // time at which player was last revived
@@ -430,18 +413,10 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 #define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? true : false)
 #define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? true : false)
 
-
 ////
-
-.entity player_stats;
-//.float playerid;
-.string playernick;
-.float elos;
-.float ranks;
 
 .string cvar_cl_physics;
 
-.bool init_for_player_needed;
 .void(entity this, entity player) init_for_player;
 
 IntrusiveList g_monsters;
@@ -449,3 +424,45 @@ STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
 
 IntrusiveList g_waypoints;
 STATIC_INIT(g_waypoints) { g_waypoints = IL_NEW(); }
+
+IntrusiveList g_vehicles;
+STATIC_INIT(g_vehicles) { g_vehicles = IL_NEW(); }
+
+IntrusiveList g_turrets;
+STATIC_INIT(g_turrets) { g_turrets = IL_NEW(); }
+
+IntrusiveList g_mines;
+STATIC_INIT(g_mines) { g_mines = IL_NEW(); }
+
+IntrusiveList g_projectiles;
+STATIC_INIT(g_projectiles) { g_projectiles = IL_NEW(); }
+
+IntrusiveList g_items;
+STATIC_INIT(g_items) { g_items = IL_NEW(); }
+
+IntrusiveList g_initforplayer;
+STATIC_INIT(g_initforplayer) { g_initforplayer = IL_NEW(); }
+
+IntrusiveList g_clones;
+STATIC_INIT(g_clones) { g_clones = IL_NEW(); }
+
+IntrusiveList g_assault_destructibles;
+STATIC_INIT(g_assault_destructibles) { g_assault_destructibles = IL_NEW(); }
+
+IntrusiveList g_assault_objectivedecreasers;
+STATIC_INIT(g_assault_objectivedecreasers) { g_assault_objectivedecreasers = IL_NEW(); }
+
+IntrusiveList g_assault_objectives;
+STATIC_INIT(g_assault_objectives) { g_assault_objectives = IL_NEW(); }
+
+IntrusiveList g_spawnpoints;
+STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }
+
+IntrusiveList g_bot_targets;
+STATIC_INIT(g_bot_targets) { g_bot_targets = IL_NEW(); }
+
+IntrusiveList g_bot_dodge;
+STATIC_INIT(g_bot_dodge) { g_bot_dodge = IL_NEW(); }
+
+IntrusiveList g_damagedbycontents;
+STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }

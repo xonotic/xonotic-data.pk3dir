@@ -1,5 +1,4 @@
-#ifndef CL_MINIGAMES_H
-#define CL_MINIGAMES_H
+#pragma once
 
 // Get a square in the center of the avaliable area
 // \note macro to pass by reference pos and mySize
@@ -85,12 +84,6 @@ entity active_minigame;
 // minigame_player representing this client
 entity minigame_self;
 
-// Whethere there's an active minigame
-float minigame_isactive()
-{
-	return active_minigame != NULL;
-}
-
 // Execute a minigame command
 #define minigame_cmd(...) minigame_cmd_workaround(0,__VA_ARGS__)
 void minigame_cmd_workaround(float dummy, string...cmdargc);
@@ -101,7 +94,7 @@ void minigame_prompt();
 
 float HUD_MinigameMenu_IsOpened();
 void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger);
-float HUD_Minigame_Showpanels();
+
 // Adds a game-specific entry to the menu
 void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_arg);
 
@@ -128,5 +121,3 @@ REGISTRY_CHECK(Minigames)
 		this.minigame_event = name##_client_event; \
     } \
     REGISTER_INIT(MINIGAME_##name)
-
-#endif

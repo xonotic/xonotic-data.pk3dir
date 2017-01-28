@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/touchexplode/touchexplode.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/touchexplode/sv_touchexplode.qc>
+#endif

@@ -1,2 +1,0 @@
-#pragma once
-void havocbot_goalrating_controlpoints(entity this, float ratingscale, vector org, float sradius);

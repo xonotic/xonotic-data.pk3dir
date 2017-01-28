@@ -1,5 +1,6 @@
+#include "casings.qh"
 #ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner);
+void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -14,9 +15,8 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 REGISTER_NET_TEMP(casings)
 
 #ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
+void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity)
 {
-    .entity weaponentity = weaponentities[0]; // TODO: parameter
     entity wep = casingowner.(weaponentity);
     vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
@@ -44,7 +44,7 @@ class(Casing) .float cnt;
 
 void Casing_Delete(entity this)
 {
-    remove(this);
+    delete(this);
 }
 
 void Casing_Draw(entity this)
@@ -154,7 +154,7 @@ NET_HANDLE(casings, bool isNew)
     if (isNew) IL_PUSH(g_drawables, casing);
     casing.velocity = casing.velocity + 2 * prandomvec();
     casing.avelocity = '0 250 0' + 100 * prandomvec();
-    casing.move_movetype = MOVETYPE_BOUNCE;
+    set_movetype(casing, MOVETYPE_BOUNCE);
     settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;

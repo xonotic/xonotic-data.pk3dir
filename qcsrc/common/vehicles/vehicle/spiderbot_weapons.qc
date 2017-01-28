@@ -48,16 +48,17 @@ void spiderbot_rocket_guided(entity this)
 
 void spiderbot_guide_release(entity this)
 {
-    FOREACH_ENTITY_ENT(realowner, this.owner,
+    bool donetrace = false;
+    IL_EACH(g_projectiles, it.realowner == this.owner && getthink(it) == spiderbot_rocket_guided,
     {
-        if(i == 0) // something exists, let's trace!
-            crosshair_trace(this.owner);
-
-        if(getthink(it) == spiderbot_rocket_guided)
+        if(!donetrace) // something exists, let's trace!
         {
-            it.pos1 = trace_endpos;
-            setthink(it, spiderbot_rocket_unguided);
+            donetrace = true;
+            crosshair_trace(this.owner);
         }
+
+        it.pos1 = trace_endpos;
+        setthink(it, spiderbot_rocket_unguided);
     });
 }
 
@@ -220,11 +221,11 @@ void spiderbot_rocket_do(entity this)
             rocket.pos1	   = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
             rocket.pos1_z	   = trace_endpos_z;
 
-            traceline(v, v + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, this);
+            traceline(v, v + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
             float h1 = 0.75 * vlen(v - trace_endpos);
 
             //v = trace_endpos;
-            traceline(v , rocket.pos1 + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, this);
+            traceline(v , rocket.pos1 + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
             float h2 = 0.75 * vlen(rocket.pos1 - v);
 
             rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));

@@ -1,3 +1,5 @@
+#include "calculations.qh"
+
 // =============================
 //  Explosion Force Calculation
 // =============================
@@ -142,6 +144,45 @@ vector findperpendicular(vector v)
 	return normalize(cliptoplane(p, v));
 }
 
+#ifdef SVQC
+	int W_GunAlign(entity this, int preferred_align)
+	{
+		if(this.m_gunalign)
+			return this.m_gunalign; // no adjustment needed
+
+		entity own = this.owner;
+
+		if(preferred_align < 1 || preferred_align > 4)
+			preferred_align = 3; // default
+
+		for(int j = 4; j > 1; --j) // > 1 as 1 is just center again
+		{
+			int taken = 0;
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(own.(weaponentity).m_gunalign == j) // we know it can't be ours thanks to the above check
+					taken |= BIT(j);
+				if(own.(weaponentity).m_gunalign == preferred_align)
+					taken |= BIT(preferred_align);
+			}
+
+			if(!(taken & BIT(preferred_align)))
+				return preferred_align; // prefer the recommended
+			if(!(taken & BIT(j)))
+				return j; // or fall back if it's not available
+		}
+
+		return preferred_align; // return it anyway
+	}
+#else
+	int W_GunAlign(entity this, int preferred_align)
+	{
+		return this.m_gunalign > 0 ? this.m_gunalign : preferred_align;
+	}
+#endif
+
+#if 0
 int W_GetGunAlignment(entity player)
 {
 	int gunalign = STAT(GUNALIGN, player);
@@ -151,6 +192,7 @@ int W_GetGunAlignment(entity player)
 
 	return gunalign;
 }
+#endif
 
 vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle)
 {
@@ -256,7 +298,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 		default:
 			error("g_projectiles_spread_style must be 0 (sphere), 1 (flattened sphere), 2 (circle), 3 (gauss 3D), 4 (gauss plane), 5 (linear falloff), 6 (quadratic falloff), 7 (stronger falloff)!");
 	}
-		
+
 	return '0 0 0';
 	/*
 	 * how to derive falloff functions:

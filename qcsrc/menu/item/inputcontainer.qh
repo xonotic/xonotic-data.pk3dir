@@ -11,6 +11,6 @@ CLASS(InputContainer, Container)
 	METHOD(InputContainer, resizeNotify, void(entity, vector, vector, vector, vector));
 
 	METHOD(InputContainer, _changeFocusXY, bool(entity this, vector pos));
-	ATTRIB(InputContainer, mouseFocusedChild, entity, NULL)
-	ATTRIB(InputContainer, isTabRoot, float, 0)
+	ATTRIB(InputContainer, mouseFocusedChild, entity);
+	ATTRIB(InputContainer, isTabRoot, float, 0);
 ENDCLASS(InputContainer)

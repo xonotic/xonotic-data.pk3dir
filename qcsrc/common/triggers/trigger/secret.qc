@@ -1,9 +1,9 @@
+#include "secret.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/util.qh>
     #include <server/defs.qh>
-    #include "secret.qh"
 #endif
 
 #ifdef SVQC
@@ -34,7 +34,7 @@ void trigger_secret_touch(entity this, entity toucher)
 
 	// handle normal trigger features
 	multi_touch(this, toucher);
-	remove(this);
+	delete(this);
 }
 
 /*QUAKED trigger_secret (.5 .5 .5) ?

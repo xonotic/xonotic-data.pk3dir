@@ -1,3 +1,4 @@
+#include "all.qh"
 #ifdef SVQC
 
 bool autocvar_bot_sound_monopoly;

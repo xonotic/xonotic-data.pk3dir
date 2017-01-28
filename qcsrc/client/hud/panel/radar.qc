@@ -137,15 +137,11 @@ void HUD_Radar_Mouse()
 		return;
 	}
 
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+	if (!autocvar_hud_cursormode)
+		update_mousepos();
 
-		mousepos_x = bound(0, mousepos_x, vid_conwidth);
-		mousepos_y = bound(0, mousepos_y, vid_conheight);
-	}
-
-	HUD_Panel_UpdateCvars();
+	panel = HUD_PANEL(RADAR);
+	HUD_Panel_LoadCvars();
 
 
 	panel_size = autocvar_hud_panel_radar_maximized_size;
@@ -197,7 +193,7 @@ void HUD_Radar()
 	if ( hud_panel_radar_temp_hidden )
 		return;
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	float f = 0;
 
@@ -284,7 +280,7 @@ void HUD_Radar()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -316,10 +312,10 @@ void HUD_Radar()
 	else
 	{
 		vector c0, c1, c2, c3, span;
-		c0 = rotate(mi_min, teamradar_angle * DEG2RAD);
-		c1 = rotate(mi_max, teamradar_angle * DEG2RAD);
-		c2 = rotate('1 0 0' * mi_min.x + '0 1 0' * mi_max.y, teamradar_angle * DEG2RAD);
-		c3 = rotate('1 0 0' * mi_max.x + '0 1 0' * mi_min.y, teamradar_angle * DEG2RAD);
+		c0 = Rotate(mi_min, teamradar_angle * DEG2RAD);
+		c1 = Rotate(mi_max, teamradar_angle * DEG2RAD);
+		c2 = Rotate('1 0 0' * mi_min.x + '0 1 0' * mi_max.y, teamradar_angle * DEG2RAD);
+		c3 = Rotate('1 0 0' * mi_max.x + '0 1 0' * mi_min.y, teamradar_angle * DEG2RAD);
 		span = '0 0 0';
 		span.x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
 		span.y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
@@ -356,7 +352,7 @@ void HUD_Radar()
 	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
 		if ( it.health >= 0 )
-		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE || !(serverflags & SERVERFLAG_TEAMPLAY) )
+		if ( it.team == myteam + 1 || gametype == MAPINFO_TYPE_RACE || !teamplay )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if(vdist((mousepos - coord), <, 8))

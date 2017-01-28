@@ -48,7 +48,7 @@
 
 #define SELFWRAP(T, R, oldargs, args, forward) \
     .R oldargs T; \
-    .R oldargs __##T = T; \
+    noref .R oldargs __##T = T; \
     .R args self##T; \
     R T##_self oldargs { ENGINE_EVENT(); return this.self##T forward; }
 
@@ -66,13 +66,13 @@ SELFWRAP(think, void, (), (entity this), (this))
 #define setthink(e, f) SELFWRAP_SET(think, e, f)
 #define getthink(e) SELFWRAP_GET(think, e)
 
-#ifndef MENUQC
+#ifdef GAMEQC
 SELFWRAP(touch, void, (), (entity this, entity toucher), (this, other))
 #define settouch(e, f) SELFWRAP_SET(touch, e, f)
 #define gettouch(e) SELFWRAP_GET(touch, e)
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 SELFWRAP(blocked, void, (), (entity this, entity blocker), (this, other))
 #define setblocked(e, f) SELFWRAP_SET(blocked, e, f)
 #define blocked stopusingthis
@@ -81,7 +81,7 @@ SELFWRAP(blocked, void, (), (entity this, entity blocker), (this, other))
 SELFWRAP(predraw, void, (), (entity this), (this))
 #define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
 
-#ifndef MENUQC
+#ifdef GAMEQC
 SELFWRAP(customizeentityforclient, bool, (), (entity this, entity client), (this, other))
 #define setcefc(e, f) SELFWRAP_SET(customizeentityforclient, e, f)
 #define getcefc(e) SELFWRAP_GET(customizeentityforclient, e)
@@ -104,6 +104,6 @@ SELFWRAP(SendEntity, bool, (entity to, int sendflags), (entity this, entity to, 
 #define movetogoal(e, ...) (__self = (e), builtin_movetogoal(__VA_ARGS__))
 #define walkmove(e, ...) (__self = (e), builtin_walkmove(__VA_ARGS__))
 
-#ifndef MENUQC
+#ifdef GAMEQC
 void adaptor_think2use(entity this) { if (this.use) this.use(this, NULL, NULL); }
 #endif

@@ -14,7 +14,8 @@ void ons_generator_ray_draw(entity this)
 
 	if(this.count > 10)
 	{
-		remove(this);
+		IL_REMOVE(g_drawables, this);
+		delete(this);
 		return;
 	}
 
@@ -33,7 +34,7 @@ void ons_generator_ray_spawn(vector org)
 	setmodel(e, MDL_ONS_RAY);
 	setorigin(e, org);
 	e.angles = randomvec() * 360;
-	e.move_movetype = MOVETYPE_NONE;
+	set_movetype(e, MOVETYPE_NONE);
 	e.alpha = 0;
 	e.scale = random() * 5 + 8;
 	e.move_time = time + 0.05;
@@ -143,18 +144,24 @@ void generator_damage(entity this, float hp)
 	setsize(this, GENERATOR_MIN, GENERATOR_MAX);
 }
 
-void generator_construct(entity this)
+void generator_construct(entity this, bool isnew)
 {
 	this.netname = "Generator";
 	this.classname = "onslaught_generator";
+
+	if(isnew)
+	{
+		IL_PUSH(g_onsgenerators, this);
+		IL_PUSH(g_drawables, this);
+	}
 
 	setorigin(this, this.origin);
 	setmodel(this, MDL_ONS_GEN);
 	setsize(this, GENERATOR_MIN, GENERATOR_MAX);
 
-	this.move_movetype	= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.solid			= SOLID_BBOX;
-	this.move_movetype		= MOVETYPE_NOCLIP;
+	set_movetype(this, MOVETYPE_NOCLIP);
 	this.move_time		= time;
 	this.drawmask		= MASK_NORMAL;
 	this.alpha			= 1;
@@ -199,7 +206,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 			this.count = 40;
 
 		generator_changeteam(this);
-		generator_construct(this);
+		generator_construct(this, isnew);
 	}
 
 	if(sf & GSF_STATUS)

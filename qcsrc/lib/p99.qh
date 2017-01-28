@@ -12,8 +12,7 @@
 /* without even the implied warranty of merchantability or fitness for a      */
 /* particular purpose.                                                        */
 /*                                                                            */
-#ifndef P99_H_
-#define P99_H_
+#pragma once
 
 #define P99_MAX_NUMBER 16
 #define P00_ARG(                            \
@@ -83,5 +82,3 @@
     P99_PASTE2(P99_PASTE3(_1, _2, _3), _4)
 #define P99_PASTE5(_1, _2, _3, _4, _5) \
     P99_PASTE2(P99_PASTE4(_1, _2, _3, _4), _5)
-
-#endif /* !P99_H_ */

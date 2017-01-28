@@ -1,10 +1,12 @@
+#include "targettrigger.qh"
 spawnfunc(turret_targettrigger);
 void turret_targettrigger_touch(entity this, entity toucher);
 
 void turret_targettrigger_touch(entity this, entity toucher)
 {
     if (this.cnt > time) return;
-    FOREACH_ENTITY_STRING_ORDERED(targetname, this.target, {
+    IL_EACH(g_turrets, it.targetname == this.target,
+    {
         if (!(it.turret_flags & TUR_FLAG_RECIEVETARGETS)) continue;
         if (!it.turret_addtarget) continue;
         it.turret_addtarget(it, toucher, this);
@@ -16,7 +18,7 @@ void turret_targettrigger_touch(entity this, entity toucher)
 */
 spawnfunc(turret_targettrigger)
 {
-    if(!autocvar_g_turrets) { remove(this); return; }
+    if(!autocvar_g_turrets) { delete(this); return; }
 
     InitTrigger(this);
 

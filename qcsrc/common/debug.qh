@@ -4,7 +4,7 @@
 .entity tag_entity;
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 .bool debug;
 .int sv_entnum;
 REGISTER_NET_TEMP(net_debug)
@@ -47,7 +47,7 @@ REGISTER_NET_TEMP(net_debug)
 	}
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 /**
  * 0: off
  * 1: on
@@ -280,7 +280,7 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
 		MAKEVECTORS(makevectors, it.v_angle, forward, right, up);
 		vector pos = it.origin + it.view_ofs;
-		traceline(pos, pos + forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, it);
+		traceline(pos, pos + forward * max_shot_distance, MOVE_NORMAL, it);
 		FOREACH_ENTITY(true, {
 		    it.solid = it.solid_prev;
             it.solid_prev = 0;

@@ -1,12 +1,13 @@
+#include "crylink.qh"
 #ifndef IMPLEMENTATION
 CLASS(Crylink, Weapon)
-/* ammotype  */ ATTRIB(Crylink, ammo_field, .int, ammo_cells)
-/* impulse   */ ATTRIB(Crylink, impulse, int, 6)
-/* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* ammotype  */ ATTRIB(Crylink, ammo_field, .int, ammo_cells);
+/* impulse   */ ATTRIB(Crylink, impulse, int, 6);
+/* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CANCLIMB);
+/* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Crylink, wpcolor, vector, '1 0.5 1');
 /* modelname */ ATTRIB(Crylink, mdl, string, "crylink");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Crylink, m_model, Model, MDL_CRYLINK_ITEM);
 #endif
 /* crosshair */ ATTRIB(Crylink, w_crosshair, string, "gfx/crosshaircrylink");
@@ -97,8 +98,9 @@ void W_Crylink_CheckLinks(entity e)
 void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 {
 	W_Crylink_CheckLinks(next);
-	if(me == own.crylink_lastgroup)
-		own.crylink_lastgroup = ((me == next) ? NULL : next);
+	.entity weaponentity = me.weaponentity_fld;
+	if(me == own.(weaponentity).crylink_lastgroup)
+		own.(weaponentity).crylink_lastgroup = ((me == next) ? NULL : next);
 	prev.queuenext = next;
 	next.queueprev = prev;
 	me.classname = "spike_oktoremove";
@@ -114,7 +116,7 @@ void W_Crylink_Dequeue(entity e)
 void W_Crylink_Reset(entity this)
 {
 	W_Crylink_Dequeue(this);
-	remove(this);
+	delete(this);
 }
 
 // force projectile to explode
@@ -127,18 +129,19 @@ void W_Crylink_LinkExplode(entity e, entity e2, entity directhitentity)
 
 	a = bound(0, 1 - (time - e.fade_time) * e.fade_rate, 1);
 
-	if(e == e.realowner.crylink_lastgroup)
-		e.realowner.crylink_lastgroup = NULL;
+	.entity weaponentity = e.weaponentity_fld;
+	if(e == e.realowner.(weaponentity).crylink_lastgroup)
+		e.realowner.(weaponentity).crylink_lastgroup = NULL;
 
 	float isprimary = !(e.projectiledeathtype & HITTYPE_SECONDARY);
 
-	RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * a, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * a, WEP_CVAR_BOTH(crylink, isprimary, radius), 
+	RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * a, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * a, WEP_CVAR_BOTH(crylink, isprimary, radius),
 				NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * a, e.projectiledeathtype, directhitentity);
 
 	W_Crylink_LinkExplode(e.queuenext, e2, directhitentity);
 
 	e.classname = "spike_oktoremove";
-	remove(e);
+	delete(e);
 }
 
 // adjust towards center
@@ -234,7 +237,8 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 	// is there at least 2 projectiles very close?
 	entity e, p;
 	float n;
-	e = this.owner.crylink_lastgroup;
+	.entity weaponentity = this.weaponentity_fld;
+	e = this.owner.(weaponentity).crylink_lastgroup;
 	n = 0;
 	if(e)
 	{
@@ -268,7 +272,7 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 			}
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
@@ -316,18 +320,19 @@ void W_Crylink_Touch(entity this, entity toucher)
 
 	if(totaldamage && ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 2) || ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 1) && !W_Crylink_Touch_WouldHitFriendly(this, WEP_CVAR_BOTH(crylink, isprimary, radius)))))
 	{
-		if(this == this.realowner.crylink_lastgroup)
-			this.realowner.crylink_lastgroup = NULL;
+		.entity weaponentity = this.weaponentity_fld;
+		if(this == this.realowner.(weaponentity).crylink_lastgroup)
+			this.realowner.(weaponentity).crylink_lastgroup = NULL;
 		W_Crylink_LinkExplode(this.queuenext, this, toucher);
 		this.classname = "spike_oktoremove";
-		remove(this);
+		delete(this);
 		return;
 	}
 	else if(finalhit)
 	{
 		// just unlink
 		W_Crylink_Dequeue(this);
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.cnt = this.cnt - 1;
@@ -342,10 +347,10 @@ void W_Crylink_Touch(entity this, entity toucher)
 void W_Crylink_Fadethink(entity this)
 {
 	W_Crylink_Dequeue(this);
-	remove(this);
+	delete(this);
 }
 
-void W_Crylink_Attack(Weapon thiswep, entity actor)
+void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	float counter, shots;
 	entity proj, prevproj, firstproj;
@@ -353,14 +358,14 @@ void W_Crylink_Attack(Weapon thiswep, entity actor)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(crylink, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(crylink, ammo), weaponentity);
 
 	maxdmg = WEP_CVAR_PRI(crylink, damage) * WEP_CVAR_PRI(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_PRI(crylink, bouncedamagefactor) * WEP_CVAR_PRI(crylink, bounces);
 	if(WEP_CVAR_PRI(crylink, joinexplode))
 		maxdmg += WEP_CVAR_PRI(crylink, joinexplode_damage);
 
-	W_SetupShot(actor, false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, maxdmg);
+	W_SetupShot(actor, weaponentity, false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -373,6 +378,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor)
 		proj = new(spike);
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
+		proj.weaponentity_fld = weaponentity;
 		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_PRI(crylink, damage);
 		if(shots == 1) {
@@ -439,6 +445,8 @@ void W_Crylink_Attack(Weapon thiswep, entity actor)
 		//proj.glow_size = 20;
 
 		proj.flags = FL_PROJECTILE;
+		IL_PUSH(g_projectiles, proj);
+		IL_PUSH(g_bot_dodge, proj);
 		proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
@@ -447,13 +455,13 @@ void W_Crylink_Attack(Weapon thiswep, entity actor)
 	}
 	if(WEP_CVAR_PRI(crylink, joinspread) != 0)
 	{
-		actor.crylink_lastgroup = proj;
+		actor.(weaponentity).crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
-		actor.crylink_waitrelease = 1;
+		actor.(weaponentity).crylink_waitrelease = 1;
 	}
 }
 
-void W_Crylink_Attack2(Weapon thiswep, entity actor)
+void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	float counter, shots;
 	entity proj, prevproj, firstproj;
@@ -461,14 +469,14 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(crylink, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(crylink, ammo), weaponentity);
 
 	maxdmg = WEP_CVAR_SEC(crylink, damage) * WEP_CVAR_SEC(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_SEC(crylink, bouncedamagefactor) * WEP_CVAR_SEC(crylink, bounces);
 	if(WEP_CVAR_SEC(crylink, joinexplode))
 		maxdmg += WEP_CVAR_SEC(crylink, joinexplode_damage);
 
-	W_SetupShot(actor, false, 2, SND_CRYLINK_FIRE2, CH_WEAPON_A, maxdmg);
+	W_SetupShot(actor, weaponentity, false, 2, SND_CRYLINK_FIRE2, CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -479,6 +487,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor)
 	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
+		proj.weaponentity_fld = weaponentity;
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
 		proj.bot_dodge = true;
@@ -554,6 +563,8 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor)
 		//proj.glow_size = 20;
 
 		proj.flags = FL_PROJECTILE;
+		IL_PUSH(g_projectiles, proj);
+		IL_PUSH(g_bot_dodge, proj);
         proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
@@ -562,98 +573,99 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor)
 	}
 	if(WEP_CVAR_SEC(crylink, joinspread) != 0)
 	{
-		actor.crylink_lastgroup = proj;
+		actor.(weaponentity).crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
-		actor.crylink_waitrelease = 2;
+		actor.(weaponentity).crylink_waitrelease = 2;
 	}
 }
 
-METHOD(Crylink, wr_aim, void(entity thiswep, entity actor))
+METHOD(Crylink, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(random() < 0.10)
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
     else
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
 }
 METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_crylink_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
+    if(autocvar_g_balance_crylink_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     }
 
     if(fire & 1)
     {
-        if(actor.crylink_waitrelease != 1)
+        if(actor.(weaponentity).crylink_waitrelease != 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(crylink, refire)))
         {
-            W_Crylink_Attack(thiswep, actor);
+            W_Crylink_Attack(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
         }
     }
 
     if((fire & 2) && autocvar_g_balance_crylink_secondary)
     {
-        if(actor.crylink_waitrelease != 2)
+        if(actor.(weaponentity).crylink_waitrelease != 2)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(crylink, refire)))
         {
-            W_Crylink_Attack2(thiswep, actor);
+            W_Crylink_Attack2(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);
         }
     }
 
-    if((actor.crylink_waitrelease == 1 && !(fire & 1)) || (actor.crylink_waitrelease == 2 && !(fire & 2)))
+    if((actor.(weaponentity).crylink_waitrelease == 1 && !(fire & 1)) || (actor.(weaponentity).crylink_waitrelease == 2 && !(fire & 2)))
     {
-        if(!actor.crylink_lastgroup || time > actor.crylink_lastgroup.teleport_time)
+        if(!actor.(weaponentity).crylink_lastgroup || time > actor.(weaponentity).crylink_lastgroup.teleport_time)
         {
             // fired and released now!
-            if(actor.crylink_lastgroup)
+            if(actor.(weaponentity).crylink_lastgroup)
             {
                 vector pos;
                 entity linkjoineffect;
-                float isprimary = (actor.crylink_waitrelease == 1);
+                float isprimary = (actor.(weaponentity).crylink_waitrelease == 1);
 
-                pos = W_Crylink_LinkJoin(actor.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
+                pos = W_Crylink_LinkJoin(actor.(weaponentity).crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
 
                 linkjoineffect = new(linkjoineffect);
+                linkjoineffect.weaponentity_fld = weaponentity;
                 setthink(linkjoineffect, W_Crylink_LinkJoinEffect_Think);
                 linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
                 linkjoineffect.owner = actor;
                 setorigin(linkjoineffect, pos);
             }
-            actor.crylink_waitrelease = 0;
-            if(!thiswep.wr_checkammo1(thiswep, actor) && !thiswep.wr_checkammo2(thiswep, actor))
+            actor.(weaponentity).crylink_waitrelease = 0;
+            if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !thiswep.wr_checkammo2(thiswep, actor, weaponentity))
             if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
             {
                 // ran out of ammo!
                 actor.cnt = WEP_CRYLINK.m_id;
-                PS(actor).m_switchweapon = w_getbestweapon(actor);
+                actor.(weaponentity).m_switchweapon = w_getbestweapon(actor, weaponentity);
             }
         }
     }
 }
-METHOD(Crylink, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Crylink, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     // don't "run out of ammo" and switch weapons while waiting for release
-    if(actor.crylink_lastgroup && actor.crylink_waitrelease)
+    if(actor.(weaponentity).crylink_lastgroup && actor.(weaponentity).crylink_waitrelease)
         return true;
 
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(crylink, ammo);
-    ammo_amount += actor.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
     return ammo_amount;
 }
-METHOD(Crylink, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Crylink, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     // don't "run out of ammo" and switch weapons while waiting for release
-    if(actor.crylink_lastgroup && actor.crylink_waitrelease)
+    if(actor.(weaponentity).crylink_lastgroup && actor.(weaponentity).crylink_waitrelease)
         return true;
 
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(crylink, ammo);
-    ammo_amount += actor.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
     return ammo_amount;
 }
 METHOD(Crylink, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND_RELOAD);
+    W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND_RELOAD);
 }
 METHOD(Crylink, wr_suicidemessage, Notification(entity thiswep))
 {

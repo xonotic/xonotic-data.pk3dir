@@ -1,3 +1,4 @@
+#include "corner.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_CORNER)
 
 #ifdef SVQC

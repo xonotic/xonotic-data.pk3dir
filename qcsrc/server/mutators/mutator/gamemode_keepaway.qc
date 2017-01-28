@@ -1,48 +1,4 @@
 #include "gamemode_keepaway.qh"
-#ifndef GAMEMODE_KEEPAWAY_H
-#define GAMEMODE_KEEPAWAY_H
-
-void ka_Initialize();
-
-REGISTER_MUTATOR(ka, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		ka_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ka_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return false;
-}
-
-
-entity ka_ball;
-
-const float SP_KEEPAWAY_PICKUPS = 4;
-const float SP_KEEPAWAY_CARRIERKILLS = 5;
-const float SP_KEEPAWAY_BCTIME = 6;
-
-void(entity this) havocbot_role_ka_carrier;
-void(entity this) havocbot_role_ka_collector;
-
-void ka_DropEvent(entity plyr);
-#endif
-
-#ifdef IMPLEMENTATION
 
 int autocvar_g_keepaway_ballcarrier_effects;
 float autocvar_g_keepaway_ballcarrier_damage;
@@ -85,7 +41,7 @@ void ka_TouchEvent(entity this, entity toucher);
 void ka_RespawnBall(entity this);
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
-	if(gameover) { return; }
+	if(game_stopped) return;
 	vector oldballorigin = this.origin;
 
 	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
@@ -127,8 +83,8 @@ void ka_TimeScoring(entity this)
 
 void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
 {
-	if(gameover) { return; }
-	if(!this) { return; }
+	if(game_stopped) return;
+	if(!this) return;
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The ball fell off the map, respawn it since players can't get to it
 		ka_RespawnBall(this);
@@ -367,7 +323,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ka, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -470,11 +426,12 @@ MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
-	
+
 	if(frag_target.ballcarried)
 		ka_DropEvent(frag_target);
 }
 
+.bool pushable;
 
 // ==============
 // Initialization
@@ -494,6 +451,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.glow_color = autocvar_g_keepawayball_trail_color;
 	e.glow_trail = true;
 	e.flags = FL_ITEM;
+	IL_PUSH(g_items, e);
 	e.pushable = true;
 	e.reset = ka_Reset;
 	settouch(e, ka_TouchEvent);
@@ -506,9 +464,9 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 void ka_ScoreRules()
 {
 	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, true); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,			"pickups",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,			"bctime",		SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,		"pickups",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,   "bckills",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,		    "bctime",		SFL_SORT_PRIO_SECONDARY);
 	ScoreRules_basics_end();
 }
 
@@ -517,5 +475,3 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 	ka_ScoreRules();
 	ka_SpawnBall();
 }
-
-#endif

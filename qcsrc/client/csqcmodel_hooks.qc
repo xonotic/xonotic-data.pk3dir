@@ -3,6 +3,7 @@
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include <common/animdecide.qh>
+#include <common/ent_cs.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/viewloc.qh>
 #include <lib/csqcmodel/cl_model.qh>
@@ -142,7 +143,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		_setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
 		forceplayermodels_goodmodelindex = e.modelindex;
-		remove(e);
+		delete(e);
 	}
 
 	// first, try finding it from the server
@@ -175,7 +176,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		forceplayermodels_model = e.model;
 		forceplayermodels_modelindex = e.modelindex;
 		forceplayermodels_skin = autocvar__cl_playerskin;
-		remove(e);
+		delete(e);
 	}
 
 	if(autocvar_cl_forcemyplayermodel != "" && autocvar_cl_forcemyplayermodel != forceplayermodels_mymodel)
@@ -185,14 +186,14 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		forceplayermodels_myisgoodmodel = fexists(e.model);
 		forceplayermodels_mymodel = e.model;
 		forceplayermodels_mymodelindex = e.modelindex;
-		remove(e);
+		delete(e);
 	}
 
 	// apply it
 	bool isfriend;
 	int cm;
 	cm = this.forceplayermodels_savecolormap;
-	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(cm - 1, "colors")) + 1024);
+	cm = (cm >= 1024) ? cm : (entcs_GetClientColors(cm - 1) + 1024);
 
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
@@ -279,7 +280,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
-		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : stof(getplayerkeyvalue(this.colormap - 1, "colors"))) & 0x0F, true) * 2;
+		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : entcs_GetClientColors(this.colormap - 1)) & 0x0F, true) * 2;
 	else
 		this.glowmod = '1 1 1';
 
@@ -369,7 +370,7 @@ int CSQCPlayer_FallbackFrame(entity this, int f)
 		case 29: return 4; // anim_duckwalkbackright -> anim_duckwalk
 		case 30: return 4; // anim_duckwalkbackleft -> anim_duckwalk
 	}
-	LOG_DEBUGF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, this.model);
+	LOG_DEBUGF("Frame %d missing in model %s, and we have no fallback - FAIL!", f, this.model);
 	return f;
 }
 void CSQCPlayer_FallbackFrame_Apply(entity this)
@@ -390,8 +391,6 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 {
 	if(this.tag_entity && wasfreed(this.tag_entity))
 		this.tag_entity = NULL;
-
-	viewloc_SetTags(this);
 
 	MUTATOR_CALLHOOK(TagIndex_Update, this);
 
@@ -433,7 +432,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 							// we need to prevent this from 'appening
 							this.tag_entity = NULL;
 							this.drawmask = 0;
-							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it\n");
+							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it");
 						}
 					}
 					else if(this.tag_entity.isplayermodel)

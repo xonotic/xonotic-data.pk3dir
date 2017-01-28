@@ -214,7 +214,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	this.event_damage = func_null;
 	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, toucher);
 
-	remove (this);
+	delete (this);
 }
 
 void vehicles_projectile_explode_think(entity this)
@@ -247,7 +247,9 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.totalfrags	   = _deahtype;
 	proj.solid			= SOLID_BBOX;
 	set_movetype(proj, MOVETYPE_FLYMISSILE);
-	proj.flags			= FL_PROJECTILE;
+	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;
@@ -265,7 +267,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 		proj.health		   = _health;
 	}
 	else
-		proj.flags		   = FL_PROJECTILE | FL_NOTARGET;
+		proj.flags |= FL_NOTARGET;
 
 	if(_mzlsound != SND_Null)
 		sound (this, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
@@ -285,7 +287,7 @@ void vehicles_gib_explode(entity this)
 	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (this.origin + '0 0 100'), '0 0 0', 1);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.wp00.origin + '0 0 64', '0 0 0', 1);
-	remove(this);
+	delete(this);
 }
 
 void vehicles_gib_touch(entity this, entity toucher)
@@ -297,7 +299,7 @@ void vehicles_gib_think(entity this)
 {
 	this.alpha -= 0.1;
 	if(this.cnt >= time)
-		remove(this);
+		delete(this);
 	else
 		this.nextthink = time + 0.1;
 }
@@ -338,7 +340,7 @@ bool vehicle_addplayerslot(	entity _owner,
 								entity _slot,
 								int _hud,
 								Model _hud_model,
-								bool(entity) _framefunc,
+								bool(entity,float) _framefunc,
 								void(entity,bool) _exitfunc, float(entity, entity) _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
@@ -432,17 +434,15 @@ void vehicles_reset_colors(entity this)
 void vehicles_clearreturn(entity veh)
 {
 	// Remove "return helper" entities, if any.
-	FOREACH_ENTITY_ENT(wp00, veh,
+	IL_EACH(g_vehicle_returners, it.wp00 == veh,
 	{
-		if(it.classname == "vehicle_return")
-		{
-			it.classname = "";
-			setthink(it, SUB_Remove);
-			it.nextthink = time + 0.1;
+		it.classname = "";
+		setthink(it, SUB_Remove);
+		it.nextthink = time + 0.1;
+		IL_REMOVE(g_vehicle_returners, it);
 
-			if(it.waypointsprite_attached)
-				WaypointSprite_Kill(it.waypointsprite_attached);
-		}
+		if(it.waypointsprite_attached)
+			WaypointSprite_Kill(it.waypointsprite_attached);
 	});
 }
 
@@ -457,7 +457,7 @@ void vehicles_return(entity this)
 	if(this.waypointsprite_attached)
 		WaypointSprite_Kill(this.waypointsprite_attached);
 
-	remove(this);
+	delete(this);
 }
 
 void vehicles_showwp_goaway(entity this)
@@ -465,7 +465,7 @@ void vehicles_showwp_goaway(entity this)
 	if(this.waypointsprite_attached)
 		WaypointSprite_Kill(this.waypointsprite_attached);
 
-	remove(this);
+	delete(this);
 }
 
 void vehicles_showwp(entity this)
@@ -512,6 +512,7 @@ void vehicles_setreturn(entity veh)
 	vehicles_clearreturn(veh);
 
 	entity ret = new(vehicle_return);
+	IL_PUSH(g_vehicle_returners, ret);
 	ret.wp00	   = veh;
 	ret.team		= veh.team;
 	setthink(ret, vehicles_showwp);
@@ -531,7 +532,7 @@ void vehicles_setreturn(entity veh)
 
 void vehicle_use(entity this, entity actor, entity trigger)
 {
-	LOG_DEBUG("vehicle ", this.netname, " used by ", actor.classname, "\n");
+	LOG_DEBUG("vehicle ", this.netname, " used by ", actor.classname);
 
 	this.tur_head.team = actor.team;
 
@@ -540,9 +541,9 @@ void vehicle_use(entity this, entity actor, entity trigger)
 	else
 		this.active = ACTIVE_ACTIVE;
 
-	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !gameover)
+	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !game_stopped)
 	{
-		LOG_DEBUG("Respawning vehicle: ", this.netname, "\n");
+		LOG_DEBUG("Respawning vehicle: ", this.netname);
 		if(this.effects & EF_NODRAW)
 		{
 			setthink(this, vehicles_spawn);
@@ -736,9 +737,10 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 }
 
 // vehicle enter/exit handling
-vector vehicles_findgoodexit(entity this, vector prefer_spot)
+vector vehicles_findgoodexit(entity this, entity player, vector prefer_spot)
 {
-	tracebox(this.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, this.owner);
+	// TODO: we actually want the player's size here
+	tracebox(this.origin + '0 0 32', PL_MIN_CONST, PL_MAX_CONST, prefer_spot, MOVE_NORMAL, player);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
@@ -750,7 +752,7 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, this.owner);
+		tracebox(v2, PL_MIN_CONST, PL_MAX_CONST, v, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -764,7 +766,7 @@ void vehicles_exit(entity vehic, bool eject)
 
 	if(vehicles_exit_running)
 	{
-		LOG_TRACE("^1vehicles_exit already running! this is not good...\n");
+		LOG_TRACE("^1vehicles_exit already running! this is not good...");
 		return;
 	}
 
@@ -792,7 +794,7 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		setsize(player, STAT(PL_MIN,player), STAT(PL_MAX, player));
 
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
@@ -802,10 +804,15 @@ void vehicles_exit(entity vehic, bool eject)
 		player.alpha			= 1;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
-		player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
+		player.view_ofs		= STAT(PL_VIEW_OFS, player);
 		player.event_damage	= PlayerDamage;
 		player.hud				= HUD_NORMAL;
-		PS(player).m_switchweapon = vehic.m_switchweapon;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++ slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			player.(weaponentity).m_switchweapon = vehic.(weaponentity).m_switchweapon;
+			delete(vehic.(weaponentity)); // no longer needed
+		}
 		player.last_vehiclecheck = time + 3;
 		player.vehicle_enter_delay = time + 2;
 
@@ -941,7 +948,7 @@ void vehicles_enter(entity pl, entity veh)
 	}
 	else return;
 
-	RemoveGrapplingHook(pl);
+	RemoveGrapplingHooks(pl);
 
 	veh.vehicle_ammo1 = 0;
 	veh.vehicle_ammo2 = 0;
@@ -958,8 +965,8 @@ void vehicles_enter(entity pl, entity veh)
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
 	pl.crouch = false;
-	pl.view_ofs = STAT(PL_VIEW_OFS, NULL);
-	setsize (pl, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
+	setsize (pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
@@ -975,7 +982,12 @@ void vehicles_enter(entity pl, entity veh)
 	veh.colormap		= pl.colormap;
 	if(veh.tur_head)
 		veh.tur_head.colormap = pl.colormap;
-	veh.m_switchweapon = PS(pl).m_switchweapon;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		veh.(weaponentity) = new(temp_wepent);
+		veh.(weaponentity).m_switchweapon = pl.(weaponentity).m_switchweapon;
+	}
 	pl.hud = veh.vehicleid;
 	pl.PlayerPhysplug = veh.PlayerPhysplug;
 
@@ -1059,7 +1071,7 @@ void vehicles_reset(entity this)
 // initialization
 void vehicles_spawn(entity this)
 {
-	LOG_DEBUG("Spawning vehicle: ", this.classname, "\n");
+	LOG_DEBUG("Spawning vehicle: ", this.classname);
 
 	// disown & reset
 	this.vehicle_hudmodel.viewmodelforclient = this;
@@ -1075,6 +1087,8 @@ void vehicles_spawn(entity this)
 	this.solid				= SOLID_SLIDEBOX;
 	this.takedamage			= DAMAGE_AIM;
 	this.deadflag			= DEAD_NO;
+	if(!this.bot_attack)
+		IL_PUSH(g_bot_targets, this);
 	this.bot_attack			= true;
 	this.flags				= FL_NOTARGET;
 	this.avelocity			= '0 0 0';
@@ -1096,7 +1110,15 @@ void vehicles_spawn(entity this)
 	if(this.vehicle_controller)
 		this.team = this.vehicle_controller.team;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == this, RemoveGrapplingHook(it));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == this)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	vehicles_reset_colors(this);
 
@@ -1115,14 +1137,17 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		return false;
 
 	if(!this.tur_head)
+	{
 		info.vr_precache(info);
+		IL_PUSH(g_vehicles, this);
+	}
 
 	if(this.targetname && this.targetname != "")
 	{
 		this.vehicle_controller = find(NULL, target, this.targetname);
 		if(!this.vehicle_controller)
 		{
-			LOG_DEBUG("^1WARNING: ^7Vehicle with invalid .targetname\n");
+			LOG_DEBUG("^1WARNING: ^7Vehicle with invalid .targetname");
 			this.active = ACTIVE_ACTIVE;
 		}
 		else
@@ -1157,9 +1182,11 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.tur_head.owner			= this;
 	this.takedamage				= DAMAGE_NO;
 	this.bot_attack				= true;
+	IL_PUSH(g_bot_targets, this);
 	this.iscreature				= true;
 	this.teleportable			= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents		= true;
+	IL_PUSH(g_damagedbycontents, this);
 	this.vehicleid				= info.vehicleid;
 	this.PlayerPhysplug			= info.PlayerPhysplug;
 	this.event_damage			= func_null;
@@ -1217,7 +1244,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	else
 		this.nextthink = time + game_starttime;
 
-	if(MUTATOR_CALLHOOK(VehicleSpawn, this))
+	if(MUTATOR_CALLHOOK(VehicleInit, this))
 		return false;
 
 	return true;

@@ -1,8 +1,8 @@
 #include "miscfunctions.qh"
 
-#include "hud/all.qh"
+#include "hud/_mod.qh"
 
-#include <common/command/generic.qh>
+#include <common/command/_mod.qh>
 
 #include <common/teams.qh>
 
@@ -350,6 +350,13 @@ void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, f
 	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz.y, theAlpha, drawflag, fadelerp);
 }
 
+void update_mousepos()
+{
+	mousepos += getmousepos() * autocvar_menu_mouse_speed;
+	mousepos.x = bound(0, mousepos.x, vid_conwidth);
+	mousepos.y = bound(0, mousepos.y, vid_conheight);
+}
+
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
 float PolyDrawModelSurface(entity e, float i_s)
 {
@@ -382,15 +389,15 @@ void PolyDrawModel(entity e)
 
 void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag)
 {
-	float x, y, q, d;
+	float d;
 	vector ringsize, v, t;
 	ringsize = radi * '1 1 0';
 
-	x = cos(f * 2 * M_PI);
-	y = sin(f * 2 * M_PI);
-	q = fabs(x) + fabs(y);
-	x /= q;
-	y /= q;
+	float co = cos(f * 2 * M_PI);
+	float si = sin(f * 2 * M_PI);
+	float q = fabs(co) + fabs(si);
+	co /= q;
+	si /= q;
 
 	if(f >= 1)
 	{
@@ -523,8 +530,8 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	if(d > 0)
 	{
 			v = centre;			t = '0.5 0.5 0';
-			v.x += x * 0.5 * ringsize.x;	t += x * '0.5 0.5 0';
-			v.y += y * 0.5 * ringsize.y;	t += y * '0.5 -0.5 0';
+			v.x += co * 0.5 * ringsize.x;	t += co * '0.5 0.5 0';
+			v.y += si * 0.5 * ringsize.y;	t += si * '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 	}

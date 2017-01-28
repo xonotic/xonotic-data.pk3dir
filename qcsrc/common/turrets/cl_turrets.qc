@@ -1,6 +1,7 @@
+#include "cl_turrets.qh"
 void turret_remove(entity this)
 {
-	remove(this.tur_head);
+	delete(this.tur_head);
 	//remove(this.enemy);
 	this.tur_head = NULL;
 }
@@ -155,17 +156,14 @@ void turret_draw2d(entity this)
 
 	o_z = 0;
 
-	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)),
+	float edgedistance_min = min((o.y - (vid_conheight * waypointsprite_edgeoffset_top)),
 	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
 	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
-	float vidscale = max(vid_conwidth / vid_width, vid_conheight / vid_height);
+	float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
 
-	crosshairdistance = sqrt( pow(o_x - vid_conwidth/2, 2) + pow(o_y - vid_conheight/2, 2) );
-
-	t = waypointsprite_scale * vidscale;
+	t = waypointsprite_scale;
 	a *= waypointsprite_alpha;
 
 	{
@@ -202,7 +200,7 @@ void turret_draw2d(entity this)
 			);
 }
 
-void turret_construct(entity this)
+void turret_construct(entity this, bool isnew)
 {
 	entity tur = get_turretinfo(this.m_id);
 
@@ -238,10 +236,15 @@ void turret_construct(entity this)
 	this.tur_head.drawmask			= MASK_NORMAL;
 	this.anim_start_time			= 0;
 	this.draw2d = turret_draw2d;
-	IL_PUSH(g_drawables_2d, this);
 	this.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
 	this.teamradar_color = '1 0 0';
 	this.alpha = 1;
+
+	if(isnew)
+	{
+		IL_PUSH(g_drawables, this);
+		IL_PUSH(g_drawables_2d, this);
+	}
 
 	tur.tr_setup(tur, this);
 }
@@ -259,14 +262,14 @@ void turret_gib_draw(entity this)
 		if(time >= this.nextthink)
 		{
 			turret_gibboom(this);
-			remove(this);
+			delete(this);
 		}
 	}
 	else
 	{
 		this.alpha = bound(0, this.nextthink - time, 1);
 		if(this.alpha < ALPHA_MIN_VISIBLE)
-			remove(this);
+			delete(this);
 	}
 }
 
@@ -370,7 +373,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		this.angles_x = ReadAngle();
 		this.angles_y = ReadAngle();
 
-		turret_construct(this);
+		turret_construct(this, isnew);
 		this.colormap = 1024;
 		this.glowmod = '0 1 1';
 		this.tur_head.colormap = this.colormap;

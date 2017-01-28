@@ -1,7 +1,6 @@
+#include "all.qh"
 #ifndef WEAPONS_ALL_C
 #define WEAPONS_ALL_C
-
-#include "all.qh"
 
 #if defined(CSQC)
 	#include <client/defs.qh>
@@ -19,6 +18,7 @@
 	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
+	#include <common/items/_mod.qh>
     #include <lib/warpzone/anglestransform.qh>
     #include <lib/warpzone/common.qh>
     #include <lib/warpzone/util_server.qh>
@@ -27,7 +27,7 @@
     #include "../stats.qh"
     #include "../teams.qh"
     #include "../util.qh"
-    #include "../monsters/all.qh"
+    #include "../monsters/_mod.qh"
     #include "config.qh"
     #include <server/weapons/csqcprojectile.qh>
     #include <server/weapons/tracing.qh>
@@ -37,14 +37,14 @@
     #include <server/defs.qh>
     #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
-    #include <server/mutators/all.qh>
+    #include <server/mutators/_mod.qh>
     #include "../mapinfo.qh"
-    #include <server/command/common.qh>
+    #include <server/command/_mod.qh>
     #include <lib/csqcmodel/sv_model.qh>
     #include <server/portals.qh>
     #include <server/g_hook.qh>
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 	#include "calculations.qc"
 #endif
 #ifdef SVQC
@@ -204,7 +204,7 @@ void W_RandomWeapons(entity e, float n)
 		RandomSelection_Init();
 		FOREACH(Weapons, it != WEP_Null, {
 			if (remaining & (it.m_wepset))
-				RandomSelection_Add(it, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(it, 1, 1);
 		});
 		Weapon w = RandomSelection_chosen_ent;
 		result |= WepSet_FromWeapon(w);
@@ -275,7 +275,7 @@ string W_Model(string w_mdl)
 	return M_ARGV(1, string);
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 {
 	switch (algn)
@@ -391,8 +391,10 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 {
 	if (name == "")
 	{
-		this.model = "";
-		if (this.weaponchild) remove(this.weaponchild);
+		vector oldmin = this.mins, oldmax = this.maxs;
+		setmodel(this, MDL_Null);
+		setsize(this, oldmin, oldmax);
+		if (this.weaponchild) delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
 		this.spawnorigin = '0 0 0';
@@ -436,7 +438,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		}
 		else
 		{
-			if (this.weaponchild) remove(this.weaponchild);
+			if (this.weaponchild) delete(this.weaponchild);
 			this.weaponchild = NULL;
 		}
 
@@ -462,7 +464,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			}
 			else
 			{
-				LOG_WARNINGF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong\n",
+				LOG_WARNF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong",
 					this.model);
 				this.movedir = '0 0 0';
 			}
@@ -481,7 +483,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			}
 			else
 			{
-				LOG_WARNINGF("weapon model %s does not support the 'shell' tag, will display casings wrong\n",
+				LOG_WARNF("weapon model %s does not support the 'shell' tag, will display casings wrong",
 					this.model);
 				this.spawnorigin = this.movedir;
 			}
@@ -503,7 +505,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			}
 			else
 			{
-				LOG_WARNINGF(
+				LOG_WARNF(
 					"weapon model %s does not support the 'handle' tag "
 					"and neither does the v_ model support the 'shot' tag, "
 					"will display muzzle flashes TOTALLY wrong\n",
@@ -523,7 +525,11 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 
 	if (this.movedir.x >= 0)
 	{
-		int algn = STAT(GUNALIGN, this.owner);
+		//int algn = STAT(GUNALIGN, this.owner);
+		int algn = W_GunAlign(this, STAT(GUNALIGN, this.owner));
+	#ifdef SVQC
+		this.m_gunalign = algn;
+	#endif
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
@@ -547,7 +553,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 }
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
@@ -557,21 +563,22 @@ NET_HANDLE(wframe, bool isNew)
 	a.x = ReadCoord();
     a.y = ReadCoord();
     a.z = ReadCoord();
+    int slot = ReadByte();
 	bool restartanim = ReadByte();
-	anim_set(viewmodel, a, !restartanim, restartanim, restartanim);
-	viewmodel.state = ReadByte();
-	viewmodel.weapon_nextthink = ReadFloat();
-	viewmodel.alpha = ReadByte() / 255;
-	switch (viewmodel.state)
+	entity wepent = viewmodels[slot];
+	anim_set(wepent, a, !restartanim, restartanim, restartanim);
+	wepent.state = ReadByte();
+	wepent.weapon_nextthink = ReadFloat();
+	switch (wepent.state)
 	{
 		case WS_RAISE:
-			viewmodel.weapon_switchdelay = activeweapon.switchdelay_raise;
+			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_raise;
 			break;
 		case WS_DROP:
-			viewmodel.weapon_switchdelay = activeweapon.switchdelay_drop;
+			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_drop;
 			break;
         default:
-            viewmodel.weapon_switchdelay = 0;
+            wepent.weapon_switchdelay = 0;
             break;
 	}
 	return true;
@@ -588,10 +595,10 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteCoord(channel, a.x);
 	WriteCoord(channel, a.y);
 	WriteCoord(channel, a.z);
+	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);
 	WriteFloat(channel, weaponentity.weapon_nextthink);
-	WriteByte(channel, weaponentity.m_alpha * 255);
 }
 #endif
 

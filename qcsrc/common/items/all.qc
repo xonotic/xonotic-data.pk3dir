@@ -1,8 +1,4 @@
-#ifndef ITEMS_ALL_C
-#define ITEMS_ALL_C
 #include "all.qh"
-
-#include "item/_mod.inc"
 
 void Dump_Items()
 {
@@ -19,4 +15,13 @@ string Item_Model(string item_mdl)
     return output;
 }
 
+string Item_Sound(string it_snd)
+{
+	string output = strcat("misc/", it_snd);
+#ifdef SVQC
+		MUTATOR_CALLHOOK(ItemSound, it_snd, output);
+		return M_ARGV(1, string);
+#else
+		return output;
 #endif
+}

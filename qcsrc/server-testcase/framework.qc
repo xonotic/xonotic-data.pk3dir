@@ -7,7 +7,7 @@ float test();
 spawnfunc(worldspawn)
 {
 	float r;
-	LOG_TRACE("TESTCASE: START\n");
+	LOG_TRACE("TESTCASE: START");
 	r = test();
 	if(r == 1)
 		error("TESTCASE: PASS");

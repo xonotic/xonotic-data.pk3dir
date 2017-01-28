@@ -1,18 +1,18 @@
 #include "teamplay.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "race.qh"
 #include "scores.qh"
 #include "scores_rules.qh"
 
-#include "bot/bot.qh"
+#include "bot/api.qh"
 
 #include "command/vote.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 
 #include "../common/deathtypes/all.qh"
-#include "../common/gamemodes/all.qh"
+#include "../common/gamemodes/_mod.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
@@ -52,6 +52,11 @@ void InitGameplayMode()
 	get_mi_min_max(1);
 	world.mins = mi_min;
 	world.maxs = mi_max;
+	// currently, NetRadiant's limit is 131072 qu for each side
+	// distance from one corner of a 131072qu cube to the opposite corner is approx. 227023 qu
+	// set the distance according to map size but don't go over the limit to avoid issues with float precision
+	// in case somebody makes extremely large maps
+	max_shot_distance = min(230000, vlen(world.maxs - world.mins));
 
 	MapInfo_LoadMapSettings(mapname);
 	serverflags &= ~SERVERFLAG_TEAMPLAY;
@@ -82,25 +87,23 @@ void InitGameplayMode()
 
 string GetClientVersionMessage(entity this)
 {
-	string versionmsg;
 	if (this.version_mismatch) {
 		if(this.version < autocvar_gameversion) {
-			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
 		} else {
-			versionmsg = "^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8";
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8");
 		}
 	} else {
-		versionmsg = "^2client version and server version are compatible.^8";
+		return strcat("Welcome to Xonotic ", autocvar_g_xonoticversion);
 	}
-	return versionmsg;
 }
 
 string getwelcomemessage(entity this)
 {
-	string s, modifications, motd;
-
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
-	modifications = M_ARGV(0, string);
+	string modifications = M_ARGV(0, string);
 
 	if(g_weaponarena)
 	{
@@ -109,7 +112,7 @@ string getwelcomemessage(entity this)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	else if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -124,9 +127,7 @@ string getwelcomemessage(entity this)
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage = GetClientVersionMessage(this);
-
-	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
-	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
+	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
@@ -151,11 +152,21 @@ string getwelcomemessage(entity this)
 
 	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
 
-	motd = autocvar_sv_motd;
+	string motd = autocvar_sv_motd;
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
 	return s;
+}
+
+void setcolor(entity this, int clr)
+{
+#if 0
+	this.clientcolors = clr;
+	this.team = (clr & 15) + 1;
+#else
+	builtin_setcolor(this, clr);
+#endif
 }
 
 void SetPlayerColors(entity pl, float _color)
@@ -206,23 +217,23 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
 {
-	int dm = 0;
+	int teams_mask = 0;
 
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
 	string teament_name = string_null;
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(GetTeamCount, dm, teament_name);
-	dm = M_ARGV(0, float);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name);
+	teams_mask = M_ARGV(0, float);
 	teament_name = M_ARGV(1, string);
 
 	if(!mutator_returnvalue)
 	{
-		if(dm & BIT(0)) c1 = 0;
-		if(dm & BIT(1)) c2 = 0;
-		if(dm & BIT(2)) c3 = 0;
-		if(dm & BIT(3)) c4 = 0;
+		if(teams_mask & BIT(0)) c1 = 0;
+		if(teams_mask & BIT(1)) c2 = 0;
+		if(teams_mask & BIT(2)) c3 = 0;
+		if(teams_mask & BIT(3)) c4 = 0;
 	}
 
 	// find out what teams are allowed if necessary
@@ -473,8 +484,10 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
-		else
-			error(sprintf("Too few teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
+		else if(totalteams == 1) // single team
+			LOG_TRACEF("Only 1 team available for %s, you may need to fix your map", MapInfo_Type_ToString(MapInfo_CurrentGametype()));
+		else // no teams, major no no
+			error(sprintf("No teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
 	}
 
 	// count how many players are in each team
@@ -496,13 +509,13 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	// now t is the minimum, or A minimum!
 	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl))
-		RandomSelection_Add(NULL, 1, string_null, 1, 1);
+		RandomSelection_AddFloat(1, 1, 1);
 	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl))
-		RandomSelection_Add(NULL, 2, string_null, 1, 1);
+		RandomSelection_AddFloat(2, 1, 1);
 	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl))
-		RandomSelection_Add(NULL, 3, string_null, 1, 1);
+		RandomSelection_AddFloat(3, 1, 1);
 	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl))
-		RandomSelection_Add(NULL, 4, string_null, 1, 1);
+		RandomSelection_AddFloat(4, 1, 1);
 
 	return RandomSelection_chosen_float;
 }
@@ -540,7 +553,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 				SetPlayerColors(this, selectedteam - 1);
 
 				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
-				// when JoinBestTeam is called by cl_client.qc/ClientConnect the player_id is 0 the log attempt is rejected
+				// when JoinBestTeam is called by client.qc/ClientConnect the player_id is 0 the log attempt is rejected
 				LogTeamchange(this.playerid, this.team, 99);
 			}
 			return selectedteam;

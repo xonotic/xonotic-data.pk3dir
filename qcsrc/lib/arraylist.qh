@@ -20,7 +20,7 @@ USING(ArrayList, entity);
 	MACRO_BEGIN \
 	{ \
 		buf_del(this.al_buf); \
-		remove(this); \
+		delete(this); \
 		this = NULL; \
 	} MACRO_END
 

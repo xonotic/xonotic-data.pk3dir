@@ -1,40 +1,4 @@
-#ifndef SPIDER_H
-#define SPIDER_H
-
-#ifndef MENUQC
-MODEL(MON_SPIDER, M_Model("spider.dpm"));
-#endif
-
-CLASS(Spider, Monster)
-    ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
-    ATTRIB(Spider, mins, vector, '-18 -18 -25');
-    ATTRIB(Spider, maxs, vector, '18 18 30');
-#ifndef MENUQC
-    ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
-#endif
-    ATTRIB(Spider, netname, string, "spider");
-    ATTRIB(Spider, monster_name, string, _("Spider"));
-ENDCLASS(Spider)
-
-REGISTER_MONSTER(SPIDER, NEW(Spider)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#include <common/weapons/all.qh>
-
-CLASS(SpiderAttack, PortoLaunch)
-/* flags     */ ATTRIB(SpiderAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(SpiderAttack, impulse, int, 9);
-/* refname   */ ATTRIB(SpiderAttack, netname, string, "spider");
-/* wepname   */ ATTRIB(SpiderAttack, m_name, string, _("Spider attack"));
-ENDCLASS(SpiderAttack)
-REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "spider.qh"
 
 #ifdef SVQC
 
@@ -106,7 +70,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 			actor.anim_finished = time + 1;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web(actor);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -148,7 +112,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 		});
 
-		remove(this);
+		delete(this);
 	}
 }
 
@@ -194,7 +158,10 @@ void M_Spider_Attack_Web(entity this)
 	proj.health = 500;
 	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, proj);
 
 	proj.bouncefactor = 0.3;
 	proj.bouncestop = 0.05;
@@ -203,9 +170,8 @@ void M_Spider_Attack_Web(entity this)
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, true);
 }
 
-bool M_Spider_Attack(int attack_type, entity actor, entity targ)
+bool M_Spider_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-    .entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		Weapon wep = WEP_SPIDER_ATTACK;
@@ -224,7 +190,7 @@ bool M_Spider_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_spider) { Monster_Spawn(this, MON_SPIDER.monsterid); }
+spawnfunc(monster_spider) { Monster_Spawn(this, true, MON_SPIDER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -248,7 +214,7 @@ METHOD(Spider, mr_death, bool(Spider this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 {
     TC(Spider, this);
@@ -283,6 +249,4 @@ METHOD(Spider, mr_precache, bool(Spider this))
     TC(Spider, this);
     return true;
 }
-#endif
-
 #endif

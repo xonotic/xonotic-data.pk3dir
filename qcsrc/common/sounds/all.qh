@@ -1,9 +1,8 @@
-#ifndef SOUNDS_ALL_H
-#define SOUNDS_ALL_H
+#pragma once
 
 #include "sound.qh"
 
-REGISTRY(Sounds, BITS(8))
+REGISTRY(Sounds, BITS(9))
 #define Sounds_from(i) _Sounds_from(i, SND_Null)
 REGISTER_REGISTRY(Sounds)
 
@@ -21,4 +20,3 @@ PRECACHE(Sounds) {
 SOUND(Null, "misc/null");
 #include "all.inc"
 #include "all.qc"
-#endif

@@ -1,67 +1,12 @@
 #include "gamemode_freezetag.qh"
-#ifndef GAMEMODE_FREEZETAG_H
-#define GAMEMODE_FREEZETAG_H
-
-int autocvar_g_freezetag_point_limit;
-int autocvar_g_freezetag_point_leadlimit;
-bool autocvar_g_freezetag_team_spawns;
-void freezetag_Initialize();
-
-REGISTER_MUTATOR(ft, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		freezetag_Initialize();
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, autocvar_timelimit_override, -1);
-
-		if (autocvar_g_freezetag_team_spawns)
-			have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back freezetag_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-.float freezetag_frozen_time;
-.float freezetag_frozen_timeout;
-const float ICE_MAX_ALPHA = 1;
-const float ICE_MIN_ALPHA = 0.1;
-float freezetag_teams;
-
-.float reviving; // temp var
-
-float autocvar_g_freezetag_revive_extra_size;
-float autocvar_g_freezetag_revive_speed;
-bool autocvar_g_freezetag_revive_nade;
-float autocvar_g_freezetag_revive_nade_health;
-
-#endif
-#ifdef IMPLEMENTATION
 
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
-int autocvar_g_freezetag_teams;
+//int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
 
-const float SP_FREEZETAG_REVIVALS = 4;
 void freezetag_ScoreRules(int teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true); // SFL_SORT_PRIO_PRIMARY
@@ -152,6 +97,9 @@ float freezetag_getWinnerTeam()
 	return -1; // no player left
 }
 
+void nades_Clear(entity);
+void nades_GiveBonus(entity player, float score);
+
 float freezetag_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -162,6 +110,7 @@ float freezetag_CheckWinner()
 			it.freezetag_frozen_timeout = 0;
 			nades_Clear(it);
 		));
+		game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return 1;
 	}
@@ -186,6 +135,8 @@ float freezetag_CheckWinner()
 		it.freezetag_frozen_timeout = 0;
 		nades_Clear(it);
 	));
+
+	game_stopped = true;
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
 }
@@ -305,7 +256,7 @@ void havocbot_role_ft_offense(entity this)
 	// If only one left on team or if role has timed out then start trying to free players.
 	if (((unfrozen == 0) && (!STAT(FROZEN, this))) || (time > this.havocbot_role_timeout))
 	{
-		LOG_TRACE("changing role to freeing\n");
+		LOG_TRACE("changing role to freeing");
 		this.havocbot_role = havocbot_role_ft_freeing;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -334,7 +285,7 @@ void havocbot_role_ft_freeing(entity this)
 
 	if (time > this.havocbot_role_timeout)
 	{
-		LOG_TRACE("changing role to offense\n");
+		LOG_TRACE("changing role to offense");
 		this.havocbot_role = havocbot_role_ft_offense;
 		this.havocbot_role_timeout = 0;
 		return;
@@ -386,7 +337,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(2, float);
+	float frag_deathtype = M_ARGV(3, float);
 
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
@@ -430,10 +381,6 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	}
 	else
 	{
-		if(IS_PLAYER(frag_target))
-			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_FROZEN, frag_attacker.netname);
-		if(IS_PLAYER(frag_attacker))
-			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_FREEZETAG_FREEZE, frag_target.netname);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
 	}
 
@@ -485,25 +432,16 @@ MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 {
-	if(gameover)
+	if(game_stopped)
 		return true;
-
-	entity player = M_ARGV(0, entity);
-
-	if(STAT(FROZEN, player) == 1)
-	{
-		// keep health = 1
-		player.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
-	}
 
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 		return true;
 
 	int n;
-
-	entity o;
-	o = NULL;
+	entity o = NULL;
+	entity player = M_ARGV(0, entity);
 	//if(STAT(FROZEN, player))
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
@@ -605,7 +543,7 @@ MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ft, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(ft, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = freezetag_teams;
 }
@@ -617,11 +555,28 @@ MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
 		M_ARGV(0, string) = "most";
 }
 
+MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
+{
+	entity frag_attacker = M_ARGV(0, entity);
+	entity frag_target = M_ARGV(1, entity);
+	//float frag_deathtype = M_ARGV(2, float);
+	int kill_count_to_attacker = M_ARGV(3, int);
+	int kill_count_to_target = M_ARGV(4, int);
+
+	if(STAT(FROZEN, frag_target))
+		return; // target was already frozen, so this is just pushing them off the cliff
+
+	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : frag_target.ping));
+	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target, frag_attacker.health, frag_attacker.armorvalue, (IS_BOT_CLIENT(frag_attacker) ? -1 : frag_attacker.ping));
+
+	return true;
+}
+
 void freezetag_Initialize()
 {
 	freezetag_teams = autocvar_g_freezetag_teams_override;
 	if(freezetag_teams < 2)
-		freezetag_teams = autocvar_g_freezetag_teams;
+		freezetag_teams = cvar("g_freezetag_teams"); // read the cvar directly as it gets written earlier in the same frame
 	freezetag_teams = bound(2, freezetag_teams, 4);
 
 	int teams = 0;
@@ -638,5 +593,3 @@ void freezetag_Initialize()
 
 	EliminatedPlayers_Init(freezetag_isEliminated);
 }
-
-#endif

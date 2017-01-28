@@ -1,11 +1,14 @@
 #pragma once
 
+#ifndef DEBUGPATHING
+	#define DEBUGPATHING 0
+#endif
+
 .entity pathlib_list;
 .entity path_next;
 .entity path_prev;
 
 #define inwater(point) (pointcontents(point) == CONTENT_WATER)
-.int medium;
 
 const vector PLIB_FORWARD = '0 1 0';
 //#define PLIB_BACK    '0 -1 0'

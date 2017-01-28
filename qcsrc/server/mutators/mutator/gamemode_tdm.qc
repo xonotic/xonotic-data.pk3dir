@@ -1,45 +1,5 @@
 #include "gamemode_tdm.qh"
-#ifndef GAMEMODE_TDM_H
-#define GAMEMODE_TDM_H
 
-int autocvar_g_tdm_point_limit;
-int autocvar_g_tdm_point_leadlimit;
-bool autocvar_g_tdm_team_spawns;
-void tdm_DelayedInit(entity this);
-
-REGISTER_MUTATOR(tdm, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, autocvar_timelimit_override, -1);
-		if (autocvar_g_tdm_team_spawns)
-			have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back tdm_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-#endif
-
-#ifdef IMPLEMENTATION
 int autocvar_g_tdm_teams;
 int autocvar_g_tdm_teams_override;
 
@@ -51,7 +11,7 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(tdm_team)
 {
-	if(!g_tdm || !this.cnt) { remove(this); return; }
+	if(!g_tdm || !this.cnt) { delete(this); return; }
 
 	this.classname = "tdm_team";
 	this.team = this.cnt + 1;
@@ -73,7 +33,7 @@ void tdm_DelayedInit(entity this)
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "tdm_team") == NULL)
 	{
-		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.\n");
+		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.");
 
 		int numteams = autocvar_g_tdm_teams_override;
 
@@ -97,7 +57,7 @@ void tdm_DelayedInit(entity this)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(tdm, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(tdm, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "tdm_team";
 	return true;
@@ -108,5 +68,3 @@ MUTATOR_HOOKFUNCTION(tdm, Scores_CountFragsRemaining)
 	// announce remaining frags
 	return true;
 }
-
-#endif

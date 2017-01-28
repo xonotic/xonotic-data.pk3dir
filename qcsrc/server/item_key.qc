@@ -1,7 +1,7 @@
 #include "item_key.qh"
 
 #include "../common/triggers/subs.qh"
-#include "../common/monsters/all.qh"
+#include "../common/monsters/_mod.qh"
 #include "../common/notifications/all.qh"
 #include "../common/util.qh"
 #include "../lib/warpzone/util_server.qh"
@@ -160,7 +160,7 @@ spawnfunc(item_key)
 	// reject this entity if more than one key was set!
 	if (this.itemkeys>0 && (this.itemkeys & (this.itemkeys-1)) != 0) {
 		objerror(this, "item_key.itemkeys must contain only 1 bit set specifying the key it represents!");
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -202,7 +202,7 @@ spawnfunc(item_key)
 
 		if (this.netname == "") {
 			objerror(this, "item_key doesn't have a default name for this key and a custom one was not specified!");
-			remove(this);
+			delete(this);
 			return;
 		}
 		break;
@@ -217,7 +217,7 @@ spawnfunc(item_key)
 		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
 	} else if (this.model == "") {
 		objerror(this, "item_key doesn't have a default model for this key and a custom one was not specified!");
-		remove(this);
+		delete(this);
 		return;
 	}
 

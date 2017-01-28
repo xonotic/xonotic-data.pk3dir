@@ -1,6 +1,6 @@
 #include "animdecide.qh"
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 
 #if defined(SVQC)
     #include "util.qh"

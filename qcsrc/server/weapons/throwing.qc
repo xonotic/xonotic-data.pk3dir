@@ -1,7 +1,7 @@
 #include "throwing.qh"
 
 #include "weaponsystem.qh"
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 #include <common/t_items.qh>
 #include "../g_damage.qh"
 #include <common/items/item.qh>
@@ -9,8 +9,9 @@
 #include <common/notifications/all.qh>
 #include <common/triggers/subs.qh>
 #include <common/util.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/state.qh>
+#include <common/wepent.qh>
 
 void thrown_wep_think(entity this)
 {
@@ -19,7 +20,10 @@ void thrown_wep_think(entity this)
 	{
 		this.SendFlags |= ISF_LOCATION;
 		this.oldorigin = this.origin;
+		this.bot_pickup = false;
 	}
+	else
+		this.bot_pickup = true;
 	this.owner = NULL;
 	float timeleft = this.savenextthink - time;
 	if(timeleft > 1)
@@ -31,7 +35,7 @@ void thrown_wep_think(entity this)
 }
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
+string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity)
 {
 	float thisammo;
 	string s;
@@ -45,8 +49,9 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
+	wep.glowmod = weaponentity_glowmod(info, own, own.clientcolors, own.(weaponentity));
 
-	W_DropEvent(wr_drop,own,wpn,wep);
+	W_DropEvent(wr_drop,own,wpn,wep,weaponentity);
 
 	if(WepSet_FromWeapon(Weapons_from(wpn)) & WEPSET_SUPERWEAPONS)
 	{
@@ -79,7 +84,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	weapon_defaultspawnfunc(wep, info);
 	if(startitem_failed)
 		return string_null;
-	wep.glowmod = weaponentity_glowmod(info, own.clientcolors);
 	setthink(wep, thrown_wep_think);
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
@@ -97,11 +101,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		if(doreduce && g_weapon_stay == 2)
 		{
 			// if our weapon is loaded, give its load back to the player
-			int i = PS(own).m_weapon.m_id;
-			if(own.(weapon_load[i]) > 0)
+			int i = own.(weaponentity).m_weapon.m_id;
+			if(own.(weaponentity).(weapon_load[i]) > 0)
 			{
-				own.(ammotype) += own.(weapon_load[i]);
-				own.(weapon_load[i]) = -1; // schedule the weapon for reloading
+				own.(ammotype) += own.(weaponentity).(weapon_load[i]);
+				own.(weaponentity).(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
 
 			wep.(ammotype) = 0;
@@ -109,11 +113,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		else if(doreduce)
 		{
 			// if our weapon is loaded, give its load back to the player
-			int i = PS(own).m_weapon.m_id;
-			if(own.(weapon_load[i]) > 0)
+			int i = own.(weaponentity).m_weapon.m_id;
+			if(own.(weaponentity).(weapon_load[i]) > 0)
 			{
-				own.(ammotype) += own.(weapon_load[i]);
-				own.(weapon_load[i]) = -1; // schedule the weapon for reloading
+				own.(ammotype) += own.(weaponentity).(weapon_load[i]);
+				own.(weaponentity).(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
 
 			thisammo = min(own.(ammotype), wep.(ammotype));
@@ -138,7 +142,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 bool W_IsWeaponThrowable(entity this, int w)
 {
-	if (MUTATOR_CALLHOOK(ForbidDropCurrentWeapon, this))
+	if (MUTATOR_CALLHOOK(ForbidDropCurrentWeapon, this, w))
 		return false;
 	if (!autocvar_g_pickup_items)
 		return false;
@@ -165,16 +169,15 @@ bool W_IsWeaponThrowable(entity this, int w)
 }
 
 // toss current weapon
-void W_ThrowWeapon(entity this, vector velo, vector delta, float doreduce)
+void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta, float doreduce)
 {
-	Weapon w = PS(this).m_weapon;
+	Weapon w = this.(weaponentity).m_weapon;
 	if (w == WEP_Null)
 		return; // just in case
-	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon, this))
+	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon, this, this.(weaponentity)))
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if(this.(weaponentity).state != WS_READY)
 		return;
 	if(!W_IsWeaponThrowable(this, w.m_id))
@@ -184,16 +187,18 @@ void W_ThrowWeapon(entity this, vector velo, vector delta, float doreduce)
 	if(!(this.weapons & set)) return;
 	this.weapons &= ~set;
 
-	W_SwitchWeapon_Force(this, w_getbestweapon(this));
-	string a = W_ThrowNewWeapon(this, w.m_id, doreduce, this.origin + delta, velo);
+	W_SwitchWeapon_Force(this, w_getbestweapon(this, weaponentity), weaponentity);
+	string a = W_ThrowNewWeapon(this, w.m_id, doreduce, this.origin + delta, velo, weaponentity);
 
 	if(!a) return;
 	Send_Notification(NOTIF_ONE, this, MSG_MULTI, ITEM_WEAPON_DROP, a, w.m_id);
 }
 
-void SpawnThrownWeapon(entity this, vector org, float w)
+void SpawnThrownWeapon(entity this, vector org, float w, .entity weaponentity)
 {
-	if(this.weapons & WepSet_FromWeapon(PS(this).m_weapon))
-		if(W_IsWeaponThrowable(this, PS(this).m_weapon.m_id))
-			W_ThrowNewWeapon(this, PS(this).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200');
+	entity wep = this.(weaponentity).m_weapon;
+
+	if(this.weapons & WepSet_FromWeapon(wep))
+		if(W_IsWeaponThrowable(this, wep.m_id))
+			W_ThrowNewWeapon(this, wep.m_id, false, org, randomvec() * 125 + '0 0 200', weaponentity);
 }

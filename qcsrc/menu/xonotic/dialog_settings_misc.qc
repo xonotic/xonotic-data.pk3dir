@@ -9,6 +9,8 @@
 #include "mainwindow.qh"
 
 #define ADDVALUE_FPS(i) e.addValue(e, strzone(sprintf(_("%d fps"), i)), #i)
+#define ADDVALUE_SPEED_KB(i) e.addValue(e, strzone(sprintf(_("%d KB/s"), i)), #i)
+#define ADDVALUE_SPEED_MB(i, j) e.addValue(e, strzone(sprintf(_("%d MB/s"), i)), #j)
 entity makeXonoticMiscSettingsTab()
 {
 	entity me;
@@ -51,9 +53,16 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 5, 1, "cl_curl_maxdownloads",
 			_("Maximum number of concurrent HTTP/FTP downloads")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(10, 2000, 50, "cl_curl_maxspeed",
-			_("Maximum download speed")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Download speed:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_curl_maxspeed"));
+		ADDVALUE_SPEED_KB(50);
+		ADDVALUE_SPEED_KB(100);
+		ADDVALUE_SPEED_KB(300);
+		ADDVALUE_SPEED_KB(500);
+		ADDVALUE_SPEED_MB(1, 1000);
+		ADDVALUE_SPEED_MB(2, 2000);
+		e.addValue(e, strzone(_("Unlimited")), "0");
+		e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		if(cvar("developer"))
 		{

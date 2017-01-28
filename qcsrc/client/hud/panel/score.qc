@@ -1,12 +1,11 @@
 #include "score.qh"
 
-#include <client/scoreboard.qh>
+#include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
 
 // Score (#7)
 
-void HUD_UpdatePlayerTeams();
 void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
@@ -71,8 +70,8 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		return;
 	}
 
-	if (!scoreboard_fade_alpha) // the scoreboard too calls HUD_UpdatePlayerTeams
-		HUD_UpdatePlayerTeams();
+	if (!scoreboard_fade_alpha) // the scoreboard too calls Scoreboard_UpdatePlayerTeams
+		Scoreboard_UpdatePlayerTeams();
 	if (team_count)
 	{
 		// show team scores in the first line
@@ -80,11 +79,12 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == NUM_SPECTATOR)
 				continue;
-			if(!tm.team && teamplay)
+			if(!tm.team)
 				continue;
+
 			if (tm.team == myteam)
 				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize.y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize.y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores(ts_primary))), eX * score_size + eY * fontsize.y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			++i;
 		}
 		first_pl = 1;
@@ -124,7 +124,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			score_color = Team_ColorRGB(pl.team) * 0.8;
 		s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores(ps_primary))), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;
 		++i;
 	}
@@ -139,7 +139,7 @@ void HUD_Score()
 		if(spectatee_status == -1 && (gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -148,7 +148,7 @@ void HUD_Score()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -162,23 +162,23 @@ void HUD_Score()
 
 	me = playerslots[current_player];
 
-	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
+	if((scores_flags(ps_primary) & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
 
 		pl = players.sort_next;
 		if(pl == me)
 			pl = pl.sort_next;
-		if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
-			if(pl.scores[ps_primary] == 0)
+		if(scores_flags(ps_primary) & SFL_ZERO_IS_WORST)
+			if(pl.scores(ps_primary) == 0)
 				pl = NULL;
 
-		score = me.(scores[ps_primary]);
+		score = me.(scores(ps_primary));
 		timer = TIME_ENCODED_TOSTRING(score);
 
 		draw_beginBoldFont();
-		if (pl && ((!(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)) || score)) {
+		if (pl && ((!(scores_flags(ps_primary) & SFL_ZERO_IS_WORST)) || score)) {
 			// distribution display
-			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
+			distribution = me.(scores(ps_primary)) - pl.(scores(ps_primary));
 
 			distrtimer = ftos_decimals(fabs(distribution/pow(10, TIME_DECIMALS)), TIME_DECIMALS);
 
@@ -211,11 +211,11 @@ void HUD_Score()
 		if(autocvar__hud_configure)
 			distribution = 42;
 		else if(pl)
-			distribution = me.(scores[ps_primary]) - pl.(scores[ps_primary]);
+			distribution = me.(scores(ps_primary)) - pl.(scores(ps_primary));
 		else
 			distribution = 0;
 
-		score = me.(scores[ps_primary]);
+		score = me.(scores(ps_primary));
 		if(autocvar__hud_configure)
 			score = 123;
 
@@ -281,9 +281,10 @@ void HUD_Score()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == NUM_SPECTATOR)
 				continue;
-			if(!tm.team && teamplay)
+			if(!tm.team)
 				continue;
-			score = tm.(teamscores[ts_primary]);
+
+			score = tm.(teamscores(ts_primary));
 			if(autocvar__hud_configure)
 				score = 123;
 

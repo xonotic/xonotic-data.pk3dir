@@ -1,6 +1,7 @@
+#include "magicear.qh"
 #ifdef SVQC
 float magicear_matched;
-float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
+float W_Tuba_HasPlayed(entity pl, .entity weaponentity, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
 string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin)
 {
 	float domatch, dotrigger, matchstart, l;
@@ -21,8 +22,12 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		if (!(ear.spawnflags & 256))
 			return msgin;
 
-		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
-			return msgin;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(!W_Tuba_HasPlayed(source, weaponentity, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
+				return msgin;
+		}
 
 		magicear_matched = true;
 

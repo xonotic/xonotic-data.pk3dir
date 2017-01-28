@@ -1,15 +1,15 @@
 #include "g_damage.qh"
 
-#include "bot/bot.qh"
+#include "bot/api.qh"
 #include "g_hook.qh"
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "../common/state.qh"
 #include "../common/physics/player.qh"
 #include "../common/t_items.qh"
 #include "../common/vehicles/all.qh"
-#include "../common/items/all.qc"
+#include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
@@ -21,11 +21,11 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
 
-void UpdateFrags(entity player, float f)
+void UpdateFrags(entity player, int f)
 {
 	PlayerTeamScore_AddScore(player, f);
 }
@@ -33,7 +33,7 @@ void UpdateFrags(entity player, float f)
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 {
 	// TODO route through PlayerScores instead
-	if(gameover) return;
+	if(game_stopped) return;
 
 	if(f < 0)
 	{
@@ -58,13 +58,15 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	if(targ != attacker) // not for suicides
 	if(g_weaponarena_random)
 	{
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		Weapon culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit) culprit = PS(attacker).m_weapon;
-		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = PS(attacker).m_weapon;
+		if(!culprit) culprit = attacker.(weaponentity).m_weapon;
+		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = attacker.(weaponentity).m_weapon;
 
 		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
@@ -97,8 +99,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		}
 
 		// after a frag, choose another random weapon set
-		if (!(attacker.weapons & WepSet_FromWeapon(PS(attacker).m_weapon)))
-			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
+		if (!(attacker.weapons & WepSet_FromWeapon(attacker.(weaponentity).m_weapon)))
+			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker, weaponentity), weaponentity);
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
@@ -111,14 +113,19 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		UpdateFrags(attacker, f);
 }
 
+.entity kh_next;
+
 string AppendItemcodes(string s, entity player)
 {
-	int w = PS(player).m_weapon.m_id;
-	//if(w == 0)
-	//	w = player.switchweapon;
-	if(w == 0)
-		w = player.cnt; // previous weapon!
-	s = strcat(s, ftos(w));
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		int w = player.(weaponentity).m_weapon.m_id;
+		if(w == 0)
+			w = player.(weaponentity).cnt; // previous weapon
+		if(w != 0 || slot == 0)
+			s = strcat(s, ftos(w));
+	}
 	if(time < player.strength_finished)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
@@ -262,6 +269,18 @@ float Obituary_WeaponDeath(
 	return false;
 }
 
+bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target)
+{
+	if(deathtype == DEATH_FIRE.m_id)
+	{
+		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : targ.ping));
+		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? -1 : attacker.ping));
+		return true;
+	}
+
+	return MUTATOR_CALLHOOK(FragCenterMessage, attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target);
+}
+
 .int buffs = _STAT(BUFFS); // TODO: remove
 entity buff_FirstFromFlags(int _buffs);
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
@@ -275,7 +294,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 	// Set final information for the death
 	targ.death_origin = targ.origin;
-	if(targ != attacker) { targ.killer_origin = attacker.origin; }
 	string deathlocation = (autocvar_notification_server_allows_location ? NearestLocation(targ.death_origin) : "");
 
 	#ifdef NOTIFICATIONS_DEBUG
@@ -411,7 +429,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
 				);
 			}
-			else
+			else if(!frag_centermessage_override(attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target))
 			{
 				Send_Notification(
 					NOTIF_ONE,
@@ -503,7 +521,7 @@ void Ice_Think(entity this)
 {
 	if(!STAT(FROZEN, this.owner) || this.owner.iceblock != this)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	setorigin(this, this.owner.origin - '0 0 16');
@@ -524,6 +542,8 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
+	if(targ.bot_attack)
+		IL_REMOVE(g_bot_targets, targ);
 	targ.bot_attack = false;
 
 	entity ice = new(ice);
@@ -541,9 +561,17 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	Ice_Think(ice);
 
-	RemoveGrapplingHook(targ);
+	RemoveGrapplingHooks(targ);
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == targ)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	// add waypoint
 	if(show_waypoint)
@@ -556,20 +584,33 @@ void Unfreeze (entity targ)
 		return;
 
 	if(STAT(FROZEN, targ) && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
+	{
 		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
+		targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+	}
 
 	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
+	if(!targ.bot_attack)
+		IL_PUSH(g_bot_targets, targ);
 	targ.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == targ)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	// remove the ice block
 	if(targ.iceblock)
-		remove(targ.iceblock);
+		delete(targ.iceblock);
 	targ.iceblock = NULL;
 }
 
@@ -582,7 +623,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	mirrordamage = 0;
 	mirrorforce = 0;
 
-	if (gameover || targ.killcount == FRAGS_SPECTATOR)
+	if (game_stopped || targ.killcount == FRAGS_SPECTATOR)
 		return;
 
     damage_targ = targ;
@@ -591,10 +632,14 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	attacker_save = attacker;
 
 	if(IS_PLAYER(targ))
-		if(targ.hook)
-			if(targ.hook.aiment)
-				if(targ.hook.aiment == attacker)
-					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(targ.(weaponentity).hook && targ.(weaponentity).hook.aiment == attacker)
+	    		RemoveHook(targ.(weaponentity).hook);
+	    }
+	}
 
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
@@ -693,7 +738,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		MUTATOR_CALLHOOK(PlayerDamage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
+		MUTATOR_CALLHOOK(Damage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
 		damage = M_ARGV(4, float);
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);
@@ -788,7 +833,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim))
+			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim, attacker))
 			{
 				if(DIFF_TEAM(victim, attacker) && !STAT(FROZEN, victim))
 				{
@@ -833,7 +878,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 	// apply push
 	if (targ.damageforcescale)
-	if (vlen(force))
+	if (force)
 	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
@@ -857,7 +902,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		UpdateCSQCProjectile(targ);
 	}
 	// apply damage
-	if (damage != 0 || (targ.damageforcescale && vlen(force)))
+	if (damage != 0 || (targ.damageforcescale && force))
 	if (targ.event_damage)
 		targ.event_damage (targ, inflictor, attacker, damage, deathtype, hitloc, force);
 
@@ -1032,7 +1077,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
 					//	print(" (", ftos(a), ")\n");
 					//}
-					if(finaldmg || vlen(force))
+					if(finaldmg || force)
 					{
 						if(targ.iscreature)
 						{
@@ -1251,14 +1296,14 @@ void fireburner_think(entity this)
 	// for players, this is done in the regular loop
 	if(wasfreed(this.owner))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	Fire_ApplyEffect(this.owner);
 	if(!Fire_IsBurning(this.owner))
 	{
 		this.owner.fire_burner = NULL;
-		remove(this);
+		delete(this);
 		return;
 	}
 	Fire_ApplyDamage(this.owner);

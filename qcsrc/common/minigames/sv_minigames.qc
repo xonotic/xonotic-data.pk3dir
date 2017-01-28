@@ -1,3 +1,4 @@
+#include "sv_minigames.qh"
 #include "minigames.qh"
 
 void player_clear_minigame(entity player)
@@ -27,7 +28,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 		GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
 			ftos(etof(player)),":",player.netname));
 		minigame_session.minigame_players = p.list_next;
-		remove ( p );
+		delete ( p );
 		player_clear_minigame(player);
 	}
 	else
@@ -40,7 +41,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 				GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
 					ftos(etof(player)),":",player.netname));
 				p.list_next = e.list_next;
-				remove(e);
+				delete(e);
 				player_clear_minigame(player);
 				return;
 			}
@@ -153,7 +154,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 
 		minigame_resend(minigame_session);
 	}
-	else { remove(player_pointer); }
+	else { delete(player_pointer); }
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
 		ftos(etof(player)),":",player.netname));
 
@@ -176,7 +177,7 @@ entity start_minigame(entity player, string minigame )
 		GameLogEcho(strcat(":minigame:start:",minig.netname));
 		if ( ! minigame_addplayer(minig,player) )
 		{
-			LOG_TRACE("Minigame ",minig.netname," rejected the first player join!\n");
+			LOG_TRACE("Minigame ",minig.netname," rejected the first player join!");
 			end_minigame(minig);
 			return NULL;
 		}
@@ -235,8 +236,8 @@ void end_minigame(entity minigame_session)
 	while( (e = findentity(e, owner, minigame_session)) )
 		if ( e.minigame_autoclean )
 		{
-			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
-			remove(e);
+			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")");
+			delete(e);
 		}
 
 	entity p;
@@ -244,11 +245,11 @@ void end_minigame(entity minigame_session)
 	{
 		p = e.list_next;
 		player_clear_minigame(e.minigame_players);
-		remove(e);
+		delete(e);
 	}
 
 	strunzone(minigame_session.netname);
-	remove(minigame_session);
+	delete(minigame_session);
 }
 
 void end_minigames()
@@ -263,7 +264,7 @@ string invite_minigame(entity inviter, entity player)
 {
 	if ( !inviter || !inviter.active_minigame )
 		return "Invalid minigame";
-	if ( !VerifyClientEntity(player, true, false) )
+	if ( VerifyClientEntity(player, true, false) <= 0 )
 		return "Invalid player";
 	if ( inviter == player )
 		return "You can't invite yourself";

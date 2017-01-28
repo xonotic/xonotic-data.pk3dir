@@ -1,18 +1,18 @@
 #include "cmd.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 
 #include "common.qh"
 #include "vote.qh"
 
 #include "../campaign.qh"
 #include "../cheats.qh"
-#include "../cl_player.qh"
+#include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>
@@ -30,8 +30,8 @@
 
 #include <common/minigames/sv_minigames.qh>
 
-#include <common/monsters/all.qc>
-#include <common/monsters/spawn.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 
 #include <lib/warpzone/common.qh>
@@ -159,33 +159,19 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
+bool joinAllowed(entity this);
+void Join(entity this);
 void ClientCommand_join(entity caller, float request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
-			{
-				if (!IS_PLAYER(caller) && !lockteams && !gameover)
-				{
-					if (caller.caplayer) return;
-					if (nJoinAllowed(caller, caller))
-					{
-						if (autocvar_g_campaign)   campaign_bots_may_start = true;
-						TRANSMUTE(Player, caller);
-						PlayerScore_Clear(caller);
-						Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && caller.team != -1) ? APP_TEAM_ENT(caller, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), caller.netname);
-						PutClientInServer(caller);
-					}
-					else
-					{
-						// player may not join because of g_maxplayers is set
-						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_JOIN_PREVENT);
-					}
-				}
-			}
+			if (!game_stopped)
+			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
+			if (joinAllowed(caller))
+				Join(caller);
+
 			return;  // never fall through to usage
 		}
 
@@ -326,6 +312,7 @@ void ClientCommand_say_team(entity caller, float request, float argc, string com
 	}
 }
 
+.bool team_selected;
 void ClientCommand_selectteam(entity caller, float request, float argc)
 {
 	switch (request)
@@ -363,7 +350,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 
 								if (selection)
 								{
-									if (caller.team == selection && !IS_DEAD(caller))
+									if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
 									{
 										sprint(caller, "^7You already are on that team.\n");
 									}
@@ -385,6 +372,8 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 										}
 										ClientKill_TeamChange(caller, selection);
 									}
+									if(!IS_PLAYER(caller))
+										caller.team_selected = true; // avoids asking again for team selection on join
 								}
 							}
 							else
@@ -482,15 +471,17 @@ void ClientCommand_spectate(entity caller, float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
+			if (!intermission_running && IS_CLIENT(caller))
 			{
 				int mutator_returnvalue = MUTATOR_CALLHOOK(ClientCommand_Spectate, caller);
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE) && autocvar_sv_spectate == 1) ClientKill_TeamChange(caller, -2); // observe
+				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE))
+				if (autocvar_sv_spectate == 1)
+					ClientKill_TeamChange(caller, -2); // observe
 			}
-			return;                                                                                                                        // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:

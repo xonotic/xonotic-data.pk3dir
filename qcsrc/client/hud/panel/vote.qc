@@ -2,17 +2,17 @@
 
 #include <common/mapinfo.qh>
 
-/** Vote window (#9) */
+// Vote (#9)
+
 void HUD_Vote()
 {
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		// this dialog gets overriden by the uid2name menu dialog, if it exists
 		// TODO remove this client side uid2name dialog in the next release
-		if(autocvar__menu_alpha)
-			hud_fade_alpha = 0;
-		else
+		if(!autocvar__menu_alpha)
 			uid2name_dialog = 0;
+
 		if (!uid2name_dialog)
 			localcmd("menu_cmd directmenu Uid2Name\n");
 
@@ -33,14 +33,12 @@ void HUD_Vote()
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_vote) return;
-
-		panel_fg_alpha = autocvar_hud_panel_fg_alpha;
-		panel_bg_alpha_str = autocvar_hud_panel_vote_bg_alpha;
-
-		if(panel_bg_alpha_str == "") {
-			panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);
-		}
-		panel_bg_alpha = stof(panel_bg_alpha_str);
+		/*
+		if(cvar("hud_panel_vote_test")) {
+			if(vote_called_vote) strunzone(vote_called_vote); vote_called_vote = strzone("^1test the vote panel");
+			vote_active = true; vote_yescount = 3; vote_nocount = 2; vote_needed = 4;
+		} else vote_active = false;
+		*/
 	}
 	else
 	{
@@ -61,10 +59,18 @@ void HUD_Vote()
 	else
 		vote_alpha = bound(0, 1 - (time - vote_change) * 2, 1);
 
-	if(!vote_alpha)
+	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
+	if(a <= 0)
 		return;
-
-	HUD_Panel_UpdateCvars();
+	//panel_fade_alpha *= a;
+	// nothing can hide this panel, not even the menu
+	float hud_fade_alpha_save = hud_fade_alpha;
+	if(uid2name_dialog && autocvar__menu_alpha)
+		hud_fade_alpha = 0;
+	else
+		hud_fade_alpha = a;
+	HUD_Panel_LoadCvars();
+	hud_fade_alpha = hud_fade_alpha_save;
 
 	if(uid2name_dialog)
 	{
@@ -72,18 +78,15 @@ void HUD_Vote()
 		panel_size = eX * 0.4 * vid_conwidth + eY * 0.3 * vid_conheight;
 	}
 
-    // these must be below above block
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
 
-	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
 	if (autocvar_hud_panel_vote_dynamichud)
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(a);
-	a = panel_fg_alpha * a;
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{
@@ -112,42 +115,44 @@ void HUD_Vote()
 	s = _("A vote has been called for:");
 	if(uid2name_dialog)
 		s = _("Allow servers to store and display your name?");
-	drawstring_aspect(pos, s, eX * mySize.x + eY * (2/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos, s, eX * mySize.x + eY * (2/8) * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	s = textShortenToWidth(vote_called_vote, mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)
 		s = _("^1Configure the HUD");
-	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, eX * mySize.x + eY * (1.75/8) * mySize.y, a, DRAWFLAG_NORMAL);
+	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, eX * mySize.x + eY * (1.75/8) * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
-    s = sprintf(_("Yes (%s): %d"), getcommandkey("vyes", "vyes"), vote_yescount);
-	drawstring_aspect(pos + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, '0 1 0', a, DRAWFLAG_NORMAL);
-    s = sprintf(_("No (%s): %d"), getcommandkey("vno", "vno"), vote_nocount);
-	drawstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, '1 0 0', a, DRAWFLAG_NORMAL);
+	s = sprintf("^2%s ^7(%d)", getcommandkey_forcename(_("Yes"), "vyes"), vote_yescount);
+	drawcolorcodedstring_aspect(pos + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
+	s = sprintf("^1%s ^7(%d)", getcommandkey_forcename(_("No"), "vno"), vote_nocount);
+	drawcolorcodedstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 
+	pos.y += (5/8) * mySize.y;
+	vector tmp_size = eX * mySize.x + eY * (3/8) * mySize.y;
 	// draw the progress bar backgrounds
-	drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_back", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
+	drawpic_skin(pos, "voteprogress_back", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// draw the highlights
 	if(vote_highlighted == 1) {
 		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5, mySize.y);
-		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_voted", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_voted", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else if(vote_highlighted == -1) {
 		drawsetcliparea(pos.x + 0.5 * mySize.x, pos.y, mySize.x * 0.5, mySize.y);
-		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_voted", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_voted", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	// draw the progress bars
 	if(vote_yescount && vote_needed)
 	{
 		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5 * (vote_yescount/vote_needed), mySize.y);
-		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_prog", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_prog", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if(vote_nocount && vote_needed)
 	{
 		drawsetcliparea(pos.x + mySize.x - mySize.x * 0.5 * (vote_nocount/vote_needed), pos.y, mySize.x * 0.5, mySize.y);
-		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_prog", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawpic_skin(pos, "voteprogress_prog", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	drawresetcliparea();

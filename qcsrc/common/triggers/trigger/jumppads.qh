@@ -1,5 +1,4 @@
-#ifndef T_JUMPPADS_H
-#define T_JUMPPADS_H
+#pragma once
 
 const float PUSH_ONCE		= 1;
 const float PUSH_SILENT		= 2;
@@ -58,5 +57,4 @@ spawnfunc(trigger_push);
 spawnfunc(target_push);
 spawnfunc(info_notnull);
 spawnfunc(target_position);
-#endif
 #endif

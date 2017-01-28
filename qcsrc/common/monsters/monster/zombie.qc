@@ -1,30 +1,4 @@
-#ifndef ZOMBIE_H
-#define ZOMBIE_H
-
-#ifndef MENUQC
-MODEL(MON_ZOMBIE, M_Model("zombie.dpm"));
-#endif
-
-CLASS(Zombie, Monster)
-    ATTRIB(Zombie, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RIDE);
-    ATTRIB(Zombie, mins, vector, '-18 -18 -25');
-    ATTRIB(Zombie, maxs, vector, '18 18 47');
-#ifndef MENUQC
-    ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
-#endif
-    ATTRIB(Zombie, netname, string, "zombie");
-    ATTRIB(Zombie, monster_name, string, _("Zombie"));
-ENDCLASS(Zombie)
-
-REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "zombie.qh"
 
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
@@ -120,7 +94,7 @@ bool M_Zombie_Defend_Block(entity this)
 	return true;
 }
 
-bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
+bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{
@@ -151,7 +125,7 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_zombie) { Monster_Spawn(this, MON_ZOMBIE.monsterid); }
+spawnfunc(monster_zombie) { Monster_Spawn(this, true, MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -180,7 +154,7 @@ METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
 {
     TC(Zombie, this);
@@ -214,6 +188,8 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
     if(actor.spawnflags & MONSTERFLAG_NORESPAWN)
         actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
 
+    actor.spawnflags &= ~MONSTERFLAG_APPEAR; // once it's appeared, it will respawn quickly, we don't want it to appear
+
     actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
     actor.monster_loot = spawnfunc_item_health_medium;
@@ -233,6 +209,4 @@ METHOD(Zombie, mr_precache, bool(Zombie this))
     TC(Zombie, this);
     return true;
 }
-#endif
-
 #endif

@@ -1,10 +1,10 @@
+#include "movetypes.qh"
 #include "../player.qh"
 
 #if defined(CSQC)
 	#include <client/defs.qh>
 	#include <common/stats.qh>
 	#include <common/util.qh>
-	#include "movetypes.qh"
 	#include <lib/csqcmodel/common.qh>
 	#include <common/t_items.qh>
 #elif defined(MENUQC)
@@ -15,17 +15,11 @@
 #ifdef SVQC
 void set_movetype(entity this, int mt)
 {
-	if(mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH)
-	{
-		this.movetype = this.move_movetype = mt; // we still set move_movetype, for other code that checks movetype
-		this.move_qcphysics = false;
-		return;
-	}
-
 	this.move_movetype = mt;
-
-	if(!this.move_qcphysics)
-		this.movetype = mt;
+	if (mt == MOVETYPE_PHYSICS || mt == MOVETYPE_PUSH || mt == MOVETYPE_FAKEPUSH) {
+		this.move_qcphysics = false;
+	}
+	this.movetype = (this.move_qcphysics) ? MOVETYPE_NONE : mt;
 }
 #elif defined(CSQC)
 void set_movetype(entity this, int mt)
@@ -452,12 +446,12 @@ bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
         X(17)
         #undef X
         {
-            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
+            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
                 etof(this), this.classname, vtos(this.origin));
             return false;
         }
 	}
-	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
+	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
 	_Movetype_LinkEdict(this, true);
 	return true;
@@ -511,60 +505,6 @@ float _Movetype_PushEntity(entity this, vector push, bool failonstartsolid)  // 
 
 .float ltime;
 .void() blocked;
-// matrix version of makevectors, sets v_forward, v_right and v_up
-void makevectors_matrix(vector myangles)  // AngleVectorsFLU
-{
-	v_forward = v_right = v_up = '0 0 0';
-
-	float y = myangles.y * (M_PI * 2 / 360);
-	float sy = sin(y);
-	float cy = cos(y);
-	float p = myangles.x * (M_PI * 2 / 360);
-	float sp = sin(p);
-	float cp = cos(p);
-	if(v_forward)
-	{
-		v_forward.x = cp * cy;
-		v_forward.y = cp * sy;
-		v_forward.z = -sp;
-	}
-	if(v_right || v_up)
-	{
-		if(myangles.z)
-		{
-			float r = myangles.z * (M_PI * 2 / 360);
-			float sr = sin(r);
-			float cr = cos(r);
-			if(v_right)
-			{
-				v_right.x = sr * sp * cy + cr * -sy;
-				v_right.y = sr * sp * sy + cr * cy;
-				v_right.z = sr * cp;
-			}
-			if(v_up)
-			{
-				v_up.x = cr * sp * cy + -sr * -sy;
-				v_up.y = cr * sp * sy + -sr * cy;
-				v_up.z = cr * cp;
-			}
-		}
-		else
-		{
-			if(v_right)
-			{
-				v_right.x = -sy;
-				v_right.y = cy;
-				v_right.z = 0;
-			}
-			if(v_up)
-			{
-				v_up.x = sp * cy;
-				v_up.y = sp * sy;
-				v_up.z = cp;
-			}
-		}
-	}
-}
 
 void _Movetype_Physics_Frame(entity this, float movedt)
 {
@@ -573,7 +513,7 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!\n");
+			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;
@@ -613,7 +553,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!\n");
+			LOG_DEBUGF("Physics: Lacking QuakeC support for Push movetype, FIX ME by using engine physics!");
 			break;
 		case MOVETYPE_NONE:
 			break;

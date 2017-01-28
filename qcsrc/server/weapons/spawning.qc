@@ -1,9 +1,9 @@
 #include "spawning.qh"
 
 #include "weaponsystem.qh"
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 #include <common/t_items.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 string W_Apply_Weaponreplace(string in)
 {
@@ -29,7 +29,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	{
 		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
-			LOG_MAPWARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
+			LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
 			startitem_failed = true;
 			return;
 		}
@@ -39,7 +39,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		s = M_ARGV(2, string);
 		if (s == "")
 		{
-			remove(this);
+			delete(this);
 			startitem_failed = true;
 			return;
 		}
@@ -76,7 +76,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 		if (wpn == WEP_Null)
 		{
-			remove(this);
+			delete(this);
 			startitem_failed = true;
 			return;
 		}

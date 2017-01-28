@@ -1,79 +1,5 @@
 #include "gamemode_ca.qh"
-#ifndef GAMEMODE_CA_H
-#define GAMEMODE_CA_H
 
-int autocvar_g_ca_point_limit;
-int autocvar_g_ca_point_leadlimit;
-float autocvar_g_ca_round_timelimit;
-bool autocvar_g_ca_team_spawns;
-int autocvar_g_ca_teams;
-int autocvar_g_ca_teams_override;
-float autocvar_g_ca_warmup;
-
-
-int ca_teams;
-bool allowed_to_spawn;
-
-const int ST_CA_ROUNDS = 1;
-
-bool CA_CheckTeams();
-bool CA_CheckWinner();
-void CA_RoundStart();
-bool ca_isEliminated(entity e);
-
-void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override);
-
-REGISTER_MUTATOR(ca, false)
-{
-	MUTATOR_ONADD
-	{
-		// game loads at time 1
-		if (time > 1) error("This is a game type and it cannot be added at runtime.");
-
-		allowed_to_spawn = true;
-
-		ca_teams = autocvar_g_ca_teams_override;
-		if (ca_teams < 2) ca_teams = autocvar_g_ca_teams;
-		ca_teams = bound(2, ca_teams, 4);
-
-		int teams = 0;
-		if(ca_teams >= 1) teams |= BIT(0);
-		if(ca_teams >= 2) teams |= BIT(1);
-		if(ca_teams >= 3) teams |= BIT(2);
-		if(ca_teams >= 4) teams |= BIT(3);
-
-		ca_teams = teams; // now set it?
-
-        ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-        ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
-        ScoreRules_basics_end();
-
-		round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
-		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-
-		EliminatedPlayers_Init(ca_isEliminated);
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_ca_point_limit, autocvar_g_ca_point_leadlimit, autocvar_timelimit_override, -1);
-
-		if (autocvar_g_ca_team_spawns)
-			have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-// should be removed in the future, as other code should not have to care
-.float caplayer; // 0.5 if scheduled to join the next round
-#endif
-
-#ifdef IMPLEMENTATION
 float autocvar_g_ca_damage2score_multiplier;
 bool autocvar_g_ca_spectate_enemies;
 
@@ -132,9 +58,11 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		allowed_to_spawn = false;
-		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
+
+		allowed_to_spawn = false;
+		game_stopped = true;
+		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		return 1;
 	}
 
@@ -156,6 +84,7 @@ float CA_CheckWinner()
 	}
 
 	allowed_to_spawn = false;
+	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
@@ -240,6 +169,18 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 		eliminatedPlayers.SendFlags |= 1;
 }
 
+MUTATOR_HOOKFUNCTION(ca, ForbidSpawn)
+{
+	entity player = M_ARGV(0, entity);
+
+	// spectators / observers that weren't playing can join; they are
+	// immediately forced to observe in the PutClientInServer hook
+	// this way they are put in a team and can play in the next round
+	if (!allowed_to_spawn && player.caplayer)
+		return true;
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
@@ -271,6 +212,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			PutClientInServer(it);
 		}
 	});
+	bot_relinkplayerlist();
 	return true;
 }
 
@@ -288,7 +230,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(ca, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = ca_teams;
 }
@@ -327,6 +269,8 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 		frag_target.respawn_flags =  RESPAWN_SILENT;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
+	if(IS_BOT_CLIENT(frag_target))
+		bot_clear(frag_target);
 	return true;
 }
 
@@ -339,25 +283,20 @@ MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca, ForbidPlayerScore_Clear)
-{
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
     entity player = M_ARGV(0, entity);
 
 	if (!IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
-	if (player.killindicator_teamchange == -2)
+	if (player.killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
 		player.frags = FRAGS_LMS_LOSER;
-    else
-        player.frags = FRAGS_SPECTATOR;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
+	if (!player.caplayer)
+		return false;  // allow team reset
 	return true;  // prevent team reset
 }
 
@@ -385,7 +324,7 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 }
 
-MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -531,5 +470,3 @@ MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 	// most weapons arena
 	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
 }
-
-#endif

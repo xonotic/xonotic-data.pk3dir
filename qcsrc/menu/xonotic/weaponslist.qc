@@ -1,6 +1,6 @@
 #include "weaponslist.qh"
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 .bool disabled;
 

@@ -1,8 +1,9 @@
+#include "swamp.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <lib/warpzone/util_server.qh>
-    #include <common/weapons/all.qh>
+    #include <common/weapons/_all.qh>
     #include <server/defs.qh>
     #include <common/deathtypes/all.qh>
 #endif
@@ -45,7 +46,7 @@ void swampslug_think(entity this)
 	if(this.health <= 0)
 	{
 		this.owner.in_swamp = 0;
-		remove(this);
+		delete(this);
 		//centerprint(this.owner,"Killing slug...\n");
 		return;
 	}

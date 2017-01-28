@@ -3,11 +3,13 @@
 #include "weaponsystem.qh"
 #include <common/t_items.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/util.qh>
 #include <common/items/item.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/state.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <common/wepent.qh>
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)
@@ -21,15 +23,13 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 void Weapon_whereis(Weapon this, entity cl)
 {
 	if (!autocvar_g_showweaponspawns) return;
-	FOREACH_ENTITY_FLOAT(weapon, this.m_id,
+	IL_EACH(g_items, it.weapon == this.m_id && (!it.team || (it.ItemStatus & ITS_AVAILABLE)),
 	{
 		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
 			continue;
-		if (!(it.flags & FL_ITEM))
-			continue;
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,
-			1, 0,
+			-2, 0,
 			NULL, it.origin + ('0 0 1' * it.maxs.z) * 1.2,
 			cl, 0,
 			NULL, enemy,
@@ -40,7 +40,7 @@ void Weapon_whereis(Weapon this, entity cl)
 	});
 }
 
-bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
+bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain)
 {
 	float f = 0;
 
@@ -71,11 +71,11 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 			}
 			else
 			{
-				f = wpn.wr_checkammo1(wpn, this) + wpn.wr_checkammo2(wpn, this);
+				f = wpn.wr_checkammo1(wpn, this, weaponentity) + wpn.wr_checkammo2(wpn, this, weaponentity);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				if(wpn == WEP_MINE_LAYER)
-					FOREACH_ENTITY_CLASS("mine", it.owner == this,
+					IL_EACH(g_mines, it.owner == this && it.weaponentity_fld == weaponentity,
 					{
 						f = 1;
 						break; // no need to continue
@@ -101,7 +101,15 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(this, wpn.m_id, 1);
-			Weapon_whereis(wpn, this);
+			if(autocvar_g_showweaponspawns < 3)
+				Weapon_whereis(wpn, this);
+			else
+			{
+				FOREACH(Weapons, it.impulse == wpn.impulse,
+				{
+					Weapon_whereis(it, this);
+				});
+			}
 		}
 		else
 		{
@@ -113,7 +121,7 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 	return false;
 }
 
-float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing)
+float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing, .entity weaponentity)
 {
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
@@ -124,10 +132,10 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 	float weaponcur;
 	entity wep;
 
-	if(skipmissing || this.selectweapon == 0)
-		weaponcur = PS(this).m_switchweapon.m_id;
+	if(skipmissing || this.(weaponentity).selectweapon == 0)
+		weaponcur = this.(weaponentity).m_switchweapon.m_id;
 	else
-		weaponcur = this.selectweapon;
+		weaponcur = this.(weaponentity).selectweapon;
 
 	if(dir == 0)
 		switchtonext = 1;
@@ -160,7 +168,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 
 		++c;
 
-		if(!skipmissing || client_hasweapon(this, wep, true, false))
+		if(!skipmissing || client_hasweapon(this, wep, weaponentity, true, false))
 		{
 			if(switchtonext)
 				return weaponwant;
@@ -217,7 +225,7 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 			--c;
 			if(c == 0)
 			{
-				client_hasweapon(this, wep, true, true);
+				client_hasweapon(this, wep, weaponentity, true, true);
 				break;
 			}
 		}
@@ -225,94 +233,94 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, fl
 	return 0;
 }
 
-void W_SwitchWeapon_Force(Player this, Weapon wep)
+void W_SwitchWeapon_Force(Player this, Weapon wep, .entity weaponentity)
 {
-    TC(Player, this); TC(Weapon, wep);
-	this.cnt = PS(this).m_switchweapon.m_id;
-	PS(this).m_switchweapon = wep;
-	this.selectweapon = wep.m_id;
+    TC(Weapon, wep);
+	this.(weaponentity).cnt = this.(weaponentity).m_switchweapon.m_id;
+	this.(weaponentity).m_switchweapon = wep;
+	this.(weaponentity).selectweapon = wep.m_id;
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
-void W_SwitchToOtherWeapon(entity this)
+void W_SwitchToOtherWeapon(entity this, .entity weaponentity)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	Weapon ww;
-	WepSet set = WepSet_FromWeapon(PS(this).m_weapon);
+	WepSet set = WepSet_FromWeapon(this.(weaponentity).m_weapon);
 	if (this.weapons & set)
 	{
 		this.weapons &= ~set;
-		ww = w_getbestweapon(this);
+		ww = w_getbestweapon(this, weaponentity);
 		this.weapons |= set;
 	}
 	else
 	{
-		ww = w_getbestweapon(this);
+		ww = w_getbestweapon(this, weaponentity);
 	}
 	if (ww == WEP_Null) return;
-	W_SwitchWeapon_Force(this, ww);
+	W_SwitchWeapon_Force(this, ww, weaponentity);
 }
 
-void W_SwitchWeapon(entity this, Weapon w)
+void W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 {
-	if (PS(this).m_switchweapon != w)
+	if(this.(weaponentity).m_switchweapon != w)
 	{
-		if (client_hasweapon(this, w, true, true))
-			W_SwitchWeapon_Force(this, w);
+		if(client_hasweapon(this, w, weaponentity, true, true))
+			W_SwitchWeapon_Force(this, w, weaponentity);
 		else
-			this.selectweapon = w.m_id; // update selectweapon ANYWAY
+			this.(weaponentity).selectweapon = w.m_id; // update selectweapon anyway
 	}
-	else if(!forbidWeaponUse(this)) {
+	else if(!forbidWeaponUse(this))
+	{
 		entity actor = this;
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		w.wr_reload(w, actor, weaponentity);
 	}
 }
 
-void W_CycleWeapon(entity this, string weaponorder, float dir)
+void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity)
 {
 	float w;
-	w = W_GetCycleWeapon(this, weaponorder, dir, -1, 1, true);
+	w = W_GetCycleWeapon(this, weaponorder, dir, -1, 1, true, weaponentity);
 	if(w > 0)
-		W_SwitchWeapon(this, Weapons_from(w));
+		W_SwitchWeapon(this, Weapons_from(w), weaponentity);
 }
 
-void W_NextWeaponOnImpulse(entity this, float imp)
+void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
 {
 	float w;
-	w = W_GetCycleWeapon(this, this.cvar_cl_weaponpriority, +1, imp, 1, (this.cvar_cl_weaponimpulsemode == 0));
+	w = W_GetCycleWeapon(this, this.cvar_cl_weaponpriority, +1, imp, 1, (this.cvar_cl_weaponimpulsemode == 0), weaponentity);
 	if(w > 0)
-		W_SwitchWeapon(this, Weapons_from(w));
+		W_SwitchWeapon(this, Weapons_from(w), weaponentity);
 }
 
 // next weapon
-void W_NextWeapon(entity this, int list)
+void W_NextWeapon(entity this, int list, .entity weaponentity)
 {
 	if(list == 0)
-		W_CycleWeapon(this, weaponorder_byid, -1);
+		W_CycleWeapon(this, weaponorder_byid, -1, weaponentity);
 	else if(list == 1)
-		W_CycleWeapon(this, this.weaponorder_byimpulse, -1);
+		W_CycleWeapon(this, this.weaponorder_byimpulse, -1, weaponentity);
 	else if(list == 2)
-		W_CycleWeapon(this, this.cvar_cl_weaponpriority, -1);
+		W_CycleWeapon(this, this.cvar_cl_weaponpriority, -1, weaponentity);
 }
 
 // prev weapon
-void W_PreviousWeapon(entity this, float list)
+void W_PreviousWeapon(entity this, float list, .entity weaponentity)
 {
 	if(list == 0)
-		W_CycleWeapon(this, weaponorder_byid, +1);
+		W_CycleWeapon(this, weaponorder_byid, +1, weaponentity);
 	else if(list == 1)
-		W_CycleWeapon(this, this.weaponorder_byimpulse, +1);
+		W_CycleWeapon(this, this.weaponorder_byimpulse, +1, weaponentity);
 	else if(list == 2)
-		W_CycleWeapon(this, this.cvar_cl_weaponpriority, +1);
+		W_CycleWeapon(this, this.cvar_cl_weaponpriority, +1, weaponentity);
 }
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon(entity this)
+void W_LastWeapon(entity this, .entity weaponentity)
 {
-	Weapon wep = Weapons_from(this.cnt);
-	if (client_hasweapon(this, wep, true, false))
-		W_SwitchWeapon(this, wep);
+	Weapon wep = Weapons_from(this.(weaponentity).cnt);
+	if (client_hasweapon(this, wep, weaponentity, true, false))
+		W_SwitchWeapon(this, wep, weaponentity);
 	else
-		W_SwitchToOtherWeapon(this);
+		W_SwitchToOtherWeapon(this, weaponentity);
 }

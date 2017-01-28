@@ -1,15 +1,15 @@
 #include "race.qh"
 
-#include "cl_client.qh"
+#include "client.qh"
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
-#include "bot/waypoints.qh"
-#include "bot/navigation.qh"
+#include "bot/api.qh"
 #include "command/getreplies.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
 #include "../common/mapinfo.qh"
+#include <common/net_linked.qh>
 #include "../common/triggers/subs.qh"
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
@@ -282,6 +282,12 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	if(myuid == "")
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_UID, mynetname, t);
+		return;
+	}
+
+	if(uid2name(myuid) == "^1Unregistered Player")
+	{
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_NAME, mynetname, t);
 		return;
 	}
 
@@ -833,15 +839,14 @@ void trigger_race_checkpoint_verify(entity this)
 				race_timed_checkpoint = 255;
 			}
 		} else {
-			for (entity cp = NULL; (cp = find(cp, classname, "trigger_race_checkpoint")); ) {
-				if (cp.sprite) {
-					if (cp.race_checkpoint == 0) {
-						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
-                    } else if (cp.race_checkpoint == race_timed_checkpoint) {
-						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceFinish, WP_Null, WP_Null);
-                    }
+			IL_EACH(g_racecheckpoints, it.sprite,
+			{
+				if (it.race_checkpoint == 0) {
+					WaypointSprite_UpdateSprites(it.sprite, WP_RaceStart, WP_Null, WP_Null);
+                } else if (it.race_checkpoint == race_timed_checkpoint) {
+					WaypointSprite_UpdateSprites(it.sprite, WP_RaceFinish, WP_Null, WP_Null);
 				}
-            }
+            });
 		}
 	}
 
@@ -905,7 +910,7 @@ vector trigger_race_checkpoint_spawn_evalfunc(entity this, entity player, entity
 spawnfunc(trigger_race_checkpoint)
 {
 	vector o;
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 
 	EXACTTRIGGER_INIT;
 
@@ -914,7 +919,7 @@ spawnfunc(trigger_race_checkpoint)
 		settouch(this, checkpoint_touch);
 
 	o = (this.absmin + this.absmax) * 0.5;
-	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
+	tracebox(o, PL_MIN_CONST, PL_MAX_CONST, o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
 	waypoint_spawnforitem_force(this, trace_endpos);
 	this.nearestwaypointtimeout = time + 1000000000;
 
@@ -947,25 +952,36 @@ spawnfunc(trigger_race_checkpoint)
 	this.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 	this.spawn_evalfunc = trigger_race_checkpoint_spawn_evalfunc;
 
+	IL_PUSH(g_racecheckpoints, this);
+
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
 spawnfunc(target_checkpoint) // defrag entity
 {
-	vector o;
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
 
-	EXACTTRIGGER_INIT;
+	// if this is targeted, then it probably isn't a trigger
+	bool is_trigger = !boolean(!this.nottargeted && this.targetname != "");
+
+	if(is_trigger)
+		EXACTTRIGGER_INIT;
 
 	this.use = checkpoint_use;
-	if (!(this.spawnflags & 1))
+	if (is_trigger && !(this.spawnflags & 1))
 		settouch(this, checkpoint_touch);
 
-	o = (this.absmin + this.absmax) * 0.5;
-	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
-	waypoint_spawnforitem_force(this, trace_endpos);
-	this.nearestwaypointtimeout = time + 1000000000;
+	vector org = this.origin;
+
+	// bots should only pathfind to this if it is a valid touchable trigger
+	if(is_trigger)
+	{
+		org = (this.absmin + this.absmax) * 0.5;
+		tracebox(org, PL_MIN_CONST, PL_MAX_CONST, org - '0 0 1' * (org.z - this.absmin.z), MOVE_NORMAL, this);
+		waypoint_spawnforitem_force(this, trace_endpos);
+		this.nearestwaypointtimeout = time + 1000000000;
+	}
 
 	if(this.message == "")
 		this.message = "went backwards";
@@ -982,9 +998,9 @@ spawnfunc(target_checkpoint) // defrag entity
 	race_timed_checkpoint = 1;
 
 	if(this.race_checkpoint == 0)
-		WaypointSprite_SpawnFixed(WP_RaceStart, o, this, sprite, RADARICON_NONE);
+		WaypointSprite_SpawnFixed(WP_RaceStart, org, this, sprite, RADARICON_NONE);
 	else
-		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, this, sprite, RADARICON_NONE);
+		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, this, sprite, RADARICON_NONE);
 
 	this.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 
@@ -1031,7 +1047,7 @@ void race_RetractPlayer(entity this)
 
 spawnfunc(info_player_race)
 {
-	if(!g_race && !g_cts) { remove(this); return; }
+	if(!g_race && !g_cts) { delete(this); return; }
 	++race_spawns;
 	spawnfunc_info_player_deathmatch(this);
 
@@ -1143,7 +1159,7 @@ float race_GetFractionalLapCount(entity e)
 
 	vector o0, o1;
 	float bestfraction, fraction;
-	entity lastcp, cp0, cp1;
+	entity lastcp;
 	float nextcpindex, lastcpindex;
 
 	nextcpindex = max(e.race_checkpoint, 0);
@@ -1154,26 +1170,26 @@ float race_GetFractionalLapCount(entity e)
 		return l; // finish
 
 	bestfraction = 1;
-	for(cp0 = NULL; (cp0 = find(cp0, classname, "trigger_race_checkpoint")); )
+	IL_EACH(g_racecheckpoints, true,
 	{
-		if(cp0.race_checkpoint != lastcpindex)
+		if(it.race_checkpoint != lastcpindex)
 			continue;
 		if(lastcp)
-			if(cp0 != lastcp)
+			if(it != lastcp)
 				continue;
-		o0 = (cp0.absmin + cp0.absmax) * 0.5;
-		for(cp1 = NULL; (cp1 = find(cp1, classname, "trigger_race_checkpoint")); )
+		o0 = (it.absmin + it.absmax) * 0.5;
+		IL_EACH(g_racecheckpoints, true,
 		{
-			if(cp1.race_checkpoint != nextcpindex)
+			if(it.race_checkpoint != nextcpindex)
 				continue;
-			o1 = (cp1.absmin + cp1.absmax) * 0.5;
+			o1 = (it.absmin + it.absmax) * 0.5;
 			if(o0 == o1)
 				continue;
 			fraction = bound(0.0001, vlen(e.origin - o1) / vlen(o0 - o1), 1);
 			if(fraction < bestfraction)
 				bestfraction = fraction;
-		}
-	}
+		});
+	});
 
 	// we are at CP "nextcpindex - bestfraction"
 	// race_timed_checkpoint == 4: then nextcp==4 means 0.9999x, nextcp==0 means 0.0000x

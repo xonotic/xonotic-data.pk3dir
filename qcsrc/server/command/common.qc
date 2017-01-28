@@ -1,10 +1,10 @@
 #include "common.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "common.qh"
 
 #include "../scores.qh"
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <lib/warpzone/common.qh>
 
@@ -189,7 +189,7 @@ void timeout_handler_reset(entity this)
 	timeout_time = 0;
 	timeout_leadtime = 0;
 
-	remove(this);
+	delete(this);
 }
 
 void timeout_handler_think(entity this)
@@ -210,6 +210,7 @@ void timeout_handler_think(entity this)
 			}
 			else  // time to end the timeout
 			{
+				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEIN);
 				timeout_status = TIMEOUT_INACTIVE;
 
 				// reset the slowmo value back to normal
@@ -380,17 +381,17 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
 
 					bool found = false;
-					for (int i = MON_FIRST; i <= MON_LAST; ++i)
+					FOREACH(Monsters, it != MON_Null && it.netname == arg_lower,
 					{
-						mon = get_monsterinfo(i);
-						if (mon.netname == arg_lower) { found = true; break; }
-					}
+						found = true;
+						break;
+					});
 
 					if (!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
-					mon = spawnmonster(arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
+					mon = spawnmonster(spawn(), arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
 					print_to(caller, strcat("Spawned ", mon.monster_name));
 					return;
 				}
@@ -574,8 +575,14 @@ void CommonCommand_records(float request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			for (int i = 0; i < 10; ++i)
-				if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			int num = stoi(argv(1));
+			if(num > 0 && num <= 10 && records_reply[num - 1] != "")
+				print_to(caller, records_reply[num - 1]);
+			else
+			{
+				for (int i = 0; i < 10; ++i)
+					if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			}
 
 			return;  // never fall through to usage
 		}

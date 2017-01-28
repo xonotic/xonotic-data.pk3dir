@@ -1,3 +1,4 @@
+#include "plat.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_PLAT)
 
 #ifdef SVQC
@@ -72,30 +73,23 @@ spawnfunc(func_plat)
 
 	if (this.sounds == 1)
 	{
-		precache_sound ("plats/plat1.wav");
-		precache_sound ("plats/plat2.wav");
 		this.noise = "plats/plat1.wav";
 		this.noise1 = "plats/plat2.wav";
 	}
 
 	if (this.sounds == 2)
 	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
 		this.noise = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
 	}
 
 	if (this.sound1)
-	{
-		precache_sound (this.sound1);
 		this.noise = this.sound1;
-	}
 	if (this.sound2)
-	{
-		precache_sound (this.sound2);
 		this.noise1 = this.sound2;
-	}
+
+	if(this.noise && this.noise != "") { precache_sound(this.noise); }
+	if(this.noise1 && this.noise1 != "") { precache_sound(this.noise1); }
 
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
@@ -168,7 +162,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		this.classname = "plat";
 		this.solid = SOLID_BSP;
-		this.move_movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.drawmask = MASK_NORMAL;
 		this.draw = plat_draw;
 		if (isnew) IL_PUSH(g_drawables, this);
@@ -177,7 +171,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		plat_reset(this); // also called here
 
-		this.move_movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.move_time = time;
 
 		plat_spawn_inside_trigger(this);
