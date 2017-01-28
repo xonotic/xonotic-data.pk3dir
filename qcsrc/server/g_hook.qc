@@ -79,6 +79,8 @@ void RemoveGrapplingHooks(entity pl)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
+    	if(!pl.(weaponentity))
+    		continue; // continue incase other slots exist?
     	if(pl.(weaponentity).hook)
     		delete(pl.(weaponentity).hook);
     	pl.(weaponentity).hook = NULL;

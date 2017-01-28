@@ -461,6 +461,22 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		return;
 	}
 
+	if(autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0)
+	{
+		.entity wepe1 = weaponentities[0];
+		entity wep1 = actor.(wepe1);
+		this.m_switchweapon = wep1.m_switchweapon;
+		if(!(this.m_switchweapon.spawnflags & WEP_FLAG_DUALWIELD))
+		{
+			this.m_weapon = WEP_Null;
+			this.m_switchingweapon = WEP_Null;
+			this.m_switchweapon = WEP_Null;
+			this.state = WS_CLEAR;
+			this.weaponname = "";
+			return;
+		}
+	}
+
 	makevectors(actor.v_angle);
 	vector fo = v_forward;  // save them in case the weapon think functions change it
 	vector ri = v_right;
