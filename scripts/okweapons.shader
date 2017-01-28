@@ -1,3 +1,34 @@
+OK_SMG
+{
+	dpglossexponentmod  64
+	dpreflectcube env/exomorph/exomorph
+ 	{
+		map textures/weapons/ok_smg.tga
+		rgbgen lightingDiffuse
+	}
+}
+
+OK_Railgun
+{
+	dpglossexponentmod  64
+	dpreflectcube env/exomorph/exomorph
+ 	{
+		map textures/weapons/ok_railgun.tga
+		rgbgen lightingDiffuse
+	}
+}
+
+OK_shotgun
+{
+	dpglossexponentmod  64
+	dpreflectcube env/exomorph/exomorph
+ 	{
+		map textures/weapons/ok_shotgun.tga
+		rgbgen lightingDiffuse
+	}
+}
+
+
 minsta
 {
 	dpglossexponentmod  64
