@@ -80,10 +80,8 @@ void RemoveGrapplingHooks(entity pl)
     {
     	.entity weaponentity = weaponentities[slot];
     	if(pl.(weaponentity).hook)
-    	{
     		delete(pl.(weaponentity).hook);
-    		pl.(weaponentity).hook = NULL;
-    	}
+    	pl.(weaponentity).hook = NULL;
     }
 
 	//pl.disableclientprediction = false;
@@ -91,15 +89,14 @@ void RemoveGrapplingHooks(entity pl)
 
 void RemoveHook(entity this)
 {
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-    	.entity weaponentity = weaponentities[slot];
-    	if(this.realowner.(weaponentity).hook == this)
-    		this.realowner.(weaponentity).hook = NULL;
-    }
+	entity player = this.realowner;
+    .entity weaponentity = this.weaponentity_fld;
 
-    if(this.realowner.move_movetype == MOVETYPE_FLY)
-    	set_movetype(this.realowner, MOVETYPE_WALK);
+    if(player.(weaponentity).hook == this)
+    	player.(weaponentity).hook = NULL;
+
+    if(player.move_movetype == MOVETYPE_FLY)
+    	set_movetype(player, MOVETYPE_WALK);
     delete(this);
 }
 
