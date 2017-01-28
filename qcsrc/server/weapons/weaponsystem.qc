@@ -452,15 +452,6 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		}
 	}
 
-	if (this.m_switchweapon == WEP_Null)
-	{
-		this.m_weapon = WEP_Null;
-		this.m_switchingweapon = WEP_Null;
-		this.state = WS_CLEAR;
-		this.weaponname = "";
-		return;
-	}
-
 	if(autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0)
 	{
 		.entity wepe1 = weaponentities[0];
@@ -475,6 +466,15 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 			this.weaponname = "";
 			return;
 		}
+	}
+
+	if (this.m_switchweapon == WEP_Null)
+	{
+		this.m_weapon = WEP_Null;
+		this.m_switchingweapon = WEP_Null;
+		this.state = WS_CLEAR;
+		this.weaponname = "";
+		return;
 	}
 
 	makevectors(actor.v_angle);
