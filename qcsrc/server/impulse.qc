@@ -52,8 +52,6 @@
 
 // weapon switching impulses
 
-bool autocvar_g_weaponswitch_debug;
-
 #define X(slot) \
 	IMPULSE(weapon_group_##slot) \
 	{ \
