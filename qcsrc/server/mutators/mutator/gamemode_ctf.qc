@@ -153,6 +153,9 @@ void ctf_CaptureRecord(entity flag, entity player)
 		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
 		write_recordmarker(player, (time - cap_time), cap_time);
 	}
+
+	if(autocvar_g_ctf_leaderboard && !ctf_oneflag)
+		race_setTime(GetMapname(), TIME_ENCODE(cap_time), player.crypto_idfp, player.netname, player, false);
 }
 
 bool ctf_Immediate_Return_Allowed(entity flag, entity toucher)
@@ -2169,6 +2172,42 @@ MUTATOR_HOOKFUNCTION(ctf, ClientDisconnect)
 	entity player = M_ARGV(0, entity);
 
 	ctf_RemovePlayer(player);
+}
+
+MUTATOR_HOOKFUNCTION(ctf, ClientConnect)
+{
+	if(!autocvar_g_ctf_leaderboard)
+		return;
+
+	entity player = M_ARGV(0, entity);
+
+	if(IS_REAL_CLIENT(player))
+	{
+		for(int i = 1; i <= RANKINGS_CNT; ++i)
+		{
+			race_SendRankings(i, 0, 0, MSG_ONE);
+		}
+	}
+}
+
+MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
+{
+	if(!autocvar_g_ctf_leaderboard)
+		return;
+
+	entity player = M_ARGV(0, entity);
+
+	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	{
+		if (!player.stored_netname)
+			player.stored_netname = strzone(uid2name(player.crypto_idfp));
+		if(player.stored_netname != player.netname)
+		{
+			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
+			strunzone(player.stored_netname);
+			player.stored_netname = strzone(player.netname);
+		}
+	}
 }
 
 MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
