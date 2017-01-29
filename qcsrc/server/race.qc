@@ -368,7 +368,6 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		t += e.race_penalty_accumulator;
 
 	t = TIME_ENCODE(t); // make integer
-	// adding just 0.4 so it rounds down in the .5 case (matching the timer display)
 
 	if(tvalid)
 	if(cp == race_timed_checkpoint) // finish line
