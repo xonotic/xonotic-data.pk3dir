@@ -1670,6 +1670,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hit_time = spectatee.hit_time;
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
+	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
 	this.vortex_charge = spectatee.vortex_charge;
