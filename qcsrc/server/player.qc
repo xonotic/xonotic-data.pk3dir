@@ -594,7 +594,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity went = weaponentities[slot];
-			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(went).m_switchweapon.m_id, went);
+			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(went).m_weapon, went);
 		}
 
 		// become fully visible
