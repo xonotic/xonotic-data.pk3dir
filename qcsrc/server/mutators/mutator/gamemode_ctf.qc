@@ -1129,7 +1129,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 					else if(is_not_monster && (!toucher.flagcarried))
 						ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED);
 				}
-				else
+				else if(!toucher.flagcarried)
 					ctf_Handle_Retrieve(flag, toucher);
 			}
 			break;
@@ -2221,7 +2221,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 							player.throw_antispam = time + autocvar_g_ctf_pass_wait;
 							return true;
 						}
-						else if(player.flagcarried)
+						else if(player.flagcarried && !head.flagcarried)
 						{
 							if(closest_target)
 							{
