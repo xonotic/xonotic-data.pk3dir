@@ -2189,6 +2189,26 @@ MUTATOR_HOOKFUNCTION(ctf, ClientConnect)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
+{
+	if(!autocvar_g_ctf_leaderboard)
+		return;
+
+	entity player = M_ARGV(0, entity);
+
+	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	{
+		if (!player.stored_netname)
+			player.stored_netname = strzone(uid2name(player.crypto_idfp));
+		if(player.stored_netname != player.netname)
+		{
+			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
+			strunzone(player.stored_netname);
+			player.stored_netname = strzone(player.netname);
+		}
+	}
+}
+
 MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 {
 	entity player = M_ARGV(0, entity);
