@@ -316,7 +316,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 
 	// Run only to visible goals
 	if(IS_ONGROUND(this))
-	if(this.speed==maxspeed)
+	if(vlen(this.velocity - eZ * this.velocity.z) >= autocvar_sv_maxspeed) // if -really- running
 	if(checkpvs(this.origin + this.view_ofs, this.goalcurrent))
 	{
 			this.bot_lastseengoal = this.goalcurrent;

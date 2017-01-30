@@ -960,9 +960,9 @@ void navigation_poptouchedgoals(entity this)
 
 	// Loose goal touching check when running
 	if(this.aistatus & AI_STATUS_RUNNING)
-	if(this.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(this.goalcurrent.classname=="waypoint")
 	if(!(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
+	if(vlen(this.velocity - eZ * this.velocity.z) >= autocvar_sv_maxspeed) // if -really- running
 	{
 		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
 		{
