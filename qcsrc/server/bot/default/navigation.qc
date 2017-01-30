@@ -643,15 +643,52 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 // updates the best goal according to a weighted calculation of travel cost and item value of a new proposed item
 void navigation_routerating(entity this, entity e, float f, float rangebias)
 {
-	entity nwp;
-	vector o;
 	if (!e)
 		return;
 
 	if(e.blacklisted)
 		return;
 
-	o = (e.absmin + e.absmax) * 0.5;
+	if (IS_PLAYER(e))
+	{
+		bool rate_wps = false;
+		if((e.flags & FL_INWATER) || (e.flags & FL_PARTIALGROUND))
+			rate_wps = true;
+
+		if(!IS_ONGROUND(e))
+		{
+			traceline(e.origin, e.origin + '0 0 -1500', true, NULL);
+			int t = pointcontents(trace_endpos + '0 0 1');
+			if(t != CONTENT_SOLID )
+			{
+				if(t == CONTENT_WATER || t == CONTENT_SLIME || t == CONTENT_LAVA)
+					rate_wps = true;
+				else if(tracebox_hits_trigger_hurt(e.origin, e.mins, e.maxs, trace_endpos))
+					return;
+			}
+		}
+
+		if(rate_wps)
+		{
+			entity theEnemy = e;
+			entity best_wp = NULL;
+			float best_dist = 10000;
+			IL_EACH(g_waypoints, vdist(it.origin - theEnemy.origin, <, 500) && vdist(it.origin - this.origin, >, 100),
+			{
+				float dist = vlen(it.origin - theEnemy.origin);
+				if (dist < best_dist)
+				{
+					best_wp = it;
+					best_dist = dist;
+				}
+			});
+			if (!best_wp)
+				return;
+			e = best_wp;
+		}
+	}
+
+	vector o = (e.absmin + e.absmax) * 0.5;
 
 	//print("routerating ", etos(e), " = ", ftos(f), " - ", ftos(rangebias), "\n");
 
@@ -744,6 +781,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		}
 	}
 
+	entity nwp;
 	//te_wizspike(e.origin);
 	//bprint(etos(e));
 	//bprint("\n");
