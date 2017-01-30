@@ -136,7 +136,6 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 	ratingscale = ratingscale * 0.00005; // enemies are rated around 20000 already
 
 	int t;
-
 	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), LAMBDA(
 		// TODO: Merge this logic with the bot_shouldattack function
 		if(vdist(it.origin - org, <, 100) || vdist(it.origin - org, >, sradius))
@@ -149,8 +148,9 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 			continue;
 		*/
 
+		bool rate_wps = false;
 		if((it.flags & FL_INWATER) || (it.flags & FL_PARTIALGROUND))
-			continue;
+			rate_wps = true;
 
 		// not falling
 		if(!IS_ONGROUND(it))
@@ -158,15 +158,13 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 			traceline(it.origin, it.origin + '0 0 -1500', true, NULL);
 			t = pointcontents(trace_endpos + '0 0 1');
 			if(t != CONTENT_SOLID )
-			if(t == CONTENT_WATER || t == CONTENT_SLIME || t == CONTENT_LAVA)
-				continue;
-			if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
-				continue;
+			{
+				if(t == CONTENT_WATER || t == CONTENT_SLIME || t == CONTENT_LAVA)
+					rate_wps = true;
+				else if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
+					continue;
+			}
 		}
-
-		// TODO: rate waypoints near the targeted player at that moment, instead of the player itself
-		//		 adding a player as a goal seems to be quite dangerous, especially on space maps
-		//		 remove hack in navigation_poptouchedgoals() after performing this change
 
 		t = ((this.health + this.armorvalue) - (it.health + it.armorvalue)) / 150;
 		t = bound(0, 1 + t, 3);
@@ -178,7 +176,27 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		t += max(0, 8 - skill) * 0.05; // less skilled bots attack more mindlessly
 		ratingscale *= t;
 		if (ratingscale > 0)
-			navigation_routerating(this, it, ratingscale * BOT_RATING_ENEMY, 2000);
+		{
+			if(rate_wps)
+			{
+				entity theEnemy = it;
+				entity best_wp = NULL;
+				float best_dist = 10000;
+				IL_EACH(g_waypoints, vdist(it.origin - theEnemy.origin, <, 500) && vdist(it.origin - this.origin, >, 100),
+				{
+					float dist = vlen(it.origin - theEnemy.origin);
+					if (dist < best_dist)
+					{
+						best_wp = it;
+						best_dist = dist;
+					}
+				});
+				if (best_wp)
+					navigation_routerating(this, best_wp, ratingscale * BOT_RATING_ENEMY, 2000);
+			}
+			else
+				navigation_routerating(this, it, ratingscale * BOT_RATING_ENEMY, 2000);
+		}
 	));
 }
 

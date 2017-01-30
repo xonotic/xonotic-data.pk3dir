@@ -428,7 +428,6 @@ void havocbot_movetogoal(entity this)
 	vector m2;
 	vector evadeobstacle;
 	vector evadelava;
-	float s;
 	float maxspeed;
 	vector gco;
 	//float dist;
@@ -727,6 +726,7 @@ void havocbot_movetogoal(entity this)
 		}
 		else
 		{
+			float s;
 			if(this.aistatus & AI_STATUS_OUT_WATER)
 				this.aistatus &= ~AI_STATUS_OUT_WATER;
 
@@ -786,6 +786,8 @@ void havocbot_movetogoal(entity this)
 			// (only when the bot is on the ground or jumping intentionally)
 			this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
+			bool unreachable = false;
+			s = CONTENT_SOLID;
 			if(trace_fraction == 1 && this.jumppadcount == 0 && !this.goalcurrent.wphardwired )
 			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
 			{
@@ -809,11 +811,9 @@ void havocbot_movetogoal(entity this)
 						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 						{
 							if (gco.z > this.origin.z + jumpstepheightvec.z)
-							{ 
+							{
 								// the goal is probably on an upper platform, assume bot can't get there
-								LOG_TRACE("bot ", this.netname, " avoided the goal ", this.goalcurrent.classname, " ", etos(this.goalcurrent), " because it led to a dangerous path; goal stack cleared");
-								navigation_clearroute(this);
-								this.bot_strategytime = 0;
+								unreachable = true;
 							}
 							else
 								evadelava = normalize(this.velocity) * -1;
@@ -827,8 +827,17 @@ void havocbot_movetogoal(entity this)
 			evadelava.z = 0;
 			makevectors(this.v_angle.y * '0 1 0');
 
-			if(evadeobstacle!='0 0 0'||evadelava!='0 0 0')
+			if(evadeobstacle || evadelava || (s == CONTENT_WATER))
+			{
 				this.aistatus |= AI_STATUS_DANGER_AHEAD;
+				if(IS_PLAYER(this.goalcurrent))
+					unreachable = true;
+			}
+			if(unreachable)
+			{
+				navigation_clearroute(this);
+				this.bot_strategytime = 0;
+			}
 		}
 
 		dodge = havocbot_dodge(this);

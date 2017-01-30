@@ -920,11 +920,6 @@ void navigation_poptouchedgoals(entity this)
 		// personality property
 	}
 
-	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
-	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
-	if(IS_PLAYER(this.goalcurrent))
-		navigation_poproute(this);
-
 	// Loose goal touching check when running
 	if(this.aistatus & AI_STATUS_RUNNING)
 	if(this.speed >= autocvar_sv_maxspeed) // if -really- running
@@ -949,7 +944,7 @@ void navigation_poptouchedgoals(entity this)
 		}
 	}
 
-	while (this.goalcurrent && boxesoverlap(m1, m2, this.goalcurrent.absmin, this.goalcurrent.absmax))
+	while (this.goalcurrent && !IS_PLAYER(this.goalcurrent) && boxesoverlap(m1, m2, this.goalcurrent.absmin, this.goalcurrent.absmax))
 	{
 		if((this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 			break;
