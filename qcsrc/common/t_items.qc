@@ -1100,6 +1100,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.respawntimejitter = defaultrespawntimejitter;
 	}
 
+	if(!this.pickup_anyway && def.m_pickupanyway)
+		this.pickup_anyway = def.m_pickupanyway();
+
 	int itemid = def.m_itemid;
 	this.items = itemid;
 	int weaponid = def.instanceOfWeaponPickup ? def.m_weapon.m_id : 0;
@@ -1349,8 +1352,6 @@ spawnfunc(item_rockets)
 {
 	if(!this.ammo_rockets)
 		this.ammo_rockets = g_pickup_rockets;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_ammo_anyway;
     StartItem(this, ITEM_Rockets);
 }
 
@@ -1368,8 +1369,6 @@ spawnfunc(item_bullets)
 
 	if(!this.ammo_nails)
 		this.ammo_nails = g_pickup_nails;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_ammo_anyway;
     StartItem(this, ITEM_Bullets);
 }
 
@@ -1377,8 +1376,6 @@ spawnfunc(item_cells)
 {
 	if(!this.ammo_cells)
 		this.ammo_cells = g_pickup_cells;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem(this, ITEM_Cells);
 }
 
@@ -1386,8 +1383,6 @@ spawnfunc(item_plasma)
 {
 	if(!this.ammo_plasma)
 		this.ammo_plasma = g_pickup_plasma;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem(this, ITEM_Plasma);
 }
 
@@ -1405,8 +1400,6 @@ spawnfunc(item_shells)
 
 	if(!this.ammo_shells)
 		this.ammo_shells = g_pickup_shells;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem(this, ITEM_Shells);
 }
 
@@ -1416,8 +1409,6 @@ spawnfunc(item_armor_small)
 		this.armorvalue = g_pickup_armorsmall;
 	if(!this.max_armorvalue)
 		this.max_armorvalue = g_pickup_armorsmall_max;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_armorsmall_anyway;
 	StartItem(this, ITEM_ArmorSmall);
 }
 
@@ -1427,8 +1418,6 @@ spawnfunc(item_armor_medium)
 		this.armorvalue = g_pickup_armormedium;
 	if(!this.max_armorvalue)
 		this.max_armorvalue = g_pickup_armormedium_max;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_armormedium_anyway;
 	StartItem(this, ITEM_ArmorMedium);
 }
 
@@ -1438,8 +1427,6 @@ spawnfunc(item_armor_big)
 		this.armorvalue = g_pickup_armorbig;
 	if(!this.max_armorvalue)
 		this.max_armorvalue = g_pickup_armorbig_max;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_armorbig_anyway;
 	StartItem(this, ITEM_ArmorBig);
 }
 
@@ -1449,8 +1436,6 @@ spawnfunc(item_armor_mega)
 		this.armorvalue = g_pickup_armormega;
 	if(!this.max_armorvalue)
 		this.max_armorvalue = g_pickup_armormega_max;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_armormega_anyway;
 	StartItem(this, ITEM_ArmorMega);
 }
 
@@ -1460,8 +1445,6 @@ spawnfunc(item_health_small)
 		this.max_health = g_pickup_healthsmall_max;
 	if(!this.health)
 		this.health = g_pickup_healthsmall;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_healthsmall_anyway;
 	StartItem(this, ITEM_HealthSmall);
 }
 
@@ -1471,8 +1454,6 @@ spawnfunc(item_health_medium)
 		this.max_health = g_pickup_healthmedium_max;
 	if(!this.health)
 		this.health = g_pickup_healthmedium;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_healthmedium_anyway;
     StartItem(this, ITEM_HealthMedium);
 }
 
@@ -1482,8 +1463,6 @@ spawnfunc(item_health_big)
 		this.max_health = g_pickup_healthbig_max;
 	if(!this.health)
 		this.health = g_pickup_healthbig;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_healthbig_anyway;
 	StartItem(this, ITEM_HealthBig);
 }
 
@@ -1493,8 +1472,6 @@ spawnfunc(item_health_mega)
         this.max_health = g_pickup_healthmega_max;
     if(!this.health)
         this.health = g_pickup_healthmega;
-    if(!this.pickup_anyway)
-        this.pickup_anyway = g_pickup_healthmega_anyway;
     StartItem(this, ITEM_HealthMega);
 }
 
@@ -1658,8 +1635,6 @@ spawnfunc(item_fuel)
 {
 	if(!this.ammo_fuel)
 		this.ammo_fuel = g_pickup_fuel;
-	if(!this.pickup_anyway)
-		this.pickup_anyway = g_pickup_ammo_anyway;
 	StartItem(this, ITEM_JetpackFuel);
 }
 

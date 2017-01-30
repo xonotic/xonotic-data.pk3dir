@@ -400,6 +400,7 @@ void cvar_changes_init()
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_norecoil");
 		BADCVAR("g_physics_clientselect");
+		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");

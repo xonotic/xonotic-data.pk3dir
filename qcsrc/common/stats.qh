@@ -120,6 +120,11 @@ REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
 
 #ifdef SVQC
+bool autocvar_g_ctf_leaderboard;
+#endif
+REGISTER_STAT(CTF_SHOWLEADERBOARD, bool, autocvar_g_ctf_leaderboard)
+
+#ifdef SVQC
 int autocvar_g_multijump;
 float autocvar_g_multijump_add;
 float autocvar_g_multijump_speed;

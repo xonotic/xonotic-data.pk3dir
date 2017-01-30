@@ -737,10 +737,10 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 }
 
 // vehicle enter/exit handling
-vector vehicles_findgoodexit(entity this, vector prefer_spot)
+vector vehicles_findgoodexit(entity this, entity player, vector prefer_spot)
 {
 	// TODO: we actually want the player's size here
-	tracebox(this.origin + '0 0 32', PL_MIN_CONST, PL_MAX_CONST, prefer_spot, MOVE_NORMAL, this.owner);
+	tracebox(this.origin + '0 0 32', PL_MIN_CONST, PL_MAX_CONST, prefer_spot, MOVE_NORMAL, player);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
@@ -752,7 +752,7 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, PL_MIN_CONST, PL_MAX_CONST, v, MOVE_NORMAL, this.owner);
+		tracebox(v2, PL_MIN_CONST, PL_MAX_CONST, v, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}

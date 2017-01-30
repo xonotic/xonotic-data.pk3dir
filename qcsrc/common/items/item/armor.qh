@@ -18,6 +18,9 @@ ENDCLASS(Armor)
 MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
 SOUND(ArmorSmall, Item_Sound("armor1"));
 #endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_armorsmall_anyway);
+#endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
 #ifdef GAMEQC
@@ -30,12 +33,16 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_itemid               =   IT_ARMOR_SHARD;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
+    this.m_pickupanyway         =   GET(g_pickup_armorsmall_anyway);
 #endif
 }
 
 #ifdef GAMEQC
 MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
 SOUND(ArmorMedium, Item_Sound("armor10"));
+#endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_armormedium_anyway);
 #endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
@@ -49,12 +56,16 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
+    this.m_pickupanyway         =   GET(g_pickup_armormedium_anyway);
 #endif
 }
 
 #ifdef GAMEQC
 MODEL(ArmorBig_ITEM, Item_Model("item_armor_big.md3"));
 SOUND(ArmorBig, Item_Sound("armor17_5"));
+#endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_armorbig_anyway);
 #endif
 
 REGISTER_ITEM(ArmorBig, Armor) {
@@ -70,12 +81,16 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
+    this.m_pickupanyway         =   GET(g_pickup_armorbig_anyway);
 #endif
 }
 
 #ifdef GAMEQC
 MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
 SOUND(ArmorMega, Item_Sound("armor25"));
+#endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_armormega_anyway);
 #endif
 
 REGISTER_ITEM(ArmorMega, Armor) {
@@ -93,5 +108,6 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
+    this.m_pickupanyway         =   GET(g_pickup_armormega_anyway);
 #endif
 }

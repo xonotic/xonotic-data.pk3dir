@@ -426,7 +426,7 @@ void racer_exit(entity this, int eject)
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
-		spot = vehicles_findgoodexit(this, spot);
+		spot = vehicles_findgoodexit(this, this.owner, spot);
 		setorigin(this.owner, spot);
 		this.owner.velocity = (v_up + v_forward * 0.25) * 750;
 		this.owner.oldvelocity = this.owner.velocity;
@@ -438,14 +438,14 @@ void racer_exit(entity this, int eject)
 			this.owner.velocity = normalize(this.velocity) * autocvar_sv_maxairspeed * 2;
 			this.owner.velocity_z += 200;
 			spot = this.origin + v_forward * 32 + '0 0 32';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, this.owner, spot);
 		}
 		else
 		{
 			this.owner.velocity = this.velocity * 0.5;
 			this.owner.velocity_z += 10;
 			spot = this.origin - v_forward * 200 + '0 0 32';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, this.owner, spot);
 		}
 		this.owner.oldvelocity = this.owner.velocity;
 		setorigin(this.owner , spot);

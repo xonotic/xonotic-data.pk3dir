@@ -84,7 +84,6 @@ void raptor_land(entity this)
 void raptor_exit(entity this, int eject)
 {
 	entity player = this.owner;
-	this.owner = NULL;
 
 	this.tur_head.exteriormodeltoclient = NULL;
 
@@ -102,7 +101,7 @@ void raptor_exit(entity this, int eject)
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
-		spot = vehicles_findgoodexit(this, spot);
+		spot = vehicles_findgoodexit(this, player, spot);
 		setorigin(player, spot);
 		player.velocity = (v_up + v_forward * 0.25) * 750;
 		player.oldvelocity = player.velocity;
@@ -114,19 +113,20 @@ void raptor_exit(entity this, int eject)
 			player.velocity = normalize(this.velocity) * autocvar_sv_maxairspeed * 2;
 			player.velocity_z += 200;
 			spot = this.origin + v_forward * 32 + '0 0 64';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, player, spot);
 		}
 		else
 		{
 			player.velocity = this.velocity * 0.5;
 			player.velocity_z += 10;
 			spot = this.origin - v_forward * 200 + '0 0 64';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, player, spot);
 		}
 		player.oldvelocity = player.velocity;
 		setorigin(player, spot);
 	}
 
+	this.owner = NULL;
 	antilag_clear(player, CS(player));
 }
 

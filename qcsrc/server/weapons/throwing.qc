@@ -194,9 +194,9 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	Send_Notification(NOTIF_ONE, this, MSG_MULTI, ITEM_WEAPON_DROP, a, w.m_id);
 }
 
-void SpawnThrownWeapon(entity this, vector org, float w, .entity weaponentity)
+void SpawnThrownWeapon(entity this, vector org, Weapon wep, .entity weaponentity)
 {
-	entity wep = this.(weaponentity).m_weapon;
+	//entity wep = this.(weaponentity).m_weapon;
 
 	if(this.weapons & WepSet_FromWeapon(wep))
 		if(W_IsWeaponThrowable(this, wep.m_id))

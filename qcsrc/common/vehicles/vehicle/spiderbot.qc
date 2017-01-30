@@ -319,7 +319,6 @@ bool spiderbot_frame(entity this, float dt)
 void spiderbot_exit(entity this, int eject)
 {
 	entity player = this.owner;
-	this.owner = NULL;
 
 	IL_EACH(g_projectiles, it.owner == player && it.classname == "spiderbot_rocket",
 	{
@@ -333,14 +332,17 @@ void spiderbot_exit(entity this, int eject)
 	set_movetype(this, MOVETYPE_WALK);
 
 	if(!player)
+	{
+		this.owner = NULL; // reset owner anyway?
 		return;
+	}
 
 	makevectors(this.angles);
 	vector spot;
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
-		spot = vehicles_findgoodexit(this, spot);
+		spot = vehicles_findgoodexit(this, player, spot);
 		setorigin(player, spot);
 		player.velocity = (v_up + v_forward * 0.25) * 750;
 		player.oldvelocity = player.velocity;
@@ -352,20 +354,21 @@ void spiderbot_exit(entity this, int eject)
 			player.velocity = normalize(this.velocity) * vlen(this.velocity);
 			player.velocity_z += 200;
 			spot = this.origin + v_forward * 128 + '0 0 64';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, player, spot);
 		}
 		else
 		{
 			player.velocity = this.velocity * 0.5;
 			player.velocity_z += 10;
 			spot = this.origin + v_forward * 256 + '0 0 64';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, player, spot);
 		}
 		player.oldvelocity = player.velocity;
 		setorigin(player, spot);
 	}
 
 	antilag_clear(player, CS(player));
+	this.owner = NULL;
 }
 
 void spiderbot_headfade(entity this)
