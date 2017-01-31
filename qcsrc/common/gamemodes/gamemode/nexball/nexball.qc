@@ -910,10 +910,9 @@ METHOD(BallStealer, wr_setup, void(BallStealer this, entity actor, .entity weapo
     //weapon_setup(WEP_PORTO.m_id);
 }
 
-METHOD(BallStealer, wr_reload, bool(BallStealer this, entity actor, .entity weaponentity))
+METHOD(BallStealer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
     TC(BallStealer, this);
-    return true;
 }
 
 METHOD(BallStealer, wr_checkammo1, bool(BallStealer this, entity actor, .entity weaponentity))
