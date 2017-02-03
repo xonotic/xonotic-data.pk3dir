@@ -91,6 +91,7 @@ float autocvar_g_ctf_flagcarrier_forcefactor;
 //float autocvar_g_ctf_flagcarrier_waypointforenemy_spotting;
 bool autocvar_g_ctf_fullbrightflags;
 bool autocvar_g_ctf_ignore_frags;
+bool autocvar_g_ctf_score_ignore_fields;
 int autocvar_g_ctf_score_capture;
 int autocvar_g_ctf_score_capture_assist;
 int autocvar_g_ctf_score_kill;
@@ -385,7 +386,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(player, -autocvar_g_ctf_score_penalty_drop);
+	PlayerTeamScore_AddScore(player, -((flag.score_drop) ? flag.score_drop : autocvar_g_ctf_score_penalty_drop));
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 
 	// waypoints
@@ -595,7 +596,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	}
 
 	// scoring
-	PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_capture);
+	PlayerTeamScore_AddScore(player, ((flag.score_capture) ? flag.score_capture : autocvar_g_ctf_score_capture));
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 
 	old_time = PlayerScore_Add(player, SP_CTF_CAPTIME, 0);
@@ -614,7 +615,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
 
 		if((enemy_flag.ctf_dropper) && (player != enemy_flag.ctf_dropper))
-			{ PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, autocvar_g_ctf_score_capture_assist); }
+			{ PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, ((flag.score_assist) ? flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
 	}
 
 	// reset the flag
@@ -640,7 +641,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	// scoring
 	if(IS_PLAYER(player))
 	{
-		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
+		PlayerTeamScore_AddScore(player, ((flag.score_return) ? flag.score_return : autocvar_g_ctf_score_return)); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
 
 		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
@@ -731,7 +732,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	{
 		case PICKUP_BASE:
 		{
-			PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_pickup_base);
+			PlayerTeamScore_AddScore(player, ((flag.score_pickup) ? flag.score_pickup : autocvar_g_ctf_score_pickup_base));
 			ctf_EventLog("steal", flag.team, player);
 			break;
 		}
@@ -1271,6 +1272,10 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	setthink(flag, ctf_FlagThink);
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
+
+	// crudely force them all to 0
+	if(autocvar_g_ctf_score_ignore_fields)
+		flag.score_assist = flag.score_capture = flag.score_drop = flag.score_pickup = flag.score_return = 0;
 
 	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	// appearence
