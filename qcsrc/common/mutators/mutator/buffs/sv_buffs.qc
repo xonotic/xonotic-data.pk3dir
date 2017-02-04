@@ -160,6 +160,7 @@ void buff_Touch(entity this, entity toucher)
 	if((this.team && DIFF_TEAM(toucher, this))
 	|| (STAT(FROZEN, toucher))
 	|| (toucher.vehicle)
+	|| (time < toucher.buff_shield)
 	|| (!this.buff_active)
 	)
 	{
@@ -639,7 +640,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		player.buffs = 0;
-		player.buff_time = 0; // already notified
+		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
+		//player.buff_time = 0; // already notified
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
@@ -840,6 +842,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			else
 				Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 			player.buffs = 0;
+			player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
 		}
 	}
 
