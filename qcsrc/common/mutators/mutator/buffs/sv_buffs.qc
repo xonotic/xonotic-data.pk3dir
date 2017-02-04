@@ -875,8 +875,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	}
 
 	if((player.buffs & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
-	if(player.alpha != autocvar_g_buffs_invisible_alpha)
-		player.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
+		player.alpha = ((autocvar_g_buffs_invisible_alpha) ? autocvar_g_buffs_invisible_alpha : -1); // powerups reset alpha, so we must enforce this (TODO)
 
 	if(player.buffs & BUFF_MEDIC.m_itemid)
 	if(time >= player.buff_medic_healtime)
