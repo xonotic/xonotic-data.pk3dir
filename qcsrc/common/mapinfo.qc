@@ -1193,6 +1193,8 @@ void MapInfo_LoadMap(string s, float reinit)
 	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH.m_flags);
 	//}
 
+	LOG_INFO("Switching to map ", s, "\n");
+
 	cvar_settemp_restore();
 	if(reinit)
 		localcmd(strcat("\nmap ", s, "\n"));
