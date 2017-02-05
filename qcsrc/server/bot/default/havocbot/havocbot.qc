@@ -706,6 +706,7 @@ void havocbot_movetogoal(entity this)
 		evadeobstacle = '0 0 0';
 		evadelava = '0 0 0';
 
+		makevectors(this.v_angle.y * '0 1 0');
 		if (this.waterlevel)
 		{
 			if(this.waterlevel>WATERLEVEL_SWIMMING)
@@ -722,11 +723,11 @@ void havocbot_movetogoal(entity this)
 					PHYS_INPUT_BUTTON_JUMP(this) = false;
 			}
 			dir = normalize(flatdir);
-			makevectors(this.v_angle.y * '0 1 0');
 		}
 		else
 		{
 			float s;
+			vector offset;
 			if(this.aistatus & AI_STATUS_OUT_WATER)
 				this.aistatus &= ~AI_STATUS_OUT_WATER;
 
@@ -749,7 +750,8 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// avoiding dangers and obstacles
-			vector dst_ahead = this.origin + this.view_ofs + this.velocity * 0.5;
+			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.5 : v_forward * 32);
+			vector dst_ahead = this.origin + this.view_ofs + offset;
 			vector dst_down = dst_ahead - '0 0 3000';
 
 			// Look ahead
