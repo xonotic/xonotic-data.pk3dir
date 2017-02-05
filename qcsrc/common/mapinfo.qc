@@ -9,6 +9,8 @@
     #include <common/monsters/_mod.qh>
 #endif
 
+bool autocvar_g_mapinfo_ignore_warnings;
+
 // generic string stuff
 
 int _MapInfo_Cache_Active;
@@ -547,7 +549,8 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 		if (sa == "") continue;
 		int p = strstrofs(sa, "=", 0);
 		if (p < 0) {
-			LOG_WARNF("Invalid gametype setting in mapinfo for gametype %s: %s", MapInfo_Type_ToString(pWantedType), sa);
+			if(!autocvar_g_mapinfo_ignore_warnings)
+				LOG_WARNF("Invalid gametype setting in mapinfo for gametype %s: %s", MapInfo_Type_ToString(pWantedType), sa);
 			continue;
 		}
 		string k = substring(sa, 0, p);
@@ -586,7 +589,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThis
 			}
 		}
 		FOREACH(Gametypes, true, handled |= it.m_parse_mapinfo(k, v));
-		if (!handled)
+		if (!handled && !autocvar_g_mapinfo_ignore_warnings)
             LOG_WARNF("Invalid gametype setting in mapinfo for gametype %s: %s", MapInfo_Type_ToString(pWantedType), sa);
 	}
 
@@ -607,7 +610,8 @@ Gametype MapInfo_Type_FromString(string t)
 #define deprecate(from, to) MACRO_BEGIN { \
 	if (t == #from) { \
 		string replacement = #to; \
-		LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, t, replacement); \
+		if(!autocvar_g_mapinfo_ignore_warnings) \
+			LOG_WARNF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.", MapInfo_Map_bspname, t, replacement); \
 		t = replacement; \
 	} \
 } MACRO_END
@@ -933,10 +937,11 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 		{
 			t = car(s); s = cdr(s);
 			Gametype f = MapInfo_Type_FromString(t);
-			LOG_WARN("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.");
+			if(!autocvar_g_mapinfo_ignore_warnings)
+				LOG_WARN("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.");
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
-			else
+			else if(!autocvar_g_mapinfo_ignore_warnings)
 				LOG_WARN("Map ", pFilename, " supports unknown game type ", t, ", ignored");
 		}
 		else if(t == "gametype")
@@ -945,7 +950,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			Gametype f = MapInfo_Type_FromString(t);
 			if(f)
 				_MapInfo_Map_ApplyGametypeEx (s, pGametypeToSet, f);
-			else
+			else if(!autocvar_g_mapinfo_ignore_warnings)
 				LOG_WARN("Map ", pFilename, " supports unknown game type ", t, ", ignored");
 		}
 		else if(t == "size")
@@ -1039,7 +1044,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 					);
 			}
 		}
-		else
+		else if(!autocvar_g_mapinfo_ignore_warnings)
 			LOG_WARN("Map ", pFilename, " provides unknown info item ", t, ", ignored");
 	}
 	fclose(fh);
