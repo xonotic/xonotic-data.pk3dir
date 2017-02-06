@@ -733,17 +733,18 @@ void havocbot_movetogoal(entity this)
 
 			// jump if going toward an obstacle that doesn't look like stairs we
 			// can walk up directly
-			tracebox(this.origin, this.mins, this.maxs, this.origin + this.velocity * 0.2, false, this);
+			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : v_forward * 32);
+			tracebox(this.origin, this.mins, this.maxs, this.origin + offset, false, this);
 			if (trace_fraction < 1)
 			if (trace_plane_normal.z < 0.7)
 			{
 				s = trace_fraction;
-				tracebox(this.origin + stepheightvec, this.mins, this.maxs, this.origin + this.velocity * 0.2 + stepheightvec, false, this);
+				tracebox(this.origin + stepheightvec, this.mins, this.maxs, this.origin + offset + stepheightvec, false, this);
 				if (trace_fraction < s + 0.01)
 				if (trace_plane_normal.z < 0.7)
 				{
 					s = trace_fraction;
-					tracebox(this.origin + jumpstepheightvec, this.mins, this.maxs, this.origin + this.velocity * 0.2 + jumpstepheightvec, false, this);
+					tracebox(this.origin + jumpstepheightvec, this.mins, this.maxs, this.origin + offset + jumpstepheightvec, false, this);
 					if (trace_fraction > s)
 						PHYS_INPUT_BUTTON_JUMP(this) = true;
 				}
