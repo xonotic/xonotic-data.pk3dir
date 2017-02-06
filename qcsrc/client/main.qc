@@ -131,6 +131,9 @@ void CSQC_Init()
 
 	registercvar("cl_spawn_near_teammate", "1");
 
+	if(autocvar_cl_lockview)
+		cvar_set("cl_lockview", "0");
+
 	gametype = NULL;
 
 	postinit = false;
