@@ -290,7 +290,8 @@ void havocbot_bunnyhop(entity this, vector dir)
 
 	maxspeed = autocvar_sv_maxspeed;
 
-	if(this.aistatus & AI_STATUS_DANGER_AHEAD)
+	if(this.aistatus & AI_STATUS_RUNNING && vdist(this.velocity, <, autocvar_sv_maxspeed * 0.75)
+		|| this.aistatus & AI_STATUS_DANGER_AHEAD)
 	{
 		this.aistatus &= ~AI_STATUS_RUNNING;
 		PHYS_INPUT_BUTTON_JUMP(this) = false;
