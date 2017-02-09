@@ -970,6 +970,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
+	pl.items &= ~IT_USING_JETPACK;
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;

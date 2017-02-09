@@ -48,6 +48,13 @@ const float VEHICLE_FLAG_SCALE = 1.0;
 .string snd_flag_touch;
 .string snd_flag_pass;
 
+// score fields
+.float score_assist;
+.float score_capture;
+.float score_drop; // note: negated
+.float score_pickup;
+.float score_return;
+
 // effects
 .string toucheffect;
 .string passeffect;

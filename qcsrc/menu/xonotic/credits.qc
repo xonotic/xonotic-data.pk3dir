@@ -86,6 +86,7 @@
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
 		PERSON(Severin "sev" Meyer) \
 		PERSON(ShadoW) \
+		PERSON(t0uYK8Ne) \
 	NL() \
 	FUNCTION(_("Music / Sound FX")) \
 		PERSON(AquaNova (Archer)) \
@@ -160,6 +161,8 @@
 			PERSON(ubone) \
 		NL() \
 		FUNCTION(_("Chinese (China)")) \
+			PERSON(Antonidas) \
+			PERSON(Armcoon) \
 			PERSON(kalawore) \
 			PERSON(sapphireliu) \
 		NL() \
@@ -228,7 +231,7 @@
 			PERSON(XCostaX) \
 		NL() \
 		FUNCTION(_("Kazakh")) \
-			PERSON("Артем \"bystrov.arterm\" Быстров") \
+			PERSON("Артем "bystrov.arterm" Быстров") \
 		NL() \
 		FUNCTION(_("Korean")) \
 			PERSON(Jisoo "s6e9x" Lim) \
