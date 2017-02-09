@@ -970,7 +970,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 		else
 		{
-			delete(player.buff_model);
+			if(player.buff_model)
+				delete(player.buff_model);
 			player.buff_model = NULL;
 
 			player.effects &= ~(EF_NOSHADOW);

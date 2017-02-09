@@ -1,3 +1,15 @@
+string Buff_UndeprecateName(string buffname)
+{
+    switch(buffname)
+    {
+        case "ammoregen": return "ammo";
+        case "haste": case "scout": return "speed";
+        case "doubler": return "medic";
+        case "invis": return "invisible";
+        default: return buffname;
+    }
+}
+
 REGISTER_BUFF(AMMO) {
     this.m_prettyName = _("Ammo");
     this.m_name = "ammo";
