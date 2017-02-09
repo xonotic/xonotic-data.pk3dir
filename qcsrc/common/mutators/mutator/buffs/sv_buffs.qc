@@ -629,7 +629,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 {
-	if(MUTATOR_RETURNVALUE || game_stopped) return;
+	if(MUTATOR_RETURNVALUE || game_stopped || !autocvar_g_buffs_drop) return;
 
 	entity player = M_ARGV(0, entity);
 
