@@ -875,6 +875,12 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	//print("routetogoal ", etos(e), "\n");
 	navigation_pushroute(this, e);
 
+	if(e.classname == "waypoint" && !(e.wpflags & WAYPOINTFLAG_PERSONAL))
+	{
+		this.wp_goal_prev1 = this.wp_goal_prev0;
+		this.wp_goal_prev0 = e;
+	}
+
 	if(g_jetpack)
 	if(e==this.navigation_jetpack_goal)
 		return true;

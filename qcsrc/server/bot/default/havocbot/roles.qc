@@ -13,6 +13,34 @@
 .void(entity this) havocbot_previous_role;
 .void(entity this) havocbot_role;
 
+void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius)
+{
+	// rate waypoints only if there's no alternative goal
+	if(navigation_bestgoal)
+		return;
+
+	float f;
+	float range = 500;
+	sradius = max(range, (0.5 + random() * 0.5) * sradius);
+	while(sradius > 100)
+	{
+		IL_EACH(g_waypoints, vdist(it.origin - org, <, sradius)
+			&& vdist(it.origin - org, >, max(100, sradius - range)),
+		{
+			if(vdist(it.origin - this.wp_goal_prev0.origin, <, range * 1.5))
+				f = 0.1;
+			else if(vdist(it.origin - this.wp_goal_prev1.origin, <, range * 1.5))
+				f = 0.1;
+			else
+				f = 0.5 + random() * 0.5;
+			navigation_routerating(this, it, ratingscale * f, 2000);
+		});
+		if(navigation_bestgoal)
+			break;
+		sradius -= range;
+	}
+};
+
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
 	float rating, d, discard, friend_distance, enemy_distance;
@@ -175,7 +203,7 @@ void havocbot_role_generic(entity this)
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
-		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 	}
 }

@@ -409,7 +409,7 @@ void havocbot_role_dom(entity this)
 		havocbot_goalrating_controlpoints(this, 10000, this.origin, 15000);
 		havocbot_goalrating_items(this, 8000, this.origin, 8000);
 		//havocbot_goalrating_enemyplayers(this, 3000, this.origin, 2000);
-		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 	}
 }
