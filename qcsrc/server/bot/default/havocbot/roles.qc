@@ -25,7 +25,8 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 	while(sradius > 100)
 	{
 		IL_EACH(g_waypoints, vdist(it.origin - org, <, sradius)
-			&& vdist(it.origin - org, >, max(100, sradius - range)),
+			&& vdist(it.origin - org, >, max(100, sradius - range))
+			&& !(it.wpflags & WAYPOINTFLAG_TELEPORT),
 		{
 			if(vdist(it.origin - this.wp_goal_prev0.origin, <, range * 1.5))
 				f = 0.1;

@@ -673,7 +673,9 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			entity theEnemy = e;
 			entity best_wp = NULL;
 			float best_dist = 10000;
-			IL_EACH(g_waypoints, vdist(it.origin - theEnemy.origin, <, 500) && vdist(it.origin - this.origin, >, 100),
+			IL_EACH(g_waypoints, vdist(it.origin - theEnemy.origin, <, 500)
+				&& vdist(it.origin - this.origin, >, 100)
+				&& !(it.wpflags & WAYPOINTFLAG_TELEPORT),
 			{
 				float dist = vlen(it.origin - theEnemy.origin);
 				if (dist < best_dist)
