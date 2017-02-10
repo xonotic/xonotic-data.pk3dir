@@ -795,7 +795,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(game_stopped || IS_DEAD(player)) return;
+	if(game_stopped || IS_DEAD(player) || frametime) return;
 
 	if(player.buffs & BUFF_FLIGHT.m_itemid)
 	{
