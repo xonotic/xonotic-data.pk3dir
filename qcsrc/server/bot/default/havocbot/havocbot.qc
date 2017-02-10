@@ -544,12 +544,10 @@ void havocbot_movetogoal(entity this)
 		}
 		else
 		{
-			if(this.velocity.z>0)
+			if(time - this.lastteleporttime > 0.3 && this.velocity.z > 0)
 			{
-				float threshold;
 				vector velxy = this.velocity; velxy_z = 0;
-				threshold = maxspeed * 0.2;
-				if(vdist(velxy, <, threshold))
+				if(vdist(velxy, <, autocvar_sv_maxspeed * 0.2))
 				{
 					LOG_TRACE("Warning: ", this.netname, " got stuck on a jumppad (velocity in xy is ", vtos(velxy), "), trying to get out of it now");
 					this.aistatus |= AI_STATUS_OUT_JUMPPAD;
