@@ -1144,7 +1144,7 @@ void ClientConnect(entity this)
     if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
 
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", this.netname));
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
 
 	LogTeamchange(this.playerid, this.team, 1);
 
@@ -2236,7 +2236,7 @@ void PlayerPreThink (entity this)
 	}
 	if (this.netname != this.netname_previous) {
 		if (autocvar_sv_eventlog) {
-			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", this.netname));
+			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
         }
 		if (this.netname_previous) strunzone(this.netname_previous);
 		this.netname_previous = strzone(this.netname);
