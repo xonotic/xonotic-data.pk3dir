@@ -1356,7 +1356,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 	float namesize = 0;
 	for(i = 0; i < RANKINGS_RECEIVED_CNT; ++i)
 	{
-		float f = stringwidth(grecordholder[i], true, hud_fontsize);
+		float f = stringwidth(ColorTranslateRGB(grecordholder[i]), true, hud_fontsize);
 		if(f > namesize)
 			namesize = f;
 	}
@@ -1408,7 +1408,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 		if (t == 0)
 			continue;
 
-		if(grecordholder[i] == entcs_GetName(player_localnum))
+		if(strdecolorize(grecordholder[i]) == strdecolorize(entcs_GetName(player_localnum)))
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!((j + column) & 1) && sbt_highlight)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
@@ -1416,7 +1416,7 @@ vector Scoreboard_Rankings_Draw(vector pos, entity pl, vector rgb, vector bg_siz
 		str = count_ordinal(i+1);
 		drawstring(pos + text_ofs, str, hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + text_ofs + eX * ranksize, TIME_ENCODED_TOSTRING(t), hud_fontsize, '1 1 1', sbt_fg_alpha, DRAWFLAG_NORMAL);
-		str = grecordholder[i];
+		str = ColorTranslateRGB(grecordholder[i]);
 		if(cut)
 			str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + text_ofs + eX * (ranksize + timesize), str, hud_fontsize, sbt_fg_alpha, DRAWFLAG_NORMAL);
