@@ -727,7 +727,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
     string namestr = "";
     if (source)
-        namestr = autocvar_g_chat_teamcolors ? playername(source) : source.netname;
+        namestr = playername(source, autocvar_g_chat_teamcolors);
 
     string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
@@ -744,7 +744,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			msgstr = strcat(msgstr, msgin);
 			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
 			if(autocvar_g_chat_teamcolors)
-				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
+				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay, true), ": ^7");
 			else
 				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
 		}
@@ -886,7 +886,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 
 	if(flood)
-		LOG_INFO("NOTE: ", playername(source), "^7 is flooding.\n");
+		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.\n");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)
@@ -964,7 +964,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
             if (source) {
                 sprint(source, sourcemsgstr);
                 dedicated_print(msgstr); // send to server console too
-                MX_Say(strcat(playername(source), "^7: ", msgin));
+                MX_Say(strcat(playername(source, true), "^7: ", msgin));
             }
             FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
         }

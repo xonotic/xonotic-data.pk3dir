@@ -350,22 +350,22 @@ void pp_hud_board(vector pos, vector mySize)
 	if ( active_minigame.minigame_flags & PP_TURN_WIN )
 	{
 		vector winfs = hud_fontsize*2;
-		string playername = "";
+		string pname = "";
 		FOREACH_MINIGAME_ENTITY(e)
 			if ( e.classname == "minigame_player" &&
 					e.team == (active_minigame.minigame_flags & PP_TURN_TEAM) )
-				playername = entcs_GetName(e.minigame_playerslot-1);
+				pname = entcs_GetName(e.minigame_playerslot-1);
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername),
+			sprintf("%s^7 won the game!",pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername),
+			sprintf("%s^7 won the game!",pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }

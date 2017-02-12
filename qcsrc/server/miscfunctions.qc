@@ -476,16 +476,16 @@ void GetCvars(entity this, int f)
 }
 
 // decolorizes and team colors the player name when needed
-string playername(entity p)
+string playername(entity p, bool team_colorize)
 {
     string t;
-    if (teamplay && !intermission_running && IS_PLAYER(p))
+    if (team_colorize && teamplay && !intermission_running && IS_PLAYER(p))
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));
     }
     else
-        return p.netname;
+        return ColorTranslateRGB(p.netname);
 }
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
