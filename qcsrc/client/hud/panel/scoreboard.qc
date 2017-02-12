@@ -569,6 +569,25 @@ string sbt_field_icon2;
 vector sbt_field_icon0_rgb;
 vector sbt_field_icon1_rgb;
 vector sbt_field_icon2_rgb;
+string Scoreboard_GetName(entity pl)
+{
+	if(ready_waiting && pl.ready)
+	{
+		sbt_field_icon0 = "gfx/scoreboard/player_ready";
+	}
+	else if(!teamplay)
+	{
+		int f = entcs_GetClientColors(pl.sv_entnum);
+		{
+			sbt_field_icon0 = "gfx/scoreboard/playercolor_base";
+			sbt_field_icon1 = "gfx/scoreboard/playercolor_shirt";
+			sbt_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
+			sbt_field_icon2 = "gfx/scoreboard/playercolor_pants";
+			sbt_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
+		}
+	}
+	return entcs_GetName(pl.sv_entnum);
+}
 string Scoreboard_GetField(entity pl, PlayerScoreField field)
 {
 	float tmp, num, denom;
@@ -609,22 +628,7 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field)
 			return str;
 
 		case SP_NAME:
-			if(ready_waiting && pl.ready)
-			{
-				sbt_field_icon0 = "gfx/scoreboard/player_ready";
-			}
-			else if(!teamplay)
-			{
-				f = entcs_GetClientColors(pl.sv_entnum);
-				{
-					sbt_field_icon0 = "gfx/scoreboard/playercolor_base";
-					sbt_field_icon1 = "gfx/scoreboard/playercolor_shirt";
-					sbt_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
-					sbt_field_icon2 = "gfx/scoreboard/playercolor_pants";
-					sbt_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
-				}
-			}
-			return entcs_GetName(pl.sv_entnum);
+			return Scoreboard_GetName(pl);
 
 		case SP_FRAGS:
 			f = pl.(scores(SP_KILLS));
