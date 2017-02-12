@@ -1170,7 +1170,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				strunzone(grecordholder[pos-1]);
 			grecordholder[pos-1] = strzone(ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
-			if(grecordholder[pos-1] == entcs_GetName(player_localnum))
+			if(strdecolorize(grecordholder[pos-1]) == strdecolorize(entcs_GetName(player_localnum)))
 				race_myrank = pos;
 			break;
 		case RACE_NET_SERVER_STATUS:
