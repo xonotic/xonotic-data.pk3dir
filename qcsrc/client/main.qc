@@ -567,7 +567,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
-		vote_called_vote = strzone(ColorTranslateRGB(ReadString()));
+		vote_called_vote = strzone(ReadString());
 	}
 
 	if(nags & 1)
@@ -1033,7 +1033,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_previousbesttime = ReadInt24_t();
 			if(race_previousbestname)
 				strunzone(race_previousbestname);
-			race_previousbestname = strzone(ColorTranslateRGB(ReadString()));
+			race_previousbestname = strzone(ReadString());
 
 			race_checkpointtime = time;
 
@@ -1060,7 +1060,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_nextbesttime = ReadInt24_t();
 			if(race_nextbestname)
 				strunzone(race_nextbestname);
-			race_nextbestname = strzone(ColorTranslateRGB(ReadString()));
+			race_nextbestname = strzone(ReadString());
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE:
@@ -1072,7 +1072,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_mycheckpointlapsdelta -= 256;
 			if(race_mycheckpointenemy)
 				strunzone(race_mycheckpointenemy);
-			race_mycheckpointenemy = strzone(ColorTranslateRGB(ReadString()));
+			race_mycheckpointenemy = strzone(ReadString());
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
@@ -1084,7 +1084,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_othercheckpointlapsdelta -= 256;
 			if(race_othercheckpointenemy)
 				strunzone(race_othercheckpointenemy);
-			race_othercheckpointenemy = strzone(ColorTranslateRGB(ReadString()));
+			race_othercheckpointenemy = strzone(ReadString());
 			break;
 
 		case RACE_NET_PENALTY_RACE:
