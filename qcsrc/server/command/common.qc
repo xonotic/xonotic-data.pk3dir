@@ -24,7 +24,7 @@ string GetCommandPrefix(entity caller)
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return caller.netname;
+	if (caller) return playername(caller, false);
 	else return admin_name();  // ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
 }
 
