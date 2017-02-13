@@ -71,7 +71,7 @@ string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, str
 	else if(theirname == "")
 		return strcat(col, sprintf("%s (%s)", cpname, timestr));
 	else
-		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
+		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(ColorTranslateRGB(theirname), col, lapstr)));
 }
 
 void HUD_RaceTimer ()

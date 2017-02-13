@@ -93,7 +93,7 @@ string NearestLocation(vector p);
 
 void play2(entity e, string filename);
 
-string playername(entity p);
+string playername(entity p, bool team_colorize);
 
 void precache();
 

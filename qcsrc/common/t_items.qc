@@ -22,6 +22,8 @@
 
     #include <common/weapons/_all.qh>
 
+    #include <common/mutators/mutator/buffs/buffs.qh>
+
     #include "../lib/warpzone/util_server.qh"
 #elif defined(CSQC)
 	#include "physics/movetypes/movetypes.qh"
@@ -1560,6 +1562,15 @@ spawnfunc(target_items)
 			else if(argv(j) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
+				FOREACH(Buffs, it != BUFF_Null,
+				{
+					s = Buff_UndeprecateName(argv(j));
+					if(s == it.m_name)
+					{
+						this.buffs |= (it.m_itemid);
+						break;
+					}
+				});
 				FOREACH(Weapons, it != WEP_Null, {
 					s = W_UndeprecateName(argv(j));
 					if(s == it.netname)
@@ -1616,6 +1627,7 @@ spawnfunc(target_items)
 		if(this.ammo_fuel != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_fuel), "fuel");
 		if(this.health != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.health), "health");
 		if(this.armorvalue != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.armorvalue), "armor");
+		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.buffs & (it.m_itemid)), it.m_name));
 		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.weapons & (it.m_wepset)), it.netname));
 	}
 	this.netname = strzone(this.netname);
@@ -1689,6 +1701,35 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 	}
 	v1 = (e.weapons & s);
 	return (v0 != v1);
+}
+
+bool GiveBuff(entity e, Buff thebuff, int op, int val)
+{
+	bool had_buff = (e.buffs & thebuff.m_itemid);
+	switch(op)
+	{
+		case OP_SET:
+			if(val > 0)
+				e.buffs |= thebuff.m_itemid;
+			else
+				e.buffs &= ~thebuff.m_itemid;
+			break;
+		case OP_MIN:
+		case OP_PLUS:
+			if(val > 0)
+				e.buffs |= thebuff.m_itemid;
+			break;
+		case OP_MAX:
+			if(val <= 0)
+				e.buffs &= ~thebuff.m_itemid;
+			break;
+		case OP_MINUS:
+			if(val > 0)
+				e.buffs &= ~thebuff.m_itemid;
+			break;
+	}
+	bool have_buff = (e.buffs & thebuff.m_itemid);
+	return (had_buff != have_buff);
 }
 
 void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_decr)
@@ -1794,6 +1835,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, armorvalue, op, val);
 			case "allweapons":
 				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED), got += GiveWeapon(e, it.m_id, op, val));
+			//case "allbuffs": // all buffs makes a player god, do not want!
+				//FOREACH(Buffs, it != BUFF_Null, got += GiveBuff(e, it.m_itemid, op, val));
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
 				got += GiveValue(e, ammo_plasma, op, val);
@@ -1852,6 +1895,11 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, ammo_fuel, op, val);
 				break;
 			default:
+				FOREACH(Buffs, it != BUFF_Null && Buff_UndeprecateName(cmd) == it.m_name,
+				{
+					got += GiveBuff(e, it, op, val);
+					break;
+				});
 				FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(cmd) == it.netname, {
                     got += GiveWeapon(e, it.m_id, op, val);
                     break;

@@ -624,17 +624,14 @@ void waypoint_saveall()
 		if(it.wpflags & WAYPOINTFLAG_GENERATED)
 			continue;
 
-		for(int j = 0; j < 32; ++j)
-		{
-			string s;
-			s = strcat(vtos(it.origin + it.mins), "\n");
-			s = strcat(s, vtos(it.origin + it.maxs));
-			s = strcat(s, "\n");
-			s = strcat(s, ftos(it.wpflags));
-			s = strcat(s, "\n");
-			fputs(file, s);
-			++c;
-		}
+		string s;
+		s = strcat(vtos(it.origin + it.mins), "\n");
+		s = strcat(s, vtos(it.origin + it.maxs));
+		s = strcat(s, "\n");
+		s = strcat(s, ftos(it.wpflags));
+		s = strcat(s, "\n");
+		fputs(file, s);
+		c++;
 	});
 	fclose(file);
 	waypoint_save_links();

@@ -1448,11 +1448,11 @@ void DumpStats(float final)
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, it.netname, "\n");
+			LOG_INFO(s, playername(it, false), "\n");
 		if(to_eventlog)
-			GameLogEcho(strcat(s, ftos(it.playerid), ":", it.netname));
+			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it, false)));
 		if(to_file)
-			fputs(file, strcat(s, it.netname, "\n"));
+			fputs(file, strcat(s, playername(it, false), "\n"));
 	));
 
 	if(teamplay)
@@ -1565,7 +1565,7 @@ void NextLevel()
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(it.netname, " ^7wins.\n");
+			bprint(playername(it, false), " ^7wins.\n");
 	));
 
 	target_music_kill();

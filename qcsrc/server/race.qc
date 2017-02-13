@@ -571,6 +571,9 @@ void dumpsurface(entity e)
 
 void checkpoint_passed(entity this, entity player)
 {
+	if(player.personal && autocvar_g_allow_checkpoints)
+		return; // practice mode!
+
 	string oldmsg;
 	entity cp;
 

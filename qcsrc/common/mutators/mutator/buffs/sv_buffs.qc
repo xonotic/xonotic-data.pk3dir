@@ -629,7 +629,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 {
-	if(MUTATOR_RETURNVALUE || game_stopped) return;
+	if(MUTATOR_RETURNVALUE || game_stopped || !autocvar_g_buffs_drop) return;
 
 	entity player = M_ARGV(0, entity);
 
@@ -795,7 +795,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(game_stopped || IS_DEAD(player)) return;
+	if(game_stopped || IS_DEAD(player) || frametime || !IS_PLAYER(player)) return;
 
 	if(player.buffs & BUFF_FLIGHT.m_itemid)
 	{
@@ -970,7 +970,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 		else
 		{
-			delete(player.buff_model);
+			if(player.buff_model)
+				delete(player.buff_model);
 			player.buff_model = NULL;
 
 			player.effects &= ~(EF_NOSHADOW);
@@ -996,6 +997,7 @@ MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
 	entity client = M_ARGV(1, entity);
 
 	client.buffs = spectatee.buffs;
+	client.buff_time = spectatee.buff_time;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)

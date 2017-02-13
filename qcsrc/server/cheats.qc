@@ -185,7 +185,8 @@ float CheatImpulse(entity this, int imp)
 			CheatCommand(this, tokenize_console("give all"));
 			break; // already counted as cheat
 		case CHIMPULSE_SPEEDRUN.impulse:
-			IS_CHEAT(this, imp, 0, 0);
+			if(!autocvar_g_allow_checkpoints)
+				IS_CHEAT(this, imp, 0, 0);
 			if(this.personal)
 			{
 				this.speedrunning = true;
@@ -222,7 +223,8 @@ float CheatImpulse(entity this, int imp)
 				this.strength_finished = time + this.personal.strength_finished - this.personal.teleport_time;
 				this.invincible_finished = time + this.personal.invincible_finished - this.personal.teleport_time;
 
-				DID_CHEAT();
+				if(!autocvar_g_allow_checkpoints)
+					DID_CHEAT();
 				break;
 			}
 			if(IS_DEAD(this))
