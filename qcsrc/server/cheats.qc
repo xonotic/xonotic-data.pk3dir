@@ -224,7 +224,8 @@ float CheatImpulse(entity this, int imp)
 				this.strength_finished = time + this.personal.strength_finished - this.personal.teleport_time;
 				this.invincible_finished = time + this.personal.invincible_finished - this.personal.teleport_time;
 
-				DID_CHEAT();
+				if(!autocvar_g_allow_checkpoints)
+					DID_CHEAT();
 				break;
 			}
 			if(IS_DEAD(this))
