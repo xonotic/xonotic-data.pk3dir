@@ -517,7 +517,9 @@ void havocbot_movetogoal(entity this)
 			if(fabs(this.velocity.z)<50)
 			{
 				entity newgoal = NULL;
-				IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 1000),
+				if (vdist(this.origin - this.goalcurrent.origin, <, 150))
+					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
+				else IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 1000),
 				{
 					traceline(this.origin + this.view_ofs, ((it.absmin + it.absmax) * 0.5), true, this);
 
