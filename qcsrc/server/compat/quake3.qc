@@ -64,6 +64,9 @@ spawnfunc(item_armor_combat)   { spawnfunc_item_armor_big(this);      }
 spawnfunc(item_armor_shard)    { spawnfunc_item_armor_small(this);    }
 spawnfunc(item_enviro)         { spawnfunc_item_invincible(this);     }
 
+// medkit -> armor (we have no holdables)
+spawnfunc(holdable_medkit)	   { spawnfunc_item_armor_mega(this);    }
+
 .float wait;
 .float delay;
 
