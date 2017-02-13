@@ -131,6 +131,7 @@ spawnfunc(info_autoscreenshot)
 	// this one just has to exist
 }
 
+bool autocvar_g_allow_checkpoints;
 float CheatImpulse(entity this, int imp)
 {
 	BEGIN_CHEAT_FUNCTION();
@@ -185,7 +186,8 @@ float CheatImpulse(entity this, int imp)
 			CheatCommand(this, tokenize_console("give all"));
 			break; // already counted as cheat
 		case CHIMPULSE_SPEEDRUN.impulse:
-			IS_CHEAT(this, imp, 0, 0);
+			if(!autocvar_g_allow_checkpoints)
+				IS_CHEAT(this, imp, 0, 0);
 			if(this.personal)
 			{
 				this.speedrunning = true;
