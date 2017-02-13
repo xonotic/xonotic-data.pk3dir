@@ -615,8 +615,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		UNSET_ONGROUND(this);
 		// dying animation
 		this.deadflag = DEAD_DYING;
-		// clear checkpoints (prevent cheating)
-		if (this.personal) delete(this.personal);
 
 		// when to allow respawn
 		calculate_player_respawn_time(this);
