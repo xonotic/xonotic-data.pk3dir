@@ -102,6 +102,14 @@ float WinningCondition_QualifyingThenRace(float limit)
 	return wc;
 }
 
+MUTATOR_HOOKFUNCTION(rc, AbortSpeedrun)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(autocvar_g_allow_checkpoints)
+		race_PreparePlayer(player); // nice try
+}
+
 MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);

@@ -131,7 +131,6 @@ spawnfunc(info_autoscreenshot)
 	// this one just has to exist
 }
 
-bool autocvar_g_allow_checkpoints;
 float CheatImpulse(entity this, int imp)
 {
 	BEGIN_CHEAT_FUNCTION();

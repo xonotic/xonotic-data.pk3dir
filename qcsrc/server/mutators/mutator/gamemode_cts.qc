@@ -194,6 +194,14 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(autocvar_g_allow_checkpoints)
+		race_PreparePlayer(player); // nice try
+}
+
 MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
