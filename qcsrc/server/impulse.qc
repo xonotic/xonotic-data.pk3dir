@@ -565,6 +565,8 @@ IMPULSE(waypoint_clear)
 	{
 		delete(this.personal);
 		this.personal = NULL;
+		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+			ClientKill(this);
 	}
 	sprint(this, "all waypoints cleared\n");
 }
