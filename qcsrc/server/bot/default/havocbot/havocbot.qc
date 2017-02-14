@@ -674,7 +674,33 @@ void havocbot_movetogoal(entity this)
 	if (this.goalcurrent == NULL)
 		return;
 
-	navigation_poptouchedgoals(this);
+
+	bool locked_goal = false;
+	if(this.goalentity.bot_pickup)
+	{
+		if(this.goalentity.bot_pickup_respawning)
+		{
+			if(this.goalentity.solid) // item respawned
+				this.goalentity.bot_pickup_respawning = false;
+			else if(time < this.goalentity.scheduledrespawntime - 10) // item already taken (by someone else)
+			{
+				this.goalentity.bot_pickup_respawning = false;
+				navigation_clearroute(this);
+				this.bot_strategytime = 0;
+				return;
+			}
+			else if(this.goalentity == this.goalcurrent)
+				locked_goal = true; // wait for item to respawn
+		}
+		else if(!this.goalentity.solid)
+		{
+			navigation_clearroute(this);
+			this.bot_strategytime = 0;
+			return;
+		}
+	}
+	if(!locked_goal)
+		navigation_poptouchedgoals(this);
 
 	// if ran out of goals try to use an alternative goal or get a new strategy asap
 	if(this.goalcurrent == NULL)

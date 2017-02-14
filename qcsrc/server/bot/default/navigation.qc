@@ -232,6 +232,7 @@ void navigation_clearroute(entity this)
 {
 	//print("bot ", etos(this), " clear\n");
 	this.navigation_hasgoals = false;
+	this.goalentity = NULL;
 	this.goalcurrent = NULL;
 	this.goalstack01 = NULL;
 	this.goalstack02 = NULL;
@@ -275,6 +276,8 @@ void navigation_clearroute(entity this)
 void navigation_pushroute(entity this, entity e)
 {
 	//print("bot ", etos(this), " push ", etos(e), "\n");
+	if(this.goalstack31 == this.goalentity)
+		this.goalentity = NULL;
 	this.goalstack31 = this.goalstack30;
 	this.goalstack30 = this.goalstack29;
 	this.goalstack29 = this.goalstack28;
@@ -315,6 +318,8 @@ void navigation_pushroute(entity this, entity e)
 void navigation_poproute(entity this)
 {
 	//print("bot ", etos(this), " pop\n");
+	if(this.goalcurrent == this.goalentity)
+		this.goalentity = NULL;
 	this.goalcurrent = this.goalstack01;
 	this.goalstack01 = this.goalstack02;
 	this.goalstack02 = this.goalstack03;
@@ -941,16 +946,6 @@ void navigation_poptouchedgoals(entity this)
 			navigation_poproute(this);
 			return;
 		}
-	}
-
-	if(this.goalcurrent.bot_pickup_respawning)
-	{
-		if(!this.goalcurrent.solid)
-		{
-			if(time > this.goalcurrent.scheduledrespawntime - 10) // item not yet taken (by someone else)
-				return; // wait for item to respawn
-		}
-		this.goalcurrent.bot_pickup_respawning = false;
 	}
 
 	// If for some reason the bot is closer to the next goal, pop the current one
