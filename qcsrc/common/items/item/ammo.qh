@@ -22,6 +22,14 @@ ENDCLASS(Ammo)
 MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
 #endif
 
+#ifdef SVQC
+PROPERTY(int, g_pickup_nails);
+void ammo_bullets_init(entity item)
+{
+    if(!item.ammo_nails)
+        item.ammo_nails = g_pickup_nails;
+}
+#endif
 REGISTER_ITEM(Bullets, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Bullets_ITEM;
@@ -31,6 +39,7 @@ REGISTER_ITEM(Bullets, Ammo) {
 #ifdef SVQC
     this.m_botvalue =   1500;
     this.m_itemid   =   IT_NAILS;
+    this.m_iteminit =   ammo_bullets_init;
 #endif
 }
 
@@ -38,6 +47,14 @@ REGISTER_ITEM(Bullets, Ammo) {
 MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
 #endif
 
+#ifdef SVQC
+PROPERTY(int, g_pickup_cells);
+void ammo_cells_init(entity item)
+{
+    if(!item.ammo_cells)
+        item.ammo_cells = g_pickup_cells;
+}
+#endif
 REGISTER_ITEM(Cells, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Cells_ITEM;
@@ -47,6 +64,7 @@ REGISTER_ITEM(Cells, Ammo) {
 #ifdef SVQC
     this.m_botvalue =   1500;
     this.m_itemid   =   IT_CELLS;
+    this.m_iteminit =   ammo_cells_init;
 #endif
 }
 
@@ -54,6 +72,14 @@ REGISTER_ITEM(Cells, Ammo) {
 MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
 #endif
 
+#ifdef SVQC
+PROPERTY(int, g_pickup_plasma);
+void ammo_plasma_init(entity item)
+{
+    if(!item.ammo_plasma)
+        item.ammo_plasma = g_pickup_plasma;
+}
+#endif
 REGISTER_ITEM(Plasma, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Plasma_ITEM;
@@ -63,6 +89,7 @@ REGISTER_ITEM(Plasma, Ammo) {
 #ifdef SVQC
     this.m_botvalue =   1500;
     this.m_itemid   =   IT_PLASMA;
+    this.m_iteminit =   ammo_plasma_init;
 #endif
 }
 
@@ -70,6 +97,14 @@ REGISTER_ITEM(Plasma, Ammo) {
 MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
 #endif
 
+#ifdef SVQC
+PROPERTY(int, g_pickup_rockets);
+void ammo_rockets_init(entity item)
+{
+    if(!item.ammo_rockets)
+        item.ammo_rockets = g_pickup_rockets;
+}
+#endif
 REGISTER_ITEM(Rockets, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Rockets_ITEM;
@@ -79,6 +114,7 @@ REGISTER_ITEM(Rockets, Ammo) {
 #ifdef SVQC
     this.m_botvalue =   1500;
     this.m_itemid   =   IT_ROCKETS;
+    this.m_iteminit =   ammo_rockets_init;
 #endif
 }
 
@@ -86,6 +122,14 @@ REGISTER_ITEM(Rockets, Ammo) {
 MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
 #endif
 
+#ifdef SVQC
+PROPERTY(int, g_pickup_shells);
+void ammo_shells_init(entity item)
+{
+    if(!item.ammo_shells)
+        item.ammo_shells = g_pickup_shells;
+}
+#endif
 REGISTER_ITEM(Shells, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Shells_ITEM;
@@ -95,5 +139,6 @@ REGISTER_ITEM(Shells, Ammo) {
 #ifdef SVQC
     this.m_botvalue =   1000;
     this.m_itemid   =   IT_SHELLS;
+    this.m_iteminit =   ammo_shells_init;
 #endif
 }

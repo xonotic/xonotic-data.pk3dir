@@ -1079,6 +1079,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	this.item_model_ent = itemmodel;
     this.item_pickupsound_ent = pickupsound;
 
+    if(def.m_iteminit)
+    	def.m_iteminit(this);
+
 	if(!this.respawntime) // both need to be set
 	{
 		this.respawntime = defaultrespawntime;
@@ -1285,8 +1288,6 @@ void StartItem(entity this, GameItem def)
 
 spawnfunc(item_rockets)
 {
-	if(!this.ammo_rockets)
-		this.ammo_rockets = g_pickup_rockets;
     StartItem(this, ITEM_Rockets);
 }
 
@@ -1302,22 +1303,16 @@ spawnfunc(item_bullets)
 		return;
 	}
 
-	if(!this.ammo_nails)
-		this.ammo_nails = g_pickup_nails;
     StartItem(this, ITEM_Bullets);
 }
 
 spawnfunc(item_cells)
 {
-	if(!this.ammo_cells)
-		this.ammo_cells = g_pickup_cells;
 	StartItem(this, ITEM_Cells);
 }
 
 spawnfunc(item_plasma)
 {
-	if(!this.ammo_plasma)
-		this.ammo_plasma = g_pickup_plasma;
 	StartItem(this, ITEM_Plasma);
 }
 
@@ -1333,80 +1328,46 @@ spawnfunc(item_shells)
 		return;
 	}
 
-	if(!this.ammo_shells)
-		this.ammo_shells = g_pickup_shells;
 	StartItem(this, ITEM_Shells);
 }
 
 spawnfunc(item_armor_small)
 {
-	if(!this.armorvalue)
-		this.armorvalue = g_pickup_armorsmall;
-	if(!this.max_armorvalue)
-		this.max_armorvalue = g_pickup_armorsmall_max;
 	StartItem(this, ITEM_ArmorSmall);
 }
 
 spawnfunc(item_armor_medium)
 {
-	if(!this.armorvalue)
-		this.armorvalue = g_pickup_armormedium;
-	if(!this.max_armorvalue)
-		this.max_armorvalue = g_pickup_armormedium_max;
 	StartItem(this, ITEM_ArmorMedium);
 }
 
 spawnfunc(item_armor_big)
 {
-	if(!this.armorvalue)
-		this.armorvalue = g_pickup_armorbig;
-	if(!this.max_armorvalue)
-		this.max_armorvalue = g_pickup_armorbig_max;
 	StartItem(this, ITEM_ArmorBig);
 }
 
 spawnfunc(item_armor_mega)
 {
-	if(!this.armorvalue)
-		this.armorvalue = g_pickup_armormega;
-	if(!this.max_armorvalue)
-		this.max_armorvalue = g_pickup_armormega_max;
 	StartItem(this, ITEM_ArmorMega);
 }
 
 spawnfunc(item_health_small)
 {
-	if(!this.max_health)
-		this.max_health = g_pickup_healthsmall_max;
-	if(!this.health)
-		this.health = g_pickup_healthsmall;
 	StartItem(this, ITEM_HealthSmall);
 }
 
 spawnfunc(item_health_medium)
 {
-	if(!this.max_health)
-		this.max_health = g_pickup_healthmedium_max;
-	if(!this.health)
-		this.health = g_pickup_healthmedium;
     StartItem(this, ITEM_HealthMedium);
 }
 
 spawnfunc(item_health_big)
 {
-	if(!this.max_health)
-		this.max_health = g_pickup_healthbig_max;
-	if(!this.health)
-		this.health = g_pickup_healthbig;
 	StartItem(this, ITEM_HealthBig);
 }
 
 spawnfunc(item_health_mega)
 {
-    if(!this.max_health)
-        this.max_health = g_pickup_healthmega_max;
-    if(!this.health)
-        this.health = g_pickup_healthmega;
     StartItem(this, ITEM_HealthMega);
 }
 
@@ -1421,16 +1382,12 @@ spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
 
 spawnfunc(item_strength)
 {
-		if(!this.strength_finished)
-			this.strength_finished = autocvar_g_balance_powerup_strength_time;
-		StartItem(this, ITEM_Strength);
+	StartItem(this, ITEM_Strength);
 }
 
 spawnfunc(item_invincible)
 {
-		if(!this.invincible_finished)
-			this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-		StartItem(this, ITEM_Shield);
+	StartItem(this, ITEM_Shield);
 }
 
 // compatibility:
@@ -1578,8 +1535,6 @@ spawnfunc(target_items)
 
 spawnfunc(item_fuel)
 {
-	if(!this.ammo_fuel)
-		this.ammo_fuel = g_pickup_fuel;
 	StartItem(this, ITEM_JetpackFuel);
 }
 
@@ -1595,8 +1550,6 @@ spawnfunc(item_fuel_regen)
 
 spawnfunc(item_jetpack)
 {
-	if(!this.ammo_fuel)
-		this.ammo_fuel = g_pickup_fuel_jetpack;
 	if(start_items & ITEM_Jetpack.m_itemid)
 	{
 		spawnfunc_item_fuel(this);

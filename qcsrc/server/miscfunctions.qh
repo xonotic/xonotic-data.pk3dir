@@ -160,35 +160,12 @@ float nearest_length[NUM_NEAREST_ENTITIES];
 
 //#NO AUTOCVARS START
 
-float g_pickup_shells;
 float g_pickup_shells_max;
-float g_pickup_nails;
 float g_pickup_nails_max;
-float g_pickup_rockets;
 float g_pickup_rockets_max;
-float g_pickup_cells;
 float g_pickup_cells_max;
-float g_pickup_plasma;
 float g_pickup_plasma_max;
-float g_pickup_fuel;
-float g_pickup_fuel_jetpack;
 float g_pickup_fuel_max;
-float g_pickup_armorsmall;
-float g_pickup_armorsmall_max;
-float g_pickup_armormedium;
-float g_pickup_armormedium_max;
-float g_pickup_armorbig;
-float g_pickup_armorbig_max;
-float g_pickup_armormega;
-float g_pickup_armormega_max;
-float g_pickup_healthsmall;
-float g_pickup_healthsmall_max;
-float g_pickup_healthmedium;
-float g_pickup_healthmedium_max;
-float g_pickup_healthbig;
-float g_pickup_healthbig_max;
-float g_pickup_healthmega;
-float g_pickup_healthmega_max;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
 WepSet g_weaponarena_weapons;
