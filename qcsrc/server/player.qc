@@ -913,6 +913,13 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = 1;
 	}
 
+	if (privatesay && source && !IS_PLAYER(source))
+	{
+		if (!game_stopped)
+		if ((privatesay && !IS_PLAYER(privatesay)) || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			ret = -1; // just hide the message completely
+	}
+
 	MUTATOR_CALLHOOK(ChatMessage, source, ret);
 	ret = M_ARGV(1, int);
 

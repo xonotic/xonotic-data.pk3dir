@@ -537,6 +537,12 @@ void ClientCommand_tell(entity caller, float request, float argc, string command
 		{
 			if (argc >= 3)
 			{
+				if(!IS_CLIENT(caller) && IS_REAL_CLIENT(caller)) // connecting
+				{
+					print_to(caller, "You can't ^2tell^7 a message while connecting.");
+					return;
+				}
+
 				entity tell_to = GetIndexedEntity(argc, 1);
 				float tell_accepted = VerifyClientEntity(tell_to, true, false);
 
