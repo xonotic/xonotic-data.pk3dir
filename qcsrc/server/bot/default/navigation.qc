@@ -946,7 +946,10 @@ void navigation_poptouchedgoals(entity this)
 	if(this.goalcurrent.bot_pickup_respawning)
 	{
 		if(!this.goalcurrent.solid)
-			return;
+		{
+			if(time > this.goalcurrent.scheduledrespawntime - 10) // item not yet taken (by someone else)
+				return; // wait for item to respawn
+		}
 		this.goalcurrent.bot_pickup_respawning = false;
 	}
 
