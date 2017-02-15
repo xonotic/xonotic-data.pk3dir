@@ -676,7 +676,13 @@ void havocbot_movetogoal(entity this)
 
 
 	bool locked_goal = false;
-	if(this.goalentity.bot_pickup)
+	if(this.goalentity && wasfreed(this.goalentity))
+	{
+		navigation_clearroute(this);
+		this.bot_strategytime = 0;
+		return;
+	}
+	else if(this.goalentity.bot_pickup)
 	{
 		if(this.goalentity.bot_pickup_respawning)
 		{
