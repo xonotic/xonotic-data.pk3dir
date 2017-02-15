@@ -784,43 +784,35 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// avoiding dangers and obstacles
-			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.5 : v_forward * 32);
-			vector dst_ahead = this.origin + this.view_ofs + offset;
+			offset = (vdist(this.velocity - eZ * this.velocity.z, >, 32) ? this.velocity * 0.5 : v_forward * 32);
+			vector dst_ahead = this.origin + offset;
 			vector dst_down = dst_ahead - '0 0 3000';
 
-			// Look ahead
-			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
-
 			// Check head-banging against walls
-			if(vdist(this.origin + this.view_ofs - trace_endpos, <, 25) && !(this.aistatus & AI_STATUS_OUT_WATER))
+			traceline(this.origin, dst_ahead, true, NULL);
+			if(vdist(this.origin - trace_endpos, <, 25) && !(this.aistatus & AI_STATUS_OUT_WATER))
 			{
 				PHYS_INPUT_BUTTON_JUMP(this) = true;
-				if(this.facingwalltime && time > this.facingwalltime)
+				if(!this.facingwalltime)
+					this.facingwalltime = time + 0.2;
+				else if(time > this.facingwalltime)
 				{
-					this.ignoregoal = this.goalcurrent;
-					this.ignoregoaltime = time + autocvar_bot_ai_ignoregoal_timeout;
+					navigation_clearroute(this);
 					this.bot_strategytime = 0;
 					return;
 				}
-				else
-				{
-					this.facingwalltime = time + 0.05;
-				}
 			}
 			else
-			{
 				this.facingwalltime = 0;
-
-				if(this.ignoregoal != NULL && time > this.ignoregoaltime)
-				{
-					this.ignoregoal = NULL;
-					this.ignoregoaltime = 0;
-				}
-			}
 
 			// Check for water/slime/lava and dangerous edges
 			// (only when the bot is on the ground or jumping intentionally)
 			this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
+
+			dst_ahead = this.origin + this.view_ofs + offset;
+			dst_down = dst_ahead - '0 0 3000';
+
+			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
 
 			bool unreachable = false;
 			s = CONTENT_SOLID;
