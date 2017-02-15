@@ -36,6 +36,7 @@ REGISTER_ITEM(HealthSmall, Health) {
     this.m_model                =   MDL_HealthSmall_ITEM;
     this.m_sound                =   SND_HealthSmall;
 #endif
+    this.netname                =   "health_small";
     this.m_name                 =   "5 Health";
     this.m_icon                 =   "health";
 #ifdef SVQC
@@ -69,6 +70,7 @@ REGISTER_ITEM(HealthMedium, Health) {
     this.m_model                =   MDL_HealthMedium_ITEM;
     this.m_sound                =   SND_HealthMedium;
 #endif
+    this.netname                =   "health_medium";
     this.m_name                 =   "25 Health";
     this.m_icon                 =   "health";
 #ifdef SVQC
@@ -102,6 +104,7 @@ REGISTER_ITEM(HealthBig, Health) {
     this.m_model                =   MDL_HealthBig_ITEM;
     this.m_sound                =   SND_HealthBig;
 #endif
+    this.netname                =   "health_big";
     this.m_name                 =   "50 Health";
     this.m_icon                 =   "health";
     this.m_color                =   '1 0 0';
@@ -137,6 +140,7 @@ REGISTER_ITEM(HealthMega, Health) {
     this.m_model                =   MDL_HealthMega_ITEM;
     this.m_sound                =   SND_HealthMega;
 #endif
+    this.netname                =   "health_mega";
     this.m_name                 =   "100 Health";
     this.m_icon                 =   "item_mega_health";
     this.m_color                =   '1 0 0';

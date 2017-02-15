@@ -27,6 +27,7 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
     this.m_model                =   MDL_VaporizerCells_ITEM;
     this.m_sound                =   SND_VaporizerCells;
 #endif
+    this.netname                =   "minst_cells";
     this.m_name                 =   "Vaporizer Ammo";
     this.m_icon                 =   "ammo_supercells";
 #ifdef SVQC
@@ -48,6 +49,7 @@ REGISTER_ITEM(ExtraLife, Powerup) {
     this.m_model                =   MDL_ExtraLife_ITEM;
     this.m_sound                =   SND_ExtraLife;
 #endif
+    this.netname                =   "health_mega";
     this.m_name                 =   "Extra life";
     this.m_icon                 =   "item_mega_health";
     this.m_color                =   '1 0 0';
@@ -66,6 +68,7 @@ REGISTER_ITEM(Invisibility, Powerup) {
     this.m_model            =   MDL_Invisibility_ITEM;
     this.m_sound            =   SND_Invisibility;
 #endif
+    this.netname            =   "strength";
     this.m_name             =   "Invisibility";
     this.m_icon             =   "strength";
     this.m_color            =   '0 0 1';
@@ -84,6 +87,7 @@ REGISTER_ITEM(Speed, Powerup) {
     this.m_model            =   MDL_Speed_ITEM;
     this.m_sound            =   SND_Speed;
 #endif
+    this.netname            =   "invincible";
     this.m_name             =   "Speed";
     this.m_icon             =   "shield";
     this.m_color            =   '1 0 1';

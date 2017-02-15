@@ -36,6 +36,7 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_model                =   MDL_ArmorSmall_ITEM;
     this.m_sound                =   SND_ArmorSmall;
 #endif
+    this.netname                =   "armor_small";
     this.m_name                 =   "5 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
@@ -69,6 +70,7 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_model                =   MDL_ArmorMedium_ITEM;
     this.m_sound                =   SND_ArmorMedium;
 #endif
+    this.netname                =   "armor_medium";
     this.m_name                 =   "25 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
@@ -102,6 +104,7 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_model                =   MDL_ArmorBig_ITEM;
     this.m_sound                =   SND_ArmorBig;
 #endif
+    this.netname                =   "armor_big";
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
     this.m_color                =   '0 1 0';
@@ -137,6 +140,7 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_model                =   MDL_ArmorMega_ITEM;
     this.m_sound                =   SND_ArmorMega;
 #endif
+    this.netname                =   "armor_mega";
     this.m_name                 =   "100 Armor";
     this.m_icon                 =   "item_large_armor";
     this.m_color                =   '0 1 0';

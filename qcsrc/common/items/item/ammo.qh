@@ -34,6 +34,7 @@ REGISTER_ITEM(Bullets, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Bullets_ITEM;
 #endif
+    this.netname    =   "bullets";
     this.m_name     =   "bullets";
     this.m_icon     =   "ammo_bullets";
 #ifdef SVQC
@@ -59,6 +60,7 @@ REGISTER_ITEM(Cells, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Cells_ITEM;
 #endif
+    this.netname    =   "cells";
     this.m_name     =   "cells";
     this.m_icon     =   "ammo_cells";
 #ifdef SVQC
@@ -84,6 +86,7 @@ REGISTER_ITEM(Plasma, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Plasma_ITEM;
 #endif
+    this.netname    =   "plasma";
     this.m_name     =   "plasma";
     this.m_icon     =   "ammo_plasma";
 #ifdef SVQC
@@ -109,6 +112,7 @@ REGISTER_ITEM(Rockets, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Rockets_ITEM;
 #endif
+    this.netname    =   "rockets";
     this.m_name     =   "rockets";
     this.m_icon     =   "ammo_rockets";
 #ifdef SVQC
@@ -134,6 +138,7 @@ REGISTER_ITEM(Shells, Ammo) {
 #ifdef GAMEQC
     this.m_model    =   MDL_Shells_ITEM;
 #endif
+    this.netname    =   "shells";
     this.m_name     =   "shells";
     this.m_icon     =   "ammo_shells";
 #ifdef SVQC

@@ -26,6 +26,7 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_model, Model);
     ATTRIB(Pickup, m_sound, Sound, SND_ITEMPICKUP);
 #endif
+    ATTRIB(Pickup, netname, string);
     ATTRIB(Pickup, m_name, string);
     METHOD(Pickup, show, void(Pickup this))
     {

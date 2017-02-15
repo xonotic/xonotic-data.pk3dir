@@ -37,6 +37,7 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_glow             =   true;
     this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
 #endif
+    this.netname            =   "strength";
     this.m_name             =   "Strength Powerup";
     this.m_icon             =   "strength";
     this.m_color            =   '0 0 1';
@@ -68,6 +69,7 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_glow             =   true;
     this.m_respawnsound     =   SND_SHIELD_RESPAWN;
 #endif
+    this.netname            =   "invincible";
     this.m_name             =   "Shield";
     this.m_icon             =   "shield";
     this.m_color            =   '1 0 1';
