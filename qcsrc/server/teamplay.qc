@@ -209,7 +209,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
 
 		if(!noprint)
-		bprint(pl.netname, "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
+			bprint(playername(pl, false), "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
 	}
 
 }

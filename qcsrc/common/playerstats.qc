@@ -133,7 +133,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
 	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
-		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), p.netname);
+		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p, false));
 
 	if(teamplay)
 		db_put(PS_GR_OUT_DB, sprintf("%s:_team", p.playerstats_id), ftos(p.team));

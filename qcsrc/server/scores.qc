@@ -824,7 +824,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 
 	sk = p.scorekeeper;
 
-	s = strcat(s, p.netname);
+	s = strcat(s, playername(p, false));
 	for (;;)
 	{
 		i = strlennocol(s) - NAMEWIDTH;
@@ -856,7 +856,7 @@ void Score_NicePrint_Spectators(entity to)
 
 void Score_NicePrint_Spectator(entity to, entity p)
 {
-	print_to(to, strcat("  ", p.netname));
+	print_to(to, strcat("  ", playername(p, false)));
 }
 
 .float score_dummyfield;
