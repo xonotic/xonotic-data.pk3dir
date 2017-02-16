@@ -1256,7 +1256,8 @@ void ClientDisconnect(entity this)
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
-	SetSpectatee(this, NULL);
+	if(IS_SPEC(this))
+		SetSpectatee(this, NULL);
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
