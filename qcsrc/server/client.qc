@@ -653,7 +653,10 @@ void PutClientInServer(entity this)
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
+			entity oldwep = this.(weaponentity);
 			CL_SpawnWeaponentity(this, weaponentity);
+			if(oldwep)
+				this.(weaponentity).m_gunalign = oldwep.m_gunalign;
 		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
