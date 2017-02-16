@@ -788,19 +788,19 @@ void havocbot_movetogoal(entity this)
 
 			// if bot for some reason doesn't get close to the current goal find another one
 			float curr_dist = vlen(this.origin - this.goalcurrent.origin);
-			if(this.goalcurrent != this.goalcurrent_prev)
+			if(!IS_PLAYER(this.goalcurrent))
 			{
-				this.goalcurrent_prev = this.goalcurrent;
-				this.goalcurrent_distance = curr_dist;
-				this.goalcurrent_distance_time = 0;
-			}
-			else if(curr_dist > this.goalcurrent_distance)
-			{
-				if(!this.goalcurrent_distance_time)
-					this.goalcurrent_distance_time = time;
-				else if (time - this.goalcurrent_distance_time > 0.5)
+				if(this.goalcurrent != this.goalcurrent_prev)
 				{
-					if(IS_ONGROUND(this))
+					this.goalcurrent_prev = this.goalcurrent;
+					this.goalcurrent_distance = curr_dist;
+					this.goalcurrent_distance_time = 0;
+				}
+				else if(curr_dist > this.goalcurrent_distance)
+				{
+					if(!this.goalcurrent_distance_time)
+						this.goalcurrent_distance_time = time;
+					else if (time - this.goalcurrent_distance_time > 0.5)
 					{
 						this.goalcurrent_prev = NULL;
 						navigation_clearroute(this);
@@ -808,43 +808,20 @@ void havocbot_movetogoal(entity this)
 						return;
 					}
 				}
-			}
-			else
-			{
-				// reduce it a little bit so it works even with very small approaches to the goal
-				this.goalcurrent_distance = max(20, curr_dist - 15);
-				this.goalcurrent_distance_time = 0;
-			}
-
-			// avoiding dangers and obstacles
-			offset = (vdist(this.velocity - eZ * this.velocity.z, >, 32) ? this.velocity * 0.5 : v_forward * 32);
-			vector dst_ahead = this.origin + offset;
-			vector dst_down = dst_ahead - '0 0 3000';
-
-			// Check head-banging against walls
-			traceline(this.origin, dst_ahead, true, NULL);
-			if(vdist(this.origin - trace_endpos, <, 25) && !(this.aistatus & AI_STATUS_OUT_WATER))
-			{
-				PHYS_INPUT_BUTTON_JUMP(this) = true;
-				if(!this.facingwalltime)
-					this.facingwalltime = time + 0.2;
-				else if(time > this.facingwalltime)
+				else
 				{
-					navigation_clearroute(this);
-					this.bot_strategytime = 0;
-					return;
+					// reduce it a little bit so it works even with very small approaches to the goal
+					this.goalcurrent_distance = max(20, curr_dist - 15);
+					this.goalcurrent_distance_time = 0;
 				}
 			}
-			else
-				this.facingwalltime = 0;
 
 			// Check for water/slime/lava and dangerous edges
 			// (only when the bot is on the ground or jumping intentionally)
 			this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
-			dst_ahead = this.origin + this.view_ofs + offset;
-			dst_down = dst_ahead - '0 0 3000';
-
+			vector dst_ahead = this.origin + this.view_ofs + offset;
+			vector dst_down = dst_ahead - '0 0 3000';
 			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
 
 			bool unreachable = false;
