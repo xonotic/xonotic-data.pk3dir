@@ -419,6 +419,9 @@ void havocbot_bunnyhop(entity this, vector dir)
 #endif
 }
 
+.entity goalcurrent_prev;
+.float goalcurrent_distance;
+.float goalcurrent_distance_time;
 void havocbot_movetogoal(entity this)
 {
 	vector destorg;
@@ -781,6 +784,36 @@ void havocbot_movetogoal(entity this)
 					if (trace_fraction > s)
 						PHYS_INPUT_BUTTON_JUMP(this) = true;
 				}
+			}
+
+			// if bot for some reason doesn't get close to the current goal find another one
+			float curr_dist = vlen(this.origin - this.goalcurrent.origin);
+			if(this.goalcurrent != this.goalcurrent_prev)
+			{
+				this.goalcurrent_prev = this.goalcurrent;
+				this.goalcurrent_distance = curr_dist;
+				this.goalcurrent_distance_time = 0;
+			}
+			else if(curr_dist > this.goalcurrent_distance)
+			{
+				if(!this.goalcurrent_distance_time)
+					this.goalcurrent_distance_time = time;
+				else if (time - this.goalcurrent_distance_time > 0.5)
+				{
+					if(IS_ONGROUND(this))
+					{
+						this.goalcurrent_prev = NULL;
+						navigation_clearroute(this);
+						this.bot_strategytime = 0;
+						return;
+					}
+				}
+			}
+			else
+			{
+				// reduce it a little bit so it works even with very small approaches to the goal
+				this.goalcurrent_distance = max(20, curr_dist - 15);
+				this.goalcurrent_distance_time = 0;
 			}
 
 			// avoiding dangers and obstacles
