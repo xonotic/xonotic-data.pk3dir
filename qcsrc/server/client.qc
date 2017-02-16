@@ -655,7 +655,7 @@ void PutClientInServer(entity this)
 			.entity weaponentity = weaponentities[slot];
 			entity oldwep = this.(weaponentity);
 			CL_SpawnWeaponentity(this, weaponentity);
-			if(oldwep)
+			if(oldwep && oldwep.owner == this)
 				this.(weaponentity).m_gunalign = oldwep.m_gunalign;
 		}
 		this.alpha = default_player_alpha;
