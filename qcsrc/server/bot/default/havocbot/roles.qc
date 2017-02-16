@@ -206,6 +206,9 @@ void havocbot_role_generic(entity this)
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
+
+		if(IS_PLAYER(this.goalentity))
+			this.bot_strategytime = time + min(2, autocvar_bot_ai_strategyinterval);
 	}
 }
 
