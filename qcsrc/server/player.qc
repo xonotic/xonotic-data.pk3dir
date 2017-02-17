@@ -743,10 +743,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
 			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
-			if(autocvar_g_chat_teamcolors)
-				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay, true), ": ^7");
-			else
-				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
+			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay, autocvar_g_chat_teamcolors), ": ^7");
 		}
 		else if(teamsay)
 		{
@@ -911,6 +908,13 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	else
 	{
 		ret = 1;
+	}
+
+	if (privatesay && source && !IS_PLAYER(source))
+	{
+		if (!game_stopped)
+		if ((privatesay && !IS_PLAYER(privatesay)) || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			ret = -1; // just hide the message completely
 	}
 
 	MUTATOR_CALLHOOK(ChatMessage, source, ret);

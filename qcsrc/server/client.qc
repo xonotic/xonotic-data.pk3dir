@@ -653,7 +653,10 @@ void PutClientInServer(entity this)
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
+			entity oldwep = this.(weaponentity);
 			CL_SpawnWeaponentity(this, weaponentity);
+			if(oldwep && oldwep.owner == this)
+				this.(weaponentity).m_gunalign = oldwep.m_gunalign;
 		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -1253,7 +1256,8 @@ void ClientDisconnect(entity this)
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
-	SetSpectatee(this, NULL);
+	if(IS_SPEC(this))
+		SetSpectatee(this, NULL);
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 

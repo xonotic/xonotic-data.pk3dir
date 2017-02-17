@@ -22,6 +22,14 @@ MODEL(Strength_ITEM, Item_Model("g_strength.md3"));
 SOUND(Strength, Item_Sound("powerup"));
 #endif
 
+#ifdef SVQC
+float autocvar_g_balance_powerup_strength_time;
+void powerup_strength_init(entity item)
+{
+    if(!item.strength_finished)
+        item.strength_finished = autocvar_g_balance_powerup_strength_time;
+}
+#endif
 REGISTER_ITEM(Strength, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Strength_ITEM;
@@ -29,12 +37,16 @@ REGISTER_ITEM(Strength, Powerup) {
     this.m_glow             =   true;
     this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
 #endif
+    this.netname            =   "strength";
     this.m_name             =   "Strength Powerup";
     this.m_icon             =   "strength";
     this.m_color            =   '0 0 1';
     this.m_waypoint         =   _("Strength");
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_STRENGTH;
+#ifdef SVQC
+    this.m_iteminit         =   powerup_strength_init;
+#endif
 }
 
 #ifdef GAMEQC
@@ -42,6 +54,14 @@ MODEL(Shield_ITEM, Item_Model("g_invincible.md3"));
 SOUND(Shield, Item_Sound("powerup_shield"));
 #endif
 
+#ifdef SVQC
+float autocvar_g_balance_powerup_invincible_time;
+void powerup_shield_init(entity item)
+{
+    if(!item.invincible_finished)
+        item.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+}
+#endif
 REGISTER_ITEM(Shield, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Shield_ITEM;
@@ -49,10 +69,14 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_glow             =   true;
     this.m_respawnsound     =   SND_SHIELD_RESPAWN;
 #endif
+    this.netname            =   "invincible";
     this.m_name             =   "Shield";
     this.m_icon             =   "shield";
     this.m_color            =   '1 0 1';
     this.m_waypoint         =   _("Shield");
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_INVINCIBLE;
+#ifdef SVQC
+    this.m_iteminit         =   powerup_shield_init;
+#endif
 }

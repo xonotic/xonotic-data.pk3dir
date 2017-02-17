@@ -242,12 +242,12 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 						if (caller.ready)            // toggle
 						{
 							caller.ready = false;
-							bprint(caller.netname, "^2 is ^1NOT^2 ready\n");
+							bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
-							bprint(caller.netname, "^2 is ready\n");
+							bprint(playername(caller, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -537,6 +537,12 @@ void ClientCommand_tell(entity caller, float request, float argc, string command
 		{
 			if (argc >= 3)
 			{
+				if(!IS_CLIENT(caller) && IS_REAL_CLIENT(caller)) // connecting
+				{
+					print_to(caller, "You can't ^2tell^7 a message while connecting.");
+					return;
+				}
+
 				entity tell_to = GetIndexedEntity(argc, 1);
 				float tell_accepted = VerifyClientEntity(tell_to, true, false);
 

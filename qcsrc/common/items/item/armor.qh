@@ -20,6 +20,15 @@ SOUND(ArmorSmall, Item_Sound("armor1"));
 #endif
 #ifdef SVQC
 PROPERTY(float, g_pickup_armorsmall_anyway);
+PROPERTY(int, g_pickup_armorsmall);
+PROPERTY(int, g_pickup_armorsmall_max);
+void item_armorsmall_init(entity item)
+{
+    if(!item.max_armorvalue)
+        item.max_armorvalue = g_pickup_armorsmall_max;
+    if(!item.armorvalue)
+        item.armorvalue = g_pickup_armorsmall;
+}
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
@@ -27,6 +36,7 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_model                =   MDL_ArmorSmall_ITEM;
     this.m_sound                =   SND_ArmorSmall;
 #endif
+    this.netname                =   "armor_small";
     this.m_name                 =   "5 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
@@ -34,6 +44,7 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
     this.m_pickupanyway         =   GET(g_pickup_armorsmall_anyway);
+    this.m_iteminit             =   item_armorsmall_init;
 #endif
 }
 
@@ -43,6 +54,15 @@ SOUND(ArmorMedium, Item_Sound("armor10"));
 #endif
 #ifdef SVQC
 PROPERTY(float, g_pickup_armormedium_anyway);
+PROPERTY(int, g_pickup_armormedium);
+PROPERTY(int, g_pickup_armormedium_max);
+void item_armormedium_init(entity item)
+{
+    if(!item.max_armorvalue)
+        item.max_armorvalue = g_pickup_armormedium_max;
+    if(!item.armorvalue)
+        item.armorvalue = g_pickup_armormedium;
+}
 #endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
@@ -50,6 +70,7 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_model                =   MDL_ArmorMedium_ITEM;
     this.m_sound                =   SND_ArmorMedium;
 #endif
+    this.netname                =   "armor_medium";
     this.m_name                 =   "25 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
@@ -57,6 +78,7 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
     this.m_pickupanyway         =   GET(g_pickup_armormedium_anyway);
+    this.m_iteminit             =   item_armormedium_init;
 #endif
 }
 
@@ -66,6 +88,15 @@ SOUND(ArmorBig, Item_Sound("armor17_5"));
 #endif
 #ifdef SVQC
 PROPERTY(float, g_pickup_armorbig_anyway);
+PROPERTY(int, g_pickup_armorbig);
+PROPERTY(int, g_pickup_armorbig_max);
+void item_armorbig_init(entity item)
+{
+    if(!item.max_armorvalue)
+        item.max_armorvalue = g_pickup_armorbig_max;
+    if(!item.armorvalue)
+        item.armorvalue = g_pickup_armorbig;
+}
 #endif
 
 REGISTER_ITEM(ArmorBig, Armor) {
@@ -73,6 +104,7 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_model                =   MDL_ArmorBig_ITEM;
     this.m_sound                =   SND_ArmorBig;
 #endif
+    this.netname                =   "armor_big";
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
     this.m_color                =   '0 1 0';
@@ -82,6 +114,7 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
     this.m_pickupanyway         =   GET(g_pickup_armorbig_anyway);
+    this.m_iteminit             =   item_armorbig_init;
 #endif
 }
 
@@ -91,6 +124,15 @@ SOUND(ArmorMega, Item_Sound("armor25"));
 #endif
 #ifdef SVQC
 PROPERTY(float, g_pickup_armormega_anyway);
+PROPERTY(int, g_pickup_armormega);
+PROPERTY(int, g_pickup_armormega_max);
+void item_armormega_init(entity item)
+{
+    if(!item.max_armorvalue)
+        item.max_armorvalue = g_pickup_armormega_max;
+    if(!item.armorvalue)
+        item.armorvalue = g_pickup_armormega;
+}
 #endif
 
 REGISTER_ITEM(ArmorMega, Armor) {
@@ -98,6 +140,7 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_model                =   MDL_ArmorMega_ITEM;
     this.m_sound                =   SND_ArmorMega;
 #endif
+    this.netname                =   "armor_mega";
     this.m_name                 =   "100 Armor";
     this.m_icon                 =   "item_large_armor";
     this.m_color                =   '0 1 0';
@@ -109,5 +152,6 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
     this.m_pickupanyway         =   GET(g_pickup_armormega_anyway);
+    this.m_iteminit             =   item_armormega_init;
 #endif
 }
