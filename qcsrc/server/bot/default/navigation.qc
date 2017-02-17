@@ -985,8 +985,18 @@ void navigation_poptouchedgoals(entity this)
 		}
 	}
 
-	while (this.goalcurrent && !IS_PLAYER(this.goalcurrent) && boxesoverlap(m1, m2, this.goalcurrent.absmin, this.goalcurrent.absmax))
+	while (this.goalcurrent && !IS_PLAYER(this.goalcurrent))
 	{
+		vector gc_min = this.goalcurrent.absmin;
+		vector gc_max = this.goalcurrent.absmax;
+		if(this.goalcurrent.classname == "waypoint")
+		{
+			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
+			gc_max = this.goalcurrent.origin + '1 1 1' * 12;
+		}
+		if(!boxesoverlap(m1, m2, gc_min, gc_max))
+			break;
+
 		if((this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 			break;
 
