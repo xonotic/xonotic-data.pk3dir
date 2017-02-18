@@ -292,6 +292,7 @@ bool PlayerJump(entity this)
 
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY(this);
+	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 
 	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
 		return true;
@@ -305,6 +306,7 @@ bool PlayerJump(entity this)
 		{
 			doublejump = true;
 			mjumpheight *= 0.7;
+			track_jump = true;
 		}
 		else
 		{
@@ -317,7 +319,6 @@ bool PlayerJump(entity this)
 		if (!IS_ONGROUND(this) && !IS_ONSLICK(this))
 			return IS_JUMP_HELD(this);
 
-	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 	if(PHYS_TRACK_CANJUMP(this))
 		track_jump = true;
 
