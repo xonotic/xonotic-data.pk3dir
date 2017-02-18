@@ -989,7 +989,7 @@ void navigation_poptouchedgoals(entity this)
 	{
 		vector gc_min = this.goalcurrent.absmin;
 		vector gc_max = this.goalcurrent.absmax;
-		if(this.goalcurrent.classname == "waypoint")
+		if(this.goalcurrent.classname == "waypoint" && !this.goalcurrent.wpisbox)
 		{
 			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
 			gc_max = this.goalcurrent.origin + '1 1 1' * 12;
