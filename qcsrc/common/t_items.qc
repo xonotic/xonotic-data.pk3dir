@@ -1332,7 +1332,7 @@ void setItemGroup(entity this)
 			{
 				int grY = it.item_group;
 				// move all items of item_group Y to item_group X
-				FOREACH_ENTITY(IS_SMALL(it.itemdef),
+				IL_EACH(g_items, IS_SMALL(it.itemdef),
 				{
 					if(it.item_group == grY)
 						it.item_group = this.item_group;
@@ -1347,9 +1347,9 @@ void setItemGroupCount()
 	for (int k = 1; k <= group_count; k++)
 	{
 		int count = 0;
-		FOREACH_ENTITY(IS_SMALL(it.itemdef) && it.item_group == k, { count++; });
+		IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { count++; });
 		if (count)
-			FOREACH_ENTITY(IS_SMALL(it.itemdef) && it.item_group == k, { it.item_group_count = count; });
+			IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { it.item_group_count = count; });
 	}
 }
 
