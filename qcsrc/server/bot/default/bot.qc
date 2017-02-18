@@ -46,6 +46,7 @@ entity bot_spawn()
 	entity bot = spawnclient();
 	if (bot)
 	{
+		setItemGroupCount();
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
@@ -63,9 +64,8 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = this.bot_nextthink + autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill);
-	if(this.bot_nextthink < time)
-		this.bot_nextthink = time + autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill);
+	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill) * min(14 / (skill + 14), 1));
+
 	//if (this.bot_painintensity > 0)
 	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
 

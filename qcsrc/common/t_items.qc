@@ -959,7 +959,16 @@ float weapon_pickupevalfunc(entity player, entity item)
 			return 0;
 		return ammo_pickupevalfunc(player, item);
 	}
-	return item.bot_pickupbasevalue;
+
+	// reduce weapon value if bot already got a good arsenal
+	float c = 1;
+	int weapons_value = 0;
+	FOREACH(Weapons, it != WEP_Null && (player.weapons & it.m_wepset), {
+		weapons_value += it.bot_pickupbasevalue;
+	});
+	c -= bound(0, weapons_value / 20000, 1) * 0.5;
+
+	return item.bot_pickupbasevalue * c;
 }
 
 float ammo_pickupevalfunc(entity player, entity item)
@@ -1008,48 +1017,56 @@ float ammo_pickupevalfunc(entity player, entity item)
 	if (need_shells)
 	if (item.ammo_shells)
 	if (player.ammo_shells < g_pickup_shells_max)
-		c = (player.ammo_shells + item.ammo_shells) / player.ammo_shells;
+		c = item.ammo_shells / player.ammo_shells;
 	if (need_nails)
 	if (item.ammo_nails)
 	if (player.ammo_nails < g_pickup_nails_max)
-		c = (player.ammo_nails + item.ammo_nails) / player.ammo_nails;
+		c = item.ammo_nails / player.ammo_nails;
 	if (need_rockets)
 	if (item.ammo_rockets)
 	if (player.ammo_rockets < g_pickup_rockets_max)
-		c = (player.ammo_rockets + item.ammo_rockets) / player.ammo_rockets;
+		c = item.ammo_rockets / player.ammo_rockets;
 	if (need_cells)
 	if (item.ammo_cells)
 	if (player.ammo_cells < g_pickup_cells_max)
-		c = (player.ammo_cells + item.ammo_cells) / player.ammo_cells;
+		c = item.ammo_cells / player.ammo_cells;
 	if (need_plasma)
 	if (item.ammo_plasma)
 	if (player.ammo_plasma < g_pickup_plasma_max)
-		c = (player.ammo_plasma + item.ammo_plasma) / player.ammo_plasma;
+		c = item.ammo_plasma / player.ammo_plasma;
 	if (need_fuel)
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
-		c = (player.ammo_fuel + item.ammo_fuel) / player.ammo_fuel;
+		c = item.ammo_fuel / player.ammo_fuel;
 
-	rating *= min(3, c);
+	rating *= min(2, c);
 	if(wpn)
-		// Skilled bots will grab more
-		rating += wpn.bot_pickupbasevalue * (0.1 + 0.1 * bound(0, skill / 10, 1));
+		rating += wpn.bot_pickupbasevalue * 0.1;
 	return rating;
 }
 
+.int item_group;
+.int item_group_count;
 float healtharmor_pickupevalfunc(entity player, entity item)
 {
 	float c = 0;
 	float rating = item.bot_pickupbasevalue;
 
-	if (item.armorvalue)
+	float itemarmor = item.armorvalue;
+	float itemhealth = item.health;
+	if(item.item_group)
+	{
+		itemarmor *= min(4, item.item_group_count);
+		itemhealth *= min(4, item.item_group_count);
+	}
+	if (itemarmor)
 	if (player.armorvalue < item.max_armorvalue)
-		c = (player.armorvalue + player.health + item.armorvalue) / (max(1, player.armorvalue + player.health));
-	if (item.health)
+		c = itemarmor / max(1, player.armorvalue * 2/3 + player.health * 1/3);
+	if (itemhealth)
 	if (player.health < item.max_health)
-		c = (player.health + item.health) / (max(1, player.health));
+		c = itemhealth / max(1, player.health);
 
-	rating *= min(3, c);
+	rating *= min(2, c);
 	return rating;
 }
 
@@ -1274,6 +1291,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		delete(this);
 		return;
 	}
+
+	setItemGroup(this);
 }
 
 void StartItem(entity this, GameItem def)
@@ -1284,6 +1303,54 @@ void StartItem(entity this, GameItem def)
     	def.m_respawntime(), // defaultrespawntime
     	def.m_respawntimejitter() // defaultrespawntimejitter
 	);
+}
+
+#define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))
+int group_count = 1;
+
+void setItemGroup(entity this)
+{
+	if(!IS_SMALL(this.itemdef))
+		return;
+
+	FOREACH_ENTITY_RADIUS(this.origin, 120, (it != this) && IS_SMALL(it.itemdef),
+	{
+		if(!this.item_group)
+		{
+			if(!it.item_group)
+			{
+				it.item_group = group_count;
+				group_count++;
+			}
+			this.item_group = it.item_group;
+		}
+		else // spawning item is already part of a item_group X
+		{
+			if(!it.item_group)
+				it.item_group = this.item_group;
+			else if(it.item_group != this.item_group) // found an item near the spawning item that is part of a different item_group Y
+			{
+				int grY = it.item_group;
+				// move all items of item_group Y to item_group X
+				FOREACH_ENTITY(IS_SMALL(it.itemdef),
+				{
+					if(it.item_group == grY)
+						it.item_group = this.item_group;
+				});
+			}
+		}
+	});
+}
+
+void setItemGroupCount()
+{
+	for (int k = 1; k <= group_count; k++)
+	{
+		int count = 0;
+		FOREACH_ENTITY(IS_SMALL(it.itemdef) && it.item_group == k, { count++; });
+		if (count)
+			FOREACH_ENTITY(IS_SMALL(it.itemdef) && it.item_group == k, { it.item_group_count = count; });
+	}
 }
 
 spawnfunc(item_rockets)
