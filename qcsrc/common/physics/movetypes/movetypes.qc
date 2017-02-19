@@ -505,60 +505,6 @@ float _Movetype_PushEntity(entity this, vector push, bool failonstartsolid)  // 
 
 .float ltime;
 .void() blocked;
-// matrix version of makevectors, sets v_forward, v_right and v_up
-void makevectors_matrix(vector myangles)  // AngleVectorsFLU
-{
-	v_forward = v_right = v_up = '0 0 0';
-
-	float y = myangles.y * (M_PI * 2 / 360);
-	float sy = sin(y);
-	float cy = cos(y);
-	float p = myangles.x * (M_PI * 2 / 360);
-	float sp = sin(p);
-	float cp = cos(p);
-	if(v_forward)
-	{
-		v_forward.x = cp * cy;
-		v_forward.y = cp * sy;
-		v_forward.z = -sp;
-	}
-	if(v_right || v_up)
-	{
-		if(myangles.z)
-		{
-			float r = myangles.z * (M_PI * 2 / 360);
-			float sr = sin(r);
-			float cr = cos(r);
-			if(v_right)
-			{
-				v_right.x = sr * sp * cy + cr * -sy;
-				v_right.y = sr * sp * sy + cr * cy;
-				v_right.z = sr * cp;
-			}
-			if(v_up)
-			{
-				v_up.x = cr * sp * cy + -sr * -sy;
-				v_up.y = cr * sp * sy + -sr * cy;
-				v_up.z = cr * cp;
-			}
-		}
-		else
-		{
-			if(v_right)
-			{
-				v_right.x = -sy;
-				v_right.y = cy;
-				v_right.z = 0;
-			}
-			if(v_up)
-			{
-				v_up.x = sp * cy;
-				v_up.y = sp * sy;
-				v_up.z = cp;
-			}
-		}
-	}
-}
 
 void _Movetype_Physics_Frame(entity this, float movedt)
 {

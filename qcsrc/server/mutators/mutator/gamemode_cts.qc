@@ -194,6 +194,14 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(autocvar_g_allow_checkpoints)
+		race_PreparePlayer(player); // nice try
+}
+
 MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
@@ -228,7 +236,7 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 	entity player = M_ARGV(0, entity);
 
 	if(IS_PLAYER(player))
-	if(!gameover)
+	if(!game_stopped)
 	{
 		if(player.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
 			race_PreparePlayer(player);
@@ -312,7 +320,7 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 		return true;
 }
 
-MUTATOR_HOOKFUNCTION(cts, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

@@ -400,6 +400,7 @@ void cvar_changes_init()
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_norecoil");
 		BADCVAR("g_physics_clientselect");
+		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
@@ -1308,7 +1309,6 @@ When the player presses attack or jump, change to the next level
 void IntermissionThink(entity this)
 {
 	FixIntermissionClient(this);
-	CSQCMODEL_AUTOUPDATE(this); // PlayerPostThink returns before calling this during intermission, so run it here
 
 	float server_screenshot = (autocvar_sv_autoscreenshot && this.cvar_cl_autoscreenshot);
 	float client_screenshot = (this.cvar_cl_autoscreenshot == 2);
@@ -1448,11 +1448,11 @@ void DumpStats(float final)
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, it.netname, "\n");
+			LOG_INFO(s, playername(it, false), "\n");
 		if(to_eventlog)
-			GameLogEcho(strcat(s, ftos(it.playerid), ":", it.netname));
+			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it, false)));
 		if(to_file)
-			fputs(file, strcat(s, it.netname, "\n"));
+			fputs(file, strcat(s, playername(it, false), "\n"));
 	));
 
 	if(teamplay)
@@ -1496,9 +1496,6 @@ void FixIntermissionClient(entity e)
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
 		e.health = -2342;
 		// first intermission phase; voting phase has positive health (used to decide whether to send SVC_FINALE or not)
-		e.solid = SOLID_NOT;
-		set_movetype(e, MOVETYPE_NONE);
-		e.takedamage = DAMAGE_NO;
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 		    .entity weaponentity = weaponentities[slot];
@@ -1532,11 +1529,10 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
-	gameover = true;
+	game_stopped = true;
+	intermission_running = 1; // game over
 
-	intermission_running = 1;
-
-// enforce a wait time before allowing changelevel
+	// enforce a wait time before allowing changelevel
 	if(player_count > 0)
 		intermission_exittime = time + autocvar_sv_mapchange_delay;
 	else
@@ -1569,7 +1565,7 @@ void NextLevel()
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(it.netname, " ^7wins.\n");
+			bprint(playername(it, false), " ^7wins.\n");
 	));
 
 	target_music_kill();
@@ -1591,7 +1587,7 @@ Exit deathmatch games upon conditions
 */
 void CheckRules_Player(entity this)
 {
-	if (gameover)	// someone else quit the game already
+	if (game_stopped) // someone else quit the game already
 		return;
 
 	if(!IS_DEAD(this))
@@ -1843,7 +1839,7 @@ void CheckRules_World()
 
 	SetDefaultAlpha();
 
-	if (gameover)	// someone else quit the game already
+	if (intermission_running) // someone else quit the game already
 	{
 		if(player_count == 0) // Nobody there? Then let's go to the next map
 			MapVote_Start();
@@ -2092,10 +2088,6 @@ void EndFrame()
 	{
 		antilag_record(it, it, altime);
 	});
-	FOREACH_CLIENT(PS(it), {
-		PlayerState s = PS(it);
-		s.ps_push(s, it);
-	});
 	systems_update();
 	IL_ENDFRAME();
 }
@@ -2168,7 +2160,7 @@ void RestoreGame()
 
 void Shutdown()
 {
-	gameover = 2;
+	game_stopped = 2;
 
 	if(world_initialized > 0)
 	{

@@ -46,6 +46,7 @@ entity bot_spawn()
 	entity bot = spawnclient();
 	if (bot)
 	{
+		setItemGroupCount();
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
@@ -63,7 +64,8 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = this.bot_nextthink + autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill);
+	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill) * min(14 / (skill + 14), 1));
+
 	//if (this.bot_painintensity > 0)
 	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
 
@@ -72,6 +74,7 @@ void bot_think(entity this)
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
+		this.movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
 	}
@@ -118,6 +121,7 @@ void bot_think(entity this)
 	// if dead, just wait until we can respawn
 	if (IS_DEAD(this))
 	{
+		this.movement = '0 0 0';
 		if (this.deadflag == DEAD_DEAD)
 		{
 			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
@@ -204,7 +208,13 @@ void bot_setnameandstuff(entity this)
 
 	prio = 6;
 
-	#define READSKILL(f,w,r) if(argv(prio) != "") this.f = stof(argv(prio)) * (w); else this.f = (!autocvar_g_campaign) * (2 * random() - 1) * (r) * (w); ++prio
+	#define READSKILL(f, w, r) MACRO_BEGIN { \
+		if(argv(prio) != "") \
+			this.f = stof(argv(prio)) * w; \
+		else \
+			this.f = (!autocvar_g_campaign) * (2 * random() - 1) * r * w; \
+		prio++; \
+	} MACRO_END
 	//print(bot_name, ": ping=", argv(9), "\n");
 
 	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboard skill
@@ -338,9 +348,8 @@ void bot_custom_weapon_priority_setup()
 
 void bot_endgame()
 {
-	entity e;
-	//dprint("bot_endgame\n");
-	e = bot_list;
+	bot_relinkplayerlist();
+	entity e = bot_list;
 	while (e)
 	{
 		setcolor(e, e.bot_preferredcolors);
@@ -397,7 +406,7 @@ void bot_clientdisconnect(entity this)
 	this.playerskin_freeme = string_null;
 	if(this.bot_cmd_current)
 		delete(this.bot_cmd_current);
-	if(bot_waypoint_queue_owner==this)
+	if(bot_waypoint_queue_owner == this)
 		bot_waypoint_queue_owner = NULL;
 }
 
@@ -630,9 +639,42 @@ float bot_fixcount()
 	return true;
 }
 
+void bot_remove_from_bot_list(entity this)
+{
+	entity e = bot_list;
+	entity prev_bot = NULL;
+	while (e)
+	{
+		if(e == this)
+		{
+			if(!prev_bot)
+				bot_list = this.nextbot;
+			else
+				prev_bot.nextbot = this.nextbot;
+			if(bot_strategytoken == this)
+			{
+				bot_strategytoken = this.nextbot;
+				bot_strategytoken_taken = true;
+			}
+			this.nextbot = NULL;
+			break;
+		}
+		prev_bot = e;
+		e = e.nextbot;
+	}
+}
+
+void bot_clear(entity this)
+{
+	bot_remove_from_bot_list(this);
+	if(bot_waypoint_queue_owner == this)
+		bot_waypoint_queue_owner = NULL;
+	this.aistatus &= ~AI_STATUS_STUCK; // otherwise bot_waypoint_queue_owner will be set again to this by navigation_unstuck
+}
+
 void bot_serverframe()
 {
-	if (intermission_running)
+	if (game_stopped)
 		return;
 
 	if (time < 2)

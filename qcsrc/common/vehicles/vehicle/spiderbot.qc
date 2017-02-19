@@ -48,7 +48,7 @@ bool spiderbot_frame(entity this, float dt)
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(intermission_running)
+	if(game_stopped)
 	{
 		vehic.solid = SOLID_NOT;
 		vehic.takedamage = DAMAGE_NO;
@@ -60,7 +60,11 @@ bool spiderbot_frame(entity this, float dt)
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
-	PS(this).m_switchweapon = WEP_Null;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		this.(weaponentity).m_switchweapon = WEP_Null;
+	}
 	this.vehicle_weapon2mode = vehic.vehicle_weapon2mode;
 
 
@@ -72,15 +76,15 @@ bool spiderbot_frame(entity this, float dt)
 	vf += v_forward;
 	ad = ad * 0.5;
 	v_forward = vf * 0.5;
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, vehic);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' * (1 - this.vehicle_reload1)), 0);
 #else
 	vector ad = gettaginfo(vehic.gun1, gettagindex(vehic.gun1, "barrels"));
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, vehic);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' * (1 - this.vehicle_reload1)), 0);
 	vector vf = ad;
 	ad = gettaginfo(vehic.gun2, gettagindex(vehic.gun2, "barrels"));
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, vehic);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' * (1 - this.vehicle_reload1)), 1);
 	ad = 0.5 * (ad + vf);
 #endif
@@ -260,7 +264,8 @@ bool spiderbot_frame(entity this, float dt)
 			v_forward = normalize(v_forward);
 			v += v_forward * 50;
 
-			fireBullet(this, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
+			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+			fireBullet(this, weaponentity, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
 				autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 
 			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
@@ -313,11 +318,11 @@ bool spiderbot_frame(entity this, float dt)
 
 void spiderbot_exit(entity this, int eject)
 {
-	vector spot;
+	entity player = this.owner;
 
-	IL_EACH(g_projectiles, it.owner == this.owner && it.classname == "spiderbot_rocket",
+	IL_EACH(g_projectiles, it.owner == player && it.classname == "spiderbot_rocket",
 	{
-		it.realowner = this.owner;
+		it.realowner = player;
 		it.owner = NULL;
 	});
 
@@ -326,39 +331,43 @@ void spiderbot_exit(entity this, int eject)
 	this.frame = 5;
 	set_movetype(this, MOVETYPE_WALK);
 
-	if(!this.owner)
+	if(!player)
+	{
+		this.owner = NULL; // reset owner anyway?
 		return;
+	}
 
 	makevectors(this.angles);
+	vector spot;
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
-		spot = vehicles_findgoodexit(this, spot);
-		setorigin(this.owner , spot);
-		this.owner.velocity = (v_up + v_forward * 0.25) * 750;
-		this.owner.oldvelocity = this.owner.velocity;
+		spot = vehicles_findgoodexit(this, player, spot);
+		setorigin(player, spot);
+		player.velocity = (v_up + v_forward * 0.25) * 750;
+		player.oldvelocity = player.velocity;
 	}
 	else
 	{
 		if(vdist(this.velocity, >, autocvar_g_vehicle_spiderbot_speed_strafe))
 		{
-			this.owner.velocity = normalize(this.velocity) * vlen(this.velocity);
-			this.owner.velocity_z += 200;
+			player.velocity = normalize(this.velocity) * vlen(this.velocity);
+			player.velocity_z += 200;
 			spot = this.origin + v_forward * 128 + '0 0 64';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, player, spot);
 		}
 		else
 		{
-			this.owner.velocity = this.velocity * 0.5;
-			this.owner.velocity_z += 10;
+			player.velocity = this.velocity * 0.5;
+			player.velocity_z += 10;
 			spot = this.origin + v_forward * 256 + '0 0 64';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, player, spot);
 		}
-		this.owner.oldvelocity = this.owner.velocity;
-		setorigin(this.owner , spot);
+		player.oldvelocity = player.velocity;
+		setorigin(player, spot);
 	}
 
-	antilag_clear(this.owner, CS(this.owner));
+	antilag_clear(player, CS(player));
 	this.owner = NULL;
 }
 
@@ -392,11 +401,7 @@ void spiderbot_blowup(entity this)
 		return;
 	}
 
-	entity h, g1, g2, b;
-	b = spawn();
-	h = spawn();
-	g1 = spawn();
-	g2 = spawn();
+	entity h = spawn(), g1 = spawn(), g2 = spawn(), b = spawn();
 
 	setmodel(b, MDL_VEH_SPIDERBOT_BODY);
 	setmodel(h, MDL_VEH_SPIDERBOT_TOP);
@@ -603,8 +608,8 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 
 #endif // SVQC
 #ifdef CSQC
-float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
-float autocvar_cl_vehicle_spiderbot_cross_size = 1;
+//float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
+//float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 METHOD(Spiderbot, vr_hud, void(Spiderbot thisveh))
 {

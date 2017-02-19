@@ -125,7 +125,6 @@ void calc_followmodel_ofs(entity view)
 	float frac;
 	vector gunorg = '0 0 0';
 	static vector vel_average;
-	static vector gunorg_prev = '0 0 0';
 	static vector gunorg_adjustment_highpass;
 	static vector gunorg_adjustment_lowpass;
 
@@ -284,9 +283,11 @@ void viewmodel_animate(entity this)
 .float weapon_eta_last;
 .float weapon_switchdelay;
 
+.string name_last;
+
 void viewmodel_draw(entity this)
 {
-	if(!activeweapon || !autocvar_r_drawviewmodel)
+	if(!this.activeweapon || !autocvar_r_drawviewmodel)
 		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
@@ -295,9 +296,9 @@ void viewmodel_draw(entity this)
 	if (invehicle) a = -1;
 	else if (wasinvehicle) a = 1;
 	wasinvehicle = invehicle;
-	Weapon wep = activeweapon;
+	Weapon wep = this.activeweapon;
 	int c = entcs_GetClientColors(current_player);
-	vector g = weaponentity_glowmod(wep, NULL, c);
+	vector g = weaponentity_glowmod(wep, NULL, c, this);
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)
@@ -312,18 +313,14 @@ void viewmodel_draw(entity this)
 		CSQCModel_Effects_Apply(e);
 	}
 	{
-		static string name_last;
 		string name = wep.mdl;
-		if(wep == WEP_TUBA)
-		{
-			name = (this.tuba_instrument == 0) ? "tuba" :
-	           	   (this.tuba_instrument == 1) ? "akordeon" :
-	                                             "kleinbottle";
-		}
-		bool swap = name != name_last;
+		string newname = wep.wr_viewmodel(wep, this);
+		if(newname)
+			name = newname;
+		bool swap = name != this.name_last;
 		// if (swap)
 		{
-			name_last = name;
+			this.name_last = name;
 			CL_WeaponEntity_SetModel(this, name, swap);
 			this.viewmodel_origin = this.origin;
 			this.viewmodel_angles = this.angles;
@@ -362,9 +359,9 @@ void viewmodel_draw(entity this)
 	setorigin(this, this.origin);
 }
 
-entity viewmodel;
 STATIC_INIT(viewmodel) {
-    viewmodel = new(viewmodel);
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    	viewmodels[slot] = new(viewmodel);
 }
 
 void Porto_Draw(entity this);
@@ -377,65 +374,70 @@ STATIC_INIT(Porto)
 }
 
 const int polyline_length = 16;
-vector polyline[polyline_length];
+.vector polyline[polyline_length];
 void Porto_Draw(entity this)
 {
-	if (activeweapon != WEP_PORTO) return;
-	if (spectatee_status) return;
-	if (WEP_CVAR(porto, secondary)) return;
-	if (intermission == 1) return;
-	if (intermission == 2) return;
-	if (STAT(HEALTH) <= 0) return;
-
-	vector pos = view_origin;
-	vector dir = view_forward;
-	if (angles_held_status)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		makevectors(angles_held);
-		dir = v_forward;
-	}
+		entity wepent = viewmodels[slot];
 
-	polyline[0] = pos;
+		if (wepent.activeweapon != WEP_PORTO) continue;
+		if (spectatee_status) continue;
+		if (WEP_CVAR(porto, secondary)) continue;
+		if (intermission == 1) continue;
+		if (intermission == 2) continue;
+		if (STAT(HEALTH) <= 0) continue;
 
-	int portal_number = 0, portal1_idx = 1, portal_max = 2;
-	int n = 1 + 2;  // 2 lines == 3 points
-	for (int idx = 0; idx < n && idx < polyline_length - 1; )
-	{
-		traceline(pos, pos + 65536 * dir, true, this);
-		dir = reflect(dir, trace_plane_normal);
-		pos = trace_endpos;
-		polyline[++idx] = pos;
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+		vector pos = view_origin;
+		vector dir = view_forward;
+		if (wepent.angles_held_status)
 		{
-			n += 1;
-			continue;
+			makevectors(wepent.angles_held);
+			dir = v_forward;
 		}
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+
+		wepent.polyline[0] = pos;
+
+		int portal_number = 0, portal1_idx = 1, portal_max = 2;
+		int n = 1 + 2;  // 2 lines == 3 points
+		for (int idx = 0; idx < n && idx < polyline_length - 1; )
 		{
-			n = max(2, idx);
-			break;
-		}
-		// check size
-		{
-			vector ang = vectoangles2(trace_plane_normal, dir);
-			ang.x = -ang.x;
-			makevectors(ang);
-			if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+			traceline(pos, pos + 65536 * dir, true, this);
+			dir = reflect(dir, trace_plane_normal);
+			pos = trace_endpos;
+			wepent.polyline[++idx] = pos;
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+			{
+				n += 1;
+				continue;
+			}
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 			{
 				n = max(2, idx);
 				break;
 			}
+			// check size
+			{
+				vector ang = vectoangles2(trace_plane_normal, dir);
+				ang.x = -ang.x;
+				makevectors(ang);
+				if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+				{
+					n = max(2, idx);
+					break;
+				}
+			}
+			portal_number += 1;
+			if (portal_number >= portal_max) break;
+			if (portal_number == 1) portal1_idx = idx;
 		}
-		portal_number += 1;
-		if (portal_number >= portal_max) break;
-		if (portal_number == 1) portal1_idx = idx;
-	}
-	for (int idx = 0; idx < n - 1; ++idx)
-	{
-		vector p = polyline[idx], q = polyline[idx + 1];
-		if (idx == 0) p -= view_up * 16;  // line from player
-		vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
-		Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
+		for (int idx = 0; idx < n - 1; ++idx)
+		{
+			vector p = wepent.polyline[idx], q = wepent.polyline[idx + 1];
+			if (idx == 0) p -= view_up * 16;  // line from player
+			vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
+			Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
+		}
 	}
 }
 
@@ -457,10 +459,17 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
+
 	if(hud == HUD_NORMAL && !spectatee_status)
-	if(switchweapon == activeweapon)
-	if((activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
-		zoomdir += button_attack2;
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			entity wepent = viewmodels[slot];
+			if(wepent.switchweapon == wepent.activeweapon)
+			if((wepent.activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (wepent.activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
+				zoomdir += button_attack2;
+		}
+	}
 	if(spectatee_status > 0 || isdemo())
 	{
 		if(spectatorbutton_zoom)
@@ -627,7 +636,7 @@ float EnemyHitCheck()
 	return SHOTTYPE_HITENEMY;
 }
 
-float TrueAimCheck()
+float TrueAimCheck(entity wepent)
 {
 	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
@@ -640,7 +649,7 @@ float TrueAimCheck()
 	ta = trueaim;
 	mv = MOVE_NOMONSTERS;
 
-	switch(activeweapon) // WEAPONTODO
+	switch(wepent.activeweapon) // WEAPONTODO
 	{
 		case WEP_TUBA: // no aim
 		case WEP_PORTO: // shoots from eye
@@ -657,7 +666,7 @@ float TrueAimCheck()
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
 			{
-				tracebox(view_origin, '0 0 0', '0 0 0', view_origin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
+				tracebox(view_origin, '0 0 0', '0 0 0', view_origin + view_forward * max_shot_distance, mv, ta);
 				return EnemyHitCheck();
 			}
 			break;
@@ -683,7 +692,7 @@ float TrueAimCheck()
 
 	vecs = decompressShotOrigin(STAT(SHOTORG));
 
-	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
+	traceline(traceorigin, traceorigin + view_forward * max_shot_distance, mv, ta);
 	trueaimpoint = trace_endpos;
 
 	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
@@ -723,7 +732,6 @@ float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
 float reticle_type;
-string reticle_image;
 string NextFrameCommand;
 
 vector freeze_org, freeze_ang;
@@ -751,7 +759,7 @@ bool WantEventchase(entity this)
 {
 	if(autocvar_cl_orthoview)
 		return false;
-	if(intermission)
+	if(STAT(GAME_STOPPED) || intermission)
 		return true;
 	if(this.viewloc)
 		return true;
@@ -815,9 +823,18 @@ void HitSound()
 {
 	// varying sound pitch
 
+	bool have_arc = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wepent = viewmodels[slot];
+
+		if(wepent.activeweapon == WEP_ARC)
+			have_arc = true;
+	}
+
 	static float hitsound_time_prev = 0;
 	// HACK: the only way to get the arc to sound consistent with pitch shift is to ignore cl_hitsound_antispam_time
-	float arc_hack = activeweapon == WEP_ARC && autocvar_cl_hitsound >= 2;
+	bool arc_hack = have_arc && autocvar_cl_hitsound >= 2;
 	if (arc_hack || COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		if (autocvar_cl_hitsound && unaccounted_damage)
@@ -826,8 +843,8 @@ void HitSound()
 			float a = autocvar_cl_hitsound_max_pitch;
 			float b = autocvar_cl_hitsound_min_pitch;
 			float c = autocvar_cl_hitsound_nom_damage;
-			float x = unaccounted_damage;
-			float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
+			float d = unaccounted_damage;
+			float pitch_shift = (b*d*(a-1) + a*c*(1-b)) / (d*(a-1) + c*(1-b));
 
 			// if sound variation is disabled, set pitch_shift to 1
 			if (autocvar_cl_hitsound == 1)
@@ -879,7 +896,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 
 		case 2: // crosshair_color_by_health
 		{
-			float x = health_stat;
+			float hp = health_stat;
 
 			//x = red
 			//y = green
@@ -887,33 +904,33 @@ vector crosshair_getcolor(entity this, float health_stat)
 
 			wcross_color.z = 0;
 
-			if(x > 200)
+			if(hp > 200)
 			{
 				wcross_color.x = 0;
 				wcross_color.y = 1;
 			}
-			else if(x > 150)
+			else if(hp > 150)
 			{
-				wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
-				wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
+				wcross_color.x = 0.4 - (hp-150)*0.02 * 0.4;
+				wcross_color.y = 0.9 + (hp-150)*0.02 * 0.1;
 			}
-			else if(x > 100)
+			else if(hp > 100)
 			{
-				wcross_color.x = 1 - (x-100)*0.02 * 0.6;
-				wcross_color.y = 1 - (x-100)*0.02 * 0.1;
-				wcross_color.z = 1 - (x-100)*0.02;
+				wcross_color.x = 1 - (hp-100)*0.02 * 0.6;
+				wcross_color.y = 1 - (hp-100)*0.02 * 0.1;
+				wcross_color.z = 1 - (hp-100)*0.02;
 			}
-			else if(x > 50)
+			else if(hp > 50)
 			{
 				wcross_color.x = 1;
 				wcross_color.y = 1;
-				wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
+				wcross_color.z = 0.2 + (hp-50)*0.02 * 0.8;
 			}
-			else if(x > 20)
+			else if(hp > 20)
 			{
 				wcross_color.x = 1;
-				wcross_color.y = (x-20)*90/27/100;
-				wcross_color.z = (x-20)*90/27/100 * 0.2;
+				wcross_color.y = (hp-20)*90/27/100;
+				wcross_color.z = (hp-20)*90/27/100 * 0.2;
 			}
 			else
 			{
@@ -944,7 +961,7 @@ void HUD_Crosshair(entity this)
 {
 	float f, i, j;
 	vector v;
-	if(!scoreboard_active && !camera_active && intermission != 2 &&
+	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) &&
 		spectatee_status != -1 && !csqcplayer.viewloc && !MUTATOR_CALLHOOK(DrawCrosshair) &&
 		!HUD_MinigameMenu_IsOpened() )
 	{
@@ -976,13 +993,14 @@ void HUD_Crosshair(entity this)
 		float shottype;
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
+		wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
 		if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;
+			entity thiswep = viewmodels[0]; // TODO: unhardcode
 			wcross_oldorigin = wcross_origin;
-			shottype = TrueAimCheck();
+			shottype = TrueAimCheck(thiswep);
 			if(shottype == SHOTTYPE_HITWORLD)
 			{
 				v = wcross_origin - wcross_oldorigin;
@@ -1004,7 +1022,8 @@ void HUD_Crosshair(entity this)
         entity e = WEP_Null;
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
-			e = switchingweapon;
+			entity wepent = viewmodels[0]; // TODO: unhardcode
+			e = wepent.switchingweapon;
 			if(e)
 			{
 				if(autocvar_crosshair_per_weapon)
@@ -1149,10 +1168,6 @@ void HUD_Crosshair(entity this)
 				weapon_clipload = STAT(WEAPON_CLIPLOAD);
 				weapon_clipsize = STAT(WEAPON_CLIPSIZE);
 
-				float ok_ammo_charge, ok_ammo_chargepool;
-				ok_ammo_charge = STAT(OK_AMMO_CHARGE);
-				ok_ammo_chargepool = STAT(OK_AMMO_CHARGEPOOL);
-
 				float vortex_charge, vortex_chargepool;
 				vortex_charge = STAT(VORTEX_CHARGE);
 				vortex_chargepool = STAT(VORTEX_CHARGEPOOL);
@@ -1162,9 +1177,10 @@ void HUD_Crosshair(entity this)
 				if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 					vortex_charge_movingavg = vortex_charge;
 
+				entity wepent = viewmodels[0]; // TODO: unhardcode
 
 				// handle the values
-				if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
+				if (autocvar_crosshair_ring && wepent.activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
 				{
 					if (vortex_chargepool || use_vortex_chargepool) {
 						use_vortex_chargepool = 1;
@@ -1184,24 +1200,17 @@ void HUD_Crosshair(entity this)
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
+				else if (autocvar_crosshair_ring && wepent.activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
 				{
 					ring_value = bound(0, STAT(LAYED_MINES) / WEP_CVAR(minelayer, limit), 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if (activeweapon == WEP_HAGAR && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				else if (wepent.activeweapon == WEP_HAGAR && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
 					ring_value = bound(0, STAT(HAGAR_LOAD) / WEP_CVAR_SEC(hagar, load_max), 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
-					ring_rgb = wcross_color;
-					ring_image = "gfx/crosshair_ring.tga";
-				}
-				else if (ok_ammo_charge)
-				{
-					ring_value = ok_ammo_chargepool;
-					ring_alpha = autocvar_crosshair_ring_reload_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
@@ -1214,12 +1223,12 @@ void HUD_Crosshair(entity this)
 
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
-					if ((activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
+					if ((wepent.activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
 						ring_image = "gfx/crosshair_ring_rifle.tga";
 					else
 						ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC )
+				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && wepent.activeweapon == WEP_ARC )
 				{
 					ring_value = arc_heat;
 					ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
@@ -1708,7 +1717,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
-	viewmodel_draw(viewmodel);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		viewmodel_draw(viewmodels[slot]);
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
@@ -1752,8 +1762,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(!postinit)
 		PostInit();
 
-	if(intermission && !gameover_time)
-		gameover_time = time;
+	if(intermission && !intermission_time)
+		intermission_time = time;
 
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
 	{
@@ -1786,39 +1796,36 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 
-	// currently switching-to weapon (for crosshair)
-	switchingweapon = Weapons_from(STAT(SWITCHINGWEAPON));
-
-	// actually active weapon (for zoom)
-	activeweapon = Weapons_from(STAT(ACTIVEWEAPON));
-
-	switchweapon = Weapons_from(STAT(SWITCHWEAPON));
-
-	if(last_switchweapon != switchweapon)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		weapontime = time;
-		last_switchweapon = switchweapon;
-		if(button_zoom && autocvar_cl_unpress_zoom_on_weapon_switch)
-		{
-			localcmd("-zoom\n");
-			button_zoom = false;
-		}
-		if(autocvar_cl_unpress_attack_on_weapon_switch)
-		{
-			localcmd("-fire\n");
-			localcmd("-fire2\n");
-			button_attack2 = false;
-		}
-	}
-	if(last_activeweapon != activeweapon)
-	{
-		last_activeweapon = activeweapon;
+		entity wepent = viewmodels[slot];
 
-		e = activeweapon;
-		if(e.netname != "")
-			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
-		else
-			localcmd("\ncl_hook_activeweapon none\n");
+		if(wepent.last_switchweapon != wepent.switchweapon)
+		{
+			weapontime = time;
+			wepent.last_switchweapon = wepent.switchweapon;
+			if(slot == 0 && button_zoom && autocvar_cl_unpress_zoom_on_weapon_switch)
+			{
+				localcmd("-zoom\n");
+				button_zoom = false;
+			}
+			if(slot == 0 && autocvar_cl_unpress_attack_on_weapon_switch)
+			{
+				localcmd("-fire\n");
+				localcmd("-fire2\n");
+				button_attack2 = false;
+			}
+		}
+		if(wepent.last_activeweapon != wepent.activeweapon)
+		{
+			wepent.last_activeweapon = wepent.activeweapon;
+
+			e = wepent.activeweapon;
+			if(e.netname != "")
+				localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
+			else if(slot == 0)
+				localcmd("\ncl_hook_activeweapon none\n");
+		}
 	}
 
 	// ALWAYS Clear Current Scene First
@@ -1946,7 +1953,20 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(autocvar_cl_reticle)
 	{
-		Weapon wep = activeweapon;
+		string reticle_image = string_null;
+		bool wep_zoomed = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			entity wepe = viewmodels[slot];
+			Weapon wep = wepe.activeweapon;
+			if(wep != WEP_Null && wep.wr_zoom)
+			{
+				bool do_zoom = wep.wr_zoom(wep, NULL);
+				if(!reticle_image && wep.w_reticle && wep.w_reticle != "")
+					reticle_image = wep.w_reticle;
+				wep_zoomed += do_zoom;
+			}
+		}
 		// Draw the aiming reticle for weapons that use it
 		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
@@ -1956,9 +1976,9 @@ void CSQC_UpdateView(entity this, float w, float h)
 			// no zoom reticle while dead
 			reticle_type = 0;
 		}
-		else if(wep.wr_zoomreticle(wep) && autocvar_cl_reticle_weapon)
+		else if(wep_zoomed && autocvar_cl_reticle_weapon)
 		{
-			if(reticle_image != "") { reticle_type = 2; }
+			if(reticle_image) { reticle_type = 2; }
 			else { reticle_type = 0; }
 		}
 		else if(button_zoom || zoomscript_caught)
@@ -1994,7 +2014,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 				switch(reticle_type)
 				{
 					case 1: drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_normal_alpha, DRAWFLAG_NORMAL); break;
-					case 2: drawpic(reticle_pos, reticle_image, reticle_size, '1 1 1', f * autocvar_cl_reticle_weapon_alpha, DRAWFLAG_NORMAL); break;
+					case 2: if(reticle_image) drawpic(reticle_pos, reticle_image, reticle_size, '1 1 1', f * autocvar_cl_reticle_weapon_alpha, DRAWFLAG_NORMAL); break;
 				}
 			}
 		}

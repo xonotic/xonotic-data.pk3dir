@@ -12,7 +12,8 @@ const int DTFLAG_NO_POTENTIAL = BIT(5);
 
 REGISTER_MUTATOR(damagetext, true);
 
-#if defined(CSQC) || defined(MENUQC)
+// || defined(MENUQC)
+#if defined(CSQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
 AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}: full damage not capped to target's health, {potential_health}: health damage not capped to target's health");
@@ -171,7 +172,7 @@ ENDCLASS(DamageText)
 REGISTER_NET_TEMP(damagetext)
 
 #ifdef SVQC
-AUTOCVAR(sv_damagetext, int, 2, _("<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players"));
+AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players");
 #define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
 #define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1 /* spectators only */)
 #define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)

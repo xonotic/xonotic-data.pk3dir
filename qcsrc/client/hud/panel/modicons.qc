@@ -283,8 +283,9 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	mod_active = 1; // keyhunt should never hide the mod icons panel
 
 	// Read current state
-
 	int state = STAT(KH_KEYS);
+	if(!state) return;
+
 	int i, key_state;
 	int all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
 	all_keys = team1_keys = team2_keys = team3_keys = team4_keys = dropped_keys = carrying_keys = 0;
@@ -315,9 +316,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	}
 
 	// Calculate slot measurements
-
 	vector slot_size;
-
 	if(all_keys == 4 && mySize.x * 0.5 < mySize.y && mySize.y * 0.5 < mySize.x)
 	{
 		// Quadratic arrangement
@@ -347,11 +346,10 @@ void HUD_Mod_KH(vector pos, vector mySize)
 
 	// Make icons blink in case of RUN HERE
 
-	float blink = 0.6 + sin(2*M_PI*time) / 2.5; // Oscillate between 0.2 and 1
-	float alpha;
-	alpha = 1;
-
+	float alpha = 1;
 	if(carrying_keys)
+	{
+		float blink = 0.6 + sin(2 * M_PI * time) * 0.4; // Oscillate between 0.2 and 1
 		switch(myteam)
 		{
 			case NUM_TEAM_1: if(team1_keys == all_keys) alpha = blink; break;
@@ -359,6 +357,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 			case NUM_TEAM_3: if(team3_keys == all_keys) alpha = blink; break;
 			case NUM_TEAM_4: if(team4_keys == all_keys) alpha = blink; break;
 		}
+	}
 
 	// Draw icons
 
@@ -495,7 +494,7 @@ int race_CheckName(string net_name)
 {
 	int i;
 	for (i=RANKINGS_CNT-1;i>=0;--i)
-		if(grecordholder[i] == net_name)
+		if(strdecolorize(grecordholder[i]) == strdecolorize(net_name))
 			return i+1;
 	return 0;
 }
@@ -584,7 +583,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	a = bound(0, race_status_time - time, 1);
 
 	string s;
-	s = textShortenToWidth(race_status_name, squareSize, '1 1 0' * 0.1 * squareSize, stringwidth_colors);
+	s = textShortenToWidth(ColorTranslateRGB(race_status_name), squareSize, '1 1 0' * 0.1 * squareSize, stringwidth_colors);
 
 	float rank;
 	if(race_status > 0)
@@ -606,7 +605,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 2) {
-		if(race_status_name == entcs_GetName(player_localnum) || !race_myrank || race_myrank < rank)
+		if(strdecolorize(race_status_name) == strdecolorize(entcs_GetName(player_localnum)) || !race_myrank || race_myrank < rank)
 			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankgreen", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		else
 			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankyellow", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
@@ -716,9 +715,7 @@ void HUD_ModIcons_SetFunc()
 	HUD_ModIcons_GameType = gametype.m_modicons;
 }
 
-int mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
-float mod_change; // "time" when mod_active changed
 
 void HUD_ModIcons()
 {
@@ -728,16 +725,10 @@ void HUD_ModIcons()
 		if(!HUD_ModIcons_GameType) return;
 	}
 
-
-	if(mod_active != mod_prev) {
-		mod_change = time;
-		mod_prev = mod_active;
-	}
-
 	if(mod_active || autocvar__hud_configure)
-		mod_alpha = bound(0, (time - mod_change) * 2, 1);
+		mod_alpha = min(mod_alpha + frametime * 2, 1);
 	else
-		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
+		mod_alpha = max(mod_alpha - frametime * 2, 0);
 
 	//if(mod_alpha <= 0)
 	//	return;

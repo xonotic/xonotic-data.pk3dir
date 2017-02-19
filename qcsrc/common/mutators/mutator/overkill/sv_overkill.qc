@@ -4,24 +4,15 @@
 #include "rpc.qh"
 
 bool autocvar_g_overkill_powerups_replace;
-bool autocvar_g_overkill_ammo_charge;
-float autocvar_g_overkill_ammo_charge_notice;
-float autocvar_g_overkill_ammo_charge_limit;
 
 bool autocvar_g_overkill_filter_healthmega;
 bool autocvar_g_overkill_filter_armormedium;
 bool autocvar_g_overkill_filter_armorbig;
-bool autocvar_g_overkill_filter_armorlarge;
+bool autocvar_g_overkill_filter_armormega;
 
-.float ok_lastwep;
 .float ok_item;
 
-.float ok_notice_time;
-.float ammo_charge[Weapons_MAX];
-.float ok_use_ammocharge = _STAT(OK_AMMO_CHARGE);
-.float ok_ammo_charge = _STAT(OK_AMMO_CHARGEPOOL);
-
-void(entity ent, float wep) ok_DecreaseCharge;
+.Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
 void ok_Initialize();
 
@@ -39,71 +30,21 @@ REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && 
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ok, W_DecreaseAmmo)
-{
-	entity actor = M_ARGV(0, entity);
-	if (actor.ok_use_ammocharge)
-	{
-		ok_DecreaseCharge(actor, PS(actor).m_weapon.m_id);
-		return true;
-	}
-}
-
-MUTATOR_HOOKFUNCTION(ok, W_Reload)
-{
-	entity actor = M_ARGV(0, entity);
-	return actor.ok_use_ammocharge;
-}
-
 void W_Blaster_Attack(entity, .entity, float, float, float, float, float, float, float, float, float, float);
 spawnfunc(weapon_hmg);
 spawnfunc(weapon_rpc);
 
-void ok_DecreaseCharge(entity ent, int wep)
-{
-	if(!ent.ok_use_ammocharge) return;
-
-	entity wepent = Weapons_from(wep);
-
-	if (wepent == WEP_Null) return;  // dummy
-
-	ent.ammo_charge[wep] -= max(0, cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
-}
-
-void ok_IncreaseCharge(entity ent, int wep)
-{
-	entity wepent = Weapons_from(wep);
-
-	if (wepent == WEP_Null) return;  // dummy
-
-	if(ent.ok_use_ammocharge)
-	if(!PHYS_INPUT_BUTTON_ATCK(ent)) // not while attacking?
-		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
-}
-
-float ok_CheckWeaponCharge(entity ent, int wep)
-{
-	if(!ent.ok_use_ammocharge) return true;
-
-	entity wepent = Weapons_from(wep);
-
-	if(wepent == WEP_Null) return false;  // dummy
-
-	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
-}
-
-MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
+MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);
 
-	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
+	if(IS_PLAYER(frag_attacker) && (IS_PLAYER(frag_target) || IS_VEHICLE(frag_target) || IS_TURRET(frag_target)))
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 	{
 		if(frag_attacker != frag_target)
-		if(frag_target.health > 0)
-		if(STAT(FROZEN, frag_target) == 0)
+		if(!STAT(FROZEN, frag_target))
 		if(!IS_DEAD(frag_target))
 		{
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
@@ -141,7 +82,12 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 
 	ok_DropItem(frag_target, targ);
 
-	frag_target.ok_lastwep = PS(frag_target).m_switchweapon.m_id;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+
+		frag_target.ok_lastwep[slot] = frag_target.(weaponentity).m_switchweapon;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
@@ -164,7 +110,7 @@ MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 {
-	if(intermission_running || gameover)
+	if(game_stopped)
 		return;
 
 	entity player = M_ARGV(0, entity);
@@ -172,87 +118,64 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
 		return;
 
-	if(player.ok_lastwep)
-	{
-		Weapon newwep = Weapons_from(player.ok_lastwep);
-		if(player.ok_lastwep == WEP_HMG.m_id)
-			newwep = WEP_MACHINEGUN;
-		if(player.ok_lastwep == WEP_RPC.m_id)
-			newwep = WEP_VORTEX;
-		PS(player).m_switchweapon = newwep;
-		player.ok_lastwep = 0;
-	}
-
-	ok_IncreaseCharge(player, PS(player).m_weapon.m_id);
-
 	if(PHYS_INPUT_BUTTON_ATCK2(player))
-	if( !forbidWeaponUse(player) || player.weapon_blocked // allow if weapon is blocked
+	if( !forbidWeaponUse(player)
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
 	if(time >= player.jump_interval)
 	{
 		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
 		makevectors(player.v_angle);
 
-		Weapon oldwep = PS(player).m_weapon;
-		PS(player).m_weapon = WEP_BLASTER;
-		W_Blaster_Attack(
-			player,
-			weaponentities[0], // TODO: unhardcode
-			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-			WEP_CVAR_SEC(vaporizer, shotangle),
-			WEP_CVAR_SEC(vaporizer, damage),
-			WEP_CVAR_SEC(vaporizer, edgedamage),
-			WEP_CVAR_SEC(vaporizer, radius),
-			WEP_CVAR_SEC(vaporizer, force),
-			WEP_CVAR_SEC(vaporizer, speed),
-			WEP_CVAR_SEC(vaporizer, spread),
-			WEP_CVAR_SEC(vaporizer, delay),
-			WEP_CVAR_SEC(vaporizer, lifetime)
-		);
-		PS(player).m_weapon = oldwep;
-	}
-
-	player.weapon_blocked = false;
-
-	player.ok_ammo_charge = player.ammo_charge[PS(player).m_weapon.m_id];
-
-	if(player.ok_use_ammocharge)
-	if(!ok_CheckWeaponCharge(player, PS(player).m_weapon.m_id))
-	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > player.ok_notice_time && PHYS_INPUT_BUTTON_ATCK(player) && IS_REAL_CLIENT(player) && PS(player).m_weapon == PS(player).m_switchweapon)
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			//Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_OVERKILL_CHARGE);
-			player.ok_notice_time = time + 2;
-			play2(player, SND(DRYFIRE));
-		}
-		Weapon wpn = PS(player).m_weapon;
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		if(player.(weaponentity).state != WS_CLEAR)
-			w_ready(wpn, player, weaponentity, PHYS_INPUT_BUTTON_ATCK(player) | (PHYS_INPUT_BUTTON_ATCK2(player) << 1));
+			.entity weaponentity = weaponentities[slot];
 
-		player.weapon_blocked = true;
+			if(player.(weaponentity).m_weapon == WEP_Null && slot != 0)
+				continue;
+
+			Weapon oldwep = player.(weaponentity).m_weapon;
+			player.(weaponentity).m_weapon = WEP_BLASTER;
+			W_Blaster_Attack(
+				player,
+				weaponentity,
+				WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+				WEP_CVAR_SEC(vaporizer, shotangle),
+				WEP_CVAR_SEC(vaporizer, damage),
+				WEP_CVAR_SEC(vaporizer, edgedamage),
+				WEP_CVAR_SEC(vaporizer, radius),
+				WEP_CVAR_SEC(vaporizer, force),
+				WEP_CVAR_SEC(vaporizer, speed),
+				WEP_CVAR_SEC(vaporizer, spread),
+				WEP_CVAR_SEC(vaporizer, delay),
+				WEP_CVAR_SEC(vaporizer, lifetime)
+			);
+			player.(weaponentity).m_weapon = oldwep;
+		}
 	}
 
 	PHYS_INPUT_BUTTON_ATCK2(player) = false;
 }
 
-MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(autocvar_g_overkill_ammo_charge)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(player.ammo_charge[it.m_id] = autocvar_g_overkill_ammo_charge_limit));
+		.entity weaponentity = weaponentities[slot];
+		entity thiswep = player.(weaponentity);
 
-		player.ok_use_ammocharge = 1;
-		player.ok_notice_time = time;
+		if(player.ok_lastwep[slot] && player.ok_lastwep[slot] != WEP_Null)
+		{
+			Weapon newwep = player.ok_lastwep[slot];
+			if(player.ok_lastwep[slot] == WEP_HMG)
+				newwep = WEP_MACHINEGUN;
+			if(player.ok_lastwep[slot] == WEP_RPC)
+				newwep = WEP_VORTEX;
+			thiswep.m_switchweapon = newwep;
+			player.ok_lastwep[slot] = WEP_Null;
+		}
 	}
-	else
-		player.ok_use_ammocharge = 0;
-
-	// if player changed their weapon while dead, don't switch to their death weapon
-	if(player.impulse)
-		player.ok_lastwep = 0;
 }
 
 void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
@@ -281,8 +204,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.nextthink = time + 0.1;
 			return true;
 		}
-
-		if(ent.classname == "item_invincible")
+		else if(ent.classname == "item_invincible")
 		{
 			entity wep = new(weapon_rpc);
 			setorigin(wep, ent.origin);
@@ -312,22 +234,11 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	{
 		case ITEM_HealthMega: return autocvar_g_overkill_filter_healthmega;
 		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
-		// WARNING: next two statements look wrong because of inconsistency between cvar names and code
-		// armor cvars need renaming to be consistent with their health counterparts
-		case ITEM_ArmorLarge: return autocvar_g_overkill_filter_armorbig;
-		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armorlarge;
+		case ITEM_ArmorBig: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armormega;
 	}
 
 	return true;
-}
-
-MUTATOR_HOOKFUNCTION(ok, SpectateCopy)
-{
-	entity spectatee = M_ARGV(0, entity);
-	entity client = M_ARGV(1, entity);
-
-	client.ammo_charge[PS(client).m_weapon.m_id] = spectatee.ammo_charge[PS(spectatee).m_weapon.m_id];
-	client.ok_use_ammocharge = spectatee.ok_use_ammocharge;
 }
 
 MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)

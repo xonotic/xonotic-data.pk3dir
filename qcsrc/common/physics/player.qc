@@ -96,8 +96,15 @@ void PM_ClientMovement_UpdateStatus(entity this)
 
 	// set crouched
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-	if(this.hook && !wasfreed(this.hook))
-		do_crouch = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wep = viewmodels[slot];
+		if(wep.hook && !wasfreed(wep.hook))
+		{
+			do_crouch = false;
+			break; // don't bother checking the others
+		}
+	}
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		do_crouch = false;
 	if(hud != HUD_NORMAL)
@@ -115,7 +122,7 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		// wants to stand, if currently crouching we need to check for a low ceiling first
 		if (IS_DUCKED(this))
 		{
-			tracebox(this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), this.origin, MOVE_NORMAL, this);
+			tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
 			if (!trace_startsolid) UNSET_DUCKED(this);
 		}
 	}
@@ -285,6 +292,7 @@ bool PlayerJump(entity this)
 
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY(this);
+	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 
 	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
 		return true;
@@ -298,6 +306,7 @@ bool PlayerJump(entity this)
 		{
 			doublejump = true;
 			mjumpheight *= 0.7;
+			track_jump = true;
 		}
 		else
 		{
@@ -310,7 +319,6 @@ bool PlayerJump(entity this)
 		if (!IS_ONGROUND(this) && !IS_ONSLICK(this))
 			return IS_JUMP_HELD(this);
 
-	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 	if(PHYS_TRACK_CANJUMP(this))
 		track_jump = true;
 
@@ -481,15 +489,15 @@ float racecar_angle(float forward, float down)
 		return ret * angle_mult;
 }
 
+#ifdef SVQC
 string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
 void SpecialCommand(entity this)
 {
-#ifdef SVQC
 	if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
 		LOG_INFO("A hollow voice says \"Plugh\".\n");
-#endif
 }
+#endif
 
 bool PM_check_specialcommand(entity this, int buttons)
 {
@@ -608,7 +616,12 @@ void PM_check_hitground(entity this)
     this.wasFlying = false;
     if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
     if (time < this.ladder_time) return;
-    if (this.hook) return;
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	if(this.(weaponentity).hook)
+    		return;
+    }
     this.nextstep = time + 0.3 + random() * 0.1;
     trace_dphitq3surfaceflags = 0;
     tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
@@ -803,5 +816,10 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 
 #ifdef SVQC
 	this.pm_frametime = frametime;
+#elif defined(CSQC)
+	if((ITEMS_STAT(this) & IT_USING_JETPACK) && !IS_DEAD(this) && !intermission)
+		this.csqcmodel_modelflags |= MF_ROCKET;
+	else
+		this.csqcmodel_modelflags &= ~MF_ROCKET;
 #endif
 }

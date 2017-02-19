@@ -5,6 +5,9 @@
 
 #include <server/teamplay.qh>
 
+IntrusiveList g_invasion_waves;
+STATIC_INIT(g_invasion_waves) { g_invasion_waves = IL_NEW(); }
+
 IntrusiveList g_invasion_spawns;
 STATIC_INIT(g_invasion_spawns) { g_invasion_spawns = IL_NEW(); }
 
@@ -16,6 +19,13 @@ bool autocvar_g_invasion_zombies_only;
 float autocvar_g_invasion_spawn_delay;
 
 .string spawnmob;
+
+spawnfunc(invasion_wave)
+{
+	if(!g_invasion) { delete(this); return; }
+
+	IL_PUSH(g_invasion_waves, this);
+}
 
 spawnfunc(invasion_spawnpoint)
 {
@@ -31,7 +41,8 @@ Monster invasion_PickMonster(int supermonster_count)
 
 	FOREACH(Monsters, it != MON_Null,
 	{
-		if((it.spawnflags & MONSTER_TYPE_PASSIVE) || (it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM) || (it.spawnflags & MONSTER_SIZE_QUAKE) || ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
+		if((it.spawnflags & MON_FLAG_HIDDEN) || (it.spawnflags & MONSTER_TYPE_PASSIVE) || (it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM) ||
+			(it.spawnflags & MONSTER_SIZE_QUAKE) || ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
 			continue;
 		if(autocvar_g_invasion_zombies_only && !(it.spawnflags & MONSTER_TYPE_UNDEAD))
 			continue;
@@ -47,18 +58,48 @@ entity invasion_PickSpawn()
 
 	IL_EACH(g_invasion_spawns, true,
 	{
-		RandomSelection_AddEnt(it, 1, ((time >= it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
+		RandomSelection_AddEnt(it, 1, ((time < it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
 		it.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
 	});
 
 	return RandomSelection_chosen_ent;
 }
 
+entity invasion_GetWaveEntity(int wavenum)
+{
+	IL_EACH(g_invasion_waves, it.cnt == wavenum,
+	{
+		return it; // found one
+	});
+
+	// if no specific one is found, find the last existing wave ent
+	entity best = NULL;
+	IL_EACH(g_invasion_waves, it.cnt <= wavenum,
+	{
+		if(!best || it.cnt > best.cnt)
+			best = it;
+	});
+
+	return best;
+}
+
 void invasion_SpawnChosenMonster(Monster mon)
 {
-	entity spawn_point, monster;
+	entity monster;
+	entity spawn_point = invasion_PickSpawn();
+	entity wave_ent = invasion_GetWaveEntity(inv_roundcnt);
 
-	spawn_point = invasion_PickSpawn();
+	string tospawn = "";
+	if(wave_ent && wave_ent.spawnmob && wave_ent.spawnmob != "")
+	{
+		RandomSelection_Init();
+		FOREACH_WORD(wave_ent.spawnmob, true,
+		{
+			RandomSelection_AddString(it, 1, 1);
+		});
+
+		tospawn = RandomSelection_chosen_string;
+	}
 
 	if(spawn_point == NULL)
 	{
@@ -67,7 +108,7 @@ void invasion_SpawnChosenMonster(Monster mon)
 		setsize(e, mon.mins, mon.maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-			monster = spawnmonster(e, "", mon.monsterid, NULL, NULL, e.origin, false, false, 2);
+			monster = spawnmonster(e, tospawn, mon.monsterid, NULL, NULL, e.origin, false, false, 2);
 		else
 		{
 			delete(e);
@@ -75,31 +116,35 @@ void invasion_SpawnChosenMonster(Monster mon)
 		}
 	}
 	else // if spawnmob field falls through (unset), fallback to mon (relying on spawnmonster for that behaviour)
-		monster = spawnmonster(spawn(), spawn_point.spawnmob, mon.monsterid, spawn_point, spawn_point, spawn_point.origin, false, false, 2);
+		monster = spawnmonster(spawn(), ((spawn_point.spawnmob && spawn_point.spawnmob != "") ? spawn_point.spawnmob : tospawn), mon.monsterid, spawn_point, spawn_point, spawn_point.origin, false, false, 2);
 
 	if(!monster)
 		return;
 
-	if(spawn_point) monster.target2 = spawn_point.target2;
 	monster.spawnshieldtime = time;
-	if(spawn_point && spawn_point.target_range) monster.target_range = spawn_point.target_range;
 
-	if(teamplay)
-	if(spawn_point && spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
-		monster.team = spawn_point.team;
-	else
+	if(spawn_point)
 	{
-		RandomSelection_Init();
-		if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_AddFloat(NUM_TEAM_1, 1, 1);
-		if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_AddFloat(NUM_TEAM_2, 1, 1);
-		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_AddFloat(NUM_TEAM_3, 1, 1); }
-		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_AddFloat(NUM_TEAM_4, 1, 1); }
-
-		monster.team = RandomSelection_chosen_float;
+		if(spawn_point.target_range)
+			monster.target_range = spawn_point.target_range;
+		monster.target2 = spawn_point.target2;
 	}
 
 	if(teamplay)
 	{
+		if(spawn_point && spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
+			monster.team = spawn_point.team;
+		else
+		{
+			RandomSelection_Init();
+			if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_AddFloat(NUM_TEAM_1, 1, 1);
+			if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_AddFloat(NUM_TEAM_2, 1, 1);
+			if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_AddFloat(NUM_TEAM_3, 1, 1); }
+			if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_AddFloat(NUM_TEAM_4, 1, 1); }
+
+			monster.team = RandomSelection_chosen_float;
+		}
+
 		monster_setupcolors(monster);
 
 		if(monster.sprite)
@@ -316,6 +361,7 @@ MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
 {
 	entity ent = M_ARGV(0, entity);
 
+	// TODO: allow these as "rogues" or something
 	if(startsWith(ent.classname, "monster_"))
 	if(!(ent.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
@@ -342,7 +388,7 @@ MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
 	player.bot_attack = false;
 }
 
-MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(inv, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

@@ -22,22 +22,28 @@ void FixSize(entity e)
 
 #ifdef SVQC
 
+bool autocvar_g_triggers_debug = true;
+
 void trigger_init(entity this)
 {
 	string m = this.model;
 	EXACTTRIGGER_INIT;
- 	if(m != "")
- 	{
- 		precache_model(m);
- 		_setmodel(this, m); // no precision needed
+	if(autocvar_g_triggers_debug)
+	{
+		if(m != "")
+	 	{
+	 		precache_model(m);
+	 		_setmodel(this, m); // no precision needed
+		}
+		setorigin(this, this.origin);
+		if(this.scale)
+			setsize(this, this.mins * this.scale, this.maxs * this.scale);
+		else
+			setsize(this, this.mins, this.maxs);
 	}
-	setorigin(this, this.origin);
-	if(this.scale)
-		setsize(this, this.mins * this.scale, this.maxs * this.scale);
-	else
-		setsize(this, this.mins, this.maxs);
 
-	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
+	if(autocvar_g_triggers_debug)
+		BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 }
 
 void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)

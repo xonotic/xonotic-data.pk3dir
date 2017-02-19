@@ -34,9 +34,13 @@ const int IT_SUPERWEAPON				= BIT(21); // suit
 const int IT_STRENGTH   				= BIT(22);
 
 // item masks
-const int IT_AMMO                      	= IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
 const int IT_UNLIMITED_AMMO            	= IT_UNLIMITED_WEAPON_AMMO | IT_UNLIMITED_SUPERWEAPONS;
 const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
+
+#ifdef SVQC
+.float  strength_finished = _STAT(STRENGTH_FINISHED);
+.float  invincible_finished = _STAT(INVINCIBLE_FINISHED);
+#endif
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)

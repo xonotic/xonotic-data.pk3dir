@@ -1,6 +1,6 @@
 #include "sv_instagib.qh"
 
-int autocvar_g_instagib_ammo_drop;
+//int autocvar_g_instagib_ammo_drop;
 bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
@@ -17,7 +17,6 @@ REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
 spawnfunc(item_minst_cells)
 {
 	if (!g_instagib) { delete(this); return; }
-	if (!this.ammo_cells) this.ammo_cells = autocvar_g_instagib_ammo_drop;
 	StartItem(this, ITEM_VaporizerCells);
 }
 
@@ -54,7 +53,7 @@ void instagib_ammocheck(entity this)
 	if(!IS_PLAYER(this))
 		return; // not a player
 
-	if(IS_DEAD(this) || gameover)
+	if(IS_DEAD(this) || game_stopped)
 		instagib_stop_countdown(this);
 	else if (this.ammo_cells > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
 		instagib_stop_countdown(this);
@@ -257,7 +256,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

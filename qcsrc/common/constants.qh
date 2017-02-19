@@ -233,7 +233,7 @@ const int SPECIES_RESERVED = 15;
 const int FRAGS_PLAYER = 0;
 const int FRAGS_SPECTATOR = -666;
 const int FRAGS_LMS_LOSER = -616;
-const int FRAGS_PLAYER_NONSOLID = -616;
+const int FRAGS_PLAYER_NONSOLID = FRAGS_LMS_LOSER;
 // we can use this frags value for both
 
 // water levels
@@ -247,6 +247,7 @@ const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
 const int SERVERFLAG_TEAMPLAY = 2;
 const int SERVERFLAG_PLAYERSTATS = 4;
 
+#ifdef SVQC
 // FIXME/EXPLAINME: why? Mario: because
 vector autocvar_sv_player_maxs = '16 16 45';
 vector autocvar_sv_player_mins = '-16 -16 -24';
@@ -254,7 +255,8 @@ vector autocvar_sv_player_viewoffset = '0 0 20';
 vector autocvar_sv_player_crouch_maxs = '16 16 25';
 vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
 vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
-vector autocvar_sv_player_headsize = '24 24 12';
+//vector autocvar_sv_player_headsize = '24 24 12';
+#endif
 
 
 // a bit more constant

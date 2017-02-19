@@ -26,31 +26,33 @@ void W_Porto_Fail(entity this, float failhard);
 
 float race_readTime(string map, float pos)
 {
-	string rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
+	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
 
 	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
 }
 
 string race_readUID(string map, float pos)
 {
-	string rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
+	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
 
 	return db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos)));
 }
 
 float race_readPos(string map, float t)
 {
-	float i;
-	for (i = 1; i <= RANKINGS_CNT; ++i)
-	if (race_readTime(map, i) == 0 || race_readTime(map, i) > t)
-		return i;
+	for(int i = 1; i <= RANKINGS_CNT; ++i)
+	{
+		int mytime = race_readTime(map, i);
+		if(!mytime || mytime > t)
+			return i;
+	}
 
 	return 0; // pos is zero if unranked
 }
 
 void race_writeTime(string map, float t, string myuid)
 {
-	string rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
+	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
 
 	float newpos;
 	newpos = race_readPos(map, t);
@@ -87,7 +89,7 @@ void race_writeTime(string map, float t, string myuid)
 
 string race_readName(string map, float pos)
 {
-	string rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
+	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
 
 	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
 }
@@ -244,15 +246,13 @@ void race_SendStatus(float id, entity e)
 	});
 }
 
-void race_setTime(string map, float t, string myuid, string mynetname, entity e)
+void race_setTime(string map, float t, string myuid, string mynetname, entity e, bool showmessage)
 {
 	// netname only used TEMPORARILY for printing
-	float newpos, player_prevpos;
-	newpos = race_readPos(map, t);
+	int newpos = race_readPos(map, t);
 
-	float i;
-	player_prevpos = 0;
-	for(i = 1; i <= RANKINGS_CNT; ++i)
+	int player_prevpos = 0;
+	for(int i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		if(race_readUID(map, i) == myuid)
 			player_prevpos = i;
@@ -264,7 +264,8 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	{
 		oldrec = race_readTime(GetMapname(), player_prevpos);
 		race_SendStatus(0, e); // "fail"
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
+		if(showmessage)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
 		return;
 	}
 	else if (!newpos)
@@ -272,7 +273,8 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 		// no ranking, time worse than the worst ranked
 		oldrec = race_readTime(GetMapname(), RANKINGS_CNT);
 		race_SendStatus(0, e); // "fail"
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
+		if(showmessage)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
 		return;
 	}
 
@@ -281,7 +283,15 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	// if the player does not have a UID we can unfortunately not store the record, as the rankings system relies on UIDs
 	if(myuid == "")
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_UID, mynetname, t);
+		if(showmessage)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_UID, mynetname, t);
+		return;
+	}
+
+	if(uid2name(myuid) == "^1Unregistered Player")
+	{
+		if(showmessage)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_NAME, mynetname, t);
 		return;
 	}
 
@@ -291,7 +301,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	// store new ranking
 	race_writeTime(GetMapname(), t, myuid);
 
-	if (newpos == 1)
+	if (newpos == 1 && showmessage)
 	{
 		write_recordmarker(e, time - TIME_DECODE(t), TIME_DECODE(t));
 		race_send_recordtime(MSG_ALL);
@@ -304,19 +314,22 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 
 	if(newpos == player_prevpos)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_IMPROVED, mynetname, newpos, t, oldrec);
+		if(showmessage)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_IMPROVED, mynetname, newpos, t, oldrec);
 		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
 		else { race_SendStatus(1, e); } // "new time"
 	}
 	else if(oldrec == 0)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_SET, mynetname, newpos, t);
+		if(showmessage)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_SET, mynetname, newpos, t);
 		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
 		else { race_SendStatus(2, e); } // "new rank"
 	}
 	else
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_BROKEN, mynetname, oldrec_holder, newpos, t, oldrec);
+		if(showmessage)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_BROKEN, mynetname, oldrec_holder, newpos, t, oldrec);
 		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
 		else { race_SendStatus(2, e); } // "new rank"
 	}
@@ -324,24 +337,20 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 
 void race_deleteTime(string map, float pos)
 {
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
+	string rr = ((g_cts) ? CTS_RECORD : ((g_ctf) ? CTF_RECORD : RACE_RECORD));
 
-	float i;
-	for (i = pos; i <= RANKINGS_CNT; ++i)
+	for(int i = pos; i <= RANKINGS_CNT; ++i)
 	{
+		string therank = ftos(i);
 		if (i == RANKINGS_CNT)
 		{
-			db_remove(ServerProgsDB, strcat(map, rr, "time", ftos(i)));
-			db_remove(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)));
+			db_remove(ServerProgsDB, strcat(map, rr, "time", therank));
+			db_remove(ServerProgsDB, strcat(map, rr, "crypto_idfp", therank));
 		}
 		else
 		{
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(GetMapname(), i+1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(GetMapname(), i+1));
+			db_put(ServerProgsDB, strcat(map, rr, "time", therank), ftos(race_readTime(GetMapname(), i+1)));
+			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", therank), race_readUID(GetMapname(), i+1));
 		}
 	}
 
@@ -362,7 +371,6 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		t += e.race_penalty_accumulator;
 
 	t = TIME_ENCODE(t); // make integer
-	// adding just 0.4 so it rounds down in the .5 case (matching the timer display)
 
 	if(tvalid)
 	if(cp == race_timed_checkpoint) // finish line
@@ -415,7 +423,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			{
 				if(cp == race_timed_checkpoint)
 				{
-					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e);
+					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e, true);
 					MUTATOR_CALLHOOK(Race_FinalCheckpoint, e);
 				}
 				if(t < recordtime || recordtime == 0)
@@ -563,6 +571,9 @@ void dumpsurface(entity e)
 
 void checkpoint_passed(entity this, entity player)
 {
+	if(player.personal && autocvar_g_allow_checkpoints)
+		return; // practice mode!
+
 	string oldmsg;
 	entity cp;
 
@@ -913,7 +924,7 @@ spawnfunc(trigger_race_checkpoint)
 		settouch(this, checkpoint_touch);
 
 	o = (this.absmin + this.absmax) * 0.5;
-	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
+	tracebox(o, PL_MIN_CONST, PL_MAX_CONST, o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
 	waypoint_spawnforitem_force(this, trace_endpos);
 	this.nearestwaypointtimeout = time + 1000000000;
 
@@ -953,20 +964,29 @@ spawnfunc(trigger_race_checkpoint)
 
 spawnfunc(target_checkpoint) // defrag entity
 {
-	vector o;
 	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
 
-	EXACTTRIGGER_INIT;
+	// if this is targeted, then it probably isn't a trigger
+	bool is_trigger = !boolean(!this.nottargeted && this.targetname != "");
+
+	if(is_trigger)
+		EXACTTRIGGER_INIT;
 
 	this.use = checkpoint_use;
-	if (!(this.spawnflags & 1))
+	if (is_trigger && !(this.spawnflags & 1))
 		settouch(this, checkpoint_touch);
 
-	o = (this.absmin + this.absmax) * 0.5;
-	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
-	waypoint_spawnforitem_force(this, trace_endpos);
-	this.nearestwaypointtimeout = time + 1000000000;
+	vector org = this.origin;
+
+	// bots should only pathfind to this if it is a valid touchable trigger
+	if(is_trigger)
+	{
+		org = (this.absmin + this.absmax) * 0.5;
+		tracebox(org, PL_MIN_CONST, PL_MAX_CONST, org - '0 0 1' * (org.z - this.absmin.z), MOVE_NORMAL, this);
+		waypoint_spawnforitem_force(this, trace_endpos);
+		this.nearestwaypointtimeout = time + 1000000000;
+	}
 
 	if(this.message == "")
 		this.message = "went backwards";
@@ -983,9 +1003,9 @@ spawnfunc(target_checkpoint) // defrag entity
 	race_timed_checkpoint = 1;
 
 	if(this.race_checkpoint == 0)
-		WaypointSprite_SpawnFixed(WP_RaceStart, o, this, sprite, RADARICON_NONE);
+		WaypointSprite_SpawnFixed(WP_RaceStart, org, this, sprite, RADARICON_NONE);
 	else
-		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, this, sprite, RADARICON_NONE);
+		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, this, sprite, RADARICON_NONE);
 
 	this.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 

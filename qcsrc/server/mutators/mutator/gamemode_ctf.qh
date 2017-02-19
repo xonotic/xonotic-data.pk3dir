@@ -48,6 +48,13 @@ const float VEHICLE_FLAG_SCALE = 1.0;
 .string snd_flag_touch;
 .string snd_flag_pass;
 
+// score fields
+.float score_assist;
+.float score_capture;
+.float score_drop; // note: negated
+.float score_pickup;
+.float score_return;
+
 // effects
 .string toucheffect;
 .string passeffect;
@@ -107,7 +114,7 @@ float ctf_captimerecord; // record time for capturing the flag
 .entity ctf_dropper; // don't allow spam of dropping the flag
 .int max_flag_health;
 .float next_take_time;
-.bool ctf_flagdamaged;
+.bool ctf_flagdamaged_byworld;
 int ctf_teams;
 
 // passing/throwing properties

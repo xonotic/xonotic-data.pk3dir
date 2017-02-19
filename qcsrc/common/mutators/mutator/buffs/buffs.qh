@@ -64,6 +64,8 @@ STATIC_INIT(REGISTER_BUFFS) {
 	#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o, r)
 #endif
 
+string Buff_UndeprecateName(string buffname);
+
 REGISTER_BUFF(Null);
 BUFF_SPAWNFUNCS(random, BUFF_Null)
 

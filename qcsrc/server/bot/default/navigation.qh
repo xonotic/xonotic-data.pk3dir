@@ -24,6 +24,9 @@ entity navigation_bestgoal;
 .entity goalstack28, goalstack29, goalstack30, goalstack31;
 .entity nearestwaypoint;
 
+.entity wp_goal_prev0;
+.entity wp_goal_prev1;
+
 .float nearestwaypointtimeout;
 .float navigation_hasgoals;
 .float lastteleporttime;

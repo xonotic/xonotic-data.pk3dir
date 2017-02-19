@@ -56,12 +56,11 @@ void XonoticScreenshotImage_draw(entity me)
 		if (time < me.zoomTime + 2) // 1 seconds at full alpha, 1 second fading out
 		{
 			string zoomString;
-			float z;
-			z = me.zoomFactor * 100;
-			if (z - floor(z) == 0)
-				zoomString = sprintf("%d%%", z);
+			float myzoom = me.zoomFactor * 100;
+			if (myzoom - floor(myzoom) == 0)
+				zoomString = sprintf("%d%%", myzoom);
 			else
-				zoomString = sprintf("%.2f%%", z);
+				zoomString = sprintf("%.2f%%", myzoom);
 			theAlpha = (2 - (time - me.zoomTime));
 			draw_Text('0.05 0.95 0', zoomString, me.realFontSize, '1 1 1', theAlpha, false);
 		}

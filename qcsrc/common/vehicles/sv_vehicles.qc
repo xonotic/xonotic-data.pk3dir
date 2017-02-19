@@ -541,7 +541,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 	else
 		this.active = ACTIVE_ACTIVE;
 
-	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !gameover)
+	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !game_stopped)
 	{
 		LOG_DEBUG("Respawning vehicle: ", this.netname);
 		if(this.effects & EF_NODRAW)
@@ -737,9 +737,10 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 }
 
 // vehicle enter/exit handling
-vector vehicles_findgoodexit(entity this, vector prefer_spot)
+vector vehicles_findgoodexit(entity this, entity player, vector prefer_spot)
 {
-	tracebox(this.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, this.owner);
+	// TODO: we actually want the player's size here
+	tracebox(this.origin + '0 0 32', PL_MIN_CONST, PL_MAX_CONST, prefer_spot, MOVE_NORMAL, player);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
@@ -751,7 +752,7 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, this.owner);
+		tracebox(v2, PL_MIN_CONST, PL_MAX_CONST, v, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -793,7 +794,7 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		setsize(player, STAT(PL_MIN,player), STAT(PL_MAX, player));
 
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
@@ -803,10 +804,15 @@ void vehicles_exit(entity vehic, bool eject)
 		player.alpha			= 1;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
-		player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
+		player.view_ofs		= STAT(PL_VIEW_OFS, player);
 		player.event_damage	= PlayerDamage;
 		player.hud				= HUD_NORMAL;
-		PS(player).m_switchweapon = vehic.m_switchweapon;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++ slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			player.(weaponentity).m_switchweapon = vehic.(weaponentity).m_switchweapon;
+			delete(vehic.(weaponentity)); // no longer needed
+		}
 		player.last_vehiclecheck = time + 3;
 		player.vehicle_enter_delay = time + 2;
 
@@ -942,7 +948,7 @@ void vehicles_enter(entity pl, entity veh)
 	}
 	else return;
 
-	RemoveGrapplingHook(pl);
+	RemoveGrapplingHooks(pl);
 
 	veh.vehicle_ammo1 = 0;
 	veh.vehicle_ammo2 = 0;
@@ -959,11 +965,12 @@ void vehicles_enter(entity pl, entity veh)
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
 	pl.crouch = false;
-	pl.view_ofs = STAT(PL_VIEW_OFS, NULL);
-	setsize (pl, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
+	setsize (pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
+	pl.items &= ~IT_USING_JETPACK;
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
@@ -976,7 +983,12 @@ void vehicles_enter(entity pl, entity veh)
 	veh.colormap		= pl.colormap;
 	if(veh.tur_head)
 		veh.tur_head.colormap = pl.colormap;
-	veh.m_switchweapon = PS(pl).m_switchweapon;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		veh.(weaponentity) = new(temp_wepent);
+		veh.(weaponentity).m_switchweapon = pl.(weaponentity).m_switchweapon;
+	}
 	pl.hud = veh.vehicleid;
 	pl.PlayerPhysplug = veh.PlayerPhysplug;
 
@@ -1099,7 +1111,15 @@ void vehicles_spawn(entity this)
 	if(this.vehicle_controller)
 		this.team = this.vehicle_controller.team;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == this, RemoveGrapplingHook(it));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == this)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	vehicles_reset_colors(this);
 

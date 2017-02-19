@@ -24,6 +24,7 @@
 #include "../common/effects/qc/all.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/triggers/include.qh"
+#include "../common/wepent.qh"
 
 #include "weapons/weaponstats.qh"
 
@@ -318,9 +319,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= sqrt(bound(1.0, this.cvar_cl_handicap, 100.0));
+		damage *= bound(1.0, this.cvar_cl_handicap, 10.0);
 		if(this != attacker)
-			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
+			damage /= bound(1.0, attacker.cvar_cl_handicap, 10.0);
 	}
 
 	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
@@ -435,7 +436,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 					}
 
 					if(sound_allowed(MSG_BROADCAST, attacker))
-					if((this.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || attacker != this) // WEAPONTODO: create separate limit for pain notification with laser
+					if(this.health < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
 					if(this.health > 1)
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
@@ -485,6 +486,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	valid_damage_for_weaponstats = 0;
 	Weapon awep = WEP_Null;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
@@ -492,7 +494,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(DIFF_TEAM(this, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
-			awep = PS(attacker).m_weapon;
+			awep = attacker.(weaponentity).m_weapon;
 		else
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
@@ -502,7 +504,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	da = da - max(this.armorvalue, 0);
 	if(valid_damage_for_weaponstats)
 	{
-		WeaponStats_LogDamage(awep.m_id, abot, PS(this).m_weapon.m_id, vbot, dh + da);
+		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
 	if (damage)
 	{
@@ -521,7 +523,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		}
 
 		if(valid_damage_for_weaponstats)
-			WeaponStats_LogKill(awep.m_id, abot, PS(this).m_weapon.m_id, vbot);
+			WeaponStats_LogKill(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot);
 
 		if(autocvar_sv_gentle < 1)
 		if(sound_allowed(MSG_BROADCAST, attacker))
@@ -560,16 +562,14 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		excess = M_ARGV(4, float);
 
-		Weapon wep = PS(this).m_weapon;
-		/*for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		Weapon wep = this.(weaponentity).m_weapon;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			.entity weaponentity = weaponentities[slot];
-			wep.wr_playerdeath(wep, this, weaponentity);
-		}*/
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		wep.wr_playerdeath(wep, this, weaponentity);
+			.entity went = weaponentities[slot];
+			wep.wr_playerdeath(wep, this, went);
+		}
 
-		RemoveGrapplingHook(this);
+		RemoveGrapplingHooks(this);
 
 		Portal_ClearAllLater(this);
 
@@ -591,7 +591,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);
 		// throw a weapon
-		SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, PS(this).m_switchweapon.m_id);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity went = weaponentities[slot];
+			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(went).m_weapon, went);
+		}
 
 		// become fully visible
 		this.alpha = default_player_alpha;
@@ -699,7 +703,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		teamsay = false;
 	}
 
-	if(intermission_running)
+	if(game_stopped)
 		teamsay = false;
 
     if (!source) {
@@ -723,7 +727,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
     string namestr = "";
     if (source)
-        namestr = autocvar_g_chat_teamcolors ? playername(source) : source.netname;
+        namestr = playername(source, autocvar_g_chat_teamcolors);
 
     string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
@@ -739,10 +743,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
 			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
-			if(autocvar_g_chat_teamcolors)
-				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
-			else
-				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
+			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay, autocvar_g_chat_teamcolors), ": ^7");
 		}
 		else if(teamsay)
 		{
@@ -876,13 +877,13 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
 	if (!privatesay && source && !IS_PLAYER(source))
 	{
-		if (!intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
-				teamsay = -1; // spectators
+		if (!game_stopped)
+		if (teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			teamsay = -1; // spectators
 	}
 
 	if(flood)
-		LOG_INFO("NOTE: ", playername(source), "^7 is flooding.\n");
+		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.\n");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)
@@ -909,6 +910,16 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = 1;
 	}
 
+	if (privatesay && source && !IS_PLAYER(source))
+	{
+		if (!game_stopped)
+		if ((privatesay && !IS_PLAYER(privatesay)) || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			ret = -1; // just hide the message completely
+	}
+
+	MUTATOR_CALLHOOK(ChatMessage, source, ret);
+	ret = M_ARGV(1, int);
+
 	if(sourcemsgstr != "" && ret != 0)
 	{
 		if(ret < 0) // faked message, because the player is muted
@@ -920,16 +931,19 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		else if(privatesay) // private message, between 2 people only
 		{
 			sprint(source, sourcemsgstr);
-			sprint(privatesay, msgstr);
 			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
-			if(cmsgstr != "")
-				centerprint(privatesay, cmsgstr);
+			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
+			{
+				sprint(privatesay, msgstr);
+				if(cmsgstr != "")
+					centerprint(privatesay, cmsgstr);
+			}
 		}
 		else if ( teamsay && source.active_minigame )
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, sprint(it, msgstr));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -937,7 +951,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, {
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), {
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
@@ -947,16 +961,16 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
+			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
 		}
 		else
 		{
             if (source) {
                 sprint(source, sourcemsgstr);
                 dedicated_print(msgstr); // send to server console too
-                MX_Say(strcat(playername(source), "^7: ", msgin));
+                MX_Say(strcat(playername(source, true), "^7: ", msgin));
             }
-            FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
+            FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
         }
 	}
 

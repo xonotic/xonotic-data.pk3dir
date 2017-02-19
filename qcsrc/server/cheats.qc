@@ -77,13 +77,13 @@ float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat get
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", this.netname, i);
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this, false), i);
 	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", this.netname, argv(0));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this, false), argv(0));
 	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", this.netname, fr);
+		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this, false), fr);
 	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", this.netname);
+		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this, false));
 
 	return 0;
 }
@@ -185,7 +185,8 @@ float CheatImpulse(entity this, int imp)
 			CheatCommand(this, tokenize_console("give all"));
 			break; // already counted as cheat
 		case CHIMPULSE_SPEEDRUN.impulse:
-			IS_CHEAT(this, imp, 0, 0);
+			if(!autocvar_g_allow_checkpoints)
+				IS_CHEAT(this, imp, 0, 0);
 			if(this.personal)
 			{
 				this.speedrunning = true;
@@ -222,7 +223,8 @@ float CheatImpulse(entity this, int imp)
 				this.strength_finished = time + this.personal.strength_finished - this.personal.teleport_time;
 				this.invincible_finished = time + this.personal.invincible_finished - this.personal.teleport_time;
 
-				DID_CHEAT();
+				if(!autocvar_g_allow_checkpoints)
+					DID_CHEAT();
 				break;
 			}
 			if(IS_DEAD(this))
@@ -324,7 +326,7 @@ float CheatCommand(entity this, int argc)
 				//   effectname
 				effectnum = _particleeffectnum(argv(1));
 				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
-				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, this);
+				traceline(w_shotorg, w_shotorg + w_shotdir * max_shot_distance, MOVE_NORMAL, this);
 				__trailparticles(this, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
 				break;
@@ -444,7 +446,7 @@ float CheatCommand(entity this, int argc)
 			e.nextthink = time;
 			e.solid = 0; // nothing special
 			setmodel(e, MDL_MARKER);
-			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+			setsize(e, STAT(PL_MIN, this), STAT(PL_MAX, this));
 			e.skin = 2;
 			if(argc == 3)
 				e.cnt = stof(argv(1));

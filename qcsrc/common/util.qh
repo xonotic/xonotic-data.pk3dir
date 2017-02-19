@@ -49,6 +49,8 @@ void db_put(int db, string key, string value);
 int buf_load(string filename);
 void buf_save(int buf, string filename);
 
+// adding just 0.4 for race times so it rounds down in the .5 case (matching the timer display)
+// FIXME it doesn't round properly
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
 string format_time(float seconds);
 string mmsss(float t);
@@ -59,6 +61,7 @@ const float TIME_FACTOR = 100;
 #define TIME_ENCODED_TOSTRING(n) mmssss(n)
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
+#define CTF_RECORD "/ctf100record/"
 #define TIME_ENCODE(t) TIME_TO_NTHS(t, TIME_FACTOR)
 #define TIME_DECODE(n) ((n) / TIME_FACTOR)
 
@@ -103,7 +106,7 @@ float almost_equals(float a, float b);
 float almost_in_bounds(float a, float b, float c);
 
 float power2of(float e);
-float log2of(float x);
+float log2of(float e);
 
 vector rgb_to_hsl(vector rgb);
 vector hsl_to_rgb(vector hsl);
@@ -238,7 +241,7 @@ void queue_to_execute_next_frame(string s);
 // f(1) = 1
 // f'(0) = startspeedfactor
 // f'(1) = endspeedfactor
-float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x);
+float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float spd);
 
 // checks whether f'(x) = 0 anywhere from 0 to 1
 // because if this is the case, the function is not usable for platforms

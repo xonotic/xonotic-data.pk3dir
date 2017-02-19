@@ -6,12 +6,15 @@
 
 bool  autocvar_g_buffs_effects;
 float autocvar_g_buffs_waypoint_distance;
+bool autocvar_g_buffs_pickup_anyway = false;
+float autocvar_g_buffs_pickup_delay = 0.7;
 bool autocvar_g_buffs_randomize;
 float autocvar_g_buffs_random_lifetime;
 bool autocvar_g_buffs_random_location;
 int autocvar_g_buffs_random_location_attempts;
 int autocvar_g_buffs_spawn_count;
 bool autocvar_g_buffs_replace_powerups;
+bool autocvar_g_buffs_drop = true;
 float autocvar_g_buffs_cooldown_activate;
 float autocvar_g_buffs_cooldown_respawn;
 float autocvar_g_buffs_resistance_blockpercent;
@@ -59,6 +62,8 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
+// flight
+.float buff_flight_oldgravity;
 // common buff variables
 .float buff_effect_delay;
 
@@ -68,10 +73,11 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 .float buff_activetime_updated;
 .entity buff_waypoint;
 .int oldbuffs; // for updating effects
+.float buff_shield; // delay for players to keep them from spamming buff pickups
 .entity buff_model; // controls effects (TODO: make csqc)
 
-const vector BUFF_MIN = ('-16 -16 -20');
-const vector BUFF_MAX = ('16 16 20');
+const vector BUFF_MIN = ('-16 -16 0');
+const vector BUFF_MAX = ('16 16 60');
 
 // client side options
 .float cvar_cl_buffs_autoreplace;

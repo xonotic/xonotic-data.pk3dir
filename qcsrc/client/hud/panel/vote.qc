@@ -116,7 +116,7 @@ void HUD_Vote()
 	if(uid2name_dialog)
 		s = _("Allow servers to store and display your name?");
 	drawstring_aspect(pos, s, eX * mySize.x + eY * (2/8) * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	s = textShortenToWidth(vote_called_vote, mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
+	s = textShortenToWidth(ColorTranslateRGB(vote_called_vote), mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)
 		s = _("^1Configure the HUD");
 	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, eX * mySize.x + eY * (1.75/8) * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);

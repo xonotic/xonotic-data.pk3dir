@@ -3,7 +3,7 @@
 float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
-int autocvar_g_freezetag_teams;
+//int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
 
@@ -110,6 +110,7 @@ float freezetag_CheckWinner()
 			it.freezetag_frozen_timeout = 0;
 			nades_Clear(it);
 		));
+		game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return 1;
 	}
@@ -134,6 +135,8 @@ float freezetag_CheckWinner()
 		it.freezetag_frozen_timeout = 0;
 		nades_Clear(it);
 	));
+
+	game_stopped = true;
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
 }
@@ -267,7 +270,7 @@ void havocbot_role_ft_offense(entity this)
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
 		havocbot_goalrating_freeplayers(this, 9000, this.origin, 10000);
-		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 	}
 }
@@ -296,7 +299,7 @@ void havocbot_role_ft_freeing(entity this)
 		havocbot_goalrating_items(this, 8000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
 		havocbot_goalrating_freeplayers(this, 20000, this.origin, 10000);
-		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 	}
 }
@@ -429,7 +432,7 @@ MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 {
-	if(gameover)
+	if(game_stopped)
 		return true;
 
 	if(round_handler_IsActive())
@@ -573,7 +576,7 @@ void freezetag_Initialize()
 {
 	freezetag_teams = autocvar_g_freezetag_teams_override;
 	if(freezetag_teams < 2)
-		freezetag_teams = autocvar_g_freezetag_teams;
+		freezetag_teams = cvar("g_freezetag_teams"); // read the cvar directly as it gets written earlier in the same frame
 	freezetag_teams = bound(2, freezetag_teams, 4);
 
 	int teams = 0;

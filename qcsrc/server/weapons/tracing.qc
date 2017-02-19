@@ -28,7 +28,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if (IS_PLAYER(ent) && PS(ent).m_weapon == WEP_RIFLE)
+	if (IS_PLAYER(ent) && ent.(weaponentity).m_weapon == WEP_RIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -54,10 +54,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
-		accuracy_add(ent, PS(ent).m_weapon.m_id, maxdamage, 0);
+		accuracy_add(ent, ent.(weaponentity).m_weapon.m_id, maxdamage, 0);
 
 	if(IS_PLAYER(ent))
-		W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
+		W_HitPlotAnalysis(ent, weaponentity, v_forward, v_right, v_up);
 
 	vector md = ent.(weaponentity).movedir;
 	if(md.x > 0)
@@ -197,7 +197,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 //  Ballistics Tracing
 // ====================
 
-void FireRailgunBullet (entity this, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
+void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector hitloc, force, endpoint, dir;
 	entity ent, endent;
@@ -334,7 +334,7 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 	}
 
 	// calculate hits and fired shots for hitscan
-	accuracy_add(this, PS(this).m_weapon.m_id, 0, min(bdamage, totaldmg));
+	accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, min(bdamage, totaldmg));
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -349,12 +349,12 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet(entity this, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
+void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
 {
 	vector  end;
 
 	dir = normalize(dir + randomvec() * spread);
-	end = start + dir * MAX_SHOT_DISTANCE;
+	end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
 	float solid_penetration_left = 1;
@@ -399,6 +399,10 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 		start = trace_endpos;
 		entity hit = trace_ent;
 
+		// traced up to max_shot_distance and didn't hit anything at all
+		if (trace_fraction == 1.0)
+			break;
+
 		// When hitting sky, stop.
 		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
 			break;
@@ -432,7 +436,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 		{
 			fireBullet_last_hit = hit;
 			yoda = 0;
-			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage);
+			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
 			float g = accuracy_isgooddamage(this, hit);
 			Damage(hit, this, this, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
@@ -442,7 +446,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
 				total_damage += damage * solid_penetration_left;
-				accuracy_add(this, PS(this).m_weapon.m_id, 0, added_damage);
+				accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, added_damage);
 			}
 		}
 

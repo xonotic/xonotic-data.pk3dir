@@ -47,6 +47,7 @@ void race_SendNextCheckpoint(entity e, float spec);
 void race_PreparePlayer(entity this);
 void race_send_recordtime(float msg);
 void race_send_speedaward(float msg);
+void race_setTime(string map, float t, string myuid, string mynetname, entity e, bool showmessage);
 
 float speedaward_speed;
 string speedaward_holder;

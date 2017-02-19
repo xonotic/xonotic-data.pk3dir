@@ -391,7 +391,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 {
 	if (name == "")
 	{
-		this.model = "";
+		vector oldmin = this.mins, oldmax = this.maxs;
+		setmodel(this, MDL_Null);
+		setsize(this, oldmin, oldmax);
 		if (this.weaponchild) delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
@@ -523,7 +525,11 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 
 	if (this.movedir.x >= 0)
 	{
-		int algn = STAT(GUNALIGN, this.owner);
+		//int algn = STAT(GUNALIGN, this.owner);
+		int algn = W_GunAlign(this, STAT(GUNALIGN, this.owner));
+	#ifdef SVQC
+		this.m_gunalign = algn;
+	#endif
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
@@ -557,21 +563,22 @@ NET_HANDLE(wframe, bool isNew)
 	a.x = ReadCoord();
     a.y = ReadCoord();
     a.z = ReadCoord();
+    int slot = ReadByte();
 	bool restartanim = ReadByte();
-	anim_set(viewmodel, a, !restartanim, restartanim, restartanim);
-	viewmodel.state = ReadByte();
-	viewmodel.weapon_nextthink = ReadFloat();
-	viewmodel.alpha = ReadByte() / 255;
-	switch (viewmodel.state)
+	entity wepent = viewmodels[slot];
+	anim_set(wepent, a, !restartanim, restartanim, restartanim);
+	wepent.state = ReadByte();
+	wepent.weapon_nextthink = ReadFloat();
+	switch (wepent.state)
 	{
 		case WS_RAISE:
-			viewmodel.weapon_switchdelay = activeweapon.switchdelay_raise;
+			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_raise;
 			break;
 		case WS_DROP:
-			viewmodel.weapon_switchdelay = activeweapon.switchdelay_drop;
+			wepent.weapon_switchdelay = wepent.activeweapon.switchdelay_drop;
 			break;
         default:
-            viewmodel.weapon_switchdelay = 0;
+            wepent.weapon_switchdelay = 0;
             break;
 	}
 	return true;
@@ -588,10 +595,10 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteCoord(channel, a.x);
 	WriteCoord(channel, a.y);
 	WriteCoord(channel, a.z);
+	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);
 	WriteFloat(channel, weaponentity.weapon_nextthink);
-	WriteByte(channel, weaponentity.m_alpha * 255);
 }
 #endif
 

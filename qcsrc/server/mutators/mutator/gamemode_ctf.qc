@@ -91,6 +91,7 @@ float autocvar_g_ctf_flagcarrier_forcefactor;
 //float autocvar_g_ctf_flagcarrier_waypointforenemy_spotting;
 bool autocvar_g_ctf_fullbrightflags;
 bool autocvar_g_ctf_ignore_frags;
+bool autocvar_g_ctf_score_ignore_fields;
 int autocvar_g_ctf_score_capture;
 int autocvar_g_ctf_score_capture_assist;
 int autocvar_g_ctf_score_kill;
@@ -153,6 +154,19 @@ void ctf_CaptureRecord(entity flag, entity player)
 		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
 		write_recordmarker(player, (time - cap_time), cap_time);
 	}
+
+	if(autocvar_g_ctf_leaderboard && !ctf_oneflag)
+		race_setTime(GetMapname(), TIME_ENCODE(cap_time), player.crypto_idfp, player.netname, player, false);
+}
+
+bool ctf_Immediate_Return_Allowed(entity flag, entity toucher)
+{
+	int num_perteam = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(toucher, it), { ++num_perteam; });
+
+	// automatically return if there's only 1 player on the team
+	return ((autocvar_g_ctf_flag_return || num_perteam <= 1 || (autocvar_g_ctf_flag_return_carrying && toucher.flagcarried))
+		&& flag.team);
 }
 
 bool ctf_Return_Customize(entity this, entity client)
@@ -372,7 +386,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(player, -autocvar_g_ctf_score_penalty_drop);
+	PlayerTeamScore_AddScore(player, -((flag.score_drop) ? flag.score_drop : autocvar_g_ctf_score_penalty_drop));
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 
 	// waypoints
@@ -582,7 +596,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	}
 
 	// scoring
-	PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_capture);
+	PlayerTeamScore_AddScore(player, ((flag.score_capture) ? flag.score_capture : autocvar_g_ctf_score_capture));
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 
 	old_time = PlayerScore_Add(player, SP_CTF_CAPTIME, 0);
@@ -601,7 +615,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
 
 		if((enemy_flag.ctf_dropper) && (player != enemy_flag.ctf_dropper))
-			{ PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, autocvar_g_ctf_score_capture_assist); }
+			{ PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, ((flag.score_assist) ? flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
 	}
 
 	// reset the flag
@@ -627,7 +641,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	// scoring
 	if(IS_PLAYER(player))
 	{
-		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
+		PlayerTeamScore_AddScore(player, ((flag.score_return) ? flag.score_return : autocvar_g_ctf_score_return)); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
 
 		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
@@ -693,7 +707,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	else if(CTF_DIFFTEAM(player, flag))
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_NUM(flag.team, CENTER_CTF_PICKUP));
 	else
-		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((SAME_TEAM(player, flag)) ? CENTER_CTF_PICKUP_TEAM : CENTER_CTF_PICKUP_TEAM_ENEMY), Team_ColorCode(flag.team));
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((SAME_TEAM(player, flag)) ? CENTER_CTF_PICKUP_RETURN : CENTER_CTF_PICKUP_RETURN_ENEMY), Team_ColorCode(flag.team));
 
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
 
@@ -718,7 +732,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	{
 		case PICKUP_BASE:
 		{
-			PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_pickup_base);
+			PlayerTeamScore_AddScore(player, ((flag.score_pickup) ? flag.score_pickup : autocvar_g_ctf_score_pickup_base));
 			ctf_EventLog("steal", flag.team, player);
 			break;
 		}
@@ -871,9 +885,7 @@ void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		if(autocvar_g_ctf_flag_return_damage_delay)
-		{
-			this.ctf_flagdamaged = true;
-		}
+			this.ctf_flagdamaged_byworld = true;
 		else
 		{
 			this.health = 0;
@@ -906,17 +918,7 @@ void ctf_FlagThink(entity this)
 		LOG_TRACE("wtf the flag got squashed?");
 		tracebox(this.origin, CTF_FLAG.m_mins, CTF_FLAG.m_maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(!trace_startsolid || this.noalign) // can we resize it without getting stuck?
-			setsize(this, CTF_FLAG.m_mins, CTF_FLAG.m_maxs); }
-
-	switch(this.ctf_status) // reset flag angles in case warpzones adjust it
-	{
-		case FLAG_DROPPED:
-		{
-			this.angles = '0 0 0';
-			break;
-		}
-
-		default: break;
+			setsize(this, CTF_FLAG.m_mins, CTF_FLAG.m_maxs);
 	}
 
 	// main think method
@@ -937,6 +939,8 @@ void ctf_FlagThink(entity this)
 
 		case FLAG_DROPPED:
 		{
+			this.angles = '0 0 0'; // reset flag angles in case warpzones adjust it
+
 			if(autocvar_g_ctf_flag_dropped_floatinwater)
 			{
 				vector midpoint = ((this.absmin + this.absmax) * 0.5);
@@ -960,7 +964,7 @@ void ctf_FlagThink(entity this)
 					return;
 				}
 			}
-			if(this.ctf_flagdamaged)
+			if(this.ctf_flagdamaged_byworld)
 			{
 				this.health -= ((this.max_flag_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
@@ -1038,7 +1042,7 @@ void ctf_FlagThink(entity this)
 METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 {
 	return = false;
-	if(gameover) { return; }
+	if(game_stopped) return;
 	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	bool is_not_monster = (!IS_MONSTER(toucher));
@@ -1051,11 +1055,8 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 			flag.health = 0;
 			ctf_CheckFlagReturn(flag, RETURN_NEEDKILL);
 		}
-		if(!flag.ctf_flagdamaged) { return; }
+		if(!flag.ctf_flagdamaged_byworld) { return; }
 	}
-
-	int num_perteam = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(toucher, it), LAMBDA(++num_perteam));
 
 	// special touch behaviors
 	if(STAT(FROZEN, toucher)) { return; }
@@ -1108,7 +1109,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 
 		case FLAG_DROPPED:
 		{
-			if(CTF_SAMETEAM(toucher, flag) && (autocvar_g_ctf_flag_return || num_perteam <= 1 || (autocvar_g_ctf_flag_return_carrying && toucher.flagcarried)) && flag.team) // automatically return if there's only 1 player on the team
+			if(CTF_SAMETEAM(toucher, flag) && ctf_Immediate_Return_Allowed(flag, toucher))
 				ctf_Handle_Return(flag, toucher); // toucher just returned his own flag
 			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != flag.ctf_dropper) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
@@ -1126,8 +1127,13 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 			if((IS_PLAYER(toucher)) && !IS_DEAD(toucher) && (toucher != flag.pass_sender))
 			{
 				if(DIFF_TEAM(toucher, flag.pass_sender))
-					ctf_Handle_Return(flag, toucher);
-				else
+				{
+					if(ctf_Immediate_Return_Allowed(flag, toucher))
+						ctf_Handle_Return(flag, toucher);
+					else if(is_not_monster && (!toucher.flagcarried))
+						ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED);
+				}
+				else if(!toucher.flagcarried)
 					ctf_Handle_Retrieve(flag, toucher);
 			}
 			break;
@@ -1183,7 +1189,7 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = NULL;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
-	flag.ctf_flagdamaged = 0;
+	flag.ctf_flagdamaged_byworld = false;
 
 	ctf_CheckStalemate();
 }
@@ -1266,6 +1272,10 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	setthink(flag, ctf_FlagThink);
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
+
+	// crudely force them all to 0
+	if(autocvar_g_ctf_score_ignore_fields)
+		flag.score_assist = flag.score_capture = flag.score_drop = flag.score_pickup = flag.score_return = 0;
 
 	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	// appearence
@@ -1355,7 +1365,7 @@ void havocbot_calculate_middlepoint()
 	entity f;
 	vector s = '0 0 0';
 	vector fo = '0 0 0';
-	float n = 0;
+	int n = 0;
 
 	f = ctf_worldflaglist;
 	while (f)
@@ -1363,11 +1373,12 @@ void havocbot_calculate_middlepoint()
 		fo = f.origin;
 		s = s + fo;
 		f = f.ctf_worldflagnext;
+		n++;
 	}
 	if(!n)
 		return;
-	havocbot_ctf_middlepoint = s * (1.0 / n);
-	havocbot_ctf_middlepoint_radius	 = vlen(fo - havocbot_ctf_middlepoint);
+	havocbot_ctf_middlepoint = s / n;
+	havocbot_ctf_middlepoint_radius = vlen(fo - havocbot_ctf_middlepoint);
 }
 
 
@@ -1823,6 +1834,11 @@ void havocbot_role_ctf_retriever(entity this)
 	mf = havocbot_ctf_find_flag(this);
 	if(mf.ctf_status==FLAG_BASE)
 	{
+		if(this.goalcurrent == mf)
+		{
+			navigation_clearroute(this);
+			this.bot_strategytime = 0;
+		}
 		havocbot_ctf_reset_role(this);
 		return;
 	}
@@ -2076,7 +2092,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 		WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
 }
 
-MUTATOR_HOOKFUNCTION(ctf, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ctf, Damage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -2163,6 +2179,42 @@ MUTATOR_HOOKFUNCTION(ctf, ClientDisconnect)
 	ctf_RemovePlayer(player);
 }
 
+MUTATOR_HOOKFUNCTION(ctf, ClientConnect)
+{
+	if(!autocvar_g_ctf_leaderboard)
+		return;
+
+	entity player = M_ARGV(0, entity);
+
+	if(IS_REAL_CLIENT(player))
+	{
+		for(int i = 1; i <= RANKINGS_CNT; ++i)
+		{
+			race_SendRankings(i, 0, 0, MSG_ONE);
+		}
+	}
+}
+
+MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
+{
+	if(!autocvar_g_ctf_leaderboard)
+		return;
+
+	entity player = M_ARGV(0, entity);
+
+	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	{
+		if (!player.stored_netname)
+			player.stored_netname = strzone(uid2name(player.crypto_idfp));
+		if(player.stored_netname != player.netname)
+		{
+			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
+			strunzone(player.stored_netname);
+			player.stored_netname = strzone(player.netname);
+		}
+	}
+}
+
 MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 {
 	entity player = M_ARGV(0, entity);
@@ -2174,7 +2226,7 @@ MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return; }
+	if(MUTATOR_RETURNVALUE || game_stopped) return;
 
 	entity player = M_ARGV(0, entity);
 
@@ -2213,7 +2265,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 							player.throw_antispam = time + autocvar_g_ctf_pass_wait;
 							return true;
 						}
-						else if(player.flagcarried)
+						else if(player.flagcarried && !head.flagcarried)
 						{
 							if(closest_target)
 							{
@@ -2584,6 +2636,14 @@ spawnfunc(team_CTF_bluespawn)  { spawnfunc_info_player_team2(this);  }
 
 spawnfunc(team_CTF_neutralflag)	{ spawnfunc_item_flag_neutral(this);  }
 spawnfunc(team_neutralobelisk)	{ spawnfunc_item_flag_neutral(this);  }
+
+// compatibility for wop maps
+spawnfunc(team_redplayer)      { spawnfunc_info_player_team1(this);  }
+spawnfunc(team_blueplayer)     { spawnfunc_info_player_team2(this);  }
+spawnfunc(team_ctl_redlolly)   { spawnfunc_item_flag_team1(this);    }
+spawnfunc(team_CTL_redlolly)   { spawnfunc_item_flag_team1(this);    }
+spawnfunc(team_ctl_bluelolly)  { spawnfunc_item_flag_team2(this);    }
+spawnfunc(team_CTL_bluelolly)  { spawnfunc_item_flag_team2(this);    }
 
 
 // ==============

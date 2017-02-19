@@ -1,10 +1,11 @@
-float autocvar_net_connecttimeout = 30;
+noref float autocvar_net_connecttimeout = 30;
 
 #ifdef GAMEQC
 #include "anim.qc"
 #include "animdecide.qc"
 #include "ent_cs.qc"
 #include "net_notice.qc"
+#include "wepent.qc"
 #endif
 
 #include "mapinfo.qc"

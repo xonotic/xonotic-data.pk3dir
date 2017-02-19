@@ -156,7 +156,7 @@ void M_Shambler_Attack_Lightning(entity this)
 
 .int state;
 
-bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
+bool M_Shambler_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

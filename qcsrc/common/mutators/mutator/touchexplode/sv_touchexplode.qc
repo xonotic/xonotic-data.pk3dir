@@ -28,7 +28,7 @@ MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	if(time > player.touchexplode_time)
-	if(!gameover)
+	if(!game_stopped)
 	if(!STAT(FROZEN, player))
 	if(IS_PLAYER(player))
 	if(!IS_DEAD(player))

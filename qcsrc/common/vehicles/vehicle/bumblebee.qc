@@ -167,7 +167,7 @@ bool bumblebee_gunner_frame(entity this, float dt)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, bumblebee);
 
 	ad = gettaginfo(gun, gettagindex(gun, "fire"));
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, gun);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, gun);
 
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' *(1 - this.vehicle_reload1)), 0);
 
@@ -184,11 +184,11 @@ vector bumblebee_gunner_findgoodexit(vector prefer_spot, entity gunner, entity p
 	//vector exitspot;
 	float mysize;
 
-	tracebox(gunner.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, player);
+	tracebox(gunner.origin + '0 0 32', STAT(PL_MIN, player), STAT(PL_MAX, player), prefer_spot, MOVE_NORMAL, player);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
-	mysize = 1.5 * vlen(STAT(PL_MAX, NULL) - STAT(PL_MIN, NULL)); // can't use gunner's size, as they don't have a size
+	mysize = 1.5 * vlen(STAT(PL_MAX, player) - STAT(PL_MIN, player)); // can't use gunner's size, as they don't have a size
 	float i;
 	vector v, v2;
 	v2 = 0.5 * (gunner.absmin + gunner.absmax);
@@ -197,7 +197,7 @@ vector bumblebee_gunner_findgoodexit(vector prefer_spot, entity gunner, entity p
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, player);
+		tracebox(v2, STAT(PL_MIN, player), STAT(PL_MAX, player), v, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -224,7 +224,7 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 	}
 
 	CSQCVehicleSetup(player, HUD_NORMAL);
-	setsize(player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+	setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 
 	player.takedamage     = DAMAGE_AIM;
 	player.solid          = SOLID_SLIDEBOX;
@@ -232,11 +232,16 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 	player.effects       &= ~EF_NODRAW;
 	player.alpha          = 1;
 	player.PlayerPhysplug = func_null;
-	player.view_ofs       = STAT(PL_VIEW_OFS, NULL);
+	player.view_ofs       = STAT(PL_VIEW_OFS, player);
 	player.event_damage   = PlayerDamage;
 	player.hud            = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;
-	PS(player).m_switchweapon = gunner.m_switchweapon;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		player.(weaponentity).m_switchweapon = gunner.(weaponentity).m_switchweapon;
+		delete(gunner.(weaponentity));
+	}
 	player.vehicle_enter_delay = time + 2;
 
 	fixedmakevectors(vehic.angles);
@@ -304,9 +309,15 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	player.vehicle_energy 	= vehic.vehicle_energy;
 	UNSET_ONGROUND(player);
 
-	RemoveGrapplingHook(player);
+	RemoveGrapplingHooks(player);
 
-	gunner.m_switchweapon = PS(player).m_switchweapon;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+
+		gunner.(weaponentity) = new(temp_wepent);
+		gunner.(weaponentity).m_switchweapon = player.(weaponentity).m_switchweapon;
+	}
 	gunner.vehicle_exit = bumblebee_gunner_exit;
 	gunner.vehicle_hudmodel.viewmodelforclient = player;
 
@@ -391,7 +402,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(intermission_running)
+	if(game_stopped)
 	{
 		vehic.solid = SOLID_NOT;
 		vehic.takedamage = DAMAGE_NO;
@@ -645,7 +656,7 @@ void bumblebee_exit(entity this, int eject)
 	else
 		spot = this.origin + v_up * 128 - v_forward * 300;
 
-	spot = vehicles_findgoodexit(this, spot);
+	spot = vehicles_findgoodexit(this, this.owner, spot);
 
 	// Hide beam
 	if(this.gun3.enemy || !wasfreed(this.gun3.enemy))

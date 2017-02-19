@@ -208,8 +208,8 @@ float Portal_FindSafeOrigin(entity portal)
 {
 	vector o;
 	o = portal.origin;
-	portal.mins = STAT(PL_MIN, NULL) - SAFERNUDGE;
-	portal.maxs = STAT(PL_MAX, NULL) + SAFERNUDGE;
+	portal.mins = PL_MIN_CONST - SAFERNUDGE;
+	portal.maxs = PL_MAX_CONST + SAFERNUDGE;
 	fixedmakevectors(portal.mangle);
 	portal.origin += 16 * v_forward;
 	if(!move_out_of_solid(portal))
@@ -481,8 +481,12 @@ void Portal_Think(entity this)
 		if(it != o || time >= this.portal_activatetime)
 			Portal_Think_TryTeleportPlayer(this, it, g);
 
-		if(it.hook)
-			Portal_Think_TryTeleportPlayer(this, it.hook, g);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook)
+	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g);
+	    }
 	));
 	this.solid = SOLID_TRIGGER;
 	this.aiment = o;

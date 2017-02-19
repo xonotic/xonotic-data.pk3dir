@@ -99,20 +99,20 @@ float TeamScore_AddToTeam(float t, float scorefield, float score)
 {
 	entity s;
 
-	if(gameover)
+	if(game_stopped)
 		score = 0;
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
 	if(t <= 0 || t >= 16)
 	{
-		if(gameover)
+		if(game_stopped)
 			return 0;
 		error("Adding score to invalid team!");
 	}
 	s = teamscorekeepers[t - 1];
 	if(!s)
 	{
-		if(gameover)
+		if(game_stopped)
 			return 0;
 		error("Adding score to unknown team!");
 	}
@@ -324,7 +324,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score, player);
 	score = M_ARGV(1, float);
 
-	if(gameover)
+	if(game_stopped)
 	if(!mutator_returnvalue)
 		score = 0;
 
@@ -332,7 +332,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	entity s = player.scorekeeper;
 	if(!s)
 	{
-		if(gameover)
+		if(game_stopped)
 			return 0;
 		LOG_WARN("Adding score to unknown player!");
 		return 0;
@@ -747,7 +747,7 @@ float TeamScore_GetCompareValue(float t)
 
 	if(t <= 0 || t >= 16)
 	{
-		if(gameover)
+		if(game_stopped)
 			return 0;
 		error("Reading score of invalid team!");
 	}
@@ -824,7 +824,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 
 	sk = p.scorekeeper;
 
-	s = strcat(s, p.netname);
+	s = strcat(s, playername(p, false));
 	for (;;)
 	{
 		i = strlennocol(s) - NAMEWIDTH;
@@ -856,7 +856,7 @@ void Score_NicePrint_Spectators(entity to)
 
 void Score_NicePrint_Spectator(entity to, entity p)
 {
-	print_to(to, strcat("  ", p.netname));
+	print_to(to, strcat("  ", playername(p, false)));
 }
 
 .float score_dummyfield;

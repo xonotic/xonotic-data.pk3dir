@@ -72,9 +72,11 @@ CLASS(Weapon, Object)
     /** M: model MDL_id_ITEM */
     ATTRIB(Weapon, m_model, entity);
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
-    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshair1");
+    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshairmoustache");
     /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
     ATTRIB(Weapon, w_crosshair_size, float, 1);
+    /** A: reticle   : per-weapon zoom reticle */
+    ATTRIB(Weapon, w_reticle, string, string_null);
     /** M: wepimg    : "weaponfoobar" side view image file of weapon. WEAPONTODO: Move out of skin files, move to common files */
     ATTRIB(Weapon, model2, string, "");
     /** M: refname   : reference name name */
@@ -85,15 +87,15 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, m_pickup, entity);
 
     /** (SERVER) setup weapon data */
-    METHOD(Weapon, wr_setup, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_setup, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) logic to run every frame */
     METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */
-    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor)) {return false;}
+    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
     /** (SERVER) checks ammo for weapon second */
-    METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor)) {return false;}
+    METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
     /** (SERVER) runs bot aiming code for this weapon */
-    METHOD(Weapon, wr_aim, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_aim, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
     METHOD(Weapon, wr_init, void(Weapon this)) {}
     /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
@@ -112,17 +114,19 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_gonethink, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
     METHOD(Weapon, wr_config, void(Weapon this)) {}
-    /** (CLIENT) weapon specific zoom reticle */
-    METHOD(Weapon, wr_zoomreticle, bool(Weapon this)) {
+    /** (BOTH) weapon specific zoom reticle */
+    METHOD(Weapon, wr_zoom, bool(Weapon this, entity actor)) {
         // no weapon specific image for this weapon
         return false;
     }
+    /** (CLIENT) weapon specific view model */
+    METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
     /** (CLIENT) weapon specific glow */
-    METHOD(Weapon, wr_glow, vector(Weapon this, entity actor)) { return '0 0 0'; }
+    METHOD(Weapon, wr_glow, vector(Weapon this, entity actor, entity wepent)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
-    METHOD(Weapon, wr_drop, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_drop, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) a weapon is picked up */
-    METHOD(Weapon, wr_pickup, void(Weapon this, entity actor)) {}
+    METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) update cvar based properties */
     METHOD(Weapon, wr_update, void(Weapon this)) {}
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
@@ -173,7 +177,9 @@ ENDCLASS(OffhandWeapon)
 .OffhandWeapon offhand;
 #endif
 
-const int MAX_SHOT_DISTANCE = 32768;
+#ifdef GAMEQC
+int max_shot_distance = 32768; // determined by world mins/maxs when map loads
+#endif
 
 // weapon flags
 const int WEP_TYPE_OTHER          =  0x00; // not for damaging people
@@ -188,6 +194,7 @@ const int WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
 const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 const int WEP_TYPE_MELEE_PRI      = 0x400; // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      = 0x800; // secondary attack is melee swing (for animation)
+const int WEP_FLAG_DUALWIELD      = 0x1000; // weapon can be dual wielded
 
 // variables:
 string weaponorder_byid;

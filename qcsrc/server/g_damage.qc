@@ -33,7 +33,7 @@ void UpdateFrags(entity player, int f)
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 {
 	// TODO route through PlayerScores instead
-	if(gameover) return;
+	if(game_stopped) return;
 
 	if(f < 0)
 	{
@@ -58,13 +58,15 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	if(targ != attacker) // not for suicides
 	if(g_weaponarena_random)
 	{
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		Weapon culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit) culprit = PS(attacker).m_weapon;
-		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = PS(attacker).m_weapon;
+		if(!culprit) culprit = attacker.(weaponentity).m_weapon;
+		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = attacker.(weaponentity).m_weapon;
 
 		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
@@ -97,8 +99,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		}
 
 		// after a frag, choose another random weapon set
-		if (!(attacker.weapons & WepSet_FromWeapon(PS(attacker).m_weapon)))
-			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
+		if (!(attacker.weapons & WepSet_FromWeapon(attacker.(weaponentity).m_weapon)))
+			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker, weaponentity), weaponentity);
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
@@ -115,12 +117,15 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 string AppendItemcodes(string s, entity player)
 {
-	int w = PS(player).m_weapon.m_id;
-	//if(w == 0)
-	//	w = player.switchweapon;
-	if(w == 0)
-		w = player.cnt; // previous weapon!
-	s = strcat(s, ftos(w));
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		int w = player.(weaponentity).m_weapon.m_id;
+		if(w == 0)
+			w = player.(weaponentity).cnt; // previous weapon
+		if(w != 0 || slot == 0)
+			s = strcat(s, ftos(w));
+	}
 	if(time < player.strength_finished)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
@@ -556,9 +561,17 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	Ice_Think(ice);
 
-	RemoveGrapplingHook(targ);
+	RemoveGrapplingHooks(targ);
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == targ)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	// add waypoint
 	if(show_waypoint)
@@ -585,7 +598,15 @@ void Unfreeze (entity targ)
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(it.(weaponentity).hook.aiment == targ)
+	    		RemoveHook(it.(weaponentity).hook);
+	    }
+	});
 
 	// remove the ice block
 	if(targ.iceblock)
@@ -602,7 +623,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	mirrordamage = 0;
 	mirrorforce = 0;
 
-	if (gameover || targ.killcount == FRAGS_SPECTATOR)
+	if (game_stopped || targ.killcount == FRAGS_SPECTATOR)
 		return;
 
     damage_targ = targ;
@@ -611,10 +632,14 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	attacker_save = attacker;
 
 	if(IS_PLAYER(targ))
-		if(targ.hook)
-			if(targ.hook.aiment)
-				if(targ.hook.aiment == attacker)
-					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(targ.(weaponentity).hook && targ.(weaponentity).hook.aiment == attacker)
+	    		RemoveHook(targ.(weaponentity).hook);
+	    }
+	}
 
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
@@ -713,7 +738,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		MUTATOR_CALLHOOK(PlayerDamage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
+		MUTATOR_CALLHOOK(Damage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
 		damage = M_ARGV(4, float);
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);
