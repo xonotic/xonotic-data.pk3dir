@@ -10,7 +10,7 @@ void conveyor_think(entity this)
 	if(dt <= 0) { return; }
 #endif
 
-	// set mythis as current conveyor where possible
+	// set myself as current conveyor where possible
 	IL_EACH(g_conveyed, it.conveyor == this,
 	{
 		it.conveyor = NULL;
