@@ -209,6 +209,8 @@ void Shutdown()
 			localcmd("\ncl_hook_gameend\n");
 	}
 
+	localcmd("\ncl_hook_shutdown\n");
+
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
 }
