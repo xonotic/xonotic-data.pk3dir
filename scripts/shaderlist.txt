@@ -7,6 +7,7 @@ model-common
 onslaught
 portals
 pyria
+rl
 shotgun
 spiderbot
 teamfx
