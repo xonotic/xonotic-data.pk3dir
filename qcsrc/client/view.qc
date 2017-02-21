@@ -326,7 +326,7 @@ void viewmodel_draw(entity this)
 			this.viewmodel_angles = this.angles;
 		}
 		anim_update(this);
-		if (!this.animstate_override && !this.animstate_looping)
+		if ((!this.animstate_override && !this.animstate_looping) || time > this.animstate_endtime)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active

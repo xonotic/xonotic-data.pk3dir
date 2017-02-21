@@ -517,7 +517,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 					this.clip_load = this.clip_size = 0;
 				}
 
-				weapon_thinkf(actor, weaponentity, WFRAME_IDLE, newwep.switchdelay_raise, w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, newwep.switchdelay_raise, w_ready);
 				break;
 			}
 			case WS_DROP:
