@@ -558,6 +558,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 
 	player.buffs = 0;
 	player.buff_time = 0;
+	player.buff_shield = time + 0.5; // prevent picking up buffs immediately
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
