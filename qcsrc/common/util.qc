@@ -413,11 +413,11 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 string mapPriorityList(string order, string(string) mapfunc)
 {
 	string neworder;
-	float i, n;
+	float n;
 
 	n = tokenize_console(order);
 	neworder = "";
-	for(i = 0; i < n; ++i)
+	for(float i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
 
 	return substring(neworder, 0, strlen(neworder) - 1);
