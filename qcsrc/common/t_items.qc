@@ -1480,7 +1480,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 
 spawnfunc(target_items)
 {
-	int n, j;
+	int n;
 	string s;
 
 	this.use = target_items_use;
@@ -1498,7 +1498,7 @@ spawnfunc(target_items)
 	}
 	else
 	{
-		for(j = 0; j < n; ++j)
+		for(int j = 0; j < n; ++j)
 		{
 			if     (argv(j) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
 			else if(argv(j) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
@@ -1582,7 +1582,7 @@ spawnfunc(target_items)
 	//print(this.netname, "\n");
 
 	n = tokenize_console(this.netname);
-	for(j = 0; j < n; ++j)
+	for(int j = 0; j < n; ++j)
 	{
 		FOREACH(Weapons, it != WEP_Null && W_UndeprecateName(argv(j)) == it.netname, {
             it.wr_init(it);
