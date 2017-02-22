@@ -58,8 +58,7 @@ void Item_SetAlpha(entity this)
 			this.alpha = -1;
 	}
 
-	if(!veh_hud)
-	if(this.ItemStatus & ITS_STAYWEP)
+	if((!veh_hud) && (this.ItemStatus & ITS_STAYWEP))
 	{
 		this.colormod = this.glowmod = autocvar_cl_weapon_stay_color;
 		this.alpha = autocvar_cl_weapon_stay_alpha;
