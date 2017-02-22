@@ -1461,10 +1461,9 @@ void target_items_use(entity this, entity actor, entity trigger)
 		return;
 	}
 
-	if (!IS_PLAYER(actor))
+	if (!IS_PLAYER(actor) || IS_DEAD(actor))
 		return;
-	if(IS_DEAD(actor))
-		return;
+
 	if(trigger.solid == SOLID_TRIGGER)
 	{
 		EXACTTRIGGER_TOUCH(this, trigger);
