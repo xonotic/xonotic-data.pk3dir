@@ -231,16 +231,13 @@ string MapInfo_BSPName_ByID(float i)
 
 string unquote(string s)
 {
-	float i, j, l;
-	l = strlen(s);
-	j = -1;
-	for(i = 0; i < l; ++i)
+	float l = strlen(s);
+	for(float i = 0; i < l; ++i)
 	{
-		string ch;
-		ch = substring(s, i, 1);
-		if(ch != " ") if(ch != "\"")
+		string ch = substring(s, i, 1);
+		if((ch != " ") && (ch != "\""))
 		{
-			for(j = strlen(s) - i - 1; j > 0; --j)
+			for(float j = l - i - 1; j > 0; --j)
 			{
 				ch = substring(s, i+j, 1);
 				if(ch != " ") if(ch != "\"")
