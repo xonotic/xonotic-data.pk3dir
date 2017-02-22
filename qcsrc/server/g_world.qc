@@ -227,9 +227,11 @@ void cvar_changes_init()
 		BADCVAR("sys_specialcharactertranslation");
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
+		BADCVAR("g_require_stats");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
+		BADPREFIX("g_require_stats_");
 		BADPREFIX("g_chat_flood_");
 		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
