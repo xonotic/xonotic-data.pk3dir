@@ -24,10 +24,9 @@
 */
 vector real_origin(entity ent)
 {
-	entity e;
 	vector v = ((ent.absmin + ent.absmax) * 0.5);
+	entity e = ent.tag_entity;
 
-	e = ent.tag_entity;
 	while(e)
 	{
 		v = v + ((e.absmin + e.absmax) * 0.5);
