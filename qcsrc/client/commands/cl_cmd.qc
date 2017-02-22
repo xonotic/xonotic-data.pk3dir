@@ -135,7 +135,7 @@ void LocalCommand_create_scrshot_ent(int request)
 		case CMD_REQUEST_COMMAND:
 		{
 			string filename = strcat(MapInfo_Map_bspname, "_scrshot_ent.txt");
-			int fh = fopen(filename, FILE_WRITE);
+			int fh = fopen(filename, FILE_APPEND);
 
 			if (fh >= 0)
 			{
