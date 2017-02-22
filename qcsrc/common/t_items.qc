@@ -448,28 +448,30 @@ void Item_Show (entity e, float mode)
 		e.spawnshieldtime = 1;
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
-	else {
-	bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.weapons & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
-		|| e.team // weapon stay isn't supported for teamed weapons
-		;
-	if(def.instanceOfWeaponPickup && !nostay && g_weapon_stay)
-	{
-		// make the item translucent and not touchable
-		e.model = e.mdl;
-		e.solid = SOLID_TRIGGER; // can STILL be picked up!
-		e.effects |= EF_STARDUST;
-		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
-		e.ItemStatus |= (ITS_AVAILABLE | ITS_STAYWEP);
-	}
 	else
 	{
-		//setmodel(e, "null");
-		e.solid = SOLID_NOT;
-		e.colormod = '0 0 0';
-		//e.glowmod = e.colormod;
-		e.spawnshieldtime = 1;
-		e.ItemStatus &= ~ITS_AVAILABLE;
-	}}
+		bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.weapons & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
+			|| e.team // weapon stay isn't supported for teamed weapons
+			;
+		if(def.instanceOfWeaponPickup && !nostay && g_weapon_stay)
+		{
+			// make the item translucent and not touchable
+			e.model = e.mdl;
+			e.solid = SOLID_TRIGGER; // can STILL be picked up!
+			e.effects |= EF_STARDUST;
+			e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
+			e.ItemStatus |= (ITS_AVAILABLE | ITS_STAYWEP);
+		}
+		else
+		{
+			//setmodel(e, "null");
+			e.solid = SOLID_NOT;
+			e.colormod = '0 0 0';
+			//e.glowmod = e.colormod;
+			e.spawnshieldtime = 1;
+			e.ItemStatus &= ~ITS_AVAILABLE;
+		}
+	}
 
 	if (def.m_glow)
 		e.ItemStatus |= ITS_GLOW;
