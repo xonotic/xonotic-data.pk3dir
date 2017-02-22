@@ -1354,9 +1354,8 @@ spawnfunc(item_rockets)
 
 spawnfunc(item_bullets)
 {
-	if(!weaponswapping)
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(this.classname != "droppedweapon")
+	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap && 
+	   (this.classname != "droppedweapon"))
 	{
 		weaponswapping = true;
 		spawnfunc_item_shells(this);
@@ -1379,9 +1378,8 @@ spawnfunc(item_plasma)
 
 spawnfunc(item_shells)
 {
-	if(!weaponswapping)
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(this.classname != "droppedweapon")
+	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
+	   (this.classname != "droppedweapon"))
 	{
 		weaponswapping = true;
 		spawnfunc_item_bullets(this);
