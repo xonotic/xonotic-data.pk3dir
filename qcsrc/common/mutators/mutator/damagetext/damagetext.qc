@@ -114,7 +114,7 @@ CLASS(DamageText, Object)
                 : sprintf("%d", potential)
             ), s);
         s = strreplace("{potential_health}", (
-            (this.m_potential_damage - this.m_armordamage == this.m_healthdamage && autocvar_cl_damagetext_format_hide_redundant)
+            (this.m_potential_damage == this.m_healthdamage + this.m_armordamage && autocvar_cl_damagetext_format_hide_redundant)
                 ? ""
                 : sprintf("%d", potential_health)
             ), s);
