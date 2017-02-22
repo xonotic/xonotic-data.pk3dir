@@ -779,8 +779,7 @@ string find_last_color_code(string s)
 	if (start == -1) // no caret found
 		return "";
 	int len = strlen(s)-1;
-	int i;
-	for(i = len; i >= start; --i)
+	for(int i = len; i >= start; --i)
 	{
 		if(substring(s, i, 1) != "^")
 			continue;
