@@ -425,15 +425,12 @@ string mapPriorityList(string order, string(string) mapfunc)
 
 string swapInPriorityList(string order, float i, float j)
 {
-	string s;
-	float w, n;
-
-	n = tokenize_console(order);
+	float n = tokenize_console(order);
 
 	if(i >= 0 && i < n && j >= 0 && j < n && i != j)
 	{
-		s = "";
-		for(w = 0; w < n; ++w)
+		string s = "";
+		for(float w = 0; w < n; ++w)
 		{
 			if(w == i)
 				s = strcat(s, argv(j), " ");
