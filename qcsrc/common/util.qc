@@ -668,7 +668,6 @@ bool isCaretEscaped(string theText, float pos)
 
 int skipIncompleteTag(string theText, float pos, int len)
 {
-	int i = 0, ch = 0;
 	int tag_start = -1;
 
 	if(substring(theText, pos - 1, 1) == "^")
@@ -676,7 +675,7 @@ int skipIncompleteTag(string theText, float pos, int len)
 		if(isCaretEscaped(theText, pos - 1) || pos >= len)
 			return 0;
 
-		ch = str2chr(theText, pos);
+		int ch = str2chr(theText, pos);
 		if(ch >= '0' && ch <= '9')
 			return 1; // ^[0-9] color code found
 		else if (ch == 'x')
@@ -686,7 +685,7 @@ int skipIncompleteTag(string theText, float pos, int len)
 	}
 	else
 	{
-		for(i = 2; pos - i >= 0 && i <= 4; ++i)
+		for(int i = 2; pos - i >= 0 && i <= 4; ++i)
 		{
 			if(substring(theText, pos - i, 2) == "^x")
 			{
