@@ -1047,16 +1047,17 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 
 	float itemarmor = item.armorvalue;
 	float itemhealth = item.health;
+
 	if(item.item_group)
 	{
 		itemarmor *= min(4, item.item_group_count);
 		itemhealth *= min(4, item.item_group_count);
 	}
-	if (itemarmor)
-	if (player.armorvalue < item.max_armorvalue)
+
+	if (itemarmor && (player.armorvalue < item.max_armorvalue))
 		c = itemarmor / max(1, player.armorvalue * 2/3 + player.health * 1/3);
-	if (itemhealth)
-	if (player.health < item.max_health)
+
+	if (itemhealth && (player.health < item.max_health))
 		c = itemhealth / max(1, player.health);
 
 	rating *= min(2, c);
