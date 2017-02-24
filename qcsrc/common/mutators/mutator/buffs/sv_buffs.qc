@@ -214,15 +214,17 @@ float buff_Available(entity buff)
 
 .int buff_seencount;
 
-void buff_NewType(entity ent, float cb)
+void buff_NewType(entity ent)
 {
 	RandomSelection_Init();
-	FOREACH(Buffs, buff_Available(it), LAMBDA(
-		it.buff_seencount += 1;
+	FOREACH(Buffs, buff_Available(it),
+	{
 		// if it's already been chosen, give it a lower priority
-		RandomSelection_AddFloat(it.m_itemid, 1, max(0.2, 1 / it.buff_seencount));
-	));
-	ent.buffs = RandomSelection_chosen_float;
+		RandomSelection_AddEnt(it, 1, max(0.2, 1 / it.buff_seencount));
+	});
+	entity newbuff = RandomSelection_chosen_ent;
+	newbuff.buff_seencount += 1; // lower chances of seeing this buff again soon
+	ent.buffs = newbuff.m_itemid;
 }
 
 void buff_Think(entity this)
@@ -263,7 +265,7 @@ void buff_Think(entity this)
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
 		if(autocvar_g_buffs_randomize)
-			buff_NewType(this, this.buffs);
+			buff_NewType(this);
 
 		if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
 			buff_Respawn(this);
@@ -307,7 +309,7 @@ void buff_Waypoint_Reset(entity this)
 void buff_Reset(entity this)
 {
 	if(autocvar_g_buffs_randomize)
-		buff_NewType(this, this.buffs);
+		buff_NewType(this);
 	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset(this);
@@ -345,7 +347,7 @@ void buff_Init(entity this)
 	entity buff = buff_FirstFromFlags(this.buffs);
 
 	if(!this.buffs || !buff_Available(buff))
-		buff_NewType(this, 0);
+		buff_NewType(this);
 
 	this.classname = "item_buff";
 	this.solid = SOLID_TRIGGER;
@@ -558,6 +560,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 
 	player.buffs = 0;
 	player.buff_time = 0;
+	player.buff_shield = time + 0.5; // prevent picking up buffs immediately
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;

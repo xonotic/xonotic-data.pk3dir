@@ -30,7 +30,7 @@ test_sv_game:
     - wget -O data/maps/g-23.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.cache
     - wget -O data/maps/g-23.waypoints.hardwired https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.hardwired
     - make
-    - EXPECT=022c6d04bef1610d046a5ee9368b27cc
+    - EXPECT=4355fafcabc680c8d8d861aa0892b839
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'

@@ -566,7 +566,10 @@ NET_HANDLE(wframe, bool isNew)
     int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
-	anim_set(wepent, a, !restartanim, restartanim, restartanim);
+	if(a.x == wepent.anim_idle_x) // we don't need to enforce idle animation
+		wepent.animstate_looping = false;
+	else
+		anim_set(wepent, a, !restartanim, restartanim, restartanim);
 	wepent.state = ReadByte();
 	wepent.weapon_nextthink = ReadFloat();
 	switch (wepent.state)

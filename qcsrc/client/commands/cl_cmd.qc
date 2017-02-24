@@ -134,8 +134,9 @@ void LocalCommand_create_scrshot_ent(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string filename = strcat(MapInfo_Map_bspname, "_scrshot_ent.txt");
-			int fh = fopen(filename, FILE_WRITE);
+			string path = ((argv(1) == "") ? "" : strcat(argv(1), "/"));
+			string filename = strcat(path, MapInfo_Map_bspname, "_scrshot_ent.txt");
+			int fh = fopen(filename, FILE_APPEND);
 
 			if (fh >= 0)
 			{
@@ -145,7 +146,7 @@ void LocalCommand_create_scrshot_ent(int request)
 				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles.x), " ", ftos(view_angles.y), " ", ftos(view_angles.z)), "\"\n"));
 				fputs(fh, "}\n");
 
-				LOG_INFO("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
+				LOG_INFO("Completed screenshot entity dump in ^2data/data/", path, MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
 
 				fclose(fh);
 			}
@@ -159,8 +160,8 @@ void LocalCommand_create_scrshot_ent(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd create_scrshot_ent\n");
-			LOG_INFO("  No arguments required.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd create_scrshot_ent [path]\n");
+			LOG_INFO("  Where 'path' can be the subdirectory of data/data in which the file is saved.\n");
 			return;
 		}
 	}
