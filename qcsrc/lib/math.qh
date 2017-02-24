@@ -180,7 +180,7 @@ float almost_equals(float a, float b)
 
 float almost_equals_eps(float a, float b, float times_eps)
 {
-	float eps = (max(a, -a) + max(b, -b)) * FLOAT_EPSILON * times_eps;
+	float eps = max(fabs(a), fabs(b)) * FLOAT_EPSILON * times_eps;
 	return a - b < eps && b - a < eps;
 }
 
