@@ -1,5 +1,7 @@
 #include "damagetext.qh"
 
+#include "lib/math.qh"
+
 #define DAMAGETEXT_PRECISION_MULTIPLIER 128
 #define DAMAGETEXT_SHORT_LIMIT 256 // the smallest value that we can't send as short - 2^15 (signed short) / DAMAGETEXT_PRECISION_MULTIPLIER
 
@@ -102,6 +104,8 @@ CLASS(DamageText, Object)
         int potential = rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
         int potential_health = rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
 
+        bool redundant = almost_equals_eps(this.m_healthdamage + this.m_armordamage, this.m_potential_damage, 10);
+
         string s = autocvar_cl_damagetext_format;
         s = strreplace("{armor}", (
             (this.m_armordamage == 0 && autocvar_cl_damagetext_format_hide_redundant)
@@ -109,12 +113,12 @@ CLASS(DamageText, Object)
                 : sprintf("%d", armor)
             ), s);
         s = strreplace("{potential}", (
-            (this.m_potential_damage == this.m_healthdamage + this.m_armordamage && autocvar_cl_damagetext_format_hide_redundant)
+            (redundant && autocvar_cl_damagetext_format_hide_redundant)
                 ? ""
                 : sprintf("%d", potential)
             ), s);
         s = strreplace("{potential_health}", (
-            (this.m_potential_damage == this.m_healthdamage + this.m_armordamage && autocvar_cl_damagetext_format_hide_redundant)
+            (redundant && autocvar_cl_damagetext_format_hide_redundant)
                 ? ""
                 : sprintf("%d", potential_health)
             ), s);
@@ -199,7 +203,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_ARMOR;
             if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_POTENTIAL;
             if (!armor) flags |= DTFLAG_NO_ARMOR;
-            if (fabs((armor + health) - potential_damage) < 0.0001) flags |= DTFLAG_NO_POTENTIAL;
+            if (almost_equals_eps(armor + health, potential_damage, 10)) flags |= DTFLAG_NO_POTENTIAL;
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
