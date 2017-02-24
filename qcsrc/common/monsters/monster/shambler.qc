@@ -244,7 +244,6 @@ METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
 }
 #endif
 #ifdef SVQC
-spawnfunc(item_health_mega);
 .float animstate_endtime;
 METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 {
@@ -256,7 +255,7 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_shambler_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_shambler_damageforcescale); }
 
-    actor.monster_loot = spawnfunc_item_health_mega;
+    actor.monster_loot = ITEM_HealthMega;
     actor.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
 
     setanim(actor, actor.anim_shoot, false, true, true);

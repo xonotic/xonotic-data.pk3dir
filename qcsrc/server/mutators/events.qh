@@ -294,7 +294,7 @@ MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
     /**/                                   o(entity, MUTATOR_ARGV_1_entity) \
     /* attacker */                         i(entity, MUTATOR_ARGV_2_entity) \
     /**/
-.void(entity this) monster_loot;
+.entity monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
 
 /**

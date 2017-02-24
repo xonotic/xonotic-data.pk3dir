@@ -46,7 +46,7 @@ void monster_dropitem(entity this, entity attacker)
 	if(e && e.monster_loot)
 	{
 		e.noalign = true;
-		e.monster_loot(e);
+		StartItem(e, e.monster_loot);
 		e.gravity = 1;
 		set_movetype(e, MOVETYPE_TOSS);
 		e.reset = SUB_Remove;

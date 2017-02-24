@@ -137,7 +137,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
 	entity item = M_ARGV(1, entity);
 
-	item.monster_loot = spawnfunc_item_minst_cells;
+	item.monster_loot = ITEM_VaporizerCells;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
