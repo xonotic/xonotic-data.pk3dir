@@ -319,7 +319,14 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
+			int entcnt = 0;
+			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
+			{
+				LOG_INFOF("%i (%s)\n", it, it.classname);
+				++entcnt;
+			});
+			if(entcnt)
+				LOG_INFOF("Found %i entities\n", entcnt);
 			return;
 		}
 
