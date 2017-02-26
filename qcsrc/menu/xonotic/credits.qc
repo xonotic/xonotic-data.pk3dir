@@ -60,6 +60,7 @@
 		PERSON(Peter "Morphed" Pielak) \
 		PERSON(Sam "LJFHutch" Hutchinson) \
 		PERSON(Pearce "theShadow" Michal) \
+		PERSON(KingPimpCommander) \
 	NL() \
 	FUNCTION(_("Animation")) \
 		PERSON(Sahil "DiaboliK" Singhal) \
