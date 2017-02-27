@@ -825,6 +825,7 @@ void havocbot_movetogoal(entity this)
 			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
 
 			bool unreachable = false;
+			bool ignorehazards = false;
 			s = CONTENT_SOLID;
 			if(trace_fraction == 1 && this.jumppadcount == 0 && !this.goalcurrent.wphardwired )
 			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
@@ -838,7 +839,16 @@ void havocbot_movetogoal(entity this)
 					s = pointcontents(trace_endpos + '0 0 1');
 					if (s != CONTENT_SOLID)
 					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+					{
 						evadelava = normalize(this.velocity) * -1;
+						if(this.waterlevel >= WATERLEVEL_WETFEET && (this.watertype == CONTENT_LAVA || this.watertype == CONTENT_SLIME))
+							ignorehazards = true;
+					}
+					else if (s == CONTENT_WATER)
+					{
+						if(this.waterlevel >= WATERLEVEL_WETFEET && this.watertype == CONTENT_WATER)
+							ignorehazards = true;
+					}
 					else if (s == CONTENT_SKY)
 						evadeobstacle = normalize(this.velocity) * -1;
 					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
@@ -867,7 +877,8 @@ void havocbot_movetogoal(entity this)
 
 			if(evadeobstacle || evadelava || (s == CONTENT_WATER))
 			{
-				this.aistatus |= AI_STATUS_DANGER_AHEAD;
+				if(!ignorehazards)
+					this.aistatus |= AI_STATUS_DANGER_AHEAD;
 				if(IS_PLAYER(this.goalcurrent))
 					unreachable = true;
 			}
