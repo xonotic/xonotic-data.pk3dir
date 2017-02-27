@@ -1,5 +1,7 @@
 #pragma once
 
+#include "lib/float.qh"
+
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
 {
 	if (weight == 0) return;
@@ -173,6 +175,12 @@ float median(float a, float b, float c)
 float almost_equals(float a, float b)
 {
 	float eps = (max(a, -a) + max(b, -b)) * 0.001;
+	return a - b < eps && b - a < eps;
+}
+
+float almost_equals_eps(float a, float b, float times_eps)
+{
+	float eps = max(fabs(a), fabs(b)) * FLOAT_EPSILON * times_eps;
 	return a - b < eps && b - a < eps;
 }
 
