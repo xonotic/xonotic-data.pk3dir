@@ -257,6 +257,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 	}
 }
 
+#ifdef DEBUGTRACE
 REGISTER_STAT(TRACE_ENT, int)
 #ifdef SVQC
 bool autocvar_debugtrace;
@@ -311,6 +312,7 @@ STATIC_INIT(TRACE_ENT)
 	e.draw2d = Trace_draw2d;
 	IL_PUSH(g_drawables_2d, e);
 }
+#endif
 #endif
 
 GENERIC_COMMAND(find, "Search through entities for matching classname")
