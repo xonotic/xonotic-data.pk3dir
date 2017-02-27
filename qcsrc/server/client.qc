@@ -2334,6 +2334,7 @@ void PlayerPreThink (entity this)
 		CheckRules_Player(this);
 
 		if (game_stopped || intermission_running) {
+			this.modelflags &= ~MF_ROCKET;
 			if(intermission_running)
 				IntermissionThink(this);
 			return;
