@@ -1916,7 +1916,11 @@ float GiveItems(entity e, float beginarg, float endarg)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(_switchweapon & BIT(slot))
-				W_SwitchWeapon_Force(e, w_getbestweapon(e, weaponentity), weaponentity);
+			{
+				Weapon wep = w_getbestweapon(e, weaponentity);
+				if(wep != e.(weaponentity).m_switchweapon)
+					W_SwitchWeapon_Force(e, wep, weaponentity);
+			}
 		}
 	}
 
