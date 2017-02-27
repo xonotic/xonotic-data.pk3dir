@@ -328,7 +328,7 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 				++entcnt;
 			});
 			if(entcnt)
-				LOG_INFOF("Found %i entities\n", entcnt);
+				LOG_INFOF("Found %d entities\n", entcnt);
 			return;
 		}
 
