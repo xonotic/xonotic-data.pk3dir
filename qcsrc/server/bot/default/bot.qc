@@ -374,14 +374,13 @@ void bot_relinkplayerlist()
 			if(prevbot)
 				prevbot.nextbot = it;
 			else
-			{
 				bot_list = it;
-				bot_list.nextbot = NULL;
-			}
 			prevbot = it;
 			++currentbots;
 		}
 	});
+	if(prevbot)
+		prevbot.nextbot = NULL;
 	LOG_TRACE("relink: ", ftos(currentbots), " bots seen.");
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
