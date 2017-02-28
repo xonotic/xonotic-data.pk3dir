@@ -33,7 +33,7 @@ AUTOCVAR_SAVE(cl_damagetext_color,                  vector, '1 1 0',    "Damage 
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,       bool,   false,      "Damage text uses weapon color");
 AUTOCVAR_SAVE(cl_damagetext_size_min,               float,  8,          "Damage text font size for small damage");
 AUTOCVAR_SAVE(cl_damagetext_size_min_damage,        float,  0,          "How much damage is considered small");
-AUTOCVAR_SAVE(cl_damagetext_size_max,               float,  16,         "Damage text font size for large damage");
+AUTOCVAR_SAVE(cl_damagetext_size_max,               float,  14,         "Damage text font size for large damage");
 AUTOCVAR_SAVE(cl_damagetext_size_max_damage,        float,  100,        "How much damage is considered large");
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
