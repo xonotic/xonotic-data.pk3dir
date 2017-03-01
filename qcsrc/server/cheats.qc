@@ -153,7 +153,7 @@ float CheatImpulse(entity this, int imp)
 			this.personal.ammo_plasma = this.ammo_plasma;
 			this.personal.ammo_shells = this.ammo_shells;
 			this.personal.ammo_fuel = this.ammo_fuel;
-			this.personal.health = this.health;
+			this.personal.health = max(1, this.health);
 			this.personal.armorvalue = this.armorvalue;
 			this.personal.weapons = this.weapons;
 			this.personal.items = this.items;
