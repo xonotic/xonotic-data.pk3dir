@@ -9,8 +9,11 @@ void sys_phys_fix(entity this, float dt)
 bool sys_phys_override(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
+	float idlesince = this.parm_idlesince;
+	this.parm_idlesince = time; // in the case that physics are overridden
 	if (PM_check_specialcommand(this, buttons)) { return true; }
 	if (this.PlayerPhysplug && this.PlayerPhysplug(this, dt)) { return true; }
+	this.parm_idlesince = idlesince;
 	return false;
 }
 
