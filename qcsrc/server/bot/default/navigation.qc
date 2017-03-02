@@ -799,20 +799,16 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
-		float search;
+		bool search = true;
 
-		search = true;
-
-		if(e.flags & FL_ITEM)
+		if((e.flags & FL_ITEM) && e.nearestwaypoint)
 		{
-			if (!(e.flags & FL_WEAPON))
-			if(e.nearestwaypoint)
-				search = false;
-		}
-		else if (e.flags & FL_WEAPON)
-		{
-			if(e.classname != "droppedweapon")
-			if(e.nearestwaypoint)
+			if (e.flags & FL_WEAPON)
+			{
+				if(e.classname != "droppedweapon")
+					search = false;
+			}
+			else
 				search = false;
 		}
 
@@ -827,10 +823,13 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 				LOG_DEBUG("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e));
 
 				if(e.flags & FL_ITEM)
-					e.blacklisted = true;
-				else if (e.flags & FL_WEAPON)
 				{
-					if(e.classname != "droppedweapon")
+					if (e.flags & FL_WEAPON)
+					{
+						if(e.classname != "droppedweapon")
+							e.blacklisted = true;
+					}
+					else
 						e.blacklisted = true;
 				}
 
