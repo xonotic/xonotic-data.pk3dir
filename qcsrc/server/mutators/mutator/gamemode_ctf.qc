@@ -925,7 +925,7 @@ void ctf_FlagThink(entity this)
 		LOG_TRACE("wtf the flag got squashed?");
 		tracebox(this.origin, CTF_FLAG.m_mins, CTF_FLAG.m_maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(!trace_startsolid || this.noalign) // can we resize it without getting stuck?
-			setsize(this, CTF_FLAG.m_mins, CTF_FLAG.m_maxs);
+			setsize(this, CTF_FLAG.m_mins * this.scale, CTF_FLAG.m_maxs * this.scale);
 	}
 
 	// main think method
@@ -1317,7 +1317,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
-	setsize(flag, CTF_FLAG.m_mins, CTF_FLAG.m_maxs);
+	setsize(flag, CTF_FLAG.m_mins * flag.scale, CTF_FLAG.m_maxs * flag.scale);
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
 
 	if(autocvar_g_ctf_flag_glowtrails)
