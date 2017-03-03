@@ -597,8 +597,14 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	}
 
 	// scoring
-	PlayerTeamScore_AddScore(player, ((enemy_flag.score_capture) ? enemy_flag.score_capture : autocvar_g_ctf_score_capture));
-	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, ((enemy_flag.score_team_capture) ? enemy_flag.score_team_capture : 1));
+	float pscore = 0;
+	if(enemy_flag.score_capture || flag.score_capture)
+		pscore = floor((max(1, enemy_flag.score_capture) + max(1, flag.score_capture)) * 0.5);
+	PlayerTeamScore_AddScore(player, ((pscore) ? pscore : autocvar_g_ctf_score_capture));
+	float capscore = 0;
+	if(enemy_flag.score_team_capture || flag.score_team_capture)
+		capscore = floor((max(1, enemy_flag.score_team_capture) + max(1, flag.score_team_capture)) * 0.5);
+	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, ((capscore) ? capscore : 1));
 
 	old_time = PlayerScore_Add(player, SP_CTF_CAPTIME, 0);
 	new_time = TIME_ENCODE(time - enemy_flag.ctf_pickuptime);
