@@ -596,7 +596,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	}
 
 	// scoring
-	PlayerTeamScore_AddScore(player, ((flag.score_capture) ? flag.score_capture : autocvar_g_ctf_score_capture));
+	PlayerTeamScore_AddScore(player, ((enemy_flag.score_capture) ? enemy_flag.score_capture : autocvar_g_ctf_score_capture));
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 
 	old_time = PlayerScore_Add(player, SP_CTF_CAPTIME, 0);
@@ -615,7 +615,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
 
 		if((enemy_flag.ctf_dropper) && (player != enemy_flag.ctf_dropper))
-			{ PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, ((flag.score_assist) ? flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
+			{ PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
 	}
 
 	// reset the flag
