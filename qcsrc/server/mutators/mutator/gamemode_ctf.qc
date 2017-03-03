@@ -569,6 +569,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 
 	if(!player) { return; } // without someone to give the reward to, we can't possibly cap
 	if(CTF_DIFFTEAM(player, flag)) { return; }
+	if((flag.cnt || enemy_flag.cnt) && flag.cnt != enemy_flag.cnt) { return; } // this should catch some edge cases (capturing grouped flag at ungrouped flag disallowed etc)
 
 	if(ctf_oneflag)
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
@@ -1204,7 +1205,12 @@ void ctf_Reset(entity this)
 
 bool ctf_FlagBase_Customize(entity this, entity client)
 {
-	if(client.flagcarried && CTF_SAMETEAM(client, client.flagcarried))
+	entity e = WaypointSprite_getviewentity(client);
+	entity wp_owner = this.owner;
+	entity flag = e.flagcarried;
+	if(flag && CTF_SAMETEAM(e, flag))
+		return false;
+	if(flag && (flag.cnt || wp_owner.cnt) && wp_owner.cnt != flag.cnt)
 		return false;
 	return true;
 }
@@ -1275,7 +1281,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	// crudely force them all to 0
 	if(autocvar_g_ctf_score_ignore_fields)
-		flag.score_assist = flag.score_capture = flag.score_drop = flag.score_pickup = flag.score_return = 0;
+		flag.cnt = flag.score_assist = flag.score_team_capture = flag.score_capture = flag.score_drop = flag.score_pickup = flag.score_return = 0;
 
 	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	// appearence
