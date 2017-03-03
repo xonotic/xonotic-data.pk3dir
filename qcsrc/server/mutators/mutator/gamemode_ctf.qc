@@ -2055,6 +2055,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	int t = 0, t2 = 0, t3 = 0;
+	bool b1 = false, b2 = false, b3 = false, b4 = false, b5 = false; // TODO: kill this, we WANT to show the other flags, somehow! (note: also means you don't see if you're FC)
 
 	// initially clear items so they can be set as necessary later.
 	player.ctf_flagstatus &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
@@ -2067,11 +2068,11 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 	// scan through all the flags and notify the client about them
 	for(entity flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
-		if(flag.team == NUM_TEAM_1) { t = CTF_RED_FLAG_CARRYING;		t2 = CTF_RED_FLAG_TAKEN;		t3 = CTF_RED_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_2) { t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_3) { t = CTF_YELLOW_FLAG_CARRYING; 	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_4) { t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; }
-		if(flag.team == 0) 			{ t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; player.ctf_flagstatus |= CTF_FLAG_NEUTRAL; }
+		if(flag.team == NUM_TEAM_1 && !b1) { b1 = true; t = CTF_RED_FLAG_CARRYING;		t2 = CTF_RED_FLAG_TAKEN;		t3 = CTF_RED_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_2 && !b2) { b2 = true; t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_3 && !b3) { b3 = true; t = CTF_YELLOW_FLAG_CARRYING; 	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_4 && !b4) { b4 = true; t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; }
+		if(flag.team == 0 && !b5) 		   { b5 = true; t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; player.ctf_flagstatus |= CTF_FLAG_NEUTRAL; }
 
 		switch(flag.ctf_status)
 		{
