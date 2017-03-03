@@ -1012,6 +1012,9 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		totalspawned -= 1;
 	}
 
+	if(!gibbed && this.mdl_dead && this.mdl_dead != "")
+		_setmodel(this, this.mdl_dead);
+
 	this.event_damage	= ((gibbed) ? func_null : Monster_Dead_Damage);
 	this.solid			= SOLID_CORPSE;
 	this.takedamage		= DAMAGE_AIM;
@@ -1292,7 +1295,13 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	{
 		IL_PUSH(g_monsters, this);
+		if(this.mdl && this.mdl != "")
+			precache_model(this.mdl);
+		if(this.mdl_dead && this.mdl_dead != "")
+			precache_model(this.mdl_dead);
+	}
 
 	if(check_appear && Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
 
@@ -1311,7 +1320,11 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	setmodel(this, mon.m_model);
+	if(this.mdl && this.mdl != "")
+		_setmodel(this, this.mdl);
+	else
+		setmodel(this, mon.m_model);
+
 	this.flags				= FL_MONSTER;
 	this.classname			= "monster";
 	this.takedamage			= DAMAGE_AIM;
