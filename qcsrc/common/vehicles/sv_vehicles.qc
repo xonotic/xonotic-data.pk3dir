@@ -24,6 +24,13 @@ bool SendAuxiliaryXhair(entity this, entity to, int sf)
 	return true;
 }
 
+bool AuxiliaryXhair_customize(entity this, entity client)
+{
+	//entity e = WaypointSprite_getviewentity(client);
+	entity axh = client.(AuxiliaryXhair[this.cnt]);
+	return axh.owner == this.owner; // cheaply check if the client's axh owner is the same as our real owner
+}
+
 .vector axh_prevorigin;
 .vector axh_prevcolors;
 
@@ -39,7 +46,8 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 	{
 		axh = new(auxiliary_xhair);
 		axh.cnt = axh_id;
-		axh.drawonlytoclient = own;
+		//axh.drawonlytoclient = own; // not spectatable
+		setcefc(axh, AuxiliaryXhair_customize);
 		axh.owner = own;
 		Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
 	}
@@ -68,6 +76,18 @@ void CSQCVehicleSetup(entity own, int vehicle_id)
 
 	WriteHeader(MSG_ONE, TE_CSQC_VEHICLESETUP);
 	WriteByte(MSG_ONE, vehicle_id);
+
+	if(vehicle_id == 0 || vehicle_id == HUD_NORMAL)
+	{
+		for(int i = 0; i < MAX_AXH; ++i)
+		{
+			entity axh = own.(AuxiliaryXhair[i]);
+			own.(AuxiliaryXhair[i]) = NULL;
+
+			if(axh.owner == own && axh != NULL && !wasfreed(axh))
+				delete(axh);
+		}
+	}
 }
 
 void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
