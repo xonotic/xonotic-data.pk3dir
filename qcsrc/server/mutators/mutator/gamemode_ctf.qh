@@ -54,6 +54,7 @@ const float VEHICLE_FLAG_SCALE = 1.0;
 .float score_drop; // note: negated
 .float score_pickup;
 .float score_return;
+.float score_team_capture; // shouldn't be too high
 
 // effects
 .string toucheffect;
