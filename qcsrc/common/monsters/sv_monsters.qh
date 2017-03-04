@@ -28,6 +28,8 @@ int monsters_killed;
 .int oldskin;
 .string mdl_dead; // dead model for goombas
 
+.vector oldmins, oldmaxs;
+
 #define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 
 // other properties

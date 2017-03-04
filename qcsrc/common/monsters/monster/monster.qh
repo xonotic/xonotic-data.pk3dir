@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_MONSTER, M_Model("zombie.dpm"));
+#endif
+
+CLASS(CustomMonster, Monster)
+    ATTRIB(CustomMonster, spawnflags, int, MON_FLAG_HIDDEN);
+#ifdef GAMEQC
+    ATTRIB(CustomMonster, m_model, Model, MDL_MON_MONSTER);
+#endif
+    ATTRIB(CustomMonster, netname, string, "monster");
+    ATTRIB(CustomMonster, monster_name, string, _("Monster"));
+ENDCLASS(CustomMonster)
+
+REGISTER_MONSTER(MONSTER, NEW(CustomMonster)) {
+#ifdef GAMEQC
+    this.mr_precache(this);
+#endif
+}

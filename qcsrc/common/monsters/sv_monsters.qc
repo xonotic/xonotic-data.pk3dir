@@ -1012,8 +1012,16 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		totalspawned -= 1;
 	}
 
+	Monster mon = Monsters_from(this.monsterid);
+
 	if(!gibbed && this.mdl_dead && this.mdl_dead != "")
+	{
 		_setmodel(this, this.mdl_dead);
+		if(this.oldmins && this.oldmaxs)
+			setsize(this, this.oldmins * this.scale, this.oldmaxs * this.scale);
+		else
+			setsize(this, mon.mins * this.scale, mon.maxs * this.scale);
+	}
 
 	this.event_damage	= ((gibbed) ? func_null : Monster_Dead_Damage);
 	this.solid			= SOLID_CORPSE;
@@ -1033,7 +1041,6 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	CSQCModel_UnlinkEntity(this);
 
-	Monster mon = Monsters_from(this.monsterid);
 	mon.mr_death(mon, this);
 
 	if(this.candrop && this.weapon)
@@ -1297,6 +1304,12 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		IL_PUSH(g_monsters, this);
+		if(this.mins && this.maxs)
+		{
+			this.oldmins = this.mins; // crude
+			this.oldmaxs = this.maxs;
+		}
+
 		if(this.mdl && this.mdl != "")
 			precache_model(this.mdl);
 		if(this.mdl_dead && this.mdl_dead != "")
@@ -1389,7 +1402,10 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 			this.scale *= 1.3;
 	}
 
-	setsize(this, mon.mins * this.scale, mon.maxs * this.scale);
+	if(this.oldmins && this.oldmaxs)
+		setsize(this, this.oldmins * this.scale, this.oldmaxs * this.scale);
+	else
+		setsize(this, mon.mins * this.scale, mon.maxs * this.scale);
 
 	this.ticrate = bound(sys_frametime, ((!this.ticrate) ? autocvar_g_monsters_think_delay : this.ticrate), 60);
 
