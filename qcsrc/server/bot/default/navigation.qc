@@ -895,14 +895,25 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
 		return true;
 
+	entity nearest_wp = NULL;
 	// see if there are waypoints describing a path to the item
 	if(e.classname != "waypoint" || (e.wpflags & WAYPOINTFLAG_PERSONAL))
+	{
 		e = e.nearestwaypoint;
+		nearest_wp = e;
+	}
 	else
 		e = e.enemy; // we already have added it, so...
 
 	if(e == NULL)
 		return false;
+
+	if(nearest_wp && nearest_wp.enemy)
+	{
+		// often path can be optimized by not adding the nearest waypoint
+		if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), (this.goalentity.absmin + this.goalentity.absmax) * 0.5, bot_navigation_movemode))
+			e = nearest_wp.enemy;
+	}
 
 	for (;;)
 	{
