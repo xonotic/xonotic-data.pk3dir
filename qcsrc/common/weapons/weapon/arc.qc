@@ -382,8 +382,9 @@ void W_Arc_Beam_Think(entity this)
 		if(this == own.(weaponentity).arc_beam) { own.(weaponentity).arc_beam = NULL; }
 		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity) && !(own.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(own, w_getbestweapon(own, weaponentity), weaponentity);
-			w_ready(thiswep, own, weaponentity, 1);
+			// note: this doesn't force the switch
+			W_SwitchToOtherWeapon(own, weaponentity);
+			own.(weaponentity).arc_BUTTON_ATCK_prev = false; // hax
 		}
 		delete(this);
 		return;
