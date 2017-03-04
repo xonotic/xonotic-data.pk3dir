@@ -509,7 +509,7 @@ void Item_Respawn (entity this)
 	sound(this, CH_TRIGGER, this.itemdef.m_respawnsound, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin(this, this.origin);
 
-    if (Item_ItemsTime_Allow(this.itemdef) || this.weapons & WEPSET_SUPERWEAPONS)
+    if (Item_ItemsTime_Allow(this.itemdef) || (this.weapons & WEPSET_SUPERWEAPONS))
 	{
 		float t = Item_ItemsTime_UpdateTime(this, 0);
 		Item_ItemsTime_SetTime(this, t);
@@ -594,7 +594,7 @@ void Item_RespawnThink(entity this)
 void Item_ScheduleRespawnIn(entity e, float t)
 {
 	// if the respawn time is longer than 10 seconds, show a waypoint, otherwise, just respawn normally
-	if ((Item_ItemsTime_Allow(e.itemdef) || e.weapons & WEPSET_SUPERWEAPONS) && (t - ITEM_RESPAWN_TICKS) > 0)
+	if ((Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS)) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -610,6 +610,13 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.nextthink = time;
 		e.scheduledrespawntime = time + t;
 		e.wait = time + t;
+
+		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
+		{
+			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
+			Item_ItemsTime_SetTime(e, t);
+			Item_ItemsTime_SetTimesForAllPlayers();
+		}
 	}
 }
 
