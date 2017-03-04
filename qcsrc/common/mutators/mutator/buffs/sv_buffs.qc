@@ -370,7 +370,7 @@ void buff_Init(entity this)
 	//this.gravity = 100;
 	this.color = buff.m_color;
 	this.glowmod = buff_GlowColor(this);
-	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate + game_starttime);
+	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate + (game_starttime - time));
 	this.buff_active = !this.buff_activetime;
 	this.pflags = PFLAGS_FULLDYNAMIC;
 
