@@ -873,7 +873,7 @@ LABEL(pickup)
 				}
 			});
 			e = RandomSelection_chosen_ent;
-
+			Item_Show(e, 1); // reset its state so it is visible (extra sendflags doesn't matter, this happens anyway)
 		}
 		else
 			e = this;
