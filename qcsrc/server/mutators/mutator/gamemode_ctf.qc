@@ -1451,6 +1451,8 @@ int havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 	return c;
 }
 
+// unused
+#if 0
 void havocbot_goalrating_ctf_ourflag(entity this, float ratingscale)
 {
 	entity head;
@@ -1464,6 +1466,7 @@ void havocbot_goalrating_ctf_ourflag(entity this, float ratingscale)
 	if (head)
 		navigation_routerating(this, head, ratingscale, 10000);
 }
+#endif
 
 void havocbot_goalrating_ctf_ourbase(entity this, float ratingscale)
 {
@@ -1472,7 +1475,15 @@ void havocbot_goalrating_ctf_ourbase(entity this, float ratingscale)
 	while (head)
 	{
 		if (CTF_SAMETEAM(this, head))
+		{
+			if (this.flagcarried)
+			if ((this.flagcarried.cnt || head.cnt) && this.flagcarried.cnt != head.cnt)
+			{
+				head = head.ctf_worldflagnext; // skip base if it has a different group
+				continue;
+			}
 			break;
+		}
 		head = head.ctf_worldflagnext;
 	}
 	if (!head)
