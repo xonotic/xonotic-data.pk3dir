@@ -419,7 +419,7 @@ void ReadyRestart_force()
 	game_starttime = time + RESTART_COUNTDOWN;
 
 	// clear player attributes
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		it.alivetime = 0;
 		it.killcount = 0;
 		PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, 0));
