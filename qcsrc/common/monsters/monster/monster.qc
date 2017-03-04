@@ -139,7 +139,7 @@ spawnfunc(monster_custom) { Monster_Spawn(this, true, MON_MONSTER.monsterid); }
 METHOD(CustomMonster, mr_think, bool(CustomMonster this, entity actor))
 {
     TC(CustomMonster, this);
-    if((actor.mon_movetype & MON_MOVE_JUMP) && time < actor.jump_delay)
+    if((actor.mon_movetype & MON_MOVE_JUMP) && time >= actor.jump_delay)
     {
     	actor.velocity_z += actor.mon_jumpheight;
     	actor.jump_delay = time + (random() * actor.mon_jumpdelay);
