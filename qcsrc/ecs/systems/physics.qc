@@ -52,7 +52,8 @@ void sys_phys_update(entity this, float dt)
 	if (IS_DEAD(this)) {
 		// handle water here
 		vector midpoint = ((this.absmin + this.absmax) * 0.5);
-		if (pointcontents(midpoint) == CONTENT_WATER) {
+		int cont = pointcontents(midpoint);
+		if (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME) {
 			this.velocity = this.velocity * 0.5;
 
 			// do we want this?
