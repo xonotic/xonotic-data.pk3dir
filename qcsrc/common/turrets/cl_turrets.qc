@@ -161,7 +161,7 @@ void turret_draw2d(entity this)
 	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
-	float crosshairdistance = sqrt( (o.x - vid_conwidth/2 ** 2) + (o.y - vid_conheight/2 ** 2) );
+	float crosshairdistance = sqrt( ((o.x - vid_conwidth/2) ** 2) + ((o.y - vid_conheight/2) ** 2) );
 
 	t = waypointsprite_scale;
 	a *= waypointsprite_alpha;

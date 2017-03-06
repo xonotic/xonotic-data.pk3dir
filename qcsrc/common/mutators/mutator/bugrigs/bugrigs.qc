@@ -97,7 +97,7 @@ void RaceCarPhysics(entity this, float dt)
 		float upspeed = this.velocity * v_up;
 
 		// responsiveness factor for steering and acceleration
-		float f = 1 / (1 + (max(-myspeed, myspeed) / PHYS_BUGRIGS_SPEED_REF(this) ** PHYS_BUGRIGS_SPEED_POW(this)));
+		float f = 1 / (1 + ((max(-myspeed, myspeed) / PHYS_BUGRIGS_SPEED_REF(this)) ** PHYS_BUGRIGS_SPEED_POW(this)));
 		//MAXIMA: f(v) := 1 / (1 + (v / PHYS_BUGRIGS_SPEED_REF(this)) ^ PHYS_BUGRIGS_SPEED_POW(this));
 
 		float steerfactor;

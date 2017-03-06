@@ -122,7 +122,7 @@ float scalbn(float e, int n)
 
 float cbrt(float e)
 {
-	return copysign((fabs(e) ** 1.0/3.0), e);
+	return copysign((fabs(e) ** (1.0/3.0)), e);
 }
 float hypot(float e, float f)
 {
