@@ -385,6 +385,11 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 	M_ARGV(1, string) = ret_string;
 }
 
+MUTATOR_HOOKFUNCTION(rc, HideTeamNagger)
+{
+	return true; // doesn't work so well
+}
+
 MUTATOR_HOOKFUNCTION(rc, FixClientCvars)
 {
 	entity player = M_ARGV(0, entity);

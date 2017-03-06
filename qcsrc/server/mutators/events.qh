@@ -941,3 +941,9 @@ enum {
     MUT_FUSREAC_TARG_VALID, // return this flag to make the function return true (valid target)
     MUT_FUSREAC_TARG_INVALID // return this flag to make the function return false (invalid target)
 };
+
+/** return true to hide the 'teamnumbers are imbalanced' message */
+#define EV_HideTeamNagger(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);
