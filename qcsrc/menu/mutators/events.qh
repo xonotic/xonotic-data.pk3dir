@@ -33,3 +33,8 @@ string cmd_string;
 	/** whole command, use only if you really have to */ i(string, cmd_string) \
 	/**/
 MUTATOR_HOOKABLE(Menu_ConsoleCommand, EV_Menu_ConsoleCommand);
+
+#define EV_ConfigureDialogs(i, o) \
+	/** main window entity */ i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(ConfigureDialogs, EV_ConfigureDialogs);
