@@ -253,7 +253,7 @@ void calculate_player_respawn_time(entity this)
 		));
 		if (sdelay_small_count == 0)
 		{
-			if (g_cts)
+			if (IS_INDEPENDENT_PLAYER(this))
 			{
 				// Players play independently. No point in requiring enemies.
 				sdelay_small_count = 1;
@@ -266,7 +266,7 @@ void calculate_player_respawn_time(entity this)
 		}
 		if (sdelay_large_count == 0)
 		{
-			if (g_cts)
+			if (IS_INDEPENDENT_PLAYER(this))
 			{
 				// Players play independently. No point in requiring enemies.
 				sdelay_large_count = 1;
