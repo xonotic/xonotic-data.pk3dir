@@ -1,5 +1,7 @@
 #include "mainwindow.qh"
 
+#include "../mutators/events.qh"
+
 #include "nexposee.qh"
 #include "inputbox.qh"
 #include "dialog_firstrun.qh"
