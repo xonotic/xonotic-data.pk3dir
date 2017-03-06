@@ -931,11 +931,9 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 	killtime = autocvar_g_balance_kill_delay;
 
-	if(g_race_qualifying || g_cts)
-		killtime = 0;
-
     if(MUTATOR_CALLHOOK(ClientKill, this, killtime))
     	return;
+    killtime = M_ARGV(1, float);
 
 	this.killindicator_teamchange = targetteam;
 
