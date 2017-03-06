@@ -224,7 +224,7 @@ void CheckAllowedTeams (entity for_whom)
 
 	string teament_name = string_null;
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name, for_whom);
 	teams_mask = M_ARGV(0, float);
 	teament_name = M_ARGV(1, string);
 
