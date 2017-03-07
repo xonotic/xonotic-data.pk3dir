@@ -550,6 +550,11 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 		{
 			if(!only_return_best)
 			{
+				if (this.team != selectedteam)
+				{
+					MUTATOR_CALLHOOK(Player_ChangeTeam, this, Team_TeamToNumber(
+						this.team), Team_TeamToNumber(selectedteam));
+				}
 				SetPlayerColors(this, selectedteam - 1);
 
 				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
@@ -565,22 +570,16 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 
 	if(!only_return_best && !this.bot_forced_team)
 	{
-		TeamchangeFrags(this);
-		if(smallest == 1)
+		smallest = Team_NumberToTeam(smallest);
+		if (smallest != -1)
 		{
-			SetPlayerColors(this, NUM_TEAM_1 - 1);
-		}
-		else if(smallest == 2)
-		{
-			SetPlayerColors(this, NUM_TEAM_2 - 1);
-		}
-		else if(smallest == 3)
-		{
-			SetPlayerColors(this, NUM_TEAM_3 - 1);
-		}
-		else if(smallest == 4)
-		{
-			SetPlayerColors(this, NUM_TEAM_4 - 1);
+			if (this.team != smallest)
+			{
+				MUTATOR_CALLHOOK(Player_ChangeTeam, this, Team_TeamToNumber(
+					this.team), Team_TeamToNumber(smallest));
+			}
+			TeamchangeFrags(this);
+			SetPlayerColors(this, smallest - 1);
 		}
 		else
 		{
@@ -645,7 +644,6 @@ void SV_ChangeTeam(entity this, float _color)
 	// not changing teams
 	if(scolor == dcolor)
 	{
-		//bprint("same team change\n");
 		SetPlayerTeam(this, dteam, steam, true);
 		return;
 	}
