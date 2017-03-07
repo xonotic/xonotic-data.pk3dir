@@ -202,74 +202,68 @@ void havocbot_ai(entity this)
 void havocbot_keyboard_movement(entity this, vector destorg)
 {
 	vector keyboard;
-	float blend, maxspeed;
-	float sk;
 
-	sk = skill + this.bot_moveskill;
-
-	maxspeed = autocvar_sv_maxspeed;
-
-	if (time < this.havocbot_keyboardtime)
-		return;
-
-	this.havocbot_keyboardtime =
-		max(
-			this.havocbot_keyboardtime
-				+ 0.05/max(1, sk+this.havocbot_keyboardskill)
-				+ random()*0.025/max(0.00025, skill+this.havocbot_keyboardskill)
-		, time);
-	keyboard = this.movement * (1.0 / maxspeed);
-
-	float trigger, trigger1;
-	blend = bound(0,sk*0.1,1);
-	trigger = autocvar_bot_ai_keyboard_threshold;
-	trigger1 = 0 - trigger;
-
-	// categorize forward movement
-	// at skill < 1.5 only forward
-	// at skill < 2.5 only individual directions
-	// at skill < 4.5 only individual directions, and forward diagonals
-	// at skill >= 4.5, all cases allowed
-	if (keyboard.x > trigger)
+	if (time > this.havocbot_keyboardtime)
 	{
-		keyboard.x = 1;
-		if (sk < 2.5)
-			keyboard.y = 0;
-	}
-	else if (keyboard.x < trigger1 && sk > 1.5)
-	{
-		keyboard.x = -1;
+		float sk = skill + this.bot_moveskill;
+		this.havocbot_keyboardtime =
+			max(
+				this.havocbot_keyboardtime
+					+ 0.05 / max(1, sk + this.havocbot_keyboardskill)
+					+ random() * 0.025 / max(0.00025, skill + this.havocbot_keyboardskill)
+			, time);
+		keyboard = this.movement / autocvar_sv_maxspeed;
+
+		float trigger = autocvar_bot_ai_keyboard_threshold;
+		float trigger1 = -trigger;
+
+		// categorize forward movement
+		// at skill < 1.5 only forward
+		// at skill < 2.5 only individual directions
+		// at skill < 4.5 only individual directions, and forward diagonals
+		// at skill >= 4.5, all cases allowed
+		if (keyboard.x > trigger)
+		{
+			keyboard.x = 1;
+			if (sk < 2.5)
+				keyboard.y = 0;
+		}
+		else if (keyboard.x < trigger1 && sk > 1.5)
+		{
+			keyboard.x = -1;
+			if (sk < 4.5)
+				keyboard.y = 0;
+		}
+		else
+		{
+			keyboard.x = 0;
+			if (sk < 1.5)
+				keyboard.y = 0;
+		}
 		if (sk < 4.5)
+			keyboard.z = 0;
+
+		if (keyboard.y > trigger)
+			keyboard.y = 1;
+		else if (keyboard.y < trigger1)
+			keyboard.y = -1;
+		else
 			keyboard.y = 0;
+
+		if (keyboard.z > trigger)
+			keyboard.z = 1;
+		else if (keyboard.z < trigger1)
+			keyboard.z = -1;
+		else
+			keyboard.z = 0;
+
+		this.havocbot_keyboard = keyboard * autocvar_sv_maxspeed;
+		if (this.havocbot_ducktime > time)
+			PHYS_INPUT_BUTTON_CROUCH(this) = true;
 	}
-	else
-	{
-		keyboard.x = 0;
-		if (sk < 1.5)
-			keyboard.y = 0;
-	}
-	if (sk < 4.5)
-		keyboard.z = 0;
-
-	if (keyboard.y > trigger)
-		keyboard.y = 1;
-	else if (keyboard.y < trigger1)
-		keyboard.y = -1;
-	else
-		keyboard.y = 0;
-
-	if (keyboard.z > trigger)
-		keyboard.z = 1;
-	else if (keyboard.z < trigger1)
-		keyboard.z = -1;
-	else
-		keyboard.z = 0;
-
-	this.havocbot_keyboard = keyboard * maxspeed;
-	if (this.havocbot_ducktime>time) PHYS_INPUT_BUTTON_CROUCH(this) = true;
 
 	keyboard = this.havocbot_keyboard;
-	blend = bound(0,vlen(destorg-this.origin)/autocvar_bot_ai_keyboard_distance,1); // When getting close move with 360 degree
+	float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
 	//dprint("movement ", vtos(this.movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
 	this.movement = this.movement + (keyboard - this.movement) * blend;
 }
