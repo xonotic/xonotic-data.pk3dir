@@ -1,4 +1,4 @@
-ast   Asturian "Asturianu" 73%
+ast   Asturian "Asturianu" 74%
 de    German "Deutsch" 99%
 de_CH German "Deutsch (Schweiz)" 99%
 en    English "English"
@@ -8,12 +8,12 @@ fr    French "Français" 99%
 it    Italian "Italiano" 99%
 hu    Hungarian "Magyar" 47%
 nl    Dutch "Nederlands" 69%
-pl    Polish "Polski" 68%
+pl    Polish "Polski" 78%
 pt    Portuguese "Português" 99%
 ro    Romanian "Romana" 84%
 fi    Finnish "Suomi" 33%
 zh_TW zh_TW "zh_TW" 67%
-el    Greek "Ελληνική" 34%
+el    Greek "Ελληνική" 33%
 be    Belarusian "Беларуская" 62%
 bg    Bulgarian "Български" 68%
 ru    Russian "Русский" 99%
