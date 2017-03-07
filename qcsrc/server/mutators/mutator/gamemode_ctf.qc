@@ -479,6 +479,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
+	navigation_dynamicgoal_set(flag);
 
 	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
 
@@ -1197,6 +1198,7 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
 	flag.ctf_flagdamaged_byworld = false;
+	navigation_dynamicgoal_unset(flag);
 
 	ctf_CheckStalemate();
 }
@@ -1225,8 +1227,7 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 {
 	// bot waypoints
 	waypoint_spawnforitem_force(this, this.origin);
-	this.nearestwaypointtimeout = 0; // activate waypointing again
-	this.bot_basewaypoint = this.nearestwaypoint;
+	navigation_dynamicgoal_init(this, true);
 
 	// waypointsprites
 	entity basename;

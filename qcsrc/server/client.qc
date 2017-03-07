@@ -651,6 +651,7 @@ void PutClientInServer(entity this)
 			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.monster_attack = true;
+		navigation_dynamicgoal_init(this, false);
 
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 

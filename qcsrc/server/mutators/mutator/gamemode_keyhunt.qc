@@ -256,6 +256,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.damageforcescale = 0;
 	key.takedamage = DAMAGE_NO;
 	key.modelindex = kh_key_carried;
+	navigation_dynamicgoal_unset(key);
 }
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
@@ -295,6 +296,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
 	key.modelindex = kh_key_dropped;
+	navigation_dynamicgoal_set(key);
 	key.kh_previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
 }
@@ -742,6 +744,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
 	key.colormod = Team_ColorRGB(initial_owner.team) * KH_KEY_BRIGHTNESS;
 	key.reset = key_reset;
+	navigation_dynamicgoal_init(key, false);
 
 	switch(initial_owner.team)
 	{

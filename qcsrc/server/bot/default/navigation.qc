@@ -15,6 +15,28 @@
 
 .float speed;
 
+void navigation_dynamicgoal_init(entity this, bool initially_static)
+{
+	this.navigation_dynamicgoal = true;
+	this.bot_basewaypoint = this.nearestwaypoint;
+	if(initially_static)
+		this.nearestwaypointtimeout = time + 1000000000;
+	else
+		this.nearestwaypointtimeout = time;
+}
+
+void navigation_dynamicgoal_set(entity this)
+{
+	this.nearestwaypointtimeout = time;
+}
+
+void navigation_dynamicgoal_unset(entity this)
+{
+	if(this.bot_basewaypoint)
+		this.nearestwaypoint = this.bot_basewaypoint;
+	this.nearestwaypointtimeout = time + 1000000000;
+}
+
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
 
@@ -799,21 +821,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
-		bool search = true;
-
-		if((e.flags & FL_ITEM) && e.nearestwaypoint)
-		{
-			if (e.flags & FL_WEAPON)
-			{
-				if(e.classname != "droppedweapon")
-					search = false;
-			}
-			else
-				search = false;
-		}
-
-		if(search)
-		if (time > e.nearestwaypointtimeout)
+		if ((!e.nearestwaypoint || e.navigation_dynamicgoal) && time > e.nearestwaypointtimeout)
 		{
 			nwp = navigation_findnearestwaypoint(e, true);
 			if(nwp)
@@ -822,16 +830,8 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			{
 				LOG_DEBUG("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e));
 
-				if(e.flags & FL_ITEM)
-				{
-					if (e.flags & FL_WEAPON)
-					{
-						if(e.classname != "droppedweapon")
-							e.blacklisted = true;
-					}
-					else
-						e.blacklisted = true;
-				}
+				if(!e.navigation_dynamicgoal)
+					e.blacklisted = true;
 
 				if(e.blacklisted)
 				{
@@ -840,11 +840,8 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 				}
 			}
 
-			// TODO: Cleaner solution, probably handling this timeout from ctf.qc
-			if(e.classname=="item_flag_team")
+			if(e.navigation_dynamicgoal)
 				e.nearestwaypointtimeout = time + 2;
-			else
-				e.nearestwaypointtimeout = time + random() * 3 + 5;
 		}
 		nwp = e.nearestwaypoint;
 	}

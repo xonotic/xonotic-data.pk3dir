@@ -38,7 +38,6 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 }
 
 void ka_TouchEvent(entity this, entity toucher);
-void ka_RespawnBall(entity this);
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
 	if(game_stopped) return;
@@ -59,6 +58,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	settouch(this, ka_TouchEvent);
 	setthink(this, ka_RespawnBall);
 	this.nextthink = time + autocvar_g_keepawayball_respawntime;
+	navigation_dynamicgoal_set(this);
 
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
@@ -114,6 +114,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	setthink(this, ka_TimeScoring);
 	this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	this.takedamage = DAMAGE_NO;
+	navigation_dynamicgoal_unset(this);
 
 	// apply effects to player
 	toucher.glow_color = autocvar_g_keepawayball_trail_color;
@@ -158,6 +159,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner.ballcarried = world; // I hope nothing checks to see if the world has the ball in the rest of my code :P
 	ball.owner = NULL;
+	navigation_dynamicgoal_set(ball);
 
 	// reset the player effects
 	plyr.glow_trail = false;
@@ -457,6 +459,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	settouch(e, ka_TouchEvent);
 	e.owner = NULL;
 	ka_ball = e;
+	navigation_dynamicgoal_init(ka_ball, false);
 
 	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
 }
