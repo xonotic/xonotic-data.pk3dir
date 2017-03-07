@@ -926,7 +926,7 @@ spawnfunc(trigger_race_checkpoint)
 	o = (this.absmin + this.absmax) * 0.5;
 	tracebox(o, PL_MIN_CONST, PL_MAX_CONST, o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
 	waypoint_spawnforitem_force(this, trace_endpos);
-	this.nearestwaypointtimeout = time + 1000000000;
+	this.nearestwaypointtimeout = -1;
 
 	if(this.message == "")
 		this.message = "went backwards";
@@ -985,7 +985,7 @@ spawnfunc(target_checkpoint) // defrag entity
 		org = (this.absmin + this.absmax) * 0.5;
 		tracebox(org, PL_MIN_CONST, PL_MAX_CONST, org - '0 0 1' * (org.z - this.absmin.z), MOVE_NORMAL, this);
 		waypoint_spawnforitem_force(this, trace_endpos);
-		this.nearestwaypointtimeout = time + 1000000000;
+		this.nearestwaypointtimeout = -1;
 	}
 
 	if(this.message == "")

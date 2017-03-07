@@ -20,7 +20,7 @@ void navigation_dynamicgoal_init(entity this, bool initially_static)
 	this.navigation_dynamicgoal = true;
 	this.bot_basewaypoint = this.nearestwaypoint;
 	if(initially_static)
-		this.nearestwaypointtimeout = time + 1000000000;
+		this.nearestwaypointtimeout = -1;
 	else
 		this.nearestwaypointtimeout = time;
 }
@@ -34,7 +34,7 @@ void navigation_dynamicgoal_unset(entity this)
 {
 	if(this.bot_basewaypoint)
 		this.nearestwaypoint = this.bot_basewaypoint;
-	this.nearestwaypointtimeout = time + 1000000000;
+	this.nearestwaypointtimeout = -1;
 }
 
 // rough simulation of walking from one point to another to test if a path
@@ -821,7 +821,8 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
-		if ((!e.nearestwaypoint || e.navigation_dynamicgoal) && time > e.nearestwaypointtimeout)
+		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
+			&& e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 		{
 			nwp = navigation_findnearestwaypoint(e, true);
 			if(nwp)
