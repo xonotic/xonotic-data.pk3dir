@@ -234,6 +234,12 @@ bool Mutator_Add(Mutator mut)
 
 void Mutator_Remove(Mutator mut)
 {
+    if(!mut.m_added)
+    {
+        backtrace("WARNING: removing not-added mutator\n");
+        return;
+    }
+
     mut.m_added = false;
     mutatorfunc_t func = mut.mutatorfunc;
     if (func(MUTATOR_REMOVING)) {
