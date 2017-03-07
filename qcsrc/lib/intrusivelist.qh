@@ -121,6 +121,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 	assert(this, return);
 	.entity il_next = this.il_nextfld;
 	.entity il_prev = this.il_prevfld;
+	assert(!IL_CONTAINS(this, it), return);
 	entity next = it.(il_next);
 	entity prev = it.(il_prev);
 	entity ohead = this.il_head;
