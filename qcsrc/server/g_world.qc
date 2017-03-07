@@ -2033,7 +2033,9 @@ void Physics_Frame()
 		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
-		set_movetype(it, it.move_movetype);
+		//set_movetype(it, it.move_movetype);
+		// inline the set_movetype function, since this is called a lot
+		it.movetype = (it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype;
 
 		if(it.move_movetype == MOVETYPE_NONE)
 			continue;

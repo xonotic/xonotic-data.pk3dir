@@ -28,7 +28,6 @@ test_sv_game:
     - wget -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
     - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
     - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
-    - wget -O data/maps/stormkeep.waypoints.hardwired https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.hardwired
     - make
     - EXPECT=361b1766b4fc23f28b7f3149050fdbb2
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
