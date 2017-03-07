@@ -383,11 +383,12 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
+			switch(player.team)
 			{
-				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+				case NUM_TEAM_1: defaultmodel = autocvar_sv_defaultplayermodel_red; defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultmodel = autocvar_sv_defaultplayermodel_blue; defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultmodel = autocvar_sv_defaultplayermodel_yellow; defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultmodel = autocvar_sv_defaultplayermodel_pink; defaultskin = autocvar_sv_defaultplayerskin_pink; break;
 			}
 		}
 
@@ -418,9 +419,13 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+			switch(player.team)
+			{
+				case NUM_TEAM_1: defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultskin = autocvar_sv_defaultplayerskin_pink; break;
+			}
 		}
 
 		if(!defaultskin)
