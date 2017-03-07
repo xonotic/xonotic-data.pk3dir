@@ -88,15 +88,16 @@
 */
 
 #define MULTITEAM_ANNCE2(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF(prefix##RED, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position) \
-    MSG_ANNCE_NOTIF(prefix##BLUE, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position)
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), channel, volume, position) \
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), channel, volume, position)
 #define MULTITEAM_ANNCE3(prefix, default, sound, channel, volume, position) \
     MULTITEAM_ANNCE2(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF(prefix##YELLOW, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position)
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), channel, volume, position)
 #define MULTITEAM_ANNCE4(prefix, default, sound, channel, volume, position) \
     MULTITEAM_ANNCE3(prefix, default, sound, channel, volume, position) \
-    MSG_ANNCE_NOTIF(prefix##PINK, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
+    MSG_ANNCE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), channel, volume, position)
 #define MULTITEAM_ANNCE(prefix, teams, default, sound, channel, volume, position) \
+    NOTIF_ADD_AUTOCVAR(ANNCE_##prefix, default) \
     MULTITEAM_ANNCE##teams(prefix, default, sound, channel, volume, position)
 
 // MSG_ANNCE_NOTIFICATIONS
@@ -206,15 +207,16 @@
     MSG_ANNCE_NOTIF(VOTE_FAIL,                  2, "votefail",          CH_INFO, VOL_BASEVOICE, ATTEN_NONE)
 
 #define MULTITEAM_INFO2(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    MSG_INFO_NOTIF(prefix##_RED, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, type, 1), TCR(gentle, type, 1)) \
-    MSG_INFO_NOTIF(prefix##_BLUE, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, type, 2), TCR(gentle, type, 2))
+    MSG_INFO_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, type, 1), TCR(gentle, type, 1)) \
+    MSG_INFO_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, type, 2), TCR(gentle, type, 2))
 #define MULTITEAM_INFO3(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
     MULTITEAM_INFO2(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    MSG_INFO_NOTIF(prefix##_YELLOW, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, type, 3), TCR(gentle, type, 3))
+    MSG_INFO_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, type, 3), TCR(gentle, type, 3))
 #define MULTITEAM_INFO4(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
     MULTITEAM_INFO3(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
-    MSG_INFO_NOTIF(prefix##_PINK, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
+    MSG_INFO_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, type, 4), TCR(gentle, type, 4))
 #define MULTITEAM_INFO(prefix, teams, default, strnum, flnum, args, hudargs, icon, normal, gentle, type) \
+    NOTIF_ADD_AUTOCVAR(INFO_##prefix, default) \
     MULTITEAM_INFO##teams(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle, type)
 
 // MSG_INFO_NOTIFICATIONS
@@ -380,6 +382,8 @@
     MULTITEAM_INFO(KEYHUNT_CAPTURE, 4,                      1,  1, 0, "s1", "",         "",     _("^BG%s^BG captured the keys for the ^TC^TT team"), "", NAME)
     MULTITEAM_INFO(KEYHUNT_DROP, 4,                         1,  1, 0, "s1", "",         "",     _("^BG%s^BG dropped the ^TC^TT Key"), "", KEY)
     MULTITEAM_INFO(KEYHUNT_LOST, 4,                         1,  1, 0, "s1", "",         "",     _("^BG%s^BG lost the ^TC^TT Key"), "", KEY)
+    MULTITEAM_INFO(KEYHUNT_PUSHED, 4,                       1,  2, 0, "s1 s2", "",      "",     _("^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"), "", KEY)
+    MULTITEAM_INFO(KEYHUNT_DESTROYED, 4,                    1,  1, 0, "s1", "",         "",     _("^BG%s^BG destroyed the ^TC^TT Key"), "", KEY)
     MULTITEAM_INFO(KEYHUNT_PICKUP, 4,                       1,  1, 0, "s1", "",         "",     _("^BG%s^BG picked up the ^TC^TT Key"), "", KEY)
 
     MSG_INFO_NOTIF(LMS_FORFEIT,                             1,  1, 0, "s1", "",         "",     _("^BG%s^F3 forfeited"), "")
@@ -411,6 +415,7 @@
     MSG_INFO_NOTIF(RACE_NEW_BROKEN,                         1,  2, 3, "s1 s2 race_col f1ord race_col f2race_time race_diff",  "s1 f2race_time",     "race_newrankyellow",       _("^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"), "")
     MSG_INFO_NOTIF(RACE_NEW_IMPROVED,                       1,  1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1 f2race_time",         "race_newtime",             _("^BG%s^BG improved their %s%s^BG place record with %s%s %s"), "")
     MSG_INFO_NOTIF(RACE_NEW_MISSING_UID,                    1,  1, 1, "s1 f1race_time", "s1 f1race_time",                                           "race_newfail",             _("^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID and will be lost."), "")
+    MSG_INFO_NOTIF(RACE_NEW_MISSING_NAME,                   1,  1, 1, "s1 f1race_time", "s1 f1race_time",                                           "race_newfail",             _("^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be lost."), "")
     MSG_INFO_NOTIF(RACE_NEW_SET,                            1,  1, 2, "s1 race_col f1ord race_col f2race_time", "s1 f2race_time",                   "race_newrecordserver",     _("^BG%s^BG set the %s%s^BG place record with %s%s"), "")
 
     MULTIICON_INFO(MINIGAME_INVITE,                         1,  2, 0, "s2 minigame1_name s1", "s2", "minigame1_d", "minigames/%s/icon_notif",   _("^F4You have been invited by ^BG%s^F4 to join their game of ^F2%s^F4 (^F1%s^F4)"), "")
@@ -491,15 +496,16 @@
     MSG_INFO_NOTIF(WEAPON_VORTEX_MURDER,                    1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponnex",                _("^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"), "")
 
 #define MULTITEAM_CENTER2(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    MSG_CENTER_NOTIF(prefix##_RED, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 1), TCR(gentle, type, 1)) \
-    MSG_CENTER_NOTIF(prefix##_BLUE, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 2), TCR(gentle, type, 2))
+    MSG_CENTER_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 1), TCR(gentle, type, 1)) \
+    MSG_CENTER_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 2), TCR(gentle, type, 2))
 #define MULTITEAM_CENTER3(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
     MULTITEAM_CENTER2(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    MSG_CENTER_NOTIF(prefix##_YELLOW, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 3), TCR(gentle, type, 3))
+    MSG_CENTER_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 3), TCR(gentle, type, 3))
 #define MULTITEAM_CENTER4(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
     MULTITEAM_CENTER3(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
-    MSG_CENTER_NOTIF(prefix##_PINK, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 4), TCR(gentle, type, 4))
+    MSG_CENTER_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, strnum, flnum, args, cpid, durcnt, TCR(normal, type, 4), TCR(gentle, type, 4))
 #define MULTITEAM_CENTER(prefix, teams, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type) \
+    NOTIF_ADD_AUTOCVAR(CENTER_##prefix, default) \
     MULTITEAM_CENTER##teams(prefix, default, strnum, flnum, args, cpid, durcnt, normal, gentle, type)
 
 // MSG_CENTER_NOTIFICATIONS
@@ -537,8 +543,8 @@
     MSG_CENTER_NOTIF(CTF_PASS_SENT_NEUTRAL,             1,      1, 0, "s1",             CPID_CTF_PASS,          "0 0",  _("^BGYou passed the flag to %s"), "")
     MULTITEAM_CENTER(CTF_PICKUP, 4,                     1,      0, 0, "",               CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou got the ^TC^TT^BG flag!"), "", FLAG)
     MSG_CENTER_NOTIF(CTF_PICKUP_NEUTRAL,                1,      0, 0, "",               CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou got the flag!"), "")
-    MSG_CENTER_NOTIF(CTF_PICKUP_TEAM,                   1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou got your %steam^BG's flag, return it!"), "")
-    MSG_CENTER_NOTIF(CTF_PICKUP_TEAM_ENEMY,             1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou got the %senemy^BG's flag, return it!"), "")
+    MSG_CENTER_NOTIF(CTF_PICKUP_RETURN,                 1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou got your %steam^BG's flag, return it!"), "")
+    MSG_CENTER_NOTIF(CTF_PICKUP_RETURN_ENEMY,           1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGYou got the %senemy^BG's flag, return it!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY,                  1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy^BG got your flag! Retrieve it!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_VERBOSE,          1,      2, 0, "s1 s2 s1",       CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "")
     MSG_CENTER_NOTIF(CTF_PICKUP_ENEMY_NEUTRAL,          1,      1, 0, "s1",             CPID_CTF_LOWPRIO,       "0 0",  _("^BGThe %senemy^BG got the flag! Retrieve it!"), "")
@@ -649,6 +655,7 @@
 
     MSG_CENTER_NOTIF(GENERATOR_UNDERATTACK,             1,      0, 0, "",               CPID_Null,              "0 0",  _("^BGThe generator is under attack!"), "")
 
+    MULTITEAM_CENTER(ROUND_TEAM_LOSS, 4,                1,      0, 0, "",               CPID_ROUND,             "0 0",  _("^TC^TT^BG team loses the round"), "", NAME)
     MULTITEAM_CENTER(ROUND_TEAM_WIN, 4,                 1,      0, 0, "",               CPID_ROUND,             "0 0",  _("^TC^TT^BG team wins the round"), "", NAME)
     MSG_CENTER_NOTIF(ROUND_PLAYER_WIN,                  1,      1, 0, "s1",             CPID_ROUND,             "0 0",  _("^BG%s^BG wins the round"), "")
 
@@ -699,7 +706,7 @@
     MSG_CENTER_NOTIF(NIX_NEWWEAPON,                     1,      0, 1, "item_wepname",   CPID_NIX,               "0 0",  _("^F2Active weapon: ^F1%s"), "")
 
     MSG_CENTER_NOTIF(ONS_CAPTURE,                       1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^BGYou captured %s^BG control point"), "")
-    MULTITEAM_CENTER(ONS_CAPTURE, 4,                    1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^TC^TT^BG team captured %s^BG control point"), "", NAME)
+    MULTITEAM_CENTER(ONS_CAPTURE_TEAM, 4,               1,      1, 0, "s1",             CPID_ONSLAUGHT,         "0 0",  _("^TC^TT^BG team captured %s^BG control point"), "", NAME)
     MSG_CENTER_NOTIF(ONS_CONTROLPOINT_SHIELDED,         1,      0, 0, "",               CPID_ONS_CAPSHIELD,     "0 0",  _("^BGThis control point currently cannot be captured"), "")
     MSG_CENTER_NOTIF(ONS_GENERATOR_SHIELDED,            1,      0, 0, "",               CPID_ONS_CAPSHIELD,     "0 0",  _("^BGThe enemy generator cannot be destroyed yet\n^F2Capture some control points to unshield it"), "")
     MULTITEAM_CENTER(ONS_NOTSHIELDED, 4,                1,      0, 0, "",               CPID_ONSLAUGHT,         "0 0",  _("^BGThe ^TCenemy^BG generator is no longer shielded!"), "", NAME)
@@ -762,7 +769,7 @@
     MSG_MULTI_NOTIF(prefix##_BLUE, default, anncepre##_BLUE, infopre##_BLUE, centerpre##_BLUE)
 #define MULTITEAM_MULTI3(prefix, default, anncepre, infopre, centerpre) \
     MULTITEAM_MULTI2(prefix, default, anncepre, infopre, centerpre) \
-    MSG_MULTI_NOTIF(default, prefix##_YELLOW, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW)
+    MSG_MULTI_NOTIF(prefix##_YELLOW, default, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW)
 #define MULTITEAM_MULTI4(prefix, default, anncepre, infopre, centerpre) \
     MULTITEAM_MULTI3(prefix, default, anncepre, infopre, centerpre) \
     MSG_MULTI_NOTIF(prefix##_PINK, default, anncepre##PINK, infopre##PINK, centerpre##PINK)
@@ -929,15 +936,17 @@
     MSG_MULTI_NOTIF(WEAPON_VORTEX_MURDER,               1,  NULL,           INFO_WEAPON_VORTEX_MURDER,              NULL)
 
 #define MULTITEAM_CHOICE2(prefix, default, challow, chtype, optiona, optionb) \
-    MSG_CHOICE_NOTIF(prefix##_RED, default, challow, chtype, optiona##_RED, optionb##_RED) \
-    MSG_CHOICE_NOTIF(prefix##_BLUE, default, challow, chtype, optiona##_BLUE, optionb##_BLUE)
+    MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED, prefix, default, challow, chtype, optiona##_RED, optionb##_RED) \
+    MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE, prefix, default, challow, chtype, optiona##_BLUE, optionb##_BLUE)
 #define MULTITEAM_CHOICE3(prefix, default, challow, chtype, optiona, optionb) \
     MULTITEAM_CHOICE2(prefix, default, challow, chtype, optiona, optionb) \
-    MSG_CHOICE_NOTIF(prefix##_YELLOW, default, challow, chtype, optiona##_YELLOW, optionb##_YELLOW)
+    MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, default, challow, chtype, optiona##_YELLOW, optionb##_YELLOW)
 #define MULTITEAM_CHOICE4(prefix, default, challow, chtype, optiona, optionb) \
     MULTITEAM_CHOICE3(prefix, default, challow, chtype, optiona, optionb) \
-    MSG_CHOICE_NOTIF(prefix##_PINK, default, challow, chtype, optiona##_PINK, optionb##_PINK)
+    MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_4, prefix##_PINK, prefix, default, challow, chtype, optiona##_PINK, optionb##_PINK)
 #define MULTITEAM_CHOICE(prefix, teams, default, challow, chtype, optiona, optionb) \
+    NOTIF_ADD_AUTOCVAR(CHOICE_##prefix, default) \
+    NOTIF_ADD_AUTOCVAR(CHOICE_##prefix##_ALLOWED, challow) \
     MULTITEAM_CHOICE##teams(prefix, default, challow, chtype, optiona, optionb)
 
 // MSG_CHOICE_NOTIFICATIONS

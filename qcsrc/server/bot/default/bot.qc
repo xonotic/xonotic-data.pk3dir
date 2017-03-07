@@ -46,6 +46,7 @@ entity bot_spawn()
 	entity bot = spawnclient();
 	if (bot)
 	{
+		setItemGroupCount();
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
@@ -63,7 +64,8 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = this.bot_nextthink + autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill);
+	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
+
 	//if (this.bot_painintensity > 0)
 	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
 
@@ -206,7 +208,13 @@ void bot_setnameandstuff(entity this)
 
 	prio = 6;
 
-	#define READSKILL(f,w,r) if(argv(prio) != "") this.f = stof(argv(prio)) * (w); else this.f = (!autocvar_g_campaign) * (2 * random() - 1) * (r) * (w); ++prio
+	#define READSKILL(f, w, r) MACRO_BEGIN { \
+		if(argv(prio) != "") \
+			this.f = stof(argv(prio)) * w; \
+		else \
+			this.f = (!autocvar_g_campaign) * (2 * random() - 1) * r * w; \
+		prio++; \
+	} MACRO_END
 	//print(bot_name, ": ping=", argv(9), "\n");
 
 	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboard skill
@@ -366,14 +374,13 @@ void bot_relinkplayerlist()
 			if(prevbot)
 				prevbot.nextbot = it;
 			else
-			{
 				bot_list = it;
-				bot_list.nextbot = NULL;
-			}
 			prevbot = it;
 			++currentbots;
 		}
 	});
+	if(prevbot)
+		prevbot.nextbot = NULL;
 	LOG_TRACE("relink: ", ftos(currentbots), " bots seen.");
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
@@ -666,7 +673,7 @@ void bot_clear(entity this)
 
 void bot_serverframe()
 {
-	if (gameover)
+	if (game_stopped)
 		return;
 
 	if (time < 2)

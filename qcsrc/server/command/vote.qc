@@ -109,7 +109,7 @@ void Nagger_ReadyCounted()
 // If the vote_caller is still here, return their name, otherwise vote_caller_name
 string OriginalCallerName()
 {
-	if (IS_REAL_CLIENT(vote_caller)) return vote_caller.netname;
+	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller, false);
 	return vote_caller_name;
 }
 
@@ -198,12 +198,12 @@ void VoteSpam(float notvoters, float mincount, string result)
 	}
 }
 
+#define spectators_allowed (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || intermission_running)))
+
 void VoteCount(float first_count)
 {
 	// declarations
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
-
-	bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
 
 	float vote_player_count = 0, notvoters = 0;
 	float vote_real_player_count = 0, vote_real_accept_count = 0;
@@ -336,7 +336,7 @@ void reset_map(bool dorespawn)
 {
 	if (time <= game_starttime)
 	{
-		if (gameover)
+		if (game_stopped)
 			return;
 		if (round_handler_IsActive())
 			round_handler_Reset(game_starttime);
@@ -367,28 +367,26 @@ void reset_map(bool dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			FOREACH_CLIENT(true, LAMBDA(
-				/*
-				only reset players if a restart countdown is active
-				this can either be due to cvar sv_ready_restart_after_countdown having set
-				restart_mapalreadyrestarted to 1 after the countdown ended or when
-				sv_ready_restart_after_countdown is not used and countdown is still running
-				*/
-				if (restart_mapalreadyrestarted || (time < game_starttime))
+			if (restart_mapalreadyrestarted || (time < game_starttime))
+			{
+				FOREACH_CLIENT(IS_PLAYER(it),
 				{
+					/*
+					only reset players if a restart countdown is active
+					this can either be due to cvar sv_ready_restart_after_countdown having set
+					restart_mapalreadyrestarted to 1 after the countdown ended or when
+					sv_ready_restart_after_countdown is not used and countdown is still running
+					*/
 					// NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-					if (IS_PLAYER(it))
-					{
-						// PlayerScore_Clear(it);
-						it.killcount = 0;
-						// stop the player from moving so that he stands still once he gets respawned
-						it.velocity = '0 0 0';
-						it.avelocity = '0 0 0';
-						it.movement = '0 0 0';
-						PutClientInServer(it);
-					}
-				}
-			));
+					// PlayerScore_Clear(it);
+					it.killcount = 0;
+					// stop the player from moving so that he stands still once he gets respawned
+					it.velocity = '0 0 0';
+					it.avelocity = '0 0 0';
+					it.movement = '0 0 0';
+					PutClientInServer(it);
+				});
+			}
 		}
 	}
 }
@@ -405,7 +403,7 @@ void ReadyRestart_think(entity this)
 // Forces a restart of the game without actually reloading the map // this is a mess...
 void ReadyRestart_force()
 {
-	if (time <= game_starttime && gameover)
+	if (time <= game_starttime && game_stopped)
 		return;
 
 	bprint("^1Server is restarting...\n");
@@ -421,7 +419,7 @@ void ReadyRestart_force()
 	game_starttime = time + RESTART_COUNTDOWN;
 
 	// clear player attributes
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		it.alivetime = 0;
 		it.killcount = 0;
 		PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, 0));
@@ -464,8 +462,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	// no assault support yet...
-	if (g_assault || gameover || race_completing) localcmd("restart\n");
+	if (MUTATOR_CALLHOOK(ReadyRestart_Deny) || game_stopped || race_completing) localcmd("restart\n");
 	else localcmd("\nsv_hook_gamerestart\n");
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
@@ -754,8 +751,6 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
-
 			float tmp_playercount = 0;
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
@@ -892,8 +887,6 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 
 					default:  // calling a vote for master
 					{
-						bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
-
 						if (!autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if (vote_called)
 						{

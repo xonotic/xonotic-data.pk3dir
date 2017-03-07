@@ -71,7 +71,7 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Invincible Projectiles"));
 	if(cvar_string("g_weaponarena") != "0")
 		s = strcat(s, ", ", WeaponArenaString());
-	else if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
 		s = strcat(s, ", ", _("No start weapons"));
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		s = strcat(s, ", ", _("Low gravity"));
@@ -91,7 +91,7 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
 		s = strcat(s, ", ", _("Jet pack"));
-	if(cvar("g_buffs"))
+	if(cvar("g_buffs") > 0)
 		s = strcat(s, ", ", _("Buffs"));
 	if(cvar("g_overkill"))
 		s = strcat(s, ", ", _("Overkill"));
@@ -143,7 +143,7 @@ float checkCompatibility_weaponarena_weapon(entity me)
 		return 0;
 	if(cvar_string("g_weaponarena") == "0")
 		return 0;
-	if(cvar_string("g_balance_blaster_weaponstart") == "0")
+	if(cvar_string("g_balance_blaster_weaponstartoverride") == "0")
 		return 0;
 	return 1;
 }
@@ -279,9 +279,9 @@ void XonoticMutatorsDialog_fill(entity me)
 			setDependent(e, "g_nix", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_balance_blaster_weaponstart", "0", _("No start weapons"), "-"));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_balance_blaster_weaponstartoverride", "0", _("No start weapons"), "-"));
 			e.cvarOffValue = "-1";
-			makeMulti(e, "g_balance_shotgun_weaponstart g_balance_machinegun_weaponstart g_balance_devastator_weaponstart g_balance_minelayer_weaponstart g_balance_electro_weaponstart g_balance_crylink_weaponstart g_balance_hagar_weaponstart g_balance_porto_weaponstart g_balance_vaporizer_weaponstart g_balance_hook_weaponstart g_balance_rifle_weaponstart g_balance_fireball_weaponstart g_balance_seeker_weaponstart g_balance_tuba_weaponstart g_balance_arc_weaponstart g_balance_vortex_weaponstart g_balance_mortar_weaponstart");
+			makeMulti(e, "g_balance_shotgun_weaponstartoverride g_balance_machinegun_weaponstartoverride g_balance_devastator_weaponstartoverride g_balance_minelayer_weaponstartoverride g_balance_electro_weaponstartoverride g_balance_crylink_weaponstartoverride g_balance_hagar_weaponstartoverride g_balance_porto_weaponstartoverride g_balance_vaporizer_weaponstartoverride g_balance_hook_weaponstartoverride g_balance_rifle_weaponstartoverride g_balance_fireball_weaponstartoverride g_balance_seeker_weaponstartoverride g_balance_tuba_weaponstartoverride g_balance_arc_weaponstartoverride g_balance_vortex_weaponstartoverride g_balance_mortar_weaponstartoverride");
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));

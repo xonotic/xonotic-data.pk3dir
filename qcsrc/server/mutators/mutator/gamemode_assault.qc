@@ -1,5 +1,7 @@
 #include "gamemode_assault.qh"
 
+#include <lib/float.qh>
+
 .entity sprite;
 #define AS_ROUND_DELAY 5
 
@@ -106,7 +108,7 @@ void target_objective_decrease_activate(entity this)
 				it.sprite = NULL; // TODO: just unsetting it?!
 		}
 
-		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
+		spr = WaypointSprite_SpawnFixed(WP_AssaultDefend, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
 		spr.assault_decreaser = this;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
@@ -211,7 +213,7 @@ entity as_round;
 .entity ent_winning;
 void as_round_think()
 {
-	gameover = false;
+	game_stopped = false;
 	assault_new_round(as_round.ent_winning);
 	delete(as_round);
 	as_round = NULL;
@@ -259,7 +261,7 @@ int WinningCondition_Assault()
 				as_round.think = as_round_think;
 				as_round.ent_winning = ent;
 				as_round.nextthink = time + AS_ROUND_DELAY;
-				gameover = true;
+				game_stopped = true;
 
 				// make sure timelimit isn't hit while the game is blocked
 				if(autocvar_timelimit > 0)
@@ -549,7 +551,7 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 {
 	entity turret = M_ARGV(0, entity);
 
-	if(!turret.team || turret.team == MAX_SHOT_DISTANCE)
+	if(!turret.team || turret.team == FLOAT_MAX)
 		turret.team = 5; // this gets reversed when match starts?
 }
 
@@ -606,6 +608,12 @@ MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 		case "info_player_team4":
 			return true;
 	}
+}
+
+MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
+{
+	// readyrestart not supported (yet)
+	return true;
 }
 
 // scoreboard setup

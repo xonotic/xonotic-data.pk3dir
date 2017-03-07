@@ -43,7 +43,7 @@ void Teleport_Touch(entity this, entity toucher)
 
 #ifdef SVQC
 	if(IS_PLAYER(toucher))
-		RemoveGrapplingHook(toucher);
+		RemoveGrapplingHooks(toucher);
 #endif
 
 	entity e;

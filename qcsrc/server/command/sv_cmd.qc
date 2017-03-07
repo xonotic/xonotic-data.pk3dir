@@ -34,7 +34,6 @@ void PutObserverInServer(entity this);
 
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: December 29th, 2011
 // =====================================================
 
 //  used by GameCommand_make_mapinfo()
@@ -139,8 +138,8 @@ void GameCommand_adminmsg(float request, float argc)
 						sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", admin_message, "\n"));
 					}
 
-					successful = strcat(successful, (successful ? ", " : ""), client.netname);
-					LOG_TRACE("Message sent to ", client.netname);
+					successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
+					LOG_TRACE("Message sent to ", playername(client, false));
 					continue;
 				}
 
@@ -383,10 +382,16 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 						}
 						else
 						{
-							// let's start at token 2 so we can skip sv_cmd bot_cmd
-							bot = find_bot_by_number(stof(argv(2)));
-							if (bot == NULL) bot = find_bot_by_name(argv(2));
-							if (bot) bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
+							if(argv(2) == "*" || argv(2) == "all")
+								FOREACH_CLIENT(IS_BOT_CLIENT(it), {
+									bot_queuecommand(it, substring(s, argv_start_index(3), -1));
+								});
+							else
+							{
+								bot = find_bot_by_number(stof(argv(2)));
+								if (bot == NULL) bot = find_bot_by_name(argv(2));
+								if (bot) bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
+							}
 						}
 					}
 					else
@@ -408,17 +413,31 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 			}
 			else if (argc >= 3)  // this comes last
 			{
-				bot = find_bot_by_number(stof(argv(1)));
-				if (bot == NULL) bot = find_bot_by_name(argv(1));
-				if (bot)
+				if(argv(1) == "*" || argv(1) == "all")
 				{
-					LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
-					bot_queuecommand(bot, substring(command, argv_start_index(2), -1));
+					int bot_num = 0;
+					FOREACH_CLIENT(IS_BOT_CLIENT(it), {
+						bot_queuecommand(it, substring(command, argv_start_index(2), -1));
+						bot_num++;
+					});
+					if(bot_num)
+						LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to all bots (", ftos(bot_num), ")\n"));
 					return;
 				}
 				else
 				{
-					LOG_INFO(strcat("Error: Can't find bot with the name or id '", argv(1), "' - Did you mistype the command?\n"));  // don't return so that usage is shown
+					bot = find_bot_by_number(stof(argv(1)));
+					if (bot == NULL) bot = find_bot_by_name(argv(1));
+					if (bot)
+					{
+						LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
+						bot_queuecommand(bot, substring(command, argv_start_index(2), -1));
+						return;
+					}
+					else
+					{
+						LOG_INFO(strcat("Error: Can't find bot with the name or id '", argv(1), "' - Did you mistype the command?\n"));  // don't return so that usage is shown
+					}
 				}
 			}
 		}
@@ -428,10 +447,12 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_INFO("\nUsage:^3 sv_cmd bot_cmd client command [argument]\n");
-			LOG_INFO("  'client' can be either the name or entity id of the bot\n");
+			LOG_INFO("  'client' can be either the name of the bot or a progressive number (not the entity number!)\n");
+			LOG_INFO("           can also be '*' or 'all' to allow sending the command to all the bots\n");
 			LOG_INFO("  For full list of commands, see bot_cmd help [command].\n");
-			LOG_INFO("Examples: sv_cmd bot_cmd client cc \"say something\"\n");
-			LOG_INFO("          sv_cmd bot_cmd client presskey jump\n");
+			LOG_INFO("Examples: sv_cmd bot_cmd 1 cc \"say something\"\n");
+			LOG_INFO("          sv_cmd bot_cmd 1 presskey jump\n");
+			LOG_INFO("          sv_cmd bot_cmd * pause\n");
 			return;
 		}
 	}
@@ -521,7 +542,7 @@ void GameCommand_defer_clear(float request, float argc)
 				if (accepted > 0)
 				{
 					stuffcmd(client, "defer clear\n");
-					LOG_INFO("defer clear stuffed to ", client.netname, "\n");
+					LOG_INFO("defer clear stuffed to ", playername(client, false), "\n");
 				}
 				else { LOG_INFO("defer_clear: ", GetClientErrorString(accepted, argv(1)), ".\n"); }
 
@@ -1026,11 +1047,11 @@ void GameCommand_moveplayer(float request, float argc)
 							if (client.caplayer) client.caplayer = 0;
 							PutObserverInServer(client);
 
-							successful = strcat(successful, (successful ? ", " : ""), client.netname);
+							successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
 						}
 						else
 						{
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already spectating.\n");
+							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") is already spectating.\n");
 						}
 						continue;
 					}
@@ -1050,7 +1071,7 @@ void GameCommand_moveplayer(float request, float argc)
 								if (team_id == client.team)  // already on the destination team
 								{
 									// keep the forcing undone
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
+									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
 									continue;
 								}
 								else if (team_id == 0)  // auto team
@@ -1079,8 +1100,8 @@ void GameCommand_moveplayer(float request, float argc)
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
 								MoveToTeam(client, team_id, 6);
-								successful = strcat(successful, (successful ? ", " : ""), client.netname);
-								LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
+								successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
+								LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
 								continue;
 							}
 							else
@@ -1326,90 +1347,37 @@ void GameCommand_shuffleteams(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (teamplay)
-			{
-				float t_teams, t_players, team_color;
-
-				// count the total amount of players and total amount of teams
-				t_players = 0;
-				t_teams = 0;
-				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
-					CheckAllowedTeams(it);
-
-					if (c1 >= 0) t_teams = max(1, t_teams);
-					if (c2 >= 0) t_teams = max(2, t_teams);
-					if (c3 >= 0) t_teams = max(3, t_teams);
-					if (c4 >= 0) t_teams = max(4, t_teams);
-
-					++t_players;
-				));
-
-				// build a list of the players in a random order
-				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
-					for ( ; ; )
-					{
-						int idx = bound(1, floor(random() * maxclients) + 1, maxclients);
-
-						if (shuffleteams_players[idx])
-						{
-							continue;  // a player is already assigned to this slot
-						}
-						else
-						{
-							shuffleteams_players[idx] = etof(it);
-							break;
-						}
-					}
-				));
-
-				// finally, from the list made earlier, re-join the players in different order.
-				for (int i = 1; i <= t_teams; ++i)
-				{
-					// find out how many players to assign to this team
-					int pnum = (t_players / t_teams);
-					pnum = ((i == 1) ? ceil(pnum) : floor(pnum));
-
-					team_color = Team_NumberToTeam(i);
-
-					// sort through the random list of players made earlier
-					for (int z = 1; z <= maxclients; ++z)
-					{
-						if (!(shuffleteams_teams[i] >= pnum))
-						{
-							if (!(shuffleteams_players[z])) continue;  // not a player, move on to next random slot
-
-							entity e = NULL;
-							if(VerifyClientNumber(shuffleteams_players[z]))
-								e = edict_num(shuffleteams_players[z]);
-
-							if(!e) continue; // unverified
-
-							if (e.team != team_color) MoveToTeam(e, team_color, 6);
-
-							shuffleteams_players[z] = 0;
-							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
-						}
-						else
-						{
-							break;  // move on to next team
-						}
-					}
-				}
-
-				bprint("Successfully shuffled the players around randomly.\n");
-
-				// clear the buffers now
-				for (int i = 0; i < SHUFFLETEAMS_MAX_PLAYERS; ++i)
-					shuffleteams_players[i] = 0;
-
-				for (int i = 0; i < SHUFFLETEAMS_MAX_TEAMS; ++i)
-					shuffleteams_teams[i] = 0;
-			}
-			else
+			if (!teamplay)
 			{
 				LOG_INFO("Can't shuffle teams when currently not playing a team game.\n");
+				return;
 			}
 
+			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
+				if (it.team_forced) {
+					// we could theoretically assign forced players to their teams
+					// and shuffle the rest to fill the empty spots but in practise
+					// either all players or none are gonna have forced teams
+					LOG_INFO("Can't shuffle teams because at least one player has a forced team.\n");
+					return;
+				}
+			));
+
+			int number_of_teams = 0;
+			CheckAllowedTeams(NULL);
+			if (c1 >= 0) number_of_teams = max(1, number_of_teams);
+			if (c2 >= 0) number_of_teams = max(2, number_of_teams);
+			if (c3 >= 0) number_of_teams = max(3, number_of_teams);
+			if (c4 >= 0) number_of_teams = max(4, number_of_teams);
+
+			int team_index = 0;
+			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, LAMBDA(
+				int target_team_number = Team_NumberToTeam(team_index + 1);
+				if (it.team != target_team_number) MoveToTeam(it, target_team_number, 6);
+				team_index = (team_index + 1) % number_of_teams;
+			));
+
+			bprint("Successfully shuffled the players around randomly.\n");
 			return;
 		}
 
@@ -1506,15 +1474,15 @@ void GameCommand_trace(float request, float argc)
 						start = stov(vtos(start));
 						end = stov(vtos(end));
 
-						tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, NULL);
+						tracebox(start, PL_MIN_CONST, PL_MAX_CONST, end, MOVE_NOMONSTERS, NULL);
 						if (!trace_startsolid && trace_fraction < 1)
 						{
 							p = trace_endpos;
-							tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), p, MOVE_NOMONSTERS, NULL);
+							tracebox(p, PL_MIN_CONST, PL_MAX_CONST, p, MOVE_NOMONSTERS, NULL);
 							if (trace_startsolid)
 							{
 								rint(42);  // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
-								tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, NULL);
+								tracebox(start, PL_MIN_CONST, PL_MAX_CONST, end, MOVE_NOMONSTERS, NULL);
 
 								// how much do we need to back off?
 								safe = 1;
@@ -1522,7 +1490,7 @@ void GameCommand_trace(float request, float argc)
 								for ( ; ; )
 								{
 									pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
-									tracebox(pos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pos, MOVE_NOMONSTERS, NULL);
+									tracebox(pos, PL_MIN_CONST, PL_MAX_CONST, pos, MOVE_NOMONSTERS, NULL);
 									if (trace_startsolid)
 									{
 										if ((safe + unsafe) * 0.5 == unsafe) break;
@@ -1538,7 +1506,7 @@ void GameCommand_trace(float request, float argc)
 								LOG_INFO("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
 								LOG_INFO("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
 
-								tracebox(p, STAT(PL_MIN, NULL) + '0.1 0.1 0.1', STAT(PL_MAX, NULL) - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, NULL);
+								tracebox(p, PL_MIN_CONST + '0.1 0.1 0.1', PL_MAX_CONST - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, NULL);
 								if (trace_startsolid) LOG_INFO("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 								else LOG_INFO("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 								if (++hitcount >= 10) break;
@@ -1552,7 +1520,7 @@ void GameCommand_trace(float request, float argc)
 								{
 									q = p + normalize(end - p) * (dq + dqf);
 									if (q == q0) break;
-									tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), q, MOVE_NOMONSTERS, NULL);
+									tracebox(p, PL_MIN_CONST, PL_MAX_CONST, q, MOVE_NOMONSTERS, NULL);
 									if (trace_startsolid) error("THIS ONE cannot happen");
 									if (trace_fraction > 0) dq += dqf * trace_fraction;
 									dqf *= 0.5;

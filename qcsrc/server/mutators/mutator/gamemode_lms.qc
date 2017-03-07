@@ -414,7 +414,7 @@ MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 
 MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 {
-	if(gameover)
+	if(game_stopped)
 	if(M_ARGV(0, entity) == SP_LMS_RANK) // score field
 		return true; // allow writing to this field in intermission as it is needed for newly joining players
 }

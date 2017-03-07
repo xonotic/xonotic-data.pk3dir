@@ -60,9 +60,9 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
     {
         this.cnt  = ReadByte();
         this.team = ReadByte();
-        this.cnt  = ReadByte();
+        this.count  = ReadByte();
 
-        if(this.cnt)
+        if(this.count)
             this.colormod = '1 0 0';
         else
             this.colormod = '0 1 0';

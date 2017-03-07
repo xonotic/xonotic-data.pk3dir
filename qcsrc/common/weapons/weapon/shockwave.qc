@@ -4,7 +4,7 @@ CLASS(Shockwave, Weapon)
 /* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none);
 /* impulse   */ ATTRIB(Shockwave, impulse, int, 2);
 /* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
-/* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
+/* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, 3000);
 /* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
 /* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");
 #ifdef GAMEQC
@@ -695,23 +695,23 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 	}
 }
 
-METHOD(Shockwave, wr_aim, void(entity thiswep, entity actor))
+METHOD(Shockwave, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(shockwave, melee_range)))
-        { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false); }
+        { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false); }
     else
-        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false); }
+        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false); }
 }
 METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     if(fire & 1)
     {
-        if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
+        if(time >= actor.(weaponentity).shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
             {
                 W_Shockwave_Attack(actor, weaponentity);
-                actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
+                actor.(weaponentity).shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
             }
         }
@@ -726,11 +726,11 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
         }
     }
 }
-METHOD(Shockwave, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Shockwave, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // infinite ammo
 }
-METHOD(Shockwave, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Shockwave, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     // shockwave has infinite ammo
     return true;

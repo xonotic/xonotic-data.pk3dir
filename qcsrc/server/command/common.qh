@@ -157,7 +157,7 @@ COMMON_COMMAND(who, "Display detailed client information about all players") { C
 
 void CommonCommand_macro_help(entity caller)
 {
-	FOREACH(COMMON_COMMANDS, true, LAMBDA(print_to(caller, sprintf("  ^2%s^7: %s\n", it.m_name, it.m_description))));
+	FOREACH(COMMON_COMMANDS, true, LAMBDA(print_to(caller, sprintf("  ^2%s^7: %s", it.m_name, it.m_description))));
 }
 
 float CommonCommand_macro_command(float argc, entity caller, string command)

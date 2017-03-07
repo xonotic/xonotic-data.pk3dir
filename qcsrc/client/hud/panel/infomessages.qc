@@ -114,6 +114,8 @@ void HUD_InfoMessages()
 				InfoMessage(s);
 			}
 
+			MUTATOR_CALLHOOK(DrawInfoMessages, pos, mySize);
+
 			if(!warmup_stage && gametype == MAPINFO_TYPE_LMS)
 			{
 				entity sk;
@@ -174,7 +176,7 @@ void HUD_InfoMessages()
 			InfoMessage(s);
 		}
 
-		if(teamplay && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
+		if(teamplay && !spectatee_status && teamnagger)
 		{
 			float ts_min = 0, ts_max = 0;
 			entity tm = teams.sort_next;

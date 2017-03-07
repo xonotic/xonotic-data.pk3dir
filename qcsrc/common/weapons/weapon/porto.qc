@@ -66,7 +66,7 @@ void W_Porto_Success(entity this)
 	delete(this);
 }
 
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
+string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity);
 void W_Porto_Fail(entity this, float failhard)
 {
 	if(this.realowner == NULL)
@@ -95,7 +95,8 @@ void W_Porto_Fail(entity this, float failhard)
 			tracetoss(this, this);
 			if(vdist(trace_endpos - this.realowner.origin, <, 128))
 			{
-				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity);
+				.entity weaponentity = this.weaponentity_fld;
+				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity, weaponentity);
 				Send_Notification(NOTIF_ONE, this.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
 			}
 		}
@@ -133,7 +134,8 @@ void W_Porto_Touch(entity this, entity toucher)
 	norm = trace_plane_normal;
 	if(trace_ent.iscreature)
 	{
-		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * STAT(PL_MIN, NULL).z, MOVE_WORLDONLY, this);
+		// TODO: why not use entity size?
+		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN_CONST.z, MOVE_WORLDONLY, this);
 		if(trace_fraction >= 1)
 			return;
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
@@ -147,7 +149,7 @@ void W_Porto_Touch(entity this, entity toucher)
 		sound(this, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 		delete(this);
 	}
-	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+	else if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
 	{
 		spamsound(this, CH_SHOTS, SND(PORTO_BOUNCE), VOL_BASE, ATTEN_NORM);
 		// just reflect
@@ -254,6 +256,7 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 	//Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = new(porto);
+	gren.weaponentity_fld = weaponentity;
 	gren.cnt = type;
 	gren.owner = gren.realowner = actor;
 	gren.playerid = actor.playerid;
@@ -296,12 +299,12 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor))
+METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(!WEP_CVAR(porto, secondary))
-        if(bot_aim(actor, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
 }
 METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -328,27 +331,21 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
     }
     else
     {
-        if(actor.porto_v_angle_held)
+        if(actor.(weaponentity).porto_v_angle_held)
         {
             if(!(fire & 2))
-            {
-                actor.porto_v_angle_held = 0;
-
-                ClientData_Touch(actor);
-            }
+                actor.(weaponentity).porto_v_angle_held = 0;
         }
         else
         {
             if(fire & 2)
             {
-                actor.porto_v_angle = actor.v_angle;
-                actor.porto_v_angle_held = 1;
-
-                ClientData_Touch(actor);
+                actor.(weaponentity).porto_v_angle = actor.v_angle;
+                actor.(weaponentity).porto_v_angle_held = 1;
             }
         }
-        if(actor.porto_v_angle_held)
-            makevectors(actor.porto_v_angle); // override the previously set angles
+        if(actor.(weaponentity).porto_v_angle_held)
+            makevectors(actor.(weaponentity).porto_v_angle); // override the previously set angles
 
         if(fire & 1)
         if(!actor.porto_current)
@@ -360,19 +357,15 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         }
     }
 }
-METHOD(PortoLaunch, wr_checkammo1, bool(entity thiswep, entity this))
+METHOD(PortoLaunch, wr_checkammo1, bool(entity thiswep, entity this, .entity weaponentity))
 {
     // always allow infinite ammo
     return true;
 }
-METHOD(PortoLaunch, wr_checkammo2, bool(entity thiswep, entity this))
+METHOD(PortoLaunch, wr_checkammo2, bool(entity thiswep, entity this, .entity weaponentity))
 {
     // always allow infinite ammo
     return true;
-}
-METHOD(PortoLaunch, wr_setup, void(entity thiswep, entity actor))
-{
-    actor.ammo_field = ammo_none;
 }
 METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 {

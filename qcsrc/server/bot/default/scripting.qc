@@ -4,6 +4,7 @@
 
 #include <common/state.qh>
 #include <common/physics/player.qh>
+#include <common/wepent.qh>
 
 #include "bot.qh"
 
@@ -310,6 +311,11 @@ float bot_decodecommand(string cmdstring)
 				bot_cmd.bot_cmd_parm_string = strzone(parm);
 				break;
 			case BOT_CMD_PARAMETER_VECTOR:
+				if(substring(parm, 0, 1) != "\'")
+				{
+					LOG_INFOF("ERROR: expected vector type \'x y z\', got %s\n", parm);
+					return 0;
+				}
 				bot_cmd.bot_cmd_parm_vector = stov(parm);
 				break;
 			default:
@@ -376,7 +382,7 @@ void bot_cmdhelp(string scmd)
 				LOG_INFO("Look to the right or left N degrees. For turning to the left use positive numbers.");
 				break;
 			case BOT_CMD_MOVETO:
-				LOG_INFO("Walk to an specific coordinate on the map. Usage: moveto \"x y z\"");
+				LOG_INFO("Walk to an specific coordinate on the map. Usage: moveto \'x y z\'");
 				break;
 			case BOT_CMD_MOVETOTARGET:
 				LOG_INFO("Walk to the specific target on the map");
@@ -569,9 +575,22 @@ float bot_cmd_select_weapon(entity this)
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
-	if(client_hasweapon(this, Weapons_from(id), true, false))
-		PS(this).m_switchweapon = Weapons_from(id);
-	else
+	bool success = false;
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
+			continue;
+
+		if(client_hasweapon(this, Weapons_from(id), weaponentity, true, false))
+		{
+			success = true;
+			this.(weaponentity).m_switchweapon = Weapons_from(id);
+		}
+	}
+
+	if(!success)
 		return CMD_STATUS_ERROR;
 
 	return CMD_STATUS_FINISHED;
@@ -870,7 +889,7 @@ float bot_cmd_keypress_handler(entity this, string key, float enabled)
 	{
 		case "all":
 			if(enabled)
-				this.bot_cmd_keys = power2of(20) - 1; // >:)
+				this.bot_cmd_keys = (2 ** 20) - 1; // >:)
 			else
 				this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 		case "forward":
@@ -1056,7 +1075,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '0 8 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, inhibited by weaponentity state\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state\n");
 		}
 	}
 	else if(ATTACK_FINISHED(this, slot) > time)
@@ -1064,15 +1083,15 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '8 0 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
 		}
 	}
-	else if(this.tuba_note)
+	else if(this.(weaponentity).tuba_note)
 	{
 		if(f)
 		{
 			this.colormod = '8 0 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, bot still has an active tuba note\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, bot still has an active tuba note\n");
 		}
 	}
 	else
@@ -1080,7 +1099,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(!f)
 		{
 			this.colormod = '8 8 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
 		}
 	}
 

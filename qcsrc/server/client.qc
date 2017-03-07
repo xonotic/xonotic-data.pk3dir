@@ -23,6 +23,7 @@
 #include "bot/api.qh"
 
 #include "../common/ent_cs.qh"
+#include "../common/wepent.qh"
 #include <common/state.qh>
 
 #include <common/effects/qc/globalsound.qh>
@@ -112,7 +113,6 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (e.race_completed)       sf |= 1; // forced scoreboard
 	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
 	if (e.zoomstate)            sf |= 4; // zoomed
-	if (e.porto_v_angle_held)   sf |= 8; // angles held
 	if (autocvar_sv_showspectators) sf |= 16; // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
@@ -121,11 +121,6 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (sf & 2)
 	{
 		WriteByte(MSG_ENTITY, to.spectatee_status);
-	}
-	if (sf & 8)
-	{
-		WriteAngle(MSG_ENTITY, e.v_angle.x);
-		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
 
 	if(sf & 16)
@@ -236,7 +231,7 @@ void PutObserverInServer(entity this)
         this.angles_z = 0;
         this.fixangle = true;
         // offset it so that the spectator spawns higher off the ground, looks better this way
-        setorigin(this, spot.origin + STAT(PL_VIEW_OFS, NULL));
+        setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
         this.prevorigin = this.origin;
         if (IS_REAL_CLIENT(this))
         {
@@ -253,11 +248,11 @@ void PutObserverInServer(entity this)
 	        FixPlayermodel(this);
         }
         setmodel(this, MDL_Null);
-        setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
+        setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
         this.view_ofs = '0 0 0';
     }
 
-    RemoveGrapplingHook(this);
+    RemoveGrapplingHooks(this);
 	Portal_ClearAll(this);
 	Unfreeze(this);
 	SetSpectatee(this, NULL);
@@ -284,7 +279,7 @@ void PutObserverInServer(entity this)
 	if (this.killcount != FRAGS_SPECTATOR)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
-		if(!gameover)
+		if(!game_stopped)
 		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
@@ -336,7 +331,6 @@ void PutObserverInServer(entity this)
 	this.istypefrag = 0;
 	setthink(this, func_null);
 	this.nextthink = 0;
-	this.hook_time = 0;
 	this.deadflag = DEAD_NO;
 	this.crouch = false;
 	this.revive_progress = 0;
@@ -346,7 +340,6 @@ void PutObserverInServer(entity this)
 	this.weapons = '0 0 0';
 	this.drawonlytoclient = this;
 
-	this.weaponname = "";
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -362,9 +355,14 @@ void PutObserverInServer(entity this)
 	this.fire_endtime = -1;
 	this.event_damage = func_null;
 
-	STAT(ACTIVEWEAPON, this) = WEP_Null.m_id;
-	STAT(SWITCHINGWEAPON, this) = WEP_Null.m_id;
-	STAT(SWITCHWEAPON, this) = WEP_Null.m_id;
+	for(int slot = 0; slot < MAX_AXH; ++slot)
+	{
+		entity axh = this.(AuxiliaryXhair[slot]);
+		this.(AuxiliaryXhair[slot]) = NULL;
+
+		if(axh.owner == this && axh != NULL && !wasfreed(axh))
+			delete(axh);
+	}
 }
 
 int player_getspecies(entity this)
@@ -385,11 +383,12 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
+			switch(player.team)
 			{
-				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+				case NUM_TEAM_1: defaultmodel = autocvar_sv_defaultplayermodel_red; defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultmodel = autocvar_sv_defaultplayermodel_blue; defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultmodel = autocvar_sv_defaultplayermodel_yellow; defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultmodel = autocvar_sv_defaultplayermodel_pink; defaultskin = autocvar_sv_defaultplayerskin_pink; break;
 			}
 		}
 
@@ -420,9 +419,13 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+			switch(player.team)
+			{
+				case NUM_TEAM_1: defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultskin = autocvar_sv_defaultplayerskin_pink; break;
+			}
 		}
 
 		if(!defaultskin)
@@ -495,9 +498,8 @@ void PutClientInServer(entity this)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
 	}
-	if (gameover) {
+	if (game_stopped)
 		TRANSMUTE(Observer, this);
-	}
 
 	SetSpectatee(this, NULL);
 
@@ -654,6 +656,7 @@ void PutClientInServer(entity this)
 			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.monster_attack = true;
+		navigation_dynamicgoal_init(this, false);
 
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
@@ -664,7 +667,11 @@ void PutClientInServer(entity this)
 
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			CL_SpawnWeaponentity(this, weaponentities[slot]);
+			.entity weaponentity = weaponentities[slot];
+			entity oldwep = this.(weaponentity);
+			CL_SpawnWeaponentity(this, weaponentity);
+			if(oldwep && oldwep.owner == this)
+				this.(weaponentity).m_gunalign = oldwep.m_gunalign;
 		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -679,7 +686,11 @@ void PutClientInServer(entity this)
 			it.wr_resetplayer(it, this);
 			// reload all reloadable weapons
 			if (it.spawnflags & WEP_FLAG_RELOADABLE) {
-				this.weapon_load[it.m_id] = it.reloading_ammo;
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					.entity weaponentity = weaponentities[slot];
+					this.(weaponentity).weapon_load[it.m_id] = it.reloading_ammo;
+				}
 			}
 		));
 
@@ -700,11 +711,20 @@ void PutClientInServer(entity this)
 			delete(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
-		PS(this).m_switchweapon = w_getbestweapon(this);
-		this.cnt = -1; // W_LastWeapon will not complain
-		PS(this).m_weapon = WEP_Null;
-		this.weaponname = "";
-		PS(this).m_switchingweapon = WEP_Null;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(slot == 0)
+				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+			else
+				this.(weaponentity).m_switchweapon = WEP_Null;
+			this.(weaponentity).m_weapon = WEP_Null;
+			this.(weaponentity).weaponname = "";
+			this.(weaponentity).m_switchingweapon = WEP_Null;
+			this.(weaponentity).cnt = -1;
+		}
+
+		MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
 
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
@@ -868,7 +888,7 @@ void ClientKill_Now(entity this)
 }
 void KillIndicator_Think(entity this)
 {
-	if (gameover)
+	if (game_stopped)
 	{
 		this.owner.killindicator = NULL;
 		delete(this);
@@ -912,7 +932,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 	float killtime;
 	float starttime;
 
-	if (gameover)
+	if (game_stopped)
 		return;
 
 	killtime = autocvar_g_balance_kill_delay;
@@ -1004,7 +1024,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 void ClientKill (entity this)
 {
-	if(gameover) return;
+	if(game_stopped) return;
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
 
@@ -1142,7 +1162,7 @@ void ClientConnect(entity this)
     if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
 
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", this.netname));
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
 
 	LogTeamchange(this.playerid, this.team, 1);
 
@@ -1200,7 +1220,7 @@ void ClientConnect(entity this)
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
-		if (!g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
+		if(!MUTATOR_CALLHOOK(HideTeamNagger, this))
 			send_CSQC_teamnagger();
 
 	CSQCMODEL_AUTOINIT(this);
@@ -1251,7 +1271,8 @@ void ClientDisconnect(entity this)
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
-	SetSpectatee(this, NULL);
+	if(IS_SPEC(this))
+		SetSpectatee(this, NULL);
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
@@ -1261,7 +1282,7 @@ void ClientDisconnect(entity this)
 
 	Unfreeze(this);
 
-	RemoveGrapplingHook(this);
+	RemoveGrapplingHooks(this);
 
 	// Here, everything has been done that requires this player to be a client.
 
@@ -1386,7 +1407,7 @@ void player_powerups(entity this)
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = this.items;
 
-	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !gameover)
+	if((this.items & IT_USING_JETPACK) && !IS_DEAD(this) && !game_stopped)
 		this.modelflags |= MF_ROCKET;
 	else
 		this.modelflags &= ~MF_ROCKET;
@@ -1668,6 +1689,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hit_time = spectatee.hit_time;
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
+	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
 	this.vortex_charge = spectatee.vortex_charge;
@@ -1691,6 +1713,17 @@ void SpectateCopy(entity this, entity spectatee)
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(this, spectatee.zoomstate);
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		this.(weaponentity) = spectatee.(weaponentity);
+	}
+
+	for(int slot = 0; slot < MAX_AXH; ++slot)
+	{
+		this.(AuxiliaryXhair[slot]) = spectatee.(AuxiliaryXhair[slot]);
+	}
 
     anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;
@@ -2144,7 +2177,7 @@ void PlayerUseKey(entity this)
 
 	if(this.vehicle)
 	{
-		if(!gameover)
+		if(!game_stopped)
 		{
 			vehicles_exit(this.vehicle, VHEF_NORMAL);
 			return;
@@ -2154,7 +2187,7 @@ void PlayerUseKey(entity this)
 	{
 		if(!STAT(FROZEN, this))
 		if(!IS_DEAD(this))
-		if(!gameover)
+		if(!game_stopped)
 		{
 			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
@@ -2227,7 +2260,7 @@ void PlayerPreThink (entity this)
 	}
 	if (this.netname != this.netname_previous) {
 		if (autocvar_sv_eventlog) {
-			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", this.netname));
+			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
         }
 		if (this.netname_previous) strunzone(this.netname_previous);
 		this.netname_previous = strzone(this.netname);
@@ -2285,7 +2318,7 @@ void PlayerPreThink (entity this)
 
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
 
-	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !gameover && !this.vehicle)
+	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
 	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this))
 	{
 		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it),
@@ -2320,7 +2353,8 @@ void PlayerPreThink (entity this)
 	if (IS_PLAYER(this)) {
 		CheckRules_Player(this);
 
-		if (gameover || intermission_running) {
+		if (game_stopped || intermission_running) {
+			this.modelflags &= ~MF_ROCKET;
 			if(intermission_running)
 				IntermissionThink(this);
 			return;
@@ -2407,8 +2441,18 @@ void PlayerPreThink (entity this)
 
 		this.prevorigin = this.origin;
 
+		bool have_hook = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(this.(weaponentity).hook.state)
+			{
+				have_hook = true;
+				break;
+			}
+		}
 		bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-		if (this.hook.state) {
+		if (have_hook) {
 			do_crouch = false;
 		} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
 			do_crouch = false;
@@ -2441,13 +2485,17 @@ void PlayerPreThink (entity this)
 		{
 			this.items &= ~this.items_added;
 
-			//for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			//{
-				//.entity weaponentity = weaponentities[slot];
-				//W_WeaponFrame(this, weaponentity);
-			//}
-			.entity weaponentity = weaponentities[0]; // TODO
-			W_WeaponFrame(this, weaponentity);
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				W_WeaponFrame(this, weaponentity);
+
+				if(slot == 0)
+				{
+					this.clip_load = this.(weaponentity).clip_load;
+					this.clip_size = this.(weaponentity).clip_size;
+				}
+			}
 
 			this.items_added = 0;
 			if (this.items & ITEM_Jetpack.m_itemid && (this.items & ITEM_JetpackRegen.m_itemid || this.ammo_fuel >= 0.01))
@@ -2460,8 +2508,12 @@ void PlayerPreThink (entity this)
 
 		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
-		if (WEP_CVAR(vortex, charge_rot_rate) && this.vortex_charge > WEP_CVAR(vortex, charge_limit) && this.vortex_charge_rottime < time)
-			this.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		}
 
 		if (frametime) player_anim(this);
 
@@ -2473,7 +2525,7 @@ void PlayerPreThink (entity this)
 
 		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
-	else if (gameover || intermission_running) {
+	else if (game_stopped || intermission_running) {
 		if(intermission_running)
 			IntermissionThink(this);
 		return;
@@ -2487,11 +2539,15 @@ void PlayerPreThink (entity this)
 
 	// WEAPONTODO: Add weapon request for this
 	if (!zoomstate_set) {
-		SetZoomState(this,
-			PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this)
-			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_VORTEX)
-			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
-		);
+		bool wep_zoomed = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			Weapon thiswep = this.(weaponentity).m_weapon;
+			if(thiswep != WEP_Null && thiswep.wr_zoom)
+				wep_zoomed += thiswep.wr_zoom(thiswep, this);
+		}
+		SetZoomState(this, PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this) || wep_zoomed);
     }
 
 	if (this.teamkill_soundtime && time > this.teamkill_soundtime)
@@ -2514,8 +2570,12 @@ void PlayerPreThink (entity this)
 
 	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	if (PS(this).m_weapon == WEP_Null)
-		this.clip_load = this.clip_size = 0;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).m_weapon == WEP_Null)
+			this.(weaponentity).clip_load = this.(weaponentity).clip_size = 0;
+	}
 }
 
 void DrownPlayer(entity this)
@@ -2617,7 +2677,7 @@ void PlayerPostThink (entity this)
 	CheatFrame(this);
 
 	//CheckPlayerJump();
-	if (gameover)
+	if (game_stopped)
 	{
 		this.solid = SOLID_NOT;
 		this.takedamage = DAMAGE_NO;
@@ -2629,7 +2689,7 @@ void PlayerPostThink (entity this)
 		CheckRules_Player(this);
 		UpdateChatBubble(this);
 		if (this.impulse) ImpulseCommands(this);
-		if (gameover)
+		if (game_stopped)
 		{
 			CSQCMODEL_AUTOUPDATE(this);
 			return;

@@ -2,52 +2,23 @@
 
 #include "pathlib.qh"
 
-float location_isok(vector point, float water_isok, float air_isok)
+bool location_isok(vector point, bool waterok, bool air_isok)
 {
-    float pc,pc2;
-
     if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-        return 0;
+        return false;
 
-    pc  = pointcontents(point);
-    pc2 = pointcontents(point - '0 0 1');
+    int pc = pointcontents(point);
+    int pc2 = pointcontents(point - '0 0 1');
 
-    switch(pc)
-    {
-        case CONTENT_SOLID:
-            break;
-
-        case CONTENT_SLIME:
-            break;
-
-        case CONTENT_LAVA:
-            break;
-
-        case CONTENT_SKY:
-            break;
-
-        case CONTENT_EMPTY:
-            if (pc2 == CONTENT_SOLID)
-                return 1;
-
-            if (pc2 == CONTENT_EMPTY)
-                if(air_isok)
-                    return 1;
-
-            if (pc2 == CONTENT_WATER)
-                if(water_isok)
-                    return 1;
-
-            break;
-
-        case CONTENT_WATER:
-            if (water_isok)
-                return 1;
-
-            break;
-    }
-
-    return 0;
+    if(pc == CONTENT_EMPTY && pc2 == CONTENT_SOLID)
+        return true;
+    if(pc == CONTENT_EMPTY && pc2 == CONTENT_WATER && waterok)
+        return true;
+    if(pc == CONTENT_EMPTY && pc2 == CONTENT_EMPTY && air_isok)
+        return true;
+    if(pc == CONTENT_WATER && waterok)
+        return true;
+    return false;
 }
 
 entity pathlib_nodeatpoint(vector where)

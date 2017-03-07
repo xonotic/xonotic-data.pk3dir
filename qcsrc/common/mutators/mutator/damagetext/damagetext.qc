@@ -1,5 +1,7 @@
 #include "damagetext.qh"
 
+#include "lib/math.qh"
+
 #define DAMAGETEXT_PRECISION_MULTIPLIER 128
 #define DAMAGETEXT_SHORT_LIMIT 256 // the smallest value that we can't send as short - 2^15 (signed short) / DAMAGETEXT_PRECISION_MULTIPLIER
 
@@ -18,12 +20,21 @@ REGISTER_MUTATOR(damagetext, true);
 AUTOCVAR_SAVE(cl_damagetext,                        bool,   true,       "Draw damage dealt where you hit the enemy");
 AUTOCVAR_SAVE(cl_damagetext_format,                 string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}: full damage not capped to target's health, {potential_health}: health damage not capped to target's health");
 AUTOCVAR_SAVE(cl_damagetext_format_verbose,         bool,   false,      "{health} shows {potential_health} too when they differ; {total} shows {potential} too when they differ");
+AUTOCVAR_SAVE(cl_damagetext_format_hide_redundant,  bool,   false,      "hide {armor} if 0; hide {potential} and {potential_health} when same as actual");
 STATIC_INIT(DamageText_LegacyFormat) {
-    if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
+    // damagetext used to be off by default and the cvar got saved in people's configs along with the old format
+    // enable damagetext while updating the format for a one time effect
+    if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) {
+        localcmd("\nseta cl_damagetext 1\n");
+        localcmd("\nseta cl_damagetext_format -{total}\n");
+    };
 }
 AUTOCVAR_SAVE(cl_damagetext_color,                  vector, '1 1 0',    "Damage text color");
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,       bool,   false,      "Damage text uses weapon color");
-AUTOCVAR_SAVE(cl_damagetext_size,                   float,  8,          "Damage text font size");
+AUTOCVAR_SAVE(cl_damagetext_size_min,               float,  10,          "Damage text font size for small damage");
+AUTOCVAR_SAVE(cl_damagetext_size_min_damage,        float,  25,          "How much damage is considered small");
+AUTOCVAR_SAVE(cl_damagetext_size_max,               float,  16,         "Damage text font size for large damage");
+AUTOCVAR_SAVE(cl_damagetext_size_max_damage,        float,  140,        "How much damage is considered large");
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
 AUTOCVAR_SAVE(cl_damagetext_velocity,               vector, '0 0 20',   "Damage text move direction");
@@ -38,17 +49,18 @@ AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage 
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color);
     ATTRIB(DamageText, m_color_friendlyfire, vector, autocvar_cl_damagetext_friendlyfire_color);
-    ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size);
+    ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size_min);
     ATTRIB(DamageText, alpha, float, autocvar_cl_damagetext_alpha_start);
     ATTRIB(DamageText, fade_rate, float, 1 / autocvar_cl_damagetext_alpha_lifetime);
     ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity);
     ATTRIB(DamageText, m_group, int, 0);
     ATTRIB(DamageText, m_friendlyfire, bool, false);
-    ATTRIB(DamageText, m_damage, int, 0);
+    ATTRIB(DamageText, m_healthdamage, int, 0);
     ATTRIB(DamageText, m_armordamage, int, 0);
     ATTRIB(DamageText, m_potential_damage, int, 0);
     ATTRIB(DamageText, m_deathtype, int, 0);
     ATTRIB(DamageText, time_prev, float, time);
+    ATTRIB(DamageText, text, string, string_null);
 
     void DamageText_draw2d(DamageText this) {
         float dt = time - this.time_prev;
@@ -62,46 +74,89 @@ CLASS(DamageText, Object)
             vector rgb;
             if (this.m_friendlyfire) {
                 rgb = this.m_color_friendlyfire;
-            }
-            else {
+            } else {
                 rgb = this.m_color;
             }
             if (autocvar_cl_damagetext_color_per_weapon) {
                 Weapon w = DEATH_WEAPONOF(this.m_deathtype);
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
-            int health = rint(this.m_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
-            int total = rint((this.m_damage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
-            int potential = rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
-            int potential_health = rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
 
-            string s = autocvar_cl_damagetext_format;
-            s = strreplace("{armor}",  sprintf("%d", rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER)), s);
-            s = strreplace("{potential}",  sprintf("%d", potential), s);
-            s = strreplace("{potential_health}",  sprintf("%d", potential_health), s);
-
-            s = strreplace("{health}", (
-				(health == potential_health || !autocvar_cl_damagetext_format_verbose)
-				? sprintf("%d",      health)
-				: sprintf("%d (%d)", health, potential_health)
-            	), s);
-            s = strreplace("{total}", (
-				(total == potential || !autocvar_cl_damagetext_format_verbose)
-				? sprintf("%d",      total)
-				: sprintf("%d (%d)", total, potential)
-            	), s);
-            drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
+            vector drawfontscale_save = drawfontscale;
+            drawfontscale = (this.m_size / autocvar_cl_damagetext_size_max) * '1 1 0';
+            drawcolorcodedstring2_builtin(pos, this.text, autocvar_cl_damagetext_size_max * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
+            drawfontscale = drawfontscale_save;
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d);
 
     void DamageText_update(DamageText this, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype) {
-        this.m_damage = _health;
+        this.m_healthdamage = _health;
         this.m_armordamage = _armor;
         this.m_potential_damage = _potential_damage;
         this.m_deathtype = _deathtype;
         setorigin(this, _origin);
         this.alpha = autocvar_cl_damagetext_alpha_start;
+
+        int health = rint(this.m_healthdamage / DAMAGETEXT_PRECISION_MULTIPLIER);
+        int armor = rint(this.m_armordamage / DAMAGETEXT_PRECISION_MULTIPLIER);
+        int total = rint((this.m_healthdamage + this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+        int potential = rint(this.m_potential_damage / DAMAGETEXT_PRECISION_MULTIPLIER);
+        int potential_health = rint((this.m_potential_damage - this.m_armordamage) / DAMAGETEXT_PRECISION_MULTIPLIER);
+
+        bool redundant = almost_equals_eps(this.m_healthdamage + this.m_armordamage, this.m_potential_damage, 5);
+
+        string s = autocvar_cl_damagetext_format;
+        s = strreplace("{armor}", (
+            (this.m_armordamage == 0 && autocvar_cl_damagetext_format_hide_redundant)
+                ? ""
+                : sprintf("%d", armor)
+            ), s);
+        s = strreplace("{potential}", (
+            (redundant && autocvar_cl_damagetext_format_hide_redundant)
+                ? ""
+                : sprintf("%d", potential)
+            ), s);
+        s = strreplace("{potential_health}", (
+            (redundant && autocvar_cl_damagetext_format_hide_redundant)
+                ? ""
+                : sprintf("%d", potential_health)
+            ), s);
+
+        s = strreplace("{health}", (
+            (health == potential_health || !autocvar_cl_damagetext_format_verbose)
+                ? sprintf("%d",      health)
+                : sprintf("%d (%d)", health, potential_health)
+            ), s);
+        s = strreplace("{total}", (
+            (total == potential || !autocvar_cl_damagetext_format_verbose)
+                ? sprintf("%d",      total)
+                : sprintf("%d (%d)", total, potential)
+            ), s);
+
+        // futureproofing: remove any remaining (unknown) format strings in case we add new ones in the future
+        // so players can use them on new servers and still have working damagetext on old ones
+        while (true) {
+            int opening_pos = strstrofs(s, "{", 0);
+            if (opening_pos == -1) break;
+            int closing_pos = strstrofs(s, "}", opening_pos);
+            if (closing_pos == -1 || closing_pos <= opening_pos) break;
+            s = strcat(
+                substring(s, 0, opening_pos),
+                substring_range(s, closing_pos + 1, strlen(s))
+            );
+        }
+
+        if (this.text) strunzone(this.text);
+        this.text = strzone(s);
+
+        float size_range = autocvar_cl_damagetext_size_max - autocvar_cl_damagetext_size_min;
+        float damage_range = autocvar_cl_damagetext_size_max_damage - autocvar_cl_damagetext_size_min_damage;
+        float scale_factor = size_range / damage_range;
+        this.m_size = bound(
+            autocvar_cl_damagetext_size_min,
+            (potential - autocvar_cl_damagetext_size_min_damage) * scale_factor + autocvar_cl_damagetext_size_min,
+            autocvar_cl_damagetext_size_max);
     }
 
     CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype, bool _friendlyfire) {
@@ -111,13 +166,17 @@ CLASS(DamageText, Object)
         DamageText_update(this, _origin, _health, _armor, _potential_damage, _deathtype);
 		IL_PUSH(g_drawables_2d, this);
     }
+
+    DESTRUCTOR(DamageText) {
+        if (this.text) strunzone(this.text);
+    }
 ENDCLASS(DamageText)
 #endif
 
 REGISTER_NET_TEMP(damagetext)
 
 #ifdef SVQC
-AUTOCVAR(sv_damagetext, int, 2, _("<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players"));
+AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players");
 #define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
 #define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1 /* spectators only */)
 #define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)
@@ -144,7 +203,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             if (armor >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_ARMOR;
             if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_POTENTIAL;
             if (!armor) flags |= DTFLAG_NO_ARMOR;
-            if (fabs((armor + health) - potential_damage) < 0.0001) flags |= DTFLAG_NO_POTENTIAL;
+            if (almost_equals_eps(armor + health, potential_damage, 5)) flags |= DTFLAG_NO_POTENTIAL;
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
@@ -202,7 +261,7 @@ NET_HANDLE(damagetext, bool isNew)
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
                 if (e.instanceOfDamageText && e.m_group == group && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
-                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
+                    DamageText_update(e, location, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
                     return;
                 }
             }
@@ -230,9 +289,14 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
         this.gotoRC(this, 0, 1); this.setFirstColumn(this, this.currentColumn);
             this.TD(this, 1, 3, makeXonoticCheckBox(0, "cl_damagetext", _("Draw damage numbers")));
         this.TR(this);
-            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size:")));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size minimum:")));
                 setDependent(e, "cl_damagetext", 1, 1);
-            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size_min"));
+                setDependent(e, "cl_damagetext", 1, 1);
+        this.TR(this);
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size maximum:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size_max"));
                 setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
             this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Accumulate range:")));

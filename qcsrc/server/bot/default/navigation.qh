@@ -24,6 +24,9 @@ entity navigation_bestgoal;
 .entity goalstack28, goalstack29, goalstack30, goalstack31;
 .entity nearestwaypoint;
 
+.entity wp_goal_prev0;
+.entity wp_goal_prev1;
+
 .float nearestwaypointtimeout;
 .float navigation_hasgoals;
 .float lastteleporttime;
@@ -43,6 +46,13 @@ entity bot_waypoint_queue_goal;		// Head of the temporary list of goals
 .entity bot_waypoint_queue_nextgoal;
 entity bot_waypoint_queue_bestgoal;
 float bot_waypoint_queue_bestgoalrating;
+
+.entity bot_basewaypoint;
+.bool navigation_dynamicgoal;
+void navigation_dynamicgoal_init(entity this, bool initially_static);
+void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_unset(entity this);
+
 
 /*
  * Functions

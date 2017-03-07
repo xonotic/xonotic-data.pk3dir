@@ -2,9 +2,11 @@
 
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
+float autocvar_g_balance_keyhunt_delay_damage_return;
 float autocvar_g_balance_keyhunt_delay_return;
 float autocvar_g_balance_keyhunt_delay_round;
 float autocvar_g_balance_keyhunt_delay_tracking;
+float autocvar_g_balance_keyhunt_return_when_unreachable;
 float autocvar_g_balance_keyhunt_dropvelocity;
 float autocvar_g_balance_keyhunt_maxdist;
 float autocvar_g_balance_keyhunt_protecttime;
@@ -128,7 +130,7 @@ void kh_update_state()
 			f = key.team;
 		else
 			f = 30;
-		s |= pow(32, key.count) * f;
+		s |= (32 ** key.count) * f;
 	}
 
 	FOREACH_CLIENT(true, LAMBDA(it.kh_state = s));
@@ -136,7 +138,7 @@ void kh_update_state()
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
-			key.owner.kh_state |= pow(32, key.count) * 31;
+			key.owner.kh_state |= (32 ** key.count) * 31;
 	}
 	//print(ftos((nextent(NULL)).kh_state), "\n");
 }
@@ -155,7 +157,7 @@ void kh_Controller_SetThink(float t, kh_Think_t func)  // runs occasionaly
 void kh_WaitForPlayers();
 void kh_Controller_Think(entity this)  // called a lot
 {
-	if(gameover)
+	if(game_stopped)
 		return;
 	if(this.cnt > 0)
 	{
@@ -175,7 +177,7 @@ void kh_Controller_Think(entity this)  // called a lot
 void kh_Scores_Event(entity player, entity key, string what, float frags_player, float frags_owner)  // update the score when a key is captured
 {
 	string s;
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	if(frags_player)
@@ -246,7 +248,8 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.angles_y -= key.owner.angles.y;
 #endif
 	key.flags = 0;
-	IL_REMOVE(g_items, key);
+	if(IL_CONTAINS(g_items, key))
+		IL_REMOVE(g_items, key);
 	key.solid = SOLID_NOT;
 	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
@@ -254,6 +257,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.damageforcescale = 0;
 	key.takedamage = DAMAGE_NO;
 	key.modelindex = kh_key_carried;
+	navigation_dynamicgoal_unset(key);
 }
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
@@ -277,7 +281,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	}
 	// in any case:
 	setattachment(key, NULL, "");
-	setorigin(key, key.owner.origin + '0 0 1' * (STAT(PL_MIN, NULL).z - KH_KEY_MIN_z));
+	setorigin(key, key.owner.origin + '0 0 1' * (STAT(PL_MIN, key.owner).z - KH_KEY_MIN_z));
 	key.angles = key.owner.angles;
 #else
 	setorigin(key, key.owner.origin + key.origin.z * '0 0 1');
@@ -285,7 +289,8 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.angles_y += key.owner.angles.y;
 #endif
 	key.flags = FL_ITEM;
-	IL_PUSH(g_items, key);
+	if(!IL_CONTAINS(g_items, key))
+		IL_PUSH(g_items, key);
 	key.solid = SOLID_TRIGGER;
 	set_movetype(key, MOVETYPE_TOSS);
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
@@ -293,6 +298,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
 	key.modelindex = kh_key_dropped;
+	navigation_dynamicgoal_set(key);
 	key.kh_previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
 }
@@ -418,10 +424,8 @@ void kh_Key_Damage(entity this, entity inflictor, entity attacker, float damage,
 		return;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
-		// touching lava, or hurt trigger
-		// what shall we do?
-		// immediately return is bad
-		// maybe start a shorter countdown?
+		this.pain_finished = bound(time, time + autocvar_g_balance_keyhunt_delay_damage_return, this.pain_finished);
+		return;
 	}
 	if(force == '0 0 0')
 		return;
@@ -448,7 +452,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 
 void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a key has been dropped and can be picked up
 {
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	if(this.owner) // already carried
@@ -456,10 +460,8 @@ void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a 
 
 	if(ITEM_TOUCH_NEEDKILL())
 	{
-		// touching sky, or nodrop
-		// what shall we do?
-		// immediately return is bad
-		// maybe start a shorter countdown?
+		this.pain_finished = bound(time, time + autocvar_g_balance_keyhunt_delay_damage_return, this.pain_finished);
+		return;
 	}
 
 	if (!IS_PLAYER(toucher))
@@ -547,6 +549,7 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 			first = false;
 		}
 
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_KEYHUNT_CAPTURE), keyowner);
 
 	first = true;
@@ -649,7 +652,11 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 	}
 
 	int realteam = kh_Team_ByID(lostkey.count);
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_LOST), lostkey.kh_previous_owner.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(loser_team, CENTER_ROUND_TEAM_LOSS));
+	if(attacker)
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_PUSHED), attacker.netname, lostkey.kh_previous_owner.netname);
+	else
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DESTROYED), lostkey.kh_previous_owner.netname);
 
 	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);
@@ -659,7 +666,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 
 void kh_Key_Think(entity this)  // runs all the time
 {
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	if(this.owner)
@@ -730,6 +737,8 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	key.angles = '0 360 0' * random();
 	key.event_damage = kh_Key_Damage;
 	key.takedamage = DAMAGE_YES;
+	key.damagedbytriggers = autocvar_g_balance_keyhunt_return_when_unreachable;
+	key.damagedbycontents = autocvar_g_balance_keyhunt_return_when_unreachable;
 	key.modelindex = kh_key_dropped;
 	key.model = "key";
 	key.kh_dropperteam = 0;
@@ -737,6 +746,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
 	key.colormod = Team_ColorRGB(initial_owner.team) * KH_KEY_BRIGHTNESS;
 	key.reset = key_reset;
+	navigation_dynamicgoal_init(key, false);
 
 	switch(initial_owner.team)
 	{
@@ -853,20 +863,23 @@ int kh_GetMissingTeams()
 				++players;
 		));
 		if (!players)
-			missing_teams |= pow(2, i);
+			missing_teams |= (2 ** i);
 	}
 	return missing_teams;
 }
 
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
+	static int prev_missing_teams_mask;
 	if(time < game_starttime)
 	{
+		if (prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
 		kh_Controller_SetThink(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
-	static int prev_missing_teams_mask;
 	int missing_teams_mask = kh_GetMissingTeams();
 	if(!missing_teams_mask)
 	{
@@ -1043,11 +1056,11 @@ void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingsca
 			}
 		}
 		if(!head.owner)
-			navigation_routerating(this, head, ratingscale_dropped * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
 		else if(head.team == this.team)
-			navigation_routerating(this, head.owner, ratingscale_team * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
 		else
-			navigation_routerating(this, head.owner, ratingscale_enemy * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 	}
 
 	havocbot_goalrating_items(this, 1, this.origin, 10000);
@@ -1309,5 +1322,5 @@ MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 
 MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 {
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
+	kh_WaitForPlayers(); // takes care of killing the "missing teams" message
 }

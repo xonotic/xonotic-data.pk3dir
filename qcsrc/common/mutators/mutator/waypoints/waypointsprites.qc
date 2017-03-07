@@ -282,10 +282,10 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
     // rotate them, and make them absolute
     rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-    v1 = rotate(v1, rot) + org;
-    v2 = rotate(v2, rot) + org;
-    v3 = rotate(v3, rot) + org;
-    v4 = rotate(v4, rot) + org;
+    v1 = Rotate(v1, rot) + org;
+    v2 = Rotate(v2, rot) + org;
+    v3 = Rotate(v3, rot) + org;
+    v4 = Rotate(v4, rot) + org;
 
     // draw them
     R_BeginPolygon(pic, f);
@@ -319,9 +319,9 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
     up = '0 1 0';
 
     rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-    o = rotate(o, rot) + org;
-    ri = rotate(ri, rot);
-    up = rotate(up, rot);
+    o = Rotate(o, rot) + org;
+    ri = Rotate(ri, rot);
+    up = Rotate(up, rot);
 
     owidth = width + 2 * border;
     o = o - up * (margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
@@ -348,19 +348,19 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 
     R_BeginPolygon("", DRAWFLAG_NORMAL);
     R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
+    R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
     R_EndPolygon();
 
     R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-    R_PolygonVertex(o + rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
     R_EndPolygon();
 
-    return o + rotate(eY * (borderDiag+size+margin), ang);
+    return o + Rotate(eY * (borderDiag+size+margin), ang);
 }
 
 // returns location of sprite healthbar
@@ -460,7 +460,7 @@ vector fixrgbexcess(vector rgb)
 void Draw_WaypointSprite(entity this)
 {
     if (this.lifetime > 0)
-        this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
+        this.alpha = (bound(0, (this.fadetime - time) / this.lifetime, 1) ** waypointsprite_timealphaexponent);
     else
         this.alpha = 1;
 
@@ -475,13 +475,13 @@ void Draw_WaypointSprite(entity this)
 
     InterpolateOrigin_Do(this);
 
+    float t = entcs_GetTeam(player_localnum) + 1;
     string spriteimage = "";
 
     // choose the sprite
     switch (this.rule)
     {
         case SPRITERULE_SPECTATOR:
-            float t = entcs_GetTeam(player_localnum) + 1;
             if (!(
                 (autocvar_g_waypointsprite_itemstime == 1 && t == NUM_SPECTATOR + 1)
             ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage || STAT(ITEMSTIME) == 2))
@@ -492,7 +492,7 @@ void Draw_WaypointSprite(entity this)
         case SPRITERULE_DEFAULT:
             if (this.team)
             {
-                if (this.team == myteam + 1)
+                if (this.team == t)
                     spriteimage = this.netname;
                 else
                     spriteimage = "";
@@ -501,9 +501,9 @@ void Draw_WaypointSprite(entity this)
                 spriteimage = this.netname;
             break;
         case SPRITERULE_TEAMPLAY:
-            if (myteam == NUM_SPECTATOR)
+            if (t == NUM_SPECTATOR + 1)
                 spriteimage = this.netname3;
-            else if (this.team == myteam + 1)
+            else if (this.team == t)
                 spriteimage = this.netname2;
             else
                 spriteimage = this.netname;
@@ -522,9 +522,9 @@ void Draw_WaypointSprite(entity this)
     float a = this.alpha * autocvar_hud_panel_fg_alpha;
 
     if (this.maxdistance > waypointsprite_normdistance)
-        a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
+        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent);
     else if (this.maxdistance > 0)
-        a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+        a *= (bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
     vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')
@@ -611,9 +611,9 @@ void Draw_WaypointSprite(entity this)
     (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o.x,
     (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o.y);
 
-    float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
+    float crosshairdistance = sqrt( ((o.x - vid_conwidth/2) ** 2) + ((o.y - vid_conheight/2) ** 2) );
 
-    float t = waypointsprite_scale;
+    t = waypointsprite_scale;
     a *= waypointsprite_alpha;
 
     {

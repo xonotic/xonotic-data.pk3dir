@@ -85,11 +85,7 @@ bool Notification_ShouldSend(NOTIF broadcast, entity to_client, entity other_cli
 			return (
 				(to_client == other_client)
 				||
-				(
-					IS_SPEC(to_client)
-					&&
-					(to_client.enemy == other_client)
-				)
+				(IS_SPEC(to_client) && (to_client.enemy == other_client))
 			);
 		case NOTIF_ONE_ONLY:
 			return (to_client == other_client);
@@ -398,7 +394,8 @@ void Create_Notification_Entity(entity notif,
 	float var_default,
 	float var_cvar,
 	MSG typeId,
-	string namestring)
+	string namestring,
+	int teamnum)
 {
 	// =====================
 	//  Global Entity Setup
@@ -407,6 +404,7 @@ void Create_Notification_Entity(entity notif,
 	notif.nent_enabled = (var_cvar >= 1);
 	notif.nent_type = typeId;
 	notif.nent_name = strzone(namestring);
+	notif.nent_teamnum = teamnum;
 
 	// Other pre-notif-setup requisites
 	notif_error = false;
@@ -440,6 +438,8 @@ void Create_Notification_Entity(entity notif,
 	}
 }
 
+#define AnnouncerFilename(snd) sprintf("announcer/%s/%s.wav", AnnouncerOption(), snd)
+
 void Create_Notification_Entity_Annce(entity notif,
 										float var_cvar,
 										string namestring,
@@ -458,7 +458,7 @@ void Create_Notification_Entity_Annce(entity notif,
 				{
 					if(notif.nent_enabled)
 					{
-						precache_sound(sprintf("announcer/%s/%s.wav", AnnouncerOption(), snd));
+						precache_sound(AnnouncerFilename(snd));
 						notif.nent_channel = channel;
 						notif.nent_snd = strzone(snd);
 						notif.nent_vol = vol;
@@ -767,7 +767,7 @@ void Notification_GetCvars(entity this)
 			get_cvars_s,
 			get_cvars_f,
 			msg_choice_choices[it.nent_choice_idx],
-			sprintf("notification_%s", it.nent_name)
+			sprintf("notification_%s", Get_Notif_CvarName(it))
 		);
 	});
 }
@@ -784,7 +784,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 	#define NOTIF_WRITE_ENTITY(e, description) MACRO_BEGIN { \
 		string notif_msg = sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n", \
-			e.nent_name, e.nent_default, description \
+			Get_Notif_CvarName(e), e.nent_default, description \
 		); \
 		NOTIF_WRITE(notif_msg); \
 	} MACRO_END
@@ -793,8 +793,8 @@ void Dump_Notifications(int fh, bool alsoprint)
 		string notif_msg = sprintf( \
 			"seta notification_%s \"%d\" \"%s\"\n" \
 			"seta notification_%s_ALLOWED \"%d\" \"%s\"\n", \
-			e.nent_name, e.nent_default, descriptiona, \
-			e.nent_name, e.nent_challow_def, descriptionb \
+			Get_Notif_CvarName(e), e.nent_default, descriptiona, \
+			Get_Notif_CvarName(e), e.nent_challow_def, descriptionb \
 		); \
 		NOTIF_WRITE(notif_msg); \
 	} MACRO_END
@@ -831,7 +831,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_ANNCE_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE, { ++NOTIF_ANNCE_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications (count = %d):\n", NOTIF_ANNCE_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_ANNCE, {
+	FOREACH(Notifications, it.nent_type == MSG_ANNCE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
 		);
@@ -839,7 +839,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_INFO_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_INFO, { ++NOTIF_INFO_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_INFO, {
+	FOREACH(Notifications, it.nent_type == MSG_INFO && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = off, 1 = print to console, "
 			"2 = print to console and chatbox (if notification_allow_chatboxprint is enabled)"
@@ -848,7 +848,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_CENTER_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER, { ++NOTIF_CENTER_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_CENTER, {
+	FOREACH(Notifications, it.nent_type == MSG_CENTER && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"0 = off, 1 = centerprint"
 		);
@@ -856,7 +856,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_MULTI_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_MULTI, { ++NOTIF_MULTI_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications (count = %d):\n", NOTIF_MULTI_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_MULTI, {
+	FOREACH(Notifications, it.nent_type == MSG_MULTI && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY(it,
 			"Enable this multiple notification"
 		);
@@ -864,7 +864,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	int NOTIF_CHOICE_COUNT = 0; FOREACH(Notifications, it.nent_type == MSG_CHOICE, { ++NOTIF_CHOICE_COUNT; });
 	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications (count = %d):\n", NOTIF_CHOICE_COUNT));
-	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
+	FOREACH(Notifications, it.nent_type == MSG_CHOICE && (!it.nent_teamnum || it.nent_teamnum == NUM_TEAM_1), {
 		NOTIF_WRITE_ENTITY_CHOICE(it,
 			"Choice for this notification 0 = off, 1 = default message, 2 = verbose message",
 			"Allow choice for this notification 0 = off, 1 = only in warmup mode, 2 = always"
@@ -876,7 +876,7 @@ void Dump_Notifications(int fh, bool alsoprint)
 
 	NOTIF_WRITE_HARDCODED(
 		"allow_chatboxprint", "1",
-		"Allow INFO notifications to be printed to chat box"
+		"Allow INFO notifications to be printed to chat box "
 		"0 = do not allow, "
 		"1 = allow only if allowed by individual notification_INFO* cvars, "
 		"2 = force all INFO notifications to be printed to the chatbox"
@@ -1046,9 +1046,7 @@ string Local_Notification_sprintf(
 }
 
 #ifdef CSQC
-void Local_Notification_sound(
-	int soundchannel, string soundfile,
-	float soundvolume, float soundposition)
+void Local_Notification_sound(int soundchannel, string soundfile, float soundvolume, float soundposition)
 {
 	if ((soundfile != prev_soundfile) || (time >= (prev_soundtime + autocvar_cl_announcer_antispam)))
 	{
@@ -1056,27 +1054,13 @@ void Local_Notification_sound(
 		Debug_Notification(sprintf(
 			"Local_Notification_sound(%f, '%s', %f, %f);\n",
 			soundchannel,
-			sprintf(
-				"announcer/%s/%s.wav",
-				AnnouncerOption(),
-				soundfile
-			),
+			AnnouncerFilename(soundfile),
 			soundvolume,
 			soundposition
 		));
 		#endif
 
-		_sound(
-			NULL,
-			soundchannel,
-			sprintf(
-				"announcer/%s/%s.wav",
-				AnnouncerOption(),
-				soundfile
-			),
-			soundvolume,
-			soundposition
-		);
+		_sound(NULL, soundchannel, AnnouncerFilename(soundfile), soundvolume, soundposition);
 
 		if (prev_soundfile) strunzone(prev_soundfile);
 		prev_soundfile = strzone(soundfile);
@@ -1087,15 +1071,11 @@ void Local_Notification_sound(
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
 			(
-				"Local_Notification_sound(NULL, %f, '%s', %f, %f) "
+				"Local_Notification_sound(%f, '%s', %f, %f) "
 				"^1BLOCKED BY ANTISPAM:^7 prevsnd: '%s', timediff: %f, limit: %f\n"
-			 ),
-			soundchannel,
-			sprintf(
-				"announcer/%s/%s.wav",
-				AnnouncerOption(),
-				soundfile
 			),
+			soundchannel,
+			AnnouncerFilename(soundfile),
 			soundvolume,
 			soundposition,
 			prev_soundfile,
@@ -1228,10 +1208,10 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		return;
 	}
 
-	string s1 = ((notif.nent_stringcount > 0) ? ...(0, string) : "");
-	string s2 = ((notif.nent_stringcount > 1) ? ...(1, string) : "");
-	string s3 = ((notif.nent_stringcount > 2) ? ...(2, string) : "");
-	string s4 = ((notif.nent_stringcount > 3) ? ...(3, string) : "");
+	string s1 = CCR((notif.nent_stringcount > 0) ? ...(0, string) : "");
+	string s2 = CCR((notif.nent_stringcount > 1) ? ...(1, string) : "");
+	string s3 = CCR((notif.nent_stringcount > 2) ? ...(2, string) : "");
+	string s4 = CCR((notif.nent_stringcount > 3) ? ...(3, string) : "");
 	float f1 =  ((notif.nent_floatcount  > 0) ? ...((notif.nent_stringcount + 0), float) : 0);
 	float f2 =  ((notif.nent_floatcount  > 1) ? ...((notif.nent_stringcount + 1), float) : 0);
 	float f3 =  ((notif.nent_floatcount  > 2) ? ...((notif.nent_stringcount + 2), float) : 0);
@@ -1269,12 +1249,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		case MSG_ANNCE:
 		{
 			#ifdef CSQC
-			Local_Notification_sound(
-				notif.nent_channel,
-				notif.nent_snd,
-				notif.nent_vol,
-				notif.nent_position
-			);
+			Local_Notification_sound(notif.nent_channel, notif.nent_snd, notif.nent_vol, notif.nent_position);
 			#else
 			backtrace("MSG_ANNCE on server?... Please notify Samual immediately!\n");
 			#endif
@@ -1367,7 +1342,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		{
 			entity found_choice = notif.nent_optiona;
 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) {
-				switch (cvar(sprintf("notification_%s", notif.nent_name)))
+				switch (cvar(sprintf("notification_%s", Get_Notif_CvarName(notif))))
 				{
 					case 1: break;
 					case 2: found_choice = notif.nent_optionb; break;
@@ -1533,8 +1508,7 @@ void Kill_Notification(
 	net_notif.nent_net_name = ORDINAL(net_cpid);
 	Net_LinkEntity(net_notif, false, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 
-	IL_EACH(
-		g_notifications,
+	IL_EACH(g_notifications,
 		(it.owner.nent_type == net_type || net_type == MSG_Null) && (it.owner.nent_cpid == net_cpid || net_cpid == CPID_Null),
 		{
 			it.nent_net_name = -1;
@@ -1607,20 +1581,9 @@ void Send_Notification(
 		return;
 	}
 
-	if (
-		server_is_dedicated
-		&&
-		(
-			broadcast == NOTIF_ALL
-			||
-			broadcast == NOTIF_ALL_EXCEPT
-		)
-		&&
-		!(
-			net_type == MSG_ANNCE
-			||
-			net_type == MSG_CENTER
-		)
+	if (server_is_dedicated
+		&& (broadcast == NOTIF_ALL || broadcast == NOTIF_ALL_EXCEPT)
+		&& !(net_type == MSG_ANNCE || net_type == MSG_CENTER)
 	)
 	{
 		Local_Notification_WOVA(

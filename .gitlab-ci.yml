@@ -24,13 +24,12 @@ test_sv_game:
     - cd ..
 
     - mkdir -p data/maps
-    - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
-    - wget -O data/maps/g-23.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.mapinfo
-    - wget -O data/maps/g-23.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints
-    - wget -O data/maps/g-23.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.cache
-    - wget -O data/maps/g-23.waypoints.hardwired https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.hardwired
+    - wget -O data/stormkeep.pk3 http://beta.xonotic.org/autobuild-bsp/latest/stormkeep.pk3
+    - wget -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
+    - wget -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
+    - wget -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
     - make
-    - EXPECT=b58f9c7587f1a14e5c52176d4e62a9fb
+    - EXPECT=0431ee1c5c25062e5dc4b104ae9e2847
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'

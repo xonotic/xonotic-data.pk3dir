@@ -9,7 +9,7 @@
 #include "mainwindow.qh"
 
 #define ADDVALUE_FPS(i) e.addValue(e, strzone(sprintf(_("%d fps"), i)), #i)
-#define ADDVALUE_SPEED_KB(i) e.addValue(e, strzone(sprintf(_("%d kb/s"), i)), #i)
+#define ADDVALUE_SPEED_KB(i) e.addValue(e, strzone(sprintf(_("%d KB/s"), i)), #i)
 #define ADDVALUE_SPEED_MB(i, j) e.addValue(e, strzone(sprintf(_("%d MB/s"), i)), #j)
 entity makeXonoticMiscSettingsTab()
 {

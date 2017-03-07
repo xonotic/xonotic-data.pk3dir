@@ -64,8 +64,8 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Gamemode Settings")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME_RED", _("Display capture times in Capture The Flag"), "-"));
-			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_TIME_BLUE notification_CHOICE_CTF_CAPTURE_TIME_YELLOW notification_CHOICE_CTF_CAPTURE_TIME_PINK notification_CHOICE_CTF_CAPTURE_BROKEN_RED notification_CHOICE_CTF_CAPTURE_BROKEN_BLUE notification_CHOICE_CTF_CAPTURE_BROKEN_YELLOW notification_CHOICE_CTF_CAPTURE_BROKEN_PINK notification_CHOICE_CTF_CAPTURE_UNBROKEN_RED notification_CHOICE_CTF_CAPTURE_UNBROKEN_BLUE notification_CHOICE_CTF_CAPTURE_UNBROKEN_YELLOW notification_CHOICE_CTF_CAPTURE_UNBROKEN_PINK");
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME", _("Display capture times in Capture The Flag"), "-"));
+			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_BROKEN notification_CHOICE_CTF_CAPTURE_UNBROKEN");
 			e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_PICKUP_ENEMY", _("Display name of flag stealer in Capture The Flag"), "-"));
@@ -80,7 +80,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_allow_chatboxprint", _("Display all info messages in the chatbox"), "-"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_INFO_QUIT_DISCONNECT", _("Display player statuses in the chatbox"), "-"));
-			makeMulti(e, "notification_INFO_QUIT_KICK_IDLING notification_INFO_JOIN_CONNECT_TEAM_BLUE notification_INFO_JOIN_CONNECT_TEAM_PINK notification_INFO_JOIN_CONNECT_TEAM_RED notification_INFO_JOIN_CONNECT_TEAM_YELLOW");
+			makeMulti(e, "notification_INFO_QUIT_KICK_IDLING notification_INFO_JOIN_CONNECT_TEAM");
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "notification_CENTER_POWERUP_INVISIBILITY", _("Powerup notifications"), "-"));

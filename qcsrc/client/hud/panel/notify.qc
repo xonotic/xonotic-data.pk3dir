@@ -145,13 +145,13 @@ void HUD_Notify()
 			icon_pos = pos + icon_left + eY * i * entry_height;
 			drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 
-			victim = textShortenToWidth(victim, name_maxwidth, font_size, stringwidth_colors);
+			victim = textShortenToWidth(ColorTranslateRGB(victim), name_maxwidth, font_size, stringwidth_colors);
 			victim_pos = pos + victim_left + name_top;
 			drawcolorcodedstring(victim_pos, victim, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 
 			if (attacker != "")
 			{
-				attacker = textShortenToWidth(attacker, name_maxwidth, font_size, stringwidth_colors);
+				attacker = textShortenToWidth(ColorTranslateRGB(attacker), name_maxwidth, font_size, stringwidth_colors);
 				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, true, font_size) + name_top;
 				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 			}

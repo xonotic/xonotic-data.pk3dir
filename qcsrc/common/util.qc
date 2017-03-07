@@ -326,7 +326,7 @@ float compressShortVector(vector vec)
 STATIC_INIT(compressShortVector)
 {
 	float l = 1;
-	float f = pow(2, 1/8);
+	float f = (2 ** (1/8));
 	int i;
 	for(i = 0; i < 128; ++i)
 	{
@@ -1078,17 +1078,17 @@ float compressShotOrigin(vector v)
 	float rz = rint(v.z * 4) + 128;
 	if(rx > 255 || rx < 0)
 	{
-		LOG_INFO("shot origin ", vtos(v), " x out of bounds\n");
+		LOG_DEBUG("shot origin ", vtos(v), " x out of bounds\n");
 		rx = bound(0, rx, 255);
 	}
 	if(ry > 255 || ry < 0)
 	{
-		LOG_INFO("shot origin ", vtos(v), " y out of bounds\n");
+		LOG_DEBUG("shot origin ", vtos(v), " y out of bounds\n");
 		ry = bound(0, ry, 255);
 	}
 	if(rz > 255 || rz < 0)
 	{
-		LOG_INFO("shot origin ", vtos(v), " z out of bounds\n");
+		LOG_DEBUG("shot origin ", vtos(v), " z out of bounds\n");
 		rz = bound(0, rz, 255);
 	}
 	return rx * 0x10000 + ry * 0x100 + rz;

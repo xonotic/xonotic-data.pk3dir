@@ -4,7 +4,7 @@ CLASS(HLAC, Weapon)
 /* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells);
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
 /* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
 #ifdef GAMEQC
@@ -75,9 +75,9 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	entity missile;
     float spread;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hlac, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hlac, ammo), weaponentity);
 
-    spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.misc_bulletcounter);
+    spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.(weaponentity).misc_bulletcounter);
     spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
     if(actor.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
@@ -168,7 +168,7 @@ void W_HLAC_Attack2(entity actor, .entity weaponentity)
 // weapon frames
 void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(PS(actor).m_weapon != PS(actor).m_switchweapon) // abort immediately if switching
+	if(actor.(weaponentity).m_weapon != actor.(weaponentity).m_switchweapon) // abort immediately if switching
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
@@ -176,10 +176,10 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 
 	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
-		if(!thiswep.wr_checkammo1(thiswep, actor))
+		if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+			W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
@@ -187,7 +187,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 		int slot = weaponslot(weaponentity);
 		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor(actor);
 		W_HLAC_Attack(WEP_HLAC, actor, weaponentity);
-		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
+		actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
 	else
@@ -200,7 +200,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep, entity actor, .entity weaponentity)
 {
     float i;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo), weaponentity);
 
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
         W_HLAC_Attack2(actor, weaponentity);
@@ -212,19 +212,19 @@ void W_HLAC_Attack2_Frame(Weapon thiswep, entity actor, .entity weaponentity)
 	}
 }
 
-METHOD(HLAC, wr_aim, void(entity thiswep, entity actor))
+METHOD(HLAC, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
 }
 METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_hlac_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
+    if(autocvar_g_balance_hlac_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else if(fire & 1)
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hlac, refire)))
         {
-            actor.misc_bulletcounter = 0;
+            actor.(weaponentity).misc_bulletcounter = 0;
             W_HLAC_Attack(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
         }
@@ -239,16 +239,16 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         }
     }
 }
-METHOD(HLAC, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(HLAC, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(hlac, ammo);
-    ammo_amount += actor.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
     return ammo_amount;
 }
-METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hlac, ammo);
-    ammo_amount += actor.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
     return ammo_amount;
 }
 METHOD(HLAC, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))

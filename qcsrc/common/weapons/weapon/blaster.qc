@@ -154,17 +154,17 @@ void W_Blaster_Attack(
 	}
 }
 
-METHOD(Blaster, wr_aim, void(entity thiswep, entity actor))
+METHOD(Blaster, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(WEP_CVAR(blaster, secondary))
     {
         if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
-            { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
+            { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
         else
-            { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+            { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
     }
     else
-        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 }
 
 METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
@@ -196,8 +196,8 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
         {
             case 0: // switch to last used weapon
             {
-                if(PS(actor).m_switchweapon == WEP_BLASTER) // don't do this if already switching
-                    W_LastWeapon(actor);
+                if(actor.(weaponentity).m_switchweapon == WEP_BLASTER) // don't do this if already switching
+                    W_LastWeapon(actor, weaponentity);
                 break;
             }
 
@@ -228,17 +228,12 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
     }
 }
 
-METHOD(Blaster, wr_setup, void(entity thiswep, entity actor))
-{
-    actor.ammo_field = ammo_none;
-}
-
-METHOD(Blaster, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Blaster, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // infinite ammo
 }
 
-METHOD(Blaster, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Blaster, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     return true; // blaster has infinite ammo
 }

@@ -220,7 +220,7 @@ void napalm_damage(entity this, float dist, float damage, float edgedamage, floa
 	{
 		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
 		d = damage + (edgedamage - damage) * (d / dist);
-		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, d * burntime, burntime, this.projectiledeathtype | HITTYPE_BOUNCE);
+		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, d * burntime, burntime, this.projectiledeathtype);
 		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.fireball_impactvec);
 		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.fireball_impactvec - this.origin, 1);
 	}
@@ -577,7 +577,7 @@ void nade_entrap_touch(entity this, entity toucher)
 		if(!pushdeltatime) return;
 
 		// div0: ticrate independent, 1 = identity (not 20)
-		toucher.velocity = toucher.velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
+		toucher.velocity = toucher.velocity * (autocvar_g_nades_entrap_strength ** pushdeltatime);
 
 	#ifdef SVQC
 		UpdateCSQCProjectile(toucher);
@@ -738,7 +738,7 @@ void nade_boom(entity this)
 
 	IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 	{
-		RemoveGrapplingHook(it.realowner);
+		RemoveHook(it);
 	});
 
 	delete(this);
@@ -769,7 +769,6 @@ void nade_touch(entity this, entity toucher)
 	if(autocvar_g_nades_pickup)
 	if(time >= this.spawnshieldtime)
 	if(!toucher.nade && this.health == this.max_health) // no boosted shot pickups, thank you very much
-	if(!STAT(FROZEN, toucher))
 	if(CanThrowNade(toucher)) // prevent some obvious things, like dead players
 	if(IS_REAL_CLIENT(toucher)) // above checks for IS_PLAYER, don't need to do it here
 	{
@@ -787,7 +786,7 @@ void nade_touch(entity this, entity toucher)
 	{
 		IL_EACH(g_projectiles, it.classname == "grapplinghook" && it.aiment == this,
 		{
-			RemoveGrapplingHook(it.realowner);
+			RemoveHook(it);
 		});
 		delete(this);
 		return;
@@ -893,7 +892,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	makevectors(e.v_angle);
 
 	// NOTE: always throw from first weapon entity?
-	W_SetupShot(e, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
+	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0);
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 
@@ -1036,6 +1035,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	if(Nades_from(n.nade_type) == NADE_TYPE_Null)
 		n.nade_type = NADE_TYPE_NORMAL.m_id;
 
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+
 	setmodel(n, MDL_PROJECTILE_NADE);
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
@@ -1050,10 +1051,10 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	setthink(n, nade_beep);
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE.m_id;
+	n.weaponentity_fld = weaponentity;
 	n.nade_lifetime = ntime;
 
 	setmodel(fn, MDL_NADE_VIEW);
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	setattachment(fn, player.(weaponentity), "");
 	fn.realowner = fn.owner = player;
 	fn.colormod = Nades_from(n.nade_type).m_color;
@@ -1061,6 +1062,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	fn.glowmod = player.glowmod;
 	setthink(fn, SUB_Remove);
 	fn.nextthink = n.wait;
+	fn.weaponentity_fld = weaponentity;
 
 	player.nade = n;
 	player.fake_nade = fn;
@@ -1101,9 +1103,6 @@ void nade_prime(entity this)
 bool CanThrowNade(entity this)
 {
 	if(this.vehicle)
-		return false;
-
-	if(gameover)
 		return false;
 
 	if(IS_DEAD(this))
@@ -1400,7 +1399,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	nades_RemoveBonus(frag_target);
 }
 
-MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 {
 	entity frag_inflictor = M_ARGV(0, entity);
 	entity frag_attacker = M_ARGV(1, entity);

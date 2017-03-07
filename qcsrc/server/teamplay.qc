@@ -52,6 +52,11 @@ void InitGameplayMode()
 	get_mi_min_max(1);
 	world.mins = mi_min;
 	world.maxs = mi_max;
+	// currently, NetRadiant's limit is 131072 qu for each side
+	// distance from one corner of a 131072qu cube to the opposite corner is approx. 227023 qu
+	// set the distance according to map size but don't go over the limit to avoid issues with float precision
+	// in case somebody makes extremely large maps
+	max_shot_distance = min(230000, vlen(world.maxs - world.mins));
 
 	MapInfo_LoadMapSettings(mapname);
 	serverflags &= ~SERVERFLAG_TEAMPLAY;
@@ -82,25 +87,23 @@ void InitGameplayMode()
 
 string GetClientVersionMessage(entity this)
 {
-	string versionmsg;
 	if (this.version_mismatch) {
 		if(this.version < autocvar_gameversion) {
-			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
 		} else {
-			versionmsg = "^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8";
+			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
+				"\n^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8");
 		}
 	} else {
-		versionmsg = "^2client version and server version are compatible.^8";
+		return strcat("Welcome to Xonotic ", autocvar_g_xonoticversion);
 	}
-	return versionmsg;
 }
 
 string getwelcomemessage(entity this)
 {
-	string s, modifications, motd;
-
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
-	modifications = M_ARGV(0, string);
+	string modifications = M_ARGV(0, string);
 
 	if(g_weaponarena)
 	{
@@ -109,7 +112,7 @@ string getwelcomemessage(entity this)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	else if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstartoverride") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -124,9 +127,7 @@ string getwelcomemessage(entity this)
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage = GetClientVersionMessage(this);
-
-	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
-	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
+	string s = strcat(versionmessage, "^8\n^8\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
@@ -151,7 +152,7 @@ string getwelcomemessage(entity this)
 
 	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
 
-	motd = autocvar_sv_motd;
+	string motd = autocvar_sv_motd;
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
@@ -208,7 +209,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
 
 		if(!noprint)
-		bprint(pl.netname, "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
+			bprint(playername(pl, false), "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
 	}
 
 }
@@ -223,7 +224,7 @@ void CheckAllowedTeams (entity for_whom)
 
 	string teament_name = string_null;
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name, for_whom);
 	teams_mask = M_ARGV(0, float);
 	teament_name = M_ARGV(1, string);
 

@@ -31,6 +31,12 @@ MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
     /**/
 MUTATOR_HOOKABLE(PlayerSpawn, EV_PlayerSpawn);
 
+/** called after a player's weapon is chosen so it can be overriden here */
+#define EV_PlayerWeaponSelect(i, o) \
+	/** player spawning */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerWeaponSelect, EV_PlayerWeaponSelect);
+
 /** called in reset_map */
 #define EV_reset_map_global(i, o) \
     /**/
@@ -96,6 +102,14 @@ MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
     /**/
 MUTATOR_HOOKABLE(ItemModel, EV_ItemModel);
 
+/** called when an item sound is about to be played, allows custom paths etc. */
+#define EV_ItemSound(i, o) \
+    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
+    /** output      */ i(string, MUTATOR_ARGV_1_string) \
+    /**/               o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
+
 /** called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill */
 #define EV_GiveFragsForKill(i, o) \
     /** attacker   */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -114,6 +128,7 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
+    /** player checked     */ i(entity, MUTATOR_ARGV_2_entity) \
     /**/
 MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
 
@@ -145,12 +160,14 @@ MUTATOR_HOOKABLE(PreFormatMessage, EV_PreFormatMessage);
 /** returns true if throwing the current weapon shall not be allowed */
 #define EV_ForbidThrowCurrentWeapon(i, o) \
     /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** weapon entity */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_ForbidThrowCurrentWeapon);
 
 /** returns true if dropping the current weapon shall not be allowed at any time including death */
 #define EV_ForbidDropCurrentWeapon(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** player */        i(entity, MUTATOR_ARGV_0_entity) \
+    /** weapon id */     i(int, MUTATOR_ARGV_1_int) \
     /**/
 MUTATOR_HOOKABLE(ForbidDropCurrentWeapon, EV_ForbidDropCurrentWeapon);
 
@@ -278,7 +295,7 @@ MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
     /**/                                   o(entity, MUTATOR_ARGV_1_entity) \
     /* attacker */                         i(entity, MUTATOR_ARGV_2_entity) \
     /**/
-.void(entity this) monster_loot;
+.entity monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
 
 /**
@@ -292,6 +309,7 @@ MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
     /** walk speed */    i(float, MUTATOR_ARGV_2_float) \
     /**/                 o(float, MUTATOR_ARGV_2_float) \
     /** move target */   i(entity, MUTATOR_ARGV_3_entity) \
+    /**/                 o(entity, MUTATOR_ARGV_3_entity) \
     /**/
 MUTATOR_HOOKABLE(MonsterMove, EV_MonsterMove);
 
@@ -343,7 +361,7 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor, EV_PlayerDamage_SplitHealthArmor
  * called to adjust damage and force values which are applied to the player, used for e.g. strength damage/force multiplier
  * i'm not sure if I should change this around slightly (Naming of the entities, and also how they're done in g_damage).
  */
-#define EV_PlayerDamage_Calculate(i, o) \
+#define EV_Damage_Calculate(i, o) \
     /** inflictor  		*/ i(entity, MUTATOR_ARGV_0_entity) \
     /** attacker    	*/ i(entity, MUTATOR_ARGV_1_entity) \
     /** target    		*/ i(entity, MUTATOR_ARGV_2_entity) \
@@ -355,7 +373,7 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor, EV_PlayerDamage_SplitHealthArmor
     /** force           */ i(vector, MUTATOR_ARGV_6_vector) \
     /** force 			*/ o(vector, MUTATOR_ARGV_6_vector) \
     /**/
-MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
+MUTATOR_HOOKABLE(Damage_Calculate, EV_Damage_Calculate);
 
 /**
  * Called when a player is damaged
@@ -375,7 +393,8 @@ MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
  * Called by W_DecreaseAmmo
  */
 #define EV_W_DecreaseAmmo(i, o) \
-    /** actor */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** actor */            i(entity, MUTATOR_ARGV_0_entity) \
+    /** weapon entity */    i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(W_DecreaseAmmo, EV_W_DecreaseAmmo);
 
@@ -647,6 +666,7 @@ MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
     /** end pos */      i(vector, MUTATOR_ARGV_3_vector) \
     /** damage */       i(float, MUTATOR_ARGV_4_float) \
     /**/                o(float, MUTATOR_ARGV_4_float) \
+    /** wep entity */   i(entity, MUTATOR_ARGV_5_entity) \
     /**/
 MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
 
@@ -906,3 +926,25 @@ MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
     /** sender */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);
+
+/** return true to just restart the match, for modes that don't support readyrestart */
+MUTATOR_HOOKABLE(ReadyRestart_Deny, EV_NO_ARGS);
+
+/** called when a fusion reactor is validating its target */
+#define EV_FusionReactor_ValidTarget(i, o) \
+    /** turret */    i(entity, MUTATOR_ARGV_0_entity) \
+    /** target */    i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(FusionReactor_ValidTarget, EV_FusionReactor_ValidTarget);
+
+enum {
+    MUT_FUSREAC_TARG_CONTINUE, // return this flag to make the function continue as normal
+    MUT_FUSREAC_TARG_VALID, // return this flag to make the function return true (valid target)
+    MUT_FUSREAC_TARG_INVALID // return this flag to make the function return false (invalid target)
+};
+
+/** return true to hide the 'teamnumbers are imbalanced' message */
+#define EV_HideTeamNagger(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);

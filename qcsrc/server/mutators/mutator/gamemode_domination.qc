@@ -153,7 +153,7 @@ void dompointthink(entity this)
 
 	// give points
 
-	if (gameover || this.delay > time || time < game_starttime)	// game has ended, don't keep giving points
+	if (game_stopped || this.delay > time || time < game_starttime)	// game has ended, don't keep giving points
 		return;
 
 	if(autocvar_g_domination_point_rate)
@@ -342,6 +342,8 @@ float Domination_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
+
+		game_stopped = true;
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 		return 1;
 	}
@@ -365,6 +367,7 @@ float Domination_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
+	game_stopped = true;
 	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 
 	return 1;
@@ -406,7 +409,7 @@ void havocbot_role_dom(entity this)
 		havocbot_goalrating_controlpoints(this, 10000, this.origin, 15000);
 		havocbot_goalrating_items(this, 8000, this.origin, 8000);
 		//havocbot_goalrating_enemyplayers(this, 3000, this.origin, 2000);
-		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 	}
 }

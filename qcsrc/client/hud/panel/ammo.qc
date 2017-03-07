@@ -169,7 +169,9 @@ void HUD_Ammo()
 		ammo_size.y = newSize;
 	}
 
-	Weapon wep = switchweapon;
+	entity wepent = viewmodels[0]; // TODO: unhardcode
+
+	Weapon wep = wepent.switchweapon;
 	int i;
 	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
 	row = column = 0;

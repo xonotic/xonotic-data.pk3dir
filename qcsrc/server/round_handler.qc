@@ -6,21 +6,20 @@
 
 void round_handler_Think(entity this)
 {
-	if (time < game_starttime)
-	{
-		round_handler_Reset(game_starttime);
-		return;
-	}
-
-	if (gameover)
-		gameover = false;
-
 	if (intermission_running)
 	{
 		round_handler_Reset(0);
 		round_handler_Remove();
 		return;
 	}
+
+	if (time < game_starttime)
+	{
+		round_handler_Reset(game_starttime);
+		return;
+	}
+
+	game_stopped = false;
 
 	if (this.wait)
 	{
@@ -59,7 +58,6 @@ void round_handler_Think(entity this)
 			// schedule a new round
 			this.wait = true;
 			this.nextthink = time + this.delay;
-			gameover = true;
 		}
 		else
 		{

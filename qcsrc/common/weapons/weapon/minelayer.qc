@@ -4,7 +4,7 @@ CLASS(MineLayer, Weapon)
 /* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets);
 /* impulse   */ ATTRIB(MineLayer, impulse, int, 4);
 /* flags     */ ATTRIB(MineLayer, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(MineLayer, wpcolor, vector, '0.75 1 0');
 /* modelname */ ATTRIB(MineLayer, mdl, string, "minelayer");
 #ifdef GAMEQC
@@ -72,6 +72,7 @@ void W_MineLayer_Stick(entity this, entity to)
 
 	entity newmine = spawn();
 	IL_PUSH(g_mines, newmine);
+	newmine.weaponentity_fld = this.weaponentity_fld;
 	newmine.classname = this.classname;
 
 	newmine.bot_dodge = this.bot_dodge;
@@ -127,20 +128,20 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), NULL, NULL, WEP_CVAR(minelayer, force), this.projectiledeathtype, directhitentity);
 
-	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
 	{
 		entity own = this.realowner;
 		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w, own))
+		if(!w.wr_checkammo1(w, own, weaponentity))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
-			.entity weaponentity = this.weaponentity_fld;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
-			PS(own).m_switchweapon = w_getbestweapon(own);
+			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
 		}
 	}
-	this.realowner.minelayer_mines -= 1;
+	this.realowner.(weaponentity).minelayer_mines -= 1;
 	delete(this);
 }
 
@@ -159,20 +160,20 @@ void W_MineLayer_DoRemoteExplode(entity this)
 
 	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, NULL);
 
-	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
 	{
 		entity own = this.realowner;
 		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w, own))
+		if(!w.wr_checkammo1(w, own, weaponentity))
 		{
 			own.cnt = WEP_MINE_LAYER.m_id;
-			.entity weaponentity = this.weaponentity_fld;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(own, slot) = time;
-			PS(own).m_switchweapon = w_getbestweapon(own);
+			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
 		}
 	}
-	this.realowner.minelayer_mines -= 1;
+	this.realowner.(weaponentity).minelayer_mines -= 1;
 	delete(this);
 }
 
@@ -207,10 +208,10 @@ void W_MineLayer_ProximityExplode(entity this)
 	W_MineLayer_Explode(this, NULL);
 }
 
-int W_MineLayer_Count(entity e)
+int W_MineLayer_Count(entity e, .entity weaponentity)
 {
 	int minecount = 0;
-	IL_EACH(g_mines, it.realowner == e,
+	IL_EACH(g_mines, it.realowner == e && it.weaponentity_fld == weaponentity,
 	{
 		minecount += 1;
 	});
@@ -274,7 +275,8 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// remote detonation
-	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).m_weapon == WEP_MINE_LAYER)
 	if(!IS_DEAD(this.realowner))
 	if(this.minelayer_detonate)
 		W_MineLayer_RemoteExplode(this);
@@ -288,13 +290,16 @@ void W_MineLayer_Touch(entity this, entity toucher)
 	if(WarpZone_Projectile_Touch(this, toucher))
 	{
 		if(wasfreed(this))
-			this.realowner.minelayer_mines -= 1;
+		{
+			.entity weaponentity = this.weaponentity_fld;
+			this.realowner.(weaponentity).minelayer_mines -= 1;
+		}
 		return;
 	}
 
-	if(toucher && IS_PLAYER(toucher) && !IS_DEAD(toucher))
+	if((toucher && IS_PLAYER(toucher) && !IS_DEAD(toucher)) || toucher.owner == this.owner)
 	{
-		// hit a player
+		// hit a player or other mine
 		// don't stick
 	}
 	else
@@ -328,7 +333,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	// scan how many mines we placed, and return if we reached our limit
 	if(WEP_CVAR(minelayer, limit))
 	{
-		if(actor.minelayer_mines >= WEP_CVAR(minelayer, limit))
+		if(actor.(weaponentity).minelayer_mines >= WEP_CVAR(minelayer, limit))
 		{
 			// the refire delay keeps this message from being spammed
 			Send_Notification(NOTIF_ONE, actor, MSG_MULTI, WEAPON_MINELAYER_LIMIT, WEP_CVAR(minelayer, limit));
@@ -337,7 +342,7 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		}
 	}
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(minelayer, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -394,14 +399,14 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, mine);
 
-	actor.minelayer_mines = W_MineLayer_Count(actor);
+	actor.(weaponentity).minelayer_mines = W_MineLayer_Count(actor, weaponentity);
 }
 
-bool W_MineLayer_PlacedMines(entity this, bool detonate)
+bool W_MineLayer_PlacedMines(entity this, .entity weaponentity, bool detonate)
 {
 	bool minfound = false;
 
-	IL_EACH(g_mines, it.realowner == this,
+	IL_EACH(g_mines, it.realowner == this && it.weaponentity_fld == weaponentity,
 	{
 		if(detonate)
 		{
@@ -417,13 +422,13 @@ bool W_MineLayer_PlacedMines(entity this, bool detonate)
 	return minfound;
 }
 
-METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
+METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     // aim and decide to fire if appropriate
-    if(actor.minelayer_mines >= WEP_CVAR(minelayer, limit))
+    if(actor.(weaponentity).minelayer_mines >= WEP_CVAR(minelayer, limit))
         PHYS_INPUT_BUTTON_ATCK(actor) = false;
     else
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(minelayer, speed), 0, WEP_CVAR(minelayer, lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(minelayer, speed), 0, WEP_CVAR(minelayer, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
     {
         // decide whether to detonate mines
@@ -503,10 +508,13 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
 }
 METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
+	if(weaponslot(weaponentity) == 0)
+		actor.minelayer_mines = actor.(weaponentity).minelayer_mines;
+
+    if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
     {
         // not if we're holding the minelayer without enough ammo, but can detonate existing mines
-        if(!(W_MineLayer_PlacedMines(actor, false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
+        if(!(W_MineLayer_PlacedMines(actor, weaponentity, false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
             thiswep.wr_reload(thiswep, actor, weaponentity);
         }
     }
@@ -521,25 +529,25 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 
     if(fire & 2)
     {
-        if(W_MineLayer_PlacedMines(actor, true))
+        if(W_MineLayer_PlacedMines(actor, weaponentity, true))
             sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
     }
 }
-METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     //int slot = 0; // TODO: unhardcode
     // actually do // don't switch while placing a mine
     //if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
     //{
         float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
-        ammo_amount += actor.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
+        ammo_amount += actor.(weaponentity).(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
         return ammo_amount;
     //}
     //return true;
 }
-METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(W_MineLayer_PlacedMines(actor, false))
+    if(W_MineLayer_PlacedMines(actor, weaponentity, false))
         return true;
     else
         return false;
@@ -547,6 +555,11 @@ METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor))
 METHOD(MineLayer, wr_resetplayer, void(entity thiswep, entity actor))
 {
     actor.minelayer_mines = 0;
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	actor.(weaponentity).minelayer_mines = 0;
+    }
 }
 METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {

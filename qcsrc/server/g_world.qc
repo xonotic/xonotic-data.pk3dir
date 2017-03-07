@@ -227,9 +227,11 @@ void cvar_changes_init()
 		BADCVAR("sys_specialcharactertranslation");
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
+		BADCVAR("g_require_stats");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
+		BADPREFIX("g_require_stats_");
 		BADPREFIX("g_chat_flood_");
 		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
@@ -278,6 +280,7 @@ void cvar_changes_init()
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_ignore_warnings");
 
 		// long
 		BADCVAR("hostname");
@@ -400,6 +403,7 @@ void cvar_changes_init()
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_norecoil");
 		BADCVAR("g_physics_clientselect");
+		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
@@ -1137,7 +1141,7 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 		string newlist;
 
 		// now reinsert this at another position
-		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
+		insertpos = (random() ** (1 / exponent));       // ]0, 1]
 		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
 		LOG_TRACE("SHUFFLE: insert pos = ", ftos(insertpos));
@@ -1447,11 +1451,11 @@ void DumpStats(float final)
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, it.netname, "\n");
+			LOG_INFO(s, playername(it, false), "\n");
 		if(to_eventlog)
-			GameLogEcho(strcat(s, ftos(it.playerid), ":", it.netname));
+			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it, false)));
 		if(to_file)
-			fputs(file, strcat(s, it.netname, "\n"));
+			fputs(file, strcat(s, playername(it, false), "\n"));
 	));
 
 	if(teamplay)
@@ -1528,9 +1532,8 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
-	gameover = true;
-
-	intermission_running = 1;
+	game_stopped = true;
+	intermission_running = 1; // game over
 
 	// enforce a wait time before allowing changelevel
 	if(player_count > 0)
@@ -1565,7 +1568,7 @@ void NextLevel()
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		FixIntermissionClient(it);
 		if(it.winning)
-			bprint(it.netname, " ^7wins.\n");
+			bprint(playername(it, false), " ^7wins.\n");
 	));
 
 	target_music_kill();
@@ -1587,7 +1590,7 @@ Exit deathmatch games upon conditions
 */
 void CheckRules_Player(entity this)
 {
-	if (gameover)	// someone else quit the game already
+	if (game_stopped) // someone else quit the game already
 		return;
 
 	if(!IS_DEAD(this))
@@ -2030,7 +2033,9 @@ void Physics_Frame()
 		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
-		set_movetype(it, it.move_movetype);
+		//set_movetype(it, it.move_movetype);
+		// inline the set_movetype function, since this is called a lot
+		it.movetype = (it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype;
 
 		if(it.move_movetype == MOVETYPE_NONE)
 			continue;
@@ -2087,10 +2092,6 @@ void EndFrame()
 	IL_EACH(g_monsters, true,
 	{
 		antilag_record(it, it, altime);
-	});
-	FOREACH_CLIENT(PS(it), {
-		PlayerState s = PS(it);
-		s.ps_push(s, it);
 	});
 	systems_update();
 	IL_ENDFRAME();
@@ -2164,7 +2165,7 @@ void RestoreGame()
 
 void Shutdown()
 {
-	gameover = 2;
+	game_stopped = 2;
 
 	if(world_initialized > 0)
 	{

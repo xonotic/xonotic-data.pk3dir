@@ -14,3 +14,14 @@ string Item_Model(string item_mdl)
 #endif
     return output;
 }
+
+string Item_Sound(string it_snd)
+{
+	string output = strcat("misc/", it_snd);
+#ifdef SVQC
+		MUTATOR_CALLHOOK(ItemSound, it_snd, output);
+		return M_ARGV(1, string);
+#else
+		return output;
+#endif
+}
