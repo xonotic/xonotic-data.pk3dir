@@ -226,7 +226,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			}
 			HUD_Write("\n");
 		}
-		MUTATOR_CALLHOOK(HUD_WriteCvars);
+		MUTATOR_CALLHOOK(HUD_WriteCvars, fh);
 
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 

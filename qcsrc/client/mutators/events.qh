@@ -165,4 +165,8 @@ MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
 	/**/
 MUTATOR_HOOKABLE(DrawInfoMessages, EV_DrawInfoMessages);
 
-MUTATOR_HOOKABLE(HUD_WriteCvars, EV_NO_ARGS);
+/** Called when drawing info messages, allows adding new info messages */
+#define EV_HUD_WriteCvars(i, o) \
+	/** file */ 			i(float, MUTATOR_ARGV_0_float) \
+	/**/
+MUTATOR_HOOKABLE(HUD_WriteCvars, EV_HUD_WriteCvars);
