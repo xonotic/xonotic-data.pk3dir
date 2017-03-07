@@ -77,6 +77,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		// Check if the item can be picked up safely
 		if(it.classname == "droppedweapon")
 		{
+			if(!IS_ONGROUND(it))
+				continue;
 			traceline(o, o + '0 0 -1500', true, NULL);
 
 			d = pointcontents(trace_endpos + '0 0 1');

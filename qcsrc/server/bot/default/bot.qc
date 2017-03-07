@@ -64,7 +64,7 @@ void bot_think(entity this)
 	if(autocvar_bot_god)
 		this.flags |= FL_GODMODE;
 
-	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill) * min(14 / (skill + 14), 1));
+	this.bot_nextthink = max(time, this.bot_nextthink) + max(0.01, autocvar_bot_ai_thinkinterval * (0.5 ** this.bot_aiskill) * min(14 / (skill + 14), 1));
 
 	//if (this.bot_painintensity > 0)
 	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
@@ -374,14 +374,13 @@ void bot_relinkplayerlist()
 			if(prevbot)
 				prevbot.nextbot = it;
 			else
-			{
 				bot_list = it;
-				bot_list.nextbot = NULL;
-			}
 			prevbot = it;
 			++currentbots;
 		}
 	});
+	if(prevbot)
+		prevbot.nextbot = NULL;
 	LOG_TRACE("relink: ", ftos(currentbots), " bots seen.");
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;

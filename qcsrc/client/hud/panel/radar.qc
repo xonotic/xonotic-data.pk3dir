@@ -8,12 +8,12 @@
 
 // Radar (#6)
 
-float HUD_Radar_Clickable()
+bool HUD_Radar_Clickable()
 {
 	return hud_panel_radar_mouse && !hud_panel_radar_temp_hidden;
 }
 
-void HUD_Radar_Show_Maximized(bool doshow,float clickable)
+void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 {
     TC(bool, doshow);
 	hud_panel_radar_maximized = doshow;

@@ -148,7 +148,6 @@ METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
 }
 #endif
 #ifdef SVQC
-spawnfunc(item_cells);
 METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 {
     TC(Wyvern, this);
@@ -158,7 +157,7 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
 
-    actor.monster_loot = spawnfunc_item_cells;
+    actor.monster_loot = ITEM_Cells;
     actor.monster_attackfunc = M_Wyvern_Attack;
 
     return true;

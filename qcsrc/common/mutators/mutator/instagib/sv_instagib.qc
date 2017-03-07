@@ -137,7 +137,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
 	entity item = M_ARGV(1, entity);
 
-	item.monster_loot = spawnfunc_item_minst_cells;
+	item.monster_loot = ITEM_VaporizerCells;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
@@ -353,7 +353,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
 	start_ammo_rockets = warmup_start_ammo_rockets = 0;
-	start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
+	//start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
 	start_weapons = warmup_start_weapons = WEPSET(VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;

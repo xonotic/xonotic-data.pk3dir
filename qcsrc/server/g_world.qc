@@ -227,9 +227,11 @@ void cvar_changes_init()
 		BADCVAR("sys_specialcharactertranslation");
 		BADCVAR("timeformat");
 		BADCVAR("timestamps");
+		BADCVAR("g_require_stats");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
+		BADPREFIX("g_require_stats_");
 		BADPREFIX("g_chat_flood_");
 		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
@@ -278,6 +280,7 @@ void cvar_changes_init()
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_ignore_warnings");
 
 		// long
 		BADCVAR("hostname");
@@ -1138,7 +1141,7 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 		string newlist;
 
 		// now reinsert this at another position
-		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
+		insertpos = (random() ** (1 / exponent));       // ]0, 1]
 		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
 		LOG_TRACE("SHUFFLE: insert pos = ", ftos(insertpos));
@@ -2030,7 +2033,9 @@ void Physics_Frame()
 		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
-		set_movetype(it, it.move_movetype);
+		//set_movetype(it, it.move_movetype);
+		// inline the set_movetype function, since this is called a lot
+		it.movetype = (it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype;
 
 		if(it.move_movetype == MOVETYPE_NONE)
 			continue;

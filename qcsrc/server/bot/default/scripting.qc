@@ -889,7 +889,7 @@ float bot_cmd_keypress_handler(entity this, string key, float enabled)
 	{
 		case "all":
 			if(enabled)
-				this.bot_cmd_keys = power2of(20) - 1; // >:)
+				this.bot_cmd_keys = (2 ** 20) - 1; // >:)
 			else
 				this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 		case "forward":

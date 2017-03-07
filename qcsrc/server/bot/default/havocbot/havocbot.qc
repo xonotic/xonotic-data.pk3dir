@@ -40,13 +40,13 @@ void havocbot_ai(entity this)
 		}
 		else
 		{
-			if (!this.jumppadcount)
+			if (!this.jumppadcount && !STAT(FROZEN, this))
 				this.havocbot_role(this); // little too far down the rabbit hole
 		}
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(!(IS_DEAD(this)))
+		if(!(IS_DEAD(this) || STAT(FROZEN, this)))
 		if(!this.goalcurrent)
 		if(this.waterlevel == WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
 		{
@@ -83,7 +83,7 @@ void havocbot_ai(entity this)
 		bot_strategytoken_taken = true;
 	}
 
-	if(IS_DEAD(this))
+	if(IS_DEAD(this) || STAT(FROZEN, this))
 		return;
 
 	havocbot_chooseenemy(this);
@@ -475,7 +475,7 @@ void havocbot_movetogoal(entity this)
 			dxy = this.origin - ( ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5 ); dxy.z = 0;
 			d = vlen(dxy);
 			v = vlen(this.velocity -  this.velocity.z * '0 0 1');
-			db = (pow(v,2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
+			db = ((v ** 2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
 		//	dprint("distance ", ftos(ceil(d)), " velocity ", ftos(ceil(v)), " brake at ", ftos(ceil(db)), "\n");
 			if(d < db || d < 500)
 			{
@@ -825,6 +825,7 @@ void havocbot_movetogoal(entity this)
 			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
 
 			bool unreachable = false;
+			bool ignorehazards = false;
 			s = CONTENT_SOLID;
 			if(trace_fraction == 1 && this.jumppadcount == 0 && !this.goalcurrent.wphardwired )
 			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || (this.aistatus & AI_STATUS_ROAMING) || PHYS_INPUT_BUTTON_JUMP(this))
@@ -838,7 +839,16 @@ void havocbot_movetogoal(entity this)
 					s = pointcontents(trace_endpos + '0 0 1');
 					if (s != CONTENT_SOLID)
 					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+					{
 						evadelava = normalize(this.velocity) * -1;
+						if(this.waterlevel >= WATERLEVEL_WETFEET && (this.watertype == CONTENT_LAVA || this.watertype == CONTENT_SLIME))
+							ignorehazards = true;
+					}
+					else if (s == CONTENT_WATER)
+					{
+						if(this.waterlevel >= WATERLEVEL_WETFEET && this.watertype == CONTENT_WATER)
+							ignorehazards = true;
+					}
 					else if (s == CONTENT_SKY)
 						evadeobstacle = normalize(this.velocity) * -1;
 					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
@@ -867,7 +877,8 @@ void havocbot_movetogoal(entity this)
 
 			if(evadeobstacle || evadelava || (s == CONTENT_WATER))
 			{
-				this.aistatus |= AI_STATUS_DANGER_AHEAD;
+				if(!ignorehazards)
+					this.aistatus |= AI_STATUS_DANGER_AHEAD;
 				if(IS_PLAYER(this.goalcurrent))
 					unreachable = true;
 			}
@@ -1136,7 +1147,7 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		this.lastcombotime = time;
 	}
 
-	distance *= pow(2, this.bot_rangepreference);
+	distance *= (2 ** this.bot_rangepreference);
 
 	// Custom weapon list based on distance to the enemy
 	if(bot_custom_weapon){

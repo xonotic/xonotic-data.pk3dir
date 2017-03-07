@@ -128,6 +128,7 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
+    /** player checked     */ i(entity, MUTATOR_ARGV_2_entity) \
     /**/
 MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
 
@@ -294,7 +295,7 @@ MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
     /**/                                   o(entity, MUTATOR_ARGV_1_entity) \
     /* attacker */                         i(entity, MUTATOR_ARGV_2_entity) \
     /**/
-.void(entity this) monster_loot;
+.entity monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
 
 /**
@@ -928,3 +929,22 @@ MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);
 
 /** return true to just restart the match, for modes that don't support readyrestart */
 MUTATOR_HOOKABLE(ReadyRestart_Deny, EV_NO_ARGS);
+
+/** called when a fusion reactor is validating its target */
+#define EV_FusionReactor_ValidTarget(i, o) \
+    /** turret */    i(entity, MUTATOR_ARGV_0_entity) \
+    /** target */    i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(FusionReactor_ValidTarget, EV_FusionReactor_ValidTarget);
+
+enum {
+    MUT_FUSREAC_TARG_CONTINUE, // return this flag to make the function continue as normal
+    MUT_FUSREAC_TARG_VALID, // return this flag to make the function return true (valid target)
+    MUT_FUSREAC_TARG_INVALID // return this flag to make the function return false (invalid target)
+};
+
+/** return true to hide the 'teamnumbers are imbalanced' message */
+#define EV_HideTeamNagger(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);
