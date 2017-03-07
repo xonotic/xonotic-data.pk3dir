@@ -164,3 +164,5 @@ MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
 	/** mySize */ 			i(vector, MUTATOR_ARGV_1_vector) \
 	/**/
 MUTATOR_HOOKABLE(DrawInfoMessages, EV_DrawInfoMessages);
+
+MUTATOR_HOOKABLE(HUD_WriteCvars, EV_NO_ARGS);

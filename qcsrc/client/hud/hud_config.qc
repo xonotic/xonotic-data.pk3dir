@@ -226,6 +226,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 			}
 			HUD_Write("\n");
 		}
+		MUTATOR_CALLHOOK(HUD_WriteCvars);
+
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
 		LOG_INFOF(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename);
