@@ -1218,7 +1218,7 @@ bool havocbot_moveto_refresh_route(entity this)
 	navigation_goalrating_start(this);
 	navigation_routerating(this, wp, 10000, 10000);
 	navigation_goalrating_end(this);
-	return this.navigation_hasgoals;
+	return (this.goalentity != NULL);
 }
 
 float havocbot_moveto(entity this, vector pos)

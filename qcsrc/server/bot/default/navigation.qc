@@ -253,7 +253,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 void navigation_clearroute(entity this)
 {
 	//print("bot ", etos(this), " clear\n");
-	this.navigation_hasgoals = false;
 	this.goalentity = NULL;
 	this.goalcurrent = NULL;
 	this.goalstack01 = NULL;
@@ -867,13 +866,11 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 // adds an item to the the goal stack with the path to a given item
 bool navigation_routetogoal(entity this, entity e, vector startposition)
 {
-	this.goalentity = e;
-
 	// if there is no goal, just exit
 	if (!e)
 		return false;
 
-	this.navigation_hasgoals = true;
+	this.goalentity = e;
 
 	// put the entity on the goal stack
 	//print("routetogoal ", etos(e), "\n");
@@ -1028,7 +1025,6 @@ void navigation_goalrating_start(entity this)
 
 	this.navigation_jetpack_goal = NULL;
 	navigation_bestrating = -1;
-	this.navigation_hasgoals = false;
 	navigation_clearroute(this);
 	navigation_bestgoal = NULL;
 	navigation_markroutes(this, NULL);
@@ -1044,16 +1040,13 @@ void navigation_goalrating_end(entity this)
 	LOG_DEBUG("best goal ", this.goalcurrent.classname);
 
 	// If the bot got stuck then try to reach the farthest waypoint
-	if (!this.navigation_hasgoals)
-	if (autocvar_bot_wander_enable)
+	if (!this.goalentity && autocvar_bot_wander_enable)
 	{
 		if (!(this.aistatus & AI_STATUS_STUCK))
 		{
 			LOG_DEBUG(this.netname, " cannot walk to any goal");
 			this.aistatus |= AI_STATUS_STUCK;
 		}
-
-		this.navigation_hasgoals = false; // Reset this value
 	}
 }
 
