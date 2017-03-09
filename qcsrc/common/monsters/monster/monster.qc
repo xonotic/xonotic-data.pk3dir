@@ -5,9 +5,9 @@
 const int MON_MOVE_NONE = BIT(0);
 const int MON_MOVE_NORMAL = BIT(1);
 const int MON_MOVE_2D = BIT(2);
-const int MON_MOVE_BOUNCE = BIT(4);
-const int MON_MOVE_TOUCH = BIT(5);
-const int MON_MOVE_JUMP = BIT(6);
+const int MON_MOVE_BOUNCE = BIT(3);
+const int MON_MOVE_TOUCH = BIT(4);
+const int MON_MOVE_JUMP = BIT(5);
 
 const int MON_ATTACK_MELEE = BIT(0);
 const int MON_ATTACK_TOUCH = BIT(1);
@@ -142,7 +142,7 @@ METHOD(CustomMonster, mr_think, bool(CustomMonster this, entity actor))
     if((actor.mon_movetype & MON_MOVE_JUMP) && time >= actor.jump_delay)
     {
     	actor.velocity_z += actor.mon_jumpheight;
-    	actor.jump_delay = time + (random() * actor.mon_jumpdelay);
+    	actor.jump_delay = time + (actor.mon_jumpdelay * random());
     }
     if(actor.mon_movetype & MON_MOVE_2D)
     {
