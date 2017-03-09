@@ -1,5 +1,8 @@
 // generated file; do not modify
 #include <common/mutators/mutator/overkill/hmg.qh>
+#include <common/mutators/mutator/overkill/okmachinegun.qh>
+#include <common/mutators/mutator/overkill/okshotgun.qh>
+#include <common/mutators/mutator/overkill/okvortex.qh>
 #include <common/mutators/mutator/overkill/overkill.qh>
 #ifdef CSQC
     #include <common/mutators/mutator/overkill/cl_overkill.qh>
