@@ -1,22 +1,24 @@
 //bot configuration:
 // default team values (team-override): 1 = red, 2 = blue, 3 = yellow, 4 = pink
 // use -1 for shirt-color or pants-color to get random colors
-//name			model           skin shirt pants team keyboard moving dodging ping weapon aggres range aiming calmhand mouse fightthink aithink
-Hellfire		ignis				0	4	0		0	0		0		-0.5	-1		1		1		-0.5	-1		-1		2		0.5		-1
-Toxic			gakmasked			0	14	7		0	-1		-1.5	-0.5	0		1		0		0		0		2		-0.5	-0.5	1
-Discovery		erebus				0	2	6		0	0		-1		-0.5	-0.5	1		-0.5	0.5		1.5		-0.5	-1		1		0.5
-Pegasus			umbra				0	13	11		0	1		1		1		1		-1		0		0.5		0		-2		0		-1		0
-Eureka			umbra				0	12	7		0	0		0		-1.5	-0.5	-0.5	0		0		0		0		-0.5	1.5		1.5
-Airhead			ignis				0	11	1		0	-1		-1.5	-1		-0.5	1		1		-1		1		-0.5	1		0.5		0
-Gator			gak					0	3	10		0	0		1		0		0.5		-0.5	0.5		-0.5	-1		0		0		-0.5	0
-Delirium		gakmasked			0	8	12		0	0		-1		-1		-1		0		2		0		1		0		2		-1		-1
-Death			gakmasked			0	4	11		0	-0.5	0		0		1		-0.5	0		1		0		0		0		0		0
-Scorcher		ignismasked			0	13	13		0	0		-1		0		-0.5	0.5		1		0		1		-2		1		0		0
-Necrotic		nyx					0	12	14		0	0		0		0		1		0		-1		-0.5	-1		1		0		0		0
-Dominator		nyx					0	3	9		0	0		0		0		2		-1		0		0		0		-1		0		0		0
-Thunderstorm	erebus				0	13	6		0	0		0		0		-0.5	-1		1		0.5		0.5		-0.5	0		0.5		0
-Mystery			pyria				0	9	14		0	1		1		1		1		-1		-1		0		1		1		-2		-1		-1
-Lion			ignismasked			0	0	4		0	1		1.5		2		-1		-1		-1		1		0		1		-0.5	-1		-1
-Sensible		seraphina			0	9	9		0	0		0		0.5		-1		0		-1		0		-1		2.5		-1.5	1		0.5
-Shadow			seraphinamasked		0	4	8		0	-0.5	2		1		0		0		-1		0		-1		0		1		-1		-0.5
-Resurrection	umbra				0	1	1		0	0		-0.5	-0.5	0		2		-1		-1		-1		0		-1		1		1
+// note: only one tab is allowed as separator
+//       enable indentation with elastic tab stops if you want to make sense of it all
+//name	model	skin	shirt	pants	team	keyboard use	moving	dodging	ping	weapon use	aggressivity	range	aiming	calmhand	mouse	fightthink	aithink
+Hellfire	ignis	0	4	0	0	0	0	-0.5	-1	1	1	-0.5	-1	-1	2	0.5	-1
+Toxic	gakmasked	0	14	7	0	-1	-1.5	-0.5	0	1	0	0	0	2	-0.5	-0.5	1
+Discovery	erebus	0	2	6	0	0	-1	-0.5	-0.5	1	-0.5	0.5	1.5	-0.5	-1	1	0.5
+Pegasus	umbra	0	13	11	0	1	1	1	1	-1	0	0.5	0	-2	0	-1	0
+Eureka	umbra	0	12	7	0	0	0	-1.5	-0.5	-0.5	0	0	0	0	-0.5	1.5	1.5
+Airhead	ignis	0	11	1	0	-1	-1.5	-1	-0.5	1	1	-1	1	-0.5	1	0.5	0
+Gator	gak	0	3	10	0	0	1	0	0.5	-0.5	0.5	-0.5	-1	0	0	-0.5	0
+Delirium	gakmasked	0	8	12	0	0	-1	-1	-1	0	2	0	1	0	2	-1	-1
+Death	gakmasked	0	4	11	0	-0.5	0	0	1	-0.5	0	1	0	0	0	0	0
+Scorcher	ignismasked	0	13	13	0	0	-1	0	-0.5	0.5	1	0	1	-2	1	0	0
+Necrotic	nyx	0	12	14	0	0	0	0	1	0	-1	-0.5	-1	1	0	0	0
+Dominator	nyx	0	3	9	0	0	0	0	2	-1	0	0	0	-1	0	0	0
+Thunderstorm	erebus	0	13	6	0	0	0	0	-0.5	-1	1	0.5	0.5	-0.5	0	0.5	0
+Mystery	pyria	0	9	14	0	1	1	1	1	-1	-1	0	1	1	-2	-1	-1
+Lion	ignismasked	0	0	4	0	1	1.5	2	-1	-1	-1	1	0	1	-0.5	-1	-1
+Sensible	seraphina	0	9	9	0	0	0	0.5	-1	0	-1	0	-1	2.5	-1.5	1	0.5
+Shadow	seraphinamasked	0	4	8	0	-0.5	2	1	0	0	-1	0	-1	0	1	-1	-0.5
+Resurrection	umbra	0	1	1	0	0	-0.5	-0.5	0	2	-1	-1	-1	0	-1	1	1

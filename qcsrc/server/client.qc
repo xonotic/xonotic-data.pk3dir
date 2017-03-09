@@ -383,11 +383,12 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
+			switch(player.team)
 			{
-				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+				case NUM_TEAM_1: defaultmodel = autocvar_sv_defaultplayermodel_red; defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultmodel = autocvar_sv_defaultplayermodel_blue; defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultmodel = autocvar_sv_defaultplayermodel_yellow; defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultmodel = autocvar_sv_defaultplayermodel_pink; defaultskin = autocvar_sv_defaultplayerskin_pink; break;
 			}
 		}
 
@@ -418,9 +419,13 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+			switch(player.team)
+			{
+				case NUM_TEAM_1: defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultskin = autocvar_sv_defaultplayerskin_pink; break;
+			}
 		}
 
 		if(!defaultskin)
@@ -651,6 +656,7 @@ void PutClientInServer(entity this)
 			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.monster_attack = true;
+		navigation_dynamicgoal_init(this, false);
 
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
@@ -1214,7 +1220,7 @@ void ClientConnect(entity this)
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
-		if (!g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
+		if(!MUTATOR_CALLHOOK(HideTeamNagger, this))
 			send_CSQC_teamnagger();
 
 	CSQCMODEL_AUTOINIT(this);

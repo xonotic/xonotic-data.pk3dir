@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Roi Asher Gerszkoviez <gerszkoviez@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-24 02:39+0100\n"
-"PO-Revision-Date: 2017-02-24 01:39+0000\n"
+"POT-Creation-Date: 2017-03-07 19:41+0100\n"
+"PO-Revision-Date: 2017-03-07 18:41+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Catalan (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ca/)\n"
@@ -18,12 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: qcsrc/client/hud/hud_config.qc:231
+#: qcsrc/client/hud/hud_config.qc:233
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr ""
 
-#: qcsrc/client/hud/hud_config.qc:235
+#: qcsrc/client/hud/hud_config.qc:237
 #, c-format
 msgid "^1Couldn't write to %s\n"
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/engineinfo.qc:69
 #, c-format
 msgid "FPS: %.*f"
-msgstr ""
+msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:87
 msgid "^1Observing"
@@ -123,7 +124,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr ""
+msgstr "^1El joc comença en ^3%d^1 segons"
 
 #: qcsrc/client/hud/panel/infomessages.qc:145
 msgid "^2Currently in ^1warmup^2 stage!"
@@ -1009,7 +1010,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Si"
 
 #: qcsrc/client/hud/panel/vote.qc:127 qcsrc/menu/xonotic/dialog_firstrun.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1019,7 +1020,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: qcsrc/client/hud/panel/weapons.qc:530
 msgid "Out of ammo"
@@ -1577,28 +1578,32 @@ msgstr ""
 msgid "Buff"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:221
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:280
 msgid "Damage text"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:231
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:290
 msgid "Draw damage numbers"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:233
-msgid "Font size:"
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:292
+msgid "Font size minimum:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:238
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:297
+msgid "Font size maximum:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:302
 msgid "Accumulate range:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:243
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:307
 msgid "Lifetime:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:248
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:258
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:312
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:322
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:55
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
@@ -1607,7 +1612,7 @@ msgstr ""
 msgid "Color:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:255
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:319
 msgid "Draw damage numbers for friendly fire"
 msgstr ""
 
@@ -4751,151 +4756,151 @@ msgstr ""
 msgid "Art"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:64
+#: qcsrc/menu/xonotic/credits.qc:65
 msgid "Animation"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:68
+#: qcsrc/menu/xonotic/credits.qc:69
 msgid "Level Design"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:91
+#: qcsrc/menu/xonotic/credits.qc:92
 msgid "Music / Sound FX"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:106
+#: qcsrc/menu/xonotic/credits.qc:107
 msgid "Game Code"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:114
+#: qcsrc/menu/xonotic/credits.qc:115
 msgid "Marketing / PR"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:120
+#: qcsrc/menu/xonotic/credits.qc:121
 msgid "Legal"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:125
+#: qcsrc/menu/xonotic/credits.qc:126
 msgid "Game Engine"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:129
+#: qcsrc/menu/xonotic/credits.qc:130
 msgid "Engine Additions"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:134
+#: qcsrc/menu/xonotic/credits.qc:135
 msgid "Compiler"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:140
+#: qcsrc/menu/xonotic/credits.qc:141
 msgid "Other Active Contributors"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:146
+#: qcsrc/menu/xonotic/credits.qc:147
 msgid "Translators"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:148
+#: qcsrc/menu/xonotic/credits.qc:149
 msgid "Asturian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:153
+#: qcsrc/menu/xonotic/credits.qc:154
 msgid "Belarusian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:156
+#: qcsrc/menu/xonotic/credits.qc:157
 msgid "Bulgarian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:163
+#: qcsrc/menu/xonotic/credits.qc:164
 msgid "Chinese (China)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:169
+#: qcsrc/menu/xonotic/credits.qc:170
 msgid "Chinese (Taiwan)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:174
+#: qcsrc/menu/xonotic/credits.qc:175
 msgid "Cornish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:177
+#: qcsrc/menu/xonotic/credits.qc:178
 msgid "Czech"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:182
+#: qcsrc/menu/xonotic/credits.qc:183
 msgid "Dutch"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:188
+#: qcsrc/menu/xonotic/credits.qc:189
 msgid "English (Australia)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:193
+#: qcsrc/menu/xonotic/credits.qc:194
 msgid "Finnish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:198
+#: qcsrc/menu/xonotic/credits.qc:199
 msgid "French"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:206
+#: qcsrc/menu/xonotic/credits.qc:207
 msgid "German"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:217
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "Greek"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:223
+#: qcsrc/menu/xonotic/credits.qc:224
 msgid "Hungarian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:227
+#: qcsrc/menu/xonotic/credits.qc:228
 msgid "Italian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:233
+#: qcsrc/menu/xonotic/credits.qc:234
 msgid "Kazakh"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:236
+#: qcsrc/menu/xonotic/credits.qc:237
 msgid "Korean"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:240
+#: qcsrc/menu/xonotic/credits.qc:241
 msgid "Polish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:248
 msgid "Portuguese"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:253
+#: qcsrc/menu/xonotic/credits.qc:254
 msgid "Romanian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:260
+#: qcsrc/menu/xonotic/credits.qc:261
 msgid "Russian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:271
+#: qcsrc/menu/xonotic/credits.qc:272
 msgid "Serbian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:276
+#: qcsrc/menu/xonotic/credits.qc:277
 msgid "Spanish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:286
+#: qcsrc/menu/xonotic/credits.qc:287
 msgid "Swedish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:290
+#: qcsrc/menu/xonotic/credits.qc:291
 msgid "Ukrainian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:297
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Past Contributors"
 msgstr ""
 
@@ -8517,7 +8522,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Intensity:"
-msgstr ""
+msgstr "Intensitat:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:152
 msgid "Global rendering brightness (default: 1)"
@@ -8565,7 +8570,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:130
 msgid "Campaign Difficulty:"
-msgstr ""
+msgstr "Dificultat de la Campanya:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:131
 msgid "CSKL^Easy"
@@ -8605,15 +8610,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
-msgstr ""
+msgstr "vermell"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:38
 msgid "blue"
-msgstr ""
+msgstr "blau"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:39
 msgid "yellow"
-msgstr ""
+msgstr "groc"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:40
 msgid "pink"
@@ -8799,7 +8804,7 @@ msgstr ""
 msgid "User defined"
 msgstr ""
 
-#: qcsrc/menu/xonotic/mainwindow.qc:62 qcsrc/menu/xonotic/mainwindow.qc:65
+#: qcsrc/menu/xonotic/mainwindow.qc:64 qcsrc/menu/xonotic/mainwindow.qc:67
 msgid "Do not press this button again!"
 msgstr ""
 
@@ -8811,7 +8816,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/maplist.qc:299
 #, c-format
 msgid "%s's Xonotic Server"
-msgstr ""
+msgstr "El Servidor de Xonotic de %s"
 
 #: qcsrc/menu/xonotic/maplist.qc:304
 msgid ""
@@ -8842,7 +8847,7 @@ msgid "Ping"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:764
-msgid "Host name"
+msgid "Hostname"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:765
@@ -9006,51 +9011,51 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
-msgstr ""
+msgstr "Gener"
 
 #: qcsrc/menu/xonotic/statslist.qc:30
 msgid "February"
-msgstr ""
+msgstr "Febrer"
 
 #: qcsrc/menu/xonotic/statslist.qc:31
 msgid "March"
-msgstr ""
+msgstr "Març"
 
 #: qcsrc/menu/xonotic/statslist.qc:32
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #: qcsrc/menu/xonotic/statslist.qc:33
 msgid "May"
-msgstr ""
+msgstr "Maig"
 
 #: qcsrc/menu/xonotic/statslist.qc:34
 msgid "June"
-msgstr ""
+msgstr "Juny"
 
 #: qcsrc/menu/xonotic/statslist.qc:35
 msgid "July"
-msgstr ""
+msgstr "Juliol"
 
 #: qcsrc/menu/xonotic/statslist.qc:36
 msgid "August"
-msgstr ""
+msgstr "Agost"
 
 #: qcsrc/menu/xonotic/statslist.qc:37
 msgid "September"
-msgstr ""
+msgstr "Setembre"
 
 #: qcsrc/menu/xonotic/statslist.qc:38
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #: qcsrc/menu/xonotic/statslist.qc:39
 msgid "November"
-msgstr ""
+msgstr "Novembre"
 
 #: qcsrc/menu/xonotic/statslist.qc:40
 msgid "December"
-msgstr ""
+msgstr "Desembre"
 
 #: qcsrc/menu/xonotic/statslist.qc:96
 msgid "Joined:"
@@ -9131,7 +9136,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:792
 msgid "Team Color:"
-msgstr ""
+msgstr "Color de l'Equip:"
 
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"

@@ -128,6 +128,7 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
+    /** player checked     */ i(entity, MUTATOR_ARGV_2_entity) \
     /**/
 MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
 
@@ -941,3 +942,9 @@ enum {
     MUT_FUSREAC_TARG_VALID, // return this flag to make the function return true (valid target)
     MUT_FUSREAC_TARG_INVALID // return this flag to make the function return false (invalid target)
 };
+
+/** return true to hide the 'teamnumbers are imbalanced' message */
+#define EV_HideTeamNagger(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);

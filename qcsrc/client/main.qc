@@ -776,8 +776,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 			localcmd("-zoom\n");
 			button_zoom = false;
 		}
+		HUD_Radar_Hide_Maximized();
 	}
-	HUD_Radar_Hide_Maximized();
 	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(this.origin), entnum, player_localentnum);
 }
 

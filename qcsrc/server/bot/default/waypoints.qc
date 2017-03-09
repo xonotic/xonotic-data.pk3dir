@@ -739,7 +739,7 @@ void waypoint_spawnforteleporter_boxes(entity e, vector org1, vector org2, vecto
 	// the teleporter's nearest spawnfunc_waypoint is this one
 	// (teleporters are not goals, so this is probably useless)
 	e.nearestwaypoint = w;
-	e.nearestwaypointtimeout = time + 1000000000;
+	e.nearestwaypointtimeout = -1;
 }
 
 void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken)

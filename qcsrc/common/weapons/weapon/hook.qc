@@ -85,7 +85,7 @@ void W_Hook_ExplodeThink(entity this)
 	float dt, dmg_remaining_next, f;
 
 	dt = time - this.teleport_time;
-	dmg_remaining_next = pow(bound(0, 1 - dt / this.dmg_duration, 1), this.dmg_power);
+	dmg_remaining_next = (bound(0, 1 - dt / this.dmg_duration, 1) ** this.dmg_power);
 
 	f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
@@ -252,7 +252,8 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
                     {
                         actor.ammo_fuel = 0;
                         actor.(weaponentity).hook_state |= HOOK_REMOVING;
-                        W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
+                        if(actor.(weaponentity).m_weapon != WEP_Null) // offhand
+                        	W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
                     }
                 }
             }

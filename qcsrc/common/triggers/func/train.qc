@@ -204,6 +204,8 @@ void train_use(entity this, entity actor, entity trigger)
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 1;
 	SUB_THINK(this, train_next);
 	this.use = func_null; // not again
+	if(trigger.target2 && trigger.target2 != "")
+		this.future_target = find(NULL, targetname, trigger.target2);
 }
 
 void func_train_find(entity this)

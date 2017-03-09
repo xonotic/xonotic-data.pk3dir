@@ -458,6 +458,11 @@ MUTATOR_HOOKFUNCTION(ca, WantWeapon)
 	M_ARGV(2, bool) = true; // all weapons
 }
 
+MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
+{
+	return true; // doesn't work well with the whole spectator as player thing
+}
+
 MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 {
 	entity player = M_ARGV(0, entity);

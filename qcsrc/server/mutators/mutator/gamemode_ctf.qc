@@ -479,6 +479,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
+	navigation_dynamicgoal_set(flag);
 
 	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
 
@@ -921,11 +922,11 @@ void ctf_FlagThink(entity this)
 		FOREACH_CLIENT(true, LAMBDA(ctf_CaptureShield_Update(it, 1))); // release shield only
 
 	// sanity checks
-	if(this.mins != CTF_FLAG.m_mins || this.maxs != CTF_FLAG.m_maxs) { // reset the flag boundaries in case it got squished
+	if(this.mins != this.m_mins || this.maxs != this.m_maxs) { // reset the flag boundaries in case it got squished
 		LOG_TRACE("wtf the flag got squashed?");
-		tracebox(this.origin, CTF_FLAG.m_mins, CTF_FLAG.m_maxs, this.origin, MOVE_NOMONSTERS, this);
+		tracebox(this.origin, this.m_mins, this.m_maxs, this.origin, MOVE_NOMONSTERS, this);
 		if(!trace_startsolid || this.noalign) // can we resize it without getting stuck?
-			setsize(this, CTF_FLAG.m_mins * this.scale, CTF_FLAG.m_maxs * this.scale);
+			setsize(this, this.m_mins, this.m_maxs);
 	}
 
 	// main think method
@@ -1197,6 +1198,7 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
 	flag.ctf_flagdamaged_byworld = false;
+	navigation_dynamicgoal_unset(flag);
 
 	ctf_CheckStalemate();
 }
@@ -1225,8 +1227,7 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 {
 	// bot waypoints
 	waypoint_spawnforitem_force(this, this.origin);
-	this.nearestwaypointtimeout = 0; // activate waypointing again
-	this.bot_basewaypoint = this.nearestwaypoint;
+	navigation_dynamicgoal_init(this, true);
 
 	// waypointsprites
 	entity basename;
@@ -1318,6 +1319,8 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
 	setsize(flag, CTF_FLAG.m_mins * flag.scale, CTF_FLAG.m_maxs * flag.scale);
+	flag.m_mins = flag.mins; // store these for squash checks
+	flag.m_maxs = flag.maxs;
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
 
 	if(autocvar_g_ctf_flag_glowtrails)
@@ -1451,6 +1454,8 @@ int havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 	return c;
 }
 
+// unused
+#if 0
 void havocbot_goalrating_ctf_ourflag(entity this, float ratingscale)
 {
 	entity head;
@@ -1464,6 +1469,7 @@ void havocbot_goalrating_ctf_ourflag(entity this, float ratingscale)
 	if (head)
 		navigation_routerating(this, head, ratingscale, 10000);
 }
+#endif
 
 void havocbot_goalrating_ctf_ourbase(entity this, float ratingscale)
 {
@@ -1472,7 +1478,15 @@ void havocbot_goalrating_ctf_ourbase(entity this, float ratingscale)
 	while (head)
 	{
 		if (CTF_SAMETEAM(this, head))
+		{
+			if (this.flagcarried)
+			if ((this.flagcarried.cnt || head.cnt) && this.flagcarried.cnt != head.cnt)
+			{
+				head = head.ctf_worldflagnext; // skip base if it has a different group
+				continue;
+			}
 			break;
+		}
 		head = head.ctf_worldflagnext;
 	}
 	if (!head)

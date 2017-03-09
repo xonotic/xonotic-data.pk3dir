@@ -85,7 +85,7 @@ float GeomLerp(float a, float _lerp, float b)
 {
 	return a == 0 ? (_lerp < 1 ? 0 : b)
 		: b == 0 ? (_lerp > 0 ? 0 : a)
-		: a * pow(fabs(b / a), _lerp);
+		: a * (fabs(b / a) ** _lerp);
 }
 
 void PM_ClientMovement_UpdateStatus(entity this)
@@ -153,7 +153,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 
 	if (dot > 0) // we can't change direction while slowing down
 	{
-		k *= pow(dot, PHYS_AIRCONTROL_POWER(this)) * dt;
+		k *= (dot ** PHYS_AIRCONTROL_POWER(this)) * dt;
 		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k/32);
 		k *= PHYS_AIRCONTROL(this);
 		this.velocity = normalize(this.velocity * xyspeed + wishdir * k);

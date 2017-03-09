@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-24 02:39+0100\n"
-"PO-Revision-Date: 2017-02-24 01:39+0000\n"
+"POT-Creation-Date: 2017-03-07 19:41+0100\n"
+"PO-Revision-Date: 2017-03-07 18:41+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -27,14 +27,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: qcsrc/client/hud/hud_config.qc:231
+#: qcsrc/client/hud/hud_config.qc:233
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr ""
 "^2Exporté avec succès dans %s ! (note : la sauvegarde est présente dans data/"
 "data/)\n"
 
-#: qcsrc/client/hud/hud_config.qc:235
+#: qcsrc/client/hud/hud_config.qc:237
 #, c-format
 msgid "^1Couldn't write to %s\n"
 msgstr "^1N'a pas pu écrire dans %s\n"
@@ -944,7 +944,7 @@ msgstr "Secrets trouvés :"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1353
 msgid "Capture time rankings"
-msgstr ""
+msgstr "Classement des temps de capture"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1353
 msgid "Rankings"
@@ -1649,28 +1649,32 @@ msgstr "Envol"
 msgid "Buff"
 msgstr "Bonus"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:221
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:280
 msgid "Damage text"
-msgstr "Texte des dommages"
+msgstr "Dommages"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:231
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:290
 msgid "Draw damage numbers"
 msgstr "Afficher les nombres de dommages"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:233
-msgid "Font size:"
-msgstr "Taille de police :"
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:292
+msgid "Font size minimum:"
+msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:238
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:297
+msgid "Font size maximum:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:302
 msgid "Accumulate range:"
 msgstr "Intervalle d'accumulation :"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:243
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:307
 msgid "Lifetime:"
 msgstr "Durée de vie :"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:248
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:258
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:312
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:322
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:55
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
@@ -1679,7 +1683,7 @@ msgstr "Durée de vie :"
 msgid "Color:"
 msgstr "Couleur :"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:255
+#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:319
 msgid "Draw damage numbers for friendly fire"
 msgstr "Afficher les nombres de dommages pour le tir ami"
 
@@ -2845,6 +2849,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be "
 "lost."
 msgstr ""
+"^BG%s^BG a inscrit un nouveau record avec ^F2%s^BG, mais il est anonyme et "
+"son record va être perdu."
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
@@ -4955,151 +4961,151 @@ msgstr "Stats"
 msgid "Art"
 msgstr "Art"
 
-#: qcsrc/menu/xonotic/credits.qc:64
+#: qcsrc/menu/xonotic/credits.qc:65
 msgid "Animation"
 msgstr "Animation"
 
-#: qcsrc/menu/xonotic/credits.qc:68
+#: qcsrc/menu/xonotic/credits.qc:69
 msgid "Level Design"
 msgstr "Conception des niveaux"
 
-#: qcsrc/menu/xonotic/credits.qc:91
+#: qcsrc/menu/xonotic/credits.qc:92
 msgid "Music / Sound FX"
 msgstr "Musique / son FX"
 
-#: qcsrc/menu/xonotic/credits.qc:106
+#: qcsrc/menu/xonotic/credits.qc:107
 msgid "Game Code"
 msgstr "Code du jeu"
 
-#: qcsrc/menu/xonotic/credits.qc:114
+#: qcsrc/menu/xonotic/credits.qc:115
 msgid "Marketing / PR"
 msgstr "Marketing / Relations publiques"
 
-#: qcsrc/menu/xonotic/credits.qc:120
+#: qcsrc/menu/xonotic/credits.qc:121
 msgid "Legal"
 msgstr "Juridique"
 
-#: qcsrc/menu/xonotic/credits.qc:125
+#: qcsrc/menu/xonotic/credits.qc:126
 msgid "Game Engine"
 msgstr "Moteur du jeu"
 
-#: qcsrc/menu/xonotic/credits.qc:129
+#: qcsrc/menu/xonotic/credits.qc:130
 msgid "Engine Additions"
 msgstr "Ajouts au moteur"
 
-#: qcsrc/menu/xonotic/credits.qc:134
+#: qcsrc/menu/xonotic/credits.qc:135
 msgid "Compiler"
 msgstr "Compilateur"
 
-#: qcsrc/menu/xonotic/credits.qc:140
+#: qcsrc/menu/xonotic/credits.qc:141
 msgid "Other Active Contributors"
 msgstr "Autres contributeurs actifs"
 
-#: qcsrc/menu/xonotic/credits.qc:146
+#: qcsrc/menu/xonotic/credits.qc:147
 msgid "Translators"
 msgstr "Traducteurs"
 
-#: qcsrc/menu/xonotic/credits.qc:148
+#: qcsrc/menu/xonotic/credits.qc:149
 msgid "Asturian"
 msgstr "Asturien"
 
-#: qcsrc/menu/xonotic/credits.qc:153
+#: qcsrc/menu/xonotic/credits.qc:154
 msgid "Belarusian"
 msgstr "Biélorusse"
 
-#: qcsrc/menu/xonotic/credits.qc:156
+#: qcsrc/menu/xonotic/credits.qc:157
 msgid "Bulgarian"
 msgstr "Bulgare"
 
-#: qcsrc/menu/xonotic/credits.qc:163
+#: qcsrc/menu/xonotic/credits.qc:164
 msgid "Chinese (China)"
 msgstr "Chinois (Chine)"
 
-#: qcsrc/menu/xonotic/credits.qc:169
+#: qcsrc/menu/xonotic/credits.qc:170
 msgid "Chinese (Taiwan)"
 msgstr "Chinois (Taïwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:174
+#: qcsrc/menu/xonotic/credits.qc:175
 msgid "Cornish"
 msgstr "Cornouaillais"
 
-#: qcsrc/menu/xonotic/credits.qc:177
+#: qcsrc/menu/xonotic/credits.qc:178
 msgid "Czech"
 msgstr "Tchèque"
 
-#: qcsrc/menu/xonotic/credits.qc:182
+#: qcsrc/menu/xonotic/credits.qc:183
 msgid "Dutch"
 msgstr "Néerlandais"
 
-#: qcsrc/menu/xonotic/credits.qc:188
+#: qcsrc/menu/xonotic/credits.qc:189
 msgid "English (Australia)"
 msgstr "Anglais (Australie)"
 
-#: qcsrc/menu/xonotic/credits.qc:193
+#: qcsrc/menu/xonotic/credits.qc:194
 msgid "Finnish"
 msgstr "Finlandais"
 
-#: qcsrc/menu/xonotic/credits.qc:198
+#: qcsrc/menu/xonotic/credits.qc:199
 msgid "French"
 msgstr "Français"
 
-#: qcsrc/menu/xonotic/credits.qc:206
+#: qcsrc/menu/xonotic/credits.qc:207
 msgid "German"
 msgstr "Allemand"
 
-#: qcsrc/menu/xonotic/credits.qc:217
+#: qcsrc/menu/xonotic/credits.qc:218
 msgid "Greek"
 msgstr "Grec"
 
-#: qcsrc/menu/xonotic/credits.qc:223
+#: qcsrc/menu/xonotic/credits.qc:224
 msgid "Hungarian"
 msgstr "Hongrois"
 
-#: qcsrc/menu/xonotic/credits.qc:227
+#: qcsrc/menu/xonotic/credits.qc:228
 msgid "Italian"
 msgstr "Italien"
 
-#: qcsrc/menu/xonotic/credits.qc:233
+#: qcsrc/menu/xonotic/credits.qc:234
 msgid "Kazakh"
 msgstr "Kazakh"
 
-#: qcsrc/menu/xonotic/credits.qc:236
+#: qcsrc/menu/xonotic/credits.qc:237
 msgid "Korean"
 msgstr "Coréen"
 
-#: qcsrc/menu/xonotic/credits.qc:240
+#: qcsrc/menu/xonotic/credits.qc:241
 msgid "Polish"
 msgstr "Polonais"
 
-#: qcsrc/menu/xonotic/credits.qc:247
+#: qcsrc/menu/xonotic/credits.qc:248
 msgid "Portuguese"
 msgstr "Portugais"
 
-#: qcsrc/menu/xonotic/credits.qc:253
+#: qcsrc/menu/xonotic/credits.qc:254
 msgid "Romanian"
 msgstr "Roumain"
 
-#: qcsrc/menu/xonotic/credits.qc:260
+#: qcsrc/menu/xonotic/credits.qc:261
 msgid "Russian"
 msgstr "Russe"
 
-#: qcsrc/menu/xonotic/credits.qc:271
+#: qcsrc/menu/xonotic/credits.qc:272
 msgid "Serbian"
 msgstr "Serbe"
 
-#: qcsrc/menu/xonotic/credits.qc:276
+#: qcsrc/menu/xonotic/credits.qc:277
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: qcsrc/menu/xonotic/credits.qc:286
+#: qcsrc/menu/xonotic/credits.qc:287
 msgid "Swedish"
 msgstr "Suédois"
 
-#: qcsrc/menu/xonotic/credits.qc:290
+#: qcsrc/menu/xonotic/credits.qc:291
 msgid "Ukrainian"
 msgstr "Ukrainien"
 
-#: qcsrc/menu/xonotic/credits.qc:297
+#: qcsrc/menu/xonotic/credits.qc:298
 msgid "Past Contributors"
 msgstr "Contributeurs passés"
 
@@ -5256,7 +5262,7 @@ msgstr "Alignement du texte :"
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:19
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Center"
-msgstr "Centre"
+msgstr "Au centre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 msgid "Font scale:"
@@ -5441,12 +5447,12 @@ msgstr "Barre d'état"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
 msgid "Left align"
-msgstr "Aligner à gauche"
+msgstr "À gauche"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:74
 msgid "Right align"
-msgstr "Aligner à droite"
+msgstr "À droite"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 msgid "Inward align"
@@ -8316,12 +8322,12 @@ msgstr "%d ips"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:12
 #, c-format
 msgid "%d KB/s"
-msgstr ""
+msgstr "%d Ko/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:13
 #, c-format
 msgid "%d MB/s"
-msgstr "%d Mb/s"
+msgstr "%d Mo/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:27
 msgid "Network"
@@ -9126,7 +9132,7 @@ msgstr "traîner l'objet"
 msgid "User defined"
 msgstr "Raccourcis personnalisés"
 
-#: qcsrc/menu/xonotic/mainwindow.qc:62 qcsrc/menu/xonotic/mainwindow.qc:65
+#: qcsrc/menu/xonotic/mainwindow.qc:64 qcsrc/menu/xonotic/mainwindow.qc:67
 msgid "Do not press this button again!"
 msgstr "N'appuyez plus sur ce bouton !"
 
@@ -9175,8 +9181,8 @@ msgid "Ping"
 msgstr "Ping"
 
 #: qcsrc/menu/xonotic/serverlist.qc:764
-msgid "Host name"
-msgstr "Nom de l'hôte"
+msgid "Hostname"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:765
 msgid "Map"

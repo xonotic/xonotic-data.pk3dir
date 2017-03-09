@@ -317,14 +317,15 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 void W_Arc_Beam_Think(entity this)
 {
 	.entity weaponentity = this.weaponentity_fld;
-	if(this != this.owner.(weaponentity).arc_beam)
+	entity own = this.owner;
+	if(this != own.(weaponentity).arc_beam)
 	{
 		delete(this);
 		return;
 	}
 
 	float burst = 0;
-	if( (PHYS_INPUT_BUTTON_ATCK2(this.owner) && !WEP_CVAR(arc, bolt)) || this.beam_bursting)
+	if( (PHYS_INPUT_BUTTON_ATCK2(own) && !WEP_CVAR(arc, bolt)) || this.beam_bursting)
 	{
 		if(!this.beam_bursting)
 			this.beam_bursting = true;
@@ -334,19 +335,19 @@ void W_Arc_Beam_Think(entity this)
 	Weapon thiswep = WEP_ARC;
 
 	if(
-		!IS_PLAYER(this.owner)
+		!IS_PLAYER(own)
 		||
-		(this.owner.(thiswep.ammo_field) <= 0 && !(this.owner.items & IT_UNLIMITED_WEAPON_AMMO))
+		(!thiswep.wr_checkammo1(thiswep, own, weaponentity) && !(own.items & IT_UNLIMITED_WEAPON_AMMO))
 		||
-		IS_DEAD(this.owner)
+		IS_DEAD(own)
 		||
-		forbidWeaponUse(this.owner)
+		forbidWeaponUse(own)
 		||
-		this.owner.(weaponentity).m_switchweapon != WEP_ARC
+		own.(weaponentity).m_switchweapon != WEP_ARC
 		||
-		(!PHYS_INPUT_BUTTON_ATCK(this.owner) && !burst )
+		(!PHYS_INPUT_BUTTON_ATCK(own) && !burst )
 		||
-		this.owner.vehicle
+		own.vehicle
 		||
 		(WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max))
 	)
@@ -366,8 +367,8 @@ void W_Arc_Beam_Think(entity this)
 			if ( cooldown_speed )
 			{
 				if ( WEP_CVAR(arc, cooldown_release) || (WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max)) )
-					this.owner.arc_overheat = time + this.beam_heat / cooldown_speed;
-				this.owner.arc_cooldown = cooldown_speed;
+					own.arc_overheat = time + this.beam_heat / cooldown_speed;
+				own.arc_cooldown = cooldown_speed;
 			}
 
 			if ( WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max) )
@@ -378,14 +379,12 @@ void W_Arc_Beam_Think(entity this)
 			}
 		}
 
-		if(this == this.owner.(weaponentity).arc_beam) { this.owner.(weaponentity).arc_beam = NULL; }
-		entity own = this.owner;
-		Weapon w = WEP_ARC;
-		if(!w.wr_checkammo1(w, own, weaponentity) && !w.wr_checkammo2(w, own, weaponentity))
-		if(!(own.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(this == own.(weaponentity).arc_beam) { own.(weaponentity).arc_beam = NULL; }
+		if(!thiswep.wr_checkammo1(thiswep, own, weaponentity) && !(own.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(own, weaponentity);
+			own.(weaponentity).arc_BUTTON_ATCK_prev = false; // hax
 		}
 		delete(this);
 		return;
@@ -393,7 +392,7 @@ void W_Arc_Beam_Think(entity this)
 
 	// decrease ammo
 	float coefficient = frametime;
-	if(!(this.owner.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(own.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		float rootammo;
 		if(burst)
@@ -403,17 +402,17 @@ void W_Arc_Beam_Think(entity this)
 
 		if(rootammo)
 		{
-			coefficient = min(coefficient, this.owner.(thiswep.ammo_field) / rootammo);
-			this.owner.(thiswep.ammo_field) = max(0, this.owner.(thiswep.ammo_field) - (rootammo * frametime));
+			coefficient = min(coefficient, own.(thiswep.ammo_field) / rootammo);
+			own.(thiswep.ammo_field) = max(0, own.(thiswep.ammo_field) - (rootammo * frametime));
 		}
 	}
 	float heat_speed = burst ? WEP_CVAR(arc, burst_heat) : WEP_CVAR(arc, beam_heat);
 	this.beam_heat = min( WEP_CVAR(arc, overheat_max), this.beam_heat + heat_speed*frametime );
 
-	makevectors(this.owner.v_angle);
+	makevectors(own.v_angle);
 
 	W_SetupShot_Range(
-		this.owner,
+		own,
 		weaponentity, // TODO
 		true,
 		0,
@@ -424,7 +423,7 @@ void W_Arc_Beam_Think(entity this)
 	);
 
 	// After teleport, "lock" the beam until the teleport is confirmed.
-	if (time < this.beam_teleporttime + ANTILAG_LATENCY(this.owner)) {
+	if (time < this.beam_teleporttime + ANTILAG_LATENCY(own)) {
 		w_shotdir = this.beam_dir;
 	}
 
@@ -539,12 +538,12 @@ void W_Arc_Beam_Think(entity this)
 		vector new_dir = normalize(new_origin - last_origin);
 
 		WarpZone_traceline_antilag(
-			this.owner,
+			own,
 			last_origin,
 			new_origin,
 			MOVE_NORMAL,
-			this.owner,
-			ANTILAG_LATENCY(this.owner)
+			own,
+			ANTILAG_LATENCY(own)
 		);
 
 		// Do all the transforms for warpzones right now, as we already
@@ -578,7 +577,7 @@ void W_Arc_Beam_Think(entity this)
 				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
 			);
 
-			if(is_player && SAME_TEAM(this.owner, trace_ent))
+			if(is_player && SAME_TEAM(own, trace_ent))
 			{
 				float roothealth, rootarmor;
 				if(burst)
@@ -634,10 +633,10 @@ void W_Arc_Beam_Think(entity this)
 				else
 					{ rootdamage = WEP_CVAR(arc, beam_nonplayerdamage); }
 
-				if(accuracy_isgooddamage(this.owner, trace_ent))
+				if(accuracy_isgooddamage(own, trace_ent))
 				{
 					accuracy_add(
-						this.owner,
+						own,
 						WEP_ARC.m_id,
 						0,
 						rootdamage * coefficient * falloff
@@ -646,8 +645,8 @@ void W_Arc_Beam_Think(entity this)
 
 				Damage(
 					trace_ent,
-					this.owner,
-					this.owner,
+					own,
+					own,
 					rootdamage * coefficient * falloff,
 					WEP_ARC.m_id,
 					hitorigin,
@@ -678,7 +677,7 @@ void W_Arc_Beam_Think(entity this)
 		this.beam_type = new_beam_type;
 	}
 
-	this.owner.(weaponentity).beam_prev = time;
+	own.(weaponentity).beam_prev = time;
 	this.nextthink = time;
 }
 
