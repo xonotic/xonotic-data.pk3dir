@@ -80,7 +80,7 @@ void monster_setupcolors(entity this);
 
 void Monster_Touch(entity this, entity toucher);
 
-void Monster_Move_2D(entity this, float mspeed, float allow_jumpoff);
+void Monster_Move_2D(entity this, float mspeed, float allow_jumpoff, int always_turn);
 
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func);
 

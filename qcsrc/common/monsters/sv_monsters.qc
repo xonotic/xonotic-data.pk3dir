@@ -1088,7 +1088,8 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	if(deathtype != DEATH_DROWN.m_id && deathtype != DEATH_FIRE.m_id && sound_allowed(MSG_BROADCAST, attacker))
 		spamsound (this, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
-	this.velocity += force * this.damageforcescale;
+	if(this.damageforcescale > 0)
+		this.velocity += force * this.damageforcescale;
 
 	if(deathtype != DEATH_DROWN.m_id && take)
 	{
@@ -1125,7 +1126,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 }
 
 // don't check for enemies, just keep walking in a straight line
-void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
+void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff, int always_turn)
 {
 	if(game_stopped || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || this.draggedby != NULL || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < this.spawn_time)
 	{
@@ -1145,9 +1146,9 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	bool reverse = false;
 	if(trace_fraction != 1.0)
 		reverse = true;
-	if(trace_ent && IS_PLAYER(trace_ent) && !(trace_ent.items & ITEM_Strength.m_itemid))
+	if(!(always_turn & 1) && trace_ent && IS_PLAYER(trace_ent) && !(trace_ent.items & ITEM_Strength.m_itemid))
 		reverse = false;
-	if(trace_ent && IS_MONSTER(trace_ent))
+	if(!(always_turn & 2) && trace_ent && IS_MONSTER(trace_ent))
 		reverse = true;
 
 	// TODO: fix this... tracing is broken if the floor is thin

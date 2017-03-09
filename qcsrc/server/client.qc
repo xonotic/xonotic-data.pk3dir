@@ -826,7 +826,7 @@ void DecodeLevelParms(entity this)
 {
 	// load parms
 	this.parm_idlesince = parm1;
-	if (this.parm_idlesince == -(86400 * 366))
+	if (this.parm_idlesince == -(86400 * 366)) // WTF
 		this.parm_idlesince = time;
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading

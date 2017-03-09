@@ -2,6 +2,8 @@
 
 bool autocvar_g_monster_spawner_copyfields = false; // just incase this gets too nasty
 
+.bool use_trigger_origin;
+
 void spawner_use(entity this, entity actor, entity trigger)
 {
 	int moncount = 0;
@@ -29,7 +31,13 @@ void spawner_use(entity this, entity actor, entity trigger)
 		e.monster_skill = this.monster_skill;
 	}
 
-	e = spawnmonster(e, this.spawnmob, 0, this, this, this.origin, false, true, this.monster_moveflags);
+	vector org = this.origin;
+	if(this.use_trigger_origin)
+	{
+		org = trigger.origin; // TODO: doesn't support brushes
+		e.angles = trigger.angles;
+	}
+	e = spawnmonster(e, this.spawnmob, 0, this, this, org, false, true, this.monster_moveflags);
 }
 
 spawnfunc(monster_spawner)
