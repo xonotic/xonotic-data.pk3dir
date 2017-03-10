@@ -253,17 +253,21 @@ void cvar_changes_init()
 
 		// mapinfo
 		BADCVAR("fraglimit");
+		BADCVAR("g_arena");
 		BADCVAR("g_assault");
 		BADCVAR("g_ca");
 		BADCVAR("g_ca_teams");
+		BADCVAR("g_conquest");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
+		BADCVAR("g_dotc");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
+		BADCVAR("g_jailbreak");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
@@ -274,8 +278,10 @@ void cvar_changes_init()
 		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
+		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
+		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
