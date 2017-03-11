@@ -467,7 +467,7 @@ vector GetCurrentFov(float fov)
 		{
 			entity wepent = viewmodels[slot];
 			if(wepent.switchweapon == wepent.activeweapon)
-			if(((wepent.activeweapon == WEP_VORTEX || wepent.activeweapon == WEP_OVERKILL_VORTEX) && !WEP_CVAR(vortex, secondary)) || (wepent.activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
+			if((wepent.activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (wepent.activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary)) || (wepent.activeweapon == WEP_OVERKILL_VORTEX && !WEP_CVAR(okvortex, secondary))) // do NOT use switchweapon here
 				zoomdir += button_attack2;
 		}
 	}
