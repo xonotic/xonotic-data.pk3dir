@@ -11,6 +11,7 @@
 #define PHYS_DODGING_UP_SPEED 				STAT(DODGING_UP_SPEED, this)
 #define PHYS_DODGING_WALL 					STAT(DODGING_WALL, this)
 #define PHYS_DODGING_AIR 					STAT(DODGING_AIR, this)
+#define PHYS_DODGING_MAXSPEED 				STAT(DODGING_MAXSPEED, this)
 #define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 
 #ifdef CSQC
@@ -123,10 +124,18 @@ bool PM_dodging_checkpressedkeys(entity this)
 
 	makevectors(this.angles);
 
+	bool wall_dodge = false;
+
 	if(!PHYS_DODGING_AIR)
-	if (check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD) != 1
-		&& check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
-		return true;
+	if(!check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD))
+	{
+		wall_dodge = check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD);
+		if(!wall_dodge) // we're not on the ground, and wall dodging isn't allowed, end it!
+			return true;
+	}
+
+	if(!wall_dodge && PHYS_DODGING_MAXSPEED && vdist(this.velocity, >, PHYS_DODGING_MAXSPEED))
+		return false;
 
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;

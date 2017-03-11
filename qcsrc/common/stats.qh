@@ -214,6 +214,7 @@ float autocvar_sv_dodging_ramp_time;
 float autocvar_sv_dodging_up_speed;
 bool autocvar_sv_dodging_wall_dodging;
 bool autocvar_sv_dodging_air_dodging;
+float autocvar_sv_dodging_maxspeed = 450;
 #endif
 
 REGISTER_STAT(DODGING, int, g_dodging)
@@ -230,6 +231,7 @@ REGISTER_STAT(DODGING_TIMEOUT, float)
 REGISTER_STAT(DODGING_UP_SPEED, float, autocvar_sv_dodging_up_speed)
 REGISTER_STAT(DODGING_WALL, bool, autocvar_sv_dodging_wall_dodging)
 REGISTER_STAT(DODGING_AIR, bool, autocvar_sv_dodging_air_dodging)
+REGISTER_STAT(DODGING_MAXSPEED, float, autocvar_sv_dodging_maxspeed)
 
 REGISTER_STAT(JETPACK_ACCEL_SIDE, float, autocvar_g_jetpack_acceleration_side)
 REGISTER_STAT(JETPACK_ACCEL_UP, float, autocvar_g_jetpack_acceleration_up)
