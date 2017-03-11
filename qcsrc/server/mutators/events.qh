@@ -880,13 +880,25 @@ MUTATOR_HOOKABLE(PrepareExplosionByDamage, EV_PrepareExplosionByDamage);
     /**/
 MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
 
-/**/
+/**
+ * Called before player changes their team. Return true to block team change.
+ */
 #define EV_Player_ChangeTeam(i, o) \
     /** player */         i(entity, MUTATOR_ARGV_0_entity) \
 	/** current team */   i(float, MUTATOR_ARGV_1_float) \
 	/** new team */       i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
+
+/**
+ * Called after player has changed their team.
+ */
+#define EV_Player_ChangedTeam(i, o) \
+    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
+	/** old team */   i(float, MUTATOR_ARGV_1_float) \
+	/** current team */       i(float, MUTATOR_ARGV_2_float) \
+    /**/
+MUTATOR_HOOKABLE(Player_ChangedTeam, EV_Player_ChangedTeam);
 
 /**/
 #define EV_URI_GetCallback(i, o) \

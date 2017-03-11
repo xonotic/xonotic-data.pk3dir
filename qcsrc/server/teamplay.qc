@@ -190,28 +190,38 @@ void SetPlayerColors(entity pl, float _color)
 	}
 }
 
+bool SetPlayerTeamSimple(entity player, int teamnum)
+{
+	if (player.team == teamnum)
+	{
+		return true;
+	}
+	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, Team_TeamToNumber(
+		player.team), Team_TeamToNumber(teamnum)) == true)
+	{
+		// Mutator has blocked team change.
+		return false;
+	}
+	int oldteam = player.team;
+	SetPlayerColors(player, teamnum - 1);
+	MUTATOR_CALLHOOK(Player_ChangedTeam, player, oldteam, player.team);
+	return true;
+}
+
 void SetPlayerTeam(entity pl, float t, float s, float noprint)
 {
-	float _color;
-
-	if(t == 4)
-		_color = NUM_TEAM_4 - 1;
-	else if(t == 3)
-		_color = NUM_TEAM_3 - 1;
-	else if(t == 2)
-		_color = NUM_TEAM_2 - 1;
-	else
-		_color = NUM_TEAM_1 - 1;
-
-	SetPlayerColors(pl,_color);
-
-	if(t != s) {
-		LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
-
-		if(!noprint)
-			bprint(playername(pl, false), "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
+	if (t == s)
+	{
+		return;
 	}
-
+	float teamnum = Team_NumberToTeam(t);
+	SetPlayerTeamSimple(pl, teamnum);
+	LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
+	if (noprint)
+	{
+		return;
+	}
+	bprint(playername(pl, false), "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
 }
 
 // set c1...c4 to show what teams are allowed
@@ -550,7 +560,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 		{
 			if(!only_return_best)
 			{
-				SetPlayerColors(this, selectedteam - 1);
+				SetPlayerTeamSimple(this, selectedteam);
 
 				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
 				// when JoinBestTeam is called by client.qc/ClientConnect the player_id is 0 the log attempt is rejected
@@ -565,22 +575,11 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 
 	if(!only_return_best && !this.bot_forced_team)
 	{
-		TeamchangeFrags(this);
-		if(smallest == 1)
+		smallest = Team_NumberToTeam(smallest);
+		if (smallest != -1)
 		{
-			SetPlayerColors(this, NUM_TEAM_1 - 1);
-		}
-		else if(smallest == 2)
-		{
-			SetPlayerColors(this, NUM_TEAM_2 - 1);
-		}
-		else if(smallest == 3)
-		{
-			SetPlayerColors(this, NUM_TEAM_3 - 1);
-		}
-		else if(smallest == 4)
-		{
-			SetPlayerColors(this, NUM_TEAM_4 - 1);
+			TeamchangeFrags(this);
+			SetPlayerTeamSimple(this, smallest);
 		}
 		else
 		{
@@ -645,7 +644,6 @@ void SV_ChangeTeam(entity this, float _color)
 	// not changing teams
 	if(scolor == dcolor)
 	{
-		//bprint("same team change\n");
 		SetPlayerTeam(this, dteam, steam, true);
 		return;
 	}
@@ -673,8 +671,6 @@ void SV_ChangeTeam(entity this, float _color)
 		// reduce frags during a team change
 		TeamchangeFrags(this);
 	}
-
-	MUTATOR_CALLHOOK(Player_ChangeTeam, this, steam, dteam);
 
 	SetPlayerTeam(this, dteam, steam, !IS_CLIENT(this));
 
