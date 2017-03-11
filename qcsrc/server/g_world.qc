@@ -268,6 +268,7 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
 		BADCVAR("g_jailbreak");
+		BADCVAR("g_jailbreak_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
