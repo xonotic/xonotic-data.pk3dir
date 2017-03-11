@@ -243,7 +243,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 
 MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 {
-	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
+	WepSet ok_start_items = (WEPSET(OVERKILL_MACHINEGUN) | WEPSET(OVERKILL_VORTEX) | WEPSET(OVERKILL_SHOTGUN));
 
 	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET(RPC); }
 	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET(HMG); }
@@ -292,7 +292,7 @@ void ok_Initialize()
 	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
-	WEP_SHOTGUN.mdl = "ok_shotgun";
-	WEP_MACHINEGUN.mdl = "ok_mg";
-	WEP_VORTEX.mdl = "ok_sniper";
+	//WEP_SHOTGUN.mdl = "ok_shotgun";
+	//WEP_MACHINEGUN.mdl = "ok_mg";
+	//WEP_VORTEX.mdl = "ok_sniper";
 }
