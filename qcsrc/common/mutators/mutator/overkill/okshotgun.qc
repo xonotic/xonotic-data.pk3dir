@@ -3,33 +3,6 @@
 #ifdef SVQC
 spawnfunc(weapon_okshotgun) { weapon_defaultspawnfunc(this, WEP_OVERKILL_SHOTGUN); }
 
-void W_OverkillShotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary)
-{
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(okshotgun, ammo), weaponentity);
-
-	W_SetupShot(actor, weaponentity, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(okshotgun, damage) * WEP_CVAR_PRI(okshotgun, bullets));
-	for(int sc = 0;sc < WEP_CVAR_PRI(okshotgun, bullets);sc = sc + 1)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR_PRI(okshotgun, spread), WEP_CVAR_PRI(okshotgun, solidpenetration), WEP_CVAR_PRI(okshotgun, damage), WEP_CVAR_PRI(okshotgun, force), WEP_OVERKILL_SHOTGUN.m_id, 0);
-
-	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(okshotgun, ammo));
-
-	// casing code
-	if(autocvar_g_casings >= 1)
-	{
-		makevectors(actor.v_angle); // for some reason, this is lost
-		//for(int sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
-			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor, weaponentity);
-	}
-
-	// muzzle flash for 1st person view
-	entity flash = spawn();
-	setmodel(flash, MDL_SHOTGUN_MUZZLEFLASH); // precision set below
-	setthink(flash, SUB_Remove);
-	flash.nextthink = time + 0.06;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
-}
-
 .float okshotgun_primarytime;
 
 METHOD(OverkillShotgun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
@@ -57,7 +30,13 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 		{
 			if (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okshotgun, animtime)))
 			{
-				W_OverkillShotgun_Attack(thiswep, actor, weaponentity, true);
+				W_Shotgun_Attack(thiswep, actor, weaponentity, true,
+					WEP_CVAR_PRI(okshotgun, ammo),
+					WEP_CVAR_PRI(okshotgun, damage),
+					WEP_CVAR_PRI(okshotgun, bullets),
+					WEP_CVAR_PRI(okshotgun, spread),
+					WEP_CVAR_PRI(okshotgun, solidpenetration),
+					WEP_CVAR_PRI(okshotgun, force));
 				actor.(weaponentity).okshotgun_primarytime = time + WEP_CVAR_PRI(okshotgun, refire) * W_WeaponRateFactor(actor);
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okshotgun, animtime), w_ready);
 			}
