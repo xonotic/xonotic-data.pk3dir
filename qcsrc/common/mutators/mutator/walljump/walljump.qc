@@ -1,5 +1,6 @@
 #include "walljump.qh"
 
+#ifdef GAMEQC
 #ifdef CSQC
 REGISTER_MUTATOR(walljump, true);
 #elif defined(SVQC)
@@ -68,3 +69,5 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 		}
 	}
 }
+
+#endif
