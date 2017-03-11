@@ -26,6 +26,7 @@
 
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
+#include <common/mutators/mutator/overkill/okvortex.qh>
 #include <common/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
@@ -466,7 +467,7 @@ vector GetCurrentFov(float fov)
 		{
 			entity wepent = viewmodels[slot];
 			if(wepent.switchweapon == wepent.activeweapon)
-			if((wepent.activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (wepent.activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
+			if((wepent.activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (wepent.activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary)) || (wepent.activeweapon == WEP_OVERKILL_VORTEX && !WEP_CVAR(okvortex, secondary))) // do NOT use switchweapon here
 				zoomdir += button_attack2;
 		}
 	}
@@ -658,6 +659,7 @@ float TrueAimCheck(entity wepent)
 		case WEP_MORTAR: // toss curve
 			return SHOTTYPE_HITWORLD;
 		case WEP_VORTEX:
+		case WEP_OVERKILL_VORTEX:
 		case WEP_VAPORIZER:
 			mv = MOVE_NORMAL;
 			break;
@@ -1180,7 +1182,7 @@ void HUD_Crosshair(entity this)
 				entity wepent = viewmodels[0]; // TODO: unhardcode
 
 				// handle the values
-				if (autocvar_crosshair_ring && wepent.activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
+				if (autocvar_crosshair_ring && (wepent.activeweapon == WEP_VORTEX || wepent.activeweapon == WEP_OVERKILL_VORTEX) && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
 				{
 					if (vortex_chargepool || use_vortex_chargepool) {
 						use_vortex_chargepool = 1;

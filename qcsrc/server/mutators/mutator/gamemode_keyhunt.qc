@@ -248,7 +248,8 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.angles_y -= key.owner.angles.y;
 #endif
 	key.flags = 0;
-	IL_REMOVE(g_items, key);
+	if(IL_CONTAINS(g_items, key))
+		IL_REMOVE(g_items, key);
 	key.solid = SOLID_NOT;
 	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
@@ -288,7 +289,8 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.angles_y += key.owner.angles.y;
 #endif
 	key.flags = FL_ITEM;
-	IL_PUSH(g_items, key);
+	if(!IL_CONTAINS(g_items, key))
+		IL_PUSH(g_items, key);
 	key.solid = SOLID_TRIGGER;
 	set_movetype(key, MOVETYPE_TOSS);
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;

@@ -28,6 +28,12 @@ string getwelcomemessage(entity this);
 
 void SetPlayerColors(entity pl, float _color);
 
+/// \brief Sets the team of the player.
+/// \param[in,out] player Player to adjust.
+/// \param[in] teamnum Team number to set. See TEAM_NUM constants.
+/// \return True if team switch was successful, false otherwise.
+bool SetPlayerTeamSimple(entity player, int teamnum);
+
 void SetPlayerTeam(entity pl, float t, float s, float noprint);
 
 // set c1...c4 to show what teams are allowed
