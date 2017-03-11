@@ -710,6 +710,59 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	}
 }
 
+// Lyberta: surv
+void HUD_Mod_SURV(vector mypos, vector mysize)
+{
+	mod_active = 1; // required in each mod function that always shows something
+	float defenderhealth = STAT(SURV_DEFENDER_HEALTH);
+	// Draw a health bar
+	float margin = mysize.y / 10; // Leave a small margin to be stylish
+	vector healthbarpos = mypos;
+	healthbarpos.x += margin;
+	healthbarpos.y += margin;
+	vector healthbarsize = mysize;
+	healthbarsize.x -= margin * 2;
+	healthbarsize.y -= margin * 2;
+	vector healthbarcolor;
+	healthbarcolor.z = 0;
+	if (defenderhealth > 0.5)
+	{
+		healthbarcolor.x = defenderhealth * -2 + 2;
+		healthbarcolor.y = 1;
+	}
+	else
+	{
+		healthbarcolor.x = 1;
+		healthbarcolor.y = defenderhealth;
+	}
+	HUD_Panel_DrawProgressBar(healthbarpos, healthbarsize, "progressbar",
+		defenderhealth, false, 0, healthbarcolor, 0.50, DRAWFLAG_NORMAL);
+	// Draw the time left
+	float roundtime = STAT(SURV_ROUND_TIME);
+	if (roundtime < 0)
+	{
+		roundtime = 0;
+	}
+	drawstring_aspect(mypos, seconds_tostring(roundtime), mysize, '1 1 1', 1,
+		DRAWFLAG_NORMAL);
+	
+	int redalive = STAT(REDALIVE);
+	int bluealive = STAT(BLUEALIVE);
+	int yellowalive = STAT(YELLOWALIVE);
+	int pinkalive = STAT(PINKALIVE);
+	string message = strcat(ftos(redalive), "/", ftos(yellowalive));
+	vector redpos = mypos;
+	redpos.y += mysize.y;
+	vector statsize = mysize;
+	statsize.x /= 2;
+	drawstring_aspect(redpos, message, statsize, '1 0 0', 1, DRAWFLAG_NORMAL);
+	message = strcat(ftos(bluealive), "/", ftos(pinkalive));
+	vector bluepos = mypos;
+	bluepos.x += mysize.x / 2;
+	bluepos.y += mysize.y;
+	drawstring_aspect(bluepos, message, statsize, '0 0 1', 1, DRAWFLAG_NORMAL);
+}
+
 void HUD_ModIcons_SetFunc()
 {
 	HUD_ModIcons_GameType = gametype.m_modicons;
