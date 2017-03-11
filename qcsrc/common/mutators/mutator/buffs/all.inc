@@ -4,8 +4,9 @@ string Buff_UndeprecateName(string buffname)
     {
         case "ammoregen": return "ammo";
         case "haste": case "scout": return "speed";
-        case "doubler": return "medic";
+        case "guard": case "revival": case "regen": return "medic";
         case "invis": return "invisible";
+        case "jumper": return "jump";
         default: return buffname;
     }
 }
