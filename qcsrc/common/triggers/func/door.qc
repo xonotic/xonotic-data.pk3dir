@@ -732,11 +732,12 @@ spawnfunc(func_door)
 
 	if (this.sounds > 0)
 	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
 		this.noise2 = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
 	}
+
+	if(this.noise1 && this.noise1 != "") { precache_sound(this.noise1); }
+	if(this.noise2 && this.noise2 != "") { precache_sound(this.noise2); }
 
 	if (!this.speed)
 		this.speed = 100;

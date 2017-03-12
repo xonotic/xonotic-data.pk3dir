@@ -354,6 +354,7 @@ void waypoint_schedulerelinkall()
 	{
 		waypoint_schedulerelink(it);
 	});
+	waypoint_load_links_hardwired();
 }
 
 // Load waypoint links from file
@@ -624,17 +625,14 @@ void waypoint_saveall()
 		if(it.wpflags & WAYPOINTFLAG_GENERATED)
 			continue;
 
-		for(int j = 0; j < 32; ++j)
-		{
-			string s;
-			s = strcat(vtos(it.origin + it.mins), "\n");
-			s = strcat(s, vtos(it.origin + it.maxs));
-			s = strcat(s, "\n");
-			s = strcat(s, ftos(it.wpflags));
-			s = strcat(s, "\n");
-			fputs(file, s);
-			++c;
-		}
+		string s;
+		s = strcat(vtos(it.origin + it.mins), "\n");
+		s = strcat(s, vtos(it.origin + it.maxs));
+		s = strcat(s, "\n");
+		s = strcat(s, ftos(it.wpflags));
+		s = strcat(s, "\n");
+		fputs(file, s);
+		c++;
 	});
 	fclose(file);
 	waypoint_save_links();
@@ -742,7 +740,7 @@ void waypoint_spawnforteleporter_boxes(entity e, vector org1, vector org2, vecto
 	// the teleporter's nearest spawnfunc_waypoint is this one
 	// (teleporters are not goals, so this is probably useless)
 	e.nearestwaypoint = w;
-	e.nearestwaypointtimeout = time + 1000000000;
+	e.nearestwaypointtimeout = -1;
 }
 
 void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken)

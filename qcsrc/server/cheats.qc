@@ -77,13 +77,13 @@ float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat get
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", this.netname, i);
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this, false), i);
 	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", this.netname, argv(0));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this, false), argv(0));
 	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", this.netname, fr);
+		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this, false), fr);
 	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", this.netname);
+		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this, false));
 
 	return 0;
 }
@@ -153,7 +153,7 @@ float CheatImpulse(entity this, int imp)
 			this.personal.ammo_plasma = this.ammo_plasma;
 			this.personal.ammo_shells = this.ammo_shells;
 			this.personal.ammo_fuel = this.ammo_fuel;
-			this.personal.health = this.health;
+			this.personal.health = max(1, this.health);
 			this.personal.armorvalue = this.armorvalue;
 			this.personal.weapons = this.weapons;
 			this.personal.items = this.items;
@@ -185,7 +185,8 @@ float CheatImpulse(entity this, int imp)
 			CheatCommand(this, tokenize_console("give all"));
 			break; // already counted as cheat
 		case CHIMPULSE_SPEEDRUN.impulse:
-			IS_CHEAT(this, imp, 0, 0);
+			if(!autocvar_g_allow_checkpoints)
+				IS_CHEAT(this, imp, 0, 0);
 			if(this.personal)
 			{
 				this.speedrunning = true;
@@ -222,7 +223,8 @@ float CheatImpulse(entity this, int imp)
 				this.strength_finished = time + this.personal.strength_finished - this.personal.teleport_time;
 				this.invincible_finished = time + this.personal.invincible_finished - this.personal.teleport_time;
 
-				DID_CHEAT();
+				if(!autocvar_g_allow_checkpoints)
+					DID_CHEAT();
 				break;
 			}
 			if(IS_DEAD(this))
@@ -324,7 +326,7 @@ float CheatCommand(entity this, int argc)
 				//   effectname
 				effectnum = _particleeffectnum(argv(1));
 				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
-				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, this);
+				traceline(w_shotorg, w_shotorg + w_shotdir * max_shot_distance, MOVE_NORMAL, this);
 				__trailparticles(this, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
 				break;
@@ -880,7 +882,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	dragger.dragdistance = vlen(touchpoint - dragger.origin - dragger.view_ofs);
 	dragger.draglocalangle = draggee.angles.y - dragger.v_angle.y;
 	touchpoint = touchpoint - gettaginfo(draggee, 0);
-	tagscale = pow(vlen(v_forward), -2);
+	tagscale = (vlen(v_forward) ** -2);
 	dragger.draglocalvector_x = touchpoint * v_forward * tagscale;
 	dragger.draglocalvector_y = touchpoint * v_right * tagscale;
 	dragger.draglocalvector_z = touchpoint * v_up * tagscale;
@@ -962,7 +964,7 @@ void Drag_MoveForward(entity dragger)
 
 void Drag_SetSpeed(entity dragger, float s)
 {
-	dragger.dragspeed = pow(2, s);
+	dragger.dragspeed = (2 ** s);
 }
 
 void Drag_MoveBackward(entity dragger)

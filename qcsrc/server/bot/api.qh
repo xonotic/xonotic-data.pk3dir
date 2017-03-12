@@ -46,7 +46,7 @@ float skill;
 .float wpcost;
 .int wpflags;
 
-bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
+bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
 void bot_clientconnect(entity this);
 void bot_clientdisconnect(entity this);
 void bot_cmdhelp(string scmd);
@@ -66,7 +66,13 @@ entity find_bot_by_number(float number);
 
 void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius);
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius);
+void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius);
 
+.entity bot_basewaypoint;
+.bool navigation_dynamicgoal;
+void navigation_dynamicgoal_init(entity this, bool initially_static);
+void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_unset(entity this);
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
 void navigation_goalrating_end(entity this);
 void navigation_goalrating_start(entity this);

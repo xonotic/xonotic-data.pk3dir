@@ -6,11 +6,14 @@
 .float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit(entity this);
 
-REGISTER_MUTATOR(buffs, cvar("g_buffs"))
+AUTOCVAR(g_buffs, int, -1, "Enable buffs, -1: enabled but no auto location or replacing powerups, 1: enabled and can replace them");
+
+REGISTER_MUTATOR(buffs, autocvar_g_buffs)
 {
 	MUTATOR_ONADD
 	{
-		InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
+		if(autocvar_g_buffs > 0)
+			InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
 	}
 }
 
@@ -111,7 +114,7 @@ void buff_SetCooldown(entity this, float cd)
 
 void buff_Respawn(entity this)
 {
-	if(gameover) { return; }
+	if(game_stopped) return;
 
 	vector oldbufforigin = this.origin;
 	this.velocity = '0 0 200';
@@ -146,7 +149,7 @@ void buff_Respawn(entity this)
 
 void buff_Touch(entity this, entity toucher)
 {
-	if(gameover) { return; }
+	if(game_stopped) return;
 
 	if(ITEM_TOUCH_NEEDKILL())
 	{
@@ -157,6 +160,7 @@ void buff_Touch(entity this, entity toucher)
 	if((this.team && DIFF_TEAM(toucher, this))
 	|| (STAT(FROZEN, toucher))
 	|| (toucher.vehicle)
+	|| (time < toucher.buff_shield)
 	|| (!this.buff_active)
 	)
 	{
@@ -210,15 +214,17 @@ float buff_Available(entity buff)
 
 .int buff_seencount;
 
-void buff_NewType(entity ent, float cb)
+void buff_NewType(entity ent)
 {
 	RandomSelection_Init();
-	FOREACH(Buffs, buff_Available(it), LAMBDA(
-		it.buff_seencount += 1;
+	FOREACH(Buffs, buff_Available(it),
+	{
 		// if it's already been chosen, give it a lower priority
-		RandomSelection_AddFloat(it.m_itemid, 1, max(0.2, 1 / it.buff_seencount));
-	));
-	ent.buffs = RandomSelection_chosen_float;
+		RandomSelection_AddEnt(it, 1, max(0.2, 1 / it.buff_seencount));
+	});
+	entity newbuff = RandomSelection_chosen_ent;
+	newbuff.buff_seencount += 1; // lower chances of seeing this buff again soon
+	ent.buffs = newbuff.m_itemid;
 }
 
 void buff_Think(entity this)
@@ -245,7 +251,7 @@ void buff_Think(entity this)
 		this.oldbuffs = this.buffs;
 	}
 
-	if(!gameover)
+	if(!game_stopped)
 	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
 	if(!this.buff_activetime_updated)
 	{
@@ -254,19 +260,19 @@ void buff_Think(entity this)
 	}
 
 	if(!this.buff_active && !this.buff_activetime)
-	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || !(this.owner.buffs & this.buffs))
+	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || !(this.owner.buffs & this.buffs) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
 		if(autocvar_g_buffs_randomize)
-			buff_NewType(this, this.buffs);
+			buff_NewType(this);
 
 		if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
 			buff_Respawn(this);
 	}
 
 	if(this.buff_activetime)
-	if(!gameover)
+	if(!game_stopped)
 	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
 	{
 		this.buff_activetime = max(0, this.buff_activetime - frametime);
@@ -303,7 +309,7 @@ void buff_Waypoint_Reset(entity this)
 void buff_Reset(entity this)
 {
 	if(autocvar_g_buffs_randomize)
-		buff_NewType(this, this.buffs);
+		buff_NewType(this);
 	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset(this);
@@ -340,14 +346,14 @@ void buff_Init(entity this)
 
 	entity buff = buff_FirstFromFlags(this.buffs);
 
-	if(!this.buffs || buff_Available(buff))
-		buff_NewType(this, 0);
+	if(!this.buffs || !buff_Available(buff))
+		buff_NewType(this);
 
 	this.classname = "item_buff";
 	this.solid = SOLID_TRIGGER;
 	this.flags = FL_ITEM;
 	this.bot_pickup = true;
-	this.bot_pickupevalfunc = commodity_pickupevalfunc;
+	this.bot_pickupevalfunc = generic_pickupevalfunc;
 	this.bot_pickupbasevalue = 1000;
 	IL_PUSH(g_items, this);
 	setthink(this, buff_Think);
@@ -364,7 +370,7 @@ void buff_Init(entity this)
 	//this.gravity = 100;
 	this.color = buff.m_color;
 	this.glowmod = buff_GlowColor(this);
-	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate + game_starttime);
+	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate + max(0, game_starttime - time));
 	this.buff_active = !this.buff_activetime;
 	this.pflags = PFLAGS_FULLDYNAMIC;
 
@@ -447,7 +453,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -554,6 +560,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 
 	player.buffs = 0;
 	player.buff_time = 0;
+	player.buff_shield = time + 0.5; // prevent picking up buffs immediately
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
@@ -625,7 +632,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return; }
+	if(MUTATOR_RETURNVALUE || game_stopped || !autocvar_g_buffs_drop) return;
 
 	entity player = M_ARGV(0, entity);
 
@@ -636,7 +643,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		player.buffs = 0;
-		player.buff_time = 0; // already notified
+		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
+		//player.buff_time = 0; // already notified
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
@@ -644,7 +652,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return; }
+	if(MUTATOR_RETURNVALUE || game_stopped) return;
 	entity player = M_ARGV(0, entity);
 
 	if(player.buffs & BUFF_SWAPPER.m_itemid)
@@ -744,6 +752,9 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {
+	if(autocvar_g_buffs < 0)
+		return; // no auto replacing of entities in this mode
+
 	entity ent = M_ARGV(0, entity);
 
 	if(autocvar_g_buffs_replace_powerups)
@@ -781,11 +792,24 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
 
+.bool buff_flight_crouchheld;
+
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(gameover || IS_DEAD(player)) { return; }
+	if(game_stopped || IS_DEAD(player) || frametime || !IS_PLAYER(player)) return;
+
+	if(player.buffs & BUFF_FLIGHT.m_itemid)
+	{
+		if(!PHYS_INPUT_BUTTON_CROUCH(player))
+			player.buff_flight_crouchheld = false;
+		else if(!player.buff_flight_crouchheld)
+		{
+			player.buff_flight_crouchheld = true;
+			player.gravity *= -1;
+		}
+	}
 
 	if(time < player.buff_disability_time)
 	if(time >= player.buff_disability_effect_time)
@@ -821,6 +845,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			else
 				Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 			player.buffs = 0;
+			player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
 		}
 	}
 
@@ -843,12 +868,17 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	}
 
 	if(player.buffs & BUFF_AMMO.m_itemid)
-	if(player.clip_size)
-		player.clip_load = player.(weapon_load[PS(player).m_switchweapon.m_id]) = player.clip_size;
+	{
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(player.(weaponentity).clip_size)
+				player.(weaponentity).clip_load = player.(weaponentity).(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.(weaponentity).clip_size;
+		}
+	}
 
 	if((player.buffs & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
-	if(player.alpha != autocvar_g_buffs_invisible_alpha)
-		player.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
+		player.alpha = ((autocvar_g_buffs_invisible_alpha) ? autocvar_g_buffs_invisible_alpha : -1); // powerups reset alpha, so we must enforce this (TODO)
 
 	if(player.buffs & BUFF_MEDIC.m_itemid)
 	if(time >= player.buff_medic_healtime)
@@ -871,9 +901,17 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_WEAPON_AMMO);
 			player.items |= IT_UNLIMITED_WEAPON_AMMO;
 
-			if(player.clip_load)
-				player.buff_ammo_prev_clipload = player.clip_load;
-			player.clip_load = player.(weapon_load[PS(player).m_switchweapon.m_id]) = player.clip_size;
+			if(player.buffs & BUFF_AMMO.m_itemid)
+			{
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					.entity weaponentity = weaponentities[slot];
+					if(player.(weaponentity).clip_load)
+						player.(weaponentity).buff_ammo_prev_clipload = player.(weaponentity).clip_load;
+					if(player.(weaponentity).clip_size)
+						player.(weaponentity).clip_load = player.(weaponentity).(weapon_load[player.(weaponentity).m_switchweapon.m_id]) = player.(weaponentity).clip_size;
+				}
+			}
 		}
 
 		BUFF_ONREM(BUFF_AMMO)
@@ -883,21 +921,43 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			else
 				player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
 
-			if(player.buff_ammo_prev_clipload)
-				player.clip_load = player.buff_ammo_prev_clipload;
+			if(player.buffs & BUFF_AMMO.m_itemid)
+			{
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					.entity weaponentity = weaponentities[slot];
+					if(player.(weaponentity).buff_ammo_prev_clipload)
+						player.(weaponentity).clip_load = player.(weaponentity).buff_ammo_prev_clipload;
+				}
+			}
 		}
 
 		BUFF_ONADD(BUFF_INVISIBLE)
 		{
 			if(time < player.strength_finished && g_instagib)
-				player.alpha = autocvar_g_instagib_invis_alpha;
+				player.buff_invisible_prev_alpha = default_player_alpha; // we don't want to save the powerup's alpha, as player may lose the powerup while holding the buff
 			else
-				player.alpha = player.buff_invisible_prev_alpha;
+				player.buff_invisible_prev_alpha = player.alpha;
 			player.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 
 		BUFF_ONREM(BUFF_INVISIBLE)
-			player.alpha = player.buff_invisible_prev_alpha;
+		{
+			if(time < player.strength_finished && g_instagib)
+				player.alpha = autocvar_g_instagib_invis_alpha;
+			else
+				player.alpha = player.buff_invisible_prev_alpha;
+		}
+
+		BUFF_ONADD(BUFF_FLIGHT)
+		{
+			player.buff_flight_oldgravity = player.gravity;
+			if(!player.gravity)
+				player.gravity = 1;
+		}
+
+		BUFF_ONREM(BUFF_FLIGHT)
+			player.gravity = ((player.trigger_gravity_check) ? player.trigger_gravity_check.enemy.gravity : player.buff_flight_oldgravity);
 
 		player.oldbuffs = player.buffs;
 		if(player.buffs)
@@ -913,7 +973,8 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		}
 		else
 		{
-			delete(player.buff_model);
+			if(player.buff_model)
+				delete(player.buff_model);
 			player.buff_model = NULL;
 
 			player.effects &= ~(EF_NOSHADOW);
@@ -939,6 +1000,7 @@ MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
 	entity client = M_ARGV(1, entity);
 
 	client.buffs = spectatee.buffs;
+	client.buff_time = spectatee.buff_time;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
@@ -982,12 +1044,14 @@ REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Buffs");
+	if(autocvar_g_buffs > 0) // only report as a mutator if they're enabled
+		M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Buffs");
 }
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 {
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Buffs");
+	if(autocvar_g_buffs > 0)
+		M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Buffs");
 }
 
 void buffs_DelayedInit(entity this)

@@ -22,7 +22,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	if((PS_GR_OUT_DB < 0) || (e.playerstats_id)) { return; }
 
 	// set up player identification
-	string s = string_null;
+	string s = "";
 
 	if((e.crypto_idfp != "") && (e.cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
@@ -133,7 +133,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
 	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
-		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), p.netname);
+		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p, false));
 
 	if(teamplay)
 		db_put(PS_GR_OUT_DB, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
@@ -257,6 +257,12 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 	else { PlayerStats_GameReport_DelayMapVote = false; }
 }
 
+// this... is a hack, a temporary one until we get a proper duel gametype
+string PlayerStats_GetGametype()
+{
+	return ((IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2) ? "duel" : GetGametype());
+}
+
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 {
 	string t, tn;
@@ -313,7 +319,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 			#endif
-			url_fputs(fh, sprintf("G %s\n", GetGametype()));
+			url_fputs(fh, sprintf("G %s\n", PlayerStats_GetGametype()));
 			url_fputs(fh, sprintf("O %s\n", modname));
 			url_fputs(fh, sprintf("M %s\n", GetMapname()));
 			url_fputs(fh, sprintf("I %s\n", matchid));
@@ -556,7 +562,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
                     case "e":
                         LOG_TRACE("G: ", gt);
                         LOG_TRACE("e: ", data);
-                        if (gt == GetGametype()) {
+                        if (gt == PlayerStats_GetGametype()) {
                             handled = true;
                             float e = stof(data);
                             PlayerScore_Add(p, SP_ELO, +1 + e);

@@ -288,7 +288,7 @@ string getmonsterlist()
 {
 	string monsterlist = "";
 
-	FOREACH(Monsters, it != MON_Null,
+	FOREACH(Monsters, it != MON_Null && !(it.spawnflags & MON_FLAG_HIDDEN),
 	{
 		string col = ((i % 2) ? "^2" : "^3");
 		monsterlist = sprintf("%s%s%s ", monsterlist, col, it.netname);

@@ -460,7 +460,7 @@ vector fixrgbexcess(vector rgb)
 void Draw_WaypointSprite(entity this)
 {
     if (this.lifetime > 0)
-        this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
+        this.alpha = (bound(0, (this.fadetime - time) / this.lifetime, 1) ** waypointsprite_timealphaexponent);
     else
         this.alpha = 1;
 
@@ -475,13 +475,13 @@ void Draw_WaypointSprite(entity this)
 
     InterpolateOrigin_Do(this);
 
+    float t = entcs_GetTeam(player_localnum) + 1;
     string spriteimage = "";
 
     // choose the sprite
     switch (this.rule)
     {
         case SPRITERULE_SPECTATOR:
-            float t = entcs_GetTeam(player_localnum) + 1;
             if (!(
                 (autocvar_g_waypointsprite_itemstime == 1 && t == NUM_SPECTATOR + 1)
             ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage || STAT(ITEMSTIME) == 2))
@@ -492,7 +492,7 @@ void Draw_WaypointSprite(entity this)
         case SPRITERULE_DEFAULT:
             if (this.team)
             {
-                if (this.team == myteam + 1)
+                if (this.team == t)
                     spriteimage = this.netname;
                 else
                     spriteimage = "";
@@ -501,9 +501,9 @@ void Draw_WaypointSprite(entity this)
                 spriteimage = this.netname;
             break;
         case SPRITERULE_TEAMPLAY:
-            if (myteam == NUM_SPECTATOR)
+            if (t == NUM_SPECTATOR + 1)
                 spriteimage = this.netname3;
-            else if (this.team == myteam + 1)
+            else if (this.team == t)
                 spriteimage = this.netname2;
             else
                 spriteimage = this.netname;
@@ -522,9 +522,9 @@ void Draw_WaypointSprite(entity this)
     float a = this.alpha * autocvar_hud_panel_fg_alpha;
 
     if (this.maxdistance > waypointsprite_normdistance)
-        a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
+        a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent);
     else if (this.maxdistance > 0)
-        a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+        a *= (bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
     vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')
@@ -611,9 +611,9 @@ void Draw_WaypointSprite(entity this)
     (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o.x,
     (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o.y);
 
-    float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
+    float crosshairdistance = sqrt( ((o.x - vid_conwidth/2) ** 2) + ((o.y - vid_conheight/2) ** 2) );
 
-    float t = waypointsprite_scale;
+    t = waypointsprite_scale;
     a *= waypointsprite_alpha;
 
     {

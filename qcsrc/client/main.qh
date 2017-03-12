@@ -53,9 +53,6 @@ bool button_zoom;
 bool spectatorbutton_zoom;
 bool button_attack2;
 
-Weapon activeweapon;
-Weapon switchingweapon;
-Weapon switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;

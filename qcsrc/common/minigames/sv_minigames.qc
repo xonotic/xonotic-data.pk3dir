@@ -264,7 +264,7 @@ string invite_minigame(entity inviter, entity player)
 {
 	if ( !inviter || !inviter.active_minigame )
 		return "Invalid minigame";
-	if ( !VerifyClientEntity(player, true, false) )
+	if ( VerifyClientEntity(player, true, false) <= 0 )
 		return "Invalid player";
 	if ( inviter == player )
 		return "You can't invite yourself";

@@ -151,7 +151,7 @@ bool racer_frame(entity this, float dt)
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(gameover)
+	if(game_stopped)
 	{
 		vehic.solid = SOLID_NOT;
 		vehic.takedamage = DAMAGE_NO;
@@ -289,9 +289,10 @@ bool racer_frame(entity this, float dt)
 #ifdef SVQC
 
 	Weapon wep1 = WEP_RACER;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if (!forbidWeaponUse(this))
 	if (PHYS_INPUT_BUTTON_ATCK(this))
-	if (wep1.wr_checkammo1(wep1, vehic))
+	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
 		string tagname = (vehic.cnt)
 		    ? (vehic.cnt = 0, "tag_fire1")
@@ -302,7 +303,6 @@ bool racer_frame(entity this, float dt)
 		// Fix z-aim (for chase mode)
 		crosshair_trace(this);
 		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
-		.entity weaponentity = weaponentities[0];
 		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 
@@ -426,7 +426,7 @@ void racer_exit(entity this, int eject)
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
-		spot = vehicles_findgoodexit(this, spot);
+		spot = vehicles_findgoodexit(this, this.owner, spot);
 		setorigin(this.owner, spot);
 		this.owner.velocity = (v_up + v_forward * 0.25) * 750;
 		this.owner.oldvelocity = this.owner.velocity;
@@ -438,14 +438,14 @@ void racer_exit(entity this, int eject)
 			this.owner.velocity = normalize(this.velocity) * autocvar_sv_maxairspeed * 2;
 			this.owner.velocity_z += 200;
 			spot = this.origin + v_forward * 32 + '0 0 32';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, this.owner, spot);
 		}
 		else
 		{
 			this.owner.velocity = this.velocity * 0.5;
 			this.owner.velocity_z += 10;
 			spot = this.origin - v_forward * 200 + '0 0 32';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, this.owner, spot);
 		}
 		this.owner.oldvelocity = this.owner.velocity;
 		setorigin(this.owner , spot);

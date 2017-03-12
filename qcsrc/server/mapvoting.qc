@@ -180,7 +180,7 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	pakfile = string_null;
 	for(i = 0; i < mapvote_screenshot_dirs_count; ++i)
 	{
-		mapfile = strcat(mapvote_screenshot_dirs[i], "/", mapvote_maps[i]);
+		mapfile = strcat(mapvote_screenshot_dirs[i], "/", nextMap);
 		pakfile = whichpack(strcat(mapfile, ".tga"));
 		if(pakfile == "")
 			pakfile = whichpack(strcat(mapfile, ".jpg"));

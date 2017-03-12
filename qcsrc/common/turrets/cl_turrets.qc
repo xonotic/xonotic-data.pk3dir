@@ -67,12 +67,13 @@ void turret_draw2d(entity this)
 		return;
 
 	float dist = vlen(this.origin - view_origin);
+	float t = (entcs_GetTeam(player_localnum) + 1);
 
 	vector o;
 	string txt;
 
 	if(autocvar_cl_vehicles_hud_tactical)
-	if(dist < 10240 && (myteam + 1 != this.team))
+	if(dist < 10240 && t != this.team)
 	{
 		// TODO: Vehicle tactical hud
 		o = project_3d_to_2d(this.origin + '0 0 32');
@@ -104,9 +105,9 @@ void turret_draw2d(entity this)
 
 
 	if(this.maxdistance > waypointsprite_normdistance)
-		a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
+		a *= (bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent);
 	else if(this.maxdistance > 0)
-		a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
+		a *= (bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1) ** waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
 	if(rgb == '0 0 0')
 	{
@@ -120,7 +121,7 @@ void turret_draw2d(entity this)
 	else
 		txt = spritelookuptext(this, spriteimage);
 
-	if(time - floor(time) > 0.5 && (myteam + 1 == this.team))
+	if(time - floor(time) > 0.5 && t == this.team)
 	{
 		if(this.helpme && time < this.helpme)
 		{
@@ -160,9 +161,9 @@ void turret_draw2d(entity this)
 	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
-	float crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
+	float crosshairdistance = sqrt( ((o.x - vid_conwidth/2) ** 2) + ((o.y - vid_conheight/2) ** 2) );
 
-	float t = waypointsprite_scale;
+	t = waypointsprite_scale;
 	a *= waypointsprite_alpha;
 
 	{

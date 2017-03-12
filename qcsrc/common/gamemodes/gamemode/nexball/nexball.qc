@@ -168,6 +168,7 @@ void GiveBall(entity plyr, entity ball)
 		ball.teamtime = time + autocvar_g_nexball_basketball_delay_hold_forteam;
 
 	ball.owner = ball.pusher = plyr; //"owner" is set to the player carrying, "pusher" to the last player who touched it
+	ball.weaponentity_fld = weaponentity;
 	ball.team = plyr.team;
 	plyr.ballcarried = ball;
 	ball.nb_dropper = plyr;
@@ -191,12 +192,12 @@ void GiveBall(entity plyr, entity ball)
 	}
 
 	plyr.(weaponentity).weapons = plyr.weapons;
-	plyr.(weaponentity).m_switchweapon = PS(plyr).m_weapon;
+	plyr.m_switchweapon = plyr.(weaponentity).m_weapon;
 	plyr.weapons = WEPSET(NEXBALL);
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w, plyr);
-	PS(plyr).m_switchweapon = WEP_NEXBALL;
-	W_SwitchWeapon(plyr, WEP_NEXBALL);
+	plyr.(weaponentity).m_switchweapon = WEP_NEXBALL;
+	W_SwitchWeapon(plyr, WEP_NEXBALL, weaponentity);
 }
 
 void DropBall(entity ball, vector org, vector vel)
@@ -219,7 +220,7 @@ void DropBall(entity ball, vector org, vector vel)
 	if(ball.owner.metertime)
 	{
 		ball.owner.metertime = 0;
-		.entity weaponentity = weaponentities[0]; // TODO: find ballstealer
+		.entity weaponentity = ball.weaponentity_fld;
 		ball.owner.(weaponentity).state = WS_READY;
 	}
 
@@ -233,7 +234,7 @@ void DropBall(entity ball, vector org, vector vel)
 
 void InitBall(entity this)
 {
-	if(gameover) return;
+	if(game_stopped) return;
 	UNSET_ONGROUND(this);
 	set_movetype(this, MOVETYPE_BOUNCE);
 	if(this.classname == "nexball_basketball")
@@ -361,7 +362,7 @@ void GoalTouch(entity this, entity toucher)
 	float isclient, pscore, otherteam;
 	string pname;
 
-	if(gameover) return;
+	if(game_stopped) return;
 	if((this.spawnflags & GOAL_TOUCHPLAYER) && toucher.ballcarried)
 		ball = toucher.ballcarried;
 	else
@@ -903,19 +904,24 @@ METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity we
     }
 }
 
-METHOD(BallStealer, wr_setup, void(BallStealer this, entity actor))
+METHOD(BallStealer, wr_setup, void(BallStealer this, entity actor, .entity weaponentity))
 {
     TC(BallStealer, this);
     //weapon_setup(WEP_PORTO.m_id);
 }
 
-METHOD(BallStealer, wr_checkammo1, bool(BallStealer this, entity actor))
+METHOD(BallStealer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    TC(BallStealer, this);
+}
+
+METHOD(BallStealer, wr_checkammo1, bool(BallStealer this, entity actor, .entity weaponentity))
 {
     TC(BallStealer, this);
     return true;
 }
 
-METHOD(BallStealer, wr_checkammo2, bool(BallStealer this, entity actor))
+METHOD(BallStealer, wr_checkammo2, bool(BallStealer this, entity actor, .entity weaponentity))
 {
     TC(BallStealer, this);
     return true;
@@ -998,16 +1004,20 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 		}
 		else
 		{
-			.entity weaponentity = weaponentities[0]; // TODO
-			if(player.(weaponentity).weapons)
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
-				player.weapons = player.(weaponentity).weapons;
-				Weapon w = WEP_NEXBALL;
-				w.wr_resetplayer(w, player);
-				PS(player).m_switchweapon = player.(weaponentity).m_switchweapon;
-				W_SwitchWeapon(player, PS(player).m_switchweapon);
+				.entity weaponentity = weaponentities[slot];
 
-				player.(weaponentity).weapons = '0 0 0';
+				if(player.(weaponentity).weapons)
+				{
+					player.weapons = player.(weaponentity).weapons;
+					Weapon w = WEP_NEXBALL;
+					w.wr_resetplayer(w, player);
+					player.(weaponentity).m_switchweapon = player.m_switchweapon;
+					W_SwitchWeapon(player, player.(weaponentity).m_switchweapon, weaponentity);
+
+					player.(weaponentity).weapons = '0 0 0';
+				}
 			}
 		}
 
@@ -1029,8 +1039,11 @@ MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.metertime = 0;
-	.entity weaponentity = weaponentities[0];
-	player.(weaponentity).weapons = '0 0 0';
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		player.(weaponentity).weapons = '0 0 0';
+	}
 
 	if (nexball_mode & NBM_BASKETBALL)
 		player.weapons |= WEPSET(NEXBALL);
@@ -1056,16 +1069,18 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
 {
-	entity player = M_ARGV(0, entity);
+	//entity player = M_ARGV(0, entity);
+	entity wepent = M_ARGV(1, entity);
 
-	return PS(player).m_weapon == WEP_NEXBALL;
+	return wepent.m_weapon == WEP_NEXBALL;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidDropCurrentWeapon)
 {
-	entity player = M_ARGV(0, entity);
+	//entity player = M_ARGV(0, entity);
+	int wep = M_ARGV(1, int);
 
-	return PS(player).m_weapon == WEP_MORTAR; // TODO: what is this for?
+	return wep == WEP_MORTAR.m_id; // TODO: what is this for?
 }
 
 MUTATOR_HOOKFUNCTION(nb, FilterItem)

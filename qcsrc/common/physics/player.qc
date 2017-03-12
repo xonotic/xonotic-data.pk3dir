@@ -85,7 +85,7 @@ float GeomLerp(float a, float _lerp, float b)
 {
 	return a == 0 ? (_lerp < 1 ? 0 : b)
 		: b == 0 ? (_lerp > 0 ? 0 : a)
-		: a * pow(fabs(b / a), _lerp);
+		: a * (fabs(b / a) ** _lerp);
 }
 
 void PM_ClientMovement_UpdateStatus(entity this)
@@ -96,8 +96,15 @@ void PM_ClientMovement_UpdateStatus(entity this)
 
 	// set crouched
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-	if(this.hook && !wasfreed(this.hook))
-		do_crouch = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wep = viewmodels[slot];
+		if(wep.hook && !wasfreed(wep.hook))
+		{
+			do_crouch = false;
+			break; // don't bother checking the others
+		}
+	}
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		do_crouch = false;
 	if(hud != HUD_NORMAL)
@@ -146,7 +153,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 
 	if (dot > 0) // we can't change direction while slowing down
 	{
-		k *= pow(dot, PHYS_AIRCONTROL_POWER(this)) * dt;
+		k *= (dot ** PHYS_AIRCONTROL_POWER(this)) * dt;
 		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY(this) * sqrt(max(0, 1 - dot*dot)) * k/32);
 		k *= PHYS_AIRCONTROL(this);
 		this.velocity = normalize(this.velocity * xyspeed + wishdir * k);
@@ -285,6 +292,7 @@ bool PlayerJump(entity this)
 
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY(this);
+	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 
 	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
 		return true;
@@ -298,6 +306,7 @@ bool PlayerJump(entity this)
 		{
 			doublejump = true;
 			mjumpheight *= 0.7;
+			track_jump = true;
 		}
 		else
 		{
@@ -310,7 +319,6 @@ bool PlayerJump(entity this)
 		if (!IS_ONGROUND(this) && !IS_ONSLICK(this))
 			return IS_JUMP_HELD(this);
 
-	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 	if(PHYS_TRACK_CANJUMP(this))
 		track_jump = true;
 
@@ -608,7 +616,12 @@ void PM_check_hitground(entity this)
     this.wasFlying = false;
     if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
     if (time < this.ladder_time) return;
-    if (this.hook) return;
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	if(this.(weaponentity).hook)
+    		return;
+    }
     this.nextstep = time + 0.3 + random() * 0.1;
     trace_dphitq3surfaceflags = 0;
     tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);

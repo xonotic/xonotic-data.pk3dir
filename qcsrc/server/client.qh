@@ -53,7 +53,7 @@ CLASS(Client, Object)
         CONSTRUCT(Client);
         this.netname = name;
         this.netaddress = "local";
-        this.playermodel = "models/player/megaerebus.iqm";
+        this.playermodel = cvar_defstring("sv_defaultplayermodel");
     }
 ENDCLASS(Client)
 

@@ -46,7 +46,7 @@ void monster_dropitem(entity this, entity attacker)
 	if(e && e.monster_loot)
 	{
 		e.noalign = true;
-		e.monster_loot(e);
+		StartItem(e, e.monster_loot);
 		e.gravity = 1;
 		set_movetype(e, MOVETYPE_TOSS);
 		e.reset = SUB_Remove;
@@ -99,9 +99,10 @@ bool Monster_ValidTarget(entity this, entity targ)
 		return false;
 	}
 
-	traceline(this.origin + this.view_ofs, targ.origin, MOVE_NOMONSTERS, this);
+	vector targ_origin = ((targ.absmin + targ.absmax) * 0.5);
+	traceline(this.origin + this.view_ofs, targ_origin, MOVE_NOMONSTERS, this);
 
-	if(trace_fraction < 1)
+	if(trace_fraction < 1 && trace_ent != targ)
 		return false; // solid
 
 	if(autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT))
@@ -409,16 +410,18 @@ bool Monster_Attack_Leap(entity this, vector anm, void(entity this, entity touch
 	return true;
 }
 
-void Monster_Attack_Check(entity this, entity targ)
+void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 {
+	int slot = weaponslot(weaponentity);
+
 	if((!this || !targ)
 	|| (!this.monster_attackfunc)
-	|| (time < this.attack_finished_single[0])
+	|| (time < this.attack_finished_single[slot])
 	) { return; }
 
 	if(vdist(targ.origin - this.origin, <=, this.attack_range))
 	{
-		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ);
+		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -427,7 +430,7 @@ void Monster_Attack_Check(entity this, entity targ)
 
 	if(vdist(targ.origin - this.origin, >, this.attack_range))
 	{
-		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ);
+		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);
 		if(attack_success == 1)
 			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -691,7 +694,8 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
 	// update goal entity if lost
-	if(this.target2 && this.goalentity.targetname != this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
+	if(this.target2 && this.target2 != "" && this.goalentity.targetname != this.target2)
+		this.goalentity = find(NULL, targetname, this.target2);
 
 	if(STAT(FROZEN, this) == 2)
 	{
@@ -780,7 +784,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	entity targ = this.goalentity;
 
 	if (MUTATOR_CALLHOOK(MonsterMove, this, runspeed, walkspeed, targ)
-		|| gameover
+		|| game_stopped
 		|| this.draggedby != NULL
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted())
 		|| time < game_starttime
@@ -864,9 +868,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	else
 	{
 		entity e = this.goalentity; //find(NULL, targetname, this.target2);
-		if(e.target2)
+		if(e.target2 && e.target2 != "")
 			this.target2 = e.target2;
-		else if(e.target) // compatibility
+		else if(e.target && e.target != "") // compatibility
 			this.target2 = e.target;
 
 		movelib_brake_simple(this, stpspeed);
@@ -888,7 +892,8 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		this.angles_y += turny;
 	}
 
-	Monster_Attack_Check(this, this.enemy);
+	.entity weaponentity = weaponentities[0]; // TODO?
+	Monster_Attack_Check(this, this.enemy, weaponentity);
 }
 
 void Monster_Remove(entity this)
@@ -1007,6 +1012,9 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		totalspawned -= 1;
 	}
 
+	if(!gibbed && this.mdl_dead && this.mdl_dead != "")
+		_setmodel(this, this.mdl_dead);
+
 	this.event_damage	= ((gibbed) ? func_null : Monster_Dead_Damage);
 	this.solid			= SOLID_CORPSE;
 	this.takedamage		= DAMAGE_AIM;
@@ -1029,7 +1037,10 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	mon.mr_death(mon, this);
 
 	if(this.candrop && this.weapon)
-		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325');
+	{
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325', weaponentity);
+	}
 }
 
 void Monster_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -1067,7 +1078,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 	this.dmg_time = time;
 
-	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN.m_id)
+	if(deathtype != DEATH_DROWN.m_id && deathtype != DEATH_FIRE.m_id && sound_allowed(MSG_BROADCAST, attacker))
 		spamsound (this, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	this.velocity += force * this.damageforcescale;
@@ -1109,7 +1120,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 // don't check for enemies, just keep walking in a straight line
 void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 {
-	if(gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || this.draggedby != NULL || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < this.spawn_time)
+	if(game_stopped || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || this.draggedby != NULL || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < this.spawn_time)
 	{
 		mspeed = 0;
 		if(time >= this.spawn_time)
@@ -1284,7 +1295,13 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	{
 		IL_PUSH(g_monsters, this);
+		if(this.mdl && this.mdl != "")
+			precache_model(this.mdl);
+		if(this.mdl_dead && this.mdl_dead != "")
+			precache_model(this.mdl_dead);
+	}
 
 	if(check_appear && Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
 
@@ -1303,7 +1320,11 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	setmodel(this, mon.m_model);
+	if(this.mdl && this.mdl != "")
+		_setmodel(this, this.mdl);
+	else
+		setmodel(this, mon.m_model);
+
 	this.flags				= FL_MONSTER;
 	this.classname			= "monster";
 	this.takedamage			= DAMAGE_AIM;

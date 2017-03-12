@@ -58,9 +58,11 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		allowed_to_spawn = false;
-		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
+
+		allowed_to_spawn = false;
+		game_stopped = true;
+		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		return 1;
 	}
 
@@ -82,6 +84,7 @@ float CA_CheckWinner()
 	}
 
 	allowed_to_spawn = false;
+	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
@@ -321,7 +324,7 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 }
 
-MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -453,6 +456,11 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 MUTATOR_HOOKFUNCTION(ca, WantWeapon)
 {
 	M_ARGV(2, bool) = true; // all weapons
+}
+
+MUTATOR_HOOKFUNCTION(ca, HideTeamNagger)
+{
+	return true; // doesn't work well with the whole spectator as player thing
 }
 
 MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)

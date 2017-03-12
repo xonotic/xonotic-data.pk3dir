@@ -553,7 +553,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		if(IS_PLAYER(this.owner.ons_toucher))
 		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
-			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE), this.owner.message);
+			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM), this.owner.message);
 			Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
 			PlayerScore_Add(this.owner.ons_toucher, SP_ONS_CAPS, 1);
 			PlayerTeamScore_AddScore(this.owner.ons_toucher, 10);
@@ -870,9 +870,9 @@ void ons_camSetup(entity this)
 
 void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	if(damage <= 0) { return; }
-	if(warmup_stage || gameover) { return; }
-	if(!round_handler_IsRoundStarted()) { return; }
+	if(damage <= 0) return;
+	if(warmup_stage || game_stopped) return;
+	if(!round_handler_IsRoundStarted()) return;
 
 	if (attacker != this)
 	{
@@ -955,7 +955,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 void ons_GeneratorThink(entity this)
 {
 	this.nextthink = time + GEN_THINKRATE;
-	if (!gameover)
+	if (!game_stopped)
 	{
 		if(!this.isshielded && this.wait < time)
 		{
@@ -1195,6 +1195,7 @@ bool Onslaught_CheckWinner()
 		nades_Clear(it);
 	});
 
+	game_stopped = true;
 	return 1;
 }
 
@@ -2021,7 +2022,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+	if(MUTATOR_RETURNVALUE || game_stopped) return false;
 
 	entity player = M_ARGV(0, entity);
 

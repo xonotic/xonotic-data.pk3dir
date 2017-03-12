@@ -34,7 +34,6 @@ void PutObserverInServer(entity this);
 
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: December 29th, 2011
 // =====================================================
 
 //  used by GameCommand_make_mapinfo()
@@ -139,8 +138,8 @@ void GameCommand_adminmsg(float request, float argc)
 						sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", admin_message, "\n"));
 					}
 
-					successful = strcat(successful, (successful ? ", " : ""), client.netname);
-					LOG_TRACE("Message sent to ", client.netname);
+					successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
+					LOG_TRACE("Message sent to ", playername(client, false));
 					continue;
 				}
 
@@ -543,7 +542,7 @@ void GameCommand_defer_clear(float request, float argc)
 				if (accepted > 0)
 				{
 					stuffcmd(client, "defer clear\n");
-					LOG_INFO("defer clear stuffed to ", client.netname, "\n");
+					LOG_INFO("defer clear stuffed to ", playername(client, false), "\n");
 				}
 				else { LOG_INFO("defer_clear: ", GetClientErrorString(accepted, argv(1)), ".\n"); }
 
@@ -1048,11 +1047,11 @@ void GameCommand_moveplayer(float request, float argc)
 							if (client.caplayer) client.caplayer = 0;
 							PutObserverInServer(client);
 
-							successful = strcat(successful, (successful ? ", " : ""), client.netname);
+							successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
 						}
 						else
 						{
-							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already spectating.\n");
+							LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") is already spectating.\n");
 						}
 						continue;
 					}
@@ -1072,7 +1071,7 @@ void GameCommand_moveplayer(float request, float argc)
 								if (team_id == client.team)  // already on the destination team
 								{
 									// keep the forcing undone
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
+									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
 									continue;
 								}
 								else if (team_id == 0)  // auto team
@@ -1101,8 +1100,8 @@ void GameCommand_moveplayer(float request, float argc)
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
 								MoveToTeam(client, team_id, 6);
-								successful = strcat(successful, (successful ? ", " : ""), client.netname);
-								LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
+								successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
+								LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
 								continue;
 							}
 							else
@@ -1348,90 +1347,37 @@ void GameCommand_shuffleteams(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (teamplay)
-			{
-				float t_teams, t_players, team_color;
-
-				// count the total amount of players and total amount of teams
-				t_players = 0;
-				t_teams = 0;
-				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
-					CheckAllowedTeams(it);
-
-					if (c1 >= 0) t_teams = max(1, t_teams);
-					if (c2 >= 0) t_teams = max(2, t_teams);
-					if (c3 >= 0) t_teams = max(3, t_teams);
-					if (c4 >= 0) t_teams = max(4, t_teams);
-
-					++t_players;
-				));
-
-				// build a list of the players in a random order
-				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
-					for ( ; ; )
-					{
-						int idx = bound(1, floor(random() * maxclients) + 1, maxclients);
-
-						if (shuffleteams_players[idx])
-						{
-							continue;  // a player is already assigned to this slot
-						}
-						else
-						{
-							shuffleteams_players[idx] = etof(it);
-							break;
-						}
-					}
-				));
-
-				// finally, from the list made earlier, re-join the players in different order.
-				for (int i = 1; i <= t_teams; ++i)
-				{
-					// find out how many players to assign to this team
-					int pnum = (t_players / t_teams);
-					pnum = ((i == 1) ? ceil(pnum) : floor(pnum));
-
-					team_color = Team_NumberToTeam(i);
-
-					// sort through the random list of players made earlier
-					for (int z = 1; z <= maxclients; ++z)
-					{
-						if (!(shuffleteams_teams[i] >= pnum))
-						{
-							if (!(shuffleteams_players[z])) continue;  // not a player, move on to next random slot
-
-							entity e = NULL;
-							if(VerifyClientNumber(shuffleteams_players[z]))
-								e = edict_num(shuffleteams_players[z]);
-
-							if(!e) continue; // unverified
-
-							if (e.team != team_color) MoveToTeam(e, team_color, 6);
-
-							shuffleteams_players[z] = 0;
-							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
-						}
-						else
-						{
-							break;  // move on to next team
-						}
-					}
-				}
-
-				bprint("Successfully shuffled the players around randomly.\n");
-
-				// clear the buffers now
-				for (int i = 0; i < SHUFFLETEAMS_MAX_PLAYERS; ++i)
-					shuffleteams_players[i] = 0;
-
-				for (int i = 0; i < SHUFFLETEAMS_MAX_TEAMS; ++i)
-					shuffleteams_teams[i] = 0;
-			}
-			else
+			if (!teamplay)
 			{
 				LOG_INFO("Can't shuffle teams when currently not playing a team game.\n");
+				return;
 			}
 
+			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
+				if (it.team_forced) {
+					// we could theoretically assign forced players to their teams
+					// and shuffle the rest to fill the empty spots but in practise
+					// either all players or none are gonna have forced teams
+					LOG_INFO("Can't shuffle teams because at least one player has a forced team.\n");
+					return;
+				}
+			));
+
+			int number_of_teams = 0;
+			CheckAllowedTeams(NULL);
+			if (c1 >= 0) number_of_teams = max(1, number_of_teams);
+			if (c2 >= 0) number_of_teams = max(2, number_of_teams);
+			if (c3 >= 0) number_of_teams = max(3, number_of_teams);
+			if (c4 >= 0) number_of_teams = max(4, number_of_teams);
+
+			int team_index = 0;
+			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, LAMBDA(
+				int target_team_number = Team_NumberToTeam(team_index + 1);
+				if (it.team != target_team_number) MoveToTeam(it, target_team_number, 6);
+				team_index = (team_index + 1) % number_of_teams;
+			));
+
+			bprint("Successfully shuffled the players around randomly.\n");
 			return;
 		}
 

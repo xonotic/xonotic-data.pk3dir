@@ -94,7 +94,7 @@ bool M_Zombie_Defend_Block(entity this)
 	return true;
 }
 
-bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
+bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{
@@ -192,7 +192,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
-    actor.monster_loot = spawnfunc_item_health_medium;
+    actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Zombie_Attack;
     actor.spawnshieldtime = actor.spawn_time;
     actor.respawntime = 0.2;

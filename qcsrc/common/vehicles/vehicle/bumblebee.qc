@@ -167,7 +167,7 @@ bool bumblebee_gunner_frame(entity this, float dt)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, bumblebee);
 
 	ad = gettaginfo(gun, gettagindex(gun, "fire"));
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, gun);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, gun);
 
 	UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' *(1 - this.vehicle_reload1)), 0);
 
@@ -236,7 +236,12 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 	player.event_damage   = PlayerDamage;
 	player.hud            = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;
-	PS(player).m_switchweapon = gunner.m_switchweapon;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		player.(weaponentity).m_switchweapon = gunner.(weaponentity).m_switchweapon;
+		delete(gunner.(weaponentity));
+	}
 	player.vehicle_enter_delay = time + 2;
 
 	fixedmakevectors(vehic.angles);
@@ -304,9 +309,15 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	player.vehicle_energy 	= vehic.vehicle_energy;
 	UNSET_ONGROUND(player);
 
-	RemoveGrapplingHook(player);
+	RemoveGrapplingHooks(player);
 
-	gunner.m_switchweapon = PS(player).m_switchweapon;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+
+		gunner.(weaponentity) = new(temp_wepent);
+		gunner.(weaponentity).m_switchweapon = player.(weaponentity).m_switchweapon;
+	}
 	gunner.vehicle_exit = bumblebee_gunner_exit;
 	gunner.vehicle_hudmodel.viewmodelforclient = player;
 
@@ -391,7 +402,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(gameover)
+	if(game_stopped)
 	{
 		vehic.solid = SOLID_NOT;
 		vehic.takedamage = DAMAGE_NO;
@@ -645,7 +656,7 @@ void bumblebee_exit(entity this, int eject)
 	else
 		spot = this.origin + v_up * 128 - v_forward * 300;
 
-	spot = vehicles_findgoodexit(this, spot);
+	spot = vehicles_findgoodexit(this, this.owner, spot);
 
 	// Hide beam
 	if(this.gun3.enemy || !wasfreed(this.gun3.enemy))

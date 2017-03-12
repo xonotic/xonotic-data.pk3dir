@@ -83,6 +83,8 @@ void raptor_land(entity this)
 
 void raptor_exit(entity this, int eject)
 {
+	entity player = this.owner;
+
 	this.tur_head.exteriormodeltoclient = NULL;
 
 	if(!IS_DEAD(this))
@@ -91,7 +93,7 @@ void raptor_exit(entity this, int eject)
 		this.nextthink = time;
 	}
 
-	if(!this.owner)
+	if(!player)
 		return;
 
 	makevectors(this.angles);
@@ -99,33 +101,33 @@ void raptor_exit(entity this, int eject)
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
-		spot = vehicles_findgoodexit(this, spot);
-		setorigin(this.owner , spot);
-		this.owner.velocity = (v_up + v_forward * 0.25) * 750;
-		this.owner.oldvelocity = this.owner.velocity;
+		spot = vehicles_findgoodexit(this, player, spot);
+		setorigin(player, spot);
+		player.velocity = (v_up + v_forward * 0.25) * 750;
+		player.oldvelocity = player.velocity;
 	}
 	else
 	{
 		if(vdist(this.velocity, >, 2 * autocvar_sv_maxairspeed))
 		{
-			this.owner.velocity = normalize(this.velocity) * autocvar_sv_maxairspeed * 2;
-			this.owner.velocity_z += 200;
+			player.velocity = normalize(this.velocity) * autocvar_sv_maxairspeed * 2;
+			player.velocity_z += 200;
 			spot = this.origin + v_forward * 32 + '0 0 64';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, player, spot);
 		}
 		else
 		{
-			this.owner.velocity = this.velocity * 0.5;
-			this.owner.velocity_z += 10;
+			player.velocity = this.velocity * 0.5;
+			player.velocity_z += 10;
 			spot = this.origin - v_forward * 200 + '0 0 64';
-			spot = vehicles_findgoodexit(this, spot);
+			spot = vehicles_findgoodexit(this, player, spot);
 		}
-		this.owner.oldvelocity = this.owner.velocity;
-		setorigin(this.owner , spot);
+		player.oldvelocity = player.velocity;
+		setorigin(player, spot);
 	}
 
-	antilag_clear(this.owner, CS(this.owner));
 	this.owner = NULL;
+	antilag_clear(player, CS(player));
 }
 
 bool raptor_frame(entity this, float dt)
@@ -133,7 +135,7 @@ bool raptor_frame(entity this, float dt)
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(gameover)
+	if(game_stopped)
 	{
 		vehic.solid = SOLID_NOT;
 		vehic.takedamage = DAMAGE_NO;
@@ -351,16 +353,16 @@ bool raptor_frame(entity this, float dt)
 	/*
 	ad = ad * 0.5;
 	v_forward = vf * 0.5;
-	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, vehic);
+	traceline(ad, ad + v_forward * max_shot_distance, MOVE_NORMAL, vehic);
 	UpdateAuxiliaryXhair(this, trace_endpos, '0 1 0', 0);
 	*/
 
 	Weapon wep1 = WEP_RAPTOR;
+	.entity weaponentity = weaponentities[0];
 	if(!forbidWeaponUse(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
-	if (wep1.wr_checkammo1(wep1, vehic))
+	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
-	    .entity weaponentity = weaponentities[0];
 		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 
@@ -462,6 +464,8 @@ bool raptor_takeoff(entity this, float dt)
 	}
 	else
 		this.PlayerPhysplug = raptor_frame;
+
+	this.vehicle_weapon2mode = vehic.vehicle_weapon2mode;
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, dt, true);
@@ -773,6 +777,9 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
             dropmark = spawn();
             dropmark.owner = player;
             dropmark.gravity = 1;
+            dropmark.dphitcontentsmask = DPCONTENTS_SOLID;
+            dropmark.solid = SOLID_CORPSE;
+			set_movetype(dropmark, MOVETYPE_BOUNCE);
         }
 
         float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;

@@ -63,8 +63,14 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			it.ammo_rockets = start_ammo_rockets;
 			it.ammo_fuel = start_ammo_fuel;
 			it.weapons = start_weapons;
-			if(!client_hasweapon(it, PS(it).m_weapon, true, false))
-				PS(it).m_switchweapon = w_getbestweapon(it);
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				if(it.(weaponentity).m_weapon == WEP_Null && slot != 0)
+					continue;
+				if(!client_hasweapon(it, it.(weaponentity).m_weapon, weaponentity, true, false))
+					it.(weaponentity).m_switchweapon = w_getbestweapon(it, weaponentity);
+			}
 		});
 	}
 
@@ -164,14 +170,24 @@ void NIX_GiveCurrentWeapon(entity this)
 
 		// all weapons must be fully loaded when we spawn
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-			this.(weapon_load[nix_weapon]) = e.reloading_ammo;
+		{
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				this.(weaponentity).(weapon_load[nix_weapon]) = e.reloading_ammo;
+			}
+		}
 
 		// vortex too
 		if(WEP_CVAR(vortex, charge))
 		{
 			if(WEP_CVAR_SEC(vortex, chargepool))
 				this.vortex_chargepool_ammo = 1;
-			this.vortex_charge = WEP_CVAR(vortex, charge_start);
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				this.(weaponentity).vortex_charge = WEP_CVAR(vortex, charge_start);
+			}
 		}
 
 		// set last change info
@@ -205,12 +221,19 @@ void NIX_GiveCurrentWeapon(entity this)
 	this.weapons |= e.m_wepset;
 
     Weapon w = Weapons_from(nix_weapon);
-	if(PS(this).m_switchweapon != w)
-		if(!client_hasweapon(this, PS(this).m_switchweapon, true, false))
+    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
+    		continue;
+
+		if(this.(weaponentity).m_switchweapon != w)
+		if(!client_hasweapon(this, this.(weaponentity).m_switchweapon, weaponentity, true, false))
 		{
-			if(client_hasweapon(this, w, true, false))
-				W_SwitchWeapon(this, w);
+			if(client_hasweapon(this, w, weaponentity, true, false))
+				W_SwitchWeapon(this, w, weaponentity);
 		}
+	}
 }
 
 MUTATOR_HOOKFUNCTION(nix, ForbidThrowCurrentWeapon)
@@ -256,7 +279,7 @@ MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(!gameover)
+	if(!game_stopped)
 	if(!IS_DEAD(player))
 	if(IS_PLAYER(player))
 		NIX_GiveCurrentWeapon(player);
