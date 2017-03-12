@@ -10,12 +10,12 @@ MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 	{
 		.entity weaponentity = weaponentities[slot];
 
-		if(frag_target.(weaponentity).m_weapon == WEP_Null && slot != 0)
+		if(frag_target.(weaponentity).m_weapon == WEP_Null)
 			continue;
 
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
 			if(frag_target.weapons & WepSet_FromWeapon(it))
-			if(frag_target.(weaponentity).m_switchweapon != it)
+			if(frag_target.(weaponentity).m_weapon != it)
 			if(W_IsWeaponThrowable(frag_target, it.m_id))
 				W_ThrowNewWeapon(frag_target, it.m_id, false, CENTER_OR_VIEWOFS(frag_target), randomvec() * 175 + '0 0 325', weaponentity);
 		));

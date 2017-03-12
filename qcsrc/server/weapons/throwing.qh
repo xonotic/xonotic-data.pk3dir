@@ -11,4 +11,4 @@ bool W_IsWeaponThrowable(entity this, int w);
 // toss current weapon
 void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta, float doreduce);
 
-void SpawnThrownWeapon(entity this, vector org, float w, .entity weaponentity);
+void SpawnThrownWeapon(entity this, vector org, Weapon wep, .entity weaponentity);

@@ -24,6 +24,13 @@ bool SendAuxiliaryXhair(entity this, entity to, int sf)
 	return true;
 }
 
+bool AuxiliaryXhair_customize(entity this, entity client)
+{
+	//entity e = WaypointSprite_getviewentity(client);
+	entity axh = client.(AuxiliaryXhair[this.cnt]);
+	return axh.owner == this.owner; // cheaply check if the client's axh owner is the same as our real owner
+}
+
 .vector axh_prevorigin;
 .vector axh_prevcolors;
 
@@ -39,7 +46,8 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 	{
 		axh = new(auxiliary_xhair);
 		axh.cnt = axh_id;
-		axh.drawonlytoclient = own;
+		//axh.drawonlytoclient = own; // not spectatable
+		setcefc(axh, AuxiliaryXhair_customize);
 		axh.owner = own;
 		Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
 	}
@@ -68,6 +76,18 @@ void CSQCVehicleSetup(entity own, int vehicle_id)
 
 	WriteHeader(MSG_ONE, TE_CSQC_VEHICLESETUP);
 	WriteByte(MSG_ONE, vehicle_id);
+
+	if(vehicle_id == 0 || vehicle_id == HUD_NORMAL)
+	{
+		for(int i = 0; i < MAX_AXH; ++i)
+		{
+			entity axh = own.(AuxiliaryXhair[i]);
+			own.(AuxiliaryXhair[i]) = NULL;
+
+			if(axh.owner == own && axh != NULL && !wasfreed(axh))
+				delete(axh);
+		}
+	}
 }
 
 void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
@@ -737,10 +757,10 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 }
 
 // vehicle enter/exit handling
-vector vehicles_findgoodexit(entity this, vector prefer_spot)
+vector vehicles_findgoodexit(entity this, entity player, vector prefer_spot)
 {
 	// TODO: we actually want the player's size here
-	tracebox(this.origin + '0 0 32', PL_MIN_CONST, PL_MAX_CONST, prefer_spot, MOVE_NORMAL, this.owner);
+	tracebox(this.origin + '0 0 32', PL_MIN_CONST, PL_MAX_CONST, prefer_spot, MOVE_NORMAL, player);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
@@ -752,7 +772,7 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, PL_MIN_CONST, PL_MAX_CONST, v, MOVE_NORMAL, this.owner);
+		tracebox(v2, PL_MIN_CONST, PL_MAX_CONST, v, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -970,6 +990,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
+	pl.items &= ~IT_USING_JETPACK;
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;

@@ -19,8 +19,8 @@ MACRO_END
 	{ (viewmodels[this.m_wepent_slot]).activeweapon = Weapons_from(ReadByte()); }) \
     \
     PROP(false, m_alpha, WEPENT_SET_NORMAL, \
-	{ WriteByte(chan, this.m_alpha * 16); }, \
-	{ (viewmodels[this.m_wepent_slot]).alpha = ReadByte() / 16; }) \
+	{ WriteByte(chan, rint(bound(-1, 254 * this.m_alpha, 254) - -1)); }, \
+	{ (viewmodels[this.m_wepent_slot]).alpha = (ReadByte() + -1) / 254; }) \
     \
     PROP(false, vortex_charge, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.vortex_charge * 16); }, \

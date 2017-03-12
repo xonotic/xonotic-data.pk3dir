@@ -242,12 +242,12 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 						if (caller.ready)            // toggle
 						{
 							caller.ready = false;
-							bprint(caller.netname, "^2 is ^1NOT^2 ready\n");
+							bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
-							bprint(caller.netname, "^2 is ready\n");
+							bprint(playername(caller, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -473,6 +473,17 @@ void ClientCommand_spectate(entity caller, float request)
 		{
 			if (!intermission_running && IS_CLIENT(caller))
 			{
+				if((IS_SPEC(caller) || IS_OBSERVER(caller)) && argv(1) != "")
+				{
+					entity client = GetFilteredEntity(argv(1));
+					int spec_accepted = VerifyClientEntity(client, false, false);
+					if(spec_accepted > 0 && IS_PLAYER(client))
+					{
+						if(Spectate(caller, client))
+							return; // fall back to regular handling
+					}
+				}
+
 				int mutator_returnvalue = MUTATOR_CALLHOOK(ClientCommand_Spectate, caller);
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
@@ -487,8 +498,8 @@ void ClientCommand_spectate(entity caller, float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd spectate\n");
-			sprint(caller, "  No arguments required.\n");
+			sprint(caller, "\nUsage:^3 cmd spectate <client>\n");
+			sprint(caller, "  Where 'client' can be the player to spectate.\n");
 			return;
 		}
 	}
@@ -526,6 +537,12 @@ void ClientCommand_tell(entity caller, float request, float argc, string command
 		{
 			if (argc >= 3)
 			{
+				if(!IS_CLIENT(caller) && IS_REAL_CLIENT(caller)) // connecting
+				{
+					print_to(caller, "You can't ^2tell^7 a message while connecting.");
+					return;
+				}
+
 				entity tell_to = GetIndexedEntity(argc, 1);
 				float tell_accepted = VerifyClientEntity(tell_to, true, false);
 

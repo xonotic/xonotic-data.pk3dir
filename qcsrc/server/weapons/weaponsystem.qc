@@ -452,6 +452,22 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		}
 	}
 
+	if(autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0)
+	{
+		.entity wepe1 = weaponentities[0];
+		entity wep1 = actor.(wepe1);
+		this.m_switchweapon = wep1.m_switchweapon;
+		if(!(this.m_switchweapon.spawnflags & WEP_FLAG_DUALWIELD))
+		{
+			this.m_weapon = WEP_Null;
+			this.m_switchingweapon = WEP_Null;
+			this.m_switchweapon = WEP_Null;
+			this.state = WS_CLEAR;
+			this.weaponname = "";
+			return;
+		}
+	}
+
 	if (this.m_switchweapon == WEP_Null)
 	{
 		this.m_weapon = WEP_Null;
@@ -501,7 +517,7 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 					this.clip_load = this.clip_size = 0;
 				}
 
-				weapon_thinkf(actor, weaponentity, WFRAME_IDLE, newwep.switchdelay_raise, w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, newwep.switchdelay_raise, w_ready);
 				break;
 			}
 			case WS_DROP:

@@ -631,16 +631,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
     damage_attacker = attacker;
 	attacker_save = attacker;
 
-	if(IS_PLAYER(targ))
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(targ.(weaponentity).hook && targ.(weaponentity).hook.aiment == attacker)
-	    		RemoveHook(targ.(weaponentity).hook);
-	    }
-	}
-
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
@@ -742,6 +732,16 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		damage = M_ARGV(4, float);
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);
+
+		if(IS_PLAYER(targ) && damage > 0 && attacker)
+		{
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		    {
+		    	.entity weaponentity = weaponentities[slot];
+		    	if(targ.(weaponentity).hook && targ.(weaponentity).hook.aiment == attacker)
+		    		RemoveHook(targ.(weaponentity).hook);
+		    }
+		}
 
 		if(STAT(FROZEN, targ))
 		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
@@ -1029,7 +1029,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 							LOG_INFOF("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
 
 
-						total = 0.25 * pow(max(mininv_f, mininv_d), 2);
+						total = 0.25 * (max(mininv_f, mininv_d) ** 2);
 
 						if(autocvar_g_throughfloor_debug)
 							LOG_INFOF(" steps=%f", total);

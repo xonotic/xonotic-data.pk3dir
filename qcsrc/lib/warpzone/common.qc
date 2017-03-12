@@ -575,12 +575,9 @@ bool WarpZoneLib_BadEntity(entity e)
 {
 	if (is_pure(e)) return true;
 	string s = e.classname;
-	switch (s)
-	{
-		// case "net_linked": // actually some real entities are linked without classname, fail
-		case "":
-			return true;
-	}
+
+	//if (s == "net_linked") return true; // actually some real entities are linked without classname, fail
+	if (s == "") return true;
 
 	if (startsWith(s, "target_")) return true;
 

@@ -64,14 +64,14 @@ void QuickMenu_Page_ClearEntry(int i)
 
 float QuickMenu_Page_Load(string target_submenu, float new_page);
 void QuickMenu_Default(string submenu);
-bool QuickMenu_Open(string mode, string submenu)
+bool QuickMenu_Open(string mode, string submenu, string file)
 {
 	int fh = -1;
 	string s;
 
 	if(mode == "")
 	{
-		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
+		if(file == "" || file == "0")
 			mode = "default";
 		else
 			mode = "file";
@@ -79,13 +79,13 @@ bool QuickMenu_Open(string mode, string submenu)
 
 	if(mode == "file")
 	{
-		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
+		if(file == "" || file == "0")
 			LOG_INFO("No file name is set in hud_panel_quickmenu_file, loading default quickmenu\n");
 		else
 		{
-			fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
+			fh = fopen(file, FILE_READ);
 			if(fh < 0)
-				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", autocvar_hud_panel_quickmenu_file);
+				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", file);
 		}
 		if(fh < 0)
 			mode = "default";

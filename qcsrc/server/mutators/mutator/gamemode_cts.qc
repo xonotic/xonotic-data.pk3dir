@@ -194,6 +194,14 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(cts, AbortSpeedrun)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(autocvar_g_allow_checkpoints)
+		race_PreparePlayer(player); // nice try
+}
+
 MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
@@ -377,6 +385,11 @@ MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 
 	if(autocvar_g_cts_finish_kill_delay)
 		CTS_ClientKill(player);
+}
+
+MUTATOR_HOOKFUNCTION(cts, HideTeamNagger)
+{
+	return true; // doesn't work so well (but isn't cts a teamless mode?)
 }
 
 MUTATOR_HOOKFUNCTION(cts, FixClientCvars)

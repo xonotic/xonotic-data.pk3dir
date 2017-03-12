@@ -257,6 +257,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 	}
 }
 
+#ifdef DEBUGTRACE
 REGISTER_STAT(TRACE_ENT, int)
 #ifdef SVQC
 bool autocvar_debugtrace;
@@ -312,6 +313,7 @@ STATIC_INIT(TRACE_ENT)
 	IL_PUSH(g_drawables_2d, e);
 }
 #endif
+#endif
 
 GENERIC_COMMAND(find, "Search through entities for matching classname")
 {
@@ -319,7 +321,14 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
+			int entcnt = 0;
+			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
+			{
+				LOG_INFOF("%i (%s)\n", it, it.classname);
+				++entcnt;
+			});
+			if(entcnt)
+				LOG_INFOF("Found %d entities\n", entcnt);
 			return;
 		}
 

@@ -154,6 +154,10 @@ MACRO_END
 		int n = this.sv_entnum;
 		entity e = entcs_receiver(n);
 		entcs_receiver(n, NULL);
+		if (e.netname) strunzone(e.netname);
+		e.netname = string_null;
+		if (e.model) strunzone(e.model);
+		e.model = string_null;
 		if (e != this) delete(e);
 	}
 

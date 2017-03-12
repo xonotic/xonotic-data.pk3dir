@@ -52,8 +52,6 @@
 
 // weapon switching impulses
 
-bool autocvar_g_weaponswitch_debug;
-
 #define X(slot) \
 	IMPULSE(weapon_group_##slot) \
 	{ \
@@ -66,7 +64,7 @@ bool autocvar_g_weaponswitch_debug;
 		{ \
 			.entity weaponentity = weaponentities[wepslot]; \
 			W_NextWeaponOnImpulse(this, slot, weaponentity); \
-			if(wepslot == 0 && !autocvar_g_weaponswitch_debug) \
+			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -100,7 +98,7 @@ X(0)
 		{ \
 			.entity weaponentity = weaponentities[wepslot]; \
 			W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir, weaponentity); \
-			if(wepslot == 0 && !autocvar_g_weaponswitch_debug) \
+			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -153,7 +151,7 @@ X(9, next)
 		{ \
 			.entity weaponentity = weaponentities[slot]; \
 			W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i), weaponentity); \
-			if(slot == 0 && !autocvar_g_weaponswitch_debug) \
+			if(slot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -196,7 +194,7 @@ IMPULSE(weapon_next_byid)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 0, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -214,7 +212,7 @@ IMPULSE(weapon_prev_byid)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 0, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -232,7 +230,7 @@ IMPULSE(weapon_next_bygroup)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 1, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -250,7 +248,7 @@ IMPULSE(weapon_prev_bygroup)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 1, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -268,7 +266,7 @@ IMPULSE(weapon_next_bypriority)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 2, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -286,7 +284,7 @@ IMPULSE(weapon_prev_bypriority)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 2, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -300,7 +298,7 @@ IMPULSE(weapon_last)
 		.entity weaponentity = weaponentities[slot];
 		W_LastWeapon(this, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -314,7 +312,7 @@ IMPULSE(weapon_best)
 		.entity weaponentity = weaponentities[slot];
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -328,7 +326,7 @@ IMPULSE(weapon_drop)
 		.entity weaponentity = weaponentities[slot];
 		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -345,7 +343,7 @@ IMPULSE(weapon_reload)
 		Weapon w = this.(weaponentity).m_weapon;
 		w.wr_reload(w, actor, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -553,6 +551,9 @@ IMPULSE(waypoint_clear_personal)
 	{
 		delete(this.personal);
 		this.personal = NULL;
+
+		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+			ClientKill(this);
 	}
 	sprint(this, "personal waypoint cleared\n");
 }
@@ -564,6 +565,8 @@ IMPULSE(waypoint_clear)
 	{
 		delete(this.personal);
 		this.personal = NULL;
+		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+			ClientKill(this);
 	}
 	sprint(this, "all waypoints cleared\n");
 }

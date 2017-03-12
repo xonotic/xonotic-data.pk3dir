@@ -656,7 +656,7 @@ void bumblebee_exit(entity this, int eject)
 	else
 		spot = this.origin + v_up * 128 - v_forward * 300;
 
-	spot = vehicles_findgoodexit(this, spot);
+	spot = vehicles_findgoodexit(this, this.owner, spot);
 
 	// Hide beam
 	if(this.gun3.enemy || !wasfreed(this.gun3.enemy))

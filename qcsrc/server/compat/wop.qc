@@ -29,11 +29,13 @@ spawnfunc(item_haste);
 spawnfunc(item_health_medium);
 spawnfunc(item_health_mega);
 spawnfunc(item_invis);
-spawnfunc(item_medic);
 
 //***********************
 //WORD OF PADMAN ENTITIES - So people can play wop maps with the xonotic weapons
 //***********************
+
+//spawnfunc(item_revival)     /* handled by buffs mutator */
+//spawnfunc(item_jumper)      /* handled by buffs mutator */
 
 spawnfunc(weapon_punchy)	{ spawnfunc_weapon_arc(this);			}
 spawnfunc(weapon_nipper)	{ spawnfunc_weapon_machinegun(this);	}
@@ -56,7 +58,7 @@ spawnfunc(ammo_imperius)	{ spawnfunc_item_cells(this);			}
 spawnfunc(item_padpower)	{ spawnfunc_item_quad(this);			}
 spawnfunc(item_climber)		{ spawnfunc_item_invincible(this);		}
 spawnfunc(item_speedy)		{ spawnfunc_item_haste(this);			}
-spawnfunc(item_jump)		{ spawnfunc_item_jetpack(this);			}
 spawnfunc(item_visionless)	{ spawnfunc_item_invis(this);			}
-spawnfunc(item_revival)		{ spawnfunc_item_medic(this);			}
 spawnfunc(item_armor_padshield)	{ spawnfunc_item_armor_mega(this);	}
+
+spawnfunc(holdable_floater)		{ spawnfunc_item_jetpack(this);		}

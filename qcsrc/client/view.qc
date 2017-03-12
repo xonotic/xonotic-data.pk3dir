@@ -326,7 +326,7 @@ void viewmodel_draw(entity this)
 			this.viewmodel_angles = this.angles;
 		}
 		anim_update(this);
-		if (!this.animstate_override && !this.animstate_looping)
+		if ((!this.animstate_override && !this.animstate_looping) || time > this.animstate_endtime)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active
@@ -522,7 +522,7 @@ vector GetCurrentFov(float fov)
 		current_zoomfraction = (current_viewzoom - 1) / (1/zoomfactor - 1);
 
 	if(zoomsensitivity < 1)
-		setsensitivityscale(pow(current_viewzoom, 1 - zoomsensitivity));
+		setsensitivityscale(current_viewzoom ** (1 - zoomsensitivity));
 	else
 		setsensitivityscale(1);
 
@@ -1735,7 +1735,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 		t = (time - blurtest_time0) / (blurtest_time1 - blurtest_time0);
 		r = t * blurtest_radius;
-		f = 1 / pow(t, blurtest_power) - 1;
+		f = 1 / (t ** blurtest_power) - 1;
 
 		cvar_set("r_glsl_postprocess", "1");
 		cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(r), " ", ftos(f), " 0 0"));
@@ -2014,7 +2014,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 				switch(reticle_type)
 				{
 					case 1: drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_normal_alpha, DRAWFLAG_NORMAL); break;
-					case 2: drawpic(reticle_pos, reticle_image, reticle_size, '1 1 1', f * autocvar_cl_reticle_weapon_alpha, DRAWFLAG_NORMAL); break;
+					case 2: if(reticle_image) drawpic(reticle_pos, reticle_image, reticle_size, '1 1 1', f * autocvar_cl_reticle_weapon_alpha, DRAWFLAG_NORMAL); break;
 				}
 			}
 		}

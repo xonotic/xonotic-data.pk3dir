@@ -64,6 +64,8 @@ REGISTER_WEAPON(CRYLINK, crylink, NEW(Crylink));
 .float crylink_waitrelease;
 .entity crylink_lastgroup;
 
+.entity crylink_owner; // we can't use realowner, as that's subject to change
+
 .entity queuenext;
 .entity queueprev;
 #endif
@@ -110,7 +112,7 @@ void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 
 void W_Crylink_Dequeue(entity e)
 {
-	W_Crylink_Dequeue_Raw(e.realowner, e.queueprev, e, e.queuenext);
+	W_Crylink_Dequeue_Raw(e.crylink_owner, e.queueprev, e, e.queuenext);
 }
 
 void W_Crylink_Reset(entity this)
@@ -130,8 +132,8 @@ void W_Crylink_LinkExplode(entity e, entity e2, entity directhitentity)
 	a = bound(0, 1 - (time - e.fade_time) * e.fade_rate, 1);
 
 	.entity weaponentity = e.weaponentity_fld;
-	if(e == e.realowner.(weaponentity).crylink_lastgroup)
-		e.realowner.(weaponentity).crylink_lastgroup = NULL;
+	if(e == e.crylink_owner.(weaponentity).crylink_lastgroup)
+		e.crylink_owner.(weaponentity).crylink_lastgroup = NULL;
 
 	float isprimary = !(e.projectiledeathtype & HITTYPE_SECONDARY);
 
@@ -179,9 +181,9 @@ vector W_Crylink_LinkJoin(entity e, float jspeed)
 		return avg_origin; // nothing to do
 
 	// yes, mathematically we can do this in ONE step, but beware of 32bit floats...
-	avg_dist = pow(vlen(e.origin - avg_origin), 2);
+	avg_dist = (vlen(e.origin - avg_origin) ** 2);
 	for(p = e; (p = p.queuenext) != e; )
-		avg_dist += pow(vlen(WarpZone_RefSys_TransformOrigin(p, e, p.origin) - avg_origin), 2);
+		avg_dist += (vlen(WarpZone_RefSys_TransformOrigin(p, e, p.origin) - avg_origin) ** 2);
 	avg_dist *= (1.0 / n);
 	avg_dist = sqrt(avg_dist);
 
@@ -321,8 +323,8 @@ void W_Crylink_Touch(entity this, entity toucher)
 	if(totaldamage && ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 2) || ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 1) && !W_Crylink_Touch_WouldHitFriendly(this, WEP_CVAR_BOTH(crylink, isprimary, radius)))))
 	{
 		.entity weaponentity = this.weaponentity_fld;
-		if(this == this.realowner.(weaponentity).crylink_lastgroup)
-			this.realowner.(weaponentity).crylink_lastgroup = NULL;
+		if(this == this.crylink_owner.(weaponentity).crylink_lastgroup)
+			this.crylink_owner.(weaponentity).crylink_lastgroup = NULL;
 		W_Crylink_LinkExplode(this.queuenext, this, toucher);
 		this.classname = "spike_oktoremove";
 		delete(this);
@@ -378,6 +380,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		proj = new(spike);
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
+		proj.crylink_owner = actor;
 		proj.weaponentity_fld = weaponentity;
 		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_PRI(crylink, damage);
@@ -490,6 +493,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 		proj.weaponentity_fld = weaponentity;
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
+		proj.crylink_owner = actor;
 		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_SEC(crylink, damage);
 		if(shots == 1) {

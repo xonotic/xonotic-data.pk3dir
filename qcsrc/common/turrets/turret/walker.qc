@@ -569,8 +569,9 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
     it.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     it.iscreature = true;
     it.teleportable = TELEPORT_NORMAL;
+    if(!it.damagedbycontents)
+        IL_PUSH(g_damagedbycontents, it);
     it.damagedbycontents = true;
-    IL_PUSH(g_damagedbycontents, it);
     it.solid = SOLID_SLIDEBOX;
     it.takedamage = DAMAGE_AIM;
     if(it.move_movetype != MOVETYPE_WALK)

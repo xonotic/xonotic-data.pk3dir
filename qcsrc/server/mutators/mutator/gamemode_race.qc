@@ -102,6 +102,14 @@ float WinningCondition_QualifyingThenRace(float limit)
 	return wc;
 }
 
+MUTATOR_HOOKFUNCTION(rc, AbortSpeedrun)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(autocvar_g_allow_checkpoints)
+		race_PreparePlayer(player); // nice try
+}
+
 MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
@@ -375,6 +383,11 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 	}
 
 	M_ARGV(1, string) = ret_string;
+}
+
+MUTATOR_HOOKFUNCTION(rc, HideTeamNagger)
+{
+	return true; // doesn't work so well
 }
 
 MUTATOR_HOOKFUNCTION(rc, FixClientCvars)

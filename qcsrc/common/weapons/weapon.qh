@@ -72,11 +72,11 @@ CLASS(Weapon, Object)
     /** M: model MDL_id_ITEM */
     ATTRIB(Weapon, m_model, entity);
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
-    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshair1");
+    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshairmoustache");
     /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
     ATTRIB(Weapon, w_crosshair_size, float, 1);
     /** A: reticle   : per-weapon zoom reticle */
-    ATTRIB(Weapon, w_reticle, string, "");
+    ATTRIB(Weapon, w_reticle, string, string_null);
     /** M: wepimg    : "weaponfoobar" side view image file of weapon. WEAPONTODO: Move out of skin files, move to common files */
     ATTRIB(Weapon, model2, string, "");
     /** M: refname   : reference name name */
@@ -194,6 +194,7 @@ const int WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
 const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 const int WEP_TYPE_MELEE_PRI      = 0x400; // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      = 0x800; // secondary attack is melee swing (for animation)
+const int WEP_FLAG_DUALWIELD      = 0x1000; // weapon can be dual wielded
 
 // variables:
 string weaponorder_byid;

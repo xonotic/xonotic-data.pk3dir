@@ -1357,6 +1357,8 @@ bool turret_initialize(entity this, Turret tur)
 	this.tur_head.solid			= SOLID_NOT;
 	set_movetype(this.tur_head, this.move_movetype);
 
+	this.weaponentities[0] = this; // lol
+
 	if(!this.tur_defend)
 	if(this.target != "")
 	{
