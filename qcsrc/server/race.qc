@@ -819,7 +819,7 @@ void trigger_race_checkpoint_verify(entity this)
 		entity cpt = it;
 		FOREACH_ENTITY_STRING(target, cpt.targetname,
 		{
-			vector org = (this.absmin + this.absmax) * 0.5;
+			vector org = (it.absmin + it.absmax) * 0.5;
 			if(cpt.race_checkpoint == 0)
 				WaypointSprite_SpawnFixed(WP_RaceStart, org, it, sprite, RADARICON_NONE);
 			else
