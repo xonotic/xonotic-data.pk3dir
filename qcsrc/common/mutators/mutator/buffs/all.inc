@@ -4,8 +4,9 @@ string Buff_UndeprecateName(string buffname)
     {
         case "ammoregen": return "ammo";
         case "haste": case "scout": return "speed";
-        case "doubler": return "medic";
+        case "guard": case "revival": case "regen": return "medic";
         case "invis": return "invisible";
+        case "jumper": return "jump";
         default: return buffname;
     }
 }
@@ -45,8 +46,9 @@ REGISTER_BUFF(MEDIC) {
     this.m_color = '1 0.12 0';
 }
 BUFF_SPAWNFUNCS(medic, BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler, BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(medic, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(guard, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(regen, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(revival, BUFF_MEDIC)
 
 REGISTER_BUFF(BASH) {
     this.m_prettyName = _("Bash");
@@ -87,6 +89,7 @@ REGISTER_BUFF(JUMP) {
     this.m_color = '0.24 0.78 1';
 }
 BUFF_SPAWNFUNCS(jump, BUFF_JUMP)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(jumper, BUFF_JUMP)
 
 REGISTER_BUFF(INVISIBLE) {
     this.m_prettyName = _("Invisible");
@@ -136,3 +139,4 @@ REGISTER_BUFF(FLIGHT) {
     this.m_color = '0.23 0.44 1';
 }
 BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(flight, BUFF_FLIGHT)

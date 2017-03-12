@@ -354,6 +354,7 @@ void waypoint_schedulerelinkall()
 	{
 		waypoint_schedulerelink(it);
 	});
+	waypoint_load_links_hardwired();
 }
 
 // Load waypoint links from file
