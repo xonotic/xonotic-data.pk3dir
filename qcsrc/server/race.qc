@@ -728,9 +728,13 @@ void checkpoint_use(entity this, entity actor, entity trigger)
 
 bool race_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
-	if(view.race_checkpoint == -1 || this.owner.race_checkpoint == -2)
+	entity own = this.owner;
+	if(this.realowner)
+		own = this.realowner; // target support
+
+	if(view.race_checkpoint == -1 || own.race_checkpoint == -2)
 		return true;
-	else if(view.race_checkpoint == this.owner.race_checkpoint)
+	else if(view.race_checkpoint == own.race_checkpoint)
 		return true;
 	else
 		return false;
@@ -825,6 +829,7 @@ void trigger_race_checkpoint_verify(entity this)
 			else
 				WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, it, sprite, RADARICON_NONE);
 
+			it.sprite.realowner = cpt;
 			it.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 		});
 	});
