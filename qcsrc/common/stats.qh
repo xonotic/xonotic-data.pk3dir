@@ -118,6 +118,7 @@ REGISTER_STAT(CAPTURE_PROGRESS, float)
 REGISTER_STAT(ENTRAP_ORB, float)
 REGISTER_STAT(ENTRAP_ORB_ALPHA, float)
 REGISTER_STAT(ITEMSTIME, int, autocvar_sv_itemstime)
+REGISTER_STAT(KILL_TIME, float)
 
 #ifdef SVQC
 bool autocvar_g_ctf_leaderboard;
