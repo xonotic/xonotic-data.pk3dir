@@ -1,5 +1,6 @@
 #include "dialog_settings_effects.qh"
 
+#include "slider_picmip.qh"
 #include "slider_sbfadetime.qh"
 #include "weaponslist.qh"
 #include "keybinder.qh"
