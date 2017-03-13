@@ -375,6 +375,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			attacker.taunt_soundtime = time + 1;
 			attacker.killcount = attacker.killcount + 1;
 
+			attacker.killsound += 1;
+
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \
@@ -631,16 +633,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
     damage_attacker = attacker;
 	attacker_save = attacker;
 
-	if(IS_PLAYER(targ))
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(targ.(weaponentity).hook && targ.(weaponentity).hook.aiment == attacker)
-	    		RemoveHook(targ.(weaponentity).hook);
-	    }
-	}
-
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
@@ -742,6 +734,16 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		damage = M_ARGV(4, float);
 		mirrordamage = M_ARGV(5, float);
 		force = M_ARGV(6, vector);
+
+		if(IS_PLAYER(targ) && damage > 0 && attacker)
+		{
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		    {
+		    	.entity weaponentity = weaponentities[slot];
+		    	if(targ.(weaponentity).hook && targ.(weaponentity).hook.aiment == attacker)
+		    		RemoveHook(targ.(weaponentity).hook);
+		    }
+		}
 
 		if(STAT(FROZEN, targ))
 		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)

@@ -1686,7 +1686,7 @@ void havocbot_role_ctf_carrier(entity this)
 
 		navigation_goalrating_end(this);
 
-		if (this.navigation_hasgoals)
+		if (this.goalentity)
 			this.havocbot_cantfindflag = time + 10;
 		else if (time > this.havocbot_cantfindflag)
 		{
