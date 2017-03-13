@@ -952,3 +952,9 @@ MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);
     /** respawn time */     i(float, MUTATOR_ARGV_1_float) \
     /**/
 MUTATOR_HOOKABLE(Item_ScheduleRespawn, EV_Item_ScheduleRespawn);
+
+/** called before physics stats are set on a player, allows limited early customization */
+#define EV_PlayerPhysics_UpdateStats(i, o) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPhysics_UpdateStats, EV_PlayerPhysics_UpdateStats);
