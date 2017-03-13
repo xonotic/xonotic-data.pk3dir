@@ -532,10 +532,7 @@ MUTATOR_HOOKABLE(SetWeaponreplace, EV_SetWeaponreplace);
 
 /** called when an item is about to respawn */
 #define EV_Item_RespawnCountdown(i, o) \
-    /** item name */   i(string, MUTATOR_ARGV_0_string) \
-    /**/               o(string, MUTATOR_ARGV_0_string) \
-    /** item colour */ i(vector, MUTATOR_ARGV_1_vector) \
-    /**/               o(vector, MUTATOR_ARGV_1_vector) \
+    /** item */   i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
@@ -948,3 +945,16 @@ enum {
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);
+
+/** return true to show a waypoint while the item is spawning */
+#define EV_Item_ScheduleRespawn(i, o) \
+    /** item */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** respawn time */     i(float, MUTATOR_ARGV_1_float) \
+    /**/
+MUTATOR_HOOKABLE(Item_ScheduleRespawn, EV_Item_ScheduleRespawn);
+
+/** called before physics stats are set on a player, allows limited early customization */
+#define EV_PlayerPhysics_UpdateStats(i, o) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPhysics_UpdateStats, EV_PlayerPhysics_UpdateStats);
