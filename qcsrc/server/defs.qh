@@ -338,6 +338,9 @@ float client_cefc_accumulatortime;
 .float vortex_charge = _STAT(VORTEX_CHARGE);
 .float vortex_charge_rottime;
 .float vortex_chargepool_ammo = _STAT(VORTEX_CHARGEPOOL);
+.float okvortex_charge = _STAT(OVERKILL_VORTEX_CHARGE);
+.float okvortex_charge_rottime;
+.float okvortex_chargepool_ammo = _STAT(OVERKILL_VORTEX_CHARGEPOOL);
 .float hagar_load = _STAT(HAGAR_LOAD);
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
