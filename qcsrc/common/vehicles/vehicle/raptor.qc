@@ -777,6 +777,9 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
             dropmark = spawn();
             dropmark.owner = player;
             dropmark.gravity = 1;
+            dropmark.dphitcontentsmask = DPCONTENTS_SOLID;
+            dropmark.solid = SOLID_CORPSE;
+			set_movetype(dropmark, MOVETYPE_BOUNCE);
         }
 
         float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;

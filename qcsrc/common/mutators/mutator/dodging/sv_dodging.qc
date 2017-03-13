@@ -1,5 +1,21 @@
 #include "sv_dodging.qh"
 
+#define PHYS_DODGING 						g_dodging
+#define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
+#define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
+#define PHYS_DODGING_FROZEN_NODOUBLETAP		autocvar_sv_dodging_frozen_doubletap
+#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold
+#define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
+#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
+#define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
+#define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
+#define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
+#define PHYS_DODGING_AIR 					autocvar_sv_dodging_air_dodging
+#define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed
+#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
+
+// we ran out of stats slots! TODO: re-enable this when prediction is available for dodging
+#if 0
 #define PHYS_DODGING 						STAT(DODGING, this)
 #define PHYS_DODGING_DELAY 					STAT(DODGING_DELAY, this)
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	STAT(DODGING_DISTANCE_THRESHOLD, this)
@@ -11,7 +27,8 @@
 #define PHYS_DODGING_UP_SPEED 				STAT(DODGING_UP_SPEED, this)
 #define PHYS_DODGING_WALL 					STAT(DODGING_WALL, this)
 #define PHYS_DODGING_AIR 					STAT(DODGING_AIR, this)
-#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
+#define PHYS_DODGING_MAXSPEED 				STAT(DODGING_MAXSPEED, this)
+#endif
 
 #ifdef CSQC
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
@@ -123,10 +140,18 @@ bool PM_dodging_checkpressedkeys(entity this)
 
 	makevectors(this.angles);
 
+	bool wall_dodge = false;
+
 	if(!PHYS_DODGING_AIR)
-	if (check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD) != 1
-		&& check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
-		return true;
+	if(!check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD))
+	{
+		wall_dodge = check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD);
+		if(!wall_dodge) // we're not on the ground, and wall dodging isn't allowed, end it!
+			return true;
+	}
+
+	if(!wall_dodge && PHYS_DODGING_MAXSPEED && vdist(this.velocity, >, PHYS_DODGING_MAXSPEED))
+		return false;
 
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;

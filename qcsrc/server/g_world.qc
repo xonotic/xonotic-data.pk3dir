@@ -253,17 +253,22 @@ void cvar_changes_init()
 
 		// mapinfo
 		BADCVAR("fraglimit");
+		BADCVAR("g_arena");
 		BADCVAR("g_assault");
 		BADCVAR("g_ca");
 		BADCVAR("g_ca_teams");
+		BADCVAR("g_conquest");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
+		BADCVAR("g_dotc");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
+		BADCVAR("g_jailbreak");
+		BADCVAR("g_jailbreak_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
@@ -274,8 +279,10 @@ void cvar_changes_init()
 		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
+		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
+		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
@@ -310,6 +317,8 @@ void cvar_changes_init()
 		BADCVAR("gameversion");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
+		BADCVAR("g_buffs_pickup_anyway");
+		BADCVAR("g_buffs_randomize");
 		BADCVAR("g_campcheck_distance");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
@@ -322,11 +331,14 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag_point_limit");
 		BADCVAR("g_hats");
 		BADCVAR("g_invasion_point_limit");
+		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keyhunt_point_leadlimit");
+		BADCVAR("g_maplist_selectrandom");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
 		BADCVAR("g_piggyback");
+		BADCVAR("g_playerclip_collisions");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
@@ -339,6 +351,7 @@ void cvar_changes_init()
 		BADCVAR("sv_precacheplayermodels");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
+		BADCVAR("sv_weapons_modeloverride");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
@@ -2073,6 +2086,8 @@ void EndFrame()
 		entity e = IS_SPEC(it) ? it.enemy : it;
 		if (e.typehitsound) {
 			it.typehit_time = time;
+		} else if (e.killsound) {
+			it.kill_time = time;
 		} else if (e.damage_dealt) {
 			it.hit_time = time;
 			it.damage_dealt_total += ceil(e.damage_dealt);
@@ -2087,6 +2102,7 @@ void EndFrame()
 	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
 		it.damage_dealt = 0;
+		it.killsound = false;
 		antilag_record(it, CS(it), altime);
 	});
 	IL_EACH(g_monsters, true,

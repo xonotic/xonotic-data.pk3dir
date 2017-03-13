@@ -7,6 +7,7 @@ spawnfunc(weapon_electro);
 spawnfunc(weapon_hagar);
 spawnfunc(weapon_machinegun);
 spawnfunc(weapon_vortex);
+spawnfunc(weapon_minelayer);
 
 spawnfunc(target_items);
 
@@ -15,7 +16,7 @@ spawnfunc(item_cells);
 spawnfunc(item_rockets);
 spawnfunc(item_shells);
 
-spawnfunc(item_jetpack);
+spawnfunc(item_strength);
 
 spawnfunc(item_armor_big);
 spawnfunc(item_armor_mega);
@@ -39,6 +40,10 @@ spawnfunc(ammo_bullets)        { spawnfunc_item_bullets(this);        }
 // GL -> Mortar
 spawnfunc(ammo_grenades)       { spawnfunc_item_rockets(this);        }
 
+// Mines -> Rockets
+spawnfunc(weapon_prox_launcher) { spawnfunc_weapon_minelayer(this);   }
+spawnfunc(ammo_mines)           { spawnfunc_item_rockets(this);       }
+
 // LG -> Lightning
 spawnfunc(weapon_lightning)    { spawnfunc_weapon_electro(this);      }
 spawnfunc(ammo_lightning)      { spawnfunc_item_cells(this);          }
@@ -48,7 +53,7 @@ spawnfunc(weapon_plasmagun)    { spawnfunc_weapon_hagar(this);        }
 spawnfunc(ammo_cells)          { spawnfunc_item_rockets(this);        }
 
 // Rail -> Vortex
-spawnfunc(weapon_railgun)      { spawnfunc_weapon_vortex(this);          }
+spawnfunc(weapon_railgun)      { spawnfunc_weapon_vortex(this);       }
 spawnfunc(ammo_slugs)          { spawnfunc_item_cells(this);          }
 
 // BFG -> Crylink
@@ -59,13 +64,16 @@ spawnfunc(ammo_bfg)            { spawnfunc_item_cells(this);          }
 spawnfunc(ammo_rockets)        { spawnfunc_item_rockets(this);        }
 
 // Armor
-spawnfunc(item_armor_body)     { spawnfunc_item_armor_mega(this);    }
+spawnfunc(item_armor_body)     { spawnfunc_item_armor_mega(this);     }
 spawnfunc(item_armor_combat)   { spawnfunc_item_armor_big(this);      }
 spawnfunc(item_armor_shard)    { spawnfunc_item_armor_small(this);    }
 spawnfunc(item_enviro)         { spawnfunc_item_invincible(this);     }
 
 // medkit -> armor (we have no holdables)
-spawnfunc(holdable_medkit)	   { spawnfunc_item_armor_mega(this);    }
+spawnfunc(holdable_medkit)	   { spawnfunc_item_armor_mega(this);     }
+
+// doubler -> strength
+spawnfunc(item_doubler)        { spawnfunc_item_strength(this); }
 
 .float wait;
 .float delay;
@@ -152,7 +160,7 @@ spawnfunc(target_give)
 	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
 }
 
-//spawnfunc(item_flight)       /* handled by jetpack */
+//spawnfunc(item_flight)       /* handled by buffs mutator */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
 //spawnfunc(item_health_large) /* handled in t_items.qc */
@@ -162,11 +170,6 @@ spawnfunc(target_give)
 //spawnfunc(item_regen)        /* handled by buffs mutator */
 
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
-
-spawnfunc(item_flight)
-{
-	spawnfunc_item_jetpack(this);
-}
 
 .float notteam;
 .float notsingle;

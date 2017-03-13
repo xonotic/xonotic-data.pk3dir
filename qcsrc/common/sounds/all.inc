@@ -266,6 +266,7 @@ Sound SND_GIB_SPLAT_RANDOM() {
 
 SOUND(HIT, "misc/hit");
 SOUND(TYPEHIT, "misc/typehit");
+SOUND(KILL, "misc/kill");
 
 SOUND(SPAWN, "misc/spawn");
 
