@@ -56,6 +56,8 @@
 
 #include "../lib/warpzone/server.qh"
 
+#include <common/mutators/mutator/overkill/okvortex.qh>
+
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
     ClientConnect(this);
@@ -1696,6 +1698,8 @@ void SpectateCopy(entity this, entity spectatee)
 	this.weapons = spectatee.weapons;
 	this.vortex_charge = spectatee.vortex_charge;
 	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
+	this.okvortex_charge = spectatee.okvortex_charge;
+	this.okvortex_chargepool_ammo = spectatee.okvortex_chargepool_ammo;
 	this.hagar_load = spectatee.hagar_load;
 	this.arc_heat_percent = spectatee.arc_heat_percent;
 	this.minelayer_mines = spectatee.minelayer_mines;
@@ -2514,7 +2518,13 @@ void PlayerPreThink (entity this)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+			{
 				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+			}
+			if (WEP_CVAR(okvortex, charge_rot_rate) && this.(weaponentity).okvortex_charge > WEP_CVAR(okvortex, charge_limit) && this.(weaponentity).okvortex_charge_rottime < time)
+			{
+				this.(weaponentity).okvortex_charge = bound(WEP_CVAR(okvortex, charge_limit), this.(weaponentity).okvortex_charge - WEP_CVAR(okvortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+			}
 		}
 
 		if (frametime) player_anim(this);

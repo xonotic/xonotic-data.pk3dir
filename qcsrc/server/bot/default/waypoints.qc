@@ -775,6 +775,17 @@ entity waypoint_spawnpersonal(entity this, vector position)
 	return w;
 }
 
+void waypoint_showlink(entity wp1, entity wp2, int display_type)
+{
+	if (!(wp1 && wp2))
+		return;
+
+	if (wp1.wphardwired && wp2.wphardwired)
+		te_beam(NULL, wp1.origin, wp2.origin);
+	else if (display_type == 1)
+		te_lightning2(NULL, wp1.origin, wp2.origin);
+}
+
 void botframe_showwaypointlinks()
 {
 	if (time < botframe_waypointeditorlightningtime)
@@ -782,48 +793,53 @@ void botframe_showwaypointlinks()
 	botframe_waypointeditorlightningtime = time + 0.5;
 	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot,
 	{
-		if(IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
+		int display_type = 0;
+		entity head = navigation_findnearestwaypoint(it, false);
+		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
+			display_type = 1; // default
+		else if(head && (head.wphardwired))
+			display_type = 2; // only hardwired
+
+		if (display_type)
 		{
 			//navigation_testtracewalk = true;
-			entity head = navigation_findnearestwaypoint(it, false);
-		//	print("currently selected WP is ", etos(head), "\n");
+			//print("currently selected WP is ", etos(head), "\n");
 			//navigation_testtracewalk = false;
 			if (head)
 			{
-				entity w;
-				w = head     ;if (w) te_lightning2(NULL, w.origin, it.origin);
-				w = head.wp00;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp01;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp02;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp03;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp04;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp05;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp06;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp07;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp08;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp09;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp10;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp11;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp12;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp13;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp14;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp15;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp16;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp17;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp18;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp19;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp20;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp21;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp22;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp23;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp24;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp25;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp26;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp27;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp28;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp29;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp30;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp31;if (w) te_lightning2(NULL, w.origin, head.origin);
+				te_lightning2(NULL, head.origin, it.origin);
+				waypoint_showlink(head.wp00, head, display_type);
+				waypoint_showlink(head.wp01, head, display_type);
+				waypoint_showlink(head.wp02, head, display_type);
+				waypoint_showlink(head.wp03, head, display_type);
+				waypoint_showlink(head.wp04, head, display_type);
+				waypoint_showlink(head.wp05, head, display_type);
+				waypoint_showlink(head.wp06, head, display_type);
+				waypoint_showlink(head.wp07, head, display_type);
+				waypoint_showlink(head.wp08, head, display_type);
+				waypoint_showlink(head.wp09, head, display_type);
+				waypoint_showlink(head.wp10, head, display_type);
+				waypoint_showlink(head.wp11, head, display_type);
+				waypoint_showlink(head.wp12, head, display_type);
+				waypoint_showlink(head.wp13, head, display_type);
+				waypoint_showlink(head.wp14, head, display_type);
+				waypoint_showlink(head.wp15, head, display_type);
+				waypoint_showlink(head.wp16, head, display_type);
+				waypoint_showlink(head.wp17, head, display_type);
+				waypoint_showlink(head.wp18, head, display_type);
+				waypoint_showlink(head.wp19, head, display_type);
+				waypoint_showlink(head.wp20, head, display_type);
+				waypoint_showlink(head.wp21, head, display_type);
+				waypoint_showlink(head.wp22, head, display_type);
+				waypoint_showlink(head.wp23, head, display_type);
+				waypoint_showlink(head.wp24, head, display_type);
+				waypoint_showlink(head.wp25, head, display_type);
+				waypoint_showlink(head.wp26, head, display_type);
+				waypoint_showlink(head.wp27, head, display_type);
+				waypoint_showlink(head.wp28, head, display_type);
+				waypoint_showlink(head.wp29, head, display_type);
+				waypoint_showlink(head.wp30, head, display_type);
+				waypoint_showlink(head.wp31, head, display_type);
 			}
 		}
 	});
