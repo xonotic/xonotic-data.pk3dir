@@ -736,6 +736,7 @@ void havocbot_movetogoal(entity this)
 		evadeobstacle = '0 0 0';
 		evadelava = '0 0 0';
 
+		this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 		makevectors(this.v_angle.y * '0 1 0');
 		if (this.waterlevel)
 		{
@@ -812,7 +813,6 @@ void havocbot_movetogoal(entity this)
 
 			// Check for water/slime/lava and dangerous edges
 			// (only when the bot is on the ground or jumping intentionally)
-			this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			vector dst_down = dst_ahead - '0 0 3000';
