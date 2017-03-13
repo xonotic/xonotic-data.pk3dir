@@ -45,6 +45,9 @@ void spawner_trigger_touch(entity this, entity toucher)
 {
 	if(!toucher.iscreature || IS_DEAD(toucher) || toucher.health < 1)
 		return; // only players
+	if(time < this.door_finished)
+		return;
+	this.door_finished = time + 1;
 
 	spawner_use(this.owner, toucher, this);
 }
