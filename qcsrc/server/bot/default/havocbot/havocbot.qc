@@ -608,7 +608,7 @@ void havocbot_movetogoal(entity this)
 
 			return;
 		}
-		else if(this.health>WEP_CVAR(devastator, damage)*0.5)
+		else if(this.health > WEP_CVAR(devastator, damage) * 0.5 * ((this.strength_finished < time) ? autocvar_g_balance_powerup_strength_selfdamage : 1))
 		{
 			if(this.velocity.z < 0)
 			{
