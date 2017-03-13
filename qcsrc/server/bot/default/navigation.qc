@@ -48,7 +48,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 	float dist;
 	float totaldist;
 	float stepdist;
-	float yaw;
 	float ignorehazards;
 	float swimming;
 
@@ -92,7 +91,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 	}
 
 	// Movement loop
-	yaw = vectoyaw(move);
 	move = end - org;
 	for (;;)
 	{
