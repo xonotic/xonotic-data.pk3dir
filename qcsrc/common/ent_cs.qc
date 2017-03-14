@@ -1,8 +1,5 @@
 #include "ent_cs.qh"
 
-// for use in mods
-#define ENTCS_EXTRAPROPS
-
 #define ENTCS_SET_NORMAL(var, x) MACRO_BEGIN \
 	var = x; \
 MACRO_END
@@ -51,8 +48,6 @@ MACRO_END
     PROP(true, frags, ENTCS_SET_NORMAL, \
 	{ WriteShort(chan, ent.frags); }, \
 	{ ent.frags = ReadShort(); }) \
-    \
-    ENTCS_EXTRAPROPS \
     \
 	/**/
 
