@@ -1190,18 +1190,16 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 
 void havocbot_aim(entity this)
 {
-	vector myvel, enemyvel;
-//	if(this.flags & FL_INWATER)
-//		return;
 	if (time < this.nextaim)
 		return;
 	this.nextaim = time + 0.1;
-	myvel = this.velocity;
+	vector myvel = this.velocity;
 	if (!this.waterlevel)
 		myvel.z = 0;
-	if (this.enemy)
+	if(MUTATOR_CALLHOOK(HavocBot_Aim, this)) { /* do nothing */ }
+	else if (this.enemy)
 	{
-		enemyvel = this.enemy.velocity;
+		vector enemyvel = this.enemy.velocity;
 		if (!this.enemy.waterlevel)
 			enemyvel.z = 0;
 		lag_additem(this, time + this.ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
