@@ -1,5 +1,38 @@
 #include "ent_cs.qh"
 
+REGISTRY(EntCSProps, BITS(16) - 1)
+#define EntCSProps_from(i) _EntCSProps_from(i, NULL)
+REGISTER_REGISTRY(EntCSProps)
+REGISTRY_SORT(EntCSProps)
+REGISTRY_CHECK(EntCSProps)
+STATIC_INIT(RegisterEntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
+
+.bool m_public;
+.bool(entity ent, entity player) m_check;
+.void(entity ent, entity player) m_set;
+.void(int chan, entity ent) m_send;
+.void(entity ent) m_receive;
+
+#ifdef SVQC
+#define ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive) \
+	bool id##_check(entity ent, entity player) { return (ent.(checkprop) != player.(checkprop)); } \
+	void id##_set(entity ent, entity player) { setprop(ent.(checkprop), player.(checkprop)); } \
+	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+		this.m_public = ispublic; \
+		this.m_check = id##_check; \
+		this.m_set = id##_set; \
+		this.m_send = id##_send; \
+	}
+#elif defined(CSQC)
+#define ENTCS_PROP(id, ispublic, checkprop, setprop, svsend, clreceive) \
+	void id##_receive(entity ent) { LAMBDA(clreceive); } \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+		this.m_public = ispublic; \
+		this.m_receive = id##_receive; \
+	}
+#endif
+
 #define ENTCS_SET_NORMAL(var, x) MACRO_BEGIN \
 	var = x; \
 MACRO_END
@@ -10,62 +43,53 @@ MACRO_END
 	var = strzone(x); \
 MACRO_END
 
-// #define PROP(public, fld, set, sv, cl)
-#define ENTCS_NETPROPS(ent, PROP) PROP(false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */ \
-	PROP(false, origin, ENTCS_SET_NORMAL, \
-	{ WriteCoord(chan, ent.origin.x);  WriteCoord(chan, ent.origin.y); \
-	  WriteCoord(chan, ent.origin.z); }, \
-	{ ent.has_sv_origin = true; vector v; v.x = ReadCoord(); v.y = ReadCoord(); v.z = ReadCoord(); setorigin(ent, v); }) \
-    \
-	PROP(false, angles_y, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, ent.angles.y / 360 * 256); }, \
-	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; ent.angles = v; }) \
-    \
-	PROP(false, health, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, bound(0, ent.health / 10, 255));  /* FIXME: use a better scale? */ }, \
-	{ ent.healthvalue = ReadByte() * 10; }) \
-    \
-	PROP(false, armorvalue, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, bound(0, ent.armorvalue / 10, 255));  /* FIXME: use a better scale? */ }, \
-	{ ent.armorvalue = ReadByte() * 10; }) \
-    \
-	PROP(true, netname, ENTCS_SET_MUTABLE_STRING, \
-	{ WriteString(chan, ent.netname); }, \
-	{ if (ent.netname) strunzone(ent.netname); ent.netname = strzone(ReadString()); }) \
-    \
-	PROP(true, model, ENTCS_SET_NORMAL, \
-	{ WriteString(chan, ent.model); }, \
-	{ if (ent.model) strunzone(ent.model); ent.model = strzone(ReadString()); }) \
-    \
-	PROP(true, skin, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, ent.skin); }, \
-	{ ent.skin = ReadByte(); }) \
-    \
-    PROP(true, clientcolors, ENTCS_SET_NORMAL, \
-	{ WriteByte(chan, ent.clientcolors); }, \
-	{ ent.colormap = ReadByte(); }) \
-    \
-    PROP(true, frags, ENTCS_SET_NORMAL, \
-	{ WriteShort(chan, ent.frags); }, \
-	{ ent.frags = ReadShort(); }) \
-    \
-	/**/
+ENTCS_PROP(ENTNUM, false, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
+
+ENTCS_PROP(ORIGIN, false, origin, ENTCS_SET_NORMAL,
+	{ WriteVector(chan, ent.origin); },
+	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
+
+ENTCS_PROP(ANGLES, false, angles_y, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.angles.y / 360 * 256); },
+	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; ent.angles = v; })
+
+ENTCS_PROP(HEALTH, false, health, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, bound(0, ent.health / 10, 255));  /* FIXME: use a better scale? */ },
+	{ ent.healthvalue = ReadByte() * 10; })
+
+ENTCS_PROP(ARMOR, false, armorvalue, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, bound(0, ent.armorvalue / 10, 255));  /* FIXME: use a better scale? */ },
+	{ ent.armorvalue = ReadByte() * 10; })
+
+ENTCS_PROP(NAME, true, netname, ENTCS_SET_MUTABLE_STRING,
+	{ WriteString(chan, ent.netname); },
+	{ if (ent.netname) strunzone(ent.netname); ent.netname = strzone(ReadString()); })
+
+ENTCS_PROP(MODEL, true, model, ENTCS_SET_NORMAL,
+	{ WriteString(chan, ent.model); },
+	{ if (ent.model) strunzone(ent.model); ent.model = strzone(ReadString()); })
+
+ENTCS_PROP(SKIN, true, skin, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.skin); },
+	{ ent.skin = ReadByte(); })
+
+ENTCS_PROP(CLIENTCOLORS, true, clientcolors, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.clientcolors); },
+	{ ent.colormap = ReadByte(); })
+
+ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.frags); },
+	{ ent.frags = ReadByte(); })
 
 #ifdef SVQC
 
 	int ENTCS_PUBLICMASK = 0;
 	STATIC_INIT(ENTCS_PUBLICMASK)
 	{
-		int i = 0;
-		#define X(public, fld, set, sv, cl) { \
-			if (public) { \
-				ENTCS_PUBLICMASK |= BIT(i); \
-			} \
-			i += 1; \
-		}
-		ENTCS_NETPROPS(this, X);
-		#undef X
-		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded ENTCS_NETPROPS limit");
+		FOREACH(EntCSProps, it.m_public,
+		{
+			ENTCS_PUBLICMASK |= BIT(it.m_id);
+		});
 	}
 
 	bool _entcs_send(entity this, entity to, int sf, int chan)
@@ -90,15 +114,10 @@ MACRO_END
 			WriteHeader(chan, CLIENT_ENTCS);
 		WriteByte(chan, etof(player) - 1);
 		WriteShort(chan, sf);
-		int i = 0;
-		#define X(public, fld, set, sv, cl) { \
-			if (sf & BIT(i)) { \
-				sv; \
-			} \
-			i += 1; \
-		}
-		ENTCS_NETPROPS(this, X);
-		#undef X
+		FOREACH(EntCSProps, sf & BIT(it.m_id),
+		{
+			it.m_send(chan, this);
+		});
 		return true;
 	}
 
@@ -111,16 +130,11 @@ MACRO_END
 	{
 		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
 		entity o = this.owner;
-		int i = 0;
-		#define X(public, fld, set, sv, cl) { \
-			if (o.fld != this.fld) { \
-				set(this.fld, o.fld); \
-				this.SendFlags |= BIT(i); \
-			} \
-			i += 1; \
-		}
-		ENTCS_NETPROPS(this, X);
-		#undef X
+		FOREACH(EntCSProps, it.m_check(this, o),
+		{
+			it.m_set(this, o);
+			this.SendFlags |= BIT(it.m_id);
+		});
 	    setorigin(this, this.origin);  // relink
 	}
 
@@ -208,15 +222,10 @@ MACRO_END
 		int sf = ReadShort();
 		e.has_sv_origin = false;
 		e.m_entcs_private = boolean(sf & BIT(0));
-		int i = 0;
-		#define X(public, fld, set, sv, cl) { \
-			if (sf & BIT(i)) { \
-				cl; \
-			} \
-			i += 1; \
-		}
-		ENTCS_NETPROPS(e, X);
-		#undef X
+		FOREACH(EntCSProps, sf & BIT(it.m_id),
+		{
+			it.m_receive(e);
+		});
 		e.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(e);
 		getthink(e)(e);
