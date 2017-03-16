@@ -584,6 +584,13 @@ IMPULSE(navwaypoint_remove)
 	entity e = navigation_findnearestwaypoint(this, false);
 	if (!e) return;
 	if (e.wpflags & WAYPOINTFLAG_GENERATED) return;
+
+	if (e.wphardwired)
+	{
+		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired\n");
+		return;
+	}
+
 	bprint(strcat("Waypoint removed at ", vtos(e.origin), "\n"));
 	waypoint_remove(e);
 }
