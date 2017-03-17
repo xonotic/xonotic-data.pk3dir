@@ -78,8 +78,8 @@ ENTCS_PROP(CLIENTCOLORS, true, clientcolors, ENTCS_SET_NORMAL,
 	{ ent.colormap = ReadByte(); })
 
 ENTCS_PROP(FRAGS, true, frags, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, ent.frags); },
-	{ ent.frags = ReadByte(); })
+	{ WriteShort(chan, ent.frags); },
+	{ ent.frags = ReadShort(); })
 
 #ifdef SVQC
 
