@@ -87,7 +87,7 @@ void SUB_CalcMoveDone(entity this)
 	SUB_SETORIGIN (this, this.finaldest);
 	this.SUB_VELOCITY = '0 0 0';
 	this.SUB_NEXTTHINK = -1;
-	if (this.think1)
+	if (this.think1 && this.think1 != SUB_CalcMoveDone)
 		this.think1 (this);
 }
 
@@ -310,7 +310,7 @@ void SUB_CalcAngleMoveDone(entity this)
 	this.angles = this.finalangle;
 	this.SUB_AVELOCITY = '0 0 0';
 	this.SUB_NEXTTHINK = -1;
-	if (this.think1)
+	if (this.think1 && this.think1 != SUB_CalcAngleMoveDone) // avoid endless loops
 		this.think1 (this);
 }
 

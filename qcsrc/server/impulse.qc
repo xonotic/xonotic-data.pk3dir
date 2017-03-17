@@ -574,18 +574,65 @@ IMPULSE(waypoint_clear)
 IMPULSE(navwaypoint_spawn)
 {
 	if (!autocvar_g_waypointeditor) return;
-	waypoint_schedulerelink(waypoint_spawn(this.origin, this.origin, 0));
-	bprint(strcat("Waypoint spawned at ", vtos(this.origin), "\n"));
+	vector org = this.origin;
+	bool sym = boolean(autocvar_g_waypointeditor_symmetrical);
+
+	LABEL(add_wp);
+	waypoint_schedulerelink(waypoint_spawn(org, org, 0));
+	bprint(strcat("Waypoint spawned at ", vtos(org), "\n"));
+	if(sym)
+	{
+		vector map_center = autocvar_g_waypointeditor_symmetrical_center;
+		org = this.origin;
+		org.x = map_center.x - (org.x - map_center.x);
+		org.y = map_center.y - (org.y - map_center.y);
+		if (vdist(org - this.origin, >, 10))
+		{
+			sym = false;
+			goto add_wp;
+		}
+	}
 }
 
 IMPULSE(navwaypoint_remove)
 {
 	if (!autocvar_g_waypointeditor) return;
 	entity e = navigation_findnearestwaypoint(this, false);
+	bool sym = boolean(autocvar_g_waypointeditor_symmetrical);
+
+	LABEL(remove_wp);
 	if (!e) return;
 	if (e.wpflags & WAYPOINTFLAG_GENERATED) return;
+
+	if (e.wphardwired)
+	{
+		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired\n");
+		return;
+	}
+
+	entity wp_sym = NULL;
+	if (sym)
+	{
+		vector map_center = autocvar_g_waypointeditor_symmetrical_center;
+		vector org = this.origin;
+		org.x = map_center.x - (org.x - map_center.x);
+		org.y = map_center.y - (org.y - map_center.y);
+		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
+			if(vdist(org - it.origin, <, 3))
+			{
+				wp_sym = it;
+				break;
+			}
+		});
+	}
 	bprint(strcat("Waypoint removed at ", vtos(e.origin), "\n"));
 	waypoint_remove(e);
+	if (sym && wp_sym)
+	{
+		e = wp_sym;
+		sym = false;
+		goto remove_wp;
+	}
 }
 
 IMPULSE(navwaypoint_relink)

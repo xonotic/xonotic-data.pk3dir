@@ -50,6 +50,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 	float stepdist;
 	float ignorehazards;
 	float swimming;
+	entity tw_ladder = NULL;
 
 	if(autocvar_bot_debug_tracewalk)
 	{
@@ -138,11 +139,11 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
 				for (; org.z < end.z + e.maxs.z; org.z += stepdist)
 				{
-						if(autocvar_bot_debug_tracewalk)
-							debugnode(e, org);
+					if(autocvar_bot_debug_tracewalk)
+						debugnode(e, org);
 
-				        if(pointcontents(org) == CONTENT_EMPTY)
-							break;
+					if(pointcontents(org) == CONTENT_EMPTY)
+						break;
 				}
 
 				if(pointcontents(org + '0 0 1') != CONTENT_EMPTY)
@@ -201,6 +202,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 						}
 						else if (trace_ent.classname == "func_ladder")
 						{
+							tw_ladder = trace_ent;
 							vector ladder_bottom = trace_endpos - dir * m2.x;
 							vector ladder_top = ladder_bottom;
 							ladder_top.z = trace_ent.absmax.z + (-m1.z + 1);
@@ -254,6 +256,16 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 			}
 
 			org = trace_endpos;
+		}
+
+		if(tw_ladder && org.z < tw_ladder.absmax.z)
+		{
+			// stop tracewalk if destination height is lower than the top of the ladder
+			// otherwise bot can't easily figure out climbing direction
+			if(autocvar_bot_debug_tracewalk)
+				debugnodestatus(org, DEBUG_NODE_FAIL);
+
+			return false;
 		}
 	}
 

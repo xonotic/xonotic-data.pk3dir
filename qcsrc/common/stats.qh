@@ -246,7 +246,7 @@ REGISTER_STAT(JETPACK_MAXSPEED_SIDE, float, autocvar_g_jetpack_maxspeed_side)
 REGISTER_STAT(JETPACK_MAXSPEED_UP, float, autocvar_g_jetpack_maxspeed_up)
 REGISTER_STAT(JETPACK_REVERSE_THRUST, float, autocvar_g_jetpack_reverse_thrust)
 
-REGISTER_STAT(MOVEVARS_HIGHSPEED, float, autocvar_g_movement_highspeed)
+REGISTER_STAT(MOVEVARS_HIGHSPEED, float)
 
 #ifdef SVQC
 AUTOCVAR(g_walljump, bool, false, "Enable wall jumping mutator");
