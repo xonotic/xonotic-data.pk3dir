@@ -537,7 +537,6 @@ void Item_RespawnCountdown (entity this)
 		this.count += 1;
 		if(this.count == 1)
 		{
-			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
 			do {
 				{
 					entity wi = Weapons_from(this.weapon);
@@ -556,10 +555,11 @@ void Item_RespawnCountdown (entity this)
 					}
 				}
 			} while (0);
+			bool mutator_returnvalue = MUTATOR_CALLHOOK(Item_RespawnCountdown, this);
             if(this.waypointsprite_attached)
             {
                 GameItem def = this.itemdef;
-                if (Item_ItemsTime_SpectatorOnly(def))
+                if (Item_ItemsTime_SpectatorOnly(def) && !mutator_returnvalue)
                     WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
                 WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
             }
@@ -594,15 +594,18 @@ void Item_RespawnThink(entity this)
 void Item_ScheduleRespawnIn(entity e, float t)
 {
 	// if the respawn time is longer than 10 seconds, show a waypoint, otherwise, just respawn normally
-	if ((Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS)) && (t - ITEM_RESPAWN_TICKS) > 0)
+	if ((Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS) || MUTATOR_CALLHOOK(Item_ScheduleRespawn, e, t)) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.count = 0;
-		t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
-		Item_ItemsTime_SetTime(e, t);
-		Item_ItemsTime_SetTimesForAllPlayers();
+		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
+		{
+			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
+			Item_ItemsTime_SetTime(e, t);
+			Item_ItemsTime_SetTimesForAllPlayers();
+		}
 	}
 	else
 	{

@@ -63,9 +63,9 @@ bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
-#define ITEM_RESPAWNTIME(i)         ((i).respawntime + (crandom() * (i).respawntimejitter))
+#define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
 	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
-#define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + (random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS)))
+#define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
 	// range: 10 .. respawntime + respawntimejitter
 
 .float max_armorvalue;

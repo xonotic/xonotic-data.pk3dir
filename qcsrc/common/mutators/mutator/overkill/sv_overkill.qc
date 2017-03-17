@@ -5,6 +5,8 @@
 
 bool autocvar_g_overkill_powerups_replace;
 
+bool autocvar_g_overkill_itemwaypoints = true;
+
 bool autocvar_g_overkill_filter_healthmega;
 bool autocvar_g_overkill_filter_armormedium;
 bool autocvar_g_overkill_filter_armorbig;
@@ -221,6 +223,34 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			return true;
 		}
 	}
+}
+
+bool ok_HandleItemWaypoints(entity e)
+{
+	if(!autocvar_g_overkill_itemwaypoints)
+		return false; // don't handle it
+
+	switch(e.itemdef)
+	{
+		case ITEM_HealthMega: return true;
+		case ITEM_ArmorMedium: return true;
+		case ITEM_ArmorBig: return true;
+		case ITEM_ArmorMega: return true;
+	}
+
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ok, Item_RespawnCountdown)
+{
+	entity item = M_ARGV(0, entity);
+	return ok_HandleItemWaypoints(item);
+}
+
+MUTATOR_HOOKFUNCTION(ok, Item_ScheduleRespawn)
+{
+	entity item = M_ARGV(0, entity);
+	return ok_HandleItemWaypoints(item);
 }
 
 MUTATOR_HOOKFUNCTION(ok, FilterItem)
