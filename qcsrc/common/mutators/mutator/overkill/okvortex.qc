@@ -140,7 +140,7 @@ METHOD(OverkillVortex, wr_think, void(entity thiswep, entity actor, .entity weap
 	if(weaponslot(weaponentity) == 0)
 		actor.okvortex_chargepool_ammo = actor.(weaponentity).okvortex_chargepool_ammo;
 
-	if(autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(okvortex, ammo), WEP_CVAR_SEC(okvortex, ammo))) { // forced reload
+	if(autocvar_g_balance_okvortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(okvortex, ammo), WEP_CVAR_SEC(okvortex, ammo))) { // forced reload
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 	} else
 	{
