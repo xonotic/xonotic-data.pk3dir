@@ -280,6 +280,7 @@ void cvar_changes_init()
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
 		BADCVAR("g_snafu");
+		BADCVAR("g_surv"); // Lyberta: adding gamemode cvar
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("g_vip");

@@ -1229,16 +1229,25 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				{
 					FOREACH(Weapons, it != WEP_Null,
 					{
-						string weaponstartcvar = strcat("g_balance_",
-							it.netname, "_weaponstart");
-						if (cvar(weaponstartcvar) != 0)
+						if (it.weaponstart)
 						{
-							W_GiveWeapon(player, it.m_id);
+							player.weapons |= it.m_wepset;
 						}
 					});
 					for (int i = 0; i < 2; ++i)
 					{
-						W_GiveWeapon(player, floor(random() * 8 + 3));
+						// Finding weapon which player doesn't have.
+						vector weaponbit;
+						int numattempts = 0;
+						do
+						{
+							weaponbit = WepSet_FromWeapon(Weapons_from(
+								floor(random() * 8 + 3)));
+							++numattempts;
+						}
+						while ((player.weapons & weaponbit) &&
+							(numattempts < 10));
+						player.weapons |= weaponbit;
 					}
 					player.items |= IT_UNLIMITED_AMMO;
 					break;
@@ -1247,16 +1256,24 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				{
 					FOREACH(Weapons, it != WEP_Null,
 					{
-						string weaponstartcvar = strcat("g_balance_",
-							it.netname, "_weaponstart");
-						if (cvar(weaponstartcvar) != 0)
+						if (it.weaponstart)
 						{
-							W_GiveWeapon(player, it.m_id);
+							player.weapons |= it.m_wepset;
 						}
 					});
 					for (int i = 0; i < 2; ++i)
 					{
-						W_GiveWeapon(player, floor(random() * 8 + 3));
+						// Finding weapon which player doesn't have.
+						vector weaponbit;
+						int numattempts = 0;
+						do
+						{
+							weaponbit = WepSet_FromWeapon(Weapons_from(
+								floor(random() * 8 + 3)));
+							++numattempts;
+						}
+						while ((player.weapons & weaponbit) &&
+							(numattempts < 10));
 					}
 					player.items |= IT_UNLIMITED_AMMO;
 					break;
@@ -1357,7 +1374,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				{
 					if (it.netname == weapon)
 					{
-						W_GiveWeapon(player, it.m_id);
+						player.weapons |= it.m_wepset;
+						//W_GiveWeapon(player, it.m_id);
 						break;
 					}
 				});
