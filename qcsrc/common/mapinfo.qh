@@ -85,7 +85,7 @@ CLASS(Gametype, Object)
     }
 ENDCLASS(Gametype)
 
-REGISTRY(Gametypes, 24)
+REGISTRY(Gametypes, 25) // Lyberta: added 1
 #define Gametypes_from(i) _Gametypes_from(i, NULL)
 REGISTER_REGISTRY(Gametypes)
 REGISTRY_CHECK(Gametypes)
@@ -476,6 +476,31 @@ CLASS(Invasion, Gametype)
     }
 ENDCLASS(Invasion)
 REGISTER_GAMETYPE(INVASION, NEW(Invasion));
+
+//=============================================================================
+
+// Lyberta: adding survival gametype
+
+#ifdef CSQC
+void HUD_Mod_SURV(vector pos, vector mySize);
+#endif
+CLASS(Survival, Gametype)
+    INIT(Survival)
+    {
+        this.gametype_init(this, _("Survival"),"surv","g_surv",true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Survive as long as you can"));
+    }
+    METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return true;
+    }
+#ifdef CSQC
+    ATTRIB(Survival, m_modicons, void(vector pos, vector mySize), HUD_Mod_SURV);
+#endif
+ENDCLASS(Survival)
+REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));
+#define g_surv IS_GAMETYPE(SURVIVAL)
+
+//=============================================================================
 
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;
