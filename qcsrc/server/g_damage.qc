@@ -375,6 +375,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			attacker.taunt_soundtime = time + 1;
 			attacker.killcount = attacker.killcount + 1;
 
+			attacker.killsound += 1;
+
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \

@@ -1,5 +1,21 @@
 #include "sv_dodging.qh"
 
+#define PHYS_DODGING 						g_dodging
+#define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
+#define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
+#define PHYS_DODGING_FROZEN_NODOUBLETAP		autocvar_sv_dodging_frozen_doubletap
+#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold
+#define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
+#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
+#define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
+#define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
+#define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
+#define PHYS_DODGING_AIR 					autocvar_sv_dodging_air_dodging
+#define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed
+#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
+
+// we ran out of stats slots! TODO: re-enable this when prediction is available for dodging
+#if 0
 #define PHYS_DODGING 						STAT(DODGING, this)
 #define PHYS_DODGING_DELAY 					STAT(DODGING_DELAY, this)
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	STAT(DODGING_DISTANCE_THRESHOLD, this)
@@ -12,7 +28,7 @@
 #define PHYS_DODGING_WALL 					STAT(DODGING_WALL, this)
 #define PHYS_DODGING_AIR 					STAT(DODGING_AIR, this)
 #define PHYS_DODGING_MAXSPEED 				STAT(DODGING_MAXSPEED, this)
-#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
+#endif
 
 #ifdef CSQC
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))

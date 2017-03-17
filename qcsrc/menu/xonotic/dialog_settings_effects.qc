@@ -1,7 +1,6 @@
 #include "dialog_settings_effects.qh"
 
 #include "slider_picmip.qh"
-#include "slider_particles.qh"
 #include "slider_sbfadetime.qh"
 #include "weaponslist.qh"
 #include "keybinder.qh"
@@ -246,13 +245,14 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Quality:")));
 			setDependent(e, "cl_particles", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticParticlesSlider());
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 3.0, 0.25, "cl_particles_quality",
+			_("Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1.0)")));
 			setDependent(e, "cl_particles", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
 			setDependent(e, "cl_particles", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(200, 500, 20, "r_drawparticles_drawdistance",
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(200, 3000, 200, "r_drawparticles_drawdistance",
 			_("Particles further away than this will not be drawn (default: 1000)")));
 			setDependent(e, "cl_particles", 1, 1);
 

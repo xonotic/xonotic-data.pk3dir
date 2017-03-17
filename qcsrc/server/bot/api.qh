@@ -44,6 +44,7 @@ float skill;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 .float wpconsidered;
 .float wpcost;
+.float wphardwired;
 .int wpflags;
 
 bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);

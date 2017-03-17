@@ -136,6 +136,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 			this.colormap = ReadShort();
 		else
 			this.colormap = 0;
+		this.skin = ReadByte();
 	}
 
 	if(f & 2)
