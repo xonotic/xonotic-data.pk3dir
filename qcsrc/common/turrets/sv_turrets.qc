@@ -2,6 +2,12 @@
 #ifdef SVQC
 #include <server/autocvars.qh>
 
+// Entity damaging the turrent when it reaches 0 health
+.entity killer;
+
+// Target triggered when the turret is destoryed
+.string target_death;
+
 // Generic aiming
 vector turret_aim_generic(entity this)
 {
@@ -190,6 +196,19 @@ void turret_die(entity this)
 	//RadiusDamage (this,this, min(this.ammo,50),min(this.ammo,50) * 0.25,250,NULL,min(this.ammo,50)*5,DEATH_TURRET,NULL);
 
 	Turret tur = get_turretinfo(this.m_id);
+    
+	// Trigger target_death
+	if ( this.target_death != "" )
+	{
+		for(entity t = NULL; (t = find(t, targetname, this.target_death)); )
+		{
+			if ( t.use )
+			{
+				t.use(t, this.killer, this);
+			}
+		}
+	}
+    
 	if(this.damage_flags & TFL_DMG_DEATH_NORESPAWN)
 	{
 		tur.tr_death(tur, this);
@@ -246,6 +265,7 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 		this.tur_head.event_damage = func_null;
 		this.takedamage			 = DAMAGE_NO;
 		this.nextthink = time;
+		this.killer = attacker;
 		setthink(this, turret_die);
 	}
 
@@ -302,7 +322,6 @@ void turrets_setframe(entity this, float _frame, float client_only)
 
 bool turret_send(entity this, entity to, float sf)
 {
-
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TURRET);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & TNSF_SETUP)
