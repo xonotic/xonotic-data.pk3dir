@@ -69,6 +69,12 @@ MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
     /**/
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
+/** called after a player died. */
+#define EV_PlayerDied(i, o) \
+    /** player    		*/ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerDied, EV_PlayerDied);
+
 /** allows overriding the frag centerprint messages */
 #define EV_FragCenterMessage(i, o) \
     /** attacker       */ i(entity, MUTATOR_ARGV_0_entity) \
