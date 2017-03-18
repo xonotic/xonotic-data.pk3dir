@@ -1747,7 +1747,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 {
 	//FOREACH_CLIENT(true, { centerprint(it, "PlayerDies"); });
 	entity frag_target = M_ARGV(2, entity);
-	Surv_CountAlivePlayers(frag_target.team);
 	//surv_RemovePlayerFromAliveList(frag_target);
 	if (!Surv_CanPlayerSpawn(frag_target))
 	{
@@ -1758,6 +1757,12 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 		}
 	}
 	return true;
+}
+
+/// \brief Hook which is called after the player died.
+MUTATOR_HOOKFUNCTION(surv, PlayerDied)
+{
+	Surv_CountAlivePlayers(-1);
 }
 
 /// \brief Hook which is called when player has scored a frag.
