@@ -663,7 +663,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 bool MoveToTeam(entity client, int team_colour, int type)
 {
-	if (client.team == teamnum)
+	if (client.team == team_colour)
 	{
 		return true;
 	}
