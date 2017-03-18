@@ -663,25 +663,16 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 bool MoveToTeam(entity client, int team_colour, int type)
 {
-	if (client.team == team_colour)
-	{
-		return true;
-	}
-	if (MUTATOR_CALLHOOK(Player_ChangeTeam, client, Team_TeamToNumber(
-		client.team), Team_TeamToNumber(team_colour)) == true)
-	{
-		// Mutator has blocked team change.
-		return false;
-	}
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
-	int oldteam = client.team;
 	TeamchangeFrags(client);  // move the players frags
-	SetPlayerColors(client, team_colour - 1);  // set the players colour
+	if (!SetPlayerTeamSimple(client, team_colour))
+	{
+		return false;
+	}
 	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
 	lockteams = lockteams_backup;  // restore the team lock
 	LogTeamchange(client.playerid, client.team, type);
-	MUTATOR_CALLHOOK(Player_ChangedTeam, client, oldteam, client.team);
 	return true;
 }
 
