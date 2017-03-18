@@ -1152,6 +1152,10 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 	entity player = M_ARGV(0, entity);
 	LOG_TRACE("SURVIVAL: ClientConnect, player = ", player.netname);
 	player.surv_savedplayermodel = player.playermodel;
+	if (player.surv_role == SURVIVAL_ROLE_NONE)
+	{
+		Surv_AddPlayerToTeam(player, player.team);
+	}
 	return true;
 }
 
