@@ -161,6 +161,7 @@ int surv_numattackersalive = 0;
 /// \brief Holds the number of defender players that are alive.
 int surv_numdefendersalive = 0;
 
+bool surv_autobalance = true; ///< Holds whether autobalance is active.
 bool surv_allowed_to_spawn; ///< Holds whether players are allowed to spawn.
 
 //====================== Forward declarations =================================
@@ -248,40 +249,32 @@ void Surv_SetPlayerRole(entity player, int role)
 		{
 			string message = strcat(player.netname, " now has no role.");
 			LOG_TRACE(message);
-			FOREACH_CLIENT(true,
-			{
-				PrintToChat(it, message);
-			});
 			break;
 		}
 		case SURVIVAL_ROLE_ATTACKER:
 		{
 			string message = strcat(player.netname, " is now an attacker.");
 			LOG_TRACE(message);
-			FOREACH_CLIENT(true,
+			if (!IS_BOT_CLIENT(player))
 			{
-				PrintToChat(it, message);
-			});
+				PrintToChat(player, "You are now an attacker.");
+			}
 			break;
 		}
 		case SURVIVAL_ROLE_DEFENDER:
 		{
 			string message = strcat(player.netname, " is now a defender.");
 			LOG_TRACE(message);
-			FOREACH_CLIENT(true,
+			if (!IS_BOT_CLIENT(player))
 			{
-				PrintToChat(it, message);
-			});
+				PrintToChat(player, "You are now a defender.");
+			}
 			break;
 		}
 		case SURVIVAL_ROLE_CANNON_FODDER:
 		{
 			string message = strcat(player.netname, " is now a cannon fodder.");
 			LOG_TRACE(message);
-			FOREACH_CLIENT(true,
-			{
-				PrintToChat(it, message);
-			});
 			break;
 		}
 	}
@@ -325,6 +318,7 @@ void Surv_AddPlayerToTeam(entity player, int teamnum)
 				LOG_TRACE("Removing bot");
 				// Remove bot to make space for human.
 				bool removedbot = false;
+				surv_autobalance = false;
 				FOREACH_CLIENT(true,
 				{
 					if ((it.surv_role == SURVIVAL_ROLE_ATTACKER) &&
@@ -336,6 +330,7 @@ void Surv_AddPlayerToTeam(entity player, int teamnum)
 						break;
 					}
 				});
+				surv_autobalance = true;
 				if (!removedbot)
 				{
 					LOG_TRACE("No valid bot to remove");
@@ -377,16 +372,19 @@ void Surv_AddPlayerToTeam(entity player, int teamnum)
 				LOG_TRACE("Removing bot");
 				// Remove bot to make space for human.
 				bool removedbot = false;
+				surv_autobalance = false;
 				FOREACH_CLIENT(true,
 				{
 					if ((it.surv_role == SURVIVAL_ROLE_DEFENDER) &&
 						IS_BOT_CLIENT(it))
 					{
+						LOG_TRACE("Removing bot ", it.netname);
 						SetPlayerTeamSimple(it, surv_attackerteam);
 						removedbot = true;
 						break;
 					}
 				});
+				surv_autobalance = true;
 				if (!removedbot)
 				{
 					LOG_TRACE("No valid bot to remove");
@@ -428,9 +426,14 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			{
 				if (player.surv_role != SURVIVAL_ROLE_CANNON_FODDER)
 				{
-					LOG_TRACE("Invalid role");
-					FOREACH_CLIENT(true, { centerprint(it,
-						"RemovePlayerFromTeam: Invalid role"); });
+					string message = strcat("RemovePlayerFromTeam: ",
+						player.netname, " has invalid role.");
+					LOG_TRACE(message);
+					FOREACH_CLIENT(true,
+					{
+						centerprint(it, message);
+						PrintToChat(it, message);
+					});
 				}
 				return;
 			}
@@ -442,7 +445,7 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			{
 				--surv_numattackerhumans;
 			}
-			if (surv_numattackers < surv_numdefenders)
+			if (surv_autobalance && (surv_numattackers < surv_numdefenders))
 			{
 				// Add bot to keep teams balanced.
 				FOREACH_CLIENT(true,
@@ -469,9 +472,14 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			}
 			if (player.surv_role != SURVIVAL_ROLE_DEFENDER)
 			{
-				LOG_TRACE("Invalid role");
-				FOREACH_CLIENT(true, { centerprint(it,
-					"RemovePlayerFromTeam: Invalid role"); });
+				string message = strcat("RemovePlayerFromTeam: ",
+					player.netname, " has invalid role.");
+				LOG_TRACE(message);
+				FOREACH_CLIENT(true,
+				{
+					centerprint(it, message);
+					PrintToChat(it, message);
+				});
 				return;
 			}
 			Surv_SetPlayerRole(player, SURVIVAL_ROLE_NONE);
@@ -482,7 +490,7 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			{
 				--surv_numdefenderhumans;
 			}
-			if (surv_numdefenders < surv_numattackers)
+			if (surv_autobalance && (surv_numdefenders < surv_numattackers))
 			{
 				// Add bot to keep teams balanced.
 				FOREACH_CLIENT(true,
@@ -801,8 +809,14 @@ void Surv_SwapTeams()
 				}
 				else
 				{
-					LOG_TRACE("SwapTeams player ", it.netname,
-						" has invalid role");
+					string message = strcat("SwapTeams: ", it.netname,
+						" has invalid role.");
+					LOG_TRACE(message);
+					FOREACH_CLIENT(true,
+					{
+						centerprint(it, message);
+						PrintToChat(it, message);
+					});
 				}
 				break;
 			}
@@ -822,8 +836,14 @@ void Surv_SwapTeams()
 					}
 					default:
 					{
-						LOG_TRACE("SwapTeams player ", it.netname,
-							" has invalid role");
+						string message = strcat("SwapTeams: ", it.netname,
+							" has invalid role.");
+						LOG_TRACE(message);
+						FOREACH_CLIENT(true,
+						{
+							centerprint(it, message);
+							PrintToChat(it, message);
+						});
 						break;
 					}
 				}
