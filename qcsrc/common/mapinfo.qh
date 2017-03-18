@@ -477,6 +477,24 @@ CLASS(Invasion, Gametype)
 ENDCLASS(Invasion)
 REGISTER_GAMETYPE(INVASION, NEW(Invasion));
 
+CLASS(SinglePlayer, Gametype)
+    INIT(SinglePlayer)
+    {
+        this.gametype_init(this, _("SinglePlayer"),"sp","g_singleplayer",true,"","",_("Explore the map and defeat the enemies"));
+    }
+    METHOD(SinglePlayer, m_isTwoBaseMode, bool())
+    {
+        return true;
+    }
+    METHOD(SinglePlayer, m_generate_mapinfo, void(Gametype this, string v))
+    {
+        if(v == "info_player_singleplayer")
+            MapInfo_Map_supportedGametypes |= this.m_flags;
+    }
+ENDCLASS(SinglePlayer)
+REGISTER_GAMETYPE(SINGLE_PLAYER, NEW(SinglePlayer));
+#define g_singleplayer IS_GAMETYPE(SINGLE_PLAYER)
+
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;
 const int MAPINFO_FEATURE_TURRETS       = 4;
