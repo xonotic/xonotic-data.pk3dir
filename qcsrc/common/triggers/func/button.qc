@@ -8,8 +8,8 @@ void button_return(entity this);
 void button_wait(entity this)
 {
 	this.state = STATE_TOP;
-	this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
-	SUB_THINK(this, button_return);
+	this.nextthink = this.ltime + this.wait;
+	setthink(this, button_return);
 	SUB_UseTargets(this, this.enemy, NULL);
 	this.frame = 1;			// use alternate textures
 }

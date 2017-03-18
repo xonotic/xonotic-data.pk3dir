@@ -25,7 +25,7 @@ string GetCommandPrefix(entity caller)
 string GetCallerName(entity caller)
 {
 	if (caller) return playername(caller, false);
-	else return admin_name();  // ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
+	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
 }
 
 // verify that the client provided is acceptable for kicking
