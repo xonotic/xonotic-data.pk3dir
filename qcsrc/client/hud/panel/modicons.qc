@@ -737,15 +737,59 @@ void HUD_Mod_SURV(vector mypos, vector mysize)
 	}
 	HUD_Panel_DrawProgressBar(healthbarpos, healthbarsize, "progressbar",
 		defenderhealth, false, 0, healthbarcolor, 0.50, DRAWFLAG_NORMAL);
+	// Draw defender picture
+	int defenderteam = STAT(SURV_DEFENDER_TEAM);
+	string defenderpic = "";
+	vector defendercolor;
+	switch (defenderteam)
+	{
+		case 1:
+		{
+			defenderpic = "player_red";
+			defendercolor = '1 0 0';
+			break;
+		}
+		case 2:
+		{
+			defenderpic = "player_blue";
+			defendercolor = '0 0 1';
+			break;
+		}
+		default:
+		{
+			defendercolor = '1 1 1';
+			break;
+		}
+	}
+	vector picpos = mypos;
+	vector picsize = mysize;
+	picsize.x = picsize.y;
+	drawpic_aspect_skin(picpos, defenderpic, picsize, '1 1 1', 1,
+		DRAWFLAG_NORMAL);
+	// Draw number of defenders
+	int numalive = STAT(SURV_DEFENDERS_ALIVE);
+	vector alivepos = mypos;
+	alivepos.x += picsize.x;
+	vector alivesize = picsize;
+	drawstring_aspect(alivepos, ftos(numalive), alivesize, defendercolor, 1,
+		DRAWFLAG_NORMAL);
 	// Draw the time left
 	float roundtime = STAT(SURV_ROUND_TIME);
 	if (roundtime < 0)
 	{
 		roundtime = 0;
 	}
-	drawstring_aspect(mypos, seconds_tostring(roundtime), mysize, '1 1 1', 1,
-		DRAWFLAG_NORMAL);
-	
+	vector roundtimepos = mypos;
+	roundtimepos.x += picsize.x * 2;
+	vector roundtimesize = mysize;
+	roundtimesize.x = mysize.x - picsize.x * 2;
+	drawstring_aspect(roundtimepos, seconds_tostring(roundtime), roundtimesize,
+		'1 1 1', 1, DRAWFLAG_NORMAL);
+	if (autocvar_developer == 0)
+	{
+		return;
+	}
+	// Debug info below
 	int redalive = STAT(REDALIVE);
 	int bluealive = STAT(BLUEALIVE);
 	int yellowalive = STAT(YELLOWALIVE);
