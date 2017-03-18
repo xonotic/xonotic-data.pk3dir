@@ -5,9 +5,6 @@
 // Entity damaging the turrent when it reaches 0 health
 .entity killer;
 
-// Target triggered when the turret is destoryed
-.string target_death;
-
 // Generic aiming
 vector turret_aim_generic(entity this)
 {
@@ -197,16 +194,12 @@ void turret_die(entity this)
 
 	Turret tur = get_turretinfo(this.m_id);
     
-	// Trigger target_death
-	if ( this.target_death != "" )
+	// Trigger target2 on death
+	if ( this.target2 != "" )
 	{
-		for(entity t = NULL; (t = find(t, targetname, this.target_death)); )
-		{
-			if ( t.use )
-			{
-				t.use(t, this.killer, this);
-			}
-		}
+		string oldtarget = this.target;
+		SUB_UseTargets(this, this.killer, NULL);
+		this.target = oldtarget;
 	}
     
 	if(this.damage_flags & TFL_DMG_DEATH_NORESPAWN)
