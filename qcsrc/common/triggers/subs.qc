@@ -317,9 +317,6 @@ void SUB_CalcAngleMoveDone(entity this)
 // FIXME: I fixed this function only for rotation around the main axes
 void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
 {
-	vector	delta;
-	float	traveltime;
-
 	if (!tspeed)
 		objerror (this, "No speed is defined!");
 
@@ -328,6 +325,7 @@ void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float t
 	this.angles_y -= 360 * floor((this.angles_y - destangle_y) / 360 + 0.5);
 	this.angles_z -= 360 * floor((this.angles_z - destangle_z) / 360 + 0.5);
 	vector delta = destangle - this.angles;
+	float traveltime;
 
 	switch(tspeedtype)
 	{
