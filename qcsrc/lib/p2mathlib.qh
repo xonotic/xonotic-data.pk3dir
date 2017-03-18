@@ -32,4 +32,4 @@ vector vec_bounds_out(vector point, vector a, vector b);
 float angle_snap_f(float f, float increment);
 vector angle_snap_vec(vector v,  float increment);
 
-vector aim_vec(vector origin, vector target);
+vector aim_vec(vector org, vector targ);

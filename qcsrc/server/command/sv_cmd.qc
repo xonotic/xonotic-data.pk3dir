@@ -134,8 +134,8 @@ void GameCommand_adminmsg(float request, float argc)
 					}
 					else
 					{
-						centerprint(client, strcat("^3", admin_name(), ":\n^7", admin_message));
-						sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", admin_message, "\n"));
+						centerprint(client, strcat("^3", GetCallerName(NULL), ":\n^7", admin_message));
+						sprint(client, strcat("\{1}\{13}^3", GetCallerName(NULL), "^7: ", admin_message, "\n"));
 					}
 
 					successful = strcat(successful, (successful ? ", " : ""), playername(client, false));

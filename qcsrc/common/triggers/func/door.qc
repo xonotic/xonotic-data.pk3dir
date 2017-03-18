@@ -94,12 +94,12 @@ void door_hit_top(entity this)
 		return;		// don't come down automatically
 	if (this.classname == "door")
 	{
-		SUB_THINK(this, door_go_down);
+		setthink(this, door_go_down);
 	} else
 	{
-		SUB_THINK(this, door_rotating_go_down);
+		setthink(this, door_rotating_go_down);
 	}
-	this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+	this.nextthink = this.ltime + this.wait;
 }
 
 void door_hit_bottom(entity this)
@@ -130,7 +130,7 @@ void door_go_up(entity this)
 
 	if (this.state == STATE_TOP)
 	{	// reset top wait time
-		this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+		this.nextthink = this.ltime + this.wait;
 		return;
 	}
 
@@ -353,8 +353,8 @@ void door_rotating_hit_top(entity this)
 	this.state = STATE_TOP;
 	if (this.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
-	SUB_THINK(this, door_rotating_go_down);
-	this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+	setthink(this, door_rotating_go_down);
+	this.nextthink = this.ltime + this.wait;
 }
 
 void door_rotating_hit_bottom(entity this)
@@ -390,7 +390,7 @@ void door_rotating_go_up(entity this, entity oth)
 
 	if (this.state == STATE_TOP)
 	{	// reset top wait time
-		this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+		this.nextthink = this.ltime + this.wait;
 		return;
 	}
 	if (this.noise2 != "")
@@ -639,7 +639,7 @@ float door_send(entity this, entity to, float sf)
 		WriteShort(MSG_ENTITY, this.speed);
 		WriteByte(MSG_ENTITY, this.lip);
 		WriteByte(MSG_ENTITY, this.state);
-		WriteCoord(MSG_ENTITY, this.SUB_LTIME);
+		WriteCoord(MSG_ENTITY, this.ltime);
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -674,7 +674,7 @@ void door_link()
 
 void door_init_startopen(entity this)
 {
-	SUB_SETORIGIN(this, this.pos2);
+	setorigin(this, this.pos2);
 	this.pos2 = this.pos1;
 	this.pos1 = this.origin;
 
@@ -685,11 +685,11 @@ void door_init_startopen(entity this)
 
 void door_reset(entity this)
 {
-	SUB_SETORIGIN(this, this.pos1);
-	this.SUB_VELOCITY = '0 0 0';
+	setorigin(this, this.pos1);
+	this.velocity = '0 0 0';
 	this.state = STATE_BOTTOM;
-	SUB_THINK(this, func_null);
-	this.SUB_NEXTTHINK = 0;
+	setthink(this, func_null);
+	this.nextthink = 0;
 
 #ifdef SVQC
 	this.SendFlags |= SF_TRIGGER_RESET;
@@ -746,7 +746,7 @@ spawnfunc(func_door)
 	if (!this.lip)
 		this.lip = 8;
 
-	this.pos1 = this.SUB_ORIGIN;
+	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
 	if(this.spawnflags & DOOR_NONSOLID)
@@ -814,7 +814,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.speed = ReadShort();
 		this.lip = ReadByte();
 		this.state = ReadByte();
-		this.SUB_LTIME = ReadCoord();
+		this.ltime = ReadCoord();
 
 		this.solid = SOLID_BSP;
 		set_movetype(this, MOVETYPE_PUSH);
