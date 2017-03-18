@@ -678,6 +678,12 @@ void dedicated_print(string input)
 	if (server_is_dedicated) print(input);
 }
 
+void PrintToChat(entity player, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	sprint(player, text);
+}
+
 /**
  * message "": do not say, just test flood control
  * return value:

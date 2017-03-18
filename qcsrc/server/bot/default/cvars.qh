@@ -40,6 +40,8 @@ float autocvar_bot_ai_navigation_jetpack_mindistance;
 float autocvar_bot_ai_thinkinterval;
 bool autocvar_bot_ai_weapon_combo;
 float autocvar_bot_ai_weapon_combo_threshold;
+bool autocvar_bot_ai_timeitems;
+float autocvar_bot_ai_timeitems_minrespawndelay;
 string autocvar_bot_config_file;
 bool autocvar_bot_god;
 bool autocvar_bot_ignore_bots;

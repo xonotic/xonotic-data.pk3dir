@@ -782,9 +782,9 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// if bot for some reason doesn't get close to the current goal find another one
-			float curr_dist = vlen(this.origin - this.goalcurrent.origin);
-			if(!IS_PLAYER(this.goalcurrent))
+			if(!IS_PLAYER(this.goalcurrent) && !(this.goalcurrent.bot_pickup_respawning && this.goalcurrent_distance < 50))
 			{
+				float curr_dist = vlen(this.origin - this.goalcurrent.origin);
 				if(this.goalcurrent != this.goalcurrent_prev)
 				{
 					this.goalcurrent_prev = this.goalcurrent;
