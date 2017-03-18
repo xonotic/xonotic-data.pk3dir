@@ -248,10 +248,9 @@ void Surv_SetPlayerRole(entity player, int role)
 		{
 			string message = strcat(player.netname, " now has no role.");
 			LOG_TRACE(message);
-			message = strcat("\{1}^7", message, "\n");
 			FOREACH_CLIENT(true,
 			{
-				sprint(it, message);
+				PrintToChat(it, message);
 			});
 			break;
 		}
@@ -259,10 +258,9 @@ void Surv_SetPlayerRole(entity player, int role)
 		{
 			string message = strcat(player.netname, " is now an attacker.");
 			LOG_TRACE(message);
-			message = strcat("\{1}^7", message, "\n");
 			FOREACH_CLIENT(true,
 			{
-				sprint(it, message);
+				PrintToChat(it, message);
 			});
 			break;
 		}
@@ -270,10 +268,9 @@ void Surv_SetPlayerRole(entity player, int role)
 		{
 			string message = strcat(player.netname, " is now a defender.");
 			LOG_TRACE(message);
-			message = strcat("\{1}^7", message, "\n");
 			FOREACH_CLIENT(true,
 			{
-				sprint(it, message);
+				PrintToChat(it, message);
 			});
 			break;
 		}
@@ -281,10 +278,9 @@ void Surv_SetPlayerRole(entity player, int role)
 		{
 			string message = strcat(player.netname, " is now a cannon fodder.");
 			LOG_TRACE(message);
-			message = strcat("\{1}^7", message, "\n");
 			FOREACH_CLIENT(true,
 			{
-				sprint(it, message);
+				PrintToChat(it, message);
 			});
 			break;
 		}
@@ -303,6 +299,11 @@ void Surv_AddPlayerToTeam(entity player, int teamnum)
 		case surv_attackerteam:
 		{
 			LOG_TRACE("Attacker team");
+			if (player.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+			{
+				LOG_TRACE("Cannon fodder is switching team");
+				return;
+			}
 			if (IS_BOT_CLIENT(player))
 			{
 				LOG_TRACE("Client is bot");
@@ -891,8 +892,11 @@ bool Surv_CanRoundEnd()
 		if (surv_roundtype == SURVIVAL_ROUND_FIRST)
 		{
 			surv_timetobeat = time - surv_roundstarttime;
-			FOREACH_CLIENT(true, { centerprint(it, "Defenders have survived");
-				});
+			FOREACH_CLIENT(true,
+			{
+				centerprint(it, "Defenders have survived.");
+				PrintToChat(it, "Defenders have survived.");
+			});
 			Surv_RoundCleanup();
 			return true;
 		}
@@ -928,8 +932,12 @@ bool Surv_CanRoundEnd()
 	{
 		surv_timetobeat = time - surv_roundstarttime;
 		string message = strcat("Defenders were eliminated in ",
-			seconds_tostring(surv_timetobeat));
-		FOREACH_CLIENT(true, { centerprint(it, message); });
+			seconds_tostring(surv_timetobeat), ".");
+		FOREACH_CLIENT(true,
+		{
+			centerprint(it, message);
+			PrintToChat(it, message);
+		});
 		Surv_RoundCleanup();
 		return true;
 	}
@@ -974,17 +982,17 @@ void Surv_RoundStart()
 	{
 		case SURVIVAL_ROUND_FIRST:
 		{
-			attackmessage = "First round. Eliminate the enemy team as fast as you can";
-			defendmessage = "First round. Defend yourself as long as you can";
+			attackmessage = "First round. Eliminate the enemy team as fast as you can.";
+			defendmessage = "First round. Defend yourself as long as you can.";
 			break;
 		}
 		case SURVIVAL_ROUND_SECOND:
 		{
 			attackmessage = strcat(
 				"Second round. Eliminate the enemy team in less than ",
-				seconds_tostring(surv_timetobeat));
+				seconds_tostring(surv_timetobeat), ".");
 			defendmessage = strcat("Second round. Defend yourself for ",
-				seconds_tostring(surv_timetobeat));
+				seconds_tostring(surv_timetobeat), ".");
 			break;
 		}
 	}
@@ -997,6 +1005,7 @@ void Surv_RoundStart()
 				if (it.surv_role == SURVIVAL_ROLE_ATTACKER)
 				{
 					centerprint(it, attackmessage);
+					PrintToChat(it, attackmessage);
 				}
 				break;
 			}
@@ -1005,6 +1014,7 @@ void Surv_RoundStart()
 				if (it.surv_role == SURVIVAL_ROLE_DEFENDER)
 				{
 					centerprint(it, defendmessage);
+					PrintToChat(it, defendmessage);
 					WaypointSprite_Spawn(WP_AssaultDestroy, 0, 0, it, '0 0 64',
 						NULL, surv_attackerteam, it, surv_attack_sprite, false,
 						RADARICON_OBJECTIVE);
