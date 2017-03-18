@@ -431,7 +431,6 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 					LOG_TRACE(message);
 					FOREACH_CLIENT(true,
 					{
-						centerprint(it, message);
 						PrintToChat(it, message);
 					});
 				}
@@ -477,7 +476,6 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				LOG_TRACE(message);
 				FOREACH_CLIENT(true,
 				{
-					centerprint(it, message);
 					PrintToChat(it, message);
 				});
 				return;
@@ -591,13 +589,11 @@ void Surv_RemovePlayerFromAliveList(entity player)
 }
 
 /// \brief Counts alive players.
-/// \param[in] t Team to lower the count by 1. Used in PlayerDies hook because
-/// at that time the player is still alive.
 /// \return No return.
 /// \note In a perfect world this function shouldn't exist. However, since QC
 /// code is so bad and spurious mutators can really mess with your code, this
 /// function is called as a last resort.
-void Surv_CountAlivePlayers(int t)
+void Surv_CountAlivePlayers()
 {
 	int savednumdefenders = surv_numdefendersalive;
 	surv_numattackersalive = 0;
@@ -624,19 +620,6 @@ void Surv_CountAlivePlayers(int t)
 			}
 		}
 	});
-	switch (t)
-	{
-		case surv_attackerteam:
-		{
-			--surv_numattackersalive;
-			break;
-		}
-		case surv_defenderteam:
-		{
-			--surv_numdefendersalive;
-			break;
-		}
-	}
 	if (!warmup_stage)
 	{
 		eliminatedPlayers.SendFlags |= 1;
@@ -814,7 +797,6 @@ void Surv_SwapTeams()
 					LOG_TRACE(message);
 					FOREACH_CLIENT(true,
 					{
-						centerprint(it, message);
 						PrintToChat(it, message);
 					});
 				}
@@ -841,7 +823,6 @@ void Surv_SwapTeams()
 						LOG_TRACE(message);
 						FOREACH_CLIENT(true,
 						{
-							centerprint(it, message);
 							PrintToChat(it, message);
 						});
 						break;
@@ -951,8 +932,8 @@ bool Surv_CanRoundEnd()
 	if (surv_roundtype == SURVIVAL_ROUND_FIRST)
 	{
 		surv_timetobeat = time - surv_roundstarttime;
-		string message = strcat("Defenders were eliminated in ",
-			seconds_tostring(surv_timetobeat), ".");
+		string message = strcat("Defenders were eliminated in ^2",
+			seconds_tostring(surv_timetobeat), "^7.");
 		FOREACH_CLIENT(true,
 		{
 			centerprint(it, message);
@@ -1009,10 +990,10 @@ void Surv_RoundStart()
 		case SURVIVAL_ROUND_SECOND:
 		{
 			attackmessage = strcat(
-				"Second round. Eliminate the enemy team in less than ",
-				seconds_tostring(surv_timetobeat), ".");
-			defendmessage = strcat("Second round. Defend yourself for ",
-				seconds_tostring(surv_timetobeat), ".");
+				"Second round. Eliminate the enemy team in less than ^2",
+				seconds_tostring(surv_timetobeat), "^7.");
+			defendmessage = strcat("Second round. Defend yourself for ^2",
+				seconds_tostring(surv_timetobeat), "^7.");
 			break;
 		}
 	}
@@ -1158,7 +1139,7 @@ MUTATOR_HOOKFUNCTION(surv, Player_ChangedTeam)
 	//}
 	Surv_RemovePlayerFromTeam(player, oldteam);
 	Surv_AddPlayerToTeam(player, newteam);
-	Surv_CountAlivePlayers(-1);
+	Surv_CountAlivePlayers();
 	//if (IS_PLAYER(player) && !IS_DEAD(player))
 	//{
 	//	surv_AddPlayerToAliveList(player, newteam);
@@ -1178,7 +1159,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)
 {
     entity player = M_ARGV(0, entity);
-	Surv_CountAlivePlayers(-1);
+	Surv_CountAlivePlayers();
 	//if (!IS_DEAD(player))
 	//{
 	//	Surv_RemovePlayerFromAliveList(player);
@@ -1211,7 +1192,7 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 	{
 		LOG_TRACE("killindicator_teamchange == -2");
 		//FOREACH_CLIENT(true, { centerprint(it, "Removing Observer from alive list"); });
-		//Surv_CountAlivePlayers(-1);
+		//Surv_CountAlivePlayers();
 		//surv_RemovePlayerFromAliveList(player);
 		//Surv_RemovePlayerFromTeam(player, player.team);
 		player.surv_state = SURVIVAL_STATE_NOT_PLAYING;
@@ -1280,7 +1261,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 	LOG_TRACE("SURVIVAL: PlayerSpawn, player = ", player.netname);
 	player.surv_state = SURVIVAL_STATE_PLAYING;
-	Surv_CountAlivePlayers(-1);
+	Surv_CountAlivePlayers();
 	//surv_AddPlayerToAliveList(player, player.team);
 	//W_GiveWeapon(player, WEP_HMG.m_id);
 	//W_GiveWeapon(player, WEP_RPC.m_id);
@@ -1762,7 +1743,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 /// \brief Hook which is called after the player died.
 MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 {
-	Surv_CountAlivePlayers(-1);
+	Surv_CountAlivePlayers();
 }
 
 /// \brief Hook which is called when player has scored a frag.
