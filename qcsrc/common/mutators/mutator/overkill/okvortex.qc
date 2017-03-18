@@ -70,7 +70,7 @@ void W_OverkillVortex_Attack(Weapon thiswep, entity actor, .entity weaponentity,
 	float flying;
 	flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	if(WEP_CVAR(okvortex, charge))
+	if (WEP_CVAR(okvortex, charge))
 	{
 		charge = WEP_CVAR(okvortex, charge_mindmg) / mydmg + (1 - WEP_CVAR(okvortex, charge_mindmg) / mydmg) * actor.(weaponentity).okvortex_charge;
 		actor.(weaponentity).okvortex_charge *= WEP_CVAR(okvortex, charge_shot_multiplier); // do this AFTER setting mydmg/myforce
@@ -78,7 +78,9 @@ void W_OverkillVortex_Attack(Weapon thiswep, entity actor, .entity weaponentity,
 		// YA RLY -- FruitieX
 	}
 	else
+	{
 		charge = 1;
+	}
 	mydmg *= charge;
 	myforce *= charge;
 
@@ -255,16 +257,19 @@ METHOD(OverkillVortex, wr_think, void(entity thiswep, entity actor, .entity weap
 		}
 	}
 }
+
 METHOD(OverkillVortex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	actor.okvortex_lasthit = 0;
 }
+
 METHOD(OverkillVortex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(okvortex, ammo);
 	ammo_amount += (autocvar_g_balance_okvortex_reload_ammo && actor.(weaponentity).(weapon_load[WEP_OVERKILL_VORTEX.m_id]) >= WEP_CVAR_PRI(okvortex, ammo));
 	return ammo_amount;
 }
+
 METHOD(OverkillVortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	if(WEP_CVAR(okvortex, secondary))
@@ -279,6 +284,7 @@ METHOD(OverkillVortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity
 		return false; // zoom is not a fire mode
 	}
 }
+
 METHOD(OverkillVortex, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	if (WEP_CVAR(okvortex, charge)) {
@@ -297,18 +303,22 @@ METHOD(OverkillVortex, wr_resetplayer, void(entity thiswep, entity actor))
 	}
 	actor.okvortex_lasthit = 0;
 }
+
 METHOD(OverkillVortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(okvortex, ammo), WEP_CVAR_SEC(okvortex, ammo)), SND_RELOAD);
+	W_Reload(actor, weaponentity, WEP_CVAR_PRI(okvortex, ammo), SND_RELOAD);
 }
+
 METHOD(OverkillVortex, wr_suicidemessage, Notification(entity thiswep))
 {
 	return WEAPON_THINKING_WITH_PORTALS;
 }
+
 METHOD(OverkillVortex, wr_killmessage, Notification(entity thiswep))
 {
 	return WEAPON_VORTEX_MURDER;
 }
+
 METHOD(OverkillVortex, wr_zoom, bool(entity thiswep, entity actor))
 {
 	return PHYS_INPUT_BUTTON_ATCK2(actor) && !WEP_CVAR(okvortex, secondary);
@@ -325,6 +335,7 @@ METHOD(OverkillVortex, wr_impacteffect, void(entity thiswep, entity actor))
 	if(!w_issilent)
 		sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 }
+
 METHOD(OverkillVortex, wr_init, void(entity thiswep))
 {
 	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
@@ -332,6 +343,7 @@ METHOD(OverkillVortex, wr_init, void(entity thiswep))
 		precache_pic("gfx/reticle_nex");
 	}
 }
+
 METHOD(OverkillVortex, wr_zoom, bool(entity thiswep, entity actor))
 {
 	if(button_zoom || zoomscript_caught || (!WEP_CVAR(okvortex, secondary) && button_attack2))
