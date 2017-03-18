@@ -1497,10 +1497,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					// FIXME: proper health pickup function.
 					player.health += g_pickup_healthmedium;
 					player.armorvalue += g_pickup_armormedium;
-					Item_ScheduleRespawn(item);
-					sound(player, CH_TRIGGER, SND_ITEMPICKUP, VOL_BASE,
-						ATTEN_NORM);
-					return MUT_ITEMTOUCH_RETURN;
+					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
 			return MUT_ITEMTOUCH_CONTINUE;
