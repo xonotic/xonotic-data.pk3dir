@@ -211,6 +211,10 @@ void turret_die(entity this)
     
 	if(this.damage_flags & TFL_DMG_DEATH_NORESPAWN)
 	{
+		// do a simple explosion effect here, since CSQC can't do it on a to-be-removed entity
+		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+		Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
+
 		tur.tr_death(tur, this);
 
 		delete(this.tur_head);
