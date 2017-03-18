@@ -120,6 +120,10 @@ float autocvar_g_surv_cannon_fodder_defense_scale;
 
 /// \brief A stat that is used to track the time left in the round.
 .float surv_round_time_stat = _STAT(SURV_ROUND_TIME);
+/// \brief A stat that is used to track defender team.
+.int surv_defender_team_stat = _STAT(SURV_DEFENDER_TEAM);
+/// \brief A stat that is used to track number of defenders alive.
+.int surv_defenders_alive_stat = _STAT(SURV_DEFENDERS_ALIVE);
 /// \brief A stat that is used to track the total health of defenders.
 .float surv_defender_health_stat = _STAT(SURV_DEFENDER_HEALTH);
 
@@ -148,20 +152,20 @@ int surv_defenderteambit; ///< Holds the defender team bitmask.
 int surv_attackercolor; ///< Holds the color of attackers.
 int surv_defendercolor; ///< Holds the color of defenders.
 
-int surv_numattackers = 0; ///< Holds the number of players in attacker team.
-int surv_numdefenders = 0; ///< Holds the number of players in defender team.
+int surv_numattackers; ///< Holds the number of players in attacker team.
+int surv_numdefenders; ///< Holds the number of players in defender team.
 
 /// \brief Holds the number of humans in attacker team.
-int surv_numattackerhumans = 0;
+int surv_numattackerhumans;
 /// \brief Holds the number of humans in defender team.
-int surv_numdefenderhumans = 0;
+int surv_numdefenderhumans;
 
 /// \brief Holds the number of attacker players that are alive.
-int surv_numattackersalive = 0;
+int surv_numattackersalive;
 /// \brief Holds the number of defender players that are alive.
-int surv_numdefendersalive = 0;
+int surv_numdefendersalive;
 
-bool surv_autobalance = true; ///< Holds whether autobalance is active.
+bool surv_autobalance; ///< Holds whether autobalance is active.
 bool surv_allowed_to_spawn; ///< Holds whether players are allowed to spawn.
 
 //====================== Forward declarations =================================
@@ -217,6 +221,13 @@ void Surv_Initialize()
 		surv_attackercolor = SURVIVAL_COLOR_BLUE;
 		surv_defendercolor = SURVIVAL_COLOR_RED;
 	}
+	surv_numattackers = 0;
+	surv_numdefenders = 0;
+	surv_numattackerhumans = 0;
+	surv_numdefenderhumans = 0;
+	surv_numattackersalive = 0;
+	surv_numdefendersalive = 0;
+	surv_autobalance = true;
 	surv_allowed_to_spawn = true;
 	precache_all_playermodels("models/ok_player/*.dpm");
 	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
@@ -655,11 +666,11 @@ void Surv_CountAlivePlayers()
 /// \return No return.
 void Surv_UpdateAliveStats()
 {
+	// Debug stuff
 	if (surv_attackercolor == SURVIVAL_COLOR_RED)
 	{
 		redalive = surv_numattackersalive;
 		bluealive = surv_numdefendersalive;
-		// Debug stuff
 		yellowalive = surv_numattackers;
 		pinkalive = surv_numdefenders;
 	}
@@ -667,12 +678,12 @@ void Surv_UpdateAliveStats()
 	{
 		bluealive = surv_numattackersalive;
 		redalive = surv_numdefendersalive;
-		// Debug stuff
 		pinkalive = surv_numattackers;
 		yellowalive = surv_numdefenders;
 	}
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
+		it.surv_defenders_alive_stat = surv_numdefendersalive;
 		it.redalive_stat = redalive;
 		it.bluealive_stat = bluealive;
 		it.yellowalive_stat = yellowalive;
@@ -831,6 +842,10 @@ void Surv_SwapTeams()
 				break;
 			}
 		}
+	});
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		it.surv_defender_team_stat = Team_TeamToNumber(surv_defenderteam);
 	});
 }
 
@@ -1152,6 +1167,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 	entity player = M_ARGV(0, entity);
 	LOG_TRACE("SURVIVAL: ClientConnect, player = ", player.netname);
 	player.surv_savedplayermodel = player.playermodel;
+	player.surv_defender_team_stat = Team_TeamToNumber(surv_defenderteam);
 	if (player.surv_role == SURVIVAL_ROLE_NONE)
 	{
 		Surv_AddPlayerToTeam(player, player.team);
