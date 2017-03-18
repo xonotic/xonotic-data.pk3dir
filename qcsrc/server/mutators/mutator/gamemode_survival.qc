@@ -246,22 +246,46 @@ void Surv_SetPlayerRole(entity player, int role)
 	{
 		case SURVIVAL_ROLE_NONE:
 		{
-			LOG_TRACE(player.netname, " now has no role.");
+			string message = strcat(player.netname, " now has no role.");
+			LOG_TRACE(message);
+			message = strcat("\{1}^7", message, "\n");
+			FOREACH_CLIENT(true,
+			{
+				sprint(it, message);
+			});
 			break;
 		}
 		case SURVIVAL_ROLE_ATTACKER:
 		{
-			LOG_TRACE(player.netname, " is now an attacker.");
+			string message = strcat(player.netname, " is now an attacker.");
+			LOG_TRACE(message);
+			message = strcat("\{1}^7", message, "\n");
+			FOREACH_CLIENT(true,
+			{
+				sprint(it, message);
+			});
 			break;
 		}
 		case SURVIVAL_ROLE_DEFENDER:
 		{
-			LOG_TRACE(player.netname, " is now a defender.");
+			string message = strcat(player.netname, " is now a defender.");
+			LOG_TRACE(message);
+			message = strcat("\{1}^7", message, "\n");
+			FOREACH_CLIENT(true,
+			{
+				sprint(it, message);
+			});
 			break;
 		}
 		case SURVIVAL_ROLE_CANNON_FODDER:
 		{
-			LOG_TRACE(player.netname, " is now a cannon fodder.");
+			string message = strcat(player.netname, " is now a cannon fodder.");
+			LOG_TRACE(message);
+			message = strcat("\{1}^7", message, "\n");
+			FOREACH_CLIENT(true,
+			{
+				sprint(it, message);
+			});
 			break;
 		}
 	}
@@ -389,6 +413,11 @@ void Surv_AddPlayerToTeam(entity player, int teamnum)
 void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 {
 	LOG_TRACE("Survival: RemovePlayerFromTeam, player: ", player.netname);
+	// TODO: This should be in RemovePlayerFromAliveList.
+	if (player.surv_attack_sprite)
+	{
+		WaypointSprite_Kill(player.surv_attack_sprite);
+	}
 	switch (teamnum)
 	{
 		case surv_attackerteam:
@@ -430,6 +459,13 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 		case surv_defenderteam:
 		{
 			LOG_TRACE("Defender team");
+			if (player.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+			{
+				// This happens during team switch. We don't need to change
+				// anything.
+				LOG_TRACE("Cannon fodder. Assuming team switch");
+				return;
+			}
 			if (player.surv_role != SURVIVAL_ROLE_DEFENDER)
 			{
 				LOG_TRACE("Invalid role");
