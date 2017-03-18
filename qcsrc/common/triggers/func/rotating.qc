@@ -69,8 +69,8 @@ spawnfunc(func_rotating)
     setblocked(this, generic_plat_blocked);
 
 	// wait for targets to spawn
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
-	SUB_THINK(this, SUB_NullThink); // for PushMove
+	this.nextthink = this.ltime + 999999999;
+	setthink(this, SUB_NullThink); // for PushMove
 
 	// TODO make a reset function for this one
 }
