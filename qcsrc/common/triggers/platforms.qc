@@ -63,8 +63,8 @@ void plat_hit_top(entity this)
 	_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	this.state = 1;
 
-	SUB_THINK(this, plat_go_down);
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 3;
+	setthink(this, plat_go_down);
+	this.nextthink = this.ltime + 3;
 }
 
 void plat_hit_bottom(entity this)
@@ -105,7 +105,7 @@ void plat_center_touch(entity this, entity toucher)
 	if (this.enemy.state == 2) {
 		plat_go_up(this.enemy);
 	} else if (this.enemy.state == 1)
-		this.enemy.SUB_NEXTTHINK = this.enemy.SUB_LTIME + 1;
+		this.enemy.nextthink = this.enemy.ltime + 1;
 }
 
 void plat_outside_touch(entity this, entity toucher)
