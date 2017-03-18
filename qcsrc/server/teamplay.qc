@@ -192,7 +192,20 @@ void SetPlayerColors(entity pl, float _color)
 
 bool SetPlayerTeamSimple(entity player, int teamnum)
 {
-	return MoveToTeam(player, teamnum, 6);
+	if (player.team == teamnum)
+	{
+		return true;
+	}
+	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, Team_TeamToNumber(
+		player.team), Team_TeamToNumber(teamnum)) == true)
+	{
+		// Mutator has blocked team change.
+		return false;
+	}
+	int oldteam = player.team;
+	SetPlayerColors(player, teamnum - 1);
+	MUTATOR_CALLHOOK(Player_ChangedTeam, player, oldteam, player.team);
+	return true;
 }
 
 void SetPlayerTeam(entity pl, float t, float s, float noprint)
