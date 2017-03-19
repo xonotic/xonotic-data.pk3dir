@@ -71,9 +71,13 @@ MUTATOR_HOOKFUNCTION(sp, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
     {
         ent.team_forced = NUM_TEAM_2;
     }
-    else if( IS_PLAYER(ent) )
+    else if( IS_REAL_CLIENT(ent) )
     {
         ent.team_forced = NUM_TEAM_1;
+        c1 = 1;
+        c2 = 0;
+        c3 = 0;
+        c4 = 0;
     }
     return true;
 }
@@ -85,8 +89,8 @@ MUTATOR_HOOKFUNCTION(sp, Scores_CountFragsRemaining)
 
 MUTATOR_HOOKFUNCTION(sp, PlayerSpawn)
 {
-	entity player = M_ARGV(0, entity);
-	entity spawn_spot = M_ARGV(1, entity);
+    entity player = M_ARGV(0, entity);
+    entity spawn_spot = M_ARGV(1, entity);
     if ( IS_BOT_CLIENT(player) )
     {
         player.can_drop_weapon = spawn_spot.can_drop_weapon;
