@@ -1,4 +1,5 @@
 #include "gamemode_singleplayer.qh"
+#include "../../bot/default/bot.qh"
 
 const int SP_TEAM_PLAYER = NUM_TEAM_1;
 const int SP_TEAM_ENEMY = NUM_TEAM_2;
