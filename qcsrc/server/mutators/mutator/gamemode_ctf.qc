@@ -1375,7 +1375,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 // NOTE: LEGACY CODE, needs to be re-written!
 
-void havocbot_calculate_middlepoint()
+void havocbot_ctf_calculate_middlepoint()
 {
 	entity f;
 	vector s = '0 0 0';
@@ -1601,9 +1601,6 @@ void havocbot_ctf_reset_role(entity this)
 
 	if(IS_DEAD(this))
 		return;
-
-	if(havocbot_ctf_middlepoint == '0 0 0')
-		havocbot_calculate_middlepoint();
 
 	// Check ctf flags
 	if (this.flagcarried)
@@ -2721,6 +2718,8 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 		}
 		if(tmp_entity.team == 0) { ctf_oneflag = true; }
 	}
+
+	havocbot_ctf_calculate_middlepoint();
 
 	if(NumTeams(ctf_teams) < 2) // somehow, there's not enough flags!
 	{
