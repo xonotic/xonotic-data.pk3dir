@@ -22,13 +22,16 @@ void thrown_wep_think(entity this)
 		this.oldorigin = this.origin;
 	}
 	this.owner = NULL;
-	float timeleft = this.savenextthink - time;
-	if(timeleft > 1)
-		SUB_SetFade(this, this.savenextthink - 1, 1);
-	else if(timeleft > 0)
-		SUB_SetFade(this, time, timeleft);
-	else
-		SUB_VanishOrRemove(this);
+	if ( autocvar_g_weapon_throw_lifetime >= 0 )
+	{
+		float timeleft = this.savenextthink - time;
+		if(timeleft > 1)
+			SUB_SetFade(this, this.savenextthink - 1, 1);
+		else if(timeleft > 0)
+			SUB_SetFade(this, time, timeleft);
+		else
+			SUB_VanishOrRemove(this);
+	}
 }
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
@@ -83,7 +86,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	if(startitem_failed)
 		return string_null;
 	setthink(wep, thrown_wep_think);
-	wep.savenextthink = wep.nextthink;
+	wep.savenextthink = time + autocvar_g_weapon_throw_lifetime;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
 	wep.pickup_anyway = true; // these are ALWAYS pickable
 
