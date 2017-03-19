@@ -90,6 +90,19 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	return w;
 }
 
+bool waypoint_islinked(entity from, entity to)
+{
+	if (from.wp00 == to) return true;if (from.wp01 == to) return true;if (from.wp02 == to) return true;if (from.wp03 == to) return true;
+	if (from.wp04 == to) return true;if (from.wp05 == to) return true;if (from.wp06 == to) return true;if (from.wp07 == to) return true;
+	if (from.wp08 == to) return true;if (from.wp09 == to) return true;if (from.wp10 == to) return true;if (from.wp11 == to) return true;
+	if (from.wp12 == to) return true;if (from.wp13 == to) return true;if (from.wp14 == to) return true;if (from.wp15 == to) return true;
+	if (from.wp16 == to) return true;if (from.wp17 == to) return true;if (from.wp18 == to) return true;if (from.wp19 == to) return true;
+	if (from.wp20 == to) return true;if (from.wp21 == to) return true;if (from.wp22 == to) return true;if (from.wp23 == to) return true;
+	if (from.wp24 == to) return true;if (from.wp25 == to) return true;if (from.wp26 == to) return true;if (from.wp27 == to) return true;
+	if (from.wp28 == to) return true;if (from.wp29 == to) return true;if (from.wp30 == to) return true;if (from.wp31 == to) return true;
+	return false;
+}
+
 // add a new link to the spawnfunc_waypoint, replacing the furthest link it already has
 void waypoint_addlink(entity from, entity to)
 {
@@ -100,14 +113,8 @@ void waypoint_addlink(entity from, entity to)
 	if (from.wpflags & WAYPOINTFLAG_NORELINK)
 		return;
 
-	if (from.wp00 == to) return;if (from.wp01 == to) return;if (from.wp02 == to) return;if (from.wp03 == to) return;
-	if (from.wp04 == to) return;if (from.wp05 == to) return;if (from.wp06 == to) return;if (from.wp07 == to) return;
-	if (from.wp08 == to) return;if (from.wp09 == to) return;if (from.wp10 == to) return;if (from.wp11 == to) return;
-	if (from.wp12 == to) return;if (from.wp13 == to) return;if (from.wp14 == to) return;if (from.wp15 == to) return;
-	if (from.wp16 == to) return;if (from.wp17 == to) return;if (from.wp18 == to) return;if (from.wp19 == to) return;
-	if (from.wp20 == to) return;if (from.wp21 == to) return;if (from.wp22 == to) return;if (from.wp23 == to) return;
-	if (from.wp24 == to) return;if (from.wp25 == to) return;if (from.wp26 == to) return;if (from.wp27 == to) return;
-	if (from.wp28 == to) return;if (from.wp29 == to) return;if (from.wp30 == to) return;if (from.wp31 == to) return;
+	if (waypoint_islinked(from, to))
+		return;
 
 	if (to.wpisbox || from.wpisbox)
 	{
@@ -251,8 +258,7 @@ void waypoint_think(entity this)
 void waypoint_clearlinks(entity wp)
 {
 	// clear links to other waypoints
-	float f;
-	f = 10000000;
+	float f = 10000000;
 	wp.wp00 = wp.wp01 = wp.wp02 = wp.wp03 = wp.wp04 = wp.wp05 = wp.wp06 = wp.wp07 = NULL;
 	wp.wp08 = wp.wp09 = wp.wp10 = wp.wp11 = wp.wp12 = wp.wp13 = wp.wp14 = wp.wp15 = NULL;
 	wp.wp16 = wp.wp17 = wp.wp18 = wp.wp19 = wp.wp20 = wp.wp21 = wp.wp22 = wp.wp23 = NULL;
@@ -296,47 +302,17 @@ spawnfunc(waypoint)
 	//waypoint_schedulerelink(this);
 }
 
-// remove a spawnfunc_waypoint, and schedule all neighbors to relink
-void waypoint_remove(entity e)
+void waypoint_remove(entity wp)
 {
-	// tell all linked waypoints that they need to relink
-	waypoint_schedulerelink(e.wp00);
-	waypoint_schedulerelink(e.wp01);
-	waypoint_schedulerelink(e.wp02);
-	waypoint_schedulerelink(e.wp03);
-	waypoint_schedulerelink(e.wp04);
-	waypoint_schedulerelink(e.wp05);
-	waypoint_schedulerelink(e.wp06);
-	waypoint_schedulerelink(e.wp07);
-	waypoint_schedulerelink(e.wp08);
-	waypoint_schedulerelink(e.wp09);
-	waypoint_schedulerelink(e.wp10);
-	waypoint_schedulerelink(e.wp11);
-	waypoint_schedulerelink(e.wp12);
-	waypoint_schedulerelink(e.wp13);
-	waypoint_schedulerelink(e.wp14);
-	waypoint_schedulerelink(e.wp15);
-	waypoint_schedulerelink(e.wp16);
-	waypoint_schedulerelink(e.wp17);
-	waypoint_schedulerelink(e.wp18);
-	waypoint_schedulerelink(e.wp19);
-	waypoint_schedulerelink(e.wp20);
-	waypoint_schedulerelink(e.wp21);
-	waypoint_schedulerelink(e.wp22);
-	waypoint_schedulerelink(e.wp23);
-	waypoint_schedulerelink(e.wp24);
-	waypoint_schedulerelink(e.wp25);
-	waypoint_schedulerelink(e.wp26);
-	waypoint_schedulerelink(e.wp27);
-	waypoint_schedulerelink(e.wp28);
-	waypoint_schedulerelink(e.wp29);
-	waypoint_schedulerelink(e.wp30);
-	waypoint_schedulerelink(e.wp31);
-	// and now remove the spawnfunc_waypoint
-	delete(e);
+	// tell all waypoints linked to wp that they need to relink
+	IL_EACH(g_waypoints, it != wp,
+	{
+		if (waypoint_islinked(it, wp))
+			waypoint_schedulerelink(it);
+	});
+	delete(wp);
 }
 
-// empties the map of waypoints
 void waypoint_removeall()
 {
 	IL_EACH(g_waypoints, true,
@@ -346,7 +322,7 @@ void waypoint_removeall()
 }
 
 // tell all waypoints to relink
-// (is this useful at all?)
+// actually this is useful only to update relink_* stats
 void waypoint_schedulerelinkall()
 {
 	relink_total = relink_walkculled = relink_pvsculled = relink_lengthculled = 0;
