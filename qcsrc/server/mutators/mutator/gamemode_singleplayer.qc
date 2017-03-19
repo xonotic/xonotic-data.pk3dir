@@ -134,3 +134,8 @@ MUTATOR_HOOKFUNCTION(sp, Spawn_Score)
 
     M_ARGV(2, vector) = spawn_score;
 }
+
+MUTATOR_HOOKFUNCTION(sp, HideTeamNagger)
+{
+    return true;
+}
