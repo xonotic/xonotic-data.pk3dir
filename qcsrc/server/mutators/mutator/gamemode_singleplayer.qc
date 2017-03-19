@@ -256,7 +256,9 @@ MUTATOR_HOOKFUNCTION(sp, PlayerPreThink)
 {
     entity player = M_ARGV(0, entity);
     if ( IS_BOT_CLIENT(player) && !player.sp_spawn_spot )
+    {
         bot_remove(player);
+    }
 }
 
 // Prevents bots from being able to pick up items
@@ -268,7 +270,7 @@ MUTATOR_HOOKFUNCTION(sp, ItemTouch)
     return MUT_ITEMTOUCH_CONTINUE;
 }
 
-// revents bots from being willing to pick up items
+// Prevents bots from being willing to pick up items
 MUTATOR_HOOKFUNCTION(sp, Item_Spawn)
 {
     entity item = M_ARGV(0, entity);

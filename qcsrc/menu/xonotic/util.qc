@@ -694,6 +694,7 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
+	GAMETYPE(MAPINFO_TYPE_SINGLE_PLAYER) \
 	/**/
 
 // hidden gametypes come last so indexing always works correctly

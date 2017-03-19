@@ -1539,6 +1539,8 @@ void Scoreboard_Draw()
 				continue;
 			if(!tm.team)
 				continue;
+			if(tm.team != NUM_TEAM_1 && gametype == MAPINFO_TYPE_SINGLE_PLAYER)
+				continue;
 
 			draw_beginBoldFont();
 			vector rgb = Team_ColorRGB(tm.team);
