@@ -13,12 +13,7 @@ bool autocvar_g_sp_allow_bot_pickup;
 
 int sp_bot_number;
 
-/*QUAKED spawnfunc_tdm_team (0 .5 .8) (-16 -16 -24) (16 16 32)
-Team declaration for TDM gameplay, this allows you to decide what team names and control point models are used in your map.
-Note: If you use spawnfunc_tdm_team entities you must define at least 2!  However, unlike domination, you don't need to make a blank one too.
-Keys:
-"netname" Name of the team (for example Red, Blue, Green, Yellow, Life, Death, Offense, Defense, etc)...
-"cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
+// Team entity for single player mode
 spawnfunc(sp_team)
 {
     if(!g_singleplayer || !this.cnt) { delete(this); return; }
@@ -27,7 +22,7 @@ spawnfunc(sp_team)
     this.team = this.cnt + 1;
 }
 
-// code from here on is just to support maps that don't have team entities
+// Spawns the given team
 void sp_spawn_team_entity(string teamname, int teamcolor)
 {
     entity this = new_pure(sp_team);
@@ -37,7 +32,7 @@ void sp_spawn_team_entity(string teamname, int teamcolor)
     this.spawnfunc_checked = true;
 }
 
-// spawnfuncs
+// Spawn point for the player
 spawnfunc(info_player_singleplayer)
 {
     if (!g_singleplayer) { delete(this); return; }
@@ -47,6 +42,9 @@ spawnfunc(info_player_singleplayer)
     spawnfunc_info_player_deathmatch(this);
 }
 
+/*
+ * Creates a new bot and assigns it to the given spawn point
+ */
 void sp_spawn_bot(entity spawn_point)
 {
     sp_bot_number++;
@@ -62,18 +60,26 @@ void sp_spawn_bot(entity spawn_point)
     }
 }
 
+/*
+ * Think function for enemy spawn points,
+ * creates a bot and stops all processing
+ */
 void sp_enemy_spawn_think(entity this)
 {
     sp_spawn_bot(this);
     setthink(this, func_null);
 }
 
-
+/*
+ * Use function for enemy spawn points,
+ * creates bot
+ */
 void sp_enemy_spawn_use(entity this, entity actor, entity trigger)
 {
     sp_spawn_bot(this);
 }
 
+// Enemy spawn point entity
 spawnfunc(info_player_singleplayer_enemy)
 {
 	if (!g_singleplayer) { delete(this); return; }
@@ -86,6 +92,7 @@ spawnfunc(info_player_singleplayer_enemy)
         setthink(this, sp_enemy_spawn_think);
 }
 
+// Game mode initialization function
 void sp_delayed_init(entity this)
 {
     // if no teams are found, spawn defaults
@@ -98,6 +105,7 @@ void sp_delayed_init(entity this)
     sp_bot_number = 0;
 }
 
+// Ensures the given bot will be removed
 void sp_remove_bot(entity bot)
 {
     sp_bot_number--;
@@ -105,6 +113,11 @@ void sp_remove_bot(entity bot)
     bot_clear(bot);
 }
 
+/*
+ * Force teams:
+ * bots are team 2,
+ * players (including observers) are in team 1
+ */
 MUTATOR_HOOKFUNCTION(sp, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(1, string) = "sp_team";
@@ -124,11 +137,16 @@ MUTATOR_HOOKFUNCTION(sp, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
     return true;
 }
 
+// Avoid the frags left messages
 MUTATOR_HOOKFUNCTION(sp, Scores_CountFragsRemaining)
 {
     return false;
 }
 
+/*
+ * Sets up players, more specifically assigns items, health and name to bots
+ * based on their spawn point
+ */
 MUTATOR_HOOKFUNCTION(sp, PlayerSpawn)
 {
     entity player = M_ARGV(0, entity);
@@ -150,12 +168,14 @@ MUTATOR_HOOKFUNCTION(sp, PlayerSpawn)
     }
 }
 
+// Prevent bots from dropping weapons by default
 MUTATOR_HOOKFUNCTION(sp, ForbidDropCurrentWeapon)
 {
     entity player = M_ARGV(0, entity);
     return !player.can_drop_weapon;
 }
 
+// Winning rules (TODO)
 MUTATOR_HOOKFUNCTION(sp, CheckRules_World)
 {
     M_ARGV(0, float) = WINNING_NO;
@@ -163,6 +183,12 @@ MUTATOR_HOOKFUNCTION(sp, CheckRules_World)
     return true;
 }
 
+/*
+ * Only allow players to spawn from specific points
+ * For real clients forces the team spawn points even for observers
+ * For bots that need to be spawned, forces them to spawn from their specifi point
+ * for bots that need to be removes, allows all team spawn points to avoid crashes
+ */
 MUTATOR_HOOKFUNCTION(sp, Spawn_Score)
 {
     entity player = M_ARGV(0, entity);
@@ -182,17 +208,23 @@ MUTATOR_HOOKFUNCTION(sp, Spawn_Score)
     M_ARGV(2, vector) = spawn_score;
 }
 
+// Avoid unbalanced teams notice as there will be far more enemies than players
 MUTATOR_HOOKFUNCTION(sp, HideTeamNagger)
 {
     return true;
 }
 
+/*
+ * Forces the bot count to be determined based on the spawn points,
+ * regardless of any other setting
+ */
 MUTATOR_HOOKFUNCTION(sp, Bot_FixCount)
 {
     M_ARGV(2, int) = sp_bot_number;
     return true;
 }
 
+// Remove bots that cannot respawn when they die
 MUTATOR_HOOKFUNCTION(sp, PlayerDies)
 {
     entity target = M_ARGV(2, entity);
@@ -205,6 +237,7 @@ MUTATOR_HOOKFUNCTION(sp, PlayerDies)
     }
 }
 
+// Ensures the bots that get removed are the ones that cannot respawn
 MUTATOR_HOOKFUNCTION(sp, Bot_SelectRemove)
 {
     FOREACH_CLIENT(it.isbot,
@@ -217,6 +250,7 @@ MUTATOR_HOOKFUNCTION(sp, Bot_SelectRemove)
     });
 }
 
+// Actually removes the bot entity when needed
 MUTATOR_HOOKFUNCTION(sp, PlayerPreThink)
 {
     entity player = M_ARGV(0, entity);
@@ -224,6 +258,7 @@ MUTATOR_HOOKFUNCTION(sp, PlayerPreThink)
         bot_remove(player);
 }
 
+// Prevents bots from being able to pick up items
 MUTATOR_HOOKFUNCTION(sp, ItemTouch)
 {
     entity toucher = M_ARGV(1, entity);
@@ -232,6 +267,7 @@ MUTATOR_HOOKFUNCTION(sp, ItemTouch)
     return MUT_ITEMTOUCH_CONTINUE;
 }
 
+// revents bots from being willing to pick up items
 MUTATOR_HOOKFUNCTION(sp, Item_Spawn)
 {
     entity item = M_ARGV(0, entity);
