@@ -9,6 +9,8 @@ const int SP_TEAM_ENEMY = NUM_TEAM_2;
 .entity sp_spawn_spot;
 .bool can_respawn;
 
+bool autocvar_g_sp_allow_bot_pickup;
+
 int sp_bot_number;
 
 /*QUAKED spawnfunc_tdm_team (0 .5 .8) (-16 -16 -24) (16 16 32)
@@ -33,7 +35,6 @@ void sp_spawn_team_entity(string teamname, int teamcolor)
     this.cnt = teamcolor - 1;
     this.team = teamcolor;
     this.spawnfunc_checked = true;
-    //spawnfunc_sp_team(this);
 }
 
 // spawnfuncs
@@ -221,4 +222,22 @@ MUTATOR_HOOKFUNCTION(sp, PlayerPreThink)
     entity player = M_ARGV(0, entity);
     if ( IS_BOT_CLIENT(player) && !player.sp_spawn_spot )
         bot_remove(player);
+}
+
+MUTATOR_HOOKFUNCTION(sp, ItemTouch)
+{
+    entity toucher = M_ARGV(1, entity);
+    if ( IS_BOT_CLIENT(toucher) && !autocvar_g_sp_allow_bot_pickup )
+        return MUT_ITEMTOUCH_RETURN;
+    return MUT_ITEMTOUCH_CONTINUE;
+}
+
+MUTATOR_HOOKFUNCTION(sp, Item_Spawn)
+{
+    entity item = M_ARGV(0, entity);
+    if ( !autocvar_g_sp_allow_bot_pickup )
+    {
+        item.bot_pickup = false;
+    }
+    return false;
 }
