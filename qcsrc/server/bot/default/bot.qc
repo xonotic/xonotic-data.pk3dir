@@ -60,6 +60,12 @@ void bot_spawn_setup(entity bot)
 	PutClientInServer(bot);
 }
 
+void bot_remove(entity bot)
+{
+	currentbots = currentbots - 1;
+	dropclient(bot);
+}
+
 void bot_think(entity this)
 {
 	if (this.bot_nextthink > time)
@@ -484,12 +490,28 @@ void bot_removefromlargestteam()
 	});
 	if(!bcount)
 		return; // no bots to remove
-	currentbots = currentbots - 1;
-	dropclient(best);
+	bot_remove(best);
 }
 
 void bot_removenewest()
 {
+	entity best = NULL;
+	MUTATOR_CALLHOOK(Bot_SelectRemove, best);
+	best = M_ARGV(0, entity);
+	if ( best )
+	{
+		if ( !IS_BOT_CLIENT(best) )
+		{
+			LOG_WARN("Mutator selected a non-bot as a bot to remove\n");
+			best = NULL;
+		}
+		else
+		{
+			bot_remove(best);
+			return;
+		}
+	}
+
 	if(teamplay)
 	{
 		bot_removefromlargestteam();
@@ -497,7 +519,6 @@ void bot_removenewest()
 	}
 
 	float besttime = 0;
-	entity best = NULL;
 	int bcount = 0;
 
 	FOREACH_CLIENT(it.isbot,
@@ -520,8 +541,7 @@ void bot_removenewest()
 	if(!bcount)
 		return; // no bots to remove
 
-	currentbots = currentbots - 1;
-	dropclient(best);
+	bot_remove(best);
 }
 
 void autoskill(float factor)

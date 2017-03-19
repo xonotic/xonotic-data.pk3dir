@@ -88,6 +88,10 @@ float bot_fixcount();
  * Sets up an entity created with spawnclient() to be a bot
  */
 void bot_spawn_setup(entity bot);
+/**
+ * Removes the bot
+ */
+void bot_remove(entity bot);
 
 void bot_think(entity this);
 void bot_setnameandstuff(entity this);

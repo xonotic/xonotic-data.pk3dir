@@ -774,6 +774,15 @@ enum {
     /**/
 MUTATOR_HOOKABLE(Bot_FixCount, EV_Bot_FixCount);
 
+/*
+ * Called when a bot needs to be removed
+ */
+#define EV_Bot_SelectRemove(i, o) \
+    /** bot to remove */  i(entity, MUTATOR_ARGV_0_entity) \
+    /**/                  o(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Bot_SelectRemove, EV_Bot_SelectRemove);
+
 #define EV_ClientCommand_Spectate(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
