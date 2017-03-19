@@ -370,6 +370,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	// (note this returns the original list if none survived)
 	if(anypoint)
 	{
+		firstspot = Spawn_FilterOutBadSpots(this, firstspot, 0, teamcheck);
 		spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
 	}
 	else

@@ -1,5 +1,12 @@
 #include "gamemode_singleplayer.qh"
 
+const int SP_TEAM_PLAYER = NUM_TEAM_1;
+const int SP_TEAM_ENEMY = NUM_TEAM_2;
+
+.bool can_drop_weapon;
+.string weapon_name;
+.int sp_spawn_team;
+
 /*QUAKED spawnfunc_tdm_team (0 .5 .8) (-16 -16 -24) (16 16 32)
 Team declaration for TDM gameplay, this allows you to decide what team names and control point models are used in your map.
 Note: If you use spawnfunc_tdm_team entities you must define at least 2!  However, unlike domination, you don't need to make a blank one too.
@@ -25,13 +32,13 @@ void sp_SpawnTeam (string teamname, int teamcolor)
     //spawnfunc_sp_team(this);
 }
 
-
 // spawnfuncs
 spawnfunc(info_player_singleplayer)
 {
     if (!g_singleplayer) { delete(this); return; }
 
-    this.team = NUM_TEAM_1;
+    this.team = SP_TEAM_PLAYER;
+    this.sp_spawn_team = SP_TEAM_PLAYER;
     spawnfunc_info_player_deathmatch(this);
 }
 
@@ -39,7 +46,8 @@ spawnfunc(info_player_singleplayer_enemy)
 {
 	if (!g_singleplayer) { delete(this); return; }
 
-	this.team = NUM_TEAM_2;
+	this.team = SP_TEAM_ENEMY;
+    this.sp_spawn_team = SP_TEAM_ENEMY;
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -50,14 +58,13 @@ void sp_DelayedInit(entity this)
     {
         LOG_TRACE("No \"sp_team\" entities found on this map, creating them anyway.");
 
-        sp_SpawnTeam("Player", NUM_TEAM_1);
-        sp_SpawnTeam("Enemy", NUM_TEAM_2);
+        sp_SpawnTeam("Player", SP_TEAM_PLAYER);
+        sp_SpawnTeam("Enemy", SP_TEAM_ENEMY);
     }
 }
 
 MUTATOR_HOOKFUNCTION(sp, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
-    LOG_TRACEF("\n==== here ====\n");
 	M_ARGV(1, string) = "sp_team";
     entity ent = M_ARGV(2, entity);
     if ( IS_BOT_CLIENT(ent) )
@@ -68,8 +75,6 @@ MUTATOR_HOOKFUNCTION(sp, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
     {
         ent.team_forced = NUM_TEAM_1;
     }
-    LOG_TRACEF("\n==== After processing ====\nent: %s\nteam: %d\n\n",
-               etos(ent), ent.team_forced);
     return true;
 }
 
@@ -77,10 +82,6 @@ MUTATOR_HOOKFUNCTION(sp, Scores_CountFragsRemaining)
 {
     return false;
 }
-
-
-.bool can_drop_weapon;
-.string weapon_name;
 
 MUTATOR_HOOKFUNCTION(sp, PlayerSpawn)
 {
@@ -107,4 +108,29 @@ MUTATOR_HOOKFUNCTION(sp, ForbidDropCurrentWeapon)
 {
     entity player = M_ARGV(0, entity);
     return !player.can_drop_weapon;
+}
+
+MUTATOR_HOOKFUNCTION(sp, CheckRules_World)
+{
+    M_ARGV(0, float) = WINNING_NO;
+    // TODO: conditions for WINNING_YES
+    return true;
+}
+
+MUTATOR_HOOKFUNCTION(sp, Spawn_Score)
+{
+    entity player = M_ARGV(0, entity);
+    entity spawn_spot = M_ARGV(1, entity);
+    vector spawn_score = M_ARGV(2, vector);
+    if ( IS_BOT_CLIENT(player) )
+    {
+        if ( spawn_spot.sp_spawn_team != SP_TEAM_ENEMY )
+            spawn_score.x = -1;
+    }
+    else if ( spawn_spot.sp_spawn_team != SP_TEAM_PLAYER )
+    {
+        spawn_score.x = -1;
+    }
+
+    M_ARGV(2, vector) = spawn_score;
 }

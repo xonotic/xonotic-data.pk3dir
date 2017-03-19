@@ -24,7 +24,10 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	entity spawn_spot = M_ARGV(1, entity);
 	vector spawn_score = M_ARGV(2, vector);
 
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 ||
+		(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate) ||
+		IS_OBSERVER(player)
+	)
 		return;
 
 	spawn_spot.msnt_lookat = NULL;
