@@ -266,7 +266,7 @@ void Surv_SetPlayerRole(entity player, int role)
 		{
 			string message = strcat(player.netname, " is now an attacker.");
 			LOG_TRACE(message);
-			if (!IS_BOT_CLIENT(player))
+			if (IS_REAL_CLIENT(player))
 			{
 				PrintToChat(player, "You are now an attacker.");
 			}
@@ -276,7 +276,7 @@ void Surv_SetPlayerRole(entity player, int role)
 		{
 			string message = strcat(player.netname, " is now a defender.");
 			LOG_TRACE(message);
-			if (!IS_BOT_CLIENT(player))
+			if (IS_REAL_CLIENT(player))
 			{
 				PrintToChat(player, "You are now a defender.");
 			}
@@ -440,7 +440,7 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 					string message = strcat("RemovePlayerFromTeam: ",
 						player.netname, " has invalid role.");
 					LOG_TRACE(message);
-					FOREACH_CLIENT(true,
+					FOREACH_CLIENT(IS_REAL_CLIENT(it),
 					{
 						PrintToChat(it, message);
 					});
@@ -485,7 +485,7 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				string message = strcat("RemovePlayerFromTeam: ",
 					player.netname, " has invalid role.");
 				LOG_TRACE(message);
-				FOREACH_CLIENT(true,
+				FOREACH_CLIENT(IS_REAL_CLIENT(it),
 				{
 					PrintToChat(it, message);
 				});
@@ -534,16 +534,26 @@ void Surv_AddPlayerToAliveList(entity player, int t)
 			if (player.surv_role == SURVIVAL_ROLE_ATTACKER)
 			{
 				++surv_numattackersalive;
-				LOG_TRACE("SURVIVAL: Added alive attacker, total = ", ftos(
-					surv_numattackersalive));
+				string message = strcat("Survival: Added alive attacker, total = ",
+					ftos(surv_numattackersalive));
+				LOG_TRACE(message);
+				FOREACH_CLIENT(IS_REAL_CLIENT(it),
+				{
+					PrintToChat(it, message);
+				});
 			}
 			break;
 		}
 		case surv_defenderteam:
 		{
 			++surv_numdefendersalive;
-			LOG_TRACE("SURVIVAL: Added alive defender, total = ", ftos(
-					surv_numdefendersalive));
+			string message = strcat("Survival: Added alive defender, total = ",
+				ftos(surv_numdefendersalive));
+			LOG_TRACE(message);
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
+			{
+				PrintToChat(it, message);
+			});
 			break;
 		}
 	}
@@ -552,26 +562,43 @@ void Surv_AddPlayerToAliveList(entity player, int t)
 
 /// \brief Removes player from alive list. Handles bookkeeping information.
 /// \param[in] player Player to remove.
+/// \param[in] t Team of the player.
 /// \return No return.
-void Surv_RemovePlayerFromAliveList(entity player)
+void Surv_RemovePlayerFromAliveList(entity player, int t)
 {
-	switch (player.team)
+	switch (t)
 	{
 		case surv_attackerteam:
 		{
 			if (player.surv_role == SURVIVAL_ROLE_ATTACKER)
 			{
 				--surv_numattackersalive;
-				LOG_TRACE("SURVIVAL: Removed alive attacker, total = ", ftos(
-					surv_numattackersalive));
+				string message = strcat("Survival: Removed alive attacker, total = ",
+					ftos(surv_numattackersalive));
+				LOG_TRACE(message);
+				FOREACH_CLIENT(IS_REAL_CLIENT(it),
+				{
+					PrintToChat(it, message);
+				});
 			}
 			break;
 		}
 		case surv_defenderteam:
 		{
+			if (player.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+			{
+				// This happens during team switch. We don't need to change
+				// anything.
+				return;
+			}
 			--surv_numdefendersalive;
-			LOG_TRACE("SURVIVAL: Removed alive defender, total = ", ftos(
-					surv_numdefendersalive));
+			string message = strcat("Survival: Removed alive defender, total = ",
+				ftos(surv_numdefendersalive));
+			LOG_TRACE(message);
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
+			{
+				PrintToChat(it, message);
+			});
 			switch (surv_numdefendersalive)
 			{
 				case 1:
@@ -636,7 +663,7 @@ void Surv_CountAlivePlayers()
 		eliminatedPlayers.SendFlags |= 1;
 	}
 	Surv_UpdateAliveStats();
-	if (warmup_stage || (savednumdefenders == surv_numdefendersalive))
+	if (warmup_stage || (savednumdefenders <= surv_numdefendersalive))
 	{
 		return;
 	}
@@ -717,7 +744,7 @@ void Surv_UpdateDefenderHealthStat()
 	{
 		healthratio = totalhealth / maxhealth;
 	}
-	FOREACH_CLIENT(true,
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
 		it.surv_defender_health_stat = healthratio;
 	});
@@ -806,7 +833,7 @@ void Surv_SwapTeams()
 					string message = strcat("SwapTeams: ", it.netname,
 						" has invalid role.");
 					LOG_TRACE(message);
-					FOREACH_CLIENT(true,
+					FOREACH_CLIENT(IS_REAL_CLIENT(it),
 					{
 						PrintToChat(it, message);
 					});
@@ -832,7 +859,7 @@ void Surv_SwapTeams()
 						string message = strcat("SwapTeams: ", it.netname,
 							" has invalid role.");
 						LOG_TRACE(message);
-						FOREACH_CLIENT(true,
+						FOREACH_CLIENT(IS_REAL_CLIENT(it),
 						{
 							PrintToChat(it, message);
 						});
@@ -908,7 +935,7 @@ bool Surv_CanRoundEnd()
 		if (surv_roundtype == SURVIVAL_ROUND_FIRST)
 		{
 			surv_timetobeat = time - surv_roundstarttime;
-			FOREACH_CLIENT(true,
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
 				centerprint(it, "Defenders have survived.");
 				PrintToChat(it, "Defenders have survived.");
@@ -949,7 +976,7 @@ bool Surv_CanRoundEnd()
 		surv_timetobeat = time - surv_roundstarttime;
 		string message = strcat("Defenders were eliminated in ^2",
 			seconds_tostring(surv_timetobeat), "^7.");
-		FOREACH_CLIENT(true,
+		FOREACH_CLIENT(IS_REAL_CLIENT(it),
 		{
 			centerprint(it, message);
 			PrintToChat(it, message);
@@ -1018,7 +1045,8 @@ void Surv_RoundStart()
 		{
 			case surv_attackerteam:
 			{
-				if (it.surv_role == SURVIVAL_ROLE_ATTACKER)
+				if (IS_REAL_CLIENT(it) && (it.surv_role ==
+					SURVIVAL_ROLE_ATTACKER))
 				{
 					centerprint(it, attackmessage);
 					PrintToChat(it, attackmessage);
@@ -1027,10 +1055,13 @@ void Surv_RoundStart()
 			}
 			case surv_defenderteam:
 			{
-				if (it.surv_role == SURVIVAL_ROLE_DEFENDER)
+				if (IS_REAL_CLIENT(it))
 				{
 					centerprint(it, defendmessage);
 					PrintToChat(it, defendmessage);
+				}
+				if (it.surv_role == SURVIVAL_ROLE_DEFENDER)
+				{
 					WaypointSprite_Spawn(WP_AssaultDestroy, 0, 0, it, '0 0 64',
 						NULL, surv_attackerteam, it, surv_attack_sprite, false,
 						RADARICON_OBJECTIVE);
@@ -1105,7 +1136,7 @@ MUTATOR_HOOKFUNCTION(surv, SV_StartFrame)
 			break;
 		}
 	}
-	FOREACH_CLIENT(true,
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
 		it.surv_round_time_stat = roundtime;
 	});
@@ -1145,20 +1176,24 @@ MUTATOR_HOOKFUNCTION(surv, Player_ChangedTeam)
 	entity player = M_ARGV(0, entity);
 	int oldteam = M_ARGV(1, float);
 	int newteam = M_ARGV(2, float);
-	LOG_TRACE("SURVIVAL: Player_ChangedTeam, ", player.netname, ", old team = ",
-		ftos(oldteam), " new team = ", ftos(newteam));
-	//FOREACH_CLIENT(true, { centerprint(it, "Player_ChangeTeam"); });
-	//if (!IS_DEAD(player))
-	//{
-	//	surv_RemovePlayerFromAliveList(player);
-	//}
+	string message = strcat("Survival: Player_ChangedTeam, ", player.netname,
+		", old team = ", ftos(oldteam), " new team = ", ftos(newteam));
+	LOG_TRACE(message);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		PrintToChat(it, message);
+	});
+	if ((oldteam != -1) && IS_PLAYER(player) && !IS_DEAD(player))
+	{
+		Surv_RemovePlayerFromAliveList(player, oldteam);
+	}
 	Surv_RemovePlayerFromTeam(player, oldteam);
 	Surv_AddPlayerToTeam(player, newteam);
-	Surv_CountAlivePlayers();
-	//if (IS_PLAYER(player) && !IS_DEAD(player))
-	//{
-	//	surv_AddPlayerToAliveList(player, newteam);
-	//}
+	//Surv_CountAlivePlayers();
+	if ((oldteam != -1) && IS_PLAYER(player) && !IS_DEAD(player))
+	{
+		Surv_AddPlayerToAliveList(player, newteam);
+	}
 }
 
 /// \brief Hook that is called when player connects to the server.
@@ -1167,7 +1202,15 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 	entity player = M_ARGV(0, entity);
 	LOG_TRACE("SURVIVAL: ClientConnect, player = ", player.netname);
 	player.surv_savedplayermodel = player.playermodel;
-	player.surv_defender_team_stat = Team_TeamToNumber(surv_defenderteam);
+	if (IS_REAL_CLIENT(player))
+	{
+		player.surv_defender_team_stat = Team_TeamToNumber(surv_defenderteam);
+		player.surv_defenders_alive_stat = surv_numdefendersalive;
+		player.redalive_stat = redalive;
+		player.bluealive_stat = bluealive;
+		player.yellowalive_stat = yellowalive;
+		player.pinkalive_stat = pinkalive;
+	}
 	if (player.surv_role == SURVIVAL_ROLE_NONE)
 	{
 		Surv_AddPlayerToTeam(player, player.team);
@@ -1179,12 +1222,12 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)
 {
     entity player = M_ARGV(0, entity);
-	Surv_CountAlivePlayers();
-	//if (!IS_DEAD(player))
-	//{
-	//	Surv_RemovePlayerFromAliveList(player);
-	//}
+	if (!IS_DEAD(player))
+	{
+		Surv_RemovePlayerFromAliveList(player, player.team);
+	}
 	Surv_RemovePlayerFromTeam(player, player.team);
+	//Surv_CountAlivePlayers();
 }
 
 MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
@@ -1204,17 +1247,13 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 {
-	//FOREACH_CLIENT(true, { centerprint(it, "MakePlayerObserver"); });
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { PrintToChat(it, "MakePlayerObserver"); });
 	//backtrace("SURVIVAL: MakePlayerObserver");
     entity player = M_ARGV(0, entity);
 	LOG_TRACE("SURVIVAL: MakePlayerObserver, player = ", player.netname);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 	{
 		LOG_TRACE("killindicator_teamchange == -2");
-		//FOREACH_CLIENT(true, { centerprint(it, "Removing Observer from alive list"); });
-		//Surv_CountAlivePlayers();
-		//surv_RemovePlayerFromAliveList(player);
-		//Surv_RemovePlayerFromTeam(player, player.team);
 		player.surv_state = SURVIVAL_STATE_NOT_PLAYING;
 	}
 	if (!warmup_stage)
@@ -1256,7 +1295,8 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 	LOG_TRACE("SURVIVAL: reset_map_players");
 	//FOREACH_CLIENT(true, { centerprint(it, "reset_map_players"); });
 	Surv_SwapTeams();
-	FOREACH_CLIENT(true, {
+	FOREACH_CLIENT(true,
+	{
 		it.killcount = 0;
 		if ((it.surv_state == SURVIVAL_STATE_NOT_PLAYING) && IS_BOT_CLIENT(it))
 		{
@@ -1277,12 +1317,12 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 /// \brief Hook that is called when player spawns.
 MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 {
-	//FOREACH_CLIENT(true, { centerprint(it, "PlayerSpawn"); });
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { PrintToChat(it, "PlayerSpawn"); });
 	entity player = M_ARGV(0, entity);
 	LOG_TRACE("SURVIVAL: PlayerSpawn, player = ", player.netname);
 	player.surv_state = SURVIVAL_STATE_PLAYING;
-	Surv_CountAlivePlayers();
-	//surv_AddPlayerToAliveList(player, player.team);
+	//Surv_CountAlivePlayers();
+	Surv_AddPlayerToAliveList(player, player.team);
 	//W_GiveWeapon(player, WEP_HMG.m_id);
 	//W_GiveWeapon(player, WEP_RPC.m_id);
 	switch (player.team)
@@ -1347,7 +1387,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				}
 				default:
 				{
-					centerprint(player, "INVALID ROLE");
 					LOG_TRACE("Survival::PlayerSpawn: Invalid attacker role.");
 					break;
 				}
@@ -1358,7 +1397,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 		{
 			if (player.surv_role != SURVIVAL_ROLE_DEFENDER)
 			{
-				centerprint(player, "INVALID ROLE");
 				LOG_TRACE("Survival::PlayerSpawn: Invalid defender role.");
 			}
 			switch (surv_defendercolor)
@@ -1442,7 +1480,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 					if (it.netname == weapon)
 					{
 						player.weapons |= it.m_wepset;
-						//W_GiveWeapon(player, it.m_id);
 						break;
 					}
 				});
@@ -1660,7 +1697,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					return MUT_ITEMTOUCH_RETURN;
 				}
 			}
-			centerprint(player, item.classname);
+			PrintToChat(player, item.classname);
 			return MUT_ITEMTOUCH_RETURN;
 		}
 	}
@@ -1743,9 +1780,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 /// \brief Hook which is called when the player dies.
 MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 {
-	//FOREACH_CLIENT(true, { centerprint(it, "PlayerDies"); });
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { PrintToChat(it, "PlayerDies"); });
 	entity frag_target = M_ARGV(2, entity);
-	//surv_RemovePlayerFromAliveList(frag_target);
 	if (!Surv_CanPlayerSpawn(frag_target))
 	{
 		frag_target.respawn_flags = RESPAWN_SILENT;
@@ -1760,7 +1796,10 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 /// \brief Hook which is called after the player died.
 MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 {
-	Surv_CountAlivePlayers();
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { PrintToChat(it, "PlayerDied"); });
+	entity player = M_ARGV(0, entity);
+	Surv_RemovePlayerFromAliveList(player, player.team);
+	//Surv_CountAlivePlayers();
 }
 
 /// \brief Hook which is called when player has scored a frag.
