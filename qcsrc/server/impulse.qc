@@ -584,7 +584,10 @@ IMPULSE(navwaypoint_spawn)
 	bprint(strcat("Waypoint spawned at ", vtos(org), "\n"));
 	if(sym)
 	{
-		vector map_center = autocvar_g_waypointeditor_symmetrical_center;
+		vector map_center = havocbot_middlepoint;
+		if (autocvar_g_waypointeditor_symmetrical == 2)
+			map_center = autocvar_g_waypointeditor_symmetrical_center;
+
 		org = e.origin;
 		org.x = map_center.x - (org.x - map_center.x);
 		org.y = map_center.y - (org.y - map_center.y);
@@ -615,7 +618,10 @@ IMPULSE(navwaypoint_remove)
 	entity wp_sym = NULL;
 	if (sym)
 	{
-		vector map_center = autocvar_g_waypointeditor_symmetrical_center;
+		vector map_center = havocbot_middlepoint;
+		if (autocvar_g_waypointeditor_symmetrical == 2)
+			map_center = autocvar_g_waypointeditor_symmetrical_center;
+
 		vector org = e.origin;
 		org.x = map_center.x - (org.x - map_center.x);
 		org.y = map_center.y - (org.y - map_center.y);

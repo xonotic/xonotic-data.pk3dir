@@ -1392,8 +1392,8 @@ void havocbot_ctf_calculate_middlepoint()
 	}
 	if(!n)
 		return;
-	havocbot_ctf_middlepoint = s / n;
-	havocbot_ctf_middlepoint_radius = vlen(fo - havocbot_ctf_middlepoint);
+	havocbot_middlepoint = s / n;
+	havocbot_middlepoint_radius = vlen(fo - havocbot_middlepoint);
 }
 
 
@@ -1638,13 +1638,13 @@ void havocbot_ctf_reset_role(entity this)
 
 	// Evaluate best position to take
 	// Count mates on middle position
-	cmiddle = havocbot_ctf_teamcount(this, havocbot_ctf_middlepoint, havocbot_ctf_middlepoint_radius * 0.5);
+	cmiddle = havocbot_ctf_teamcount(this, havocbot_middlepoint, havocbot_middlepoint_radius * 0.5);
 
 	// Count mates on defense position
-	cdefense = havocbot_ctf_teamcount(this, mf.dropped_origin, havocbot_ctf_middlepoint_radius * 0.5);
+	cdefense = havocbot_ctf_teamcount(this, mf.dropped_origin, havocbot_middlepoint_radius * 0.5);
 
 	// Count mates on offense position
-	coffense = havocbot_ctf_teamcount(this, ef.dropped_origin, havocbot_ctf_middlepoint_radius);
+	coffense = havocbot_ctf_teamcount(this, ef.dropped_origin, havocbot_middlepoint_radius);
 
 	if(cdefense<=coffense)
 		havocbot_role_ctf_setrole(this, HAVOCBOT_CTF_ROLE_DEFENSE);
@@ -1926,15 +1926,15 @@ void havocbot_role_ctf_middle(entity this)
 	{
 		vector org;
 
-		org = havocbot_ctf_middlepoint;
+		org = havocbot_middlepoint;
 		org.z = this.origin.z;
 
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
 		havocbot_goalrating_ctf_droppedflags(this, 30000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 10000, org, havocbot_ctf_middlepoint_radius * 0.5);
-		havocbot_goalrating_items(this, 5000, org, havocbot_ctf_middlepoint_radius * 0.5);
+		havocbot_goalrating_enemyplayers(this, 10000, org, havocbot_middlepoint_radius * 0.5);
+		havocbot_goalrating_items(this, 5000, org, havocbot_middlepoint_radius * 0.5);
 		havocbot_goalrating_items(this, 2500, this.origin, 10000);
 		havocbot_goalrating_ctf_enemybase(this, 2500);
 		navigation_goalrating_end(this);
@@ -1975,11 +1975,7 @@ void havocbot_role_ctf_defense(entity this)
 	}
 	if (this.bot_strategytime < time)
 	{
-		float mp_radius;
-		vector org;
-
-		org = mf.dropped_origin;
-		mp_radius = havocbot_ctf_middlepoint_radius;
+		vector org = mf.dropped_origin;
 
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
@@ -2003,9 +1999,9 @@ void havocbot_role_ctf_defense(entity this)
 			havocbot_goalrating_ctf_ourbase(this, 30000);
 
 		havocbot_goalrating_ctf_ourstolenflag(this, 20000);
-		havocbot_goalrating_ctf_droppedflags(this, 20000, org, mp_radius);
-		havocbot_goalrating_enemyplayers(this, 15000, org, mp_radius);
-		havocbot_goalrating_items(this, 10000, org, mp_radius);
+		havocbot_goalrating_ctf_droppedflags(this, 20000, org, havocbot_middlepoint_radius);
+		havocbot_goalrating_enemyplayers(this, 15000, org, havocbot_middlepoint_radius);
+		havocbot_goalrating_items(this, 10000, org, havocbot_middlepoint_radius);
 		havocbot_goalrating_items(this, 5000, this.origin, 10000);
 		navigation_goalrating_end(this);
 	}
