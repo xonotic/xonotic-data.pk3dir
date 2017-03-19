@@ -769,6 +769,8 @@ enum {
 	/**/     					o(int, MUTATOR_ARGV_0_int) \
     /** real players */    		i(int, MUTATOR_ARGV_1_int) \
     /**/    					o(int, MUTATOR_ARGV_1_int) \
+    /** bots */    				i(int, MUTATOR_ARGV_2_int) \
+    /**/    					o(int, MUTATOR_ARGV_2_int) \
     /**/
 MUTATOR_HOOKABLE(Bot_FixCount, EV_Bot_FixCount);
 

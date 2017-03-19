@@ -6,6 +6,7 @@ const int SP_TEAM_ENEMY = NUM_TEAM_2;
 .bool can_drop_weapon;
 .string weapon_name;
 .int sp_spawn_team;
+.entity sp_spawn_spot;
 
 /*QUAKED spawnfunc_tdm_team (0 .5 .8) (-16 -16 -24) (16 16 32)
 Team declaration for TDM gameplay, this allows you to decide what team names and control point models are used in your map.
@@ -22,7 +23,7 @@ spawnfunc(sp_team)
 }
 
 // code from here on is just to support maps that don't have team entities
-void sp_SpawnTeam (string teamname, int teamcolor)
+void sp_spawn_team_entity(string teamname, int teamcolor)
 {
     entity this = new_pure(sp_team);
     this.netname = teamname;
@@ -42,6 +43,26 @@ spawnfunc(info_player_singleplayer)
     spawnfunc_info_player_deathmatch(this);
 }
 
+void sp_spawn_bot(entity spawn_point)
+{
+    entity bot = spawnclient();
+    if (bot)
+    {
+        bot.sp_spawn_spot = spawn_point;
+        bot_spawn_setup(bot);
+    }
+    else
+    {
+        LOG_WARN("Could not spawn bot");
+    }
+}
+
+void sp_enemy_spawn_think(entity this)
+{
+    sp_spawn_bot(this);
+    setthink(this, SUB_Remove);
+}
+
 spawnfunc(info_player_singleplayer_enemy)
 {
 	if (!g_singleplayer) { delete(this); return; }
@@ -49,17 +70,18 @@ spawnfunc(info_player_singleplayer_enemy)
 	this.team = SP_TEAM_ENEMY;
     this.sp_spawn_team = SP_TEAM_ENEMY;
 	spawnfunc_info_player_deathmatch(this);
+    setthink(this, sp_enemy_spawn_think);
 }
 
-void sp_DelayedInit(entity this)
+void sp_delayed_init(entity this)
 {
     // if no teams are found, spawn defaults
     if(find(NULL, classname, "sp_team") == NULL)
     {
         LOG_TRACE("No \"sp_team\" entities found on this map, creating them anyway.");
 
-        sp_SpawnTeam("Player", SP_TEAM_PLAYER);
-        sp_SpawnTeam("Enemy", SP_TEAM_ENEMY);
+        sp_spawn_team_entity("Player", SP_TEAM_PLAYER);
+        sp_spawn_team_entity("Enemy", SP_TEAM_ENEMY);
     }
 }
 
@@ -128,7 +150,8 @@ MUTATOR_HOOKFUNCTION(sp, Spawn_Score)
     vector spawn_score = M_ARGV(2, vector);
     if ( IS_BOT_CLIENT(player) )
     {
-        if ( spawn_spot.sp_spawn_team != SP_TEAM_ENEMY )
+        if ( spawn_spot.sp_spawn_team != SP_TEAM_ENEMY || 
+            (player.sp_spawn_spot && player.sp_spawn_spot !=spawn_spot) )
             spawn_score.x = -1;
     }
     else if ( spawn_spot.sp_spawn_team != SP_TEAM_PLAYER )
@@ -141,5 +164,14 @@ MUTATOR_HOOKFUNCTION(sp, Spawn_Score)
 
 MUTATOR_HOOKFUNCTION(sp, HideTeamNagger)
 {
+    return true;
+}
+
+MUTATOR_HOOKFUNCTION(sp, Bot_FixCount)
+{
+    int count = 0;
+    for ( entity e = NULL; (e = findfloat(e, sp_spawn_team, SP_TEAM_ENEMY)); )
+        count++;
+    M_ARGV(2, int) = count;
     return true;
 }

@@ -2,7 +2,7 @@
 
 #include "../gamemode.qh"
 
-void sp_DelayedInit(entity this);
+void sp_delayed_init(entity this);
 
 REGISTER_MUTATOR(sp, false)
 {
@@ -10,7 +10,7 @@ REGISTER_MUTATOR(sp, false)
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		InitializeEntity(NULL, sp_DelayedInit, INITPRIO_GAMETYPE);
+		InitializeEntity(NULL, sp_delayed_init, INITPRIO_GAMETYPE);
 
 		ActivateTeamplay();
 		SetLimits(-1, -1, autocvar_timelimit_override, -1);

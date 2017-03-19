@@ -84,6 +84,10 @@ float bot_ignore_bots; // let bots not attack other bots (only works in non-team
 
 entity bot_spawn();
 float bot_fixcount();
+/*
+ * Sets up an entity created with spawnclient() to be a bot
+ */
+void bot_spawn_setup(entity bot);
 
 void bot_think(entity this);
 void bot_setnameandstuff(entity this);

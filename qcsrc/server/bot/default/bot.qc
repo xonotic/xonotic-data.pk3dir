@@ -46,13 +46,18 @@ entity bot_spawn()
 	entity bot = spawnclient();
 	if (bot)
 	{
-		setItemGroupCount();
-		currentbots = currentbots + 1;
-		bot_setnameandstuff(bot);
-		ClientConnect(bot);
-		PutClientInServer(bot);
+		bot_spawn_setup(bot);
 	}
 	return bot;
+}
+
+void bot_spawn_setup(entity bot)
+{
+	setItemGroupCount();
+	currentbots = currentbots + 1;
+	bot_setnameandstuff(bot);
+	ClientConnect(bot);
+	PutClientInServer(bot);
 }
 
 void bot_think(entity this)
@@ -580,9 +585,12 @@ float bot_fixcount()
 {
 	int activerealplayers = 0;
 	int realplayers = 0;
-	if (MUTATOR_CALLHOOK(Bot_FixCount, activerealplayers, realplayers)) {
+	int bots = 0;
+
+	if (MUTATOR_CALLHOOK(Bot_FixCount, activerealplayers, realplayers, bots)) {
 		activerealplayers = M_ARGV(0, int);
 		realplayers = M_ARGV(1, int);
+        bots = M_ARGV(2, int);
 	} else {
 		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 			if(IS_PLAYER(it))
@@ -591,14 +599,19 @@ float bot_fixcount()
 		));
 	}
 
-	int bots;
 	// add/remove bots if needed to make sure there are at least
 	// minplayers+bot_number, or remove all bots if no one is playing
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
-	if (teamplay && autocvar_bot_vs_human && AvailableTeams() == 2)
+	if (bots)
+	{
+		// Nothing to do, number of bots set by the hook
+	}
+	else if (teamplay && autocvar_bot_vs_human && AvailableTeams() == 2)
+	{
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
+	}
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
 		float realminplayers, minplayers;
