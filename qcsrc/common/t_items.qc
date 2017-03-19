@@ -1027,27 +1027,27 @@ float ammo_pickupevalfunc(entity player, entity item)
 	if (need_shells)
 	if (item.ammo_shells)
 	if (player.ammo_shells < g_pickup_shells_max)
-		c = item.ammo_shells / player.ammo_shells;
+		c = item.ammo_shells / max(1, player.ammo_shells);
 	if (need_nails)
 	if (item.ammo_nails)
 	if (player.ammo_nails < g_pickup_nails_max)
-		c = item.ammo_nails / player.ammo_nails;
+		c = item.ammo_nails / max(1, player.ammo_nails);
 	if (need_rockets)
 	if (item.ammo_rockets)
 	if (player.ammo_rockets < g_pickup_rockets_max)
-		c = item.ammo_rockets / player.ammo_rockets;
+		c = item.ammo_rockets / max(1, player.ammo_rockets);
 	if (need_cells)
 	if (item.ammo_cells)
 	if (player.ammo_cells < g_pickup_cells_max)
-		c = item.ammo_cells / player.ammo_cells;
+		c = item.ammo_cells / max(1, player.ammo_cells);
 	if (need_plasma)
 	if (item.ammo_plasma)
 	if (player.ammo_plasma < g_pickup_plasma_max)
-		c = item.ammo_plasma / player.ammo_plasma;
+		c = item.ammo_plasma / max(1, player.ammo_plasma);
 	if (need_fuel)
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
-		c = item.ammo_fuel / player.ammo_fuel;
+		c = item.ammo_fuel / max(1, player.ammo_fuel);
 
 	rating *= min(2, c);
 	if(wpn)
