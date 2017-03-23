@@ -853,6 +853,9 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
+		if(autocvar_g_waypointeditor && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
+			e.nearestwaypoint = NULL;
+
 		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
 			&& e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 		{
@@ -875,6 +878,8 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 			if(e.navigation_dynamicgoal)
 				e.nearestwaypointtimeout = time + 2;
+			else if(autocvar_g_waypointeditor)
+				e.nearestwaypointtimeout = time + 3 + random() * 2;
 		}
 		nwp = e.nearestwaypoint;
 	}
