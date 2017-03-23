@@ -16,6 +16,15 @@ const int SURVIVAL_COLOR_BLUE = NUM_TEAM_2 - 1; ///< Used to reference the blue.
 
 enum
 {
+	SURVIVAL_TYPE_COOP, ///< All humans are on the defender team.
+	SURVIVAL_TYPE_VERSUS ///< Humans take turns between attackers and defenders.
+};
+
+const string SURVIVAL_TYPE_COOP_VALUE = "coop"; ///< Cvar value for coop.
+const string SURVIVAL_TYPE_VERSUS_VALUE = "versus"; ///< Cvar value for versus.
+
+enum
+{
 	/// \brief First round where there is timelimit set by the server.
 	SURVIVAL_ROUND_FIRST,
 	/// \brief Second round where defender team tries to survive for the first
@@ -136,6 +145,7 @@ float autocvar_g_surv_cannon_fodder_defense_scale;
 
 .entity surv_attack_sprite; ///< Holds the sprite telling attackers to attack.
 
+int surv_type; ///< Holds the type of survival. See SURVIVAL_TYPE constants.
 /// \brief Holds the type of the current round. See SURVIVAL_ROUND constants.
 int surv_roundtype;
 bool surv_isroundactive; ///< Holds whether the round is active.
@@ -199,6 +209,23 @@ void Surv_UpdateDefenderHealthStat();
 
 void Surv_Initialize()
 {
+	switch (cvar_string("g_surv_type"))
+	{
+		case SURVIVAL_TYPE_COOP_VALUE:
+		{
+			surv_type = SURVIVAL_TYPE_COOP;
+			break;
+		}
+		case SURVIVAL_TYPE_VERSUS_VALUE:
+		{
+			surv_type = SURVIVAL_TYPE_VERSUS;
+			break;
+		}
+		default:
+		{
+			error("Invalid survival type.");
+		}
+	}
 	surv_roundtype = SURVIVAL_ROUND_FIRST;
 	surv_isroundactive = false;
 	surv_roundstarttime = time;
@@ -783,14 +810,21 @@ void Surv_RoundCleanup()
 	surv_allowed_to_spawn = false;
 	surv_isroundactive = false;
 	game_stopped = true;
-	FOREACH_CLIENT(true, {
+	FOREACH_CLIENT(true,
+	{
 		if (it.surv_attack_sprite)
 		{
 			WaypointSprite_Kill(it.surv_attack_sprite);
 		}
 	});
-	Surv_SwitchRoundType();
-	round_handler_Init(5, autocvar_g_surv_warmup, surv_timetobeat);
+	if (surv_type == SURVIVAL_TYPE_VERSUS)
+	{
+		Surv_SwitchRoundType();
+		round_handler_Init(5, autocvar_g_surv_warmup, surv_timetobeat);
+		return;
+	}
+	round_handler_Init(5, autocvar_g_surv_warmup,
+		autocvar_g_surv_round_timelimit);
 }
 
 /// \brief Swaps attacker and defender teams.
@@ -1014,6 +1048,11 @@ void Surv_RoundStart()
 	{
 		case SURVIVAL_ROUND_FIRST:
 		{
+			if (surv_type == SURVIVAL_TYPE_COOP)
+			{
+				defendmessage = "^3Defend yourself ^2as long as you can^3.";
+				break;
+			}
 			attackmessage = "^3First round. Eliminate the enemy team ^2as fast as you can^3.";
 			defendmessage = "^3First round. Defend yourself ^2as long as you can^3.";
 			break;
@@ -1138,6 +1177,16 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 	LOG_TRACE("SURVIVAL: CheckAllowedTeams, player = ", player.netname);
 	if (!IS_BOT_CLIENT(player))
 	{
+		if (surv_type == SURVIVAL_TYPE_COOP)
+		{
+			if (surv_numdefenderhumans < autocvar_g_surv_team_size)
+			{
+				M_ARGV(0, float) = surv_defenderteambit;
+				return;
+			}
+			M_ARGV(0, float) = 0;
+			return;
+		}
 		int teambits = 0;
 		if (surv_numattackerhumans < autocvar_g_surv_team_size)
 		{
@@ -1276,7 +1325,10 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 {
 	LOG_TRACE("SURVIVAL: reset_map_players");
 	//DebugPrintToChatAll("reset_map_players");
-	Surv_SwapTeams();
+	if (surv_type == SURVIVAL_TYPE_VERSUS)
+	{
+		Surv_SwapTeams();
+	}
 	FOREACH_CLIENT(true,
 	{
 		it.killcount = 0;
@@ -1753,12 +1805,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 	}
 	WaypointSprite_UpdateHealth(target.surv_attack_sprite, target.health);
 }
-
-//MUTATOR_HOOKFUNCTION(surv, ClientKill)
-//{
-	//FOREACH_CLIENT(true, { centerprint(it, "ClientKill"); });
-	//entity player = M_ARGV(0, entity);
-//}
 
 /// \brief Hook which is called when the player dies.
 MUTATOR_HOOKFUNCTION(surv, PlayerDies)
