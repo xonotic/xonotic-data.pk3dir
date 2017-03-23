@@ -17,6 +17,13 @@ void dedicated_print(string input);
 /// \return No return.
 void PrintToChat(entity player, string text);
 
+/// \brief Print the string to player's chat if the server cvar "developer" is
+/// not 0.
+/// \param[in] player Player to print to.
+/// \param[in] text Text to print.
+/// \return No return.
+void DebugPrintToChat(entity player, string text);
+
 void player_setupanimsformodel(entity this);
 
 void player_anim(entity this);
