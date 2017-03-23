@@ -1049,6 +1049,9 @@ void turret_think(entity this)
 	if (this.ammo < this.ammo_max)
 		this.ammo = min(this.ammo + this.ammo_recharge, this.ammo_max);
 
+	if (this.move_movetype == MOVETYPE_FOLLOW && this.origin - this.view_ofs != this.aiment.origin)
+		this.SendFlags |= TNSF_MOVE;
+
 	// Inactive turrets needs to run the think loop,
 	// So they can handle animation and wake up if need be.
 	if(!this.active)
