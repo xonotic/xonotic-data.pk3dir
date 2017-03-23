@@ -589,7 +589,7 @@ void Surv_RemovePlayerFromAliveList(entity player, int t)
 				ftos(surv_numdefendersalive));
 			LOG_TRACE(message);
 			DebugPrintToChatAll(message);
-			if (warmup_stage)
+			if (warmup_stage || surv_allowed_to_spawn)
 			{
 				break;
 			}
@@ -657,7 +657,8 @@ void Surv_CountAlivePlayers()
 		eliminatedPlayers.SendFlags |= 1;
 	}
 	Surv_UpdateAliveStats();
-	if (warmup_stage || (savednumdefenders <= surv_numdefendersalive))
+	if (warmup_stage || surv_allowed_to_spawn || (savednumdefenders <=
+		surv_numdefendersalive))
 	{
 		return;
 	}
