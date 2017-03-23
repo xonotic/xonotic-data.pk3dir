@@ -574,16 +574,21 @@ IMPULSE(waypoint_clear)
 IMPULSE(navwaypoint_spawn)
 {
 	if (!autocvar_g_waypointeditor) return;
+	entity e;
 	vector org = this.origin;
 	bool sym = boolean(autocvar_g_waypointeditor_symmetrical);
 
 	LABEL(add_wp);
-	waypoint_schedulerelink(waypoint_spawn(org, org, 0));
+	e = waypoint_spawn(org, org, 0);
+	waypoint_schedulerelink(e);
 	bprint(strcat("Waypoint spawned at ", vtos(org), "\n"));
 	if(sym)
 	{
-		vector map_center = autocvar_g_waypointeditor_symmetrical_center;
-		org = this.origin;
+		vector map_center = havocbot_middlepoint;
+		if (autocvar_g_waypointeditor_symmetrical == 2)
+			map_center = autocvar_g_waypointeditor_symmetrical_center;
+
+		org = e.origin;
 		org.x = map_center.x - (org.x - map_center.x);
 		org.y = map_center.y - (org.y - map_center.y);
 		if (vdist(org - this.origin, >, 10))
@@ -613,8 +618,11 @@ IMPULSE(navwaypoint_remove)
 	entity wp_sym = NULL;
 	if (sym)
 	{
-		vector map_center = autocvar_g_waypointeditor_symmetrical_center;
-		vector org = this.origin;
+		vector map_center = havocbot_middlepoint;
+		if (autocvar_g_waypointeditor_symmetrical == 2)
+			map_center = autocvar_g_waypointeditor_symmetrical_center;
+
+		vector org = e.origin;
 		org.x = map_center.x - (org.x - map_center.x);
 		org.y = map_center.y - (org.y - map_center.y);
 		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
