@@ -697,6 +697,20 @@ void DebugPrintToChat(entity player, string text)
 	}
 }
 
+void PrintToChatAll(string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	bprint(text);
+}
+
+void DebugPrintToChatAll(string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatAll(text);
+	}
+}
+
 /**
  * message "": do not say, just test flood control
  * return value:
