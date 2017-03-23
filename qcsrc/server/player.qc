@@ -695,10 +695,7 @@ void DebugPrintToChat(entity player, string text)
 void PrintToChatAll(string text)
 {
 	text = strcat("\{1}^7", text, "\n");
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		sprint(it, text);
-	});
+	bprint(text);
 }
 
 void DebugPrintToChatAll(string text)
