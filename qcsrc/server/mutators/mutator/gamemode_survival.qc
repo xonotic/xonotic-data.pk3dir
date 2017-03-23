@@ -268,7 +268,7 @@ void Surv_SetPlayerRole(entity player, int role)
 			LOG_TRACE(message);
 			if (IS_REAL_CLIENT(player))
 			{
-				PrintToChat(player, "You are now an attacker.");
+				PrintToChat(player, "^3You are now ^2an attacker^3.");
 			}
 			break;
 		}
@@ -278,7 +278,7 @@ void Surv_SetPlayerRole(entity player, int role)
 			LOG_TRACE(message);
 			if (IS_REAL_CLIENT(player))
 			{
-				PrintToChat(player, "You are now a defender.");
+				PrintToChat(player, "^3You are now ^2a defender^3.");
 			}
 			break;
 		}
@@ -589,6 +589,10 @@ void Surv_RemovePlayerFromAliveList(entity player, int t)
 				ftos(surv_numdefendersalive));
 			LOG_TRACE(message);
 			DebugPrintToChatAll(message);
+			if (warmup_stage)
+			{
+				break;
+			}
 			switch (surv_numdefendersalive)
 			{
 				case 1:
@@ -921,8 +925,8 @@ bool Surv_CanRoundEnd()
 			surv_timetobeat = time - surv_roundstarttime;
 			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
-				centerprint(it, "Defenders have survived.");
-				PrintToChat(it, "Defenders have survived.");
+				centerprint(it, "^3Defenders have ^2survived^3.");
+				PrintToChat(it, "^3Defenders have ^2survived^3.");
 			});
 			Surv_RoundCleanup();
 			return true;
@@ -958,8 +962,8 @@ bool Surv_CanRoundEnd()
 	if (surv_roundtype == SURVIVAL_ROUND_FIRST)
 	{
 		surv_timetobeat = time - surv_roundstarttime;
-		string message = strcat("Defenders were eliminated in ^2",
-			seconds_tostring(surv_timetobeat), "^7.");
+		string message = strcat("^3Defenders were eliminated in ^2",
+			seconds_tostring(surv_timetobeat), "^3.");
 		FOREACH_CLIENT(IS_REAL_CLIENT(it),
 		{
 			centerprint(it, message);
@@ -1009,17 +1013,16 @@ void Surv_RoundStart()
 	{
 		case SURVIVAL_ROUND_FIRST:
 		{
-			attackmessage = "First round. Eliminate the enemy team as fast as you can.";
-			defendmessage = "First round. Defend yourself as long as you can.";
+			attackmessage = "^3First round. Eliminate the enemy team ^2as fast as you can^3.";
+			defendmessage = "^3First round. Defend yourself ^2as long as you can^3.";
 			break;
 		}
 		case SURVIVAL_ROUND_SECOND:
 		{
-			attackmessage = strcat(
-				"Second round. Eliminate the enemy team in less than ^2",
-				seconds_tostring(surv_timetobeat), "^7.");
-			defendmessage = strcat("Second round. Defend yourself for ^2",
-				seconds_tostring(surv_timetobeat), "^7.");
+			attackmessage = strcat("^3Second round. Eliminate the enemy team in less than ^2",
+				seconds_tostring(surv_timetobeat), "^3.");
+			defendmessage = strcat("^3Second round. Defend yourself for ^2",
+				seconds_tostring(surv_timetobeat), "^3.");
 			break;
 		}
 	}
