@@ -1482,7 +1482,7 @@ MUTATOR_HOOKFUNCTION(surv, FixPlayermodel)
 /// regenerate.
 MUTATOR_HOOKFUNCTION(surv, PlayerRegen)
 {
-	entity player = M_ARGV(1, entity);
+	entity player = M_ARGV(0, entity);
 	if (player.team == surv_defenderteam)
 	{
 		return true;
