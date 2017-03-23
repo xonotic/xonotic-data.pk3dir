@@ -684,6 +684,14 @@ void PrintToChat(entity player, string text)
 	sprint(player, text);
 }
 
+void DebugPrintToChat(entity player, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChat(player, text);
+	}
+}
+
 /**
  * message "": do not say, just test flood control
  * return value:
