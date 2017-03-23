@@ -24,6 +24,17 @@ void PrintToChat(entity player, string text);
 /// \return No return.
 void DebugPrintToChat(entity player, string text);
 
+/// \brief Prints the string to all players' chat.
+/// \param[in] text Text to print.
+/// \return No return.
+void PrintToChatAll(string text);
+
+/// \brief Prints the string to all players' chat if the server cvar "developer"
+/// is not 0.
+/// \param[in] text Text to print.
+/// \return No return.
+void DebugPrintToChatAll(string text);
+
 void player_setupanimsformodel(entity this);
 
 void player_anim(entity this);
