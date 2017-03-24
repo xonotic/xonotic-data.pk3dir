@@ -40,8 +40,7 @@ enum
 enum
 {
 	SURVIVAL_ROLE_NONE, ///< Player is not playing.
-	SURVIVAL_ROLE_ATTACKER, ///< Player is an attacker.
-	SURVIVAL_ROLE_DEFENDER, ///< Player is a defender.
+	SURVIVAL_ROLE_PLAYER, ///< Player is an attacker or defender.
 	SURVIVAL_ROLE_CANNON_FODDER ///< Player is a cannon fodder.
 };
 
@@ -280,14 +279,16 @@ void Surv_ChangeNumberOfPlayers(int teamnum, int delta)
 		case surv_attackerteam:
 		{
 			surv_numattackers += delta;
-			LOG_TRACE("Number of attackers = ", ftos(surv_numattackers));
+			LOG_TRACE("Number of attackers = ", ftos(surv_numattackers),
+				" was = ", ftos(surv_numattackers - delta));
 			Surv_UpdateTeamStats();
 			return;
 		}
 		case surv_defenderteam:
 		{
 			surv_numdefenders += delta;
-			LOG_TRACE("Number of defenders = ", ftos(surv_numdefenders));
+			LOG_TRACE("Number of defenders = ", ftos(surv_numdefenders),
+				" was = ", ftos(surv_numdefenders - delta));
 			Surv_UpdateTeamStats();
 			return;
 		}
@@ -306,7 +307,8 @@ void Surv_ChangeNumberOfAlivePlayers(int teamnum, int delta)
 		{
 			surv_numattackersalive += delta;
 			LOG_TRACE("Number of alive attackers = ", ftos(
-				surv_numattackersalive));
+				surv_numattackersalive), " was = ", ftos(surv_numattackersalive
+				- delta));
 			Surv_UpdateAliveStats();
 			return;
 		}
@@ -314,7 +316,8 @@ void Surv_ChangeNumberOfAlivePlayers(int teamnum, int delta)
 		{
 			surv_numdefendersalive += delta;
 			LOG_TRACE("Number of alive defenders = ", ftos(
-				surv_numdefendersalive));
+				surv_numdefendersalive), " was = ", ftos(surv_numdefendersalive
+				- delta));
 			Surv_UpdateAliveStats();
 			return;
 		}
@@ -339,14 +342,9 @@ void Surv_SetPlayerRole(entity player, int role)
 			LOG_TRACE(player.netname, " now has no role.");
 			break;
 		}
-		case SURVIVAL_ROLE_ATTACKER:
+		case SURVIVAL_ROLE_PLAYER:
 		{
-			LOG_TRACE(player.netname, " is now an attacker.");
-			break;
-		}
-		case SURVIVAL_ROLE_DEFENDER:
-		{
-			LOG_TRACE(player.netname, " is now a defender.");
+			LOG_TRACE(player.netname, " is now a player.");
 			break;
 		}
 		case SURVIVAL_ROLE_CANNON_FODDER:
@@ -380,7 +378,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				LOG_TRACE("Attackers = ", ftos(surv_numattackers));
 				if (surv_numattackers < autocvar_g_surv_team_size)
 				{
-					Surv_SetPlayerRole(player, SURVIVAL_ROLE_ATTACKER);
+					Surv_SetPlayerRole(player, SURVIVAL_ROLE_PLAYER);
 					Surv_ChangeNumberOfPlayers(teamnum, +1);
 					return true;
 				}
@@ -397,15 +395,17 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				surv_autobalance = false;
 				FOREACH_CLIENT(true,
 				{
-					if ((it.surv_role == SURVIVAL_ROLE_ATTACKER) &&
-						IS_BOT_CLIENT(it))
+					if ((it.team == surv_attackerteam) && (it.surv_role ==
+						SURVIVAL_ROLE_PLAYER) && IS_BOT_CLIENT(it))
 					{
+						LOG_TRACE("Changing ", it.netname,
+							" from attacker to cannon fodder.");
 						Surv_SetPlayerRole(it, SURVIVAL_ROLE_CANNON_FODDER);
-						Surv_ChangeNumberOfPlayers(teamnum, -1);
 						if (!IS_DEAD(it))
 						{
 							Surv_ChangeNumberOfAlivePlayers(teamnum, -1);
 						}
+						Surv_ChangeNumberOfPlayers(teamnum, -1);
 						removedbot = true;
 						break;
 					}
@@ -420,7 +420,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				}
 				LOG_TRACE("Removed bot");
 			}
-			Surv_SetPlayerRole(player, SURVIVAL_ROLE_ATTACKER);
+			Surv_SetPlayerRole(player, SURVIVAL_ROLE_PLAYER);
 			Surv_ChangeNumberOfPlayers(teamnum, +1);
 			++surv_numattackerhumans;
 			LOG_TRACE("Human attackers = ", ftos(surv_numattackerhumans));
@@ -435,7 +435,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				LOG_TRACE("Defenders = ", ftos(surv_numdefenders));
 				if (surv_numdefenders < autocvar_g_surv_team_size)
 				{
-					Surv_SetPlayerRole(player, SURVIVAL_ROLE_DEFENDER);
+					Surv_SetPlayerRole(player, SURVIVAL_ROLE_PLAYER);
 					Surv_ChangeNumberOfPlayers(teamnum, +1);
 					return true;
 				}
@@ -453,10 +453,10 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				surv_autobalance = false;
 				FOREACH_CLIENT(true,
 				{
-					if ((it.surv_role == SURVIVAL_ROLE_DEFENDER) &&
-						IS_BOT_CLIENT(it))
+					if ((it.team == surv_defenderteam) && IS_BOT_CLIENT(it))
 					{
-						LOG_TRACE("Removing bot ", it.netname);
+						LOG_TRACE("Changing ", it.netname,
+							" from defender to cannon fodder.");
 						SetPlayerTeamSimple(it, surv_attackerteam);
 						removedbot = true;
 						break;
@@ -472,7 +472,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				}
 				LOG_TRACE("Removed bot");
 			}
-			Surv_SetPlayerRole(player, SURVIVAL_ROLE_DEFENDER);
+			Surv_SetPlayerRole(player, SURVIVAL_ROLE_PLAYER);
 			Surv_ChangeNumberOfPlayers(teamnum, +1);
 			++surv_numdefenderhumans;
 			LOG_TRACE("Human defenders = ", ftos(surv_numdefenderhumans));
@@ -495,15 +495,16 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 		case surv_attackerteam:
 		{
 			LOG_TRACE("Attacker team");
-			if (player.surv_role != SURVIVAL_ROLE_ATTACKER)
+			if (player.surv_role == SURVIVAL_ROLE_NONE)
 			{
-				if (player.surv_role != SURVIVAL_ROLE_CANNON_FODDER)
-				{
-					string message = strcat("RemovePlayerFromTeam: ",
-						player.netname, " has invalid role.");
-					LOG_TRACE(message);
-					DebugPrintToChatAll(message);
-				}
+				string message = strcat("RemovePlayerFromTeam: ",
+					player.netname, " has invalid role.");
+				DebugPrintToChatAll(message);
+				return;
+			}
+			if (player.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+			{
+				Surv_SetPlayerRole(player, SURVIVAL_ROLE_NONE);
 				return;
 			}
 			Surv_SetPlayerRole(player, SURVIVAL_ROLE_NONE);
@@ -519,7 +520,9 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				{
 					if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
 					{
-						Surv_SetPlayerRole(it, SURVIVAL_ROLE_ATTACKER);
+						LOG_TRACE("Changing ", it.netname,
+							" from cannon fodder to attacker.");
+						Surv_SetPlayerRole(it, SURVIVAL_ROLE_PLAYER);
 						Surv_ChangeNumberOfPlayers(teamnum, +1);
 						if (!IS_DEAD(it))
 						{
@@ -541,11 +544,10 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				LOG_TRACE("Cannon fodder. Assuming team switch");
 				return;
 			}
-			if (player.surv_role != SURVIVAL_ROLE_DEFENDER)
+			if (player.surv_role != SURVIVAL_ROLE_PLAYER)
 			{
 				string message = strcat("RemovePlayerFromTeam: ",
 					player.netname, " has invalid role.");
-				LOG_TRACE(message);
 				DebugPrintToChatAll(message);
 				return;
 			}
@@ -562,6 +564,8 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				{
 					if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
 					{
+						LOG_TRACE("Changing ", it.netname,
+							" from cannon fodder to defender.");
 						SetPlayerTeamSimple(it, surv_defenderteam);						
 						return;
 					}
@@ -609,7 +613,7 @@ void Surv_AddPlayerToAliveList(entity player, int teamnum)
 	{
 		case surv_attackerteam:
 		{
-			if (player.surv_role == SURVIVAL_ROLE_ATTACKER)
+			if (player.surv_role == SURVIVAL_ROLE_PLAYER)
 			{
 				Surv_ChangeNumberOfAlivePlayers(teamnum, +1);
 			}
@@ -637,7 +641,7 @@ void Surv_RemovePlayerFromAliveList(entity player, int teamnum)
 	{
 		case surv_attackerteam:
 		{
-			if (player.surv_role == SURVIVAL_ROLE_ATTACKER)
+			if (player.surv_role == SURVIVAL_ROLE_PLAYER)
 			{
 				Surv_ChangeNumberOfAlivePlayers(teamnum, -1);
 			}
@@ -698,7 +702,7 @@ void Surv_CountAlivePlayers()
 		{
 			case surv_attackerteam:
 			{
-				if ((it.surv_role == SURVIVAL_ROLE_ATTACKER) && !IS_DEAD(it))
+				if ((it.surv_role == SURVIVAL_ROLE_PLAYER) && !IS_DEAD(it))
 				{
 					++surv_numattackersalive;
 				}
@@ -706,7 +710,7 @@ void Surv_CountAlivePlayers()
 			}
 			case surv_defenderteam:
 			{
-				if ((it.surv_role == SURVIVAL_ROLE_DEFENDER) && !IS_DEAD(it))
+				if ((it.surv_role == SURVIVAL_ROLE_PLAYER) && !IS_DEAD(it))
 				{
 					++surv_numdefendersalive;
 				}
@@ -874,49 +878,10 @@ void Surv_SwapTeams()
 	surv_numdefenderhumans = temp;
 	FOREACH_CLIENT(true,
 	{
-		switch (it.team)
+		if ((it.team == surv_defenderteam) && (it.surv_role ==
+			SURVIVAL_ROLE_CANNON_FODDER))
 		{
-			case surv_attackerteam:
-			{
-				if (it.surv_role == SURVIVAL_ROLE_DEFENDER)
-				{
-					Surv_SetPlayerRole(it, SURVIVAL_ROLE_ATTACKER);
-					break;
-				}
-				else
-				{
-					string message = strcat("SwapTeams: ", it.netname,
-						" has invalid role.");
-					LOG_TRACE(message);
-					DebugPrintToChatAll(message);
-				}
-				break;
-			}
-			case surv_defenderteam:
-			{
-				switch (it.surv_role)
-				{
-					case SURVIVAL_ROLE_ATTACKER:
-					{
-						Surv_SetPlayerRole(it, SURVIVAL_ROLE_DEFENDER);
-						break;
-					}
-					case SURVIVAL_ROLE_CANNON_FODDER:
-					{
-						SetPlayerTeamSimple(it, surv_attackerteam);
-						break;
-					}
-					default:
-					{
-						string message = strcat("SwapTeams: ", it.netname,
-							" has invalid role.");
-						LOG_TRACE(message);
-						DebugPrintToChatAll(message);
-						break;
-					}
-				}
-				break;
-			}
+			SetPlayerTeamSimple(it, surv_attackerteam);
 		}
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
@@ -1000,7 +965,7 @@ void Surv_DeterminePlayerModel(entity player)
 		{
 			switch (player.surv_role)
 			{
-				case SURVIVAL_ROLE_ATTACKER:
+				case SURVIVAL_ROLE_PLAYER:
 				{
 					if (!autocvar_g_surv_attacker_force_overkill_models)
 					{
@@ -1209,7 +1174,7 @@ void Surv_RoundStart()
 			case surv_attackerteam:
 			{
 				if (IS_REAL_CLIENT(it) && (it.surv_role ==
-					SURVIVAL_ROLE_ATTACKER))
+					SURVIVAL_ROLE_PLAYER))
 				{
 					centerprint(it, attackmessage);
 					PrintToChat(it, attackmessage);
@@ -1223,7 +1188,7 @@ void Surv_RoundStart()
 					centerprint(it, defendmessage);
 					PrintToChat(it, defendmessage);
 				}
-				if (it.surv_role == SURVIVAL_ROLE_DEFENDER)
+				if (it.surv_role == SURVIVAL_ROLE_PLAYER)
 				{
 					WaypointSprite_Spawn(WP_AssaultDestroy, 0, 0, it, '0 0 64',
 						NULL, surv_attackerteam, it, surv_attack_sprite, false,
@@ -1310,7 +1275,7 @@ MUTATOR_HOOKFUNCTION(surv, SV_StartFrame)
 MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	entity player = M_ARGV(2, entity);
-	LOG_TRACE("SURVIVAL: CheckAllowedTeams, player = ", player.netname);
+	LOG_TRACE("Survival: CheckAllowedTeams, player = ", player.netname);
 	if (!IS_BOT_CLIENT(player))
 	{
 		if (surv_type == SURVIVAL_TYPE_COOP)
@@ -1328,7 +1293,8 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 		{
 			teambits |= surv_attackerteambit;
 		}
-		if (surv_numdefenderhumans < autocvar_g_surv_team_size)
+		if (surv_allowed_to_spawn && (surv_numdefenderhumans <
+			autocvar_g_surv_team_size))
 		{
 			teambits |= surv_defenderteambit;
 		}
@@ -1336,7 +1302,8 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 		return;
 	}
 	int teambits = surv_attackerteambit;
-	if (surv_numdefenders < autocvar_g_surv_team_size)
+	if ((player.team == surv_defenderteam) || (surv_numdefenders <
+		autocvar_g_surv_team_size))
 	{
 		teambits |= surv_defenderteambit;
 	}
@@ -1373,7 +1340,7 @@ MUTATOR_HOOKFUNCTION(surv, Player_ChangedTeam)
 MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
-	LOG_TRACE("SURVIVAL: ClientConnect, player = ", player.netname);
+	LOG_TRACE("Survival: ClientConnect, player = ", player.netname);
 	player.surv_savedplayermodel = player.playermodel;
 	if (IS_REAL_CLIENT(player))
 	{
@@ -1406,7 +1373,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)
 MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 {
 	entity player = M_ARGV(0, entity);
-	LOG_TRACE("SURVIVAL: PutClientInServer, player = ", player.netname);
+	LOG_TRACE("Survival: PutClientInServer, player = ", player.netname);
 	if (!Surv_CanPlayerSpawn(player) && IS_PLAYER(player))
 	{
 		TRANSMUTE(Observer, player);
@@ -1415,9 +1382,8 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 {
-	//DebugPrintToChatAll("MakePlayerObserver");
 	entity player = M_ARGV(0, entity);
-	LOG_TRACE("SURVIVAL: MakePlayerObserver, player = ", player.netname);
+	LOG_TRACE("Survival: MakePlayerObserver, player = ", player.netname);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 	{
 		LOG_TRACE("killindicator_teamchange == -2");
@@ -1439,7 +1405,7 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 MUTATOR_HOOKFUNCTION(surv, ForbidSpawn)
 {
 	entity player = M_ARGV(0, entity);
-	LOG_TRACE("SURVIVAL: ForbidSpawn, player = ", player.netname);
+	LOG_TRACE("Survival: ForbidSpawn, player = ", player.netname);
 	if (player.surv_state == SURVIVAL_STATE_NOT_PLAYING)
 	{
 		return false;
@@ -1499,7 +1465,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 		{
 			switch (player.surv_role)
 			{
-				case SURVIVAL_ROLE_ATTACKER:
+				case SURVIVAL_ROLE_PLAYER:
 				{
 					FOREACH(Weapons, it != WEP_Null,
 					{
@@ -1564,7 +1530,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 		}
 		case surv_defenderteam:
 		{
-			if (player.surv_role != SURVIVAL_ROLE_DEFENDER)
+			if (player.surv_role != SURVIVAL_ROLE_PLAYER)
 			{
 				LOG_TRACE("Survival: PlayerSpawn: ", player.netname,
 					" has invalid defender role.");
@@ -1944,17 +1910,3 @@ MUTATOR_HOOKFUNCTION(surv, Scores_CountFragsRemaining)
 	// Don't announce remaining frags
 	return false;
 }
-
-//MUTATOR_HOOKFUNCTION(surv, MatchEnd)
-//{
-//	surv_numattackers = 0;
-//	surv_numdefenders = 0;
-//	surv_numattackerhumans = 0;
-//	surv_numdefenderhumans = 0;
-//	surv_numattackersalive = 0;
-//	surv_numdefendersalive = 0;
-//	FOREACH_CLIENT(true,
-//	{
-//		it.surv_role = SURVIVAL_ROLE_NONE;
-//	});
-//}
