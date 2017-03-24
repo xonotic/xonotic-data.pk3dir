@@ -624,7 +624,8 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	entity portal;
 
 	fixedmakevectors(ang);
-	if(!CheckWireframeBox(own, org - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+
+	if(!CheckWireframeBox(own, org - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 32 * v_forward))
 		return NULL;
 
 	portal = new(portal);
