@@ -513,26 +513,28 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			{
 				--surv_numattackerhumans;
 			}
-			if (surv_autobalance && (surv_numattackers < surv_numdefenders))
+			if ((surv_autobalance == false) || (surv_numattackers >=
+				surv_numdefenders))
 			{
-				// Add bot to keep teams balanced.
-				FOREACH_CLIENT(true,
-				{
-					if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
-					{
-						LOG_TRACE("Changing ", it.netname,
-							" from cannon fodder to attacker.");
-						Surv_SetPlayerRole(it, SURVIVAL_ROLE_PLAYER);
-						Surv_ChangeNumberOfPlayers(teamnum, +1);
-						if (!IS_DEAD(it))
-						{
-							Surv_ChangeNumberOfAlivePlayers(teamnum, +1);
-						}
-						return;
-					}
-				});
+				return;
 			}
-			break;
+			// Add bot to keep teams balanced.
+			FOREACH_CLIENT(true,
+			{
+				if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+				{
+					LOG_TRACE("Changing ", it.netname,
+						" from cannon fodder to attacker.");
+					Surv_SetPlayerRole(it, SURVIVAL_ROLE_PLAYER);
+					Surv_ChangeNumberOfPlayers(teamnum, +1);
+					if (!IS_DEAD(it))
+					{
+						Surv_ChangeNumberOfAlivePlayers(teamnum, +1);
+					}
+					return;
+				}
+			});
+			return;
 		}
 		case surv_defenderteam:
 		{
@@ -557,26 +559,28 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			{
 				--surv_numdefenderhumans;
 			}
-			if (surv_autobalance && (surv_numdefenders < surv_numattackers))
+			if ((surv_autobalance == false) || (surv_numdefenders >=
+				surv_numattackers))
 			{
-				// Add bot to keep teams balanced.
-				FOREACH_CLIENT(true,
-				{
-					if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
-					{
-						LOG_TRACE("Changing ", it.netname,
-							" from cannon fodder to defender.");
-						SetPlayerTeamSimple(it, surv_defenderteam);						
-						return;
-					}
-				});
+				return;
 			}
-			break;
+			// Add bot to keep teams balanced.
+			FOREACH_CLIENT(true,
+			{
+				if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+				{
+					LOG_TRACE("Changing ", it.netname,
+						" from cannon fodder to defender.");
+					SetPlayerTeamSimple(it, surv_defenderteam);						
+					return;
+				}
+			});
+			return;
 		}
 		default:
 		{
 			LOG_TRACE("Invalid team");
-			break;
+			return;
 		}
 	}
 }
@@ -1719,6 +1723,41 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 						}
 					}
 					delete(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				case "replacedweapon":
+				{
+					switch (item.weapon)
+					{
+						case WEP_SHOTGUN.m_id:
+						{
+							Surv_GivePlayerShells(player, cvar(
+								"g_pickup_shells_weapon"));
+							break;
+						}
+						case WEP_RIFLE.m_id:
+						{
+							Surv_GivePlayerBullets(player, cvar(
+								"g_pickup_nails_weapon"));
+							break;
+						}
+						case WEP_MINE_LAYER.m_id:
+						case WEP_SEEKER.m_id:
+						{
+							Surv_GivePlayerRockets(player, cvar(
+								"g_pickup_rockets_weapon"));
+							break;
+						}
+						case WEP_HLAC.m_id:
+						{
+							Surv_GivePlayerCells(player, cvar(
+								"g_pickup_cells_weapon"));
+							break;
+						}
+					}
+					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
 						ATTEN_NORM);
 					return MUT_ITEMTOUCH_RETURN;
