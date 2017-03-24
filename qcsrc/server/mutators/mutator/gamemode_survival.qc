@@ -66,6 +66,8 @@ int autocvar_g_surv_point_leadlimit; ///< Maximum lead of a single team.
 /// \brief How much players are allowed in teams (excluding cannon fodder).
 int autocvar_g_surv_team_size;
 
+/// \brief Whether to force overkill player models for defenders.
+int autocvar_g_surv_defender_force_overkill_models;
 /// \brief How much health do defenders get during spawn.
 int autocvar_g_surv_defender_start_health;
 /// \brief How much armor do defenders get during spawn.
@@ -891,6 +893,78 @@ void Surv_SwapTeams()
 	});
 }
 
+/// \brief Changes the player model to the one configured for the gamemode.
+/// \param[in,out] player Player to change the model of.
+/// \return No return.
+void Surv_ForcePlayerModel(entity player)
+{
+	if (player.team != surv_defenderteam)
+	{
+		return;
+	}
+	if (!autocvar_g_surv_defender_force_overkill_models)
+	{
+		return;
+	}
+	switch (surv_defendercolor)
+	{
+		case SURVIVAL_COLOR_RED:
+		{
+			switch (floor(random() * 4))
+			{
+				case 0:
+				{
+					player.surv_playermodel = "models/ok_player/okrobot1.dpm";
+					break;
+				}
+				case 1:
+				{
+					player.surv_playermodel = "models/ok_player/okrobot2.dpm";
+					break;
+				}
+				case 2:
+				{
+					player.surv_playermodel = "models/ok_player/okrobot3.dpm";
+					break;
+				}
+				case 3:
+				{
+					player.surv_playermodel = "models/ok_player/okrobot4.dpm";
+					break;
+				}
+			}
+			break;
+		}
+		case SURVIVAL_COLOR_BLUE:
+		{
+			switch (floor(random() * 4))
+			{
+				case 0:
+				{
+					player.surv_playermodel = "models/ok_player/okmale1.dpm";
+					break;
+				}
+				case 1:
+				{
+					player.surv_playermodel = "models/ok_player/okmale2.dpm";
+					break;
+				}
+				case 2:
+				{
+					player.surv_playermodel = "models/ok_player/okmale3.dpm";
+					break;
+				}
+				case 3:
+				{
+					player.surv_playermodel = "models/ok_player/okmale4.dpm";
+					break;
+				}
+			}
+			break;
+		}
+	}
+}
+
 /// \brief Gives player shells.
 /// \param[in,out] player Player to give shells to.
 /// \param[in] amount Amount of shells to give.
@@ -1426,73 +1500,10 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 		{
 			if (player.surv_role != SURVIVAL_ROLE_DEFENDER)
 			{
-				LOG_TRACE("Survival: PlayerSpawn: Invalid defender role.");
+				LOG_TRACE("Survival: PlayerSpawn: ", player.netname,
+					" has invalid defender role.");
 			}
-			switch (surv_defendercolor)
-			{
-				case SURVIVAL_COLOR_RED:
-				{
-					switch (floor(random() * 4))
-					{
-						case 0:
-						{
-							player.surv_playermodel =
-								"models/ok_player/okrobot1.dpm";
-							break;
-						}
-						case 1:
-						{
-							player.surv_playermodel =
-								"models/ok_player/okrobot2.dpm";
-							break;
-						}
-						case 2:
-						{
-							player.surv_playermodel =
-								"models/ok_player/okrobot3.dpm";
-							break;
-						}
-						case 3:
-						{
-							player.surv_playermodel =
-								"models/ok_player/okrobot4.dpm";
-							break;
-						}
-					}
-					break;
-				}
-				case SURVIVAL_COLOR_BLUE:
-				{
-					switch (floor(random() * 4))
-					{
-						case 0:
-						{
-							player.surv_playermodel =
-								"models/ok_player/okmale1.dpm";
-							break;
-						}
-						case 1:
-						{
-							player.surv_playermodel =
-								"models/ok_player/okmale2.dpm";
-							break;
-						}
-						case 2:
-						{
-							player.surv_playermodel =
-								"models/ok_player/okmale3.dpm";
-							break;
-						}
-						case 3:
-						{
-							player.surv_playermodel =
-								"models/ok_player/okmale4.dpm";
-							break;
-						}
-					}
-					break;
-				}
-			}
+			Surv_ForcePlayerModel(player);
 			player.health = autocvar_g_surv_defender_start_health;
 			player.armorvalue = autocvar_g_surv_defender_start_armor;
 			player.ammo_shells = autocvar_g_surv_defender_start_ammo_shells;
