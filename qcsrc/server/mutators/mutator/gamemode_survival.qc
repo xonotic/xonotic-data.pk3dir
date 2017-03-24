@@ -11,9 +11,6 @@ const int SURVIVAL_TEAM_2_BIT = BIT(1); ///< Bitmask of the second team.
 /// \brief Used when bitfield team count is requested.
 const int SURVIVAL_TEAM_BITS = 3;
 
-const int SURVIVAL_COLOR_RED = NUM_TEAM_1 - 1; ///< Used to reference the red.
-const int SURVIVAL_COLOR_BLUE = NUM_TEAM_2 - 1; ///< Used to reference the blue.
-
 enum
 {
 	SURVIVAL_TYPE_COOP, ///< All humans are on the defender team.
@@ -66,8 +63,13 @@ int autocvar_g_surv_point_leadlimit; ///< Maximum lead of a single team.
 /// \brief How much players are allowed in teams (excluding cannon fodder).
 int autocvar_g_surv_team_size;
 
+/// \brief Whether to force overkill player models for attackers.
+int autocvar_g_surv_attacker_force_overkill_models;
 /// \brief Whether to force overkill player models for defenders.
 int autocvar_g_surv_defender_force_overkill_models;
+/// \brief Whether to force overkill player models for cannon fodder.
+int autocvar_g_surv_cannon_fodder_force_overkill_models;
+
 /// \brief How much health do defenders get during spawn.
 int autocvar_g_surv_defender_start_health;
 /// \brief How much armor do defenders get during spawn.
@@ -161,9 +163,6 @@ int surv_defenderteam; ///< Holds the defender team.
 int surv_attackerteambit; ///< Hols the attacker team bitmask.
 int surv_defenderteambit; ///< Holds the defender team bitmask.
 
-int surv_attackercolor; ///< Holds the color of attackers.
-int surv_defendercolor; ///< Holds the color of defenders.
-
 int surv_numattackers; ///< Holds the number of players in attacker team.
 int surv_numdefenders; ///< Holds the number of players in defender team.
 
@@ -242,8 +241,6 @@ void Surv_Initialize()
 		surv_defenderteam = NUM_TEAM_2;
 		surv_attackerteambit = SURVIVAL_TEAM_1_BIT;
 		surv_defenderteambit = SURVIVAL_TEAM_2_BIT;
-		surv_attackercolor = SURVIVAL_COLOR_RED;
-		surv_defendercolor = SURVIVAL_COLOR_BLUE;
 	}
 	else
 	{
@@ -251,8 +248,6 @@ void Surv_Initialize()
 		surv_defenderteam = NUM_TEAM_1;
 		surv_attackerteambit = SURVIVAL_TEAM_2_BIT;
 		surv_defenderteambit = SURVIVAL_TEAM_1_BIT;
-		surv_attackercolor = SURVIVAL_COLOR_BLUE;
-		surv_defendercolor = SURVIVAL_COLOR_RED;
 	}
 	surv_numattackers = 0;
 	surv_numdefenders = 0;
@@ -587,7 +582,7 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 void Surv_UpdateTeamStats()
 {
 	// Debug stuff
-	if (surv_attackercolor == SURVIVAL_COLOR_RED)
+	if (surv_attackerteam == NUM_TEAM_1)
 	{
 		yellowalive = surv_numattackers;
 		pinkalive = surv_numdefenders;
@@ -756,7 +751,7 @@ void Surv_CountAlivePlayers()
 void Surv_UpdateAliveStats()
 {
 	// Debug stuff
-	if (surv_attackercolor == SURVIVAL_COLOR_RED)
+	if (surv_attackerteam == NUM_TEAM_1)
 	{
 		redalive = surv_numattackersalive;
 		bluealive = surv_numdefendersalive;
@@ -871,9 +866,6 @@ void Surv_SwapTeams()
 	temp = surv_attackerteambit;
 	surv_attackerteambit = surv_defenderteambit;
 	surv_defenderteambit = temp;
-	temp = surv_attackercolor;
-	surv_attackercolor = surv_defendercolor;
-	surv_defendercolor = temp;
 	temp = surv_numattackers;
 	surv_numattackers = surv_numdefenders;
 	surv_numdefenders = temp;
@@ -933,74 +925,112 @@ void Surv_SwapTeams()
 	});
 }
 
-/// \brief Changes the player model to the one configured for the gamemode.
-/// \param[in,out] player Player to change the model of.
+/// \brief Forces the overkill model for specific player.
+/// \param[in,out] player Player to force the model of.
 /// \return No return.
-void Surv_ForcePlayerModel(entity player)
+void Surv_ForceOverkillPlayerModel(entity player)
 {
-	if (player.team != surv_defenderteam)
+	switch (player.team)
 	{
-		return;
-	}
-	if (!autocvar_g_surv_defender_force_overkill_models)
-	{
-		return;
-	}
-	switch (surv_defendercolor)
-	{
-		case SURVIVAL_COLOR_RED:
+		case NUM_TEAM_1:
 		{
 			switch (floor(random() * 4))
 			{
 				case 0:
 				{
 					player.surv_playermodel = "models/ok_player/okrobot1.dpm";
-					break;
+					return;
 				}
 				case 1:
 				{
 					player.surv_playermodel = "models/ok_player/okrobot2.dpm";
-					break;
+					return;
 				}
 				case 2:
 				{
 					player.surv_playermodel = "models/ok_player/okrobot3.dpm";
-					break;
+					return;
 				}
 				case 3:
 				{
 					player.surv_playermodel = "models/ok_player/okrobot4.dpm";
-					break;
+					return;
 				}
 			}
-			break;
+			return;
 		}
-		case SURVIVAL_COLOR_BLUE:
+		case NUM_TEAM_2:
 		{
 			switch (floor(random() * 4))
 			{
 				case 0:
 				{
 					player.surv_playermodel = "models/ok_player/okmale1.dpm";
-					break;
+					return;
 				}
 				case 1:
 				{
 					player.surv_playermodel = "models/ok_player/okmale2.dpm";
-					break;
+					return;
 				}
 				case 2:
 				{
 					player.surv_playermodel = "models/ok_player/okmale3.dpm";
-					break;
+					return;
 				}
 				case 3:
 				{
 					player.surv_playermodel = "models/ok_player/okmale4.dpm";
-					break;
+					return;
 				}
 			}
-			break;
+			return;
+		}
+	}
+}
+
+/// \brief Determines the player model to the one configured for the gamemode.
+/// \param[in,out] player Player to determine the model of.
+/// \return No return.
+void Surv_DeterminePlayerModel(entity player)
+{
+	switch (player.team)
+	{
+		case surv_attackerteam:
+		{
+			switch (player.surv_role)
+			{
+				case SURVIVAL_ROLE_ATTACKER:
+				{
+					if (!autocvar_g_surv_attacker_force_overkill_models)
+					{
+						player.surv_playermodel = player.surv_savedplayermodel;
+						return;
+					}
+					Surv_ForceOverkillPlayerModel(player);
+					return;
+				}
+				case SURVIVAL_ROLE_CANNON_FODDER:
+				{
+					if (!autocvar_g_surv_cannon_fodder_force_overkill_models)
+					{
+						player.surv_playermodel = player.surv_savedplayermodel;
+						return;
+					}
+					Surv_ForceOverkillPlayerModel(player);
+					return;
+				}
+			}
+		}
+		case surv_defenderteam:
+		{
+			if (!autocvar_g_surv_defender_force_overkill_models)
+			{
+				player.surv_playermodel = player.surv_savedplayermodel;
+				return;
+			}
+			Surv_ForceOverkillPlayerModel(player);
+			return;
 		}
 	}
 }
@@ -1077,15 +1107,15 @@ bool Surv_CanRoundEnd()
 			surv_defenderteam, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(
 			surv_defenderteam, INFO_ROUND_TEAM_WIN));
-		switch (surv_defendercolor)
+		switch (surv_defenderteam)
 		{
-			case SURVIVAL_COLOR_RED:
+			case NUM_TEAM_1:
 			{
 				sound(NULL, CH_TRIGGER, SND_SURV_RED_SCORES, VOL_BASE,
 					ATTEN_NONE);
 				break;
 			}
-			case SURVIVAL_COLOR_BLUE:
+			case NUM_TEAM_2:
 			{
 				sound(NULL, CH_TRIGGER, SND_SURV_BLUE_SCORES, VOL_BASE,
 					ATTEN_NONE);
@@ -1118,15 +1148,15 @@ bool Surv_CanRoundEnd()
 		surv_attackerteam, CENTER_ROUND_TEAM_WIN));
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(surv_attackerteam,
 		INFO_ROUND_TEAM_WIN));
-	switch (surv_attackercolor)
+	switch (surv_attackerteam)
 	{
-		case SURVIVAL_COLOR_RED:
+		case NUM_TEAM_1:
 		{
 			sound(NULL, CH_TRIGGER, SND_SURV_RED_SCORES, VOL_BASE,
 				ATTEN_NONE);
 			break;
 		}
-		case SURVIVAL_COLOR_BLUE:
+		case NUM_TEAM_2:
 		{
 			sound(NULL, CH_TRIGGER, SND_SURV_BLUE_SCORES, VOL_BASE,
 				ATTEN_NONE);
@@ -1419,8 +1449,7 @@ MUTATOR_HOOKFUNCTION(surv, ForbidSpawn)
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 {
-	LOG_TRACE("SURVIVAL: reset_map_global");
-	//DebugPrintToChatAll("reset_map_global");
+	LOG_TRACE("Survival: reset_map_global");
 	surv_allowed_to_spawn = true;
 	surv_numattackersalive = 0;
 	surv_numdefendersalive = 0;
@@ -1429,8 +1458,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 {
-	LOG_TRACE("SURVIVAL: reset_map_players");
-	//DebugPrintToChatAll("reset_map_players");
+	LOG_TRACE("Survival: reset_map_players");
 	if (surv_type == SURVIVAL_TYPE_VERSUS)
 	{
 		Surv_SwapTeams();
@@ -1464,11 +1492,11 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	player.surv_state = SURVIVAL_STATE_PLAYING;
 	//Surv_CountAlivePlayers();
 	Surv_AddPlayerToAliveList(player, player.team);
+	Surv_DeterminePlayerModel(player);
 	switch (player.team)
 	{
 		case surv_attackerteam:
 		{
-			player.surv_playermodel = player.surv_savedplayermodel;
 			switch (player.surv_role)
 			{
 				case SURVIVAL_ROLE_ATTACKER:
@@ -1541,7 +1569,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				LOG_TRACE("Survival: PlayerSpawn: ", player.netname,
 					" has invalid defender role.");
 			}
-			Surv_ForcePlayerModel(player);
 			player.health = autocvar_g_surv_defender_start_health;
 			player.armorvalue = autocvar_g_surv_defender_start_armor;
 			player.ammo_shells = autocvar_g_surv_defender_start_ammo_shells;
