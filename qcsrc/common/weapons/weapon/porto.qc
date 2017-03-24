@@ -29,6 +29,7 @@ CLASS(PortoLaunch, Weapon)
         P(class, prefix, weaponstartoverride, float, NONE) \
         P(class, prefix, weaponstart, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
+        P(class, prefix, ignore_clips, bool, NONE) \
 	END()
     W_PROPS(X, PortoLaunch, porto)
 #undef X
@@ -289,7 +290,10 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 	fixedmakevectors(fixedvectoangles(gren.velocity));
 	gren.right_vector = v_right;
 
-	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+
+	if(!WEP_CVAR(porto, ignore_clips))
+		gren.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
 	if(type > 0)
 		CSQCProjectile(gren, true, PROJECTILE_PORTO_BLUE, true);
