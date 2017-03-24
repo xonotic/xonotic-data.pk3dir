@@ -69,6 +69,10 @@ int autocvar_g_surv_defender_force_overkill_models;
 /// \brief Whether to force overkill player models for cannon fodder.
 int autocvar_g_surv_cannon_fodder_force_overkill_models;
 
+/// \brief Number of weapons that can be randomly given to attackers during
+/// spawn.
+int autocvar_g_surv_attacker_num_random_start_weapons;
+
 /// \brief How much health do defenders get during spawn.
 int autocvar_g_surv_defender_start_health;
 /// \brief How much armor do defenders get during spawn.
@@ -81,6 +85,13 @@ int autocvar_g_surv_defender_start_ammo_bullets;
 int autocvar_g_surv_defender_start_ammo_rockets;
 /// \brief How many cells do defenders get during spawn.
 int autocvar_g_surv_defender_start_ammo_cells;
+/// \brief Number of weapons that can be randomly given to defenders during
+/// spawn.
+int autocvar_g_surv_defender_num_random_start_weapons;
+
+/// \brief Number of weapons that can be randomly given to cannon fodder during
+/// spawn.
+int autocvar_g_surv_cannon_fodder_num_random_start_weapons;
 
 /// \brief How many shells do defenders get when they pickup small health/armor.
 int autocvar_g_surv_defender_pickup_shells_small;
@@ -1004,6 +1015,94 @@ void Surv_DeterminePlayerModel(entity player)
 	}
 }
 
+/// \brief Gives start weapons to the player.
+/// \param[in,out] player Player to give weapons to.
+/// \return No return.
+void Surv_GiveStartWeapons(entity player)
+{
+	int numrandomweapons = 0;
+	string randomweaponlist = "";
+	switch (player.team)
+	{
+		case surv_attackerteam:
+		{
+			FOREACH(Weapons, it != WEP_Null,
+			{
+				if (it.weaponstart)
+				{
+					player.weapons |= it.m_wepset;
+				}
+			});
+			switch (player.surv_role)
+			{
+				case SURVIVAL_ROLE_PLAYER:
+				{
+					numrandomweapons =
+						autocvar_g_surv_attacker_num_random_start_weapons;
+					randomweaponlist = "g_surv_attacker_random_start_weapons";
+					break;
+				}
+				case SURVIVAL_ROLE_CANNON_FODDER:
+				{
+					numrandomweapons =
+						autocvar_g_surv_cannon_fodder_num_random_start_weapons;
+					randomweaponlist =
+						"g_surv_cannon_fodder_random_start_weapons";
+					break;
+				}
+			}
+			break;
+		}
+		case surv_defenderteam:
+		{
+			int numweapons = tokenize_console(cvar_string(
+				"g_surv_defender_start_weapons"));
+			for (int i = 0; i < numweapons; ++i)
+			{
+				string weapon = argv(i);
+				FOREACH(Weapons, it != WEP_Null,
+				{
+					if (it.netname == weapon)
+					{
+						player.weapons |= it.m_wepset;
+						break;
+					}
+				});
+			}
+			numrandomweapons =
+				autocvar_g_surv_defender_num_random_start_weapons;
+			randomweaponlist = "g_surv_defender_random_start_weapons";
+			break;
+		}
+	}
+	if (numrandomweapons == 0)
+	{
+		return;
+	}
+	int numweapons = tokenize_console(cvar_string(randomweaponlist));
+	for (int i = 0; i < numrandomweapons; ++i)
+	{
+		// Finding weapon which player doesn't have.
+		WepSet weaponbit = WEPSET(Null);
+		int numattempts = 0;
+		do
+		{
+			string weapon = argv(floor(random() * numweapons));
+			FOREACH(Weapons, it != WEP_Null,
+			{
+				if (it.netname == weapon)
+				{
+					weaponbit = it.m_wepset;
+					break;
+				}
+			});
+			++numattempts;
+		}
+		while ((player.weapons & weaponbit) && (numattempts < 10));
+		player.weapons |= weaponbit;
+	}
+}
+
 /// \brief Gives player shells.
 /// \param[in,out] player Player to give shells to.
 /// \param[in] amount Amount of shells to give.
@@ -1456,13 +1555,12 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
-	string message = strcat("Survival: PlayerSpawn, player = ", player.netname);
-	LOG_TRACE(message);
-	DebugPrintToChatAll(message);
+	LOG_TRACE("Survival: PlayerSpawn, player = ", player.netname);
 	player.surv_state = SURVIVAL_STATE_PLAYING;
 	//Surv_CountAlivePlayers();
 	Surv_AddPlayerToAliveList(player, player.team);
 	Surv_DeterminePlayerModel(player);
+	Surv_GiveStartWeapons(player);
 	switch (player.team)
 	{
 		case surv_attackerteam:
@@ -1471,28 +1569,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 			{
 				case SURVIVAL_ROLE_PLAYER:
 				{
-					FOREACH(Weapons, it != WEP_Null,
-					{
-						if (it.weaponstart)
-						{
-							player.weapons |= it.m_wepset;
-						}
-					});
-					for (int i = 0; i < 2; ++i)
-					{
-						// Finding weapon which player doesn't have.
-						vector weaponbit;
-						int numattempts = 0;
-						do
-						{
-							weaponbit = WepSet_FromWeapon(Weapons_from(
-								floor(random() * 8 + 3)));
-							++numattempts;
-						}
-						while ((player.weapons & weaponbit) &&
-							(numattempts < 10));
-						player.weapons |= weaponbit;
-					}
 					player.items |= IT_UNLIMITED_AMMO;
 					Send_Notification(NOTIF_ONE, player, MSG_CENTER,
 						CENTER_ASSAULT_ATTACKING);
@@ -1500,27 +1576,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				}
 				case SURVIVAL_ROLE_CANNON_FODDER:
 				{
-					FOREACH(Weapons, it != WEP_Null,
-					{
-						if (it.weaponstart)
-						{
-							player.weapons |= it.m_wepset;
-						}
-					});
-					for (int i = 0; i < 2; ++i)
-					{
-						// Finding weapon which player doesn't have.
-						vector weaponbit;
-						int numattempts = 0;
-						do
-						{
-							weaponbit = WepSet_FromWeapon(Weapons_from(
-								floor(random() * 8 + 3)));
-							++numattempts;
-						}
-						while ((player.weapons & weaponbit) &&
-							(numattempts < 10));
-					}
 					player.items |= IT_UNLIMITED_AMMO;
 					break;
 				}
@@ -1545,20 +1600,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 			player.ammo_nails = autocvar_g_surv_defender_start_ammo_bullets;
 			player.ammo_rockets = autocvar_g_surv_defender_start_ammo_rockets;
 			player.ammo_cells = autocvar_g_surv_defender_start_ammo_cells;
-			int numweapons = tokenize_console(cvar_string(
-				"g_surv_defender_start_weapons"));
-			for (int i = 0; i < numweapons; ++i)
-			{
-				string weapon = argv(i);
-				FOREACH(Weapons, it != WEP_Null,
-				{
-					if (it.netname == weapon)
-					{
-						player.weapons |= it.m_wepset;
-						break;
-					}
-				});
-			}
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER,
 				CENTER_ASSAULT_DEFENDING);
 			break;
