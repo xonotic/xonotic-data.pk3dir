@@ -163,6 +163,8 @@ const int TSF_NO_AMMO_REGEN = 4; // disable builtin ammo regeneration
 const int TSF_NO_PATHBREAK = 8; // don't break path to chase enemies, will still fire at them if possible
 const int TSL_NO_RESPAWN = 16; // don't re-spawn
 const int TSL_ROAM = 32; // roam while idle
+const int TSF_INACTIVE = 64; // start deactivated
+const int TSF_KEEPTEAM = 128; // when used, don't switch teams
 
 // send flags
 const int TNSF_UPDATE       = 2;

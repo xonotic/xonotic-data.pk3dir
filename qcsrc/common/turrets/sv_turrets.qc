@@ -1198,13 +1198,22 @@ void turret_use(entity this, entity actor, entity trigger)
 {
 	LOG_TRACE("Turret ",this.netname, " used by ", actor.classname);
 
-	this.team = actor.team;
+	if ( !(this.spawnflags & TSF_KEEPTEAM) )
+	{
+		this.team = actor.team;
 
-	if(this.team == 0)
-		this.active = ACTIVE_NOT;
+		if(this.team == 0)
+			this.active = ACTIVE_NOT;
+		else
+			this.active = ACTIVE_ACTIVE;
+	}
 	else
-		this.active = ACTIVE_ACTIVE;
-
+	{
+		if ( this.active == ACTIVE_NOT )
+			this.active = ACTIVE_ACTIVE;
+		else
+			this.active = ACTIVE_NOT;
+	}
 }
 
 void turret_link(entity this)
@@ -1342,9 +1351,13 @@ bool turret_initialize(entity this, Turret tur)
 	_setmodel(this, tur.model);
 	setsize(this, tur.mins, tur.maxs);
 
+	if ( this.spawnflags & TSF_INACTIVE )
+		this.active = ACTIVE_NOT;
+	else
+		this.active = ACTIVE_ACTIVE;
+
 	this.m_id					= tur.m_id;
 	this.classname				= "turret_main";
-	this.active					= ACTIVE_ACTIVE;
 	this.effects				= EF_NODRAW;
 	this.netname				= tur.turret_name;
 	this.ticrate				= bound(sys_frametime, this.ticrate, 60);
