@@ -293,20 +293,12 @@ void Surv_SetPlayerRole(entity player, int role)
 		{
 			string message = strcat(player.netname, " is now an attacker.");
 			LOG_TRACE(message);
-			if (IS_REAL_CLIENT(player))
-			{
-				PrintToChat(player, "^3You are now ^2an attacker^3.");
-			}
 			break;
 		}
 		case SURVIVAL_ROLE_DEFENDER:
 		{
 			string message = strcat(player.netname, " is now a defender.");
 			LOG_TRACE(message);
-			if (IS_REAL_CLIENT(player))
-			{
-				PrintToChat(player, "^3You are now ^2a defender^3.");
-			}
 			break;
 		}
 		case SURVIVAL_ROLE_CANNON_FODDER:
@@ -1392,6 +1384,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 						player.weapons |= weaponbit;
 					}
 					player.items |= IT_UNLIMITED_AMMO;
+					Send_Notification(NOTIF_ONE, player, MSG_CENTER,
+						CENTER_ASSAULT_ATTACKING);
 					break;
 				}
 				case SURVIVAL_ROLE_CANNON_FODDER:
@@ -1422,7 +1416,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				}
 				default:
 				{
-					LOG_TRACE("Survival::PlayerSpawn: Invalid attacker role.");
+					LOG_TRACE("Survival: PlayerSpawn: Invalid attacker role.");
 					break;
 				}
 			}
@@ -1432,7 +1426,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 		{
 			if (player.surv_role != SURVIVAL_ROLE_DEFENDER)
 			{
-				LOG_TRACE("Survival::PlayerSpawn: Invalid defender role.");
+				LOG_TRACE("Survival: PlayerSpawn: Invalid defender role.");
 			}
 			switch (surv_defendercolor)
 			{
@@ -1519,6 +1513,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 					}
 				});
 			}
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER,
+				CENTER_ASSAULT_DEFENDING);
 			break;
 		}
 	}
@@ -1834,6 +1830,10 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 /// \brief Hook which is called when player has scored a frag.
 MUTATOR_HOOKFUNCTION(surv, GiveFragsForKill, CBC_ORDER_FIRST)
 {
+	if (surv_type == SURVIVAL_TYPE_COOP)
+	{
+		return true;
+	}
 	entity player = M_ARGV(0, entity);
 	if ((player.team == surv_defenderteam) || (player.surv_role ==
 		SURVIVAL_ROLE_CANNON_FODDER))
