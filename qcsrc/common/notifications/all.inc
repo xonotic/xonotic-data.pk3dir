@@ -442,6 +442,15 @@
 
     MSG_INFO_NOTIF(SUPERWEAPON_PICKUP,                      N_CONSOLE,  1, 0, "s1", "s1",       "superweapons",         _("^BG%s^K1 picked up a Superweapon"), "")
 
+    MSG_INFO_NOTIF(SURVIVAL_1ST_ROUND_ATTACKER,             N_CONSOLE,    0, 0, "", "",         "",                     _("^BGFirst round. Eliminate the enemy team ^F1as fast as you can^BG."), "")
+    MSG_INFO_NOTIF(SURVIVAL_1ST_ROUND_DEFENDER,             N_CONSOLE,    0, 0, "", "",         "",                     _("^BGFirst round. Defend yourself ^F1as long as you can^BG."), "")
+    MSG_INFO_NOTIF(SURVIVAL_2ND_ROUND_ATTACKER,             N_CONSOLE,    0, 1, "f1time", "",   "",                     _("^BGSecond round. Eliminate the enemy team in less than ^F1%s^BG."), "")
+    MSG_INFO_NOTIF(SURVIVAL_2ND_ROUND_DEFENDER,             N_CONSOLE,    0, 1, "f1time", "",   "",                     _("^BGSecond round. Defend yourself for ^F1%s^BG."), "")
+    MSG_INFO_NOTIF(SURVIVAL_COOP_DEFENDER,                  N_CONSOLE,    0, 0, "", "",         "",                     _("^BGDefend yourself ^F1as long as you can^BG."), "")
+    MSG_INFO_NOTIF(SURVIVAL_DEFENDERS_ELIMINATED,           N_CONSOLE,    0, 0, "", "",         "",                     _("^BGDefenders were ^F1eliminated^BG."), "")
+    MSG_INFO_NOTIF(SURVIVAL_DEFENDERS_ELIMINATED_IN,        N_CONSOLE,    0, 1, "f1time", "",   "",                     _("^BGDefenders were eliminated in ^F1%s^BG."), "")
+    MSG_INFO_NOTIF(SURVIVAL_DEFENDERS_SURVIVED,             N_CONSOLE,    0, 0, "", "",         "",                     _("^BGDefenders have ^F1survived^BG."), "")
+
     MSG_INFO_NOTIF(TEAMCHANGE_LARGERTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou cannot change to a larger team"), "")
     MSG_INFO_NOTIF(TEAMCHANGE_NOTALLOWED,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^BGYou are not allowed to change teams"), "")
 
@@ -770,6 +779,15 @@
     MSG_CENTER_NOTIF(SUPERWEAPON_BROKEN,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have broken down"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_LOST,                  N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Superweapons have been lost"), "")
     MSG_CENTER_NOTIF(SUPERWEAPON_PICKUP,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You now have a superweapon"), "")
+
+    MSG_CENTER_NOTIF(SURVIVAL_1ST_ROUND_ATTACKER,       N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGFirst round. Eliminate the enemy team ^F1as fast as you can^BG."), "")
+    MSG_CENTER_NOTIF(SURVIVAL_1ST_ROUND_DEFENDER,       N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGFirst round. Defend yourself ^F1as long as you can^BG."), "")
+    MSG_CENTER_NOTIF(SURVIVAL_2ND_ROUND_ATTACKER,       N_ENABLE,    0, 1, "f1time",         CPID_Null,              "0 0",  _("^BGSecond round. Eliminate the enemy team in less than ^F1%s^BG."), "")
+    MSG_CENTER_NOTIF(SURVIVAL_2ND_ROUND_DEFENDER,       N_ENABLE,    0, 1, "f1time",         CPID_Null,              "0 0",  _("^BGSecond round. Defend yourself for ^F1%s^BG."), "")
+    MSG_CENTER_NOTIF(SURVIVAL_COOP_DEFENDER,            N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGDefend yourself ^F1as long as you can^BG."), "")
+    MSG_CENTER_NOTIF(SURVIVAL_DEFENDERS_ELIMINATED,     N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGDefenders were ^F1eliminated^BG."), "")
+    MSG_CENTER_NOTIF(SURVIVAL_DEFENDERS_ELIMINATED_IN,  N_ENABLE,    0, 1, "f1time",         CPID_Null,              "0 0",  _("^BGDefenders were eliminated in ^F1%s^BG."), "")
+    MSG_CENTER_NOTIF(SURVIVAL_DEFENDERS_SURVIVED,       N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGDefenders have ^F1survived^BG."), "")
 
     MULTITEAM_CENTER(TEAMCHANGE, 4,                     N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "", NAME)
     MSG_CENTER_NOTIF(TEAMCHANGE_AUTO,                   N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing team in ^COUNT"), "")

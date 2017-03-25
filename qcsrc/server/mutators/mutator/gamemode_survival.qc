@@ -1165,19 +1165,18 @@ bool Surv_CanRoundEnd()
 		if (surv_roundtype == SURVIVAL_ROUND_FIRST)
 		{
 			surv_timetobeat = time - surv_roundstarttime;
-			FOREACH_CLIENT(IS_REAL_CLIENT(it),
-			{
-				centerprint(it, "^3Defenders have ^2survived^3.");
-				PrintToChat(it, "^3Defenders have ^2survived^3.");
-			});
+			Send_Notification(NOTIF_ALL, NULL, MSG_CENTER,
+				CENTER_SURVIVAL_DEFENDERS_SURVIVED);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO,
+				INFO_SURVIVAL_DEFENDERS_SURVIVED);
 			Surv_RoundCleanup();
 			return true;
 		}
 		surv_timetobeat = autocvar_g_surv_round_timelimit;
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(
-			surv_defenderteam, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(
-			surv_defenderteam, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER,
+			CENTER_SURVIVAL_DEFENDERS_SURVIVED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO,
+			INFO_SURVIVAL_DEFENDERS_SURVIVED);
 		switch (surv_defenderteam)
 		{
 			case NUM_TEAM_1:
@@ -1204,21 +1203,18 @@ bool Surv_CanRoundEnd()
 	if (surv_roundtype == SURVIVAL_ROUND_FIRST)
 	{
 		surv_timetobeat = time - surv_roundstarttime;
-		string message = strcat("^3Defenders were eliminated in ^2",
-			seconds_tostring(surv_timetobeat), "^3.");
-		FOREACH_CLIENT(IS_REAL_CLIENT(it),
-		{
-			centerprint(it, message);
-			PrintToChat(it, message);
-		});
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER,
+			CENTER_SURVIVAL_DEFENDERS_ELIMINATED_IN, surv_timetobeat);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO,
+			INFO_SURVIVAL_DEFENDERS_ELIMINATED_IN, surv_timetobeat);
 		Surv_RoundCleanup();
 		return true;
 	}
 	surv_timetobeat = autocvar_g_surv_round_timelimit;
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(
-		surv_attackerteam, CENTER_ROUND_TEAM_WIN));
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(surv_attackerteam,
-		INFO_ROUND_TEAM_WIN));
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER,
+		CENTER_SURVIVAL_DEFENDERS_ELIMINATED);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO,
+		INFO_SURVIVAL_DEFENDERS_ELIMINATED);
 	switch (surv_attackerteam)
 	{
 		case NUM_TEAM_1:
@@ -1249,27 +1245,66 @@ void Surv_RoundStart()
 	surv_isroundactive = true;
 	surv_roundstarttime = time;
 	surv_allowed_to_spawn = false;
-	string attackmessage = "";
-	string defendmessage = "";
 	switch (surv_roundtype)
 	{
 		case SURVIVAL_ROUND_FIRST:
 		{
-			if (surv_type == SURVIVAL_TYPE_COOP)
+			FOREACH_CLIENT(IS_PLAYER(it),
 			{
-				defendmessage = "^3Defend yourself ^2as long as you can^3.";
-				break;
-			}
-			attackmessage = "^3First round. Eliminate the enemy team ^2as fast as you can^3.";
-			defendmessage = "^3First round. Defend yourself ^2as long as you can^3.";
+				if (it.team == surv_attackerteam)
+				{
+					Send_Notification(NOTIF_TEAM, it, MSG_CENTER,
+						CENTER_SURVIVAL_1ST_ROUND_ATTACKER);
+					Send_Notification(NOTIF_TEAM, it, MSG_INFO,
+						INFO_SURVIVAL_1ST_ROUND_ATTACKER);
+					break;
+				}
+			});
+			FOREACH_CLIENT(IS_PLAYER(it),
+			{
+				if (it.team == surv_defenderteam)
+				{
+					if (surv_type == SURVIVAL_TYPE_COOP)
+					{
+						Send_Notification(NOTIF_TEAM, it, MSG_CENTER,
+							CENTER_SURVIVAL_COOP_DEFENDER);
+						Send_Notification(NOTIF_TEAM, it, MSG_INFO,
+							INFO_SURVIVAL_COOP_DEFENDER);
+						break;
+					}
+					Send_Notification(NOTIF_TEAM, it, MSG_CENTER,
+						CENTER_SURVIVAL_1ST_ROUND_DEFENDER);
+					Send_Notification(NOTIF_TEAM, it, MSG_INFO,
+						INFO_SURVIVAL_1ST_ROUND_DEFENDER);
+					break;
+				}
+			});
 			break;
 		}
 		case SURVIVAL_ROUND_SECOND:
 		{
-			attackmessage = strcat("^3Second round. Eliminate the enemy team in less than ^2",
-				seconds_tostring(surv_timetobeat), "^3.");
-			defendmessage = strcat("^3Second round. Defend yourself for ^2",
-				seconds_tostring(surv_timetobeat), "^3.");
+			FOREACH_CLIENT(IS_PLAYER(it),
+			{
+				if (it.team == surv_attackerteam)
+				{
+					Send_Notification(NOTIF_TEAM, it, MSG_CENTER,
+						CENTER_SURVIVAL_2ND_ROUND_ATTACKER, surv_timetobeat);
+					Send_Notification(NOTIF_TEAM, it, MSG_INFO,
+						INFO_SURVIVAL_2ND_ROUND_ATTACKER, surv_timetobeat);
+					break;
+				}
+			});
+			FOREACH_CLIENT(IS_PLAYER(it),
+			{
+				if (it.team == surv_defenderteam)
+				{
+					Send_Notification(NOTIF_TEAM, it, MSG_CENTER,
+						CENTER_SURVIVAL_2ND_ROUND_DEFENDER, surv_timetobeat);
+					Send_Notification(NOTIF_TEAM, it, MSG_INFO,
+						INFO_SURVIVAL_2ND_ROUND_DEFENDER, surv_timetobeat);
+					break;
+				}
+			});
 			break;
 		}
 	}
@@ -1277,30 +1312,18 @@ void Surv_RoundStart()
 	{
 		switch (it.team)
 		{
-			case surv_attackerteam:
-			{
-				if (IS_REAL_CLIENT(it) && (it.surv_role ==
-					SURVIVAL_ROLE_PLAYER))
-				{
-					centerprint(it, attackmessage);
-					PrintToChat(it, attackmessage);
-				}
-				break;
-			}
 			case surv_defenderteam:
 			{
-				if (IS_REAL_CLIENT(it))
-				{
-					centerprint(it, defendmessage);
-					PrintToChat(it, defendmessage);
-				}
 				if (it.surv_role == SURVIVAL_ROLE_PLAYER)
 				{
 					WaypointSprite_Spawn(WP_AssaultDestroy, 0, 0, it, '0 0 64',
 						NULL, surv_attackerteam, it, surv_attack_sprite, false,
 						RADARICON_OBJECTIVE);
-					WaypointSprite_UpdateMaxHealth(it.surv_attack_sprite, 100);
-					WaypointSprite_UpdateHealth(it.surv_attack_sprite, 100);
+					WaypointSprite_UpdateMaxHealth(it.surv_attack_sprite,
+						autocvar_g_surv_defender_start_health +
+						autocvar_g_surv_defender_start_armor);
+					WaypointSprite_UpdateHealth(it.surv_attack_sprite,
+						it.health + it.armorvalue);
 				}
 				break;
 			}
@@ -1940,7 +1963,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 		WaypointSprite_Kill(target.surv_attack_sprite);
 		return;
 	}
-	WaypointSprite_UpdateHealth(target.surv_attack_sprite, target.health);
+	WaypointSprite_UpdateHealth(target.surv_attack_sprite, target.health +
+		target.armorvalue);
 }
 
 /// \brief Hook which is called when the player dies.
