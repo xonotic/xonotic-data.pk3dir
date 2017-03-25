@@ -141,6 +141,9 @@ float autocvar_g_surv_cannon_fodder_attack_scale;
 /// \brief How much cannon fodder gets damaged. Higher values mean less damage.
 float autocvar_g_surv_cannon_fodder_defense_scale;
 
+/// \brief Whether defenders drop weapons after death.
+int autocvar_g_surv_defender_drop_weapons;
+
 /// \brief A stat that is used to track the time left in the round.
 .float surv_round_time_stat = _STAT(SURV_ROUND_TIME);
 /// \brief A stat that is used to track defender team.
@@ -1934,13 +1937,22 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 {
 	//DebugPrintToChatAll("PlayerDies");
-	entity frag_target = M_ARGV(2, entity);
-	if (!Surv_CanPlayerSpawn(frag_target))
+	entity victim = M_ARGV(2, entity);
+	if ((victim.team == surv_defenderteam) &&
+		(autocvar_g_surv_defender_drop_weapons == false))
 	{
-		frag_target.respawn_flags = RESPAWN_SILENT;
-		if (IS_BOT_CLIENT(frag_target))
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			bot_clear(frag_target);
+			.entity went = weaponentities[slot];
+			victim.(went).m_weapon = WEP_Null;
+		}
+	}
+	if (!Surv_CanPlayerSpawn(victim))
+	{
+		victim.respawn_flags = RESPAWN_SILENT;
+		if (IS_BOT_CLIENT(victim))
+		{
+			bot_clear(victim);
 		}
 	}
 	return true;
