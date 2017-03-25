@@ -1866,6 +1866,16 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
+/// \brief Hook which is called when the player tries to throw their weapon.
+MUTATOR_HOOKFUNCTION(surv, ForbidThrowCurrentWeapon)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.team == surv_defenderteam)
+	{
+		return true;
+	}
+}
+
 /// \brief Hook which is called when the damage amount must be determined.
 MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 {
