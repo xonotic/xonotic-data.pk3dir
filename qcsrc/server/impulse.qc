@@ -584,12 +584,12 @@ vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
 	}
 	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
 	{
-		float m = havocbot_symmetryaxys_equation.x;
-		float q = havocbot_symmetryaxys_equation.y;
+		float m = havocbot_symmetryaxis_equation.x;
+		float q = havocbot_symmetryaxis_equation.y;
 		if (autocvar_g_waypointeditor_symmetrical == -2)
 		{
-			m = autocvar_g_waypointeditor_symmetrical_axys.x;
-			q = autocvar_g_waypointeditor_symmetrical_axys.y;
+			m = autocvar_g_waypointeditor_symmetrical_axis.x;
+			q = autocvar_g_waypointeditor_symmetrical_axis.y;
 		}
 
 		new_org.x = (1 / (1 + m*m)) * ((1 - m*m) * org.x + 2 * m * org.y - 2 * m * q);
@@ -605,7 +605,7 @@ IMPULSE(navwaypoint_spawn)
 	entity e;
 	vector org = this.origin;
 	bool sym = boolean(autocvar_g_waypointeditor_symmetrical);
-	int ctf_flags = havocbot_symmetryaxys_equation.z;
+	int ctf_flags = havocbot_symmetryaxis_equation.z;
 	int order = ctf_flags;
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
 	{
@@ -636,7 +636,7 @@ IMPULSE(navwaypoint_remove)
 	if (!autocvar_g_waypointeditor) return;
 	entity e = navigation_findnearestwaypoint(this, false);
 	bool sym = boolean(autocvar_g_waypointeditor_symmetrical);
-	int ctf_flags = havocbot_symmetryaxys_equation.z;
+	int ctf_flags = havocbot_symmetryaxis_equation.z;
 	int order = ctf_flags;
 	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
 	{

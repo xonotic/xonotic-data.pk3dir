@@ -1396,7 +1396,7 @@ void havocbot_ctf_calculate_middlepoint()
 	havocbot_middlepoint = s / n;
 	havocbot_middlepoint_radius = vlen(fo - havocbot_middlepoint);
 
-	havocbot_symmetryaxys_equation = '0 0 0';
+	havocbot_symmetryaxis_equation = '0 0 0';
 	if(n == 2)
 	{
 		// for symmetrical editing of waypoints
@@ -1404,11 +1404,11 @@ void havocbot_ctf_calculate_middlepoint()
 		entity f2 = f1.ctf_worldflagnext;
 		float m = -(f1.origin.y - f2.origin.y) / (f1.origin.x - f2.origin.x);
 		float q = havocbot_middlepoint.y - m * havocbot_middlepoint.x;
-		havocbot_symmetryaxys_equation.x = m;
-		havocbot_symmetryaxys_equation.y = q;
+		havocbot_symmetryaxis_equation.x = m;
+		havocbot_symmetryaxis_equation.y = q;
 	}
 	// store number of flags in this otherwise unused vector component
-	havocbot_symmetryaxys_equation.z = n;
+	havocbot_symmetryaxis_equation.z = n;
 }
 
 
