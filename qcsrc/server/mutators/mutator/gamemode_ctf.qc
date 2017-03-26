@@ -1392,8 +1392,23 @@ void havocbot_ctf_calculate_middlepoint()
 	}
 	if(!n)
 		return;
+
 	havocbot_middlepoint = s / n;
 	havocbot_middlepoint_radius = vlen(fo - havocbot_middlepoint);
+
+	havocbot_symmetryaxys_equation = '0 0 0';
+	if(n == 2)
+	{
+		// for symmetrical editing of waypoints
+		entity f1 = ctf_worldflaglist;
+		entity f2 = f1.ctf_worldflagnext;
+		float m = -(f1.origin.y - f2.origin.y) / (f1.origin.x - f2.origin.x);
+		float q = havocbot_middlepoint.y - m * havocbot_middlepoint.x;
+		havocbot_symmetryaxys_equation.x = m;
+		havocbot_symmetryaxys_equation.y = q;
+	}
+	// store number of flags in this otherwise unused vector component
+	havocbot_symmetryaxys_equation.z = n;
 }
 
 

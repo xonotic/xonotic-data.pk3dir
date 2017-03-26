@@ -245,7 +245,9 @@ float autocvar_g_turrets_targetscan_mindelay;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_waypointeditor;
 bool autocvar_g_waypointeditor_symmetrical;
-vector autocvar_g_waypointeditor_symmetrical_center;
+vector autocvar_g_waypointeditor_symmetrical_origin;
+int autocvar_g_waypointeditor_symmetrical_order;
+vector autocvar_g_waypointeditor_symmetrical_axys;
 bool autocvar_g_waypoints_for_items;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
 bool autocvar_g_weapon_throwable;

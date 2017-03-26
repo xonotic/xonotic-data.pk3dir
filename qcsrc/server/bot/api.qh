@@ -71,6 +71,7 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 
 vector havocbot_middlepoint;
 float havocbot_middlepoint_radius;
+vector havocbot_symmetryaxys_equation;
 
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
