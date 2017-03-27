@@ -188,7 +188,7 @@ void waypoint_think(entity this)
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
 	sm1 = this.origin + this.mins;
 	sm2 = this.origin + this.maxs;
-	IL_EACH(g_waypoints, true,
+	IL_EACH(g_waypoints, this != it,
 	{
 		if (boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
 		{
@@ -384,7 +384,7 @@ float waypoint_load_links()
 
 			if(!found)
 			{
-				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin));
+				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from_pos));
 				continue;
 			}
 
@@ -406,7 +406,7 @@ float waypoint_load_links()
 
 		if(!found)
 		{
-			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin));
+			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to_pos));
 			continue;
 		}
 
