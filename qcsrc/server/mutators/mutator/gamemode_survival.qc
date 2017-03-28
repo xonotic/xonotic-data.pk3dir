@@ -1548,6 +1548,13 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 	surv_allowed_to_spawn = true;
 	surv_numattackersalive = 0;
 	surv_numdefendersalive = 0;
+	if (surv_roundtype == SURVIVAL_ROUND_FIRST)
+	{
+		FOREACH_CLIENT(IS_REAL_CLIENT(it),
+		{
+			it.surv_round_time_stat = 0;
+		});
+	}
 	return true;
 }
 
