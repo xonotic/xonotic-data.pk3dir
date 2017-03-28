@@ -12,7 +12,7 @@ pl    Polish "Polski" 78%
 pt    Portuguese "Português" 99%
 ro    Romanian "Romana" 84%
 fi    Finnish "Suomi" 33%
-zh_TW zh_TW "zh_TW" 67%
+zh_TW Chinese (Taiwan) "國語" 67%
 el    Greek "Ελληνική" 33%
 be    Belarusian "Беларуская" 62%
 bg    Bulgarian "Български" 68%
