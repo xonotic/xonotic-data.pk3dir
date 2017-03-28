@@ -90,6 +90,46 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	return w;
 }
 
+void waypoint_removelink(entity from, entity to)
+{
+	if (from == to || (from.wpflags & WAYPOINTFLAG_NORELINK))
+		return;
+
+	bool found = false;
+	if (!found && from.wp00 == to) found = true; if (found) {from.wp00 = from.wp01; from.wp00mincost = from.wp01mincost;}
+	if (!found && from.wp01 == to) found = true; if (found) {from.wp01 = from.wp02; from.wp01mincost = from.wp02mincost;}
+	if (!found && from.wp02 == to) found = true; if (found) {from.wp02 = from.wp03; from.wp02mincost = from.wp03mincost;}
+	if (!found && from.wp03 == to) found = true; if (found) {from.wp03 = from.wp04; from.wp03mincost = from.wp04mincost;}
+	if (!found && from.wp04 == to) found = true; if (found) {from.wp04 = from.wp05; from.wp04mincost = from.wp05mincost;}
+	if (!found && from.wp05 == to) found = true; if (found) {from.wp05 = from.wp06; from.wp05mincost = from.wp06mincost;}
+	if (!found && from.wp06 == to) found = true; if (found) {from.wp06 = from.wp07; from.wp06mincost = from.wp07mincost;}
+	if (!found && from.wp07 == to) found = true; if (found) {from.wp07 = from.wp08; from.wp07mincost = from.wp08mincost;}
+	if (!found && from.wp08 == to) found = true; if (found) {from.wp08 = from.wp09; from.wp08mincost = from.wp09mincost;}
+	if (!found && from.wp09 == to) found = true; if (found) {from.wp09 = from.wp10; from.wp09mincost = from.wp10mincost;}
+	if (!found && from.wp10 == to) found = true; if (found) {from.wp10 = from.wp11; from.wp10mincost = from.wp11mincost;}
+	if (!found && from.wp11 == to) found = true; if (found) {from.wp11 = from.wp12; from.wp11mincost = from.wp12mincost;}
+	if (!found && from.wp12 == to) found = true; if (found) {from.wp12 = from.wp13; from.wp12mincost = from.wp13mincost;}
+	if (!found && from.wp13 == to) found = true; if (found) {from.wp13 = from.wp14; from.wp13mincost = from.wp14mincost;}
+	if (!found && from.wp14 == to) found = true; if (found) {from.wp14 = from.wp15; from.wp14mincost = from.wp15mincost;}
+	if (!found && from.wp15 == to) found = true; if (found) {from.wp15 = from.wp16; from.wp15mincost = from.wp16mincost;}
+	if (!found && from.wp16 == to) found = true; if (found) {from.wp16 = from.wp17; from.wp16mincost = from.wp17mincost;}
+	if (!found && from.wp17 == to) found = true; if (found) {from.wp17 = from.wp18; from.wp17mincost = from.wp18mincost;}
+	if (!found && from.wp18 == to) found = true; if (found) {from.wp18 = from.wp19; from.wp18mincost = from.wp19mincost;}
+	if (!found && from.wp19 == to) found = true; if (found) {from.wp19 = from.wp20; from.wp19mincost = from.wp20mincost;}
+	if (!found && from.wp20 == to) found = true; if (found) {from.wp20 = from.wp21; from.wp20mincost = from.wp21mincost;}
+	if (!found && from.wp21 == to) found = true; if (found) {from.wp21 = from.wp22; from.wp21mincost = from.wp22mincost;}
+	if (!found && from.wp22 == to) found = true; if (found) {from.wp22 = from.wp23; from.wp22mincost = from.wp23mincost;}
+	if (!found && from.wp23 == to) found = true; if (found) {from.wp23 = from.wp24; from.wp23mincost = from.wp24mincost;}
+	if (!found && from.wp24 == to) found = true; if (found) {from.wp24 = from.wp25; from.wp24mincost = from.wp25mincost;}
+	if (!found && from.wp25 == to) found = true; if (found) {from.wp25 = from.wp26; from.wp25mincost = from.wp26mincost;}
+	if (!found && from.wp26 == to) found = true; if (found) {from.wp26 = from.wp27; from.wp26mincost = from.wp27mincost;}
+	if (!found && from.wp27 == to) found = true; if (found) {from.wp27 = from.wp28; from.wp27mincost = from.wp28mincost;}
+	if (!found && from.wp28 == to) found = true; if (found) {from.wp28 = from.wp29; from.wp28mincost = from.wp29mincost;}
+	if (!found && from.wp29 == to) found = true; if (found) {from.wp29 = from.wp30; from.wp29mincost = from.wp30mincost;}
+	if (!found && from.wp30 == to) found = true; if (found) {from.wp30 = from.wp31; from.wp30mincost = from.wp31mincost;}
+	if (found) {from.wp31 = NULL; from.wp31mincost = 10000000;}
+}
+
 bool waypoint_islinked(entity from, entity to)
 {
 	if (from.wp00 == to) return true;if (from.wp01 == to) return true;if (from.wp02 == to) return true;if (from.wp03 == to) return true;
@@ -188,7 +228,7 @@ void waypoint_think(entity this)
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
 	sm1 = this.origin + this.mins;
 	sm2 = this.origin + this.maxs;
-	IL_EACH(g_waypoints, true,
+	IL_EACH(g_waypoints, this != it,
 	{
 		if (boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
 		{
@@ -308,7 +348,7 @@ void waypoint_remove(entity wp)
 	IL_EACH(g_waypoints, it != wp,
 	{
 		if (waypoint_islinked(it, wp))
-			waypoint_schedulerelink(it);
+			waypoint_removelink(it, wp);
 	});
 	delete(wp);
 }
@@ -384,7 +424,7 @@ float waypoint_load_links()
 
 			if(!found)
 			{
-				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin));
+				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from_pos));
 				continue;
 			}
 
@@ -406,7 +446,7 @@ float waypoint_load_links()
 
 		if(!found)
 		{
-			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin));
+			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to_pos));
 			continue;
 		}
 
