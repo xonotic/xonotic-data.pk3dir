@@ -323,8 +323,7 @@ void Surv_ChangeNumberOfAlivePlayers(int teamnum, int delta)
 			LOG_TRACE("Number of alive attackers = ", ftos(
 				surv_numattackersalive), " was = ", ftos(surv_numattackersalive
 				- delta));
-			Surv_UpdateAliveStats();
-			return;
+			break;
 		}
 		case surv_defenderteam:
 		{
@@ -332,10 +331,11 @@ void Surv_ChangeNumberOfAlivePlayers(int teamnum, int delta)
 			LOG_TRACE("Number of alive defenders = ", ftos(
 				surv_numdefendersalive), " was = ", ftos(surv_numdefendersalive
 				- delta));
-			Surv_UpdateAliveStats();
-			return;
+			break;
 		}
 	}
+	Surv_UpdateAliveStats();
+	eliminatedPlayers.SendFlags |= 1;
 }
 
 /// \brief Sets the player role.
@@ -736,11 +736,8 @@ void Surv_CountAlivePlayers()
 			}
 		}
 	});
-	if (!warmup_stage)
-	{
-		eliminatedPlayers.SendFlags |= 1;
-	}
 	Surv_UpdateAliveStats();
+	eliminatedPlayers.SendFlags |= 1;
 	if (warmup_stage || surv_allowed_to_spawn || (savednumdefenders <=
 		surv_numdefendersalive))
 	{
@@ -1517,10 +1514,6 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 	{
 		LOG_TRACE("killindicator_teamchange == -2");
 		player.surv_state = SURVIVAL_STATE_NOT_PLAYING;
-	}
-	if (!warmup_stage)
-	{
-		eliminatedPlayers.SendFlags |= 1;
 	}
 	if (player.surv_state == SURVIVAL_STATE_NOT_PLAYING)
 	{
