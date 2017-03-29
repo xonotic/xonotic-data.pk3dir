@@ -125,16 +125,20 @@ METHOD(OverkillVortex, wr_aim, void(entity thiswep, entity actor, .entity weapon
 
 METHOD(OverkillVortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if(WEP_CVAR(okvortex, charge) && actor.(weaponentity).okvortex_charge < WEP_CVAR(okvortex, charge_limit))
+	if (WEP_CVAR(okvortex, charge) && actor.(weaponentity).okvortex_charge < WEP_CVAR(okvortex, charge_limit))
+	{
 		actor.(weaponentity).okvortex_charge = min(1, actor.(weaponentity).okvortex_charge + WEP_CVAR(okvortex, charge_rate) * frametime / W_TICSPERFRAME);
+	}
 
-	if(weaponslot(weaponentity) == 0)
+	if (weaponslot(weaponentity) == 0)
+	{
 		actor.okvortex_charge = actor.(weaponentity).okvortex_charge;
+	}
 
-	if(WEP_CVAR_SEC(okvortex, chargepool))
-		if(actor.(weaponentity).okvortex_chargepool_ammo < 1)
+	if (WEP_CVAR_SEC(okvortex, chargepool))
+		if (actor.(weaponentity).okvortex_chargepool_ammo < 1)
 		{
-			if(actor.okvortex_chargepool_pauseregen_finished < time)
+			if (actor.okvortex_chargepool_pauseregen_finished < time)
 				actor.(weaponentity).okvortex_chargepool_ammo = min(1, actor.(weaponentity).okvortex_chargepool_ammo + WEP_CVAR_SEC(okvortex, chargepool_regen) * frametime / W_TICSPERFRAME);
 			actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(okvortex, chargepool_pause_regen));
 		}
@@ -142,9 +146,12 @@ METHOD(OverkillVortex, wr_think, void(entity thiswep, entity actor, .entity weap
 	if(weaponslot(weaponentity) == 0)
 		actor.okvortex_chargepool_ammo = actor.(weaponentity).okvortex_chargepool_ammo;
 
-	if(autocvar_g_balance_okvortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(okvortex, ammo), WEP_CVAR_SEC(okvortex, ammo))) { // forced reload
+	if (autocvar_g_balance_okvortex_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR_PRI(okvortex, ammo))
+	{
+		// forced reload
 		thiswep.wr_reload(thiswep, actor, weaponentity);
-	} else
+	}
+	else
 	{
 		if (fire & 1)
 		{
