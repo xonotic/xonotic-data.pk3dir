@@ -23,9 +23,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-29 23:02+0200\n"
-"PO-Revision-Date: 2017-03-29 20:59+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2017-03-29 23:07+0200\n"
+"PO-Revision-Date: 2017-03-29 21:08+0000\n"
+"Last-Translator: Mirio <opivy@hotmail.de>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -2096,7 +2096,7 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1 gekocht^K1%s%s"
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 wurde vor Monster befördert von ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
@@ -7598,6 +7598,8 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance (default: 1.0)"
 msgstr ""
+"Faktor für die Anzahl von Partikel. Weniger bedeutet weniger Partikel, was "
+"zu einer besseren Leistung führt (Standard: 1.0)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
 msgid "Particles further away than this will not be drawn (default: 1000)"
