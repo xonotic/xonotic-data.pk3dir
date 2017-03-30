@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-03-30 06:46+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -1329,6 +1329,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Tuez les ennemis pour les geler, tenez-vous à côté des équipiers gelés pour "
+"les ranimer ; gelez tous les ennemis pour gagner"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -2545,22 +2547,22 @@ msgstr "^BG%s^K1 a été gelé par ^BG%s"
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr "^BG%s^K3 a été dégelé par ^BG%s"
+msgstr "^BG%s^K3 a été ranimé par ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:365
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr "^BG%s^K3 a dégelé après être tombé"
+msgstr "^BG%s^K3 a été ranimé après être tombé"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr "^BG%s^K3 a été dégelé par l'explosion de sa Grenade"
+msgstr "^BG%s^K3 a été ranimé par l'explosion de sa Grenade"
 
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s second(s)"
-msgstr "^BG%s^K3 a été automatiquement dégelé après %s seconde(s)"
+msgstr "^BG%s^K3 a été automatiquement ranimé après %s seconde(s)"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
@@ -3761,21 +3763,21 @@ msgstr "^F2Vous avez ramassé quelques vies supplémentaires"
 #: qcsrc/common/notifications/all.inc:676
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr "^K3Vous avez dégelé ^BG%s"
+msgstr "^K3Vous avez ranimé ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:677
 msgid "^K3You revived yourself"
-msgstr "^K3Vous vous êtes dégelé tout seul"
+msgstr "^K3Vous vous êtes ranimé tout seul"
 
 #: qcsrc/common/notifications/all.inc:678
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "^K3Vous avez été dégelé par ^BG%s"
+msgstr "^K3Vous avez été ranimé par ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:679
 #, c-format
 msgid "^K3You were automatically revived after %s second(s)"
-msgstr "^K3Vous avez été automatiquement dégelé après %s seconde(s)"
+msgstr "^K3Vous avez été automatiquement ranimé après %s seconde(s)"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^BGThe generator is under attack!"
@@ -7661,6 +7663,9 @@ msgid ""
 "when there's an obstacle between your gun and the target; Enemies: also "
 "enlarge the crosshair when you would hit an enemy"
 msgstr ""
+"Aucune : ne pas tester le réticule ; TrueAim : flouter le réticule lorsqu'il "
+"y a un obstacle entre votre fusil et la cible ; Ennemis : élargir en plus le "
+"réticule lorsqu'un ennemi est dans votre ligne de mire"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "HTTST^Disabled"

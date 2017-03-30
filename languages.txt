@@ -1,10 +1,10 @@
 ast   Asturian "Asturianu" 74%
-de    German "Deutsch" 99%
-de_CH German "Deutsch (Schweiz)" 99%
+de    German "Deutsch" 100%
+de_CH German "Deutsch (Schweiz)" 100%
 en    English "English"
 en_AU English "English (Australia)" 86%
 es    Spanish "Español" 67%
-fr    French "Français" 99%
+fr    French "Français" 100%
 it    Italian "Italiano" 99%
 hu    Hungarian "Magyar" 55%
 nl    Dutch "Nederlands" 69%
@@ -16,5 +16,5 @@ zh_TW "Chinese (Taiwan)" "國語" 67%
 el    Greek "Ελληνική" 33%
 be    Belarusian "Беларуская" 62%
 bg    Bulgarian "Български" 68%
-ru    Russian "Русский" 99%
+ru    Russian "Русский" 100%
 uk    Ukrainian "Українська" 57%
