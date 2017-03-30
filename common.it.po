@@ -7,13 +7,14 @@
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
 # Costa <yesbubu@hotmail.it>, 2014
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
+# Mirio <opivy@hotmail.de>, 2017
 # Antonio <piuntn@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-29 23:07+0200\n"
-"PO-Revision-Date: 2017-03-29 20:59+0000\n"
+"POT-Creation-Date: 2017-03-30 07:23+0200\n"
+"PO-Revision-Date: 2017-03-30 05:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -1312,11 +1313,9 @@ msgstr "Congelamento (Freeze Tag)"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid ""
-"Kill enemies to freeze them, stand next to teammates to revive them, freeze "
-"the most enemies to win"
+"Kill enemies to freeze them, stand next to frozen teammates to revive them; "
+"freeze all enemies to win"
 msgstr ""
-"Uccidi i nemici per congelarli, avvicinati ai compagni di squadra per "
-"risvegliarli, congela i nemici per vincere"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -2079,7 +2078,7 @@ msgstr "^BG%s%s^K1 è stato cucinato da ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 è stato spinto verso un mostro da ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
@@ -7596,6 +7595,8 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance (default: 1.0)"
 msgstr ""
+"Moltiplicatore del numero di particelle. Valori inferiori significano meno "
+"particelle, che di conseguenza incrementano le performance (predefinito: 1.0)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
 msgid "Particles further away than this will not be drawn (default: 1000)"
@@ -7652,12 +7653,9 @@ msgstr "Test colpo a segno:"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
 msgid ""
 "None: do not do hit tests for the crosshair; TrueAim: blur the crosshair "
-"when you would not hit the wall; Enemies: also enlarge the crosshair when "
-"you would hit an enemy"
+"when there's an obstacle between your gun and the target; Enemies: also "
+"enlarge the crosshair when you would hit an enemy"
 msgstr ""
-"Nessuno: non fare test del colpo a segno per il mirino; VeraMira: sfuoca il "
-"mirino quando non potresti colpire il muro; Nemici: ingrandisci anche il "
-"mirino quando colpiresti un nemico"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "HTTST^Disabled"

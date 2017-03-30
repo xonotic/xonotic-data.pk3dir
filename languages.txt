@@ -1,6 +1,6 @@
 ast   Asturian "Asturianu" 74%
-de    German "Deutsch" 100%
-de_CH German "Deutsch (Schweiz)" 100%
+de    German "Deutsch" 99%
+de_CH German "Deutsch (Schweiz)" 99%
 en    English "English"
 en_AU English "English (Australia)" 86%
 es    Spanish "Español" 67%

@@ -5,14 +5,15 @@
 # Translators:
 # Ivan Paulos Tomé <greylica@gmail.com>, 2016
 # Jean Trindade Pereira <jean_trindade2@hotmail.com>, 2015-2017
+# Mirio <opivy@hotmail.de>, 2017
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-29 23:07+0200\n"
-"PO-Revision-Date: 2017-03-29 20:59+0000\n"
+"POT-Creation-Date: 2017-03-30 07:23+0200\n"
+"PO-Revision-Date: 2017-03-30 05:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Portuguese (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pt/)\n"
@@ -1307,11 +1308,9 @@ msgstr "Freeze Tag"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid ""
-"Kill enemies to freeze them, stand next to teammates to revive them, freeze "
-"the most enemies to win"
+"Kill enemies to freeze them, stand next to frozen teammates to revive them; "
+"freeze all enemies to win"
 msgstr ""
-"Mate inimigos para torná-los imóveis, permaneça próximo a colegas de equipe "
-"para revivê-los e imobilize o máximo de inimigos possível para vencer"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -2075,7 +2074,7 @@ msgstr "^BG%s%s^K1 foi cozinhado por ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 foi empurrado em frente de um monstro por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
@@ -7557,6 +7556,8 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance (default: 1.0)"
 msgstr ""
+"Multiplicador para a quantidade de partículas. Menos significa menos "
+"partículas, o que resulta em um melhor desempenho (padrão: 1.0)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
 msgid "Particles further away than this will not be drawn (default: 1000)"
@@ -7612,12 +7613,9 @@ msgstr "Teste de acerto:"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
 msgid ""
 "None: do not do hit tests for the crosshair; TrueAim: blur the crosshair "
-"when you would not hit the wall; Enemies: also enlarge the crosshair when "
-"you would hit an enemy"
+"when there's an obstacle between your gun and the target; Enemies: also "
+"enlarge the crosshair when you would hit an enemy"
 msgstr ""
-"Nenhum: não realiza testes de acerto para a mira; Mira Real: desfoca a mira "
-"quando você não acertaria a parede; Inimigos: a mira também é ampliada "
-"quando você acertaria um inimigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "HTTST^Disabled"

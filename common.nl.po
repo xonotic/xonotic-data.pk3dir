@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-29 23:07+0200\n"
-"PO-Revision-Date: 2017-03-29 20:59+0000\n"
+"POT-Creation-Date: 2017-03-30 07:23+0200\n"
+"PO-Revision-Date: 2017-03-30 05:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Dutch (http://www.transifex.com/team-xonotic/xonotic/language/"
 "nl/)\n"
@@ -1283,11 +1283,9 @@ msgstr "Freeze Tag"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid ""
-"Kill enemies to freeze them, stand next to teammates to revive them, freeze "
-"the most enemies to win"
+"Kill enemies to freeze them, stand next to frozen teammates to revive them; "
+"freeze all enemies to win"
 msgstr ""
-"Vermoord vijanden om ze te bevriezen, sta naast teamleden om ze weer bij te "
-"brengen, bevries de meeste vijanden om te winnen"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -7460,8 +7458,8 @@ msgstr "Treffer test:"
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
 msgid ""
 "None: do not do hit tests for the crosshair; TrueAim: blur the crosshair "
-"when you would not hit the wall; Enemies: also enlarge the crosshair when "
-"you would hit an enemy"
+"when there's an obstacle between your gun and the target; Enemies: also "
+"enlarge the crosshair when you would hit an enemy"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
