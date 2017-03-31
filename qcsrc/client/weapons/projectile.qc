@@ -264,7 +264,23 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			this.fade_rate = 0;
 		}
 
-		this.team = ReadByte() - 1;
+		int myteam = ReadByte();
+		this.team = myteam - 1;
+
+		if(teamplay)
+		{
+			if(myteam)
+				this.colormap = (this.team) * 0x11; // note: team - 1 on server (client uses different numbers)
+			else
+				this.colormap = 0x00;
+			this.colormap |= BIT(10); // RENDER_COLORMAPPED
+		}
+		else
+			this.colormap = myteam;
+		if(this.colormap > 0)
+			this.glowmod = colormapPaletteColor(this.colormap & 0x0F, true) * 2;
+		else
+			this.glowmod = '1 1 1';
 	}
 
 	if (f & 2)
