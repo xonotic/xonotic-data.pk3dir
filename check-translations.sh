@@ -56,7 +56,14 @@ if [ x"$mode" = x"pot" ]; then
 			done
 			echo "$name"
 		done | sort -u
-	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot >&2
+	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new >&2
+	if msgcmp --use-untranslated common.pot common.pot.new; then
+		echo "No contentful changes to common.pot - OK."
+		rm -f common.pot.new
+	else
+		echo "Updating common.pot. This probably should be committed."
+		mv -v common.pot.new common.pot
+	fi
 fi
 
 if [ x"$mode" = x"txt" ]; then
