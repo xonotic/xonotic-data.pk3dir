@@ -81,7 +81,7 @@ if [ x"$mode" = x"txt" ]; then
 					continue
 				fi
 			fi
-			# Note: no -N here, this is the point where we allow fuzzy matching.
+			# Note: we're only reporting EXISTING fuzzy matches in the Fuzzy count, thus -N.
 			po=`msgmerge -N "$X" common.pot`
 			ne=`printf "%s\n" "$po" | msgfmt -o /dev/null --check-format --check-header --use-fuzzy - 2>&1 | grep . | wc -l`
 			nu=`printf "%s\n" "$po" | msgattrib --untranslated - | grep -c ^#:`
