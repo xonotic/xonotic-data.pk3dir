@@ -54,12 +54,12 @@ if $sync_po; then
 		gnewfile=common.$lang.po
 		if [ -f "$tcurfile" ]; then
 			git show "$mergebase":"$gnewfile" > "$goldfile"
-			msgmerge -F -U "$tcurfile" common.pot
-			msgmerge -F -U "$goldfile" common.pot
-			msgmerge -F -U "$gnewfile" common.pot
+			msgmerge -N -F -U "$tcurfile" common.pot
+			msgmerge -N -F -U "$goldfile" common.pot
+			msgmerge -N -F -U "$gnewfile" common.pot
 			if diff -u "$goldfile" "$gnewfile" >/dev/null; then
 				# no change on git, changed on tx only
-				msgmerge -F -U "$tcurfile" common.pot
+				msgmerge -N -F -U "$tcurfile" common.pot
 				cp "$tcurfile" "$gnewfile"
 			else
 				if ! diff -u "$goldfile" "$gnewfile" | patch "$tcurfile"; then
@@ -71,12 +71,12 @@ if $sync_po; then
 					done
 					rm -f "$tcurfile.rej"
 				fi
-				msgmerge -F -U "$tcurfile" common.pot
+				msgmerge -N -F -U "$tcurfile" common.pot
 				cp "$tcurfile" "$gnewfile"
 			fi
 			rm "$goldfile"
 		else
-			msgmerge -F -U "$gnewfile" common.pot
+			msgmerge -N -F -U "$gnewfile" common.pot
 			cp "$gnewfile" "$tcurfile"
 		fi
 	done
