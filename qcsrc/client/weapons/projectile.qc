@@ -164,13 +164,13 @@ void Projectile_Draw(entity this)
 	this.drawmask = MASK_NORMAL;
 }
 
-void loopsound(entity e, int ch, string samp, float vol, float attn)
+void loopsound(entity e, int ch, Sound samp, float vol, float attn)
 {
     TC(int, ch);
 	if (e.silent)
 		return;
 
-	_sound(e, ch, samp, vol, attn);
+	sound(e, ch, samp, vol, attn);
 	e.snd_looping = ch;
 }
 
@@ -357,7 +357,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		{
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
-				loopsound(this, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				set_movetype(this, MOVETYPE_BOUNCE);
@@ -367,7 +367,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND(ROCKET_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				break;
@@ -414,12 +414,12 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_FIREBALL:
-				loopsound(this, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
 				this.mins = '-16 -16 -16';
 				this.maxs = '16 16 16';
 				break;
 			case PROJECTILE_FIREMINE:
-				loopsound(this, CH_SHOTS_SINGLE, SND(FIREBALL_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_FIREBALL_FLY, VOL_BASE, ATTEN_NORM);
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				this.mins = '-4 -4 -4';
@@ -434,7 +434,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(this, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
@@ -447,17 +447,17 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_RAPTORCANNON:
 				break;
 			case PROJECTILE_SPIDERROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 			case PROJECTILE_WAKIROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 			/*
 			case PROJECTILE_WAKICANNON:
 			    break;
 			case PROJECTILE_BUMBLE_GUN:
 			    // only new engines support sound moving with object
-			    loopsound(this, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
+			    loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
 			    this.mins = '0 0 -4';
 			    this.maxs = '0 0 -4';
 			    this.move_movetype = MOVETYPE_BOUNCE;
