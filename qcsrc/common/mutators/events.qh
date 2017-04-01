@@ -96,6 +96,14 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
     /**/
 MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
 
+/** called when a weapon sound is about to be played, allows custom paths etc. */
+#define EV_WeaponSound(i, o) \
+    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
+    /** output      */ i(string, MUTATOR_ARGV_1_string) \
+    /**/               o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
+
 /** called when a weapon model is about to be set, allows custom paths etc. */
 #define EV_WeaponModel(i, o) \
     /** model */  i(string, MUTATOR_ARGV_0_string) \
