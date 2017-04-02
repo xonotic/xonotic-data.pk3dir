@@ -136,7 +136,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 			if (trace_fraction < 1)
 			{
 				swimming = true;
-				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
+				org = trace_endpos + normalize(org - trace_endpos) * stepdist;
 				for (; org.z < end.z + e.maxs.z; org.z += stepdist)
 				{
 					if(autocvar_bot_debug_tracewalk)

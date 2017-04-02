@@ -716,7 +716,7 @@ void PutClientInServer(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(slot == 0)
+			if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
 				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
 			else
 				this.(weaponentity).m_switchweapon = WEP_Null;

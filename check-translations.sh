@@ -56,7 +56,14 @@ if [ x"$mode" = x"pot" ]; then
 			done
 			echo "$name"
 		done | sort -u
-	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot >&2
+	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot.new >&2
+	if msgcmp -N --use-untranslated common.pot common.pot.new; then
+		echo "No contentful changes to common.pot - OK."
+		rm -f common.pot.new
+	else
+		echo "Updating common.pot. This probably should be committed."
+		mv -v common.pot.new common.pot
+	fi
 fi
 
 if [ x"$mode" = x"txt" ]; then
@@ -74,6 +81,7 @@ if [ x"$mode" = x"txt" ]; then
 					continue
 				fi
 			fi
+			# Note: we're only reporting EXISTING fuzzy matches in the Fuzzy count, thus -N.
 			po=`msgmerge -N "$X" common.pot`
 			ne=`printf "%s\n" "$po" | msgfmt -o /dev/null --check-format --check-header --use-fuzzy - 2>&1 | grep . | wc -l`
 			nu=`printf "%s\n" "$po" | msgattrib --untranslated - | grep -c ^#:`
@@ -112,6 +120,7 @@ if [ x"$mode" = x"po" ]; then
 				continue
 			fi
 		fi
+		# Note: no -N here, this is the point where we allow fuzzy matching.
 		msgmerge -F -U "$X" common.pot >&2
 		msgfmt -o /dev/null --check-format --check-header --use-fuzzy "$X" 2>&1 \
 		                              | grep . > "$X".errors       || rm -f "$X".errors
@@ -263,6 +272,7 @@ EOF
 				continue
 			fi
 		fi
+		# Note: no -N here, this is the point where we allow fuzzy matching.
 		msgmerge -F -U "$X" common.pot >/dev/null 2>&1
 	done
 fi
