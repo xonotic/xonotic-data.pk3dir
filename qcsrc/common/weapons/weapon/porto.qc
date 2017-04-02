@@ -151,7 +151,7 @@ void W_Porto_Touch(entity this, entity toucher)
 	}
 	else if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
 	{
-		spamsound(this, CH_SHOTS, SND(PORTO_BOUNCE), VOL_BASE, ATTEN_NORM);
+		spamsound(this, CH_SHOTS, SND_PORTO_BOUNCE, VOL_BASE, ATTEN_NORM);
 		// just reflect
 		this.right_vector = this.right_vector - 2 * trace_plane_normal * (this.right_vector * trace_plane_normal);
 		this.angles = vectoangles(this.velocity - 2 * trace_plane_normal * (this.velocity * trace_plane_normal));

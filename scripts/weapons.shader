@@ -23,14 +23,6 @@ uzi
 		rgbgen lightingDiffuse
 	}
 }
-glauncher
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/glauncher.tga
-		rgbgen lightingDiffuse
-	}
-}
 hagar
 {
 	dpreflectcube cubemaps/default/sky
