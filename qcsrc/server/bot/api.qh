@@ -69,6 +69,10 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius);
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius);
 
+vector havocbot_middlepoint;
+float havocbot_middlepoint_radius;
+vector havocbot_symmetryaxis_equation;
+
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);

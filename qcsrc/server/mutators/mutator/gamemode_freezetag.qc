@@ -225,6 +225,7 @@ void(entity this) havocbot_role_ft_offense;
 
 void havocbot_goalrating_freeplayers(entity this, float ratingscale, vector org, float sradius)
 {
+	float t;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), LAMBDA(
 		if (STAT(FROZEN, it) == 1)
 		{
@@ -232,11 +233,12 @@ void havocbot_goalrating_freeplayers(entity this, float ratingscale, vector org,
 				continue;
 			navigation_routerating(this, it, ratingscale, 2000);
 		}
-		else
+		else if(vdist(it.origin - org, >, 400)) // avoid gathering all teammates in one place
 		{
 			// If teamate is not frozen still seek them out as fight better
 			// in a group.
-			navigation_routerating(this, it, ratingscale/3, 2000);
+			t = 0.2 * 150 / (this.health + this.armorvalue);
+			navigation_routerating(this, it, t * ratingscale, 2000);
 		}
 	));
 }

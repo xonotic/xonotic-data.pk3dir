@@ -571,24 +571,62 @@ IMPULSE(waypoint_clear)
 	sprint(this, "all waypoints cleared\n");
 }
 
+vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
+{
+	vector new_org = org;
+	if (fabs(autocvar_g_waypointeditor_symmetrical) == 1)
+	{
+		vector map_center = havocbot_middlepoint;
+		if (autocvar_g_waypointeditor_symmetrical == -1)
+			map_center = autocvar_g_waypointeditor_symmetrical_origin;
+
+		new_org = Rotate(org - map_center, 360 * DEG2RAD / ctf_flags) + map_center;
+	}
+	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
+	{
+		float m = havocbot_symmetryaxis_equation.x;
+		float q = havocbot_symmetryaxis_equation.y;
+		if (autocvar_g_waypointeditor_symmetrical == -2)
+		{
+			m = autocvar_g_waypointeditor_symmetrical_axis.x;
+			q = autocvar_g_waypointeditor_symmetrical_axis.y;
+		}
+
+		new_org.x = (1 / (1 + m*m)) * ((1 - m*m) * org.x + 2 * m * org.y - 2 * m * q);
+		new_org.y = (1 / (1 + m*m)) * (2 * m * org.x + (m*m - 1) * org.y + 2 * q);
+	}
+	new_org.z = org.z;
+	return new_org;
+}
+
 IMPULSE(navwaypoint_spawn)
 {
 	if (!autocvar_g_waypointeditor) return;
+	entity e;
 	vector org = this.origin;
-	bool sym = boolean(autocvar_g_waypointeditor_symmetrical);
+	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
+	           || (autocvar_g_waypointeditor_symmetrical < 0));
+	int order = ctf_flags;
+	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
+	{
+		order = autocvar_g_waypointeditor_symmetrical_order;
+		ctf_flags = order;
+	}
 
 	LABEL(add_wp);
-	waypoint_schedulerelink(waypoint_spawn(org, org, 0));
+	e = waypoint_spawn(org, org, 0);
+	waypoint_schedulerelink(e);
 	bprint(strcat("Waypoint spawned at ", vtos(org), "\n"));
 	if(sym)
 	{
-		vector map_center = autocvar_g_waypointeditor_symmetrical_center;
-		org = this.origin;
-		org.x = map_center.x - (org.x - map_center.x);
-		org.y = map_center.y - (org.y - map_center.y);
-		if (vdist(org - this.origin, >, 10))
+		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		if (vdist(org - this.origin, >, 32))
 		{
-			sym = false;
+			if(order > 2)
+				order--;
+			else
+				sym = false;
 			goto add_wp;
 		}
 	}
@@ -598,7 +636,15 @@ IMPULSE(navwaypoint_remove)
 {
 	if (!autocvar_g_waypointeditor) return;
 	entity e = navigation_findnearestwaypoint(this, false);
-	bool sym = boolean(autocvar_g_waypointeditor_symmetrical);
+	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
+	           || (autocvar_g_waypointeditor_symmetrical < 0));
+	int order = ctf_flags;
+	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
+	{
+		order = autocvar_g_waypointeditor_symmetrical_order;
+		ctf_flags = order;
+	}
 
 	LABEL(remove_wp);
 	if (!e) return;
@@ -613,10 +659,7 @@ IMPULSE(navwaypoint_remove)
 	entity wp_sym = NULL;
 	if (sym)
 	{
-		vector map_center = autocvar_g_waypointeditor_symmetrical_center;
-		vector org = this.origin;
-		org.x = map_center.x - (org.x - map_center.x);
-		org.y = map_center.y - (org.y - map_center.y);
+		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
 		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
 			if(vdist(org - it.origin, <, 3))
 			{
@@ -630,7 +673,10 @@ IMPULSE(navwaypoint_remove)
 	if (sym && wp_sym)
 	{
 		e = wp_sym;
-		sym = false;
+		if(order > 2)
+			order--;
+		else
+			sym = false;
 		goto remove_wp;
 	}
 }

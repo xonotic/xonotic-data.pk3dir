@@ -716,7 +716,7 @@ void PutClientInServer(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(slot == 0)
+			if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
 				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
 			else
 				this.(weaponentity).m_switchweapon = WEP_Null;
@@ -2383,6 +2383,13 @@ void PlayerPreThink (entity this)
 				}
 			} else {
 				if (frametime) player_anim(this);
+
+				if (this.respawn_flags & RESPAWN_DENY)
+				{
+					STAT(RESPAWN_TIME, this) = 0;
+					return;
+				}
+
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
 				switch(this.deadflag)
