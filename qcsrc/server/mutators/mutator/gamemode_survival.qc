@@ -1439,6 +1439,10 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 /// \brief Hook that determines the best team for the player to join.
 MUTATOR_HOOKFUNCTION(surv, JoinBestTeam, CBC_ORDER_EXCLUSIVE)
 {
+	if (surv_type == SURVIVAL_TYPE_COOP)
+	{
+		return;
+	}
 	entity player = M_ARGV(0, entity);
 	if (IS_BOT_CLIENT(player))
 	{
