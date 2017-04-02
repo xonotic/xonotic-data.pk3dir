@@ -162,10 +162,10 @@ ENDCLASS(Mutator)
 
 REGISTRY(Mutators, BITS(7))
 #define Mutators_from(i) _Mutators_from(i, NULL)
-Mutator loaded_mutators[Mutators_MAX];
 bool Mutator_Add(Mutator mut);
 void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
+.bool m_added;
 
 #ifdef GAMEQC
 /** server mutators activate corresponding client mutators for all clients */
@@ -211,18 +211,10 @@ NET_HANDLE(Mutator, bool isNew)
 
 bool Mutator_Add(Mutator mut)
 {
-    int j = -1;
-    for (int i = 0; i < Mutators_MAX; ++i) {
-        if (loaded_mutators[i] == mut)
-            return true; // already added
-        if (!(loaded_mutators[i]))
-            j = i;
-    }
-    if (j < 0) {
-        backtrace("WARNING: too many mutators, cannot add any more\n");
-        return false;
-    }
-    loaded_mutators[j] = mut;
+    if(mut.m_added)
+        return true; // already added
+
+    mut.m_added = true;
     mutatorfunc_t func = mut.mutatorfunc;
     if (!func(MUTATOR_ADDING)) {
         // good
@@ -242,15 +234,13 @@ bool Mutator_Add(Mutator mut)
 
 void Mutator_Remove(Mutator mut)
 {
-    int i;
-    for (i = 0; i < Mutators_MAX; ++i)
-        if (loaded_mutators[i] == mut)
-            break;
-    if (i >= Mutators_MAX) {
+    if(!mut.m_added)
+    {
         backtrace("WARNING: removing not-added mutator\n");
         return;
     }
-    loaded_mutators[i] = NULL;
+
+    mut.m_added = false;
     mutatorfunc_t func = mut.mutatorfunc;
     if (func(MUTATOR_REMOVING)) {
         // baaaaad

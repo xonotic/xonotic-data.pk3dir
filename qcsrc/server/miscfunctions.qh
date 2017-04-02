@@ -40,7 +40,7 @@ void play2team(float t, string filename);
 
 void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name);
 
-float spamsound(entity e, float chan, string samp, float vol, float _atten);
+float spamsound(entity e, float chan, Sound samp, float vol, float _atten);
 
 void GetCvars_handleString(entity this, string thisname, float f, .string field, string name);
 

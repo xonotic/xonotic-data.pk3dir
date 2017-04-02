@@ -66,7 +66,7 @@ spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(this, WEP_MINE_LAYER); }
 
 void W_MineLayer_Stick(entity this, entity to)
 {
-	spamsound(this, CH_SHOTS, SND(MINE_STICK), VOL_BASE, ATTN_NORM);
+	spamsound(this, CH_SHOTS, SND_MINE_STICK, VOL_BASE, ATTN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -239,7 +239,7 @@ void W_MineLayer_Think(entity this)
 	if((time > this.cnt) && (!this.mine_time) && (this.cnt > 0))
 	{
 		if(WEP_CVAR(minelayer, lifetime_countdown) > 0)
-			spamsound(this, CH_SHOTS, SND(MINE_TRIGGER), VOL_BASE, ATTN_NORM);
+			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
 		this.mine_time = time + WEP_CVAR(minelayer, lifetime_countdown);
 		this.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
@@ -261,7 +261,7 @@ void W_MineLayer_Think(entity this)
 		if(head != this.realowner && DIFF_TEAM(head, this.realowner)) // don't trigger for team mates
 		if(!this.mine_time)
 		{
-			spamsound(this, CH_SHOTS, SND(MINE_TRIGGER), VOL_BASE, ATTN_NORM);
+			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
 			this.mine_time = time + WEP_CVAR(minelayer, time);
 		}
 		head = head.chain;
