@@ -532,7 +532,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 {
-	float smallest, selectedteam;
+	float bestteam, selectedteam;
 
 	// don't join a team if we're not playing a team game
 	if(!teamplay)
@@ -571,15 +571,17 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 		// otherwise end up on the smallest team (handled below)
 	}
 
-	smallest = FindSmallestTeam(this, true);
+	bestteam = FindSmallestTeam(this, true);
+	MUTATOR_CALLHOOK(JoinBestTeam, this, bestteam);
+	bestteam = M_ARGV(1, float);
 
 	if(!only_return_best && !this.bot_forced_team)
 	{
-		smallest = Team_NumberToTeam(smallest);
-		if (smallest != -1)
+		bestteam = Team_NumberToTeam(bestteam);
+		if (bestteam != -1)
 		{
 			TeamchangeFrags(this);
-			SetPlayerTeamSimple(this, smallest);
+			SetPlayerTeamSimple(this, bestteam);
 		}
 		else
 		{
@@ -592,7 +594,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 			Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
 	}
 
-	return smallest;
+	return bestteam;
 }
 
 //void() ctf_playerchanged;
