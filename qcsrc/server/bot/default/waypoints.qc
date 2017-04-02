@@ -462,7 +462,7 @@ float waypoint_load_links()
 	return true;
 }
 
-void waypoint_load_links_hardwired()
+void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 {
 	string filename, s;
 	float file, tokens, c = 0, found;
@@ -476,7 +476,8 @@ void waypoint_load_links_hardwired()
 
 	if (file < 0)
 	{
-		LOG_TRACE("waypoint links load from ", filename, " failed");
+		if(!removal_mode)
+			LOG_TRACE("waypoint links load from ", filename, " failed");
 		return;
 	}
 
@@ -514,7 +515,8 @@ void waypoint_load_links_hardwired()
 
 			if(!found)
 			{
-				LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
+				if(!removal_mode)
+					LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
 				continue;
 			}
 		}
@@ -535,11 +537,18 @@ void waypoint_load_links_hardwired()
 
 		if(!found)
 		{
-			LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
+			if(!removal_mode)
+				LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
 			continue;
 		}
 
 		++c;
+		if(removal_mode)
+		{
+			waypoint_removelink(wp_from, wp_to);
+			continue;
+		}
+
 		waypoint_addlink(wp_from, wp_to);
 		wp_from.wphardwired = true;
 		wp_to.wphardwired = true;
@@ -547,8 +556,12 @@ void waypoint_load_links_hardwired()
 
 	fclose(file);
 
-	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
+	if(!removal_mode)
+		LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
 }
+
+void waypoint_load_links_hardwired() { waypoint_load_or_remove_links_hardwired(false); }
+void waypoint_remove_links_hardwired() { waypoint_load_or_remove_links_hardwired(true); }
 
 entity waypoint_get_link(entity w, float i)
 {
@@ -593,6 +606,9 @@ entity waypoint_get_link(entity w, float i)
 // Save all waypoint links to a file
 void waypoint_save_links()
 {
+	// temporarily remove hardwired links so they don't get saved among normal links
+	waypoint_remove_links_hardwired();
+
 	string filename = sprintf("maps/%s.waypoints.cache", mapname);
 	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
@@ -619,6 +635,8 @@ void waypoint_save_links()
 	botframe_cachedwaypointlinks = true;
 
 	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache\n", c, mapname);
+
+	waypoint_load_links_hardwired();
 }
 
 // save waypoints to gamedir/data/maps/mapname.waypoints

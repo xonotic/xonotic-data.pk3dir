@@ -92,14 +92,6 @@ MUTATOR_HOOKABLE(FragCenterMessage, EV_FragCenterMessage);
     /**/
 MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
 
-/** called when a weapon sound is about to be played, allows custom paths etc. */
-#define EV_WeaponSound(i, o) \
-    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
-    /** output      */ i(string, MUTATOR_ARGV_1_string) \
-    /**/               o(string, MUTATOR_ARGV_1_string) \
-    /**/
-MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
-
 /** called when an item model is about to be set, allows custom paths etc. */
 #define EV_ItemModel(i, o) \
     /** model       */ i(string, MUTATOR_ARGV_0_string) \
