@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 06:46+0000\n"
+"PO-Revision-Date: 2017-04-01 10:04+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -367,7 +367,7 @@ msgstr "lâché le drapeau, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^drop gun, icon"
-msgstr "lâché l'arme, icône"
+msgstr "lâcher l'arme, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
@@ -375,7 +375,7 @@ msgstr "lâché l'arme %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^drop flag/key, icon"
-msgstr "lâché le drapeau / la clé, icône"
+msgstr "lâcher le drapeau / la clé, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
@@ -9047,7 +9047,7 @@ msgstr "recharger"
 
 #: qcsrc/menu/xonotic/keybinder.qc:49
 msgid "drop weapon / throw nade"
-msgstr "jeter l'arme / lancer la grenade"
+msgstr "lâcher l'arme / lancer la grenade"
 
 #: qcsrc/menu/xonotic/keybinder.qc:77
 msgid "hold zoom"

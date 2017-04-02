@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 06:18+0000\n"
+"PO-Revision-Date: 2017-04-01 20:51+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -5038,7 +5038,7 @@ msgstr "Украинский"
 
 #: qcsrc/menu/xonotic/credits.qc:299
 msgid "Past Contributors"
-msgstr "Последние участники"
+msgstr "Прошлые участники"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
@@ -8241,7 +8241,7 @@ msgstr "Сеть"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:29
 msgid "Client UDP port:"
-msgstr "UDP порт клиента:"
+msgstr "Порт UDP клиента:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
 msgid "Force client to use chosen port unless it is set to 0"
@@ -8401,12 +8401,12 @@ msgstr "Включить режим разработчика"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:151
 msgid "Advanced settings..."
-msgstr "Доп. настройки..."
+msgstr "Расширенные настройки..."
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:152
 msgid "Advanced settings where you can tweak every single variable of the game"
 msgstr ""
-"Продвинутые настройки, в которых можно настроить каждую переменную игры"
+"Расширенные настройки, в которых можно настроить каждую переменную игры"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:157
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
@@ -8439,7 +8439,7 @@ msgstr "Описание:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qh:7
 msgid "Advanced settings"
-msgstr "Доп. настройки"
+msgstr "Расширенные настройки"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:11
 msgid "Are you sure you want to reset all settings?"
@@ -9160,7 +9160,7 @@ msgstr "SLCAT^Инстагиб"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Defrag Mode"
-msgstr "Режим гонки"
+msgstr "Гоночный режим"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
