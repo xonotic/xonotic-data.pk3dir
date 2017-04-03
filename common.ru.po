@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-04-01 20:51+0000\n"
+"PO-Revision-Date: 2017-04-02 19:24+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -4773,7 +4773,7 @@ msgstr "%d секунд"
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr "%d секунда"
+msgstr "%d секунду"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
