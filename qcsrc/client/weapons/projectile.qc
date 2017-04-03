@@ -109,7 +109,7 @@ void Projectile_Draw(entity this)
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0';  // forward
 				break;
-			case PROEJCTILE_ROCKET:
+			case PROJECTILE_ROCKET:
 				rot = '0 0 720'; // spinning
 				break;
 			default:
