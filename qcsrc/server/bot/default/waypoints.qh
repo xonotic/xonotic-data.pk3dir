@@ -56,6 +56,8 @@ void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);
 entity waypoint_spawnpersonal(entity this, vector position);
 
+void waypoint_unreachable(entity pl);
+
 vector waypoint_fixorigin(vector position);
 
 void botframe_autowaypoints();

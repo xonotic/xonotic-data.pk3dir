@@ -15,6 +15,99 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+void waypoint_unreachable(entity pl)
+{
+	IL_EACH(g_waypoints, true,
+	{
+		it.colormod = '0.5 0.5 0.5';
+		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
+	});
+	entity e2 = navigation_findnearestwaypoint(pl, false);
+	navigation_markroutes(pl, e2);
+
+	int j = 0;
+	int m = 0;
+	IL_EACH(g_waypoints, it.wpcost >= 10000000,
+	{
+		LOG_INFO("unreachable: ", etos(it), " ", vtos(it.origin), "\n");
+		it.colormod_z = 8;
+		it.effects |= EF_NODEPTHTEST | EF_BLUE;
+		j++;
+		m++;
+	});
+	if (j) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)\n", j);
+	navigation_markroutes_inverted(e2);
+
+	j = 0;
+	IL_EACH(g_waypoints, it.wpcost >= 10000000,
+	{
+		LOG_INFO("cannot reach me: ", etos(it), " ", vtos(it.origin), "\n");
+		it.colormod_x = 8;
+		if (!(it.effects & EF_NODEPTHTEST))  // not already reported before
+			m++;
+		it.effects |= EF_NODEPTHTEST | EF_RED;
+		j++;
+	});
+	if (j) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)\n", j);
+	if (m) LOG_INFOF("%d waypoints have been marked total\n", m);
+
+	j = 0;
+	IL_EACH(g_spawnpoints, true,
+	{
+		vector org = it.origin;
+		tracebox(it.origin, PL_MIN_CONST, PL_MAX_CONST, it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
+		setorigin(it, trace_endpos);
+		if (navigation_findnearestwaypoint(it, false))
+		{
+			setorigin(it, org);
+			it.effects &= ~EF_NODEPTHTEST;
+			it.model = "";
+		}
+		else
+		{
+			setorigin(it, org);
+			LOG_INFO("spawn without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+			it.effects |= EF_NODEPTHTEST;
+			_setmodel(it, pl.model);
+			it.frame = pl.frame;
+			it.skin = pl.skin;
+			it.colormod = '8 0.5 8';
+			setsize(it, '0 0 0', '0 0 0');
+			j++;
+		}
+	});
+	if (j) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)\n", j);
+
+	j = 0;
+	IL_EACH(g_items, true,
+	{
+		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
+		it.colormod = '0.5 0.5 0.5';
+	});
+	IL_EACH(g_items, true,
+	{
+		if (navigation_findnearestwaypoint(it, false))
+			continue;
+		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+		it.effects |= EF_NODEPTHTEST | EF_RED;
+		it.colormod_x = 8;
+		j++;
+	});
+	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)\n", j);
+
+	j = 0;
+	IL_EACH(g_items, true,
+	{
+		if (navigation_findnearestwaypoint(it, true))
+			continue;
+		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+		it.effects |= EF_NODEPTHTEST | EF_BLUE;
+		it.colormod_z = 8;
+		j++;
+	});
+	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
+}
+
 vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
 {
 	vector new_org = org;

@@ -98,6 +98,7 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken);
 void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken);
 void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);
+void waypoint_unreachable(entity pl);
 
 .entity goalcurrent;
 void navigation_clearroute(entity this);
