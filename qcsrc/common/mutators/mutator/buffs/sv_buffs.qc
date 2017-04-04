@@ -566,39 +566,25 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 	player.buff_disability_effect_time = 0;
 }
 
-.float stat_sv_maxspeed;
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_jumpvelocity;
+MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics_UpdateStats)
+{
+	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
+
+	if(player.buffs & BUFF_SPEED.m_itemid)
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_buffs_speed_speed;
+
+	if(time < player.buff_disability_time)
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_buffs_disability_speed;
+}
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
-
-	if(player.buffs & BUFF_SPEED.m_itemid)
-	{
-		player.stat_sv_maxspeed *= autocvar_g_buffs_speed_speed;
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_speed_speed;
-	}
-
-	if(time < player.buff_disability_time)
-	{
-		player.stat_sv_maxspeed *= autocvar_g_buffs_disability_speed;
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_disability_speed;
-	}
+	// these automatically reset, no need to worry
 
 	if(player.buffs & BUFF_JUMP.m_itemid)
-	{
-		// automatically reset, no need to worry
-		player.stat_sv_jumpvelocity = autocvar_g_buffs_jump_height;
-	}
-}
-
-MUTATOR_HOOKFUNCTION(buffs, PlayerJump)
-{
-	entity player = M_ARGV(0, entity);
-
-	if(player.buffs & BUFF_JUMP.m_itemid)
-		M_ARGV(1, float) = autocvar_g_buffs_jump_height;
+		STAT(MOVEVARS_JUMPVELOCITY, player) = autocvar_g_buffs_jump_height;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, MonsterMove)

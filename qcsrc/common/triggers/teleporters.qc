@@ -20,6 +20,7 @@
     #include <server/anticheat.qh>
 #endif
 
+#ifdef SVQC
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
 	if (IS_PLAYER(player) && !IS_DEAD(player))
@@ -36,8 +37,6 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	}
 	return 0;
 }
-
-#ifdef SVQC
 
 void trigger_teleport_link(entity this);
 
@@ -64,7 +63,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 {
 	tdeath(e, e, e, '0 0 0', '0 0 0');
 }
-
 #endif
 
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
@@ -174,8 +172,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 entity Simple_TeleportPlayer(entity teleporter, entity player)
 {
 	vector locout;
-	entity e;
-	float p;
+	entity e = NULL;
 
 	// Find the output teleporter
 	if(teleporter.enemy)
@@ -184,10 +181,12 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	}
 	else
 	{
+		// sorry CSQC, random stuff ain't gonna happen
+#ifdef SVQC
 		RandomSelection_Init();
 		FOREACH_ENTITY_STRING(targetname, teleporter.target,
 		{
-			p = 1;
+			bool p = true;
 			if(STAT(TELEPORT_TELEFRAG_AVOID, player))
 			{
 			#ifdef SVQC
@@ -196,11 +195,12 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 				locout = it.origin + '0 0 1' * (1 - player.mins.z - 24);
 			#endif
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
-					p = 0;
+					p = false;
 			}
 			RandomSelection_AddEnt(it, (it.cnt ? it.cnt : 1), p);
 		});
 		e = RandomSelection_chosen_ent;
+#endif
 	}
 
 #ifdef SVQC

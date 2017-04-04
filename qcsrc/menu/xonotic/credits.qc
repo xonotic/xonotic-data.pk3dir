@@ -94,6 +94,7 @@
 		PERSON(blkrbt) \
 		PERSON(chooksta) \
 		PERSON(Independent.nu) \
+		PERSON(Lea "TheAudioMonkey" Edwards) \
 		PERSON([master]mind) \
 		PERSON(Merlijn Hofstra) \
 		PERSON(Mick Rippon) \
@@ -142,6 +143,7 @@
 		PERSON(Erik "Ablu" Schilling) \
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
+		PERSON(Jeff) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \

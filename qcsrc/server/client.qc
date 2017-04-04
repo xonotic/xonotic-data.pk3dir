@@ -714,7 +714,7 @@ void PutClientInServer(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(slot == 0)
+			if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
 				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
 			else
 				this.(weaponentity).m_switchweapon = WEP_Null;
@@ -1231,6 +1231,8 @@ void ClientConnect(entity this)
 		sv_notice_join(this);
 
 	// update physics stats (players can spawn before physics runs)
+	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
+	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
 	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
 
 	IL_EACH(g_initforplayer, it.init_for_player, {
@@ -2379,6 +2381,13 @@ void PlayerPreThink (entity this)
 				}
 			} else {
 				if (frametime) player_anim(this);
+
+				if (this.respawn_flags & RESPAWN_DENY)
+				{
+					STAT(RESPAWN_TIME, this) = 0;
+					return;
+				}
+
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
 				switch(this.deadflag)

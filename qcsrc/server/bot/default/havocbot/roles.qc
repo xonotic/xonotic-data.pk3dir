@@ -54,9 +54,13 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 		if(!it.solid)
 		{
+			if(!autocvar_bot_ai_timeitems)
+				continue;
 			if(!it.scheduledrespawntime)
 				continue;
-			if(it.respawntime < 30 || (it.respawntimejitter && !it.itemdef.instanceOfPowerup))
+			if(it.respawntime < max(11, autocvar_bot_ai_timeitems_minrespawndelay))
+				continue;
+			if(it.respawntimejitter && !it.itemdef.instanceOfPowerup)
 				continue;
 
 			float t = 0;

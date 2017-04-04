@@ -203,11 +203,8 @@ void PM_dodging(entity this)
 	if (!PHYS_DODGING)
 		return;
 
-    if (IS_DEAD(this))
-        return;
-
-	// when swimming, no dodging allowed..
-	if (this.waterlevel >= WATERLEVEL_SWIMMING)
+	// when swimming or dead, no dodging allowed..
+	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this))
 	{
 		this.dodging_action = 0;
 		this.dodging_direction_x = 0;

@@ -90,6 +90,59 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	return w;
 }
 
+void waypoint_removelink(entity from, entity to)
+{
+	if (from == to || (from.wpflags & WAYPOINTFLAG_NORELINK))
+		return;
+
+	bool found = false;
+	if (!found && from.wp00 == to) found = true; if (found) {from.wp00 = from.wp01; from.wp00mincost = from.wp01mincost;}
+	if (!found && from.wp01 == to) found = true; if (found) {from.wp01 = from.wp02; from.wp01mincost = from.wp02mincost;}
+	if (!found && from.wp02 == to) found = true; if (found) {from.wp02 = from.wp03; from.wp02mincost = from.wp03mincost;}
+	if (!found && from.wp03 == to) found = true; if (found) {from.wp03 = from.wp04; from.wp03mincost = from.wp04mincost;}
+	if (!found && from.wp04 == to) found = true; if (found) {from.wp04 = from.wp05; from.wp04mincost = from.wp05mincost;}
+	if (!found && from.wp05 == to) found = true; if (found) {from.wp05 = from.wp06; from.wp05mincost = from.wp06mincost;}
+	if (!found && from.wp06 == to) found = true; if (found) {from.wp06 = from.wp07; from.wp06mincost = from.wp07mincost;}
+	if (!found && from.wp07 == to) found = true; if (found) {from.wp07 = from.wp08; from.wp07mincost = from.wp08mincost;}
+	if (!found && from.wp08 == to) found = true; if (found) {from.wp08 = from.wp09; from.wp08mincost = from.wp09mincost;}
+	if (!found && from.wp09 == to) found = true; if (found) {from.wp09 = from.wp10; from.wp09mincost = from.wp10mincost;}
+	if (!found && from.wp10 == to) found = true; if (found) {from.wp10 = from.wp11; from.wp10mincost = from.wp11mincost;}
+	if (!found && from.wp11 == to) found = true; if (found) {from.wp11 = from.wp12; from.wp11mincost = from.wp12mincost;}
+	if (!found && from.wp12 == to) found = true; if (found) {from.wp12 = from.wp13; from.wp12mincost = from.wp13mincost;}
+	if (!found && from.wp13 == to) found = true; if (found) {from.wp13 = from.wp14; from.wp13mincost = from.wp14mincost;}
+	if (!found && from.wp14 == to) found = true; if (found) {from.wp14 = from.wp15; from.wp14mincost = from.wp15mincost;}
+	if (!found && from.wp15 == to) found = true; if (found) {from.wp15 = from.wp16; from.wp15mincost = from.wp16mincost;}
+	if (!found && from.wp16 == to) found = true; if (found) {from.wp16 = from.wp17; from.wp16mincost = from.wp17mincost;}
+	if (!found && from.wp17 == to) found = true; if (found) {from.wp17 = from.wp18; from.wp17mincost = from.wp18mincost;}
+	if (!found && from.wp18 == to) found = true; if (found) {from.wp18 = from.wp19; from.wp18mincost = from.wp19mincost;}
+	if (!found && from.wp19 == to) found = true; if (found) {from.wp19 = from.wp20; from.wp19mincost = from.wp20mincost;}
+	if (!found && from.wp20 == to) found = true; if (found) {from.wp20 = from.wp21; from.wp20mincost = from.wp21mincost;}
+	if (!found && from.wp21 == to) found = true; if (found) {from.wp21 = from.wp22; from.wp21mincost = from.wp22mincost;}
+	if (!found && from.wp22 == to) found = true; if (found) {from.wp22 = from.wp23; from.wp22mincost = from.wp23mincost;}
+	if (!found && from.wp23 == to) found = true; if (found) {from.wp23 = from.wp24; from.wp23mincost = from.wp24mincost;}
+	if (!found && from.wp24 == to) found = true; if (found) {from.wp24 = from.wp25; from.wp24mincost = from.wp25mincost;}
+	if (!found && from.wp25 == to) found = true; if (found) {from.wp25 = from.wp26; from.wp25mincost = from.wp26mincost;}
+	if (!found && from.wp26 == to) found = true; if (found) {from.wp26 = from.wp27; from.wp26mincost = from.wp27mincost;}
+	if (!found && from.wp27 == to) found = true; if (found) {from.wp27 = from.wp28; from.wp27mincost = from.wp28mincost;}
+	if (!found && from.wp28 == to) found = true; if (found) {from.wp28 = from.wp29; from.wp28mincost = from.wp29mincost;}
+	if (!found && from.wp29 == to) found = true; if (found) {from.wp29 = from.wp30; from.wp29mincost = from.wp30mincost;}
+	if (!found && from.wp30 == to) found = true; if (found) {from.wp30 = from.wp31; from.wp30mincost = from.wp31mincost;}
+	if (found) {from.wp31 = NULL; from.wp31mincost = 10000000;}
+}
+
+bool waypoint_islinked(entity from, entity to)
+{
+	if (from.wp00 == to) return true;if (from.wp01 == to) return true;if (from.wp02 == to) return true;if (from.wp03 == to) return true;
+	if (from.wp04 == to) return true;if (from.wp05 == to) return true;if (from.wp06 == to) return true;if (from.wp07 == to) return true;
+	if (from.wp08 == to) return true;if (from.wp09 == to) return true;if (from.wp10 == to) return true;if (from.wp11 == to) return true;
+	if (from.wp12 == to) return true;if (from.wp13 == to) return true;if (from.wp14 == to) return true;if (from.wp15 == to) return true;
+	if (from.wp16 == to) return true;if (from.wp17 == to) return true;if (from.wp18 == to) return true;if (from.wp19 == to) return true;
+	if (from.wp20 == to) return true;if (from.wp21 == to) return true;if (from.wp22 == to) return true;if (from.wp23 == to) return true;
+	if (from.wp24 == to) return true;if (from.wp25 == to) return true;if (from.wp26 == to) return true;if (from.wp27 == to) return true;
+	if (from.wp28 == to) return true;if (from.wp29 == to) return true;if (from.wp30 == to) return true;if (from.wp31 == to) return true;
+	return false;
+}
+
 // add a new link to the spawnfunc_waypoint, replacing the furthest link it already has
 void waypoint_addlink(entity from, entity to)
 {
@@ -100,14 +153,8 @@ void waypoint_addlink(entity from, entity to)
 	if (from.wpflags & WAYPOINTFLAG_NORELINK)
 		return;
 
-	if (from.wp00 == to) return;if (from.wp01 == to) return;if (from.wp02 == to) return;if (from.wp03 == to) return;
-	if (from.wp04 == to) return;if (from.wp05 == to) return;if (from.wp06 == to) return;if (from.wp07 == to) return;
-	if (from.wp08 == to) return;if (from.wp09 == to) return;if (from.wp10 == to) return;if (from.wp11 == to) return;
-	if (from.wp12 == to) return;if (from.wp13 == to) return;if (from.wp14 == to) return;if (from.wp15 == to) return;
-	if (from.wp16 == to) return;if (from.wp17 == to) return;if (from.wp18 == to) return;if (from.wp19 == to) return;
-	if (from.wp20 == to) return;if (from.wp21 == to) return;if (from.wp22 == to) return;if (from.wp23 == to) return;
-	if (from.wp24 == to) return;if (from.wp25 == to) return;if (from.wp26 == to) return;if (from.wp27 == to) return;
-	if (from.wp28 == to) return;if (from.wp29 == to) return;if (from.wp30 == to) return;if (from.wp31 == to) return;
+	if (waypoint_islinked(from, to))
+		return;
 
 	if (to.wpisbox || from.wpisbox)
 	{
@@ -181,7 +228,7 @@ void waypoint_think(entity this)
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
 	sm1 = this.origin + this.mins;
 	sm2 = this.origin + this.maxs;
-	IL_EACH(g_waypoints, true,
+	IL_EACH(g_waypoints, this != it,
 	{
 		if (boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
 		{
@@ -251,8 +298,7 @@ void waypoint_think(entity this)
 void waypoint_clearlinks(entity wp)
 {
 	// clear links to other waypoints
-	float f;
-	f = 10000000;
+	float f = 10000000;
 	wp.wp00 = wp.wp01 = wp.wp02 = wp.wp03 = wp.wp04 = wp.wp05 = wp.wp06 = wp.wp07 = NULL;
 	wp.wp08 = wp.wp09 = wp.wp10 = wp.wp11 = wp.wp12 = wp.wp13 = wp.wp14 = wp.wp15 = NULL;
 	wp.wp16 = wp.wp17 = wp.wp18 = wp.wp19 = wp.wp20 = wp.wp21 = wp.wp22 = wp.wp23 = NULL;
@@ -296,47 +342,17 @@ spawnfunc(waypoint)
 	//waypoint_schedulerelink(this);
 }
 
-// remove a spawnfunc_waypoint, and schedule all neighbors to relink
-void waypoint_remove(entity e)
+void waypoint_remove(entity wp)
 {
-	// tell all linked waypoints that they need to relink
-	waypoint_schedulerelink(e.wp00);
-	waypoint_schedulerelink(e.wp01);
-	waypoint_schedulerelink(e.wp02);
-	waypoint_schedulerelink(e.wp03);
-	waypoint_schedulerelink(e.wp04);
-	waypoint_schedulerelink(e.wp05);
-	waypoint_schedulerelink(e.wp06);
-	waypoint_schedulerelink(e.wp07);
-	waypoint_schedulerelink(e.wp08);
-	waypoint_schedulerelink(e.wp09);
-	waypoint_schedulerelink(e.wp10);
-	waypoint_schedulerelink(e.wp11);
-	waypoint_schedulerelink(e.wp12);
-	waypoint_schedulerelink(e.wp13);
-	waypoint_schedulerelink(e.wp14);
-	waypoint_schedulerelink(e.wp15);
-	waypoint_schedulerelink(e.wp16);
-	waypoint_schedulerelink(e.wp17);
-	waypoint_schedulerelink(e.wp18);
-	waypoint_schedulerelink(e.wp19);
-	waypoint_schedulerelink(e.wp20);
-	waypoint_schedulerelink(e.wp21);
-	waypoint_schedulerelink(e.wp22);
-	waypoint_schedulerelink(e.wp23);
-	waypoint_schedulerelink(e.wp24);
-	waypoint_schedulerelink(e.wp25);
-	waypoint_schedulerelink(e.wp26);
-	waypoint_schedulerelink(e.wp27);
-	waypoint_schedulerelink(e.wp28);
-	waypoint_schedulerelink(e.wp29);
-	waypoint_schedulerelink(e.wp30);
-	waypoint_schedulerelink(e.wp31);
-	// and now remove the spawnfunc_waypoint
-	delete(e);
+	// tell all waypoints linked to wp that they need to relink
+	IL_EACH(g_waypoints, it != wp,
+	{
+		if (waypoint_islinked(it, wp))
+			waypoint_removelink(it, wp);
+	});
+	delete(wp);
 }
 
-// empties the map of waypoints
 void waypoint_removeall()
 {
 	IL_EACH(g_waypoints, true,
@@ -346,7 +362,7 @@ void waypoint_removeall()
 }
 
 // tell all waypoints to relink
-// (is this useful at all?)
+// actually this is useful only to update relink_* stats
 void waypoint_schedulerelinkall()
 {
 	relink_total = relink_walkculled = relink_pvsculled = relink_lengthculled = 0;
@@ -408,7 +424,7 @@ float waypoint_load_links()
 
 			if(!found)
 			{
-				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin));
+				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from_pos));
 				continue;
 			}
 
@@ -430,7 +446,7 @@ float waypoint_load_links()
 
 		if(!found)
 		{
-			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin));
+			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to_pos));
 			continue;
 		}
 
@@ -446,7 +462,7 @@ float waypoint_load_links()
 	return true;
 }
 
-void waypoint_load_links_hardwired()
+void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 {
 	string filename, s;
 	float file, tokens, c = 0, found;
@@ -460,7 +476,8 @@ void waypoint_load_links_hardwired()
 
 	if (file < 0)
 	{
-		LOG_TRACE("waypoint links load from ", filename, " failed");
+		if(!removal_mode)
+			LOG_TRACE("waypoint links load from ", filename, " failed");
 		return;
 	}
 
@@ -498,7 +515,8 @@ void waypoint_load_links_hardwired()
 
 			if(!found)
 			{
-				LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
+				if(!removal_mode)
+					LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
 				continue;
 			}
 		}
@@ -519,11 +537,18 @@ void waypoint_load_links_hardwired()
 
 		if(!found)
 		{
-			LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
+			if(!removal_mode)
+				LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
 			continue;
 		}
 
 		++c;
+		if(removal_mode)
+		{
+			waypoint_removelink(wp_from, wp_to);
+			continue;
+		}
+
 		waypoint_addlink(wp_from, wp_to);
 		wp_from.wphardwired = true;
 		wp_to.wphardwired = true;
@@ -531,8 +556,12 @@ void waypoint_load_links_hardwired()
 
 	fclose(file);
 
-	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
+	if(!removal_mode)
+		LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
 }
+
+void waypoint_load_links_hardwired() { waypoint_load_or_remove_links_hardwired(false); }
+void waypoint_remove_links_hardwired() { waypoint_load_or_remove_links_hardwired(true); }
 
 entity waypoint_get_link(entity w, float i)
 {
@@ -577,6 +606,9 @@ entity waypoint_get_link(entity w, float i)
 // Save all waypoint links to a file
 void waypoint_save_links()
 {
+	// temporarily remove hardwired links so they don't get saved among normal links
+	waypoint_remove_links_hardwired();
+
 	string filename = sprintf("maps/%s.waypoints.cache", mapname);
 	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
@@ -603,6 +635,8 @@ void waypoint_save_links()
 	botframe_cachedwaypointlinks = true;
 
 	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache\n", c, mapname);
+
+	waypoint_load_links_hardwired();
 }
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
@@ -775,6 +809,17 @@ entity waypoint_spawnpersonal(entity this, vector position)
 	return w;
 }
 
+void waypoint_showlink(entity wp1, entity wp2, int display_type)
+{
+	if (!(wp1 && wp2))
+		return;
+
+	if (wp1.wphardwired && wp2.wphardwired)
+		te_beam(NULL, wp1.origin, wp2.origin);
+	else if (display_type == 1)
+		te_lightning2(NULL, wp1.origin, wp2.origin);
+}
+
 void botframe_showwaypointlinks()
 {
 	if (time < botframe_waypointeditorlightningtime)
@@ -782,48 +827,53 @@ void botframe_showwaypointlinks()
 	botframe_waypointeditorlightningtime = time + 0.5;
 	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot,
 	{
-		if(IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
+		int display_type = 0;
+		entity head = navigation_findnearestwaypoint(it, false);
+		if (IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
+			display_type = 1; // default
+		else if(head && (head.wphardwired))
+			display_type = 2; // only hardwired
+
+		if (display_type)
 		{
 			//navigation_testtracewalk = true;
-			entity head = navigation_findnearestwaypoint(it, false);
-		//	print("currently selected WP is ", etos(head), "\n");
+			//print("currently selected WP is ", etos(head), "\n");
 			//navigation_testtracewalk = false;
 			if (head)
 			{
-				entity w;
-				w = head     ;if (w) te_lightning2(NULL, w.origin, it.origin);
-				w = head.wp00;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp01;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp02;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp03;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp04;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp05;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp06;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp07;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp08;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp09;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp10;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp11;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp12;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp13;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp14;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp15;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp16;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp17;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp18;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp19;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp20;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp21;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp22;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp23;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp24;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp25;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp26;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp27;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp28;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp29;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp30;if (w) te_lightning2(NULL, w.origin, head.origin);
-				w = head.wp31;if (w) te_lightning2(NULL, w.origin, head.origin);
+				te_lightning2(NULL, head.origin, it.origin);
+				waypoint_showlink(head.wp00, head, display_type);
+				waypoint_showlink(head.wp01, head, display_type);
+				waypoint_showlink(head.wp02, head, display_type);
+				waypoint_showlink(head.wp03, head, display_type);
+				waypoint_showlink(head.wp04, head, display_type);
+				waypoint_showlink(head.wp05, head, display_type);
+				waypoint_showlink(head.wp06, head, display_type);
+				waypoint_showlink(head.wp07, head, display_type);
+				waypoint_showlink(head.wp08, head, display_type);
+				waypoint_showlink(head.wp09, head, display_type);
+				waypoint_showlink(head.wp10, head, display_type);
+				waypoint_showlink(head.wp11, head, display_type);
+				waypoint_showlink(head.wp12, head, display_type);
+				waypoint_showlink(head.wp13, head, display_type);
+				waypoint_showlink(head.wp14, head, display_type);
+				waypoint_showlink(head.wp15, head, display_type);
+				waypoint_showlink(head.wp16, head, display_type);
+				waypoint_showlink(head.wp17, head, display_type);
+				waypoint_showlink(head.wp18, head, display_type);
+				waypoint_showlink(head.wp19, head, display_type);
+				waypoint_showlink(head.wp20, head, display_type);
+				waypoint_showlink(head.wp21, head, display_type);
+				waypoint_showlink(head.wp22, head, display_type);
+				waypoint_showlink(head.wp23, head, display_type);
+				waypoint_showlink(head.wp24, head, display_type);
+				waypoint_showlink(head.wp25, head, display_type);
+				waypoint_showlink(head.wp26, head, display_type);
+				waypoint_showlink(head.wp27, head, display_type);
+				waypoint_showlink(head.wp28, head, display_type);
+				waypoint_showlink(head.wp29, head, display_type);
+				waypoint_showlink(head.wp30, head, display_type);
+				waypoint_showlink(head.wp31, head, display_type);
 			}
 		}
 	});

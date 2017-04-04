@@ -48,9 +48,9 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 	float dist;
 	float totaldist;
 	float stepdist;
-	float yaw;
 	float ignorehazards;
 	float swimming;
+	entity tw_ladder = NULL;
 
 	if(autocvar_bot_debug_tracewalk)
 	{
@@ -92,7 +92,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 	}
 
 	// Movement loop
-	yaw = vectoyaw(move);
 	move = end - org;
 	for (;;)
 	{
@@ -137,14 +136,14 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 			if (trace_fraction < 1)
 			{
 				swimming = true;
-				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
+				org = trace_endpos + normalize(org - trace_endpos) * stepdist;
 				for (; org.z < end.z + e.maxs.z; org.z += stepdist)
 				{
-						if(autocvar_bot_debug_tracewalk)
-							debugnode(e, org);
+					if(autocvar_bot_debug_tracewalk)
+						debugnode(e, org);
 
-				        if(pointcontents(org) == CONTENT_EMPTY)
-							break;
+					if(pointcontents(org) == CONTENT_EMPTY)
+						break;
 				}
 
 				if(pointcontents(org + '0 0 1') != CONTENT_EMPTY)
@@ -182,8 +181,14 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 						if(autocvar_bot_debug_tracewalk)
 							debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
 
-						// check for doors
+						FOREACH_ENTITY_CLASS("func_ladder", true,
+							{ it.solid = SOLID_BSP; });
+
 						traceline( org, move, movemode, e);
+
+						FOREACH_ENTITY_CLASS("func_ladder", true,
+							{ it.solid = SOLID_TRIGGER; });
+
 						if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
 						{
 							vector nextmove;
@@ -194,6 +199,24 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 								traceline( move, nextmove, movemode, e);
 								move = nextmove;
 							}
+						}
+						else if (trace_ent.classname == "func_ladder")
+						{
+							tw_ladder = trace_ent;
+							vector ladder_bottom = trace_endpos - dir * m2.x;
+							vector ladder_top = ladder_bottom;
+							ladder_top.z = trace_ent.absmax.z + (-m1.z + 1);
+							tracebox(ladder_bottom, m1, m2, ladder_top, movemode, e);
+							if (trace_fraction < 1 || trace_startsolid)
+							{
+								if(autocvar_bot_debug_tracewalk)
+									debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
+
+								return false; // failed
+							}
+							org = ladder_top + dir * m2.x;
+							move = org + dir * stepdist;
+							continue;
 						}
 						else
 						{
@@ -233,6 +256,16 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 			}
 
 			org = trace_endpos;
+		}
+
+		if(tw_ladder && org.z < tw_ladder.absmax.z)
+		{
+			// stop tracewalk if destination height is lower than the top of the ladder
+			// otherwise bot can't easily figure out climbing direction
+			if(autocvar_bot_debug_tracewalk)
+				debugnodestatus(org, DEBUG_NODE_FAIL);
+
+			return false;
 		}
 	}
 
@@ -820,6 +853,9 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
+		if(autocvar_g_waypointeditor && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
+			e.nearestwaypoint = NULL;
+
 		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
 			&& e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 		{
@@ -842,6 +878,8 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 			if(e.navigation_dynamicgoal)
 				e.nearestwaypointtimeout = time + 2;
+			else if(autocvar_g_waypointeditor)
+				e.nearestwaypointtimeout = time + 3 + random() * 2;
 		}
 		nwp = e.nearestwaypoint;
 	}

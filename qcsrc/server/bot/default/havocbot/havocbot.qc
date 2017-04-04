@@ -608,7 +608,7 @@ void havocbot_movetogoal(entity this)
 
 			return;
 		}
-		else if(this.health>WEP_CVAR(devastator, damage)*0.5)
+		else if(this.health > WEP_CVAR(devastator, damage) * 0.5 * ((this.strength_finished < time) ? autocvar_g_balance_powerup_strength_selfdamage : 1))
 		{
 			if(this.velocity.z < 0)
 			{
@@ -736,6 +736,7 @@ void havocbot_movetogoal(entity this)
 		evadeobstacle = '0 0 0';
 		evadelava = '0 0 0';
 
+		this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 		makevectors(this.v_angle.y * '0 1 0');
 		if (this.waterlevel)
 		{
@@ -781,9 +782,9 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// if bot for some reason doesn't get close to the current goal find another one
-			float curr_dist = vlen(this.origin - this.goalcurrent.origin);
-			if(!IS_PLAYER(this.goalcurrent))
+			if(!IS_PLAYER(this.goalcurrent) && !(this.goalcurrent.bot_pickup_respawning && this.goalcurrent_distance < 50))
 			{
+				float curr_dist = vlen(this.origin - this.goalcurrent.origin);
 				if(this.goalcurrent != this.goalcurrent_prev)
 				{
 					this.goalcurrent_prev = this.goalcurrent;
@@ -812,7 +813,6 @@ void havocbot_movetogoal(entity this)
 
 			// Check for water/slime/lava and dangerous edges
 			// (only when the bot is on the ground or jumping intentionally)
-			this.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			vector dst_down = dst_ahead - '0 0 3000';
@@ -1190,18 +1190,16 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 
 void havocbot_aim(entity this)
 {
-	vector myvel, enemyvel;
-//	if(this.flags & FL_INWATER)
-//		return;
 	if (time < this.nextaim)
 		return;
 	this.nextaim = time + 0.1;
-	myvel = this.velocity;
+	vector myvel = this.velocity;
 	if (!this.waterlevel)
 		myvel.z = 0;
-	if (this.enemy)
+	if(MUTATOR_CALLHOOK(HavocBot_Aim, this)) { /* do nothing */ }
+	else if (this.enemy)
 	{
-		enemyvel = this.enemy.velocity;
+		vector enemyvel = this.enemy.velocity;
 		if (!this.enemy.waterlevel)
 			enemyvel.z = 0;
 		lag_additem(this, time + this.ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);

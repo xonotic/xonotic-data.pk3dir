@@ -99,6 +99,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	{
 		if(sf & 0x40)
 			WriteShort(MSG_ENTITY, this.colormap);
+		WriteByte(MSG_ENTITY, this.skin);
 	}
 
 	if(sf & BIT(1))

@@ -61,15 +61,6 @@ void WarpZone_crosshair_trace(entity pl)
 }
 
 
-string admin_name()
-{
-	if(autocvar_sv_adminnick != "")
-		return autocvar_sv_adminnick;
-	else
-		return "SERVER ADMIN";
-}
-
-
 void GameLogEcho(string s)
 {
     string fn;

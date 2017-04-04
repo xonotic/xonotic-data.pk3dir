@@ -260,12 +260,8 @@ string GetAmmoPicture(.int ammotype)
 string W_Sound(string w_snd)
 {
 	string output = strcat("weapons/", w_snd);
-#ifdef SVQC
-		MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
-		return M_ARGV(1, string);
-#else
-		return output;
-#endif
+	MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
+	return M_ARGV(1, string);
 }
 
 string W_Model(string w_mdl)
