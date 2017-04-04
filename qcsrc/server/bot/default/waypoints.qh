@@ -35,7 +35,6 @@ void waypoint_clearlinks(entity wp);
 void waypoint_schedulerelink(entity wp);
 
 void waypoint_remove(entity e);
-void waypoint_removeall();
 void waypoint_schedulerelinkall();
 void waypoint_load_links_hardwired();
 void waypoint_save_links();

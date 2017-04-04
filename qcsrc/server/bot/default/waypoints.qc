@@ -353,14 +353,6 @@ void waypoint_remove(entity wp)
 	delete(wp);
 }
 
-void waypoint_removeall()
-{
-	IL_EACH(g_waypoints, true,
-	{
-		delete(it);
-	});
-}
-
 // tell all waypoints to relink
 // actually this is useful only to update relink_* stats
 void waypoint_schedulerelinkall()
