@@ -94,7 +94,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float		dmgtime;
 
 .float		killcount;
-.float damage_dealt, typehitsound;
+.float damage_dealt, typehitsound, killsound;
 
 .float watersound_finished;
 .float iscreature;
@@ -317,6 +317,7 @@ string matchid;
 
 .float hit_time = _STAT(HIT_TIME);
 .float typehit_time = _STAT(TYPEHIT_TIME);
+.float kill_time = _STAT(KILL_TIME);
 
 .float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
 

@@ -326,7 +326,7 @@ float compressShortVector(vector vec)
 STATIC_INIT(compressShortVector)
 {
 	float l = 1;
-	float f = pow(2, 1/8);
+	float f = (2 ** (1/8));
 	int i;
 	for(i = 0; i < 128; ++i)
 	{

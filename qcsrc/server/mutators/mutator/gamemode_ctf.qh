@@ -67,7 +67,6 @@ entity ctf_worldflaglist;
 .entity ctf_staleflagnext;
 
 // waypoint sprites
-.entity bot_basewaypoint; // flag waypointsprite
 .entity wps_helpme;
 .entity wps_flagbase;
 .entity wps_flagcarrier;
@@ -145,9 +144,6 @@ const int HAVOCBOT_CTF_ROLE_RETRIEVER = 32;
 const int HAVOCBOT_CTF_ROLE_ESCORT = 64;
 
 .bool havocbot_cantfindflag;
-
-vector havocbot_ctf_middlepoint;
-float havocbot_ctf_middlepoint_radius;
 
 void havocbot_role_ctf_setrole(entity bot, int role);
 

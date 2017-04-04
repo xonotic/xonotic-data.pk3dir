@@ -44,6 +44,7 @@ float skill;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 .float wpconsidered;
 .float wpcost;
+.float wphardwired;
 .int wpflags;
 
 bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
@@ -68,6 +69,15 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius);
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius);
 
+vector havocbot_middlepoint;
+float havocbot_middlepoint_radius;
+vector havocbot_symmetryaxis_equation;
+
+.entity bot_basewaypoint;
+.bool navigation_dynamicgoal;
+void navigation_dynamicgoal_init(entity this, bool initially_static);
+void navigation_dynamicgoal_set(entity this);
+void navigation_dynamicgoal_unset(entity this);
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
 void navigation_goalrating_end(entity this);
 void navigation_goalrating_start(entity this);

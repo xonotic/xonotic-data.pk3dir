@@ -74,7 +74,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
-		loopsound(proj, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
+		loopsound(proj, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
 		proj.mins = '-16 -16 -16';
 		proj.maxs = '16 16 16';
 	}
@@ -220,7 +220,7 @@ void napalm_damage(entity this, float dist, float damage, float edgedamage, floa
 	{
 		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
 		d = damage + (edgedamage - damage) * (d / dist);
-		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, d * burntime, burntime, this.projectiledeathtype | HITTYPE_BOUNCE);
+		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, d * burntime, burntime, this.projectiledeathtype);
 		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.fireball_impactvec);
 		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.fireball_impactvec - this.origin, 1);
 	}
@@ -265,7 +265,7 @@ void nade_napalm_ball(entity this)
 	entity proj;
 	vector kick;
 
-	spamsound(this, CH_SHOTS, SND(FIREBALL_FIRE), VOL_BASE, ATTEN_NORM);
+	spamsound(this, CH_SHOTS, SND_FIREBALL_FIRE, VOL_BASE, ATTEN_NORM);
 
 	proj = new(grenade);
 	proj.owner = this.owner;
@@ -577,7 +577,7 @@ void nade_entrap_touch(entity this, entity toucher)
 		if(!pushdeltatime) return;
 
 		// div0: ticrate independent, 1 = identity (not 20)
-		toucher.velocity = toucher.velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
+		toucher.velocity = toucher.velocity * (autocvar_g_nades_entrap_strength ** pushdeltatime);
 
 	#ifdef SVQC
 		UpdateCSQCProjectile(toucher);
@@ -798,7 +798,7 @@ void nade_touch(entity this, entity toucher)
 	//UpdateCSQCProjectile(this);
 	if(this.health == this.max_health)
 	{
-		spamsound(this, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTEN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
 		return;
 	}
 

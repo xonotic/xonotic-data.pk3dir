@@ -1,16 +1,5 @@
 #pragma once
 
-#define SUB_ANGLES(s)		(s).angles
-#define SUB_VELOCITY		velocity
-#define SUB_AVELOCITY		avelocity
-#define SUB_ORIGIN			origin
-#define SUB_SETORIGIN(s,v)	setorigin((s), (v))
-#define SUB_NEXTTHINK		nextthink
-#define SUB_THINK(e, f)     setthink(e, f)
-#define SUB_THUNK(e)        getthink(e)
-#define SUB_LTIME			ltime
-
-
 void SUB_SetFade (entity ent, float when, float fading_time);
 void SUB_VanishOrRemove (entity ent);
 

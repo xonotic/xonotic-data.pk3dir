@@ -61,15 +61,6 @@ void WarpZone_crosshair_trace(entity pl)
 }
 
 
-string admin_name()
-{
-	if(autocvar_sv_adminnick != "")
-		return autocvar_sv_adminnick;
-	else
-		return "SERVER ADMIN";
-}
-
-
 void GameLogEcho(string s)
 {
     string fn;
@@ -1313,7 +1304,7 @@ void attach_sameorigin(entity e, entity to, string tag)
     float tagscale;
 
     org = e.origin - gettaginfo(to, gettagindex(to, tag));
-    tagscale = pow(vlen(v_forward), -2); // undo a scale on the tag
+    tagscale = (vlen(v_forward) ** -2); // undo a scale on the tag
     t_forward = v_forward * tagscale;
     t_left = v_right * -tagscale;
     t_up = v_up * tagscale;

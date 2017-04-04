@@ -383,11 +383,12 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
+			switch(player.team)
 			{
-				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+				case NUM_TEAM_1: defaultmodel = autocvar_sv_defaultplayermodel_red; defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultmodel = autocvar_sv_defaultplayermodel_blue; defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultmodel = autocvar_sv_defaultplayermodel_yellow; defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultmodel = autocvar_sv_defaultplayermodel_pink; defaultskin = autocvar_sv_defaultplayerskin_pink; break;
 			}
 		}
 
@@ -418,9 +419,13 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+			switch(player.team)
+			{
+				case NUM_TEAM_1: defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultskin = autocvar_sv_defaultplayerskin_pink; break;
+			}
 		}
 
 		if(!defaultskin)
@@ -651,6 +656,7 @@ void PutClientInServer(entity this)
 			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.monster_attack = true;
+		navigation_dynamicgoal_init(this, false);
 
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
@@ -708,7 +714,7 @@ void PutClientInServer(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(slot == 0)
+			if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
 				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
 			else
 				this.(weaponentity).m_switchweapon = WEP_Null;
@@ -1223,6 +1229,8 @@ void ClientConnect(entity this)
 		sv_notice_join(this);
 
 	// update physics stats (players can spawn before physics runs)
+	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
+	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
 	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
 
 	IL_EACH(g_initforplayer, it.init_for_player, {
@@ -2371,6 +2379,13 @@ void PlayerPreThink (entity this)
 				}
 			} else {
 				if (frametime) player_anim(this);
+
+				if (this.respawn_flags & RESPAWN_DENY)
+				{
+					STAT(RESPAWN_TIME, this) = 0;
+					return;
+				}
+
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
 				switch(this.deadflag)

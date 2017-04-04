@@ -522,7 +522,7 @@ vector GetCurrentFov(float fov)
 		current_zoomfraction = (current_viewzoom - 1) / (1/zoomfactor - 1);
 
 	if(zoomsensitivity < 1)
-		setsensitivityscale(pow(current_viewzoom, 1 - zoomsensitivity));
+		setsensitivityscale(current_viewzoom ** (1 - zoomsensitivity));
 	else
 		setsensitivityscale(1);
 
@@ -874,6 +874,14 @@ void HitSound()
 	{
 		sound(NULL, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
 		typehit_time_prev = typehit_time;
+	}
+
+	static float kill_time_prev = 0;
+	float kill_time = STAT(KILL_TIME);
+	if (COMPARE_INCREASING(kill_time, kill_time_prev) > autocvar_cl_hitsound_antispam_time)
+	{
+		sound(NULL, CH_INFO, SND_KILL, VOL_BASE, ATTN_NONE);
+		kill_time_prev = kill_time;
 	}
 }
 
@@ -1735,7 +1743,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 		t = (time - blurtest_time0) / (blurtest_time1 - blurtest_time0);
 		r = t * blurtest_radius;
-		f = 1 / pow(t, blurtest_power) - 1;
+		f = 1 / (t ** blurtest_power) - 1;
 
 		cvar_set("r_glsl_postprocess", "1");
 		cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(r), " ", ftos(f), " 0 0"));

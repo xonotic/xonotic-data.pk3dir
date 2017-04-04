@@ -262,6 +262,24 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, 
     drawpic_aspect_skin(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
 }
 
+float Item_ItemsTime_GetTime(int item)
+{
+    if(autocvar__hud_configure)
+    {
+        switch(item)
+        {
+            case ITEM_ArmorMega.m_id: return time + 0;
+            case ITEM_HealthMega.m_id: return time + 8;
+            case ITEM_Strength.m_id: return time + 0;
+            case ITEM_Shield.m_id: return time + 4;
+        }
+
+        return -1; // don't show others
+    }
+    else
+        return ItemsTime_time[item];
+}
+
 void HUD_ItemsTime()
 {
     if (!autocvar__hud_configure)
@@ -271,35 +289,28 @@ void HUD_ItemsTime()
         ||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage || STAT(ITEMSTIME) == 2))
             )) { return; }
     }
-    else
-    {
-        ItemsTime_time[ITEM_ArmorMega.m_id] = time + 0;
-        ItemsTime_time[ITEM_HealthMega.m_id] = time + 8;
-        ItemsTime_time[ITEM_Strength.m_id] = time + 0;
-        ItemsTime_time[ITEM_Shield.m_id] = time + 4;
-    }
 
     int count = 0;
     if (autocvar_hud_panel_itemstime_hidespawned == 1)
     {
         FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
-            count += (ItemsTime_time[it.m_id] > time || -ItemsTime_time[it.m_id] > time);
+            count += (Item_ItemsTime_GetTime(it.m_id) > time || -Item_ItemsTime_GetTime(it.m_id) > time);
         ));
-        count += (ItemsTime_time[Items_MAX] > time || -ItemsTime_time[Items_MAX] > time);
+        count += (Item_ItemsTime_GetTime(Items_MAX) > time || -Item_ItemsTime_GetTime(Items_MAX) > time);
     }
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
     {
         FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
-            count += (ItemsTime_time[it.m_id] > time);
+            count += (Item_ItemsTime_GetTime(it.m_id) > time);
         ));
-        count += (ItemsTime_time[Items_MAX] > time);
+        count += (Item_ItemsTime_GetTime(Items_MAX) > time);
     }
     else
     {
         FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
-            count += (ItemsTime_time[it.m_id] != -1);
+            count += (Item_ItemsTime_GetTime(it.m_id) != -1);
         ));
-        count += (ItemsTime_time[Items_MAX] != -1);
+        count += (Item_ItemsTime_GetTime(Items_MAX) != -1);
     }
     if (count == 0)
         return;
@@ -374,12 +385,12 @@ void HUD_ItemsTime()
     bool item_available;
     int id = 0;
     string icon = "";
-    FOREACH(Items, Item_ItemsTime_Allow(it) && ItemsTime_time[it.m_id] != -1, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it) && Item_ItemsTime_GetTime(it.m_id) != -1, LAMBDA(
     	id = it.m_id;
     	icon = it.m_icon;
 
 LABEL(iteration)
-        float item_time = ItemsTime_time[id];
+        float item_time = Item_ItemsTime_GetTime(id);
         if (item_time < -1)
         {
             item_available = true;
@@ -388,9 +399,9 @@ LABEL(iteration)
         else
             item_available = (item_time <= time);
 
-        if (ItemsTime_time[id] >= 0)
+        if (Item_ItemsTime_GetTime(id) >= 0)
         {
-            if (time <= ItemsTime_time[id])
+            if (time <= Item_ItemsTime_GetTime(id))
                 ItemsTime_availableTime[id] = 0;
             else if (ItemsTime_availableTime[id] == 0)
                 ItemsTime_availableTime[id] = time;
@@ -402,11 +413,11 @@ LABEL(iteration)
         f = (f > 1) ? 0 : bound(0, f, 1);
 
         if (autocvar_hud_panel_itemstime_hidespawned == 1)
-            if (!(ItemsTime_time[id] > time || -ItemsTime_time[id] > time))
+            if (!(Item_ItemsTime_GetTime(id) > time || -Item_ItemsTime_GetTime(id) > time))
                 continue;
 
         if (autocvar_hud_panel_itemstime_hidespawned == 2)
-            if (!(ItemsTime_time[id] > time))
+            if (!(Item_ItemsTime_GetTime(id) > time))
                 continue;
 
         DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, icon, item_time, item_available, f);
@@ -420,7 +431,7 @@ LABEL(iteration)
         	break;
     ));
     // add another fake iteration for superweapons time
-    if(id < Items_MAX && ItemsTime_time[Items_MAX] != -1)
+    if(id < Items_MAX && Item_ItemsTime_GetTime(Items_MAX) != -1)
     {
 		id = Items_MAX;
 		icon = "superweapons";

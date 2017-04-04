@@ -359,7 +359,7 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 	else
 	{
 		//UpdateCSQCProjectile(this);
-		spamsound(this, CH_SHOTS, SND(ELECTRO_BOUNCE), VOL_BASE, ATTEN_NORM);
+		spamsound(this, CH_SHOTS, SND_ELECTRO_BOUNCE, VOL_BASE, ATTEN_NORM);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 
 		if(WEP_CVAR_SEC(electro, stick))

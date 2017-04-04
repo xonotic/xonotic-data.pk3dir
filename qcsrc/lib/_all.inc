@@ -122,7 +122,9 @@ void    isnt_bool(float this) { print(ftos(this)); }
 #include "vector.qh"
 #include "yenc.qh"
 
-#include "matrix/_mod.inc"
+#if XONOTIC
+	#include "matrix/_mod.inc"
+#endif
 
 #ifndef SVQC
 #define objerror_safe(e)

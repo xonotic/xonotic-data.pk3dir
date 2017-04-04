@@ -15,6 +15,9 @@
 #include "../lib/warpzone/common.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 
+IntrusiveList g_race_targets;
+STATIC_INIT(g_race_targets) { g_race_targets = IL_NEW(); }
+
 void race_InitSpectator()
 {
 	if(g_race_qualifying)
@@ -725,9 +728,13 @@ void checkpoint_use(entity this, entity actor, entity trigger)
 
 bool race_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
-	if(view.race_checkpoint == -1 || this.owner.race_checkpoint == -2)
+	entity own = this.owner;
+	if(this.realowner)
+		own = this.realowner; // target support
+
+	if(view.race_checkpoint == -1 || own.race_checkpoint == -2)
 		return true;
-	else if(view.race_checkpoint == this.owner.race_checkpoint)
+	else if(view.race_checkpoint == own.race_checkpoint)
 		return true;
 	else
 		return false;
@@ -811,19 +818,37 @@ void trigger_race_checkpoint_verify(entity this)
 
 	g_race_qualifying = qual;
 
+	IL_EACH(g_race_targets, true,
+	{
+		entity cpt = it;
+		FOREACH_ENTITY_STRING(target, cpt.targetname,
+		{
+			vector org = (it.absmin + it.absmax) * 0.5;
+			if(cpt.race_checkpoint == 0)
+				WaypointSprite_SpawnFixed(WP_RaceStart, org, it, sprite, RADARICON_NONE);
+			else
+				WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, it, sprite, RADARICON_NONE);
+
+			it.sprite.realowner = cpt;
+			it.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
+		});
+	});
+
 	if (race_timed_checkpoint) {
 		if (defrag_ents) {
-			for (entity cp = NULL; (cp = find(cp, classname, "target_startTimer"));) {
-				WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
-            }
-			for (entity cp = NULL; (cp = find(cp, classname, "target_stopTimer"));) {
-				WaypointSprite_UpdateSprites(cp.sprite, WP_RaceFinish, WP_Null, WP_Null);
-            }
-			for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
-				if (cp.race_checkpoint == -2) { // something's wrong with the defrag cp file or it has not been written yet, set defragcpexists to -1 so that it will be rewritten when someone finishes
-					defragcpexists = -1;
-                }
-			}
+			IL_EACH(g_race_targets, true,
+			{
+				entity cpt = it;
+				if(it.classname == "target_startTimer" || it.classname == "target_stopTimer") {
+					FOREACH_ENTITY_STRING(target, cpt.targetname, {
+						WaypointSprite_UpdateSprites(it.sprite, ((cpt.classname == "target_startTimer") ? WP_RaceStart : WP_RaceFinish), WP_Null, WP_Null);
+					});
+				}
+				if(it.classname == "target_checkpoint") {
+					if(it.race_checkpoint == -2)
+						defragcpexists = -1; // something's wrong with the defrag cp file or it has not been written yet, set defragcpexists to -1 so that it will be rewritten when someone finishes
+				}
+			});
 			if (defragcpexists != -1) {
 				float largest_cp_id = 0;
 				for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
@@ -926,7 +951,7 @@ spawnfunc(trigger_race_checkpoint)
 	o = (this.absmin + this.absmax) * 0.5;
 	tracebox(o, PL_MIN_CONST, PL_MAX_CONST, o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
 	waypoint_spawnforitem_force(this, trace_endpos);
-	this.nearestwaypointtimeout = time + 1000000000;
+	this.nearestwaypointtimeout = -1;
 
 	if(this.message == "")
 		this.message = "went backwards";
@@ -985,7 +1010,7 @@ spawnfunc(target_checkpoint) // defrag entity
 		org = (this.absmin + this.absmax) * 0.5;
 		tracebox(org, PL_MIN_CONST, PL_MAX_CONST, org - '0 0 1' * (org.z - this.absmin.z), MOVE_NORMAL, this);
 		waypoint_spawnforitem_force(this, trace_endpos);
-		this.nearestwaypointtimeout = time + 1000000000;
+		this.nearestwaypointtimeout = -1;
 	}
 
 	if(this.message == "")
@@ -1002,12 +1027,7 @@ spawnfunc(target_checkpoint) // defrag entity
 
 	race_timed_checkpoint = 1;
 
-	if(this.race_checkpoint == 0)
-		WaypointSprite_SpawnFixed(WP_RaceStart, org, this, sprite, RADARICON_NONE);
-	else
-		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, org, this, sprite, RADARICON_NONE);
-
-	this.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
+	IL_PUSH(g_race_targets, this);
 
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
