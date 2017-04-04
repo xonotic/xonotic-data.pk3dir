@@ -15,6 +15,7 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+.entity spawnpointmodel;
 void waypoint_unreachable(entity pl)
 {
 	IL_EACH(g_waypoints, true,
@@ -54,25 +55,34 @@ void waypoint_unreachable(entity pl)
 	j = 0;
 	IL_EACH(g_spawnpoints, true,
 	{
-		vector org = it.origin;
-		tracebox(it.origin, PL_MIN_CONST, PL_MAX_CONST, it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
-		setorigin(it, trace_endpos);
 		if (navigation_findnearestwaypoint(it, false))
 		{
-			setorigin(it, org);
-			it.effects &= ~EF_NODEPTHTEST;
-			it.model = "";
+			if(it.spawnpointmodel)
+			{
+				delete(it.spawnpointmodel);
+				it.spawnpointmodel = NULL;
+			}
 		}
 		else
 		{
-			setorigin(it, org);
+			if(!it.spawnpointmodel)
+			{
+				tracebox(it.origin, PL_MIN_CONST, PL_MAX_CONST, it.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
+				entity e = new(spawnpointmodel);
+				vector org = trace_endpos + eZ;
+				setorigin(e, org);
+				e.solid = SOLID_TRIGGER;
+				it.spawnpointmodel = e;
+			}
 			LOG_INFO("spawn without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
-			it.effects |= EF_NODEPTHTEST;
-			_setmodel(it, pl.model);
-			it.frame = pl.frame;
-			it.skin = pl.skin;
-			it.colormod = '8 0.5 8';
-			setsize(it, '0 0 0', '0 0 0');
+			it.spawnpointmodel.effects |= EF_NODEPTHTEST;
+			_setmodel(it.spawnpointmodel, pl.model);
+			it.spawnpointmodel.frame = pl.frame;
+			it.spawnpointmodel.skin = pl.skin;
+			it.spawnpointmodel.colormap = pl.colormap;
+			it.spawnpointmodel.colormod = pl.colormod;
+			it.spawnpointmodel.glowmod = pl.glowmod;
+			setsize(it.spawnpointmodel, PL_MIN_CONST, PL_MAX_CONST);
 			j++;
 		}
 	});
