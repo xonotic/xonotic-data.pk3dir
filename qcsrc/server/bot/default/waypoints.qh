@@ -29,12 +29,15 @@ float botframe_cachedwaypointlinks;
  */
 
 spawnfunc(waypoint);
+void waypoint_removelink(entity from, entity to);
+bool waypoint_islinked(entity from, entity to);
 void waypoint_addlink(entity from, entity to);
 void waypoint_think(entity this);
 void waypoint_clearlinks(entity wp);
 void waypoint_schedulerelink(entity wp);
 
-void waypoint_remove(entity e);
+void waypoint_remove_fromeditor(entity pl);
+void waypoint_remove(entity wp);
 void waypoint_schedulerelinkall();
 void waypoint_load_links_hardwired();
 void waypoint_save_links();
@@ -49,6 +52,7 @@ void botframe_showwaypointlinks();
 float waypoint_loadall();
 float waypoint_load_links();
 
+void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);
 entity waypoint_spawnpersonal(entity this, vector position);
 

@@ -15,6 +15,34 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
+{
+	vector new_org = org;
+	if (fabs(autocvar_g_waypointeditor_symmetrical) == 1)
+	{
+		vector map_center = havocbot_middlepoint;
+		if (autocvar_g_waypointeditor_symmetrical == -1)
+			map_center = autocvar_g_waypointeditor_symmetrical_origin;
+
+		new_org = Rotate(org - map_center, 360 * DEG2RAD / ctf_flags) + map_center;
+	}
+	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
+	{
+		float m = havocbot_symmetryaxis_equation.x;
+		float q = havocbot_symmetryaxis_equation.y;
+		if (autocvar_g_waypointeditor_symmetrical == -2)
+		{
+			m = autocvar_g_waypointeditor_symmetrical_axis.x;
+			q = autocvar_g_waypointeditor_symmetrical_axis.y;
+		}
+
+		new_org.x = (1 / (1 + m*m)) * ((1 - m*m) * org.x + 2 * m * org.y - 2 * m * q);
+		new_org.y = (1 / (1 + m*m)) * (2 * m * org.x + (m*m - 1) * org.y + 2 * q);
+	}
+	new_org.z = org.z;
+	return new_org;
+}
+
 void waypoint_setupmodel(entity wp)
 {
 	if (autocvar_g_waypointeditor)
@@ -88,6 +116,100 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	waypoint_setupmodel(w);
 
 	return w;
+}
+
+void waypoint_spawn_fromeditor(entity pl)
+{
+	entity e;
+	vector org = pl.origin;
+	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
+	           || (autocvar_g_waypointeditor_symmetrical < 0));
+	int order = ctf_flags;
+	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
+	{
+		order = autocvar_g_waypointeditor_symmetrical_order;
+		ctf_flags = order;
+	}
+
+	LABEL(add_wp);
+	e = waypoint_spawn(org, org, 0);
+	waypoint_schedulerelink(e);
+	bprint(strcat("Waypoint spawned at ", vtos(org), "\n"));
+	if(sym)
+	{
+		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		if (vdist(org - pl.origin, >, 32))
+		{
+			if(order > 2)
+				order--;
+			else
+				sym = false;
+			goto add_wp;
+		}
+	}
+}
+
+void waypoint_remove(entity wp)
+{
+	// tell all waypoints linked to wp that they need to relink
+	IL_EACH(g_waypoints, it != wp,
+	{
+		if (waypoint_islinked(it, wp))
+			waypoint_removelink(it, wp);
+	});
+	delete(wp);
+}
+
+void waypoint_remove_fromeditor(entity pl)
+{
+	entity e = navigation_findnearestwaypoint(pl, false);
+
+	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
+	           || (autocvar_g_waypointeditor_symmetrical < 0));
+	int order = ctf_flags;
+	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
+	{
+		order = autocvar_g_waypointeditor_symmetrical_order;
+		ctf_flags = order;
+	}
+
+	LABEL(remove_wp);
+	if (!e) return;
+	if (e.wpflags & WAYPOINTFLAG_GENERATED) return;
+
+	if (e.wphardwired)
+	{
+		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired\n");
+		return;
+	}
+
+	entity wp_sym = NULL;
+	if (sym)
+	{
+		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
+			if(vdist(org - it.origin, <, 3))
+			{
+				wp_sym = it;
+				break;
+			}
+		});
+	}
+
+	bprint(strcat("Waypoint removed at ", vtos(e.origin), "\n"));
+	waypoint_remove(e);
+
+	if (sym && wp_sym)
+	{
+		e = wp_sym;
+		if(order > 2)
+			order--;
+		else
+			sym = false;
+		goto remove_wp;
+	}
 }
 
 void waypoint_removelink(entity from, entity to)
@@ -340,17 +462,6 @@ spawnfunc(waypoint)
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(this);
 	//waypoint_schedulerelink(this);
-}
-
-void waypoint_remove(entity wp)
-{
-	// tell all waypoints linked to wp that they need to relink
-	IL_EACH(g_waypoints, it != wp,
-	{
-		if (waypoint_islinked(it, wp))
-			waypoint_removelink(it, wp);
-	});
-	delete(wp);
 }
 
 // tell all waypoints to relink
