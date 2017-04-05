@@ -131,6 +131,10 @@ int autocvar_g_surv_defender_pickup_cells_big;
 /// \brief How many cells do defenders get when they pickup mega health/armor.
 int autocvar_g_surv_defender_pickup_cells_mega;
 
+/// \brief How much score attackers gain per 1 point of damage.
+float autocvar_g_surv_attacker_damage_score;
+/// \brief How much score attackers get for killing defenders.
+float autocvar_g_surv_attacker_frag_score;
 /// \brief How much defenders damage others. Higher values mean more damage.
 float autocvar_g_surv_defender_attack_scale;
 /// \brief How much defenders get damaged. High values mean less damage.
@@ -1987,7 +1991,6 @@ MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 {
 	entity target = M_ARGV(1, entity);
-	//float health = M_ARGV(2, float);
 	if (target.team != surv_defenderteam)
 	{
 		return;
@@ -1996,10 +1999,21 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 	if (target.health < 1)
 	{
 		WaypointSprite_Kill(target.surv_attack_sprite);
-		return;
 	}
-	WaypointSprite_UpdateHealth(target.surv_attack_sprite, target.health +
-		target.armorvalue);
+	else
+	{
+		WaypointSprite_UpdateHealth(target.surv_attack_sprite, target.health +
+			target.armorvalue);
+	}
+	entity attacker = M_ARGV(0, entity);
+	if ((attacker.team == surv_attackerteam) && (attacker.surv_role ==
+		SURVIVAL_ROLE_PLAYER))
+	{
+		float health = M_ARGV(2, float);
+		float armor = M_ARGV(3, float);
+		float score = (health + armor) * autocvar_g_surv_attacker_damage_score;
+		PlayerScore_Add(attacker, SP_SCORE, score);
+	}
 }
 
 /// \brief Hook which is called when the player dies.
@@ -2043,11 +2057,18 @@ MUTATOR_HOOKFUNCTION(surv, GiveFragsForKill, CBC_ORDER_FIRST)
 	{
 		return true;
 	}
-	entity player = M_ARGV(0, entity);
-	if ((player.team == surv_defenderteam) || (player.surv_role ==
+	entity attacker = M_ARGV(0, entity);
+	if ((attacker.team == surv_defenderteam) || (attacker.surv_role ==
 		SURVIVAL_ROLE_CANNON_FODDER))
 	{
 		M_ARGV(2, float) = 0;
+		return true;
+	}
+	entity target = M_ARGV(1, entity);
+	if ((attacker.surv_role == SURVIVAL_ROLE_PLAYER) && (target.team ==
+		surv_defenderteam))
+	{
+		M_ARGV(2, float) = autocvar_g_surv_attacker_frag_score;
 	}
 	return true;
 }
