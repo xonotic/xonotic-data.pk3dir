@@ -459,7 +459,6 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 #endif
 #ifdef SVQC
 .float speed;
-spawnfunc(item_health_big);
 METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 {
     TC(Mage, this);
@@ -469,7 +468,7 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
 
-    actor.monster_loot = spawnfunc_item_health_big;
+    actor.monster_loot = ITEM_HealthBig;
     actor.monster_attackfunc = M_Mage_Attack;
 
     return true;

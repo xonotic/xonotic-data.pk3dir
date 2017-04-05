@@ -15,6 +15,28 @@
 
 .float speed;
 
+void navigation_dynamicgoal_init(entity this, bool initially_static)
+{
+	this.navigation_dynamicgoal = true;
+	this.bot_basewaypoint = this.nearestwaypoint;
+	if(initially_static)
+		this.nearestwaypointtimeout = -1;
+	else
+		this.nearestwaypointtimeout = time;
+}
+
+void navigation_dynamicgoal_set(entity this)
+{
+	this.nearestwaypointtimeout = time;
+}
+
+void navigation_dynamicgoal_unset(entity this)
+{
+	if(this.bot_basewaypoint)
+		this.nearestwaypoint = this.bot_basewaypoint;
+	this.nearestwaypointtimeout = -1;
+}
+
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
 
@@ -26,9 +48,9 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 	float dist;
 	float totaldist;
 	float stepdist;
-	float yaw;
 	float ignorehazards;
 	float swimming;
+	entity tw_ladder = NULL;
 
 	if(autocvar_bot_debug_tracewalk)
 	{
@@ -70,7 +92,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 	}
 
 	// Movement loop
-	yaw = vectoyaw(move);
 	move = end - org;
 	for (;;)
 	{
@@ -115,14 +136,14 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 			if (trace_fraction < 1)
 			{
 				swimming = true;
-				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
+				org = trace_endpos + normalize(org - trace_endpos) * stepdist;
 				for (; org.z < end.z + e.maxs.z; org.z += stepdist)
 				{
-						if(autocvar_bot_debug_tracewalk)
-							debugnode(e, org);
+					if(autocvar_bot_debug_tracewalk)
+						debugnode(e, org);
 
-				        if(pointcontents(org) == CONTENT_EMPTY)
-							break;
+					if(pointcontents(org) == CONTENT_EMPTY)
+						break;
 				}
 
 				if(pointcontents(org + '0 0 1') != CONTENT_EMPTY)
@@ -160,8 +181,14 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 						if(autocvar_bot_debug_tracewalk)
 							debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
 
-						// check for doors
+						FOREACH_ENTITY_CLASS("func_ladder", true,
+							{ it.solid = SOLID_BSP; });
+
 						traceline( org, move, movemode, e);
+
+						FOREACH_ENTITY_CLASS("func_ladder", true,
+							{ it.solid = SOLID_TRIGGER; });
+
 						if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
 						{
 							vector nextmove;
@@ -172,6 +199,24 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 								traceline( move, nextmove, movemode, e);
 								move = nextmove;
 							}
+						}
+						else if (trace_ent.classname == "func_ladder")
+						{
+							tw_ladder = trace_ent;
+							vector ladder_bottom = trace_endpos - dir * m2.x;
+							vector ladder_top = ladder_bottom;
+							ladder_top.z = trace_ent.absmax.z + (-m1.z + 1);
+							tracebox(ladder_bottom, m1, m2, ladder_top, movemode, e);
+							if (trace_fraction < 1 || trace_startsolid)
+							{
+								if(autocvar_bot_debug_tracewalk)
+									debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
+
+								return false; // failed
+							}
+							org = ladder_top + dir * m2.x;
+							move = org + dir * stepdist;
+							continue;
 						}
 						else
 						{
@@ -212,6 +257,16 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 
 			org = trace_endpos;
 		}
+
+		if(tw_ladder && org.z < tw_ladder.absmax.z)
+		{
+			// stop tracewalk if destination height is lower than the top of the ladder
+			// otherwise bot can't easily figure out climbing direction
+			if(autocvar_bot_debug_tracewalk)
+				debugnodestatus(org, DEBUG_NODE_FAIL);
+
+			return false;
+		}
 	}
 
 	//print("tracewalk: ", vtos(start), " did not arrive at ", vtos(end), " but at ", vtos(org), "\n");
@@ -231,7 +286,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 void navigation_clearroute(entity this)
 {
 	//print("bot ", etos(this), " clear\n");
-	this.navigation_hasgoals = false;
+	this.goalentity = NULL;
 	this.goalcurrent = NULL;
 	this.goalstack01 = NULL;
 	this.goalstack02 = NULL;
@@ -275,6 +330,8 @@ void navigation_clearroute(entity this)
 void navigation_pushroute(entity this, entity e)
 {
 	//print("bot ", etos(this), " push ", etos(e), "\n");
+	if(this.goalstack31 == this.goalentity)
+		this.goalentity = NULL;
 	this.goalstack31 = this.goalstack30;
 	this.goalstack30 = this.goalstack29;
 	this.goalstack29 = this.goalstack28;
@@ -315,6 +372,8 @@ void navigation_pushroute(entity this, entity e)
 void navigation_poproute(entity this)
 {
 	//print("bot ", etos(this), " pop\n");
+	if(this.goalcurrent == this.goalentity)
+		this.goalentity = NULL;
 	this.goalcurrent = this.goalstack01;
 	this.goalstack01 = this.goalstack02;
 	this.goalstack02 = this.goalstack03;
@@ -643,15 +702,54 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 // updates the best goal according to a weighted calculation of travel cost and item value of a new proposed item
 void navigation_routerating(entity this, entity e, float f, float rangebias)
 {
-	entity nwp;
-	vector o;
 	if (!e)
 		return;
 
 	if(e.blacklisted)
 		return;
 
-	o = (e.absmin + e.absmax) * 0.5;
+	if (IS_PLAYER(e))
+	{
+		bool rate_wps = false;
+		if((e.flags & FL_INWATER) || (e.flags & FL_PARTIALGROUND))
+			rate_wps = true;
+
+		if(!IS_ONGROUND(e))
+		{
+			traceline(e.origin, e.origin + '0 0 -1500', true, NULL);
+			int t = pointcontents(trace_endpos + '0 0 1');
+			if(t != CONTENT_SOLID )
+			{
+				if(t == CONTENT_WATER || t == CONTENT_SLIME || t == CONTENT_LAVA)
+					rate_wps = true;
+				else if(tracebox_hits_trigger_hurt(e.origin, e.mins, e.maxs, trace_endpos))
+					return;
+			}
+		}
+
+		if(rate_wps)
+		{
+			entity theEnemy = e;
+			entity best_wp = NULL;
+			float best_dist = 10000;
+			IL_EACH(g_waypoints, vdist(it.origin - theEnemy.origin, <, 500)
+				&& vdist(it.origin - this.origin, >, 100)
+				&& !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+			{
+				float dist = vlen(it.origin - theEnemy.origin);
+				if (dist < best_dist)
+				{
+					best_wp = it;
+					best_dist = dist;
+				}
+			});
+			if (!best_wp)
+				return;
+			e = best_wp;
+		}
+	}
+
+	vector o = (e.absmin + e.absmax) * 0.5;
 
 	//print("routerating ", etos(e), " = ", ftos(f), " - ", ftos(rangebias), "\n");
 
@@ -744,6 +842,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		}
 	}
 
+	entity nwp;
 	//te_wizspike(e.origin);
 	//bprint(etos(e));
 	//bprint("\n");
@@ -754,25 +853,11 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 	else
 	{
-		float search;
+		if(autocvar_g_waypointeditor && e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
+			e.nearestwaypoint = NULL;
 
-		search = true;
-
-		if(e.flags & FL_ITEM)
-		{
-			if (!(e.flags & FL_WEAPON))
-			if(e.nearestwaypoint)
-				search = false;
-		}
-		else if (e.flags & FL_WEAPON)
-		{
-			if(e.classname != "droppedweapon")
-			if(e.nearestwaypoint)
-				search = false;
-		}
-
-		if(search)
-		if (time > e.nearestwaypointtimeout)
+		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
+			&& e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 		{
 			nwp = navigation_findnearestwaypoint(e, true);
 			if(nwp)
@@ -781,13 +866,8 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			{
 				LOG_DEBUG("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e));
 
-				if(e.flags & FL_ITEM)
+				if(!e.navigation_dynamicgoal)
 					e.blacklisted = true;
-				else if (e.flags & FL_WEAPON)
-				{
-					if(e.classname != "droppedweapon")
-						e.blacklisted = true;
-				}
 
 				if(e.blacklisted)
 				{
@@ -796,11 +876,10 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 				}
 			}
 
-			// TODO: Cleaner solution, probably handling this timeout from ctf.qc
-			if(e.classname=="item_flag_team")
+			if(e.navigation_dynamicgoal)
 				e.nearestwaypointtimeout = time + 2;
-			else
-				e.nearestwaypointtimeout = time + random() * 3 + 5;
+			else if(autocvar_g_waypointeditor)
+				e.nearestwaypointtimeout = time + 3 + random() * 2;
 		}
 		nwp = e.nearestwaypoint;
 	}
@@ -825,17 +904,21 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 // adds an item to the the goal stack with the path to a given item
 bool navigation_routetogoal(entity this, entity e, vector startposition)
 {
-	this.goalentity = e;
-
 	// if there is no goal, just exit
 	if (!e)
 		return false;
 
-	this.navigation_hasgoals = true;
+	this.goalentity = e;
 
 	// put the entity on the goal stack
 	//print("routetogoal ", etos(e), "\n");
 	navigation_pushroute(this, e);
+
+	if(e.classname == "waypoint" && !(e.wpflags & WAYPOINTFLAG_PERSONAL))
+	{
+		this.wp_goal_prev1 = this.wp_goal_prev0;
+		this.wp_goal_prev0 = e;
+	}
 
 	if(g_jetpack)
 	if(e==this.navigation_jetpack_goal)
@@ -845,14 +928,25 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
 		return true;
 
+	entity nearest_wp = NULL;
 	// see if there are waypoints describing a path to the item
 	if(e.classname != "waypoint" || (e.wpflags & WAYPOINTFLAG_PERSONAL))
+	{
 		e = e.nearestwaypoint;
+		nearest_wp = e;
+	}
 	else
 		e = e.enemy; // we already have added it, so...
 
 	if(e == NULL)
 		return false;
+
+	if(nearest_wp && nearest_wp.enemy)
+	{
+		// often path can be optimized by not adding the nearest waypoint
+		if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), (this.goalentity.absmin + this.goalentity.absmax) * 0.5, bot_navigation_movemode))
+			e = nearest_wp.enemy;
+	}
 
 	for (;;)
 	{
@@ -875,9 +969,6 @@ void navigation_poptouchedgoals(entity this)
 	org = this.origin;
 	m1 = org + this.mins;
 	m2 = org + this.maxs;
-
-	while(this.goalcurrent && wasfreed(this.goalcurrent))
-		navigation_poproute(this);
 
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
@@ -913,16 +1004,11 @@ void navigation_poptouchedgoals(entity this)
 		// personality property
 	}
 
-	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
-	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
-	if(IS_PLAYER(this.goalcurrent))
-		navigation_poproute(this);
-
 	// Loose goal touching check when running
 	if(this.aistatus & AI_STATUS_RUNNING)
-	if(this.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(this.goalcurrent.classname=="waypoint")
 	if(!(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
+	if(vlen(this.velocity - eZ * this.velocity.z) >= autocvar_sv_maxspeed) // if -really- running
 	{
 		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
 		{
@@ -942,8 +1028,18 @@ void navigation_poptouchedgoals(entity this)
 		}
 	}
 
-	while (this.goalcurrent && boxesoverlap(m1, m2, this.goalcurrent.absmin, this.goalcurrent.absmax))
+	while (this.goalcurrent && !IS_PLAYER(this.goalcurrent))
 	{
+		vector gc_min = this.goalcurrent.absmin;
+		vector gc_max = this.goalcurrent.absmax;
+		if(this.goalcurrent.classname == "waypoint" && !this.goalcurrent.wpisbox)
+		{
+			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
+			gc_max = this.goalcurrent.origin + '1 1 1' * 12;
+		}
+		if(!boxesoverlap(m1, m2, gc_min, gc_max))
+			break;
+
 		if((this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 			break;
 
@@ -967,7 +1063,6 @@ void navigation_goalrating_start(entity this)
 
 	this.navigation_jetpack_goal = NULL;
 	navigation_bestrating = -1;
-	this.navigation_hasgoals = false;
 	navigation_clearroute(this);
 	navigation_bestgoal = NULL;
 	navigation_markroutes(this, NULL);
@@ -983,16 +1078,13 @@ void navigation_goalrating_end(entity this)
 	LOG_DEBUG("best goal ", this.goalcurrent.classname);
 
 	// If the bot got stuck then try to reach the farthest waypoint
-	if (!this.navigation_hasgoals)
-	if (autocvar_bot_wander_enable)
+	if (!this.goalentity && autocvar_bot_wander_enable)
 	{
 		if (!(this.aistatus & AI_STATUS_STUCK))
 		{
 			LOG_DEBUG(this.netname, " cannot walk to any goal");
 			this.aistatus |= AI_STATUS_STUCK;
 		}
-
-		this.navigation_hasgoals = false; // Reset this value
 	}
 }
 

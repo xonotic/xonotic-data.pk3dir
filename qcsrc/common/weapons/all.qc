@@ -67,11 +67,11 @@ WepSet _WepSet_FromWeapon(int a)
 				if (a >= 24)
 				{
 					a -= 24;
-					return '0 0 1' * power2of(a);
+					return '0 0 1' * (2 ** a);
 				}
-			return '0 1 0' * power2of(a);
+			return '0 1 0' * (2 ** a);
 		}
-	return '1 0 0' * power2of(a);
+	return '1 0 0' * (2 ** a);
 }
 #ifdef SVQC
 	void WriteWepSet(float dst, WepSet w)
@@ -260,12 +260,8 @@ string GetAmmoPicture(.int ammotype)
 string W_Sound(string w_snd)
 {
 	string output = strcat("weapons/", w_snd);
-#ifdef SVQC
-		MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
-		return M_ARGV(1, string);
-#else
-		return output;
-#endif
+	MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
+	return M_ARGV(1, string);
 }
 
 string W_Model(string w_mdl)
@@ -566,7 +562,10 @@ NET_HANDLE(wframe, bool isNew)
     int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
-	anim_set(wepent, a, !restartanim, restartanim, restartanim);
+	if(a.x == wepent.anim_idle_x) // we don't need to enforce idle animation
+		wepent.animstate_looping = false;
+	else
+		anim_set(wepent, a, !restartanim, restartanim, restartanim);
 	wepent.state = ReadByte();
 	wepent.weapon_nextthink = ReadFloat();
 	switch (wepent.state)

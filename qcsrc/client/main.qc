@@ -131,6 +131,9 @@ void CSQC_Init()
 
 	registercvar("cl_spawn_near_teammate", "1");
 
+	if(autocvar_cl_lockview)
+		cvar_set("cl_lockview", "0");
+
 	gametype = NULL;
 
 	postinit = false;
@@ -205,6 +208,8 @@ void Shutdown()
 		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
+
+	localcmd("\ncl_hook_shutdown\n");
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
@@ -564,7 +569,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
-		vote_called_vote = strzone(ColorTranslateRGB(ReadString()));
+		vote_called_vote = strzone(ReadString());
 	}
 
 	if(nags & 1)
@@ -771,8 +776,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 			localcmd("-zoom\n");
 			button_zoom = false;
 		}
+		HUD_Radar_Hide_Maximized();
 	}
-	HUD_Radar_Hide_Maximized();
 	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(this.origin), entnum, player_localentnum);
 }
 
@@ -1030,7 +1035,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_previousbesttime = ReadInt24_t();
 			if(race_previousbestname)
 				strunzone(race_previousbestname);
-			race_previousbestname = strzone(ColorTranslateRGB(ReadString()));
+			race_previousbestname = strzone(ReadString());
 
 			race_checkpointtime = time;
 
@@ -1057,7 +1062,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_nextbesttime = ReadInt24_t();
 			if(race_nextbestname)
 				strunzone(race_nextbestname);
-			race_nextbestname = strzone(ColorTranslateRGB(ReadString()));
+			race_nextbestname = strzone(ReadString());
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE:
@@ -1069,7 +1074,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_mycheckpointlapsdelta -= 256;
 			if(race_mycheckpointenemy)
 				strunzone(race_mycheckpointenemy);
-			race_mycheckpointenemy = strzone(ColorTranslateRGB(ReadString()));
+			race_mycheckpointenemy = strzone(ReadString());
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
@@ -1081,7 +1086,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_othercheckpointlapsdelta -= 256;
 			if(race_othercheckpointenemy)
 				strunzone(race_othercheckpointenemy);
-			race_othercheckpointenemy = strzone(ColorTranslateRGB(ReadString()));
+			race_othercheckpointenemy = strzone(ReadString());
 			break;
 
 		case RACE_NET_PENALTY_RACE:
@@ -1167,7 +1172,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				strunzone(grecordholder[pos-1]);
 			grecordholder[pos-1] = strzone(ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
-			if(grecordholder[pos-1] == entcs_GetName(player_localnum))
+			if(strdecolorize(grecordholder[pos-1]) == strdecolorize(entcs_GetName(player_localnum)))
 				race_myrank = pos;
 			break;
 		case RACE_NET_SERVER_STATUS:

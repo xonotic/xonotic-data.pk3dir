@@ -5,7 +5,8 @@ CLASS(Armor, Pickup)
 #ifdef SVQC
     ATTRIB(Armor, m_mins, vector, '-16 -16 0');
     ATTRIB(Armor, m_maxs, vector, '16 16 48');
-    ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), commodity_pickupevalfunc);
+    ATTRIB(Armor, m_pickupevalfunc, float(entity player, entity item), healtharmor_pickupevalfunc);
+    ATTRIB(Armor, m_botvalue, int, 5000);
 #endif
 ENDCLASS(Armor)
 
@@ -17,19 +18,33 @@ ENDCLASS(Armor)
 MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
 SOUND(ArmorSmall, Item_Sound("armor1"));
 #endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_armorsmall_anyway);
+PROPERTY(int, g_pickup_armorsmall);
+PROPERTY(int, g_pickup_armorsmall_max);
+void item_armorsmall_init(entity item)
+{
+    if(!item.max_armorvalue)
+        item.max_armorvalue = g_pickup_armorsmall_max;
+    if(!item.armorvalue)
+        item.armorvalue = g_pickup_armorsmall;
+}
+#endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
 #ifdef GAMEQC
     this.m_model                =   MDL_ArmorSmall_ITEM;
     this.m_sound                =   SND_ArmorSmall;
 #endif
+    this.netname                =   "armor_small";
     this.m_name                 =   "5 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
     this.m_itemid               =   IT_ARMOR_SHARD;
     this.m_respawntime          =   GET(g_pickup_respawntime_short);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_short);
+    this.m_pickupanyway         =   GET(g_pickup_armorsmall_anyway);
+    this.m_iteminit             =   item_armorsmall_init;
 #endif
 }
 
@@ -37,19 +52,33 @@ REGISTER_ITEM(ArmorSmall, Armor) {
 MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
 SOUND(ArmorMedium, Item_Sound("armor10"));
 #endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_armormedium_anyway);
+PROPERTY(int, g_pickup_armormedium);
+PROPERTY(int, g_pickup_armormedium_max);
+void item_armormedium_init(entity item)
+{
+    if(!item.max_armorvalue)
+        item.max_armorvalue = g_pickup_armormedium_max;
+    if(!item.armorvalue)
+        item.armorvalue = g_pickup_armormedium;
+}
+#endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
 #ifdef GAMEQC
     this.m_model                =   MDL_ArmorMedium_ITEM;
     this.m_sound                =   SND_ArmorMedium;
 #endif
+    this.netname                =   "armor_medium";
     this.m_name                 =   "25 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_MID;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_medium);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_medium);
+    this.m_pickupanyway         =   GET(g_pickup_armormedium_anyway);
+    this.m_iteminit             =   item_armormedium_init;
 #endif
 }
 
@@ -57,21 +86,35 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 MODEL(ArmorBig_ITEM, Item_Model("item_armor_big.md3"));
 SOUND(ArmorBig, Item_Sound("armor17_5"));
 #endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_armorbig_anyway);
+PROPERTY(int, g_pickup_armorbig);
+PROPERTY(int, g_pickup_armorbig_max);
+void item_armorbig_init(entity item)
+{
+    if(!item.max_armorvalue)
+        item.max_armorvalue = g_pickup_armorbig_max;
+    if(!item.armorvalue)
+        item.armorvalue = g_pickup_armorbig;
+}
+#endif
 
 REGISTER_ITEM(ArmorBig, Armor) {
 #ifdef GAMEQC
     this.m_model                =   MDL_ArmorBig_ITEM;
     this.m_sound                =   SND_ArmorBig;
 #endif
+    this.netname                =   "armor_big";
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
     this.m_color                =   '0 1 0';
     this.m_waypoint             =   _("Big armor");
 #ifdef SVQC
-    this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
+    this.m_pickupanyway         =   GET(g_pickup_armorbig_anyway);
+    this.m_iteminit             =   item_armorbig_init;
 #endif
 }
 
@@ -79,12 +122,25 @@ REGISTER_ITEM(ArmorBig, Armor) {
 MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
 SOUND(ArmorMega, Item_Sound("armor25"));
 #endif
+#ifdef SVQC
+PROPERTY(float, g_pickup_armormega_anyway);
+PROPERTY(int, g_pickup_armormega);
+PROPERTY(int, g_pickup_armormega_max);
+void item_armormega_init(entity item)
+{
+    if(!item.max_armorvalue)
+        item.max_armorvalue = g_pickup_armormega_max;
+    if(!item.armorvalue)
+        item.armorvalue = g_pickup_armormega;
+}
+#endif
 
 REGISTER_ITEM(ArmorMega, Armor) {
 #ifdef GAMEQC
     this.m_model                =   MDL_ArmorMega_ITEM;
     this.m_sound                =   SND_ArmorMega;
 #endif
+    this.netname                =   "armor_mega";
     this.m_name                 =   "100 Armor";
     this.m_icon                 =   "item_large_armor";
     this.m_color                =   '0 1 0';
@@ -92,9 +148,10 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_maxs                 =   '16 16 70';
-    this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_ARMOR;
     this.m_respawntime          =   GET(g_pickup_respawntime_long);
     this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_long);
+    this.m_pickupanyway         =   GET(g_pickup_armormega_anyway);
+    this.m_iteminit             =   item_armormega_init;
 #endif
 }

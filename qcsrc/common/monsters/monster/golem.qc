@@ -260,7 +260,6 @@ METHOD(Golem, mr_anim, bool(Golem this, entity actor))
 }
 #endif
 #ifdef SVQC
-spawnfunc(item_health_mega);
 .float animstate_endtime;
 METHOD(Golem, mr_setup, bool(Golem this, entity actor))
 {
@@ -272,7 +271,7 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_golem_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_golem_damageforcescale); }
 
-    actor.monster_loot = spawnfunc_item_health_mega;
+    actor.monster_loot = ITEM_HealthMega;
     actor.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
 
     setanim(actor, actor.anim_shoot, false, true, true);

@@ -70,9 +70,6 @@ bool ons_stalemate;
 
 .float teleport_antispam;
 
-// waypoint sprites
-.entity bot_basewaypoint; // generator waypointsprite
-
 .bool isgenneighbor[17];
 .bool iscpneighbor[17];
 float ons_notification_time[17];

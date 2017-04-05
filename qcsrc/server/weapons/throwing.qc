@@ -20,10 +20,7 @@ void thrown_wep_think(entity this)
 	{
 		this.SendFlags |= ISF_LOCATION;
 		this.oldorigin = this.origin;
-		this.bot_pickup = false;
 	}
-	else
-		this.bot_pickup = true;
 	this.owner = NULL;
 	float timeleft = this.savenextthink - time;
 	if(timeleft > 1)
@@ -50,6 +47,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 	wep.glowmod = weaponentity_glowmod(info, own, own.clientcolors, own.(weaponentity));
+	navigation_dynamicgoal_init(wep, false);
 
 	W_DropEvent(wr_drop,own,wpn,wep,weaponentity);
 
@@ -194,9 +192,9 @@ void W_ThrowWeapon(entity this, .entity weaponentity, vector velo, vector delta,
 	Send_Notification(NOTIF_ONE, this, MSG_MULTI, ITEM_WEAPON_DROP, a, w.m_id);
 }
 
-void SpawnThrownWeapon(entity this, vector org, float w, .entity weaponentity)
+void SpawnThrownWeapon(entity this, vector org, Weapon wep, .entity weaponentity)
 {
-	entity wep = this.(weaponentity).m_weapon;
+	//entity wep = this.(weaponentity).m_weapon;
 
 	if(this.weapons & WepSet_FromWeapon(wep))
 		if(W_IsWeaponThrowable(this, wep.m_id))

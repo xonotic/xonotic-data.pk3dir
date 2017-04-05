@@ -1,0 +1,8 @@
+//TAG: troll
+death sound/monsters/troll/death 0
+sight sound/monsters/troll/sight 0
+//ranged sound/monsters/troll/ranged 0
+melee sound/monsters/troll/melee 0
+pain sound/monsters/troll/pain 2
+//spawn sound/monsters/troll/spawn 0
+idle sound/monsters/troll/idle 2

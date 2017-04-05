@@ -209,7 +209,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
 
 		if(!noprint)
-		bprint(pl.netname, "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
+			bprint(playername(pl, false), "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
 	}
 
 }
@@ -224,7 +224,7 @@ void CheckAllowedTeams (entity for_whom)
 
 	string teament_name = string_null;
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(CheckAllowedTeams, teams_mask, teament_name, for_whom);
 	teams_mask = M_ARGV(0, float);
 	teament_name = M_ARGV(1, string);
 

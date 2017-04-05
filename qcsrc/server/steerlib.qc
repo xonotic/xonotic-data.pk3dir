@@ -2,6 +2,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
+    #include "pathlib/utility.qh"
 #endif
 
 /**
@@ -340,51 +341,6 @@ vector steerlib_traceavoid_flat(entity this, float pitch, float length, vector v
     return normalize(leftwish + rightwish + frontwish);
 }
 
-bool beamsweep_badpoint(vector point, bool waterok)
-{
-    if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-        return true;
-
-    int pc = pointcontents(point);
-    int pc2 = pointcontents(point - '0 0 1');
-    
-    if(pc == CONTENT_EMPTY && pc2 == CONTENT_SOLID)
-        return false;
-    if(pc == CONTENT_EMPTY && pc2 == CONTENT_WATER && waterok)
-        return false;
-    if(pc == CONTENT_WATER && waterok)
-        return false;
-    return true;
-
-    /*switch(pc)
-    {
-        case CONTENT_SOLID: break;
-        case CONTENT_SLIME: break;
-        case CONTENT_LAVA:  break;
-
-        case CONTENT_SKY:
-            return true;
-
-        case CONTENT_EMPTY:
-            if (pc2 == CONTENT_SOLID)
-                return 0;
-
-            if (pc2 == CONTENT_WATER)
-                if(waterok)
-                    return 0;
-
-            break;
-
-        case CONTENT_WATER:
-            if(waterok)
-                return 0;
-
-            break;
-    }
-
-    return true;*/
-}
-
 //#define BEAMSTEER_VISUAL
 float beamsweep(entity this, vector from, vector dir,float length, float step,float step_up, float step_down)
 {
@@ -398,7 +354,7 @@ float beamsweep(entity this, vector from, vector dir,float length, float step,fl
     if(trace_fraction == 1.0)
         return 0;
 
-    if(beamsweep_badpoint(trace_endpos,0))
+    if(!location_isok(trace_endpos, false, false))
         return 0;
 
     a = trace_endpos;
@@ -414,7 +370,7 @@ float beamsweep(entity this, vector from, vector dir,float length, float step,fl
         if(trace_fraction == 1.0)
             return i / length;
 
-        if(beamsweep_badpoint(trace_endpos,0))
+        if(!location_isok(trace_endpos, false, false))
             return i / length;
 #ifdef BEAMSTEER_VISUAL
         te_lightning1(NULL,a+u,b+u);

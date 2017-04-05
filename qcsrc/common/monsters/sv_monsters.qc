@@ -46,7 +46,7 @@ void monster_dropitem(entity this, entity attacker)
 	if(e && e.monster_loot)
 	{
 		e.noalign = true;
-		e.monster_loot(e);
+		StartItem(e, e.monster_loot);
 		e.gravity = 1;
 		set_movetype(e, MOVETYPE_TOSS);
 		e.reset = SUB_Remove;
@@ -99,9 +99,10 @@ bool Monster_ValidTarget(entity this, entity targ)
 		return false;
 	}
 
-	traceline(this.origin + this.view_ofs, targ.origin, MOVE_NOMONSTERS, this);
+	vector targ_origin = ((targ.absmin + targ.absmax) * 0.5);
+	traceline(this.origin + this.view_ofs, targ_origin, MOVE_NOMONSTERS, this);
 
-	if(trace_fraction < 1)
+	if(trace_fraction < 1 && trace_ent != targ)
 		return false; // solid
 
 	if(autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT))
@@ -698,7 +699,8 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
 	// update goal entity if lost
-	if(this.target2 && this.goalentity.targetname != this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
+	if(this.target2 && this.target2 != "" && this.goalentity.targetname != this.target2)
+		this.goalentity = find(NULL, targetname, this.target2);
 
 	if(STAT(FROZEN, this) == 2)
 	{
@@ -871,9 +873,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	else
 	{
 		entity e = this.goalentity; //find(NULL, targetname, this.target2);
-		if(e.target2)
+		if(e.target2 && e.target2 != "")
 			this.target2 = e.target2;
-		else if(e.target) // compatibility
+		else if(e.target && e.target != "") // compatibility
 			this.target2 = e.target;
 
 		movelib_brake_simple(this, stpspeed);
@@ -1015,6 +1017,9 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		totalspawned -= 1;
 	}
 
+	if(!gibbed && this.mdl_dead && this.mdl_dead != "")
+		_setmodel(this, this.mdl_dead);
+
 	this.event_damage	= ((gibbed) ? func_null : Monster_Dead_Damage);
 	this.solid			= SOLID_CORPSE;
 	this.takedamage		= DAMAGE_AIM;
@@ -1078,8 +1083,8 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 	this.dmg_time = time;
 
-	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN.m_id)
-		spamsound (this, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+	if(deathtype != DEATH_DROWN.m_id && deathtype != DEATH_FIRE.m_id && sound_allowed(MSG_BROADCAST, attacker))
+		spamsound (this, CH_PAIN, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	this.velocity += force * this.damageforcescale;
 
@@ -1295,7 +1300,13 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!autocvar_g_monsters) { Monster_Remove(this); return false; }
 
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
+	{
 		IL_PUSH(g_monsters, this);
+		if(this.mdl && this.mdl != "")
+			precache_model(this.mdl);
+		if(this.mdl_dead && this.mdl_dead != "")
+			precache_model(this.mdl_dead);
+	}
 
 	if(check_appear && Monster_Appear_Check(this, mon_id)) { return true; } // return true so the monster isn't removed
 
@@ -1314,7 +1325,11 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	setmodel(this, mon.m_model);
+	if(this.mdl && this.mdl != "")
+		_setmodel(this, this.mdl);
+	else
+		setmodel(this, mon.m_model);
+
 	this.flags				= FL_MONSTER;
 	this.classname			= "monster";
 	this.takedamage			= DAMAGE_AIM;

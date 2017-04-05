@@ -118,7 +118,7 @@ float TeamScore_AddToTeam(float t, float scorefield, float score)
 	}
 	if(score)
 		if(teamscores_label(scorefield) != "")
-			s.SendFlags |= pow(2, scorefield);
+			s.SendFlags |= (2 ** scorefield);
 	return (s.(teamscores(scorefield)) += score);
 }
 
@@ -265,7 +265,7 @@ float PlayerScore_Clear(entity player)
 	FOREACH(Scores, true, {
 		if(sk.(scores(it)) != 0)
 			if(scores_label(it) != "")
-				sk.SendFlags |= pow(2, i % 16);
+				sk.SendFlags |= (2 ** (i % 16));
 		sk.(scores(it)) = 0;
 	});
 
@@ -282,7 +282,7 @@ void Score_ClearAll()
 		FOREACH(Scores, true, {
 			if(sk.(scores(it)) != 0)
 				if(scores_label(it) != "")
-					sk.SendFlags |= pow(2, i % 16);
+					sk.SendFlags |= (2 ** (i % 16));
 			sk.(scores(it)) = 0;
 		});
 	});
@@ -295,7 +295,7 @@ void Score_ClearAll()
 		{
 			if(sk.(teamscores(j)) != 0)
 				if(teamscores_label(j) != "")
-					sk.SendFlags |= pow(2, j);
+					sk.SendFlags |= (2 ** j);
 			sk.(teamscores(j)) = 0;
 		}
 	}
@@ -339,7 +339,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	}
 	if(score)
 		if(scores_label(scorefield) != "")
-			s.SendFlags |= pow(2, scorefield.m_id % 16);
+			s.SendFlags |= (2 ** (scorefield.m_id % 16));
 	if(!warmup_stage)
 		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
 	return (s.(scores(scorefield)) += score);
@@ -824,7 +824,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 
 	sk = p.scorekeeper;
 
-	s = strcat(s, p.netname);
+	s = strcat(s, playername(p, false));
 	for (;;)
 	{
 		i = strlennocol(s) - NAMEWIDTH;
@@ -856,7 +856,7 @@ void Score_NicePrint_Spectators(entity to)
 
 void Score_NicePrint_Spectator(entity to, entity p)
 {
-	print_to(to, strcat("  ", p.netname));
+	print_to(to, strcat("  ", playername(p, false)));
 }
 
 .float score_dummyfield;

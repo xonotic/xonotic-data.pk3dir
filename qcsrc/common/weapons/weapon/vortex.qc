@@ -4,7 +4,7 @@ CLASS(Vortex, Weapon)
 /* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells);
 /* impulse   */ ATTRIB(Vortex, impulse, int, 7);
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
-/* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
 #ifdef GAMEQC
@@ -67,8 +67,8 @@ REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
 #endif
 #ifdef IMPLEMENTATION
 
-REGISTER_STAT(WEP_CVAR_vortex_charge, bool, WEP_CVAR(vortex, charge))
-REGISTER_STAT(WEP_CVAR_vortex_charge_animlimit, float, WEP_CVAR(vortex, charge_animlimit))
+//REGISTER_STAT(WEP_CVAR_vortex_charge, bool, WEP_CVAR(vortex, charge))
+//REGISTER_STAT(WEP_CVAR_vortex_charge_animlimit, float, WEP_CVAR(vortex, charge_animlimit))
 
 #if defined(GAMEQC)
 float autocvar_g_weapon_charge_colormod_red_full;
@@ -81,9 +81,9 @@ float autocvar_g_weapon_charge_colormod_hdrmultiplier;
 
 METHOD(Vortex, wr_glow, vector(Vortex this, entity actor, entity wepent))
 {
-	if (!STAT(WEP_CVAR_vortex_charge, actor)) return '0 0 0';
+	if (!WEP_CVAR(vortex, charge)) return '0 0 0';
 	float charge = wepent.vortex_charge;
-	float animlimit = STAT(WEP_CVAR_vortex_charge_animlimit, actor);
+	float animlimit = WEP_CVAR(vortex, charge_animlimit);
 	vector g;
 	g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, charge / animlimit);
 	g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, charge / animlimit);

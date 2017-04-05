@@ -109,7 +109,7 @@ void Nagger_ReadyCounted()
 // If the vote_caller is still here, return their name, otherwise vote_caller_name
 string OriginalCallerName()
 {
-	if (IS_REAL_CLIENT(vote_caller)) return vote_caller.netname;
+	if (IS_REAL_CLIENT(vote_caller)) return playername(vote_caller, false);
 	return vote_caller_name;
 }
 
@@ -419,7 +419,7 @@ void ReadyRestart_force()
 	game_starttime = time + RESTART_COUNTDOWN;
 
 	// clear player attributes
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		it.alivetime = 0;
 		it.killcount = 0;
 		PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, 0));

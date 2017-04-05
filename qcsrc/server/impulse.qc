@@ -52,8 +52,6 @@
 
 // weapon switching impulses
 
-bool autocvar_g_weaponswitch_debug;
-
 #define X(slot) \
 	IMPULSE(weapon_group_##slot) \
 	{ \
@@ -66,7 +64,7 @@ bool autocvar_g_weaponswitch_debug;
 		{ \
 			.entity weaponentity = weaponentities[wepslot]; \
 			W_NextWeaponOnImpulse(this, slot, weaponentity); \
-			if(wepslot == 0 && !autocvar_g_weaponswitch_debug) \
+			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -100,7 +98,7 @@ X(0)
 		{ \
 			.entity weaponentity = weaponentities[wepslot]; \
 			W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir, weaponentity); \
-			if(wepslot == 0 && !autocvar_g_weaponswitch_debug) \
+			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -153,7 +151,7 @@ X(9, next)
 		{ \
 			.entity weaponentity = weaponentities[slot]; \
 			W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i), weaponentity); \
-			if(slot == 0 && !autocvar_g_weaponswitch_debug) \
+			if(slot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
 	}
@@ -196,7 +194,7 @@ IMPULSE(weapon_next_byid)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 0, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -214,7 +212,7 @@ IMPULSE(weapon_prev_byid)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 0, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -232,7 +230,7 @@ IMPULSE(weapon_next_bygroup)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 1, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -250,7 +248,7 @@ IMPULSE(weapon_prev_bygroup)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 1, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -268,7 +266,7 @@ IMPULSE(weapon_next_bypriority)
 		.entity weaponentity = weaponentities[slot];
 		W_NextWeapon(this, 2, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -286,7 +284,7 @@ IMPULSE(weapon_prev_bypriority)
 		.entity weaponentity = weaponentities[slot];
 		W_PreviousWeapon(this, 2, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -300,7 +298,7 @@ IMPULSE(weapon_last)
 		.entity weaponentity = weaponentities[slot];
 		W_LastWeapon(this, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -314,7 +312,7 @@ IMPULSE(weapon_best)
 		.entity weaponentity = weaponentities[slot];
 		W_SwitchWeapon(this, w_getbestweapon(this, weaponentity), weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -328,7 +326,7 @@ IMPULSE(weapon_drop)
 		.entity weaponentity = weaponentities[slot];
 		W_ThrowWeapon(this, weaponentity, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -345,7 +343,7 @@ IMPULSE(weapon_reload)
 		Weapon w = this.(weaponentity).m_weapon;
 		w.wr_reload(w, actor, weaponentity);
 
-		if(slot == 0 && !autocvar_g_weaponswitch_debug)
+		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
 			break;
 	}
 }
@@ -553,6 +551,9 @@ IMPULSE(waypoint_clear_personal)
 	{
 		delete(this.personal);
 		this.personal = NULL;
+
+		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+			ClientKill(this);
 	}
 	sprint(this, "personal waypoint cleared\n");
 }
@@ -564,25 +565,120 @@ IMPULSE(waypoint_clear)
 	{
 		delete(this.personal);
 		this.personal = NULL;
+		if((g_cts || g_race) && autocvar_g_allow_checkpoints)
+			ClientKill(this);
 	}
 	sprint(this, "all waypoints cleared\n");
+}
+
+vector waypoint_getSymmetricalOrigin(vector org, int ctf_flags)
+{
+	vector new_org = org;
+	if (fabs(autocvar_g_waypointeditor_symmetrical) == 1)
+	{
+		vector map_center = havocbot_middlepoint;
+		if (autocvar_g_waypointeditor_symmetrical == -1)
+			map_center = autocvar_g_waypointeditor_symmetrical_origin;
+
+		new_org = Rotate(org - map_center, 360 * DEG2RAD / ctf_flags) + map_center;
+	}
+	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
+	{
+		float m = havocbot_symmetryaxis_equation.x;
+		float q = havocbot_symmetryaxis_equation.y;
+		if (autocvar_g_waypointeditor_symmetrical == -2)
+		{
+			m = autocvar_g_waypointeditor_symmetrical_axis.x;
+			q = autocvar_g_waypointeditor_symmetrical_axis.y;
+		}
+
+		new_org.x = (1 / (1 + m*m)) * ((1 - m*m) * org.x + 2 * m * org.y - 2 * m * q);
+		new_org.y = (1 / (1 + m*m)) * (2 * m * org.x + (m*m - 1) * org.y + 2 * q);
+	}
+	new_org.z = org.z;
+	return new_org;
 }
 
 IMPULSE(navwaypoint_spawn)
 {
 	if (!autocvar_g_waypointeditor) return;
-	waypoint_schedulerelink(waypoint_spawn(this.origin, this.origin, 0));
-	bprint(strcat("Waypoint spawned at ", vtos(this.origin), "\n"));
+	entity e;
+	vector org = this.origin;
+	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
+	           || (autocvar_g_waypointeditor_symmetrical < 0));
+	int order = ctf_flags;
+	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
+	{
+		order = autocvar_g_waypointeditor_symmetrical_order;
+		ctf_flags = order;
+	}
+
+	LABEL(add_wp);
+	e = waypoint_spawn(org, org, 0);
+	waypoint_schedulerelink(e);
+	bprint(strcat("Waypoint spawned at ", vtos(org), "\n"));
+	if(sym)
+	{
+		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		if (vdist(org - this.origin, >, 32))
+		{
+			if(order > 2)
+				order--;
+			else
+				sym = false;
+			goto add_wp;
+		}
+	}
 }
 
 IMPULSE(navwaypoint_remove)
 {
 	if (!autocvar_g_waypointeditor) return;
 	entity e = navigation_findnearestwaypoint(this, false);
+	int ctf_flags = havocbot_symmetryaxis_equation.z;
+	bool sym = ((autocvar_g_waypointeditor_symmetrical > 0 && ctf_flags >= 2)
+	           || (autocvar_g_waypointeditor_symmetrical < 0));
+	int order = ctf_flags;
+	if(autocvar_g_waypointeditor_symmetrical_order >= 2)
+	{
+		order = autocvar_g_waypointeditor_symmetrical_order;
+		ctf_flags = order;
+	}
+
+	LABEL(remove_wp);
 	if (!e) return;
 	if (e.wpflags & WAYPOINTFLAG_GENERATED) return;
+
+	if (e.wphardwired)
+	{
+		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired\n");
+		return;
+	}
+
+	entity wp_sym = NULL;
+	if (sym)
+	{
+		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
+		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
+			if(vdist(org - it.origin, <, 3))
+			{
+				wp_sym = it;
+				break;
+			}
+		});
+	}
 	bprint(strcat("Waypoint removed at ", vtos(e.origin), "\n"));
 	waypoint_remove(e);
+	if (sym && wp_sym)
+	{
+		e = wp_sym;
+		if(order > 2)
+			order--;
+		else
+			sym = false;
+		goto remove_wp;
+	}
 }
 
 IMPULSE(navwaypoint_relink)

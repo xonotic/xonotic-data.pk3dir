@@ -243,7 +243,6 @@ METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 }
 #endif
 #ifdef SVQC
-spawnfunc(item_health_medium);
 METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 {
     TC(Spider, this);
@@ -253,7 +252,7 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
-    actor.monster_loot = spawnfunc_item_health_medium;
+    actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Spider_Attack;
 
     return true;

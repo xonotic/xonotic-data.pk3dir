@@ -130,7 +130,7 @@ void kh_update_state()
 			f = key.team;
 		else
 			f = 30;
-		s |= pow(32, key.count) * f;
+		s |= (32 ** key.count) * f;
 	}
 
 	FOREACH_CLIENT(true, LAMBDA(it.kh_state = s));
@@ -138,7 +138,7 @@ void kh_update_state()
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
-			key.owner.kh_state |= pow(32, key.count) * 31;
+			key.owner.kh_state |= (32 ** key.count) * 31;
 	}
 	//print(ftos((nextent(NULL)).kh_state), "\n");
 }
@@ -248,7 +248,8 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.angles_y -= key.owner.angles.y;
 #endif
 	key.flags = 0;
-	IL_REMOVE(g_items, key);
+	if(IL_CONTAINS(g_items, key))
+		IL_REMOVE(g_items, key);
 	key.solid = SOLID_NOT;
 	set_movetype(key, MOVETYPE_NONE);
 	key.team = key.owner.team;
@@ -256,6 +257,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.damageforcescale = 0;
 	key.takedamage = DAMAGE_NO;
 	key.modelindex = kh_key_carried;
+	navigation_dynamicgoal_unset(key);
 }
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
@@ -287,7 +289,8 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.angles_y += key.owner.angles.y;
 #endif
 	key.flags = FL_ITEM;
-	IL_PUSH(g_items, key);
+	if(!IL_CONTAINS(g_items, key))
+		IL_PUSH(g_items, key);
 	key.solid = SOLID_TRIGGER;
 	set_movetype(key, MOVETYPE_TOSS);
 	key.pain_finished = time + autocvar_g_balance_keyhunt_delay_return;
@@ -295,6 +298,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	key.takedamage = DAMAGE_YES;
 	// let key.team stay
 	key.modelindex = kh_key_dropped;
+	navigation_dynamicgoal_set(key);
 	key.kh_previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
 }
@@ -742,6 +746,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
 	key.colormod = Team_ColorRGB(initial_owner.team) * KH_KEY_BRIGHTNESS;
 	key.reset = key_reset;
+	navigation_dynamicgoal_init(key, false);
 
 	switch(initial_owner.team)
 	{
@@ -858,7 +863,7 @@ int kh_GetMissingTeams()
 				++players;
 		));
 		if (!players)
-			missing_teams |= pow(2, i);
+			missing_teams |= (2 ** i);
 	}
 	return missing_teams;
 }
@@ -1051,11 +1056,11 @@ void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingsca
 			}
 		}
 		if(!head.owner)
-			navigation_routerating(this, head, ratingscale_dropped * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head, ratingscale_dropped * 10000, 100000);
 		else if(head.team == this.team)
-			navigation_routerating(this, head.owner, ratingscale_team * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head.owner, ratingscale_team * 10000, 100000);
 		else
-			navigation_routerating(this, head.owner, ratingscale_enemy * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head.owner, ratingscale_enemy * 10000, 100000);
 	}
 
 	havocbot_goalrating_items(this, 1, this.origin, 10000);

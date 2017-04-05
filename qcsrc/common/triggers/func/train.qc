@@ -29,7 +29,7 @@ void train_wait(entity this)
 		ang_x = -ang_x; // flip up / down orientation
 
 		if(this.wait > 0) // slow turning
-			SUB_CalcAngleMove(this, ang, TSPEED_TIME, this.SUB_LTIME - time + this.wait, train_wait);
+			SUB_CalcAngleMove(this, ang, TSPEED_TIME, this.ltime - time + this.wait, train_wait);
 		else // instant turning
 			SUB_CalcAngleMove(this, ang, TSPEED_TIME, 0.0000001, train_wait);
 		this.train_wait_turning = true;
@@ -46,8 +46,8 @@ void train_wait(entity this)
 	if(tg.spawnflags & 4)
 	{
 		this.use = train_use;
-		SUB_THINK(this, func_null);
-		this.SUB_NEXTTHINK = 0;
+		setthink(this, func_null);
+		this.nextthink = 0;
 	}
 	else
 #endif
@@ -58,8 +58,8 @@ void train_wait(entity this)
 	}
 	else
 	{
-		SUB_THINK(this, train_next);
-		this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+		setthink(this, train_next);
+		this.nextthink = this.ltime + this.wait;
 	}
 }
 
@@ -201,9 +201,11 @@ void train_link(entity this)
 
 void train_use(entity this, entity actor, entity trigger)
 {
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 1;
-	SUB_THINK(this, train_next);
+	this.nextthink = this.ltime + 1;
+	setthink(this, train_next);
 	this.use = func_null; // not again
+	if(trigger.target2 && trigger.target2 != "")
+		this.future_target = find(NULL, targetname, trigger.target2);
 }
 
 void func_train_find(entity this)
@@ -215,12 +217,12 @@ void func_train_find(entity this)
 	this.future_target = train_next_find(targ);
 	if (this.target == "")
 		objerror(this, "func_train_find: no next target");
-	SUB_SETORIGIN(this, targ.origin - this.view_ofs);
+	setorigin(this, targ.origin - this.view_ofs);
 
 	if(!(this.spawnflags & 4))
 	{
-		this.SUB_NEXTTHINK = this.SUB_LTIME + 1;
-		SUB_THINK(this, train_next);
+		this.nextthink = this.ltime + 1;
+		setthink(this, train_next);
 	}
 
 	train_link(this);

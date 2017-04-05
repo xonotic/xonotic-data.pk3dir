@@ -3,14 +3,19 @@
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
+	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
+	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
 	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
 }
 
 bool sys_phys_override(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
+	float idlesince = this.parm_idlesince;
+	this.parm_idlesince = time; // in the case that physics are overridden
 	if (PM_check_specialcommand(this, buttons)) { return true; }
 	if (this.PlayerPhysplug && this.PlayerPhysplug(this, dt)) { return true; }
+	this.parm_idlesince = idlesince;
 	return false;
 }
 

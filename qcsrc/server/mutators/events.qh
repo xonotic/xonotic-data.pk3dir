@@ -86,14 +86,6 @@ MUTATOR_HOOKABLE(FragCenterMessage, EV_FragCenterMessage);
     /**/
 MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
 
-/** called when a weapon sound is about to be played, allows custom paths etc. */
-#define EV_WeaponSound(i, o) \
-    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
-    /** output      */ i(string, MUTATOR_ARGV_1_string) \
-    /**/               o(string, MUTATOR_ARGV_1_string) \
-    /**/
-MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
-
 /** called when an item model is about to be set, allows custom paths etc. */
 #define EV_ItemModel(i, o) \
     /** model       */ i(string, MUTATOR_ARGV_0_string) \
@@ -128,6 +120,7 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
     /**/                      o(float, MUTATOR_ARGV_0_float) \
     /** team entity name   */ i(string, MUTATOR_ARGV_1_string) \
     /**/                      o(string, MUTATOR_ARGV_1_string) \
+    /** player checked     */ i(entity, MUTATOR_ARGV_2_entity) \
     /**/
 MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
 
@@ -294,7 +287,7 @@ MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
     /**/                                   o(entity, MUTATOR_ARGV_1_entity) \
     /* attacker */                         i(entity, MUTATOR_ARGV_2_entity) \
     /**/
-.void(entity this) monster_loot;
+.entity monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
 
 /**
@@ -308,6 +301,7 @@ MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
     /** walk speed */    i(float, MUTATOR_ARGV_2_float) \
     /**/                 o(float, MUTATOR_ARGV_2_float) \
     /** move target */   i(entity, MUTATOR_ARGV_3_entity) \
+    /**/                 o(entity, MUTATOR_ARGV_3_entity) \
     /**/
 MUTATOR_HOOKABLE(MonsterMove, EV_MonsterMove);
 
@@ -530,10 +524,7 @@ MUTATOR_HOOKABLE(SetWeaponreplace, EV_SetWeaponreplace);
 
 /** called when an item is about to respawn */
 #define EV_Item_RespawnCountdown(i, o) \
-    /** item name */   i(string, MUTATOR_ARGV_0_string) \
-    /**/               o(string, MUTATOR_ARGV_0_string) \
-    /** item colour */ i(vector, MUTATOR_ARGV_1_vector) \
-    /**/               o(vector, MUTATOR_ARGV_1_vector) \
+    /** item */   i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
@@ -927,3 +918,41 @@ MUTATOR_HOOKABLE(ChatMessageTo, EV_ChatMessageTo);
 
 /** return true to just restart the match, for modes that don't support readyrestart */
 MUTATOR_HOOKABLE(ReadyRestart_Deny, EV_NO_ARGS);
+
+/** called when a fusion reactor is validating its target */
+#define EV_FusionReactor_ValidTarget(i, o) \
+    /** turret */    i(entity, MUTATOR_ARGV_0_entity) \
+    /** target */    i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(FusionReactor_ValidTarget, EV_FusionReactor_ValidTarget);
+
+enum {
+    MUT_FUSREAC_TARG_CONTINUE, // return this flag to make the function continue as normal
+    MUT_FUSREAC_TARG_VALID, // return this flag to make the function return true (valid target)
+    MUT_FUSREAC_TARG_INVALID // return this flag to make the function return false (invalid target)
+};
+
+/** return true to hide the 'teamnumbers are imbalanced' message */
+#define EV_HideTeamNagger(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);
+
+/** return true to show a waypoint while the item is spawning */
+#define EV_Item_ScheduleRespawn(i, o) \
+    /** item */             i(entity, MUTATOR_ARGV_0_entity) \
+    /** respawn time */     i(float, MUTATOR_ARGV_1_float) \
+    /**/
+MUTATOR_HOOKABLE(Item_ScheduleRespawn, EV_Item_ScheduleRespawn);
+
+/** called before physics stats are set on a player, allows limited early customization */
+#define EV_PlayerPhysics_UpdateStats(i, o) \
+    /** player */             i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPhysics_UpdateStats, EV_PlayerPhysics_UpdateStats);
+
+/** return true to use your own aim target (or none at all) */
+#define EV_HavocBot_Aim(i, o) \
+    /** bot */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(HavocBot_Aim, EV_HavocBot_Aim);

@@ -14,6 +14,9 @@ void viewloc_PlayerPhysics(entity this)
 {
 	if(this.viewloc)
 	{
+		if(this.viewloc.goalentity == this.viewloc.enemy)
+			return; // we can't side-scroll in this case
+
 		vector old_movement = this.movement;
 		this.movement_x = old_movement_y;
 		this.movement_y = 0;
@@ -86,6 +89,7 @@ void viewloc_SetViewLocation()
 	//NOTE: the "cam_" cvars sould probably be changed out with a spawnflag or an entity key. I have it like this for my testing -- Player_2
 	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
 	{
+		bool have_sidescroll = (view.viewloc.enemy != view.viewloc.goalentity);
 		vector position_a, position_b, camera_position, camera_angle = '0 0 0', forward, backward;
 		//vector scratch;
 
@@ -105,7 +109,7 @@ void viewloc_SetViewLocation()
 
 
 		// a tracking camera follows the player when it leaves the world box
-		if (autocvar_cam_track) {
+		if (autocvar_cam_track || !have_sidescroll) {
 			camera_angle = aim_vec (camera_position, view.origin);
 		}
 
@@ -149,15 +153,18 @@ void viewloc_SetViewLocation()
 		setproperty(VF_ORIGIN, camera_position);
 		setproperty(VF_ANGLES, camera_angle);
 
-		forward = vectoangles(normalize(vec_to_min(position_b, position_a) - vec_to_max(position_b, position_a)));
-		backward = vectoangles(normalize(vec_to_max(position_b, position_a) - vec_to_min(position_b, position_a)));
+		if(have_sidescroll)
+		{
+			forward = vectoangles(normalize(vec_to_min(position_b, position_a) - vec_to_max(position_b, position_a)));
+			backward = vectoangles(normalize(vec_to_max(position_b, position_a) - vec_to_min(position_b, position_a)));
 
-		if(input_movevalues_y < 0) // left
-			view.angles_y = backward_y;
-		if(input_movevalues_y > 0) // favour right
-			view.angles_y = forward_y;
+			if(input_movevalues_y < 0) // left
+				view.angles_y = backward.y;
+			if(input_movevalues_y > 0) // favour right
+				view.angles_y = forward.y;
 
-		setproperty(VF_CL_VIEWANGLES, view.angles);
+			setproperty(VF_CL_VIEWANGLES, view.angles);
+		}
 	}
 }
 

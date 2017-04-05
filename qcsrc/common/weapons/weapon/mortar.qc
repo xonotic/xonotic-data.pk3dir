@@ -4,7 +4,7 @@ CLASS(Mortar, Weapon)
 /* ammotype  */ ATTRIB(Mortar, ammo_field, .int, ammo_rockets);
 /* impulse   */ ATTRIB(Mortar, impulse, int, 4);
 /* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(Mortar, wpcolor, vector, '1 0 0');
 /* modelname */ ATTRIB(Mortar, mdl, string, "gl");
 #ifdef GAMEQC
@@ -151,14 +151,14 @@ void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 	}
 	else if(WEP_CVAR_PRI(mortar, type) == 1) // bounce
 	{
-		spamsound(this, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTN_NORM);
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		this.gl_bouncecnt += 1;
 	}
 	else if(WEP_CVAR_PRI(mortar, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound(this, CH_SHOTS, SND(GRENADE_STICK), VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
 		this.oldvelocity = this.velocity;
@@ -183,7 +183,7 @@ void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 	}
 	else if(WEP_CVAR_SEC(mortar, type) == 1) // bounce
 	{
-		spamsound(this, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTN_NORM);
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		this.gl_bouncecnt += 1;
@@ -194,7 +194,7 @@ void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 	}
 	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound(this, CH_SHOTS, SND(GRENADE_STICK), VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
 		this.oldvelocity = this.velocity;

@@ -61,15 +61,6 @@ void WarpZone_crosshair_trace(entity pl)
 }
 
 
-string admin_name()
-{
-	if(autocvar_sv_adminnick != "")
-		return autocvar_sv_adminnick;
-	else
-		return "SERVER ADMIN";
-}
-
-
 void GameLogEcho(string s)
 {
     string fn;
@@ -476,16 +467,16 @@ void GetCvars(entity this, int f)
 }
 
 // decolorizes and team colors the player name when needed
-string playername(entity p)
+string playername(entity p, bool team_colorize)
 {
     string t;
-    if (teamplay && !intermission_running && IS_PLAYER(p))
+    if (team_colorize && teamplay && !intermission_running && IS_PLAYER(p))
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));
     }
     else
-        return p.netname;
+        return ColorTranslateRGB(p.netname);
 }
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
@@ -1313,7 +1304,7 @@ void attach_sameorigin(entity e, entity to, string tag)
     float tagscale;
 
     org = e.origin - gettaginfo(to, gettagindex(to, tag));
-    tagscale = pow(vlen(v_forward), -2); // undo a scale on the tag
+    tagscale = (vlen(v_forward) ** -2); // undo a scale on the tag
     t_forward = v_forward * tagscale;
     t_left = v_right * -tagscale;
     t_up = v_up * tagscale;

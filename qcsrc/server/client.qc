@@ -354,6 +354,15 @@ void PutObserverInServer(entity this)
 	this.oldvelocity = this.velocity;
 	this.fire_endtime = -1;
 	this.event_damage = func_null;
+
+	for(int slot = 0; slot < MAX_AXH; ++slot)
+	{
+		entity axh = this.(AuxiliaryXhair[slot]);
+		this.(AuxiliaryXhair[slot]) = NULL;
+
+		if(axh.owner == this && axh != NULL && !wasfreed(axh))
+			delete(axh);
+	}
 }
 
 int player_getspecies(entity this)
@@ -374,11 +383,12 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
+			switch(player.team)
 			{
-				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+				case NUM_TEAM_1: defaultmodel = autocvar_sv_defaultplayermodel_red; defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultmodel = autocvar_sv_defaultplayermodel_blue; defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultmodel = autocvar_sv_defaultplayermodel_yellow; defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultmodel = autocvar_sv_defaultplayermodel_pink; defaultskin = autocvar_sv_defaultplayerskin_pink; break;
 			}
 		}
 
@@ -409,9 +419,13 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
-			if (s != "neutral")
-				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+			switch(player.team)
+			{
+				case NUM_TEAM_1: defaultskin = autocvar_sv_defaultplayerskin_red; break;
+				case NUM_TEAM_2: defaultskin = autocvar_sv_defaultplayerskin_blue; break;
+				case NUM_TEAM_3: defaultskin = autocvar_sv_defaultplayerskin_yellow; break;
+				case NUM_TEAM_4: defaultskin = autocvar_sv_defaultplayerskin_pink; break;
+			}
 		}
 
 		if(!defaultskin)
@@ -642,6 +656,7 @@ void PutClientInServer(entity this)
 			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.monster_attack = true;
+		navigation_dynamicgoal_init(this, false);
 
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
@@ -653,7 +668,10 @@ void PutClientInServer(entity this)
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
+			entity oldwep = this.(weaponentity);
 			CL_SpawnWeaponentity(this, weaponentity);
+			if(oldwep && oldwep.owner == this)
+				this.(weaponentity).m_gunalign = oldwep.m_gunalign;
 		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -696,7 +714,7 @@ void PutClientInServer(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if(slot == 0)
+			if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
 				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
 			else
 				this.(weaponentity).m_switchweapon = WEP_Null;
@@ -1144,7 +1162,7 @@ void ClientConnect(entity this)
     if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
 
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", this.netname));
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
 
 	LogTeamchange(this.playerid, this.team, 1);
 
@@ -1202,7 +1220,7 @@ void ClientConnect(entity this)
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
-		if (!g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
+		if(!MUTATOR_CALLHOOK(HideTeamNagger, this))
 			send_CSQC_teamnagger();
 
 	CSQCMODEL_AUTOINIT(this);
@@ -1213,6 +1231,8 @@ void ClientConnect(entity this)
 		sv_notice_join(this);
 
 	// update physics stats (players can spawn before physics runs)
+	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
+	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
 	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
 
 	IL_EACH(g_initforplayer, it.init_for_player, {
@@ -1253,7 +1273,8 @@ void ClientDisconnect(entity this)
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
-	SetSpectatee(this, NULL);
+	if(IS_SPEC(this))
+		SetSpectatee(this, NULL);
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
@@ -1670,6 +1691,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hit_time = spectatee.hit_time;
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
+	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
 	this.vortex_charge = spectatee.vortex_charge;
@@ -1698,6 +1720,11 @@ void SpectateCopy(entity this, entity spectatee)
 	{
 		.entity weaponentity = weaponentities[slot];
 		this.(weaponentity) = spectatee.(weaponentity);
+	}
+
+	for(int slot = 0; slot < MAX_AXH; ++slot)
+	{
+		this.(AuxiliaryXhair[slot]) = spectatee.(AuxiliaryXhair[slot]);
 	}
 
     anticheat_spectatecopy(this, spectatee);
@@ -2235,7 +2262,7 @@ void PlayerPreThink (entity this)
 	}
 	if (this.netname != this.netname_previous) {
 		if (autocvar_sv_eventlog) {
-			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", this.netname));
+			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
         }
 		if (this.netname_previous) strunzone(this.netname_previous);
 		this.netname_previous = strzone(this.netname);
@@ -2329,6 +2356,7 @@ void PlayerPreThink (entity this)
 		CheckRules_Player(this);
 
 		if (game_stopped || intermission_running) {
+			this.modelflags &= ~MF_ROCKET;
 			if(intermission_running)
 				IntermissionThink(this);
 			return;
@@ -2353,6 +2381,13 @@ void PlayerPreThink (entity this)
 				}
 			} else {
 				if (frametime) player_anim(this);
+
+				if (this.respawn_flags & RESPAWN_DENY)
+				{
+					STAT(RESPAWN_TIME, this) = 0;
+					return;
+				}
+
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
 				switch(this.deadflag)

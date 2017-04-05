@@ -24,8 +24,8 @@ string GetCommandPrefix(entity caller)
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return caller.netname;
-	else return admin_name();  // ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
+	if (caller) return playername(caller, false);
+	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
 }
 
 // verify that the client provided is acceptable for kicking
@@ -575,8 +575,14 @@ void CommonCommand_records(float request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			for (int i = 0; i < 10; ++i)
-				if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			int num = stoi(argv(1));
+			if(num > 0 && num <= 10 && records_reply[num - 1] != "")
+				print_to(caller, records_reply[num - 1]);
+			else
+			{
+				for (int i = 0; i < 10; ++i)
+					if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			}
 
 			return;  // never fall through to usage
 		}

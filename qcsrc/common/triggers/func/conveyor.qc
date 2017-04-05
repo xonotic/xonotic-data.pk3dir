@@ -10,7 +10,7 @@ void conveyor_think(entity this)
 	if(dt <= 0) { return; }
 #endif
 
-	// set mythis as current conveyor where possible
+	// set myself as current conveyor where possible
 	IL_EACH(g_conveyed, it.conveyor == this,
 	{
 		it.conveyor = NULL;
@@ -154,10 +154,11 @@ spawnfunc(func_conveyor)
 
 void conveyor_draw(entity this) { conveyor_think(this); }
 
-void conveyor_init(entity this)
+void conveyor_init(entity this, bool isnew)
 {
+	if(isnew)
+		IL_PUSH(g_drawables, this);
 	this.draw = conveyor_draw;
-	IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
 	set_movetype(this, MOVETYPE_NONE);
@@ -196,7 +197,7 @@ NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 		this.targetname = strzone(ReadString());
 		this.target = strzone(ReadString());
 
-		conveyor_init(this);
+		conveyor_init(this, isnew);
 	}
 
 	if(sf & 2)

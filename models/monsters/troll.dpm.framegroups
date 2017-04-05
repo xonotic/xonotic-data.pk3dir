@@ -1,0 +1,11 @@
+/*
+Generated framegroups file for troll
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 38 30 1 // troll attack
+39 63 30 1 // troll melee_hold
+102 51 30 1 // troll walk
+153 45 30 0 // troll death
+198 2 30 0 // troll dead
+102 51 60 1 // troll run

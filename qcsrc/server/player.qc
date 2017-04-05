@@ -594,7 +594,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity went = weaponentities[slot];
-			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(went).m_switchweapon.m_id, went);
+			SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, this.(went).m_weapon, went);
 		}
 
 		// become fully visible
@@ -678,6 +678,12 @@ void dedicated_print(string input)
 	if (server_is_dedicated) print(input);
 }
 
+void PrintToChat(entity player, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	sprint(player, text);
+}
+
 /**
  * message "": do not say, just test flood control
  * return value:
@@ -727,7 +733,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
     string namestr = "";
     if (source)
-        namestr = autocvar_g_chat_teamcolors ? playername(source) : source.netname;
+        namestr = playername(source, autocvar_g_chat_teamcolors);
 
     string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
@@ -743,10 +749,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
 			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
-			if(autocvar_g_chat_teamcolors)
-				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
-			else
-				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
+			privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay, autocvar_g_chat_teamcolors), ": ^7");
 		}
 		else if(teamsay)
 		{
@@ -886,7 +889,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 
 	if(flood)
-		LOG_INFO("NOTE: ", playername(source), "^7 is flooding.\n");
+		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.\n");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)
@@ -911,6 +914,13 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	else
 	{
 		ret = 1;
+	}
+
+	if (privatesay && source && !IS_PLAYER(source))
+	{
+		if (!game_stopped)
+		if ((privatesay && !IS_PLAYER(privatesay)) || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !warmup_stage))
+			ret = -1; // just hide the message completely
 	}
 
 	MUTATOR_CALLHOOK(ChatMessage, source, ret);
@@ -964,7 +974,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
             if (source) {
                 sprint(source, sourcemsgstr);
                 dedicated_print(msgstr); // send to server console too
-                MX_Say(strcat(playername(source), "^7: ", msgin));
+                MX_Say(strcat(playername(source, true), "^7: ", msgin));
             }
             FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
         }

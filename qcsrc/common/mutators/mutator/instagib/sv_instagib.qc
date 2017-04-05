@@ -1,6 +1,6 @@
 #include "sv_instagib.qh"
 
-int autocvar_g_instagib_ammo_drop;
+//int autocvar_g_instagib_ammo_drop;
 bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
@@ -17,7 +17,6 @@ REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
 spawnfunc(item_minst_cells)
 {
 	if (!g_instagib) { delete(this); return; }
-	if (!this.ammo_cells) this.ammo_cells = autocvar_g_instagib_ammo_drop;
 	StartItem(this, ITEM_VaporizerCells);
 }
 
@@ -138,7 +137,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
 	entity item = M_ARGV(1, entity);
 
-	item.monster_loot = spawnfunc_item_minst_cells;
+	item.monster_loot = ITEM_VaporizerCells;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
@@ -354,7 +353,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
 	start_ammo_rockets = warmup_start_ammo_rockets = 0;
-	start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
+	//start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
 	start_weapons = warmup_start_weapons = WEPSET(VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;

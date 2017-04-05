@@ -311,6 +311,11 @@ float bot_decodecommand(string cmdstring)
 				bot_cmd.bot_cmd_parm_string = strzone(parm);
 				break;
 			case BOT_CMD_PARAMETER_VECTOR:
+				if(substring(parm, 0, 1) != "\'")
+				{
+					LOG_INFOF("ERROR: expected vector type \'x y z\', got %s\n", parm);
+					return 0;
+				}
 				bot_cmd.bot_cmd_parm_vector = stov(parm);
 				break;
 			default:
@@ -377,7 +382,7 @@ void bot_cmdhelp(string scmd)
 				LOG_INFO("Look to the right or left N degrees. For turning to the left use positive numbers.");
 				break;
 			case BOT_CMD_MOVETO:
-				LOG_INFO("Walk to an specific coordinate on the map. Usage: moveto \"x y z\"");
+				LOG_INFO("Walk to an specific coordinate on the map. Usage: moveto \'x y z\'");
 				break;
 			case BOT_CMD_MOVETOTARGET:
 				LOG_INFO("Walk to the specific target on the map");
@@ -884,7 +889,7 @@ float bot_cmd_keypress_handler(entity this, string key, float enabled)
 	{
 		case "all":
 			if(enabled)
-				this.bot_cmd_keys = power2of(20) - 1; // >:)
+				this.bot_cmd_keys = (2 ** 20) - 1; // >:)
 			else
 				this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 		case "forward":

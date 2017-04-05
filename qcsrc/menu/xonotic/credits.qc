@@ -60,6 +60,7 @@
 		PERSON(Peter "Morphed" Pielak) \
 		PERSON(Sam "LJFHutch" Hutchinson) \
 		PERSON(Pearce "theShadow" Michal) \
+		PERSON(KingPimpCommander) \
 	NL() \
 	FUNCTION(_("Animation")) \
 		PERSON(Sahil "DiaboliK" Singhal) \
@@ -86,12 +87,14 @@
 		PERSON(Ruszkai "CuBe0wL" Ákos) \
 		PERSON(Severin "sev" Meyer) \
 		PERSON(ShadoW) \
+		PERSON(t0uYK8Ne) \
 	NL() \
 	FUNCTION(_("Music / Sound FX")) \
 		PERSON(AquaNova (Archer)) \
 		PERSON(blkrbt) \
 		PERSON(chooksta) \
 		PERSON(Independent.nu) \
+		PERSON(Lea "TheAudioMonkey" Edwards) \
 		PERSON([master]mind) \
 		PERSON(Merlijn Hofstra) \
 		PERSON(Mick Rippon) \
@@ -140,6 +143,7 @@
 		PERSON(Erik "Ablu" Schilling) \
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
+		PERSON(Jeff) \
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
@@ -160,6 +164,8 @@
 			PERSON(ubone) \
 		NL() \
 		FUNCTION(_("Chinese (China)")) \
+			PERSON(Antonidas) \
+			PERSON(Armcoon) \
 			PERSON(kalawore) \
 			PERSON(sapphireliu) \
 		NL() \
@@ -228,7 +234,7 @@
 			PERSON(XCostaX) \
 		NL() \
 		FUNCTION(_("Kazakh")) \
-			PERSON("Артем \"bystrov.arterm\" Быстров") \
+			PERSON("Артем "bystrov.arterm" Быстров") \
 		NL() \
 		FUNCTION(_("Korean")) \
 			PERSON(Jisoo "s6e9x" Lim) \
