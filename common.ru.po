@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-04-02 19:24+0000\n"
+"PO-Revision-Date: 2017-04-04 21:13+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -87,7 +87,7 @@ msgstr "предыдущее оружие"
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Используйте ^3%s^1 или ^3%s^1 для изменения скорости"
+msgstr "^1Нажмите ^3%s^1 или ^3%s^1 для смены скорости"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
@@ -174,7 +174,7 @@ msgstr "^2Нажмите ^3%s^2 для завершения разминки"
 
 #: qcsrc/client/hud/panel/infomessages.qc:196
 msgid "Teamnumbers are unbalanced!"
-msgstr "Неравенство в размере команд!"
+msgstr "Команды не равны!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #, c-format
@@ -432,7 +432,7 @@ msgstr "QMCMD^Звук чата"
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Spectator camera"
-msgstr "QMCMD^Камера наблюдателя"
+msgstr "QMCMD^Камера зрителя"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^1st person"
@@ -1285,7 +1285,7 @@ msgstr "Захватите контрольные точки и уничтожь
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Onslaught"
-msgstr "Onslaught"
+msgstr "Натиск"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Nexball"
@@ -1293,7 +1293,8 @@ msgstr "Нексбол"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
-msgstr "Стреляйте по мячу, чтобы забить гол противнику, и дайте забить его вам"
+msgstr ""
+"Стреляйте по мячу, чтобы забить гол противнику, и не дайте забить его вам"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid "Freeze Tag"
@@ -1309,7 +1310,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
-msgstr "Держите шар для набора очков убийств"
+msgstr "Держите шар для набора очков за убийства"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Keepaway"
@@ -1872,7 +1873,7 @@ msgstr "^1Уведомления от сервера:"
 
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
-msgstr "^F4ПРИМЕЧАНИЕ: ^BGЧат наблюдателей не видим для игроков во время матча"
+msgstr "^F4ПРИМЕЧАНИЕ: ^BGЧат зрителей не виден для игроков во время матча"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
@@ -2748,8 +2749,8 @@ msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment."
 msgstr ""
-"^F2 Ты был выкинут с сервера, потому что ты наблюдатель, и наблюдатели не "
-"допускаются на данный момент."
+"^F2Ты был выкинут с сервера, потому что ты зритель, а зрители не допускаются "
+"на данный момент."
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
@@ -2848,15 +2849,15 @@ msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have "
 "^F2Xonotic %s"
 msgstr ""
-"^F4ПРИМЕЧАНИЕ: ^BGСервер запущен с версией ^F1Xonotic %s (бета)^BG, ваша "
-"версия ^F2Xonotic %s"
+"^F4ПРИМЕЧАНИЕ: ^BGСервер запущен с версией ^F1Xonotic %s (бета)^BG, у вас "
+"^F2Xonotic %s"
 
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"
 msgstr ""
-"^F4ПРИМЕЧАНИЕ: ^BGСервер запущен с версией ^F1Xonotic %s^BG, ваша версия "
+"^F4ПРИМЕЧАНИЕ: ^BGСервер запущен с версией ^F1Xonotic %s^BG, у вас "
 "^F2Xonotic %s"
 
 #: qcsrc/common/notifications/all.inc:450
@@ -2866,8 +2867,8 @@ msgid ""
 "the update from ^F3http://www.xonotic.org/^BG!"
 msgstr ""
 "^F4ПРИМЕЧАНИЕ: ^BGВышла новая версия ^F1Xonotic %s^BG, а у вас всё ещё "
-"установлен ^F2Xonotic %s^BG —  скачайте последнюю версию с ^F3http://www."
-"xonotic.org/^BG!"
+"^F2Xonotic %s^BG —  скачайте последнюю версию с ^F3http://www.xonotic.org/"
+"^BG!"
 
 #: qcsrc/common/notifications/all.inc:452
 #, c-format
@@ -4269,7 +4270,7 @@ msgstr "Первая жертва! "
 #: qcsrc/common/notifications/all.qh:559
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr "%s^K1 совершил %d фрагов подряд! %s^BG"
+msgstr "%s^K1 совершил %d убийств подряд! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:560
 #, c-format
@@ -4551,7 +4552,7 @@ msgstr "Электро"
 
 #: qcsrc/common/weapons/weapon/fireball.qc:17
 msgid "Fireball"
-msgstr "Файрбол"
+msgstr "Файербол"
 
 #: qcsrc/common/weapons/weapon/hagar.qc:17
 msgid "Hagar"
@@ -5867,7 +5868,7 @@ msgstr "Игра по сети"
 msgid ""
 "Play online, against your friends in LAN, view demos or change player "
 "settings"
-msgstr "Играть по сети, просмотреть демо или изменить настройки игрока"
+msgstr "Играть по сети, посмотреть демки или изменить настройки игрока"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:46
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
@@ -5893,7 +5894,7 @@ msgstr "Предел фрагов:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:66
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:78
 msgid "The amount of frags needed before the match will end"
-msgstr "Количество очков, необходимых для завершения состязания"
+msgstr "Количество фрагов, необходимых для завершения состязания"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:67
 msgid "Capture limit:"
@@ -6048,7 +6049,7 @@ msgstr "Убийца"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 msgid "Unhuman"
-msgstr "Сверхчеловек"
+msgstr "Сверхбот"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:162
 msgid "Godlike"
@@ -6427,11 +6428,11 @@ msgstr "MOD^По умолчанию"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 #, c-format
 msgid "%d modified"
-msgstr "кол-во изменённых настроек: %d"
+msgstr "%d изменено"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Official"
-msgstr "Официальные настройки"
+msgstr "Официальные"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
 msgid "N/A (auth library missing, can't connect)"
@@ -6508,7 +6509,7 @@ msgstr "Боты:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:268
 msgid "Free slots:"
-msgstr "Свободные места:"
+msgstr "Пустые слоты:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:274
 msgid "Encryption:"
@@ -6626,7 +6627,7 @@ msgstr "MUSICPL^Удалить все"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:43
 msgid "Auto screenshot scoreboard"
-msgstr "Автоматически снимать таблицу результатов"
+msgstr "Автоснимок таблицы результатов"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:63
 msgid "Open in the viewer"
@@ -7773,7 +7774,7 @@ msgstr "Печатать на отдельных линиях"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
 msgid "Add extra frag information to centerprint when available"
-msgstr "Добавлять дополнительную информцию о фрагах в центральной панели"
+msgstr "Добавлять расширенную информацию о фрагах в центральной панели"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
@@ -8419,7 +8420,7 @@ msgstr "Фильтр cvar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:38
 msgid "Modified cvars only"
-msgstr "Только модифицированные переменные"
+msgstr "Только изменённые переменные"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:45
 msgid "Setting:"
@@ -8906,7 +8907,7 @@ msgstr "пригнуться / погрузиться"
 
 #: qcsrc/menu/xonotic/keybinder.qc:36
 msgid "off-hand hook"
-msgstr "крюк"
+msgstr "ручной крюк"
 
 #: qcsrc/menu/xonotic/keybinder.qc:37
 msgid "jet pack"
@@ -8966,7 +8967,7 @@ msgstr "Вид от 3-го лица"
 
 #: qcsrc/menu/xonotic/keybinder.qc:83
 msgid "enter spectator mode"
-msgstr "стать наблюдателем"
+msgstr "стать зрителем"
 
 #: qcsrc/menu/xonotic/keybinder.qc:85
 msgid "Communicate"
@@ -9058,7 +9059,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/playerlist.qc:100 qcsrc/menu/xonotic/playerlist.qc:110
 msgid "spectator"
-msgstr "наблюдатель"
+msgstr "зритель"
 
 #: qcsrc/menu/xonotic/playermodel.qc:170
 msgid "<no model found>"
@@ -9066,7 +9067,7 @@ msgstr "<модель игрока не найдена>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:273
 msgid "Favorite"
-msgstr "Избранный"
+msgstr "В избранные"
 
 #: qcsrc/menu/xonotic/serverlist.qc:274
 msgid ""
@@ -9128,7 +9129,7 @@ msgstr "статистика включена"
 
 #: qcsrc/menu/xonotic/serverlist.qh:151
 msgid "SLCAT^Favorites"
-msgstr "Избранное"
+msgstr "Избранные"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Recommended"
@@ -9148,7 +9149,7 @@ msgstr "Спортивный режим"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Modified Servers"
-msgstr "Модифицированные серверы"
+msgstr "Модифицированные:"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Overkill"
