@@ -146,123 +146,149 @@ METHOD(OverkillVortex, wr_think, void(entity thiswep, entity actor, .entity weap
 	if(weaponslot(weaponentity) == 0)
 		actor.okvortex_chargepool_ammo = actor.(weaponentity).okvortex_chargepool_ammo;
 
+	if ((WEP_CVAR_SEC(okvortex, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
+	{
+		// Secondary uses it's own refire timer if refire_type is 1.
+		actor.jump_interval = time + WEP_CVAR_SEC(okvortex, refire) * W_WeaponRateFactor(actor);
+		// Ugly hack to reuse the fire mode of the blaster.
+		makevectors(actor.v_angle);
+		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
+		actor.(weaponentity).m_weapon = WEP_BLASTER;
+		W_Blaster_Attack(
+			actor,
+			weaponentity,
+			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+			WEP_CVAR_SEC(okvortex, shotangle),
+			WEP_CVAR_SEC(okvortex, damage),
+			WEP_CVAR_SEC(okvortex, edgedamage),
+			WEP_CVAR_SEC(okvortex, radius),
+			WEP_CVAR_SEC(okvortex, force),
+			WEP_CVAR_SEC(okvortex, speed),
+			WEP_CVAR_SEC(okvortex, spread),
+			WEP_CVAR_SEC(okvortex, delay),
+			WEP_CVAR_SEC(okvortex, lifetime)
+		);
+		actor.(weaponentity).m_weapon = oldwep;
+	}
+
 	if (autocvar_g_balance_okvortex_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR_PRI(okvortex, ammo))
 	{
-		// forced reload
+		// Rorced reload
 		thiswep.wr_reload(thiswep, actor, weaponentity);
+		return;
 	}
-	else
+	if (fire & 1) // Primary attack
 	{
-		if (fire & 1)
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okvortex, refire)))
 		{
-			if (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okvortex, refire)))
-			{
-				W_OverkillVortex_Attack(thiswep, actor, weaponentity, 0);
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okvortex, animtime), w_ready);
-			}
-		}
-		else if ((fire & 2) && (WEP_CVAR(okvortex, secondary) == 2))
-		{
-			if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(okshotgun, refire)))
-			{
-				return;
-			}
-			// ugly instagib hack to reuse the fire mode of the laser
-			makevectors(actor.v_angle);
-			Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-			actor.(weaponentity).m_weapon = WEP_BLASTER;
-			W_Blaster_Attack(
-				actor,
-				weaponentity,
-				WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-				WEP_CVAR_SEC(okshotgun, shotangle),
-				WEP_CVAR_SEC(okshotgun, damage),
-				WEP_CVAR_SEC(okshotgun, edgedamage),
-				WEP_CVAR_SEC(okshotgun, radius),
-				WEP_CVAR_SEC(okshotgun, force),
-				WEP_CVAR_SEC(okshotgun, speed),
-				WEP_CVAR_SEC(okshotgun, spread),
-				WEP_CVAR_SEC(okshotgun, delay),
-				WEP_CVAR_SEC(okshotgun, lifetime)
-			);
-			actor.(weaponentity).m_weapon = oldwep;
-			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(okshotgun, animtime), w_ready);
 			return;
 		}
-		if((WEP_CVAR(okvortex, charge) && !WEP_CVAR(okvortex, secondary)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
-		{
-			if(WEP_CVAR(okvortex, charge))
-			{
-				actor.(weaponentity).okvortex_charge_rottime = time + WEP_CVAR(okvortex, charge_rot_pause);
-				float dt = frametime / W_TICSPERFRAME;
-
-				if(actor.(weaponentity).okvortex_charge < 1)
-				{
-					if(WEP_CVAR_SEC(okvortex, chargepool))
-					{
-						if(WEP_CVAR_SEC(okvortex, ammo))
-						{
-							// always deplete if secondary is held
-							actor.okvortex_chargepool_ammo = max(0, actor.okvortex_chargepool_ammo - WEP_CVAR_SEC(okvortex, ammo) * dt);
-
-							dt = min(dt, (1 - actor.(weaponentity).okvortex_charge) / WEP_CVAR(okvortex, charge_rate));
-							actor.okvortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(okvortex, chargepool_pause_regen);
-							dt = min(dt, actor.okvortex_chargepool_ammo);
-							dt = max(0, dt);
-
-							actor.(weaponentity).okvortex_charge += dt * WEP_CVAR(okvortex, charge_rate);
-						}
-					}
-
-					else if(WEP_CVAR_SEC(okvortex, ammo))
-					{
-						if(fire & 2) // only eat ammo when the button is pressed
-						{
-							dt = min(dt, (1 - actor.(weaponentity).okvortex_charge) / WEP_CVAR(okvortex, charge_rate));
-							if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
-							{
-								// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-								if(autocvar_g_balance_vortex_reload_ammo)
-								{
-									dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(okvortex, ammo)) / WEP_CVAR_SEC(okvortex, ammo));
-									dt = max(0, dt);
-									if(dt > 0)
-									{
-										actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(okvortex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(okvortex, ammo) * dt);
-									}
-									actor.(weaponentity).(weapon_load[WEP_OVERKILL_VORTEX.m_id]) = actor.(weaponentity).clip_load;
-								}
-								else
-								{
-									dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(okvortex, ammo)) / WEP_CVAR_SEC(okvortex, ammo));
-									dt = max(0, dt);
-									if(dt > 0)
-									{
-										actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(okvortex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(okvortex, ammo) * dt);
-									}
-								}
-							}
-							actor.(weaponentity).okvortex_charge += dt * WEP_CVAR(okvortex, charge_rate);
-						}
-					}
-
-					else
-					{
-						dt = min(dt, (1 - actor.(weaponentity).okvortex_charge) / WEP_CVAR(okvortex, charge_rate));
-						actor.(weaponentity).okvortex_charge += dt * WEP_CVAR(okvortex, charge_rate);
-					}
-				}
-			}
-			else if(WEP_CVAR(okvortex, secondary))
-			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(okvortex, refire)))
-				{
-					W_OverkillVortex_Attack(thiswep, actor, weaponentity, 1);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(okvortex, animtime), w_ready);
-				}
-			}
-		}
+		W_OverkillVortex_Attack(thiswep, actor, weaponentity, 0);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okvortex, animtime), w_ready);
+		return;
 	}
+	if ((fire & 2) && (WEP_CVAR(okvortex, secondary) == 2) && (WEP_CVAR_SEC(okvortex, refire_type) == 0))
+	{
+		// Secondary attack
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(okshotgun, refire)))
+		{
+			return;
+		}
+		// ugly instagib hack to reuse the fire mode of the laser
+		makevectors(actor.v_angle);
+		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
+		actor.(weaponentity).m_weapon = WEP_BLASTER;
+		W_Blaster_Attack(
+			actor,
+			weaponentity,
+			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+			WEP_CVAR_SEC(okvortex, shotangle),
+			WEP_CVAR_SEC(okvortex, damage),
+			WEP_CVAR_SEC(okvortex, edgedamage),
+			WEP_CVAR_SEC(okvortex, radius),
+			WEP_CVAR_SEC(okvortex, force),
+			WEP_CVAR_SEC(okvortex, speed),
+			WEP_CVAR_SEC(okvortex, spread),
+			WEP_CVAR_SEC(okvortex, delay),
+			WEP_CVAR_SEC(okvortex, lifetime)
+		);
+		actor.(weaponentity).m_weapon = oldwep;
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(okvortex, animtime), w_ready);
+		return;
+	}
+	//if ((WEP_CVAR(okvortex, charge) && (WEP_CVAR(okvortex, secondary) == 1)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
+	//{
+	//	if(WEP_CVAR(okvortex, charge))
+	//	{
+	//		actor.(weaponentity).okvortex_charge_rottime = time + WEP_CVAR(okvortex, charge_rot_pause);
+	//		float dt = frametime / W_TICSPERFRAME;
+	//
+	//		if(actor.(weaponentity).okvortex_charge < 1)
+	//		{
+	//			if(WEP_CVAR_SEC(okvortex, chargepool))
+	//			{
+	//				if(WEP_CVAR_SEC(okvortex, ammo))
+	//				{
+	//					// always deplete if secondary is held
+	//					actor.okvortex_chargepool_ammo = max(0, actor.okvortex_chargepool_ammo - WEP_CVAR_SEC(okvortex, ammo) * dt);
+
+	//					dt = min(dt, (1 - actor.(weaponentity).okvortex_charge) / WEP_CVAR(okvortex, charge_rate));
+	//					actor.okvortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(okvortex, chargepool_pause_regen);
+	//					dt = min(dt, actor.okvortex_chargepool_ammo);
+	//					dt = max(0, dt);
+
+	//					actor.(weaponentity).okvortex_charge += dt * WEP_CVAR(okvortex, charge_rate);
+	//				}
+	//			}
+
+	//			else if(WEP_CVAR_SEC(okvortex, ammo))
+	//			{
+	//				if(fire & 2) // only eat ammo when the button is pressed
+	//				{
+	//					dt = min(dt, (1 - actor.(weaponentity).okvortex_charge) / WEP_CVAR(okvortex, charge_rate));
+	//					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	//					{
+	//						// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	//						if(autocvar_g_balance_vortex_reload_ammo)
+	//						{
+	//							dt = min(dt, (actor.(weaponentity).clip_load - WEP_CVAR_PRI(okvortex, ammo)) / WEP_CVAR_SEC(okvortex, ammo));
+	//							dt = max(0, dt);
+	//							if(dt > 0)
+	//							{
+	//								actor.(weaponentity).clip_load = max(WEP_CVAR_SEC(okvortex, ammo), actor.(weaponentity).clip_load - WEP_CVAR_SEC(okvortex, ammo) * dt);
+	//							}
+	//							actor.(weaponentity).(weapon_load[WEP_OVERKILL_VORTEX.m_id]) = actor.(weaponentity).clip_load;
+	//						}
+	//						else
+	//						{
+	//							dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(okvortex, ammo)) / WEP_CVAR_SEC(okvortex, ammo));
+	//							dt = max(0, dt);
+	//							if(dt > 0)
+	//							{
+	//								actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(okvortex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(okvortex, ammo) * dt);
+	//							}
+	//						}
+	//					}
+	//					actor.(weaponentity).okvortex_charge += dt * WEP_CVAR(okvortex, charge_rate);
+	//				}
+	//			}
+
+	//			else
+	//			{
+	//				dt = min(dt, (1 - actor.(weaponentity).okvortex_charge) / WEP_CVAR(okvortex, charge_rate));
+	//				actor.(weaponentity).okvortex_charge += dt * WEP_CVAR(okvortex, charge_rate);
+	//			}
+	//		}
+	//	}
+	//	else if(WEP_CVAR(okvortex, secondary))
+	//	{
+	//		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(okvortex, refire)))
+	//		{
+	//			W_OverkillVortex_Attack(thiswep, actor, weaponentity, 1);
+	//			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(okvortex, animtime), w_ready);
+	//		}
+	//	}
+	//}
 }
 
 METHOD(OverkillVortex, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
