@@ -3,8 +3,6 @@
 #ifdef SVQC
 spawnfunc(weapon_okshotgun) { weapon_defaultspawnfunc(this, WEP_OVERKILL_SHOTGUN); }
 
-.float okshotgun_primarytime;
-
 METHOD(OverkillShotgun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	if (vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR_PRI(okshotgun, bot_range)))
@@ -19,30 +17,53 @@ METHOD(OverkillShotgun, wr_aim, void(entity thiswep, entity actor, .entity weapo
 
 METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (WEP_CVAR(okshotgun, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(okshotgun, ammo)) // forced reload
+	if ((WEP_CVAR_SEC(okshotgun, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
 	{
+		// Secondary uses it's own refire timer if refire_type is 1.
+		actor.jump_interval = time + WEP_CVAR_SEC(okshotgun, refire) * W_WeaponRateFactor(actor);
+		// Ugly hack to reuse the fire mode of the blaster.
+		makevectors(actor.v_angle);
+		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
+		actor.(weaponentity).m_weapon = WEP_BLASTER;
+		W_Blaster_Attack(
+			actor,
+			weaponentity,
+			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+			WEP_CVAR_SEC(okshotgun, shotangle),
+			WEP_CVAR_SEC(okshotgun, damage),
+			WEP_CVAR_SEC(okshotgun, edgedamage),
+			WEP_CVAR_SEC(okshotgun, radius),
+			WEP_CVAR_SEC(okshotgun, force),
+			WEP_CVAR_SEC(okshotgun, speed),
+			WEP_CVAR_SEC(okshotgun, spread),
+			WEP_CVAR_SEC(okshotgun, delay),
+			WEP_CVAR_SEC(okshotgun, lifetime)
+		);
+		actor.(weaponentity).m_weapon = oldwep;
+	}
+	if (WEP_CVAR(okshotgun, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(okshotgun, ammo))
+	{
+		// Forced reload
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 		return;
 	}
 	if (fire & 1) // Primary attack
 	{
-		if (time >= actor.(weaponentity).okshotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okshotgun, animtime)))
 		{
-			if (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(okshotgun, animtime)))
-			{
-				W_Shotgun_Attack(thiswep, actor, weaponentity, true,
-					WEP_CVAR_PRI(okshotgun, ammo),
-					WEP_CVAR_PRI(okshotgun, damage),
-					WEP_CVAR_PRI(okshotgun, bullets),
-					WEP_CVAR_PRI(okshotgun, spread),
-					WEP_CVAR_PRI(okshotgun, solidpenetration),
-					WEP_CVAR_PRI(okshotgun, force));
-				actor.(weaponentity).okshotgun_primarytime = time + WEP_CVAR_PRI(okshotgun, refire) * W_WeaponRateFactor(actor);
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okshotgun, animtime), w_ready);
-			}
+			return;
 		}
+		W_Shotgun_Attack(thiswep, actor, weaponentity, true,
+			WEP_CVAR_PRI(okshotgun, ammo),
+			WEP_CVAR_PRI(okshotgun, damage),
+			WEP_CVAR_PRI(okshotgun, bullets),
+			WEP_CVAR_PRI(okshotgun, spread),
+			WEP_CVAR_PRI(okshotgun, solidpenetration),
+			WEP_CVAR_PRI(okshotgun, force));
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(okshotgun, animtime), w_ready);
+		return;
 	}
-	else if (fire & 2) // Secondary attack
+	if ((fire & 2) && (WEP_CVAR_SEC(okshotgun, refire_type) == 0)) // Secondary attack
 	{
 		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(okshotgun, refire)))
 		{

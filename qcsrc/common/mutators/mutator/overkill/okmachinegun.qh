@@ -57,6 +57,7 @@ CLASS(OverkillMachineGun, Weapon)
 		P(class, prefix, lifetime, float, SEC) \
 		P(class, prefix, radius, float, SEC) \
 		P(class, prefix, refire, float, SEC) \
+		P(class, prefix, refire_type, float, SEC) \
 		P(class, prefix, shotangle, float, SEC) \
 		P(class, prefix, speed, float, SEC) \
 		P(class, prefix, spread, float, SEC) \

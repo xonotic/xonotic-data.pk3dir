@@ -131,22 +131,51 @@ METHOD(OverkillMachineGun, wr_aim, void(entity thiswep, entity actor, .entity we
 
 METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (WEP_CVAR(okmachinegun, reload_ammo) && actor.(weaponentity).clip_load < min(max(WEP_CVAR(okmachinegun, sustained_ammo), WEP_CVAR(okmachinegun, first_ammo)), WEP_CVAR(okmachinegun, burst_ammo)))
-	{ // forced reload
-		thiswep.wr_reload(thiswep, actor, weaponentity);
+	if ((WEP_CVAR_SEC(okmachinegun, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
+	{
+		// Secondary uses it's own refire timer if refire_type is 1.
+		actor.jump_interval = time + WEP_CVAR_SEC(okmachinegun, refire) * W_WeaponRateFactor(actor);
+		// Ugly hack to reuse the fire mode of the blaster.
+		makevectors(actor.v_angle);
+		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
+		actor.(weaponentity).m_weapon = WEP_BLASTER;
+		W_Blaster_Attack(
+			actor,
+			weaponentity,
+			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+			WEP_CVAR_SEC(okmachinegun, shotangle),
+			WEP_CVAR_SEC(okmachinegun, damage),
+			WEP_CVAR_SEC(okmachinegun, edgedamage),
+			WEP_CVAR_SEC(okmachinegun, radius),
+			WEP_CVAR_SEC(okmachinegun, force),
+			WEP_CVAR_SEC(okmachinegun, speed),
+			WEP_CVAR_SEC(okmachinegun, spread),
+			WEP_CVAR_SEC(okmachinegun, delay),
+			WEP_CVAR_SEC(okmachinegun, lifetime)
+		);
+		actor.(weaponentity).m_weapon = oldwep;
 	}
-	else if (WEP_CVAR(okmachinegun, mode) == 1)
+	if (WEP_CVAR(okmachinegun, reload_ammo) && actor.(weaponentity).clip_load < min(max(WEP_CVAR(okmachinegun, sustained_ammo), WEP_CVAR(okmachinegun, first_ammo)), WEP_CVAR(okmachinegun, burst_ammo)))
+	{
+		// Forced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+		return;
+	}
+	if (WEP_CVAR(okmachinegun, mode) == 1)
 	{
 		if(fire & 1) // Primary attack
-		if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
 		{
+			if (!weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
+			{
+				return;
+			}
 			actor.(weaponentity).misc_bulletcounter = 0;
 			W_OverkillMachineGun_Attack_Auto(thiswep, actor, weaponentity, fire);
+			return;
 		}
-
-		if (fire & 2) // Secondary attack
+		if ((fire & 2) && (WEP_CVAR_SEC(okmachinegun, refire_type) == 0)) // Secondary attack
 		{
-			if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(okmachinegun, refire)))
+			if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(okmachinegun, refire)))
 			{
 				return;
 			}
@@ -174,17 +203,20 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 	}
 	else
 	{
-		if(fire & 1) // Primary attack
-		if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
+		if (fire & 1) // Primary attack
 		{
+			if (!weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
+			{
+				return;
+			}
 			actor.(weaponentity).misc_bulletcounter = 1;
 			W_OverkillMachineGun_Attack(WEP_OVERKILL_MACHINEGUN, WEP_OVERKILL_MACHINEGUN.m_id, actor, weaponentity); // sets attack_finished
 			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(okmachinegun, sustained_refire), W_OverkillMachineGun_Attack_Frame);
+			return;
 		}
-
-		if (fire & 2) // Secondary attack
+		if ((fire & 2) && (WEP_CVAR_SEC(okmachinegun, refire_type) == 0)) // Secondary attack
 		{
-			if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(okmachinegun, refire)))
+			if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(okmachinegun, refire)))
 			{
 				return;
 			}
