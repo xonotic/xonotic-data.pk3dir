@@ -169,6 +169,22 @@ METHOD(OverkillVortex, wr_think, void(entity thiswep, entity actor, .entity weap
 			WEP_CVAR_SEC(okvortex, lifetime)
 		);
 		actor.(weaponentity).m_weapon = oldwep;
+		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
+			(actor.(weaponentity).wframe == WFRAME_FIRE2))
+		{
+			// Set secondary fire animation.
+			vector a = '0 0 0';
+			actor.(weaponentity).wframe = WFRAME_FIRE2;
+			a = actor.(weaponentity).anim_fire2;
+			a.z *= g_weaponratefactor;
+			FOREACH_CLIENT(true, LAMBDA(
+				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
+				{
+					wframe_send(it, actor.(weaponentity), a, true);
+				}
+			));
+			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
+		}
 	}
 
 	if (autocvar_g_balance_okvortex_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR_PRI(okvortex, ammo))

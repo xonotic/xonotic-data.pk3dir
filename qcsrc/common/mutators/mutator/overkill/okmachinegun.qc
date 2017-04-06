@@ -154,6 +154,22 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 			WEP_CVAR_SEC(okmachinegun, lifetime)
 		);
 		actor.(weaponentity).m_weapon = oldwep;
+		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
+			(actor.(weaponentity).wframe == WFRAME_FIRE2))
+		{
+			// Set secondary fire animation.
+			vector a = '0 0 0';
+			actor.(weaponentity).wframe = WFRAME_FIRE2;
+			a = actor.(weaponentity).anim_fire2;
+			a.z *= g_weaponratefactor;
+			FOREACH_CLIENT(true, LAMBDA(
+				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
+				{
+					wframe_send(it, actor.(weaponentity), a, true);
+				}
+			));
+			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
+		}
 	}
 	if (WEP_CVAR(okmachinegun, reload_ammo) && actor.(weaponentity).clip_load < min(max(WEP_CVAR(okmachinegun, sustained_ammo), WEP_CVAR(okmachinegun, first_ammo)), WEP_CVAR(okmachinegun, burst_ammo)))
 	{
