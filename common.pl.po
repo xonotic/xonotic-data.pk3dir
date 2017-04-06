@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-04-05 18:45+0000\n"
+"Last-Translator: Kriss Chr <kriss7475@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -1668,11 +1668,11 @@ msgstr "Granat lodowy"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:34
 msgid "Translocate grenade"
-msgstr ""
+msgstr "Granat teleportujący"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:42
 msgid "Spawn grenade"
-msgstr ""
+msgstr "Granat spawnujący"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:50
 msgid "Heal grenade"
@@ -4048,11 +4048,11 @@ msgstr "punkty"
 
 #: qcsrc/common/notifications/all.qh:419
 msgid "drop flag"
-msgstr ""
+msgstr "Upuść flagę"
 
 #: qcsrc/common/notifications/all.qh:420
 msgid "throw nade"
-msgstr ""
+msgstr "Rzuć granat"
 
 #: qcsrc/common/notifications/all.qh:431
 #, c-format
@@ -4186,7 +4186,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:489 qcsrc/common/notifications/all.qh:502
 #, c-format
 msgid "%d score spree! "
-msgstr ""
+msgstr "%d zabójstw w rzędzie!"
 
 #: qcsrc/common/notifications/all.qh:501
 #, c-format
@@ -4237,7 +4237,7 @@ msgstr ", zakończył swój %d szał zabijania"
 #: qcsrc/common/notifications/all.qh:596
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ""
+msgstr ", kończąc ich sekwencję %d zabójstw"
 
 #: qcsrc/common/notifications/all.qh:610
 #, c-format
@@ -4247,7 +4247,7 @@ msgstr ", tracąc swój %d szał zabijania"
 #: qcsrc/common/notifications/all.qh:611
 #, c-format
 msgid ", losing their %d score spree"
-msgstr ""
+msgstr ", tracąc ich sekwencję %d zabójstw"
 
 #: qcsrc/common/teams.qh:29
 msgid "TEAM^Red"
@@ -4396,15 +4396,15 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/plasma.qh:13
 msgid "Plasma Cannon"
-msgstr ""
+msgstr "Działko plazmowe"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:7
 msgid "Dual plasma"
-msgstr ""
+msgstr "Podwójna plazma"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:19
 msgid "Dual Plasma Cannon"
-msgstr ""
+msgstr "Podwójne plazmowe działko"
 
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
@@ -4442,11 +4442,11 @@ msgstr ""
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:19
 msgid "Racer"
-msgstr ""
+msgstr "Wyścigówka"
 
 #: qcsrc/common/vehicles/vehicle/racer_weapon.qh:9
 msgid "Racer cannon"
-msgstr ""
+msgstr "działko Wyścigówki"
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:19
 msgid "Raptor"
@@ -4466,7 +4466,7 @@ msgstr ""
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:19
 msgid "Spiderbot"
-msgstr ""
+msgstr "Robot-pająk"
 
 #: qcsrc/common/weapons/all.qh:78
 msgid "Weapons dump command only works with sv_cmd.\n"
@@ -4510,7 +4510,7 @@ msgstr "Chwytak"
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:17
 msgid "MachineGun"
-msgstr ""
+msgstr "Karabin maszynowy"
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:17
 msgid "Mine Layer"
@@ -5559,7 +5559,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:32
 msgid "Alpha"
-msgstr ""
+msgstr "Przezroczystość"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Slide"
@@ -5575,7 +5575,7 @@ msgstr "Obrazki broni:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:41
 msgid "Show only owned weapons"
-msgstr ""
+msgstr "Pokazuje tyko bronie które posiadasz"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:52
 msgid "Show weapon ID as:"
@@ -5760,11 +5760,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:28
 msgid "Spawnpoint"
-msgstr ""
+msgstr "Punkt spawnu"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:29
 msgid "No moving"
-msgstr ""
+msgstr "Bezruch"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:31
 msgid "Colors:"
@@ -5837,7 +5837,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:67
 msgid "Capture limit:"
-msgstr ""
+msgstr "Limit przejęć:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:67
 msgid "The amount of captures needed before the match will end"
@@ -6126,7 +6126,7 @@ msgstr "Niska grawitacja"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:79
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:166
 msgid "Cloaked"
-msgstr ""
+msgstr "Ukryci"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Hook"
@@ -6177,11 +6177,11 @@ msgstr "Ulepszenia"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:103
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:163
 msgid "Touch explode"
-msgstr ""
+msgstr "Wybuchowy dotyk"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "MUT^None"
-msgstr ""
+msgstr "MUT^Brak"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:156
 msgid "Gameplay mutators:"
@@ -7596,11 +7596,11 @@ msgstr "Dynamiczny HUD"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:161
 msgid "HUD moves around following player's movement"
-msgstr ""
+msgstr "HUD porusza się razem z ruchami gracza"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
 msgid "Shake the HUD when hurt"
-msgstr ""
+msgstr "Potrząśnij HUD-em gdy otrzymano obrażenia"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
@@ -7625,11 +7625,13 @@ msgstr "Informacja o zabiciu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
 msgid "Display information about killing sprees"
-msgstr ""
+msgstr "Pokaż informacje o kilku zabójstwach w rzędzie"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:29
 msgid "Only display sprees if they are achievements"
 msgstr ""
+"Pokaż informacje o kilku zabójstwach w rzędzie tylko jeżeli osiągnięto dany "
+"wynik po raz pierszy"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
 msgid "Show spree information in centerprints"
@@ -7716,7 +7718,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:96
 msgid "Announcers"
-msgstr ""
+msgstr "Informacje głosowe"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:98
 msgid "Respawn countdown sounds"
