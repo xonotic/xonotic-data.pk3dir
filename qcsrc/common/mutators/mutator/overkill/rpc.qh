@@ -18,21 +18,34 @@ CLASS(RocketPropelledChainsaw, Weapon)
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
-		P(class, prefix, ammo, float, NONE) \
-		P(class, prefix, animtime, float, NONE) \
-		P(class, prefix, damage2, float, NONE) \
-		P(class, prefix, damageforcescale, float, NONE) \
-		P(class, prefix, damage, float, NONE) \
-		P(class, prefix, edgedamage, float, NONE) \
-		P(class, prefix, force, float, NONE) \
-		P(class, prefix, health, float, NONE) \
-		P(class, prefix, lifetime, float, NONE) \
-		P(class, prefix, radius, float, NONE) \
-		P(class, prefix, refire, float, NONE) \
+		P(class, prefix, ammo, float, PRI) \
+		P(class, prefix, animtime, float, PRI) \
+		P(class, prefix, damage, float, PRI) \
+		P(class, prefix, damage2, float, PRI) \
+		P(class, prefix, damageforcescale, float, PRI) \
+		P(class, prefix, edgedamage, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, health, float, PRI) \
+		P(class, prefix, lifetime, float, PRI) \
+		P(class, prefix, radius, float, PRI) \
+		P(class, prefix, refire, float, PRI) \
+		P(class, prefix, speedaccel, float, PRI) \
+		P(class, prefix, speed, float, PRI) \
+		P(class, prefix, ammo, float, SEC) \
+		P(class, prefix, animtime, float, SEC) \
+		P(class, prefix, damage, float, SEC) \
+		P(class, prefix, delay, float, SEC) \
+		P(class, prefix, edgedamage, float, SEC) \
+		P(class, prefix, force, float, SEC) \
+		P(class, prefix, lifetime, float, SEC) \
+		P(class, prefix, radius, float, SEC) \
+		P(class, prefix, refire, float, SEC) \
+		P(class, prefix, refire_type, float, SEC) \
+		P(class, prefix, shotangle, float, SEC) \
+		P(class, prefix, speed, float, SEC) \
+		P(class, prefix, spread, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
         P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, speedaccel, float, NONE) \
-		P(class, prefix, speed, float, NONE) \
         P(class, prefix, switchdelay_drop, float, NONE) \
         P(class, prefix, switchdelay_raise, float, NONE) \
         P(class, prefix, weaponreplace, string, NONE) \

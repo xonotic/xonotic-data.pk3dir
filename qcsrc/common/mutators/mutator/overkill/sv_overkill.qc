@@ -110,54 +110,6 @@ MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
-{
-	if(game_stopped)
-		return;
-
-	entity player = M_ARGV(0, entity);
-
-	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
-		return;
-
-	if(PHYS_INPUT_BUTTON_ATCK2(player))
-	if( !forbidWeaponUse(player)
-		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
-	if(time >= player.jump_interval)
-	{
-		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
-		makevectors(player.v_angle);
-
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-
-			if(player.(weaponentity).m_weapon == WEP_Null && slot != 0)
-				continue;
-
-			Weapon oldwep = player.(weaponentity).m_weapon;
-			player.(weaponentity).m_weapon = WEP_BLASTER;
-			W_Blaster_Attack(
-				player,
-				weaponentity,
-				WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-				WEP_CVAR_SEC(vaporizer, shotangle),
-				WEP_CVAR_SEC(vaporizer, damage),
-				WEP_CVAR_SEC(vaporizer, edgedamage),
-				WEP_CVAR_SEC(vaporizer, radius),
-				WEP_CVAR_SEC(vaporizer, force),
-				WEP_CVAR_SEC(vaporizer, speed),
-				WEP_CVAR_SEC(vaporizer, spread),
-				WEP_CVAR_SEC(vaporizer, delay),
-				WEP_CVAR_SEC(vaporizer, lifetime)
-			);
-			player.(weaponentity).m_weapon = oldwep;
-		}
-	}
-
-	PHYS_INPUT_BUTTON_ATCK2(player) = false;
-}
-
 MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 {
 	entity player = M_ARGV(0, entity);
