@@ -89,8 +89,7 @@ void CampaignFile_Unload()
 	if(campaign_title)
 	{
 		strunzone(campaign_title);
-		int i;
-		for(i = 0; i < campaign_entries; ++i)
+		for(int i = 0; i < campaign_entries; ++i)
 		{
 			strunzone(campaign_gametype[i]);
 			strunzone(campaign_mapname[i]);
