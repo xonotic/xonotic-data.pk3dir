@@ -8,7 +8,7 @@ void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage (this, this.realowner, WEP_CVAR_PRI(rpc, damage), WEP_CVAR_PRI(rpc, edgedamage), WEP_CVAR_PRI(rpc, radius), NULL, NULL, WEP_CVAR_PRI(rpc, force), this.projectiledeathtype, directhitentity);
 
 	delete (this);
 }
@@ -55,9 +55,9 @@ void W_RocketPropelledChainsaw_Think(entity this)
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin + this.pos1 * (2 * this.wait), MOVE_NORMAL, this);
 	if(IS_PLAYER(trace_ent))
-		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - other.origin) * WEP_CVAR(rpc, force));
+		Damage (trace_ent, this, this.realowner, WEP_CVAR_PRI(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - other.origin) * WEP_CVAR_PRI(rpc, force));
 
-	this.velocity = this.pos1 * (this.cnt + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
+	this.velocity = this.pos1 * (this.cnt + (WEP_CVAR_PRI(rpc, speedaccel) * sys_frametime));
 
 	UpdateCSQCProjectile(this);
 	this.nextthink = time;
@@ -68,18 +68,18 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
 	entity flash = spawn ();
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo), weaponentity);
-	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(rpc, ammo), weaponentity);
+	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
-	missile.bot_dodgerating = WEP_CVAR(rpc, damage) * 2;
+	missile.bot_dodgerating = WEP_CVAR_PRI(rpc, damage) * 2;
 
 	missile.takedamage = DAMAGE_YES;
-	missile.damageforcescale = WEP_CVAR(rpc, damageforcescale);
-	missile.health = WEP_CVAR(rpc, health);
+	missile.damageforcescale = WEP_CVAR_PRI(rpc, damageforcescale);
+	missile.health = WEP_CVAR_PRI(rpc, health);
 	missile.event_damage = W_RocketPropelledChainsaw_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -89,12 +89,12 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
-	W_SetupProjVelocity_Basic(missile, WEP_CVAR(rpc, speed), 0);
+	W_SetupProjVelocity_Basic(missile, WEP_CVAR_PRI(rpc, speed), 0);
 
 	settouch(missile, W_RocketPropelledChainsaw_Touch);
 
 	setthink(missile, W_RocketPropelledChainsaw_Think);
-	missile.cnt = time + WEP_CVAR(rpc, lifetime);
+	missile.cnt = time + WEP_CVAR_PRI(rpc, lifetime);
 	missile.nextthink = time;
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
@@ -113,46 +113,113 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 
 METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(rpc, speed), 0, WEP_CVAR_PRI(rpc, lifetime), false);
 }
 
 METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(rpc, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR(rpc, ammo)) {
-        thiswep.wr_reload(thiswep, actor, weaponentity);
-    } else
-    {
-        if (fire & 1)
-        {
-            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(rpc, refire)))
-            {
-                W_RocketPropelledChainsaw_Attack(thiswep, actor, weaponentity);
-                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
-            }
-        }
-
-        if (fire & 2)
-        {
-            // to-do
-        }
-    }
+	if ((WEP_CVAR_SEC(rpc, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
+	{
+		// Secondary uses it's own refire timer if refire_type is 1.
+		actor.jump_interval = time + WEP_CVAR_SEC(rpc, refire) * W_WeaponRateFactor(actor);
+		// Ugly hack to reuse the fire mode of the blaster.
+		makevectors(actor.v_angle);
+		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
+		actor.(weaponentity).m_weapon = WEP_BLASTER;
+		W_Blaster_Attack(
+			actor,
+			weaponentity,
+			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+			WEP_CVAR_SEC(rpc, shotangle),
+			WEP_CVAR_SEC(rpc, damage),
+			WEP_CVAR_SEC(rpc, edgedamage),
+			WEP_CVAR_SEC(rpc, radius),
+			WEP_CVAR_SEC(rpc, force),
+			WEP_CVAR_SEC(rpc, speed),
+			WEP_CVAR_SEC(rpc, spread),
+			WEP_CVAR_SEC(rpc, delay),
+			WEP_CVAR_SEC(rpc, lifetime)
+		);
+		actor.(weaponentity).m_weapon = oldwep;
+		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
+			(actor.(weaponentity).wframe == WFRAME_FIRE2))
+		{
+			// Set secondary fire animation.
+			vector a = '0 0 0';
+			actor.(weaponentity).wframe = WFRAME_FIRE2;
+			a = actor.(weaponentity).anim_fire2;
+			a.z *= g_weaponratefactor;
+			FOREACH_CLIENT(true, LAMBDA(
+				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
+				{
+					wframe_send(it, actor.(weaponentity), a, true);
+				}
+			));
+			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
+		}
+	}
+	if (WEP_CVAR(rpc, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(rpc, ammo))
+	{
+		// Forced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+		return;
+	}
+	if (fire & 1) // Primary attack
+	{
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(rpc, refire)))
+		{
+			return;
+		}
+		W_RocketPropelledChainsaw_Attack(thiswep, actor, weaponentity);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(rpc, animtime), w_ready);
+		return;
+	}
+	if ((fire & 2) && (WEP_CVAR_SEC(rpc, refire_type) == 0)) // Secondary attack
+	{
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(rpc, refire)))
+		{
+			return;
+		}
+		// ugly instagib hack to reuse the fire mode of the laser
+		makevectors(actor.v_angle);
+		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
+		actor.(weaponentity).m_weapon = WEP_BLASTER;
+		W_Blaster_Attack(
+			actor,
+			weaponentity,
+			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+			WEP_CVAR_SEC(rpc, shotangle),
+			WEP_CVAR_SEC(rpc, damage),
+			WEP_CVAR_SEC(rpc, edgedamage),
+			WEP_CVAR_SEC(rpc, radius),
+			WEP_CVAR_SEC(rpc, force),
+			WEP_CVAR_SEC(rpc, speed),
+			WEP_CVAR_SEC(rpc, spread),
+			WEP_CVAR_SEC(rpc, delay),
+			WEP_CVAR_SEC(rpc, lifetime)
+		);
+		actor.(weaponentity).m_weapon = oldwep;
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(rpc, animtime), w_ready);
+	}
 }
 
 METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(rpc, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR_PRI(rpc, ammo);
     return ammo_amount;
 }
 
 METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    return false;
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(rpc, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR_SEC(rpc, ammo);
+    return ammo_amount;
 }
 
 METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, WEP_CVAR(rpc, ammo), SND_RELOAD);
+    W_Reload(actor, weaponentity, WEP_CVAR_PRI(rpc, ammo), SND_RELOAD);
 }
 
 METHOD(RocketPropelledChainsaw, wr_suicidemessage, Notification(entity thiswep))
