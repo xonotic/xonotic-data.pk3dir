@@ -491,12 +491,12 @@ void FixPlayermodel(entity player)
 /** Called when a client spawns in the server */
 void PutClientInServer(entity this)
 {
-	if (IS_BOT_CLIENT(this)) {
-		TRANSMUTE(Player, this);
-	} else if (IS_REAL_CLIENT(this)) {
+    if (IS_REAL_CLIENT(this)) {
 		msg_entity = this;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
+	} else {
+		TRANSMUTE(Player, this);
 	}
 	if (game_stopped)
 		TRANSMUTE(Observer, this);

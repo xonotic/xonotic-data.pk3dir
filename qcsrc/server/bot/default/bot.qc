@@ -63,7 +63,10 @@ void bot_spawn_setup(entity bot)
 void bot_remove(entity bot)
 {
 	currentbots = currentbots - 1;
-	dropclient(bot);
+    if ( IS_FAKE_CLIENT(bot) )
+        delete(bot);
+    else
+        dropclient(bot);
 }
 
 void bot_think(entity this)
@@ -110,16 +113,19 @@ void bot_think(entity this)
 	// skill 0 = ping 0.7 (slightly drunk)
 
 	// clear buttons
-	PHYS_INPUT_BUTTON_ATCK(this) = false;
-	PHYS_INPUT_BUTTON_JUMP(this) = false;
-	PHYS_INPUT_BUTTON_ATCK2(this) = false;
-	PHYS_INPUT_BUTTON_ZOOM(this) = false;
-	PHYS_INPUT_BUTTON_CROUCH(this) = false;
-	PHYS_INPUT_BUTTON_HOOK(this) = false;
-	PHYS_INPUT_BUTTON_INFO(this) = false;
-	PHYS_INPUT_BUTTON_DRAG(this) = false;
-	PHYS_INPUT_BUTTON_CHAT(this) = false;
-	PHYS_INPUT_BUTTON_USE(this) = false;
+    if ( !IS_FAKE_CLIENT(this) )
+    {
+        PHYS_INPUT_BUTTON_ATCK(this) = false;
+        PHYS_INPUT_BUTTON_JUMP(this) = false;
+        PHYS_INPUT_BUTTON_ATCK2(this) = false;
+        PHYS_INPUT_BUTTON_ZOOM(this) = false;
+        PHYS_INPUT_BUTTON_CROUCH(this) = false;
+        PHYS_INPUT_BUTTON_HOOK(this) = false;
+        PHYS_INPUT_BUTTON_INFO(this) = false;
+        PHYS_INPUT_BUTTON_DRAG(this) = false;
+        PHYS_INPUT_BUTTON_CHAT(this) = false;
+        PHYS_INPUT_BUTTON_USE(this) = false;
+    }
 
 	if (time < game_starttime)
 	{
@@ -133,7 +139,7 @@ void bot_think(entity this)
 	if (IS_DEAD(this))
 	{
 		this.movement = '0 0 0';
-		if (this.deadflag == DEAD_DEAD)
+		if (this.deadflag == DEAD_DEAD && !IS_FAKE_CLIENT(this))
 		{
 			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
 			this.bot_strategytime = 0;
@@ -399,7 +405,7 @@ void bot_relinkplayerlist()
 
 void bot_clientdisconnect(entity this)
 {
-	if (!IS_BOT_CLIENT(this))
+	if (IS_REAL_CLIENT(this))
 		return;
 	bot_clearqueue(this);
 	if(this.cleanname)
@@ -422,7 +428,7 @@ void bot_clientdisconnect(entity this)
 
 void bot_clientconnect(entity this)
 {
-	if (!IS_BOT_CLIENT(this)) return;
+	if (IS_REAL_CLIENT(this)) return;
 	this.bot_preferredcolors = this.clientcolors;
 	this.bot_nextthink = time - random();
 	this.lag_func = bot_lagfunc;
@@ -500,16 +506,8 @@ void bot_removenewest()
 	best = M_ARGV(0, entity);
 	if ( best )
 	{
-		if ( !IS_BOT_CLIENT(best) )
-		{
-			LOG_WARN("Mutator selected a non-bot as a bot to remove\n");
-			best = NULL;
-		}
-		else
-		{
-			bot_remove(best);
-			return;
-		}
+		bot_remove(best);
+		return;
 	}
 
 	if(teamplay)
@@ -605,7 +603,7 @@ float bot_fixcount()
 {
 	int activerealplayers = 0;
 	int realplayers = 0;
-	int bots = 0;
+	int bots = -1;
 
 	if (MUTATOR_CALLHOOK(Bot_FixCount, activerealplayers, realplayers, bots)) {
 		activerealplayers = M_ARGV(0, int);
@@ -624,7 +622,7 @@ float bot_fixcount()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = false;
-	if (bots)
+	if (bots >= 0)
 	{
 		// Nothing to do, number of bots set by the hook
 	}
