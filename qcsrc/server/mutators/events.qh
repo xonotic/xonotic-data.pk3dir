@@ -69,6 +69,12 @@ MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
     /**/
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
+/** called after a player died. */
+#define EV_PlayerDied(i, o) \
+    /** player    		*/ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerDied, EV_PlayerDied);
+
 /** allows overriding the frag centerprint messages */
 #define EV_FragCenterMessage(i, o) \
     /** attacker       */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -85,14 +91,6 @@ MUTATOR_HOOKABLE(FragCenterMessage, EV_FragCenterMessage);
     /** attacker */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
-
-/** called when a weapon sound is about to be played, allows custom paths etc. */
-#define EV_WeaponSound(i, o) \
-    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
-    /** output      */ i(string, MUTATOR_ARGV_1_string) \
-    /**/               o(string, MUTATOR_ARGV_1_string) \
-    /**/
-MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
 
 /** called when an item model is about to be set, allows custom paths etc. */
 #define EV_ItemModel(i, o) \

@@ -145,9 +145,6 @@ const int HAVOCBOT_CTF_ROLE_ESCORT = 64;
 
 .bool havocbot_cantfindflag;
 
-vector havocbot_ctf_middlepoint;
-float havocbot_ctf_middlepoint_radius;
-
 void havocbot_role_ctf_setrole(entity bot, int role);
 
 // team checking
