@@ -1084,6 +1084,23 @@ void Surv_GiveStartWeapons(entity player)
 		return;
 	}
 	int numweapons = tokenize_console(cvar_string(randomweaponlist));
+	if (warmup_stage)
+	{
+		// Give all weapons during warmup stage.
+		for (int i = 0; i < numweapons; ++i)
+		{
+			string weapon = argv(i);
+			FOREACH(Weapons, it != WEP_Null,
+			{
+				if (it.netname == weapon)
+				{
+					player.weapons |= it.m_wepset;
+					break;
+				}
+			});
+		}
+		return;
+	}
 	for (int i = 0; i < numrandomweapons; ++i)
 	{
 		// Finding weapon which player doesn't have.
@@ -1372,6 +1389,7 @@ MUTATOR_HOOKFUNCTION(surv, SetWeaponArena)
 MUTATOR_HOOKFUNCTION(surv, SetStartItems)
 {
 	start_weapons = WEPSET(Null);
+	warmup_start_weapons = WEPSET(Null);
 }
 
 MUTATOR_HOOKFUNCTION(surv, SV_StartFrame)
