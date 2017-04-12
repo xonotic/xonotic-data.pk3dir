@@ -93,6 +93,22 @@ int autocvar_g_surv_defender_num_random_start_weapons;
 /// spawn.
 int autocvar_g_surv_cannon_fodder_num_random_start_weapons;
 
+/// \brief How many health do defenders get when they pickup small health.
+int autocvar_g_surv_defender_pickup_health_small;
+/// \brief How many health do defenders get when they pickup medium health.
+int autocvar_g_surv_defender_pickup_health_medium;
+/// \brief How many health do defenders get when they pickup big health.
+int autocvar_g_surv_defender_pickup_health_big;
+/// \brief How many health do defenders get when they pickup mega health.
+int autocvar_g_surv_defender_pickup_health_mega;
+/// \brief How many armor do defenders get when they pickup small armor.
+int autocvar_g_surv_defender_pickup_armor_small;
+/// \brief How many armor do defenders get when they pickup medium armor.
+int autocvar_g_surv_defender_pickup_armor_medium;
+/// \brief How many armor do defenders get when they pickup big armor.
+int autocvar_g_surv_defender_pickup_armor_big;
+/// \brief How many armor do defenders get when they pickup mega armor.
+int autocvar_g_surv_defender_pickup_armor_mega;
 /// \brief How many shells do defenders get when they pickup small health/armor.
 int autocvar_g_surv_defender_pickup_shells_small;
 /// \brief How many shells do defenders get when they pickup medium
@@ -1704,8 +1720,9 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 			switch (item.classname)
 			{
 				case "item_health_small":
-				case "item_armor_small":
 				{
+					GivePlayerHealth(player,
+						autocvar_g_surv_defender_pickup_health_small);
 					GivePlayerShells(player,
 						autocvar_g_surv_defender_pickup_shells_small);
 					GivePlayerBullets(player,
@@ -1720,8 +1737,9 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					return MUT_ITEMTOUCH_RETURN;
 				}
 				case "item_health_medium":
-				case "item_armor_medium":
 				{
+					GivePlayerHealth(player,
+						autocvar_g_surv_defender_pickup_health_medium);
 					GivePlayerShells(player,
 						autocvar_g_surv_defender_pickup_shells_medium);
 					GivePlayerBullets(player,
@@ -1736,8 +1754,76 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					return MUT_ITEMTOUCH_RETURN;
 				}
 				case "item_health_big":
+				{
+					GivePlayerHealth(player,
+						autocvar_g_surv_defender_pickup_health_big);
+					GivePlayerShells(player,
+						autocvar_g_surv_defender_pickup_shells_big);
+					GivePlayerBullets(player,
+						autocvar_g_surv_defender_pickup_bullets_big);
+					GivePlayerRockets(player,
+						autocvar_g_surv_defender_pickup_rockets_big);
+					GivePlayerCells(player,
+						autocvar_g_surv_defender_pickup_cells_big);
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_HealthBig, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				case "item_health_mega":
+				{
+					GivePlayerHealth(player,
+						autocvar_g_surv_defender_pickup_health_mega);
+					GivePlayerShells(player,
+						autocvar_g_surv_defender_pickup_shells_mega);
+					GivePlayerBullets(player,
+						autocvar_g_surv_defender_pickup_bullets_mega);
+					GivePlayerRockets(player,
+						autocvar_g_surv_defender_pickup_rockets_mega);
+					GivePlayerCells(player,
+						autocvar_g_surv_defender_pickup_cells_mega);
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_HealthMega, VOL_BASE, ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				case "item_armor_small":
+				{
+					GivePlayerArmor(player,
+						autocvar_g_surv_defender_pickup_armor_small);
+					GivePlayerShells(player,
+						autocvar_g_surv_defender_pickup_shells_small);
+					GivePlayerBullets(player,
+						autocvar_g_surv_defender_pickup_bullets_small);
+					GivePlayerRockets(player,
+						autocvar_g_surv_defender_pickup_rockets_small);
+					GivePlayerCells(player,
+						autocvar_g_surv_defender_pickup_cells_small);
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_HealthSmall, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				case "item_armor_medium":
+				{
+					GivePlayerArmor(player,
+						autocvar_g_surv_defender_pickup_armor_medium);
+					GivePlayerShells(player,
+						autocvar_g_surv_defender_pickup_shells_medium);
+					GivePlayerBullets(player,
+						autocvar_g_surv_defender_pickup_bullets_medium);
+					GivePlayerRockets(player,
+						autocvar_g_surv_defender_pickup_rockets_medium);
+					GivePlayerCells(player,
+						autocvar_g_surv_defender_pickup_cells_medium);
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_HealthMedium, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
 				case "item_armor_big":
 				{
+					GivePlayerArmor(player,
+						autocvar_g_surv_defender_pickup_armor_big);
 					GivePlayerShells(player,
 						autocvar_g_surv_defender_pickup_shells_big);
 					GivePlayerBullets(player,
@@ -1750,9 +1836,10 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					sound(player, CH_TRIGGER, SND_HealthBig, VOL_BASE, ATTEN_NORM);
 					return MUT_ITEMTOUCH_RETURN;
 				}
-				case "item_health_mega":
 				case "item_armor_mega":
 				{
+					GivePlayerArmor(player,
+						autocvar_g_surv_defender_pickup_armor_mega);
 					GivePlayerShells(player,
 						autocvar_g_surv_defender_pickup_shells_mega);
 					GivePlayerBullets(player,
