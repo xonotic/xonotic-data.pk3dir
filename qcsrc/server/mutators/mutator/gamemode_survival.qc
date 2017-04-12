@@ -1124,46 +1124,6 @@ void Surv_GiveStartWeapons(entity player)
 	}
 }
 
-/// \brief Gives player shells.
-/// \param[in,out] player Player to give shells to.
-/// \param[in] amount Amount of shells to give.
-/// \return No return.
-void Surv_GivePlayerShells(entity player, float amount)
-{
-	player.ammo_shells = bound(player.ammo_shells, player.ammo_shells + amount,
-		g_pickup_shells_max);
-}
-
-/// \brief Gives player bullets.
-/// \param[in,out] player Player to give bullets to.
-/// \param[in] amount Amount of bullets to give.
-/// \return No return.
-void Surv_GivePlayerBullets(entity player, float amount)
-{
-	player.ammo_nails = bound(player.ammo_nails, player.ammo_nails + amount,
-		g_pickup_nails_max);
-}
-
-/// \brief Gives player rockets.
-/// \param[in,out] player Player to give rockets to.
-/// \param[in] amount Amount of rockets to give.
-/// \return No return.
-void Surv_GivePlayerRockets(entity player, float amount)
-{
-	player.ammo_rockets = bound(player.ammo_rockets, player.ammo_rockets +
-		amount, g_pickup_rockets_max);
-}
-
-/// \brief Gives player cells.
-/// \param[in,out] player Player to give cells to.
-/// \param[in] amount Amount of cells to give.
-/// \return No return.
-void Surv_GivePlayerCells(entity player, float amount)
-{
-	player.ammo_cells = bound(player.ammo_cells, player.ammo_cells + amount,
-		g_pickup_cells_max);
-}
-
 //=============================== Callbacks ===================================
 
 bool Surv_CanRoundStart()
@@ -1747,13 +1707,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "item_health_small":
 				case "item_armor_small":
 				{
-					Surv_GivePlayerShells(player,
+					GivePlayerShells(player,
 						autocvar_g_surv_defender_pickup_shells_small);
-					Surv_GivePlayerBullets(player,
+					GivePlayerBullets(player,
 						autocvar_g_surv_defender_pickup_bullets_small);
-					Surv_GivePlayerRockets(player,
+					GivePlayerRockets(player,
 						autocvar_g_surv_defender_pickup_rockets_small);
-					Surv_GivePlayerCells(player,
+					GivePlayerCells(player,
 						autocvar_g_surv_defender_pickup_cells_small);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthSmall, VOL_BASE,
@@ -1763,13 +1723,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "item_health_medium":
 				case "item_armor_medium":
 				{
-					Surv_GivePlayerShells(player,
+					GivePlayerShells(player,
 						autocvar_g_surv_defender_pickup_shells_medium);
-					Surv_GivePlayerBullets(player,
+					GivePlayerBullets(player,
 						autocvar_g_surv_defender_pickup_bullets_medium);
-					Surv_GivePlayerRockets(player,
+					GivePlayerRockets(player,
 						autocvar_g_surv_defender_pickup_rockets_medium);
-					Surv_GivePlayerCells(player,
+					GivePlayerCells(player,
 						autocvar_g_surv_defender_pickup_cells_medium);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthMedium, VOL_BASE,
@@ -1779,13 +1739,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "item_health_big":
 				case "item_armor_big":
 				{
-					Surv_GivePlayerShells(player,
+					GivePlayerShells(player,
 						autocvar_g_surv_defender_pickup_shells_big);
-					Surv_GivePlayerBullets(player,
+					GivePlayerBullets(player,
 						autocvar_g_surv_defender_pickup_bullets_big);
-					Surv_GivePlayerRockets(player,
+					GivePlayerRockets(player,
 						autocvar_g_surv_defender_pickup_rockets_big);
-					Surv_GivePlayerCells(player,
+					GivePlayerCells(player,
 						autocvar_g_surv_defender_pickup_cells_big);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthBig, VOL_BASE, ATTEN_NORM);
@@ -1794,13 +1754,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "item_health_mega":
 				case "item_armor_mega":
 				{
-					Surv_GivePlayerShells(player,
+					GivePlayerShells(player,
 						autocvar_g_surv_defender_pickup_shells_mega);
-					Surv_GivePlayerBullets(player,
+					GivePlayerBullets(player,
 						autocvar_g_surv_defender_pickup_bullets_mega);
-					Surv_GivePlayerRockets(player,
+					GivePlayerRockets(player,
 						autocvar_g_surv_defender_pickup_rockets_mega);
-					Surv_GivePlayerCells(player,
+					GivePlayerCells(player,
 						autocvar_g_surv_defender_pickup_cells_mega);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthMega, VOL_BASE, ATTEN_NORM);
@@ -1819,13 +1779,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					{
 						case WEP_SHOTGUN.m_id:
 						{
-							Surv_GivePlayerShells(player, cvar(
+							GivePlayerShells(player, cvar(
 								"g_pickup_shells_weapon"));
 							break;
 						}
 						case WEP_MACHINEGUN.m_id:
 						{
-							Surv_GivePlayerBullets(player, cvar(
+							GivePlayerBullets(player, cvar(
 								"g_pickup_nails_weapon"));
 							break;
 						}
@@ -1833,7 +1793,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 						case WEP_HAGAR.m_id:
 						case WEP_DEVASTATOR.m_id:
 						{
-							Surv_GivePlayerRockets(player, cvar(
+							GivePlayerRockets(player, cvar(
 								"g_pickup_rockets_weapon"));
 							break;
 						}
@@ -1841,7 +1801,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 						case WEP_CRYLINK.m_id:
 						case WEP_VORTEX.m_id:
 						{
-							Surv_GivePlayerCells(player, cvar(
+							GivePlayerCells(player, cvar(
 								"g_pickup_cells_weapon"));
 							break;
 						}
@@ -1857,26 +1817,26 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					{
 						case WEP_SHOTGUN.m_id:
 						{
-							Surv_GivePlayerShells(player, cvar(
+							GivePlayerShells(player, cvar(
 								"g_pickup_shells_weapon"));
 							break;
 						}
 						case WEP_RIFLE.m_id:
 						{
-							Surv_GivePlayerBullets(player, cvar(
+							GivePlayerBullets(player, cvar(
 								"g_pickup_nails_weapon"));
 							break;
 						}
 						case WEP_MINE_LAYER.m_id:
 						case WEP_SEEKER.m_id:
 						{
-							Surv_GivePlayerRockets(player, cvar(
+							GivePlayerRockets(player, cvar(
 								"g_pickup_rockets_weapon"));
 							break;
 						}
 						case WEP_HLAC.m_id:
 						{
-							Surv_GivePlayerCells(player, cvar(
+							GivePlayerCells(player, cvar(
 								"g_pickup_cells_weapon"));
 							break;
 						}
@@ -1889,8 +1849,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "weapon_machinegun":
 				case "weapon_uzi":
 				{
-					Surv_GivePlayerBullets(player, cvar(
-						"g_pickup_nails_weapon"));
+					GivePlayerBullets(player, cvar("g_pickup_nails_weapon"));
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
 						ATTEN_NORM);
@@ -1900,8 +1859,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "weapon_hagar":
 				case "weapon_rocketlauncher":
 				{
-					Surv_GivePlayerRockets(player,
-						cvar("g_pickup_rockets_weapon"));
+					GivePlayerRockets(player, cvar("g_pickup_rockets_weapon"));
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
 						ATTEN_NORM);
@@ -1911,7 +1869,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "weapon_crylink":
 				case "weapon_nex":
 				{
-					Surv_GivePlayerCells(player, cvar("g_pickup_cells_weapon"));
+					GivePlayerCells(player, cvar("g_pickup_cells_weapon"));
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
 						ATTEN_NORM);
