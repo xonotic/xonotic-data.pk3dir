@@ -97,6 +97,10 @@ int autocvar_g_surv_cannon_fodder_start_armor;
 /// spawn.
 int autocvar_g_surv_cannon_fodder_num_random_start_weapons;
 
+/// \brief How much health do attackers get when they pickup ammo.
+int autocvar_g_surv_attacker_pickup_ammo_health;
+/// \brief How much armor do attackers get when they pickup ammo.
+int autocvar_g_surv_attacker_pickup_ammo_armor;
 /// \brief How many health do defenders get when they pickup small health.
 int autocvar_g_surv_defender_pickup_health_small;
 /// \brief How many health do defenders get when they pickup medium health.
@@ -1715,8 +1719,10 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "item_cells":
 				case "droppedweapon":
 				{
-					GivePlayerHealth(player, g_pickup_healthmedium);
-					GivePlayerArmor(player, g_pickup_armormedium);
+					GivePlayerHealth(player,
+						autocvar_g_surv_attacker_pickup_ammo_health);
+					GivePlayerArmor(player,
+						autocvar_g_surv_attacker_pickup_ammo_armor);
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
