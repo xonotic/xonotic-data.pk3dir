@@ -157,8 +157,6 @@ int autocvar_g_surv_defender_pickup_cells_mega;
 
 /// \brief How much score attackers gain per 1 point of damage.
 float autocvar_g_surv_attacker_damage_score;
-/// \brief How much score attackers get for killing defenders.
-float autocvar_g_surv_attacker_frag_score;
 /// \brief How much defenders damage others. Higher values mean more damage.
 float autocvar_g_surv_defender_attack_scale;
 /// \brief How much defenders get damaged. High values mean less damage.
@@ -168,6 +166,33 @@ float autocvar_g_surv_defender_defense_scale;
 float autocvar_g_surv_cannon_fodder_attack_scale;
 /// \brief How much cannon fodder gets damaged. Higher values mean less damage.
 float autocvar_g_surv_cannon_fodder_defense_scale;
+
+/// \brief How much score attackers get for fragging defenders.
+float autocvar_g_surv_attacker_frag_score;
+/// \brief How much health do defenders get when they frag an attacker.
+int autocvar_g_surv_defender_attacker_frag_health;
+/// \brief How much armor do defenders get when they frag an attacker.
+int autocvar_g_surv_defender_attacker_frag_armor;
+/// \brief How many shells do defenders get when they frag an attacker.
+int autocvar_g_surv_defender_attacker_frag_shells;
+/// \brief How many bullets do defenders get when they frag an attacker.
+int autocvar_g_surv_defender_attacker_frag_bullets;
+/// \brief How many rockets do defenders get when they frag an attacker.
+int autocvar_g_surv_defender_attacker_frag_rockets;
+/// \brief How many cells do defenders get when they frag an attacker.
+int autocvar_g_surv_defender_attacker_frag_cells;
+/// \brief How much health do defenders get when they frag cannon fodder.
+int autocvar_g_surv_defender_cannon_fodder_frag_health;
+/// \brief How much armor do defenders get when they frag cannon fodder.
+int autocvar_g_surv_defender_cannon_fodder_frag_armor;
+/// \brief How many shells do defenders get when they frag cannon fodder.
+int autocvar_g_surv_defender_cannon_fodder_frag_shells;
+/// \brief How many bullets do defenders get when they frag cannon fodder.
+int autocvar_g_surv_defender_cannon_fodder_frag_bullets;
+/// \brief How many rockets do defenders get when they frag cannon fodder.
+int autocvar_g_surv_defender_cannon_fodder_frag_rockets;
+/// \brief How many cells do defenders get when they frag cannon fodder.
+int autocvar_g_surv_defender_cannon_fodder_frag_cells;
 
 /// \brief Whether defenders drop weapons after death.
 int autocvar_g_surv_defender_drop_weapons;
@@ -2095,7 +2120,47 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 {
 	//DebugPrintToChatAll("PlayerDies");
+	entity attacker = M_ARGV(1, entity);
 	entity victim = M_ARGV(2, entity);
+	if ((attacker.team == surv_defenderteam) &&
+		(victim.team == surv_attackerteam))
+	{
+		switch (victim.surv_role)
+		{
+			case SURVIVAL_ROLE_PLAYER:
+			{
+				GivePlayerHealth(attacker,
+					autocvar_g_surv_defender_attacker_frag_health);
+				GivePlayerArmor(attacker,
+					autocvar_g_surv_defender_attacker_frag_armor);
+				GivePlayerShells(attacker,
+					autocvar_g_surv_defender_attacker_frag_shells);
+				GivePlayerBullets(attacker,
+					autocvar_g_surv_defender_attacker_frag_bullets);
+				GivePlayerRockets(attacker,
+					autocvar_g_surv_defender_attacker_frag_rockets);
+				GivePlayerCells(attacker,
+					autocvar_g_surv_defender_attacker_frag_cells);
+				break;
+			}
+			case SURVIVAL_ROLE_CANNON_FODDER:
+			{
+				GivePlayerHealth(attacker,
+					autocvar_g_surv_defender_cannon_fodder_frag_health);
+				GivePlayerArmor(attacker,
+					autocvar_g_surv_defender_cannon_fodder_frag_armor);
+				GivePlayerShells(attacker,
+					autocvar_g_surv_defender_cannon_fodder_frag_shells);
+				GivePlayerBullets(attacker,
+					autocvar_g_surv_defender_cannon_fodder_frag_bullets);
+				GivePlayerRockets(attacker,
+					autocvar_g_surv_defender_cannon_fodder_frag_rockets);
+				GivePlayerCells(attacker,
+					autocvar_g_surv_defender_cannon_fodder_frag_cells);
+				break;
+			}
+		}
+	}
 	if ((victim.team == surv_defenderteam) &&
 		(autocvar_g_surv_defender_drop_weapons == false))
 	{
