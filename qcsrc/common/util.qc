@@ -24,10 +24,9 @@
 */
 vector real_origin(entity ent)
 {
-	entity e;
 	vector v = ((ent.absmin + ent.absmax) * 0.5);
+	entity e = ent.tag_entity;
 
-	e = ent.tag_entity;
 	while(e)
 	{
 		v = v + ((e.absmin + e.absmax) * 0.5);
@@ -414,11 +413,11 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 string mapPriorityList(string order, string(string) mapfunc)
 {
 	string neworder;
-	float i, n;
+	float n;
 
 	n = tokenize_console(order);
 	neworder = "";
-	for(i = 0; i < n; ++i)
+	for(float i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
 
 	return substring(neworder, 0, strlen(neworder) - 1);
@@ -426,15 +425,12 @@ string mapPriorityList(string order, string(string) mapfunc)
 
 string swapInPriorityList(string order, float i, float j)
 {
-	string s;
-	float w, n;
-
-	n = tokenize_console(order);
+	float n = tokenize_console(order);
 
 	if(i >= 0 && i < n && j >= 0 && j < n && i != j)
 	{
-		s = "";
-		for(w = 0; w < n; ++w)
+		string s = "";
+		for(float w = 0; w < n; ++w)
 		{
 			if(w == i)
 				s = strcat(s, argv(j), " ");
@@ -672,7 +668,6 @@ bool isCaretEscaped(string theText, float pos)
 
 int skipIncompleteTag(string theText, float pos, int len)
 {
-	int i = 0, ch = 0;
 	int tag_start = -1;
 
 	if(substring(theText, pos - 1, 1) == "^")
@@ -680,7 +675,7 @@ int skipIncompleteTag(string theText, float pos, int len)
 		if(isCaretEscaped(theText, pos - 1) || pos >= len)
 			return 0;
 
-		ch = str2chr(theText, pos);
+		int ch = str2chr(theText, pos);
 		if(ch >= '0' && ch <= '9')
 			return 1; // ^[0-9] color code found
 		else if (ch == 'x')
@@ -690,7 +685,7 @@ int skipIncompleteTag(string theText, float pos, int len)
 	}
 	else
 	{
-		for(i = 2; pos - i >= 0 && i <= 4; ++i)
+		for(int i = 2; pos - i >= 0 && i <= 4; ++i)
 		{
 			if(substring(theText, pos - i, 2) == "^x")
 			{
@@ -784,8 +779,7 @@ string find_last_color_code(string s)
 	if (start == -1) // no caret found
 		return "";
 	int len = strlen(s)-1;
-	int i;
-	for(i = len; i >= start; --i)
+	for(int i = len; i >= start; --i)
 	{
 		if(substring(s, i, 1) != "^")
 			continue;
