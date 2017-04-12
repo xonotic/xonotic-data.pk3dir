@@ -641,6 +641,30 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
+void GivePlayerShells(entity player, float amount)
+{
+	player.ammo_shells = bound(player.ammo_shells, player.ammo_shells + amount,
+		g_pickup_shells_max);
+}
+
+void GivePlayerBullets(entity player, float amount)
+{
+	player.ammo_nails = bound(player.ammo_nails, player.ammo_nails + amount,
+		g_pickup_nails_max);
+}
+
+void GivePlayerRockets(entity player, float amount)
+{
+	player.ammo_rockets = bound(player.ammo_rockets, player.ammo_rockets +
+		amount, g_pickup_rockets_max);
+}
+
+void GivePlayerCells(entity player, float amount)
+{
+	player.ammo_cells = bound(player.ammo_cells, player.ammo_cells + amount,
+		g_pickup_cells_max);
+}
+
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
 {
 	if (!item.(ammotype))
