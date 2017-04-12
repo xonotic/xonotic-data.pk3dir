@@ -711,6 +711,26 @@ void DebugPrintToChatAll(string text)
 	}
 }
 
+void PrintToChatTeam(int teamnum, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		if (it.team == teamnum)
+		{
+			sprint(it, text);
+		}
+	});
+}
+
+void DebugPrintToChatTeam(int teamnum, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatTeam(teamnum, text);
+	}
+}
+
 /**
  * message "": do not say, just test flood control
  * return value:

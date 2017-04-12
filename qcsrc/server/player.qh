@@ -35,6 +35,19 @@ void PrintToChatAll(string text);
 /// \return No return.
 void DebugPrintToChatAll(string text);
 
+/// \brief Print the string to chat of all players of the specified team.
+/// \param[in] teamnum Team to print to. See NUM_TEAM constants.
+/// \param[in] text Text to print.
+/// \return No return.
+void PrintToChatTeam(int teamnum, string text);
+
+/// \brief Print the string to chat of all players of the specified team if the
+/// server cvar "developer" is not 0.
+/// \param[in] teamnum Team to print to. See NUM_TEAM constants.
+/// \param[in] text Text to print.
+/// \return No return.
+void DebugPrintToChatTeam(int teamnum, string text);
+
 void player_setupanimsformodel(entity this);
 
 void player_anim(entity this);
