@@ -82,25 +82,37 @@ void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
 
-/// \brief Gives player shells.
+/// \brief Gives health to the player.
+/// \param[in,out] player Player to give health to.
+/// \param[in] amount Amount of health to give.
+/// \return No return.
+void GivePlayerHealth(entity player, float amount);
+
+/// \brief Gives armor to the player.
+/// \param[in,out] player Player to give armor to.
+/// \param[in] amount Amount of armor to give.
+/// \return No return.
+void GivePlayerArmor(entity player, float amount);
+
+/// \brief Gives shells to the player.
 /// \param[in,out] player Player to give shells to.
 /// \param[in] amount Amount of shells to give.
 /// \return No return.
 void GivePlayerShells(entity player, float amount);
 
-/// \brief Gives player bullets.
+/// \brief Gives bullets to the player.
 /// \param[in,out] player Player to give bullets to.
 /// \param[in] amount Amount of bullets to give.
 /// \return No return.
 void GivePlayerBullets(entity player, float amount);
 
-/// \brief Gives player rockets.
+/// \brief Gives rockets to the player.
 /// \param[in,out] player Player to give rockets to.
 /// \param[in] amount Amount of rockets to give.
 /// \return No return.
 void GivePlayerRockets(entity player, float amount);
 
-/// \brief Gives player cells.
+/// \brief Gives cells to the player.
 /// \param[in,out] player Player to give cells to.
 /// \param[in] amount Amount of cells to give.
 /// \return No return.

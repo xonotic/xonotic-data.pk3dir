@@ -641,6 +641,30 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
+void GivePlayerHealth(entity player, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	player.health = bound(player.health, player.health + amount,
+		 g_pickup_healthmega_max);
+	player.pauserothealth_finished = max(player.pauserothealth_finished, time +
+		autocvar_g_balance_pause_health_rot);
+}
+
+void GivePlayerArmor(entity player, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	player.armorvalue = bound(player.armorvalue, player.armorvalue + amount,
+		 g_pickup_armormega_max);
+	player.pauserotarmor_finished = max(player.pauserotarmor_finished, time +
+		autocvar_g_balance_pause_armor_rot);
+}
+
 void GivePlayerShells(entity player, float amount)
 {
 	player.ammo_shells = bound(player.ammo_shells, player.ammo_shells + amount,
