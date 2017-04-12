@@ -89,6 +89,10 @@ int autocvar_g_surv_defender_start_ammo_cells;
 /// spawn.
 int autocvar_g_surv_defender_num_random_start_weapons;
 
+/// \brief How much health does cannon fodder get during spawn.
+int autocvar_g_surv_cannon_fodder_start_health;
+/// \brief How much armor does cannon fodder get during spawn.
+int autocvar_g_surv_cannon_fodder_start_armor;
 /// \brief Number of weapons that can be randomly given to cannon fodder during
 /// spawn.
 int autocvar_g_surv_cannon_fodder_num_random_start_weapons;
@@ -1635,6 +1639,9 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				}
 				case SURVIVAL_ROLE_CANNON_FODDER:
 				{
+					player.health = autocvar_g_surv_cannon_fodder_start_health;
+					player.armorvalue =
+						autocvar_g_surv_cannon_fodder_start_armor;
 					player.items |= IT_UNLIMITED_AMMO;
 					break;
 				}
