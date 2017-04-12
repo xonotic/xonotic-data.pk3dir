@@ -1692,9 +1692,8 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "item_cells":
 				case "droppedweapon":
 				{
-					// FIXME: proper health pickup function.
-					player.health += g_pickup_healthmedium;
-					player.armorvalue += g_pickup_armormedium;
+					GivePlayerHealth(player, g_pickup_healthmedium);
+					GivePlayerArmor(player, g_pickup_armormedium);
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
