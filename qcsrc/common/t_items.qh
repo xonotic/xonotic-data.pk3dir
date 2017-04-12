@@ -81,6 +81,31 @@ void Item_ScheduleRespawnIn(entity e, float t);
 void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
+
+/// \brief Gives player shells.
+/// \param[in,out] player Player to give shells to.
+/// \param[in] amount Amount of shells to give.
+/// \return No return.
+void GivePlayerShells(entity player, float amount);
+
+/// \brief Gives player bullets.
+/// \param[in,out] player Player to give bullets to.
+/// \param[in] amount Amount of bullets to give.
+/// \return No return.
+void GivePlayerBullets(entity player, float amount);
+
+/// \brief Gives player rockets.
+/// \param[in,out] player Player to give rockets to.
+/// \param[in] amount Amount of rockets to give.
+/// \return No return.
+void GivePlayerRockets(entity player, float amount);
+
+/// \brief Gives player cells.
+/// \param[in,out] player Player to give cells to.
+/// \param[in] amount Amount of cells to give.
+/// \return No return.
+void GivePlayerCells(entity player, float amount);
+
 float ITEM_MODE_NONE = 0;
 float ITEM_MODE_HEALTH = 1;
 float ITEM_MODE_ARMOR = 2;
