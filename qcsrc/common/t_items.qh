@@ -94,29 +94,12 @@ void GivePlayerHealth(entity player, float amount);
 /// \return No return.
 void GivePlayerArmor(entity player, float amount);
 
-/// \brief Gives shells to the player.
-/// \param[in,out] player Player to give shells to.
-/// \param[in] amount Amount of shells to give.
+/// \brief Gives ammo of the specified type to the player.
+/// \param[in,out] player Player to give ammo to.
+/// \param[in] type Ammo type property.
+/// \param[in] amount Amount of ammo to give.
 /// \return No return.
-void GivePlayerShells(entity player, float amount);
-
-/// \brief Gives bullets to the player.
-/// \param[in,out] player Player to give bullets to.
-/// \param[in] amount Amount of bullets to give.
-/// \return No return.
-void GivePlayerBullets(entity player, float amount);
-
-/// \brief Gives rockets to the player.
-/// \param[in,out] player Player to give rockets to.
-/// \param[in] amount Amount of rockets to give.
-/// \return No return.
-void GivePlayerRockets(entity player, float amount);
-
-/// \brief Gives cells to the player.
-/// \param[in,out] player Player to give cells to.
-/// \param[in] amount Amount of cells to give.
-/// \return No return.
-void GivePlayerCells(entity player, float amount);
+void GivePlayerAmmo(entity player, .float ammotype, float amount);
 
 float ITEM_MODE_NONE = 0;
 float ITEM_MODE_HEALTH = 1;
