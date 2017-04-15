@@ -337,7 +337,7 @@ void trigger_push_findtarget(entity this)
 				}
 			}
 			if (valid_best_target)
-				waypoint_spawnforteleporter(this, best_target, vlen(best_target - best_org) / vlen(e.velocity));
+				waypoint_spawnforteleporter(this, best_target, (vlen(t.origin - best_org) + vlen(best_target - t.origin)) / vlen(e.velocity));
 			delete(e);
 #endif
 		}
