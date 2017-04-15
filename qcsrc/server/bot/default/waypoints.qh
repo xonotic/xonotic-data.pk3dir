@@ -50,7 +50,7 @@ void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, flo
 void botframe_showwaypointlinks();
 
 float waypoint_loadall();
-float waypoint_load_links();
+bool waypoint_load_links();
 
 void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);

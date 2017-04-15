@@ -580,7 +580,7 @@ void waypoint_schedulerelinkall()
 }
 
 // Load waypoint links from file
-float waypoint_load_links()
+bool waypoint_load_links()
 {
 	string filename, s;
 	float file, tokens, c = 0, found;
