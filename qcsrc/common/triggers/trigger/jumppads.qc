@@ -272,6 +272,17 @@ void trigger_push_touch(entity this, entity toucher)
 #ifdef SVQC
 void trigger_push_link(entity this);
 void trigger_push_updatelink(entity this);
+bool trigger_push_testorigin(entity e, entity targ, entity jp, vector org)
+{
+	setorigin(e, org);
+	tracetoss(e, e);
+	if(e.move_movetype == MOVETYPE_NONE)
+	{
+		tracebox(trace_endpos, e.mins, e.maxs, trace_endpos - eZ * 1500, true, jp);
+		return true;
+	}
+	return false;
+}
 #endif
 void trigger_push_findtarget(entity this)
 {
@@ -287,12 +298,46 @@ void trigger_push_findtarget(entity this)
 			++n;
 #ifdef SVQC
 			entity e = spawn();
-			setorigin(e, org);
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
-			tracetoss(e, e);
-			if(e.move_movetype == MOVETYPE_NONE)
-				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+			vector best_target = '0 0 0';
+			vector best_org = '0 0 0';
+			bool valid_best_target = false;
+			if (trigger_push_testorigin(e, t, this, org))
+			{
+				best_target = trace_endpos;
+				best_org = org;
+				valid_best_target = true;
+			}
+
+			vector new_org;
+			vector dist = t.origin - org;
+			if (dist.x || dist.y) // if not perfectly vertical
+			{
+				// test trajectory with different starting points, sometimes the trajectory
+				// starting from the jumppad origin can't reach the real destination
+				// and destination waypoint ends up near the jumppad itself
+				vector flatdir = normalize(dist - eZ * dist.z);
+				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmin.x - this.absmax.x));
+				new_org = org + ofs;
+				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+				{
+					best_target = trace_endpos;
+					best_org = new_org;
+					valid_best_target = true;
+				}
+				new_org = org - ofs;
+				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+				{
+					best_target = trace_endpos;
+					best_org = new_org;
+					valid_best_target = true;
+				}
+			}
+			if (valid_best_target)
+				waypoint_spawnforteleporter(this, best_target, vlen(best_target - best_org) / vlen(e.velocity));
 			delete(e);
 #endif
 		}
