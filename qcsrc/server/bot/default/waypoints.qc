@@ -398,7 +398,6 @@ void waypoint_addlink(entity from, entity to)
 		v2_x = bound(m1_x, v2_x, m2_x);
 		v2_y = bound(m1_y, v2_y, m2_y);
 		v2_z = bound(m1_z, v2_z, m2_z);
-		v2 = to.origin;
 		c = vlen(v2 - v1);
 	}
 	else
