@@ -45,6 +45,10 @@ void func_ladder_init(entity this)
 
 	trigger_init(this);
 	func_ladder_link(this);
+	vector top = (this.absmin + this.absmax) / 2;
+	top.z = this.absmax.z + 1 - PL_MIN_CONST.z;
+	float height = this.absmax.z - this.absmin.z;
+	waypoint_spawnforteleporter_boxes(this, WAYPOINTFLAG_LADDER, this.absmin, this.absmax, top, top, height);
 }
 
 spawnfunc(func_ladder)

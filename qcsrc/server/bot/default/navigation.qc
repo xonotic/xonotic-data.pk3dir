@@ -50,7 +50,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 	float stepdist;
 	float ignorehazards;
 	float swimming;
-	entity tw_ladder = NULL;
 
 	if(autocvar_bot_debug_tracewalk)
 	{
@@ -178,16 +177,25 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 					tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
 					if (trace_fraction < 1 || trace_startsolid)
 					{
+						bool ladder_found = false;
+						FOREACH_ENTITY_CLASS("func_ladder", boxesoverlap(trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1', it.absmin, it.absmax),
+						{
+							if(boxesoverlap(end, end, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
+								ladder_found = true; // can't return here ("Loop mutex held by tracewalk" error)
+						});
+						if(ladder_found)
+						{
+							if(autocvar_bot_debug_tracewalk)
+								debugnodestatus(org, DEBUG_NODE_SUCCESS);
+
+							//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
+							return true;
+						}
+
 						if(autocvar_bot_debug_tracewalk)
 							debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
 
-						FOREACH_ENTITY_CLASS("func_ladder", true,
-							{ it.solid = SOLID_BSP; });
-
 						traceline( org, move, movemode, e);
-
-						FOREACH_ENTITY_CLASS("func_ladder", true,
-							{ it.solid = SOLID_TRIGGER; });
 
 						if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
 						{
@@ -199,24 +207,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 								traceline( move, nextmove, movemode, e);
 								move = nextmove;
 							}
-						}
-						else if (trace_ent.classname == "func_ladder")
-						{
-							tw_ladder = trace_ent;
-							vector ladder_bottom = trace_endpos - dir * m2.x;
-							vector ladder_top = ladder_bottom;
-							ladder_top.z = trace_ent.absmax.z + (-m1.z + 1);
-							tracebox(ladder_bottom, m1, m2, ladder_top, movemode, e);
-							if (trace_fraction < 1 || trace_startsolid)
-							{
-								if(autocvar_bot_debug_tracewalk)
-									debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
-
-								return false; // failed
-							}
-							org = ladder_top + dir * m2.x;
-							move = org + dir * stepdist;
-							continue;
 						}
 						else
 						{
@@ -256,16 +246,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 			}
 
 			org = trace_endpos;
-		}
-
-		if(tw_ladder && org.z < tw_ladder.absmax.z)
-		{
-			// stop tracewalk if destination height is lower than the top of the ladder
-			// otherwise bot can't easily figure out climbing direction
-			if(autocvar_bot_debug_tracewalk)
-				debugnodestatus(org, DEBUG_NODE_FAIL);
-
-			return false;
 		}
 	}
 

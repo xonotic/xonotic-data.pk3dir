@@ -968,11 +968,11 @@ void waypoint_spawnforitem(entity e)
 	waypoint_spawnforitem_force(e, e.origin);
 }
 
-void waypoint_spawnforteleporter_boxes(entity e, vector org1, vector org2, vector destination1, vector destination2, float timetaken)
+void waypoint_spawnforteleporter_boxes(entity e, int teleport_flag, vector org1, vector org2, vector destination1, vector destination2, float timetaken)
 {
 	entity w;
 	entity dw;
-	w = waypoint_spawn(org1, org2, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_TELEPORT | WAYPOINTFLAG_NORELINK);
+	w = waypoint_spawn(org1, org2, WAYPOINTFLAG_GENERATED | teleport_flag | WAYPOINTFLAG_NORELINK);
 	dw = waypoint_spawn(destination1, destination2, WAYPOINTFLAG_GENERATED);
 	// one way link to the destination
 	w.wp00 = dw;
@@ -987,13 +987,13 @@ void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, flo
 {
 	org = waypoint_fixorigin(org);
 	destination = waypoint_fixorigin(destination);
-	waypoint_spawnforteleporter_boxes(e, org, org, destination, destination, timetaken);
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, org, org, destination, destination, timetaken);
 }
 
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 {
 	destination = waypoint_fixorigin(destination);
-	waypoint_spawnforteleporter_boxes(e, e.absmin, e.absmax, destination, destination, timetaken);
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin, e.absmax, destination, destination, timetaken);
 }
 
 entity waypoint_spawnpersonal(entity this, vector position)
@@ -1274,6 +1274,8 @@ void botframe_deleteuselesswaypoints()
 		if (it.wpflags & WAYPOINTFLAG_ITEM)
 			it.wpflags |= WAYPOINTFLAG_USEFUL;
 		if (it.wpflags & WAYPOINTFLAG_TELEPORT)
+			it.wpflags |= WAYPOINTFLAG_USEFUL;
+		if (it.wpflags & WAYPOINTFLAG_LADDER)
 			it.wpflags |= WAYPOINTFLAG_USEFUL;
 		if (it.wpflags & WAYPOINTFLAG_PROTECTED)
 			it.wpflags |= WAYPOINTFLAG_USEFUL;
