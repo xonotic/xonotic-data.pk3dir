@@ -381,27 +381,25 @@ void waypoint_addlink(entity from, entity to)
 	if (waypoint_islinked(from, to))
 		return;
 
+	vector v1 = from.origin;
+	vector v2 = to.origin;
 	if (to.wpisbox || from.wpisbox)
 	{
 		// if either is a box we have to find the nearest points on them to
 		// calculate the distance properly
-		vector v1, v2, m1, m2;
-		v1 = from.origin;
+		vector m1, m2;
 		m1 = to.absmin;
 		m2 = to.absmax;
 		v1_x = bound(m1_x, v1_x, m2_x);
 		v1_y = bound(m1_y, v1_y, m2_y);
 		v1_z = bound(m1_z, v1_z, m2_z);
-		v2 = to.origin;
 		m1 = from.absmin;
 		m2 = from.absmax;
 		v2_x = bound(m1_x, v2_x, m2_x);
 		v2_y = bound(m1_y, v2_y, m2_y);
 		v2_z = bound(m1_z, v2_z, m2_z);
-		c = vlen(v2 - v1);
 	}
-	else
-		c = vlen(to.origin - from.origin);
+	c = vlen(v2 - v1);
 
 	if (from.wp31mincost < c) return;
 	if (from.wp30mincost < c) {from.wp31 = to;from.wp31mincost = c;return;} from.wp31 = from.wp30;from.wp31mincost = from.wp30mincost;
