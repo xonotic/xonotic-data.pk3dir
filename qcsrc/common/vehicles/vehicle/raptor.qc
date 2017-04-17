@@ -462,6 +462,7 @@ bool raptor_takeoff(entity this, float dt)
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
 		setorigin(this, vehic.origin + '0 0 32');
+		this.oldorigin = this.origin;
 	}
 	else
 		this.PlayerPhysplug = raptor_frame;
