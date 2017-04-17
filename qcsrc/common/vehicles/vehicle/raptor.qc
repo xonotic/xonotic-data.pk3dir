@@ -254,6 +254,7 @@ bool raptor_frame(entity this, float dt)
 	vehic.velocity  += df * dt;
 	this.velocity = this.movement  = vehic.velocity;
 	setorigin(this, vehic.origin + '0 0 32');
+	this.oldorigin = this.origin; // negate fall damage
 
 	this.vehicle_weapon2mode = vehic.vehicle_weapon2mode;
 

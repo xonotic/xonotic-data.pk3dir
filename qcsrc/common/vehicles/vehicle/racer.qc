@@ -377,6 +377,7 @@ bool racer_frame(entity this, float dt)
 #endif
 
 	setorigin(this, vehic.origin + '0 0 32');
+	this.oldorigin = this.origin; // negate fall damage
 	this.velocity = vehic.velocity;
 }
 

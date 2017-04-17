@@ -308,6 +308,7 @@ bool spiderbot_frame(entity this, float dt)
 		this.vehicle_reload2 = 100 - ((vehic.gun2.cnt - time) / vehic.attack_finished_single[0]) * 100;
 
 	setorigin(this, vehic.origin + '0 0 1' * vehic.maxs_z);
+	this.oldorigin = this.origin; // negate fall damage
 	this.velocity = vehic.velocity;
 
 	VEHICLE_UPDATE_PLAYER(this, vehic, health, spiderbot);
