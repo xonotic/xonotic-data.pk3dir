@@ -399,7 +399,7 @@ void waypoint_addlink(entity from, entity to)
 		v2_y = bound(m1_y, v2_y, m2_y);
 		v2_z = bound(m1_z, v2_z, m2_z);
 	}
-	c = vlen(v2 - v1);
+	c = vlen(v2 - v1) / autocvar_sv_maxspeed;
 
 	if (from.wp31mincost < c) return;
 	if (from.wp30mincost < c) {from.wp31 = to;from.wp31mincost = c;return;} from.wp31 = from.wp30;from.wp31mincost = from.wp30mincost;
