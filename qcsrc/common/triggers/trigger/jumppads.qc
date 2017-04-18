@@ -304,11 +304,13 @@ void trigger_push_findtarget(entity this)
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
 			vector best_target = '0 0 0';
 			vector best_org = '0 0 0';
+			vector best_vel = '0 0 0';
 			bool valid_best_target = false;
 			if (trigger_push_testorigin(e, t, this, org))
 			{
 				best_target = trace_endpos;
 				best_org = org;
+				best_vel = e.velocity;
 				valid_best_target = true;
 			}
 
@@ -327,6 +329,7 @@ void trigger_push_findtarget(entity this)
 				{
 					best_target = trace_endpos;
 					best_org = new_org;
+					best_vel = e.velocity;
 					valid_best_target = true;
 				}
 				new_org = org - ofs;
@@ -335,11 +338,16 @@ void trigger_push_findtarget(entity this)
 				{
 					best_target = trace_endpos;
 					best_org = new_org;
+					best_vel = e.velocity;
 					valid_best_target = true;
 				}
 			}
 			if (valid_best_target)
-				waypoint_spawnforteleporter(this, best_target, (vlen(t.origin - best_org) + vlen(best_target - t.origin)) / vlen(e.velocity));
+			{
+				float distxy = (vlen((best_target - eZ * best_target.z) - (best_org - eZ * best_org.z)));
+				float velxy = vlen(best_vel - eZ * best_vel.z);
+				waypoint_spawnforteleporter(this, best_target, distxy / velxy);
+			}
 			delete(e);
 #endif
 		}
