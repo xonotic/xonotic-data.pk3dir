@@ -276,6 +276,8 @@ bool trigger_push_testorigin(entity e, entity targ, entity jp, vector org)
 {
 	setorigin(e, org);
 	tracetoss(e, e);
+	if(trace_startsolid)
+		return false;
 	if(e.move_movetype == MOVETYPE_NONE)
 	{
 		tracebox(trace_endpos, e.mins, e.maxs, trace_endpos - eZ * 1500, true, jp);
@@ -318,7 +320,7 @@ void trigger_push_findtarget(entity this)
 				// starting from the jumppad origin can't reach the real destination
 				// and destination waypoint ends up near the jumppad itself
 				vector flatdir = normalize(dist - eZ * dist.z);
-				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmin.x - this.absmax.x));
+				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmax.y - this.absmin.y));
 				new_org = org + ofs;
 				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
 				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
