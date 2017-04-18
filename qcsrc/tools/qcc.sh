@@ -47,12 +47,13 @@ $(return >/dev/null 2>&1) || {
     IN=$3
     case "${OUT}" in
       /*)
+        OUT_ABSOLUTE=${OUT}
         ;;
       *)
-        OUT=${PWD}/${OUT}
+        OUT_ABSOLUTE=${PWD}/${OUT}
         ;;
     esac
     set -x
     qpp "${IN}" "${OUT}" -I. ${QCCIDENT} ${QCCDEFS} > "${WORKDIR}/${MODE}.qc"
-    qcc ${QCCFLAGS} -o "${OUT}" "../${WORKDIR}/${MODE}.qc"
+    qcc ${QCCFLAGS} -o "${OUT_ABSOLUTE}" "../${WORKDIR}/${MODE}.qc"
 }
