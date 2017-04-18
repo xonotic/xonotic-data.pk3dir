@@ -401,6 +401,16 @@ void waypoint_addlink(entity from, entity to)
 	}
 	c = vlen(v2 - v1) / autocvar_sv_maxspeed;
 
+	float height = v1.z - v2.z;
+	if(height > 0 && autocvar_sv_gravity > 0)
+	{
+		float height_cost = sqrt(height / autocvar_sv_gravity);
+		float xydist = vlen((v2 - eZ * v2.z) - (v1 - eZ * v1.z));
+		float xydist_cost = xydist / autocvar_sv_maxspeed;
+		if(max(height_cost, xydist_cost) < c)
+			c = max(height_cost, xydist_cost);
+	}
+
 	if (from.wp31mincost < c) return;
 	if (from.wp30mincost < c) {from.wp31 = to;from.wp31mincost = c;return;} from.wp31 = from.wp30;from.wp31mincost = from.wp30mincost;
 	if (from.wp29mincost < c) {from.wp30 = to;from.wp30mincost = c;return;} from.wp30 = from.wp29;from.wp30mincost = from.wp29mincost;
