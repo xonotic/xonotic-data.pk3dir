@@ -55,7 +55,7 @@ void W_RocketPropelledChainsaw_Think(entity this)
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin + this.pos1 * (2 * this.wait), MOVE_NORMAL, this);
 	if(IS_PLAYER(trace_ent))
-		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - other.origin) * WEP_CVAR(rpc, force));
+		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
 
 	this.velocity = this.pos1 * (this.cnt + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
 
