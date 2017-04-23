@@ -31,10 +31,14 @@ float botframe_cachedwaypointlinks;
 spawnfunc(waypoint);
 void waypoint_removelink(entity from, entity to);
 bool waypoint_islinked(entity from, entity to);
+void waypoint_addlink_customcost(entity from, entity to, float c);
 void waypoint_addlink(entity from, entity to);
 void waypoint_think(entity this);
 void waypoint_clearlinks(entity wp);
 void waypoint_schedulerelink(entity wp);
+
+float waypoint_getdistancecost(vector v1, vector v2);
+float waypoint_getdistancecost_simple(float dist);
 
 void waypoint_remove_fromeditor(entity pl);
 void waypoint_remove(entity wp);

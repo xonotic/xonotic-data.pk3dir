@@ -368,19 +368,29 @@ bool waypoint_islinked(entity from, entity to)
 	return false;
 }
 
-// add a new link to the spawnfunc_waypoint, replacing the furthest link it already has
-void waypoint_addlink(entity from, entity to)
+float waypoint_getdistancecost_simple(float dist)
 {
-	float c;
+	return dist / autocvar_sv_maxspeed;
+}
 
-	if (from == to)
-		return;
-	if (from.wpflags & WAYPOINTFLAG_NORELINK)
-		return;
+float waypoint_getdistancecost(vector from, vector to)
+{
+	float c = waypoint_getdistancecost_simple(vlen(to - from));
 
-	if (waypoint_islinked(from, to))
-		return;
+	float height = from.z - to.z;
+	if(height > 0 && autocvar_sv_gravity > 0)
+	{
+		float height_cost = sqrt(height / autocvar_sv_gravity);
+		float xydist = vlen(vec2(to - from));
+		float xydist_cost = xydist / autocvar_sv_maxspeed;
+		if(max(height_cost, xydist_cost) < c)
+			c = max(height_cost, xydist_cost);
+	}
+	return c;
+}
 
+float waypoint_getlinkcost(entity from, entity to)
+{
 	vector v1 = from.origin;
 	vector v2 = to.origin;
 	if (to.wpisbox || from.wpisbox)
@@ -399,17 +409,20 @@ void waypoint_addlink(entity from, entity to)
 		v2_y = bound(m1_y, v2_y, m2_y);
 		v2_z = bound(m1_z, v2_z, m2_z);
 	}
-	c = vlen(v2 - v1) / autocvar_sv_maxspeed;
+	return waypoint_getdistancecost(v1, v2);
+}
 
-	float height = v1.z - v2.z;
-	if(height > 0 && autocvar_sv_gravity > 0)
-	{
-		float height_cost = sqrt(height / autocvar_sv_gravity);
-		float xydist = vlen((v2 - eZ * v2.z) - (v1 - eZ * v1.z));
-		float xydist_cost = xydist / autocvar_sv_maxspeed;
-		if(max(height_cost, xydist_cost) < c)
-			c = max(height_cost, xydist_cost);
-	}
+// add a new link to the spawnfunc_waypoint, replacing the furthest link it already has
+// if c == -1 automatically determine cost of the link
+void waypoint_addlink_customcost(entity from, entity to, float c)
+{
+	if (from == to || waypoint_islinked(from, to))
+		return;
+	if (c == -1 && (from.wpflags & WAYPOINTFLAG_NORELINK))
+		return;
+
+	if(c == -1)
+		c = waypoint_getlinkcost(from, to);
 
 	if (from.wp31mincost < c) return;
 	if (from.wp30mincost < c) {from.wp31 = to;from.wp31mincost = c;return;} from.wp31 = from.wp30;from.wp31mincost = from.wp30mincost;
@@ -444,6 +457,11 @@ void waypoint_addlink(entity from, entity to)
 	if (from.wp01mincost < c) {from.wp02 = to;from.wp02mincost = c;return;} from.wp02 = from.wp01;from.wp02mincost = from.wp01mincost;
 	if (from.wp00mincost < c) {from.wp01 = to;from.wp01mincost = c;return;} from.wp01 = from.wp00;from.wp01mincost = from.wp00mincost;
 	from.wp00 = to;from.wp00mincost = c;return;
+}
+
+void waypoint_addlink(entity from, entity to)
+{
+	waypoint_addlink_customcost(from, to, -1);
 }
 
 // relink this spawnfunc_waypoint

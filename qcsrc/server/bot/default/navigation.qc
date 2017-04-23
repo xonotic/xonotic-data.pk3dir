@@ -496,7 +496,7 @@ float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 			if (tracewalk(this, this.origin, this.mins, this.maxs, v, bot_navigation_movemode))
 			{
 				it.wpnearestpoint = v;
-				it.wpcost = vlen(v - this.origin) + it.dmg;
+				it.wpcost = waypoint_getdistancecost(this.origin, v) + it.dmg;
 				it.wpfire = 1;
 				it.enemy = NULL;
 				c = c + 1;
@@ -523,7 +523,7 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 	}
 	else
 		v = wp.origin;
-	cost2 = cost2 + vlen(v - p);
+	cost2 += waypoint_getdistancecost(p, v);
 	if (wp.wpcost > cost2)
 	{
 		wp.wpcost = cost2;
@@ -687,6 +687,9 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 
 	if(e.blacklisted)
 		return;
+
+	rangebias = waypoint_getdistancecost_simple(rangebias);
+	f = waypoint_getdistancecost_simple(f);
 
 	if (IS_PLAYER(e))
 	{
@@ -1085,7 +1088,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 			v.y = bound(m1_y, v.y, m2_y);
 			v.z = bound(m1_z, v.z, m2_z);
 			o = (it.absmin + it.absmax) * 0.5;
-			d = it.bot_dodgerating - vlen(o - v);
+			d = waypoint_getdistancecost_simple(it.bot_dodgerating) - waypoint_getdistancecost(o, v);
 			if (d > 0)
 			{
 				traceline(o, v, true, NULL);
