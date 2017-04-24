@@ -2245,7 +2245,9 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// draw 2D entities
 	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
+#ifdef DEBUGDRAW
 	Debug_Draw();
+#endif
 
 	scoreboard_active = Scoreboard_WouldDraw();
 
