@@ -1074,6 +1074,35 @@ void waypoint_showlink(entity wp1, entity wp2, int display_type)
 		te_lightning2(NULL, wp1.origin, wp2.origin);
 }
 
+void waypoint_showlinks_to(entity wp, int display_type)
+{
+	IL_EACH(g_waypoints, it != wp,
+	{
+		if (waypoint_islinked(it, wp))
+			waypoint_showlink(it, wp, display_type);
+	});
+}
+
+void waypoint_showlinks_from(entity wp, int display_type)
+{
+	waypoint_showlink(wp.wp00, wp, display_type); waypoint_showlink(wp.wp16, wp, display_type);
+	waypoint_showlink(wp.wp01, wp, display_type); waypoint_showlink(wp.wp17, wp, display_type);
+	waypoint_showlink(wp.wp02, wp, display_type); waypoint_showlink(wp.wp18, wp, display_type);
+	waypoint_showlink(wp.wp03, wp, display_type); waypoint_showlink(wp.wp19, wp, display_type);
+	waypoint_showlink(wp.wp04, wp, display_type); waypoint_showlink(wp.wp20, wp, display_type);
+	waypoint_showlink(wp.wp05, wp, display_type); waypoint_showlink(wp.wp21, wp, display_type);
+	waypoint_showlink(wp.wp06, wp, display_type); waypoint_showlink(wp.wp22, wp, display_type);
+	waypoint_showlink(wp.wp07, wp, display_type); waypoint_showlink(wp.wp23, wp, display_type);
+	waypoint_showlink(wp.wp08, wp, display_type); waypoint_showlink(wp.wp24, wp, display_type);
+	waypoint_showlink(wp.wp09, wp, display_type); waypoint_showlink(wp.wp25, wp, display_type);
+	waypoint_showlink(wp.wp10, wp, display_type); waypoint_showlink(wp.wp26, wp, display_type);
+	waypoint_showlink(wp.wp11, wp, display_type); waypoint_showlink(wp.wp27, wp, display_type);
+	waypoint_showlink(wp.wp12, wp, display_type); waypoint_showlink(wp.wp28, wp, display_type);
+	waypoint_showlink(wp.wp13, wp, display_type); waypoint_showlink(wp.wp29, wp, display_type);
+	waypoint_showlink(wp.wp14, wp, display_type); waypoint_showlink(wp.wp30, wp, display_type);
+	waypoint_showlink(wp.wp15, wp, display_type); waypoint_showlink(wp.wp31, wp, display_type);
+}
+
 void botframe_showwaypointlinks()
 {
 	if (time < botframe_waypointeditorlightningtime)
@@ -1096,38 +1125,10 @@ void botframe_showwaypointlinks()
 			if (head)
 			{
 				te_lightning2(NULL, head.origin, it.origin);
-				waypoint_showlink(head.wp00, head, display_type);
-				waypoint_showlink(head.wp01, head, display_type);
-				waypoint_showlink(head.wp02, head, display_type);
-				waypoint_showlink(head.wp03, head, display_type);
-				waypoint_showlink(head.wp04, head, display_type);
-				waypoint_showlink(head.wp05, head, display_type);
-				waypoint_showlink(head.wp06, head, display_type);
-				waypoint_showlink(head.wp07, head, display_type);
-				waypoint_showlink(head.wp08, head, display_type);
-				waypoint_showlink(head.wp09, head, display_type);
-				waypoint_showlink(head.wp10, head, display_type);
-				waypoint_showlink(head.wp11, head, display_type);
-				waypoint_showlink(head.wp12, head, display_type);
-				waypoint_showlink(head.wp13, head, display_type);
-				waypoint_showlink(head.wp14, head, display_type);
-				waypoint_showlink(head.wp15, head, display_type);
-				waypoint_showlink(head.wp16, head, display_type);
-				waypoint_showlink(head.wp17, head, display_type);
-				waypoint_showlink(head.wp18, head, display_type);
-				waypoint_showlink(head.wp19, head, display_type);
-				waypoint_showlink(head.wp20, head, display_type);
-				waypoint_showlink(head.wp21, head, display_type);
-				waypoint_showlink(head.wp22, head, display_type);
-				waypoint_showlink(head.wp23, head, display_type);
-				waypoint_showlink(head.wp24, head, display_type);
-				waypoint_showlink(head.wp25, head, display_type);
-				waypoint_showlink(head.wp26, head, display_type);
-				waypoint_showlink(head.wp27, head, display_type);
-				waypoint_showlink(head.wp28, head, display_type);
-				waypoint_showlink(head.wp29, head, display_type);
-				waypoint_showlink(head.wp30, head, display_type);
-				waypoint_showlink(head.wp31, head, display_type);
+				if(PHYS_INPUT_BUTTON_CROUCH(it))
+					waypoint_showlinks_to(head, display_type);
+				else
+					waypoint_showlinks_from(head, display_type);
 			}
 		}
 	});
