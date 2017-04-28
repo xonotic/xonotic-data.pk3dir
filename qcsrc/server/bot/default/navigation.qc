@@ -661,16 +661,9 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 			cost = it.wpcost; // cost to walk from it to home
 			p = it.wpnearestpoint;
 			entity wp = it;
-			IL_EACH(g_waypoints, true,
+			IL_EACH(g_waypoints, it != wp,
 			{
-				if(wp != it.wp00) if(wp != it.wp01) if(wp != it.wp02) if(wp != it.wp03)
-				if(wp != it.wp04) if(wp != it.wp05) if(wp != it.wp06) if(wp != it.wp07)
-				if(wp != it.wp08) if(wp != it.wp09) if(wp != it.wp10) if(wp != it.wp11)
-				if(wp != it.wp12) if(wp != it.wp13) if(wp != it.wp14) if(wp != it.wp15)
-				if(wp != it.wp16) if(wp != it.wp17) if(wp != it.wp18) if(wp != it.wp19)
-				if(wp != it.wp20) if(wp != it.wp21) if(wp != it.wp22) if(wp != it.wp23)
-				if(wp != it.wp24) if(wp != it.wp25) if(wp != it.wp26) if(wp != it.wp27)
-				if(wp != it.wp28) if(wp != it.wp29) if(wp != it.wp30) if(wp != it.wp31)
+				if(!waypoint_islinked(it, wp))
 					continue;
 				cost2 = cost + it.dmg;
 				navigation_markroutes_checkwaypoint(wp, it, cost2, p);
@@ -1079,8 +1072,8 @@ void botframe_updatedangerousobjects(float maxupdate)
 	IL_EACH(g_waypoints, true,
 	{
 		danger = 0;
-		m1 = it.mins;
-		m2 = it.maxs;
+		m1 = it.absmin;
+		m2 = it.absmax;
 		IL_EACH(g_bot_dodge, it.bot_dodge,
 		{
 			v = it.origin;
