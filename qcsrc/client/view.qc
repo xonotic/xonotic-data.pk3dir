@@ -356,6 +356,7 @@ void viewmodel_draw(entity this)
 	this.angles = this.viewmodel_angles;
 	this.angles_x = (-90 * f * f);
 	viewmodel_animate(this);
+	MUTATOR_CALLHOOK(DrawViewModel, this);
 	setorigin(this, this.origin);
 }
 
