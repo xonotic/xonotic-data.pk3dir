@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Arm Coon <armcoon@gmail.com>, 2016
+# Arm Coon <armcoon@gmail.com>, 2016-2017
 # Jeff Huang <s8321414@gmail.com>, 2015
 # msn1018927464 <msn1018927464@hotmail.com>, 2015
 # msn1018927464 <msn1018927464@hotmail.com>, 2015
@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-04-15 05:02+0000\n"
+"Last-Translator: Arm Coon <armcoon@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_TW/)\n"
 "Language: zh_TW\n"
@@ -68,12 +68,12 @@ msgstr "^1按下 ^3%s^1 或 ^3%s^1 察看上一個或下一個玩家"
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "下一件武器"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "上一件武器"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -83,7 +83,7 @@ msgstr "^1使用 ^3%s^1 或 ^3%s^1 來改變速度"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1按下 ^3%s^1 來進行觀察, ^3%s^1 來改變鏡頭模式"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:191
@@ -122,7 +122,7 @@ msgstr "^1按下 ^3%s^1 加入"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "跳躍"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -179,11 +179,11 @@ msgstr "團隊菜單"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1正在觀看這名玩家："
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1正在觀看你："
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^7Press ^3ESC ^7to show HUD options."
@@ -191,7 +191,7 @@ msgstr "^7按下 ^3ESC ^7來顯示HUD選項."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3雙擊 ^7a 板面執行板面專用選項。"
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -262,7 +262,7 @@ msgstr "QMCMD^團隊對話"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
-msgstr ""
+msgstr "QMCMD^四分之一"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item %x^7 (l:%y^7)"
@@ -414,7 +414,7 @@ msgstr "QMCMD^音效設定"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Hit sound"
-msgstr ""
+msgstr "QMCMD^擊打聲"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Chat sound"
@@ -431,11 +431,11 @@ msgstr "QMCMD^第一人稱"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^3rd person around player"
-msgstr ""
+msgstr "QMCMD^3rd人稱環繞玩家"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^3rd person behind"
-msgstr ""
+msgstr "QMCMD^3rd人稱後方"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 #: qcsrc/client/hud/panel/quickmenu.qc:844
@@ -557,11 +557,11 @@ msgstr "SCO^已破壞"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:84
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^傷害"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:85
 msgid "SCO^dmgtaken"
-msgstr ""
+msgstr "SCO^得到的傷害"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "SCO^drops"
@@ -657,7 +657,7 @@ msgstr "SCO^復活"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "SCO^回合勝利"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^score"
@@ -916,7 +916,7 @@ msgstr "分數板"
 #: qcsrc/client/hud/panel/scoreboard.qc:1580
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr ""
+msgstr "速度獎勵： %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
@@ -1131,7 +1131,7 @@ msgstr "足球偷竊者"
 
 #: qcsrc/common/items/item/armor.qh:111
 msgid "Big armor"
-msgstr ""
+msgstr "大型護甲"
 
 #: qcsrc/common/items/item/armor.qh:147
 msgid "Mega armor"
@@ -1139,7 +1139,7 @@ msgstr "巨型護甲"
 
 #: qcsrc/common/items/item/health.qh:111
 msgid "Big health"
-msgstr ""
+msgstr "大型補血包"
 
 #: qcsrc/common/items/item/health.qh:147
 msgid "Mega health"
@@ -1348,7 +1348,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1404
 msgid "Next Level"
-msgstr ""
+msgstr "下一階段"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1405
 msgid "Restart"
@@ -1595,11 +1595,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:292
 msgid "Font size minimum:"
-msgstr ""
+msgstr "字體大小最小值："
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:297
 msgid "Font size maximum:"
-msgstr ""
+msgstr "字體大小最大值："
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:302
 msgid "Accumulate range:"
@@ -1756,7 +1756,7 @@ msgstr "粉紅色基地"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr ""
+msgstr "在這裡回歸旗子"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -2474,7 +2474,7 @@ msgstr "^BG%s^K3 將在 %s 秒后自動復活"
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
 msgid "^BG%s^K1 froze themself"
-msgstr ""
+msgstr "^BG%s^K1 凍結他們自己"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:684
@@ -2490,7 +2490,7 @@ msgstr "^BG%s^BG 贏了這回合"
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:548
 msgid "^BGRound tied"
-msgstr ""
+msgstr "^BG平局"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:549
@@ -4829,7 +4829,7 @@ msgstr "漢語(中國)"
 
 #: qcsrc/menu/xonotic/credits.qc:171
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "中文 (臺灣)"
 
 #: qcsrc/menu/xonotic/credits.qc:176
 msgid "Cornish"

@@ -260,7 +260,7 @@ void buff_Think(entity this)
 	}
 
 	if(!this.buff_active && !this.buff_activetime)
-	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || !(this.owner.buffs & this.buffs) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
+	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || this.owner.vehicle || !(this.owner.buffs & this.buffs) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
@@ -987,28 +987,6 @@ MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
 
 	client.buffs = spectatee.buffs;
 	client.buff_time = spectatee.buff_time;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
-{
-	entity player = M_ARGV(0, entity);
-	entity veh = M_ARGV(1, entity);
-
-	veh.buffs = player.buffs;
-	player.buffs = 0;
-	veh.buff_time = max(0, player.buff_time - time);
-	player.buff_time = 0;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, VehicleExit)
-{
-	entity player = M_ARGV(0, entity);
-	entity veh = M_ARGV(1, entity);
-
-	player.buffs = player.oldbuffs = veh.buffs;
-	veh.buffs = 0;
-	player.buff_time = time + veh.buff_time;
-	veh.buff_time = 0;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)

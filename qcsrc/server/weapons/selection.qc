@@ -61,7 +61,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 			sprint(this, "Invalid weapon\n");
 		return false;
 	}
-	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD))
+	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(this.dual_weapons & wpn.m_wepset))
 		return false; // no complaints needed
 	if (this.weapons & WepSet_FromWeapon(wpn))
 	{
