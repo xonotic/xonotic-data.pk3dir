@@ -665,28 +665,19 @@ void GivePlayerArmor(entity player, float amount)
 		autocvar_g_balance_pause_armor_rot);
 }
 
-void GivePlayerShells(entity player, float amount)
+void GivePlayerAmmo(entity player, .float ammotype, float amount)
 {
-	player.ammo_shells = bound(player.ammo_shells, player.ammo_shells + amount,
-		g_pickup_shells_max);
-}
-
-void GivePlayerBullets(entity player, float amount)
-{
-	player.ammo_nails = bound(player.ammo_nails, player.ammo_nails + amount,
-		g_pickup_nails_max);
-}
-
-void GivePlayerRockets(entity player, float amount)
-{
-	player.ammo_rockets = bound(player.ammo_rockets, player.ammo_rockets +
-		amount, g_pickup_rockets_max);
-}
-
-void GivePlayerCells(entity player, float amount)
-{
-	player.ammo_cells = bound(player.ammo_cells, player.ammo_cells + amount,
-		g_pickup_cells_max);
+	float maxvalue = 999;
+	switch(ammotype)
+	{
+		case ammo_shells: maxvalue = g_pickup_shells_max;
+		case ammo_cells: maxvalue = g_pickup_cells_max;
+		case ammo_rockets: maxvalue = g_pickup_rockets_max;
+		case ammo_plasma: maxvalue = g_pickup_plasma_max;
+		case ammo_nails: maxvalue = g_pickup_nails_max;
+		case ammo_fuel: maxvalue = g_pickup_fuel_max;
+	}
+	player.(ammotype) = min(player.(ammotype) + amount, maxvalue);
 }
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
