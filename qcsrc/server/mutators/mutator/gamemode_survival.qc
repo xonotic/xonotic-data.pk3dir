@@ -1761,13 +1761,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				{
 					GivePlayerHealth(player,
 						autocvar_g_surv_defender_pickup_health_small);
-					GivePlayerShells(player,
+					GivePlayerAmmo(player, ammo_shells,
 						autocvar_g_surv_defender_pickup_shells_small);
-					GivePlayerBullets(player,
+					GivePlayerAmmo(player, ammo_nails,
 						autocvar_g_surv_defender_pickup_bullets_small);
-					GivePlayerRockets(player,
+					GivePlayerAmmo(player, ammo_rockets,
 						autocvar_g_surv_defender_pickup_rockets_small);
-					GivePlayerCells(player,
+					GivePlayerAmmo(player, ammo_cells,
 						autocvar_g_surv_defender_pickup_cells_small);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthSmall, VOL_BASE,
@@ -1778,13 +1778,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				{
 					GivePlayerHealth(player,
 						autocvar_g_surv_defender_pickup_health_medium);
-					GivePlayerShells(player,
+					GivePlayerAmmo(player, ammo_shells,
 						autocvar_g_surv_defender_pickup_shells_medium);
-					GivePlayerBullets(player,
+					GivePlayerAmmo(player, ammo_nails,
 						autocvar_g_surv_defender_pickup_bullets_medium);
-					GivePlayerRockets(player,
+					GivePlayerAmmo(player, ammo_rockets,
 						autocvar_g_surv_defender_pickup_rockets_medium);
-					GivePlayerCells(player,
+					GivePlayerAmmo(player, ammo_cells,
 						autocvar_g_surv_defender_pickup_cells_medium);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthMedium, VOL_BASE,
@@ -1795,13 +1795,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				{
 					GivePlayerHealth(player,
 						autocvar_g_surv_defender_pickup_health_big);
-					GivePlayerShells(player,
+					GivePlayerAmmo(player, ammo_shells,
 						autocvar_g_surv_defender_pickup_shells_big);
-					GivePlayerBullets(player,
+					GivePlayerAmmo(player, ammo_nails,
 						autocvar_g_surv_defender_pickup_bullets_big);
-					GivePlayerRockets(player,
+					GivePlayerAmmo(player, ammo_rockets,
 						autocvar_g_surv_defender_pickup_rockets_big);
-					GivePlayerCells(player,
+					GivePlayerAmmo(player, ammo_cells,
 						autocvar_g_surv_defender_pickup_cells_big);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthBig, VOL_BASE,
@@ -1812,13 +1812,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				{
 					GivePlayerHealth(player,
 						autocvar_g_surv_defender_pickup_health_mega);
-					GivePlayerShells(player,
+					GivePlayerAmmo(player, ammo_shells,
 						autocvar_g_surv_defender_pickup_shells_mega);
-					GivePlayerBullets(player,
+					GivePlayerAmmo(player, ammo_nails,
 						autocvar_g_surv_defender_pickup_bullets_mega);
-					GivePlayerRockets(player,
+					GivePlayerAmmo(player, ammo_rockets,
 						autocvar_g_surv_defender_pickup_rockets_mega);
-					GivePlayerCells(player,
+					GivePlayerAmmo(player, ammo_cells,
 						autocvar_g_surv_defender_pickup_cells_mega);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthMega, VOL_BASE, ATTEN_NORM);
@@ -1828,13 +1828,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				{
 					GivePlayerArmor(player,
 						autocvar_g_surv_defender_pickup_armor_small);
-					GivePlayerShells(player,
+					GivePlayerAmmo(player, ammo_shells,
 						autocvar_g_surv_defender_pickup_shells_small);
-					GivePlayerBullets(player,
+					GivePlayerAmmo(player, ammo_nails,
 						autocvar_g_surv_defender_pickup_bullets_small);
-					GivePlayerRockets(player,
+					GivePlayerAmmo(player, ammo_rockets,
 						autocvar_g_surv_defender_pickup_rockets_small);
-					GivePlayerCells(player,
+					GivePlayerAmmo(player, ammo_cells,
 						autocvar_g_surv_defender_pickup_cells_small);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthSmall, VOL_BASE,
@@ -1845,13 +1845,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				{
 					GivePlayerArmor(player,
 						autocvar_g_surv_defender_pickup_armor_medium);
-					GivePlayerShells(player,
+					GivePlayerAmmo(player, ammo_shells,
 						autocvar_g_surv_defender_pickup_shells_medium);
-					GivePlayerBullets(player,
+					GivePlayerAmmo(player, ammo_nails,
 						autocvar_g_surv_defender_pickup_bullets_medium);
-					GivePlayerRockets(player,
+					GivePlayerAmmo(player, ammo_rockets,
 						autocvar_g_surv_defender_pickup_rockets_medium);
-					GivePlayerCells(player,
+					GivePlayerAmmo(player, ammo_cells,
 						autocvar_g_surv_defender_pickup_cells_medium);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthMedium, VOL_BASE,
@@ -1862,13 +1862,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				{
 					GivePlayerArmor(player,
 						autocvar_g_surv_defender_pickup_armor_big);
-					GivePlayerShells(player,
+					GivePlayerAmmo(player, ammo_shells,
 						autocvar_g_surv_defender_pickup_shells_big);
-					GivePlayerBullets(player,
+					GivePlayerAmmo(player, ammo_nails,
 						autocvar_g_surv_defender_pickup_bullets_big);
-					GivePlayerRockets(player,
+					GivePlayerAmmo(player, ammo_rockets,
 						autocvar_g_surv_defender_pickup_rockets_big);
-					GivePlayerCells(player,
+					GivePlayerAmmo(player, ammo_cells,
 						autocvar_g_surv_defender_pickup_cells_big);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthBig, VOL_BASE, ATTEN_NORM);
@@ -1878,13 +1878,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				{
 					GivePlayerArmor(player,
 						autocvar_g_surv_defender_pickup_armor_mega);
-					GivePlayerShells(player,
+					GivePlayerAmmo(player, ammo_shells,
 						autocvar_g_surv_defender_pickup_shells_mega);
-					GivePlayerBullets(player,
+					GivePlayerAmmo(player, ammo_nails,
 						autocvar_g_surv_defender_pickup_bullets_mega);
-					GivePlayerRockets(player,
+					GivePlayerAmmo(player, ammo_rockets,
 						autocvar_g_surv_defender_pickup_rockets_mega);
-					GivePlayerCells(player,
+					GivePlayerAmmo(player, ammo_cells,
 						autocvar_g_surv_defender_pickup_cells_mega);
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_HealthMega, VOL_BASE, ATTEN_NORM);
@@ -1903,13 +1903,13 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					{
 						case WEP_SHOTGUN.m_id:
 						{
-							GivePlayerShells(player, cvar(
+							GivePlayerAmmo(player, ammo_shells, cvar(
 								"g_pickup_shells_weapon"));
 							break;
 						}
 						case WEP_MACHINEGUN.m_id:
 						{
-							GivePlayerBullets(player, cvar(
+							GivePlayerAmmo(player, ammo_nails, cvar(
 								"g_pickup_nails_weapon"));
 							break;
 						}
@@ -1917,7 +1917,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 						case WEP_HAGAR.m_id:
 						case WEP_DEVASTATOR.m_id:
 						{
-							GivePlayerRockets(player, cvar(
+							GivePlayerAmmo(player, ammo_rockets, cvar(
 								"g_pickup_rockets_weapon"));
 							break;
 						}
@@ -1925,7 +1925,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 						case WEP_CRYLINK.m_id:
 						case WEP_VORTEX.m_id:
 						{
-							GivePlayerCells(player, cvar(
+							GivePlayerAmmo(player, ammo_cells, cvar(
 								"g_pickup_cells_weapon"));
 							break;
 						}
@@ -1941,26 +1941,26 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 					{
 						case WEP_SHOTGUN.m_id:
 						{
-							GivePlayerShells(player, cvar(
+							GivePlayerAmmo(player, ammo_shells, cvar(
 								"g_pickup_shells_weapon"));
 							break;
 						}
 						case WEP_RIFLE.m_id:
 						{
-							GivePlayerBullets(player, cvar(
+							GivePlayerAmmo(player, ammo_nails, cvar(
 								"g_pickup_nails_weapon"));
 							break;
 						}
 						case WEP_MINE_LAYER.m_id:
 						case WEP_SEEKER.m_id:
 						{
-							GivePlayerRockets(player, cvar(
+							GivePlayerAmmo(player, ammo_rockets, cvar(
 								"g_pickup_rockets_weapon"));
 							break;
 						}
 						case WEP_HLAC.m_id:
 						{
-							GivePlayerCells(player, cvar(
+							GivePlayerAmmo(player, ammo_cells, cvar(
 								"g_pickup_cells_weapon"));
 							break;
 						}
@@ -1973,7 +1973,8 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "weapon_machinegun":
 				case "weapon_uzi":
 				{
-					GivePlayerBullets(player, cvar("g_pickup_nails_weapon"));
+					GivePlayerAmmo(player, ammo_nails,
+						cvar("g_pickup_nails_weapon"));
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
 						ATTEN_NORM);
@@ -1983,7 +1984,8 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "weapon_hagar":
 				case "weapon_rocketlauncher":
 				{
-					GivePlayerRockets(player, cvar("g_pickup_rockets_weapon"));
+					GivePlayerAmmo(player, ammo_rockets,
+						cvar("g_pickup_rockets_weapon"));
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
 						ATTEN_NORM);
@@ -1993,7 +1995,8 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "weapon_crylink":
 				case "weapon_nex":
 				{
-					GivePlayerCells(player, cvar("g_pickup_cells_weapon"));
+					GivePlayerAmmo(player, ammo_cells,
+						cvar("g_pickup_cells_weapon"));
 					Item_ScheduleRespawn(item);
 					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
 						ATTEN_NORM);
@@ -2133,13 +2136,13 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 					autocvar_g_surv_defender_attacker_frag_health);
 				GivePlayerArmor(attacker,
 					autocvar_g_surv_defender_attacker_frag_armor);
-				GivePlayerShells(attacker,
+				GivePlayerAmmo(attacker, ammo_shells,
 					autocvar_g_surv_defender_attacker_frag_shells);
-				GivePlayerBullets(attacker,
+				GivePlayerAmmo(attacker, ammo_nails,
 					autocvar_g_surv_defender_attacker_frag_bullets);
-				GivePlayerRockets(attacker,
+				GivePlayerAmmo(attacker, ammo_rockets,
 					autocvar_g_surv_defender_attacker_frag_rockets);
-				GivePlayerCells(attacker,
+				GivePlayerAmmo(attacker, ammo_cells,
 					autocvar_g_surv_defender_attacker_frag_cells);
 				break;
 			}
@@ -2149,13 +2152,13 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 					autocvar_g_surv_defender_cannon_fodder_frag_health);
 				GivePlayerArmor(attacker,
 					autocvar_g_surv_defender_cannon_fodder_frag_armor);
-				GivePlayerShells(attacker,
+				GivePlayerAmmo(attacker, ammo_shells,
 					autocvar_g_surv_defender_cannon_fodder_frag_shells);
-				GivePlayerBullets(attacker,
+				GivePlayerAmmo(attacker, ammo_nails,
 					autocvar_g_surv_defender_cannon_fodder_frag_bullets);
-				GivePlayerRockets(attacker,
+				GivePlayerAmmo(attacker, ammo_rockets,
 					autocvar_g_surv_defender_cannon_fodder_frag_rockets);
-				GivePlayerCells(attacker,
+				GivePlayerAmmo(attacker, ammo_cells,
 					autocvar_g_surv_defender_cannon_fodder_frag_cells);
 				break;
 			}
