@@ -436,6 +436,26 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	entity best = NULL;
 	vector v;
 
+	if(!autocvar_g_waypointeditor && !ent.navigation_dynamicgoal)
+	{
+		waypoint_clearlinks(ent); // initialize wpXXmincost fields
+		IL_EACH(g_waypoints, it != ent,
+		{
+			if(it.wpisbox)
+			{
+				vector wm1 = it.absmin;
+				vector wm2 = it.absmax;
+				v.x = bound(wm1_x, org.x, wm2_x);
+				v.y = bound(wm1_y, org.y, wm2_y);
+				v.z = bound(wm1_z, org.z, wm2_z);
+			}
+			else
+				v = it.origin;
+			if(navigation_waypoint_will_link(v, org, ent, walkfromwp, 1050))
+				navigation_item_addlink(it, ent);
+		});
+	}
+
 	// box check failed, try walk
 	IL_EACH(g_waypoints, it != ent,
 	{
@@ -940,7 +960,8 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	{
 		// often path can be optimized by not adding the nearest waypoint
 		if (this.goalentity.nearestwaypoint_dist < 8
-			|| tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), (this.goalentity.absmin + this.goalentity.absmax) * 0.5, bot_navigation_movemode))
+			|| (!this.goalentity.navigation_dynamicgoal && navigation_item_islinked(nearest_wp.enemy, this.goalentity))
+			|| (this.goalentity.navigation_dynamicgoal && tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), (this.goalentity.absmin + this.goalentity.absmax) * 0.5, bot_navigation_movemode)))
 			e = nearest_wp.enemy;
 	}
 

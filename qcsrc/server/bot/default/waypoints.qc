@@ -416,18 +416,16 @@ float waypoint_getlinkcost(entity from, entity to)
 {
 	vector v1 = from.origin;
 	vector v2 = to.origin;
-	if (to.wpisbox || from.wpisbox)
+	if (from.wpisbox)
 	{
-		// if either is a box we have to find the nearest points on them to
-		// calculate the distance properly
-		vector m1, m2;
-		m1 = to.absmin;
-		m2 = to.absmax;
+		vector m1 = to.absmin, m2 = to.absmax;
 		v1_x = bound(m1_x, v1_x, m2_x);
 		v1_y = bound(m1_y, v1_y, m2_y);
 		v1_z = bound(m1_z, v1_z, m2_z);
-		m1 = from.absmin;
-		m2 = from.absmax;
+	}
+	if (to.wpisbox)
+	{
+		vector m1 = from.absmin, m2 = from.absmax;
 		v2_x = bound(m1_x, v2_x, m2_x);
 		v2_y = bound(m1_y, v2_y, m2_y);
 		v2_z = bound(m1_z, v2_z, m2_z);
