@@ -745,7 +745,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		}
 	}
 
-	vector o = (e.absmin + e.absmax) * 0.5;
+	vector goal_org = (e.absmin + e.absmax) * 0.5;
 
 	//print("routerating ", etos(e), " = ", ftos(f), " - ", ftos(rangebias), "\n");
 
@@ -753,7 +753,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if(g_jetpack)
 	if(this.items & IT_JETPACK)
 	if(autocvar_bot_ai_navigation_jetpack)
-	if(vdist(this.origin - o, >, autocvar_bot_ai_navigation_jetpack_mindistance))
+	if(vdist(this.origin - goal_org, >, autocvar_bot_ai_navigation_jetpack_mindistance))
 	{
 		vector pointa, pointb;
 
@@ -764,7 +764,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		pointa = trace_endpos - '0 0 1';
 
 		// Point B
-		traceline(o, o + '0 0 65535', MOVE_NORMAL, e);
+		traceline(goal_org, goal_org + '0 0 65535', MOVE_NORMAL, e);
 		pointb = trace_endpos - '0 0 1';
 
 		// Can I see these two points from the sky?
@@ -904,8 +904,9 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if (nwp.wpcost < 10000000)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
-		LOG_DEBUG(e.classname, " ", ftos(f), "/(1+", ftos((nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint))), "/", ftos(rangebias), ") = ");
-		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(o - nwp.wpnearestpoint)));
+		float cost = nwp.wpcost + waypoint_getdistancecost(nwp.wpnearestpoint, goal_org);
+		LOG_DEBUG(e.classname, " ", ftos(f), "/(1+", ftos(cost), "/", ftos(rangebias), ") = ");
+		f = f * rangebias / (rangebias + cost);
 		LOG_DEBUG("considering ", e.classname, " (with rating ", ftos(f), ")");
 		if (navigation_bestrating < f)
 		{
