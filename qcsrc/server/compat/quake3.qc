@@ -151,6 +151,7 @@ void target_give_init(entity this)
         it.nextthink = time;
 	});
 	this.spawnflags = 2;
+	this.spawnfunc_checked = true;
 	spawnfunc_target_items(this);
 	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }

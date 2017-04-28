@@ -170,3 +170,9 @@ MUTATOR_HOOKABLE(DrawInfoMessages, EV_DrawInfoMessages);
 	/** file */ 			i(float, MUTATOR_ARGV_0_float) \
 	/**/
 MUTATOR_HOOKABLE(HUD_WriteCvars, EV_HUD_WriteCvars);
+
+/** Called when the view model is being animated (setorigin is called after the hook, so you only need to modify origin here if desired) */
+#define EV_DrawViewModel(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(DrawViewModel, EV_DrawViewModel);
