@@ -668,14 +668,38 @@ void GivePlayerArmor(entity player, float amount)
 void GivePlayerAmmo(entity player, .float ammotype, float amount)
 {
 	float maxvalue = 999;
-	switch(ammotype)
+	switch (ammotype)
 	{
-		case ammo_shells: maxvalue = g_pickup_shells_max;
-		case ammo_cells: maxvalue = g_pickup_cells_max;
-		case ammo_rockets: maxvalue = g_pickup_rockets_max;
-		case ammo_plasma: maxvalue = g_pickup_plasma_max;
-		case ammo_nails: maxvalue = g_pickup_nails_max;
-		case ammo_fuel: maxvalue = g_pickup_fuel_max;
+		case ammo_shells:
+		{
+			maxvalue = g_pickup_shells_max;
+			break;
+		}
+		case ammo_cells:
+		{
+			maxvalue = g_pickup_cells_max;
+			break;
+		}
+		case ammo_rockets:
+		{
+			maxvalue = g_pickup_rockets_max;
+			break;
+		}
+		case ammo_plasma:
+		{
+			maxvalue = g_pickup_plasma_max;
+			break;
+		}
+		case ammo_nails:
+		{
+			maxvalue = g_pickup_nails_max;
+			break;
+		}
+		case ammo_fuel:
+		{
+			maxvalue = g_pickup_fuel_max;
+			break;
+		}
 	}
 	player.(ammotype) = min(player.(ammotype) + amount, maxvalue);
 }
