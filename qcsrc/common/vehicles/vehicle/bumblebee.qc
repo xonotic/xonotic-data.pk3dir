@@ -99,6 +99,7 @@ bool bumblebee_gunner_frame(entity this, float dt)
 		_out = autocvar_g_vehicle_bumblebee_cannon_turnlimit_in;
 		setorigin(this, vehic.origin + v_up * -16 + v_forward * -16 + v_right * -128);
 	}
+	this.oldorigin = this.origin; // negate fall damage
 
 	crosshair_trace(this);
 	vector _ct = trace_endpos;
@@ -607,6 +608,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 	makevectors(vehic.angles);
 	vehic.angles_x *= -1;
 	setorigin(this, vehic.origin + v_up * 48 + v_forward * 160);
+	this.oldorigin = this.origin; // negate fall damage
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 }

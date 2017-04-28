@@ -870,6 +870,9 @@ void vehicles_exit(entity vehic, bool eject)
 
 	CSQCMODEL_AUTOINIT(vehic);
 
+	if(player)
+		player.oldorigin = player.origin; // player's location is set by the exit functions, so we need to do this after everything
+
 	vehicles_exit_running = false;
 }
 

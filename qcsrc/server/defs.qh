@@ -421,6 +421,8 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .void(entity this, entity player) init_for_player;
 
+.WepSet dual_weapons;
+
 IntrusiveList g_monsters;
 STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
 

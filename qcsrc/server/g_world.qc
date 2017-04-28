@@ -345,6 +345,7 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_db_saveasdump");
 		BADCVAR("sv_intermission_cdtrack");
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");

@@ -658,6 +658,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
 			}
 		));
+		MUTATOR_CALLHOOK(PlayerDied, this);
 	}
 }
 
@@ -682,6 +683,48 @@ void PrintToChat(entity player, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
 	sprint(player, text);
+}
+
+void DebugPrintToChat(entity player, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChat(player, text);
+	}
+}
+
+void PrintToChatAll(string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	bprint(text);
+}
+
+void DebugPrintToChatAll(string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatAll(text);
+	}
+}
+
+void PrintToChatTeam(int teamnum, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		if (it.team == teamnum)
+		{
+			sprint(it, text);
+		}
+	});
+}
+
+void DebugPrintToChatTeam(int teamnum, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatTeam(teamnum, text);
+	}
 }
 
 /**
