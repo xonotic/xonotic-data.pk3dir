@@ -11,6 +11,7 @@
 
 #include <common/constants.qh>
 #include <common/net_linked.qh>
+#include <common/physics/player.qh>
 
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
@@ -174,7 +175,14 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	if(!(f & WAYPOINTFLAG_PERSONAL))
 	{
-		IL_EACH(g_waypoints, boxesoverlap(m1, m2, it.absmin, it.absmax),
+		vector em1 = m1;
+		vector em2 = m2;
+		if (m1 == m2)
+		{
+			em1 = m1 - '8 8 8';
+			em2 = m2 + '8 8 8';
+		}
+		IL_EACH(g_waypoints, boxesoverlap(em1, em2, it.absmin, it.absmax),
 		{
 			return it;
 		});
@@ -233,6 +241,21 @@ void waypoint_spawn_fromeditor(entity pl)
 	{
 		order = autocvar_g_waypointeditor_symmetrical_order;
 		ctf_flags = order;
+	}
+
+	if(!PHYS_INPUT_BUTTON_CROUCH(pl))
+	{
+		// snap waypoint to item's origin if close enough
+		IL_EACH(g_items, true,
+		{
+			vector item_org = (it.absmin + it.absmax) * 0.5;
+			item_org.z = it.absmin.z - PL_MIN_CONST.z;
+			if(vlen(item_org - org) < 30)
+			{
+				org = item_org;
+				break;
+			}
+		});
 	}
 
 	LABEL(add_wp);
