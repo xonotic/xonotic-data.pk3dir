@@ -528,7 +528,7 @@ float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 }
 
 // updates a path link if a spawnfunc_waypoint link is better than the current one
-void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vector p)
+void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost, vector p)
 {
 	vector m1;
 	vector m2;
@@ -543,10 +543,13 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 	}
 	else
 		v = wp.origin;
-	cost2 += waypoint_getdistancecost(p, v);
-	if (wp.wpcost > cost2)
+	if (w.wpflags & WAYPOINTFLAG_TELEPORT)
+		cost += w.wp00mincost; // assuming teleport has exactly one destination
+	else
+		cost += waypoint_getdistancecost(p, v);
+	if (wp.wpcost > cost)
 	{
-		wp.wpcost = cost2;
+		wp.wpcost = cost;
 		wp.enemy = w;
 		wp.wpfire = 1;
 		wp.wpnearestpoint = v;
