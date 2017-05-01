@@ -573,6 +573,8 @@ void PutClientInServer(entity this)
 		}
 		SetSpectatee_status(this, 0);
 
+		this.dual_weapons = '0 0 0';
+
 		this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
 
 		this.items = start_items;
