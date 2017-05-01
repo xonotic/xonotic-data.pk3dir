@@ -4,6 +4,7 @@
 #
 # Translators:
 # Alan García <bearz_x@hotmail.com>, 2015
+# Antonio Sirera <antoniosirera@gmail.com>, 2017
 # Ari_tent <xonotic@outlook.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
@@ -21,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-04-29 17:32+0000\n"
+"Last-Translator: Antonio Sirera <antoniosirera@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
 "Language: es\n"
@@ -77,12 +78,12 @@ msgstr "^1Presiona ^3%s^1 o ^3%s^1 para el siguiente o anterior jugador"
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "arma siguiente"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "arma anterior"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -92,7 +93,7 @@ msgstr "^1Usa ^3%s^1 o ^3%s^1 para cambiar la velocidad"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Pulsa ^3%s^1 para observar y ^3%s^1 para cambiar el modo de cámara."
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:191
@@ -131,7 +132,7 @@ msgstr "^1Presiona ^3%s^1 para unirte"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "saltar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -189,11 +190,11 @@ msgstr "menu de equipo"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Esperando a este jugador:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Esperándote a ti:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^7Press ^3ESC ^7to show HUD options."
@@ -229,12 +230,12 @@ msgstr "Jugador %d"
 #: qcsrc/client/hud/panel/quickmenu.qc:605
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Submenú%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:610
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "Comando%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:636
 msgid "Continue..."
@@ -243,32 +244,32 @@ msgstr "Continuar..."
 #: qcsrc/client/hud/panel/quickmenu.qc:784
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "QMCMD^Chat"
-msgstr ""
+msgstr "QMCMD^Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / ¡qué buena esa!"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^¡qué buena esa!"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:786
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^¡qué buen juego!"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^hola / ¡buena suerte!"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^hola / ¡buena suerte y pásalo bien!"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Chat de equipo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
@@ -292,11 +293,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^negative"
-msgstr ""
+msgstr "QMCMD^negativo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^positive"
-msgstr ""
+msgstr "QMCMD^positivo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -381,12 +382,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^Send private message to"
-msgstr ""
+msgstr "QMCMD^Enviar mensaje privado a"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Settings"
-msgstr ""
+msgstr "QMCMD^Ajustes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 #: qcsrc/client/hud/panel/quickmenu.qc:821
@@ -395,7 +396,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^3rd person view"
-msgstr ""
+msgstr "QMCMD^Vista en 3ª persona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^Player models like mine"
@@ -420,7 +421,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 #: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Sound settings"
-msgstr ""
+msgstr "QMCMD^Ajustes de sonido"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Hit sound"
@@ -454,11 +455,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Increase speed"
-msgstr ""
+msgstr "QMCMD^Incrementar la velocidad"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^Decrease speed"
-msgstr ""
+msgstr "QMCMD^Reducir la velocidad"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Wall collision off"
@@ -470,7 +471,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "QMCMD^Pantalla completa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:849
 msgid "QMCMD^Translate chat messages"
@@ -567,11 +568,11 @@ msgstr "SCO^destruido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:84
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^daño"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:85
 msgid "SCO^dmgtaken"
-msgstr ""
+msgstr "SCO^daño recibido"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "SCO^drops"
@@ -667,7 +668,7 @@ msgstr "SCO^revivals"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "SCO^rondas ganadas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^score"
@@ -1177,19 +1178,19 @@ msgstr ""
 
 #: qcsrc/common/items/item/armor.qh:111
 msgid "Big armor"
-msgstr ""
+msgstr "Gran armadura"
 
 #: qcsrc/common/items/item/armor.qh:147
 msgid "Mega armor"
-msgstr ""
+msgstr "Mega armadura"
 
 #: qcsrc/common/items/item/health.qh:111
 msgid "Big health"
-msgstr ""
+msgstr "Gran poción"
 
 #: qcsrc/common/items/item/health.qh:147
 msgid "Mega health"
-msgstr ""
+msgstr "Mega poción"
 
 #: qcsrc/common/items/item/jetpack.qh:35
 msgid "Jet Pack"
@@ -1254,13 +1255,15 @@ msgstr "Combate a muerte por equipos"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid "Capture the Flag"
-msgstr "Capture the Flag"
+msgstr "Consigue la bandera"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Encuentra la bandera enemiga y tráela hasta tu base para capturarla; "
+"defiende tu base del equipo contrario. "
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Clan Arena"
@@ -1301,6 +1304,7 @@ msgstr ""
 #: qcsrc/common/mapinfo.qh:371
 msgid "Capture control points to reach and destroy the enemy generator"
 msgstr ""
+"Consigue puntos de control para alcanzar y destruir el generador del enemigo."
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Onslaught"
@@ -1359,7 +1363,7 @@ msgstr "Partida actual"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:403
 msgid "Exit Menu"
-msgstr ""
+msgstr "Salir del menú"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:415
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
