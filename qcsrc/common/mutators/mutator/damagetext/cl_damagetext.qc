@@ -43,16 +43,26 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, m_deathtype, int, 0);
     ATTRIB(DamageText, time_prev, float, time);
     ATTRIB(DamageText, text, string, string_null);
+    ATTRIB(DamageText, m_screen_coords, bool, false);
 
     void DamageText_draw2d(DamageText this) {
         float dt = time - this.time_prev;
         this.time_prev = time;
-        setorigin(this, this.origin + dt * this.velocity);
         this.alpha -= dt * this.fade_rate;
-        if (this.alpha < 0) delete(this);
-        vector pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
-        if (pos.z >= 0 && this.m_size > 0) {
-            pos.z = 0;
+        if (this.alpha < 0) {
+            delete(this);
+            return;
+        }
+        vector screen_pos;
+        if (this.m_screen_coords) {
+            setorigin(this, this.origin + dt * '0 -20 0'); // TODO unhardcode
+            screen_pos = this.origin;
+        } else {
+            setorigin(this, this.origin + dt * this.velocity); // TODO why this.velocity instead of cvar?
+            screen_pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
+        }
+        if (screen_pos.z >= 0 && this.m_size > 0) {
+            screen_pos.z = 0;
             vector rgb;
             if (this.m_friendlyfire) {
                 rgb = this.m_color_friendlyfire;
@@ -66,7 +76,7 @@ CLASS(DamageText, Object)
 
             vector drawfontscale_save = drawfontscale;
             drawfontscale = (this.m_size / autocvar_cl_damagetext_size_max) * '1 1 0';
-            drawcolorcodedstring2_builtin(pos, this.text, autocvar_cl_damagetext_size_max * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
+            drawcolorcodedstring2_builtin(screen_pos, this.text, autocvar_cl_damagetext_size_max * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
             drawfontscale = drawfontscale_save;
         }
     }
@@ -141,12 +151,13 @@ CLASS(DamageText, Object)
             autocvar_cl_damagetext_size_max);
     }
 
-    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype, bool _friendlyfire) {
+    CONSTRUCTOR(DamageText, int _group, vector _origin, bool _screen_coords, int _health, int _armor, int _potential_damage, int _deathtype, bool _friendlyfire) {
         CONSTRUCT(DamageText);
         this.m_group = _group;
         this.m_friendlyfire = _friendlyfire;
+        this.m_screen_coords = _screen_coords;
         DamageText_update(this, _origin, _health, _armor, _potential_damage, _deathtype);
-		IL_PUSH(g_drawables_2d, this);
+        IL_PUSH(g_drawables_2d, this);
     }
 
     DESTRUCTOR(DamageText) {
@@ -156,8 +167,7 @@ ENDCLASS(DamageText)
 
 NET_HANDLE(damagetext, bool isNew)
 {
-    int group = ReadShort();
-    vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
+    int server_entity_index = ReadShort();
     int deathtype = ReadInt24_t();
     int flags = ReadByte();
     bool friendlyfire = flags & DTFLAG_SAMETEAM;
@@ -173,18 +183,30 @@ NET_HANDLE(damagetext, bool isNew)
     else potential_damage = ReadShort();
 
     return = true;
-    if (autocvar_cl_damagetext) {
-        if (friendlyfire && !autocvar_cl_damagetext_friendlyfire) {
-            return;
-        }
+    if (!autocvar_cl_damagetext) return;
+    if (friendlyfire && !autocvar_cl_damagetext_friendlyfire) return;
+
+    int client_entity_index = server_entity_index - 1;
+    entity entcs = entcs_receiver(client_entity_index);
+    if (!entcs || !entcs.has_origin) {
+        vector screen_pos = '0 0 0';
+        screen_pos.x = vid_conwidth * 0.45; // TODO unhardcode
+        screen_pos.y = vid_conheight * 0.45;
+        // TODO accumulation
+        // TODO when hitting multiple enemies dmgtext would overlap
+        make_impure(NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire));
+    } else {
         if (autocvar_cl_damagetext_accumulate_range) {
-            for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
-                if (e.instanceOfDamageText && e.m_group == group && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
-                    DamageText_update(e, location, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
+            for (entity e = findradius(entcs.origin, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
+                if (e.instanceOfDamageText
+                    && !e.m_screen_coords // we're using origin for both world coords and screen coords so avoid mismatches
+                    && e.m_group == server_entity_index
+                    && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
+                    DamageText_update(e, entcs.origin, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
                     return;
                 }
             }
         }
-        make_impure(NEW(DamageText, group, location, health, armor, potential_damage, deathtype, friendlyfire));
+        make_impure(NEW(DamageText, server_entity_index, entcs.origin, false, health, armor, potential_damage, deathtype, friendlyfire));
     }
 }

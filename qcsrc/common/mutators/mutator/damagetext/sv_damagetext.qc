@@ -16,7 +16,6 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const float armor = M_ARGV(3, float);
     const int deathtype = M_ARGV(5, int);
     const float potential_damage = M_ARGV(6, float);
-    const vector location = hit.origin;
     FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
         if (
             (SV_DAMAGETEXT_ALL()) ||
@@ -35,9 +34,6 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
             WriteEntity(MSG_ONE, hit);
-            WriteCoord(MSG_ONE, location.x);
-            WriteCoord(MSG_ONE, location.y);
-            WriteCoord(MSG_ONE, location.z);
             WriteInt24_t(MSG_ONE, deathtype);
             WriteByte(MSG_ONE, flags);
 
