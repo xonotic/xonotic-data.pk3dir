@@ -161,6 +161,9 @@ spawnfunc(info_player_survivor)
 
 spawnfunc(info_player_start)
 {
+	this.target4 = this.target; // COMPAT: Quake 3 maps use target for item giving entities
+	this.target = string_null;
+
 	spawnfunc_info_player_deathmatch(this);
 }
 
