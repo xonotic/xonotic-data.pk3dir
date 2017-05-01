@@ -722,6 +722,12 @@ void havocbot_movetogoal(entity this)
 	destorg.x = bound(m1_x, destorg.x, m2_x);
 	destorg.y = bound(m1_y, destorg.y, m2_y);
 	destorg.z = bound(m1_z, destorg.z, m2_z);
+
+	// in case bot ends up inside the teleport waypoint without touching
+	// the teleport itself, head to the teleport origin
+	if(destorg == this.origin)
+		destorg = this.goalcurrent.origin;
+
 	diff = destorg - this.origin;
 	//dist = vlen(diff);
 	dir = normalize(diff);
