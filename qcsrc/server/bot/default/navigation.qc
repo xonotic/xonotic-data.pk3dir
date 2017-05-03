@@ -178,15 +178,16 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 					if (trace_fraction < 1 || trace_startsolid)
 					{
 						bool ladder_found = false;
-						FOREACH_ENTITY_CLASS("func_ladder", boxesoverlap(trace_endpos + m1 + '-1 -1 -1', trace_endpos + m2 + '1 1 1', it.absmin, it.absmax),
+						FOREACH_ENTITY_CLASS("func_ladder", true,
 						{
+							if(boxesoverlap(org + jumpheight_vec + m1 + '-1 -1 -1', org + jumpheight_vec + m2 + '1 1 1', it.absmin, it.absmax))
 							if(boxesoverlap(end, end, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
 								ladder_found = true; // can't return here ("Loop mutex held by tracewalk" error)
 						});
 						if(ladder_found)
 						{
 							if(autocvar_bot_debug_tracewalk)
-								debugnodestatus(org, DEBUG_NODE_SUCCESS);
+								debugnodestatus(end, DEBUG_NODE_SUCCESS);
 
 							//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
 							return true;
