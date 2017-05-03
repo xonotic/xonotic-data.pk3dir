@@ -61,6 +61,8 @@ int autocvar_g_surv_point_leadlimit; ///< Maximum lead of a single team.
 
 /// \brief How much players are allowed in teams (excluding cannon fodder).
 int autocvar_g_surv_team_size;
+/// \brief If set, defenders will not be shown on the radar.
+int autocvar_g_surv_stealth;
 
 /// \brief Whether to force overkill player models for attackers.
 int autocvar_g_surv_attacker_force_overkill_models;
@@ -1352,6 +1354,10 @@ void Surv_RoundStart()
 			break;
 		}
 	}
+	if (autocvar_g_surv_stealth)
+	{
+		return;
+	}
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		switch (it.team)
@@ -2116,15 +2122,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 		return;
 	}
 	Surv_UpdateDefenderHealthStat();
-	if (target.health < 1)
-	{
-		WaypointSprite_Kill(target.surv_attack_sprite);
-	}
-	else
-	{
-		WaypointSprite_UpdateHealth(target.surv_attack_sprite, target.health +
-			target.armorvalue);
-	}
 	entity attacker = M_ARGV(0, entity);
 	if ((attacker.team == surv_attackerteam) && (attacker.surv_role ==
 		SURVIVAL_ROLE_PLAYER))
@@ -2133,6 +2130,19 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 		float armor = M_ARGV(3, float);
 		float score = (health + armor) * autocvar_g_surv_attacker_damage_score;
 		PlayerScore_Add(attacker, SP_SCORE, score);
+	}
+	if (autocvar_g_surv_stealth)
+	{
+		return;
+	}
+	if (target.health < 1)
+	{
+		WaypointSprite_Kill(target.surv_attack_sprite);
+	}
+	else
+	{
+		WaypointSprite_UpdateHealth(target.surv_attack_sprite, target.health +
+			target.armorvalue);
 	}
 }
 
