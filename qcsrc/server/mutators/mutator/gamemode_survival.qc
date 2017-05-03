@@ -737,6 +737,15 @@ void Surv_RemovePlayerFromAliveList(entity player, int teamnum)
 				{
 					sound(NULL, CH_TRIGGER, SND_SURV_1_FRAG_LEFT,
 						VOL_BASE, ATTEN_NONE);
+					FOREACH_CLIENT(IS_PLAYER(it),
+					{
+						if (it.team == surv_defenderteam)
+						{
+							Send_Notification(NOTIF_ONE, it, MSG_CENTER,
+								CENTER_ALONE);
+							return;
+						}
+					});
 					return;
 				}
 				case 2:
@@ -801,19 +810,27 @@ void Surv_CountAlivePlayers()
 		case 1:
 		{
 			sound(NULL, CH_TRIGGER, SND_SURV_1_FRAG_LEFT, VOL_BASE, ATTEN_NONE);
-			break;
+			FOREACH_CLIENT(IS_PLAYER(it),
+			{
+				if (it.team == surv_defenderteam)
+				{
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ALONE);
+					return;
+				}
+			});
+			return;
 		}
 		case 2:
 		{
 			sound(NULL, CH_TRIGGER, SND_SURV_2_FRAGS_LEFT, VOL_BASE,
 				ATTEN_NONE);
-			break;
+			return;
 		}
 		case 3:
 		{
 			sound(NULL, CH_TRIGGER, SND_SURV_3_FRAGS_LEFT, VOL_BASE,
 				ATTEN_NONE);
-			break;
+			return;
 		}
 	}
 }
