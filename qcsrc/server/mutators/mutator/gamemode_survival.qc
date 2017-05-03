@@ -103,6 +103,15 @@ int autocvar_g_surv_cannon_fodder_num_random_start_weapons;
 int autocvar_g_surv_attacker_pickup_ammo_health;
 /// \brief How much armor do attackers get when they pickup ammo.
 int autocvar_g_surv_attacker_pickup_ammo_armor;
+/// \brief How much health do attackers get when they pickup a weapon.
+int autocvar_g_surv_attacker_pickup_weapon_health;
+/// \brief How much armor do attackers get when they pickup a weapon.
+int autocvar_g_surv_attacker_pickup_weapon_armor;
+/// \brief How much health do attackers get when they pickup a dropped weapon.
+int autocvar_g_surv_attacker_pickup_droppedweapon_health;
+/// \brief How much armor do attackers get when they pickup a dropped weapon.
+int autocvar_g_surv_attacker_pickup_droppedweapon_armor;
+
 /// \brief How many health do defenders get when they pickup small health.
 int autocvar_g_surv_defender_pickup_health_small;
 /// \brief How many health do defenders get when they pickup medium health.
@@ -159,10 +168,12 @@ int autocvar_g_surv_defender_pickup_cells_mega;
 
 /// \brief How much score attackers gain per 1 point of damage.
 float autocvar_g_surv_attacker_damage_score;
+
 /// \brief How much defenders damage others. Higher values mean more damage.
 float autocvar_g_surv_defender_attack_scale;
 /// \brief How much defenders get damaged. High values mean less damage.
 float autocvar_g_surv_defender_defense_scale;
+
 /// \brief How much cannon fodder damages others. Higher values mean more
 /// damage.
 float autocvar_g_surv_cannon_fodder_attack_scale;
@@ -171,6 +182,7 @@ float autocvar_g_surv_cannon_fodder_defense_scale;
 
 /// \brief How much score attackers get for fragging defenders.
 float autocvar_g_surv_attacker_frag_score;
+
 /// \brief How much health do defenders get when they frag an attacker.
 int autocvar_g_surv_defender_attacker_frag_health;
 /// \brief How much armor do defenders get when they frag an attacker.
@@ -1776,12 +1788,35 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				case "item_bullets":
 				case "item_rockets":
 				case "item_cells":
-				case "droppedweapon":
 				{
 					GivePlayerHealth(player,
 						autocvar_g_surv_attacker_pickup_ammo_health);
 					GivePlayerArmor(player,
 						autocvar_g_surv_attacker_pickup_ammo_armor);
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case "weapon_machinegun":
+				case "weapon_uzi":
+				case "weapon_grenadelauncher":
+				case "weapon_electro":
+				case "weapon_crylink":
+				case "weapon_nex":
+				case "weapon_hagar":
+				case "weapon_rocketlauncher":
+				case "replacedweapon":
+				{
+					GivePlayerHealth(player,
+						autocvar_g_surv_attacker_pickup_weapon_health);
+					GivePlayerArmor(player,
+						autocvar_g_surv_attacker_pickup_weapon_armor);
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case "droppedweapon":
+				{
+					GivePlayerHealth(player,
+						autocvar_g_surv_attacker_pickup_droppedweapon_health);
+					GivePlayerArmor(player,
+						autocvar_g_surv_attacker_pickup_droppedweapon_armor);
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
