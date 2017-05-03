@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Kevin Scannell <kscanne@gmail.com>, 2017
 msgid ""
@@ -11,17 +11,20 @@ msgstr ""
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
 "PO-Revision-Date: 2017-05-01 16:37+0000\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
-"Language-Team: Irish (http://www.transifex.com/team-xonotic/xonotic/language/ga/)\n"
+"Language-Team: Irish (http://www.transifex.com/team-xonotic/xonotic/language/"
+"ga/)\n"
+"Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ga\n"
-"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);\n"
+"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : "
+"4);\n"
 
 #: qcsrc/client/hud/hud_config.qc:233
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
-msgstr "^2D'éirigh leis an easpórtáil go %s! (Nóta: tá sé sábháilte in data/data/)\n"
+msgstr ""
+"^2D'éirigh leis an easpórtáil go %s! (Nóta: tá sé sábháilte in data/data/)\n"
 
 #: qcsrc/client/hud/hud_config.qc:237
 #, c-format
@@ -59,7 +62,8 @@ msgstr "príomhlámhach"
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr "^1Brúigh ^3%s^1 (an chéad imreoir eile) nó ^3%s^1 (an t-imreoir roimhe seo)"
+msgstr ""
+"^1Brúigh ^3%s^1 (an chéad imreoir eile) nó ^3%s^1 (an t-imreoir roimhe seo)"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
@@ -1085,7 +1089,8 @@ msgid "%d seconds left"
 msgstr ""
 
 #: qcsrc/client/mapvoting.qc:497
-msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
+msgid ""
+"mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
 msgstr ""
 
 #: qcsrc/client/mapvoting.qc:507
@@ -1390,8 +1395,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/nmm.qc:610
 msgid ""
-"You can select one of your pieces to move it in one of the surrounding "
-"places"
+"You can select one of your pieces to move it in one of the surrounding places"
 msgstr ""
 
 #: qcsrc/common/minigames/minigame/nmm.qc:612
@@ -1841,8 +1845,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
-"^BG%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
+"%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:243
@@ -1899,8 +1903,8 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:254
 #, c-format
 msgid ""
-"^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned"
-" itself"
+"^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
+"itself"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:255
@@ -3017,8 +3021,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
-msgid ""
-"^BG%s%s^K1 was sawn in half by ^BG%s^K1's Rocket Propelled Chainsaw%s%s"
+msgid "^BG%s%s^K1 was sawn in half by ^BG%s^K1's Rocket Propelled Chainsaw%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:498
@@ -4685,8 +4688,8 @@ msgstr ""
 #: qcsrc/lib/spawnfunc.qh:65
 #, c-format
 msgid ""
-"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error,"
-" please file an issue."
+"Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, "
+"please file an issue."
 msgstr ""
 
 #: qcsrc/lib/string.qh:46
@@ -6187,9 +6190,9 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:268
 msgid ""
-"Players will be given only one weapon, which can instantly kill the opponent"
-" with a single shot. If the player runs out of ammo, he will have 10 seconds"
-" to find some or if he fails to do so, face death. The secondary fire mode "
+"Players will be given only one weapon, which can instantly kill the opponent "
+"with a single shot. If the player runs out of ammo, he will have 10 seconds "
+"to find some or if he fails to do so, face death. The secondary fire mode "
 "does not inflict any damage but is good for doing trickjumps."
 msgstr ""
 
@@ -6237,7 +6240,8 @@ msgid "Pause"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
-msgid "Pause updating the server list to prevent servers from \"jumping around\""
+msgid ""
+"Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
@@ -6874,8 +6878,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid ""
-"Enable spatialization (blend the right and left channel slightly to decrease"
-" stereo separation a bit for headphones)"
+"Enable spatialization (blend the right and left channel slightly to decrease "
+"stereo separation a bit for headphones)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -7117,8 +7121,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:146
 msgid ""
-"Offset mapping effect that will make textures with bumpmaps appear like they"
-" \"pop out\" of the flat 2D surface (default: disabled)"
+"Offset mapping effect that will make textures with bumpmaps appear like they "
+"\"pop out\" of the flat 2D surface (default: disabled)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
@@ -7320,8 +7324,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:249
 msgid ""
-"Multiplier for amount of particles. Less means less particles, which in turn"
-" gives for better performance (default: 1.0)"
+"Multiplier for amount of particles. Less means less particles, which in turn "
+"gives for better performance (default: 1.0)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
@@ -7872,8 +7876,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:58
 msgid ""
-"Automatically switch to newly picked up weapons if they are better than what"
-" you are carrying"
+"Automatically switch to newly picked up weapons if they are better than what "
+"you are carrying"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:61
@@ -8205,8 +8209,7 @@ msgid "Advanced settings..."
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:152
-msgid ""
-"Advanced settings where you can tweak every single variable of the game"
+msgid "Advanced settings where you can tweak every single variable of the game"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:157
@@ -8362,8 +8365,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:62
 msgid ""
-"Enable vertical synchronization to prevent tearing, will cap your fps to the"
-" screen refresh rate (default: disabled)"
+"Enable vertical synchronization to prevent tearing, will cap your fps to the "
+"screen refresh rate (default: disabled)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:67
@@ -8428,8 +8431,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:99
 msgid ""
-"Eliminate overdraw by rendering a depth-only version of the scene before the"
-" normal rendering starts (default: disabled)"
+"Eliminate overdraw by rendering a depth-only version of the scene before the "
+"normal rendering starts (default: disabled)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:100
@@ -8844,8 +8847,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:274
 msgid ""
-"Bookmark the currently highlighted server so that it's faster to find in the"
-" future"
+"Bookmark the currently highlighted server so that it's faster to find in the "
+"future"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:763
@@ -8959,8 +8962,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_particles.qc:13
 msgid ""
-"Multiplier for amount of particles. Less means less particles, which in turn"
-" gives for better performance (default: 1)"
+"Multiplier for amount of particles. Less means less particles, which in turn "
+"gives for better performance (default: 1)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/slider_particles.qc:14
