@@ -218,6 +218,7 @@ int autocvar_g_surv_defender_drop_weapons;
 .entity surv_attack_sprite; ///< Holds the sprite telling attackers to attack.
 
 int surv_type; ///< Holds the type of survival. See SURVIVAL_TYPE constants.
+bool surv_warmup; ///< Holds whether warmup is active.
 /// \brief Holds the type of the current round. See SURVIVAL_ROUND constants.
 int surv_roundtype;
 bool surv_isroundactive; ///< Holds whether the round is active.
@@ -1410,6 +1411,12 @@ bool Surv_IsEliminated(entity player)
 
 //============================= Hooks ========================================
 
+/// \brief Hook that is called to determine general rules of the game. 
+MUTATOR_HOOKFUNCTION(surv, ReadLevelCvars)
+{
+	surv_warmup = warmup_stage;
+}
+
 /// \brief Hook that is called to determine if there is a weapon arena.
 MUTATOR_HOOKFUNCTION(surv, SetWeaponArena)
 {
@@ -1628,8 +1635,6 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 {
 	LOG_TRACE("Survival: reset_map_global");
 	surv_allowed_to_spawn = true;
-	surv_numattackersalive = 0;
-	surv_numdefendersalive = 0;
 	if (surv_roundtype == SURVIVAL_ROUND_FIRST)
 	{
 		FOREACH_CLIENT(IS_REAL_CLIENT(it),
@@ -1643,7 +1648,13 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 {
 	LOG_TRACE("Survival: reset_map_players");
-	if (surv_type == SURVIVAL_TYPE_VERSUS)
+	surv_numattackersalive = 0;
+	surv_numdefendersalive = 0;
+	if (surv_warmup)
+	{
+		surv_warmup = false;
+	}
+	else if (surv_type == SURVIVAL_TYPE_VERSUS)
 	{
 		Surv_SwapTeams();
 	}
@@ -1655,7 +1666,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 			it.team = -1;
 			it.surv_state = SURVIVAL_STATE_PLAYING;
 		}
-		if (it.surv_state != SURVIVAL_STATE_NOT_PLAYING)
+		if (it.surv_state == SURVIVAL_STATE_PLAYING)
 		{
 			TRANSMUTE(Player, it);
 			it.surv_state = SURVIVAL_STATE_PLAYING;
