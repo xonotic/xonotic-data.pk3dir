@@ -403,7 +403,7 @@ float waypoint_getdistancecost(vector from, vector to)
 	float height = from.z - to.z;
 	if(height > 0 && autocvar_sv_gravity > 0)
 	{
-		float height_cost = sqrt(height / autocvar_sv_gravity);
+		float height_cost = sqrt(height / (autocvar_sv_gravity / 2));
 		float xydist = vlen(vec2(to - from));
 		float xydist_cost = xydist / autocvar_sv_maxspeed;
 		if(max(height_cost, xydist_cost) < c)
