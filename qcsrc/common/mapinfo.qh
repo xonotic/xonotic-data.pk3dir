@@ -487,7 +487,7 @@ void HUD_Mod_SURV(vector pos, vector mySize);
 CLASS(Survival, Gametype)
     INIT(Survival)
     {
-        this.gametype_init(this, _("Survival"),"surv","g_surv",true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Survive as long as you can"));
+        this.gametype_init(this, _("Survival"), "surv", "g_surv", true, "", "timelimit=20 pointlimit=5 teams=2 leadlimit=0", _("Survive as long as you can"));
     }
     METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
