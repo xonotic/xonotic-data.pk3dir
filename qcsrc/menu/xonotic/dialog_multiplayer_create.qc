@@ -75,6 +75,7 @@ void GameType_ConfigureSliders_for_CurrentGametype(entity me)
 		case MAPINFO_TYPE_CTS:             GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
 		case MAPINFO_TYPE_INVASION:        GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
 		case MAPINFO_TYPE_TEAM_DEATHMATCH: GameType_ConfigureSliders(me, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit",         "g_tdm_teams_override",         _("The amount of points needed before the match will end")); break;
+		case MAPINFO_TYPE_SURVIVAL:        GameType_ConfigureSliders(me, _("Point limit:"),     1,   20,  1, "g_surv_point_limit",        string_null,                    _("The amount of points needed before the match will end")); break;
 		default:                           GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The amount of frags needed before the match will end")); break;
 	}
 }
