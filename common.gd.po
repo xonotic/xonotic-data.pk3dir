@@ -5,12 +5,13 @@
 # Translators:
 # GunChleoc, 2017
 # GunChleoc, 2017
+# GunChleoc, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-01 19:52+0000\n"
+"PO-Revision-Date: 2017-05-03 17:02+0000\n"
 "Last-Translator: GunChleoc\n"
 "Language-Team: Gaelic, Scottish (http://www.transifex.com/team-xonotic/"
 "xonotic/language/gd/)\n"
@@ -25,44 +26,48 @@ msgstr ""
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr ""
+"^2Chaidh às-phortadh gu %s! (An aire: Chaidh a shàbhaladh ann ann data/"
+"data/)\n"
 
 #: qcsrc/client/hud/hud_config.qc:237
 #, c-format
 msgid "^1Couldn't write to %s\n"
-msgstr ""
+msgstr "^1Cha b’ urrainn dhuinn sgrìobhadh gu %s\n"
 
 #: qcsrc/client/hud/panel/chat.qc:82
 msgid "^3Player^7: This is the chat area."
-msgstr ""
+msgstr "^3Cluicheadair^7: Seo raon na cabadaich."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:69
 #, c-format
 msgid "FPS: %.*f"
-msgstr ""
+msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:87
 msgid "^1Observing"
-msgstr ""
+msgstr "^1’Ga amharc"
 
 #: qcsrc/client/hud/panel/infomessages.qc:89
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr ""
+msgstr "^1’Ga amharc: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr ""
+msgstr "^1Brùth air ^3%s^1 gus amharc"
 
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr ""
+msgstr "prìomh-losgadh"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr ""
+"^1Brùth air ^3%s^1 no ^3%s^1 airson an ath-chluicheadair no an cluicheadair "
+"roimhe"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
@@ -77,12 +82,13 @@ msgstr "an t-arm roimhe"
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr ""
+msgstr "^1Cleachd ^3%s^1 no ^3%s^1 gus an luaths atharrachadh"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr ""
+"^1Brùth air ^3%s^1 airson amharc, ^3%s^1 gus modh a’ chamara atharrachadh"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:191
@@ -92,12 +98,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr ""
+msgstr "losgadh dàrnach"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr ""
+msgstr "^1Brùth air ^3%s^1 airson fiosrachadh mu mhodh a’ gheama"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #: qcsrc/menu/xonotic/keybinder.qc:94
@@ -106,17 +112,17 @@ msgstr "fiosrachadh an fhrithealaiche"
 
 #: qcsrc/client/hud/panel/infomessages.qc:124
 msgid "^1Match has already begun"
-msgstr ""
+msgstr "^1Tha am maids air tòiseachadh mar-thà"
 
 #: qcsrc/client/hud/panel/infomessages.qc:126
 msgid "^1You have no more lives left"
-msgstr ""
+msgstr "^1Dh’fhalbh na beathannan ort"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr ""
+msgstr "^1Brùth air ^3%s^1 gur pàirt a ghabhail"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
@@ -126,16 +132,16 @@ msgstr "thoir leum"
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr ""
+msgstr "^1Tòisichidh an geama an ceann ^3%d^1 diog(an)"
 
 #: qcsrc/client/hud/panel/infomessages.qc:145
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2’Sa ^1ghreis-ghleusaidh^2 fhathast!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sBrùth air ^3%s%s gus crìoch a chur air a’ ghreis-ghleusaidh"
 
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #: qcsrc/client/hud/panel/infomessages.qc:162
@@ -147,29 +153,29 @@ msgstr "deiseil"
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%sBrùth air ^3%s%s nuair a bhios tu deiseil"
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr ""
+msgstr "^2A’ fuireach gus am bi càch deiseil leis an gleusadh…"
 
 #: qcsrc/client/hud/panel/infomessages.qc:169
 msgid "^2Waiting for others to ready up..."
-msgstr ""
+msgstr "^2A’ fuireach gus am bi càch deiseil…"
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Brùth air ^3%s^2 gus crìoch a chur air a’ ghreis-ghleusaidh"
 
 #: qcsrc/client/hud/panel/infomessages.qc:196
 msgid "Teamnumbers are unbalanced!"
-msgstr ""
+msgstr "Chan eil àireamhan nan sgiobaidhean cothromach!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr ""
+msgstr " Brùth air ^3%s%s gus a ghleusadh"
 
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #: qcsrc/menu/xonotic/keybinder.qc:102
@@ -178,19 +184,21 @@ msgstr "clàr-taice an sgioba"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Ag amharc a’ chluicheadair seo:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1’Gad amharc:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "^7Brùth air ^3ESC ^7gur roghainnean a’ HUD a shealltainn."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
+"^3Dèan briogadh dùbailte ^7a air a’ phanail a chum roghainnean sònraichte na "
+"panail."
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -198,7 +206,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3IUCHRAICHEAN SAIGHDE ^7airson mion-ghleusadh."
 
 #: qcsrc/client/hud/panel/modicons.qc:561
 msgid "Personal best"
@@ -212,52 +220,52 @@ msgstr ""
 #: qcsrc/client/hud/panel/score.qc:59
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "Cluicheadair %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:603
 #: qcsrc/client/hud/panel/quickmenu.qc:605
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Fo-chlàr-taice%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:610
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "Àithne%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:636
 msgid "Continue..."
-msgstr ""
+msgstr "Lean air adhart…"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:784
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "QMCMD^Chat"
-msgstr ""
+msgstr "Cabadaich"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr ":-) / glè mhath"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "glè mhath"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:786
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "deagh-gheana"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "sin sibh / gura math a thèid leibh"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "sin sibh / gura math a thèid leibh is gabhaibh tlachd"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "Cabadaich an sgioba"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
@@ -269,7 +277,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "nì an-asgaidh, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item (l:%l^7)"
@@ -277,15 +285,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "chaidh nì a thogail, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^negative"
-msgstr ""
+msgstr "àicheach"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^positive"
-msgstr ""
+msgstr "dearbh"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -293,7 +301,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help, icon"
-msgstr ""
+msgstr "feumach air cobhair, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen (l:%y^7)"
@@ -301,7 +309,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen, icon"
-msgstr ""
+msgstr "chunnacas nàmhaid, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^flag seen (l:%y^7)"
@@ -309,7 +317,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^flag seen, icon"
-msgstr ""
+msgstr "chunnacas bratach, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -317,7 +325,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending, icon"
-msgstr ""
+msgstr "a’ dìon, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -333,11 +341,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking, icon"
-msgstr ""
+msgstr "a’ toir ionnsaigh, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flag, icon"
-msgstr ""
+msgstr "air bratach a mharbhadh, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
@@ -370,37 +378,37 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^Send private message to"
-msgstr ""
+msgstr "Cuir teachdaireachd phrìobhaideach gu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Settings"
-msgstr ""
+msgstr "Roghainnean"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^View/HUD settings"
-msgstr ""
+msgstr "Roghainnean an t-seallaidh/HUD"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^3rd person view"
-msgstr ""
+msgstr "Sealladh treas pearsa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^Player models like mine"
-msgstr ""
+msgstr "Modailean chluicheadairean mar am fear agamsa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^Names above players"
-msgstr ""
+msgstr "Ainmean os cionn nan cluicheadairean"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^Crosshair per weapon"
-msgstr ""
+msgstr "Crois-ribe gach airm"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^Net graph"
@@ -409,45 +417,45 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 #: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Sound settings"
-msgstr ""
+msgstr "Roghainnean fuaime"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Hit sound"
-msgstr ""
+msgstr "Fuaim bualaidh"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Chat sound"
-msgstr ""
+msgstr "Fuaim na cabadaich"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Spectator camera"
-msgstr ""
+msgstr "Camara amhairc"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^1st person"
-msgstr ""
+msgstr "1ad pearsa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^3rd person around player"
-msgstr ""
+msgstr "3s pearsa mun chluicheadair"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^3rd person behind"
-msgstr ""
+msgstr "3s pearsa air cùlaibh a’ chluicheadair"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Observer camera"
-msgstr ""
+msgstr "Camara an amhairc"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Increase speed"
-msgstr ""
+msgstr "Dèan nas luaithe"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^Decrease speed"
-msgstr ""
+msgstr "Dèan nas maille"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Wall collision off"
@@ -459,11 +467,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "Làn-sgrìn"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:849
 msgid "QMCMD^Translate chat messages"
-msgstr ""
+msgstr "Eadar-theangaich teachdaireachdan na cabadaich"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 #: qcsrc/client/hud/panel/quickmenu.qc:862
@@ -472,23 +480,23 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Restart the map"
-msgstr ""
+msgstr "Ath-thòisich am mapa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^End match"
-msgstr ""
+msgstr "Cuir crìoch air a’ mhaids"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Reduce match time"
-msgstr ""
+msgstr "Lùghdaich ùine a’ mhaids"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^Extend match time"
-msgstr ""
+msgstr "Meudaich ùine a’ mhaids"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^Shuffle teams"
-msgstr ""
+msgstr "Cuir na sgiobaidhean air thuaiream"
 
 #: qcsrc/client/hud/panel/racetimer.qc:37
 #, c-format
@@ -502,12 +510,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 msgid "Start line"
-msgstr ""
+msgstr "Loidhne tòiseachaidh"
 
 #: qcsrc/client/hud/panel/racetimer.qc:63
 #: qcsrc/client/hud/panel/racetimer.qc:67
 msgid "Finish line"
-msgstr ""
+msgstr "Loidhne crìochnachaidh"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -5160,7 +5168,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 msgid "PNL^Enabled even playing in warmup"
-msgstr ""
+msgstr "An comas rè na greise-gleusaidh cuideachd"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:29
 msgid "Reduced"
