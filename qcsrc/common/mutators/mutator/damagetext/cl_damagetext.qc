@@ -228,7 +228,6 @@ NET_HANDLE(damagetext, bool isNew)
         float a = autocvar_cl_damagetext_2d_pos.x;
         LOG_INFOF("%d %v\n", a, autocvar_cl_damagetext_2d_pos);*/
 
-        // TODO accumulation - IL drawables?
         IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {
             DamageText_update(it, screen_pos, it.m_healthdamage + health, it.m_armordamage + armor, it.m_potential_damage + potential_damage, deathtype);
             return;
