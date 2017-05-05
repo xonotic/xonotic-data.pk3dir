@@ -1953,6 +1953,7 @@ void Join(entity this)
 
 	PutClientInServer(this);
 
+	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	else
