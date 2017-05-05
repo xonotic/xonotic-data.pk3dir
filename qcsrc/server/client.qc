@@ -1810,6 +1810,9 @@ void SetSpectatee_status(entity this, int spectatee_num)
 
 void SetSpectatee(entity this, entity spectatee)
 {
+	if(IS_BOT_CLIENT(this))
+		return; // bots abuse .enemy, this code is useless to them
+
 	entity old_spectatee = this.enemy;
 
 	this.enemy = spectatee;
