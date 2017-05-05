@@ -30,7 +30,6 @@ AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage 
 AUTOCVAR_SAVE(cl_damagetext_2d_pos,                 vector, '0.47 0.47 0',     "2D damage text initial position (X and Y between 0 and 1)");
 AUTOCVAR_SAVE(cl_damagetext_2d_alpha_start,         float,  1,          "2D damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_2d_alpha_lifetime,      float,  1.5,        "2D damage text lifetime (alpha fading) in seconds");
-//AUTOCVAR_SAVE(cl_damagetext_2d_shrink_rate,         float,  0.3,        "How much to shrink 2D damage text in 1 second");
 AUTOCVAR_SAVE(cl_damagetext_2d_size_lifetime,       float,  3,          "2D damage text lifetime (size shrinking) in seconds");
 AUTOCVAR_SAVE(cl_damagetext_2d_velocity,            vector, '-20 0 0',  "2D damage text move direction (screen coordinates)");
 
@@ -47,16 +46,11 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, m_armordamage, int, 0);
     ATTRIB(DamageText, m_potential_damage, int, 0);
     ATTRIB(DamageText, m_deathtype, int, 0);
-    //ATTRIB(DamageText, time_prev, float, time);
-    ATTRIB(DamageText, hit_time, float, 0); // TODO
+    ATTRIB(DamageText, hit_time, float, 0);
     ATTRIB(DamageText, text, string, string_null);
     ATTRIB(DamageText, m_screen_coords, bool, false);
 
     void DamageText_draw2d(DamageText this) {
-        //float dt = time - this.time_prev;
-        //this.time_prev = time;
-        //this.m_size -= dt * this.m_shrink_rate * this.m_size; // TODO this is wrong
-        //this.alpha -= dt * this.fade_rate;
         float since_hit = time - this.hit_time;
         float size = this.m_size - since_hit * this.m_shrink_rate * this.m_size;
         float alpha_ = this.alpha - since_hit * this.fade_rate;
@@ -66,12 +60,8 @@ CLASS(DamageText, Object)
         }
         vector screen_pos;
         if (this.m_screen_coords) {
-            //setorigin(this, this.origin + dt * autocvar_cl_damagetext_2d_velocity);
-            //screen_pos = this.origin;
             screen_pos = this.origin + since_hit * autocvar_cl_damagetext_2d_velocity;
         } else {
-            //setorigin(this, this.origin + dt * autocvar_cl_damagetext_velocity);
-            //screen_pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
             screen_pos = project_3d_to_2d(this.origin + since_hit * autocvar_cl_damagetext_velocity) + autocvar_cl_damagetext_offset;
         }
         if (screen_pos.z >= 0 && size > 0) {
@@ -223,10 +213,6 @@ NET_HANDLE(damagetext, bool isNew)
         vector screen_pos = '0 0 0';
         screen_pos.x = vid_conwidth * autocvar_cl_damagetext_2d_pos.x;
         screen_pos.y = vid_conheight * autocvar_cl_damagetext_2d_pos.y;
-        /*LOG_INFOF("%d %d %v\n", autocvar_cl_damagetext_2d_pos.x, autocvar_cl_damagetext_2d_pos.y, screen_pos);
-        LOG_INFOF("%d %d %v\n", autocvar_cl_damagetext_2d_pos_x, autocvar_cl_damagetext_2d_pos_y, screen_pos);
-        float a = autocvar_cl_damagetext_2d_pos.x;
-        LOG_INFOF("%d %v\n", a, autocvar_cl_damagetext_2d_pos);*/
 
         IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {
             DamageText_update(it, screen_pos, it.m_healthdamage + health, it.m_armordamage + armor, it.m_potential_damage + potential_damage, deathtype);
