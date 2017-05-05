@@ -57,9 +57,9 @@ CLASS(DamageText, Object)
         //this.time_prev = time;
         //this.m_size -= dt * this.m_shrink_rate * this.m_size; // TODO this is wrong
         //this.alpha -= dt * this.fade_rate;
-        float dt = time - this.hit_time;
-        float size = this.m_size - dt * this.m_shrink_rate * this.m_size;
-        float alpha_ = this.alpha - dt * this.fade_rate;
+        float since_hit = time - this.hit_time;
+        float size = this.m_size - since_hit * this.m_shrink_rate * this.m_size;
+        float alpha_ = this.alpha - since_hit * this.fade_rate;
         if (alpha_ < 0) {
             delete(this);
             return;
@@ -68,11 +68,11 @@ CLASS(DamageText, Object)
         if (this.m_screen_coords) {
             //setorigin(this, this.origin + dt * autocvar_cl_damagetext_2d_velocity);
             //screen_pos = this.origin;
-            screen_pos = this.origin + dt * autocvar_cl_damagetext_2d_velocity;
+            screen_pos = this.origin + since_hit * autocvar_cl_damagetext_2d_velocity;
         } else {
             //setorigin(this, this.origin + dt * autocvar_cl_damagetext_velocity);
             //screen_pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
-            screen_pos = project_3d_to_2d(this.origin + dt * autocvar_cl_damagetext_velocity) + autocvar_cl_damagetext_offset;
+            screen_pos = project_3d_to_2d(this.origin + since_hit * autocvar_cl_damagetext_velocity) + autocvar_cl_damagetext_offset;
         }
         if (screen_pos.z >= 0 && size > 0) {
             screen_pos.z = 0;
