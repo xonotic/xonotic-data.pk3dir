@@ -200,7 +200,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector hitloc, force, endpoint, dir;
-	entity ent, endent;
+	entity endent;
 	float endq3surfaceflags;
 	float totaldmg;
 	entity o;
@@ -265,13 +265,10 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	endq3surfaceflags = trace_dphitq3surfaceflags;
 
 	// find all the entities the railgun hit and restore their solid state
-	ent = findfloat(NULL, railgunhit, true);
-	while (ent)
+	FOREACH_ENTITY_FLOAT(railgunhit, true,
 	{
-		// restore their solid type
-		ent.solid = ent.railgunhitsolidbackup;
-		ent = findfloat(ent, railgunhit, true);
-	}
+		it.solid = it.railgunhitsolidbackup;
+	});
 
 	// spawn a temporary explosion entity for RadiusDamage calls
 	//explosion = spawn();
@@ -304,34 +301,30 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	}
 
 	// find all the entities the railgun hit and hurt them
-	ent = findfloat(NULL, railgunhit, true);
-	while (ent)
+	FOREACH_ENTITY_FLOAT(railgunhit, true,
 	{
 		// get the details we need to call the damage function
-		hitloc = ent.railgunhitloc;
+		hitloc = it.railgunhitloc;
 
-		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
-		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
+		f = ExponentialFalloff(mindist, maxdist, halflifedist, it.railgundistance);
+		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, it.railgundistance);
 
-		if(accuracy_isgooddamage(this, ent))
+		if(accuracy_isgooddamage(this, it))
 			totaldmg += bdamage * f;
 
 		// apply the damage
-		if (ent.takedamage)
-			Damage (ent, this, this, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
+		if (it.takedamage)
+			Damage (it, this, this, bdamage * f, deathtype, hitloc, it.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin(explosion, hitloc);
 		//RadiusDamage (explosion, this, 10, 0, 50, NULL, NULL, 300, deathtype);
 
-		ent.railgunhitloc = '0 0 0';
-		ent.railgunhitsolidbackup = SOLID_NOT;
-		ent.railgunhit = false;
-		ent.railgundistance = 0;
-
-		// advance to the next entity
-		ent = findfloat(ent, railgunhit, true);
-	}
+		it.railgunhitloc = '0 0 0';
+		it.railgunhitsolidbackup = SOLID_NOT;
+		it.railgunhit = false;
+		it.railgundistance = 0;
+	});
 
 	// calculate hits and fired shots for hitscan
 	accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, min(bdamage, totaldmg));
