@@ -191,7 +191,7 @@ ENDCLASS(DamageText)
 
 NET_HANDLE(damagetext, bool isNew)
 {
-    int server_entity_index = ReadShort();
+    int server_entity_index = ReadByte();
     int deathtype = ReadInt24_t();
     int flags = ReadByte();
     bool friendlyfire = flags & DTFLAG_SAMETEAM;

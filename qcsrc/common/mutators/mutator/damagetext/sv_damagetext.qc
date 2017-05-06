@@ -33,7 +33,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
-            WriteEntity(MSG_ONE, hit);
+            WriteByte(MSG_ONE, etof(hit));
             WriteInt24_t(MSG_ONE, deathtype);
             WriteByte(MSG_ONE, flags);
 
