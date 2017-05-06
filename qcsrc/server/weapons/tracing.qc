@@ -199,33 +199,21 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 
 void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
-	vector hitloc, force, endpoint, dir;
-	entity endent;
-	float endq3surfaceflags;
-	float totaldmg;
-	entity o;
+	entity pseudoprojectile = NULL;
 
-	float length;
-	vector beampos;
-	string snd;
-	entity pseudoprojectile;
-	float f, ffs;
-
-	pseudoprojectile = NULL;
-
-	dir = normalize(end - start);
-	length = vlen(end - start);
-	force = dir * bforce;
+	vector dir = normalize(end - start);
+	float length = vlen(end - start);
+	vector force = dir * bforce;
 
 	// go a little bit into the wall because we need to hit this wall later
 	end = end + dir;
 
-	totaldmg = 0;
+	float totaldmg = 0;
 
 	// trace multiple times until we hit a wall, each obstacle will be made
 	// non-solid so we can hit the next, while doing this we spawn effects and
 	// note down which entities were hit so we can damage them later
-	o = this;
+	entity o = this;
 	while (1)
 	{
 		if(CS(this).antilag_debug)
@@ -260,9 +248,9 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		trace_ent.solid = SOLID_NOT;
 	}
 
-	endpoint = trace_endpos;
-	endent = trace_ent;
-	endq3surfaceflags = trace_dphitq3surfaceflags;
+	vector endpoint = trace_endpos;
+	entity endent = trace_ent;
+	float endq3surfaceflags = trace_dphitq3surfaceflags;
 
 	// find all the entities the railgun hit and restore their solid state
 	FOREACH_ENTITY_FLOAT(railgunhit, true,
@@ -282,17 +270,15 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 			{
 				msg_entity = it;
 				// nearest point on the beam
-				beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
+				vector beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
 
-				f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
+				float f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
 				if(f <= 0)
 					continue;
 
-				snd = SND(NEXWHOOSH_RANDOM());
-
 				if(!pseudoprojectile)
 					pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTEN_NONE);
+				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
 			}
 		));
 
@@ -304,17 +290,17 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	FOREACH_ENTITY_FLOAT(railgunhit, true,
 	{
 		// get the details we need to call the damage function
-		hitloc = it.railgunhitloc;
+		vector hitloc = it.railgunhitloc;
 
-		f = ExponentialFalloff(mindist, maxdist, halflifedist, it.railgundistance);
-		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, it.railgundistance);
+		float foff = ExponentialFalloff(mindist, maxdist, halflifedist, it.railgundistance);
+		float ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, it.railgundistance);
 
 		if(accuracy_isgooddamage(this, it))
-			totaldmg += bdamage * f;
+			totaldmg += bdamage * foff;
 
 		// apply the damage
 		if (it.takedamage)
-			Damage (it, this, this, bdamage * f, deathtype, hitloc, it.railgunforce * ffs);
+			Damage (it, this, this, bdamage * foff, deathtype, hitloc, it.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin(explosion, hitloc);
