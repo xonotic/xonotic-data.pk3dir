@@ -752,7 +752,7 @@ void Surv_RemovePlayerFromAliveList(entity player, int teamnum)
 				{
 					sound(NULL, CH_TRIGGER, SND_SURV_1_FRAG_LEFT,
 						VOL_BASE, ATTEN_NONE);
-					FOREACH_CLIENT(IS_PLAYER(it),
+					FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 					{
 						if (it.team == surv_defenderteam)
 						{
@@ -825,7 +825,7 @@ void Surv_CountAlivePlayers()
 		case 1:
 		{
 			sound(NULL, CH_TRIGGER, SND_SURV_1_FRAG_LEFT, VOL_BASE, ATTEN_NONE);
-			FOREACH_CLIENT(IS_PLAYER(it),
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 			{
 				if (it.team == surv_defenderteam)
 				{
@@ -1695,8 +1695,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 	LOG_TRACE("Survival: PlayerSpawn, player = ", player.netname);
 	player.surv_state = SURVIVAL_STATE_PLAYING;
-	//Surv_CountAlivePlayers();
-	Surv_AddPlayerToAliveList(player, player.team);
 	Surv_DeterminePlayerModel(player);
 	Surv_GiveStartWeapons(player);
 	switch (player.team)
@@ -1746,6 +1744,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 			break;
 		}
 	}
+	//Surv_CountAlivePlayers();
+	Surv_AddPlayerToAliveList(player, player.team);
 }
 
 /// \brief UGLY HACK. This is called every frame to keep player model correct.
