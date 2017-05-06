@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-03 23:38+0000\n"
+"PO-Revision-Date: 2017-05-06 01:59+0000\n"
 "Last-Translator: Vitama Piru Leta <vitamanrules@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -1467,10 +1467,11 @@ msgstr "IA"
 #: qcsrc/common/minigames/minigame/pong.qc:587
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
+"Pulsa ^1Start Match^7 para empezar la partida con los jugadores actuales"
 
 #: qcsrc/common/minigames/minigame/pong.qc:651
 msgid "Start Match"
-msgstr ""
+msgstr "Comenzar Partida"
 
 #: qcsrc/common/minigames/minigame/pong.qc:652
 msgid "Add AI player"
@@ -1486,6 +1487,8 @@ msgid ""
 "You lost the game!\n"
 "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr ""
+"¡Has perdido la partida!\n"
+"¡Selecciona \"^1Next Match^7\" en el menú para la revancha!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:325
@@ -1493,21 +1496,24 @@ msgid ""
 "You win!\n"
 "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
+"¡Has ganado!\n"
+"¡Selecciona \"^1Next Match^7\" en el menú para empezar una nueva partida!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
+"¡Selecciona \"^1Next Match^7\" en el menú para empezar una nueva partida!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:451
 #: qcsrc/common/minigames/minigame/ttt.qc:332
 msgid "Wait for your opponent to confirm the rematch"
-msgstr ""
+msgstr "Espera a que tu oponente confirme la revancha"
 
 #: qcsrc/common/minigames/minigame/pp.qc:582
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Next Match"
-msgstr "Siguiente encuentro"
+msgstr "Siguiente Partida"
 
 #: qcsrc/common/minigames/minigame/ps.qc:478
 #, c-format
@@ -1524,7 +1530,7 @@ msgstr "¡Bien hecho, has ganado!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:494
 msgid "Jump a piece over another to capture it"
-msgstr ""
+msgstr "Salta una pieza sobre otra para capturarla"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:666
 msgid "Single Player"
@@ -1542,7 +1548,7 @@ msgstr "Púa de mago"
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Shambler"
-msgstr ""
+msgstr "Shambler"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -1582,7 +1588,7 @@ msgstr "Velocidad"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:43
 msgid "Medic"
-msgstr "Medico"
+msgstr "Medicina"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:54
 msgid "Bash"
@@ -1596,7 +1602,7 @@ msgstr "Vampiro"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:70
 msgid "Disability"
-msgstr "Deshabilitado"
+msgstr "Descapacitado"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:78
 msgid "Vengeance"
@@ -1608,7 +1614,7 @@ msgstr "Salto"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:95
 msgid "Invisible"
-msgstr "Invicible"
+msgstr "Invisible"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:104
 msgid "Inferno"
@@ -1616,7 +1622,7 @@ msgstr "Infierno"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:112
 msgid "Swapper"
-msgstr ""
+msgstr "Swapper"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:120
 msgid "Magnet"
@@ -1624,7 +1630,7 @@ msgstr "Imán"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:128
 msgid "Luck"
-msgstr ""
+msgstr "Suerte"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:136
 msgid "Flight"
@@ -1636,27 +1642,27 @@ msgstr "Beneficio"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:280
 msgid "Damage text"
-msgstr ""
+msgstr "Texto de daño"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:290
 msgid "Draw damage numbers"
-msgstr ""
+msgstr "Dibujar números de daño"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:292
 msgid "Font size minimum:"
-msgstr ""
+msgstr "Tamaño de fuente mínimo:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:297
 msgid "Font size maximum:"
-msgstr ""
+msgstr "Tamaño de fuente máximo:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:302
 msgid "Accumulate range:"
-msgstr ""
+msgstr "Alcance acumulado:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:307
 msgid "Lifetime:"
-msgstr ""
+msgstr "Tiempo de vida:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:312
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:322
@@ -1670,7 +1676,7 @@ msgstr "Color:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:319
 msgid "Draw damage numbers for friendly fire"
-msgstr ""
+msgstr "Dibujar números de daño para fuego amigo"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:56
 msgid "Extra life"
@@ -1678,47 +1684,47 @@ msgstr "Vida extra"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:75
 msgid "Invisibility"
-msgstr "Invicibilidad"
+msgstr "Invisivilidad"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
-msgstr ""
+msgstr "Granada Napalm"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:26
 msgid "Ice grenade"
-msgstr ""
+msgstr "Granada de Hielo"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:34
 msgid "Translocate grenade"
-msgstr ""
+msgstr "Granada de Translocación"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:42
 msgid "Spawn grenade"
-msgstr ""
+msgstr "Granada de Aparición"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:50
 msgid "Heal grenade"
-msgstr ""
+msgstr "Granada de curación"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:58
 msgid "Monster grenade"
-msgstr ""
+msgstr "Granada monstruo"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:66
 msgid "Entrap grenade"
-msgstr ""
+msgstr "Granada trampa"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:32
 msgid "Grenade"
-msgstr ""
+msgstr "Granada"
 
 #: qcsrc/common/mutators/mutator/overkill/hmg.qh:17
 msgid "Heavy Machine Gun"
-msgstr ""
+msgstr "Ametralladora Pesada"
 
 #: qcsrc/common/mutators/mutator/overkill/rpc.qh:17
 msgid "Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Motosierra Propulsada por Cohetes"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -1726,7 +1732,7 @@ msgstr "Punto de encuentro"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr "Ayudame!"
+msgstr "¡Ayudame!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
@@ -1738,15 +1744,15 @@ msgstr "PELIGRO"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:8
 msgid "Frozen!"
-msgstr "Congelado!"
+msgstr "¡Congelado!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Item"
-msgstr ""
+msgstr "Artículo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:12
 msgid "Checkpoint"
-msgstr "Punto de revisión"
+msgstr "Punto de control"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:252
@@ -1773,19 +1779,19 @@ msgstr "Empujar"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Flag carrier"
-msgstr "Acarreador de bandera"
+msgstr "Portador de bandera"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Enemy carrier"
-msgstr "Acarreador enemigo"
+msgstr "Portador enemigo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:23
 msgid "Dropped flag"
-msgstr "Bandera suelta"
+msgstr "Bandera perdida"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "White base"
-msgstr ""
+msgstr "Base blanca"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Red base"
@@ -1797,15 +1803,15 @@ msgstr "Base azul"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "Yellow base"
-msgstr ""
+msgstr "Base amarilla"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Pink base"
-msgstr ""
+msgstr "Base rosa"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr ""
+msgstr "Devuele la vandera aquí"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -1820,7 +1826,7 @@ msgstr "Punto de control"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 msgid "Dropped key"
-msgstr "Llave suelta"
+msgstr "Llave perdida"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
@@ -1828,7 +1834,7 @@ msgstr "Llave suelta"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
 msgid "Key carrier"
-msgstr "Acarreador de la llave"
+msgstr "Portador de la llave"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
@@ -1837,11 +1843,11 @@ msgstr "Corre aquí"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Ball"
-msgstr "Pelota"
+msgstr "Bola"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
-msgstr "Acarreador de la pelota"
+msgstr "Portador de la bola"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
@@ -1854,11 +1860,11 @@ msgstr "Generador"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Weapon"
-msgstr ""
+msgstr "Arma"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 msgid "Monster"
-msgstr ""
+msgstr "Monstruo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Vehicle"
@@ -1866,7 +1872,7 @@ msgstr "Vehiculo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
-msgstr ""
+msgstr "¡Intruso!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Tagged"
@@ -1889,13 +1895,13 @@ msgstr "^1Avisos del servidor:"
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
-"^F4NOTA: ^BGEl chat de espectador no se envía a los jugadores durante el "
-"juego"
+"^F4NOTA: ^BGEl chat de espectador no se envía a los jugadores durante la "
+"partida"
 
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr "^BG%s^BG capturo la ^TC^TT^BG bandera"
+msgstr "^BG%s^BG capturó la bandera ^TC^TT^BG"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -1903,18 +1909,18 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG capturo la ^TC^TT^BG bandera en ^F1%s^BG segundos, rompiendo ^BG"
+"^BG%s^BG capturó la bandera ^TC^TT^BG en ^F1%s^BG segundos, rompiendo ^BG"
 "%s^BG's el record anterior de ^F2%s^BG segundos"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr ""
+msgstr "^BG%s^BG ha capturado la bandera"
 
 #: qcsrc/common/notifications/all.inc:244
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr "^BG%s^BG capturo la ^TC^TT^BG bandera en ^F1%s^BG segundos"
+msgstr "^BG%s^BG capturó la ^TC^TT^BG bandera en ^F1%s^BG segundos"
 
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
@@ -1922,77 +1928,77 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
-"^BG%s^BG capturo la ^TC^TT^BG bandera en ^F2%s^BG segundos, fallando para "
-"romper ^BG%s^BG's record anterior de ^F1%s^BG segundos"
+"^BG%s^BG capturó la bandera ^TC^TT^BG en ^F2%s^BG segundos, fallando al "
+"romper ^BG%s^BG's el record anterior de ^F1%s^BG segundos"
 
 #: qcsrc/common/notifications/all.inc:246
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr "^BGLa ^TC^TT^BG bandera fue regresada a su base por su dueño"
+msgstr "^BGLa ^TC^TT^BG bandera fue devuelta a su base por su dueño"
 
 #: qcsrc/common/notifications/all.inc:247
 msgid "^BGThe flag was returned by its owner"
-msgstr ""
+msgstr "^BGLa bandera fue devuelta por su dueño"
 
 #: qcsrc/common/notifications/all.inc:248
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr "^BGLa ^TC^TT^BG bandera fue destruida y regresada a su base"
+msgstr "^BGLa ^TC^TT^BG bandera fue destruida y devuelta a la base"
 
 #: qcsrc/common/notifications/all.inc:249
 msgid "^BGThe flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGLa bandera fué destruida y devuelta a la base"
 
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr "^BGLa ^TC^TT^BG bandera se aventada en la base y ha regresado sola"
+msgstr "^BGLa bandera ^TC^TT^BG fué soltada en la base y volvió"
 
 #: qcsrc/common/notifications/all.inc:251
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BGLa bandera fue soltada en la base y volvió"
 
 #: qcsrc/common/notifications/all.inc:252
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
 msgstr ""
-"^BGTLa ^TC^TT^BG bandera cayó en algún lugar y no puede alcanzar a regresar "
-"a la base"
+"^BGTLa bandera ^TC^TT^BG cayó en algún lugar y no pudo ser alcanzada y "
+"devuelta a la base"
 
 #: qcsrc/common/notifications/all.inc:253
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
 msgstr ""
+"^BGLa bandera cayó en algún lugar y no pudo ser alcanzada y devuelta a la "
+"base"
 
 #: qcsrc/common/notifications/all.inc:254
 #, c-format
 msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
-msgstr ""
-"^BGLa ^TC^TT^BG bandera se desespero despues de ^F1%.2f^BG segundos y se "
-"regreso sola"
+msgstr "^BGLa bandera ^TC^TT^BG se desesperó tras ^F1%.2f^BG segundos y volvió"
 
 #: qcsrc/common/notifications/all.inc:255
 #, c-format
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
-msgstr ""
+msgstr "^BGLa bandera se desesperó tras ^F1%.2f^BG segundos y volvió"
 
 #: qcsrc/common/notifications/all.inc:256
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr "^BGLa ^TC^TT^BG bandera fue regresada a la base"
+msgstr "^BGLa bandera ^TC^TT^BG ha vuelto a la base"
 
 #: qcsrc/common/notifications/all.inc:257
 msgid "^BGThe flag has returned to the base"
-msgstr ""
+msgstr "^BGLa bandera ha vuelto a la base"
 
 #: qcsrc/common/notifications/all.inc:258
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr "^BG%s^BG perdió la ^TC^TT^BG bandera"
+msgstr "^BG%s^BG perdió la bandera ^TC^TT^BG "
 
 #: qcsrc/common/notifications/all.inc:259
 #, c-format
 msgid "^BG%s^BG lost the flag"
-msgstr ""
+msgstr "^BG%s^BG perdió la bandera"
 
 #: qcsrc/common/notifications/all.inc:260
 #, c-format
@@ -2002,50 +2008,51 @@ msgstr "^BG%s^BG tiene la ^TC^TT^BG bandera"
 #: qcsrc/common/notifications/all.inc:261
 #, c-format
 msgid "^BG%s^BG got the flag"
-msgstr ""
+msgstr "^BG%s^BG tiene la bandera"
 
 #: qcsrc/common/notifications/all.inc:262
 #: qcsrc/common/notifications/all.inc:263
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr "^BG%s^BG regresó la ^TC^TT^BG bandera"
+msgstr "^BG%s^BG devolvió la ^TC^TT^BG bandera"
 
 #: qcsrc/common/notifications/all.inc:265
 #: qcsrc/common/notifications/all.inc:553
 #, c-format
 msgid "^F2Throwing coin... Result: %s^F2!"
-msgstr "^F2Tirando moneda... Resulto %s^F2!"
+msgstr "^F2Tirando moneda... Resultado: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:267
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr "^BGNo tienes mas combustible para el ^F1Jetpack"
+msgstr "^BGNo tienes mas combustible para la ^F1Mochila propulsora"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
 msgstr ""
+"^F2Te falta un UID, las opciones superspec no serán guardadas/restaudaras"
 
 #: qcsrc/common/notifications/all.inc:271
 msgid "^F1Round already started, you will join the game in the next round"
-msgstr "^F1La ronda ya empezó, entraras al juego en la siguiente ronda"
+msgstr "^F1La ronda ya ha empezado, entrarás al juego en la siguiente ronda"
 
 #: qcsrc/common/notifications/all.inc:272
 msgid "^F2You will spectate in the next round"
-msgstr "^F2Tendras que mirar la siguiente ronda"
+msgstr "^F2Tendrás que espectar en la siguiente ronda"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue asesinado por ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:274
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 se marcó por ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:275
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 fue eliminado injustamente por ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 fué eliminado injustamente por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:276
 #, c-format
@@ -2060,12 +2067,12 @@ msgstr "^BG%s%s^K1 fue castigado por ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:278
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
-msgstr "^BG%s%s^K1 se siente calientito por ^BG%s^K1's fuego^K1%s%s"
+msgstr "^BG%s%s^K1 sintió calorcito de ^BG%s^K1's fuego^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:278
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 fue crujientemente quemado por ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 fue frito por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:279
 #, c-format
@@ -2075,326 +2082,336 @@ msgstr "^BG%s%s^K1 fue cocinado por ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue empujado a un monstruo por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1 fue explotado por ^BG%s^K1's Granda%s%s"
+msgstr "^BG%s%s^K1 fue explotado por ^BG%s^K1 Granda%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
-msgstr "^BG%s%s^K1 se acerco demasiado a la explosión de la napalm %s%s"
+msgstr "^BG%s%s^K1 se acercó demasiado a una explosión de napalm %s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue calcinado por la Granada de Napalm de ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue explotado por la Granada de Hielo de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue congelado por la Granada de Hielo de ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
 msgstr ""
+"^BG%s%s^K1 no ha sido curado por la Granada de Curación de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue enviado al espacio por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue adelgazado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue conservado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 intentó ocupar el espacio de teletransporte de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue telegrafiado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:290
 #, c-format
 msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 murió en un accidente con ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 quedó atrapado en la explosión cuando el Bumblebee de ^BG%s^K1 "
+"explotó%s%s"
 
 #: qcsrc/common/notifications/all.inc:292
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 vió las preciosas luces del Bumblebee de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:293
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue aplastado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s"
 msgstr ""
+"^BG%s%s^K1 fue victima del bombardeo de racimo del Raptor de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:295
 #, c-format
 msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 no pudo resistir los blobs morados de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:296
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 quedó atrapado en la explosión cuando el Raptor de ^BG%s^K1 "
+"explotó%s%s"
 
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 quedó atrapado en la explosión cuando el Robot Araña de ^BG%s^K1 "
+"explotó%s%s"
 
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue despedazado por el Robot Araña de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue explotado a bits por el Robot Araña de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 quedó atrapado en la explosión cuando el Racer de ^BG%s^K1 explotó"
+"%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fué atornillado por el Racer de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 no pudo encontrar refugio del Racer de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue lanzado a un mundo de dolor por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s^K1 was moved into the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue movido al  %s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
 msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se hicieron enemigos Del Señor del Juego en Equipo%s%s"
 
 #: qcsrc/common/notifications/all.inc:307
 #, c-format
 msgid "^BG%s^K1 thought they found a nice camping ground%s%s"
-msgstr ""
+msgstr "^BG%s^K1 pensaron que habían encontrado una buena zona de camping%s%s"
 
 #: qcsrc/common/notifications/all.inc:308
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themself%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se eliminó injustamente a si mismo%s%s"
 
 #: qcsrc/common/notifications/all.inc:310
 #, c-format
 msgid "^BG%s^K1 couldn't catch their breath%s%s"
-msgstr ""
+msgstr "^BG%s^K1 no podian respirar %s%s"
 
 #: qcsrc/common/notifications/all.inc:310
 #, c-format
 msgid "^BG%s^K1 was in the water for too long%s%s"
-msgstr ""
+msgstr "^BG%s^K1 estuvo en el agua demasiado tiempo%s%s"
 
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
-msgstr ""
+msgstr "^BG%s^K1 chocó contra el suelo con un poquito demasiada fuerza%s%s"
 
 #: qcsrc/common/notifications/all.inc:311
 #, c-format
 msgid "^BG%s^K1 hit the ground with a crunch%s%s"
-msgstr ""
+msgstr "^BG%s^K1 chocó contra el suelo con un crujido%s%s"
 
 #: qcsrc/common/notifications/all.inc:312
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se volvió un poco demasiado crujiente%s%s"
 
 #: qcsrc/common/notifications/all.inc:312
 #, c-format
 msgid "^BG%s^K1 felt a little hot%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sintió un poco de calor%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
 msgid "^BG%s^K1 died%s%s"
-msgstr ""
+msgstr "^BG%s^K1 murió%s%s"
 
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1 found a hot place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 encontró un lugar caliente%s%s"
 
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1 turned into hot slag%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se convirtió en escoria caliente%s%s"
 
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
 msgid "^BG%s^K1 was exploded by a Mage%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue explotado por un Mago%s%s"
 
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr ""
+msgstr "Las entrañas de ^BG%s^K1 fueron sacads por un  Shambler%s%s"
 
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
 msgid "^BG%s^K1 was smashed by a Shambler%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue machacado por un Shambler%s%s"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Shambler%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue borrado por un Shambler%s%s"
 
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1 was bitten by a Spider%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue mordido por una Araña%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 was fireballed by a Wyvern%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue alcanzado por una bola de fuego de un Guiverno%s%s"
 
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
 msgid "^BG%s^K1 joins the Zombies%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se une a los Zombis%s%s"
 
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr ""
+msgstr "^BG%s^K1 recibió lecciones de Kung Fu de un Zombi%s%s"
 
 #: qcsrc/common/notifications/all.inc:323
 #: qcsrc/common/notifications/all.inc:325
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
-msgstr ""
+msgstr "^BG%s^K1 dominó el arte de auto-nadearse%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 decidió mirar los resultados de su explosión de napalm%s%s"
 
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
 msgid "^BG%s^K1 was burned to death by their own Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue calcinado por su propia Granada de Napalm%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid "^BG%s^K1 felt a little chilly%s%s"
-msgstr ""
+msgstr "^BG%s^K1 sintió un poco de fresco%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid "^BG%s^K1 was frozen to death by their own Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue congelado por su propia Granada de Hielo%s%s"
 
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr ""
+msgstr "La Granada de Curación de ^BG%s^K1 no los curó completamente %s%s"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
 msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?"
-msgstr ""
+msgstr "^BG%s^K1 murió%s%s. ¿De que sirve vivir sin munición?"
 
 #: qcsrc/common/notifications/all.inc:328
 #, c-format
 msgid "^BG%s^K1 ran out of ammo%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se quedó sin munición%s%s"
 
 #: qcsrc/common/notifications/all.inc:329
 #, c-format
 msgid "^BG%s^K1 rotted away%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se pudrió%s%s"
 
 #: qcsrc/common/notifications/all.inc:330
 #, c-format
 msgid "^BG%s^K1 became a shooting star%s%s"
-msgstr ""
+msgstr "^BG%s^K1 se convirtió en una estrella fugaz%s%s"
 
 #: qcsrc/common/notifications/all.inc:331
 #, c-format
 msgid "^BG%s^K1 was slimed%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue adelgazado%s%s"
 
 #: qcsrc/common/notifications/all.inc:332
 #, c-format
 msgid "^BG%s^K1 couldn't take it anymore%s%s"
-msgstr ""
+msgstr "^BG%s^K1 no podía soportarlo más%s%s"
 
 #: qcsrc/common/notifications/all.inc:333
 #, c-format
 msgid "^BG%s^K1 is now preserved for centuries to come%s%s"
-msgstr ""
+msgstr "^BG%s^K1 está ahora conservado por siglos%s%s"
 
 #: qcsrc/common/notifications/all.inc:334
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 cambio al %s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid "^BG%s^K1 died in an accident%s%s"
-msgstr ""
+msgstr "^BG%s^K1 murió en un accidente%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 encontró una torreta%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
 msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue explotado por una torreta eWheel%s%s"
 
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
@@ -5983,7 +6000,7 @@ msgstr "Bot"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:153
 msgid "Beginner"
-msgstr "Iniciado"
+msgstr "Principiante"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:154
 msgid "You will win"
@@ -8906,7 +8923,7 @@ msgstr "recargar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:49
 msgid "drop weapon / throw nade"
-msgstr ""
+msgstr "soltar arma / tirar granada"
 
 #: qcsrc/menu/xonotic/keybinder.qc:77
 msgid "hold zoom"
@@ -8926,11 +8943,11 @@ msgstr "captura de pantalla"
 
 #: qcsrc/menu/xonotic/keybinder.qc:81
 msgid "maximize radar"
-msgstr ""
+msgstr "maximizar radar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:82
 msgid "3rd person view"
-msgstr ""
+msgstr "Vista 3ª persona"
 
 #: qcsrc/menu/xonotic/keybinder.qc:83
 msgid "enter spectator mode"
@@ -8986,15 +9003,15 @@ msgstr "soltar llave / soltar bandera"
 
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "quick menu"
-msgstr ""
+msgstr "menu rápido"
 
 #: qcsrc/menu/xonotic/keybinder.qc:107
 msgid "sandbox menu"
-msgstr ""
+msgstr "menu sandbox"
 
 #: qcsrc/menu/xonotic/keybinder.qc:108
 msgid "drag object"
-msgstr ""
+msgstr "arrastrar objeto"
 
 #: qcsrc/menu/xonotic/keybinder.qc:110
 msgid "User defined"
@@ -9034,7 +9051,7 @@ msgstr "<ningún modelo encontrado>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:273
 msgid "Favorite"
-msgstr ""
+msgstr "Favorito"
 
 #: qcsrc/menu/xonotic/serverlist.qc:274
 msgid ""
@@ -9050,7 +9067,7 @@ msgstr "Ping"
 
 #: qcsrc/menu/xonotic/serverlist.qc:764
 msgid "Hostname"
-msgstr ""
+msgstr "Nombre de host"
 
 #: qcsrc/menu/xonotic/serverlist.qc:765
 msgid "Map"
@@ -9071,7 +9088,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:1060
 msgid "encryption:"
-msgstr ""
+msgstr "cifrado:"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1061
 #, c-format
@@ -9081,20 +9098,20 @@ msgstr ""
 #: qcsrc/menu/xonotic/serverlist.qc:1063
 #, c-format
 msgid "modified settings"
-msgstr ""
+msgstr "configuración modificada"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1063
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "configuración oficial"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1065
 msgid "stats disabled"
-msgstr ""
+msgstr "estadísticas deshabilitadas"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1065
 msgid "stats enabled"
-msgstr ""
+msgstr "estadísticas habilitadas"
 
 #: qcsrc/menu/xonotic/serverlist.qh:151
 msgid "SLCAT^Favorites"
@@ -9130,7 +9147,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Defrag Mode"
-msgstr ""
+msgstr "SLCAT^Modo Defrag"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<TITLE>"
@@ -9163,32 +9180,32 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_particles.qc:14
 msgid "PART^OMG"
-msgstr ""
+msgstr "PARTE^OMG"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:15
 msgid "PART^Low"
-msgstr ""
+msgstr "PARTE^Bajo"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:16
 msgid "PART^Medium"
-msgstr ""
+msgstr "PARTE^Medio"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:17
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "PART^Normal"
-msgstr ""
+msgstr "PARTE^Normal"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:18
 msgid "PART^High"
-msgstr ""
+msgstr "PARTE^Alto"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:19
 msgid "PART^Ultra"
-msgstr ""
+msgstr "PARTE^Ultra"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:20
 msgid "PART^Ultimate"
-msgstr ""
+msgstr "PARTE^Último"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:13
 msgid ""
@@ -9206,109 +9223,109 @@ msgstr "Resolución de pantalla"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "PART^Slow"
-msgstr ""
+msgstr "PARTE^Lento"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "PART^Fast"
-msgstr ""
+msgstr "PARTE^Rapido"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:16
 msgid "PART^Instant"
-msgstr ""
+msgstr "PARTE^Instante"
 
 #: qcsrc/menu/xonotic/statslist.qc:29
 msgid "January"
-msgstr ""
+msgstr "Enero"
 
 #: qcsrc/menu/xonotic/statslist.qc:30
 msgid "February"
-msgstr ""
+msgstr "Febrero"
 
 #: qcsrc/menu/xonotic/statslist.qc:31
 msgid "March"
-msgstr ""
+msgstr "Marzo"
 
 #: qcsrc/menu/xonotic/statslist.qc:32
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #: qcsrc/menu/xonotic/statslist.qc:33
 msgid "May"
-msgstr ""
+msgstr "Mayo"
 
 #: qcsrc/menu/xonotic/statslist.qc:34
 msgid "June"
-msgstr ""
+msgstr "Junio"
 
 #: qcsrc/menu/xonotic/statslist.qc:35
 msgid "July"
-msgstr ""
+msgstr "Julio"
 
 #: qcsrc/menu/xonotic/statslist.qc:36
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #: qcsrc/menu/xonotic/statslist.qc:37
 msgid "September"
-msgstr ""
+msgstr "Sectiembre"
 
 #: qcsrc/menu/xonotic/statslist.qc:38
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #: qcsrc/menu/xonotic/statslist.qc:39
 msgid "November"
-msgstr ""
+msgstr "Noviembre"
 
 #: qcsrc/menu/xonotic/statslist.qc:40
 msgid "December"
-msgstr ""
+msgstr "Diciembre"
 
 #: qcsrc/menu/xonotic/statslist.qc:96
 msgid "Joined:"
-msgstr ""
+msgstr "Unido:"
 
 #: qcsrc/menu/xonotic/statslist.qc:103
 msgid "Last_Seen:"
-msgstr ""
+msgstr "Última_vez_visto:"
 
 #: qcsrc/menu/xonotic/statslist.qc:110
 msgid "Time_Played:"
-msgstr ""
+msgstr "Tiempo_Jugado:"
 
 #: qcsrc/menu/xonotic/statslist.qc:117
 msgid "Favorite_Map:"
-msgstr ""
+msgstr "Mapa_Favorito:"
 
 #: qcsrc/menu/xonotic/statslist.qc:201 qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "%s_Matches:"
-msgstr ""
+msgstr "%s_Partidas:"
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 #, c-format
 msgid "%s_ELO:"
-msgstr ""
+msgstr "%s_ELO:"
 
 #: qcsrc/menu/xonotic/statslist.qc:215
 #, c-format
 msgid "%s_Rank:"
-msgstr ""
+msgstr "%s_Rango:"
 
 #: qcsrc/menu/xonotic/statslist.qc:222
 #, c-format
 msgid "%s_Percentile:"
-msgstr ""
+msgstr "%s_Percentil:"
 
 #: qcsrc/menu/xonotic/statslist.qc:231
 #, c-format
 msgid "%s_Favorite_Map:"
-msgstr ""
+msgstr "%s_Mapa_Favorito:"
 
 #: qcsrc/menu/xonotic/statslist.qc:246
 #, c-format
 msgid "%d (unranked)"
-msgstr ""
+msgstr "%d (sin clasificar)"
 
 #: qcsrc/menu/xonotic/util.qc:417
 #, c-format
