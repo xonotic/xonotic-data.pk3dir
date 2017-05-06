@@ -85,8 +85,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 				continue;
 			traceline(o, o + '0 0 -1500', true, NULL);
 
-			float d = pointcontents(trace_endpos + '0 0 1');
-			if(d == CONTENT_WATER || d == CONTENT_SLIME || d == CONTENT_LAVA)
+			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(trace_endpos + '0 0 1')) & DPCONTENTS_LIQUIDSMASK)
 				continue;
 			// this tracebox_hits_trigger_hurt call isn't needed:
 			// dropped weapons are removed as soon as they fall on a trigger_hurt
