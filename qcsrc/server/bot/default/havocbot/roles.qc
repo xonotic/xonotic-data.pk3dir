@@ -97,8 +97,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		else
 		{
 			// Ignore items under water
-			traceline(it.origin + it.maxs, it.origin + it.maxs, MOVE_NORMAL, it);
-			if(trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
+			// TODO: can't .waterlevel be used here?
+			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(it.origin + ((it.mins + it.maxs) * 0.5))) & DPCONTENTS_LIQUIDSMASK)
 				continue;
 		}
 
