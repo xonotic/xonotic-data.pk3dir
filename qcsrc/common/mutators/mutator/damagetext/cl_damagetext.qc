@@ -32,10 +32,7 @@ AUTOCVAR_SAVE(cl_damagetext_2d_alpha_start,         float,  1,          "2D dama
 AUTOCVAR_SAVE(cl_damagetext_2d_alpha_lifetime,      float,  1.5,        "2D damage text lifetime (alpha fading) in seconds");
 AUTOCVAR_SAVE(cl_damagetext_2d_size_lifetime,       float,  3,          "2D damage text lifetime (size shrinking) in seconds");
 AUTOCVAR_SAVE(cl_damagetext_2d_velocity,            vector, '-20 0 0',  "2D damage text move direction (screen coordinates)");
-AUTOCVAR_SAVE(cl_damagetext_2d_overlap_offset,      vector, '0 -20 0',  "Offset 2D damage text by this much to prevent overlapping (screen coordinates)");
-
-entity damagetext_screen_first;
-int damagetext_screen_count = 0;
+AUTOCVAR_SAVE(cl_damagetext_2d_overlap_offset,      vector, '0 -15 0',  "Offset 2D damage text by this much to prevent overlapping (screen coordinates)");
 
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color);
@@ -54,11 +51,14 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, text, string, string_null);
     ATTRIB(DamageText, m_screen_coords, bool, false);
 
+    STATIC_ATTRIB(DamageText, screen_first, DamageText, NULL);
+    STATIC_ATTRIB(DamageText, screen_count, int, 0);
+
     void DamageText_draw2d(DamageText this) {
         float since_hit = time - this.hit_time;
         float size = this.m_size - since_hit * this.m_shrink_rate * this.m_size;
         float alpha_ = this.alpha - since_hit * this.fade_rate;
-        if (alpha_ < 0) {
+        if (alpha_ <= 0 || size <= 0) {
             delete(this);
             return;
         }
@@ -68,7 +68,7 @@ CLASS(DamageText, Object)
         } else {
             screen_pos = project_3d_to_2d(this.origin + since_hit * autocvar_cl_damagetext_velocity) + autocvar_cl_damagetext_offset;
         }
-        if (screen_pos.z >= 0 && size > 0) {
+        if (screen_pos.z >= 0) {
             screen_pos.z = 0;
             vector rgb;
             if (this.m_friendlyfire) {
@@ -182,10 +182,11 @@ CLASS(DamageText, Object)
 
     DESTRUCTOR(DamageText) {
         if (this.text) strunzone(this.text);
-        if (this == damagetext_screen_first) {
+        if (this == DamageText_screen_first) {
             // start from 0 offset again, hopefully, others (if any) will have faded away by now
-            damagetext_screen_first = NULL;
-            damagetext_screen_count = 0;
+            DamageText_screen_first = NULL;
+            //damagetext_screen_count = 0;
+            DamageText_screen_count = 0;
         }
     }
 ENDCLASS(DamageText)
@@ -225,14 +226,16 @@ NET_HANDLE(damagetext, bool isNew)
         });
 
         // when hitting multiple enemies, dmgtext would overlap
-        if (damagetext_screen_first == NULL) {
+        if (DamageText_screen_first == NULL) {
             DamageText dt = NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire);
             make_impure(dt);
-            damagetext_screen_first = dt;
-            damagetext_screen_count = 1;
+            DamageText_screen_first = dt;
+            //damagetext_screen_count = 1;
+            DamageText_screen_count = 1;
         } else {
-            screen_pos += autocvar_cl_damagetext_2d_overlap_offset * damagetext_screen_count;
-            damagetext_screen_count++;
+            screen_pos += autocvar_cl_damagetext_2d_overlap_offset * DamageText_screen_count;
+            //damagetext_screen_count++;
+            DamageText_screen_count++;
             make_impure(NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire));
         }
     } else {
