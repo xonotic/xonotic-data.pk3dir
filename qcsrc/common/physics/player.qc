@@ -15,7 +15,7 @@ bool Physics_Valid(string thecvar)
 
 float Physics_ClientOption(entity this, string option, float defaultval)
 {
-	if(IS_REAL_CLIENT(this) && Physics_Valid(this.cvar_cl_physics))
+	if(Physics_Valid(this.cvar_cl_physics))
 	{
 		string s = sprintf("g_physics_%s_%s", this.cvar_cl_physics, option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
