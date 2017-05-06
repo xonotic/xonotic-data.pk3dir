@@ -171,7 +171,6 @@ CLASS(DamageText, Object)
         if (_screen_coords) {
             this.fade_rate = 1 / autocvar_cl_damagetext_2d_alpha_lifetime;
             this.m_shrink_rate = 1 / autocvar_cl_damagetext_2d_size_lifetime;
-            //this.m_shrink_rate = autocvar_cl_damagetext_2d_shrink_rate;
         } else {
             this.fade_rate = 1 / autocvar_cl_damagetext_alpha_lifetime;
             this.m_shrink_rate = 0;
@@ -185,7 +184,6 @@ CLASS(DamageText, Object)
         if (this == DamageText_screen_first) {
             // start from 0 offset again, hopefully, others (if any) will have faded away by now
             DamageText_screen_first = NULL;
-            //damagetext_screen_count = 0;
             DamageText_screen_count = 0;
         }
     }
@@ -230,11 +228,9 @@ NET_HANDLE(damagetext, bool isNew)
             DamageText dt = NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire);
             make_impure(dt);
             DamageText_screen_first = dt;
-            //damagetext_screen_count = 1;
             DamageText_screen_count = 1;
         } else {
             screen_pos += autocvar_cl_damagetext_2d_overlap_offset * DamageText_screen_count;
-            //damagetext_screen_count++;
             DamageText_screen_count++;
             make_impure(NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire));
         }
