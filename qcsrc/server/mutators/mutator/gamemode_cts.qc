@@ -406,6 +406,11 @@ MUTATOR_HOOKFUNCTION(cts, WantWeapon)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(cts, ForbidDropCurrentWeapon)
+{
+	return true;
+}
+
 void cts_Initialize()
 {
 	cts_ScoreRules();
