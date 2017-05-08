@@ -237,6 +237,7 @@ void cvar_changes_init()
 		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("log_file");
+		BADPREFIX("quit_");
 		BADPREFIX("rcon_");
 		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
@@ -345,6 +346,7 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_db_saveasdump");
 		BADCVAR("sv_intermission_cdtrack");
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");

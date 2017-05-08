@@ -76,15 +76,11 @@ spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
 void W_Devastator_Unregister(entity this)
 {
-	if(this.realowner && this.realowner.lastrocket == this)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(this.realowner.(weaponentity).lastrocket == this)
-				this.realowner.(weaponentity).lastrocket = NULL;
-		}
-		// this.realowner.rl_release = 1;
+		.entity weaponentity = weaponentities[slot];
+		if(this.realowner.(weaponentity).lastrocket == this)
+			this.realowner.(weaponentity).lastrocket = NULL;
 	}
 }
 
