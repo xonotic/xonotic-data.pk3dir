@@ -8,8 +8,8 @@ MODEL(MON_MAGE, M_Model("nanomage.dpm"));
 
 CLASS(Mage, Monster)
     ATTRIB(Mage, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Mage, mins, vector, '-36 -36 -24');
-    ATTRIB(Mage, maxs, vector, '36 36 50');
+    ATTRIB(Mage, mins, vector, '-16 -16 -24');
+    ATTRIB(Mage, maxs, vector, '16 16 55');
 #ifdef GAMEQC
     ATTRIB(Mage, m_model, Model, MDL_MON_MAGE);
 #endif
