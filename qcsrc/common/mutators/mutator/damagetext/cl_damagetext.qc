@@ -29,8 +29,8 @@ AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show da
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
 AUTOCVAR_SAVE(cl_damagetext_2d_pos,                 vector, '0.47 0.47 0',     "2D damage text initial position (X and Y between 0 and 1)");
 AUTOCVAR_SAVE(cl_damagetext_2d_alpha_start,         float,  1,          "2D damage text initial alpha");
-AUTOCVAR_SAVE(cl_damagetext_2d_alpha_lifetime,      float,  1.5,        "2D damage text lifetime (alpha fading) in seconds");
-AUTOCVAR_SAVE(cl_damagetext_2d_size_lifetime,       float,  3,          "2D damage text lifetime (size shrinking) in seconds");
+AUTOCVAR_SAVE(cl_damagetext_2d_alpha_lifetime,      float,  1,        "2D damage text lifetime (alpha fading) in seconds");
+AUTOCVAR_SAVE(cl_damagetext_2d_size_lifetime,       float,  2,          "2D damage text lifetime (size shrinking) in seconds");
 AUTOCVAR_SAVE(cl_damagetext_2d_velocity,            vector, '-20 0 0',  "2D damage text move direction (screen coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_2d_overlap_offset,      vector, '0 -15 0',  "Offset 2D damage text by this much to prevent overlapping (screen coordinates)");
 
