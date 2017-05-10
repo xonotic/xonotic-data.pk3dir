@@ -392,6 +392,8 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	float d;
 	vector ringsize, v, t;
 	ringsize = radi * '1 1 0';
+	centre = HUD_Shift(centre);
+	ringsize = HUD_Scale(ringsize);
 
 	float co = cos(f * 2 * M_PI);
 	float si = sin(f * 2 * M_PI);

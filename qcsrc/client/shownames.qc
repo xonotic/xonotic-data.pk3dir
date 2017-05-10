@@ -117,6 +117,7 @@ void Draw_ShowNames(entity this)
 		if (!this.csqcmodel_isdead) a *= f;
 	}
 	if (a < ALPHA_MIN_VISIBLE && gametype != MAPINFO_TYPE_CTS) return;
+	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
 	if (autocvar_hud_shownames_maxdistance)
 	{
 		if (dist >= autocvar_hud_shownames_maxdistance) return;
