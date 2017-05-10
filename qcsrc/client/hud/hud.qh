@@ -2,6 +2,8 @@
 
 #include <common/weapons/_all.qh>
 
+void Hud_Dynamic_Frame();
+
 bool HUD_Radar_Clickable();
 void HUD_Radar_Mouse();
 
