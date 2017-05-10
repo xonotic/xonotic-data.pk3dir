@@ -3,7 +3,7 @@ de    German "Deutsch" 100%
 de_CH German "Deutsch (Schweiz)" 100%
 en    English "English"
 en_AU English "English (Australia)" 86%
-es    Spanish "Español" 67%
+es    Spanish "Español" 81%
 fr    French "Français" 100%
 it    Italian "Italiano" 100%
 hu    Hungarian "Magyar" 55%

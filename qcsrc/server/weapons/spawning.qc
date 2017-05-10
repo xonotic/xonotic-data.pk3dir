@@ -133,6 +133,9 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	if (g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
 
+	if(!this.owner)
+		this.glowmod = wpn.wpcolor;
+
 	GameItem def = wpn.m_pickup;
 	_StartItem(
 		this,

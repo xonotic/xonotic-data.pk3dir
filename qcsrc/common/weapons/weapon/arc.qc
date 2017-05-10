@@ -3,7 +3,7 @@
 CLASS(Arc, Weapon)
 /* ammotype  */ ATTRIB(Arc, ammo_field, .int, ammo_cells);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
-/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_NORMAL);
+/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
