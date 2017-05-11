@@ -27,12 +27,16 @@ AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage 
 AUTOCVAR_SAVE(cl_damagetext_accumulate_alpha_rel,   float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show damage text for friendlyfire too");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
-AUTOCVAR_SAVE(cl_damagetext_2d_pos,                 vector, '0.47 0.47 0',     "2D damage text initial position (X and Y between 0 and 1)");
-AUTOCVAR_SAVE(cl_damagetext_2d_alpha_start,         float,  1,          "2D damage text initial alpha");
-AUTOCVAR_SAVE(cl_damagetext_2d_alpha_lifetime,      float,  1,        "2D damage text lifetime (alpha fading) in seconds");
-AUTOCVAR_SAVE(cl_damagetext_2d_size_lifetime,       float,  2,          "2D damage text lifetime (size shrinking) in seconds");
-AUTOCVAR_SAVE(cl_damagetext_2d_velocity,            vector, '-20 0 0',  "2D damage text move direction (screen coordinates)");
-AUTOCVAR_SAVE(cl_damagetext_2d_overlap_offset,      vector, '0 -15 0',  "Offset 2D damage text by this much to prevent overlapping (screen coordinates)");
+
+AUTOCVAR(cl_damagetext_2d,                     bool,   true,       "Show damagetext in 2D coordinated if the enemy's location is not known");
+AUTOCVAR(cl_damagetext_2d_pos,                 vector, '0.47 0.47 0',     "2D damage text initial position (X and Y between 0 and 1)");
+AUTOCVAR(cl_damagetext_2d_alpha_start,         float,  1,          "2D damage text initial alpha");
+AUTOCVAR(cl_damagetext_2d_alpha_lifetime,      float,  1.3,        "2D damage text lifetime (alpha fading) in seconds");
+AUTOCVAR(cl_damagetext_2d_size_lifetime,       float,  3,          "2D damage text lifetime (size shrinking) in seconds");
+AUTOCVAR(cl_damagetext_2d_velocity,            vector, '-15 0 0',  "2D damage text move direction (screen coordinates)");
+AUTOCVAR(cl_damagetext_2d_overlap_offset,      vector, '0 -15 0',  "Offset 2D damage text by this much to prevent overlapping (screen coordinates)");
+AUTOCVAR(cl_damagetext_2d_close_range,         float,  125,        "Always use 2D damagetext for hits closer that this");
+AUTOCVAR(cl_damagetext_2d_out_of_view,         bool,   true,       "Always use 2D damagetext for hits that occured off-screen");
 
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color);
@@ -212,29 +216,9 @@ NET_HANDLE(damagetext, bool isNew)
 
     int client_entity_index = server_entity_index - 1;
     entity entcs = entcs_receiver(client_entity_index);
-    if (!entcs || !entcs.has_origin) {
-        // screen coords only
-        vector screen_pos = '0 0 0';
-        screen_pos.x = vid_conwidth * autocvar_cl_damagetext_2d_pos.x;
-        screen_pos.y = vid_conheight * autocvar_cl_damagetext_2d_pos.y;
+    if (entcs && entcs.has_origin && vdist(entcs.origin - view_origin, >, autocvar_cl_damagetext_2d_close_range)
+        && (!autocvar_cl_damagetext_2d_out_of_view || projected_on_screen(project_3d_to_2d(entcs.origin)))) {
 
-        IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {
-            DamageText_update(it, screen_pos, it.m_healthdamage + health, it.m_armordamage + armor, it.m_potential_damage + potential_damage, deathtype);
-            return;
-        });
-
-        // when hitting multiple enemies, dmgtext would overlap
-        if (DamageText_screen_first == NULL) {
-            DamageText dt = NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire);
-            make_impure(dt);
-            DamageText_screen_first = dt;
-            DamageText_screen_count = 1;
-        } else {
-            screen_pos += autocvar_cl_damagetext_2d_overlap_offset * DamageText_screen_count;
-            DamageText_screen_count++;
-            make_impure(NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire));
-        }
-    } else {
         // world coords
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(entcs.origin, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
@@ -248,5 +232,30 @@ NET_HANDLE(damagetext, bool isNew)
             }
         }
         make_impure(NEW(DamageText, server_entity_index, entcs.origin, false, health, armor, potential_damage, deathtype, friendlyfire));
+        return;
+    }
+
+    // screen coords only
+    if (!autocvar_cl_damagetext_2d) return;
+
+    vector screen_pos = '0 0 0';
+    screen_pos.x = vid_conwidth * autocvar_cl_damagetext_2d_pos.x;
+    screen_pos.y = vid_conheight * autocvar_cl_damagetext_2d_pos.y;
+
+    IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {
+        DamageText_update(it, screen_pos, it.m_healthdamage + health, it.m_armordamage + armor, it.m_potential_damage + potential_damage, deathtype);
+        return;
+    });
+
+    // when hitting multiple enemies, dmgtext would overlap
+    if (DamageText_screen_first == NULL) {
+        DamageText dt = NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire);
+        make_impure(dt);
+        DamageText_screen_first = dt;
+        DamageText_screen_count = 1;
+    } else {
+        screen_pos += autocvar_cl_damagetext_2d_overlap_offset * DamageText_screen_count;
+        DamageText_screen_count++;
+        make_impure(NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire));
     }
 }
