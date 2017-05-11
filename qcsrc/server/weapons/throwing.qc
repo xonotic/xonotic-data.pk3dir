@@ -146,8 +146,6 @@ bool W_IsWeaponThrowable(entity this, int w)
 		return false;
 	if (g_weaponarena)
 		return 0;
-	if (g_cts)
-		return 0;
     if(w == WEP_Null.m_id)
         return false;
 

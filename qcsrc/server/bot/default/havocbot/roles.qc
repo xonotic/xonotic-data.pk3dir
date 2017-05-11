@@ -44,7 +44,7 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
-	float rating, d, discard, friend_distance, enemy_distance;
+	float rating, discard, friend_distance, enemy_distance;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 
@@ -85,8 +85,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 				continue;
 			traceline(o, o + '0 0 -1500', true, NULL);
 
-			d = pointcontents(trace_endpos + '0 0 1');
-			if(d == CONTENT_WATER || d == CONTENT_SLIME || d == CONTENT_LAVA)
+			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(trace_endpos + '0 0 1')) & DPCONTENTS_LIQUIDSMASK)
 				continue;
 			// this tracebox_hits_trigger_hurt call isn't needed:
 			// dropped weapons are removed as soon as they fall on a trigger_hurt
@@ -97,8 +96,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		else
 		{
 			// Ignore items under water
-			traceline(it.origin + it.maxs, it.origin + it.maxs, MOVE_NORMAL, it);
-			if(trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
+			// TODO: can't .waterlevel be used here?
+			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(it.origin + ((it.mins + it.maxs) * 0.5))) & DPCONTENTS_LIQUIDSMASK)
 				continue;
 		}
 
@@ -110,17 +109,15 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 			entity picker = it;
 			FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
 			{
-				d = vlen(it.origin - o); // distance between player and item
-
 				if ( it.team == this.team )
 				{
 					if ( !IS_REAL_CLIENT(it) || discard )
 						continue;
 
-					if( d > friend_distance)
+					if( vdist(it.origin - o, >, friend_distance) )
 						continue;
 
-					friend_distance = d;
+					friend_distance = vlen(it.origin - o); // distance between player and item
 					discard = true;
 
 					if (picker.health && it.health > this.health) continue;
@@ -140,8 +137,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 				{
 					// If enemy only track distances
 					// TODO: track only if visible ?
-					if( d < enemy_distance )
-						enemy_distance = d;
+					if( vdist(it.origin - o, <, enemy_distance) )
+						enemy_distance = vlen(it.origin - o); // distance between player and item
 				}
 			});
 
