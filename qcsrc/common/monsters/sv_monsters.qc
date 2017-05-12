@@ -25,8 +25,8 @@
 
 void monsters_setstatus(entity this)
 {
-	this.stat_monsters_total = monsters_total;
-	this.stat_monsters_killed = monsters_killed;
+	STAT(MONSTERS_TOTAL, this) = monsters_total;
+	STAT(MONSTERS_KILLED, this) = monsters_killed;
 }
 
 void monster_dropitem(entity this, entity attacker)
