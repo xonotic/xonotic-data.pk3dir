@@ -4,6 +4,7 @@
 
 #define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
 int autocvar_g_invasion_teams;
+int autocvar_g_invasion_type;
 bool autocvar_g_invasion_team_spawns;
 bool g_invasion;
 void invasion_Initialize();
@@ -58,3 +59,7 @@ float inv_monsters_perteam[17];
 float inv_monsterskill;
 
 const float ST_INV_KILLS = 1;
+
+const int INV_TYPE_ROUND = 0; // round-based waves of enemies
+const int INV_TYPE_HUNT = 1; // clear the map of placed enemies
+const int INV_TYPE_STAGE = 2; // reach the end of the level
