@@ -6,8 +6,8 @@
 
 CLASS(HunterKiller, Turret)
 /* spawnflags */ ATTRIB(HunterKiller, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS);
-/* mins       */ ATTRIB(HunterKiller, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(HunterKiller, maxs, vector, '32 32 64');
+/* mins       */ ATTRIB(HunterKiller, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(HunterKiller, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(HunterKiller, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(HunterKiller, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(HunterKiller, head_model, string, strcat("models/turrets/", "hk.md3"));

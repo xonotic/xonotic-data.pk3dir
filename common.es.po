@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-06 01:59+0000\n"
+"PO-Revision-Date: 2017-05-06 16:19+0000\n"
 "Last-Translator: Vitama Piru Leta <vitamanrules@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -2416,191 +2416,199 @@ msgstr "^BG%s^K1 fue explotado por una torreta eWheel%s%s"
 #: qcsrc/common/notifications/all.inc:338
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue atrapado en el fuego de la torreta FLAC%s%s"
 
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue reventado por una torreta Hellion%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
 msgid "^BG%s^K1 could not hide from the Hunter turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 no se pudo esconder de la torreta Hunter%s%s"
 
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue acribillado por una torreta Ametralladora%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue convertido en entrañas ardientes por una torreta MLRS%s%s"
 
 #: qcsrc/common/notifications/all.inc:343
 #, c-format
 msgid "^BG%s^K1 was phased out by a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue eliminado por una torreta%s%s"
 
 #: qcsrc/common/notifications/all.inc:344
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s"
 msgstr ""
+"^BGa %s^K1 le sirvieron un poco de plasma sobrecalentado de una torreta %s%s"
 
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
 msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue electrocutado por una torreta Tesla%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"
-msgstr ""
+msgstr "^BGa %s^K1 le llenó de plomo una torreta Walker %s%s"
 
 #: qcsrc/common/notifications/all.inc:347
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue empalado por una torreta Walker%s%s"
 
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1fue reventado por una torreta Walker%s%s"
 
 #: qcsrc/common/notifications/all.inc:349
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
 msgstr ""
+"^BG%s^K1 fue alcanzado por la onda expansiva de una explosion de Bumblebee%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
 msgid "^BG%s^K1 was crushed by a vehicle%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue aplastado por un vehículo%s%s"
 
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
 msgid "^BG%s^K1 was caught in a Raptor cluster bomb%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue alcanzado por una bomba de racimo de un Raptor%s%s"
 
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s"
 msgstr ""
+"^BG%s^K1 fue alcanzado por la explosión de la bomba de racimo de un Raptor%s"
+"%s"
 
 #: qcsrc/common/notifications/all.inc:353
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s"
 msgstr ""
+"^BG%s^K1 fue alcanzado por la onda expansiva de la explosión de un Robot "
+"Araña%s%s"
 
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
 msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue reventado a bits por un cohete de Robot Araña%s%s"
 
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Racer explosion%s%s"
 msgstr ""
+"^BG%s^K1 quedó atrapado en la onda expansiva de una explosión de Racer%s%s"
 
 #: qcsrc/common/notifications/all.inc:356
 #, c-format
 msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 no pudo encontrar refugio de un cohete de Racer%s%s"
 
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
 msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s^K1 fue traicionado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
 msgid "^BG%s^BG%s^BG (%s %s every %s seconds)"
-msgstr ""
+msgstr "^BG%s^BG%s^BG (%s %s cada %s segundos)"
 
 #: qcsrc/common/notifications/all.inc:363
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K1 fue congelado por ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K3 fue revivido por ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:365
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr ""
+msgstr "^BG%s^K3 fue revivido por la caída"
 
 #: qcsrc/common/notifications/all.inc:366
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr ""
+msgstr "^BG%s^K3 fue revivido por la eplosión de su Granada"
 
 #: qcsrc/common/notifications/all.inc:367
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s second(s)"
-msgstr ""
+msgstr "^BG%s^K3 fue automáticamente revivido tras %s segundo(s)"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
 msgid "^BG%s^K1 froze themself"
-msgstr ""
+msgstr "^BG%s^K1 se auto-congeló"
 
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:684
 msgid "^TC^TT^BG team wins the round"
-msgstr "El equipo ^TC^TT^BG ha ganado la ronda"
+msgstr "^TC^TT^BG El equipo gana la ronda"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:685
 #, c-format
 msgid "^BG%s^BG wins the round"
-msgstr "^BG%s^BG ha ganado la ronda"
+msgstr "^BG%s^BG gana la ronda"
 
 #: qcsrc/common/notifications/all.inc:372
 #: qcsrc/common/notifications/all.inc:548
 msgid "^BGRound tied"
-msgstr "^BGRondo empatada"
+msgstr "^BGRonda empatada"
 
 #: qcsrc/common/notifications/all.inc:373
 #: qcsrc/common/notifications/all.inc:549
 msgid "^BGRound over, there's no winner"
-msgstr "^BGLa ronda se ha acabado sin un ganador"
+msgstr "^BGRonda finalizada, no hay ganador"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
 msgid "^BGGodmode saved you %s units of damage, cheater!"
-msgstr ""
+msgstr "^BGEl modo Dios te ha quitado %s unidades de daño, ¡tramposo!"
 
 #: qcsrc/common/notifications/all.inc:377
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr ""
+msgstr "^BG¡%s^BG tiene la ventaja %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:378
 #, c-format
 msgid "^BG%s^BG lost the %s^BG buff!"
-msgstr ""
+msgstr "^BG¡%s^BG pierde la ventaja %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:379
 #: qcsrc/common/notifications/all.inc:692
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr ""
+msgstr "^BG¡Has tirado la ventaja %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:380
 #: qcsrc/common/notifications/all.inc:693
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr ""
+msgstr "^BG¡Tienes la ventaja %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:696
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr "^BG no tienes la ^F1%s"
+msgstr "^BGNo tienes la ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:383
 #: qcsrc/common/notifications/all.inc:697
@@ -2612,199 +2620,203 @@ msgstr "^BGHas tirado la ^F1%s^BG%s"
 #: qcsrc/common/notifications/all.inc:698
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr "^BGObtuviste la ^F1%s"
+msgstr "^BGTienes la ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:385
 #: qcsrc/common/notifications/all.inc:699
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr "^BGNo tienes suficientes municiones para ^F1%s"
+msgstr "^BGNo tienes suficiente munición para el ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:386
 #: qcsrc/common/notifications/all.inc:700
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "^F1%s %s^BG no puede disparar, pero su ^F1%s^BG aun puede"
+msgstr "^F1%s %s^BG no puede disparar, pero su ^F1%s^BG puede"
 
 #: qcsrc/common/notifications/all.inc:387
 #: qcsrc/common/notifications/all.inc:701
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr "^F1%s^BG ^F4 no esta disponible ^BG en este mapa"
+msgstr "^F1%s^BG ^F4 no disponible ^BG en este mapa"
 
 #: qcsrc/common/notifications/all.inc:389
 #, c-format
 msgid "^BG%s^BG is connecting..."
-msgstr ""
+msgstr "^BG%s^BG está conectando..."
 
 #: qcsrc/common/notifications/all.inc:390
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr ""
+msgstr "^BG%s^F3 conectado"
 
 #: qcsrc/common/notifications/all.inc:391
 #, c-format
 msgid "^BG%s^F3 connected and joined the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 se ha conectado y se ha unido al equipo ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:392
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr ""
+msgstr "^BG%s^F3 está jugando"
 
 #: qcsrc/common/notifications/all.inc:393
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 esta jugando en el equipo ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:395
 #: qcsrc/common/notifications/all.inc:706
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
-msgstr "^BG%s^BG ha tirado la pelota!"
+msgstr "^BG¡%s^BG ha tirado la bola!"
 
 #: qcsrc/common/notifications/all.inc:396
 #: qcsrc/common/notifications/all.inc:707
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
-msgstr "^BG%s ^BG ha recogido la pelota!"
+msgstr "^BG¡%s ^BG ha recogido la bola!"
 
 #: qcsrc/common/notifications/all.inc:398
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^BG ha capturado las llaves para el equipo ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:399
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ha tirado la llave ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:400
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG pierde la llave ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
 msgid "^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"
-msgstr ""
+msgstr "^BG%s^BG empujó %s^BG causando la destrucción de la^TC^TT Llave ^BG"
 
 #: qcsrc/common/notifications/all.inc:402
 #, c-format
 msgid "^BG%s^BG destroyed the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG destruyó la Llave ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG recogió la Llave ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^BG%s^F3 forfeited"
-msgstr ""
+msgstr "^BG%s^F3 perdido"
 
 #: qcsrc/common/notifications/all.inc:406
 #, c-format
 msgid "^BG%s^F3 has no more lives left"
-msgstr ""
+msgstr "^BG%s^F3 no tiene mas vidas restantes"
 
 #: qcsrc/common/notifications/all.inc:408
 msgid "^BGMonsters are currently disabled"
-msgstr ""
+msgstr "^BGLos monstruos están actualmente deshabilitados"
 
 #: qcsrc/common/notifications/all.inc:410
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
-msgstr ""
+msgstr "^BGEl equipo ^TC^TT^BG mantuvo la bola demasiado tiempo"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
 msgid "^BG%s^BG captured %s^BG control point"
-msgstr ""
+msgstr "^BG%s^BG ha capturado el punto de control de %s^BG"
 
 #: qcsrc/common/notifications/all.inc:413
 #, c-format
 msgid "^TC^TT^BG team %s^BG control point has been destroyed by %s"
 msgstr ""
+"^TC^TT^BG El punto de control del equipo %s^BG ha sido destruido por %s"
 
 #: qcsrc/common/notifications/all.inc:414
 msgid "^TC^TT^BG generator has been destroyed"
-msgstr ""
+msgstr "^TC^TT^BG el generador ha sido destruido"
 
 #: qcsrc/common/notifications/all.inc:415
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
 msgstr ""
+"^TC^TT^BG ¡el generador se ha quemado expontaneamete debido al tiempo extra!"
 
 #: qcsrc/common/notifications/all.inc:417
 #, c-format
 msgid "^BG%s^K1 picked up Invisibility"
-msgstr ""
+msgstr "^BG%s^K1 ha cogido Invisibilidad"
 
 #: qcsrc/common/notifications/all.inc:418
 #, c-format
 msgid "^BG%s^K1 picked up Shield"
-msgstr ""
+msgstr "^BG%s^K1 ha cogido Escudo"
 
 #: qcsrc/common/notifications/all.inc:419
 #, c-format
 msgid "^BG%s^K1 picked up Speed"
-msgstr ""
+msgstr "^BG%s^K1 ha cogido Velocidad"
 
 #: qcsrc/common/notifications/all.inc:420
 #, c-format
 msgid "^BG%s^K1 picked up Strength"
-msgstr ""
+msgstr "^BG%s^K1 ha cogido Fuerza"
 
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr ""
+msgstr "^BG%s^F3 se ha desconectado"
 
 #: qcsrc/common/notifications/all.inc:423
 #, c-format
 msgid "^BG%s^F3 was kicked for idling"
-msgstr ""
+msgstr "^BG%s^F3 fue expulsado por vaguear"
 
 #: qcsrc/common/notifications/all.inc:424
 msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment."
 msgstr ""
+"^F2Fuiste expulsado del servidor porque eres un espectador y los "
+"espectadores no estan permitidos por el momento"
 
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
 msgid "^BG%s^F3 is now spectating"
-msgstr ""
+msgstr "^BG%s^F3 está espectando"
 
 #: qcsrc/common/notifications/all.inc:427
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr ""
+msgstr "^BG%s^BG ha abandonado la carrera"
 
 #: qcsrc/common/notifications/all.inc:428
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
-msgstr ""
+msgstr "^BG%s^BG no pudo romper su %s%s^BG posición de record %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
 msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"
-msgstr ""
+msgstr "^BG%s^BG no pudo romper el %s%s^BG posición de record %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr ""
+msgstr "^BG%s^BG ha terminado la carrear"
 
 #: qcsrc/common/notifications/all.inc:431
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
-msgstr ""
+msgstr "^BG%s^BG rompió el record de %s^BG %s%s^BG posición con %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:432
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
-msgstr ""
+msgstr "^BG%s^BG mejoró su %s%s^BG posición de record con %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:433
 #, c-format
