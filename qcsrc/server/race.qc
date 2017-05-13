@@ -628,13 +628,10 @@ void checkpoint_passed(entity this, entity player)
 				});
 				race_highest_checkpoint = largest_cp_id + 1;
 				race_timed_checkpoint = largest_cp_id + 1;
-
-				IL_EACH(g_race_targets, it.classname == "target_checkpoint",
-				{
-					if(it.race_checkpoint == -2) // set defragcpexists to -1 so that the cp id file will be rewritten when someone finishes
-						defragcpexists = -1;
-				});
 			}
+
+			if(it.race_checkpoint == -2) // set defragcpexists to -1 so that the cp id file will be rewritten when someone finishes
+				defragcpexists = -1;
 		});
 
 		if(!cp_amount)
