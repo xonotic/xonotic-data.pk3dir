@@ -10,7 +10,7 @@
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	return autocvar_g_physics_clientselect && thecvar != "" && thecvar && && thecvar != "default" strhasword(autocvar_g_physics_clientselect_options, thecvar);
+	return autocvar_g_physics_clientselect && thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity this, string option, float defaultval)
