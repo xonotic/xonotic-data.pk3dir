@@ -994,17 +994,12 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 // (this is how bots detect if they reached a goal)
 void navigation_poptouchedgoals(entity this)
 {
-	vector org, m1, m2;
-	org = this.origin;
-	m1 = org + this.mins;
-	m2 = org + this.maxs;
-
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
 		// make sure jumppad is really hit, don't rely on distance based checks
 		// as they may report a touch even if it didn't really happen
-		if(this.lastteleporttime>0)
-		if(time - this.lastteleporttime < ((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15))
+		if(this.lastteleporttime > 0
+			&& time - this.lastteleporttime < ((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15))
 		{
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
@@ -1013,8 +1008,9 @@ void navigation_poptouchedgoals(entity this)
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			}
 			navigation_poproute(this);
-			return;
 		}
+		else
+			return;
 	}
 
 	// If for some reason the bot is closer to the next goal, pop the current one
@@ -1036,7 +1032,6 @@ void navigation_poptouchedgoals(entity this)
 	// Loose goal touching check when running
 	if(this.aistatus & AI_STATUS_RUNNING)
 	if(this.goalcurrent.classname=="waypoint")
-	if(!(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
 	if(vlen(this.velocity - eZ * this.velocity.z) >= autocvar_sv_maxspeed) // if -really- running
 	{
 		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
@@ -1066,10 +1061,7 @@ void navigation_poptouchedgoals(entity this)
 			gc_min = this.goalcurrent.origin - '1 1 1' * 12;
 			gc_max = this.goalcurrent.origin + '1 1 1' * 12;
 		}
-		if(!boxesoverlap(m1, m2, gc_min, gc_max))
-			break;
-
-		if((this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT))
+		if(!boxesoverlap(this.absmin, this.absmax, gc_min, gc_max))
 			break;
 
 		// Detect personal waypoints
