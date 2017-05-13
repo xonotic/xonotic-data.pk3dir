@@ -814,7 +814,7 @@ void vehicles_exit(entity vehic, bool eject)
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(player, STAT(PL_MIN,player), STAT(PL_MAX, player));
+		setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 
 		player.takedamage		= DAMAGE_AIM;
 		player.solid			= SOLID_SLIDEBOX;
@@ -989,7 +989,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	pl.crouch = false;
 	pl.view_ofs = STAT(PL_VIEW_OFS, pl);
-	setsize (pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
+	setsize(pl, STAT(PL_MIN, pl), STAT(PL_MAX, pl));
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
@@ -1246,14 +1246,14 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		setattachment(this.vehicle_viewport, this.vehicle_hudmodel, info.tag_view);
 	}
 
-	setsize(this, info.mins, info.maxs);
+	setsize(this, info.m_mins, info.m_maxs);
 
 	info.vr_setup(info, this);
 
 	if(!nodrop)
 	{
 		setorigin(this, this.origin);
-		tracebox(this.origin + '0 0 100', info.mins, info.maxs, this.origin - '0 0 10000', MOVE_WORLDONLY, this);
+		tracebox(this.origin + '0 0 100', info.m_mins, info.m_maxs, this.origin - '0 0 10000', MOVE_WORLDONLY, this);
 		setorigin(this, trace_endpos);
 	}
 
