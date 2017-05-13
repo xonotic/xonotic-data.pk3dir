@@ -928,6 +928,13 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if (!e)
 		return false;
 
+	if(e.wpflags & WAYPOINTFLAG_TELEPORT)
+	{
+		// force teleport destination as route destination
+		e.wp00.enemy = e;
+		e = e.wp00;
+	}
+
 	this.goalentity = e;
 
 	// put the entity on the goal stack
