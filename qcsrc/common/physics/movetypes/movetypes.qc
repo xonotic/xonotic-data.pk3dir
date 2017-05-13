@@ -382,21 +382,13 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 
 	if(this.flags & FL_ITEM)
 	{
-		mi.x -= 15;
-		mi.y -= 15;
-		mi.z -= 1;
-		ma.x += 15;
-		ma.y += 15;
-		ma.z += 1;
+		mi -= '15 15 1';
+		ma += '15 15 1';
 	}
 	else
 	{
-		mi.x -= 1;
-		mi.y -= 1;
-		mi.z -= 1;
-		ma.x += 1;
-		ma.y += 1;
-		ma.z += 1;
+		mi -= '1 1 1';
+		ma += '1 1 1';
 	}
 
 	this.absmin = mi;
