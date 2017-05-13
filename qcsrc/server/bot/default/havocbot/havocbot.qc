@@ -518,6 +518,10 @@ void havocbot_movetogoal(entity this)
 					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
 				else IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 1000),
 				{
+					if(it.wpflags & WAYPOINTFLAG_TELEPORT)
+					if(it.origin.z < this.origin.z - 100 && vdist(vec2(it.origin - this.origin), <, 100))
+						continue;
+
 					traceline(this.origin + this.view_ofs, ((it.absmin + it.absmax) * 0.5), true, this);
 
 					if(trace_fraction < 1)
