@@ -7,13 +7,15 @@
 # Pendulla <djdjoric@gmail.com>, 2014
 # Ristovski <rafael.ristovski@gmail.com>, 2014
 # Ristovski <rafael.ristovski@gmail.com>, 2014
+# Марко М. Костић (Marko M. Kostić) <marko.m.kostic@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-05-13 23:01+0000\n"
+"Last-Translator: Марко М. Костић (Marko M. Kostić) <marko.m.kostic@gmail."
+"com>\n"
 "Language-Team: Serbian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/sr/)\n"
 "Language: sr\n"
@@ -26,241 +28,240 @@ msgstr ""
 #: qcsrc/client/hud/hud_config.qc:233
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
-msgstr "^2Uspešno izvezeno u %s! (Beleška: Sačuvano u data/data/)\n"
+msgstr "^2Успешно извезено у %s! (напомена: сачувано у data/data/)\n"
 
 #: qcsrc/client/hud/hud_config.qc:237
 #, c-format
 msgid "^1Couldn't write to %s\n"
-msgstr "^1Nemoguće upisivanje u %s\n"
+msgstr "^1Не могу да упишем у %s\n"
 
 #: qcsrc/client/hud/panel/chat.qc:82
 msgid "^3Player^7: This is the chat area."
-msgstr "^3Igrač^7: Ovo je mesto za ćaskanje."
+msgstr "^3Играч^7: Ово је простор за ћаскање."
 
 #: qcsrc/client/hud/panel/engineinfo.qc:69
 #, c-format
 msgid "FPS: %.*f"
-msgstr "FPS: %.*f"
+msgstr "КПС: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:87
 msgid "^1Observing"
-msgstr "^1Posmatranje"
+msgstr "^1Посматрање"
 
 #: qcsrc/client/hud/panel/infomessages.qc:89
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Praćenje: ^7%s"
+msgstr "^1Праћење: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Pritisni ^3%s^1 da pratiš igrača"
+msgstr "^1Притисните ^3%s^1 за праћење"
 
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr ""
+msgstr "примарно пуцање"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr ""
-"^1Pritisni ^3%s^1 ili ^3%s^1 da posmatraš sledećeg ili prethodnog igrača"
+msgstr "^1Притисните ^3%s^1 или ^3%s^1 за следећег или претходног играча"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "следеће оружје"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "претходно оружје"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Koristi ^3%s^1 ili ^3%s^1 za promenu brzine"
+msgstr "^1Користите ^3%s^1 или ^3%s^1 за промену брзине"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Притисните ^3%s^1 за посматрање, ^3%s^1 за промену режима камере"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:191
 msgid "drop weapon"
-msgstr ""
+msgstr "баци оружје"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr ""
+msgstr "секундарно пуцање"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Pritisni ^3%s^1 za informacije o vrsti igre"
+msgstr "^1Притисните ^3%s^1 за податак о режиму игре"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "server info"
-msgstr ""
+msgstr "подаци о серверу"
 
 #: qcsrc/client/hud/panel/infomessages.qc:124
 msgid "^1Match has already begun"
-msgstr "^1Igra je već počela"
+msgstr "^1Игра је већ почела"
 
 #: qcsrc/client/hud/panel/infomessages.qc:126
 msgid "^1You have no more lives left"
-msgstr "^1Nemaš više života"
+msgstr "^1Немате више живота"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Pritisni ^3%s^1 da se pridružiš"
+msgstr "^1Притисните ^3%s^1 за придруживање"
 
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "скочи"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1Igra počinje za ^3%d^1 sekundi"
+msgstr "^1Игра почиње за ^3%d^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:145
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr "^2Trenutno u ^1zagrevnom^2 fazi!"
+msgstr "^2Тренутно у фази ^1загревања^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%sPritisni ^3%s%s da završiš zagrevanje"
+msgstr "%sПритисните ^3%s%s за престанак загревања"
 
 #: qcsrc/client/hud/panel/infomessages.qc:160
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #: qcsrc/client/hud/panel/infomessages.qc:175
 #: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "ready"
-msgstr ""
+msgstr "спреман"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%sPritisni ^3%s%s kada si spreman/a"
+msgstr "%sПритисните ^3%s%s када будете били спремни"
 
 #: qcsrc/client/hud/panel/infomessages.qc:167
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr "^2Čekanje ostalih da se spreme i završe zagrevanje..."
+msgstr "^2Чекам на остале да се припреме и заврше загревање..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:169
 msgid "^2Waiting for others to ready up..."
-msgstr "^2Čekanje ostalih da se spreme..."
+msgstr "^2Чекам на остале да се припреме..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:175
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2Pritisni ^3%s^2 da završiš zagrevanje"
+msgstr "^2Притисните ^3%s^2 за завршавање загревања"
 
 #: qcsrc/client/hud/panel/infomessages.qc:196
 msgid "Teamnumbers are unbalanced!"
-msgstr "Timovi su neujednačeni!"
+msgstr "Екипе нису уравнотежене!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr "Pritisni ^3%s%s za podešavanje"
+msgstr "Притисните ^3%s%s за прилагођавање"
 
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "team menu"
-msgstr ""
+msgstr "мени екипе"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1Посматрам овог играча:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1Посматрају вас:"
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Pritisni ^3ESC ^7da se pojave opcije za HUD."
+msgstr "^7Притисните ^3ESC ^7за приказ опција ХУД-а."
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr "^3Dupli klik ^7a na panel opcije u vezi panela."
+msgstr "^3Дупли клик ^7a на плочу за опције у вези плоче."
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr "^3CTRL ^7za onemogućavanje testiranja kolizije, ^3SHIFT ^7i"
+msgstr "^3CTRL ^7за онемогућавање провере сударања, ^3SHIFT ^7и"
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr "^3ALT ^7+ ^3ARROW KEYS ^7za fina podešavanja."
+msgstr "^3ALT ^7+ ^3ARROW KEYS ^7за тачнија прилагођавања."
 
 #: qcsrc/client/hud/panel/modicons.qc:561
 msgid "Personal best"
-msgstr "Lični rekord"
+msgstr "Лични рекорд"
 
 #: qcsrc/client/hud/panel/modicons.qc:571
 msgid "Server best"
-msgstr "Rekord servera"
+msgstr "Рекорд на серверу"
 
 #: qcsrc/client/hud/panel/notify.qc:115 qcsrc/client/hud/panel/notify.qc:116
 #: qcsrc/client/hud/panel/score.qc:59
 #, c-format
 msgid "Player %d"
-msgstr "Igrač %d"
+msgstr "Играч %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:603
 #: qcsrc/client/hud/panel/quickmenu.qc:605
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Подмени%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:610
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "Наредба%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:636
 msgid "Continue..."
-msgstr ""
+msgstr "Настави..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:784
 #: qcsrc/client/hud/panel/quickmenu.qc:788
 msgid "QMCMD^Chat"
-msgstr ""
+msgstr "QMCMD^Ћаскање"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^:-) / nice one"
-msgstr ""
+msgstr "QMCMD^:-) / добар потез"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:785
 msgid "QMCMD^nice one"
-msgstr ""
+msgstr "QMCMD^добар потез"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:786
 msgid "QMCMD^good game"
-msgstr ""
+msgstr "QMCMD^добра игра"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^hi / good luck"
-msgstr ""
+msgstr "QMCMD^здраво / срећно"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:787
 msgid "QMCMD^hi / good luck and have fun"
-msgstr ""
+msgstr "QMCMD^здраво / срећно и нека ти буде забавно"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:792
 #: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^Team chat"
-msgstr ""
+msgstr "QMCMD^Екипно ћаскање"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:793
 msgid "QMCMD^quad soon"
@@ -268,11 +269,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^бесплатна ствар %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^бесплатна ствар, иконица"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item (l:%l^7)"
@@ -373,125 +374,125 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^Send private message to"
-msgstr ""
+msgstr "QMCMD^Пошаљите приватну поруку за"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:813
 #: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Settings"
-msgstr ""
+msgstr "QMCMD^Подешавања"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 #: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^View/HUD settings"
-msgstr ""
+msgstr "QMCMD^Преглед/ХУД подешавања"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^3rd person view"
-msgstr ""
+msgstr "QMCMD^Преглед из трећег лица"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^Player models like mine"
-msgstr ""
+msgstr "QMCMD^Модели играча као што је мој"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^Names above players"
-msgstr ""
+msgstr "QMCMD^Имена изнад играча"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^Crosshair per weapon"
-msgstr ""
+msgstr "QMCMD^Нишани по оружју"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:819
 msgid "QMCMD^FPS"
-msgstr ""
+msgstr "QMCMD^КПС"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:820
 msgid "QMCMD^Net graph"
-msgstr ""
+msgstr "QMCMD^График мреже"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:823
 #: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Sound settings"
-msgstr ""
+msgstr "QMCMD^Подешавања звука"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:824
 msgid "QMCMD^Hit sound"
-msgstr ""
+msgstr "QMCMD^Звук погодка"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^Chat sound"
-msgstr ""
+msgstr "QMCMD^Звук ћаскања"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:830
 #: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Spectator camera"
-msgstr ""
+msgstr "QMCMD^Пратилачка камера"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^1st person"
-msgstr ""
+msgstr "QMCMD^Прво лице"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:832
 msgid "QMCMD^3rd person around player"
-msgstr ""
+msgstr "QMCMD^Треће лице око играча"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:833
 msgid "QMCMD^3rd person behind"
-msgstr ""
+msgstr "QMCMD^Треће лице иза"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:839
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Observer camera"
-msgstr ""
+msgstr "QMCMD^Посматрачка камера"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 msgid "QMCMD^Increase speed"
-msgstr ""
+msgstr "QMCMD^Повећај брзину"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^Decrease speed"
-msgstr ""
+msgstr "QMCMD^Смањи брзину"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Wall collision off"
-msgstr ""
+msgstr "QMCMD^Зидно сударање искључено"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^Wall collision on"
-msgstr ""
+msgstr "QMCMD^Зидно сударање укључено"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "QMCMD^Преко целог екрана"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:849
 msgid "QMCMD^Translate chat messages"
-msgstr ""
+msgstr "QMCMD^Преведи поруке ћаскања"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^Call a vote"
-msgstr ""
+msgstr "QMCMD^Затражи изгласавање"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Restart the map"
-msgstr ""
+msgstr "QMCMD^Поново покрени мапу"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^End match"
-msgstr ""
+msgstr "QMCMD^Заврши игру"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Reduce match time"
-msgstr ""
+msgstr "QMCMD^Смањи време трајања игре"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^Extend match time"
-msgstr ""
+msgstr "QMCMD^Повећај време трајања игре"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^Shuffle teams"
-msgstr ""
+msgstr "QMCMD^Промешај екипе"
 
 #: qcsrc/client/hud/panel/racetimer.qc:37
 #, c-format
@@ -505,33 +506,33 @@ msgstr "(+%dL)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:61
 msgid "Start line"
-msgstr "Startna linija"
+msgstr "Почетна линија"
 
 #: qcsrc/client/hud/panel/racetimer.qc:63
 #: qcsrc/client/hud/panel/racetimer.qc:67
 msgid "Finish line"
-msgstr "Cilj"
+msgstr "Циљ"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
 msgid "Intermediate %d"
-msgstr "srednje %d"
+msgstr "Просек %d"
 
 #: qcsrc/client/hud/panel/racetimer.qc:130
 msgid "^1Intermediate 1 (+15.42)"
-msgstr "^1Prosek 1 (+15.42)"
+msgstr "^1Просек 1 (+15.42)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:132
 #: qcsrc/client/hud/panel/racetimer.qc:174
 #: qcsrc/client/hud/panel/racetimer.qc:219
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
-msgstr "^1KAZNA: %.1f (%s)"
+msgstr "^1КАЗНА: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:221
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
-msgstr "^2KAZNA: %.1f (%s)"
+msgstr "^2КАЗНА: %.1f (%s)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:78
 msgid "SCO^bckills"
@@ -543,35 +544,35 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:80
 msgid "SCO^caps"
-msgstr ""
+msgstr "SCO^освајања"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:81
 msgid "SCO^captime"
-msgstr ""
+msgstr "SCO^време освајања"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:82
 msgid "SCO^deaths"
-msgstr ""
+msgstr "SCO^смрти"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:83
 msgid "SCO^destroyed"
-msgstr ""
+msgstr "SCO^уништено"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:84
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^штета"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:85
 msgid "SCO^dmgtaken"
-msgstr ""
+msgstr "SCO^примљено штете"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "SCO^drops"
-msgstr ""
+msgstr "SCO^испуштања"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "SCO^faults"
-msgstr ""
+msgstr "SCO^грешака"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "SCO^fckills"
@@ -579,7 +580,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "SCO^goals"
-msgstr ""
+msgstr "SCO^циљева"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "SCO^kckills"
@@ -591,7 +592,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "SCO^k/d"
-msgstr ""
+msgstr "SCO^у/с"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^kdr"
@@ -599,47 +600,47 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^kills"
-msgstr ""
+msgstr "SCO^убистава"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "SCO^laps"
-msgstr ""
+msgstr "SCO^кругова"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:96
 msgid "SCO^lives"
-msgstr ""
+msgstr "SCO^живота"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:97
 msgid "SCO^losses"
-msgstr ""
+msgstr "SCO^губитака"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:98
 msgid "SCO^name"
-msgstr ""
+msgstr "SCO^име"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:99
 msgid "SCO^sum"
-msgstr ""
+msgstr "SCO^свота"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:100
 msgid "SCO^nick"
-msgstr ""
+msgstr "SCO^надимак"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:101
 msgid "SCO^objectives"
-msgstr ""
+msgstr "SCO^циљеви"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "SCO^pickups"
-msgstr ""
+msgstr "SCO^купљења"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:103
 msgid "SCO^ping"
-msgstr ""
+msgstr "SCO^пинг"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:104
 msgid "SCO^pl"
-msgstr ""
+msgstr "SCO^гп"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "SCO^pushes"
@@ -647,15 +648,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "SCO^rank"
-msgstr ""
+msgstr "SCO^ранг"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^returns"
-msgstr ""
+msgstr "SCO^враћања"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^revivals"
-msgstr ""
+msgstr "SCO^оживљавања"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^rounds won"
@@ -663,11 +664,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^score"
-msgstr ""
+msgstr "SCO^резултат"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:111
 msgid "SCO^suicides"
-msgstr ""
+msgstr "SCO^самоубистава"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:112
 msgid "SCO^takes"
@@ -681,8 +682,8 @@ msgstr ""
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
-"Možeš modifikovati tablu rezultata koristeći ^2scoreboard_columns_set "
-"komandu.\n"
+"Можете изменити таблу са резултатима користећи ^2scoreboard_columns_set "
+"наредбу.\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:296
 msgid "^3|---------------------------------------------------------------|\n"
@@ -690,7 +691,7 @@ msgstr "^3|---------------------------------------------------------------|\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:297
 msgid "Usage:\n"
-msgstr "Korišćenje:\n"
+msgstr "Употреба:\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:298
 msgid "^2scoreboard_columns_set default\n"
@@ -702,7 +703,7 @@ msgstr "^2scoreboard_columns_set ^7field1 field2 ...\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:300
 msgid "The following field names are recognized (case insensitive):\n"
-msgstr "Sledeća imena polja su prepoznata (velika i mala slova dozvoljena):\n"
+msgstr "Следећа имена поља су препозната (величина слова неважна):\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:301
 msgid "You can use a ^3|^7 to start the right-aligned fields.\n"
@@ -761,6 +762,8 @@ msgid ""
 "^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was "
 "captured\n"
 msgstr ""
+"^3освајања^7                     Број освајања заставе (ЗЗ) или кључа (Лов "
+"на кључеве)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:317
 msgid ""
@@ -885,24 +888,24 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:208
 msgid "N/A"
-msgstr ""
+msgstr "Н/Д"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1155
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "Статистика прецизности (просек %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1294
 msgid "Map stats:"
-msgstr ""
+msgstr "Статистика мапе:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1324
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Убијено чудовишта:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1331
 msgid "Secrets found:"
-msgstr ""
+msgstr "Нађено тајни:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1353
 msgid "Capture time rankings"
@@ -910,12 +913,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1353
 msgid "Rankings"
-msgstr ""
+msgstr "Рангови"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1517
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
-msgstr ""
+msgstr "Табела са резултатима"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1580
 #, c-format
@@ -930,36 +933,36 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1600
 #, c-format
 msgid "Spectators"
-msgstr ""
+msgstr "Пратиоци"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1615
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
-msgstr ""
+msgstr "игра се ^3%s^7 на ^2%s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1622
 #: qcsrc/client/hud/panel/scoreboard.qc:1627
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr ""
+msgstr " највише ^1%1.0f минута^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1631
 #: qcsrc/client/hud/panel/scoreboard.qc:1650
 msgid " or"
-msgstr ""
+msgstr " или"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1634
 #: qcsrc/client/hud/panel/scoreboard.qc:1641
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr ""
+msgstr " до ^3%s %s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1635
 #: qcsrc/client/hud/panel/scoreboard.qc:1642
 #: qcsrc/client/hud/panel/scoreboard.qc:1654
 #: qcsrc/client/hud/panel/scoreboard.qc:1661
 msgid "SCO^points"
-msgstr ""
+msgstr "SCO^бодова"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1636
 #: qcsrc/client/hud/panel/scoreboard.qc:1643
@@ -972,42 +975,42 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1660
 #, c-format
 msgid " until a lead of ^3%s %s^7"
-msgstr ""
+msgstr " до предности од ^3%s %s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1684
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr ""
+msgstr "^1Оживљавање за ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1694
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Мртви сте, сачекајте ^3%s^7 пре оживљавања"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1703
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Мртви сте, притисните ^2%s^7 да бисте се оживели"
 
 #: qcsrc/client/hud/panel/vote.qc:24
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr "^1Potreban odgovor pre ulaska u hud podešavanje\n"
+msgstr "^1Морате одговорити пре уласка у режим за подешавање ХУД-а\n"
 
 #: qcsrc/client/hud/panel/vote.qc:29
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr "^2Ime ^7umesto of \"^1Anonymous player^7\" u statistici"
+msgstr "^2Име ^7уместо \"^1Anonymous player^7\" у статистици"
 
 #: qcsrc/client/hud/panel/vote.qc:115
 msgid "A vote has been called for:"
-msgstr "Glasanje je započeto za:"
+msgstr "Гласање је почео за:"
 
 #: qcsrc/client/hud/panel/vote.qc:117
 msgid "Allow servers to store and display your name?"
-msgstr "Dozvoli serverima da čuvaju i prikazuju tvoje ime?"
+msgstr "Дозволити серверима да чувају и приказују ваше име?"
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "^1Configure the HUD"
-msgstr "^1Podešavanje HUD"
+msgstr "^1Подесите ХУД"
 
 #: qcsrc/client/hud/panel/vote.qc:125 qcsrc/menu/xonotic/dialog_firstrun.qc:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:18
@@ -1017,7 +1020,7 @@ msgstr "^1Podešavanje HUD"
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: qcsrc/client/hud/panel/vote.qc:127 qcsrc/menu/xonotic/dialog_firstrun.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1027,19 +1030,19 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Не"
 
 #: qcsrc/client/hud/panel/weapons.qc:530
 msgid "Out of ammo"
-msgstr "Municija potrošena"
+msgstr "Муниција је потрошена"
 
 #: qcsrc/client/hud/panel/weapons.qc:534
 msgid "Don't have"
-msgstr "Nema"
+msgstr "Нема"
 
 #: qcsrc/client/hud/panel/weapons.qc:538
 msgid "Unavailable"
-msgstr "Nedostupno"
+msgstr "Недоступно"
 
 #: qcsrc/client/main.qc:1014
 msgid " qu/s"
@@ -1047,67 +1050,67 @@ msgstr "qu/s"
 
 #: qcsrc/client/main.qc:1016
 msgid " m/s"
-msgstr "m/s"
+msgstr "м/с"
 
 #: qcsrc/client/main.qc:1018
 msgid " km/h"
-msgstr "km/h"
+msgstr "км/ч"
 
 #: qcsrc/client/main.qc:1020
 msgid " mph"
-msgstr "mph"
+msgstr "миља/ч"
 
 #: qcsrc/client/main.qc:1022
 msgid " knots"
-msgstr "knots"
+msgstr "чворова"
 
 #: qcsrc/client/main.qc:1264
 #, c-format
 msgid "%s (not bound)"
-msgstr "%s (nije obavezno)"
+msgstr "%s (није везано)"
 
 #: qcsrc/client/mapvoting.qc:49
 msgid " (1 vote)"
-msgstr "(1glas)"
+msgstr "(1 глас)"
 
 #: qcsrc/client/mapvoting.qc:51
 #, c-format
 msgid " (%d votes)"
-msgstr "(%d glasova)"
+msgstr "(%d гласова)"
 
 #: qcsrc/client/mapvoting.qc:271
 msgid "Don't care"
-msgstr "Svejedno"
+msgstr "Свеједно"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Decide the gametype"
-msgstr ""
+msgstr "Одаберите врсту игре"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Vote for a map"
-msgstr "Glasaj za mapu"
+msgstr "Гласајте за мапу"
 
 #: qcsrc/client/mapvoting.qc:382
 #, c-format
 msgid "%d seconds left"
-msgstr "%d sekundi preostalo"
+msgstr "Преостало секунди: %d"
 
 #: qcsrc/client/mapvoting.qc:497
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
-msgstr "mv_mapdownload: ^3Nije predviđeno samostalno korišćenje komande!\n"
+msgstr "mv_mapdownload: ^3Не бисте требали користити самостално ову наредбу!\n"
 
 #: qcsrc/client/mapvoting.qc:507
 msgid "^1Error:^7 Couldn't find pak index.\n"
-msgstr "^1Greška:^7 Nije pronađen pak indeks.\n"
+msgstr "^1Грешка:^7 Не могу наћи пак садржај.\n"
 
 #: qcsrc/client/mapvoting.qc:516
 msgid "Requesting preview...\n"
-msgstr "Zahtevanje pregleda...\n"
+msgstr "Захтевам преглед...\n"
 
 #: qcsrc/client/miscfunctions.qc:109
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr "Pokušavanje odstranjivanja tima koji nije u listi!"
+msgstr "Покушавам да уклоним екипу која није у списку екипа!"
 
 #: qcsrc/client/view.qc:1370
 msgid "Nade timer"
@@ -1115,15 +1118,15 @@ msgstr ""
 
 #: qcsrc/client/view.qc:1375
 msgid "Capture progress"
-msgstr ""
+msgstr "Напредак заробљавања"
 
 #: qcsrc/client/view.qc:1380
 msgid "Revival progress"
-msgstr ""
+msgstr "Напредак оживљавања"
 
 #: qcsrc/common/command/generic.qc:157
 msgid "error creating curl handle\n"
-msgstr ""
+msgstr "грешка при стварању курл ручке\n"
 
 #: qcsrc/common/command/generic.qc:403
 msgid "Notification restart command only works with cl_cmd and sv_cmd.\n"
@@ -1131,56 +1134,56 @@ msgstr ""
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
-msgstr ""
+msgstr "Лоптокрадица"
 
 #: qcsrc/common/items/item/armor.qh:111
 msgid "Big armor"
-msgstr ""
+msgstr "Велики оклоп"
 
 #: qcsrc/common/items/item/armor.qh:147
 msgid "Mega armor"
-msgstr ""
+msgstr "Мега оклоп"
 
 #: qcsrc/common/items/item/health.qh:111
 msgid "Big health"
-msgstr ""
+msgstr "Велико здравље"
 
 #: qcsrc/common/items/item/health.qh:147
 msgid "Mega health"
-msgstr ""
+msgstr "Мега здравље"
 
 #: qcsrc/common/items/item/jetpack.qh:35
 msgid "Jet Pack"
-msgstr ""
+msgstr "Ракетни појас"
 
 #: qcsrc/common/items/item/jetpack.qh:82
 msgid "Fuel regen"
-msgstr ""
+msgstr "Реген. горива"
 
 #: qcsrc/common/items/item/powerup.qh:44
 msgid "Strength"
-msgstr ""
+msgstr "Снага"
 
 #: qcsrc/common/items/item/powerup.qh:76
 msgid "Shield"
-msgstr ""
+msgstr "Штит"
 
 #: qcsrc/common/mapinfo.qc:642
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr ""
+msgstr "@!#%'n бацање трубе"
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Deathmatch"
-msgstr ""
+msgstr "Игра на смрт"
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Score as many frags as you can"
-msgstr ""
+msgstr "Достигните што више рокања"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Last Man Standing"
-msgstr ""
+msgstr "Последњи човек на ногама"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Survive and kill until the enemies have no lives left"
@@ -1188,101 +1191,109 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:126
 msgid "Race"
-msgstr "Trka"
+msgstr "Трка"
 
 #: qcsrc/common/mapinfo.qh:126
 msgid "Race against other players to the finish line"
-msgstr ""
+msgstr "Тркајте се са осталим играчима до циља"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race CTS"
-msgstr ""
+msgstr "ЗЗ трка"
 
 #: qcsrc/common/mapinfo.qh:160
 msgid "Race for fastest time."
-msgstr ""
+msgstr "Тркајте се за најбоље време."
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Help your team score the most frags against the enemy team"
 msgstr ""
+"Помозите вашпј екипи да постигне највише рокања против непријатељске екипе"
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Team Deathmatch"
-msgstr ""
+msgstr "Екипна игра на смрт"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid "Capture the Flag"
-msgstr ""
+msgstr "Заробљавање заставе"
 
 #: qcsrc/common/mapinfo.qh:220
 msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Нађите и донесите непријатељску заставу у вашу базу да бисте је заробили и "
+"браните вашу базу од друге екипе"
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Clan Arena"
-msgstr ""
+msgstr "Кланска арена"
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "Убијте сваког из непријатељске екипе да бисте освојили рунду"
 
 #: qcsrc/common/mapinfo.qh:287
 msgid "Capture and defend all the control points to win"
-msgstr ""
+msgstr "Заробите и браните све контролне тачке да бисте победили"
 
 #: qcsrc/common/mapinfo.qh:287
 msgid "Domination"
-msgstr ""
+msgstr "Доминација"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Gather all the keys to win the round"
-msgstr ""
+msgstr "Сакупите све кључеве да бисте освојили рунду"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Key Hunt"
-msgstr ""
+msgstr "Лов на кључеве"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid "Assault"
-msgstr ""
+msgstr "Напад"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
+"Уништите препреке да бисте нашли и уништили непријатељско напојно језгро пре "
+"него што време истекне"
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Capture control points to reach and destroy the enemy generator"
 msgstr ""
+"Заробите контролне тачке да бисте досегли и уништили непријатески генератор"
 
 #: qcsrc/common/mapinfo.qh:371
 msgid "Onslaught"
-msgstr ""
+msgstr "Крвопролиће"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Nexball"
-msgstr ""
+msgstr "Некс-лопта"
 
 #: qcsrc/common/mapinfo.qh:387
 msgid "Shoot and kick the ball into the enemies goal, keep your goal clean"
-msgstr ""
+msgstr "Гађајте и шутните лопту у непријатељски гол, браните ваш гол"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid "Freeze Tag"
-msgstr ""
+msgstr "Ледене шуге"
 
 #: qcsrc/common/mapinfo.qh:408
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Убијте непријатеље да бисте их заледили, стојте близу залеђених саиграча да "
+"бисте их оживели, заледите све непријатеље да бисте победили"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
-msgstr ""
+msgstr "Држите лопту да бисте добили бодове за убиства"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Keepaway"
@@ -1290,112 +1301,112 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:461
 msgid "Invasion"
-msgstr "Invazija"
+msgstr "Инвазија"
 
 #: qcsrc/common/mapinfo.qh:461
 msgid "Survive against waves of monsters"
-msgstr ""
+msgstr "Преживите таласе чудовишта"
 
 #: qcsrc/common/minigames/cl_minigames.qc:383
 msgid "It's your turn"
-msgstr ""
+msgstr "На вас је ред"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:331
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
-msgstr ""
+msgstr "Изађи"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:336
 msgid "Invite"
-msgstr ""
+msgstr "Позови"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:378
 msgid "Current Game"
-msgstr ""
+msgstr "Тренутна игра"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:403
 msgid "Exit Menu"
-msgstr ""
+msgstr "Мени за излазак"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:415
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Create"
-msgstr ""
+msgstr "Направи"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:418
 msgid "Join"
-msgstr ""
+msgstr "Приступи"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:489
 msgid "Minigames"
-msgstr ""
+msgstr "Мини игре"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1168
 msgid "Better luck next time!"
-msgstr ""
+msgstr "Више среће следећи пут!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1172
 msgid "Tubular! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Цевасто! Притисните „Следећи ниво“ да бисте наставили!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1174
 msgid "Wicked! Press \"Next Level\" to continue!"
-msgstr ""
+msgstr "Опако! Притисните „Следећи ниво“ да бисте наставили!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1177
 msgid "Press the space bar to change your currently selected tile"
-msgstr ""
+msgstr "Притисните размак да бисте променили тренутно изабрану плочицу"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1180
 msgid "Push the boulders onto the targets"
-msgstr ""
+msgstr "Гурните камене на мете"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1404
 msgid "Next Level"
-msgstr ""
+msgstr "Следећи ниво"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1405
 msgid "Restart"
-msgstr ""
+msgstr "Поново покрени"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1406
 msgid "Editor"
-msgstr ""
+msgstr "Уређивач"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1407
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
-msgstr ""
+msgstr "Сачувај"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
 #: qcsrc/common/minigames/minigame/ttt.qc:319
 msgid "Draw"
-msgstr ""
+msgstr "Нерешено"
 
 #: qcsrc/common/minigames/minigame/c4.qc:378
 #: qcsrc/common/minigames/minigame/nmm.qc:601
 msgid "You lost the game!"
-msgstr ""
+msgstr "Изгубили сте игру!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:379
 #: qcsrc/common/minigames/minigame/nmm.qc:602
 msgid "You win!"
-msgstr ""
+msgstr "Победили сте!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
 #: qcsrc/common/minigames/minigame/nmm.qc:606
 #: qcsrc/common/minigames/minigame/pp.qc:455
 #: qcsrc/common/minigames/minigame/ttt.qc:336
 msgid "Wait for your opponent to make their move"
-msgstr ""
+msgstr "Сачекајте да ваш противник начини свој потез"
 
 #: qcsrc/common/minigames/minigame/c4.qc:386
 #: qcsrc/common/minigames/minigame/nmm.qc:608
 #: qcsrc/common/minigames/minigame/pp.qc:458
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Click on the game board to place your piece"
-msgstr ""
+msgstr "Кликните на играчку таблу да бисте поставили своју фигуру"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:610
 msgid ""
@@ -1413,23 +1424,24 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/pong.qc:570
 #: qcsrc/common/minigames/minigame/ttt.qc:299
 msgid "AI"
-msgstr ""
+msgstr "ВИ"
 
 #: qcsrc/common/minigames/minigame/pong.qc:587
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
+"Притисните ^1Започни игру^7 да бисте започели игру са тренутним играчима"
 
 #: qcsrc/common/minigames/minigame/pong.qc:651
 msgid "Start Match"
-msgstr ""
+msgstr "Започни игру"
 
 #: qcsrc/common/minigames/minigame/pong.qc:652
 msgid "Add AI player"
-msgstr ""
+msgstr "Додај ВИ играча"
 
 #: qcsrc/common/minigames/minigame/pong.qc:653
 msgid "Remove AI player"
-msgstr ""
+msgstr "Уклони ВИ играча"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
@@ -1437,6 +1449,8 @@ msgid ""
 "You lost the game!\n"
 "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr ""
+"Изгубили сте игру!\n"
+"Изаберите \"^1Следећа игра^7\" у менију за поновну игру!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:444
 #: qcsrc/common/minigames/minigame/ttt.qc:325
@@ -1444,162 +1458,164 @@ msgid ""
 "You win!\n"
 "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
+"Победили сте!\n"
+"Изаберите \"^1Следећа игра^7\" у менију за нову игру!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ttt.qc:331
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr ""
+msgstr "Изаберите \"^1Нова игра^7\" у менију да започнете нову игру!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:451
 #: qcsrc/common/minigames/minigame/ttt.qc:332
 msgid "Wait for your opponent to confirm the rematch"
-msgstr ""
+msgstr "Чекам да ваш противник потврди поновну игру"
 
 #: qcsrc/common/minigames/minigame/pp.qc:582
 #: qcsrc/common/minigames/minigame/ttt.qc:665
 msgid "Next Match"
-msgstr ""
+msgstr "Следећа игра"
 
 #: qcsrc/common/minigames/minigame/ps.qc:478
 #, c-format
 msgid "Pieces left: %s"
-msgstr ""
+msgstr "Преосталих фигура: %s"
 
 #: qcsrc/common/minigames/minigame/ps.qc:488
 msgid "No more valid moves"
-msgstr ""
+msgstr "Немате више исправних потеза"
 
 #: qcsrc/common/minigames/minigame/ps.qc:491
 msgid "Well done, you win!"
-msgstr ""
+msgstr "Свака част, победили сте!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:494
 msgid "Jump a piece over another to capture it"
-msgstr ""
+msgstr "Прескочите фигуром преко друге да бисте је заробили"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:666
 msgid "Single Player"
-msgstr ""
+msgstr "Један играч"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
 msgid "Mage"
-msgstr ""
+msgstr "Чаробњак"
 
 #: qcsrc/common/monsters/monster/mage.qh:33
 msgid "Mage spike"
-msgstr ""
+msgstr "Чаробњачки шиљак"
 
 #: qcsrc/common/monsters/monster/shambler.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
 msgid "Shambler"
-msgstr ""
+msgstr "Касапин"
 
 #: qcsrc/common/monsters/monster/spider.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
 msgid "Spider"
-msgstr "Pauk"
+msgstr "Паук"
 
 #: qcsrc/common/monsters/monster/spider.qh:32
 msgid "Spider attack"
-msgstr ""
+msgstr "Напад паука"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
 msgid "Wyvern"
-msgstr ""
+msgstr "Виверн"
 
 #: qcsrc/common/monsters/monster/wyvern.qh:32
 msgid "Wyvern attack"
-msgstr ""
+msgstr "Напад виверна"
 
 #: qcsrc/common/monsters/monster/zombie.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
 msgid "Zombie"
-msgstr "Zombi"
+msgstr "Зомби"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:15
 msgid "Ammo"
-msgstr ""
+msgstr "Муниција"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:24
 msgid "Resistance"
-msgstr ""
+msgstr "Отпорност"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:33
 #: qcsrc/common/mutators/mutator/instagib/items.qh:94
 msgid "Speed"
-msgstr "Brzina"
+msgstr "Брзина"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:43
 msgid "Medic"
-msgstr ""
+msgstr "Болничар"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:54
 msgid "Bash"
-msgstr ""
+msgstr "Тежак удар"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:62
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:177
 msgid "Vampire"
-msgstr ""
+msgstr "Вампир"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:70
 msgid "Disability"
-msgstr ""
+msgstr "Потешкоћа"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:78
 msgid "Vengeance"
-msgstr ""
+msgstr "Освета"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:86
 msgid "Jump"
-msgstr ""
+msgstr "Скок"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:95
 msgid "Invisible"
-msgstr ""
+msgstr "Невидљивост"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:104
 msgid "Inferno"
-msgstr ""
+msgstr "Пакао"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:112
 msgid "Swapper"
-msgstr ""
+msgstr "Замењивач"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:120
 msgid "Magnet"
-msgstr ""
+msgstr "Магнет"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:128
 msgid "Luck"
-msgstr ""
+msgstr "Срећа"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:136
 msgid "Flight"
-msgstr ""
+msgstr "Лет"
 
 #: qcsrc/common/mutators/mutator/buffs/buffs.qh:7
 msgid "Buff"
-msgstr ""
+msgstr "Баф"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:280
 msgid "Damage text"
-msgstr ""
+msgstr "Текст штете"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:290
 msgid "Draw damage numbers"
-msgstr ""
+msgstr "Исцртај бројке штете"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:292
 msgid "Font size minimum:"
-msgstr ""
+msgstr "Најмања величина фонта:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:297
 msgid "Font size maximum:"
-msgstr ""
+msgstr "Највећа величина фонта:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:302
 msgid "Accumulate range:"
@@ -1607,7 +1623,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:307
 msgid "Lifetime:"
-msgstr ""
+msgstr "Животни век:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:312
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:322
@@ -1617,27 +1633,27 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:109
 #: qcsrc/menu/xonotic/util.qc:775
 msgid "Color:"
-msgstr "Boja:"
+msgstr "Боја:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:319
 msgid "Draw damage numbers for friendly fire"
-msgstr ""
+msgstr "Исцртај бројке штете за пријатељску ватру"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:56
 msgid "Extra life"
-msgstr ""
+msgstr "Додатни живот"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:75
 msgid "Invisibility"
-msgstr ""
+msgstr "Невидљивост"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:18
 msgid "Napalm grenade"
-msgstr ""
+msgstr "Напалм граната"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:26
 msgid "Ice grenade"
-msgstr ""
+msgstr "Ледена граната"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:34
 msgid "Translocate grenade"
@@ -1649,114 +1665,114 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:50
 msgid "Heal grenade"
-msgstr ""
+msgstr "Лекарска граната"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:58
 msgid "Monster grenade"
-msgstr ""
+msgstr "Чудовишна граната"
 
 #: qcsrc/common/mutators/mutator/nades/nades.inc:66
 msgid "Entrap grenade"
-msgstr ""
+msgstr "Замка-граната"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:32
 msgid "Grenade"
-msgstr ""
+msgstr "Граната"
 
 #: qcsrc/common/mutators/mutator/overkill/hmg.qh:17
 msgid "Heavy Machine Gun"
-msgstr ""
+msgstr "Тешки митраљез"
 
 #: qcsrc/common/mutators/mutator/overkill/rpc.qh:17
 msgid "Rocket Propelled Chainsaw"
-msgstr ""
+msgstr "Тестера на ракетни погон"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr ""
+msgstr "Водиља"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
-msgstr "Pomozi mi!"
+msgstr "Помози ми!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
-msgstr "Ovde"
+msgstr "Овде"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
-msgstr ""
+msgstr "ОПАСНОСТ"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:8
 msgid "Frozen!"
-msgstr ""
+msgstr "Залеђен!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Item"
-msgstr ""
+msgstr "Ствар"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:12
 msgid "Checkpoint"
-msgstr ""
+msgstr "Контролни пункт"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:252
 msgid "Finish"
-msgstr ""
+msgstr "Заврши"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:14
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:252
 msgid "Start"
-msgstr ""
+msgstr "Почни"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 msgid "Defend"
-msgstr ""
+msgstr "Брани"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
 msgid "Destroy"
-msgstr ""
+msgstr "Уништи"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:19
 msgid "Push"
-msgstr ""
+msgstr "Гурни"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Flag carrier"
-msgstr ""
+msgstr "Носач заставе"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Enemy carrier"
-msgstr ""
+msgstr "Непријатељски носач"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:23
 msgid "Dropped flag"
-msgstr ""
+msgstr "Испуштена застава"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "White base"
-msgstr ""
+msgstr "Бела база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "Red base"
-msgstr ""
+msgstr "Црвена база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Blue base"
-msgstr ""
+msgstr "Плава база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "Yellow base"
-msgstr ""
+msgstr "Жута база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Pink base"
-msgstr ""
+msgstr "Розе база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr ""
+msgstr "Врати заставу овде"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -1767,11 +1783,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:52
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 msgid "Control point"
-msgstr ""
+msgstr "Контролна тачка"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 msgid "Dropped key"
-msgstr ""
+msgstr "Испуштен кључ"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
@@ -1779,59 +1795,59 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
 msgid "Key carrier"
-msgstr ""
+msgstr "Носач кључа"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
-msgstr "Istrcaj ovde"
+msgstr "Дотрчи овде"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:45
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Ball"
-msgstr ""
+msgstr "Лопта"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
-msgstr ""
+msgstr "Носач лопте"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
-msgstr ""
+msgstr "Гол"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:55
 msgid "Generator"
-msgstr ""
+msgstr "Генератор"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 msgid "Weapon"
-msgstr ""
+msgstr "Оружје"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:59
 msgid "Monster"
-msgstr ""
+msgstr "Чудовиште"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Vehicle"
-msgstr "Vozila"
+msgstr "Возило"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:62
 msgid "Intruder!"
-msgstr ""
+msgstr "Уљез!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:64
 msgid "Tagged"
-msgstr ""
+msgstr "Означен"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:651
 #: qcsrc/common/turrets/cl_turrets.qc:120
 msgid "Spam"
-msgstr ""
+msgstr "Непожељно"
 
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:655
 #, c-format
 msgid "%s needing help!"
-msgstr ""
+msgstr "Играчу %s треба помоћ!"
 
 #: qcsrc/common/net_notice.qc:87
 msgid "^1Server notices:"
@@ -1844,7 +1860,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:241
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "Играч ^BG%s^BG је заробио заставу боје ^TC^TT^BG"
 
 #: qcsrc/common/notifications/all.inc:242
 #, c-format
@@ -1856,7 +1872,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr ""
+msgstr "^BG%s^BG је заробио заставу"
 
 #: qcsrc/common/notifications/all.inc:244
 #, c-format
@@ -2530,13 +2546,13 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:697
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr ""
+msgstr "^BGИспустили сте ствар ^F1%s^BG%s"
 
 #: qcsrc/common/notifications/all.inc:384
 #: qcsrc/common/notifications/all.inc:698
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr ""
+msgstr "^BGУзели сте оружје ^F1%s"
 
 #: qcsrc/common/notifications/all.inc:385
 #: qcsrc/common/notifications/all.inc:699
@@ -2564,34 +2580,34 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:390
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr ""
+msgstr "^BG%s^F3 повезан"
 
 #: qcsrc/common/notifications/all.inc:391
 #, c-format
 msgid "^BG%s^F3 connected and joined the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 повезан и приступио екипи ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:392
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr ""
+msgstr "^BG%s^F3 сада игра"
 
 #: qcsrc/common/notifications/all.inc:393
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 сада игра у екипи боје ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:395
 #: qcsrc/common/notifications/all.inc:706
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
-msgstr ""
+msgstr "Играч ^BG%s^BG је испустио лопту!"
 
 #: qcsrc/common/notifications/all.inc:396
 #: qcsrc/common/notifications/all.inc:707
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
-msgstr ""
+msgstr "Играч ^BG%s^BG је покупио лопту!"
 
 #: qcsrc/common/notifications/all.inc:398
 #, c-format
@@ -2682,7 +2698,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr ""
+msgstr "^BG%s^F3 се откачио"
 
 #: qcsrc/common/notifications/all.inc:423
 #, c-format
@@ -3164,7 +3180,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:559
 msgid "^BGYou captured the flag!"
-msgstr ""
+msgstr "^BGЗаробили сте заставу!"
 
 #: qcsrc/common/notifications/all.inc:560
 #, c-format
@@ -3213,11 +3229,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:569
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGУзели сте заставу боје ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:570
 msgid "^BGYou got the flag!"
-msgstr ""
+msgstr "^BGУзели сте заставу!"
 
 #: qcsrc/common/notifications/all.inc:571
 #, c-format
@@ -3298,7 +3314,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr ""
+msgstr "^K3%sРокнули сте играча ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:591
 #: qcsrc/common/notifications/all.inc:600
@@ -3310,7 +3326,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:592
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sРокнуо вас је играч ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:593
 #: qcsrc/common/notifications/all.inc:602
@@ -3563,7 +3579,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^K1Watch your step!"
-msgstr ""
+msgstr "^K1Пазите где газите!"
 
 #: qcsrc/common/notifications/all.inc:665
 #, c-format
@@ -3634,7 +3650,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:683
 msgid "^TC^TT^BG team loses the round"
-msgstr ""
+msgstr "Екипа боје ^TC^TT^BG је изгубила рунду"
 
 #: qcsrc/common/notifications/all.inc:687
 msgid "^K1You froze yourself"
@@ -3697,11 +3713,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:714
 msgid "^F4Round will start in ^COUNT"
-msgstr ""
+msgstr "^F4Рунда почиње за ^COUNT"
 
 #: qcsrc/common/notifications/all.inc:715
 msgid "^BGScanning frequency range..."
-msgstr ""
+msgstr "^BGПретражујем опсег фреквенција..."
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^BGYou are starting with the ^TC^TT Key"
@@ -3962,27 +3978,27 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:399 qcsrc/common/notifications/all.qh:400
 #, c-format
 msgid " (near %s)"
-msgstr ""
+msgstr " (близу %s)"
 
 #: qcsrc/common/notifications/all.qh:407 qcsrc/common/notifications/all.qh:408
 msgid "primary"
-msgstr ""
+msgstr "примарно"
 
 #: qcsrc/common/notifications/all.qh:407 qcsrc/common/notifications/all.qh:408
 msgid "secondary"
-msgstr ""
+msgstr "секундарно"
 
 #: qcsrc/common/notifications/all.qh:410
 msgid "point"
-msgstr ""
+msgstr "бод"
 
 #: qcsrc/common/notifications/all.qh:410
 msgid "points"
-msgstr ""
+msgstr "бодови"
 
 #: qcsrc/common/notifications/all.qh:419
 msgid "drop flag"
-msgstr ""
+msgstr "баци заставу"
 
 #: qcsrc/common/notifications/all.qh:420
 msgid "throw nade"
@@ -4005,7 +4021,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:444
 msgid "TRIPLE FRAG! "
-msgstr ""
+msgstr "ТРОСТРУКА РОКЊАВА! "
 
 #: qcsrc/common/notifications/all.qh:445
 #, c-format
@@ -4019,7 +4035,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:445
 msgid "RAGE! "
-msgstr ""
+msgstr "БЕСНИЛО! "
 
 #: qcsrc/common/notifications/all.qh:446
 #, c-format
@@ -4033,7 +4049,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:446
 msgid "MASSACRE! "
-msgstr ""
+msgstr "МАСАКР! "
 
 #: qcsrc/common/notifications/all.qh:447
 #, c-format
@@ -4047,7 +4063,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:447
 msgid "MAYHEM! "
-msgstr ""
+msgstr "САКАЋЕЊЕ! "
 
 #: qcsrc/common/notifications/all.qh:448
 #, c-format
@@ -4061,7 +4077,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:448
 msgid "BERSERKER! "
-msgstr ""
+msgstr "ЛУДАК! "
 
 #: qcsrc/common/notifications/all.qh:449
 #, c-format
@@ -4075,7 +4091,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:449
 msgid "CARNAGE! "
-msgstr ""
+msgstr "ПОКОЉ! "
 
 #: qcsrc/common/notifications/all.qh:450
 #, c-format
@@ -4089,17 +4105,17 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:450
 msgid "ARMAGEDDON! "
-msgstr ""
+msgstr "АРМАГЕДОН! "
 
 #: qcsrc/common/notifications/all.qh:457
 #, c-format
 msgid "%s(^F1Bot^BG)"
-msgstr ""
+msgstr "%s(^F1Бот^BG)"
 
 #: qcsrc/common/notifications/all.qh:459
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
-msgstr ""
+msgstr "%s(Пинг ^F1%d^BG)"
 
 #: qcsrc/common/notifications/all.qh:466
 #, c-format
@@ -4127,19 +4143,19 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:514
 msgid "First blood! "
-msgstr ""
+msgstr "Прва крв!"
 
 #: qcsrc/common/notifications/all.qh:514
 msgid "First score! "
-msgstr ""
+msgstr "Први погодак!"
 
 #: qcsrc/common/notifications/all.qh:518
 msgid "First casualty! "
-msgstr ""
+msgstr "Прва губитак!"
 
 #: qcsrc/common/notifications/all.qh:518
 msgid "First victim! "
-msgstr ""
+msgstr "Прва жртва!"
 
 #: qcsrc/common/notifications/all.qh:559
 #, c-format
@@ -4183,75 +4199,75 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:29
 msgid "TEAM^Red"
-msgstr ""
+msgstr "TEAM^ЦРВЕНА"
 
 #: qcsrc/common/teams.qh:30
 msgid "TEAM^Blue"
-msgstr ""
+msgstr "TEAM^ПЛАВА"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Yellow"
-msgstr ""
+msgstr "TEAM^ЖУТА"
 
 #: qcsrc/common/teams.qh:32
 msgid "TEAM^Pink"
-msgstr ""
+msgstr "TEAM^РОЗЕ"
 
 #: qcsrc/common/teams.qh:33
 msgid "Team"
-msgstr ""
+msgstr "Екипа"
 
 #: qcsrc/common/teams.qh:34
 msgid "Neutral"
-msgstr ""
+msgstr "Неутрално"
 
 #: qcsrc/common/teams.qh:37
 msgid "KEY^Red"
-msgstr ""
+msgstr "KEY^Црвени"
 
 #: qcsrc/common/teams.qh:38
 msgid "KEY^Blue"
-msgstr ""
+msgstr "KEY^Плави"
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Yellow"
-msgstr ""
+msgstr "KEY^Жути"
 
 #: qcsrc/common/teams.qh:40
 msgid "KEY^Pink"
-msgstr ""
+msgstr "KEY^Розе"
 
 #: qcsrc/common/teams.qh:41
 msgid "FLAG^Red"
-msgstr ""
+msgstr "FLAG^Црвена"
 
 #: qcsrc/common/teams.qh:42
 msgid "FLAG^Blue"
-msgstr ""
+msgstr "FLAG^Плава"
 
 #: qcsrc/common/teams.qh:43
 msgid "FLAG^Yellow"
-msgstr ""
+msgstr "FLAG^Жута"
 
 #: qcsrc/common/teams.qh:44
 msgid "FLAG^Pink"
-msgstr ""
+msgstr "FLAG^Розе"
 
 #: qcsrc/common/teams.qh:45
 msgid "GENERATOR^Red"
-msgstr ""
+msgstr "GENERATOR^Црвени"
 
 #: qcsrc/common/teams.qh:46
 msgid "GENERATOR^Blue"
-msgstr ""
+msgstr "GENERATOR^Плави"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Yellow"
-msgstr ""
+msgstr "GENERATOR^Жути"
 
 #: qcsrc/common/teams.qh:48
 msgid "GENERATOR^Pink"
-msgstr ""
+msgstr "GENERATOR^Розе"
 
 #: qcsrc/common/turrets/all.qh:51
 msgid "Turrets dump command only works with sv_cmd.\n"
@@ -4260,7 +4276,7 @@ msgstr ""
 #: qcsrc/common/turrets/cl_turrets.qc:129
 #, c-format
 msgid "%s under attack!"
-msgstr ""
+msgstr "%s је под нападом!"
 
 #: qcsrc/common/turrets/turret.qh:11
 msgid "Turret"
@@ -4284,7 +4300,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:11
 msgid "Fusion Reactor"
-msgstr ""
+msgstr "Фузиони реактор"
 
 #: qcsrc/common/turrets/turret/hellion.qh:13
 msgid "Hellion Missile Turret"
@@ -4345,7 +4361,7 @@ msgstr ""
 #: qcsrc/common/turrets/turret/tesla.qh:13
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
 msgid "Tesla Coil"
-msgstr ""
+msgstr "Теслин калем"
 
 #: qcsrc/common/turrets/turret/walker.qh:15
 msgid "Walker Turret"
@@ -4358,7 +4374,7 @@ msgstr ""
 #: qcsrc/common/vehicles/cl_vehicles.qc:191
 #, c-format
 msgid "Press %s"
-msgstr ""
+msgstr "Притисните %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:948
 msgid "No right gunner!"
@@ -4438,7 +4454,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/hook.qc:17
 msgid "Grappling Hook"
-msgstr "Kuka"
+msgstr "Хватајућа кука"
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:17
 msgid "MachineGun"
@@ -4462,7 +4478,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/seeker.qc:17
 msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
+msgstr "Т.А.Г. трагач"
 
 #: qcsrc/common/weapons/weapon/shockwave.qc:17
 msgid "Shockwave"
@@ -4475,7 +4491,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/tuba.qc:17
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'n Tuba"
+msgstr "Ј!#%на труба"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:18
 msgid "Vaporizer"
@@ -4687,7 +4703,7 @@ msgstr ""
 
 #: qcsrc/lib/oo.qh:290
 msgid "No description"
-msgstr ""
+msgstr "Нема описа"
 
 #: qcsrc/lib/spawnfunc.qh:65
 #, c-format
@@ -4720,220 +4736,221 @@ msgstr ""
 
 #: qcsrc/menu/command/menu_cmd.qc:79
 msgid "Available options:\n"
-msgstr ""
+msgstr "Доступне опције:\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:128
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
 msgstr ""
+"Неисправна наредба. За списак доступних наредби, укуцајте menu_cmd help.\n"
 
 #: qcsrc/menu/item/listbox.qc:415
 #, c-format
 msgid "Item %d"
-msgstr ""
+msgstr "Ствар %d"
 
 #: qcsrc/menu/item/textslider.qc:11 qcsrc/menu/item/textslider.qc:12
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:37
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:68
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:115
 msgid "Custom"
-msgstr ""
+msgstr "Прилагођено"
 
 #: qcsrc/menu/xonotic/campaign.qc:241
 #, c-format
 msgid "Level %d: %s"
-msgstr ""
+msgstr "Ниво %d: %s"
 
 #: qcsrc/menu/xonotic/credits.qc:4
 msgid "Core Team"
-msgstr ""
+msgstr "Развојно језгро"
 
 #: qcsrc/menu/xonotic/credits.qc:16
 msgid "Extended Team"
-msgstr ""
+msgstr "Проширена екипа"
 
 #: qcsrc/menu/xonotic/credits.qc:48
 msgid "Website"
-msgstr ""
+msgstr "Веб сајт"
 
 #: qcsrc/menu/xonotic/credits.qc:53
 msgid "Stats"
-msgstr ""
+msgstr "Статистика"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Art"
-msgstr ""
+msgstr "Графика"
 
 #: qcsrc/menu/xonotic/credits.qc:65
 msgid "Animation"
-msgstr ""
+msgstr "Анимација"
 
 #: qcsrc/menu/xonotic/credits.qc:69
 msgid "Level Design"
-msgstr ""
+msgstr "Дизајн нивоа"
 
 #: qcsrc/menu/xonotic/credits.qc:92
 msgid "Music / Sound FX"
-msgstr ""
+msgstr "Музика и монтажа звука"
 
 #: qcsrc/menu/xonotic/credits.qc:108
 msgid "Game Code"
-msgstr ""
+msgstr "Код игрице"
 
 #: qcsrc/menu/xonotic/credits.qc:116
 msgid "Marketing / PR"
-msgstr ""
+msgstr "Маркетинг и односи са јавношћу"
 
 #: qcsrc/menu/xonotic/credits.qc:122
 msgid "Legal"
-msgstr ""
+msgstr "Правна служба"
 
 #: qcsrc/menu/xonotic/credits.qc:127
 msgid "Game Engine"
-msgstr ""
+msgstr "Мотор игрице"
 
 #: qcsrc/menu/xonotic/credits.qc:131
 msgid "Engine Additions"
-msgstr ""
+msgstr "Додаци на мотору"
 
 #: qcsrc/menu/xonotic/credits.qc:136
 msgid "Compiler"
-msgstr ""
+msgstr "Компајлер"
 
 #: qcsrc/menu/xonotic/credits.qc:142
 msgid "Other Active Contributors"
-msgstr ""
+msgstr "Други активни доприносиоци"
 
 #: qcsrc/menu/xonotic/credits.qc:148
 msgid "Translators"
-msgstr ""
+msgstr "Преводиоци"
 
 #: qcsrc/menu/xonotic/credits.qc:150
 msgid "Asturian"
-msgstr ""
+msgstr "Астуријски"
 
 #: qcsrc/menu/xonotic/credits.qc:155
 msgid "Belarusian"
-msgstr ""
+msgstr "Белоруски"
 
 #: qcsrc/menu/xonotic/credits.qc:158
 msgid "Bulgarian"
-msgstr ""
+msgstr "Бугарски"
 
 #: qcsrc/menu/xonotic/credits.qc:165
 msgid "Chinese (China)"
-msgstr ""
+msgstr "Кинески (Кина)"
 
 #: qcsrc/menu/xonotic/credits.qc:171
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "Кинески (Тајван)"
 
 #: qcsrc/menu/xonotic/credits.qc:176
 msgid "Cornish"
-msgstr ""
+msgstr "Корнишки"
 
 #: qcsrc/menu/xonotic/credits.qc:179
 msgid "Czech"
-msgstr ""
+msgstr "Чешки"
 
 #: qcsrc/menu/xonotic/credits.qc:184
 msgid "Dutch"
-msgstr ""
+msgstr "Холандски"
 
 #: qcsrc/menu/xonotic/credits.qc:190
 msgid "English (Australia)"
-msgstr ""
+msgstr "Енглески (Аустралија)"
 
 #: qcsrc/menu/xonotic/credits.qc:195
 msgid "Finnish"
-msgstr ""
+msgstr "Фински"
 
 #: qcsrc/menu/xonotic/credits.qc:200
 msgid "French"
-msgstr ""
+msgstr "Француски"
 
 #: qcsrc/menu/xonotic/credits.qc:208
 msgid "German"
-msgstr ""
+msgstr "Немачки"
 
 #: qcsrc/menu/xonotic/credits.qc:219
 msgid "Greek"
-msgstr ""
+msgstr "Грчки"
 
 #: qcsrc/menu/xonotic/credits.qc:225
 msgid "Hungarian"
-msgstr ""
+msgstr "Мађарски"
 
 #: qcsrc/menu/xonotic/credits.qc:229
 msgid "Italian"
-msgstr ""
+msgstr "Италијански"
 
 #: qcsrc/menu/xonotic/credits.qc:235
 msgid "Kazakh"
-msgstr ""
+msgstr "Казахстански"
 
 #: qcsrc/menu/xonotic/credits.qc:238
 msgid "Korean"
-msgstr ""
+msgstr "Корејски"
 
 #: qcsrc/menu/xonotic/credits.qc:242
 msgid "Polish"
-msgstr ""
+msgstr "Пољски"
 
 #: qcsrc/menu/xonotic/credits.qc:249
 msgid "Portuguese"
-msgstr ""
+msgstr "Португалски"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "Romanian"
-msgstr ""
+msgstr "Румунски"
 
 #: qcsrc/menu/xonotic/credits.qc:262
 msgid "Russian"
-msgstr ""
+msgstr "Руски"
 
 #: qcsrc/menu/xonotic/credits.qc:273
 msgid "Serbian"
-msgstr ""
+msgstr "Српски"
 
 #: qcsrc/menu/xonotic/credits.qc:278
 msgid "Spanish"
-msgstr ""
+msgstr "Шпански"
 
 #: qcsrc/menu/xonotic/credits.qc:288
 msgid "Swedish"
-msgstr ""
+msgstr "Шведски"
 
 #: qcsrc/menu/xonotic/credits.qc:292
 msgid "Ukrainian"
-msgstr ""
+msgstr "Украјински"
 
 #: qcsrc/menu/xonotic/credits.qc:299
 msgid "Past Contributors"
-msgstr ""
+msgstr "Прошли доприносиоци"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:73
 msgid "forced to be saved to config.cfg"
-msgstr ""
+msgstr "присилно сачувано у config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:79 qcsrc/menu/xonotic/cvarlist.qc:89
 msgid "will not be saved"
-msgstr ""
+msgstr "неће бити сачувано"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:84
 msgid "will be saved to config.cfg"
-msgstr ""
+msgstr "биће сачувано у config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:93
 msgid "private"
-msgstr ""
+msgstr "приватно"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:95
 msgid "engine setting"
-msgstr ""
+msgstr "подешавање мотора"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:97
 msgid "read only"
-msgstr ""
+msgstr "само за читање"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:38
@@ -4942,15 +4959,15 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:75
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr ""
+msgstr "У реду"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
-msgstr ""
+msgstr "Заслуге"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
-msgstr ""
+msgstr "Заслуге за Зонотик"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:39
 msgid ""
@@ -4958,44 +4975,47 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
+"Добро дошли у Зонотик, изаберите ваш језик и унесите ваше име играча да "
+"бисте почели. Можете касније променити ове опције кроз мени система."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
 msgid "Name:"
-msgstr "Ime:"
+msgstr "Име:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:60
 msgid "Name under which you will appear in the game"
-msgstr ""
+msgstr "Име под којим ћете се појавити у игри"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
-msgstr ""
+msgstr "Језик текста:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:78
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
+"Дозволити играчким статистикама да користе ваш надимак на stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Undecided"
-msgstr ""
+msgstr "Неодлучен"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:88
 msgid "Save settings"
-msgstr ""
+msgstr "Сачувај подешавања"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qh:6
 msgid "Welcome"
-msgstr "Dobrodošli"
+msgstr "Добродошли"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:16
 msgid "Ammunition display:"
-msgstr ""
+msgstr "Приказ муниције:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:19
 msgid "Show only current ammo type"
-msgstr ""
+msgstr "Прикажи само тренутну врсту муниције"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:22
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:44
@@ -5021,7 +5041,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:18
 msgid "Left"
-msgstr "Levo"
+msgstr "Лево"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:32
@@ -5032,15 +5052,15 @@ msgstr "Levo"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:34
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:20
 msgid "Right"
-msgstr "Desno"
+msgstr "Десно"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
-msgstr ""
+msgstr "Плоча муниције"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:17
 msgid "Message duration:"
-msgstr ""
+msgstr "Трајање поруке:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:21
 msgid "Fade time:"
@@ -5059,7 +5079,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:19
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:71
 msgid "Center"
-msgstr "Centar"
+msgstr "Средина"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 msgid "Font scale:"
@@ -5083,15 +5103,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:26
 msgid "Chat beep sound"
-msgstr ""
+msgstr "Звук пиштања у ћаскању"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qh:6
 msgid "Chat Panel"
-msgstr ""
+msgstr "Плоча ћаскања"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:14
 msgid "Engine info:"
-msgstr ""
+msgstr "Подаци о мотору:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "Use an averaging algorithm for fps"
@@ -5244,20 +5264,20 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:68
 msgid "Left align"
-msgstr ""
+msgstr "Лево поравнање"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:74
 msgid "Right align"
-msgstr ""
+msgstr "Десно поравнање"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 msgid "Inward align"
-msgstr ""
+msgstr "Унутрашње поравнање"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:29
 msgid "Outward align"
-msgstr ""
+msgstr "Спољашње поравнање"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
@@ -5265,7 +5285,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
-msgstr "Brzina:"
+msgstr "Брзина:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:38
 msgid "Include vertical speed"
@@ -5297,27 +5317,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:57
 msgid "Show"
-msgstr "Prikaži"
+msgstr "Прикажи"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:60
 msgid "Top speed"
-msgstr ""
+msgstr "Највећа брзина"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:66
 msgid "Acceleration:"
-msgstr ""
+msgstr "Убрзање:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:67
 msgid "Include vertical acceleration"
-msgstr ""
+msgstr "Укључи усправно убрзање"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
-msgstr ""
+msgstr "Плоча физике"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
-msgstr ""
+msgstr "Плоча појачања"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
 msgid "Panel enabled when spectating"
@@ -5350,7 +5370,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
-msgstr ""
+msgstr "Радар:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:68
@@ -5363,31 +5383,31 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 #: qcsrc/menu/xonotic/util.qc:792
 msgid "Alpha:"
-msgstr ""
+msgstr "Алфа:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:30
 msgid "Rotation:"
-msgstr ""
+msgstr "Заокренутост:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:32
 msgid "Forward"
-msgstr ""
+msgstr "Напред"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:33
 msgid "West"
-msgstr ""
+msgstr "Запад"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:34
 msgid "South"
-msgstr ""
+msgstr "Југ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:35
 msgid "East"
-msgstr ""
+msgstr "Исток"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:36
 msgid "North"
-msgstr ""
+msgstr "Север"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:40
 msgid "Scale:"
@@ -5470,7 +5490,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Never"
-msgstr ""
+msgstr "Никада"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:24
 #, c-format
@@ -5515,11 +5535,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:54
 msgid "Number"
-msgstr "Broj"
+msgstr "Број"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Bind"
-msgstr ""
+msgstr "Вежи"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:58
 msgid "Weapon ID scale:"
@@ -5527,11 +5547,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:64
 msgid "Show Accuracy"
-msgstr ""
+msgstr "Прикажи прецизност"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:65
 msgid "Show Ammo"
-msgstr ""
+msgstr "Прикажи муницију"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:68
 msgid "Ammo bar alpha:"
@@ -5543,11 +5563,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qh:6
 msgid "Weapons Panel"
-msgstr ""
+msgstr "Плоча оружја"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:19
 msgid "HUD skins"
-msgstr ""
+msgstr "Омоти ХУД-а"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:22
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:196
@@ -5556,23 +5576,23 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:25
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:35
 msgid "Filter:"
-msgstr ""
+msgstr "Филтер:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:44
 msgid "Refresh"
-msgstr ""
+msgstr "Освежи"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:30
 msgid "Set skin"
-msgstr ""
+msgstr "Постави омот"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:37
 msgid "Save current skin"
-msgstr ""
+msgstr "Сачувај тренутни омот"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "Panel background defaults:"
@@ -5581,7 +5601,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:48
 #: qcsrc/menu/xonotic/util.qc:767
 msgid "Background:"
-msgstr ""
+msgstr "Позадина:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:62
@@ -5590,12 +5610,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:770 qcsrc/menu/xonotic/util.qc:786
 #: qcsrc/menu/xonotic/util.qc:803
 msgid "Disable"
-msgstr ""
+msgstr "Онемогући"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
 #: qcsrc/menu/xonotic/util.qc:783
 msgid "Border size:"
-msgstr ""
+msgstr "Величина границе:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:114
@@ -5634,15 +5654,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:121
 msgid "Grid settings:"
-msgstr ""
+msgstr "Подешавања мреже:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 msgid "Snap panels to grid"
-msgstr ""
+msgstr "Залепи плоче на мрежу"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:127
 msgid "Grid size:"
-msgstr ""
+msgstr "Величина мреже:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:129
 msgid "X:"
@@ -5729,7 +5749,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
-msgstr ""
+msgstr "Више играча"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid ""
@@ -5748,7 +5768,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Unlimited"
-msgstr ""
+msgstr "Неограничено"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:65
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:66
@@ -5827,7 +5847,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "1 minute"
-msgstr ""
+msgstr "1 минут"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:124
 msgid "TIMLIM^Infinite"
@@ -5881,47 +5901,47 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:153
 msgid "Beginner"
-msgstr ""
+msgstr "Почетник"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:154
 msgid "You will win"
-msgstr ""
+msgstr "Победићете"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:155
 msgid "You can win"
-msgstr ""
+msgstr "Можете победити"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:156
 msgid "You might win"
-msgstr ""
+msgstr "Можда ћете победити"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:157
 msgid "Advanced"
-msgstr ""
+msgstr "Напредно"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:158
 msgid "Expert"
-msgstr ""
+msgstr "Експерт"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Pro"
-msgstr ""
+msgstr "Професионалац"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:160
 msgid "Assassin"
-msgstr ""
+msgstr "Убица"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
 msgid "Unhuman"
-msgstr ""
+msgstr "Нечовек"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:162
 msgid "Godlike"
-msgstr ""
+msgstr "Боговски"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
 msgid "Mutators..."
-msgstr ""
+msgstr "Мутатори..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:179
 msgid "Mutators and weapon arenas"
@@ -5929,7 +5949,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Maplist"
-msgstr ""
+msgstr "Списак мапа"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:198
 msgid ""
@@ -5955,7 +5975,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:217
 msgid "Add all"
-msgstr ""
+msgstr "Додај све"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:218
 msgid "Add every available map to your selection"
@@ -5963,7 +5983,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:221
 msgid "Remove all"
-msgstr ""
+msgstr "Уклони све"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:222
 msgid "Remove all the maps from your selection"
@@ -5975,20 +5995,20 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:58
 msgid "Title:"
-msgstr ""
+msgstr "Наслов:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:64
 msgid "Author:"
-msgstr ""
+msgstr "Творац:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:70
 msgid "Game types:"
-msgstr ""
+msgstr "Врсте игре:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:296
 msgid "Close"
-msgstr ""
+msgstr "Затвори"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:96
 msgid "MAP^Play"
@@ -6049,7 +6069,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:195
 msgid "Low gravity"
-msgstr ""
+msgstr "Ниска гравитација"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:79
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:166
@@ -6058,7 +6078,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Hook"
-msgstr ""
+msgstr "Кука"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
@@ -6068,7 +6088,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:224
 msgid "Piñata"
-msgstr ""
+msgstr "Пињата"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:229
@@ -6083,12 +6103,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "Jet pack"
-msgstr ""
+msgstr "Ракетни појас"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
 msgid "Buffs"
-msgstr ""
+msgstr "Бафови"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:97
 msgid "Overkill"
@@ -6113,7 +6133,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:156
 msgid "Gameplay mutators:"
-msgstr ""
+msgstr "Мутатори тока игре:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Enable dodging"
@@ -6241,7 +6261,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:51
 msgid "Pause"
-msgstr ""
+msgstr "Заустави"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid ""
@@ -6250,16 +6270,16 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:53
 msgid "Reload the server list"
-msgstr ""
+msgstr "Поново учитај списак сервера"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:67
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:223
 msgid "Address:"
-msgstr ""
+msgstr "Адреса:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:78
 msgid "Info..."
-msgstr ""
+msgstr "Подаци..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:79
 msgid "Show more information about the currently highlighted server"
@@ -6268,7 +6288,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:84
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:303
 msgid "Join!"
-msgstr ""
+msgstr "Приступи!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:154
 #: qcsrc/menu/xonotic/serverlist.qc:1061
@@ -6282,7 +6302,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:161
 msgid "Official"
-msgstr ""
+msgstr "Званичан"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:169
 msgid "N/A (auth library missing, can't connect)"
@@ -6326,72 +6346,72 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:217
 msgid "Hostname:"
-msgstr ""
+msgstr "Име домаћина:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:231
 msgid "Gametype:"
-msgstr ""
+msgstr "Врста игре:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:236
 msgid "Map:"
-msgstr ""
+msgstr "Мапа:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:241
 msgid "Mod:"
-msgstr ""
+msgstr "Мод:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:246
 msgid "Version:"
-msgstr ""
+msgstr "Издање:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:251
 msgid "Settings:"
-msgstr ""
+msgstr "Подешавања:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:258
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:290
 msgid "Players:"
-msgstr ""
+msgstr "Играчи:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:263
 msgid "Bots:"
-msgstr ""
+msgstr "Ботови:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:268
 msgid "Free slots:"
-msgstr ""
+msgstr "Слободних места:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:274
 msgid "Encryption:"
-msgstr ""
+msgstr "Шифровање:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:279
 msgid "ID:"
-msgstr ""
+msgstr "ИБ:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:284
 msgid "Key:"
-msgstr ""
+msgstr "Кључ:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Information"
-msgstr ""
+msgstr "Подаци о серверу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:25
 msgid "Demos"
-msgstr ""
+msgstr "Демои"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:26
 msgid "Screenshots"
-msgstr ""
+msgstr "Снимци екрана"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:27
 msgid "Music Player"
-msgstr ""
+msgstr "Пуштач музике"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:48
 msgid "Auto record demos"
-msgstr ""
+msgstr "Самостално снима демое"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:57
 msgid "Timedemo"
@@ -6417,7 +6437,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qh:6
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qh:6
 msgid "Disconnect"
-msgstr ""
+msgstr "Откачи се"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
@@ -6506,11 +6526,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:20
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:21
 msgid "Apply immediately"
-msgstr ""
+msgstr "Одмах примени"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:48
 msgid "Name"
-msgstr ""
+msgstr "Име"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:77
 msgid "Model"
@@ -6552,32 +6572,32 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:162
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:172
 msgid "Female"
-msgstr ""
+msgstr "Женски"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:163
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:173
 msgid "Male"
-msgstr ""
+msgstr "Мушки"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:166
 msgid "Gender"
-msgstr ""
+msgstr "Пол"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:11
 msgid "Are you sure you want to quit?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите изаћи?"
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:15
 msgid "Back to work..."
-msgstr ""
+msgstr "Назад на посао..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:17
 msgid "I got some more fragging to do!"
-msgstr ""
+msgstr "Хоћу да рокам још мало!"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
-msgstr ""
+msgstr "Изађи из игре"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:15
 msgid "Model:"
@@ -6693,7 +6713,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "Show help"
-msgstr ""
+msgstr "Прикажи помоћ"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:82
 msgid "* is the object you are facing"
@@ -6705,681 +6725,717 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:18
 msgid "Video"
-msgstr ""
+msgstr "Видео"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:19
 msgid "Effects"
-msgstr ""
+msgstr "Ефекти"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:20
 msgid "Audio"
-msgstr ""
+msgstr "Звук"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:22
 msgid "Game"
-msgstr ""
+msgstr "Игра"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:23
 msgid "Input"
-msgstr ""
+msgstr "Улаз"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:24
 msgid "User"
-msgstr ""
+msgstr "Корисник"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:25
 #: qcsrc/menu/xonotic/keybinder.qc:105
 msgid "Misc"
-msgstr ""
+msgstr "Разно"
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:6
 msgid "Settings"
-msgstr ""
+msgstr "Подешавања"
 
 #: qcsrc/menu/xonotic/dialog_settings.qh:7
 msgid "Change the game settings"
-msgstr ""
+msgstr "Промени подешавања игрице"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:29
 msgid "Master:"
-msgstr ""
+msgstr "Главни:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:35
 msgid "Music:"
-msgstr ""
+msgstr "Музика:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:43
 msgid "VOL^Ambient:"
-msgstr ""
+msgstr "VOL^Окружење:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:50
 msgid "Info:"
-msgstr ""
+msgstr "Подаци:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:57
 msgid "Items:"
-msgstr ""
+msgstr "Ствари:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:64
 msgid "Pain:"
-msgstr ""
+msgstr "Бол:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:71
 msgid "Player:"
-msgstr ""
+msgstr "Играч:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:78
 msgid "Shots:"
-msgstr ""
+msgstr "Погоци:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:85
 msgid "Voice:"
-msgstr ""
+msgstr "Глас:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:93
 msgid "Weapons:"
-msgstr ""
+msgstr "Оружја:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:99
 msgid "New style sound attenuation"
-msgstr ""
+msgstr "Нови стил слабљења звука"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:102
 msgid "Mute sounds when not active"
-msgstr ""
+msgstr "Притаји звукове приликом неактивности"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:105
 msgid "Frequency:"
-msgstr ""
+msgstr "Учестаност"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:107
 msgid "Sound output frequency"
-msgstr ""
+msgstr "Учестаност звучног излаза"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "8 kHz"
-msgstr ""
+msgstr "8 килохерца"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:109
 msgid "11.025 kHz"
-msgstr ""
+msgstr "11.025 килохерца"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "16 kHz"
-msgstr ""
+msgstr "16 килохерца"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:111
 msgid "22.05 kHz"
-msgstr ""
+msgstr "22.05 килохерца"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:112
 msgid "24 kHz"
-msgstr ""
+msgstr "24 килохерца"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:113
 msgid "32 kHz"
-msgstr ""
+msgstr "32 килохерца"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:114
 msgid "44.1 kHz"
-msgstr ""
+msgstr "44.1 килохерца"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:115
 msgid "48 kHz"
-msgstr ""
+msgstr "48 килохерца"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:119
 msgid "Channels:"
-msgstr ""
+msgstr "Канали:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:121
 msgid "Number of channels for the sound output"
-msgstr ""
+msgstr "Број коришћених канала за звучни излаз"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:122
 msgid "Mono"
-msgstr ""
+msgstr "Моно"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:123
 msgid "Stereo"
-msgstr ""
+msgstr "Стерео"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:124
 msgid "2.1"
-msgstr ""
+msgstr "2.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:125
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:126
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:127
 msgid "5.1"
-msgstr ""
+msgstr "5.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:128
 msgid "6.1"
-msgstr ""
+msgstr "6.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:129
 msgid "7.1"
-msgstr ""
+msgstr "7.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:134
 msgid "Swap stereo output channels"
-msgstr ""
+msgstr "Замени излазне стерео канале"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:135
 msgid "Swap left/right channels"
-msgstr ""
+msgstr "Замени леве и десне канале"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:138
 msgid "Headphone friendly mode"
-msgstr ""
+msgstr "Режим за слушке"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid ""
 "Enable spatialization (blend the right and left channel slightly to decrease "
 "stereo separation a bit for headphones)"
 msgstr ""
+"Омогући упросторавање (лагано утопи десни и леви канал да би се смањило "
+"делимично стерео одвајање за слушалице)"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
 msgid "Hit indication sound"
-msgstr ""
+msgstr "Звучни показатељ погодка"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Play a hit indicator sound when your shot hits an enemy"
-msgstr ""
+msgstr "Пусти звучни показатељ погодка када погодите непријатеља"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:147
 msgid "Chat message sound"
-msgstr ""
+msgstr "Звук поруке ћаскања"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:149
 msgid "Menu sounds"
-msgstr ""
+msgstr "Звукови менија"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:150
 msgid "Play sounds when clicking menu items"
-msgstr ""
+msgstr "Пусти звукове при клику на ставке у менију"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:151
 msgid "Focus sounds"
-msgstr ""
+msgstr "Усредсреди звукове"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:152
 msgid "Play sounds when hovering over menu items too"
-msgstr ""
+msgstr "Пусти звукове приликом лебдења мишем преко ставки у менију"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:156
 msgid "Time announcer:"
-msgstr ""
+msgstr "Најављивач времена:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:158
 msgid "WRN^Disabled"
-msgstr ""
+msgstr "WRN^Онемогућено"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:160
 msgid "5 minutes"
-msgstr ""
+msgstr "5 минута"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:161
 msgid "WRN^Both"
-msgstr ""
+msgstr "WRN^Оба"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:164
 msgid "Automatic taunts:"
-msgstr ""
+msgstr "Аутоматска ругања:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:166
 msgid "Automatically taunt enemies after fragging them"
-msgstr ""
+msgstr "Аутоматски се ругајте непријатељима након што их рокнете"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:168
 msgid "Sometimes"
-msgstr ""
+msgstr "Понекад"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:169
 msgid "Often"
-msgstr ""
+msgstr "Често"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:170
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:141
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid "Always"
-msgstr ""
+msgstr "Увек"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:176
 msgid "Debug info about sounds"
-msgstr ""
+msgstr "Подаци за отклањање грешака о звуковима"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:41
 msgid "Quality preset:"
-msgstr ""
+msgstr "Брзо подешавање квалитета"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:45
 msgid "PRE^OMG!"
-msgstr ""
+msgstr "PRE^ВАУ!"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:48
 msgid "PRE^Low"
-msgstr ""
+msgstr "PRE^Низак"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:50
 msgid "PRE^Medium"
-msgstr ""
+msgstr "PRE^Средњи"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:52
 msgid "PRE^Normal"
-msgstr ""
+msgstr "PRE^Обичан"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:54
 msgid "PRE^High"
-msgstr ""
+msgstr "PRE^Висок"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:56
 msgid "PRE^Ultra"
-msgstr ""
+msgstr "PRE^Ултра"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:60
 msgid "PRE^Ultimate"
-msgstr ""
+msgstr "PRE^Ултимативни"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:65
 msgid "Geometry detail:"
-msgstr ""
+msgstr "Геометријска детаљност:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Change the smoothness of the curves on the map (default: normal)"
-msgstr ""
+msgstr "Мења глаткост кривина на мапи (подразумевано: обична)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:68
 msgid "DET^Lowest"
-msgstr ""
+msgstr "DET^Најнижа"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:69
 msgid "DET^Low"
-msgstr ""
+msgstr "DET^Ниска"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:70
 msgid "DET^Normal"
-msgstr ""
+msgstr "DET^Обична"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:71
 msgid "DET^Good"
-msgstr ""
+msgstr "DET^Добра"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:72
 msgid "DET^Best"
-msgstr ""
+msgstr "DET^Најбоља"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:73
 msgid "DET^Insane"
-msgstr ""
+msgstr "DET^Невиђена"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:77
 msgid "Player detail:"
-msgstr ""
+msgstr "Детаљност играча:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:79
 msgid "PDET^Low"
-msgstr ""
+msgstr "PDET^Ниска"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:80
 msgid "PDET^Medium"
-msgstr ""
+msgstr "PDET^Средња"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:81
 msgid "PDET^Normal"
-msgstr ""
+msgstr "PDET^Обична"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:82
 msgid "PDET^Good"
-msgstr ""
+msgstr "PDET^Добра"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:83
 msgid "PDET^Best"
-msgstr ""
+msgstr "PDET^Најбоља"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:87
 msgid "Texture resolution:"
-msgstr ""
+msgstr "Резолуција текстура:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:91
 msgid "RES^Leet"
-msgstr ""
+msgstr "RES^Мајсторска"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:92
 msgid "RES^Lowest"
-msgstr ""
+msgstr "RES^Најнижа"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:93
 msgid "RES^Very low"
-msgstr ""
+msgstr "RES^Веома ниска"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:94
 msgid "RES^Low"
-msgstr ""
+msgstr "RES^Ниска"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:95
 msgid "RES^Normal"
-msgstr ""
+msgstr "RES^Обична"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:96
 msgid "RES^Good"
-msgstr ""
+msgstr "RES^Добра"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
 msgid "RES^Best"
-msgstr ""
+msgstr "RES^Најбоља"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:110
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:115
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:120
 msgid "Avoid lossy texture compression"
-msgstr ""
+msgstr "Избегни паковање текстура са губитком"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:131
 msgid "Show surfaces"
-msgstr ""
+msgstr "Прикажи површине"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:132
 msgid ""
 "Disable textures completely for very slow hardware. This gives a huge "
 "performance boost, but looks very ugly. (default: disabled)"
 msgstr ""
+"Онемогућава текстуре у потпуности на веома слабом хардверу. Ово пружа "
+"огромно убрзање перформанси али чини игру веома ружном. (подразумевано: "
+"онемогућено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:135
 msgid "Use lightmaps"
-msgstr ""
+msgstr "Користи светлосне мапе"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:136
 msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory (default: enabled)"
 msgstr ""
+"Користи светлосне мапе високе резолуције које изгледају лепо али користе "
+"нешто више видео меморије (подразумевано: укључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:138
 msgid "Deluxe mapping"
-msgstr ""
+msgstr "Делукс мапирање"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:139
 msgid "Use per-pixel lighting effects (default: enabled)"
-msgstr ""
+msgstr "Користи светлосне ефекте по пикселу (подразумевано: укључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Gloss"
-msgstr ""
+msgstr "Сјајност"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:142
 msgid ""
 "Enable the use of glossmaps on textures supporting it (default: enabled)"
 msgstr ""
+"Омогућава коришћење мапа сјајности на подржаним текстурама (подразумевано: "
+"укључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:145
 msgid "Offset mapping"
-msgstr ""
+msgstr "Офсет мапирање"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:146
 msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface (default: disabled)"
 msgstr ""
+"Ефекат офсет мапирања ће учинити текстуре са мапама џомби да изгледају као "
+"даоне \"искачу\" из 2Д површине (подразумевано: искључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
 msgid "Relief mapping"
-msgstr ""
+msgstr "Рељефно мапирање"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:149
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance "
 "(default: disabled)"
 msgstr ""
+"Офсетно мапирање већег квалитета које такође има велики ударац на "
+"перформансе (подразумевано: искључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "Reflections:"
-msgstr ""
+msgstr "Одрази:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
 msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces (default: disabled)"
 msgstr ""
+"Квалитет одражавања и преламања, представља велики ударац на перформансе на "
+"мапама са одражавајућим површинама (подразумевано: искључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:156
 msgid "Resolution of reflections/refractions (default: good)"
-msgstr ""
+msgstr "Резолуција одражавања и преламања (подразумевано: искључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:157
 msgid "Blurred"
-msgstr ""
+msgstr "Замућени"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:158
 msgid "REFL^Good"
-msgstr ""
+msgstr "REFL^Добри"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
 msgid "Sharp"
-msgstr ""
+msgstr "Оштри"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:163
 msgid "Decals"
-msgstr ""
+msgstr "Декали"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:164
 msgid "Enable decals (bullet holes and blood) (default: enabled)"
-msgstr ""
+msgstr "Омогући декале (ране од метка и крв) (подразумевано: омогућено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:165
 msgid "Decals on models"
-msgstr ""
+msgstr "Декали на моделима"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:169
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:253
 msgid "Distance:"
-msgstr ""
+msgstr "Даљина:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:172
 msgid "Decals further away than this will not be drawn (default: 300)"
 msgstr ""
+"Декали удаљенији од ове вредности се неће исцртавати (подразумевано: 360)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:176
 msgid "Time:"
-msgstr ""
+msgstr "Време:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:179
 msgid "Time in seconds before decals fade away (default: 2)"
-msgstr ""
+msgstr "Време у секундама пре него што декали нестану (подразумевано: 2)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:183
 msgid "Damage effects:"
-msgstr ""
+msgstr "Ефекти штете:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
 msgid "DMGFX^Disabled"
-msgstr ""
+msgstr "DMGFX^Онемогућени"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:186
 msgid "Skeletal"
-msgstr ""
+msgstr "Скелетни"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:187
 msgid "DMGFX^All"
-msgstr ""
+msgstr "DMGFX^Сви"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:191
 msgid "No dynamic lighting"
-msgstr ""
+msgstr "Без динамичког осветљења"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Enable corona flares around certain lights (default: enabled)"
-msgstr ""
+msgstr "Омогући корона блеске око одређених светала (подразумевано: омогућено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:194
 msgid "Fake corona lighting"
-msgstr ""
+msgstr "Лажно корона осветљење"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 msgid ""
 "Enable faster but uglier dynamic lights by rendering bright coronas instead "
 "of real dynamic lights (default: disabled)"
 msgstr ""
+"Омогућава бржа али ружнија динамичка светла исцртавањем јарких корона уместо "
+"стварних динамичких светала (подразумевано: онемогућено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:198
 msgid "Realtime dynamic lighting"
-msgstr ""
+msgstr "Динамичко осветљење у реалном времену"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid ""
 "Enable rendering of dynamic lights such as explosions and rocket lights "
 "(default: enabled)"
 msgstr ""
+"Омогућава исцртавање динамичких светала као што су експлозије и светла "
+"ракета (подразумевано: укључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:201
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
 msgid "Shadows"
-msgstr ""
+msgstr "Сенке"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Enable rendering of shadows from dynamic lights (default: disabled)"
 msgstr ""
+"Омогућава исцртавање сенки динамичких светала (подразумевано: онемогућено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Realtime world lighting"
-msgstr ""
+msgstr "Осветљавање света у реалном времену"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid ""
 "Enable rendering of full realtime world lighting on maps that support it. "
 "Note that this might have a big impact on performance. (default: disabled)"
 msgstr ""
+"Омогућава исцртавање пуног осветљења света у реалном времену на мапама које "
+"то подржавају. Знајте да ово утиче знатно на перформансе. (подразумевано: "
+"искључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid ""
 "Enable rendering of shadows from realtime world lights (default: disabled)"
 msgstr ""
+"Омогућава исцртавање сенки са осветљења света у реалном времену "
+"(подразумевано: искључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Use normal maps"
-msgstr ""
+msgstr "Користи обичне мапе"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid "Enable use of directional shading on textures (default: enabled)"
 msgstr ""
+"Омогућава коришћење усмереног сенчења на текстурама (подразумевано: "
+"омогућено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid "Soft shadows"
-msgstr ""
+msgstr "Меке сенке"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:219
 msgid "Fade corona according to visibility"
-msgstr ""
+msgstr "Избледи короне на основу видљивости"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
 msgid "Fade coronas according to visibility (default: enabled)"
-msgstr ""
+msgstr "Изблеђује короне на основу видљивости (подразумевано: омогућено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
 msgid "Bloom"
-msgstr ""
+msgstr "Цветање"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:225
 msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance. (default: disabled)"
 msgstr ""
+"Омогућава ефекат цветања који појачава јаркост пиксела близу веома јарких "
+"пиксела. Веома утиче на перформансе. (подразумевано: искључено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:226
 msgid "Extra postprocessing effects"
-msgstr ""
+msgstr "Додатни ефекти након обраде"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:227
 msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup (default: disabled)"
 msgstr ""
+"Омогућава додатне ефекте након обраде у случају када је играч повређен или "
+"под водом или користи појачање (подразумевано: онемогућено)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Motion blur strength - 0.4 recommended"
-msgstr ""
+msgstr "Јачина замућења при покрету - 0.4 препоручено"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:233
 msgid "Motion blur:"
-msgstr ""
+msgstr "Замућење при покрету:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:239
 msgid "Particles"
-msgstr ""
+msgstr "Честице"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
 msgid "Spawnpoint effects"
-msgstr ""
+msgstr "Ефекти тачке оживљавања"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:241
 msgid "Particles effects at all spawn points and whenever a player spawns"
-msgstr ""
+msgstr "Ефекти честица на свим тачкама оживљавања и кад год се играч оживи"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:246
 msgid "Quality:"
-msgstr ""
+msgstr "Квалитет:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:249
 msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance (default: 1.0)"
 msgstr ""
+"Множилац за своту честица. Мање значи мање честица што заузврат даје боље "
+"перформансе у игри (подразумевано: 1.0)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:256
 msgid "Particles further away than this will not be drawn (default: 1000)"
 msgstr ""
+"Честице удаљеније од ове вредности се неће исцртавати (подразумевано: 1000)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:31
 msgid "No crosshair"
-msgstr ""
+msgstr "Без нишана"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:62
 msgid "Per weapon"
-msgstr ""
+msgstr "По оружју"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:34
 msgid ""
 "Set a different crosshair for each weapon, good if you play without weapon "
 "models"
 msgstr ""
+"Изаберите другачији нишан за свако оружје, добро ако играте без модела оружја"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:81
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:97
 msgid "Size:"
-msgstr ""
+msgstr "Величина:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:64
 msgid "By health"
-msgstr ""
+msgstr "По здрављу"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:76
 msgid "Use rings to indicate weapon status"
-msgstr ""
+msgstr "Користи прстене за показивање стања оружја"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:93
 msgid "Enable center crosshair dot"
-msgstr ""
+msgstr "Омогући нишанску тачку на средини"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:111
 msgid "Use normal crosshair color"
-msgstr ""
+msgstr "Користи обичну боју нишана"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:122
 msgid "Smooth effects of crosshairs"
-msgstr ""
+msgstr "Глатки ефекти нишана"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:125
 msgid "Hit testing:"
-msgstr ""
+msgstr "Процена погађања:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:128
 msgid ""
@@ -7696,7 +7752,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
 #: qcsrc/menu/xonotic/serverlist.qc:767
 msgid "Players"
-msgstr "Igrači"
+msgstr "Играчи"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
@@ -8489,7 +8545,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:123
 msgid "Contrast:"
-msgstr "Kontrast:"
+msgstr "Контраст:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:125
 msgid "Brightness of white (default: 1)"
@@ -8535,7 +8591,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Intensity:"
-msgstr "Intenzitet:"
+msgstr "Јачина:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:152
 msgid "Global rendering brightness (default: 1)"
@@ -8575,7 +8631,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:110
 msgid "Instant action! (random map with bots)"
-msgstr ""
+msgstr "Тренутна акција! (насумична мапа са ботовима)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:117
 msgid "???"
@@ -8583,27 +8639,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:130
 msgid "Campaign Difficulty:"
-msgstr ""
+msgstr "Тежина похода:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:131
 msgid "CSKL^Easy"
-msgstr ""
+msgstr "CSKL^Лако"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:132
 msgid "CSKL^Medium"
-msgstr ""
+msgstr "CSKL^Средње"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:133
 msgid "CSKL^Hard"
-msgstr ""
+msgstr "CSKL^Тешко"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:135
 msgid "Start Singleplayer!"
-msgstr ""
+msgstr "Започни игру за једног играча!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"
-msgstr "Igra jednog igrača"
+msgstr "Један играч"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
@@ -8611,7 +8667,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
-msgstr "Pobednik"
+msgstr "Победник"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "join 'best' team (auto-select)"
@@ -8623,11 +8679,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "red"
-msgstr "crvena"
+msgstr "црвена"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:38
 msgid "blue"
-msgstr "plava"
+msgstr "плава"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:39
 msgid "yellow"
@@ -8639,7 +8695,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:43
 msgid "spectate"
-msgstr "posmatraj"
+msgstr "посматрај"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
@@ -8839,7 +8895,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/playerlist.qc:100 qcsrc/menu/xonotic/playerlist.qc:110
 msgid "spectator"
-msgstr "posmatrač"
+msgstr "пратилац"
 
 #: qcsrc/menu/xonotic/playermodel.qc:170
 msgid "<no model found>"
@@ -8857,7 +8913,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:763
 msgid "Ping"
-msgstr "Ping"
+msgstr "Пинг"
 
 #: qcsrc/menu/xonotic/serverlist.qc:764
 msgid "Hostname"
@@ -8865,11 +8921,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:765
 msgid "Map"
-msgstr "Mapa"
+msgstr "Мапа"
 
 #: qcsrc/menu/xonotic/serverlist.qc:766
 msgid "Type"
-msgstr "Tip"
+msgstr "Врста"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1060
 #, c-format
@@ -8953,16 +9009,16 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:72
 msgid "VOL^MAX"
-msgstr ""
+msgstr "VOL^НАЈВИШЕ"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:74
 msgid "VOL^OFF"
-msgstr ""
+msgstr "VOL^ИСКЉУЧЕНО"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:82
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s децибела"
 
 #: qcsrc/menu/xonotic/slider_particles.qc:13
 msgid ""
@@ -9145,12 +9201,12 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:780
 msgid "Use default"
-msgstr "Koristi fabrička podešavanja"
+msgstr "Користи подразумевано"
 
 #: qcsrc/menu/xonotic/util.qc:800
 msgid "Team Color:"
-msgstr "Boja tima:"
+msgstr "Боја екипе:"
 
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
-msgstr "Omogući panel"
+msgstr "Омогући плочу"
