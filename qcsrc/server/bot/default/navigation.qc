@@ -266,6 +266,9 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 // completely empty the goal stack, used when deciding where to go
 void navigation_clearroute(entity this)
 {
+	this.goalcurrent_prev = this.goalcurrent;
+	this.goalcurrent_distance = 10000000;
+	this.goalcurrent_distance_time = 0;
 	//print("bot ", etos(this), " clear\n");
 	this.goalentity = NULL;
 	this.goalcurrent = NULL;
@@ -310,6 +313,9 @@ void navigation_clearroute(entity this)
 // steps to the goal, and then recalculate the path.
 void navigation_pushroute(entity this, entity e)
 {
+	this.goalcurrent_prev = this.goalcurrent;
+	this.goalcurrent_distance = 10000000;
+	this.goalcurrent_distance_time = 0;
 	//print("bot ", etos(this), " push ", etos(e), "\n");
 	if(this.goalstack31 == this.goalentity)
 		this.goalentity = NULL;
@@ -352,6 +358,9 @@ void navigation_pushroute(entity this, entity e)
 // (used when a spawnfunc_waypoint is reached)
 void navigation_poproute(entity this)
 {
+	this.goalcurrent_prev = this.goalcurrent;
+	this.goalcurrent_distance = 10000000;
+	this.goalcurrent_distance_time = 0;
 	//print("bot ", etos(this), " pop\n");
 	if(this.goalcurrent == this.goalentity)
 		this.goalentity = NULL;

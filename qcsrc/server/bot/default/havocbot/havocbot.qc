@@ -413,9 +413,26 @@ void havocbot_bunnyhop(entity this, vector dir)
 #endif
 }
 
-.entity goalcurrent_prev;
-.float goalcurrent_distance;
-.float goalcurrent_distance_time;
+// return true when bot isn't getting closer to the current goal
+bool havocbot_checkgoaldistance(entity this, vector gco)
+{
+	float curr_dist = vlen(this.origin - gco);
+	if(curr_dist > this.goalcurrent_distance)
+	{
+		if(!this.goalcurrent_distance_time)
+			this.goalcurrent_distance_time = time;
+		else if (time - this.goalcurrent_distance_time > 0.5)
+			return true;
+	}
+	else
+	{
+		// reduce it a little bit so it works even with very small approaches to the goal
+		this.goalcurrent_distance = max(20, curr_dist - 15);
+		this.goalcurrent_distance_time = 0;
+	}
+	return false;
+}
+
 void havocbot_movetogoal(entity this)
 {
 	vector destorg;
@@ -507,16 +524,20 @@ void havocbot_movetogoal(entity this)
 	// Handling of jump pads
 	if(this.jumppadcount)
 	{
-		// If got stuck on the jump pad try to reach the farthest visible waypoint
-		// but with some randomness so it can try out different paths
-		if(this.aistatus & AI_STATUS_OUT_JUMPPAD)
+		if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 		{
-			if(fabs(this.velocity.z)<50)
+			this.aistatus |= AI_STATUS_OUT_JUMPPAD;
+			navigation_poptouchedgoals(this);
+			return;
+		}
+		else if(this.aistatus & AI_STATUS_OUT_JUMPPAD)
+		{
+			// If got stuck on the jump pad try to reach the farthest visible waypoint
+			// but with some randomness so it can try out different paths
+			if(!this.goalcurrent)
 			{
 				entity newgoal = NULL;
-				if (vdist(this.origin - this.goalcurrent.origin, <, 150))
-					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
-				else IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 1000),
+				IL_EACH(g_waypoints, vdist(it.origin - this.origin, <=, 1000),
 				{
 					if(it.wpflags & WAYPOINTFLAG_TELEPORT)
 					if(it.origin.z < this.origin.z - 100 && vdist(vec2(it.origin - this.origin), <, 100))
@@ -543,11 +564,22 @@ void havocbot_movetogoal(entity this)
 				}
 			}
 			else
-				return;
+			{
+				gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
+				if (this.origin.z > gco.z && vdist(vec2(this.velocity), <, autocvar_sv_maxspeed))
+					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
+				else if(havocbot_checkgoaldistance(this, gco))
+				{
+					navigation_clearroute(this);
+					this.bot_strategytime = 0;
+				}
+				else
+					return;
+			}
 		}
 		else
 		{
-			if(time - this.lastteleporttime > 0.3 && this.velocity.z > 0)
+			if(time - this.lastteleporttime > 0.2 && this.velocity.z > 0)
 			{
 				vector velxy = this.velocity; velxy_z = 0;
 				if(vdist(velxy, <, autocvar_sv_maxspeed * 0.2))
@@ -792,33 +824,12 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// if bot for some reason doesn't get close to the current goal find another one
-			if(!IS_PLAYER(this.goalcurrent) && !(this.goalcurrent.bot_pickup_respawning && this.goalcurrent_distance < 50))
+			if(!this.jumppadcount && !IS_PLAYER(this.goalcurrent) && !(this.goalcurrent.bot_pickup_respawning && this.goalcurrent_distance < 50))
+			if(havocbot_checkgoaldistance(this, gco))
 			{
-				float curr_dist = vlen(this.origin - this.goalcurrent.origin);
-				if(this.goalcurrent != this.goalcurrent_prev)
-				{
-					this.goalcurrent_prev = this.goalcurrent;
-					this.goalcurrent_distance = curr_dist;
-					this.goalcurrent_distance_time = 0;
-				}
-				else if(curr_dist > this.goalcurrent_distance)
-				{
-					if(!this.goalcurrent_distance_time)
-						this.goalcurrent_distance_time = time;
-					else if (time - this.goalcurrent_distance_time > 0.5)
-					{
-						this.goalcurrent_prev = NULL;
-						navigation_clearroute(this);
-						this.bot_strategytime = 0;
-						return;
-					}
-				}
-				else
-				{
-					// reduce it a little bit so it works even with very small approaches to the goal
-					this.goalcurrent_distance = max(20, curr_dist - 15);
-					this.goalcurrent_distance_time = 0;
-				}
+				navigation_clearroute(this);
+				this.bot_strategytime = 0;
+				return;
 			}
 
 			// Check for water/slime/lava and dangerous edges

@@ -278,6 +278,29 @@ bool trigger_push_testorigin(entity e, entity targ, entity jp, vector org)
 	tracetoss(e, e);
 	if(trace_startsolid)
 		return false;
+
+	if(!jp.height)
+	{
+		// since tracetoss starting from jumppad's origin often fails when target
+		// is very close to real destination, start it directly from target's
+		// origin instead
+		e.velocity_z = 0;
+		setorigin(e, targ.origin + stepheightvec);
+		tracetoss(e, e);
+		if(trace_startsolid)
+		{
+			setorigin(e, targ.origin + stepheightvec / 2);
+			tracetoss(e, e);
+			if(trace_startsolid)
+			{
+				setorigin(e, targ.origin);
+				tracetoss(e, e);
+				if(trace_startsolid)
+					return false;
+			}
+		}
+	}
+
 	if(e.move_movetype == MOVETYPE_NONE)
 	{
 		tracebox(trace_endpos, e.mins, e.maxs, trace_endpos - eZ * 1500, true, jp);
@@ -295,6 +318,9 @@ void trigger_push_findtarget(entity this)
 	if (this.target)
 	{
 		int n = 0;
+#ifdef SVQC
+		vector vel = '0 0 0';
+#endif
 		for(entity t = NULL; (t = find(t, targetname, this.target)); )
 		{
 			++n;
@@ -302,6 +328,7 @@ void trigger_push_findtarget(entity this)
 			entity e = spawn();
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
+			vel = e.velocity;
 			vector best_target = '0 0 0';
 			vector best_org = '0 0 0';
 			vector best_vel = '0 0 0';
@@ -325,28 +352,41 @@ void trigger_push_findtarget(entity this)
 				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmax.y - this.absmin.y));
 				new_org = org + ofs;
 				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				vel = e.velocity;
+				if(vlen(vec2(e.velocity)) < autocvar_sv_maxspeed)
+					e.velocity = autocvar_sv_maxspeed * flatdir;
 				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
 				{
 					best_target = trace_endpos;
 					best_org = new_org;
-					best_vel = e.velocity;
+					best_vel = vel;
 					valid_best_target = true;
 				}
 				new_org = org - ofs;
 				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				vel = e.velocity;
+				if(vlen(vec2(e.velocity)) < autocvar_sv_maxspeed)
+					e.velocity = autocvar_sv_maxspeed * flatdir;
 				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
 				{
 					best_target = trace_endpos;
 					best_org = new_org;
-					best_vel = e.velocity;
+					best_vel = vel;
 					valid_best_target = true;
 				}
 			}
+
 			if (valid_best_target)
 			{
-				float distxy = (vlen((best_target - eZ * best_target.z) - (best_org - eZ * best_org.z)));
-				float velxy = vlen(best_vel - eZ * best_vel.z);
-				waypoint_spawnforteleporter(this, best_target, distxy / velxy);
+				if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, best_target + PL_MIN_CONST, best_target + PL_MAX_CONST)))
+				{
+					float velxy = vlen(vec2(best_vel));
+					float cost = vlen(vec2(t.origin - best_org)) / velxy;
+					if(velxy < autocvar_sv_maxspeed)
+						velxy = autocvar_sv_maxspeed;
+					cost += vlen(vec2(best_target - t.origin)) / velxy;
+					waypoint_spawnforteleporter(this, best_target, cost);
+				}
 			}
 			delete(e);
 #endif
@@ -379,7 +419,8 @@ void trigger_push_findtarget(entity this)
 		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 		e.velocity = this.movedir;
 		tracetoss(e, e);
-		waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+		if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
+			waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 		delete(e);
 	}
 

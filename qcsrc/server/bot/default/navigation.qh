@@ -24,6 +24,10 @@ entity navigation_bestgoal;
 .entity goalstack24, goalstack25, goalstack26, goalstack27;
 .entity goalstack28, goalstack29, goalstack30, goalstack31;
 
+.entity goalcurrent_prev;
+.float goalcurrent_distance;
+.float goalcurrent_distance_time;
+
 .entity nearestwaypoint;
 .float nearestwaypoint_dist;
 .float nearestwaypointtimeout;
