@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-13 23:01+0000\n"
+"PO-Revision-Date: 2017-05-14 18:08+0000\n"
 "Last-Translator: Марко М. Костић (Marko M. Kostić) <marko.m.kostic@gmail."
 "com>\n"
 "Language-Team: Serbian (http://www.transifex.com/team-xonotic/xonotic/"
@@ -1002,7 +1002,7 @@ msgstr "^2Име ^7уместо \"^1Anonymous player^7\" у статистици
 
 #: qcsrc/client/hud/panel/vote.qc:115
 msgid "A vote has been called for:"
-msgstr "Гласање је почео за:"
+msgstr "Гласање је почело за:"
 
 #: qcsrc/client/hud/panel/vote.qc:117
 msgid "Allow servers to store and display your name?"
@@ -1689,7 +1689,7 @@ msgstr "Тестера на ракетни погон"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr "Водиља"
+msgstr "Путна тачка"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
@@ -7290,7 +7290,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:205
 msgid "Realtime world lighting"
-msgstr "Осветљавање света у реалном времену"
+msgstr "Осветљење света у реалном времену"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:206
 msgid ""
@@ -7443,311 +7443,314 @@ msgid ""
 "when there's an obstacle between your gun and the target; Enemies: also "
 "enlarge the crosshair when you would hit an enemy"
 msgstr ""
+"Ништа: не процењуј погодке преко нишана. ПравоЦиљање: замути нишан када се "
+"утврди да постоји препрека између ваше пушке и мете. Непријатељи: такође "
+"повећај ништан када се процени да бисте погодили непријатеља."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:129
 msgid "HTTST^Disabled"
-msgstr ""
+msgstr "HTTST^Онемогућено"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:130
 msgid "HTTST^TrueAim"
-msgstr ""
+msgstr "HTTST^ПравоЦиљање"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:131
 msgid "HTTST^Enemies"
-msgstr ""
+msgstr "HTTST^Непријатељи"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
 msgid "Blur crosshair if the shot is obstructed"
-msgstr ""
+msgstr "Замути нишан када је непријатељ заклоњен"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
 msgid "Enlarge crosshair if targeting an enemy"
-msgstr ""
+msgstr "Повећај нишан када би се непријатељ погодио"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:143
 msgid "Animate crosshair when hitting an enemy"
-msgstr ""
+msgstr "Анимирај нишан када се непријатељ погоди"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:146
 msgid "Animate crosshair when picking up an item"
-msgstr ""
+msgstr "Анимирај нишан када се покупи ствар"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
 msgid "Crosshair"
-msgstr ""
+msgstr "Нишан"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:48
 msgid "Fading speed:"
-msgstr ""
+msgstr "Брзина изблеђивања:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:51
 msgid "Enable rows / columns highlighting"
-msgstr ""
+msgstr "Омогући истицање редова и колона"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:55
 msgid "Show decimals in respawn countdown"
-msgstr ""
+msgstr "Прикажи децимале у одбројавачу оживљавања"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid "Show accuracy underneath scoreboard"
-msgstr ""
+msgstr "Прикажи прецизност испод табле са резултатима"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:61
 msgid "Waypoints"
-msgstr ""
+msgstr "Путне тачке"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:63
 msgid "Display waypoint markers for objectives on the map"
-msgstr ""
+msgstr "Прикажи обележиваче путних тачака за циљеве на мапи"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:64
 msgid "Show various gametype specific waypoints"
-msgstr ""
+msgstr "Прикажи разноразне путне тачке везане за врсту игре"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:70
 msgid "Control transparency of the waypoints"
-msgstr ""
+msgstr "Управљај провидношћу путних тачака"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:74
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:124
 msgid "Fontsize:"
-msgstr ""
+msgstr "Величина фонта:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:80
 msgid "Edge offset:"
-msgstr ""
+msgstr "Офсет ивице:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:89
 msgid "Fade when near the crosshair"
-msgstr ""
+msgstr "Избледи у близини нишана"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:94
 msgid "Damage"
-msgstr ""
+msgstr "Штета"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:96
 msgid "Overlay:"
-msgstr ""
+msgstr "Преклоп:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:99
 msgid "Factor:"
-msgstr ""
+msgstr "Чинилац:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:104
 msgid "Fade rate:"
-msgstr ""
+msgstr "Стопа изблеђивања:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:112
 msgid "Player Names"
-msgstr ""
+msgstr "Имена играча"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:114
 msgid "Show names above players"
-msgstr ""
+msgstr "Прикажи имена изнад играча"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:130
 msgid "Max distance:"
-msgstr ""
+msgstr "Највећа даљина:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:136
 msgid "Decolorize:"
-msgstr ""
+msgstr "Обезбоји:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:140
 #: qcsrc/menu/xonotic/keybinder.qc:99
 msgid "Teamplay"
-msgstr ""
+msgstr "Екипна игра"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:148
 msgid "Only when near crosshair"
-msgstr ""
+msgstr "Само у близини нишана"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:152
 msgid "Display health and armor"
-msgstr ""
+msgstr "Прикажи здравље и оклоп"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:157
 msgid "Damage overlay:"
-msgstr ""
+msgstr "Преклоп штете:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:160
 msgid "Dynamic HUD"
-msgstr ""
+msgstr "Динамички ХУД"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:161
 msgid "HUD moves around following player's movement"
-msgstr ""
+msgstr "ХУД се помера унаоколо и прати кретање играча"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
 msgid "Shake the HUD when hurt"
-msgstr ""
+msgstr "Затреси ХУД приликом рањавања"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
 msgid "Enter HUD editor"
-msgstr ""
+msgstr "Уђи у уређивач ХУД-а"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
 msgid "HUD"
-msgstr ""
+msgstr "ХУД"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
-msgstr ""
+msgstr "Да би се уређивач ХУД-а приказао, морате бити унутар игре."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr ""
+msgstr "Да ли желите да покренете локалну игру да бисте подесили ХУД?"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
-msgstr ""
+msgstr "Подаци о рокању"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
 msgid "Display information about killing sprees"
-msgstr ""
+msgstr "Прикажи податке о покољима"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:29
 msgid "Only display sprees if they are achievements"
-msgstr ""
+msgstr "Прикажи покоље само ако су достигнућа"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:34
 msgid "Show spree information in centerprints"
-msgstr ""
+msgstr "Прикажи податке о покољима у средишњим порукама"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:38
 msgid "Show spree information in death messages"
-msgstr ""
+msgstr "Прикажи податке о покољима у смртним порукама"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:43
 msgid "Sprees in info messages:"
-msgstr ""
+msgstr "Покољи у инфо порукама:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:46
 msgid "SPREES^Disabled"
-msgstr ""
+msgstr "SPREES^Онемогућено"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:47
 msgid "Target"
-msgstr ""
+msgstr "Мета"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:48
 msgid "Attacker"
-msgstr ""
+msgstr "Нападач"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:49
 msgid "SPREES^Both"
-msgstr ""
+msgstr "SPREES^Оба"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:55
 msgid "Print on a seperate line"
-msgstr ""
+msgstr "Прикажи у засебном реду"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
 msgid "Add extra frag information to centerprint when available"
-msgstr ""
+msgstr "Прикажи додатне податке о рокању у средишњој поруци, када су доступни"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
-msgstr ""
+msgstr "Додај податак о месту рокања у смртним порукама, када је доступан"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
-msgstr ""
+msgstr "Подешавања режима игре"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:67
 msgid "Display capture times in Capture The Flag"
-msgstr ""
+msgstr "Прикажи времена заробљавање у режиму заробљавања заставе"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:71
 msgid "Display name of flag stealer in Capture The Flag"
-msgstr ""
+msgstr "Прикажи име заставокрадице у режиму заробљавања заставе"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:76
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:133
 msgid "Other"
-msgstr ""
+msgstr "Друго"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:78
 msgid "Display console messages in the top left corner"
-msgstr ""
+msgstr "Прикажи конзолне поруке у горњем левом углу"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:80
 msgid "Display all info messages in the chatbox"
-msgstr ""
+msgstr "Прикажи све инфо поруке у ћаскаоници"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:82
 msgid "Display player statuses in the chatbox"
-msgstr ""
+msgstr "Прикажи стање играча у ћаскаоници"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:86
 msgid "Powerup notifications"
-msgstr ""
+msgstr "Обавештења о појачањима"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Weapon centerprint notifications"
-msgstr ""
+msgstr "Средишња обавештења о оружјима"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:92
 msgid "Weapon info message notifications"
-msgstr ""
+msgstr "Инфо обавештења о оружјима"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:96
 msgid "Announcers"
-msgstr ""
+msgstr "Најављивачи"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:98
 msgid "Respawn countdown sounds"
-msgstr ""
+msgstr "Звук одбројавачаноживљавања"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:101
 msgid "Killstreak sounds"
-msgstr ""
+msgstr "Звукови серије убистава"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:104
 msgid "Achievement sounds"
-msgstr ""
+msgstr "Звукови достигнућа"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qh:7
 msgid "Messages"
-msgstr ""
+msgstr "Поруке"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 msgid "Items"
-msgstr ""
+msgstr "Ствари"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:32
 msgid "Use simple 2D images instead of item models"
-msgstr ""
+msgstr "Користи једноставне 2Д слике уместо модела ствари"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:34
 msgid "Unavailable alpha:"
-msgstr ""
+msgstr "Недоступна алфа:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:37
 msgid "Unavailable color:"
-msgstr ""
+msgstr "Недосутпна боја:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:39
 msgid "GHOITEMS^Black"
-msgstr ""
+msgstr "GHOITEMS^Црна"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:40
 msgid "GHOITEMS^Dark"
-msgstr ""
+msgstr "GHOITEMS^Тамна"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:41
 msgid "GHOITEMS^Tinted"
-msgstr ""
+msgstr "GHOITEMS^Засенчена"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
 msgid "GHOITEMS^Normal"
-msgstr ""
+msgstr "GHOITEMS^Обична"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:43
 msgid "GHOITEMS^Blue"
-msgstr ""
+msgstr "GHOITEMS^Плава"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:49
 #: qcsrc/menu/xonotic/serverlist.qc:767
@@ -7756,75 +7759,75 @@ msgstr "Играчи"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 msgid "Force player models to mine"
-msgstr ""
+msgstr "Присили да модели остали играча буду исти"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:53
 msgid "Force player colors to mine"
-msgstr ""
+msgstr "Присили да боје осталих играча буду исте"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "In non teamplay modes only"
-msgstr ""
+msgstr "Само у не-екипном режиму"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Body fading:"
-msgstr ""
+msgstr "Изблеђивање тела:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "Gibs:"
-msgstr ""
+msgstr "Клин са куком:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:65
 msgid "GIBS^None"
-msgstr ""
+msgstr "GIBS^Ниједан"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:66
 msgid "GIBS^Few"
-msgstr ""
+msgstr "GIBS^Понеки"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "GIBS^Many"
-msgstr ""
+msgstr "GIBS^Доста"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:68
 msgid "GIBS^Lots"
-msgstr ""
+msgstr "GIBS^Мноштво"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:7
 msgid "Models"
-msgstr ""
+msgstr "Модели"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
-msgstr ""
+msgstr "Прилагоди како су ствари и играчи приказани у игри"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:26
 msgid "1st person perspective"
-msgstr ""
+msgstr "Поглед из првог лица"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:30
 msgid "Slide to third person upon death"
-msgstr ""
+msgstr "Пребаци се на поглед из трећег лица након умирања"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:34
 msgid "Smooth the view when landing from a jump"
-msgstr ""
+msgstr "Изглади поглед при доскоку из скока"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:38
 msgid "Smooth the view while crouching"
-msgstr ""
+msgstr "Изглади поглед приликом чучања"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:42
 msgid "View waving while idle"
-msgstr ""
+msgstr "Махање погледом у мировању"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:46
 msgid "View bobbing while walking around"
-msgstr ""
+msgstr "Љуљање погледа приликом шетања унаоколо"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:51
 msgid "3rd person perspective"
-msgstr ""
+msgstr "Поглед из трећег лица"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:55
 msgid "Back distance"
@@ -7836,95 +7839,97 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:67
 msgid "Allow passing through walls while spectating"
-msgstr ""
+msgstr "Дозволи пролазак кроз зидове приликом праћења"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:70
 msgid "Field of view:"
-msgstr ""
+msgstr "Видно поље:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:72
 msgid "Field of vision in degrees (default: 100)"
-msgstr ""
+msgstr "Видно поље у степенима (подразумевано: 100)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:76
 msgid "ZOOM^Zoom factor:"
-msgstr ""
+msgstr "ZOOM^Чинилац зумирања:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:78
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr ""
+msgstr "Колико је велик чинилац зумирања када се тастер за зумирање притисне"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:81
 msgid "ZOOM^Zoom speed:"
-msgstr ""
+msgstr "ZOOM^Брзина зумирања:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:83
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr ""
+msgstr "Колико брзо ће поглед бити зумиран, онемогући за тренутно зумирање"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:92
 msgid "ZOOM^Instant"
-msgstr ""
+msgstr "ZOOM^Тренутно"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:96
 msgid "ZOOM^Zoom sensitivity:"
-msgstr ""
+msgstr "ZOOM^Осетљивост зумирања:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:98
 msgid ""
 "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no "
 "sensitivity change)"
 msgstr ""
+"Начин на који се мења осетљивост зумирања, од 0 (најмања осетљивост) до 1 "
+"(без промене осетљивости)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:101
 msgid "Velocity zoom"
-msgstr ""
+msgstr "Зумирање брзине"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:102
 msgid "Forward movement only"
-msgstr ""
+msgstr "Само кретање унапред"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:106
 msgid "VZOOM^Factor"
-msgstr ""
+msgstr "VZOOM^Чинилац"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:113
 msgid "Display reticle 2D overlay while zooming"
-msgstr ""
+msgstr "Прикажи мрежасти 2Д преклоп током зумирања"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:116
 msgid "Release zoom when you die or respawn"
-msgstr ""
+msgstr "Престани са зумирањем након умирања или оживљавања"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:120
 msgid "Release zoom when you switch weapons"
-msgstr ""
+msgstr "Престани са зумирањем при промени оружја"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:76
 msgid "View"
-msgstr ""
+msgstr "Поглед"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:34
 msgid "Weapon Priority List (* = mutator weapon)"
-msgstr ""
+msgstr "Списак важности оружја (* = мутаторско оружје)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:40
 msgid "Up"
-msgstr ""
+msgstr "Горе"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:44
 msgid "Down"
-msgstr ""
+msgstr "Доле"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:50
 msgid "Use priority list for weapon cycling"
-msgstr ""
+msgstr "Користи списак важности за мењање оружја"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:51
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
-msgstr ""
+msgstr "Користи списак изнад приликом мењања оружја помоћу точкића миша"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:53
 msgid "Cycle through only usable weapon selections"
