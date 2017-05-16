@@ -678,6 +678,19 @@ void bot_serverframe()
 	if (time < 2)
 		return;
 
+	if(autocvar_skill != skill)
+	{
+		float wpcost_update = false;
+		if(skill >= autocvar_bot_ai_bunnyhop_skilloffset && autocvar_skill < autocvar_bot_ai_bunnyhop_skilloffset)
+			wpcost_update = true;
+		if(skill < autocvar_bot_ai_bunnyhop_skilloffset && autocvar_skill >= autocvar_bot_ai_bunnyhop_skilloffset)
+			wpcost_update = true;
+
+		skill = autocvar_skill;
+		if (wpcost_update)
+			waypoint_updatecost_foralllinks();
+	}
+
 	bot_calculate_stepheightvec();
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 

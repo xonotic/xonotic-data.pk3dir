@@ -391,8 +391,49 @@ bool waypoint_islinked(entity from, entity to)
 	return false;
 }
 
+void waypoint_updatecost_foralllinks()
+{
+	IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+	{
+		if(it.wp00) it.wp00mincost = waypoint_getlinkcost(it, it.wp00);
+		if(it.wp01) it.wp01mincost = waypoint_getlinkcost(it, it.wp01);
+		if(it.wp02) it.wp02mincost = waypoint_getlinkcost(it, it.wp02);
+		if(it.wp03) it.wp03mincost = waypoint_getlinkcost(it, it.wp03);
+		if(it.wp04) it.wp04mincost = waypoint_getlinkcost(it, it.wp04);
+		if(it.wp05) it.wp05mincost = waypoint_getlinkcost(it, it.wp05);
+		if(it.wp06) it.wp06mincost = waypoint_getlinkcost(it, it.wp06);
+		if(it.wp07) it.wp07mincost = waypoint_getlinkcost(it, it.wp07);
+		if(it.wp08) it.wp08mincost = waypoint_getlinkcost(it, it.wp08);
+		if(it.wp09) it.wp09mincost = waypoint_getlinkcost(it, it.wp09);
+		if(it.wp10) it.wp10mincost = waypoint_getlinkcost(it, it.wp10);
+		if(it.wp11) it.wp11mincost = waypoint_getlinkcost(it, it.wp11);
+		if(it.wp12) it.wp12mincost = waypoint_getlinkcost(it, it.wp12);
+		if(it.wp13) it.wp13mincost = waypoint_getlinkcost(it, it.wp13);
+		if(it.wp14) it.wp14mincost = waypoint_getlinkcost(it, it.wp14);
+		if(it.wp15) it.wp15mincost = waypoint_getlinkcost(it, it.wp15);
+		if(it.wp16) it.wp16mincost = waypoint_getlinkcost(it, it.wp16);
+		if(it.wp17) it.wp17mincost = waypoint_getlinkcost(it, it.wp17);
+		if(it.wp18) it.wp18mincost = waypoint_getlinkcost(it, it.wp18);
+		if(it.wp19) it.wp19mincost = waypoint_getlinkcost(it, it.wp19);
+		if(it.wp20) it.wp20mincost = waypoint_getlinkcost(it, it.wp20);
+		if(it.wp21) it.wp21mincost = waypoint_getlinkcost(it, it.wp21);
+		if(it.wp22) it.wp22mincost = waypoint_getlinkcost(it, it.wp22);
+		if(it.wp23) it.wp23mincost = waypoint_getlinkcost(it, it.wp23);
+		if(it.wp24) it.wp24mincost = waypoint_getlinkcost(it, it.wp24);
+		if(it.wp25) it.wp25mincost = waypoint_getlinkcost(it, it.wp25);
+		if(it.wp26) it.wp26mincost = waypoint_getlinkcost(it, it.wp26);
+		if(it.wp27) it.wp27mincost = waypoint_getlinkcost(it, it.wp27);
+		if(it.wp28) it.wp28mincost = waypoint_getlinkcost(it, it.wp28);
+		if(it.wp29) it.wp29mincost = waypoint_getlinkcost(it, it.wp29);
+		if(it.wp30) it.wp30mincost = waypoint_getlinkcost(it, it.wp30);
+		if(it.wp31) it.wp31mincost = waypoint_getlinkcost(it, it.wp31);
+	});
+}
+
 float waypoint_getdistancecost_simple(float dist)
 {
+	if(skill >= autocvar_bot_ai_bunnyhop_skilloffset)
+		return dist / (autocvar_sv_maxspeed * 1.25);
 	return dist / autocvar_sv_maxspeed;
 }
 

@@ -217,8 +217,6 @@ void StartFrame()
 	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
 
-	skill = autocvar_skill;
-
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	game_delay = (time < game_starttime);
 

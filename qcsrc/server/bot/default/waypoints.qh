@@ -41,6 +41,7 @@ void waypoint_schedulerelink(entity wp);
 float waypoint_getlinkcost(entity from, entity to);
 float waypoint_getdistancecost(vector v1, vector v2);
 float waypoint_getdistancecost_simple(float dist);
+void waypoint_updatecost_foralllinks();
 
 void waypoint_remove_fromeditor(entity pl);
 void waypoint_remove(entity wp);
