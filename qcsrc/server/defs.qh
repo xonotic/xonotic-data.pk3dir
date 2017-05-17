@@ -470,3 +470,6 @@ STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
 
 IntrusiveList g_railgunhit;
 STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
+
+IntrusiveList g_ladders;
+STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }
