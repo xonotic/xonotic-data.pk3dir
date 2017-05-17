@@ -25,8 +25,8 @@
 
 void monsters_setstatus(entity this)
 {
-	this.stat_monsters_total = monsters_total;
-	this.stat_monsters_killed = monsters_killed;
+	STAT(MONSTERS_TOTAL, this) = monsters_total;
+	STAT(MONSTERS_KILLED, this) = monsters_killed;
 }
 
 void monster_dropitem(entity this, entity attacker)
@@ -1406,7 +1406,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 			this.scale *= 1.3;
 	}
 
-	setsize(this, mon.mins * this.scale, mon.maxs * this.scale);
+	setsize(this, mon.m_mins * this.scale, mon.m_maxs * this.scale);
 
 	this.ticrate = bound(sys_frametime, ((!this.ticrate) ? autocvar_g_monsters_think_delay : this.ticrate), 60);
 

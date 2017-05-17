@@ -105,7 +105,7 @@ void invasion_SpawnChosenMonster(Monster mon)
 	{
 		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations");
 		entity e = spawn();
-		setsize(e, mon.mins, mon.maxs);
+		setsize(e, mon.m_mins, mon.m_maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 			monster = spawnmonster(e, tospawn, mon.monsterid, NULL, NULL, e.origin, false, false, 2);

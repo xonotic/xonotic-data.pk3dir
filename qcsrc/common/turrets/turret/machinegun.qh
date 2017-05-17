@@ -4,8 +4,8 @@
 
 CLASS(MachineGunTurret, Turret)
 /* spawnflags */ ATTRIB(MachineGunTurret, spawnflags, int, TUR_FLAG_PLAYER);
-/* mins       */ ATTRIB(MachineGunTurret, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(MachineGunTurret, maxs, vector, '32 32 64');
+/* mins       */ ATTRIB(MachineGunTurret, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(MachineGunTurret, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(MachineGunTurret, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(MachineGunTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(MachineGunTurret, head_model, string, strcat("models/turrets/", "machinegun.md3"));

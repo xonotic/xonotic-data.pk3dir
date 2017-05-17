@@ -4,8 +4,8 @@
 
 CLASS(TeslaCoil, Turret)
 /* spawnflags */ ATTRIB(TeslaCoil, spawnflags, int, TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
-/* mins       */ ATTRIB(TeslaCoil, mins, vector, '-60 -60 0');
-/* maxs       */ ATTRIB(TeslaCoil, maxs, vector, '60 60 128');
+/* mins       */ ATTRIB(TeslaCoil, m_mins, vector, '-60 -60 0');
+/* maxs       */ ATTRIB(TeslaCoil, m_maxs, vector, '60 60 128');
 /* modelname  */ ATTRIB(TeslaCoil, mdl, string, "tesla_base.md3");
 /* model      */ ATTRIB_STRZONE(TeslaCoil, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(TeslaCoil, head_model, string, strcat("models/turrets/", "tesla_head.md3"));

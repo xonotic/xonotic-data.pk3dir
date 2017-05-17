@@ -10,8 +10,8 @@ REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
 
 CLASS(DualPlasmaTurret, PlasmaTurret)
 /* spawnflags */ ATTRIB(DualPlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
-/* mins       */ ATTRIB(DualPlasmaTurret, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(DualPlasmaTurret, maxs, vector, '32 32 64');
+/* mins       */ ATTRIB(DualPlasmaTurret, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(DualPlasmaTurret, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(DualPlasmaTurret, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(DualPlasmaTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(DualPlasmaTurret, head_model, string, strcat("models/turrets/", "plasmad.md3"));

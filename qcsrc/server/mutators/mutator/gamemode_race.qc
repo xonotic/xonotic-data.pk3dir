@@ -102,6 +102,12 @@ float WinningCondition_QualifyingThenRace(float limit)
 	return wc;
 }
 
+MUTATOR_HOOKFUNCTION(rc, ClientKill)
+{
+	if(g_race_qualifying)
+		M_ARGV(1, float) = 0; // killtime
+}
+
 MUTATOR_HOOKFUNCTION(rc, AbortSpeedrun)
 {
 	entity player = M_ARGV(0, entity);

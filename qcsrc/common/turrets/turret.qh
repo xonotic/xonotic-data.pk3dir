@@ -18,9 +18,9 @@ CLASS(Turret, Object)
 
     ATTRIB(Turret, spawnflags, int, 0);
     /** turret hitbox size */
-    ATTRIB(Turret, mins, vector, '-0 -0 -0');
+    ATTRIB(Turret, m_mins, vector, '-0 -0 -0');
     /** turret hitbox size */
-    ATTRIB(Turret, maxs, vector, '0 0 0');
+    ATTRIB(Turret, m_maxs, vector, '0 0 0');
 
     METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
         returns(this.turret_name, string_null);
