@@ -526,6 +526,8 @@ void spawn_flocker(entity this)
     flocker.health     = 10;
     flocker.pos1      = normalize(flocker.velocity + randomvec() * 0.1);
 
+    IL_PUSH(g_flockers, flocker);
+
     this.cnt = this.cnt -1;
 
 }
@@ -559,7 +561,7 @@ void flocker_hunter_think(entity this)
 
     if(!this.enemy)
     {
-        FOREACH_ENTITY_FLOAT(flock_id, this.flock_id,
+        IL_EACH(g_flockers, it.flock_id == this.flock_id,
         {
             if(it == this.owner || it == ee)
                 continue;
@@ -610,6 +612,9 @@ spawnfunc(flockerspawn)
     this.enemy.nextthink = time + 10;
     this.enemy.flock_id  = this.flock_id;
     this.enemy.owner     = this;
+
+    IL_PUSH(g_flockers, this);
+    IL_PUSH(g_flockers, this.enemy);
 }
 #endif
 
