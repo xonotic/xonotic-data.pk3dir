@@ -156,6 +156,8 @@ void invasion_SpawnChosenMonster(Monster mon)
 		}
 	}
 
+	if(monster.monster_attack)
+		IL_REMOVE(g_monster_targets, monster);
 	monster.monster_attack = false; // it's the player's job to kill all the monsters
 
 	if(inv_roundcnt >= inv_maxrounds)

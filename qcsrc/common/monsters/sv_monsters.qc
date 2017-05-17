@@ -125,21 +125,27 @@ entity Monster_FindTarget(entity this)
 	vector my_center = CENTER_OR_VIEWOFS(this);
 
 	// find the closest acceptable target to pass to
-	FOREACH_ENTITY_RADIUS(this.origin, this.target_range, it.monster_attack,
+	IL_EACH(g_monster_targets, it.monster_attack,
 	{
-		if(Monster_ValidTarget(this, it))
-		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-			vector targ_center = CENTER_OR_VIEWOFS(it);
+		float trange = this.target_range;
+		if(PHYS_INPUT_BUTTON_CROUCH(it))
+			trange *= 0.75; // TODO cvar this
+		vector theirmid = (it.absmin + it.absmax) * 0.5;
+		if(vdist(theirmid - this.origin, >, trange))
+			continue;
+		if(!Monster_ValidTarget(this, it))
+			continue;
 
-			if(closest_target)
-			{
-				vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
-				if(vlen2(my_center - targ_center) < vlen2(my_center - closest_target_center))
-					{ closest_target = it; }
-			}
-			else { closest_target = it; }
+		// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+		vector targ_center = CENTER_OR_VIEWOFS(it);
+
+		if(closest_target)
+		{
+			vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
+			if(vlen2(my_center - targ_center) < vlen2(my_center - closest_target_center))
+				{ closest_target = it; }
 		}
+		else { closest_target = it; }
 	});
 
 	return closest_target;
@@ -178,6 +184,8 @@ void monster_changeteam(entity this, int newteam)
 	if(!teamplay) { return; }
 
 	this.team = newteam;
+	if(!this.monster_attack)
+		IL_PUSH(g_monster_targets, this);
 	this.monster_attack = true; // new team, activate attacking
 	monster_setupcolors(this);
 
@@ -1266,7 +1274,11 @@ bool Monster_Spawn_Setup(entity this)
 	Monster_Sounds_Update(this);
 
 	if(teamplay)
+	{
+		if(!this.monster_attack)
+			IL_PUSH(g_monster_targets, this);
 		this.monster_attack = true; // we can have monster enemies in team games
+	}
 
 	Monster_Sound(this, monstersound_spawn, 0, false, CH_VOICE);
 
