@@ -618,20 +618,14 @@ void Unfreeze (entity targ)
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	float mirrordamage;
-	float mirrorforce;
 	float complainteamdamage = 0;
-	entity attacker_save;
-	mirrordamage = 0;
-	mirrorforce = 0;
+	float mirrordamage = 0;
+	float mirrorforce = 0;
 
 	if (game_stopped || targ.killcount == FRAGS_SPECTATOR)
 		return;
 
-    damage_targ = targ;
-    damage_inflictor = inflictor;
-    damage_attacker = attacker;
-	attacker_save = attacker;
+	entity attacker_save = attacker;
 
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
