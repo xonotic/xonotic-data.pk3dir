@@ -571,6 +571,8 @@ void waypoint_think(entity this)
 				++relink_lengthculled;
 				continue;
 			}
+			float sv_deviation = 0;
+			float ev_deviation = 0;
 			navigation_testtracewalk = 0;
 			if (!this.wpisbox)
 			{
@@ -578,6 +580,7 @@ void waypoint_think(entity this)
 				if (!trace_startsolid)
 				{
 					//dprint("sv deviation", vtos(trace_endpos - sv), "\n");
+					sv_deviation = trace_endpos.z + 1 - sv.z;
 					sv = trace_endpos + '0 0 1';
 				}
 			}
@@ -587,19 +590,37 @@ void waypoint_think(entity this)
 				if (!trace_startsolid)
 				{
 					//dprint("ev deviation", vtos(trace_endpos - ev), "\n");
+					ev_deviation = trace_endpos.z + 1 - ev.z;
 					ev = trace_endpos + '0 0 1';
 				}
 			}
 			//traceline(this.origin, it.origin, false, NULL);
 			//if (trace_fraction == 1)
-			if (!this.wpisbox && tracewalk(this, sv, PL_MIN_CONST, PL_MAX_CONST, ev, MOVE_NOMONSTERS))
-				waypoint_addlink(this, it);
-			else
+			if (this.wpisbox)
 				relink_walkculled += 0.5;
-			if (!it.wpisbox && tracewalk(it, ev, PL_MIN_CONST, PL_MAX_CONST, sv, MOVE_NOMONSTERS))
-				waypoint_addlink(it, this);
 			else
+			{
+				vector dest = ev;
+				dest.z = em1.z + ev_deviation;
+				float dest_height = em2.z - em1.z;
+				if(tracewalk(this, sv, PL_MIN_CONST, PL_MAX_CONST, dest, dest_height, MOVE_NOMONSTERS))
+					waypoint_addlink(this, it);
+				else
+					relink_walkculled += 0.5;
+			}
+
+			if (it.wpisbox)
 				relink_walkculled += 0.5;
+			else
+			{
+				vector dest = sv;
+				dest.z = sm1.z + sv_deviation;
+				float dest_height = sm2.z - sm1.z;
+				if(tracewalk(it, ev, PL_MIN_CONST, PL_MAX_CONST, dest, dest_height, MOVE_NOMONSTERS))
+					waypoint_addlink(it, this);
+				else
+					relink_walkculled += 0.5;
+			}
 		}
 	});
 	navigation_testtracewalk = 0;

@@ -28,7 +28,7 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint) { }
 void navigation_markroutes_inverted(entity fixed_source_waypoint) { }
 void navigation_routerating(entity this, entity e, float f, float rangebias) { }
 
-bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode) { return false; }
+bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode) { return false; }
 
 void waypoint_remove_fromeditor(entity pl) { }
 void waypoint_remove(entity wp) { }

@@ -39,8 +39,8 @@ void navigation_dynamicgoal_unset(entity this)
 
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
-
-bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode)
+// if end_height is > 0 destination is any point in the vertical segment [end, end + end_height * eZ]
+bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode)
 {
 	vector org;
 	vector move;
@@ -90,11 +90,13 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 		return false;
 	}
 
+	vector end2 = end;
+	if(end_height)
+		end2.z += end_height;
 	// Movement loop
-	move = end - org;
 	for (;;)
 	{
-		if (boxesoverlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
+		if (boxesoverlap(end, end2, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
 		{
 			// Succeeded
 			if(autocvar_bot_debug_tracewalk)
@@ -181,7 +183,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 						FOREACH_ENTITY_CLASS("func_ladder", true,
 						{
 							if(boxesoverlap(org + jumpheight_vec + m1 + '-1 -1 -1', org + jumpheight_vec + m2 + '1 1 1', it.absmin, it.absmax))
-							if(boxesoverlap(end, end, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
+							if(boxesoverlap(end, end2, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
 								ladder_found = true; // can't return here ("Loop mutex held by tracewalk" error)
 						});
 						if(ladder_found)
@@ -409,12 +411,12 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 		{
 			if (walkfromwp)
 			{
-				if (tracewalk(ent, v, PL_MIN_CONST, PL_MAX_CONST, org, bot_navigation_movemode))
+				if (tracewalk(ent, v, PL_MIN_CONST, PL_MAX_CONST, org, 0, bot_navigation_movemode))
 					return true;
 			}
 			else
 			{
-				if (tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v, bot_navigation_movemode))
+				if (tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v, 0, bot_navigation_movemode))
 					return true;
 			}
 		}
@@ -503,8 +505,9 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 {
 	vector v, m1, m2;
-//	navigation_testtracewalk = true;
+	//navigation_testtracewalk = true;
 	int c = 0;
+	float v_height;
 	IL_EACH(g_waypoints, !it.wpconsidered,
 	{
 		if (it.wpisbox)
@@ -514,16 +517,20 @@ float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 			v = this.origin;
 			v.x = bound(m1_x, v.x, m2_x);
 			v.y = bound(m1_y, v.y, m2_y);
-			v.z = bound(m1_z, v.z, m2_z);
+			v.z = m1.z;
+			v_height = m2.z - m1.z;
 		}
 		else
+		{
 			v = it.origin;
+			v_height = 0;
+		}
 		vector diff = v - this.origin;
 		diff.z = max(0, diff.z);
 		if(vdist(diff, <, maxdist))
 		{
 			it.wpconsidered = true;
-			if (tracewalk(this, this.origin, this.mins, this.maxs, v, bot_navigation_movemode))
+			if (tracewalk(this, this.origin, this.mins, this.maxs, v, v_height, bot_navigation_movemode))
 			{
 				it.wpnearestpoint = v;
 				it.wpcost = waypoint_getdistancecost(this.origin, v) + it.dmg;
@@ -961,7 +968,10 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
-	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
+	vector dest = (e.absmin + e.absmax) * 0.5;
+	dest.z = e.absmin.z;
+	float dest_height = e.absmax.z - e.absmin.z;
+	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 		return true;
 
 	entity nearest_wp = NULL;
@@ -980,10 +990,21 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if(nearest_wp && nearest_wp.enemy)
 	{
 		// often path can be optimized by not adding the nearest waypoint
-		if (this.goalentity.nearestwaypoint_dist < 8
-			|| (!this.goalentity.navigation_dynamicgoal && navigation_item_islinked(nearest_wp.enemy, this.goalentity))
-			|| (this.goalentity.navigation_dynamicgoal && tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), (this.goalentity.absmin + this.goalentity.absmax) * 0.5, bot_navigation_movemode)))
+		if (this.goalentity.nearestwaypoint_dist < 8)
 			e = nearest_wp.enemy;
+		else
+		{
+			if (this.goalentity.navigation_dynamicgoal)
+			{
+				vector dest = (this.goalentity.absmin + this.goalentity.absmax) * 0.5;
+				dest.z = this.goalentity.absmin.z;
+				float dest_height = this.goalentity.absmax.z - this.goalentity.absmin.z;
+				if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
+					e = nearest_wp.enemy;
+			}
+			else if(navigation_item_islinked(nearest_wp.enemy, this.goalentity))
+				e = nearest_wp.enemy;
+		}
 	}
 
 	for (;;)
@@ -1026,16 +1047,21 @@ void navigation_poptouchedgoals(entity this)
 	if(this.goalstack01 && !wasfreed(this.goalstack01))
 	if(vlen2(this.goalcurrent.origin - this.origin) > vlen2(this.goalstack01.origin - this.origin))
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
-	if(tracewalk(this, this.origin, this.mins, this.maxs, (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5, bot_navigation_movemode))
 	{
-		LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
-		navigation_poproute(this);
-		// TODO this may also be a nice idea to do "early" (e.g. by
-		// manipulating the vlen() comparisons) to shorten paths in
-		// general - this would make bots walk more "on rails" than
-		// "zigzagging" which they currently do with sufficiently
-		// random-like waypoints, and thus can make a nice bot
-		// personality property
+		vector dest = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
+		dest.z = this.goalstack01.absmin.z;
+		float dest_height = this.goalstack01.absmax.z - this.goalstack01.absmin.z;
+		if(tracewalk(this, this.origin, this.mins, this.maxs, dest, dest_height, bot_navigation_movemode))
+		{
+			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
+			navigation_poproute(this);
+			// TODO this may also be a nice idea to do "early" (e.g. by
+			// manipulating the vlen() comparisons) to shorten paths in
+			// general - this would make bots walk more "on rails" than
+			// "zigzagging" which they currently do with sufficiently
+			// random-like waypoints, and thus can make a nice bot
+			// personality property
+		}
 	}
 
 	// Loose goal touching check when running
@@ -1173,7 +1199,10 @@ void navigation_unstuck(entity this)
 		// evaluate the next goal on the queue
 		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
 		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
-		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), bot_waypoint_queue_goal.origin, bot_navigation_movemode))
+		vector dest = (bot_waypoint_queue_goal.absmin + bot_waypoint_queue_goal.absmax) * 0.5;
+		dest.z = bot_waypoint_queue_goal.absmin.z;
+		float dest_height = bot_waypoint_queue_goal.absmax.z - bot_waypoint_queue_goal.absmin.z;
+		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
 			{

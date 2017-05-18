@@ -87,7 +87,7 @@ void debugnodestatus(vector position, float status);
 
 void debuggoalstack(entity this);
 
-float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
+float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode);
 
 float navigation_markroutes_nearestwaypoints(entity this, float maxdist);
 float navigation_routetogoal(entity this, entity e, vector startposition);
