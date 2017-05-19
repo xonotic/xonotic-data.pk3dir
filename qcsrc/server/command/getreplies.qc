@@ -259,11 +259,7 @@ string getlsmaps()
 				continue; // we still get the added count, but skip the actual processing
 
 			// todo: Check by play count of maps for other game types?
-			if (
-			    (g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
-			    ||
-			    (g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
-			   )
+			if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
 			{
 				newmaps = true;
 				if (i % 2) col = "^4*"; else col = "^5*";

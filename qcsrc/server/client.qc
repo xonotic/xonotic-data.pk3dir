@@ -910,7 +910,7 @@ void KillIndicator_Think(entity this)
 		ClientKill_Now(this.owner);
 		return;
 	}
-    else if(g_cts && this.health == 1) // health == 1 means that it's silent
+    else if(this.health == 1) // health == 1 means that it's silent
     {
         this.nextthink = time + 1;
         this.cnt -= 1;
@@ -940,11 +940,9 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 	killtime = autocvar_g_balance_kill_delay;
 
-	if(g_race_qualifying || g_cts)
-		killtime = 0;
-
     if(MUTATOR_CALLHOOK(ClientKill, this, killtime))
     	return;
+    killtime = M_ARGV(1, float);
 
 	this.killindicator_teamchange = targetteam;
 

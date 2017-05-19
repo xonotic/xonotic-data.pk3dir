@@ -7,7 +7,7 @@ es    Spanish "Español" 81%
 fr    French "Français" 100%
 it    Italian "Italiano" 100%
 hu    Hungarian "Magyar" 55%
-nl    Dutch "Nederlands" 69%
+nl    Dutch "Nederlands" 70%
 pl    Polish "Polski" 80%
 pt    Portuguese "Português" 100%
 ro    Romanian "Romana" 84%
