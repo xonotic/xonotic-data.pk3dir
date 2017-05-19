@@ -397,6 +397,7 @@ void cvar_changes_init()
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
+		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_domination_teams_override");
 		BADCVAR("g_freezetag_teams_override");
