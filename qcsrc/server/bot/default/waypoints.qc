@@ -24,7 +24,14 @@ void waypoint_unreachable(entity pl)
 		it.colormod = '0.5 0.5 0.5';
 		it.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 	});
+
 	entity e2 = navigation_findnearestwaypoint(pl, false);
+	if(!e2)
+	{
+		LOG_INFOF("Can't find any waypoint nearby\n");
+		return;
+	}
+
 	navigation_markroutes(pl, e2);
 
 	int j = 0;
