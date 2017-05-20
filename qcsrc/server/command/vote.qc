@@ -344,7 +344,10 @@ void reset_map(bool dorespawn)
 
 	MUTATOR_CALLHOOK(reset_map_global);
 
-	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
+	FOREACH_ENTITY_FLOAT(pure_data, false,
+	{
+		if(IS_CLIENT(it))
+			continue;
 		if (it.reset)
 		{
 			it.reset(it);

@@ -476,3 +476,6 @@ STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }
 
 IntrusiveList g_locations;
 STATIC_INIT(g_locations) { g_locations = IL_NEW(); }
+
+IntrusiveList g_saved_team;
+STATIC_INIT(g_saved_team) { g_saved_team = IL_NEW(); }
