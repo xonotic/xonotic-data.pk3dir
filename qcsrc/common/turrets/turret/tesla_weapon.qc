@@ -44,7 +44,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
 
         IL_EACH(g_railgunhit, it.railgunhit,
         {
-            it.railgunhit = 0;
+            it.railgunhit = false;
         });
         IL_CLEAR(g_railgunhit);
     }
@@ -76,7 +76,7 @@ entity toast(entity actor, entity from, float range, float damage)
     {
         te_csqc_lightningarc(from.origin, etarget.origin);
         Damage(etarget, actor, actor, damage, DEATH_TURRET_TESLA.m_id, etarget.origin, '0 0 0');
-        etarget.railgunhit = 1;
+        etarget.railgunhit = true;
         IL_PUSH(g_railgunhit, etarget);
     }
 

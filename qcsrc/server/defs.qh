@@ -86,7 +86,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float		dmg;
 
 // for railgun damage (hitting multiple enemies)
-.float railgunhit;
+.bool railgunhit;
 .float railgunhitsolidbackup;
 .vector railgunhitloc;
 
@@ -473,3 +473,6 @@ STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
 
 IntrusiveList g_ladders;
 STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }
+
+IntrusiveList g_locations;
+STATIC_INIT(g_locations) { g_locations = IL_NEW(); }
