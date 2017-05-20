@@ -333,3 +333,6 @@ entity initialize_entity_first;
 
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(entity this) func, float order);
+
+IntrusiveList g_ctrace_changed;
+STATIC_INIT(g_ctrace_changed) { g_ctrace_changed = IL_NEW(); }

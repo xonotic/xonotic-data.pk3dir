@@ -44,16 +44,19 @@ void crosshair_trace_plusvisibletriggers(entity pl)
 		{
 			it.solid = SOLID_BSP;
 			it.ctrace_solidchanged = true;
+			IL_PUSH(g_ctrace_changed, it);
 		}
 	});
 
 	crosshair_trace(pl);
 
-	FOREACH_ENTITY_FLOAT(ctrace_solidchanged, true,
+	IL_EACH(g_ctrace_changed, it.ctrace_solidchanged,
 	{
 		it.solid = SOLID_TRIGGER;
 		it.ctrace_solidchanged = false;
 	});
+
+	IL_CLEAR(g_ctrace_changed);
 }
 void WarpZone_crosshair_trace(entity pl)
 {
