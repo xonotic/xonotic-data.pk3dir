@@ -38,9 +38,9 @@ CLASS(Monster, Object)
     /** model */
     ATTRIB(Monster, m_model, entity);
     /** hitbox size */
-    ATTRIB(Monster, mins, vector, '-0 -0 -0');
+    ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
     /** hitbox size */
-    ATTRIB(Monster, maxs, vector, '0 0 0');
+    ATTRIB(Monster, m_maxs, vector, '0 0 0');
 
     /** (SERVER) setup monster data */
     METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }

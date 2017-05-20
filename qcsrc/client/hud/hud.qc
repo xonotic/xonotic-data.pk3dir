@@ -572,8 +572,6 @@ void HUD_Main()
 
 	HUD_Configure_Frame();
 
-	Hud_Dynamic_Frame();
-
 	if(scoreboard_fade_alpha == 1)
 		if(autocvar__menu_alpha == 1)
 			return;

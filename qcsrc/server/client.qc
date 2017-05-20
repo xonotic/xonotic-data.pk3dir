@@ -573,6 +573,8 @@ void PutClientInServer(entity this)
 		}
 		SetSpectatee_status(this, 0);
 
+		this.dual_weapons = '0 0 0';
+
 		this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
 
 		this.items = start_items;
@@ -908,7 +910,7 @@ void KillIndicator_Think(entity this)
 		ClientKill_Now(this.owner);
 		return;
 	}
-    else if(g_cts && this.health == 1) // health == 1 means that it's silent
+    else if(this.health == 1) // health == 1 means that it's silent
     {
         this.nextthink = time + 1;
         this.cnt -= 1;
@@ -938,11 +940,9 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 	killtime = autocvar_g_balance_kill_delay;
 
-	if(g_race_qualifying || g_cts)
-		killtime = 0;
-
     if(MUTATOR_CALLHOOK(ClientKill, this, killtime))
     	return;
+    killtime = M_ARGV(1, float);
 
 	this.killindicator_teamchange = targetteam;
 
@@ -1441,7 +1441,8 @@ void player_powerups(entity this)
 			if (time < this.strength_finished)
 			{
 				this.items = this.items | ITEM_Strength.m_itemid;
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_STRENGTH, this.netname);
+				if(!g_cts)
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_STRENGTH, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_STRENGTH);
 			}
 		}
@@ -1461,7 +1462,8 @@ void player_powerups(entity this)
 			if (time < this.invincible_finished)
 			{
 				this.items = this.items | ITEM_Shield.m_itemid;
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SHIELD, this.netname);
+				if(!g_cts)
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SHIELD, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_SHIELD);
 			}
 		}
@@ -1495,7 +1497,8 @@ void player_powerups(entity this)
 			if (time < this.superweapons_finished || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				this.items = this.items | IT_SUPERWEAPON;
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
+				if(!g_cts)
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
 			}
 			else
@@ -1808,6 +1811,9 @@ void SetSpectatee_status(entity this, int spectatee_num)
 
 void SetSpectatee(entity this, entity spectatee)
 {
+	if(IS_BOT_CLIENT(this))
+		return; // bots abuse .enemy, this code is useless to them
+
 	entity old_spectatee = this.enemy;
 
 	this.enemy = spectatee;
@@ -1948,6 +1954,7 @@ void Join(entity this)
 
 	PutClientInServer(this);
 
+	if(IS_PLAYER(this))
 	if(teamplay && this.team != -1)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_PLAY_TEAM), this.netname);
 	else
