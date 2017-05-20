@@ -11,7 +11,7 @@ nl    Dutch "Nederlands" 70%
 pl    Polish "Polski" 80%
 pt    Portuguese "Português" 100%
 ro    Romanian "Romana" 84%
-sr sr "sr" 58%
+sr    Serbian "Српски" 58%
 fi    Finnish "Suomi" 33%
 zh_TW "Chinese (Taiwan)" "國語" 68%
 el    Greek "Ελληνική" 33%
