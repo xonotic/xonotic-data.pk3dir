@@ -53,6 +53,8 @@ void func_ladder_init(entity this)
 
 spawnfunc(func_ladder)
 {
+	IL_PUSH(g_ladders, this); // TODO: also func_water? bots currently loop through func_ladder only
+
 	func_ladder_init(this);
 }
 

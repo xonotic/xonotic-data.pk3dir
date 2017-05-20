@@ -437,22 +437,6 @@ float buff_Inferno_CalculateTime(float damg, float offset_x, float offset_y, flo
 }
 
 // mutator hooks
-MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
-{
-	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(6, float);
-	float frag_damage = M_ARGV(7, float);
-
-	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
-
-	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
-	{
-		vector v = healtharmor_applydamage(50, autocvar_g_buffs_resistance_blockpercent, frag_deathtype, frag_damage);
-		M_ARGV(4, float) = v.x; // take
-		M_ARGV(5, float) = v.y; // save
-	}
-}
-
 MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
@@ -462,6 +446,12 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	vector frag_force = M_ARGV(6, vector);
 
 	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
+
+	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
+	{
+		float reduced = frag_damage * autocvar_g_buffs_resistance_blockpercent;
+		frag_damage = bound(0, frag_damage - reduced, frag_damage);
+	}
 
 	if(frag_target.buffs & BUFF_SPEED.m_itemid)
 	if(frag_target != frag_attacker)

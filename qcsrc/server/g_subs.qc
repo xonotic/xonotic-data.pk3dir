@@ -204,26 +204,22 @@ Ripped from DPMod
 */
 vector findbetterlocation (vector org, float mindist)
 {
-	vector	loc;
-	vector vec;
-	float c, h;
-
-	vec = mindist * '1 0 0';
-	c = 0;
+	vector vec = mindist * '1 0 0';
+	int c = 0;
 	while (c < 6)
 	{
 		traceline (org, org + vec, true, NULL);
 		vec = vec * -1;
 		if (trace_fraction < 1)
 		{
-			loc = trace_endpos;
+			vector loc = trace_endpos;
 			traceline (loc, loc + vec, true, NULL);
 			if (trace_fraction >= 1)
 				org = loc + vec;
 		}
 		if (c & 1)
 		{
-			h = vec.y;
+			float h = vec.y;
 			vec.y = vec.x;
 			vec.x = vec.z;
 			vec.z = h;

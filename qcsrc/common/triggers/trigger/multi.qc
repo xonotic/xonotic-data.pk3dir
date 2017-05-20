@@ -164,6 +164,7 @@ spawnfunc(trigger_multiple)
 	EXACTTRIGGER_INIT;
 
 	this.team_saved = this.team;
+	IL_PUSH(g_saved_team, this);
 
 	if (this.health)
 	{

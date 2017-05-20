@@ -180,7 +180,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 					if (trace_fraction < 1 || trace_startsolid)
 					{
 						bool ladder_found = false;
-						FOREACH_ENTITY_CLASS("func_ladder", true,
+						IL_EACH(g_ladders, it.classname == "func_ladder",
 						{
 							if(boxesoverlap(org + jumpheight_vec + m1 + '-1 -1 -1', org + jumpheight_vec + m2 + '1 1 1', it.absmin, it.absmax))
 							if(boxesoverlap(end, end2, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
