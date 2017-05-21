@@ -42,17 +42,34 @@ void func_ladder_link(entity this)
 void func_ladder_init(entity this)
 {
 	settouch(this, func_ladder_touch);
-
 	trigger_init(this);
 	func_ladder_link(this);
 
 	if(min(this.absmax.x - this.absmin.x, this.absmax.y - this.absmin.y) > 100)
 		return;
+
+	vector top_min = (this.absmin + this.absmax) / 2;
+	top_min.z = this.absmax.z;
+	vector top_max = top_min;
+	top_max.z += PL_MAX_CONST.z - PL_MIN_CONST.z;
+	tracebox(top_max + jumpstepheightvec, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+	if(trace_startsolid)
+	{
+		tracebox(top_max + stepheightvec, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+		if(trace_startsolid)
+		{
+			tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+			if(trace_startsolid)
+				return;
+		}
+	}
+	if(trace_endpos.z < this.absmax.z)
+		return;
+
 	this.bot_pickup = true; // allow bots to make use of this ladder
-	vector top = (this.absmin + this.absmax) / 2;
-	top.z = this.absmax.z + 1 - PL_MIN_CONST.z;
-	float cost = waypoint_getlinearcost(this.absmax.z - this.absmin.z);
-	waypoint_spawnforteleporter_boxes(this, WAYPOINTFLAG_LADDER, this.absmin, this.absmax, top, top, cost);
+	float cost = waypoint_getlinearcost(trace_endpos.z - this.absmin.z);
+	top_min = trace_endpos;
+	waypoint_spawnforteleporter_boxes(this, WAYPOINTFLAG_LADDER, this.absmin, this.absmax, top_min, top_min, cost);
 }
 
 spawnfunc(func_ladder)
