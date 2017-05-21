@@ -51,7 +51,7 @@ void func_ladder_init(entity this)
 	this.bot_pickup = true; // allow bots to make use of this ladder
 	vector top = (this.absmin + this.absmax) / 2;
 	top.z = this.absmax.z + 1 - PL_MIN_CONST.z;
-	float cost = waypoint_getdistancecost_simple(this.absmax.z - this.absmin.z);
+	float cost = waypoint_getlinearcost(this.absmax.z - this.absmin.z);
 	waypoint_spawnforteleporter_boxes(this, WAYPOINTFLAG_LADDER, this.absmin, this.absmax, top, top, cost);
 }
 

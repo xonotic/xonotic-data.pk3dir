@@ -534,7 +534,7 @@ float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 			if (tracewalk(this, this.origin, this.mins, this.maxs, v, v_height, bot_navigation_movemode))
 			{
 				it.wpnearestpoint = v;
-				it.wpcost = waypoint_getdistancecost(this.origin, v) + it.dmg;
+				it.wpcost = waypoint_gettravelcost(this.origin, v) + it.dmg;
 				it.wpfire = 1;
 				it.enemy = NULL;
 				c = c + 1;
@@ -564,7 +564,7 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost, vector
 	if (w.wpflags & WAYPOINTFLAG_TELEPORT)
 		cost += w.wp00mincost; // assuming teleport has exactly one destination
 	else
-		cost += waypoint_getdistancecost(p, v);
+		cost += waypoint_gettravelcost(p, v);
 	if (wp.wpcost > cost)
 	{
 		wp.wpcost = cost;
@@ -722,8 +722,8 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if(e.blacklisted)
 		return;
 
-	rangebias = waypoint_getdistancecost_simple(rangebias);
-	f = waypoint_getdistancecost_simple(f);
+	rangebias = waypoint_getlinearcost(rangebias);
+	f = waypoint_getlinearcost(f);
 
 	if (IS_PLAYER(e))
 	{
@@ -925,7 +925,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if (nwp.wpcost < 10000000)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
-		float cost = nwp.wpcost + waypoint_getdistancecost(nwp.wpnearestpoint, goal_org);
+		float cost = nwp.wpcost + waypoint_gettravelcost(nwp.wpnearestpoint, goal_org);
 		LOG_DEBUG(e.classname, " ", ftos(f), "/(1+", ftos(cost), "/", ftos(rangebias), ") = ");
 		f = f * rangebias / (rangebias + cost);
 		LOG_DEBUG("considering ", e.classname, " (with rating ", ftos(f), ")");
@@ -1162,7 +1162,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 			v.y = bound(m1_y, v.y, m2_y);
 			v.z = bound(m1_z, v.z, m2_z);
 			o = (it.absmin + it.absmax) * 0.5;
-			d = waypoint_getdistancecost_simple(it.bot_dodgerating) - waypoint_getdistancecost(o, v);
+			d = waypoint_getlinearcost(it.bot_dodgerating) - waypoint_gettravelcost(o, v);
 			if (d > 0)
 			{
 				traceline(o, v, true, NULL);

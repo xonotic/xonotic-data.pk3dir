@@ -437,22 +437,22 @@ void waypoint_updatecost_foralllinks()
 	});
 }
 
-float waypoint_getdistancecost_simple(float dist)
+float waypoint_getlinearcost(float dist)
 {
 	if(skill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		return dist / (autocvar_sv_maxspeed * 1.25);
 	return dist / autocvar_sv_maxspeed;
 }
 
-float waypoint_getdistancecost(vector from, vector to)
+float waypoint_gettravelcost(vector from, vector to)
 {
-	float c = waypoint_getdistancecost_simple(vlen(to - from));
+	float c = waypoint_getlinearcost(vlen(to - from));
 
 	float height = from.z - to.z;
 	if(height > jumpheight_vec.z && autocvar_sv_gravity > 0)
 	{
 		float height_cost = sqrt(height / (autocvar_sv_gravity / 2));
-		c = waypoint_getdistancecost_simple(vlen(vec2(to - from))); // xy distance cost
+		c = waypoint_getlinearcost(vlen(vec2(to - from))); // xy distance cost
 		if(height_cost > c)
 			c = height_cost;
 	}
@@ -477,7 +477,7 @@ float waypoint_getlinkcost(entity from, entity to)
 		v2_y = bound(m1_y, v2_y, m2_y);
 		v2_z = bound(m1_z, v2_z, m2_z);
 	}
-	return waypoint_getdistancecost(v1, v2);
+	return waypoint_gettravelcost(v1, v2);
 }
 
 // add a new link to the spawnfunc_waypoint, replacing the furthest link it already has
