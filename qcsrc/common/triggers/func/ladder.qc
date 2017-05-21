@@ -45,6 +45,10 @@ void func_ladder_init(entity this)
 
 	trigger_init(this);
 	func_ladder_link(this);
+
+	if(min(this.absmax.x - this.absmin.x, this.absmax.y - this.absmin.y) > 100)
+		return;
+	this.bot_pickup = true; // allow bots to make use of this ladder
 	vector top = (this.absmin + this.absmax) / 2;
 	top.z = this.absmax.z + 1 - PL_MIN_CONST.z;
 	float cost = waypoint_getdistancecost_simple(this.absmax.z - this.absmin.z);
