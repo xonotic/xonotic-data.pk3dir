@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Kim Lee <coughingmouse@gmail.com>, 2016
+# Kuff Lee <coughingmouse@gmail.com>, 2016
+# Kuff Lee <coughingmouse@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-05-21 01:14+0000\n"
+"Last-Translator: Kuff Lee <coughingmouse@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ko/)\n"
 "Language: ko\n"
@@ -55,7 +56,7 @@ msgstr "^1관전하려면 ^3%s^1을 누르세요"
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr ""
+msgstr "주공격"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
@@ -65,12 +66,12 @@ msgstr "^1다음 플레이어를 보시려면 ^3%s^1를, 이전 플레이어는 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr ""
+msgstr "다음 무기"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr ""
+msgstr "이전 무기"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -80,17 +81,17 @@ msgstr "^1속력을 바꾸시려면 ^3%s^1 나 ^3%s^1를 누르세요"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1 ^3%s^1를 눌러 관전하고, ^3%s^1를 눌러 카메라 모드를 바꾸세요"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/common/vehicles/cl_vehicles.qc:191
 msgid "drop weapon"
-msgstr ""
+msgstr "무기 떨구기"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr ""
+msgstr "보조무기"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
@@ -100,7 +101,7 @@ msgstr "^1게임 모드 정보로 보려면 ^3%s^1를 누르세요"
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #: qcsrc/menu/xonotic/keybinder.qc:94
 msgid "server info"
-msgstr ""
+msgstr "서버에 대한 정보"
 
 #: qcsrc/client/hud/panel/infomessages.qc:124
 msgid "^1Match has already begun"
@@ -119,7 +120,7 @@ msgstr "^1참가하려면 ^3%s^1를 누르세요"
 #: qcsrc/client/hud/panel/infomessages.qc:128
 #: qcsrc/client/hud/panel/infomessages.qc:131
 msgid "jump"
-msgstr ""
+msgstr "뛰기"
 
 #: qcsrc/client/hud/panel/infomessages.qc:139
 #, c-format
@@ -140,7 +141,7 @@ msgstr "%s워밍업을 끝내시려면 ^3%s%s를 누르세요"
 #: qcsrc/client/hud/panel/infomessages.qc:175
 #: qcsrc/menu/xonotic/keybinder.qc:91
 msgid "ready"
-msgstr ""
+msgstr "준비"
 
 #: qcsrc/client/hud/panel/infomessages.qc:162
 #, c-format
@@ -172,15 +173,15 @@ msgstr "조정하려면 ^3%s%s를 누르세요"
 #: qcsrc/client/hud/panel/infomessages.qc:199
 #: qcsrc/menu/xonotic/keybinder.qc:102
 msgid "team menu"
-msgstr ""
+msgstr "팀 메뉴"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating this player:"
-msgstr ""
+msgstr "^1이 플래이어를 관전 중 :"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 msgid "^1Spectating you:"
-msgstr ""
+msgstr "^1당신을 관전 중 :"
 
 #: qcsrc/client/hud/panel/infomessages.qc:225
 msgid "^7Press ^3ESC ^7to show HUD options."
