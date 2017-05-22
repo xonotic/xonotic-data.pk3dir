@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-20 16:42+0000\n"
+"PO-Revision-Date: 2017-05-21 09:40+0000\n"
 "Last-Translator: Starfire24680 <starfire24680@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -7535,7 +7535,7 @@ msgid ""
 "using a powerup (default: disabled)"
 msgstr ""
 "Habilita efectos especiales de postprocesamiento cuando se recibe daño o se "
-"esta bajo el agua o cuando se usa un poder (por defecto: deshabilitado)"
+"esta bajo el agua o se usa un poder (por defecto: deshabilitado)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:232
 msgid "Motion blur strength - 0.4 recommended"
@@ -7844,8 +7844,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
 msgstr ""
-"Añade localización de la eliminación en los mensajes de muertes cuando esté "
-"disponible"
+"Añade localización de la eliminación en los mensajes de muertes cuando sea "
+"posible"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"

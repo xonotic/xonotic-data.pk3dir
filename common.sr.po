@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-20 13:26+0000\n"
+"PO-Revision-Date: 2017-05-21 11:21+0000\n"
 "Last-Translator: Марко М. Костић (Marko M. Kostić) <marko.m.kostic@gmail."
 "com>\n"
 "Language-Team: Serbian (http://www.transifex.com/team-xonotic/xonotic/"
@@ -9184,7 +9184,7 @@ msgstr "Омиљена_мапа:"
 #: qcsrc/menu/xonotic/statslist.qc:201 qcsrc/menu/xonotic/statslist.qc:245
 #, c-format
 msgid "%s_Matches:"
-msgstr ""
+msgstr "%s_Игара:"
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 #, c-format
@@ -9194,7 +9194,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:215
 #, c-format
 msgid "%s_Rank:"
-msgstr ""
+msgstr "%s_Ранг:"
 
 #: qcsrc/menu/xonotic/statslist.qc:222
 #, c-format
@@ -9204,12 +9204,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:231
 #, c-format
 msgid "%s_Favorite_Map:"
-msgstr ""
+msgstr "%s_Омиљена_мапа:"
 
 #: qcsrc/menu/xonotic/statslist.qc:246
 #, c-format
 msgid "%d (unranked)"
-msgstr ""
+msgstr "%d (нерангиран)"
 
 #: qcsrc/menu/xonotic/util.qc:417
 #, c-format
@@ -9217,6 +9217,8 @@ msgid ""
 "Update can be downloaded at:\n"
 "%s\n"
 msgstr ""
+"Исправка се може преузети са:\n"
+"%s\n"
 
 #: qcsrc/menu/xonotic/util.qc:528
 msgid "Autogenerating mapinfo for newly added maps..."

@@ -4,7 +4,7 @@
 #
 # Translators:
 # Kuff Lee <coughingmouse@gmail.com>, 2016
-# Kuff Lee <coughingmouse@gmail.com>, 2017
+# Kuff Lee <coughingmouse@gmail.com>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
