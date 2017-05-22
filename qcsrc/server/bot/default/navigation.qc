@@ -42,29 +42,20 @@ void navigation_dynamicgoal_unset(entity this)
 // if end_height is > 0 destination is any point in the vertical segment [end, end + end_height * eZ]
 bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode)
 {
-	vector org;
-	vector move;
-	vector dir;
-	float dist;
-	float totaldist;
-	float stepdist;
-	float ignorehazards;
-	float swimming;
-
 	if(autocvar_bot_debug_tracewalk)
 	{
 		debugresetnodes();
 		debugnode(e, start);
 	}
 
-	move = end - start;
-	move.z = 0;
-	org = start;
-	dist = totaldist = vlen(move);
-	dir = normalize(move);
-	stepdist = 32;
-	ignorehazards = false;
-	swimming = false;
+	vector org = start;
+	vector dir = end - start;
+	dir.z = 0;
+	float dist = vlen(dir);
+	dir = normalize(dir);
+	float stepdist = 32;
+	bool ignorehazards = false;
+	bool swimming = false;
 
 	// Analyze starting point
 	traceline(start, start, MOVE_NORMAL, e);
@@ -128,8 +119,8 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 		}
 		if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
 		{
-			move = normalize(end - org);
-			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
+			vector move = org + normalize(end - org) * stepdist;
+			tracebox(org, m1, m2, move, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
 				debugnode(e, trace_endpos);
@@ -163,7 +154,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 		}
 		else
 		{
-			move = dir * stepdist + org;
+			vector move = org + dir * stepdist;
 			tracebox(org, m1, m2, move, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
