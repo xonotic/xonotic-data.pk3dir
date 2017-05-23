@@ -37,6 +37,24 @@ void navigation_dynamicgoal_unset(entity this)
 	this.nearestwaypointtimeout = -1;
 }
 
+bool navigation_checkladders(entity e, vector org, vector move, vector m1, vector m2, vector end, vector end2, int movemode)
+{
+	IL_EACH(g_ladders, it.classname == "func_ladder",
+	{
+		if(it.bot_pickup)
+		if(boxesoverlap(move + m1 + '-1 -1 -1', move + m2 + '1 1 1', it.absmin, it.absmax))
+		if(boxesoverlap(end, end2, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
+		{
+			vector top = org;
+			top.z = it.absmax.z + (PL_MAX_CONST.z - PL_MIN_CONST.z);
+			tracebox(org, m1, m2, top, movemode, e);
+			if(trace_fraction == 1)
+				return true;
+		}
+	});
+	return false;
+}
+
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
 // if end_height is > 0 destination is any point in the vertical segment [end, end + end_height * eZ]
@@ -150,21 +168,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 					//print("tracewalk: ", vtos(start), " failed under water\n");
 				}
 
-				bool ladder_found = false;
-				IL_EACH(g_ladders, it.classname == "func_ladder",
-				{
-					if(it.bot_pickup)
-					if(boxesoverlap(move + m1 + '-1 -1 -1', move + m2 + '1 1 1', it.absmin, it.absmax))
-					if(boxesoverlap(end, end2, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
-					{
-						vector top = org;
-						top.z = it.absmax.z + (PL_MAX_CONST.z - PL_MIN_CONST.z);
-						tracebox(org, m1, m2, top, movemode, e);
-						if(trace_fraction == 1)
-							ladder_found = true; // can't return here ("Loop mutex held by tracewalk" error)
-					}
-				});
-				if(ladder_found)
+				if(navigation_checkladders(e, org, move, m1, m2, end, end2, movemode))
 				{
 					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(trace_endpos, DEBUG_NODE_SUCCESS);
@@ -196,23 +200,8 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 					tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
 					if (trace_fraction < 1 || trace_startsolid)
 					{
-						vector org_save = org;
-						vector org = trace_endpos - dir * (stepdist / 2);
-						bool ladder_found = false;
-						IL_EACH(g_ladders, it.classname == "func_ladder",
-						{
-							if(it.bot_pickup)
-							if(boxesoverlap(move + jumpheight_vec + m1 + '-1 -1 -1', move + jumpheight_vec + m2 + '1 1 1', it.absmin, it.absmax))
-							if(boxesoverlap(end, end2, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
-							{
-								vector top = org;
-								top.z = it.absmax.z + (PL_MAX_CONST.z - PL_MIN_CONST.z);
-								tracebox(org, m1, m2, top, movemode, e);
-								if(trace_fraction == 1)
-									ladder_found = true; // can't return here ("Loop mutex held by tracewalk" error)
-							}
-						});
-						if(ladder_found)
+						if(navigation_checkladders(e, trace_endpos - dir * (stepdist / 2),
+							move + jumpheight_vec, m1, m2, end, end2, movemode))
 						{
 							if(autocvar_bot_debug_tracewalk)
 								debugnodestatus(trace_endpos, DEBUG_NODE_SUCCESS);
@@ -220,7 +209,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 							//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
 							return true;
 						}
-						org = org_save;
 
 						if(autocvar_bot_debug_tracewalk)
 							debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
