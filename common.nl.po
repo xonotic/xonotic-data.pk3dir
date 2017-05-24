@@ -4,6 +4,7 @@
 #
 # Translators:
 # Contijn Buijs <contijn.buijs@gmail.com>, 2017
+# Joeke de Graaf <mappack@null.net>, 2017
 # Jonathan van der Steege <jonakeys@hotmail.com>, 2016
 # Jonathan van der Steege <jonakeys@hotmail.com>, 2016
 msgid ""
@@ -11,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2017-05-14 14:26+0000\n"
+"Last-Translator: Joeke de Graaf <mappack@null.net>\n"
 "Language-Team: Dutch (http://www.transifex.com/team-xonotic/xonotic/language/"
 "nl/)\n"
 "Language: nl\n"
@@ -59,7 +60,7 @@ msgstr "^1Druk ^3%s^1 om toeschouwer te zijn"
 #: qcsrc/client/hud/panel/infomessages.qc:100
 #: qcsrc/menu/xonotic/keybinder.qc:40
 msgid "primary fire"
-msgstr ""
+msgstr "primair vuur"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #, c-format
@@ -95,7 +96,7 @@ msgstr "wapen laten vallen"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr ""
+msgstr "secundair vuur"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
@@ -197,7 +198,7 @@ msgstr "^3Dubbelklik ^7a-paneel voor paneelspecifieke opties"
 
 #: qcsrc/client/hud/panel/infomessages.qc:227
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7om het testen van botsingen uit te schakelen, ^3SHIFT ^7and"
 
 #: qcsrc/client/hud/panel/infomessages.qc:228
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -284,11 +285,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^negative"
-msgstr ""
+msgstr "QMCMD^negatief"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^positive"
-msgstr ""
+msgstr "QMCMD^positief"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -316,11 +317,11 @@ msgstr "QMCMD^vlag gezien, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^verdedigen (I:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending, icon"
-msgstr ""
+msgstr "QMCMD^verdedigen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:802
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -551,7 +552,7 @@ msgstr "SCO^verovertijd"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:82
 msgid "SCO^deaths"
-msgstr ""
+msgstr "SCO^doden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:83
 msgid "SCO^destroyed"
@@ -559,7 +560,7 @@ msgstr "SCO^vernietigd"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:84
 msgid "SCO^damage"
-msgstr ""
+msgstr "SCO^schade"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:85
 msgid "SCO^dmgtaken"
@@ -567,39 +568,39 @@ msgstr "SCO^schade ontvangen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:86
 msgid "SCO^drops"
-msgstr ""
+msgstr "SCO^vallen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:87
 msgid "SCO^faults"
-msgstr ""
+msgstr "SCO^fouten"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:88
 msgid "SCO^fckills"
-msgstr ""
+msgstr "SCO^vdmoorden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:89
 msgid "SCO^goals"
-msgstr ""
+msgstr "SCO^doelpunten"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "SCO^kckills"
-msgstr ""
+msgstr "SCO^sdmoorden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^kdratio"
-msgstr ""
+msgstr "SCO^mdratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:92
 msgid "SCO^k/d"
-msgstr ""
+msgstr "SCO^m/d"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:93
 msgid "SCO^kdr"
-msgstr ""
+msgstr "SCO^mdr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:94
 msgid "SCO^kills"
-msgstr ""
+msgstr "SCO^moorden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:95
 msgid "SCO^laps"
@@ -631,7 +632,7 @@ msgstr "SCO^doelen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:102
 msgid "SCO^pickups"
-msgstr ""
+msgstr "SCO^aantal keren vlag opgepakt"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:103
 msgid "SCO^ping"
@@ -643,23 +644,23 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:105
 msgid "SCO^pushes"
-msgstr ""
+msgstr "SCO^duwen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:106
 msgid "SCO^rank"
-msgstr ""
+msgstr "SCO^rang"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:107
 msgid "SCO^returns"
-msgstr ""
+msgstr "SCO^aantal keren vlag teruggebracht"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:108
 msgid "SCO^revivals"
-msgstr ""
+msgstr "SCO^reanimatie"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:109
 msgid "SCO^rounds won"
-msgstr ""
+msgstr "SCO^rondes gewonnen"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:110
 msgid "SCO^score"

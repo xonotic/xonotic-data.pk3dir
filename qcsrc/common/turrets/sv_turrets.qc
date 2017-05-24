@@ -1325,7 +1325,7 @@ bool turret_initialize(entity this, Turret tur)
 	++turret_count;
 
 	_setmodel(this, tur.model);
-	setsize(this, tur.mins, tur.maxs);
+	setsize(this, tur.m_mins, tur.m_maxs);
 
 	this.m_id					= tur.m_id;
 	this.classname				= "turret_main";
