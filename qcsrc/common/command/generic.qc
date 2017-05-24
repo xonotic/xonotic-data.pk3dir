@@ -1,11 +1,13 @@
-#include "all.qh"
+#include "generic.qh"
+#include "_mod.qh"
+#include "reg.qh"
 
 #include "markup.qh"
 #include "rpn.qh"
 
 #include "../mapinfo.qh"
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	#include "../notifications/all.qh"
 #endif
 
@@ -14,10 +16,7 @@
 #endif
 
 #ifdef SVQC
-	#include <server/command/banning.qh>
-	#include <server/command/cmd.qh>
-	#include <server/command/common.qh>
-	#include <server/command/sv_cmd.qh>
+	#include <server/command/_mod.qh>
 	#include <common/turrets/config.qh>
 	#include <common/weapons/config.qh>
 #endif
@@ -36,7 +35,7 @@ void Curl_URI_Get_Callback(int id, float status, string data)
 	string do_cvar = curl_uri_get_cvar[i];
 	if(status != 0)
 	{
-		LOG_TRACEF("error: status is %d\n", status);
+		LOG_TRACEF("error: status is %d", status);
 		if(do_cvar)
 			strunzone(do_cvar);
 		return;
@@ -374,7 +373,7 @@ void GenericCommand_restartnotifs(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			#ifndef MENUQC
+			#ifdef GAMEQC
 			int NOTIF_ANNCE_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE,   { ++NOTIF_ANNCE_COUNT;  });
 			int NOTIF_INFO_COUNT    = 0; FOREACH(Notifications, it.nent_type == MSG_INFO,    { ++NOTIF_INFO_COUNT;   });
 			int NOTIF_CENTER_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER,  { ++NOTIF_CENTER_COUNT; });
@@ -426,9 +425,9 @@ void GenericCommand_settemp(float request, float argc)
 			{
 				float f = cvar_settemp(argv(1), argv(2));
 				if(f == 1)
-					LOG_TRACE("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n");
+					LOG_TRACE("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.");
 				else if(f == -1)
-					LOG_TRACE("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
+					LOG_TRACE("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".");
 				// else cvar_settemp itself errors out
 
 				return;
@@ -456,9 +455,9 @@ void GenericCommand_settemp_restore(float request, float argc)
 			float i = cvar_settemp_restore();
 
 			if(i)
-				LOG_TRACE("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
+				LOG_TRACE("Restored ", ftos(i), " temporary cvar settings to their original values.");
 			else
-				LOG_TRACE("Nothing to restore.\n");
+				LOG_TRACE("Nothing to restore.");
 
 			return;
 		}

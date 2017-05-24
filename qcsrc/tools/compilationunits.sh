@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
-cd "$(dirname "$0")"
+cd ${0%/*}
 
 WORKDIR=../.tmp
 
@@ -9,8 +9,8 @@ CPP="cc -xc -E"
 
 declare -a QCCDEFS=(
     -DNDEBUG=1
+    -DXONOTIC=1
     -DWATERMARK="\"$(git describe --tags --dirty='~')\""
-    -DDEBUGPATHING=0
 )
 QCCDEFS="${QCCDEFS[@]}"
 
@@ -34,23 +34,22 @@ QCCFLAGS="${QCCFLAGS[@]} ${NOWARN[@]}"
 cd ..
 
 function check1() {
-    declare -l base="${1}"
-    MODE=${2}
-    declare -l file="${3}"
+    declare -l prog="${1}"
+    declare -l file="${2}"
+    MODE=${prog}
     qpp ${file} test.dat \
-            -include lib/_all.inc -include ${base}/_all.qh \
-            -I. ${QCCIDENT} ${QCCDEFS} -D${MODE} > ${WORKDIR}/${MODE}.qc
-    qcc ${QCCFLAGS} -o ../${WORKDIR}/test.dat ../${WORKDIR}/${MODE}.qc >/dev/null
+            -include lib/_all.inc -include ${prog}/_all.qh \
+            -I. ${QCCIDENT} ${QCCDEFS} > ${WORKDIR}/${prog}.qc
+    qcc ${QCCFLAGS} -o ../${WORKDIR}/test.dat ../${WORKDIR}/${prog}.qc >/dev/null
 }
 
 function check() {
-    declare -l base="${1}"
-    MODE=${2}
-    find ${base} -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
-        check1 ${base} ${MODE} ${file}
+    declare -l prog="${1}"
+    find ${prog} -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
+        check1 ${prog} ${file}
     done
 }
 
-check client CSQC
-check server SVQC
-check menu MENUQC
+check client
+check server
+check menu

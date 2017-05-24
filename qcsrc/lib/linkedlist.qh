@@ -1,14 +1,14 @@
 #pragma once
 
 CLASS(LinkedListNode, Object)
-	ATTRIB(LinkedListNode, ll_data, entity, NULL)
-	ATTRIB(LinkedListNode, ll_prev, LinkedListNode, NULL)
-	ATTRIB(LinkedListNode, ll_next, LinkedListNode, NULL)
+	ATTRIB(LinkedListNode, ll_data, entity);
+	ATTRIB(LinkedListNode, ll_prev, LinkedListNode);
+	ATTRIB(LinkedListNode, ll_next, LinkedListNode);
 ENDCLASS(LinkedListNode)
 
 CLASS(LinkedList, Object)
-	ATTRIB(LinkedList, ll_head, LinkedListNode, NULL);
-	ATTRIB(LinkedList, ll_tail, LinkedListNode, NULL);
+	ATTRIB(LinkedList, ll_head, LinkedListNode);
+	ATTRIB(LinkedList, ll_tail, LinkedListNode);
 ENDCLASS(LinkedList)
 
 #define LL_NEW() NEW(LinkedList)
@@ -40,7 +40,7 @@ entity LL_POP(LinkedList this)
 	LinkedListNode prev = n.ll_prev;
 	if (prev) (this.ll_tail = prev).ll_next = NULL;
 	else this.ll_head = this.ll_tail = NULL;
-	remove(n);
+	delete(n);
 	return e;
 }
 
@@ -57,7 +57,7 @@ entity LL_POP(LinkedList this)
 			entity it = LL_POP(_ll); \
 			if (!it) continue; \
 			dtor \
-			remove(it); \
+			delete(it); \
 		} \
 	} MACRO_END
 
@@ -68,7 +68,7 @@ entity LL_POP(LinkedList this)
 	MACRO_BEGIN \
 	{ \
 		LL_CLEAR_2(this, dtor); \
-		remove(this); \
+		delete(this); \
 		this = NULL; \
 	} MACRO_END
 

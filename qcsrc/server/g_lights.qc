@@ -1,6 +1,6 @@
 #include "g_lights.qh"
 
-void train_next();
+void train_next(entity this);
 
 const float LOOP = 1;
 
@@ -34,53 +34,52 @@ flags:
 "NOSHADOW" will not cast shadows in realtime lighting mode
 "FOLLOW" will follow the entity which "targetname" matches "target"
 */
-void dynlight_think()
+void dynlight_think(entity this)
 {
-    SELFPARAM();
-	if(!self.owner)
-		remove(self);
+	if(!this.owner)
+		delete(this);
 
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 }
 void dynlight_find_aiment(entity this)
 {
 	entity targ;
-	if (!self.target)
-		objerror ("dynlight: no target to follow");
+	if (!this.target)
+		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, self.target);
-	self.movetype = MOVETYPE_FOLLOW;
-	self.aiment = targ;
-	self.owner = targ;
-	self.punchangle = targ.angles;
-	self.view_ofs = self.origin - targ.origin;
-	self.v_angle = self.angles - targ.angles;
-	self.think = dynlight_think;
-	self.nextthink = time + 0.1;
+	targ = find(NULL, targetname, this.target);
+	set_movetype(this, MOVETYPE_FOLLOW);
+	this.aiment = targ;
+	this.owner = targ;
+	this.punchangle = targ.angles;
+	this.view_ofs = this.origin - targ.origin;
+	this.v_angle = this.angles - targ.angles;
+	setthink(this, dynlight_think);
+	this.nextthink = time + 0.1;
 }
 void dynlight_find_path(entity this)
 {
 	entity targ;
-	if (!self.target)
-		objerror ("dynlight: no target to follow");
+	if (!this.target)
+		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, self.target);
-	self.target = targ.target;
-	setorigin (self, targ.origin);
-	self.think = train_next;
-	self.nextthink = time + 0.1;
+	targ = find(NULL, targetname, this.target);
+	this.target = targ.target;
+	setorigin(this, targ.origin);
+	setthink(this, train_next);
+	this.nextthink = time + 0.1;
 }
 void dynlight_find_target(entity this)
 {
 	entity targ;
-	if (!self.target)
-		objerror ("dynlight: no target to follow");
+	if (!this.target)
+		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, self.target);
-	setattachment(self, targ, self.dtagname);
-	self.owner = targ;
-	self.think = dynlight_think;
-	self.nextthink = time + 0.1;
+	targ = find(NULL, targetname, this.target);
+	setattachment(this, targ, this.dtagname);
+	this.owner = targ;
+	setthink(this, dynlight_think);
+	this.nextthink = time + 0.1;
 }
 void dynlight_use(entity this, entity actor, entity trigger)
 {
@@ -91,43 +90,43 @@ void dynlight_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(dynlight)
 {
-	if (!self.light_lev)
-		self.light_lev = 200;
-	if (!self.color)
-		self.color = '1 1 1';
-	self.lefty = self.light_lev;
-	self.use = dynlight_use;
-	setsize (self, '0 0 0', '0 0 0');
-	setorigin (self, self.origin);
-	//self.pflags = PFLAGS_FULLDYNAMIC;
-	self.solid = SOLID_NOT;
-	//self.blocked = func_null;
-	//if (self.spawnflags & DNOSHADOW)
-	//	self.pflags = self.pflags + PFLAGS_NOSHADOW;
-	//if (self.spawnflags & START_OFF)
-	//	self.light_lev = 0;
+	if (!this.light_lev)
+		this.light_lev = 200;
+	if (!this.color)
+		this.color = '1 1 1';
+	this.lefty = this.light_lev;
+	this.use = dynlight_use;
+	setsize (this, '0 0 0', '0 0 0');
+	setorigin(this, this.origin);
+	//this.pflags = PFLAGS_FULLDYNAMIC;
+	this.solid = SOLID_NOT;
+	//this.blocked = func_null;
+	//if (this.spawnflags & DNOSHADOW)
+	//	this.pflags = this.pflags + PFLAGS_NOSHADOW;
+	//if (this.spawnflags & START_OFF)
+	//	this.light_lev = 0;
 
 //tag attaching
-	if (self.dtagname)
+	if (this.dtagname)
 	{
-		InitializeEntity(self, dynlight_find_target, INITPRIO_FINDTARGET);
+		InitializeEntity(this, dynlight_find_target, INITPRIO_FINDTARGET);
 		return;
 	}
 
 // entity following
-	if (self.spawnflags & DFOLLOW)
+	if (this.spawnflags & DFOLLOW)
 	{
-		InitializeEntity(self, dynlight_find_aiment, INITPRIO_FINDTARGET);
+		InitializeEntity(this, dynlight_find_aiment, INITPRIO_FINDTARGET);
 		return;
 	}
 // path following
-	if (self.target)
-//	if (!(self.spawnflags & DFOLLOW))
+	if (this.target)
+//	if (!(this.spawnflags & DFOLLOW))
 	{
-		self.movetype = MOVETYPE_NOCLIP;
-		if (!self.speed)
-			self.speed = 100;
-		InitializeEntity(self, dynlight_find_path, INITPRIO_FINDTARGET);
+		set_movetype(this, MOVETYPE_NOCLIP);
+		if (!this.speed)
+			this.speed = 100;
+		InitializeEntity(this, dynlight_find_path, INITPRIO_FINDTARGET);
 		return;
 	}
 }

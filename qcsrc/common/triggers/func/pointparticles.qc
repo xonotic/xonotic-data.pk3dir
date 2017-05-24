@@ -1,3 +1,4 @@
+#include "pointparticles.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_POINTPARTICLES)
 
 #ifdef SVQC
@@ -9,42 +10,42 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 
 	// optional features to save space
 	fl = fl & 0x0F;
-	if(self.spawnflags & 2)
+	if(this.spawnflags & 2)
 		fl |= 0x10; // absolute count on toggle-on
-	if(self.movedir != '0 0 0' || self.velocity != '0 0 0')
+	if(this.movedir != '0 0 0' || this.velocity != '0 0 0')
 		fl |= 0x20; // 4 bytes - saves CPU
-	if(self.waterlevel || self.count != 1)
+	if(this.waterlevel || this.count != 1)
 		fl |= 0x40; // 4 bytes - obscure features almost never used
-	if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+	if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		fl |= 0x80; // 14 bytes - saves lots of space
 
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 2)
 	{
-		if(self.state)
-			WriteCoord(MSG_ENTITY, self.impulse);
+		if(this.state)
+			WriteCoord(MSG_ENTITY, this.impulse);
 		else
 			WriteCoord(MSG_ENTITY, 0); // off
 	}
 	if(fl & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 	}
 	if(fl & 1)
 	{
-		if(self.model != "null")
+		if(this.model != "null")
 		{
-			WriteShort(MSG_ENTITY, self.modelindex);
+			WriteShort(MSG_ENTITY, this.modelindex);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, self.mins_x);
-				WriteCoord(MSG_ENTITY, self.mins_y);
-				WriteCoord(MSG_ENTITY, self.mins_z);
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				WriteCoord(MSG_ENTITY, this.mins_x);
+				WriteCoord(MSG_ENTITY, this.mins_y);
+				WriteCoord(MSG_ENTITY, this.mins_z);
+				WriteCoord(MSG_ENTITY, this.maxs_x);
+				WriteCoord(MSG_ENTITY, this.maxs_y);
+				WriteCoord(MSG_ENTITY, this.maxs_z);
 			}
 		}
 		else
@@ -52,36 +53,36 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 			WriteShort(MSG_ENTITY, 0);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				WriteCoord(MSG_ENTITY, this.maxs_x);
+				WriteCoord(MSG_ENTITY, this.maxs_y);
+				WriteCoord(MSG_ENTITY, this.maxs_z);
 			}
 		}
-		WriteShort(MSG_ENTITY, self.cnt);
-		WriteString(MSG_ENTITY, self.mdl);
+		WriteShort(MSG_ENTITY, this.cnt);
+		WriteString(MSG_ENTITY, this.mdl);
 		if(fl & 0x20)
 		{
-			WriteShort(MSG_ENTITY, compressShortVector(self.velocity));
-			WriteShort(MSG_ENTITY, compressShortVector(self.movedir));
+			WriteShort(MSG_ENTITY, compressShortVector(this.velocity));
+			WriteShort(MSG_ENTITY, compressShortVector(this.movedir));
 		}
 		if(fl & 0x40)
 		{
-			WriteShort(MSG_ENTITY, self.waterlevel * 16.0);
-			WriteByte(MSG_ENTITY, self.count * 16.0);
+			WriteShort(MSG_ENTITY, this.waterlevel * 16.0);
+			WriteByte(MSG_ENTITY, this.count * 16.0);
 		}
-		WriteString(MSG_ENTITY, self.noise);
-		if(self.noise != "")
+		WriteString(MSG_ENTITY, this.noise);
+		if(this.noise != "")
 		{
-			WriteByte(MSG_ENTITY, floor(self.atten * 64));
-			WriteByte(MSG_ENTITY, floor(self.volume * 255));
+			WriteByte(MSG_ENTITY, floor(this.atten * 64));
+			WriteByte(MSG_ENTITY, floor(this.volume * 255));
 		}
-		WriteString(MSG_ENTITY, self.bgmscript);
-		if(self.bgmscript != "")
+		WriteString(MSG_ENTITY, this.bgmscript);
+		if(this.bgmscript != "")
 		{
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptattack * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptrelease * 64));
+			WriteByte(MSG_ENTITY, floor(this.bgmscriptattack * 64));
+			WriteByte(MSG_ENTITY, floor(this.bgmscriptdecay * 64));
+			WriteByte(MSG_ENTITY, floor(this.bgmscriptsustain * 255));
+			WriteByte(MSG_ENTITY, floor(this.bgmscriptrelease * 64));
 		}
 	}
 	return 1;
@@ -93,14 +94,14 @@ void pointparticles_use(entity this, entity actor, entity trigger)
 	this.SendFlags |= 2;
 }
 
-void pointparticles_think()
-{SELFPARAM();
-	if(self.origin != self.oldorigin)
+void pointparticles_think(entity this)
+{
+	if(this.origin != this.oldorigin)
 	{
-		self.SendFlags |= 4;
-		self.oldorigin = self.origin;
+		this.SendFlags |= 4;
+		this.oldorigin = this.origin;
 	}
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 void pointparticles_reset(entity this)
@@ -143,31 +144,31 @@ spawnfunc(func_pointparticles)
 	}
 	else
 		this.state = 1;
-	this.think = pointparticles_think;
+	setthink(this, pointparticles_think);
 	this.nextthink = time;
 }
 
 spawnfunc(func_sparks)
 {
-	// self.cnt is the amount of sparks that one burst will spawn
-	if(self.cnt < 1) {
-		self.cnt = 25.0; // nice default value
+	// this.cnt is the amount of sparks that one burst will spawn
+	if(this.cnt < 1) {
+		this.cnt = 25.0; // nice default value
 	}
 
-	// self.wait is the probability that a sparkthink will spawn a spark shower
+	// this.wait is the probability that a sparkthink will spawn a spark shower
 	// range: 0 - 1, but 0 makes little sense, so...
-	if(self.wait < 0.05) {
-		self.wait = 0.25; // nice default value
+	if(this.wait < 0.05) {
+		this.wait = 0.25; // nice default value
 	}
 
-	self.count = self.cnt;
-	self.mins = '0 0 0';
-	self.maxs = '0 0 0';
-	self.velocity = '0 0 -1';
-	self.mdl = "TE_SPARK";
-	self.impulse = 10 * self.wait; // by default 2.5/sec
-	self.wait = 0;
-	self.cnt = 0; // use mdl
+	this.count = this.cnt;
+	this.mins = '0 0 0';
+	this.maxs = '0 0 0';
+	this.velocity = '0 0 -1';
+	this.mdl = "TE_SPARK";
+	this.impulse = 10 * this.wait; // by default 2.5/sec
+	this.wait = 0;
+	this.cnt = 0; // use mdl
 
 	spawnfunc_func_pointparticles(this);
 }
@@ -194,20 +195,20 @@ void Draw_PointParticles(entity this)
 	vector p;
 	vector sz;
 	vector o;
-	o = self.origin;
-	sz = self.maxs - self.mins;
-	n = doBGMScript(self);
-	if(self.absolute == 2)
+	o = this.origin;
+	sz = this.maxs - this.mins;
+	n = doBGMScript(this);
+	if(this.absolute == 2)
 	{
 		if(n >= 0)
-			n = self.just_toggled ? self.impulse : 0;
+			n = this.just_toggled ? this.impulse : 0;
 		else
-			n = self.impulse * drawframetime;
+			n = this.impulse * drawframetime;
 	}
 	else
 	{
-		n *= self.impulse * drawframetime;
-		if(self.just_toggled)
+		n *= this.impulse * drawframetime;
+		if(this.just_toggled)
 			if(n < 1)
 				n = 1;
 	}
@@ -216,46 +217,46 @@ void Draw_PointParticles(entity this)
 	fail = 0;
 	for(i = random(); i <= n && fail <= 64*n; ++i)
 	{
-		p = o + self.mins;
+		p = o + this.mins;
 		p.x += random() * sz.x;
 		p.y += random() * sz.y;
 		p.z += random() * sz.z;
-		if(WarpZoneLib_BoxTouchesBrush(p, p, self, world))
+		if(WarpZoneLib_BoxTouchesBrush(p, p, this, NULL))
 		{
-			if(self.movedir != '0 0 0')
+			if(this.movedir != '0 0 0')
 			{
-				traceline(p, p + normalize(self.movedir) * 4096, 0, world);
+				traceline(p, p + normalize(this.movedir) * 4096, 0, NULL);
 				p = trace_endpos;
 				int eff_num;
-				if(self.cnt)
-					eff_num = self.cnt;
+				if(this.cnt)
+					eff_num = this.cnt;
 				else
-					eff_num = _particleeffectnum(self.mdl);
-				__pointparticles(eff_num, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
+					eff_num = _particleeffectnum(this.mdl);
+				__pointparticles(eff_num, p, trace_plane_normal * vlen(this.movedir) + this.velocity + randomvec() * this.waterlevel, this.count);
 			}
 			else
 			{
 				int eff_num;
-				if(self.cnt)
-					eff_num = self.cnt;
+				if(this.cnt)
+					eff_num = this.cnt;
 				else
-					eff_num = _particleeffectnum(self.mdl);
-				__pointparticles(eff_num, p, self.velocity + randomvec() * self.waterlevel, self.count);
+					eff_num = _particleeffectnum(this.mdl);
+				__pointparticles(eff_num, p, this.velocity + randomvec() * this.waterlevel, this.count);
 			}
-			if(self.noise != "")
+			if(this.noise != "")
 			{
-				setorigin(self, p);
-				_sound(self, CH_AMBIENT, self.noise, VOL_BASE * self.volume, self.atten);
+				setorigin(this, p);
+				_sound(this, CH_AMBIENT, this.noise, VOL_BASE * this.volume, this.atten);
 			}
-			self.just_toggled = 0;
+			this.just_toggled = 0;
 		}
-		else if(self.absolute)
+		else if(this.absolute)
 		{
 			++fail;
 			--i;
 		}
 	}
-	setorigin(self, o);
+	setorigin(this, o);
 }
 
 void Ent_PointParticles_Remove(entity this)
@@ -279,105 +280,106 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 	if(f & 2)
 	{
 		i = ReadCoord(); // density (<0: point, >0: volume)
-		if(i && !self.impulse && (self.cnt || self.mdl)) // self.cnt check is so it only happens if the ent already existed
-			self.just_toggled = 1;
-		self.impulse = i;
+		if(i && !this.impulse && (this.cnt || this.mdl)) // this.cnt check is so it only happens if the ent already existed
+			this.just_toggled = 1;
+		this.impulse = i;
 	}
 	if(f & 4)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
 	if(f & 1)
 	{
-		self.modelindex = ReadShort();
+		this.modelindex = ReadShort();
 		if(f & 0x80)
 		{
-			if(self.modelindex)
+			if(this.modelindex)
 			{
-				self.mins_x = ReadCoord();
-				self.mins_y = ReadCoord();
-				self.mins_z = ReadCoord();
-				self.maxs_x = ReadCoord();
-				self.maxs_y = ReadCoord();
-				self.maxs_z = ReadCoord();
+				this.mins_x = ReadCoord();
+				this.mins_y = ReadCoord();
+				this.mins_z = ReadCoord();
+				this.maxs_x = ReadCoord();
+				this.maxs_y = ReadCoord();
+				this.maxs_z = ReadCoord();
 			}
 			else
 			{
-				self.mins    = '0 0 0';
-				self.maxs_x = ReadCoord();
-				self.maxs_y = ReadCoord();
-				self.maxs_z = ReadCoord();
+				this.mins    = '0 0 0';
+				this.maxs_x = ReadCoord();
+				this.maxs_y = ReadCoord();
+				this.maxs_z = ReadCoord();
 			}
 		}
 		else
 		{
-			self.mins = self.maxs = '0 0 0';
+			this.mins = this.maxs = '0 0 0';
 		}
 
-		self.cnt = ReadShort(); // effect number
-		self.mdl = strzone(ReadString()); // effect string
+		this.cnt = ReadShort(); // effect number
+		this.mdl = strzone(ReadString()); // effect string
 
 		if(f & 0x20)
 		{
-			self.velocity = decompressShortVector(ReadShort());
-			self.movedir = decompressShortVector(ReadShort());
+			this.velocity = decompressShortVector(ReadShort());
+			this.movedir = decompressShortVector(ReadShort());
 		}
 		else
 		{
-			self.velocity = self.movedir = '0 0 0';
+			this.velocity = this.movedir = '0 0 0';
 		}
 		if(f & 0x40)
 		{
-			self.waterlevel = ReadShort() / 16.0;
-			self.count = ReadByte() / 16.0;
+			this.waterlevel = ReadShort() / 16.0;
+			this.count = ReadByte() / 16.0;
 		}
 		else
 		{
-			self.waterlevel = 0;
-			self.count = 1;
+			this.waterlevel = 0;
+			this.count = 1;
 		}
-		if(self.noise)
-			strunzone(self.noise);
-		if(self.bgmscript)
-			strunzone(self.bgmscript);
-		self.noise = strzone(ReadString());
-		if(self.noise != "")
+		if(this.noise)
+			strunzone(this.noise);
+		if(this.bgmscript)
+			strunzone(this.bgmscript);
+		this.noise = strzone(ReadString());
+		if(this.noise != "")
 		{
-			self.atten = ReadByte() / 64.0;
-			self.volume = ReadByte() / 255.0;
+			this.atten = ReadByte() / 64.0;
+			this.volume = ReadByte() / 255.0;
 		}
-		self.bgmscript = strzone(ReadString());
-		if(self.bgmscript != "")
+		this.bgmscript = strzone(ReadString());
+		if(this.bgmscript != "")
 		{
-			self.bgmscriptattack = ReadByte() / 64.0;
-			self.bgmscriptdecay = ReadByte() / 64.0;
-			self.bgmscriptsustain = ReadByte() / 255.0;
-			self.bgmscriptrelease = ReadByte() / 64.0;
+			this.bgmscriptattack = ReadByte() / 64.0;
+			this.bgmscriptdecay = ReadByte() / 64.0;
+			this.bgmscriptsustain = ReadByte() / 255.0;
+			this.bgmscriptrelease = ReadByte() / 64.0;
 		}
-		BGMScript_InitEntity(self);
+		BGMScript_InitEntity(this);
 	}
 
 	return = true;
 
 	if(f & 2)
 	{
-		self.absolute = (self.impulse >= 0);
-		if(!self.absolute)
+		this.absolute = (this.impulse >= 0);
+		if(!this.absolute)
 		{
-			v = self.maxs - self.mins;
-			self.impulse *= -v.x * v.y * v.z / 262144; // relative: particles per 64^3 cube
+			v = this.maxs - this.mins;
+			this.impulse *= -v.x * v.y * v.z / 262144; // relative: particles per 64^3 cube
 		}
 	}
 
 	if(f & 0x10)
-		self.absolute = 2;
+		this.absolute = 2;
 
-	setorigin(self, self.origin);
-	setsize(self, self.mins, self.maxs);
-	self.solid = SOLID_NOT;
-	self.draw = Draw_PointParticles;
-	self.entremove = Ent_PointParticles_Remove;
+	setorigin(this, this.origin);
+	setsize(this, this.mins, this.maxs);
+	this.solid = SOLID_NOT;
+	this.draw = Draw_PointParticles;
+	if (isnew) IL_PUSH(g_drawables, this);
+	this.entremove = Ent_PointParticles_Remove;
 }
 #endif

@@ -1,4 +1,4 @@
-#ifndef MENUQC
+#ifdef GAMEQC
 #define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN { \
     this.m_projectile[i] = projectile; \
     this.m_trail[i] = trail; \
@@ -59,4 +59,12 @@ REGISTER_NADE(MONSTER) {
     this.m_icon = "nade_monster";
     NADE_PROJECTILE(0, PROJECTILE_NADE_MONSTER, EFFECT_NADE_TRAIL_RED);
     NADE_PROJECTILE(1, PROJECTILE_NADE_MONSTER_BURN, EFFECT_NADE_TRAIL_BURN_RED);
+}
+
+REGISTER_NADE(ENTRAP) {
+    this.m_color = '0.15 0.85 0';
+    this.m_name = _("Entrap grenade");
+    this.m_icon = "nade_entrap";
+    NADE_PROJECTILE(0, PROJECTILE_NADE_ENTRAP, EFFECT_NADE_TRAIL_YELLOW);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_ENTRAP_BURN, EFFECT_NADE_TRAIL_BURN_YELLOW);
 }

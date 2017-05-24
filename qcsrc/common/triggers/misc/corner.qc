@@ -1,40 +1,41 @@
+#include "corner.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_CORNER)
 
 #ifdef SVQC
-bool corner_send(entity to, int sf)
-{SELFPARAM();
+bool corner_send(entity this, entity to, int sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CORNER);
 
-	WriteString(MSG_ENTITY, self.platmovetype);
+	WriteString(MSG_ENTITY, this.platmovetype);
 
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, this.origin_x);
+	WriteCoord(MSG_ENTITY, this.origin_y);
+	WriteCoord(MSG_ENTITY, this.origin_z);
 
-	WriteString(MSG_ENTITY, self.target);
-	WriteString(MSG_ENTITY, self.target2);
-	WriteString(MSG_ENTITY, self.target3);
-	WriteString(MSG_ENTITY, self.target4);
-	WriteString(MSG_ENTITY, self.targetname);
-	WriteByte(MSG_ENTITY, self.target_random);
+	WriteString(MSG_ENTITY, this.target);
+	WriteString(MSG_ENTITY, this.target2);
+	WriteString(MSG_ENTITY, this.target3);
+	WriteString(MSG_ENTITY, this.target4);
+	WriteString(MSG_ENTITY, this.targetname);
+	WriteByte(MSG_ENTITY, this.target_random);
 
-	WriteByte(MSG_ENTITY, self.wait);
+	WriteByte(MSG_ENTITY, this.wait);
 
 	return true;
 }
 
-void corner_link()
+void corner_link(entity this)
 {
-	//Net_LinkEntity(self, false, 0, corner_send);
+	//Net_LinkEntity(this, false, 0, corner_send);
 }
 
 spawnfunc(path_corner)
 {
 	// setup values for overriding train movement
 	// if a second value does not exist, both start and end speeds are the single value specified
-	set_platmovetype(self, self.platmovetype);
+	set_platmovetype(this, this.platmovetype);
 
-	corner_link();
+	corner_link(this);
 }
 #elif defined(CSQC)
 
@@ -61,29 +62,29 @@ void corner_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_CORNER, bool isnew)
 {
-	self.platmovetype = strzone(ReadString());
+	this.platmovetype = strzone(ReadString());
 
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	setorigin(self, self.origin);
+	this.origin_x = ReadCoord();
+	this.origin_y = ReadCoord();
+	this.origin_z = ReadCoord();
+	setorigin(this, this.origin);
 
-	self.target = strzone(ReadString());
-	self.target2 = strzone(ReadString());
-	self.target3 = strzone(ReadString());
-	self.target4 = strzone(ReadString());
-	self.targetname = strzone(ReadString());
-	self.target_random = ReadByte();
+	this.target = strzone(ReadString());
+	this.target2 = strzone(ReadString());
+	this.target3 = strzone(ReadString());
+	this.target4 = strzone(ReadString());
+	this.targetname = strzone(ReadString());
+	this.target_random = ReadByte();
 
-	self.wait = ReadByte();
+	this.wait = ReadByte();
 
 	return = true;
 
-	self.classname = "path_corner";
-	self.drawmask = MASK_NORMAL;
-	self.entremove = corner_remove;
+	this.classname = "path_corner";
+	this.drawmask = MASK_NORMAL;
+	this.entremove = corner_remove;
 
-	set_platmovetype(self, self.platmovetype);
+	set_platmovetype(this, this.platmovetype);
 }
 
 #endif

@@ -1,11 +1,12 @@
+#include "triggers.qh"
 void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);
 
-void DelayThink()
-{SELFPARAM();
+void DelayThink(entity this)
+{
 	SUB_UseTargets (this, this.enemy, NULL);
-	remove(this);
+	delete(this);
 }
 
 void FixSize(entity e)
@@ -21,28 +22,33 @@ void FixSize(entity e)
 
 #ifdef SVQC
 
+bool autocvar_g_triggers_debug = true;
+
 void trigger_init(entity this)
 {
 	string m = this.model;
-	WITHSELF(this, WarpZoneLib_ExactTrigger_Init());
- 	if(m != "")
- 	{
- 		precache_model(m);
- 		_setmodel(this, m); // no precision needed
+	EXACTTRIGGER_INIT;
+	if(autocvar_g_triggers_debug)
+	{
+		if(m != "")
+	 	{
+	 		precache_model(m);
+	 		_setmodel(this, m); // no precision needed
+		}
+		setorigin(this, this.origin);
+		if(this.scale)
+			setsize(this, this.mins * this.scale, this.maxs * this.scale);
+		else
+			setsize(this, this.mins, this.maxs);
 	}
-	setorigin(this, this.origin);
-	if(this.scale)
-		setsize(this, this.mins * this.scale, this.maxs * this.scale);
-	else
-		setsize(this, this.mins, this.maxs);
 
-	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
+	if(autocvar_g_triggers_debug)
+		BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 }
 
 void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)
 {
-	this.SendEntity = SendEntity_self;
-	this.SendEntity3 = sendfunc;
+	setSendEntity(this, sendfunc);
 	this.SendFlags = 0xFFFFFF;
 }
 
@@ -92,8 +98,8 @@ void trigger_common_write(entity this, bool withtarget)
 
 #elif defined(CSQC)
 
-void trigger_common_read(bool withtarget)
-{SELFPARAM();
+void trigger_common_read(entity this, bool withtarget)
+{
 	int f = ReadByte();
 	this.warpzone_isboxy = (f & 1);
 
@@ -164,26 +170,28 @@ void trigger_remove_generic(entity this)
 }
 #endif
 
+
 /*
 ==============================
 SUB_UseTargets
 
 the global "activator" should be set to the entity that initiated the firing.
 
-If self.delay is set, a DelayedUse entity will be created that will actually
+If this.delay is set, a DelayedUse entity will be created that will actually
 do the SUB_UseTargets after that many seconds have passed.
 
-Centerprints any self.message to the activator.
+Centerprints any this.message to the activator.
 
-Removes all entities with a targetname that match self.killtarget,
+Removes all entities with a targetname that match this.killtarget,
 and removes them, so some events can remove other triggers.
 
 Search for (string)targetname in all entities that
-match (string)self.target and call their .use function
+match (string)this.target and call their .use function
 
 ==============================
 */
-void SUB_UseTargets(entity this, entity actor, entity trigger)
+
+void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventReuse)
 {
 //
 // check for a delay
@@ -193,7 +201,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	// create a temp object to fire at a later time
 		entity t = new(DelayedUse);
 		t.nextthink = time + this.delay;
-		t.think = DelayThink;
+		setthink(t, DelayThink);
 		t.enemy = actor;
 		t.message = this.message;
 		t.killtarget = this.killtarget;
@@ -201,6 +209,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 		t.target2 = this.target2;
 		t.target3 = this.target3;
 		t.target4 = this.target4;
+		t.antiwall_flag = this.antiwall_flag;
 		return;
 	}
 
@@ -225,8 +234,8 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	s = this.killtarget;
 	if (s != "")
 	{
-		for(entity t = world; (t = find(t, targetname, s)); )
-			remove(t);
+		for(entity t = NULL; (t = find(t, targetname, s)); )
+			delete(t);
 	}
 #endif
 
@@ -252,13 +261,13 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 			// Flag to set func_clientwall state
 			// 1 == deactivate, 2 == activate, 0 == do nothing
 			int aw_flag = this.antiwall_flag;
-			for(entity t = world; (t = find(t, targetname, s)); )
+			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
-				if(t.use)
+				if(t.use && (t.sub_target_used != time || !preventReuse))
 				{
 					if(this.target_random)
 					{
-						RandomSelection_Add(t, 0, string_null, 1, 0);
+						RandomSelection_AddEnt(t, 1, 0);
 					}
 					else
 					{
@@ -266,6 +275,8 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 							t.antiwall_flag = aw_flag;
 
 						t.use(t, actor, this);
+						if(preventReuse)
+							t.sub_target_used = time;
 					}
 				}
 			}
@@ -273,41 +284,17 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	}
 
 	if(this.target_random && RandomSelection_chosen_ent)
-		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
-}
-
-void SUB_UseTargets_self()
-{SELFPARAM();
-	SUB_UseTargets(this, NULL, NULL);
-}
-
-#ifdef CSQC
-void trigger_touch_generic(entity this, void() touchfunc)
-{
-	entity e;
-	for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
-	if(e.classname == "csqcprojectile")
 	{
-		vector emin = e.absmin, emax = e.absmax;
-		if(this.solid == SOLID_BSP)
-		{
-			emin -= '1 1 1';
-			emax += '1 1 1';
-		}
-		if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
-		if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
-		{
-			other = e;
-			WITHSELF(this, touchfunc());
-		}
+		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
+		if(preventReuse)
+			RandomSelection_chosen_ent.sub_target_used = time;
 	}
 }
-void trigger_draw_generic(entity this)
-{
-	float dt = time - this.move_time;
-	this.move_time = time;
-	if(dt <= 0) { return; }
 
-	if(this.trigger_touch) { trigger_touch_generic(this, this.trigger_touch); }
+void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false); }
+void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true); }
+
+void SUB_UseTargets_self(entity this)
+{
+	SUB_UseTargets(this, NULL, NULL);
 }
-#endif

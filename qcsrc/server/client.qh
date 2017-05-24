@@ -1,0 +1,115 @@
+#pragma once
+
+void ClientState_attach(entity this);
+
+IntrusiveList g_players;
+STATIC_INIT(g_players) { g_players = IL_NEW(); }
+
+CLASS(Client, Object)
+    /** Client name */
+    ATTRIB(Client, netname, string, this.netname);
+    ATTRIB(Client, colormap, int, this.colormap);
+    ATTRIB(Client, team, int, this.team);
+    ATTRIB(Client, clientcolors, int, this.clientcolors);
+    /** Client IP */
+    ATTRIB(Client, netaddress, string, this.netaddress);
+    ATTRIB(Client, playermodel, string, this.playermodel);
+    ATTRIB(Client, playerskin, int, this.playerskin);
+
+    /** fingerprint of CA key the player used to authenticate */
+    ATTRIB(Client, crypto_keyfp, string, this.crypto_keyfp);
+    /** fingerprint of CA key the server used to authenticate to the player */
+    ATTRIB(Client, crypto_mykeyfp, string, this.crypto_mykeyfp);
+    /** fingerprint of ID used by the player entity, or string_null if not identified */
+    ATTRIB(Client, crypto_idfp, string, this.crypto_idfp);
+    /** set if the player's ID has been signed */
+    ATTRIB(Client, crypto_idfp_signed, bool, this.crypto_idfp_signed);
+    /** the string "AES128" if encrypting, and string_null if plaintext */
+    ATTRIB(Client, crypto_encryptmethod, string, this.crypto_encryptmethod);
+    /** the string "HMAC-SHA256" if signing, and string_null if plaintext */
+    ATTRIB(Client, crypto_signmethod, string, this.crypto_signmethod);
+
+    // custom
+
+    ATTRIB(Client, playerid, int, this.playerid);
+
+    METHOD(Client, m_unwind, bool(Client this));
+
+    STATIC_METHOD(Client, Add, void(Client this, int _team));
+    STATIC_METHOD(Client, Remove, void(Client this));
+
+    INIT(Client) {
+        if (this.m_unwind(this)) return this;
+        make_impure(this);
+        this.classname = "player_joining";
+        static int playerid_last;
+        this.playerid = ++playerid_last;
+        ClientState_attach(this);
+    }
+    DESTRUCTOR(Client) {
+        Client_Remove(this);
+    }
+    CONSTRUCTOR(Client, string name) {
+        CONSTRUCT(Client);
+        this.netname = name;
+        this.netaddress = "local";
+        this.playermodel = cvar_defstring("sv_defaultplayermodel");
+    }
+ENDCLASS(Client)
+
+CLASS(Observer, Client)
+    INIT(Observer) {
+        this.classname = STR_OBSERVER;
+    }
+    DESTRUCTOR(Observer) { }
+ENDCLASS(Observer)
+
+CLASS(Spectator, Client)
+    INIT(Spectator) {
+        this.classname = STR_SPECTATOR;
+    }
+    DESTRUCTOR(Spectator) { }
+ENDCLASS(Spectator)
+
+CLASS(Player, Client)
+    INIT(Player) {
+        this.classname = STR_PLAYER;
+        IL_PUSH(g_players, this);
+    }
+    DESTRUCTOR(Player) {
+        IL_REMOVE(g_players, this);
+    }
+ENDCLASS(Player)
+
+METHOD(Client, m_unwind, bool(Client this))
+{
+    TC(Client, this);
+    #define UNWIND(class) MACRO_BEGIN if (this.instanceOf##class) { METHOD_REFERENCE(class, dtorimpl)(this); } MACRO_END
+    switch (this.classname) {
+        case "Observer":
+            UNWIND(Spectator);
+            UNWIND(Player);
+            return true;
+        case "Spectator":
+            UNWIND(Observer);
+            UNWIND(Player);
+            return true;
+        case "Player":
+            UNWIND(Observer);
+            UNWIND(Spectator);
+            return true;
+    }
+    #undef UNWIND
+    return false;
+}
+
+float c1, c2, c3, c4;
+
+void play_countdown(entity this, float finished, Sound samp);
+
+float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
+
+bool Spectate(entity this, entity pl);
+
+#define SPECTATE_COPY() [[accumulate]] void SpectateCopy(entity this, entity spectatee)
+#define SPECTATE_COPYFIELD(fld) SPECTATE_COPY() { this.(fld) = spectatee.(fld); }

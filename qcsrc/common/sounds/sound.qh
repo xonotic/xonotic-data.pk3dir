@@ -1,5 +1,4 @@
-#ifndef SOUND_H
-#define SOUND_H
+#pragma once
 
 // negative = SVQC autochannels
 // positive = one per entity
@@ -35,6 +34,7 @@ const float ATTEN_MAX = 3.984375;
 
 const float VOL_BASE = 0.7;
 const float VOL_BASEVOICE = 1.0;
+const float VOL_MUFFLED = 0.35;
 
 // Play all sounds via sound7, for access to the extra channels.
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
@@ -76,7 +76,7 @@ const float VOL_BASEVOICE = 1.0;
 			auto = true; \
 			__chan = fabs(__chan); \
 			entity tmp = __e = new(csqc_autochannel); \
-			tmp.think = SUB_Remove_self; \
+			setthink(tmp, SUB_Remove); \
 			tmp.nextthink = time + soundlength(__samp); \
 		} \
 		vector old_origin = __e.origin; \
@@ -93,8 +93,8 @@ const float VOL_BASEVOICE = 1.0;
 	} MACRO_END
 
 CLASS(Sound, Object)
-	ATTRIB(Sound, m_id, int, 0)
-	ATTRIB(Sound, sound_str, string(), func_null)
+	ATTRIB(Sound, m_id, int, 0);
+	ATTRIB(Sound, sound_str, string());
 	CONSTRUCTOR(Sound, string() path)
 	{
 		CONSTRUCT(Sound);
@@ -114,7 +114,7 @@ CLASS(Sound, Object)
 			/**/
 		#define tryext(ext) { string s = strcat(base, "." #ext); if (fexists(strcat("sound/", s))) return s; }
 		extensions(tryext);
-		LOG_WARNINGF("Missing sound: \"%s\"\n", strcat("sound/", base));
+		LOG_WARNF("Missing sound: \"%s\"", strcat("sound/", base));
 		#undef tryext
 		#undef extensions
 		return string_null;
@@ -125,9 +125,7 @@ CLASS(Sound, Object)
 	    TC(Sound, this);
 		string s = Sound_fixpath(this);
 		if (!s) return;
-		LOG_DEBUGF("precache_sound(\"%s\")\n", s);
+		profile(sprintf("precache_sound(\"%s\")", s));
 		precache_sound(s);
 	}
 ENDCLASS(Sound)
-
-#endif

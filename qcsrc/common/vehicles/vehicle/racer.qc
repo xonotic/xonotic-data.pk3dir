@@ -1,28 +1,4 @@
-#ifndef VEHICLE_RACER
-#define VEHICLE_RACER
-
-#include "racer_weapon.qh"
-
-CLASS(Racer, Vehicle)
-/* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
-/* mins       */ ATTRIB(Racer, mins, vector, '-120 -120 -40' * 0.5);
-/* maxs       */ ATTRIB(Racer, maxs, vector, '120 120 40' * 0.5);
-/* view offset*/ ATTRIB(Racer, view_ofs, vector, '0 0 50');
-/* view dist  */ ATTRIB(Racer, height, float, 200);
-/* model	  */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
-/* model	  */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
-/* head_model */ ATTRIB(Racer, head_model, string, "null");
-/* hud_model  */ ATTRIB(Racer, hud_model, string, "models/vehicles/wakizashi_cockpit.dpm");
-/* tags       */ ATTRIB(Racer, tag_head, string, "");
-/* tags       */ ATTRIB(Racer, tag_hud, string, "");
-/* tags       */ ATTRIB(Racer, tag_view, string, "tag_viewport");
-/* netname    */ ATTRIB(Racer, netname, string, "racer");
-/* fullname   */ ATTRIB(Racer, vehicle_name, string, _("Racer"));
-/* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");
-ENDCLASS(Racer)
-REGISTER_VEHICLE(RACER, NEW(Racer));
-
-#endif
+#include "racer.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -59,7 +35,7 @@ float autocvar_g_vehicle_racer_friction = 0.45;
 
 float autocvar_g_vehicle_racer_water_time = 5;
 
-float autocvar_g_vehicle_racer_collision_multiplier = 0.05;
+//float autocvar_g_vehicle_racer_collision_multiplier = 0.05;
 
 // 0 = hover, != 0 = maglev
 int autocvar_g_vehicle_racer_hovertype = 0;
@@ -170,15 +146,16 @@ void racer_fire_rocket_aim(entity player, string tagname, entity trg)
 	racer_fire_rocket(player, v, v_forward, trg);
 }
 
-bool racer_frame(entity this)
+bool racer_frame(entity this, float dt)
 {
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(intermission_running)
+	if(game_stopped)
 	{
-		vehic.velocity = '0 0 0';
-		vehic.avelocity = '0 0 0';
+		vehic.solid = SOLID_NOT;
+		vehic.takedamage = DAMAGE_NO;
+		set_movetype(vehic, MOVETYPE_NONE);
 		return;
 	}
 
@@ -186,7 +163,7 @@ bool racer_frame(entity this)
 
 	traceline(vehic.origin, vehic.origin + '0 0 1', MOVE_NOMONSTERS, this);
 	int cont = trace_dpstartcontents;
-	if(cont & DPCONTENTS_WATER)
+	if(!(cont & DPCONTENTS_WATER))
 		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(IS_DEAD(vehic))
@@ -195,28 +172,22 @@ bool racer_frame(entity this)
 		return;
 	}
 
-	racer_align4point(vehic, PHYS_INPUT_TIMELENGTH);
+	racer_align4point(vehic, dt);
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
-
-	if(time >= vehic.vehicle_last_trace)
-	{
-		crosshair_trace(this);
-		vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
-	}
 
 	vehic.angles_x *= -1;
 
 	// Yaw
-	float ftmp = autocvar_g_vehicle_racer_turnspeed * PHYS_INPUT_TIMELENGTH;
+	float ftmp = autocvar_g_vehicle_racer_turnspeed * dt;
 	ftmp = bound(-ftmp, shortangle_f(this.v_angle_y - vehic.angles_y, vehic.angles_y), ftmp);
 	vehic.angles_y = anglemods(vehic.angles_y + ftmp);
 
 	// Roll
-	vehic.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * PHYS_INPUT_TIMELENGTH;
+	vehic.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * dt;
 
 	// Pitch
-	ftmp = autocvar_g_vehicle_racer_pitchspeed  * PHYS_INPUT_TIMELENGTH;
+	ftmp = autocvar_g_vehicle_racer_pitchspeed  * dt;
 	ftmp = bound(-ftmp, shortangle_f(this.v_angle_x - vehic.angles_x, vehic.angles_x), ftmp);
 	vehic.angles_x = bound(-autocvar_g_vehicle_racer_pitchlimit, anglemods(vehic.angles_x + ftmp), autocvar_g_vehicle_racer_pitchlimit);
 
@@ -262,7 +233,7 @@ bool racer_frame(entity this)
 #endif
 
 	// Afterburn
-	if (PHYS_INPUT_BUTTON_JUMP(this) && vehic.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * PHYS_INPUT_TIMELENGTH))
+	if (PHYS_INPUT_BUTTON_JUMP(this) && vehic.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * dt))
 	{
 #ifdef SVQC
 		if(time - vehic.wait > 0.2)
@@ -273,12 +244,12 @@ bool racer_frame(entity this)
 
 		if(cont & DPCONTENTS_LIQUIDSMASK)
 		{
-			vehic.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * PHYS_INPUT_TIMELENGTH;
+			vehic.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * dt;
 			df += (v_forward * autocvar_g_vehicle_racer_waterburn_speed);
 		}
 		else
 		{
-			vehic.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * PHYS_INPUT_TIMELENGTH;
+			vehic.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * dt;
 			df += (v_forward * autocvar_g_vehicle_racer_speed_afterburn);
 		}
 
@@ -313,15 +284,15 @@ bool racer_frame(entity this)
 		dforce = autocvar_g_vehicle_racer_water_downforce;
 
 	df -= v_up * (vlen(vehic.velocity) * dforce);
-	this.movement = vehic.velocity += df * PHYS_INPUT_TIMELENGTH;
+	this.movement = vehic.velocity += df * dt;
 
 #ifdef SVQC
-	setself(vehic);
 
 	Weapon wep1 = WEP_RACER;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if (!forbidWeaponUse(this))
 	if (PHYS_INPUT_BUTTON_ATCK(this))
-	if (wep1.wr_checkammo1(wep1))
+	if (wep1.wr_checkammo1(wep1, vehic, weaponentity))
 	{
 		string tagname = (vehic.cnt)
 		    ? (vehic.cnt = 0, "tag_fire1")
@@ -332,18 +303,21 @@ bool racer_frame(entity this)
 		// Fix z-aim (for chase mode)
 		crosshair_trace(this);
 		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
-		.entity weaponentity = weaponentities[0];
 		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 
-	setself(this);
-
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
-		if(vehic.vehicle_last_trace == time + autocvar_g_vehicle_racer_thinkrate)
-		vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
-						 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
-						 autocvar_g_vehicle_racer_rocket_locked_time);
+		if(time >= vehic.vehicle_last_trace)
+		{
+			crosshair_trace(this);
+
+			vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * dt,
+							 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * dt,
+							 autocvar_g_vehicle_racer_rocket_locked_time);
+
+			vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
+		}
 
 		if(vehic.lock_target)
 		{
@@ -365,14 +339,14 @@ bool racer_frame(entity this)
 
 		if(vehic.misc_bulletcounter == 1)
 		{
-			racer_fire_rocket_aim(this, "tag_rocket_r", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : world);
+			racer_fire_rocket_aim(this, "tag_rocket_r", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : NULL);
 			this.vehicle_ammo2 = 50;
 		}
 		else if(vehic.misc_bulletcounter == 2)
 		{
-			racer_fire_rocket_aim(this, "tag_rocket_l", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : world);
+			racer_fire_rocket_aim(this, "tag_rocket_l", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : NULL);
 			vehic.lock_strength  = 0;
-			vehic.lock_target	= world;
+			vehic.lock_target	= NULL;
 			vehic.misc_bulletcounter = 0;
 			vehic.delay = time + autocvar_g_vehicle_racer_rocket_refire;
 			vehic.lip = time;
@@ -385,13 +359,13 @@ bool racer_frame(entity this)
 	this.vehicle_reload2 = bound(0, 100 * ((time - vehic.lip) / (vehic.delay - vehic.lip)), 100);
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, true);
+		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, false);
+		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, dt, false);
 
 	if(vehic.vehicle_flags  & VHF_ENERGYREGEN)
-		vehicles_regen(vehic, vehic.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, false);
+		vehicles_regen(vehic, vehic.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, dt, false);
 
 	VEHICLE_UPDATE_PLAYER(this, vehic, health, racer);
 	VEHICLE_UPDATE_PLAYER(this, vehic, energy, racer);
@@ -403,11 +377,12 @@ bool racer_frame(entity this)
 #endif
 
 	setorigin(this, vehic.origin + '0 0 32');
+	this.oldorigin = this.origin; // negate fall damage
 	this.velocity = vehic.velocity;
 }
 
-void racer_think()
-{SELFPARAM();
+void racer_think(entity this)
+{
 	this.nextthink = time + autocvar_g_vehicle_racer_thinkrate;
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NOMONSTERS, this);
@@ -417,7 +392,7 @@ void racer_think()
 
 	float forced = autocvar_g_vehicle_racer_upforcedamper;
 
-	//int cont = pointcontents(self.origin - '0 0 64');
+	//int cont = pointcontents(this.origin - '0 0 64');
 	traceline(this.origin - '0 0 64', this.origin - '0 0 64', MOVE_NOMONSTERS, this);
 	//if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 	if(trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
@@ -436,134 +411,99 @@ void racer_think()
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void racer_exit(float eject)
-{SELFPARAM();
+void racer_exit(entity this, int eject)
+{
 	vector spot;
 
-	self.think	  = racer_think;
-	self.nextthink  = time;
-	self.movetype   = MOVETYPE_BOUNCE;
-	sound (self.tur_head, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
+	setthink(this, racer_think);
+	this.nextthink  = time;
+	set_movetype(this, MOVETYPE_BOUNCE);
+	sound (this.tur_head, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
 
-	if(!self.owner)
+	if(!this.owner)
 		return;
 
-	makevectors(self.angles);
+	makevectors(this.angles);
 	if(eject)
 	{
-		spot = self.origin + v_forward * 100 + '0 0 64';
-		spot = vehicles_findgoodexit(spot);
-		setorigin(self.owner , spot);
-		self.owner.velocity = (v_up + v_forward * 0.25) * 750;
-		self.owner.oldvelocity = self.owner.velocity;
+		spot = this.origin + v_forward * 100 + '0 0 64';
+		spot = vehicles_findgoodexit(this, this.owner, spot);
+		setorigin(this.owner, spot);
+		this.owner.velocity = (v_up + v_forward * 0.25) * 750;
+		this.owner.oldvelocity = this.owner.velocity;
 	}
 	else
 	{
-		if(vdist(self.velocity, >, 2 * autocvar_sv_maxairspeed))
+		if(vdist(this.velocity, >, 2 * autocvar_sv_maxairspeed))
 		{
-			self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed * 2;
-			self.owner.velocity_z += 200;
-			spot = self.origin + v_forward * 32 + '0 0 32';
-			spot = vehicles_findgoodexit(spot);
+			this.owner.velocity = normalize(this.velocity) * autocvar_sv_maxairspeed * 2;
+			this.owner.velocity_z += 200;
+			spot = this.origin + v_forward * 32 + '0 0 32';
+			spot = vehicles_findgoodexit(this, this.owner, spot);
 		}
 		else
 		{
-			self.owner.velocity = self.velocity * 0.5;
-			self.owner.velocity_z += 10;
-			spot = self.origin - v_forward * 200 + '0 0 32';
-			spot = vehicles_findgoodexit(spot);
+			this.owner.velocity = this.velocity * 0.5;
+			this.owner.velocity_z += 10;
+			spot = this.origin - v_forward * 200 + '0 0 32';
+			spot = vehicles_findgoodexit(this, this.owner, spot);
 		}
-		self.owner.oldvelocity = self.owner.velocity;
-		setorigin(self.owner , spot);
+		this.owner.oldvelocity = this.owner.velocity;
+		setorigin(this.owner , spot);
 	}
-	antilag_clear(self.owner, CS(self.owner));
-	self.owner = world;
+	antilag_clear(this.owner, CS(this.owner));
+	this.owner = NULL;
 }
 
-void racer_blowup()
-{SELFPARAM();
-	self.deadflag	= DEAD_DEAD;
-	self.vehicle_exit(VHEF_NORMAL);
+void racer_blowup(entity this)
+{
+	this.deadflag = DEAD_DEAD;
+	this.vehicle_exit(this, VHEF_NORMAL);
 
-	RadiusDamage (self, self.enemy, autocvar_g_vehicle_racer_blowup_coredamage,
+	RadiusDamage (this, this.enemy, autocvar_g_vehicle_racer_blowup_coredamage,
 					autocvar_g_vehicle_racer_blowup_edgedamage,
-					autocvar_g_vehicle_racer_blowup_radius, world, world,
+					autocvar_g_vehicle_racer_blowup_radius, NULL, NULL,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
-					DEATH_VH_WAKI_DEATH.m_id, world);
+					DEATH_VH_WAKI_DEATH.m_id, NULL);
 
-	self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
-	self.think	  = vehicles_spawn;
-	self.movetype   = MOVETYPE_NONE;
-	self.effects	= EF_NODRAW;
-	self.solid = SOLID_NOT;
+	this.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
+	setthink(this, vehicles_spawn);
+	set_movetype(this, MOVETYPE_NONE);
+	this.effects	= EF_NODRAW;
+	this.solid = SOLID_NOT;
 
-	self.colormod  = '0 0 0';
-	self.avelocity = '0 0 0';
-	self.velocity  = '0 0 0';
+	this.colormod  = '0 0 0';
+	this.avelocity = '0 0 0';
+	this.velocity  = '0 0 0';
 
-	setorigin(self, self.pos1);
+	setorigin(this, this.pos1);
 }
 
-void racer_blowup_think()
-{SELFPARAM();
-	self.nextthink = time;
+void racer_blowup_think(entity this)
+{
+	this.nextthink = time;
 
-	if(time >= self.delay)
-		racer_blowup();
+	if(time >= this.delay)
+		racer_blowup(this);
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void racer_deadtouch()
-{SELFPARAM();
-	self.avelocity_x *= 0.7;
-	self.cnt -= 1;
-	if(self.cnt <= 0)
-		racer_blowup();
+void racer_deadtouch(entity this, entity toucher)
+{
+	this.avelocity_x *= 0.7;
+	this.cnt -= 1;
+	if(this.cnt <= 0)
+		racer_blowup(this);
 }
 
 spawnfunc(vehicle_racer)
 {
-	if(!autocvar_g_vehicle_racer) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_RACER, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_racer) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_RACER, false)) { delete(this); return; }
 }
 
 #endif // SVQC
-
-#ifdef CSQC
-#if 0
-void racer_draw()
-{SELFPARAM();
-	float pushdeltatime = time - self.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	self.lastpushtime = time;
-	if(!pushdeltatime) return;
-
-	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin - ('0 0 1' * STAT(VEH_RACER_SPRINGLENGTH)), MOVE_NOMONSTERS, self);
-
-	vector df = self.move_velocity * -STAT(VEH_RACER_FRICTION);
-	df_z += (1 - trace_fraction) * STAT(VEH_RACER_HOVERPOWER) + sin(time * 2) * (STAT(VEH_RACER_SPRINGLENGTH) * 2);
-
-	float forced = STAT(VEH_RACER_UPFORCEDAMPER);
-
-	int cont = pointcontents(self.move_origin - '0 0 64');
-	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
-	{
-		forced = STAT(VEH_RACER_WATER_UPFORCEDAMPER);
-		self.move_velocity_z += 200;
-	}
-
-	self.move_velocity += df * pushdeltatime;
-	if(self.move_velocity_z > 0)
-		self.move_velocity_z *= 1 - forced * pushdeltatime;
-
-	self.move_angles_x *= 1 - (STAT(VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
-	self.move_angles_z *= 1 - (STAT(VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
-
-	Movetype_Physics_MatchServer(false);
-}
-#endif
-#endif
 
 METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 {
@@ -576,24 +516,21 @@ METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
-    SELFPARAM();
-    self.movetype = MOVETYPE_BOUNCE;
-    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
-    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
+    set_movetype(instance, MOVETYPE_BOUNCE);
+    instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
+    instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
 
-    if(self.owner.flagcarried)
-       setorigin(self.owner.flagcarried, '-190 0 96');
+    if(instance.owner.flagcarried)
+       setorigin(instance.owner.flagcarried, '-190 0 96');
 #elif defined(CSQC)
-    SELFPARAM();
-    self.move_movetype = MOVETYPE_BOUNCE;
+    set_movetype(instance, MOVETYPE_BOUNCE);
 #endif
 }
 
 METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
-    SELFPARAM();
-    if(self.scale != 0.5)
+    if(instance.scale != 0.5)
     {
         if(autocvar_g_vehicle_racer_hovertype != 0)
             racer_force_from_tag = vehicles_force_fromtag_maglev;
@@ -601,47 +538,47 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
             racer_force_from_tag = vehicles_force_fromtag_hover;
 
         // FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
-        self.scale = 0.5;
-        setattachment(self.vehicle_hudmodel, self, "");
-        setattachment(self.vehicle_viewport, self, "tag_viewport");
+        instance.scale = 0.5;
+        setattachment(instance.vehicle_hudmodel, instance, "");
+        setattachment(instance.vehicle_viewport, instance, "tag_viewport");
 
-        self.mass			   = 900;
+        instance.mass			   = 900;
     }
 
-    self.think		  = racer_think;
-    self.nextthink	  = time;
-    self.vehicle_health = autocvar_g_vehicle_racer_health;
-    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
+    setthink(instance, racer_think);
+    instance.nextthink	  = time;
+    instance.vehicle_health = autocvar_g_vehicle_racer_health;
+    instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
-    self.movetype	  = MOVETYPE_TOSS;
-    self.solid		  = SOLID_SLIDEBOX;
-    self.delay		  = time;
-    self.scale		  = 0.5;
+    set_movetype(instance, MOVETYPE_TOSS);
+    instance.solid		  = SOLID_SLIDEBOX;
+    instance.delay		  = time;
+    instance.scale		  = 0.5;
 
-    self.PlayerPhysplug = racer_frame;
+    instance.PlayerPhysplug = racer_frame;
 
-    self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
-    self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
-    self.damageforcescale = 0.5;
-    self.vehicle_health = autocvar_g_vehicle_racer_health;
-    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
+    instance.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
+    instance.bouncestop = autocvar_g_vehicle_racer_bouncestop;
+    instance.damageforcescale = 0.5;
+    instance.vehicle_health = autocvar_g_vehicle_racer_health;
+    instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
 #endif
 }
 
 METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
-    instance.SendEntity		= func_null; // stop networking this racer (for now)
+    setSendEntity(instance, func_null); // stop networking this racer (for now)
     instance.health			= 0;
     instance.event_damage	= func_null;
     instance.solid			= SOLID_CORPSE;
     instance.takedamage		= DAMAGE_NO;
     instance.deadflag		= DEAD_DYING;
-    instance.movetype		= MOVETYPE_BOUNCE;
+    set_movetype(instance, MOVETYPE_BOUNCE);
     instance.wait			= time;
     instance.delay			= 2 + time + random() * 3;
     instance.cnt			= 1 + random() * 2;
-    instance.touch			= racer_deadtouch;
+    settouch(instance, racer_deadtouch);
 
     Send_Effect(EFFECT_EXPLOSION_MEDIUM, instance.origin, '0 0 0', 1);
 
@@ -654,7 +591,7 @@ METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
     instance.velocity += '0 0 700';
     instance.colormod = '-0.5 -0.5 -0.5';
 
-    instance.think = racer_blowup_think;
+    setthink(instance, racer_blowup_think);
     instance.nextthink = time;
 #endif
 }
@@ -666,7 +603,7 @@ METHOD(Racer, vr_hud, void(Racer thisveh))
                      "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
                      "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
 }
-METHOD(Racer, vr_crosshair, void(Racer thisveh))
+METHOD(Racer, vr_crosshair, void(Racer thisveh, entity player))
 {
     Vehicles_drawCrosshair(vCROSS_GUIDE);
 }

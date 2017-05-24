@@ -10,7 +10,7 @@
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
 	bool pure_available;
-	float m, pure_violations, freeslots, j, numh, maxp, numb, sflags;
+	float m, pure_violations, freeslots, numh, maxp, numb, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
 	// ====================================
@@ -96,7 +96,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	freeslots = -1;
 	sflags = -1;
 	modname = "";
-	for(j = 2; j < m; ++j)
+	for(int j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
 			break;
@@ -124,7 +124,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	if(s != "data")
 		modname = sprintf("%s (%s)", modname, s);
 
-	j = MapInfo_Type_FromString(typestr); // try and get the real name of the game type
+	Gametype j = MapInfo_Type_FromString(typestr); // try and get the real name of the game type
 	if(j) { typestr = MapInfo_Type_ToText(j); } // only set it if we actually found it
 
 	me.currentServerType = strzone(typestr);

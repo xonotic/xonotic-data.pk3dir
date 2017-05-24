@@ -8,7 +8,7 @@
 
 spawnfunc(info_null)
 {
-	remove(self);
+	delete(this);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
 }
 
@@ -51,9 +51,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	{
 		// take players back into the past
 		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_takeback(it, CS(it), time - lag));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if(it != forent)
-				antilag_takeback(it, it, time - lag);
+		IL_EACH(g_monsters, it != forent,
+		{
+			antilag_takeback(it, it, time - lag);
 		});
 	}
 
@@ -67,9 +67,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	if (lag)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_restore(it, CS(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if (it != forent)
-				antilag_restore(it, it);
+		IL_EACH(g_monsters, it != forent,
+		{
+			antilag_restore(it, it);
 		});
 	}
 
@@ -141,10 +141,10 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 
 		if(c == 50)
 		{
-			LOG_TRACE("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2), "\n");
-			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos), "\n");
-			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos), "\n");
-			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
+			LOG_TRACE("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2));
+			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos));
+			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos));
+			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)));
 		}
 
 		stopentity = trace_ent;
@@ -204,26 +204,22 @@ Ripped from DPMod
 */
 vector findbetterlocation (vector org, float mindist)
 {
-	vector	loc;
-	vector vec;
-	float c, h;
-
-	vec = mindist * '1 0 0';
-	c = 0;
+	vector vec = mindist * '1 0 0';
+	int c = 0;
 	while (c < 6)
 	{
-		traceline (org, org + vec, true, world);
+		traceline (org, org + vec, true, NULL);
 		vec = vec * -1;
 		if (trace_fraction < 1)
 		{
-			loc = trace_endpos;
-			traceline (loc, loc + vec, true, world);
+			vector loc = trace_endpos;
+			traceline (loc, loc + vec, true, NULL);
 			if (trace_fraction >= 1)
 				org = loc + vec;
 		}
 		if (c & 1)
 		{
-			h = vec.y;
+			float h = vec.y;
 			vec.y = vec.x;
 			vec.x = vec.z;
 			vec.z = h;
@@ -234,8 +230,8 @@ vector findbetterlocation (vector org, float mindist)
 	return org;
 }
 
-float LOD_customize()
-{SELFPARAM();
+bool LOD_customize(entity this, entity client)
+{
 	if(autocvar_loddebug)
 	{
 		int d = autocvar_loddebug;
@@ -249,10 +245,10 @@ float LOD_customize()
 	}
 
 	// TODO csqc network this so it only gets sent once
-	vector near_point = NearestPointOnBox(this, other.origin);
-	if(vdist(near_point - other.origin, <, this.loddistance1))
+	vector near_point = NearestPointOnBox(this, client.origin);
+	if(vdist(near_point - client.origin, <, this.loddistance1))
 		this.modelindex = this.lodmodelindex0;
-	else if(!this.lodmodelindex2 || vdist(near_point - other.origin, <, this.loddistance2))
+	else if(!this.lodmodelindex2 || vdist(near_point - client.origin, <, this.loddistance2))
 		this.modelindex = this.lodmodelindex1;
 	else
 		this.modelindex = this.lodmodelindex2;
@@ -260,8 +256,8 @@ float LOD_customize()
 	return true;
 }
 
-void LOD_uncustomize()
-{SELFPARAM();
+void LOD_uncustomize(entity this)
+{
 	this.modelindex = this.lodmodelindex0;
 }
 
@@ -277,20 +273,20 @@ void LODmodel_attach(entity this)
 
 	if(this.lodtarget1 != "")
 	{
-		e = find(world, targetname, this.lodtarget1);
+		e = find(NULL, targetname, this.lodtarget1);
 		if(e)
 		{
 			this.lodmodel1 = e.model;
-			remove(e);
+			delete(e);
 		}
 	}
 	if(this.lodtarget2 != "")
 	{
-		e = find(world, targetname, this.lodtarget2);
+		e = find(NULL, targetname, this.lodtarget2);
 		if(e)
 		{
 			this.lodmodel2 = e.model;
-			remove(e);
+			delete(e);
 		}
 	}
 
@@ -321,13 +317,13 @@ void LODmodel_attach(entity this)
 	}
 
 	if(this.lodmodelindex1)
-		if (!this.SendEntity)
+		if (!getSendEntity(this))
 			SetCustomizer(this, LOD_customize, LOD_uncustomize);
 }
 
 void ApplyMinMaxScaleAngles(entity e)
-{SELFPARAM();
-	if(e.angles.x != 0 || e.angles.z != 0 || self.avelocity.x != 0 || self.avelocity.z != 0) // "weird" rotation
+{
+	if(e.angles.x != 0 || e.angles.z != 0 || e.avelocity.x != 0 || e.avelocity.z != 0) // "weird" rotation
 	{
 		e.maxs = '1 1 1' * vlen(
 			'1 0 0' * max(-e.mins.x, e.maxs.x) +
@@ -336,7 +332,7 @@ void ApplyMinMaxScaleAngles(entity e)
 		);
 		e.mins = -e.maxs;
 	}
-	else if(e.angles.y != 0 || self.avelocity.y != 0) // yaw only is a bit better
+	else if(e.angles.y != 0 || e.avelocity.y != 0) // yaw only is a bit better
 	{
 		e.maxs_x = vlen(
 			'1 0 0' * max(-e.mins.x, e.maxs.x) +
@@ -352,43 +348,43 @@ void ApplyMinMaxScaleAngles(entity e)
 		setsize(e, e.mins, e.maxs);
 }
 
-void SetBrushEntityModel()
-{SELFPARAM();
- 	if(self.model != "")
+void SetBrushEntityModel(entity this)
+{
+ 	if(this.model != "")
  	{
- 		precache_model(self.model);
-		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
-			vector mi = self.mins;
-			vector ma = self.maxs;
-			_setmodel(self, self.model); // no precision needed
-			setsize(self, mi, ma);
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
 		}
 		else
-			_setmodel(self, self.model); // no precision needed
-		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
+			_setmodel(this, this.model); // no precision needed
+		InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
-	setorigin(self, self.origin);
-	ApplyMinMaxScaleAngles(self);
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
 }
 
-void SetBrushEntityModelNoLOD()
-{SELFPARAM();
- 	if(self.model != "")
+void SetBrushEntityModelNoLOD(entity this)
+{
+ 	if(this.model != "")
  	{
- 		precache_model(self.model);
-		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
-			vector mi = self.mins;
-			vector ma = self.maxs;
-			_setmodel(self, self.model); // no precision needed
-			setsize(self, mi, ma);
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
 		}
 		else
-			_setmodel(self, self.model); // no precision needed
+			_setmodel(this, this.model); // no precision needed
  	}
-	setorigin(self, self.origin);
-	ApplyMinMaxScaleAngles(self);
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
 }
 
 /*
@@ -410,41 +406,41 @@ void SetMovedir(entity this)
 	this.angles = '0 0 0';
 }
 
-void InitTrigger()
-{SELFPARAM();
+void InitTrigger(entity this)
+{
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir(self);
-	self.solid = SOLID_TRIGGER;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_NONE;
-	self.modelindex = 0;
-	self.model = "";
+	SetMovedir(this);
+	this.solid = SOLID_TRIGGER;
+	SetBrushEntityModel(this);
+	set_movetype(this, MOVETYPE_NONE);
+	this.modelindex = 0;
+	this.model = "";
 }
 
-void InitSolidBSPTrigger()
-{SELFPARAM();
+void InitSolidBSPTrigger(entity this)
+{
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir(self);
-	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
-//	self.modelindex = 0;
-	self.model = "";
+	SetMovedir(this);
+	this.solid = SOLID_BSP;
+	SetBrushEntityModel(this);
+	set_movetype(this, MOVETYPE_NONE); // why was this PUSH? -div0
+//	this.modelindex = 0;
+	this.model = "";
 }
 
-float InitMovingBrushTrigger()
-{SELFPARAM();
+bool InitMovingBrushTrigger(entity this)
+{
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_PUSH;
-	if(self.modelindex == 0)
+	this.solid = SOLID_BSP;
+	SetBrushEntityModel(this);
+	set_movetype(this, MOVETYPE_PUSH);
+	if(this.modelindex == 0)
 	{
-		objerror("InitMovingBrushTrigger: no brushes found!");
-		return 0;
+		objerror(this, "InitMovingBrushTrigger: no brushes found!");
+		return false;
 	}
-	return 1;
+	return true;
 }

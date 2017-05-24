@@ -1,8 +1,8 @@
 #include "miscfunctions.qh"
 
-#include "hud/all.qh"
+#include "hud/_mod.qh"
 
-#include <common/command/generic.qh>
+#include <common/command/_mod.qh>
 
 #include <common/teams.qh>
 
@@ -68,11 +68,11 @@ void RemovePlayer(entity player)
 void MoveToLast(entity e)
 {
 	AuditLists();
-	other = e.sort_next;
-	while(other)
+	entity ent = e.sort_next;
+	while(ent)
 	{
-		SORT_SWAP(other, e);
-		other = e.sort_next;
+		SORT_SWAP(ent, e);
+		ent = e.sort_next;
 	}
 	AuditLists();
 }
@@ -124,7 +124,7 @@ entity GetTeam(int Team, bool add)
 	if(teamslots[num])
 		return teamslots[num];
 	if (!add)
-		return world;
+		return NULL;
 	entity tm = new_pure(team);
 	tm.team = Team;
 	teamslots[num] = tm;
@@ -224,6 +224,10 @@ void drawborderlines(float thickness, vector pos, vector dim, vector color, floa
 
 void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag)
 {
+	pos = HUD_Shift(pos);
+	sz = HUD_Scale(sz);
+	area = HUD_Scale(area);
+
 	vector current_pos = '0 0 0', end_pos, new_size = '0 0 0', ratio = '0 0 0';
 	end_pos = pos + area;
 
@@ -258,6 +262,43 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theSc
 	drawpic_skin(position, pic, theScale, rgb, theAlpha * fadelerp, flag);
 }
 
+void HUD_Scale_Disable()
+{
+	hud_scale = '1 1 0';
+	hud_shift = '0 0 0';
+	drawfontscale = hud_scale;
+}
+
+void HUD_Scale_Enable()
+{
+	hud_scale = hud_scale_current;
+	hud_shift = hud_shift_current;
+	drawfontscale = hud_scale;
+}
+
+vector HUD_Scale(vector v)
+{
+	v.x = HUD_ScaleX(v.x);
+	v.y = HUD_ScaleY(v.y);
+	return v;
+}
+
+vector HUD_Shift(vector v)
+{
+	v.x = HUD_ShiftX(v.x);
+	v.y = HUD_ShiftY(v.y);
+	return v;
+}
+
+float stringwidth(string text, float handleColors, vector sz)
+{
+	vector dfs = drawfontscale;
+	drawfontscale = '1 1 0';
+	float r = stringwidth_builtin(text, handleColors, sz);
+	drawfontscale = dfs;
+	return r;
+}
+
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
 	SET_POS_AND_SZ_Y_ASPECT(false);
@@ -275,12 +316,16 @@ void drawstring_expanding(vector position, string text, vector theScale, vector 
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
+	drawfontscale = hud_scale * sz;
+	vector dfs = drawfontscale;
 	drawfontscale = sz * '1 1 0';
-	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, false, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), rgb, theAlpha * (1 - fadelerp), flag);
+	float textaspect = stringwidth_builtin(text, false, theScale * (sz / drawfontscale.x)) / (theScale.x * sz);
+	drawfontscale = dfs;
+	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, textaspect), text, HUD_Scale(theScale * (sz / drawfontscale.x)), rgb, theAlpha * (1 - fadelerp), flag);
 	// width parameter:
-	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
+	//    (scale_x * sz / drawfontscale.x) * drawfontscale.x * SIZE1 / (scale_x * sz)
 	//    SIZE1
-	drawfontscale = '1 1 0';
+	drawfontscale = hud_scale;
 }
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
@@ -294,14 +339,22 @@ void drawcolorcodedstring_expanding(vector position, string text, vector theScal
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	drawfontscale = sz * '1 1 0';
-	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, true, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), theAlpha * (1 - fadelerp), flag);
-	drawfontscale = '1 1 0';
+	drawfontscale = hud_scale * sz;
+	// eventually replace with drawcolorcodedstring
+	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth_builtin(text, true, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), theAlpha * (1 - fadelerp), flag);
+	drawfontscale = hud_scale;
 }
 
 void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float theAlpha, float drawflag, float fadelerp) {
 	SET_POS_AND_SZ_Y_ASPECT(true);
 	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz.y, theAlpha, drawflag, fadelerp);
+}
+
+void update_mousepos()
+{
+	mousepos += getmousepos() * autocvar_menu_mouse_speed;
+	mousepos.x = bound(0, mousepos.x, vid_conwidth);
+	mousepos.y = bound(0, mousepos.y, vid_conheight);
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
@@ -336,15 +389,17 @@ void PolyDrawModel(entity e)
 
 void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag)
 {
-	float x, y, q, d;
+	float d;
 	vector ringsize, v, t;
 	ringsize = radi * '1 1 0';
+	centre = HUD_Shift(centre);
+	ringsize = HUD_Scale(ringsize);
 
-	x = cos(f * 2 * M_PI);
-	y = sin(f * 2 * M_PI);
-	q = fabs(x) + fabs(y);
-	x /= q;
-	y /= q;
+	float co = cos(f * 2 * M_PI);
+	float si = sin(f * 2 * M_PI);
+	float q = fabs(co) + fabs(si);
+	co /= q;
+	si /= q;
 
 	if(f >= 1)
 	{
@@ -477,8 +532,8 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	if(d > 0)
 	{
 			v = centre;			t = '0.5 0.5 0';
-			v.x += x * 0.5 * ringsize.x;	t += x * '0.5 0.5 0';
-			v.y += y * 0.5 * ringsize.y;	t += y * '0.5 -0.5 0';
+			v.x += co * 0.5 * ringsize.x;	t += co * '0.5 0.5 0';
+			v.y += si * 0.5 * ringsize.y;	t += si * '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 	}

@@ -1,5 +1,4 @@
-#ifndef DPEXTENSIONS_H
-#define DPEXTENSIONS_H
+#pragma once
 
 #pragma noref 1
 
@@ -64,5 +63,3 @@ int() _buf_create = #460;
 #define buf_create _buf_create
 
 #pragma noref 0
-
-#endif

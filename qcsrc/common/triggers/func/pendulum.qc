@@ -1,75 +1,76 @@
+#include "pendulum.qh"
 #ifdef SVQC
 .float freq;
-void func_pendulum_controller_think()
-{SELFPARAM();
+void func_pendulum_controller_think(entity this)
+{
 	float v;
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 
-	if (!(self.owner.active == ACTIVE_ACTIVE))
+	if (!(this.owner.active == ACTIVE_ACTIVE))
 	{
-		self.owner.avelocity_x = 0;
+		this.owner.avelocity_x = 0;
 		return;
 	}
 
 	// calculate sinewave using makevectors
-	makevectors((self.nextthink * self.owner.freq + self.owner.phase) * '0 360 0');
-	v = self.owner.speed * v_forward_y + self.cnt;
-	if(self.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
+	makevectors((this.nextthink * this.owner.freq + this.owner.phase) * '0 360 0');
+	v = this.owner.speed * v_forward_y + this.cnt;
+	if(this.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
 	{
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.avelocity_z = (remainder(v - self.owner.angles_z, 360)) * 10;
+		this.owner.avelocity_z = (remainder(v - this.owner.angles_z, 360)) * 10;
 	}
 }
 
 spawnfunc(func_pendulum)
 {
 	entity controller;
-	if (self.noise != "")
+	if (this.noise != "")
 	{
-		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
+		precache_sound(this.noise);
+		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
 	// keys: angle, speed, phase, noise, freq
 
-	if(!self.speed)
-		self.speed = 30;
-	// not initializing self.dmg to 2, to allow damageless pendulum
+	if(!this.speed)
+		this.speed = 30;
+	// not initializing this.dmg to 2, to allow damageless pendulum
 
-	if(self.dmg && (self.message == ""))
-		self.message = " was squished";
-	if(self.dmg && (self.message2 == ""))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
+	if(this.dmg && (this.message == ""))
+		this.message = " was squished";
+	if(this.dmg && (this.message2 == ""))
+		this.message2 = "was squished by";
+	if(this.dmg && (!this.dmgtime))
+		this.dmgtime = 0.25;
+	this.dmgtime2 = time;
 
-	self.blocked = generic_plat_blocked;
+	setblocked(this, generic_plat_blocked);
 
-	self.avelocity_z = 0.0000001;
-	if (!InitMovingBrushTrigger())
+	this.avelocity_z = 0.0000001;
+	if (!InitMovingBrushTrigger(this))
 		return;
 
-	if(!self.freq)
+	if(!this.freq)
 	{
 		// find pendulum length (same formula as Q3A)
-		self.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(self.mins_z))));
+		this.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(this.mins_z))));
 	}
 
 	// copy initial angle
-	self.cnt = self.angles_z;
+	this.cnt = this.angles_z;
 
 	// wait for targets to spawn
 	controller = new(func_pendulum_controller);
-	controller.owner = self;
+	controller.owner = this;
 	controller.nextthink = time + 1;
-	controller.think = func_pendulum_controller_think;
-	self.nextthink = self.SUB_LTIME + 999999999;
-	self.SUB_THINK = SUB_NullThink; // for PushMove
+	setthink(controller, func_pendulum_controller_think);
+	this.nextthink = this.ltime + 999999999;
+	setthink(this, SUB_NullThink); // for PushMove
 
-	//self.effects |= EF_LOWPRECISION;
+	//this.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
 }

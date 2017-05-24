@@ -1,3 +1,4 @@
+#include "ps.qh"
 REGISTER_MINIGAME(ps, "Peg Solitaire");
 
 const float PS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board
@@ -13,17 +14,17 @@ const int PS_TILE_SIZE = 8;
 // find same game piece given its tile name
 entity ps_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
-	return world;
+	return NULL;
 }
 
 bool ps_draw(entity minigame)
 {
 	int valid = 0;
-	entity e = world;
+	entity e = NULL;
 	while( ( e = findentity(e,owner,minigame) ) )
 		if( e.classname == "minigame_board_piece" )
 		{
@@ -69,7 +70,7 @@ bool ps_winning_piece(entity minigame)
 	//int number = minigame_tile_number(piece.netname);
 	//int letter = minigame_tile_letter(piece.netname);
 
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minigame) ) )
 		if ( e.classname == "minigame_board_piece" )
 		{
@@ -139,7 +140,7 @@ bool ps_move_piece(entity minigame, entity piece, string pos, int leti, int numb
 		return false;
 
 	if(middle.netname) { strunzone(middle.netname); }
-	remove(middle);
+	delete(middle);
 
 	if(piece.netname) { strunzone(piece.netname); }
 	piece.netname = strzone(pos);
@@ -227,12 +228,12 @@ int ps_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}
@@ -429,7 +430,7 @@ void ps_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void ps_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
@@ -506,7 +507,7 @@ void ps_make_move(entity minigame)
 		else
 		{
 			minigame_cmd("move ", ps_curr_piece.netname, " ", ps_curr_pos);
-			ps_curr_piece = world;
+			ps_curr_piece = NULL;
 		}
 	}
 }
@@ -528,7 +529,7 @@ int ps_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			ps_set_curr_pos("");
-			ps_curr_piece = world;
+			ps_curr_piece = NULL;
 			minigame.message = ps_turn_to_string(minigame.minigame_flags);
 			return false;
 		}

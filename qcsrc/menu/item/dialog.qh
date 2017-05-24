@@ -30,43 +30,45 @@ CLASS(Dialog, InputContainer)
 	METHOD(Dialog, TR, void(entity));
 	METHOD(Dialog, gotoRC, void(entity, float, float));
 
-	ATTRIB(Dialog, isTabRoot, float, 1)
-	ATTRIB(Dialog, closeButton, entity, NULL)
-	ATTRIB(Dialog, intendedHeight, float, 0)
-	ATTRIB(Dialog, itemOrigin, vector, '0 0 0')
-	ATTRIB(Dialog, itemSize, vector, '0 0 0')
-	ATTRIB(Dialog, itemSpacing, vector, '0 0 0')
-	ATTRIB(Dialog, currentRow, float, 0)
-	ATTRIB(Dialog, currentColumn, float, 0)
-	ATTRIB(Dialog, firstColumn, float, 0)
+	ATTRIB(Dialog, isTabRoot, float, 1);
+	ATTRIB(Dialog, closeButton, entity);
+	ATTRIB(Dialog, intendedHeight, float, 0);
+	ATTRIB(Dialog, itemOrigin, vector, '0 0 0');
+	ATTRIB(Dialog, itemSize, vector, '0 0 0');
+	ATTRIB(Dialog, itemSpacing, vector, '0 0 0');
+	ATTRIB(Dialog, currentRow, float, 0);
+	ATTRIB(Dialog, currentColumn, float, 0);
+	ATTRIB(Dialog, firstColumn, float, 0);
 
 	// to be customized
-	ATTRIB(Dialog, closable, float, 1)
-	ATTRIB(Dialog, title, string, "Form1")  // ;)
-	ATTRIB(Dialog, color, vector, '1 0.5 1')
-	ATTRIB(Dialog, intendedWidth, float, 0)
-	ATTRIB(Dialog, rows, float, 3)
-	ATTRIB(Dialog, columns, float, 2)
+	ATTRIB(Dialog, closable, float, 1);
+	ATTRIB(Dialog, title, string, "Form1");
+	ATTRIB(Dialog, color, vector, '1 0.5 1');
+	ATTRIB(Dialog, intendedWidth, float, 0);
+	ATTRIB(Dialog, rows, float, 3);
+	ATTRIB(Dialog, columns, float, 2);
 
-	ATTRIB(Dialog, marginTop, float, 0)     // pixels
-	ATTRIB(Dialog, marginBottom, float, 0)  // pixels
-	ATTRIB(Dialog, marginLeft, float, 0)    // pixels
-	ATTRIB(Dialog, marginRight, float, 0)   // pixels
-	ATTRIB(Dialog, columnSpacing, float, 0) // pixels
-	ATTRIB(Dialog, rowSpacing, float, 0)    // pixels
-	ATTRIB(Dialog, rowHeight, float, 0)     // pixels
-	ATTRIB(Dialog, titleHeight, float, 0)   // pixels
-	ATTRIB(Dialog, titleFontSize, float, 0) // pixels; if 0, title causes no margin
-	ATTRIB(Dialog, zoomedOutTitleBarPosition, float, 0)
-	ATTRIB(Dialog, zoomedOutTitleBar, float, 0)
+	ATTRIB(Dialog, marginTop, float, 0);     // pixels
+	ATTRIB(Dialog, marginBottom, float, 0);  // pixels
+	ATTRIB(Dialog, marginLeft, float, 0);    // pixels
+	ATTRIB(Dialog, marginRight, float, 0);   // pixels
+	ATTRIB(Dialog, columnSpacing, float, 0); // pixels
+	ATTRIB(Dialog, rowSpacing, float, 0);    // pixels
+	ATTRIB(Dialog, rowHeight, float, 0);     // pixels
+	ATTRIB(Dialog, titleHeight, float, 0);   // pixels
+	ATTRIB(Dialog, titleFontSize, float, 0); // pixels; if 0, title causes no margin
+	ATTRIB(Dialog, zoomedOutTitleBarPosition, float, 0);
+	ATTRIB(Dialog, zoomedOutTitleBar, float, 0);
 
-	ATTRIB(Dialog, requiresConnection, float, 0)  // set to true if the dialog requires a connection to be opened
+	ATTRIB(Dialog, requiresConnection, float, 0);  // set to true if the dialog requires a connection to be opened
 
-	ATTRIB(Dialog, backgroundImage, string, string_null)
-	ATTRIB(Dialog, borderLines, float, 1)
-	ATTRIB(Dialog, closeButtonImage, string, string_null)
+	ATTRIB(Dialog, backgroundImage, string);
+	ATTRIB(Dialog, borderLines, float, 1);
+	ATTRIB(Dialog, closeButtonImage, string);
 
-	ATTRIB(Dialog, frame, entity, NULL)
+	ATTRIB(Dialog, hideMenuOnClose, bool, false);
+
+	ATTRIB(Dialog, frame, entity);
 ENDCLASS(Dialog)
 
 void Dialog_Close(entity button, entity me);

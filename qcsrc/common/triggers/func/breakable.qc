@@ -1,8 +1,9 @@
+#include "breakable.qh"
 #ifdef SVQC
 
 #include <server/g_subs.qh>
 #include <server/g_damage.qh>
-#include <server/bot/bot.qh>
+#include <server/bot/api.qh>
 #include <common/csqcmodel_settings.qh>
 #include <lib/csqcmodel/sv_model.qh>
 #include <server/weapons/common.qh>
@@ -59,7 +60,7 @@ void LaunchDebris (entity this, string debrisname, vector force)
 	dbr.skin = this.debrisskin;
 	dbr.colormap = this.colormap; // inherit team colors
 	dbr.owner = this; // do not be affected by our own explosion
-	dbr.movetype = this.debrismovetype;
+	set_movetype(dbr, this.debrismovetype);
 	dbr.solid = this.debrissolid;
 	if(dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
 		setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it
@@ -88,8 +89,6 @@ void func_breakable_colormod(entity this)
 		this.colormod = '1 0 0' + '0 1 0' * (2 * h - 0.5);
 	else
 		this.colormod = '1 1 1';
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void func_breakable_look_destroyed(entity this)
@@ -104,14 +103,13 @@ void func_breakable_look_destroyed(entity this)
 	else {
 		if (this.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
 			floorZ = this.absmin.z;
-			setorigin(this,((this.absmax+this.absmin)*.5));
+			setorigin(this, ((this.absmax + this.absmin) * 0.5));
 			this.origin_z = floorZ;
 		}
 		_setmodel(this, this.mdl_dead);
+		ApplyMinMaxScaleAngles(this);
 		this.effects &= ~EF_NODRAW;
 	}
-
-	CSQCMODEL_AUTOUPDATE(this);
 
 	this.solid = SOLID_NOT;
 }
@@ -119,12 +117,11 @@ void func_breakable_look_destroyed(entity this)
 void func_breakable_look_restore(entity this)
 {
 	_setmodel(this, this.mdl);
+	ApplyMinMaxScaleAngles(this);
 	this.effects &= ~EF_NODRAW;
 
 	if(this.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
 		setorigin(this, this.dropped_origin);
-
-	CSQCMODEL_AUTOUPDATE(this);
 
 	this.solid = SOLID_BSP;
 }
@@ -133,6 +130,8 @@ void func_breakable_behave_destroyed(entity this)
 {
 	this.health = this.max_health;
 	this.takedamage = DAMAGE_NO;
+	if(this.bot_attack)
+		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
 	this.event_damage = func_null;
 	this.state = 1;
@@ -143,6 +142,13 @@ void func_breakable_behave_destroyed(entity this)
 		stopsound (this, CH_TRIGGER_SINGLE);
 }
 
+void func_breakable_think(entity this)
+{
+	this.nextthink = time;
+	CSQCMODEL_AUTOUPDATE(this);
+}
+
+void func_breakable_destroy(entity this, entity actor, entity trigger);
 void func_breakable_behave_restore(entity this)
 {
 	this.health = this.max_health;
@@ -154,22 +160,28 @@ void func_breakable_behave_restore(entity this)
 	if(!(this.spawnflags & 4))
 	{
 		this.takedamage = DAMAGE_AIM;
+		if(!this.bot_attack)
+			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
 		this.event_damage = func_breakable_damage;
 	}
+	if(this.spawnflags & 4)
+		this.use = func_breakable_destroy; // don't need to set it usually, as .use isn't reset
 	this.state = 0;
-	this.nextthink = 0; // cancel auto respawn
+	//this.nextthink = 0; // cancel auto respawn
+	setthink(this, func_breakable_think);
+	this.nextthink = time + 0.1;
 	func_breakable_colormod(this);
 	if (this.noise1)
 		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 }
 
-void func_breakable_init_for_player(entity player)
-{SELFPARAM();
-	if (self.noise1 && self.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
+void func_breakable_init_for_player(entity this, entity player)
+{
+	if (this.noise1 && this.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
 	{
 		msg_entity = player;
-		soundto (MSG_ONE, self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -177,20 +189,16 @@ void func_breakable_destroyed(entity this)
 {
 	func_breakable_look_destroyed(this);
 	func_breakable_behave_destroyed(this);
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void func_breakable_restore(entity this, entity actor, entity trigger)
 {
 	func_breakable_look_restore(this);
 	func_breakable_behave_restore(this);
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void func_breakable_restore_self()
-{SELFPARAM();
+void func_breakable_restore_self(entity this)
+{
 	func_breakable_restore(this, NULL, NULL);
 }
 
@@ -201,7 +209,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 	string oldmsg;
 
 	entity act = this.owner;
-	this.owner = world; // set by W_PrepareExplosionByDamage
+	this.owner = NULL; // set by W_PrepareExplosionByDamage
 
 	// now throw around the debris
 	n = tokenize_console(this.debris);
@@ -214,14 +222,15 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
 	if(this.dmg)
-		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, world, this.dmg_force, DEATH_HURTTRIGGER.m_id, world);
+		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, NULL, this.dmg_force, DEATH_HURTTRIGGER.m_id, NULL);
 
 	if(this.cnt) // TODO
 		__pointparticles(this.cnt, this.absmin * 0.5 + this.absmax * 0.5, '0 0 0', this.count);
 
 	if(this.respawntime)
 	{
-		this.think = func_breakable_restore_self;
+		CSQCMODEL_AUTOUPDATE(this);
+		setthink(this, func_breakable_restore_self);
 		this.nextthink = time + this.respawntime + crandom() * this.respawntimejitter;
 	}
 
@@ -231,8 +240,8 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 	this.message = oldmsg;
 }
 
-void func_breakable_destroy_self()
-{SELFPARAM();
+void func_breakable_destroy_self(entity this)
+{
 	func_breakable_destroy(this, NULL, NULL);
 }
 
@@ -271,7 +280,8 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		// do not explode NOW but in the NEXT FRAME!
 		// because recursive calls to RadiusDamage are not allowed
 		this.nextthink = time;
-		this.think = func_breakable_destroy_self;
+		CSQCMODEL_AUTOUPDATE(this);
+		setthink(this, func_breakable_destroy_self);
 	}
 }
 
@@ -283,8 +293,6 @@ void func_breakable_reset(entity this)
 		func_breakable_behave_destroyed(this);
 	else
 		func_breakable_behave_restore(this);
-
-	CSQCMODEL_AUTOUPDATE(this);
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
@@ -319,7 +327,7 @@ spawnfunc(func_breakable)
 		this.dmg_force = 200;
 
 	this.mdl = this.model;
-	SetBrushEntityModel();
+	SetBrushEntityModel(this);
 
 	if(this.spawnflags & 4)
 		this.use = func_breakable_destroy;
@@ -345,12 +353,13 @@ spawnfunc(func_breakable)
 		precache_sound(this.noise1);
 
 	this.team_saved = this.team;
+	IL_PUSH(g_saved_team, this);
 	this.dropped_origin = this.origin;
 
 	this.reset = func_breakable_reset;
 	this.reset(this);
 
-	this.init_for_player_needed = 1;
+	IL_PUSH(g_initforplayer, this);
 	this.init_for_player = func_breakable_init_for_player;
 
 	CSQCMODEL_AUTOINIT(this);

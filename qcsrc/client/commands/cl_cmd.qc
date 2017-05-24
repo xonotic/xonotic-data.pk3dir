@@ -4,12 +4,12 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "cl_cmd.qh"
 
 #include "../autocvars.qh"
 #include "../defs.qh"
-#include <client/hud/all.qh>
+#include <client/hud/_mod.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
@@ -17,8 +17,6 @@
 #include "../mutators/events.qh"
 
 #include <common/mapinfo.qh>
-
-#include <common/command/generic.qh>
 
 void DrawDebugModel(entity this)
 {
@@ -92,7 +90,7 @@ void LocalCommand_boxparticles(int request, int argc)
 					if (index <= 0)
 						own = entitybyindex(-index);
 					else
-						own = findfloat(world, entnum, index);
+						own = findfloat(NULL, entnum, index);
 					vector org_from = stov(argv(3));
 					vector org_to = stov(argv(4));
 					vector dir_from = stov(argv(5));
@@ -136,8 +134,9 @@ void LocalCommand_create_scrshot_ent(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string filename = strcat(MapInfo_Map_bspname, "_scrshot_ent.txt");
-			int fh = fopen(filename, FILE_WRITE);
+			string path = ((argv(1) == "") ? "" : strcat(argv(1), "/"));
+			string filename = strcat(path, MapInfo_Map_bspname, "_scrshot_ent.txt");
+			int fh = fopen(filename, FILE_APPEND);
 
 			if (fh >= 0)
 			{
@@ -147,7 +146,7 @@ void LocalCommand_create_scrshot_ent(int request)
 				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles.x), " ", ftos(view_angles.y), " ", ftos(view_angles.z)), "\"\n"));
 				fputs(fh, "}\n");
 
-				LOG_INFO("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
+				LOG_INFO("Completed screenshot entity dump in ^2data/data/", path, MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
 
 				fclose(fh);
 			}
@@ -161,8 +160,8 @@ void LocalCommand_create_scrshot_ent(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd create_scrshot_ent\n");
-			LOG_INFO("  No arguments required.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd create_scrshot_ent [path]\n");
+			LOG_INFO("  Where 'path' can be the subdirectory of data/data in which the file is saved.\n");
 			return;
 		}
 	}
@@ -183,6 +182,7 @@ void LocalCommand_debugmodel(int request, int argc)
 			setorigin(debugmodel_entity, view_origin);
 			debugmodel_entity.angles = view_angles;
 			debugmodel_entity.draw = DrawDebugModel;
+			IL_PUSH(g_drawables, debugmodel_entity);
 
 			return;
 		}
@@ -249,7 +249,7 @@ void LocalCommand_handlevote(int request, int argc)
 
 bool QuickMenu_IsOpened();
 void QuickMenu_Close();
-bool QuickMenu_Open(string mode, string submenu);
+bool QuickMenu_Open(string mode, string submenu, string file);
 
 bool HUD_MinigameMenu_IsOpened();
 void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger);
@@ -279,15 +279,17 @@ void LocalCommand_hud(int request, int argc)
 				{
 					if (argv(2) == "help")
 					{
-						LOG_INFO(" quickmenu [[default | file | \"\"] submenu]\n");
+						LOG_INFO(" quickmenu [[default | file | \"\"] submenu file]\n");
 						LOG_INFO("Called without options (or with \"\") loads either the default quickmenu or a quickmenu file if hud_panel_quickmenu_file is set to a valid filename.\n");
 						LOG_INFO("A submenu name can be given to open the quickmenu directly in a submenu; it requires to specify 'default', 'file' or '\"\"' option.\n");
+						LOG_INFO("A file name can also be given to open a different quickmenu\n");
 						return;
 					}
+					string file = ((argv(4) == "") ? autocvar_hud_panel_quickmenu_file : argv(4));
 					if (QuickMenu_IsOpened())
 						QuickMenu_Close();
 					else
-						QuickMenu_Open(argv(2), argv(3));  // mode, submenu
+						QuickMenu_Open(argv(2), argv(3), file);  // mode, submenu
 					return;
 				}
 
@@ -306,13 +308,13 @@ void LocalCommand_hud(int request, int argc)
 
 				case "scoreboard_columns_set":
 				{
-					Cmd_HUD_SetFields(argc);
+					Cmd_Scoreboard_SetFields(argc);
 					return;
 				}
 
 				case "scoreboard_columns_help":
 				{
-					Cmd_HUD_Help();
+					Cmd_Scoreboard_Help();
 					return;
 				}
 

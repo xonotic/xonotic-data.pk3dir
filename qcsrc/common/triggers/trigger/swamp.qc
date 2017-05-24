@@ -1,8 +1,9 @@
+#include "swamp.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <lib/warpzone/util_server.qh>
-    #include <common/weapons/all.qh>
+    #include <common/weapons/_all.qh>
     #include <server/defs.qh>
     #include <common/deathtypes/all.qh>
 #endif
@@ -22,8 +23,8 @@
 #ifdef SVQC
 spawnfunc(trigger_swamp);
 #endif
-void swamp_touch();
-void swampslug_think();
+void swamp_touch(entity this, entity toucher);
+void swampslug_think(entity this);
 
 
 /*
@@ -36,17 +37,17 @@ void swampslug_think();
 *
 * I do it this way becuz there is no "untouch" event.
 */
-void swampslug_think()
-{SELFPARAM();
+void swampslug_think(entity this)
+{
 	//Slowly kill the slug
-	self.health = self.health - 1;
+	this.health = this.health - 1;
 
 	//Slug dead? then remove curses.
-	if(self.health <= 0)
+	if(this.health <= 0)
 	{
-		self.owner.in_swamp = 0;
-		remove(self);
-		//centerprint(self.owner,"Killing slug...\n");
+		this.owner.in_swamp = 0;
+		delete(this);
+		//centerprint(this.owner,"Killing slug...\n");
 		return;
 	}
 
@@ -54,42 +55,42 @@ void swampslug_think()
 	// Or we have exited it very recently.
 	// Do the damage and renew the timer.
 #ifdef SVQC
-	Damage (self.owner, self, self, self.dmg, DEATH_SWAMP.m_id, other.origin, '0 0 0');
+	Damage (this.owner, this, this, this.dmg, DEATH_SWAMP.m_id, this.owner.origin, '0 0 0');
 #endif
 
-	self.nextthink = time + self.swamp_interval;
+	this.nextthink = time + this.swamp_interval;
 }
 
-void swamp_touch()
-{SELFPARAM();
+void swamp_touch(entity this, entity toucher)
+{
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
-	if(!IS_PLAYER(other) || IS_DEAD(other))
+	if(!IS_PLAYER(toucher) || IS_DEAD(toucher))
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
 	// Chech if player alredy got a swampslug.
-	if(other.in_swamp != 1)
+	if(toucher.in_swamp != 1)
 	{
 		// If not attach one.
-		//centerprint(other,"Entering swamp!\n");
-		other.swampslug = spawn();
-		other.swampslug.health = 2;
-		other.swampslug.think = swampslug_think;
-		other.swampslug.nextthink = time;
-		other.swampslug.owner = other;
-		other.swampslug.dmg = self.dmg;
-		other.swampslug.swamp_interval = self.swamp_interval;
-		other.swamp_slowdown = self.swamp_slowdown;
-		other.in_swamp = 1;
+		//centerprint(toucher,"Entering swamp!\n");
+		toucher.swampslug = spawn();
+		toucher.swampslug.health = 2;
+		setthink(toucher.swampslug, swampslug_think);
+		toucher.swampslug.nextthink = time;
+		toucher.swampslug.owner = toucher;
+		toucher.swampslug.dmg = this.dmg;
+		toucher.swampslug.swamp_interval = this.swamp_interval;
+		toucher.swamp_slowdown = this.swamp_slowdown;
+		toucher.in_swamp = 1;
 		return;
 	}
 
-	//other.in_swamp = 1;
+	//toucher.in_swamp = 1;
 
 	//Revitalize players swampslug
-	other.swampslug.health = 2;
+	toucher.swampslug.health = 2;
 }
 
 REGISTER_NET_LINKED(ENT_CLIENT_SWAMP)
@@ -108,9 +109,9 @@ float swamp_send(entity this, entity to, float sf)
 	return true;
 }
 
-void swamp_link()
-{SELFPARAM();
-	trigger_link(self, swamp_send);
+void swamp_link(entity this)
+{
+	trigger_link(this, swamp_send);
 }
 
 /*QUAKED spawnfunc_trigger_swamp (.5 .5 .5) ?
@@ -120,37 +121,37 @@ get slowd down and damaged
 spawnfunc(trigger_swamp)
 {
 	// Init stuff
-	trigger_init(self);
-	self.touch = swamp_touch;
+	trigger_init(this);
+	settouch(this, swamp_touch);
 
 	// Setup default keys, if missing
-	if(self.dmg <= 0)
-		self.dmg = 5;
-	if(self.swamp_interval <= 0)
-		self.swamp_interval = 1;
-	if(self.swamp_slowdown <= 0)
-		self.swamp_slowdown = 0.5;
+	if(this.dmg <= 0)
+		this.dmg = 5;
+	if(this.swamp_interval <= 0)
+		this.swamp_interval = 1;
+	if(this.swamp_slowdown <= 0)
+		this.swamp_slowdown = 0.5;
 
-	swamp_link();
+	swamp_link(this);
 }
 
 #elif defined(CSQC)
 
 NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
 {
-	self.dmg = ReadByte();
-	self.swamp_slowdown = ReadByte();
-	self.swamp_interval = ReadByte();
+	this.dmg = ReadByte();
+	this.swamp_slowdown = ReadByte();
+	this.swamp_interval = ReadByte();
 
-	trigger_common_read(false);
+	trigger_common_read(this, false);
 
 	return = true;
 
-	self.classname = "trigger_swamp";
-	self.solid = SOLID_TRIGGER;
-	self.move_touch = swamp_touch;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
-	self.entremove = trigger_remove_generic;
+	this.classname = "trigger_swamp";
+	this.solid = SOLID_TRIGGER;
+	settouch(this, swamp_touch);
+	this.drawmask = MASK_NORMAL;
+	this.move_time = time;
+	this.entremove = trigger_remove_generic;
 }
 #endif

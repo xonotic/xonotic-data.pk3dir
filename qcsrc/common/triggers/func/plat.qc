@@ -1,51 +1,52 @@
+#include "plat.qh"
 REGISTER_NET_LINKED(ENT_CLIENT_PLAT)
 
 #ifdef SVQC
-void plat_link();
+void plat_link(entity this);
 
 void plat_delayedinit(entity this)
 {
-	plat_link();
-	plat_spawn_inside_trigger(); // the "start moving" trigger
+	plat_link(this);
+	plat_spawn_inside_trigger(this); // the "start moving" trigger
 }
 
-float plat_send(entity to, float sf)
-{SELFPARAM();
+float plat_send(entity this, entity to, float sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_PLAT);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & SF_TRIGGER_INIT)
 	{
-		WriteByte(MSG_ENTITY, self.platmovetype_start);
-		WriteByte(MSG_ENTITY, self.platmovetype_turn);
-		WriteByte(MSG_ENTITY, self.platmovetype_end);
-		WriteByte(MSG_ENTITY, self.spawnflags);
+		WriteByte(MSG_ENTITY, this.platmovetype_start);
+		WriteByte(MSG_ENTITY, this.platmovetype_turn);
+		WriteByte(MSG_ENTITY, this.platmovetype_end);
+		WriteByte(MSG_ENTITY, this.spawnflags);
 
-		WriteString(MSG_ENTITY, self.model);
+		WriteString(MSG_ENTITY, this.model);
 
-		trigger_common_write(self, true);
+		trigger_common_write(this, true);
 
-		WriteCoord(MSG_ENTITY, self.pos1_x);
-		WriteCoord(MSG_ENTITY, self.pos1_y);
-		WriteCoord(MSG_ENTITY, self.pos1_z);
-		WriteCoord(MSG_ENTITY, self.pos2_x);
-		WriteCoord(MSG_ENTITY, self.pos2_y);
-		WriteCoord(MSG_ENTITY, self.pos2_z);
+		WriteCoord(MSG_ENTITY, this.pos1_x);
+		WriteCoord(MSG_ENTITY, this.pos1_y);
+		WriteCoord(MSG_ENTITY, this.pos1_z);
+		WriteCoord(MSG_ENTITY, this.pos2_x);
+		WriteCoord(MSG_ENTITY, this.pos2_y);
+		WriteCoord(MSG_ENTITY, this.pos2_z);
 
-		WriteCoord(MSG_ENTITY, self.size_x);
-		WriteCoord(MSG_ENTITY, self.size_y);
-		WriteCoord(MSG_ENTITY, self.size_z);
+		WriteCoord(MSG_ENTITY, this.size_x);
+		WriteCoord(MSG_ENTITY, this.size_y);
+		WriteCoord(MSG_ENTITY, this.size_z);
 
-		WriteAngle(MSG_ENTITY, self.mangle_x);
-		WriteAngle(MSG_ENTITY, self.mangle_y);
-		WriteAngle(MSG_ENTITY, self.mangle_z);
+		WriteAngle(MSG_ENTITY, this.mangle_x);
+		WriteAngle(MSG_ENTITY, this.mangle_y);
+		WriteAngle(MSG_ENTITY, this.mangle_z);
 
-		WriteShort(MSG_ENTITY, self.speed);
-		WriteShort(MSG_ENTITY, self.height);
-		WriteByte(MSG_ENTITY, self.lip);
-		WriteByte(MSG_ENTITY, self.state);
+		WriteShort(MSG_ENTITY, this.speed);
+		WriteShort(MSG_ENTITY, this.height);
+		WriteByte(MSG_ENTITY, this.lip);
+		WriteByte(MSG_ENTITY, this.state);
 
-		WriteShort(MSG_ENTITY, self.dmg);
+		WriteShort(MSG_ENTITY, this.dmg);
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -56,9 +57,9 @@ float plat_send(entity to, float sf)
 	return true;
 }
 
-void plat_link()
+void plat_link(entity this)
 {
-	//Net_LinkEntity(self, 0, false, plat_send);
+	//Net_LinkEntity(this, 0, false, plat_send);
 }
 
 spawnfunc(func_plat)
@@ -72,41 +73,34 @@ spawnfunc(func_plat)
 
 	if (this.sounds == 1)
 	{
-		precache_sound ("plats/plat1.wav");
-		precache_sound ("plats/plat2.wav");
 		this.noise = "plats/plat1.wav";
 		this.noise1 = "plats/plat2.wav";
 	}
 
 	if (this.sounds == 2)
 	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
 		this.noise = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
 	}
 
 	if (this.sound1)
-	{
-		precache_sound (this.sound1);
 		this.noise = this.sound1;
-	}
 	if (this.sound2)
-	{
-		precache_sound (this.sound2);
 		this.noise1 = this.sound2;
-	}
+
+	if(this.noise && this.noise != "") { precache_sound(this.noise); }
+	if(this.noise1 && this.noise1 != "") { precache_sound(this.noise1); }
 
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 
 	this.classname = "plat";
-	if (!InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger(this))
 		return;
 	this.effects |= EF_LOWPRECISION;
 	setsize (this, this.mins , this.maxs);
 
-	this.blocked = plat_crush;
+	setblocked(this, plat_crush);
 
 	if (!this.speed) this.speed = 150;
 	if (!this.lip) this.lip = 16;
@@ -142,7 +136,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 		this.model = strzone(ReadString());
 		_setmodel(this, this.model);
 
-		trigger_common_read(true);
+		trigger_common_read(this, true);
 
 		this.pos1_x = ReadCoord();
 		this.pos1_y = ReadCoord();
@@ -168,28 +162,25 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		this.classname = "plat";
 		this.solid = SOLID_BSP;
-		this.movetype = MOVETYPE_PUSH;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.drawmask = MASK_NORMAL;
 		this.draw = plat_draw;
+		if (isnew) IL_PUSH(g_drawables, this);
 		this.use = plat_use;
 		this.entremove = trigger_remove_generic;
 
 		plat_reset(this); // also called here
 
-		this.move_movetype = MOVETYPE_PUSH;
-		this.move_origin = this.origin;
-		this.move_angles = this.angles;
+		set_movetype(this, MOVETYPE_PUSH);
 		this.move_time = time;
 
-		plat_spawn_inside_trigger();
+		plat_spawn_inside_trigger(this);
 	}
 
 	if(sf & SF_TRIGGER_RESET)
 	{
 		plat_reset(this);
 
-		this.move_origin = this.origin;
-		this.move_angles = this.angles;
 		this.move_time = time;
 	}
 	return true;

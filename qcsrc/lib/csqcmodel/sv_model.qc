@@ -24,15 +24,15 @@
 #include "common.qh"
 #include <common/animdecide.qh>
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/util.qh>
 #include <server/constants.qh>
 #include <server/defs.qh>
 
 // generic CSQC model code
 
-bool CSQCModel_Send(entity to, int sf)
+bool CSQCModel_Send(entity this, entity to, int sf)
 {
-    SELFPARAM();
 	// some nice flags for CSQCMODEL_IF
 	noref bool isplayer = IS_CLIENT(this);
 	noref bool islocalplayer = (this == to);
@@ -65,13 +65,9 @@ bool CSQCModel_Send(entity to, int sf)
 void CSQCModel_CheckUpdate(entity e)
 {
 	// some nice flags for CSQCMODEL_IF
-	float isplayer = IS_CLIENT(e);
-	float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
-	float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
-
-	unused_float = isplayer;
-	unused_float = islocalplayer;
-	unused_float = isnolocalplayer;
+	noref float isplayer = IS_CLIENT(e);
+	noref float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
+	noref float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 
 #if CSQCPLAYER_FORCE_UPDATES
 	if(isplayer && time > e.csqcmodel_nextforcedupdate)
@@ -122,12 +118,12 @@ void CSQCModel_CheckUpdate(entity e)
 
 void CSQCModel_LinkEntity(entity e)
 {
-	e.SendEntity = CSQCModel_Send;
+	setSendEntity(e, CSQCModel_Send);
 	e.SendFlags = 0xFFFFFF;
 	CSQCModel_CheckUpdate(e);
 }
 
 void CSQCModel_UnlinkEntity(entity e)
 {
-	e.SendEntity = func_null;
+	setSendEntity(e, func_null);
 }

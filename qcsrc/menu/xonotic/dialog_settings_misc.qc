@@ -9,6 +9,8 @@
 #include "mainwindow.qh"
 
 #define ADDVALUE_FPS(i) e.addValue(e, strzone(sprintf(_("%d fps"), i)), #i)
+#define ADDVALUE_SPEED_KB(i) e.addValue(e, strzone(sprintf(_("%d KB/s"), i)), #i)
+#define ADDVALUE_SPEED_MB(i, j) e.addValue(e, strzone(sprintf(_("%d MB/s"), i)), #j)
 entity makeXonoticMiscSettingsTab()
 {
 	entity me;
@@ -51,9 +53,16 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 5, 1, "cl_curl_maxdownloads",
 			_("Maximum number of concurrent HTTP/FTP downloads")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(10, 2000, 50, "cl_curl_maxspeed",
-			_("Maximum download speed")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Download speed:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_curl_maxspeed"));
+		ADDVALUE_SPEED_KB(50);
+		ADDVALUE_SPEED_KB(100);
+		ADDVALUE_SPEED_KB(300);
+		ADDVALUE_SPEED_KB(500);
+		ADDVALUE_SPEED_MB(1, 1000);
+		ADDVALUE_SPEED_MB(2, 2000);
+		e.addValue(e, strzone(_("Unlimited")), "0");
+		e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		if(cvar("developer"))
 		{
@@ -77,16 +86,15 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxfps"));
-			ADDVALUE_FPS(5);
-			ADDVALUE_FPS(10);
-			ADDVALUE_FPS(20);
 			ADDVALUE_FPS(30);
 			ADDVALUE_FPS(40);
 			ADDVALUE_FPS(50);
 			ADDVALUE_FPS(60);
 			ADDVALUE_FPS(70);
+			ADDVALUE_FPS(80);
 			ADDVALUE_FPS(100);
 			ADDVALUE_FPS(125);
+			ADDVALUE_FPS(150);
 			ADDVALUE_FPS(200);
 			e.addValue(e, ZCTX(_("MAXFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
@@ -98,8 +106,10 @@ void XonoticMiscSettingsTab_fill(entity me)
 			ADDVALUE_FPS(40);
 			ADDVALUE_FPS(50);
 			ADDVALUE_FPS(60);
+			ADDVALUE_FPS(80);
 			ADDVALUE_FPS(100);
 			ADDVALUE_FPS(125);
+			ADDVALUE_FPS(150);
 			ADDVALUE_FPS(200);
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);

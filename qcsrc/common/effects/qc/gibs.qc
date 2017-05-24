@@ -46,7 +46,7 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	e.oldorigin_x = compressShortVector(e.velocity);
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), Violence_GibSplash_SendEntity(e, it, 0));
-	remove(e);
+	delete(e);
 }
 
 void Violence_GibSplash(entity source, float type, float amount, entity attacker)
@@ -70,7 +70,7 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 
 void Gib_Delete(entity this)
 {
-	remove(this);
+	delete(this);
 }
 
 string species_prefix(int specnum);
@@ -111,28 +111,27 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 		__pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
 }
 
-void SUB_RemoveOnNoImpact()
+void SUB_RemoveOnNoImpact(entity this, entity toucher)
 {
-    SELFPARAM();
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-		Gib_Delete(self);
+		Gib_Delete(this);
 }
 
-void Gib_Touch()
-{SELFPARAM();
+void Gib_Touch(entity this, entity toucher)
+{
 	// TODO maybe bounce of walls, make more gibs, etc.
 
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
-		Gib_Delete(self);
+		Gib_Delete(this);
 		return;
 	}
 
-	if(!self.silent)
-		sound(self, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
-	__pointparticles(_particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
+	if(!this.silent)
+		sound(this, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
+	__pointparticles(_particleeffectnum(strcat(species_prefix(this.cnt), "blood")), this.origin + '0 0 1', '0 0 30', 10);
 
-	Gib_Delete(self);
+	Gib_Delete(this);
 }
 
 void Gib_Draw(entity this)
@@ -144,7 +143,7 @@ void Gib_Draw(entity this)
 	if(wasfreed(this))
 		return;
 
-	if(this.touch == Gib_Touch) // don't do this for the "chunk" thingie...
+	if(gettouch(this) == Gib_Touch) // don't do this for the "chunk" thingie...
 		// TODO somehow make it spray in a direction dependent on this.angles
 		__trailparticles(this, _particleeffectnum(strcat(species_prefix(this.cnt), EFFECT_TR_SLIGHTBLOOD.eent_eff_name)), oldorg, this.origin);
 	else
@@ -171,7 +170,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 	// TODO remove some gibs according to cl_nogibs
 	gib = RubbleNew("gib");
-	gib.move_movetype = MOVETYPE_BOUNCE;
+	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;
 	gib.cnt = specnum;
@@ -181,10 +180,11 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	setsize (gib, '-8 -8 -8', '8 8 8');
 
 	gib.draw = Gib_Draw;
+	IL_PUSH(g_drawables, gib);
 	if(destroyontouch)
-		gib.move_touch = Gib_Touch;
+		settouch(gib, Gib_Touch);
 	else
-		gib.move_touch = SUB_RemoveOnNoImpact;
+		settouch(gib, SUB_RemoveOnNoImpact);
 
 	// don't spawn gibs inside solid - just don't
 	if(org != safeorg)
@@ -193,10 +193,9 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 		org = trace_endpos;
 	}
 
-	gib.move_origin = org;
 	setorigin(gib, org);
-	gib.move_velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
-	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity) * autocvar_cl_gibs_avelocity_scale;
+	gib.velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
+	gib.avelocity = prandomvec() * vlen(gib.velocity) * autocvar_cl_gibs_avelocity_scale;
 	gib.move_time = time;
 	gib.damageforcescale = autocvar_cl_gibs_damageforcescale;
 
@@ -312,7 +311,7 @@ NET_HANDLE(net_gibsplash, bool isNew)
 			// no gibs in gentle mode, sorry
 			break;
 	}
-	remove(this);
+	delete(this);
 }
 #endif
 

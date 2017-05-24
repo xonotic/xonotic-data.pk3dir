@@ -1,0 +1,97 @@
+#pragma once
+
+#include <common/items/_mod.qh>
+#include <common/items/item/ammo.qh>
+#include <common/items/item/powerup.qh>
+
+float instagib_respawntime_ammo = 45;
+float instagib_respawntimejitter_ammo = 0;
+GETTER(float, instagib_respawntime_ammo)
+GETTER(float, instagib_respawntimejitter_ammo)
+
+#ifdef GAMEQC
+MODEL(VaporizerCells_ITEM, Item_Model("a_cells.md3"));
+SOUND(VaporizerCells, Item_Sound("itempickup"));
+#endif
+
+#ifdef SVQC
+int autocvar_g_instagib_ammo_drop;
+void ammo_vaporizercells_init(entity item)
+{
+    if(!item.ammo_cells)
+        item.ammo_cells = autocvar_g_instagib_ammo_drop;
+}
+#endif
+REGISTER_ITEM(VaporizerCells, Ammo) {
+#ifdef GAMEQC
+    this.m_model                =   MDL_VaporizerCells_ITEM;
+    this.m_sound                =   SND_VaporizerCells;
+#endif
+    this.netname                =   "minst_cells";
+    this.m_name                 =   "Vaporizer Ammo";
+    this.m_icon                 =   "ammo_supercells";
+#ifdef SVQC
+    this.m_botvalue             =   2000;
+    this.m_itemid               =   IT_CELLS;
+    this.m_respawntime          =   GET(instagib_respawntime_ammo);
+    this.m_respawntimejitter    =   GET(instagib_respawntimejitter_ammo);
+    this.m_iteminit             =   ammo_vaporizercells_init;
+#endif
+}
+
+#ifdef GAMEQC
+MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));
+SOUND(ExtraLife, Item_Sound("megahealth"));
+#endif
+
+REGISTER_ITEM(ExtraLife, Powerup) {
+#ifdef GAMEQC
+    this.m_model                =   MDL_ExtraLife_ITEM;
+    this.m_sound                =   SND_ExtraLife;
+#endif
+    this.netname                =   "health_mega";
+    this.m_name                 =   "Extra life";
+    this.m_icon                 =   "item_mega_health";
+    this.m_color                =   '1 0 0';
+    this.m_waypoint             =   _("Extra life");
+    this.m_waypointblink        =   2;
+    this.m_itemid               =   IT_NAILS;
+}
+
+#ifdef GAMEQC
+MODEL(Invisibility_ITEM, Item_Model("g_strength.md3"));
+SOUND(Invisibility, Item_Sound("powerup"));
+#endif
+
+REGISTER_ITEM(Invisibility, Powerup) {
+#ifdef GAMEQC
+    this.m_model            =   MDL_Invisibility_ITEM;
+    this.m_sound            =   SND_Invisibility;
+#endif
+    this.netname            =   "strength";
+    this.m_name             =   "Invisibility";
+    this.m_icon             =   "strength";
+    this.m_color            =   '0 0 1';
+    this.m_waypoint         =   _("Invisibility");
+    this.m_waypointblink    =   2;
+    this.m_itemid           =   IT_STRENGTH;
+}
+
+#ifdef GAMEQC
+MODEL(Speed_ITEM, Item_Model("g_invincible.md3"));
+SOUND(Speed, Item_Sound("powerup_shield"));
+#endif
+
+REGISTER_ITEM(Speed, Powerup) {
+#ifdef GAMEQC
+    this.m_model            =   MDL_Speed_ITEM;
+    this.m_sound            =   SND_Speed;
+#endif
+    this.netname            =   "invincible";
+    this.m_name             =   "Speed";
+    this.m_icon             =   "shield";
+    this.m_color            =   '1 0 1';
+    this.m_waypoint         =   _("Speed");
+    this.m_waypointblink    =   2;
+    this.m_itemid           =   IT_INVINCIBLE;
+}

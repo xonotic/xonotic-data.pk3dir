@@ -8,12 +8,12 @@
 
 // Radar (#6)
 
-float HUD_Radar_Clickable()
+bool HUD_Radar_Clickable()
 {
 	return hud_panel_radar_mouse && !hud_panel_radar_temp_hidden;
 }
 
-void HUD_Radar_Show_Maximized(bool doshow,float clickable)
+void HUD_Radar_Show_Maximized(bool doshow, bool clickable)
 {
     TC(bool, doshow);
 	hud_panel_radar_maximized = doshow;
@@ -26,6 +26,13 @@ void HUD_Radar_Show_Maximized(bool doshow,float clickable)
 			if(autocvar_hud_cursormode)
 				setcursormode(1);
 			hud_panel_radar_mouse = 1;
+
+			// we must unset the player's buttons, as they aren't released elsewhere
+			localcmd("-fire\n");
+			localcmd("-fire2\n");
+			localcmd("-use\n");
+			localcmd("-hook\n");
+			localcmd("-jump\n");
 		}
 	}
 	else if ( hud_panel_radar_mouse )
@@ -78,11 +85,9 @@ float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	else
 	{
 		// allow console/use binds to work without hiding the map
-		string con_keys;
-		float keys;
-		float i;
-		con_keys = strcat(findkeysforcommand("toggleconsole", 0)," ",findkeysforcommand("+use", 0)) ;
-		keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		string con_keys = strcat(findkeysforcommand("toggleconsole", 0), " ", findkeysforcommand("+use", 0)) ;
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		int i;
 		for (i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
@@ -132,15 +137,11 @@ void HUD_Radar_Mouse()
 		return;
 	}
 
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+	if (!autocvar_hud_cursormode)
+		update_mousepos();
 
-		mousepos_x = bound(0, mousepos_x, vid_conwidth);
-		mousepos_y = bound(0, mousepos_y, vid_conheight);
-	}
-
-	HUD_Panel_UpdateCvars();
+	panel = HUD_PANEL(RADAR);
+	HUD_Panel_LoadCvars();
 
 
 	panel_size = autocvar_hud_panel_radar_maximized_size;
@@ -192,7 +193,7 @@ void HUD_Radar()
 	if ( hud_panel_radar_temp_hidden )
 		return;
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	float f = 0;
 
@@ -275,7 +276,11 @@ void HUD_Radar()
 	pos = panel_pos;
 	mySize = panel_size;
 
-	HUD_Panel_DrawBg(1);
+	if (autocvar_hud_panel_radar_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -285,7 +290,7 @@ void HUD_Radar()
 	int color2;
 	float scale2d, normalsize, bigsize;
 
-	teamradar_origin2d = pos + 0.5 * mySize;
+	teamradar_origin2d = HUD_Shift(pos + 0.5 * mySize);
 	teamradar_size2d = mySize;
 
 	if(minimapname == "")
@@ -294,7 +299,7 @@ void HUD_Radar()
 	teamradar_loadcvars();
 
 	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
-	teamradar_size2d = mySize;
+	teamradar_size2d = HUD_Scale(mySize);
 
 	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
 
@@ -307,10 +312,10 @@ void HUD_Radar()
 	else
 	{
 		vector c0, c1, c2, c3, span;
-		c0 = rotate(mi_min, teamradar_angle * DEG2RAD);
-		c1 = rotate(mi_max, teamradar_angle * DEG2RAD);
-		c2 = rotate('1 0 0' * mi_min.x + '0 1 0' * mi_max.y, teamradar_angle * DEG2RAD);
-		c3 = rotate('1 0 0' * mi_max.x + '0 1 0' * mi_min.y, teamradar_angle * DEG2RAD);
+		c0 = Rotate(mi_min, teamradar_angle * DEG2RAD);
+		c1 = Rotate(mi_max, teamradar_angle * DEG2RAD);
+		c2 = Rotate('1 0 0' * mi_min.x + '0 1 0' * mi_max.y, teamradar_angle * DEG2RAD);
+		c3 = Rotate('1 0 0' * mi_max.x + '0 1 0' * mi_min.y, teamradar_angle * DEG2RAD);
 		span = '0 0 0';
 		span.x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
 		span.y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
@@ -342,12 +347,12 @@ void HUD_Radar()
 
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
-	FOREACH_ENTITY_CLASS("radarlink", true, draw_teamradar_link(it.origin, it.velocity, it.team));
+	IL_EACH(g_radarlinks, true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
-	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, {
+	IL_EACH(g_radaricons, it.teamradar_icon, {
 		if ( hud_panel_radar_mouse )
-		if ( it.health > 0 )
-		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE )
+		if ( it.health >= 0 )
+		if ( it.team == myteam + 1 || gametype == MAPINFO_TYPE_RACE || !teamplay )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if(vdist((mousepos - coord), <, 8))

@@ -1,5 +1,4 @@
-#ifndef ANIM_H
-#define ANIM_H
+#pragma once
 
 // begin engine fields
 
@@ -46,5 +45,3 @@ void anim_set(entity e, vector anim, bool looping, bool override, bool restart);
 #define setanim(...) anim_set(__VA_ARGS__)
 void anim_update(entity e);
 #define updateanim(...) anim_update(__VA_ARGS__)
-
-#endif

@@ -11,21 +11,20 @@ string AnnouncerOption()
 {
 	string ret = autocvar_cl_announcer;
 	MUTATOR_CALLHOOK(AnnouncerOption, ret);
-	ret = ret_string;
+	ret = M_ARGV(0, string);
 	return ret;
 }
 
 entity announcer_countdown;
 
-void Announcer_Countdown()
+void Announcer_Countdown(entity this)
 {
-	SELFPARAM();
 	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
-		remove(this);
+		delete(this);
 		announcer_countdown = NULL;
 		return;
 	}
@@ -41,7 +40,7 @@ void Announcer_Countdown()
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
-		remove(this);
+		delete(this);
 		announcer_countdown = NULL;
 		return;
 	}
@@ -59,7 +58,7 @@ void Announcer_Countdown()
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
-			if(annce_num != NULL)		
+			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
 		}
 
@@ -88,7 +87,7 @@ void Announcer_Gamestart()
 			centerprint_kill(ORDINAL(CPID_ROUND));
 			if(announcer_countdown)
 			{
-				remove(announcer_countdown);
+				delete(announcer_countdown);
 				announcer_countdown = NULL;
 			}
 		}
@@ -102,7 +101,7 @@ void Announcer_Gamestart()
 			if (!announcer_countdown)
 			{
 				announcer_countdown = new(announcer_countdown);
-				announcer_countdown.think = Announcer_Countdown;
+				setthink(announcer_countdown, Announcer_Countdown);
 			}
 
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle

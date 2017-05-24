@@ -1,7 +1,6 @@
-#ifndef WEAPONS_ALL_H
-#define WEAPONS_ALL_H
+#pragma once
 
-#include <common/command/all.qh>
+#include <common/command/_mod.qh>
 #include <common/stats.qh>
 #include "config.qh"
 
@@ -19,21 +18,21 @@ WepSet ReadWepSet();
 
 #include "weapon.qh"
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #include "calculations.qh"
 #include <common/models/all.qh>
 #endif
 
 #include <common/util.qh>
 
-#ifdef SVQC
-#include <server/bot/aim.qh>
-#endif
-
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 #define Weapons_from(i) _Weapons_from(i, WEP_Null)
 REGISTER_REGISTRY(Weapons)
 STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPickup, it)); }
+
+#ifdef SVQC
+#include <server/bot/api.qh>
+#endif
 
 .WepSet m_wepset;
 #define WEPSET(id) (WEP_##id.m_wepset)
@@ -107,15 +106,15 @@ void W_PROP_reload(int chan, entity to)
         if (f) f(it, chan);
     });
 }
-void W_PROP_think()
+void W_PROP_think(entity this)
 {
     W_PROP_reload(MSG_ALL, NULL);
 }
 STATIC_INIT_LATE(W_PROP_reloader)
 {
-    SELFPARAM();
     entity e = W_PROP_reloader = new_pure(W_PROP_reloader);
-    WITHSELF(e, (e.think = W_PROP_think)());
+    setthink(e, W_PROP_think);
+    W_PROP_think(e);
 }
 #endif
 
@@ -144,10 +143,12 @@ X(weaponreplace, string)
 X(weaponstartoverride, float)
 X(weaponstart, float)
 X(weaponthrowable, float)
+#ifdef SVQC
 X(reload_ammo, float)
 .float reloading_ammo = reload_ammo;
 X(reload_time, float)
 .float reloading_time = reload_time;
+#endif
 #undef X
 
 
@@ -299,6 +300,7 @@ REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
 {
+	string inaccessible = "";
     FOREACH(Weapons, true, {
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
@@ -309,8 +311,9 @@ STATIC_INIT(register_weapons_done)
         if (imp <= WEP_IMPULSE_END)
             localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
         else
-            LOG_TRACEF("Impulse limit exceeded, weapon will not be directly accessible: %s\n", it.netname);
+        	inaccessible = strcat(inaccessible, "\n", it.netname);
     });
+    if (inaccessible) LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
     #ifdef CSQC
     FOREACH(Weapons, true, it.wr_init(it));
     #endif
@@ -321,16 +324,18 @@ STATIC_INIT(register_weapons_done)
     weaponorder_byid = strzone(substring(weaponorder_byid, 1, -1));
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 .entity weaponchild;
 .entity exteriorweaponentity;
-vector weaponentity_glowmod(Weapon wep, int c)
+vector weaponentity_glowmod(Weapon wep, entity actor, int c, entity wepent)
 {
     vector g;
-    if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
+    if (!(g = wep.wr_glow(wep, actor, wepent))) g = colormapPaletteColor(c & 0x0F, true) * 2;
     return g;
 }
+
+.int m_gunalign;
 
 //.int weapon; // current weapon
 .string weaponname; // name of .weapon
@@ -357,6 +362,4 @@ ENUMCLASS_END(WFRAME)
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
-#endif
-
 #endif

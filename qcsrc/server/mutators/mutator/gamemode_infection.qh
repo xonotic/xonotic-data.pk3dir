@@ -1,0 +1,33 @@
+#pragma once
+
+#include "../gamemode.qh"
+
+bool g_infection;
+void infection_Initialize();
+
+REGISTER_MUTATOR(inf, false)
+{
+	MUTATOR_ONADD
+	{
+		if (time > 1)  // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		g_infection = true;
+		// Use default limits
+		infection_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back inf_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}

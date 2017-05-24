@@ -16,7 +16,7 @@ class(Projectile).float gravity;
 class(Projectile).int snd_looping;
 class(Projectile).bool silent;
 
-void SUB_Stop(entity this);
+void SUB_Stop(entity this, entity toucher);
 
 void Projectile_ResetTrail(entity this, vector to);
 
@@ -24,7 +24,7 @@ void Projectile_DrawTrail(entity this, vector to);
 
 void Projectile_Draw(entity this);
 
-void loopsound(entity e, int ch, string samp, float vol, float attn);
+void loopsound(entity e, int ch, Sound samp, float vol, float attn);
 
 void Ent_RemoveProjectile(entity this);
 

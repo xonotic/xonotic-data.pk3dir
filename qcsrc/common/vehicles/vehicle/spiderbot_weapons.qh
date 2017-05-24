@@ -1,11 +1,12 @@
 #pragma once
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 #ifdef SVQC
 void spiderbot_rocket_do(entity this);
 #endif
 
+#ifdef SVQC
 // 400 (x2) DPS
 float autocvar_g_vehicle_spiderbot_minigun_damage = 24;
 float autocvar_g_vehicle_spiderbot_minigun_refire = 0.06;
@@ -30,3 +31,4 @@ float autocvar_g_vehicle_spiderbot_rocket_health = 100;
 float autocvar_g_vehicle_spiderbot_rocket_noise = 0.2;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate = 0.25;
 float autocvar_g_vehicle_spiderbot_rocket_lifetime = 20;
+#endif

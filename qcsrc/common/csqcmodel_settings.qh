@@ -1,5 +1,4 @@
-#ifndef CSQCMODEL_SETTINGS_H
-#define CSQCMODEL_SETTINGS_H
+#pragma once
 
 // define this if svqc code wants to use .frame2 and .lerpfrac
 //#define CSQCMODEL_HAVE_TWO_FRAMES
@@ -19,16 +18,12 @@
 # define TAG_VIEWLOC_NAME tag_networkviewloc
 # define TAG_VIEWLOC_TYPE int
 .float tag_networkviewloc;
-
-# define MOVETYPE_NAME move_movetype
 #else
 # define TAG_ENTITY_NAME tag_entity
 # define TAG_ENTITY_TYPE entity
 
 # define TAG_VIEWLOC_NAME viewloc
 # define TAG_VIEWLOC_TYPE entity
-
-# define MOVETYPE_NAME movetype
 #endif
 
 // new fields
@@ -68,7 +63,7 @@
 	CSQCMODEL_PROPERTY(BIT(13), int, ReadInt24_t, WriteInt24_t, dphitcontentsmask) \
 	CSQCMODEL_PROPERTY(BIT(14), TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) \
 	CSQCMODEL_PROPERTY(BIT(15), int, ReadByte, WriteByte, multijump_count) \
-	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, MOVETYPE_NAME)
+	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, move_movetype)
 // TODO get rid of colormod/glowmod here; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here
@@ -94,4 +89,3 @@
 #endif
 
 #define CSQCMODEL_EF_RESPAWNGHOST EF_SELECTABLE
-#endif

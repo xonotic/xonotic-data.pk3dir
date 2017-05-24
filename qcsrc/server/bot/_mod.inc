@@ -1,6 +1,5 @@
 // generated file; do not modify
-#include <server/bot/aim.qc>
-#include <server/bot/bot.qc>
-#include <server/bot/navigation.qc>
-#include <server/bot/scripting.qc>
-#include <server/bot/waypoints.qc>
+#include <server/bot/api.qc>
+
+#include <server/bot/default/_mod.inc>
+#include <server/bot/null/_mod.inc>

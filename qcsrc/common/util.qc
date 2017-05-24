@@ -18,16 +18,15 @@
     #include "mapinfo.qh"
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 /*
 * Get "real" origin, in worldspace, even if ent is attached to something else.
 */
 vector real_origin(entity ent)
 {
-	entity e;
 	vector v = ((ent.absmin + ent.absmax) * 0.5);
+	entity e = ent.tag_entity;
 
-	e = ent.tag_entity;
 	while(e)
 	{
 		v = v + ((e.absmin + e.absmax) * 0.5);
@@ -55,28 +54,29 @@ string wordwrap(string s, float l)
 	return r;
 }
 
-#ifndef MENUQC
-#ifndef CSQC
+#ifdef SVQC
+entity _wordwrap_buffer_sprint_ent;
 void wordwrap_buffer_sprint(string s)
-{SELFPARAM();
+{
 	wordwrap_buffer = strcat(wordwrap_buffer, s);
 	if(s == "\n")
 	{
-		sprint(self, wordwrap_buffer);
+		sprint(_wordwrap_buffer_sprint_ent, wordwrap_buffer);
 		wordwrap_buffer = "";
 	}
 }
 
-void wordwrap_sprint(string s, float l)
-{SELFPARAM();
+void wordwrap_sprint(entity to, string s, float l)
+{
 	wordwrap_buffer = "";
+	_wordwrap_buffer_sprint_ent = to;
 	wordwrap_cb(s, l, wordwrap_buffer_sprint);
+	_wordwrap_buffer_sprint_ent = NULL;
 	if(wordwrap_buffer != "")
-		sprint(self, strcat(wordwrap_buffer, "\n"));
+		sprint(to, strcat(wordwrap_buffer, "\n"));
 	wordwrap_buffer = "";
 	return;
 }
-#endif
 #endif
 
 #ifndef SVQC
@@ -227,13 +227,13 @@ string ScoreString(int pFlags, float pValue)
 
 float lengthLogTable[128];
 
-float invertLengthLog(float x)
+float invertLengthLog(float dist)
 {
 	int l, r, m;
 
-	if(x >= lengthLogTable[127])
+	if(dist >= lengthLogTable[127])
 		return 127;
-	if(x <= lengthLogTable[0])
+	if(dist <= lengthLogTable[0])
 		return 0;
 
 	l = 0;
@@ -242,15 +242,15 @@ float invertLengthLog(float x)
 	while(r - l > 1)
 	{
 		m = floor((l + r) / 2);
-		if(lengthLogTable[m] < x)
+		if(lengthLogTable[m] < dist)
 			l = m;
 		else
 			r = m;
 	}
 
 	// now: r is >=, l is <
-	float lerr = (x - lengthLogTable[l]);
-	float rerr = (lengthLogTable[r] - x);
+	float lerr = (dist - lengthLogTable[l]);
+	float rerr = (lengthLogTable[r] - dist);
 	if(lerr < rerr)
 		return l;
 	return r;
@@ -262,26 +262,26 @@ vector decompressShortVector(int data)
 	if(data == 0)
 		return '0 0 0';
 	float p	= (data & 0xF000) / 0x1000;
-	float y	= (data & 0x0F80) / 0x80;
+	float q	= (data & 0x0F80) / 0x80;
 	int len = (data & 0x007F);
 
-	//print("\ndecompress: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
+	//print("\ndecompress: p ", ftos(p)); print("q ", ftos(q)); print("len ", ftos(len), "\n");
 
 	if(p == 0)
 	{
 		out.x = 0;
 		out.y = 0;
-		if(y == 31)
+		if(q == 31)
 			out.z = -1;
 		else
 			out.z = +1;
 	}
 	else
 	{
-		y   = .19634954084936207740 * y;
+		q   = .19634954084936207740 * q;
 		p = .19634954084936207740 * p - 1.57079632679489661922;
-		out.x = cos(y) *  cos(p);
-		out.y = sin(y) *  cos(p);
+		out.x = cos(q) *  cos(p);
+		out.y = sin(q) *  cos(p);
 		out.z =          -sin(p);
 	}
 
@@ -294,7 +294,7 @@ float compressShortVector(vector vec)
 {
 	vector ang;
 	float p, y, len;
-	if(vlen(vec) == 0)
+	if(vec == '0 0 0')
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
 	ang = vectoangles(vec);
@@ -322,10 +322,10 @@ float compressShortVector(vector vec)
 	return (p * 0x1000) + (y * 0x80) + len;
 }
 
-void compressShortVector_init()
+STATIC_INIT(compressShortVector)
 {
 	float l = 1;
-	float f = pow(2, 1/8);
+	float f = (2 ** (1/8));
 	int i;
 	for(i = 0; i < 128; ++i)
 	{
@@ -349,7 +349,7 @@ void compressShortVector_init()
 	}
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector dvz)
 {
 	traceline(v0, v0 + dvx, true, forent); if(trace_fraction < 1) return 0;
@@ -396,6 +396,9 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 		n = tokenize_console(neworder);
 		for(w = to; w >= from; --w)
 		{
+			int wflags = Weapons_from(w).spawnflags;
+			if((wflags & WEP_FLAG_HIDDEN) && (wflags & WEP_FLAG_MUTATORBLOCKED) && !(wflags & WEP_FLAG_NORMAL))
+				continue;
 			for(i = 0; i < n; ++i)
 				if(stof(argv(i)) == w)
 					break;
@@ -410,11 +413,11 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 string mapPriorityList(string order, string(string) mapfunc)
 {
 	string neworder;
-	float i, n;
+	float n;
 
 	n = tokenize_console(order);
 	neworder = "";
-	for(i = 0; i < n; ++i)
+	for(float i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
 
 	return substring(neworder, 0, strlen(neworder) - 1);
@@ -422,15 +425,12 @@ string mapPriorityList(string order, string(string) mapfunc)
 
 string swapInPriorityList(string order, float i, float j)
 {
-	string s;
-	float w, n;
-
-	n = tokenize_console(order);
+	float n = tokenize_console(order);
 
 	if(i >= 0 && i < n && j >= 0 && j < n && i != j)
 	{
-		s = "";
-		for(w = 0; w < n; ++w)
+		string s = "";
+		for(float w = 0; w < n; ++w)
 		{
 			if(w == i)
 				s = strcat(s, argv(j), " ");
@@ -445,7 +445,7 @@ string swapInPriorityList(string order, float i, float j)
 	return order;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 void get_mi_min_max(float mode)
 {
 	vector mi, ma;
@@ -469,7 +469,7 @@ void get_mi_min_max(float mode)
 
 	mi_min = mi;
 	mi_max = ma;
-	MapInfo_Get_ByName(mi_shortname, 0, 0);
+	MapInfo_Get_ByName(mi_shortname, 0, NULL);
 	if(MapInfo_Map_mins.x < MapInfo_Map_maxs.x)
 	{
 		mi_min = MapInfo_Map_mins;
@@ -486,7 +486,7 @@ void get_mi_min_max(float mode)
 					 '0 1 0' * ma.y + '0 0 1' * ma.z,
 					 '1 0 0' * ma.x,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_min.x = trace_endpos.x;
 
@@ -495,7 +495,7 @@ void get_mi_min_max(float mode)
 					 '1 0 0' * ma.x + '0 0 1' * ma.z,
 					 '0 1 0' * ma.y,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_min.y = trace_endpos.y;
 
@@ -504,7 +504,7 @@ void get_mi_min_max(float mode)
 					 '1 0 0' * ma.x + '0 1 0' * ma.y,
 					 '0 0 1' * ma.z,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_min.z = trace_endpos.z;
 
@@ -513,7 +513,7 @@ void get_mi_min_max(float mode)
 					 '0 1 0' * ma.y + '0 0 1' * ma.z,
 					 '1 0 0' * mi.x,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_max.x = trace_endpos.x;
 
@@ -522,7 +522,7 @@ void get_mi_min_max(float mode)
 					 '1 0 0' * ma.x + '0 0 1' * ma.z,
 					 '0 1 0' * mi.y,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_max.y = trace_endpos.y;
 
@@ -531,7 +531,7 @@ void get_mi_min_max(float mode)
 					 '1 0 0' * ma.x + '0 1 0' * ma.y,
 					 '0 0 1' * mi.z,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_max.z = trace_endpos.z;
 		}
@@ -589,7 +589,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if (!(tmp_cvar || tmp_value))
 	{
-		LOG_TRACE("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		LOG_TRACE("Error: Invalid usage of cvar_settemp(string, string); !");
 		return 0;
 	}
 
@@ -599,7 +599,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 		return 0;
 	}
 
-	FOREACH_ENTITY_CLASS("saved_cvar_value", it.netname == tmp_cvar,
+	IL_EACH(g_saved_cvars, it.netname == tmp_cvar,
 	{
 		created_saved_value = -1; // skip creation
 		break; // no need to continue
@@ -609,6 +609,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	{
 		// creating a new entity to keep track of this cvar
 		entity e = new_pure(saved_cvar_value);
+		IL_PUSH(g_saved_cvars, e);
 		e.netname = strzone(tmp_cvar);
 		e.message = strzone(cvar_string(tmp_cvar));
 		created_saved_value = 1;
@@ -632,7 +633,7 @@ int cvar_settemp_restore()
 			cvar_set(it.netname, it.message);
 			strunzone(it.netname);
 			strunzone(it.message);
-			remove(it);
+			delete(it);
 			++j;
 		}
 		else
@@ -640,13 +641,13 @@ int cvar_settemp_restore()
 	});
 
 #else
-	entity e = world;
+	entity e = NULL;
 	while((e = find(e, classname, "saved_cvar_value")))
 	{
 		if(cvar_type(e.netname))
 		{
 			cvar_set(e.netname, e.message);
-			remove(e);
+			delete(e);
 			++j;
 		}
 		else
@@ -655,6 +656,57 @@ int cvar_settemp_restore()
 #endif
 
 	return j;
+}
+
+bool isCaretEscaped(string theText, float pos)
+{
+	int i = 0;
+	while(pos - i >= 1 && substring(theText, pos - i - 1, 1) == "^")
+		++i;
+	return (i & 1);
+}
+
+int skipIncompleteTag(string theText, float pos, int len)
+{
+	int tag_start = -1;
+
+	if(substring(theText, pos - 1, 1) == "^")
+	{
+		if(isCaretEscaped(theText, pos - 1) || pos >= len)
+			return 0;
+
+		int ch = str2chr(theText, pos);
+		if(ch >= '0' && ch <= '9')
+			return 1; // ^[0-9] color code found
+		else if (ch == 'x')
+			tag_start = pos - 1; // ^x tag found
+		else
+			return 0;
+	}
+	else
+	{
+		for(int i = 2; pos - i >= 0 && i <= 4; ++i)
+		{
+			if(substring(theText, pos - i, 2) == "^x")
+			{
+				tag_start = pos - i; // ^x tag found
+				break;
+			}
+		}
+	}
+
+	if(tag_start >= 0)
+	{
+		if(tag_start + 5 < len)
+		if(IS_HEXDIGIT(substring(theText, tag_start + 2, 1)))
+		if(IS_HEXDIGIT(substring(theText, tag_start + 3, 1)))
+		if(IS_HEXDIGIT(substring(theText, tag_start + 4, 1)))
+		{
+			if(!isCaretEscaped(theText, tag_start))
+				return 5 - (pos - tag_start); // ^xRGB color code found
+		}
+	}
+	return 0;
 }
 
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
@@ -667,56 +719,24 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	if(w(theText, theSize) <= maxWidth)
 		return strlen(theText); // yeah!
 
+	bool colors = (w("^7", theSize) == 0);
+
 	// binary search for right place to cut string
-	float ch;
-	float left, right, middle; // this always works
+	int len, left, right, middle;
 	left = 0;
-	right = strlen(theText); // this always fails
+	right = len = strlen(theText);
+	int ofs = 0;
 	do
 	{
 		middle = floor((left + right) / 2);
-		if(w(substring(theText, 0, middle), theSize) <= maxWidth)
-			left = middle;
+		if(colors)
+			ofs = skipIncompleteTag(theText, middle, len);
+		if(w(substring(theText, 0, middle + ofs), theSize) <= maxWidth)
+			left = middle + ofs;
 		else
 			right = middle;
 	}
 	while(left < right - 1);
-
-	if(w("^7", theSize) == 0) // detect color codes support in the width function
-	{
-		// NOTE: when color codes are involved, this binary search is,
-		// mathematically, BROKEN. However, it is obviously guaranteed to
-		// terminate, as the range still halves each time - but nevertheless, it is
-		// guaranteed that it finds ONE valid cutoff place (where "left" is in
-		// range, and "right" is outside).
-
-		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
-		// and decrease left on the basis of the chars detected of the truncated tag
-		// Even if the ^xrgb tag is not complete/correct, left is decreased
-		// (sometimes too much but with a correct result)
-		// it fixes also ^[0-9]
-		while(left >= 1 && substring(theText, left-1, 1) == "^")
-			left-=1;
-
-		if (left >= 2 && substring(theText, left-2, 2) == "^x") // ^x/
-			left-=2;
-		else if (left >= 3 && substring(theText, left-3, 2) == "^x")
-			{
-				ch = str2chr(theText, left-1);
-				if( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xr/
-					left-=3;
-			}
-		else if (left >= 4 && substring(theText, left-4, 2) == "^x")
-			{
-				ch = str2chr(theText, left-2);
-				if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') )
-				{
-					ch = str2chr(theText, left-1);
-					if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xrg/
-						left-=4;
-				}
-			}
-	}
 
 	return left;
 }
@@ -731,56 +751,24 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	if(w(theText) <= maxWidth)
 		return strlen(theText); // yeah!
 
+	bool colors = (w("^7") == 0);
+
 	// binary search for right place to cut string
-	float ch;
-	float left, right, middle; // this always works
+	int len, left, right, middle;
 	left = 0;
-	right = strlen(theText); // this always fails
+	right = len = strlen(theText);
+	int ofs = 0;
 	do
 	{
 		middle = floor((left + right) / 2);
-		if(w(substring(theText, 0, middle)) <= maxWidth)
-			left = middle;
+		if(colors)
+			ofs = skipIncompleteTag(theText, middle, len);
+		if(w(substring(theText, 0, middle + ofs)) <= maxWidth)
+			left = middle + ofs;
 		else
 			right = middle;
 	}
 	while(left < right - 1);
-
-	if(w("^7") == 0) // detect color codes support in the width function
-	{
-		// NOTE: when color codes are involved, this binary search is,
-		// mathematically, BROKEN. However, it is obviously guaranteed to
-		// terminate, as the range still halves each time - but nevertheless, it is
-		// guaranteed that it finds ONE valid cutoff place (where "left" is in
-		// range, and "right" is outside).
-
-		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
-		// and decrease left on the basis of the chars detected of the truncated tag
-		// Even if the ^xrgb tag is not complete/correct, left is decreased
-		// (sometimes too much but with a correct result)
-		// it fixes also ^[0-9]
-		while(left >= 1 && substring(theText, left-1, 1) == "^")
-			left-=1;
-
-		if (left >= 2 && substring(theText, left-2, 2) == "^x") // ^x/
-			left-=2;
-		else if (left >= 3 && substring(theText, left-3, 2) == "^x")
-			{
-				ch = str2chr(theText, left-1);
-				if( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xr/
-					left-=3;
-			}
-		else if (left >= 4 && substring(theText, left-4, 2) == "^x")
-			{
-				ch = str2chr(theText, left-2);
-				if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') )
-				{
-					ch = str2chr(theText, left-1);
-					if ( (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') ) // ^xrg/
-						left-=4;
-				}
-			}
-	}
 
 	return left;
 }
@@ -791,8 +779,7 @@ string find_last_color_code(string s)
 	if (start == -1) // no caret found
 		return "";
 	int len = strlen(s)-1;
-	int i;
-	for(i = len; i >= start; --i)
+	for(int i = len; i >= start; --i)
 	{
 		if(substring(s, i, 1) != "^")
 			continue;
@@ -805,14 +792,14 @@ string find_last_color_code(string s)
 		if (carets & 1)
 		{
 			if(i+1 <= len)
-			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
+			if(IS_DIGIT(substring(s, i+1, 1)))
 				return substring(s, i, 2);
 
 			if(i+4 <= len)
 			if(substring(s, i+1, 1) == "x")
-			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+2, 1), 0) >= 0)
-			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+3, 1), 0) >= 0)
-			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+4, 1), 0) >= 0)
+			if(IS_HEXDIGIT(substring(s, i + 2, 1)))
+			if(IS_HEXDIGIT(substring(s, i + 3, 1)))
+			if(IS_HEXDIGIT(substring(s, i + 4, 1)))
 				return substring(s, i, 5);
 		}
 		i -= carets; // this also skips one char before the carets
@@ -929,7 +916,7 @@ string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_
 		return strcat(substring(theText, 0, textLengthUpToLength(theText, maxWidth - tw("..."), tw)), "...");
 }
 
-float isGametypeInFilter(float gt, float tp, float ts, string pattern)
+float isGametypeInFilter(Gametype gt, float tp, float ts, string pattern)
 {
 	string subpattern, subpattern2, subpattern3, subpattern4;
 	subpattern = strcat(",", MapInfo_Type_ToString(gt), ",");
@@ -1080,26 +1067,25 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 
 float compressShotOrigin(vector v)
 {
-	float x, y, z;
-	x = rint(v.x * 2);
-	y = rint(v.y * 4) + 128;
-	z = rint(v.z * 4) + 128;
-	if(x > 255 || x < 0)
+	float rx = rint(v.x * 2);
+	float ry = rint(v.y * 4) + 128;
+	float rz = rint(v.z * 4) + 128;
+	if(rx > 255 || rx < 0)
 	{
-		LOG_INFO("shot origin ", vtos(v), " x out of bounds\n");
-		x = bound(0, x, 255);
+		LOG_DEBUG("shot origin ", vtos(v), " x out of bounds\n");
+		rx = bound(0, rx, 255);
 	}
-	if(y > 255 || y < 0)
+	if(ry > 255 || ry < 0)
 	{
-		LOG_INFO("shot origin ", vtos(v), " y out of bounds\n");
-		y = bound(0, y, 255);
+		LOG_DEBUG("shot origin ", vtos(v), " y out of bounds\n");
+		ry = bound(0, ry, 255);
 	}
-	if(z > 255 || z < 0)
+	if(rz > 255 || rz < 0)
 	{
-		LOG_INFO("shot origin ", vtos(v), " z out of bounds\n");
-		z = bound(0, z, 255);
+		LOG_DEBUG("shot origin ", vtos(v), " z out of bounds\n");
+		rz = bound(0, rz, 255);
 	}
-	return x * 0x10000 + y * 0x100 + z;
+	return rx * 0x10000 + ry * 0x100 + rz;
 }
 vector decompressShotOrigin(int f)
 {
@@ -1110,7 +1096,7 @@ vector decompressShotOrigin(int f)
 	return v;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
@@ -1224,8 +1210,9 @@ float get_model_parameters(string m, float sk)
 		get_model_parameters_bone_aimweight[i] = 0;
 	}
 	get_model_parameters_fixbone = 0;
+	get_model_parameters_hidden = false;
 
-#ifndef MENUQC
+#ifdef GAMEQC
 	MUTATOR_CALLHOOK(ClearModelParams);
 #endif
 
@@ -1290,7 +1277,7 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
-	#ifndef MENUQC
+	#ifdef GAMEQC
 		MUTATOR_CALLHOOK(GetModelParams, c, s);
 	#endif
 		for(int i = 0; i < MAX_AIM_BONES; ++i)
@@ -1301,6 +1288,8 @@ float get_model_parameters(string m, float sk)
 			}
 		if(c == "fixbone")
 			get_model_parameters_fixbone = stof(s);
+		if(c == "hidden")
+			get_model_parameters_hidden = stob(s);
 	}
 
 	while((s = fgets(fh)))
@@ -1383,7 +1372,7 @@ void m_shutdown()
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 .float skeleton_bones_index;
 void Skeleton_SetBones(entity e)
 {
@@ -1433,7 +1422,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 	// start with a 1-element queue
 	queue_start = queue_end = e;
-	queue_end.(fld) = world;
+	queue_end.(fld) = NULL;
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
@@ -1441,7 +1430,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	{
 		// find all neighbors of queue_start
 		entity t;
-		for(t = world; (t = nxt(t, queue_start, pass)); )
+		for(t = NULL; (t = nxt(t, queue_start, pass)); )
 		{
 			if(t.FindConnectedComponent_processing)
 				continue;
@@ -1450,7 +1439,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 				// it is connected? ADD IT. It will look for neighbors soon too.
 				queue_end.(fld) = t;
 				queue_end = t;
-				queue_end.(fld) = world;
+				queue_end.(fld) = NULL;
 				queue_end.FindConnectedComponent_processing = 1;
 			}
 		}
@@ -1461,7 +1450,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 vector animfixfps(entity e, vector a, vector b)
 {
 	// multi-frame anim: keep as-is
@@ -1480,7 +1469,7 @@ vector animfixfps(entity e, vector a, vector b)
 }
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 Notification Announcer_PickNumber(int type, int num)
 {
     return = NULL;
@@ -1592,7 +1581,7 @@ Notification Announcer_PickNumber(int type, int num)
 }
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents)
 {
 	switch(nativecontents)

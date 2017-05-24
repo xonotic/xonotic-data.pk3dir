@@ -1,18 +1,20 @@
 #pragma once
 
+#include "lib/float.qh"
+
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
 {
 	if (weight == 0) return;
-	if (mean == 0) e.(a) *= pow(value, weight);
-	else e.(a) += pow(value, mean) * weight;
+	if (mean == 0) e.(a) *= (value ** weight);
+	else e.(a) += (value ** mean) * weight;
 	e.(c) += weight;
 }
 
 float mean_evaluate(entity e, .float a, .float c, float mean)
 {
 	if (e.(c) == 0) return 0;
-	if (mean == 0) return pow(e.(a), 1.0 / e.(c));
-	else return pow(e.(a) / e.(c), 1.0 / mean);
+	if (mean == 0) return (e.(a) ** (1.0 / e.(c)));
+	else return ((e.(a) / e.(c)) ** (1.0 / mean));
 }
 
 #define MEAN_ACCUMULATE(s, prefix, v, w) mean_accumulate(s, prefix##_accumulator, prefix##_count, prefix##_mean, v, w)
@@ -82,12 +84,12 @@ vector bezier_quadratic_getderivative(vector a, vector b, vector c, float t)
 	       + (b - a) * 2;
 }
 
-float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x)
+float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float spd)
 {
 	return (((startspeedfactor + endspeedfactor - 2
-	         ) * x - 2 * startspeedfactor - endspeedfactor + 3
-	        ) * x + startspeedfactor
-	       ) * x;
+	         ) * spd - 2 * startspeedfactor - endspeedfactor + 3
+	        ) * spd + startspeedfactor
+	       ) * spd;
 }
 
 bool cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
@@ -176,6 +178,12 @@ float almost_equals(float a, float b)
 	return a - b < eps && b - a < eps;
 }
 
+float almost_equals_eps(float a, float b, float times_eps)
+{
+	float eps = max(fabs(a), fabs(b)) * FLOAT_EPSILON * times_eps;
+	return a - b < eps && b - a < eps;
+}
+
 float almost_in_bounds(float a, float b, float c)
 {
 	float eps = (max(a, -a) + max(c, -c)) * 0.001;
@@ -185,64 +193,64 @@ float almost_in_bounds(float a, float b, float c)
 
 float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)
 {
-	if (halflifedist > 0) return pow(0.5, (bound(mindist, d, maxdist) - mindist) / halflifedist);
-	else if (halflifedist < 0) return pow(0.5, (bound(mindist, d, maxdist) - maxdist) / halflifedist);
+	if (halflifedist > 0) return (0.5 ** ((bound(mindist, d, maxdist) - mindist) / halflifedist));
+	else if (halflifedist < 0) return (0.5 ** ((bound(mindist, d, maxdist) - maxdist) / halflifedist));
 	else return 1;
 }
 
 float power2of(float e)
 {
-	return pow(2, e);
+	return (2 ** e);
 }
 
-float log2of(float x)
+float log2of(float e)
 {
 	// NOTE: generated code
-	if (x > 2048)
-		if (x > 131072)
-			if (x > 1048576)
-				if (x > 4194304) return 23;
+	if (e > 2048)
+		if (e > 131072)
+			if (e > 1048576)
+				if (e > 4194304) return 23;
 				else
-					if (x > 2097152) return 22;
+					if (e > 2097152) return 22;
 					else return 21;
 			else
-				if (x > 524288) return 20;
+				if (e > 524288) return 20;
 				else
-					if (x > 262144) return 19;
+					if (e > 262144) return 19;
 					else return 18;
 		else
-			if (x > 16384)
-				if (x > 65536) return 17;
+			if (e > 16384)
+				if (e > 65536) return 17;
 				else
-					if (x > 32768) return 16;
+					if (e > 32768) return 16;
 					else return 15;
 			else
-				if (x > 8192) return 14;
+				if (e > 8192) return 14;
 				else
-					if (x > 4096) return 13;
+					if (e > 4096) return 13;
 					else return 12;
 	else
-		if (x > 32)
-			if (x > 256)
-				if (x > 1024) return 11;
+		if (e > 32)
+			if (e > 256)
+				if (e > 1024) return 11;
 				else
-					if (x > 512) return 10;
+					if (e > 512) return 10;
 					else return 9;
 			else
-				if (x > 128) return 8;
+				if (e > 128) return 8;
 				else
-					if (x > 64) return 7;
+					if (e > 64) return 7;
 					else return 6;
 		else
-			if (x > 4)
-				if (x > 16) return 5;
+			if (e > 4)
+				if (e > 16) return 5;
 				else
-					if (x > 8) return 4;
+					if (e > 8) return 4;
 					else return 3;
 			else
-				if (x > 2) return 2;
+				if (e > 2) return 2;
 				else
-					if (x > 1) return 1;
+					if (e > 1) return 1;
 					else return 0;
 }
 

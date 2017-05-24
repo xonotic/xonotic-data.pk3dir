@@ -1,0 +1,64 @@
+#pragma once
+
+/*
+ * Globals and Fields
+ */
+
+.float havocbot_keyboardskill;
+.float ignoregoaltime;
+.float lastfiredweapon;
+.float lastcombotime;
+.float havocbot_blockhead;
+
+.float havocbot_keyboardtime;
+.float havocbot_ducktime;
+.float bot_timelastseengoal;
+.float bot_canruntogoal;
+.float bot_chooseweapontime;
+.float rocketjumptime;
+.float nextaim;
+.float havocbot_personal_waypoint_searchtime;
+.float havocbot_personal_waypoint_failcounter;
+.float havocbot_chooseenemy_finished;
+.float havocbot_stickenemy;
+.float havocbot_role_timeout;
+
+.entity ignoregoal;
+.entity bot_lastseengoal;
+.entity havocbot_personal_waypoint;
+
+.vector havocbot_keyboard;
+
+/*
+ * Functions
+ */
+
+void havocbot_ai(entity this);
+void havocbot_aim(entity this);
+void havocbot_setupbot(entity this);
+void havocbot_movetogoal(entity this);
+void havocbot_chooserole(entity this);
+void havocbot_chooseenemy(entity this);
+void havocbot_chooseweapon(entity this, .entity weaponentity);
+void havocbot_bunnyhop(entity this, vector dir);
+void havocbot_keyboard_movement(entity this, vector destorg);
+
+float havocbot_resetgoal(entity this);
+float havocbot_moveto(entity this, vector pos);
+float havocbot_moveto_refresh_route(entity this);
+
+vector havocbot_dodge(entity this);
+
+.void(entity this) havocbot_role;
+.void(entity this) havocbot_previous_role;
+
+void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+
+/*
+ * Imports
+ */
+
+.entity draggedby;
+.float ladder_time;
+.entity ladder_entity;

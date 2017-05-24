@@ -1,3 +1,4 @@
+#include "voicescript.qh"
 #ifdef SVQC
 .entity voicescript; // attached voice script
 .float voicescript_index; // index of next voice, or -1 to use the randomized ones
@@ -6,7 +7,7 @@
 
 void target_voicescript_clear(entity pl)
 {
-	pl.voicescript = world;
+	pl.voicescript = NULL;
 }
 
 void target_voicescript_use(entity this, entity actor, entity trigger)
@@ -31,7 +32,7 @@ void target_voicescript_next(entity pl)
 		return;
 	if (!IS_PLAYER(pl))
 		return;
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	if(time >= pl.voicescript_voiceend)
@@ -67,7 +68,7 @@ void target_voicescript_next(entity pl)
 			}
 			else
 			{
-				pl.voicescript = world; // stop trying then
+				pl.voicescript = NULL; // stop trying then
 			}
 		}
 	}
@@ -84,18 +85,18 @@ spawnfunc(target_voicescript)
 	// delay: initial delay before the first message
 
 	float i, n;
-	self.use = target_voicescript_use;
+	this.use = target_voicescript_use;
 
-	n = tokenize_console(self.message);
-	self.cnt = n / 2;
+	n = tokenize_console(this.message);
+	this.cnt = n / 2;
 	for(i = 0; i+1 < n; i += 2)
 	{
 		if(argv(i) == "*")
 		{
-			self.cnt = i / 2;
+			this.cnt = i / 2;
 			++i;
 		}
-		precache_sound(strcat(self.netname, "/", argv(i), ".wav"));
+		precache_sound(strcat(this.netname, "/", argv(i), ".wav"));
 	}
 }
 #endif

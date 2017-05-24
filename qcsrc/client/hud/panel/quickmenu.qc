@@ -1,9 +1,10 @@
 #include "quickmenu.qh"
-// QuickMenu (#23)
 
 #include <common/ent_cs.qh>
-#include <client/hud/all.qh>
+#include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
+
+// QuickMenu (#23)
 
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
@@ -58,18 +59,19 @@ void QuickMenu_Page_ClearEntry(int i)
 	if (QuickMenu_Page_Command[i])
 		strunzone(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command[i] = string_null;
+	QuickMenu_Page_Command_Type[i] = 0;
 }
 
 float QuickMenu_Page_Load(string target_submenu, float new_page);
 void QuickMenu_Default(string submenu);
-bool QuickMenu_Open(string mode, string submenu)
+bool QuickMenu_Open(string mode, string submenu, string file)
 {
 	int fh = -1;
 	string s;
 
 	if(mode == "")
 	{
-		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
+		if(file == "" || file == "0")
 			mode = "default";
 		else
 			mode = "file";
@@ -77,13 +79,13 @@ bool QuickMenu_Open(string mode, string submenu)
 
 	if(mode == "file")
 	{
-		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
+		if(file == "" || file == "0")
 			LOG_INFO("No file name is set in hud_panel_quickmenu_file, loading default quickmenu\n");
 		else
 		{
-			fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
+			fh = fopen(file, FILE_READ);
 			if(fh < 0)
-				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", autocvar_hud_panel_quickmenu_file);
+				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", file);
 		}
 		if(fh < 0)
 			mode = "default";
@@ -155,7 +157,7 @@ bool QuickMenu_Open(string mode, string submenu)
 	}
 	else
 	{
-		LOG_WARNINGF("Unrecognized mode %s\n", mode);
+		LOG_WARNF("Unrecognized mode %s", mode);
 		return false;
 	}
 
@@ -291,7 +293,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 			// printf("^1 skipping %s\n", s);
 		}
 		if(QuickMenu_Buffer_Index == QuickMenu_Buffer_Size)
-			LOG_WARNINGF("Couldn't find submenu \"%s\"\n", z_submenu);
+			LOG_WARNF("Couldn't find submenu \"%s\"", z_submenu);
 	}
 
 	// only the last page can contain up to QUICKMENU_MAXLINES entries
@@ -430,11 +432,8 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	}
 
 	// allow console bind to work
-	string con_keys;
-	float keys;
-	con_keys = findkeysforcommand("toggleconsole", 0);
-	keys = tokenize(con_keys); // findkeysforcommand returns data for this
-
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
 	bool hit_con_bind = false;
 	int i;
 	for (i = 0; i < keys; ++i)
@@ -497,15 +496,11 @@ void QuickMenu_Mouse()
 		return;
 	}
 
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+	if (!autocvar_hud_cursormode)
+		update_mousepos();
 
-		mousepos.x = bound(0, mousepos.x, vid_conwidth);
-		mousepos.y = bound(0, mousepos.y, vid_conheight);
-	}
-
-	HUD_Panel_UpdateCvars();
+	panel = HUD_PANEL(QUICKMENU);
+	HUD_Panel_LoadCvars();
 
 	if(panel_bg_padding)
 	{
@@ -619,9 +614,10 @@ void HUD_QuickMenu()
 		}
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
-	HUD_Panel_DrawBg(1);
+	HUD_Scale_Disable();
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{
@@ -659,7 +655,7 @@ void HUD_QuickMenu()
 				else
 					tokenize_console(substring(QuickMenu_Page_Command[i], 0, end));
 
-				//if(argv(1) && argv(0) == "toggle") // already checked
+				if(argv(1) && argv(0) == "toggle")
 				{
 					// "enable feature xxx" "toggle xxx" (or "toggle xxx 1 0")
 					// "disable feature xxx" "toggle xxx 0 1"
@@ -867,9 +863,9 @@ void QuickMenu_Default(string target_submenu)
 
 	if(target_submenu != "" && !target_submenu_found)
 	{
-		LOG_WARNINGF("Couldn't find submenu \"%s\"\n", target_submenu);
+		LOG_WARNF("Couldn't find submenu \"%s\"", target_submenu);
 		if(prvm_language != "en")
-			LOG_WARNINGF("^3Warning: submenu must be in English\n", target_submenu);
+			LOG_WARNF("^3Warning: submenu must be in English", target_submenu);
 		QuickMenu_Buffer_Size = 0;
 	}
 }

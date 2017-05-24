@@ -1,5 +1,7 @@
 #include "mainwindow.qh"
 
+#include "../mutators/events.qh"
+
 #include "nexposee.qh"
 #include "inputbox.qh"
 #include "dialog_firstrun.qh"
@@ -39,6 +41,7 @@
 #include "dialog_sandboxtools.qh"
 #include "dialog_monstertools.qh"
 #include "dialog_teamselect.qh"
+#include "dialog_uid2name.qh"
 #include "dialog_singleplayer.qh"
 #include "dialog_multiplayer.qh"
 #include "dialog_settings.qh"
@@ -224,9 +227,15 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
+	i = NEW(XonoticUid2NameDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	i = NEW(XonoticMonsterToolsDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z * SKINALPHA_DIALOG_SANDBOXTOOLS);
+
+	MUTATOR_CALLHOOK(ConfigureDialogs, me);
 
 
 	// main dialogs/windows

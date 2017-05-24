@@ -3,7 +3,7 @@
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-void beam_think();
+void beam_think(entity this);
 
 .int fireflag;
 SOUND(PhaserTurretAttack_FIRE, W_Sound("electro_fire"));
@@ -14,7 +14,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, SND_PhaserTurretAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_PhaserTurretAttack_FIRE, CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -26,16 +26,17 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
         setmodel(beam, MDL_TUR_PHASER_BEAM);
         beam.effects = EF_LOWPRECISION;
         beam.solid = SOLID_NOT;
-        beam.think = beam_think;
+        setthink(beam, beam_think);
         beam.cnt = time + actor.shot_speed;
         beam.shot_spread = time + 2;
         beam.nextthink = time;
         beam.owner = actor;
         beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / beam.ticrate);
         beam.scale = actor.target_range / 256;
-        beam.movetype = MOVETYPE_NONE;
+        set_movetype(beam, MOVETYPE_NONE);
         beam.enemy = actor.enemy;
         beam.bot_dodge = true;
+        IL_PUSH(g_bot_dodge, beam);
         beam.bot_dodgerating = beam.shot_dmg;
         sound (beam, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
         actor.fireflag = 1;
@@ -52,41 +53,39 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
     }
 }
 
-void beam_think()
-{SELFPARAM();
-    if ((time > self.cnt) || (IS_DEAD(self.owner)))
+void beam_think(entity this)
+{
+    if ((time > this.cnt) || (IS_DEAD(this.owner)))
     {
-        self.owner.attack_finished_single[0] = time + self.owner.shot_refire;
-        self.owner.fireflag = 2;
-        self.owner.tur_head.frame = 10;
-        sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-        remove(self);
+        this.owner.attack_finished_single[0] = time + this.owner.shot_refire;
+        this.owner.fireflag = 2;
+        this.owner.tur_head.frame = 10;
+        sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+        delete(this);
         return;
     }
 
-    turret_do_updates(self.owner);
+    turret_do_updates(this.owner);
 
-    if (time - self.shot_spread > 0)
+    if (time - this.shot_spread > 0)
     {
-        self.shot_spread = time + 2;
-        sound (self, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
+        this.shot_spread = time + 2;
+        sound (this, CH_SHOTS_SINGLE, SND_TUR_PHASER, VOL_BASE, ATTEN_NORM);
     }
 
 
-    self.nextthink = time + self.ticrate;
+    this.nextthink = time + this.ticrate;
 
-    self.owner.attack_finished_single[0] = time + frametime;
-    setself(self.owner);
-    FireImoBeam (   self.tur_shotorg,
-                    self.tur_shotorg + self.tur_shotdir_updated * self.target_range,
-                    '-1 -1 -1' * self.shot_radius,
-                    '1 1 1' * self.shot_radius,
-                    self.shot_force,
+    this.owner.attack_finished_single[0] = time + frametime;
+    FireImoBeam (   this.owner, this.tur_shotorg,
+                    this.tur_shotorg + this.tur_shotdir_updated * this.target_range,
+                    '-1 -1 -1' * this.shot_radius,
+                    '1 1 1' * this.shot_radius,
+                    this.shot_force,
                     this.shot_dmg,
                     0.75,
                     DEATH_TURRET_PHASER.m_id);
-    setself(this);
-    self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
+    this.scale = vlen(this.owner.tur_shotorg - trace_endpos) / 256;
 
 }
 

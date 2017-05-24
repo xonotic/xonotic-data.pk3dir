@@ -1,8 +1,8 @@
+#include "config.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "../util.qh"
-    #include "config.qh"
     #include "all.qh"
 #endif
 
@@ -35,7 +35,7 @@ void Dump_Weapon_Settings()
 		it.wr_config(it);
 
 		// step 3: sort queue
-		heapsort(WEP_CONFIG_COUNT, W_Config_Queue_Swap, W_Config_Queue_Compare, world);
+		heapsort(WEP_CONFIG_COUNT, W_Config_Queue_Swap, W_Config_Queue_Compare, NULL);
 
 		// step 4: write queue
 		WEP_CONFIG_WRITETOFILE(sprintf(

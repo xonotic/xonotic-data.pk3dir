@@ -1,57 +1,39 @@
-#ifndef TURRET_PLASMA_H
-#define TURRET_PLASMA_H
-
-#include "plasma_weapon.qh"
-
-CLASS(PlasmaTurret, Turret)
-/* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
-/* mins       */ ATTRIB(PlasmaTurret, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(PlasmaTurret, maxs, vector, '32 32 64');
-/* modelname  */ ATTRIB(PlasmaTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB_STRZONE(PlasmaTurret, model, string, strcat("models/turrets/", this.mdl));
-/* head_model */ ATTRIB_STRZONE(PlasmaTurret, head_model, string, strcat("models/turrets/", "plasma.md3"));
-/* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
-/* fullname   */ ATTRIB(PlasmaTurret, turret_name, string, _("Plasma Cannon"));
-    ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
-ENDCLASS(PlasmaTurret)
-REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
-
-#endif
+#include "plasma.qh"
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
 
-spawnfunc(turret_plasma) { if (!turret_initialize(TUR_PLASMA)) remove(self); }
+spawnfunc(turret_plasma) { if (!turret_initialize(this, TUR_PLASMA)) delete(this); }
 
 METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 {
     if(g_instagib)
     {
-        FireRailgunBullet (self, self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
+        .entity weaponentity = weaponentities[0]; // TODO: unhardcode
+        FireRailgunBullet (it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance, 10000000000,
                            800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
 
-        Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+        Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, it.tur_shotorg, it.tur_shotdir_updated * 1000, 1);
 
         // teamcolor / hit beam effect
         vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-        WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
+        WarpZone_TrailParticles(NULL, particleeffectnum(EFFECT_VAPORIZER(it.team)), it.tur_shotorg, v);
     }
     else
     {
         SUPER(PlasmaTurret).tr_attack(this, it);
     }
-    if (self.tur_head.frame == 0)
-        self.tur_head.frame = 1;
+    if (it.tur_head.frame == 0)
+        it.tur_head.frame = 1;
 }
 METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {
-    SELFPARAM();
-    if (self.tur_head.frame != 0)
-        self.tur_head.frame = self.tur_head.frame + 1;
+    if (it.tur_head.frame != 0)
+        it.tur_head.frame = it.tur_head.frame + 1;
 
-    if (self.tur_head.frame > 5)
-        self.tur_head.frame = 0;
+    if (it.tur_head.frame > 5)
+        it.tur_head.frame = 0;
 }
 METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
 {

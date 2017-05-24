@@ -1,5 +1,4 @@
-#ifndef NADES_ALL_H
-#define NADES_ALL_H
+#pragma once
 
 #include <common/teams.qh>
 
@@ -17,6 +16,8 @@ const int PROJECTILE_NADE_HEAL = 80;
 const int PROJECTILE_NADE_HEAL_BURN = 81;
 const int PROJECTILE_NADE_MONSTER = 82;
 const int PROJECTILE_NADE_MONSTER_BURN = 83;
+const int PROJECTILE_NADE_ENTRAP = 84;
+const int PROJECTILE_NADE_ENTRAP_BURN = 85;
 
 REGISTRY(Nades, BITS(4))
 #define Nades_from(i) _Nades_from(i, NADE_TYPE_Null)
@@ -26,12 +27,12 @@ REGISTRY_CHECK(Nades)
 #define REGISTER_NADE(id) REGISTER(Nades, NADE_TYPE, id, m_id, NEW(Nade))
 
 CLASS(Nade, Object)
-    ATTRIB(Nade, m_id, int, 0)
-    ATTRIB(Nade, m_color, vector, '0 0 0')
-    ATTRIB(Nade, m_name, string, _("Grenade"))
-    ATTRIB(Nade, m_icon, string, "nade_normal")
-    ATTRIBARRAY(Nade, m_projectile, int, 2)
-    ATTRIBARRAY(Nade, m_trail, entity, 2)
+    ATTRIB(Nade, m_id, int, 0);
+    ATTRIB(Nade, m_color, vector, '0 0 0');
+    ATTRIB(Nade, m_name, string, _("Grenade"));
+    ATTRIB(Nade, m_icon, string, "nade_normal");
+    ATTRIBARRAY(Nade, m_projectile, int, 2);
+    ATTRIBARRAY(Nade, m_trail, entity, 2);
     METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
         returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
     }
@@ -50,14 +51,14 @@ Nade Nade_FromProjectile(int proj)
     return NADE_TYPE_Null;
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #include "effects.inc"
 #endif
 
 #include "nades.inc"
 
-.float healer_lifetime;
-.float healer_radius;
+.float orb_lifetime;
+.float orb_radius;
 
 #ifdef SVQC
 
@@ -78,26 +79,25 @@ Nade Nade_FromProjectile(int proj)
 .float stat_healing_orb_alpha = _STAT(HEALING_ORB_ALPHA);
 .float nade_show_particles;
 
-bool healer_send(entity this, entity to, int sf);
+bool orb_send(entity this, entity to, int sf);
 
 // Remove nades that are being thrown
 void nades_Clear(entity player);
 
 // Give a bonus grenade to a player
-void(entity player, float score) nades_GiveBonus;
+void nades_GiveBonus(entity player, float score);
 
 /**
  * called to adjust nade damage and force on hit
  */
 #define EV_Nade_Damage(i, o) \
- 	/** weapon */ i(entity, MUTATOR_ARGV_0_entity) \
-    /** force */  i(vector, MUTATOR_ARGV_0_vector) \
-    /**/          o(vector, MUTATOR_ARGV_0_vector) \
- 	/** damage */ i(float,  MUTATOR_ARGV_0_float) \
-    /**/          o(float,  MUTATOR_ARGV_0_float) \
+    /** nade */   i(entity, MUTATOR_ARGV_0_entity) \
+ 	/** weapon */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** force */  i(vector, MUTATOR_ARGV_2_vector) \
+    /**/          o(vector, MUTATOR_ARGV_2_vector) \
+ 	/** damage */ i(float,  MUTATOR_ARGV_3_float) \
+    /**/          o(float,  MUTATOR_ARGV_3_float) \
     /**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
-
-#endif
 
 #endif

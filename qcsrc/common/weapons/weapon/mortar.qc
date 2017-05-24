@@ -1,12 +1,13 @@
+#include "mortar.qh"
 #ifndef IMPLEMENTATION
 CLASS(Mortar, Weapon)
-/* ammotype  */ ATTRIB(Mortar, ammo_field, .int, ammo_rockets)
-/* impulse   */ ATTRIB(Mortar, impulse, int, 4)
+/* ammotype  */ ATTRIB(Mortar, ammo_field, .int, ammo_rockets);
+/* impulse   */ ATTRIB(Mortar, impulse, int, 4);
 /* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(Mortar, wpcolor, vector, '1 0 0');
 /* modelname */ ATTRIB(Mortar, mdl, string, "gl");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Mortar, m_model, Model, MDL_MORTAR_ITEM);
 #endif
 /* crosshair */ ATTRIB(Mortar, w_crosshair, string, "gfx/crosshairgrenadelauncher");
@@ -64,54 +65,54 @@ REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
 spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(this, WEP_MORTAR); }
 spawnfunc(weapon_grenadelauncher) { spawnfunc_weapon_mortar(this); }
 
-void W_Mortar_Grenade_Explode()
-{SELFPARAM();
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(self.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
-						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
+void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
+{
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
+						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
-	if(self.movetype == MOVETYPE_NONE)
-		self.velocity = self.oldvelocity;
+	if(this.move_movetype == MOVETYPE_NONE)
+		this.velocity = this.oldvelocity;
 
-	RadiusDamage(self, self.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), world, world, WEP_CVAR_PRI(mortar, force), self.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, directhitentity);
 
-	remove(self);
+	delete(this);
 }
 
 void W_Mortar_Grenade_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Mortar_Grenade_Explode());
+	W_Mortar_Grenade_Explode(this, trigger);
 }
 
-void W_Mortar_Grenade_Explode2()
-{SELFPARAM();
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(self.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
-						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
+void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
+{
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
+						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
-	if(self.movetype == MOVETYPE_NONE)
-		self.velocity = self.oldvelocity;
+	if(this.move_movetype == MOVETYPE_NONE)
+		this.velocity = this.oldvelocity;
 
-	RadiusDamage(self, self.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), world, world, WEP_CVAR_SEC(mortar, force), self.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, directhitentity);
 
-	remove(self);
+	delete(this);
 }
 
 void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Mortar_Grenade_Explode2());
+	W_Mortar_Grenade_Explode2(this, trigger);
 }
 
 void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -128,104 +129,101 @@ void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, flo
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
-void W_Mortar_Grenade_Think1()
-{SELFPARAM();
-	self.nextthink = time;
-	if(time > self.cnt)
+void W_Mortar_Grenade_Think1(entity this)
+{
+	this.nextthink = time;
+	if(time > this.cnt)
 	{
-		other = world;
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mortar_Grenade_Explode();
+		this.projectiledeathtype |= HITTYPE_BOUNCE;
+		W_Mortar_Grenade_Explode(this, NULL);
 		return;
 	}
-	if(self.gl_detonate_later && self.gl_bouncecnt >= WEP_CVAR_PRI(mortar, remote_minbouncecnt))
-		W_Mortar_Grenade_Explode();
+	if(this.gl_detonate_later && this.gl_bouncecnt >= WEP_CVAR_PRI(mortar, remote_minbouncecnt))
+		W_Mortar_Grenade_Explode(this, NULL);
 }
 
-void W_Mortar_Grenade_Touch1()
-{SELFPARAM();
-	PROJECTILE_TOUCH;
-	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
+void W_Mortar_Grenade_Touch1(entity this, entity toucher)
+{
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
-		this.use(this, NULL, NULL);
+		this.use(this, NULL, toucher);
 	}
 	else if(WEP_CVAR_PRI(mortar, type) == 1) // bounce
 	{
-		spamsound(self, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTN_NORM);
-		Send_Effect(EFFECT_HAGAR_BOUNCE, self.origin, self.velocity, 1);
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		self.gl_bouncecnt += 1;
+		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTN_NORM);
+		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
+		this.projectiledeathtype |= HITTYPE_BOUNCE;
+		this.gl_bouncecnt += 1;
 	}
-	else if(WEP_CVAR_PRI(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
+	else if(WEP_CVAR_PRI(mortar, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound(self, CH_SHOTS, SND(GRENADE_STICK), VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
-		self.oldvelocity = self.velocity;
-		self.velocity = '0 0 0';
-		self.movetype = MOVETYPE_NONE; // also disables gravity
-		self.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
-		UpdateCSQCProjectile(self);
+		this.oldvelocity = this.velocity;
+		this.velocity = '0 0 0';
+		set_movetype(this, MOVETYPE_NONE); // also disables gravity
+		this.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
+		UpdateCSQCProjectile(this);
 
 		// do not respond to any more touches
-		self.solid = SOLID_NOT;
+		this.solid = SOLID_NOT;
 
-		self.nextthink = min(self.nextthink, time + WEP_CVAR_PRI(mortar, lifetime_stick));
+		this.nextthink = min(this.nextthink, time + WEP_CVAR_PRI(mortar, lifetime_stick));
 	}
 }
 
-void W_Mortar_Grenade_Touch2()
-{SELFPARAM();
-	PROJECTILE_TOUCH;
-	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
+void W_Mortar_Grenade_Touch2(entity this, entity toucher)
+{
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
-		this.use(this, NULL, NULL);
+		this.use(this, NULL, toucher);
 	}
 	else if(WEP_CVAR_SEC(mortar, type) == 1) // bounce
 	{
-		spamsound(self, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTN_NORM);
-		Send_Effect(EFFECT_HAGAR_BOUNCE, self.origin, self.velocity, 1);
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		self.gl_bouncecnt += 1;
+		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTN_NORM);
+		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
+		this.projectiledeathtype |= HITTYPE_BOUNCE;
+		this.gl_bouncecnt += 1;
 
-		if(WEP_CVAR_SEC(mortar, lifetime_bounce) && self.gl_bouncecnt == 1)
-			self.nextthink = time + WEP_CVAR_SEC(mortar, lifetime_bounce);
+		if(WEP_CVAR_SEC(mortar, lifetime_bounce) && this.gl_bouncecnt == 1)
+			this.nextthink = time + WEP_CVAR_SEC(mortar, lifetime_bounce);
 
 	}
-	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
+	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.move_movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound(self, CH_SHOTS, SND(GRENADE_STICK), VOL_BASE, ATTN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_STICK, VOL_BASE, ATTN_NORM);
 
 		// let it stick whereever it is
-		self.oldvelocity = self.velocity;
-		self.velocity = '0 0 0';
-		self.movetype = MOVETYPE_NONE; // also disables gravity
-		self.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
-		UpdateCSQCProjectile(self);
+		this.oldvelocity = this.velocity;
+		this.velocity = '0 0 0';
+		set_movetype(this, MOVETYPE_NONE); // also disables gravity
+		this.gravity = 0; // nope, it does NOT! maybe a bug in CSQC code? TODO
+		UpdateCSQCProjectile(this);
 
 		// do not respond to any more touches
-		self.solid = SOLID_NOT;
+		this.solid = SOLID_NOT;
 
-		self.nextthink = min(self.nextthink, time + WEP_CVAR_SEC(mortar, lifetime_stick));
+		this.nextthink = min(this.nextthink, time + WEP_CVAR_SEC(mortar, lifetime_stick));
 	}
 }
 
-void W_Mortar_Attack(Weapon thiswep)
-{SELFPARAM();
-	entity gren;
+void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
+{
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(mortar, ammo), weaponentity);
 
-	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(mortar, ammo));
-
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	gren = new(grenade);
-	gren.owner = gren.realowner = self;
+	entity gren = new(grenade);
+	gren.owner = gren.realowner = actor;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_PRI(mortar, damage);
-	gren.movetype = MOVETYPE_BOUNCE;
+	set_movetype(gren, MOVETYPE_BOUNCE);
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
@@ -235,45 +233,48 @@ void W_Mortar_Attack(Weapon thiswep)
 
 	gren.cnt = time + WEP_CVAR_PRI(mortar, lifetime);
 	gren.nextthink = time;
-	gren.think = W_Mortar_Grenade_Think1;
+	setthink(gren, W_Mortar_Grenade_Think1);
 	gren.use = W_Mortar_Grenade_Explode_use;
-	gren.touch = W_Mortar_Grenade_Touch1;
+	settouch(gren, W_Mortar_Grenade_Touch1);
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = WEP_CVAR_PRI(mortar, health);
 	gren.damageforcescale = WEP_CVAR_PRI(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_UP_PRI(gren, mortar);
 
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	if(WEP_CVAR_PRI(mortar, type) == 0 || WEP_CVAR_PRI(mortar, type) == 2)
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);
 	else
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
-	MUTATOR_CALLHOOK(EditProjectile, self, gren);
+	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-void W_Mortar_Attack2(Weapon thiswep)
-{SELFPARAM();
+void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
+{
 	entity gren;
 
-	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(mortar, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(mortar, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = new(grenade);
-	gren.owner = gren.realowner = self;
+	gren.owner = gren.realowner = actor;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(mortar, damage);
-	gren.movetype = MOVETYPE_BOUNCE;
+	set_movetype(gren, MOVETYPE_BOUNCE);
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
@@ -282,50 +283,52 @@ void W_Mortar_Attack2(Weapon thiswep)
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
 	gren.nextthink = time + WEP_CVAR_SEC(mortar, lifetime);
-	gren.think = adaptor_think2use_hittype_splash;
+	setthink(gren, adaptor_think2use_hittype_splash);
 	gren.use = W_Mortar_Grenade_Explode2_use;
-	gren.touch = W_Mortar_Grenade_Touch2;
+	settouch(gren, W_Mortar_Grenade_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = WEP_CVAR_SEC(mortar, health);
 	gren.damageforcescale = WEP_CVAR_SEC(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_UP_SEC(gren, mortar);
 
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	if(WEP_CVAR_SEC(mortar, type) == 0 || WEP_CVAR_SEC(mortar, type) == 2)
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);
 	else
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
-	MUTATOR_CALLHOOK(EditProjectile, self, gren);
+	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
 .float bot_secondary_grenademooth;
 
-METHOD(Mortar, wr_aim, void(entity thiswep))
+METHOD(Mortar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    PHYS_INPUT_BUTTON_ATCK(self) = false;
-    PHYS_INPUT_BUTTON_ATCK2(self) = false;
-    if(self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
+    PHYS_INPUT_BUTTON_ATCK(actor) = false;
+    PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+    if(actor.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
     {
-        if(bot_aim(self, WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
         {
-            PHYS_INPUT_BUTTON_ATCK(self) = true;
-            if(random() < 0.01) self.bot_secondary_grenademooth = 1;
+            PHYS_INPUT_BUTTON_ATCK(actor) = true;
+            if(random() < 0.01) actor.bot_secondary_grenademooth = 1;
         }
     }
     else
     {
-        if(bot_aim(self, WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
         {
-            PHYS_INPUT_BUTTON_ATCK2(self) = true;
-            if(random() < 0.02) self.bot_secondary_grenademooth = 0;
+            PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+            if(random() < 0.02) actor.bot_secondary_grenademooth = 0;
         }
     }
 }
@@ -347,13 +350,13 @@ METHOD(Mortar, wr_aim, void(entity thiswep))
     */
 METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_mortar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
+    if(autocvar_g_balance_mortar_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else if(fire & 1)
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(mortar, refire)))
         {
-            W_Mortar_Attack(thiswep);
+            W_Mortar_Attack(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
         }
     }
@@ -362,43 +365,39 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         if(WEP_CVAR_SEC(mortar, remote_detonateprimary))
         {
             bool nadefound = false;
-            entity nade;
-            for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == actor)
+            IL_EACH(g_projectiles, it.realowner == actor && it.classname == "grenade",
             {
-                if(!nade.gl_detonate_later)
+                if(!it.gl_detonate_later)
                 {
-                    nade.gl_detonate_later = true;
+                    it.gl_detonate_later = true;
                     nadefound = true;
                 }
-            }
+            });
             if(nadefound)
                 sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
         }
         else if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(mortar, refire)))
         {
-            W_Mortar_Attack2(thiswep);
+            W_Mortar_Attack2(thiswep, actor, weaponentity);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
         }
     }
 }
-METHOD(Mortar, wr_checkammo1, bool(entity thiswep))
+METHOD(Mortar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(mortar, ammo);
-    ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(mortar, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
     return ammo_amount;
 }
-METHOD(Mortar, wr_checkammo2, bool(entity thiswep))
+METHOD(Mortar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(mortar, ammo);
-    ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(mortar, ammo);
+    ammo_amount += actor.(weaponentity).(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
     return ammo_amount;
 }
 METHOD(Mortar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND_RELOAD); // WEAPONTODO
+    W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND_RELOAD); // WEAPONTODO
 }
 METHOD(Mortar, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -418,14 +417,13 @@ METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Mortar, wr_impacteffect, void(entity thiswep))
+METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
     if(!w_issilent)
-        sound(self, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
+        sound(actor, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
 #endif

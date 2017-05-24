@@ -3,8 +3,8 @@
 void test_weapons_hurt(entity this)
 {
     EXPECT_NE(100, this.health);
-    remove(this.enemy);
-    remove(this);
+    delete(this.enemy);
+    delete(this);
 }
 
 TEST(Weapons, Hurt)
@@ -26,7 +26,7 @@ TEST(Weapons, Hurt)
     it.items |= IT_UNLIMITED_AMMO;
     Weapon wep = WEP_VORTEX;
     W_GiveWeapon(it, wep.m_id);
-    W_SwitchWeapon_Force(it, wep);
+    W_SwitchWeapon_Force(it, wep, weaponentities[0]);
 
     it = b;
     PHYS_INPUT_BUTTON_JUMP(it) = true;

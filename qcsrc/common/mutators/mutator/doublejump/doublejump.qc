@@ -1,4 +1,6 @@
-#ifdef IMPLEMENTATION
+#include "doublejump.qh"
+
+#ifdef GAMEQC
 #ifdef SVQC
 	#include <server/antilag.qh>
 #endif
@@ -15,21 +17,20 @@ REGISTER_MUTATOR(doublejump, true);
 
 MUTATOR_HOOKFUNCTION(doublejump, PlayerJump)
 {
-    SELFPARAM();
-	if (PHYS_DOUBLEJUMP(self))
+    entity player = M_ARGV(0, entity);
+
+	if (PHYS_DOUBLEJUMP(player))
 	{
-		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
+		tracebox(player.origin + '0 0 0.01', player.mins, player.maxs, player.origin - '0 0 0.01', MOVE_NORMAL, player);
 		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
 		{
-			player_multijump = true;
+			M_ARGV(2, bool) = true;
 
 			// we MUST clip velocity here!
-			float f = self.velocity * trace_plane_normal;
+			float f = player.velocity * trace_plane_normal;
 			if (f < 0)
-				self.velocity -= f * trace_plane_normal;
+				player.velocity -= f * trace_plane_normal;
 		}
 	}
-	return false;
 }
-
 #endif

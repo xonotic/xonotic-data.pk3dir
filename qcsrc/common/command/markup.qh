@@ -1,5 +1,4 @@
-#ifndef COMMAND_MARKUP_H
-#define COMMAND_MARKUP_H
+#pragma once
 
 // ==========================================================
 //  Declarations for markup command code, reworked by Samual
@@ -12,4 +11,3 @@ string markup_from[NUM_MARKUPS];
 string markup_to[NUM_MARKUPS];
 
 string GenericCommand_markup(string s2);
-#endif

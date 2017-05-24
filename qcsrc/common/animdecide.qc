@@ -1,6 +1,6 @@
 #include "animdecide.qh"
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 
 #if defined(SVQC)
     #include "util.qh"
@@ -10,7 +10,7 @@
 bool monsters_animoverride(entity this)
 {
 	Monster monster_id = NULL;
-	FOREACH(Monsters, it != MON_Null && it.model == this.model, {
+	FOREACH(Monsters, it != MON_Null && it.m_model.model_str() == this.model, {
         monster_id = it;
         break;
 	});

@@ -1,22 +1,23 @@
+#include "delay.qh"
 #ifdef SVQC
 void delay_use(entity this, entity actor, entity trigger)
 {
-   this.think = SUB_UseTargets_self;
-   this.nextthink = this.wait;
+   setthink(this, SUB_UseTargets_self);
+   this.nextthink = time + this.wait;
 }
 
 void delay_reset(entity this)
 {
-	this.think = func_null;
+	setthink(this, func_null);
 	this.nextthink = 0;
 }
 
 spawnfunc(trigger_delay)
 {
-    if(!self.wait)
-        self.wait = 1;
+    if(!this.wait)
+        this.wait = 1;
 
-    self.use = delay_use;
-    self.reset = delay_reset;
+    this.use = delay_use;
+    this.reset = delay_reset;
 }
 #endif

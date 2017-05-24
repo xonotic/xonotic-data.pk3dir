@@ -1,7 +1,8 @@
-#ifndef COMMON_PHYSICS_H
-#define COMMON_PHYSICS_H
+#pragma once
 
 // Client/server mappings
+
+.float pm_frametime;
 
 .entity conveyor;
 
@@ -23,7 +24,7 @@
 .vector v_angle_old;
 .string lastclassname;
 
-.float(entity) PlayerPhysplug;
+.float(entity,float) PlayerPhysplug;
 float AdjustAirAccelQW(float accelqw, float factor);
 
 bool IsFlying(entity a);
@@ -35,6 +36,7 @@ bool IsFlying(entity a);
 #define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN, s)
 #define GAMEPLAYFIX_STEPMULTIPLETIMES(s)    STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, s)
 #define GAMEPLAYFIX_UNSTICKPLAYERS(s)       STAT(GAMEPLAYFIX_UNSTICKPLAYERS, s)
+#define GAMEPLAYFIX_WATERTRANSITION(s) STAT(GAMEPLAYFIX_WATERTRANSITION, s)
 
 #define PHYS_ACCELERATE(s)                  STAT(MOVEVARS_ACCELERATE, s)
 #define PHYS_AIRACCELERATE(s)               STAT(MOVEVARS_AIRACCELERATE, s)
@@ -44,6 +46,7 @@ bool IsFlying(entity a);
 #define PHYS_AIRCONTROL(s)                  STAT(MOVEVARS_AIRCONTROL, s)
 #define PHYS_AIRCONTROL_PENALTY(s)          STAT(MOVEVARS_AIRCONTROL_PENALTY, s)
 #define PHYS_AIRCONTROL_POWER(s)            STAT(MOVEVARS_AIRCONTROL_POWER, s)
+#define PHYS_AIRCONTROL_BACKWARDS(s)        STAT(MOVEVARS_AIRCONTROL_BACKWARDS, s)
 #define PHYS_AIRSPEEDLIMIT_NONQW(s)         STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, s)
 #define PHYS_AIRSTOPACCELERATE(s)           STAT(MOVEVARS_AIRSTOPACCELERATE, s)
 #define PHYS_AIRSTRAFEACCELERATE(s)         STAT(MOVEVARS_AIRSTRAFEACCELERATE, s)
@@ -67,6 +70,7 @@ bool IsFlying(entity a);
 #define PHYS_JETPACK_FUEL(s)                STAT(JETPACK_FUEL, s)
 #define PHYS_JETPACK_MAXSPEED_SIDE(s)       STAT(JETPACK_MAXSPEED_SIDE, s)
 #define PHYS_JETPACK_MAXSPEED_UP(s)         STAT(JETPACK_MAXSPEED_UP, s)
+#define PHYS_JETPACK_REVERSE_THRUST(s)		STAT(JETPACK_REVERSE_THRUST, s)
 
 #define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, s)
 #define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP, s)
@@ -93,6 +97,8 @@ bool IsFlying(entity a);
 
 #define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, s)
 
+#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY, s)
+
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)
 #define PHYS_INPUT_BUTTON_ATCK2(s)          PHYS_INPUT_BUTTON_BUTTON3(s)
@@ -115,12 +121,19 @@ STATIC_INIT(PHYS_INPUT_BUTTON_HOOK)
 #define PHYS_INPUT_BUTTON_PRYDON(s)         PHYS_INPUT_BUTTON_BUTTON_PRYDON(s)
 #define PHYS_INPUT_BUTTON_ZOOMSCRIPT(s)     PHYS_INPUT_BUTTON_BUTTON9(s)
 #define PHYS_INPUT_BUTTON_JETPACK(s)        PHYS_INPUT_BUTTON_BUTTON10(s)
+#define PHYS_INPUT_BUTTON_DODGE(s)			PHYS_INPUT_BUTTON_BUTTON11(s)
 
 #ifdef CSQC
 STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 {
 	localcmd("alias +jetpack +button10\n");
     localcmd("alias -jetpack -button10\n");
+}
+
+STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
+{
+    localcmd("alias +dodge +button11\n");
+    localcmd("alias -dodge -button11\n");
 }
 #endif
 
@@ -152,17 +165,22 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 #define UNSET_JUMP_HELD(s)                  ((s).flags |= FL_JUMPRELEASED)
 
 #define WAS_ONGROUND(s)                     boolean((s).lastflags & FL_ONGROUND)
+#define WAS_ONSLICK(s)                      boolean((s).lastflags & FL_ONSLICK)
 
 #define ITEMS_STAT(s)                       ((s).items)
 
 .float teleport_time;
+#define PHYS_TELEPORT_TIME(s)               ((s).teleport_time)
+
+.float waterjump_time;
+#define PHYS_WATERJUMP_TIME(s)               ((s).waterjump_time)
 
 #ifdef CSQC
 
+	#define PHYS_FIXANGLE(s) ('0 0 0')
+
 	string autocvar_cl_jumpspeedcap_min;
 	string autocvar_cl_jumpspeedcap_max;
-
-	noref float pmove_waterjumptime;
 
 	const int FL_WATERJUMP = 2048;  // player jumping out of water
 	const int FL_JUMPRELEASED = 4096;  // for jump debouncing
@@ -177,17 +195,15 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 	.entity hook;
 
 // TODO
-	#define IS_CLIENT(s)                        ((s).isplayermodel)
+	#define IS_CLIENT(s)                        ((s).isplayermodel || (s) == csqcplayer)
 	#define IS_PLAYER(s)                        ((s).isplayermodel)
-	#define IS_NOT_A_CLIENT(s)                  (!(s).isplayermodel)
+	#define IS_NOT_A_CLIENT(s)                  (!(s).isplayermodel && (s) != csqcplayer)
 	#define isPushable(s)                       ((s).isplayermodel || (s).pushable || ((s).flags & FL_PROJECTILE))
 
 	//float player_multijump;
 	//float player_jumpheight;
 
 	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
-
-	#define PHYS_TELEPORT_TIME(s)               ((s).teleport_time)
 
 	#define TICRATE                             ticrate
 
@@ -237,7 +253,11 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 
 #elif defined(SVQC)
 
+	#define PHYS_FIXANGLE(s) ((s).fixangle)
+
 	bool Physics_Valid(string thecvar);
+
+	void Physics_UpdateStats(entity this, float maxspd_mod);
 
 	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
 	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
@@ -245,8 +265,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 	/** Not real stats */
 	.string jumpspeedcap_min;
 	.string jumpspeedcap_max;
-
-	#define PHYS_TELEPORT_TIME(s)               ((s).teleport_time)
 
 	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
 
@@ -318,6 +336,4 @@ NET_HANDLE(setpause, bool)
 	PHYS_INPUT_BUTTON_CHAT(sender) = ispaused;
 	return true;
 }
-#endif
-
 #endif

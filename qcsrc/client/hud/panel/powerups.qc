@@ -1,6 +1,6 @@
 #include "powerups.qh"
 
-#include <common/items/all.qc>
+#include <common/items/_mod.qh>
 
 // Powerups (#2)
 
@@ -63,15 +63,16 @@ void HUD_Powerups()
 {
 	int allItems = STAT(ITEMS);
 	int allBuffs = STAT(BUFFS);
-	int strengthTime, shieldTime, superTime;
+	float strengthTime, shieldTime, superTime;
 
 	// Initialize items
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_powerups) return;
-		if(spectatee_status == -1) return;
-		if(STAT(HEALTH) <= 0) return;
-		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
+		if((!autocvar_hud_panel_powerups) || (spectatee_status == -1))
+			return;
+		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_powerups_hide_ondeath)
+			return;
+		//if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);
 		shieldTime = bound(0, STAT(INVINCIBLE_FINISHED) - time, 99);
@@ -108,8 +109,13 @@ void HUD_Powerups()
 		return;
 
 	// Draw panel background
-	HUD_Panel_UpdateCvars();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_LoadCvars();
+
+	if (autocvar_hud_panel_powerups_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
+	HUD_Panel_DrawBg();
 
 	// Set drawing area
 	vector pos = panel_pos;

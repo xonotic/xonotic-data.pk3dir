@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 REGISTRY(COMMON_COMMANDS, BITS(7))
 #define COMMON_COMMANDS_from(i) _COMMON_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(COMMON_COMMANDS)
@@ -19,10 +19,9 @@ STATIC_INIT(COMMON_COMMANDS_aliases) {
 }
 
 #include "vote.qh"
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 
-#include <common/command/generic.qh>
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 
 // ============================================================
 //  Shared declarations for server commands, written by Samual
@@ -55,7 +54,7 @@ float timeout_status;    // (values: 0, 1, 2) contains whether a timeout is not 
 .vector lastV_angle;     // used when pausing the game in order to force the player to keep his old view angle fixed
 
 // allow functions to be used in other code like g_world.qc and teamplay.qc
-void timeout_handler_think();
+void timeout_handler_think(entity this);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void CommonCommand_macro_write_aliases(float fh);
@@ -98,9 +97,9 @@ void print_to(entity to, string input);
 // ==========================================
 
 // used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
-void timeout_handler_reset();
+void timeout_handler_reset(entity this);
 
-void timeout_handler_think();
+void timeout_handler_think(entity this);
 
 // ===================================================
 //  Common commands used in both sv_cmd.qc and cmd.qc
@@ -158,7 +157,7 @@ COMMON_COMMAND(who, "Display detailed client information about all players") { C
 
 void CommonCommand_macro_help(entity caller)
 {
-	FOREACH(COMMON_COMMANDS, true, LAMBDA(print_to(caller, sprintf("  ^2%s^7: %s\n", it.m_name, it.m_description))));
+	FOREACH(COMMON_COMMANDS, true, LAMBDA(print_to(caller, sprintf("  ^2%s^7: %s", it.m_name, it.m_description))));
 }
 
 float CommonCommand_macro_command(float argc, entity caller, string command)

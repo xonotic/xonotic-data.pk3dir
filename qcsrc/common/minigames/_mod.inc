@@ -1,5 +1,7 @@
 // generated file; do not modify
-#include <common/minigames/cl_minigames_hud.qc>
+#ifdef CSQC
+    #include <common/minigames/cl_minigames_hud.qc>
+#endif
 #include <common/minigames/minigames.qc>
 #ifdef CSQC
     #include <common/minigames/cl_minigames.qc>
@@ -7,3 +9,5 @@
 #ifdef SVQC
     #include <common/minigames/sv_minigames.qc>
 #endif
+
+#include <common/minigames/minigame/_mod.inc>

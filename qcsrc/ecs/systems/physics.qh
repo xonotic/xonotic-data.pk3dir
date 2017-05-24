@@ -1,0 +1,11 @@
+#pragma once
+
+SYSTEM(phys, 30, 10);
+
+void sys_phys_fix(entity this, float dt);
+bool sys_phys_override(entity this, float dt);
+void sys_phys_monitor(entity this, float dt);
+void sys_phys_pregame_hold(entity this);
+void sys_phys_ai(entity this);
+void sys_phys_spectator_control(entity this);
+void sys_phys_fixspeed(entity this, float maxspeed_mod);

@@ -8,6 +8,24 @@
 .int m_id;
 USING(vectori, vector);
 
+const int STATS_ENGINE_RESERVE = 32;
+// must be listed in ascending order
+#define MAGIC_STATS(_, x) \
+	_(x, MOVEVARS_TIMESCALE, 241) \
+	/**/
+
+int g_magic_stats_hole = 0;
+
+#define MAGIC_STATS_FIX_MANUAL(it, var, id) \
+	if (it.registered_id == "STAT_" #var) { --g_magic_stats_hole; it.m_id = id; } else
+
+#define MAGIC_STATS_FIX_AUTO(it, var, id) \
+	if (it.m_id == id) { ++g_magic_stats_hole; ++it.m_id; }
+
+#define MAGIC_STATS_FIX(it) \
+	it.m_id += g_magic_stats_hole; \
+	MAGIC_STATS(MAGIC_STATS_FIX_MANUAL, it) { MAGIC_STATS(MAGIC_STATS_FIX_AUTO, it) }
+
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
 #if defined(CSQC)
@@ -27,7 +45,7 @@ USING(vectori, vector);
 	#define _STAT(id) g_stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		T _STAT(id); \
-		T CAT(_STAT(id), _prev); \
+		/* T CAT(_STAT(id), _prev); */ \
 		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
 			if (#T == "vector" || #T == "vectori") { \
@@ -38,8 +56,8 @@ USING(vectori, vector);
 		[[accumulate]] void stats_get() \
 		{ \
 			T it = getstat_##T(STAT_##id.m_id); \
-			if (it != CAT(_STAT(id), _prev)) \
-				CAT(_STAT(id), _prev) = _STAT(id) = it; \
+			/* if (it != CAT(_STAT(id), _prev)) \
+				CAT(_STAT(id), _prev) = */ _STAT(id) = it; \
 		}
 	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
 #elif defined(SVQC)
@@ -68,8 +86,11 @@ USING(vectori, vector);
 	/** Prevent engine stats being sent */
 	STATIC_INIT(stats_clear)
 	{
-		int r = 32;
+		int r = STATS_ENGINE_RESERVE;
 		for (int i = 0, n = 256 - r; i < n; ++i) {
+			#define X(_, name, id) if (i == id) continue;
+			MAGIC_STATS(X, );
+			#undef X
 			addstat(r + i, AS_INT, __stat_null);
 		}
 	}
@@ -93,13 +114,11 @@ USING(vectori, vector);
     #define REGISTER_STAT_3(id, T, expr) \
     	REGISTER_STAT_2(id, T); \
     	[[accumulate]] void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
-    	STATIC_INIT(worldstat_##id) { entity this = world; STAT(id, this) = (expr); }
+    	STATIC_INIT(worldstat_##id) { entity this = NULL; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)
     #define REGISTER_STAT_3(id, T, expr)
 #endif
-
-const int STATS_ENGINE_RESERVE = 32;
 
 REGISTRY(Stats, 256 - STATS_ENGINE_RESERVE)
 REGISTER_REGISTRY(Stats)
@@ -107,7 +126,10 @@ REGISTRY_SORT(Stats)
 REGISTRY_CHECK(Stats)
 STATIC_INIT(RegisterStats_renumber)
 {
-	FOREACH(Stats, true, it.m_id = STATS_ENGINE_RESERVE + i);
+	FOREACH(Stats, true, {
+		it.m_id = STATS_ENGINE_RESERVE + i;
+		MAGIC_STATS_FIX(it);
+	});
 }
 #ifdef SVQC
 STATIC_INIT(stats_add) { stats_add(); }

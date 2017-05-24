@@ -1,3 +1,4 @@
+#include "c4.qh"
 REGISTER_MINIGAME(c4, "Connect Four");
 
 const float C4_TURN_PLACE = 0x0100; // player has to place a piece on the board
@@ -24,11 +25,11 @@ const int C4_TEAMS = 2;
 // find connect 4 piece given its tile name
 entity c4_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
-	return world;
+	return NULL;
 }
 
 // Checks if the given piece completes a row
@@ -196,12 +197,12 @@ int c4_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}
@@ -298,22 +299,22 @@ void c4_hud_board(vector pos, vector mySize)
 	if ( active_minigame.minigame_flags & C4_TURN_WIN )
 	{
 		vector winfs = hud_fontsize*2;
-		string playername = "";
+		string pname = "";
 		FOREACH_MINIGAME_ENTITY(e)
 			if ( e.classname == "minigame_player" &&
 					e.team == (active_minigame.minigame_flags & C4_TURN_TEAM) )
-				playername = entcs_GetName(e.minigame_playerslot-1);
+				pname = entcs_GetName(e.minigame_playerslot-1);
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername),
+			sprintf("%s^7 won the game!",pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername),
+			sprintf("%s^7 won the game!",pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -322,7 +323,7 @@ void c4_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void c4_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);

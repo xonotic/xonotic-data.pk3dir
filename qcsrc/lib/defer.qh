@@ -1,33 +1,23 @@
 #pragma once
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
 	#include "oo.qh"
 	#include "self.qh"
 
 	entityclass(Defer);
 	class(Defer).entity owner;
-	class(Defer).void() think;
-	class(Defer).float nextthink;
 	class(Defer).void(entity) defer_func;
 
-	/** Remove self */
+	/** Remove entity */
 	void SUB_Remove(entity this)
 	{
-		remove(this);
+		delete(this);
 	}
 
-	/** Remove self */
-	void SUB_Remove_self()
+	void defer_think(entity this)
 	{
-		SELFPARAM();
-		remove(this);
-	}
-
-	void defer_think()
-	{
-		SELFPARAM();
-		this.think     = SUB_Remove_self;
+		setthink(this, SUB_Remove);
 		this.nextthink = time;
 		this.defer_func(this.owner);
 	}
@@ -41,7 +31,7 @@
 		entity e    = new_pure(deferred);
 		e.owner     = this;
 		e.defer_func = func;
-		e.think     = defer_think;
+		setthink(e, defer_think);
 		e.nextthink = time + fdelay;
 	}
 

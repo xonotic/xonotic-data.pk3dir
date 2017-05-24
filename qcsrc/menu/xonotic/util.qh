@@ -29,11 +29,12 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data);
 
 // game type list box stuff (does not NEED to contain all game types, other
 // types stay available via console)
-int GameType_GetID(int cnt);
+entity GameType_GetID(int cnt);
 string GameType_GetName(int cnt);
 string GameType_GetIcon(int cnt);
 //string GameType_GetTeams(float cnt);
 int GameType_GetCount();
+int GameType_GetTotalCount();
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname);
 #define DIALOG_HUDPANEL_COMMON_NOTOGGLE() \

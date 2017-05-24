@@ -1,7 +1,7 @@
 #include "mapvoting.qh"
 
-#include "hud/all.qh"
-#include "scoreboard.qh"
+#include "hud/_mod.qh"
+#include "hud/panel/scoreboard.qh"
 
 #include <common/mapinfo.qh>
 
@@ -24,7 +24,6 @@ float mv_timeout;
 float mv_top2_time;
 float mv_top2_alpha;
 
-vector mv_mousepos;
 int mv_selection;
 int mv_columns;
 int mv_mouse_selection;
@@ -84,14 +83,15 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		alpha = mv_top2_alpha; // Fade away if not one of the top 2 choice
 	else
 		alpha = 1; // Normal, full alpha
+	alpha *= panel_fg_alpha;
 
 	// Bounding box details
 	float rect_margin = hud_fontsize.y / 2;
 
-	pos.x += rect_margin + autocvar_scoreboard_border_thickness;
-	pos.y += rect_margin + autocvar_scoreboard_border_thickness;
-	maxh -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
-	tsize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
+	pos.x += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	pos.y += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	maxh -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
+	tsize -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
 
 	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
 	vector rect_size = '1 1 0';
@@ -101,15 +101,15 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	// Highlight selected item
 	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
 	{
-		drawfill(rect_pos, rect_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
+		drawfill(rect_pos, rect_size, '1 1 1', 0.1 * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	// Highlight current vote
 	vector rgb = MapVote_RGB(id);
 	if(id == mv_ownvote)
 	{
-		drawfill(rect_pos, rect_size, rgb, 0.1*alpha, DRAWFLAG_NORMAL);
-		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
+		drawfill(rect_pos, rect_size, rgb, 0.1 * alpha, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
 	}
 
 	vector offset = pos;
@@ -134,7 +134,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 
 	string thelabel = mv_desc[id], ts;
 	entity last = title;
-	entity next = world;
+	entity next = NULL;
 	float nlines = 0;
 	if( thelabel != "")
 	{
@@ -177,11 +177,11 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		drawstring(last.origin+offset, last.message, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
 		next = last;
 		last = last.chain;
-		remove(next);
+		delete(next);
 	}
 
 	// Cleanup
-	remove(title);
+	delete(title);
 }
 
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float _count, int id)
@@ -193,10 +193,10 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	float rect_margin = hud_fontsize.y / 2;
 
-	pos.x += rect_margin + autocvar_scoreboard_border_thickness;
-	pos.y += rect_margin + autocvar_scoreboard_border_thickness;
-	isize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
-	tsize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
+	pos.x += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	pos.y += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
+	isize -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
+	tsize -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
 
 	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
 	vector rect_size = '1 1 0';
@@ -230,17 +230,18 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		theAlpha = mv_top2_alpha;
 	else
 		theAlpha = 1;
+	theAlpha *= panel_fg_alpha;
 
 	// Highlight selected item
 	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
-		drawfill(rect_pos, rect_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
+		drawfill(rect_pos, rect_size, '1 1 1', 0.1 * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	// Highlight current vote
 	vector rgb = MapVote_RGB(id);
 	if(id == mv_ownvote)
 	{
-		drawfill(rect_pos, rect_size, rgb, 0.1*theAlpha, DRAWFLAG_NORMAL);
-		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, theAlpha, DRAWFLAG_NORMAL);
+		drawfill(rect_pos, rect_size, rgb, 0.1 * theAlpha, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_hud_panel_mapvote_highlight_border, rect_pos, rect_size, rgb, theAlpha, DRAWFLAG_NORMAL);
 	}
 
 	drawstring(text_pos, label, hud_fontsize, rgb, theAlpha, DRAWFLAG_NORMAL);
@@ -272,7 +273,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float _count, int
 	text_size = stringwidth(label, false, hud_fontsize);
 
 	pos.x -= text_size*0.5;
-	drawstring(pos, label, hud_fontsize, rgb, 1, DRAWFLAG_NORMAL);
+	drawstring(pos, label, hud_fontsize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 vector MapVote_GridVec(vector gridspec, int i, int m)
@@ -295,10 +296,10 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	for (r = 0; r < rows; ++r)
 		for (c = 0; c < columns; ++c)
 		{
-			if (mv_mousepos.x >= topleft.x + cellsize.x *  c &&
-				mv_mousepos.x <= topleft.x + cellsize.x * (c + 1) &&
-				mv_mousepos.y >= topleft.y + cellsize.y *  r &&
-				mv_mousepos.y <= topleft.y + cellsize.y * (r + 1))
+			if (mousepos.x >= topleft.x + cellsize.x *  c &&
+				mousepos.x <= topleft.x + cellsize.x * (c + 1) &&
+				mousepos.y >= topleft.y + cellsize.y *  r &&
+				mousepos.y <= topleft.y + cellsize.y * (r + 1))
 			{
 				mv_mouse_selection = r * columns + c;
 				break;
@@ -332,16 +333,14 @@ void MapVote_Draw()
 	if(!mv_active)
 		return;
 
+	HUD_Panel_LoadCvars();
+
 	if (!autocvar_hud_cursormode)
 	{
-		vector mpos = mv_mousepos + getmousepos();
-		mpos.x = bound(0, mpos.x, vid_conwidth);
-		mpos.y = bound(0, mpos.y, vid_conheight);
-
-		if ( mpos.x != mv_mousepos.x || mpos.y != mv_mousepos.y )
+		vector mpos = mousepos;
+		update_mousepos();
+		if (mpos.x != mousepos.x || mpos.y != mousepos.y)
 			mv_selection_keyboard = 0;
-		mv_mousepos = mpos;
-
 	}
 
 	center = (vid_conwidth - 1)/2;
@@ -360,34 +359,31 @@ void MapVote_Draw()
 	pos.y = ymin;
 	pos.z = 0;
 
+	HUD_Scale_Disable();
 	draw_beginBoldFont();
 
 	map = ((gametypevote) ? _("Decide the gametype") : _("Vote for a map"));
 	pos.x = center - stringwidth(map, false, hud_fontsize * 2) * 0.5;
-	drawstring(pos, map, hud_fontsize * 2, '1 1 1', 1, DRAWFLAG_NORMAL);
+	drawstring(pos, map, hud_fontsize * 2, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += hud_fontsize.y * 2;
 
 	if( mapvote_chosenmap != "" )
 	{
 		pos.y += hud_fontsize.y * 0.25;
 		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize * 1.5) * 0.5;
-		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += hud_fontsize.y * 1.5;
-		pos.y += hud_fontsize.y * 0.5;
 	}
-	else
-		pos.y += hud_fontsize.y * 0.5;
+	pos.y += hud_fontsize.y * 0.5;
 
 	draw_endBoldFont();
 
 	i = ceil(max(0, mv_timeout - time));
 	map = sprintf(_("%d seconds left"), i);
 	pos.x = center - stringwidth(map, false, hud_fontsize * 1.5) * 0.5;
-	drawstring(pos, map, hud_fontsize * 1.5, '0 1 0', 1, DRAWFLAG_NORMAL);
+	drawstring(pos, map, hud_fontsize * 1.5, '0 1 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 	pos.y += hud_fontsize.y * 1.5;
 	pos.y += hud_fontsize.y * 0.5;
-
-	HUD_Panel_UpdateCvars();
 
 	// base for multi-column stuff...
 	pos.y += hud_fontsize.y;
@@ -442,7 +438,7 @@ void MapVote_Draw()
 	panel_pos.y = pos.y;
 	panel_size.x = xmax - xmin;
 	panel_size.y = ymax - ymin;
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{
@@ -488,7 +484,7 @@ void MapVote_Draw()
 		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}
 
-	draw_cursor_normal(mv_mousepos, '1 1 1', 1 - autocvar__menu_alpha);
+	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
 }
 
 void Cmd_MapVote_MapDownload(int argc)
@@ -612,12 +608,7 @@ void GameTypeVote_ReadOption(int i)
 	mv_maps[i] = gt;
 	mv_flags[i] = ReadByte();
 
-	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, gt);
-	if(precache_pic(mv_picpath) == "")
-		mv_picpath = strcat("gfx/menu/default/gametype_", gt);
-	string pic = strzone(mv_picpath);
-	mv_pics[i] = pic;
-	mv_preview[i] = PreviewExists(pic);
+	string basetype = "";
 
 	if ( mv_flags[i] & GTV_CUSTOM )
 	{
@@ -626,20 +617,38 @@ void GameTypeVote_ReadOption(int i)
 			name = gt;
 		mv_pk3[i] = strzone(name);
 		mv_desc[i] = strzone(ReadString());
+		basetype = strzone(ReadString());
 	}
 	else
 	{
-		int type = MapInfo_Type_FromString(gt);
+		Gametype type = MapInfo_Type_FromString(gt);
 		mv_pk3[i] = strzone(MapInfo_Type_ToText(type));
 		mv_desc[i] = MapInfo_Type_Description(type);
 	}
+
+	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, gt);
+	if(precache_pic(mv_picpath) == "")
+	{
+		mv_picpath = strcat("gfx/menu/default/gametype_", gt);
+		if(precache_pic(mv_picpath) == "")
+		{
+			mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, basetype);
+			if(precache_pic(mv_picpath) == "")
+			{
+				mv_picpath = strcat("gfx/menu/default/gametype_", basetype);
+			}
+		}
+	}
+	string pic = strzone(mv_picpath);
+	mv_pics[i] = pic;
+	mv_preview[i] = PreviewExists(pic);
 }
 
 void MapVote_Init()
 {
 	mv_active = 1;
-	if(autocvar_hud_cursormode) { setcursormode(1); }
-	else { mv_mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight; }
+	if(autocvar_hud_cursormode) setcursormode(1);
+	else mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 	mv_selection = -1;
 	mv_selection_keyboard = 0;
 
@@ -680,8 +689,8 @@ void MapVote_Init()
 	for(i = 0; i < mv_num_maps; ++i )
 		mv_flags_start[i] = mv_flags[i];
 
-	// Assume mv_pk3list is world, there should only be 1 mapvote per round
-	mv_pk3list = world; // I'm still paranoid!
+	// Assume mv_pk3list is NULL, there should only be 1 mapvote per round
+	mv_pk3list = NULL; // I'm still paranoid!
 
 	for(i = 0; i < mv_num_maps; ++i)
 	{
@@ -775,8 +784,8 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if(bInputType == 3)
 	{
-		mv_mousepos.x = nPrimary;
-		mv_mousepos.y = nSecondary;
+		mousepos.x = nPrimary;
+		mousepos.y = nSecondary;
 		mv_selection_keyboard = 0;
 		return true;
 	}

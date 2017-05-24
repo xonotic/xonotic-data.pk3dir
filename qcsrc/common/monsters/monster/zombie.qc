@@ -1,30 +1,4 @@
-#ifndef ZOMBIE_H
-#define ZOMBIE_H
-
-#ifndef MENUQC
-MODEL(MON_ZOMBIE, M_Model("zombie.dpm"));
-#endif
-
-CLASS(Zombie, Monster)
-    ATTRIB(Zombie, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RIDE);
-    ATTRIB(Zombie, mins, vector, '-18 -18 -25');
-    ATTRIB(Zombie, maxs, vector, '18 18 47');
-#ifndef MENUQC
-    ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
-#endif
-    ATTRIB(Zombie, netname, string, "zombie");
-    ATTRIB(Zombie, monster_name, string, _("Zombie"));
-ENDCLASS(Zombie)
-
-REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "zombie.qh"
 
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
@@ -75,26 +49,26 @@ const float zombie_anim_spawn				= 30;
 
 .vector moveto;
 
-void M_Zombie_Attack_Leap_Touch()
-{SELFPARAM();
-	if (self.health <= 0)
+void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
+{
+	if (this.health <= 0)
 		return;
 
 	vector angles_face;
 
-	if(other.takedamage)
+	if(toucher.takedamage)
 	{
-		angles_face = vectoangles(self.moveto - self.origin);
+		angles_face = vectoangles(this.moveto - this.origin);
 		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
-		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_ZOMBIE_JUMP.m_id, other.origin, angles_face);
-		self.touch = Monster_Touch; // instantly turn it off to stop damage spam
-		self.state = 0;
+		Damage(toucher, this, this, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_ZOMBIE_JUMP.m_id, toucher.origin, angles_face);
+		settouch(this, Monster_Touch); // instantly turn it off to stop damage spam
+		this.state = 0;
 	}
 
 	if (trace_dphitcontents)
 	{
-		self.state = 0;
-		self.touch = Monster_Touch;
+		this.state = 0;
+		settouch(this, Monster_Touch);
 	}
 }
 
@@ -120,7 +94,7 @@ bool M_Zombie_Defend_Block(entity this)
 	return true;
 }
 
-bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
+bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{
@@ -151,7 +125,7 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_zombie) { Monster_Spawn(this, MON_ZOMBIE.monsterid); }
+spawnfunc(monster_zombie) { Monster_Spawn(this, true, MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
@@ -163,12 +137,12 @@ METHOD(Zombie, mr_think, bool(Zombie this, entity actor))
     return true;
 }
 
-METHOD(Zombie, mr_pain, bool(Zombie this, entity actor))
+METHOD(Zombie, mr_pain, float(Zombie this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Zombie, this);
     actor.pain_finished = time + 0.34;
     setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
-    return true;
+    return damage_take;
 }
 
 METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
@@ -180,7 +154,7 @@ METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
     return true;
 }
 #endif
-#ifndef MENUQC
+#ifdef GAMEQC
 METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
 {
     TC(Zombie, this);
@@ -214,9 +188,11 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
     if(actor.spawnflags & MONSTERFLAG_NORESPAWN)
         actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
 
+    actor.spawnflags &= ~MONSTERFLAG_APPEAR; // once it's appeared, it will respawn quickly, we don't want it to appear
+
     actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
-    actor.monster_loot = spawnfunc_item_health_medium;
+    actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Zombie_Attack;
     actor.spawnshieldtime = actor.spawn_time;
     actor.respawntime = 0.2;
@@ -233,6 +209,4 @@ METHOD(Zombie, mr_precache, bool(Zombie this))
     TC(Zombie, this);
     return true;
 }
-#endif
-
 #endif

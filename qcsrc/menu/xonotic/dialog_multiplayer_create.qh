@@ -5,15 +5,15 @@ CLASS(XonoticServerCreateTab, XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity));
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity));
 	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity));
-	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticServerCreateTab, rows, float, 23)
-	ATTRIB(XonoticServerCreateTab, columns, float, 6.2)  // added extra .2 for center space
+	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticServerCreateTab, rows, float, 23);
+	ATTRIB(XonoticServerCreateTab, columns, float, 6.2);  // added extra .2 for center space
 
-	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, sliderTeams, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, sliderTimelimit, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, labelFraglimit, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, labelTeams, entity, NULL)
+	ATTRIB(XonoticServerCreateTab, mapListBox, entity);
+	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity);
+	ATTRIB(XonoticServerCreateTab, sliderTeams, entity);
+	ATTRIB(XonoticServerCreateTab, sliderTimelimit, entity);
+	ATTRIB(XonoticServerCreateTab, labelFraglimit, entity);
+	ATTRIB(XonoticServerCreateTab, labelTeams, entity);
 ENDCLASS(XonoticServerCreateTab)
 entity makeXonoticServerCreateTab();

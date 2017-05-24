@@ -1,6 +1,6 @@
 #include "matrix.qh"
 
-#include "cl_player.qh"
+#include "player.qh"
 
 var void MX_Handle(int buf, string ancestor)
 {

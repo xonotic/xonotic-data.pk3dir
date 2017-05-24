@@ -4,65 +4,62 @@
 
 #ifdef SVQC
 
-void spiderbot_rocket_artillery()
-{SELFPARAM();
-    self.nextthink = time;
-    UpdateCSQCProjectile(self);
+void spiderbot_rocket_artillery(entity this)
+{
+    this.nextthink = time;
+    UpdateCSQCProjectile(this);
 }
 
-void spiderbot_rocket_unguided()
-{SELFPARAM();
+void spiderbot_rocket_unguided(entity this)
+{
     vector newdir, olddir;
 
-    self.nextthink  = time;
+    this.nextthink  = time;
 
-    olddir = normalize(self.velocity);
-    newdir = normalize(self.pos1 - self.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
-    self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
+    olddir = normalize(this.velocity);
+    newdir = normalize(this.pos1 - this.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
+    this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
 
-    UpdateCSQCProjectile(self);
+    UpdateCSQCProjectile(this);
 
-    if (IS_DEAD(self.owner) || self.cnt < time || vdist(self.pos1 - self.origin, <, 16))
-        self.use(self, NULL, NULL);
+    if (IS_DEAD(this.owner) || this.cnt < time || vdist(this.pos1 - this.origin, <, 16))
+        this.use(this, NULL, NULL);
 }
 
-void spiderbot_rocket_guided()
-{SELFPARAM();
+void spiderbot_rocket_guided(entity this)
+{
     vector newdir, olddir;
 
-    self.nextthink  = time;
+    this.nextthink  = time;
 
-    if(!self.realowner.vehicle)
-        self.think = spiderbot_rocket_unguided;
+    if(!this.realowner.vehicle)
+        setthink(this, spiderbot_rocket_unguided);
 
-    crosshair_trace(self.realowner);
-    olddir = normalize(self.velocity);
-    newdir = normalize(trace_endpos - self.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
-    self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
+    crosshair_trace(this.realowner);
+    olddir = normalize(this.velocity);
+    newdir = normalize(trace_endpos - this.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
+    this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
 
-    UpdateCSQCProjectile(self);
+    UpdateCSQCProjectile(this);
 
-    if (IS_DEAD(self.owner) || self.cnt < time)
-        self.use(self, NULL, NULL);
+    if (IS_DEAD(this.owner) || this.cnt < time)
+        this.use(this, NULL, NULL);
 }
 
 void spiderbot_guide_release(entity this)
 {
-    entity rkt;
-    rkt = findchainentity(realowner, this.owner);
-    if(!rkt)
-        return;
-
-    crosshair_trace(this.owner);
-    while(rkt)
+    bool donetrace = false;
+    IL_EACH(g_projectiles, it.realowner == this.owner && getthink(it) == spiderbot_rocket_guided,
     {
-        if(rkt.think == spiderbot_rocket_guided)
+        if(!donetrace) // something exists, let's trace!
         {
-            rkt.pos1 = trace_endpos;
-            rkt.think = spiderbot_rocket_unguided;
+            donetrace = true;
+            crosshair_trace(this.owner);
         }
-        rkt = rkt.chain;
-    }
+
+        it.pos1 = trace_endpos;
+        setthink(it, spiderbot_rocket_unguided);
+    });
 }
 
 float spiberbot_calcartillery_flighttime;
@@ -140,9 +137,9 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 }
 
 void spiderbot_rocket_do(entity this)
-{;
+{
     vector v;
-    entity rocket = world;
+    entity rocket = NULL;
 
     if (this.wait != -10)
     {
@@ -196,7 +193,7 @@ void spiderbot_rocket_do(entity this)
             float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
             _dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
             rocket.nextthink  = time + (_dist / autocvar_g_vehicle_spiderbot_rocket_speed);
-            rocket.think	 = vehicles_projectile_explode;
+            setthink(rocket, vehicles_projectile_explode_think);
 
             if(PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.tur_head.frame == 1)
                 this.wait = -10;
@@ -209,7 +206,7 @@ void spiderbot_rocket_do(entity this)
             crosshair_trace(this.owner);
             rocket.pos1	   = trace_endpos;
             rocket.nextthink  = time;
-            rocket.think	  = spiderbot_rocket_guided;
+            setthink(rocket, spiderbot_rocket_guided);
 
 
         break;
@@ -224,17 +221,17 @@ void spiderbot_rocket_do(entity this)
             rocket.pos1	   = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
             rocket.pos1_z	   = trace_endpos_z;
 
-            traceline(v, v + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, this);
+            traceline(v, v + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
             float h1 = 0.75 * vlen(v - trace_endpos);
 
             //v = trace_endpos;
-            traceline(v , rocket.pos1 + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, this);
+            traceline(v , rocket.pos1 + '0 0 1' * max_shot_distance, MOVE_WORLDONLY, this);
             float h2 = 0.75 * vlen(rocket.pos1 - v);
 
             rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));
-            rocket.movetype  = MOVETYPE_TOSS;
+            set_movetype(rocket, MOVETYPE_TOSS);
             rocket.gravity   = 1;
-            //rocket.think	 = spiderbot_rocket_artillery;
+            //setthink(rocket, spiderbot_rocket_artillery);
         break;
     }
     rocket.classname  = "spiderbot_rocket";

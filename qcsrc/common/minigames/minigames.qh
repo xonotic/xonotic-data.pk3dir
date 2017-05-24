@@ -1,5 +1,4 @@
-#ifndef MINIGAMES_H
-#define MINIGAMES_H
+#pragma once
 
 // previous node in a doubly linked list
 .entity list_prev;
@@ -121,5 +120,3 @@ entity msle_spawn(entity minigame_session, string class_name);
 
 int msle_id(string class_name);
 string msle_classname(int id);
-
-#endif

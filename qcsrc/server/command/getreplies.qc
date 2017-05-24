@@ -1,14 +1,15 @@
 #include "getreplies.qh"
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 #include "getreplies.qh"
 
 #include "../race.qh"
 
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/mapinfo.qh>
 #include <common/util.qh>
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 
 // =========================================================
 //  Reply messages for common commands, re-worked by Samual
@@ -27,7 +28,7 @@ string getrecords(int page)  // 50 records per page
 	string s = "";
 
 	MUTATOR_CALLHOOK(GetRecords, page, s);
-	s = ret_string;
+	s = M_ARGV(1, string);
 
 	MapInfo_ClearTemps();
 
@@ -241,22 +242,24 @@ string getmaplist()
 	return sprintf("^7Maps in list: %s\n", maplist);
 }
 
-
+const int LSMAPS_MAX = 250;
 string getlsmaps()
 {
 	string lsmaps = "", col;
-	float i, newmaps = 0;
+	bool newmaps = false;
+	int added = 0;
 
-	for (i = 0; i < MapInfo_count; ++i)
+	for (int i = 0; i < MapInfo_count; ++i)
 	{
 		if ((MapInfo_Get_ByID(i)) && !(MapInfo_Map_flags & MapInfo_ForbiddenFlags()))
 		{
+			++added;
+
+			if(added > LSMAPS_MAX)
+				continue; // we still get the added count, but skip the actual processing
+
 			// todo: Check by play count of maps for other game types?
-			if (
-			    (g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
-			    ||
-			    (g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
-			   )
+			if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
 			{
 				newmaps = true;
 				if (i % 2) col = "^4*"; else col = "^5*";
@@ -270,19 +273,22 @@ string getlsmaps()
 		}
 	}
 
+	if(added > LSMAPS_MAX)
+		lsmaps = sprintf("%s^7(%d not listed)", lsmaps, added - LSMAPS_MAX);
+
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps available (%d)%s: %s\n", tokenize_console(lsmaps), (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
+	return sprintf("^7Maps available (%d)%s: %s\n", added, (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
 }
 
 string getmonsterlist()
 {
-	string monsterlist = "", col;
+	string monsterlist = "";
 
-	for (int i = MON_FIRST; i <= MON_LAST; ++i)
+	FOREACH(Monsters, it != MON_Null && !(it.spawnflags & MON_FLAG_HIDDEN),
 	{
-		if (i % 2) col = "^2"; else col = "^3";
-		monsterlist = sprintf("%s%s%s ", monsterlist, col, (get_monsterinfo(i)).netname);
-	}
+		string col = ((i % 2) ? "^2" : "^3");
+		monsterlist = sprintf("%s%s%s ", monsterlist, col, it.netname);
+	});
 
 	return sprintf("^7Monsters available: %s\n", monsterlist);
 }

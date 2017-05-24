@@ -1,28 +1,34 @@
+#include "multivibrator.qh"
 #ifdef SVQC
-void multivibrator_send()
-{SELFPARAM();
+void multivibrator_send(entity this)
+{
 	float newstate;
 	float cyclestart;
 
-	cyclestart = floor((time + self.phase) / (self.wait + self.respawntime)) * (self.wait + self.respawntime) - self.phase;
+	cyclestart = floor((time + this.phase) / (this.wait + this.respawntime)) * (this.wait + this.respawntime) - this.phase;
 
-	newstate = (time < cyclestart + self.wait);
+	newstate = (time < cyclestart + this.wait);
 
-	if(self.state != newstate)
-		SUB_UseTargets(self, self, NULL);
-	self.state = newstate;
+	if(this.state != newstate)
+		SUB_UseTargets(this, this, NULL);
+	this.state = newstate;
 
-	if(self.state)
-		self.nextthink = cyclestart + self.wait + 0.01;
+	if(this.state)
+		this.nextthink = cyclestart + this.wait + 0.01;
 	else
-		self.nextthink = cyclestart + self.wait + self.respawntime + 0.01;
+		this.nextthink = cyclestart + this.wait + this.respawntime + 0.01;
+}
+
+void multivibrator_send_think(entity this)
+{
+	multivibrator_send(this);
 }
 
 void multivibrator_toggle(entity this, entity actor, entity trigger)
 {
 	if(this.nextthink == 0)
 	{
-		WITHSELF(this, multivibrator_send());
+		multivibrator_send(this);
 	}
 	else
 	{
@@ -35,12 +41,12 @@ void multivibrator_toggle(entity this, entity actor, entity trigger)
 	}
 }
 
-void multivibrator_reset()
-{SELFPARAM();
-	if(!(self.spawnflags & 1))
-		self.nextthink = 0; // wait for a trigger event
+void multivibrator_reset(entity this)
+{
+	if(!(this.spawnflags & 1))
+		this.nextthink = 0; // wait for a trigger event
 	else
-		self.nextthink = max(1, time);
+		this.nextthink = max(1, time);
 }
 
 /*QUAKED trigger_multivibrator (.5 .5 .5) (-8 -8 -8) (8 8 8) START_ON
@@ -56,17 +62,17 @@ START_ON: assume it is already turned on (when targeted)
 */
 spawnfunc(trigger_multivibrator)
 {
-	if(!self.wait)
-		self.wait = 1;
-	if(!self.respawntime)
-		self.respawntime = self.wait;
+	if(!this.wait)
+		this.wait = 1;
+	if(!this.respawntime)
+		this.respawntime = this.wait;
 
-	self.state = 0;
-	self.use = multivibrator_toggle;
-	self.think = multivibrator_send;
-	self.nextthink = max(1, time);
+	this.state = 0;
+	this.use = multivibrator_toggle;
+	setthink(this, multivibrator_send_think);
+	this.nextthink = max(1, time);
 
 	IFTARGETED
-		multivibrator_reset();
+		multivibrator_reset(this);
 }
 #endif

@@ -1,48 +1,49 @@
+#include "hurt.qh"
 #ifdef SVQC
 void trigger_hurt_use(entity this, entity actor, entity trigger)
 {
 	if(IS_PLAYER(actor))
 		this.enemy = actor;
 	else
-		this.enemy = world; // let's just destroy it, if taking over is too much work
+		this.enemy = NULL; // let's just destroy it, if taking over is too much work
 }
 
 .float triggerhurttime;
-void trigger_hurt_touch()
-{SELFPARAM();
-	if (self.active != ACTIVE_ACTIVE)
+void trigger_hurt_touch(entity this, entity toucher)
+{
+	if (this.active != ACTIVE_ACTIVE)
 		return;
 
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (this.team != toucher.team))
 			return;
 
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
-	if (other.iscreature)
+	if (toucher.iscreature)
 	{
-		if (other.takedamage)
-		if (other.triggerhurttime < time)
+		if (toucher.takedamage)
+		if (toucher.triggerhurttime < time)
 		{
-			EXACTTRIGGER_TOUCH;
-			other.triggerhurttime = time + 1;
+			EXACTTRIGGER_TOUCH(this, toucher);
+			toucher.triggerhurttime = time + 1;
 
 			entity own;
-			own = self.enemy;
+			own = this.enemy;
 			if (!IS_PLAYER(own))
 			{
-				own = self;
-				self.enemy = world; // I still hate you all
+				own = this;
+				this.enemy = NULL; // I still hate you all
 			}
 
-			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			Damage (toucher, this, own, this.dmg, DEATH_HURTTRIGGER.m_id, toucher.origin, '0 0 0');
 		}
 	}
-	else if(other.damagedbytriggers)
+	else if(toucher.damagedbytriggers)
 	{
-		if(other.takedamage)
+		if(toucher.takedamage)
 		{
-			EXACTTRIGGER_TOUCH;
-			Damage(other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			EXACTTRIGGER_TOUCH(this, toucher);
+			Damage(toucher, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, toucher.origin, '0 0 0');
 		}
 	}
 
@@ -60,23 +61,23 @@ entity trigger_hurt_first;
 spawnfunc(trigger_hurt)
 {
 	EXACTTRIGGER_INIT;
-	self.active = ACTIVE_ACTIVE;
-	self.touch = trigger_hurt_touch;
-	self.use = trigger_hurt_use;
-	self.enemy = world; // I hate you all
-	if (!self.dmg)
-		self.dmg = 1000;
-	if (self.message == "")
-		self.message = "was in the wrong place";
-	if (self.message2 == "")
-		self.message2 = "was thrown into a world of hurt by";
-	// self.message = "someone like %s always gets wrongplaced";
+	this.active = ACTIVE_ACTIVE;
+	settouch(this, trigger_hurt_touch);
+	this.use = trigger_hurt_use;
+	this.enemy = world; // I hate you all
+	if (!this.dmg)
+		this.dmg = 1000;
+	if (this.message == "")
+		this.message = "was in the wrong place";
+	if (this.message2 == "")
+		this.message2 = "was thrown into a world of hurt by";
+	// this.message = "someone like %s always gets wrongplaced";
 
 	if(!trigger_hurt_first)
-		trigger_hurt_first = self;
+		trigger_hurt_first = this;
 	if(trigger_hurt_last)
-		trigger_hurt_last.trigger_hurt_next = self;
-	trigger_hurt_last = self;
+		trigger_hurt_last.trigger_hurt_next = this;
+	trigger_hurt_last = this;
 }
 
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)

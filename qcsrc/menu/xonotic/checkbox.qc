@@ -2,28 +2,28 @@
 
 entity makeXonoticCheckBox_T(float isInverted, string theCvar, string theText, string theTooltip)
 {
-	float y, n;
+	float m, n;
 	if(isInverted > 1)
 	{
 		n = isInverted - 1;
-		y = -n;
+		m = -n;
 	}
 	else if(isInverted < -1)
 	{
 		n = isInverted + 1;
-		y = -n;
+		m = -n;
 	}
 	else if(isInverted == 1)
 	{
 		n = 1;
-		y = 0;
+		m = 0;
 	}
 	else
 	{
 		n = 0;
-		y = 1;
+		m = 1;
 	}
-	return makeXonoticCheckBoxEx_T(y, n, theCvar, theText, theTooltip);
+	return makeXonoticCheckBoxEx_T(m, n, theCvar, theText, theTooltip);
 }
 entity makeXonoticCheckBox(float isInverted, string theCvar, string theText)
 {

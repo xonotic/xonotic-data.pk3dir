@@ -2,4 +2,5 @@
 
 float fsnap(float val,float fsize);
 entity pathlib_nodeatpoint(vector where);
-float tile_check_plus2(vector where);
+float tile_check_plus2(entity this, vector where);
+bool location_isok(vector point, bool waterok, bool air_isok);

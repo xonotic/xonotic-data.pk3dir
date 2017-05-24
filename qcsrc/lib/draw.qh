@@ -5,7 +5,7 @@
 	#include "i18n.qh"
 	#include "vector.qh"
 
-	#include <client/defs.qh>
+	float vid_conwidth;
 
 	void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 	{
@@ -46,7 +46,7 @@
 	{
 		if (theBorderSize.x < 0 && theBorderSize.y < 0)  // draw whole image as it is
 		{
-			drawpic(theOrigin, pic, theSize, theColor, theAlpha, 0);
+			drawpic_builtin(theOrigin, pic, theSize, theColor, theAlpha, 0);
 			return;
 		}
 		if (theBorderSize.x == 0 && theBorderSize.y == 0)  // no border
@@ -120,13 +120,13 @@
 	void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
 	{
 		position.x -= 2 / 3 * strlen(text) * theScale.x;
-		drawstring(position, text, theScale, rgb, theAlpha, flag);
+		drawstring_builtin(position, text, theScale, rgb, theAlpha, flag);
 	}
 
 	void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
 	{
 		position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
-		drawstring(position, text, theScale, rgb, theAlpha, flag);
+		drawstring_builtin(position, text, theScale, rgb, theAlpha, flag);
 	}
 
 #endif

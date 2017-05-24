@@ -22,9 +22,9 @@ void ActivateTeamplay();
 
 void InitGameplayMode();
 
-string GetClientVersionMessage();
+string GetClientVersionMessage(entity this);
 
-string getwelcomemessage();
+string getwelcomemessage(entity this);
 
 void SetPlayerColors(entity pl, float _color);
 
@@ -45,9 +45,10 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e);
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl);
 
-int JoinBestTeam(entity pl, bool only_return_best, bool forcebestteam);
+int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam);
 
 //void() ctf_playerchanged;
-void SV_ChangeTeam(float _color);
 
 void ShufflePlayerOutOfTeam (float source_team);
+
+void setcolor(entity this, int clr);

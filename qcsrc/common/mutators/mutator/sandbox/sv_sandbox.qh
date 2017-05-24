@@ -1,0 +1,4 @@
+#pragma once
+
+IntrusiveList g_sandbox_objects;
+STATIC_INIT(g_sandbox_objects) { g_sandbox_objects = IL_NEW(); }

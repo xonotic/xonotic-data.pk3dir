@@ -1,5 +1,3 @@
-#ifdef IMPLEMENTATION
-
 float autocvar_g_infection_round_timelimit;
 float autocvar_g_infection_warmup;
 int autocvar_g_infection_teams;
@@ -41,9 +39,8 @@ void infection_GetColorOwner(entity me)
 	});
 }
 
-void infection_Assign(bool late)
+void infection_Assign(entity this, bool late)
 {
-    SELFPARAM();
 	if (!late)
 	{
 		int infection_coloridx = 0;
@@ -56,7 +53,7 @@ void infection_Assign(bool late)
 	else
 	{
 		// Spawn too late, give player a random color
-		int color = 15;
+		int plcolor = 15;
 		int skip = rint(random() * (infection_players_count - 1));  // Ignore self
 		entity e = NULL;
 		FOREACH_CLIENT(IS_PLAYER(it), {
@@ -67,9 +64,9 @@ void infection_Assign(bool late)
 			}
 		});
 		LOG_DEBUGF("[INFECTION] copying %s's color", e.netname);
-		color = e.infectioncolor;
+		plcolor = e.infectioncolor;
 		this.infectioncolor_original = INFECTIONTEAM_NONE;  // Can't win if player didn't spawn during the round delay
-		infection_SetColor(this, color);
+		infection_SetColor(this, plcolor);
 	}
 }
 
@@ -119,7 +116,7 @@ bool infection_CheckWinner()
 
 void infection_RoundStart()
 {
-	infection_Assign(false);
+	infection_Assign(NULL, false);
 	infection_CheckWinner();
 }
 
@@ -134,18 +131,19 @@ MUTATOR_HOOKFUNCTION(inf, PlayerDies)
 	return true;
 }
 
-bool inf_RemovePlayer();
+bool inf_RemovePlayer(entity this);
 MUTATOR_HOOKFUNCTION(inf, MakePlayerObserver)
 {
-	return inf_RemovePlayer();
+	entity player = M_ARGV(0, entity);
+	return inf_RemovePlayer(player);
 }
 MUTATOR_HOOKFUNCTION(inf, ClientDisconnect)
 {
-	return inf_RemovePlayer();
+	entity player = M_ARGV(0, entity);
+	return inf_RemovePlayer(player);
 }
-bool inf_RemovePlayer()
+bool inf_RemovePlayer(entity this)
 {
-    SELFPARAM();
 	if (!IS_PLAYER(this)) return true;  // Wasn't playing
 
 	infection_players_count--;
@@ -172,18 +170,22 @@ bool inf_RemovePlayer()
 
 MUTATOR_HOOKFUNCTION(inf, PlayerSpawn)
 {
-    SELFPARAM();
-	if (this.infectioncolor_original != INFECTIONTEAM_UNDEFINED) return true;  // Wasn't observing
+	entity player = M_ARGV(0, entity);
+
+	if (player.infectioncolor_original != INFECTIONTEAM_UNDEFINED) return true;  // Wasn't observing
 	infection_players_count++;
 
-	infection_Assign(true);
+	infection_Assign(player, true);
 
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	frag_score = 0;
+	entity frag_attacker = M_ARGV(0, entity);
+	entity frag_target = M_ARGV(1, entity);
+
+	M_ARGV(2, float) = 0; // frag score
 	infection_GetColorOwner(frag_attacker);
 	// Check whether this was an act of mutany
 	if (autocvar_g_infection_mutany
@@ -202,7 +204,7 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
         frag_attacker.infectioncolor_original = frag_target.infectioncolor_original;
         frag_target.infectioncolor_original = INFECTIONTEAM_NONE;
 
-        frag_score = -2;
+        M_ARGV(2, float) = -2; // frag score
         return true;
 	}
 
@@ -216,7 +218,7 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
             centerprint(it, sprintf("^1Your alpha ^7%s^1 was infected by ^7%s^1 with ^7%s^1's color.\nYou now belong to ^7%s^1's team!",
                 frag_target.netname, frag_attacker.netname, color_owner_red, color_owner_red));
             infection_SetColor(it, frag_attacker.infectioncolor);
-            frag_score++;
+            M_ARGV(2, float) += 1; // frag score
 		});
 
 		frag_target.infectioncolor_original = INFECTIONTEAM_NONE;
@@ -224,7 +226,7 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
 	else
 	{
 		infection_SetColor(frag_target, frag_attacker.infectioncolor);
-		frag_score++;
+		M_ARGV(2, float) += 1; // frag score
 	}
 
 	string target = frag_target.netname, attacker = frag_attacker.netname;
@@ -240,72 +242,54 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(inf, PlayerPreThink, CBC_ORDER_FIRST)
 {
-    SELFPARAM();
-	if (IS_PLAYER(this))
+	entity player = M_ARGV(0, entity);
+
+	if (IS_PLAYER(player))
 	{
 		// Prevent cheating by changing player colors
-		infection_SetColor(this, round_handler_IsRoundStarted()
-			? this.infectioncolor
+		infection_SetColor(player, round_handler_IsRoundStarted()
+			? player.infectioncolor
 			: 15);
 	}
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(inf, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(inf, Damage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
 	if (IS_PLAYER(frag_attacker)                    // Allow environment damage
 	    && frag_attacker != frag_target             // Allow self damage
 	    && INF_SAMETEAM(frag_attacker, frag_target) // Block friendly fire
 	   )
 	{
 	    if(!infection_IsAlpha(frag_target) || (infection_IsAlpha(frag_target) && !autocvar_g_infection_mutany) ){
-		    frag_damage = 0;
-		    frag_force = '0 0 0';
+		    M_ARGV(4, float) = 0; // damage
+		    M_ARGV(6, vector) = '0 0 0'; // force
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inf, BotShouldAttack)
 {
-    SELFPARAM();
-	return INF_SAMETEAM(checkentity, this);
+	entity bot = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+
+	return INF_SAMETEAM(targ, bot);
 }
 
 MUTATOR_HOOKFUNCTION(inf, ClientConnect)
 {
-    SELFPARAM();
-	this.infectioncolor_original = INFECTIONTEAM_UNDEFINED;
-	stuffcmd(this, "settemp cl_forceplayercolors 0\n");
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	player.infectioncolor_original = INFECTIONTEAM_UNDEFINED;
+	stuffcmd(player, "settemp cl_forceplayercolors 0\n");
 }
 
-REGISTER_MUTATOR(inf, false)
+void infection_Initialize()
 {
-	MUTATOR_ONADD
-	{
-		if (time > 1)  // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		infection_players_count = 0;
-		round_handler_Spawn(infection_CheckTeams, infection_CheckWinner, infection_RoundStart);
-		round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back inf_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		print("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
+	infection_players_count = 0;
+	round_handler_Spawn(infection_CheckTeams, infection_CheckWinner, infection_RoundStart);
+	round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);
 }
-
-#endif

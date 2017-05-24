@@ -1,0 +1,13 @@
+QC
+    filter call_regexp_common C++
+    filter remove_inline //.*$
+    extension qc
+    extension inc
+    3rd_gen_scale 0.5
+    end_of_line_continuation \\$
+QC Header
+    filter call_regexp_common C++
+    filter remove_inline //.*$
+    extension qh
+    3rd_gen_scale 0.5
+    end_of_line_continuation \\$

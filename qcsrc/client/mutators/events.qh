@@ -2,12 +2,6 @@
 
 #include <common/mutators/base.qh>
 
-// globals
-
-string cmd_name;
-int cmd_argc;
-string cmd_string;
-
 /**
  * Called when a client command is parsed
  * NOTE: hooks MUST start with if (MUTATOR_RETURNVALUE) return false;
@@ -16,6 +10,8 @@ string cmd_string;
  * // example:
  * MUTATOR_HOOKFUNCTION(foo, CSQC_ConsoleCommand) {
  *     if (MUTATOR_RETURNVALUE) return false; // command was already handled
+ *     string cmd_name = M_ARGV(0, string);
+ *     int cmd_argc = M_ARGV(1, int);
  *     if (cmd_name == "echocvar" && cmd_argc >= 2) {
  *         print(cvar_string(argv(1)), "\n");
  *         return true;
@@ -28,9 +24,9 @@ string cmd_string;
  * }
  */
 #define EV_CSQC_ConsoleCommand(i, o) \
-	/** command name */ i(string, cmd_name) \
-	/** also, argv() can be used */ i(int, cmd_argc) \
-	/** whole command, use only if you really have to */ i(string, cmd_string) \
+ 	/** command name */ i(string, MUTATOR_ARGV_0_string) \
+ 	/** argc (also, argv() can be used) */ i(int, MUTATOR_ARGV_1_int) \
+ 	/** whole command, use only if you really have to */ i(string, MUTATOR_ARGV_2_string) \
 	/**/
 MUTATOR_HOOKABLE(CSQC_ConsoleCommand, EV_CSQC_ConsoleCommand);
 
@@ -39,13 +35,13 @@ MUTATOR_HOOKABLE(UpdateCrosshair, EV_NO_ARGS);
 
 /** Called when a projectile is linked with CSQC */
 #define EV_Ent_Projectile(i, o) \
-	/** entity id */ i(entity, __self) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
 	/**/
 MUTATOR_HOOKABLE(Ent_Projectile, EV_Ent_Projectile);
 
 /** Called when a projectile's properties are being modified */
 #define EV_EditProjectile(i, o) \
-	/** entity id */ i(entity, __self) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
 	/**/
 MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
 
@@ -54,25 +50,25 @@ MUTATOR_HOOKABLE(PrecacheProjectiles, EV_NO_ARGS);
 
 /** Called when updating the attached tags index */
 #define EV_TagIndex_Update(i, o) \
-	/** entity id */ i(entity, __self) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
 	/**/
 MUTATOR_HOOKABLE(TagIndex_Update, EV_TagIndex_Update);
 
 /** Called when setting the attached tags */
 #define EV_TagIndex_Apply(i, o) \
-	/** entity id */ i(entity, __self) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
 	/**/
 MUTATOR_HOOKABLE(TagIndex_Apply, EV_TagIndex_Apply);
 
 /** Called when setting up skeleton bones */
 #define EV_Skeleton_CheckBones(i, o) \
-	/** entity id */ i(entity, __self) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
 	/**/
 MUTATOR_HOOKABLE(Skeleton_CheckBones, EV_Skeleton_CheckBones);
 
 /** Called when setting up bones from the loaded model */
 #define EV_Skeleton_CheckModel(i, o) \
-	/** entity id */ i(entity, __self) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
 	/**/
 MUTATOR_HOOKABLE(Skeleton_CheckModel, EV_Skeleton_CheckModel);
 
@@ -81,21 +77,29 @@ MUTATOR_HOOKABLE(ClearModelParams, EV_NO_ARGS);
 
 /** Called when getting the global parameters for a model */
 #define EV_GetModelParams(i, o) \
-	/** entity id */ i(string, checkmodel_input) \
-	/** entity id */ i(string, checkmodel_command) \
+	/** input */  i(string, MUTATOR_ARGV_0_string) \
+	/** command */  i(string, MUTATOR_ARGV_1_string) \
 	/**/
-string checkmodel_input, checkmodel_command;
 MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
 
 /** Called checking if 3rd person mode should be forced on */
 #define EV_WantEventchase(i, o) \
-	/** entity id */ i(entity, __self) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
 	/**/
 MUTATOR_HOOKABLE(WantEventchase, EV_WantEventchase);
 
+/** allow customizing 3rd person mode effect */
+#define EV_CustomizeEventchase(i, o) \
+	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
+	/* current_view_origin_override */ o(vector, MUTATOR_ARGV_0_vector) \
+	/* view_offset_override */ o(vector, MUTATOR_ARGV_1_vector) \
+	/* chase_distance_override */ o(float, MUTATOR_ARGV_0_float) \
+	/**/
+MUTATOR_HOOKABLE(CustomizeEventchase, EV_CustomizeEventchase);
+
 #define EV_AnnouncerOption(i, o) \
-	/**/ i(string, ret_string) \
-	/**/ o(string, ret_string) \
+	/** announcer string */  i(string, MUTATOR_ARGV_0_string) \
+	/** announcer string */ o(string, MUTATOR_ARGV_0_string) \
 	/**/
 MUTATOR_HOOKABLE(AnnouncerOption, EV_AnnouncerOption);
 
@@ -103,7 +107,7 @@ MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
 
 #define EV_HUD_Draw_overlay(i, o) \
 	/**/ o(vector, MUTATOR_ARGV_0_vector) \
-	/**/ o(float, MUTATOR_ARGV_0_float) \
+	/**/ o(float, MUTATOR_ARGV_1_float) \
 	/**/
 MUTATOR_HOOKABLE(HUD_Draw_overlay, EV_HUD_Draw_overlay);
 
@@ -111,23 +115,64 @@ MUTATOR_HOOKABLE(HUD_Powerups_add, EV_NO_ARGS);
 
 /** Return true to not draw any vortex beam */
 #define EV_Particles_VortexBeam(i, o) \
-	/**/ i(vector, vbeam_shotorg) \
-	/**/ i(vector, vbeam_endpos) \
+	/** beam shot origin */  i(vector, MUTATOR_ARGV_0_vector) \
+	/** beam end position */ i(vector, MUTATOR_ARGV_1_vector) \
 	/**/
-vector vbeam_shotorg;
-vector vbeam_endpos;
 MUTATOR_HOOKABLE(Particles_VortexBeam, EV_Particles_VortexBeam);
 
 /** Return true to not draw any impact effect */
 #define EV_Weapon_ImpactEffect(i, o) \
-	/**/ i(entity, w_hitwep) \
+	/** weapon */ 			i(entity, MUTATOR_ARGV_0_entity) \
+	/** damage entity */ 	i(entity, MUTATOR_ARGV_1_entity) \
 	/**/
-entity w_hitwep;
 MUTATOR_HOOKABLE(Weapon_ImpactEffect, EV_Weapon_ImpactEffect);
 
 /* NOTE: hooks MUST start with if (MUTATOR_RETURNVALUE) return false;
 */
 #define EV_HUD_Command(i, o) \
-	/** also, argv() can be used */ i(int, cmd_argc) \
+	/** argc (also, argv() can be used) */ i(int, MUTATOR_ARGV_0_int) \
 	/**/
 MUTATOR_HOOKABLE(HUD_Command, EV_HUD_Command);
+
+/** Draw the grapple hook, allows changing hook texture and colour */
+#define EV_DrawGrapplingHook(i, o) \
+	/** hook */ 			i(entity, MUTATOR_ARGV_0_entity) \
+	/** texture */ 			i(string, MUTATOR_ARGV_1_string) \
+	/***/ 					o(string, MUTATOR_ARGV_1_string) \
+	/** colour */ 			i(vector, MUTATOR_ARGV_2_vector) \
+	/***/ 					o(vector, MUTATOR_ARGV_2_vector) \
+	/** team */ 			i(float, MUTATOR_ARGV_3_float) \
+	/**/
+MUTATOR_HOOKABLE(DrawGrapplingHook, EV_DrawGrapplingHook);
+
+/** Called when an entity is updated (either by SVQC networking or PVS) */
+#define EV_Ent_Update(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/** is new to client */ i(bool, MUTATOR_ARGV_1_bool) \
+	/**/
+MUTATOR_HOOKABLE(Ent_Update, EV_Ent_Update);
+
+/** Return true to not draw crosshair */
+MUTATOR_HOOKABLE(DrawCrosshair, EV_NO_ARGS);
+
+/** Return true to not draw scoreboard */
+MUTATOR_HOOKABLE(DrawScoreboard, EV_NO_ARGS);
+
+/** Called when drawing info messages, allows adding new info messages */
+#define EV_DrawInfoMessages(i, o) \
+	/** pos */ 			    i(vector, MUTATOR_ARGV_0_vector) \
+	/** mySize */ 			i(vector, MUTATOR_ARGV_1_vector) \
+	/**/
+MUTATOR_HOOKABLE(DrawInfoMessages, EV_DrawInfoMessages);
+
+/** Called when drawing info messages, allows adding new info messages */
+#define EV_HUD_WriteCvars(i, o) \
+	/** file */ 			i(float, MUTATOR_ARGV_0_float) \
+	/**/
+MUTATOR_HOOKABLE(HUD_WriteCvars, EV_HUD_WriteCvars);
+
+/** Called when the view model is being animated (setorigin is called after the hook, so you only need to modify origin here if desired) */
+#define EV_DrawViewModel(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(DrawViewModel, EV_DrawViewModel);

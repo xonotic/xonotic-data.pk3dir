@@ -1,11 +1,10 @@
-#ifndef ITEMS_ALL_H
-#define ITEMS_ALL_H
+#pragma once
 
-#include <common/command/all.qh>
+#include <common/command/_mod.qh>
 
 #include "item.qh"
 
-REGISTRY(Items, BITS(5))
+REGISTRY(Items, BITS(7))
 #define Items_from(i) _Items_from(i, NULL)
 REGISTER_REGISTRY(Items)
 #define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
@@ -30,8 +29,6 @@ GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
     }
 }
 
-#ifndef MENUQC
+#ifdef GAMEQC
 string Item_Model(string item_mdl);
-#endif
-
 #endif

@@ -73,18 +73,22 @@ void CampaignPreInit()
 {
 	float baseskill;
 	string title;
-	if(autocvar_sv_cheats)
-	{
-		CampaignBailout("JOLLY CHEATS AHAHAHAHAHAHAH))");
-		return;
-	}
 	campaign_level = autocvar__campaign_index;
 	campaign_name = strzone(autocvar__campaign_name);
 	campaign_index_var = strzone(strcat("g_campaign", campaign_name, "_index"));
 	CampaignFile_Load(campaign_level, 2);
+
 	if(campaign_entries < 1)
 	{
 		CampaignBailout("unknown map");
+		return;
+	}
+
+	if(autocvar_sv_cheats)
+	{
+		MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0]));
+		CampaignFile_Unload();
+		CampaignBailout("JOLLY CHEATS AHAHAHAHAHAHAH))");
 		return;
 	}
 
@@ -256,7 +260,7 @@ void CampaignPostIntermission()
 	if(campaign_won && campaign_entries < 2)
 	{
 		// last map won!
-		LOG_DEBUG("^2test run: campaign looks GOOD\n");
+		LOG_DEBUG("^2test run: campaign looks GOOD");
 		localcmd("togglemenu 1\n");
 		CampaignFile_Unload();
 		return;

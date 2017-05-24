@@ -1,15 +1,4 @@
-#ifndef DAMAGEEFFECTS_H
-#define DAMAGEEFFECTS_H
-
-#ifdef CSQC
-#include <common/deathtypes/all.qh>
-#include <common/physics/movetypes/movetypes.qh>
-#include <client/mutators/events.qh>
-#include <common/vehicles/all.qh>
-#include <common/weapons/all.qh>
-#endif
-
-#endif
+#include "damageeffects.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -20,15 +9,15 @@ REGISTER_NET_LINKED(ENT_CLIENT_DAMAGEINFO)
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
-	WriteShort(MSG_ENTITY, self.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(self.origin.x));
-	WriteCoord(MSG_ENTITY, floor(self.origin.y));
-	WriteCoord(MSG_ENTITY, floor(self.origin.z));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg, 255));
-	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, self.oldorigin.x);
-	WriteByte(MSG_ENTITY, self.species);
+	WriteShort(MSG_ENTITY, this.projectiledeathtype);
+	WriteCoord(MSG_ENTITY, floor(this.origin.x));
+	WriteCoord(MSG_ENTITY, floor(this.origin.y));
+	WriteCoord(MSG_ENTITY, floor(this.origin.z));
+	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
+	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
+	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
+	WriteShort(MSG_ENTITY, this.oldorigin.x);
+	WriteByte(MSG_ENTITY, this.species);
 	return true;
 }
 
@@ -69,8 +58,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 .int state;
 .bool isplayermodel;
 
-void DamageEffect_Think()
-{SELFPARAM();
+void DamageEffect_Think(entity this)
+{
 	// if particle distribution is enabled, slow ticrate by total number of damages
 	if(autocvar_cl_damageeffect_distribute)
 		this.nextthink = time + autocvar_cl_damageeffect_ticrate * this.owner.total_damages;
@@ -81,7 +70,7 @@ void DamageEffect_Think()
 	{
 		// time is up or the player got gibbed / disconnected
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
-		remove(this);
+		delete(this);
 		return;
 	}
 	if(this.state && !this.owner.csqcmodel_isdead)
@@ -89,7 +78,7 @@ void DamageEffect_Think()
 		// if the player was dead but is now alive, it means he respawned
 		// if so, clear his damage effects, or damages from his dead body will be copied back
 		this.owner.total_damages = max(0, this.owner.total_damages - 1);
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.state = this.owner.csqcmodel_isdead;
@@ -183,7 +172,7 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 	e.owner = this;
 	e.cnt = time + life;
 	e.team = _particleeffectnum(effectname);
-	e.think = DamageEffect_Think;
+	setthink(e, DamageEffect_Think);
 	e.nextthink = time;
 	this.total_damages += 1;
 }
@@ -255,8 +244,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		if(it.damageforcescale)
 			if(vdist(thisforce, !=, 0))
 			{
-				it.move_velocity = it.move_velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.move_velocity, autocvar_g_balance_damagepush_speedfactor);
-				it.move_flags &= ~FL_ONGROUND;
+				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, autocvar_g_balance_damagepush_speedfactor);
+				UNSET_ONGROUND(it);
 			}
 
 		if(w_issilent)
@@ -273,7 +262,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
+		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
 		else
@@ -347,7 +336,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISTURRET(w_deathtype))
 	{
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
+		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
 		else
@@ -408,7 +397,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		Weapon hitwep = DEATH_WEAPONOF(w_deathtype);
 		w_random = prandom();
 
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
+		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
 			w_backoff = trace_plane_normal;
 		else
@@ -417,8 +406,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 		{
-			if(!MUTATOR_CALLHOOK(Weapon_ImpactEffect, hitwep))
-				hitwep.wr_impacteffect(hitwep);
+			if(!MUTATOR_CALLHOOK(Weapon_ImpactEffect, hitwep, this))
+				hitwep.wr_impacteffect(hitwep, this);
 		}
 	}
 }

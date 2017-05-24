@@ -1,3 +1,4 @@
+#include "all.qh"
 #ifdef SVQC
 
 bool autocvar_bot_sound_monopoly;
@@ -108,18 +109,18 @@ void stopsound(entity e, int chan)
 void play2(entity e, string filename)
 {
 	msg_entity = e;
-	soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
+	soundtoat(MSG_ONE, NULL, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
 }
 
 .float spamtime;
 /** use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame) */
-float spamsound(entity e, int chan, string samp, float vol, float _atten)
+float spamsound(entity e, int chan, Sound samp, float vol, float _atten)
 {
 	if (!sound_allowed(MSG_BROADCAST, e)) return false;
 	if (time > e.spamtime)
 	{
 		e.spamtime = time;
-		_sound(e, chan, samp, vol, _atten);
+		sound(e, chan, samp, vol, _atten);
 		return true;
 	}
 	return false;
@@ -134,7 +135,7 @@ void play2team(float t, string filename)
 void play2all(string samp)
 {
 	if (autocvar_bot_sound_monopoly) return;
-	_sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
+	_sound(NULL, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
 }
 
 #endif

@@ -1,6 +1,6 @@
 #include "teamradar.qh"
 
-#include "hud/all.qh"
+#include "hud/_mod.qh"
 
 #include <common/mutators/mutator/waypoints/all.qh>
 
@@ -20,7 +20,7 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	vector out;
 	in -= teamradar_origin3d_in_texcoord;
 
-	out = rotate(in, teamradar_angle * DEG2RAD);
+	out = Rotate(in, teamradar_angle * DEG2RAD);
 	out.y = - out.y; // screen space is reversed
 
 	out = out * teamradar_size;
@@ -42,19 +42,19 @@ vector teamradar_2dcoord_to_texcoord(vector in)
 	out = out / teamradar_size;
 
 	out_y = - out_y; // screen space is reversed
-	out = rotate(out, -teamradar_angle * DEG2RAD);
+	out = Rotate(out, -teamradar_angle * DEG2RAD);
 
 	out += teamradar_origin3d_in_texcoord;
 
 	return out;
 }
 
-vector teamradar_texcoord_to_3dcoord(vector in,float z)
+vector teamradar_texcoord_to_3dcoord(vector in,float oz)
 {
 	vector out;
 	out_x = in_x * (mi_picmax_x - mi_picmin_x) + mi_picmin_x;
 	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
-	out_z = z;
+	out_z = oz;
 	return out;
 }
 
@@ -128,7 +128,7 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb, float a)
 {
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord));
-	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon.m_radaricon)), '8 8 0', rgb, a, 0);
+	drawpic_builtin(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon.m_radaricon)), '8 8 0', rgb, a, 0);
 
 	if(pingdata)
 	{
@@ -141,7 +141,7 @@ void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb,
 			if(dt >= 1 || dt <= 0)
 				continue;
 			vector v = '2 2 0' * teamradar_size * dt;
-			drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
+			drawpic_builtin(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
 		}
 	}
 }
@@ -203,6 +203,7 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 
 	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 	this.classname = "radarlink";
+	if (isnew) IL_PUSH(g_radarlinks, this);
 
 	if(sendflags & 1)
 	{

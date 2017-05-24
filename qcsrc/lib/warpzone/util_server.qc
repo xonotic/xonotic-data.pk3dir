@@ -9,8 +9,8 @@
 #endif
 #include "common.qh"
 
-void WarpZoneLib_ExactTrigger_Init()
-{SELFPARAM();
+void WarpZoneLib_ExactTrigger_Init(entity this)
+{
 	vector mi, ma;
 	if (this.movedir == '0 0 0')
 	if (this.angles != '0 0 0')
@@ -43,7 +43,7 @@ void WarpZoneLib_ExactTrigger_Init()
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
 	else
 		setsize(this, this.mins, this.maxs);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_TRIGGER;
 	this.model = "";
 }

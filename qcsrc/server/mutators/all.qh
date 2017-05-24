@@ -1,6 +1,0 @@
-#pragma once
-
-#include "mutator.qh"
-#include "gamemode.qh"
-
-#include "all.inc"

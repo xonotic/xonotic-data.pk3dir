@@ -14,43 +14,43 @@ bool modeleffect_SendEntity(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
 
 	f = 0;
-	if(self.velocity != '0 0 0')
+	if(this.velocity != '0 0 0')
 		f |= 1;
-	if(self.angles != '0 0 0')
+	if(this.angles != '0 0 0')
 		f |= 2;
-	if(self.avelocity != '0 0 0')
+	if(this.avelocity != '0 0 0')
 		f |= 4;
 
 	WriteByte(MSG_ENTITY, f);
-	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteByte(MSG_ENTITY, self.skin);
-	WriteByte(MSG_ENTITY, self.frame);
-	WriteCoord(MSG_ENTITY, self.origin.x);
-	WriteCoord(MSG_ENTITY, self.origin.y);
-	WriteCoord(MSG_ENTITY, self.origin.z);
+	WriteShort(MSG_ENTITY, this.modelindex);
+	WriteByte(MSG_ENTITY, this.skin);
+	WriteByte(MSG_ENTITY, this.frame);
+	WriteCoord(MSG_ENTITY, this.origin.x);
+	WriteCoord(MSG_ENTITY, this.origin.y);
+	WriteCoord(MSG_ENTITY, this.origin.z);
 	if(f & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.velocity.x);
-		WriteCoord(MSG_ENTITY, self.velocity.y);
-		WriteCoord(MSG_ENTITY, self.velocity.z);
+		WriteCoord(MSG_ENTITY, this.velocity.x);
+		WriteCoord(MSG_ENTITY, this.velocity.y);
+		WriteCoord(MSG_ENTITY, this.velocity.z);
 	}
 	if(f & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.angles.x);
-		WriteCoord(MSG_ENTITY, self.angles.y);
-		WriteCoord(MSG_ENTITY, self.angles.z);
+		WriteCoord(MSG_ENTITY, this.angles.x);
+		WriteCoord(MSG_ENTITY, this.angles.y);
+		WriteCoord(MSG_ENTITY, this.angles.z);
 	}
 	if(f & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.avelocity.x);
-		WriteCoord(MSG_ENTITY, self.avelocity.y);
-		WriteCoord(MSG_ENTITY, self.avelocity.z);
+		WriteCoord(MSG_ENTITY, this.avelocity.x);
+		WriteCoord(MSG_ENTITY, this.avelocity.y);
+		WriteCoord(MSG_ENTITY, this.avelocity.z);
 	}
-	WriteShort(MSG_ENTITY, self.scale * 256.0);
-	WriteShort(MSG_ENTITY, self.scale2 * 256.0);
-	WriteByte(MSG_ENTITY, self.teleport_time * 100.0);
-	WriteByte(MSG_ENTITY, self.fade_time * 100.0);
-	WriteByte(MSG_ENTITY, self.alpha * 255.0);
+	WriteShort(MSG_ENTITY, this.scale * 256.0);
+	WriteShort(MSG_ENTITY, this.scale2 * 256.0);
+	WriteByte(MSG_ENTITY, this.teleport_time * 100.0);
+	WriteByte(MSG_ENTITY, this.fade_time * 100.0);
+	WriteByte(MSG_ENTITY, this.alpha * 255.0);
 
 	return true;
 }
@@ -103,7 +103,7 @@ void ModelEffect_Draw(entity this)
 	this.alpha = this.cnt * bound(0, 1 - (time - this.lifetime) / this.fadetime, 1);
 	if(this.alpha < ALPHA_MIN_VISIBLE)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.drawmask = MASK_NORMAL;
@@ -156,8 +156,9 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	e.cnt = ReadByte() / 255.0; // actually alpha
 
 	e.draw = ModelEffect_Draw;
+	if (isnew) IL_PUSH(g_drawables, e);
 
-	if (!isnew) remove(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
+	if (!isnew) delete(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
 	return true;
 }
 #endif

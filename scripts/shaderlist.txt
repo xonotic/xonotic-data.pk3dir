@@ -2,11 +2,13 @@ domination
 electro
 fireball
 flags
+gl
 hlac
 model-common
 onslaught
 portals
 pyria
+rl
 shotgun
 spiderbot
 teamfx
@@ -16,3 +18,4 @@ turrets
 weapons
 monsters
 ok_nade_counter
+nades

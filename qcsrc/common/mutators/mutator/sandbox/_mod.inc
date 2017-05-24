@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/sandbox/sandbox.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/sandbox/sv_sandbox.qc>
+#endif

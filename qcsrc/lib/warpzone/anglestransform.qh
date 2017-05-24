@@ -1,5 +1,4 @@
-#ifndef LIB_WARPZONE_ANGLETRANSFORM_H
-#define LIB_WARPZONE_ANGLETRANSFORM_H
+#pragma once
 
 #ifndef POSITIVE_PITCH_IS_DOWN
 #define POSITIVE_PITCH_IS_DOWN 1
@@ -42,4 +41,3 @@ vector AnglesTransform_ToVAngles(vector v);
 // transformed = original * transform + postshift
 vector AnglesTransform_Multiply_GetPostShift(vector sf0, vector st0, vector t1, vector st1);
 vector AnglesTransform_PrePostShift_GetPostShift(vector sf, vector t, vector st);
-#endif

@@ -5,8 +5,8 @@
 
 .vector	pos1, pos2;
 
-vector pathlib_wateroutnode(vector start,vector end, float doedge)
-{SELFPARAM();
+vector pathlib_wateroutnode(entity this, vector start, vector end, float doedge)
+{
     vector surface;
 
     pathlib_movenode_goodnode = 0;
@@ -14,7 +14,7 @@ vector pathlib_wateroutnode(vector start,vector end, float doedge)
     end.x = fsnap(end.x, pathlib_gridsize);
     end.y = fsnap(end.y, pathlib_gridsize);
 
-    traceline(end + ('0 0 0.25' * pathlib_gridsize),end - ('0 0 1' * pathlib_gridsize),MOVE_WORLDONLY,self);
+    traceline(end + ('0 0 0.25' * pathlib_gridsize),end - ('0 0 1' * pathlib_gridsize),MOVE_WORLDONLY,this);
     end = trace_endpos;
 
     if (!(pointcontents(end - '0 0 1') == CONTENT_SOLID))
@@ -29,7 +29,7 @@ vector pathlib_wateroutnode(vector start,vector end, float doedge)
     if(pointcontents(surface + '0 0 1') != CONTENT_EMPTY)
         return end;
 
-    tracebox(start + '0 0 64', movenode_boxmin,movenode_boxmax, end + '0 0 64', MOVE_WORLDONLY, self);
+    tracebox(start + '0 0 64', movenode_boxmin,movenode_boxmax, end + '0 0 64', MOVE_WORLDONLY, this);
     if(trace_fraction == 1)
         pathlib_movenode_goodnode = 1;
 
@@ -39,8 +39,8 @@ vector pathlib_wateroutnode(vector start,vector end, float doedge)
     return end;
 }
 
-vector pathlib_swimnode(vector start,vector end, float doedge)
-{SELFPARAM();
+vector pathlib_swimnode(entity this, vector start, vector end, float doedge)
+{
     pathlib_movenode_goodnode = 0;
 
     if(pointcontents(start) != CONTENT_WATER)
@@ -50,44 +50,44 @@ vector pathlib_swimnode(vector start,vector end, float doedge)
     end.y = fsnap(end.y, pathlib_gridsize);
 
     if(pointcontents(end) == CONTENT_EMPTY)
-        return pathlib_wateroutnode( start, end, doedge);
+        return pathlib_wateroutnode(this, start, end, doedge);
 
-    tracebox(start, movenode_boxmin,movenode_boxmax, end, MOVE_WORLDONLY, self);
+    tracebox(start, movenode_boxmin,movenode_boxmax, end, MOVE_WORLDONLY, this);
     if(trace_fraction == 1)
         pathlib_movenode_goodnode = 1;
 
     return end;
 }
 
-vector pathlib_flynode(vector start,vector end, float doedge)
-{SELFPARAM();
+vector pathlib_flynode(entity this, vector start, vector end, float doedge)
+{
     pathlib_movenode_goodnode = 0;
 
     end.x = fsnap(end.x, pathlib_gridsize);
     end.y = fsnap(end.y, pathlib_gridsize);
 
-    tracebox(start, movenode_boxmin,movenode_boxmax, end, MOVE_WORLDONLY, self);
+    tracebox(start, movenode_boxmin,movenode_boxmax, end, MOVE_WORLDONLY, this);
     if(trace_fraction == 1)
         pathlib_movenode_goodnode = 1;
 
     return end;
 }
 
-void a_think()
-{SELFPARAM();
-    te_lightning1(self,self.origin, self.pos1);
-    if(self.cnt < time)
-        remove(self);
+void a_think(entity this)
+{
+    te_lightning1(this,this.origin, this.pos1);
+    if(this.cnt < time)
+        delete(this);
     else
-        self.nextthink = time + 0.2;
+        this.nextthink = time + 0.2;
 }
 
-vector pathlib_walknode(vector start,vector end,float doedge)
-{SELFPARAM();
+vector pathlib_walknode(entity this, vector start, vector end, float doedge)
+{
     vector direction,point,last_point,s,e;
     float steps, distance, i;
 
-    LOG_TRACE("Walking node from ", vtos(start), " to ", vtos(end), "\n");
+    LOG_TRACE("Walking node from ", vtos(start), " to ", vtos(end));
 
     pathlib_movenode_goodnode = 0;
 
@@ -97,19 +97,19 @@ vector pathlib_walknode(vector start,vector end,float doedge)
     start.y = fsnap(start.y,pathlib_gridsize);
 
     // Find the floor
-    traceline(start + movenode_stepup, start - movenode_maxdrop, MOVE_WORLDONLY, self);
+    traceline(start + movenode_stepup, start - movenode_maxdrop, MOVE_WORLDONLY, this);
     if(trace_fraction == 1.0)
     {
         entity a;
         a = spawn();
-        a.think = a_think;
+        setthink(a, a_think);
         a.nextthink = time;
-        setorigin(a,start + movenode_stepup);
+        setorigin(a, start + movenode_stepup);
         a.pos1 = trace_endpos;
         //start - movenode_maxdrop
         a.cnt = time + 10;
 
-        LOG_TRACE("I cant walk on air!\n");
+        LOG_TRACE("I cant walk on air!");
         return trace_endpos;
     }
 
@@ -127,7 +127,7 @@ vector pathlib_walknode(vector start,vector end,float doedge)
     for(i = 1; i < steps; ++i)
     {
         point = last_point + (direction * movenode_stepsize);
-        traceline(point + movenode_stepup,point - movenode_maxdrop,MOVE_WORLDONLY,self);
+        traceline(point + movenode_stepup,point - movenode_maxdrop,MOVE_WORLDONLY,this);
         if(trace_fraction == 1.0)
             return trace_endpos;
 
@@ -141,13 +141,13 @@ vector pathlib_walknode(vector start,vector end,float doedge)
     //dprint("end_x:  ",ftos(end_x),  "  end_y:  ",ftos(end_y),"\n");
     //dprint("point_x:",ftos(point_x),"  point_y:",ftos(point_y),"\n\n");
 
-    traceline(point + movenode_stepup, point - movenode_maxdrop,MOVE_WORLDONLY,self);
+    traceline(point + movenode_stepup, point - movenode_maxdrop,MOVE_WORLDONLY,this);
     if(trace_fraction == 1.0)
         return trace_endpos;
 
     last_point = trace_endpos;
 
-    tracebox(start + movenode_boxup, movenode_boxmin,movenode_boxmax, last_point + movenode_boxup, MOVE_WORLDONLY, self);
+    tracebox(start + movenode_boxup, movenode_boxmin,movenode_boxmax, last_point + movenode_boxup, MOVE_WORLDONLY, this);
     if(trace_fraction != 1.0)
         return trace_endpos;
 

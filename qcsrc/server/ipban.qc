@@ -163,7 +163,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 		LOG_TRACE("received ban list item ", ftos(i / 4), ": ip=", ip);
 		LOG_TRACE(" timeleft=", ftos(timeleft), " reason=", reason);
-		LOG_TRACE(" serverip=", serverip, "\n");
+		LOG_TRACE(" serverip=", serverip);
 
 		timeleft -= 1.5 * autocvar_g_ban_sync_timeout;
 		if(timeleft < 0)
@@ -196,8 +196,8 @@ LABEL(skip)
 	}
 }
 
-void OnlineBanList_Think()
-{SELFPARAM();
+void OnlineBanList_Think(entity this)
+{
 	float argc;
 	string uri;
 	float i, n;
@@ -237,13 +237,13 @@ void OnlineBanList_Think()
 	}
 
 	if(autocvar_g_ban_sync_interval > 0)
-		self.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
+		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 	else
 		goto killme;
 	return;
 
 LABEL(killme)
-	remove(self);
+	delete(this);
 }
 
 const float BAN_MAX = 256;
@@ -319,7 +319,7 @@ void Ban_LoadBans()
 	}
 
 	entity e = new(bansyncer);
-	e.think = OnlineBanList_Think;
+	setthink(e, OnlineBanList_Think);
 	e.nextthink = time + 1;
 }
 
@@ -507,10 +507,10 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 			if(time + bantime > ban_expire[i])
 			{
 				ban_expire[i] = time + bantime;
-				LOG_TRACE(ip, "'s ban has been prolonged to ", ftos(bantime), " seconds from now\n");
+				LOG_TRACE(ip, "'s ban has been prolonged to ", ftos(bantime), " seconds from now");
 			}
 			else
-				LOG_TRACE(ip, "'s ban is still active until ", ftos(ban_expire[i] - time), " seconds from now\n");
+				LOG_TRACE(ip, "'s ban is still active until ", ftos(ban_expire[i] - time), " seconds from now");
 
 			// and enforce
 			reason = Ban_Enforce(i, reason);
@@ -552,7 +552,7 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 	}
 	// okay, insert our new victim as i
 	Ban_Delete(i);
-	LOG_TRACE(ip, " has been banned for ", ftos(bantime), " seconds\n");
+	LOG_TRACE(ip, " has been banned for ", ftos(bantime), " seconds");
 	ban_expire[i] = time + bantime;
 	ban_ip[i] = strzone(ip);
 	ban_count = max(ban_count, i + 1);

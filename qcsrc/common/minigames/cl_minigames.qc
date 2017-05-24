@@ -74,8 +74,8 @@ MINIGAME_SIMPLELINKED_ENTITIES
 
 void minigame_autoclean_entity(entity e)
 {
-	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
-	remove(e);
+	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")");
+	delete(e);
 }
 
 void HUD_MinigameMenu_CurrentButton();
@@ -86,15 +86,15 @@ void deactivate_minigame()
 		return;
 
 	active_minigame.minigame_event(active_minigame,"deactivate");
-	entity e = world;
+	entity e = NULL;
 	while( (e = findentity(e, owner, active_minigame)) )
 		if ( e.minigame_autoclean )
 		{
 			minigame_autoclean_entity(e);
 		}
 
-	minigame_self = world;
-	active_minigame = world;
+	minigame_self = NULL;
+	active_minigame = NULL;
 
 	if ( auto_close_minigamemenu )
 	{
@@ -121,7 +121,7 @@ void activate_minigame(entity minigame)
 
 	if ( !minigame.descriptor || minigame.classname != "minigame" )
 	{
-		LOG_TRACE("Trying to activate unregistered minigame ",minigame.netname," in client\n");
+		LOG_TRACE("Trying to activate unregistered minigame ",minigame.netname," in client");
 		return;
 	}
 
@@ -134,7 +134,7 @@ void activate_minigame(entity minigame)
 	}
 
 	if ( minigame_self.owner != minigame )
-		minigame_self = world;
+		minigame_self = NULL;
 	active_minigame = minigame;
 	active_minigame.minigame_event(active_minigame,"activate");
 
@@ -156,88 +156,89 @@ void minigame_player_entremove(entity this)
 string() ReadString_Raw = #366;
 string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 #define ReadString ReadString_Zoned
-#define FIELD(Flags, Type,Name) if ( sf & (Flags) ) self.Name = Read##Type();
+#define FIELD(Flags, Type,Name) if ( sf & (Flags) ) this.Name = Read##Type();
 #define MSLE(Name,Fields) \
-	else if ( self.classname == #Name ) { \
+	else if ( this.classname == #Name ) { \
 		if ( sf & MINIG_SF_CREATE ) { \
-			minigame_read_owner(); \
-			self.entremove = msle_entremove_##Name; \
+			minigame_read_owner(this); \
+			this.entremove = msle_entremove_##Name; \
 		} \
-		minigame_ent = self.owner; \
+		minigame_ent = this.owner; \
 		Fields \
 	}
-void minigame_read_owner()
-{SELFPARAM();
+void minigame_read_owner(entity this)
+{
 	string owner_name = ReadString_Raw();
-	self.owner = world;
+	this.owner = NULL;
 	do
-		self.owner = find(self.owner,netname,owner_name);
-	while ( self.owner && self.owner.classname != "minigame" );
-	if ( !self.owner )
-		LOG_TRACE("Got a minigame entity without a minigame!\n");
+		this.owner = find(this.owner,netname,owner_name);
+	while ( this.owner && this.owner.classname != "minigame" );
+	if ( !this.owner )
+		LOG_TRACE("Got a minigame entity without a minigame!");
 }
 NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 {
 	float sf = ReadByte();
 	if ( sf & MINIG_SF_CREATE )
 	{
-		self.classname = msle_classname(ReadShort());
-		self.netname = ReadString_Zoned();
+		this.classname = msle_classname(ReadShort());
+		this.netname = ReadString_Zoned();
 	}
 
-	entity minigame_ent = world;
+	entity minigame_ent = NULL;
 
-	if ( self.classname == "minigame" )
+	if ( this.classname == "minigame" )
 	{
-		minigame_ent = self;
+		minigame_ent = this;
 
 		if ( sf & MINIG_SF_CREATE )
 		{
-			self.entremove = minigame_entremove;
-			self.descriptor = minigame_get_descriptor(ReadString_Raw());
-			if ( !self.descriptor )
-				LOG_TRACE("Got a minigame without a client-side descriptor!\n");
+			this.entremove = minigame_entremove;
+			this.descriptor = minigame_get_descriptor(ReadString_Raw());
+			if ( !this.descriptor )
+				LOG_TRACE("Got a minigame without a client-side descriptor!");
 			else
-				self.minigame_event = self.descriptor.minigame_event;
+				this.minigame_event = this.descriptor.minigame_event;
 		}
 		if ( sf & MINIG_SF_UPDATE )
-			self.minigame_flags = ReadLong();
+			this.minigame_flags = ReadLong();
 	}
-	else if ( self.classname == "minigame_player" )
+	else if ( this.classname == "minigame_player" )
 	{
 		float activate = 0;
 		if ( sf & MINIG_SF_CREATE )
 		{
-			self.entremove = minigame_player_entremove;
-			minigame_read_owner();
+			this.entremove = minigame_player_entremove;
+			minigame_read_owner(this);
 			float ent = ReadLong();
-			self.minigame_playerslot = ent;
-			LOG_DEBUG("Player: ",entcs_GetName(ent-1),"\n");
+			this.minigame_playerslot = ent;
+			LOG_DEBUG("Player: ",entcs_GetName(ent-1));
 
-			activate = (ent == player_localnum+1 && self.owner && self.owner != active_minigame);
+			activate = (ent == player_localnum+1 && this.owner && this.owner != active_minigame);
 
 		}
-		minigame_ent = self.owner;
+		minigame_ent = this.owner;
 
 		if ( sf & MINIG_SF_UPDATE )
-			self.team = ReadByte();
+			this.team = ReadByte();
 
 		if ( activate )
 		{
-			minigame_self = self;
-			activate_minigame(self.owner);
+			minigame_self = this;
+			activate_minigame(this.owner);
+			minigame_self = this; // set it again (needed before, but may also be reset)
 		}
 	}
 	MINIGAME_SIMPLELINKED_ENTITIES
 
 	if ( minigame_ent )
-		minigame_ent.minigame_event(minigame_ent,"network_receive",self,sf);
+		minigame_ent.minigame_event(minigame_ent,"network_receive",this,sf);
 
 	if ( sf & MINIG_SF_CREATE )
 	{
-		LOG_DEBUG("CL Reading entity: ",ftos(etof(self)),
-			" classname:",self.classname," enttype:",ftos(self.enttype) );
-		LOG_DEBUG(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+		LOG_DEBUG("CL Reading entity: ",ftos(etof(this)),
+			" classname:",this.classname," enttype:",ftos(this.enttype) );
+		LOG_DEBUG(" sf:",ftos(sf)," netname:",this.netname);
 	}
 	return true;
 }

@@ -1,4 +1,3 @@
-#ifndef EFFECTS_QC
-#define EFFECTS_QC
+#pragma once
+
 #include "all.inc"
-#endif

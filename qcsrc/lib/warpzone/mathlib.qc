@@ -4,174 +4,172 @@
 #elif defined(SVQC)
 #endif
 
-int fpclassify(float x)
+int fpclassify(float e)
 {
-	if(isnan(x))
+	if(isnan(e))
 		return FP_NAN;
-	if(isinf(x))
+	if(isinf(e))
 		return FP_INFINITE;
-	if(x == 0)
+	if(e == 0)
 		return FP_ZERO;
 	return FP_NORMAL;
 }
-bool isfinite(float x)
+bool isfinite(float e)
 {
-	return !(isnan(x) || isinf(x));
+	return !(isnan(e) || isinf(e));
 }
-bool isinf(float x)
+bool isinf(float e)
 {
-	return (x != 0) && (x + x == x);
+	return (e != 0) && (e + e == e);
 }
-bool isnan(float x)
+bool isnan(float e)
 {
-	float y;
-	y = x;
-	return (x != y);
+	float f = e;
+	return (e != f);
 }
-bool isnormal(float x)
+bool isnormal(float e)
 {
-	return isfinite(x);
+	return isfinite(e);
 }
-bool signbit(float x)
+bool signbit(float e)
 {
-	return (x < 0);
-}
-
-float acosh(float x)
-{
-	return log(x + sqrt(x*x - 1));
-}
-float asinh(float x)
-{
-	return log(x + sqrt(x*x + 1));
-}
-float atanh(float x)
-{
-	return 0.5 * log((1+x) / (1-x));
-}
-float cosh(float x)
-{
-	return 0.5 * (exp(x) + exp(-x));
-}
-float sinh(float x)
-{
-	return 0.5 * (exp(x) - exp(-x));
-}
-float tanh(float x)
-{
-	return sinh(x) / cosh(x);
+	return (e < 0);
 }
 
-float exp(float x)
+float acosh(float e)
 {
-	return pow(M_E, x);
+	return log(e + sqrt(e*e - 1));
 }
-float exp2(float x)
+float asinh(float e)
 {
-	return pow(2, x);
+	return log(e + sqrt(e*e + 1));
 }
-float expm1(float x)
+float atanh(float e)
 {
-	return exp(x) - 1;
+	return 0.5 * log((1+e) / (1-e));
+}
+float cosh(float e)
+{
+	return 0.5 * (exp(e) + exp(-e));
+}
+float sinh(float e)
+{
+	return 0.5 * (exp(e) - exp(-e));
+}
+float tanh(float e)
+{
+	return sinh(e) / cosh(e);
 }
 
-vector frexp(float x)
+float exp(float e)
+{
+	return (M_E ** e);
+}
+float exp2(float e)
+{
+	return (2 ** e);
+}
+float expm1(float e)
+{
+	return exp(e) - 1;
+}
+
+vector frexp(float e)
 {
 	vector v;
 	v.z = 0;
-	v.y = ilogb(x) + 1;
-	v.x = x / exp2(v.y);
+	v.y = ilogb(e) + 1;
+	v.x = e / (2 ** v.y);
 	return v;
 }
-int ilogb(float x)
+int ilogb(float e)
 {
-	return floor(log2(fabs(x)));
+	return floor(log2(fabs(e)));
 }
-float ldexp(float x, int e)
+float ldexp(float e, int e)
 {
-	return x * pow(2, e);
+	return e * (2 ** e);
 }
-float logn(float x, float base)
+float logn(float e, float base)
 {
-	return log(x) / log(base);
+	return log(e) / log(base);
 }
-float log10(float x)
+float log10(float e)
 {
-	return log(x) * M_LOG10E;
+	return log(e) * M_LOG10E;
 }
-float log1p(float x)
+float log1p(float e)
 {
-	return log(x + 1);
+	return log(e + 1);
 }
-float log2(float x)
+float log2(float e)
 {
-	return log(x) * M_LOG2E;
+	return log(e) * M_LOG2E;
 }
-float logb(float x)
+float logb(float e)
 {
-	return floor(log2(fabs(x)));
+	return floor(log2(fabs(e)));
 }
 vector modf(float f)
 {
 	return '1 0 0' * (f - trunc(f)) + '0 1 0' * trunc(f);
 }
 
-float scalbn(float x, int n)
+float scalbn(float e, int n)
 {
-	return x * pow(2, n);
+	return e * (2 ** n);
 }
 
-float cbrt(float x)
+float cbrt(float e)
 {
-	return copysign(pow(fabs(x), 1.0/3.0), x);
+	return copysign((fabs(e) ** (1.0/3.0)), e);
 }
-float hypot(float x, float y)
+float hypot(float e, float f)
 {
-	return sqrt(x*x + y*y);
+	return sqrt(e*e + f*f);
 }
 
-float erf(float x)
+float erf(float e)
 {
 	// approximation taken from wikipedia
-	float y;
-	y = x*x;
-	return copysign(sqrt(1 - exp(-y * (1.273239544735163 + 0.14001228868667 * y) / (1 + 0.14001228868667 * y))), x);
+	float f;
+	f = e*e;
+	return copysign(sqrt(1 - exp(-f * (1.273239544735163 + 0.14001228868667 * f) / (1 + 0.14001228868667 * f))), e);
 }
-float erfc(float x)
+float erfc(float e)
 {
-	return 1.0 - erf(x);
+	return 1.0 - erf(e);
 }
-vector lgamma(float x)
+vector lgamma(float e)
 {
 	// TODO improve accuracy
-	if(!isfinite(x))
-		return fabs(x) * '1 0 0' + copysign(1, x) * '0 1 0';
-	if(x < 1 && x == floor(x))
+	if(!isfinite(e))
+		return fabs(e) * '1 0 0' + copysign(1, e) * '0 1 0';
+	if(e < 1 && e == floor(e))
 		return nan("gamma") * '1 1 1';
-	if(x < 0.1)
+	if(e < 0.1)
 	{
 		vector v;
-		v = lgamma(1.0 - x);
+		v = lgamma(1.0 - e);
 		// reflection formula:
 		// gamma(1-z) * gamma(z) = pi / sin(pi*z)
 		// lgamma(1-z) + lgamma(z) = log(pi) - log(sin(pi*z))
 		// sign of gamma(1-z) = sign of gamma(z) * sign of sin(pi*z)
-		v.z = sin(M_PI * x);
+		v.z = sin(M_PI * e);
 		v.x = log(M_PI) - log(fabs(v.z)) - v.x;
 		if(v.z < 0)
 			v.y = -v.y;
 		v.z = 0;
 		return v;
 	}
-	if(x < 1.1)
-		return lgamma(x + 1) - log(x) * '1 0 0';
-	x -= 1;
-	return (0.5 * log(2 * M_PI * x) + x * (log(x) - 1)) * '1 0 0' + '0 1 0';
+	if(e < 1.1)
+		return lgamma(e + 1) - log(e) * '1 0 0';
+	e -= 1;
+	return (0.5 * log(2 * M_PI * e) + e * (log(e) - 1)) * '1 0 0' + '0 1 0';
 }
-float tgamma(float x)
+float tgamma(float e)
 {
-	vector v;
-	v = lgamma(x);
+	vector v = lgamma(e);
 	return exp(v.x) * v.y;
 }
 
@@ -184,109 +182,109 @@ float tgamma(float x)
  *  1 % -2 == -1
  * -1 % -2 == -1
  */
-float pymod(float x, float y)
+float pymod(float e, float f)
 {
-	return x - y * floor(x / y);
+	return e - f * floor(e / f);
 }
 
-float nearbyint(float x)
+float nearbyint(float e)
 {
-	return rint(x);
+	return rint(e);
 }
-float trunc(float x)
+float trunc(float e)
 {
-	return (x>=0) ? floor(x) : ceil(x);
+	return (e>=0) ? floor(e) : ceil(e);
 }
 
-float fmod(float x, float y)
+float fmod(float e, float f)
 {
-	return x - y * trunc(x / y);
+	return e - f * trunc(e / f);
 }
-float remainder(float x, float y)
+float remainder(float e, float f)
 {
-	return x - y * rint(x / y);
+	return e - f * rint(e / f);
 }
-vector remquo(float x, float y)
+vector remquo(float e, float f)
 {
 	vector v;
 	v.z = 0;
-	v.y = rint(x / y);
-	v.x = x - y * v.y;
+	v.y = rint(e / f);
+	v.x = e - f * v.y;
 	return v;
 }
 
-float copysign(float x, float y)
+float copysign(float e, float f)
 {
-	return fabs(x) * ((y>0) ? 1 : -1);
+	return fabs(e) * ((f>0) ? 1 : -1);
 }
 float nan(string tag)
 {
 	return sqrt(-1);
 }
-float nextafter(float x, float y)
+float nextafter(float e, float f)
 {
 	// TODO very crude
-	if(x == y)
+	if(e == f)
 		return nan("nextafter");
-	if(x > y)
-		return -nextafter(-x, -y);
-	// now we know that x < y
-	// so we need the next number > x
+	if(e > f)
+		return -nextafter(-e, -f);
+	// now we know that e < f
+	// so we need the next number > e
 	float d, a, b;
-	d = max(fabs(x), 0.00000000000000000000001);
-	a = x + d;
+	d = max(fabs(e), 0.00000000000000000000001);
+	a = e + d;
 	do
 	{
 		d *= 0.5;
 		b = a;
-		a = x + d;
+		a = e + d;
 	}
-	while(a != x);
+	while(a != e);
 	return b;
 }
-float nexttoward(float x, float y)
+float nexttoward(float e, float f)
 {
-	return nextafter(x, y);
+	return nextafter(e, f);
 }
 
-float fdim(float x, float y)
+float fdim(float e, float f)
 {
-	return max(x-y, 0);
+	return max(e-f, 0);
 }
-float fmax(float x, float y)
+float fmax(float e, float f)
 {
-	return max(x, y);
+	return max(e, f);
 }
-float fmin(float x, float y)
+float fmin(float e, float f)
 {
-	return min(x, y);
+	return min(e, f);
 }
-float fma(float x, float y, float z)
+float fma(float e, float f, float g)
 {
-	return x * y + z;
+	return e * f + g;
 }
 
-int isgreater(float x, float y)
+int isgreater(float e, float f)
 {
-	return x > y;
+	return e > f;
 }
-int isgreaterequal(float x, float y)
+int isgreaterequal(float e, float f)
 {
-	return x >= y;
+	return e >= f;
 }
-int isless(float x, float y)
+int isless(float e, float f)
 {
-	return x < y;
+	return e < f;
 }
-int islessequal(float x, float y)
+int islessequal(float e, float f)
 {
-	return x <= y;
+	return e <= f;
 }
-int islessgreater(float x, float y)
+int islessgreater(float e, float f)
 {
-	return x < y || x > y;
+	return e < f || e > f;
 }
-int isunordered(float x, float y)
+int isunordered(float e, float f)
 {
-	return !(x < y || x == y || x > y);
+	return !(e < f || e == f || e > f);
 }

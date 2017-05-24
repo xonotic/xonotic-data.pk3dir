@@ -1,0 +1,246 @@
+#pragma once
+
+#include "iter.qh"
+
+const int IL_MAX = 128;
+
+void IL_INIT(entity this);
+void IL_DTOR(entity this);
+void IL_ENDFRAME();
+
+/**
+ * limitations:
+ *   NULL cannot be present
+ *   elements can only be present once
+ *   a maximum of `IL_MAX` lists can exist at one time
+ *   freed entities must be removed from the list
+ */
+CLASS(IntrusiveList, Object)
+	ATTRIB(IntrusiveList, il_head, entity);
+	ATTRIB(IntrusiveList, il_tail, entity);
+	ATTRIB(IntrusiveList, il_nextfld, .entity, nil);
+	ATTRIB(IntrusiveList, il_prevfld, .entity, nil);
+	INIT(IntrusiveList) { IL_INIT(this); }
+	DESTRUCTOR(IntrusiveList) { IL_DTOR(this); }
+ENDCLASS(IntrusiveList)
+
+// bitflags
+.vector il_lists;
+// bitflags
+.vector il_listmask;
+
+#define IL_NEW() NEW(IntrusiveList)
+
+#define IL_EMPTY(this) (this.il_head == NULL)
+
+#define IL_FIRST(this) (this.il_head)
+#define IL_LAST(this) (this.il_tail)
+#define IL_PEEK(this) (this.il_tail)
+
+bool IL_CONTAINS(IntrusiveList this, entity it)
+{
+	assert(this, return false);
+	return it.(this.il_nextfld) || this.il_head == it || this.il_tail == it;
+}
+
+/**
+ * Push to tail
+ */
+entity IL_PUSH(IntrusiveList this, entity it)
+{
+	assert(this, return NULL);
+	assert(it, return NULL);
+	.entity il_next = this.il_nextfld;
+	.entity il_prev = this.il_prevfld;
+	assert(!IL_CONTAINS(this, it), return NULL);
+
+	entity tail = it.(il_prev) = this.il_tail;
+	tail ? (tail.(il_next) = it) : this.il_head = it;
+	this.il_tail = it;
+	it.il_lists |= this.il_listmask;
+	return it;
+}
+
+/**
+ * Push to head
+ */
+entity IL_UNSHIFT(IntrusiveList this, entity it)
+{
+	assert(this, return NULL);
+	assert(it, return NULL);
+	.entity il_next = this.il_nextfld;
+	.entity il_prev = this.il_prevfld;
+	assert(!IL_CONTAINS(this, it), return NULL);
+
+	entity head = it.(il_next) = this.il_head;
+	head ? (head.(il_prev) = it) : this.il_tail = it;
+	this.il_head = it;
+	it.il_lists |= this.il_listmask;
+	return it;
+}
+
+/**
+ * Pop from tail
+ */
+entity IL_POP(IntrusiveList this)
+{
+	assert(this, return NULL);
+	.entity il_next = this.il_nextfld;
+	.entity il_prev = this.il_prevfld;
+
+	if (!this.il_tail) return NULL;
+	entity it = this.il_tail;
+	entity prev = it.(il_prev);
+	if (prev) (this.il_tail = prev).(il_next) = NULL;
+	else this.il_head = this.il_tail = NULL;
+	return it;
+}
+
+/**
+ * Pop from head
+ */
+entity IL_SHIFT(IntrusiveList this)
+{
+	assert(this, return NULL);
+	.entity il_next = this.il_nextfld;
+	.entity il_prev = this.il_prevfld;
+
+	if (!this.il_head) return NULL;
+	entity it = this.il_head;
+	entity next = it.(il_next);
+	if (next) (this.il_head = next).(il_prev) = NULL;
+	else this.il_head = this.il_tail = NULL;
+	return it;
+}
+
+/**
+ * Remove any element, anywhere in the list
+ */
+void IL_REMOVE(IntrusiveList this, entity it)
+{
+	assert(this, return);
+	.entity il_next = this.il_nextfld;
+	.entity il_prev = this.il_prevfld;
+	//assert(!IL_CONTAINS(this, it), return);
+	entity next = it.(il_next);
+	entity prev = it.(il_prev);
+	entity ohead = this.il_head;
+	entity otail = this.il_tail;
+	next ? next.(il_prev) = prev : this.il_tail = prev;
+	prev ? prev.(il_next) = next : this.il_head = next;
+	LOG_DEBUGF("remove %i (%i :: %i), head: %i -> %i, tail: %i -> %i", it, it.(il_prev), it.(il_next), ohead, this.il_head, otail, this.il_tail);
+	it.(il_next) = it.(il_prev) = NULL;
+}
+
+/**
+ * Remove all elements
+ */
+#define IL_CLEAR(this) \
+	MACRO_BEGIN \
+	{ \
+		IntrusiveList __il = this; \
+		assert(__il); \
+		.entity il_prev = __il.il_prevfld; \
+		IL_EACH(__il, true, it.(il_next) = it.(il_prev) = NULL); \
+		__il.il_head = __il.il_tail = NULL; \
+	} MACRO_END
+
+/**
+ * Delete the list
+ */
+#define IL_DELETE(this) \
+	MACRO_BEGIN \
+	{ \
+		delete(this); \
+		this = NULL; \
+	} MACRO_END
+
+#define IL_EACH(this, cond, body) \
+	MACRO_BEGIN \
+	{ \
+		IntrusiveList _il = this; \
+		assert(_il); \
+		.entity il_next = _il.il_nextfld; \
+		noref int i = 0; \
+		for (entity _next, _it = _il.il_head; _it; (_it = _next, ++i)) \
+		{ \
+			const noref entity it = _it; \
+			_next = it.(il_next); \
+			if (cond) { LAMBDA(body) } \
+		} \
+	} MACRO_END
+
+.int il_id;
+IntrusiveList il_links[IL_MAX];
+.entity il_links_flds[IL_MAX * 2];
+int il_links_ptr;
+
+#define IL_FLOOR(n) ((n) | 0)
+#define IL_CEIL(n)  IL_FLOOR((n) + 0.5)
+
+#define IL_LISTS_PER_BIT IL_CEIL(IL_MAX / (3 * 24))
+
+void IL_INIT(IntrusiveList this)
+{
+	.entity nextfld, prevfld;
+	for (int i = il_links_ptr; i < il_links_ptr + IL_MAX; ++i) {
+		int idx = i;
+		if (idx >= IL_MAX) idx -= IL_MAX;
+		int id = idx;
+		idx *= 2;
+		if (!il_links[idx]) {
+			il_links[idx] = this;
+			nextfld = il_links_flds[idx + 0];
+			prevfld = il_links_flds[idx + 1];
+			this.il_id = id;
+			int bit = IL_FLOOR(id / IL_LISTS_PER_BIT);
+			if (bit < (1 * 24)) this.il_listmask = '1 0 0' * (1 << (bit - (0 * 24)));
+			else if (bit < (2 * 24)) this.il_listmask = '0 1 0' * (1 << (bit - (1 * 24)));
+			else if (bit < (3 * 24)) this.il_listmask = '0 0 1' * (1 << (bit - (2 * 24)));
+			else assert(false);
+			il_links_ptr = id + 1;
+			if (il_links_ptr >= IL_MAX) il_links_ptr -= IL_MAX;
+			this.il_nextfld = nextfld;
+			this.il_prevfld = prevfld;
+			return;
+		}
+	}
+	LOG_WARNF("IntrusiveList overflow");
+}
+
+void IL_DTOR(IntrusiveList this)
+{
+	IL_CLEAR(this);
+	il_links[this.il_id] = NULL;
+}
+
+void IL_ENDFRAME()
+{
+#if 0
+	// incompatible with CSQC, remove() clears entities
+	for (int i = 0; i < IL_MAX; ++i) {
+		IntrusiveList list = il_links[i];
+		if (list) {
+			.entity nextfld = list.il_nextfld;
+			for (entity next, it = list.il_head; it; it = next) {
+				next = it.(nextfld);
+				if (wasfreed(it)) {
+					IL_REMOVE(list, it);
+				}
+			}
+		}
+	}
+#endif
+}
+
+void ONREMOVE(entity this)
+{
+	if (this.il_lists) {
+		for (int i = 0; i < IL_MAX; ++i) {
+			IntrusiveList list = il_links[i];
+			if (this.il_lists & list.il_listmask && IL_CONTAINS(list, this)) {
+				IL_REMOVE(list, this);
+			}
+		}
+	}
+}

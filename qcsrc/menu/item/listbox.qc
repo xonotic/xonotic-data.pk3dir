@@ -379,17 +379,16 @@
 		oldshift = draw_shift;
 		oldscale = draw_scale;
 
-		float y;
 		i = me.getItemAtPos(me, me.scrollPos);
-		y = me.getItemStart(me, i) - me.scrollPos;
-		for ( ; i < me.nItems && y < 1; ++i)
+		float j = me.getItemStart(me, i) - me.scrollPos;
+		for ( ; i < me.nItems && j < 1; ++i)
 		{
-			draw_shift = boxToGlobal(eY * y, oldshift, oldscale);
+			draw_shift = boxToGlobal(eY * j, oldshift, oldscale);
 			vector relSize = eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, i);
 			absSize = boxToGlobalSize(relSize, me.size);
 			draw_scale = boxToGlobalSize(relSize, oldscale);
 			me.drawListBoxItem(me, i, absSize, (me.selectedItem == i), (me.focusedItem == i));
-			y += relSize.y;
+			j += relSize.y;
 		}
 		draw_ClearClip();
 

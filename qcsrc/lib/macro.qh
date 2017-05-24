@@ -1,7 +1,7 @@
 #pragma once
 
 #if 1
-    void voidfunc() { error("voidfunc"); }
+    void voidfunc() { }
     #define MACRO_BEGIN if (1) {
     #define MACRO_END } else voidfunc()
 #else
@@ -14,3 +14,6 @@
 
 #define _STR(it) #it
 #define STR(it) _STR(it)
+
+#define EMPTY()
+#define DEFER(id) id EMPTY()

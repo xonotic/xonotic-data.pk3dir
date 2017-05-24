@@ -6,21 +6,11 @@
  * Server: instance per client, clients decoupled from players
  */
 CLASS(PlayerState, Object)
-	ATTRIB(PlayerState, m_client, entity, NULL)
+	ATTRIB(PlayerState, m_client, entity);
 	CONSTRUCTOR(PlayerState, entity client)
 	{
 		CONSTRUCT(PlayerState);
 		this.m_client = client;
-	}
-	ATTRIB(PlayerState, m_switchingweapon, Weapon, Weapons_from(-1))
-	ATTRIB(PlayerState, m_switchweapon, Weapon, Weapons_from(-1))
-	ATTRIB(PlayerState, m_weapon, Weapon, Weapons_from(-1))
-	METHOD(PlayerState, ps_push, void(PlayerState this, entity cl))
-	{
-	    TC(PlayerState, this);
-		STAT(ACTIVEWEAPON, cl) = this.m_weapon.m_id;
-		STAT(SWITCHINGWEAPON, cl) = this.m_switchingweapon.m_id;
-		STAT(SWITCHWEAPON, cl) = this.m_switchweapon.m_id;
 	}
 ENDCLASS(PlayerState)
 
@@ -37,11 +27,15 @@ void PlayerState_detach(entity this);
  * Server: instance per client
  */
 CLASS(ClientState, Object)
-	ATTRIB(ClientState, m_client, entity, NULL)
+	ATTRIB(ClientState, m_client, entity);
 	CONSTRUCTOR(ClientState, entity client)
 	{
 		CONSTRUCT(ClientState);
 		this.m_client = client;
+	}
+	METHOD(PlayerState, ps_push, void(PlayerState this, entity cl))
+	{
+		TC(PlayerState, this);
 	}
 ENDCLASS(ClientState)
 

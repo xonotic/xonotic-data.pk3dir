@@ -1,0 +1,11 @@
+#pragma once
+
+#define ChangeYaw builtin_ChangeYaw
+#define checkclient builtin_checkclient
+#define droptofloor builtin_droptofloor
+#define error builtin_error
+#define movetogoal builtin_movetogoal
+#define objerror builtin_objerror
+#define remove builtin_remove
+#define walkmove builtin_walkmove
+#define setcolor builtin_setcolor

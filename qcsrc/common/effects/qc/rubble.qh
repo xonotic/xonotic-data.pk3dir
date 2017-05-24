@@ -1,41 +1,34 @@
-#ifndef RUBBLE_H
-#define RUBBLE_H
+#pragma once
 
 #ifdef CSQC
 
 entityclass(Rubble);
 class(Rubble).float creationtime;
 
-void RubbleLimit(string cname, float limit, void(entity) deleteproc)
-{
-	entity e;
-	entity oldest;
-	float c;
-	float oldesttime;
+IntrusiveList g_rubble;
+STATIC_INIT(g_rubble) { g_rubble = IL_NEW(); }
 
+void RubbleLimit(string cname, int limit, void(entity) deleteproc)
+{
 	// remove rubble of the same type if it's at the limit
 	// remove multiple rubble if the limit has been decreased
 	while (1)
 	{
-		e = findchain(classname, cname);
-		if (e == world) break;
 		// walk the list and count the entities, find the oldest
 		// initialize our search with the first entity
-		c = 1;
-		oldest = e;
-		oldesttime = e.creationtime;
-		e = e.chain;
+		int c = 0;
+		entity oldest = NULL;
+		float oldesttime = 0;
 		// compare to all other matching entities
-		while (e)
+		IL_EACH(g_rubble, it.classname == cname,
 		{
-			c = c + 1;
-			if (oldesttime > e.creationtime)
+			++c;
+			if(!oldest || oldesttime > it.creationtime)
 			{
-				oldesttime = e.creationtime;
-				oldest = e;
+				oldest = it;
+				oldesttime = it.creationtime;
 			}
-			e = e.chain;
-		}
+		});
 
 		// stop if there are less than the limit already
 		if (c <= limit) break;
@@ -51,9 +44,8 @@ entity RubbleNew(string cname)
 	entity e = spawn();
 	e.classname = cname;
 	e.creationtime = time;
+	IL_PUSH(g_rubble, e);
 	return e;
 }
-
-#endif
 
 #endif

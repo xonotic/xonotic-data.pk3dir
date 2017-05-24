@@ -132,7 +132,7 @@ const int SOLID_CORPSE 	= 5; // same as SOLID_BBOX, except it behaves as SOLID_N
 
 const int MOVE_NORMAL = 0; // same as false
 const int MOVE_NOMONSTERS = 1; // same as true
-const int MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
+const int MOVE_MISSILE = 2; // save as movement with .move_movetype == MOVETYPE_FLYMISSILE
 const int MOVE_HITMODEL = 4;
 const int MOVE_WORLDONLY = 3;
 

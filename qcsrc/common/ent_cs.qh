@@ -1,5 +1,4 @@
-#ifndef ENT_CS_H
-#define ENT_CS_H
+#pragma once
 
 REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 REGISTER_NET_TEMP(CLIENT_ENTCS)
@@ -26,7 +25,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 	bool entcs_send(entity this, entity to, int sf);
 
-	void entcs_think();
+	void entcs_think(entity this);
 
 	void entcs_attach(entity e);
 
@@ -59,10 +58,21 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	/**
      * @param i zero indexed player
      */
+    .int frags;
 	bool entcs_IsSpectating(int i)
 	{
 		bool unconnected = !playerslots[i].gotscores;
-		return unconnected || stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR;
+		entity e = entcs_receiver(i);
+		return unconnected || ((e) ? e.frags : stof(getplayerkeyvalue(i, "frags"))) == FRAGS_SPECTATOR;
+	}
+
+	/**
+     * @param i zero indexed player
+     */
+	int entcs_GetClientColors(int i)
+	{
+		entity e = entcs_receiver(i);
+		return e ? e.colormap : stof(getplayerkeyvalue(i, "colors"));
 	}
 
 	/**
@@ -71,7 +81,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	*/
 	int entcs_GetTeamColor(int i)
 	{
-		return (!teamplay) ? 0 : stof(getplayerkeyvalue(i, "colors")) & 15;
+		return (!teamplay) ? 0 : entcs_GetClientColors(i) & 15;
 	}
 
 	/**
@@ -98,7 +108,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	*/
 	string entcs_GetName(int i)
 	{
-		return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
+		entity e = entcs_receiver(i);
+		return ColorTranslateRGB(e ? e.netname : getplayerkeyvalue(i, "name"));
 	}
 
     /**
@@ -127,7 +138,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		       ? '1 1 1'
 			   : colormapPaletteColor(((e.colormap >= 1024)
 			? e.colormap
-			: stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 15, true)
+			: entcs_GetClientColors(e.colormap - 1)) & 15, true)
 		;
 	}
 
@@ -139,7 +150,5 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		entity e = CSQCModel_server2csqc(i);
 		return e ? e.csqcmodel_isdead : false;
 	}
-
-#endif
 
 #endif

@@ -1,3 +1,4 @@
+#include "pp.qh"
 REGISTER_MINIGAME(pp, "Push-Pull");
 
 const int PP_TURN_PLACE = 0x0100; // player has to place a piece on the board
@@ -29,11 +30,11 @@ const int PP_TILE_SIZE = 7;
 // find tic tac toe piece given its tile name
 entity pp_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
-	return world;
+	return NULL;
 }
 
 // check if the tile name is valid (3x3 grid)
@@ -121,7 +122,7 @@ void pp_move(entity minigame, entity player, string pos )
 			if(existing)
 			{
 				if(existing.netname) { strunzone(existing.netname); }
-				remove(existing);
+				delete(existing);
 			}
 
 			entity piece = msle_spawn(minigame,"minigame_board_piece");
@@ -164,7 +165,7 @@ void pp_setup_pieces(entity minigame)
 		}
 	}
 
-	minigame.pp_curr_piece = world;
+	minigame.pp_curr_piece = NULL;
 }
 
 // request a new match
@@ -183,10 +184,10 @@ void pp_next_match(entity minigame, entity player)
 	{
 		minigame.minigame_flags = PP_TURN_PLACE | minigame.pp_nexteam;
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
-		entity e = world;
+		entity e = NULL;
 		while ( ( e = findentity(e,owner,minigame) ) )
 			if ( e.classname == "minigame_board_piece" )
-				remove(e);
+				delete(e);
 		minigame.pp_team1_score = 0;
 		minigame.pp_team2_score = 0;
 
@@ -210,12 +211,12 @@ int pp_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}
@@ -270,8 +271,7 @@ int pp_server_event(entity minigame, string event, ...)
 
 string pp_curr_pos; // identifier of the tile under the mouse
 vector pp_boardpos; // HUD board position
-vector pp_boardsize;// HUD board size
-.int pp_checkwin; // Used to optimize checks to display a win
+vector pp_boardsize; // HUD board size
 
 // Required function, draw the game board
 void pp_hud_board(vector pos, vector mySize)
@@ -285,7 +285,7 @@ void pp_hud_board(vector pos, vector mySize)
 	vector tile_size = minigame_hud_denormalize_size('1 1 0'/PP_TILE_SIZE,pos,mySize);
 	vector tile_pos;
 
-	active_minigame.pp_curr_piece = world;
+	active_minigame.pp_curr_piece = NULL;
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	if(e.classname == "minigame_board_piece")
@@ -350,22 +350,22 @@ void pp_hud_board(vector pos, vector mySize)
 	if ( active_minigame.minigame_flags & PP_TURN_WIN )
 	{
 		vector winfs = hud_fontsize*2;
-		string playername = "";
+		string pname = "";
 		FOREACH_MINIGAME_ENTITY(e)
 			if ( e.classname == "minigame_player" &&
 					e.team == (active_minigame.minigame_flags & PP_TURN_TEAM) )
-				playername = entcs_GetName(e.minigame_playerslot-1);
+				pname = entcs_GetName(e.minigame_playerslot-1);
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername),
+			sprintf("%s^7 won the game!",pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername),
+			sprintf("%s^7 won the game!",pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -374,7 +374,7 @@ void pp_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void pp_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);

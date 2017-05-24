@@ -3,7 +3,7 @@
 #include "listbox.qh"
 CLASS(XonoticSkinList, XonoticListBox)
 	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity));
-	ATTRIB(XonoticSkinList, rowsPerItem, float, 4)
+	ATTRIB(XonoticSkinList, rowsPerItem, float, 4);
 	METHOD(XonoticSkinList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticSkinList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticSkinList, getSkins, void(entity));
@@ -15,18 +15,18 @@ CLASS(XonoticSkinList, XonoticListBox)
 	METHOD(XonoticSkinList, keyDown, float(entity, float, float, float));
 	METHOD(XonoticSkinList, destroy, void(entity));
 
-	ATTRIB(XonoticSkinList, skinlist, float, -1)
-	ATTRIB(XonoticSkinList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticSkinList, columnPreviewOrigin, float, 0)
-	ATTRIB(XonoticSkinList, columnPreviewSize, float, 0)
-	ATTRIB(XonoticSkinList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticSkinList, columnNameSize, float, 0)
-	ATTRIB(XonoticSkinList, realUpperMargin1, float, 0)
-	ATTRIB(XonoticSkinList, realUpperMargin2, float, 0)
-	ATTRIB(XonoticSkinList, origin, vector, '0 0 0')
-	ATTRIB(XonoticSkinList, itemAbsSize, vector, '0 0 0')
+	ATTRIB(XonoticSkinList, skinlist, float, -1);
+	ATTRIB(XonoticSkinList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticSkinList, columnPreviewOrigin, float, 0);
+	ATTRIB(XonoticSkinList, columnPreviewSize, float, 0);
+	ATTRIB(XonoticSkinList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticSkinList, columnNameSize, float, 0);
+	ATTRIB(XonoticSkinList, realUpperMargin1, float, 0);
+	ATTRIB(XonoticSkinList, realUpperMargin2, float, 0);
+	ATTRIB(XonoticSkinList, origin, vector, '0 0 0');
+	ATTRIB(XonoticSkinList, itemAbsSize, vector, '0 0 0');
 
-	ATTRIB(XonoticSkinList, name, string, "skinselector")
+	ATTRIB(XonoticSkinList, name, string, "skinselector");
 ENDCLASS(XonoticSkinList)
 
 entity makeXonoticSkinList();

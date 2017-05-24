@@ -1,6 +1,7 @@
 #include "centerprint.qh"
 
-#include <client/scoreboard.qh>
+#include "scoreboard.qh"
+#include <common/notifications/all.qh>
 
 // CenterPrint (#16)
 
@@ -57,8 +58,7 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 			{
 				// fade out the current msg (duration and countdown_num are ignored)
 				centerprint_time[j] = min(5, autocvar_hud_panel_centerprint_fade_out);
-				if (centerprint_expire_time[j] > time + min(5, autocvar_hud_panel_centerprint_fade_out) || centerprint_expire_time[j] < time)
-					centerprint_expire_time[j] = time + min(5, autocvar_hud_panel_centerprint_fade_out);
+				centerprint_expire_time[j] = -1; // don't use the variable time here!
 				return;
 			}
 			break; // found a msg with the same id, at position j
@@ -80,14 +80,14 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 	if (duration < 0)
 	{
 		centerprint_time[j] = -1;
-		centerprint_expire_time[j] = time;
+		centerprint_expire_time[j] = -1; // don't use the variable time here!
 	}
 	else
 	{
 		if(duration == 0)
 			duration = max(1, autocvar_hud_panel_centerprint_time);
 		centerprint_time[j] = duration;
-		centerprint_expire_time[j] = time + duration;
+		centerprint_expire_time[j] = -1; // don't use the variable time here!
 	}
 	centerprint_countdown_num[j] = countdown_num;
 }
@@ -128,7 +128,10 @@ void HUD_CenterPrint ()
 	else
 	{
 		if(!hud_configure_prev)
+		{
 			reset_centerprint_messages();
+			hud_configure_cp_generation_time = time; // show a message immediately
+		}
 		if (time > hud_configure_cp_generation_time)
 		{
 			if(highlightedPanel == HUD_PANEL(CENTERPRINT))
@@ -151,14 +154,7 @@ void HUD_CenterPrint ()
 		}
 	}
 
-	// this panel fades only when the menu does
-	float hud_fade_alpha_save = 0;
-	if(scoreboard_fade_alpha)
-	{
-		hud_fade_alpha_save = hud_fade_alpha;
-		hud_fade_alpha = 1 - autocvar__menu_alpha;
-	}
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	if ( HUD_Radar_Clickable() )
 	{
@@ -168,17 +164,13 @@ void HUD_CenterPrint ()
 		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
 		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
 	}
-	else if(scoreboard_fade_alpha)
+	else if(!autocvar__hud_configure && scoreboard_fade_alpha)
 	{
-		hud_fade_alpha = hud_fade_alpha_save;
-
 		// move the panel below the scoreboard
 		if (scoreboard_bottom >= 0.96 * vid_conheight)
 			return;
 		vector target_pos;
-
 		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size.x);
-
 		if(target_pos.y > panel_pos.y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
@@ -186,7 +178,11 @@ void HUD_CenterPrint ()
 		}
 	}
 
-	HUD_Panel_DrawBg(1);
+	if (autocvar_hud_panel_centerprint_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
+	HUD_Panel_DrawBg();
 
 	if (!centerprint_showing)
 		return;
@@ -221,6 +217,13 @@ void HUD_CenterPrint ()
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
+		if (centerprint_expire_time[j] == -1)
+		{
+			// here we are sure the time variable is not altered by CSQC_Ent_Update
+			centerprint_expire_time[j] = time;
+			if (centerprint_time[j] > 0)
+				centerprint_expire_time[j] += centerprint_time[j];
+		}
 		if (centerprint_expire_time[j] <= time)
 		{
 			if (centerprint_countdown_num[j] && centerprint_time[j] > 0)
@@ -244,6 +247,9 @@ void HUD_CenterPrint ()
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 
+		if(centerprint_msgID[j] == CPID_TIMEIN)
+			a = 1;
+
 		// while counting down show it anyway in order to hold the current message position
 		if (a <= 0.5/255.0 && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
 			continue;
@@ -256,14 +262,16 @@ void HUD_CenterPrint ()
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
 		{
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half theAlpha
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower theAlpha even more for each message
+			// pass one: all messages after the first have half alpha
+			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1);
+			// pass two: after that, gradually lower alpha even more for each message
+			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1);
 		}
 		a *= panel_fg_alpha;
 
-		// finally set the size based on the new theAlpha from subsequent fading
+		// finally set the size based on the new alpha from subsequent fading
 		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
-		drawfontscale = sz * '1 1 0';
+		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
 			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
@@ -278,7 +286,7 @@ void HUD_CenterPrint ()
 				getWrappedLine_remaining = argv(k);
 				while(getWrappedLine_remaining)
 				{
-					ts = getWrappedLine(panel_size.x * sz, fontsize, stringwidth_colors);
+					ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 					if (ts != "")
 						pos.y -= fontsize.y;
 					else
@@ -294,13 +302,13 @@ void HUD_CenterPrint ()
 			getWrappedLine_remaining = argv(k);
 			while(getWrappedLine_remaining)
 			{
-				ts = getWrappedLine(panel_size.x * sz, fontsize, stringwidth_colors);
+				ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 				if (ts != "")
 				{
 					if (align)
-						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize)) * align;
+						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize) * sz) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
-						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
+						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz * hud_scale.x) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
 					pos.y += fontsize.y;
 				}
 				else
@@ -319,7 +327,7 @@ void HUD_CenterPrint ()
 
 			if (pos.y < panel_pos.y) // check if the next message can be shown
 			{
-				drawfontscale = '1 1 0';
+				drawfontscale = hud_scale;
 				return;
 			}
 		}
@@ -331,12 +339,12 @@ void HUD_CenterPrint ()
 
 			if(pos.y > panel_pos.y + panel_size.y - fontsize.y) // check if the next message can be shown
 			{
-				drawfontscale = '1 1 0';
+				drawfontscale = hud_scale;
 				return;
 			}
 		}
 	}
-	drawfontscale = '1 1 0';
+	drawfontscale = hud_scale;
 	if (all_messages_expired)
 	{
 		centerprint_showing = false;
