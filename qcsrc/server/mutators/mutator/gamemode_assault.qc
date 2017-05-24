@@ -195,13 +195,12 @@ void assault_new_round(entity this)
 	else
 		assault_attacker_team = NUM_TEAM_1;
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
+	IL_EACH(g_saved_team, !IS_CLIENT(it),
 	{
-		if(IS_CLIENT(it))
-			continue;
-
-		if (it.team_saved == NUM_TEAM_1) it.team_saved = NUM_TEAM_2;
-		else if (it.team_saved == NUM_TEAM_2) it.team_saved = NUM_TEAM_1;
+		if(it.team_saved == NUM_TEAM_1)
+			it.team_saved = NUM_TEAM_2;
+		else if(it.team_saved == NUM_TEAM_2)
+			it.team_saved = NUM_TEAM_1;
 	});
 
 	// reset the level with a countdown

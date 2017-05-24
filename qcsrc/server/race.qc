@@ -577,9 +577,6 @@ void checkpoint_passed(entity this, entity player)
 	if(player.personal && autocvar_g_allow_checkpoints)
 		return; // practice mode!
 
-	string oldmsg;
-	entity cp;
-
 	if(player.classname == "porto")
 	{
 		// do not allow portalling through checkpoints
@@ -587,6 +584,8 @@ void checkpoint_passed(entity this, entity player)
 		W_Porto_Fail(player, 0);
 		return;
 	}
+
+	string oldmsg; // used twice
 
 	/*
 	 * Trigger targets
@@ -616,30 +615,37 @@ void checkpoint_passed(entity this, entity player)
 			this.race_checkpoint = player.race_checkpoint;
 		}
 
-		float largest_cp_id = 0;
-		float cp_amount = 0;
-		for(cp = NULL; (cp = find(cp, classname, "target_checkpoint"));)
+		int cp_amount = 0, largest_cp_id = 0;
+		IL_EACH(g_race_targets, it.classname == "target_checkpoint",
 		{
 			cp_amount += 1;
-			if(cp.race_checkpoint > largest_cp_id) // update the finish id if someone hit a new checkpoint
+			if(it.race_checkpoint > largest_cp_id) // update the finish id if someone hit a new checkpoint
 			{
-				largest_cp_id = cp.race_checkpoint;
-				for(cp = NULL; (cp = find(cp, classname, "target_stopTimer"));)
-					cp.race_checkpoint = largest_cp_id + 1; // finish line
+				if(!largest_cp_id)
+				{
+					IL_EACH(g_race_targets, it.classname == "target_checkpoint",
+					{
+						if(it.race_checkpoint == -2) // set defragcpexists to -1 so that the cp id file will be rewritten when someone finishes
+							defragcpexists = -1;
+					});
+				}
+
+				largest_cp_id = it.race_checkpoint;
+				IL_EACH(g_race_targets, it.classname == "target_stopTimer",
+				{
+					it.race_checkpoint = largest_cp_id + 1; // finish line
+				});
 				race_highest_checkpoint = largest_cp_id + 1;
 				race_timed_checkpoint = largest_cp_id + 1;
-
-				for(cp = NULL; (cp = find(cp, classname, "target_checkpoint"));)
-				{
-					if(cp.race_checkpoint == -2) // set defragcpexists to -1 so that the cp id file will be rewritten when someone finishes
-						defragcpexists = -1;
-				}
 			}
-		}
-		if(cp_amount == 0)
+		});
+
+		if(!cp_amount)
 		{
-			for(cp = NULL; (cp = find(cp, classname, "target_stopTimer"));)
-				cp.race_checkpoint = 1;
+			IL_EACH(g_race_targets, it.classname == "target_stopTimer",
+			{
+				it.race_checkpoint = 1;
+			});
 			race_highest_checkpoint = 1;
 			race_timed_checkpoint = 1;
 		}
@@ -695,8 +701,10 @@ void checkpoint_passed(entity this, entity player)
 			defragcpexists = fh = fopen(strcat("maps/", GetMapname(), ".defragcp"), FILE_WRITE);
 			if(fh >= 0)
 			{
-				for(cp = NULL; (cp = find(cp, classname, "target_checkpoint"));)
-				fputs(fh, strcat(cp.targetname, " ", ftos(cp.race_checkpoint), "\n"));
+				IL_EACH(g_race_targets, it.classname == "target_checkpoint",
+				{
+					fputs(fh, strcat(it.targetname, " ", ftos(it.race_checkpoint), "\n"));
+				});
 			}
 			fclose(fh);
 		}
