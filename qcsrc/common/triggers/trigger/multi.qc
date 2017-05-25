@@ -55,7 +55,7 @@ void multi_trigger(entity this)
 	}
 	else
 	{	// we can't just remove (this) here, because this is a touch function
-		// called wheil C code is looping through area links...
+		// called while C code is looping through area links...
 		settouch(this, func_null);
 	}
 }

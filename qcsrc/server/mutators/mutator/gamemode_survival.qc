@@ -1,5 +1,6 @@
 #include "gamemode_survival.qh"
 
+#include <common/mutators/mutator/playertemplates/sv_playertemplates.qh>
 #include <common/mutators/mutator/overkill/hmg.qh>
 #include <common/mutators/mutator/overkill/rpc.qh>
 
@@ -71,34 +72,6 @@ int autocvar_g_surv_defender_force_overkill_models;
 /// \brief Whether to force overkill player models for cannon fodder.
 int autocvar_g_surv_cannon_fodder_force_overkill_models;
 
-/// \brief Number of weapons that can be randomly given to attackers during
-/// spawn.
-int autocvar_g_surv_attacker_num_random_start_weapons;
-
-/// \brief How much health do defenders get during spawn.
-int autocvar_g_surv_defender_start_health;
-/// \brief How much armor do defenders get during spawn.
-int autocvar_g_surv_defender_start_armor;
-/// \brief How many shells do defenders get during spawn.
-int autocvar_g_surv_defender_start_ammo_shells;
-/// \brief How many bullets do defenders get during spawn.
-int autocvar_g_surv_defender_start_ammo_bullets;
-/// \brief How many rockets do defenders get during spawn.
-int autocvar_g_surv_defender_start_ammo_rockets;
-/// \brief How many cells do defenders get during spawn.
-int autocvar_g_surv_defender_start_ammo_cells;
-/// \brief Number of weapons that can be randomly given to defenders during
-/// spawn.
-int autocvar_g_surv_defender_num_random_start_weapons;
-
-/// \brief How much health does cannon fodder get during spawn.
-int autocvar_g_surv_cannon_fodder_start_health;
-/// \brief How much armor does cannon fodder get during spawn.
-int autocvar_g_surv_cannon_fodder_start_armor;
-/// \brief Number of weapons that can be randomly given to cannon fodder during
-/// spawn.
-int autocvar_g_surv_cannon_fodder_num_random_start_weapons;
-
 /// \brief How much health do attackers get when they pickup ammo.
 int autocvar_g_surv_attacker_pickup_ammo_health;
 /// \brief How much armor do attackers get when they pickup ammo.
@@ -168,17 +141,6 @@ int autocvar_g_surv_defender_pickup_cells_mega;
 
 /// \brief How much score attackers gain per 1 point of damage.
 float autocvar_g_surv_attacker_damage_score;
-
-/// \brief How much defenders damage others. Higher values mean more damage.
-float autocvar_g_surv_defender_attack_scale;
-/// \brief How much defenders get damaged. High values mean less damage.
-float autocvar_g_surv_defender_defense_scale;
-
-/// \brief How much cannon fodder damages others. Higher values mean more
-/// damage.
-float autocvar_g_surv_cannon_fodder_attack_scale;
-/// \brief How much cannon fodder gets damaged. Higher values mean less damage.
-float autocvar_g_surv_cannon_fodder_defense_scale;
 
 /// \brief How much score attackers get for fragging defenders.
 float autocvar_g_surv_attacker_frag_score;
@@ -348,6 +310,33 @@ void Surv_Initialize()
 	ActivateTeamplay();
 	SetLimits(autocvar_g_surv_point_limit, autocvar_g_surv_point_leadlimit,
 		autocvar_timelimit_override, -1);
+}
+
+string Surv_GetPlayerTemplate(entity player)
+{
+	switch (player.team)
+	{
+		case surv_attackerteam:
+		{
+			switch (player.surv_role)
+			{
+				case SURVIVAL_ROLE_NONE:
+				case SURVIVAL_ROLE_PLAYER:
+				{
+					return "surv_attacker";
+				}
+				case SURVIVAL_ROLE_CANNON_FODDER:
+				{
+					return "surv_cannon_fodder";
+				}
+			}
+		}
+		case surv_defenderteam:
+		{
+			return "surv_defender";
+		}
+	}
+	return "default";
 }
 
 /// \brief Changes the number of players in a team.
@@ -878,9 +867,9 @@ void Surv_UpdateAliveStats()
 /// \return No return.
 void Surv_UpdateDefenderHealthStat()
 {
-	float maxhealth = surv_numdefenders * (
-		autocvar_g_surv_defender_start_health +
-		autocvar_g_surv_defender_start_armor);
+	float maxhealth = surv_numdefenders * (PlayerTemplate_GetFloatCvar(
+		"surv_defender", "start_health") + PlayerTemplate_GetFloatCvar(
+		"surv_defender", "start_armor"));
 	float totalhealth = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
@@ -1100,111 +1089,6 @@ void Surv_DeterminePlayerModel(entity player)
 	}
 }
 
-/// \brief Gives start weapons to the player.
-/// \param[in,out] player Player to give weapons to.
-/// \return No return.
-void Surv_GiveStartWeapons(entity player)
-{
-	int numrandomweapons = 0;
-	string randomweaponlist = "";
-	switch (player.team)
-	{
-		case surv_attackerteam:
-		{
-			FOREACH(Weapons, it != WEP_Null,
-			{
-				if (it.weaponstart)
-				{
-					player.weapons |= it.m_wepset;
-				}
-			});
-			switch (player.surv_role)
-			{
-				case SURVIVAL_ROLE_PLAYER:
-				{
-					numrandomweapons =
-						autocvar_g_surv_attacker_num_random_start_weapons;
-					randomweaponlist = "g_surv_attacker_random_start_weapons";
-					break;
-				}
-				case SURVIVAL_ROLE_CANNON_FODDER:
-				{
-					numrandomweapons =
-						autocvar_g_surv_cannon_fodder_num_random_start_weapons;
-					randomweaponlist =
-						"g_surv_cannon_fodder_random_start_weapons";
-					break;
-				}
-			}
-			break;
-		}
-		case surv_defenderteam:
-		{
-			int numweapons = tokenize_console(cvar_string(
-				"g_surv_defender_start_weapons"));
-			for (int i = 0; i < numweapons; ++i)
-			{
-				string weapon = argv(i);
-				FOREACH(Weapons, it != WEP_Null,
-				{
-					if (it.netname == weapon)
-					{
-						player.weapons |= it.m_wepset;
-						break;
-					}
-				});
-			}
-			numrandomweapons =
-				autocvar_g_surv_defender_num_random_start_weapons;
-			randomweaponlist = "g_surv_defender_random_start_weapons";
-			break;
-		}
-	}
-	if (numrandomweapons == 0)
-	{
-		return;
-	}
-	int numweapons = tokenize_console(cvar_string(randomweaponlist));
-	if (warmup_stage)
-	{
-		// Give all weapons during warmup stage.
-		for (int i = 0; i < numweapons; ++i)
-		{
-			string weapon = argv(i);
-			FOREACH(Weapons, it != WEP_Null,
-			{
-				if (it.netname == weapon)
-				{
-					player.weapons |= it.m_wepset;
-					break;
-				}
-			});
-		}
-		return;
-	}
-	for (int i = 0; i < numrandomweapons; ++i)
-	{
-		// Finding weapon which player doesn't have.
-		WepSet weaponbit = WEPSET(Null);
-		int numattempts = 0;
-		do
-		{
-			string weapon = argv(floor(random() * numweapons));
-			FOREACH(Weapons, it != WEP_Null,
-			{
-				if (it.netname == weapon)
-				{
-					weaponbit = it.m_wepset;
-					break;
-				}
-			});
-			++numattempts;
-		}
-		while ((player.weapons & weaponbit) && (numattempts < 10));
-		player.weapons |= weaponbit;
-	}
-}
-
 //=============================== Callbacks ===================================
 
 bool Surv_CanRoundStart()
@@ -1383,8 +1267,9 @@ void Surv_RoundStart()
 						NULL, surv_attackerteam, it, surv_attack_sprite, false,
 						RADARICON_OBJECTIVE);
 					WaypointSprite_UpdateMaxHealth(it.surv_attack_sprite,
-						autocvar_g_surv_defender_start_health +
-						autocvar_g_surv_defender_start_armor);
+						PlayerTemplate_GetFloatCvar("surv_defender",
+						"start_health") + PlayerTemplate_GetFloatCvar(
+						"surv_defender", "start_armor"));
 					WaypointSprite_UpdateHealth(it.surv_attack_sprite,
 						it.health + it.armorvalue);
 				}
@@ -1696,7 +1581,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	LOG_TRACE("Survival: PlayerSpawn, player = ", player.netname);
 	player.surv_state = SURVIVAL_STATE_PLAYING;
 	Surv_DeterminePlayerModel(player);
-	Surv_GiveStartWeapons(player);
+	PlayerTemplate_PlayerSpawn(player, Surv_GetPlayerTemplate(player));
 	switch (player.team)
 	{
 		case surv_attackerteam:
@@ -1705,17 +1590,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 			{
 				case SURVIVAL_ROLE_PLAYER:
 				{
-					player.items |= IT_UNLIMITED_AMMO;
 					Send_Notification(NOTIF_ONE, player, MSG_CENTER,
 						CENTER_ASSAULT_ATTACKING);
-					break;
-				}
-				case SURVIVAL_ROLE_CANNON_FODDER:
-				{
-					player.health = autocvar_g_surv_cannon_fodder_start_health;
-					player.armorvalue =
-						autocvar_g_surv_cannon_fodder_start_armor;
-					player.items |= IT_UNLIMITED_AMMO;
 					break;
 				}
 				default:
@@ -1733,12 +1609,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 				LOG_TRACE("Survival: PlayerSpawn: ", player.netname,
 					" has invalid defender role.");
 			}
-			player.health = autocvar_g_surv_defender_start_health;
-			player.armorvalue = autocvar_g_surv_defender_start_armor;
-			player.ammo_shells = autocvar_g_surv_defender_start_ammo_shells;
-			player.ammo_nails = autocvar_g_surv_defender_start_ammo_bullets;
-			player.ammo_rockets = autocvar_g_surv_defender_start_ammo_rockets;
-			player.ammo_cells = autocvar_g_surv_defender_start_ammo_cells;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER,
 				CENTER_ASSAULT_DEFENDING);
 			break;
@@ -2116,47 +1986,9 @@ MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float damage = M_ARGV(4, float);
-	switch (frag_attacker.team)
-	{
-		case surv_attackerteam:
-		{
-			switch (frag_attacker.surv_role)
-			{
-				case SURVIVAL_ROLE_CANNON_FODDER:
-				{
-					damage *= autocvar_g_surv_cannon_fodder_attack_scale;
-					break;
-				}
-			}
-			break;
-		}
-		case surv_defenderteam:
-		{
-			damage *= autocvar_g_surv_defender_attack_scale;
-			break;
-		}
-	}
-	switch (frag_target.team)
-	{
-		case surv_attackerteam:
-		{
-			switch (frag_target.surv_role)
-			{
-				case SURVIVAL_ROLE_CANNON_FODDER:
-				{
-					damage /= autocvar_g_surv_cannon_fodder_defense_scale;
-					break;
-				}
-			}
-			break;
-		}
-		case surv_defenderteam:
-		{
-			damage /= autocvar_g_surv_defender_defense_scale;
-			break;
-		}
-	}
-	M_ARGV(4, float) = damage;
+	M_ARGV(4, float) = PlayerTemplate_Damage_Calculate(frag_attacker,
+		Surv_GetPlayerTemplate(frag_attacker), frag_target,
+		Surv_GetPlayerTemplate(frag_target), damage);
 }
 
 /// \brief Hook which is called when the player was damaged.
