@@ -1,0 +1,35 @@
+/// \file
+/// \brief Header file that describes the Player Templates mutator.
+/// \author Lyberta
+/// \copyright GNU GPLv3 or any later version.
+
+#pragma once
+
+/// \brief Gets the floating point value of the variable from the given
+/// template.
+/// \param[in] template Name of the template.
+/// \param[in] variable Name of the variable.
+/// \return Value of the variable.
+float PlayerTemplate_GetFloatCvar(string template, string variable);
+
+/// \brief Gets the string value of the variable from the given template.
+/// \param[in] template Name of the template.
+/// \param[in] variable Name of the variable.
+/// \return Value of the variable.
+string PlayerTemplate_GetStringCvar(string template, string variable);
+
+/// \brief Setups the player during spawn according to the given template.
+/// \param[in] player Player to setup.
+/// \param[in] template Name of the template.
+/// \return No return.
+void PlayerTemplate_PlayerSpawn(entity player, string template);
+
+/// \brief Changes the damage done using templates' attack and defense scales.
+/// \param[in] attacke Attacker entity.
+/// \param[in] attackertemplate Template of the attacker.
+/// \param[in] victim Victim entity.
+/// \param[in] victimtemplate Template of the victim.
+/// \param[in] damage Damage to adjust.
+/// \return Adjusted damage.
+float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
+	entity victim, string victimtemplate, float damage);

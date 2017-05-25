@@ -23,6 +23,7 @@
 #include <common/mutators/mutator/overkill/_mod.qh>
 #include <common/mutators/mutator/physical_items/_mod.qh>
 #include <common/mutators/mutator/pinata/_mod.qh>
+#include <common/mutators/mutator/playertemplates/_mod.qh>
 #include <common/mutators/mutator/random_gravity/_mod.qh>
 #include <common/mutators/mutator/rocketflying/_mod.qh>
 #include <common/mutators/mutator/rocketminsta/_mod.qh>
