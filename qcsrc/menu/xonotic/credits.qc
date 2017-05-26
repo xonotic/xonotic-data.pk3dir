@@ -144,7 +144,6 @@
 		PERSON(Lyberta) \
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
-
 	NL() \
 	NL() \
 	TITLE(_("Translators")) \
