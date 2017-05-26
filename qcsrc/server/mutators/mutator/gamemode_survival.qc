@@ -867,8 +867,8 @@ void Surv_UpdateAliveStats()
 /// \return No return.
 void Surv_UpdateDefenderHealthStat()
 {
-	float maxhealth = surv_numdefenders * (PlayerTemplate_GetFloatCvar(
-		"surv_defender", "start_health") + PlayerTemplate_GetFloatCvar(
+	float maxhealth = surv_numdefenders * (PlayerTemplate_GetFloatValue(
+		"surv_defender", "start_health") + PlayerTemplate_GetFloatValue(
 		"surv_defender", "start_armor"));
 	float totalhealth = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
@@ -1267,8 +1267,8 @@ void Surv_RoundStart()
 						NULL, surv_attackerteam, it, surv_attack_sprite, false,
 						RADARICON_OBJECTIVE);
 					WaypointSprite_UpdateMaxHealth(it.surv_attack_sprite,
-						PlayerTemplate_GetFloatCvar("surv_defender",
-						"start_health") + PlayerTemplate_GetFloatCvar(
+						PlayerTemplate_GetFloatValue("surv_defender",
+						"start_health") + PlayerTemplate_GetFloatValue(
 						"surv_defender", "start_armor"));
 					WaypointSprite_UpdateHealth(it.surv_attack_sprite,
 						it.health + it.armorvalue);
