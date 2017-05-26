@@ -10,17 +10,18 @@ float autocvar_g_turrets_unit_ewheel_speed_slower;
 float autocvar_g_turrets_unit_ewheel_speed_stop;
 float autocvar_g_turrets_unit_ewheel_turnrate;
 
-const float ewheel_anim_stop = 0;
-const float ewheel_anim_fwd_slow = 1;
-const float ewheel_anim_fwd_fast = 2;
-const float ewheel_anim_bck_slow = 3;
-const float ewheel_anim_bck_fast = 4;
+const int ewheel_anim_stop     = 0;
+const int ewheel_anim_fwd_slow = 1;
+const int ewheel_anim_fwd_fast = 2;
+const int ewheel_anim_bck_slow = 3;
+const int ewheel_anim_bck_fast = 4;
 
 void ewheel_move_path(entity this)
 {
-#ifdef EWHEEL_FANCYPATH
-    // Are we close enougth to a path node to switch to the next?
+    // Are we close enough to a path node to switch to the next?
     if(vdist(this.origin - this.pathcurrent.origin, <, 64))
+    {
+#ifdef EWHEEL_FANCYPATH
         if (this.pathcurrent.path_next == NULL)
         {
             // Path endpoint reached
@@ -43,11 +44,10 @@ void ewheel_move_path(entity this)
         }
         else
             this.pathcurrent = this.pathcurrent.path_next;
-
 #else
-    if(vdist(this.origin - this.pathcurrent.origin, <, 64))
         this.pathcurrent = this.pathcurrent.enemy;
 #endif
+    }
 
     if (this.pathcurrent)
     {
@@ -61,11 +61,11 @@ void ewheel_move_path(entity this)
 
 void ewheel_move_enemy(entity this)
 {
-    float newframe;
+    int newframe;
 
     this.steerto = steerlib_arrive(this, this.enemy.origin,this.target_range_optimal);
 
-    this.moveto  = this.origin + this.steerto * 128;
+    this.moveto = this.origin + this.steerto * 128;
 
     if (this.tur_dist_enemy > this.target_range_optimal)
     {
@@ -176,17 +176,17 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
             e = find(NULL, targetname, it.target);
             if (!e)
             {
-                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!");
+                LOG_TRACE("Initital waypoint for ewheel does NOT exist, fix your map!");
                 it.target = "";
             }
 
             if (e.classname != "turret_checkpoint")
-                LOG_TRACE("Warning: not a turrret path");
+                LOG_TRACE("Warning: not a turret path");
             else
             {
 
 #ifdef EWHEEL_FANCYPATH
-                it.pathcurrent = WALKER_PATH(it, it.origin, e.origin);
+                it.pathcurrent = pathlib_astar(it, it.origin, e.origin);
                 it.pathgoal = e;
 #else
                 it.pathcurrent  = e;
