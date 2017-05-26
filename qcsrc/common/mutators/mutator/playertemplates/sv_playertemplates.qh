@@ -5,18 +5,40 @@
 
 #pragma once
 
+/// \brief Returns the full name of the player template cvar.
+/// \param[in] template Name of the template.
+/// \param[in] variable Name of the variable.
+/// \return Full name of the variable.
+string PlayerTemplate_GetFullCvarName(string template, string variable);
+
+/// \brief Returns the name of the cvar that is used for default value.
+/// \param[in] Name of the player template variable.
+/// \return Name of the cvar that is used for default value.
+string PlayerTemplate_GetDefaultCvarName(string variable);
+
+/// \brief Returns the default floating point value of the player template
+/// variable.
+/// \param[in] variable Name of the variable.
+/// \return Default floating point value of the player template variable.
+float PlayerTemplate_GetDefaultFloatValue(string variable);
+
+/// \brief Returns the default string value of the player template variable.
+/// \param[in] variable Name of the variable.
+/// \return Default string value of the player template variable.
+string PlayerTemplate_GetDefaultStringValue(string variable);
+
 /// \brief Gets the floating point value of the variable from the given
 /// template.
 /// \param[in] template Name of the template.
 /// \param[in] variable Name of the variable.
 /// \return Value of the variable.
-float PlayerTemplate_GetFloatCvar(string template, string variable);
+float PlayerTemplate_GetFloatValue(string template, string variable);
 
 /// \brief Gets the string value of the variable from the given template.
 /// \param[in] template Name of the template.
 /// \param[in] variable Name of the variable.
 /// \return Value of the variable.
-string PlayerTemplate_GetStringCvar(string template, string variable);
+string PlayerTemplate_GetStringValue(string template, string variable);
 
 /// \brief Setups the player during spawn according to the given template.
 /// \param[in] player Player to setup.
