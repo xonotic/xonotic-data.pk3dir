@@ -157,7 +157,7 @@ void W_Tuba_NoteOff(entity this)
 	if (actor.(weaponentity).tuba_note == this)
 	{
 		actor.(weaponentity).tuba_lastnotes_last = (actor.(weaponentity).tuba_lastnotes_last + 1) % MAX_TUBANOTES;
-		actor.(weaponentity).(tuba_lastnotes[actor.(weaponentity).tuba_lastnotes_last]) = eX * this.spawnshieldtime + eY * time + eZ * this.cnt;
+		actor.(weaponentity).(tuba_lastnotes[actor.(weaponentity).tuba_lastnotes_last]) = vec3(this.spawnshieldtime, time, this.cnt);
 		actor.(weaponentity).tuba_note = NULL;
 		actor.(weaponentity).tuba_lastnotes_cnt = bound(0, actor.(weaponentity).tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
 

@@ -109,10 +109,7 @@ vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspe
 		rows = ceil(item_count/columns);
 	}
 
-	if(vertical)
-		return eX * best_rows + eY * best_columns;
-	else
-		return eX * best_columns + eY * best_rows;
+	return (vertical) ? vec2(best_rows, best_columns) : vec2(best_columns, best_rows);
 }
 
 /*

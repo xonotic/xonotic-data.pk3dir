@@ -841,7 +841,7 @@ void ons_camSetup(entity this)
 	float best_trace_fraction = 0;
 	while(ang.y < 360)
 	{
-		dir = eX * cos(ang.y * DEG2RAD) + eY * sin(ang.y * DEG2RAD);
+		dir = vec2(cos(ang.y * DEG2RAD), sin(ang.y * DEG2RAD));
 		dir *= 500;
 		traceline(this.origin, this.origin - dir, MOVE_WORLDONLY, this);
 		if(trace_fraction > best_trace_fraction)

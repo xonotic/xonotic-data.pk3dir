@@ -104,10 +104,7 @@ noref vector _vec3;
 vector Rotate(vector v, float a)
 {
 	float a_sin = sin(a), a_cos = cos(a);
-	vector r = '0 0 0';
-	r.x =      v.x * a_cos + v.y * a_sin;
-	r.y = -1 * v.x * a_sin + v.y * a_cos;
-	return r;
+	return vec2(v.x * a_cos + v.y * a_sin, -v.x * a_sin + v.y * a_cos);
 }
 
 noref vector _yinvert;
@@ -164,10 +161,10 @@ vector vec_epsilon(vector this, float eps)
 		vector m1 = box.mins + box.origin;
 		vector m2 = box.maxs + box.origin;
 
-		vector ret;
-		ret.x = bound(m1.x, org.x, m2.x);
-		ret.y = bound(m1.y, org.y, m2.y);
-		ret.z = bound(m1.z, org.z, m2.z);
-		return ret;
+		return vec3(
+			bound(m1.x, org.x, m2.x),
+			bound(m1.y, org.y, m2.y),
+			bound(m1.z, org.z, m2.z)
+		);
 	}
 #endif

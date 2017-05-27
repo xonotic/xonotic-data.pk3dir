@@ -407,7 +407,7 @@ void HUD_Weapons()
 		}
 
 		// figure out the drawing position of weapon
-		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
+		weapon_pos = panel_pos + vec2(column * weapon_size.x, row * weapon_size.y);
 
 		// update position of the currently selected weapon
 		if(it == panel_switchweapon)
