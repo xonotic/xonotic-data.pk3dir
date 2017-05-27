@@ -93,6 +93,10 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 	up = v_up; \
 } MACRO_END
 
+//pseudo prototypes:
+// vector vec2(vector v); // returns a vector with just the x and y components of the given vector
+// vector vec2(float x, float y); // returns a vector with the given x and y components
+
 noref vector _vec2;
 #define vec2(...) EVAL(OVERLOAD(vec2, __VA_ARGS__))
 #define vec2_1(v) (_vec2 = (v), _vec2.z = 0, _vec2)
