@@ -40,11 +40,26 @@ float PlayerTemplate_GetFloatValue(string template, string variable);
 /// \return Value of the variable.
 string PlayerTemplate_GetStringValue(string template, string variable);
 
+/// \brief Gives player items according to the given template's variable.
+/// \param[in] player Player to give items to.
+/// \param[in] template Name of the template.
+/// \param[in] variable Name of the variable.
+/// \return Enum value to pass to mutator hook.
+float PlayerTemplate_GivePlayerItem(entity player, string template,
+	string variable);
+
 /// \brief Setups the player during spawn according to the given template.
 /// \param[in] player Player to setup.
 /// \param[in] template Name of the template.
 /// \return No return.
 void PlayerTemplate_PlayerSpawn(entity player, string template);
+
+/// \brief Gives player items according to the given template.
+/// \param[in] player Player to give items to.
+/// \param[in] item Item which player has picked up.
+/// \param[in] template Name of the template.
+/// \return Enum value to pass to mutator hook.
+float PlayerTemplate_ItemTouch(entity player, entity item, string template);
 
 /// \brief Changes the damage done using templates' attack and defense scales.
 /// \param[in] attacke Attacker entity.

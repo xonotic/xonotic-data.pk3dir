@@ -120,6 +120,10 @@ float PlayerTemplate_GetFloatValue(string template, string variable)
 		return PlayerTemplate_GetDefaultFloatValue(variable);
 	}
 	string fullname = PlayerTemplate_GetFullCvarName(template, variable);
+	if (!(cvar_type(fullname) & CVAR_TYPEFLAG_EXISTS))
+	{
+		return PlayerTemplate_GetDefaultFloatValue(variable);
+	}
 	if (cvar_string(fullname) == "default")
 	{
 		return PlayerTemplate_GetDefaultFloatValue(variable);
@@ -134,11 +138,82 @@ string PlayerTemplate_GetStringValue(string template, string variable)
 		return PlayerTemplate_GetDefaultStringValue(variable);
 	}
 	string fullname = PlayerTemplate_GetFullCvarName(template, variable);
+	if (!(cvar_type(fullname) & CVAR_TYPEFLAG_EXISTS))
+	{
+		return PlayerTemplate_GetDefaultStringValue(variable);
+	}
 	if (cvar_string(fullname) == "default")
 	{
 		return PlayerTemplate_GetDefaultStringValue(variable);
 	}
 	return cvar_string(fullname);
+}
+
+float PlayerTemplate_GivePlayerItem(entity player, string template,
+	string variable)
+{
+	string value = PlayerTemplate_GetStringValue(template, variable);
+	if (value == "default")
+	{
+		return MUT_ITEMTOUCH_CONTINUE;
+	}
+	int numfields = tokenize_console(PlayerTemplate_GetStringValue(template,
+		variable));
+	if (numfields == 0)
+	{
+		return MUT_ITEMTOUCH_CONTINUE;
+	}
+	for (int i = 1; i < numfields; ++i)
+	{
+		switch (i)
+		{
+			case 1:
+			{
+				GivePlayerHealth(player, stof(argv(i)));
+				break;
+			}
+			case 2:
+			{
+				GivePlayerArmor(player, stof(argv(i)));
+				break;
+			}
+			case 3:
+			{
+				GivePlayerAmmo(player, ammo_shells, stof(argv(i)));
+				break;
+			}
+			case 4:
+			{
+				GivePlayerAmmo(player, ammo_nails, stof(argv(i)));
+				break;
+			}
+			case 5:
+			{
+				GivePlayerAmmo(player, ammo_rockets, stof(argv(i)));
+				break;
+			}
+			case 6:
+			{
+				GivePlayerAmmo(player, ammo_cells, stof(argv(i)));
+				break;
+			}
+		}
+	}
+	switch (argv(0))
+	{
+		case "add":
+		{
+			return MUT_ITEMTOUCH_CONTINUE;
+		}
+		case "override":
+		{
+			return MUT_ITEMTOUCH_RETURN;
+		}
+		default:
+		{
+			return MUT_ITEMTOUCH_CONTINUE;
+		}
+	}
 }
 
 void PlayerTemplate_PlayerSpawn(entity player, string template)
@@ -233,6 +308,675 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 		while ((player.weapons & weaponbit) && (numattempts < 10));
 		player.weapons |= weaponbit;
 	}
+}
+
+float PlayerTemplate_ItemTouch(entity player, entity item, string template)
+{
+	if (template == "default")
+	{
+		return MUT_ITEMTOUCH_CONTINUE;
+	}
+	switch (item.classname)
+	{
+		case "item_health_small":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_health_small");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_HealthSmall, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_health_medium":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_health_medium");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_HealthMedium, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_health_big":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_health_big");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_HealthBig, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_health_mega":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_health_mega");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_HealthMega, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_armor_small":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_armor_small");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ArmorSmall, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_armor_medium":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_armor_medium");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ArmorMedium, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_armor_big":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_armor_big");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ArmorBig, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_armor_mega":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_armor_mega");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ArmorMega, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_shells":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_shells");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ITEMPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_bullets":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_bullets");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ITEMPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_rockets":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_rockets");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ITEMPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_cells":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_cells");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ITEMPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_machinegun":
+		case "weapon_uzi":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_machinegun");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_grenadelauncher":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_mortar");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_electro":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_electro");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_crylink":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_crylink");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_nex":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_vortex");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_hagar":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_hagar");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_rocketlauncher":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_devastator");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "droppedweapon":
+		{
+			float result;
+			switch (item.weapon)
+			{
+				case WEP_SHOTGUN.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_shotgun");
+					break;
+				}
+				case WEP_MACHINEGUN.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_machinegun");
+					break;
+				}
+				case WEP_MORTAR.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_mortar");
+					break;
+				}
+				case WEP_ELECTRO.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_electro");
+					break;
+				}
+				case WEP_CRYLINK.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_crylink");
+					break;
+				}
+				case WEP_VORTEX.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_vortex");
+					break;
+				}
+				case WEP_HAGAR.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_hagar");
+					break;
+				}
+				case WEP_DEVASTATOR.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_devastator");
+					break;
+				}
+				case WEP_MINE_LAYER.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_minelayer");
+					break;
+				}
+				case WEP_HLAC.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_hlac");
+					break;
+				}
+				case WEP_RIFLE.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_rifle");
+					break;
+				}
+				case WEP_SEEKER.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_dropped_seeker");
+					break;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					delete(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "replacedweapon":
+		{
+			float result;
+			switch (item.weapon)
+			{
+				case WEP_MINE_LAYER.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_minelayer");
+					break;
+				}
+				case WEP_HLAC.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_hlac");
+					break;
+				}
+				case WEP_RIFLE.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_rifle");
+					break;
+				}
+				case WEP_SEEKER.m_id:
+				{
+					result = PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_seeker");
+					break;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_strength":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_strength");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_Strength, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_invincible":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_shield");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_Shield, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		default:
+		{
+			switch (item.netname)
+			{
+				case "Vaporizer Ammo":
+				case "Extra life":
+				case "Invisibility":
+				case "Speed":
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				default:
+				{
+					PrintToChatAll(strcat("Unrecognized item, classname: ",
+						item.classname, " netname: ", item.netname));
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+	}
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
