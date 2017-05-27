@@ -1,8 +1,6 @@
 #pragma once
 
 // stats networking
-.int stat_monsters_killed;
-.int stat_monsters_total;
 int monsters_total;
 int monsters_killed;
 

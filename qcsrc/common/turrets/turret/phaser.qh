@@ -4,8 +4,8 @@
 
 CLASS(PhaserTurret, Turret)
 /* spawnflags */ ATTRIB(PhaserTurret, spawnflags, int, TUR_FLAG_SNIPER | TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER);
-/* mins       */ ATTRIB(PhaserTurret, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(PhaserTurret, maxs, vector, '32 32 64');
+/* mins       */ ATTRIB(PhaserTurret, m_mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(PhaserTurret, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(PhaserTurret, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(PhaserTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(PhaserTurret, head_model, string, strcat("models/turrets/", "phaser.md3"));

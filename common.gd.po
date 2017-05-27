@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-03 17:02+0000\n"
+"PO-Revision-Date: 2017-05-16 11:11+0000\n"
 "Last-Translator: GunChleoc\n"
 "Language-Team: Gaelic, Scottish (http://www.transifex.com/team-xonotic/"
 "xonotic/language/gd/)\n"
@@ -273,7 +273,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "nì an-asgaidh %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 msgid "QMCMD^free item, icon"
@@ -281,7 +281,7 @@ msgstr "nì an-asgaidh, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "chaidh nì a thogail (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^took item, icon"
@@ -297,7 +297,7 @@ msgstr "dearbh"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "feumach air cobhair,  (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^need help, icon"
@@ -305,7 +305,7 @@ msgstr "feumach air cobhair, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen (l:%y^7)"
-msgstr ""
+msgstr "chunnacas nàmhaid (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:799
 msgid "QMCMD^enemy seen, icon"
@@ -313,7 +313,7 @@ msgstr "chunnacas nàmhaid, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^flag seen (l:%y^7)"
-msgstr ""
+msgstr "chunnacas bratach (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:800
 msgid "QMCMD^flag seen, icon"
@@ -321,7 +321,7 @@ msgstr "chunnacas bratach, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "a’ dìon (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:801
 msgid "QMCMD^defending, icon"
@@ -337,11 +337,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "a’ toirt ionnsaigh (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^attacking, icon"
-msgstr "a’ toir ionnsaigh, ìomhaigheag"
+msgstr "a’ toirt ionnsaigh, ìomhaigheag"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flag, icon"
@@ -459,11 +459,11 @@ msgstr "Dèan nas maille"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^Wall collision off"
-msgstr ""
+msgstr "Tha co-bhualadh ri ballachan dheth"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^Wall collision on"
-msgstr ""
+msgstr "Tha co-bhualadh ri ballachan air"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "QMCMD^Fullscreen"
@@ -1020,7 +1020,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Tha"
 
 #: qcsrc/client/hud/panel/vote.qc:127 qcsrc/menu/xonotic/dialog_firstrun.qc:83
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_startconfirm.qc:21
@@ -1030,7 +1030,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Chan eil"
 
 #: qcsrc/client/hud/panel/weapons.qc:530
 msgid "Out of ammo"
@@ -1046,23 +1046,23 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1014
 msgid " qu/s"
-msgstr ""
+msgstr " qu/s"
 
 #: qcsrc/client/main.qc:1016
 msgid " m/s"
-msgstr ""
+msgstr " m/s"
 
 #: qcsrc/client/main.qc:1018
 msgid " km/h"
-msgstr ""
+msgstr " km/h"
 
 #: qcsrc/client/main.qc:1020
 msgid " mph"
-msgstr ""
+msgstr " mph"
 
 #: qcsrc/client/main.qc:1022
 msgid " knots"
-msgstr ""
+msgstr "mìle mara"
 
 #: qcsrc/client/main.qc:1264
 #, c-format
@@ -1080,20 +1080,20 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:271
 msgid "Don't care"
-msgstr ""
+msgstr "Tha mi coma"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Decide the gametype"
-msgstr ""
+msgstr "Tagh seòrsa a' gheama"
 
 #: qcsrc/client/mapvoting.qc:365
 msgid "Vote for a map"
-msgstr ""
+msgstr "Bhòt airson mapa"
 
 #: qcsrc/client/mapvoting.qc:382
 #, c-format
 msgid "%d seconds left"
-msgstr ""
+msgstr "Tha %d diog(an) air fhàgail"
 
 #: qcsrc/client/mapvoting.qc:497
 msgid ""
@@ -1106,7 +1106,7 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:516
 msgid "Requesting preview...\n"
-msgstr ""
+msgstr "Ag iarraidh ro-shealladh...\n"
 
 #: qcsrc/client/miscfunctions.qc:109
 msgid "Trying to remove a team which is not in the teamlist!"

@@ -82,7 +82,7 @@ void HUD_Physics()
 		}
 	}
 
-	int acc_decimals = 2;
+	const int acc_decimals = 2;
 	if(time > physics_update_time)
 	{
 		// workaround for ftos_decimals returning a negative 0
@@ -91,6 +91,8 @@ void HUD_Physics()
 		discrete_acceleration = acceleration;
 		discrete_speed = speed;
 		physics_update_time += autocvar_hud_panel_physics_update_interval;
+		if(physics_update_time < time)
+			physics_update_time = time + autocvar_hud_panel_physics_update_interval;
 	}
 
 	//compute layout

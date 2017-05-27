@@ -9,6 +9,8 @@ spawnfunc(target_location)
     // eventually support: count, teamgame selectors, line of sight?
 
     target_push_init(this);
+
+    IL_PUSH(g_locations, this);
 }
 
 spawnfunc(info_location)
@@ -17,5 +19,7 @@ spawnfunc(info_location)
     this.message = this.netname;
 
     target_push_init(this);
+
+    IL_PUSH(g_locations, this);
 }
 #endif
