@@ -88,6 +88,10 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		{
 			return 1;
 		}
+		case "blaster_self_damage":
+		{
+			return 1;
+		}
 		default:
 		{
 			// TODO: Report error.
@@ -981,8 +985,14 @@ float PlayerTemplate_ItemTouch(entity player, entity item, string template)
 }
 
 float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
-	entity victim, string victimtemplate, float damage)
+	entity victim, string victimtemplate, float deathtype, float damage)
 {
+	if ((attacker == victim) && (DEATH_ISWEAPON(deathtype, WEP_BLASTER)) &&
+		(PlayerTemplate_GetFloatValue(victimtemplate, "blaster_self_damage") ==
+		0))
+	{
+		return 0;
+	}
 	damage *= PlayerTemplate_GetFloatValue(attackertemplate, "attack_scale");
 	damage /= PlayerTemplate_GetFloatValue(victimtemplate, "defense_scale");
 	return damage;
