@@ -800,18 +800,34 @@ void Surv_UpdateAliveStats()
 /// \return No return.
 void Surv_UpdateDefenderHealthStat()
 {
-	float maxhealth = surv_numdefenders * (PlayerTemplate_GetFloatValue(
-		"surv_defender", "start_health") + PlayerTemplate_GetFloatValue(
-		"surv_defender", "start_armor"));
+	float maxhealth;
 	float totalhealth = 0;
-	FOREACH_CLIENT(IS_PLAYER(it),
+	if (autocvar_g_instagib == 1)
 	{
-		if (it.team == surv_defenderteam)
+		maxhealth = surv_numdefenders * (PlayerTemplate_GetFloatValue(
+			"surv_defender", "start_armor") + 1);
+		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			totalhealth += it.health;
-			totalhealth += it.armorvalue;
-		}
-	});
+			if (it.team == surv_defenderteam)
+			{
+				totalhealth += it.armorvalue + 1;
+			}
+		});
+	}
+	else
+	{
+		maxhealth = surv_numdefenders * (PlayerTemplate_GetFloatValue(
+			"surv_defender", "start_health") + PlayerTemplate_GetFloatValue(
+			"surv_defender", "start_armor"));
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			if (it.team == surv_defenderteam)
+			{
+				totalhealth += it.health;
+				totalhealth += it.armorvalue;
+			}
+		});
+	}
 	float healthratio;
 	if (maxhealth == 0)
 	{
@@ -1199,12 +1215,23 @@ void Surv_RoundStart()
 					WaypointSprite_Spawn(WP_AssaultDestroy, 0, 0, it, '0 0 64',
 						NULL, surv_attackerteam, it, surv_attack_sprite, false,
 						RADARICON_OBJECTIVE);
-					WaypointSprite_UpdateMaxHealth(it.surv_attack_sprite,
-						PlayerTemplate_GetFloatValue("surv_defender",
-						"start_health") + PlayerTemplate_GetFloatValue(
-						"surv_defender", "start_armor"));
-					WaypointSprite_UpdateHealth(it.surv_attack_sprite,
-						it.health + it.armorvalue);
+					if (autocvar_g_instagib == 1)
+					{
+						WaypointSprite_UpdateMaxHealth(it.surv_attack_sprite,
+							PlayerTemplate_GetFloatValue("surv_defender",
+							"start_armor") + 1);
+						WaypointSprite_UpdateHealth(it.surv_attack_sprite,
+							it.armorvalue + 1);
+					}
+					else
+					{
+						WaypointSprite_UpdateMaxHealth(it.surv_attack_sprite,
+							PlayerTemplate_GetFloatValue("surv_defender",
+							"start_health") + PlayerTemplate_GetFloatValue(
+							"surv_defender", "start_armor"));
+						WaypointSprite_UpdateHealth(it.surv_attack_sprite,
+							it.health + it.armorvalue);
+					}
 				}
 				break;
 			}
@@ -1257,6 +1284,10 @@ MUTATOR_HOOKFUNCTION(surv, SetWeaponArena)
 /// \brief Hook that is called to determine start items of all players.
 MUTATOR_HOOKFUNCTION(surv, SetStartItems)
 {
+	if (autocvar_g_instagib == 1)
+	{
+		return;
+	}
 	start_weapons = WEPSET(Null);
 	warmup_start_weapons = WEPSET(Null);
 }
@@ -1651,6 +1682,7 @@ MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 /// \brief Hook which is called when the player was damaged.
 MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 {
+	PrintToChatAll("PlayerDamaged");
 	entity target = M_ARGV(1, entity);
 	if (target.team != surv_defenderteam)
 	{
@@ -1676,8 +1708,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 	}
 	else
 	{
-		WaypointSprite_UpdateHealth(target.surv_attack_sprite, target.health +
-			target.armorvalue);
+		WaypointSprite_UpdateHealth(target.surv_attack_sprite,
+			target.armorvalue + 1);
 	}
 }
 
