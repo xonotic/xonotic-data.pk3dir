@@ -1641,10 +1641,11 @@ MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+	float deathtype = M_ARGV(3, float);
 	float damage = M_ARGV(4, float);
 	M_ARGV(4, float) = PlayerTemplate_Damage_Calculate(frag_attacker,
 		Surv_GetPlayerTemplate(frag_attacker), frag_target,
-		Surv_GetPlayerTemplate(frag_target), damage);
+		Surv_GetPlayerTemplate(frag_target), deathtype, damage);
 }
 
 /// \brief Hook which is called when the player was damaged.
