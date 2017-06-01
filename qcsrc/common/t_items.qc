@@ -181,7 +181,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
-    if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
+    if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
     {
         this.ItemStatus = ReadByte();
 

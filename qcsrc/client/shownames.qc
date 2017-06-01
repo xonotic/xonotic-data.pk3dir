@@ -63,7 +63,6 @@ void Draw_ShowNames(entity this)
 			overlap = 0;
 	}
 
-	float dist = vlen(this.origin - view_origin);
 	if (overlap == -1 && autocvar_hud_shownames_antioverlap)
 	{
 		// fade tag out if another tag that is closer to you overlaps
@@ -76,7 +75,7 @@ void Draw_ShowNames(entity this)
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
 			if (vdist(((eX * o.x + eY * o.y) - eo), <, autocvar_hud_shownames_antioverlap_distance)
-			    && vdist((it.origin - view_origin), <, dist))
+			    && vlen2(it.origin - view_origin) < vlen2(this.origin - view_origin))
 			{
 				overlap = 1;
 				break;
@@ -118,6 +117,7 @@ void Draw_ShowNames(entity this)
 	}
 	if (a < ALPHA_MIN_VISIBLE && gametype != MAPINFO_TYPE_CTS) return;
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
+	float dist = vlen(this.origin - view_origin);
 	if (autocvar_hud_shownames_maxdistance)
 	{
 		if (dist >= autocvar_hud_shownames_maxdistance) return;
