@@ -1682,7 +1682,6 @@ MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 /// \brief Hook which is called when the player was damaged.
 MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 {
-	PrintToChatAll("PlayerDamaged");
 	entity target = M_ARGV(1, entity);
 	if (target.team != surv_defenderteam)
 	{
