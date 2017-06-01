@@ -506,10 +506,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
-	if (damage)
-	{
-		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
-	}
+
+	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
 	if (this.health < 1)
 	{
