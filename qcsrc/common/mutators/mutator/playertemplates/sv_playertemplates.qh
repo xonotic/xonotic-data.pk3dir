@@ -66,7 +66,8 @@ float PlayerTemplate_ItemTouch(entity player, entity item, string template);
 /// \param[in] attackertemplate Template of the attacker.
 /// \param[in] victim Victim entity.
 /// \param[in] victimtemplate Template of the victim.
+/// \param[in] deathtype Type of the damage.
 /// \param[in] damage Damage to adjust.
 /// \return Adjusted damage.
 float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
-	entity victim, string victimtemplate, float damage);
+	entity victim, string victimtemplate, float deathtype, float damage);
