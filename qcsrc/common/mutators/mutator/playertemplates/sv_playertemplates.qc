@@ -244,6 +244,10 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 		player.ammo_cells = PlayerTemplate_GetFloatValue(template,
 			"start_ammo_cells");
 	}
+	if (autocvar_g_instagib == 1)
+	{
+		return;
+	}
 	// Give weapons.
 	if (PlayerTemplate_GetFloatValue(template, "default_start_weapons"))
 	{
@@ -987,6 +991,10 @@ float PlayerTemplate_ItemTouch(entity player, entity item, string template)
 float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
 	entity victim, string victimtemplate, float deathtype, float damage)
 {
+	if (autocvar_g_instagib == 1)
+	{
+		return damage;
+	}
 	if ((attacker == victim) && (DEATH_ISWEAPON(deathtype, WEP_BLASTER)) &&
 		(PlayerTemplate_GetFloatValue(victimtemplate, "blaster_self_damage") ==
 		0))
