@@ -43,8 +43,6 @@ const int ANIM_ROAM       = 11;
 .float animflag;
 .float idletime;
 
-#define WALKER_PATH(this, s, e) pathlib_astar(this, s, e)
-
 bool walker_firecheck(entity this)
 {
     if (this.animflag == ANIM_MELEE)
@@ -299,7 +297,7 @@ void walker_move_path(entity this)
 
                 if (this.pathgoal.enemy)
                 {
-                    this.pathcurrent = WALKER_PATH(this, this.pathgoal.origin, this.pathgoal.enemy.origin);
+                    this.pathcurrent = pathlib_astar(this, this.pathgoal.origin, this.pathgoal.enemy.origin);
                     this.pathgoal = this.pathgoal.enemy;
                 }
             }
@@ -324,6 +322,30 @@ void walker_move_path(entity this)
     this.steerto = steerlib_attract2(this, this.moveto, 0.5, 500, 0.95);
     walker_move_to(this, this.moveto, 0);
 #endif
+}
+
+void walker_findtarget(entity this)
+{
+    entity e = find(NULL, targetname, this.target);
+    if (!e)
+    {
+        LOG_TRACE("Initital waypoint for walker does NOT exist, fix your map!");
+        this.target = "";
+    }
+
+    if (e.classname != "turret_checkpoint")
+        LOG_TRACE("Warning: not a turrret path");
+    else
+    {
+#ifdef WALKER_FANCYPATHING
+        this.pathcurrent = pathlib_astar(this, this.origin, e.origin);
+        this.pathgoal = e;
+#else
+        this.pathcurrent = e;
+#endif
+    }
+
+    // TODO: this doesn't reset target, so tur_defend will be the checkpoint too!
 }
 
 spawnfunc(turret_walker) { if(!turret_initialize(this, TUR_WALKER)) delete(this); }
@@ -550,8 +572,6 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 {
     it.ticrate = 0.05;
 
-    entity e;
-
     // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
     if(it.move_movetype == MOVETYPE_WALK)
     {
@@ -587,26 +607,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
     it.turret_firecheckfunc = walker_firecheck;
 
     if (it.target != "")
-    {
-        e = find(NULL, targetname, it.target);
-        if (!e)
-        {
-            LOG_TRACE("Initital waypoint for walker does NOT exsist, fix your map!");
-            it.target = "";
-        }
-
-        if (e.classname != "turret_checkpoint")
-            LOG_TRACE("Warning: not a turrret path");
-        else
-        {
-#ifdef WALKER_FANCYPATHING
-            it.pathcurrent = WALKER_PATH(it, it.origin, e.origin);
-            it.pathgoal = e;
-#else
-            it.pathcurrent = e;
-#endif
-        }
-    }
+        InitializeEntity(it, walker_findtarget, INITPRIO_FINDTARGET);
 }
 
 #endif // SVQC
