@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-21 09:40+0000\n"
+"PO-Revision-Date: 2017-05-25 19:02+0000\n"
 "Last-Translator: Starfire24680 <starfire24680@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -3333,7 +3333,7 @@ msgstr "^BGSugiriendo a %s^BG que te pase la bandera"
 #: qcsrc/common/notifications/all.inc:567
 #, c-format
 msgid "^BGYou passed the ^TC^TT^BG flag to %s"
-msgstr "^BGHaz pasado la bandera ^TC^TT^BG a %s"
+msgstr "^BGHas pasado la bandera ^TC^TT^BG a %s"
 
 #: qcsrc/common/notifications/all.inc:568
 #, c-format
@@ -3342,7 +3342,7 @@ msgstr "^BGHas pasado la bandera a %s"
 
 #: qcsrc/common/notifications/all.inc:569
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr "^BGHaz obtenido la bandera ^TC^TT^BG!"
+msgstr "^BGHas obtenido la bandera ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:570
 msgid "^BGYou got the flag!"
