@@ -253,7 +253,7 @@ void calculate_player_respawn_time(entity this)
 		));
 		if (sdelay_small_count == 0)
 		{
-			if (g_cts)
+			if (IS_INDEPENDENT_PLAYER(this))
 			{
 				// Players play independently. No point in requiring enemies.
 				sdelay_small_count = 1;
@@ -266,7 +266,7 @@ void calculate_player_respawn_time(entity this)
 		}
 		if (sdelay_large_count == 0)
 		{
-			if (g_cts)
+			if (IS_INDEPENDENT_PLAYER(this))
 			{
 				// Players play independently. No point in requiring enemies.
 				sdelay_large_count = 1;
@@ -506,10 +506,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
-	if (damage)
-	{
-		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
-	}
+
+	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
 	if (this.health < 1)
 	{

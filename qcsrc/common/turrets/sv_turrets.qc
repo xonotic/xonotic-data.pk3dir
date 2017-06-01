@@ -1245,6 +1245,30 @@ void turret_initparams(entity tur)
 	#undef TRY
 }
 
+void turret_findtarget(entity this)
+{
+	entity e = find(NULL, classname, "turret_manager");
+	if(!e)
+	{
+		e = new(turret_manager);
+		setthink(e, turrets_manager_think);
+		e.nextthink = time + 2;
+	}
+	
+	entity targ = find(NULL, targetname, this.target);
+	if(targ.classname == "turret_checkpoint")
+		return; // turrets don't defend checkpoints?
+
+	if (!targ)
+	{
+		this.target = "";
+		LOG_TRACE("Turret has invalid defendpoint!");
+	}
+
+	this.tur_defend = targ;
+	this.idle_aim = this.tur_head.angles + angleofs(this.tur_head, targ);
+}
+
 bool turret_initialize(entity this, Turret tur)
 {
 	if(!autocvar_g_turrets)
@@ -1258,14 +1282,6 @@ bool turret_initialize(entity this, Turret tur)
 		tur.tr_precache(tur);
 		IL_PUSH(g_turrets, this);
 		IL_PUSH(g_bot_targets, this);
-	}
-
-	entity e = find(NULL, classname, "turret_manager");
-	if(!e)
-	{
-		e = new(turret_manager);
-		setthink(e, turrets_manager_think);
-		e.nextthink = time + 2;
 	}
 
 	if(!(this.spawnflags & TSF_SUSPENDED))
@@ -1325,7 +1341,7 @@ bool turret_initialize(entity this, Turret tur)
 	++turret_count;
 
 	_setmodel(this, tur.model);
-	setsize(this, tur.mins, tur.maxs);
+	setsize(this, tur.m_mins, tur.m_maxs);
 
 	this.m_id					= tur.m_id;
 	this.classname				= "turret_main";
@@ -1341,6 +1357,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.takedamage				= DAMAGE_AIM;
 	set_movetype(this, MOVETYPE_NOCLIP);
 	this.view_ofs				= '0 0 0';
+	this.idle_aim 				= '0 0 0';
 	this.turret_firecheckfunc	= turret_firecheck;
 	this.event_damage			= turret_damage;
 	this.use					= turret_use;
@@ -1363,21 +1380,8 @@ bool turret_initialize(entity this, Turret tur)
 
 	this.weaponentities[0] = this; // lol
 
-	if(!this.tur_defend)
-	if(this.target != "")
-	{
-		this.tur_defend = find(NULL, targetname, this.target);
-		if (this.tur_defend == NULL)
-		{
-			this.target = "";
-			LOG_TRACE("Turret has invalid defendpoint!");
-		}
-	}
-
-	if (this.tur_defend)
-		this.idle_aim = this.tur_head.angles + angleofs(this.tur_head, this.tur_defend);
-	else
-		this.idle_aim = '0 0 0';
+	if(!this.tur_defend && this.target != "")
+		InitializeEntity(this, turret_findtarget, INITPRIO_FINDTARGET);
 
 #ifdef TURRET_DEBUG
 	this.tur_debug_start = this.nextthink;

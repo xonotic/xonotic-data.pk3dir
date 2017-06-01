@@ -234,6 +234,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 			break;
 
 		// make the entity non-solid so we can hit the next one
+		IL_PUSH(g_railgunhit, trace_ent);
 		trace_ent.railgunhit = true;
 		trace_ent.railgunhitloc = end;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
@@ -253,7 +254,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	float endq3surfaceflags = trace_dphitq3surfaceflags;
 
 	// find all the entities the railgun hit and restore their solid state
-	FOREACH_ENTITY_FLOAT(railgunhit, true,
+	IL_EACH(g_railgunhit, it.railgunhit,
 	{
 		it.solid = it.railgunhitsolidbackup;
 	});
@@ -287,8 +288,10 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	}
 
 	// find all the entities the railgun hit and hurt them
-	FOREACH_ENTITY_FLOAT(railgunhit, true,
+	IL_EACH(g_railgunhit, it.railgunhit,
 	{
+		// removal from the list is handled below
+
 		// get the details we need to call the damage function
 		vector hitloc = it.railgunhitloc;
 
@@ -311,6 +314,8 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		it.railgunhit = false;
 		it.railgundistance = 0;
 	});
+
+	IL_CLEAR(g_railgunhit);
 
 	// calculate hits and fired shots for hitscan
 	accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, min(bdamage, totaldmg));

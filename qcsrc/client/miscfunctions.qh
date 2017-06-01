@@ -119,12 +119,12 @@ string _drawpic_picpath;
 				_drawpic_oldsz = _drawpic_sz.x;\
 				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;\
 				if(_drawpic_sz.x)\
-					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz.x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+					drawpic(pos + eX * 0.5 * (_drawpic_oldsz - _drawpic_sz.x), pic, _drawpic_sz, color, theAlpha, drawflag);\
 			} else {\
 				_drawpic_oldsz = _drawpic_sz.y;\
 				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;\
 				if(_drawpic_sz.y)\
-					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz.y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+					drawpic(pos + eY * 0.5 * (_drawpic_oldsz - _drawpic_sz.y), pic, _drawpic_sz, color, theAlpha, drawflag);\
 			}\
 		}\
 	} MACRO_END

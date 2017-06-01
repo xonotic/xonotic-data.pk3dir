@@ -176,7 +176,6 @@ void cvar_changes_init()
 		BADPREFIX("cvar_check_");
 		BADCVAR("gamecfg");
 		BADCVAR("g_configversion");
-		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
 		BADCVAR("sv_mapformat_is_quake2");
 		BADCVAR("sv_mapformat_is_quake3");
@@ -334,7 +333,6 @@ void cvar_changes_init()
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keyhunt_point_leadlimit");
-		BADCVAR("g_maplist_selectrandom");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
@@ -346,6 +344,7 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_damagetext");
 		BADCVAR("sv_db_saveasdump");
 		BADCVAR("sv_intermission_cdtrack");
 		BADCVAR("sv_minigames");
@@ -358,7 +357,7 @@ void cvar_changes_init()
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
-		BADPREFIX("g_maplist_votable_");
+		BADPREFIX("g_maplist_");
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
@@ -396,6 +395,7 @@ void cvar_changes_init()
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
+		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_domination_teams_override");
 		BADCVAR("g_freezetag_teams_override");
@@ -406,13 +406,6 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_teams_override");
 		BADCVAR("g_lms_lives_override");
 		BADCVAR("g_maplist");
-		BADCVAR("g_maplist_check_waypoints");
-		BADCVAR("g_maplist_mostrecent_count");
-		BADCVAR("g_maplist_shuffle");
-		BADCVAR("g_maplist_votable");
-		BADCVAR("g_maplist_votable_abstain");
-		BADCVAR("g_maplist_votable_nodetail");
-		BADCVAR("g_maplist_votable_suggestions");
 		BADCVAR("g_maxplayers");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");

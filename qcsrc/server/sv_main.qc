@@ -160,8 +160,7 @@ Called before each frame by the server
 =============
 */
 
-float game_delay;
-float game_delay_last;
+bool game_delay_last;
 
 bool autocvar_sv_autopause = false;
 float RedirectionThink();
@@ -220,11 +219,9 @@ void StartFrame()
 	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
-	game_delay = (time < game_starttime);
-
+	bool game_delay = (time < game_starttime);
 	if (autocvar_sv_eventlog && game_delay_last && !game_delay)
 		GameLogEcho(":startdelay_ended");
-
 	game_delay_last = game_delay;
 
 	CreatureFrame_All();
