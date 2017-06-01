@@ -548,30 +548,6 @@ void race_ClearTime(entity e)
 	});
 }
 
-void dumpsurface(entity e)
-{
-	float n, si, ni;
-	vector norm, vec;
-	LOG_INFO("Surfaces of ", etos(e), ":\n");
-
-	LOG_INFO("TEST = ", ftos(getsurfacenearpoint(e, '0 0 0')), "\n");
-
-	for(si = 0; ; ++si)
-	{
-		n = getsurfacenumpoints(e, si);
-		if(n <= 0)
-			break;
-		LOG_INFO("  Surface ", ftos(si), ":\n");
-		norm = getsurfacenormal(e, si);
-		LOG_INFO("    Normal = ", vtos(norm), "\n");
-		for(ni = 0; ni < n; ++ni)
-		{
-			vec = getsurfacepoint(e, si, ni);
-			LOG_INFO("    Point ", ftos(ni), " = ", vtos(vec), " (", ftos(norm * vec), ")\n");
-		}
-	}
-}
-
 void checkpoint_passed(entity this, entity player)
 {
 	if(player.personal && autocvar_g_allow_checkpoints)
