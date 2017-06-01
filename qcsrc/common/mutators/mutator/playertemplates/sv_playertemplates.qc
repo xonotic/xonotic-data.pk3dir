@@ -365,6 +365,7 @@ float PlayerTemplate_ItemTouch(entity player, entity item, string template)
 			}
 		}
 		case "item_health_big":
+		case "item_health_large":
 		{
 			float result = PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_health_big");
