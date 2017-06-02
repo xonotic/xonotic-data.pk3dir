@@ -7,7 +7,7 @@
 # alex progger <tiprogrammierer.alex@gmail.com>, 2015
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
-# Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
+# Jakub P. <pedziszewski@gmail.com>, 2015
 # John Smith <myrangd@gmail.com>, 2016
 # Kriss Chr <kriss7475@gmail.com>, 2017
 # Piotr Kozica <koza91@gmail.com>, 2016
