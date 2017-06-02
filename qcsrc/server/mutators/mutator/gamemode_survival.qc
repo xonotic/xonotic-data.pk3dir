@@ -120,6 +120,8 @@ int autocvar_g_surv_defender_drop_weapons;
 /// \brief Holds the role of the player. See SURVIVAL_ROLE constants.
 .int surv_role;
 .string surv_savedplayermodel; ///< Initial player model.
+/// \brief Player state used during replacement of bot player with real player.
+.entity surv_savedplayerstate;
 .string surv_playermodel; ///< Player model forced by the game.
 
 .entity surv_attack_sprite; ///< Holds the sprite telling attackers to attack.
@@ -272,6 +274,43 @@ string Surv_GetPlayerTemplate(entity player)
 	return "default";
 }
 
+/// \brief Saves the player state. Used to seamlessly swap bots with humans.
+/// \param[in] player Player to save the state of.
+/// \return Entity containing the player state.
+entity Surv_SavePlayerState(entity player)
+{
+	entity state = spawn();
+	state.origin = player.origin;
+	state.angles = player.angles;
+	state.health = player.health;
+	state.armorvalue = player.armorvalue;
+	state.ammo_shells = player.ammo_shells;
+	state.ammo_nails = player.ammo_nails;
+	state.ammo_rockets = player.ammo_rockets;
+	state.ammo_cells = player.ammo_cells;
+	state.weapons = player.weapons;
+	state.items = player.items;
+	return state;
+}
+
+/// \brief Restores a saved player state.
+/// \param[in] player Player to restore the state of.
+/// \param[in] st State to restore.
+/// \return No return.
+void Surv_RestorePlayerState(entity player, entity st)
+{
+	player.origin = st.origin;
+	player.angles = st.angles;
+	player.health = st.health;
+	player.armorvalue = st.armorvalue;
+	player.ammo_shells = st.ammo_shells;
+	player.ammo_nails = st.ammo_nails;
+	player.ammo_rockets = st.ammo_rockets;
+	player.ammo_cells = st.ammo_cells;
+	player.weapons = st.weapons;
+	player.items = st.items;
+}
+
 /// \brief Changes the number of players in a team.
 /// \param[in] teamnum Team to adjust.
 /// \param[in] delta Amount to adjust by.
@@ -397,10 +436,10 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				// Remove bot to make space for human.
 				bool removedbot = false;
 				surv_autobalance = false;
-				FOREACH_CLIENT(true,
+				FOREACH_CLIENT(IS_BOT_CLIENT(it),
 				{
 					if ((it.team == surv_attackerteam) && (it.surv_role ==
-						SURVIVAL_ROLE_PLAYER) && IS_BOT_CLIENT(it))
+						SURVIVAL_ROLE_PLAYER))
 					{
 						LOG_TRACE("Changing ", it.netname,
 							" from attacker to cannon fodder.");
@@ -455,12 +494,17 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				// Remove bot to make space for human.
 				bool removedbot = false;
 				surv_autobalance = false;
-				FOREACH_CLIENT(true,
+				FOREACH_CLIENT(IS_BOT_CLIENT(it),
 				{
-					if ((it.team == surv_defenderteam) && IS_BOT_CLIENT(it))
+					if (it.team == surv_defenderteam)
 					{
 						LOG_TRACE("Changing ", it.netname,
 							" from defender to cannon fodder.");
+						if ((!IS_DEAD(it)) && (!surv_allowed_to_spawn))
+						{
+							player.surv_savedplayerstate =
+								Surv_SavePlayerState(it);
+						}
 						SetPlayerTeamSimple(it, surv_attackerteam);
 						removedbot = true;
 						break;
@@ -575,7 +619,13 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				{
 					LOG_TRACE("Changing ", it.netname,
 						" from cannon fodder to defender.");
-					SetPlayerTeamSimple(it, surv_defenderteam);						
+					SetPlayerTeamSimple(it, surv_defenderteam);
+					if (!IS_DEAD(player) && !surv_allowed_to_spawn)
+					{
+						entity state = Surv_SavePlayerState(player);
+						Surv_RestorePlayerState(it, state);
+						delete(state);
+					}
 					return;
 				}
 			});
@@ -848,7 +898,8 @@ void Surv_UpdateDefenderHealthStat()
 /// \return True if the player can spawn, false otherwise.
 bool Surv_CanPlayerSpawn(entity player)
 {
-	if (player.team == surv_attackerteam)
+	if ((player.team == surv_attackerteam) ||
+		(player.surv_savedplayerstate != NULL))
 	{
 		return true;
 	}
@@ -1324,24 +1375,10 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	entity player = M_ARGV(2, entity);
 	LOG_TRACE("Survival: CheckAllowedTeams, player = ", player.netname);
-	if (!IS_BOT_CLIENT(player))
+	if (IS_BOT_CLIENT(player))
 	{
-		if (surv_type == SURVIVAL_TYPE_COOP)
-		{
-			if (surv_numdefenderhumans < autocvar_g_surv_team_size)
-			{
-				M_ARGV(0, float) = surv_defenderteambit;
-				return;
-			}
-			M_ARGV(0, float) = 0;
-			return;
-		}
-		int teambits = 0;
-		if (surv_numattackerhumans < autocvar_g_surv_team_size)
-		{
-			teambits |= surv_attackerteambit;
-		}
-		if (surv_allowed_to_spawn && (surv_numdefenderhumans <
+		int teambits = surv_attackerteambit;
+		if ((player.team == surv_defenderteam) || (surv_numdefenders <
 			autocvar_g_surv_team_size))
 		{
 			teambits |= surv_defenderteambit;
@@ -1349,13 +1386,27 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 		M_ARGV(0, float) = teambits;
 		return;
 	}
-	int teambits = surv_attackerteambit;
-	if ((player.team == surv_defenderteam) || (surv_numdefenders <
-		autocvar_g_surv_team_size))
+	if (surv_type == SURVIVAL_TYPE_COOP)
+	{
+		if (surv_numdefenderhumans < autocvar_g_surv_team_size)
+		{
+			M_ARGV(0, float) = surv_defenderteambit;
+			return;
+		}
+		M_ARGV(0, float) = 0;
+		return;
+	}
+	int teambits = 0;
+	if (surv_numattackerhumans < autocvar_g_surv_team_size)
+	{
+		teambits |= surv_attackerteambit;
+	}
+	if (surv_numdefenderhumans < autocvar_g_surv_team_size)
 	{
 		teambits |= surv_defenderteambit;
 	}
 	M_ARGV(0, float) = teambits;
+	return;
 }
 
 /// \brief Hook that determines the best team for the player to join.
@@ -1545,7 +1596,16 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	LOG_TRACE("Survival: PlayerSpawn, player = ", player.netname);
 	player.surv_state = SURVIVAL_STATE_PLAYING;
 	Surv_DeterminePlayerModel(player);
-	PlayerTemplate_PlayerSpawn(player, Surv_GetPlayerTemplate(player));
+	if (player.surv_savedplayerstate != NULL)
+	{
+		Surv_RestorePlayerState(player, player.surv_savedplayerstate);
+		delete(player.surv_savedplayerstate);
+		player.surv_savedplayerstate = NULL;
+	}
+	else
+	{
+		PlayerTemplate_PlayerSpawn(player, Surv_GetPlayerTemplate(player));
+	}
 	switch (player.team)
 	{
 		case surv_attackerteam:
