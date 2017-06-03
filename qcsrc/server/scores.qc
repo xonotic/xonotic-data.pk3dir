@@ -341,7 +341,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	}
 	if(!score)
 	{
-		return (s.(scores(scorefield));
+		return s.(scores(scorefield));
 	}
 	if(scores_label(scorefield) != "")
 		s.SendFlags |= (2 ** (scorefield.m_id % 16));
