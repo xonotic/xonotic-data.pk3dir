@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-04-01 10:04+0000\n"
+"PO-Revision-Date: 2017-05-21 08:35+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -32,7 +32,7 @@ msgstr ""
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr ""
-"^2Exporté avec succès dans %s ! (note : la sauvegarde est présente dans data/"
+"^2Exporté avec succès vers %s ! (note : la sauvegarde est présente dans data/"
 "data/)\n"
 
 #: qcsrc/client/hud/hud_config.qc:237
@@ -593,7 +593,7 @@ msgstr "buts"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:90
 msgid "SCO^kckills"
-msgstr "clefs tués"
+msgstr "clés tués"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:91
 msgid "SCO^kdratio"
@@ -773,16 +773,16 @@ msgid ""
 "^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was "
 "captured\n"
 msgstr ""
-"^3captures^7                     Combien de fois un drapeau (CTF) ou une "
-"clef (Chasse aux Clefs) a été capturé(e)\n"
+"^3captures^7                     Combien de fois un drapeau (CTF) ou une clé "
+"(Chasse aux Clés) a été capturé(e)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:317
 msgid ""
 "^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
 "ball (Keepaway) was picked up\n"
 msgstr ""
-"^3collectés^7                  Nombre de fois qu'un drapeau (CTF), une clef "
-"(Chasse aux Clefs) ou une balle (Gardez-la-balle) a été ramassé\n"
+"^3collectés^7                  Nombre de fois qu'un drapeau (CTF), une clé "
+"(Chasse aux Clés) ou une balle (Gardez-la-balle) a été ramassé\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:318
 msgid "^3captime^7                  Time of fastest cap (CTF)\n"
@@ -818,16 +818,16 @@ msgid ""
 "^3destroyed^7                Number of keys destroyed by pushing them into "
 "void\n"
 msgstr ""
-"^3détruits^7                Nombre de clefs détruites en les poussant dans "
-"le vide\n"
+"^3détruits^7                Nombre de clés détruites en les poussant dans le "
+"vide\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:326
 msgid "^3kckills^7                  Number of keys carrier kills\n"
-msgstr "^3clefs tués^7                  Nombre de porteurs de clefs tués\n"
+msgstr "^3clés tués^7                  Nombre de porteurs de clés tués\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:327
 msgid "^3losses^7                   Number of times a key was lost\n"
-msgstr "^3pertes^7                   Nombre de fois qu'une clef a été perdue\n"
+msgstr "^3pertes^7                   Nombre de fois qu'une clé a été perdue\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:328
 msgid "^3laps^7                     Number of laps finished (race/cts)\n"
@@ -1288,7 +1288,7 @@ msgstr "Collectez toutes les clés pour gagner la manche"
 
 #: qcsrc/common/mapinfo.qh:319
 msgid "Key Hunt"
-msgstr "Chasse aux Clefs"
+msgstr "Chasse aux Clés"
 
 #: qcsrc/common/mapinfo.qh:353
 msgid "Assault"
@@ -1836,7 +1836,7 @@ msgstr "Point de contrôle"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:37
 msgid "Dropped key"
-msgstr "Clef lâchée"
+msgstr "Clé lâchée"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
@@ -1844,7 +1844,7 @@ msgstr "Clef lâchée"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
 msgid "Key carrier"
-msgstr "Porteur de clef"
+msgstr "Porteur de clé"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
@@ -2693,33 +2693,32 @@ msgstr "^BG%s^BG a pris la balle !"
 #: qcsrc/common/notifications/all.inc:398
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr "^BG%s^BG a capturé les clefs pour l'équipe ^TC^TT"
+msgstr "^BG%s^BG a capturé les clés pour l'équipe ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:399
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr "^BG%s^BG a lâché la Clef ^TC^TT"
+msgstr "^BG%s^BG a lâché la Clé ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:400
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr "^BG%s^BG a perdu la Clef ^TC^TT"
+msgstr "^BG%s^BG a perdu la Clé ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
 msgid "^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"
-msgstr ""
-"^BG%s^BG a poussé %s^BG, provoquant la destruction de la clef ^TC^TT^BG"
+msgstr "^BG%s^BG a poussé %s^BG, provoquant la destruction de la clé ^TC^TT^BG"
 
 #: qcsrc/common/notifications/all.inc:402
 #, c-format
 msgid "^BG%s^BG destroyed the ^TC^TT Key"
-msgstr "^BG%s^BG a détruit la Clef ^TC^TT"
+msgstr "^BG%s^BG a détruit la Clé ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr "^BG%s^BG a pris la Clef ^TC^TT"
+msgstr "^BG%s^BG a pris la Clé ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
@@ -3838,15 +3837,15 @@ msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
 msgstr ""
-"^BGToutes les clefs sont entre les mains de votre équipe !\n"
-"Aidez les porteurs de clef à se réunir !"
+"^BGToutes les clés sont entre les mains de votre équipe !\n"
+"Aidez les porteurs de clé à se réunir !"
 
 #: qcsrc/common/notifications/all.inc:712
 msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
-"^BGToutes les clefs sont entre les mains de l'équipe ^TC^TT ^BG !\n"
+"^BGToutes les clés sont entre les mains de l'équipe ^TC^TT ^BG !\n"
 "Intervenez ^F4MAINTENANT^BG !"
 
 #: qcsrc/common/notifications/all.inc:713
@@ -3854,8 +3853,8 @@ msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Meet the other key carriers ^F4NOW^BG!"
 msgstr ""
-"^BGToutes les clefs sont entre vos mains !\n"
-"Rejoignez les autres porteurs de clef ^F4MAINTENANT^BG !"
+"^BGToutes les clés sont entre vos mains !\n"
+"Rejoignez les autres porteurs de clé ^F4MAINTENANT^BG !"
 
 #: qcsrc/common/notifications/all.inc:714
 msgid "^F4Round will start in ^COUNT"
@@ -3867,7 +3866,7 @@ msgstr "^BGBalayage de la gamme de fréquence…"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr "^BGVous commencez avec la Clef ^TC^TT"
+msgstr "^BGVous commencez avec la Clé ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:718
 msgid "^BGYou have no lives left, you must wait until the next match"
@@ -5435,11 +5434,11 @@ msgstr "Tableau de bord activé"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
 msgid "Panel enabled even observing"
-msgstr "Tableau de bord activé en mode spectateur"
+msgstr "Activé en mode spectateur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
 msgid "Panel enabled only in Race/CTS"
-msgstr "Tableau de bord activé en mode Couse/CTS"
+msgstr "Activé en mode Course/CTS seulement"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:24
 msgid "Status bar"
@@ -5465,7 +5464,7 @@ msgstr "Aligner vers l'extérieur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Flip speed/acceleration positions"
-msgstr "Inverser la position de la vitesse/de l'accélération"
+msgstr "Inverser les positions de la vitesse/de l'accélération"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 msgid "Speed:"
@@ -5497,7 +5496,7 @@ msgstr "mph"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:55
 msgid "knots"
-msgstr "noeuds"
+msgstr "nœuds"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:57
 msgid "Show"
@@ -5550,7 +5549,7 @@ msgstr "Chronomètre de Course"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
 msgid "Panel enabled in teamgames"
-msgstr "Tableau de bord activé dans les jeux en équipe"
+msgstr "Activé dans les jeux en équipe"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:23
 msgid "Radar:"
@@ -6064,7 +6063,8 @@ msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
-"Le nombre maximum de personnes pouvant jouer sur votre serveur en même temps"
+"Le nombre maximum de joueurs ou de bots pouvant jouer sur votre serveur en "
+"même temps"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
 msgid "Number of bots:"
@@ -6080,7 +6080,7 @@ msgstr "Niveau des bots :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
 msgid "Specify how experienced the bots will be"
-msgstr "Spécifier la difficulté des bots"
+msgstr "Spécifier le niveau d'expérience des bots"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:152
 msgid "Botlike"
@@ -7742,7 +7742,7 @@ msgstr "Compensation des bords :"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:89
 msgid "Fade when near the crosshair"
-msgstr "Cacher à proximité du réticule"
+msgstr "Atténuer à proximité du réticule"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:94
 msgid "Damage"
@@ -9123,7 +9123,7 @@ msgstr "auto-joindre une équipe"
 
 #: qcsrc/menu/xonotic/keybinder.qc:103
 msgid "drop key / drop flag"
-msgstr "lâcher la clef / drapeau"
+msgstr "lâcher la clé / drapeau"
 
 #: qcsrc/menu/xonotic/keybinder.qc:106
 msgid "quick menu"

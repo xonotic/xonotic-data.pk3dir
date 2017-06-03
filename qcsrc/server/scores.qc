@@ -266,7 +266,8 @@ float PlayerScore_Clear(entity player)
 		if(sk.(scores(it)) != 0)
 			if(scores_label(it) != "")
 				sk.SendFlags |= (2 ** (i % 16));
-		sk.(scores(it)) = 0;
+		if(i != SP_ELO.m_id)
+			sk.(scores(it)) = 0;
 	});
 
 	return 1;
@@ -283,7 +284,8 @@ void Score_ClearAll()
 			if(sk.(scores(it)) != 0)
 				if(scores_label(it) != "")
 					sk.SendFlags |= (2 ** (i % 16));
-			sk.(scores(it)) = 0;
+			if(i != SP_ELO.m_id)
+				sk.(scores(it)) = 0;
 		});
 	});
 	for(t = 0; t < 16; ++t)
@@ -337,9 +339,12 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 		LOG_WARN("Adding score to unknown player!");
 		return 0;
 	}
-	if(score)
-		if(scores_label(scorefield) != "")
-			s.SendFlags |= (2 ** (scorefield.m_id % 16));
+	if(!score)
+	{
+		return s.(scores(scorefield));
+	}
+	if(scores_label(scorefield) != "")
+		s.SendFlags |= (2 ** (scorefield.m_id % 16));
 	if(!warmup_stage)
 		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
 	return (s.(scores(scorefield)) += score);

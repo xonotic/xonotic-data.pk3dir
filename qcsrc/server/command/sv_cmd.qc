@@ -251,20 +251,15 @@ void GameCommand_bbox(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			LOG_INFO("Original size: ", ftos(world.absmin.x), " ", ftos(world.absmin.y), " ", ftos(world.absmin.z));
-			LOG_INFO(" ", ftos(world.absmax.x), " ", ftos(world.absmax.y), " ", ftos(world.absmax.z), "\n");
-			LOG_INFO("Currently set size: ", ftos(world.mins.x), " ", ftos(world.mins.y), " ", ftos(world.mins.z));
-			LOG_INFO(" ", ftos(world.maxs.x), " ", ftos(world.maxs.y), " ", ftos(world.maxs.z), "\n");
-			LOG_INFO("Solid bounding box size:");
-
+			vector size_min = '0 0 0';
+			vector size_max = '0 0 0';
 			tracebox('1 0 0' * world.absmin.x,
 				'0 1 0' * world.absmin.y + '0 0 1' * world.absmin.z,
 				'0 1 0' * world.absmax.y + '0 0 1' * world.absmax.z,
 				'1 0 0' * world.absmax.x,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.x));
-			else LOG_INFO(" ", ftos(trace_endpos.x));
+			size_min.x = (trace_startsolid) ? world.absmin.x : trace_endpos.x;
 
 			tracebox('0 1 0' * world.absmin.y,
 				'1 0 0' * world.absmin.x + '0 0 1' * world.absmin.z,
@@ -272,8 +267,7 @@ void GameCommand_bbox(float request)
 				'0 1 0' * world.absmax.y,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.y));
-			else LOG_INFO(" ", ftos(trace_endpos.y));
+			size_min.y = (trace_startsolid) ? world.absmin.y : trace_endpos.y;
 
 			tracebox('0 0 1' * world.absmin.z,
 				'1 0 0' * world.absmin.x + '0 1 0' * world.absmin.y,
@@ -281,8 +275,7 @@ void GameCommand_bbox(float request)
 				'0 0 1' * world.absmax.z,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.z));
-			else LOG_INFO(" ", ftos(trace_endpos.z));
+			size_min.z = (trace_startsolid) ? world.absmin.z : trace_endpos.z;
 
 			tracebox('1 0 0' * world.absmax.x,
 				'0 1 0' * world.absmin.y + '0 0 1' * world.absmin.z,
@@ -290,8 +283,7 @@ void GameCommand_bbox(float request)
 				'1 0 0' * world.absmin.x,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.x));
-			else LOG_INFO(" ", ftos(trace_endpos.x));
+			size_max.x = (trace_startsolid) ? world.absmax.x : trace_endpos.x;
 
 			tracebox('0 1 0' * world.absmax.y,
 				'1 0 0' * world.absmin.x + '0 0 1' * world.absmin.z,
@@ -299,8 +291,7 @@ void GameCommand_bbox(float request)
 				'0 1 0' * world.absmin.y,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.y));
-			else LOG_INFO(" ", ftos(trace_endpos.y));
+			size_max.y = (trace_startsolid) ? world.absmax.y : trace_endpos.y;
 
 			tracebox('0 0 1' * world.absmax.z,
 				'1 0 0' * world.absmin.x + '0 1 0' * world.absmin.y,
@@ -308,10 +299,11 @@ void GameCommand_bbox(float request)
 				'0 0 1' * world.absmin.z,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.z));
-			else LOG_INFO(" ", ftos(trace_endpos.z));
+			size_max.z = (trace_startsolid) ? world.absmax.z : trace_endpos.z;
 
-			LOG_INFO("\n");
+			LOG_INFOF("Original size: %v %v\n", world.absmin, world.absmax);
+			LOG_INFOF("Currently set size: %v %v\n", world.mins, world.maxs);
+			LOG_INFOF("Solid bounding box size: %v %v\n", size_min, size_max);
 			return;
 		}
 

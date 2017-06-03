@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# IFo Hancroft <contact@ifohancroft.com>, 2016-2017
+# IFo Hancroft <inactive+ifohancroft@transifex.com>, 2016-2017
 # set_killer <mettall@abv.bg>, 2014
 # ubone <van_ds_ff@mail.bg>, 2016
 # set_killer <mettall@abv.bg>, 2014

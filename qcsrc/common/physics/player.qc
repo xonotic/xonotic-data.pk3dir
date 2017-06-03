@@ -10,20 +10,20 @@
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	return autocvar_g_physics_clientselect && strhasword(autocvar_g_physics_clientselect_options, thecvar);
+	return autocvar_g_physics_clientselect && thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity this, string option, float defaultval)
 {
-	if(Physics_Valid(this.cvar_cl_physics))
+	if(IS_REAL_CLIENT(this) && Physics_Valid(this.cvar_cl_physics))
 	{
-		string s = sprintf("g_physics_%s_%s", this.cvar_cl_physics, option);
+		string s = strcat("g_physics_", this.cvar_cl_physics, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
 	if(autocvar_g_physics_clientselect && autocvar_g_physics_clientselect_default)
 	{
-		string s = sprintf("g_physics_%s_%s", autocvar_g_physics_clientselect_default, option);
+		string s = strcat("g_physics_", autocvar_g_physics_clientselect_default, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}

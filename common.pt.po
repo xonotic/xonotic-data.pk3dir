@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-04-02 04:48+0000\n"
+"PO-Revision-Date: 2017-05-31 03:15+0000\n"
 "Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pt/)\n"
@@ -5040,7 +5040,7 @@ msgstr "Polônes "
 
 #: qcsrc/menu/xonotic/credits.qc:249
 msgid "Portuguese"
-msgstr "Português Brasileiro"
+msgstr "Português"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "Romanian"
@@ -6732,7 +6732,7 @@ msgstr "Permitir que as estatísticas de jogadores usem o seu apelido"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:145
 msgid "Country"
-msgstr "País"
+msgstr "Idioma"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:159
 msgid "Gender:"
@@ -7758,7 +7758,7 @@ msgstr "O HUD se move de acordo com o movimento do jogador"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:163
 msgid "Shake the HUD when hurt"
-msgstr "Vibra o HUD ao ser atingido"
+msgstr "Vibrar o HUD ao ser atingido"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:167
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qh:6
@@ -8875,7 +8875,7 @@ msgstr "Difícil"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:135
 msgid "Start Singleplayer!"
-msgstr "Iniciar Um Jogador!"
+msgstr "Iniciar Campanha!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:6
 msgid "Singleplayer"

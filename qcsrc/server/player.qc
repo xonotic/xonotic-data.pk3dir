@@ -253,7 +253,7 @@ void calculate_player_respawn_time(entity this)
 		));
 		if (sdelay_small_count == 0)
 		{
-			if (g_cts)
+			if (IS_INDEPENDENT_PLAYER(this))
 			{
 				// Players play independently. No point in requiring enemies.
 				sdelay_small_count = 1;
@@ -266,7 +266,7 @@ void calculate_player_respawn_time(entity this)
 		}
 		if (sdelay_large_count == 0)
 		{
-			if (g_cts)
+			if (IS_INDEPENDENT_PLAYER(this))
 			{
 				// Players play independently. No point in requiring enemies.
 				sdelay_large_count = 1;
@@ -506,10 +506,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		WeaponStats_LogDamage(awep.m_id, abot, this.(weaponentity).m_weapon.m_id, vbot, dh + da);
 	}
-	if (damage)
-	{
-		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
-	}
+
+	MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype, damage);
 
 	if (this.health < 1)
 	{
@@ -658,6 +656,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
 			}
 		));
+		MUTATOR_CALLHOOK(PlayerDied, this);
 	}
 }
 
@@ -686,6 +685,48 @@ void PrintToChat(entity player, string text)
 {
 	text = strcat("\{1}^7", text, "\n");
 	sprint(player, text);
+}
+
+void DebugPrintToChat(entity player, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChat(player, text);
+	}
+}
+
+void PrintToChatAll(string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	bprint(text);
+}
+
+void DebugPrintToChatAll(string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatAll(text);
+	}
+}
+
+void PrintToChatTeam(int teamnum, string text)
+{
+	text = strcat("\{1}^7", text, "\n");
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		if (it.team == teamnum)
+		{
+			sprint(it, text);
+		}
+	});
+}
+
+void DebugPrintToChatTeam(int teamnum, string text)
+{
+	if (autocvar_developer)
+	{
+		PrintToChatTeam(teamnum, text);
+	}
 }
 
 /**

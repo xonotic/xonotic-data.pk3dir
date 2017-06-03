@@ -1,1 +1,6 @@
 #pragma once
+
+#ifdef SVQC
+IntrusiveList g_seeker_trackers;
+STATIC_INIT(g_seeker_trackers) { g_seeker_trackers = IL_NEW(); }
+#endif

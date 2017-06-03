@@ -1039,6 +1039,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
 	gen.team_saved = teamnumber;
+	IL_PUSH(g_saved_team, gen);
 	set_movetype(gen, MOVETYPE_NONE);
 	gen.lasthealth = gen.max_health = gen.health = autocvar_g_onslaught_gen_health;
 	gen.takedamage = DAMAGE_AIM;

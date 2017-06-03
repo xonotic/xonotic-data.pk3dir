@@ -260,7 +260,7 @@ void buff_Think(entity this)
 	}
 
 	if(!this.buff_active && !this.buff_activetime)
-	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || !(this.owner.buffs & this.buffs) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
+	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || this.owner.vehicle || !(this.owner.buffs & this.buffs) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
@@ -437,22 +437,6 @@ float buff_Inferno_CalculateTime(float damg, float offset_x, float offset_y, flo
 }
 
 // mutator hooks
-MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
-{
-	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(6, float);
-	float frag_damage = M_ARGV(7, float);
-
-	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
-
-	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
-	{
-		vector v = healtharmor_applydamage(50, autocvar_g_buffs_resistance_blockpercent, frag_deathtype, frag_damage);
-		M_ARGV(4, float) = v.x; // take
-		M_ARGV(5, float) = v.y; // save
-	}
-}
-
 MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
@@ -462,6 +446,12 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	vector frag_force = M_ARGV(6, vector);
 
 	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
+
+	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
+	{
+		float reduced = frag_damage * autocvar_g_buffs_resistance_blockpercent;
+		frag_damage = bound(0, frag_damage - reduced, frag_damage);
+	}
 
 	if(frag_target.buffs & BUFF_SPEED.m_itemid)
 	if(frag_target != frag_attacker)
@@ -987,28 +977,6 @@ MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
 
 	client.buffs = spectatee.buffs;
 	client.buff_time = spectatee.buff_time;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
-{
-	entity player = M_ARGV(0, entity);
-	entity veh = M_ARGV(1, entity);
-
-	veh.buffs = player.buffs;
-	player.buffs = 0;
-	veh.buff_time = max(0, player.buff_time - time);
-	player.buff_time = 0;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, VehicleExit)
-{
-	entity player = M_ARGV(0, entity);
-	entity veh = M_ARGV(1, entity);
-
-	player.buffs = player.oldbuffs = veh.buffs;
-	veh.buffs = 0;
-	player.buff_time = time + veh.buff_time;
-	veh.buff_time = 0;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)

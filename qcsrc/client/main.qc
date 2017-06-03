@@ -1232,7 +1232,7 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 	keys = db_get(binddb, command);
 	if (keys == "")
 	{
-		bool joy_detected = cvar("joy_detected");
+		bool joy_active = cvar("joy_active");
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
 		{
@@ -1240,7 +1240,7 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 			if(k != -1)
 			{
 				string key = keynumtostring(k);
-				if(!joy_detected && substring(key, 0, 3) == "JOY")
+				if(!joy_active && substring(key, 0, 3) == "JOY")
 					continue;
 
 				if (keys == "")
