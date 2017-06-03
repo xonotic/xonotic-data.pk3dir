@@ -1499,6 +1499,37 @@ MUTATOR_HOOKFUNCTION(surv, Player_ChangedTeam)
 	}
 }
 
+/// \brief Hook that is called when player is about to be killed when changing
+/// teams.
+MUTATOR_HOOKFUNCTION(surv, Player_ChangeTeamKill)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.team != surv_defenderteam)
+	{
+		return false;
+	}
+	if (player.surv_savedplayerstate == NULL)
+	{
+		return false;
+	}
+	Surv_RestorePlayerState(player, player.surv_savedplayerstate);
+	delete(player.surv_savedplayerstate);
+	player.surv_savedplayerstate = NULL;
+	return true;
+}
+
+/// \brief Hook that is called when player is about to be killed as a result of
+/// the kill command or changing teams.
+MUTATOR_HOOKFUNCTION(surv, ClientKill_Now)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.team == surv_defenderteam)
+	{
+		// Deny suicide.
+		return true;
+	}
+}
+
 /// \brief Hook that is called when player connects to the server.
 MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 {
