@@ -888,8 +888,10 @@ void ClientKill_Now(entity this)
 	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
-	if(!IS_SPEC(this) && !IS_OBSERVER(this))
+	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
+	{
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
+	}
 
 	// now I am sure the player IS dead
 }
