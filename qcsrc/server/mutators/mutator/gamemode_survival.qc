@@ -290,6 +290,7 @@ entity Surv_SavePlayerState(entity player)
 	state.ammo_cells = player.ammo_cells;
 	state.weapons = player.weapons;
 	state.items = player.items;
+	state.superweapons_finished = player.superweapons_finished;
 	return state;
 }
 
@@ -309,6 +310,7 @@ void Surv_RestorePlayerState(entity player, entity st)
 	player.ammo_cells = st.ammo_cells;
 	player.weapons = st.weapons;
 	player.items = st.items;
+	player.superweapons_finished = st.superweapons_finished;
 }
 
 /// \brief Changes the number of players in a team.
@@ -434,33 +436,36 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			{
 				LOG_TRACE("Removing bot");
 				// Remove bot to make space for human.
-				bool removedbot = false;
-				surv_autobalance = false;
+				entity bot = NULL;
+				float score = -999;
 				FOREACH_CLIENT(IS_BOT_CLIENT(it),
 				{
 					if ((it.team == surv_attackerteam) && (it.surv_role ==
 						SURVIVAL_ROLE_PLAYER))
 					{
-						LOG_TRACE("Changing ", it.netname,
-							" from attacker to cannon fodder.");
-						Surv_SetPlayerRole(it, SURVIVAL_ROLE_CANNON_FODDER);
-						if (!IS_DEAD(it))
+						float tempscore = PlayerScore_Get(it, SP_SCORE);
+						if (tempscore < score)
 						{
-							Surv_ChangeNumberOfAlivePlayers(teamnum, -1);
+							bot = it;
+							score = tempscore;
 						}
-						Surv_ChangeNumberOfPlayers(teamnum, -1);
-						removedbot = true;
-						break;
 					}
 				});
-				surv_autobalance = true;
-				if (!removedbot)
+				if (bot == NULL)
 				{
 					LOG_TRACE("No valid bot to remove");
 					// No space in team, denying team change.
 					TRANSMUTE(Spectator, player);
 					return false;
 				}
+				LOG_TRACE("Changing ", bot.netname,
+					" from attacker to cannon fodder.");
+				Surv_SetPlayerRole(bot, SURVIVAL_ROLE_CANNON_FODDER);
+				if (!IS_DEAD(bot))
+				{
+					Surv_ChangeNumberOfAlivePlayers(teamnum, -1);
+				}
+				Surv_ChangeNumberOfPlayers(teamnum, -1);
 				LOG_TRACE("Removed bot");
 			}
 			Surv_SetPlayerRole(player, SURVIVAL_ROLE_PLAYER);
@@ -492,32 +497,51 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			{
 				LOG_TRACE("Removing bot");
 				// Remove bot to make space for human.
-				bool removedbot = false;
-				surv_autobalance = false;
+				entity bot = NULL;
+				float score = -999;
 				FOREACH_CLIENT(IS_BOT_CLIENT(it),
 				{
-					if (it.team == surv_defenderteam)
+					if (!IS_DEAD(it) && (it.team == surv_defenderteam))
 					{
-						LOG_TRACE("Changing ", it.netname,
-							" from defender to cannon fodder.");
-						if ((!IS_DEAD(it)) && (!surv_allowed_to_spawn))
+						float tempscore = PlayerScore_Get(it, SP_SCORE);
+						if (tempscore < score)
 						{
-							player.surv_savedplayerstate =
-								Surv_SavePlayerState(it);
+							bot = it;
+							score = tempscore;
 						}
-						SetPlayerTeamSimple(it, surv_attackerteam);
-						removedbot = true;
-						break;
 					}
 				});
-				surv_autobalance = true;
-				if (!removedbot)
+				if (bot == NULL)
+				{
+					FOREACH_CLIENT(IS_BOT_CLIENT(it),
+					{
+						if (it.team == surv_defenderteam)
+						{
+							float tempscore = PlayerScore_Get(it, SP_SCORE);
+							if (tempscore < score)
+							{
+								bot = it;
+								score = tempscore;
+							}
+						}
+					});
+				}
+				if (bot == NULL)
 				{
 					LOG_TRACE("No valid bot to remove");
 					// No space in team, denying team change.
 					TRANSMUTE(Spectator, player);
 					return false;
 				}
+				LOG_TRACE("Changing ", bot.netname,
+					" from defender to cannon fodder.");
+				if ((!IS_DEAD(bot)) && (!surv_allowed_to_spawn))
+				{
+					player.surv_savedplayerstate = Surv_SavePlayerState(bot);
+				}
+				surv_autobalance = false;
+				SetPlayerTeamSimple(bot, surv_attackerteam);
+				surv_autobalance = true;
 				LOG_TRACE("Removed bot");
 			}
 			Surv_SetPlayerRole(player, SURVIVAL_ROLE_PLAYER);
