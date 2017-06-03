@@ -532,18 +532,20 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 {
-	float bestteam, selectedteam;
-
 	// don't join a team if we're not playing a team game
-	if(!teamplay)
+	if (!teamplay)
+	{
 		return 0;
+	}
 
 	// find out what teams are available
 	CheckAllowedTeams(this);
 
+	float selectedteam;
+
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
-	if(!forcebestteam)
+	if (!forcebestteam)
 	{
 		if(     c1 >= 0 && this.team == NUM_TEAM_1)
 			selectedteam = this.team;
@@ -556,9 +558,9 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 		else
 			selectedteam = -1;
 
-		if(selectedteam > 0)
+		if (selectedteam > 0)
 		{
-			if(!only_return_best)
+			if (!only_return_best)
 			{
 				SetPlayerTeamSimple(this, selectedteam);
 
@@ -571,29 +573,30 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 		// otherwise end up on the smallest team (handled below)
 	}
 
-	bestteam = FindSmallestTeam(this, true);
+	float bestteam = FindSmallestTeam(this, true);
 	MUTATOR_CALLHOOK(JoinBestTeam, this, bestteam);
 	bestteam = M_ARGV(1, float);
 
-	if(!only_return_best && !this.bot_forced_team)
+	if (only_return_best || this.bot_forced_team)
 	{
-		bestteam = Team_NumberToTeam(bestteam);
-		if (bestteam != -1)
-		{
-			TeamchangeFrags(this);
-			SetPlayerTeamSimple(this, bestteam);
-		}
-		else
-		{
-			error("smallest team: invalid team\n");
-		}
-
-		LogTeamchange(this.playerid, this.team, 2); // log auto join
-
-		if(!IS_DEAD(this))
-			Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
+		return bestteam;
 	}
-
+	bestteam = Team_NumberToTeam(bestteam);
+	if (bestteam != -1)
+	{
+		TeamchangeFrags(this);
+		SetPlayerTeamSimple(this, bestteam);
+	}
+	else
+	{
+		error("JoinBestTeam: invalid team\n");
+	}
+	LogTeamchange(this.playerid, this.team, 2); // log auto join
+	if (!IS_DEAD(this) && (MUTATOR_CALLHOOK(Player_ChangeTeamKill, this) ==
+		false))
+	{
+		Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
+	}
 	return bestteam;
 }
 
@@ -676,12 +679,16 @@ void SV_ChangeTeam(entity this, float _color)
 
 	SetPlayerTeam(this, dteam, steam, !IS_CLIENT(this));
 
-	if(IS_PLAYER(this) && steam != dteam)
+	if(!IS_PLAYER(this) || (steam == dteam))
 	{
-		// kill player when changing teams
-		if(!IS_DEAD(this))
-			Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
+		return;
 	}
+	// kill player when changing teams
+	if(IS_DEAD(this) || (MUTATOR_CALLHOOK(Player_ChangeTeamKill, this) == true))
+	{
+		return;
+	}
+	Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
 }
 
 void ShufflePlayerOutOfTeam (float source_team)
@@ -816,7 +823,10 @@ void ShufflePlayerOutOfTeam (float source_team)
 	TeamchangeFrags(selected);
 	SetPlayerTeam(selected, smallestteam, source_team, false);
 
-	if(!IS_DEAD(selected))
-		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE.m_id, selected.origin, '0 0 0');
+	if (IS_DEAD(selected) || MUTATOR_CALLHOOK(Player_ChangeTeamKill, selected) == true)
+	{
+		return;
+	}
+	Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE.m_id, selected.origin, '0 0 0');
 	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }
