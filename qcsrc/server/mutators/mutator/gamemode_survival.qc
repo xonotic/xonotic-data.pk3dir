@@ -437,7 +437,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				LOG_TRACE("Removing bot");
 				// Remove bot to make space for human.
 				entity bot = NULL;
-				float score = -999;
+				float score = 999;
 				FOREACH_CLIENT(IS_BOT_CLIENT(it),
 				{
 					if ((it.team == surv_attackerteam) && (it.surv_role ==
@@ -498,7 +498,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				LOG_TRACE("Removing bot");
 				// Remove bot to make space for human.
 				entity bot = NULL;
-				float score = -999;
+				float score = 999;
 				FOREACH_CLIENT(IS_BOT_CLIENT(it),
 				{
 					if (!IS_DEAD(it) && (it.team == surv_defenderteam))
