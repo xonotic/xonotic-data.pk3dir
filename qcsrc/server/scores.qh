@@ -25,6 +25,14 @@ void PlayerScore_Detach(entity player);
 float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score);
 
 /**
+ * \brief Returns the player's score.
+ * \param[in] player Player to inspect.
+ * \param[in] scorefield Field of the score.
+ * \return Player's score.
+ */
+#define PlayerScore_Get(player, scorefield) PlayerScore_Add(player, scorefield, 0)
+
+/**
  * Initialize the score of this player if needed.
  * Does nothing in teamplay.
  * Use that when a spectator becomes a player.
