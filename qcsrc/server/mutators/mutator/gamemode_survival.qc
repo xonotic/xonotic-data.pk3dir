@@ -962,6 +962,11 @@ void Surv_RoundCleanup()
 		{
 			WaypointSprite_Kill(it.surv_attack_sprite);
 		}
+		if (it.surv_savedplayerstate)
+		{
+			delete(it.surv_savedplayerstate);
+			it.surv_savedplayerstate = NULL;
+		}
 	});
 	if (surv_type == SURVIVAL_TYPE_VERSUS)
 	{
@@ -1791,8 +1796,16 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 	}
 	else
 	{
-		WaypointSprite_UpdateHealth(target.surv_attack_sprite,
-			target.armorvalue + 1);
+		if (autocvar_g_instagib == 1)
+		{
+			WaypointSprite_UpdateHealth(target.surv_attack_sprite,
+				target.armorvalue + 1);
+		}
+		else
+		{
+			WaypointSprite_UpdateHealth(target.surv_attack_sprite,
+				target.health + target.armorvalue);
+		}
 	}
 }
 
