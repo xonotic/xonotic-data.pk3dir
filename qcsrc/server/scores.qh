@@ -30,7 +30,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score);
  * \param[in] scorefield Field of the score.
  * \return Player's score.
  */
-float PlayerScore_Get(entity player, PlayerScoreField scorefield);
+#define PlayerScore_Get(player, scorefield) PlayerScore_Add(player, scorefield, 0)
 
 /**
  * Initialize the score of this player if needed.

@@ -347,11 +347,6 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	return (s.(scores(scorefield)) += score);
 }
 
-float PlayerScore_Get(entity player, PlayerScoreField scorefield)
-{
-	return player.scorekeeper.scores(scorefield);
-}
-
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score)
 {
 	float r;
