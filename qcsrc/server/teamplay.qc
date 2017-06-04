@@ -230,7 +230,7 @@ void CheckAllowedTeams (entity for_whom)
 	int teams_mask = 0;
 
 	c1 = c2 = c3 = c4 = -1;
-	cb1 = cb2 = cb3 = cb4 = 0;
+	numbotsteam1 = numbotsteam2 = numbotsteam3 = numbotsteam4 = 0;
 
 	string teament_name = string_null;
 
@@ -358,7 +358,7 @@ void GetTeamCounts(entity ignore)
 				if(c1 >= 0)
 				{
 					c1 = c1 + value;
-					cb1 = cb1 + bvalue;
+					numbotsteam1 += bvalue;
 				}
 			}
 			if(t == NUM_TEAM_2)
@@ -366,7 +366,7 @@ void GetTeamCounts(entity ignore)
 				if(c2 >= 0)
 				{
 					c2 = c2 + value;
-					cb2 = cb2 + bvalue;
+					numbotsteam2 += bvalue;
 				}
 			}
 			if(t == NUM_TEAM_3)
@@ -374,7 +374,7 @@ void GetTeamCounts(entity ignore)
 				if(c3 >= 0)
 				{
 					c3 = c3 + value;
-					cb3 = cb3 + bvalue;
+					numbotsteam3 += bvalue;
 				}
 			}
 			if(t == NUM_TEAM_4)
@@ -382,7 +382,7 @@ void GetTeamCounts(entity ignore)
 				if(c4 >= 0)
 				{
 					c4 = c4 + value;
-					cb4 = cb4 + bvalue;
+					numbotsteam4 += bvalue;
 				}
 			}
 		}
@@ -393,10 +393,10 @@ void GetTeamCounts(entity ignore)
 	{
 		switch(autocvar_g_campaign_forceteam)
 		{
-			case 1: if(c1 == cb1) ++c1; break;
-			case 2: if(c2 == cb2) ++c2; break;
-			case 3: if(c3 == cb3) ++c3; break;
-			case 4: if(c4 == cb4) ++c4; break;
+			case 1: if(c1 == numbotsteam1) ++c1; break;
+			case 2: if(c2 == numbotsteam2) ++c2; break;
+			case 3: if(c3 == numbotsteam3) ++c3; break;
+			case 4: if(c4 == numbotsteam4) ++c4; break;
 		}
 	}
 }
@@ -409,17 +409,17 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 
 	switch(ta)
 	{
-		case 1: ca = c1; cba = cb1; sa = team1_score; break;
-		case 2: ca = c2; cba = cb2; sa = team2_score; break;
-		case 3: ca = c3; cba = cb3; sa = team3_score; break;
-		case 4: ca = c4; cba = cb4; sa = team4_score; break;
+		case 1: ca = c1; cba = numbotsteam1; sa = team1_score; break;
+		case 2: ca = c2; cba = numbotsteam2; sa = team2_score; break;
+		case 3: ca = c3; cba = numbotsteam3; sa = team3_score; break;
+		case 4: ca = c4; cba = numbotsteam4; sa = team4_score; break;
 	}
 	switch(tb)
 	{
-		case 1: cb = c1; cbb = cb1; sb = team1_score; break;
-		case 2: cb = c2; cbb = cb2; sb = team2_score; break;
-		case 3: cb = c3; cbb = cb3; sb = team3_score; break;
-		case 4: cb = c4; cbb = cb4; sb = team4_score; break;
+		case 1: cb = c1; cbb = numbotsteam1; sb = team1_score; break;
+		case 2: cb = c2; cbb = numbotsteam2; sb = team2_score; break;
+		case 3: cb = c3; cbb = numbotsteam3; sb = team3_score; break;
+		case 4: cb = c4; cbb = numbotsteam4; sb = team4_score; break;
 	}
 
 	// invalid
