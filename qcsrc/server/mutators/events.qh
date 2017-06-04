@@ -130,6 +130,24 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
 
+/** return true to manually override team counts */
+MUTATOR_HOOKABLE(GetTeamCounts, EV_NO_ARGS);
+
+/** allow overriding of team counts */
+#define EV_GetTeamCount(i, o) \
+    /** team to count                   */ i(float, MUTATOR_ARGV_0_float) \
+    /** player to ignore                */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** number of players in a team     */ i(float, MUTATOR_ARGV_2_float) \
+    /**/                                   o(float, MUTATOR_ARGV_2_float) \
+    /** number of bots in a team        */ i(float, MUTATOR_ARGV_3_float) \
+    /**/                                   o(float, MUTATOR_ARGV_3_float) \
+    /** lowest scoring player in a team */ i(entity, MUTATOR_ARGV_4_entity) \
+    /**/                                   o(entity, MUTATOR_ARGV_4_entity) \
+    /** lowest scoring bot in a team    */ i(entity, MUTATOR_ARGV_5_entity) \
+    /**/                                   o(entity, MUTATOR_ARGV_5_entity) \
+    /**/
+MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
+
 /** allows overriding best team */
 #define EV_JoinBestTeam(i, o) \
     /** player checked     */ i(entity, MUTATOR_ARGV_0_entity) \

@@ -332,61 +332,193 @@ float PlayerValue(entity p)
 // teams that are allowed will now have their player counts stored in c1...c4
 void GetTeamCounts(entity ignore)
 {
-	float value, bvalue;
-	// now count how many players are on each team already
-
-	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
-	// also remember the lowest-scoring player
-
-	FOREACH_CLIENT(true, LAMBDA(
-		float t;
-		if(IS_PLAYER(it) || it.caplayer)
-			t = it.team;
-		else if(it.team_forced > 0)
-			t = it.team_forced; // reserve the spot
-		else
-			continue;
-		if(it != ignore)// && it.netname != "")
+	if (MUTATOR_CALLHOOK(GetTeamCounts) == true)
+	{
+		if (c1 >= 0)
 		{
-			value = PlayerValue(it);
-			if(IS_BOT_CLIENT(it))
-				bvalue = value;
-			else
-				bvalue = 0;
-			if(t == NUM_TEAM_1)
-			{
-				if(c1 >= 0)
-				{
-					c1 = c1 + value;
-					numbotsteam1 += bvalue;
-				}
-			}
-			if(t == NUM_TEAM_2)
-			{
-				if(c2 >= 0)
-				{
-					c2 = c2 + value;
-					numbotsteam2 += bvalue;
-				}
-			}
-			if(t == NUM_TEAM_3)
-			{
-				if(c3 >= 0)
-				{
-					c3 = c3 + value;
-					numbotsteam3 += bvalue;
-				}
-			}
-			if(t == NUM_TEAM_4)
-			{
-				if(c4 >= 0)
-				{
-					c4 = c4 + value;
-					numbotsteam4 += bvalue;
-				}
-			}
+			MUTATOR_CALLHOOK(GetTeamCount, NUM_TEAM_1, ignore, c1, numbotsteam1,
+				lowestplayerteam1, lowestbotteam1);
+			c1 = M_ARGV(2, float);
+			numbotsteam1 = M_ARGV(3, float);
+			lowestplayerteam1 = M_ARGV(4, entity);
+			lowestbotteam1 = M_ARGV(5, entity);
 		}
-	));
+		if (c2 >= 0)
+		{
+			MUTATOR_CALLHOOK(GetTeamCount, NUM_TEAM_2, ignore, c2, numbotsteam2,
+				lowestplayerteam2, lowestbotteam2);
+			c2 = M_ARGV(2, float);
+			numbotsteam2 = M_ARGV(3, float);
+			lowestplayerteam2 = M_ARGV(4, entity);
+			lowestbotteam2 = M_ARGV(5, entity);
+		}
+		if (c3 >= 0)
+		{
+			MUTATOR_CALLHOOK(GetTeamCount, NUM_TEAM_3, ignore, c3, numbotsteam3,
+				lowestplayerteam3, lowestbotteam3);
+			c3 = M_ARGV(2, float);
+			numbotsteam3 = M_ARGV(3, float);
+			lowestplayerteam3 = M_ARGV(4, entity);
+			lowestbotteam3 = M_ARGV(5, entity);
+		}
+		if (c4 >= 0)
+		{
+			MUTATOR_CALLHOOK(GetTeamCount, NUM_TEAM_4, ignore, c4, numbotsteam4,
+				lowestplayerteam4, lowestbotteam4);
+			c4 = M_ARGV(2, float);
+			numbotsteam4 = M_ARGV(3, float);
+			lowestplayerteam4 = M_ARGV(4, entity);
+			lowestbotteam4 = M_ARGV(5, entity);
+		}
+	}
+	else
+	{
+		float value, bvalue;
+		// now count how many players are on each team already
+		float lowestplayerscore1 = FLOAT_MAX;
+		float lowestbotscore1 = FLOAT_MAX;
+		float lowestplayerscore2 = FLOAT_MAX;
+		float lowestbotscore2 = FLOAT_MAX;
+		float lowestplayerscore3 = FLOAT_MAX;
+		float lowestbotscore3 = FLOAT_MAX;
+		float lowestplayerscore4 = FLOAT_MAX;
+		float lowestbotscore4 = FLOAT_MAX;
+		FOREACH_CLIENT(true, LAMBDA(
+			float t;
+			if (IS_PLAYER(it) || it.caplayer)
+			{
+				t = it.team;
+			}
+			else if (it.team_forced > 0)
+			{
+				t = it.team_forced; // reserve the spot
+			}
+			else
+			{
+				continue;
+			}
+			if (it == ignore)
+			{
+				continue;
+			}
+			value = PlayerValue(it);
+			if (IS_BOT_CLIENT(it))
+			{
+				bvalue = value;
+			}
+			else
+			{
+				bvalue = 0;
+			}
+			if (value == 0)
+			{
+				continue;
+			}
+			switch (t)
+			{
+				case NUM_TEAM_1:
+				{
+					if (c1 < 0)
+					{
+						break;
+					}
+					c1 += value;
+					numbotsteam1 += bvalue;
+					float tempscore = PlayerScore_Get(it, SP_SCORE);
+					if (!bvalue)
+					{
+						if (tempscore < lowestplayerscore1)
+						{
+							lowestplayerteam1 = it;
+							lowestplayerscore1 = tempscore;
+						}
+						break;
+					}
+					if (tempscore < lowestbotscore1)
+					{
+						lowestbotteam1 = it;
+						lowestbotscore1 = tempscore;
+					}
+					break;
+				}
+				case NUM_TEAM_2:
+				{
+					if (c2 < 0)
+					{
+						break;
+					}
+					c2 += value;
+					numbotsteam2 += bvalue;
+					float tempscore = PlayerScore_Get(it, SP_SCORE);
+					if (!bvalue)
+					{
+						if (tempscore < lowestplayerscore2)
+						{
+							lowestplayerteam2 = it;
+							lowestplayerscore2 = tempscore;
+						}
+						break;
+					}
+					if (tempscore < lowestbotscore2)
+					{
+						lowestbotteam2 = it;
+						lowestbotscore2 = tempscore;
+					}
+					break;
+				}
+				case NUM_TEAM_3:
+				{
+					if (c3 < 0)
+					{
+						break;
+					}
+					c3 += value;
+					numbotsteam3 += bvalue;
+					float tempscore = PlayerScore_Get(it, SP_SCORE);
+					if (!bvalue)
+					{
+						if (tempscore < lowestplayerscore3)
+						{
+							lowestplayerteam3 = it;
+							lowestplayerscore3 = tempscore;
+						}
+						break;
+					}
+					if (tempscore < lowestbotscore3)
+					{
+						lowestbotteam3 = it;
+						lowestbotscore3 = tempscore;
+					}
+					break;
+				}
+				case NUM_TEAM_4:
+				{
+					if (c4 < 0)
+					{
+						break;
+					}
+					c4 += value;
+					numbotsteam4 += bvalue;
+					float tempscore = PlayerScore_Get(it, SP_SCORE);
+					if (!bvalue)
+					{
+						if (tempscore < lowestplayerscore4)
+						{
+							lowestplayerteam4 = it;
+							lowestplayerscore4 = tempscore;
+						}
+						break;
+					}
+					if (tempscore < lowestbotscore4)
+					{
+						lowestbotteam4 = it;
+						lowestbotscore4 = tempscore;
+					}
+					break;
+				}
+			}
+		));
+	}
 
 	// if the player who has a forced team has not joined yet, reserve the spot
 	if(autocvar_g_campaign)
