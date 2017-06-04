@@ -6,7 +6,18 @@ string cache_lastmutatormsg;
 // client counts for each team
 //float c1, c2, c3, c4;
 // # of bots on those teams
-float numbotsteam1, numbotsteam2, numbotsteam3, numbotsteam4;
+float numbotsteam1;
+float numbotsteam2;
+float numbotsteam3;
+float numbotsteam4;
+entity lowestplayerteam1;
+entity lowestplayerteam2;
+entity lowestplayerteam3;
+entity lowestplayerteam4;
+entity lowestbotteam1;
+entity lowestbotteam2;
+entity lowestbotteam3;
+entity lowestbotteam4;
 
 int redowned, blueowned, yellowowned, pinkowned;
 

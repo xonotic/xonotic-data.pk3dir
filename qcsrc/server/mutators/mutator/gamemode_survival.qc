@@ -1642,6 +1642,110 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 	return;
 }
 
+/// \brief Hook that override team counts.
+MUTATOR_HOOKFUNCTION(surv, GetTeamCounts, CBC_ORDER_EXCLUSIVE)
+{
+	return true;
+}
+
+/// \brief Hook that sets the team count.
+MUTATOR_HOOKFUNCTION(surv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+{
+	float teamnum = M_ARGV(0, float);
+	entity ignore = M_ARGV(1, entity);
+	switch (teamnum)
+	{
+		case surv_attackerteam:
+		{
+			M_ARGV(2, float) = surv_numattackers;
+			M_ARGV(3, float) = surv_numattackers - surv_numattackerhumans;
+			entity lowestplayer = NULL;
+			float lowestplayerscore = FLOAT_MAX;
+			entity lowestbot = NULL;
+			float lowestbotscore = FLOAT_MAX;
+			FOREACH_CLIENT((it.team == surv_attackerteam) && (it.surv_role ==
+				SURVIVAL_ROLE_PLAYER),
+			{
+				if (it == ignore)
+				{
+					continue;
+				}
+				if (IS_BOT_CLIENT(it))
+				{
+					float tempscore = PlayerScore_Get(it, SP_SCORE);
+					if (tempscore < lowestbotscore)
+					{
+						lowestbot = it;
+						lowestbotscore = tempscore;
+						continue;
+					}
+				}
+				float tempscore = PlayerScore_Get(it, SP_SCORE);
+				if (tempscore < lowestplayerscore)
+				{
+					lowestplayer = it;
+					lowestplayerscore = tempscore;
+				}
+			});
+			M_ARGV(4, entity) = lowestplayer;
+			M_ARGV(5, entity) = lowestbot;
+			if (ignore.team == surv_attackerteam)
+			{
+				--M_ARGV(2, float);
+				if (IS_BOT_CLIENT(ignore))
+				{
+					--M_ARGV(3, float);
+				}
+			}
+			break;
+		}
+		case surv_defenderteam:
+		{
+			M_ARGV(2, float) = surv_numdefenders;
+			M_ARGV(3, float) = surv_numdefenders - surv_numdefenderhumans;
+			entity lowestplayer = NULL;
+			float lowestplayerscore = FLOAT_MAX;
+			entity lowestbot = NULL;
+			float lowestbotscore = FLOAT_MAX;
+			FOREACH_CLIENT((it.team == surv_defenderteam),
+			{
+				if (it == ignore)
+				{
+					continue;
+				}
+				if (IS_BOT_CLIENT(it))
+				{
+					float tempscore = PlayerScore_Get(it, SP_SCORE);
+					if (tempscore < lowestbotscore)
+					{
+						lowestbot = it;
+						lowestbotscore = tempscore;
+						continue;
+					}
+				}
+				float tempscore = PlayerScore_Get(it, SP_SCORE);
+				if (tempscore < lowestplayerscore)
+				{
+					lowestplayer = it;
+					lowestplayerscore = tempscore;
+				}
+			});
+			M_ARGV(4, entity) = lowestplayer;
+			M_ARGV(5, entity) = lowestbot;
+			if (ignore.team == surv_defenderteam)
+			{
+				--M_ARGV(2, float);
+				if (IS_BOT_CLIENT(ignore))
+				{
+					--M_ARGV(3, float);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}
+
 /// \brief Hook that determines the best team for the player to join.
 MUTATOR_HOOKFUNCTION(surv, JoinBestTeam, CBC_ORDER_EXCLUSIVE)
 {
