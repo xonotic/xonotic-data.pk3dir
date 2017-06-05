@@ -37,12 +37,12 @@ void navigation_dynamicgoal_unset(entity this)
 	this.nearestwaypointtimeout = -1;
 }
 
-bool navigation_checkladders(entity e, vector org, vector move, vector m1, vector m2, vector end, vector end2, int movemode)
+bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector end, vector end2, int movemode)
 {
 	IL_EACH(g_ladders, it.classname == "func_ladder",
 	{
 		if(it.bot_pickup)
-		if(boxesoverlap(move + m1 + '-1 -1 -1', move + m2 + '1 1 1', it.absmin, it.absmax))
+		if(boxesoverlap(org + m1 + '-1 -1 -1', org + m2 + '1 1 1', it.absmin, it.absmax))
 		if(boxesoverlap(end, end2, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
 		{
 			vector top = org;
@@ -200,11 +200,14 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 					tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
 					if (trace_fraction < 1 || trace_startsolid)
 					{
-						if(navigation_checkladders(e, trace_endpos - dir * (stepdist / 2),
-							move + jumpheight_vec, m1, m2, end, end2, movemode))
+						vector v = trace_endpos - jumpstepheightvec + jumpheight_vec;
+						if(navigation_checkladders(e, v, m1, m2, end, end2, movemode))
 						{
 							if(autocvar_bot_debug_tracewalk)
-								debugnodestatus(trace_endpos, DEBUG_NODE_SUCCESS);
+							{
+								debugnode(e, v);
+								debugnodestatus(v, DEBUG_NODE_SUCCESS);
+							}
 
 							//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
 							return true;
