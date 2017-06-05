@@ -168,6 +168,8 @@ void waypoint_setupmodel(entity wp)
 			wp.colormod = '1 0 0';
 		else if (wp.wpflags & WAYPOINTFLAG_GENERATED)
 			wp.colormod = '1 1 0';
+		else if (wp.wphardwired)
+			wp.colormod = '0.5 0 1';
 		else
 			wp.colormod = '1 1 1';
 	}
