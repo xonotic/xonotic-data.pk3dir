@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-03-31 17:53+0000\n"
+"PO-Revision-Date: 2017-06-04 00:29+0000\n"
 "Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
@@ -344,7 +344,7 @@ msgstr "ucciso bandiera, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
-msgstr "ucciso portatore bandiera (l:%y^7)"
+msgstr "ucciso portabandiera (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:805
 #, c-format
@@ -778,8 +778,7 @@ msgstr "^3captime^7                  Tempo della cattura più veloce (CTF)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:319
 msgid "^3fckills^7                  Number of flag carrier kills\n"
-msgstr ""
-"^3fckills^7                  Numero di uccisioni dei portatori di bandiera\n"
+msgstr "^3fckills^7                  Numero di uccisioni dei portabandiera\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:320
 msgid "^3returns^7                  Number of flag returns\n"
@@ -811,8 +810,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:326
 msgid "^3kckills^7                  Number of keys carrier kills\n"
-msgstr ""
-"^3kckills^7                  Numero di uccisioni di portatori di chiavi\n"
+msgstr "^3kckills^7                  Numero di uccisioni di portachiavi\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:327
 msgid "^3losses^7                   Number of times a key was lost\n"
@@ -841,8 +839,7 @@ msgstr "^3takes^7                    Numero di punti di dominio presi (DOM)\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:333
 msgid "^3bckills^7                  Number of ball carrier kills\n"
-msgstr ""
-"^3bckills^7                  Numbero di uccisioni di portatori di palla\n"
+msgstr "^3bckills^7                  Numbero di uccisioni di portapalla\n"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:334
 msgid ""
@@ -1770,7 +1767,7 @@ msgstr "Spingi"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Flag carrier"
-msgstr "Portatore bandiera"
+msgstr "Portabandiera"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Enemy carrier"
@@ -1778,7 +1775,7 @@ msgstr "Portatore nemico"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:23
 msgid "Dropped flag"
-msgstr "Bandiera persa"
+msgstr "Bandiera lasciata"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "White base"
@@ -1825,7 +1822,7 @@ msgstr "Chiave lasciata"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
 msgid "Key carrier"
-msgstr "Portatore chiave"
+msgstr "Portchiave"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Run here"
@@ -1838,7 +1835,7 @@ msgstr "Palla"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:46
 msgid "Ball carrier"
-msgstr "Portatore palla"
+msgstr "Portapalla"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 msgid "Goal"
@@ -2604,7 +2601,7 @@ msgstr "^BG%s^BG ha perso il colpetto %s^BG!"
 #: qcsrc/common/notifications/all.inc:692
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr "^BGHai abbandonato il colpetto %s^BG!"
+msgstr "^BGHai lasciato il colpetto %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:380
 #: qcsrc/common/notifications/all.inc:693
@@ -3446,8 +3443,7 @@ msgstr "^BGStallo! I nemici ora possono vederti nel radar!"
 #: qcsrc/common/notifications/all.inc:586
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
 msgstr ""
-"^BGStallo! I portatori di bandiera ora possono essere visti dai nemici nel "
-"radar!"
+"^BGStallo! I portabandiera ora possono essere visti dai nemici nel radar!"
 
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
@@ -3845,7 +3841,7 @@ msgid ""
 "Help the key carriers to meet!"
 msgstr ""
 "^BGTutte le chiavi sono in mano alla tua squadra!\n"
-"Aiuta i portatori di chiavi a incontrarsi!"
+"Aiuta i portachiavi a incontrarsi!"
 
 #: qcsrc/common/notifications/all.inc:712
 msgid ""
@@ -3861,7 +3857,7 @@ msgid ""
 "Meet the other key carriers ^F4NOW^BG!"
 msgstr ""
 "^BGTutte le chiavi sono in mano alla tua squadra!\n"
-"Incxontra gli altri portatori di chiavi ^F4ORA^BG!"
+"Incxontra gli altri portachiavi ^F4ORA^BG!"
 
 #: qcsrc/common/notifications/all.inc:714
 msgid "^F4Round will start in ^COUNT"

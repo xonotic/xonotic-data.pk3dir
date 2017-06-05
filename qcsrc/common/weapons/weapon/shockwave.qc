@@ -460,7 +460,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 					);
 
 				// figure out the direction of force
-				vel = normalize(vec3(head.velocity.x, head.velocity.y, 0));
+				vel = normalize(vec2(head.velocity));
 				vel *=
 					(
 						bound(0, (vlen(vel) / autocvar_sv_maxspeed), 1)

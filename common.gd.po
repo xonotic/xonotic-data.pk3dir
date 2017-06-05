@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-16 11:11+0000\n"
+"PO-Revision-Date: 2017-06-01 21:16+0000\n"
 "Last-Translator: GunChleoc\n"
 "Language-Team: Gaelic, Scottish (http://www.transifex.com/team-xonotic/"
 "xonotic/language/gd/)\n"
@@ -933,36 +933,36 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1600
 #, c-format
 msgid "Spectators"
-msgstr ""
+msgstr "Amhairc"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1615
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
-msgstr ""
+msgstr "a' cluich ^3%s^7 air ^2%s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1622
 #: qcsrc/client/hud/panel/scoreboard.qc:1627
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr ""
+msgstr " fad suas ri ^1%1.0f mionaid(ean)^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1631
 #: qcsrc/client/hud/panel/scoreboard.qc:1650
 msgid " or"
-msgstr ""
+msgstr "no"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1634
 #: qcsrc/client/hud/panel/scoreboard.qc:1641
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr ""
+msgstr " gu ruige ^3%s %s^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1635
 #: qcsrc/client/hud/panel/scoreboard.qc:1642
 #: qcsrc/client/hud/panel/scoreboard.qc:1654
 #: qcsrc/client/hud/panel/scoreboard.qc:1661
 msgid "SCO^points"
-msgstr ""
+msgstr "puingean"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1636
 #: qcsrc/client/hud/panel/scoreboard.qc:1643
@@ -1034,7 +1034,7 @@ msgstr "Chan eil"
 
 #: qcsrc/client/hud/panel/weapons.qc:530
 msgid "Out of ammo"
-msgstr ""
+msgstr "Dh'fhalbh an connadh ort"
 
 #: qcsrc/client/hud/panel/weapons.qc:534
 msgid "Don't have"
@@ -1071,12 +1071,12 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:49
 msgid " (1 vote)"
-msgstr ""
+msgstr " (Bhòtaichean: 1)"
 
 #: qcsrc/client/mapvoting.qc:51
 #, c-format
 msgid " (%d votes)"
-msgstr ""
+msgstr " (Bhòtaichean: %d)"
 
 #: qcsrc/client/mapvoting.qc:271
 msgid "Don't care"
@@ -1306,15 +1306,15 @@ msgstr ""
 #: qcsrc/common/minigames/cl_minigames_hud.qc:331
 #: qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
-msgstr ""
+msgstr "Fàg an-seo"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:336
 msgid "Invite"
-msgstr ""
+msgstr "Thoir cuireadh"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:378
 msgid "Current Game"
-msgstr ""
+msgstr "An geama làithreach"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:403
 msgid "Exit Menu"
@@ -1323,19 +1323,19 @@ msgstr ""
 #: qcsrc/common/minigames/cl_minigames_hud.qc:415
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:16
 msgid "Create"
-msgstr ""
+msgstr "Cruthaich"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:418
 msgid "Join"
-msgstr ""
+msgstr "Gabh pàirt ann"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:489
 msgid "Minigames"
-msgstr ""
+msgstr "Meanbh-gheamannan"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1168
 msgid "Better luck next time!"
-msgstr ""
+msgstr "Gun rachadh nas fhearr leat an t-ath-thuras!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1172
 msgid "Tubular! Press \"Next Level\" to continue!"
@@ -1355,84 +1355,88 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/bd.qc:1404
 msgid "Next Level"
-msgstr ""
+msgstr "An t-ath-leibheil"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1405
 msgid "Restart"
-msgstr ""
+msgstr "Ath-thòisich"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1406
 msgid "Editor"
-msgstr ""
+msgstr "Deasaiche"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1407
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
-msgstr ""
+msgstr "Sàbhail"
 
 #: qcsrc/common/minigames/minigame/c4.qc:373
 #: qcsrc/common/minigames/minigame/pp.qc:438
 #: qcsrc/common/minigames/minigame/ttt.qc:319
 msgid "Draw"
-msgstr ""
+msgstr "Co-ionnann"
 
 #: qcsrc/common/minigames/minigame/c4.qc:378
 #: qcsrc/common/minigames/minigame/nmm.qc:601
 msgid "You lost the game!"
-msgstr ""
+msgstr "Chaill thu an geama!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:379
 #: qcsrc/common/minigames/minigame/nmm.qc:602
 msgid "You win!"
-msgstr ""
+msgstr "Bhuannaich thu!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
 #: qcsrc/common/minigames/minigame/nmm.qc:606
 #: qcsrc/common/minigames/minigame/pp.qc:455
 #: qcsrc/common/minigames/minigame/ttt.qc:336
 msgid "Wait for your opponent to make their move"
-msgstr ""
+msgstr "Fuirich gus an gluais an nàmhaid"
 
 #: qcsrc/common/minigames/minigame/c4.qc:386
 #: qcsrc/common/minigames/minigame/nmm.qc:608
 #: qcsrc/common/minigames/minigame/pp.qc:458
 #: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Click on the game board to place your piece"
-msgstr ""
+msgstr "Briog air bòrd a' gheama gus am fear agad a chur ann"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:610
 msgid ""
 "You can select one of your pieces to move it in one of the surrounding places"
 msgstr ""
+"'S urrainn dhut fear a thaghadh gus a ghluasad sna h-ionadan timcheall air"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:612
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr ""
+"'S urrainn dhut fear a thaghadh gus a ghluasad àite sam bith air a' bhòrd"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:614
 msgid "You can take one of the opponent's pieces"
-msgstr ""
+msgstr "'S urrainn dhut fear an nàmhad a ghabhail"
 
 #: qcsrc/common/minigames/minigame/pong.qc:570
 #: qcsrc/common/minigames/minigame/ttt.qc:299
 msgid "AI"
-msgstr ""
+msgstr "IF"
 
 #: qcsrc/common/minigames/minigame/pong.qc:587
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
+"Brùth air ^1Tòisich maidse^7 gus a' mhaidse a thòiseachadh leis na "
+"cluicheadairean làithreach"
 
 #: qcsrc/common/minigames/minigame/pong.qc:651
 msgid "Start Match"
-msgstr ""
+msgstr "Tòisich maidse"
 
 #: qcsrc/common/minigames/minigame/pong.qc:652
 msgid "Add AI player"
-msgstr ""
+msgstr "Cuir cluicheadair IF ris"
 
 #: qcsrc/common/minigames/minigame/pong.qc:653
 msgid "Remove AI player"
-msgstr ""
+msgstr "Thoir cluicheadair IF air falbh"
 
 #: qcsrc/common/minigames/minigame/pp.qc:443
 #: qcsrc/common/minigames/minigame/ttt.qc:324
@@ -1466,23 +1470,23 @@ msgstr ""
 #: qcsrc/common/minigames/minigame/ps.qc:478
 #, c-format
 msgid "Pieces left: %s"
-msgstr ""
+msgstr "Fir air am fàgail: %s"
 
 #: qcsrc/common/minigames/minigame/ps.qc:488
 msgid "No more valid moves"
-msgstr ""
+msgstr "Chan eil gluasad dligheach ann tuilleadh"
 
 #: qcsrc/common/minigames/minigame/ps.qc:491
 msgid "Well done, you win!"
-msgstr ""
+msgstr "Sin thu fhèin, bhuannaich thu!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:494
 msgid "Jump a piece over another to capture it"
-msgstr ""
+msgstr "Gearr leum le fear thar fir eile gus a ghabhail"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:666
 msgid "Single Player"
-msgstr ""
+msgstr "Aon-chluicheadair"
 
 #: qcsrc/common/monsters/monster/mage.qh:17
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -1523,7 +1527,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:15
 msgid "Ammo"
-msgstr ""
+msgstr "Connadh"
 
 #: qcsrc/common/mutators/mutator/buffs/all.inc:24
 msgid "Resistance"
@@ -1688,15 +1692,15 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
-msgstr ""
+msgstr "CUNNART"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:8
 msgid "Frozen!"
-msgstr ""
+msgstr "Reòite!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:10
 msgid "Item"
-msgstr ""
+msgstr "Nì"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:12
 msgid "Checkpoint"

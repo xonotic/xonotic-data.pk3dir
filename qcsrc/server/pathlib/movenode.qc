@@ -9,7 +9,7 @@ vector pathlib_wateroutnode(entity this, vector start, vector end, float doedge)
 {
     vector surface;
 
-    pathlib_movenode_goodnode = 0;
+    pathlib_movenode_goodnode = false;
 
     end.x = fsnap(end.x, pathlib_gridsize);
     end.y = fsnap(end.y, pathlib_gridsize);
@@ -31,17 +31,17 @@ vector pathlib_wateroutnode(entity this, vector start, vector end, float doedge)
 
     tracebox(start + '0 0 64', movenode_boxmin,movenode_boxmax, end + '0 0 64', MOVE_WORLDONLY, this);
     if(trace_fraction == 1)
-        pathlib_movenode_goodnode = 1;
+        pathlib_movenode_goodnode = true;
 
     if(fabs(surface.z - end.z) > 32)
-        pathlib_movenode_goodnode = 0;
+        pathlib_movenode_goodnode = false;
 
     return end;
 }
 
 vector pathlib_swimnode(entity this, vector start, vector end, float doedge)
 {
-    pathlib_movenode_goodnode = 0;
+    pathlib_movenode_goodnode = false;
 
     if(pointcontents(start) != CONTENT_WATER)
         return end;
@@ -54,21 +54,21 @@ vector pathlib_swimnode(entity this, vector start, vector end, float doedge)
 
     tracebox(start, movenode_boxmin,movenode_boxmax, end, MOVE_WORLDONLY, this);
     if(trace_fraction == 1)
-        pathlib_movenode_goodnode = 1;
+        pathlib_movenode_goodnode = true;
 
     return end;
 }
 
 vector pathlib_flynode(entity this, vector start, vector end, float doedge)
 {
-    pathlib_movenode_goodnode = 0;
+    pathlib_movenode_goodnode = false;
 
     end.x = fsnap(end.x, pathlib_gridsize);
     end.y = fsnap(end.y, pathlib_gridsize);
 
     tracebox(start, movenode_boxmin,movenode_boxmax, end, MOVE_WORLDONLY, this);
     if(trace_fraction == 1)
-        pathlib_movenode_goodnode = 1;
+        pathlib_movenode_goodnode = true;
 
     return end;
 }
@@ -84,12 +84,11 @@ void a_think(entity this)
 
 vector pathlib_walknode(entity this, vector start, vector end, float doedge)
 {
-    vector direction,point,last_point,s,e;
-    float steps, distance, i;
+    vector point;
 
     LOG_TRACE("Walking node from ", vtos(start), " to ", vtos(end));
 
-    pathlib_movenode_goodnode = 0;
+    pathlib_movenode_goodnode = false;
 
     end.x = fsnap(end.x,pathlib_gridsize);
     end.y = fsnap(end.y,pathlib_gridsize);
@@ -116,15 +115,16 @@ vector pathlib_walknode(entity this, vector start, vector end, float doedge)
     start = trace_endpos;
 
     // Find the direcion, without Z
-    s   = start; e   = end;
+    vector s   = start;
+    vector e   = end;
     //e_z = 0; s_z = 0;
-    direction = normalize(e - s);
+    vector direction = normalize(e - s);
 
-    distance  = vlen(start - end);
-    steps     = rint(distance / movenode_stepsize);
+    float distance  = vlen(start - end);
+    int steps     = rint(distance / movenode_stepsize);
 
-    last_point = start;
-    for(i = 1; i < steps; ++i)
+    vector last_point = start;
+    for(int i = 1; i < steps; ++i)
     {
         point = last_point + (direction * movenode_stepsize);
         traceline(point + movenode_stepup,point - movenode_maxdrop,MOVE_WORLDONLY,this);
@@ -151,6 +151,6 @@ vector pathlib_walknode(entity this, vector start, vector end, float doedge)
     if(trace_fraction != 1.0)
         return trace_endpos;
 
-    pathlib_movenode_goodnode = 1;
+    pathlib_movenode_goodnode = true;
     return last_point;
 }
