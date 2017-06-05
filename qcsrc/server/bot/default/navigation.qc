@@ -1088,7 +1088,7 @@ void navigation_poptouchedgoals(entity this)
 	// Loose goal touching check when running
 	if(this.aistatus & AI_STATUS_RUNNING)
 	if(this.goalcurrent.classname=="waypoint")
-	if(vlen(this.velocity - eZ * this.velocity.z) >= autocvar_sv_maxspeed) // if -really- running
+	if(vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed)) // if -really- running
 	{
 		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
 		{

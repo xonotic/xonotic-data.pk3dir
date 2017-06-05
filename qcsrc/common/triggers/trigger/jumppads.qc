@@ -353,7 +353,7 @@ void trigger_push_findtarget(entity this)
 				new_org = org + ofs;
 				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
 				vel = e.velocity;
-				if(vlen(vec2(e.velocity)) < autocvar_sv_maxspeed)
+				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
 					e.velocity = autocvar_sv_maxspeed * flatdir;
 				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
 				{
@@ -365,7 +365,7 @@ void trigger_push_findtarget(entity this)
 				new_org = org - ofs;
 				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
 				vel = e.velocity;
-				if(vlen(vec2(e.velocity)) < autocvar_sv_maxspeed)
+				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
 					e.velocity = autocvar_sv_maxspeed * flatdir;
 				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
 				{

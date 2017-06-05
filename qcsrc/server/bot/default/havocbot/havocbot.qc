@@ -311,7 +311,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 
 	// Run only to visible goals
 	if(IS_ONGROUND(this))
-	if(vlen(this.velocity - eZ * this.velocity.z) >= autocvar_sv_maxspeed) // if -really- running
+	if(vdist(vec2(this.velocity), >=, autocvar_sv_maxspeed)) // if -really- running
 	if(checkpvs(this.origin + this.view_ofs, this.goalcurrent))
 	{
 			this.bot_lastseengoal = this.goalcurrent;
@@ -773,8 +773,8 @@ void havocbot_movetogoal(entity this)
 
 	//if (this.bot_dodgevector_time < time)
 	{
-	//	this.bot_dodgevector_time = time + cvar("bot_ai_dodgeupdateinterval");
-	//	this.bot_dodgevector_jumpbutton = 1;
+		//this.bot_dodgevector_time = time + cvar("bot_ai_dodgeupdateinterval");
+		//this.bot_dodgevector_jumpbutton = 1;
 		evadeobstacle = '0 0 0';
 		evadelava = '0 0 0';
 
@@ -784,7 +784,7 @@ void havocbot_movetogoal(entity this)
 		{
 			if(this.waterlevel>WATERLEVEL_SWIMMING)
 			{
-			//	flatdir_z = 1;
+				//flatdir_z = 1;
 				this.aistatus |= AI_STATUS_OUT_WATER;
 			}
 			else
