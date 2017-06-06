@@ -789,13 +789,13 @@ void havocbot_movetogoal(entity this)
 			}
 			else
 			{
+				dir = flatdir;
 				if(this.velocity.z >= 0 && !(this.watertype == CONTENT_WATER && gco.z < this.origin.z) &&
 					( !(this.waterlevel == WATERLEVEL_WETFEET && this.watertype == CONTENT_WATER) || this.aistatus & AI_STATUS_OUT_WATER))
 					PHYS_INPUT_BUTTON_JUMP(this) = true;
 				else
 					PHYS_INPUT_BUTTON_JUMP(this) = false;
 			}
-			dir = normalize(flatdir);
 		}
 		else
 		{

@@ -55,6 +55,17 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 	return false;
 }
 
+#define IN_WATER(pos) (cont = pointcontents(pos), (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME))
+#define SUBMERGED(pos) IN_WATER(pos + autocvar_sv_player_viewoffset)
+#define WATERFEET(pos) IN_WATER(pos + eZ * (m1.z + 1))
+
+#define RESURFACE(org) MACRO_BEGIN { \
+	while(org.z + 4 < end2.z) { \
+		if(!WATERFEET(org + eZ * 4)) \
+			break; \
+		org.z += 4; \
+	} \
+} MACRO_END
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
 // if end_height is > 0 destination is any point in the vertical segment [end, end + end_height * eZ]
@@ -74,6 +85,8 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	float stepdist = 32;
 	bool ignorehazards = false;
 	bool swimming = false;
+	bool swimming_outwater = false;
+	int cont;
 
 	// Analyze starting point
 	traceline(start, start, MOVE_NORMAL, e);
@@ -83,10 +96,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	{
 		traceline( start, start + '0 0 -65536', MOVE_NORMAL, e);
 		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
-		{
 			ignorehazards = true;
-			swimming = true;
-		}
 	}
 	tracebox(start, m1, m2, start, MOVE_NOMONSTERS, e);
 	if (trace_startsolid)
@@ -119,10 +129,9 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 
 		if (dist <= 0)
 			break;
-		if (stepdist > dist)
-			stepdist = dist;
-		dist = dist - stepdist;
+
 		traceline(org, org, MOVE_NORMAL, e);
+
 		if (!ignorehazards)
 		{
 			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
@@ -135,31 +144,37 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 				return false;
 			}
 		}
-		if (trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
+		if ((trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) || swimming)
 		{
 			vector water_end = end;
 			water_end.z = bound(end.z, org.z, end2.z);
-			vector water_dir = normalize(water_end - org);
-			vector move = org + water_dir * stepdist;
-			tracebox(org, m1, m2, move, movemode, e);
-
-			if(autocvar_bot_debug_tracewalk)
-				debugnode(e, trace_endpos);
-
-			if (trace_fraction < 1)
+			vector water_dir;
+			if(swimming_outwater)
 			{
-				swimming = true;
-				org = trace_endpos - water_dir * (stepdist / 2);
-				for (; org.z < end2.z + e.maxs.z; org.z += stepdist)
-				{
-					if(autocvar_bot_debug_tracewalk)
-						debugnode(e, org);
+				water_dir = dir;
+				if (stepdist > dist)
+					stepdist = dist;
+				dist -= stepdist;
+			}
+			else
+			{
+				water_dir = normalize(water_end - org);
+				vector ang = vectoangles(water_dir);
+				float c = cos(ang.x * DEG2RAD);
+				if (stepdist * c > dist)
+					stepdist = dist / c;
+				dist -= stepdist * c;
+			}
+			vector move = org + water_dir * stepdist;
 
-					if(pointcontents(org) == CONTENT_EMPTY)
-						break;
-				}
-
-				if(pointcontents(org + '0 0 1') != CONTENT_EMPTY)
+			tracebox(org, m1, m2, move, movemode, e);
+			if (trace_fraction < 1) // cant swim in the current direction
+			{
+				if(dist <= 0)
+					tracebox(org + stepheightvec, m1, m2, move, movemode, e);
+				else
+					tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
+				if (trace_startsolid)
 				{
 					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);
@@ -168,22 +183,86 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 					//print("tracewalk: ", vtos(start), " failed under water\n");
 				}
 
-				if(navigation_checkladders(e, org, move, m1, m2, end, end2, movemode))
+				if (trace_fraction < 1) // cant step-swim in the current direction
 				{
 					if(autocvar_bot_debug_tracewalk)
-						debugnodestatus(trace_endpos, DEBUG_NODE_SUCCESS);
+						debugnodestatus(org, DEBUG_NODE_WARNING);
 
-					//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
-					return true;
+					if(WATERFEET(org))
+					{
+						RESURFACE(org);
+						if(autocvar_bot_debug_tracewalk)
+							debugnode(e, org);
+
+						//water_dir = dir;
+						move = org + dir * stepdist;
+
+						tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
+					}
+
+					if (trace_fraction < 1 || trace_startsolid) // can't jump obstacle out of water
+					{
+						vector v = trace_endpos - stepheightvec + jumpheight_vec;
+						if(navigation_checkladders(e, v, m1, m2, end, end2, movemode))
+						{
+							if(autocvar_bot_debug_tracewalk)
+							{
+								debugnode(e, v);
+								debugnodestatus(v, DEBUG_NODE_SUCCESS);
+							}
+
+							//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
+							return true;
+						}
+
+						if(autocvar_bot_debug_tracewalk)
+							debugnodestatus(org, DEBUG_NODE_FAIL);
+
+						return false;
+						//print("tracewalk: ", vtos(start), " failed under water\n");
+					}
+
+					// successfully jumped obstacle up out of water
+					move = trace_endpos;
+					tracebox(move, m1, m2, move + '0 0 -65536', movemode, e);
+					if(trace_endpos != move)
+					if(autocvar_bot_debug_tracewalk)
+						debugnode(e, move);
+					org = trace_endpos;
+
+					swimming = false;
+					swimming_outwater = false;
+
+					continue;
 				}
-				continue;
-
 			}
-			else
-				org = trace_endpos;
+
+			float height = trace_endpos.z - org.z;
+
+			// successfully advanced by swimming or step-swimming
+			org = trace_endpos;
+
+			if(height > 0 && (swimming || !SUBMERGED(org)))
+			{
+				swimming = true;
+				if(!swimming_outwater && !WATERFEET(org))
+				{
+					// put it back in the water if it gets out of water
+					do {
+						org.z -= 4;
+						if(WATERFEET(org))
+							break;
+					} while(org.z > height);
+					swimming_outwater = true;
+				}
+			}
 		}
-		else
+		else // if (!((trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) || swimming))
 		{
+			if (stepdist > dist)
+				stepdist = dist;
+			dist -= stepdist;
+
 			vector move = org + dir * stepdist;
 			tracebox(org, m1, m2, move, movemode, e);
 
@@ -255,18 +334,17 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			// (this is the same logic as the Quake walkmove function used)
 			tracebox(move, m1, m2, move + '0 0 -65536', movemode, e);
 
-			// moved successfully
-			if(swimming)
-			{
-				float c;
-				c = pointcontents(org + '0 0 1');
-				if (!(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME))
-					swimming = false;
-				else
-					continue;
-			}
-
 			org = trace_endpos;
+
+			if(org.z < move.z && SUBMERGED(org))
+			{
+				// ended up underwater while walking, resurface
+				if(autocvar_bot_debug_tracewalk)
+					debugnode(e, org);
+				RESURFACE(org);
+				swimming = true;
+				swimming_outwater = true;
+			}
 		}
 	}
 
