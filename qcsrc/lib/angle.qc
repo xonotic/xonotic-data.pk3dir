@@ -1,4 +1,7 @@
 .vector origin;
+
+// angles of the player's model (as opposed to his view which uses `.vector v_angle;`)
+// x is pitch, y is yaw, z is roll
 .vector angles;
 
 /*

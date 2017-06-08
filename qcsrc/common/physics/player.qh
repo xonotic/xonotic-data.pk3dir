@@ -190,6 +190,9 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	.int items;
 
 	.vector movement;
+
+	// angles of the player's view (as opposed to his model which uses `.vector angles;`)
+	// x is pitch, y is yaw, z is roll
 	.vector v_angle;
 
 	.entity hook;

@@ -26,9 +26,6 @@
 # define TAG_VIEWLOC_TYPE entity
 #endif
 
-// new fields
-.vector v_angle;
-
 // add properties you want networked to CSQC here
 #define CSQCMODEL_EXTRAPROPERTIES \
 	CSQCMODEL_PROPERTY(BIT(0), int, ReadShort, WriteShort, colormap) \
