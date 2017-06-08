@@ -1109,7 +1109,7 @@ void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, flo
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 {
 	destination = waypoint_fixorigin(destination);
-	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin, e.absmax, destination, destination, timetaken);
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST + '1 1 1', e.absmax - PL_MIN_CONST + '-1 -1 -1', destination, destination, timetaken);
 }
 
 entity waypoint_spawnpersonal(entity this, vector position)
