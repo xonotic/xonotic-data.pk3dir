@@ -184,9 +184,8 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	if(!(f & WAYPOINTFLAG_PERSONAL))
 	{
-		vector em1 = m1;
-		vector em2 = m2;
-		if (m1 == m2)
+		vector em1 = m1, em2 = m2;
+		if (!(f & WAYPOINTFLAG_GENERATED) && m1 == m2)
 		{
 			em1 = m1 - '8 8 8';
 			em2 = m2 + '8 8 8';
