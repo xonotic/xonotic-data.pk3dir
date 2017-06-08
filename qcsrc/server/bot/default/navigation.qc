@@ -496,11 +496,12 @@ void navigation_poproute(entity this)
 	this.goalstack31 = NULL;
 }
 
-float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist)
+// walking to wp (walkfromwp == false) v2 and v2_height will be used as
+// waypoint destination coordinates instead of v (only useful for box waypoints)
+// for normal waypoints v2 == v and v2_height == 0
+float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2, float v2_height, float walkfromwp, float bestdist)
 {
-	float dist;
-	dist = vlen(v - org);
-	if (bestdist > dist)
+	if (vdist(v - org, <, bestdist))
 	{
 		traceline(v, org, true, ent);
 		if (trace_fraction == 1)
@@ -512,7 +513,7 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 			}
 			else
 			{
-				if (tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v, 0, bot_navigation_movemode))
+				if (tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v2, v2_height, bot_navigation_movemode))
 					return true;
 			}
 		}
@@ -552,17 +553,27 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 				continue;
 
+			vector v2;
+			float v2_height;
 			if(it.wpisbox)
 			{
-				vector wm1 = it.absmin;
-				vector wm2 = it.absmax;
+				vector wm1 = it.origin + it.mins;
+				vector wm2 = it.origin + it.maxs;
 				v.x = bound(wm1_x, org.x, wm2_x);
 				v.y = bound(wm1_y, org.y, wm2_y);
 				v.z = bound(wm1_z, org.z, wm2_z);
+				v2.x = v.x;
+				v2.y = v.y;
+				v2.z = wm1.z;
+				v2_height = wm2.z - wm1.z;
 			}
 			else
+			{
 				v = it.origin;
-			if(navigation_waypoint_will_link(v, org, ent, walkfromwp, 1050))
+				v2 = v;
+				v2_height = 0;
+			}
+			if(navigation_waypoint_will_link(v, org, ent, v2, v2_height, walkfromwp, 1050))
 				navigation_item_addlink(it, ent);
 		});
 	}
@@ -573,6 +584,8 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 		if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 			continue;
 
+		vector v2;
+		float v2_height;
 		if(it.wpisbox)
 		{
 			vector wm1 = it.origin + it.mins;
@@ -580,10 +593,18 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			v.x = bound(wm1_x, org.x, wm2_x);
 			v.y = bound(wm1_y, org.y, wm2_y);
 			v.z = bound(wm1_z, org.z, wm2_z);
+			v2.x = v.x;
+			v2.y = v.y;
+			v2.z = wm1.z;
+			v2_height = wm2.z - wm1.z;
 		}
 		else
+		{
 			v = it.origin;
-		if(navigation_waypoint_will_link(v, org, ent, walkfromwp, bestdist))
+			v2 = v;
+			v2_height = 0;
+		}
+		if(navigation_waypoint_will_link(v, org, ent, v2, v2_height, walkfromwp, bestdist))
 		{
 			bestdist = vlen(v - org);
 			best = it;

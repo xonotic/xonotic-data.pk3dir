@@ -1248,7 +1248,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 
 		// if wp -> porg, then OK
 		float maxdist;
-		if(navigation_waypoint_will_link(wp.origin, porg, p, walkfromwp, 1050))
+		if(navigation_waypoint_will_link(wp.origin, porg, p, wp.origin, 0, walkfromwp, 1050))
 		{
 			// we may find a better one
 			maxdist = vlen(wp.origin - porg);
@@ -1264,8 +1264,8 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		{
 			float d = vlen(wp.origin - it.origin) + vlen(it.origin - porg);
 			if(d < bestdist)
-			if(navigation_waypoint_will_link(wp.origin, it.origin, p, walkfromwp, 1050))
-			if(navigation_waypoint_will_link(it.origin, porg, p, walkfromwp, 1050))
+			if(navigation_waypoint_will_link(wp.origin, it.origin, p, wp.origin, 0, walkfromwp, 1050))
+			if(navigation_waypoint_will_link(it.origin, porg, p, it.origin, 0, walkfromwp, 1050))
 			{
 				bestdist = d;
 				p.(fld) = it;
@@ -1319,7 +1319,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 
 		if(wp)
 		{
-			if(!navigation_waypoint_will_link(wp.origin, o, p, walkfromwp, 1050))
+			if(!navigation_waypoint_will_link(wp.origin, o, p, wp.origin, 0, walkfromwp, 1050))
 			{
 				// we cannot walk from wp.origin to o
 				// get closer to tmax
@@ -1345,7 +1345,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		// if we get here, o is valid regarding waypoints
 		// check if o is connected right to the player
 		// we break if it succeeds, as that means o is a good waypoint location
-		if(navigation_waypoint_will_link(o, porg, p, walkfromwp, 1050))
+		if(navigation_waypoint_will_link(o, porg, p, o, 0, walkfromwp, 1050))
 			break;
 
 		// o is no good, we need to get closer to the player
