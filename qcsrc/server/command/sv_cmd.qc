@@ -1564,10 +1564,10 @@ void GameCommand_trace(float request, float argc)
 
 				case "walk":
 				{
-					if (argc == 4)
+					if (argc == 4 || argc == 5)
 					{
 						e = nextent(NULL);
-						if (tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), 0, MOVE_NORMAL))
+						if (tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), stof(argv(4)), MOVE_NORMAL))
 							LOG_INFO("can walk\n");
 						else
 							LOG_INFO("cannot walk\n");
