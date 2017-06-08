@@ -115,7 +115,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	// Movement loop
 	for (;;)
 	{
-		if (boxesoverlap(end, end2, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
+		if (boxesoverlap(end, end2, org + '-1 -1 -1', org + '1 1 1'))
 		{
 			// Succeeded
 			if(autocvar_bot_debug_tracewalk)
