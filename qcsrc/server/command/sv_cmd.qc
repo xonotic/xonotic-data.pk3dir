@@ -1596,7 +1596,9 @@ void GameCommand_trace(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2trace^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd trace command (startpos endpos)\n");
+			LOG_INFO("\nUsage:^3 sv_cmd trace command [startpos endpos] [endpos_height]\n");
+			LOG_INFO("  Where startpos and endpos are parameters for 'walk' and 'showline' commands,\n");
+			LOG_INFO("  'endpos_height' is an optional parameter for 'walk' command,\n");
 			LOG_INFO("  Full list of commands here: \"debug, debug2, walk, showline.\"\n");
 			LOG_INFO("See also: ^2bbox, gettaginfo^7\n");
 			return;
