@@ -307,6 +307,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 								traceline( move, nextmove, movemode, e);
 								move = nextmove;
 							}
+							dist = vlen(vec2(end - move));
 						}
 						else
 						{
