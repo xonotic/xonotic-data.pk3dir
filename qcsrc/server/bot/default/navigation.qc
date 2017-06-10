@@ -544,7 +544,8 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 		te_plasmaburn(org);
 
 	entity best = NULL;
-	vector v;
+	vector v, v2;
+	float v2_height;
 
 	if(!autocvar_g_waypointeditor && !ent.navigation_dynamicgoal)
 	{
@@ -554,26 +555,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 				continue;
 
-			vector v2;
-			float v2_height;
-			if(it.wpisbox)
-			{
-				vector wm1 = it.origin + it.mins;
-				vector wm2 = it.origin + it.maxs;
-				v.x = bound(wm1_x, org.x, wm2_x);
-				v.y = bound(wm1_y, org.y, wm2_y);
-				v.z = bound(wm1_z, org.z, wm2_z);
-				v2.x = v.x;
-				v2.y = v.y;
-				v2.z = wm1.z;
-				v2_height = wm2.z - wm1.z;
-			}
-			else
-			{
-				v = it.origin;
-				v2 = v;
-				v2_height = 0;
-			}
+			SET_TRACEWALK_DESTCOORDS_2(it, org, v, v2, v2_height);
 			if(navigation_waypoint_will_link(v, org, ent, v2, v2_height, walkfromwp, 1050))
 				navigation_item_addlink(it, ent);
 		});
@@ -584,27 +566,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	{
 		if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 			continue;
-
-		vector v2;
-		float v2_height;
-		if(it.wpisbox)
-		{
-			vector wm1 = it.origin + it.mins;
-			vector wm2 = it.origin + it.maxs;
-			v.x = bound(wm1_x, org.x, wm2_x);
-			v.y = bound(wm1_y, org.y, wm2_y);
-			v.z = bound(wm1_z, org.z, wm2_z);
-			v2.x = v.x;
-			v2.y = v.y;
-			v2.z = wm1.z;
-			v2_height = wm2.z - wm1.z;
-		}
-		else
-		{
-			v = it.origin;
-			v2 = v;
-			v2_height = 0;
-		}
+		SET_TRACEWALK_DESTCOORDS_2(it, org, v, v2, v2_height);
 		if(navigation_waypoint_will_link(v, org, ent, v2, v2_height, walkfromwp, bestdist))
 		{
 			bestdist = vlen(v - org);
@@ -628,27 +590,14 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 // finds the waypoints near the bot initiating a navigation query
 float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 {
-	vector v, m1, m2;
+	vector v;
 	//navigation_testtracewalk = true;
 	int c = 0;
 	float v_height;
 	IL_EACH(g_waypoints, !it.wpconsidered,
 	{
-		if (it.wpisbox)
-		{
-			m1 = it.origin + it.mins;
-			m2 = it.origin + it.maxs;
-			v = this.origin;
-			v.x = bound(m1_x, v.x, m2_x);
-			v.y = bound(m1_y, v.y, m2_y);
-			v.z = m1.z;
-			v_height = m2.z - m1.z;
-		}
-		else
-		{
-			v = it.origin;
-			v_height = 0;
-		}
+		SET_TRACEWALK_DESTCOORDS(it, this.origin, v, v_height);
+
 		vector diff = v - this.origin;
 		diff.z = max(0, diff.z);
 		if(vdist(diff, <, maxdist))
@@ -671,13 +620,12 @@ float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 // updates a path link if a spawnfunc_waypoint link is better than the current one
 void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost, vector p)
 {
-	vector m1;
-	vector m2;
+	vector m1, m2;
 	vector v;
 	if (wp.wpisbox)
 	{
-		m1 = wp.absmin;
-		m2 = wp.absmax;
+		m1 = wp.origin + wp.mins;
+		m2 = wp.origin + wp.maxs;
 		v.x = bound(m1_x, p.x, m2_x);
 		v.y = bound(m1_y, p.y, m2_y);
 		v.z = bound(m1_z, p.z, m2_z);

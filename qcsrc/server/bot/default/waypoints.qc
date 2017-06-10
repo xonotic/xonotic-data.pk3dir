@@ -538,15 +538,14 @@ void waypoint_addlink(entity from, entity to)
 // (SLOW!)
 void waypoint_think(entity this)
 {
-	vector sv, sm1, sm2, ev, em1, em2, dv;
+	vector sv, sv2, ev, ev2, dv;
+	float sv2_height, ev2_height;
 
 	bot_calculate_stepheightvec();
 
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
-	sm1 = this.origin + this.mins;
-	sm2 = this.origin + this.maxs;
 	IL_EACH(g_waypoints, this != it,
 	{
 		if (boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
@@ -563,47 +562,8 @@ void waypoint_think(entity this)
 				continue;
 			}
 
-			vector sv2;
-			float sv2_height;
-			if (this.wpisbox)
-			{
-				sv = it.origin;
-				sv.x = bound(sm1.x, sv.x, sm2.x);
-				sv.y = bound(sm1.y, sv.y, sm2.y);
-				sv.z = bound(sm1.z, sv.z, sm2.z);
-				sv2.x = sv.x;
-				sv2.y = sv.y;
-				sv2.z = sm1.z;
-				sv2_height = sm2.z - sm1.z;
-			}
-			else
-			{
-				sv = this.origin;
-				sv2 = sv;
-				sv2_height = 0;
-			}
-
-			vector ev2;
-			float ev2_height;
-			if (it.wpisbox)
-			{
-				ev = this.origin;
-				em1 = it.origin + it.mins;
-				em2 = it.origin + it.maxs;
-				ev.x = bound(em1.x, ev.x, em2.x);
-				ev.y = bound(em1.y, ev.y, em2.y);
-				ev.z = bound(em1.z, ev.z, em2.z);
-				ev2.x = ev.x;
-				ev2.y = ev.y;
-				ev2.z = em1.z;
-				ev2_height = em2.z - em1.z;
-			}
-			else
-			{
-				ev = it.origin;
-				ev2 = ev;
-				ev2_height = 0;
-			}
+			SET_TRACEWALK_DESTCOORDS_2(this, it.origin, sv, sv2, sv2_height);
+			SET_TRACEWALK_DESTCOORDS_2(it, this.origin, ev, ev2, ev2_height);
 
 			dv = ev - sv;
 			dv.z = 0;
