@@ -148,24 +148,26 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 		{
 			vector water_end = end;
 			water_end.z = bound(end.z, org.z, end2.z);
-			vector water_dir;
+			vector move;
 			if(swimming_outwater)
 			{
-				water_dir = dir;
 				if (stepdist > dist)
 					stepdist = dist;
 				dist -= stepdist;
+				move = org + dir * stepdist;
 			}
 			else
 			{
-				water_dir = normalize(water_end - org);
-				vector ang = vectoangles(water_dir);
-				float c = cos(ang.x * DEG2RAD);
-				if (stepdist * c > dist)
-					stepdist = dist / c;
-				dist -= stepdist * c;
+				// can't use movement direction here to calculate move because of precision errors
+				// especially when direction has a high enough z value
+				//water_dir = normalize(water_end - org);
+				//move = org + water_dir * stepdist;
+
+				if (stepdist > dist)
+					stepdist = dist;
+				move = org + (water_end - org) * (stepdist / dist);
+				dist = vlen(vec2(water_end - move));
 			}
-			vector move = org + water_dir * stepdist;
 
 			tracebox(org, m1, m2, move, movemode, e);
 			if (trace_fraction < 1) // cant swim in the current direction
@@ -194,7 +196,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 						if(autocvar_bot_debug_tracewalk)
 							debugnode(e, org);
 
-						//water_dir = dir;
 						move = org + dir * stepdist;
 
 						tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
