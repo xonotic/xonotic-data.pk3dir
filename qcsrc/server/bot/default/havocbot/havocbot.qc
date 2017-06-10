@@ -44,7 +44,6 @@ void havocbot_ai(entity this)
 				this.havocbot_role(this); // little too far down the rabbit hole
 		}
 
-		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
 		if(!(IS_DEAD(this) || STAT(FROZEN, this)))
 		if(!this.goalcurrent)
@@ -139,7 +138,9 @@ void havocbot_ai(entity this)
 
 		vector now,v,next;//,heading;
 		float aimdistance,skillblend,distanceblend,blend;
-		next = now = ( (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5) - (this.origin + this.view_ofs);
+
+		SET_DESTCOORDS(this.goalcurrent, this.origin, now);
+		next = now = now - (this.origin + this.view_ofs);
 		aimdistance = vlen(now);
 		//heading = this.velocity;
 		//dprint(this.goalstack01.classname,etos(this.goalstack01),"\n");
@@ -306,7 +307,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 		this.bot_timelastseengoal = 0;
 	}
 
-	gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
+	SET_DESTCOORDS(this.goalcurrent, this.origin, gco);
 	bunnyhopdistance = vlen(this.origin - gco);
 
 	// Run only to visible goals
@@ -439,8 +440,6 @@ void havocbot_movetogoal(entity this)
 	vector diff;
 	vector dir;
 	vector flatdir;
-	vector m1;
-	vector m2;
 	vector evadeobstacle;
 	vector evadelava;
 	float maxspeed;
@@ -752,12 +751,7 @@ void havocbot_movetogoal(entity this)
 	if(autocvar_bot_debug_goalstack)
 		debuggoalstack(this);
 
-	m1 = this.goalcurrent.origin + this.goalcurrent.mins;
-	m2 = this.goalcurrent.origin + this.goalcurrent.maxs;
-	destorg = this.origin;
-	destorg.x = bound(m1_x, destorg.x, m2_x);
-	destorg.y = bound(m1_y, destorg.y, m2_y);
-	destorg.z = bound(m1_z, destorg.z, m2_z);
+	SET_DESTCOORDS(this.goalcurrent, this.origin, destorg);
 
 	// in case bot ends up inside the teleport waypoint without touching
 	// the teleport itself, head to the teleport origin
@@ -1284,7 +1278,9 @@ float havocbot_moveto(entity this, vector pos)
 			debuggoalstack(this);
 
 		// Heading
-		vector dir = ( ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5 ) - (this.origin + this.view_ofs);
+		vector dir;
+		SET_DESTCOORDS(this.goalcurrent, this.origin, dir);
+		dir = dir - (this.origin + this.view_ofs);
 		dir.z = 0;
 		bot_aimdir(this, dir, -1);
 
