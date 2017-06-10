@@ -225,8 +225,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 					// successfully jumped obstacle up out of water
 					move = trace_endpos;
 					tracebox(move, m1, m2, move + '0 0 -65536', movemode, e);
-					if(trace_endpos != move)
-					if(autocvar_bot_debug_tracewalk)
+					if(autocvar_bot_debug_tracewalk && trace_endpos != move)
 						debugnode(e, move);
 					org = trace_endpos;
 
