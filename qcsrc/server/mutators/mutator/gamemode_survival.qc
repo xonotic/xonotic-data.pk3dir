@@ -501,9 +501,10 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			});
 			if (lowestplayer != NULL)
 			{
+				bool savedautobalance = surv_autobalance;
 				surv_autobalance = false;
 				SetPlayerTeamSimple(lowestplayer, surv_defenderteam);
-				surv_autobalance = true;
+				surv_autobalance = savedautobalance;
 				return true;
 			}
 			FOREACH_CLIENT(true,
@@ -521,9 +522,10 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			});
 			if (lowestplayer != NULL)
 			{
+				bool savedautobalance = surv_autobalance;
 				surv_autobalance = false;
 				SetPlayerTeamSimple(lowestplayer, surv_defenderteam);
-				surv_autobalance = true;
+				surv_autobalance = savedautobalance;
 			}
 			return true;
 		}
@@ -592,10 +594,11 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				{
 					player.surv_savedplayerstate = Surv_SavePlayerState(bot);
 				}
+				bool savedautobalance = surv_autobalance;
 				surv_autobalance = false;
 				surv_announcefrags = false;
 				SetPlayerTeamSimple(bot, surv_attackerteam);
-				surv_autobalance = true;
+				surv_autobalance = savedautobalance;
 				surv_announcefrags = true;
 				LOG_TRACE("Removed bot");
 			}
@@ -624,9 +627,10 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			});
 			if (lowestplayer != NULL)
 			{
+				bool savedautobalance = surv_autobalance;
 				surv_autobalance = false;
 				SetPlayerTeamSimple(lowestplayer, surv_attackerteam);
-				surv_autobalance = true;
+				surv_autobalance = savedautobalance;
 				return true;
 			}
 			FOREACH_CLIENT(true,
@@ -643,9 +647,10 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			});
 			if (lowestplayer != NULL)
 			{
+				bool savedautobalance = surv_autobalance;
 				surv_autobalance = false;
 				SetPlayerTeamSimple(lowestplayer, surv_attackerteam);
-				surv_autobalance = true;
+				surv_autobalance = savedautobalance;
 			}
 			return true;
 		}
@@ -728,9 +733,10 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			});
 			if (lowestplayer != NULL)
 			{
+				bool savedautobalance = surv_autobalance;
 				surv_autobalance = false;
 				SetPlayerTeamSimple(lowestplayer, surv_attackerteam);
-				surv_autobalance = true;
+				surv_autobalance = savedautobalance;
 				return;
 			}
 			FOREACH_CLIENT(true,
@@ -749,9 +755,10 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			{
 				return;
 			}
+			bool savedautobalance = surv_autobalance;
 			surv_autobalance = false;
 			SetPlayerTeamSimple(lowestplayer, surv_attackerteam);
-			surv_autobalance = true;
+			surv_autobalance = savedautobalance;
 			return;
 		}
 		case surv_defenderteam:
@@ -793,10 +800,11 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 					{
 						it.surv_savedplayerstate = Surv_SavePlayerState(player);
 					}
+					bool savedautobalance = surv_autobalance;
 					surv_autobalance = false;
 					surv_announcefrags = false;
 					SetPlayerTeamSimple(it, surv_defenderteam);
-					surv_autobalance = true;
+					surv_autobalance = savedautobalance;
 					surv_announcefrags = true;					
 					return;
 				}
@@ -817,10 +825,11 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			});
 			if (lowestplayer != NULL)
 			{
+				bool savedautobalance = surv_autobalance;
 				surv_autobalance = false;
 				surv_announcefrags = false;
 				SetPlayerTeamSimple(lowestplayer, surv_defenderteam);
-				surv_autobalance = true;
+				surv_autobalance = savedautobalance;
 				surv_announcefrags = true;
 				return;
 			}
@@ -840,10 +849,11 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 			{
 				return;
 			}
+			bool savedautobalance = surv_autobalance;
 			surv_autobalance = false;
 			surv_announcefrags = false;
 			SetPlayerTeamSimple(lowestplayer, surv_defenderteam);
-			surv_autobalance = true;
+			surv_autobalance = savedautobalance;
 			surv_announcefrags = true;
 			return;
 		}
@@ -1606,6 +1616,10 @@ MUTATOR_HOOKFUNCTION(surv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	entity player = M_ARGV(2, entity);
 	LOG_TRACE("Survival: CheckAllowedTeams, player = ", player.netname);
+	if (player == NULL)
+	{
+		return SURVIVAL_TEAM_BITS;
+	}
 	if (IS_BOT_CLIENT(player))
 	{
 		int teambits = surv_attackerteambit;
