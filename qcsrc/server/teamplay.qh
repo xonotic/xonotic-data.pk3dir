@@ -37,7 +37,7 @@ string GetClientVersionMessage(entity this);
 
 string getwelcomemessage(entity this);
 
-void SetPlayerColors(entity pl, float _color);
+void SetPlayerColors(entity player, float _color);
 
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
@@ -45,7 +45,13 @@ void SetPlayerColors(entity pl, float _color);
 /// \return True if team switch was successful, false otherwise.
 bool SetPlayerTeamSimple(entity player, int teamnum);
 
-void SetPlayerTeam(entity pl, float t, float s, float noprint);
+/// \brief Sets the team of the player.
+/// \param[in,out] player Player to adjust.
+/// \param[in] destinationteam Team to set.
+/// \param[in] sourceteam Previous team of the player.
+/// \param[in] noprint Whether to print this event to players' console.
+/// \return No return.
+void SetPlayerTeam(entity player, int destinationteam, int sourceteam, bool noprint);
 
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom);
@@ -56,7 +62,7 @@ float PlayerValue(entity p);
 // teams that are allowed will now have their player counts stored in c1...c4
 void GetTeamCounts(entity ignore);
 
-float TeamSmallerEqThanTeam(float ta, float tb, entity e);
+float TeamSmallerEqThanTeam(float teama, float teamb, entity e, bool usescore);
 
 // returns # of smallest team (1, 2, 3, 4)
 // NOTE: Assumes CheckAllowedTeams has already been called!
@@ -64,7 +70,13 @@ float FindSmallestTeam(entity pl, float ignore_pl);
 
 int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam);
 
-//void() ctf_playerchanged;
+/// \brief Auto balances bots in teams after the player has changed team.
+/// \param[in] sourceteam Previous team of the player (1, 2, 3, 4).
+/// \param[in] destinationteam Current team of the player (1, 2, 3, 4).
+/// \return No return.
+/// \note This function assumes that CheckAllowedTeams and GetTeamCounts has
+/// been called.
+void AutoBalanceBots(int sourceteam, int destinationteam);
 
 void ShufflePlayerOutOfTeam (float source_team);
 

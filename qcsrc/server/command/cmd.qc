@@ -319,82 +319,103 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argv(1) != "")
+			if (argv(1) == "")
 			{
-				if (IS_CLIENT(caller))
+				return;
+			}
+			if (!IS_CLIENT(caller))
+			{
+				return;
+			}
+			if (!teamplay)
+			{
+				sprint(caller, "^7selectteam can only be used in teamgames\n");
+				return;
+			}
+			if (caller.team_forced > 0)
+			{
+				sprint(caller, "^7selectteam can not be used as your team is forced\n");
+				return;
+			}
+			if (lockteams)
+			{
+				sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+				return;
+			}
+			float selection;
+			switch (argv(1))
+			{
+				case "red":
 				{
-					if (teamplay)
-					{
-						if (caller.team_forced <= 0)
-						{
-							if (!lockteams)
-							{
-								float selection;
-
-								switch (argv(1))
-								{
-									case "red": selection = NUM_TEAM_1;
-										break;
-									case "blue": selection = NUM_TEAM_2;
-										break;
-									case "yellow": selection = NUM_TEAM_3;
-										break;
-									case "pink": selection = NUM_TEAM_4;
-										break;
-									case "auto": selection = (-1);
-										break;
-
-									default: selection = 0;
-										break;
-								}
-
-								if (selection)
-								{
-									if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
-									{
-										sprint(caller, "^7You already are on that team.\n");
-									}
-									else if (caller.wasplayer && autocvar_g_changeteam_banned)
-									{
-										sprint(caller, "^1You cannot change team, forbidden by the server.\n");
-									}
-									else
-									{
-										if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
-										{
-											CheckAllowedTeams(caller);
-											GetTeamCounts(caller);
-											if (!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(caller.team), caller))
-											{
-												Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-												return;
-											}
-										}
-										ClientKill_TeamChange(caller, selection);
-									}
-									if(!IS_PLAYER(caller))
-										caller.team_selected = true; // avoids asking again for team selection on join
-								}
-							}
-							else
-							{
-								sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
-							}
-						}
-						else
-						{
-							sprint(caller, "^7selectteam can not be used as your team is forced\n");
-						}
-					}
-					else
-					{
-						sprint(caller, "^7selectteam can only be used in teamgames\n");
-					}
+					selection = NUM_TEAM_1;
+					break;
+				}
+				case "blue":
+				{
+					selection = NUM_TEAM_2;
+					break;
+				}
+				case "yellow":
+				{
+					selection = NUM_TEAM_3;
+					break;
+				}
+				case "pink":
+				{
+					selection = NUM_TEAM_4;
+					break;
+				}
+				case "auto":
+				{
+					selection = (-1);
+					break;
+				}
+				default:
+				{
+					return;
+				}
+			}
+			if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
+			{
+				sprint(caller, "^7You already are on that team.\n");
+				return;
+			}
+			if (caller.wasplayer && autocvar_g_changeteam_banned)
+			{
+				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
+				return;
+			}
+			if (selection == -1)
+			{
+				ClientKill_TeamChange(caller, selection);
+				if (!IS_PLAYER(caller))
+				{
+					caller.team_selected = true; // avoids asking again for team selection on join
 				}
 				return;
 			}
-		}
+			if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+			{
+				CheckAllowedTeams(caller);
+				GetTeamCounts(caller);
+				if (caller.team == -1)
+				{
 
+				}
+				else if (!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(caller.team), caller, false))
+				{
+					PrintToChatAll("TeamSmallerEqThanTeam prevented team switch.");
+					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					return;
+				}
+			}
+			ClientKill_TeamChange(caller, selection);
+			if (!IS_PLAYER(caller))
+			{
+				caller.team_selected = true; // avoids asking again for team selection on join
+			}
+			return;
+		}
 		default:
 			sprint(caller, "Incorrect parameters for ^2selectteam^7\n");
 		case CMD_REQUEST_USAGE:
