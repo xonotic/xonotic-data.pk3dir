@@ -169,24 +169,17 @@ void setcolor(entity this, int clr)
 #endif
 }
 
-void SetPlayerColors(entity pl, float _color)
+void SetPlayerColors(entity player, float _color)
 {
-	/*string s;
-	s = ftos(cl);
-	stuffcmd(pl, strcat("color ", s, " ", s, "\n")  );
-	pl.team = cl + 1;
-	//pl.clientcolors = pl.clientcolors - (pl.clientcolors & 15) + cl;
-	pl.clientcolors = 16*cl + cl;*/
-
-	float pants, shirt;
-	pants = _color & 0x0F;
-	shirt = _color & 0xF0;
-
-
-	if(teamplay) {
-		setcolor(pl, 16*pants + pants);
-	} else {
-		setcolor(pl, shirt + pants);
+	float pants = _color & 0x0F;
+	float shirt = _color & 0xF0;
+	if (teamplay)
+	{
+		setcolor(player, 16 * pants + pants);
+	}
+	else
+	{
+		setcolor(player, shirt + pants);
 	}
 }
 
@@ -194,6 +187,9 @@ bool SetPlayerTeamSimple(entity player, int teamnum)
 {
 	if (player.team == teamnum)
 	{
+		// This is important when players join the game and one of their color
+		// matches the team color while other doesn't. For example [BOT]Lion.
+		SetPlayerColors(player, teamnum - 1);
 		return true;
 	}
 	if (MUTATOR_CALLHOOK(Player_ChangeTeam, player, Team_TeamToNumber(
@@ -208,20 +204,19 @@ bool SetPlayerTeamSimple(entity player, int teamnum)
 	return true;
 }
 
-void SetPlayerTeam(entity pl, float t, float s, float noprint)
+void SetPlayerTeam(entity player, int destinationteam, int sourceteam, bool noprint)
 {
-	if (t == s)
+	int teamnum = Team_NumberToTeam(destinationteam);
+	if (!SetPlayerTeamSimple(player, teamnum))
 	{
 		return;
 	}
-	float teamnum = Team_NumberToTeam(t);
-	SetPlayerTeamSimple(pl, teamnum);
-	LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
+	LogTeamchange(player.playerid, player.team, 3);  // log manual team join
 	if (noprint)
 	{
 		return;
 	}
-	bprint(playername(pl, false), "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
+	bprint(playername(player, false), "^7 has changed from ", Team_NumberToColoredFullName(sourceteam), "^7 to ", Team_NumberToColoredFullName(destinationteam), "\n");
 }
 
 // set c1...c4 to show what teams are allowed
@@ -533,66 +528,69 @@ void GetTeamCounts(entity ignore)
 	}
 }
 
-float TeamSmallerEqThanTeam(float ta, float tb, entity e)
+float TeamSmallerEqThanTeam(int teama, int teamb, entity e, bool usescore)
 {
-	// we assume that CheckAllowedTeams and GetTeamCounts have already been called
-	float f;
-	float ca = -1, cb = -1, cba = 0, cbb = 0, sa = 0, sb = 0;
-
-	switch(ta)
+	// equal
+	if (teama == teamb)
 	{
-		case 1: ca = c1; cba = numbotsteam1; sa = team1_score; break;
-		case 2: ca = c2; cba = numbotsteam2; sa = team2_score; break;
-		case 3: ca = c3; cba = numbotsteam3; sa = team3_score; break;
-		case 4: ca = c4; cba = numbotsteam4; sa = team4_score; break;
+		return true;
 	}
-	switch(tb)
+	// we assume that CheckAllowedTeams and GetTeamCounts have already been called
+	float numplayersteama = -1, numplayersteamb = -1;
+	float numbotsteama = 0, numbotsteamb = 0;
+	float scoreteama = 0, scoreteamb = 0;
+
+	switch (teama)
 	{
-		case 1: cb = c1; cbb = numbotsteam1; sb = team1_score; break;
-		case 2: cb = c2; cbb = numbotsteam2; sb = team2_score; break;
-		case 3: cb = c3; cbb = numbotsteam3; sb = team3_score; break;
-		case 4: cb = c4; cbb = numbotsteam4; sb = team4_score; break;
+		case 1: numplayersteama = c1; numbotsteama = numbotsteam1; scoreteama = team1_score; break;
+		case 2: numplayersteama = c2; numbotsteama = numbotsteam2; scoreteama = team2_score; break;
+		case 3: numplayersteama = c3; numbotsteama = numbotsteam3; scoreteama = team3_score; break;
+		case 4: numplayersteama = c4; numbotsteama = numbotsteam4; scoreteama = team4_score; break;
+	}
+	switch (teamb)
+	{
+		case 1: numplayersteamb = c1; numbotsteamb = numbotsteam1; scoreteamb = team1_score; break;
+		case 2: numplayersteamb = c2; numbotsteamb = numbotsteam2; scoreteamb = team2_score; break;
+		case 3: numplayersteamb = c3; numbotsteamb = numbotsteam3; scoreteamb = team3_score; break;
+		case 4: numplayersteamb = c4; numbotsteamb = numbotsteam4; scoreteamb = team4_score; break;
 	}
 
 	// invalid
-	if(ca < 0 || cb < 0)
+	if (numplayersteama < 0 || numplayersteamb < 0)
 		return false;
 
-	// equal
-	if(ta == tb)
-		return true;
-
-	if(IS_REAL_CLIENT(e))
+	if ((IS_REAL_CLIENT(e) && bots_would_leave))
 	{
-		if(bots_would_leave)
-		{
-			ca -= cba * 0.999;
-			cb -= cbb * 0.999;
-		}
+		numplayersteama -= numbotsteama;
+		numplayersteamb -= numbotsteamb;
 	}
-
-	// keep teams alive (teams of size 0 always count as smaller, ignoring score)
-	if(ca < 1)
-		if(cb >= 1)
-			return true;
-	if(ca >= 1)
-		if(cb < 1)
-			return false;
+	if (!usescore)
+	{
+		return numplayersteama <= numplayersteamb;
+	}
+	if (numplayersteama < numplayersteamb)
+	{
+		return true;
+	}
+	if (numplayersteama > numplayersteamb)
+	{
+		return false;
+	}
+	return scoreteama <= scoreteamb;
 
 	// first, normalize
-	f = max(ca, cb, 1);
-	ca /= f;
-	cb /= f;
-	f = max(sa, sb, 1);
-	sa /= f;
-	sb /= f;
+	//f = max(numplayersteama, numplayersteamb, 1);
+	//numplayersteama /= f;
+	//numplayersteamb /= f;
+
+	//float f = max(scoreteama, scoreteamb, 1);
+	//scoreteama /= f;
+	//scoreteamb /= f;
 
 	// the more we're at the end of the match, the more take scores into account
-	f = bound(0, game_completion_ratio * autocvar_g_balance_teams_scorefactor, 1);
-	ca += (sa - ca) * f;
-	cb += (sb - cb) * f;
-
-	return ca <= cb;
+	//f = bound(0, game_completion_ratio * autocvar_g_balance_teams_scorefactor, 1);
+	//numplayersteama += (scoreteama - numplayersteama) * f;
+	//numplayersteamb += (scoreteamb - numplayersteamb) * f;	
 }
 
 // returns # of smallest team (1, 2, 3, 4)
@@ -640,23 +638,23 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	RandomSelection_Init();
 
-	if(TeamSmallerEqThanTeam(1, t, pl))
+	if(TeamSmallerEqThanTeam(1, t, pl, true))
 		t = 1;
-	if(TeamSmallerEqThanTeam(2, t, pl))
+	if(TeamSmallerEqThanTeam(2, t, pl, true))
 		t = 2;
-	if(TeamSmallerEqThanTeam(3, t, pl))
+	if(TeamSmallerEqThanTeam(3, t, pl, true))
 		t = 3;
-	if(TeamSmallerEqThanTeam(4, t, pl))
+	if(TeamSmallerEqThanTeam(4, t, pl, true))
 		t = 4;
 
 	// now t is the minimum, or A minimum!
-	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl))
+	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl, true))
 		RandomSelection_AddFloat(1, 1, 1);
-	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl))
+	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl, true))
 		RandomSelection_AddFloat(2, 1, 1);
-	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl))
+	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl, true))
 		RandomSelection_AddFloat(3, 1, 1);
-	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl))
+	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl, true))
 		RandomSelection_AddFloat(4, 1, 1);
 
 	return RandomSelection_chosen_float;
@@ -714,16 +712,18 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 		return bestteam;
 	}
 	bestteam = Team_NumberToTeam(bestteam);
-	if (bestteam != -1)
-	{
-		TeamchangeFrags(this);
-		SetPlayerTeamSimple(this, bestteam);
-	}
-	else
+	if (bestteam == -1)
 	{
 		error("JoinBestTeam: invalid team\n");
 	}
+	int oldteam = Team_TeamToNumber(this.team);
+	TeamchangeFrags(this);
+	SetPlayerTeamSimple(this, bestteam);
 	LogTeamchange(this.playerid, this.team, 2); // log auto join
+	if (!IS_BOT_CLIENT(this))
+	{
+		AutoBalanceBots(oldteam, Team_TeamToNumber(bestteam));
+	}
 	if (!IS_DEAD(this) && (MUTATOR_CALLHOOK(Player_ChangeTeamKill, this) ==
 		false))
 	{
@@ -732,10 +732,9 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 	return bestteam;
 }
 
-//void() ctf_playerchanged;
 void SV_ChangeTeam(entity this, float _color)
 {
-	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
+	float sourcecolor, destinationcolor, sourceteam, destinationteam;
 
 	// in normal deathmatch we can just apply the color and we're done
 	if(!teamplay)
@@ -751,76 +750,130 @@ void SV_ChangeTeam(entity this, float _color)
 	if(!teamplay)
 		return;
 
-	scolor = this.clientcolors & 0x0F;
-	dcolor = _color & 0x0F;
+	sourcecolor = this.clientcolors & 0x0F;
+	destinationcolor = _color & 0x0F;
 
-	if(scolor == NUM_TEAM_1 - 1)
-		steam = 1;
-	else if(scolor == NUM_TEAM_2 - 1)
-		steam = 2;
-	else if(scolor == NUM_TEAM_3 - 1)
-		steam = 3;
-	else // if(scolor == NUM_TEAM_4 - 1)
-		steam = 4;
-	if(dcolor == NUM_TEAM_1 - 1)
-		dteam = 1;
-	else if(dcolor == NUM_TEAM_2 - 1)
-		dteam = 2;
-	else if(dcolor == NUM_TEAM_3 - 1)
-		dteam = 3;
-	else // if(dcolor == NUM_TEAM_4 - 1)
-		dteam = 4;
-
+	sourceteam = Team_TeamToNumber(sourcecolor + 1);
+	destinationteam = Team_TeamToNumber(destinationcolor + 1);
+	
 	CheckAllowedTeams(this);
 
-	if(dteam == 1 && c1 < 0) dteam = 4;
-	if(dteam == 4 && c4 < 0) dteam = 3;
-	if(dteam == 3 && c3 < 0) dteam = 2;
-	if(dteam == 2 && c2 < 0) dteam = 1;
+	if (destinationteam == 1 && c1 < 0) destinationteam = 4;
+	if (destinationteam == 4 && c4 < 0) destinationteam = 3;
+	if (destinationteam == 3 && c3 < 0) destinationteam = 2;
+	if (destinationteam == 2 && c2 < 0) destinationteam = 1;
 
 	// not changing teams
-	if(scolor == dcolor)
+	if (sourcecolor == destinationcolor)
 	{
-		SetPlayerTeam(this, dteam, steam, true);
+		SetPlayerTeam(this, destinationteam, sourceteam, true);
 		return;
 	}
 
-	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && this.wasplayer)) {
+	if (autocvar_g_campaign || (autocvar_g_changeteam_banned && this.wasplayer))
+	{
 		Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
 
 	// autocvar_g_balance_teams_prevent_imbalance only makes sense if autocvar_g_balance_teams is on, as it makes the team selection dialog pointless
-	if(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+	if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 	{
 		GetTeamCounts(this);
-		if(!TeamSmallerEqThanTeam(dteam, steam, this))
+		if (!TeamSmallerEqThanTeam(destinationteam, sourceteam, this, false))
 		{
+			PrintToChatAll("TeamSmallerEqThanTeam prevented team switch.");
 			Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
 	}
-
-//	bprint("allow change teams from ", ftos(steam), " to ", ftos(dteam), "\n");
-
-	if(IS_PLAYER(this) && steam != dteam)
+	if(IS_PLAYER(this) && sourceteam != destinationteam)
 	{
 		// reduce frags during a team change
 		TeamchangeFrags(this);
 	}
-
-	SetPlayerTeam(this, dteam, steam, !IS_CLIENT(this));
-
-	if(!IS_PLAYER(this) || (steam == dteam))
+	SetPlayerTeam(this, destinationteam, sourceteam, !IS_CLIENT(this));
+	AutoBalanceBots(sourceteam, destinationteam);
+	if (!IS_PLAYER(this) || (sourceteam == destinationteam))
 	{
 		return;
 	}
 	// kill player when changing teams
-	if(IS_DEAD(this) || (MUTATOR_CALLHOOK(Player_ChangeTeamKill, this) == true))
+	if (IS_DEAD(this) || (MUTATOR_CALLHOOK(Player_ChangeTeamKill, this) == true))
 	{
 		return;
 	}
 	Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
+}
+
+void AutoBalanceBots(int sourceteam, int destinationteam)
+{
+	if ((sourceteam == -1) || (destinationteam == -1))
+	{
+		return;
+	}
+	if (!autocvar_g_balance_teams ||
+		!autocvar_g_balance_teams_prevent_imbalance)
+	{
+		return;
+	}
+	int numplayerssourceteam = 0;
+	int numplayersdestinationteam = 0;
+	entity lowestbotdestinationteam = NULL;
+	switch (sourceteam)
+	{
+		case 1:
+		{
+			numplayerssourceteam = c1;
+			break;
+		}
+		case 2:
+		{
+			numplayerssourceteam = c2;
+			break;
+		}
+		case 3:
+		{
+			numplayerssourceteam = c3;
+			break;
+		}
+		case 4:
+		{
+			numplayerssourceteam = c4;
+			break;
+		}
+	}
+	switch (destinationteam)
+	{
+		case 1:
+		{
+			numplayersdestinationteam = c1;
+			lowestbotdestinationteam = lowestbotteam1;
+			break;
+		}
+		case 2:
+		{
+			numplayersdestinationteam = c2;
+			lowestbotdestinationteam = lowestbotteam2;
+			break;
+		}
+		case 3:
+		{
+			numplayersdestinationteam = c3;
+			lowestbotdestinationteam = lowestbotteam3;
+			break;
+		}
+		case 4:
+		{
+			numplayersdestinationteam = c4;
+			lowestbotdestinationteam = lowestbotteam4;
+			break;
+		}
+	}
+	if ((numplayersdestinationteam > numplayerssourceteam) && (lowestbotdestinationteam != NULL))
+	{
+		SetPlayerTeamSimple(lowestbotdestinationteam, Team_NumberToTeam(sourceteam));
+	}
 }
 
 void ShufflePlayerOutOfTeam (float source_team)
