@@ -398,13 +398,8 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 			{
 				CheckAllowedTeams(caller);
 				GetTeamCounts(caller);
-				if (caller.team == -1)
+				if ((BIT(Team_TeamToNumber(selection) - 1) & FindBestTeams(caller, false)) == 0)
 				{
-
-				}
-				else if (!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(caller.team), caller, false))
-				{
-					PrintToChatAll("TeamSmallerEqThanTeam prevented team switch.");
 					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 					return;
 				}
