@@ -528,7 +528,58 @@ void GetTeamCounts(entity ignore)
 	}
 }
 
-float TeamSmallerEqThanTeam(int teama, int teamb, entity e, bool usescore)
+bool IsTeamSmallerThanTeam(int teama, int teamb, entity e, bool usescore)
+{
+	// equal
+	if (teama == teamb)
+	{
+		return false;
+	}
+	// we assume that CheckAllowedTeams and GetTeamCounts have already been called
+	float numplayersteama = -1, numplayersteamb = -1;
+	float numbotsteama = 0, numbotsteamb = 0;
+	float scoreteama = 0, scoreteamb = 0;
+
+	switch (teama)
+	{
+		case 1: numplayersteama = c1; numbotsteama = numbotsteam1; scoreteama = team1_score; break;
+		case 2: numplayersteama = c2; numbotsteama = numbotsteam2; scoreteama = team2_score; break;
+		case 3: numplayersteama = c3; numbotsteama = numbotsteam3; scoreteama = team3_score; break;
+		case 4: numplayersteama = c4; numbotsteama = numbotsteam4; scoreteama = team4_score; break;
+	}
+	switch (teamb)
+	{
+		case 1: numplayersteamb = c1; numbotsteamb = numbotsteam1; scoreteamb = team1_score; break;
+		case 2: numplayersteamb = c2; numbotsteamb = numbotsteam2; scoreteamb = team2_score; break;
+		case 3: numplayersteamb = c3; numbotsteamb = numbotsteam3; scoreteamb = team3_score; break;
+		case 4: numplayersteamb = c4; numbotsteamb = numbotsteam4; scoreteamb = team4_score; break;
+	}
+
+	// invalid
+	if (numplayersteama < 0 || numplayersteamb < 0)
+		return false;
+
+	if ((IS_REAL_CLIENT(e) && bots_would_leave))
+	{
+		numplayersteama -= numbotsteama;
+		numplayersteamb -= numbotsteamb;
+	}
+	if (!usescore)
+	{
+		return numplayersteama < numplayersteamb;
+	}
+	if (numplayersteama < numplayersteamb)
+	{
+		return true;
+	}
+	if (numplayersteama > numplayersteamb)
+	{
+		return false;
+	}
+	return scoreteama < scoreteamb;	
+}
+
+bool IsTeamEqualToTeam(int teama, int teamb, entity e, bool usescore)
 {
 	// equal
 	if (teama == teamb)
@@ -566,97 +617,107 @@ float TeamSmallerEqThanTeam(int teama, int teamb, entity e, bool usescore)
 	}
 	if (!usescore)
 	{
-		return numplayersteama <= numplayersteamb;
+		return numplayersteama == numplayersteamb;
 	}
 	if (numplayersteama < numplayersteamb)
 	{
-		return true;
+		return false;
 	}
 	if (numplayersteama > numplayersteamb)
 	{
 		return false;
 	}
-	return scoreteama <= scoreteamb;
+	return scoreteama == scoreteamb;	
+}
 
-	// first, normalize
-	//f = max(numplayersteama, numplayersteamb, 1);
-	//numplayersteama /= f;
-	//numplayersteamb /= f;
-
-	//float f = max(scoreteama, scoreteamb, 1);
-	//scoreteama /= f;
-	//scoreteamb /= f;
-
-	// the more we're at the end of the match, the more take scores into account
-	//f = bound(0, game_completion_ratio * autocvar_g_balance_teams_scorefactor, 1);
-	//numplayersteama += (scoreteama - numplayersteama) * f;
-	//numplayersteamb += (scoreteamb - numplayersteamb) * f;	
+int FindBestTeams(entity player, bool usescore)
+{
+	if (MUTATOR_CALLHOOK(FindBestTeams, player) == true)
+	{
+		return M_ARGV(1, float);
+	}
+	int teambits = 0;
+	int previousteam = 0;
+	if (c1 >= 0)
+	{
+		teambits = BIT(0);
+		previousteam = 1;
+	}
+	if (c2 >= 0)
+	{
+		if (IsTeamSmallerThanTeam(2, previousteam, player, usescore))
+		{
+			teambits = BIT(1);
+			previousteam = 2;
+		}
+		else if (IsTeamEqualToTeam(2, previousteam, player, usescore))
+		{
+			teambits |= BIT(1);
+			previousteam = 2;
+		}
+	}
+	if (c3 >= 0)
+	{
+		if (IsTeamSmallerThanTeam(3, previousteam, player, usescore))
+		{
+			teambits = BIT(2);
+			previousteam = 3;
+		}
+		else if (IsTeamEqualToTeam(3, previousteam, player, usescore))
+		{
+			teambits |= BIT(2);
+			previousteam = 3;
+		}
+	}
+	if (c4 >= 0)
+	{
+		if (IsTeamSmallerThanTeam(4, previousteam, player, usescore))
+		{
+			teambits = BIT(3);
+		}
+		else if (IsTeamEqualToTeam(4, previousteam, player, usescore))
+		{
+			teambits |= BIT(3);
+		}
+	}
+	return teambits;
 }
 
 // returns # of smallest team (1, 2, 3, 4)
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl)
 {
-	int totalteams = 0;
-	int t = 1; // initialize with a random team?
-	if(c4 >= 0) t = 4;
-	if(c3 >= 0) t = 3;
-	if(c2 >= 0) t = 2;
-	if(c1 >= 0) t = 1;
-
-	// find out what teams are available
-	//CheckAllowedTeams();
-
-	// make sure there are at least 2 teams to join
-	if(c1 >= 0)
-		totalteams = totalteams + 1;
-	if(c2 >= 0)
-		totalteams = totalteams + 1;
-	if(c3 >= 0)
-		totalteams = totalteams + 1;
-	if(c4 >= 0)
-		totalteams = totalteams + 1;
-
-	if((autocvar_bot_vs_human || pl.team_forced > 0) && totalteams == 1)
-		totalteams += 1;
-
-	if(totalteams <= 1)
-	{
-		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
-			return 1; // special case for campaign and player joining
-		else if(totalteams == 1) // single team
-			LOG_TRACEF("Only 1 team available for %s, you may need to fix your map", MapInfo_Type_ToString(MapInfo_CurrentGametype()));
-		else // no teams, major no no
-			error(sprintf("No teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
-	}
-
 	// count how many players are in each team
-	if(ignore_pl)
+	if (ignore_pl)
+	{
 		GetTeamCounts(pl);
+	}
 	else
+	{
 		GetTeamCounts(NULL);
-
+	}
+	int teambits = FindBestTeams(pl, true);
+	if (teambits == 0)
+	{
+		error(sprintf("No teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
+	}
 	RandomSelection_Init();
-
-	if(TeamSmallerEqThanTeam(1, t, pl, true))
-		t = 1;
-	if(TeamSmallerEqThanTeam(2, t, pl, true))
-		t = 2;
-	if(TeamSmallerEqThanTeam(3, t, pl, true))
-		t = 3;
-	if(TeamSmallerEqThanTeam(4, t, pl, true))
-		t = 4;
-
-	// now t is the minimum, or A minimum!
-	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl, true))
+	if ((teambits & BIT(0)) != 0)
+	{
 		RandomSelection_AddFloat(1, 1, 1);
-	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl, true))
+	}
+	if ((teambits & BIT(1)) != 0)
+	{
 		RandomSelection_AddFloat(2, 1, 1);
-	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl, true))
+	}
+	if ((teambits & BIT(2)) != 0)
+	{
 		RandomSelection_AddFloat(3, 1, 1);
-	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl, true))
+	}
+	if ((teambits & BIT(3)) != 0)
+	{
 		RandomSelection_AddFloat(4, 1, 1);
-
+	}
 	return RandomSelection_chosen_float;
 }
 
@@ -704,9 +765,6 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 	}
 
 	float bestteam = FindSmallestTeam(this, true);
-	MUTATOR_CALLHOOK(JoinBestTeam, this, bestteam);
-	bestteam = M_ARGV(1, float);
-
 	if (only_return_best || this.bot_forced_team)
 	{
 		return bestteam;
@@ -780,9 +838,8 @@ void SV_ChangeTeam(entity this, float _color)
 	if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 	{
 		GetTeamCounts(this);
-		if (!TeamSmallerEqThanTeam(destinationteam, sourceteam, this, false))
+		if ((BIT(destinationteam - 1) & FindBestTeams(this, false)) == 0)
 		{
-			PrintToChatAll("TeamSmallerEqThanTeam prevented team switch.");
 			Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
