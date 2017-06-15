@@ -62,7 +62,33 @@ float PlayerValue(entity p);
 // teams that are allowed will now have their player counts stored in c1...c4
 void GetTeamCounts(entity ignore);
 
-float TeamSmallerEqThanTeam(float teama, float teamb, entity e, bool usescore);
+/// \brief Returns whether one team is smaller than the other.
+/// \param[in] teama First team.
+/// \param[in] teamb Second team.
+/// \param[in] e Player to check.
+/// \param[in] usescore Whether to take into account team scores.
+/// \return True if first team is smaller than the second one, false otherwise.
+/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
+/// been called.
+bool IsTeamSmallerThanTeam(float teama, float teamb, entity e, bool usescore);
+
+/// \brief Returns whether one team is equal to the other.
+/// \param[in] teama First team.
+/// \param[in] teamb Second team.
+/// \param[in] e Player to check.
+/// \param[in] usescore Whether to take into account team scores.
+/// \return True if first team is equal to the second one, false otherwise.
+/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
+/// been called.
+bool IsTeamEqualToTeam(float teama, float teamb, entity e, bool usescore);
+
+/// \brief Returns the bitmask of the best teams for the player to join.
+/// \param[in] player Player to check.
+/// \param[in] usescore Whether to take into account team scores.
+/// \return Bitmask of the best teams for the player to join.
+/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
+/// been called.
+int FindBestTeams(entity player, bool usescore);
 
 // returns # of smallest team (1, 2, 3, 4)
 // NOTE: Assumes CheckAllowedTeams has already been called!
@@ -74,7 +100,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam);
 /// \param[in] sourceteam Previous team of the player (1, 2, 3, 4).
 /// \param[in] destinationteam Current team of the player (1, 2, 3, 4).
 /// \return No return.
-/// \note This function assumes that CheckAllowedTeams and GetTeamCounts has
+/// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
 /// been called.
 void AutoBalanceBots(int sourceteam, int destinationteam);
 

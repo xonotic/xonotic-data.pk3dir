@@ -148,13 +148,12 @@ MUTATOR_HOOKABLE(GetTeamCounts, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
 
-/** allows overriding best team */
-#define EV_JoinBestTeam(i, o) \
-    /** player checked     */ i(entity, MUTATOR_ARGV_0_entity) \
-    /** team number        */ i(float, MUTATOR_ARGV_1_float) \
-    /**/                      o(float, MUTATOR_ARGV_1_float) \
+/** allows overriding best teams */
+#define EV_FindBestTeams(i, o) \
+    /** player checked   */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** bitmask of teams */ o(float, MUTATOR_ARGV_1_float) \
     /**/
-MUTATOR_HOOKABLE(JoinBestTeam, EV_JoinBestTeam);
+MUTATOR_HOOKABLE(FindBestTeams, EV_FindBestTeams);
 
 /** copies variables for spectating "spectatee" to "this" */
 #define EV_SpectateCopy(i, o) \
