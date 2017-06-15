@@ -1760,17 +1760,17 @@ MUTATOR_HOOKFUNCTION(surv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 	return true;
 }
 
-/// \brief Hook that determines the best team for the player to join.
-MUTATOR_HOOKFUNCTION(surv, JoinBestTeam, CBC_ORDER_EXCLUSIVE)
+/// \brief Hook that determines the best teams for the player to join.
+MUTATOR_HOOKFUNCTION(surv, FindBestTeams, CBC_ORDER_EXCLUSIVE)
 {
 	if (surv_type == SURVIVAL_TYPE_COOP)
 	{
-		return;
+		return false;
 	}
 	entity player = M_ARGV(0, entity);
 	if (IS_BOT_CLIENT(player))
 	{
-		return;
+		return false;
 	}
 	int numattackerhumans = surv_numattackerhumans;
 	int numdefenderhumans = surv_numdefenderhumans;
@@ -1784,15 +1784,16 @@ MUTATOR_HOOKFUNCTION(surv, JoinBestTeam, CBC_ORDER_EXCLUSIVE)
 	}
 	if (numattackerhumans < numdefenderhumans)
 	{
-		M_ARGV(1, float) = Team_TeamToNumber(surv_attackerteam);
-		return;
+		M_ARGV(1, float) = BIT(Team_TeamToNumber(surv_attackerteam) - 1);
+		return true;
 	}
 	if (numattackerhumans > numdefenderhumans)
 	{
-		M_ARGV(1, float) = Team_TeamToNumber(surv_defenderteam);
-		return;
+		M_ARGV(1, float) = BIT(Team_TeamToNumber(surv_defenderteam) - 1);
+		return true;
 	}
-	M_ARGV(1, float) = floor(random() * 2) + 1;
+	M_ARGV(1, float) = SURVIVAL_TEAM_BITS;
+	return true;
 }
 
 /// \brief Hook that is called when player has changed the team.
