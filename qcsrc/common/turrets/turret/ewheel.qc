@@ -113,6 +113,29 @@ void ewheel_move_idle(entity this)
         movelib_brake_simple(this, (autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
+void ewheel_findtarget(entity this)
+{
+    entity e = find(NULL, targetname, this.target);
+    if (!e)
+    {
+        LOG_TRACE("Initital waypoint for ewheel does NOT exist, fix your map!");
+        this.target = "";
+    }
+
+    if (e.classname != "turret_checkpoint")
+        LOG_TRACE("Warning: not a turret path");
+    else
+    {
+
+#ifdef EWHEEL_FANCYPATH
+        this.pathcurrent = pathlib_astar(this, this.origin, e.origin);
+        this.pathgoal = e;
+#else
+        this.pathcurrent  = e;
+#endif
+    }
+}
+
 spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) delete(this); }
 
 METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
@@ -162,8 +185,6 @@ METHOD(EWheel, tr_death, void(EWheel this, entity it))
 
 METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 {
-    entity e;
-
     if(it.move_movetype == MOVETYPE_WALK)
     {
         it.velocity = '0 0 0';
@@ -172,27 +193,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
         setorigin(it, it.pos1);
 
         if (it.target != "")
-        {
-            e = find(NULL, targetname, it.target);
-            if (!e)
-            {
-                LOG_TRACE("Initital waypoint for ewheel does NOT exist, fix your map!");
-                it.target = "";
-            }
-
-            if (e.classname != "turret_checkpoint")
-                LOG_TRACE("Warning: not a turret path");
-            else
-            {
-
-#ifdef EWHEEL_FANCYPATH
-                it.pathcurrent = pathlib_astar(it, it.origin, e.origin);
-                it.pathgoal = e;
-#else
-                it.pathcurrent  = e;
-#endif
-            }
-        }
+            InitializeEntity(it, ewheel_findtarget, INITPRIO_FINDTARGET);
     }
 
     it.iscreature				= true;

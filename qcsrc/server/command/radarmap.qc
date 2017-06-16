@@ -1,3 +1,5 @@
+#ifdef RADARMAP
+
 #include "radarmap.qh"
 #include <common/command/_mod.qh>
 #include "radarmap.qh"
@@ -366,7 +368,7 @@ void RadarMap_Think(entity this)
 	}
 }
 
-float RadarMap_Make(float argc)
+bool RadarMap_Make(float argc)
 {
 	float i;
 
@@ -454,3 +456,4 @@ float RadarMap_Make(float argc)
 
 	return false;
 }
+#endif
