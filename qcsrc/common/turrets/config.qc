@@ -5,9 +5,9 @@
 
 void T_Config_Queue_Swap(float root, float child, entity pass)
 {
-	string oldroot = tur_config_queue[root];
-	tur_config_queue[root] = tur_config_queue[child];
-	tur_config_queue[child] = oldroot;
+	string oldroot = config_queue[root];
+	config_queue[root] = config_queue[child];
+	config_queue[child] = oldroot;
 }
 
 float T_Config_Queue_Compare(float root, float child, entity pass)
@@ -16,8 +16,8 @@ float T_Config_Queue_Compare(float root, float child, entity pass)
 
 	for(i = 1; i <= 100; ++i)
 	{
-		r = str2chr(tur_config_queue[root], i);
-		c = str2chr(tur_config_queue[child], i);
+		r = str2chr(config_queue[root], i);
+		c = str2chr(config_queue[child], i);
 		if(r == c) { continue; }
 		else if(c > r) { return -1; }
 		else { return 1; }
@@ -32,8 +32,8 @@ void Dump_Turret_Settings()
 	FOREACH(Turrets, it != TUR_Null, {
 		// step 1: clear the queue
 		TUR_CONFIG_COUNT = 0;
-		for(int j = 0; j <= MAX_TUR_CONFIG; ++j)
-			{ tur_config_queue[j] = string_null; }
+		for(int j = 0; j <= MAX_CONFIG_SETTINGS; ++j)
+			config_queue[j] = string_null;
 
 		// step 2: build new queue
 		it.tr_config(it);
@@ -44,7 +44,7 @@ void Dump_Turret_Settings()
 		// step 4: write queue
 		TUR_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n", i, it.turret_name))
 		for(int j = 0; j <= TUR_CONFIG_COUNT; ++j)
-			{ TUR_CONFIG_WRITETOFILE(tur_config_queue[j]) }
+			TUR_CONFIG_WRITETOFILE(config_queue[j])
 		TUR_CONFIG_WRITETOFILE("// }}}\n")
 
 		// step 5: debug info
@@ -54,8 +54,8 @@ void Dump_Turret_Settings()
 
 	// clear queue now that we're finished
 	TUR_CONFIG_COUNT = 0;
-	for(int j = 0; j <= MAX_TUR_CONFIG; ++j)
-		{ tur_config_queue[j] = string_null; }
+	for(int j = 0; j <= MAX_CONFIG_SETTINGS; ++j)
+		config_queue[j] = string_null;
 
 	// extra information
 	LOG_INFO(sprintf("Totals: %d turrets, %d settings\n", (Turrets_COUNT - 1), totalsettings));

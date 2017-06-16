@@ -256,6 +256,11 @@ vector autocvar_sv_player_crouch_maxs = '16 16 25';
 vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
 vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
 //vector autocvar_sv_player_headsize = '24 24 12';
+
+// temporary array used to dump weapon and turret settings
+const int MAX_CONFIG_SETTINGS = 256;
+string config_queue[MAX_CONFIG_SETTINGS];
+
 #endif
 
 
