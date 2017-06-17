@@ -1147,10 +1147,11 @@ void vehicles_spawn(entity this)
 	    }
 	});
 
-	vehicles_reset_colors(this);
 
 	Vehicle info = Vehicles_from(this.vehicleid);
 	info.vr_spawn(info, this);
+
+	vehicles_reset_colors(this);
 
 	CSQCMODEL_AUTOINIT(this);
 }
