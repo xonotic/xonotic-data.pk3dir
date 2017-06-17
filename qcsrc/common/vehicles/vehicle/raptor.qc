@@ -794,10 +794,10 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
             where = project_3d_to_2d(trace_endpos);
 
             setorigin(dropmark, trace_endpos);
-            tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
 
             if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
             {
+                tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
                 where.x -= tmpSize.x * 0.5;
                 where.y -= tmpSize.y * 0.5;
                 where.z = 0;
@@ -811,10 +811,10 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
             if(dropmark.cnt > time)
             {
                 where = project_3d_to_2d(dropmark.origin);
-                tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
 
                 if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
                 {
+                    tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
                     where.x -= tmpSize.x * 0.5;
                     where.y -= tmpSize.y * 0.5;
                     where.z = 0;
