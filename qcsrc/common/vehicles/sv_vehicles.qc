@@ -449,6 +449,9 @@ void vehicles_reset_colors(entity this)
 	this.avelocity = '0 0 0';
 	this.velocity  = '0 0 0';
 	this.effects   = eff;
+
+	Vehicle info = Vehicles_from(this.vehicleid);
+	info.vr_setcolors(info, this);
 }
 
 void vehicles_clearreturn(entity veh)
