@@ -195,7 +195,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	// x is pitch: positive means down (unlike .angles)
 	// y is yaw: between -180 and 180, increases when turning left
 	// z is roll: positive means tilted clockwise, usually is 0
-	// when .fixangle is set, .v_angle will be set to .angles in the next frame
+	// when .fixangle is set, the player's view will change to the direction where the model is facing
 	.vector v_angle;
 
 	.entity hook;
