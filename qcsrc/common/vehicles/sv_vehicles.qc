@@ -403,12 +403,14 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	return vtag;
 }
 
-void vehicles_reset_colors(entity this)
+void vehicles_reset_colors(entity this, entity player)
 {
 	int eff = 0, cmap;
 	const vector cmod = '0 0 0';
 	if(this.team && teamplay)
 		cmap = 1024 + (this.team - 1) * 17;
+	else if(player)
+		cmap = player.colormap;
 	else
 		cmap = 1024;
 	if(autocvar_g_nodepthtestplayers)
@@ -575,7 +577,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 		else
 		{
 			vehicles_setreturn(this);
-			vehicles_reset_colors(this);
+			vehicles_reset_colors(this, actor);
 		}
 	}
 }
@@ -868,7 +870,7 @@ void vehicles_exit(entity vehic, bool eject)
 	vehic.vehicle_exit(vehic, eject);
 
 	vehicles_setreturn(vehic);
-	vehicles_reset_colors(vehic);
+	vehicles_reset_colors(vehic, NULL);
 	vehic.owner = NULL;
 
 	CSQCMODEL_AUTOINIT(vehic);
@@ -1034,6 +1036,8 @@ void vehicles_enter(entity pl, entity veh)
 	veh.team = pl.team;
 	veh.flags -= FL_NOTARGET;
 
+	vehicles_reset_colors(veh, pl);
+
 	if (IS_REAL_CLIENT(pl))
 	{
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_ENTER);
@@ -1151,7 +1155,7 @@ void vehicles_spawn(entity this)
 	Vehicle info = Vehicles_from(this.vehicleid);
 	info.vr_spawn(info, this);
 
-	vehicles_reset_colors(this);
+	vehicles_reset_colors(this, NULL);
 
 	CSQCMODEL_AUTOINIT(this);
 }
