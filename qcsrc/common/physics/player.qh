@@ -191,8 +191,11 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 
 	.vector movement;
 
-	// angles of the player's view (as opposed to his model which uses `.vector angles;`)
-	// x is pitch, y is yaw, z is roll
+	// angles of the player's view (as opposed to his model which uses `.vector angles;`) in degrees
+	// x is pitch: positive means down (unlike .angles)
+	// y is yaw: between -180 and 180, increases when turning left
+	// z is roll: positive means tilted clockwise, usually is 0
+	// when .fixangle is set, .v_angle will be set to .angles in the next frame
 	.vector v_angle;
 
 	.entity hook;
