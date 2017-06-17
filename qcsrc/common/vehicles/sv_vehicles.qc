@@ -419,25 +419,25 @@ void vehicles_reset_colors(entity this)
 	// Find all ents attacked to main model and setup effects, colormod etc.
 	FOREACH_ENTITY_ENT(tag_entity, this,
 	{
-		if(it != this.vehicle_shieldent)
-		{
-			it.effects = eff;
-			it.colormod = cmod;
-			it.colormap = cmap;
-			it.alpha = 1;
-		}
+		if(it == this.vehicle_shieldent)
+			continue;
+
+		it.effects = eff;
+		it.colormod = cmod;
+		it.colormap = cmap;
+		it.alpha = 1;
 	});
 
 	// Also check head tags
 	FOREACH_ENTITY_ENT(tag_entity, this.tur_head,
 	{
-		if(it != this.vehicle_shieldent)
-		{
-			it.effects = eff;
-			it.colormod = cmod;
-			it.colormap = cmap;
-			it.alpha = 1;
-		}
+		if(it == this.vehicle_shieldent)
+			continue;
+
+		it.effects = eff;
+		it.colormod = cmod;
+		it.colormap = cmap;
+		it.alpha = 1;
 	});
 
 	this.vehicle_hudmodel.effects  = this.effects  = eff; // | EF_LOWPRECISION;
