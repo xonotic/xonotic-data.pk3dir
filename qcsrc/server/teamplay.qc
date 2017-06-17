@@ -645,7 +645,12 @@ int FindBestTeams(entity player, bool usescore)
 	}
 	if (c2 >= 0)
 	{
-		if (IsTeamSmallerThanTeam(2, previousteam, player, usescore))
+		if (previousteam == 0)
+		{
+			teambits = BIT(1);
+			previousteam = 2;
+		}
+		else if (IsTeamSmallerThanTeam(2, previousteam, player, usescore))
 		{
 			teambits = BIT(1);
 			previousteam = 2;
@@ -658,7 +663,12 @@ int FindBestTeams(entity player, bool usescore)
 	}
 	if (c3 >= 0)
 	{
-		if (IsTeamSmallerThanTeam(3, previousteam, player, usescore))
+		if (previousteam == 0)
+		{
+			teambits = BIT(2);
+			previousteam = 3;
+		}
+		else if (IsTeamSmallerThanTeam(3, previousteam, player, usescore))
 		{
 			teambits = BIT(2);
 			previousteam = 3;
@@ -671,7 +681,11 @@ int FindBestTeams(entity player, bool usescore)
 	}
 	if (c4 >= 0)
 	{
-		if (IsTeamSmallerThanTeam(4, previousteam, player, usescore))
+		if (previousteam == 0)
+		{
+			teambits = BIT(3);
+		}
+		else if (IsTeamSmallerThanTeam(4, previousteam, player, usescore))
 		{
 			teambits = BIT(3);
 		}
@@ -927,10 +941,20 @@ void AutoBalanceBots(int sourceteam, int destinationteam)
 			break;
 		}
 	}
-	if ((numplayersdestinationteam > numplayerssourceteam) && (lowestbotdestinationteam != NULL))
+	if ((numplayersdestinationteam <= numplayerssourceteam) ||
+		(lowestbotdestinationteam == NULL))
 	{
-		SetPlayerTeamSimple(lowestbotdestinationteam, Team_NumberToTeam(sourceteam));
+		return;
 	}
+	SetPlayerTeamSimple(lowestbotdestinationteam, Team_NumberToTeam(sourceteam));
+	if (IS_DEAD(lowestbotdestinationteam) || (MUTATOR_CALLHOOK(
+		Player_ChangeTeamKill, lowestbotdestinationteam) == true))
+	{
+		return;
+	}
+	Damage(lowestbotdestinationteam, lowestbotdestinationteam,
+		lowestbotdestinationteam, 100000, DEATH_TEAMCHANGE.m_id,
+		lowestbotdestinationteam.origin, '0 0 0');
 }
 
 void ShufflePlayerOutOfTeam (float source_team)
