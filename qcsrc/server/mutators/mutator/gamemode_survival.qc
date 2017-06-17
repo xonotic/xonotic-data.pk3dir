@@ -320,6 +320,66 @@ void Surv_RestorePlayerState(entity player, entity st)
 	player.superweapons_finished = st.superweapons_finished;
 }
 
+/// \brief Returns the attacker with the lowest score.
+/// \param[in] bot Whether to search only for bots.
+/// \return Attacker with the lowest score or NULL if not found.
+entity Surv_FindLowestAttacker(bool bot)
+{
+	entity player = NULL;
+	float score = FLOAT_MAX;
+	FOREACH_CLIENT(bot ? IS_BOT_CLIENT(it) : true,
+	{
+		if ((it.team == surv_attackerteam) && (it.surv_role ==
+			SURVIVAL_ROLE_PLAYER))
+		{
+			float tempscore = PlayerScore_Get(it, SP_SCORE);
+			if (tempscore < score)
+			{
+				player = it;
+				score = tempscore;
+			}
+		}
+	});
+	return player;
+}
+
+/// \brief Returns the defender with the lowest score.
+/// \param[in] bot Whether to search only for bots.
+/// \param[in] alive Whether to search only for alive players.
+/// \return Defender with the lowest score or NULL if not found.
+entity Surv_FindLowestDefender(bool bot, bool alive)
+{
+	entity player = NULL;
+	float score = FLOAT_MAX;
+	FOREACH_CLIENT(bot ? IS_BOT_CLIENT(it) : true,
+	{
+		if ((it.team == surv_defenderteam) && (alive ? !IS_DEAD(it) : true))
+		{
+			float tempscore = PlayerScore_Get(it, SP_SCORE);
+			if (tempscore < score)
+			{
+				player = it;
+				score = tempscore;
+			}
+		}
+	});
+	return player;
+}
+
+/// \brief Returns the cannon fodder.
+/// \return Cannon fodder or NULL if not found.
+entity Surv_FindCannonFodder()
+{
+	FOREACH_CLIENT(IS_BOT_CLIENT(it),
+	{
+		if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+		{
+			return it;
+		}
+	});
+	return NULL;
+}
+
 /// \brief Changes the number of players in a team.
 /// \param[in] teamnum Team to adjust.
 /// \param[in] delta Amount to adjust by.
@@ -443,21 +503,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			{
 				LOG_TRACE("Removing bot");
 				// Remove bot to make space for human.
-				entity bot = NULL;
-				float score = FLOAT_MAX;
-				FOREACH_CLIENT(IS_BOT_CLIENT(it),
-				{
-					if ((it.team == surv_attackerteam) && (it.surv_role ==
-						SURVIVAL_ROLE_PLAYER))
-					{
-						float tempscore = PlayerScore_Get(it, SP_SCORE);
-						if (tempscore < score)
-						{
-							bot = it;
-							score = tempscore;
-						}
-					}
-				});
+				entity bot = Surv_FindLowestAttacker(true);
 				if (bot == NULL)
 				{
 					LOG_TRACE("No valid bot to remove");
@@ -484,21 +530,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			{
 				return true;
 			}
-			entity lowestplayer = NULL;
-			float score = FLOAT_MAX;
-			FOREACH_CLIENT(IS_BOT_CLIENT(it),
-			{
-				if ((it.team == surv_attackerteam) && (it.surv_role ==
-					SURVIVAL_ROLE_PLAYER))
-				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < score)
-					{
-						lowestplayer = it;
-						score = tempscore;
-					}
-				}
-			});
+			entity lowestplayer = Surv_FindLowestAttacker(true);
 			if (lowestplayer != NULL)
 			{
 				bool savedautobalance = surv_autobalance;
@@ -507,19 +539,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				surv_autobalance = savedautobalance;
 				return true;
 			}
-			FOREACH_CLIENT(true,
-			{
-				if ((it.team == surv_attackerteam) && (it.surv_role ==
-					SURVIVAL_ROLE_PLAYER))
-				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < score)
-					{
-						lowestplayer = it;
-						score = tempscore;
-					}
-				}
-			});
+			lowestplayer = Surv_FindLowestAttacker(false);
 			if (lowestplayer != NULL)
 			{
 				bool savedautobalance = surv_autobalance;
@@ -552,34 +572,10 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			{
 				LOG_TRACE("Removing bot");
 				// Remove bot to make space for human.
-				entity bot = NULL;
-				float score = FLOAT_MAX;
-				FOREACH_CLIENT(IS_BOT_CLIENT(it),
-				{
-					if (!IS_DEAD(it) && (it.team == surv_defenderteam))
-					{
-						float tempscore = PlayerScore_Get(it, SP_SCORE);
-						if (tempscore < score)
-						{
-							bot = it;
-							score = tempscore;
-						}
-					}
-				});
+				entity bot = Surv_FindLowestDefender(true, true);
 				if (bot == NULL)
 				{
-					FOREACH_CLIENT(IS_BOT_CLIENT(it),
-					{
-						if (it.team == surv_defenderteam)
-						{
-							float tempscore = PlayerScore_Get(it, SP_SCORE);
-							if (tempscore < score)
-							{
-								bot = it;
-								score = tempscore;
-							}
-						}
-					});
+					bot = Surv_FindLowestDefender(true, false);
 				}
 				if (bot == NULL)
 				{
@@ -611,20 +607,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 			{
 				return true;
 			}
-			entity lowestplayer = NULL;
-			float score = FLOAT_MAX;
-			FOREACH_CLIENT(IS_BOT_CLIENT(it),
-			{
-				if (it.team == surv_defenderteam)
-				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < score)
-					{
-						lowestplayer = it;
-						score = tempscore;
-					}
-				}
-			});
+			entity lowestplayer = Surv_FindLowestDefender(true, false);
 			if (lowestplayer != NULL)
 			{
 				bool savedautobalance = surv_autobalance;
@@ -633,18 +616,7 @@ bool Surv_AddPlayerToTeam(entity player, int teamnum)
 				surv_autobalance = savedautobalance;
 				return true;
 			}
-			FOREACH_CLIENT(true,
-			{
-				if (it.team == surv_defenderteam)
-				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < score)
-					{
-						lowestplayer = it;
-						score = tempscore;
-					}
-				}
-			});
+			lowestplayer = Surv_FindLowestDefender(false, false);
 			if (lowestplayer != NULL)
 			{
 				bool savedautobalance = surv_autobalance;
@@ -702,35 +674,20 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				return;
 			}
 			// Add bot to keep teams balanced.
-			FOREACH_CLIENT(true,
+			entity lowestplayer = Surv_FindCannonFodder();
+			if (lowestplayer != NULL)
 			{
-				if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+				LOG_TRACE("Changing ", lowestplayer.netname,
+					" from cannon fodder to attacker.");
+				Surv_SetPlayerRole(lowestplayer, SURVIVAL_ROLE_PLAYER);
+				Surv_ChangeNumberOfPlayers(teamnum, +1);
+				if (!IS_DEAD(lowestplayer))
 				{
-					LOG_TRACE("Changing ", it.netname,
-						" from cannon fodder to attacker.");
-					Surv_SetPlayerRole(it, SURVIVAL_ROLE_PLAYER);
-					Surv_ChangeNumberOfPlayers(teamnum, +1);
-					if (!IS_DEAD(it))
-					{
-						Surv_ChangeNumberOfAlivePlayers(teamnum, +1);
-					}
-					return;
+					Surv_ChangeNumberOfAlivePlayers(teamnum, +1);
 				}
-			});
-			entity lowestplayer = NULL;
-			float score = FLOAT_MAX;
-			FOREACH_CLIENT(IS_BOT_CLIENT(it),
-			{
-				if (it.team == surv_defenderteam)
-				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < score)
-					{
-						lowestplayer = it;
-						score = tempscore;
-					}
-				}
-			});
+				return;
+			}
+			lowestplayer = Surv_FindLowestDefender(true, false);
 			if (lowestplayer != NULL)
 			{
 				bool savedautobalance = surv_autobalance;
@@ -739,18 +696,7 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				surv_autobalance = savedautobalance;
 				return;
 			}
-			FOREACH_CLIENT(true,
-			{
-				if (it.team == surv_defenderteam)
-				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < score)
-					{
-						lowestplayer = it;
-						score = tempscore;
-					}
-				}
-			});
+			lowestplayer = Surv_FindLowestDefender(false, false);
 			if (lowestplayer == NULL)
 			{
 				return;
@@ -790,39 +736,25 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				return;
 			}
 			// Add bot to keep teams balanced.
-			FOREACH_CLIENT(true,
+			entity lowestplayer = Surv_FindCannonFodder();
+			if (lowestplayer != NULL)
 			{
-				if (it.surv_role == SURVIVAL_ROLE_CANNON_FODDER)
+				LOG_TRACE("Changing ", lowestplayer.netname,
+					" from cannon fodder to defender.");
+				if (!IS_DEAD(player))
 				{
-					LOG_TRACE("Changing ", it.netname,
-						" from cannon fodder to defender.");
-					if (!IS_DEAD(player))
-					{
-						it.surv_savedplayerstate = Surv_SavePlayerState(player);
-					}
-					bool savedautobalance = surv_autobalance;
-					surv_autobalance = false;
-					surv_announcefrags = false;
-					SetPlayerTeamSimple(it, surv_defenderteam);
-					surv_autobalance = savedautobalance;
-					surv_announcefrags = true;					
-					return;
+					lowestplayer.surv_savedplayerstate =
+						Surv_SavePlayerState(player);
 				}
-			});
-			entity lowestplayer = NULL;
-			float score = FLOAT_MAX;
-			FOREACH_CLIENT(IS_BOT_CLIENT(it),
-			{
-				if (it.team == surv_attackerteam)
-				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < score)
-					{
-						lowestplayer = it;
-						score = tempscore;
-					}
-				}
-			});
+				bool savedautobalance = surv_autobalance;
+				surv_autobalance = false;
+				surv_announcefrags = false;
+				SetPlayerTeamSimple(lowestplayer, surv_defenderteam);
+				surv_autobalance = savedautobalance;
+				surv_announcefrags = true;					
+				return;
+			}
+			lowestplayer = Surv_FindLowestAttacker(true);
 			if (lowestplayer != NULL)
 			{
 				bool savedautobalance = surv_autobalance;
@@ -833,18 +765,7 @@ void Surv_RemovePlayerFromTeam(entity player, int teamnum)
 				surv_announcefrags = true;
 				return;
 			}
-			FOREACH_CLIENT(true,
-			{
-				if (it.team == surv_attackerteam)
-				{
-					float tempscore = PlayerScore_Get(it, SP_SCORE);
-					if (tempscore < score)
-					{
-						lowestplayer = it;
-						score = tempscore;
-					}
-				}
-			});
+			lowestplayer = Surv_FindLowestAttacker(false);
 			if (lowestplayer == NULL)
 			{
 				return;
@@ -1673,6 +1594,14 @@ MUTATOR_HOOKFUNCTION(surv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 		{
 			M_ARGV(2, float) = surv_numattackers;
 			M_ARGV(3, float) = surv_numattackers - surv_numattackerhumans;
+			if (ignore.team == surv_attackerteam)
+			{
+				--M_ARGV(2, float);
+				if (IS_BOT_CLIENT(ignore))
+				{
+					--M_ARGV(3, float);
+				}
+			}
 			entity lowestplayer = NULL;
 			float lowestplayerscore = FLOAT_MAX;
 			entity lowestbot = NULL;
@@ -1703,7 +1632,13 @@ MUTATOR_HOOKFUNCTION(surv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 			});
 			M_ARGV(4, entity) = lowestplayer;
 			M_ARGV(5, entity) = lowestbot;
-			if (ignore.team == surv_attackerteam)
+			break;
+		}
+		case surv_defenderteam:
+		{
+			M_ARGV(2, float) = surv_numdefenders;
+			M_ARGV(3, float) = surv_numdefenders - surv_numdefenderhumans;
+			if (ignore.team == surv_defenderteam)
 			{
 				--M_ARGV(2, float);
 				if (IS_BOT_CLIENT(ignore))
@@ -1711,12 +1646,6 @@ MUTATOR_HOOKFUNCTION(surv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 					--M_ARGV(3, float);
 				}
 			}
-			break;
-		}
-		case surv_defenderteam:
-		{
-			M_ARGV(2, float) = surv_numdefenders;
-			M_ARGV(3, float) = surv_numdefenders - surv_numdefenderhumans;
 			entity lowestplayer = NULL;
 			float lowestplayerscore = FLOAT_MAX;
 			entity lowestbot = NULL;
@@ -1746,14 +1675,6 @@ MUTATOR_HOOKFUNCTION(surv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 			});
 			M_ARGV(4, entity) = lowestplayer;
 			M_ARGV(5, entity) = lowestbot;
-			if (ignore.team == surv_defenderteam)
-			{
-				--M_ARGV(2, float);
-				if (IS_BOT_CLIENT(ignore))
-				{
-					--M_ARGV(3, float);
-				}
-			}
 			break;
 		}
 	}
@@ -2220,7 +2141,8 @@ MUTATOR_HOOKFUNCTION(surv, GiveFragsForKill, CBC_ORDER_FIRST)
 /// important. Without it bots are completely broken. Is it a hack? Of course.
 MUTATOR_HOOKFUNCTION(surv, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
 		if (IS_PLAYER(it) || (it.surv_state == SURVIVAL_STATE_PLAYING))
 		{
 			++M_ARGV(0, int);
