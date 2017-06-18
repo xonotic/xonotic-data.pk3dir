@@ -3,7 +3,7 @@
 CLASS(Vortex, Weapon)
 /* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells);
 /* impulse   */ ATTRIB(Vortex, impulse, int, 7);
-/* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
