@@ -403,12 +403,14 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	return vtag;
 }
 
-void vehicles_reset_colors(entity this)
+void vehicles_reset_colors(entity this, entity player)
 {
 	int eff = 0, cmap;
 	const vector cmod = '0 0 0';
 	if(this.team && teamplay)
 		cmap = 1024 + (this.team - 1) * 17;
+	else if(player)
+		cmap = player.colormap;
 	else
 		cmap = 1024;
 	if(autocvar_g_nodepthtestplayers)
@@ -419,25 +421,25 @@ void vehicles_reset_colors(entity this)
 	// Find all ents attacked to main model and setup effects, colormod etc.
 	FOREACH_ENTITY_ENT(tag_entity, this,
 	{
-		if(it != this.vehicle_shieldent)
-		{
-			it.effects = eff;
-			it.colormod = cmod;
-			it.colormap = cmap;
-			it.alpha = 1;
-		}
+		if(it == this.vehicle_shieldent)
+			continue;
+
+		it.effects = eff;
+		it.colormod = cmod;
+		it.colormap = cmap;
+		it.alpha = 1;
 	});
 
 	// Also check head tags
 	FOREACH_ENTITY_ENT(tag_entity, this.tur_head,
 	{
-		if(it != this.vehicle_shieldent)
-		{
-			it.effects = eff;
-			it.colormod = cmod;
-			it.colormap = cmap;
-			it.alpha = 1;
-		}
+		if(it == this.vehicle_shieldent)
+			continue;
+
+		it.effects = eff;
+		it.colormod = cmod;
+		it.colormap = cmap;
+		it.alpha = 1;
 	});
 
 	this.vehicle_hudmodel.effects  = this.effects  = eff; // | EF_LOWPRECISION;
@@ -449,6 +451,9 @@ void vehicles_reset_colors(entity this)
 	this.avelocity = '0 0 0';
 	this.velocity  = '0 0 0';
 	this.effects   = eff;
+
+	Vehicle info = Vehicles_from(this.vehicleid);
+	info.vr_setcolors(info, this);
 }
 
 void vehicles_clearreturn(entity veh)
@@ -572,7 +577,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 		else
 		{
 			vehicles_setreturn(this);
-			vehicles_reset_colors(this);
+			vehicles_reset_colors(this, actor);
 		}
 	}
 }
@@ -865,7 +870,7 @@ void vehicles_exit(entity vehic, bool eject)
 	vehic.vehicle_exit(vehic, eject);
 
 	vehicles_setreturn(vehic);
-	vehicles_reset_colors(vehic);
+	vehicles_reset_colors(vehic, NULL);
 	vehic.owner = NULL;
 
 	CSQCMODEL_AUTOINIT(vehic);
@@ -1031,6 +1036,8 @@ void vehicles_enter(entity pl, entity veh)
 	veh.team = pl.team;
 	veh.flags -= FL_NOTARGET;
 
+	vehicles_reset_colors(veh, pl);
+
 	if (IS_REAL_CLIENT(pl))
 	{
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_ENTER);
@@ -1144,10 +1151,11 @@ void vehicles_spawn(entity this)
 	    }
 	});
 
-	vehicles_reset_colors(this);
 
 	Vehicle info = Vehicles_from(this.vehicleid);
 	info.vr_spawn(info, this);
+
+	vehicles_reset_colors(this, NULL);
 
 	CSQCMODEL_AUTOINIT(this);
 }

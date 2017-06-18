@@ -354,6 +354,7 @@ spawnfunc(func_breakable)
 		precache_sound(this.noise1);
 
 	this.team_saved = this.team;
+	IL_PUSH(g_saved_team, this);
 	this.dropped_origin = this.origin;
 
 	this.reset = func_breakable_reset;

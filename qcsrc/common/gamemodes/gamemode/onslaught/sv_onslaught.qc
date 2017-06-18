@@ -143,8 +143,8 @@ void onslaught_updatelinks()
 	{
 		l.islinked = false;
 		l.isshielded = true;
-		int i;
-		for(i = 0; i < 17; ++i) { l.isgenneighbor[i] = false; l.iscpneighbor[i] = false; }
+		l.aregensneighbor = 0;
+		l.arecpsneighbor = 0;
 		LOG_DEBUG(etos(l), " (point) belongs to team ", ftos(l.team));
 		l.sprite.SendFlags |= 16;
 	}
@@ -188,9 +188,9 @@ void onslaught_updatelinks()
 				l.enemy.isshielded = false;
 			}
 			if(l.goalentity.classname == "onslaught_generator")
-				l.enemy.isgenneighbor[l.goalentity.team] = true;
+				l.enemy.aregensneighbor |= BIT(l.goalentity.team);
 			else
-				l.enemy.iscpneighbor[l.goalentity.team] = true;
+				l.enemy.arecpsneighbor |= BIT(l.goalentity.team);
 		}
 		if (l.enemy.islinked)
 		{
@@ -200,9 +200,9 @@ void onslaught_updatelinks()
 				l.goalentity.isshielded = false;
 			}
 			if(l.enemy.classname == "onslaught_generator")
-				l.goalentity.isgenneighbor[l.enemy.team] = true;
+				l.goalentity.aregensneighbor |= BIT(l.enemy.team);
 			else
-				l.goalentity.iscpneighbor[l.enemy.team] = true;
+				l.goalentity.arecpsneighbor |= BIT(l.enemy.team);
 		}
 	}
 	// now update the generators
@@ -328,8 +328,8 @@ void ons_DelayedLinkSetup(entity this)
 
 int ons_ControlPoint_CanBeLinked(entity cp, int teamnumber)
 {
-	if(cp.isgenneighbor[teamnumber]) { return 2; }
-	if(cp.iscpneighbor[teamnumber]) { return 1; }
+	if(cp.aregensneighbor & BIT(teamnumber)) return 2;
+	if(cp.arecpsneighbor & BIT(teamnumber)) return 1;
 
 	return 0;
 }
@@ -1039,6 +1039,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
 	gen.team_saved = teamnumber;
+	IL_PUSH(g_saved_team, gen);
 	set_movetype(gen, MOVETYPE_NONE);
 	gen.lasthealth = gen.max_health = gen.health = autocvar_g_onslaught_gen_health;
 	gen.takedamage = DAMAGE_AIM;
@@ -1307,7 +1308,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 			continue;
 
 		// Ignore owned controlpoints
-		if(!(cp2.isgenneighbor[this.team] || cp2.iscpneighbor[this.team]))
+		if(!((cp2.aregensneighbor & BIT(this.team)) || (cp2.arecpsneighbor & BIT(this.team))))
 			continue;
 
 		// Count team mates interested in this control point

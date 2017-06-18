@@ -1,6 +1,7 @@
 // generated file; do not modify
 #include <common/triggers/target/changelevel.qc>
 #include <common/triggers/target/include.qc>
+#include <common/triggers/target/kill.qc>
 #include <common/triggers/target/levelwarp.qc>
 #include <common/triggers/target/location.qc>
 #include <common/triggers/target/music.qc>

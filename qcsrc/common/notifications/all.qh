@@ -409,7 +409,7 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \
 	ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("point") : _("points"))) \
 	ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
-	ARG_CASE(ARG_CS,        "f1time",        process_time(2, f1)) \
+	ARG_CASE(ARG_CS_SV,     "f1time",        process_time(2, f1)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   mmssss(f1)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   mmssss(f2)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   mmssss(f3)) \
