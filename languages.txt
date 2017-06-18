@@ -17,5 +17,5 @@ el    Greek "Ελληνική" 33%
 be    Belarusian "Беларуская" 62%
 bg    Bulgarian "Български" 68%
 ru    Russian "Русский" 100%
-sr    Serbian "Српски" 69%
+sr    Serbian "Српски" 71%
 uk    Ukrainian "Українська" 57%
