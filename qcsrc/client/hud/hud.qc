@@ -490,6 +490,9 @@ void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {
 	vector ofs = '0 0 0';
+	hud_scale_current = '1 1 0';
+	hud_shift_current = '0 0 0';
+
 	if (autocvar_hud_dynamic_follow)
 	{
 		entity view = CSQCModel_server2csqc(player_localentnum - 1);
