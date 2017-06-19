@@ -210,6 +210,8 @@ void cvar_changes_init()
 		BADCVAR("mastervolume");
 		BADCVAR("volume");
 		BADCVAR("bgmvolume");
+		BADCVAR("in_pitch_min");
+		BADCVAR("in_pitch_max");
 
 		// private
 		BADCVAR("developer");
@@ -314,6 +316,7 @@ void cvar_changes_init()
 
 		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
+		BADCVAR("condump_stripcolors");
 		BADCVAR("gameversion");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
@@ -361,6 +364,7 @@ void cvar_changes_init()
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
+		BADPREFIX("notification_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
