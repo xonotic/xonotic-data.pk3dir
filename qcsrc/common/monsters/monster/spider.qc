@@ -18,16 +18,12 @@ void M_Spider_Attack_Web(entity this);
 
 REGISTER_MUTATOR(spiderweb, true);
 
-MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics_UpdateStats)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
-	if (time >= player.spider_slowness)
-		return false;
-	PHYS_MAXSPEED(player) *= 0.5; // half speed while slow from spider
-	PHYS_MAXAIRSPEED(player) *= 0.5;
-	PHYS_AIRSPEEDLIMIT_NONQW(player) *= 0.5;
-	PHYS_AIRSTRAFEACCELERATE(player) *= 0.5;
+	if(time < player.spider_slowness)
+		STAT(MOVEVARS_HIGHSPEED, player) *= 0.5;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
@@ -255,12 +251,6 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
     actor.monster_loot = ITEM_HealthMedium;
     actor.monster_attackfunc = M_Spider_Attack;
 
-    return true;
-}
-
-METHOD(Spider, mr_precache, bool(Spider this))
-{
-    TC(Spider, this);
     return true;
 }
 #endif

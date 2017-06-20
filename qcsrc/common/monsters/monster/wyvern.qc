@@ -170,10 +170,4 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 
     return true;
 }
-
-METHOD(Wyvern, mr_precache, bool(Wyvern this))
-{
-    TC(Wyvern, this);
-    return true;
-}
 #endif

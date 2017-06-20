@@ -281,10 +281,4 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
 
     return true;
 }
-
-METHOD(Golem, mr_precache, bool(Golem this))
-{
-    TC(Golem, this);
-    return true;
-}
 #endif
