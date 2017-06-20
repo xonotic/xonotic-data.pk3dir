@@ -785,6 +785,7 @@ vector vehicles_findgoodexit(entity this, entity player, vector prefer_spot)
 	return this.origin;
 }
 
+.int old_vehicle_flags;
 void vehicles_exit(entity vehic, bool eject)
 {
 	entity player = vehic.owner;
@@ -862,6 +863,10 @@ void vehicles_exit(entity vehic, bool eject)
 	MUTATOR_CALLHOOK(VehicleExit, player, vehic);
 
 	vehic.team = vehic.tur_head.team;
+
+	if(vehic.old_vehicle_flags & VHF_SHIELDREGEN)
+		vehic.vehicle_flags |= VHF_SHIELDREGEN;
+	vehic.old_vehicle_flags = 0;
 
 	sound (vehic, CH_TRIGGER_SINGLE, SND_Null, 1, ATTEN_NORM);
 	vehic.vehicle_hudmodel.viewmodelforclient = vehic;
@@ -968,6 +973,10 @@ void vehicles_enter(entity pl, entity veh)
 		FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, veh), Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_VEHICLE_STEAL));
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
+
+		veh.vehicle_shield = 0;
+		veh.old_vehicle_flags = veh.vehicle_flags; // make a backup just so we're not permanently crippling this vehicle
+		veh.vehicle_flags &= ~VHF_SHIELDREGEN;
 
 		if (autocvar_g_vehicles_steal_show_waypoint) {
 			entity wp = WaypointSprite_Spawn(WP_VehicleIntruder, 0, 0, pl, '0 0 68', NULL, veh.team, veh, wps_intruder, true, RADARICON_DANGER);
