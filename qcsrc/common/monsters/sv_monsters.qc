@@ -125,7 +125,7 @@ entity Monster_FindTarget(entity this)
 	vector my_center = CENTER_OR_VIEWOFS(this);
 
 	// find the closest acceptable target to pass to
-	FOREACH_ENTITY_RADIUS(this.origin, this.target_range, it.monster_attack,
+	IL_EACH(g_monster_targets, it.monster_attack && vdist(it.origin - this.origin, <, this.target_range),
 	{
 		if(Monster_ValidTarget(this, it))
 		{
@@ -173,6 +173,8 @@ void monster_changeteam(entity this, int newteam)
 	if(!teamplay) { return; }
 
 	this.team = newteam;
+	if(!this.monster_attack)
+		IL_PUSH(g_monster_targets, this);
 	this.monster_attack = true; // new team, activate attacking
 	monster_setupcolors(this);
 
@@ -245,7 +247,7 @@ void Monster_Sound_Precache(string f)
 	{
 		if(tokenize_console(s) != 3)
 		{
-			LOG_TRACE("Invalid sound info line: ", s);
+			//LOG_DEBUG("Invalid sound info line: ", s); // probably a comment, no need to spam warnings
 			continue;
 		}
 		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
@@ -299,7 +301,7 @@ bool Monster_Sounds_Load(entity this, string f, int first)
 	float fh = fopen(f, FILE_READ);
 	if(fh < 0)
 	{
-		LOG_TRACE("Monster sound file not found: ", f);
+		//LOG_DEBUG("Monster sound file not found: ", f); // no biggie, monster has no sounds, let's not spam it
 		return false;
 	}
 	while((s = fgets(fh)))
@@ -565,7 +567,7 @@ vector Monster_Move_Target(entity this, entity targ)
 			|| ((trace_fraction < 1) && (trace_ent != this.enemy)))
 		{
 			this.enemy = NULL;
-			this.pass_distance = 0;
+			//this.pass_distance = 0;
 		}
 
 		if(this.enemy)
@@ -656,12 +658,13 @@ vector Monster_Move_Target(entity this, entity targ)
 
 void Monster_CalculateVelocity(entity this, vector to, vector from, float turnrate, float movespeed)
 {
-	float current_distance = vlen((('1 0 0' * to.x) + ('0 1 0' * to.y)) - (('1 0 0' * from.x) + ('0 1 0' * from.y))); // for the sake of this check, exclude Z axis
-	float initial_height = 0; //min(50, (targ_distance * tanh(20)));
-	float current_height = (initial_height * min(1, (this.pass_distance) ? (current_distance / this.pass_distance) : current_distance));
+	//float current_distance = vlen((('1 0 0' * to.x) + ('0 1 0' * to.y)) - (('1 0 0' * from.x) + ('0 1 0' * from.y))); // for the sake of this check, exclude Z axis
+	//float initial_height = 0; //min(50, (targ_distance * tanh(20)));
+	//float current_height = (initial_height * min(1, (this.pass_distance) ? (current_distance / this.pass_distance) : current_distance));
 	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
 
-	vector targpos;
+	vector targpos = to;
+#if 0
 	if(current_height) // make sure we can actually do this arcing path
 	{
 		targpos = (to + ('0 0 1' * current_height));
@@ -677,6 +680,7 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 		}
 	}
 	else { targpos = to; }
+#endif
 
 	//this.angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
 
@@ -819,7 +823,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 				this.monster_moveto = '0 0 0';
 				this.monster_face = '0 0 0';
 
-				this.pass_distance = vlen((('1 0 0' * this.enemy.origin_x) + ('0 1 0' * this.enemy.origin_y)) - (('1 0 0' *  this.origin_x) + ('0 1 0' *  this.origin_y)));
+				//this.pass_distance = vlen((('1 0 0' * this.enemy.origin_x) + ('0 1 0' * this.enemy.origin_y)) - (('1 0 0' *  this.origin_x) + ('0 1 0' *  this.origin_y)));
 				Monster_Sound(this, monstersound_sight, 0, false, CH_VOICE);
 			}
 		}
@@ -1261,7 +1265,11 @@ bool Monster_Spawn_Setup(entity this)
 	Monster_Sounds_Update(this);
 
 	if(teamplay)
+	{
+		if(!this.monster_attack)
+			IL_PUSH(g_monster_targets, this);
 		this.monster_attack = true; // we can have monster enemies in team games
+	}
 
 	Monster_Sound(this, monstersound_spawn, 0, false, CH_VOICE);
 
@@ -1355,7 +1363,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	this.candrop			= true;
 	this.view_ofs			= '0 0 0.7' * (this.maxs_z * 0.5);
 	this.oldtarget2			= this.target2;
-	this.pass_distance		= 0;
+	//this.pass_distance		= 0;
 	this.deadflag			= DEAD_NO;
 	this.spawn_time			= time;
 	this.gravity			= 1;

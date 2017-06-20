@@ -1262,7 +1262,7 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
-        LOG_TRACE("Needed ", ftos(i + 1), " attempts");
+        LOG_DEBUG("Needed ", ftos(i + 1), " attempts");
         return true;
     }
     else
