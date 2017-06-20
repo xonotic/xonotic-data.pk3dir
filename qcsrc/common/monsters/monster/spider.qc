@@ -238,10 +238,4 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 
     return true;
 }
-
-METHOD(Spider, mr_precache, bool(Spider this))
-{
-    TC(Spider, this);
-    return true;
-}
 #endif

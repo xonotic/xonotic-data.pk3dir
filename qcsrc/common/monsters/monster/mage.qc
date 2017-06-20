@@ -464,10 +464,4 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 
     return true;
 }
-
-METHOD(Mage, mr_precache, bool(Mage this))
-{
-    TC(Mage, this);
-    return true;
-}
 #endif

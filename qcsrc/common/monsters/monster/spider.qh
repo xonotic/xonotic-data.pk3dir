@@ -17,11 +17,7 @@ CLASS(Spider, Monster)
     ATTRIB(Spider, monster_name, string, _("Spider"));
 ENDCLASS(Spider)
 
-REGISTER_MONSTER(SPIDER, NEW(Spider)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(SPIDER, NEW(Spider));
 
 #include <common/weapons/_all.qh>
 

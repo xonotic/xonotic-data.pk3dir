@@ -263,10 +263,4 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 
     return true;
 }
-
-METHOD(Shambler, mr_precache, bool(Shambler this))
-{
-    TC(Shambler, this);
-    return true;
-}
 #endif
