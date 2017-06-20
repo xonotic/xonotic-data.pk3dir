@@ -219,14 +219,14 @@ void M_Mage_Defend_Heal(entity this)
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_mage_heal_range, M_Mage_Defend_Heal_Check(this, it),
 	{
 		washealed = true;
-		string fx = "";
+		entity fx = EFFECT_Null;
 		if(IS_PLAYER(it))
 		{
 			switch(this.skin)
 			{
 				case 0:
 					if(it.health < autocvar_g_balance_health_regenstable) it.health = bound(0, it.health + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_health_regenstable);
-					fx = EFFECT_HEALING.eent_eff_name;
+					fx = EFFECT_HEALING;
 					break;
 				case 1:
 					if(it.ammo_cells) it.ammo_cells = bound(it.ammo_cells, it.ammo_cells + 1, g_pickup_cells_max);
@@ -234,22 +234,22 @@ void M_Mage_Defend_Heal(entity this)
 					if(it.ammo_rockets) it.ammo_rockets = bound(it.ammo_rockets, it.ammo_rockets + 1, g_pickup_rockets_max);
 					if(it.ammo_shells) it.ammo_shells = bound(it.ammo_shells, it.ammo_shells + 2, g_pickup_shells_max);
 					if(it.ammo_nails) it.ammo_nails = bound(it.ammo_nails, it.ammo_nails + 5, g_pickup_nails_max);
-					fx = "ammoregen_fx";
+					fx = EFFECT_AMMO_REGEN;
 					break;
 				case 2:
 					if(it.armorvalue < autocvar_g_balance_armor_regenstable)
 					{
 						it.armorvalue = bound(0, it.armorvalue + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_armor_regenstable);
-						fx = "armorrepair_fx";
+						fx = EFFECT_ARMOR_REPAIR;
 					}
 					break;
 				case 3:
 					it.health = bound(0, it.health - ((it == this)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
-					fx = EFFECT_RAGE.eent_eff_name;
+					fx = EFFECT_RAGE;
 					break;
 			}
 
-			Send_Effect_(fx, it.origin, '0 0 0', 1);
+			Send_Effect(fx, it.origin, '0 0 0', 1);
 		}
 		else
 		{

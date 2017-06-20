@@ -116,11 +116,9 @@ void M_Shambler_Attack_Lightning_Think(entity this)
 
 void M_Shambler_Attack_Lightning(entity this)
 {
-	entity gren;
-
 	monster_makevectors(this, this.enemy);
 
-	gren = new(grenade);
+	entity gren = new(grenade);
 	gren.owner = gren.realowner = this;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
