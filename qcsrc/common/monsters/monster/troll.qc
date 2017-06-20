@@ -1,6 +1,3 @@
-// TODO
-#ifndef IMPLEMENTATION
-
 #include "troll.qh"
 
 #ifdef SVQC
@@ -110,6 +107,4 @@ METHOD(Troll, mr_setup, bool(Troll this, entity actor))
 
     return true;
 }
-#endif
-
 #endif
