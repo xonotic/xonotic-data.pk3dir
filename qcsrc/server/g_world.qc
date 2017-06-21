@@ -252,6 +252,7 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
+		BADCVAR("sv_muteban_list");
 
 		// mapinfo
 		BADCVAR("fraglimit");
