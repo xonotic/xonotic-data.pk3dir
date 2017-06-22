@@ -105,9 +105,6 @@ void get_mi_min_max_texcoords(float mode);
 float almost_equals(float a, float b);
 float almost_in_bounds(float a, float b, float c);
 
-float power2of(float e);
-float log2of(float e);
-
 vector rgb_to_hsl(vector rgb);
 vector hsl_to_rgb(vector hsl);
 vector rgb_to_hsv(vector rgb);
