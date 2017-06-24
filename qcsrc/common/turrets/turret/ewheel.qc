@@ -140,10 +140,9 @@ spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) delete(this)
 
 METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 {
-    float vz;
     vector wish_angle, real_angle;
 
-    vz = it.velocity_z;
+    float vz = it.velocity_z;
 
     it.angles_x = anglemods(it.angles_x);
     it.angles_y = anglemods(it.angles_y);
