@@ -1229,11 +1229,11 @@ void HUD_Configure_DrawGrid()
 		hud_configure_realGridSize.y = hud_configure_gridSize.y * vid_conheight;
 		vector s;
 		// x-axis
-		s = eX + eY * vid_conheight;
+		s = vec2(1, vid_conheight);
 		for(i = 1; i < 1/hud_configure_gridSize.x; ++i)
 			drawfill(eX * i * hud_configure_realGridSize.x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		// y-axis
-		s = eY + eX * vid_conwidth;
+		s = vec2(vid_conwidth, 1);
 		for(i = 1; i < 1/hud_configure_gridSize.y; ++i)
 			drawfill(eY * i * hud_configure_realGridSize.y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
@@ -1285,11 +1285,13 @@ const string hlBorder = "gfx/hud/default/border_highlighted";
 const string hlBorder2 = "gfx/hud/default/border_highlighted2";
 void HUD_Panel_HlBorder(float myBorder, vector color, float theAlpha)
 {
-	drawfill(panel_pos - '1 1 0' * myBorder, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * theAlpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder, hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size.x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size.y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size.x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size.y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size.x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size.y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+	vector pos = panel_pos - vec2(myBorder, myBorder);
+	drawfill(pos, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, hlBorder, '8 1 0' * hlBorderSize, vec2(panel_size.x + 2 * myBorder, hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos + eY * (panel_size.y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, vec2(panel_size.x + 2 * myBorder, hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
+	pos.y += hlBorderSize;
+	drawpic_tiled(pos, hlBorder2, '1 8 0' * hlBorderSize, vec2(hlBorderSize, panel_size.y + 2 * myBorder - 2 * hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos + eX * (panel_size.x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, vec2(hlBorderSize, panel_size.y + 2 * myBorder - 2 * hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_Configure_PostDraw()

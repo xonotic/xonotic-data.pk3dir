@@ -356,7 +356,7 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 		new_size.x = max_panel_width; \
 		new_size.y = panel_size.y * (new_size.x / panel_size.x); \
 	} \
-	vector new_pos = eX * (panel_bg_border + 0.5 * max_panel_width) + eY * 0.5 * vid_conheight - 0.5 * new_size; \
+	vector new_pos = vec2(panel_bg_border + 0.5 * max_panel_width, 0.5 * vid_conheight) - 0.5 * new_size; \
 	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * new_pos; \
 	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * new_size; \
 } MACRO_END

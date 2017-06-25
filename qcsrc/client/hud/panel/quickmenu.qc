@@ -528,7 +528,7 @@ void QuickMenu_Mouse()
 				color = '1 1 0.3';
 			else
 				color = '1 1 1';
-			drawfill(panel_pos, eX * panel_size.x + eY * fontsize.y, color, .2, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), color, .2, DRAWFLAG_NORMAL);
 
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
 				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
@@ -552,7 +552,7 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 			pic = strcat("gfx/hud/default/", option);
 		vector option_size = '1 1 0' * fontsize.y * 0.8;
 		desc_width -= option_size.x;
-		drawpic(pos + eX * desc_width + eY * (fontsize.y - option_size.y) / 2, pic, option_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
+		drawpic(pos + vec2(desc_width, (fontsize.y - option_size.y) / 2), pic, option_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
 		desc_width -= fontsize.x / 4;
 	}
 	entry = textShortenToWidth(desc, desc_width, fontsize, stringwidth_colors);
@@ -682,7 +682,7 @@ void HUD_QuickMenu()
 
 		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
 			&& QuickMenu_Page_ActivatedEntry == i)
-			drawfill(panel_pos, eX * panel_size.x + eY * fontsize.y, '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
 
 		panel_pos.y += fontsize.y;
 	}

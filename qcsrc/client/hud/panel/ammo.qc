@@ -150,7 +150,7 @@ void HUD_Ammo()
 
 	rows = HUD_GetRowCount(total_ammo_count, mySize, 3);
 	columns = ceil((total_ammo_count)/rows);
-	ammo_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
+	ammo_size = vec2(mySize.x / columns, mySize.y / rows);
 
 	vector offset = '0 0 0';
 	float newSize;
@@ -207,7 +207,7 @@ void HUD_Ammo()
 		{
 			ammotype = GetAmmoFieldFromNum(i);
 			DrawAmmoItem(
-				pos + eX * column * (ammo_size.x + offset.x) + eY * row * (ammo_size.y + offset.y),
+				pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)),
 				ammo_size,
 				ammotype,
 				(wep.ammo_field == ammotype),
@@ -229,7 +229,7 @@ void HUD_Ammo()
 
 		float f = bound(0, nade_statuschange_elapsedtime*2, 1);
 
-		DrawAmmoNades(pos + eX * column * (ammo_size.x + offset.x) + eY * row * (ammo_size.y + offset.y), ammo_size, nade_prevstatus < nade_cnt && nade_cnt != 0 && f < 1, f);
+		DrawAmmoNades(pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)), ammo_size, nade_prevstatus < nade_cnt && nade_cnt != 0 && f < 1, f);
 	}
 
 	draw_endBoldFont();
