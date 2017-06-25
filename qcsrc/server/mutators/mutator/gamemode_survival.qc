@@ -64,6 +64,8 @@ int autocvar_g_surv_point_leadlimit; ///< Maximum lead of a single team.
 int autocvar_g_surv_team_size;
 /// \brief If set, defenders will not be shown on the radar.
 int autocvar_g_surv_stealth;
+/// \brief Whether to allow spectating enemy players while dead.
+bool autocvar_g_surv_spectate_enemies;
 
 /// \brief Whether to force overkill player models for attackers.
 int autocvar_g_surv_attacker_force_overkill_models;
@@ -2166,6 +2168,61 @@ MUTATOR_HOOKFUNCTION(surv, GiveFragsForKill, CBC_ORDER_FIRST)
 		M_ARGV(2, float) = autocvar_g_surv_attacker_frag_score;
 	}
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(surv, SpectateSet)
+{
+	entity client = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+
+	if (!autocvar_g_surv_spectate_enemies &&
+		(client.surv_state == SURVIVAL_STATE_PLAYING) &&
+		DIFF_TEAM(targ, client))
+	{
+		return true;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(surv, SpectateNext)
+{
+	entity client = M_ARGV(0, entity);
+
+	if (!autocvar_g_surv_spectate_enemies &&
+		(client.surv_state == SURVIVAL_STATE_PLAYING))
+	{
+		entity targ = M_ARGV(1, entity);
+		M_ARGV(1, entity) = CA_SpectateNext(client, targ);
+		return true;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(surv, SpectatePrev)
+{
+	entity client = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+	entity first = M_ARGV(2, entity);
+
+	if (!autocvar_g_surv_spectate_enemies &&
+		(client.surv_state == SURVIVAL_STATE_PLAYING))
+	{
+		do
+		{
+			targ = targ.chain;
+		}
+		while (targ && DIFF_TEAM(targ, client));
+		if (!targ)
+		{
+			for (targ = first; targ && DIFF_TEAM(targ, client);
+				targ = targ.chain);
+
+			if (targ == client.enemy)
+			{
+				return MUT_SPECPREV_RETURN;
+			}
+		}
+	}
+	M_ARGV(1, entity) = targ;
+	return MUT_SPECPREV_FOUND;
 }
 
 /// \brief I'm not sure exactly what this function does but it is very
