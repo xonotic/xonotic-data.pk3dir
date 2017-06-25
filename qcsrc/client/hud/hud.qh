@@ -31,7 +31,7 @@ REGISTER_REGISTRY(hud_panels)
 			panel.current_panel_bg, \
 			HUD_Scale(panel_size + '1 1 0' * 2 * panel_bg_border), \
 			panel_bg_color, panel_bg_alpha, \
-			HUD_Scale('1 1 0' * (panel_bg_border/BORDER_MULTIPLIER)) \
+			HUD_Scale('1 1 0' * BORDER_MULTIPLIER * panel_bg_border) \
 		); \
 } MACRO_END
 
@@ -81,7 +81,7 @@ float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomrigh
 entity highlightedPanel;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
-const float BORDER_MULTIPLIER = 0.25;
+const float BORDER_MULTIPLIER = 4;
 float scoreboard_bottom;
 int weapon_accuracy[Weapons_MAX];
 
