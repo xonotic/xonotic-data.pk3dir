@@ -5,12 +5,13 @@
 
 #define HUD_Write(s) fputs(fh, s)
 #define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
-#define HUD_Write_PanelCvar(cvar_suf) HUD_Write_Cvar(strcat("hud_panel_", panel.panel_name, cvar_suf))
+#define HUD_Write_PanelCvar(cvar_suf) str = strcat("hud_panel_", panel.panel_name, cvar_suf), HUD_Write_Cvar(str)
 // Save the config
 void HUD_Panel_ExportCfg(string cfgname)
 {
 	float fh;
 	string filename = strcat("hud_", autocvar_hud_skin, "_", cfgname, ".cfg");
+	string str = "";
 	fh = fopen(filename, FILE_WRITE);
 	if(fh >= 0)
 	{
