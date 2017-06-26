@@ -216,9 +216,13 @@ NET_HANDLE(damagetext, bool isNew)
 
     int client_entity_index = server_entity_index - 1;
     entity entcs = entcs_receiver(client_entity_index);
-    if (entcs && entcs.has_origin && vdist(entcs.origin - view_origin, >, autocvar_cl_damagetext_2d_close_range)
-        && (!autocvar_cl_damagetext_2d_out_of_view || projected_on_screen(project_3d_to_2d(entcs.origin)))) {
 
+    bool can_use_3d = entcs && entcs.has_origin;
+    bool too_close = vdist(entcs.origin - view_origin, <, autocvar_cl_damagetext_2d_close_range);
+    bool prefer_in_view = autocvar_cl_damagetext_2d_out_of_view && !projected_on_screen(project_3d_to_2d(entcs.origin));
+    bool prefer_2d = autocvar_cl_damagetext_2d && (too_close || prefer_in_view);
+
+    if (can_use_3d && !prefer_2d) {
         // world coords
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(entcs.origin, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
@@ -232,27 +236,24 @@ NET_HANDLE(damagetext, bool isNew)
             }
         }
         make_impure(NEW(DamageText, server_entity_index, entcs.origin, false, health, armor, potential_damage, deathtype, friendlyfire));
-        return;
-    }
+    } else if (autocvar_cl_damagetext_2d) {
+        // screen coords only
+        vector screen_pos = vec2(vid_conwidth * autocvar_cl_damagetext_2d_pos.x, vid_conheight * autocvar_cl_damagetext_2d_pos.y);
+        IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {
+            DamageText_update(it, screen_pos, it.m_healthdamage + health, it.m_armordamage + armor, it.m_potential_damage + potential_damage, deathtype);
+            return;
+        });
 
-    // screen coords only
-    if (!autocvar_cl_damagetext_2d) return;
-
-    vector screen_pos = vec2(vid_conwidth * autocvar_cl_damagetext_2d_pos.x, vid_conheight * autocvar_cl_damagetext_2d_pos.y);
-    IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {
-        DamageText_update(it, screen_pos, it.m_healthdamage + health, it.m_armordamage + armor, it.m_potential_damage + potential_damage, deathtype);
-        return;
-    });
-
-    // when hitting multiple enemies, dmgtext would overlap
-    if (DamageText_screen_first == NULL) {
-        DamageText dt = NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire);
-        make_impure(dt);
-        DamageText_screen_first = dt;
-        DamageText_screen_count = 1;
-    } else {
-        screen_pos += autocvar_cl_damagetext_2d_overlap_offset * DamageText_screen_count;
-        DamageText_screen_count++;
-        make_impure(NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire));
+        // when hitting multiple enemies, dmgtext would overlap
+        if (DamageText_screen_first == NULL) {
+            DamageText dt = NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire);
+            make_impure(dt);
+            DamageText_screen_first = dt;
+            DamageText_screen_count = 1;
+        } else {
+            screen_pos += autocvar_cl_damagetext_2d_overlap_offset * DamageText_screen_count;
+            DamageText_screen_count++;
+            make_impure(NEW(DamageText, server_entity_index, screen_pos, true, health, armor, potential_damage, deathtype, friendlyfire));
+        }
     }
 }
