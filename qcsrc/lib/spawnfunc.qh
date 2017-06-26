@@ -186,6 +186,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, warpzone_fadeend) \
 		FIELD_SCALAR(fld, warpzone_fadestart) \
 		FIELD_SCALAR(fld, weapon) \
+		FIELD_SCALAR(fld, worldtype) \
 		FIELD_VEC(fld, absmax) \
 		FIELD_VEC(fld, absmin) \
 		FIELD_VEC(fld, angles) \
