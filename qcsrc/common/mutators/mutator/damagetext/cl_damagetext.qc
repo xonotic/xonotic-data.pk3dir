@@ -238,10 +238,7 @@ NET_HANDLE(damagetext, bool isNew)
     // screen coords only
     if (!autocvar_cl_damagetext_2d) return;
 
-    vector screen_pos = '0 0 0';
-    screen_pos.x = vid_conwidth * autocvar_cl_damagetext_2d_pos.x;
-    screen_pos.y = vid_conheight * autocvar_cl_damagetext_2d_pos.y;
-
+    vector screen_pos = vec2(vid_conwidth * autocvar_cl_damagetext_2d_pos.x, vid_conheight * autocvar_cl_damagetext_2d_pos.y);
     IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {
         DamageText_update(it, screen_pos, it.m_healthdamage + health, it.m_armordamage + armor, it.m_potential_damage + potential_damage, deathtype);
         return;
