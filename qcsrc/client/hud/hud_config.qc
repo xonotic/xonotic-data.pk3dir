@@ -95,6 +95,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_Cvar("hud_panel_weapons_onlyowned");
 					HUD_Write_Cvar("hud_panel_weapons_noncurrent_alpha");
 					HUD_Write_Cvar("hud_panel_weapons_noncurrent_scale");
+					HUD_Write_Cvar("hud_panel_weapons_selection_radius");
+					HUD_Write_Cvar("hud_panel_weapons_selection_speed");
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_Cvar("hud_panel_ammo_onlycurrent");
@@ -113,6 +115,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_Cvar("hud_panel_powerups_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
+					HUD_Write_Cvar("hud_panel_healtharmor_combined");
 					HUD_Write_Cvar("hud_panel_healtharmor_flip");
 					HUD_Write_Cvar("hud_panel_healtharmor_iconalign");
 					HUD_Write_Cvar("hud_panel_healtharmor_baralign");
@@ -121,7 +124,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_armor");
 					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx");
 					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx_smooth");
-					HUD_Write_Cvar("hud_panel_healtharmor_combined");
 					HUD_Write_Cvar("hud_panel_healtharmor_text");
 					break;
 				case HUD_PANEL_NOTIFY:
@@ -205,6 +207,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_Cvar("hud_panel_itemstime_text");
 					HUD_Write_Cvar("hud_panel_itemstime_ratio");
 					HUD_Write_Cvar("hud_panel_itemstime_dynamicsize");
+					break;
+				case HUD_PANEL_MAPVOTE:
+					HUD_Write_Cvar("hud_panel_mapvote_highlight_border");
 					break;
 				case HUD_PANEL_QUICKMENU:
 					HUD_Write_Cvar("hud_panel_quickmenu_align");
