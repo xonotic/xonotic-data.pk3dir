@@ -725,10 +725,11 @@ string Scoreboard_FixColumnWidth(int i, string str)
 			sbt_fixcolumnwidth_iconlen = f;
 	}
 
-	sbt_fixcolumnwidth_iconlen *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
-
 	if(sbt_fixcolumnwidth_iconlen != 0)
+	{
+		sbt_fixcolumnwidth_iconlen *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
 		sbt_fixcolumnwidth_marginlen = stringwidth(" ", false, hud_fontsize);
+	}
 	else
 		sbt_fixcolumnwidth_marginlen = 0;
 
@@ -833,7 +834,6 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 	float fg_alpha = (is_self ? sbt_fg_alpha_self : sbt_fg_alpha);
 
 	vector pos = item_pos;
-	vector pic_size = vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y);
 	pos.x += hud_fontsize.x * 0.5;
 	pos.y += (1.25 - 1) / 2 * hud_fontsize.y; // center text vertically
 	vector tmp = '0 0 0';
@@ -864,11 +864,11 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 		tmp.x = sbt_field_size[i] + hud_fontsize.x;
 		if(sbt_field_icon0 != "")
-			drawpic(pos - tmp, sbt_field_icon0, pic_size, sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
+			drawpic(pos - tmp, sbt_field_icon0, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		if(sbt_field_icon1 != "")
-			drawpic(pos - tmp, sbt_field_icon1, pic_size, sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
+			drawpic(pos - tmp, sbt_field_icon1, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 		if(sbt_field_icon2 != "")
-			drawpic(pos - tmp, sbt_field_icon2, pic_size, sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
+			drawpic(pos - tmp, sbt_field_icon2, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if(sbt_field[i] == SP_SEPARATOR)
@@ -898,11 +898,11 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 			tmp.x = sbt_field_size[i];
 			if(sbt_field_icon0 != "")
-				drawpic(pos - tmp, sbt_field_icon0, pic_size, sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, sbt_field_icon0, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			if(sbt_field_icon1 != "")
-				drawpic(pos - tmp, sbt_field_icon1, pic_size, sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, sbt_field_icon1, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon1_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			if(sbt_field_icon2 != "")
-				drawpic(pos - tmp, sbt_field_icon2, pic_size, sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
+				drawpic(pos - tmp, sbt_field_icon2, vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen, hud_fontsize.y), sbt_field_icon2_rgb, fg_alpha, DRAWFLAG_NORMAL);
 			pos.x -= sbt_field_size[i] + hud_fontsize.x;
 		}
 	}
