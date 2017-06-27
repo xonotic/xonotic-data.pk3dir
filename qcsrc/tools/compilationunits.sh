@@ -2,6 +2,21 @@
 set -eu
 cd ${0%/*}
 
+# if these files exist from previous compilation, `./all compile` will stop
+# detecting changes after running this script so delete them to trigger
+# a recompile next time
+if [ -f ../../csprogs.dat ]; then
+    rm ../../csprogs.dat
+fi
+
+if [ -f ../../menu.dat ]; then
+    rm ../../menu.dat
+fi
+
+if [ -f ../../progs.dat ]; then
+    rm ../../progs.dat
+fi
+
 WORKDIR=../.tmp
 
 CPP="cc -xc -E"
@@ -53,6 +68,3 @@ function check() {
 check client
 check server
 check menu
-
-# trigger a recompile next time, otherwise the `all` script wouldn't detect changes
-rm csprogs.dat menu.dat progs.dat
