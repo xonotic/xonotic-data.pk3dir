@@ -11,12 +11,12 @@ REGISTRY(hud_panels, BITS(6))
 #define hud_panels_from(i) _hud_panels_from(i, NULL)
 REGISTER_REGISTRY(hud_panels)
 
-#define REGISTER_HUD_PANEL(id, draw_func, name, configflags, showflags) \
+#define REGISTER_HUD_PANEL(id, draw_func, configflags, showflags) \
 	void draw_func(); \
 	REGISTER(hud_panels, HUD_PANEL, id, m_id, new_pure(hud_panel)) { \
 		this.panel_id = this.m_id; \
 		this.panel_draw = draw_func; \
-		this.panel_name = #name; \
+		this.panel_name = strzone(strtolower(#id)); \
 		this.panel_configflags = configflags; \
 		this.panel_showflags = showflags; \
 	}
@@ -31,7 +31,7 @@ REGISTER_REGISTRY(hud_panels)
 			panel.current_panel_bg, \
 			HUD_Scale(panel_size + '1 1 0' * 2 * panel_bg_border), \
 			panel_bg_color, panel_bg_alpha, \
-			HUD_Scale('1 1 0' * (panel_bg_border/BORDER_MULTIPLIER)) \
+			HUD_Scale('1 1 0' * BORDER_MULTIPLIER * panel_bg_border) \
 		); \
 } MACRO_END
 
@@ -81,7 +81,7 @@ float resizeCorner; // 1 = topleft, 2 = topright, 3 = bottomleft, 4 = bottomrigh
 entity highlightedPanel;
 float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
-const float BORDER_MULTIPLIER = 0.25;
+const float BORDER_MULTIPLIER = 4;
 float scoreboard_bottom;
 int weapon_accuracy[Weapons_MAX];
 
@@ -206,31 +206,31 @@ int prev_p_health, prev_p_armor;
 
 void HUD_ItemsTime();
 
-REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        weapons,        PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // WEAPONS
-REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           ammo,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // AMMO
-REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       powerups,       PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // POWERUPS
-REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    healtharmor,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // HEALTHARMOR
-REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         notify,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // NOTIFY
-REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          timer,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // TIMER
-REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          radar,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RADAR
-REGISTER_HUD_PANEL(SCORE,           HUD_Score,          score,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // SCORE
-REGISTER_HUD_PANEL(RACETIMER,       HUD_RaceTimer,      racetimer,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RACETIMER
-REGISTER_HUD_PANEL(VOTE,            HUD_Vote,           vote,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // VOTE
-REGISTER_HUD_PANEL(MODICONS,        HUD_ModIcons,       modicons,       PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                            | PANEL_SHOW_WITH_SB) // MODICONS
-REGISTER_HUD_PANEL(PRESSEDKEYS,     HUD_PressedKeys,    pressedkeys,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // PRESSEDKEYS
-REGISTER_HUD_PANEL(CHAT,            HUD_Chat,           chat,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // CHAT
-REGISTER_HUD_PANEL(ENGINEINFO,      HUD_EngineInfo,     engineinfo,     PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // ENGINEINFO
-REGISTER_HUD_PANEL(INFOMESSAGES,    HUD_InfoMessages,   infomessages,   PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // INFOMESSAGES
-REGISTER_HUD_PANEL(PHYSICS,         HUD_Physics,        physics,        PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // PHYSICS
-REGISTER_HUD_PANEL(CENTERPRINT,     HUD_CenterPrint,    centerprint,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                            | PANEL_SHOW_WITH_SB) // CENTERPRINT
-REGISTER_HUD_PANEL(MINIGAME_BOARD,  HUD_MinigameBoard,  minigameboard,  PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAME_BOARD
-REGISTER_HUD_PANEL(MINIGAME_STATUS, HUD_MinigameStatus, minigamestatus, PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAME_STATUS
-REGISTER_HUD_PANEL(MINIGAME_HELP,   HUD_MinigameHelp,   minigamehelp,   PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAME_HELP
-REGISTER_HUD_PANEL(MINIGAME_MENU,   HUD_MinigameMenu,   minigamemenu,   PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // MINIGAME_MENU
-REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       mapvote,        PANEL_CONFIG_NO                          ,                                             PANEL_SHOW_MAPVOTE                     ) // MAPVOTE
-REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      itemstime,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // ITEMSTIME
-REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME                                                                ) // QUICKMENU
-REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
+REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // WEAPONS
+REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // AMMO
+REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // POWERUPS
+REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // HEALTHARMOR
+REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // NOTIFY
+REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // TIMER
+REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RADAR
+REGISTER_HUD_PANEL(SCORE,           HUD_Score,          PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME                                          ) // SCORE
+REGISTER_HUD_PANEL(RACETIMER,       HUD_RaceTimer,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // RACETIMER
+REGISTER_HUD_PANEL(VOTE,            HUD_Vote,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // VOTE
+REGISTER_HUD_PANEL(MODICONS,        HUD_ModIcons,       PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                            | PANEL_SHOW_WITH_SB) // MODICONS
+REGISTER_HUD_PANEL(PRESSEDKEYS,     HUD_PressedKeys,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // PRESSEDKEYS
+REGISTER_HUD_PANEL(CHAT,            HUD_Chat,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // CHAT
+REGISTER_HUD_PANEL(ENGINEINFO,      HUD_EngineInfo,     PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // ENGINEINFO
+REGISTER_HUD_PANEL(INFOMESSAGES,    HUD_InfoMessages,   PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // INFOMESSAGES
+REGISTER_HUD_PANEL(PHYSICS,         HUD_Physics,        PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // PHYSICS
+REGISTER_HUD_PANEL(CENTERPRINT,     HUD_CenterPrint,    PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                            | PANEL_SHOW_WITH_SB) // CENTERPRINT
+REGISTER_HUD_PANEL(MINIGAMEBOARD,   HUD_MinigameBoard,  PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMEBOARD
+REGISTER_HUD_PANEL(MINIGAMESTATUS,  HUD_MinigameStatus, PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMESTATUS
+REGISTER_HUD_PANEL(MINIGAMEHELP,    HUD_MinigameHelp,   PANEL_CONFIG_NO                          ,                       PANEL_SHOW_MINIGAME                      | PANEL_SHOW_WITH_SB) // MINIGAMEHELP
+REGISTER_HUD_PANEL(MINIGAMEMENU,    HUD_MinigameMenu,   PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // MINIGAMEMENU
+REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       PANEL_CONFIG_NO                          ,                                             PANEL_SHOW_MAPVOTE                     ) // MAPVOTE
+REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // ITEMSTIME
+REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      PANEL_CONFIG_MAIN                        , PANEL_SHOW_MAINGAME                                                                ) // QUICKMENU
+REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    PANEL_CONFIG_NO                          , PANEL_SHOW_MAINGAME | PANEL_SHOW_MINIGAME | PANEL_SHOW_MAPVOTE | PANEL_SHOW_WITH_SB) // SCOREBOARD
 // always add new panels to the end of list
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
@@ -356,7 +356,7 @@ REGISTER_HUD_PANEL(SCOREBOARD,      Scoreboard_Draw,    scoreboard,     PANEL_CO
 		new_size.x = max_panel_width; \
 		new_size.y = panel_size.y * (new_size.x / panel_size.x); \
 	} \
-	vector new_pos = eX * (panel_bg_border + 0.5 * max_panel_width) + eY * 0.5 * vid_conheight - 0.5 * new_size; \
+	vector new_pos = vec2(panel_bg_border + 0.5 * max_panel_width, 0.5 * vid_conheight) - 0.5 * new_size; \
 	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * new_pos; \
 	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * new_size; \
 } MACRO_END

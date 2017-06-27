@@ -252,6 +252,7 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
+		BADCVAR("sv_muteban_list");
 
 		// mapinfo
 		BADCVAR("fraglimit");
@@ -281,6 +282,7 @@ void cvar_changes_init()
 		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
+		BADCVAR("g_runematch");
 		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");

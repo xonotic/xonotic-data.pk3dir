@@ -271,7 +271,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
 
-		if(IS_CLIENT(attacker) && this.classname == "func_assault_destructible")
+		if(IS_CLIENT(attacker)) //&& this.classname == "func_assault_destructible")
 		{
 			this.owner = attacker;
 			this.realowner = attacker;

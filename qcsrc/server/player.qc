@@ -311,7 +311,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 {
 	float take, save, dh, da;
 	vector v;
-	float valid_damage_for_weaponstats;
 	float excess;
 
 	dh = max(this.health, 0);
@@ -484,7 +483,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	bool abot = (IS_BOT_CLIENT(attacker));
 	bool vbot = (IS_BOT_CLIENT(this));
 
-	valid_damage_for_weaponstats = 0;
+	bool valid_damage_for_weaponstats = false;
 	Weapon awep = WEP_Null;
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
@@ -497,7 +496,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			awep = attacker.(weaponentity).m_weapon;
 		else
 			awep = DEATH_WEAPONOF(deathtype);
-		valid_damage_for_weaponstats = 1;
+		valid_damage_for_weaponstats = true;
 	}
 
 	dh = dh - max(this.health, 0);
@@ -560,10 +559,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		excess = M_ARGV(4, float);
 
-		Weapon wep = this.(weaponentity).m_weapon;
+		//Weapon wep = this.(weaponentity).m_weapon;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity went = weaponentities[slot];
+			if(!this.(weaponentity))
+				continue; // TODO: clones have no weapon, but we don't want to have to check this all the time
+			Weapon wep = this.(weaponentity).m_weapon;
 			wep.wr_playerdeath(wep, this, went);
 		}
 
@@ -649,13 +651,17 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		}
 
 		// reset fields the weapons may use just in case
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			it.wr_resetplayer(it, this);
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		if(this.classname != "body")
+		{
+			FOREACH(Weapons, it != WEP_Null,
 			{
-				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
-			}
-		));
+				it.wr_resetplayer(it, this);
+				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+				{
+					ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
+				}
+			});
+		}
 		MUTATOR_CALLHOOK(PlayerDied, this);
 	}
 }

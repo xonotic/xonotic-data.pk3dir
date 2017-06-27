@@ -482,3 +482,6 @@ STATIC_INIT(g_saved_team) { g_saved_team = IL_NEW(); }
 
 IntrusiveList g_monster_targets;
 STATIC_INIT(g_monster_targets) { g_monster_targets = IL_NEW(); }
+
+IntrusiveList g_pathlib_nodes;
+STATIC_INIT(g_pathlib_nodes) { g_pathlib_nodes = IL_NEW(); }
