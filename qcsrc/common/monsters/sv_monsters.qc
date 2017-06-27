@@ -1404,15 +1404,8 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 		set_movetype(this, MOVETYPE_FLY);
 	}
 
-	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED))
-	{
-		if(mon.spawnflags & MONSTER_SIZE_BROKEN)
-			this.scale *= 1.3;
-
-		if(mon.spawnflags & MONSTER_SIZE_QUAKE)
-		if(autocvar_g_monsters_quake_resize)
-			this.scale *= 1.3;
-	}
+	if((mon.spawnflags & MONSTER_SIZE_QUAKE) && autocvar_g_monsters_quake_resize && !(this.spawnflags & MONSTERFLAG_RESPAWNED))
+		this.scale *= 1.3;
 
 	setsize(this, mon.m_mins * this.scale, mon.m_maxs * this.scale);
 
