@@ -965,7 +965,7 @@ msgstr "grasz ^3%s^7 na ^2%s^7"
 #: qcsrc/client/hud/panel/scoreboard.qc:1627
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr " aż do 1 ^1%1.0f minut^7"
+msgstr " aż do ^1%1.0f minut(y)^7"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1631
 #: qcsrc/client/hud/panel/scoreboard.qc:1650
@@ -1027,7 +1027,7 @@ msgstr "Głosowanie wezwane dla:"
 
 #: qcsrc/client/hud/panel/vote.qc:117
 msgid "Allow servers to store and display your name?"
-msgstr "Pozwolić serwerom przechować i wyświetlić twoje imię?"
+msgstr "Pozwolić serwerom przechowywać i wyświetlać twoje imię?"
 
 #: qcsrc/client/hud/panel/vote.qc:121
 msgid "^1Configure the HUD"
@@ -1151,11 +1151,11 @@ msgstr "błąd tworzenia uchwytu curl\n"
 
 #: qcsrc/common/command/generic.qc:403
 msgid "Notification restart command only works with cl_cmd and sv_cmd.\n"
-msgstr ""
+msgstr "Komenda restartu powiadomień działa tylko z cl_amd i sv_cmd.\n"
 
 #: qcsrc/common/gamemodes/gamemode/nexball/weapon.qh:7
 msgid "Ball Stealer"
-msgstr ""
+msgstr "Złodziej piłek"
 
 #: qcsrc/common/items/item/armor.qh:111
 msgid "Big armor"
@@ -1307,6 +1307,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
+"Zabijaj przeciwników, aby ich zamrozić, stój przy sojusznikach, żeby ich "
+"rozmrozić; zamróź wszystkich przeciwników, aby wygrać!
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -1314,7 +1316,7 @@ msgstr "Trzymaj kulę, aby otrzymywać punkty za zabicia"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Keepaway"
-msgstr ""
+msgstr "Keepaway"
 
 #: qcsrc/common/mapinfo.qh:461
 msgid "Invasion"
@@ -1649,7 +1651,7 @@ msgstr "Kolor:"
 
 #: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:319
 msgid "Draw damage numbers for friendly fire"
-msgstr ""
+msgstr "Pokaż ilość obrażeń dla bratobójczego ognia"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:56
 msgid "Extra life"
@@ -2070,7 +2072,7 @@ msgstr "^BG%s%s^K1 zbliżył się za nadto do eksplozji napalmu%s%s"
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 spalił się przez Napalm gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
@@ -2090,7 +2092,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został wystrzelony w kosmos przez gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
@@ -2115,7 +2117,7 @@ msgstr "^BG%s%s^K1 zostałeś ztelefragowany przez ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:290
 #, c-format
 msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 zginął w wpadku z graczem ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
@@ -2131,7 +2133,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:293
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został zmiażdżony przez gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
@@ -6140,8 +6142,8 @@ msgstr "W powietrzu"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:87
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:224
-msgid "Piñata"
-msgstr "Piñata"
+msgid "Pinata"
+msgstr "Pinata"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:229
@@ -6208,10 +6210,12 @@ msgstr ""
 msgid ""
 "Amount of health below which your player gets stunned because of blood loss"
 msgstr ""
+"Ilość punktów życia, poniżej których gracz umiera z wykrwawienia się"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:192
 msgid "Make things fall to the ground slower, lower value means lower gravity"
-msgstr ""
+msgstr "Sprawia, że wszystko wolnej spada na ziemię, niższa wartość oznacza "
+"niższą grawitację"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:201
 msgid "Weapon & item mutators:"
@@ -6223,7 +6227,7 @@ msgstr "Chwytak"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:205
 msgid "Players spawn with the grappling hook"
-msgstr ""
+msgstr "Gracze zaczynają z Chwytakiem"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:209
 msgid "Players spawn with the jetpack"
@@ -6231,7 +6235,7 @@ msgstr "Gracze zaczynają z Jetpackami"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:225
 msgid "Players will drop all weapons they possessed when they are killed"
-msgstr "Gracze upuszczą wszystkie bronie jakie mają gdy zostaną zabici"
+msgstr "Gracze upuszczają wszystkie posiadane bronie gdy zostaną zabici"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:230
 msgid "Weapons stay after they are picked up"
@@ -6272,6 +6276,10 @@ msgid ""
 "to find some or if he fails to do so, face death. The secondary fire mode "
 "does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Gracze zaczynają z jedną bronią, która od razu zabija jednym strzałem. "
+"Jeśli graczowi skończy się amunicja, ma 10 sekund na znalezienie amunicji "
+"Jeśli mu się nie uda, stawi czoło śmierci. Drugi tryb ognia nie zadaje "
+"obrażeń, ale jest dobry do wykonywania trickjumpów."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:273
 msgid ""
@@ -6279,6 +6287,9 @@ msgid ""
 "weapon. After some time, a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
+"Bez broni Xonotic - zamiast przedmiotów do podniesienia, wszyscy zaczynają "
+"z tą samą bronią, po pewnym czasie rozpocznie się odliczanie, po którym "
+"wszyscy będą mieli zmienioną broń."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:277
 msgid "with blaster"
@@ -6286,7 +6297,7 @@ msgstr "z Blasterem"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:278
 msgid "Always carry the blaster as an additional weapon in Nix"
-msgstr ""
+msgstr "Zawsze noś Blaster jako dodatkowa broń w Nix"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:9
 msgid "Mutators"
@@ -6472,7 +6483,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:58
 msgid "Benchmark how fast your computer can run the highlighted demo"
-msgstr ""
+msgstr "Sprawdź jak szybko twój komputer może włączyć wybrane demo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:62
 msgid "DEMO^Play"
@@ -6674,7 +6685,7 @@ msgstr "Kość:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:31
 msgid "Set * as child"
-msgstr ""
+msgstr "Ustaw * jako dziecko"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:32
 msgid "Attach to *"
@@ -7176,6 +7187,8 @@ msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory (default: enabled)"
 msgstr ""
+"Użyj mapowania światła wysokiej rozdzielczości, która ładnie wygląda, ale "
+"wymaga więcej pamięci (domyślnie: włączone)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:138
 msgid "Deluxe mapping"
@@ -9236,7 +9249,7 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
 msgstr ""
-"^1BŁĄÐ:: Kompresja z tekstury jest wymagana, ale nie wspomagana.\n"
+"^1BŁĄ?:: Kompresja z tekstury jest wymagana, ale nie wspomagana.\n"
 "^1Oczekuj problemów wizualnych.\n"
 
 #: qcsrc/menu/xonotic/util.qc:780
