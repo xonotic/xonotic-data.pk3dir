@@ -740,12 +740,19 @@ void HUD_QuickMenu()
 
 // useful to Translate a string inside the Command
 #define QUICKMENU_ENTRY_TC(title,command,text,translated_text) {\
-	if(prvm_language == "en") \
-		QUICKMENU_ENTRY(title, sprintf(command, text)) \
-	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) \
-		QUICKMENU_ENTRY(strcat("(en)", title), sprintf(command, text)) \
-	else \
-		QUICKMENU_ENTRY(strcat("(", prvm_language, ")", title), sprintf(command, translated_text)) \
+	if(prvm_language == "en") { \
+		tc_title = title; \
+		tc_cmd = sprintf(command, text); \
+	} \
+	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) { \
+		tc_title = strcat("(en)", title); \
+		tc_cmd = sprintf(command, text); \
+	} \
+	else { \
+		tc_title = strcat("(", prvm_language, ")", title); \
+		tc_cmd = sprintf(command, translated_text); \
+	} \
+	QUICKMENU_ENTRY(tc_title, tc_cmd) \
 }
 
 void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me)
@@ -780,6 +787,9 @@ void QuickMenu_Default(string target_submenu)
 	bool target_submenu_found = false;
 	if(target_submenu != "")
 		QuickMenu_Buffer_Size = QUICKMENU_BUFFER_MAXENTRIES; // forbids load of next entries until target_submenu
+
+	string tc_title;
+	string tc_cmd;
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
