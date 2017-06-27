@@ -53,3 +53,6 @@ function check() {
 check client
 check server
 check menu
+
+# trigger a recompile next time, otherwise the `all` script wouldn't detect changes
+rm ../csprogs.dat ../menu.dat ../progs.dat
