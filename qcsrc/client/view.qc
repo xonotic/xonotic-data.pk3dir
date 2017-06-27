@@ -62,10 +62,9 @@ float autocvar_cl_leanmodel_highpass = 0.2;
 float autocvar_cl_leanmodel_lowpass = 0.05;
 
 #define avg_factor(avg_time) (1 - exp(-frametime / max(0.001, avg_time)))
-#define lowpass(value, frac, ref_store, ret) MACRO_BEGIN \
-{ \
-	ret = ref_store = ref_store * (1 - frac) + (value) * frac; \
-} MACRO_END
+
+#define lowpass(value, frac, ref_store, ret) \
+	ret = ref_store = ref_store * (1 - frac) + (value) * frac;
 
 #define lowpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
 { \
