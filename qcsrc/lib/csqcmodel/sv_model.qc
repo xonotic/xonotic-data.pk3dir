@@ -23,7 +23,6 @@
 
 #include "common.qh"
 #include <common/net_linked.qh>
-#include <common/util.qh>
 
 // generic CSQC model code
 

@@ -156,16 +156,6 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 
 string getcurrentmod();
 
-#ifdef GAMEQC
-#ifdef CSQC
-int ReadInt24_t();
-#else
-void WriteInt24_t(float dest, float val);
-void WriteInt48_t(float dest, vector val);
-void WriteInt72_t(float dest, vector val);
-#endif
-#endif
-
 float float2range11(float f);
 float float2range01(float f);
 
