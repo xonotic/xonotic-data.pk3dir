@@ -25,15 +25,6 @@
 #include "cl_model.qh"
 #include "common.qh"
 #include "interpolate.qh"
-#include <client/defs.qh>
-#include <client/main.qh>
-#include <common/constants.qh>
-#include <common/net_linked.qh>
-#include <common/physics/player.qh>
-#include <common/stats.qh>
-#include <common/triggers/trigger/viewloc.qh>
-#include <common/util.qh>
-#include <common/viewloc.qh>
 
 float autocvar_cl_movement_errorcompensation = 0;
 bool autocvar_cl_movement_intermissionrunning = false;
@@ -109,15 +100,15 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 {
 	if (IS_DUCKED(this) || !this.isplayermodel)
 	{
-		this.mins = STAT(PL_CROUCH_MIN, this);
-		this.maxs = STAT(PL_CROUCH_MAX, this);
-		this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
+		this.mins = PHYS_PL_CROUCH_MIN(this);
+		this.maxs = PHYS_PL_CROUCH_MAX(this);
+		this.view_ofs = PHYS_PL_CROUCH_VIEWOFS(this);
 	}
 	else
 	{
-		this.mins = STAT(PL_MIN, this);
-		this.maxs = STAT(PL_MAX, this);
-		this.view_ofs = STAT(PL_VIEW_OFS, this);
+		this.mins = PHYS_PL_MIN(this);
+		this.maxs = PHYS_PL_MAX(this);
+		this.view_ofs = PHYS_PL_VIEWOFS(this);
 	}
 }
 
@@ -216,18 +207,13 @@ bool CSQCPlayer_IsLocalPlayer(entity this)
 	return (this == csqcplayer);
 }
 
-void CSQCPlayer_SetViewLocation()
-{
-	viewloc_SetViewLocation();
-}
-
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
 {
 	const vector v0 = ((intermission && !autocvar_cl_movement_intermissionrunning) ? '0 0 0' : pmove_vel); // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
-	const float vh = STAT(VIEWHEIGHT);
-	const vector pl_viewofs = STAT(PL_VIEW_OFS);
-	const vector pl_viewofs_crouch = STAT(PL_CROUCH_VIEW_OFS);
+	const float vh = PHYS_VIEWHEIGHT(NULL);
+	const vector pl_viewofs = PHYS_PL_VIEWOFS(NULL);
+	const vector pl_viewofs_crouch = PHYS_PL_CROUCH_VIEWOFS(NULL);
 	const entity e = csqcplayer;
 	if (e)
 	{
@@ -303,7 +289,7 @@ void CSQCPlayer_SetCamera()
 		if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
 		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
 		// note: these two only work in WIP2, but are harmless in WIP1
-		if (STAT(HEALTH) <= 0 && STAT(HEALTH) != -666 && STAT(HEALTH) != -2342) refdefflags |= REFDEFFLAG_DEAD;
+		if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
 		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
 		V_CalcRefdef(view, refdefflags);
 	}

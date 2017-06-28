@@ -29,6 +29,17 @@ float AdjustAirAccelQW(float accelqw, float factor);
 
 bool IsFlying(entity a);
 
+#define PHYS_PL_MAX(s)						STAT(PL_MAX, s)
+#define PHYS_PL_MIN(s)						STAT(PL_MIN, s)
+#define PHYS_PL_CROUCH_MAX(s)				STAT(PL_CROUCH_MAX, s)
+#define PHYS_PL_CROUCH_MIN(s)				STAT(PL_CROUCH_MIN, s)
+
+#define PHYS_PL_VIEWOFS(s)					STAT(PL_VIEW_OFS, s)
+#define PHYS_PL_CROUCH_VIEWOFS(s)			STAT(PL_CROUCH_VIEW_OFS, s)
+
+#define PHYS_VIEWHEIGHT(s)					STAT(VIEWHEIGHT, s)
+#define PHYS_HEALTH(s)						STAT(HEALTH, s)
+
 #define BUFFS_STAT(s)                       STAT(BUFFS, s)
 
 #define PHYS_ACCELERATE(s)                  STAT(MOVEVARS_ACCELERATE, s)

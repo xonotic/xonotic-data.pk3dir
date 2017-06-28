@@ -68,7 +68,7 @@
 
 // add hook function calls here
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP() \
-	CSQCPlayer_SetViewLocation()
+	viewloc_SetViewLocation()
 
 // force updates of player entities this frequently (per second) even if unchanged
 #ifndef CSQCPLAYER_FORCE_UPDATES
