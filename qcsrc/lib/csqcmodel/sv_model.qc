@@ -22,12 +22,8 @@
 #include "sv_model.qh"
 
 #include "common.qh"
-#include <common/animdecide.qh>
-#include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/util.qh>
-#include <server/constants.qh>
-#include <server/defs.qh>
 
 // generic CSQC model code
 
