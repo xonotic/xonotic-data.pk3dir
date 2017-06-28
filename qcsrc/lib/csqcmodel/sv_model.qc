@@ -22,7 +22,6 @@
 #include "sv_model.qh"
 
 #include "common.qh"
-#include <common/net_linked.qh>
 
 // generic CSQC model code
 
