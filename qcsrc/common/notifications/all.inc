@@ -785,7 +785,7 @@
     MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter the vehicle gunner"), "")
     MSG_CENTER_NOTIF(VEHICLE_ENTER_STEAL,               N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to steal this vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL,                     N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "")
-    MSG_CENTER_NOTIF(VEHICLE_STEAL_SELF,                N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "4 0",  _("^F2You have stolen the enemy's vehicle, you are now visible on their radar!"), "")
+    MSG_CENTER_NOTIF(VEHICLE_STEAL_SELF,                N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "4 0",  _("^F2Intruder detected, disabling shields!"), "")
 
     MSG_CENTER_NOTIF(WEAPON_MINELAYER_LIMIT,            N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "")
 

@@ -17,8 +17,4 @@ CLASS(Shambler, Monster)
     ATTRIB(Shambler, monster_name, string, _("Shambler"));
 ENDCLASS(Shambler)
 
-REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(SHAMBLER, NEW(Shambler));

@@ -56,6 +56,7 @@ int randombits(int bits, int k, bool error_return)
 	return r;
 }
 
+/*
 void randombit_test(int bits, int iter)
 {
 	while (iter > 0)
@@ -64,6 +65,7 @@ void randombit_test(int bits, int iter)
 		--iter;
 	}
 }
+*/
 
 enum {
 	OP_SET,

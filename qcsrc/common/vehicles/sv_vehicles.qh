@@ -20,12 +20,12 @@ float autocvar_g_vehicles_thinkrate = 0.1;
 
 AUTOCVAR(g_vehicles_teams, bool, true, "allow team specific vehicles");
 float autocvar_g_vehicles_teleportable;
-float autocvar_g_vehicles_vortex_damagerate = 0.5;
-float autocvar_g_vehicles_machinegun_damagerate = 0.5;
+float autocvar_g_vehicles_vortex_damagerate = 0.75;
+float autocvar_g_vehicles_machinegun_damagerate = 0.75;
 float autocvar_g_vehicles_rifle_damagerate = 0.75;
-float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
+float autocvar_g_vehicles_vaporizer_damagerate = 0.5;
 float autocvar_g_vehicles_tag_damagerate = 5;
-float autocvar_g_vehicles_weapon_damagerate = 1;
+float autocvar_g_vehicles_weapon_damagerate = 2;
 
 .float vehicle_last_trace;
 

@@ -17,11 +17,7 @@ CLASS(Wyvern, Monster)
     ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
 ENDCLASS(Wyvern)
 
-REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(WYVERN, NEW(Wyvern));
 
 #include <common/weapons/_all.qh>
 
