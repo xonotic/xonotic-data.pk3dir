@@ -163,42 +163,37 @@ string process_time(float outputtype, float seconds)
 
 			if (tmp_minutes)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_minutes(tmp_minutes),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			if (tmp_hours)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_hours(tmp_hours),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			if (tmp_days)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_days(tmp_days),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			if (tmp_weeks)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_weeks(tmp_weeks),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			if (tmp_years)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_years(tmp_years),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			return output;
@@ -214,9 +209,8 @@ string process_time(float outputtype, float seconds)
 			if (tmp_days)
 			{
 				output = sprintf(
-					"%s%s",
 					count_days(tmp_days),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			return output;
