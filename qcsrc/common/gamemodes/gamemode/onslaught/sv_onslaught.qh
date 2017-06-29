@@ -70,8 +70,8 @@ bool ons_stalemate;
 
 .float teleport_antispam;
 
-.bool isgenneighbor[17];
-.bool iscpneighbor[17];
+.int aregensneighbor;
+.int arecpsneighbor;
 float ons_notification_time[17];
 
 .float ons_overtime_damagedelay;

@@ -1,0 +1,3 @@
+#pragma once
+
+REGISTER_NET_LINKED(ENT_CLIENT_MODEL)

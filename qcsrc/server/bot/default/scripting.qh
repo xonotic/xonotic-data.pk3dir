@@ -34,9 +34,9 @@ const int BOT_CMD_BARRIER 		= 20;
 const int BOT_CMD_CONSOLE 		= 21;
 const int BOT_CMD_SOUND 		= 22;
 const int BOT_CMD_DEBUG_ASSERT_CANFIRE = 23;
-const int BOT_CMD_WHILE 		= 24;	// TODO: Not implemented yet
-const int BOT_CMD_WEND 			= 25;	// TODO: Not implemented yet
-const int BOT_CMD_CHASE 		= 26;	// TODO: Not implemented yet
+//const int BOT_CMD_WHILE 		= 24;	// TODO: Not implemented yet
+//const int BOT_CMD_WEND 			= 25;	// TODO: Not implemented yet
+//const int BOT_CMD_CHASE 		= 26;	// TODO: Not implemented yet
 
 const int BOT_CMD_COUNTER 		= 24;	// Update this value if you add/remove a command
 

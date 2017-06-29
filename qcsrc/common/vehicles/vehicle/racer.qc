@@ -11,7 +11,7 @@ float autocvar_g_vehicle_racer_thinkrate = 0.05; // TODO: any higher causes it t
 
 float autocvar_g_vehicle_racer_speed_afterburn = 3000;
 // energy consumed per second
-float autocvar_g_vehicle_racer_afterburn_cost = 100;
+float autocvar_g_vehicle_racer_afterburn_cost = 130;
 
 float autocvar_g_vehicle_racer_waterburn_cost = 5;
 float autocvar_g_vehicle_racer_waterburn_speed = 750;
@@ -29,8 +29,8 @@ float autocvar_g_vehicle_racer_downforce = 0.01;
 
 float autocvar_g_vehicle_racer_speed_forward = 650;
 float autocvar_g_vehicle_racer_speed_strafe = 650;
-float autocvar_g_vehicle_racer_springlength = 70;
-float autocvar_g_vehicle_racer_upforcedamper = 10;
+float autocvar_g_vehicle_racer_springlength = 90;
+float autocvar_g_vehicle_racer_upforcedamper = 2;
 float autocvar_g_vehicle_racer_friction = 0.45;
 
 float autocvar_g_vehicle_racer_water_time = 5;
@@ -47,8 +47,8 @@ float autocvar_g_vehicle_racer_turnspeed = 220;
 float autocvar_g_vehicle_racer_pitchspeed = 125;
 
 float autocvar_g_vehicle_racer_energy = 100;
-float autocvar_g_vehicle_racer_energy_regen = 50;
-float autocvar_g_vehicle_racer_energy_regen_pause = 1;
+float autocvar_g_vehicle_racer_energy_regen = 90;
+float autocvar_g_vehicle_racer_energy_regen_pause = 0.35;
 
 float autocvar_g_vehicle_racer_health = 200;
 float autocvar_g_vehicle_racer_health_regen = 0;
@@ -59,7 +59,7 @@ float autocvar_g_vehicle_racer_shield_regen = 30;
 float autocvar_g_vehicle_racer_shield_regen_pause = 1;
 
 bool autocvar_g_vehicle_racer_rocket_locktarget = true;
-float autocvar_g_vehicle_racer_rocket_locking_time = 0.9;
+float autocvar_g_vehicle_racer_rocket_locking_time = 0.35;
 float autocvar_g_vehicle_racer_rocket_locking_releasetime = 0.5;
 float autocvar_g_vehicle_racer_rocket_locked_time = 4;
 
@@ -75,7 +75,7 @@ float autocvar_g_vehicle_racer_bouncefactor = 0.25;
 // if != 0, New veloctiy after bounce = 0 if new velocity < this
 float autocvar_g_vehicle_racer_bouncestop = 0;
 // "minspeed_for_pain speedchange_to_pain_factor max_damage"
-vector autocvar_g_vehicle_racer_bouncepain = '60 0.75 300';
+vector autocvar_g_vehicle_racer_bouncepain = '200 0.15 150';
 
 .float racer_watertime;
 

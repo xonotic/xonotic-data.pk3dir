@@ -427,7 +427,7 @@ void HUD_MinigameMenu_Open()
 // Handles mouse input on to minigame menu panel
 void HUD_MinigameMenu_MouseInput()
 {
-	panel = HUD_PANEL(MINIGAME_MENU);
+	panel = HUD_PANEL(MINIGAMEMENU);
 
 	HUD_Panel_LoadCvars();
 
@@ -575,7 +575,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 	{
 		mousepos_x = nPrimary;
 		mousepos_y = nSecondary;
-		if ( active_minigame && HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
+		if ( active_minigame && HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
 			active_minigame.minigame_event(active_minigame,"mouse_moved",mousepos);
 		return true;
 
@@ -613,7 +613,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			string action = bInputType == 0 ? "pressed" : "released";
 			if ( nPrimary >= K_MOUSE1 && nPrimary <= K_MOUSE16 )
 			{
-				if ( HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
+				if ( HUD_mouse_over(HUD_PANEL(MINIGAMEBOARD)) )
 					device = "mouse";
 			}
 			else
@@ -629,7 +629,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		if ( bInputType == 0 )
 		{
 			if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
-				HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
+				HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
 			{
 				HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
 				return true;
@@ -685,7 +685,7 @@ void HUD_Minigame_Mouse()
 	if (!autocvar_hud_cursormode)
 		update_mousepos();
 
-	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
+	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)) )
 		HUD_MinigameMenu_MouseInput();
 
 	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);

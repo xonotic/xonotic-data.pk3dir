@@ -105,9 +105,6 @@ void get_mi_min_max_texcoords(float mode);
 float almost_equals(float a, float b);
 float almost_in_bounds(float a, float b, float c);
 
-float power2of(float e);
-float log2of(float e);
-
 vector rgb_to_hsl(vector rgb);
 vector hsl_to_rgb(vector hsl);
 vector rgb_to_hsv(vector rgb);
@@ -158,16 +155,6 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 #endif
 
 string getcurrentmod();
-
-#ifdef GAMEQC
-#ifdef CSQC
-int ReadInt24_t();
-#else
-void WriteInt24_t(float dest, float val);
-void WriteInt48_t(float dest, vector val);
-void WriteInt72_t(float dest, vector val);
-#endif
-#endif
 
 float float2range11(float f);
 float float2range01(float f);
@@ -259,7 +246,9 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 #define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
 
+#ifdef GAMEQC
 string CCR(string input);
+#endif
 
 #ifdef GAMEQC
 	#ifdef CSQC

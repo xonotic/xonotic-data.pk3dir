@@ -198,10 +198,7 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 	else return 1;
 }
 
-float power2of(float e)
-{
-	return (2 ** e);
-}
+#define power2of(e) (2 ** e)
 
 float log2of(float e)
 {

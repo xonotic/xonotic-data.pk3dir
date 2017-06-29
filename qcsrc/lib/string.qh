@@ -72,6 +72,7 @@ string ColorTranslateRGB(string s)
 	return (ColorTranslateMode & 1) ? strdecolorize(s) : s;
 }
 
+#ifdef GAMEQC
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
 string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
@@ -106,6 +107,7 @@ string CCR(string input)
 	input = strreplace("^N", "^7", input);  // "none"-- reset to white...
 	return input;
 }
+#endif
 
 #define startsWith(haystack, needle) (strstrofs(haystack, needle, 0) == 0)
 

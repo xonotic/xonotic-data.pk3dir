@@ -57,15 +57,16 @@ vector shortangle_vxy(vector ang1, vector ang2)
 }
 
 /*
-* Return the angle between two enteties
+* Return the angle offset between angle ang and angle of the vector from->to
 */
-vector angleofs(entity from, entity to)
+
+vector angleofs3(vector from, vector ang, vector to)
 {
 	vector v_res;
 
-	v_res = normalize(to.origin - from.origin);
+	v_res = normalize(to - from);
 	v_res = vectoangles(v_res);
-	v_res = v_res - from.angles;
+	v_res = v_res - ang;
 
 	if (v_res_x < 0) 	v_res_x += 360;
 	if (v_res_x > 180) 	v_res_x -= 360;
@@ -76,19 +77,4 @@ vector angleofs(entity from, entity to)
 	return v_res;
 }
 
-vector angleofs3(vector from, vector from_a, entity to)
-{
-	vector v_res;
-
-	v_res = normalize(to.origin - from);
-	v_res = vectoangles(v_res);
-	v_res = v_res - from_a;
-
-	if (v_res_x < 0) 	v_res_x += 360;
-	if (v_res_x > 180) 	v_res_x -= 360;
-
-	if (v_res_y < 0) 	v_res_y += 360;
-	if (v_res_y > 180) 	v_res_y -= 360;
-
-	return v_res;
-}
+#define angleofs(from, to) angleofs3(from.origin, from.angles, to.origin)

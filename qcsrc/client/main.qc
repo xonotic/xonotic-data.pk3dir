@@ -31,7 +31,7 @@
 
 void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
 {
-	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
+	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
 	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
 }
 
