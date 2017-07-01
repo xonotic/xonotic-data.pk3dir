@@ -19,17 +19,25 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+[[eraseable]]
 vector vec_bias(vector v, float f);
 
 
+[[eraseable]]
 vector vec_to_min(vector a, vector b);
+[[eraseable]]
 vector vec_to_max(vector a, vector b);
 
 // there may already be a function for bounding a vector in this manner, however my very quick search did not reveal one -- Player_2
+[[eraseable]]
 vector vec_bounds_in(vector point, vector a, vector b);
+[[eraseable]]
 vector vec_bounds_out(vector point, vector a, vector b);
 
+[[eraseable]]
 float angle_snap_f(float f, float increment);
+[[eraseable]]
 vector angle_snap_vec(vector v,  float increment);
 
+[[eraseable]]
 vector aim_vec(vector org, vector targ);

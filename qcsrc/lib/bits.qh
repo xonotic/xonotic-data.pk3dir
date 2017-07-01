@@ -10,6 +10,7 @@
 	#define BITSET(var, mask, flag) ((var) ^ (-(flag) ^ (var)) & (mask))
 #endif
 
+[[eraseable]]
 int lowestbit(int f)
 {
 	f &= ~(f << 1);
@@ -20,6 +21,7 @@ int lowestbit(int f)
 	return f;
 }
 
+[[eraseable]]
 int randombit(int bits)
 {
 	if (!(bits & (bits - 1)))  // this ONLY holds for powers of two!
@@ -42,6 +44,7 @@ int randombit(int bits)
 	return b;
 }
 
+[[eraseable]]
 int randombits(int bits, int k, bool error_return)
 {
 	int r = 0;
@@ -75,6 +78,7 @@ enum {
 	OP_MINUS
 };
 
+[[eraseable]]
 bool GiveBit(entity e, .int fld, int bit, int op, int val)
 {
 	int v0 = (e.(fld) & bit);
@@ -99,6 +103,7 @@ bool GiveBit(entity e, .int fld, int bit, int op, int val)
 	return v0 != v1;
 }
 
+[[eraseable]]
 bool GiveValue(entity e, .int fld, int op, int val)
 {
 	int v0 = e.(fld);
