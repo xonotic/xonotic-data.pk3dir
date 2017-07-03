@@ -658,6 +658,8 @@ void PutClientInServer(entity this)
 		if(!this.bot_attack)
 			IL_PUSH(g_bot_targets, this);
 		this.bot_attack = true;
+		if(!this.monster_attack)
+			IL_PUSH(g_monster_targets, this);
 		this.monster_attack = true;
 		navigation_dynamicgoal_init(this, false);
 
@@ -1040,6 +1042,9 @@ void FixClientCvars(entity e)
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
 		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
+
+	stuffcmd(e, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
+	stuffcmd(e, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
 
 	MUTATOR_CALLHOOK(FixClientCvars, e);
 }

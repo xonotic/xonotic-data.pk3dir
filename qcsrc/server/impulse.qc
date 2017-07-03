@@ -660,7 +660,7 @@ IMPULSE(navwaypoint_remove)
 	if (sym)
 	{
 		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
-		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
+		IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_GENERATED), {
 			if(vdist(org - it.origin, <, 3))
 			{
 				wp_sym = it;

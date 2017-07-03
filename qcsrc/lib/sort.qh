@@ -5,6 +5,7 @@ USING(swapfunc_t, void (int i1, int i2, entity pass));
 /** <0 for <, ==0 for ==, >0 for > (like strcmp) */
 USING(comparefunc_t, int (int i1, int i2, entity pass));
 
+[[eraseable]]
 void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 {
 	#define heapify(_count) \
@@ -39,6 +40,7 @@ void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 	}
 }
 
+[[eraseable]]
 void shuffle(float n, swapfunc_t swap, entity pass)
 {
 	for (int i = 1; i < n; ++i)

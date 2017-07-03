@@ -79,8 +79,8 @@ void HUD_HealthArmor()
 	int baralign = autocvar_hud_panel_healtharmor_baralign;
 	int iconalign = autocvar_hud_panel_healtharmor_iconalign;
 
-    int maxhealth = autocvar_hud_panel_healtharmor_maxhealth;
-    int maxarmor = autocvar_hud_panel_healtharmor_maxarmor;
+	int maxhealth = autocvar_hud_panel_healtharmor_maxhealth;
+	int maxarmor = autocvar_hud_panel_healtharmor_maxarmor;
 	if(autocvar_hud_panel_healtharmor_combined) // combined health and armor display
 	{
 		vector v;
@@ -88,15 +88,14 @@ void HUD_HealthArmor()
 
 		float hp = floor(v.x + 1);
 
-        float maxtotal = maxhealth + maxarmor;
+		float maxtotal = maxhealth + maxarmor;
 		string biggercount;
 		if(v.z) // NOT fully armored
 		{
 			biggercount = "health";
 			if(autocvar_hud_panel_healtharmor_progressbar)
 				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_health, hp/maxtotal, 0, (baralign == 1 || baralign == 2), autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			if(armor)
-            if(autocvar_hud_panel_healtharmor_text)
+			if(armor && autocvar_hud_panel_healtharmor_text)
 				drawpic_aspect_skin(pos + eX * mySize.x - eX * 0.5 * mySize.y, "armor", '0.5 0.5 0' * mySize.y, '1 1 1', panel_fg_alpha * armor / health, DRAWFLAG_NORMAL);
 		}
 		else
@@ -104,15 +103,14 @@ void HUD_HealthArmor()
 			biggercount = "armor";
 			if(autocvar_hud_panel_healtharmor_progressbar)
 				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, hp/maxtotal, 0, (baralign == 1 || baralign == 2), autocvar_hud_progressbar_armor_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			if(health)
-            if(autocvar_hud_panel_healtharmor_text)
+			if(health && autocvar_hud_panel_healtharmor_text)
 				drawpic_aspect_skin(pos + eX * mySize.x - eX * 0.5 * mySize.y, "health", '0.5 0.5 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
-        if(autocvar_hud_panel_healtharmor_text)
+		if(autocvar_hud_panel_healtharmor_text)
 			DrawNumIcon(pos, mySize, hp, biggercount, 0, iconalign, HUD_Get_Num_Color(hp, maxtotal), 1);
 
 		if(fuel)
-			HUD_Panel_DrawProgressBar(pos, eX * mySize.x + eY * 0.2 * mySize.y, "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(pos, vec2(mySize.x, 0.2 * mySize.y), "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 	}
 	else
 	{

@@ -63,6 +63,8 @@ void Item_SetAlpha(entity this)
 		this.colormod = this.glowmod = autocvar_cl_weapon_stay_color;
 		this.alpha = autocvar_cl_weapon_stay_alpha;
 	}
+
+	this.drawmask = ((this.alpha <= 0) ? 0 : MASK_NORMAL);
 }
 
 void ItemDraw(entity this)
@@ -127,9 +129,7 @@ void Item_PreDraw(entity this)
 {
 	if(warpzone_warpzones_exist)
 	{
-		// just incase warpzones were initialized last, reset these
-		//this.alpha = 1; // alpha is already set by the draw function
-		this.drawmask = MASK_NORMAL;
+		setpredraw(this, func_null); // no need to keep running this
 		return;
 	}
 	float alph;
@@ -145,8 +145,8 @@ void Item_PreDraw(entity this)
 		this.alpha = alph;
 	if(alph <= 0)
 		this.drawmask = 0;
-	else
-		this.drawmask = MASK_NORMAL;
+	//else
+		//this.drawmask = MASK_NORMAL; // reset by the setalpha function
 }
 
 void ItemRemove(entity this)
@@ -181,7 +181,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
-    if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
+    if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
     {
         this.ItemStatus = ReadByte();
 
@@ -213,7 +213,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         this.fade_end = ReadShort();
         this.fade_start = ReadShort();
-        if(this.fade_start && !autocvar_cl_items_nofade)
+        if(!warpzone_warpzones_exist && this.fade_start && !autocvar_cl_items_nofade)
         	setpredraw(this, Item_PreDraw);
 
         if(this.mdl)
@@ -227,14 +227,14 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             this.draw = ItemDrawSimple;
 
-            if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
+            if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
             else
             {
                 this.draw = ItemDraw;

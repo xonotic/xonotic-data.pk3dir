@@ -44,16 +44,19 @@ void crosshair_trace_plusvisibletriggers(entity pl)
 		{
 			it.solid = SOLID_BSP;
 			it.ctrace_solidchanged = true;
+			IL_PUSH(g_ctrace_changed, it);
 		}
 	});
 
 	crosshair_trace(pl);
 
-	FOREACH_ENTITY_FLOAT(ctrace_solidchanged, true,
+	IL_EACH(g_ctrace_changed, it.ctrace_solidchanged,
 	{
 		it.solid = SOLID_TRIGGER;
 		it.ctrace_solidchanged = false;
 	});
+
+	IL_CLEAR(g_ctrace_changed);
 }
 void WarpZone_crosshair_trace(entity pl)
 {
@@ -109,65 +112,53 @@ void GameLogClose()
     }
 }
 
-entity findnearest(vector point, .string field, string value, vector axismod)
+entity findnearest(vector point, bool checkitems, vector axismod)
 {
-    entity localhead;
-    float i;
-    float j;
-    float len;
     vector dist;
+    int num_nearest = 0;
 
-    float num_nearest;
-    num_nearest = 0;
-
-    localhead = find(NULL, field, value);
-    while (localhead)
+    IL_EACH(((checkitems) ? g_items : g_locations), ((checkitems) ? (it.target == "###item###") : (it.classname == "target_location")),
     {
-        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.target == "###item###")
-            dist = localhead.oldorigin;
+    	if ((it.items == IT_KEY1 || it.items == IT_KEY2) && it.target == "###item###")
+            dist = it.oldorigin;
         else
-            dist = localhead.origin;
+            dist = it.origin;
         dist = dist - point;
         dist = dist.x * axismod.x * '1 0 0' + dist.y * axismod.y * '0 1 0' + dist.z * axismod.z * '0 0 1';
-        len = vlen(dist);
+        float len = vlen2(dist);
 
-        for (i = 0; i < num_nearest; ++i)
+        int l;
+        for (l = 0; l < num_nearest; ++l)
         {
-            if (len < nearest_length[i])
+            if (len < nearest_length[l])
                 break;
         }
 
         // now i tells us where to insert at
         //   INSERTION SORT! YOU'VE SEEN IT! RUN!
-        if (i < NUM_NEAREST_ENTITIES)
+        if (l < NUM_NEAREST_ENTITIES)
         {
-            for (j = NUM_NEAREST_ENTITIES - 1; j >= i; --j)
+            for (int j = NUM_NEAREST_ENTITIES - 1; j >= l; --j)
             {
                 nearest_length[j + 1] = nearest_length[j];
                 nearest_entity[j + 1] = nearest_entity[j];
             }
-            nearest_length[i] = len;
-            nearest_entity[i] = localhead;
+            nearest_length[l] = len;
+            nearest_entity[l] = it;
             if (num_nearest < NUM_NEAREST_ENTITIES)
                 num_nearest = num_nearest + 1;
         }
-
-        localhead = find(localhead, field, value);
-    }
+    });
 
     // now use the first one from our list that we can see
-    for (i = 0; i < num_nearest; ++i)
+    for (int j = 0; j < num_nearest; ++j)
     {
-        traceline(point, nearest_entity[i].origin, true, NULL);
+        traceline(point, nearest_entity[j].origin, true, NULL);
         if (trace_fraction == 1)
         {
-            if (i != 0)
-            {
-                LOG_TRACE("Nearest point (");
-                LOG_TRACE(nearest_entity[0].netname);
-                LOG_TRACE(") is not visible, using a visible one.");
-            }
-            return nearest_entity[i];
+            if (j != 0)
+                LOG_TRACEF("Nearest point (%s) is not visible, using a visible one.", nearest_entity[0].netname);
+            return nearest_entity[j];
         }
     }
 
@@ -191,17 +182,13 @@ entity findnearest(vector point, .string field, string value, vector axismod)
 
 string NearestLocation(vector p)
 {
-    entity loc;
-    string ret;
-    ret = "somewhere";
-    loc = findnearest(p, classname, "target_location", '1 1 1');
+    string ret = "somewhere";
+    entity loc = findnearest(p, false, '1 1 1');
     if (loc)
-    {
         ret = loc.message;
-    }
     else
     {
-        loc = findnearest(p, target, "###item###", '1 1 4');
+        loc = findnearest(p, true, '1 1 4');
         if (loc)
             ret = loc.netname;
     }
@@ -1275,7 +1262,7 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
-        LOG_TRACE("Needed ", ftos(i + 1), " attempts");
+        LOG_DEBUG("Needed ", ftos(i + 1), " attempts");
         return true;
     }
     else

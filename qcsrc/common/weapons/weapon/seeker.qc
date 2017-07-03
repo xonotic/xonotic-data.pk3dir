@@ -395,33 +395,36 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 // ============================
 entity W_Seeker_Tagged_Info(entity isowner, .entity weaponentity, entity istarget)
 {
-	entity tag;
-	for(tag = NULL; (tag = find(tag, classname, "tag_tracker")); )
-		if((tag.realowner == isowner) && (tag.tag_target == istarget) && (tag.weaponentity_fld == weaponentity))
-			return tag;
+	IL_EACH(g_seeker_trackers, it.classname == "tag_tracker" && it.realowner == isowner,
+	{
+		if(it.tag_target == istarget && it.weaponentity_fld == weaponentity)
+			return it;
+	});
 
 	return NULL;
 }
 
 void W_Seeker_Attack(entity actor, .entity weaponentity)
 {
-	entity tracker, closest_target;
+	entity closest_target = NULL;
 
-	closest_target = NULL;
-	for(tracker = NULL; (tracker = find(tracker, classname, "tag_tracker")); ) if (tracker.realowner == actor)
+	IL_EACH(g_seeker_trackers, it.classname == "tag_tracker" && it.realowner == actor,
 	{
 		if(closest_target)
 		{
-			if(vlen2(actor.origin - tracker.tag_target.origin) < vlen2(actor.origin - closest_target.origin))
-				closest_target = tracker.tag_target;
+			if(vlen2(actor.origin - it.tag_target.origin) < vlen2(actor.origin - closest_target.origin))
+				closest_target = it.tag_target;
 		}
 		else
-			closest_target = tracker.tag_target;
-	}
+			closest_target = it.tag_target;
+	});
 
-	traceline(actor.origin + actor.view_ofs, closest_target.origin, MOVE_NOMONSTERS, actor);
-	if((!closest_target) || ((trace_fraction < 1) && (trace_ent != closest_target)))
-		closest_target = NULL;
+	if(closest_target)
+	{
+		traceline(actor.origin + actor.view_ofs, closest_target.origin, MOVE_NOMONSTERS, actor);
+		if(!closest_target || (trace_fraction < 1 && trace_ent != closest_target))
+			closest_target = NULL;
+	}
 
 	W_Seeker_Fire_Missile(WEP_SEEKER, actor, weaponentity, '0 0 0', closest_target);
 }
@@ -545,6 +548,7 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 			e.cnt         = WEP_CVAR(seeker, missile_count);
 			e.owner       = this.owner;
 			e.realowner   = this.realowner;
+			IL_PUSH(g_seeker_trackers, e);
 
 			if(WEP_CVAR(seeker, type) == 1)
 			{

@@ -238,7 +238,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, 
         if (autocvar_hud_panel_itemstime_progressbar_reduced)
         {
             p_pos = numpos;
-            p_size = eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y;
+            p_size = vec2(((ar - 1)/ar) * mySize.x, mySize.y);
         }
         else
         {
@@ -251,9 +251,9 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, 
     if(autocvar_hud_panel_itemstime_text)
     {
         if(t > 0)
-            drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+            drawstring_aspect(numpos, ftos(t), vec2(((ar - 1)/ar) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
         else if(precache_pic("gfx/hud/default/checkmark")) // COMPAT: check if this image exists, as 0.8.1 clients lack it
-            drawpic_aspect_skin(numpos, "checkmark", eX * (ar - 1) * mySize_y + eY * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
+            drawpic_aspect_skin(numpos, "checkmark", vec2((ar - 1) * mySize.y, mySize.y), '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
         else // legacy code, if the image is missing just center the icon
             picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
     }
@@ -332,7 +332,7 @@ void HUD_ItemsTime()
     rows = HUD_GetRowCount(count, mySize, ar);
     columns = ceil(count/rows);
 
-    vector itemstime_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
+    vector itemstime_size = vec2(mySize.x / columns, mySize.y / rows);
 
     vector offset = '0 0 0';
     float newSize;
@@ -420,7 +420,7 @@ LABEL(iteration)
             if (!(Item_ItemsTime_GetTime(id) > time))
                 continue;
 
-        DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, icon, item_time, item_available, f);
+        DrawItemsTimeItem(pos + vec2(column * (itemstime_size.x + offset.x), row * (itemstime_size.y + offset.y)), itemstime_size, ar, icon, item_time, item_available, f);
         ++row;
         if (row >= rows)
         {

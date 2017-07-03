@@ -378,6 +378,9 @@ LABEL(cvar_fail)
 
 	set_movetype(this, this.movetype);
 
+	if(this.monster_attack)
+		IL_PUSH(g_monster_targets, this);
+
 	// support special -1 and -2 angle from radiant
 	if (this.angles == '0 -1 0')
 		this.angles = '-90 0 0';

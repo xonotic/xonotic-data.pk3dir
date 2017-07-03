@@ -55,7 +55,7 @@ void multi_trigger(entity this)
 	}
 	else
 	{	// we can't just remove (this) here, because this is a touch function
-		// called wheil C code is looping through area links...
+		// called while C code is looping through area links...
 		settouch(this, func_null);
 	}
 }
@@ -164,6 +164,7 @@ spawnfunc(trigger_multiple)
 	EXACTTRIGGER_INIT;
 
 	this.team_saved = this.team;
+	IL_PUSH(g_saved_team, this);
 
 	if (this.health)
 	{

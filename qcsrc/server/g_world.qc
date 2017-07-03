@@ -176,7 +176,6 @@ void cvar_changes_init()
 		BADPREFIX("cvar_check_");
 		BADCVAR("gamecfg");
 		BADCVAR("g_configversion");
-		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
 		BADCVAR("sv_mapformat_is_quake2");
 		BADCVAR("sv_mapformat_is_quake3");
@@ -211,6 +210,8 @@ void cvar_changes_init()
 		BADCVAR("mastervolume");
 		BADCVAR("volume");
 		BADCVAR("bgmvolume");
+		BADCVAR("in_pitch_min");
+		BADCVAR("in_pitch_max");
 
 		// private
 		BADCVAR("developer");
@@ -251,6 +252,7 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
+		BADCVAR("sv_muteban_list");
 
 		// mapinfo
 		BADCVAR("fraglimit");
@@ -280,6 +282,7 @@ void cvar_changes_init()
 		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
+		BADCVAR("g_runematch");
 		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
@@ -315,6 +318,7 @@ void cvar_changes_init()
 
 		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
+		BADCVAR("condump_stripcolors");
 		BADCVAR("gameversion");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
@@ -334,7 +338,6 @@ void cvar_changes_init()
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keyhunt_point_leadlimit");
-		BADCVAR("g_maplist_selectrandom");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
@@ -359,10 +362,11 @@ void cvar_changes_init()
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
-		BADPREFIX("g_maplist_votable_");
+		BADPREFIX("g_maplist_");
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
+		BADPREFIX("notification_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
@@ -408,13 +412,6 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_teams_override");
 		BADCVAR("g_lms_lives_override");
 		BADCVAR("g_maplist");
-		BADCVAR("g_maplist_check_waypoints");
-		BADCVAR("g_maplist_mostrecent_count");
-		BADCVAR("g_maplist_shuffle");
-		BADCVAR("g_maplist_votable");
-		BADCVAR("g_maplist_votable_abstain");
-		BADCVAR("g_maplist_votable_nodetail");
-		BADCVAR("g_maplist_votable_suggestions");
 		BADCVAR("g_maxplayers");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");

@@ -95,8 +95,8 @@ void pong_add_score(entity minigame, int team_thrower, int team_receiver, int de
 // get point in the box nearest to the given one (2D)
 vector box_nearest(vector box_min, vector box_max, vector p)
 {
-	return eX * ( p_x > box_max_x  ? box_max_x  : ( p_x < box_min_x ? box_min_x : p_x ) )
-		+ eY * ( p_y > box_max_y  ? box_max_y  : ( p_y < box_min_y ? box_min_y : p_y ) );
+	return vec2( p.x > box_max.x  ? box_max.x  : ( p.x < box_min.x ? box_min.x : p.x ),
+		p.y > box_max.y  ? box_max.y  : ( p.y < box_min.y ? box_min.y : p.y ) );
 }
 
 void pong_paddle_bounce(entity ball, int pteam)
@@ -293,8 +293,8 @@ void pong_paddle_think(entity this)
 vector pong_team_to_box_halfsize(int nteam, float length, float width)
 {
 	if ( nteam > 2 )
-		return eY*width/2 + eX*length/2;
-	return eX*width/2 + eY*length/2;
+		return vec2(length/2, width/2);
+	return vec2(width/2, length/2);
 }
 
 vector pong_team_to_paddlepos(int nteam)
