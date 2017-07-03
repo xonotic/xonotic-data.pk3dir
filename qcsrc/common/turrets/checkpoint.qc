@@ -12,8 +12,6 @@
 #define checkpoint_cache_to   selected_player
 */
 
-.entity pathgoal;
-
 /*
 entity path_makeorcache(entity forwho,entity start, entity end)
 {

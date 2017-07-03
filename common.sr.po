@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-21 11:21+0000\n"
+"PO-Revision-Date: 2017-06-17 17:00+0000\n"
 "Last-Translator: Марко М. Костић (Marko M. Kostić) <marko.m.kostic@gmail."
 "com>\n"
 "Language-Team: Serbian (http://www.transifex.com/team-xonotic/xonotic/"
@@ -1179,7 +1179,7 @@ msgstr "Игра на смрт"
 
 #: qcsrc/common/mapinfo.qh:99
 msgid "Score as many frags as you can"
-msgstr "Достигните што више рокања"
+msgstr "Достигните што више фрегова"
 
 #: qcsrc/common/mapinfo.qh:111
 msgid "Last Man Standing"
@@ -1208,7 +1208,7 @@ msgstr "Тркајте се за најбоље време."
 #: qcsrc/common/mapinfo.qh:184
 msgid "Help your team score the most frags against the enemy team"
 msgstr ""
-"Помозите вашпј екипи да постигне највише рокања против непријатељске екипе"
+"Помозите вашпј екипи да постигне највише фрегова против непријатељске екипе"
 
 #: qcsrc/common/mapinfo.qh:184
 msgid "Team Deathmatch"
@@ -3314,7 +3314,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr "^K3%sРокнули сте играча ^BG%s"
+msgstr "^K3%sФреговали сте играча ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:591
 #: qcsrc/common/notifications/all.inc:600
@@ -3326,7 +3326,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:592
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr "^K1%sРокнуо вас је играч ^BG%s"
+msgstr "^K1%sФреговао вас је играч ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:593
 #: qcsrc/common/notifications/all.inc:602
@@ -4021,31 +4021,31 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.qh:444
 msgid "TRIPLE FRAG! "
-msgstr "ТРОСТРУКА РОКЊАВА! "
+msgstr "ТРОСТРУКИ ФРЕГ! "
 
 #: qcsrc/common/notifications/all.qh:445
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "ИГРАЧ %s^K1 ЈЕ НАПРАВИО 5 ПОГОДАКА У НИЗУ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:445
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је откључао БЕС! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:445
 msgid "RAGE! "
-msgstr "БЕСНИЛО! "
+msgstr "БЕС! "
 
 #: qcsrc/common/notifications/all.qh:446
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "ИГРАЧ %s^K1 ЈЕ НАПРАВИО 10 ПОГОДАКА У НИЗУ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:446
 #, c-format
 msgid "%s^K1 started a MASSACRE! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је започео МАСАКР! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:446
 msgid "MASSACRE! "
@@ -4054,12 +4054,12 @@ msgstr "МАСАКР! "
 #: qcsrc/common/notifications/all.qh:447
 #, c-format
 msgid "%s^K1 executed MAYHEM! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је извршио САКАЋЕЊЕ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:447
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "ИГРАЧ %s^K1 ЈЕ НАПРАВИО 15 ПОГОДАКА У НИЗУ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:447
 msgid "MAYHEM! "
@@ -4068,12 +4068,12 @@ msgstr "САКАЋЕЊЕ! "
 #: qcsrc/common/notifications/all.qh:448
 #, c-format
 msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је ЛУДАК! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:448
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "ИГРАЧ %s^K1 ЈЕ НАПРАВИО 20 ПОГОДАКА У НИЗУ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:448
 msgid "BERSERKER! "
@@ -4082,12 +4082,12 @@ msgstr "ЛУДАК! "
 #: qcsrc/common/notifications/all.qh:449
 #, c-format
 msgid "%s^K1 inflicts CARNAGE! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је извршио ПОКОЉ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:449
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "ИГРАЧ %s^K1 ЈЕ НАПРАВИО 25 ПОГОДАКА У НИЗУ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:449
 msgid "CARNAGE! "
@@ -4096,12 +4096,12 @@ msgstr "ПОКОЉ! "
 #: qcsrc/common/notifications/all.qh:450
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "ИГРАЧ %s^K1 ЈЕ НАПРАВИО 30 ПОГОДАКА У НИЗУ! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:450
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
-msgstr ""
+msgstr "Играч%s^K1 је започео АРМАГЕДОН! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:450
 msgid "ARMAGEDDON! "
@@ -4123,6 +4123,8 @@ msgid ""
 "\n"
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
+"\n"
+"(Здравље ^1%d^BG / Оклоп ^2%d^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:468
 #, c-format
@@ -4130,6 +4132,8 @@ msgid ""
 "\n"
 "(^F4Dead^BG)%s"
 msgstr ""
+"\n"
+"(^F4Мртвих^BG)%s"
 
 #: qcsrc/common/notifications/all.qh:489 qcsrc/common/notifications/all.qh:502
 #, c-format
@@ -4160,22 +4164,22 @@ msgstr "Прва жртва! "
 #: qcsrc/common/notifications/all.qh:559
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је направио %d фрегова у низу! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:560
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је направио %d погодака у низу! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:578
 #, c-format
 msgid "%s^K1 drew first blood! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је пролио прву крв! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:579
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
-msgstr ""
+msgstr "Играч %s^K1 је остварио први погодак! %s^BG"
 
 #: qcsrc/common/notifications/all.qh:595
 #, c-format
@@ -5777,13 +5781,13 @@ msgstr "Неограничено"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:78
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:128
 msgid "Frag limit:"
-msgstr "Граница рокања:"
+msgstr "Граница фреговања:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:65
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:66
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:78
 msgid "The amount of frags needed before the match will end"
-msgstr "Број рокања потребних пре него што се игра заврши"
+msgstr "Број фрегова потребних пре него што се игра заврши"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:67
 msgid "Capture limit:"
@@ -6596,7 +6600,7 @@ msgstr "Назад на посао..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:17
 msgid "I got some more fragging to do!"
-msgstr "Хоћу да рокам још мало!"
+msgstr "Хоћу да фрегујем још мало!"
 
 #: qcsrc/menu/xonotic/dialog_quit.qh:7
 msgid "Quit the game"
@@ -6961,7 +6965,7 @@ msgstr "Аутоматска ругања:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:166
 msgid "Automatically taunt enemies after fragging them"
-msgstr "Аутоматски се ругајте непријатељима након што их рокнете"
+msgstr "Аутоматски се ругајте непријатељима након што их изфрегујете"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:168
 msgid "Sometimes"
@@ -7607,7 +7611,7 @@ msgstr "Да ли желите да покренете локалну игру �
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:24
 msgid "Frag Information"
-msgstr "Подаци о рокању"
+msgstr "Подаци о фреговима"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:26
 msgid "Display information about killing sprees"
@@ -7651,11 +7655,12 @@ msgstr "Прикажи у засебном реду"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
 msgid "Add extra frag information to centerprint when available"
-msgstr "Прикажи додатне податке о рокању у средишњој поруци, када су доступни"
+msgstr ""
+"Прикажи додатне податке о фреговању у средишњој поруци, када су доступни"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
-msgstr "Додај податак о месту рокања у смртним порукама, када је доступан"
+msgstr "Додај податак о месту фреговања у посмртним порукама, када је доступан"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
@@ -7940,7 +7945,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid "Auto switch weapons on pickup"
-msgstr ""
+msgstr "Самостално промени оружје при купљењу"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:58
 msgid ""
@@ -7950,21 +7955,21 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:61
 msgid "Release attack buttons when you switch weapons"
-msgstr ""
+msgstr "Отпусти тастере за напад при промени оружја"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:64
 msgid "Draw 1st person weapon model"
-msgstr ""
+msgstr "Исцртај модел оружја из првог лица"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
 msgid "Draw the weapon model"
-msgstr ""
+msgstr "Исцртај модел оружја"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:72
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:75
 msgid "Position of the weapon model; requires reconnect"
-msgstr ""
+msgstr "Положај модела оружја, потребно поновно повезивање"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:80
 msgid "Gun model swaying"
@@ -7977,73 +7982,73 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:43
 msgid "Weapons"
-msgstr ""
+msgstr "Оружја"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:33
 msgid "Key Bindings"
-msgstr ""
+msgstr "Повези тастера"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:37
 msgid "Change key..."
-msgstr ""
+msgstr "Промени тастер..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:41
 msgid "Edit..."
-msgstr ""
+msgstr "Уреди..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:47
 msgid "Clear"
-msgstr ""
+msgstr "Очисти"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:52
 msgid "Reset all"
-msgstr ""
+msgstr "Ресетуј све"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:57
 msgid "Mouse"
-msgstr ""
+msgstr "Миш"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:59
 msgid "Sensitivity:"
-msgstr ""
+msgstr "Осетљивост:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:61
 msgid "Mouse speed multiplier"
-msgstr ""
+msgstr "Чинилац брзине миша"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:63
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Глатко циљање"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:64
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
-msgstr ""
+msgstr "Чини померање миша глатким али је онда циљање мање осетљиво"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:66
 msgid "Invert aiming"
-msgstr ""
+msgstr "Обрни циљање"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:67
 msgid "Invert mouse movement on the Y-axis"
-msgstr ""
+msgstr "Обрће померање миша по ипсилон оси"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:69
 msgid "Use system mouse positioning"
-msgstr ""
+msgstr "Користи системско позиционирање миша"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:74
 msgid "Enable built in mouse acceleration"
-msgstr ""
+msgstr "Омогући уграђено убрзање миша"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:78
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:82
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:85
 msgid "Disable system mouse acceleration"
-msgstr ""
+msgstr "Онемогући системско убрзање миша"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:79
 msgid "Make use of DGA mouse input"
-msgstr ""
+msgstr "Искористи DGA унос на мишу"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:93
 msgid "Pressing \"enter console\" key also closes it"
@@ -8055,41 +8060,41 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:96
 msgid "Automatically repeat jumping if holding jump"
-msgstr ""
+msgstr "Самостално понављај скакање ако се држи скакање"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:99
 msgid "Jetpack on jump:"
-msgstr ""
+msgstr "Ракетни појас при скоку:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:101
 msgid "JPJUMP^Disabled"
-msgstr ""
+msgstr "JPJUMP^Онемогућен"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:102
 msgid "Air only"
-msgstr ""
+msgstr "Само у ваздуху"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 msgid "JPJUMP^All"
-msgstr ""
+msgstr "JPJUMP^Све"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:109
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:114
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "Use joystick input"
-msgstr ""
+msgstr "Користи унос преко џојстика"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:31
 msgid "Command when pressed:"
-msgstr ""
+msgstr "Наредба док је притиснут:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:34
 msgid "Command when released:"
-msgstr ""
+msgstr "Наредба када је отпуштен:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:40
 msgid "Cancel"
-msgstr ""
+msgstr "Откажи"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qh:7
 msgid "User defined key bind"

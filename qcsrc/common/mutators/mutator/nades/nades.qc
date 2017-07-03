@@ -133,7 +133,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 		DrawNadeProgressBar(myPos, mySize, bonusProgress, nadeColor);
 
 		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(textPos, ftos(bonusNades), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(textPos, ftos(bonusNades), vec2((2/3) * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if(draw_expanding)
 			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);

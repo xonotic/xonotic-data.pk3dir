@@ -171,11 +171,19 @@ STATIC_INIT(RegisterClasses)
 #define _INIT_STATIC(cname) [[accumulate]] void spawn##cname##_static(cname this)
 #define INIT(cname) [[accumulate]] cname spawn##cname##_1(cname this)
 
+#if NDEBUG
+	#define DEBUG_STUFF(cname)
+#else
+	#define DEBUG_STUFF(cname) \
+		bool is_##cname(entity e) { return e.instanceOf##cname; } \
+		void isnt_##cname(entity e) { eprint(e); }
+#endif
+
+
 #define CLASS(cname, base)                  \
 	entityclass(cname, base);               \
 	class(cname).bool instanceOf##cname;    \
-    bool is_##cname(entity e) { return e.instanceOf##cname; } \
-    void isnt_##cname(entity e) { eprint(e); } \
+	DEBUG_STUFF(cname)                      \
 	VTBL(cname, base)                       \
 	_INIT_STATIC(cname)                     \
 	{                                       \

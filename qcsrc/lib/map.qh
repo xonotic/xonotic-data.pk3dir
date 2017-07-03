@@ -4,6 +4,7 @@
 
 // Databases (hash tables)
 const int DB_BUCKETS = 8192;
+[[eraseable]]
 void db_save(int db, string filename)
 {
 	int fh = fopen(filename, FILE_WRITE);
@@ -20,14 +21,17 @@ void db_save(int db, string filename)
 
 USING(HashMap, int);
 
+[[eraseable]]
 int db_create()
 {
 	return buf_create();
 }
 #define HM_NEW(this) (this = db_create())
 
+[[eraseable]]
 void db_put(int db, string key, string value);
 
+[[eraseable]]
 int db_load(string filename)
 {
 	int db = buf_create();
@@ -61,6 +65,7 @@ int db_load(string filename)
 	return db;
 }
 
+[[eraseable]]
 void db_dump(int db, string filename)
 {
 	int fh = fopen(filename, FILE_WRITE);
@@ -75,12 +80,14 @@ void db_dump(int db, string filename)
 	fclose(fh);
 }
 
+[[eraseable]]
 void db_close(int db)
 {
 	buf_del(db);
 }
 #define HM_DELETE(this) db_close(this)
 
+[[eraseable]]
 string db_get(int db, string key)
 {
 	int h = crc16(false, key) % DB_BUCKETS;
@@ -90,6 +97,7 @@ string db_get(int db, string key)
 
 #define db_remove(db, key) db_put(db, key, "")
 
+[[eraseable]]
 void db_put(int db, string key, string value)
 {
 	int h = crc16(false, key) % DB_BUCKETS;
@@ -97,6 +105,7 @@ void db_put(int db, string key, string value)
 }
 #define HM_sets(this, key, val) db_put(this, key, val)
 
+/*
 void db_test()
 {
 	LOG_INFO("LOAD...\n");
@@ -110,3 +119,4 @@ void db_test()
 	db_close(db);
 	LOG_INFO("CLOSED.\n");
 }
+*/
