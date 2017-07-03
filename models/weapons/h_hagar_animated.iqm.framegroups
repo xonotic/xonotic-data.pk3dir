@@ -1,0 +1,9 @@
+/*
+Generated framegroups file for h_hagar
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 11 15 1 // h_hagar fire
+12 9 60 1 // h_hagar fire2
+21 51 5 1 // h_hagar idle
+72 21 30 1 // h_hagar reload
