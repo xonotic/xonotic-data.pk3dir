@@ -576,11 +576,14 @@ NET_HANDLE(wframe, bool isNew)
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
 	vector a = '0 0 0';
-    if (fr == WFRAME_IDLE) a = wepent.anim_idle;
-    else if (fr == WFRAME_FIRE1) a = wepent.anim_fire1;
-    else if (fr == WFRAME_FIRE2) a = wepent.anim_fire2;
-    else  // if (fr == WFRAME_RELOAD)
-        a = wepent.anim_reload;
+	switch(fr)
+	{
+		case WFRAME_IDLE:   a = wepent.anim_idle; break;
+		case WFRAME_FIRE1:  a = wepent.anim_fire1; break;
+		case WFRAME_FIRE2:  a = wepent.anim_fire2; break;
+		default:
+		case WFRAME_RELOAD: a = wepent.anim_reload; break;
+	}
     a.z *= wrate;
 
     //LOG_INFO(vtos(a), " ", ftos(fr), " ", ftos(wrate), "\n");
