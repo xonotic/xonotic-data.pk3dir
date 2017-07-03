@@ -220,7 +220,7 @@ NET_HANDLE(damagetext, bool isNew)
     bool can_use_3d = entcs && entcs.has_origin;
     bool too_close = vdist(entcs.origin - view_origin, <, autocvar_cl_damagetext_2d_close_range);
     bool prefer_in_view = autocvar_cl_damagetext_2d_out_of_view && !projected_on_screen(project_3d_to_2d(entcs.origin));
-    bool prefer_2d = autocvar_cl_damagetext_2d && (too_close || prefer_in_view);
+    bool prefer_2d = spectatee_status != -1 && autocvar_cl_damagetext_2d && (too_close || prefer_in_view);
 
     if (can_use_3d && !prefer_2d) {
         // world coords
