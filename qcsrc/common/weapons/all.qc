@@ -586,8 +586,6 @@ NET_HANDLE(wframe, bool isNew)
 	}
     a.z *= wrate;
 
-    //LOG_INFO(vtos(a), " ", ftos(fr), " ", ftos(wrate), "\n");
-
 	if(fr == WFRAME_IDLE) // we don't need to enforce idle animation
 		wepent.animstate_looping = false;
 	else

@@ -32,4 +32,6 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 
 void weapon_prepareattack_do(entity actor, .entity weaponentity, float secondary, float attacktime);
 
+void weapon_thinkf_ex(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor, .entity weaponentity, int fire) func, bool forcenorestart);
+
 void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor, .entity weaponentity, int fire) func);

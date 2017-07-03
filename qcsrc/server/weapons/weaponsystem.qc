@@ -337,8 +337,8 @@ void wframe_send(entity actor, entity weaponentity, int a, bool restartanim);
  * @param t defer thinking until time + t
  * @param func next think function
  */
-void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor,
-	.entity weaponentity, int fire) func)
+void weapon_thinkf_ex(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor,
+	.entity weaponentity, int fire) func, bool forcenorestart)
 {
 	entity this = actor.(weaponentity);
 	if (this == NULL) return;
@@ -353,9 +353,14 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		restartanim = fr != WFRAME_IDLE;
 	}
 
+	if(forcenorestart)
+		restartanim = false;
+
 	vector of = v_forward;
 	vector or = v_right;
 	vector ou = v_up;
+
+	this.wframe = fr;
 
 	v_forward = of;
 	v_right = or;
@@ -405,6 +410,12 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		actor.anim_upper_action = 0;
 	}
 }
+void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor,
+	.entity weaponentity, int fire) func)
+{
+	weapon_thinkf_ex(actor, weaponentity, fr, t, func, false);
+}
+
 
 bool forbidWeaponUse(entity player)
 {
