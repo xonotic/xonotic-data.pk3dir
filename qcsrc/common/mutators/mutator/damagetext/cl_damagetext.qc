@@ -29,11 +29,11 @@ AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show da
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
 
 AUTOCVAR(cl_damagetext_2d,                     bool,   true,       "Show damagetext in 2D coordinated if the enemy's location is not known");
-AUTOCVAR(cl_damagetext_2d_pos,                 vector, '0.47 0.47 0',     "2D damage text initial position (X and Y between 0 and 1)");
+AUTOCVAR(cl_damagetext_2d_pos,                 vector, '0.47 0.53 0',     "2D damage text initial position (X and Y between 0 and 1)");
 AUTOCVAR(cl_damagetext_2d_alpha_start,         float,  1,          "2D damage text initial alpha");
 AUTOCVAR(cl_damagetext_2d_alpha_lifetime,      float,  1.3,        "2D damage text lifetime (alpha fading) in seconds");
 AUTOCVAR(cl_damagetext_2d_size_lifetime,       float,  3,          "2D damage text lifetime (size shrinking) in seconds");
-AUTOCVAR(cl_damagetext_2d_velocity,            vector, '-15 0 0',  "2D damage text move direction (screen coordinates)");
+AUTOCVAR(cl_damagetext_2d_velocity,            vector, '-25 0 0',  "2D damage text move direction (screen coordinates)");
 AUTOCVAR(cl_damagetext_2d_overlap_offset,      vector, '0 -15 0',  "Offset 2D damage text by this much to prevent overlapping (screen coordinates)");
 AUTOCVAR(cl_damagetext_2d_close_range,         float,  125,        "Always use 2D damagetext for hits closer that this");
 AUTOCVAR(cl_damagetext_2d_out_of_view,         bool,   true,       "Always use 2D damagetext for hits that occured off-screen");
