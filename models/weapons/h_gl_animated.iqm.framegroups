@@ -1,0 +1,9 @@
+/*
+Generated framegroups file for h_gl
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 25 30 0 // h_gl fire
+26 25 30 0 // h_gl fire
+51 101 3 1 // h_gl idle
+152 101 3 1 // h_gl idle

@@ -156,109 +156,157 @@ MODEL(CASING_BULLET,                    "models/casing_bronze.iqm");
 MODEL(BUFF,                             "models/relics/relic.md3");
 
 MODEL(BLASTER_VIEW,                     W_Model("h_laser.iqm"));
+MODEL(BLASTER_VIEW_ANIMATED,            W_Model("h_laser_animated.iqm"));
 MODEL(BLASTER_WORLD,                    W_Model("v_laser.md3"));
+MODEL(BLASTER_WORLD_ANIMATED,           W_Model("v_laser_animated.md3"));
 MODEL(BLASTER_ITEM,                     W_Model("g_laser.md3"));
 
 MODEL(SHOTGUN_MUZZLEFLASH,              "models/uziflash.md3");
 MODEL(SHOTGUN_VIEW,                     W_Model("h_shotgun.iqm"));
+MODEL(SHOTGUN_VIEW_ANIMATED,            W_Model("h_shotgun_animated.iqm"));
 MODEL(SHOTGUN_WORLD,                    W_Model("v_shotgun.md3"));
+MODEL(SHOTGUN_WORLD_ANIMATED,           W_Model("v_shotgun_animated.md3"));
 MODEL(SHOTGUN_ITEM,                     W_Model("g_shotgun.md3"));
 
 MODEL(MACHINEGUN_MUZZLEFLASH,           "models/uziflash.md3");
 MODEL(MACHINEGUN_VIEW,                  W_Model("h_uzi.iqm"));
+MODEL(MACHINEGUN_VIEW_ANIMATED,         W_Model("h_uzi_animated.iqm"));
 MODEL(MACHINEGUN_WORLD,                 W_Model("v_uzi.md3"));
+MODEL(MACHINEGUN_WORLD_ANIMATED,        W_Model("v_uzi_animated.md3"));
 MODEL(MACHINEGUN_ITEM,                  W_Model("g_uzi.md3"));
 
 MODEL(MORTAR_VIEW,                      W_Model("h_gl.iqm"));
+MODEL(MORTAR_VIEW_ANIMATED,             W_Model("h_gl_animated.iqm"));
 MODEL(MORTAR_WORLD,                     W_Model("v_gl.md3"));
+MODEL(MORTAR_WORLD_ANIMATED,            W_Model("v_gl_animated.md3"));
 MODEL(MORTAR_ITEM,                      W_Model("g_gl.md3"));
 
 MODEL(MINELAYER_MUZZLEFLASH,            "models/flash.md3");
 MODEL(MINELAYER_MINE,                   "models/mine.md3");
 MODEL(MINELAYER_VIEW,                   W_Model("h_minelayer.iqm"));
+MODEL(MINELAYER_VIEW_ANIMATED,          W_Model("h_minelayer_animated.iqm"));
 MODEL(MINELAYER_WORLD,                  W_Model("v_minelayer.md3"));
+MODEL(MINELAYER_WORLD_ANIMATED,         W_Model("v_minelayer_animated.md3"));
 MODEL(MINELAYER_ITEM,                   W_Model("g_minelayer.md3"));
 
 MODEL(ELECTRO_VIEW,                     W_Model("h_electro.iqm"));
+MODEL(ELECTRO_VIEW_ANIMATED,            W_Model("h_electro_animated.iqm"));
 MODEL(ELECTRO_WORLD,                    W_Model("v_electro.md3"));
+MODEL(ELECTRO_WORLD_ANIMATED,           W_Model("v_electro_animated.md3"));
 MODEL(ELECTRO_ITEM,                     W_Model("g_electro.md3"));
 
 MODEL(CRYLINK_VIEW,                     W_Model("h_crylink.iqm"));
+MODEL(CRYLINK_VIEW_ANIMATED,            W_Model("h_crylink_animated.iqm"));
 MODEL(CRYLINK_WORLD,                    W_Model("v_crylink.md3"));
+MODEL(CRYLINK_WORLD_ANIMATED,           W_Model("v_crylink_animated.md3"));
 MODEL(CRYLINK_ITEM,                     W_Model("g_crylink.md3"));
 
 MODEL(VORTEX_MUZZLEFLASH,               "models/nexflash.md3");
 MODEL(VORTEX_VIEW,                      W_Model("h_nex.iqm"));
+MODEL(VORTEX_VIEW_ANIMATED,             W_Model("h_nex_animated.iqm"));
 MODEL(VORTEX_WORLD,                     W_Model("v_nex.md3"));
+MODEL(VORTEX_WORLD_ANIMATED,            W_Model("v_nex_animated.md3"));
 MODEL(VORTEX_ITEM,                      W_Model("g_nex.md3"));
 
 MODEL(HAGAR_VIEW,                       W_Model("h_hagar.iqm"));
+MODEL(HAGAR_VIEW_ANIMATED,              W_Model("h_hagar_animated.iqm"));
 MODEL(HAGAR_WORLD,                      W_Model("v_hagar.md3"));
+MODEL(HAGAR_WORLD_ANIMATED,             W_Model("v_hagar_animated.md3"));
 MODEL(HAGAR_ITEM,                       W_Model("g_hagar.md3"));
 
 MODEL(DEVASTATOR_MUZZLEFLASH,           "models/flash.md3");
 MODEL(DEVASTATOR_VIEW,                  W_Model("h_rl.iqm"));
+MODEL(DEVASTATOR_VIEW_ANIMATED,         W_Model("h_rl_animated.iqm"));
 MODEL(DEVASTATOR_WORLD,                 W_Model("v_rl.md3"));
+MODEL(DEVASTATOR_WORLD_ANIMATED,        W_Model("v_rl_animated.md3"));
 MODEL(DEVASTATOR_ITEM,                  W_Model("g_rl.md3"));
 
 MODEL(PORTAL,                           "models/portal.md3");
 MODEL(PORTO_VIEW,                       W_Model("h_porto.iqm"));
+MODEL(PORTO_VIEW_ANIMATED,              W_Model("h_porto_animated.iqm"));
 MODEL(PORTO_WORLD,                      W_Model("v_porto.md3"));
+MODEL(PORTO_WORLD_ANIMATED,             W_Model("v_porto_animated.md3"));
 MODEL(PORTO_ITEM,                       W_Model("g_porto.md3"));
 
 MODEL(VAPORIZER_MUZZLEFLASH,            "models/nexflash.md3");
 MODEL(VAPORIZER_VIEW,                   W_Model("h_minstanex.iqm"));
+MODEL(VAPORIZER_VIEW_ANIMATED,          W_Model("h_minstanex_animated.iqm"));
 MODEL(VAPORIZER_WORLD,                  W_Model("v_minstanex.md3"));
+MODEL(VAPORIZER_WORLD_ANIMATED,         W_Model("v_minstanex_animated.md3"));
 MODEL(VAPORIZER_ITEM,                   W_Model("g_minstanex.md3"));
 
 MODEL(HOOK,                             "models/hook.md3");
 MODEL(HOOK_VIEW,                        W_Model("h_hookgun.iqm"));
+MODEL(HOOK_VIEW_ANIMATED,               W_Model("h_hookgun_animated.iqm"));
 MODEL(HOOK_WORLD,                       W_Model("v_hookgun.md3"));
+MODEL(HOOK_WORLD_ANIMATED,              W_Model("v_hookgun_animated.md3"));
 MODEL(HOOK_ITEM,                        W_Model("g_hookgun.md3"));
 
 MODEL(HLAC_VIEW,                        W_Model("h_hlac.iqm"));
+MODEL(HLAC_VIEW_ANIMATED,               W_Model("h_hlac_animated.iqm"));
 MODEL(HLAC_WORLD,                       W_Model("v_hlac.md3"));
+MODEL(HLAC_WORLD_ANIMATED,              W_Model("v_hlac_animated.md3"));
 MODEL(HLAC_ITEM,                        W_Model("g_hlac.md3"));
 
 MODEL(TUBA_VIEW,                        W_Model("h_tuba.iqm"));
+MODEL(TUBA_VIEW_ANIMATED,               W_Model("h_tuba_animated.iqm"));
 MODEL(TUBA_WORLD,                       W_Model("v_tuba.md3"));
+MODEL(TUBA_WORLD_ANIMATED,              W_Model("v_tuba_animated.md3"));
 MODEL(TUBA_ITEM,                        W_Model("g_tuba.md3"));
 MODEL(ACCORDION_VIEW,                   W_Model("h_akordeon.iqm"));
+MODEL(ACCORDION_VIEW_ANIMATED,          W_Model("h_akordeon_animated.iqm"));
 MODEL(ACCORDION_WORLD,                  W_Model("v_akordeon.md3"));
+MODEL(ACCORDION_WORLD_ANIMATED,         W_Model("v_akordeon_animated.md3"));
 MODEL(KLEINBOTTLE_VIEW,                 W_Model("h_kleinbottle.iqm"));
+MODEL(KLEINBOTTLE_VIEW_ANIMATED,        W_Model("h_kleinbottle_animated.iqm"));
 MODEL(KLEINBOTTLE_WORLD,                W_Model("v_kleinbottle.md3"));
+MODEL(KLEINBOTTLE_WORLD_ANIMATED,       W_Model("v_kleinbottle_animated.md3"));
 
 MODEL(RIFLE_VIEW,                       W_Model("h_campingrifle.iqm"));
+MODEL(RIFLE_VIEW_ANIMATED,              W_Model("h_campingrifle_animated.iqm"));
 MODEL(RIFLE_WORLD,                      W_Model("v_campingrifle.md3"));
+MODEL(RIFLE_WORLD_ANIMATED,             W_Model("v_campingrifle_animated.md3"));
 MODEL(RIFLE_ITEM,                       W_Model("g_campingrifle.md3"));
 
 MODEL(FIREBALL_SPHERE,                  "models/sphere/sphere.md3");
 MODEL(FIREBALL_VIEW,                    W_Model("h_fireball.iqm"));
+MODEL(FIREBALL_VIEW_ANIMATED,           W_Model("h_fireball_animated.iqm"));
 MODEL(FIREBALL_WORLD,                   W_Model("v_fireball.md3"));
+MODEL(FIREBALL_WORLD_ANIMATED,          W_Model("v_fireball_animated.md3"));
 MODEL(FIREBALL_ITEM,                    W_Model("g_fireball.md3"));
 
 MODEL(SEEKER_VIEW,                      W_Model("h_seeker.iqm"));
+MODEL(SEEKER_VIEW_ANIMATED,             W_Model("h_seeker_animated.iqm"));
 MODEL(SEEKER_WORLD,                     W_Model("v_seeker.md3"));
+MODEL(SEEKER_WORLD_ANIMATED,            W_Model("v_seeker_animated.md3"));
 MODEL(SEEKER_ITEM,                      W_Model("g_seeker.md3"));
 
 MODEL(SHOCKWAVE_MUZZLEFLASH,            "models/uziflash.md3");
 MODEL(SHOCKWAVE_VIEW,                   W_Model("h_shotgun.iqm"));
+MODEL(SHOCKWAVE_VIEW_ANIMATED,          W_Model("h_shotgun_animated.iqm"));
 MODEL(SHOCKWAVE_WORLD,                  W_Model("v_shotgun.md3"));
+MODEL(SHOCKWAVE_WORLD_ANIMATED,         W_Model("v_shotgun_animated.md3"));
 MODEL(SHOCKWAVE_ITEM,                   W_Model("g_shotgun.md3"));
 
 MODEL(ARC_MUZZLEFLASH,                  "models/flash.md3");
 MODEL(ARC_VIEW,                         W_Model("h_arc.iqm"));
+MODEL(ARC_VIEW_ANIMATED,                W_Model("h_arc_animated.iqm"));
 MODEL(ARC_WORLD,                        W_Model("v_arc.md3"));
+MODEL(ARC_WORLD_ANIMATED,               W_Model("v_arc_animated.md3"));
 MODEL(ARC_ITEM,                         W_Model("g_arc.md3"));
 
 MODEL(HMG_MUZZLEFLASH,                  "models/uziflash.md3");
 MODEL(HMG_VIEW,                         W_Model("h_ok_hmg.iqm"));
+MODEL(HMG_VIEW_ANIMATED,                W_Model("h_ok_hmg_animated.iqm"));
 MODEL(HMG_WORLD,                        W_Model("v_ok_hmg.md3"));
+MODEL(HMG_WORLD_ANIMATED,               W_Model("v_ok_hmg_animated.md3"));
 MODEL(HMG_ITEM,                         W_Model("g_ok_hmg.md3"));
 
 MODEL(RPC_MUZZLEFLASH,                  "models/flash.md3");
 MODEL(RPC_VIEW,                         W_Model("h_ok_rl.iqm"));
+MODEL(RPC_VIEW_ANIMATED,                W_Model("h_ok_rl_animated.iqm"));
 MODEL(RPC_WORLD,                        W_Model("v_ok_rl.md3"));
+MODEL(RPC_WORLD_ANIMATED,               W_Model("v_ok_rl_animated.md3"));
 MODEL(RPC_ITEM,                         W_Model("g_ok_rl.md3"));
 
 MODEL(TUR_GIB_BASE1,                    "models/turrets/base-gib1.md3");

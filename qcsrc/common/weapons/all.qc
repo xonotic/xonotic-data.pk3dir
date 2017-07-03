@@ -404,11 +404,26 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	{
 		// if there is a child entity, hide it until we're sure we use it
 		if (this.weaponchild) this.weaponchild.model = "";
-		_setmodel(this, W_Model(strcat("v_", name, ".md3")));
+		bool use_animated = false;
+		string wmodel = W_Model(strcat("v_", name, ".md3"));
+		string hmodel = W_Model(strcat("h_", name, ".iqm"));
+	#ifdef CSQC
+		use_animated = autocvar_cl_weapons_animate;
+	#endif
+		if(use_animated)
+		{
+			string tmdl = W_Model(strcat("v_", name, "_animated.md3"));
+			string ymdl = W_Model(strcat("h_", name, "_animated.iqm"));
+			if(fexists(tmdl))
+				wmodel = tmdl;
+			if(fexists(ymdl))
+				hmodel = ymdl;
+		}
+		_setmodel(this, wmodel);
 		int v_shot_idx;  // used later
 		(v_shot_idx = gettagindex(this, "shot")) || (v_shot_idx = gettagindex(this, "tag_shot"));
 
-		_setmodel(this, W_Model(strcat("h_", name, ".iqm")));
+		_setmodel(this, hmodel);
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 		this.anim_fire1  = animfixfps(this, '0 1 0.01', '0 0 0');
 		this.anim_fire2  = animfixfps(this, '1 1 0.01', '0 0 0');
@@ -428,7 +443,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 				this.weaponchild.renderflags |= RF_VIEWMODEL;
 #endif
 			}
-			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
+			_setmodel(this.weaponchild, wmodel);
 			setsize(this.weaponchild, '0 0 0', '0 0 0');
 			setattachment(this.weaponchild, this, t);
 		}
@@ -555,14 +570,22 @@ REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
 NET_HANDLE(wframe, bool isNew)
 {
-	vector a;
-	a.x = ReadCoord();
-    a.y = ReadCoord();
-    a.z = ReadCoord();
+	int fr = ReadByte();
+	float wrate = ReadCoord();
     int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
-	if(a.x == wepent.anim_idle_x) // we don't need to enforce idle animation
+	vector a = '0 0 0';
+    if (fr == WFRAME_IDLE) a = wepent.anim_idle;
+    else if (fr == WFRAME_FIRE1) a = wepent.anim_fire1;
+    else if (fr == WFRAME_FIRE2) a = wepent.anim_fire2;
+    else  // if (fr == WFRAME_RELOAD)
+        a = wepent.anim_reload;
+    a.z *= wrate;
+
+    //LOG_INFO(vtos(a), " ", ftos(fr), " ", ftos(wrate), "\n");
+
+	if(fr == WFRAME_IDLE) // we don't need to enforce idle animation
 		wepent.animstate_looping = false;
 	else
 		anim_set(wepent, a, !restartanim, restartanim, restartanim);
@@ -585,15 +608,14 @@ NET_HANDLE(wframe, bool isNew)
 #endif
 
 #ifdef SVQC
-void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
+void wframe_send(entity actor, entity weaponentity, int a, bool restartanim)
 {
 	if (!IS_REAL_CLIENT(actor)) return;
 	int channel = MSG_ONE;
 	msg_entity = actor;
 	WriteHeader(channel, wframe);
-	WriteCoord(channel, a.x);
-	WriteCoord(channel, a.y);
-	WriteCoord(channel, a.z);
+	WriteByte(channel, a);
+	WriteCoord(channel, W_WeaponRateFactor(actor));
 	WriteByte(channel, weaponslot(weaponentity.weaponentity_fld));
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);

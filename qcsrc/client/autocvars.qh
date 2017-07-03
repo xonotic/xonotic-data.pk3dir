@@ -445,3 +445,4 @@ float autocvar_g_jetpack_attenuation;
 bool autocvar_cl_showspectators;
 int autocvar_cl_nade_timer;
 bool autocvar_r_drawviewmodel;
+bool autocvar_cl_weapons_animate;

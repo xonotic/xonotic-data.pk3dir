@@ -331,7 +331,7 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bo
 	return false;
 }
 
-void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
+void wframe_send(entity actor, entity weaponentity, int a, bool restartanim);
 
 /**
  * @param t defer thinking until time + t
@@ -356,15 +356,6 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	vector of = v_forward;
 	vector or = v_right;
 	vector ou = v_up;
-
-	vector a = '0 0 0';
-    this.wframe = fr;
-    if (fr == WFRAME_IDLE) a = this.anim_idle;
-    else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
-    else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
-    else  // if (fr == WFRAME_RELOAD)
-        a = this.anim_reload;
-    a.z *= g_weaponratefactor;
 
 	v_forward = of;
 	v_right = or;
@@ -395,7 +386,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	{
 		FOREACH_CLIENT(true, LAMBDA(
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
-				wframe_send(it, this, a, restartanim);
+				wframe_send(it, this, fr, restartanim);
 		));
 	}
 
