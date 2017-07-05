@@ -227,14 +227,14 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             this.draw = ItemDrawSimple;
 
-            if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
+            if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
             else
             {
                 this.draw = ItemDraw;

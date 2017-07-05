@@ -17,6 +17,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+[[eraseable]]
 vector vec_bias(vector v, float f)
 {
 	vector c;
@@ -25,6 +26,7 @@ vector vec_bias(vector v, float f)
 	c.z = v.z + f;
 	return c;
 }
+[[eraseable]]
 vector vec_to_min(vector a, vector b)
 {
 	vector c;
@@ -34,6 +36,7 @@ vector vec_to_min(vector a, vector b)
 	return c;
 }
 
+[[eraseable]]
 vector vec_to_max(vector a, vector b)
 {
 	vector c;
@@ -44,6 +47,7 @@ vector vec_to_max(vector a, vector b)
 }
 
 // there may already be a function for bounding a vector in this manner, however my very quick search did not reveal one -- Player_2
+[[eraseable]]
 vector vec_bounds_in(vector point, vector a, vector b)
 {
 	vector d = vec_to_min(a, b);
@@ -54,6 +58,7 @@ vector vec_bounds_in(vector point, vector a, vector b)
 	return c;
 }
 
+[[eraseable]]
 vector vec_bounds_out(vector point, vector a, vector b)
 {
 	vector d = vec_to_max(a, b);
@@ -64,6 +69,7 @@ vector vec_bounds_out(vector point, vector a, vector b)
 	return c;
 }
 
+[[eraseable]]
 float angle_snap_f(float f, float increment)
 {
 	for (int j = 0; j <= 360; )
@@ -75,6 +81,7 @@ float angle_snap_f(float f, float increment)
 	return 0;
 }
 
+[[eraseable]]
 vector angle_snap_vec(vector v, float increment)
 {
 	vector c;
@@ -84,6 +91,7 @@ vector angle_snap_vec(vector v, float increment)
 	return c;
 }
 
+[[eraseable]]
 vector aim_vec(vector org, vector targ)
 {
 	vector v;
