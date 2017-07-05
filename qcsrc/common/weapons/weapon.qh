@@ -195,6 +195,7 @@ const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutato
 const int WEP_TYPE_MELEE_PRI      = 0x400; // primary attack is melee swing (for animation)
 const int WEP_TYPE_MELEE_SEC      = 0x800; // secondary attack is melee swing (for animation)
 const int WEP_FLAG_DUALWIELD      = 0x1000; // weapon can be dual wielded
+const int WEP_FLAG_NODUAL         = 0x2000; // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
 
 // variables:
 string weaponorder_byid;

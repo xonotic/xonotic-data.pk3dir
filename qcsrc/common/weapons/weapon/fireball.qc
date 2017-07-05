@@ -3,7 +3,7 @@
 CLASS(Fireball, Weapon)
 /* ammotype  */ //ATTRIB(Fireball, ammo_field, .int, ammo_none);
 /* impulse   */ ATTRIB(Fireball, impulse, int, 9);
-/* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, 5000);
 /* color     */ ATTRIB(Fireball, wpcolor, vector, '1 0.5 0');
 /* modelname */ ATTRIB(Fireball, mdl, string, "fireball");

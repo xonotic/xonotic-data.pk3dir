@@ -789,7 +789,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	}
 
 	// Can we even aim this thing?
-	tvt_thadv = angleofs3(e_turret.tur_head.origin, e_turret.angles + e_turret.tur_head.angles, e_target);
+	tvt_thadv = angleofs3(e_turret.tur_head.origin, e_turret.angles + e_turret.tur_head.angles, e_target.origin);
 	tvt_tadv = shortangle_vxy(angleofs(e_turret, e_target), e_turret.angles);
 	tvt_thadf = vlen(tvt_thadv);
 	tvt_tadf = vlen(tvt_tadv);

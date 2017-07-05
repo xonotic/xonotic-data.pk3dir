@@ -1,6 +1,6 @@
 #include "onslaught.qh"
 
-#ifndef MENUQC
+#ifdef GAMEQC
 REGISTER_NET_LINKED(ENT_ONSCAMERA)
 #endif
 

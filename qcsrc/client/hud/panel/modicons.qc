@@ -38,8 +38,8 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 
 	if(layout)
 	{
-		drawpic_aspect_skin(myPos, pic, eX * 0.7 * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(myPos + eX * 0.7 * mySize.x, ftos(stat), eX * 0.3 * mySize.x + eY * mySize.y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(myPos, pic, vec2(0.7 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(myPos + eX * 0.7 * mySize.x, ftos(stat), vec2(0.3 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else
 		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -63,11 +63,12 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 
 	int i;
 	float row = 0, column = 0;
-	vector pos, itemSize;
-	itemSize = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
+	vector pos = '0 0 0', itemSize;
+	itemSize = vec2(mySize.x / columns, mySize.y / rows);
 	for(i=0; i<team_count; ++i)
 	{
-		pos = myPos + eX * column * itemSize.x + eY * row * itemSize.y;
+		pos.x = myPos.x + column * itemSize.x;
+		pos.y = myPos.y + row * itemSize.y;
 
 		DrawCAItem(pos, itemSize, aspect_ratio, layout, i);
 
@@ -320,7 +321,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	if(all_keys == 4 && mySize.x * 0.5 < mySize.y && mySize.y * 0.5 < mySize.x)
 	{
 		// Quadratic arrangement
-		slot_size = eX * mySize.x * 0.5 + eY * mySize.y * 0.5;
+		slot_size = vec2(mySize.x * 0.5, mySize.y * 0.5);
 		KH_SLOTS[0] = pos;
 		KH_SLOTS[1] = pos + eX * slot_size.x;
 		KH_SLOTS[2] = pos + eY * slot_size.y;
@@ -331,14 +332,14 @@ void HUD_Mod_KH(vector pos, vector mySize)
 		if(mySize.x > mySize.y)
 		{
 			// Horizontal arrangement
-			slot_size = eX * mySize.x / all_keys + eY * mySize.y;
+			slot_size = vec2(mySize.x / all_keys, mySize.y);
 			for(i = 0; i < all_keys; ++i)
 				KH_SLOTS[i] = pos + eX * slot_size.x * i;
 		}
 		else
 		{
 			// Vertical arrangement
-			slot_size = eX * mySize.x + eY * mySize.y / all_keys;
+			slot_size = vec2(mySize.x, mySize.y / all_keys);
 			for(i = 0; i < all_keys; ++i)
 				KH_SLOTS[i] = pos + eY * slot_size.y * i;
 		}
@@ -432,10 +433,10 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 
 	if(mySize.x > mySize.y) {
 		kaball_pos = pos + eX * 0.25 * mySize.x;
-		kaball_size = eX * 0.5 * mySize.x + eY * mySize.y;
+		kaball_size = vec2(0.5 * mySize.x, mySize.y);
 	} else {
 		kaball_pos = pos + eY * 0.25 * mySize.y;
-		kaball_size = eY * 0.5 * mySize.y + eX * mySize.x;
+		kaball_size = vec2(mySize.x, 0.5 * mySize.y);
 	}
 
 	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
@@ -445,7 +446,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 		drawpic_aspect_skin_expanding(kaball_pos, "keepawayball_carrying", kaball_size, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
 
 	if(kaball)
-		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, "keepawayball_carrying", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
 }
 
 
@@ -548,15 +549,19 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	if(mySize.x > mySize.y) {
 		// text on left side
 		squareSize = min(mySize.y, mySize.x/2);
-		textPos = pos + eX * 0.5 * max(0, mySize.x/2 - squareSize) + eY * 0.5 * (mySize.y - squareSize);
-		medalPos = pos + eX * 0.5 * max(0, mySize.x/2 - squareSize) + eX * 0.5 * mySize.x + eY * 0.5 * (mySize.y - squareSize);
+		vector ofs = vec2(0.5 * max(0, mySize.x/2 - squareSize), 0.5 * (mySize.y - squareSize));
+		textPos = pos + ofs;
+		ofs.x += 0.5 * mySize.x;
+		medalPos = pos + ofs;
 	} else {
 		// text on top
 		squareSize = min(mySize.x, mySize.y/2);
-		textPos = pos + eY * 0.5 * max(0, mySize.y/2 - squareSize) + eX * 0.5 * (mySize.x - squareSize);
-		medalPos = pos + eY * 0.5 * max(0, mySize.y/2 - squareSize) + eY * 0.5 * mySize.y + eX * 0.5 * (mySize.x - squareSize);
+		vector ofs = vec2(0.5 * (mySize.x - squareSize), 0.5 * max(0, mySize.y/2 - squareSize));
+		textPos = pos + ofs;
+		ofs.y += 0.5 * mySize.y;
+		medalPos = pos + ofs;
 	}
-	vector textSize = eX * squareSize + eY * 0.25 * squareSize;
+	vector textSize = vec2(squareSize, 0.25 * squareSize);
 
 	race_showTime(_("Personal best"), textPos, eY * 0.25 * squareSize, t, textSize, time - crecordtime_change_time);
 
@@ -665,9 +670,9 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 		//draw the text
 		color *= 0.5 + pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
 		if (layout == 2) // average pps
-			drawstring_aspect(myPos + eX * mySize.y, ftos_decimals(stat, 2), eX * (2/3) * mySize.x + eY * mySize.y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(myPos + eX * mySize.y, ftos_decimals(stat, 2), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		else // percentage of average pps
-			drawstring_aspect(myPos + eX * mySize.y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize.x + eY * mySize.y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(myPos + eX * mySize.y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	//draw the icon
@@ -694,10 +699,10 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	int i;
 	float row = 0, column = 0;
 	vector pos, itemSize;
-	itemSize = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
+	itemSize = vec2(mySize.x / columns, mySize.y / rows);
 	for(i=0; i<team_count; ++i)
 	{
-		pos = myPos + eX * column * itemSize.x + eY * row * itemSize.y;
+		pos = myPos + vec2(column * itemSize.x, row * itemSize.y);
 
 		DrawDomItem(pos, itemSize, aspect_ratio, layout, i);
 

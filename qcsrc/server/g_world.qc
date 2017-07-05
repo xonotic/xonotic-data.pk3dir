@@ -210,6 +210,8 @@ void cvar_changes_init()
 		BADCVAR("mastervolume");
 		BADCVAR("volume");
 		BADCVAR("bgmvolume");
+		BADCVAR("in_pitch_min");
+		BADCVAR("in_pitch_max");
 
 		// private
 		BADCVAR("developer");
@@ -250,6 +252,7 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
+		BADCVAR("sv_muteban_list");
 
 		// mapinfo
 		BADCVAR("fraglimit");
@@ -279,6 +282,7 @@ void cvar_changes_init()
 		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
+		BADCVAR("g_runematch");
 		BADCVAR("g_snafu");
 		BADCVAR("g_surv"); // Lyberta: adding gamemode cvar
 		BADCVAR("g_tdm");
@@ -315,6 +319,7 @@ void cvar_changes_init()
 
 		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
+		BADCVAR("condump_stripcolors");
 		BADCVAR("gameversion");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
@@ -362,6 +367,7 @@ void cvar_changes_init()
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
+		BADPREFIX("notification_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");

@@ -167,7 +167,7 @@ void HUD_Powerups()
 
 	// Draw items from linked list
 	vector itemPos = pos;
-	vector itemSize = eX * (size.x / columns) + eY * (size.y / rows);
+	vector itemSize = vec2(size.x / columns, size.y / rows);
 	vector textColor = '1 1 1';
 
 	int fullSeconds = 0;
@@ -178,7 +178,7 @@ void HUD_Powerups()
 	draw_beginBoldFont();
 	for(entity item = powerupItems; item.count; item = item.chain)
 	{
-		itemPos = eX * (pos.x + column * itemSize.x) + eY * (pos.y + row * itemSize.y);
+		itemPos = vec2(pos.x + column * itemSize.x, pos.y + row * itemSize.y);
 
 		// Draw progressbar
 		if(autocvar_hud_panel_powerups_progressbar)

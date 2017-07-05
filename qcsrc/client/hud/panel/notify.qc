@@ -83,7 +83,7 @@ void HUD_Notify()
 	float name_maxwidth = panel_width_half - icon_width_half - size.x * NOTIFY_ICON_MARGIN;
 
 	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
-	vector icon_size = (eX * icon_aspect + eY) * entry_height;
+	vector icon_size = vec2(icon_aspect, 1) * entry_height;
 	vector icon_left = eX * (panel_width_half - icon_width_half);
 	vector attacker_right = eX * name_maxwidth;
 	vector victim_left = eX * (size.x - name_maxwidth);
