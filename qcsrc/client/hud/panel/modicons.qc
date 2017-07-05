@@ -551,7 +551,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		squareSize = min(mySize.y, mySize.x/2);
 		vector ofs = vec2(0.5 * max(0, mySize.x/2 - squareSize), 0.5 * (mySize.y - squareSize));
 		textPos = pos + ofs;
-		ofs.y += 0.5 * mySize.x;
+		ofs.x += 0.5 * mySize.x;
 		medalPos = pos + ofs;
 	} else {
 		// text on top

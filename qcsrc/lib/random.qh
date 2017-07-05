@@ -7,7 +7,9 @@ float RandomSelection_chosen_float;
 string RandomSelection_chosen_string;
 vector RandomSelection_chosen_vec;
 
+[[eraseable]]
 void RandomSelection_Init();
+[[eraseable]]
 void RandomSelection_Add(entity e, float f, string s, vector v, float weight, float priority);
 #define RandomSelection_AddEnt(e, weight, priority) RandomSelection_Add(e, 0, string_null, '0 0 0', weight, priority)
 #define RandomSelection_AddFloat(f, weight, priority) RandomSelection_Add(NULL, f, string_null, '0 0 0', weight, priority)

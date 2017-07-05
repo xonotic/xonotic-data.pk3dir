@@ -260,7 +260,15 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 // this... is a hack, a temporary one until we get a proper duel gametype
 string PlayerStats_GetGametype()
 {
-	return ((IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2) ? "duel" : GetGametype());
+	if(IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2)
+	{
+		// probably duel, but let's make sure
+		int plcount = 0;
+		FOREACH_CLIENT(IS_PLAYER(it), ++plcount);
+		if(plcount <= 2)
+			return "duel";
+	}
+	return GetGametype();
 }
 
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
