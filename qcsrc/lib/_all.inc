@@ -61,18 +61,20 @@
 	MACRO_END
 #endif
 
-#define   is_float(this) (true || ftoe(this))
-#define isnt_float(this)
-#define   is_vector(this) (true || vtos(this))
-#define isnt_vector(this)
-#define   is_string(this) (true || stof(this))
-#define isnt_string(this)
-#define   is_entity(this) (true || etof(this))
-#define isnt_entity(this)
-bool      is_int(float this) { return this == floor(this); }
-void    isnt_int(float this) { print(ftos(this)); }
-bool      is_bool(float this) { return this == true || this == false; }
-void    isnt_bool(float this) { print(ftos(this)); }
+#if !(NDEBUG)
+	#define   is_float(this) (true || ftoe(this))
+	#define isnt_float(this)
+	#define   is_vector(this) (true || vtos(this))
+	#define isnt_vector(this)
+	#define   is_string(this) (true || stof(this))
+	#define isnt_string(this)
+	#define   is_entity(this) (true || etof(this))
+	#define isnt_entity(this)
+	bool      is_int(float this) { return this == floor(this); }
+	void    isnt_int(float this) { print(ftos(this)); }
+	bool      is_bool(float this) { return this == true || this == false; }
+	void    isnt_bool(float this) { print(ftos(this)); }
+#endif
 
 #include "warpzone/mathlib.qc"
 

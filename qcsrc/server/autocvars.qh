@@ -518,6 +518,7 @@ float autocvar_sv_airaccel_sideways_friction;
 float autocvar_sv_aircontrol;
 float autocvar_sv_aircontrol_power;
 float autocvar_sv_aircontrol_backwards;
+float autocvar_sv_aircontrol_sidewards;
 float autocvar_sv_aircontrol_penalty;
 float autocvar_sv_warsowbunny_airforwardaccel;
 float autocvar_sv_warsowbunny_topspeed;

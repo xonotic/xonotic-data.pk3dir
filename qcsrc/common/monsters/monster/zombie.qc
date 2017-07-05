@@ -203,10 +203,4 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     return true;
 }
-
-METHOD(Zombie, mr_precache, bool(Zombie this))
-{
-    TC(Zombie, this);
-    return true;
-}
 #endif

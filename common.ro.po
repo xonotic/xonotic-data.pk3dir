@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-30 07:23+0200\n"
+"POT-Creation-Date: 2017-07-03 14:35+0200\n"
 "PO-Revision-Date: 2017-03-30 05:23+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Romanian (http://www.transifex.com/team-xonotic/xonotic/"
@@ -25,12 +25,12 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
 "2:1));\n"
 
-#: qcsrc/client/hud/hud_config.qc:233
+#: qcsrc/client/hud/hud_config.qc:239
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr "^2Exportat cu succes către %s! (Notă: Este salvat în data/data/)\n"
 
-#: qcsrc/client/hud/hud_config.qc:237
+#: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^1Couldn't write to %s\n"
 msgstr "^1Nu s-a putut scrie către %s\n"
@@ -89,7 +89,7 @@ msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
-#: qcsrc/common/vehicles/cl_vehicles.qc:191
+#: qcsrc/common/vehicles/cl_vehicles.qc:192
 msgid "drop weapon"
 msgstr ""
 
@@ -206,11 +206,11 @@ msgstr "^3CTRL ^7pentru a dezactiva testarea de coliziune, ^3SHIFT ^7și"
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3SĂGEȚI ^7pentru ajustări fine."
 
-#: qcsrc/client/hud/panel/modicons.qc:561
+#: qcsrc/client/hud/panel/modicons.qc:566
 msgid "Personal best"
 msgstr "Record personal"
 
-#: qcsrc/client/hud/panel/modicons.qc:571
+#: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Server best"
 msgstr "Record server"
 
@@ -235,264 +235,264 @@ msgstr "Comandă%d"
 msgid "Continue..."
 msgstr "Continuă..."
 
-#: qcsrc/client/hud/panel/quickmenu.qc:784
-#: qcsrc/client/hud/panel/quickmenu.qc:788
+#: qcsrc/client/hud/panel/quickmenu.qc:794
+#: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "QMCMD^Chat"
 msgstr "QMCMD^Conversație"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:785
+#: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
 msgstr "QMCMD^:) / frumos"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:785
+#: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^nice one"
 msgstr "QMCMD^frumos"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:786
+#: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^good game"
 msgstr "QMCMD^GG"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:787
+#: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^hi / good luck"
 msgstr "QMCMD^salut / baftă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:787
+#: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^hi / good luck and have fun"
 msgstr "QMCMD^salut / baftă și distracție plăcută"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:792
-#: qcsrc/client/hud/panel/quickmenu.qc:808
+#: qcsrc/client/hud/panel/quickmenu.qc:802
+#: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^Team chat"
 msgstr "QMCMD^Conversație echipă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:793
+#: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^quad soon"
 msgstr "QMCMD^quad valabil în curând"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:794
+#: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item %x^7 (l:%y^7)"
 msgstr "QMCMD^obiect liber %x^7 (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:794
+#: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item, icon"
 msgstr "QMCMD^obiect liber, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:795
+#: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item (l:%l^7)"
 msgstr "QMCMD^a luat obiectul (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:795
+#: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item, icon"
 msgstr "QMCMD^a luat obiectul, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:796
+#: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^negative"
 msgstr "QMCMD^negativ"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:797
+#: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^positive"
 msgstr "QMCMD^pozitiv"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:798
+#: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^necesit ajutor (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:798
+#: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^need help, icon"
 msgstr "QMCMD^necesit ajutor, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:799
+#: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^enemy seen (l:%y^7)"
 msgstr "QMCMD^inamic observat (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:799
+#: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^enemy seen, icon"
 msgstr "QMCMD^inamic observat, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:800
+#: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^flag seen (l:%y^7)"
 msgstr "QMCMD^steag observat (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:800
+#: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^flag seen, icon"
 msgstr "QMCMD^steag observat, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:801
+#: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^în apărare (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:801
+#: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^defending, icon"
 msgstr "QMCMD^în apărare, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:802
+#: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:802
+#: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^roaming, icon"
 msgstr "QMCMD^roaming, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:803
+#: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^în atac (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:803
+#: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^attacking, icon"
 msgstr "QMCMD^în atac, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:804
-msgid "QMCMD^killed flag, icon"
-msgstr "QMCMD^omorât steagul, pictogramă"
-
-#: qcsrc/client/hud/panel/quickmenu.qc:804
+#: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
 msgstr "QMCMD^posesorul de steag omorât (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:805
+#: qcsrc/client/hud/panel/quickmenu.qc:814
+msgid "QMCMD^killed flagcarrier, icon"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
 msgstr "QMCMD^steag scăpat (l:%d^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:805
+#: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^dropped flag, icon"
 msgstr "QMCMD^steag scăpat, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:806
-msgid "QMCMD^drop gun, icon"
-msgstr "QMCMD^scapă arma, pictogramă"
+#: qcsrc/client/hud/panel/quickmenu.qc:816
+msgid "QMCMD^drop weapon, icon"
+msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:806
-msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
-msgstr "QMCMD^armă scăpată %w^7 (l:%l^7)"
+#: qcsrc/client/hud/panel/quickmenu.qc:816
+msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
+msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:807
+#: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
 msgstr "QMCMD^scapă steag/cheie, pictogramă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:807
+#: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
 msgstr "QMCMD^steag/cheie scăpate %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:811
+#: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^Send private message to"
 msgstr "QMCMD^Trimite mesaj privat către"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:813
-#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:823
+#: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Settings"
 msgstr "QMCMD^Setări"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:814
-#: qcsrc/client/hud/panel/quickmenu.qc:821
+#: qcsrc/client/hud/panel/quickmenu.qc:824
+#: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^View/HUD settings"
 msgstr "QMCMD^Setări de Vizualizare/HUD"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:815
+#: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^3rd person view"
 msgstr "QMCMD^Perspectivă la persoana a 3-a"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:816
+#: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Player models like mine"
 msgstr "QMCMD^Modele de jucători ca al meu"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:817
+#: qcsrc/client/hud/panel/quickmenu.qc:827
 msgid "QMCMD^Names above players"
 msgstr "QMCMD^Nume deasupra jucătorilor"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:818
+#: qcsrc/client/hud/panel/quickmenu.qc:828
 msgid "QMCMD^Crosshair per weapon"
 msgstr "QMCMD^Reticul pe fiecare armă"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:819
+#: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^FPS"
 msgstr "QMCMD^FPS"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:820
+#: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Net graph"
 msgstr "QMCMD^Grafic de conexiune"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:823
-#: qcsrc/client/hud/panel/quickmenu.qc:826
+#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Sound settings"
 msgstr "QMCMD^Setări de sunet"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:824
+#: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Hit sound"
 msgstr "QMCMD^Sunet de lovire"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:825
+#: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^Chat sound"
 msgstr "QMCMD^Sunet conversație"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:830
-#: qcsrc/client/hud/panel/quickmenu.qc:834
+#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Spectator camera"
 msgstr "QMCMD^Cameră spectator"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:831
+#: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^1st person"
 msgstr "QMCMD^Persoana a 1-a"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:832
+#: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^3rd person around player"
 msgstr "QMCMD^Persoana a 3-a în jurul jucătorului"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^3rd person behind"
 msgstr "QMCMD^Persoana a 3-a în spate"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:839
-#: qcsrc/client/hud/panel/quickmenu.qc:844
+#: qcsrc/client/hud/panel/quickmenu.qc:849
+#: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^Observer camera"
 msgstr "QMCMD^Cameră de observator"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Increase speed"
 msgstr "QMCMD^Crește viteza"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:841
+#: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Decrease speed"
 msgstr "QMCMD^Scade viteza"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:842
+#: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Wall collision off"
 msgstr "QMCMD^Coliziunea cu pereții dezactivată"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:843
+#: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Wall collision on"
 msgstr "QMCMD^Coliziunea cu pereții activată"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:847
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Fullscreen"
 msgstr "QMCMD^Ecran complet"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:849
+#: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^Translate chat messages"
 msgstr "QMCMD^Tradu mesajele de conversație"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:852
 #: qcsrc/client/hud/panel/quickmenu.qc:862
+#: qcsrc/client/hud/panel/quickmenu.qc:872
 msgid "QMCMD^Call a vote"
 msgstr "QMCMD^Cheamă vot"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:853
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^Restart the map"
 msgstr "QMCMD^Repornește harta"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:854
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^End match"
 msgstr "QMCMD^Încheie meciul"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:857
+#: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^Reduce match time"
 msgstr "QMCMD^Redu timpul de meci"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:858
+#: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Extend match time"
 msgstr "QMCMD^Extinde timpul de meci"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:861
+#: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Shuffle teams"
 msgstr "QMCMD^Amestecă echipele"
 
@@ -520,18 +520,18 @@ msgstr "Linie de sosire"
 msgid "Intermediate %d"
 msgstr "Intermediar %d"
 
-#: qcsrc/client/hud/panel/racetimer.qc:130
+#: qcsrc/client/hud/panel/racetimer.qc:132
 msgid "^1Intermediate 1 (+15.42)"
 msgstr "^1Intermediar 1 (+15.42)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:132
-#: qcsrc/client/hud/panel/racetimer.qc:174
-#: qcsrc/client/hud/panel/racetimer.qc:219
+#: qcsrc/client/hud/panel/racetimer.qc:135
+#: qcsrc/client/hud/panel/racetimer.qc:177
+#: qcsrc/client/hud/panel/racetimer.qc:227
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr "^1PENALIZARE: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:221
+#: qcsrc/client/hud/panel/racetimer.qc:229
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
 msgstr "^2PENALIZARE: %.1f (%s)"
@@ -908,104 +908,104 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1155
+#: qcsrc/client/hud/panel/scoreboard.qc:1156
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Statistici de acuratețe (medie %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1294
+#: qcsrc/client/hud/panel/scoreboard.qc:1295
 msgid "Map stats:"
 msgstr "Statistici hartă:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1324
+#: qcsrc/client/hud/panel/scoreboard.qc:1325
 msgid "Monsters killed:"
 msgstr "Monștri uciși:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1331
+#: qcsrc/client/hud/panel/scoreboard.qc:1332
 msgid "Secrets found:"
 msgstr "Secrete descoperite:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1353
+#: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Capture time rankings"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1353
+#: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Rankings"
 msgstr "Clasament"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1517
+#: qcsrc/client/hud/panel/scoreboard.qc:1519
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
 msgstr "Tabelă de scor"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1580
+#: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1584
+#: qcsrc/client/hud/panel/scoreboard.qc:1588
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1600
+#: qcsrc/client/hud/panel/scoreboard.qc:1604
 #, c-format
 msgid "Spectators"
 msgstr "Spectatori"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1615
+#: qcsrc/client/hud/panel/scoreboard.qc:1619
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
 msgstr "se joacă ^3%s^7 pe harta ^2%s^7 "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1622
-#: qcsrc/client/hud/panel/scoreboard.qc:1627
+#: qcsrc/client/hud/panel/scoreboard.qc:1626
+#: qcsrc/client/hud/panel/scoreboard.qc:1631
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
 msgstr "timp de ^1%1.0f minute^7 "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1631
-#: qcsrc/client/hud/panel/scoreboard.qc:1650
+#: qcsrc/client/hud/panel/scoreboard.qc:1635
+#: qcsrc/client/hud/panel/scoreboard.qc:1654
 msgid " or"
 msgstr "sau "
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1634
-#: qcsrc/client/hud/panel/scoreboard.qc:1641
+#: qcsrc/client/hud/panel/scoreboard.qc:1638
+#: qcsrc/client/hud/panel/scoreboard.qc:1645
 #, c-format
 msgid " until ^3%s %s^7"
 msgstr "până la ^3%s %s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1635
-#: qcsrc/client/hud/panel/scoreboard.qc:1642
-#: qcsrc/client/hud/panel/scoreboard.qc:1654
-#: qcsrc/client/hud/panel/scoreboard.qc:1661
+#: qcsrc/client/hud/panel/scoreboard.qc:1639
+#: qcsrc/client/hud/panel/scoreboard.qc:1646
+#: qcsrc/client/hud/panel/scoreboard.qc:1658
+#: qcsrc/client/hud/panel/scoreboard.qc:1665
 msgid "SCO^points"
 msgstr "SCO^puncte"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1636
-#: qcsrc/client/hud/panel/scoreboard.qc:1643
-#: qcsrc/client/hud/panel/scoreboard.qc:1655
-#: qcsrc/client/hud/panel/scoreboard.qc:1662
+#: qcsrc/client/hud/panel/scoreboard.qc:1640
+#: qcsrc/client/hud/panel/scoreboard.qc:1647
+#: qcsrc/client/hud/panel/scoreboard.qc:1659
+#: qcsrc/client/hud/panel/scoreboard.qc:1666
 msgid "SCO^is beaten"
 msgstr "SCO^este bătut"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1653
-#: qcsrc/client/hud/panel/scoreboard.qc:1660
+#: qcsrc/client/hud/panel/scoreboard.qc:1657
+#: qcsrc/client/hud/panel/scoreboard.qc:1664
 #, c-format
 msgid " until a lead of ^3%s %s^7"
 msgstr "până la un avans de ^3%s %s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1684
+#: qcsrc/client/hud/panel/scoreboard.qc:1688
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Respawn în ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1694
+#: qcsrc/client/hud/panel/scoreboard.qc:1698
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Ești mort, așteaptă ^3%s^7 până la respawn"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1703
+#: qcsrc/client/hud/panel/scoreboard.qc:1707
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Ești mort, apasă ^2%s^7 pentru a te respawna"
@@ -1132,15 +1132,15 @@ msgstr "Cerere de previzualizare...\n"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Se încearcă înlăturarea unei echipe ce nu se află în lista cu echipe!"
 
-#: qcsrc/client/view.qc:1370
+#: qcsrc/client/view.qc:1380
 msgid "Nade timer"
 msgstr "Fitil grenadă"
 
-#: qcsrc/client/view.qc:1375
+#: qcsrc/client/view.qc:1385
 msgid "Capture progress"
 msgstr ""
 
-#: qcsrc/client/view.qc:1380
+#: qcsrc/client/view.qc:1390
 msgid "Revival progress"
 msgstr "Progres reînviere"
 
@@ -1189,7 +1189,7 @@ msgstr "Forță"
 msgid "Shield"
 msgstr "Scut"
 
-#: qcsrc/common/mapinfo.qc:642
+#: qcsrc/common/mapinfo.qc:639
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "Aruncă @!#%'n Tuba"
@@ -1521,7 +1521,7 @@ msgstr "Joc Solo"
 msgid "Mage"
 msgstr "Mag"
 
-#: qcsrc/common/monsters/monster/mage.qh:33
+#: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
 msgstr ""
 
@@ -1535,7 +1535,7 @@ msgstr "Târâtor"
 msgid "Spider"
 msgstr "Păianjen"
 
-#: qcsrc/common/monsters/monster/spider.qh:32
+#: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
 msgstr ""
 
@@ -1544,7 +1544,7 @@ msgstr ""
 msgid "Wyvern"
 msgstr "Dragon"
 
-#: qcsrc/common/monsters/monster/wyvern.qh:32
+#: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
 msgstr ""
 
@@ -1620,32 +1620,32 @@ msgstr "Zbor"
 msgid "Buff"
 msgstr "Buff"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:280
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
 msgstr "Textul de daune"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:290
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:18
 msgid "Draw damage numbers"
 msgstr "Afișează numerele pentru daune"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:292
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:297
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:302
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 msgid "Accumulate range:"
 msgstr "Acumulează rază:"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:307
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:35
 msgid "Lifetime:"
 msgstr "Durată de viață:"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:312
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:322
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:40
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:55
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
@@ -1654,7 +1654,7 @@ msgstr "Durată de viață:"
 msgid "Color:"
 msgstr "Culoare:"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:319
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:47
 msgid "Draw damage numbers for friendly fire"
 msgstr ""
 
@@ -4097,9 +4097,8 @@ msgstr ""
 "^F4Oprește-l!"
 
 #: qcsrc/common/notifications/all.inc:788
-msgid ""
-"^F2You have stolen the enemy's vehicle, you are now visible on their radar!"
-msgstr "^F2Ai ciordit un vehicul de la inamic, ești urmărit de radarul lor!"
+msgid "^F2Intruder detected, disabling shields!"
+msgstr ""
 
 #: qcsrc/common/notifications/all.qh:188
 msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
@@ -4505,16 +4504,16 @@ msgstr "Turelă Umblătoare"
 msgid "Walker"
 msgstr ""
 
-#: qcsrc/common/vehicles/cl_vehicles.qc:191
+#: qcsrc/common/vehicles/cl_vehicles.qc:192
 #, c-format
 msgid "Press %s"
 msgstr "Apasă %s"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:948
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:950
 msgid "No right gunner!"
 msgstr "Nu este niciun trăgător pe dreapta!"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:954
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No left gunner!"
 msgstr "Nu este niciun trăgător pe stânga!"
 
@@ -4815,27 +4814,27 @@ msgstr "CI_THI^%d secunde"
 msgid "CI_MUL^%d seconds"
 msgstr "CI_MUL^%d secunde"
 
-#: qcsrc/lib/counting.qh:78
+#: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
 msgstr "%dst"
 
-#: qcsrc/lib/counting.qh:79
+#: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
 msgstr "%dnd"
 
-#: qcsrc/lib/counting.qh:80
+#: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
 msgstr "%drd"
 
-#: qcsrc/lib/counting.qh:81 qcsrc/lib/counting.qh:84
+#: qcsrc/lib/counting.qh:82 qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
 msgstr "%dth"
 
-#: qcsrc/lib/oo.qh:290
+#: qcsrc/lib/oo.qh:298
 msgid "No description"
 msgstr "Fără descriere:"
 
@@ -4846,12 +4845,12 @@ msgid ""
 "please file an issue."
 msgstr ""
 
-#: qcsrc/lib/string.qh:46
+#: qcsrc/lib/string.qh:48
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
 msgstr "%d zile, %02d:%02d:%02d"
 
-#: qcsrc/lib/string.qh:47
+#: qcsrc/lib/string.qh:49
 #, c-format
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
@@ -4956,111 +4955,119 @@ msgstr ""
 msgid "Other Active Contributors"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:148
+#: qcsrc/menu/xonotic/credits.qc:149
 msgid "Translators"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:150
+#: qcsrc/menu/xonotic/credits.qc:151
 msgid "Asturian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:155
+#: qcsrc/menu/xonotic/credits.qc:156
 msgid "Belarusian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:158
+#: qcsrc/menu/xonotic/credits.qc:159
 msgid "Bulgarian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:165
+#: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:171
+#: qcsrc/menu/xonotic/credits.qc:172
 msgid "Chinese (Taiwan)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:176
+#: qcsrc/menu/xonotic/credits.qc:177
 msgid "Cornish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:179
+#: qcsrc/menu/xonotic/credits.qc:180
 msgid "Czech"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:184
+#: qcsrc/menu/xonotic/credits.qc:185
 msgid "Dutch"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:190
+#: qcsrc/menu/xonotic/credits.qc:192
 msgid "English (Australia)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:195
+#: qcsrc/menu/xonotic/credits.qc:197
 msgid "Finnish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:200
+#: qcsrc/menu/xonotic/credits.qc:202
 msgid "French"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:208
+#: qcsrc/menu/xonotic/credits.qc:210
 msgid "German"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:219
+#: qcsrc/menu/xonotic/credits.qc:221
 msgid "Greek"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:225
+#: qcsrc/menu/xonotic/credits.qc:227
 msgid "Hungarian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:229
+#: qcsrc/menu/xonotic/credits.qc:231
+msgid "Irish"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:234
 msgid "Italian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:235
+#: qcsrc/menu/xonotic/credits.qc:240
 msgid "Kazakh"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:238
+#: qcsrc/menu/xonotic/credits.qc:243
 msgid "Korean"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:242
+#: qcsrc/menu/xonotic/credits.qc:247
 msgid "Polish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:249
+#: qcsrc/menu/xonotic/credits.qc:255
 msgid "Portuguese"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:255
+#: qcsrc/menu/xonotic/credits.qc:261
 msgid "Romanian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:262
+#: qcsrc/menu/xonotic/credits.qc:268
 msgid "Russian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:273
+#: qcsrc/menu/xonotic/credits.qc:279
+msgid "Scottish Gaelic"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:282
 msgid "Serbian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:278
+#: qcsrc/menu/xonotic/credits.qc:288
 msgid "Spanish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:288
+#: qcsrc/menu/xonotic/credits.qc:299
 msgid "Swedish"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:292
+#: qcsrc/menu/xonotic/credits.qc:303
 msgid "Ukrainian"
 msgstr ""
 
-#: qcsrc/menu/xonotic/credits.qc:299
+#: qcsrc/menu/xonotic/credits.qc:310
 msgid "Past Contributors"
 msgstr ""
 
@@ -9319,3 +9326,17 @@ msgstr "Culoare echipă:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Activare panou"
+
+#~ msgid "QMCMD^killed flag, icon"
+#~ msgstr "QMCMD^omorât steagul, pictogramă"
+
+#~ msgid "QMCMD^drop gun, icon"
+#~ msgstr "QMCMD^scapă arma, pictogramă"
+
+#~ msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
+#~ msgstr "QMCMD^armă scăpată %w^7 (l:%l^7)"
+
+#~ msgid ""
+#~ "^F2You have stolen the enemy's vehicle, you are now visible on their "
+#~ "radar!"
+#~ msgstr "^F2Ai ciordit un vehicul de la inamic, ești urmărit de radarul lor!"

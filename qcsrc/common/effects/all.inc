@@ -153,6 +153,8 @@ EFFECT(0, ICEORGLASS,               "iceorglass")
 EFFECT(0, ICEFIELD,                 "icefield")
 EFFECT(0, FIREFIELD,                "firefield")
 EFFECT(0, HEALING,                  "healing_fx")
+EFFECT(0, ARMOR_REPAIR,             "armorrepair_fx")
+EFFECT(0, AMMO_REGEN,               "ammoregen_fx")
 EFFECT(1, LASER_BEAM_FAST,          "nex242_misc_laser_beam_fast")
 EFFECT(0, RESPAWN_GHOST,            "respawn_ghost")
 

@@ -17,8 +17,4 @@ CLASS(Zombie, Monster)
     ATTRIB(Zombie, monster_name, string, _("Zombie"));
 ENDCLASS(Zombie)
 
-REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(ZOMBIE, NEW(Zombie));

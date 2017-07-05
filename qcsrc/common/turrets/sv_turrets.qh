@@ -94,6 +94,8 @@ bool turret_initialize(entity this, Turret tur);
 
 .entity pathcurrent;
 
+.entity pathgoal;
+
 float turret_count;
 
 // debugging
