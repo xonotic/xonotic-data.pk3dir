@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-03 14:35+0200\n"
-"PO-Revision-Date: 2017-05-21 08:35+0000\n"
+"PO-Revision-Date: 2017-07-05 18:30+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -354,7 +354,7 @@ msgstr "tué le porteur de drapeau (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "tué le porteur de drapeau, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
@@ -367,11 +367,11 @@ msgstr "lâché le drapeau, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "lâché l'arme, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:816
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "lâché l'arme %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
@@ -4135,7 +4135,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:788
 msgid "^F2Intruder detected, disabling shields!"
-msgstr ""
+msgstr "^F2Intrus détecté, boucliers désactivés !"
 
 #: qcsrc/common/notifications/all.qh:188
 msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
@@ -5060,7 +5060,7 @@ msgstr "Hongrois"
 
 #: qcsrc/menu/xonotic/credits.qc:231
 msgid "Irish"
-msgstr ""
+msgstr "Irlandais"
 
 #: qcsrc/menu/xonotic/credits.qc:234
 msgid "Italian"
@@ -5092,7 +5092,7 @@ msgstr "Russe"
 
 #: qcsrc/menu/xonotic/credits.qc:279
 msgid "Scottish Gaelic"
-msgstr ""
+msgstr "Gaélique écossais"
 
 #: qcsrc/menu/xonotic/credits.qc:282
 msgid "Serbian"
@@ -9499,19 +9499,3 @@ msgstr "Couleur de l'Équipe :"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Afficher le tableau de bord"
-
-#~ msgid "QMCMD^killed flag, icon"
-#~ msgstr "tué le drapeau, icône"
-
-#~ msgid "QMCMD^drop gun, icon"
-#~ msgstr "lâcher l'arme, icône"
-
-#~ msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
-#~ msgstr "lâché l'arme %w^7 (l:%l^7)"
-
-#~ msgid ""
-#~ "^F2You have stolen the enemy's vehicle, you are now visible on their "
-#~ "radar!"
-#~ msgstr ""
-#~ "^F2Vous avez volé le véhicule de l'ennemi, vous êtes maintenant visible "
-#~ "sur leur radar !"

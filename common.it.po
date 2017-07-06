@@ -9490,18 +9490,3 @@ msgstr "Colore squadra:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Abilita pannello"
-
-#~ msgid "QMCMD^killed flag, icon"
-#~ msgstr "ucciso bandiera, icona"
-
-#~ msgid "QMCMD^drop gun, icon"
-#~ msgstr "lascia arma, icona"
-
-#~ msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
-#~ msgstr "lasciata arma %w^7 (l:%l^7)"
-
-#~ msgid ""
-#~ "^F2You have stolen the enemy's vehicle, you are now visible on their "
-#~ "radar!"
-#~ msgstr ""
-#~ "^F2Hai rubato il veicolo del nemico, sei adesso visibile sul loro radar!"

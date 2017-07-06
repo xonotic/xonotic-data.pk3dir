@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-03 14:35+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
+"PO-Revision-Date: 2017-07-05 15:06+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: English (Australia) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
@@ -9273,19 +9273,3 @@ msgstr "Team Colour:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Enable panel"
-
-#~ msgid "QMCMD^killed flag, icon"
-#~ msgstr "QMCMD^killed flag, icon"
-
-#~ msgid "QMCMD^drop gun, icon"
-#~ msgstr "QMCMD^drop gun, icon"
-
-#~ msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
-#~ msgstr "QMCMD^dropped gun %w^7 (l:%l^7)"
-
-#~ msgid ""
-#~ "^F2You have stolen the enemy's vehicle, you are now visible on their "
-#~ "radar!"
-#~ msgstr ""
-#~ "^F2You have stolen the enemy's vehicle, you are now visible on their "
-#~ "radar!"
