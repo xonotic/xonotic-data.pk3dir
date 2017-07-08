@@ -197,8 +197,8 @@ bool projected_on_screen(vector screen_pos)
 	return screen_pos.z >= 0
 		&& screen_pos.x >= 0
 		&& screen_pos.y >= 0
-		&& screen_pos.x <= vid_conwidth
-		&& screen_pos.y <= vid_conheight;
+		&& screen_pos.x < vid_conwidth
+		&& screen_pos.y < vid_conheight;
 }
 
 float expandingbox_sizefactor_from_fadelerp(float fadelerp)
