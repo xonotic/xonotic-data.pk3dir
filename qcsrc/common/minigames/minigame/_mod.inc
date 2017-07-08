@@ -5,4 +5,5 @@
 #include <common/minigames/minigame/pong.qc>
 #include <common/minigames/minigame/pp.qc>
 #include <common/minigames/minigame/ps.qc>
+#include <common/minigames/minigame/tetris.qc>
 #include <common/minigames/minigame/ttt.qc>
