@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-03 14:35+0200\n"
+"POT-Creation-Date: 2017-07-09 00:35+0200\n"
 "PO-Revision-Date: 2017-07-05 15:06+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
@@ -246,8 +246,8 @@ msgstr "Continuar..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
-msgid "QMCMD^Chat"
-msgstr "QMCMD^Chat"
+msgid "Chat"
+msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
