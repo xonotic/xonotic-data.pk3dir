@@ -710,14 +710,14 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	float a_up = PHYS_JETPACK_ACCEL_UP(this);
 	float a_add = PHYS_JETPACK_ANTIGRAVITY(this) * PHYS_GRAVITY(this);
 
-	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(self)) { a_up = PHYS_JETPACK_REVERSE_THRUST(this); }
+	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(this)) { a_up = PHYS_JETPACK_REVERSE_THRUST(this); }
 
 	wishvel_x *= a_side;
 	wishvel_y *= a_side;
 	wishvel_z *= a_up;
 	wishvel_z += a_add;
 
-	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(self)) { wishvel_z *= -1; }
+	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(this)) { wishvel_z *= -1; }
 
 	float best = 0;
 	//////////////////////////////////////////////////////////////////////////////////////

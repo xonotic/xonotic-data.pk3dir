@@ -1182,7 +1182,7 @@ float bot_execute_commands_once(entity this)
 	bot_setcurrentcommand(this);
 
 	// Ignore all commands except continue when the bot is paused
-	if(!(self.bot_exec_status & BOT_EXEC_STATUS_PAUSED))
+	if(!(this.bot_exec_status & BOT_EXEC_STATUS_PAUSED))
 	{
 		// if we have no bot command, better return
 		// old logic kept pressing previously pressed keys, but that has problems
