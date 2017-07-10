@@ -138,6 +138,13 @@ spawnfunc(trigger_teleport)
 
 spawnfunc(target_teleporter)
 {
+	if(this.target == "")
+	{
+		// actually a destination!
+		spawnfunc_info_teleport_destination(this);
+		return;
+	}
+
 	this.active = ACTIVE_ACTIVE;
 
 	this.use = target_teleport_use;
@@ -146,12 +153,6 @@ spawnfunc(target_teleporter)
 		FOREACH_WORD(this.noise, true, precache_sound(it));
 
 	InitializeEntity(this, teleport_findtarget, INITPRIO_FINDTARGET);
-
-	if (this.target == "")
-	{
-		objerror (this, "Teleporter with no target");
-		return;
-	}
 }
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)

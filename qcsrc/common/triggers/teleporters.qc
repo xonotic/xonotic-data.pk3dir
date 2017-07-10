@@ -251,7 +251,7 @@ void teleport_findtarget(entity this)
 	else if(n == 1)
 	{
 		// exactly one dest - bots love that
-		this.enemy = find(e, targetname, this.target);
+		this.enemy = find(NULL, targetname, this.target);
 	}
 	else
 	{
