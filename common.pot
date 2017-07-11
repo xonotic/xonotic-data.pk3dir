@@ -225,6 +225,11 @@ msgstr ""
 msgid "Continue..."
 msgstr ""
 
+#: qcsrc/client/hud/panel/quickmenu.qc:794
+#: qcsrc/client/hud/panel/quickmenu.qc:798
+msgid "Chat"
+msgstr ""
+
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
 msgstr ""
