@@ -64,7 +64,7 @@ MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
     /** attacker    	*/ i(entity, MUTATOR_ARGV_1_entity) \
     /** target    		*/ i(entity, MUTATOR_ARGV_2_entity) \
     /** deathtype     	*/ i(float,  MUTATOR_ARGV_3_float) \
-    /** damage          */ i(float,  MUTATOR_ARGV_4_float) \
+    /** damage         */ i(float,  MUTATOR_ARGV_4_float) \
     /** damage  		*/ o(float,  MUTATOR_ARGV_4_float) \
     /**/
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);

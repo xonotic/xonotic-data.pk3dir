@@ -557,7 +557,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
-		excess = M_ARGV(4, float);
+		damage = M_ARGV(4, float);
+		excess = max(0, damage - take - save);
 
 		//Weapon wep = this.(weaponentity).m_weapon;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
