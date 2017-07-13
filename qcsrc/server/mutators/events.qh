@@ -801,7 +801,7 @@ MUTATOR_HOOKABLE(CheckRules_World, EV_CheckRules_World);
 MUTATOR_HOOKABLE(WantWeapon, EV_WantWeapon);
 
 #define EV_AddPlayerScore(i, o) \
-    /** score field */  i(PlayerScoreField, MUTATOR_ARGV_0_entity) \
+    /** score field */  i(entity, MUTATOR_ARGV_0_entity) \
     /** score */        i(float, MUTATOR_ARGV_1_float) \
     /**/                o(float, MUTATOR_ARGV_1_float) \
     /** player */       i(entity, MUTATOR_ARGV_2_entity) \

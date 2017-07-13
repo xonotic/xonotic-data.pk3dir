@@ -17,6 +17,7 @@
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
+#include <common/scores.qh>
 #include <common/triggers/include.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>

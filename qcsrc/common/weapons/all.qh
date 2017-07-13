@@ -20,6 +20,7 @@ WepSet ReadWepSet();
 
 #ifdef GAMEQC
 #include "calculations.qh"
+#include "projectiles.qh"
 #include <common/models/all.qh>
 #endif
 
