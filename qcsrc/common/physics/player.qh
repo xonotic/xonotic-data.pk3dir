@@ -292,6 +292,17 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 
 #endif
 
+#ifdef SVQC
+// FIXME/EXPLAINME: why? Mario: because
+vector autocvar_sv_player_maxs = '16 16 45';
+vector autocvar_sv_player_mins = '-16 -16 -24';
+vector autocvar_sv_player_viewoffset = '0 0 35';
+vector autocvar_sv_player_crouch_maxs = '16 16 25';
+vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
+vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
+//vector autocvar_sv_player_headsize = '24 24 12';
+#endif
+
 REGISTER_NET_C2S(setpause)
 #ifdef CSQC
 void unpause_update()

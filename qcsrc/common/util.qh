@@ -4,6 +4,12 @@
 vector real_origin(entity ent);
 #endif
 
+#ifdef SVQC
+// temporary array used to dump weapon and turret settings
+const int MAX_CONFIG_SETTINGS = 256;
+string config_queue[MAX_CONFIG_SETTINGS];
+#endif
+
 .string netname;
 .string message;
 

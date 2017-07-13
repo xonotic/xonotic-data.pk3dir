@@ -2,7 +2,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../util.qh"
+    #include <common/util.qh>
     #include "all.qh"
 #endif
 
