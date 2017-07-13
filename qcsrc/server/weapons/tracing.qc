@@ -422,10 +422,10 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			yoda = 0;
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
-			float g = accuracy_isgooddamage(this, hit);
+			bool gooddamage = accuracy_isgooddamage(this, hit);
 			Damage(hit, this, this, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons
-			if(g)
+			if(gooddamage)
 			{
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);

@@ -2708,6 +2708,11 @@ void PlayerPostThink (entity this)
 	}
 
 	if (IS_PLAYER(this)) {
+		if(this.death_time == time && IS_DEAD(this))
+		{
+			this.maxs.z = 5;
+			setsize(this, this.mins, this.maxs);
+		}
 		DrownPlayer(this);
 		CheckRules_Player(this);
 		UpdateChatBubble(this);

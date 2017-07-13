@@ -93,7 +93,7 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 	int mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
 
 	if (warmup_stage) return false;
-	if (IS_DEAD(targ)) return false;
+	if (IS_DEAD(targ) && time > targ.death_time) return false;
 	if (STAT(FROZEN, targ)) return false;
 	if (SAME_TEAM(attacker, targ)) return false;
 
