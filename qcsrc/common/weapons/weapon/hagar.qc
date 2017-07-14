@@ -241,14 +241,14 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 
 	weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(hagar, refire));
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	shots = actor.(weaponentity).hagar_load;
+	W_SetupShot(actor, weaponentity, false, 2, SND_HAGAR_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage) * shots);
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
 
-	shots = actor.(weaponentity).hagar_load;
 	missile = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
