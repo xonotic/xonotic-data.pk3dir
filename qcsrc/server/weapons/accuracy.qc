@@ -94,7 +94,7 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 
 	if (warmup_stage) return false;
 	if (IS_DEAD(targ) && time > targ.death_time) return false;
-	if (STAT(FROZEN, targ)) return false;
+	if (STAT(FROZEN, targ) && time > targ.freeze_time) return false;
 	if (SAME_TEAM(attacker, targ)) return false;
 
 	if (mutator_check == MUT_ACCADD_INVALID) return true;

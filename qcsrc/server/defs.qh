@@ -380,6 +380,7 @@ const float ACTIVE_TOGGLE 	= 3;
 .float revive_progress = _STAT(REVIVE_PROGRESS);
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.float freeze_time;
 .entity iceblock;
 .entity frozen_by; // for ice fields
 
