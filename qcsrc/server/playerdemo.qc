@@ -64,7 +64,7 @@ void playerdemo_open_write(entity this, string f)
 	PLAYERDEMO_FIELD(CS(ent),func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
 	PLAYERDEMO_FIELD(CS(ent),func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
 	PLAYERDEMO_FIELD(CS(ent),func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
-	PLAYERDEMO_FIELD(ent,func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
 	PLAYERDEMO_FIELD(ent,func,float,flags) \
 	// end of list
 
