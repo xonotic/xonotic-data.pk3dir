@@ -24,12 +24,14 @@ void sys_phys_monitor(entity this, float dt)
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	anticheat_physics(this);
 	if (sv_maxidle > 0) {
-		if (buttons != this.buttons_old
+		if (buttons != CS(this).buttons_old
 		    || CS(this).movement != CS(this).movement_old
 		    || this.v_angle != this.v_angle_old) { CS(this).parm_idlesince = time; }
 	}
 	PM_check_nickspam(this);
 	PM_check_punch(this, dt);
+
+	CS(this).buttons_old = PHYS_INPUT_BUTTON_MASK(this);
 }
 
 void sys_phys_ai(entity this)

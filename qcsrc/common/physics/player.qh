@@ -18,7 +18,6 @@
 #endif
 
 .vector movement_old;
-.float buttons_old;
 .vector v_angle_old;
 .string lastclassname;
 
