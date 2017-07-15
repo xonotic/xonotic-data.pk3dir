@@ -87,6 +87,7 @@ CLASS(Client, Object)
     ATTRIB(Client, netname_previous, string, this.netname_previous);
     ATTRIB(Client, allowed_timeouts, int, this.allowed_timeouts);
     ATTRIB(Client, active_minigame, entity, this.active_minigame);
+    ATTRIB(Client, taunt_soundtime, float, this.taunt_soundtime);
 
     METHOD(Client, m_unwind, bool(Client this));
 

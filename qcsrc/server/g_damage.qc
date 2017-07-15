@@ -372,7 +372,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			LogDeath("frag", deathtype, attacker, targ);
 			GiveFrags(attacker, targ, 1, deathtype);
 
-			attacker.taunt_soundtime = time + 1;
+			CS(attacker).taunt_soundtime = time + 1;
 			attacker.killcount = attacker.killcount + 1;
 
 			attacker.killsound += 1;

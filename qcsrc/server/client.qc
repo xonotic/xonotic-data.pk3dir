@@ -2606,8 +2606,8 @@ void PlayerPreThink (entity this)
 		e.pusher = oldpusher;
 	}
 
-	if (this.taunt_soundtime && time > this.taunt_soundtime) {
-		this.taunt_soundtime = 0;
+	if (CS(this).taunt_soundtime && time > CS(this).taunt_soundtime) {
+		CS(this).taunt_soundtime = 0;
 		PlayerSound(this, playersound_taunt, CH_VOICE, VOL_BASEVOICE, VOICETYPE_AUTOTAUNT);
 	}
 
