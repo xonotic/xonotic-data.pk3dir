@@ -1125,8 +1125,8 @@ void ClientConnect(entity this)
 #ifdef WATERMARK
 	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
 #endif
-	this.version_nagtime = time + 10 + random() * 10;
 	TRANSMUTE(Client, this);
+	CS(this).version_nagtime = time + 10 + random() * 10;
 
 	// identify the right forced team
 	if (autocvar_g_campaign)
@@ -2485,8 +2485,8 @@ void PlayerPreThink (entity this)
 	}
 
 	// version nagging
-	if (this.version_nagtime && this.cvar_g_xonoticversion && time > this.version_nagtime) {
-        this.version_nagtime = 0;
+	if (CS(this).version_nagtime && this.cvar_g_xonoticversion && time > CS(this).version_nagtime) {
+        CS(this).version_nagtime = 0;
         if (strstrofs(this.cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(this.cvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git client
         } else if (strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0) {
