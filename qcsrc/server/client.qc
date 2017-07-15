@@ -2106,6 +2106,192 @@ bool joinAllowed(entity this)
 	return true;
 }
 
+bool PlayerThink(entity this)
+{
+	CheckRules_Player(this);
+
+	if (game_stopped || intermission_running) {
+		this.modelflags &= ~MF_ROCKET;
+		if(intermission_running)
+			IntermissionThink(this);
+		return false;
+	}
+
+	if (timeout_status == TIMEOUT_ACTIVE) {
+        // don't allow the player to turn around while game is paused
+		// FIXME turn this into CSQC stuff
+		this.v_angle = this.lastV_angle;
+		this.angles = this.lastV_angle;
+		this.fixangle = true;
+	}
+
+	if (frametime) player_powerups(this);
+
+	if (IS_DEAD(this)) {
+		if (this.personal && g_race_qualifying) {
+			if (time > this.respawn_time) {
+				STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
+				respawn(this);
+				CS(this).impulse = CHIMPULSE_SPEEDRUN.impulse;
+			}
+		} else {
+			if (frametime) player_anim(this);
+
+			if (this.respawn_flags & RESPAWN_DENY)
+			{
+				STAT(RESPAWN_TIME, this) = 0;
+				return false;
+			}
+
+			bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
+
+			switch(this.deadflag)
+			{
+				case DEAD_DYING:
+				{
+					if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
+						this.deadflag = DEAD_RESPAWNING;
+					else if (!button_pressed || (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)))
+						this.deadflag = DEAD_DEAD;
+					break;
+				}
+				case DEAD_DEAD:
+				{
+					if (button_pressed)
+						this.deadflag = DEAD_RESPAWNABLE;
+					else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE))
+						this.deadflag = DEAD_RESPAWNING;
+					break;
+				}
+				case DEAD_RESPAWNABLE:
+				{
+					if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+						this.deadflag = DEAD_RESPAWNING;
+					break;
+				}
+				case DEAD_RESPAWNING:
+				{
+					if (time > this.respawn_time)
+					{
+						this.respawn_time = time + 1; // only retry once a second
+						this.respawn_time_max = this.respawn_time;
+						respawn(this);
+					}
+					break;
+				}
+			}
+
+			ShowRespawnCountdown(this);
+
+			if (this.respawn_flags & RESPAWN_SILENT)
+				STAT(RESPAWN_TIME, this) = 0;
+			else if ((this.respawn_flags & RESPAWN_FORCE) && this.respawn_time < this.respawn_time_max)
+			{
+				if (time < this.respawn_time)
+					STAT(RESPAWN_TIME, this) = this.respawn_time;
+				else if (this.deadflag != DEAD_RESPAWNING)
+					STAT(RESPAWN_TIME, this) = -this.respawn_time_max;
+			}
+			else
+				STAT(RESPAWN_TIME, this) = this.respawn_time;
+		}
+
+		// if respawning, invert stat_respawn_time to indicate this, the client translates it
+		if (this.deadflag == DEAD_RESPAWNING && STAT(RESPAWN_TIME, this) > 0)
+			STAT(RESPAWN_TIME, this) *= -1;
+
+		return false;
+	}
+
+	this.prevorigin = this.origin;
+
+	bool have_hook = false;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(this.(weaponentity).hook.state)
+		{
+			have_hook = true;
+			break;
+		}
+	}
+	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	if (have_hook) {
+		do_crouch = false;
+	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
+		do_crouch = false;
+	} else if (this.vehicle) {
+		do_crouch = false;
+	} else if (STAT(FROZEN, this)) {
+		do_crouch = false;
+    }
+
+	if (do_crouch) {
+		if (!this.crouch) {
+			this.crouch = true;
+			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
+			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
+			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
+		}
+	} else if (this.crouch) {
+        tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
+        if (!trace_startsolid) {
+            this.crouch = false;
+            this.view_ofs = STAT(PL_VIEW_OFS, this);
+            setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
+        }
+	}
+
+	FixPlayermodel(this);
+
+	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
+	//if(frametime)
+	{
+		this.items &= ~this.items_added;
+
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity weaponentity = weaponentities[slot];
+			W_WeaponFrame(this, weaponentity);
+
+			if(slot == 0)
+			{
+				this.clip_load = this.(weaponentity).clip_load;
+				this.clip_size = this.(weaponentity).clip_size;
+			}
+		}
+
+		this.items_added = 0;
+		if (this.items & ITEM_Jetpack.m_itemid && (this.items & ITEM_JetpackRegen.m_itemid || this.ammo_fuel >= 0.01))
+            this.items_added |= IT_FUEL;
+
+		this.items |= this.items_added;
+	}
+
+	player_regen(this);
+
+	// WEAPONTODO: Add a weapon request for this
+	// rot vortex charge to the charge limit
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
+			this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+	}
+
+	if (frametime) player_anim(this);
+
+	// secret status
+	secrets_setstatus(this);
+
+	// monsters status
+	monsters_setstatus(this);
+
+	this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
+
+	return true;
+}
+
 void ObserverThink(entity this)
 {
 	if ( CS(this).impulse )
@@ -2384,186 +2570,8 @@ void PlayerPreThink (entity this)
 		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
-		CheckRules_Player(this);
-
-		if (game_stopped || intermission_running) {
-			this.modelflags &= ~MF_ROCKET;
-			if(intermission_running)
-				IntermissionThink(this);
+		if(!PlayerThink(this))
 			return;
-		}
-
-		if (timeout_status == TIMEOUT_ACTIVE) {
-            // don't allow the player to turn around while game is paused
-			// FIXME turn this into CSQC stuff
-			this.v_angle = this.lastV_angle;
-			this.angles = this.lastV_angle;
-			this.fixangle = true;
-		}
-
-		if (frametime) player_powerups(this);
-
-		if (IS_DEAD(this)) {
-			if (this.personal && g_race_qualifying) {
-				if (time > this.respawn_time) {
-					STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
-					respawn(this);
-					CS(this).impulse = CHIMPULSE_SPEEDRUN.impulse;
-				}
-			} else {
-				if (frametime) player_anim(this);
-
-				if (this.respawn_flags & RESPAWN_DENY)
-				{
-					STAT(RESPAWN_TIME, this) = 0;
-					return;
-				}
-
-				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
-
-				switch(this.deadflag)
-				{
-					case DEAD_DYING:
-					{
-						if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
-							this.deadflag = DEAD_RESPAWNING;
-						else if (!button_pressed || (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)))
-							this.deadflag = DEAD_DEAD;
-						break;
-					}
-					case DEAD_DEAD:
-					{
-						if (button_pressed)
-							this.deadflag = DEAD_RESPAWNABLE;
-						else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE))
-							this.deadflag = DEAD_RESPAWNING;
-						break;
-					}
-					case DEAD_RESPAWNABLE:
-					{
-						if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
-							this.deadflag = DEAD_RESPAWNING;
-						break;
-					}
-					case DEAD_RESPAWNING:
-					{
-						if (time > this.respawn_time)
-						{
-							this.respawn_time = time + 1; // only retry once a second
-							this.respawn_time_max = this.respawn_time;
-							respawn(this);
-						}
-						break;
-					}
-				}
-
-				ShowRespawnCountdown(this);
-
-				if (this.respawn_flags & RESPAWN_SILENT)
-					STAT(RESPAWN_TIME, this) = 0;
-				else if ((this.respawn_flags & RESPAWN_FORCE) && this.respawn_time < this.respawn_time_max)
-				{
-					if (time < this.respawn_time)
-						STAT(RESPAWN_TIME, this) = this.respawn_time;
-					else if (this.deadflag != DEAD_RESPAWNING)
-						STAT(RESPAWN_TIME, this) = -this.respawn_time_max;
-				}
-				else
-					STAT(RESPAWN_TIME, this) = this.respawn_time;
-			}
-
-			// if respawning, invert stat_respawn_time to indicate this, the client translates it
-			if (this.deadflag == DEAD_RESPAWNING && STAT(RESPAWN_TIME, this) > 0)
-				STAT(RESPAWN_TIME, this) *= -1;
-
-			return;
-		}
-
-		this.prevorigin = this.origin;
-
-		bool have_hook = false;
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(this.(weaponentity).hook.state)
-			{
-				have_hook = true;
-				break;
-			}
-		}
-		bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
-		if (have_hook) {
-			do_crouch = false;
-		} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-			do_crouch = false;
-		} else if (this.vehicle) {
-			do_crouch = false;
-		} else if (STAT(FROZEN, this)) {
-			do_crouch = false;
-        }
-
-		if (do_crouch) {
-			if (!this.crouch) {
-				this.crouch = true;
-				this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
-				setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
-				// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
-			}
-		} else if (this.crouch) {
-            tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
-            if (!trace_startsolid) {
-                this.crouch = false;
-                this.view_ofs = STAT(PL_VIEW_OFS, this);
-                setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
-            }
-		}
-
-		FixPlayermodel(this);
-
-		// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
-		//if(frametime)
-		{
-			this.items &= ~this.items_added;
-
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			{
-				.entity weaponentity = weaponentities[slot];
-				W_WeaponFrame(this, weaponentity);
-
-				if(slot == 0)
-				{
-					this.clip_load = this.(weaponentity).clip_load;
-					this.clip_size = this.(weaponentity).clip_size;
-				}
-			}
-
-			this.items_added = 0;
-			if (this.items & ITEM_Jetpack.m_itemid && (this.items & ITEM_JetpackRegen.m_itemid || this.ammo_fuel >= 0.01))
-                this.items_added |= IT_FUEL;
-
-			this.items |= this.items_added;
-		}
-
-		player_regen(this);
-
-		// WEAPONTODO: Add a weapon request for this
-		// rot vortex charge to the charge limit
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if (WEP_CVAR(vortex, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(vortex, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
-				this.(weaponentity).vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
-		}
-
-		if (frametime) player_anim(this);
-
-		// secret status
-		secrets_setstatus(this);
-
-		// monsters status
-		monsters_setstatus(this);
-
-		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
 	else if (game_stopped || intermission_running) {
 		if(intermission_running)
