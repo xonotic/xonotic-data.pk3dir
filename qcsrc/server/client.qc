@@ -2664,7 +2664,6 @@ PlayerPostThink
 Called every frame for each client after the physics are run
 =============
 */
-.float idlekick_lasttimeleft;
 void PlayerPostThink (entity this)
 {
 	Player_Physics(this);
@@ -2687,9 +2686,9 @@ void PlayerPostThink (entity this)
 		{ /* do nothing */ }
 		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
-			if (this.idlekick_lasttimeleft)
+			if (CS(this).idlekick_lasttimeleft)
 			{
-				this.idlekick_lasttimeleft = 0;
+				CS(this).idlekick_lasttimeleft = 0;
 				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_IDLING);
 			}
 		}
@@ -2697,7 +2696,7 @@ void PlayerPostThink (entity this)
 		{
 			float timeleft = ceil(sv_maxidle - (time - CS(this).parm_idlesince));
 			if (timeleft == min(10, sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
-				if (!this.idlekick_lasttimeleft)
+				if (!CS(this).idlekick_lasttimeleft)
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
 			if (timeleft <= 0) {
@@ -2706,10 +2705,10 @@ void PlayerPostThink (entity this)
 				return;
 			}
 			else if (timeleft <= 10) {
-				if (timeleft != this.idlekick_lasttimeleft) {
+				if (timeleft != CS(this).idlekick_lasttimeleft) {
 				    Send_Notification(NOTIF_ONE, this, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft));
                 }
-				this.idlekick_lasttimeleft = timeleft;
+				CS(this).idlekick_lasttimeleft = timeleft;
 			}
 		}
 	}
