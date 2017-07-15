@@ -1053,25 +1053,38 @@ void FixClientCvars(entity e)
 	MUTATOR_CALLHOOK(FixClientCvars, e);
 }
 
-float PlayerInIDList(entity p, string idlist)
+bool findinlist_abbrev(string tofind, string list)
 {
-	float n, i;
-	string s;
-
-	// NOTE: we do NOT check crypto_idfp_signed here, an unsigned ID is fine too for this
-	if (!p.crypto_idfp)
-		return 0;
-
-	// this function allows abbreviated player IDs too!
-	n = tokenize_console(idlist);
-	for(i = 0; i < n; ++i)
+	// this function allows abbreviated strings!
+	FOREACH_WORD(list, it == substring(tofind, 0, strlen(it)),
 	{
-		s = argv(i);
-		if(s == substring(p.crypto_idfp, 0, strlen(s)))
-			return 1;
-	}
+		return true;
+	});
 
-	return 0;
+	return false;
+}
+
+bool PlayerInIPList(entity p, string iplist)
+{
+	// some safety checks (never allow local?)
+	if(p.netaddress == "local" || p.netaddress == "" || !IS_REAL_CLIENT(p))
+		return false;
+
+	return findinlist_abbrev(p.netaddress, iplist);
+}
+
+bool PlayerInIDList(entity p, string idlist)
+{
+	// NOTE: we do NOT check crypto_idfp_signed here, an unsigned ID is fine too for this
+	if(!p.crypto_idfp)
+		return false;
+
+	return findinlist_abbrev(p.crypto_idfp, idlist);
+}
+
+bool PlayerInList(entity player, string list)
+{
+	return PlayerInIDList(player, list) || PlayerInIPList(player, list);
 }
 
 #ifdef DP_EXT_PRECONNECT
@@ -1130,10 +1143,10 @@ void ClientConnect(entity this)
 			}
 		}
 	}
-	else if (PlayerInIDList(this, autocvar_g_forced_team_red))    this.team_forced = NUM_TEAM_1;
-	else if (PlayerInIDList(this, autocvar_g_forced_team_blue))   this.team_forced = NUM_TEAM_2;
-	else if (PlayerInIDList(this, autocvar_g_forced_team_yellow)) this.team_forced = NUM_TEAM_3;
-	else if (PlayerInIDList(this, autocvar_g_forced_team_pink))   this.team_forced = NUM_TEAM_4;
+	else if (PlayerInList(this, autocvar_g_forced_team_red))    this.team_forced = NUM_TEAM_1;
+	else if (PlayerInList(this, autocvar_g_forced_team_blue))   this.team_forced = NUM_TEAM_2;
+	else if (PlayerInList(this, autocvar_g_forced_team_yellow)) this.team_forced = NUM_TEAM_3;
+	else if (PlayerInList(this, autocvar_g_forced_team_pink))   this.team_forced = NUM_TEAM_4;
 	else switch (autocvar_g_forced_team_otherwise)
 	{
 		default: this.team_forced = 0; break;
