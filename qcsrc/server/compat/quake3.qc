@@ -5,6 +5,7 @@
 spawnfunc(weapon_crylink);
 spawnfunc(weapon_electro);
 spawnfunc(weapon_hagar);
+spawnfunc(weapon_hook);
 spawnfunc(weapon_machinegun);
 spawnfunc(weapon_vortex);
 spawnfunc(weapon_minelayer);
@@ -59,6 +60,9 @@ spawnfunc(ammo_slugs)          { spawnfunc_item_cells(this);          }
 // BFG -> Crylink
 spawnfunc(weapon_bfg)          { spawnfunc_weapon_crylink(this);      }
 spawnfunc(ammo_bfg)            { spawnfunc_item_cells(this);          }
+
+// grappling hook -> hook
+spawnfunc(weapon_grapplinghook) { spawnfunc_weapon_hook(this);        }
 
 // RL -> RL
 spawnfunc(ammo_rockets)        { spawnfunc_item_rockets(this);        }

@@ -140,10 +140,9 @@ spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) delete(this)
 
 METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 {
-    float vz;
     vector wish_angle, real_angle;
 
-    vz = it.velocity_z;
+    float vz = it.velocity_z;
 
     it.angles_x = anglemods(it.angles_x);
     it.angles_y = anglemods(it.angles_y);
@@ -198,8 +197,9 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 
     it.iscreature				= true;
     it.teleportable			= TELEPORT_NORMAL;
-    it.damagedbycontents		= true;
-    IL_PUSH(g_damagedbycontents, it);
+    if(!it.damagedbycontents)
+        IL_PUSH(g_damagedbycontents, it);
+    it.damagedbycontents        = true;
     set_movetype(it, MOVETYPE_WALK);
     it.solid					= SOLID_SLIDEBOX;
     it.takedamage				= DAMAGE_AIM;

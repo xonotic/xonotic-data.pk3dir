@@ -57,6 +57,7 @@ void Physics_UpdateStats(entity this, float maxspd_mod)
 	STAT(MOVEVARS_AIRCONTROL, this) = Physics_ClientOption(this, "aircontrol", autocvar_sv_aircontrol);
 	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(this, "aircontrol_power", autocvar_sv_aircontrol_power);
 	STAT(MOVEVARS_AIRCONTROL_BACKWARDS, this) = Physics_ClientOption(this, "aircontrol_backwards", autocvar_sv_aircontrol_backwards);
+	STAT(MOVEVARS_AIRCONTROL_SIDEWARDS, this) = Physics_ClientOption(this, "aircontrol_sidewards", autocvar_sv_aircontrol_sidewards);
 	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(this, "aircontrol_penalty", autocvar_sv_aircontrol_penalty);
 	STAT(MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, this) = Physics_ClientOption(this, "warsowbunny_airforwardaccel", autocvar_sv_warsowbunny_airforwardaccel);
 	STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, this) = Physics_ClientOption(this, "warsowbunny_topspeed", autocvar_sv_warsowbunny_topspeed);
@@ -137,6 +138,11 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 	float movity = IsMoveInDirection(this.movement, 0);
 	if(PHYS_AIRCONTROL_BACKWARDS(this))
 		movity += IsMoveInDirection(this.movement, 180);
+	if(PHYS_AIRCONTROL_SIDEWARDS(this))
+	{
+		movity += IsMoveInDirection(this.movement, 90);
+		movity += IsMoveInDirection(this.movement, -90);
+	}
 
 	float k = 32 * (2 * movity - 1);
 	if (k <= 0)
@@ -704,14 +710,14 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	float a_up = PHYS_JETPACK_ACCEL_UP(this);
 	float a_add = PHYS_JETPACK_ANTIGRAVITY(this) * PHYS_GRAVITY(this);
 
-	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(self)) { a_up = PHYS_JETPACK_REVERSE_THRUST(this); }
+	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(this)) { a_up = PHYS_JETPACK_REVERSE_THRUST(this); }
 
 	wishvel_x *= a_side;
 	wishvel_y *= a_side;
 	wishvel_z *= a_up;
 	wishvel_z += a_add;
 
-	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(self)) { wishvel_z *= -1; }
+	if(PHYS_JETPACK_REVERSE_THRUST(this) && PHYS_INPUT_BUTTON_CROUCH(this)) { wishvel_z *= -1; }
 
 	float best = 0;
 	//////////////////////////////////////////////////////////////////////////////////////

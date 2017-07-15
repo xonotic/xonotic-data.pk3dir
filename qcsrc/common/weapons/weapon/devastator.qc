@@ -3,7 +3,7 @@
 CLASS(Devastator, Weapon)
 /* ammotype  */ ATTRIB(Devastator, ammo_field, .int, ammo_rockets);
 /* impulse   */ ATTRIB(Devastator, impulse, int, 9);
-/* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Devastator, mdl, string, "rl");

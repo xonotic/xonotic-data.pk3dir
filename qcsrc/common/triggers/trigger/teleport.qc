@@ -100,9 +100,6 @@ spawnfunc(trigger_teleport)
 	}
 
 	IL_PUSH(g_teleporters, this);
-
-	this.teleport_next = teleport_first;
-	teleport_first = this;
 }
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
@@ -122,9 +119,6 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 	//settouch(this, trigger_push_touch);
 	this.move_time = time;
 	defer(this, 0.25, teleport_findtarget);
-
-	this.teleport_next = teleport_first;
-	teleport_first = this;
 
 	return true;
 }

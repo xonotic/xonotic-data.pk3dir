@@ -17,6 +17,7 @@
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
+#include <common/scores.qh>
 #include <common/triggers/include.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>
@@ -31,7 +32,7 @@
 
 void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
 {
-	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
+	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
 	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
 }
 
@@ -130,6 +131,8 @@ void CSQC_Init()
 	registercvar("cl_multijump", "1");
 
 	registercvar("cl_spawn_near_teammate", "1");
+
+	registercvar("cl_race_cptimes_onlyself", "0");
 
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
@@ -1044,7 +1047,22 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_penaltyaccumulator = 0;
 				race_laptime = time; // valid
 			}
+			break;
+		case RACE_NET_CHECKPOINT_HIT_SELF_QUALIFYING:
+			race_checkpoint = ReadByte();
+			race_time = ReadInt24_t();
+			race_previousbesttime = ReadInt24_t();
+			if(race_previousbestname)
+				strunzone(race_previousbestname);
+			race_previousbestname = strzone(""); // handled by MakeRaceString
 
+			race_checkpointtime = time;
+
+			if(race_checkpoint == 0 || race_checkpoint == 254)
+			{
+				race_penaltyaccumulator = 0;
+				race_laptime = time; // valid
+			}
 			break;
 
 		case RACE_NET_CHECKPOINT_CLEAR:
@@ -1065,6 +1083,15 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_nextbestname = strzone(ReadString());
 			break;
 
+		case RACE_NET_CHECKPOINT_NEXT_SELF_QUALIFYING:
+			race_nextcheckpoint = ReadByte();
+
+			race_nextbesttime = ReadInt24_t();
+			if(race_nextbestname)
+				strunzone(race_nextbestname);
+			race_nextbestname = strzone(""); // handled by MakeRaceString
+			break;
+
 		case RACE_NET_CHECKPOINT_HIT_RACE:
 			race_mycheckpoint = ReadByte();
 			race_mycheckpointtime = time;
@@ -1074,7 +1101,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_mycheckpointlapsdelta -= 256;
 			if(race_mycheckpointenemy)
 				strunzone(race_mycheckpointenemy);
-			race_mycheckpointenemy = strzone(ReadString());
+			int who = ReadByte();
+			if(who)
+				race_mycheckpointenemy = strzone(entcs_GetName(who - 1));
+			else
+				race_mycheckpointenemy = strzone(""); // TODO: maybe string_null works fine here?
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
@@ -1086,7 +1117,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_othercheckpointlapsdelta -= 256;
 			if(race_othercheckpointenemy)
 				strunzone(race_othercheckpointenemy);
-			race_othercheckpointenemy = strzone(ReadString());
+			int what = ReadByte();
+			if(what)
+				race_othercheckpointenemy = strzone(entcs_GetName(what - 1));
+			else
+				race_othercheckpointenemy = strzone(""); // TODO: maybe string_null works fine here?
 			break;
 
 		case RACE_NET_PENALTY_RACE:

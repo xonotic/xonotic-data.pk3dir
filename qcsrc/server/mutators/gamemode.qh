@@ -15,6 +15,7 @@
 #include <lib/warpzone/util_server.qh>
 #include <lib/warpzone/server.qh>
 #include <common/constants.qh>
+#include <common/scores.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -70,6 +71,8 @@
 #include <server/item_key.qh>
 #include <server/pathlib/pathlib.qh>
 #include <common/vehicles/all.qh>
+
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
 
 #include <server/client.qh>
 #include <server/player.qh>

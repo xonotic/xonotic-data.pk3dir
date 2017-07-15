@@ -5,6 +5,7 @@
 #include <common/net_linked.qh>
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
+#include <common/scores.qh>
 
 .entity scorekeeper;
 entity teamscorekeepers[16];

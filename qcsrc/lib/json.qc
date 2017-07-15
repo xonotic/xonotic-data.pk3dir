@@ -32,6 +32,7 @@ string _json_ns;
 // Current keys
 int _json_keys;
 
+[[eraseable]]
 bool _json_parse_object() {
     JSON_BEGIN();
     if (STRING_ITERATOR_GET(_json) != '{') JSON_FAIL("expected '{'");
@@ -40,6 +41,7 @@ bool _json_parse_object() {
     JSON_END();
 }
 
+    [[eraseable]]
     bool _json_parse_members() {
         JSON_BEGIN();
         for (;;) {
@@ -53,6 +55,7 @@ bool _json_parse_object() {
         JSON_END();
     }
 
+        [[eraseable]]
         bool _json_parse_pair() {
             JSON_BEGIN();
             if (!_json_parse_string(false)) JSON_FAIL("expected string");
@@ -66,6 +69,7 @@ bool _json_parse_object() {
             JSON_END();
         }
 
+[[eraseable]]
 bool _json_parse_array() {
     JSON_BEGIN();
     if (STRING_ITERATOR_GET(_json) != '[') JSON_FAIL("expected '['");
@@ -93,6 +97,7 @@ bool _json_parse_array() {
     JSON_END();
 }
 
+[[eraseable]]
 bool _json_parse_value() {
     JSON_BEGIN();
     if (!(_json_parse_string(true)
@@ -105,6 +110,7 @@ bool _json_parse_value() {
     JSON_END();
 }
 
+    [[eraseable]]
     bool _json_parse_true() {
         JSON_BEGIN();
         if (!(STRING_ITERATOR_GET(_json) == 't'
@@ -116,6 +122,7 @@ bool _json_parse_value() {
         JSON_END();
     }
 
+    [[eraseable]]
     bool _json_parse_false() {
         JSON_BEGIN();
         if (!(STRING_ITERATOR_GET(_json) == 'f'
@@ -128,6 +135,7 @@ bool _json_parse_value() {
         JSON_END();
     }
 
+    [[eraseable]]
     bool _json_parse_null() {
         JSON_BEGIN();
         if (!(STRING_ITERATOR_GET(_json) == 'n'
@@ -139,6 +147,7 @@ bool _json_parse_value() {
         JSON_END();
     }
 
+[[eraseable]]
 bool _json_parse_string(bool add) {
     JSON_BEGIN();
     if (STRING_ITERATOR_GET(_json) != '"') JSON_FAIL("expected opening '\"'");
@@ -170,12 +179,14 @@ bool _json_parse_string(bool add) {
     JSON_END();
 }
 
+[[eraseable]]
 bool _json_parse_number() {
     JSON_BEGIN();
     if (!(_json_parse_float() || _json_parse_int())) JSON_FAIL("expected number");
     JSON_END();
 }
 
+    [[eraseable]]
     bool _json_parse_float() {
         JSON_BEGIN();
         string s = "";
@@ -197,6 +208,7 @@ bool _json_parse_number() {
         JSON_END();
     }
 
+    [[eraseable]]
     bool _json_parse_int() {
         JSON_BEGIN();
         string s = "";
@@ -214,6 +226,7 @@ bool _json_parse_number() {
         JSON_END();
     }
 
+[[eraseable]]
 int json_parse(string in, bool() func) {
     string trimmed = "";
     LABEL(trim) {
@@ -259,6 +272,7 @@ int json_parse(string in, bool() func) {
     return _json_buffer;
 }
 
+[[eraseable]]
 string json_get(int buf, string key)
 {
     for (int i = 1, n = buf_getsize(buf); i < n; i += 2) {
@@ -267,11 +281,13 @@ string json_get(int buf, string key)
     return string_null;
 }
 
+[[eraseable]]
 void json_del(int buf)
 {
     buf_del(buf);
 }
 
+[[eraseable]]
 void json_dump(int buf)
 {
     for (int i = 0, n = buf_getsize(buf); i < n; ++i) {

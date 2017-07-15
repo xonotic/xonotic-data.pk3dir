@@ -26,7 +26,7 @@
     #include "../constants.qh"
     #include "../stats.qh"
     #include "../teams.qh"
-    #include "../util.qh"
+    #include <common/util.qh>
     #include "../monsters/_mod.qh"
     #include "config.qh"
     #include <server/weapons/csqcprojectile.qh>
