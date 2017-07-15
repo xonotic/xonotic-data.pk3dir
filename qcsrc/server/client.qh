@@ -37,6 +37,7 @@ CLASS(Client, Object)
     ATTRIB(Client, muted, bool, this.muted);
     ATTRIB(Client, killindicator_teamchange, int, this.killindicator_teamchange);
     ATTRIB(Client, idlekick_lasttimeleft, float, this.idlekick_lasttimeleft);
+    ATTRIB(Client, pm_frametime, float, this.pm_frametime);
 
     METHOD(Client, m_unwind, bool(Client this));
 

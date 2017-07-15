@@ -2,8 +2,6 @@
 
 // Client/server mappings
 
-.float pm_frametime;
-
 .entity conveyor;
 
 .float race_penalty;

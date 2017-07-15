@@ -821,7 +821,7 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);
 
 #ifdef SVQC
-	this.pm_frametime = frametime;
+	CS(this).pm_frametime = frametime;
 #elif defined(CSQC)
 	if((ITEMS_STAT(this) & IT_USING_JETPACK) && !IS_DEAD(this) && !intermission)
 		this.csqcmodel_modelflags |= MF_ROCKET;

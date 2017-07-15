@@ -2649,12 +2649,12 @@ void Player_Physics(entity this)
 	if(!this.move_qcphysics)
 		return;
 
-	if(!frametime && !this.pm_frametime)
+	if(!frametime && !CS(this).pm_frametime)
 		return;
 
-	Movetype_Physics_NoMatchTicrate(this, this.pm_frametime, true);
+	Movetype_Physics_NoMatchTicrate(this, CS(this).pm_frametime, true);
 
-	this.pm_frametime = 0;
+	CS(this).pm_frametime = 0;
 }
 
 /*
