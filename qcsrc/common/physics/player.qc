@@ -820,7 +820,7 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 {
 #ifdef SVQC
 	// needs to be called before physics are run!
-	PM_UpdateButtons(this);
+	PM_UpdateButtons(this, CS(this));
 #endif
 
 	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);

@@ -2747,39 +2747,39 @@ void PlayerPostThink (entity this)
 }
 
 // hack to copy the button fields from the client entity to the Client State
-void PM_UpdateButtons(entity this)
+void PM_UpdateButtons(entity this, entity store)
 {
 	if(this.impulse)
-		CS(this).impulse = this.impulse;
+		store.impulse = this.impulse;
 	this.impulse = 0;
 
-	CS(this).button0 = this.button0;
-	CS(this).button2 = this.button2;
-	CS(this).button3 = this.button3;
-	CS(this).button4 = this.button4;
-	CS(this).button5 = this.button5;
-	CS(this).button6 = this.button6;
-	CS(this).button7 = this.button7;
-	CS(this).button8 = this.button8;
-	CS(this).button9 = this.button9;
-	CS(this).button10 = this.button10;
-	CS(this).button11 = this.button11;
-	CS(this).button12 = this.button12;
-	CS(this).button13 = this.button13;
-	CS(this).button14 = this.button14;
-	CS(this).button15 = this.button15;
-	CS(this).button16 = this.button16;
-	CS(this).buttonuse = this.buttonuse;
-	CS(this).buttonchat = this.buttonchat;
+	store.button0 = this.button0;
+	store.button2 = this.button2;
+	store.button3 = this.button3;
+	store.button4 = this.button4;
+	store.button5 = this.button5;
+	store.button6 = this.button6;
+	store.button7 = this.button7;
+	store.button8 = this.button8;
+	store.button9 = this.button9;
+	store.button10 = this.button10;
+	store.button11 = this.button11;
+	store.button12 = this.button12;
+	store.button13 = this.button13;
+	store.button14 = this.button14;
+	store.button15 = this.button15;
+	store.button16 = this.button16;
+	store.buttonuse = this.buttonuse;
+	store.buttonchat = this.buttonchat;
 
-	CS(this).cursor_active = this.cursor_active;
-	CS(this).cursor_screen = this.cursor_screen;
-	CS(this).cursor_trace_start = this.cursor_trace_start;
-	CS(this).cursor_trace_endpos = this.cursor_trace_endpos;
-	CS(this).cursor_trace_ent = this.cursor_trace_ent;
+	store.cursor_active = this.cursor_active;
+	store.cursor_screen = this.cursor_screen;
+	store.cursor_trace_start = this.cursor_trace_start;
+	store.cursor_trace_endpos = this.cursor_trace_endpos;
+	store.cursor_trace_ent = this.cursor_trace_ent;
 
 	// TODO: ping?
 
-	CS(this).v_angle = this.v_angle;
-	CS(this).movement = this.movement;
+	store.v_angle = this.v_angle;
+	store.movement = this.movement;
 }
