@@ -1268,7 +1268,7 @@ void ClientConnect(entity this)
 	{
 		if (!autocvar_g_campaign && !IS_PLAYER(this))
 		{
-			this.motd_actived_time = -1;
+			CS(this).motd_actived_time = -1;
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
 		}
 	}
@@ -2051,46 +2051,46 @@ void checkSpectatorBlock(entity this)
 
 void PrintWelcomeMessage(entity this)
 {
-	if(this.motd_actived_time == 0)
+	if(CS(this).motd_actived_time == 0)
 	{
 		if (autocvar_g_campaign) {
 			if ((IS_PLAYER(this) && PHYS_INPUT_BUTTON_INFO(this)) || (!IS_PLAYER(this))) {
-				this.motd_actived_time = time;
+				CS(this).motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, campaign_message);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this)) {
-				this.motd_actived_time = time;
+				CS(this).motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage(this));
 			}
 		}
 	}
-	else if(this.motd_actived_time > 0) // showing MOTD or campaign message
+	else if(CS(this).motd_actived_time > 0) // showing MOTD or campaign message
 	{
 		if (autocvar_g_campaign) {
 			if (PHYS_INPUT_BUTTON_INFO(this))
-				this.motd_actived_time = time;
-			else if ((time - this.motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
-				this.motd_actived_time = 0;
+				CS(this).motd_actived_time = time;
+			else if ((time - CS(this).motd_actived_time > 2) && IS_PLAYER(this)) { // hide it some seconds after BUTTON_INFO has been released
+				CS(this).motd_actived_time = 0;
 				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(this))
-				this.motd_actived_time = time;
-			else if (time - this.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-				this.motd_actived_time = 0;
+				CS(this).motd_actived_time = time;
+			else if (time - CS(this).motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
+				CS(this).motd_actived_time = 0;
 				Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 			}
 		}
 	}
-	else //if(this.motd_actived_time < 0) // just connected, motd is active
+	else //if(CS(this).motd_actived_time < 0) // just connected, motd is active
 	{
 		if(PHYS_INPUT_BUTTON_INFO(this)) // BUTTON_INFO hides initial MOTD
-			this.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(this.motd_actived_time == -2 || IS_PLAYER(this) || IS_SPEC(this))
+			CS(this).motd_actived_time = -2; // wait until BUTTON_INFO gets released
+		else if(CS(this).motd_actived_time == -2 || IS_PLAYER(this) || IS_SPEC(this))
 		{
 			// instanctly hide MOTD
-			this.motd_actived_time = 0;
+			CS(this).motd_actived_time = 0;
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_MOTD);
 		}
 	}
