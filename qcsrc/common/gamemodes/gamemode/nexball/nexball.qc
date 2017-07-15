@@ -753,11 +753,11 @@ void W_Nexball_Touch(entity this, entity toucher)
 				LogNB("stole", attacker);
 				_sound(toucher, CH_TRIGGER, ball.noise2, VOL_BASE, ATTEN_NORM);
 
-				if(SAME_TEAM(attacker, toucher) && time > attacker.teamkill_complain)
+				if(SAME_TEAM(attacker, toucher) && time > CS(attacker).teamkill_complain)
 				{
-					attacker.teamkill_complain = time + 5;
-					attacker.teamkill_soundtime = time + 0.4;
-					attacker.teamkill_soundsource = toucher;
+					CS(attacker).teamkill_complain = time + 5;
+					CS(attacker).teamkill_soundtime = time + 0.4;
+					CS(attacker).teamkill_soundsource = toucher;
 				}
 
 				GiveBall(attacker, toucher.ballcarried);

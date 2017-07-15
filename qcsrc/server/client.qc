@@ -2598,11 +2598,11 @@ void PlayerPreThink (entity this)
 		SetZoomState(this, PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this) || wep_zoomed);
     }
 
-	if (this.teamkill_soundtime && time > this.teamkill_soundtime)
+	if (CS(this).teamkill_soundtime && time > CS(this).teamkill_soundtime)
 	{
-		this.teamkill_soundtime = 0;
+		CS(this).teamkill_soundtime = 0;
 
-		entity e = this.teamkill_soundsource;
+		entity e = CS(this).teamkill_soundsource;
 		entity oldpusher = e.pusher;
 		e.pusher = this;
 		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOL_BASEVOICE, VOICETYPE_LASTATTACKER_ONLY);

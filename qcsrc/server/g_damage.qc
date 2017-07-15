@@ -854,18 +854,18 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 						}
 					}
 				}
-				else
+				else if(IS_PLAYER(attacker))
 				{
 					if(deathtype != DEATH_FIRE.m_id)
 					{
 						attacker.typehitsound += 1;
 					}
 					if(complainteamdamage > 0)
-						if(time > attacker.teamkill_complain)
+						if(time > CS(attacker).teamkill_complain)
 						{
-							attacker.teamkill_complain = time + 5;
-							attacker.teamkill_soundtime = time + 0.4;
-							attacker.teamkill_soundsource = targ;
+							CS(attacker).teamkill_complain = time + 5;
+							CS(attacker).teamkill_soundtime = time + 0.4;
+							CS(attacker).teamkill_soundsource = targ;
 						}
 				}
 			}
