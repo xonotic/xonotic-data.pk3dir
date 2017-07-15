@@ -79,6 +79,7 @@ CLASS(Client, Object)
     ATTRIB(Client, teamkill_complain, float, this.teamkill_complain);
     ATTRIB(Client, teamkill_soundtime, float, this.teamkill_soundtime);
     ATTRIB(Client, teamkill_soundsource, entity, this.teamkill_soundsource);
+    ATTRIB(Client, usekeypressed, bool, this.usekeypressed);
 
     METHOD(Client, m_unwind, bool(Client this));
 

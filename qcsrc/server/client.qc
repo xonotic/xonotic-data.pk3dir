@@ -2106,6 +2106,7 @@ bool joinAllowed(entity this)
 	return true;
 }
 
+.int items_added;
 bool PlayerThink(entity this)
 {
 	CheckRules_Player(this);
@@ -2445,9 +2446,7 @@ PlayerPreThink
 Called every frame for each client before the physics are run
 =============
 */
-.float usekeypressed;
 .float last_vehiclecheck;
-.int items_added;
 void PlayerPreThink (entity this)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
@@ -2561,9 +2560,9 @@ void PlayerPreThink (entity this)
 
 	if(!this.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
-		if(PHYS_INPUT_BUTTON_USE(this) && !this.usekeypressed)
+		if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 			PlayerUseKey(this);
-		this.usekeypressed = PHYS_INPUT_BUTTON_USE(this);
+		CS(this).usekeypressed = PHYS_INPUT_BUTTON_USE(this);
 	}
 
 	if (IS_REAL_CLIENT(this))
