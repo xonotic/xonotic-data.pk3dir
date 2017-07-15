@@ -105,7 +105,7 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 
 					if (caller.version < autocvar_gameversion_min || caller.version > autocvar_gameversion_max)
 					{
-						caller.version_mismatch = 1;
+						CS(caller).version_mismatch = true;
 						ClientKill_TeamChange(caller, -2);  // observe
 					}
 					else if (autocvar_g_campaign || autocvar_g_balance_teams)

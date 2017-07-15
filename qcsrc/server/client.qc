@@ -2099,7 +2099,7 @@ void PrintWelcomeMessage(entity this)
 
 bool joinAllowed(entity this)
 {
-	if (this.version_mismatch) return false;
+	if (CS(this).version_mismatch) return false;
 	if (!nJoinAllowed(this, this)) return false;
 	if (teamplay && lockteams) return false;
 	if (ShowTeamSelection(this)) return false;
@@ -2306,7 +2306,7 @@ void ObserverThink(entity this)
 		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !this.version_mismatch) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !CS(this).version_mismatch) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);

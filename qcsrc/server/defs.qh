@@ -243,8 +243,6 @@ float next_pingtime;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
 
-.float version_mismatch;
-
 int autocvar__independent_players;
 bool independent_players;
 #define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)

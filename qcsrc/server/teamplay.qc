@@ -87,7 +87,7 @@ void InitGameplayMode()
 
 string GetClientVersionMessage(entity this)
 {
-	if (this.version_mismatch) {
+	if (CS(this).version_mismatch) {
 		if(this.version < autocvar_gameversion) {
 			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
 				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
