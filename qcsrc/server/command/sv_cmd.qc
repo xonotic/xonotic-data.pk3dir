@@ -1144,7 +1144,7 @@ void GameCommand_nospectators(float request)
 			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, LAMBDA(
 				if(!it.caplayer)
 				{
-					it.spectatortime = time;
+					CS(it).spectatortime = time;
 					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 				}
 			));

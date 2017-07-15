@@ -291,7 +291,7 @@ void PutObserverInServer(entity this)
 
 	accuracy_resend(this);
 
-	this.spectatortime = time;
+	CS(this).spectatortime = time;
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
@@ -1224,7 +1224,7 @@ void ClientConnect(entity this)
 
 	bot_relinkplayerlist();
 
-	this.spectatortime = time;
+	CS(this).spectatortime = time;
 	if (blockSpectators)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
@@ -2042,7 +2042,7 @@ void checkSpectatorBlock(entity this)
 	if(!this.caplayer)
 	if(IS_REAL_CLIENT(this))
 	{
-		if( time > (this.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
+		if( time > (CS(this).spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
 			dropclient(this);
 		}

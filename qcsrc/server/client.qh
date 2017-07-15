@@ -82,6 +82,7 @@ CLASS(Client, Object)
     ATTRIB(Client, usekeypressed, bool, this.usekeypressed);
     ATTRIB(Client, motd_actived_time, float, this.motd_actived_time);
     ATTRIB(Client, jointime, float, this.jointime);
+    ATTRIB(Client, spectatortime, float, this.spectatortime);
 
     METHOD(Client, m_unwind, bool(Client this));
 
