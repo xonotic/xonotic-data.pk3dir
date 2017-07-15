@@ -154,8 +154,6 @@ void ClientData_Touch(entity e)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(it.clientdata.SendFlags = 1));
 }
 
-.string netname_previous;
-
 void SetSpectatee(entity this, entity spectatee);
 void SetSpectatee_status(entity this, int spectatee_num);
 
@@ -1191,7 +1189,7 @@ void ClientConnect(entity this)
 
 	this.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
-	this.netname_previous = strzone(this.netname);
+	CS(this).netname_previous = strzone(this.netname);
 
 	if(teamplay && IS_PLAYER(this))
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_CONNECT_TEAM), this.netname);
@@ -1320,7 +1318,7 @@ void ClientDisconnect(entity this)
 
 	bot_relinkplayerlist();
 
-	if (this.netname_previous) strunzone(this.netname_previous);
+	if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
 	if (this.clientstatus) strunzone(this.clientstatus);
 	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
 	if (this.personal) delete(this.personal);
@@ -2476,12 +2474,12 @@ void PlayerPreThink (entity this)
 		this.netname = strzone(sprintf("Player#%d", this.playerid));
 		// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 	}
-	if (this.netname != this.netname_previous) {
+	if (this.netname != CS(this).netname_previous) {
 		if (autocvar_sv_eventlog) {
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
         }
-		if (this.netname_previous) strunzone(this.netname_previous);
-		this.netname_previous = strzone(this.netname);
+		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
+		CS(this).netname_previous = strzone(this.netname);
 	}
 
 	// version nagging
