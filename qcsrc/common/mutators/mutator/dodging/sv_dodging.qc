@@ -12,7 +12,6 @@
 #define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
 #define PHYS_DODGING_AIR 					autocvar_sv_dodging_air_dodging
 #define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed
-#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 
 // we ran out of stats slots! TODO: re-enable this when prediction is available for dodging
 #if 0
@@ -33,9 +32,11 @@
 #ifdef CSQC
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
+	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 #elif defined(SVQC)
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
+	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
 #endif
 
 #ifdef SVQC

@@ -1682,7 +1682,7 @@ void GetPressedKeys(entity this)
 	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
 	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
 	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
-	this.pressedkeys = keys; // store for other users
+	CS(this).pressedkeys = keys; // store for other users
 
 	STAT(PRESSED_KEYS, this) = keys;
 }
