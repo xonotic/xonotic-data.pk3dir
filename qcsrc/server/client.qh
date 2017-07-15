@@ -88,6 +88,7 @@ CLASS(Client, Object)
     ATTRIB(Client, allowed_timeouts, int, this.allowed_timeouts);
     ATTRIB(Client, active_minigame, entity, this.active_minigame);
     ATTRIB(Client, taunt_soundtime, float, this.taunt_soundtime);
+    ATTRIB(Client, killcount, int, this.killcount);
 
     METHOD(Client, m_unwind, bool(Client this));
 

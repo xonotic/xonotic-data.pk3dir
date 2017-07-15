@@ -238,7 +238,7 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 	if(IS_PLAYER(player))
 	if(!game_stopped)
 	{
-		if(player.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
+		if(CS(player).killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
 			race_PreparePlayer(player);
 		else // respawn
 			race_RetractPlayer(player);

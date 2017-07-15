@@ -274,7 +274,7 @@ void PutObserverInServer(entity this)
         PlayerScore_Clear(this);  // clear scores when needed
     }
 
-	if (this.killcount != FRAGS_SPECTATOR)
+	if (CS(this).killcount != FRAGS_SPECTATOR)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
 		if(!game_stopped)
@@ -345,7 +345,7 @@ void PutObserverInServer(entity this)
 		this.weaponentities[slot] = NULL;
 	}
 	this.exteriorweaponentity = NULL;
-	this.killcount = FRAGS_SPECTATOR;
+	CS(this).killcount = FRAGS_SPECTATOR;
 	this.velocity = '0 0 0';
 	this.avelocity = '0 0 0';
 	this.punchangle = '0 0 0';
@@ -641,9 +641,9 @@ void PutPlayerInServer(entity this)
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
-	if (this.killcount == FRAGS_SPECTATOR) {
+	if (CS(this).killcount == FRAGS_SPECTATOR) {
 		PlayerScore_Clear(this);
-		this.killcount = 0;
+		CS(this).killcount = 0;
 	}
 
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)

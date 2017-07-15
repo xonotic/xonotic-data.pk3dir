@@ -326,19 +326,19 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 				{
 					case DEATH_MIRRORDAMAGE:
 					{
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
 						break;
 					}
 
 					default:
 					{
-						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
 						break;
 					}
 				}
 			}
 		}
-		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
+		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
@@ -358,11 +358,11 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			LogDeath("tk", deathtype, attacker, targ);
 			GiveFrags(attacker, targ, -1, deathtype);
 
-			attacker.killcount = 0;
+			CS(attacker).killcount = 0;
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, CS(targ).killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -373,7 +373,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			GiveFrags(attacker, targ, 1, deathtype);
 
 			CS(attacker).taunt_soundtime = time + 1;
-			attacker.killcount = attacker.killcount + 1;
+			CS(attacker).killcount = CS(attacker).killcount + 1;
 
 			attacker.killsound += 1;
 
@@ -384,7 +384,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break; \
 				}
-			switch(attacker.killcount)
+			switch(CS(attacker).killcount)
 			{
 				KILL_SPREE_LIST
 				default: break;
@@ -404,7 +404,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			}
 			else
 			{
-				kill_count_to_attacker = attacker.killcount;
+				kill_count_to_attacker = CS(attacker).killcount;
 				kill_count_to_target = 0;
 			}
 
@@ -459,8 +459,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			if(deathtype == DEATH_BUFF.m_id)
 				f3 = buff_FirstFromFlags(attacker.buffs).m_id;
 
-			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, f3);
+			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker))
+				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, CS(targ).killcount, kill_count_to_attacker, f3);
 		}
 	}
 
@@ -480,7 +480,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					targ.netname,
 					inflictor.message,
 					deathlocation,
-					targ.killcount,
+					CS(targ).killcount,
 					0,
 					0);
 				break;
@@ -492,7 +492,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					targ.netname,
 					((strstrofs(deathmessage, "%", 0) < 0) ? strcat("%s ", deathmessage) : deathmessage),
 					deathlocation,
-					targ.killcount,
+					CS(targ).killcount,
 					0,
 					0);
 				break;
@@ -500,7 +500,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			default:
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", CS(targ).killcount, 0, 0);
 				break;
 			}
 		}
@@ -516,7 +516,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	}
 
 	// reset target kill count
-	if(targ.killcount) { targ.killcount = 0; }
+	CS(targ).killcount = 0;
 }
 
 void Ice_Think(entity this)
@@ -622,7 +622,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	float mirrordamage = 0;
 	float mirrorforce = 0;
 
-	if (game_stopped || targ.killcount == FRAGS_SPECTATOR)
+	if (game_stopped || (IS_CLIENT(targ) && CS(targ).killcount == FRAGS_SPECTATOR))
 		return;
 
 	entity attacker_save = attacker;

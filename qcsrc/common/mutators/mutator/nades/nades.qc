@@ -1373,19 +1373,19 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	if(!STAT(FROZEN, frag_target) || !autocvar_g_freezetag_revive_nade)
 		toss_nade(frag_target, true, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 
-	float killcount_bonus = ((frag_attacker.killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * frag_attacker.killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
-
 	if(IS_PLAYER(frag_attacker))
 	{
+		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
+
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
 		else if(frag_target.flagcarried)
 			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
-		else if(autocvar_g_nades_bonus_score_spree && frag_attacker.killcount > 1)
+		else if(autocvar_g_nades_bonus_score_spree && CS(frag_attacker).killcount > 1)
 		{
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: { nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_spree); break; }
-			switch(frag_attacker.killcount)
+			switch(CS(frag_attacker).killcount)
 			{
 				KILL_SPREE_LIST
 				default: nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor); break;
