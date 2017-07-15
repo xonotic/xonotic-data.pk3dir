@@ -60,8 +60,8 @@ void playerdemo_open_write(entity this, string f)
 	PLAYERDEMO_FIELD(ent,func,float,frame) \
 	PLAYERDEMO_FIELD(ent,func,float,effects) \
 	/* PLAYERDEMO_FIELD(ent,func,float,switchweapon) */ \
-	PLAYERDEMO_FIELD(ent,func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
-	PLAYERDEMO_FIELD(ent,func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
 	PLAYERDEMO_FIELD(ent,func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
 	PLAYERDEMO_FIELD(ent,func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
 	PLAYERDEMO_FIELD(ent,func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \

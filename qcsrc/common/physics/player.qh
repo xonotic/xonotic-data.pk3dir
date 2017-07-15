@@ -261,9 +261,9 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 
 	#define PHYS_INPUT_MOVEVALUES(s)            ((s).movement)
 
-	#define PHYS_INPUT_BUTTON_BUTTON1(s)        ((s).button0)
+	#define PHYS_INPUT_BUTTON_BUTTON1(s)        (CS(s).button0)
 	#define PHYS_INPUT_BUTTON_BUTTON2(s)        ((s).button2)
-	#define PHYS_INPUT_BUTTON_BUTTON3(s)        ((s).button3)
+	#define PHYS_INPUT_BUTTON_BUTTON3(s)        (CS(s).button3)
 	#define PHYS_INPUT_BUTTON_BUTTON4(s)        ((s).button4)
 	#define PHYS_INPUT_BUTTON_BUTTON5(s)        ((s).button5)
 	#define PHYS_INPUT_BUTTON_BUTTON6(s)        ((s).button6)
