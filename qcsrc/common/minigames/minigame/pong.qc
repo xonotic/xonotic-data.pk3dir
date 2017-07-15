@@ -427,8 +427,12 @@ int pong_server_event(entity minigame, string event, ...)
 					return true;
 				case "pong_aimore":
 				{
+					// keep declaration here, moving it into for() reverses weapon order
+					// potentially compiler bug
+					int j;
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
-						for ( int j = 0; j < PONG_MAX_PLAYERS; j++ )
+						for ( j = 0; j < PONG_MAX_PLAYERS; j++ )
+						//for ( int j = 0; j < PONG_MAX_PLAYERS; j++ )
 						{
 							if ( minigame.pong_paddles[j] == NULL )
 							{
