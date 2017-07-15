@@ -488,6 +488,232 @@ void FixPlayermodel(entity player)
 				setcolor(player, stof(autocvar_sv_defaultplayercolors));
 }
 
+void PutPlayerInServer(entity this)
+{
+	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
+
+	PlayerState_attach(this);
+	accuracy_resend(this);
+
+	if (this.team < 0)
+		JoinBestTeam(this, false, true);
+
+	entity spot = SelectSpawnPoint(this, false);
+	if (!spot) {
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_NOSPAWNS);
+		return; // spawn failed
+	}
+
+	TRANSMUTE(Player, this);
+
+	this.wasplayer = true;
+	this.iscreature = true;
+	this.teleportable = TELEPORT_NORMAL;
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
+	this.damagedbycontents = true;
+	set_movetype(this, MOVETYPE_WALK);
+	this.solid = SOLID_SLIDEBOX;
+	this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
+	if (autocvar_g_playerclip_collisions)
+		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
+	if (IS_BOT_CLIENT(this) && autocvar_g_botclip_collisions)
+		this.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
+	this.frags = FRAGS_PLAYER;
+	if (INDEPENDENT_PLAYERS) MAKE_INDEPENDENT_PLAYER(this);
+	this.flags = FL_CLIENT | FL_PICKUPITEMS;
+	if (autocvar__notarget)
+		this.flags |= FL_NOTARGET;
+	this.takedamage = DAMAGE_AIM;
+	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
+	this.dmg = 2; // WTF
+
+	if (warmup_stage) {
+		this.ammo_shells = warmup_start_ammo_shells;
+		this.ammo_nails = warmup_start_ammo_nails;
+		this.ammo_rockets = warmup_start_ammo_rockets;
+		this.ammo_cells = warmup_start_ammo_cells;
+		this.ammo_plasma = warmup_start_ammo_plasma;
+		this.ammo_fuel = warmup_start_ammo_fuel;
+		this.health = warmup_start_health;
+		this.armorvalue = warmup_start_armorvalue;
+		this.weapons = WARMUP_START_WEAPONS;
+	} else {
+		this.ammo_shells = start_ammo_shells;
+		this.ammo_nails = start_ammo_nails;
+		this.ammo_rockets = start_ammo_rockets;
+		this.ammo_cells = start_ammo_cells;
+		this.ammo_plasma = start_ammo_plasma;
+		this.ammo_fuel = start_ammo_fuel;
+		this.health = start_health;
+		this.armorvalue = start_armorvalue;
+		this.weapons = start_weapons;
+	}
+	SetSpectatee_status(this, 0);
+
+	this.dual_weapons = '0 0 0';
+
+	this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
+
+	this.items = start_items;
+
+	this.spawnshieldtime = time + autocvar_g_spawnshieldtime;
+	this.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
+	this.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
+	this.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
+	this.pauseregen_finished = time + autocvar_g_balance_pause_health_regen_spawn;
+	// extend the pause of rotting if client was reset at the beginning of the countdown
+	if (!autocvar_sv_ready_restart_after_countdown && time < game_starttime) { // TODO why is this cvar NOTted?
+		float f = game_starttime - time;
+		this.spawnshieldtime += f;
+		this.pauserotarmor_finished += f;
+		this.pauserothealth_finished += f;
+		this.pauseregen_finished += f;
+	}
+	this.damageforcescale = 2;
+	this.death_time = 0;
+	this.respawn_flags = 0;
+	this.respawn_time = 0;
+	this.stat_respawn_time = 0;
+	this.scale = autocvar_sv_player_scale;
+	this.fade_time = 0;
+	this.pain_frame = 0;
+	this.pain_finished = 0;
+	this.pushltime = 0;
+	setthink(this, func_null); // players have no think function
+	this.nextthink = 0;
+	this.dmg_team = 0;
+	this.ballistics_density = autocvar_g_ballistics_density_player;
+
+	this.deadflag = DEAD_NO;
+
+	this.angles = spot.angles;
+	this.angles_z = 0; // never spawn tilted even if the spot says to
+	if (IS_BOT_CLIENT(this))
+		this.v_angle = this.angles;
+	this.fixangle = true; // turn this way immediately
+	this.oldvelocity = this.velocity = '0 0 0';
+	this.avelocity = '0 0 0';
+	this.punchangle = '0 0 0';
+	this.punchvector = '0 0 0';
+
+	this.strength_finished = 0;
+	this.invincible_finished = 0;
+	this.fire_endtime = -1;
+	this.revive_progress = 0;
+	this.revival_time = 0;
+	this.air_finished = time + 12;
+
+	entity spawnevent = new_pure(spawnevent);
+	spawnevent.owner = this;
+	Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
+
+	// Cut off any still running player sounds.
+	stopsound(this, CH_PLAYER_SINGLE);
+
+	this.model = "";
+	FixPlayermodel(this);
+	this.drawonlytoclient = NULL;
+
+	this.viewloc = NULL;
+
+	this.crouch = false;
+	this.view_ofs = STAT(PL_VIEW_OFS, this);
+	setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
+	this.spawnorigin = spot.origin;
+	setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
+	// don't reset back to last position, even if new position is stuck in solid
+	this.oldorigin = this.origin;
+	this.prevorigin = this.origin;
+	this.lastteleporttime = time; // prevent insane speeds due to changing origin
+	if(this.conveyor)
+		IL_REMOVE(g_conveyed, this);
+	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
+	this.hud = HUD_NORMAL;
+
+	this.event_damage = PlayerDamage;
+
+	if(!this.bot_attack)
+		IL_PUSH(g_bot_targets, this);
+	this.bot_attack = true;
+	if(!this.monster_attack)
+		IL_PUSH(g_monster_targets, this);
+	this.monster_attack = true;
+	navigation_dynamicgoal_init(this, false);
+
+	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
+
+	if (this.killcount == FRAGS_SPECTATOR) {
+		PlayerScore_Clear(this);
+		this.killcount = 0;
+	}
+
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		entity oldwep = this.(weaponentity);
+		CL_SpawnWeaponentity(this, weaponentity);
+		if(oldwep && oldwep.owner == this)
+			this.(weaponentity).m_gunalign = oldwep.m_gunalign;
+	}
+	this.alpha = default_player_alpha;
+	this.colormod = '1 1 1' * autocvar_g_player_brightness;
+	this.exteriorweaponentity.alpha = default_weapon_alpha;
+
+	this.speedrunning = false;
+
+	target_voicescript_clear(this);
+
+	// reset fields the weapons may use
+	FOREACH(Weapons, true, LAMBDA(
+		it.wr_resetplayer(it, this);
+			// reload all reloadable weapons
+		if (it.spawnflags & WEP_FLAG_RELOADABLE) {
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				.entity weaponentity = weaponentities[slot];
+				this.(weaponentity).weapon_load[it.m_id] = it.reloading_ammo;
+			}
+		}
+	));
+
+	{
+		string s = spot.target;
+		spot.target = string_null;
+		SUB_UseTargets(spot, this, NULL);
+		spot.target = s;
+	}
+
+	Unfreeze(this);
+
+	MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
+
+	if (autocvar_spawn_debug)
+	{
+		sprint(this, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
+		delete(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
+	}
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
+			this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
+		else
+			this.(weaponentity).m_switchweapon = WEP_Null;
+		this.(weaponentity).m_weapon = WEP_Null;
+		this.(weaponentity).weaponname = "";
+		this.(weaponentity).m_switchingweapon = WEP_Null;
+		this.(weaponentity).cnt = -1;
+	}
+
+	MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
+
+	if (!warmup_stage && !this.alivetime)
+		this.alivetime = time;
+
+	antilag_clear(this, CS(this));
+}
 
 /** Called when a client spawns in the server */
 void PutClientInServer(entity this)
@@ -512,229 +738,7 @@ void PutClientInServer(entity this)
 	if (IS_OBSERVER(this)) {
 		PutObserverInServer(this);
 	} else if (IS_PLAYER(this)) {
-		if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
-
-		PlayerState_attach(this);
-		accuracy_resend(this);
-
-		if (this.team < 0)
-			JoinBestTeam(this, false, true);
-
-		entity spot = SelectSpawnPoint(this, false);
-		if (!spot) {
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_NOSPAWNS);
-			return; // spawn failed
-		}
-
-		TRANSMUTE(Player, this);
-
-		this.wasplayer = true;
-		this.iscreature = true;
-		this.teleportable = TELEPORT_NORMAL;
-		if(!this.damagedbycontents)
-			IL_PUSH(g_damagedbycontents, this);
-		this.damagedbycontents = true;
-		set_movetype(this, MOVETYPE_WALK);
-		this.solid = SOLID_SLIDEBOX;
-		this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
-		if (autocvar_g_playerclip_collisions)
-			this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
-		if (IS_BOT_CLIENT(this) && autocvar_g_botclip_collisions)
-			this.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
-		this.frags = FRAGS_PLAYER;
-		if (INDEPENDENT_PLAYERS) MAKE_INDEPENDENT_PLAYER(this);
-		this.flags = FL_CLIENT | FL_PICKUPITEMS;
-		if (autocvar__notarget)
-			this.flags |= FL_NOTARGET;
-		this.takedamage = DAMAGE_AIM;
-		this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
-		this.dmg = 2; // WTF
-
-		if (warmup_stage) {
-			this.ammo_shells = warmup_start_ammo_shells;
-			this.ammo_nails = warmup_start_ammo_nails;
-			this.ammo_rockets = warmup_start_ammo_rockets;
-			this.ammo_cells = warmup_start_ammo_cells;
-			this.ammo_plasma = warmup_start_ammo_plasma;
-			this.ammo_fuel = warmup_start_ammo_fuel;
-			this.health = warmup_start_health;
-			this.armorvalue = warmup_start_armorvalue;
-			this.weapons = WARMUP_START_WEAPONS;
-		} else {
-			this.ammo_shells = start_ammo_shells;
-			this.ammo_nails = start_ammo_nails;
-			this.ammo_rockets = start_ammo_rockets;
-			this.ammo_cells = start_ammo_cells;
-			this.ammo_plasma = start_ammo_plasma;
-			this.ammo_fuel = start_ammo_fuel;
-			this.health = start_health;
-			this.armorvalue = start_armorvalue;
-			this.weapons = start_weapons;
-		}
-		SetSpectatee_status(this, 0);
-
-		this.dual_weapons = '0 0 0';
-
-		this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
-
-		this.items = start_items;
-
-		this.spawnshieldtime = time + autocvar_g_spawnshieldtime;
-		this.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
-		this.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
-		this.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
-		this.pauseregen_finished = time + autocvar_g_balance_pause_health_regen_spawn;
-		// extend the pause of rotting if client was reset at the beginning of the countdown
-		if (!autocvar_sv_ready_restart_after_countdown && time < game_starttime) { // TODO why is this cvar NOTted?
-			float f = game_starttime - time;
-			this.spawnshieldtime += f;
-			this.pauserotarmor_finished += f;
-			this.pauserothealth_finished += f;
-			this.pauseregen_finished += f;
-		}
-		this.damageforcescale = 2;
-		this.death_time = 0;
-		this.respawn_flags = 0;
-		this.respawn_time = 0;
-		this.stat_respawn_time = 0;
-		this.scale = autocvar_sv_player_scale;
-		this.fade_time = 0;
-		this.pain_frame = 0;
-		this.pain_finished = 0;
-		this.pushltime = 0;
-		setthink(this, func_null); // players have no think function
-		this.nextthink = 0;
-		this.dmg_team = 0;
-		this.ballistics_density = autocvar_g_ballistics_density_player;
-
-		this.deadflag = DEAD_NO;
-
-		this.angles = spot.angles;
-		this.angles_z = 0; // never spawn tilted even if the spot says to
-		if (IS_BOT_CLIENT(this))
-			this.v_angle = this.angles;
-		this.fixangle = true; // turn this way immediately
-		this.oldvelocity = this.velocity = '0 0 0';
-		this.avelocity = '0 0 0';
-		this.punchangle = '0 0 0';
-		this.punchvector = '0 0 0';
-
-		this.strength_finished = 0;
-		this.invincible_finished = 0;
-		this.fire_endtime = -1;
-		this.revive_progress = 0;
-		this.revival_time = 0;
-		this.air_finished = time + 12;
-
-		entity spawnevent = new_pure(spawnevent);
-		spawnevent.owner = this;
-		Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
-
-		// Cut off any still running player sounds.
-		stopsound(this, CH_PLAYER_SINGLE);
-
-		this.model = "";
-		FixPlayermodel(this);
-		this.drawonlytoclient = NULL;
-
-		this.viewloc = NULL;
-
-		this.crouch = false;
-		this.view_ofs = STAT(PL_VIEW_OFS, this);
-		setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
-		this.spawnorigin = spot.origin;
-		setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
-		// don't reset back to last position, even if new position is stuck in solid
-		this.oldorigin = this.origin;
-		this.prevorigin = this.origin;
-		this.lastteleporttime = time; // prevent insane speeds due to changing origin
-		if(this.conveyor)
-			IL_REMOVE(g_conveyed, this);
-		this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
-		this.hud = HUD_NORMAL;
-
-		this.event_damage = PlayerDamage;
-
-		if(!this.bot_attack)
-			IL_PUSH(g_bot_targets, this);
-		this.bot_attack = true;
-		if(!this.monster_attack)
-			IL_PUSH(g_monster_targets, this);
-		this.monster_attack = true;
-		navigation_dynamicgoal_init(this, false);
-
-		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
-
-		if (this.killcount == FRAGS_SPECTATOR) {
-			PlayerScore_Clear(this);
-			this.killcount = 0;
-		}
-
-		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			entity oldwep = this.(weaponentity);
-			CL_SpawnWeaponentity(this, weaponentity);
-			if(oldwep && oldwep.owner == this)
-				this.(weaponentity).m_gunalign = oldwep.m_gunalign;
-		}
-		this.alpha = default_player_alpha;
-		this.colormod = '1 1 1' * autocvar_g_player_brightness;
-		this.exteriorweaponentity.alpha = default_weapon_alpha;
-
-		this.speedrunning = false;
-
-		target_voicescript_clear(this);
-
-		// reset fields the weapons may use
-		FOREACH(Weapons, true, LAMBDA(
-			it.wr_resetplayer(it, this);
-			// reload all reloadable weapons
-			if (it.spawnflags & WEP_FLAG_RELOADABLE) {
-				for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-				{
-					.entity weaponentity = weaponentities[slot];
-					this.(weaponentity).weapon_load[it.m_id] = it.reloading_ammo;
-				}
-			}
-		));
-
-		{
-			string s = spot.target;
-			spot.target = string_null;
-			SUB_UseTargets(spot, this, NULL);
-			spot.target = s;
-		}
-
-		Unfreeze(this);
-
-		MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
-
-		if (autocvar_spawn_debug)
-		{
-			sprint(this, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
-			delete(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
-		}
-
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(slot == 0 || autocvar_g_weaponswitch_debug == 1)
-				this.(weaponentity).m_switchweapon = w_getbestweapon(this, weaponentity);
-			else
-				this.(weaponentity).m_switchweapon = WEP_Null;
-			this.(weaponentity).m_weapon = WEP_Null;
-			this.(weaponentity).weaponname = "";
-			this.(weaponentity).m_switchingweapon = WEP_Null;
-			this.(weaponentity).cnt = -1;
-		}
-
-		MUTATOR_CALLHOOK(PlayerWeaponSelect, this);
-
-		if (!warmup_stage && !this.alivetime)
-			this.alivetime = time;
-
-		antilag_clear(this, CS(this));
+		PutPlayerInServer(this);
 	}
 }
 
