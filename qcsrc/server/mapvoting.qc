@@ -7,6 +7,7 @@
 #include <common/net_linked.qh>
 #include "../common/mapinfo.qh"
 #include "../common/playerstats.qh"
+#include <common/state.qh>
 #include "../common/util.qh"
 
 

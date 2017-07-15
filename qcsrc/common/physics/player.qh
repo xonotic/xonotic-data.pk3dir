@@ -2,6 +2,11 @@
 
 // Client/server mappings
 
+#ifdef SVQC
+// TODO: get rid of this random dumb include!
+	#include <common/state.qh>
+#endif
+
 .entity conveyor;
 
 .float race_penalty;

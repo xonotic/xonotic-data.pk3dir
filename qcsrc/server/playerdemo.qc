@@ -4,6 +4,7 @@
 #elif defined(SVQC)
     #include "defs.qh"
     #include "playerdemo.qh"
+	#include <common/state.qh>
 #endif
 
 .float playerdemo_fh;
