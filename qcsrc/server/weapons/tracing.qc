@@ -25,9 +25,9 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 {
 	TC(Sound, snd);
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
-	float oldsolid;
-	vector vecs, dv;
-	oldsolid = ent.dphitcontentsmask;
+	float oldsolid = ent.dphitcontentsmask;
+	if(!IS_CLIENT(ent))
+		antilag = false; // no antilag for non-clients!
 	if (IS_PLAYER(ent) && ent.(weaponentity).m_weapon == WEP_RIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
@@ -60,12 +60,9 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		W_HitPlotAnalysis(ent, weaponentity, v_forward, v_right, v_up);
 
 	vector md = ent.(weaponentity).movedir;
-	if(md.x > 0)
-		vecs = md;
-	else
-		vecs = '0 0 0';
+	vector vecs = ((md.x > 0) ? md : '0 0 0');
 
-	dv = v_right * -vecs.y + v_up * vecs.z;
+	vector dv = v_right * -vecs.y + v_up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
 	// now move the shotorg forward as much as requested if possible
@@ -108,10 +105,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		else if(autocvar_g_antilag == 3) // client side hitscan
 		{
 			// this part MUST use prydon cursor
-			if (ent.cursor_trace_ent)                 // client was aiming at someone
-			if (ent.cursor_trace_ent != ent)         // just to make sure
-			if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-			if (IS_PLAYER(ent.cursor_trace_ent)) // and actually a player
+			if (CS(ent).cursor_trace_ent)                 // client was aiming at someone
+			if (CS(ent).cursor_trace_ent != ent)         // just to make sure
+			if (CS(ent).cursor_trace_ent.takedamage)      // and that person is killable
+			if (IS_PLAYER(CS(ent).cursor_trace_ent)) // and actually a player
 			{
 				// verify that the shot would miss without antilag
 				// (avoids an issue where guns would always shoot at their origin)
@@ -119,9 +116,9 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 				if (!trace_ent.takedamage)
 				{
 					// verify that the shot would hit if altered
-					traceline(w_shotorg, ent.cursor_trace_ent.origin, MOVE_NORMAL, ent);
-					if (trace_ent == ent.cursor_trace_ent)
-						w_shotdir = normalize(ent.cursor_trace_ent.origin - w_shotorg);
+					traceline(w_shotorg, CS(ent).cursor_trace_ent.origin, MOVE_NORMAL, ent);
+					if (trace_ent == CS(ent).cursor_trace_ent)
+						w_shotdir = normalize(CS(ent).cursor_trace_ent.origin - w_shotorg);
 					else
 						LOG_INFO("antilag fail\n");
 				}
