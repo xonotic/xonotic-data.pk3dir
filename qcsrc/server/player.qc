@@ -744,7 +744,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
         msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
-	msgin = formatmessage(source, msgin);
+    if(source)
+		msgin = formatmessage(source, msgin);
 
     string colorstr;
 	if (!IS_PLAYER(source))
@@ -944,7 +945,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
 
     int ret;
-	if(source.muted)
+	if(source && CS(source).muted)
 	{
 		// always fake the message
 		ret = -1;

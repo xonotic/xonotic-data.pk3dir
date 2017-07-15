@@ -131,7 +131,7 @@ void BanCommand_mute(float request, float argc, string command)  // TODO: Add a 
 
 				if (accepted > 0)
 				{
-					client.muted = true;
+					CS(client).muted = true;
 					return;
 				}
 				else
@@ -212,7 +212,7 @@ void BanCommand_unmute(float request, float argc)
 
 				if (accepted > 0)
 				{
-					client.muted = false;
+					CS(client).muted = false;
 					return;
 				}
 				else
