@@ -456,7 +456,7 @@ void ReadyRestart_force()
 	// after a restart every players number of allowed timeouts gets reset, too
 	if (autocvar_sv_timeout)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(it.allowed_timeouts = autocvar_sv_timeout_number));
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(CS(it).allowed_timeouts = autocvar_sv_timeout_number));
 	}
     // reset map immediately if this cvar is not set
     if (!autocvar_sv_ready_restart_after_countdown) reset_map(true);

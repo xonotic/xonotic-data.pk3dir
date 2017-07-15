@@ -1229,7 +1229,7 @@ void ClientConnect(entity this)
 	}
 
 	CS(this).jointime = time;
-	this.allowed_timeouts = autocvar_sv_timeout_number;
+	CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (IS_REAL_CLIENT(this))
 	{
@@ -1286,7 +1286,7 @@ void ClientDisconnect(entity this)
 
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
-	if (this.active_minigame) part_minigame(this);
+	if (CS(this).active_minigame) part_minigame(this);
 	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 
 	if (autocvar_sv_eventlog)
@@ -1299,6 +1299,7 @@ void ClientDisconnect(entity this)
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
+	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -1318,7 +1319,6 @@ void ClientDisconnect(entity this)
 
 	bot_relinkplayerlist();
 
-	if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
 	if (this.clientstatus) strunzone(this.clientstatus);
 	if (this.weaponorder_byimpulse) strunzone(this.weaponorder_byimpulse);
 	if (this.personal) delete(this.personal);
@@ -1345,7 +1345,7 @@ void ChatBubbleThink(entity this)
 
 	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) )
 	{
-		if ( this.owner.active_minigame )
+		if ( CS(this.owner).active_minigame )
 			this.mdl = "models/sprites/minigame_busy.iqm";
 		else if (PHYS_INPUT_BUTTON_CHAT(this.owner))
 			this.mdl = "models/misc/chatbubble.spr";

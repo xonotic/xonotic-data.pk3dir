@@ -994,11 +994,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 					centerprint(privatesay, cmsgstr);
 			}
 		}
-		else if ( teamsay && source.active_minigame )
+		else if ( teamsay && CS(source).active_minigame )
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
