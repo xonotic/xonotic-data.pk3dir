@@ -1230,7 +1230,7 @@ void ClientConnect(entity this)
 		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 	}
 
-	this.jointime = time;
+	CS(this).jointime = time;
 	this.allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (IS_REAL_CLIENT(this))

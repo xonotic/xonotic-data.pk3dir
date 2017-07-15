@@ -188,7 +188,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
 		TRANSMUTE(Observer, player);
-		if (player.jointime != time && !player.caplayer) // not when connecting
+		if (CS(player).jointime != time && !player.caplayer) // not when connecting
 		{
 			player.caplayer = 0.5;
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);

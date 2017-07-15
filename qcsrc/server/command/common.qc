@@ -808,7 +808,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 					it.netname,
 					CS(it).ping,
 					CS(it).ping_packetloss,
-					process_time(1, time - it.jointime),
+					process_time(1, time - CS(it).jointime),
 					tmp_netaddress,
 					tmp_crypto_idfp));
 

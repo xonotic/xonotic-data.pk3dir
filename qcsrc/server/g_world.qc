@@ -1459,7 +1459,7 @@ void DumpStats(float final)
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
-		s = strcat(s, ftos(rint(time - it.jointime)), ":");
+		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
 		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 			s = strcat(s, ftos(it.team), ":");
 		else
