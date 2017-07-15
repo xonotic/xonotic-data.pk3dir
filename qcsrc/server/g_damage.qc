@@ -273,8 +273,8 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 {
 	if(deathtype == DEATH_FIRE.m_id)
 	{
-		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : targ.ping));
-		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? -1 : attacker.ping));
+		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : CS(targ).ping));
+		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
 		return true;
 	}
 
@@ -417,7 +417,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_TYPEFRAG,
 					targ.netname,
 					kill_count_to_attacker,
-					(IS_BOT_CLIENT(targ) ? -1 : targ.ping)
+					(IS_BOT_CLIENT(targ) ? -1 : CS(targ).ping)
 				);
 				Send_Notification(
 					NOTIF_ONE,
@@ -428,7 +428,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					kill_count_to_target,
 					attacker.health,
 					attacker.armorvalue,
-					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
+					(IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping)
 				);
 			}
 			else if(!frag_centermessage_override(attacker, targ, deathtype, kill_count_to_attacker, kill_count_to_target))
@@ -440,7 +440,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_FRAG,
 					targ.netname,
 					kill_count_to_attacker,
-					(IS_BOT_CLIENT(targ) ? -1 : targ.ping)
+					(IS_BOT_CLIENT(targ) ? -1 : CS(targ).ping)
 				);
 				Send_Notification(
 					NOTIF_ONE,
@@ -451,7 +451,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					kill_count_to_target,
 					attacker.health,
 					attacker.armorvalue,
-					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
+					(IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping)
 				);
 			}
 

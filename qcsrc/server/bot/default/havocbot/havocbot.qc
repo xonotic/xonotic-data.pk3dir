@@ -1202,10 +1202,10 @@ void havocbot_aim(entity this)
 		vector enemyvel = this.enemy.velocity;
 		if (!this.enemy.waterlevel)
 			enemyvel.z = 0;
-		lag_additem(this, time + this.ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
+		lag_additem(this, time + CS(this).ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
 	}
 	else
-		lag_additem(this, time + this.ping, 0, 0, NULL, this.origin, myvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
+		lag_additem(this, time + CS(this).ping, 0, 0, NULL, this.origin, myvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
 }
 
 bool havocbot_moveto_refresh_route(entity this)

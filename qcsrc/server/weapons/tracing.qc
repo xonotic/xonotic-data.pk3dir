@@ -348,10 +348,8 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	else
 		fireBullet_trace_callback_eff = EFFECT_BULLET;
 
-	float lag = ANTILAG_LATENCY(this);
+	float lag = ((IS_REAL_CLIENT(this)) ? ANTILAG_LATENCY(this) : 0);
 	if(lag < 0.001)
-		lag = 0;
-	if (!IS_REAL_CLIENT(this))
 		lag = 0;
 	if(autocvar_g_antilag == 0 || this.cvar_cl_noantilag)
 		lag = 0; // only do hitscan, but no antilag

@@ -57,6 +57,10 @@ CLASS(Client, Object)
     ATTRIB(Client, cursor_trace_endpos, vector, this.cursor_trace_endpos);
     ATTRIB(Client, cursor_trace_ent, entity, this.cursor_trace_ent);
 
+    ATTRIB(Client, ping, float, this.ping);
+    ATTRIB(Client, ping_packetloss, float, this.ping_packetloss);
+    ATTRIB(Client, ping_movementloss, float, this.ping_movementloss);
+
     ATTRIB(Client, v_angle, vector, this.v_angle);
     ATTRIB(Client, movement, vector, this.movement);
 

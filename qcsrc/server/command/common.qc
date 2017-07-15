@@ -806,8 +806,8 @@ void CommonCommand_who(float request, entity caller, float argc)
 				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "),
 					etof(it),
 					it.netname,
-					it.ping,
-					it.ping_packetloss,
+					CS(it).ping,
+					CS(it).ping_packetloss,
 					process_time(1, time - it.jointime),
 					tmp_netaddress,
 					tmp_crypto_idfp));

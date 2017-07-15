@@ -2778,7 +2778,9 @@ void PM_UpdateButtons(entity this, entity store)
 	store.cursor_trace_endpos = this.cursor_trace_endpos;
 	store.cursor_trace_ent = this.cursor_trace_ent;
 
-	// TODO: ping?
+	store.ping = this.ping;
+	store.ping_packetloss = this.ping_packetloss;
+	store.ping_movementloss = this.ping_movementloss;
 
 	store.v_angle = this.v_angle;
 	store.movement = this.movement;
