@@ -1053,6 +1053,9 @@ void FixClientCvars(entity e)
 
 bool findinlist_abbrev(string tofind, string list)
 {
+	if(list == "" || tofind == "")
+		return false; // empty list or search, just return
+
 	// this function allows abbreviated strings!
 	FOREACH_WORD(list, it == substring(tofind, 0, strlen(it)),
 	{
@@ -1082,7 +1085,7 @@ bool PlayerInIDList(entity p, string idlist)
 
 bool PlayerInList(entity player, string list)
 {
-	return PlayerInIDList(player, list) || PlayerInIPList(player, list);
+	return boolean(PlayerInIDList(player, list) || PlayerInIPList(player, list));
 }
 
 #ifdef DP_EXT_PRECONNECT
