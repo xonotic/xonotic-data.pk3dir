@@ -1,6 +1,7 @@
 #pragma once
 
 #include <common/weapons/_all.qh>
+#include <common/scores.qh>
 
 void Hud_Dynamic_Frame();
 
