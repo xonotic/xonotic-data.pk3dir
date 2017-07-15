@@ -180,7 +180,7 @@ void havocbot_ai(entity this)
 			// we are currently holding a weapon that's not fully loaded, reload it
 			if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
 			if(this.(weaponentity).clip_load < this.(weaponentity).clip_size)
-				this.impulse = IMP_weapon_reload.impulse; // not sure if this is done right
+				CS(this).impulse = IMP_weapon_reload.impulse; // not sure if this is done right
 
 			// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
 			// the code above executes next frame, starting the reloading then

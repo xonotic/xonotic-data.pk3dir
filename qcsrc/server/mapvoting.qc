@@ -599,7 +599,7 @@ void MapVote_Tick()
 		if(it.health != 2342)
 		{
 			it.health = 2342;
-			it.impulse = 0;
+			CS(it).impulse = 0;
 
 			msg_entity = it;
 			WriteByte(MSG_ONE, SVC_FINALE);
@@ -610,13 +610,13 @@ void MapVote_Tick()
 		if ( !(mapvote_maps_flags[it.mapvote-1] & GTV_AVAILABLE) )
 			it.mapvote = 0;
 		// use impulses as new vote
-		if(it.impulse >= 1 && it.impulse <= mapvote_count)
-			if( mapvote_maps_flags[it.impulse - 1] & GTV_AVAILABLE )
+		if(CS(it).impulse >= 1 && CS(it).impulse <= mapvote_count)
+			if( mapvote_maps_flags[CS(it).impulse - 1] & GTV_AVAILABLE )
 			{
-				it.mapvote = it.impulse;
+				it.mapvote = CS(it).impulse;
 				MapVote_TouchVotes(it);
 			}
-		it.impulse = 0;
+		CS(it).impulse = 0;
 
 		if(it.mapvote)
 			++totalvotes;

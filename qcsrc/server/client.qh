@@ -29,6 +29,37 @@ CLASS(Client, Object)
     /** the string "HMAC-SHA256" if signing, and string_null if plaintext */
     ATTRIB(Client, crypto_signmethod, string, this.crypto_signmethod);
 
+    // engine client fields
+    ATTRIB(Client, impulse, int, this.impulse);
+
+    ATTRIB(Client, button0, int, this.button0);
+    ATTRIB(Client, button2, int, this.button2);
+    ATTRIB(Client, button3, int, this.button3);
+    ATTRIB(Client, button4, int, this.button4);
+    ATTRIB(Client, button5, int, this.button5);
+    ATTRIB(Client, button6, int, this.button6);
+    ATTRIB(Client, button7, int, this.button7);
+    ATTRIB(Client, button8, int, this.button8);
+    ATTRIB(Client, button9, int, this.button9);
+    ATTRIB(Client, button10, int, this.button10);
+    ATTRIB(Client, button11, int, this.button11);
+    ATTRIB(Client, button12, int, this.button12);
+    ATTRIB(Client, button13, int, this.button13);
+    ATTRIB(Client, button14, int, this.button14);
+    ATTRIB(Client, button15, int, this.button15);
+    ATTRIB(Client, button16, int, this.button16);
+    ATTRIB(Client, buttonuse, int, this.buttonuse);
+    ATTRIB(Client, buttonchat, int, this.buttonchat);
+
+    ATTRIB(Client, cursor_active, int, this.cursor_active);
+    ATTRIB(Client, cursor_screen, vector, this.cursor_screen);
+    ATTRIB(Client, cursor_trace_start, vector, this.cursor_trace_start);
+    ATTRIB(Client, cursor_trace_endpos, vector, this.cursor_trace_endpos);
+    ATTRIB(Client, cursor_trace_ent, entity, this.cursor_trace_ent);
+
+    ATTRIB(Client, v_angle, vector, this.v_angle);
+    ATTRIB(Client, movement, vector, this.movement);
+
     // custom
 
     ATTRIB(Client, playerid, int, this.playerid);

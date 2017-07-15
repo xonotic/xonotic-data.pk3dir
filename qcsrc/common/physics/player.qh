@@ -244,6 +244,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 
 	void Physics_UpdateStats(entity this, float maxspd_mod);
 
+	void PM_UpdateButtons(entity this);
+
 	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
 	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
 

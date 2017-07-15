@@ -1711,7 +1711,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.clip_size = spectatee.clip_size;
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	this.health = spectatee.health;
-	this.impulse = 0;
+	CS(this).impulse = 0;
 	this.items = spectatee.items;
 	this.last_pickup = spectatee.last_pickup;
 	this.hit_time = spectatee.hit_time;
@@ -2108,10 +2108,10 @@ bool joinAllowed(entity this)
 
 void ObserverThink(entity this)
 {
-	if ( this.impulse )
+	if ( CS(this).impulse )
 	{
-		MinigameImpulse(this, this.impulse);
-		this.impulse = 0;
+		MinigameImpulse(this, CS(this).impulse);
+		CS(this).impulse = 0;
 	}
 
 	if (this.flags & FL_JUMPRELEASED) {
@@ -2142,15 +2142,15 @@ void ObserverThink(entity this)
 
 void SpectatorThink(entity this)
 {
-	if ( this.impulse )
+	if ( CS(this).impulse )
 	{
-		if(MinigameImpulse(this, this.impulse))
-			this.impulse = 0;
+		if(MinigameImpulse(this, CS(this).impulse))
+			CS(this).impulse = 0;
 
-		if (this.impulse == IMP_weapon_drop.impulse)
+		if (CS(this).impulse == IMP_weapon_drop.impulse)
 		{
 			STAT(CAMERA_SPECTATOR, this) = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
-			this.impulse = 0;
+			CS(this).impulse = 0;
 			return;
 		}
 	}
@@ -2159,7 +2159,7 @@ void SpectatorThink(entity this)
 		if (PHYS_INPUT_BUTTON_JUMP(this) && joinAllowed(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			this.flags |= FL_SPAWNING;
-		} else if(PHYS_INPUT_BUTTON_ATCK(this) || this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209)) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(this) || CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18 || (CS(this).impulse >= 200 && CS(this).impulse <= 209)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
@@ -2167,8 +2167,8 @@ void SpectatorThink(entity this)
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			}
-			this.impulse = 0;
-		} else if(this.impulse == 12 || this.impulse == 16  || this.impulse == 19 || (this.impulse >= 220 && this.impulse <= 229)) {
+			CS(this).impulse = 0;
+		} else if(CS(this).impulse == 12 || CS(this).impulse == 16  || CS(this).impulse == 19 || (CS(this).impulse >= 220 && CS(this).impulse <= 229)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			if(SpectatePrev(this)) {
 				TRANSMUTE(Spectator, this);
@@ -2176,7 +2176,7 @@ void SpectatorThink(entity this)
 				TRANSMUTE(Observer, this);
 				PutClientInServer(this);
 			}
-			this.impulse = 0;
+			CS(this).impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			TRANSMUTE(Observer, this);
@@ -2408,7 +2408,7 @@ void PlayerPreThink (entity this)
 				if (time > this.respawn_time) {
 					STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
 					respawn(this);
-					this.impulse = CHIMPULSE_SPEEDRUN.impulse;
+					CS(this).impulse = CHIMPULSE_SPEEDRUN.impulse;
 				}
 			} else {
 				if (frametime) player_anim(this);
@@ -2727,7 +2727,7 @@ void PlayerPostThink (entity this)
 		DrownPlayer(this);
 		CheckRules_Player(this);
 		UpdateChatBubble(this);
-		if (this.impulse) ImpulseCommands(this);
+		if (CS(this).impulse) ImpulseCommands(this);
 		if (game_stopped)
 		{
 			CSQCMODEL_AUTOUPDATE(this);
@@ -2744,4 +2744,42 @@ void PlayerPostThink (entity this)
 	playerdemo_write(this);
 
 	CSQCMODEL_AUTOUPDATE(this);
+}
+
+// hack to copy the button fields from the client entity to the Client State
+void PM_UpdateButtons(entity this)
+{
+	if(this.impulse)
+		CS(this).impulse = this.impulse;
+	this.impulse = 0;
+
+	CS(this).button0 = this.button0;
+	CS(this).button2 = this.button2;
+	CS(this).button3 = this.button3;
+	CS(this).button4 = this.button4;
+	CS(this).button5 = this.button5;
+	CS(this).button6 = this.button6;
+	CS(this).button7 = this.button7;
+	CS(this).button8 = this.button8;
+	CS(this).button9 = this.button9;
+	CS(this).button10 = this.button10;
+	CS(this).button11 = this.button11;
+	CS(this).button12 = this.button12;
+	CS(this).button13 = this.button13;
+	CS(this).button14 = this.button14;
+	CS(this).button15 = this.button15;
+	CS(this).button16 = this.button16;
+	CS(this).buttonuse = this.buttonuse;
+	CS(this).buttonchat = this.buttonchat;
+
+	CS(this).cursor_active = this.cursor_active;
+	CS(this).cursor_screen = this.cursor_screen;
+	CS(this).cursor_trace_start = this.cursor_trace_start;
+	CS(this).cursor_trace_endpos = this.cursor_trace_endpos;
+	CS(this).cursor_trace_ent = this.cursor_trace_ent;
+
+	// TODO: ping?
+
+	CS(this).v_angle = this.v_angle;
+	CS(this).movement = this.movement;
 }

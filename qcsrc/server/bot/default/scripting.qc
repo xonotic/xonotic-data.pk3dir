@@ -485,7 +485,7 @@ float bot_cmd_cc(entity this)
 
 float bot_cmd_impulse(entity this)
 {
-	this.impulse = bot_cmd.bot_cmd_parm_float;
+	CS(this).impulse = bot_cmd.bot_cmd_parm_float;
 	return CMD_STATUS_FINISHED;
 }
 

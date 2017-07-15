@@ -57,28 +57,28 @@ void sys_phys_spectator_control(entity this)
 {
 	float maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
 	if (!this.spectatorspeed) { this.spectatorspeed = maxspeed_mod; }
-	if ((this.impulse >= 1 && this.impulse <= 19)
-	    || (this.impulse >= 200 && this.impulse <= 209)
-	    || (this.impulse >= 220 && this.impulse <= 229)
+	if ((CS(this).impulse >= 1 && CS(this).impulse <= 19)
+	    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
+	    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
 	   ) {
 		if (this.lastclassname != STR_PLAYER) {
-			if (this.impulse == 10
-			    || this.impulse == 15
-			    || this.impulse == 18
-			    || (this.impulse >= 200 && this.impulse <= 209)
-			   ) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (this.impulse == 11) {
+			if (CS(this).impulse == 10
+			    || CS(this).impulse == 15
+			    || CS(this).impulse == 18
+			    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
+			   ) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (CS(this).impulse == 11) {
 				this.spectatorspeed = maxspeed_mod;
-			} else if (this.impulse == 12
-			    || this.impulse == 16
-			    || this.impulse == 19
-			    || (this.impulse >= 220 && this.impulse <= 229)
+			} else if (CS(this).impulse == 12
+			    || CS(this).impulse == 16
+			    || CS(this).impulse == 19
+			    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
 			          ) {
 				this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
-			} else if (this.impulse >= 1 && this.impulse <= 9) {
-				this.spectatorspeed = 1 + 0.5 * (this.impulse - 1);
+			} else if (CS(this).impulse >= 1 && CS(this).impulse <= 9) {
+				this.spectatorspeed = 1 + 0.5 * (CS(this).impulse - 1);
 			}
 		}  // otherwise just clear
-		this.impulse = 0;
+		CS(this).impulse = 0;
 	}
 }
 
