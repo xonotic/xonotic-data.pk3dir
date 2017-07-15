@@ -34,7 +34,7 @@ CLASS(Client, Object)
     ATTRIB(Client, playerid, int, this.playerid);
 
     ATTRIB(Client, parm_idlesince, int, this.parm_idlesince);
-    ATTRIB(Client, muted, int, this.muted);
+    ATTRIB(Client, muted, bool, this.muted);
 
     METHOD(Client, m_unwind, bool(Client this));
 

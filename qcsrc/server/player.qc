@@ -838,7 +838,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	// FLOOD CONTROL
 	int flood = 0;
 	var .float flood_field = floodcontrol_chat;
-	if(floodcontrol)
+	if(floodcontrol && source)
 	{
 		float flood_spl;
 		float flood_burst;
