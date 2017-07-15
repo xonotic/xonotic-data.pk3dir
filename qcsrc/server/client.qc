@@ -821,7 +821,7 @@ SetChangeParms
 void SetChangeParms (entity this)
 {
 	// save parms for level change
-	parm1 = this.parm_idlesince - time;
+	parm1 = CS(this).parm_idlesince - time;
 
 	MUTATOR_CALLHOOK(SetChangeParms);
 }
@@ -834,12 +834,12 @@ DecodeLevelParms
 void DecodeLevelParms(entity this)
 {
 	// load parms
-	this.parm_idlesince = parm1;
-	if (this.parm_idlesince == -(86400 * 366))
-		this.parm_idlesince = time;
+	CS(this).parm_idlesince = parm1;
+	if (CS(this).parm_idlesince == -(86400 * 366))
+		CS(this).parm_idlesince = time;
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
-	this.parm_idlesince = max(this.parm_idlesince, time - sv_maxidle + 60);
+	CS(this).parm_idlesince = max(CS(this).parm_idlesince, time - sv_maxidle + 60);
 
 	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
@@ -2672,7 +2672,7 @@ void PlayerPostThink (entity this)
 
 		if (sv_maxidle_slots > 0 && (maxclients - totalClients) > sv_maxidle_slots)
 		{ /* do nothing */ }
-		else if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
+		else if (time - CS(this).parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if (this.idlekick_lasttimeleft)
 			{
@@ -2682,7 +2682,7 @@ void PlayerPostThink (entity this)
 		}
 		else
 		{
-			float timeleft = ceil(sv_maxidle - (time - this.parm_idlesince));
+			float timeleft = ceil(sv_maxidle - (time - CS(this).parm_idlesince));
 			if (timeleft == min(10, sv_maxidle - 1)) { // - 1 to support sv_maxidle <= 10
 				if (!this.idlekick_lasttimeleft)
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);

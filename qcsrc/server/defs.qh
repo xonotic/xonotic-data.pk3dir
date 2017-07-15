@@ -232,7 +232,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 float lockteams;
 
-.float parm_idlesince;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 int sv_maxidle_slots;

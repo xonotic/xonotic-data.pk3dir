@@ -33,6 +33,8 @@ CLASS(Client, Object)
 
     ATTRIB(Client, playerid, int, this.playerid);
 
+    ATTRIB(Client, parm_idlesince, int, this.parm_idlesince);
+
     METHOD(Client, m_unwind, bool(Client this));
 
     STATIC_METHOD(Client, Add, void(Client this, int _team));

@@ -11,11 +11,11 @@ void sys_phys_fix(entity this, float dt)
 bool sys_phys_override(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
-	float idlesince = this.parm_idlesince;
-	this.parm_idlesince = time; // in the case that physics are overridden
+	float idlesince = CS(this).parm_idlesince;
+	CS(this).parm_idlesince = time; // in the case that physics are overridden
 	if (PM_check_specialcommand(this, buttons)) { return true; }
 	if (this.PlayerPhysplug && this.PlayerPhysplug(this, dt)) { return true; }
-	this.parm_idlesince = idlesince;
+	CS(this).parm_idlesince = idlesince;
 	return false;
 }
 
@@ -26,7 +26,7 @@ void sys_phys_monitor(entity this, float dt)
 	if (sv_maxidle > 0) {
 		if (buttons != this.buttons_old
 		    || this.movement != this.movement_old
-		    || this.v_angle != this.v_angle_old) { this.parm_idlesince = time; }
+		    || this.v_angle != this.v_angle_old) { CS(this).parm_idlesince = time; }
 	}
 	PM_check_nickspam(this);
 	PM_check_punch(this, dt);
