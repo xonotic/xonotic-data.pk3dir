@@ -35,6 +35,7 @@ CLASS(Client, Object)
 
     ATTRIB(Client, parm_idlesince, int, this.parm_idlesince);
     ATTRIB(Client, muted, bool, this.muted);
+    ATTRIB(Client, killindicator_teamchange, int, this.killindicator_teamchange);
 
     METHOD(Client, m_unwind, bool(Client this));
 

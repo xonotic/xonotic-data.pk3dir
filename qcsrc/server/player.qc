@@ -536,7 +536,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		{
 			delete(this.killindicator);
 			this.killindicator = NULL;
-			if(this.killindicator_teamchange)
+			if(CS(this).killindicator_teamchange)
 				defer_ClientKill_Now_TeamChange = true;
 
 			if(this.classname == "body")
