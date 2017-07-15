@@ -71,8 +71,8 @@ void RaceCarPhysics(entity this, float dt)
 	vector rigvel;
 
 	vector angles_save = this.angles;
-	float accel = bound(-1, this.movement.x / PHYS_MAXSPEED(this), 1);
-	float steer = bound(-1, this.movement.y / PHYS_MAXSPEED(this), 1);
+	float accel = bound(-1, PHYS_CS(this).movement.x / PHYS_MAXSPEED(this), 1);
+	float steer = bound(-1, PHYS_CS(this).movement.y / PHYS_MAXSPEED(this), 1);
 
 	if (PHYS_BUGRIGS_REVERSE_SPEEDING(this))
 	{

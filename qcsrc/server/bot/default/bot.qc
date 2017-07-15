@@ -74,7 +74,7 @@ void bot_think(entity this)
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
 	}
@@ -113,7 +113,7 @@ void bot_think(entity this)
 	if (time < game_starttime)
 	{
 		// block the bot during the countdown to game start
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		this.bot_nextthink = game_starttime;
 		return;
 	}
@@ -121,7 +121,7 @@ void bot_think(entity this)
 	// if dead, just wait until we can respawn
 	if (IS_DEAD(this))
 	{
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		if (this.deadflag == DEAD_DEAD)
 		{
 			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn

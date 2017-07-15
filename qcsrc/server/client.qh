@@ -74,6 +74,7 @@ CLASS(Client, Object)
     ATTRIB(Client, idlekick_lasttimeleft, float, this.idlekick_lasttimeleft);
     ATTRIB(Client, pm_frametime, float, this.pm_frametime);
     ATTRIB(Client, pressedkeys, int, this.pressedkeys);
+    ATTRIB(Client, movement_old, vector, this.movement_old);
 
     METHOD(Client, m_unwind, bool(Client this));
 

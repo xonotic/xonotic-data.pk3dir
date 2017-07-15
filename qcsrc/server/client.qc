@@ -1673,10 +1673,10 @@ void GetPressedKeys(entity this)
 {
 	MUTATOR_CALLHOOK(GetPressedKeys, this);
 	int keys = STAT(PRESSED_KEYS, this);
-	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
-	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
-	keys = BITSET(keys, KEY_RIGHT, 		this.movement.y > 0);
-	keys = BITSET(keys, KEY_LEFT, 		this.movement.y < 0);
+	keys = BITSET(keys, KEY_FORWARD, 	CS(this).movement.x > 0);
+	keys = BITSET(keys, KEY_BACKWARD, 	CS(this).movement.x < 0);
+	keys = BITSET(keys, KEY_RIGHT, 		CS(this).movement.y > 0);
+	keys = BITSET(keys, KEY_LEFT, 		CS(this).movement.y < 0);
 
 	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
 	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));

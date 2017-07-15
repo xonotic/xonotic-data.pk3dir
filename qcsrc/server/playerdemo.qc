@@ -160,7 +160,7 @@ float playerdemo_read(entity this)
 		this.playerdemo_time += this.playerdemo_starttime;
 	}
 	this.velocity = '0 0 0';
-	this.movement = '0 0 0';
+	CS(this).movement = '0 0 0';
 	this.dmg_take = 0; // so screen doesn't stay blurry
 	this.dmg_save = 0;
 	this.dmg_inflictor = NULL;

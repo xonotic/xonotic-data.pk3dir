@@ -135,13 +135,13 @@ void PM_ClientMovement_UpdateStatus(entity this)
 
 void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 {
-	float movity = IsMoveInDirection(this.movement, 0);
+	float movity = IsMoveInDirection(PHYS_CS(this).movement, 0);
 	if(PHYS_AIRCONTROL_BACKWARDS(this))
-		movity += IsMoveInDirection(this.movement, 180);
+		movity += IsMoveInDirection(PHYS_CS(this).movement, 180);
 	if(PHYS_AIRCONTROL_SIDEWARDS(this))
 	{
-		movity += IsMoveInDirection(this.movement, 90);
-		movity += IsMoveInDirection(this.movement, -90);
+		movity += IsMoveInDirection(PHYS_CS(this).movement, 90);
+		movity += IsMoveInDirection(PHYS_CS(this).movement, -90);
 	}
 
 	float k = 32 * (2 * movity - 1);
@@ -550,7 +550,7 @@ void PM_check_nickspam(entity this)
 	if (this.nickspamcount >= autocvar_g_nick_flood_penalty_yellow)
 	{
 		// slight annoyance for nick change scripts
-		this.movement = -1 * this.movement;
+		PHYS_CS(this).movement = -1 * PHYS_CS(this).movement;
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = PHYS_INPUT_BUTTON_HOOK(this) = PHYS_INPUT_BUTTON_USE(this) = false;
 
 		if (this.nickspamcount >= autocvar_g_nick_flood_penalty_red) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
@@ -598,12 +598,12 @@ void PM_check_frozen(entity this)
 #endif
 	)
 	{
-		this.movement_x = bound(-5, this.movement.x, 5);
-		this.movement_y = bound(-5, this.movement.y, 5);
-		this.movement_z = bound(-5, this.movement.z, 5);
+		PHYS_CS(this).movement_x = bound(-5, PHYS_CS(this).movement.x, 5);
+		PHYS_CS(this).movement_y = bound(-5, PHYS_CS(this).movement.y, 5);
+		PHYS_CS(this).movement_z = bound(-5, PHYS_CS(this).movement.z, 5);
 	}
 	else
-		this.movement = '0 0 0';
+		PHYS_CS(this).movement = '0 0 0';
 
 	vector midpoint = ((this.absmin + this.absmax) * 0.5);
 	if (pointcontents(midpoint) == CONTENT_WATER)
@@ -684,7 +684,7 @@ void PM_check_blocked(entity this)
 #ifdef SVQC
 	if (!this.player_blocked)
 		return;
-	this.movement = '0 0 0';
+	PHYS_CS(this).movement = '0 0 0';
 	this.disableclientprediction = 1;
 #endif
 }
@@ -693,8 +693,8 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 {
 	//makevectors(this.v_angle.y * '0 1 0');
 	makevectors(this.v_angle);
-	vector wishvel = v_forward * this.movement_x
-					+ v_right * this.movement_y;
+	vector wishvel = v_forward * PHYS_CS(this).movement_x
+					+ v_right * PHYS_CS(this).movement_y;
 	// add remaining speed as Z component
 	float maxairspd = PHYS_MAXAIRSPEED(this) * max(1, maxspd_mod);
 	// fix speedhacks :P

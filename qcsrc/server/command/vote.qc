@@ -386,7 +386,7 @@ void reset_map(bool dorespawn)
 					// stop the player from moving so that he stands still once he gets respawned
 					it.velocity = '0 0 0';
 					it.avelocity = '0 0 0';
-					it.movement = '0 0 0';
+					CS(it).movement = '0 0 0';
 					PutClientInServer(it);
 				});
 			}

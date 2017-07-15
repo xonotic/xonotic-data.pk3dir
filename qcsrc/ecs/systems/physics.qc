@@ -18,7 +18,7 @@ void sys_phys_update(entity this, float dt)
 	if (sys_phys_override(this, dt)) { return; } sys_phys_monitor(this, dt);
 
 	this.buttons_old = PHYS_INPUT_BUTTON_MASK(this);
-	this.movement_old = this.movement;
+	PHYS_CS(this).movement_old = PHYS_CS(this).movement;
 	this.v_angle_old = this.v_angle;
 
 	sys_phys_ai(this);
@@ -200,10 +200,10 @@ void sys_phys_simulate(entity this, float dt)
 		}
 	}
 	makevectors(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')));
-	// wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
-	vector wishvel = v_forward * this.movement.x
-	    + v_right * this.movement.y
-	    + '0 0 1' * this.movement.z * (this.com_phys_vel_2d ? 0 : 1);
+	// wishvel = v_forward * PHYS_CS(this).movement.x + v_right * PHYS_CS(this).movement.y + v_up * PHYS_CS(this).movement.z;
+	vector wishvel = v_forward * PHYS_CS(this).movement.x
+	    + v_right * PHYS_CS(this).movement.y
+	    + '0 0 1' * PHYS_CS(this).movement.z * (this.com_phys_vel_2d ? 0 : 1);
 	if (this.com_phys_water) {
 		if (PHYS_INPUT_BUTTON_CROUCH(this)) {
 			wishvel.z = -PHYS_MAXSPEED(this);
@@ -216,7 +216,7 @@ void sys_phys_simulate(entity this, float dt)
 	}
 	if (this.com_phys_ladder) {
 		if (this.viewloc) {
-			wishvel.z = this.movement_old.x;
+			wishvel.z = PHYS_CS(this).movement_old.x;
 		}
 		if (this.ladder_entity.classname == "func_water") {
 			float f = vlen(wishvel);
@@ -271,7 +271,7 @@ void sys_phys_simulate(entity this, float dt)
 			// dv/dt = accel * maxspeed * (1 - accelqw) (when fast)
 			// log dv/dt = logaccel + logmaxspeed (when slow)
 			// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
-			float strafity = IsMoveInDirection(this.movement, -90) + IsMoveInDirection(this.movement, +90);  // if one is nonzero, other is always zero
+			float strafity = IsMoveInDirection(PHYS_CS(this).movement, -90) + IsMoveInDirection(PHYS_CS(this).movement, +90);  // if one is nonzero, other is always zero
 			if (PHYS_MAXAIRSTRAFESPEED(this)) {
 				wishspeed =
 				    min(wishspeed,
@@ -288,7 +288,7 @@ void sys_phys_simulate(entity this, float dt)
 			}
 			// !CPM
 
-			if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && this.movement.y == 0 && this.movement.x != 0) {
+			if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && PHYS_CS(this).movement.y == 0 && PHYS_CS(this).movement.x != 0) {
 				PM_AirAccelerate(this, dt, wishdir, wishspeed2);
 			} else {
 				float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;

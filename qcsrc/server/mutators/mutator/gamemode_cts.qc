@@ -98,8 +98,8 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel.x = fabs(player.movement.x);
-	wishvel.y = fabs(player.movement.y);
+	wishvel.x = fabs(CS(player).movement.x);
+	wishvel.y = fabs(CS(player).movement.y);
 	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
 		wishvel.z = 0;
@@ -107,32 +107,32 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 		if(wishvel.x >= 2 * wishvel.y)
 		{
 			// pure X motion
-			if(player.movement.x > 0)
-				player.movement_x = wishspeed;
+			if(CS(player).movement.x > 0)
+				CS(player).movement_x = wishspeed;
 			else
-				player.movement_x = -wishspeed;
-			player.movement_y = 0;
+				CS(player).movement_x = -wishspeed;
+			CS(player).movement_y = 0;
 		}
 		else if(wishvel.y >= 2 * wishvel.x)
 		{
 			// pure Y motion
-			player.movement_x = 0;
-			if(player.movement.y > 0)
-				player.movement_y = wishspeed;
+			CS(player).movement_x = 0;
+			if(CS(player).movement.y > 0)
+				CS(player).movement_y = wishspeed;
 			else
-				player.movement_y = -wishspeed;
+				CS(player).movement_y = -wishspeed;
 		}
 		else
 		{
 			// diagonal
-			if(player.movement.x > 0)
-				player.movement_x = M_SQRT1_2 * wishspeed;
+			if(CS(player).movement.x > 0)
+				CS(player).movement_x = M_SQRT1_2 * wishspeed;
 			else
-				player.movement_x = -M_SQRT1_2 * wishspeed;
-			if(player.movement.y > 0)
-				player.movement_y = M_SQRT1_2 * wishspeed;
+				CS(player).movement_x = -M_SQRT1_2 * wishspeed;
+			if(CS(player).movement.y > 0)
+				CS(player).movement_y = M_SQRT1_2 * wishspeed;
 			else
-				player.movement_y = -M_SQRT1_2 * wishspeed;
+				CS(player).movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
 }

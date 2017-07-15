@@ -157,9 +157,10 @@ bool PM_dodging_checkpressedkeys(entity this)
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;
 	bool dodge_detected = false;
+	vector mymovement = PHYS_CS(this).movement;
 
 	#define X(COND,BTN,RESULT)															\
-	if (this.movement_##COND)												\
+	if (mymovement_##COND)												\
 		/* is this a state change? */													\
 		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
 				tap_direction_##RESULT;													\
@@ -237,7 +238,7 @@ void PM_dodging(entity this)
 	if (this.dodging_action == 1)
 	{
 		//disable jump key during dodge accel phase
-		if(this.movement_z > 0) { this.movement_z = 0; }
+		if(PHYS_CS(this).movement.z > 0) { PHYS_CS(this).movement_z = 0; }
 
 		this.velocity += ((this.dodging_direction_y * velocity_difference) * v_right)
 					+ ((this.dodging_direction_x * velocity_difference) * v_forward);
@@ -280,10 +281,10 @@ void PM_dodging_GetPressedKeys(entity this)
 	PM_dodging_checkpressedkeys(this);
 
 	int keys = this.pressedkeys;
-	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
-	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
-	keys = BITSET(keys, KEY_RIGHT, 		this.movement.y > 0);
-	keys = BITSET(keys, KEY_LEFT, 		this.movement.y < 0);
+	keys = BITSET(keys, KEY_FORWARD, 	PHYS_CS(this).movement.x > 0);
+	keys = BITSET(keys, KEY_BACKWARD, 	PHYS_CS(this).movement.x < 0);
+	keys = BITSET(keys, KEY_RIGHT, 		PHYS_CS(this).movement.y > 0);
+	keys = BITSET(keys, KEY_LEFT, 		PHYS_CS(this).movement.y < 0);
 
 	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
 	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));

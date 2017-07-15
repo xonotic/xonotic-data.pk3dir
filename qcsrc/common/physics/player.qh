@@ -206,6 +206,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define PHYS_INPUT_FRAMETIME                serverdeltatime
 
 	#define PHYS_INPUT_MOVEVALUES(s)            input_movevalues
+	#define PHYS_CS(s)                          (s)
 
 	#define PHYS_INPUT_BUTTON_BUTTON1(s)        boolean(input_buttons & BIT(0))
 	#define PHYS_INPUT_BUTTON_BUTTON2(s)        boolean(input_buttons & BIT(1))
@@ -259,7 +260,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define PHYS_INPUT_TIMELENGTH               frametime
 	#define PHYS_INPUT_FRAMETIME                sys_frametime
 
-	#define PHYS_INPUT_MOVEVALUES(s)            ((s).movement)
+	#define PHYS_INPUT_MOVEVALUES(s)            CS(s).movement
+	#define PHYS_CS(s)                          CS(s)
 
 	#define PHYS_INPUT_BUTTON_BUTTON1(s)        (CS(s).button0)
 	#define PHYS_INPUT_BUTTON_BUTTON2(s)        (CS(s).button2)
