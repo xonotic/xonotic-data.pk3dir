@@ -1072,14 +1072,12 @@ spawnfunc(info_player_race)
 
 void race_ClearRecords()
 {
-	float i;
-
-	for(i = 0; i < MAX_CHECKPOINTS; ++i)
+	for(int j = 0; j < MAX_CHECKPOINTS; ++j)
 	{
-		race_checkpoint_records[i] = 0;
-		if(race_checkpoint_recordholders[i])
-			strunzone(race_checkpoint_recordholders[i]);
-		race_checkpoint_recordholders[i] = string_null;
+		race_checkpoint_records[j] = 0;
+		if(race_checkpoint_recordholders[j])
+			strunzone(race_checkpoint_recordholders[j]);
+		race_checkpoint_recordholders[j] = string_null;
 	}
 
 	FOREACH_CLIENT(true, LAMBDA(

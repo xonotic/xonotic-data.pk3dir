@@ -68,7 +68,7 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 			othertimestr = strcat("+", ftos_decimals(mytime - othertime, TIME_DECIMALS));
 		else
 			othertimestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(othertime));
-		othercol = "^3";
+		othercol = "^7";
 	}
 
 	if(cp == 254)
