@@ -176,7 +176,7 @@ void HUD_RaceTimer ()
 				if(race_nextbesttime)
 				{
 					a = bound(0, 2 - ((race_laptime + TIME_DECODE(race_nextbesttime)) - (time + TIME_DECODE(race_penaltyaccumulator))), 1);
-					float a2 = bound(0, 2 - ((race_laptime + TIME_DECODE(race_mybesttime)) - (time + TIME_DECODE(race_penaltyaccumulator))), 1);
+					float a2 = ((race_mybesttime) ? bound(0, 2 - ((race_laptime + TIME_DECODE(race_mybesttime)) - (time + TIME_DECODE(race_penaltyaccumulator))), 1) : 0);
 					if(a > 0) // next one?
 						s = MakeRaceString(race_nextcheckpoint, (time + TIME_DECODE(race_penaltyaccumulator)) - race_laptime, TIME_DECODE(race_nextbesttime), ((a2 > 0) ? TIME_DECODE(race_mybesttime) : 0), 0, race_nextbestname);
 				}
