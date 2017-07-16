@@ -432,6 +432,9 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e, true);
 					MUTATOR_CALLHOOK(Race_FinalCheckpoint, e);
 				}
+				if(t < myrecordtime || myrecordtime == 0)
+					e.race_checkpoint_record[cp] = t; // resending done below
+
 				if(t < recordtime || recordtime == 0)
 				{
 					race_checkpoint_records[cp] = t;
@@ -442,8 +445,6 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.race_checkpoint == cp, LAMBDA(race_SendNextCheckpoint(it, 0)));
 				}
 
-				if(t < myrecordtime || myrecordtime == 0)
-					e.race_checkpoint_record[cp] = t; // resending done below
 			}
 		}
 		else
