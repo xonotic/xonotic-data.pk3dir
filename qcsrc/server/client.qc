@@ -281,10 +281,10 @@ void PutObserverInServer(entity this)
 		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
-		if(this.just_joined == false) {
+		if(!CS(this).just_joined)
 			LogTeamchange(this.playerid, -1, 4);
-		} else
-			this.just_joined = false;
+		else
+			CS(this).just_joined = false;
 	}
 
 	accuracy_resend(this);
@@ -1190,7 +1190,7 @@ void ClientConnect(entity this)
 
 	LogTeamchange(this.playerid, this.team, 1);
 
-	this.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
+	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
 	CS(this).netname_previous = strzone(this.netname);
 

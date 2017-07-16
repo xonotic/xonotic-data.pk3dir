@@ -93,6 +93,7 @@ CLASS(Client, Object)
     ATTRIB(Client, version, int, this.version);
     ATTRIB(Client, spectatee_status, int, this.spectatee_status);
     ATTRIB(Client, zoomstate, bool, this.zoomstate);
+    ATTRIB(Client, just_joined, bool, this.just_joined);
 
     METHOD(Client, m_unwind, bool(Client this));
 
