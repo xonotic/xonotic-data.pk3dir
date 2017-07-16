@@ -6,6 +6,9 @@ include_directories(qcsrc)
 
 add_definitions(-DXONOTIC=1)
 add_definitions(-DNDEBUG=1)
+add_definitions(-DENABLE_EFFECTINFO=0)
+add_definitions(-DENABLE_DEBUGDRAW=0)
+add_definitions(-DENABLE_DEBUGTRACE=0)
 
 find_package(Git REQUIRED)
 if (DEFINED ENV{VERSION})
