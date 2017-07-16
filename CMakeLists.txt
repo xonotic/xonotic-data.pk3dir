@@ -8,12 +8,16 @@ add_definitions(-DXONOTIC=1)
 add_definitions(-DNDEBUG=1)
 
 find_package(Git REQUIRED)
-execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty=~
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        OUTPUT_VARIABLE GIT_DESC
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+if (DEFINED ENV{VERSION})
+    set(GIT_DESC "$ENV{VERSION}")
+else ()
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} describe --tags --dirty=~
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE GIT_DESC
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif ()
 add_definitions(-DWATERMARK=\"${GIT_DESC}\")
 
 set_source_files_properties(
@@ -27,15 +31,21 @@ set_source_files_properties(
 
 add_executable(csprogs qcsrc/client/progs.inc)
 target_compile_definitions(csprogs PRIVATE -DGAMEQC -DCSQC)
-add_dependencies(csprogs gmqcc)
+if (TARGET gmqcc)
+    add_dependencies(csprogs gmqcc)
+endif ()
 
 add_executable(progs qcsrc/server/progs.inc)
 target_compile_definitions(progs PRIVATE -DGAMEQC -DSVQC)
-add_dependencies(progs gmqcc)
+if (TARGET gmqcc)
+    add_dependencies(progs gmqcc)
+endif ()
 
 add_executable(menu qcsrc/menu/progs.inc)
 target_compile_definitions(menu PRIVATE -DMENUQC)
-add_dependencies(menu gmqcc)
+if (TARGET gmqcc)
+    add_dependencies(menu gmqcc)
+endif ()
 
 function(set_prelude target prelude)
     get_target_property(MY_PROJECT_SOURCES target SOURCES)
