@@ -2501,29 +2501,32 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if (STAT(FROZEN, this) == 2)
+	if(IS_PLAYER(this))
 	{
-		this.revive_progress = bound(0, this.revive_progress + frametime * this.revive_speed, 1);
-		this.health = max(1, this.revive_progress * start_health);
-		this.iceblock.alpha = bound(0.2, 1 - this.revive_progress, 1);
-
-		if (this.revive_progress >= 1)
-			Unfreeze(this);
-	}
-	else if (STAT(FROZEN, this) == 3)
-	{
-		this.revive_progress = bound(0, this.revive_progress - frametime * this.revive_speed, 1);
-		this.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * this.revive_progress );
-
-		if (this.health < 1)
+		if (STAT(FROZEN, this) == 2)
 		{
-			if (this.vehicle)
-				vehicles_exit(this.vehicle, VHEF_RELEASE);
-			if(this.event_damage)
-				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
+			this.revive_progress = bound(0, this.revive_progress + frametime * this.revive_speed, 1);
+			this.health = max(1, this.revive_progress * start_health);
+			this.iceblock.alpha = bound(0.2, 1 - this.revive_progress, 1);
+
+			if (this.revive_progress >= 1)
+				Unfreeze(this);
 		}
-		else if (this.revive_progress <= 0)
-			Unfreeze(this);
+		else if (STAT(FROZEN, this) == 3)
+		{
+			this.revive_progress = bound(0, this.revive_progress - frametime * this.revive_speed, 1);
+			this.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * this.revive_progress );
+
+			if (this.health < 1)
+			{
+				if (this.vehicle)
+					vehicles_exit(this.vehicle, VHEF_RELEASE);
+				if(this.event_damage)
+					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
+			}
+			else if (this.revive_progress <= 0)
+				Unfreeze(this);
+		}
 	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
