@@ -726,7 +726,8 @@ void PutClientInServer(entity this)
 	SetSpectatee(this, NULL);
 
 	// reset player keys
-	this.itemkeys = 0;
+	if(PS(this))
+		PS(this).itemkeys = 0;
 
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
