@@ -53,7 +53,6 @@ float server_is_dedicated;
 .float count;
 //.float cnt2;
 
-.float play_time;
 .int respawn_flags;
 .float respawn_time;
 .float respawn_time_max;

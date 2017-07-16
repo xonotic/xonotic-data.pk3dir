@@ -2110,8 +2110,6 @@ bool joinAllowed(entity this)
 .int items_added;
 bool PlayerThink(entity this)
 {
-	CheckRules_Player(this);
-
 	if (game_stopped || intermission_running) {
 		this.modelflags &= ~MF_ROCKET;
 		if(intermission_running)
@@ -2733,7 +2731,6 @@ void PlayerPostThink (entity this)
 
 	if (IS_PLAYER(this)) {
 		DrownPlayer(this);
-		CheckRules_Player(this);
 		UpdateChatBubble(this);
 		if (CS(this).impulse) ImpulseCommands(this);
 		if (game_stopped)

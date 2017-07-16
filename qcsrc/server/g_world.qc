@@ -1596,25 +1596,6 @@ void NextLevel()
 	localcmd("\nsv_hook_gameend\n");
 }
 
-/*
-============
-CheckRules_Player
-
-Exit deathmatch games upon conditions
-============
-*/
-void CheckRules_Player(entity this)
-{
-	if (game_stopped) // someone else quit the game already
-		return;
-
-	if(!IS_DEAD(this))
-		this.play_time += frametime;
-
-	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
-	//   (div0: and that in CheckRules_World please)
-}
-
 
 float InitiateSuddenDeath()
 {
