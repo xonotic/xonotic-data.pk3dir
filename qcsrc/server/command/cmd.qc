@@ -101,9 +101,9 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 			{
 				if (IS_CLIENT(caller))
 				{
-					caller.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+					CS(caller).version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 
-					if (caller.version < autocvar_gameversion_min || caller.version > autocvar_gameversion_max)
+					if (CS(caller).version < autocvar_gameversion_min || CS(caller).version > autocvar_gameversion_max)
 					{
 						CS(caller).version_mismatch = true;
 						ClientKill_TeamChange(caller, -2);  // observe

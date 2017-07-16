@@ -90,6 +90,7 @@ CLASS(Client, Object)
     ATTRIB(Client, taunt_soundtime, float, this.taunt_soundtime);
     ATTRIB(Client, killcount, int, this.killcount);
     ATTRIB(Client, version_mismatch, bool, this.version_mismatch);
+    ATTRIB(Client, version, int, this.version);
 
     METHOD(Client, m_unwind, bool(Client this));
 

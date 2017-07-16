@@ -131,8 +131,6 @@ float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
 
-.float version;
-
 // footstep interval
 .float nextstep;
 
