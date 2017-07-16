@@ -165,6 +165,7 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 
 	int cp = e.race_checkpoint;
 	float recordtime = race_checkpoint_records[cp];
+	float myrecordtime = e.race_checkpoint_record[cp];
 	string recordholder = race_checkpoint_recordholders[cp];
 	if(recordholder == e.netname)
 		recordholder = "";
@@ -172,7 +173,7 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 	if(!IS_REAL_CLIENT(e))
 		return;
 
-	if(!spec && !e.cvar_cl_race_cptimes_onlyself) // don't show spectators the player's personal time
+	if(!spec)
 		msg_entity = e;
 	WRITESPECTATABLE_MSG_ONE(msg_entity, {
 		WriteHeader(MSG_ONE, TE_CSQC_RACE);
@@ -186,20 +187,10 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_NEXT_QUALIFYING);
 		WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player will be at next
 		WriteInt24_t(MSG_ONE, recordtime);
+		if(!spec)
+			WriteInt24_t(MSG_ONE, myrecordtime);
 		WriteString(MSG_ONE, recordholder);
 	});
-
-	if(!spec && e.cvar_cl_race_cptimes_onlyself) // don't send to spectators!
-	{
-		recordtime = e.race_checkpoint_record[cp];
-
-		// not spectatable
-		msg_entity = e;
-		WriteHeader(MSG_ONE, TE_CSQC_RACE);
-		WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_NEXT_SELF_QUALIFYING);
-		WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player will be at next
-		WriteInt24_t(MSG_ONE, recordtime);
-	}
 }
 
 void race_send_recordtime(float msg)
@@ -471,25 +462,14 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			if(g_race_qualifying)
 			{
 				WRITESPECTATABLE_MSG_ONE(e, {
-					if(it == e && e.cvar_cl_race_cptimes_onlyself)
-						continue;
 					WriteHeader(MSG_ONE, TE_CSQC_RACE);
 					WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
 					WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
 					WriteInt24_t(MSG_ONE, t); // time to that intermediate
 					WriteInt24_t(MSG_ONE, recordtime); // previously best time
+					WriteInt24_t(MSG_ONE, myrecordtime); // previously best time
 					WriteString(MSG_ONE, recordholder); // record holder
 				});
-
-				if(e.cvar_cl_race_cptimes_onlyself)
-				{
-					msg_entity = e;
-					WriteHeader(MSG_ONE, TE_CSQC_RACE);
-					WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_SELF_QUALIFYING);
-					WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
-					WriteInt24_t(MSG_ONE, t); // time to that intermediate
-					WriteInt24_t(MSG_ONE, myrecordtime); // previously best time
-				}
 			}
 		}
 	}

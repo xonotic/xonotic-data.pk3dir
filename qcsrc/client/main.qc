@@ -132,8 +132,6 @@ void CSQC_Init()
 
 	registercvar("cl_spawn_near_teammate", "1");
 
-	registercvar("cl_race_cptimes_onlyself", "0");
-
 	if(autocvar_cl_lockview)
 		cvar_set("cl_lockview", "0");
 
@@ -1036,25 +1034,18 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_checkpoint = ReadByte();
 			race_time = ReadInt24_t();
 			race_previousbesttime = ReadInt24_t();
+			race_mypreviousbesttime = ReadInt24_t();
 			if(race_previousbestname)
 				strunzone(race_previousbestname);
-			race_previousbestname = strzone(ReadString());
-
-			race_checkpointtime = time;
-
-			if(race_checkpoint == 0 || race_checkpoint == 254)
+			string pbestname = ReadString();
+			if(autocvar_cl_race_cptimes_onlyself)
 			{
-				race_penaltyaccumulator = 0;
-				race_laptime = time; // valid
+				race_previousbesttime = race_mypreviousbesttime;
+				race_mypreviousbesttime = 0;
+				race_previousbestname = strzone("");
 			}
-			break;
-		case RACE_NET_CHECKPOINT_HIT_SELF_QUALIFYING:
-			race_checkpoint = ReadByte();
-			race_time = ReadInt24_t();
-			race_previousbesttime = ReadInt24_t();
-			if(race_previousbestname)
-				strunzone(race_previousbestname);
-			race_previousbestname = strzone(""); // handled by MakeRaceString
+			else
+				race_previousbestname = strzone(pbestname);
 
 			race_checkpointtime = time;
 
@@ -1078,18 +1069,18 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_nextcheckpoint = ReadByte();
 
 			race_nextbesttime = ReadInt24_t();
+			race_mybesttime = ReadInt24_t();
 			if(race_nextbestname)
 				strunzone(race_nextbestname);
-			race_nextbestname = strzone(ReadString());
-			break;
-
-		case RACE_NET_CHECKPOINT_NEXT_SELF_QUALIFYING:
-			race_nextcheckpoint = ReadByte();
-
-			race_nextbesttime = ReadInt24_t();
-			if(race_nextbestname)
-				strunzone(race_nextbestname);
-			race_nextbestname = strzone(""); // handled by MakeRaceString
+			string newname = ReadString();
+			if(autocvar_cl_race_cptimes_onlyself)
+			{
+				race_nextbesttime = race_mybesttime;
+				race_mybesttime = 0;
+				race_nextbestname = strzone("");
+			}
+			else
+				race_nextbestname = strzone(newname);
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE:
