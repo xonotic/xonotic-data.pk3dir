@@ -1253,9 +1253,7 @@ void ClientConnect(entity this)
 		sv_notice_join(this);
 
 	// update physics stats (players can spawn before physics runs)
-	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
-	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
-	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
+	Physics_UpdateStats(this);
 
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);

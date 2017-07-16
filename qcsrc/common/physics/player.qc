@@ -30,8 +30,14 @@ float Physics_ClientOption(entity this, string option, float defaultval)
 	return defaultval;
 }
 
-void Physics_UpdateStats(entity this, float maxspd_mod)
+void Physics_UpdateStats(entity this)
 {
+	// update this first, as it's used on all stats (wouldn't want to update them all manually from a mutator hook now, would we?)
+	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
+
+	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this);
+	float maxspd_mod = PHYS_HIGHSPEED(this);
+
 	STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw), maxspd_mod);
 	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw))
 		? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw), maxspd_mod)

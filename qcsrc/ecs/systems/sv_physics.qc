@@ -3,9 +3,7 @@
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
-	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
-	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
-	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
+	Physics_UpdateStats(this);
 }
 
 bool sys_phys_override(entity this, float dt)
