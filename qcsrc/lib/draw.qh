@@ -117,14 +117,14 @@
 		}
 	}
 
-	[[eraseable]]
+	ERASEABLE
 	void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
 	{
 		position.x -= 2 / 3 * strlen(text) * theScale.x;
 		drawstring_builtin(position, text, theScale, rgb, theAlpha, flag);
 	}
 
-	[[eraseable]]
+	ERASEABLE
 	void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
 	{
 		position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
