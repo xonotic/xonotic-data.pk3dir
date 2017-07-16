@@ -111,8 +111,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 	sf = 0;
 	if (e.race_completed)       sf |= 1; // forced scoreboard
-	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
-	if (e.zoomstate)            sf |= 4; // zoomed
+	if (CS(to).spectatee_status)    sf |= 2; // spectator ent number follows
+	if (CS(e).zoomstate)            sf |= 4; // zoomed
 	if (autocvar_sv_showspectators) sf |= 16; // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
@@ -120,7 +120,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 	if (sf & 2)
 	{
-		WriteByte(MSG_ENTITY, to.spectatee_status);
+		WriteByte(MSG_ENTITY, CS(to).spectatee_status);
 	}
 
 	if(sf & 16)
@@ -1662,9 +1662,9 @@ void player_regen(entity this)
 bool zoomstate_set;
 void SetZoomState(entity this, float newzoom)
 {
-	if(newzoom != this.zoomstate)
+	if(newzoom != CS(this).zoomstate)
 	{
-		this.zoomstate = newzoom;
+		CS(this).zoomstate = newzoom;
 		ClientData_Touch(this);
 	}
 	zoomstate_set = true;
@@ -1742,7 +1742,7 @@ void SpectateCopy(entity this, entity spectatee)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
-	SetZoomState(this, spectatee.zoomstate);
+	SetZoomState(this, CS(spectatee).zoomstate);
 
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -1822,10 +1822,10 @@ bool SpectateSet(entity this)
 
 void SetSpectatee_status(entity this, int spectatee_num)
 {
-	int oldspectatee_status = this.spectatee_status;
-	this.spectatee_status = spectatee_num;
+	int oldspectatee_status = CS(this).spectatee_status;
+	CS(this).spectatee_status = spectatee_num;
 
-	if (this.spectatee_status != oldspectatee_status)
+	if (CS(this).spectatee_status != oldspectatee_status)
 	{
 		ClientData_Touch(this);
 		if (g_race || g_cts) race_InitSpectator();
