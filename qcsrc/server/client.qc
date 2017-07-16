@@ -2262,7 +2262,7 @@ bool PlayerThink(entity this)
 		}
 
 		this.items_added = 0;
-		if (this.items & ITEM_Jetpack.m_itemid && (this.items & ITEM_JetpackRegen.m_itemid || this.ammo_fuel >= 0.01))
+		if ((this.items & ITEM_Jetpack.m_itemid) && ((this.items & ITEM_JetpackRegen.m_itemid) || this.ammo_fuel >= 0.01))
             this.items_added |= IT_FUEL;
 
 		this.items |= this.items_added;
@@ -2721,7 +2721,6 @@ void PlayerPostThink (entity this)
 
 	CheatFrame(this);
 
-	//CheckPlayerJump();
 	if (game_stopped)
 	{
 		this.solid = SOLID_NOT;

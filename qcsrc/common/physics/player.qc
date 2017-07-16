@@ -477,24 +477,6 @@ void CheckPlayerJump(entity this)
 		CheckWaterJump(this);
 }
 
-float racecar_angle(float forward, float down)
-{
-	if (forward < 0)
-	{
-		forward = -forward;
-		down = -down;
-	}
-
-	float ret = vectoyaw('0 1 0' * down + '1 0 0' * forward);
-
-	float angle_mult = forward / (800 + forward);
-
-	if (ret > 180)
-		return ret * angle_mult + 360 * (1 - angle_mult);
-	else
-		return ret * angle_mult;
-}
-
 #ifdef SVQC
 string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
