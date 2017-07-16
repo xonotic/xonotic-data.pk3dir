@@ -334,7 +334,6 @@ void PutObserverInServer(entity this)
 
 	this.items = 0;
 	this.weapons = '0 0 0';
-	PS(this).dual_weapons = '0 0 0';
 	this.drawonlytoclient = this;
 
 	this.weaponmodel = "";
@@ -2442,13 +2441,6 @@ Called every frame for each client before the physics are run
 void PlayerPreThink (entity this)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
-
-    STAT(GAMESTARTTIME, this) = game_starttime;
-	STAT(ROUNDSTARTTIME, this) = round_starttime;
-	STAT(ALLOW_OLDVORTEXBEAM, this) = autocvar_g_allow_oldvortexbeam;
-	STAT(LEADLIMIT, this) = autocvar_leadlimit;
-
-	STAT(WEAPONSINMAP, this) = weaponsInMap;
 
 	if (frametime) {
 		// physics frames: update anticheat stuff
