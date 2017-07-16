@@ -110,7 +110,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (IS_SPEC(e)) e = e.enemy;
 
 	sf = 0;
-	if (e.race_completed)       sf |= 1; // forced scoreboard
+	if (CS(e).race_completed)       sf |= 1; // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= 2; // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= 4; // zoomed
 	if (autocvar_sv_showspectators) sf |= 16; // show spectators
@@ -225,12 +225,10 @@ void PutObserverInServer(entity this)
     {
         entity spot = SelectSpawnPoint(this, true);
         if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
-        this.angles = spot.angles;
-        this.angles_z = 0;
+        this.angles = vec2(spot.angles);
         this.fixangle = true;
         // offset it so that the spectator spawns higher off the ground, looks better this way
         setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
-        this.prevorigin = this.origin;
         if (IS_REAL_CLIENT(this))
         {
             msg_entity = this;
@@ -622,7 +620,6 @@ void PutPlayerInServer(entity this)
 	setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 	// don't reset back to last position, even if new position is stuck in solid
 	this.oldorigin = this.origin;
-	this.prevorigin = this.origin;
 	this.lastteleporttime = time; // prevent insane speeds due to changing origin
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
@@ -2202,8 +2199,6 @@ bool PlayerThink(entity this)
 
 		return false;
 	}
-
-	this.prevorigin = this.origin;
 
 	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)

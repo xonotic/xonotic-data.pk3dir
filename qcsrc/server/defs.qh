@@ -289,8 +289,6 @@ float servertime, serverprevtime, serverframetime;
 
 .float ammo_fuel;
 
-.vector prevorigin;
-
 //flood fields
 .float nickspamtime; // time of last nick change
 .float nickspamcount;

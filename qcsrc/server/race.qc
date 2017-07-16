@@ -378,7 +378,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 	if(tvalid)
 	if(cp == race_timed_checkpoint) // finish line
-	if (!e.race_completed)
+	if (!CS(e).race_completed)
 	{
 		float s;
 		if(g_race_qualifying)
@@ -404,7 +404,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 			if(race_completing)
 			{
-				e.race_completed = 1;
+				CS(e).race_completed = 1;
 				MAKE_INDEPENDENT_PLAYER(e);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FINISHED, e.netname);
 				ClientData_Touch(e);
@@ -1030,9 +1030,9 @@ spawnfunc(target_stopTimer) { spawnfunc_target_checkpoint(this); }
 
 void race_AbandonRaceCheck(entity p)
 {
-	if(race_completing && !p.race_completed)
+	if(race_completing && !CS(p).race_completed)
 	{
-		p.race_completed = 1;
+		CS(p).race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
 		ClientData_Touch(p);
@@ -1170,7 +1170,7 @@ float race_GetFractionalLapCount(entity e)
 
 	float l;
 	l = PlayerScore_Add(e, SP_RACE_LAPS, 0);
-	if(e.race_completed)
+	if(CS(e).race_completed)
 		return l; // not fractional
 
 	vector o0, o1;
