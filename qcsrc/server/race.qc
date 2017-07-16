@@ -456,17 +456,21 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 		if(IS_REAL_CLIENT(e))
 		{
-			msg_entity = e;
 			if(g_race_qualifying)
 			{
-				WRITESPECTATABLE_MSG_ONE(e, {
-					WriteHeader(MSG_ONE, TE_CSQC_RACE);
-					WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
-					WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
-					WriteInt24_t(MSG_ONE, t); // time to that intermediate
-					WriteInt24_t(MSG_ONE, recordtime); // previously best time
-					WriteInt24_t(MSG_ONE, ((tvalid) ? it.race_checkpoint_record[cp] : 0)); // previously best time
-					WriteString(MSG_ONE, recordholder); // record holder
+				FOREACH_CLIENT(IS_REAL_CLIENT(it),
+				{
+					if(it == e || (IS_SPEC(it) && it.enemy == e))
+					{
+						msg_entity = it;
+						WriteHeader(MSG_ONE, TE_CSQC_RACE);
+						WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
+						WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
+						WriteInt24_t(MSG_ONE, t); // time to that intermediate
+						WriteInt24_t(MSG_ONE, recordtime); // previously best time
+						WriteInt24_t(MSG_ONE, ((tvalid) ? it.race_checkpoint_record[cp] : 0)); // previously best time
+						WriteString(MSG_ONE, recordholder); // record holder
+					}
 				});
 			}
 		}
