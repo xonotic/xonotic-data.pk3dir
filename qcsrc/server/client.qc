@@ -334,7 +334,7 @@ void PutObserverInServer(entity this)
 
 	this.items = 0;
 	this.weapons = '0 0 0';
-	this.dual_weapons = '0 0 0';
+	PS(this).dual_weapons = '0 0 0';
 	this.drawonlytoclient = this;
 
 	this.weaponmodel = "";
@@ -547,7 +547,7 @@ void PutPlayerInServer(entity this)
 	}
 	SetSpectatee_status(this, 0);
 
-	this.dual_weapons = '0 0 0';
+	PS(this).dual_weapons = '0 0 0';
 
 	this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
 
@@ -1718,7 +1718,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
-	this.dual_weapons = spectatee.dual_weapons;
 	this.vortex_charge = spectatee.vortex_charge;
 	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	this.hagar_load = spectatee.hagar_load;
