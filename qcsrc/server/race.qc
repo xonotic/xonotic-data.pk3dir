@@ -415,13 +415,12 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 	if(g_race_qualifying)
 	{
 		float recordtime;
-		float myrecordtime;
 		string recordholder;
 
 		if(tvalid)
 		{
 			recordtime = race_checkpoint_records[cp];
-			myrecordtime = e.race_checkpoint_record[cp];
+			float myrecordtime = e.race_checkpoint_record[cp];
 			recordholder = strcat1(race_checkpoint_recordholders[cp]); // make a tempstring copy, as we'll possibly strunzone it!
 			if(recordholder == e.netname)
 				recordholder = "";
@@ -452,7 +451,6 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			// dummies
 			t = 0;
 			recordtime = 0;
-			myrecordtime = 0;
 			recordholder = "";
 		}
 
@@ -467,7 +465,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
 					WriteInt24_t(MSG_ONE, t); // time to that intermediate
 					WriteInt24_t(MSG_ONE, recordtime); // previously best time
-					WriteInt24_t(MSG_ONE, myrecordtime); // previously best time
+					WriteInt24_t(MSG_ONE, ((tvalid) ? it.race_checkpoint_record[cp] : 0)); // previously best time
 					WriteString(MSG_ONE, recordholder); // record holder
 				});
 			}
