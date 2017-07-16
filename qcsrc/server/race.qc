@@ -10,6 +10,7 @@
 #include "../common/notifications/all.qh"
 #include "../common/mapinfo.qh"
 #include <common/net_linked.qh>
+#include <common/state.qh>
 #include "../common/triggers/subs.qh"
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
