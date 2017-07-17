@@ -399,9 +399,10 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 	);
 
 	float lag = ((IS_REAL_CLIENT(actor)) ? ANTILAG_LATENCY(actor) : 0);
+	bool noantilag = ((IS_CLIENT(actor)) ? CS(actor).cvar_cl_noantilag : false);
 	if(lag < 0.001)
 		lag = 0;
-	if(autocvar_g_antilag == 0 || actor.cvar_cl_noantilag)
+	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{

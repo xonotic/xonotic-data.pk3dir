@@ -1093,8 +1093,8 @@ void nade_prime(entity this)
 	}
 	else
 	{
-		ntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype = ((autocvar_g_nades_client_select) ? CS(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		pntype = ((autocvar_g_nades_client_select) ? CS(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
@@ -1250,8 +1250,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 			if(autocvar_g_nades_bonus_client_select)
 			{
-				player.nade_type = player.cvar_cl_nade_type;
-				player.pokenade_type = player.cvar_cl_pokenade_type;
+				player.nade_type = CS(player).cvar_cl_nade_type;
+				player.pokenade_type = CS(player).cvar_cl_pokenade_type;
 			}
 			else
 			{
@@ -1345,7 +1345,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 		player.nade_refire  = time + autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
-		player.nade_type = player.cvar_cl_nade_type;
+		player.nade_type = CS(player).cvar_cl_nade_type;
 
 	player.nade_timer = 0;
 

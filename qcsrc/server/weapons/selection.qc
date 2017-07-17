@@ -290,7 +290,7 @@ void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponent
 void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
 {
 	float w;
-	w = W_GetCycleWeapon(this, this.cvar_cl_weaponpriority, +1, imp, 1, (this.cvar_cl_weaponimpulsemode == 0), weaponentity);
+	w = W_GetCycleWeapon(this, this.cvar_cl_weaponpriority, +1, imp, 1, (CS(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
 	if(w > 0)
 		W_SwitchWeapon(this, Weapons_from(w), weaponentity);
 }

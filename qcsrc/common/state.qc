@@ -69,10 +69,10 @@ void PlayerScore_Detach(entity this);
 
 void ClientState_detach(entity this)
 {
+    GetCvars(this, -1);  // free cvars TODO: is this still needed now that it's stored on the clientstate entity?
 	delete(CS(this));
 	this._cs = NULL;
 
-    GetCvars(this, -1);  // free cvars
 
     bot_clientdisconnect(this);
 
