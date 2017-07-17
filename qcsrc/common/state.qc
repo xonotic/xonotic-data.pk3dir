@@ -70,6 +70,7 @@ void PlayerScore_Detach(entity this);
 void ClientState_detach(entity this)
 {
     accuracy_free(this); // TODO: needs to be before CS() is deleted!
+    PlayerScore_Detach(this); // what ^they^ said
 	delete(CS(this));
 	this._cs = NULL;
 
@@ -82,5 +83,4 @@ void ClientState_detach(entity this)
     playerdemo_shutdown(this);
     entcs_detach(this);
     ClientData_Detach(this);
-    PlayerScore_Detach(this);
 }
