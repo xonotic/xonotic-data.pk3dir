@@ -514,18 +514,18 @@ bool PM_check_specialcommand(entity this, int buttons)
 	else
 		c = "?";
 
-	if (c == substring(specialcommand, this.specialcommand_pos, 1))
+	if (c == substring(specialcommand, CS(this).specialcommand_pos, 1))
 	{
-		this.specialcommand_pos += 1;
-		if (this.specialcommand_pos >= strlen(specialcommand))
+		CS(this).specialcommand_pos += 1;
+		if (CS(this).specialcommand_pos >= strlen(specialcommand))
 		{
-			this.specialcommand_pos = 0;
+			CS(this).specialcommand_pos = 0;
 			SpecialCommand(this);
 			return true;
 		}
 	}
-	else if (this.specialcommand_pos && (c != substring(specialcommand, this.specialcommand_pos - 1, 1)))
-		this.specialcommand_pos = 0;
+	else if (CS(this).specialcommand_pos && (c != substring(specialcommand, CS(this).specialcommand_pos - 1, 1)))
+		CS(this).specialcommand_pos = 0;
 #endif
 	return false;
 }

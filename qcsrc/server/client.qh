@@ -104,6 +104,7 @@ CLASS(Client, Object)
     ATTRIB(Client, accuracy, entity, this.accuracy);
     ATTRIB(Client, hasweapon_complain_spam, float, this.hasweapon_complain_spam);
     ATTRIB(Client, scorekeeper, entity, this.scorekeeper);
+    ATTRIB(Client, specialcommand_pos, int, this.specialcommand_pos);
 
     METHOD(Client, m_unwind, bool(Client this));
 
