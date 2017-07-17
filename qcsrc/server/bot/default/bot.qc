@@ -56,8 +56,8 @@ entity bot_spawn()
 		setItemGroupCount();
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
-		bot_setclientfields(bot);
 		ClientConnect(bot);
+		bot_setclientfields(bot);
 		PutClientInServer(bot);
 	}
 	return bot;
