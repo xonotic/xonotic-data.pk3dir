@@ -247,7 +247,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 
 	bool Physics_Valid(string thecvar);
 
-	void Physics_UpdateStats(entity this, float maxspd_mod);
+	void Physics_UpdateStats(entity this);
 
 	void PM_UpdateButtons(entity this, entity store);
 

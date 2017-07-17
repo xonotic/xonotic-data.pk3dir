@@ -93,6 +93,8 @@ CLASS(Client, Object)
     ATTRIB(Client, version, int, this.version);
     ATTRIB(Client, spectatee_status, int, this.spectatee_status);
     ATTRIB(Client, zoomstate, bool, this.zoomstate);
+    ATTRIB(Client, just_joined, bool, this.just_joined);
+    ATTRIB(Client, race_completed, bool, this.race_completed);
 
     METHOD(Client, m_unwind, bool(Client this));
 
@@ -133,6 +135,12 @@ CLASS(Spectator, Client)
 ENDCLASS(Spectator)
 
 CLASS(Player, Client)
+    
+    // custom
+
+    ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
+    ATTRIB(Player, itemkeys, int, this.itemkeys);
+
     INIT(Player) {
         this.classname = STR_PLAYER;
         IL_PUSH(g_players, this);

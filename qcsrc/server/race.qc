@@ -10,6 +10,7 @@
 #include "../common/notifications/all.qh"
 #include "../common/mapinfo.qh"
 #include <common/net_linked.qh>
+#include <common/state.qh>
 #include "../common/triggers/subs.qh"
 #include "../lib/warpzone/util_server.qh"
 #include "../lib/warpzone/common.qh"
@@ -378,7 +379,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 	if(tvalid)
 	if(cp == race_timed_checkpoint) // finish line
-	if (!e.race_completed)
+	if (!CS(e).race_completed)
 	{
 		float s;
 		if(g_race_qualifying)
@@ -404,7 +405,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 			if(race_completing)
 			{
-				e.race_completed = 1;
+				CS(e).race_completed = 1;
 				MAKE_INDEPENDENT_PLAYER(e);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FINISHED, e.netname);
 				ClientData_Touch(e);
@@ -432,6 +433,9 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e, true);
 					MUTATOR_CALLHOOK(Race_FinalCheckpoint, e);
 				}
+				if(t < myrecordtime || myrecordtime == 0)
+					e.race_checkpoint_record[cp] = t; // resending done below
+
 				if(t < recordtime || recordtime == 0)
 				{
 					race_checkpoint_records[cp] = t;
@@ -442,8 +446,6 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.race_checkpoint == cp, LAMBDA(race_SendNextCheckpoint(it, 0)));
 				}
 
-				if(t < myrecordtime || myrecordtime == 0)
-					e.race_checkpoint_record[cp] = t; // resending done below
 			}
 		}
 		else
@@ -456,17 +458,21 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 		if(IS_REAL_CLIENT(e))
 		{
-			msg_entity = e;
 			if(g_race_qualifying)
 			{
-				WRITESPECTATABLE_MSG_ONE(e, {
-					WriteHeader(MSG_ONE, TE_CSQC_RACE);
-					WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
-					WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
-					WriteInt24_t(MSG_ONE, t); // time to that intermediate
-					WriteInt24_t(MSG_ONE, recordtime); // previously best time
-					WriteInt24_t(MSG_ONE, ((tvalid) ? it.race_checkpoint_record[cp] : 0)); // previously best time
-					WriteString(MSG_ONE, recordholder); // record holder
+				FOREACH_CLIENT(IS_REAL_CLIENT(it),
+				{
+					if(it == e || (IS_SPEC(it) && it.enemy == e))
+					{
+						msg_entity = it;
+						WriteHeader(MSG_ONE, TE_CSQC_RACE);
+						WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
+						WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
+						WriteInt24_t(MSG_ONE, t); // time to that intermediate
+						WriteInt24_t(MSG_ONE, recordtime); // previously best time
+						WriteInt24_t(MSG_ONE, ((tvalid) ? it.race_checkpoint_record[cp] : 0)); // previously best time
+						WriteString(MSG_ONE, recordholder); // record holder
+					}
 				});
 			}
 		}
@@ -1025,9 +1031,9 @@ spawnfunc(target_stopTimer) { spawnfunc_target_checkpoint(this); }
 
 void race_AbandonRaceCheck(entity p)
 {
-	if(race_completing && !p.race_completed)
+	if(race_completing && !CS(p).race_completed)
 	{
-		p.race_completed = 1;
+		CS(p).race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
 		ClientData_Touch(p);
@@ -1072,14 +1078,12 @@ spawnfunc(info_player_race)
 
 void race_ClearRecords()
 {
-	float i;
-
-	for(i = 0; i < MAX_CHECKPOINTS; ++i)
+	for(int j = 0; j < MAX_CHECKPOINTS; ++j)
 	{
-		race_checkpoint_records[i] = 0;
-		if(race_checkpoint_recordholders[i])
-			strunzone(race_checkpoint_recordholders[i]);
-		race_checkpoint_recordholders[i] = string_null;
+		race_checkpoint_records[j] = 0;
+		if(race_checkpoint_recordholders[j])
+			strunzone(race_checkpoint_recordholders[j]);
+		race_checkpoint_recordholders[j] = string_null;
 	}
 
 	FOREACH_CLIENT(true, LAMBDA(
@@ -1167,7 +1171,7 @@ float race_GetFractionalLapCount(entity e)
 
 	float l;
 	l = PlayerScore_Add(e, SP_RACE_LAPS, 0);
-	if(e.race_completed)
+	if(CS(e).race_completed)
 		return l; // not fractional
 
 	vector o0, o1;

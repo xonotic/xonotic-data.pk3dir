@@ -854,7 +854,7 @@ void Ent_Remove(entity this)
 
 	if(this.snd_looping > 0)
 	{
-		sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
+		sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
 		this.snd_looping = 0;
 	}
 
@@ -976,6 +976,7 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	forcefog = strzone(ReadString());
 
 	armorblockpercent = ReadByte() / 255.0;
+	damagepush_speedfactor = ReadByte() / 255.0;
 
 	serverflags = ReadByte();
 

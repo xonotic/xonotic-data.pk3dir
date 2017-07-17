@@ -351,7 +351,7 @@ void GetTeamCounts(entity ignore)
 					cb1 = cb1 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_2)
+			else if(t == NUM_TEAM_2)
 			{
 				if(c2 >= 0)
 				{
@@ -359,7 +359,7 @@ void GetTeamCounts(entity ignore)
 					cb2 = cb2 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_3)
+			else if(t == NUM_TEAM_3)
 			{
 				if(c3 >= 0)
 				{
@@ -367,7 +367,7 @@ void GetTeamCounts(entity ignore)
 					cb3 = cb3 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_4)
+			else if(t == NUM_TEAM_4)
 			{
 				if(c4 >= 0)
 				{

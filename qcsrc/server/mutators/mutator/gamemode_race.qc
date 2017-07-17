@@ -73,7 +73,7 @@ float WinningCondition_Race(float fraglimit)
 	c = 0;
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		++n;
-		if(it.race_completed)
+		if(CS(it).race_completed)
 			++c;
 	));
 	if(n && (n == c))

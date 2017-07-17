@@ -186,7 +186,7 @@ void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
 // WEAPONTODO: remove this
-WepSet weaponsInMap;
+//WepSet weaponsInMap;
 
 #define weapons _STAT(WEAPONS)
 
@@ -256,8 +256,8 @@ string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
 
-float game_starttime; //point in time when the countdown to game start is over
-float round_starttime; //point in time when the countdown to round start is over
+//float game_starttime; //point in time when the countdown to game start is over
+//float round_starttime; //point in time when the countdown to round start is over
 
 void W_Porto_Remove (entity p);
 
@@ -288,8 +288,6 @@ void ClientData_Touch(entity e);
 float servertime, serverprevtime, serverframetime;
 
 .float ammo_fuel;
-
-.vector prevorigin;
 
 //flood fields
 .float nickspamtime; // time of last nick change

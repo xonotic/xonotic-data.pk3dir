@@ -110,7 +110,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (IS_SPEC(e)) e = e.enemy;
 
 	sf = 0;
-	if (e.race_completed)       sf |= 1; // forced scoreboard
+	if (CS(e).race_completed)       sf |= 1; // forced scoreboard
 	if (CS(to).spectatee_status)    sf |= 2; // spectator ent number follows
 	if (CS(e).zoomstate)            sf |= 4; // zoomed
 	if (autocvar_sv_showspectators) sf |= 16; // show spectators
@@ -225,12 +225,10 @@ void PutObserverInServer(entity this)
     {
         entity spot = SelectSpawnPoint(this, true);
         if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
-        this.angles = spot.angles;
-        this.angles_z = 0;
+        this.angles = vec2(spot.angles);
         this.fixangle = true;
         // offset it so that the spectator spawns higher off the ground, looks better this way
         setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
-        this.prevorigin = this.origin;
         if (IS_REAL_CLIENT(this))
         {
             msg_entity = this;
@@ -281,10 +279,10 @@ void PutObserverInServer(entity this)
 		if(autocvar_g_chat_nospectators == 1 || (!warmup_stage && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
-		if(this.just_joined == false) {
+		if(!CS(this).just_joined)
 			LogTeamchange(this.playerid, -1, 4);
-		} else
-			this.just_joined = false;
+		else
+			CS(this).just_joined = false;
 	}
 
 	accuracy_resend(this);
@@ -336,7 +334,6 @@ void PutObserverInServer(entity this)
 
 	this.items = 0;
 	this.weapons = '0 0 0';
-	this.dual_weapons = '0 0 0';
 	this.drawonlytoclient = this;
 
 	this.weaponmodel = "";
@@ -549,7 +546,7 @@ void PutPlayerInServer(entity this)
 	}
 	SetSpectatee_status(this, 0);
 
-	this.dual_weapons = '0 0 0';
+	PS(this).dual_weapons = '0 0 0';
 
 	this.superweapons_finished = (this.weapons & WEPSET_SUPERWEAPONS) ? time + autocvar_g_balance_superweapons_time : 0;
 
@@ -622,7 +619,6 @@ void PutPlayerInServer(entity this)
 	setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 	// don't reset back to last position, even if new position is stuck in solid
 	this.oldorigin = this.origin;
-	this.prevorigin = this.origin;
 	this.lastteleporttime = time; // prevent insane speeds due to changing origin
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
@@ -729,7 +725,8 @@ void PutClientInServer(entity this)
 	SetSpectatee(this, NULL);
 
 	// reset player keys
-	this.itemkeys = 0;
+	if(PS(this))
+		PS(this).itemkeys = 0;
 
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
@@ -775,6 +772,7 @@ void ClientInit_misc(entity this)
 	else
 		WriteString(channel, "");
 	WriteByte(channel, this.count * 255.0); // g_balance_armor_blockpercent
+	WriteByte(channel, this.cnt * 255.0); // g_balance_damagepush_speedfactor
 	WriteByte(channel, serverflags);
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 }
@@ -785,6 +783,11 @@ void ClientInit_CheckUpdate(entity this)
 	if(this.count != autocvar_g_balance_armor_blockpercent)
 	{
 		this.count = autocvar_g_balance_armor_blockpercent;
+		this.SendFlags |= 1;
+	}
+	if(this.cnt != autocvar_g_balance_damagepush_speedfactor)
+	{
+		this.cnt = autocvar_g_balance_damagepush_speedfactor;
 		this.SendFlags |= 1;
 	}
 }
@@ -1190,7 +1193,7 @@ void ClientConnect(entity this)
 
 	LogTeamchange(this.playerid, this.team, 1);
 
-	this.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
+	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
 	CS(this).netname_previous = strzone(this.netname);
 
@@ -1255,9 +1258,7 @@ void ClientConnect(entity this)
 		sv_notice_join(this);
 
 	// update physics stats (players can spawn before physics runs)
-	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
-	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
-	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
+	Physics_UpdateStats(this);
 
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
@@ -1721,7 +1722,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
-	this.dual_weapons = spectatee.dual_weapons;
 	this.vortex_charge = spectatee.vortex_charge;
 	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	this.hagar_load = spectatee.hagar_load;
@@ -2203,8 +2203,6 @@ bool PlayerThink(entity this)
 		return false;
 	}
 
-	this.prevorigin = this.origin;
-
 	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -2450,13 +2448,6 @@ void PlayerPreThink (entity this)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
-    STAT(GAMESTARTTIME, this) = game_starttime;
-	STAT(ROUNDSTARTTIME, this) = round_starttime;
-	STAT(ALLOW_OLDVORTEXBEAM, this) = autocvar_g_allow_oldvortexbeam;
-	STAT(LEADLIMIT, this) = autocvar_leadlimit;
-
-	STAT(WEAPONSINMAP, this) = weaponsInMap;
-
 	if (frametime) {
 		// physics frames: update anticheat stuff
 		anticheat_prethink(this);
@@ -2508,29 +2499,32 @@ void PlayerPreThink (entity this)
 		this.max_armorvalue = 0;
 	}
 
-	if (STAT(FROZEN, this) == 2)
+	if(IS_PLAYER(this))
 	{
-		this.revive_progress = bound(0, this.revive_progress + frametime * this.revive_speed, 1);
-		this.health = max(1, this.revive_progress * start_health);
-		this.iceblock.alpha = bound(0.2, 1 - this.revive_progress, 1);
-
-		if (this.revive_progress >= 1)
-			Unfreeze(this);
-	}
-	else if (STAT(FROZEN, this) == 3)
-	{
-		this.revive_progress = bound(0, this.revive_progress - frametime * this.revive_speed, 1);
-		this.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * this.revive_progress );
-
-		if (this.health < 1)
+		if (STAT(FROZEN, this) == 2)
 		{
-			if (this.vehicle)
-				vehicles_exit(this.vehicle, VHEF_RELEASE);
-			if(this.event_damage)
-				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
+			this.revive_progress = bound(0, this.revive_progress + frametime * this.revive_speed, 1);
+			this.health = max(1, this.revive_progress * start_health);
+			this.iceblock.alpha = bound(0.2, 1 - this.revive_progress, 1);
+
+			if (this.revive_progress >= 1)
+				Unfreeze(this);
 		}
-		else if (this.revive_progress <= 0)
-			Unfreeze(this);
+		else if (STAT(FROZEN, this) == 3)
+		{
+			this.revive_progress = bound(0, this.revive_progress - frametime * this.revive_speed, 1);
+			this.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * this.revive_progress );
+
+			if (this.health < 1)
+			{
+				if (this.vehicle)
+					vehicles_exit(this.vehicle, VHEF_RELEASE);
+				if(this.event_damage)
+					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
+			}
+			else if (this.revive_progress <= 0)
+				Unfreeze(this);
+		}
 	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
