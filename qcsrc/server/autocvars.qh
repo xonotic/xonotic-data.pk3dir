@@ -267,7 +267,7 @@ string autocvar_nextmap;
 string autocvar_quit_and_redirect;
 float autocvar_quit_and_redirect_timer;
 bool autocvar_quit_when_empty;
-float autocvar_r_showbboxes; // FIXME check this
+float autocvar_r_showbboxes;
 int autocvar_rescan_pending;
 bool autocvar_samelevel;
 string autocvar_sessionid;
