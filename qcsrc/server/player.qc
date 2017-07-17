@@ -111,7 +111,6 @@ void CopyBody(entity this, float keepvelocity)
 	//clone.weapon = this.weapon;
 	setorigin(clone, this.origin);
 	setsize(clone, this.mins, this.maxs);
-	clone.prevorigin = this.origin;
 	clone.reset = SUB_Remove;
 	clone._ps = this._ps;
 
@@ -536,7 +535,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		{
 			delete(this.killindicator);
 			this.killindicator = NULL;
-			if(this.killindicator_teamchange)
+			if(CS(this).killindicator_teamchange)
 				defer_ClientKill_Now_TeamChange = true;
 
 			if(this.classname == "body")
@@ -744,7 +743,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
         msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
-	msgin = formatmessage(source, msgin);
+    if(source)
+		msgin = formatmessage(source, msgin);
 
     string colorstr;
 	if (!IS_PLAYER(source))
@@ -837,7 +837,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	// FLOOD CONTROL
 	int flood = 0;
 	var .float flood_field = floodcontrol_chat;
-	if(floodcontrol)
+	if(floodcontrol && source)
 	{
 		float flood_spl;
 		float flood_burst;
@@ -944,7 +944,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
 
     int ret;
-	if(source.muted)
+	if(source && CS(source).muted)
 	{
 		// always fake the message
 		ret = -1;
@@ -993,11 +993,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 					centerprint(privatesay, cmsgstr);
 			}
 		}
-		else if ( teamsay && source.active_minigame )
+		else if ( teamsay && CS(source).active_minigame )
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{

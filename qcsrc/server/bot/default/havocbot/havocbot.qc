@@ -181,7 +181,7 @@ void havocbot_ai(entity this)
 			// we are currently holding a weapon that's not fully loaded, reload it
 			if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
 			if(this.(weaponentity).clip_load < this.(weaponentity).clip_size)
-				this.impulse = IMP_weapon_reload.impulse; // not sure if this is done right
+				CS(this).impulse = IMP_weapon_reload.impulse; // not sure if this is done right
 
 			// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
 			// the code above executes next frame, starting the reloading then
@@ -213,7 +213,7 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 					+ 0.05 / max(1, sk + this.havocbot_keyboardskill)
 					+ random() * 0.025 / max(0.00025, skill + this.havocbot_keyboardskill)
 			, time);
-		keyboard = this.movement / autocvar_sv_maxspeed;
+		keyboard = CS(this).movement / autocvar_sv_maxspeed;
 
 		float trigger = autocvar_bot_ai_keyboard_threshold;
 		float trigger1 = -trigger;
@@ -265,8 +265,8 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 
 	keyboard = this.havocbot_keyboard;
 	float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
-	//dprint("movement ", vtos(this.movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
-	this.movement = this.movement + (keyboard - this.movement) * blend;
+	//dprint("movement ", vtos(CS(this).movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
+	CS(this).movement = CS(this).movement + (keyboard - CS(this).movement) * blend;
 }
 
 void havocbot_bunnyhop(entity this, vector dir)
@@ -402,12 +402,12 @@ void havocbot_bunnyhop(entity this, vector dir)
 			while (deviation.y > 180) deviation.y = deviation.y - 360;
 
 			if(fabs(deviation.y)>10)
-				this.movement_x = 0;
+				CS(this).movement_x = 0;
 
 			if(deviation.y>10)
-				this.movement_y = maxspeed * -1;
+				CS(this).movement_y = maxspeed * -1;
 			else if(deviation.y<10)
-				this.movement_y = maxspeed;
+				CS(this).movement_y = maxspeed;
 
 		}
 	}
@@ -448,7 +448,7 @@ void havocbot_movetogoal(entity this)
 	vector dodge;
 	//if (this.goalentity)
 	//	te_lightning2(this, this.origin, (this.goalentity.absmin + this.goalentity.absmax) * 0.5);
-	this.movement = '0 0 0';
+	CS(this).movement = '0 0 0';
 	maxspeed = autocvar_sv_maxspeed;
 
 	// Jetpack navigation
@@ -492,7 +492,7 @@ void havocbot_movetogoal(entity this)
 				// Brake
 				if(fabs(this.velocity.x)>maxspeed*0.3)
 				{
-					this.movement_x = dir * v_forward * -maxspeed;
+					CS(this).movement_x = dir * v_forward * -maxspeed;
 					return;
 				}
 				// Switch to normal mode
@@ -514,8 +514,8 @@ void havocbot_movetogoal(entity this)
 		PHYS_INPUT_BUTTON_HOOK(this) = true;
 		if(this.navigation_jetpack_point.z - STAT(PL_MAX, this).z + STAT(PL_MIN, this).z < this.origin.z)
 		{
-			this.movement_x = dir * v_forward * maxspeed;
-			this.movement_y = dir * v_right * maxspeed;
+			CS(this).movement_x = dir * v_forward * maxspeed;
+			CS(this).movement_y = dir * v_right * maxspeed;
 		}
 		return;
 	}
@@ -632,8 +632,8 @@ void havocbot_movetogoal(entity this)
 				tracebox(this.origin, this.mins, this.maxs, this.origin + (dir * maxspeed * 3), MOVE_NOMONSTERS, this);
 				if(trace_fraction==1)
 				{
-					this.movement_x = dir * v_forward * maxspeed;
-					this.movement_y = dir * v_right * maxspeed;
+					CS(this).movement_x = dir * v_forward * maxspeed;
+					CS(this).movement_y = dir * v_right * maxspeed;
 					if (skill < 10)
 						havocbot_keyboard_movement(this, this.origin + dir * 100);
 				}
@@ -656,7 +656,7 @@ void havocbot_movetogoal(entity this)
 
 					if(client_hasweapon(this, WEP_DEVASTATOR, weaponentity, true, false))
 					{
-						this.movement_x = maxspeed;
+						CS(this).movement_x = maxspeed;
 
 						if(this.rocketjumptime)
 						{
@@ -681,7 +681,7 @@ void havocbot_movetogoal(entity this)
 		{
 			// If there is no goal try to move forward
 			if(this.goalcurrent==NULL)
-				this.movement_x = maxspeed;
+				CS(this).movement_x = maxspeed;
 		}
 	}
 
@@ -697,9 +697,9 @@ void havocbot_movetogoal(entity this)
 		else
 			PHYS_INPUT_BUTTON_JUMP(this) = false;
 		makevectors(this.v_angle.y * '0 1 0');
-		this.movement_x = dir * v_forward * maxspeed;
-		this.movement_y = dir * v_right * maxspeed;
-		this.movement_z = dir * v_up * maxspeed;
+		CS(this).movement_x = dir * v_forward * maxspeed;
+		CS(this).movement_y = dir * v_right * maxspeed;
+		CS(this).movement_z = dir * v_up * maxspeed;
 	}
 
 	// if there is nowhere to go, exit
@@ -927,9 +927,9 @@ void havocbot_movetogoal(entity this)
 	//dir = this.bot_dodgevector;
 	//if (this.bot_dodgevector_jumpbutton)
 	//	PHYS_INPUT_BUTTON_JUMP(this) = true;
-	this.movement_x = dir * v_forward * maxspeed;
-	this.movement_y = dir * v_right * maxspeed;
-	this.movement_z = dir * v_up * maxspeed;
+	CS(this).movement_x = dir * v_forward * maxspeed;
+	CS(this).movement_y = dir * v_right * maxspeed;
+	CS(this).movement_z = dir * v_up * maxspeed;
 
 	// Emulate keyboard interface
 	if (skill < 10)
@@ -1217,10 +1217,10 @@ void havocbot_aim(entity this)
 		vector enemyvel = this.enemy.velocity;
 		if (!this.enemy.waterlevel)
 			enemyvel.z = 0;
-		lag_additem(this, time + this.ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
+		lag_additem(this, time + CS(this).ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
 	}
 	else
-		lag_additem(this, time + this.ping, 0, 0, NULL, this.origin, myvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
+		lag_additem(this, time + CS(this).ping, 0, 0, NULL, this.origin, myvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
 }
 
 bool havocbot_moveto_refresh_route(entity this)

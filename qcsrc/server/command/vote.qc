@@ -382,11 +382,11 @@ void reset_map(bool dorespawn)
 					*/
 					// NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
 					// PlayerScore_Clear(it);
-					it.killcount = 0;
+					CS(it).killcount = 0;
 					// stop the player from moving so that he stands still once he gets respawned
 					it.velocity = '0 0 0';
 					it.avelocity = '0 0 0';
-					it.movement = '0 0 0';
+					CS(it).movement = '0 0 0';
 					PutClientInServer(it);
 				});
 			}
@@ -424,7 +424,7 @@ void ReadyRestart_force()
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		it.alivetime = 0;
-		it.killcount = 0;
+		CS(it).killcount = 0;
 		PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, 0));
 	));
 
@@ -456,7 +456,7 @@ void ReadyRestart_force()
 	// after a restart every players number of allowed timeouts gets reset, too
 	if (autocvar_sv_timeout)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(it.allowed_timeouts = autocvar_sv_timeout_number));
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(CS(it).allowed_timeouts = autocvar_sv_timeout_number));
 	}
     // reset map immediately if this cvar is not set
     if (!autocvar_sv_ready_restart_after_countdown) reset_map(true);

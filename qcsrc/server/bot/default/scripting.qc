@@ -485,7 +485,7 @@ float bot_cmd_cc(entity this)
 
 float bot_cmd_impulse(entity this)
 {
-	this.impulse = bot_cmd.bot_cmd_parm_float;
+	CS(this).impulse = bot_cmd.bot_cmd_parm_float;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -836,7 +836,7 @@ const int BOT_CMD_KEY_CHAT 		= BIT(10);
 
 bool bot_presskeys(entity this)
 {
-	this.movement = '0 0 0';
+	CS(this).movement = '0 0 0';
 	PHYS_INPUT_BUTTON_JUMP(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
@@ -849,14 +849,14 @@ bool bot_presskeys(entity this)
 		return false;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
-		this.movement_x = autocvar_sv_maxspeed;
+		CS(this).movement_x = autocvar_sv_maxspeed;
 	else if(this.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
-		this.movement_x = -autocvar_sv_maxspeed;
+		CS(this).movement_x = -autocvar_sv_maxspeed;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
-		this.movement_y = autocvar_sv_maxspeed;
+		CS(this).movement_y = autocvar_sv_maxspeed;
 	else if(this.bot_cmd_keys & BOT_CMD_KEY_LEFT)
-		this.movement_y = -autocvar_sv_maxspeed;
+		CS(this).movement_y = -autocvar_sv_maxspeed;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_JUMP)
 		PHYS_INPUT_BUTTON_JUMP(this) = true;
@@ -1008,7 +1008,7 @@ float bot_cmd_pause(entity this)
 	PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
-	this.movement = '0 0 0';
+	CS(this).movement = '0 0 0';
 	this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 
 	bot_clear(this);

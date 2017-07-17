@@ -24,7 +24,7 @@ const float URL_FH_STDOUT = -2;
 entity url_fromid[NUM_URL_ID];
 int autocvar__urllib_nextslot;
 
-[[eraseable]]
+ERASEABLE
 float url_URI_Get_Callback(int id, float status, string data)
 {
 	if (id < MIN_URL_ID) return 0;
@@ -83,7 +83,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 	}
 }
 
-[[eraseable]]
+ERASEABLE
 void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
 	entity e;
@@ -203,7 +203,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 }
 
 // close a file
-[[eraseable]]
+ERASEABLE
 void url_fclose(entity e)
 {
 	int i;
@@ -283,7 +283,7 @@ void url_fclose(entity e)
 }
 
 // with \n (blame FRIK_FILE)
-[[eraseable]]
+ERASEABLE
 string url_fgets(entity e)
 {
 	if (e.url_fh == URL_FH_CURL)
@@ -308,7 +308,7 @@ string url_fgets(entity e)
 }
 
 // without \n (blame FRIK_FILE)
-[[eraseable]]
+ERASEABLE
 void url_fputs(entity e, string s)
 {
 	if (e.url_fh == URL_FH_CURL)
@@ -331,7 +331,7 @@ void url_fputs(entity e, string s)
 }
 
 // multi URL object, tries URLs separated by space in sequence
-[[eraseable]]
+ERASEABLE
 void url_multi_ready(entity fh, entity me, float status)
 {
 	float n;
@@ -360,7 +360,7 @@ void url_multi_ready(entity fh, entity me, float status)
 	me.url_ready(fh, me.url_ready_pass, status);
 }
 
-[[eraseable]]
+ERASEABLE
 void url_multi_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
 	float n;
