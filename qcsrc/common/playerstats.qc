@@ -146,9 +146,9 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	if(IS_REAL_CLIENT(p))
 	{
-		if(p.latency_cnt)
+		if(CS(p).latency_cnt)
 		{
-			float latency = (p.latency_sum / p.latency_cnt);
+			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
 			if(latency) { PS_GR_P_ADDVAL(p, PLAYERSTATS_AVGLATENCY, latency); }
 		}
 	}
