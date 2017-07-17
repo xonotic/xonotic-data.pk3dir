@@ -994,7 +994,7 @@ void ctf_FlagThink(entity this)
 				this.health = 0;
 				ctf_CheckFlagReturn(this, RETURN_SPEEDRUN);
 
-				this.owner.impulse = CHIMPULSE_SPEEDRUN.impulse; // move the player back to the waypoint they set
+				CS(this.owner).impulse = CHIMPULSE_SPEEDRUN.impulse; // move the player back to the waypoint they set
 				ImpulseCommands(this.owner);
 			}
 			if(autocvar_g_ctf_stalemate)

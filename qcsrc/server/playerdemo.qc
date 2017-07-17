@@ -4,6 +4,7 @@
 #elif defined(SVQC)
     #include "defs.qh"
     #include "playerdemo.qh"
+	#include <common/state.qh>
 #endif
 
 .float playerdemo_fh;
@@ -60,11 +61,11 @@ void playerdemo_open_write(entity this, string f)
 	PLAYERDEMO_FIELD(ent,func,float,frame) \
 	PLAYERDEMO_FIELD(ent,func,float,effects) \
 	/* PLAYERDEMO_FIELD(ent,func,float,switchweapon) */ \
-	PLAYERDEMO_FIELD(ent,func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
-	PLAYERDEMO_FIELD(ent,func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
-	PLAYERDEMO_FIELD(ent,func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
-	PLAYERDEMO_FIELD(ent,func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
-	PLAYERDEMO_FIELD(ent,func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
 	PLAYERDEMO_FIELD(ent,func,float,flags) \
 	// end of list
 
@@ -160,6 +161,10 @@ float playerdemo_read(entity this)
 		this.playerdemo_time += this.playerdemo_starttime;
 	}
 	this.velocity = '0 0 0';
+	CS(this).movement = '0 0 0';
+	this.dmg_take = 0; // so screen doesn't stay blurry
+	this.dmg_save = 0;
+	this.dmg_inflictor = NULL;
 	time = t;
 	return 1;
 }

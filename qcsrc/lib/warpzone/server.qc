@@ -888,7 +888,7 @@ void WarpZone_PlayerPhysics_FixVAngle(entity this)
 #ifndef WARPZONE_DONT_FIX_VANGLE
 	if(IS_REAL_CLIENT(this))
 	if(this.v_angle.z <= 360) // if not already adjusted
-	if(time - this.ping * 0.001 < this.warpzone_teleport_time)
+	if(time - CS(this).ping * 0.001 < this.warpzone_teleport_time)
 	{
 		this.v_angle = WarpZone_TransformVAngles(this.warpzone_teleport_zone, this.v_angle);
 		this.v_angle_z += 720; // mark as adjusted

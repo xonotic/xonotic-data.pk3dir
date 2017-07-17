@@ -186,10 +186,10 @@ void W_Tuba_NoteOff(entity this)
 int W_Tuba_GetNote(entity pl, int hittype)
 {
 	float movestate = 5;
-	if (pl.movement.x < 0)		movestate -= 3;
-	else if (pl.movement.x > 0)	movestate += 3;
-	if (pl.movement.y < 0)		movestate -= 1;
-	else if (pl.movement.y > 0)	movestate += 1;
+	if (CS(pl).movement.x < 0)		movestate -= 3;
+	else if (CS(pl).movement.x > 0)	movestate += 3;
+	if (CS(pl).movement.y < 0)		movestate -= 1;
+	else if (CS(pl).movement.y > 0)	movestate += 1;
 
 	int note = 0;
 	switch (movestate)

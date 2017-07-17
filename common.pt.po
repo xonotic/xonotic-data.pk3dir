@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-30 07:23+0200\n"
-"PO-Revision-Date: 2017-05-31 03:15+0000\n"
-"Last-Translator: Jean Trindade Pereira <jean_trindade2@hotmail.com>\n"
+"POT-Creation-Date: 2017-07-09 00:35+0200\n"
+"PO-Revision-Date: 2017-07-09 23:06+0000\n"
+"Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Portuguese (http://www.transifex.com/team-xonotic/xonotic/"
 "language/pt/)\n"
 "Language: pt\n"
@@ -23,12 +23,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: qcsrc/client/hud/hud_config.qc:233
+#: qcsrc/client/hud/hud_config.qc:239
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr "^2Exportado com sucesso para %s! (Nota: Foi salvo em data/data/)\n"
 
-#: qcsrc/client/hud/hud_config.qc:237
+#: qcsrc/client/hud/hud_config.qc:243
 #, c-format
 msgid "^1Couldn't write to %s\n"
 msgstr "^1Não foi possível escrever para %s\n"
@@ -88,7 +88,7 @@ msgstr ""
 "^1Pressione ^3%s^1 para observar e ^3%s^1 para alterar o modo da câmera"
 
 #: qcsrc/client/hud/panel/infomessages.qc:108
-#: qcsrc/common/vehicles/cl_vehicles.qc:191
+#: qcsrc/common/vehicles/cl_vehicles.qc:192
 msgid "drop weapon"
 msgstr "largar arma"
 
@@ -207,11 +207,11 @@ msgstr "^3CTRL ^7para desligar teste de colisão, ^3SHIFT ^7e"
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3TECLAS DIRECIONAIS ^7para pequenos ajustes."
 
-#: qcsrc/client/hud/panel/modicons.qc:561
+#: qcsrc/client/hud/panel/modicons.qc:566
 msgid "Personal best"
 msgstr "Recorde pessoal"
 
-#: qcsrc/client/hud/panel/modicons.qc:571
+#: qcsrc/client/hud/panel/modicons.qc:576
 msgid "Server best"
 msgstr "Recorde do servidor"
 
@@ -236,264 +236,264 @@ msgstr "Comando%d"
 msgid "Continue..."
 msgstr "Continuar..."
 
-#: qcsrc/client/hud/panel/quickmenu.qc:784
-#: qcsrc/client/hud/panel/quickmenu.qc:788
-msgid "QMCMD^Chat"
+#: qcsrc/client/hud/panel/quickmenu.qc:794
+#: qcsrc/client/hud/panel/quickmenu.qc:798
+msgid "Chat"
 msgstr "Chat"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:785
+#: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
 msgstr ":-) / Boa jogada"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:785
+#: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^nice one"
 msgstr "Boa jogada"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:786
+#: qcsrc/client/hud/panel/quickmenu.qc:796
 msgid "QMCMD^good game"
 msgstr "Bom jogo"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:787
+#: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^hi / good luck"
 msgstr "Olá / Boa sorte"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:787
+#: qcsrc/client/hud/panel/quickmenu.qc:797
 msgid "QMCMD^hi / good luck and have fun"
 msgstr "Olá / Boa sorte e divirta-se"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:792
-#: qcsrc/client/hud/panel/quickmenu.qc:808
+#: qcsrc/client/hud/panel/quickmenu.qc:802
+#: qcsrc/client/hud/panel/quickmenu.qc:818
 msgid "QMCMD^Team chat"
 msgstr "Chat da equipe"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:793
+#: qcsrc/client/hud/panel/quickmenu.qc:803
 msgid "QMCMD^quad soon"
 msgstr "Quad em breve"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:794
+#: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item %x^7 (l:%y^7)"
 msgstr "Item livre %x^7 (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:794
+#: qcsrc/client/hud/panel/quickmenu.qc:804
 msgid "QMCMD^free item, icon"
 msgstr "Item livre, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:795
+#: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item (l:%l^7)"
 msgstr "Item pego (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:795
+#: qcsrc/client/hud/panel/quickmenu.qc:805
 msgid "QMCMD^took item, icon"
 msgstr "Item pego, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:796
+#: qcsrc/client/hud/panel/quickmenu.qc:806
 msgid "QMCMD^negative"
 msgstr "Negativo"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:797
+#: qcsrc/client/hud/panel/quickmenu.qc:807
 msgid "QMCMD^positive"
 msgstr "Positivo"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:798
+#: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "Preciso de ajuda (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:798
+#: qcsrc/client/hud/panel/quickmenu.qc:808
 msgid "QMCMD^need help, icon"
 msgstr "Preciso de ajuda, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:799
+#: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^enemy seen (l:%y^7)"
 msgstr "Inimigo avistado (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:799
+#: qcsrc/client/hud/panel/quickmenu.qc:809
 msgid "QMCMD^enemy seen, icon"
 msgstr "Inimigo avistado, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:800
+#: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^flag seen (l:%y^7)"
 msgstr "Bandeira avistada (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:800
+#: qcsrc/client/hud/panel/quickmenu.qc:810
 msgid "QMCMD^flag seen, icon"
 msgstr "Bandeira avistada, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:801
+#: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "Defendendo (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:801
+#: qcsrc/client/hud/panel/quickmenu.qc:811
 msgid "QMCMD^defending, icon"
 msgstr "Defendendo, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:802
+#: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "Patrulhando (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:802
+#: qcsrc/client/hud/panel/quickmenu.qc:812
 msgid "QMCMD^roaming, icon"
 msgstr "Patrulhando, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:803
+#: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "Atacando (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:803
+#: qcsrc/client/hud/panel/quickmenu.qc:813
 msgid "QMCMD^attacking, icon"
 msgstr "Atacando, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:804
-msgid "QMCMD^killed flag, icon"
-msgstr "Bandeira aniquilada, ícone"
-
-#: qcsrc/client/hud/panel/quickmenu.qc:804
+#: qcsrc/client/hud/panel/quickmenu.qc:814
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
 msgstr "Portador da bandeira aniquilado (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:805
+#: qcsrc/client/hud/panel/quickmenu.qc:814
+msgid "QMCMD^killed flagcarrier, icon"
+msgstr ""
+
+#: qcsrc/client/hud/panel/quickmenu.qc:815
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
 msgstr "Bandeira largada (l:%d^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:805
+#: qcsrc/client/hud/panel/quickmenu.qc:815
 msgid "QMCMD^dropped flag, icon"
 msgstr "Bandeira largada, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:806
-msgid "QMCMD^drop gun, icon"
-msgstr "Largar arma, ícone"
+#: qcsrc/client/hud/panel/quickmenu.qc:816
+msgid "QMCMD^drop weapon, icon"
+msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:806
-msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
-msgstr "Arma solta %w^7 (l:%l^7)"
+#: qcsrc/client/hud/panel/quickmenu.qc:816
+msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
+msgstr ""
 
-#: qcsrc/client/hud/panel/quickmenu.qc:807
+#: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^drop flag/key, icon"
 msgstr "Largar bandeira/chave, ícone"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:807
+#: qcsrc/client/hud/panel/quickmenu.qc:817
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
 msgstr "Bandeira/Chave largada %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:811
+#: qcsrc/client/hud/panel/quickmenu.qc:821
 msgid "QMCMD^Send private message to"
 msgstr "Mandar mensagem privada para"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:813
-#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:823
+#: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^Settings"
 msgstr "Configurações"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:814
-#: qcsrc/client/hud/panel/quickmenu.qc:821
+#: qcsrc/client/hud/panel/quickmenu.qc:824
+#: qcsrc/client/hud/panel/quickmenu.qc:831
 msgid "QMCMD^View/HUD settings"
 msgstr "Configurações de Exibição/HUD"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:815
+#: qcsrc/client/hud/panel/quickmenu.qc:825
 msgid "QMCMD^3rd person view"
 msgstr "Visão em 3ª pessoa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:816
+#: qcsrc/client/hud/panel/quickmenu.qc:826
 msgid "QMCMD^Player models like mine"
 msgstr "Modelos de jogadores como o meu"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:817
+#: qcsrc/client/hud/panel/quickmenu.qc:827
 msgid "QMCMD^Names above players"
 msgstr "Nomes sobre jogadores"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:818
+#: qcsrc/client/hud/panel/quickmenu.qc:828
 msgid "QMCMD^Crosshair per weapon"
 msgstr "Mira por arma"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:819
+#: qcsrc/client/hud/panel/quickmenu.qc:829
 msgid "QMCMD^FPS"
 msgstr "FPS"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:820
+#: qcsrc/client/hud/panel/quickmenu.qc:830
 msgid "QMCMD^Net graph"
 msgstr "Gráfico da rede"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:823
-#: qcsrc/client/hud/panel/quickmenu.qc:826
+#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:836
 msgid "QMCMD^Sound settings"
 msgstr "Configurações de som"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:824
+#: qcsrc/client/hud/panel/quickmenu.qc:834
 msgid "QMCMD^Hit sound"
 msgstr "Som de acerto"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:825
+#: qcsrc/client/hud/panel/quickmenu.qc:835
 msgid "QMCMD^Chat sound"
 msgstr "Som do chat"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:830
-#: qcsrc/client/hud/panel/quickmenu.qc:834
+#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^Spectator camera"
 msgstr "Câmera de espectador"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:831
+#: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^1st person"
 msgstr "1ª pessoa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:832
+#: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^3rd person around player"
 msgstr "3ª pessoa em volta do jogador"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:833
+#: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^3rd person behind"
 msgstr "3ª pessoa traseira"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:839
-#: qcsrc/client/hud/panel/quickmenu.qc:844
+#: qcsrc/client/hud/panel/quickmenu.qc:849
+#: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^Observer camera"
 msgstr "Câmera de observador"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:850
 msgid "QMCMD^Increase speed"
 msgstr "Aumentar velocidade"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:841
+#: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^Decrease speed"
 msgstr "Diminuir velocidade"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:842
+#: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^Wall collision off"
 msgstr "Colisão com paredes desligada"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:843
+#: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^Wall collision on"
 msgstr "Colisão com paredes ligada"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:847
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^Fullscreen"
 msgstr "Tela cheia"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:849
+#: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^Translate chat messages"
 msgstr "Traduzir mensagens de chat"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:852
 #: qcsrc/client/hud/panel/quickmenu.qc:862
+#: qcsrc/client/hud/panel/quickmenu.qc:872
 msgid "QMCMD^Call a vote"
 msgstr "Iniciar uma votação"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:853
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^Restart the map"
 msgstr "Reiniciar o mapa"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:854
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^End match"
 msgstr "Terminar a partida"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:857
+#: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^Reduce match time"
 msgstr "Reduzir tempo de partida"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:858
+#: qcsrc/client/hud/panel/quickmenu.qc:868
 msgid "QMCMD^Extend match time"
 msgstr "Estender tempo de partida"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:861
+#: qcsrc/client/hud/panel/quickmenu.qc:871
 msgid "QMCMD^Shuffle teams"
 msgstr "Misturar as equipes"
 
@@ -521,18 +521,18 @@ msgstr "Linha de chegada"
 msgid "Intermediate %d"
 msgstr "Intermediário %d"
 
-#: qcsrc/client/hud/panel/racetimer.qc:130
+#: qcsrc/client/hud/panel/racetimer.qc:132
 msgid "^1Intermediate 1 (+15.42)"
 msgstr "^1Intermediário 1 (+15.42)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:132
-#: qcsrc/client/hud/panel/racetimer.qc:174
-#: qcsrc/client/hud/panel/racetimer.qc:219
+#: qcsrc/client/hud/panel/racetimer.qc:135
+#: qcsrc/client/hud/panel/racetimer.qc:177
+#: qcsrc/client/hud/panel/racetimer.qc:227
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr "^1PENALIDADE: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:221
+#: qcsrc/client/hud/panel/racetimer.qc:229
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
 msgstr "^2PENALIDADE: %.1f (%s)"
@@ -912,104 +912,104 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1155
+#: qcsrc/client/hud/panel/scoreboard.qc:1156
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Estatísticas de precisão (média %d%%)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1294
+#: qcsrc/client/hud/panel/scoreboard.qc:1295
 msgid "Map stats:"
 msgstr "Estatísticas do mapa:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1324
+#: qcsrc/client/hud/panel/scoreboard.qc:1325
 msgid "Monsters killed:"
 msgstr "Monstros mortos:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1331
+#: qcsrc/client/hud/panel/scoreboard.qc:1332
 msgid "Secrets found:"
 msgstr "Segredos encontrados:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1353
+#: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Capture time rankings"
 msgstr "Classificações de tempo de capturas"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1353
+#: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Rankings"
 msgstr "Classificações"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1517
+#: qcsrc/client/hud/panel/scoreboard.qc:1519
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
 msgstr "Placar"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1580
+#: qcsrc/client/hud/panel/scoreboard.qc:1584
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "Prêmio de velocidade: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1584
+#: qcsrc/client/hud/panel/scoreboard.qc:1588
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "O mais rápido de todos: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1600
+#: qcsrc/client/hud/panel/scoreboard.qc:1604
 #, c-format
 msgid "Spectators"
 msgstr "Espectadores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1615
+#: qcsrc/client/hud/panel/scoreboard.qc:1619
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
 msgstr "jogando ^3%s^7 em ^2%s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1622
-#: qcsrc/client/hud/panel/scoreboard.qc:1627
+#: qcsrc/client/hud/panel/scoreboard.qc:1626
+#: qcsrc/client/hud/panel/scoreboard.qc:1631
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
 msgstr " por até ^1%1.0f minutos^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1631
-#: qcsrc/client/hud/panel/scoreboard.qc:1650
+#: qcsrc/client/hud/panel/scoreboard.qc:1635
+#: qcsrc/client/hud/panel/scoreboard.qc:1654
 msgid " or"
 msgstr " ou"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1634
-#: qcsrc/client/hud/panel/scoreboard.qc:1641
+#: qcsrc/client/hud/panel/scoreboard.qc:1638
+#: qcsrc/client/hud/panel/scoreboard.qc:1645
 #, c-format
 msgid " until ^3%s %s^7"
 msgstr " até ^3%s %s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1635
-#: qcsrc/client/hud/panel/scoreboard.qc:1642
-#: qcsrc/client/hud/panel/scoreboard.qc:1654
-#: qcsrc/client/hud/panel/scoreboard.qc:1661
+#: qcsrc/client/hud/panel/scoreboard.qc:1639
+#: qcsrc/client/hud/panel/scoreboard.qc:1646
+#: qcsrc/client/hud/panel/scoreboard.qc:1658
+#: qcsrc/client/hud/panel/scoreboard.qc:1665
 msgid "SCO^points"
 msgstr "pontos"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1636
-#: qcsrc/client/hud/panel/scoreboard.qc:1643
-#: qcsrc/client/hud/panel/scoreboard.qc:1655
-#: qcsrc/client/hud/panel/scoreboard.qc:1662
+#: qcsrc/client/hud/panel/scoreboard.qc:1640
+#: qcsrc/client/hud/panel/scoreboard.qc:1647
+#: qcsrc/client/hud/panel/scoreboard.qc:1659
+#: qcsrc/client/hud/panel/scoreboard.qc:1666
 msgid "SCO^is beaten"
 msgstr "foi espancado"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1653
-#: qcsrc/client/hud/panel/scoreboard.qc:1660
+#: qcsrc/client/hud/panel/scoreboard.qc:1657
+#: qcsrc/client/hud/panel/scoreboard.qc:1664
 #, c-format
 msgid " until a lead of ^3%s %s^7"
 msgstr " até uma vantagem de ^3%s %s^7"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1684
+#: qcsrc/client/hud/panel/scoreboard.qc:1688
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^1Renascendo em ^3%s^1..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1694
+#: qcsrc/client/hud/panel/scoreboard.qc:1698
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "Você está morto, espere ^3%s^7 antes de renascer"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:1703
+#: qcsrc/client/hud/panel/scoreboard.qc:1707
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Você está morto, pressione ^2%s^7 para renascer"
@@ -1136,15 +1136,15 @@ msgid "Trying to remove a team which is not in the teamlist!"
 msgstr ""
 "Você está tentando remover uma equipe que não está na lista de equipes!"
 
-#: qcsrc/client/view.qc:1370
+#: qcsrc/client/view.qc:1380
 msgid "Nade timer"
 msgstr "Temporizador de granada"
 
-#: qcsrc/client/view.qc:1375
+#: qcsrc/client/view.qc:1385
 msgid "Capture progress"
 msgstr "Progresso de captura"
 
-#: qcsrc/client/view.qc:1380
+#: qcsrc/client/view.qc:1390
 msgid "Revival progress"
 msgstr "Progresso de renascimento"
 
@@ -1193,7 +1193,7 @@ msgstr "Força"
 msgid "Shield"
 msgstr "Escudo"
 
-#: qcsrc/common/mapinfo.qc:642
+#: qcsrc/common/mapinfo.qc:639
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Tuba Throwing"
@@ -1532,7 +1532,7 @@ msgstr "Um Jogador"
 msgid "Mage"
 msgstr "Mago"
 
-#: qcsrc/common/monsters/monster/mage.qh:33
+#: qcsrc/common/monsters/monster/mage.qh:29
 msgid "Mage spike"
 msgstr "Prego de mago"
 
@@ -1546,7 +1546,7 @@ msgstr "Shambler"
 msgid "Spider"
 msgstr "Aranha"
 
-#: qcsrc/common/monsters/monster/spider.qh:32
+#: qcsrc/common/monsters/monster/spider.qh:28
 msgid "Spider attack"
 msgstr "Ataque da Aranha"
 
@@ -1555,7 +1555,7 @@ msgstr "Ataque da Aranha"
 msgid "Wyvern"
 msgstr "Wyvern"
 
-#: qcsrc/common/monsters/monster/wyvern.qh:32
+#: qcsrc/common/monsters/monster/wyvern.qh:28
 msgid "Wyvern attack"
 msgstr "Ataque do Wyvern"
 
@@ -1631,32 +1631,32 @@ msgstr "Voo"
 msgid "Buff"
 msgstr "Bônus"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:280
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:8
 msgid "Damage text"
 msgstr "Texto de dano"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:290
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:18
 msgid "Draw damage numbers"
 msgstr "Exibir números de dano"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:292
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
 msgstr "Tamanho da fonte mínimo:"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:297
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
 msgstr "Tamanho da fonte máximo:"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:302
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 msgid "Accumulate range:"
 msgstr "Alcance de acúmulo:"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:307
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:35
 msgid "Lifetime:"
 msgstr "Tempo de vida:"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:312
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:322
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:40
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:50
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:55
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:102
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:60
@@ -1665,7 +1665,7 @@ msgstr "Tempo de vida:"
 msgid "Color:"
 msgstr "Cor:"
 
-#: qcsrc/common/mutators/mutator/damagetext/damagetext.qc:319
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:47
 msgid "Draw damage numbers for friendly fire"
 msgstr "Exibir números de dano para fogo amigo"
 
@@ -4100,10 +4100,8 @@ msgstr ""
 "^F4Impeça-os!"
 
 #: qcsrc/common/notifications/all.inc:788
-msgid ""
-"^F2You have stolen the enemy's vehicle, you are now visible on their radar!"
+msgid "^F2Intruder detected, disabling shields!"
 msgstr ""
-"^F2Você roubou o veículo do inimigo, agora você está visível no radar deles!"
 
 #: qcsrc/common/notifications/all.qh:188
 msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
@@ -4510,16 +4508,16 @@ msgstr "Sentinela Walker"
 msgid "Walker"
 msgstr "Walker"
 
-#: qcsrc/common/vehicles/cl_vehicles.qc:191
+#: qcsrc/common/vehicles/cl_vehicles.qc:192
 #, c-format
 msgid "Press %s"
 msgstr "Pressione %s"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:948
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:950
 msgid "No right gunner!"
 msgstr "Sem artilheiro na direita!"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:954
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:956
 msgid "No left gunner!"
 msgstr "Sem artilheiro na esquerda!"
 
@@ -4820,27 +4818,27 @@ msgstr "^%d segundos"
 msgid "CI_MUL^%d seconds"
 msgstr "^%d segundos"
 
-#: qcsrc/lib/counting.qh:78
+#: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dst"
 msgstr "%dst"
 
-#: qcsrc/lib/counting.qh:79
+#: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%dnd"
 msgstr "%dnd"
 
-#: qcsrc/lib/counting.qh:80
+#: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "%drd"
 msgstr "%drd"
 
-#: qcsrc/lib/counting.qh:81 qcsrc/lib/counting.qh:84
+#: qcsrc/lib/counting.qh:82 qcsrc/lib/counting.qh:85
 #, c-format
 msgid "%dth"
 msgstr "%dth"
 
-#: qcsrc/lib/oo.qh:290
+#: qcsrc/lib/oo.qh:298
 msgid "No description"
 msgstr "Sem descrição"
 
@@ -4853,12 +4851,12 @@ msgstr ""
 "Campo de entidade %s.%s (%s) não está na lista branca. Se você acredita que "
 "isso é um erro, por favor, reporte-o."
 
-#: qcsrc/lib/string.qh:46
+#: qcsrc/lib/string.qh:48
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
 msgstr "%d dias, %02d:%02d:%02d"
 
-#: qcsrc/lib/string.qh:47
+#: qcsrc/lib/string.qh:49
 #, c-format
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
@@ -4962,111 +4960,119 @@ msgstr "Compilador"
 msgid "Other Active Contributors"
 msgstr "Outros Contribuidores Ativos"
 
-#: qcsrc/menu/xonotic/credits.qc:148
+#: qcsrc/menu/xonotic/credits.qc:149
 msgid "Translators"
 msgstr "Tradutores"
 
-#: qcsrc/menu/xonotic/credits.qc:150
+#: qcsrc/menu/xonotic/credits.qc:151
 msgid "Asturian"
 msgstr "Asturiano"
 
-#: qcsrc/menu/xonotic/credits.qc:155
+#: qcsrc/menu/xonotic/credits.qc:156
 msgid "Belarusian"
 msgstr "Bielorusso"
 
-#: qcsrc/menu/xonotic/credits.qc:158
+#: qcsrc/menu/xonotic/credits.qc:159
 msgid "Bulgarian"
 msgstr "Búlgaro"
 
-#: qcsrc/menu/xonotic/credits.qc:165
+#: qcsrc/menu/xonotic/credits.qc:166
 msgid "Chinese (China)"
 msgstr "Chinês (China)"
 
-#: qcsrc/menu/xonotic/credits.qc:171
+#: qcsrc/menu/xonotic/credits.qc:172
 msgid "Chinese (Taiwan)"
 msgstr "Chinês (Taiwan)"
 
-#: qcsrc/menu/xonotic/credits.qc:176
+#: qcsrc/menu/xonotic/credits.qc:177
 msgid "Cornish"
 msgstr "Córnico"
 
-#: qcsrc/menu/xonotic/credits.qc:179
+#: qcsrc/menu/xonotic/credits.qc:180
 msgid "Czech"
 msgstr "Tcheco"
 
-#: qcsrc/menu/xonotic/credits.qc:184
+#: qcsrc/menu/xonotic/credits.qc:185
 msgid "Dutch"
 msgstr "Holandês"
 
-#: qcsrc/menu/xonotic/credits.qc:190
+#: qcsrc/menu/xonotic/credits.qc:192
 msgid "English (Australia)"
 msgstr "Inglês (Australia)"
 
-#: qcsrc/menu/xonotic/credits.qc:195
+#: qcsrc/menu/xonotic/credits.qc:197
 msgid "Finnish"
 msgstr "Finlandês"
 
-#: qcsrc/menu/xonotic/credits.qc:200
+#: qcsrc/menu/xonotic/credits.qc:202
 msgid "French"
 msgstr "Francês"
 
-#: qcsrc/menu/xonotic/credits.qc:208
+#: qcsrc/menu/xonotic/credits.qc:210
 msgid "German"
 msgstr "Alemão"
 
-#: qcsrc/menu/xonotic/credits.qc:219
+#: qcsrc/menu/xonotic/credits.qc:221
 msgid "Greek"
 msgstr "Grego"
 
-#: qcsrc/menu/xonotic/credits.qc:225
+#: qcsrc/menu/xonotic/credits.qc:227
 msgid "Hungarian"
 msgstr "Húngaro"
 
-#: qcsrc/menu/xonotic/credits.qc:229
+#: qcsrc/menu/xonotic/credits.qc:231
+msgid "Irish"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:234
 msgid "Italian"
 msgstr "Italiano"
 
-#: qcsrc/menu/xonotic/credits.qc:235
+#: qcsrc/menu/xonotic/credits.qc:240
 msgid "Kazakh"
 msgstr "Cazaque"
 
-#: qcsrc/menu/xonotic/credits.qc:238
+#: qcsrc/menu/xonotic/credits.qc:243
 msgid "Korean"
 msgstr "Coreano"
 
-#: qcsrc/menu/xonotic/credits.qc:242
+#: qcsrc/menu/xonotic/credits.qc:247
 msgid "Polish"
 msgstr "Polônes "
 
-#: qcsrc/menu/xonotic/credits.qc:249
+#: qcsrc/menu/xonotic/credits.qc:255
 msgid "Portuguese"
 msgstr "Português"
 
-#: qcsrc/menu/xonotic/credits.qc:255
+#: qcsrc/menu/xonotic/credits.qc:261
 msgid "Romanian"
 msgstr "Romeno"
 
-#: qcsrc/menu/xonotic/credits.qc:262
+#: qcsrc/menu/xonotic/credits.qc:268
 msgid "Russian"
 msgstr "Russo"
 
-#: qcsrc/menu/xonotic/credits.qc:273
+#: qcsrc/menu/xonotic/credits.qc:279
+msgid "Scottish Gaelic"
+msgstr ""
+
+#: qcsrc/menu/xonotic/credits.qc:282
 msgid "Serbian"
 msgstr "Sérvio"
 
-#: qcsrc/menu/xonotic/credits.qc:278
+#: qcsrc/menu/xonotic/credits.qc:288
 msgid "Spanish"
 msgstr "Espanhol"
 
-#: qcsrc/menu/xonotic/credits.qc:288
+#: qcsrc/menu/xonotic/credits.qc:299
 msgid "Swedish"
 msgstr "Sueco"
 
-#: qcsrc/menu/xonotic/credits.qc:292
+#: qcsrc/menu/xonotic/credits.qc:303
 msgid "Ukrainian"
 msgstr "Ucraniano"
 
-#: qcsrc/menu/xonotic/credits.qc:299
+#: qcsrc/menu/xonotic/credits.qc:310
 msgid "Past Contributors"
 msgstr "Colaboradores Passados"
 

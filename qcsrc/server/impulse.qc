@@ -352,9 +352,9 @@ void ImpulseCommands(entity this)
 {
 	if (game_stopped) return;
 
-	int imp = this.impulse;
+	int imp = CS(this).impulse;
 	if (!imp) return;
-	this.impulse = 0;
+	CS(this).impulse = 0;
 
 	if (MinigameImpulse(this, imp)) return;
 

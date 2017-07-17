@@ -1,5 +1,6 @@
 #include "sortlist.qh"
 
+ERASEABLE
 entity Sort_Spawn()
 {
 	entity sort = new_pure(sortlist);

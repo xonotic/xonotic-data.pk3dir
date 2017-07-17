@@ -721,7 +721,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 				{
 					print_to(caller, "^7Error: You can not call a timeout while the map is being restarted.");
 				}
-				else if (caller && (caller.allowed_timeouts < 1))
+				else if (caller && (CS(caller).allowed_timeouts < 1))
 				{
 					print_to(caller, "^7Error: You already used all your timeout calls for this map.");
 				}
@@ -736,9 +736,9 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 
 				else  // everything should be okay, proceed with starting the timeout
 				{
-					if (caller)   caller.allowed_timeouts -= 1;
+					if (caller)   CS(caller).allowed_timeouts -= 1;
 					// write a bprint who started the timeout (and how many they have left)
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : ""), "!\n");
+					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(CS(caller).allowed_timeouts), " timeout(s) left)") : ""), "!\n");
 
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;
@@ -806,9 +806,9 @@ void CommonCommand_who(float request, entity caller, float argc)
 				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "),
 					etof(it),
 					it.netname,
-					it.ping,
-					it.ping_packetloss,
-					process_time(1, time - it.jointime),
+					CS(it).ping,
+					CS(it).ping_packetloss,
+					process_time(1, time - CS(it).jointime),
 					tmp_netaddress,
 					tmp_crypto_idfp));
 

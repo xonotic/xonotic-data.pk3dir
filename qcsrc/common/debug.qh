@@ -47,7 +47,7 @@ REGISTER_NET_TEMP(net_debug)
 	}
 #endif
 
-#ifdef DEBUGDRAW
+#if ENABLE_DEBUGDRAW
 #ifdef GAMEQC
 /**
  * 0: off
@@ -259,7 +259,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 	}
 }
 
-#ifdef DEBUGTRACE
+#if ENABLE_DEBUGTRACE
 REGISTER_STAT(TRACE_ENT, int)
 #ifdef SVQC
 bool autocvar_debugtrace;

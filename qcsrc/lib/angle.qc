@@ -4,6 +4,7 @@
 /*
 * Return a angle within +/- 360.
 */
+ERASEABLE
 float anglemods(float v)
 {
 	v = v - 360 * floor(v / 360);
@@ -19,6 +20,7 @@ float anglemods(float v)
 /*
 * Return the short angle
 */
+ERASEABLE
 float shortangle_f(float ang1, float ang2)
 {
 	if(ang1 > ang2)
@@ -35,6 +37,7 @@ float shortangle_f(float ang1, float ang2)
 	return ang1;
 }
 
+ERASEABLE
 vector shortangle_v(vector ang1, vector ang2)
 {
 	vector vtmp;
@@ -46,6 +49,7 @@ vector shortangle_v(vector ang1, vector ang2)
 	return vtmp;
 }
 
+ERASEABLE
 vector shortangle_vxy(vector ang1, vector ang2)
 {
 	vector vtmp = '0 0 0';
@@ -60,6 +64,7 @@ vector shortangle_vxy(vector ang1, vector ang2)
 * Return the angle offset between angle ang and angle of the vector from->to
 */
 
+ERASEABLE
 vector angleofs3(vector from, vector ang, vector to)
 {
 	vector v_res;

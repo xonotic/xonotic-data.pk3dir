@@ -2,6 +2,7 @@
 
 #include <common/mapinfo.qh>
 #include <common/ent_cs.qh>
+#include <common/scores.qh>
 #include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
 
 // Mod icons (#10)
@@ -512,14 +513,18 @@ void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, 
 
 void HUD_Mod_Race(vector pos, vector mySize)
 {
-	mod_active = 1; // race should never hide the mod icons panel
 	entity me;
 	me = playerslots[player_localnum];
 	float score;
 	score = me.(scores(ps_primary));
 
 	if(!(scores_flags(ps_primary) & SFL_TIME) || teamplay) // race/cts record display on HUD
+	{
+		mod_active = 0; // hide it in this case!
 		return; // no records in the actual race
+	}
+
+	mod_active = 1;
 
 	// clientside personal record
 	string rr;
@@ -551,7 +556,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		squareSize = min(mySize.y, mySize.x/2);
 		vector ofs = vec2(0.5 * max(0, mySize.x/2 - squareSize), 0.5 * (mySize.y - squareSize));
 		textPos = pos + ofs;
-		ofs.y += 0.5 * mySize.x;
+		ofs.x += 0.5 * mySize.x;
 		medalPos = pos + ofs;
 	} else {
 		// text on top

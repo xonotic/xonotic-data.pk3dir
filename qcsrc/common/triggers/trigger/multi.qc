@@ -86,9 +86,8 @@ void multi_touch(entity this, entity toucher)
 	}
 
 	// if the trigger has pressed keys, check that the player is pressing those keys
-	if(this.pressedkeys)
-	if(IS_PLAYER(toucher)) // only for players
-	if(!(toucher.pressedkeys & this.pressedkeys))
+	if(this.pressedkeys && IS_PLAYER(toucher)) // only for players
+	if(!(CS(toucher).pressedkeys & this.pressedkeys))
 		return;
 
 	EXACTTRIGGER_TOUCH(this, toucher);
