@@ -976,6 +976,7 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	forcefog = strzone(ReadString());
 
 	armorblockpercent = ReadByte() / 255.0;
+	damagepush_speedfactor = ReadByte() / 255.0;
 
 	serverflags = ReadByte();
 

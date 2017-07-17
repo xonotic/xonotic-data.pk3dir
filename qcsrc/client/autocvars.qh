@@ -152,7 +152,6 @@ float autocvar_crosshair_ring_reload_size;
 float autocvar_crosshair_size;
 int autocvar_ekg;
 float autocvar_fov;
-float autocvar_g_balance_damagepush_speedfactor;
 bool autocvar_hud_cursormode = true;
 float autocvar_hud_colorflash_alpha;
 bool autocvar_hud_configure_checkcollisions;
