@@ -397,7 +397,7 @@ void FixPlayermodel(entity player)
 		int n = tokenize_console(defaultmodel);
 		if(n > 0)
 		{
-			defaultmodel = argv(floor(n * player.model_randomizer));
+			defaultmodel = argv(floor(n * CS(player).model_randomizer));
 			// However, do NOT randomize if the player-selected model is in the list.
 			for (int i = 0; i < n; ++i)
 				if ((argv(i) == player.playermodel && defaultskin == stof(player.playerskin)) || argv(i) == strcat(player.playermodel, ":", player.playerskin))
@@ -1252,7 +1252,7 @@ void ClientConnect(entity this)
 
 	CSQCMODEL_AUTOINIT(this);
 
-	this.model_randomizer = random();
+	CS(this).model_randomizer = random();
 
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
