@@ -102,6 +102,7 @@ CLASS(Client, Object)
     ATTRIB(Client, v_angle_old, vector, this.v_angle_old);
     ATTRIB(Client, model_randomizer, float, this.model_randomizer);
     ATTRIB(Client, accuracy, entity, this.accuracy);
+    ATTRIB(Client, hasweapon_complain_spam, float, this.hasweapon_complain_spam);
 
     METHOD(Client, m_unwind, bool(Client this));
 
