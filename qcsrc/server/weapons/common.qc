@@ -20,16 +20,18 @@ void W_GiveWeapon(entity e, int wep)
     }
 }
 
-void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
+void W_PlayStrengthSound(entity player)
 {
+	entity store = IS_PLAYER(player) ? PS(player) : player; // because non-player entities can fire, but can they have items? TODO
+
 	if((player.items & ITEM_Strength.m_itemid)
-		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+		&& ((time > store.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+		|| (time > store.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
 			sound(player, CH_TRIGGER, SND_STRENGTH_FIRE, VOL_BASE, ATTEN_NORM);
-			player.prevstrengthsound = time;
+			store.prevstrengthsound = time;
 		}
-		player.prevstrengthsoundattempt = time;
+		store.prevstrengthsoundattempt = time;
 }
 
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception)
