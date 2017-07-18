@@ -44,7 +44,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 {
 	float f = 0;
 
-	if (time < this.hasweapon_complain_spam)
+	if (time < CS(this).hasweapon_complain_spam)
 		complain = 0;
 
 	// ignore hook button when using other offhand equipment
@@ -53,7 +53,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 	    complain = 0;
 
 	if (complain)
-		this.hasweapon_complain_spam = time + 0.2;
+		CS(this).hasweapon_complain_spam = time + 0.2;
 
 	if (wpn == WEP_Null)
 	{

@@ -135,23 +135,23 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 void ClientData_Attach(entity this)
 {
-	Net_LinkEntity(this.clientdata = new_pure(clientdata), false, 0, ClientData_Send);
-	this.clientdata.drawonlytoclient = this;
-	this.clientdata.owner = this;
+	Net_LinkEntity(CS(this).clientdata = new_pure(clientdata), false, 0, ClientData_Send);
+	CS(this).clientdata.drawonlytoclient = this;
+	CS(this).clientdata.owner = this;
 }
 
 void ClientData_Detach(entity this)
 {
-	delete(this.clientdata);
-	this.clientdata = NULL;
+	delete(CS(this).clientdata);
+	CS(this).clientdata = NULL;
 }
 
 void ClientData_Touch(entity e)
 {
-	e.clientdata.SendFlags = 1;
+	CS(e).clientdata.SendFlags = 1;
 
 	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(it.clientdata.SendFlags = 1));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(CS(it).clientdata.SendFlags = 1));
 }
 
 void SetSpectatee(entity this, entity spectatee);

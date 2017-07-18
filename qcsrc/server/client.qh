@@ -101,6 +101,12 @@ CLASS(Client, Object)
     ATTRIB(Client, latency_time, float, this.latency_time);
     ATTRIB(Client, v_angle_old, vector, this.v_angle_old);
     ATTRIB(Client, model_randomizer, float, this.model_randomizer);
+    ATTRIB(Client, accuracy, entity, this.accuracy);
+    ATTRIB(Client, hasweapon_complain_spam, float, this.hasweapon_complain_spam);
+    ATTRIB(Client, scorekeeper, entity, this.scorekeeper);
+    ATTRIB(Client, specialcommand_pos, int, this.specialcommand_pos);
+    ATTRIB(Client, hitplotfh, int, this.hitplotfh);
+    ATTRIB(Client, clientdata, entity, this.clientdata);
     ATTRIB(Client, cmd_floodcount, int, this.cmd_floodcount);
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
 

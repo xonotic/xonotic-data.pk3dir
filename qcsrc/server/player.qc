@@ -553,7 +553,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
         // increment frag counter for used weapon type
         Weapon w = DEATH_WEAPONOF(deathtype);
 		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
-			attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
+			CS(attacker).accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		damage = M_ARGV(4, float);
@@ -615,6 +615,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		UNSET_ONGROUND(this);
 		// dying animation
 		this.deadflag = DEAD_DYING;
+
+		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
 
 		// when to allow respawn
 		calculate_player_respawn_time(this);
