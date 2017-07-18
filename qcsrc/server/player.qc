@@ -616,6 +616,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// dying animation
 		this.deadflag = DEAD_DYING;
 
+		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
+
 		// when to allow respawn
 		calculate_player_respawn_time(this);
 

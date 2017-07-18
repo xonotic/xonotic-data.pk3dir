@@ -488,8 +488,13 @@ string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
 void SpecialCommand(entity this)
 {
-	if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
-		LOG_INFO("A hollow voice says \"Plugh\".\n");
+	if(autocvar_sv_cheats || this.maycheat)
+	{
+		if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
+			LOG_INFO("A hollow voice says \"Plugh\".\n");
+	}
+	else
+		STAT(MOVEVARS_SPECIALCOMMAND, this) = true;
 }
 #endif
 
