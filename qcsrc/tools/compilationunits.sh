@@ -2,9 +2,13 @@
 set -eu
 cd ${0%/*}
 
-# if these files exist from previous compilation, `./all compile` will stop
+# This script attempts to build the codebase in every possible header configuration,
+# to check that all files #include what they need, so that we can eventually move away
+# from a unity build and into incremental compilation.
+
+# If these files exist from previous compilation, `./all compile` will stop
 # detecting changes after running this script so delete them to trigger
-# a recompile next time
+# a recompile next time.
 if [ -f ../../csprogs.dat ]; then
     rm ../../csprogs.dat
 fi
