@@ -650,7 +650,7 @@ void SV_ChangeTeam(entity this, float _color)
 		return;
 	}
 
-	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && this.wasplayer)) {
+	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(this).wasplayer)) {
 		Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}

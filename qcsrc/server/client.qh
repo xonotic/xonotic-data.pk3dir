@@ -107,6 +107,7 @@ CLASS(Client, Object)
     ATTRIB(Client, specialcommand_pos, int, this.specialcommand_pos);
     ATTRIB(Client, hitplotfh, int, this.hitplotfh);
     ATTRIB(Client, clientdata, entity, this.clientdata);
+    ATTRIB(Client, wasplayer, bool, this.wasplayer);
 
     METHOD(Client, m_unwind, bool(Client this));
 
