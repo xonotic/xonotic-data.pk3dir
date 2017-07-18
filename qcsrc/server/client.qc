@@ -578,7 +578,7 @@ void PutPlayerInServer(entity this)
 	setthink(this, func_null); // players have no think function
 	this.nextthink = 0;
 	this.dmg_team = 0;
-	this.ballistics_density = autocvar_g_ballistics_density_player;
+	PS(this).ballistics_density = autocvar_g_ballistics_density_player;
 
 	this.deadflag = DEAD_NO;
 

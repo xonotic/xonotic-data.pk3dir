@@ -153,6 +153,7 @@ CLASS(Player, Client)
 
     ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
     ATTRIB(Player, itemkeys, int, this.itemkeys);
+    ATTRIB(Player, ballistics_density, float, this.ballistics_density);
 
     INIT(Player) {
         this.classname = STR_PLAYER;
