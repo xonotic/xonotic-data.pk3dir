@@ -22,6 +22,7 @@
 .float spectatorspeed;
 #endif
 
+.int buttons_old;
 .vector movement_old;
 .vector v_angle_old;
 .string lastclassname;

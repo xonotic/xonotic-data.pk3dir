@@ -95,6 +95,19 @@ CLASS(Client, Object)
     ATTRIB(Client, zoomstate, bool, this.zoomstate);
     ATTRIB(Client, just_joined, bool, this.just_joined);
     ATTRIB(Client, race_completed, bool, this.race_completed);
+    ATTRIBARRAY(Client, msg_choice_choices, int, 50); // TODO: actually NOTIF_CHOICE_MAX
+    ATTRIB(Client, latency_sum, float, this.latency_sum);
+    ATTRIB(Client, latency_cnt, int, this.latency_cnt);
+    ATTRIB(Client, latency_time, float, this.latency_time);
+    ATTRIB(Client, v_angle_old, vector, this.v_angle_old);
+    ATTRIB(Client, model_randomizer, float, this.model_randomizer);
+    ATTRIB(Client, accuracy, entity, this.accuracy);
+    ATTRIB(Client, hasweapon_complain_spam, float, this.hasweapon_complain_spam);
+    ATTRIB(Client, scorekeeper, entity, this.scorekeeper);
+    ATTRIB(Client, specialcommand_pos, int, this.specialcommand_pos);
+    ATTRIB(Client, hitplotfh, int, this.hitplotfh);
+    ATTRIB(Client, clientdata, entity, this.clientdata);
+    ATTRIB(Client, wasplayer, bool, this.wasplayer);
 
     METHOD(Client, m_unwind, bool(Client this));
 
@@ -140,6 +153,10 @@ CLASS(Player, Client)
 
     ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
     ATTRIB(Player, itemkeys, int, this.itemkeys);
+    ATTRIB(Player, ballistics_density, float, this.ballistics_density);
+    ATTRIB(Player, prevstrengthsound, float, this.prevstrengthsound);
+    ATTRIB(Player, prevstrengthsoundattempt, float, this.prevstrengthsoundattempt);
+    ATTRIB(Player, buff_shield, float, this.buff_shield);
 
     INIT(Player) {
         this.classname = STR_PLAYER;

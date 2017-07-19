@@ -283,7 +283,7 @@ void ClientData_Touch(entity e);
 
 //vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
-.float wasplayer;
+.bool wasplayer;
 
 float servertime, serverprevtime, serverframetime;
 
