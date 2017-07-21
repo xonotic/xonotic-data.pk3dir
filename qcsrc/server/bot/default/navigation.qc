@@ -57,15 +57,34 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 
 #define IN_WATER(pos) (cont = pointcontents(pos), (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME))
 #define SUBMERGED(pos) IN_WATER(pos + autocvar_sv_player_viewoffset)
-#define WATERFEET(pos) IN_WATER(pos + eZ * (m1.z + 1))
+#define WETFEET(pos) IN_WATER(pos + eZ * (m1.z + 1))
 
-#define RESURFACE(org) MACRO_BEGIN { \
-	while(org.z + 4 < end2.z) { \
-		if(!WATERFEET(org + eZ * 4)) \
-			break; \
-		org.z += 4; \
-	} \
-} MACRO_END
+vector resurface_limited(vector org, float lim, vector m1)
+{
+	int cont;
+	if (WETFEET(org + eZ * (lim - org.z)))
+		org.z = lim;
+	else
+	{
+		float RES_min_h = org.z;
+		float RES_max_h = lim;
+		do {
+			org.z = 0.5 * (RES_min_h + RES_max_h);
+			if(WETFEET(org))
+				RES_min_h = org.z;
+			else
+				RES_max_h = org.z;
+		} while (RES_max_h - RES_min_h >= 1);
+		org.z = RES_min_h;
+	}
+	return org;
+}
+#define RESURFACE_LIMITED(org, lim) org = resurface_limited(org, lim, m1)
+
+#define NAV_WALK 0
+#define NAV_SWIM_ONWATER 1
+#define NAV_SWIM_UNDERWATER 2
+
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
 // if end_height is > 0 destination is any point in the vertical segment [end, end + end_height * eZ]
@@ -84,9 +103,8 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	dir = normalize(dir);
 	float stepdist = 32;
 	bool ignorehazards = false;
-	bool swimming = false;
-	bool swimming_outwater = false;
 	int cont;
+	int nav_action;
 
 	// Analyze starting point
 	traceline(start, start, MOVE_NORMAL, e);
@@ -112,18 +130,70 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	vector end2 = end;
 	if(end_height)
 		end2.z += end_height;
-	// Movement loop
-	for (;;)
-	{
-		if (boxesoverlap(end, end2, org + '-1 -1 -1', org + '1 1 1'))
-		{
-			// Succeeded
-			if(autocvar_bot_debug_tracewalk)
-				debugnodestatus(org, DEBUG_NODE_SUCCESS);
 
-			//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
-			return true;
+	vector fixed_end = end;
+	vector move;
+
+	if (dist > 0 && WETFEET(org))
+	{
+		if (SUBMERGED(org))
+			nav_action = NAV_SWIM_UNDERWATER;
+		else
+		{
+			// tracebox down by player's height
+			// useful to know if water level is so low that bot can still walk
+			tracebox(org, m1, m2, org - eZ * (m2.z - m1.z), movemode, e);
+			if (SUBMERGED(trace_endpos))
+			{
+				org = trace_endpos;
+				nav_action = NAV_SWIM_UNDERWATER;
+			}
+			else
+				nav_action = NAV_WALK;
 		}
+	}
+	else
+		nav_action =  NAV_WALK;
+
+	// Movement loop
+	while (true)
+	{
+		if (dist <= 0)
+		{
+			bool success = true;
+			if (org.z > end2.z + 1)
+			{
+				tracebox(org, m1, m2, end2, movemode, e);
+				org = trace_endpos;
+				if (org.z > end2.z + 1)
+					success = false;
+			}
+			else if (org.z < end.z - 1)
+			{
+				tracebox(org, m1, m2, org - jumpheight_vec, movemode, e);
+				if (SUBMERGED(trace_endpos))
+					RESURFACE_LIMITED(trace_endpos, end.z);
+				else if (trace_endpos.z > org.z - jumpheight_vec.z)
+					tracebox(trace_endpos, m1, m2, trace_endpos + jumpheight_vec, movemode, e);
+				org = trace_endpos;
+				if (org.z < end.z - 1)
+					success = false;
+			}
+
+			if (success)
+			{
+				// Succeeded
+				if(autocvar_bot_debug_tracewalk)
+				{
+					debugnode(e, org);
+					debugnodestatus(org, DEBUG_NODE_SUCCESS);
+				}
+
+				//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
+				return true;
+			}
+		}
+
 		if(autocvar_bot_debug_tracewalk)
 			debugnode(e, org);
 
@@ -144,126 +214,230 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 				return false;
 			}
 		}
-		if ((trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) || swimming)
+
+		if(nav_action == NAV_SWIM_UNDERWATER || (nav_action == NAV_SWIM_ONWATER && org.z > end2.z))
 		{
-			vector water_end = end;
-			water_end.z = bound(end.z, org.z, end2.z);
-			vector move;
-			if(swimming_outwater)
-			{
-				if (stepdist > dist)
-					stepdist = dist;
-				dist -= stepdist;
-				move = org + dir * stepdist;
-			}
-			else
-			{
-				// can't use movement direction here to calculate move because of precision errors
-				// especially when direction has a high enough z value
-				//water_dir = normalize(water_end - org);
-				//move = org + water_dir * stepdist;
-
-				if (stepdist > dist)
-					stepdist = dist;
-				move = org + (water_end - org) * (stepdist / dist);
-				dist = vlen(vec2(water_end - move));
-			}
-
-			tracebox(org, m1, m2, move, movemode, e);
-			if (trace_fraction < 1) // cant swim in the current direction
-			{
-				if(dist <= 0)
-					tracebox(org + stepheightvec, m1, m2, move, movemode, e);
-				else
-					tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
-				if (trace_startsolid)
-				{
-					if(autocvar_bot_debug_tracewalk)
-						debugnodestatus(org, DEBUG_NODE_FAIL);
-
-					return false;
-					//print("tracewalk: ", vtos(start), " failed under water\n");
-				}
-
-				if (trace_fraction < 1) // cant step-swim in the current direction
-				{
-					if(autocvar_bot_debug_tracewalk)
-						debugnodestatus(org, DEBUG_NODE_WARNING);
-
-					if(WATERFEET(org))
-					{
-						RESURFACE(org);
-						if(autocvar_bot_debug_tracewalk)
-							debugnode(e, org);
-
-						move = org + dir * stepdist;
-
-						tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
-					}
-
-					if (trace_fraction < 1 || trace_startsolid) // can't jump obstacle out of water
-					{
-						vector v = trace_endpos - stepheightvec + jumpheight_vec;
-						if(navigation_checkladders(e, v, m1, m2, end, end2, movemode))
-						{
-							if(autocvar_bot_debug_tracewalk)
-							{
-								debugnode(e, v);
-								debugnodestatus(v, DEBUG_NODE_SUCCESS);
-							}
-
-							//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
-							return true;
-						}
-
-						if(autocvar_bot_debug_tracewalk)
-							debugnodestatus(org, DEBUG_NODE_FAIL);
-
-						return false;
-						//print("tracewalk: ", vtos(start), " failed under water\n");
-					}
-
-					// successfully jumped obstacle up out of water
-					move = trace_endpos;
-					tracebox(move, m1, m2, move + '0 0 -65536', movemode, e);
-					if(autocvar_bot_debug_tracewalk && trace_endpos != move)
-						debugnode(e, move);
-					org = trace_endpos;
-
-					swimming = false;
-					swimming_outwater = false;
-
-					continue;
-				}
-			}
-
-			float height = trace_endpos.z - org.z;
-
-			// successfully advanced by swimming or step-swimming
-			org = trace_endpos;
-
-			if(height > 0 && (swimming || !SUBMERGED(org)))
-			{
-				swimming = true;
-				if(!swimming_outwater && !WATERFEET(org))
-				{
-					// put it back in the water if it gets out of water
-					do {
-						org.z -= 4;
-						if(WATERFEET(org))
-							break;
-					} while(org.z > height);
-					swimming_outwater = true;
-				}
+			// can't use movement direction here to calculate move because of
+			// precision errors especially when direction has a high enough z value
+			//water_dir = normalize(water_end - org);
+			//move = org + water_dir * stepdist;
+			fixed_end.z = bound(end.z, org.z, end2.z);
+			if (stepdist > dist)
+				stepdist = dist;
+			if (stepdist == dist) {
+				move = fixed_end;
+				dist = 0;
+			} else {
+				move = org + (fixed_end - org) * (stepdist / dist);
+				dist = vlen(vec2(fixed_end - move));
 			}
 		}
-		else // if (!((trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK) || swimming))
+		else // horiz. direction
 		{
 			if (stepdist > dist)
 				stepdist = dist;
 			dist -= stepdist;
+			move = org + dir * stepdist;
+		}
 
-			vector move = org + dir * stepdist;
+		if(nav_action == NAV_SWIM_ONWATER)
+		{
+			tracebox(org, m1, m2, move, movemode, e); // swim
+
+			// hit something
+			if (trace_fraction < 1)
+			{
+				// stepswim
+				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
+
+				if (trace_fraction < 1 || trace_startsolid) // can't jump obstacle out of water
+				{
+					if(navigation_checkladders(e, trace_endpos, m1, m2, end, end2, movemode))
+					{
+						if(autocvar_bot_debug_tracewalk)
+						{
+							debugnode(e, trace_endpos);
+							debugnodestatus(trace_endpos, DEBUG_NODE_SUCCESS);
+						}
+
+						//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
+						return true;
+					}
+
+					if(autocvar_bot_debug_tracewalk)
+						debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
+
+					return false;
+					//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
+				}
+
+				//succesful stepswim
+
+				if (dist <= 0)
+				{
+					org = trace_endpos;
+					continue;
+				}
+
+				if (org.z <= move.z) // going horiz.
+				{
+					tracebox(trace_endpos, m1, m2, move, movemode, e);
+					org = trace_endpos;
+					nav_action = NAV_WALK;
+					continue;
+				}
+			}
+
+			if (org.z <= move.z) // going horiz.
+			{
+				org = trace_endpos;
+				nav_action = NAV_SWIM_ONWATER;
+			}
+			else // going down
+			{
+				org = trace_endpos;
+				if (SUBMERGED(org))
+					nav_action = NAV_SWIM_UNDERWATER;
+				else
+					nav_action = NAV_SWIM_ONWATER;
+			}
+		}
+		else if(nav_action == NAV_SWIM_UNDERWATER)
+		{
+			if (move.z >= org.z) // swimming upwards or horiz.
+			{
+				tracebox(org, m1, m2, move, movemode, e); // swim
+
+				bool stepswimmed = false;
+
+				// hit something
+				if (trace_fraction < 1)
+				{
+					// stepswim
+					vector stepswim_move = move + stepheightvec;
+					if (dist > 0 && stepswim_move.z > end2.z) // don't allow stepswim to go higher than destination
+						stepswim_move.z = end2.z;
+
+					tracebox(org + stepheightvec, m1, m2, stepswim_move, movemode, e);
+
+					// hit something
+					if (trace_startsolid)
+					{
+						if(autocvar_bot_debug_tracewalk)
+							debugnodestatus(org, DEBUG_NODE_FAIL);
+
+						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
+						return false;
+					}
+
+					if (trace_fraction < 1)
+					{
+						float org_z_prev = org.z;
+						RESURFACE_LIMITED(org, end2.z);
+						if(org.z == org_z_prev)
+						{
+							if(autocvar_bot_debug_tracewalk)
+								debugnodestatus(org, DEBUG_NODE_FAIL);
+
+							//print("tracewalk: ", vtos(start), " can't reach ", vtos(end), "\n");
+							return false;
+						}
+						if(SUBMERGED(org))
+							nav_action = NAV_SWIM_UNDERWATER;
+						else
+							nav_action = NAV_SWIM_ONWATER;
+
+						// we didn't advance horiz. in this step, dist decrease should be reverted
+						// but we can do it properly right now... apply this workaround instead
+						if (dist <= 0)
+							dist = 1;
+
+						continue;
+					}
+
+					//succesful stepswim
+
+					if (dist <= 0)
+					{
+						org = trace_endpos;
+						continue;
+					}
+
+					stepswimmed = true;
+				}
+
+				if (!WETFEET(trace_endpos))
+				{
+					tracebox(trace_endpos, m1, m2, trace_endpos - eZ * (stepdist + (m2.z - m1.z)), movemode, e);
+					// if stepswimmed we'll land on the obstacle, avoid the SUBMERGED check
+					if (!stepswimmed && SUBMERGED(trace_endpos))
+					{
+						RESURFACE_LIMITED(trace_endpos, end2.z);
+						org = trace_endpos;
+						nav_action = NAV_SWIM_ONWATER;
+						continue;
+					}
+
+					// not submerged
+					org = trace_endpos;
+					nav_action = NAV_WALK;
+					continue;
+				}
+
+				// wetfeet
+				org = trace_endpos;
+				nav_action = NAV_SWIM_UNDERWATER;
+				continue;
+			}
+			else //if (move.z < org.z) // swimming downwards
+			{
+				tracebox(org, m1, m2, move, movemode, e); // swim
+
+				// hit something
+				if (trace_fraction < 1)
+				{
+					// stepswim
+					tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
+
+					// hit something
+					if (trace_fraction < 1 || trace_startsolid) // can't jump obstacle out of water
+					{
+						if(autocvar_bot_debug_tracewalk)
+							debugnodestatus(move, DEBUG_NODE_FAIL);
+
+						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
+						return false;
+					}
+
+					//succesful stepswim
+
+					if (dist <= 0)
+					{
+						org = trace_endpos;
+						continue;
+					}
+
+					if (trace_endpos.z > org.z && !SUBMERGED(trace_endpos))
+					{
+						// stepswim caused upwards direction
+						tracebox(trace_endpos, m1, m2, trace_endpos - stepheightvec, movemode, e);
+						if (!SUBMERGED(trace_endpos))
+						{
+							org = trace_endpos;
+							nav_action = NAV_WALK;
+							continue;
+						}
+					}
+				}
+
+				org = trace_endpos;
+				nav_action = NAV_SWIM_UNDERWATER;
+				continue;
+			}
+		}
+		else if(nav_action == NAV_WALK)
+		{
+			// walk
 			tracebox(org, m1, m2, move, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
@@ -329,6 +503,12 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			else
 				move = trace_endpos;
 
+			if (dist <= 0)
+			{
+				org = move;
+				continue;
+			}
+
 			// trace down from stepheight as far as possible and move there,
 			// if this starts in solid we try again without the stepup, and
 			// if that also fails we assume it is a wall
@@ -337,15 +517,19 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 
 			org = trace_endpos;
 
-			if(org.z < move.z && SUBMERGED(org))
+			if(org.z > move.z - 1 || !SUBMERGED(org))
 			{
-				// ended up underwater while walking, resurface
-				if(autocvar_bot_debug_tracewalk)
-					debugnode(e, org);
-				RESURFACE(org);
-				swimming = true;
-				swimming_outwater = true;
+				nav_action = NAV_WALK;
+				continue;
 			}
+
+			// ended up submerged while walking
+			if(autocvar_bot_debug_tracewalk)
+				debugnode(e, org);
+
+			RESURFACE_LIMITED(org, move.z);
+			nav_action = NAV_SWIM_ONWATER;
+			continue;
 		}
 	}
 
