@@ -304,19 +304,8 @@ MUTATOR_HOOKFUNCTION(ok, SetModname)
 	return true;
 }
 
-void ok_SetCvars()
-{
-	// hack to force overkill playermodels
-	cvar_settemp("sv_defaultcharacter", "1");
-	cvar_settemp("sv_defaultplayermodel", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
-	cvar_settemp("sv_defaultplayermodel_red", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm");
-	cvar_settemp("sv_defaultplayermodel_blue", "models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
-}
-
 void ok_Initialize()
 {
-	ok_SetCvars();
-
 	precache_all_playermodels("models/ok_player/*.dpm");
 
 	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
