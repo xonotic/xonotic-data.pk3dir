@@ -98,10 +98,10 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	}
 
 	vector org = start;
-	vector dir = end - start;
-	dir.z = 0;
-	float dist = vlen(dir);
-	dir = normalize(dir);
+	vector flatdir = end - start;
+	flatdir.z = 0;
+	float flatdist = vlen(flatdir);
+	flatdir = normalize(flatdir);
 	float stepdist = 32;
 	bool ignorehazards = false;
 	int cont;
@@ -130,7 +130,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	vector fixed_end = end;
 	vector move;
 
-	if (dist > 0 && WETFEET(org))
+	if (flatdist > 0 && WETFEET(org))
 	{
 		if (SUBMERGED(org))
 			nav_action = NAV_SWIM_UNDERWATER;
@@ -154,7 +154,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	// Movement loop
 	while (true)
 	{
-		if (dist <= 0)
+		if (flatdist <= 0)
 		{
 			bool success = true;
 			if (org.z > end2.z + 1)
@@ -193,7 +193,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 		if(autocvar_bot_debug_tracewalk)
 			debugnode(e, org);
 
-		if (dist <= 0)
+		if (flatdist <= 0)
 			break;
 
 		if(nav_action == NAV_SWIM_UNDERWATER || (nav_action == NAV_SWIM_ONWATER && org.z > end2.z))
@@ -203,22 +203,22 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			//water_dir = normalize(water_end - org);
 			//move = org + water_dir * stepdist;
 			fixed_end.z = bound(end.z, org.z, end2.z);
-			if (stepdist > dist)
-				stepdist = dist;
-			if (stepdist == dist) {
+			if (stepdist > flatdist)
+				stepdist = flatdist;
+			if (stepdist == flatdist) {
 				move = fixed_end;
-				dist = 0;
+				flatdist = 0;
 			} else {
-				move = org + (fixed_end - org) * (stepdist / dist);
-				dist = vlen(vec2(fixed_end - move));
+				move = org + (fixed_end - org) * (stepdist / flatdist);
+				flatdist = vlen(vec2(fixed_end - move));
 			}
 		}
 		else // horiz. direction
 		{
-			if (stepdist > dist)
-				stepdist = dist;
-			dist -= stepdist;
-			move = org + dir * stepdist;
+			if (stepdist > flatdist)
+				stepdist = flatdist;
+			flatdist -= stepdist;
+			move = org + flatdir * stepdist;
 		}
 
 		if(nav_action == NAV_SWIM_ONWATER)
@@ -254,7 +254,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 
 				//succesful stepswim
 
-				if (dist <= 0)
+				if (flatdist <= 0)
 				{
 					org = trace_endpos;
 					continue;
@@ -296,7 +296,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 				{
 					// stepswim
 					vector stepswim_move = move + stepheightvec;
-					if (dist > 0 && stepswim_move.z > end2.z) // don't allow stepswim to go higher than destination
+					if (flatdist > 0 && stepswim_move.z > end2.z) // don't allow stepswim to go higher than destination
 						stepswim_move.z = end2.z;
 
 					tracebox(org + stepheightvec, m1, m2, stepswim_move, movemode, e);
@@ -328,17 +328,17 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 						else
 							nav_action = NAV_SWIM_ONWATER;
 
-						// we didn't advance horiz. in this step, dist decrease should be reverted
+						// we didn't advance horiz. in this step, flatdist decrease should be reverted
 						// but we can do it properly right now... apply this workaround instead
-						if (dist <= 0)
-							dist = 1;
+						if (flatdist <= 0)
+							flatdist = 1;
 
 						continue;
 					}
 
 					//succesful stepswim
 
-					if (dist <= 0)
+					if (flatdist <= 0)
 					{
 						org = trace_endpos;
 						continue;
@@ -392,7 +392,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 
 					//succesful stepswim
 
-					if (dist <= 0)
+					if (flatdist <= 0)
 					{
 						org = trace_endpos;
 						continue;
@@ -458,11 +458,11 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 							move = trace_endpos;
 							while(trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
 							{
-								nextmove = move + (dir * stepdist);
+								nextmove = move + (flatdir * stepdist);
 								traceline( move, nextmove, movemode, e);
 								move = nextmove;
 							}
-							dist = vlen(vec2(end - move));
+							flatdist = vlen(vec2(end - move));
 						}
 						else
 						{
@@ -484,7 +484,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			else
 				move = trace_endpos;
 
-			if (dist <= 0)
+			if (flatdist <= 0)
 			{
 				org = move;
 				continue;
