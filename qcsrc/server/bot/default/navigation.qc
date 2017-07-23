@@ -55,9 +55,10 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 	return false;
 }
 
-#define IN_WATER(pos) (cont = pointcontents(pos), (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME))
-#define SUBMERGED(pos) IN_WATER(pos + autocvar_sv_player_viewoffset)
-#define WETFEET(pos) IN_WATER(pos + eZ * (m1.z + 1))
+#define IN_LAVA(pos) (cont = pointcontents(pos), (cont == CONTENT_LAVA || cont == CONTENT_SLIME))
+#define IN_LIQUID(pos) (cont = pointcontents(pos), (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME))
+#define SUBMERGED(pos) IN_LIQUID(pos + autocvar_sv_player_viewoffset)
+#define WETFEET(pos) IN_LIQUID(pos + eZ * (m1.z + 1))
 
 vector resurface_limited(vector org, float lim, vector m1)
 {
@@ -110,12 +111,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	traceline(start, start, MOVE_NORMAL, e);
 	if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 		ignorehazards = true;
-	else
-	{
-		traceline( start, start + '0 0 -65536', MOVE_NORMAL, e);
-		if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
-			ignorehazards = true;
-	}
+
 	tracebox(start, m1, m2, start, MOVE_NOMONSTERS, e);
 	if (trace_startsolid)
 	{
@@ -199,21 +195,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 
 		if (dist <= 0)
 			break;
-
-		traceline(org, org, MOVE_NORMAL, e);
-
-		if (!ignorehazards)
-		{
-			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
-			{
-				// hazards blocking path
-				if(autocvar_bot_debug_tracewalk)
-					debugnodestatus(org, DEBUG_NODE_FAIL);
-
-				//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
-				return false;
-			}
-		}
 
 		if(nav_action == NAV_SWIM_UNDERWATER || (nav_action == NAV_SWIM_ONWATER && org.z > end2.z))
 		{
@@ -516,6 +497,21 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			tracebox(move, m1, m2, move + '0 0 -65536', movemode, e);
 
 			org = trace_endpos;
+
+			if (!ignorehazards)
+			{
+				if (IN_LAVA(org))
+				{
+					if(autocvar_bot_debug_tracewalk)
+					{
+						debugnode(e, trace_endpos);
+						debugnodestatus(org, DEBUG_NODE_FAIL);
+					}
+
+					//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
+					return false;
+				}
+			}
 
 			if(org.z > move.z - 1 || !SUBMERGED(org))
 			{
