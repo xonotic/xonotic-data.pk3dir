@@ -60,7 +60,39 @@ void func_ladder_init(entity this)
 		{
 			tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
 			if(trace_startsolid)
-				return;
+			{
+				if(this.absmax.x - this.absmin.x > PL_MAX_CONST.x - PL_MIN_CONST.x
+					&& this.absmax.y - this.absmin.y < this.absmax.x - this.absmin.x)
+				{
+					// move top on one side
+					top_max.y = top_min.y = this.absmin.y + (PL_MAX_CONST.y - PL_MIN_CONST.y) * 0.75;
+				}
+				else if(this.absmax.y - this.absmin.y > PL_MAX_CONST.y - PL_MIN_CONST.y
+					&& this.absmax.x - this.absmin.x < this.absmax.y - this.absmin.y)
+				{
+					// move top on one side
+					top_max.x = top_min.x = this.absmin.x + (PL_MAX_CONST.x - PL_MIN_CONST.x) * 0.75;
+				}
+				tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+				if(trace_startsolid)
+				{
+					if(this.absmax.x - this.absmin.x > PL_MAX_CONST.x - PL_MIN_CONST.x
+						&& this.absmax.y - this.absmin.y < this.absmax.x - this.absmin.x)
+					{
+						// alternatively on the other side
+						top_max.y = top_min.y = this.absmax.y - (PL_MAX_CONST.y - PL_MIN_CONST.y) * 0.75;
+					}
+					else if(this.absmax.y - this.absmin.y > PL_MAX_CONST.y - PL_MIN_CONST.y
+						&& this.absmax.x - this.absmin.x < this.absmax.y - this.absmin.y)
+					{
+						// alternatively on the other side
+						top_max.x = top_min.x = this.absmax.x - (PL_MAX_CONST.x - PL_MIN_CONST.x) * 0.75;
+					}
+					tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+					if(trace_startsolid)
+						return;
+				}
+			}
 		}
 	}
 	if(trace_endpos.z < this.absmax.z)
