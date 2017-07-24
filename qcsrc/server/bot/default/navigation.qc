@@ -424,10 +424,27 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
-					tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
-					if (trace_fraction < 1 || trace_startsolid)
+					if (trace_startsolid) // hit ceiling above org
 					{
-						vector v = trace_endpos - jumpstepheightvec + jumpheight_vec;
+						// reduce stepwalk height
+						tracebox(org, m1, m2, org + stepheightvec, movemode, e);
+						tracebox(trace_endpos, m1, m2, move + eZ * (trace_endpos.z - move.z), movemode, e);
+					}
+					else //if (trace_fraction < 1)
+					{
+						tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
+						if (trace_startsolid) // hit ceiling above org
+						{
+							// reduce jumpstepwalk height
+							tracebox(org, m1, m2, org + jumpstepheightvec, movemode, e);
+							tracebox(trace_endpos, m1, m2, move + eZ * (trace_endpos.z - move.z), movemode, e);
+						}
+					}
+
+					if (trace_fraction < 1)
+					{
+						vector v = trace_endpos;
+						v.z = org.z + jumpheight_vec.z;
 						if(navigation_checkladders(e, v, m1, m2, end, end2, movemode))
 						{
 							if(autocvar_bot_debug_tracewalk)
