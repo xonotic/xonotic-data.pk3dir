@@ -269,7 +269,7 @@ void waypoint_spawn_fromeditor(entity pl)
 	LABEL(add_wp);
 	e = waypoint_spawn(org, org, 0);
 	waypoint_schedulerelink(e);
-	bprint(strcat("Waypoint spawned at ", vtos(org), "\n"));
+	bprint(strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 	if(sym)
 	{
 		org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
