@@ -444,9 +444,17 @@ float waypoint_getlinearcost(float dist)
 		return dist / (autocvar_sv_maxspeed * 1.25);
 	return dist / autocvar_sv_maxspeed;
 }
-
-float waypoint_gettravelcost(vector from, vector to)
+float waypoint_getlinearcost_underwater(float dist)
 {
+	// NOTE: this value is hardcoded on the engine too, see SV_WaterMove
+	return dist / (autocvar_sv_maxspeed * 0.7);
+}
+
+float waypoint_gettravelcost(vector from, vector to, bool submerged_from, bool submerged_to)
+{
+	if (submerged_from && submerged_to)
+		return waypoint_getlinearcost_underwater(vlen(to - from));
+
 	float c = waypoint_getlinearcost(vlen(to - from));
 
 	float height = from.z - to.z;
@@ -457,6 +465,9 @@ float waypoint_gettravelcost(vector from, vector to)
 		if(height_cost > c)
 			c = height_cost;
 	}
+
+	if (submerged_from || submerged_to)
+		return (c + waypoint_getlinearcost_underwater(vlen(to - from))) / 2;
 	return c;
 }
 
@@ -478,7 +489,7 @@ float waypoint_getlinkcost(entity from, entity to)
 		v2_y = bound(m1_y, v2_y, m2_y);
 		v2_z = bound(m1_z, v2_z, m2_z);
 	}
-	return waypoint_gettravelcost(v1, v2);
+	return waypoint_gettravelcost(v1, v2, SUBMERGED(v1), SUBMERGED(v2));
 }
 
 // add a new link to the spawnfunc_waypoint, replacing the furthest link it already has

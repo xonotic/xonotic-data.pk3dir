@@ -39,7 +39,7 @@ void waypoint_clearlinks(entity wp);
 void waypoint_schedulerelink(entity wp);
 
 float waypoint_getlinkcost(entity from, entity to);
-float waypoint_gettravelcost(vector v1, vector v2);
+float waypoint_gettravelcost(vector v1, vector v2, bool submerged_from, bool submerged_to);
 float waypoint_getlinearcost(float dist);
 void waypoint_updatecost_foralllinks();
 

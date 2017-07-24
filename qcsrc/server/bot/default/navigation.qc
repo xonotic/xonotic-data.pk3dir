@@ -55,14 +55,8 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 	return false;
 }
 
-#define IN_LAVA(pos) (cont = pointcontents(pos), (cont == CONTENT_LAVA || cont == CONTENT_SLIME))
-#define IN_LIQUID(pos) (cont = pointcontents(pos), (cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME))
-#define SUBMERGED(pos) IN_LIQUID(pos + autocvar_sv_player_viewoffset)
-#define WETFEET(pos) IN_LIQUID(pos + eZ * (m1.z + 1))
-
 vector resurface_limited(vector org, float lim, vector m1)
 {
-	int cont;
 	if (WETFEET(org + eZ * (lim - org.z)))
 		org.z = lim;
 	else
@@ -104,7 +98,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 	flatdir = normalize(flatdir);
 	float stepdist = 32;
 	bool ignorehazards = false;
-	int cont;
 	int nav_action;
 
 	// Analyze starting point
@@ -786,7 +779,7 @@ float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 			if (tracewalk(this, this.origin, this.mins, this.maxs, v, v_height, bot_navigation_movemode))
 			{
 				it.wpnearestpoint = v;
-				it.wpcost = waypoint_gettravelcost(this.origin, v) + it.dmg;
+				it.wpcost = waypoint_gettravelcost(this.origin, v, SUBMERGED(this.origin), SUBMERGED(v)) + it.dmg;
 				it.wpfire = 1;
 				it.enemy = NULL;
 				c = c + 1;
@@ -815,7 +808,7 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost, vector
 	if (w.wpflags & WAYPOINTFLAG_TELEPORT)
 		cost += w.wp00mincost; // assuming teleport has exactly one destination
 	else
-		cost += waypoint_gettravelcost(p, v);
+		cost += waypoint_gettravelcost(p, v, SUBMERGED(p), SUBMERGED(v));
 	if (wp.wpcost > cost)
 	{
 		wp.wpcost = cost;
@@ -1176,7 +1169,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if (nwp.wpcost < 10000000)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
-		float cost = nwp.wpcost + waypoint_gettravelcost(nwp.wpnearestpoint, goal_org);
+		float cost = nwp.wpcost + waypoint_gettravelcost(nwp.wpnearestpoint, goal_org, SUBMERGED(nwp.wpnearestpoint), SUBMERGED(goal_org));
 		LOG_DEBUG(e.classname, " ", ftos(f), "/(1+", ftos(cost), "/", ftos(rangebias), ") = ");
 		f = f * rangebias / (rangebias + cost);
 		LOG_DEBUG("considering ", e.classname, " (with rating ", ftos(f), ")");
@@ -1413,7 +1406,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 			v.y = bound(m1_y, v.y, m2_y);
 			v.z = bound(m1_z, v.z, m2_z);
 			o = (it.absmin + it.absmax) * 0.5;
-			d = waypoint_getlinearcost(it.bot_dodgerating) - waypoint_gettravelcost(o, v);
+			d = waypoint_getlinearcost(it.bot_dodgerating) - waypoint_gettravelcost(o, v, SUBMERGED(o), SUBMERGED(v));
 			if (d > 0)
 			{
 				traceline(o, v, true, NULL);
