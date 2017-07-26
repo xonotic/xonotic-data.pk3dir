@@ -227,6 +227,11 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			}
 		}
 		setsize(w, '0 0 0', '0 0 0');
+
+		// can't apply the same logic to box waypoints because often they are
+		// inside some solid and SUBMERGED check would fail even if submerged
+		if(SUBMERGED(w.origin))
+			w.waterlevel = WATERLEVEL_SUBMERGED;
 	}
 
 	waypoint_clearlinks(w);
@@ -450,8 +455,20 @@ float waypoint_getlinearcost_underwater(float dist)
 	return dist / (autocvar_sv_maxspeed * 0.7);
 }
 
-float waypoint_gettravelcost(vector from, vector to, bool submerged_from, bool submerged_to)
+float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_ent)
 {
+	bool submerged_from;
+	if((from_ent.classname == "waypoint" && !from_ent.wpisbox) || from_ent.classname == "player")
+		submerged_from = (from_ent.waterlevel == WATERLEVEL_SUBMERGED);
+	else
+		submerged_from = SUBMERGED(from);
+
+	bool submerged_to;
+	if((to_ent.classname == "waypoint" && !to_ent.wpisbox) || to_ent.classname == "player")
+		submerged_to = (to_ent.waterlevel == WATERLEVEL_SUBMERGED);
+	else
+		submerged_to = SUBMERGED(to);
+
 	if (submerged_from && submerged_to)
 		return waypoint_getlinearcost_underwater(vlen(to - from));
 
@@ -489,7 +506,7 @@ float waypoint_getlinkcost(entity from, entity to)
 		v2.y = bound(m1.y, v1.y, m2.y);
 		v2.z = bound(m1.z, v1.z, m2.z);
 	}
-	return waypoint_gettravelcost(v1, v2, SUBMERGED(v1), SUBMERGED(v2));
+	return waypoint_gettravelcost(v1, v2, from, to);
 }
 
 // add a new link to the spawnfunc_waypoint, replacing the furthest link it already has

@@ -797,7 +797,7 @@ float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 			if (tracewalk(this, this.origin, this.mins, this.maxs, v, v_height, bot_navigation_movemode))
 			{
 				it.wpnearestpoint = v;
-				it.wpcost = waypoint_gettravelcost(this.origin, v, SUBMERGED(this.origin), SUBMERGED(v)) + it.dmg;
+				it.wpcost = waypoint_gettravelcost(this.origin, v, this, it) + it.dmg;
 				it.wpfire = 1;
 				it.enemy = NULL;
 				c = c + 1;
@@ -826,7 +826,7 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost, vector
 	if (w.wpflags & WAYPOINTFLAG_TELEPORT)
 		cost += w.wp00mincost; // assuming teleport has exactly one destination
 	else
-		cost += waypoint_gettravelcost(p, v, SUBMERGED(p), SUBMERGED(v));
+		cost += waypoint_gettravelcost(p, v, w, wp);
 	if (wp.wpcost > cost)
 	{
 		wp.wpcost = cost;
@@ -1187,7 +1187,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if (nwp.wpcost < 10000000)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
-		float cost = nwp.wpcost + waypoint_gettravelcost(nwp.wpnearestpoint, goal_org, SUBMERGED(nwp.wpnearestpoint), SUBMERGED(goal_org));
+		float cost = nwp.wpcost + waypoint_gettravelcost(nwp.wpnearestpoint, goal_org, nwp, e);
 		LOG_DEBUG(e.classname, " ", ftos(f), "/(1+", ftos(cost), "/", ftos(rangebias), ") = ");
 		f = f * rangebias / (rangebias + cost);
 		LOG_DEBUG("considering ", e.classname, " (with rating ", ftos(f), ")");
@@ -1412,11 +1412,13 @@ void botframe_updatedangerousobjects(float maxupdate)
 	vector m1, m2, v, o;
 	float c, d, danger;
 	c = 0;
+	entity wp_cur;
 	IL_EACH(g_waypoints, true,
 	{
 		danger = 0;
 		m1 = it.absmin;
 		m2 = it.absmax;
+		wp_cur = it;
 		IL_EACH(g_bot_dodge, it.bot_dodge,
 		{
 			v = it.origin;
@@ -1424,7 +1426,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 			v.y = bound(m1_y, v.y, m2_y);
 			v.z = bound(m1_z, v.z, m2_z);
 			o = (it.absmin + it.absmax) * 0.5;
-			d = waypoint_getlinearcost(it.bot_dodgerating) - waypoint_gettravelcost(o, v, SUBMERGED(o), SUBMERGED(v));
+			d = waypoint_getlinearcost(it.bot_dodgerating) - waypoint_gettravelcost(o, v, it, wp_cur);
 			if (d > 0)
 			{
 				traceline(o, v, true, NULL);
