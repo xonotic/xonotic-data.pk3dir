@@ -477,17 +477,17 @@ float waypoint_getlinkcost(entity from, entity to)
 	vector v2 = to.origin;
 	if (from.wpisbox)
 	{
-		vector m1 = to.absmin, m2 = to.absmax;
-		v1_x = bound(m1_x, v1_x, m2_x);
-		v1_y = bound(m1_y, v1_y, m2_y);
-		v1_z = bound(m1_z, v1_z, m2_z);
+		vector m1 = from.absmin, m2 = from.absmax;
+		v1.x = bound(m1.x, v2.x, m2.x);
+		v1.y = bound(m1.y, v2.y, m2.y);
+		v1.z = bound(m1.z, v2.z, m2.z);
 	}
 	if (to.wpisbox)
 	{
-		vector m1 = from.absmin, m2 = from.absmax;
-		v2_x = bound(m1_x, v2_x, m2_x);
-		v2_y = bound(m1_y, v2_y, m2_y);
-		v2_z = bound(m1_z, v2_z, m2_z);
+		vector m1 = to.absmin, m2 = to.absmax;
+		v2.x = bound(m1.x, v1.x, m2.x);
+		v2.y = bound(m1.y, v1.y, m2.y);
+		v2.z = bound(m1.z, v1.z, m2.z);
 	}
 	return waypoint_gettravelcost(v1, v2, SUBMERGED(v1), SUBMERGED(v2));
 }
