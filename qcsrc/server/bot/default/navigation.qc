@@ -43,7 +43,7 @@ bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector 
 	{
 		if(it.bot_pickup)
 		if(boxesoverlap(org + m1 + '-1 -1 -1', org + m2 + '1 1 1', it.absmin, it.absmax))
-		if(boxesoverlap(end, end2, it.absmin + (m1 - eZ * m1.z - '1 1 0'), it.absmax + (m2 - eZ * m2.z + '1 1 0')))
+		if(boxesoverlap(end, end2, it.absmin + vec2(m1) + '-1 -1 0', it.absmax + vec2(m2) + '1 1 0'))
 		{
 			vector top = org;
 			top.z = it.absmax.z + (PL_MAX_CONST.z - PL_MIN_CONST.z);
@@ -226,12 +226,13 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 
 				if (trace_fraction < 1 || trace_startsolid) // can't jump obstacle out of water
 				{
-					if(navigation_checkladders(e, trace_endpos, m1, m2, end, end2, movemode))
+					org = trace_endpos;
+					if(navigation_checkladders(e, org, m1, m2, end, end2, movemode))
 					{
 						if(autocvar_bot_debug_tracewalk)
 						{
-							debugnode(e, trace_endpos);
-							debugnodestatus(trace_endpos, DEBUG_NODE_SUCCESS);
+							debugnode(e, org);
+							debugnodestatus(org, DEBUG_NODE_SUCCESS);
 						}
 
 						//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
@@ -239,7 +240,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 					}
 
 					if(autocvar_bot_debug_tracewalk)
-						debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
+						debugnodestatus(org, DEBUG_NODE_FAIL);
 
 					return false;
 					//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
