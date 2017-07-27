@@ -209,6 +209,8 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 		if (flatdist <= 0)
 			break;
 
+		if (stepdist > flatdist)
+			stepdist = flatdist;
 		if(nav_action == NAV_SWIM_UNDERWATER || (nav_action == NAV_SWIM_ONWATER && org.z > end2.z))
 		{
 			// can't use movement direction here to calculate move because of
@@ -216,8 +218,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			//water_dir = normalize(water_end - org);
 			//move = org + water_dir * stepdist;
 			fixed_end.z = bound(end.z, org.z, end2.z);
-			if (stepdist > flatdist)
-				stepdist = flatdist;
 			if (stepdist == flatdist) {
 				move = fixed_end;
 				flatdist = 0;
@@ -228,8 +228,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 		}
 		else // horiz. direction
 		{
-			if (stepdist > flatdist)
-				stepdist = flatdist;
 			flatdist -= stepdist;
 			move = org + flatdir * stepdist;
 		}
@@ -343,7 +341,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 							nav_action = NAV_SWIM_ONWATER;
 
 						// we didn't advance horiz. in this step, flatdist decrease should be reverted
-						// but we can do it properly right now... apply this workaround instead
+						// but we can't do it properly right now... apply this workaround instead
 						if (flatdist <= 0)
 							flatdist = 1;
 
