@@ -515,12 +515,6 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			else
 				move = trace_endpos;
 
-			if (flatdist <= 0)
-			{
-				org = move;
-				continue;
-			}
-
 			// trace down from stepheight as far as possible and move there,
 			// if this starts in solid we try again without the stepup, and
 			// if that also fails we assume it is a wall
@@ -542,6 +536,13 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 					//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
 					return false;
 				}
+			}
+
+			if (flatdist <= 0)
+			{
+				if(move.z >= end2.z && org.z < end2.z)
+					org.z = end2.z;
+				continue;
 			}
 
 			if(org.z > move.z - 1 || !SUBMERGED(org))
