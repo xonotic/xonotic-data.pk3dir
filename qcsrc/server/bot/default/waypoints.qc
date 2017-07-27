@@ -227,11 +227,6 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			}
 		}
 		setsize(w, '0 0 0', '0 0 0');
-
-		// can't apply the same logic to box waypoints because often they are
-		// inside some solid and SUBMERGED check would fail even if submerged
-		if(SUBMERGED(w.origin))
-			w.waterlevel = WATERLEVEL_SUBMERGED;
 	}
 
 	waypoint_clearlinks(w);
@@ -457,17 +452,8 @@ float waypoint_getlinearcost_underwater(float dist)
 
 float waypoint_gettravelcost(vector from, vector to, entity from_ent, entity to_ent)
 {
-	bool submerged_from;
-	if((from_ent.classname == "waypoint" && !from_ent.wpisbox) || from_ent.classname == "player")
-		submerged_from = (from_ent.waterlevel == WATERLEVEL_SUBMERGED);
-	else
-		submerged_from = SUBMERGED(from);
-
-	bool submerged_to;
-	if((to_ent.classname == "waypoint" && !to_ent.wpisbox) || to_ent.classname == "player")
-		submerged_to = (to_ent.waterlevel == WATERLEVEL_SUBMERGED);
-	else
-		submerged_to = SUBMERGED(to);
+	bool submerged_from = navigation_check_submerged_state(from_ent, from);
+	bool submerged_to = navigation_check_submerged_state(to_ent, to);
 
 	if (submerged_from && submerged_to)
 		return waypoint_getlinearcost_underwater(vlen(to - from));

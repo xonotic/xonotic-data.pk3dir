@@ -125,6 +125,12 @@ void navigation_dynamicgoal_init(entity this, bool initially_static);
 void navigation_dynamicgoal_set(entity this);
 void navigation_dynamicgoal_unset(entity this);
 
+.int nav_submerged_state;
+#define SUBMERGED_UNDEFINED 0
+#define SUBMERGED_NO 1
+#define SUBMERGED_YES 2
+bool navigation_check_submerged_state(entity ent, vector pos);
+
 
 /*
  * Functions

@@ -37,6 +37,26 @@ void navigation_dynamicgoal_unset(entity this)
 	this.nearestwaypointtimeout = -1;
 }
 
+bool navigation_check_submerged_state(entity ent, vector pos)
+{
+	bool submerged;
+	if(IS_PLAYER(ent))
+		submerged = (ent.waterlevel == WATERLEVEL_SUBMERGED);
+	else if(ent.nav_submerged_state != SUBMERGED_UNDEFINED)
+		submerged = (ent.nav_submerged_state == SUBMERGED_YES);
+	else
+	{
+		submerged = SUBMERGED(pos);
+		// NOTE: SUBMERGED check of box waypoint origin may fail even if origin
+		//  is actually submerged because often they are inside some solid.
+		//  That's why submerged state is saved now that we know current pos is
+		//  not stuck in solid (previous tracewalk call to this pos was successfully)
+		if(!ent.navigation_dynamicgoal)
+			ent.nav_submerged_state = (submerged) ? SUBMERGED_YES : SUBMERGED_NO;
+	}
+	return submerged;
+}
+
 bool navigation_checkladders(entity e, vector org, vector m1, vector m2, vector end, vector end2, int movemode)
 {
 	IL_EACH(g_ladders, it.classname == "func_ladder",
