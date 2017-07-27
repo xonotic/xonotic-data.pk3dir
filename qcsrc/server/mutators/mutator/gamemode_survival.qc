@@ -265,17 +265,17 @@ string Surv_GetPlayerTemplate(entity player)
 				case SURVIVAL_ROLE_NONE:
 				case SURVIVAL_ROLE_PLAYER:
 				{
-					return "surv_attacker";
+					return cvar_string("g_surv_attacker_template");
 				}
 				case SURVIVAL_ROLE_CANNON_FODDER:
 				{
-					return "surv_cannon_fodder";
+					return cvar_string("g_surv_cannon_fodder_template");
 				}
 			}
 		}
 		case surv_defenderteam:
 		{
-			return "surv_defender";
+			return cvar_string("g_surv_defender_template");
 		}
 	}
 	return "default";
