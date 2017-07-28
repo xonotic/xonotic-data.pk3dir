@@ -755,7 +755,7 @@ void havocbot_movetogoal(entity this)
 
 	// in case bot ends up inside the teleport waypoint without touching
 	// the teleport itself, head to the teleport origin
-	if(destorg == this.origin)
+	if(this.goalcurrent.wpisbox && boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin, this.origin))
 		destorg = this.goalcurrent.origin;
 
 	diff = destorg - this.origin;
