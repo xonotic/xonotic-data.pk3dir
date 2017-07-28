@@ -23,10 +23,6 @@ string PlayerTemplate_GetDefaultCvarName(string variable)
 		{
 			return "g_balance_armor_start";
 		}
-		case "unlimited_ammo":
-		{
-			return "g_use_ammunition";
-		}
 		case "start_ammo_shells":
 		{
 			return "g_start_ammo_shells";
@@ -65,7 +61,6 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 	{
 		case "start_health":
 		case "start_armor":
-		case "unlimited_ammo":
 		case "start_ammo_shells":
 		case "start_ammo_bullets":
 		case "start_ammo_rockets":
@@ -74,6 +69,10 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		case "start_ammo_fuel":
 		{
 			return cvar(PlayerTemplate_GetDefaultCvarName(variable));
+		}
+		case "unlimited_ammo":
+		{
+			return !autocvar_g_use_ammunition;
 		}
 		case "default_start_weapons":
 		{
