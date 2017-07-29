@@ -108,7 +108,7 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 void PlayerStats_GameReport_Accuracy(entity p)
 {
 	#define ACCMAC(suffix, field) \
-		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), p.accuracy.(field[i-1]));
+		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
 	FOREACH(Weapons, it != WEP_Null, {
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
@@ -146,9 +146,9 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	if(IS_REAL_CLIENT(p))
 	{
-		if(p.latency_cnt)
+		if(CS(p).latency_cnt)
 		{
-			float latency = (p.latency_sum / p.latency_cnt);
+			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
 			if(latency) { PS_GR_P_ADDVAL(p, PLAYERSTATS_AVGLATENCY, latency); }
 		}
 	}

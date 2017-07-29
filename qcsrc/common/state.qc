@@ -69,6 +69,10 @@ void PlayerScore_Detach(entity this);
 
 void ClientState_detach(entity this)
 {
+    accuracy_free(this); // TODO: needs to be before CS() is deleted!
+    PlayerScore_Detach(this); // what ^they^ said
+    W_HitPlotClose(this);
+    ClientData_Detach(this);
 	delete(CS(this));
 	this._cs = NULL;
 
@@ -76,11 +80,7 @@ void ClientState_detach(entity this)
 
     bot_clientdisconnect(this);
 
-    W_HitPlotClose(this);
     anticheat_report_to_eventlog(this);
     playerdemo_shutdown(this);
     entcs_detach(this);
-    accuracy_free(this);
-    ClientData_Detach(this);
-    PlayerScore_Detach(this);
 }

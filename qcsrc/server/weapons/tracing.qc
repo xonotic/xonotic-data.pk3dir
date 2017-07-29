@@ -438,16 +438,17 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			break;
 
 		float maxdist;
+		entity hitstore = IS_PLAYER(hit) ? PS(hit) : hit;
 		if(max_solid_penetration < 0)
 			break;
-		else if(hit.ballistics_density < -1)
+		else if(hitstore.ballistics_density < -1)
 			break; // -2: no solid penetration, ever
-		else if(hit.ballistics_density < 0)
+		else if(hitstore.ballistics_density < 0)
 			maxdist = vlen(hit.maxs - hit.mins) + 1; // -1: infinite travel distance
-		else if(hit.ballistics_density == 0)
+		else if(hitstore.ballistics_density == 0)
 			maxdist = max_solid_penetration * solid_penetration_left;
 		else
-			maxdist = max_solid_penetration * solid_penetration_left * hit.ballistics_density;
+			maxdist = max_solid_penetration * solid_penetration_left * hitstore.ballistics_density;
 
 		if(maxdist <= autocvar_g_ballistics_mindistance)
 			break;

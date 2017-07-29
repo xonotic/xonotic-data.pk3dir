@@ -62,12 +62,12 @@ void PingPLReport_Think(entity this)
 		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
 		// record latency times for clients throughout the match so we can report it to playerstats
-		if(time > (e.latency_time + LATENCY_THINKRATE))
+		if(time > (CS(e).latency_time + LATENCY_THINKRATE))
 		{
-			e.latency_sum += CS(e).ping;
-			e.latency_cnt += 1;
-			e.latency_time = time;
-			//print("sum: ", ftos(e.latency_sum), ", cnt: ", ftos(e.latency_cnt), ", avg: ", ftos(e.latency_sum / e.latency_cnt), ".\n");
+			CS(e).latency_sum += CS(e).ping;
+			CS(e).latency_cnt += 1;
+			CS(e).latency_time = time;
+			//print("sum: ", ftos(CS(e).latency_sum), ", cnt: ", ftos(CS(e).latency_cnt), ", avg: ", ftos(CS(e).latency_sum / CS(e).latency_cnt), ".\n");
 		}
 	}
 	else

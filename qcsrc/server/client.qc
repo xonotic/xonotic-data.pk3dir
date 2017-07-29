@@ -135,23 +135,23 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 void ClientData_Attach(entity this)
 {
-	Net_LinkEntity(this.clientdata = new_pure(clientdata), false, 0, ClientData_Send);
-	this.clientdata.drawonlytoclient = this;
-	this.clientdata.owner = this;
+	Net_LinkEntity(CS(this).clientdata = new_pure(clientdata), false, 0, ClientData_Send);
+	CS(this).clientdata.drawonlytoclient = this;
+	CS(this).clientdata.owner = this;
 }
 
 void ClientData_Detach(entity this)
 {
-	delete(this.clientdata);
-	this.clientdata = NULL;
+	delete(CS(this).clientdata);
+	CS(this).clientdata = NULL;
 }
 
 void ClientData_Touch(entity e)
 {
-	e.clientdata.SendFlags = 1;
+	CS(e).clientdata.SendFlags = 1;
 
 	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(it.clientdata.SendFlags = 1));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(CS(it).clientdata.SendFlags = 1));
 }
 
 void SetSpectatee(entity this, entity spectatee);
@@ -397,7 +397,7 @@ void FixPlayermodel(entity player)
 		int n = tokenize_console(defaultmodel);
 		if(n > 0)
 		{
-			defaultmodel = argv(floor(n * player.model_randomizer));
+			defaultmodel = argv(floor(n * CS(player).model_randomizer));
 			// However, do NOT randomize if the player-selected model is in the list.
 			for (int i = 0; i < n; ++i)
 				if ((argv(i) == player.playermodel && defaultskin == stof(player.playerskin)) || argv(i) == strcat(player.playermodel, ":", player.playerskin))
@@ -501,7 +501,7 @@ void PutPlayerInServer(entity this)
 
 	TRANSMUTE(Player, this);
 
-	this.wasplayer = true;
+	CS(this).wasplayer = true;
 	this.iscreature = true;
 	this.teleportable = TELEPORT_NORMAL;
 	if(!this.damagedbycontents)
@@ -578,7 +578,7 @@ void PutPlayerInServer(entity this)
 	setthink(this, func_null); // players have no think function
 	this.nextthink = 0;
 	this.dmg_team = 0;
-	this.ballistics_density = autocvar_g_ballistics_density_player;
+	PS(this).ballistics_density = autocvar_g_ballistics_density_player;
 
 	this.deadflag = DEAD_NO;
 
@@ -1252,7 +1252,7 @@ void ClientConnect(entity this)
 
 	CSQCMODEL_AUTOINIT(this);
 
-	this.model_randomizer = random();
+	CS(this).model_randomizer = random();
 
 	if (IS_REAL_CLIENT(this))
 		sv_notice_join(this);
@@ -1957,7 +1957,7 @@ void ShowRespawnCountdown(entity this)
 .bool team_selected;
 bool ShowTeamSelection(entity this)
 {
-	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
+	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
 		return false;
 	stuffcmd(this, "menu_showteamselect\n");
 	return true;
