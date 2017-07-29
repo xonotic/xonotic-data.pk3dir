@@ -136,13 +136,16 @@ void havocbot_ai(entity this)
 		this.aistatus |= AI_STATUS_ROAMING;
 		this.aistatus &= ~AI_STATUS_ATTACKING;
 
-		vector now,v,next;//,heading;
+		vector v, now, next;
 		float aimdistance,skillblend,distanceblend,blend;
 
-		SET_DESTCOORDS(this.goalcurrent, this.origin, now);
-		next = now = now - (this.origin + this.view_ofs);
+		if(this.goalcurrent.wpisbox && boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin, this.origin))
+			v = this.goalcurrent.origin;
+		else
+			SET_DESTCOORDS(this.goalcurrent, this.origin, v);
+		next = now = v - (this.origin + this.view_ofs);
 		aimdistance = vlen(now);
-		//heading = this.velocity;
+
 		//dprint(this.goalstack01.classname,etos(this.goalstack01),"\n");
 		if(
 			this.goalstack01 != this && this.goalstack01 && !wasfreed(this.goalstack01) && ((this.aistatus & AI_STATUS_RUNNING) == 0) &&
