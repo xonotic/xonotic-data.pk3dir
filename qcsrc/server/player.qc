@@ -97,7 +97,6 @@ void CopyBody(entity this, float keepvelocity)
 	clone.move_qcphysics = false; // don't run gamecode logic on clones, too many
 	set_movetype(clone, this.move_movetype);
 	clone.solid = this.solid;
-	clone.ballistics_density = this.ballistics_density;
 	clone.takedamage = this.takedamage;
 	setcefc(clone, getcefc(this));
 	clone.uncustomizeentityforclient = this.uncustomizeentityforclient;
@@ -553,7 +552,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
         // increment frag counter for used weapon type
         Weapon w = DEATH_WEAPONOF(deathtype);
 		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
-			attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
+			CS(attacker).accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		damage = M_ARGV(4, float);
@@ -610,11 +609,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		set_movetype(this, MOVETYPE_TOSS);
 		// shootable corpse
 		this.solid = SOLID_CORPSE;
-		this.ballistics_density = autocvar_g_ballistics_density_corpse;
+		PS(this).ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
 		UNSET_ONGROUND(this);
 		// dying animation
 		this.deadflag = DEAD_DYING;
+
+		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
 
 		// when to allow respawn
 		calculate_player_respawn_time(this);

@@ -812,8 +812,10 @@ void trigger_race_checkpoint_verify(entity this)
 
 	g_race_qualifying = qual;
 
-	IL_EACH(g_race_targets, true,
+	IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
 	{
+		if(it.targetname == "" || !it.targetname) // somehow this is a case...
+			continue;
 		entity cpt = it;
 		FOREACH_ENTITY_STRING(target, cpt.targetname,
 		{
@@ -830,12 +832,15 @@ void trigger_race_checkpoint_verify(entity this)
 
 	if (race_timed_checkpoint) {
 		if (defrag_ents) {
-			IL_EACH(g_race_targets, true,
+			IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
 			{
 				entity cpt = it;
 				if(it.classname == "target_startTimer" || it.classname == "target_stopTimer") {
+					if(it.targetname == "" || !it.targetname) // somehow this is a case...
+						continue;
 					FOREACH_ENTITY_STRING(target, cpt.targetname, {
-						WaypointSprite_UpdateSprites(it.sprite, ((cpt.classname == "target_startTimer") ? WP_RaceStart : WP_RaceFinish), WP_Null, WP_Null);
+						if(it.sprite)
+							WaypointSprite_UpdateSprites(it.sprite, ((cpt.classname == "target_startTimer") ? WP_RaceStart : WP_RaceFinish), WP_Null, WP_Null);
 					});
 				}
 				if(it.classname == "target_checkpoint") {

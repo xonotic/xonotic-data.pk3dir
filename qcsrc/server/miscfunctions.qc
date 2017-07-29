@@ -325,7 +325,7 @@ void GetCvars_handleString_Fixup(entity this, string thisname, float f, .string 
 			}
 		}
 }
-void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name)
+void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name)
 {
 	if (f < 0)
 	{
@@ -333,7 +333,7 @@ void GetCvars_handleFloat(entity this, string thisname, float f, .float field, s
 	else if (f > 0)
 	{
 		if (thisname == name)
-			this.(field) = stof(argv(f + 1));
+			store.(field) = stof(argv(f + 1));
 	}
 	else
 		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
@@ -434,7 +434,7 @@ void GetCvars(entity this, int f)
 	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
 	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 
-	GetCvars_handleFloat(this, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(this, this, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)

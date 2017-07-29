@@ -15,10 +15,14 @@ void sys_phys_update(entity this, float dt)
 	sys_in_update(this, dt);
 
 	sys_phys_fix(this, dt);
-	if (sys_phys_override(this, dt)) { return; } sys_phys_monitor(this, dt);
+	if (sys_phys_override(this, dt))
+		return;
+
+	sys_phys_monitor(this, dt);
 
 	PHYS_CS(this).movement_old = PHYS_CS(this).movement;
-	this.v_angle_old = this.v_angle;
+	PHYS_CS(this).v_angle_old = this.v_angle;
+	PHYS_CS(this).buttons_old = PHYS_INPUT_BUTTON_MASK(this);
 
 	sys_phys_ai(this);
 

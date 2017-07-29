@@ -488,8 +488,13 @@ string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
 void SpecialCommand(entity this)
 {
-	if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
-		LOG_INFO("A hollow voice says \"Plugh\".\n");
+	if(autocvar_sv_cheats || this.maycheat)
+	{
+		if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
+			LOG_INFO("A hollow voice says \"Plugh\".\n");
+	}
+	else
+		STAT(MOVEVARS_SPECIALCOMMAND, this) = true;
 }
 #endif
 
@@ -514,18 +519,18 @@ bool PM_check_specialcommand(entity this, int buttons)
 	else
 		c = "?";
 
-	if (c == substring(specialcommand, this.specialcommand_pos, 1))
+	if (c == substring(specialcommand, CS(this).specialcommand_pos, 1))
 	{
-		this.specialcommand_pos += 1;
-		if (this.specialcommand_pos >= strlen(specialcommand))
+		CS(this).specialcommand_pos += 1;
+		if (CS(this).specialcommand_pos >= strlen(specialcommand))
 		{
-			this.specialcommand_pos = 0;
+			CS(this).specialcommand_pos = 0;
 			SpecialCommand(this);
 			return true;
 		}
 	}
-	else if (this.specialcommand_pos && (c != substring(specialcommand, this.specialcommand_pos - 1, 1)))
-		this.specialcommand_pos = 0;
+	else if (CS(this).specialcommand_pos && (c != substring(specialcommand, CS(this).specialcommand_pos - 1, 1)))
+		CS(this).specialcommand_pos = 0;
 #endif
 	return false;
 }
@@ -808,7 +813,8 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 {
 #ifdef SVQC
 	// needs to be called before physics are run!
-	PM_UpdateButtons(this, CS(this));
+	if(IS_REAL_CLIENT(this))
+		PM_UpdateButtons(this, CS(this));
 #endif
 
 	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);
