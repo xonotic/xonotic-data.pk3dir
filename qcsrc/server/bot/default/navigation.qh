@@ -49,14 +49,13 @@ entity navigation_bestgoal;
 	waypoint_addlink_customcost(to_item, from_wp, waypoint_getlinkcost(from_wp, to_item))
 
 // if ent is a box waypoint or an item v is set to coords of ent that are closer to org
-// (but v.z is set to the middle coord of ent)
 #define SET_DESTCOORDS(ent, org, v) MACRO_BEGIN { \
 	if ((ent.classname != "waypoint") || ent.wpisbox) { \
 		vector wm1 = ent.origin + ent.mins; \
 		vector wm2 = ent.origin + ent.maxs; \
 		v.x = bound(wm1.x, org.x, wm2.x); \
 		v.y = bound(wm1.y, org.y, wm2.y); \
-		v.z = (wm2.z - wm1.z) / 2; \
+		v.z = bound(wm1.z, org.z, wm2.z); \
 	} else { \
 		v = ent.origin; \
 	} \
