@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-03 14:35+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
+"POT-Creation-Date: 2017-07-09 00:35+0200\n"
+"PO-Revision-Date: 2017-07-09 23:06+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Romanian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ro/)\n"
@@ -237,8 +237,8 @@ msgstr "Continuă..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
-msgid "QMCMD^Chat"
-msgstr "QMCMD^Conversație"
+msgid "Chat"
+msgstr "Conversație"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -9326,17 +9326,3 @@ msgstr "Culoare echipă:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Activare panou"
-
-#~ msgid "QMCMD^killed flag, icon"
-#~ msgstr "QMCMD^omorât steagul, pictogramă"
-
-#~ msgid "QMCMD^drop gun, icon"
-#~ msgstr "QMCMD^scapă arma, pictogramă"
-
-#~ msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
-#~ msgstr "QMCMD^armă scăpată %w^7 (l:%l^7)"
-
-#~ msgid ""
-#~ "^F2You have stolen the enemy's vehicle, you are now visible on their "
-#~ "radar!"
-#~ msgstr "^F2Ai ciordit un vehicul de la inamic, ești urmărit de radarul lor!"

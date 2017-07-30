@@ -6,6 +6,7 @@
 #include <common/net_linked.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
+#include <common/scores.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
 

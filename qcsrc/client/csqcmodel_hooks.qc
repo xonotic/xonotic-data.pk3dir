@@ -134,6 +134,9 @@ void CSQCPlayer_ModelAppearance_PostUpdate(entity this)
 }
 void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 {
+	if(MUTATOR_CALLHOOK(ForcePlayermodels_Skip, this, islocalplayer))
+		goto skipforcemodels;
+
 	// FORCEMODEL
 	// which one is ALWAYS good?
 	if (!forceplayermodels_goodmodel)
@@ -277,6 +280,8 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		else if(autocvar_cl_forceplayercolors)
 			this.colormap = player_localnum + 1;
 	}
+
+	LABEL(skipforcemodels)
 
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)
@@ -561,7 +566,7 @@ void CSQCModel_Effects_Apply(entity this)
 	{
 		if(!this.snd_looping)
 		{
-			sound(this, CH_TRIGGER_SINGLE, SND_JETPACK_FLY, VOL_BASE, autocvar_g_jetpack_attenuation);
+			sound(this, CH_TRIGGER_SINGLE, SND_JETPACK_FLY, VOL_BASE, autocvar_cl_jetpack_attenuation);
 			this.snd_looping = CH_TRIGGER_SINGLE;
 		}
 	}
@@ -569,7 +574,7 @@ void CSQCModel_Effects_Apply(entity this)
 	{
 		if(this.snd_looping)
 		{
-			sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
+			sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
 			this.snd_looping = 0;
 		}
 	}

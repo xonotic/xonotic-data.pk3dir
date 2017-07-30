@@ -1024,25 +1024,27 @@ float ammo_pickupevalfunc(entity player, entity item)
 		rating = item.bot_pickupbasevalue;
 	}
 
+	float noammorating = 0.5;
+
 	if ((need_shells) && (item.ammo_shells) && (player.ammo_shells < g_pickup_shells_max))
-		c = item.ammo_shells / player.ammo_shells;
+		c = item.ammo_shells / max(noammorating, player.ammo_shells);
 
 	if ((need_nails) && (item.ammo_nails) && (player.ammo_nails < g_pickup_nails_max))
-		c = item.ammo_nails / player.ammo_nails;
+		c = item.ammo_nails / max(noammorating, player.ammo_nails);
 
 	if ((need_rockets) && (item.ammo_rockets) && (player.ammo_rockets < g_pickup_rockets_max))
-		c = item.ammo_rockets / player.ammo_rockets;
+		c = item.ammo_rockets / max(noammorating, player.ammo_rockets);
 
 	if ((need_cells) && (item.ammo_cells) && (player.ammo_cells < g_pickup_cells_max))
-		c = item.ammo_cells / player.ammo_cells;
+		c = item.ammo_cells / max(noammorating, player.ammo_cells);
 
 	if ((need_plasma) && (item.ammo_plasma) && (player.ammo_plasma < g_pickup_plasma_max))
-		c = item.ammo_plasma / player.ammo_plasma;
+		c = item.ammo_plasma / max(noammorating, player.ammo_plasma);
 
 	if ((need_fuel) && (item.ammo_fuel) && (player.ammo_fuel < g_pickup_fuel_max))
-		c = item.ammo_fuel / player.ammo_fuel;
+		c = item.ammo_fuel / max(noammorating, player.ammo_fuel);
 
-	rating *= min(2, c);
+	rating *= min(c, 2);
 	if(wpn)
 		rating += wpn.bot_pickupbasevalue * 0.1;
 	return rating;

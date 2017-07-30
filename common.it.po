@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-03 14:35+0200\n"
-"PO-Revision-Date: 2017-07-06 00:29+0000\n"
-"Last-Translator: Antonio <piuntn@gmail.com>\n"
+"POT-Creation-Date: 2017-07-09 00:35+0200\n"
+"PO-Revision-Date: 2017-07-09 23:06+0000\n"
+"Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -234,7 +234,7 @@ msgstr "Continua..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
-msgid "QMCMD^Chat"
+msgid "Chat"
 msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
@@ -9490,18 +9490,3 @@ msgstr "Colore squadra:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Abilita pannello"
-
-#~ msgid "QMCMD^killed flag, icon"
-#~ msgstr "ucciso bandiera, icona"
-
-#~ msgid "QMCMD^drop gun, icon"
-#~ msgstr "lascia arma, icona"
-
-#~ msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
-#~ msgstr "lasciata arma %w^7 (l:%l^7)"
-
-#~ msgid ""
-#~ "^F2You have stolen the enemy's vehicle, you are now visible on their "
-#~ "radar!"
-#~ msgstr ""
-#~ "^F2Hai rubato il veicolo del nemico, sei adesso visibile sul loro radar!"

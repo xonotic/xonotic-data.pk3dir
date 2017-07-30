@@ -4,10 +4,10 @@
 #include "progname.qh"
 #include "static.qh"
 
-[[eraseable]]
+ERASEABLE
 void RegisterCvars(void(string name, string def, string desc, bool archive, string file) f) {}
 
-[[eraseable]]
+ERASEABLE
 bool cvar_value_issafe(string s)
 {
 	if (strstrofs(s, "\"", 0) >= 0) return false;
@@ -20,7 +20,7 @@ bool cvar_value_issafe(string s)
 }
 
 /** escape the string to make it safe for consoles */
-[[eraseable]]
+ERASEABLE
 string MakeConsoleSafe(string input)
 {
 	input = strreplace("\n", "", input);
@@ -30,19 +30,19 @@ string MakeConsoleSafe(string input)
 	return input;
 }
 
-[[eraseable]]
+ERASEABLE
 void cvar_describe(string name, string desc)
 {
 	localcmd(sprintf("\nset %1$s \"$%1$s\" \"%2$s\"\n", name, MakeConsoleSafe(desc)));
 }
 
-[[eraseable]]
+ERASEABLE
 void cvar_archive(string name)
 {
 	localcmd(sprintf("\nseta %1$s \"$%1$s\"\n", name));
 }
 
-[[eraseable]]
+ERASEABLE
 void RegisterCvars_Set(string name, string def, string desc, bool archive, string file)
 {
 	cvar_describe(name, desc);
@@ -50,7 +50,7 @@ void RegisterCvars_Set(string name, string def, string desc, bool archive, strin
 }
 
 int RegisterCvars_Save_fd;
-[[eraseable]]
+ERASEABLE
 void RegisterCvars_Save(string name, string def, string desc, bool archive, string file)
 {
 	if (!archive) return;
