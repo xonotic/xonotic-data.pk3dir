@@ -1070,11 +1070,12 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_nextcheckpoint = ReadByte();
 
 			race_nextbesttime = ReadInt24_t();
-			race_mybesttime = ReadInt24_t();
+			if(b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING) // not while spectating (matches server)
+				race_mybesttime = ReadInt24_t();
 			if(race_nextbestname)
 				strunzone(race_nextbestname);
 			string newname = ReadString();
-			if(autocvar_cl_race_cptimes_onlyself)
+			if(autocvar_cl_race_cptimes_onlyself && b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING)
 			{
 				race_nextbesttime = race_mybesttime;
 				race_mybesttime = 0;
