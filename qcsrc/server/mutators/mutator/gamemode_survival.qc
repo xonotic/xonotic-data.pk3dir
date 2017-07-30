@@ -1951,7 +1951,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerRegen)
 	{
 		return true;
 	}
-	return false;
+	return PlayerTemplate_PlayerRegen(player, Surv_GetPlayerTemplate(player));
 }
 
 /// \brief Hook that is called to determine if balance messages will appear.
