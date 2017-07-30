@@ -273,7 +273,7 @@ void PutObserverInServer(entity this)
 	} else {
 		int oldteam = this.team;
 		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
-		MUTATOR_CALLHOOK(Player_ChangedTeam, this, oldteam, this.team); // Lyberta: added hook
+		MUTATOR_CALLHOOK(Player_ChangedTeam, this, oldteam, this.team);
         this.frags = FRAGS_SPECTATOR;
         PlayerScore_Clear(this);  // clear scores when needed
     }
