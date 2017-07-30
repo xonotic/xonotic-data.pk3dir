@@ -54,6 +54,12 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 /// \return No return.
 void PlayerTemplate_PlayerSpawn(entity player, string template);
 
+/// \brief Regenerates player health according to the given template.
+/// \param[in] player Player to regenerate.
+/// \param[in] template Name of the template.
+/// \return Value to pass to mutator hook.
+float PlayerTemplate_PlayerRegen(entity player, string template);
+
 /// \brief Gives player items according to the given template.
 /// \param[in] player Player to give items to.
 /// \param[in] item Item which player has picked up.

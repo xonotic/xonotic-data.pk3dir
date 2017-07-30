@@ -47,6 +47,30 @@ string PlayerTemplate_GetDefaultCvarName(string variable)
 		{
 			return "g_start_ammo_fuel";
 		}
+		case "health_regen_factor":
+		{
+			return "g_balance_health_regen";
+		}
+		case "health_regen_linear":
+		{
+			return "g_balance_health_regenlinear";
+		}
+		case "health_rot_factor":
+		{
+			return "g_balance_health_rot";
+		}
+		case "health_rot_linear":
+		{
+			return "g_balance_health_rotlinear";
+		}
+		case "health_regen_stable":
+		{
+			return "g_balance_health_regenstable";
+		}
+		case "health_rot_stable":
+		{
+			return "g_balance_health_rotstable";
+		}
 		default:
 		{
 			// TODO: Report error.
@@ -67,6 +91,12 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		case "start_ammo_cells":
 		case "start_ammo_plasma":
 		case "start_ammo_fuel":
+		case "health_regen_factor":
+		case "health_regen_linear":
+		case "health_rot_factor":
+		case "health_rot_linear":
+		case "health_regen_stable":
+		case "health_rot_stable":
 		{
 			return cvar(PlayerTemplate_GetDefaultCvarName(variable));
 		}
@@ -315,6 +345,27 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 		while ((player.weapons & weaponbit) && (numattempts < 10));
 		player.weapons |= weaponbit;
 	}
+}
+
+float PlayerTemplate_PlayerRegen(entity player, string template)
+{
+	if (template == "default")
+	{
+		return false;
+	}
+	M_ARGV(5, float) = PlayerTemplate_GetFloatValue(template,
+		"health_regen_factor");
+	M_ARGV(6, float) = PlayerTemplate_GetFloatValue(template,
+		"health_regen_linear");
+	M_ARGV(7, float) = PlayerTemplate_GetFloatValue(template,
+		"health_rot_factor");
+	M_ARGV(8, float) = PlayerTemplate_GetFloatValue(template,
+		"health_rot_linear");
+	M_ARGV(9, float) = PlayerTemplate_GetFloatValue(template,
+		"health_regen_stable");
+	M_ARGV(10, float) = PlayerTemplate_GetFloatValue(template,
+		"health_rot_stable");
+	return false;
 }
 
 float PlayerTemplate_ItemTouch(entity player, entity item, string template)
