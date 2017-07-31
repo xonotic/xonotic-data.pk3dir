@@ -85,8 +85,9 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 				continue;
 			traceline(o, o + '0 0 -1500', true, NULL);
 
-			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(trace_endpos + '0 0 1')) & DPCONTENTS_LIQUIDSMASK)
+			if(IN_LAVA(trace_endpos + '0 0 1'))
 				continue;
+
 			// this tracebox_hits_trigger_hurt call isn't needed:
 			// dropped weapons are removed as soon as they fall on a trigger_hurt
 			// and can't be rated while they are in the air
@@ -95,8 +96,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		}
 		else
 		{
-			// Ignore items under water
-			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(it.origin + ((it.mins + it.maxs) * 0.5))) & DPCONTENTS_LIQUIDSMASK)
+			if(IN_LAVA(it.origin + (it.mins + it.maxs) * 0.5))
 				continue;
 		}
 
