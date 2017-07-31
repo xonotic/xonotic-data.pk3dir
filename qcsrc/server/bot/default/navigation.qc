@@ -308,7 +308,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 				{
 					// stepswim
 					vector stepswim_move = move + stepheightvec;
-					if (flatdist > 0 && stepswim_move.z > end2.z) // don't allow stepswim to go higher than destination
+					if (flatdist > 0 && stepswim_move.z > end2.z + stepheightvec.z) // don't allow stepswim to go higher than destination
 						stepswim_move.z = end2.z;
 
 					tracebox(org + stepheightvec, m1, m2, stepswim_move, movemode, e);
