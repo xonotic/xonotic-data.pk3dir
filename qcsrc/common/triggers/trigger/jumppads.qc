@@ -300,13 +300,7 @@ bool trigger_push_testorigin(entity e, entity targ, entity jp, vector org)
 			}
 		}
 	}
-
-	if(e.move_movetype == MOVETYPE_NONE)
-	{
-		tracebox(trace_endpos, e.mins, e.maxs, trace_endpos - eZ * 1500, true, jp);
-		return true;
-	}
-	return false;
+	return true;
 }
 #endif
 void trigger_push_findtarget(entity this)
@@ -325,6 +319,9 @@ void trigger_push_findtarget(entity this)
 		{
 			++n;
 #ifdef SVQC
+			if(t.move_movetype != MOVETYPE_NONE)
+				continue;
+
 			entity e = spawn();
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
