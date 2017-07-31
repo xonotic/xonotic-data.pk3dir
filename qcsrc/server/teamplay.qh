@@ -70,7 +70,7 @@ void GetTeamCounts(entity ignore);
 /// \return True if first team is smaller than the second one, false otherwise.
 /// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
 /// been called.
-bool IsTeamSmallerThanTeam(float teama, float teamb, entity e, bool usescore);
+bool IsTeamSmallerThanTeam(int teama, int teamb, entity e, bool usescore);
 
 /// \brief Returns whether one team is equal to the other.
 /// \param[in] teama First team.
@@ -80,7 +80,7 @@ bool IsTeamSmallerThanTeam(float teama, float teamb, entity e, bool usescore);
 /// \return True if first team is equal to the second one, false otherwise.
 /// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
 /// been called.
-bool IsTeamEqualToTeam(float teama, float teamb, entity e, bool usescore);
+bool IsTeamEqualToTeam(int teama, int teamb, entity e, bool usescore);
 
 /// \brief Returns the bitmask of the best teams for the player to join.
 /// \param[in] player Player to check.
