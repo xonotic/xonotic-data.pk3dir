@@ -781,8 +781,10 @@ void havocbot_movetogoal(entity this)
 		{
 			if(this.waterlevel>WATERLEVEL_SWIMMING)
 			{
-				//flatdir_z = 1;
-				this.aistatus |= AI_STATUS_OUT_WATER;
+				if(!this.goalcurrent)
+					this.aistatus |= AI_STATUS_OUT_WATER;
+				else if(gco.z > this.origin.z)
+					PHYS_INPUT_BUTTON_JUMP(this) = true;
 			}
 			else
 			{
