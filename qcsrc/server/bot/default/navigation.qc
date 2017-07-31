@@ -1337,6 +1337,8 @@ void navigation_poptouchedgoals(entity this)
 		{
 			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
 			navigation_poproute(this);
+			if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+				return;
 			// TODO this may also be a nice idea to do "early" (e.g. by
 			// manipulating the vlen() comparisons) to shorten paths in
 			// general - this would make bots walk more "on rails" than
@@ -1365,6 +1367,8 @@ void navigation_poptouchedgoals(entity this)
 				}
 
 				navigation_poproute(this);
+				if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+					return;
 			}
 		}
 	}
@@ -1390,6 +1394,8 @@ void navigation_poptouchedgoals(entity this)
 		}
 
 		navigation_poproute(this);
+		if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+			return;
 	}
 }
 
