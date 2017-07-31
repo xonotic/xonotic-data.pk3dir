@@ -754,12 +754,18 @@ void havocbot_movetogoal(entity this)
 	if(autocvar_bot_debug_goalstack)
 		debuggoalstack(this);
 
+	bool bunnyhop_forbidden = false;;
 	SET_DESTCOORDS(this.goalcurrent, this.origin, destorg);
 
 	// in case bot ends up inside the teleport waypoint without touching
 	// the teleport itself, head to the teleport origin
-	if(this.goalcurrent.wpisbox && boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin, this.origin))
+	if(this.goalcurrent.wpisbox && boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.absmin, this.absmax))
+	{
+		bunnyhop_forbidden = true;
 		destorg = this.goalcurrent.origin;
+		if(destorg.z > this.origin.z)
+			PHYS_INPUT_BUTTON_JUMP(this) = true;
+	}
 
 	diff = destorg - this.origin;
 	//dist = vlen(diff);
@@ -930,8 +936,8 @@ void havocbot_movetogoal(entity this)
 		havocbot_keyboard_movement(this, destorg);
 
 	// Bunnyhop!
-//	if(this.aistatus & AI_STATUS_ROAMING)
-	if(this.goalcurrent)
+	//if(this.aistatus & AI_STATUS_ROAMING)
+	if(!bunnyhop_forbidden && this.goalcurrent)
 	if(skill+this.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(this, dir);
 
