@@ -300,6 +300,7 @@ bool trigger_push_testorigin(entity e, entity targ, entity jp, vector org)
 			}
 		}
 	}
+	tracebox(trace_endpos, e.mins, e.maxs, trace_endpos - eZ * 1500, true, e);
 	return true;
 }
 #endif
