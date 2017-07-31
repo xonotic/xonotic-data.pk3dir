@@ -324,6 +324,7 @@ void trigger_push_findtarget(entity this)
 
 			entity e = spawn();
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
 			vel = e.velocity;
 			vector best_target = '0 0 0';
@@ -382,7 +383,7 @@ void trigger_push_findtarget(entity this)
 					if(velxy < autocvar_sv_maxspeed)
 						velxy = autocvar_sv_maxspeed;
 					cost += vlen(vec2(best_target - t.origin)) / velxy;
-					waypoint_spawnforteleporter(this, best_target, cost);
+					waypoint_spawnforteleporter(this, best_target, cost, e);
 				}
 			}
 			delete(e);
@@ -412,12 +413,13 @@ void trigger_push_findtarget(entity this)
 	else
 	{
 		entity e = spawn();
-		setorigin(e, org);
 		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+		setorigin(e, org);
 		e.velocity = this.movedir;
 		tracetoss(e, e);
 		if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
-			waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+			waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
 		delete(e);
 	}
 

@@ -411,6 +411,9 @@ LABEL(cvar_fail)
 void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
+	entity tracetest_ent = spawn();
+	setsize(tracetest_ent, PL_MIN_CONST, PL_MAX_CONST);
+	tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	//for(entity e = warpzone_first; e; e = e.warpzone_next)
 	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
 	{
@@ -421,6 +424,7 @@ void WarpZone_PostInitialize_Callback()
 		dst = (e.enemy.absmin + e.enemy.absmax) * 0.5;
 		makevectors(e.enemy.warpzone_angles);
 		dst = dst + ((e.enemy.warpzone_origin - dst) * v_forward) * v_forward - 16 * v_right;
-		waypoint_spawnforteleporter_v(e, src, dst, 0);
+		waypoint_spawnforteleporter_wz(e, src, dst, 0, tracetest_ent);
 	}
+	delete(tracetest_ent);
 }

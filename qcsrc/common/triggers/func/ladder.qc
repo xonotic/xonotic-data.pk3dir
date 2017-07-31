@@ -48,17 +48,21 @@ void func_ladder_init(entity this)
 	if(min(this.absmax.x - this.absmin.x, this.absmax.y - this.absmin.y) > 100)
 		return;
 
+	entity tracetest_ent = spawn();
+	setsize(tracetest_ent, PL_MIN_CONST, PL_MAX_CONST);
+	tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+
 	vector top_min = (this.absmin + this.absmax) / 2;
 	top_min.z = this.absmax.z;
 	vector top_max = top_min;
 	top_max.z += PL_MAX_CONST.z - PL_MIN_CONST.z;
-	tracebox(top_max + jumpstepheightvec, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+	tracebox(top_max + jumpstepheightvec, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
 	if(trace_startsolid)
 	{
-		tracebox(top_max + stepheightvec, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+		tracebox(top_max + stepheightvec, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
 		if(trace_startsolid)
 		{
-			tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+			tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
 			if(trace_startsolid)
 			{
 				if(this.absmax.x - this.absmin.x > PL_MAX_CONST.x - PL_MIN_CONST.x
@@ -73,7 +77,7 @@ void func_ladder_init(entity this)
 					// move top on one side
 					top_max.x = top_min.x = this.absmin.x + (PL_MAX_CONST.x - PL_MIN_CONST.x) * 0.75;
 				}
-				tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
+				tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
 				if(trace_startsolid)
 				{
 					if(this.absmax.x - this.absmin.x > PL_MAX_CONST.x - PL_MIN_CONST.x
@@ -88,15 +92,16 @@ void func_ladder_init(entity this)
 						// alternatively on the other side
 						top_max.x = top_min.x = this.absmax.x - (PL_MAX_CONST.x - PL_MIN_CONST.x) * 0.75;
 					}
-					tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, NULL);
-					if(trace_startsolid)
-						return;
+					tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
 				}
 			}
 		}
 	}
-	if(trace_endpos.z < this.absmax.z)
+	if(trace_startsolid || trace_endpos.z < this.absmax.z)
+	{
+		delete(tracetest_ent);
 		return;
+	}
 
 	this.bot_pickup = true; // allow bots to make use of this ladder
 	float cost = waypoint_getlinearcost(trace_endpos.z - this.absmin.z);

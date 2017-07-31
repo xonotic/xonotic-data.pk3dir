@@ -1017,20 +1017,18 @@ float waypoint_loadall()
 	return cwp + cwb;
 }
 
-vector waypoint_fixorigin(vector position)
+vector waypoint_fixorigin(vector position, entity tracetest_ent)
 {
-	tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z), PL_MIN_CONST, PL_MAX_CONST, position + '0 0 -512', MOVE_NOMONSTERS, NULL);
+	tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z), PL_MIN_CONST, PL_MAX_CONST, position + '0 0 -512', MOVE_NOMONSTERS, tracetest_ent);
 	if(trace_fraction < 1)
 		position = trace_endpos;
-	//traceline(position, position + '0 0 -512', MOVE_NOMONSTERS, NULL);
-	//print("position is ", ftos(trace_endpos_z - position_z), " above solid\n");
 	return position;
 }
 
 void waypoint_spawnforitem_force(entity e, vector org)
 {
 	// Fix the waypoint altitude if necessary
-	org = waypoint_fixorigin(org);
+	org = waypoint_fixorigin(org, NULL);
 
 	// don't spawn an item spawnfunc_waypoint if it already exists
 	IL_EACH(g_waypoints, true,
@@ -1079,16 +1077,16 @@ void waypoint_spawnforteleporter_boxes(entity e, int teleport_flag, vector org1,
 	e.nearestwaypointtimeout = -1;
 }
 
-void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken)
+void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, entity tracetest_ent)
 {
-	org = waypoint_fixorigin(org);
-	destination = waypoint_fixorigin(destination);
+	org = waypoint_fixorigin(org, tracetest_ent);
+	destination = waypoint_fixorigin(destination, tracetest_ent);
 	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, org, org, destination, destination, timetaken);
 }
 
-void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
+void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)
 {
-	destination = waypoint_fixorigin(destination);
+	destination = waypoint_fixorigin(destination, tracetest_ent);
 	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST + '1 1 1', e.absmax - PL_MIN_CONST + '-1 -1 -1', destination, destination, timetaken);
 }
 
@@ -1099,7 +1097,7 @@ entity waypoint_spawnpersonal(entity this, vector position)
 	// drop the waypoint to a proper location:
 	//   first move it up by a player height
 	//   then move it down to hit the floor with player bbox size
-	position = waypoint_fixorigin(position);
+	position = waypoint_fixorigin(position, this);
 
 	w = waypoint_spawn(position, position, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_PERSONAL);
 	w.nearestwaypoint = NULL;
