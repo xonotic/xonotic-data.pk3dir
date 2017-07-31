@@ -272,10 +272,10 @@ void trigger_push_touch(entity this, entity toucher)
 #ifdef SVQC
 void trigger_push_link(entity this);
 void trigger_push_updatelink(entity this);
-bool trigger_push_testorigin(entity e, entity targ, entity jp, vector org)
+bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vector org)
 {
-	setorigin(e, org);
-	tracetoss(e, e);
+	setorigin(tracetest_ent, org);
+	tracetoss(tracetest_ent, tracetest_ent);
 	if(trace_startsolid)
 		return false;
 
@@ -284,23 +284,23 @@ bool trigger_push_testorigin(entity e, entity targ, entity jp, vector org)
 		// since tracetoss starting from jumppad's origin often fails when target
 		// is very close to real destination, start it directly from target's
 		// origin instead
-		e.velocity_z = 0;
-		setorigin(e, targ.origin + stepheightvec);
-		tracetoss(e, e);
+		tracetest_ent.velocity.z = 0;
+		setorigin(tracetest_ent, targ.origin + stepheightvec);
+		tracetoss(tracetest_ent, tracetest_ent);
 		if(trace_startsolid)
 		{
-			setorigin(e, targ.origin + stepheightvec / 2);
-			tracetoss(e, e);
+			setorigin(tracetest_ent, targ.origin + stepheightvec / 2);
+			tracetoss(tracetest_ent, tracetest_ent);
 			if(trace_startsolid)
 			{
-				setorigin(e, targ.origin);
-				tracetoss(e, e);
+				setorigin(tracetest_ent, targ.origin);
+				tracetoss(tracetest_ent, tracetest_ent);
 				if(trace_startsolid)
 					return false;
 			}
 		}
 	}
-	tracebox(trace_endpos, e.mins, e.maxs, trace_endpos - eZ * 1500, true, e);
+	tracebox(trace_endpos, tracetest_ent.mins, tracetest_ent.maxs, trace_endpos - eZ * 1500, true, tracetest_ent);
 	return true;
 }
 #endif
