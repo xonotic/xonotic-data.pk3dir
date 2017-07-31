@@ -301,7 +301,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			{
 				tracebox(org, m1, m2, move, movemode, e); // swim
 
-				bool stepswimmed = false;
+				bool stepswum = false;
 
 				// hit something
 				if (trace_fraction < 1)
@@ -356,14 +356,14 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 						continue;
 					}
 
-					stepswimmed = true;
+					stepswum = true;
 				}
 
 				if (!WETFEET(trace_endpos))
 				{
 					tracebox(trace_endpos, m1, m2, trace_endpos - eZ * (stepdist + (m2.z - m1.z)), movemode, e);
-					// if stepswimmed we'll land on the obstacle, avoid the SUBMERGED check
-					if (!stepswimmed && SUBMERGED(trace_endpos))
+					// if stepswum we'll land on the obstacle, avoid the SUBMERGED check
+					if (!stepswum && SUBMERGED(trace_endpos))
 					{
 						RESURFACE_LIMITED(trace_endpos, end2.z);
 						org = trace_endpos;
