@@ -92,7 +92,7 @@ int FindBestTeams(entity player, bool usescore);
 
 // returns # of smallest team (1, 2, 3, 4)
 // NOTE: Assumes CheckAllowedTeams has already been called!
-float FindSmallestTeam(entity pl, float ignore_pl);
+float FindSmallestTeam(entity player, float ignore_player);
 
 int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam);
 

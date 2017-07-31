@@ -699,18 +699,18 @@ int FindBestTeams(entity player, bool usescore)
 
 // returns # of smallest team (1, 2, 3, 4)
 // NOTE: Assumes CheckAllowedTeams has already been called!
-float FindSmallestTeam(entity pl, float ignore_pl)
+float FindSmallestTeam(entity player, float ignore_player)
 {
 	// count how many players are in each team
-	if (ignore_pl)
+	if (ignore_player)
 	{
-		GetTeamCounts(pl);
+		GetTeamCounts(player);
 	}
 	else
 	{
 		GetTeamCounts(NULL);
 	}
-	int teambits = FindBestTeams(pl, true);
+	int teambits = FindBestTeams(player, true);
 	if (teambits == 0)
 	{
 		error(sprintf("No teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
