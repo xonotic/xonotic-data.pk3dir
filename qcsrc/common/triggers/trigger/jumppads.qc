@@ -27,10 +27,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
 	  ht  - jump height, measured from the higher one of org and tgt's midpoint
 
 	Returns: velocity for the jump
-	the global trigger_push_calculatevelocity_flighttime is set to the total
-	jump time
  */
-
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 {
 	float grav, sdist, zdist, vs, vz, jumpheight;
@@ -88,6 +85,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	if(zdist == 0)
 		solution_x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
 
+	float flighttime;
 	if(zdist < 0)
 	{
 		// down-jump
@@ -96,14 +94,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			// almost straight line type
 			// jump apex is before the jump
 			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution.y;
+			flighttime = solution.y;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one too
-			trigger_push_calculatevelocity_flighttime = solution.y;
+			flighttime = solution.y;
 		}
 	}
 	else
@@ -114,17 +112,17 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			// almost straight line type
 			// jump apex is after the jump
 			// we must take the smaller one
-			trigger_push_calculatevelocity_flighttime = solution.x;
+			flighttime = solution.x;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution.y;
+			flighttime = solution.y;
 		}
 	}
-	vs = sdist / trigger_push_calculatevelocity_flighttime;
+	vs = sdist / flighttime;
 
 	// finally calculate the velocity
 	return sdir * vs + '0 0 1' * vz;

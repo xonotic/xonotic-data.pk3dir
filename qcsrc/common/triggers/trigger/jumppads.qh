@@ -11,8 +11,6 @@ const int NUM_JUMPPADSUSED = 3;
 .float jumppadcount;
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
-float trigger_push_calculatevelocity_flighttime;
-
 #ifdef SVQC
 void SUB_UseTargets(entity this, entity actor, entity trigger);
 void trigger_push_use(entity this, entity actor, entity trigger);
@@ -28,10 +26,7 @@ void trigger_push_use(entity this, entity actor, entity trigger);
 	  ht  - jump height, measured from the higher one of org and tgt's midpoint
 
 	Returns: velocity for the jump
-	the global trigger_push_calculatevelocity_flighttime is set to the total
-	jump time
  */
-
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
 
 void trigger_push_touch(entity this, entity toucher);
