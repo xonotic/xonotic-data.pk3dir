@@ -139,10 +139,17 @@ void havocbot_ai(entity this)
 		vector v, now, next;
 		float aimdistance,skillblend,distanceblend,blend;
 
-		if(this.goalcurrent.wpisbox && boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin, this.origin))
-			v = this.goalcurrent.origin;
-		else
-			SET_DESTCOORDS(this.goalcurrent, this.origin, v);
+		SET_DESTCOORDS(this.goalcurrent, this.origin, v);
+		if(this.goalcurrent.wpisbox)
+		{
+			// avoid a glitch when bot is teleported but teleport waypoint isn't removed yet
+			if(this.goalstack02 && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT
+			&& this.lastteleporttime > 0 && time - this.lastteleporttime < 0.15)
+				v = (this.goalstack02.absmin + this.goalstack02.absmax) * 0.5;
+			// aim to teleport origin if bot is inside teleport waypoint but hasn't touched the real teleport yet
+			else if(boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax, this.origin, this.origin))
+				v = this.goalcurrent.origin;
+		}
 		next = now = v - (this.origin + this.view_ofs);
 		aimdistance = vlen(now);
 
