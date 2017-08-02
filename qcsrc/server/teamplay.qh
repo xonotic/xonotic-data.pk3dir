@@ -5,19 +5,22 @@ string cache_lastmutatormsg;
 
 // client counts for each team
 //float c1, c2, c3, c4;
-// # of bots on those teams
-float numbotsteam1;
-float numbotsteam2;
-float numbotsteam3;
-float numbotsteam4;
-entity lowestplayerteam1;
-entity lowestplayerteam2;
-entity lowestplayerteam3;
-entity lowestplayerteam4;
-entity lowestbotteam1;
-entity lowestbotteam2;
-entity lowestbotteam3;
-entity lowestbotteam4;
+
+// The following variables are used for balancing. They are not updated
+// automatically. You need to call CheckAllowedTeams and GetTeamCounts to get
+// proper values.
+float numbotsteam1; ///< Number of bots in the first team.
+float numbotsteam2; ///< Number of bots in the second team.
+float numbotsteam3; ///< Number of bots in the third team.
+float numbotsteam4; ///< Number of bots in the fourth team.
+entity lowesthumanteam1; ///< Human with the lowest score in the first team.
+entity lowesthumanteam2; ///< Human with the lowest score in the second team.
+entity lowesthumanteam3; ///< Human with the lowest score in the third team.
+entity lowesthumanteam4; ///< Human with the lowest score in the fourth team.
+entity lowestbotteam1; ///< Bot with the lowest score in the first team.
+entity lowestbotteam2; ///< Bot with the lowest score in the second team.
+entity lowestbotteam3; ///< Bot with the lowest score in the third team.
+entity lowestbotteam4; ///< Bot with the lowest score in the fourth team.
 
 int redowned, blueowned, yellowowned, pinkowned;
 

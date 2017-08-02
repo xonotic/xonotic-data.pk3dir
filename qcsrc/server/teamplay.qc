@@ -333,37 +333,37 @@ void GetTeamCounts(entity ignore)
 		if (c1 >= 0)
 		{
 			MUTATOR_CALLHOOK(GetTeamCount, NUM_TEAM_1, ignore, c1, numbotsteam1,
-				lowestplayerteam1, lowestbotteam1);
+				lowesthumanteam1, lowestbotteam1);
 			c1 = M_ARGV(2, float);
 			numbotsteam1 = M_ARGV(3, float);
-			lowestplayerteam1 = M_ARGV(4, entity);
+			lowesthumanteam1 = M_ARGV(4, entity);
 			lowestbotteam1 = M_ARGV(5, entity);
 		}
 		if (c2 >= 0)
 		{
 			MUTATOR_CALLHOOK(GetTeamCount, NUM_TEAM_2, ignore, c2, numbotsteam2,
-				lowestplayerteam2, lowestbotteam2);
+				lowesthumanteam2, lowestbotteam2);
 			c2 = M_ARGV(2, float);
 			numbotsteam2 = M_ARGV(3, float);
-			lowestplayerteam2 = M_ARGV(4, entity);
+			lowesthumanteam2 = M_ARGV(4, entity);
 			lowestbotteam2 = M_ARGV(5, entity);
 		}
 		if (c3 >= 0)
 		{
 			MUTATOR_CALLHOOK(GetTeamCount, NUM_TEAM_3, ignore, c3, numbotsteam3,
-				lowestplayerteam3, lowestbotteam3);
+				lowesthumanteam3, lowestbotteam3);
 			c3 = M_ARGV(2, float);
 			numbotsteam3 = M_ARGV(3, float);
-			lowestplayerteam3 = M_ARGV(4, entity);
+			lowesthumanteam3 = M_ARGV(4, entity);
 			lowestbotteam3 = M_ARGV(5, entity);
 		}
 		if (c4 >= 0)
 		{
 			MUTATOR_CALLHOOK(GetTeamCount, NUM_TEAM_4, ignore, c4, numbotsteam4,
-				lowestplayerteam4, lowestbotteam4);
+				lowesthumanteam4, lowestbotteam4);
 			c4 = M_ARGV(2, float);
 			numbotsteam4 = M_ARGV(3, float);
-			lowestplayerteam4 = M_ARGV(4, entity);
+			lowesthumanteam4 = M_ARGV(4, entity);
 			lowestbotteam4 = M_ARGV(5, entity);
 		}
 	}
@@ -371,15 +371,16 @@ void GetTeamCounts(entity ignore)
 	{
 		float value, bvalue;
 		// now count how many players are on each team already
-		float lowestplayerscore1 = FLOAT_MAX;
+		float lowesthumanscore1 = FLOAT_MAX;
 		float lowestbotscore1 = FLOAT_MAX;
-		float lowestplayerscore2 = FLOAT_MAX;
+		float lowesthumanscore2 = FLOAT_MAX;
 		float lowestbotscore2 = FLOAT_MAX;
-		float lowestplayerscore3 = FLOAT_MAX;
+		float lowesthumanscore3 = FLOAT_MAX;
 		float lowestbotscore3 = FLOAT_MAX;
-		float lowestplayerscore4 = FLOAT_MAX;
+		float lowesthumanscore4 = FLOAT_MAX;
 		float lowestbotscore4 = FLOAT_MAX;
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true,
+		{
 			float t;
 			if (IS_PLAYER(it) || it.caplayer)
 			{
@@ -423,10 +424,10 @@ void GetTeamCounts(entity ignore)
 					float tempscore = PlayerScore_Get(it, SP_SCORE);
 					if (!bvalue)
 					{
-						if (tempscore < lowestplayerscore1)
+						if (tempscore < lowesthumanscore1)
 						{
-							lowestplayerteam1 = it;
-							lowestplayerscore1 = tempscore;
+							lowesthumanteam1 = it;
+							lowesthumanscore1 = tempscore;
 						}
 						break;
 					}
@@ -448,10 +449,10 @@ void GetTeamCounts(entity ignore)
 					float tempscore = PlayerScore_Get(it, SP_SCORE);
 					if (!bvalue)
 					{
-						if (tempscore < lowestplayerscore2)
+						if (tempscore < lowesthumanscore2)
 						{
-							lowestplayerteam2 = it;
-							lowestplayerscore2 = tempscore;
+							lowesthumanteam2 = it;
+							lowesthumanscore2 = tempscore;
 						}
 						break;
 					}
@@ -473,10 +474,10 @@ void GetTeamCounts(entity ignore)
 					float tempscore = PlayerScore_Get(it, SP_SCORE);
 					if (!bvalue)
 					{
-						if (tempscore < lowestplayerscore3)
+						if (tempscore < lowesthumanscore3)
 						{
-							lowestplayerteam3 = it;
-							lowestplayerscore3 = tempscore;
+							lowesthumanteam3 = it;
+							lowesthumanscore3 = tempscore;
 						}
 						break;
 					}
@@ -498,10 +499,10 @@ void GetTeamCounts(entity ignore)
 					float tempscore = PlayerScore_Get(it, SP_SCORE);
 					if (!bvalue)
 					{
-						if (tempscore < lowestplayerscore4)
+						if (tempscore < lowesthumanscore4)
 						{
-							lowestplayerteam4 = it;
-							lowestplayerscore4 = tempscore;
+							lowesthumanteam4 = it;
+							lowesthumanscore4 = tempscore;
 						}
 						break;
 					}
@@ -513,7 +514,7 @@ void GetTeamCounts(entity ignore)
 					break;
 				}
 			}
-		));
+		});
 	}
 
 	// if the player who has a forced team has not joined yet, reserve the spot

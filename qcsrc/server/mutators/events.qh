@@ -141,7 +141,7 @@ MUTATOR_HOOKABLE(GetTeamCounts, EV_NO_ARGS);
     /**/                                   o(float, MUTATOR_ARGV_2_float) \
     /** number of bots in a team        */ i(float, MUTATOR_ARGV_3_float) \
     /**/                                   o(float, MUTATOR_ARGV_3_float) \
-    /** lowest scoring player in a team */ i(entity, MUTATOR_ARGV_4_entity) \
+    /** lowest scoring human in a team  */ i(entity, MUTATOR_ARGV_4_entity) \
     /**/                                   o(entity, MUTATOR_ARGV_4_entity) \
     /** lowest scoring bot in a team    */ i(entity, MUTATOR_ARGV_5_entity) \
     /**/                                   o(entity, MUTATOR_ARGV_5_entity) \
