@@ -204,19 +204,20 @@ bool SetPlayerTeamSimple(entity player, int teamnum)
 	return true;
 }
 
-void SetPlayerTeam(entity player, int destinationteam, int sourceteam, bool noprint)
+bool SetPlayerTeam(entity player, int destinationteam, int sourceteam, bool noprint)
 {
 	int teamnum = Team_NumberToTeam(destinationteam);
 	if (!SetPlayerTeamSimple(player, teamnum))
 	{
-		return;
+		return false;
 	}
 	LogTeamchange(player.playerid, player.team, 3);  // log manual team join
 	if (noprint)
 	{
-		return;
+		return true;
 	}
 	bprint(playername(player, false), "^7 has changed from ", Team_NumberToColoredFullName(sourceteam), "^7 to ", Team_NumberToColoredFullName(destinationteam), "\n");
+	return true;
 }
 
 // set c1...c4 to show what teams are allowed
@@ -862,7 +863,10 @@ void SV_ChangeTeam(entity this, float _color)
 		// reduce frags during a team change
 		TeamchangeFrags(this);
 	}
-	SetPlayerTeam(this, destinationteam, sourceteam, !IS_CLIENT(this));
+	if (!SetPlayerTeam(this, destinationteam, sourceteam, !IS_CLIENT(this)))
+	{
+		return;
+	}
 	AutoBalanceBots(sourceteam, destinationteam);
 	if (!IS_PLAYER(this) || (sourceteam == destinationteam))
 	{
@@ -1086,8 +1090,10 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	// move the player to the new team
 	TeamchangeFrags(selected);
-	SetPlayerTeam(selected, smallestteam, source_team, false);
-
+	if (!SetPlayerTeam(selected, smallestteam, source_team, false))
+	{
+		return;
+	}
 	if (IS_DEAD(selected) || MUTATOR_CALLHOOK(Player_ChangeTeamKill, selected) == true)
 	{
 		return;

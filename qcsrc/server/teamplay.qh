@@ -50,8 +50,8 @@ bool SetPlayerTeamSimple(entity player, int teamnum);
 /// \param[in] destinationteam Team to set.
 /// \param[in] sourceteam Previous team of the player.
 /// \param[in] noprint Whether to print this event to players' console.
-/// \return No return.
-void SetPlayerTeam(entity player, int destinationteam, int sourceteam, bool noprint);
+/// \return True if team switch was successful, false otherwise.
+bool SetPlayerTeam(entity player, int destinationteam, int sourceteam, bool noprint);
 
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom);
