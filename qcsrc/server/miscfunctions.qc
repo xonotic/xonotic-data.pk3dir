@@ -463,7 +463,7 @@ string playername(entity p, bool team_colorize)
         return strcat(t, strdecolorize(p.netname));
     }
     else
-        return ColorTranslateRGB(p.netname);
+        return p.netname;
 }
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
