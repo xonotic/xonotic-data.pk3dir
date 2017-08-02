@@ -3,12 +3,17 @@
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
-// client counts for each team
-//float c1, c2, c3, c4;
-
 // The following variables are used for balancing. They are not updated
 // automatically. You need to call CheckAllowedTeams and GetTeamCounts to get
 // proper values.
+
+// These four have 2 different states. If they are equal to -1, it means that
+// the player can't join the team. Zero or positive value means that player can
+// join the team and means the number of players on that team.
+float c1;
+float c2;
+float c3;
+float c4;
 float numbotsteam1; ///< Number of bots in the first team.
 float numbotsteam2; ///< Number of bots in the second team.
 float numbotsteam3; ///< Number of bots in the third team.
