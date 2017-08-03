@@ -745,8 +745,12 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			return it;
 	});
 
-	vector org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org.z = ent.origin.z + ent.mins.z - PL_MIN_CONST.z; // player height
+	vector org = ent.origin;
+	if(ent.size)
+	{
+		org += 0.5 * (ent.mins + ent.maxs);
+		org.z = ent.origin.z + ent.mins.z - PL_MIN_CONST.z; // player height
+	}
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
