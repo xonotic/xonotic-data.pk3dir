@@ -561,7 +561,7 @@ bool IsTeamSmallerThanTeam(int teama, int teamb, entity e, bool usescore)
 	if (numplayersteama < 0 || numplayersteamb < 0)
 		return false;
 
-	if ((IS_REAL_CLIENT(e) && bots_would_leave))
+	if (IS_REAL_CLIENT(e) && bots_would_leave)
 	{
 		numplayersteama -= numbotsteama;
 		numplayersteamb -= numbotsteamb;
@@ -612,7 +612,7 @@ bool IsTeamEqualToTeam(int teama, int teamb, entity e, bool usescore)
 	if (numplayersteama < 0 || numplayersteamb < 0)
 		return false;
 
-	if ((IS_REAL_CLIENT(e) && bots_would_leave))
+	if (IS_REAL_CLIENT(e) && bots_would_leave)
 	{
 		numplayersteama -= numbotsteama;
 		numplayersteamb -= numbotsteamb;
