@@ -183,6 +183,20 @@ void SetPlayerColors(entity player, float _color)
 	}
 }
 
+void KillPlayerForTeamChange(entity player)
+{
+	if (IS_DEAD(player))
+	{
+		return;
+	}
+	if (MUTATOR_CALLHOOK(Player_ChangeTeamKill, player) == true)
+	{
+		return;
+	}
+	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, player.origin,
+		'0 0 0');
+}
+
 bool SetPlayerTeamSimple(entity player, int team_num)
 {
 	if (player.team == team_num)
@@ -887,11 +901,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool force_best_team)
 	{
 		AutoBalanceBots(old_team, Team_TeamToNumber(best_team));
 	}
-	if (!IS_DEAD(this) && (MUTATOR_CALLHOOK(Player_ChangeTeamKill, this) ==
-		false))
-	{
-		Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
-	}
+	KillPlayerForTeamChange(this);
 	return best_team;
 }
 
@@ -962,12 +972,7 @@ void SV_ChangeTeam(entity this, float _color)
 	{
 		return;
 	}
-	// kill player when changing teams
-	if (IS_DEAD(this) || (MUTATOR_CALLHOOK(Player_ChangeTeamKill, this) == true))
-	{
-		return;
-	}
-	Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
+	KillPlayerForTeamChange(this);
 }
 
 void AutoBalanceBots(int source_team, int destination_team)
@@ -1041,12 +1046,5 @@ void AutoBalanceBots(int source_team, int destination_team)
 	}
 	SetPlayerTeamSimple(lowest_bot_destination_team,
 		Team_NumberToTeam(source_team));
-	if (IS_DEAD(lowest_bot_destination_team) || (MUTATOR_CALLHOOK(
-		Player_ChangeTeamKill, lowest_bot_destination_team) == true))
-	{
-		return;
-	}
-	Damage(lowest_bot_destination_team, lowest_bot_destination_team,
-		lowest_bot_destination_team, 100000, DEATH_TEAMCHANGE.m_id,
-		lowest_bot_destination_team.origin, '0 0 0');
+	KillPlayerForTeamChange(lowest_bot_destination_team);
 }

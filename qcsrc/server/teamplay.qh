@@ -47,6 +47,11 @@ string getwelcomemessage(entity this);
 
 void SetPlayerColors(entity player, float _color);
 
+/// \brief Kills player as a result of team change.
+/// \param[in,out] player Player to kill.
+/// \return No return.
+void KillPlayerForTeamChange(entity player);
+
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
 /// \param[in] team_num Team number to set. See TEAM_NUM constants.
