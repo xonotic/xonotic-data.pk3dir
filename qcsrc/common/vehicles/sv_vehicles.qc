@@ -234,7 +234,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	this.event_damage = func_null;
 	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, toucher);
 
-	delete (this);
+	delete(this);
 }
 
 void vehicles_projectile_explode_think(entity this)

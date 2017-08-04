@@ -28,7 +28,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 		GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
 			ftos(etof(player)),":",player.netname));
 		minigame_session.minigame_players = p.list_next;
-		delete ( p );
+		delete( p );
 		player_clear_minigame(player);
 	}
 	else

@@ -311,6 +311,7 @@ void viewmodel_draw(entity this)
 		e.csqcmodel_effects = fx;
 		CSQCModel_Effects_Apply(e);
 	}
+	if(a >= 0)
 	{
 		string name = wep.mdl;
 		string newname = wep.wr_viewmodel(wep, this);
