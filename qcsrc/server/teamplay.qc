@@ -578,7 +578,7 @@ bool IsTeamSmallerThanTeam(int teama, int teamb, entity e, bool usescore)
 	{
 		return false;
 	}
-	return scoreteama < scoreteamb;	
+	return scoreteama < scoreteamb;
 }
 
 bool IsTeamEqualToTeam(int teama, int teamb, entity e, bool usescore)
@@ -629,7 +629,7 @@ bool IsTeamEqualToTeam(int teama, int teamb, entity e, bool usescore)
 	{
 		return false;
 	}
-	return scoreteama == scoreteamb;	
+	return scoreteama == scoreteamb;
 }
 
 int FindBestTeams(entity player, bool usescore)
@@ -829,7 +829,7 @@ void SV_ChangeTeam(entity this, float _color)
 
 	sourceteam = Team_TeamToNumber(sourcecolor + 1);
 	destinationteam = Team_TeamToNumber(destinationcolor + 1);
-	
+
 	CheckAllowedTeams(this);
 
 	if (destinationteam == 1 && c1 < 0) destinationteam = 4;
