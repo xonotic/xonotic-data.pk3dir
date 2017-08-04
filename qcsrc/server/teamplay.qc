@@ -87,8 +87,8 @@ void InitGameplayMode()
 
 string GetClientVersionMessage(entity this)
 {
-	if (this.version_mismatch) {
-		if(this.version < autocvar_gameversion) {
+	if (CS(this).version_mismatch) {
+		if(CS(this).version < autocvar_gameversion) {
 			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
 				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
 		} else {
@@ -351,7 +351,7 @@ void GetTeamCounts(entity ignore)
 					cb1 = cb1 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_2)
+			else if(t == NUM_TEAM_2)
 			{
 				if(c2 >= 0)
 				{
@@ -359,7 +359,7 @@ void GetTeamCounts(entity ignore)
 					cb2 = cb2 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_3)
+			else if(t == NUM_TEAM_3)
 			{
 				if(c3 >= 0)
 				{
@@ -367,7 +367,7 @@ void GetTeamCounts(entity ignore)
 					cb3 = cb3 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_4)
+			else if(t == NUM_TEAM_4)
 			{
 				if(c4 >= 0)
 				{
@@ -650,7 +650,7 @@ void SV_ChangeTeam(entity this, float _color)
 		return;
 	}
 
-	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && this.wasplayer)) {
+	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(this).wasplayer)) {
 		Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}

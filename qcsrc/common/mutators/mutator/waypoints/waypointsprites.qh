@@ -5,6 +5,10 @@
 /** Additional networked waypoint state, used for items, weapons, buffs */
 .int wp_extra;
 
+const int SPRITERULE_DEFAULT = 0;
+const int SPRITERULE_TEAMPLAY = 1;
+const int SPRITERULE_SPECTATOR = 2;
+
 #ifdef CSQC
 entityclass(WaypointSprite);
 class(WaypointSprite) .float helpme;

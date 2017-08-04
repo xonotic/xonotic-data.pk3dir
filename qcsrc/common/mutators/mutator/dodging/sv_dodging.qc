@@ -12,7 +12,6 @@
 #define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
 #define PHYS_DODGING_AIR 					autocvar_sv_dodging_air_dodging
 #define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed
-#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 
 // we ran out of stats slots! TODO: re-enable this when prediction is available for dodging
 #if 0
@@ -33,9 +32,11 @@
 #ifdef CSQC
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
+	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 #elif defined(SVQC)
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
+	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
 #endif
 
 #ifdef SVQC
@@ -156,9 +157,10 @@ bool PM_dodging_checkpressedkeys(entity this)
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;
 	bool dodge_detected = false;
+	vector mymovement = PHYS_CS(this).movement;
 
 	#define X(COND,BTN,RESULT)															\
-	if (this.movement_##COND)												\
+	if (mymovement_##COND)												\
 		/* is this a state change? */													\
 		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
 				tap_direction_##RESULT;													\
@@ -236,7 +238,7 @@ void PM_dodging(entity this)
 	if (this.dodging_action == 1)
 	{
 		//disable jump key during dodge accel phase
-		if(this.movement_z > 0) { this.movement_z = 0; }
+		if(PHYS_CS(this).movement.z > 0) { PHYS_CS(this).movement_z = 0; }
 
 		this.velocity += ((this.dodging_direction_y * velocity_difference) * v_right)
 					+ ((this.dodging_direction_x * velocity_difference) * v_forward);
@@ -279,10 +281,10 @@ void PM_dodging_GetPressedKeys(entity this)
 	PM_dodging_checkpressedkeys(this);
 
 	int keys = this.pressedkeys;
-	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
-	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
-	keys = BITSET(keys, KEY_RIGHT, 		this.movement.y > 0);
-	keys = BITSET(keys, KEY_LEFT, 		this.movement.y < 0);
+	keys = BITSET(keys, KEY_FORWARD, 	PHYS_CS(this).movement.x > 0);
+	keys = BITSET(keys, KEY_BACKWARD, 	PHYS_CS(this).movement.x < 0);
+	keys = BITSET(keys, KEY_RIGHT, 		PHYS_CS(this).movement.y > 0);
+	keys = BITSET(keys, KEY_LEFT, 		PHYS_CS(this).movement.y < 0);
 
 	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
 	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));

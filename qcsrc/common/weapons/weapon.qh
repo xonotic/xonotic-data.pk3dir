@@ -208,7 +208,7 @@ string W_NumberWeaponOrder(string order);
 string W_FixWeaponOrder_BuildImpulseList(string o);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);
-void W_RandomWeapons(entity e, float n);
+void W_RandomWeapons(entity e, int n);
 
 string GetAmmoPicture(.int ammotype);
 

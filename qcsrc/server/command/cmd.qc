@@ -101,11 +101,11 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 			{
 				if (IS_CLIENT(caller))
 				{
-					caller.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+					CS(caller).version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 
-					if (caller.version < autocvar_gameversion_min || caller.version > autocvar_gameversion_max)
+					if (CS(caller).version < autocvar_gameversion_min || CS(caller).version > autocvar_gameversion_max)
 					{
-						caller.version_mismatch = 1;
+						CS(caller).version_mismatch = true;
 						ClientKill_TeamChange(caller, -2);  // observe
 					}
 					else if (autocvar_g_campaign || autocvar_g_balance_teams)
@@ -354,7 +354,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 									{
 										sprint(caller, "^7You already are on that team.\n");
 									}
-									else if (caller.wasplayer && autocvar_g_changeteam_banned)
+									else if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
 									{
 										sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 									}

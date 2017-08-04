@@ -212,7 +212,7 @@ void lms_RemovePlayer(entity player)
 			lms_lowest_lives = 0; // end the game now!
 	}
 
-	if(player.killcount != FRAGS_SPECTATOR)
+	if(CS(player).killcount != FRAGS_SPECTATOR)
 		if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else

@@ -16,7 +16,7 @@ float(int tmr) _gettime = #67;
 float(int tmr) _gettime = #519;
 #endif
 
-[[eraseable]]
+ERASEABLE
 void profile(string s)
 {
 	static float g_starttime;

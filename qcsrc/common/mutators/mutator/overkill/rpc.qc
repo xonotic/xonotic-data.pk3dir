@@ -10,7 +10,7 @@ void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 
 	RadiusDamage (this, this.realowner, WEP_CVAR_PRI(rpc, damage), WEP_CVAR_PRI(rpc, edgedamage), WEP_CVAR_PRI(rpc, radius), NULL, NULL, WEP_CVAR_PRI(rpc, force), this.projectiledeathtype, directhitentity);
 
-	delete (this);
+	delete(this);
 }
 
 void W_RocketPropelledChainsaw_Explode_think(entity this)

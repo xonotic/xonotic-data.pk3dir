@@ -4,7 +4,7 @@
 
 // Databases (hash tables)
 const int DB_BUCKETS = 8192;
-[[eraseable]]
+ERASEABLE
 void db_save(int db, string filename)
 {
 	int fh = fopen(filename, FILE_WRITE);
@@ -21,17 +21,17 @@ void db_save(int db, string filename)
 
 USING(HashMap, int);
 
-[[eraseable]]
+ERASEABLE
 int db_create()
 {
 	return buf_create();
 }
 #define HM_NEW(this) (this = db_create())
 
-[[eraseable]]
+ERASEABLE
 void db_put(int db, string key, string value);
 
-[[eraseable]]
+ERASEABLE
 int db_load(string filename)
 {
 	int db = buf_create();
@@ -65,7 +65,7 @@ int db_load(string filename)
 	return db;
 }
 
-[[eraseable]]
+ERASEABLE
 void db_dump(int db, string filename)
 {
 	int fh = fopen(filename, FILE_WRITE);
@@ -80,14 +80,14 @@ void db_dump(int db, string filename)
 	fclose(fh);
 }
 
-[[eraseable]]
+ERASEABLE
 void db_close(int db)
 {
 	buf_del(db);
 }
 #define HM_DELETE(this) db_close(this)
 
-[[eraseable]]
+ERASEABLE
 string db_get(int db, string key)
 {
 	int h = crc16(false, key) % DB_BUCKETS;
@@ -97,7 +97,7 @@ string db_get(int db, string key)
 
 #define db_remove(db, key) db_put(db, key, "")
 
-[[eraseable]]
+ERASEABLE
 void db_put(int db, string key, string value)
 {
 	int h = crc16(false, key) % DB_BUCKETS;

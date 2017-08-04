@@ -139,11 +139,11 @@ void ctf_CaptureRecord(entity flag, entity player)
 	if(ctf_oneflag)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CTF_CAPTURE_NEUTRAL, player.netname);
 	else if(!ctf_captimerecord)
-		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_TIME), player.netname, (cap_time * 100));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_TIME), player.netname, TIME_ENCODE(cap_time));
 	else if(cap_time < cap_record)
-		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_BROKEN), player.netname, refername, (cap_time * 100), (cap_record * 100));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_BROKEN), player.netname, refername, TIME_ENCODE(cap_time), TIME_ENCODE(cap_record));
 	else
-		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_UNBROKEN), player.netname, refername, (cap_time * 100), (cap_record * 100));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_UNBROKEN), player.netname, refername, TIME_ENCODE(cap_time), TIME_ENCODE(cap_record));
 
 	// write that shit in the database
 	if(!ctf_oneflag) // but not in 1-flag mode
@@ -152,7 +152,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 		ctf_captimerecord = cap_time;
 		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
 		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
-		write_recordmarker(player, (time - cap_time), cap_time);
+		write_recordmarker(player, flag.ctf_pickuptime, cap_time);
 	}
 
 	if(autocvar_g_ctf_leaderboard && !ctf_oneflag)
@@ -795,7 +795,7 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 				case RETURN_DAMAGE:
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_FLAGRETURN_DAMAGED)); break;
 				case RETURN_SPEEDRUN:
-					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_FLAGRETURN_SPEEDRUN), ctf_captimerecord); break;
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_FLAGRETURN_SPEEDRUN), TIME_ENCODE(ctf_captimerecord)); break;
 				case RETURN_NEEDKILL:
 					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_NUM(flag.team, INFO_CTF_FLAGRETURN_NEEDKILL)); break;
 				default:
@@ -994,7 +994,7 @@ void ctf_FlagThink(entity this)
 				this.health = 0;
 				ctf_CheckFlagReturn(this, RETURN_SPEEDRUN);
 
-				this.owner.impulse = CHIMPULSE_SPEEDRUN.impulse; // move the player back to the waypoint they set
+				CS(this.owner).impulse = CHIMPULSE_SPEEDRUN.impulse; // move the player back to the waypoint they set
 				ImpulseCommands(this.owner);
 			}
 			if(autocvar_g_ctf_stalemate)

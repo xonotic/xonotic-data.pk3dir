@@ -2,7 +2,7 @@
 
 #include "lib/float.qh"
 
-[[eraseable]]
+ERASEABLE
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
 {
 	if (weight == 0) return;
@@ -11,7 +11,7 @@ void mean_accumulate(entity e, .float a, .float c, float mean, float value, floa
 	e.(c) += weight;
 }
 
-[[eraseable]]
+ERASEABLE
 float mean_evaluate(entity e, .float a, .float c, float mean)
 {
 	if (e.(c) == 0) return 0;
@@ -34,7 +34,7 @@ Angc used for animations
 */
 
 
-[[eraseable]]
+ERASEABLE
 float angc(float a1, float a2)
 {
 	while (a1 > 180)
@@ -53,13 +53,13 @@ float angc(float a1, float a2)
 	return a;
 }
 
-[[eraseable]]
+ERASEABLE
 float fsnap(float val, float fsize)
 {
 	return rint(val / fsize) * fsize;
 }
 
-[[eraseable]]
+ERASEABLE
 vector vsnap(vector point, float fsize)
 {
 	vector vret;
@@ -71,13 +71,13 @@ vector vsnap(vector point, float fsize)
 	return vret;
 }
 
-[[eraseable]]
+ERASEABLE
 vector lerpv(float t0, vector v0, float t1, vector v1, float t)
 {
 	return v0 + (v1 - v0) * ((t - t0) / (t1 - t0));
 }
 
-[[eraseable]]
+ERASEABLE
 vector bezier_quadratic_getpoint(vector a, vector b, vector c, float t)
 {
 	return (c - 2 * b + a) * (t * t)
@@ -85,14 +85,14 @@ vector bezier_quadratic_getpoint(vector a, vector b, vector c, float t)
 	       + a;
 }
 
-[[eraseable]]
+ERASEABLE
 vector bezier_quadratic_getderivative(vector a, vector b, vector c, float t)
 {
 	return (c - 2 * b + a) * (2 * t)
 	       + (b - a) * 2;
 }
 
-[[eraseable]]
+ERASEABLE
 float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float spd)
 {
 	return (((startspeedfactor + endspeedfactor - 2
@@ -101,7 +101,7 @@ float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float spd)
 	       ) * spd;
 }
 
-[[eraseable]]
+ERASEABLE
 bool cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 {
 	if (startspeedfactor < 0 || endspeedfactor < 0) return false;
@@ -166,40 +166,40 @@ bool cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 }
 
 /** continuous function mapping all reals into -1..1 */
-[[eraseable]]
+ERASEABLE
 float float2range11(float f)
 {
 	return f / (fabs(f) + 1);
 }
 
 /** continuous function mapping all reals into 0..1 */
-[[eraseable]]
+ERASEABLE
 float float2range01(float f)
 {
 	return 0.5 + 0.5 * float2range11(f);
 }
 
-[[eraseable]]
+ERASEABLE
 float median(float a, float b, float c)
 {
 	return (a < c) ? bound(a, b, c) : bound(c, b, a);
 }
 
-[[eraseable]]
+ERASEABLE
 float almost_equals(float a, float b)
 {
 	float eps = (max(a, -a) + max(b, -b)) * 0.001;
 	return a - b < eps && b - a < eps;
 }
 
-[[eraseable]]
+ERASEABLE
 float almost_equals_eps(float a, float b, float times_eps)
 {
 	float eps = max(fabs(a), fabs(b)) * FLOAT_EPSILON * times_eps;
 	return a - b < eps && b - a < eps;
 }
 
-[[eraseable]]
+ERASEABLE
 float almost_in_bounds(float a, float b, float c)
 {
 	float eps = (max(a, -a) + max(c, -c)) * 0.001;
@@ -207,7 +207,7 @@ float almost_in_bounds(float a, float b, float c)
 	return b == median(a - eps, b, c + eps);
 }
 
-[[eraseable]]
+ERASEABLE
 float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)
 {
 	if (halflifedist > 0) return (0.5 ** ((bound(mindist, d, maxdist) - mindist) / halflifedist));
@@ -217,7 +217,7 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 
 #define power2of(e) (2 ** e)
 
-[[eraseable]]
+ERASEABLE
 float log2of(float e)
 {
 	// NOTE: generated code
@@ -270,7 +270,7 @@ float log2of(float e)
 }
 
 /** ax^2 + bx + c = 0 */
-[[eraseable]]
+ERASEABLE
 vector solve_quadratic(float a, float b, float c)
 {
 	vector v;
