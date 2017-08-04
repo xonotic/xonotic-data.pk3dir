@@ -112,6 +112,4 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam);
 /// been called.
 void AutoBalanceBots(int sourceteam, int destinationteam);
 
-void ShufflePlayerOutOfTeam (float source_team);
-
 void setcolor(entity this, int clr);
