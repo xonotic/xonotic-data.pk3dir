@@ -57,17 +57,17 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, e.ping, 65535));
-		WriteByte(MSG_BROADCAST, min(ceil(e.ping_packetloss * 255), 255));
-		WriteByte(MSG_BROADCAST, min(ceil(e.ping_movementloss * 255), 255));
+		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 65535));
+		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
+		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
 		// record latency times for clients throughout the match so we can report it to playerstats
-		if(time > (e.latency_time + LATENCY_THINKRATE))
+		if(time > (CS(e).latency_time + LATENCY_THINKRATE))
 		{
-			e.latency_sum += e.ping;
-			e.latency_cnt += 1;
-			e.latency_time = time;
-			//print("sum: ", ftos(e.latency_sum), ", cnt: ", ftos(e.latency_cnt), ", avg: ", ftos(e.latency_sum / e.latency_cnt), ".\n");
+			CS(e).latency_sum += CS(e).ping;
+			CS(e).latency_cnt += 1;
+			CS(e).latency_time = time;
+			//print("sum: ", ftos(CS(e).latency_sum), ", cnt: ", ftos(CS(e).latency_cnt), ", avg: ", ftos(CS(e).latency_sum / CS(e).latency_cnt), ".\n");
 		}
 	}
 	else
@@ -462,6 +462,7 @@ void cvar_changes_init()
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
+		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
 		// mutators that announce themselves properly to the server browser
@@ -1459,7 +1460,7 @@ void DumpStats(float final)
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
-		s = strcat(s, ftos(rint(time - it.jointime)), ":");
+		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
 		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 			s = strcat(s, ftos(it.team), ":");
 		else
@@ -1594,25 +1595,6 @@ void NextLevel()
 	MUTATOR_CALLHOOK(MatchEnd);
 
 	localcmd("\nsv_hook_gameend\n");
-}
-
-/*
-============
-CheckRules_Player
-
-Exit deathmatch games upon conditions
-============
-*/
-void CheckRules_Player(entity this)
-{
-	if (game_stopped) // someone else quit the game already
-		return;
-
-	if(!IS_DEAD(this))
-		this.play_time += frametime;
-
-	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
-	//   (div0: and that in CheckRules_World please)
 }
 
 

@@ -417,7 +417,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		it.killcount = 0;
+		CS(it).killcount = 0;
 		it.freezetag_frozen_timeout = -1;
 		PutClientInServer(it);
 		it.freezetag_frozen_timeout = 0;
@@ -568,8 +568,8 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 	if(STAT(FROZEN, frag_target))
 		return; // target was already frozen, so this is just pushing them off the cliff
 
-	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : frag_target.ping));
-	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target, frag_attacker.health, frag_attacker.armorvalue, (IS_BOT_CLIENT(frag_attacker) ? -1 : frag_attacker.ping));
+	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : CS(frag_target).ping));
+	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target, frag_attacker.health, frag_attacker.armorvalue, (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
 
 	return true;
 }

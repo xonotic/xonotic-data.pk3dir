@@ -38,7 +38,7 @@ void play2all(string samp);
 
 void play2team(float t, string filename);
 
-void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name);
+void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name);
 
 float spamsound(entity e, float chan, Sound samp, float vol, float _atten);
 

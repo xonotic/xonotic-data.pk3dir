@@ -172,14 +172,14 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else
     {
-        actor.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), actor.rifle_accumulator, time);
+        actor.(weaponentity).rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), actor.(weaponentity).rifle_accumulator, time);
         if(fire & 1)
         if(weapon_prepareattack_check(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(rifle, refire)))
-        if(time >= actor.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
+        if(time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
         {
             weapon_prepareattack_do(actor, weaponentity, false, WEP_CVAR_PRI(rifle, refire));
             W_Rifle_BulletHail(actor, weaponentity, WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
-            actor.rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
+            actor.(weaponentity).rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
         }
         if(fire & 2)
         {
@@ -190,11 +190,11 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
                 } else
                 {
                     if(weapon_prepareattack_check(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(rifle, refire)))
-                    if(time >= actor.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
+                    if(time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
                     {
                         weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(rifle, refire));
                         W_Rifle_BulletHail(actor, weaponentity, WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
-                        actor.rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
+                        actor.(weaponentity).rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
                     }
                 }
             }

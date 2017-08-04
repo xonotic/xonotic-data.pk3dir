@@ -9,7 +9,7 @@
 #define boolean(value) ((value) != 0)
 
 // get true/false value of a string with multiple different inputs
-[[eraseable]]
+ERASEABLE
 float InterpretBoolean(string input)
 {
 	switch (strtolower(input))

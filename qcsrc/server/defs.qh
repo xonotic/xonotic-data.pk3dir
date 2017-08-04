@@ -53,7 +53,6 @@ float server_is_dedicated;
 .float count;
 //.float cnt2;
 
-.float play_time;
 .int respawn_flags;
 .float respawn_time;
 .float respawn_time_max;
@@ -131,8 +130,6 @@ float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
 
-.float version;
-
 // footstep interval
 .float nextstep;
 
@@ -179,8 +176,6 @@ float default_weapon_alpha;
 .float cvar_cl_allow_uidtracking;
 .string stored_netname;
 
-.float version_nagtime;
-
 string gamemode_name;
 
 float startitem_failed;
@@ -191,7 +186,7 @@ void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
 // WEAPONTODO: remove this
-WepSet weaponsInMap;
+//WepSet weaponsInMap;
 
 #define weapons _STAT(WEAPONS)
 
@@ -226,13 +221,11 @@ int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it
 
 // set when showing a kill countdown
 .entity killindicator;
-.float killindicator_teamchange;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 float lockteams;
 
-.float parm_idlesince;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 int sv_maxidle_slots;
@@ -246,8 +239,6 @@ float next_pingtime;
 .float cvar_cl_autotaunt;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
-
-.float version_mismatch;
 
 int autocvar__independent_players;
 bool independent_players;
@@ -265,8 +256,8 @@ string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
 
-float game_starttime; //point in time when the countdown to game start is over
-float round_starttime; //point in time when the countdown to round start is over
+//float game_starttime; //point in time when the countdown to game start is over
+//float round_starttime; //point in time when the countdown to round start is over
 
 void W_Porto_Remove (entity p);
 
@@ -292,13 +283,11 @@ void ClientData_Touch(entity e);
 
 //vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
-.float wasplayer;
+.bool wasplayer;
 
 float servertime, serverprevtime, serverframetime;
 
 .float ammo_fuel;
-
-.vector prevorigin;
 
 //flood fields
 .float nickspamtime; // time of last nick change

@@ -176,3 +176,13 @@ MUTATOR_HOOKABLE(HUD_WriteCvars, EV_HUD_WriteCvars);
 	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
 	/**/
 MUTATOR_HOOKABLE(DrawViewModel, EV_DrawViewModel);
+
+/** Called when updating the view's liquid contents, return true to disable the standard checks and apply your own */
+MUTATOR_HOOKABLE(HUD_Contents, EV_NO_ARGS);
+
+/** Return true to disable player model/color forcing */
+#define EV_ForcePlayermodels_Skip(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/** is local */ 		i(bool, MUTATOR_ARGV_1_bool) \
+	/**/
+MUTATOR_HOOKABLE(ForcePlayermodels_Skip, EV_ForcePlayermodels_Skip);

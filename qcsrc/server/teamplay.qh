@@ -3,21 +3,29 @@
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
-// client counts for each team
-//float c1, c2, c3, c4;
-// # of bots on those teams
-float numbotsteam1;
-float numbotsteam2;
-float numbotsteam3;
-float numbotsteam4;
-entity lowestplayerteam1;
-entity lowestplayerteam2;
-entity lowestplayerteam3;
-entity lowestplayerteam4;
-entity lowestbotteam1;
-entity lowestbotteam2;
-entity lowestbotteam3;
-entity lowestbotteam4;
+// The following variables are used for balancing. They are not updated
+// automatically. You need to call CheckAllowedTeams and GetTeamCounts to get
+// proper values.
+
+// These four have 2 different states. If they are equal to -1, it means that
+// the player can't join the team. Zero or positive value means that player can
+// join the team and means the number of players on that team.
+float c1;
+float c2;
+float c3;
+float c4;
+float num_bots_team1; ///< Number of bots in the first team.
+float num_bots_team2; ///< Number of bots in the second team.
+float num_bots_team3; ///< Number of bots in the third team.
+float num_bots_team4; ///< Number of bots in the fourth team.
+entity lowest_human_team1; ///< Human with the lowest score in the first team.
+entity lowest_human_team2; ///< Human with the lowest score in the second team.
+entity lowest_human_team3; ///< Human with the lowest score in the third team.
+entity lowest_human_team4; ///< Human with the lowest score in the fourth team.
+entity lowest_bot_team1; ///< Bot with the lowest score in the first team.
+entity lowest_bot_team2; ///< Bot with the lowest score in the second team.
+entity lowest_bot_team3; ///< Bot with the lowest score in the third team.
+entity lowest_bot_team4; ///< Bot with the lowest score in the fourth team.
 
 int redowned, blueowned, yellowowned, pinkowned;
 
@@ -39,22 +47,28 @@ string getwelcomemessage(entity this);
 
 void SetPlayerColors(entity player, float _color);
 
-/// \brief Sets the team of the player.
-/// \param[in,out] player Player to adjust.
-/// \param[in] teamnum Team number to set. See TEAM_NUM constants.
-/// \return True if team switch was successful, false otherwise.
-bool SetPlayerTeamSimple(entity player, int teamnum);
+/// \brief Kills player as a result of team change.
+/// \param[in,out] player Player to kill.
+/// \return No return.
+void KillPlayerForTeamChange(entity player);
 
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
-/// \param[in] destinationteam Team to set.
-/// \param[in] sourceteam Previous team of the player.
-/// \param[in] noprint Whether to print this event to players' console.
-/// \return No return.
-void SetPlayerTeam(entity player, int destinationteam, int sourceteam, bool noprint);
+/// \param[in] team_num Team number to set. See TEAM_NUM constants.
+/// \return True if team switch was successful, false otherwise.
+bool SetPlayerTeamSimple(entity player, int team_num);
+
+/// \brief Sets the team of the player.
+/// \param[in,out] player Player to adjust.
+/// \param[in] destination_team Team to set.
+/// \param[in] source_team Previous team of the player.
+/// \param[in] no_print Whether to print this event to players' console.
+/// \return True if team switch was successful, false otherwise.
+bool SetPlayerTeam(entity player, int destination_team, int source_team,
+	bool no_print);
 
 // set c1...c4 to show what teams are allowed
-void CheckAllowedTeams (entity for_whom);
+void CheckAllowedTeams(entity for_whom);
 
 float PlayerValue(entity p);
 
@@ -63,47 +77,46 @@ float PlayerValue(entity p);
 void GetTeamCounts(entity ignore);
 
 /// \brief Returns whether one team is smaller than the other.
-/// \param[in] teama First team.
-/// \param[in] teamb Second team.
-/// \param[in] e Player to check.
-/// \param[in] usescore Whether to take into account team scores.
+/// \param[in] team_a First team.
+/// \param[in] team_b Second team.
+/// \param[in] player Player to check.
+/// \param[in] use_score Whether to take into account team scores.
 /// \return True if first team is smaller than the second one, false otherwise.
 /// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
 /// been called.
-bool IsTeamSmallerThanTeam(float teama, float teamb, entity e, bool usescore);
+bool IsTeamSmallerThanTeam(int team_a, int team_b, entity player,
+	bool use_score);
 
 /// \brief Returns whether one team is equal to the other.
-/// \param[in] teama First team.
-/// \param[in] teamb Second team.
-/// \param[in] e Player to check.
-/// \param[in] usescore Whether to take into account team scores.
+/// \param[in] team_a First team.
+/// \param[in] team_b Second team.
+/// \param[in] player Player to check.
+/// \param[in] use_score Whether to take into account team scores.
 /// \return True if first team is equal to the second one, false otherwise.
 /// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
 /// been called.
-bool IsTeamEqualToTeam(float teama, float teamb, entity e, bool usescore);
+bool IsTeamEqualToTeam(int team_a, int team_b, entity player, bool use_score);
 
 /// \brief Returns the bitmask of the best teams for the player to join.
 /// \param[in] player Player to check.
-/// \param[in] usescore Whether to take into account team scores.
+/// \param[in] use_score Whether to take into account team scores.
 /// \return Bitmask of the best teams for the player to join.
 /// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
 /// been called.
-int FindBestTeams(entity player, bool usescore);
+int FindBestTeams(entity player, bool use_score);
 
 // returns # of smallest team (1, 2, 3, 4)
 // NOTE: Assumes CheckAllowedTeams has already been called!
-float FindSmallestTeam(entity pl, float ignore_pl);
+int FindSmallestTeam(entity player, float ignore_player);
 
-int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam);
+int JoinBestTeam(entity this, bool only_return_best, bool force_best_team);
 
 /// \brief Auto balances bots in teams after the player has changed team.
-/// \param[in] sourceteam Previous team of the player (1, 2, 3, 4).
-/// \param[in] destinationteam Current team of the player (1, 2, 3, 4).
+/// \param[in] source_team Previous team of the player (1, 2, 3, 4).
+/// \param[in] destination_team Current team of the player (1, 2, 3, 4).
 /// \return No return.
 /// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
 /// been called.
-void AutoBalanceBots(int sourceteam, int destinationteam);
-
-void ShufflePlayerOutOfTeam (float source_team);
+void AutoBalanceBots(int source_team, int destination_team);
 
 void setcolor(entity this, int clr);

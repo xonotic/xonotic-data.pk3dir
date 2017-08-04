@@ -2,6 +2,7 @@
 
 #include "client.qh"
 #include "scores.qh"
+#include "teamplay.qh"
 
 int ScoreRules_teams;
 

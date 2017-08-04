@@ -188,7 +188,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
 		TRANSMUTE(Observer, player);
-		if (player.jointime != time && !player.caplayer) // not when connecting
+		if (CS(player).jointime != time && !player.caplayer) // not when connecting
 		{
 			player.caplayer = 0.5;
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
@@ -199,7 +199,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
-		it.killcount = 0;
+		CS(it).killcount = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 		{
 			it.team = -1;
@@ -289,7 +289,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 
 	if (!IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
-	if (player.killindicator_teamchange == -2) // player wants to spectate
+	if (CS(player).killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
 		player.frags = FRAGS_LMS_LOSER;
