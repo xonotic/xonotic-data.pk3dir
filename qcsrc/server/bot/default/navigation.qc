@@ -181,7 +181,15 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 			{
 				tracebox(org, m1, m2, org - jumpheight_vec, movemode, e);
 				if (SUBMERGED(trace_endpos))
-					RESURFACE_LIMITED(trace_endpos, end.z);
+				{
+					vector v = trace_endpos;
+					tracebox(v, m1, m2, end, movemode, e);
+					if(trace_endpos.z >= end.z - 1)
+					{
+						RESURFACE_LIMITED(v, trace_endpos.z);
+						trace_endpos = v;
+					}
+				}
 				else if (trace_endpos.z > org.z - jumpheight_vec.z)
 					tracebox(trace_endpos, m1, m2, trace_endpos + jumpheight_vec, movemode, e);
 				org = trace_endpos;
