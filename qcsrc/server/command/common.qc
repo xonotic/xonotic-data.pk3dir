@@ -115,13 +115,13 @@ entity GetIndexedEntity(float argc, float start_index)
 		}
 		else  // no, maybe it's a name?
 		{
-			FOREACH_CLIENT(true, LAMBDA(
+			FOREACH_CLIENT(true, {
 				if(strdecolorize(it.netname) == strdecolorize(argv(start_index)))
 				{
 					selection = it;
 					break; // no reason to keep looking
 				}
-			));
+			});
 
 			index = (start_index + 1);
 		}
@@ -148,13 +148,13 @@ entity GetFilteredEntity(string input)
 	else
 	{
 		selection = NULL;
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true, {
 			if(strdecolorize(it.netname) == strdecolorize(input))
 			{
 				selection = it;
 				break; // no reason to keep looking
 			}
-		));
+		});
 	}
 
 	return selection;
@@ -217,9 +217,9 @@ void timeout_handler_think(entity this)
 				cvar_set("slowmo", ftos(orig_slowmo));
 
 				// unlock the view for players so they can move around again
-				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 					it.fixangle = false;
-				));
+				});
 
 				timeout_handler_reset(this);
 			}
@@ -244,16 +244,16 @@ void timeout_handler_think(entity this)
 				cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
 
 				// reset all the flood variables
-				FOREACH_CLIENT(true, LAMBDA(
+				FOREACH_CLIENT(true, {
 					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
 						it.floodcontrol_chatteam = it.floodcontrol_chattell =
 							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
-				));
+				});
 
 				// copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
-				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 					it.lastV_angle = it.v_angle;
-				));
+				});
 
 				this.nextthink = time;  // think again next frame to handle it under TIMEOUT_ACTIVE code
 			}
@@ -784,7 +784,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 				"ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 
 			total_listed_players = 0;
-			FOREACH_CLIENT(true, LAMBDA(
+			FOREACH_CLIENT(true, {
 				is_bot = (IS_BOT_CLIENT(it));
 
 				if (is_bot)
@@ -813,7 +813,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 					tmp_crypto_idfp));
 
 				++total_listed_players;
-			));
+			});
 
 			print_to(caller, strcat("Finished listing ", ftos(total_listed_players), " client(s) out of ", ftos(maxclients), " slots."));
 

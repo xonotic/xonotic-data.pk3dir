@@ -454,7 +454,7 @@ void WinningConditionHelper(entity this)
 		WinningConditionHelper_second = NULL;
 		winnerscorekeeper = NULL;
 		secondscorekeeper = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			sk = CS(it).scorekeeper;
 			c = PlayerScore_Compare(winnerscorekeeper, sk, 1);
 			if(c < 0)
@@ -473,7 +473,7 @@ void WinningConditionHelper(entity this)
 					secondscorekeeper = sk;
 				}
 			}
-		));
+		});
 
 		WinningConditionHelper_equality = (PlayerScore_Compare(winnerscorekeeper, secondscorekeeper, 0) == 0);
 		if(WinningConditionHelper_equality)
@@ -515,7 +515,7 @@ void WinningConditionHelper(entity this)
 		strunzone(worldstatus);
 	worldstatus = strzone(s);
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		string s = "";
 		if(fullstatus)
 		{
@@ -535,7 +535,7 @@ void WinningConditionHelper(entity this)
 		if(it.clientstatus)
 			strunzone(it.clientstatus);
 		it.clientstatus = strzone(s);
-	));
+	});
 }
 
 string GetScoreLogLabel(string label, float fl)
@@ -694,7 +694,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 
 	plist = NULL;
 
-	FOREACH_CLIENT(true, LAMBDA(it.(field) = 0));
+	FOREACH_CLIENT(true, { it.(field) = 0; });
 
 	FOREACH_CLIENT(CS(it).scorekeeper,
 	{
@@ -894,12 +894,12 @@ void Score_NicePrint(entity to)
 	}
 
 	t = 0;
-	FOREACH_CLIENT(!IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(!IS_PLAYER(it), {
 		if (!t)
 			Score_NicePrint_Spectators(to);
 		Score_NicePrint_Spectator(to, it);
 		t = 1;
-	));
+	});
 }
 
 void PlayerScore_PlayerStats(entity p)
