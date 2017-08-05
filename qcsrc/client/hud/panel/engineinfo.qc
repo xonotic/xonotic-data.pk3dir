@@ -1,5 +1,8 @@
 #include "engineinfo.qh"
 
+#include <client/autocvars.qh>
+#include <client/miscfunctions.qh>
+
 // Engine info (#13)
 
 float prevfps;

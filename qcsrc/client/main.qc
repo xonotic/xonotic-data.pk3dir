@@ -1,6 +1,10 @@
 #include "main.qh"
 
+#include "miscfunctions.qh"
+#include <common/effects/effect.qh>
 #include <common/effects/qc/all.qh>
+#include <common/effects/all.qh>
+#include <common/effects/all.inc>
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"

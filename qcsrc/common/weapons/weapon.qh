@@ -7,6 +7,8 @@
 #include <common/effects/qc/all.qh>
 #endif
 
+USING(WepSet, vector);
+
 const int MAX_WEAPONSLOTS = 2;
 .entity weaponentities[MAX_WEAPONSLOTS];
 
