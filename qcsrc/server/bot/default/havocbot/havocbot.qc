@@ -363,7 +363,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if(checkdistance)
 					{
 						this.aistatus &= ~AI_STATUS_RUNNING;
-						// increase stop distance in case the goal is on a slope or a lower platform 
+						// increase stop distance in case the goal is on a slope or a lower platform
 						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance + (this.origin.z - gco.z))
 							PHYS_INPUT_BUTTON_JUMP(this) = true;
 					}

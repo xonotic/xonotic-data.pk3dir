@@ -19,7 +19,7 @@ entity spawnmonster (entity e, string monster, int monster_id, entity spawnedby,
 
 	if(monster == "random")
 	{
-		RandomSelection_Init();	
+		RandomSelection_Init();
 		FOREACH(Monsters, it != MON_Null && !(it.spawnflags & MONSTER_TYPE_PASSIVE) && !(it.spawnflags & MON_FLAG_HIDDEN),
 		{
 			RandomSelection_AddEnt(it, 1, 1);
