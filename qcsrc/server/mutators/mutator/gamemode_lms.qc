@@ -367,10 +367,10 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		++M_ARGV(0, int); // activerealplayers
 		++M_ARGV(1, int); // realplayers
-	));
+	});
 
 	return true;
 }

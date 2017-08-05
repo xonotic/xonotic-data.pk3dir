@@ -443,7 +443,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 						strunzone(race_checkpoint_recordholders[cp]);
 					race_checkpoint_recordholders[cp] = strzone(e.netname);
 					if(g_race_qualifying)
-						FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.race_checkpoint == cp, LAMBDA(race_SendNextCheckpoint(it, 0)));
+						FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.race_checkpoint == cp, { race_SendNextCheckpoint(it, 0); });
 				}
 
 			}
@@ -1048,7 +1048,7 @@ void race_AbandonRaceCheck(entity p)
 void race_StartCompleting()
 {
 	race_completing = 1;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_DEAD(it), LAMBDA(race_AbandonRaceCheck(it)));
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_DEAD(it), { race_AbandonRaceCheck(it); });
 }
 
 void race_PreparePlayer(entity this)
@@ -1091,11 +1091,11 @@ void race_ClearRecords()
 		race_checkpoint_recordholders[j] = string_null;
 	}
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		float p = it.race_place;
 		race_PreparePlayer(it);
 		it.race_place = p;
-	));
+	});
 }
 
 void race_ImposePenaltyTime(entity pl, float penalty, string reason)

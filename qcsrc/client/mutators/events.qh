@@ -186,3 +186,11 @@ MUTATOR_HOOKABLE(HUD_Contents, EV_NO_ARGS);
 	/** is local */ 		i(bool, MUTATOR_ARGV_1_bool) \
 	/**/
 MUTATOR_HOOKABLE(ForcePlayermodels_Skip, EV_ForcePlayermodels_Skip);
+
+/** Called when damage info is received on the client, useful for playing explosion effects */
+#define EV_DamageInfo(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/** death type */ 		i(int, MUTATOR_ARGV_1_int) \
+	/** hit origin */ 		i(vector, MUTATOR_ARGV_2_vector) \
+	/**/
+MUTATOR_HOOKABLE(DamageInfo, EV_DamageInfo);

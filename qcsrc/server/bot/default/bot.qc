@@ -175,13 +175,13 @@ void bot_setnameandstuff(entity this)
 				continue;
 			s = argv(0);
 			prio = 1;
-			FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 				if(s == it.cleanname)
 				{
 					prio = 0;
 					break;
 				}
-			));
+			});
 			RandomSelection_AddString(readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
@@ -248,10 +248,10 @@ void bot_setnameandstuff(entity this)
 
 	// number bots with identical names
 	int j = 0;
-	FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 		if(it.cleanname == name)
 			++j;
-	));
+	});
 	if (j)
 		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
 	else
@@ -526,12 +526,12 @@ void autoskill(float factor)
 
 	bestbot = -1;
 	bestplayer = -1;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(IS_REAL_CLIENT(it))
 			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
 		else
 			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
-	));
+	});
 
 	LOG_DEBUG("autoskill: best player got ", ftos(bestplayer), ", ");
 	LOG_DEBUG("best bot got ", ftos(bestbot), "; ");
@@ -565,7 +565,7 @@ void autoskill(float factor)
 		// don't reset counters, wait for them to accumulate
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.totalfrags_lastcheck = it.totalfrags));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.totalfrags_lastcheck = it.totalfrags; });
 }
 
 void bot_calculate_stepheightvec()
@@ -584,11 +584,11 @@ float bot_fixcount()
 		activerealplayers = M_ARGV(0, int);
 		realplayers = M_ARGV(1, int);
 	} else {
-		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 			if(IS_PLAYER(it))
 				++activerealplayers;
 			++realplayers;
-		));
+		});
 	}
 
 	int bots;

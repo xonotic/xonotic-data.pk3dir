@@ -6,7 +6,7 @@ bool autocvar_g_ca_spectate_enemies;
 void CA_count_alive_players()
 {
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		switch(it.team)
 		{
 			case NUM_TEAM_1: ++total_players; if(!IS_DEAD(it)) ++redalive; break;
@@ -14,13 +14,13 @@ void CA_count_alive_players()
 			case NUM_TEAM_3: ++total_players; if(!IS_DEAD(it)) ++yellowalive; break;
 			case NUM_TEAM_4: ++total_players; if(!IS_DEAD(it)) ++pinkalive; break;
 		}
-	));
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	});
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		it.redalive_stat = redalive;
 		it.bluealive_stat = bluealive;
 		it.yellowalive_stat = yellowalive;
 		it.pinkalive_stat = pinkalive;
-	));
+	});
 }
 
 float CA_GetWinnerTeam()
@@ -58,7 +58,7 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
+		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
 
 		allowed_to_spawn = false;
 		game_stopped = true;
@@ -87,7 +87,7 @@ float CA_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
+	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
 
 	return 1;
 }
