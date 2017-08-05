@@ -1,5 +1,6 @@
 #include "player.qh"
 
+#include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"

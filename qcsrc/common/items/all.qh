@@ -6,6 +6,9 @@
 
 REGISTRY(Items, BITS(7))
 #define Items_from(i) _Items_from(i, NULL)
+#ifdef GAMEQC
+REGISTRY_DEPENDS(Items, Models)
+#endif
 REGISTER_REGISTRY(Items)
 #define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
 

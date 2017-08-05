@@ -1,5 +1,8 @@
 #pragma once
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 string W_Apply_Weaponreplace(string in);
 
 void weapon_defaultspawnfunc(entity this, Weapon e);

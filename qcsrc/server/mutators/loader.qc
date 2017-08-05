@@ -1,5 +1,8 @@
 #include "loader.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 STATIC_INIT_LATE(Gametype) {
     Gametype g = MapInfo_CurrentGametype();
     if (g) {

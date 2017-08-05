@@ -1,5 +1,8 @@
 #include "client.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
 #include "anticheat.qh"
 #include "impulse.qh"
 #include "player.qh"

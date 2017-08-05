@@ -1,5 +1,6 @@
 #include "g_damage.qh"
 
+#include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
 #include "mutators/_mod.qh"

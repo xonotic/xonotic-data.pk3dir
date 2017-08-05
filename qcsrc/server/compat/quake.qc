@@ -1,5 +1,7 @@
 #include "quake.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include <common/weapons/_all.qh>
 
 spawnfunc(weapon_electro);

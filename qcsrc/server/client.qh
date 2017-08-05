@@ -1,5 +1,8 @@
 #pragma once
 
+#include "utils.qh"
+#include <common/sounds/all.qh>
+
 void ClientState_attach(entity this);
 
 IntrusiveList g_players;

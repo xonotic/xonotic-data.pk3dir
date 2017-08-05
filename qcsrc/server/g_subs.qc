@@ -1,5 +1,7 @@
 #include "g_subs.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "antilag.qh"
 #include "command/common.qh"
 #include "../common/state.qh"

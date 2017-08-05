@@ -1,5 +1,7 @@
 #include "tracing.qh"
 
+#include <common/effects/all.qh>
+
 #include "accuracy.qh"
 #include "common.qh"
 #include "hitplot.qh"

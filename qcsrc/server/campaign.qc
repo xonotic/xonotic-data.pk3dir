@@ -1,4 +1,7 @@
 #include "campaign.qh"
+
+#include "defs.qh"
+
 #include "cheats.qh"
 #include "miscfunctions.qh"
 #include "g_world.qh"

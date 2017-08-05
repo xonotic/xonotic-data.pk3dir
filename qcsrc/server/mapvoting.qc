@@ -1,5 +1,7 @@
 #include "mapvoting.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "g_world.qh"
 #include "command/cmd.qh"
 #include "command/getreplies.qh"

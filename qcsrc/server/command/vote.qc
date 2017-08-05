@@ -1,4 +1,8 @@
 #include "vote.qh"
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 #include <common/command/_mod.qh>
 #include "vote.qh"
 

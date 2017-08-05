@@ -1,6 +1,7 @@
 #include "gamemode_ctf.qh"
 
 #ifndef CSQC
+#include <common/effects/all.qh>
 void ctf_Initialize();
 
 REGISTER_MUTATOR(ctf, false)

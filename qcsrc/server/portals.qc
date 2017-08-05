@@ -1,5 +1,6 @@
 #include "portals.qh"
 
+#include <common/effects/all.qh>
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
 #include "../common/constants.qh"
