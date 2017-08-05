@@ -390,7 +390,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		}
 	}
 
-	MUTATOR_CALLHOOK(DamageInfo, this);
+	MUTATOR_CALLHOOK(DamageInfo, this, w_deathtype, w_org);
 
 	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
