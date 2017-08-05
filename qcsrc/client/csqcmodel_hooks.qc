@@ -134,6 +134,9 @@ void CSQCPlayer_ModelAppearance_PostUpdate(entity this)
 }
 void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 {
+	if(MUTATOR_CALLHOOK(ForcePlayermodels_Skip, this, islocalplayer))
+		goto skipforcemodels;
+
 	// FORCEMODEL
 	// which one is ALWAYS good?
 	if (!forceplayermodels_goodmodel)
@@ -277,6 +280,8 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 		else if(autocvar_cl_forceplayercolors)
 			this.colormap = player_localnum + 1;
 	}
+
+	LABEL(skipforcemodels)
 
 	// GLOWMOD AND DEATH FADING
 	if(this.colormap > 0)

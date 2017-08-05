@@ -463,7 +463,7 @@ string playername(entity p, bool team_colorize)
         return strcat(t, strdecolorize(p.netname));
     }
     else
-        return ColorTranslateRGB(p.netname);
+        return p.netname;
 }
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
@@ -547,10 +547,10 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				g_weaponarena_weapons |= (it.m_wepset);
-		));
+		});
 	}
 	else if (s == "devall")
 	{
@@ -565,11 +565,11 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if(it.spawnflags & WEP_FLAG_NORMAL)
 					g_weaponarena_weapons |= (it.m_wepset);
-		));
+		});
 	}
 	else if (s == "none")
 	{
@@ -584,14 +584,14 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				if(it.netname == s)
 				{
 					g_weaponarena_weapons |= (it.m_wepset);
 					g_weaponarena_list = strcat(g_weaponarena_list, it.m_name, " & ");
 					break;
 				}
-			));
+			});
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
@@ -610,7 +610,7 @@ void readplayerstartcvars()
 	}
 	else
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			int w = want_weapon(it, false);
 			WepSet s = it.m_wepset;
 			if(w & 1)
@@ -619,7 +619,7 @@ void readplayerstartcvars()
 				start_weapons_default |= s;
 			if(w & 4)
 				start_weapons_defaultmask |= s;
-		));
+		});
 	}
 
 	if(!cvar("g_use_ammunition"))
@@ -671,7 +671,7 @@ void readplayerstartcvars()
 			warmup_start_weapons = '0 0 0';
 			warmup_start_weapons_default = '0 0 0';
 			warmup_start_weapons_defaultmask = '0 0 0';
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				int w = want_weapon(it, g_warmup_allguns);
 				WepSet s = (it.m_wepset);
 				if(w & 1)
@@ -680,7 +680,7 @@ void readplayerstartcvars()
 					warmup_start_weapons_default |= s;
 				if(w & 4)
 					warmup_start_weapons_defaultmask |= s;
-			));
+			});
 		}
 	}
 
@@ -699,10 +699,10 @@ void readplayerstartcvars()
 	WepSet precache_weapons = start_weapons;
 	if (g_warmup_allguns != 1)
 		precache_weapons |= warmup_start_weapons;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		if(precache_weapons & (it.m_wepset))
 			it.wr_init(it);
-	));
+	});
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
@@ -763,7 +763,7 @@ void precache_all_playermodels(string pattern)
 
 void precache_playermodels(string s)
 {
-	FOREACH_WORD(s, true, LAMBDA(precache_playermodel(it)));
+	FOREACH_WORD(s, true, { precache_playermodel(it); });
 }
 
 void precache()

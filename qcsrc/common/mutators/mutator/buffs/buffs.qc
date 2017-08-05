@@ -10,7 +10,7 @@ entity buff_FirstFromFlags(int _buffs)
 {
     if (flags)
     {
-        FOREACH(Buffs, it.m_itemid & _buffs, LAMBDA(return it));
+        FOREACH(Buffs, it.m_itemid & _buffs, { return it; });
     }
     return BUFF_Null;
 }
