@@ -185,9 +185,9 @@ bool Mutator_SendEntity(entity this, entity to, int sf)
 void NET_Mutator_Remove(entity this)
 {
     string s = this.netname;
-    WITH(bool, mutator_log, true, LAMBDA(
+    WITH(bool, mutator_log, true, {
         FOREACH(Mutators, it.registered_id == s, Mutator_Remove(it));
-    ));
+    });
 }
 NET_HANDLE(Mutator, bool isNew)
 {
@@ -199,9 +199,9 @@ NET_HANDLE(Mutator, bool isNew)
         make_pure(this);
         this.entremove = NET_Mutator_Remove;
         int added = 0;
-        WITH(bool, mutator_log, true, LAMBDA(
+        WITH(bool, mutator_log, true, {
             FOREACH(Mutators, it.registered_id == s, { Mutator_Add(it); ++added; });
-        ));
+        });
         if (added > 1) LOG_WARNF("Added more than one mutator for %s", s);
     }
 }

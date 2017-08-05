@@ -328,7 +328,7 @@ void GetTeamCounts(entity ignore)
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		float t;
 		if(IS_PLAYER(it) || it.caplayer)
 			t = it.team;
@@ -376,7 +376,7 @@ void GetTeamCounts(entity ignore)
 				}
 			}
 		}
-	));
+	});
 
 	// if the player who has a forced team has not joined yet, reserve the spot
 	if(autocvar_g_campaign)
@@ -650,7 +650,7 @@ void SV_ChangeTeam(entity this, float _color)
 		return;
 	}
 
-	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && this.wasplayer)) {
+	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(this).wasplayer)) {
 		Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
@@ -737,7 +737,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
-	FOREACH_CLIENT(IS_PLAYER(it) && it.team == steam, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it.team == steam, {
 		if(it.isbot)
 		{
 			if(it.totalfrags < lowest_bot_score)
@@ -754,7 +754,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 				lowest_player_score = it.totalfrags;
 			}
 		}
-	));
+	});
 
 	// prefers to move a bot...
 	if(lowest_bot != NULL)

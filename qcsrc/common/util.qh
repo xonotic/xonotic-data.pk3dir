@@ -33,9 +33,7 @@ string draw_UseSkinFor(string pic);
 // for each element, funcPre is called first, then funcPre and funcPost for all its children, and funcPost last
 void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass);
 
-// adding just 0.4 for race times so it rounds down in the .5 case (matching the timer display)
-// FIXME it doesn't round properly
-#define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
+#define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.5)
 
 const int TIME_DECIMALS = 2;
 const float TIME_FACTOR = 100;

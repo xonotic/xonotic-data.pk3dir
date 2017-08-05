@@ -109,6 +109,7 @@ CLASS(Client, Object)
     ATTRIB(Client, clientdata, entity, this.clientdata);
     ATTRIB(Client, cmd_floodcount, int, this.cmd_floodcount);
     ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
+    ATTRIB(Client, wasplayer, bool, this.wasplayer);
 
     // networked cvars
 
@@ -177,11 +178,15 @@ CLASS(Spectator, Client)
 ENDCLASS(Spectator)
 
 CLASS(Player, Client)
-    
+
     // custom
 
     ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
     ATTRIB(Player, itemkeys, int, this.itemkeys);
+    ATTRIB(Player, ballistics_density, float, this.ballistics_density);
+    ATTRIB(Player, prevstrengthsound, float, this.prevstrengthsound);
+    ATTRIB(Player, prevstrengthsoundattempt, float, this.prevstrengthsoundattempt);
+    ATTRIB(Player, buff_shield, float, this.buff_shield);
 
     INIT(Player) {
         this.classname = STR_PLAYER;

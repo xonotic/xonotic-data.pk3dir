@@ -311,6 +311,7 @@ void viewmodel_draw(entity this)
 		e.csqcmodel_effects = fx;
 		CSQCModel_Effects_Apply(e);
 	}
+	if(a >= 0)
 	{
 		string name = wep.mdl;
 		string newname = wep.wr_viewmodel(wep, this);
@@ -2111,7 +2112,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 
 	// improved polyblend
-	if(autocvar_hud_contents)
+	if(autocvar_hud_contents && !MUTATOR_CALLHOOK(HUD_Contents))
 	{
 		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
 		vector liquidcolor;

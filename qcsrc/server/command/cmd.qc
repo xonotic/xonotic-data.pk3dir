@@ -356,7 +356,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 									{
 										sprint(caller, "^7You already are on that team.\n");
 									}
-									else if (caller.wasplayer && autocvar_g_changeteam_banned)
+									else if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
 									{
 										sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 									}

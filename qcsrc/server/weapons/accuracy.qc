@@ -85,7 +85,7 @@ void accuracy_add(entity this, int w, int fired, int hit)
 	if (b == accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w])) return; // no change
 	int sf = 1 << (w % 24);
 	a.SendFlags |= sf;
-	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, LAMBDA(CS(it).accuracy.SendFlags |= sf));
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, { CS(it).accuracy.SendFlags |= sf; });
 }
 
 bool accuracy_isgooddamage(entity attacker, entity targ)

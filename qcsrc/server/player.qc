@@ -97,7 +97,6 @@ void CopyBody(entity this, float keepvelocity)
 	clone.move_qcphysics = false; // don't run gamecode logic on clones, too many
 	set_movetype(clone, this.move_movetype);
 	clone.solid = this.solid;
-	clone.ballistics_density = this.ballistics_density;
 	clone.takedamage = this.takedamage;
 	setcefc(clone, getcefc(this));
 	clone.uncustomizeentityforclient = this.uncustomizeentityforclient;
@@ -236,10 +235,10 @@ void calculate_player_respawn_time(entity this)
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
 	if (teamplay)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 			if(it.team == this.team)
 				++pcount;
-		));
+		});
 		if (sdelay_small_count == 0)
 			sdelay_small_count = 1;
 		if (sdelay_large_count == 0)
@@ -247,9 +246,9 @@ void calculate_player_respawn_time(entity this)
 	}
 	else
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 			++pcount;
-		));
+		});
 		if (sdelay_small_count == 0)
 		{
 			if (IS_INDEPENDENT_PLAYER(this))
@@ -610,7 +609,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		set_movetype(this, MOVETYPE_TOSS);
 		// shootable corpse
 		this.solid = SOLID_CORPSE;
-		this.ballistics_density = autocvar_g_ballistics_density_corpse;
+		PS(this).ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
 		UNSET_ONGROUND(this);
 		// dying animation

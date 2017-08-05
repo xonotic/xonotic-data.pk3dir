@@ -151,7 +151,7 @@ void ClientData_Touch(entity e)
 	CS(e).clientdata.SendFlags = 1;
 
 	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(CS(it).clientdata.SendFlags = 1));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, { CS(it).clientdata.SendFlags = 1; });
 }
 
 void SetSpectatee(entity this, entity spectatee);
@@ -501,7 +501,7 @@ void PutPlayerInServer(entity this)
 
 	TRANSMUTE(Player, this);
 
-	this.wasplayer = true;
+	CS(this).wasplayer = true;
 	this.iscreature = true;
 	this.teleportable = TELEPORT_NORMAL;
 	if(!this.damagedbycontents)
@@ -578,7 +578,7 @@ void PutPlayerInServer(entity this)
 	setthink(this, func_null); // players have no think function
 	this.nextthink = 0;
 	this.dmg_team = 0;
-	this.ballistics_density = autocvar_g_ballistics_density_player;
+	PS(this).ballistics_density = autocvar_g_ballistics_density_player;
 
 	this.deadflag = DEAD_NO;
 
@@ -659,7 +659,7 @@ void PutPlayerInServer(entity this)
 	target_voicescript_clear(this);
 
 	// reset fields the weapons may use
-	FOREACH(Weapons, true, LAMBDA(
+	FOREACH(Weapons, true, {
 		it.wr_resetplayer(it, this);
 			// reload all reloadable weapons
 		if (it.spawnflags & WEP_FLAG_RELOADABLE) {
@@ -669,7 +669,7 @@ void PutPlayerInServer(entity this)
 				this.(weaponentity).weapon_load[it.m_id] = it.reloading_ammo;
 			}
 		}
-	));
+	});
 
 	{
 		string s = spot.target;
@@ -1957,7 +1957,7 @@ void ShowRespawnCountdown(entity this)
 .bool team_selected;
 bool ShowTeamSelection(entity this)
 {
-	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (this.wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
+	if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || this.team_selected || (CS(this).wasplayer && autocvar_g_changeteam_banned) || this.team_forced > 0)
 		return false;
 	stuffcmd(this, "menu_showteamselect\n");
 	return true;
@@ -2009,13 +2009,13 @@ int nJoinAllowed(entity this, entity ignore)
 	// TODO simplify this
 	int totalClients = 0;
 	int currentlyPlaying = 0;
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		if(it != ignore)
 			++totalClients;
 		if(IS_REAL_CLIENT(it))
 		if(IS_PLAYER(it) || it.caplayer)
 			++currentlyPlaying;
-	));
+	});
 
 	float free_slots = 0;
 	if (!autocvar_g_maxplayers)

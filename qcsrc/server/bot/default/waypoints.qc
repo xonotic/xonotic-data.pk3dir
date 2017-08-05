@@ -1131,12 +1131,12 @@ LABEL(next)
 
 void botframe_autowaypoints()
 {
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && !IS_DEAD(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && !IS_DEAD(it), {
 		// going back is broken, so only fix waypoints to walk TO the player
 		//botframe_autowaypoints_fix(p, false, botframe_autowaypoints_lastwp0);
 		botframe_autowaypoints_fix(it, true, botframe_autowaypoints_lastwp1);
 		//te_explosion(p.botframe_autowaypoints_lastwp0.origin);
-	));
+	});
 
 	if (autocvar_g_waypointeditor_auto >= 2) {
 		botframe_deleteuselesswaypoints();
