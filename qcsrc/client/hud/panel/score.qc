@@ -3,6 +3,7 @@
 #include "scoreboard.qh"
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
+#include <common/scores.qh>
 
 // Score (#7)
 

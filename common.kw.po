@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-03 14:35+0200\n"
-"PO-Revision-Date: 2017-03-30 05:23+0000\n"
+"POT-Creation-Date: 2017-07-09 00:35+0200\n"
+"PO-Revision-Date: 2017-07-09 23:06+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Cornish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/kw/)\n"
@@ -230,8 +230,8 @@ msgstr "Pesya..."
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
-msgid "QMCMD^Chat"
-msgstr "QMCMD^Keskows"
+msgid "Chat"
+msgstr "Keskows"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -9198,12 +9198,3 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr ""
-
-#~ msgid "QMCMD^killed flag, icon"
-#~ msgstr "QMCMD^baner ledhys, arwodhik"
-
-#~ msgid "QMCMD^drop gun, icon"
-#~ msgstr "QMCMD^gonn droppyes, arwodhik"
-
-#~ msgid "QMCMD^dropped gun %w^7 (l:%l^7)"
-#~ msgstr "QMCMD^gonn droppyes %w^7 (l:%l^7)"

@@ -134,10 +134,17 @@ void Item_PreDraw(entity this)
 	}
 	float alph;
 	vector org = getpropertyvec(VF_ORIGIN);
-	if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
-		alph = 0;
-	else if(this.fade_start)
-		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	//if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
+		//alph = 0; // this shouldn't be needed, since items behind walls are culled anyway
+	if(this.fade_start)
+	{
+		if(vdist(org - this.origin, >, this.fade_end))
+			alph = 0; // save on some processing
+		else if(vdist(org - this.origin, <, this.fade_start))
+			alph = 1; // more processing saved
+		else
+			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	}
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
@@ -931,7 +938,7 @@ LABEL(pickup)
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
-		delete (this);
+		delete(this);
 	else if (this.spawnshieldtime)
 	{
 		entity e;
@@ -1087,25 +1094,27 @@ float ammo_pickupevalfunc(entity player, entity item)
 		rating = item.bot_pickupbasevalue;
 	}
 
+	float noammorating = 0.5;
+
 	if ((need_shells) && (item.ammo_shells) && (player.ammo_shells < g_pickup_shells_max))
-		c = item.ammo_shells / player.ammo_shells;
+		c = item.ammo_shells / max(noammorating, player.ammo_shells);
 
 	if ((need_nails) && (item.ammo_nails) && (player.ammo_nails < g_pickup_nails_max))
-		c = item.ammo_nails / player.ammo_nails;
+		c = item.ammo_nails / max(noammorating, player.ammo_nails);
 
 	if ((need_rockets) && (item.ammo_rockets) && (player.ammo_rockets < g_pickup_rockets_max))
-		c = item.ammo_rockets / player.ammo_rockets;
+		c = item.ammo_rockets / max(noammorating, player.ammo_rockets);
 
 	if ((need_cells) && (item.ammo_cells) && (player.ammo_cells < g_pickup_cells_max))
-		c = item.ammo_cells / player.ammo_cells;
+		c = item.ammo_cells / max(noammorating, player.ammo_cells);
 
 	if ((need_plasma) && (item.ammo_plasma) && (player.ammo_plasma < g_pickup_plasma_max))
-		c = item.ammo_plasma / player.ammo_plasma;
+		c = item.ammo_plasma / max(noammorating, player.ammo_plasma);
 
 	if ((need_fuel) && (item.ammo_fuel) && (player.ammo_fuel < g_pickup_fuel_max))
-		c = item.ammo_fuel / player.ammo_fuel;
+		c = item.ammo_fuel / max(noammorating, player.ammo_fuel);
 
-	rating *= min(2, c);
+	rating *= min(c, 2);
 	if(wpn)
 		rating += wpn.bot_pickupbasevalue * 0.1;
 	return rating;
@@ -1233,7 +1242,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
-			delete (this);
+			delete(this);
 			return;
 		}
 
@@ -1271,7 +1280,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			// target_give not yet supported; maybe later
 			print("removed targeted ", this.classname, "\n");
 			startitem_failed = true;
-			remove (this);
+			delete(this);
 			return;
 		}
 		*/
@@ -1427,7 +1436,7 @@ spawnfunc(item_rockets)
 
 spawnfunc(item_bullets)
 {
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap && 
+	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
 	   (this.classname != "droppedweapon"))
 	{
 		weaponswapping = true;

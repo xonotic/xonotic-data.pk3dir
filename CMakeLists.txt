@@ -1,19 +1,66 @@
-cmake_minimum_required(VERSION 2.8.11)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-project(xonotic-data LANGUAGES ASM)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+project(xonotic-data ASM)
+
+set(checks qc-checks)
+add_custom_target(${checks})
+
+# depend on qcc
+if (TARGET gmqcc)
+    add_dependencies(${checks} gmqcc)
+endif ()
+
+add_dependencies(${checks} data-check-cvars)
+add_custom_target(data-check-cvars
+        COMMENT "checking cvars"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        VERBATIM COMMAND ${CMAKE_COMMAND} -E
+        env "CMAKE=1"
+        "${PROJECT_SOURCE_DIR}/check-cvars.sh"
+        )
+
+add_dependencies(${checks} qc-genmod)
+add_custom_target(qc-genmod
+        COMMENT "genmod.sh"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/qcsrc"
+        VERBATIM COMMAND ./tools/genmod.sh
+        )
+
+add_dependencies(${checks} qc-headerstyle)
+add_custom_target(qc-headerstyle
+        COMMENT "headerstyle.sh"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/qcsrc"
+        VERBATIM COMMAND ${CMAKE_COMMAND} -E
+        env "VERBOSE=0"
+        ./tools/headerstyle.sh
+        )
+
+add_dependencies(${checks} qc-whitespace)
+add_custom_target(qc-whitespace
+        COMMENT "whitespace.sh"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/qcsrc"
+        VERBATIM COMMAND ./tools/whitespace.sh
+        )
 
 include_directories(qcsrc)
 
 add_definitions(-DXONOTIC=1)
 add_definitions(-DNDEBUG=1)
+add_definitions(-DENABLE_EFFECTINFO=0)
+add_definitions(-DENABLE_DEBUGDRAW=0)
+add_definitions(-DENABLE_DEBUGTRACE=0)
 
-find_package(Git REQUIRED)
-execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty=~
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        OUTPUT_VARIABLE GIT_DESC
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+if (DEFINED ENV{VERSION})
+    set(GIT_DESC "$ENV{VERSION}")
+else ()
+    find_package(Git REQUIRED)
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} describe --tags --dirty=~
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE GIT_DESC
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif ()
 add_definitions(-DWATERMARK=\"${GIT_DESC}\")
 
 set_source_files_properties(
@@ -26,16 +73,16 @@ set_source_files_properties(
 )
 
 add_executable(csprogs qcsrc/client/progs.inc)
+add_dependencies(csprogs ${checks})
 target_compile_definitions(csprogs PRIVATE -DGAMEQC -DCSQC)
-add_dependencies(csprogs gmqcc)
 
 add_executable(progs qcsrc/server/progs.inc)
+add_dependencies(progs ${checks})
 target_compile_definitions(progs PRIVATE -DGAMEQC -DSVQC)
-add_dependencies(progs gmqcc)
 
 add_executable(menu qcsrc/menu/progs.inc)
+add_dependencies(menu ${checks})
 target_compile_definitions(menu PRIVATE -DMENUQC)
-add_dependencies(menu gmqcc)
 
 function(set_prelude target prelude)
     get_target_property(MY_PROJECT_SOURCES target SOURCES)

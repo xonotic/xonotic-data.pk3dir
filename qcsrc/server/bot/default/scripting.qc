@@ -485,7 +485,7 @@ float bot_cmd_cc(entity this)
 
 float bot_cmd_impulse(entity this)
 {
-	this.impulse = bot_cmd.bot_cmd_parm_float;
+	CS(this).impulse = bot_cmd.bot_cmd_parm_float;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -539,16 +539,16 @@ float bot_cmd_barrier(entity this)
 
 	if(this.bot_barrier == 1) // find other bots
 	{
-		FOREACH_CLIENT(it.isbot, LAMBDA(
+		FOREACH_CLIENT(it.isbot, {
 			if(it.bot_cmdqueuebuf_allocated)
 			if(it.bot_barrier != 1)
 				return CMD_STATUS_EXECUTING; // not all are at the barrier yet
-		));
+		});
 
 		// all bots hit the barrier!
 
 		// acknowledge barrier
-		FOREACH_CLIENT(it.isbot, LAMBDA(it.bot_barrier = 2));
+		FOREACH_CLIENT(it.isbot, { it.bot_barrier = 2; });
 
 		bot_barriertime = time;
 	}
@@ -836,7 +836,7 @@ const int BOT_CMD_KEY_CHAT 		= BIT(10);
 
 bool bot_presskeys(entity this)
 {
-	this.movement = '0 0 0';
+	CS(this).movement = '0 0 0';
 	PHYS_INPUT_BUTTON_JUMP(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
@@ -849,14 +849,14 @@ bool bot_presskeys(entity this)
 		return false;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
-		this.movement_x = autocvar_sv_maxspeed;
+		CS(this).movement_x = autocvar_sv_maxspeed;
 	else if(this.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
-		this.movement_x = -autocvar_sv_maxspeed;
+		CS(this).movement_x = -autocvar_sv_maxspeed;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
-		this.movement_y = autocvar_sv_maxspeed;
+		CS(this).movement_y = autocvar_sv_maxspeed;
 	else if(this.bot_cmd_keys & BOT_CMD_KEY_LEFT)
-		this.movement_y = -autocvar_sv_maxspeed;
+		CS(this).movement_y = -autocvar_sv_maxspeed;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_JUMP)
 		PHYS_INPUT_BUTTON_JUMP(this) = true;
@@ -1008,7 +1008,7 @@ float bot_cmd_pause(entity this)
 	PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
-	this.movement = '0 0 0';
+	CS(this).movement = '0 0 0';
 	this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 
 	bot_clear(this);
@@ -1156,7 +1156,7 @@ void bot_setcurrentcommand(entity this)
 
 void bot_resetqueues()
 {
-	FOREACH_CLIENT(it.isbot, LAMBDA(
+	FOREACH_CLIENT(it.isbot, {
 		it.bot_cmd_execution_index = 0;
 		bot_clearqueue(it);
 		// also, cancel all barriers
@@ -1167,7 +1167,7 @@ void bot_resetqueues()
 			it.(bot_placenames[i]) = string_null;
 		}
 		it.bot_places_count = 0;
-	));
+	});
 
 	bot_barriertime = time;
 }
@@ -1182,7 +1182,7 @@ float bot_execute_commands_once(entity this)
 	bot_setcurrentcommand(this);
 
 	// Ignore all commands except continue when the bot is paused
-	if(!(self.bot_exec_status & BOT_EXEC_STATUS_PAUSED))
+	if(!(this.bot_exec_status & BOT_EXEC_STATUS_PAUSED))
 	{
 		// if we have no bot command, better return
 		// old logic kept pressing previously pressed keys, but that has problems

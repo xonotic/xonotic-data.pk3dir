@@ -791,11 +791,11 @@ void QuickMenu_Default(string target_submenu)
 	string tc_title;
 	string tc_cmd;
 
-	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
+	QUICKMENU_SMENU(_("Chat"), "Chat")
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
-	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
+	QUICKMENU_SMENU(_("Chat"), "Chat")
 
 	if(teamplay)
 	{

@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-03 14:35+0200\n"
-"PO-Revision-Date: 2017-06-01 21:16+0000\n"
-"Last-Translator: GunChleoc\n"
+"POT-Creation-Date: 2017-07-09 00:35+0200\n"
+"PO-Revision-Date: 2017-07-09 23:06+0000\n"
+"Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Gaelic, Scottish (http://www.transifex.com/team-xonotic/"
 "xonotic/language/gd/)\n"
 "Language: gd\n"
@@ -239,7 +239,7 @@ msgstr "Lean air adhart…"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
-msgid "QMCMD^Chat"
+msgid "Chat"
 msgstr "Cabadaich"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
@@ -9168,6 +9168,3 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr ""
-
-#~ msgid "QMCMD^killed flag, icon"
-#~ msgstr "air bratach a mharbhadh, ìomhaigheag"

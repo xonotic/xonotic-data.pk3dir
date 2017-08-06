@@ -44,7 +44,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 {
 	float f = 0;
 
-	if (time < this.hasweapon_complain_spam)
+	if (time < CS(this).hasweapon_complain_spam)
 		complain = 0;
 
 	// ignore hook button when using other offhand equipment
@@ -53,7 +53,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 	    complain = 0;
 
 	if (complain)
-		this.hasweapon_complain_spam = time + 0.2;
+		CS(this).hasweapon_complain_spam = time + 0.2;
 
 	if (wpn == WEP_Null)
 	{
@@ -61,7 +61,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 			sprint(this, "Invalid weapon\n");
 		return false;
 	}
-	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(this.dual_weapons & wpn.m_wepset))
+	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(PS(this).dual_weapons & wpn.m_wepset))
 		return false; // no complaints needed
 	if (this.weapons & WepSet_FromWeapon(wpn))
 	{

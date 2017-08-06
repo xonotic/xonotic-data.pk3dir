@@ -198,17 +198,17 @@ bool racer_frame(entity this, float dt)
 	vector df = vehic.velocity * -autocvar_g_vehicle_racer_friction;
 	//vehic.velocity_z = ftmp;
 
-	if(this.movement)
+	if(CS(this).movement)
 	{
 		if(cont & DPCONTENTS_LIQUIDSMASK)
 		{
-			if(this.movement_x) { df += v_forward * ((this.movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
-			if(this.movement_y) { df += v_right * ((this.movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
+			if(CS(this).movement_x) { df += v_forward * ((CS(this).movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
+			if(CS(this).movement_y) { df += v_right * ((CS(this).movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
 		}
 		else
 		{
-			if(this.movement_x) { df += v_forward * ((this.movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward); }
-			if(this.movement_y) { df += v_right * ((this.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe); }
+			if(CS(this).movement_x) { df += v_forward * ((CS(this).movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward); }
+			if(CS(this).movement_y) { df += v_right * ((CS(this).movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe); }
 		}
 
 #ifdef SVQC
@@ -284,7 +284,7 @@ bool racer_frame(entity this, float dt)
 		dforce = autocvar_g_vehicle_racer_water_downforce;
 
 	df -= v_up * (vlen(vehic.velocity) * dforce);
-	this.movement = vehic.velocity += df * dt;
+	CS(this).movement = vehic.velocity += df * dt;
 
 #ifdef SVQC
 

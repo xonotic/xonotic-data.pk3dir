@@ -1,3 +1,4 @@
+#include "kill.qh"
 #include "location.qh"
 #ifdef SVQC
 

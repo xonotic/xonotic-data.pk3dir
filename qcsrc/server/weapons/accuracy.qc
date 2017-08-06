@@ -20,7 +20,7 @@ bool accuracy_send(entity this, entity to, int sf)
 
 	entity a = this.owner;
 	if (IS_SPEC(a)) a = a.enemy;
-	a = a.accuracy;
+	a = CS(a).accuracy;
 
 	if (to != a.owner)
 		if (!autocvar_sv_accuracy_data_share && !a.owner.cvar_cl_accuracy_data_share)
@@ -40,7 +40,7 @@ bool accuracy_send(entity this, entity to, int sf)
 // init/free
 void accuracy_init(entity e)
 {
-	entity a = e.accuracy = new_pure(accuracy);
+	entity a = CS(e).accuracy = new_pure(accuracy);
 	a.owner = e;
 	a.drawonlytoclient = e;
 	Net_LinkEntity(a, false, 0, accuracy_send);
@@ -48,13 +48,13 @@ void accuracy_init(entity e)
 
 void accuracy_free(entity e)
 {
-	delete(e.accuracy);
+	delete(CS(e).accuracy);
 }
 
 // force a resend of a player's accuracy stats
 void accuracy_resend(entity e)
 {
-	e.accuracy.SendFlags = 0xFFFFFF;
+	CS(e).accuracy.SendFlags = 0xFFFFFF;
 }
 
 // update accuracy stats
@@ -64,7 +64,7 @@ void accuracy_resend(entity e)
 void accuracy_add(entity this, int w, int fired, int hit)
 {
 	if (IS_INDEPENDENT_PLAYER(this)) return;
-	entity a = this.accuracy;
+	entity a = CS(this).accuracy;
 	if (!a) return;
 	if (!hit && !fired) return;
 	w -= WEP_FIRST;
@@ -85,7 +85,7 @@ void accuracy_add(entity this, int w, int fired, int hit)
 	if (b == accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w])) return; // no change
 	int sf = 1 << (w % 24);
 	a.SendFlags |= sf;
-	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, LAMBDA(it.accuracy.SendFlags |= sf));
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, { CS(it).accuracy.SendFlags |= sf; });
 }
 
 bool accuracy_isgooddamage(entity attacker, entity targ)

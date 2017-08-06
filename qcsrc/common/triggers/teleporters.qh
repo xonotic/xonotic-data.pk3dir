@@ -27,9 +27,6 @@ entity Teleport_Find(vector mi, vector ma);
 
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags);
 
-entity teleport_first;
-.entity teleport_next;
-
 #ifdef SVQC
 
 void trigger_teleport_use(entity this, entity actor, entity trigger);

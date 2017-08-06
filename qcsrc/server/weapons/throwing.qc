@@ -60,10 +60,10 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		else
 		{
 			int superweapons = 1;
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				WepSet set = it.m_wepset;
 				if((set & WEPSET_SUPERWEAPONS) && (own.weapons & set)) ++superweapons;
-			));
+			});
 			if(superweapons <= 1)
 			{
 				wep.superweapons_finished = own.superweapons_finished;

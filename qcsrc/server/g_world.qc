@@ -57,17 +57,17 @@ void PingPLReport_Think(entity this)
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, e.ping, 65535));
-		WriteByte(MSG_BROADCAST, min(ceil(e.ping_packetloss * 255), 255));
-		WriteByte(MSG_BROADCAST, min(ceil(e.ping_movementloss * 255), 255));
+		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 65535));
+		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
+		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
 		// record latency times for clients throughout the match so we can report it to playerstats
-		if(time > (e.latency_time + LATENCY_THINKRATE))
+		if(time > (CS(e).latency_time + LATENCY_THINKRATE))
 		{
-			e.latency_sum += e.ping;
-			e.latency_cnt += 1;
-			e.latency_time = time;
-			//print("sum: ", ftos(e.latency_sum), ", cnt: ", ftos(e.latency_cnt), ", avg: ", ftos(e.latency_sum / e.latency_cnt), ".\n");
+			CS(e).latency_sum += CS(e).ping;
+			CS(e).latency_cnt += 1;
+			CS(e).latency_time = time;
+			//print("sum: ", ftos(CS(e).latency_sum), ", cnt: ", ftos(CS(e).latency_cnt), ", avg: ", ftos(CS(e).latency_sum / CS(e).latency_cnt), ".\n");
 		}
 	}
 	else
@@ -253,6 +253,8 @@ void cvar_changes_init()
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
 		BADCVAR("sv_muteban_list");
+		BADCVAR("sv_allow_customplayermodels_idlist");
+		BADCVAR("sv_allow_customplayermodels_speciallist");
 
 		// mapinfo
 		BADCVAR("fraglimit");
@@ -462,6 +464,7 @@ void cvar_changes_init()
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
+		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
 		// mutators that announce themselves properly to the server browser
@@ -1457,9 +1460,9 @@ void DumpStats(float final)
 	if(to_file)
 		fputs(file, strcat(s, "\n"));
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), {
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
-		s = strcat(s, ftos(rint(time - it.jointime)), ":");
+		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
 		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 			s = strcat(s, ftos(it.team), ":");
 		else
@@ -1471,7 +1474,7 @@ void DumpStats(float final)
 			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it, false)));
 		if(to_file)
 			fputs(file, strcat(s, playername(it, false), "\n"));
-	));
+	});
 
 	if(teamplay)
 	{
@@ -1528,9 +1531,9 @@ void FixIntermissionClient(entity e)
 		{
 			stuffcmd(e, "\nscr_printspeed 1000000\n");
 			RandomSelection_Init();
-			FOREACH_WORD(autocvar_sv_intermission_cdtrack, true, LAMBDA(
+			FOREACH_WORD(autocvar_sv_intermission_cdtrack, true, {
 				RandomSelection_AddString(it, 1, 1);
-			));
+			});
 			if (RandomSelection_chosen_string != "")
 			{
 				stuffcmd(e, sprintf("\ncd loop %s\n", RandomSelection_chosen_string));
@@ -1580,11 +1583,11 @@ void NextLevel()
 
 	GameLogClose();
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
 			bprint(playername(it, false), " ^7wins.\n");
-	));
+	});
 
 	target_music_kill();
 
@@ -1594,25 +1597,6 @@ void NextLevel()
 	MUTATOR_CALLHOOK(MatchEnd);
 
 	localcmd("\nsv_hook_gameend\n");
-}
-
-/*
-============
-CheckRules_Player
-
-Exit deathmatch games upon conditions
-============
-*/
-void CheckRules_Player(entity this)
-{
-	if (game_stopped) // someone else quit the game already
-		return;
-
-	if(!IS_DEAD(this))
-		this.play_time += frametime;
-
-	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
-	//   (div0: and that in CheckRules_World please)
 }
 
 
@@ -1677,22 +1661,22 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = (it.(field) == value)));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = (it.(field) == value); });
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(it.(field) == value)
 			it.winning = 1;
-	));
+	});
 }
 
 // clear the .winning flags
 void ClearWinners()
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = 0));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
 }
 
 void ShuffleMaplist()
@@ -1785,7 +1769,7 @@ float WinningCondition_RanOutOfSpawns()
 
 	team1_score = team2_score = team3_score = team4_score = 0;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
 		switch(it.team)
 		{
 			case NUM_TEAM_1: team1_score = 1; break;
@@ -1793,7 +1777,7 @@ float WinningCondition_RanOutOfSpawns()
 			case NUM_TEAM_3: team3_score = 1; break;
 			case NUM_TEAM_4: team4_score = 1; break;
 		}
-	));
+	});
 
 	IL_EACH(g_spawnpoints, true,
 	{
@@ -1919,13 +1903,13 @@ void CheckRules_World()
 				float playerswithlaps;
 				float readyplayers;
 				totalplayers = playerswithlaps = readyplayers = 0;
-				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it), {
 					++totalplayers;
 					if(PlayerScore_Add(it, SP_RACE_FASTEST, 0))
 						++playerswithlaps;
 					if(it.ready)
 						++readyplayers;
-				));
+				});
 
 				// at least 2 of the players have completed a lap: start the RACE
 				// otherwise, the players should end the qualifying on their own
@@ -2145,7 +2129,7 @@ float RedirectionThink()
 	redirection_nextthink = time + 1;
 
 	clients_found = 0;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		// TODO add timer
 		LOG_INFO("Redirecting: sending connect command to ", it.netname, "\n");
 		if(redirection_target == "self")
@@ -2153,7 +2137,7 @@ float RedirectionThink()
 		else
 			stuffcmd(it, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
-	));
+	});
 
 	LOG_INFO("Redirecting: ", ftos(clients_found), " clients left.\n");
 

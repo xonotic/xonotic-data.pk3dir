@@ -101,11 +101,11 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 			{
 				if (IS_CLIENT(caller))
 				{
-					caller.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+					CS(caller).version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 
-					if (caller.version < autocvar_gameversion_min || caller.version > autocvar_gameversion_max)
+					if (CS(caller).version < autocvar_gameversion_min || CS(caller).version > autocvar_gameversion_max)
 					{
-						caller.version_mismatch = 1;
+						CS(caller).version_mismatch = true;
 						ClientKill_TeamChange(caller, -2);  // observe
 					}
 					else if (autocvar_g_campaign || autocvar_g_balance_teams)
@@ -380,21 +380,13 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 				sprint(caller, "^7You already are on that team.\n");
 				return;
 			}
-			if (caller.wasplayer && autocvar_g_changeteam_banned)
+			if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
 			{
 				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 				return;
 			}
-			if (selection == -1)
-			{
-				ClientKill_TeamChange(caller, selection);
-				if (!IS_PLAYER(caller))
-				{
-					caller.team_selected = true; // avoids asking again for team selection on join
-				}
-				return;
-			}
-			if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+			if ((selection != -1) && autocvar_g_balance_teams &&
+				autocvar_g_balance_teams_prevent_imbalance)
 			{
 				CheckAllowedTeams(caller);
 				GetTeamCounts(caller);

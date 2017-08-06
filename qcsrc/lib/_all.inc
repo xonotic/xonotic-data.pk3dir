@@ -24,6 +24,12 @@
 	#define bool float
 #endif
 
+#ifndef QCC_SUPPORT_ERASEABLE
+	#define ERASEABLE
+#else
+	#define ERASEABLE [[eraseable]]
+#endif
+
 #include <dpdefs/pre.qh>
 
 #if defined(CSQC)

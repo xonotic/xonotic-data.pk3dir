@@ -97,7 +97,6 @@ void CopyBody(entity this, float keepvelocity)
 	clone.move_qcphysics = false; // don't run gamecode logic on clones, too many
 	set_movetype(clone, this.move_movetype);
 	clone.solid = this.solid;
-	clone.ballistics_density = this.ballistics_density;
 	clone.takedamage = this.takedamage;
 	setcefc(clone, getcefc(this));
 	clone.uncustomizeentityforclient = this.uncustomizeentityforclient;
@@ -111,7 +110,6 @@ void CopyBody(entity this, float keepvelocity)
 	//clone.weapon = this.weapon;
 	setorigin(clone, this.origin);
 	setsize(clone, this.mins, this.maxs);
-	clone.prevorigin = this.origin;
 	clone.reset = SUB_Remove;
 	clone._ps = this._ps;
 
@@ -237,10 +235,10 @@ void calculate_player_respawn_time(entity this)
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
 	if (teamplay)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 			if(it.team == this.team)
 				++pcount;
-		));
+		});
 		if (sdelay_small_count == 0)
 			sdelay_small_count = 1;
 		if (sdelay_large_count == 0)
@@ -248,9 +246,9 @@ void calculate_player_respawn_time(entity this)
 	}
 	else
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 			++pcount;
-		));
+		});
 		if (sdelay_small_count == 0)
 		{
 			if (IS_INDEPENDENT_PLAYER(this))
@@ -536,7 +534,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		{
 			delete(this.killindicator);
 			this.killindicator = NULL;
-			if(this.killindicator_teamchange)
+			if(CS(this).killindicator_teamchange)
 				defer_ClientKill_Now_TeamChange = true;
 
 			if(this.classname == "body")
@@ -554,10 +552,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
         // increment frag counter for used weapon type
         Weapon w = DEATH_WEAPONOF(deathtype);
 		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
-			attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
+			CS(attacker).accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
-		excess = M_ARGV(4, float);
+		damage = M_ARGV(4, float);
+		excess = max(0, damage - take - save);
 
 		//Weapon wep = this.(weaponentity).m_weapon;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
@@ -610,11 +609,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		set_movetype(this, MOVETYPE_TOSS);
 		// shootable corpse
 		this.solid = SOLID_CORPSE;
-		this.ballistics_density = autocvar_g_ballistics_density_corpse;
+		PS(this).ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
 		UNSET_ONGROUND(this);
 		// dying animation
 		this.deadflag = DEAD_DYING;
+
+		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
 
 		// when to allow respawn
 		calculate_player_respawn_time(this);
@@ -747,7 +748,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (!teamsay && !privatesay && substring(msgin, 0, 1) == " ")
         msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
-	msgin = formatmessage(source, msgin);
+    if(source)
+		msgin = formatmessage(source, msgin);
 
     string colorstr;
 	if (!IS_PLAYER(source))
@@ -840,7 +842,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	// FLOOD CONTROL
 	int flood = 0;
 	var .float flood_field = floodcontrol_chat;
-	if(floodcontrol)
+	if(floodcontrol && source)
 	{
 		float flood_spl;
 		float flood_burst;
@@ -947,7 +949,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
 
     int ret;
-	if(source.muted)
+	if(source && CS(source).muted)
 	{
 		// always fake the message
 		ret = -1;
@@ -996,11 +998,11 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 					centerprint(privatesay, cmsgstr);
 			}
 		}
-		else if ( teamsay && source.active_minigame )
+		else if ( teamsay && CS(source).active_minigame )
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && CS(it).active_minigame == CS(source).active_minigame && !MUTATOR_CALLHOOK(ChatMessageTo, it, source), sprint(it, msgstr));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
