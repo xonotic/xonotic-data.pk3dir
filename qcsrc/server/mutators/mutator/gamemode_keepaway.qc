@@ -1,5 +1,7 @@
 #include "gamemode_keepaway.qh"
 
+#include <common/effects/all.qh>
+
 int autocvar_g_keepaway_ballcarrier_effects;
 float autocvar_g_keepaway_ballcarrier_damage;
 float autocvar_g_keepaway_ballcarrier_force;

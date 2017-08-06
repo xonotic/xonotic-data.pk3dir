@@ -1,5 +1,8 @@
 #include "vote.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 #include <common/mapinfo.qh>
 
 // Vote (#9)

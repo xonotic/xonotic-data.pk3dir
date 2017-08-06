@@ -4,8 +4,8 @@
 #include <common/stats.qh>
 #include "config.qh"
 
-// weapon sets
-USING(WepSet, vector);
+#include "weapon.qh"
+
 #ifdef SVQC
 void WriteWepSet(float dest, WepSet w);
 #endif
@@ -15,8 +15,6 @@ WepSet WepSet_GetFromStat();
 WepSet WepSet_GetFromStat_InMap();
 WepSet ReadWepSet();
 #endif
-
-#include "weapon.qh"
 
 #ifdef GAMEQC
 #include "calculations.qh"

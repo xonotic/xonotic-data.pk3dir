@@ -1,5 +1,6 @@
 #include "player.qh"
 
+#include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
@@ -235,10 +236,10 @@ void calculate_player_respawn_time(entity this)
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
 	if (teamplay)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 			if(it.team == this.team)
 				++pcount;
-		));
+		});
 		if (sdelay_small_count == 0)
 			sdelay_small_count = 1;
 		if (sdelay_large_count == 0)
@@ -246,9 +247,9 @@ void calculate_player_respawn_time(entity this)
 	}
 	else
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 			++pcount;
-		));
+		});
 		if (sdelay_small_count == 0)
 		{
 			if (IS_INDEPENDENT_PLAYER(this))

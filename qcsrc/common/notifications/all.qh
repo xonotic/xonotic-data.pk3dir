@@ -6,6 +6,10 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 
+#ifdef CSQC
+#include <client/autocvars.qh>
+#endif
+
 /** main types/groups of notifications */
 ENUMCLASS(MSG)
 	/** "Global" AND "personal" announcer messages */
@@ -402,8 +406,8 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
 	ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
 	ARG_CASE(ARG_CS_SV,     "f4",            ftos(f4)) \
-	ARG_CASE(ARG_CS_SV,     "f1p2dec",       ftos_decimals(f1/100, 2)) \
-	ARG_CASE(ARG_CS_SV,     "f2p2dec",       ftos_decimals(f2/100, 2)) \
+	ARG_CASE(ARG_CS_SV,     "f1dtime",       ftos_decimals(TIME_DECODE(f1), 2)) \
+	ARG_CASE(ARG_CS_SV,     "f2dtime",       ftos_decimals(TIME_DECODE(f2), 2)) \
 	ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \

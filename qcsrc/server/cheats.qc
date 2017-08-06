@@ -1,5 +1,9 @@
 #include "cheats.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
+
 #include "g_damage.qh"
 #include "race.qh"
 #include "../common/triggers/teleporters.qh"
@@ -264,7 +268,7 @@ float CheatImpulse(entity this, int imp)
 		case CHIMPULSE_R00T.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			RandomSelection_Init();
-			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), LAMBDA(RandomSelection_AddEnt(it, 1, 1)));
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), { RandomSelection_AddEnt(it, 1, 1); });
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else

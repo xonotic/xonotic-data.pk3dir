@@ -2,6 +2,8 @@
 
 // convenience
 #include "skin.qh"
+#include "draw.qh"
+#include "menu.qh"
 
 CLASS(Item, Object)
 	METHOD(Item, draw, void(Item));

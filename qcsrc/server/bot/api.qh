@@ -1,5 +1,6 @@
 #pragma once
 
+#include <server/defs.qh>
 #include <common/weapons/_all.qh>
 
 const int WAYPOINTFLAG_GENERATED = BIT(23);

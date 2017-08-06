@@ -16,7 +16,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
         case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team);
     }
 
-    FOREACH(Nades, true, LAMBDA(
+    FOREACH(Nades, true, {
         for (int j = 0; j < 2; j++)
         {
             if (it.m_projectile[j] == proj)
@@ -26,7 +26,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
                 break;
             }
         }
-    ));
+    });
 
     return EFFECT_Null;
 }
@@ -1278,7 +1278,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(!IS_DEAD(it))
 			if(STAT(FROZEN, it) == 0)
 			if(SAME_TEAM(it, player))
@@ -1290,7 +1290,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 					it.reviving = true;
 				++n;
 			}
-		));
+		});
 	}
 
 	if(n && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
@@ -1306,10 +1306,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
 			it.revive_progress = player.revive_progress;
 			it.reviving = false;
-		));
+		});
 	}
 }
 

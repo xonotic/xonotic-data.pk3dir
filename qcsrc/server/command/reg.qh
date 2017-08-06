@@ -14,5 +14,5 @@ REGISTRY_SORT(SERVER_COMMANDS)
 	METHOD(servercommand_##id, m_invokecmd, void(servercommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(SERVER_COMMANDS_aliases) {
-	FOREACH(SERVER_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_sv"))));
+	FOREACH(SERVER_COMMANDS, true, { localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_sv")); });
 }

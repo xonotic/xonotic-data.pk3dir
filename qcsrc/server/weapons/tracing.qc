@@ -1,5 +1,7 @@
 #include "tracing.qh"
 
+#include <common/effects/all.qh>
+
 #include "accuracy.qh"
 #include "common.qh"
 #include "hitplot.qh"
@@ -262,7 +264,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
 	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
 			if(!it.railgunhit)
 			if(!(IS_SPEC(it) && it.enemy == this))
 			{
@@ -278,7 +280,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 					pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
 				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
 			}
-		));
+		});
 
 		if(pseudoprojectile)
 			delete(pseudoprojectile);

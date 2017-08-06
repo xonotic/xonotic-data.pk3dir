@@ -133,7 +133,7 @@ void kh_update_state()
 		s |= (32 ** key.count) * f;
 	}
 
-	FOREACH_CLIENT(true, LAMBDA(it.kh_state = s));
+	FOREACH_CLIENT(true, { it.kh_state = s; });
 
 	FOR_EACH_KH_KEY(key)
 	{
@@ -394,9 +394,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			{
 				if (!k.owner) continue;
 				entity first = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, { first = it; break; });
 				entity third = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, { third = it; break; });
 				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFinish, third);
 			}
 		}
@@ -409,9 +409,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			{
 				if (!k.owner) continue;
 				entity first = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, { first = it; break; });
 				entity third = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, { third = it; break; });
 				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFriend, third);
 			}
 		}
@@ -601,7 +601,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 		int players = 0;
 		float of = autocvar_g_balance_keyhunt_score_destroyed_ownfactor;
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.team != loser_team, LAMBDA(++players));
+		FOREACH_CLIENT(IS_PLAYER(it) && it.team != loser_team, { ++players; });
 
 		entity key;
 		int keys = 0;
@@ -636,16 +636,16 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 				continue;
 
 			players = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, LAMBDA(++players));
+			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, { ++players; });
 
 			DistributeEvenly_Init(fragsleft, j);
 			fragsleft = DistributeEvenly_Get(j - 1);
 			DistributeEvenly_Init(DistributeEvenly_Get(1), players);
 
-			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, {
 				f = DistributeEvenly_Get(1);
 				kh_Scores_Event(it, NULL, "destroyed", f, 0);
-			));
+			});
 
 			--j;
 		}
@@ -703,7 +703,7 @@ LABEL(not_winning)
 	if(kh_interferemsg_time && time > kh_interferemsg_time)
 	{
 		kh_interferemsg_time = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(it.team == kh_interferemsg_team)
 				if(it.kh_next)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_MEET);
@@ -711,7 +711,7 @@ LABEL(not_winning)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
 			else
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
-		));
+		});
 	}
 
 	this.nextthink = time + 0.05;
@@ -858,10 +858,10 @@ int kh_GetMissingTeams()
 	{
 		int teem = kh_Team_ByID(i);
 		int players = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
 				++players;
-		));
+		});
 		if (!players)
 			missing_teams |= (2 ** i);
 	}
@@ -939,14 +939,14 @@ void kh_StartRound()  // runs at the start of each round
 		int teem = kh_Team_ByID(i);
 		int players = 0;
 		entity my_player = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
 			{
 				++players;
 				if(random() * players <= 1)
 					my_player = it;
 			}
-		));
+		});
 		kh_Key_Spawn(my_player, 360 * i / NumTeams(kh_teams), i);
 	}
 

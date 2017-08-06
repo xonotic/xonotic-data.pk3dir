@@ -1,5 +1,7 @@
 #include "ipban.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "autocvars.qh"
 #include "command/banning.qh"
 #include "defs.qh"

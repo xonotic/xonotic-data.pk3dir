@@ -1,5 +1,8 @@
 #include "client.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
 #include "anticheat.qh"
 #include "impulse.qh"
 #include "player.qh"
@@ -151,7 +154,7 @@ void ClientData_Touch(entity e)
 	CS(e).clientdata.SendFlags = 1;
 
 	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(CS(it).clientdata.SendFlags = 1));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, { CS(it).clientdata.SendFlags = 1; });
 }
 
 void SetSpectatee(entity this, entity spectatee);
@@ -659,7 +662,7 @@ void PutPlayerInServer(entity this)
 	target_voicescript_clear(this);
 
 	// reset fields the weapons may use
-	FOREACH(Weapons, true, LAMBDA(
+	FOREACH(Weapons, true, {
 		it.wr_resetplayer(it, this);
 			// reload all reloadable weapons
 		if (it.spawnflags & WEP_FLAG_RELOADABLE) {
@@ -669,7 +672,7 @@ void PutPlayerInServer(entity this)
 				this.(weaponentity).weapon_load[it.m_id] = it.reloading_ammo;
 			}
 		}
-	));
+	});
 
 	{
 		string s = spot.target;
@@ -2009,13 +2012,13 @@ int nJoinAllowed(entity this, entity ignore)
 	// TODO simplify this
 	int totalClients = 0;
 	int currentlyPlaying = 0;
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		if(it != ignore)
 			++totalClients;
 		if(IS_REAL_CLIENT(it))
 		if(IS_PLAYER(it) || it.caplayer)
 			++currentlyPlaying;
-	));
+	});
 
 	float free_slots = 0;
 	if (!autocvar_g_maxplayers)
