@@ -637,7 +637,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, player))
 			{
@@ -648,7 +648,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 					closest = it;
 				}
 			}
-		));
+		});
 
 		if(closest)
 		{

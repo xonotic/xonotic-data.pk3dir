@@ -1,5 +1,7 @@
 #include "movenode.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "pathlib.qh"
 #include "utility.qh"
 

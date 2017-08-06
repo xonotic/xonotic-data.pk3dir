@@ -16,7 +16,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const float armor = M_ARGV(3, float);
     const int deathtype = M_ARGV(5, int);
     const float potential_damage = M_ARGV(6, float);
-    FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+    FOREACH_CLIENT(IS_REAL_CLIENT(it), {
         if (
             (SV_DAMAGETEXT_ALL()) ||
             (SV_DAMAGETEXT_PLAYERS() && it == attacker) ||
@@ -53,5 +53,5 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
                 else WriteShort(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
 			}
         }
-    ));
+    });
 }

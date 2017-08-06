@@ -1,5 +1,7 @@
 #include "g_models.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "g_subs.qh"
 #include <common/net_linked.qh>
 #include "../common/triggers/subs.qh"

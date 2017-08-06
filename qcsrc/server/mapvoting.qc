@@ -1,5 +1,7 @@
 #include "mapvoting.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "g_world.qh"
 #include "command/cmd.qh"
 #include "command/getreplies.qh"
@@ -100,7 +102,7 @@ string GameTypeVote_MapInfo_FixName(string m)
 
 void MapVote_ClearAllVotes()
 {
-	FOREACH_CLIENT(true, LAMBDA(it.mapvote = 0));
+	FOREACH_CLIENT(true, { it.mapvote = 0; });
 }
 
 void MapVote_UnzoneStrings()
@@ -454,7 +456,7 @@ bool MapVote_Finished(int mappos)
 			GameLogEcho(strcat(":vote:suggestion_accepted:", mapvote_maps[mappos]));
 	}
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(FixClientCvars(it)));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { FixClientCvars(it); });
 
 	if(gametypevote)
 	{
@@ -595,7 +597,7 @@ void MapVote_Tick()
 		return;
 
 	int totalvotes = 0;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		// hide scoreboard again
 		if(it.health != 2342)
 		{
@@ -621,7 +623,7 @@ void MapVote_Tick()
 
 		if(it.mapvote)
 			++totalvotes;
-	));
+	});
 
 	MapVote_CheckRules_1(); // just count
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
 

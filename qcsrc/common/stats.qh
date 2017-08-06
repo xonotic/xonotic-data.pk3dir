@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef SVQC
+#include <server/autocvars.qh>
 #include <server/client.qh>
 #endif
 

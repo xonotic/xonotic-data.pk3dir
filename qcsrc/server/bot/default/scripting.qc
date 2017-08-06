@@ -1,5 +1,7 @@
 #include "scripting.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include <common/state.qh>
@@ -539,16 +541,16 @@ float bot_cmd_barrier(entity this)
 
 	if(this.bot_barrier == 1) // find other bots
 	{
-		FOREACH_CLIENT(it.isbot, LAMBDA(
+		FOREACH_CLIENT(it.isbot, {
 			if(it.bot_cmdqueuebuf_allocated)
 			if(it.bot_barrier != 1)
 				return CMD_STATUS_EXECUTING; // not all are at the barrier yet
-		));
+		});
 
 		// all bots hit the barrier!
 
 		// acknowledge barrier
-		FOREACH_CLIENT(it.isbot, LAMBDA(it.bot_barrier = 2));
+		FOREACH_CLIENT(it.isbot, { it.bot_barrier = 2; });
 
 		bot_barriertime = time;
 	}
@@ -1156,7 +1158,7 @@ void bot_setcurrentcommand(entity this)
 
 void bot_resetqueues()
 {
-	FOREACH_CLIENT(it.isbot, LAMBDA(
+	FOREACH_CLIENT(it.isbot, {
 		it.bot_cmd_execution_index = 0;
 		bot_clearqueue(it);
 		// also, cancel all barriers
@@ -1167,7 +1169,7 @@ void bot_resetqueues()
 			it.(bot_placenames[i]) = string_null;
 		}
 		it.bot_places_count = 0;
-	));
+	});
 
 	bot_barriertime = time;
 }

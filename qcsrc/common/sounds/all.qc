@@ -1,6 +1,8 @@
 #include "all.qh"
 #ifdef SVQC
 
+#include <server/utils.qh>
+
 bool autocvar_bot_sound_monopoly;
 
 .entity realowner;

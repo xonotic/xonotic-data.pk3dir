@@ -1,5 +1,8 @@
 #pragma once
 
+#include "utils.qh"
+#include <common/sounds/all.qh>
+
 void ClientState_attach(entity this);
 
 IntrusiveList g_players;
@@ -148,7 +151,7 @@ CLASS(Spectator, Client)
 ENDCLASS(Spectator)
 
 CLASS(Player, Client)
-    
+
     // custom
 
     ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!

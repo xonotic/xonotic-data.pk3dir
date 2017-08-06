@@ -134,10 +134,17 @@ void Item_PreDraw(entity this)
 	}
 	float alph;
 	vector org = getpropertyvec(VF_ORIGIN);
-	if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
-		alph = 0;
-	else if(this.fade_start)
-		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	//if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
+		//alph = 0; // this shouldn't be needed, since items behind walls are culled anyway
+	if(this.fade_start)
+	{
+		if(vdist(org - this.origin, >, this.fade_end))
+			alph = 0; // save on some processing
+		else if(vdist(org - this.origin, <, this.fade_start))
+			alph = 1; // more processing saved
+		else
+			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	}
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
@@ -868,7 +875,7 @@ LABEL(pickup)
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
-		delete (this);
+		delete(this);
 	else if (this.spawnshieldtime)
 	{
 		entity e;
@@ -1172,7 +1179,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
-			delete (this);
+			delete(this);
 			return;
 		}
 
@@ -1210,7 +1217,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			// target_give not yet supported; maybe later
 			print("removed targeted ", this.classname, "\n");
 			startitem_failed = true;
-			remove (this);
+			delete(this);
 			return;
 		}
 		*/
@@ -1366,7 +1373,7 @@ spawnfunc(item_rockets)
 
 spawnfunc(item_bullets)
 {
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap && 
+	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
 	   (this.classname != "droppedweapon"))
 	{
 		weaponswapping = true;
