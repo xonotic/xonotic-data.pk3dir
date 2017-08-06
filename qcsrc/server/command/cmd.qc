@@ -385,16 +385,8 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 				return;
 			}
-			if (selection == -1)
-			{
-				ClientKill_TeamChange(caller, selection);
-				if (!IS_PLAYER(caller))
-				{
-					caller.team_selected = true; // avoids asking again for team selection on join
-				}
-				return;
-			}
-			if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+			if ((selection != -1) && autocvar_g_balance_teams &&
+				autocvar_g_balance_teams_prevent_imbalance)
 			{
 				CheckAllowedTeams(caller);
 				GetTeamCounts(caller);
