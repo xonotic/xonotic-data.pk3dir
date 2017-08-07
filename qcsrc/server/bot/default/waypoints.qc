@@ -864,9 +864,6 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 		LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
 }
 
-void waypoint_load_links_hardwired() { waypoint_load_or_remove_links_hardwired(false); }
-void waypoint_remove_links_hardwired() { waypoint_load_or_remove_links_hardwired(true); }
-
 entity waypoint_get_link(entity w, float i)
 {
 	switch(i)

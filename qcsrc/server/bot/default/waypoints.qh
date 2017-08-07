@@ -46,7 +46,6 @@ void waypoint_updatecost_foralllinks();
 void waypoint_remove_fromeditor(entity pl);
 void waypoint_remove(entity wp);
 void waypoint_schedulerelinkall();
-void waypoint_load_links_hardwired();
 void waypoint_save_links();
 void waypoint_saveall();
 
@@ -58,6 +57,9 @@ void botframe_showwaypointlinks();
 
 float waypoint_loadall();
 bool waypoint_load_links();
+#define waypoint_load_links_hardwired() waypoint_load_or_remove_links_hardwired(false)
+#define waypoint_remove_links_hardwired() waypoint_load_or_remove_links_hardwired(true)
+void waypoint_load_or_remove_links_hardwired(bool removal_mode);
 
 void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);
