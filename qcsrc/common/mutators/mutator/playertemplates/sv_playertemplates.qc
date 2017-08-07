@@ -326,24 +326,24 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 	}
 	for (int i = 0; i < numrandomweapons; ++i)
 	{
-		// Finding weapon which player doesn't have.
-		WepSet weaponbit = WEPSET(Null);
-		int numattempts = 0;
-		do
+		RandomSelection_Init();
+		for (int j = 0; j < numweapons; ++j)
 		{
-			string weapon = argv(floor(random() * numweapons));
+			string weapon = argv(j);
 			FOREACH(Weapons, it != WEP_Null,
 			{
-				if (it.netname == weapon)
+				// Finding a weapon which player doesn't have.
+				if (!(player.weapons & it.m_wepset) && (it.netname == weapon))
 				{
-					weaponbit = it.m_wepset;
-					break;
+					RandomSelection_AddEnt(it, 1, 1);
 				}
 			});
-			++numattempts;
 		}
-		while ((player.weapons & weaponbit) && (numattempts < 10));
-		player.weapons |= weaponbit;
+		if (RandomSelection_chosen_ent == NULL)
+		{
+			return;
+		}
+		player.weapons |= RandomSelection_chosen_ent.m_wepset;
 	}
 }
 
