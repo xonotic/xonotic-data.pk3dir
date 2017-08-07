@@ -889,20 +889,18 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	delete(e.fake_nade);
 	e.fake_nade = NULL;
 
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
+
 	makevectors(e.v_angle);
 
 	// NOTE: always throw from first weapon entity?
 	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0);
 
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
-
 	vector offset = (v_forward * autocvar_g_nades_throw_offset.x)
-				  + (v_right * autocvar_g_nades_throw_offset.y)
-				  + (v_up * autocvar_g_nades_throw_offset.z);
-	if(autocvar_g_nades_throw_offset == '0 0 0')
-		offset = '0 0 0';
+	              + (v_right * autocvar_g_nades_throw_offset.y)
+	              + (v_up * autocvar_g_nades_throw_offset.z);
 
-	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
+	setorigin(_nade, w_shotorg + offset);
 	//setmodel(_nade, MDL_PROJECTILE_NADE);
 	//setattachment(_nade, NULL, "");
 	PROJECTILE_MAKETRIGGER(_nade);
