@@ -53,7 +53,7 @@ void PingPLReport_Think(entity this)
 	this.nextthink = time + delta;
 
 	e = edict_num(this.cnt + 1);
-	if(IS_REAL_CLIENT(e) && IS_CLIENT(e))
+	if(IS_CLIENT(e) && IS_REAL_CLIENT(e))
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
