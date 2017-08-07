@@ -854,6 +854,8 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 		waypoint_addlink(wp_from, wp_to);
 		wp_from.wphardwired = true;
 		wp_to.wphardwired = true;
+		waypoint_setupmodel(wp_from);
+		waypoint_setupmodel(wp_to);
 	}
 
 	fclose(file);
