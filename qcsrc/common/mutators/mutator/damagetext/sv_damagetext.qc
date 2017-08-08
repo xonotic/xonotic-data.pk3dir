@@ -9,7 +9,7 @@ REGISTER_MUTATOR(damagetext, true);
 #define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)
 #define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3 /* all players */)
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
-    if (SV_DAMAGETEXT_DISABLED()) return;
+    if (SV_DAMAGETEXT_DISABLED() || autocvar_g_instagib) return;
     const entity attacker = M_ARGV(0, entity);
     const entity hit = M_ARGV(1, entity); if (hit == attacker) return;
     const float health = M_ARGV(2, float);
