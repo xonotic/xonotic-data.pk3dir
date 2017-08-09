@@ -1262,9 +1262,9 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
-	vector dest = (e.absmin + e.absmax) * 0.5;
-	dest.z = e.absmin.z;
-	float dest_height = e.absmax.z - e.absmin.z;
+	vector dest;
+	float dest_height;
+	SET_TRACEWALK_DESTCOORDS(e, e.origin, dest, dest_height);
 	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 		return true;
 
@@ -1290,9 +1290,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		{
 			if (this.goalentity.navigation_dynamicgoal)
 			{
-				vector dest = (this.goalentity.absmin + this.goalentity.absmax) * 0.5;
-				dest.z = this.goalentity.absmin.z;
-				float dest_height = this.goalentity.absmax.z - this.goalentity.absmin.z;
+				SET_TRACEWALK_DESTCOORDS(e, e.origin, dest, dest_height);
 				if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 					e = nearest_wp.enemy;
 			}
