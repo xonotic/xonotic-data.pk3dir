@@ -352,7 +352,7 @@ noref int autocvar_cl_gunalign;
 .int cvar_cl_gunalign;
 REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
 #endif
-REGISTER_STAT(GUNALIGN, int, this.cvar_cl_gunalign)
+REGISTER_STAT(GUNALIGN, int)
 #ifdef SVQC
 SPECTATE_COPYFIELD(_STAT(GUNALIGN))
 #endif

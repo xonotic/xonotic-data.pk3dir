@@ -421,7 +421,7 @@ void GetCvars(entity this, int f)
 
 	Notification_GetCvars(this);
 
-	ReplicateVars(this, s, f);
+	ReplicateVars(this, CS(this), s, f);
 
 	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
 	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
@@ -435,7 +435,7 @@ void GetCvars(entity this, int f)
 	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
 	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 
-	GetCvars_handleFloat(this, this, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(this, CS(this), s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)

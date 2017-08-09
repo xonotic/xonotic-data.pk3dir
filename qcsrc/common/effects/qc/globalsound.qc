@@ -333,7 +333,7 @@
 						msg_entity = this.pusher;
 						if (IS_REAL_CLIENT(msg_entity))
 						{
-							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
+							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten);
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten);
 							else soundto(MSG_ONE, this, chan, sample, vol, atten);
@@ -354,7 +354,7 @@
 					#define X() \
 						MACRO_BEGIN \
 						{ \
-							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
+							float atten = (CS(msg_entity).cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
 							else soundto(MSG_ONE, this, chan, sample, vol, atten); \
@@ -384,10 +384,10 @@
 					#define X() \
 						MACRO_BEGIN \
 						{ \
-							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt) \
+							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < CS(msg_entity).cvar_cl_autotaunt) \
 							{ \
-								float atten = (msg_entity.cvar_cl_voice_directional >= 1) \
-								    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, \
+								float atten = (CS(msg_entity).cvar_cl_voice_directional >= 1) \
+								    ? bound(ATTEN_MIN, CS(msg_entity).cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
 								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
