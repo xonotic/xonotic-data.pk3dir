@@ -268,6 +268,11 @@ void waypoint_spawn_fromeditor(entity pl)
 
 	LABEL(add_wp);
 	e = waypoint_spawn(org, org, 0);
+	if(!e)
+	{
+		LOG_INFOF("Couldn't spawn waypoint at %v\n", org);
+		return;
+	}
 	waypoint_schedulerelink(e);
 	bprint(strcat("Waypoint spawned at ", vtos(e.origin), "\n"));
 	if(sym)
