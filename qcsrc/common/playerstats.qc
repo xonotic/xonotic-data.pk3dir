@@ -24,7 +24,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	// set up player identification
 	string s = "";
 
-	if((e.crypto_idfp != "") && (e.cvar_cl_allow_uidtracking == 1))
+	if((e.crypto_idfp != "") && (CS(e).cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
@@ -132,7 +132,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
+	if(CS(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
 		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p, false));
 
 	if(teamplay)

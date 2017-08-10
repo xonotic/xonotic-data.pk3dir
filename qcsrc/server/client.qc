@@ -2311,7 +2311,7 @@ void ObserverThink(entity this)
 				TRANSMUTE(Spectator, this);
 			}
 		} else {
-			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? this.cvar_cl_clippedspectating : !this.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS(this).cvar_cl_clippedspectating : !CS(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
 	} else {
@@ -2449,6 +2449,9 @@ Called every frame for each client before the physics are run
 .float last_vehiclecheck;
 void PlayerPreThink (entity this)
 {
+	STAT(GUNALIGN, this) = CS(this).cvar_cl_gunalign; // TODO
+	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS(this).cvar_cl_movement_track_canjump;
+
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
 	if (frametime) {
@@ -2478,19 +2481,19 @@ void PlayerPreThink (entity this)
 	}
 
 	// version nagging
-	if (CS(this).version_nagtime && this.cvar_g_xonoticversion && time > CS(this).version_nagtime) {
+	if (CS(this).version_nagtime && CS(this).cvar_g_xonoticversion && time > CS(this).version_nagtime) {
         CS(this).version_nagtime = 0;
-        if (strstrofs(this.cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(this.cvar_g_xonoticversion, "autobuild", 0) >= 0) {
+        if (strstrofs(CS(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS(this).cvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git client
         } else if (strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git server
-            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
         } else {
-            int r = vercmp(this.cvar_g_xonoticversion, autocvar_g_xonoticversion);
+            int r = vercmp(CS(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
             if (r < 0) { // old client
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
             } else if (r > 0) { // old server
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
             }
         }
     }
@@ -2554,7 +2557,7 @@ void PlayerPreThink (entity this)
 		this.last_vehiclecheck = time + 1;
 	}
 
-	if(!this.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
+	if(!CS(this).cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
 		if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 			PlayerUseKey(this);

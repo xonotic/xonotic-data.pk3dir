@@ -41,6 +41,13 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+// TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
+void bot_setclientfields(entity this)
+{
+	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+}
+
 entity bot_spawn()
 {
 	entity bot = spawnclient();
@@ -50,6 +57,7 @@ entity bot_spawn()
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
+		bot_setclientfields(bot);
 		PutClientInServer(bot);
 	}
 	return bot;
@@ -264,9 +272,6 @@ void bot_setnameandstuff(entity this)
 		bot_model = strcat(bot_model, ".iqm");
 	this.playermodel = this.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	this.playerskin = this.playerskin_freeme = strzone(bot_skin);
-
-	this.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the NULL
-	this.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 void bot_custom_weapon_priority_setup()
@@ -419,7 +424,10 @@ void bot_clientconnect(entity this)
 	this.createdtime = this.bot_nextthink;
 
 	if(!this.bot_config_loaded) // This is needed so team overrider doesn't break between matches
+	{
 		bot_setnameandstuff(this);
+		bot_setclientfields(this);
+	}
 
 	if(this.bot_forced_team==1)
 		this.team = NUM_TEAM_1;

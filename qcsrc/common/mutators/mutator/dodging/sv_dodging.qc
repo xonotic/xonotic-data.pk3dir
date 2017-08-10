@@ -35,7 +35,7 @@
 	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 #elif defined(SVQC)
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
-	#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
+	#define PHYS_DODGING_TIMEOUT(s) 			CS(s).cvar_cl_dodging_timeout
 	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
 #endif
 
@@ -52,7 +52,7 @@ bool autocvar_sv_dodging_sound;
 #include <common/animdecide.qh>
 #include <common/physics/player.qh>
 
-.float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
+.float cvar_cl_dodging_timeout;
 
 REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 {
@@ -307,6 +307,13 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 #ifdef SVQC
 
 REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
+
+MUTATOR_HOOKFUNCTION(dodging, PlayerPreThink)
+{
+	entity player = M_ARGV(0, entity);
+
+	STAT(DODGING_TIMEOUT, player) = CS(player).cvar_cl_dodging_timeout;
+}
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
