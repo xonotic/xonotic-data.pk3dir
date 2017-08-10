@@ -196,6 +196,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	// y is yaw: between -180 and 180, increases when turning left
 	// z is roll: positive means tilted clockwise, usually is 0
 	// when .fixangle is set, the player's view will change to the direction where the model is facing
+	// more info: https://gitlab.com/xonotic/xonotic-data.pk3dir/merge_requests/447#note_32816794
 	.vector v_angle;
 
 	.entity hook;
