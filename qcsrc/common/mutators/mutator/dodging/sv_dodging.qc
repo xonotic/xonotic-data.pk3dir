@@ -300,13 +300,6 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 
 REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 
-MUTATOR_HOOKFUNCTION(dodging, PlayerPreThink)
-{
-	entity player = M_ARGV(0, entity);
-
-	STAT(DODGING_TIMEOUT, player) = CS(player).cvar_cl_dodging_timeout;
-}
-
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
