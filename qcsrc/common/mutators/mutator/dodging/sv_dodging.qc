@@ -162,11 +162,11 @@ bool PM_dodging_checkpressedkeys(entity this)
 				dodge_detected = true;												\
 			this.last_##BTN##_KEY_time = time;										\
 		}
- 	X(x < 0, BACKWARD,	x--);
- 	X(x > 0, FORWARD,	x++);
- 	X(y < 0, LEFT,		y--);
- 	X(y > 0, RIGHT,		y++);
- 	#undef X
+	X(x < 0, BACKWARD,	x--);
+	X(x > 0, FORWARD,	x++);
+	X(y < 0, LEFT,		y--);
+	X(y > 0, RIGHT,		y++);
+	#undef X
 
 	if (dodge_detected)
 	{
