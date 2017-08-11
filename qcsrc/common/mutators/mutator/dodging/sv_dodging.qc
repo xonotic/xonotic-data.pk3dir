@@ -130,12 +130,6 @@ bool check_close_to_ground(entity this, float threshold)
 
 bool PM_dodging_checkpressedkeys(entity this)
 {
-	if(!PHYS_DODGING)
-		return false;
-
-	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
-	bool frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
-
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
 		return false;
@@ -154,6 +148,9 @@ bool PM_dodging_checkpressedkeys(entity this)
 
 	if(!wall_dodge && PHYS_DODGING_MAXSPEED && vdist(this.velocity, >, PHYS_DODGING_MAXSPEED))
 		return false;
+
+	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
+	bool frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;
@@ -203,9 +200,6 @@ bool PM_dodging_checkpressedkeys(entity this)
 
 void PM_dodging(entity this)
 {
-	if (!PHYS_DODGING)
-		return;
-
 	// when swimming or dead, no dodging allowed..
 	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this))
 	{
@@ -277,8 +271,6 @@ void PM_dodging(entity this)
 void PM_dodging_GetPressedKeys(entity this)
 {
 #ifdef CSQC
-	if(!PHYS_DODGING) { return; }
-
 	PM_dodging_checkpressedkeys(this);
 
 	int keys = this.pressedkeys;
@@ -297,7 +289,7 @@ void PM_dodging_GetPressedKeys(entity this)
 
 MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 {
-    entity player = M_ARGV(0, entity);
+	entity player = M_ARGV(0, entity);
 
 	// print("dodging_PlayerPhysics\n");
 	PM_dodging_GetPressedKeys(player);
