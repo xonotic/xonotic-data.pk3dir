@@ -4,7 +4,7 @@
 #define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
 #define PHYS_DODGING_FROZEN_NODOUBLETAP		autocvar_sv_dodging_frozen_doubletap
-#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold
+#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold // TODO not used - kill? (also below)
 #define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
 #define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
 #define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
@@ -192,6 +192,22 @@ bool PM_dodging_checkpressedkeys(entity this)
 	return false;
 }
 
+// TODO use real cvars
+/*float autocvar_velocity_min = 200;
+float autocvar_velocity_max = 700;
+float autocvar_force_min = 50;
+float autocvar_force_max = 350;*/
+float determine_speed(entity player) {
+	float x = PHYS_FROZEN(player) ? PHYS_DODGING_HORIZ_SPEED_FROZEN : PHYS_DODGING_HORIZ_SPEED;
+	x = x; // unused
+	return x;
+
+	/*float horiz_vel = vlen(vec2(player.velocity));
+	// force min and max are inverted - the faster you are the wekaer dodging becomes
+	// TODO document cvars in cfg
+	return map_bound_ranges(horiz_vel, autocvar_velocity_min, autocvar_velocity_max, autocvar_force_max, autocvar_force_min);*/
+}
+
 void PM_dodging(entity this)
 {
 	// when swimming or dead, no dodging allowed..
@@ -217,7 +233,8 @@ void PM_dodging(entity this)
 	// if ramp time is smaller than frametime we get problems ;D
 	common_factor = min(common_factor, 1);
 
-	float horiz_speed = PHYS_FROZEN(this) ? PHYS_DODGING_HORIZ_SPEED_FROZEN : PHYS_DODGING_HORIZ_SPEED;
+	float horiz_speed = determine_speed(this); // TODO kill this
+	//OG_INFOF("velocity %f -> force %f\n", vlen(vec2(this.velocity)), horiz_speed);
 	float new_velocity_gain = this.dodging_velocity_gain - (common_factor * horiz_speed);
 	new_velocity_gain = max(0, new_velocity_gain);
 
