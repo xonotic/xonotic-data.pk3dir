@@ -4,7 +4,7 @@
 #define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
 #define PHYS_DODGING_FROZEN_DOUBLETAP		autocvar_sv_dodging_frozen_doubletap
-#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold // TODO not used - kill? (also below)
+#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold
 #define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
 #define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
 #define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
@@ -98,29 +98,31 @@ REGISTER_MUTATOR(dodging, true);
 .int pressedkeys;
 #endif
 
-// returns true if the player is close to a wall
-bool check_close_to_wall(entity this, float threshold)
-{
-	if (PHYS_DODGING_WALL == 0) { return false; }
-
 #define X(dir) \
 	tracebox(this.origin, this.mins, this.maxs, this.origin + threshold * dir, true, this); \
 	if (trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) \
 		return true;
 
+// returns true if the player is close to a wall
+bool is_close_to_wall(entity this, float threshold)
+{
 	X(v_right);
 	X(-v_right);
 	X(v_forward);
 	X(-v_forward);
-#undef X
 
 	return false;
 }
 
-bool check_close_to_ground(entity this, float threshold)
+bool is_close_to_ground(entity this, float threshold)
 {
-	return IS_ONGROUND(this) ? true : false;
+	if (IS_ONGROUND(this)) return true;
+	X(-v_up); // necessary for dodging down a slope using doubletap (using `+dodge` works anyway)
+
+	return false;
 }
+
+#undef X
 
 bool PM_dodging_checkpressedkeys(entity this)
 {
@@ -133,9 +135,9 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool wall_dodge = false;
 
 	if(!PHYS_DODGING_AIR)
-	if(!check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD))
+	if(!is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD))
 	{
-		wall_dodge = check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD);
+		wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD));
 		if(!wall_dodge) // we're not on the ground, and wall dodging isn't allowed, end it!
 			return true;
 	}
