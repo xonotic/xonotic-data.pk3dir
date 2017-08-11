@@ -155,12 +155,12 @@ bool PM_dodging_checkpressedkeys(entity this)
 	if (mymovement_##COND)												\
 		/* is this a state change? */													\
 		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
-				tap_direction_##RESULT;													\
-				if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap)	\
-					dodge_detected = true;												\
-				if(PHYS_INPUT_BUTTON_DODGE(this))										\
-					dodge_detected = true;												\
-				this.last_##BTN##_KEY_time = time;										\
+			tap_direction_##RESULT;													\
+			if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap)	\
+				dodge_detected = true;												\
+			if(PHYS_INPUT_BUTTON_DODGE(this))										\
+				dodge_detected = true;												\
+			this.last_##BTN##_KEY_time = time;										\
 		}
  	X(x < 0, BACKWARD,	x--);
  	X(x > 0, FORWARD,	x++);
