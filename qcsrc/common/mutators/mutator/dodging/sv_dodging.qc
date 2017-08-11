@@ -94,7 +94,7 @@ REGISTER_MUTATOR(dodging, true);
 // until it's 0.
 .float dodging_velocity_gain;
 
-#ifdef CSQC
+#ifdef CSQC // TODO what is this? 1) CSQC in sv_ file never even gets compiled 2) pressedkeys is only defined on server so this would be always 0
 .int pressedkeys;
 #endif
 
