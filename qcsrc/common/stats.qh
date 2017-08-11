@@ -230,7 +230,7 @@ float autocvar_sv_dodging_maxspeed = 450;
 REGISTER_STAT(DODGING, int, g_dodging)
 REGISTER_STAT(DODGING_DELAY, float, autocvar_sv_dodging_delay)
 REGISTER_STAT(DODGING_DISTANCE_THRESHOLD, float, autocvar_sv_dodging_wall_distance_threshold)
-REGISTER_STAT(DODGING_FROZEN_NO_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
+REGISTER_STAT(DODGING_FROZEN_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
 REGISTER_STAT(DODGING_HEIGHT_THRESHOLD, float, autocvar_sv_dodging_height_threshold)
 REGISTER_STAT(DODGING_HORIZ_SPEED, float, autocvar_sv_dodging_horiz_speed)
 REGISTER_STAT(DODGING_HORIZ_SPEED_FROZEN, float, autocvar_sv_dodging_horiz_speed_frozen)

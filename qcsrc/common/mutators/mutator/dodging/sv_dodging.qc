@@ -3,7 +3,7 @@
 #define PHYS_DODGING 						g_dodging
 #define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
-#define PHYS_DODGING_FROZEN_NODOUBLETAP		autocvar_sv_dodging_frozen_doubletap
+#define PHYS_DODGING_FROZEN_DOUBLETAP		autocvar_sv_dodging_frozen_doubletap
 #define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold // TODO not used - kill? (also below)
 #define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
 #define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
@@ -18,7 +18,7 @@
 #define PHYS_DODGING 						STAT(DODGING, this)
 #define PHYS_DODGING_DELAY 					STAT(DODGING_DELAY, this)
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	STAT(DODGING_DISTANCE_THRESHOLD, this)
-#define PHYS_DODGING_FROZEN_NODOUBLETAP		STAT(DODGING_FROZEN_NO_DOUBLETAP, this)
+#define PHYS_DODGING_FROZEN_DOUBLETAP		STAT(DODGING_FROZEN_DOUBLETAP, this)
 #define PHYS_DODGING_HEIGHT_THRESHOLD 		STAT(DODGING_HEIGHT_THRESHOLD, this)
 #define PHYS_DODGING_HORIZ_SPEED 			STAT(DODGING_HORIZ_SPEED, this)
 #define PHYS_DODGING_HORIZ_SPEED_FROZEN 	STAT(DODGING_HORIZ_SPEED_FROZEN, this)
@@ -144,7 +144,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 		return false;
 
 	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
-	bool frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
+	bool frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_DOUBLETAP);
 
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;
