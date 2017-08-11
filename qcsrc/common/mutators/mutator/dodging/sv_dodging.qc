@@ -43,12 +43,6 @@
 
 bool autocvar_sv_dodging_sound;
 
-// set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
-.float dodging_action;
-
-// the jump part of the dodge cannot be ramped
-.float dodging_single_action;
-
 #include <common/animdecide.qh>
 #include <common/physics/player.qh>
 
@@ -229,7 +223,7 @@ void PM_dodging(entity this)
 
 	float velocity_difference = this.dodging_velocity_gain - new_velocity_gain;
 
-	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
+	// ramp up dodging speed by adding some velocity each frame..
 	if (this.dodging_action == 1)
 	{
 		//disable jump key during dodge accel phase
