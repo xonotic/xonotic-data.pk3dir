@@ -329,10 +329,10 @@ vector solve_quadratic(float a, float b, float c)
 /// Max can be lower than min if you want to invert the range, values can be negative.
 ERASEABLE
 float map_ranges(float value, float src_min, float src_max, float dest_min, float dest_max) {
-	float velocity_diff = src_max - src_min;
-	float force_diff = dest_max - dest_min;
-	float ratio = (value - src_min) / velocity_diff;
-	return dest_min + force_diff * ratio;
+	float src_diff = src_max - src_min;
+	float dest_diff = dest_max - dest_min;
+	float ratio = (value - src_min) / src_diff;
+	return dest_min + dest_diff * ratio;
 }
 
 /// Same as `map_ranges` except that values outside the source range are clamped to min or max.
