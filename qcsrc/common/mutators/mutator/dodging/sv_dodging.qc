@@ -166,7 +166,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 	{
 		wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD));
 		if(!wall_dodge) // we're not on the ground, and wall dodging isn't allowed, end it!
-			return true;
+			return false;
 	}
 
 	if(!wall_dodge && PHYS_DODGING_MAXSPEED && vdist(this.velocity, >, PHYS_DODGING_MAXSPEED))
