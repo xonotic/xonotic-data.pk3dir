@@ -130,21 +130,6 @@ bool PM_dodging_checkpressedkeys(entity this)
 	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
 		return false;
 
-	makevectors(this.angles);
-
-	bool wall_dodge = false;
-
-	if(!PHYS_DODGING_AIR)
-	if(!is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD))
-	{
-		wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD));
-		if(!wall_dodge) // we're not on the ground, and wall dodging isn't allowed, end it!
-			return true;
-	}
-
-	if(!wall_dodge && PHYS_DODGING_MAXSPEED && vdist(this.velocity, >, PHYS_DODGING_MAXSPEED))
-		return false;
-
 	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
 	bool frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_DOUBLETAP);
 
@@ -170,28 +155,42 @@ bool PM_dodging_checkpressedkeys(entity this)
 	X(y > 0, RIGHT,		y++);
 	#undef X
 
-	if (dodge_detected)
+	if (!dodge_detected) return false;
+
+	makevectors(this.angles);
+
+	bool wall_dodge = false;
+
+	if(!PHYS_DODGING_AIR)
+	if(!is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD))
 	{
-		this.last_dodging_time = time;
-
-		this.dodging_action = 1;
-		this.dodging_single_action = 1;
-
-		this.dodging_velocity_gain = PHYS_DODGING_HORIZ_SPEED;
-
-		this.dodging_direction_x = tap_direction_x;
-		this.dodging_direction_y = tap_direction_y;
-
-		// normalize the dodging_direction vector.. (unlike UT99) XD
-		float length = this.dodging_direction_x * this.dodging_direction_x
-					+ this.dodging_direction_y * this.dodging_direction_y;
-		length = sqrt(length);
-
-		this.dodging_direction_x = this.dodging_direction_x * 1.0 / length;
-		this.dodging_direction_y = this.dodging_direction_y * 1.0 / length;
-		return true;
+		wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD));
+		if(!wall_dodge) // we're not on the ground, and wall dodging isn't allowed, end it!
+			return true;
 	}
-	return false;
+
+	if(!wall_dodge && PHYS_DODGING_MAXSPEED && vdist(this.velocity, >, PHYS_DODGING_MAXSPEED))
+		return false;
+
+	this.last_dodging_time = time;
+
+	this.dodging_action = 1;
+	this.dodging_single_action = 1;
+
+	this.dodging_velocity_gain = PHYS_DODGING_HORIZ_SPEED;
+
+	this.dodging_direction_x = tap_direction_x;
+	this.dodging_direction_y = tap_direction_y;
+
+	// normalize the dodging_direction vector.. (unlike UT99) XD
+	float length = this.dodging_direction_x * this.dodging_direction_x
+				+ this.dodging_direction_y * this.dodging_direction_y;
+	length = sqrt(length);
+
+	this.dodging_direction_x = this.dodging_direction_x * 1.0 / length;
+	this.dodging_direction_y = this.dodging_direction_y * 1.0 / length;
+
+	return true;
 }
 
 // TODO use real cvars
