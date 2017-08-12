@@ -283,9 +283,9 @@ void PM_dodging(entity this)
 	}
 }
 
+#ifdef CSQC
 void PM_dodging_GetPressedKeys(entity this)
 {
-#ifdef CSQC
 	PM_dodging_checkpressedkeys(this);
 
 	int keys = this.pressedkeys;
@@ -299,15 +299,16 @@ void PM_dodging_GetPressedKeys(entity this)
 	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
 	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
 	this.pressedkeys = keys;
-#endif
 }
+#endif
 
 MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
 
-	// print("dodging_PlayerPhysics\n");
+#ifdef CSQC
 	PM_dodging_GetPressedKeys(player);
+#endif
 	PM_dodging(player);
 }
 
