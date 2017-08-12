@@ -29,7 +29,7 @@
 #define PHYS_DODGING_MAXSPEED 				STAT(DODGING_MAXSPEED, this)
 #endif
 
-#ifdef CSQC
+#ifdef CSQC // FIXME this is an sv_ file, none of this will even be compiled
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
 	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
@@ -244,6 +244,9 @@ void PM_dodging(entity this)
 	// ramp up dodging speed by adding some velocity each frame..
 	if (this.dodging_action == 1)
 	{
+		// FIXME is movement.z ever used?
+		// it seems the rest of the code uses PHYS_INPUT_BUTTON_JUMP for jumping
+
 		//disable jump key during dodge accel phase
 		if(PHYS_CS(this).movement.z > 0) { PHYS_CS(this).movement_z = 0; }
 
