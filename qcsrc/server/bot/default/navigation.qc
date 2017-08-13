@@ -1240,18 +1240,24 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if (!e)
 		return false;
 
+	entity teleport_goal = NULL;
+
+	this.goalentity = e;
+
 	if(e.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
 		// force teleport destination as route destination
-		e.wp00.enemy = e;
-		e = e.wp00;
+		teleport_goal = e;
+		navigation_pushroute(this, e.wp00);
+		this.goalentity = e.wp00;
 	}
-
-	this.goalentity = e;
 
 	// put the entity on the goal stack
 	//print("routetogoal ", etos(e), "\n");
 	navigation_pushroute(this, e);
+
+	if(teleport_goal)
+		e = this.goalentity;
 
 	if(e.classname == "waypoint" && !(e.wpflags & WAYPOINTFLAG_PERSONAL))
 	{
@@ -1277,6 +1283,8 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		e = e.nearestwaypoint;
 		nearest_wp = e;
 	}
+	else if(teleport_goal)
+		e = teleport_goal;
 	else
 		e = e.enemy; // we already have added it, so...
 
