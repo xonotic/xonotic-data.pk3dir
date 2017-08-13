@@ -1,7 +1,5 @@
 #include "bumblebee_weapons.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
 
 #ifdef SVQC
@@ -130,7 +128,5 @@ void bumble_raygun_draw(entity this)
         Draw_CylindricLine(_vtmp1, this.bumble_origin +  randomvec() * 32, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
     }
 }
-
-#endif
 
 #endif
