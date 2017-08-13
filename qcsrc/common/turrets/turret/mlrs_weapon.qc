@@ -1,7 +1,5 @@
 #include "mlrs_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 SOUND(MLRSTurretAttack_FIRE, W_Sound("electro_fire"));
 METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -25,7 +23,5 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, .entity we
         te_explosion (missile.origin);
     }
 }
-
-#endif
 
 #endif
