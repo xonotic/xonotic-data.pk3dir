@@ -211,6 +211,9 @@ float determine_speed(entity player) {
 
 void PM_dodging(entity this)
 {
+	// can't use return value from PM_dodging_checkpressedkeys because they're called from different hooks
+	if (!this.dodging_action) return;
+
 	// when swimming or dead, no dodging allowed..
 	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this))
 	{
@@ -242,19 +245,15 @@ void PM_dodging(entity this)
 	float velocity_difference = this.dodging_velocity_gain - new_velocity_gain;
 
 	// ramp up dodging speed by adding some velocity each frame..
-	if (this.dodging_action == 1)
-	{
-		// FIXME is movement.z ever used?
-		// it seems the rest of the code uses PHYS_INPUT_BUTTON_JUMP for jumping
 
-		//disable jump key during dodge accel phase
-		if(PHYS_CS(this).movement.z > 0) { PHYS_CS(this).movement_z = 0; }
+	//disable jump key during dodge accel phase
+	// FIXME is movement.z ever used? it seems the rest of the code uses PHYS_INPUT_BUTTON_JUMP for jumping
+	if(PHYS_CS(this).movement.z > 0) { PHYS_CS(this).movement_z = 0; }
 
-		this.velocity += ((this.dodging_direction_y * velocity_difference) * v_right)
-					+ ((this.dodging_direction_x * velocity_difference) * v_forward);
+	this.velocity += ((this.dodging_direction_y * velocity_difference) * v_right)
+				+ ((this.dodging_direction_x * velocity_difference) * v_forward);
 
-		this.dodging_velocity_gain = this.dodging_velocity_gain - velocity_difference;
-	}
+	this.dodging_velocity_gain = this.dodging_velocity_gain - velocity_difference;
 
 	// the up part of the dodge is a single shot action
 	if (this.dodging_single_action == 1)
@@ -274,7 +273,7 @@ void PM_dodging(entity this)
 	}
 
 	// are we done with the dodging ramp yet?
-	if((this.dodging_action == 1) && ((time - this.last_dodging_time) > PHYS_DODGING_RAMP_TIME))
+	if((time - this.last_dodging_time) > PHYS_DODGING_RAMP_TIME)
 	{
 		// reset state so next dodge can be done correctly
 		this.dodging_action = 0;
@@ -305,6 +304,7 @@ void PM_dodging_GetPressedKeys(entity this)
 MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
+	//LOG_INFOF("player %s, physics %f\n", player.netname, time);
 
 #ifdef CSQC
 	PM_dodging_GetPressedKeys(player);
@@ -319,6 +319,7 @@ REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
+	//LOG_INFOF("player %s, keys %f\n", player.netname, time);
 
 	PM_dodging_checkpressedkeys(player);
 }
