@@ -11,7 +11,7 @@
 #define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
 #define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
 #define PHYS_DODGING_AIR 					autocvar_sv_dodging_air_dodging
-#define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed
+#define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed // TODO separate max air speed, fix frozen dodging
 
 // we ran out of stats slots! TODO: re-enable this when prediction is available for dodging
 #if 0
@@ -75,7 +75,6 @@ REGISTER_MUTATOR(dodging, true);
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
-
 // these are used to store the last key press time for each of the keys..
 .float last_FORWARD_KEY_time;
 .float last_BACKWARD_KEY_time;
@@ -92,7 +91,10 @@ REGISTER_MUTATOR(dodging, true);
 // This is the velocity gain to be added over the ramp time.
 // It will decrease from frame to frame during dodging_action = 1
 // until it's 0.
-.float dodging_velocity_gain;
+//.float dodging_velocity_gain;
+
+.float dodging_force_total;
+.float dodging_force_remaining;
 
 #ifdef CSQC // TODO what is this? 1) CSQC in sv_ file never even gets compiled 2) pressedkeys is only defined on server so this would be always 0
 .int pressedkeys;
@@ -123,6 +125,22 @@ bool is_close_to_ground(entity this, float threshold)
 }
 
 #undef X
+
+// TODO use real cvars
+/*float autocvar_velocity_min = 200;
+float autocvar_velocity_max = 700;
+float autocvar_force_min = 50;
+float autocvar_force_max = 350;*/
+float determine_speed(entity player) {
+	float x = PHYS_FROZEN(player) ? PHYS_DODGING_HORIZ_SPEED_FROZEN : PHYS_DODGING_HORIZ_SPEED;
+	x = x; // unused
+	return x;
+
+	/*float horiz_vel = vlen(vec2(player.velocity));
+	// force min and max are inverted - the faster you are the wekaer dodging becomes
+	// TODO document cvars in cfg
+	return map_bound_ranges(horiz_vel, autocvar_velocity_min, autocvar_velocity_max, autocvar_force_max, autocvar_force_min);*/
+}
 
 bool PM_dodging_checkpressedkeys(entity this)
 {
@@ -177,36 +195,20 @@ bool PM_dodging_checkpressedkeys(entity this)
 	this.dodging_action = 1;
 	this.dodging_single_action = 1;
 
-	this.dodging_velocity_gain = PHYS_DODGING_HORIZ_SPEED;
+	//this.dodging_velocity_gain = PHYS_DODGING_HORIZ_SPEED;
+	this.dodging_force_total = determine_speed(this);
+	this.dodging_force_remaining = this.dodging_force_total;
 
-	this.dodging_direction_x = tap_direction_x;
-	this.dodging_direction_y = tap_direction_y;
+	this.dodging_direction.x = tap_direction_x;
+	this.dodging_direction.y = tap_direction_y;
 
 	// normalize the dodging_direction vector.. (unlike UT99) XD
-	float length = this.dodging_direction_x * this.dodging_direction_x
-				+ this.dodging_direction_y * this.dodging_direction_y;
-	length = sqrt(length);
+	float length = sqrt(this.dodging_direction.x ** 2 + this.dodging_direction.y ** 2);
 
-	this.dodging_direction_x = this.dodging_direction_x * 1.0 / length;
-	this.dodging_direction_y = this.dodging_direction_y * 1.0 / length;
+	this.dodging_direction_x = this.dodging_direction_x / length;
+	this.dodging_direction_y = this.dodging_direction_y / length;
 
 	return true;
-}
-
-// TODO use real cvars
-/*float autocvar_velocity_min = 200;
-float autocvar_velocity_max = 700;
-float autocvar_force_min = 50;
-float autocvar_force_max = 350;*/
-float determine_speed(entity player) {
-	float x = PHYS_FROZEN(player) ? PHYS_DODGING_HORIZ_SPEED_FROZEN : PHYS_DODGING_HORIZ_SPEED;
-	x = x; // unused
-	return x;
-
-	/*float horiz_vel = vlen(vec2(player.velocity));
-	// force min and max are inverted - the faster you are the wekaer dodging becomes
-	// TODO document cvars in cfg
-	return map_bound_ranges(horiz_vel, autocvar_velocity_min, autocvar_velocity_max, autocvar_force_max, autocvar_force_min);*/
 }
 
 void PM_dodging(entity this)
@@ -229,31 +231,35 @@ void PM_dodging(entity this)
 	else
 		makevectors(this.angles);
 
+	// fraction of the force to apply each frame
 	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
 	// will be called ramp_time/frametime times = 2 times. so, we need to
 	// add 0.5 * the total speed each frame until the dodge action is done..
 	float common_factor = PHYS_DODGING_FRAMETIME / PHYS_DODGING_RAMP_TIME;
+	common_factor /= 2; // FIXME this is WRONG but this function is called twice per frame!!!
 
 	// if ramp time is smaller than frametime we get problems ;D
 	common_factor = min(common_factor, 1);
 
-	float horiz_speed = determine_speed(this); // TODO kill this
-	//OG_INFOF("velocity %f -> force %f\n", vlen(vec2(this.velocity)), horiz_speed);
+	/*float horiz_speed = determine_speed(this); // TODO kill this
+	//LOG_INFOF("velocity %f -> force %f\n", vlen(vec2(this.velocity)), horiz_speed);
 	float new_velocity_gain = this.dodging_velocity_gain - (common_factor * horiz_speed);
 	new_velocity_gain = max(0, new_velocity_gain);
 
-	float velocity_difference = this.dodging_velocity_gain - new_velocity_gain;
+	float velocity_difference = this.dodging_velocity_gain - new_velocity_gain;*/
 
-	// ramp up dodging speed by adding some velocity each frame..
+	/*float velocity_increase = min(common_factor * this.dodging_force_total, this.dodging_force_remaining;
+	this.dodging_force_remaining -= velocity_increase;*/
 
-	//disable jump key during dodge accel phase
-	// FIXME is movement.z ever used? it seems the rest of the code uses PHYS_INPUT_BUTTON_JUMP for jumping
-	if(PHYS_CS(this).movement.z > 0) { PHYS_CS(this).movement_z = 0; }
-
-	this.velocity += ((this.dodging_direction_y * velocity_difference) * v_right)
+	/*this.velocity += ((this.dodging_direction_y * velocity_difference) * v_right)
 				+ ((this.dodging_direction_x * velocity_difference) * v_forward);
 
-	this.dodging_velocity_gain = this.dodging_velocity_gain - velocity_difference;
+	this.dodging_velocity_gain = this.dodging_velocity_gain - velocity_difference;*/
+
+	float velocity_increase = common_factor * this.dodging_force_total;
+	LOG_INFOF("time %f velocity_increase: %f\n", time, velocity_increase);
+	this.velocity += this.dodging_direction_x * velocity_increase * v_forward
+	               + this.dodging_direction_y * velocity_increase * v_right;
 
 	// the up part of the dodge is a single shot action
 	if (this.dodging_single_action == 1)
@@ -277,8 +283,8 @@ void PM_dodging(entity this)
 	{
 		// reset state so next dodge can be done correctly
 		this.dodging_action = 0;
-		this.dodging_direction_x = 0;
-		this.dodging_direction_y = 0;
+		this.dodging_direction.x = 0;
+		this.dodging_direction.y = 0;
 	}
 }
 
