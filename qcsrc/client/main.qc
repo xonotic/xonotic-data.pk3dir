@@ -1,8 +1,10 @@
 #include "main.qh"
 
+#include "defs.qh"
+#include <common/ent_cs.qh>
 #include "miscfunctions.qh"
 #include <common/effects/effect.qh>
-#include <common/effects/qc/all.qh>
+#include <common/effects/qc/_mod.qh>
 #include <common/effects/all.qh>
 #include <common/effects/all.inc>
 #include "hud/_mod.qh"

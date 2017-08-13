@@ -22,7 +22,7 @@
 #include "../common/minigames/sv_minigames.qh"
 
 #include "../common/physics/player.qh"
-#include "../common/effects/qc/all.qh"
+#include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/triggers/include.qh"
 #include "../common/wepent.qh"

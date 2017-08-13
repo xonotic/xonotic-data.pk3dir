@@ -2,7 +2,6 @@
 
 #include <common/ent_cs.qh>
 
-#ifdef IMPLEMENTATION
 	#include <common/animdecide.qh>
 
 	#ifdef SVQC
@@ -436,4 +435,3 @@
 		}
 
 	#endif
-#endif

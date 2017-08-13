@@ -1,7 +1,5 @@
 #include "damageeffects.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_NET_LINKED(ENT_CLIENT_DAMAGEINFO)
 
 #ifdef SVQC
@@ -413,7 +411,5 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		}
 	}
 }
-
-#endif
 
 #endif
