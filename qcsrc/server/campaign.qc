@@ -1,4 +1,7 @@
 #include "campaign.qh"
+
+#include "defs.qh"
+
 #include "cheats.qh"
 #include "miscfunctions.qh"
 #include "g_world.qh"
@@ -192,12 +195,12 @@ void CampaignPreIntermission()
 	int lost = 0;
 	string savevar;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 		if(it.winning)
 			won += 1;
 		else
 			lost += 1;
-	));
+	});
 
 	if(autocvar__campaign_testrun)
 	{

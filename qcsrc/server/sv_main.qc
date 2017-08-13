@@ -139,10 +139,10 @@ void CreatureFrame_All()
 void Pause_TryPause(bool ispaused)
 {
 	int n = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
 		++n;
-	));
+	});
 	if (!n) return;
 	setpause(ispaused);
 }
@@ -187,12 +187,12 @@ void StartFrame()
 		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
 		int c_seeing = 0;
 		int c_seen = 0;
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true, {
 			if(IS_REAL_CLIENT(it))
 				++c_seeing;
 			if(IS_PLAYER(it))
 				++c_seen;
-		));
+		});
 		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
 		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
 

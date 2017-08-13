@@ -24,7 +24,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	entity spawn_spot = M_ARGV(1, entity);
 	vector spawn_score = M_ARGV(2, vector);
 
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS(player).cvar_cl_spawn_near_teammate))
 		return;
 
 	spawn_spot.msnt_lookat = NULL;
@@ -33,7 +33,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 		return;
 
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it != player && SAME_TEAM(it, player) && !IS_DEAD(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != player && SAME_TEAM(it, player) && !IS_DEAD(it), {
 		if(vdist(spawn_spot.origin - it.origin, >, autocvar_g_spawn_near_teammate_distance))
 			continue;
 		if(vdist(spawn_spot.origin - it.origin, <, 48))
@@ -41,7 +41,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 		if(!checkpvs(spawn_spot.origin, it))
 			continue;
 		RandomSelection_AddEnt(it, 1, 1);
-	));
+	});
 
 	if(RandomSelection_chosen_ent)
 	{
@@ -76,7 +76,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		return; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
 
 	// Note: when entering this, fixangle is already set.
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && CS(player).cvar_cl_spawn_near_teammate))
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			player.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
@@ -85,7 +85,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		vector best_pos = '0 0 0';
 		float best_dist2 = FLOAT_MAX;
 		int tested = 0;
-		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT_RANDOM(IS_PLAYER(it), {
 			if (autocvar_g_spawn_near_teammate_ignore_spawnpoint_max && tested >= autocvar_g_spawn_near_teammate_ignore_spawnpoint_max) break;
 
 			if (PHYS_INPUT_BUTTON_CHAT(it)) continue;
@@ -196,7 +196,7 @@ LABEL(skip)
 					break; // don't test the other spots near this teammate, go to the next one
 				}
 			}
-		));
+		});
 
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 		if(best_mate)

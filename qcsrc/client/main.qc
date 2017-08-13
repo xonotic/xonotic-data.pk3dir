@@ -1,6 +1,12 @@
 #include "main.qh"
 
-#include <common/effects/qc/all.qh>
+#include "defs.qh"
+#include <common/ent_cs.qh>
+#include "miscfunctions.qh"
+#include <common/effects/effect.qh>
+#include <common/effects/qc/_mod.qh>
+#include <common/effects/all.qh>
+#include <common/effects/all.inc>
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
@@ -101,11 +107,6 @@ void CSQC_Init()
 				break;
 		maxclients = i;
 	}
-
-	// needs to be done so early because of the constants they create
-	static_init();
-	static_init_late();
-	static_init_precache();
 
 	binddb = db_create();
 	tempdb = db_create();
@@ -657,6 +658,9 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 
 void Spawn_Draw(entity this)
 {
+	if(this.alpha <= 0)
+		return;
+
 	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
@@ -665,7 +669,14 @@ void Spawn_PreDraw(entity this)
 	float alph;
 	vector org = getpropertyvec(VF_ORIGIN);
 	if(this.fade_start)
-		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	{
+		if(vdist(org - this.origin, >, this.fade_end))
+			alph = 0; // save on some processing
+		else if(vdist(org - this.origin, <, this.fade_start))
+			alph = 1; // more processing saved
+		else
+			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	}
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
@@ -1070,11 +1081,12 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_nextcheckpoint = ReadByte();
 
 			race_nextbesttime = ReadInt24_t();
-			race_mybesttime = ReadInt24_t();
+			if(b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING) // not while spectating (matches server)
+				race_mybesttime = ReadInt24_t();
 			if(race_nextbestname)
 				strunzone(race_nextbestname);
 			string newname = ReadString();
-			if(autocvar_cl_race_cptimes_onlyself)
+			if(autocvar_cl_race_cptimes_onlyself && b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING)
 			{
 				race_nextbesttime = race_mybesttime;
 				race_mybesttime = 0;

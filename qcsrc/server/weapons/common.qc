@@ -1,5 +1,7 @@
 #include "common.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include <common/t_items.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>

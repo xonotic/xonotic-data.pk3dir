@@ -393,10 +393,10 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 
 	if (this)
 	{
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true, {
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
 				wframe_send(it, this, a, restartanim);
-		));
+		});
 	}
 
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)

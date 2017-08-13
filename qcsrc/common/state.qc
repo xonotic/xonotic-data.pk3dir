@@ -69,6 +69,7 @@ void PlayerScore_Detach(entity this);
 
 void ClientState_detach(entity this)
 {
+    GetCvars(this, -1);  // free cvars TODO: is this still needed now that it's stored on the clientstate entity?
     accuracy_free(this); // TODO: needs to be before CS() is deleted!
     PlayerScore_Detach(this); // what ^they^ said
     W_HitPlotClose(this);
@@ -76,7 +77,6 @@ void ClientState_detach(entity this)
 	delete(CS(this));
 	this._cs = NULL;
 
-    GetCvars(this, -1);  // free cvars
 
     bot_clientdisconnect(this);
 

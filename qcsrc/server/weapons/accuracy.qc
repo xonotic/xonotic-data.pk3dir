@@ -23,7 +23,7 @@ bool accuracy_send(entity this, entity to, int sf)
 	a = CS(a).accuracy;
 
 	if (to != a.owner)
-		if (!autocvar_sv_accuracy_data_share && !a.owner.cvar_cl_accuracy_data_share)
+		if (!autocvar_sv_accuracy_data_share && !CS(a.owner).cvar_cl_accuracy_data_share)
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
@@ -85,7 +85,7 @@ void accuracy_add(entity this, int w, int fired, int hit)
 	if (b == accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w])) return; // no change
 	int sf = 1 << (w % 24);
 	a.SendFlags |= sf;
-	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, LAMBDA(CS(it).accuracy.SendFlags |= sf));
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, { CS(it).accuracy.SendFlags |= sf; });
 }
 
 bool accuracy_isgooddamage(entity attacker, entity targ)

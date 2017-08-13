@@ -1,7 +1,5 @@
 #include "racer_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
@@ -167,7 +165,5 @@ void racer_rocket_groundhugger(entity this)
     UpdateCSQCProjectile(this);
     return;
 }
-
-#endif
 
 #endif

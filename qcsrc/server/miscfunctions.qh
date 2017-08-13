@@ -1,5 +1,7 @@
 #pragma once
 
+#include <server/defs.qh>
+
 #include <common/t_items.qh>
 
 #include "mutators/events.qh"
@@ -306,7 +308,7 @@ void readlevelcvars()
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(it.wr_init(it)));
+	FOREACH(Weapons, it != WEP_Null, { it.wr_init(it); });
 
 	readplayerstartcvars();
 }

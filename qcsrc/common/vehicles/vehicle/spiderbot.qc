@@ -1,7 +1,5 @@
 #include "spiderbot.qh"
 
-#ifdef IMPLEMENTATION
-
 const int SBRM_FIRST = 1;
 const int SBRM_VOLLY = 1;
 const int SBRM_GUIDE = 2;
@@ -123,9 +121,9 @@ bool spiderbot_frame(entity this, float dt)
 		}
 
 		if (!PHYS_INPUT_BUTTON_JUMP(this))
-			PHYS_INPUT_BUTTON_JUMP(vehic) = false;
+			vehic.button2 = false;
 
-		if((IS_ONGROUND(vehic)) && PHYS_INPUT_BUTTON_JUMP(this) && !PHYS_INPUT_BUTTON_JUMP(vehic) && vehic.tur_head.wait < time)
+		if((IS_ONGROUND(vehic)) && PHYS_INPUT_BUTTON_JUMP(this) && !vehic.button2 && vehic.tur_head.wait < time)
 		{
 			sound (vehic, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_JUMP, VOL_VEHICLEENGINE, ATTEN_NORM);
 			//dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
@@ -133,7 +131,7 @@ bool spiderbot_frame(entity this, float dt)
 
 			vehic.tur_head.wait = time + 2;
 			vehic.jump_delay = time + 2;
-			PHYS_INPUT_BUTTON_JUMP(vehic) = true; // set spider's jump
+			vehic.button2 = true; // set spider's jump
 			//PHYS_INPUT_BUTTON_JUMP(this) = false;
 
 			vector movefix = '0 0 0';
@@ -638,5 +636,4 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
     AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
 }
 
-#endif
 #endif

@@ -34,7 +34,7 @@ void trigger_secret_touch(entity this, entity toucher)
 
 	// handle normal trigger features
 	multi_touch(this, toucher);
-	// we can't just remove (this) here, because this is a touch function
+	// we can't just delete(this) here, because this is a touch function
 	// called while C code is looping through area links...
 	//delete(this);
 }

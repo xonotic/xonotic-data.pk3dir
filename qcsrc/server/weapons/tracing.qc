@@ -1,5 +1,7 @@
 #include "tracing.qh"
 
+#include <common/effects/all.qh>
+
 #include "accuracy.qh"
 #include "common.qh"
 #include "hitplot.qh"
@@ -84,7 +86,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//vector prevend = w_shotend;
 
 	if (antilag)
-	if (!ent.cvar_cl_noantilag)
+	if (!CS(ent).cvar_cl_noantilag)
 	{
 		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
 		{
@@ -262,7 +264,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
 	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
 			if(!it.railgunhit)
 			if(!(IS_SPEC(it) && it.enemy == this))
 			{
@@ -278,7 +280,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 					pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
 				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
 			}
-		));
+		});
 
 		if(pseudoprojectile)
 			delete(pseudoprojectile);
@@ -351,7 +353,8 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	float lag = ((IS_REAL_CLIENT(this)) ? ANTILAG_LATENCY(this) : 0);
 	if(lag < 0.001)
 		lag = 0;
-	if(autocvar_g_antilag == 0 || this.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(this)) ? CS(this).cvar_cl_noantilag : false);
+	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{

@@ -1,5 +1,8 @@
 #include "g_hook.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
 #include "weapons/common.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/weaponsystem.qh"

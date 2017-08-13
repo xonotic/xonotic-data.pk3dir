@@ -75,14 +75,14 @@ void sandbox_ObjectFunction_Think(entity this)
 	// since if the owning player disconnects, the object's owner should also be reset.
 
 	// bots can't have objects
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 		if(this.crypto_idfp == it.crypto_idfp)
 		{
 			this.realowner = it;
 			break;
 		}
 		this.realowner = NULL;
-	));
+	});
 
 	this.nextthink = time;
 
@@ -209,7 +209,7 @@ void sandbox_ObjectRemove(entity e)
 	sandbox_ObjectAttach_Remove(e); // detach child objects
 
 	// if the object being removed has been selected for attachment by a player, unset it
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.object_attach == e, LAMBDA(it.object_attach = NULL));
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.object_attach == e, { it.object_attach = NULL; });
 
 	if(e.material)	{	strunzone(e.material);	e.material = string_null;	}
 	if(e.crypto_idfp)	{	strunzone(e.crypto_idfp);	e.crypto_idfp = string_null;	}
