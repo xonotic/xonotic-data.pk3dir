@@ -206,6 +206,7 @@ void freezetag_Unfreeze(entity this)
 	this.freezetag_frozen_timeout = 0;
 
 	Unfreeze(this);
+	freezetag_count_alive_players();
 }
 
 float freezetag_isEliminated(entity e)
@@ -317,7 +318,6 @@ void ft_RemovePlayer(entity this)
 	if(!STAT(FROZEN, this))
 		freezetag_LastPlayerForTeam_Notify(this);
 	freezetag_Unfreeze(this);
-	freezetag_count_alive_players();
 }
 
 MUTATOR_HOOKFUNCTION(ft, ClientDisconnect)
@@ -346,7 +346,6 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	{
 		if(STAT(FROZEN, frag_target))
 			freezetag_Unfreeze(frag_target);
-		freezetag_count_alive_players();
 		return true; // let the player die so that he can respawn whenever he wants
 	}
 
@@ -363,7 +362,9 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			freezetag_LastPlayerForTeam_Notify(frag_target);
 		}
 		else
+		{
 			freezetag_Unfreeze(frag_target); // remove ice
+		}
 		frag_target.health = 0; // Unfreeze resets health
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
@@ -478,7 +479,6 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		if(player.revive_progress >= 1)
 		{
 			freezetag_Unfreeze(player);
-			freezetag_count_alive_players();
 
 			if(n == -1)
 			{
