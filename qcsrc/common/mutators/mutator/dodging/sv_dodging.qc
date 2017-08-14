@@ -1,5 +1,7 @@
 #include "sv_dodging.qh"
 
+// TODO the CSQC blocks in this sv_ file are currently not compiled but will be when dodging prediction gets enabled
+
 #define PHYS_DODGING 						g_dodging
 #define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
@@ -29,7 +31,7 @@
 #define PHYS_DODGING_MAXSPEED 				STAT(DODGING_MAXSPEED, this)
 #endif
 
-#ifdef CSQC // FIXME this is an sv_ file, none of this will even be compiled
+#ifdef CSQC
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
 	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
