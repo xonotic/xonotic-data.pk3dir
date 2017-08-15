@@ -182,6 +182,38 @@ string PlayerTemplate_GetStringValue(string template, string variable)
 	return cvar_string(fullname);
 }
 
+void PlayerTemplate_GiveRandomWeapons(entity player, int num_weapons,
+	string weapon_names)
+{
+	if (num_weapons == 0)
+	{
+		return;
+	}
+	int num_potential_weapons = tokenize_console(weapon_names);
+	for (int i = 0; i < num_weapons; ++i)
+	{
+		RandomSelection_Init();
+		for (int j = 0; j < num_potential_weapons; ++j)
+		{
+			string weapon = argv(j);
+			FOREACH(Weapons, it != WEP_Null,
+			{
+				// Finding a weapon which player doesn't have.
+				if (!(player.weapons & it.m_wepset) && (it.netname == weapon))
+				{
+					RandomSelection_AddEnt(it, 1, 1);
+					break;
+				}
+			});
+		}
+		if (RandomSelection_chosen_ent == NULL)
+		{
+			return;
+		}
+		player.weapons |= RandomSelection_chosen_ent.m_wepset;
+	}
+}
+
 float PlayerTemplate_GivePlayerItem(entity player, string template,
 	string variable)
 {
@@ -302,48 +334,28 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 			}
 		});
 	}
-	// Give random weapons.
-	int numrandomweapons = PlayerTemplate_GetFloatValue(template,
-		"num_random_start_weapons");
-	numweapons = tokenize_console(PlayerTemplate_GetStringValue(template,
-		"random_start_weapons"));
-	if (warmup_stage)
+	if (!warmup_stage)
 	{
-		// Give all weapons during warmup stage.
-		for (int i = 0; i < numweapons; ++i)
-		{
-			string weapon = argv(i);
-			FOREACH(Weapons, it != WEP_Null,
-			{
-				if (it.netname == weapon)
-				{
-					player.weapons |= it.m_wepset;
-					break;
-				}
-			});
-		}
+		GiveRandomWeapons(player, PlayerTemplate_GetFloatValue(template,
+		"num_random_start_weapons"), PlayerTemplate_GetStringValue(template,
+		"random_start_weapons"));
 		return;
 	}
-	for (int i = 0; i < numrandomweapons; ++i)
+	// Give random weapons.
+	numweapons = tokenize_console(PlayerTemplate_GetStringValue(template,
+		"random_start_weapons"));
+	// Give all weapons during warmup stage.
+	for (int i = 0; i < numweapons; ++i)
 	{
-		RandomSelection_Init();
-		for (int j = 0; j < numweapons; ++j)
+		string weapon = argv(i);
+		FOREACH(Weapons, it != WEP_Null,
 		{
-			string weapon = argv(j);
-			FOREACH(Weapons, it != WEP_Null,
+			if (it.netname == weapon)
 			{
-				// Finding a weapon which player doesn't have.
-				if (!(player.weapons & it.m_wepset) && (it.netname == weapon))
-				{
-					RandomSelection_AddEnt(it, 1, 1);
-				}
-			});
-		}
-		if (RandomSelection_chosen_ent == NULL)
-		{
-			return;
-		}
-		player.weapons |= RandomSelection_chosen_ent.m_wepset;
+				player.weapons |= it.m_wepset;
+				break;
+			}
+		});
 	}
 }
 
