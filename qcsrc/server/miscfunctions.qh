@@ -44,7 +44,7 @@ void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .
 
 float spamsound(entity e, float chan, Sound samp, float vol, float _atten);
 
-void GetCvars_handleString(entity this, string thisname, float f, .string field, string name);
+void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name);
 
 void precache_all_playermodels(string pattern);
 
@@ -75,7 +75,7 @@ void GameLogInit();
 
 void GameLogClose();
 
-void GetCvars(entity this, float f);
+void GetCvars(entity this, entity store, int f);
 
 string GetMapname();
 

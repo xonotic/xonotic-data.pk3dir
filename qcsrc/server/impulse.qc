@@ -97,7 +97,7 @@ X(0)
 		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
 		{ \
 			.entity weaponentity = weaponentities[wepslot]; \
-			W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir, weaponentity); \
+			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[slot], dir, weaponentity); \
 			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
