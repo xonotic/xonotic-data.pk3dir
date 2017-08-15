@@ -5,22 +5,22 @@
 CLASS(MainWindow, ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity));
 	METHOD(MainWindow, draw, void(entity));
-	ATTRIB(MainWindow, firstRunDialog, entity, NULL)
-	ATTRIB(MainWindow, advancedDialog, entity, NULL)
-	ATTRIB(MainWindow, mutatorsDialog, entity, NULL)
-	ATTRIB(MainWindow, mapInfoDialog, entity, NULL)
-	ATTRIB(MainWindow, userbindEditDialog, entity, NULL)
-	ATTRIB(MainWindow, winnerDialog, entity, NULL)
-	ATTRIB(MainWindow, serverInfoDialog, entity, NULL)
-	ATTRIB(MainWindow, cvarsDialog, entity, NULL)
-	ATTRIB(MainWindow, screenshotViewerDialog, entity, NULL)
-	ATTRIB(MainWindow, viewDialog, entity, NULL)
-	ATTRIB(MainWindow, hudconfirmDialog, entity, NULL)
-	ATTRIB(MainWindow, languageWarningDialog, entity, NULL)
-	ATTRIB(MainWindow, mainNexposee, entity, NULL)
-	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
-	ATTRIB(MainWindow, dialogToShow, entity, NULL)
-	ATTRIB(MainWindow, demostartconfirmDialog, entity, NULL)
-	ATTRIB(MainWindow, demotimeconfirmDialog, entity, NULL)
-	ATTRIB(MainWindow, resetDialog, entity, NULL)
+	ATTRIB(MainWindow, firstRunDialog, entity);
+	ATTRIB(MainWindow, advancedDialog, entity);
+	ATTRIB(MainWindow, mutatorsDialog, entity);
+	ATTRIB(MainWindow, mapInfoDialog, entity);
+	ATTRIB(MainWindow, userbindEditDialog, entity);
+	ATTRIB(MainWindow, winnerDialog, entity);
+	ATTRIB(MainWindow, serverInfoDialog, entity);
+	ATTRIB(MainWindow, cvarsDialog, entity);
+	ATTRIB(MainWindow, screenshotViewerDialog, entity);
+	ATTRIB(MainWindow, viewDialog, entity);
+	ATTRIB(MainWindow, hudconfirmDialog, entity);
+	ATTRIB(MainWindow, languageWarningDialog, entity);
+	ATTRIB(MainWindow, mainNexposee, entity);
+	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND);
+	ATTRIB(MainWindow, dialogToShow, entity);
+	ATTRIB(MainWindow, demostartconfirmDialog, entity);
+	ATTRIB(MainWindow, demotimeconfirmDialog, entity);
+	ATTRIB(MainWindow, resetDialog, entity);
 ENDCLASS(MainWindow)

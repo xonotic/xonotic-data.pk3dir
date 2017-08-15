@@ -4,9 +4,6 @@ float race_teams;
 
 // scores
 const float ST_RACE_LAPS = 1;
-const float SP_RACE_LAPS = 4;
-const float SP_RACE_TIME = 5;
-const float SP_RACE_FASTEST = 6;
 
 bool g_race_qualifying;
 
@@ -32,6 +29,9 @@ float race_completing;
 .float race_respawn_checkpoint;
 .entity race_respawn_spotref; // try THIS spawn in case you respawn
 
+IntrusiveList g_racecheckpoints;
+STATIC_INIT(g_racecheckpoints) { g_racecheckpoints = IL_NEW(); }
+
 // definitions for functions used outside race.qc
 float race_PreviousCheckpoint(float f);
 float race_NextCheckpoint(float f);
@@ -47,6 +47,7 @@ void race_SendNextCheckpoint(entity e, float spec);
 void race_PreparePlayer(entity this);
 void race_send_recordtime(float msg);
 void race_send_speedaward(float msg);
+void race_setTime(string map, float t, string myuid, string mynetname, entity e, bool showmessage);
 
 float speedaward_speed;
 string speedaward_holder;

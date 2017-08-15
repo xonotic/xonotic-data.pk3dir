@@ -1,5 +1,11 @@
 #include "chat.qh"
-/** Handle chat as a panel (#12) */
+
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
+
+// Chat (#12)
+
 void HUD_Chat()
 {
 	if(!autocvar__hud_configure)
@@ -21,7 +27,7 @@ void HUD_Chat()
 		}
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	if(intermission == 2)
 	{
@@ -47,7 +53,7 @@ void HUD_Chat()
 			panel.current_panel_bg = strzone(panel_bg);
 			chat_panel_modified = true;
 		}
-		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an theAlpha of at least 0.75
+		panel_bg_alpha = max(0.75, panel_bg_alpha);
 	}
 
 	vector pos, mySize;
@@ -56,7 +62,7 @@ void HUD_Chat()
 
 	// chat messages don't scale properly since they are displayed directly by the engine
 	HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{
@@ -75,17 +81,13 @@ void HUD_Chat()
 
 	if(autocvar__hud_configure)
 	{
-		vector chatsize;
-		chatsize = '1 1 0' * autocvar_con_chatsize;
-		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over theAlpha and such
-		float i, a;
-		for(i = 0; i < autocvar_con_chat; ++i)
+		vector chatsize = '1 1 0' * autocvar_con_chatsize;
+		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
+		string str = textShortenToWidth(_("^3Player^7: This is the chat area."), mySize.x, chatsize, stringwidth_colors);
+		for(int i = 0; i < autocvar_con_chat; ++i)
 		{
-			if(i == autocvar_con_chat - 1)
-				a = panel_fg_alpha;
-			else
-				a = panel_fg_alpha * floor(((i + 1) * 7 + autocvar_con_chattime)/45);
-			drawcolorcodedstring(pos, textShortenToWidth(_("^3Player^7: This is the chat area."), mySize.x, chatsize, stringwidth_colors), chatsize, a, DRAWFLAG_NORMAL);
+			// engine displays chat text at full alpha
+			drawcolorcodedstring(pos, str, chatsize, 1, DRAWFLAG_NORMAL);
 			pos.y += chatsize.y;
 		}
 	}

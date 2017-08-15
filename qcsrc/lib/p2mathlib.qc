@@ -17,87 +17,88 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+ERASEABLE
 vector vec_bias(vector v, float f)
 {
 	vector c;
-	c_x = v_x + f;
-	c_y = v_y + f;
-	c_z = v_z + f;
+	c.x = v.x + f;
+	c.y = v.y + f;
+	c.z = v.z + f;
 	return c;
 }
+ERASEABLE
 vector vec_to_min(vector a, vector b)
 {
 	vector c;
-	c_x = min(a_x, b_x);
-	c_y = min(a_y, b_y);
-	c_z = min(a_z, b_z);
+	c.x = min(a.x, b.x);
+	c.y = min(a.y, b.y);
+	c.z = min(a.z, b.z);
 	return c;
 }
 
+ERASEABLE
 vector vec_to_max(vector a, vector b)
 {
 	vector c;
-	c_x = max(a_x, b_x);
-	c_y = max(a_y, b_y);
-	c_z = max(a_z, b_z);
+	c.x = max(a.x, b.x);
+	c.y = max(a.y, b.y);
+	c.z = max(a.z, b.z);
 	return c;
 }
 
 // there may already be a function for bounding a vector in this manner, however my very quick search did not reveal one -- Player_2
+ERASEABLE
 vector vec_bounds_in(vector point, vector a, vector b)
 {
-	vector c, d, e;
+	vector d = vec_to_min(a, b);
+	vector e = vec_to_max(a, b);
 
-	d = vec_to_min(a, b);
-	e = vec_to_max(a, b);
-
-	c = vec_to_max(point, d);
-	c = vec_to_min(c, e);
+	vector c = vec_to_min(vec_to_max(point, d), e);
 
 	return c;
 }
 
+ERASEABLE
 vector vec_bounds_out(vector point, vector a, vector b)
 {
-	vector c, d, e;
+	vector d = vec_to_max(a, b);
+	vector e = vec_to_min(a, b);
 
-	d = vec_to_max(a, b);
-	e = vec_to_min(a, b);
-
-	c = vec_to_max(point, d);
-	c = vec_to_min(c, e);
+	vector c = vec_to_min(vec_to_max(point, d), e);
 
 	return c;
 }
 
+ERASEABLE
 float angle_snap_f(float f, float increment)
 {
-	float i;
-	for (i = 0; i <= 360; )
+	for (int j = 0; j <= 360; )
 	{
-		if (f <= i - increment) return i - increment;
-		i = i + increment;
+		if (f <= j - increment) return j - increment;
+		j = j + increment;
 	}
 
 	return 0;
 }
 
-vector angle_snap_vec(vector v,  float increment)
+ERASEABLE
+vector angle_snap_vec(vector v, float increment)
 {
 	vector c;
-	c_x = angle_snap_f(v_x, increment);
-	c_y = angle_snap_f(v_y, increment);
-	c_z = angle_snap_f(v_z, increment);
+	c.x = angle_snap_f(v.x, increment);
+	c.y = angle_snap_f(v.y, increment);
+	c.z = angle_snap_f(v.z, increment);
 	return c;
 }
 
-vector aim_vec(vector origin, vector target)
+ERASEABLE
+vector aim_vec(vector org, vector targ)
 {
 	vector v;
 	// we float around x and y, but rotate around z
-	v_x = target_x - origin_x;
-	v_y = target_y - origin_y;
-	v_z = origin_z - target_z;
+	v.x = targ.x - org.x;
+	v.y = targ.y - org.y;
+	v.z = org.z - targ.z;
 	// get the angles actual
 	return vectoangles(normalize(v));
 }

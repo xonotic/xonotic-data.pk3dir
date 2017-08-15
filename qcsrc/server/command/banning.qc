@@ -1,10 +1,14 @@
 #include "banning.qh"
-#include <common/command/command.qh>
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/state.qh>
+#include <common/command/_mod.qh>
 #include "banning.qh"
 
 #include "common.qh"
 
-#include "../cl_player.qh"
+#include "../player.qh"
 #include "../ipban.qh"
 
 #include <common/util.qh>
@@ -131,7 +135,7 @@ void BanCommand_mute(float request, float argc, string command)  // TODO: Add a 
 
 				if (accepted > 0)
 				{
-					client.muted = true;
+					CS(client).muted = true;
 					return;
 				}
 				else
@@ -212,7 +216,7 @@ void BanCommand_unmute(float request, float argc)
 
 				if (accepted > 0)
 				{
-					client.muted = false;
+					CS(client).muted = false;
 					return;
 				}
 				else

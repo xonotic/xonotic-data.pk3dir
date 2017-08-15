@@ -1,7 +1,5 @@
 #include "hk_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 float autocvar_g_turrets_unit_hk_shot_speed;
@@ -20,7 +18,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
 		if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, SND_HunterKillerAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_HunterKillerAttack_FIRE, CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -31,7 +29,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
         setthink(missile, turret_hk_missile_think);
         missile.nextthink = time + 0.25;
-        missile.movetype = MOVETYPE_BOUNCEMISSILE;
+        set_movetype(missile, MOVETYPE_BOUNCEMISSILE);
         missile.velocity = actor.tur_shotdir_updated * (actor.shot_speed * 0.75);
         missile.angles = vectoangles(missile.velocity);
         missile.cnt = time + 30;
@@ -44,7 +42,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 	}
 }
 
-bool hk_is_valid_target(entity this, entity e_target);
+bool hk_is_valid_target(entity this, entity proj, entity targ);
 void turret_hk_missile_think(entity this)
 {
     vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
@@ -53,10 +51,7 @@ void turret_hk_missile_think(entity this)
     float lt_for;   // Length of Trace FORwrad
     float lt_seek;  // Length of Trace SEEK (left, right, up down)
     float pt_seek;  // Pitch of Trace SEEK (How mutch to angele left, right up, down trace towards v_forward)
-    vector pre_pos;
     float myspeed;
-    entity e;
-    float ad,edist;
 
     this.nextthink = time + this.ticrate;
 
@@ -69,19 +64,17 @@ void turret_hk_missile_think(entity this)
     // Pick the closest valid target.
     if (!this.enemy)
     {
-        e = findradius(this.origin, 5000);
-        while (e)
+        // in this case, the lighter check is to validate it first, and check distance if it is valid
+        IL_EACH(g_damagedbycontents, hk_is_valid_target(this.owner, this, it),
         {
-            if (hk_is_valid_target(this, e))
-            {
-                if (!this.enemy)
-                    this.enemy = e;
-                else
-                    if (vlen2(this.origin - e.origin) < vlen2(this.origin - this.enemy.origin))
-                        this.enemy = e;
-            }
-            e = e.chain;
-        }
+            if(vdist(it.origin, >, 5000))
+                continue;
+
+            if(!this.enemy)
+                this.enemy = it;
+            else if(vlen2(this.origin - it.origin) < vlen2(this.origin - this.enemy.origin))
+                this.enemy = it;
+        });
     }
 
     this.angles = vectoangles(this.velocity);
@@ -91,16 +84,15 @@ void turret_hk_missile_think(entity this)
 
     if (this.enemy)
     {
-        edist = vlen(this.origin - this.enemy.origin);
         // Close enougth to do decent damage?
-        if ( edist <= (this.owner.shot_radius * 0.25) )
+        if(vdist(this.origin - this.enemy.origin, <=, (this.owner.shot_radius * 0.25)))
         {
             turret_projectile_explode(this);
             return;
         }
 
         // Get data on enemy position
-        pre_pos = this.enemy.origin +
+        vector pre_pos = this.enemy.origin +
                   this.enemy.velocity *
                   min((vlen(this.enemy.origin - this.origin) / vlen(this.velocity)),0.5);
 
@@ -111,12 +103,11 @@ void turret_hk_missile_think(entity this)
     }
     else
     {
-    edist = 0;
-    ve = '0 0 0';
+        ve = '0 0 0';
         fe = 0;
     }
 
-    if ((fe != 1) || (this.enemy == NULL) || (edist > 1000))
+    if ((fe != 1) || (this.enemy == NULL) || vdist(this.origin - this.enemy.origin, >, 1000))
     {
         myspeed = vlen(this.velocity);
 
@@ -129,7 +120,7 @@ void turret_hk_missile_think(entity this)
         ff = trace_fraction;
 
         // Find angular offset
-        ad = vlen(vectoangles(normalize(this.enemy.origin - this.origin)) - this.angles);
+        float ad = vlen(vectoangles(normalize(this.enemy.origin - this.origin)) - this.angles);
 
         // To close to something, Slow down!
         if ( ((ff < 0.7) || (ad > 4)) && (myspeed > (autocvar_g_turrets_unit_hk_shot_speed)) )
@@ -207,7 +198,7 @@ void turret_hk_missile_think(entity this)
     {
         this.cnt = time + 0.25;
         this.nextthink = 0;
-        this.movetype		 = MOVETYPE_BOUNCE;
+        set_movetype(this, MOVETYPE_BOUNCE);
         return;
     }
 
@@ -224,7 +215,7 @@ void turret_hk_missile_think(entity this)
 
 #ifdef TURRET_DEBUG_HK
     //if(this.atime < time) {
-    if ((fe <= 0.99)||(edist > 1000))
+    if ((fe <= 0.99)||vdist(this.origin - this.enemy.origin, >, 1000))
     {
         te_lightning2(NULL,this.origin, this.origin + vr * lt_seek);
         te_lightning2(NULL,this.origin, this.origin + vl * lt_seek);
@@ -246,40 +237,42 @@ void turret_hk_missile_think(entity this)
     UpdateCSQCProjectile(this);
 }
 
-bool hk_is_valid_target(entity this, entity e_target)
+bool hk_is_valid_target(entity this, entity proj, entity targ)
 {
-    if (e_target == NULL)
+    if (!targ)
+        return false;
+
+    // we know for sure pure entities are bad targets
+    if(is_pure(targ))
         return false;
 
     // If only this was used more..
-    if (e_target.flags & FL_NOTARGET)
+    if (targ.flags & FL_NOTARGET)
         return false;
 
     // Cant touch this
-    if ((e_target.takedamage == DAMAGE_NO) || (e_target.health < 0))
+    if ((targ.takedamage == DAMAGE_NO) || (targ.health < 0))
         return false;
 
     // player
-    if (IS_CLIENT(e_target))
+    if (IS_PLAYER(targ))
     {
-        if (this.owner.target_select_playerbias < 0)
+        if (this.target_select_playerbias < 0)
             return false;
 
-        if (IS_DEAD(e_target))
+        if (IS_DEAD(targ))
             return false;
     }
 
     // Missile
-    if ((e_target.flags & FL_PROJECTILE) && (this.owner.target_select_missilebias < 0))
+    if ((targ.flags & FL_PROJECTILE) && (this.target_select_missilebias < 0))
         return false;
 
     // Team check
-    if ((e_target.team == this.owner.team) || (this.owner.team == e_target.owner.team))
+    if ((targ.team == this.team) || (this.team == targ.owner.team))
         return false;
 
     return true;
 }
-
-#endif
 
 #endif

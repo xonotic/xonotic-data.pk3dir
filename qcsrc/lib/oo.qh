@@ -71,10 +71,17 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 #define new_pure(class) _new(class, true)
 #define spawn() __spawn("entity", __FILE__ ":" STR(__LINE__), false)
 
+[[accumulate]] void ONREMOVE(entity this) {}
+
+#ifndef SVQC
+	#define delete_fn builtin_remove
+#endif
+
 #define delete(this) MACRO_BEGIN { \
     entity _this = (this); \
     void(entity) _dtor = _this.dtor; \
-    if (_dtor) _dtor(_this); else remove(_this); \
+    ONREMOVE(this); \
+    if (_dtor) _dtor(_this); else delete_fn(_this); \
     /* this = NULL; */  \
 } MACRO_END
 
@@ -164,11 +171,19 @@ STATIC_INIT(RegisterClasses)
 #define _INIT_STATIC(cname) [[accumulate]] void spawn##cname##_static(cname this)
 #define INIT(cname) [[accumulate]] cname spawn##cname##_1(cname this)
 
+#if NDEBUG
+	#define DEBUG_STUFF(cname)
+#else
+	#define DEBUG_STUFF(cname) \
+		bool is_##cname(entity e) { return e.instanceOf##cname; } \
+		void isnt_##cname(entity e) { eprint(e); }
+#endif
+
+
 #define CLASS(cname, base)                  \
 	entityclass(cname, base);               \
 	class(cname).bool instanceOf##cname;    \
-    bool is_##cname(entity e) { return e.instanceOf##cname; } \
-    void isnt_##cname(entity e) { eprint(e); } \
+	DEBUG_STUFF(cname)                      \
 	VTBL(cname, base)                       \
 	_INIT_STATIC(cname)                     \
 	{                                       \
@@ -220,13 +235,17 @@ STATIC_INIT(RegisterClasses)
     } \
 	STATIC_METHOD(cname, dtorimpl, void(cname this))
 
-#define ATTRIB(cname, name, type, val)      \
-	class(cname).type name;                \
+#define ATTRIB(...) EVAL_ATTRIB(OVERLOAD_(ATTRIB, __VA_ARGS__))
+#define EVAL_ATTRIB(...) __VA_ARGS__
+#define ATTRIB_3(cname, name, type) INIT(cname) {} class(cname) .type name
+#define ATTRIB_4(cname, name, type, val) \
+	ATTRIB_3(cname, name, type); \
 	INIT(cname) \
 	{ \
 		noref bool strzone; /* Error on strzone() calls. */ \
 		this.name = val; \
-	}
+	} \
+	ATTRIB_3(cname, name, type)
 
 #define STATIC_ATTRIB(cname, name, type, val) \
 	type cname##_##name; \
@@ -257,7 +276,7 @@ STATIC_INIT(RegisterClasses)
 	}
 
 #define ATTRIBARRAY(cname, name, type, cnt) \
-	class(cname).type name[cnt];
+	class(cname) .type name[cnt]
 
 #define ENDCLASS(cname) \
 	INIT(cname) \
@@ -271,7 +290,7 @@ STATIC_INIT(RegisterClasses)
 #define spawn_1(this)
 #define _vtbl NULL
 CLASS(Object, );
-    DESTRUCTOR(Object) { remove(this); }
+    DESTRUCTOR(Object) { builtin_remove(this); }
     #define remove(this) delete(this)
 	METHOD(Object, describe, string(Object this))
 	{

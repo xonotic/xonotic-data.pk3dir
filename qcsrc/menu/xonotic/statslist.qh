@@ -3,7 +3,7 @@
 #include "listbox.qh"
 CLASS(XonoticStatsList, XonoticListBox)
 	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity));
-	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)
+	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4);
 	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticStatsList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticStatsList, getStats, void(entity));
@@ -11,13 +11,13 @@ CLASS(XonoticStatsList, XonoticListBox)
 	METHOD(XonoticStatsList, keyDown, float(entity, float, float, float));
 	METHOD(XonoticStatsList, destroy, void(entity));
 	METHOD(XonoticStatsList, showNotify, void(entity));
-	ATTRIB(XonoticStatsList, selectionDoesntMatter, bool, true)
+	ATTRIB(XonoticStatsList, selectionDoesntMatter, bool, true);
 
-	ATTRIB(XonoticStatsList, listStats, float, -1)
-	ATTRIB(XonoticStatsList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticStatsList, realUpperMargin, float, 0)
-	ATTRIB(XonoticStatsList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticStatsList, columnNameSize, float, 0)
+	ATTRIB(XonoticStatsList, listStats, float, -1);
+	ATTRIB(XonoticStatsList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticStatsList, realUpperMargin, float, 0);
+	ATTRIB(XonoticStatsList, columnNameOrigin, float, 0);
+	ATTRIB(XonoticStatsList, columnNameSize, float, 0);
 ENDCLASS(XonoticStatsList)
 
 entity statslist;  // for reference elsewhere

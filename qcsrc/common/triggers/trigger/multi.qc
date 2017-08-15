@@ -1,3 +1,4 @@
+#include "multi.qh"
 // NOTE: also contains trigger_once at bottom
 
 #ifdef SVQC
@@ -53,8 +54,8 @@ void multi_trigger(entity this)
 		multi_wait(this); // waiting finished
 	}
 	else
-	{	// we can't just remove (this) here, because this is a touch function
-		// called wheil C code is looping through area links...
+	{	// we can't just delete(this) here, because this is a touch function
+		// called while C code is looping through area links...
 		settouch(this, func_null);
 	}
 }
@@ -66,34 +67,33 @@ void multi_use(entity this, entity actor, entity trigger)
 	multi_trigger(this);
 }
 
-void multi_touch(entity this)
+void multi_touch(entity this, entity toucher)
 {
 	if(!(this.spawnflags & 2))
-	if(!other.iscreature)
+	if(!toucher.iscreature)
 			return;
 
 	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (this.team != other.team))
+		if(((this.spawnflags & 4) == 0) == (this.team != toucher.team))
 			return;
 
 // if the trigger has an angles field, check player's facing direction
 	if (this.movedir != '0 0 0')
 	{
-		makevectors (other.angles);
+		makevectors (toucher.angles);
 		if (v_forward * this.movedir < 0)
 			return;		// not facing the right way
 	}
 
 	// if the trigger has pressed keys, check that the player is pressing those keys
-	if(this.pressedkeys)
-	if(IS_PLAYER(other)) // only for players
-	if(!(other.pressedkeys & this.pressedkeys))
+	if(this.pressedkeys && IS_PLAYER(toucher)) // only for players
+	if(!(CS(toucher).pressedkeys & this.pressedkeys))
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
-	this.enemy = other;
-	this.goalentity = other;
+	this.enemy = toucher;
+	this.goalentity = toucher;
 	multi_trigger(this);
 }
 
@@ -163,6 +163,7 @@ spawnfunc(trigger_multiple)
 	EXACTTRIGGER_INIT;
 
 	this.team_saved = this.team;
+	IL_PUSH(g_saved_team, this);
 
 	if (this.health)
 	{

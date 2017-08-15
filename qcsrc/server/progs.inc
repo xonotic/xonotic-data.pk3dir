@@ -1,20 +1,11 @@
-#ifndef DEBUGPATHING
-	#define DEBUGPATHING 0
-#endif
-
 #include <lib/_all.inc>
-#include "_all.qh"
 
-#include "../server/_mod.inc"
-#include "bot/_mod.inc"
-#include "bot/havocbot/_mod.inc"
-#include "command/_mod.inc"
-#include "mutators/_mod.inc"
-#include "pathlib/_all.inc"
-#include "weapons/_mod.inc"
+#if XONOTIC
+
+#include <server/_mod.inc>
 
 #include <common/_all.inc>
-#include <common/effects/qc/all.qc>
+#include <common/effects/qc/_mod.inc>
 
 #include <lib/csqcmodel/sv_model.qc>
 
@@ -23,6 +14,9 @@
 #include <lib/warpzone/server.qc>
 #include <lib/warpzone/util_server.qc>
 
-#if BUILD_MOD
-#include "../../mod/server/progs.inc"
+#include <ecs/_mod.inc>
+#endif
+
+#ifdef BUILD_MOD
+#include <mod/server/progs.inc>
 #endif

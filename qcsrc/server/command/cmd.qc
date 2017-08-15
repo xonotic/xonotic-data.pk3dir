@@ -1,18 +1,22 @@
 #include "cmd.qh"
-#include <common/command/command.qh>
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
+#include <common/command/_mod.qh>
 
 #include "common.qh"
 #include "vote.qh"
 
 #include "../campaign.qh"
 #include "../cheats.qh"
-#include "../cl_player.qh"
+#include "../player.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 
 #ifdef SVQC
 	#include <common/vehicles/all.qh>
@@ -30,8 +34,8 @@
 
 #include <common/minigames/sv_minigames.qh>
 
-#include <common/monsters/all.qc>
-#include <common/monsters/spawn.qh>
+#include <common/monsters/_mod.qh>
+#include <common/monsters/sv_spawn.qh>
 #include <common/monsters/sv_monsters.qh>
 
 #include <lib/warpzone/common.qh>
@@ -45,17 +49,19 @@ void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change,
 
 bool SV_ParseClientCommand_floodcheck(entity this)
 {
+	entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+
 	if (!timeout_status)  // not while paused
 	{
-		if (time <= (this.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
+		if (time <= (store.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
-			this.cmd_floodcount += 1;
-			if (this.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
+			store.cmd_floodcount += 1;
+			if (store.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
 		}
 		else
 		{
-			this.cmd_floodtime = time;
-			this.cmd_floodcount = 1;
+			store.cmd_floodtime = time;
+			store.cmd_floodcount = 1;
 		}
 	}
 	return true;  // continue, as we're not flooding yet
@@ -74,8 +80,8 @@ void ClientCommand_autoswitch(entity caller, float request, float argc)
 		{
 			if (argv(1) != "")
 			{
-				caller.autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (caller.autoswitch ? "on" : "off"), ".\n"));
+				CS(caller).autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS(caller).autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
@@ -101,11 +107,11 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 			{
 				if (IS_CLIENT(caller))
 				{
-					caller.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+					CS(caller).version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 
-					if (caller.version < autocvar_gameversion_min || caller.version > autocvar_gameversion_max)
+					if (CS(caller).version < autocvar_gameversion_min || CS(caller).version > autocvar_gameversion_max)
 					{
-						caller.version_mismatch = 1;
+						CS(caller).version_mismatch = true;
 						ClientKill_TeamChange(caller, -2);  // observe
 					}
 					else if (autocvar_g_campaign || autocvar_g_balance_teams)
@@ -159,33 +165,19 @@ void ClientCommand_mv_getpicture(entity caller, float request, float argc)  // i
 	}
 }
 
+bool joinAllowed(entity this);
+void Join(entity this);
 void ClientCommand_join(entity caller, float request)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
-			{
-				if (!IS_PLAYER(caller) && !lockteams && !gameover)
-				{
-					if (caller.caplayer) return;
-					if (nJoinAllowed(caller, caller))
-					{
-						if (autocvar_g_campaign)   campaign_bots_may_start = true;
-						TRANSMUTE(Player, caller);
-						PlayerScore_Clear(caller);
-						Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && caller.team != -1) ? APP_TEAM_ENT(caller, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), caller.netname);
-						WITHSELF(caller, PutClientInServer());
-					}
-					else
-					{
-						// player may not join because of g_maxplayers is set
-						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_JOIN_PREVENT);
-					}
-				}
-			}
+			if (!game_stopped)
+			if (IS_CLIENT(caller) && !IS_PLAYER(caller))
+			if (joinAllowed(caller))
+				Join(caller);
+
 			return;  // never fall through to usage
 		}
 
@@ -228,7 +220,7 @@ void ClientCommand_physics(entity caller, float request, float argc)
 		}
 
 		default:
-			sprint(caller, strcat("Current physics set: ^3", caller.cvar_cl_physics, "\n"));
+			sprint(caller, strcat("Current physics set: ^3", CS(caller).cvar_cl_physics, "\n"));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd physics <physics>\n");
@@ -256,12 +248,12 @@ void ClientCommand_ready(entity caller, float request)  // todo: anti-spam for t
 						if (caller.ready)            // toggle
 						{
 							caller.ready = false;
-							bprint(caller.netname, "^2 is ^1NOT^2 ready\n");
+							bprint(playername(caller, false), "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
 							caller.ready = true;
-							bprint(caller.netname, "^2 is ready\n");
+							bprint(playername(caller, false), "^2 is ready\n");
 						}
 
 						// cannot reset the game while a timeout is active!
@@ -326,6 +318,7 @@ void ClientCommand_say_team(entity caller, float request, float argc, string com
 	}
 }
 
+.bool team_selected;
 void ClientCommand_selectteam(entity caller, float request, float argc)
 {
 	switch (request)
@@ -363,11 +356,11 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 
 								if (selection)
 								{
-									if (caller.team == selection && !IS_DEAD(caller))
+									if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
 									{
 										sprint(caller, "^7You already are on that team.\n");
 									}
-									else if (caller.wasplayer && autocvar_g_changeteam_banned)
+									else if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
 									{
 										sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 									}
@@ -385,6 +378,8 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 										}
 										ClientKill_TeamChange(caller, selection);
 									}
+									if(!IS_PLAYER(caller))
+										caller.team_selected = true; // avoids asking again for team selection on join
 								}
 							}
 							else
@@ -459,7 +454,7 @@ void ClientCommand_sentcvar(entity caller, float request, float argc, string com
 					tokenize_console(s);
 				}
 
-				GetCvars(caller, 1);
+				GetCvars(caller, CS(caller), 1);
 
 				return;
 			}
@@ -482,22 +477,35 @@ void ClientCommand_spectate(entity caller, float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (IS_CLIENT(caller))
+			if (!intermission_running && IS_CLIENT(caller))
 			{
+				if((IS_SPEC(caller) || IS_OBSERVER(caller)) && argv(1) != "")
+				{
+					entity client = GetFilteredEntity(argv(1));
+					int spec_accepted = VerifyClientEntity(client, false, false);
+					if(spec_accepted > 0 && IS_PLAYER(client))
+					{
+						if(Spectate(caller, client))
+							return; // fall back to regular handling
+					}
+				}
+
 				int mutator_returnvalue = MUTATOR_CALLHOOK(ClientCommand_Spectate, caller);
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE) && autocvar_sv_spectate == 1) ClientKill_TeamChange(caller, -2); // observe
+				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE))
+				if (autocvar_sv_spectate == 1)
+					ClientKill_TeamChange(caller, -2); // observe
 			}
-			return;                                                                                                                        // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd spectate\n");
-			sprint(caller, "  No arguments required.\n");
+			sprint(caller, "\nUsage:^3 cmd spectate <client>\n");
+			sprint(caller, "  Where 'client' can be the player to spectate.\n");
 			return;
 		}
 	}
@@ -535,6 +543,12 @@ void ClientCommand_tell(entity caller, float request, float argc, string command
 		{
 			if (argc >= 3)
 			{
+				if(!IS_CLIENT(caller) && IS_REAL_CLIENT(caller)) // connecting
+				{
+					print_to(caller, "You can't ^2tell^7 a message while connecting.");
+					return;
+				}
+
 				entity tell_to = GetIndexedEntity(argc, 1);
 				float tell_accepted = VerifyClientEntity(tell_to, true, false);
 
@@ -704,8 +718,8 @@ void ClientCommand_macro_write_aliases(float fh)
 // ======================================
 // If this function exists, server game code parses clientcommand before the engine code gets it.
 
-void SV_ParseClientCommand(string command)
-{ENGINE_EVENT();
+void SV_ParseClientCommand(entity this, string command)
+{
 	// If invalid UTF-8, don't even parse it
 	string command2 = "";
 	float len = strlen(command);

@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/midair/midair.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/midair/sv_midair.qc>
+#endif

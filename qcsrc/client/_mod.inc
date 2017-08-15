@@ -6,8 +6,12 @@
 #include <client/mapvoting.qc>
 #include <client/miscfunctions.qc>
 #include <client/player_skeleton.qc>
-#include <client/scoreboard.qc>
 #include <client/shownames.qc>
 #include <client/teamradar.qc>
 #include <client/view.qc>
 #include <client/wall.qc>
+
+#include <client/commands/_mod.inc>
+#include <client/hud/_mod.inc>
+#include <client/mutators/_mod.inc>
+#include <client/weapons/_mod.inc>

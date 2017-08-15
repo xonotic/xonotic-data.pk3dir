@@ -1,5 +1,4 @@
-#ifndef COMMON_MUTATORS_EVENTS_H
-#define COMMON_MUTATORS_EVENTS_H
+#pragma once
 
 #define EV_NO_ARGS(i, o)
 
@@ -75,6 +74,7 @@ MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
  */
 #define EV_PlayerPhysics(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** ticrate*/ i(float, MUTATOR_ARGV_1_float) \
     /**/
 MUTATOR_HOOKABLE(PlayerPhysics, EV_PlayerPhysics);
 
@@ -92,8 +92,17 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 #define EV_PM_Physics(i, o) \
     /** player */       i(entity, MUTATOR_ARGV_0_entity) \
     /** maxspeed_mod */ i(float, MUTATOR_ARGV_1_float) \
+    /** tick rate */    i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
+
+/** called when a weapon sound is about to be played, allows custom paths etc. */
+#define EV_WeaponSound(i, o) \
+    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
+    /** output      */ i(string, MUTATOR_ARGV_1_string) \
+    /**/               o(string, MUTATOR_ARGV_1_string) \
+    /**/
+MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
 
 /** called when a weapon model is about to be set, allows custom paths etc. */
 #define EV_WeaponModel(i, o) \
@@ -102,5 +111,3 @@ MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
     /**/          o(string, MUTATOR_ARGV_1_string) \
     /**/
 MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);
-
-#endif

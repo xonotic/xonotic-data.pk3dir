@@ -4,7 +4,7 @@
     #include <common/t_items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <common/weapons/all.qh>
+    #include <common/weapons/_all.qh>
 #endif
 
 void WarpZone_Accumulator_Clear(entity acc)
@@ -112,7 +112,7 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 #ifdef CSQC
 	if (trace_networkentity)
 	{
-		LOG_TRACE("hit a network ent, cannot continue WarpZoneLib_BoxTouchesBrush\n");
+		LOG_TRACE("hit a network ent, cannot continue WarpZoneLib_BoxTouchesBrush");
 		// we cannot continue, as a player blocks us...
 		// so, abort
 		return 0;
@@ -154,31 +154,33 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 entity WarpZone_Find(vector mi, vector ma)
 {
 	// if we are near any warpzone planes - MOVE AWAY (work around nearclip)
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return NULL;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, NULL))
-			return e;
+	IL_EACH(g_warpzones, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL),
+	{
+		return it;
+	});
 	return NULL;
 }
 
 void WarpZone_MakeAllSolid()
 {
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		e.solid = SOLID_BSP;
+	IL_EACH(g_warpzones, true,
+	{
+		it.solid = SOLID_BSP;
+	});
 }
 
 void WarpZone_MakeAllOther()
 {
-	entity e;
 	if(!warpzone_warpzones_exist)
 		return;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
-		e.solid = SOLID_TRIGGER;
+	IL_EACH(g_warpzones, true,
+	{
+		it.solid = SOLID_TRIGGER;
+	});
 }
 
 void WarpZone_Trace_InitTransform()
@@ -271,7 +273,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	{
 		if(--i < 1)
 		{
-			LOG_TRACE("Too many warpzones in sequence, aborting trace.\n");
+			LOG_TRACE("Too many warpzones in sequence, aborting trace.");
 			trace_ent = NULL;
 			break;
 		}
@@ -296,13 +298,13 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			}
 			break;
 		}
-		if(trace_ent == wz)
+		/*if(trace_ent == wz)
 		{
 			// FIXME can this check be removed? Do we really need it?
-			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace\n");
+			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace");
 			trace_ent = NULL;
 			break;
-		}
+		}*/
 		wz = trace_ent;
 		if(!WarpZone_trace_firstzone)
 			WarpZone_trace_firstzone = wz;
@@ -395,7 +397,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	{
 		if(--i < 1)
 		{
-			LOG_TRACE("Too many warpzones in sequence, aborting trace.\n");
+			LOG_TRACE("Too many warpzones in sequence, aborting trace.");
 			trace_ent = NULL;
 			break;
 		}
@@ -413,7 +415,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		if(trace_ent == wz)
 		{
 			// FIXME can this check be removed? Do we really need it?
-			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace\n");
+			LOG_TRACE("I transformed into the same zone again, wtf, aborting the trace");
 			trace_ent = NULL;
 			break;
 		}
@@ -573,12 +575,9 @@ bool WarpZoneLib_BadEntity(entity e)
 {
 	if (is_pure(e)) return true;
 	string s = e.classname;
-	switch (s)
-	{
-		// case "net_linked": // actually some real entities are linked without classname, fail
-		case "":
-			return true;
-	}
+
+	//if (s == "net_linked") return true; // actually some real entities are linked without classname, fail
+	if (s == "") return true;
 
 	if (startsWith(s, "target_")) return true;
 
@@ -671,7 +670,7 @@ void WarpZone_RefSys_GC(entity this)
 	// garbage collect unused reference systems
 	this.nextthink = time + 1;
 	if(this.owner.WarpZone_refsys != this)
-		remove(this);
+		delete(this);
 }
 void WarpZone_RefSys_CheckCreate(entity me)
 {
@@ -688,7 +687,7 @@ void WarpZone_RefSys_Clear(entity me)
 {
 	if(me.WarpZone_refsys)
 	{
-		remove(me.WarpZone_refsys);
+		delete(me.WarpZone_refsys);
 		me.WarpZone_refsys = NULL;
 	}
 }
@@ -785,7 +784,7 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	return e;
 }
 
-float WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
+bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 {
 	return !WarpZoneLib_BoxTouchesBrush(toucher.absmin, toucher.absmax, this, toucher);
 }
@@ -805,11 +804,9 @@ void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 	}
 }
 
-float WarpZoneLib_MoveOutOfSolid(entity e)
+bool WarpZoneLib_MoveOutOfSolid(entity e)
 {
-	vector o, m0, m1;
-
-	o = e.origin;
+	vector o = e.origin;
 	traceline(o, o, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 		return false;
@@ -818,22 +815,16 @@ float WarpZoneLib_MoveOutOfSolid(entity e)
 	if (!trace_startsolid)
 		return true;
 
-	m0 = e.mins;
-	m1 = e.maxs;
+	vector m0 = e.mins;
+	vector m1 = e.maxs;
 	e.mins = '0 0 0';
 	e.maxs = '0 0 0';
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '1 0 0' * m0_x);
-	e.mins_x = m0_x;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '1 0 0' * m1_x);
-	e.maxs_x = m1_x;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 1 0' * m0_y);
-	e.mins_y = m0_y;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 1 0' * m1_y);
-	e.maxs_y = m1_y;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 0 1' * m0_z);
-	e.mins_z = m0_z;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 0 1' * m1_z);
-	e.maxs_z = m1_z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m0.x); e.mins.x = m0.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m1.x); e.maxs.x = m1.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m0.y); e.mins.y = m0.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m1.y); e.maxs.y = m1.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m0.z); e.mins.z = m0.z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m1.z); e.maxs.z = m1.z;
 	setorigin(e, e.origin);
 
 	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);

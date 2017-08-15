@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/superspec/superspec.qh>
+#ifdef SVQC
+    #include <common/mutators/mutator/superspec/sv_superspec.qh>
+#endif

@@ -1,28 +1,8 @@
-#ifndef TURRET_PHASER_H
-#define TURRET_PHASER_H
-
-#include "phaser_weapon.qh"
-
-CLASS(PhaserTurret, Turret)
-/* spawnflags */ ATTRIB(PhaserTurret, spawnflags, int, TUR_FLAG_SNIPER | TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER);
-/* mins       */ ATTRIB(PhaserTurret, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(PhaserTurret, maxs, vector, '32 32 64');
-/* modelname  */ ATTRIB(PhaserTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB_STRZONE(PhaserTurret, model, string, strcat("models/turrets/", this.mdl));
-/* head_model */ ATTRIB_STRZONE(PhaserTurret, head_model, string, strcat("models/turrets/", "phaser.md3"));
-/* netname    */ ATTRIB(PhaserTurret, netname, string, "phaser");
-/* fullname   */ ATTRIB(PhaserTurret, turret_name, string, _("Phaser Cannon"));
-    ATTRIB(PhaserTurret, m_weapon, Weapon, WEP_PHASER);
-ENDCLASS(PhaserTurret)
-REGISTER_TURRET(PHASER, NEW(PhaserTurret));
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "phaser.qh"
 
 #ifdef SVQC
 
-spawnfunc(turret_phaser) { if (!turret_initialize(this, TUR_PHASER)) remove(this); }
+spawnfunc(turret_phaser) { if (!turret_initialize(this, TUR_PHASER)) delete(this); }
 
 .int fireflag;
 
@@ -62,5 +42,4 @@ bool turret_phaser_firecheck(entity this)
     return turret_firecheck(this);
 }
 
-#endif
 #endif

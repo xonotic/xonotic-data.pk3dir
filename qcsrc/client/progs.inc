@@ -1,14 +1,11 @@
 #include <lib/_all.inc>
-#include "_all.qh"
 
-#include "../client/_mod.inc"
-#include "commands/_mod.inc"
-#include "hud/_mod.inc"
-#include "mutators/_mod.inc"
-#include "weapons/_mod.inc"
+#if XONOTIC
+
+#include <client/_mod.inc>
 
 #include <common/_all.inc>
-#include <common/effects/qc/all.qc>
+#include <common/effects/qc/_mod.inc>
 
 #include <lib/csqcmodel/cl_model.qc>
 #include <lib/csqcmodel/cl_player.qc>
@@ -20,6 +17,9 @@
 #include <lib/warpzone/server.qc>
 #include <lib/warpzone/util_server.qc>
 
-#if BUILD_MOD
-#include "../../mod/client/progs.inc"
+#include <ecs/_mod.inc>
+#endif
+
+#ifdef BUILD_MOD
+#include <mod/client/progs.inc>
 #endif

@@ -1,13 +1,14 @@
+#include "sv_minigames.qh"
 #include "minigames.qh"
 
 void player_clear_minigame(entity player)
 {
-	player.active_minigame = NULL;
+	CS(player).active_minigame = NULL;
 	player.minigame_players = NULL;
 	if ( IS_PLAYER(player) )
-		player.movetype = MOVETYPE_WALK;
+		set_movetype(player, MOVETYPE_WALK);
 	else
-		player.movetype = MOVETYPE_FLY_WORLDONLY;
+		set_movetype(player, MOVETYPE_FLY_WORLDONLY);
 	player.team_forced = 0;
 }
 
@@ -27,7 +28,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 		GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
 			ftos(etof(player)),":",player.netname));
 		minigame_session.minigame_players = p.list_next;
-		remove ( p );
+		delete( p );
 		player_clear_minigame(player);
 	}
 	else
@@ -40,7 +41,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 				GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
 					ftos(etof(player)),":",player.netname));
 				p.list_next = e.list_next;
-				remove(e);
+				delete(e);
 				player_clear_minigame(player);
 				return;
 			}
@@ -112,22 +113,22 @@ void minigame_resend(entity minigame)
 	}
 }
 
-bool minigame_CheckSend(entity this)
+bool minigame_CheckSend(entity this, entity client)
 {
 	entity e;
 	for ( e = this.owner.minigame_players; e != NULL; e = e.list_next )
-		if ( e.minigame_players == other )
+		if ( e.minigame_players == client )
 			return true;
 	return false;
 }
 
 int minigame_addplayer(entity minigame_session, entity player)
 {
-	if ( player.active_minigame )
+	if ( CS(player).active_minigame )
 	{
-		if ( player.active_minigame == minigame_session )
+		if ( CS(player).active_minigame == minigame_session )
 			return 0;
-		minigame_rmplayer(player.active_minigame,player);
+		minigame_rmplayer(CS(player).active_minigame,player);
 	}
 	entity player_pointer = new(minigame_player);
 	int mgteam = minigame_session.minigame_event(minigame_session,"join",player,player_pointer);
@@ -139,7 +140,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 		player_pointer.team = mgteam;
 		player_pointer.list_next = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
-		player.active_minigame = minigame_session;
+		CS(player).active_minigame = minigame_session;
 		player.minigame_players = player_pointer;
 		setcefc(player_pointer, minigame_CheckSend);
 		Net_LinkEntity(player_pointer, false, 0, minigame_SendEntity);
@@ -153,7 +154,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 
 		minigame_resend(minigame_session);
 	}
-	else { remove(player_pointer); }
+	else { delete(player_pointer); }
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
 		ftos(etof(player)),":",player.netname));
 
@@ -176,7 +177,7 @@ entity start_minigame(entity player, string minigame )
 		GameLogEcho(strcat(":minigame:start:",minig.netname));
 		if ( ! minigame_addplayer(minig,player) )
 		{
-			LOG_TRACE("Minigame ",minig.netname," rejected the first player join!\n");
+			LOG_TRACE("Minigame ",minig.netname," rejected the first player join!");
 			end_minigame(minig);
 			return NULL;
 		}
@@ -214,7 +215,7 @@ entity join_minigame(entity player, string game_id )
 
 void part_minigame(entity player )
 {
-	entity minig = player.active_minigame;
+	entity minig = CS(player).active_minigame;
 
 	if ( minig && minig.classname == "minigame" )
 		minigame_rmplayer(minig,player);
@@ -235,8 +236,8 @@ void end_minigame(entity minigame_session)
 	while( (e = findentity(e, owner, minigame_session)) )
 		if ( e.minigame_autoclean )
 		{
-			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
-			remove(e);
+			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")");
+			delete(e);
 		}
 
 	entity p;
@@ -244,11 +245,11 @@ void end_minigame(entity minigame_session)
 	{
 		p = e.list_next;
 		player_clear_minigame(e.minigame_players);
-		remove(e);
+		delete(e);
 	}
 
 	strunzone(minigame_session.netname);
-	remove(minigame_session);
+	delete(minigame_session);
 }
 
 void end_minigames()
@@ -261,19 +262,19 @@ void end_minigames()
 
 string invite_minigame(entity inviter, entity player)
 {
-	if ( !inviter || !inviter.active_minigame )
+	if ( !inviter || !CS(inviter).active_minigame )
 		return "Invalid minigame";
-	if ( !VerifyClientEntity(player, true, false) )
+	if ( VerifyClientEntity(player, true, false) <= 0 )
 		return "Invalid player";
 	if ( inviter == player )
 		return "You can't invite yourself";
-	if ( player.active_minigame == inviter.active_minigame )
+	if ( CS(player).active_minigame == CS(inviter).active_minigame )
 		return strcat(player.netname," is already playing");
 
 	Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_MINIGAME_INVITE,
-		inviter.active_minigame.netname, inviter.netname );
+		CS(inviter).active_minigame.netname, inviter.netname );
 
-	GameLogEcho(strcat(":minigame:invite:",inviter.active_minigame.netname,":",
+	GameLogEcho(strcat(":minigame:invite:",CS(inviter).active_minigame.netname,":",
 		ftos(etof(player)),":",player.netname));
 
 	return "";
@@ -281,10 +282,10 @@ string invite_minigame(entity inviter, entity player)
 
 entity minigame_find_player(entity client)
 {
-	if ( ! client.active_minigame )
+	if ( ! CS(client).active_minigame )
 		return NULL;
 	entity e;
-	for ( e = client.active_minigame.minigame_players; e; e = e.list_next )
+	for ( e = CS(client).active_minigame.minigame_players; e; e = e.list_next )
 		if ( e.minigame_players == client )
 			return e;
 	return NULL;
@@ -292,11 +293,11 @@ entity minigame_find_player(entity client)
 
 bool MinigameImpulse(entity this, int imp)
 {
-	if (!this.active_minigame) return false;
+	if (!CS(this).active_minigame) return false;
 	entity e = minigame_find_player(this);
-	if ( imp && this.active_minigame && e )
+	if ( imp && CS(this).active_minigame && e )
 	{
-		return this.active_minigame.minigame_event(this.active_minigame,"impulse",e,imp);
+		return CS(this).active_minigame.minigame_event(CS(this).active_minigame,"impulse",e,imp);
 	}
 	return false;
 }
@@ -349,7 +350,7 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 		}
 		else if ( minig_cmd == "end" || minig_cmd == "part" )
 		{
-			if ( caller.active_minigame )
+			if ( CS(caller).active_minigame )
 			{
 				part_minigame(caller);
 				sprint(caller,"Left minigame session\n");
@@ -360,14 +361,14 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 		}
 		else if ( minig_cmd == "invite" && argc > 2 )
 		{
-			if ( caller.active_minigame )
+			if ( CS(caller).active_minigame )
 			{
 				entity client = GetIndexedEntity(argc, 2);
 				string error = invite_minigame(caller,client);
 				if ( error == "" )
 				{
 					sprint(caller,"You have invited ",client.netname,
-						" to join your game of ", caller.active_minigame.descriptor.message, "\n");
+						" to join your game of ", CS(caller).active_minigame.descriptor.message, "\n");
 				}
 				else
 					sprint(caller,"Could not invite: ", error, ".\n");
@@ -376,12 +377,12 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 				sprint(caller,"You aren't playing any minigame...\n");
 			return;
 		}
-		else if ( caller.active_minigame )
+		else if ( CS(caller).active_minigame )
 		{
 			entity e = minigame_find_player(caller);
 			string subcommand = substring(command,argv_end_index(0),-1);
 			int arg_c = tokenize_console(subcommand);
-			if ( caller.active_minigame.minigame_event(caller.active_minigame,"cmd",e,arg_c,subcommand) )
+			if ( CS(caller).active_minigame.minigame_event(CS(caller).active_minigame,"cmd",e,arg_c,subcommand) )
 				return;
 
 		}

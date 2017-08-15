@@ -1,6 +1,7 @@
-#ifndef CALCULATIONS_H
-#define CALCULATIONS_H
+#pragma once
+
 vector damage_explosion_calcpush(vector explosion_f, vector target_v, float speedfactor);
 vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle);
-int W_GetGunAlignment(entity player);
-#endif
+int W_GunAlign(entity this, int preferred_align);
+//int W_GetGunAlignment(entity player);
+float explosion_calcpush_getmultiplier(vector explosion_v, vector target_v);

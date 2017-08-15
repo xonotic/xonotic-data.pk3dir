@@ -1,3 +1,4 @@
+#include "relay_teamcheck.qh"
 #ifdef SVQC
 void trigger_relay_teamcheck_use(entity this, entity actor, entity trigger)
 {
@@ -29,6 +30,7 @@ void trigger_relay_teamcheck_reset(entity this)
 spawnfunc(trigger_relay_teamcheck)
 {
 	this.team_saved = this.team;
+	IL_PUSH(g_saved_team, this);
 	this.use = trigger_relay_teamcheck_use;
 	this.reset = trigger_relay_teamcheck_reset;
 }

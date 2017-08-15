@@ -1,0 +1,110 @@
+#pragma once
+/*
+ * Globals and Fields
+ */
+
+const int AI_STATUS_ROAMING                    = BIT(0); // Bot is just crawling the map. No enemies at sight
+const int AI_STATUS_ATTACKING                  = BIT(1); // There are enemies at sight
+const int AI_STATUS_RUNNING                    = BIT(2); // Bot is bunny hopping
+const int AI_STATUS_DANGER_AHEAD               = BIT(3); // There is lava/slime/trigger_hurt ahead
+const int AI_STATUS_OUT_JUMPPAD                = BIT(4); // Trying to get out of a "vertical" jump pad
+const int AI_STATUS_OUT_WATER                  = BIT(5); // Trying to get out of water
+const int AI_STATUS_WAYPOINT_PERSONAL_LINKING  = BIT(6); // Waiting for the personal waypoint to be linked
+const int AI_STATUS_WAYPOINT_PERSONAL_GOING    = BIT(7); // Going to a personal waypoint
+const int AI_STATUS_WAYPOINT_PERSONAL_REACHED  = BIT(8); // Personal waypoint reached
+const int AI_STATUS_JETPACK_FLYING             = BIT(9);
+const int AI_STATUS_JETPACK_LANDING            = BIT(10);
+const int AI_STATUS_STUCK                      = BIT(11); // Cannot reach any goal
+
+.float isbot; // true if this client is actually a bot
+.int aistatus;
+
+// Skill system
+float autoskill_nextthink;
+
+// havocbot_keyboardskill // keyboard movement
+.float bot_moveskill; // moving technique
+.float bot_dodgeskill; // dodging
+
+.float bot_pingskill; // ping offset
+
+.float bot_weaponskill; // weapon usage skill (combos, e.g.)
+.float bot_aggresskill; // aggressivity, controls "think before fire" behaviour
+.float bot_rangepreference; // weapon choice offset for range (>0 = prefer long range earlier "sniper", <0 = prefer short range "spammer")
+
+.float bot_aimskill; // aim accuracy
+.float bot_offsetskill; // aim breakage
+.float bot_mouseskill; // mouse "speed"
+
+.float bot_thinkskill; // target choice
+.float bot_aiskill; // strategy choice
+
+.float totalfrags_lastcheck;
+
+// Custom weapon priorities
+float bot_distance_far;
+float bot_distance_close;
+
+entity bot_list;
+.entity nextbot;
+.string cleanname;
+.string netname_freeme;
+.string playermodel_freeme;
+.string playerskin_freeme;
+
+.float bot_nextthink;
+
+.float createdtime;
+.float bot_preferredcolors;
+.float bot_attack;
+.float bot_dodge;
+.float bot_dodgerating;
+
+.float bot_pickup;
+.float bot_pickupbasevalue;
+.bool bot_pickup_respawning;
+.float bot_canfire;
+.float bot_strategytime;
+
+.float bot_forced_team;
+.float bot_config_loaded;
+
+float bot_strategytoken_taken;
+entity bot_strategytoken;
+
+float botframe_spawnedwaypoints;
+float botframe_nextthink;
+float botframe_nextdangertime;
+float bot_cvar_nextthink;
+float bot_ignore_bots; // let bots not attack other bots (only works in non-teamplay)
+
+/*
+ * Functions
+ */
+
+entity bot_spawn();
+float bot_fixcount();
+
+void bot_think(entity this);
+void bot_setnameandstuff(entity this);
+void bot_custom_weapon_priority_setup();
+void bot_endgame();
+void bot_relinkplayerlist();
+void bot_clear(entity this);
+void bot_clientdisconnect(entity this);
+void bot_clientconnect(entity this);
+void bot_removefromlargestteam();
+void bot_removenewest();
+void autoskill(float factor);
+void bot_serverframe();
+
+.void(entity this) bot_ai;
+.float(entity player, entity item) bot_pickupevalfunc;
+
+/*
+ * Imports
+ */
+
+void(entity this) havocbot_setupbot;
+
+void bot_calculate_stepheightvec();

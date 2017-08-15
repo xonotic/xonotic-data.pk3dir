@@ -19,8 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#ifndef LIB_CSQCMODEL_COMMON_H
-#define LIB_CSQCMODEL_COMMON_H
+#pragma once
 
 #include <common/csqcmodel_settings.qh>
 
@@ -93,5 +92,4 @@ const int CSQCMODEL_PROPERTY_SIZE = BIT(15);
 	CSQCMODEL_PROPERTY_SCALED(CSQCMODEL_PROPERTY_LERPFRAC, float, ReadByte, WriteByte, lerpfrac, 255, 0, 255)
 #else
 #define ALLPROPERTIES ALLPROPERTIES_COMMON
-#endif
 #endif

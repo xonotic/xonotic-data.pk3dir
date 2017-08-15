@@ -1,36 +1,78 @@
-#ifndef MOVETYPES_H
-#define MOVETYPES_H
+#pragma once
+
+// water levels
+const int WATERLEVEL_NONE = 0;
+const int WATERLEVEL_WETFEET = 1;
+const int WATERLEVEL_SWIMMING = 2;
+const int WATERLEVEL_SUBMERGED = 3;
 
 #define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
 #define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
 #define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
+#define IS_ONSLICK(s)						boolean((s).flags & FL_ONSLICK)
+#define SET_ONSLICK(s)						((s).flags |= FL_ONSLICK)
+#define UNSET_ONSLICK(s)					((s).flags &= ~FL_ONSLICK)
 
-.float move_ltime;
-.void(entity this) move_think;
-.float move_nextthink;
-.void(entity this) move_blocked;
+#define GAMEPLAYFIX_DOWNTRACEONGROUND(s)    STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, NULL)
+#define GAMEPLAYFIX_EASIERWATERJUMP(s)      STAT(GAMEPLAYFIX_EASIERWATERJUMP, NULL)
+#define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN, NULL)
+#define GAMEPLAYFIX_STEPMULTIPLETIMES(s)    STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, NULL)
+#define GAMEPLAYFIX_UNSTICKPLAYERS(s)       STAT(GAMEPLAYFIX_UNSTICKPLAYERS, NULL)
+#define GAMEPLAYFIX_WATERTRANSITION(s) 		STAT(GAMEPLAYFIX_WATERTRANSITION, NULL)
+#define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, NULL)
+
+#define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT, NULL)
+#define PHYS_NOSTEP(s)                      STAT(NOSTEP, NULL)
+#define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP, NULL)
+#define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION, NULL)
+
+#ifdef CSQC
+.float bouncestop;
+.float bouncefactor;
+
+	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  (boolean(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE))
+	#define GAMEPLAYFIX_NOGRAVITYONGROUND           (boolean(moveflags & MOVEFLAG_NOGRAVITYONGROUND))
+	#define GAMEPLAYFIX_Q2AIRACCELERATE             (boolean(moveflags & MOVEFLAG_Q2AIRACCELERATE))
+
+	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
+	// FIXME: 0 doesn't mean zero gravity
+	#define PHYS_ENTGRAVITY(s)                  STAT(MOVEVARS_ENTGRAVITY, s)
+
+	#define TICRATE                             ticrate
+
+#elif defined(SVQC)
+
+	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  autocvar_sv_gameplayfix_gravityunaffectedbyticrate
+	#define GAMEPLAYFIX_NOGRAVITYONGROUND           autocvar_sv_gameplayfix_nogravityonground
+	#define GAMEPLAYFIX_Q2AIRACCELERATE             autocvar_sv_gameplayfix_q2airaccelerate
+
+	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
+	#define PHYS_ENTGRAVITY(s)                  ((s).gravity)
+
+	#define TICRATE sys_frametime
+
+#endif
+
+void set_movetype(entity this, int mt);
 
 .float move_movetype;
 .float move_time;
-.vector move_origin;
-.vector move_angles;
-.vector move_velocity;
-.vector move_avelocity;
-.int move_flags;
-.int move_watertype;
-.int move_waterlevel;
+//.vector move_origin;
+//.vector move_angles;
+//.vector move_velocity;
+//.vector move_avelocity;
+//.int move_flags;
+//.int move_watertype;
+//.int move_waterlevel;
 .void(float, float)contentstransition;
-.float move_bounce_factor;
-.float move_bounce_stopspeed;
+//.float move_bounce_factor;
+//.float move_bounce_stopspeed;
 .float move_nomonsters;  // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
 
-.entity move_aiment;
-.vector move_punchangle;
+.entity aiment;
+.vector punchangle;
 
-// should match sv_gameplayfix_fixedcheckwatertransition
-float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
-
-.entity move_groundentity;  // FIXME add move_groundnetworkentity?
+.entity groundentity;  // FIXME add move_groundnetworkentity?
 .float move_suspendedinair;
 .float move_didgravity;
 
@@ -44,8 +86,8 @@ void _Movetype_LinkEdict(entity this, float touch_triggers);
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
 void _Movetype_PushEntityTrace(entity this, vector push);
 float _Movetype_PushEntity(entity this, vector push, float failonstartsolid);
-void makevectors_matrix(vector myangles);
 
+void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient);
 void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy);
 void Movetype_Physics_MatchServer(entity this, bool sloppy);
 void Movetype_Physics_NoMatchServer(entity this);
@@ -75,7 +117,12 @@ const int MOVETYPE_FLY_WORLDONLY    = 33;
 
 const int FL_ITEM                   = 256;
 const int FL_ONGROUND				= 512;
+#elif defined(SVQC)
+const int MOVETYPE_ANGLENOCLIP      = 1;
+const int MOVETYPE_ANGLECLIP        = 2;
 #endif
+
+const int FL_ONSLICK = BIT(20);
 
 const int MOVETYPE_FAKEPUSH         = 13;
 
@@ -86,6 +133,4 @@ const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = BIT(2);
 
 #ifdef CSQC
 #define moveflags STAT(MOVEFLAGS)
-#endif
-
 #endif

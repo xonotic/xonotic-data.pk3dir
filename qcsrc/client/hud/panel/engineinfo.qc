@@ -1,5 +1,9 @@
 #include "engineinfo.qh"
-// Engine info panel (#13)
+
+#include <client/autocvars.qh>
+#include <client/miscfunctions.qh>
+
+// Engine info (#13)
 
 float prevfps;
 float prevfps_time;
@@ -18,7 +22,7 @@ void HUD_EngineInfo()
 		if(!autocvar_hud_panel_engineinfo) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -27,7 +31,7 @@ void HUD_EngineInfo()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;

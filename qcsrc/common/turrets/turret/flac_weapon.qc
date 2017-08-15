@@ -1,7 +1,5 @@
 #include "flac_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 void turret_flac_projectile_think_explode(entity this);
@@ -12,7 +10,7 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, SND_FlacAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_FlacAttack_FIRE, CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -49,9 +47,7 @@ void turret_flac_projectile_think_explode(entity this)
 #else
     RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
 #endif
-    remove(this);
+    delete(this);
 }
-
-#endif
 
 #endif

@@ -1,48 +1,5 @@
-#ifndef IMPLEMENTATION
-CLASS(PortoLaunch, Weapon)
-/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none)
-/* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0)
-/* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON);
-/* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
-/* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
-#ifndef MENUQC
-/* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
-#endif
-/* crosshair */ ATTRIB(PortoLaunch, w_crosshair, string, "gfx/crosshairporto");
-/* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");
-/* refname   */ ATTRIB(PortoLaunch, netname, string, "porto");
-/* wepname   */ ATTRIB(PortoLaunch, m_name, string, _("Port-O-Launch"));
+#include "porto.qh"
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, PortoLaunch, porto)
-#undef X
-ENDCLASS(PortoLaunch)
-REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
-
-#ifdef SVQC
-.entity porto_current;
-.vector porto_v_angle; // holds "held" view angles
-.float porto_v_angle_held;
-.vector right_vector;
-.float porto_forbidden;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 #include <common/triggers/trigger/jumppads.qh>
 
@@ -62,10 +19,10 @@ void W_Porto_Success(entity this)
 	}
 
 	this.realowner.porto_current = NULL;
-	remove(this);
+	delete(this);
 }
 
-string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
+string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo, .entity weaponentity);
 void W_Porto_Fail(entity this, float failhard)
 {
 	if(this.realowner == NULL)
@@ -89,16 +46,18 @@ void W_Porto_Fail(entity this, float failhard)
 		if(move_out_of_solid(this))
 		{
 			this.flags = FL_ITEM;
+			IL_PUSH(g_items, this);
 			this.velocity = trigger_push_calculatevelocity(this.origin, this.realowner, 128);
 			tracetoss(this, this);
 			if(vdist(trace_endpos - this.realowner.origin, <, 128))
 			{
-				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity);
+				.entity weaponentity = this.weaponentity_fld;
+				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity, weaponentity);
 				Send_Notification(NOTIF_ONE, this.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
 			}
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 void W_Porto_Remove(entity p)
@@ -113,25 +72,26 @@ void W_Porto_Think(entity this)
 {
 	trace_plane_normal = '0 0 0';
 	if(this.realowner.playerid != this.playerid)
-		remove(this);
+		delete(this);
 	else
 		W_Porto_Fail(this, 0);
 }
 
-void W_Porto_Touch(entity this)
+void W_Porto_Touch(entity this, entity toucher)
 {
 	vector norm;
 
 	// do not use PROJECTILE_TOUCH here
 	// FIXME but DO handle warpzones!
 
-	if(other.classname == "portal")
+	if(toucher.classname == "portal")
 		return; // handled by the portal
 
 	norm = trace_plane_normal;
 	if(trace_ent.iscreature)
 	{
-		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * STAT(PL_MIN, NULL).z, MOVE_WORLDONLY, this);
+		// TODO: why not use entity size?
+		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN_CONST.z, MOVE_WORLDONLY, this);
 		if(trace_fraction >= 1)
 			return;
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
@@ -143,11 +103,11 @@ void W_Porto_Touch(entity this)
 	if(this.realowner.playerid != this.playerid)
 	{
 		sound(this, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
-		remove(this);
+		delete(this);
 	}
-	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+	else if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) || (trace_dphitcontents & DPCONTENTS_PLAYERCLIP))
 	{
-		spamsound(this, CH_SHOTS, SND(PORTO_BOUNCE), VOL_BASE, ATTEN_NORM);
+		spamsound(this, CH_SHOTS, SND_PORTO_BOUNCE, VOL_BASE, ATTEN_NORM);
 		// just reflect
 		this.right_vector = this.right_vector - 2 * trace_plane_normal * (this.right_vector * trace_plane_normal);
 		this.angles = vectoangles(this.velocity - 2 * trace_plane_normal * (this.velocity * trace_plane_normal));
@@ -240,11 +200,11 @@ void W_Porto_Touch(entity this)
 	}
 }
 
-void W_Porto_Attack(entity actor, float type)
+void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 {
 	entity gren;
 
-	W_SetupShot(actor, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
+	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;
@@ -252,12 +212,13 @@ void W_Porto_Attack(entity actor, float type)
 	//Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = new(porto);
+	gren.weaponentity_fld = weaponentity;
 	gren.cnt = type;
 	gren.owner = gren.realowner = actor;
 	gren.playerid = actor.playerid;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = 200;
-	gren.movetype = MOVETYPE_BOUNCEMISSILE;
+	set_movetype(gren, MOVETYPE_BOUNCEMISSILE);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.effects = EF_RED;
 	gren.scale = 4;
@@ -275,6 +236,8 @@ void W_Porto_Attack(entity actor, float type)
 
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	gren.portal_id = time;
 	actor.porto_current = gren;
@@ -292,12 +255,12 @@ void W_Porto_Attack(entity actor, float type)
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor))
+METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     PHYS_INPUT_BUTTON_ATCK(actor) = false;
     PHYS_INPUT_BUTTON_ATCK2(actor) = false;
     if(!WEP_CVAR(porto, secondary))
-        if(bot_aim(actor, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
+        if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
             PHYS_INPUT_BUTTON_ATCK(actor) = true;
 }
 METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -309,7 +272,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(actor, 0);
+            W_Porto_Attack(actor, weaponentity, 0);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
 
@@ -318,57 +281,47 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
         {
-            W_Porto_Attack(actor, 1);
+            W_Porto_Attack(actor, weaponentity, 1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
         }
     }
     else
     {
-        if(actor.porto_v_angle_held)
+        if(actor.(weaponentity).porto_v_angle_held)
         {
             if(!(fire & 2))
-            {
-                actor.porto_v_angle_held = 0;
-
-                ClientData_Touch(actor);
-            }
+                actor.(weaponentity).porto_v_angle_held = 0;
         }
         else
         {
             if(fire & 2)
             {
-                actor.porto_v_angle = actor.v_angle;
-                actor.porto_v_angle_held = 1;
-
-                ClientData_Touch(actor);
+                actor.(weaponentity).porto_v_angle = actor.v_angle;
+                actor.(weaponentity).porto_v_angle_held = 1;
             }
         }
-        if(actor.porto_v_angle_held)
-            makevectors(actor.porto_v_angle); // override the previously set angles
+        if(actor.(weaponentity).porto_v_angle_held)
+            makevectors(actor.(weaponentity).porto_v_angle); // override the previously set angles
 
         if(fire & 1)
         if(!actor.porto_current)
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(actor, -1);
+            W_Porto_Attack(actor, weaponentity, -1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
     }
 }
-METHOD(PortoLaunch, wr_checkammo1, bool(entity thiswep, entity this))
+METHOD(PortoLaunch, wr_checkammo1, bool(entity thiswep, entity this, .entity weaponentity))
 {
     // always allow infinite ammo
     return true;
 }
-METHOD(PortoLaunch, wr_checkammo2, bool(entity thiswep, entity this))
+METHOD(PortoLaunch, wr_checkammo2, bool(entity thiswep, entity this, .entity weaponentity))
 {
     // always allow infinite ammo
     return true;
-}
-METHOD(PortoLaunch, wr_setup, void(entity thiswep, entity actor))
-{
-    actor.ammo_field = ammo_none;
 }
 METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 {
@@ -377,7 +330,6 @@ METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 #endif
 #ifdef CSQC
 METHOD(PortoLaunch, wr_impacteffect, void(entity this, entity actor)) {
-    LOG_WARNING("Since when does Porto send DamageInfo?\n");
+    LOG_WARN("Since when does Porto send DamageInfo?");
 }
-#endif
 #endif

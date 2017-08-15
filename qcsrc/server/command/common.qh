@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 REGISTRY(COMMON_COMMANDS, BITS(7))
 #define COMMON_COMMANDS_from(i) _COMMON_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(COMMON_COMMANDS)
@@ -15,14 +15,13 @@ REGISTRY_SORT(COMMON_COMMANDS)
 	METHOD(commoncommand_##id, m_invokecmd, void(commoncommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(COMMON_COMMANDS_aliases) {
-	FOREACH(COMMON_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svcmd"))));
+	FOREACH(COMMON_COMMANDS, true, { localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svcmd")); });
 }
 
 #include "vote.qh"
-#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_spawn.qh>
 
-#include <common/command/generic.qh>
-#include <common/command/command.qh>
+#include <common/command/_mod.qh>
 
 // ============================================================
 //  Shared declarations for server commands, written by Samual
@@ -158,30 +157,30 @@ COMMON_COMMAND(who, "Display detailed client information about all players") { C
 
 void CommonCommand_macro_help(entity caller)
 {
-	FOREACH(COMMON_COMMANDS, true, LAMBDA(print_to(caller, sprintf("  ^2%s^7: %s\n", it.m_name, it.m_description))));
+	FOREACH(COMMON_COMMANDS, true, { print_to(caller, sprintf("  ^2%s^7: %s", it.m_name, it.m_description)); });
 }
 
 float CommonCommand_macro_command(float argc, entity caller, string command)
 {
 	string c = strtolower(argv(0));
-	FOREACH(COMMON_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(COMMON_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(it, CMD_REQUEST_COMMAND, caller, argc, command);
 		return true;
-	));
+	});
 	return false;
 }
 
 float CommonCommand_macro_usage(float argc, entity caller)
 {
 	string c = strtolower(argv(1));
-	FOREACH(COMMON_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(COMMON_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(it, CMD_REQUEST_USAGE, caller, argc, "");
 		return true;
-	));
+	});
 	return false;
 }
 
 void CommonCommand_macro_write_aliases(float fh)
 {
-	FOREACH(COMMON_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_svcmd", it.m_name, it.m_description)));
+	FOREACH(COMMON_COMMANDS, true, { CMD_Write_Alias("qc_cmd_svcmd", it.m_name, it.m_description); });
 }

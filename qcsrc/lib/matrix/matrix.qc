@@ -22,7 +22,7 @@ void MX_Nick_(entity fh, entity pass, int status)
             fh.url_verb = "PUT";
             fh.url_content_type = "application/json";
             url_fputs(fh, sprintf("{\"displayname\": \"%s\"}", pass.message));
-            remove(pass);
+            delete(pass);
             url_fclose(fh);
             break;
         }
@@ -46,7 +46,7 @@ void MX_Messages_(entity fh, entity pass, int status)
 {
     switch (status) {
         default: {
-            LOG_WARNINGF("status: %d", status);
+            LOG_WARNF("status: %d", status);
             break;
         }
         case URL_READY_CLOSED: break;
@@ -90,7 +90,7 @@ void MX_Sync_(entity fh, entity pass, int status)
 {
     switch (status) {
         default: {
-            LOG_WARNINGF("status: %d", status);
+            LOG_WARNF("status: %d", status);
             break;
         }
         case URL_READY_CLOSED: break;
@@ -175,7 +175,7 @@ void MX_Typing_(entity fh, entity pass, int status)
             fh.url_verb = "PUT";
             fh.url_content_type = "application/json";
             url_fputs(fh, sprintf("{\"typing\": %s, \"timeout\": 30000}", pass.message));
-            remove(pass);
+            delete(pass);
             url_fclose(fh);
             break;
         }
@@ -204,7 +204,7 @@ void MX_Say_(entity fh, entity pass, int status)
             fh.url_verb = "PUT";
             fh.url_content_type = "application/json";
             url_fputs(fh, sprintf("{\"msgtype\": \"m.text\", \"body\": \"%s\"}", pass.message));
-            strunzone(pass.message); remove(pass);
+            strunzone(pass.message); delete(pass);
             url_fclose(fh);
             break;
         }

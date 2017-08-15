@@ -1,5 +1,7 @@
 #include "g_subs.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "antilag.qh"
 #include "command/common.qh"
 #include "../common/state.qh"
@@ -8,7 +10,7 @@
 
 spawnfunc(info_null)
 {
-	remove(this);
+	delete(this);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
 }
 
@@ -51,9 +53,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	{
 		// take players back into the past
 		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_takeback(it, CS(it), time - lag));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if(it != forent)
-				antilag_takeback(it, it, time - lag);
+		IL_EACH(g_monsters, it != forent,
+		{
+			antilag_takeback(it, it, time - lag);
 		});
 	}
 
@@ -67,9 +69,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	if (lag)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_restore(it, CS(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
-			if (it != forent)
-				antilag_restore(it, it);
+		IL_EACH(g_monsters, it != forent,
+		{
+			antilag_restore(it, it);
 		});
 	}
 
@@ -83,13 +85,15 @@ void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, false);
 }
@@ -99,13 +103,15 @@ void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, floa
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	WarpZone_traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, true);
 }
@@ -141,10 +147,10 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 
 		if(c == 50)
 		{
-			LOG_TRACE("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2), "\n");
-			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos), "\n");
-			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos), "\n");
-			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
+			LOG_TRACE("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2));
+			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos));
+			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos));
+			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)));
 		}
 
 		stopentity = trace_ent;
@@ -204,26 +210,22 @@ Ripped from DPMod
 */
 vector findbetterlocation (vector org, float mindist)
 {
-	vector	loc;
-	vector vec;
-	float c, h;
-
-	vec = mindist * '1 0 0';
-	c = 0;
+	vector vec = mindist * '1 0 0';
+	int c = 0;
 	while (c < 6)
 	{
 		traceline (org, org + vec, true, NULL);
 		vec = vec * -1;
 		if (trace_fraction < 1)
 		{
-			loc = trace_endpos;
+			vector loc = trace_endpos;
 			traceline (loc, loc + vec, true, NULL);
 			if (trace_fraction >= 1)
 				org = loc + vec;
 		}
 		if (c & 1)
 		{
-			h = vec.y;
+			float h = vec.y;
 			vec.y = vec.x;
 			vec.x = vec.z;
 			vec.z = h;
@@ -234,7 +236,7 @@ vector findbetterlocation (vector org, float mindist)
 	return org;
 }
 
-float LOD_customize(entity this)
+bool LOD_customize(entity this, entity client)
 {
 	if(autocvar_loddebug)
 	{
@@ -249,10 +251,10 @@ float LOD_customize(entity this)
 	}
 
 	// TODO csqc network this so it only gets sent once
-	vector near_point = NearestPointOnBox(this, other.origin);
-	if(vdist(near_point - other.origin, <, this.loddistance1))
+	vector near_point = NearestPointOnBox(this, client.origin);
+	if(vdist(near_point - client.origin, <, this.loddistance1))
 		this.modelindex = this.lodmodelindex0;
-	else if(!this.lodmodelindex2 || vdist(near_point - other.origin, <, this.loddistance2))
+	else if(!this.lodmodelindex2 || vdist(near_point - client.origin, <, this.loddistance2))
 		this.modelindex = this.lodmodelindex1;
 	else
 		this.modelindex = this.lodmodelindex2;
@@ -281,7 +283,7 @@ void LODmodel_attach(entity this)
 		if(e)
 		{
 			this.lodmodel1 = e.model;
-			remove(e);
+			delete(e);
 		}
 	}
 	if(this.lodtarget2 != "")
@@ -290,7 +292,7 @@ void LODmodel_attach(entity this)
 		if(e)
 		{
 			this.lodmodel2 = e.model;
-			remove(e);
+			delete(e);
 		}
 	}
 
@@ -417,7 +419,7 @@ void InitTrigger(entity this)
 	SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
 }
@@ -429,7 +431,7 @@ void InitSolidBSPTrigger(entity this)
 	SetMovedir(this);
 	this.solid = SOLID_BSP;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
+	set_movetype(this, MOVETYPE_NONE); // why was this PUSH? -div0
 //	this.modelindex = 0;
 	this.model = "";
 }
@@ -440,7 +442,7 @@ bool InitMovingBrushTrigger(entity this)
 // to mean no restrictions, so use a yaw of 360 instead.
 	this.solid = SOLID_BSP;
 	SetBrushEntityModel(this);
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	if(this.modelindex == 0)
 	{
 		objerror(this, "InitMovingBrushTrigger: no brushes found!");

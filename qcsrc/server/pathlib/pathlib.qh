@@ -1,11 +1,14 @@
 #pragma once
 
+#ifndef DEBUGPATHING
+	#define DEBUGPATHING 0
+#endif
+
 .entity pathlib_list;
 .entity path_next;
 .entity path_prev;
 
 #define inwater(point) (pointcontents(point) == CONTENT_WATER)
-.int medium;
 
 const vector PLIB_FORWARD = '0 1 0';
 //#define PLIB_BACK    '0 -1 0'
@@ -23,7 +26,7 @@ entity closedlist;
 entity goal_node;
 entity start_node;
 
-.float is_path_node;
+.bool is_path_node;
 .float pathlib_node_g;
 .float pathlib_node_h;
 .float pathlib_node_f;
@@ -46,7 +49,7 @@ float pathlib_closed_cnt;
 float pathlib_made_cnt;
 float pathlib_merge_cnt;
 float pathlib_searched_cnt;
-float pathlib_bestopen_seached;
+float pathlib_bestopen_searched;
 float pathlib_bestcash_hits;
 float pathlib_bestcash_saved;
 float pathlib_gridsize;
@@ -63,10 +66,10 @@ entity best_open_node;
 vector tile_check_up;
 vector tile_check_down;
 float  tile_check_size;
-float     tile_check_cross(entity this, vector where);
-float     tile_check_plus(entity this, vector where);
-float     tile_check_star(entity this, vector where);
-var float tile_check(entity this, vector where);
+bool     tile_check_cross(entity this, vector where);
+bool     tile_check_plus(entity this, vector where);
+bool     tile_check_star(entity this, vector where);
+var bool tile_check(entity this, vector where);
 
 float  movenode_stepsize;
 vector movenode_stepup;
@@ -74,7 +77,7 @@ vector movenode_maxdrop;
 vector movenode_boxup;
 vector movenode_boxmax;
 vector movenode_boxmin;
-float  pathlib_movenode_goodnode;
+bool  pathlib_movenode_goodnode;
 
 vector     pathlib_wateroutnode(entity this, vector start, vector end, float doedge);
 vector     pathlib_swimnode(entity this, vector start, vector end, float doedge);
@@ -102,7 +105,7 @@ float      pathlib_h_diagonal2sdp(vector preprev, vector prev, vector point, vec
 float      pathlib_h_none(vector preprev, vector prev) { return 0; }
 var float  pathlib_heuristic(vector from, vector to);
 
-var float  pathlib_makenode(entity parent,vector start, vector to, vector goal,float cost);
-var float  buildpath_nodefilter(vector n,vector c,vector p);
+var bool  pathlib_makenode(entity parent,vector start, vector to, vector goal,float cost);
+var bool  buildpath_nodefilter(vector n,vector c,vector p);
 
 var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);

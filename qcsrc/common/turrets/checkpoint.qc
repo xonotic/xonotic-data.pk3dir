@@ -1,3 +1,7 @@
+#include "checkpoint.qh"
+
+#ifdef SVQC
+
 /**
     turret_checkpoint
 **/
@@ -10,8 +14,6 @@
 #define checkpoint_cache_from lastrocket
 #define checkpoint_cache_to   selected_player
 */
-
-.entity pathgoal;
 
 /*
 entity path_makeorcache(entity forwho,entity start, entity end)
@@ -56,7 +58,7 @@ void turret_checkpoint_init(entity this)
     {
         this.enemy = find(NULL, targetname, this.target);
         if(this.enemy == NULL)
-            LOG_TRACE("A turret_checkpoint faild to find its target!\n");
+            LOG_TRACE("A turret_checkpoint faild to find its target!");
     }
     //setthink(this, turret_checkpoint_think);
     //this.nextthink = time + tc_acum + 0.25;
@@ -76,3 +78,5 @@ spawnfunc(walker_checkpoint)
     this.classname = "turret_checkpoint";
     spawnfunc_turret_checkpoint(this);
 }
+
+#endif

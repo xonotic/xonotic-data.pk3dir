@@ -1,7 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
-cd "$(dirname "$0")"
+cd ${0%/*}
 cd ..
+
+VERBOSE=${VERBOSE:-1}
 
 function startswith() {
     declare -l file="${1}"
@@ -15,17 +17,17 @@ function startswith() {
 function check() {
     declare -l base="${1}"
     find "$base" -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
-        echo "$file"
+        [ "$VERBOSE" != "0" ] && echo "$file"
         declare -l file_h="${file%.qc}.qh"
-        if [ ! -f "$file_h" ]; then echo "#pragma once" > "$file_h"; fi
+        if [[ ! -f "$file_h" ]]; then echo "#pragma once" > "$file_h"; fi
 
         include=$(basename "$file")
         include="${include%.qc}.qh"
         include="#include \"${include}\""
         startswith "$file" "$include"
     done
-    find "$base" -type f -name '*.qh' -print0 | sort -z | while read -r -d '' file; do
-        echo "$file"
+    find "$base" -type f -name '*.qh' -a \! -name '_mod.qh' -print0 | sort -z | while read -r -d '' file; do
+        [ "$VERBOSE" != "0" ] && echo "$file"
         startswith "$file" "#pragma once"
     done
 }
@@ -33,3 +35,4 @@ function check() {
 check client
 check server
 check menu
+check common

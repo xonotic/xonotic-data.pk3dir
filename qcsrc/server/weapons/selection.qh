@@ -1,31 +1,34 @@
 #pragma once
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
 
 .float hasweapon_complain_spam;
-bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain);
+bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain);
 
 .int weaponcomplainindex;
-float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing);
+float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing, .entity weaponentity);
 
-#define w_getbestweapon(ent) Weapons_from(W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true))
+#define w_getbestweapon(ent,wepent) Weapons_from(W_GetCycleWeapon(ent, CS(ent).cvar_cl_weaponpriority, 0, -1, false, true, wepent))
 
-void W_SwitchWeapon_Force(Player this, Weapon w);
+void W_SwitchWeapon_Force(Player this, Weapon w, .entity weaponentity);
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
-void W_SwitchToOtherWeapon(entity this);
-void W_SwitchWeapon(entity this, Weapon imp);
+void W_SwitchToOtherWeapon(entity this, .entity weaponentity);
+void W_SwitchWeapon(entity this, Weapon imp, .entity weaponentity);
 
-void W_CycleWeapon(entity this, string weaponorder, float dir);
+void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity);
 
-void W_NextWeaponOnImpulse(entity this, float imp);
+void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity);
 
 // next weapon
-void W_NextWeapon(entity this, float list);
+void W_NextWeapon(entity this, float list, .entity weaponentity);
 
 // prev weapon
-void W_PreviousWeapon(entity this, float list);
+void W_PreviousWeapon(entity this, float list, .entity weaponentity);
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon(entity this);
+void W_LastWeapon(entity this, .entity weaponentity);

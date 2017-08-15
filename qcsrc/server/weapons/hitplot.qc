@@ -1,9 +1,12 @@
 #include "hitplot.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "../antilag.qh"
 #include "../g_subs.qh"
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 #include <common/state.qh>
+#include <common/wepent.qh>
 
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
 {
@@ -51,29 +54,25 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 	return ret;
 }
 
-void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, vector screenup)
+void W_HitPlotAnalysis(entity player, .entity weaponentity, vector screenforward, vector screenright, vector screenup)
 {
-	vector hitplot;
-	vector org;
-	float lag;
-
-	if(player.hitplotfh >= 0)
+	if(CS(player).hitplotfh >= 0)
 	{
-		lag = ANTILAG_LATENCY(player);
+		float lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
 			lag = 0;
 		if(!IS_REAL_CLIENT(player))
 			lag = 0; // only antilag for clients
 
-		org = player.origin + player.view_ofs;
-		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
+		vector org = player.origin + player.view_ofs;
+		traceline_antilag_force(player, org, org + screenforward * max_shot_distance, MOVE_NORMAL, player, lag);
 		if(IS_CLIENT(trace_ent) || IS_MONSTER(trace_ent))
 		{
 		    entity store = IS_CLIENT(trace_ent) ? CS(trace_ent) : trace_ent;
 			antilag_takeback(trace_ent, store, time - lag);
-			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
+			vector hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
 			antilag_restore(trace_ent, store);
-			fputs(player.hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(PS(player).m_switchweapon.m_id), "\n"));
+			fputs(CS(player).hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(player.(weaponentity).m_switchweapon.m_id), "\n"));
 			//print(strcat(ftos(hitplot_x), " ", ftos(hitplot_y), " ", ftos(hitplot_z), "\n"));
 		}
 	}
@@ -83,17 +82,17 @@ void W_HitPlotOpen(entity player)
 {
 	if(autocvar_g_hitplots || strhasword(autocvar_g_hitplots_individuals, player.netaddress))
 	{
-		player.hitplotfh = fopen(strcat("hits-", matchid, "-", player.netaddress, "-", ftos(player.playerid), ".plot"), FILE_WRITE);
-		fputs(player.hitplotfh, strcat("#name ", player.netname, "\n"));
+		CS(player).hitplotfh = fopen(strcat("hits-", matchid, "-", player.netaddress, "-", ftos(player.playerid), ".plot"), FILE_WRITE);
+		fputs(CS(player).hitplotfh, strcat("#name ", playername(player, false), "\n"));
 	}
-	else { player.hitplotfh = -1; }
+	else { CS(player).hitplotfh = -1; }
 }
 
 void W_HitPlotClose(entity player)
 {
-	if(player.hitplotfh >= 0)
+	if(CS(player).hitplotfh >= 0)
 	{
-		fclose(player.hitplotfh);
-		player.hitplotfh = -1;
+		fclose(CS(player).hitplotfh);
+		CS(player).hitplotfh = -1;
 	}
 }

@@ -1,7 +1,9 @@
+#include "music.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include <common/constants.qh>
+    #include <common/net_linked.qh>
     #include <server/constants.qh>
     #include <server/defs.qh>
 #endif
@@ -10,6 +12,9 @@ REGISTER_NET_TEMP(TE_CSQC_TARGET_MUSIC)
 REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_MUSIC)
 
 #ifdef SVQC
+
+IntrusiveList g_targetmusic_list;
+STATIC_INIT(g_targetmusic_list) { g_targetmusic_list = IL_NEW(); }
 
 // values:
 //   volume
@@ -36,7 +41,8 @@ void target_music_reset(entity this)
 }
 void target_music_kill()
 {
-	FOREACH_ENTITY_CLASS("target_music", true, {
+	IL_EACH(g_targetmusic_list, true,
+	{
 		it.volume = 0;
         if (it.targetname == "")
             target_music_sendto(it, MSG_ALL, 1);
@@ -64,6 +70,7 @@ spawnfunc(target_music)
 	this.reset = target_music_reset;
 	if(!this.volume)
 		this.volume = 1;
+	IL_PUSH(g_targetmusic_list, this);
 	if(this.targetname == "")
 		target_music_sendto(this, MSG_INIT, 1);
 	else
@@ -71,13 +78,13 @@ spawnfunc(target_music)
 }
 void TargetMusic_RestoreGame()
 {
-	for(entity e = NULL; (e = find(e, classname, "target_music")); )
+	IL_EACH(g_targetmusic_list, true,
 	{
-		if(e.targetname == "")
-			target_music_sendto(e, MSG_INIT, 1);
+		if(it.targetname == "")
+			target_music_sendto(it, MSG_INIT, 1);
 		else
-			target_music_sendto(e, MSG_INIT, 0);
-	}
+			target_music_sendto(it, MSG_INIT, 0);
+	});
 }
 // values:
 //   volume
@@ -223,7 +230,7 @@ void Net_TargetMusic()
 		_sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
-			LOG_TRACEF("Cannot initialize sound %s\n", e.noise);
+			LOG_TRACEF("Cannot initialize sound %s", e.noise);
 			strunzone(e.noise);
 			e.noise = string_null;
 		}
@@ -310,7 +317,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 			_sound(this, CH_BGM_SINGLE, this.noise, 0, ATTEN_NONE);
 			if(getsoundtime(this, CH_BGM_SINGLE) < 0)
 			{
-				LOG_TRACEF("Cannot initialize sound %s\n", this.noise);
+				LOG_TRACEF("Cannot initialize sound %s", this.noise);
 				strunzone(this.noise);
 				this.noise = string_null;
 			}

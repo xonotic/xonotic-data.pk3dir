@@ -13,14 +13,14 @@ CLASS(Nexposee, Container)
 	METHOD(Nexposee, focusEnter, void(entity));
 	METHOD(Nexposee, close, void(entity));
 
-	ATTRIB(Nexposee, animationState, float, -1)
-	ATTRIB(Nexposee, animationFactor, float, 0)
-	ATTRIB(Nexposee, selectedChild, entity, NULL)
-	ATTRIB(Nexposee, mouseFocusedChild, entity, NULL)
+	ATTRIB(Nexposee, animationState, float, -1);
+	ATTRIB(Nexposee, animationFactor, float, 0);
+	ATTRIB(Nexposee, selectedChild, entity);
+	ATTRIB(Nexposee, mouseFocusedChild, entity);
 	METHOD(Nexposee, addItem, void(entity, entity, vector, vector, float));
 	METHOD(Nexposee, calc, void(entity));
 	METHOD(Nexposee, setNexposee, void(entity, entity, vector, float, float));
-	ATTRIB(Nexposee, mousePosition, vector, '0 0 0')
+	ATTRIB(Nexposee, mousePosition, vector, '0 0 0');
 	METHOD(Nexposee, pullNexposee, void(entity, entity, vector));
 ENDCLASS(Nexposee)
 

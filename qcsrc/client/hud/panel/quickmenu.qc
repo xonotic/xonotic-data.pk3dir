@@ -1,9 +1,13 @@
 #include "quickmenu.qh"
-// QuickMenu (#23)
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 #include <common/ent_cs.qh>
-#include <client/hud/all.qh>
+#include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
+
+// QuickMenu (#23)
 
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
@@ -58,18 +62,19 @@ void QuickMenu_Page_ClearEntry(int i)
 	if (QuickMenu_Page_Command[i])
 		strunzone(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command[i] = string_null;
+	QuickMenu_Page_Command_Type[i] = 0;
 }
 
 float QuickMenu_Page_Load(string target_submenu, float new_page);
 void QuickMenu_Default(string submenu);
-bool QuickMenu_Open(string mode, string submenu)
+bool QuickMenu_Open(string mode, string submenu, string file)
 {
 	int fh = -1;
 	string s;
 
 	if(mode == "")
 	{
-		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
+		if(file == "" || file == "0")
 			mode = "default";
 		else
 			mode = "file";
@@ -77,13 +82,13 @@ bool QuickMenu_Open(string mode, string submenu)
 
 	if(mode == "file")
 	{
-		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
+		if(file == "" || file == "0")
 			LOG_INFO("No file name is set in hud_panel_quickmenu_file, loading default quickmenu\n");
 		else
 		{
-			fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
+			fh = fopen(file, FILE_READ);
 			if(fh < 0)
-				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", autocvar_hud_panel_quickmenu_file);
+				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", file);
 		}
 		if(fh < 0)
 			mode = "default";
@@ -155,7 +160,7 @@ bool QuickMenu_Open(string mode, string submenu)
 	}
 	else
 	{
-		LOG_WARNINGF("Unrecognized mode %s\n", mode);
+		LOG_WARNF("Unrecognized mode %s", mode);
 		return false;
 	}
 
@@ -291,7 +296,7 @@ bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 			// printf("^1 skipping %s\n", s);
 		}
 		if(QuickMenu_Buffer_Index == QuickMenu_Buffer_Size)
-			LOG_WARNINGF("Couldn't find submenu \"%s\"\n", z_submenu);
+			LOG_WARNF("Couldn't find submenu \"%s\"", z_submenu);
 	}
 
 	// only the last page can contain up to QUICKMENU_MAXLINES entries
@@ -430,11 +435,8 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	}
 
 	// allow console bind to work
-	string con_keys;
-	float keys;
-	con_keys = findkeysforcommand("toggleconsole", 0);
-	keys = tokenize(con_keys); // findkeysforcommand returns data for this
-
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
 	bool hit_con_bind = false;
 	int i;
 	for (i = 0; i < keys; ++i)
@@ -497,15 +499,11 @@ void QuickMenu_Mouse()
 		return;
 	}
 
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+	if (!autocvar_hud_cursormode)
+		update_mousepos();
 
-		mousepos.x = bound(0, mousepos.x, vid_conwidth);
-		mousepos.y = bound(0, mousepos.y, vid_conheight);
-	}
-
-	HUD_Panel_UpdateCvars();
+	panel = HUD_PANEL(QUICKMENU);
+	HUD_Panel_LoadCvars();
 
 	if(panel_bg_padding)
 	{
@@ -533,7 +531,7 @@ void QuickMenu_Mouse()
 				color = '1 1 0.3';
 			else
 				color = '1 1 1';
-			drawfill(panel_pos, eX * panel_size.x + eY * fontsize.y, color, .2, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), color, .2, DRAWFLAG_NORMAL);
 
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
 				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
@@ -557,7 +555,7 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 			pic = strcat("gfx/hud/default/", option);
 		vector option_size = '1 1 0' * fontsize.y * 0.8;
 		desc_width -= option_size.x;
-		drawpic(pos + eX * desc_width + eY * (fontsize.y - option_size.y) / 2, pic, option_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
+		drawpic(pos + vec2(desc_width, (fontsize.y - option_size.y) / 2), pic, option_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
 		desc_width -= fontsize.x / 4;
 	}
 	entry = textShortenToWidth(desc, desc_width, fontsize, stringwidth_colors);
@@ -619,10 +617,10 @@ void HUD_QuickMenu()
 		}
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(panel_bg_padding)
 	{
@@ -660,7 +658,7 @@ void HUD_QuickMenu()
 				else
 					tokenize_console(substring(QuickMenu_Page_Command[i], 0, end));
 
-				//if(argv(1) && argv(0) == "toggle") // already checked
+				if(argv(1) && argv(0) == "toggle")
 				{
 					// "enable feature xxx" "toggle xxx" (or "toggle xxx 1 0")
 					// "disable feature xxx" "toggle xxx 0 1"
@@ -687,7 +685,7 @@ void HUD_QuickMenu()
 
 		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
 			&& QuickMenu_Page_ActivatedEntry == i)
-			drawfill(panel_pos, eX * panel_size.x + eY * fontsize.y, '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
 
 		panel_pos.y += fontsize.y;
 	}
@@ -745,12 +743,19 @@ void HUD_QuickMenu()
 
 // useful to Translate a string inside the Command
 #define QUICKMENU_ENTRY_TC(title,command,text,translated_text) {\
-	if(prvm_language == "en") \
-		QUICKMENU_ENTRY(title, sprintf(command, text)) \
-	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) \
-		QUICKMENU_ENTRY(strcat("(en)", title), sprintf(command, text)) \
-	else \
-		QUICKMENU_ENTRY(strcat("(", prvm_language, ")", title), sprintf(command, translated_text)) \
+	if(prvm_language == "en") { \
+		tc_title = title; \
+		tc_cmd = sprintf(command, text); \
+	} \
+	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) { \
+		tc_title = strcat("(en)", title); \
+		tc_cmd = sprintf(command, text); \
+	} \
+	else { \
+		tc_title = strcat("(", prvm_language, ")", title); \
+		tc_cmd = sprintf(command, translated_text); \
+	} \
+	QUICKMENU_ENTRY(tc_title, tc_cmd) \
 }
 
 void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me)
@@ -786,11 +791,14 @@ void QuickMenu_Default(string target_submenu)
 	if(target_submenu != "")
 		QuickMenu_Buffer_Size = QUICKMENU_BUFFER_MAXENTRIES; // forbids load of next entries until target_submenu
 
-	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
+	string tc_title;
+	string tc_cmd;
+
+	QUICKMENU_SMENU(_("Chat"), "Chat")
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
-	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
+	QUICKMENU_SMENU(_("Chat"), "Chat")
 
 	if(teamplay)
 	{
@@ -806,9 +814,9 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^defending, icon")), "say_team %s; g_waypointsprite_team_here", "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^roaming, icon")), "say_team %s; g_waypointsprite_team_here", "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^attacking, icon")), "say_team %s; g_waypointsprite_team_here", "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
-		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flag, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flagcarrier, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^dropped flag, icon")), "say_team %s; g_waypointsprite_team_here_d", "dropped flag (l:%d^7)", CTX(_("QMCMD^dropped flag (l:%d^7)")))
-		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop weapon, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped weapon %w^7 (l:%l^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	}
@@ -868,9 +876,9 @@ void QuickMenu_Default(string target_submenu)
 
 	if(target_submenu != "" && !target_submenu_found)
 	{
-		LOG_WARNINGF("Couldn't find submenu \"%s\"\n", target_submenu);
+		LOG_WARNF("Couldn't find submenu \"%s\"", target_submenu);
 		if(prvm_language != "en")
-			LOG_WARNINGF("^3Warning: submenu must be in English\n", target_submenu);
+			LOG_WARNF("^3Warning: submenu must be in English", target_submenu);
 		QuickMenu_Buffer_Size = 0;
 	}
 }

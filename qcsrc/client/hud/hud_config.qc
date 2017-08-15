@@ -1,15 +1,20 @@
 #include "hud_config.qh"
 
 #include "hud.qh"
+#include "panel/scoreboard.qh"
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 
 #define HUD_Write(s) fputs(fh, s)
 #define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
-#define HUD_Write_PanelCvar(cvar_suf) HUD_Write_Cvar(strcat("hud_panel_", panel.panel_name, cvar_suf))
+#define HUD_Write_PanelCvar(cvar_suf) str = strcat("hud_panel_", panel.panel_name, cvar_suf), HUD_Write_Cvar(str)
 // Save the config
 void HUD_Panel_ExportCfg(string cfgname)
 {
 	float fh;
 	string filename = strcat("hud_", autocvar_hud_skin, "_", cfgname, ".cfg");
+	string str = "";
 	fh = fopen(filename, FILE_WRITE);
 	if(fh >= 0)
 	{
@@ -70,146 +75,168 @@ void HUD_Panel_ExportCfg(string cfgname)
 			HUD_Write_PanelCvar("_bg_padding");
 			switch(panel) {
 				case HUD_PANEL_WEAPONS:
-					HUD_Write_PanelCvar("_accuracy");
-					HUD_Write_PanelCvar("_label");
-					HUD_Write_PanelCvar("_label_scale");
-					HUD_Write_PanelCvar("_complainbubble");
-					HUD_Write_PanelCvar("_complainbubble_padding");
-					HUD_Write_PanelCvar("_complainbubble_time");
-					HUD_Write_PanelCvar("_complainbubble_fadetime");
-					HUD_Write_PanelCvar("_complainbubble_color_outofammo");
-					HUD_Write_PanelCvar("_complainbubble_color_donthave");
-					HUD_Write_PanelCvar("_complainbubble_color_unavailable");
-					HUD_Write_PanelCvar("_ammo");
-					HUD_Write_PanelCvar("_ammo_color");
-					HUD_Write_PanelCvar("_ammo_alpha");
-					HUD_Write_PanelCvar("_aspect");
-					HUD_Write_PanelCvar("_timeout");
-					HUD_Write_PanelCvar("_timeout_effect");
-					HUD_Write_PanelCvar("_timeout_fadebgmin");
-					HUD_Write_PanelCvar("_timeout_fadefgmin");
-					HUD_Write_PanelCvar("_timeout_speed_in");
-					HUD_Write_PanelCvar("_timeout_speed_out");
-					HUD_Write_PanelCvar("_onlyowned");
-					HUD_Write_PanelCvar("_noncurrent_alpha");
-					HUD_Write_PanelCvar("_noncurrent_scale");
+					HUD_Write_Cvar("hud_panel_weapons_accuracy");
+					HUD_Write_Cvar("hud_panel_weapons_label");
+					HUD_Write_Cvar("hud_panel_weapons_label_scale");
+					HUD_Write_Cvar("hud_panel_weapons_complainbubble");
+					HUD_Write_Cvar("hud_panel_weapons_complainbubble_padding");
+					HUD_Write_Cvar("hud_panel_weapons_complainbubble_time");
+					HUD_Write_Cvar("hud_panel_weapons_complainbubble_fadetime");
+					HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_outofammo");
+					HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_donthave");
+					HUD_Write_Cvar("hud_panel_weapons_complainbubble_color_unavailable");
+					HUD_Write_Cvar("hud_panel_weapons_ammo");
+					HUD_Write_Cvar("hud_panel_weapons_ammo_color");
+					HUD_Write_Cvar("hud_panel_weapons_ammo_alpha");
+					HUD_Write_Cvar("hud_panel_weapons_aspect");
+					HUD_Write_Cvar("hud_panel_weapons_timeout");
+					HUD_Write_Cvar("hud_panel_weapons_timeout_effect");
+					HUD_Write_Cvar("hud_panel_weapons_timeout_fadebgmin");
+					HUD_Write_Cvar("hud_panel_weapons_timeout_fadefgmin");
+					HUD_Write_Cvar("hud_panel_weapons_timeout_speed_in");
+					HUD_Write_Cvar("hud_panel_weapons_timeout_speed_out");
+					HUD_Write_Cvar("hud_panel_weapons_onlyowned");
+					HUD_Write_Cvar("hud_panel_weapons_noncurrent_alpha");
+					HUD_Write_Cvar("hud_panel_weapons_noncurrent_scale");
+					HUD_Write_Cvar("hud_panel_weapons_selection_radius");
+					HUD_Write_Cvar("hud_panel_weapons_selection_speed");
 					break;
 				case HUD_PANEL_AMMO:
-					HUD_Write_PanelCvar("_onlycurrent");
-					HUD_Write_PanelCvar("_noncurrent_alpha");
-					HUD_Write_PanelCvar("_noncurrent_scale");
-					HUD_Write_PanelCvar("_iconalign");
-					HUD_Write_PanelCvar("_progressbar");
-					HUD_Write_PanelCvar("_progressbar_name");
-					HUD_Write_PanelCvar("_progressbar_xoffset");
-					HUD_Write_PanelCvar("_text");
+					HUD_Write_Cvar("hud_panel_ammo_onlycurrent");
+					HUD_Write_Cvar("hud_panel_ammo_noncurrent_alpha");
+					HUD_Write_Cvar("hud_panel_ammo_noncurrent_scale");
+					HUD_Write_Cvar("hud_panel_ammo_iconalign");
+					HUD_Write_Cvar("hud_panel_ammo_progressbar");
+					HUD_Write_Cvar("hud_panel_ammo_progressbar_name");
+					HUD_Write_Cvar("hud_panel_ammo_progressbar_xoffset");
+					HUD_Write_Cvar("hud_panel_ammo_text");
 					break;
 				case HUD_PANEL_POWERUPS:
-					HUD_Write_PanelCvar("_iconalign");
-					HUD_Write_PanelCvar("_baralign");
-					HUD_Write_PanelCvar("_progressbar");
-					HUD_Write_PanelCvar("_text");
+					HUD_Write_Cvar("hud_panel_powerups_iconalign");
+					HUD_Write_Cvar("hud_panel_powerups_baralign");
+					HUD_Write_Cvar("hud_panel_powerups_progressbar");
+					HUD_Write_Cvar("hud_panel_powerups_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
-					HUD_Write_PanelCvar("_flip");
-					HUD_Write_PanelCvar("_iconalign");
-					HUD_Write_PanelCvar("_baralign");
-					HUD_Write_PanelCvar("_progressbar");
-					HUD_Write_PanelCvar("_progressbar_health");
-					HUD_Write_PanelCvar("_progressbar_armor");
-					HUD_Write_PanelCvar("_progressbar_gfx");
-					HUD_Write_PanelCvar("_progressbar_gfx_smooth");
-					HUD_Write_PanelCvar("_combined");
-					HUD_Write_PanelCvar("_text");
+					HUD_Write_Cvar("hud_panel_healtharmor_combined");
+					HUD_Write_Cvar("hud_panel_healtharmor_flip");
+					HUD_Write_Cvar("hud_panel_healtharmor_iconalign");
+					HUD_Write_Cvar("hud_panel_healtharmor_baralign");
+					HUD_Write_Cvar("hud_panel_healtharmor_progressbar");
+					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_health");
+					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_armor");
+					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx");
+					HUD_Write_Cvar("hud_panel_healtharmor_progressbar_gfx_smooth");
+					HUD_Write_Cvar("hud_panel_healtharmor_text");
 					break;
 				case HUD_PANEL_NOTIFY:
-					HUD_Write_PanelCvar("_flip");
-					HUD_Write_PanelCvar("_fontsize");
-					HUD_Write_PanelCvar("_time");
-					HUD_Write_PanelCvar("_fadetime");
-					HUD_Write_PanelCvar("_icon_aspect");
+					HUD_Write_Cvar("hud_panel_notify_flip");
+					HUD_Write_Cvar("hud_panel_notify_fontsize");
+					HUD_Write_Cvar("hud_panel_notify_time");
+					HUD_Write_Cvar("hud_panel_notify_fadetime");
+					HUD_Write_Cvar("hud_panel_notify_icon_aspect");
 					break;
 				case HUD_PANEL_TIMER:
 					break;
 				case HUD_PANEL_RADAR:
-					HUD_Write_PanelCvar("_foreground_alpha");
-					HUD_Write_PanelCvar("_rotation");
-					HUD_Write_PanelCvar("_zoommode");
-					HUD_Write_PanelCvar("_scale");
-					HUD_Write_PanelCvar("_maximized_scale");
-					HUD_Write_PanelCvar("_maximized_size");
-					HUD_Write_PanelCvar("_maximized_rotation");
-					HUD_Write_PanelCvar("_maximized_zoommode");
+					HUD_Write_Cvar("hud_panel_radar_foreground_alpha");
+					HUD_Write_Cvar("hud_panel_radar_rotation");
+					HUD_Write_Cvar("hud_panel_radar_zoommode");
+					HUD_Write_Cvar("hud_panel_radar_scale");
+					HUD_Write_Cvar("hud_panel_radar_maximized_scale");
+					HUD_Write_Cvar("hud_panel_radar_maximized_size");
+					HUD_Write_Cvar("hud_panel_radar_maximized_rotation");
+					HUD_Write_Cvar("hud_panel_radar_maximized_zoommode");
 					break;
 				case HUD_PANEL_SCORE:
-					HUD_Write_PanelCvar("_rankings");
+					HUD_Write_Cvar("hud_panel_score_rankings");
 					break;
 				case HUD_PANEL_VOTE:
-					HUD_Write_PanelCvar("_alreadyvoted_alpha");
+					HUD_Write_Cvar("hud_panel_vote_alreadyvoted_alpha");
 					break;
 				case HUD_PANEL_MODICONS:
-					HUD_Write_PanelCvar("_ca_layout");
-					HUD_Write_PanelCvar("_dom_layout");
-					HUD_Write_PanelCvar("_freezetag_layout");
+					HUD_Write_Cvar("hud_panel_modicons_ca_layout");
+					HUD_Write_Cvar("hud_panel_modicons_dom_layout");
+					HUD_Write_Cvar("hud_panel_modicons_freezetag_layout");
 					break;
 				case HUD_PANEL_PRESSEDKEYS:
-					HUD_Write_PanelCvar("_aspect");
-					HUD_Write_PanelCvar("_attack");
+					HUD_Write_Cvar("hud_panel_pressedkeys_aspect");
+					HUD_Write_Cvar("hud_panel_pressedkeys_attack");
 					break;
 				case HUD_PANEL_ENGINEINFO:
-					HUD_Write_PanelCvar("_framecounter_time");
-					HUD_Write_PanelCvar("_framecounter_decimals");
+					HUD_Write_Cvar("hud_panel_engineinfo_framecounter_time");
+					HUD_Write_Cvar("hud_panel_engineinfo_framecounter_decimals");
 					break;
 				case HUD_PANEL_INFOMESSAGES:
-					HUD_Write_PanelCvar("_flip");
+					HUD_Write_Cvar("hud_panel_infomessages_flip");
 					break;
 				case HUD_PANEL_PHYSICS:
-					HUD_Write_PanelCvar("_speed_unit_show");
-					HUD_Write_PanelCvar("_speed_max");
-					HUD_Write_PanelCvar("_speed_vertical");
-					HUD_Write_PanelCvar("_topspeed");
-					HUD_Write_PanelCvar("_topspeed_time");
-					HUD_Write_PanelCvar("_acceleration_max");
-					HUD_Write_PanelCvar("_acceleration_vertical");
-					HUD_Write_PanelCvar("_flip");
-					HUD_Write_PanelCvar("_baralign");
-					HUD_Write_PanelCvar("_progressbar");
-					HUD_Write_PanelCvar("_acceleration_progressbar_mode");
-					HUD_Write_PanelCvar("_acceleration_progressbar_scale");
-					HUD_Write_PanelCvar("_acceleration_progressbar_nonlinear");
-					HUD_Write_PanelCvar("_text");
-					HUD_Write_PanelCvar("_text_scale");
+					HUD_Write_Cvar("hud_panel_physics_speed_unit_show");
+					HUD_Write_Cvar("hud_panel_physics_speed_max");
+					HUD_Write_Cvar("hud_panel_physics_speed_vertical");
+					HUD_Write_Cvar("hud_panel_physics_topspeed");
+					HUD_Write_Cvar("hud_panel_physics_topspeed_time");
+					HUD_Write_Cvar("hud_panel_physics_acceleration_max");
+					HUD_Write_Cvar("hud_panel_physics_acceleration_vertical");
+					HUD_Write_Cvar("hud_panel_physics_flip");
+					HUD_Write_Cvar("hud_panel_physics_baralign");
+					HUD_Write_Cvar("hud_panel_physics_progressbar");
+					HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_mode");
+					HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_scale");
+					HUD_Write_Cvar("hud_panel_physics_acceleration_progressbar_nonlinear");
+					HUD_Write_Cvar("hud_panel_physics_text");
+					HUD_Write_Cvar("hud_panel_physics_text_scale");
 					break;
 				case HUD_PANEL_CENTERPRINT:
-					HUD_Write_PanelCvar("_align");
-					HUD_Write_PanelCvar("_flip");
-					HUD_Write_PanelCvar("_fontscale");
-					HUD_Write_PanelCvar("_time");
-					HUD_Write_PanelCvar("_fade_in");
-					HUD_Write_PanelCvar("_fade_out");
-					HUD_Write_PanelCvar("_fade_subsequent");
-					HUD_Write_PanelCvar("_fade_subsequent_passone");
-					HUD_Write_PanelCvar("_fade_subsequent_passone_minalpha");
-					HUD_Write_PanelCvar("_fade_subsequent_passtwo");
-					HUD_Write_PanelCvar("_fade_subsequent_passtwo_minalpha");
-					HUD_Write_PanelCvar("_fade_subsequent_minfontsize");
-					HUD_Write_PanelCvar("_fade_minfontsize");
+					HUD_Write_Cvar("hud_panel_centerprint_align");
+					HUD_Write_Cvar("hud_panel_centerprint_flip");
+					HUD_Write_Cvar("hud_panel_centerprint_fontscale");
+					HUD_Write_Cvar("hud_panel_centerprint_time");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_in");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_out");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone_minalpha");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo_minalpha");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_minfontsize");
+					HUD_Write_Cvar("hud_panel_centerprint_fade_minfontsize");
 					break;
 				case HUD_PANEL_ITEMSTIME:
-					HUD_Write_PanelCvar("_iconalign");
-					HUD_Write_PanelCvar("_progressbar");
-					HUD_Write_PanelCvar("_progressbar_name");
-					HUD_Write_PanelCvar("_progressbar_reduced");
-					HUD_Write_PanelCvar("_text");
-					HUD_Write_PanelCvar("_ratio");
-					HUD_Write_PanelCvar("_dynamicsize");
+					HUD_Write_Cvar("hud_panel_itemstime_iconalign");
+					HUD_Write_Cvar("hud_panel_itemstime_progressbar");
+					HUD_Write_Cvar("hud_panel_itemstime_progressbar_name");
+					HUD_Write_Cvar("hud_panel_itemstime_progressbar_reduced");
+					HUD_Write_Cvar("hud_panel_itemstime_text");
+					HUD_Write_Cvar("hud_panel_itemstime_ratio");
+					HUD_Write_Cvar("hud_panel_itemstime_dynamicsize");
+					break;
+				case HUD_PANEL_MAPVOTE:
+					HUD_Write_Cvar("hud_panel_mapvote_highlight_border");
 					break;
 				case HUD_PANEL_QUICKMENU:
-					HUD_Write_PanelCvar("_align");
+					HUD_Write_Cvar("hud_panel_quickmenu_align");
+					break;
+				case HUD_PANEL_SCOREBOARD:
+					HUD_Write_Cvar("hud_panel_scoreboard_fadeinspeed");
+					HUD_Write_Cvar("hud_panel_scoreboard_fadeoutspeed");
+					HUD_Write_Cvar("hud_panel_scoreboard_respawntime_decimals");
+					HUD_Write_Cvar("hud_panel_scoreboard_table_bg_alpha");
+					HUD_Write_Cvar("hud_panel_scoreboard_table_bg_scale");
+					HUD_Write_Cvar("hud_panel_scoreboard_table_fg_alpha");
+					HUD_Write_Cvar("hud_panel_scoreboard_table_fg_alpha_self");
+					HUD_Write_Cvar("hud_panel_scoreboard_table_highlight");
+					HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha");
+					HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_self");
+					HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
+					HUD_Write_Cvar("hud_panel_scoreboard_accuracy_doublerows");
+					HUD_Write_Cvar("hud_panel_scoreboard_accuracy_nocolors");
 					break;
 			}
 			HUD_Write("\n");
 		}
+		MUTATOR_CALLHOOK(HUD_WriteCvars, fh);
+
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
 		LOG_INFOF(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename);
@@ -221,9 +248,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 
 void HUD_Configure_Exit_Force()
 {
-	if (menu_enabled)
+	if (hud_configure_menu_open)
 	{
-		menu_enabled = 0;
+		hud_configure_menu_open = 0;
 		localcmd("togglemenu\n");
 	}
 	cvar_set("_hud_configure", "0");
@@ -671,10 +698,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	}
 
 	// allow console bind to work
-	string con_keys;
-	float keys;
-	con_keys = findkeysforcommand("toggleconsole", 0);
-	keys = tokenize(con_keys); // findkeysforcommand returns data for this
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
 	bool hit_con_bind = false;
 	int i;
@@ -729,14 +754,14 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	{
 		if (bInputType == 1)
 			return true;
-		menu_enabled = 1;
+		hud_configure_menu_open = 1;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
 	{
 		if (bInputType == 1)
 			return true;
-		if (!menu_enabled)
+		if (!hud_configure_menu_open)
 			cvar_set("_hud_configure", "0");
 	}
 	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
@@ -834,7 +859,10 @@ LABEL(find_tab_panel)
 			return true;
 
 		if (highlightedPanel)
-			cvar_set(strcat("hud_panel_", highlightedPanel.panel_name), ftos(!cvar(strcat("hud_panel_", highlightedPanel.panel_name))));
+		{
+			if(panel.panel_configflags & PANEL_CONFIG_CANBEOFF)
+				cvar_set(strcat("hud_panel_", highlightedPanel.panel_name), ftos(!cvar(strcat("hud_panel_", highlightedPanel.panel_name))));
+		}
 		else
 			cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
 	}
@@ -1084,7 +1112,7 @@ void HUD_Panel_Highlight(float allow_move)
 
 void HUD_Panel_EnableMenu()
 {
-	menu_enabled = 2;
+	hud_configure_menu_open = 2;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
 float mouse_over_panel;
@@ -1094,12 +1122,7 @@ void HUD_Panel_Mouse()
 		return;
 
 	if (!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-
-		mousepos.x = bound(0, mousepos.x, vid_conwidth);
-		mousepos.y = bound(0, mousepos.y, vid_conheight);
-	}
+		update_mousepos();
 
 	if(mouseClicked)
 	{
@@ -1183,7 +1206,7 @@ void HUD_Panel_Mouse()
 	{
 		if(prevMouseClicked)
 			highlightedAction = 0;
-		if(menu_enabled == 2)
+		if(hud_configure_menu_open == 2)
 			mouse_over_panel = 0;
 		else
 			mouse_over_panel = HUD_Panel_Check_Mouse_Pos(true);
@@ -1215,11 +1238,11 @@ void HUD_Configure_DrawGrid()
 		hud_configure_realGridSize.y = hud_configure_gridSize.y * vid_conheight;
 		vector s;
 		// x-axis
-		s = eX + eY * vid_conheight;
+		s = vec2(1, vid_conheight);
 		for(i = 1; i < 1/hud_configure_gridSize.x; ++i)
 			drawfill(eX * i * hud_configure_realGridSize.x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		// y-axis
-		s = eY + eX * vid_conwidth;
+		s = vec2(vid_conwidth, 1);
 		for(i = 1; i < 1/hud_configure_gridSize.y; ++i)
 			drawfill(eY * i * hud_configure_realGridSize.y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
@@ -1231,7 +1254,7 @@ void HUD_Configure_Frame()
 	int i;
 	if(autocvar__hud_configure)
 	{
-		if(isdemo() || intermission == 2)
+		if(isdemo() || intermission == 2 || scoreboard_active)
 		{
 			HUD_Configure_Exit_Force();
 			return;
@@ -1250,7 +1273,7 @@ void HUD_Configure_Frame()
 		if(autocvar__menu_alpha != _menu_alpha_prev)
 		{
 			if(autocvar__menu_alpha == 0)
-				menu_enabled = 0;
+				hud_configure_menu_open = 0;
 			_menu_alpha_prev = autocvar__menu_alpha;
 		}
 
@@ -1258,8 +1281,8 @@ void HUD_Configure_Frame()
 	}
 	else if(hud_configure_prev)
 	{
-		if(menu_enabled)
-			menu_enabled = 0;
+		if(hud_configure_menu_open)
+			hud_configure_menu_open = 0;
 		if(autocvar_hud_cursormode)
 			setcursormode(0);
 		hud_dynamic_shake_factor = -1;
@@ -1271,11 +1294,13 @@ const string hlBorder = "gfx/hud/default/border_highlighted";
 const string hlBorder2 = "gfx/hud/default/border_highlighted2";
 void HUD_Panel_HlBorder(float myBorder, vector color, float theAlpha)
 {
-	drawfill(panel_pos - '1 1 0' * myBorder, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * theAlpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder, hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size.x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size.y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size.x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size.y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size.x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size.y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+	vector pos = panel_pos - vec2(myBorder, myBorder);
+	drawfill(pos, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos, hlBorder, '8 1 0' * hlBorderSize, vec2(panel_size.x + 2 * myBorder, hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos + eY * (panel_size.y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, vec2(panel_size.x + 2 * myBorder, hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
+	pos.y += hlBorderSize;
+	drawpic_tiled(pos, hlBorder2, '1 8 0' * hlBorderSize, vec2(hlBorderSize, panel_size.y + 2 * myBorder - 2 * hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(pos + eX * (panel_size.x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, vec2(hlBorderSize, panel_size.y + 2 * myBorder - 2 * hlBorderSize), color, theAlpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_Configure_PostDraw()

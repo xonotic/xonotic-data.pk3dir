@@ -1,42 +1,5 @@
 #include "gamemode_race.qh"
 
-#ifndef GAMEMODE_RACE_H
-#define GAMEMODE_RACE_H
-
-void rc_SetLimits();
-void race_Initialize();
-
-REGISTER_MUTATOR(rc, false)
-{
-	MUTATOR_ONADD
-	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-
-		rc_SetLimits();
-		race_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back race_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
-
-#endif
-
-#ifdef IMPLEMENTATION
-
 #include <server/race.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
@@ -51,23 +14,22 @@ void havocbot_role_race(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	entity e;
 	if (this.bot_strategytime < time)
 	{
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
-		for(e = NULL; (e = find(e, classname, "trigger_race_checkpoint")) != NULL; )
+		IL_EACH(g_racecheckpoints, true,
 		{
-			if(e.cnt == this.race_checkpoint)
+			if(it.cnt == this.race_checkpoint)
 			{
-				navigation_routerating(this, e, 1000000, 5000);
+				navigation_routerating(this, it, 1000000, 5000);
 			}
 			else if(this.race_checkpoint == -1)
 			{
-				navigation_routerating(this, e, 1000000, 5000);
+				navigation_routerating(this, it, 1000000, 5000);
 			}
-		}
+		});
 
 		navigation_goalrating_end(this);
 	}
@@ -78,7 +40,7 @@ void race_ScoreRules()
 	ScoreRules_basics(race_teams, 0, 0, false);
 	if(race_teams)
 	{
-		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",       SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
@@ -109,11 +71,11 @@ float WinningCondition_Race(float fraglimit)
 
 	n = 0;
 	c = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		++n;
-		if(it.race_completed)
+		if(CS(it).race_completed)
 			++c;
-	));
+	});
 	if(n && (n == c))
 		return WINNING_YES;
 	wc = WinningCondition_Scores(fraglimit, 0);
@@ -140,11 +102,26 @@ float WinningCondition_QualifyingThenRace(float limit)
 	return wc;
 }
 
-MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(rc, ClientKill)
+{
+	if(g_race_qualifying)
+		M_ARGV(1, float) = 0; // killtime
+}
+
+MUTATOR_HOOKFUNCTION(rc, AbortSpeedrun)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
+	if(autocvar_g_allow_checkpoints)
+		race_PreparePlayer(player); // nice try
+}
+
+MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
+{
+	entity player = M_ARGV(0, entity);
+	float dt = M_ARGV(1, float);
+
+	player.race_movetime_frac += dt;
 	float f = floor(player.race_movetime_frac);
 	player.race_movetime_frac -= f;
 	player.race_movetime_count += f;
@@ -159,7 +136,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 		if(player.race_penalty)
 		{
 			player.velocity = '0 0 0';
-			player.movetype = MOVETYPE_NONE;
+			set_movetype(player, MOVETYPE_NONE);
 			player.disableclientprediction = 2;
 		}
 	}
@@ -173,8 +150,8 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel.x = fabs(player.movement.x);
-	wishvel.y = fabs(player.movement.y);
+	wishvel.x = fabs(CS(player).movement.x);
+	wishvel.y = fabs(CS(player).movement.y);
 	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
 		wishvel.z = 0;
@@ -182,32 +159,32 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 		if(wishvel.x >= 2 * wishvel.y)
 		{
 			// pure X motion
-			if(player.movement.x > 0)
-				player.movement_x = wishspeed;
+			if(CS(player).movement.x > 0)
+				CS(player).movement_x = wishspeed;
 			else
-				player.movement_x = -wishspeed;
-			player.movement_y = 0;
+				CS(player).movement_x = -wishspeed;
+			CS(player).movement_y = 0;
 		}
 		else if(wishvel.y >= 2 * wishvel.x)
 		{
 			// pure Y motion
-			player.movement_x = 0;
-			if(player.movement.y > 0)
-				player.movement_y = wishspeed;
+			CS(player).movement_x = 0;
+			if(CS(player).movement.y > 0)
+				CS(player).movement_y = wishspeed;
 			else
-				player.movement_y = -wishspeed;
+				CS(player).movement_y = -wishspeed;
 		}
 		else
 		{
 			// diagonal
-			if(player.movement.x > 0)
-				player.movement_x = M_SQRT1_2 * wishspeed;
+			if(CS(player).movement.x > 0)
+				CS(player).movement_x = M_SQRT1_2 * wishspeed;
 			else
-				player.movement_x = -M_SQRT1_2 * wishspeed;
-			if(player.movement.y > 0)
-				player.movement_y = M_SQRT1_2 * wishspeed;
+				CS(player).movement_x = -M_SQRT1_2 * wishspeed;
+			if(CS(player).movement.y > 0)
+				CS(player).movement_y = M_SQRT1_2 * wishspeed;
 			else
-				player.movement_y = -M_SQRT1_2 * wishspeed;
+				CS(player).movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
 }
@@ -221,7 +198,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		if(it.race_place)
 		{
 			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
@@ -229,7 +206,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 				it.race_place = 0;
 		}
 		race_EventLog(ftos(it.race_place), it);
-	));
+	});
 
 	if(g_race_qualifying == 2)
 	{
@@ -304,9 +281,9 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	entity player = M_ARGV(0, entity);
 
 	if(IS_PLAYER(player))
-	if(!gameover)
+	if(!game_stopped)
 	{
-		if(player.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
+		if(CS(player).killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
 			race_PreparePlayer(player);
 		else // respawn
 			race_RetractPlayer(player);
@@ -318,7 +295,7 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
 }
@@ -335,7 +312,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));
@@ -380,7 +357,7 @@ MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
 		return true; // in qualifying, you don't lose score by observing
 }
 
-MUTATOR_HOOKFUNCTION(rc, GetTeamCount, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(rc, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = race_teams;
 }
@@ -412,6 +389,11 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 	}
 
 	M_ARGV(1, string) = ret_string;
+}
+
+MUTATOR_HOOKFUNCTION(rc, HideTeamNagger)
+{
+	return true; // doesn't work so well
 }
 
 MUTATOR_HOOKFUNCTION(rc, FixClientCvars)
@@ -463,6 +445,14 @@ void rc_SetLimits()
 	{
 		ActivateTeamplay();
 		race_teams = bound(2, autocvar_g_race_teams, 4);
+		int teams = 0;
+		if(race_teams >= 1) teams |= BIT(0);
+		if(race_teams >= 2) teams |= BIT(1);
+		if(race_teams >= 3) teams |= BIT(2);
+		if(race_teams >= 4) teams |= BIT(3);
+
+		race_teams = teams; // now set it?
+
 		have_team_spawns = -1; // request team spawns
 	}
 	else
@@ -496,5 +486,3 @@ void rc_SetLimits()
 		g_race_qualifying = 0;
 	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
 }
-
-#endif

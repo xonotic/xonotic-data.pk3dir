@@ -1,3 +1,4 @@
+#include "gravity.qh"
 #ifdef SVQC
 .entity trigger_gravity_check;
 void trigger_gravity_remove(entity own)
@@ -6,7 +7,7 @@ void trigger_gravity_remove(entity own)
 	{
 		UpdateCSQCProjectile(own);
 		own.gravity = own.trigger_gravity_check.gravity;
-		remove(own.trigger_gravity_check);
+		delete(own.trigger_gravity_check);
 	}
 	else
 		backtrace("Removing a trigger_gravity_check with no valid owner");
@@ -22,7 +23,7 @@ void trigger_gravity_check_think(entity this)
 		if(this.owner.trigger_gravity_check == this)
 			trigger_gravity_remove(this.owner);
 		else
-			remove(this);
+			delete(this);
 		return;
 	}
 	else
@@ -37,50 +38,50 @@ void trigger_gravity_use(entity this, entity actor, entity trigger)
 	this.state = !this.state;
 }
 
-void trigger_gravity_touch(entity this)
+void trigger_gravity_touch(entity this, entity toucher)
 {
 	float g;
 
 	if(this.state != true)
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
 	g = this.gravity;
 
 	if (!(this.spawnflags & 1))
 	{
-		if(other.trigger_gravity_check)
+		if(toucher.trigger_gravity_check)
 		{
-			if(this == other.trigger_gravity_check.enemy)
+			if(this == toucher.trigger_gravity_check.enemy)
 			{
 				// same?
-				other.trigger_gravity_check.count = 2; // gravity one more frame...
+				toucher.trigger_gravity_check.count = 2; // gravity one more frame...
 				return;
 			}
 
 			// compare prio
-			if(this.cnt > other.trigger_gravity_check.enemy.cnt)
-				trigger_gravity_remove(other);
+			if(this.cnt > toucher.trigger_gravity_check.enemy.cnt)
+				trigger_gravity_remove(toucher);
 			else
 				return;
 		}
-		other.trigger_gravity_check = spawn();
-		other.trigger_gravity_check.enemy = this;
-		other.trigger_gravity_check.owner = other;
-		other.trigger_gravity_check.gravity = other.gravity;
-		setthink(other.trigger_gravity_check, trigger_gravity_check_think);
-		other.trigger_gravity_check.nextthink = time;
-		other.trigger_gravity_check.count = 2;
-		if(other.gravity)
-			g *= other.gravity;
+		toucher.trigger_gravity_check = spawn();
+		toucher.trigger_gravity_check.enemy = this;
+		toucher.trigger_gravity_check.owner = toucher;
+		toucher.trigger_gravity_check.gravity = toucher.gravity;
+		setthink(toucher.trigger_gravity_check, trigger_gravity_check_think);
+		toucher.trigger_gravity_check.nextthink = time;
+		toucher.trigger_gravity_check.count = 2;
+		if(toucher.gravity)
+			g *= toucher.gravity;
 	}
 
-	if (other.gravity != g)
+	if (toucher.gravity != g)
 	{
-		other.gravity = g;
+		toucher.gravity = g;
 		if(this.noise != "")
-			_sound (other, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+			_sound (toucher, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 		UpdateCSQCProjectile(this.owner);
 	}
 }

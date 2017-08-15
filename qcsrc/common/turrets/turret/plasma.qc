@@ -1,34 +1,15 @@
-#ifndef TURRET_PLASMA_H
-#define TURRET_PLASMA_H
-
-#include "plasma_weapon.qh"
-
-CLASS(PlasmaTurret, Turret)
-/* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
-/* mins       */ ATTRIB(PlasmaTurret, mins, vector, '-32 -32 0');
-/* maxs       */ ATTRIB(PlasmaTurret, maxs, vector, '32 32 64');
-/* modelname  */ ATTRIB(PlasmaTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB_STRZONE(PlasmaTurret, model, string, strcat("models/turrets/", this.mdl));
-/* head_model */ ATTRIB_STRZONE(PlasmaTurret, head_model, string, strcat("models/turrets/", "plasma.md3"));
-/* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
-/* fullname   */ ATTRIB(PlasmaTurret, turret_name, string, _("Plasma Cannon"));
-    ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
-ENDCLASS(PlasmaTurret)
-REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
-
-#endif
-
-#ifdef IMPLEMENTATION
+#include "plasma.qh"
 
 #ifdef SVQC
 
-spawnfunc(turret_plasma) { if (!turret_initialize(this, TUR_PLASMA)) remove(this); }
+spawnfunc(turret_plasma) { if (!turret_initialize(this, TUR_PLASMA)) delete(this); }
 
 METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 {
     if(g_instagib)
     {
-        FireRailgunBullet (it, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
+        .entity weaponentity = weaponentities[0]; // TODO: unhardcode
+        FireRailgunBullet (it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance, 10000000000,
                            800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
 
         Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, it.tur_shotorg, it.tur_shotdir_updated * 1000, 1);
@@ -62,5 +43,4 @@ METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
     turret_do_updates(it);
 }
 
-#endif
 #endif

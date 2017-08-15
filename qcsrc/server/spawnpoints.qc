@@ -1,9 +1,10 @@
 #include "spawnpoints.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 #include "g_world.qh"
 #include "race.qh"
 #include "../common/constants.qh"
+#include <common/net_linked.qh>
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"
@@ -63,7 +64,7 @@ void spawnpoint_use(entity this, entity actor, entity trigger)
 	if(have_team_spawns > 0)
 	{
 		this.team = actor.team;
-		some_spawn_has_been_used = 1;
+		some_spawn_has_been_used = true;
 	}
 	//LOG_INFO("spawnpoint was used!\n");
 }
@@ -105,13 +106,14 @@ void relocate_spawnpoint(entity this)
     setthink(this, spawnpoint_think);
     this.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
     this.team_saved = this.team;
+    IL_PUSH(g_saved_team, this);
     if (!this.cnt)
         this.cnt = 1;
 
     if (have_team_spawns != 0)
         if (this.team)
             have_team_spawns = 1;
-    have_team_spawns_forteam[this.team] = 1;
+    have_team_spawns_forteams |= BIT(this.team);
 
     if (autocvar_r_showbboxes)
     {
@@ -166,6 +168,7 @@ spawnfunc(info_player_start)
 spawnfunc(info_player_deathmatch)
 {
 	this.classname = "info_player_deathmatch";
+	IL_PUSH(g_spawnpoints, this);
 	relocate_spawnpoint(this);
 }
 
@@ -238,28 +241,26 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	}
 
 	shortest = vlen(world.maxs - world.mins);
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 		thisdist = vlen(it.origin - spot.origin);
 		if (thisdist < shortest)
 			shortest = thisdist;
-	));
+	});
 	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
 	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
-	if(spot.target != "") {
-		entity ent;
-		float found;
-
-		found = 0;
-		for(ent = NULL; (ent = find(ent, targetname, spot.target)); )
+	if(spot.target != "")
+	{
+		int found = 0;
+		for(entity targ = findchain(targetname, spot.target); targ; targ = targ.chain)
 		{
 			++found;
-			if(ent.spawn_evalfunc)
+			if(targ.spawn_evalfunc)
 			{
-				spawn_score = ent.spawn_evalfunc(ent, this, spot, spawn_score);
+				spawn_score = targ.spawn_evalfunc(targ, this, spot, spawn_score);
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}
@@ -267,7 +268,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 
 		if(!found)
 		{
-			LOG_TRACE("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target, "\n");
+			LOG_TRACE("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target);
 			return '-1 0 0';
 		}
 	}
@@ -318,7 +319,7 @@ entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exp
 
 	RandomSelection_Init();
 	for(spot = firstspot; spot; spot = spot.chain)
-		RandomSelection_Add(spot, 0, string_null, pow(bound(lower, spot.spawnpoint_score.y, upper), exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
+		RandomSelection_AddEnt(spot, (bound(lower, spot.spawnpoint_score.y, upper) ** exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
 
 	return RandomSelection_chosen_ent;
 }
@@ -335,7 +336,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	float teamcheck;
 	entity spot, firstspot;
 
-	spot = find (NULL, classname, "testplayerstart");
+	spot = find(NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
@@ -343,11 +344,11 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
 	{
-		if(have_team_spawns_forteam[this.team] == 0)
+		if(!(have_team_spawns_forteams & BIT(this.team)))
 		{
 			// we request a spawn for a team, and we have team
 			// spawns, but that team has no spawns?
-			if(have_team_spawns_forteam[0])
+			if(have_team_spawns_forteams & BIT(0))
 				// try noteam spawns
 				teamcheck = 0;
 			else
@@ -357,7 +358,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 		else
 			teamcheck = this.team; // MUST be team
 	}
-	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
+	else if(have_team_spawns == 0 && (have_team_spawns_forteams & BIT(0)))
 		teamcheck = 0; // MUST be noteam
 	else
 		teamcheck = -1;

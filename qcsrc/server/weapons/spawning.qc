@@ -1,9 +1,9 @@
 #include "spawning.qh"
 
 #include "weaponsystem.qh"
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 #include <common/t_items.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 string W_Apply_Weaponreplace(string in)
 {
@@ -29,7 +29,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	{
 		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
-			LOG_MAPWARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
+			LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
 			startitem_failed = true;
 			return;
 		}
@@ -39,7 +39,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		s = M_ARGV(2, string);
 		if (s == "")
 		{
-			remove(this);
+			delete(this);
 			startitem_failed = true;
 			return;
 		}
@@ -50,7 +50,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				FOREACH(Weapons, it != WEP_Null, {
 					if(it.netname == s)
 					{
 						entity replacement = spawn();
@@ -59,24 +59,24 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 						weapon_defaultspawnfunc(replacement, it);
 						break;
 					}
-				));
+				});
 			}
 		}
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
 			wpn = WEP_Null;
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				if(it.netname == s)
 				{
 					wpn = it;
 					break;
 				}
-			));
+			});
 		}
 		if (wpn == WEP_Null)
 		{
-			remove(this);
+			delete(this);
 			startitem_failed = true;
 			return;
 		}
@@ -132,6 +132,9 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	// pickup anyway
 	if (g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
+
+	if(!this.owner)
+		this.glowmod = wpn.wpcolor;
 
 	GameItem def = wpn.m_pickup;
 	_StartItem(

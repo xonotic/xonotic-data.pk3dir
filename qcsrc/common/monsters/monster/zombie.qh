@@ -1,0 +1,20 @@
+#pragma once
+
+#include "../all.qh"
+
+#ifdef GAMEQC
+MODEL(MON_ZOMBIE, M_Model("zombie.dpm"));
+#endif
+
+CLASS(Zombie, Monster)
+    ATTRIB(Zombie, spawnflags, int, MONSTER_TYPE_UNDEAD | MON_FLAG_MELEE | MON_FLAG_RIDE);
+    ATTRIB(Zombie, m_mins, vector, '-18 -18 -25');
+    ATTRIB(Zombie, m_maxs, vector, '18 18 47');
+#ifdef GAMEQC
+    ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
+#endif
+    ATTRIB(Zombie, netname, string, "zombie");
+    ATTRIB(Zombie, monster_name, string, _("Zombie"));
+ENDCLASS(Zombie)
+
+REGISTER_MONSTER(ZOMBIE, NEW(Zombie));

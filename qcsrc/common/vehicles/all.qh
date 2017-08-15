@@ -1,5 +1,4 @@
-#ifndef VEHICLES_ALL_H
-#define VEHICLES_ALL_H
+#pragma once
 
 #include "vehicle.qh"
 
@@ -21,6 +20,4 @@ const int VEH_FIRST = 1;
 
 REGISTER_VEHICLE(Null, NEW(Vehicle));
 
-#include "vehicle/_mod.inc"
-
-#endif
+#include "vehicle/_mod.qh"

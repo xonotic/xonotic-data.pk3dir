@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef MENUQC
+#ifdef GAMEQC
 
     /**
      * Replicate a client cvar into a server field
@@ -12,7 +12,7 @@
 	#define REPLICATE(...) EVAL_REPLICATE(OVERLOAD(REPLICATE, __VA_ARGS__))
 	#define EVAL_REPLICATE(...) __VA_ARGS__
 
-	[[accumulate]] void ReplicateVars(entity this, string thisname, int i) {}
+	[[accumulate]] void ReplicateVars(entity this, entity store, string thisname, int i) {}
 
 	#define REPLICATE_3(fld, type, var) REPLICATE_4(fld, type, var, )
 	#define REPLICATE_4(fld, type, var, func) REPLICATE_##type(fld, var, func)
@@ -35,9 +35,9 @@
 
 	#if defined(SVQC)
 		#define REPLICATE_7(fld, type, var, func, create, destroy, after) \
-			void ReplicateVars(entity this, string thisname, int i) \
+			void ReplicateVars(entity this, entity store, string thisname, int i) \
 			{ \
-				type field = this.fld; \
+				type field = store.fld; \
 				if (i < 0) { destroy } \
 				else \
 				{ \
@@ -53,7 +53,7 @@
 					} \
 					if (current) { after } \
 				} \
-				this.fld = field; \
+				store.fld = field; \
 			}
 	#elif defined(CSQC)
 		// TODO

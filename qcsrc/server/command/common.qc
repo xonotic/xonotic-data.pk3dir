@@ -1,10 +1,14 @@
 #include "common.qh"
-#include <common/command/command.qh>
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
+#include <common/command/_mod.qh>
 #include "common.qh"
 
 #include "../scores.qh"
 
-#include <common/monsters/all.qh>
+#include <common/monsters/_mod.qh>
 #include <common/notifications/all.qh>
 #include <lib/warpzone/common.qh>
 
@@ -24,8 +28,8 @@ string GetCommandPrefix(entity caller)
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return caller.netname;
-	else return admin_name();  // ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
+	if (caller) return playername(caller, false);
+	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
 }
 
 // verify that the client provided is acceptable for kicking
@@ -115,13 +119,13 @@ entity GetIndexedEntity(float argc, float start_index)
 		}
 		else  // no, maybe it's a name?
 		{
-			FOREACH_CLIENT(true, LAMBDA(
+			FOREACH_CLIENT(true, {
 				if(strdecolorize(it.netname) == strdecolorize(argv(start_index)))
 				{
 					selection = it;
 					break; // no reason to keep looking
 				}
-			));
+			});
 
 			index = (start_index + 1);
 		}
@@ -148,13 +152,13 @@ entity GetFilteredEntity(string input)
 	else
 	{
 		selection = NULL;
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true, {
 			if(strdecolorize(it.netname) == strdecolorize(input))
 			{
 				selection = it;
 				break; // no reason to keep looking
 			}
-		));
+		});
 	}
 
 	return selection;
@@ -189,7 +193,7 @@ void timeout_handler_reset(entity this)
 	timeout_time = 0;
 	timeout_leadtime = 0;
 
-	remove(this);
+	delete(this);
 }
 
 void timeout_handler_think(entity this)
@@ -210,15 +214,16 @@ void timeout_handler_think(entity this)
 			}
 			else  // time to end the timeout
 			{
+				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEIN);
 				timeout_status = TIMEOUT_INACTIVE;
 
 				// reset the slowmo value back to normal
 				cvar_set("slowmo", ftos(orig_slowmo));
 
 				// unlock the view for players so they can move around again
-				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 					it.fixangle = false;
-				));
+				});
 
 				timeout_handler_reset(this);
 			}
@@ -243,16 +248,16 @@ void timeout_handler_think(entity this)
 				cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
 
 				// reset all the flood variables
-				FOREACH_CLIENT(true, LAMBDA(
+				FOREACH_CLIENT(true, {
 					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
 						it.floodcontrol_chatteam = it.floodcontrol_chattell =
 							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
-				));
+				});
 
 				// copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
-				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 					it.lastV_angle = it.v_angle;
-				));
+				});
 
 				this.nextthink = time;  // think again next frame to handle it under TIMEOUT_ACTIVE code
 			}
@@ -364,10 +369,10 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					if (arg_lower == "list") { print_to(caller, monsterlist_reply); return; }
 
-					FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-						if(it.realowner == caller)
-							++tmp_moncount;
-					));
+					IL_EACH(g_monsters, it.realowner == caller,
+					{
+						++tmp_moncount;
+					});
 
 					if (!autocvar_g_monsters) { print_to(caller, "Monsters are disabled"); return; }
 					if (autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { print_to(caller, "Monster spawning is disabled"); return; }
@@ -380,17 +385,17 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
 
 					bool found = false;
-					for (int i = MON_FIRST; i <= MON_LAST; ++i)
+					FOREACH(Monsters, it != MON_Null && it.netname == arg_lower,
 					{
-						mon = get_monsterinfo(i);
-						if (mon.netname == arg_lower) { found = true; break; }
-					}
+						found = true;
+						break;
+					});
 
 					if (!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
 
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
-					mon = spawnmonster(arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
+					mon = spawnmonster(spawn(), arg_lower, 0, caller, caller, trace_endpos, false, false, moveflag);
 					print_to(caller, strcat("Spawned ", mon.monster_name));
 					return;
 				}
@@ -436,10 +441,12 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					int tmp_remcount = 0;
 
-					FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+					IL_EACH(g_monsters, true,
+					{
 						Monster_Remove(it);
 						++tmp_remcount;
-					));
+					});
+					IL_CLEAR(g_monsters);
 
 					monsters_total = monsters_killed = totalspawned = 0;
 
@@ -572,8 +579,14 @@ void CommonCommand_records(float request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			for (int i = 0; i < 10; ++i)
-				if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			int num = stoi(argv(1));
+			if(num > 0 && num <= 10 && records_reply[num - 1] != "")
+				print_to(caller, records_reply[num - 1]);
+			else
+			{
+				for (int i = 0; i < 10; ++i)
+					if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			}
 
 			return;  // never fall through to usage
 		}
@@ -712,7 +725,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 				{
 					print_to(caller, "^7Error: You can not call a timeout while the map is being restarted.");
 				}
-				else if (caller && (caller.allowed_timeouts < 1))
+				else if (caller && (CS(caller).allowed_timeouts < 1))
 				{
 					print_to(caller, "^7Error: You already used all your timeout calls for this map.");
 				}
@@ -727,9 +740,9 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 
 				else  // everything should be okay, proceed with starting the timeout
 				{
-					if (caller)   caller.allowed_timeouts -= 1;
+					if (caller)   CS(caller).allowed_timeouts -= 1;
 					// write a bprint who started the timeout (and how many they have left)
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : ""), "!\n");
+					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(CS(caller).allowed_timeouts), " timeout(s) left)") : ""), "!\n");
 
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;
@@ -775,7 +788,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 				"ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 
 			total_listed_players = 0;
-			FOREACH_CLIENT(true, LAMBDA(
+			FOREACH_CLIENT(true, {
 				is_bot = (IS_BOT_CLIENT(it));
 
 				if (is_bot)
@@ -797,14 +810,14 @@ void CommonCommand_who(float request, entity caller, float argc)
 				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "),
 					etof(it),
 					it.netname,
-					it.ping,
-					it.ping_packetloss,
-					process_time(1, time - it.jointime),
+					CS(it).ping,
+					CS(it).ping_packetloss,
+					process_time(1, time - CS(it).jointime),
 					tmp_netaddress,
 					tmp_crypto_idfp));
 
 				++total_listed_players;
-			));
+			});
 
 			print_to(caller, strcat("Finished listing ", ftos(total_listed_players), " client(s) out of ", ftos(maxclients), " slots."));
 

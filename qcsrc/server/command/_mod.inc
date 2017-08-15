@@ -1,5 +1,4 @@
 // generated file; do not modify
-#include <server/command/all.qc>
 #include <server/command/banning.qc>
 #include <server/command/cmd.qc>
 #ifdef SVQC
@@ -8,4 +7,5 @@
 #include <server/command/common.qc>
 #include <server/command/getreplies.qc>
 #include <server/command/radarmap.qc>
+#include <server/command/reg.qc>
 #include <server/command/vote.qc>

@@ -1,10 +1,11 @@
 #include "accuracy.qh"
 
-#include "../mutators/all.qh"
+#include "../mutators/_mod.qh"
 #include <common/constants.qh>
+#include <common/net_linked.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 int accuracy_byte(float n, float d)
 {
@@ -19,10 +20,10 @@ bool accuracy_send(entity this, entity to, int sf)
 
 	entity a = this.owner;
 	if (IS_SPEC(a)) a = a.enemy;
-	a = a.accuracy;
+	a = CS(a).accuracy;
 
 	if (to != a.owner)
-		if (!autocvar_sv_accuracy_data_share && !a.owner.cvar_cl_accuracy_data_share)
+		if (!autocvar_sv_accuracy_data_share && !CS(a.owner).cvar_cl_accuracy_data_share)
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
@@ -39,7 +40,7 @@ bool accuracy_send(entity this, entity to, int sf)
 // init/free
 void accuracy_init(entity e)
 {
-	entity a = e.accuracy = new_pure(accuracy);
+	entity a = CS(e).accuracy = new_pure(accuracy);
 	a.owner = e;
 	a.drawonlytoclient = e;
 	Net_LinkEntity(a, false, 0, accuracy_send);
@@ -47,13 +48,13 @@ void accuracy_init(entity e)
 
 void accuracy_free(entity e)
 {
-	remove(e.accuracy);
+	delete(CS(e).accuracy);
 }
 
 // force a resend of a player's accuracy stats
 void accuracy_resend(entity e)
 {
-	e.accuracy.SendFlags = 0xFFFFFF;
+	CS(e).accuracy.SendFlags = 0xFFFFFF;
 }
 
 // update accuracy stats
@@ -63,7 +64,7 @@ void accuracy_resend(entity e)
 void accuracy_add(entity this, int w, int fired, int hit)
 {
 	if (IS_INDEPENDENT_PLAYER(this)) return;
-	entity a = this.accuracy;
+	entity a = CS(this).accuracy;
 	if (!a) return;
 	if (!hit && !fired) return;
 	w -= WEP_FIRST;
@@ -84,7 +85,7 @@ void accuracy_add(entity this, int w, int fired, int hit)
 	if (b == accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w])) return; // no change
 	int sf = 1 << (w % 24);
 	a.SendFlags |= sf;
-	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, LAMBDA(it.accuracy.SendFlags |= sf));
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, { CS(it).accuracy.SendFlags |= sf; });
 }
 
 bool accuracy_isgooddamage(entity attacker, entity targ)

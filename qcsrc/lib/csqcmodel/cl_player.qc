@@ -25,16 +25,9 @@
 #include "cl_model.qh"
 #include "common.qh"
 #include "interpolate.qh"
-#include <client/defs.qh>
-#include <client/main.qh>
-#include <common/constants.qh>
-#include <common/physics/player.qh>
-#include <common/stats.qh>
-#include <common/triggers/trigger/viewloc.qh>
-#include <common/util.qh>
-#include <common/viewloc.qh>
 
 float autocvar_cl_movement_errorcompensation = 0;
+bool autocvar_cl_movement_intermissionrunning = false;
 
 // engine stuff
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
@@ -96,7 +89,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 void CSQCPlayer_Unpredict(entity this)
 {
 	if (csqcplayer_status == CSQCPLAYERSTATUS_UNPREDICTED) return;
-	if (csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED) LOG_FATALF("Cannot unpredict in current status (%d)\n", csqcplayer_status);
+	if (csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED) LOG_FATALF("Cannot unpredict in current status (%d)", csqcplayer_status);
 	this.origin = csqcplayer_origin;
 	this.velocity = csqcplayer_velocity;
 	csqcplayer_moveframe = csqcplayer_sequence + 1; // + 1 because the recieved frame has the move already done (server side)
@@ -105,17 +98,17 @@ void CSQCPlayer_Unpredict(entity this)
 
 void CSQCPlayer_SetMinsMaxs(entity this)
 {
-	if ((this.flags & FL_DUCKED) || !this.isplayermodel)
+	if (IS_DUCKED(this) || !this.isplayermodel)
 	{
-		this.mins = STAT(PL_CROUCH_MIN, NULL);
-		this.maxs = STAT(PL_CROUCH_MAX, NULL);
-		this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, NULL);
+		this.mins = PHYS_PL_CROUCH_MIN(this);
+		this.maxs = PHYS_PL_CROUCH_MAX(this);
+		this.view_ofs = PHYS_PL_CROUCH_VIEWOFS(this);
 	}
 	else
 	{
-		this.mins = STAT(PL_MIN, NULL);
-		this.maxs = STAT(PL_MAX, NULL);
-		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
+		this.mins = PHYS_PL_MIN(this);
+		this.maxs = PHYS_PL_MAX(this);
+		this.view_ofs = PHYS_PL_VIEWOFS(this);
 	}
 }
 
@@ -129,72 +122,31 @@ void CSQCPlayer_SavePrediction(entity this)
 }
 
 void CSQC_ClientMovement_PlayerMove_Frame(entity this);
-void _Movetype_Physics_ClientFrame(entity this, float movedt);
-
-void Movetype_Physics_Spam(entity this)  // optimized
-{
-	_Movetype_Physics_ClientFrame(this, PHYS_INPUT_TIMELENGTH);
-	if(wasfreed(this))
-		return;
-
-	this.avelocity = this.move_avelocity;
-	this.velocity = this.move_velocity;
-	this.angles = this.move_angles;
-	this.flags = BITSET(this.flags, FL_ONGROUND, boolean(this.move_flags & FL_ONGROUND));
-	this.flags = BITSET(this.flags, FL_WATERJUMP, boolean(this.move_flags & FL_WATERJUMP));
-	this.waterlevel = this.move_waterlevel;
-	this.watertype = this.move_watertype;
-	setorigin(this, this.move_origin);
-}
-
-void CSQCPlayer_CheckWater(entity this)
-{
-	this.move_origin = this.origin;
-	this.move_waterlevel = this.waterlevel;
-	this.move_watertype = this.watertype;
-	_Movetype_CheckWater(this);
-	this.waterlevel = this.move_waterlevel;
-	this.watertype = this.move_watertype;
-}
 
 void CSQCPlayer_Physics(entity this)
 {
-	if(autocvar_cl_movement)
-	{
-		if(autocvar_cl_movement == 1)
-			CSQCPlayer_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
+	if(!autocvar_cl_movement) { return; }
 
-		vector oldv_angle = this.v_angle;
-		vector oldangles = this.angles; // we need to save these, as they're abused by other code
-		this.v_angle = PHYS_INPUT_ANGLES(this);
-		this.angles = PHYS_WORLD_ANGLES(this);
+	_Movetype_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
-		CSQC_ClientMovement_PlayerMove_Frame(this);
+	vector oldv_angle = this.v_angle;
+	vector oldangles = this.angles; // we need to save these, as they're abused by other code
+	this.v_angle = PHYS_INPUT_ANGLES(this);
+	this.angles = PHYS_WORLD_ANGLES(this);
 
-		if(autocvar_cl_movement == 1)
-		{
-			this.move_origin = this.origin;
-			this.move_angles = this.angles;
-			//this.move_movetype = MOVETYPE_WALK; // temp
-			this.move_velocity = this.velocity;
-			this.move_avelocity = this.avelocity;
-			this.move_flags = BITSET(this.move_flags, FL_ONGROUND, IS_ONGROUND(this));
-			this.move_flags = BITSET(this.move_flags, FL_WATERJUMP, boolean(this.flags & FL_WATERJUMP));
-			this.move_waterlevel = this.waterlevel;
-			this.move_watertype = this.watertype;
-			Movetype_Physics_Spam(this);
-		}
+	CSQC_ClientMovement_PlayerMove_Frame(this);
 
-		view_angles = this.v_angle;
-		input_angles = this.angles;
-		this.v_angle = oldv_angle;
-		this.angles = oldangles;
+	Movetype_Physics_NoMatchTicrate(this, PHYS_INPUT_TIMELENGTH, true);
 
-		this.pmove_flags =
-				((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
-				(!(this.flags & FL_JUMPRELEASED) ? PMF_JUMP_HELD : 0) |
-				((IS_ONGROUND(this)) ? PMF_ONGROUND : 0);
-	}
+	view_angles = this.v_angle;
+	input_angles = this.angles;
+	this.v_angle = oldv_angle;
+	this.angles = oldangles;
+
+	this.pmove_flags =
+			((IS_DUCKED(this)) ? PMF_DUCKED : 0) |
+			((IS_JUMP_HELD(this)) ? PMF_JUMP_HELD : 0) |
+			((IS_ONGROUND(this)) ? PMF_ONGROUND : 0);
 }
 
 void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
@@ -230,6 +182,15 @@ void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
 		do
 		{
 			if (!getinputstate(csqcplayer_moveframe)) break;
+			/*if (input_timelength > 0.0005)
+			{
+				if (input_timelength > 0.05)
+				{
+					input_timelength /= 2;
+					CSQCPlayer_Physics(this);
+				}
+				CSQCPlayer_Physics(this);
+			}*/
 			CSQCPlayer_Physics(this);
 			CSQCPlayer_SetMinsMaxs(this);
 			++csqcplayer_moveframe;
@@ -246,18 +207,13 @@ bool CSQCPlayer_IsLocalPlayer(entity this)
 	return (this == csqcplayer);
 }
 
-void CSQCPlayer_SetViewLocation()
-{
-	viewloc_SetViewLocation();
-}
-
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
 {
-	const vector v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
-	const float vh = STAT(VIEWHEIGHT);
-	const vector pl_viewofs = STAT(PL_VIEW_OFS, NULL);
-	const vector pl_viewofs_crouch = STAT(PL_CROUCH_VIEW_OFS, NULL);
+	const vector v0 = ((intermission && !autocvar_cl_movement_intermissionrunning) ? '0 0 0' : pmove_vel); // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+	const float vh = PHYS_VIEWHEIGHT(NULL);
+	const vector pl_viewofs = PHYS_PL_VIEWOFS(NULL);
+	const vector pl_viewofs_crouch = PHYS_PL_CROUCH_VIEWOFS(NULL);
 	const entity e = csqcplayer;
 	if (e)
 	{
@@ -333,7 +289,7 @@ void CSQCPlayer_SetCamera()
 		if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
 		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
 		// note: these two only work in WIP2, but are harmless in WIP1
-		if (STAT(HEALTH) <= 0 && STAT(HEALTH) != -666 && STAT(HEALTH) != -2342) refdefflags |= REFDEFFLAG_DEAD;
+		if (PHYS_HEALTH(NULL) <= 0 && PHYS_HEALTH(NULL) != -666 && PHYS_HEALTH(NULL) != -2342) refdefflags |= REFDEFFLAG_DEAD;
 		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
 		V_CalcRefdef(view, refdefflags);
 	}

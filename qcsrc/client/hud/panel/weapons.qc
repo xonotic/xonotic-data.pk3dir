@@ -1,5 +1,12 @@
 #include "weapons.qh"
-// Weapon icons (#0)
+
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
+#include <client/view.qh>
+#include <common/wepent.qh>
+
+// Weapons (#0)
 
 entity weaponorder[Weapons_MAX];
 void weaponorder_swap(int i, int j, entity pass)
@@ -23,7 +30,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 	int nHidden = 0; \
 	FOREACH(Weapons, it != WEP_Null, { \
 		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
-		if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1; \
+		if (it.spawnflags & WEP_FLAG_HIDDEN || it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1; \
 	}); \
 	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
 	columns = table_size.x; \
@@ -56,6 +63,8 @@ void HUD_Weapons()
 	float when = max(1, autocvar_hud_panel_weapons_complainbubble_time);
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
+
 	vector weapon_pos, weapon_size = '0 0 0';
 	vector color;
 
@@ -68,6 +77,8 @@ void HUD_Weapons()
 	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
 			return;
+		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_weapons_hide_ondeath)
+			return;
 		if(timeout && time >= weapontime + timeout + timeout_effect_length)
 		if(autocvar_hud_panel_weapons_timeout_effect == 3 || (autocvar_hud_panel_weapons_timeout_effect == 1 && !(autocvar_hud_panel_weapons_timeout_fadebgmin + autocvar_hud_panel_weapons_timeout_fadefgmin)))
 		{
@@ -77,7 +88,7 @@ void HUD_Weapons()
 	}
 
 	// update generic hud functions
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
@@ -147,8 +158,8 @@ void HUD_Weapons()
 	{
 		if(autocvar__hud_configure)
 		{
-			if(menu_enabled != 2)
-				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+			if(hud_configure_menu_open != 2)
+				HUD_Panel_DrawBg(); // also draw the bg of the entire panel
 		}
 
 		// do we own this weapon?
@@ -310,7 +321,7 @@ void HUD_Weapons()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 
 	if(center.x == -1)
 		return; // panel has gone off screen
@@ -330,7 +341,7 @@ void HUD_Weapons()
 	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
-	if (autocvar_hud_panel_weapons_ammo)
+	if (!infinite_ammo && autocvar_hud_panel_weapons_ammo)
 	{
 		ammo_color = stov(autocvar_hud_panel_weapons_ammo_color);
 		ammo_alpha = panel_fg_alpha * autocvar_hud_panel_weapons_ammo_alpha;
@@ -356,7 +367,6 @@ void HUD_Weapons()
 	vector label_size = '1 1 0' * min(weapon_size.x, weapon_size.y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
 	vector noncurrent_size = weapon_size * bound(0.01, autocvar_hud_panel_weapons_noncurrent_scale, 1);
 	float noncurrent_alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_weapons_noncurrent_alpha, 1);
-	bool isCurrent;
 	static vector weapon_pos_current = '-1 0 0';
 	if(weapon_pos_current.x == -1)
 		weapon_pos_current = panel_pos;
@@ -368,8 +378,12 @@ void HUD_Weapons()
 		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
-	if(!panel_switchweapon)
-		panel_switchweapon = switchweapon;
+	entity wepent = viewmodels[0]; // TODO: unhardcode
+
+	if(wepent.switchweapon == WEP_Null)
+		panel_switchweapon = NULL;
+	else if(!panel_switchweapon)
+		panel_switchweapon = wepent.switchweapon;
 
 	// draw background behind currently selected weapon
 	// do it earlier to make sure bg is drawn behind every weapon icons while it's moving
@@ -398,11 +412,10 @@ void HUD_Weapons()
 		}
 
 		// figure out the drawing position of weapon
-		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
+		weapon_pos = panel_pos + vec2(column * weapon_size.x, row * weapon_size.y);
 
 		// update position of the currently selected weapon
-		isCurrent = (it == panel_switchweapon);
-		if(isCurrent)
+		if(it == panel_switchweapon)
 		{
 			if(weapon_pos_current.y > weapon_pos.y)
 				weapon_pos_current.y = max(weapon_pos.y, weapon_pos_current.y - switch_speed * (weapon_pos_current.y - weapon_pos.y));
@@ -466,7 +479,7 @@ void HUD_Weapons()
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && (it.ammo_field != ammo_none))
+			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_field != ammo_none))
 			{
 				float ammo_full;
 				a = getstati(GetAmmoStat(it.ammo_field)); // how much ammo do we have?

@@ -1,8 +1,10 @@
 #include "weaponstats.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "../g_world.qh"
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 
 void WeaponStats_Init()
 {

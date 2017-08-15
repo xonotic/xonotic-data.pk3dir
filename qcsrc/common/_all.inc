@@ -1,10 +1,11 @@
-float autocvar_net_connecttimeout = 30;
+noref float autocvar_net_connecttimeout = 30;
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #include "anim.qc"
 #include "animdecide.qc"
 #include "ent_cs.qc"
 #include "net_notice.qc"
+#include "wepent.qc"
 #endif
 
 #include "mapinfo.qc"
@@ -19,19 +20,21 @@ float autocvar_net_connecttimeout = 30;
 #include "campaign_setup.qc"
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #include "physics/all.inc"
 #include "triggers/include.qc"
 #include "viewloc.qc"
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 #include "minigames/minigames.qc"
 #endif
 
 #include "debug.qh"
 
-#ifndef MENUQC
+#include "command/_mod.inc"
+
+#ifdef GAMEQC
 #include "deathtypes/all.qc"
 #include "effects/all.qc"
 #include "impulses/all.qc"
@@ -40,10 +43,10 @@ float autocvar_net_connecttimeout = 30;
 #endif
 
 #include "items/_mod.inc"
-    #include "weapons/all.qc"
-        #include "monsters/all.qc"
-        #include "turrets/all.qc"
-        #include "vehicles/all.qc"
+    #include "weapons/_all.inc"
+        #include "monsters/_mod.inc"
+        #include "turrets/_mod.inc"
+        #include "vehicles/_mod.inc"
 
 #include "mutators/_mod.inc"
     #include "gamemodes/_mod.inc"

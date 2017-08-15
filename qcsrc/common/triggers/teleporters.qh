@@ -1,5 +1,7 @@
-#ifndef T_TELEPORTERS_H
-#define T_TELEPORTERS_H
+#pragma once
+
+IntrusiveList g_teleporters;
+STATIC_INIT(g_teleporters) { g_teleporters = IL_NEW(); }
 
 .entity pusher;
 const float TELEPORT_FLAG_SOUND = 1;
@@ -17,16 +19,13 @@ const float TELEPORT_SIMPLE = 2; // only do teleport, nothing special
 
 entity Simple_TeleportPlayer(entity teleporter, entity player);
 
-void Teleport_Touch (entity this);
+void Teleport_Touch(entity this, entity toucher);
 
 void teleport_findtarget(entity this);
 
 entity Teleport_Find(vector mi, vector ma);
 
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags);
-
-entity teleport_first;
-.entity teleport_next;
 
 #ifdef SVQC
 
@@ -69,28 +68,4 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl);
 #ifdef CSQC
 .entity realowner;
 .float lastteleporttime;
-
-#define TDEATHLOOP(o) \
-	entity head; \
-	vector deathmin; \
-	vector deathmax; \
-	float deathradius; \
-	deathmin = (o) + player.mins; \
-	deathmax = (o) + player.maxs; \
-	if(telefragmin != telefragmax) \
-	{ \
-		if(deathmin.x > telefragmin.x) deathmin.x = telefragmin.x; \
-		if(deathmin.y > telefragmin.y) deathmin.y = telefragmin.y; \
-		if(deathmin.z > telefragmin.z) deathmin.z = telefragmin.z; \
-		if(deathmax.x < telefragmax.x) deathmax.x = telefragmax.x; \
-		if(deathmax.y < telefragmax.y) deathmax.y = telefragmax.y; \
-		if(deathmax.z < telefragmax.z) deathmax.z = telefragmax.z; \
-	} \
-	deathradius = max(vlen(deathmin), vlen(deathmax)); \
-	for(head = findradius(o, deathradius); head; head = head.chain) \
-		if(head != player) \
-			if(head.isplayermodel) \
-				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
-#endif
-
 #endif

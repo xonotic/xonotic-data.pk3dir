@@ -1,7 +1,5 @@
 #include "modeleffects.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_NET_LINKED(ENT_CLIENT_MODELEFFECT)
 
 #ifdef SVQC
@@ -103,7 +101,7 @@ void ModelEffect_Draw(entity this)
 	this.alpha = this.cnt * bound(0, 1 - (time - this.lifetime) / this.fadetime, 1);
 	if(this.alpha < ALPHA_MIN_VISIBLE)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	this.drawmask = MASK_NORMAL;
@@ -156,10 +154,9 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	e.cnt = ReadByte() / 255.0; // actually alpha
 
 	e.draw = ModelEffect_Draw;
+	if (isnew) IL_PUSH(g_drawables, e);
 
-	if (!isnew) remove(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
+	if (!isnew) delete(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
 	return true;
 }
-#endif
-
 #endif

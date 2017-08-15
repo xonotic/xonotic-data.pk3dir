@@ -6,6 +6,9 @@
 #include "../mutators/events.qh"
 
 #include <common/constants.qh>
+#include <common/effects/effect.qh>
+#include <common/effects/all.qh>
+#include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
 
 #include <lib/csqcmodel/interpolate.qh>
@@ -16,17 +19,17 @@
 .float scale;
 .vector colormod;
 
-void SUB_Stop(entity this)
+void SUB_Stop(entity this, entity toucher)
 {
-	this.move_velocity = this.move_avelocity = '0 0 0';
-	this.move_movetype = MOVETYPE_NONE;
+	this.velocity = this.avelocity = '0 0 0';
+	set_movetype(this, MOVETYPE_NONE);
 }
 
-void Projectile_ContentsTransition(int prev, int current)
-{ENGINE_EVENT();
+void Projectile_ContentsTransition(entity this, int prev, int current)
+{
 	if(current == CONTENT_WATER)
 	{
-		pointparticles(EFFECT_WATER_SPLASH_SMALL, this.move_origin, '0 0 0', 1);
+		pointparticles(EFFECT_WATER_SPLASH_SMALL, this.origin, '0 0 0', 1);
 	}
 }
 
@@ -66,11 +69,11 @@ void Projectile_Draw(entity this)
 	float t;
 	float a;
 
-	f = this.move_flags;
+	f = this.flags;
 
 	if (this.count & 0x80)
 	{
-		// this.move_flags &= ~FL_ONGROUND;
+		// UNSET_ONGROUND(this);
 		if (this.move_movetype == MOVETYPE_NONE || this.move_movetype == MOVETYPE_FLY)
 			Movetype_Physics_NoMatchServer(this);
 		// the trivial movetypes do not have to match the
@@ -80,9 +83,9 @@ void Projectile_Draw(entity this)
 		// moving, we might still be ticrate dependent.
 		else
 			Movetype_Physics_MatchServer(this, autocvar_cl_projectiles_sloppy);
-		if (!(this.move_flags & FL_ONGROUND))
+		if (!IS_ONGROUND(this))
 			if (this.velocity != '0 0 0')
-				this.move_angles = this.angles = vectoangles(this.velocity);
+				this.angles = vectoangles(this.velocity);
 	}
 	else
 	{
@@ -115,6 +118,9 @@ void Projectile_Draw(entity this)
 				break;
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0';  // forward
+				break;
+			case PROJECTILE_ROCKET:
+				rot = '0 0 720'; // spinning
 				break;
 			default:
 				break;
@@ -171,13 +177,13 @@ void Projectile_Draw(entity this)
 	this.drawmask = MASK_NORMAL;
 }
 
-void loopsound(entity e, int ch, string samp, float vol, float attn)
+void loopsound(entity e, int ch, Sound samp, float vol, float attn)
 {
     TC(int, ch);
 	if (e.silent)
 		return;
 
-	_sound(e, ch, samp, vol, attn);
+	sound(e, ch, samp, vol, attn);
 	e.snd_looping = ch;
 }
 
@@ -217,9 +223,9 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	// projectiles no longer being able to lie on a bmodel
 	this.move_nomonsters = MOVE_WORLDONLY;
 	if (f & 0x40)
-		this.move_flags |= FL_ONGROUND;
+		SET_ONGROUND(this);
 	else
-		this.move_flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(this);
 
 	if (!this.move_time)
 	{
@@ -251,8 +257,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.gravity = ReadCoord();
 			else
 				this.gravity = 0;  // none
-			this.move_origin = this.origin;
-			this.move_velocity = this.velocity;
 		}
 
 		if (time == this.spawntime || (this.count & 0x80) || (f & 0x08))
@@ -273,7 +277,26 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			this.fade_rate = 0;
 		}
 
-		this.team = ReadByte() - 1;
+		int myteam = ReadByte();
+		this.team = myteam - 1;
+
+		if(teamplay)
+		{
+			if(myteam)
+				this.colormap = (this.team) * 0x11; // note: team - 1 on server (client uses different numbers)
+			else
+				this.colormap = 0x00;
+			this.colormap |= BIT(10); // RENDER_COLORMAPPED
+		}
+		else
+			this.colormap = myteam;
+		// TODO: projectiles use glowmaps for their color, not teams
+		#if 0
+		if(this.colormap > 0)
+			this.glowmod = colormapPaletteColor(this.colormap & 0x0F, true) * 2;
+		else
+			this.glowmod = '1 1 1';
+		#endif
 	}
 
 	if (f & 2)
@@ -340,25 +363,25 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		this.maxs = '0 0 0';
 		this.colormod = '0 0 0';
 		settouch(this, SUB_Stop);
-		this.move_movetype = MOVETYPE_TOSS;
+		set_movetype(this, MOVETYPE_TOSS);
 		this.alphamod = 1;
-		this.contentstransition = Projectile_ContentsTransition;
+		setcontentstransition(this, Projectile_ContentsTransition);
 
 		switch (this.cnt)
 		{
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
-				loopsound(this, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
-				this.mins = '0 0 -4';
-				this.maxs = '0 0 -4';
-				this.move_movetype = MOVETYPE_BOUNCE;
+				loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
+				this.mins = '-4 -4 -4';
+				this.maxs = '4 4 4';
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
-				this.move_bounce_factor = WEP_CVAR_SEC(electro, bouncefactor);
-				this.move_bounce_stopspeed = WEP_CVAR_SEC(electro, bouncestop);
+				this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
+				this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND(ROCKET_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				break;
@@ -369,10 +392,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_GRENADE_BOUNCING:
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
-				this.move_bounce_factor = WEP_CVAR(mortar, bouncefactor);
-				this.move_bounce_stopspeed = WEP_CVAR(mortar, bouncestop);
+				this.bouncefactor = WEP_CVAR(mortar, bouncefactor);
+				this.bouncestop = WEP_CVAR(mortar, bouncestop);
 				break;
 			case PROJECTILE_SHAMBLER_LIGHTNING:
 				this.mins = '-8 -8 -8';
@@ -387,31 +410,31 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_PORTO_RED:
 				this.colormod = '2 1 1';
 				this.alphamod = 0.5;
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_PORTO_BLUE:
 				this.colormod = '1 1 2';
 				this.alphamod = 0.5;
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_HAGAR_BOUNCING:
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_CRYLINK_BOUNCING:
-				this.move_movetype = MOVETYPE_BOUNCE;
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
 			case PROJECTILE_FIREBALL:
-				loopsound(this, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
 				this.mins = '-16 -16 -16';
 				this.maxs = '16 16 16';
 				break;
 			case PROJECTILE_FIREMINE:
-				loopsound(this, CH_SHOTS_SINGLE, SND(FIREBALL_FLY), VOL_BASE, ATTEN_NORM);
-				this.move_movetype = MOVETYPE_BOUNCE;
+				loopsound(this, CH_SHOTS_SINGLE, SND_FIREBALL_FLY, VOL_BASE, ATTEN_NORM);
+				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
@@ -425,7 +448,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(this, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
@@ -438,23 +461,23 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_RAPTORCANNON:
 				break;
 			case PROJECTILE_SPIDERROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 			case PROJECTILE_WAKIROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 			/*
 			case PROJECTILE_WAKICANNON:
 			    break;
 			case PROJECTILE_BUMBLE_GUN:
 			    // only new engines support sound moving with object
-			    loopsound(this, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
+			    loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
 			    this.mins = '0 0 -4';
 			    this.maxs = '0 0 -4';
 			    this.move_movetype = MOVETYPE_BOUNCE;
-			    this.move_touch = func_null;
-			    this.move_bounce_factor = WEP_CVAR_SEC(electro, bouncefactor);
-			    this.move_bounce_stopspeed = WEP_CVAR_SEC(electro, bouncestop);
+			    settouch(this, func_null);
+			    this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
+			    this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 			    break;
 			*/
 			default:
@@ -471,16 +494,16 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	if (this.gravity)
 	{
 		if (this.move_movetype == MOVETYPE_FLY)
-			this.move_movetype = MOVETYPE_TOSS;
+			set_movetype(this, MOVETYPE_TOSS);
 		if (this.move_movetype == MOVETYPE_BOUNCEMISSILE)
-			this.move_movetype = MOVETYPE_BOUNCE;
+			set_movetype(this, MOVETYPE_BOUNCE);
 	}
 	else
 	{
 		if (this.move_movetype == MOVETYPE_TOSS)
-			this.move_movetype = MOVETYPE_FLY;
+			set_movetype(this, MOVETYPE_FLY);
 		if (this.move_movetype == MOVETYPE_BOUNCE)
-			this.move_movetype = MOVETYPE_BOUNCEMISSILE;
+			set_movetype(this, MOVETYPE_BOUNCEMISSILE);
 	}
 
 	if (!(this.count & 0x80))
@@ -488,6 +511,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 	this.classname = "csqcprojectile";
 	this.draw = Projectile_Draw;
+	if (isnew) IL_PUSH(g_drawables, this);
 	this.entremove = Ent_RemoveProjectile;
 }
 

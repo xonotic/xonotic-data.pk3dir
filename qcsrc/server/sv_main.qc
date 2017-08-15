@@ -4,12 +4,11 @@
 #include "g_hook.qh"
 #include "g_world.qh"
 
-#include "bot/bot.qh"
-#include "bot/waypoints.qh"
+#include "bot/api.qh"
 
 #include "command/common.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
@@ -19,7 +18,7 @@
 #include "../common/util.qh"
 
 #include "../common/vehicles/all.qh"
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 
 #include "../lib/csqcmodel/sv_model.qh"
 
@@ -96,10 +95,21 @@ void CreatureFrame_Liquids(entity this)
 void CreatureFrame_FallDamage(entity this)
 {
 	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
+	if(this.velocity || this.oldvelocity) // moving or has moved
 	{
 		// check for falling damage
 		float velocity_len = vlen(this.velocity);
-		if(!this.hook.state)
+		bool have_hook = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	    {
+	    	.entity weaponentity = weaponentities[slot];
+	    	if(this.(weaponentity).hook && this.(weaponentity).hook.state)
+	    	{
+	    		have_hook = true;
+	    		break;
+	    	}
+	    }
+		if(!have_hook)
 		{
 			float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 			if (IS_DEAD(this))
@@ -117,8 +127,9 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-	FOREACH_ENTITY_FLOAT(damagedbycontents, true, {
-		if (it.movetype == MOVETYPE_NOCLIP) continue;
+	IL_EACH(g_damagedbycontents, it.damagedbycontents,
+	{
+		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
 		CreatureFrame_FallDamage(it);
 		it.oldvelocity = it.velocity;
@@ -128,10 +139,10 @@ void CreatureFrame_All()
 void Pause_TryPause(bool ispaused)
 {
 	int n = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
 		++n;
-	));
+	});
 	if (!n) return;
 	setpause(ispaused);
 }
@@ -149,22 +160,22 @@ Called before each frame by the server
 =============
 */
 
-float game_delay;
-float game_delay_last;
+bool game_delay_last;
 
-bool autocvar_sv_autopause = true;
+bool autocvar_sv_autopause = false;
 float RedirectionThink();
-void PM_Main(Client this);
+void systems_update();
+void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPreThink()));
+    IL_EACH(g_players, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
+    IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
-	remove = remove_unsafely; // not during spawning!
+	delete_fn = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
 	servertime = time;
 	serverframetime = frametime;
@@ -176,12 +187,12 @@ void StartFrame()
 		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
 		int c_seeing = 0;
 		int c_seen = 0;
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true, {
 			if(IS_REAL_CLIENT(it))
 				++c_seeing;
 			if(IS_PLAYER(it))
 				++c_seen;
-		));
+		});
 		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
 		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
 
@@ -190,7 +201,7 @@ void StartFrame()
 	}
 #endif
 
-	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, CSQCProjectile_Check(it));
+	IL_EACH(g_projectiles, it.csqcprojectile_clientanimate, CSQCProjectile_Check(it));
 
 	if (RedirectionThink()) return;
 
@@ -208,17 +219,15 @@ void StartFrame()
 	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
-	game_delay = (time < game_starttime);
-
+	bool game_delay = (time < game_starttime);
 	if (autocvar_sv_eventlog && game_delay_last && !game_delay)
 		GameLogEcho(":startdelay_ended");
-
 	game_delay_last = game_delay;
 
 	CreatureFrame_All();
 	CheckRules_World();
 
-	if (warmup_stage && !gameover && warmup_limit > 0 && time >= warmup_limit) {
+	if (warmup_stage && !game_stopped && warmup_limit > 0 && time >= warmup_limit) {
 		ReadyRestart();
 		return;
 	}
@@ -228,7 +237,7 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
     FOREACH_CLIENT(true, GlobalStats_update(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPostThink()));
+    IL_EACH(g_players, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }
 
 .vector originjitter;
@@ -237,15 +246,15 @@ void StartFrame()
 .string gametypefilter;
 .string cvarfilter;
 bool DoesQ3ARemoveThisEntity(entity this);
-void SV_OnEntityPreSpawnFunction()
-{ENGINE_EVENT();
+void SV_OnEntityPreSpawnFunction(entity this)
+{
 	__spawnfunc_expecting = true;
 	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
@@ -354,7 +363,7 @@ LABEL(cvar_fail)
 		if (!inv)
 		{
 			//print("cvarfilter fail\n");
-			remove(this);
+			delete(this);
 			__spawnfunc_expecting = false;
 			return;
 		}
@@ -362,10 +371,15 @@ LABEL(cvar_fail)
 
 	if(DoesQ3ARemoveThisEntity(this))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
+
+	set_movetype(this, this.movetype);
+
+	if(this.monster_attack)
+		IL_PUSH(g_monster_targets, this);
 
 	// support special -1 and -2 angle from radiant
 	if (this.angles == '0 -1 0')
@@ -390,7 +404,7 @@ LABEL(cvar_fail)
 
 	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
-		remove(this);
+		delete(this);
 		__spawnfunc_expecting = false;
 		return;
 	}
@@ -399,8 +413,8 @@ LABEL(cvar_fail)
 void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
-	entity e;
-	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
+	//for(entity e = warpzone_first; e; e = e.warpzone_next)
+	for(entity e = NULL; (e = find(e, classname, "trigger_warpzone")); )
 	{
 		vector src, dst;
 		src = (e.absmin + e.absmax) * 0.5;

@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/pinata/pinata.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/pinata/sv_pinata.qc>
+#endif

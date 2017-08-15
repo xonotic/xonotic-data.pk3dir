@@ -14,7 +14,6 @@ REGISTER_WAYPOINT(RaceFinish, _("Finish"), '1 0.5 0', 1);
 REGISTER_WAYPOINT(RaceStart, _("Start"), '1 0.5 0', 1);
 REGISTER_WAYPOINT(RaceStartFinish, _("Start"), '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(Assault, _("<placeholder>"), '1 0.5 0', 1);
 REGISTER_WAYPOINT(AssaultDefend, _("Defend"), '1 0.5 0', 1);
 REGISTER_WAYPOINT(AssaultDestroy, _("Destroy"), '1 0.5 0', 1);
 REGISTER_WAYPOINT(AssaultPush, _("Push"), '1 0.5 0', 1);
@@ -27,6 +26,7 @@ REGISTER_WAYPOINT(FlagBaseRed, _("Red base"), '0.8 0.8 0', 1);
 REGISTER_WAYPOINT(FlagBaseBlue, _("Blue base"), '0.8 0.8 0', 1);
 REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), '0.8 0.8 0', 1);
 REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), '0.8 0.8 0', 1);
+REGISTER_WAYPOINT(FlagReturn, _("Return flag here"), '0 0.8 0.8', 1);
 
 REGISTER_WAYPOINT(DomNeut, _("Control point"), '0 1 1', 1);
 REGISTER_WAYPOINT(DomRed, _("Control point"), '0 1 1', 1);

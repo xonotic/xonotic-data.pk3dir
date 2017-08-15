@@ -1,11 +1,14 @@
 #include "g_hook.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
 #include "weapons/common.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/weaponsystem.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
-#include "cl_player.qh"
+#include "player.qh"
 #include "command/common.qh"
 #include "round_handler.qh"
 #include "../common/state.qh"
@@ -13,7 +16,8 @@
 #include "../common/vehicles/all.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
-#include "../common/weapons/all.qh"
+#include <common/net_linked.qh>
+#include <common/weapons/_all.qh>
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/server.qh"
 
@@ -70,24 +74,40 @@ And you should be done!
 
 .float hook_length;
 
-void RemoveGrapplingHook(entity pl)
+void RemoveGrapplingHooks(entity pl)
 {
-	if(pl.hook == NULL)
-		return;
-	remove(pl.hook);
-	pl.hook = NULL;
-	if(pl.movetype == MOVETYPE_FLY)
-		pl.movetype = MOVETYPE_WALK;
+	if(pl.move_movetype == MOVETYPE_FLY)
+		set_movetype(pl, MOVETYPE_WALK);
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+    {
+    	.entity weaponentity = weaponentities[slot];
+    	if(!pl.(weaponentity))
+    		continue; // continue incase other slots exist?
+    	if(pl.(weaponentity).hook)
+    		delete(pl.(weaponentity).hook);
+    	pl.(weaponentity).hook = NULL;
+    }
 
 	//pl.disableclientprediction = false;
 }
 
+void RemoveHook(entity this)
+{
+	entity player = this.realowner;
+    .entity weaponentity = this.weaponentity_fld;
+
+    if(player.(weaponentity).hook == this)
+    	player.(weaponentity).hook = NULL;
+
+    if(player.move_movetype == MOVETYPE_FLY)
+    	set_movetype(player, MOVETYPE_WALK);
+    delete(this);
+}
+
 void GrapplingHookReset(entity this)
 {
-	if(this.realowner.hook == this)
-		RemoveGrapplingHook(this.owner);
-	else // in any case:
-		remove(this);
+	RemoveHook(this);
 }
 
 void GrapplingHookThink(entity this);
@@ -101,7 +121,7 @@ void GrapplingHook_Stop(entity this)
 	this.nextthink = time;
 	settouch(this, func_null);
 	this.velocity = '0 0 0';
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.hook_length = -1;
 }
 
@@ -116,6 +136,7 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 	if(sf & 1)
 	{
 		WriteByte(MSG_ENTITY, etof(this.realowner));
+		WriteByte(MSG_ENTITY, weaponslot(this.weaponentity_fld));
 	}
 	if(sf & 2)
 	{
@@ -138,14 +159,15 @@ void GrapplingHookThink(entity this)
 {
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
 	vector dir, org, end, v0, dv, v, myorg, vs;
-	if(this.realowner.hook != this)	// how did that happen?
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).hook != this)	// how did that happen?
 	{
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(this) || intermission_running || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || ((this.aiment.flags & FL_PROJECTILE) && this.aiment.classname != "nade"))
+	if(LostMovetypeFollow(this) || game_stopped || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || ((this.aiment.flags & FL_PROJECTILE) && this.aiment.classname != "nade"))
 	{
-		RemoveGrapplingHook(this.realowner);
+		RemoveHook(this);
 		return;
 	}
 	if(this.aiment)
@@ -153,7 +175,7 @@ void GrapplingHookThink(entity this)
 
 	this.nextthink = time;
 
-	int s = W_GetGunAlignment(this.realowner);
+	int s = W_GunAlign(this.realowner.(weaponentity), STAT(GUNALIGN, this.realowner)) - 1;
 	vs = hook_shotorigin[s];
 
 	makevectors(this.realowner.v_angle);
@@ -205,7 +227,7 @@ void GrapplingHookThink(entity this)
 			v = v0 = WarpZone_RefSys_TransformVelocity(pull_entity, this, pull_entity.velocity);
 
 			// first pull the rope...
-			if(this.realowner.hook_state & HOOK_PULLING)
+			if(this.realowner.(weaponentity).hook_state & HOOK_PULLING)
 			{
 				newlength = this.hook_length;
 				newlength = max(newlength - pullspeed * frametime, minlength);
@@ -220,10 +242,10 @@ void GrapplingHookThink(entity this)
 				this.hook_length = newlength;
 			}
 
-			if(pull_entity.movetype == MOVETYPE_FLY)
-				pull_entity.movetype = MOVETYPE_WALK;
+			if(pull_entity.move_movetype == MOVETYPE_FLY)
+				set_movetype(pull_entity, MOVETYPE_WALK);
 
-			if(this.realowner.hook_state & HOOK_RELEASING)
+			if(this.realowner.(weaponentity).hook_state & HOOK_RELEASING)
 			{
 				newlength = dist;
 				this.hook_length = newlength;
@@ -238,7 +260,7 @@ void GrapplingHookThink(entity this)
 				dv = ((v - v0) * dir) * dir;
 				if(tarzan >= 2)
 				{
-					if(this.aiment.movetype == MOVETYPE_WALK || this.aiment.classname == "nade")
+					if(this.aiment.move_movetype == MOVETYPE_WALK || this.aiment.classname == "nade")
 					{
 						entity aim_ent = ((IS_VEHICLE(this.aiment) && this.aiment.owner) ? this.aiment.owner : this.aiment);
 						v = v - dv * 0.5;
@@ -265,7 +287,7 @@ void GrapplingHookThink(entity this)
 
 			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !STAT(FROZEN, this.aiment))
 			{
-				RemoveGrapplingHook(this.realowner);
+				RemoveHook(this);
 				return;
 			}
 		}
@@ -280,7 +302,7 @@ void GrapplingHookThink(entity this)
 			if(spd < 50)
 				spd = 0;
 			this.realowner.velocity = dir*spd;
-			this.realowner.movetype = MOVETYPE_FLY;
+			set_movetype(this.realowner, MOVETYPE_FLY);
 
 			UNSET_ONGROUND(this.realowner);
 		}
@@ -301,18 +323,18 @@ void GrapplingHookThink(entity this)
 	}
 }
 
-void GrapplingHookTouch (entity this)
+void GrapplingHookTouch(entity this, entity toucher)
 {
-	if(other.movetype == MOVETYPE_FOLLOW)
+	if(toucher.move_movetype == MOVETYPE_FOLLOW)
 		return;
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	GrapplingHook_Stop(this);
 
-	if(other)
-		if(other.movetype != MOVETYPE_NONE)
+	if(toucher)
+		if(toucher.move_movetype != MOVETYPE_NONE)
 		{
-			SetMovetypeFollow(this, other);
+			SetMovetypeFollow(this, toucher);
 			WarpZone_RefSys_BeginAddingIncrementally(this, this.aiment);
 		}
 
@@ -337,41 +359,40 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 			this.realowner.pushltime = time + autocvar_g_maxpushtime;
 			this.realowner.istypefrag = PHYS_INPUT_BUTTON_CHAT(this.realowner);
 		}
-		RemoveGrapplingHook(this.realowner);
+		RemoveHook(this);
 	}
 }
 
-void FireGrapplingHook(entity actor)
+void FireGrapplingHook(entity actor, .entity weaponentity)
 {
-	entity missile;
-	vector org;
-	vector vs;
-
 	if(forbidWeaponUse(actor)) return;
 	if(actor.vehicle) return;
 
 	makevectors(actor.v_angle);
 
-	int s = W_GetGunAlignment(actor);
-	vs = hook_shotorigin[s];
+	int s = W_GunAlign(actor.(weaponentity), STAT(GUNALIGN, actor)) - 1;
+	vector vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
 	sound (actor, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
-	org = actor.origin + actor.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
+	vector org = actor.origin + actor.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
 	tracebox(actor.origin + actor.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, actor);
 	org = trace_endpos;
 
 	Send_Effect(EFFECT_HOOK_MUZZLEFLASH, org, '0 0 0', 1);
 
-	missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.owner = missile.realowner = actor;
-	actor.hook = missile;
+	actor.(weaponentity).hook = missile;
+	missile.weaponentity_fld = weaponentity;
 	missile.reset = GrapplingHookReset;
 	missile.classname = "grapplinghook";
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 
-	missile.movetype = ((autocvar_g_balance_grapplehook_gravity) ? MOVETYPE_TOSS : MOVETYPE_FLY);
+	set_movetype(missile, ((autocvar_g_balance_grapplehook_gravity) ? MOVETYPE_TOSS : MOVETYPE_FLY));
 	PROJECTILE_MAKETRIGGER(missile);
 
 	//setmodel (missile, MDL_HOOK); // precision set below
@@ -396,6 +417,8 @@ void FireGrapplingHook(entity actor)
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
 	missile.damagedbycontents = (autocvar_g_balance_grapplehook_damagedbycontents);
+	if(missile.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, missile);
 
 	missile.hook_start = missile.hook_end = missile.origin;
 

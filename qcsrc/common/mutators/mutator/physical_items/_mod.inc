@@ -1,2 +1,4 @@
 // generated file; do not modify
-#include <common/mutators/mutator/physical_items/physical_items.qc>
+#ifdef SVQC
+    #include <common/mutators/mutator/physical_items/sv_physical_items.qc>
+#endif

@@ -1,3 +1,4 @@
+#include "ps.qh"
 REGISTER_MINIGAME(ps, "Peg Solitaire");
 
 const float PS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board
@@ -139,7 +140,7 @@ bool ps_move_piece(entity minigame, entity piece, string pos, int leti, int numb
 		return false;
 
 	if(middle.netname) { strunzone(middle.netname); }
-	remove(middle);
+	delete(middle);
 
 	if(piece.netname) { strunzone(piece.netname); }
 	piece.netname = strzone(pos);
@@ -232,7 +233,7 @@ int ps_server_event(entity minigame, string event, ...)
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}
@@ -429,7 +430,7 @@ void ps_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void ps_hud_status(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);

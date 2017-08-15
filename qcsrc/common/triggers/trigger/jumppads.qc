@@ -1,3 +1,4 @@
+#include "jumppads.qh"
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
 #include "jumppads.qh"
@@ -129,24 +130,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	return sdir * vs + '0 0 1' * vz;
 }
 
-void trigger_push_touch(entity this)
+bool jumppad_push(entity this, entity targ)
 {
-	if (this.active == ACTIVE_NOT)
-		return;
-
-	if (!isPushable(other))
-		return;
-
-	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, other)))
-			return;
-
-	EXACTTRIGGER_TOUCH;
+	if (!isPushable(targ))
+		return false;
 
 	if(this.enemy)
 	{
-		other.velocity = trigger_push_calculatevelocity(other.origin, this.enemy, this.height);
-		other.move_velocity = other.velocity;
+		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height);
 	}
 	else if(this.target && this.target != "")
 	{
@@ -155,112 +146,121 @@ void trigger_push_touch(entity this)
 		for(e = NULL; (e = find(e, targetname, this.target)); )
 		{
 			if(e.cnt)
-				RandomSelection_Add(e, 0, string_null, e.cnt, 1);
+				RandomSelection_AddEnt(e, e.cnt, 1);
 			else
-				RandomSelection_Add(e, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(e, 1, 1);
 		}
-		other.velocity = trigger_push_calculatevelocity(other.origin, RandomSelection_chosen_ent, this.height);
-		other.move_velocity = other.velocity;
+		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height);
 	}
 	else
 	{
-		other.velocity = this.movedir;
-		other.move_velocity = other.velocity;
+		targ.velocity = this.movedir;
 	}
 
-#ifdef SVQC
-	UNSET_ONGROUND(other);
-#elif defined(CSQC)
-	other.move_flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(targ);
 
-	if (other.flags & FL_PROJECTILE)
+#ifdef CSQC
+	if (targ.flags & FL_PROJECTILE)
 	{
-		other.move_angles = vectoangles (other.move_velocity);
-		switch(other.move_movetype)
+		targ.angles = vectoangles (targ.velocity);
+		switch(targ.move_movetype)
 		{
 			case MOVETYPE_FLY:
-				other.move_movetype = MOVETYPE_TOSS;
-				other.gravity = 1;
+				set_movetype(targ, MOVETYPE_TOSS);
+				targ.gravity = 1;
 				break;
 			case MOVETYPE_BOUNCEMISSILE:
-				other.move_movetype = MOVETYPE_BOUNCE;
-				other.gravity = 1;
+				set_movetype(targ, MOVETYPE_BOUNCE);
+				targ.gravity = 1;
 				break;
 		}
 	}
 #endif
 
 #ifdef SVQC
-	if (IS_PLAYER(other))
+	if (IS_PLAYER(targ))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
-		other.oldvelocity = other.velocity;
+		targ.oldvelocity = targ.velocity;
 
 		if(this.pushltime < time)  // prevent "snorring" sound when a player hits the jumppad more than once
 		{
 			// flash when activated
-			Send_Effect(EFFECT_JUMPPAD, other.origin, other.velocity, 1);
-			_sound (other, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
+			_sound (targ, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 			this.pushltime = time + 0.2;
 		}
-		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
+		if(IS_REAL_CLIENT(targ) || IS_BOT_CLIENT(targ))
 		{
 			bool found = false;
-			for(int i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
-				if(other.(jumppadsused[i]) == this)
+			for(int i = 0; i < targ.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
+				if(targ.(jumppadsused[i]) == this)
 					found = true;
 			if(!found)
 			{
-				other.(jumppadsused[other.jumppadcount % NUM_JUMPPADSUSED]) = this;
-				other.jumppadcount = other.jumppadcount + 1;
+				targ.(jumppadsused[targ.jumppadcount % NUM_JUMPPADSUSED]) = this;
+				targ.jumppadcount = targ.jumppadcount + 1;
 			}
 
-			if(IS_REAL_CLIENT(other))
+			if(IS_REAL_CLIENT(targ))
 			{
 				if(this.message)
-					centerprint(other, this.message);
+					centerprint(targ, this.message);
 			}
 			else
-				other.lastteleporttime = time;
+				targ.lastteleporttime = time;
 
-			if (!IS_DEAD(other))
-				animdecide_setaction(other, ANIMACTION_JUMP, true);
+			if (!IS_DEAD(targ))
+				animdecide_setaction(targ, ANIMACTION_JUMP, true);
 		}
 		else
-			other.jumppadcount = true;
+			targ.jumppadcount = true;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
-		other.pushltime = 0;
-		other.istypefrag = 0;
+		targ.pushltime = 0;
+		targ.istypefrag = 0;
 	}
 
 	if(this.enemy.target)
-		SUB_UseTargets(this.enemy, other, other); // TODO: do we need other as trigger too?
+		SUB_UseTargets(this.enemy, targ, this);
 
-	if (other.flags & FL_PROJECTILE)
+	if (targ.flags & FL_PROJECTILE)
 	{
-		other.angles = vectoangles (other.velocity);
-		switch(other.movetype)
+		targ.angles = vectoangles (targ.velocity);
+		targ.com_phys_gravity_factor = 1;
+		switch(targ.move_movetype)
 		{
 			case MOVETYPE_FLY:
-				other.movetype = MOVETYPE_TOSS;
-				other.gravity = 1;
+				set_movetype(targ, MOVETYPE_TOSS);
+				targ.gravity = 1;
 				break;
 			case MOVETYPE_BOUNCEMISSILE:
-				other.movetype = MOVETYPE_BOUNCE;
-				other.gravity = 1;
+				set_movetype(targ, MOVETYPE_BOUNCE);
+				targ.gravity = 1;
 				break;
 		}
-		UpdateCSQCProjectile(other);
+		UpdateCSQCProjectile(targ);
 	}
+#endif
 
-	/*if (other.flags & FL_ITEM)
-	{
-		ItemUpdate(other);
-		other.SendFlags |= ISF_DROP;
-	}*/
+	return true;
+}
 
-	if (this.spawnflags & PUSH_ONCE)
+void trigger_push_touch(entity this, entity toucher)
+{
+	if (this.active == ACTIVE_NOT)
+		return;
+
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, toucher)))
+			return;
+
+	EXACTTRIGGER_TOUCH(this, toucher);
+
+	noref bool success = jumppad_push(this, toucher);
+
+#ifdef SVQC
+	if (success && (this.spawnflags & PUSH_ONCE))
 	{
 		settouch(this, func_null);
 		setthink(this, SUB_Remove);
@@ -275,28 +275,25 @@ void trigger_push_updatelink(entity this);
 #endif
 void trigger_push_findtarget(entity this)
 {
-	entity t;
-	vector org;
-
 	// first calculate a typical start point for the jump
-	org = (this.absmin + this.absmax) * 0.5;
-	org_z = this.absmax.z - STAT(PL_MIN, NULL).z;
+	vector org = (this.absmin + this.absmax) * 0.5;
+	org.z = this.absmax.z - PL_MIN_CONST.z;
 
 	if (this.target)
 	{
-		float n = 0;
-		for(t = NULL; (t = find(t, targetname, this.target)); )
+		int n = 0;
+		for(entity t = NULL; (t = find(t, targetname, this.target)); )
 		{
 			++n;
 #ifdef SVQC
 			entity e = spawn();
 			setorigin(e, org);
-			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
 			tracetoss(e, e);
-			if(e.movetype == MOVETYPE_NONE)
+			if(e.move_movetype == MOVETYPE_NONE)
 				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
-			remove(e);
+			delete(e);
 #endif
 		}
 
@@ -324,14 +321,13 @@ void trigger_push_findtarget(entity this)
 	{
 		entity e = spawn();
 		setorigin(e, org);
-		setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 		e.velocity = this.movedir;
 		tracetoss(e, e);
 		waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
-		remove(e);
+		delete(e);
 	}
 
-	trigger_push_link(this);
 	defer(this, 0.1, trigger_push_updatelink);
 #endif
 }
@@ -396,6 +392,8 @@ spawnfunc(trigger_push)
 		this.noise = "misc/jumppad.wav";
 	precache_sound (this.noise);
 
+	trigger_push_link(this); // link it now
+
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }
@@ -418,6 +416,14 @@ bool target_push_send(entity this, entity to, float sf)
 	return true;
 }
 
+void target_push_use(entity this, entity actor, entity trigger)
+{
+	if(trigger.classname == "trigger_push" || trigger == this)
+		return; // WTF, why is this a thing
+
+	jumppad_push(this, actor);
+}
+
 void target_push_link(entity this)
 {
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
@@ -432,7 +438,18 @@ void target_push_init(entity this)
 	target_push_link(this);
 }
 
-spawnfunc(target_push) { target_push_init(this); }
+void target_push_init2(entity this)
+{
+	if(this.target && this.target != "") // we have an old style pusher!
+	{
+		InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
+		this.use = target_push_use;
+	}
+
+	target_push_init(this); // normal push target behaviour can be combined with a legacy pusher?
+}
+
+spawnfunc(target_push) { target_push_init2(this); }
 spawnfunc(info_notnull) { target_push_init(this); }
 spawnfunc(target_position) { target_push_init(this); }
 
@@ -463,9 +480,9 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 
 void target_push_remove(entity this)
 {
-	if(this.classname)
-		strunzone(this.classname);
-	this.classname = string_null;
+	//if(this.classname)
+		//strunzone(this.classname);
+	//this.classname = string_null;
 
 	if(this.targetname)
 		strunzone(this.targetname);

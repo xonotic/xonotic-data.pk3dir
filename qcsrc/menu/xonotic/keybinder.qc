@@ -1,6 +1,6 @@
 #include "keybinder.qh"
 
-#include <common/weapons/all.qh>
+#include <common/weapons/_all.qh>
 .int flags;
 
 #include "button.qh"
@@ -40,28 +40,29 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+fire"                                 , _("primary fire"));
 	KEYBIND_DEF("+fire2"                                , _("secondary fire"));
 	KEYBIND_DEF(""                                      , "");
-	KEYBIND_DEF(""                                      , _("Weapon switching"));
-	KEYBIND_DEF("weapprev"                              , _("previous"));
-	KEYBIND_DEF("weapnext"                              , _("next"));
-	KEYBIND_DEF("weaplast"                              , _("previously used"));
-	KEYBIND_DEF("weapbest"                              , _("best"));
+	KEYBIND_DEF(""                                      , _("Weapons"));
+	KEYBIND_DEF("weapprev"                              , CTX(_("WEAPON^previous")));
+	KEYBIND_DEF("weapnext"                              , CTX(_("WEAPON^next")));
+	KEYBIND_DEF("weaplast"                              , CTX(_("WEAPON^previously used")));
+	KEYBIND_DEF("weapbest"                              , CTX(_("WEAPON^best")));
 	KEYBIND_DEF("reload"                                , _("reload"));
+	KEYBIND_DEF("dropweapon"                            , _("drop weapon / throw nade"));
 
 	int i;
 
 	#define ADD_TO_W_LIST(pred) \
-		FOREACH(Weapons, it != WEP_Null, LAMBDA( \
+		FOREACH(Weapons, it != WEP_Null, { \
 			if (it.impulse != imp) continue; \
 			if (!(pred)) continue; \
 			w_list = strcat(w_list, it.m_name, " / "); \
-		))
+		})
 
 	for(int imp = 1; imp <= 9; ++imp)
 	{
         string w_list = "";
-		ADD_TO_W_LIST(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_TYPE_OTHER) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON));
-		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_SUPERWEAPON) && !(it.spawnflags & WEP_TYPE_OTHER) && !(it.spawnflags & WEP_FLAG_HIDDEN));
-		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_TYPE_OTHER) && !(it.spawnflags & WEP_FLAG_HIDDEN));
+		ADD_TO_W_LIST(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON));
+		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_SUPERWEAPON) && !(it.spawnflags & WEP_FLAG_HIDDEN));
+		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_FLAG_HIDDEN));
 		if(w_list)
 			KEYBIND_DEF(strcat("weapon_group_", itos(imp)), substring(w_list, 0, -4));
 		if(imp == 0)
@@ -78,6 +79,8 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("+showscores"                           , _("show scores"));
 	KEYBIND_DEF("screenshot"                            , _("screen shot"));
 	KEYBIND_DEF("+hud_panel_radar_maximized"            , _("maximize radar"));
+	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
+	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("Communicate"));
 	KEYBIND_DEF("messagemode"                           , _("public chat"));
@@ -97,12 +100,12 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
 	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
-	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
-	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
-	KEYBIND_DEF("dropweapon"                            , _("drop weapon"));
 	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Misc"));
+	KEYBIND_DEF("quickmenu"                             , _("quick menu"));
+	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
 	KEYBIND_DEF("+button8"                              , _("drag object"));
-	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
 	KEYBIND_DEF(""                                      , "");
 	KEYBIND_DEF(""                                      , _("User defined"));
 

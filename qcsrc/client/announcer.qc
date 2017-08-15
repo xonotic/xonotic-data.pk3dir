@@ -24,7 +24,7 @@ void Announcer_Countdown(entity this)
 	if(roundstarttime == -1)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
-		remove(this);
+		delete(this);
 		announcer_countdown = NULL;
 		return;
 	}
@@ -40,7 +40,7 @@ void Announcer_Countdown(entity this)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
-		remove(this);
+		delete(this);
 		announcer_countdown = NULL;
 		return;
 	}
@@ -58,7 +58,7 @@ void Announcer_Countdown(entity this)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
-			if(annce_num != NULL)		
+			if(annce_num != NULL)
 				Local_Notification(MSG_ANNCE, annce_num);
 		}
 
@@ -87,7 +87,7 @@ void Announcer_Gamestart()
 			centerprint_kill(ORDINAL(CPID_ROUND));
 			if(announcer_countdown)
 			{
-				remove(announcer_countdown);
+				delete(announcer_countdown);
 				announcer_countdown = NULL;
 			}
 		}

@@ -1,5 +1,5 @@
-#ifndef GENERATOR_H
-#define GENERATOR_H
+#pragma once
+
 const vector GENERATOR_MIN = '-52 -52 -14';
 const vector GENERATOR_MAX = '52 52 75';
 
@@ -7,4 +7,3 @@ const int GSF_STATUS = 4;
 const int GSF_SETUP = 8;
 
 bool generator_send(entity this, entity to, int sf);
-#endif

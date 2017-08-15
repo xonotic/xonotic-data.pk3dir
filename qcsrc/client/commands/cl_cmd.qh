@@ -1,7 +1,7 @@
 #pragma once
 
-void Cmd_HUD_SetFields(int);
-void Cmd_HUD_Help();
+void Cmd_Scoreboard_SetFields(int);
+void Cmd_Scoreboard_Help();
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void LocalCommand_macro_write_aliases(int fh);

@@ -1,5 +1,4 @@
-#ifndef TRIGGERS_H
-#define TRIGGERS_H
+#pragma once
 
 const float SF_TRIGGER_INIT = 1;
 const float SF_TRIGGER_UPDATE = 2;
@@ -28,7 +27,11 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 
 void target_voicescript_next(entity pl);
 void target_voicescript_clear(entity pl);
+
+void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger);
 #endif
+
+.float sub_target_used;
 
 .float volume, atten;
 
@@ -49,6 +52,4 @@ const int ACTIVE_ACTIVE 	= 1;
 const int ACTIVE_IDLE 		= 2;
 const int ACTIVE_BUSY 		= 2;
 const int ACTIVE_TOGGLE		= 3;
-#endif
-
 #endif

@@ -1,5 +1,4 @@
-#ifndef MODELS_ALL_H
-#define MODELS_ALL_H
+#pragma once
 
 #include "model.qh"
 
@@ -22,5 +21,3 @@ PRECACHE(Models) {
 
 MODEL(Null, "null");
 #include "all.inc"
-
-#endif

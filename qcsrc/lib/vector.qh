@@ -25,6 +25,7 @@ noref vector _dotproduct_a, _dotproduct_b;
 #if 1
 #define cross(a, b) ((a) >< (b))
 #else
+ERASEABLE
 vector cross(vector a, vector b)
 {
 	return
@@ -34,10 +35,18 @@ vector cross(vector a, vector b)
 }
 #endif
 
+noref vector _vmul_a, _vmul_b;
+#define vmul(a, b) \
+    (_vmul_a = (a), _vmul_b = (b), \
+	  '1 0 0' * (_vmul_a.x * _vmul_b.x) \
+	+ '0 1 0' * (_vmul_a.y * _vmul_b.y) \
+	+ '0 0 1' * (_vmul_a.z * _vmul_b.z))
+
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';
 const vector eZ = '0 0 1';
 
+ERASEABLE
 vector randompos(vector m1, vector m2)
 {
 	vector v;
@@ -48,16 +57,19 @@ vector randompos(vector m1, vector m2)
 	return v;
 }
 
+ERASEABLE
 float vlen_maxnorm2d(vector v)
 {
 	return max(v.x, v.y, -v.x, -v.y);
 }
 
+ERASEABLE
 float vlen_minnorm2d(vector v)
 {
 	return min(max(v.x, -v.x), max(v.y, -v.y));
 }
 
+ERASEABLE
 float dist_point_line(vector p, vector l0, vector ldir)
 {
 	ldir = normalize(ldir);
@@ -70,9 +82,11 @@ float dist_point_line(vector p, vector l0, vector ldir)
 }
 
 /** requires that m2>m1 in all coordinates, and that m4>m3 */
+ERASEABLE
 float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z; }
 
 /** requires the same as boxesoverlap, but is a stronger condition */
+ERASEABLE
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z; }
 
 #define PITCH(v) ((v).x)
@@ -86,6 +100,10 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 	up = v_up; \
 } MACRO_END
 
+//pseudo prototypes:
+// vector vec2(vector v); // returns a vector with just the x and y components of the given vector
+// vector vec2(float x, float y); // returns a vector with the given x and y components
+
 noref vector _vec2;
 #define vec2(...) EVAL(OVERLOAD(vec2, __VA_ARGS__))
 #define vec2_1(v) (_vec2 = (v), _vec2.z = 0, _vec2)
@@ -94,13 +112,11 @@ noref vector _vec2;
 noref vector _vec3;
 #define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
 
-vector rotate(vector v, float a)
+ERASEABLE
+vector Rotate(vector v, float a)
 {
 	float a_sin = sin(a), a_cos = cos(a);
-	vector r = '0 0 0';
-	r.x =      v.x * a_cos + v.y * a_sin;
-	r.y = -1 * v.x * a_sin + v.y * a_cos;
-	return r;
+	return vec2(v.x * a_cos + v.y * a_sin, -v.x * a_sin + v.y * a_cos);
 }
 
 noref vector _yinvert;
@@ -111,12 +127,35 @@ noref vector _yinvert;
  * @param norm the normalized normal
  * @returns dir reflected by norm
  */
+ERASEABLE
 vector reflect(vector dir, vector norm)
 {
 	return dir - 2 * (dir * norm) * norm;
 }
 
-#ifndef MENUQC
+/**
+ * clip vel along the plane defined by norm (assuming 0 distance away), bounciness determined by bounce 0..1
+ */
+ERASEABLE
+vector vec_reflect(vector vel, vector norm, float bounce)
+{
+	return vel - (1 + bounce) * (vel * norm) * norm;
+}
+
+ERASEABLE
+vector vec_epsilon(vector this, float eps)
+{
+	if (this.x > -eps && this.x < eps) this.x = 0;
+	if (this.y > -eps && this.y < eps) this.y = 0;
+	if (this.z > -eps && this.z < eps) this.z = 0;
+	return this;
+}
+
+#define ClipVelocity(in, normal, out, overbounce) \
+	(out = vec_epsilon(vec_reflect(in, normal, (overbounce) - 1), 0.1))
+
+#ifdef GAMEQC
+	ERASEABLE
 	vector get_corner_position(entity box, int corner)
 	{
 		switch (corner)
@@ -133,15 +172,16 @@ vector reflect(vector dir, vector norm)
 		}
 	}
 
+	ERASEABLE
 	vector NearestPointOnBox(entity box, vector org)
 	{
 		vector m1 = box.mins + box.origin;
 		vector m2 = box.maxs + box.origin;
 
-		vector ret;
-		ret.x = bound(m1.x, org.x, m2.x);
-		ret.y = bound(m1.y, org.y, m2.y);
-		ret.z = bound(m1.z, org.z, m2.z);
-		return ret;
+		return vec3(
+			bound(m1.x, org.x, m2.x),
+			bound(m1.y, org.y, m2.y),
+			bound(m1.z, org.z, m2.z)
+		);
 	}
 #endif

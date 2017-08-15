@@ -1,7 +1,5 @@
 #include "mlrs_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 SOUND(MLRSTurretAttack_FIRE, W_Sound("electro_fire"));
 METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -11,7 +9,7 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, .entity we
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(machinegun, sustained_refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, SND_MLRSTurretAttack_FIRE, CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MLRSTurretAttack_FIRE, CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -25,7 +23,5 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, .entity we
         te_explosion (missile.origin);
     }
 }
-
-#endif
 
 #endif

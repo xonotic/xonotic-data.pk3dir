@@ -4,7 +4,7 @@
 .entity tag_entity;
 #endif
 
-#ifndef MENUQC
+#ifdef GAMEQC
 .bool debug;
 .int sv_entnum;
 REGISTER_NET_TEMP(net_debug)
@@ -47,7 +47,8 @@ REGISTER_NET_TEMP(net_debug)
 	}
 #endif
 
-#ifndef MENUQC
+#if ENABLE_DEBUGDRAW
+#ifdef GAMEQC
 /**
  * 0: off
  * 1: on
@@ -100,7 +101,7 @@ bool autocvar_debugdraw;
 //						if (it.entnum) break;
 //						if (it.drawmask) break;
 //						if (it.predraw) break;
-//						if (it.movetype) break;
+//						if (it.move_movetype) break;
 						if (it.solid) break;
 //						if (it.origin) break;
 //						if (it.oldorigin) break;
@@ -182,6 +183,7 @@ bool autocvar_debugdraw;
 		}
 	}
 #endif
+#endif
 
 GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 {
@@ -223,6 +225,41 @@ GENERIC_COMMAND(version, "Print the current version")
 	}
 }
 
+#ifdef CSQC
+void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
+#endif
+GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string s = "";
+			int h = buf_create();
+			buf_cvarlist(h, "", "_"); // exclude all _ cvars as they are temporary
+			int n = buf_getsize(h);
+			for (int i = 0; i < n; ++i) {
+				string k = bufstr_get(h, i);
+				string v = cvar_string(k);
+				string d = cvar_defstring(k);
+				if (v == d)
+					continue;
+				s = strcat(s, k, " \"", v, "\" // \"", d, "\"\n");
+			}
+			buf_del(h);
+			LOG_INFO(s);
+			return;
+		}
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges"));
+			return;
+		}
+	}
+}
+
+#if ENABLE_DEBUGTRACE
 REGISTER_STAT(TRACE_ENT, int)
 #ifdef SVQC
 bool autocvar_debugtrace;
@@ -246,7 +283,7 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
 		MAKEVECTORS(makevectors, it.v_angle, forward, right, up);
 		vector pos = it.origin + it.view_ofs;
-		traceline(pos, pos + forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, it);
+		traceline(pos, pos + forward * max_shot_distance, MOVE_NORMAL, it);
 		FOREACH_ENTITY(true, {
 		    it.solid = it.solid_prev;
             it.solid_prev = 0;
@@ -275,7 +312,9 @@ STATIC_INIT(TRACE_ENT)
 {
 	entity e = TRACE_ENT = new_pure(TRACE_ENT);
 	e.draw2d = Trace_draw2d;
+	IL_PUSH(g_drawables_2d, e);
 }
+#endif
 #endif
 
 GENERIC_COMMAND(find, "Search through entities for matching classname")
@@ -284,7 +323,14 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
+			int entcnt = 0;
+			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
+			{
+				LOG_INFOF("%i (%s)\n", it, it.classname);
+				++entcnt;
+			});
+			if(entcnt)
+				LOG_INFOF("Found %d entities\n", entcnt);
 			return;
 		}
 

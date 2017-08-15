@@ -76,7 +76,7 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 	net_eff.eent_eff_trail = eff.eent_eff_trail;
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), Net_Write_Effect(net_eff, it, 0));
-	remove(net_eff);
+	delete(net_eff);
 }
 
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
@@ -91,4 +91,6 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 }
 #endif
 
-#include "effectinfo.qc"
+#if ENABLE_EFFECTINFO
+	#include "effectinfo.qc"
+#endif

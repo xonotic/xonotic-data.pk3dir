@@ -1,3 +1,4 @@
+#include "pendulum.qh"
 #ifdef SVQC
 .float freq;
 void func_pendulum_controller_think(entity this)
@@ -66,8 +67,8 @@ spawnfunc(func_pendulum)
 	controller.owner = this;
 	controller.nextthink = time + 1;
 	setthink(controller, func_pendulum_controller_think);
-	this.nextthink = this.SUB_LTIME + 999999999;
-	SUB_THINK(this, SUB_NullThink); // for PushMove
+	this.nextthink = this.ltime + 999999999;
+	setthink(this, SUB_NullThink); // for PushMove
 
 	//this.effects |= EF_LOWPRECISION;
 

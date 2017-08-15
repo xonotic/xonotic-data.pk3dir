@@ -1,5 +1,4 @@
-#ifndef TARGET_MUSIC_H
-#define TARGET_MUSIC_H
+#pragma once
 
 .float lifetime;
 
@@ -24,6 +23,4 @@ void Ent_TriggerMusic_Remove(entity this);
 
 #elif defined(SVQC)
 void target_music_kill();
-#endif
-
 #endif

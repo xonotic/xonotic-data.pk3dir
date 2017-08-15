@@ -1,6 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
-cd "$(dirname "$0")"
+cd ${0%/*}
+
+# This script attempts to build the codebase in every possible header configuration,
+# to check that all files #include what they need, so that we can eventually move away
+# from a unity build and into incremental compilation.
+
+# If these files exist from previous compilation, `./all compile` will stop
+# detecting changes after running this script so delete them to trigger
+# a recompile next time.
+if [ -f ../../csprogs.dat ]; then
+    rm ../../csprogs.dat
+fi
+
+if [ -f ../../menu.dat ]; then
+    rm ../../menu.dat
+fi
+
+if [ -f ../../progs.dat ]; then
+    rm ../../progs.dat
+fi
 
 WORKDIR=../.tmp
 
@@ -9,8 +28,11 @@ CPP="cc -xc -E"
 
 declare -a QCCDEFS=(
     -DNDEBUG=1
+    -DXONOTIC=1
     -DWATERMARK="\"$(git describe --tags --dirty='~')\""
-    -DDEBUGPATHING=0
+    -DENABLE_EFFECTINFO=0
+    -DENABLE_DEBUGDRAW=0
+    -DENABLE_DEBUGTRACE=0
 )
 QCCDEFS="${QCCDEFS[@]}"
 
@@ -34,23 +56,24 @@ QCCFLAGS="${QCCFLAGS[@]} ${NOWARN[@]}"
 cd ..
 
 function check1() {
-    declare -l base="${1}"
-    MODE=${2}
-    declare -l file="${3}"
+    declare -l prog="${1}"
+    declare -l file="${2}"
+    MODE=${prog}
+    includes="-include lib/_all.inc"
+    [ -f ${prog}/_all.qh ] && includes="${includes} -include ${prog}/_all.qh"
     qpp ${file} test.dat \
-            -include lib/_all.inc -include ${base}/_all.qh \
-            -I. ${QCCIDENT} ${QCCDEFS} -D${MODE} > ${WORKDIR}/${MODE}.qc
-    qcc ${QCCFLAGS} -o ../${WORKDIR}/test.dat ../${WORKDIR}/${MODE}.qc >/dev/null
+            ${includes} \
+            -I. ${QCCIDENT} ${QCCDEFS} > ${WORKDIR}/${prog}.qc
+    qcc ${QCCFLAGS} -o ../${WORKDIR}/test.dat ../${WORKDIR}/${prog}.qc >/dev/null
 }
 
 function check() {
-    declare -l base="${1}"
-    MODE=${2}
-    find ${base} -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
-        check1 ${base} ${MODE} ${file}
+    declare -l prog="${1}"
+    find ${prog} -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
+        check1 ${prog} ${file}
     done
 }
 
-check client CSQC
-check server SVQC
-check menu MENUQC
+check client
+check server
+check menu

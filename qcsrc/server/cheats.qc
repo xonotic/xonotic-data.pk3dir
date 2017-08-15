@@ -1,10 +1,14 @@
 #include "cheats.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
+
 #include "g_damage.qh"
 #include "race.qh"
 #include "../common/triggers/teleporters.qh"
 
-#include "mutators/all.qh"
+#include "mutators/_mod.qh"
 
 #include "weapons/tracing.qh"
 
@@ -14,9 +18,9 @@
 
 #include <common/physics/player.qh>
 
-#include "../common/monsters/all.qh"
+#include "../common/monsters/_mod.qh"
 
-#include "../common/weapons/all.qh"
+#include <common/weapons/_all.qh>
 
 #include "../common/triggers/subs.qh"
 
@@ -77,13 +81,13 @@ float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat get
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", this.netname, i);
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", playername(this, false), i);
 	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", this.netname, argv(0));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", playername(this, false), argv(0));
 	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", this.netname, fr);
+		bprintf("Player %s^7 tried to use cheat frame %d\n", playername(this, false), fr);
 	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", this.netname);
+		bprintf("Player %s^7 tried to use an unknown cheat\n", playername(this, false));
 
 	return 0;
 }
@@ -153,7 +157,7 @@ float CheatImpulse(entity this, int imp)
 			this.personal.ammo_plasma = this.ammo_plasma;
 			this.personal.ammo_shells = this.ammo_shells;
 			this.personal.ammo_fuel = this.ammo_fuel;
-			this.personal.health = this.health;
+			this.personal.health = max(1, this.health);
 			this.personal.armorvalue = this.armorvalue;
 			this.personal.weapons = this.weapons;
 			this.personal.items = this.items;
@@ -164,7 +168,7 @@ float CheatImpulse(entity this, int imp)
 			this.personal.strength_finished = this.strength_finished;
 			this.personal.invincible_finished = this.invincible_finished;
 			this.personal.teleport_time = time;
-			break; // this part itthis doesn't cheat, so let's not count this
+			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			makevectors (this.v_angle);
@@ -185,7 +189,8 @@ float CheatImpulse(entity this, int imp)
 			CheatCommand(this, tokenize_console("give all"));
 			break; // already counted as cheat
 		case CHIMPULSE_SPEEDRUN.impulse:
-			IS_CHEAT(this, imp, 0, 0);
+			if(!autocvar_g_allow_checkpoints)
+				IS_CHEAT(this, imp, 0, 0);
 			if(this.personal)
 			{
 				this.speedrunning = true;
@@ -222,7 +227,8 @@ float CheatImpulse(entity this, int imp)
 				this.strength_finished = time + this.personal.strength_finished - this.personal.teleport_time;
 				this.invincible_finished = time + this.personal.invincible_finished - this.personal.teleport_time;
 
-				DID_CHEAT();
+				if(!autocvar_g_allow_checkpoints)
+					DID_CHEAT();
 				break;
 			}
 			if(IS_DEAD(this))
@@ -232,7 +238,7 @@ float CheatImpulse(entity this, int imp)
 			break;
 		case CHIMPULSE_TELEPORT.impulse:
 			IS_CHEAT(this, imp, 0, 0);
-			if(this.movetype == MOVETYPE_NOCLIP)
+			if(this.move_movetype == MOVETYPE_NOCLIP)
 			{
 				e = find(NULL, classname, "info_autoscreenshot");
 				if(e)
@@ -240,7 +246,7 @@ float CheatImpulse(entity this, int imp)
 					sprint(this, "Emergency teleport used info_autoscreenshot location\n");
 					setorigin(this, e.origin);
 					this.angles = e.angles;
-					remove(e);
+					delete(e);
 					// should we? this.angles_x = -this.angles_x;
 					this.fixangle = true;
 					this.velocity = '0 0 0';
@@ -262,7 +268,7 @@ float CheatImpulse(entity this, int imp)
 		case CHIMPULSE_R00T.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			RandomSelection_Init();
-			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), { RandomSelection_AddEnt(it, 1, 1); });
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else
@@ -274,7 +280,7 @@ float CheatImpulse(entity this, int imp)
 			e2 = spawn();
 			setorigin(e2, e.origin);
 			RadiusDamage(e2, this, 1000, 0, 128, NULL, NULL, 500, DEATH_CHEAT.m_id, e);
-			remove(e2);
+			delete(e2);
 
 			LOG_INFO("404 Sportsmanship not found.\n");
 			DID_CHEAT();
@@ -323,8 +329,8 @@ float CheatCommand(entity this, int argc)
 				// arguments:
 				//   effectname
 				effectnum = _particleeffectnum(argv(1));
-				W_SetupShot(this, false, false, SND_Null, CH_WEAPON_A, 0);
-				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, this);
+				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
+				traceline(w_shotorg, w_shotorg + w_shotdir * max_shot_distance, MOVE_NORMAL, this);
 				__trailparticles(this, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
 				break;
@@ -338,7 +344,7 @@ float CheatCommand(entity this, int argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(this, false, false, SND_Null, CH_WEAPON_A, 0);
+				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, this);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
@@ -364,7 +370,7 @@ float CheatCommand(entity this, int argc)
 						tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_NORMAL, e);
 						if(trace_startsolid)
 						{
-							remove(e);
+							delete(e);
 							sprint(this, "cannot make stuff there (no space)\n");
 						}
 						else
@@ -444,7 +450,7 @@ float CheatCommand(entity this, int argc)
 			e.nextthink = time;
 			e.solid = 0; // nothing special
 			setmodel(e, MDL_MARKER);
-			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+			setsize(e, STAT(PL_MIN, this), STAT(PL_MAX, this));
 			e.skin = 2;
 			if(argc == 3)
 				e.cnt = stof(argv(1));
@@ -475,18 +481,18 @@ float CheatCommand(entity this, int argc)
 			RandomSelection_Init();
 			crosshair_trace(this);
 			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
-				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
+				RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
-				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
+				RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			if(RandomSelection_chosen_ent)
 			{
-				remove(RandomSelection_chosen_ent.killindicator.killindicator);
-				remove(RandomSelection_chosen_ent.killindicator);
+				delete(RandomSelection_chosen_ent.killindicator.killindicator);
+				delete(RandomSelection_chosen_ent.killindicator);
 				if(RandomSelection_chosen_ent.aiment)
-					remove(RandomSelection_chosen_ent.aiment);
+					delete(RandomSelection_chosen_ent.aiment);
 				if(RandomSelection_chosen_ent.enemy)
-					remove(RandomSelection_chosen_ent.enemy);
-				remove(RandomSelection_chosen_ent);
+					delete(RandomSelection_chosen_ent.enemy);
+				delete(RandomSelection_chosen_ent);
 			}
 			DID_CHEAT();
 			break;
@@ -497,9 +503,9 @@ float CheatCommand(entity this, int argc)
 				RandomSelection_Init();
 				crosshair_trace(this);
 				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
-					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
+					RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
-					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
+					RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				if(RandomSelection_chosen_ent)
 				{
 					if(substring(argv(1), 0, 1) == "*")
@@ -604,15 +610,15 @@ float CheatCommand(entity this, int argc)
 		case "drag_clear":
 			IS_CHEAT(this, 0, argc, 0);
 			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
-				remove(e);
+				delete(e);
 			for(entity e = NULL; (e = find(e, classname, "dragbox_corner_1")); )
-				remove(e);
+				delete(e);
 			for(entity e = NULL; (e = find(e, classname, "dragbox_corner_2")); )
-				remove(e);
+				delete(e);
 			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
-				remove(e);
+				delete(e);
 			for(entity e = NULL; (e = find(e, classname, "drag_digit")); )
-				remove(e);
+				delete(e);
 			DID_CHEAT();
 			break;
 		case "god":
@@ -639,29 +645,29 @@ float CheatCommand(entity this, int argc)
 			break;
 		case "noclip":
 			IS_CHEAT(this, 0, argc, 0);
-			if(this.movetype != MOVETYPE_NOCLIP)
+			if(this.move_movetype != MOVETYPE_NOCLIP)
 			{
-				this.movetype = MOVETYPE_NOCLIP;
+				set_movetype(this, MOVETYPE_NOCLIP);
 				sprint(this, "noclip ON\n");
 				DID_CHEAT();
 			}
 			else
 			{
-				this.movetype = MOVETYPE_WALK;
+				set_movetype(this, MOVETYPE_WALK);
 				sprint(this, "noclip OFF\n");
 			}
 			break;
 		case "fly":
 			IS_CHEAT(this, 0, argc, 0);
-			if(this.movetype != MOVETYPE_FLY)
+			if(this.move_movetype != MOVETYPE_FLY)
 			{
-				this.movetype = MOVETYPE_FLY;
+				set_movetype(this, MOVETYPE_FLY);
 				sprint(this, "flymode ON\n");
 				DID_CHEAT();
 			}
 			else
 			{
-				this.movetype = MOVETYPE_WALK;
+				set_movetype(this, MOVETYPE_WALK);
 				sprint(this, "flymode OFF\n");
 			}
 			break;
@@ -675,7 +681,7 @@ float CheatCommand(entity this, int argc)
 			entity e = spawn();
 			e.target = argv(1);
 			SUB_UseTargets(e, this, NULL);
-			remove(e);
+			delete(e);
 			DID_CHEAT();
 			break;
 		case "killtarget":
@@ -683,7 +689,7 @@ float CheatCommand(entity this, int argc)
 			entity e2 = spawn();
 			e2.killtarget = argv(1);
 			SUB_UseTargets(e2, this, NULL);
-			remove(e2);
+			delete(e2);
 			DID_CHEAT();
 			break;
 		case "teleporttotarget":
@@ -695,7 +701,7 @@ float CheatCommand(entity this, int argc)
 			if(!wasfreed(ent))
 			{
 				Simple_TeleportPlayer(ent, this);
-				remove(ent);
+				delete(ent);
 				DID_CHEAT();
 			}
 			break;
@@ -733,7 +739,8 @@ float CheatFrame(entity this)
 			if(this.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
 			{
 				// use cheat dragging if cheats are enabled
-				crosshair_trace_plusvisibletriggers(this);
+				//if(Drag_IsDragging(this))
+					//crosshair_trace_plusvisibletriggers(this);
 				Drag(this, true, true);
 			}
 			else
@@ -777,21 +784,21 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 			{
 				if(PHYS_INPUT_BUTTON_DRAG(this))
 				{
-					if(this.impulse == 10 || this.impulse == 15 || this.impulse == 18)
+					if(CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18)
 					{
 						Drag_MoveForward(this);
-						this.impulse = 0;
+						CS(this).impulse = 0;
 					}
-					else if(this.impulse == 12 || this.impulse == 16 || this.impulse == 19)
+					else if(CS(this).impulse == 12 || CS(this).impulse == 16 || CS(this).impulse == 19)
 					{
 						Drag_MoveBackward(this);
-						this.impulse = 0;
+						CS(this).impulse = 0;
 					}
-					else if(this.impulse >= 1 && this.impulse <= 9)
+					else if(CS(this).impulse >= 1 && CS(this).impulse <= 9)
 					{
-						Drag_SetSpeed(this, this.impulse - 1);
+						Drag_SetSpeed(this, CS(this).impulse - 1);
 					}
-					else if(this.impulse == 14)
+					else if(CS(this).impulse == 14)
 					{
 						Drag_SetSpeed(this, 9);
 					}
@@ -867,9 +874,9 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 {
 	float tagscale;
 
-	draggee.dragmovetype = draggee.movetype;
+	draggee.dragmovetype = draggee.move_movetype;
 	draggee.draggravity = draggee.gravity;
-	draggee.movetype = MOVETYPE_WALK;
+	set_movetype(draggee, MOVETYPE_WALK);
 	draggee.gravity = 0.00001;
 	UNSET_ONGROUND(draggee);
 	draggee.draggedby = dragger;
@@ -879,7 +886,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	dragger.dragdistance = vlen(touchpoint - dragger.origin - dragger.view_ofs);
 	dragger.draglocalangle = draggee.angles.y - dragger.v_angle.y;
 	touchpoint = touchpoint - gettaginfo(draggee, 0);
-	tagscale = pow(vlen(v_forward), -2);
+	tagscale = (vlen(v_forward) ** -2);
 	dragger.draglocalvector_x = touchpoint * v_forward * tagscale;
 	dragger.draglocalvector_y = touchpoint * v_right * tagscale;
 	dragger.draglocalvector_z = touchpoint * v_up * tagscale;
@@ -894,10 +901,10 @@ void Drag_Finish(entity dragger)
 	if(dragger)
 		dragger.dragentity = NULL;
 	draggee.draggedby = NULL;
-	draggee.movetype = draggee.dragmovetype;
+	set_movetype(draggee, draggee.dragmovetype);
 	draggee.gravity = draggee.draggravity;
 
-	switch(draggee.movetype)
+	switch(draggee.move_movetype)
 	{
 		case MOVETYPE_TOSS:
 		case MOVETYPE_WALK:
@@ -912,7 +919,7 @@ void Drag_Finish(entity dragger)
 			break;
 	}
 
-	if((draggee.flags & FL_ITEM) && (vlen(draggee.velocity) < 32))
+	if((draggee.flags & FL_ITEM) && (vdist(draggee.velocity, <, 32)))
 	{
 		draggee.velocity = '0 0 0';
 		SET_ONGROUND(draggee); // floating items are FUN
@@ -961,7 +968,7 @@ void Drag_MoveForward(entity dragger)
 
 void Drag_SetSpeed(entity dragger, float s)
 {
-	dragger.dragspeed = pow(2, s);
+	dragger.dragspeed = (2 ** s);
 }
 
 void Drag_MoveBackward(entity dragger)

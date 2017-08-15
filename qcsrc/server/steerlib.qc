@@ -2,15 +2,17 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
+    #include "pathlib/utility.qh"
 #endif
 
 /**
     Uniform pull towards a point
 **/
-vector steerlib_pull(entity this, vector point)
+#define steerlib_pull(ent,point) normalize(point - (ent).origin)
+/*vector steerlib_pull(entity this, vector point)
 {
     return normalize(point - this.origin);
-}
+}*/
 
 /**
     Uniform push from a point
@@ -143,7 +145,7 @@ vector steerlib_wander(entity this, float range, float tresh, vector oldpoint)
     vector wander_point;
     wander_point = v_forward - oldpoint;
 
-    if (vlen(wander_point) > tresh)
+    if (vdist(wander_point, >, tresh))
         return oldpoint;
 
     range = bound(0,range,1);
@@ -339,50 +341,11 @@ vector steerlib_traceavoid_flat(entity this, float pitch, float length, vector v
     return normalize(leftwish + rightwish + frontwish);
 }
 
-float beamsweep_badpoint(vector point,float waterok)
-{
-    float pc,pc2;
-
-    if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-        return 1;
-
-    pc  = pointcontents(point);
-    pc2 = pointcontents(point - '0 0 1');
-
-    switch(pc)
-    {
-        case CONTENT_SOLID: break;
-        case CONTENT_SLIME: break;
-        case CONTENT_LAVA:  break;
-
-        case CONTENT_SKY:
-            return 1;
-
-        case CONTENT_EMPTY:
-            if (pc2 == CONTENT_SOLID)
-                return 0;
-
-            if (pc2 == CONTENT_WATER)
-                if(waterok)
-                    return 0;
-
-            break;
-
-        case CONTENT_WATER:
-            if(waterok)
-                return 0;
-
-            break;
-    }
-
-    return 1;
-}
-
 //#define BEAMSTEER_VISUAL
 float beamsweep(entity this, vector from, vector dir,float length, float step,float step_up, float step_down)
 {
     float i;
-    vector a,b,u,d;
+    vector a, b, u, d;
 
     u = '0 0 1' * step_up;
     d = '0 0 1' * step_down;
@@ -391,7 +354,7 @@ float beamsweep(entity this, vector from, vector dir,float length, float step,fl
     if(trace_fraction == 1.0)
         return 0;
 
-    if(beamsweep_badpoint(trace_endpos,0))
+    if(!location_isok(trace_endpos, false, false))
         return 0;
 
     a = trace_endpos;
@@ -407,7 +370,7 @@ float beamsweep(entity this, vector from, vector dir,float length, float step,fl
         if(trace_fraction == 1.0)
             return i / length;
 
-        if(beamsweep_badpoint(trace_endpos,0))
+        if(!location_isok(trace_endpos, false, false))
             return i / length;
 #ifdef BEAMSTEER_VISUAL
         te_lightning1(NULL,a+u,b+u);
@@ -464,8 +427,8 @@ vector steerlib_beamsteer(entity this, vector dir, float length, float step, flo
 
     if(bm_left + bm_right < 0.15)
     {
-        vr = normalize((v_forward*-1) + v_right * 0.75);
-        vl = normalize((v_forward*-1) - v_right * 0.75);
+        vr = normalize((v_forward*-1) + v_right * 0.90);
+        vl = normalize((v_forward*-1) - v_right * 0.90);
 
         bm_right = beamsweep(this, this.origin, vr, length, step, step_up, step_down);
         bm_left  = beamsweep(this, this.origin, vl, length, step, step_up, step_down);
@@ -556,12 +519,14 @@ void spawn_flocker(entity this)
     setthink(flocker, flocker_think);
     flocker.nextthink  = time + random() * 5;
     PROJECTILE_MAKETRIGGER(flocker);
-    flocker.movetype   = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(flocker, MOVETYPE_BOUNCEMISSILE);
     flocker.effects    = EF_LOWPRECISION;
     flocker.velocity   = randomvec() * 300;
     flocker.angles     = vectoangles(flocker.velocity);
     flocker.health     = 10;
     flocker.pos1      = normalize(flocker.velocity + randomvec() * 0.1);
+
+    IL_PUSH(g_flockers, flocker);
 
     this.cnt = this.cnt -1;
 
@@ -579,8 +544,7 @@ void flockerspawn_think(entity this)
 void flocker_hunter_think(entity this)
 {
     vector dodgemove,attractmove,newmove;
-    entity e,ee;
-    float d,bd;
+    entity ee;
 
     this.angles_x = this.angles.x * -1;
     makevectors(this.angles);
@@ -597,20 +561,14 @@ void flocker_hunter_think(entity this)
 
     if(!this.enemy)
     {
-        e = findchainfloat(flock_id,this.flock_id);
-        while(e)
+        IL_EACH(g_flockers, it.flock_id == this.flock_id,
         {
-            d = vlen(this.origin - e.origin);
+            if(it == this.owner || it == ee)
+                continue;
 
-            if(e != this.owner)
-            if(e != ee)
-            if(d > bd)
-            {
-                this.enemy = e;
-                bd = d;
-            }
-            e = e.chain;
-        }
+            if(!this.enemy || vlen2(this.origin - it.origin) > vlen2(this.origin - this.enemy.origin))
+                this.enemy = it;
+        });
     }
 
     if(this.enemy)
@@ -623,7 +581,6 @@ void flocker_hunter_think(entity this)
     newmove = dodgemove + attractmove;
     this.velocity = movelib_inertmove_byspeed(this, newmove,1250,0.3,0.7);
     this.velocity = movelib_dragvec(this, 0.01,0.5);
-
 
     this.angles = vectoangles(this.velocity);
     this.nextthink = time + 0.1;
@@ -649,12 +606,15 @@ spawnfunc(flockerspawn)
 
     this.enemy.scale     = 3;
     this.enemy.effects   = EF_LOWPRECISION;
-    this.enemy.movetype  = MOVETYPE_BOUNCEMISSILE;
+    set_movetype(this.enemy, MOVETYPE_BOUNCEMISSILE);
     PROJECTILE_MAKETRIGGER(this.enemy);
     setthink(this.enemy, flocker_hunter_think);
     this.enemy.nextthink = time + 10;
     this.enemy.flock_id  = this.flock_id;
     this.enemy.owner     = this;
+
+    IL_PUSH(g_flockers, this);
+    IL_PUSH(g_flockers, this.enemy);
 }
 #endif
 

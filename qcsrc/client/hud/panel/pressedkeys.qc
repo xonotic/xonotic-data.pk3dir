@@ -1,5 +1,11 @@
 #include "pressedkeys.qh"
-/** Draw pressed keys (#11) */
+
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
+
+// Pressed keys (#11)
+
 void HUD_PressedKeys()
 {
 	if(!autocvar__hud_configure)
@@ -8,7 +14,7 @@ void HUD_PressedKeys()
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
 	}
 
-	HUD_Panel_UpdateCvars();
+	HUD_Panel_LoadCvars();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -17,7 +23,7 @@ void HUD_PressedKeys()
 		HUD_Scale_Enable();
 	else
 		HUD_Scale_Disable();
-	HUD_Panel_DrawBg(1);
+	HUD_Panel_DrawBg();
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -46,8 +52,7 @@ void HUD_PressedKeys()
 		mySize = newSize;
 	}
 
-	vector keysize;
-	keysize = eX * mySize.x * (1/3.0) + eY * mySize.y * (1/(3.0 - !autocvar_hud_panel_pressedkeys_attack));
+	vector keysize = vec2(mySize.x / 3, mySize.y / (3 - !autocvar_hud_panel_pressedkeys_attack));
 	int pressedkeys = STAT(PRESSED_KEYS);
 
 	if(autocvar_hud_panel_pressedkeys_attack)

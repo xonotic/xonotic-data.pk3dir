@@ -8,14 +8,12 @@ float  plib_fvals[8];
 
 float pathlib_expandnode_starf(entity node, vector start, vector goal)
 {
-    vector where,f,r,t;
-    float fc,c;
-    entity nap;
+    float fc;
 
-    where = node.origin;
+    vector where = node.origin;
 
-    f = PLIB_FORWARD * pathlib_gridsize;
-    r = PLIB_RIGHT   * pathlib_gridsize;
+    vector f = PLIB_FORWARD * pathlib_gridsize;
+    vector r = PLIB_RIGHT   * pathlib_gridsize;
 
     // Forward
     plib_points[0] = where + f;
@@ -43,7 +41,7 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
 
     for(int i=0;i < 8; ++i)
     {
-        t = plib_points[i];
+        vector t = plib_points[i];
         fc  = pathlib_heuristic(t,goal) + pathlib_cost(node, t, pathlib_gridsize);
         plib_fvals[i] = fc;
 
@@ -56,13 +54,15 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
     int fc2 = 0;
     for(int i = 0; i < 8; ++i)
     {
-        c = 0;
-        nap = pathlib_nodeatpoint(plib_points[i]);
+        bool c = false;
+        entity nap = pathlib_nodeatpoint(plib_points[i]);
         if(nap)
+        {
             if(nap.owner == openlist)
-                c = 1;
+                c = true;
+        }
         else
-            c = 1;
+            c = true;
 
         if(c)
         if(plib_fvals[i] < fc)
@@ -94,12 +94,12 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
 
 float pathlib_expandnode_star(entity node, vector start, vector goal)
 {
-    vector point, where, f, r;
+    vector point;
 
-    where = node.origin;
+    vector where = node.origin;
 
-    f = PLIB_FORWARD * pathlib_gridsize;
-    r = PLIB_RIGHT   * pathlib_gridsize;
+    vector f = PLIB_FORWARD * pathlib_gridsize;
+    vector r = PLIB_RIGHT   * pathlib_gridsize;
 
     if (node.pathlib_node_edgeflags == pathlib_node_edgeflag_unknown)
         node.pathlib_node_edgeflags = tile_check_plus2(node, node.origin);
@@ -173,12 +173,12 @@ float pathlib_expandnode_star(entity node, vector start, vector goal)
 
 float pathlib_expandnode_octagon(entity node, vector start, vector goal)
 {
-    vector point,where,f,r;
+    vector point;
 
-    where = node.origin;
+    vector where = node.origin;
 
-    f = PLIB_FORWARD * pathlib_gridsize;
-    r = PLIB_RIGHT   * pathlib_gridsize;
+    vector f = PLIB_FORWARD * pathlib_gridsize;
+    vector r = PLIB_RIGHT   * pathlib_gridsize;
 
     // Forward
     point = where + f;

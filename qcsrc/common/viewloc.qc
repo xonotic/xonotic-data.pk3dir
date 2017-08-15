@@ -1,3 +1,4 @@
+#include "viewloc.qh"
 #include "util.qh"
 
 #if defined(CSQC)
@@ -13,12 +14,15 @@ void viewloc_PlayerPhysics(entity this)
 {
 	if(this.viewloc)
 	{
-		vector old_movement = this.movement;
-		this.movement_x = old_movement_y;
-		this.movement_y = 0;
+		if(this.viewloc.goalentity == this.viewloc.enemy)
+			return; // we can't side-scroll in this case
 
-		if(this.movement_x < 0)
-			this.movement_x = -this.movement_x;
+		vector old_movement = PHYS_CS(this).movement;
+		PHYS_CS(this).movement_x = old_movement_y;
+		PHYS_CS(this).movement_y = 0;
+
+		if(PHYS_CS(this).movement_x < 0)
+			PHYS_CS(this).movement_x = -PHYS_CS(this).movement_x;
 
 		vector level_start, level_end;
 		level_start = this.viewloc.enemy.origin;
@@ -27,9 +31,9 @@ void viewloc_PlayerPhysics(entity this)
 		forward = vectoangles(normalize(level_end - level_start));
 		backward = vectoangles(normalize(level_start - level_end));
 
-		if(this.movement_x < 0) // left
+		if(PHYS_CS(this).movement_x < 0) // left
 			this.angles_y = backward_y;
-		if(this.movement_x > 0) // right
+		if(PHYS_CS(this).movement_x > 0) // right
 			this.angles_y = forward_y;
 
 		if(old_movement_x > 0)
@@ -74,6 +78,10 @@ void viewloc_SetTags(entity this)
 }
 
 vector old_camera_angle = '0 0 0';
+bool autocvar_cam_snap_close;
+bool autocvar_cam_track;
+bool autocvar_cam_snap_hard;
+bool autocvar_cam_snap_unlock;
 void viewloc_SetViewLocation()
 {
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
@@ -81,7 +89,8 @@ void viewloc_SetViewLocation()
 	//NOTE: the "cam_" cvars sould probably be changed out with a spawnflag or an entity key. I have it like this for my testing -- Player_2
 	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
 	{
-		vector position_a, position_b, camera_position, camera_angle, forward, backward;
+		bool have_sidescroll = (view.viewloc.enemy != view.viewloc.goalentity);
+		vector position_a, position_b, camera_position, camera_angle = '0 0 0', forward, backward;
 		//vector scratch;
 
 		position_a = view.viewloc.enemy.origin;
@@ -99,20 +108,18 @@ void viewloc_SetViewLocation()
 			camera_position = vec_bounds_in(view.origin, position_a, position_b);
 
 
-		camera_angle = '0 0 0';
-
 		// a tracking camera follows the player when it leaves the world box
-		if (cvar("cam_track")) {
+		if (autocvar_cam_track || !have_sidescroll) {
 			camera_angle = aim_vec (camera_position, view.origin);
 		}
 
 		// hard snap changes the angle as soon as it crosses over the nearest 90 degree mark
-		if (cvar("cam_snap_hard")){
+		if (autocvar_cam_snap_hard){
 			camera_angle = angle_snap_vec(aim_vec(camera_position, view.origin), 90);
 		}
 
 		// tries to avoid snapping unless it *really* needs to
-		if (cvar("cam_snap_close")){
+		if (autocvar_cam_snap_close){
 
 			// like hard snap, but don't snap angles yet.
 			camera_angle = aim_vec(camera_position, view.origin);
@@ -130,15 +137,15 @@ void viewloc_SetViewLocation()
 		}
 
 		//unlocking this allows the camera to look up and down. this also allows a top-down view.
-		if (!cvar("cam_snap_unlock")) {
+		if (!autocvar_cam_snap_unlock) {
 			camera_angle_x = 0;
 			camera_angle_z = 0;
 		}
 
 #if 0
-		LOG_TRACE(vtos(camera_position), "\n");
-		LOG_TRACE(vtos(old_camera_angle), "\n");
-		LOG_TRACE(vtos(camera_angle), "\n");
+		LOG_TRACE(vtos(camera_position));
+		LOG_TRACE(vtos(old_camera_angle));
+		LOG_TRACE(vtos(camera_angle));
 #endif
 
 		freeze_org = getpropertyvec(VF_ORIGIN);
@@ -146,15 +153,18 @@ void viewloc_SetViewLocation()
 		setproperty(VF_ORIGIN, camera_position);
 		setproperty(VF_ANGLES, camera_angle);
 
-		forward = vectoangles(normalize(vec_to_min(position_b, position_a) - vec_to_max(position_b, position_a)));
-		backward = vectoangles(normalize(vec_to_max(position_b, position_a) - vec_to_min(position_b, position_a)));
+		if(have_sidescroll)
+		{
+			forward = vectoangles(normalize(vec_to_min(position_b, position_a) - vec_to_max(position_b, position_a)));
+			backward = vectoangles(normalize(vec_to_max(position_b, position_a) - vec_to_min(position_b, position_a)));
 
-		if(input_movevalues_y < 0) // left
-			view.angles_y = backward_y;
-		if(input_movevalues_y > 0) // favour right
-			view.angles_y = forward_y;
+			if(input_movevalues_y < 0) // left
+				view.angles_y = backward.y;
+			if(input_movevalues_y > 0) // favour right
+				view.angles_y = forward.y;
 
-		setproperty(VF_CL_VIEWANGLES, view.angles);
+			setproperty(VF_CL_VIEWANGLES, view.angles);
+		}
 	}
 }
 

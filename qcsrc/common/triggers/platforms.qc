@@ -1,17 +1,18 @@
-void generic_plat_blocked(entity this)
+#include "platforms.qh"
+void generic_plat_blocked(entity this, entity blocker)
 {
 #ifdef SVQC
-	if(this.dmg && other.takedamage != DAMAGE_NO)
+	if(this.dmg && blocker.takedamage != DAMAGE_NO)
 	{
 		if(this.dmgtime2 < time)
 		{
-			Damage (other, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 			this.dmgtime2 = time + this.dmgtime;
 		}
 
 		// Gib dead/dying stuff
-		if(IS_DEAD(other))
-			Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+		if(IS_DEAD(blocker))
+			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 	}
 #endif
 }
@@ -23,7 +24,7 @@ void plat_spawn_inside_trigger(entity this)
 
 	trigger = spawn();
 	settouch(trigger, plat_center_touch);
-	trigger.movetype = MOVETYPE_NONE;
+	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.enemy = this;
 
@@ -53,7 +54,7 @@ void plat_spawn_inside_trigger(entity this)
 			}
 
 	// otherwise, something is fishy...
-	remove(trigger);
+	delete(trigger);
 	objerror(this, "plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
 }
 
@@ -62,8 +63,8 @@ void plat_hit_top(entity this)
 	_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	this.state = 1;
 
-	SUB_THINK(this, plat_go_down);
-	this.SUB_NEXTTHINK = this.SUB_LTIME + 3;
+	setthink(this, plat_go_down);
+	this.nextthink = this.ltime + 3;
 }
 
 void plat_hit_bottom(entity this)
@@ -86,37 +87,37 @@ void plat_go_up(entity this)
 	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, plat_hit_top);
 }
 
-void plat_center_touch(entity this)
+void plat_center_touch(entity this, entity toucher)
 {
 #ifdef SVQC
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
 
-	if (other.health <= 0)
+	if (toucher.health <= 0)
 		return;
 #elif defined(CSQC)
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
-	if(IS_DEAD(other))
+	if(IS_DEAD(toucher))
 		return;
 #endif
 
 	if (this.enemy.state == 2) {
 		plat_go_up(this.enemy);
 	} else if (this.enemy.state == 1)
-		this.enemy.SUB_NEXTTHINK = this.enemy.SUB_LTIME + 1;
+		this.enemy.nextthink = this.enemy.ltime + 1;
 }
 
-void plat_outside_touch(entity this)
+void plat_outside_touch(entity this, entity toucher)
 {
 #ifdef SVQC
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
 
-	if (other.health <= 0)
+	if (toucher.health <= 0)
 		return;
 #elif defined(CSQC)
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
 #endif
 
@@ -128,34 +129,29 @@ void plat_outside_touch(entity this)
 
 void plat_trigger_use(entity this, entity actor, entity trigger)
 {
-#ifdef SVQC
 	if (getthink(this))
 		return;		// already activated
-#elif defined(CSQC)
-	if(this.move_think)
-		return;
-#endif
 	plat_go_down(this);
 }
 
 
-void plat_crush(entity this)
+void plat_crush(entity this, entity blocker)
 {
-	if((this.spawnflags & 4) && (other.takedamage != DAMAGE_NO))
+	if((this.spawnflags & 4) && (blocker.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 #ifdef SVQC
-		if((this.dmg) && (other.takedamage != DAMAGE_NO))
+		if((this.dmg) && (blocker.takedamage != DAMAGE_NO))
 		{   // Shall we bite?
-			Damage (other, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 			// Gib dead/dying stuff
-			if(IS_DEAD(other))
-				Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			if(IS_DEAD(blocker))
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 		}
 #endif
 
