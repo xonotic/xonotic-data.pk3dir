@@ -49,23 +49,23 @@ string PlayerTemplate_GetDefaultCvarName(string variable)
 		}
 		case "random_start_shells":
 		{
-			return "g_pickup_shells_weapon";
+			return "g_random_start_shells";
 		}
 		case "random_start_bullets":
 		{
-			return "g_pickup_nails_weapon";
+			return "g_random_start_bullets";
 		}
 		case "random_start_rockets":
 		{
-			return "g_pickup_rockets_weapon";
+			return "g_random_start_rockets";
 		}
 		case "random_start_cells":
 		{
-			return "g_pickup_cells_weapon";
+			return "g_random_start_cells";
 		}
 		case "random_start_plasma":
 		{
-			return "g_pickup_plasma_weapon";
+			return "g_random_start_plasma";
 		}
 		case "health_regen_factor":
 		{
