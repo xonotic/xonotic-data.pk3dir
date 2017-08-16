@@ -643,6 +643,12 @@ void readplayerstartcvars()
 		start_ammo_cells = cvar("g_start_ammo_cells");
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
+		num_random_start_weapons = cvar("g_num_random_start_weapons");
+		random_start_shells = cvar("g_random_start_shells");
+		random_start_bullets = cvar("g_random_start_bullets");
+		random_start_rockets = cvar("g_random_start_rockets");
+		random_start_cells = cvar("g_random_start_cells");
+		random_start_plasma = cvar("g_random_start_plasma");
 	}
 
 	if (warmup_stage)
@@ -711,6 +717,11 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
+	random_start_shells = max(0, random_start_shells);
+	random_start_bullets = max(0, random_start_bullets);
+	random_start_rockets = max(0, random_start_rockets);
+	random_start_cells = max(0, random_start_cells);
+	random_start_plasma = max(0, random_start_plasma);
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
