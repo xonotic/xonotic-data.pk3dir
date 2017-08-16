@@ -1,5 +1,7 @@
 #include "hitplot.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "../antilag.qh"
 #include "../g_subs.qh"
 #include <common/weapons/_all.qh>

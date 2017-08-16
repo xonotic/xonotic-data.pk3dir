@@ -1,4 +1,7 @@
 #include "banning.qh"
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include <common/state.qh>
 #include <common/command/_mod.qh>
 #include "banning.qh"

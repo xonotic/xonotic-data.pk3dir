@@ -1,5 +1,7 @@
 #include "race.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "client.qh"
 #include "portals.qh"
 #include "scores.qh"

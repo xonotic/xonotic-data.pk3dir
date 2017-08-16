@@ -1,3 +1,4 @@
+#pragma once
 // Global list of effects, networked to CSQC by ID to save bandwidth and to use client particle numbers (allows mismatching effectinfos to some degree)
 // Not too concerned about the order of this list, just keep the weapon effects together!
 

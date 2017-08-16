@@ -250,7 +250,13 @@ void make_safe_for_remove(entity this);
 
 #ifdef CSQC
 	void _CSQC_Init();
-	void CSQC_Init() { if (_CSQC_Init) _CSQC_Init(); }
+	void CSQC_Init()
+	{
+		static_init();
+		static_init_late();
+		static_init_precache();
+		if (_CSQC_Init) _CSQC_Init();
+	}
 	#define CSQC_Init _CSQC_Init
 
 	void _CSQC_Shutdown();

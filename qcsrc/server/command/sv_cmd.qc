@@ -1,6 +1,8 @@
 #include "sv_cmd.qh"
 #include "_mod.qh"
 
+#include <common/effects/all.qh>
+
 #include "banning.qh"
 #include "cmd.qh"
 #include "common.qh"

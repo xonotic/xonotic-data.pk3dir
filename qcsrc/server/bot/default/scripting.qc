@@ -1,5 +1,7 @@
 #include "scripting.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include <common/state.qh>

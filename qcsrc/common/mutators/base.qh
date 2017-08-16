@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef CSQC
+#include <client/main.qh>
+#endif
+
 const int CBC_ORDER_FIRST = 1;
 const int CBC_ORDER_LAST = 2;
 const int CBC_ORDER_EXCLUSIVE = 3;

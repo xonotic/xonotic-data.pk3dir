@@ -1,5 +1,7 @@
 #include "quake3.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include <common/weapons/_all.qh>
 
 spawnfunc(weapon_crylink);
@@ -116,35 +118,23 @@ void target_give_init(entity this)
 	{
 		if (it.classname == "weapon_rocketlauncher" || it.classname == "weapon_devastator") {
 			this.ammo_rockets += it.count * WEP_CVAR(devastator, ammo);
-			this.netname = "devastator";
+			this.netname = cons(this.netname, "devastator");
 		}
 		else if (it.classname == "weapon_lightning") {
 			this.ammo_cells += it.count * WEP_CVAR_PRI(electro, ammo); // WEAPONTODO
-			if(this.netname == "")
-				this.netname = "electro";
-			else
-				this.netname = strcat(this.netname, " electro");
+			this.netname = cons(this.netname, "electro");
 		}
 		else if (it.classname == "weapon_plasmagun") {
 			this.ammo_rockets += it.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
-			if(this.netname == "")
-				this.netname = "hagar";
-			else
-				this.netname = strcat(this.netname, " hagar");
+			this.netname = cons(this.netname, "hagar");
 		}
 		else if (it.classname == "weapon_bfg") {
 			this.ammo_cells += it.count * WEP_CVAR_PRI(crylink, ammo);
-			if(this.netname == "")
-				this.netname = "crylink";
-			else
-				this.netname = strcat(this.netname, " crylink");
+			this.netname = cons(this.netname, "crylink");
 		}
 		else if (it.classname == "weapon_grenadelauncher" || it.classname == "weapon_mortar") {
 			this.ammo_rockets += it.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
-			if(this.netname == "")
-				this.netname = "mortar";
-			else
-				this.netname = strcat(this.netname, " mortar");
+			this.netname = cons(this.netname, "mortar");
 		}
 		else if (it.classname == "item_armor_body")
 			this.armorvalue = 100;

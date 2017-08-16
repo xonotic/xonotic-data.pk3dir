@@ -1,5 +1,9 @@
 #include "cheats.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
+
 #include "g_damage.qh"
 #include "race.qh"
 #include "../common/triggers/teleporters.qh"

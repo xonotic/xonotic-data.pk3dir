@@ -1,5 +1,8 @@
 #include "powerups.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 #include <common/items/_mod.qh>
 
 // Powerups (#2)

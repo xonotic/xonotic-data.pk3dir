@@ -1,5 +1,7 @@
 #include "aim.qh"
 
+#include <server/defs.qh>
+
 #include "cvars.qh"
 
 #include "bot.qh"

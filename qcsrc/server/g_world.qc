@@ -53,7 +53,7 @@ void PingPLReport_Think(entity this)
 	this.nextthink = time + delta;
 
 	e = edict_num(this.cnt + 1);
-	if(IS_REAL_CLIENT(e))
+	if(IS_CLIENT(e) && IS_REAL_CLIENT(e))
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
@@ -1331,8 +1331,8 @@ void IntermissionThink(entity this)
 {
 	FixIntermissionClient(this);
 
-	float server_screenshot = (autocvar_sv_autoscreenshot && this.cvar_cl_autoscreenshot);
-	float client_screenshot = (this.cvar_cl_autoscreenshot == 2);
+	float server_screenshot = (autocvar_sv_autoscreenshot && CS(this).cvar_cl_autoscreenshot);
+	float client_screenshot = (CS(this).cvar_cl_autoscreenshot == 2);
 
 	if( (server_screenshot || client_screenshot)
 		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
