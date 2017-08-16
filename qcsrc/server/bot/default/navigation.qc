@@ -1272,7 +1272,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	// if it can reach the goal there is nothing more to do
 	vector dest;
 	float dest_height;
-	SET_TRACEWALK_DESTCOORDS(e, e.origin, dest, dest_height);
+	SET_TRACEWALK_DESTCOORDS(e, startposition, dest, dest_height);
 	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 		return true;
 
@@ -1300,7 +1300,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		{
 			if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
 			{
-				SET_TRACEWALK_DESTCOORDS(e, e.origin, dest, dest_height);
+				SET_TRACEWALK_DESTCOORDS(e, nearest_wp.enemy.origin, dest, dest_height);
 				if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 					e = nearest_wp.enemy;
 			}
