@@ -114,6 +114,7 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount);
 /// \param[in] rockets Amount of rockets to give with rocket-based weapon.
 /// \param[in] cells Amount of cells to give with cell-based weapon.
 /// \param[in] cells Amount of plasma to give with plasma-based weapon.
+/// \return No return.
 void GivePlayerRandomWeapons(entity player, int num_weapons,
 	string weapon_names, float shells, float bullets, float rockets,
 	float cells, float plasma);
