@@ -17,7 +17,7 @@ void freezetag_ScoreRules(int teams)
 void freezetag_count_alive_players()
 {
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		switch(it.team)
 		{
 			case NUM_TEAM_1: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++redalive; break;
@@ -25,13 +25,13 @@ void freezetag_count_alive_players()
 			case NUM_TEAM_3: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++yellowalive; break;
 			case NUM_TEAM_4: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++pinkalive; break;
 		}
-	));
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	});
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		it.redalive_stat = redalive;
 		it.bluealive_stat = bluealive;
 		it.yellowalive_stat = yellowalive;
 		it.pinkalive_stat = pinkalive;
-	));
+	});
 
 	eliminatedPlayers.SendFlags |= 1;
 }
@@ -106,10 +106,10 @@ float freezetag_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			it.freezetag_frozen_timeout = 0;
 			nades_Clear(it);
-		));
+		});
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return 1;
@@ -131,10 +131,10 @@ float freezetag_CheckWinner()
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.freezetag_frozen_timeout = 0;
 		nades_Clear(it);
-	));
+	});
 
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
@@ -144,7 +144,7 @@ float freezetag_CheckWinner()
 entity freezetag_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 		if(it.health >= 1)
 		if(!STAT(FROZEN, it))
 		if(SAME_TEAM(it, this))
@@ -152,7 +152,7 @@ entity freezetag_LastPlayerForTeam(entity this)
 			last_pl = it;
 		else
 			return NULL;
-	));
+	});
 	return last_pl;
 }
 
@@ -226,7 +226,7 @@ void(entity this) havocbot_role_ft_offense;
 void havocbot_goalrating_freeplayers(entity this, float ratingscale, vector org, float sradius)
 {
 	float t;
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), {
 		if (STAT(FROZEN, it) == 1)
 		{
 			if(vdist(it.origin - org, >, sradius))
@@ -240,7 +240,7 @@ void havocbot_goalrating_freeplayers(entity this, float ratingscale, vector org,
 			t = 0.2 * 150 / (this.health + this.armorvalue);
 			navigation_routerating(this, it, t * ratingscale, 2000);
 		}
-	));
+	});
 }
 
 void havocbot_role_ft_offense(entity this)
@@ -253,7 +253,7 @@ void havocbot_role_ft_offense(entity this)
 
 	// Count how many players on team are unfrozen.
 	int unfrozen = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this) && !(STAT(FROZEN, it) != 1), LAMBDA(unfrozen++));
+	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this) && !(STAT(FROZEN, it) != 1), { unfrozen++; });
 
 	// If only one left on team or if role has timed out then start trying to free players.
 	if (((unfrozen == 0) && (!STAT(FROZEN, this))) || (time > this.havocbot_role_timeout))
@@ -416,12 +416,12 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		it.killcount = 0;
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		CS(it).killcount = 0;
 		it.freezetag_frozen_timeout = -1;
 		PutClientInServer(it);
 		it.freezetag_frozen_timeout = 0;
-	));
+	});
 	freezetag_count_alive_players();
 	return true;
 }
@@ -454,7 +454,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(STAT(FROZEN, it) == 0)
 			if(!IS_DEAD(it))
 			if(SAME_TEAM(it, player))
@@ -466,7 +466,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 					it.reviving = true;
 				++n;
 			}
-		));
+		});
 
 	}
 
@@ -488,21 +488,21 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
 				PlayerScore_Add(it, SP_FREEZETAG_REVIVALS, +1);
 				PlayerScore_Add(it, SP_SCORE, +1);
 				nades_GiveBonus(it,autocvar_g_nades_bonus_score_low);
-			));
+			});
 
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
 			it.revive_progress = player.revive_progress;
 			it.reviving = false;
-		));
+		});
 	}
 	else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
 	{
@@ -568,8 +568,8 @@ MUTATOR_HOOKFUNCTION(ft, FragCenterMessage)
 	if(STAT(FROZEN, frag_target))
 		return; // target was already frozen, so this is just pushing them off the cliff
 
-	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : frag_target.ping));
-	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target, frag_attacker.health, frag_attacker.armorvalue, (IS_BOT_CLIENT(frag_attacker) ? -1 : frag_attacker.ping));
+	Send_Notification(NOTIF_ONE, frag_attacker, MSG_CHOICE, CHOICE_FRAG_FREEZE, frag_target.netname, kill_count_to_attacker, (IS_BOT_CLIENT(frag_target) ? -1 : CS(frag_target).ping));
+	Send_Notification(NOTIF_ONE, frag_target, MSG_CHOICE, CHOICE_FRAGGED_FREEZE, frag_attacker.netname, kill_count_to_target, frag_attacker.health, frag_attacker.armorvalue, (IS_BOT_CLIENT(frag_attacker) ? -1 : CS(frag_attacker).ping));
 
 	return true;
 }

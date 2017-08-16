@@ -27,6 +27,7 @@
 	}
 #endif
 
+ERASEABLE
 string seconds_tostring(float sec)
 {
 	float minutes = floor(sec / 60);
@@ -34,6 +35,7 @@ string seconds_tostring(float sec)
 	return sprintf("%d:%02d", minutes, sec);
 }
 
+ERASEABLE
 string format_time(float seconds)
 {
 	seconds = floor(seconds + 0.5);
@@ -47,6 +49,7 @@ string format_time(float seconds)
 	else return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
 }
 
+ERASEABLE
 string mmsss(float tenths)
 {
 	tenths = floor(tenths + 0.5);
@@ -56,6 +59,7 @@ string mmsss(float tenths)
 	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 1));
 }
 
+ERASEABLE
 string mmssss(float hundredths)
 {
 	hundredths = floor(hundredths + 0.5);
@@ -67,11 +71,13 @@ string mmssss(float hundredths)
 
 int ColorTranslateMode;
 
+ERASEABLE
 string ColorTranslateRGB(string s)
 {
 	return (ColorTranslateMode & 1) ? strdecolorize(s) : s;
 }
 
+#ifdef GAMEQC
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
 string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
@@ -106,9 +112,11 @@ string CCR(string input)
 	input = strreplace("^N", "^7", input);  // "none"-- reset to white...
 	return input;
 }
+#endif
 
 #define startsWith(haystack, needle) (strstrofs(haystack, needle, 0) == 0)
 
+ERASEABLE
 bool startsWithNocase(string haystack, string needle)
 {
 	return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
@@ -118,6 +126,7 @@ noref string _endsWith_suffix;
 #define endsWith(this, suffix) (_endsWith_suffix = suffix, substring(this, -strlen(_endsWith_suffix), -1) == _endsWith_suffix)
 
 /** unzone the string, and return it as tempstring. Safe to be called on string_null */
+ERASEABLE
 string fstrunzone(string s)
 {
 	if (!s) return s;
@@ -127,6 +136,7 @@ string fstrunzone(string s)
 }
 
 /** returns first word */
+ERASEABLE
 string car(string s)
 {
 	int o = strstrofs(s, " ", 0);
@@ -135,6 +145,7 @@ string car(string s)
 }
 
 /** returns all but first word */
+ERASEABLE
 string cdr(string s)
 {
 	int o = strstrofs(s, " ", 0);
@@ -142,6 +153,7 @@ string cdr(string s)
 	return substring(s, o + 1, strlen(s) - (o + 1));
 }
 
+ERASEABLE
 string cons(string a, string b)
 {
 	if (a == "") return b;
@@ -149,11 +161,13 @@ string cons(string a, string b)
 	return strcat(a, " ", b);
 }
 
+ERASEABLE
 string substring_range(string s, float b, float e)
 {
 	return substring(s, b, e - b);
 }
 
+ERASEABLE
 string swapwords(string str, float i, float j)
 {
 	float n;
@@ -175,10 +189,13 @@ string swapwords(string str, float i, float j)
 }
 
 string _shufflewords_str;
+ERASEABLE
 void _shufflewords_swapfunc(float i, float j, entity pass)
 {
 	_shufflewords_str = swapwords(_shufflewords_str, i, j);
 }
+
+ERASEABLE
 string shufflewords(string str)
 {
 	_shufflewords_str = str;
@@ -189,6 +206,7 @@ string shufflewords(string str)
 	return str;
 }
 
+ERASEABLE
 string unescape(string in)
 {
 	in = strzone(in);  // but it doesn't seem to be necessary in my tests at least
@@ -213,6 +231,7 @@ string unescape(string in)
 	return str;
 }
 
+ERASEABLE
 string strwords(string s, int w)
 {
 	int endpos = 0;
@@ -224,6 +243,7 @@ string strwords(string s, int w)
 
 #define strhasword(s, w) (strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0)
 
+ERASEABLE
 int u8_strsize(string s)
 {
 	int l = 0;
@@ -236,6 +256,7 @@ int u8_strsize(string s)
 	return l;
 }
 
+ERASEABLE
 bool isInvisibleString(string s)
 {
 	s = strdecolorize(s);
@@ -263,6 +284,7 @@ bool isInvisibleString(string s)
 
 // Multiline text file buffers
 
+ERASEABLE
 int buf_load(string pFilename)
 {
 	int buf = buf_create();
@@ -280,6 +302,7 @@ int buf_load(string pFilename)
 	return buf;
 }
 
+ERASEABLE
 void buf_save(float buf, string pFilename)
 {
 	int fh = fopen(pFilename, FILE_WRITE);
@@ -293,6 +316,7 @@ void buf_save(float buf, string pFilename)
 /**
  * converts a number to a string with the indicated number of decimals
  */
+ERASEABLE
 string ftos_decimals(float number, int decimals)
 {
 	// inhibit stupid negative zero
@@ -303,6 +327,7 @@ string ftos_decimals(float number, int decimals)
 /**
  * converts a number to a string with the minimum number of decimals
  */
+ERASEABLE
 string ftos_mindecimals(float number)
 {
 	// inhibit stupid negative zero
@@ -310,6 +335,7 @@ string ftos_mindecimals(float number)
 	return sprintf("%.7g", number);
 }
 
+ERASEABLE
 int vercmp_recursive(string v1, string v2)
 {
 	int dot1 = strstrofs(v1, ".", 0);
@@ -328,6 +354,7 @@ int vercmp_recursive(string v1, string v2)
 	else return (dot2 == -1) ? 1 : vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
 }
 
+ERASEABLE
 int vercmp(string v1, string v2)
 {
 	if (strcasecmp(v1, v2) == 0) return 0;  // early out check

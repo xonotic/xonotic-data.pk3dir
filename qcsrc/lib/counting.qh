@@ -61,6 +61,7 @@
 	_("CI_THI^%d seconds"), /* third */ \
 	_("CI_MUL^%d seconds")) /* multi */
 
+ERASEABLE
 string count_ordinal(int interval)
 {
 	// This function is designed primarily for the English language, it's impossible
@@ -86,6 +87,7 @@ string count_ordinal(int interval)
 	return "";
 }
 
+ERASEABLE
 string count_fill(float interval, string zeroth, string first, string second, string third, string multi)
 {
 	// This function is designed primarily for the English language, it's impossible
@@ -116,6 +118,7 @@ string count_fill(float interval, string zeroth, string first, string second, st
 	return "";
 }
 
+ERASEABLE
 string process_time(float outputtype, float seconds)
 {
 	float tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
@@ -163,42 +166,37 @@ string process_time(float outputtype, float seconds)
 
 			if (tmp_minutes)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_minutes(tmp_minutes),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			if (tmp_hours)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_hours(tmp_hours),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			if (tmp_days)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_days(tmp_days),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			if (tmp_weeks)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_weeks(tmp_weeks),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			if (tmp_years)
 			{
-				output = sprintf(
-					"%s%s",
+				output = strcat(
 					count_years(tmp_years),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			return output;
@@ -214,9 +212,8 @@ string process_time(float outputtype, float seconds)
 			if (tmp_days)
 			{
 				output = sprintf(
-					"%s%s",
 					count_days(tmp_days),
-					((output != "") ? sprintf(", %s", output) : ""));
+					((output != "") ? strcat(", ", output) : ""));
 			}
 
 			return output;

@@ -3,3 +3,9 @@
 #include <menu/item.qc>
 #include <menu/matrix.qc>
 #include <menu/menu.qc>
+
+#include <menu/anim/_mod.inc>
+#include <menu/command/_mod.inc>
+#include <menu/item/_mod.inc>
+#include <menu/mutators/_mod.inc>
+#include <menu/xonotic/_mod.inc>

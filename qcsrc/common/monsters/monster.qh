@@ -38,9 +38,9 @@ CLASS(Monster, Object)
     /** model */
     ATTRIB(Monster, m_model, entity);
     /** hitbox size */
-    ATTRIB(Monster, mins, vector, '-0 -0 -0');
+    ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
     /** hitbox size */
-    ATTRIB(Monster, maxs, vector, '0 0 0');
+    ATTRIB(Monster, m_maxs, vector, '0 0 0');
 
     /** (SERVER) setup monster data */
     METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
@@ -48,8 +48,6 @@ CLASS(Monster, Object)
     METHOD(Monster, mr_think, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
     /** (SERVER) called when monster dies */
     METHOD(Monster, mr_death, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (BOTH) precaches models/sounds used by this monster */
-    METHOD(Monster, mr_precache, bool(Monster this)) { TC(Monster, this); return false; }
     /** (SERVER) called when monster is damaged */
     METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
     /** (BOTH?) sets animations for monster */

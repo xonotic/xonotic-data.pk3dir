@@ -1,5 +1,8 @@
 #include "pressedkeys.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 
 // Pressed keys (#11)
 
@@ -49,8 +52,7 @@ void HUD_PressedKeys()
 		mySize = newSize;
 	}
 
-	vector keysize;
-	keysize = eX * mySize.x * (1/3.0) + eY * mySize.y * (1/(3.0 - !autocvar_hud_panel_pressedkeys_attack));
+	vector keysize = vec2(mySize.x / 3, mySize.y / (3 - !autocvar_hud_panel_pressedkeys_attack));
 	int pressedkeys = STAT(PRESSED_KEYS);
 
 	if(autocvar_hud_panel_pressedkeys_attack)

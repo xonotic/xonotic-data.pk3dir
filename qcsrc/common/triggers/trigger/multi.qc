@@ -54,8 +54,8 @@ void multi_trigger(entity this)
 		multi_wait(this); // waiting finished
 	}
 	else
-	{	// we can't just remove (this) here, because this is a touch function
-		// called wheil C code is looping through area links...
+	{	// we can't just delete(this) here, because this is a touch function
+		// called while C code is looping through area links...
 		settouch(this, func_null);
 	}
 }
@@ -86,9 +86,8 @@ void multi_touch(entity this, entity toucher)
 	}
 
 	// if the trigger has pressed keys, check that the player is pressing those keys
-	if(this.pressedkeys)
-	if(IS_PLAYER(toucher)) // only for players
-	if(!(toucher.pressedkeys & this.pressedkeys))
+	if(this.pressedkeys && IS_PLAYER(toucher)) // only for players
+	if(!(CS(toucher).pressedkeys & this.pressedkeys))
 		return;
 
 	EXACTTRIGGER_TOUCH(this, toucher);
@@ -164,6 +163,7 @@ spawnfunc(trigger_multiple)
 	EXACTTRIGGER_INIT;
 
 	this.team_saved = this.team;
+	IL_PUSH(g_saved_team, this);
 
 	if (this.health)
 	{

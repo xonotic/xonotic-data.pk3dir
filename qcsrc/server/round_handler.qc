@@ -1,5 +1,7 @@
 #include "round_handler.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "campaign.qh"
 #include "command/vote.qh"
 #include "../common/util.qh"
@@ -76,7 +78,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 }
 
 // NOTE: this is only needed because if round_handler spawns at time 1
-// gamestarttime isn't initialized yet
+// game_starttime isn't initialized yet
 void round_handler_FirstThink(entity this)
 {
 	round_starttime = max(time, game_starttime) + this.count;

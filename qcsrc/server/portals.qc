@@ -1,5 +1,6 @@
 #include "portals.qh"
 
+#include <common/effects/all.qh>
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
 #include "../common/constants.qh"
@@ -473,7 +474,7 @@ void Portal_Think(entity this)
 
 	fixedmakevectors(this.mangle);
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(it != o)
 			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
@@ -487,7 +488,7 @@ void Portal_Think(entity this)
 	    	if(it.(weaponentity).hook)
 	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g);
 	    }
-	));
+	});
 	this.solid = SOLID_TRIGGER;
 	this.aiment = o;
 #endif

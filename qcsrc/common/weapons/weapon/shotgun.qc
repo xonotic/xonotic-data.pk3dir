@@ -1,61 +1,5 @@
 #include "shotgun.qh"
-#ifndef IMPLEMENTATION
-CLASS(Shotgun, Weapon)
-/* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells);
-/* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
-/* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
-/* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');
-/* modelname */ ATTRIB(Shotgun, mdl, string, "shotgun");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Shotgun, m_model, Model, MDL_SHOTGUN_ITEM);
-#endif
-/* crosshair */ ATTRIB(Shotgun, w_crosshair, string, "gfx/crosshairshotgun");
-/* crosshair */ ATTRIB(Shotgun, w_crosshair_size, float, 0.65);
-/* wepimg    */ ATTRIB(Shotgun, model2, string, "weaponshotgun");
-/* refname   */ ATTRIB(Shotgun, netname, string, "shotgun");
-/* wepname   */ ATTRIB(Shotgun, m_name, string, _("Shotgun"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, alt_animtime, float, SEC) \
-		P(class, prefix, alt_refire, float, SEC) \
-		P(class, prefix, ammo, float, PRI) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bullets, float, PRI) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, melee_delay, float, SEC) \
-		P(class, prefix, melee_multihit, float, SEC) \
-		P(class, prefix, melee_nonplayerdamage, float, SEC) \
-		P(class, prefix, melee_no_doubleslap, float, SEC) \
-		P(class, prefix, melee_range, float, SEC) \
-		P(class, prefix, melee_swing_side, float, SEC) \
-		P(class, prefix, melee_swing_up, float, SEC) \
-		P(class, prefix, melee_time, float, SEC) \
-		P(class, prefix, melee_traces, float, SEC) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, solidpenetration, float, PRI) \
-		P(class, prefix, spread, float, PRI) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Shotgun, shotgun)
-#undef X
-
-ENDCLASS(Shotgun)
-REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
-
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(this, WEP_SHOTGUN); }
 
@@ -125,7 +69,7 @@ void W_Shotgun_Melee_Think(entity this)
 			+ (v_up * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_side)));
 
-		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
+		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -334,5 +278,4 @@ METHOD(Shotgun, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

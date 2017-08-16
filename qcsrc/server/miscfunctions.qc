@@ -1,4 +1,5 @@
 #include "miscfunctions.qh"
+
 #include "antilag.qh"
 #include "command/common.qh"
 #include "constants.qh"
@@ -33,7 +34,7 @@
 
 void crosshair_trace(entity pl)
 {
-	traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
+	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 .bool ctrace_solidchanged;
 void crosshair_trace_plusvisibletriggers(entity pl)
@@ -44,20 +45,23 @@ void crosshair_trace_plusvisibletriggers(entity pl)
 		{
 			it.solid = SOLID_BSP;
 			it.ctrace_solidchanged = true;
+			IL_PUSH(g_ctrace_changed, it);
 		}
 	});
 
 	crosshair_trace(pl);
 
-	FOREACH_ENTITY_FLOAT(ctrace_solidchanged, true,
+	IL_EACH(g_ctrace_changed, it.ctrace_solidchanged,
 	{
 		it.solid = SOLID_TRIGGER;
 		it.ctrace_solidchanged = false;
 	});
+
+	IL_CLEAR(g_ctrace_changed);
 }
 void WarpZone_crosshair_trace(entity pl)
 {
-	WarpZone_traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
+	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
 
@@ -109,65 +113,53 @@ void GameLogClose()
     }
 }
 
-entity findnearest(vector point, .string field, string value, vector axismod)
+entity findnearest(vector point, bool checkitems, vector axismod)
 {
-    entity localhead;
-    float i;
-    float j;
-    float len;
     vector dist;
+    int num_nearest = 0;
 
-    float num_nearest;
-    num_nearest = 0;
-
-    localhead = find(NULL, field, value);
-    while (localhead)
+    IL_EACH(((checkitems) ? g_items : g_locations), ((checkitems) ? (it.target == "###item###") : (it.classname == "target_location")),
     {
-        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.target == "###item###")
-            dist = localhead.oldorigin;
+    	if ((it.items == IT_KEY1 || it.items == IT_KEY2) && it.target == "###item###")
+            dist = it.oldorigin;
         else
-            dist = localhead.origin;
+            dist = it.origin;
         dist = dist - point;
         dist = dist.x * axismod.x * '1 0 0' + dist.y * axismod.y * '0 1 0' + dist.z * axismod.z * '0 0 1';
-        len = vlen(dist);
+        float len = vlen2(dist);
 
-        for (i = 0; i < num_nearest; ++i)
+        int l;
+        for (l = 0; l < num_nearest; ++l)
         {
-            if (len < nearest_length[i])
+            if (len < nearest_length[l])
                 break;
         }
 
         // now i tells us where to insert at
         //   INSERTION SORT! YOU'VE SEEN IT! RUN!
-        if (i < NUM_NEAREST_ENTITIES)
+        if (l < NUM_NEAREST_ENTITIES)
         {
-            for (j = NUM_NEAREST_ENTITIES - 1; j >= i; --j)
+            for (int j = NUM_NEAREST_ENTITIES - 1; j >= l; --j)
             {
                 nearest_length[j + 1] = nearest_length[j];
                 nearest_entity[j + 1] = nearest_entity[j];
             }
-            nearest_length[i] = len;
-            nearest_entity[i] = localhead;
+            nearest_length[l] = len;
+            nearest_entity[l] = it;
             if (num_nearest < NUM_NEAREST_ENTITIES)
                 num_nearest = num_nearest + 1;
         }
-
-        localhead = find(localhead, field, value);
-    }
+    });
 
     // now use the first one from our list that we can see
-    for (i = 0; i < num_nearest; ++i)
+    for (int j = 0; j < num_nearest; ++j)
     {
-        traceline(point, nearest_entity[i].origin, true, NULL);
+        traceline(point, nearest_entity[j].origin, true, NULL);
         if (trace_fraction == 1)
         {
-            if (i != 0)
-            {
-                LOG_TRACE("Nearest point (");
-                LOG_TRACE(nearest_entity[0].netname);
-                LOG_TRACE(") is not visible, using a visible one.");
-            }
-            return nearest_entity[i];
+            if (j != 0)
+                LOG_TRACEF("Nearest point (%s) is not visible, using a visible one.", nearest_entity[0].netname);
+            return nearest_entity[j];
         }
     }
 
@@ -191,17 +183,13 @@ entity findnearest(vector point, .string field, string value, vector axismod)
 
 string NearestLocation(vector p)
 {
-    entity loc;
-    string ret;
-    ret = "somewhere";
-    loc = findnearest(p, classname, "target_location", '1 1 1');
+    string ret = "somewhere";
+    entity loc = findnearest(p, false, '1 1 1');
     if (loc)
-    {
         ret = loc.message;
-    }
     else
     {
-        loc = findnearest(p, target, "###item###", '1 1 4');
+        loc = findnearest(p, true, '1 1 4');
         if (loc)
             ret = loc.netname;
     }
@@ -304,41 +292,41 @@ Called with:
   0:  sends the request
   >0: receives a cvar from name=argv(f) value=argv(f+1)
 */
-void GetCvars_handleString(entity this, string thisname, float f, .string field, string name)
+void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name)
 {
 	if (f < 0)
 	{
-		if (this.(field))
-			strunzone(this.(field));
-		this.(field) = string_null;
+		if (store.(field))
+			strunzone(store.(field));
+		store.(field) = string_null;
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (this.(field))
-				strunzone(this.(field));
-			this.(field) = strzone(argv(f + 1));
+			if (store.(field))
+				strunzone(store.(field));
+			store.(field) = strzone(argv(f + 1));
 		}
 	}
 	else
 		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleString_Fixup(entity this, string thisname, float f, .string field, string name, string(entity, string) func)
+void GetCvars_handleString_Fixup(entity this, entity store, string thisname, float f, .string field, string name, string(entity, string) func)
 {
-	GetCvars_handleString(this, thisname, f, field, name);
+	GetCvars_handleString(this, store, thisname, f, field, name);
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
 		{
-			string s = func(this, strcat1(this.(field)));
-			if (s != this.(field))
+			string s = func(this, strcat1(store.(field)));
+			if (s != store.(field))
 			{
-				strunzone(this.(field));
-				this.(field) = strzone(s);
+				strunzone(store.(field));
+				store.(field) = strzone(s);
 			}
 		}
 }
-void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name)
+void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name)
 {
 	if (f < 0)
 	{
@@ -346,12 +334,12 @@ void GetCvars_handleFloat(entity this, string thisname, float f, .float field, s
 	else if (f > 0)
 	{
 		if (thisname == name)
-			this.(field) = stof(argv(f + 1));
+			store.(field) = stof(argv(f + 1));
 	}
 	else
 		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleFloatOnce(entity this, string thisname, float f, .float field, string name)
+void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float f, .float field, string name)
 {
 	if (f < 0)
 	{
@@ -360,17 +348,17 @@ void GetCvars_handleFloatOnce(entity this, string thisname, float f, .float fiel
 	{
 		if (thisname == name)
 		{
-			if (!this.(field))
+			if (!store.(field))
 			{
-				this.(field) = stof(argv(f + 1));
-				if (!this.(field))
-					this.(field) = -1;
+				store.(field) = stof(argv(f + 1));
+				if (!store.(field))
+					store.(field) = -1;
 			}
 		}
 	}
 	else
 	{
-		if (!this.(field))
+		if (!store.(field))
 			stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
@@ -420,7 +408,7 @@ REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
-void GetCvars(entity this, int f)
+void GetCvars(entity this, entity store, int f)
 {
 	string s = string_null;
 
@@ -433,21 +421,21 @@ void GetCvars(entity this, int f)
 
 	Notification_GetCvars(this);
 
-	ReplicateVars(this, s, f);
+	ReplicateVars(this, store, s, f);
 
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 
-	GetCvars_handleFloat(this, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(this, store, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -476,7 +464,7 @@ string playername(entity p, bool team_colorize)
         return strcat(t, strdecolorize(p.netname));
     }
     else
-        return ColorTranslateRGB(p.netname);
+        return p.netname;
 }
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
@@ -560,10 +548,10 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				g_weaponarena_weapons |= (it.m_wepset);
-		));
+		});
 	}
 	else if (s == "devall")
 	{
@@ -578,11 +566,11 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if(it.spawnflags & WEP_FLAG_NORMAL)
 					g_weaponarena_weapons |= (it.m_wepset);
-		));
+		});
 	}
 	else if (s == "none")
 	{
@@ -597,14 +585,14 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				if(it.netname == s)
 				{
 					g_weaponarena_weapons |= (it.m_wepset);
 					g_weaponarena_list = strcat(g_weaponarena_list, it.m_name, " & ");
 					break;
 				}
-			));
+			});
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
@@ -623,7 +611,7 @@ void readplayerstartcvars()
 	}
 	else
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			int w = want_weapon(it, false);
 			WepSet s = it.m_wepset;
 			if(w & 1)
@@ -632,7 +620,7 @@ void readplayerstartcvars()
 				start_weapons_default |= s;
 			if(w & 4)
 				start_weapons_defaultmask |= s;
-		));
+		});
 	}
 
 	if(!cvar("g_use_ammunition"))
@@ -684,7 +672,7 @@ void readplayerstartcvars()
 			warmup_start_weapons = '0 0 0';
 			warmup_start_weapons_default = '0 0 0';
 			warmup_start_weapons_defaultmask = '0 0 0';
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				int w = want_weapon(it, g_warmup_allguns);
 				WepSet s = (it.m_wepset);
 				if(w & 1)
@@ -693,7 +681,7 @@ void readplayerstartcvars()
 					warmup_start_weapons_default |= s;
 				if(w & 4)
 					warmup_start_weapons_defaultmask |= s;
-			));
+			});
 		}
 	}
 
@@ -712,10 +700,10 @@ void readplayerstartcvars()
 	WepSet precache_weapons = start_weapons;
 	if (g_warmup_allguns != 1)
 		precache_weapons |= warmup_start_weapons;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		if(precache_weapons & (it.m_wepset))
 			it.wr_init(it);
-	));
+	});
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
@@ -776,7 +764,7 @@ void precache_all_playermodels(string pattern)
 
 void precache_playermodels(string s)
 {
-	FOREACH_WORD(s, true, LAMBDA(precache_playermodel(it)));
+	FOREACH_WORD(s, true, { precache_playermodel(it); });
 }
 
 void precache()
@@ -1275,7 +1263,7 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
-        LOG_TRACE("Needed ", ftos(i + 1), " attempts");
+        LOG_DEBUG("Needed ", ftos(i + 1), " attempts");
         return true;
     }
     else

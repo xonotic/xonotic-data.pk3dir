@@ -1,7 +1,5 @@
 #include "bumblebee.qh"
 
-#ifdef IMPLEMENTATION
-
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
 const float BRG_END = 8;
@@ -99,6 +97,7 @@ bool bumblebee_gunner_frame(entity this, float dt)
 		_out = autocvar_g_vehicle_bumblebee_cannon_turnlimit_in;
 		setorigin(this, vehic.origin + v_up * -16 + v_forward * -16 + v_right * -128);
 	}
+	this.oldorigin = this.origin; // negate fall damage
 
 	crosshair_trace(this);
 	vector _ct = trace_endpos;
@@ -438,9 +437,9 @@ bool bumblebee_pilot_frame(entity this, float dt)
 
 	// Pitch
 	ftmp = 0;
-	if(this.movement.x > 0 && vang.x < autocvar_g_vehicle_bumblebee_pitchlimit)
+	if(CS(this).movement.x > 0 && vang.x < autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = 4;
-	else if(this.movement.x < 0 && vang.x > -autocvar_g_vehicle_bumblebee_pitchlimit)
+	else if(CS(this).movement.x < 0 && vang.x > -autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = -8;
 
 	newvel.x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel.x , autocvar_g_vehicle_bumblebee_pitchlimit);
@@ -454,19 +453,19 @@ bool bumblebee_pilot_frame(entity this, float dt)
 	makevectors('0 1 0' * vehic.angles.y);
 	newvel = vehic.velocity * -autocvar_g_vehicle_bumblebee_friction;
 
-	if(this.movement.x != 0)
+	if(CS(this).movement.x != 0)
 	{
-		if(this.movement.x > 0)
+		if(CS(this).movement.x > 0)
 			newvel += v_forward  * autocvar_g_vehicle_bumblebee_speed_forward;
-		else if(this.movement.x < 0)
+		else if(CS(this).movement.x < 0)
 			newvel -= v_forward  * autocvar_g_vehicle_bumblebee_speed_forward;
 	}
 
-	if(this.movement.y != 0)
+	if(CS(this).movement.y != 0)
 	{
-		if(this.movement.y < 0)
+		if(CS(this).movement.y < 0)
 			newvel -= v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
-		else if(this.movement.y > 0)
+		else if(CS(this).movement.y > 0)
 			newvel += v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
 		ftmp = newvel * v_right;
 		ftmp *= dt * 0.1;
@@ -485,7 +484,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 		newvel +=  v_up * autocvar_g_vehicle_bumblebee_speed_up;
 
 	vehic.velocity  += newvel * dt;
-	this.velocity = this.movement  = vehic.velocity;
+	this.velocity = CS(this).movement  = vehic.velocity;
 
 
 	if(autocvar_g_vehicle_bumblebee_healgun_locktime)
@@ -607,6 +606,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 	makevectors(vehic.angles);
 	vehic.angles_x *= -1;
 	setorigin(this, vehic.origin + v_up * 48 + v_forward * 160);
+	this.oldorigin = this.origin; // negate fall damage
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 }
@@ -965,5 +965,4 @@ METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
     AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
 }
 
-#endif
 #endif

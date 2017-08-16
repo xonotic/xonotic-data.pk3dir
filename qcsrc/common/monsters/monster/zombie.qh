@@ -8,8 +8,8 @@ MODEL(MON_ZOMBIE, M_Model("zombie.dpm"));
 
 CLASS(Zombie, Monster)
     ATTRIB(Zombie, spawnflags, int, MONSTER_TYPE_UNDEAD | MON_FLAG_MELEE | MON_FLAG_RIDE);
-    ATTRIB(Zombie, mins, vector, '-18 -18 -25');
-    ATTRIB(Zombie, maxs, vector, '18 18 47');
+    ATTRIB(Zombie, m_mins, vector, '-18 -18 -25');
+    ATTRIB(Zombie, m_maxs, vector, '18 18 47');
 #ifdef GAMEQC
     ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
 #endif
@@ -17,8 +17,4 @@ CLASS(Zombie, Monster)
     ATTRIB(Zombie, monster_name, string, _("Zombie"));
 ENDCLASS(Zombie)
 
-REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(ZOMBIE, NEW(Zombie));

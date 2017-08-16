@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef SVQC
+#include <server/defs.qh>
+#endif
+
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking

@@ -13,7 +13,7 @@ int autocvar_captureleadlimit_override;
 float autocvar_ekg;
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
-bool autocvar_g_allow_oldvortexbeam;
+//bool autocvar_g_allow_oldvortexbeam;
 int autocvar_g_antilag;
 float autocvar_g_antilag_nudge;
 float autocvar_g_balance_armor_blockpercent;
@@ -258,7 +258,7 @@ float autocvar_gameversion_min;
 float autocvar_gameversion_max;
 string autocvar_hostname;
 bool autocvar_lastlevel;
-int autocvar_leadlimit;
+//int autocvar_leadlimit;
 int autocvar_leadlimit_and_fraglimit;
 int autocvar_leadlimit_override;
 int autocvar_loddebug;
@@ -518,6 +518,7 @@ float autocvar_sv_airaccel_sideways_friction;
 float autocvar_sv_aircontrol;
 float autocvar_sv_aircontrol_power;
 float autocvar_sv_aircontrol_backwards;
+float autocvar_sv_aircontrol_sidewards;
 float autocvar_sv_aircontrol_penalty;
 float autocvar_sv_warsowbunny_airforwardaccel;
 float autocvar_sv_warsowbunny_topspeed;

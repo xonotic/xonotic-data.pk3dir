@@ -212,7 +212,7 @@ void lms_RemovePlayer(entity player)
 			lms_lowest_lives = 0; // end the game now!
 	}
 
-	if(player.killcount != FRAGS_SPECTATOR)
+	if(CS(player).killcount != FRAGS_SPECTATOR)
 		if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else
@@ -367,10 +367,10 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		++M_ARGV(0, int); // activerealplayers
 		++M_ARGV(1, int); // realplayers
-	));
+	});
 
 	return true;
 }

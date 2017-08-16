@@ -1,6 +1,8 @@
 #include "sv_cmd.qh"
 #include "_mod.qh"
 
+#include <common/effects/all.qh>
+
 #include "banning.qh"
 #include "cmd.qh"
 #include "common.qh"
@@ -193,11 +195,11 @@ void GameCommand_allspec(float request, float argc)
 		{
 			string reason = argv(1);
 			int n = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 				if (it.caplayer) it.caplayer = 0;
 				PutObserverInServer(it);
 				++n;
-			));
+			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
 			else   LOG_INFO("No players found to spectate.\n");
 			return;
@@ -251,20 +253,15 @@ void GameCommand_bbox(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			LOG_INFO("Original size: ", ftos(world.absmin.x), " ", ftos(world.absmin.y), " ", ftos(world.absmin.z));
-			LOG_INFO(" ", ftos(world.absmax.x), " ", ftos(world.absmax.y), " ", ftos(world.absmax.z), "\n");
-			LOG_INFO("Currently set size: ", ftos(world.mins.x), " ", ftos(world.mins.y), " ", ftos(world.mins.z));
-			LOG_INFO(" ", ftos(world.maxs.x), " ", ftos(world.maxs.y), " ", ftos(world.maxs.z), "\n");
-			LOG_INFO("Solid bounding box size:");
-
+			vector size_min = '0 0 0';
+			vector size_max = '0 0 0';
 			tracebox('1 0 0' * world.absmin.x,
 				'0 1 0' * world.absmin.y + '0 0 1' * world.absmin.z,
 				'0 1 0' * world.absmax.y + '0 0 1' * world.absmax.z,
 				'1 0 0' * world.absmax.x,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.x));
-			else LOG_INFO(" ", ftos(trace_endpos.x));
+			size_min.x = (trace_startsolid) ? world.absmin.x : trace_endpos.x;
 
 			tracebox('0 1 0' * world.absmin.y,
 				'1 0 0' * world.absmin.x + '0 0 1' * world.absmin.z,
@@ -272,8 +269,7 @@ void GameCommand_bbox(float request)
 				'0 1 0' * world.absmax.y,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.y));
-			else LOG_INFO(" ", ftos(trace_endpos.y));
+			size_min.y = (trace_startsolid) ? world.absmin.y : trace_endpos.y;
 
 			tracebox('0 0 1' * world.absmin.z,
 				'1 0 0' * world.absmin.x + '0 1 0' * world.absmin.y,
@@ -281,8 +277,7 @@ void GameCommand_bbox(float request)
 				'0 0 1' * world.absmax.z,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.z));
-			else LOG_INFO(" ", ftos(trace_endpos.z));
+			size_min.z = (trace_startsolid) ? world.absmin.z : trace_endpos.z;
 
 			tracebox('1 0 0' * world.absmax.x,
 				'0 1 0' * world.absmin.y + '0 0 1' * world.absmin.z,
@@ -290,8 +285,7 @@ void GameCommand_bbox(float request)
 				'1 0 0' * world.absmin.x,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.x));
-			else LOG_INFO(" ", ftos(trace_endpos.x));
+			size_max.x = (trace_startsolid) ? world.absmax.x : trace_endpos.x;
 
 			tracebox('0 1 0' * world.absmax.y,
 				'1 0 0' * world.absmin.x + '0 0 1' * world.absmin.z,
@@ -299,8 +293,7 @@ void GameCommand_bbox(float request)
 				'0 1 0' * world.absmin.y,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.y));
-			else LOG_INFO(" ", ftos(trace_endpos.y));
+			size_max.y = (trace_startsolid) ? world.absmax.y : trace_endpos.y;
 
 			tracebox('0 0 1' * world.absmax.z,
 				'1 0 0' * world.absmin.x + '0 1 0' * world.absmin.y,
@@ -308,10 +301,11 @@ void GameCommand_bbox(float request)
 				'0 0 1' * world.absmin.z,
 				MOVE_WORLDONLY,
 				NULL);
-			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.z));
-			else LOG_INFO(" ", ftos(trace_endpos.z));
+			size_max.z = (trace_startsolid) ? world.absmax.z : trace_endpos.z;
 
-			LOG_INFO("\n");
+			LOG_INFOF("Original size: %v %v\n", world.absmin, world.absmax);
+			LOG_INFOF("Currently set size: %v %v\n", world.mins, world.maxs);
+			LOG_INFOF("Solid bounding box size: %v %v\n", size_min, size_max);
 			return;
 		}
 
@@ -571,11 +565,11 @@ void GameCommand_defer_clear_all(float request)
 			int n = 0;
 			float argc;
 
-			FOREACH_CLIENT(true, LAMBDA(
+			FOREACH_CLIENT(true, {
 				argc = tokenize_console(strcat("defer_clear ", ftos(etof(it))));
 				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
 				++n;
-			));
+			});
 			if (n)   LOG_INFO(strcat("Successfully stuffed defer clear to all clients (", ftos(n), ")\n"));  // should a message be added if no players were found?
 			return;
 		}
@@ -1149,13 +1143,13 @@ void GameCommand_nospectators(float request)
 		{
 			blockSpectators = 1;
 			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, LAMBDA(
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, {
 				if(!it.caplayer)
 				{
-					it.spectatortime = time;
+					CS(it).spectatortime = time;
 					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 				}
-			));
+			});
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
 		}
@@ -1353,7 +1347,7 @@ void GameCommand_shuffleteams(float request)
 				return;
 			}
 
-			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
 				if (it.team_forced) {
 					// we could theoretically assign forced players to their teams
 					// and shuffle the rest to fill the empty spots but in practise
@@ -1361,7 +1355,7 @@ void GameCommand_shuffleteams(float request)
 					LOG_INFO("Can't shuffle teams because at least one player has a forced team.\n");
 					return;
 				}
-			));
+			});
 
 			int number_of_teams = 0;
 			CheckAllowedTeams(NULL);
@@ -1371,11 +1365,11 @@ void GameCommand_shuffleteams(float request)
 			if (c4 >= 0) number_of_teams = max(4, number_of_teams);
 
 			int team_index = 0;
-			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, LAMBDA(
+			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
 				int target_team_number = Team_NumberToTeam(team_index + 1);
 				if (it.team != target_team_number) MoveToTeam(it, target_team_number, 6);
 				team_index = (team_index + 1) % number_of_teams;
-			));
+			});
 
 			bprint("Successfully shuffled the players around randomly.\n");
 			return;
@@ -1739,32 +1733,32 @@ SERVER_COMMAND(warp, "Choose different level in campaign") { GameCommand_warp(re
 
 void GameCommand_macro_help()
 {
-	FOREACH(SERVER_COMMANDS, true, LAMBDA(LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description)));
+	FOREACH(SERVER_COMMANDS, true, { LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description); });
 }
 
 float GameCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
-	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(SERVER_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(it, CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
-	));
+	});
 	return false;
 }
 
 float GameCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
-	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(SERVER_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(it, CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
-	));
+	});
 	return false;
 }
 
 void GameCommand_macro_write_aliases(float fh)
 {
-	FOREACH(SERVER_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_sv", it.m_name, it.m_description)));
+	FOREACH(SERVER_COMMANDS, true, { CMD_Write_Alias("qc_cmd_sv", it.m_name, it.m_description); });
 }
 
 

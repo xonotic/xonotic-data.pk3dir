@@ -1,67 +1,4 @@
 #include "vaporizer.qh"
-#ifndef IMPLEMENTATION
-CLASS(Vaporizer, Weapon)
-/* ammotype  */ ATTRIB(Vaporizer, ammo_field, .int, ammo_cells);
-/* impulse   */ ATTRIB(Vaporizer, impulse, int, 7);
-/* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN);
-/* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.5 1 1');
-/* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);
-#endif
-/* crosshair */ ATTRIB(Vaporizer, w_crosshair, string, "gfx/crosshairminstanex");
-/* crosshair */ ATTRIB(Vaporizer, w_crosshair_size, float, 0.6);
-/* reticle   */ ATTRIB(Vaporizer, w_reticle, string, "gfx/reticle_nex");
-/* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponminstanex");
-/* refname   */ ATTRIB(Vaporizer, netname, string, "vaporizer");
-/* wepname   */ ATTRIB(Vaporizer, m_name, string, _("Vaporizer"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, PRI) \
-    	P(class, prefix, animtime, float, PRI) \
-    	P(class, prefix, damage, float, PRI) \
-    	P(class, prefix, refire, float, PRI) \
-    	P(class, prefix, ammo, float, SEC) \
-    	P(class, prefix, animtime, float, SEC) \
-    	P(class, prefix, damage, float, SEC) \
-    	P(class, prefix, delay, float, SEC) \
-    	P(class, prefix, edgedamage, float, SEC) \
-    	P(class, prefix, force, float, SEC) \
-    	P(class, prefix, lifetime, float, SEC) \
-    	P(class, prefix, radius, float, SEC) \
-    	P(class, prefix, refire, float, SEC) \
-    	P(class, prefix, shotangle, float, SEC) \
-    	P(class, prefix, speed, float, SEC) \
-    	P(class, prefix, spread, float, SEC) \
-    	P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Vaporizer, vaporizer)
-#undef X
-
-ENDCLASS(Vaporizer)
-REGISTER_WEAPON(VAPORIZER, vaporizer, NEW(Vaporizer));
-
-
-#ifdef SVQC
-.float vaporizer_lasthit;
-.float jump_interval;
-.float jump_interval2;
-.bool held_down;
-.float rm_force;
-.float rm_damage;
-.float rm_edmg;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 
 REGISTER_NET_TEMP(TE_CSQC_VAPORBEAMPARTICLE)
 
@@ -514,5 +451,4 @@ METHOD(Vaporizer, wr_zoom, bool(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

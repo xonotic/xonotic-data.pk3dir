@@ -1,94 +1,5 @@
 #include "seeker.qh"
-#ifndef IMPLEMENTATION
-CLASS(Seeker, Weapon)
-/* ammotype  */ ATTRIB(Seeker, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(Seeker, impulse, int, 8);
-/* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Seeker, wpcolor, vector, '0.5 1 0');
-/* modelname */ ATTRIB(Seeker, mdl, string, "seeker");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Seeker, m_model, Model, MDL_SEEKER_ITEM);
-#endif
-/* crosshair */ ATTRIB(Seeker, w_crosshair, string, "gfx/crosshairseeker");
-/* crosshair */ ATTRIB(Seeker, w_crosshair_size, float, 0.8);
-/* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
-/* refname   */ ATTRIB(Seeker, netname, string, "seeker");
-/* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-    	P(class, prefix, flac_ammo, float, NONE) \
-    	P(class, prefix, flac_animtime, float, NONE) \
-    	P(class, prefix, flac_damage, float, NONE) \
-    	P(class, prefix, flac_edgedamage, float, NONE) \
-    	P(class, prefix, flac_force, float, NONE) \
-    	P(class, prefix, flac_lifetime, float, NONE) \
-    	P(class, prefix, flac_lifetime_rand, float, NONE) \
-    	P(class, prefix, flac_radius, float, NONE) \
-    	P(class, prefix, flac_refire, float, NONE) \
-    	P(class, prefix, flac_speed, float, NONE) \
-    	P(class, prefix, flac_speed_up, float, NONE) \
-    	P(class, prefix, flac_speed_z, float, NONE) \
-    	P(class, prefix, flac_spread, float, NONE) \
-    	P(class, prefix, missile_accel, float, NONE) \
-    	P(class, prefix, missile_ammo, float, NONE) \
-    	P(class, prefix, missile_animtime, float, NONE) \
-    	P(class, prefix, missile_count, float, NONE) \
-    	P(class, prefix, missile_damageforcescale, float, NONE) \
-    	P(class, prefix, missile_damage, float, NONE) \
-    	P(class, prefix, missile_decel, float, NONE) \
-    	P(class, prefix, missile_delay, float, NONE) \
-    	P(class, prefix, missile_edgedamage, float, NONE) \
-    	P(class, prefix, missile_force, float, NONE) \
-    	P(class, prefix, missile_health, float, NONE) \
-    	P(class, prefix, missile_lifetime, float, NONE) \
-    	P(class, prefix, missile_proxy, float, NONE) \
-    	P(class, prefix, missile_proxy_delay, float, NONE) \
-    	P(class, prefix, missile_proxy_maxrange, float, NONE) \
-    	P(class, prefix, missile_radius, float, NONE) \
-    	P(class, prefix, missile_refire, float, NONE) \
-    	P(class, prefix, missile_smart, float, NONE) \
-    	P(class, prefix, missile_smart_mindist, float, NONE) \
-    	P(class, prefix, missile_smart_trace_max, float, NONE) \
-    	P(class, prefix, missile_smart_trace_min, float, NONE) \
-    	P(class, prefix, missile_speed, float, NONE) \
-    	P(class, prefix, missile_speed_max, float, NONE) \
-    	P(class, prefix, missile_speed_up, float, NONE) \
-    	P(class, prefix, missile_speed_z, float, NONE) \
-    	P(class, prefix, missile_spread, float, NONE) \
-    	P(class, prefix, missile_turnrate, float, NONE) \
-    	P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-    	P(class, prefix, tag_ammo, float, NONE) \
-    	P(class, prefix, tag_animtime, float, NONE) \
-    	P(class, prefix, tag_damageforcescale, float, NONE) \
-    	P(class, prefix, tag_health, float, NONE) \
-    	P(class, prefix, tag_lifetime, float, NONE) \
-    	P(class, prefix, tag_refire, float, NONE) \
-    	P(class, prefix, tag_speed, float, NONE) \
-    	P(class, prefix, tag_spread, float, NONE) \
-    	P(class, prefix, tag_tracker_lifetime, float, NONE) \
-		P(class, prefix, type, float, NONE) \
-		P(class, prefix, weaponreplace, string, NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Seeker, seeker)
-#undef X
-ENDCLASS(Seeker)
-REGISTER_WEAPON(SEEKER, seeker, NEW(Seeker));
-
-
-#ifdef SVQC
-.entity tag_target, wps_tag_tracker;
-.float tag_time;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 
@@ -395,33 +306,36 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 // ============================
 entity W_Seeker_Tagged_Info(entity isowner, .entity weaponentity, entity istarget)
 {
-	entity tag;
-	for(tag = NULL; (tag = find(tag, classname, "tag_tracker")); )
-		if((tag.realowner == isowner) && (tag.tag_target == istarget) && (tag.weaponentity_fld == weaponentity))
-			return tag;
+	IL_EACH(g_seeker_trackers, it.classname == "tag_tracker" && it.realowner == isowner,
+	{
+		if(it.tag_target == istarget && it.weaponentity_fld == weaponentity)
+			return it;
+	});
 
 	return NULL;
 }
 
 void W_Seeker_Attack(entity actor, .entity weaponentity)
 {
-	entity tracker, closest_target;
+	entity closest_target = NULL;
 
-	closest_target = NULL;
-	for(tracker = NULL; (tracker = find(tracker, classname, "tag_tracker")); ) if (tracker.realowner == actor)
+	IL_EACH(g_seeker_trackers, it.classname == "tag_tracker" && it.realowner == actor,
 	{
 		if(closest_target)
 		{
-			if(vlen2(actor.origin - tracker.tag_target.origin) < vlen2(actor.origin - closest_target.origin))
-				closest_target = tracker.tag_target;
+			if(vlen2(actor.origin - it.tag_target.origin) < vlen2(actor.origin - closest_target.origin))
+				closest_target = it.tag_target;
 		}
 		else
-			closest_target = tracker.tag_target;
-	}
+			closest_target = it.tag_target;
+	});
 
-	traceline(actor.origin + actor.view_ofs, closest_target.origin, MOVE_NOMONSTERS, actor);
-	if((!closest_target) || ((trace_fraction < 1) && (trace_ent != closest_target)))
-		closest_target = NULL;
+	if(closest_target)
+	{
+		traceline(actor.origin + actor.view_ofs, closest_target.origin, MOVE_NOMONSTERS, actor);
+		if(!closest_target || (trace_fraction < 1 && trace_ent != closest_target))
+			closest_target = NULL;
+	}
 
 	W_Seeker_Fire_Missile(WEP_SEEKER, actor, weaponentity, '0 0 0', closest_target);
 }
@@ -545,6 +459,7 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 			e.cnt         = WEP_CVAR(seeker, missile_count);
 			e.owner       = this.owner;
 			e.realowner   = this.realowner;
+			IL_PUSH(g_seeker_trackers, e);
 
 			if(WEP_CVAR(seeker, type) == 1)
 			{
@@ -758,5 +673,4 @@ METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

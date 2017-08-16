@@ -21,6 +21,12 @@ PROPERTY(float, g_pickup_respawntimejitter_powerup)
 #include <common/items/item.qh>
 #include <common/t_items.qh>
 
+#ifdef GAMEQC
+#include <common/models/all.qh>
+#include <common/sounds/all.qh>
+#include <common/sounds/all.inc>
+#endif
+
 CLASS(Pickup, GameItem)
 #ifdef GAMEQC
     ATTRIB(Pickup, m_model, Model);

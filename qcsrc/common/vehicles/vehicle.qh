@@ -27,9 +27,9 @@ CLASS(Vehicle, Object)
     /**  */
     ATTRIB(Vehicle, spawnflags, int, 0);
     /** vehicle hitbox size */
-    ATTRIB(Vehicle, mins, vector, '-0 -0 -0');
+    ATTRIB(Vehicle, m_mins, vector, '-0 -0 -0');
     /** vehicle hitbox size */
-    ATTRIB(Vehicle, maxs, vector, '0 0 0');
+    ATTRIB(Vehicle, m_maxs, vector, '0 0 0');
     /** vehicle 3rd person view offset */
     ATTRIB(Vehicle, view_ofs, vector, '0 0 0');
     /** vehicle 3rd person view distance */
@@ -51,6 +51,8 @@ CLASS(Vehicle, Object)
     METHOD(Vehicle, vr_spawn, void(Vehicle this, entity instance)) { }
     /** (SERVER) called when a vehicle hits something */
     METHOD(Vehicle, vr_impact, void(Vehicle this, entity instance)) { }
+    /** (SERVER) called when a vehicle's colors are being reset, so modules can be updated */
+    METHOD(Vehicle, vr_setcolors, void(Vehicle this, entity instance)) { }
     /** (CLIENT) logic to run every frame */
     METHOD(Vehicle, vr_hud, void(Vehicle this)) { }
     /** (CLIENT) logic to run every frame */

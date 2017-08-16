@@ -26,8 +26,8 @@ int minigame_tile_number(string id)
 // Get relative position of the center of a given tile
 vector minigame_tile_pos(string id, int rows, int columns)
 {
-	return eX*(minigame_tile_letter(id)+0.5)/columns +
-	       eY - eY*(minigame_tile_number(id)+0.5)/rows;
+	return vec2((minigame_tile_letter(id) + 0.5) / columns,
+		(1 - (minigame_tile_number(id) + 0.5) / rows));
 }
 
 // Get a tile name from indices

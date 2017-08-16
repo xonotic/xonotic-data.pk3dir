@@ -17,12 +17,12 @@ void viewloc_PlayerPhysics(entity this)
 		if(this.viewloc.goalentity == this.viewloc.enemy)
 			return; // we can't side-scroll in this case
 
-		vector old_movement = this.movement;
-		this.movement_x = old_movement_y;
-		this.movement_y = 0;
+		vector old_movement = PHYS_CS(this).movement;
+		PHYS_CS(this).movement_x = old_movement_y;
+		PHYS_CS(this).movement_y = 0;
 
-		if(this.movement_x < 0)
-			this.movement_x = -this.movement_x;
+		if(PHYS_CS(this).movement_x < 0)
+			PHYS_CS(this).movement_x = -PHYS_CS(this).movement_x;
 
 		vector level_start, level_end;
 		level_start = this.viewloc.enemy.origin;
@@ -31,9 +31,9 @@ void viewloc_PlayerPhysics(entity this)
 		forward = vectoangles(normalize(level_end - level_start));
 		backward = vectoangles(normalize(level_start - level_end));
 
-		if(this.movement_x < 0) // left
+		if(PHYS_CS(this).movement_x < 0) // left
 			this.angles_y = backward_y;
-		if(this.movement_x > 0) // right
+		if(PHYS_CS(this).movement_x > 0) // right
 			this.angles_y = forward_y;
 
 		if(old_movement_x > 0)

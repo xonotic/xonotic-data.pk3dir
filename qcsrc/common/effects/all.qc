@@ -91,6 +91,6 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 }
 #endif
 
-#ifdef EFFECTINFO_ENABLED
+#if ENABLE_EFFECTINFO
 	#include "effectinfo.qc"
 #endif

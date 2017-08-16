@@ -1,5 +1,9 @@
 #include "chat.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
+
 // Chat (#12)
 
 void HUD_Chat()

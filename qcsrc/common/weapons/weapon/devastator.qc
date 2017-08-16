@@ -1,73 +1,5 @@
 #include "devastator.qh"
-#ifndef IMPLEMENTATION
-CLASS(Devastator, Weapon)
-/* ammotype  */ ATTRIB(Devastator, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(Devastator, impulse, int, 9);
-/* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
-/* modelname */ ATTRIB(Devastator, mdl, string, "rl");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Devastator, m_model, Model, MDL_DEVASTATOR_ITEM);
-#endif
-/* crosshair */ ATTRIB(Devastator, w_crosshair, string, "gfx/crosshairrocketlauncher");
-/* crosshair */ ATTRIB(Devastator, w_crosshair_size, float, 0.7);
-/* wepimg    */ ATTRIB(Devastator, model2, string, "weaponrocketlauncher");
-/* refname   */ ATTRIB(Devastator, netname, string, "devastator");
-/* wepname   */ ATTRIB(Devastator, m_name, string, _("Devastator"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, NONE) \
-        P(class, prefix, animtime, float, NONE) \
-        P(class, prefix, damageforcescale, float, NONE) \
-        P(class, prefix, damage, float, NONE) \
-        P(class, prefix, detonatedelay, float, NONE) \
-        P(class, prefix, edgedamage, float, NONE) \
-        P(class, prefix, force, float, NONE) \
-        P(class, prefix, guidedelay, float, NONE) \
-        P(class, prefix, guidegoal, float, NONE) \
-        P(class, prefix, guideratedelay, float, NONE) \
-        P(class, prefix, guiderate, float, NONE) \
-        P(class, prefix, guidestop, float, NONE) \
-        P(class, prefix, health, float, NONE) \
-        P(class, prefix, lifetime, float, NONE) \
-        P(class, prefix, radius, float, NONE) \
-        P(class, prefix, refire, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, remote_damage, float, NONE) \
-        P(class, prefix, remote_edgedamage, float, NONE) \
-        P(class, prefix, remote_force, float, NONE) \
-        P(class, prefix, remote_jump_damage, float, NONE) \
-        P(class, prefix, remote_jump_force, float, NONE) \
-        P(class, prefix, remote_jump_radius, float, NONE) \
-        P(class, prefix, remote_jump_velocity_z_add, float, NONE) \
-        P(class, prefix, remote_jump_velocity_z_max, float, NONE) \
-        P(class, prefix, remote_jump_velocity_z_min, float, NONE) \
-        P(class, prefix, remote_radius, float, NONE) \
-        P(class, prefix, speedaccel, float, NONE) \
-        P(class, prefix, speedstart, float, NONE) \
-        P(class, prefix, speed, float, NONE) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Devastator, devastator)
-#undef X
-
-ENDCLASS(Devastator)
-REGISTER_WEAPON(DEVASTATOR, devastator, NEW(Devastator));
-
-#ifdef SVQC
-.float rl_release;
-.float rl_detonate_later;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 spawnfunc(weapon_devastator) { weapon_defaultspawnfunc(this, WEP_DEVASTATOR); }
 spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
@@ -76,15 +8,11 @@ spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
 void W_Devastator_Unregister(entity this)
 {
-	if(this.realowner && this.realowner.lastrocket == this)
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-			if(this.realowner.(weaponentity).lastrocket == this)
-				this.realowner.(weaponentity).lastrocket = NULL;
-		}
-		// this.realowner.rl_release = 1;
+		.entity weaponentity = weaponentities[slot];
+		if(this.realowner.(weaponentity).lastrocket == this)
+			this.realowner.(weaponentity).lastrocket = NULL;
 	}
 }
 
@@ -618,5 +546,4 @@ METHOD(Devastator, wr_impacteffect, void(entity thiswep, entity actor))
         sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
-#endif
 #endif

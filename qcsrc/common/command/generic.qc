@@ -74,13 +74,12 @@ void GenericCommand_addtolist(float request, float argc)
 				}
 				else // add it to the end of the list if the list doesn't already have it
 				{
-					argc = tokenizebyseparator(cvar_string(original_cvar), " ");
-					int i;
-					for(i = 0; i < argc; ++i)
-						if(argv(i) == tmp_string)
-							return; // already in list
+					FOREACH_WORD(cvar_string(original_cvar), it == tmp_string,
+					{
+						return; // already in the list
+					});
 
-					cvar_set(original_cvar, strcat(tmp_string, " ", cvar_string(original_cvar)));
+					cvar_set(original_cvar, cons(cvar_string(original_cvar), tmp_string));
 				}
 				return;
 			}
@@ -336,19 +335,15 @@ void GenericCommand_removefromlist(float request, float argc)
 		{
 			if(argc == 3)
 			{
-				float i;
 				string original_cvar = argv(1);
 				string removal = argv(2);
-				string tmp_string;
 
-				argc = tokenizebyseparator(cvar_string(original_cvar), " ");
+				string tmp_string = "";
+				FOREACH_WORD(cvar_string(original_cvar), it != removal,
+				{
+					tmp_string = cons(tmp_string, it);
+				});
 
-				tmp_string = "";
-				for(i = 0; i < argc; ++i)
-					if(argv(i) != removal)
-						tmp_string = strcat(tmp_string, " ", argv(i));
-
-				tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
 				cvar_set(original_cvar, tmp_string);
 
 				return;

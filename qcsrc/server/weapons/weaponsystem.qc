@@ -393,10 +393,10 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 
 	if (this)
 	{
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true, {
 			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
 				wframe_send(it, this, a, restartanim);
-		));
+		});
 	}
 
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
@@ -457,7 +457,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 		.entity wepe1 = weaponentities[0];
 		entity wep1 = actor.(wepe1);
 		this.m_switchweapon = wep1.m_switchweapon;
-		if(!(this.m_switchweapon.spawnflags & WEP_FLAG_DUALWIELD))
+		entity store = IS_PLAYER(actor) ? PS(actor) : actor;
+		if(!(this.m_switchweapon.spawnflags & WEP_FLAG_DUALWIELD) && !(store.dual_weapons & wep1.m_switchweapon.m_wepset))
 		{
 			this.m_weapon = WEP_Null;
 			this.m_switchingweapon = WEP_Null;

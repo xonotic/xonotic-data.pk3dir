@@ -71,11 +71,11 @@ float WinningCondition_Race(float fraglimit)
 
 	n = 0;
 	c = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		++n;
-		if(it.race_completed)
+		if(CS(it).race_completed)
 			++c;
-	));
+	});
 	if(n && (n == c))
 		return WINNING_YES;
 	wc = WinningCondition_Scores(fraglimit, 0);
@@ -100,6 +100,12 @@ float WinningCondition_QualifyingThenRace(float limit)
 	}
 
 	return wc;
+}
+
+MUTATOR_HOOKFUNCTION(rc, ClientKill)
+{
+	if(g_race_qualifying)
+		M_ARGV(1, float) = 0; // killtime
 }
 
 MUTATOR_HOOKFUNCTION(rc, AbortSpeedrun)
@@ -144,8 +150,8 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel.x = fabs(player.movement.x);
-	wishvel.y = fabs(player.movement.y);
+	wishvel.x = fabs(CS(player).movement.x);
+	wishvel.y = fabs(CS(player).movement.y);
 	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
 		wishvel.z = 0;
@@ -153,32 +159,32 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 		if(wishvel.x >= 2 * wishvel.y)
 		{
 			// pure X motion
-			if(player.movement.x > 0)
-				player.movement_x = wishspeed;
+			if(CS(player).movement.x > 0)
+				CS(player).movement_x = wishspeed;
 			else
-				player.movement_x = -wishspeed;
-			player.movement_y = 0;
+				CS(player).movement_x = -wishspeed;
+			CS(player).movement_y = 0;
 		}
 		else if(wishvel.y >= 2 * wishvel.x)
 		{
 			// pure Y motion
-			player.movement_x = 0;
-			if(player.movement.y > 0)
-				player.movement_y = wishspeed;
+			CS(player).movement_x = 0;
+			if(CS(player).movement.y > 0)
+				CS(player).movement_y = wishspeed;
 			else
-				player.movement_y = -wishspeed;
+				CS(player).movement_y = -wishspeed;
 		}
 		else
 		{
 			// diagonal
-			if(player.movement.x > 0)
-				player.movement_x = M_SQRT1_2 * wishspeed;
+			if(CS(player).movement.x > 0)
+				CS(player).movement_x = M_SQRT1_2 * wishspeed;
 			else
-				player.movement_x = -M_SQRT1_2 * wishspeed;
-			if(player.movement.y > 0)
-				player.movement_y = M_SQRT1_2 * wishspeed;
+				CS(player).movement_x = -M_SQRT1_2 * wishspeed;
+			if(CS(player).movement.y > 0)
+				CS(player).movement_y = M_SQRT1_2 * wishspeed;
 			else
-				player.movement_y = -M_SQRT1_2 * wishspeed;
+				CS(player).movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
 }
@@ -192,7 +198,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		if(it.race_place)
 		{
 			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
@@ -200,7 +206,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 				it.race_place = 0;
 		}
 		race_EventLog(ftos(it.race_place), it);
-	));
+	});
 
 	if(g_race_qualifying == 2)
 	{
@@ -277,7 +283,7 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	if(IS_PLAYER(player))
 	if(!game_stopped)
 	{
-		if(player.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
+		if(CS(player).killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
 			race_PreparePlayer(player);
 		else // respawn
 			race_RetractPlayer(player);
@@ -306,7 +312,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));

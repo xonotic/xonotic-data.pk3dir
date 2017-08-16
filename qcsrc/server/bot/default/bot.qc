@@ -41,6 +41,13 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+// TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
+void bot_setclientfields(entity this)
+{
+	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+}
+
 entity bot_spawn()
 {
 	entity bot = spawnclient();
@@ -50,6 +57,7 @@ entity bot_spawn()
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
+		bot_setclientfields(bot);
 		PutClientInServer(bot);
 	}
 	return bot;
@@ -74,7 +82,7 @@ void bot_think(entity this)
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
 	}
@@ -94,7 +102,7 @@ void bot_think(entity this)
 	// (simulated network latency + naturally delayed reflexes)
 	//this.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
 	// minimum ping 20+10 random
-	this.ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
+	CS(this).ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
 	// skill 10 = ping 0.2 (adrenaline)
 	// skill 0 = ping 0.7 (slightly drunk)
 
@@ -113,7 +121,7 @@ void bot_think(entity this)
 	if (time < game_starttime)
 	{
 		// block the bot during the countdown to game start
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		this.bot_nextthink = game_starttime;
 		return;
 	}
@@ -121,7 +129,7 @@ void bot_think(entity this)
 	// if dead, just wait until we can respawn
 	if (IS_DEAD(this))
 	{
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		if (this.deadflag == DEAD_DEAD)
 		{
 			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
@@ -175,13 +183,13 @@ void bot_setnameandstuff(entity this)
 				continue;
 			s = argv(0);
 			prio = 1;
-			FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 				if(s == it.cleanname)
 				{
 					prio = 0;
 					break;
 				}
-			));
+			});
 			RandomSelection_AddString(readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
@@ -248,10 +256,10 @@ void bot_setnameandstuff(entity this)
 
 	// number bots with identical names
 	int j = 0;
-	FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 		if(it.cleanname == name)
 			++j;
-	));
+	});
 	if (j)
 		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
 	else
@@ -264,9 +272,6 @@ void bot_setnameandstuff(entity this)
 		bot_model = strcat(bot_model, ".iqm");
 	this.playermodel = this.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	this.playerskin = this.playerskin_freeme = strzone(bot_skin);
-
-	this.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the NULL
-	this.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 void bot_custom_weapon_priority_setup()
@@ -419,7 +424,10 @@ void bot_clientconnect(entity this)
 	this.createdtime = this.bot_nextthink;
 
 	if(!this.bot_config_loaded) // This is needed so team overrider doesn't break between matches
+	{
 		bot_setnameandstuff(this);
+		bot_setclientfields(this);
+	}
 
 	if(this.bot_forced_team==1)
 		this.team = NUM_TEAM_1;
@@ -526,25 +534,25 @@ void autoskill(float factor)
 
 	bestbot = -1;
 	bestplayer = -1;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(IS_REAL_CLIENT(it))
 			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
 		else
 			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
-	));
+	});
 
-	LOG_TRACE("autoskill: best player got ", ftos(bestplayer), ", ");
-	LOG_TRACE("best bot got ", ftos(bestbot), "; ");
+	LOG_DEBUG("autoskill: best player got ", ftos(bestplayer), ", ");
+	LOG_DEBUG("best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		LOG_TRACE("not doing anything");
+		LOG_DEBUG("not doing anything");
 		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(autocvar_skill < 17)
 		{
-			LOG_TRACE("2 frags difference, increasing skill");
+			LOG_DEBUG("2 frags difference, increasing skill");
 			cvar_set("skill", ftos(autocvar_skill + 1));
 			bprint("^2SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
@@ -553,19 +561,19 @@ void autoskill(float factor)
 	{
 		if(autocvar_skill > 0)
 		{
-			LOG_TRACE("2 frags difference, decreasing skill");
+			LOG_DEBUG("2 frags difference, decreasing skill");
 			cvar_set("skill", ftos(autocvar_skill - 1));
 			bprint("^1SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else
 	{
-		LOG_TRACE("not doing anything");
+		LOG_DEBUG("not doing anything");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.totalfrags_lastcheck = it.totalfrags));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.totalfrags_lastcheck = it.totalfrags; });
 }
 
 void bot_calculate_stepheightvec()
@@ -584,11 +592,11 @@ float bot_fixcount()
 		activerealplayers = M_ARGV(0, int);
 		realplayers = M_ARGV(1, int);
 	} else {
-		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 			if(IS_PLAYER(it))
 				++activerealplayers;
 			++realplayers;
-		));
+		});
 	}
 
 	int bots;

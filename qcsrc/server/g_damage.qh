@@ -3,6 +3,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
+    #include <server/defs.qh>
+    #include <server/miscfunctions.qh>
     #include <lib/warpzone/common.qh>
     #include <common/constants.qh>
     #include <common/teams.qh>
@@ -85,11 +87,6 @@ void Ice_Think(entity this);
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint);
 
 void Unfreeze (entity targ);
-
-// these are updated by each Damage call for use in button triggering and such
-entity damage_targ;
-entity damage_inflictor;
-entity damage_attacker;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
