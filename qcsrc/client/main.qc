@@ -108,6 +108,11 @@ void CSQC_Init()
 		maxclients = i;
 	}
 
+	// needs to be done so early because of the constants they create
+	static_init();
+	static_init_late();
+	static_init_precache();
+
 	binddb = db_create();
 	tempdb = db_create();
 	ClientProgsDB = db_load("client.db");
