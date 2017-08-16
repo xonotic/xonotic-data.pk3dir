@@ -771,7 +771,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector v, v2;
 	float v2_height;
 
-	if(!autocvar_g_waypointeditor && !ent.navigation_dynamicgoal)
+	if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
 	{
 		waypoint_clearlinks(ent); // initialize wpXXmincost fields
 		IL_EACH(g_waypoints, it != ent,
@@ -779,8 +779,9 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 				continue;
 
-			SET_TRACEWALK_DESTCOORDS_2(it, org, v, v2, v2_height);
-			if(navigation_waypoint_will_link(v, org, ent, v2, v2_height, walkfromwp, 1050))
+			SET_TRACEWALK_DESTCOORDS(it, org, v2, v2_height);
+			if(vdist(v2 - org, <, 1050))
+			if(tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v2, v2_height, bot_navigation_movemode))
 				navigation_item_addlink(it, ent);
 		});
 	}
@@ -1301,6 +1302,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 			if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
 			{
 				SET_TRACEWALK_DESTCOORDS(e, nearest_wp.enemy.origin, dest, dest_height);
+				if(vdist(dest - nearest_wp.enemy.origin, <, 1050))
 				if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 					e = nearest_wp.enemy;
 			}
