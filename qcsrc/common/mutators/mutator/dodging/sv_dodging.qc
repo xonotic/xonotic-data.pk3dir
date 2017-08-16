@@ -182,7 +182,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool wall_dodge = false;
 
 	if(!PHYS_DODGING_AIR)
-	if(!is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD))
+	if(!is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD)) // TODO first check wall wallldodging - this fails for sloped walls
 	{
 		wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD));
 		if(!wall_dodge) // we're not on the ground, and wall dodging isn't allowed, end it!
@@ -207,8 +207,8 @@ bool PM_dodging_checkpressedkeys(entity this)
 	// normalize the dodging_direction vector.. (unlike UT99) XD
 	float length = sqrt(this.dodging_direction.x ** 2 + this.dodging_direction.y ** 2);
 
-	this.dodging_direction_x = this.dodging_direction_x / length;
-	this.dodging_direction_y = this.dodging_direction_y / length;
+	this.dodging_direction.x = this.dodging_direction.x / length;
+	this.dodging_direction.y = this.dodging_direction.y / length;
 
 	return true;
 }
@@ -222,8 +222,8 @@ void PM_dodging(entity this)
 	if (this.waterlevel >= WATERLEVEL_SWIMMING || IS_DEAD(this))
 	{
 		this.dodging_action = 0;
-		this.dodging_direction_x = 0;
-		this.dodging_direction_y = 0;
+		this.dodging_direction.x = 0;
+		this.dodging_direction.y = 0;
 		return;
 	}
 
@@ -238,10 +238,10 @@ void PM_dodging(entity this)
 	// will be called ramp_time/frametime times = 2 times. so, we need to
 	// add 0.5 * the total speed each frame until the dodge action is done..
 	float common_factor = PHYS_DODGING_FRAMETIME / PHYS_DODGING_RAMP_TIME;
-	common_factor /= 2; // FIXME this is WRONG but this function is called twice per frame!!!
+	//common_factor /= 2; // FIXME this is WRONG but this function is called twice per frame!!!
 
 	// if ramp time is smaller than frametime we get problems ;D
-	common_factor = min(common_factor, 1);
+	common_factor = min(common_factor, 1); // TODO necessary with dodging_force_remaining?
 
 	/*float horiz_speed = determine_speed(this); // TODO kill this
 	//LOG_INFOF("velocity %f -> force %f\n", vlen(vec2(this.velocity)), horiz_speed);
@@ -258,10 +258,11 @@ void PM_dodging(entity this)
 
 	this.dodging_velocity_gain = this.dodging_velocity_gain - velocity_difference;*/
 
-	float velocity_increase = common_factor * this.dodging_force_total;
+	float velocity_increase = min(common_factor * this.dodging_force_total, this.dodging_force_remaining);
+	this.dodging_force_remaining -= velocity_increase;
 	LOG_INFOF("time %f velocity_increase: %f\n", time, velocity_increase);
-	this.velocity += this.dodging_direction_x * velocity_increase * v_forward
-	               + this.dodging_direction_y * velocity_increase * v_right;
+	this.velocity += this.dodging_direction.x * velocity_increase * v_forward
+	               + this.dodging_direction.y * velocity_increase * v_right;
 
 	// the up part of the dodge is a single shot action
 	if (this.dodging_single_action == 1)
@@ -280,8 +281,7 @@ void PM_dodging(entity this)
 		this.dodging_single_action = 0;
 	}
 
-	// are we done with the dodging ramp yet?
-	if((time - this.last_dodging_time) > PHYS_DODGING_RAMP_TIME)
+	if(this.dodging_force_remaining <= 0)
 	{
 		// reset state so next dodge can be done correctly
 		this.dodging_action = 0;
