@@ -207,87 +207,6 @@ string PlayerTemplate_GetStringValue(string template, string variable)
 	return cvar_string(fullname);
 }
 
-void PlayerTemplate_GiveRandomWeapons(entity player, int num_weapons,
-	string weapon_names, float shells, float bullets, float rockets,
-	float cells, float plasma)
-{
-	if (num_weapons == 0)
-	{
-		return;
-	}
-	int num_potential_weapons = tokenize_console(weapon_names);
-	for (int i = 0; i < num_weapons; ++i)
-	{
-		RandomSelection_Init();
-		for (int j = 0; j < num_potential_weapons; ++j)
-		{
-			string weapon = argv(j);
-			FOREACH(Weapons, it != WEP_Null,
-			{
-				// Finding a weapon which player doesn't have.
-				if (!(player.weapons & it.m_wepset) && (it.netname == weapon))
-				{
-					RandomSelection_AddEnt(it, 1, 1);
-					break;
-				}
-			});
-		}
-		if (RandomSelection_chosen_ent == NULL)
-		{
-			return;
-		}
-		player.weapons |= RandomSelection_chosen_ent.m_wepset;
-		switch (RandomSelection_chosen_ent.ammo_field)
-		{
-			case (ammo_shells):
-			{
-				if (player.ammo_shells != 0)
-				{
-					break;
-				}
-				GivePlayerAmmo(player, ammo_shells, shells);
-				break;
-			}
-			case (ammo_nails):
-			{
-				if (player.ammo_nails != 0)
-				{
-					break;
-				}
-				GivePlayerAmmo(player, ammo_nails, bullets);
-				break;
-			}
-			case (ammo_rockets):
-			{
-				if (player.ammo_rockets != 0)
-				{
-					break;
-				}
-				GivePlayerAmmo(player, ammo_rockets, rockets);
-				break;
-			}
-			case (ammo_cells):
-			{
-				if (player.ammo_cells != 0)
-				{
-					break;
-				}
-				GivePlayerAmmo(player, ammo_cells, cells);
-				break;
-			}
-			case (ammo_plasma):
-			{
-				if (player.ammo_plasma != 0)
-				{
-					break;
-				}
-				GivePlayerAmmo(player, ammo_plasma, plasma);
-				break;
-			}
-		}
-	}
-}
-
 float PlayerTemplate_GivePlayerItem(entity player, string template,
 	string variable)
 {
@@ -410,7 +329,7 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 	}
 	if (!warmup_stage)
 	{
-		PlayerTemplate_GiveRandomWeapons(player,
+		GivePlayerRandomWeapons(player,
 			PlayerTemplate_GetFloatValue(template, "num_random_start_weapons"),
 			PlayerTemplate_GetStringValue(template, "random_start_weapons"),
 			PlayerTemplate_GetFloatValue(template, "random_start_shells"),

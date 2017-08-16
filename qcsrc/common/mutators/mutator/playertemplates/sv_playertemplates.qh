@@ -40,19 +40,6 @@ float PlayerTemplate_GetFloatValue(string template, string variable);
 /// \return Value of the variable.
 string PlayerTemplate_GetStringValue(string template, string variable);
 
-/// \brief Give several random weapons and ammo to the player.
-/// \param[in,out] player Player to give weapons to.
-/// \param[in] num_weapons Number of weapons to give.
-/// \param[in] weapon_names Names of weapons to give separated by spaces.
-/// \param[in] shells Amount of shells to give with shell-based weapon.
-/// \param[in] bullets Amount of bullets to give with bullet-based weapon.
-/// \param[in] rockets Amount of rockets to give with rocket-based weapon.
-/// \param[in] cells Amount of cells to give with cell-based weapon.
-/// \param[in] cells Amount of plasma to give with plasma-based weapon.
-void PlayerTemplate_GiveRandomWeapons(entity player, int num_weapons,
-	string weapon_names, float shells, float bullets, float rockets,
-	float cells, float plasma);
-
 /// \brief Gives player items according to the given template's variable.
 /// \param[in] player Player to give items to.
 /// \param[in] template Name of the template.
