@@ -252,14 +252,14 @@ bool Invasion_CheckWinner()
 	}
 	else
 	{
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			float cs = PlayerScore_Add(it, SP_KILLS, 0);
 			if(cs > winning_score)
 			{
 				winning_score = cs;
 				winner = it;
 			}
-		));
+		});
 	}
 
 	IL_EACH(g_monsters, true,
@@ -295,10 +295,10 @@ bool Invasion_CheckPlayers()
 void Invasion_RoundStart()
 {
 	int numplayers = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.player_blocked = false;
 		++numplayers;
-	));
+	});
 
 	if(inv_roundcnt < inv_maxrounds)
 		inv_roundcnt += 1; // a limiter to stop crazy counts

@@ -1,8 +1,7 @@
+#include "radarmap.qh"
 #ifdef RADARMAP
 
-#include "radarmap.qh"
 #include <common/command/_mod.qh>
-#include "radarmap.qh"
 
 #include "../g_world.qh"
 #include "../g_subs.qh"

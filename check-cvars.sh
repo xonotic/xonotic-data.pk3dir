@@ -27,6 +27,9 @@ check_files "balance-xonotic.cfg" "balance-*.cfg" "/^seta? g_/"
 check_files "_hud_descriptions.cfg" "hud_*.cfg" "/^seta? hud_/"
 
 if $errord; then
+    if [ "$CMAKE" != "" ]; then
+	    exit 1
+	fi
 	echo "Please wait for 30 seconds, so you have had enough time to read this..."
 	sleep 30
 fi

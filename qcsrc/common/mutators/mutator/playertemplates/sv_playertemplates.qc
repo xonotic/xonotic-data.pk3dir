@@ -47,6 +47,26 @@ string PlayerTemplate_GetDefaultCvarName(string variable)
 		{
 			return "g_start_ammo_fuel";
 		}
+		case "random_start_shells":
+		{
+			return "g_random_start_shells";
+		}
+		case "random_start_bullets":
+		{
+			return "g_random_start_bullets";
+		}
+		case "random_start_rockets":
+		{
+			return "g_random_start_rockets";
+		}
+		case "random_start_cells":
+		{
+			return "g_random_start_cells";
+		}
+		case "random_start_plasma":
+		{
+			return "g_random_start_plasma";
+		}
 		case "health_regen_factor":
 		{
 			return "g_balance_health_regen";
@@ -91,6 +111,11 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		case "start_ammo_cells":
 		case "start_ammo_plasma":
 		case "start_ammo_fuel":
+		case "random_start_shells":
+		case "random_start_bullets":
+		case "random_start_rockets":
+		case "random_start_cells":
+		case "random_start_plasma":
 		case "health_regen_factor":
 		case "health_regen_linear":
 		case "health_rot_factor":
@@ -180,38 +205,6 @@ string PlayerTemplate_GetStringValue(string template, string variable)
 		return PlayerTemplate_GetDefaultStringValue(variable);
 	}
 	return cvar_string(fullname);
-}
-
-void PlayerTemplate_GiveRandomWeapons(entity player, int num_weapons,
-	string weapon_names)
-{
-	if (num_weapons == 0)
-	{
-		return;
-	}
-	int num_potential_weapons = tokenize_console(weapon_names);
-	for (int i = 0; i < num_weapons; ++i)
-	{
-		RandomSelection_Init();
-		for (int j = 0; j < num_potential_weapons; ++j)
-		{
-			string weapon = argv(j);
-			FOREACH(Weapons, it != WEP_Null,
-			{
-				// Finding a weapon which player doesn't have.
-				if (!(player.weapons & it.m_wepset) && (it.netname == weapon))
-				{
-					RandomSelection_AddEnt(it, 1, 1);
-					break;
-				}
-			});
-		}
-		if (RandomSelection_chosen_ent == NULL)
-		{
-			return;
-		}
-		player.weapons |= RandomSelection_chosen_ent.m_wepset;
-	}
 }
 
 float PlayerTemplate_GivePlayerItem(entity player, string template,
@@ -336,9 +329,14 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 	}
 	if (!warmup_stage)
 	{
-		GiveRandomWeapons(player, PlayerTemplate_GetFloatValue(template,
-		"num_random_start_weapons"), PlayerTemplate_GetStringValue(template,
-		"random_start_weapons"));
+		GivePlayerRandomWeapons(player,
+			PlayerTemplate_GetFloatValue(template, "num_random_start_weapons"),
+			PlayerTemplate_GetStringValue(template, "random_start_weapons"),
+			PlayerTemplate_GetFloatValue(template, "random_start_shells"),
+			PlayerTemplate_GetFloatValue(template, "random_start_bullets"),
+			PlayerTemplate_GetFloatValue(template, "random_start_rockets"),
+			PlayerTemplate_GetFloatValue(template, "random_start_cells"),
+			PlayerTemplate_GetFloatValue(template, "random_start_plasma"));
 		return;
 	}
 	// Give random weapons.

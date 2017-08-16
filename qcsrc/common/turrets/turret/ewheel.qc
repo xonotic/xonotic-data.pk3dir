@@ -1,7 +1,5 @@
 #include "ewheel.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 float autocvar_g_turrets_unit_ewheel_speed_fast;
@@ -245,4 +243,3 @@ void ewheel_draw(entity this)
         }
 
 #endif // CSQC
-#endif

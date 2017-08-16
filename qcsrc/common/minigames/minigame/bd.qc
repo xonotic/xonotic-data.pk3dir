@@ -1020,7 +1020,7 @@ void bd_hud_board(vector pos, vector mySize)
 				minigame_drawpic_centered( tile_pos,
 						minigame_texture(thepiece),
 						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-			}	
+			}
 		}
 		else if ( e.classname == "minigame_board_piece" )
 		{
@@ -1058,7 +1058,7 @@ void bd_hud_board(vector pos, vector mySize)
 				default:
 				case BD_DIR_DN: theang = M_PI; break;
 				case BD_DIR_LF: theang = M_PI * 3 / 2; break;
-				case BD_DIR_RT: theang = M_PI / 2; break; 
+				case BD_DIR_RT: theang = M_PI / 2; break;
 			}
 
 			drawrotpic(tile_pos, theang, minigame_texture("bd/dozer"),

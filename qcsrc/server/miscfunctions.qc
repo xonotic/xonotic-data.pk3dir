@@ -1,4 +1,5 @@
 #include "miscfunctions.qh"
+
 #include "antilag.qh"
 #include "command/common.qh"
 #include "constants.qh"
@@ -291,37 +292,37 @@ Called with:
   0:  sends the request
   >0: receives a cvar from name=argv(f) value=argv(f+1)
 */
-void GetCvars_handleString(entity this, string thisname, float f, .string field, string name)
+void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name)
 {
 	if (f < 0)
 	{
-		if (this.(field))
-			strunzone(this.(field));
-		this.(field) = string_null;
+		if (store.(field))
+			strunzone(store.(field));
+		store.(field) = string_null;
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (this.(field))
-				strunzone(this.(field));
-			this.(field) = strzone(argv(f + 1));
+			if (store.(field))
+				strunzone(store.(field));
+			store.(field) = strzone(argv(f + 1));
 		}
 	}
 	else
 		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleString_Fixup(entity this, string thisname, float f, .string field, string name, string(entity, string) func)
+void GetCvars_handleString_Fixup(entity this, entity store, string thisname, float f, .string field, string name, string(entity, string) func)
 {
-	GetCvars_handleString(this, thisname, f, field, name);
+	GetCvars_handleString(this, store, thisname, f, field, name);
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
 		{
-			string s = func(this, strcat1(this.(field)));
-			if (s != this.(field))
+			string s = func(this, strcat1(store.(field)));
+			if (s != store.(field))
 			{
-				strunzone(this.(field));
-				this.(field) = strzone(s);
+				strunzone(store.(field));
+				store.(field) = strzone(s);
 			}
 		}
 }
@@ -338,7 +339,7 @@ void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .
 	else
 		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleFloatOnce(entity this, string thisname, float f, .float field, string name)
+void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float f, .float field, string name)
 {
 	if (f < 0)
 	{
@@ -347,17 +348,17 @@ void GetCvars_handleFloatOnce(entity this, string thisname, float f, .float fiel
 	{
 		if (thisname == name)
 		{
-			if (!this.(field))
+			if (!store.(field))
 			{
-				this.(field) = stof(argv(f + 1));
-				if (!this.(field))
-					this.(field) = -1;
+				store.(field) = stof(argv(f + 1));
+				if (!store.(field))
+					store.(field) = -1;
 			}
 		}
 	}
 	else
 	{
-		if (!this.(field))
+		if (!store.(field))
 			stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
@@ -407,7 +408,7 @@ REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
-void GetCvars(entity this, int f)
+void GetCvars(entity this, entity store, int f)
 {
 	string s = string_null;
 
@@ -420,21 +421,21 @@ void GetCvars(entity this, int f)
 
 	Notification_GetCvars(this);
 
-	ReplicateVars(this, s, f);
+	ReplicateVars(this, store, s, f);
 
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 
-	GetCvars_handleFloat(this, this, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(this, store, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -463,7 +464,7 @@ string playername(entity p, bool team_colorize)
         return strcat(t, strdecolorize(p.netname));
     }
     else
-        return ColorTranslateRGB(p.netname);
+        return p.netname;
 }
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
@@ -547,10 +548,10 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				g_weaponarena_weapons |= (it.m_wepset);
-		));
+		});
 	}
 	else if (s == "devall")
 	{
@@ -565,11 +566,11 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if(it.spawnflags & WEP_FLAG_NORMAL)
 					g_weaponarena_weapons |= (it.m_wepset);
-		));
+		});
 	}
 	else if (s == "none")
 	{
@@ -584,14 +585,14 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				if(it.netname == s)
 				{
 					g_weaponarena_weapons |= (it.m_wepset);
 					g_weaponarena_list = strcat(g_weaponarena_list, it.m_name, " & ");
 					break;
 				}
-			));
+			});
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
@@ -610,7 +611,7 @@ void readplayerstartcvars()
 	}
 	else
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			int w = want_weapon(it, false);
 			WepSet s = it.m_wepset;
 			if(w & 1)
@@ -619,7 +620,7 @@ void readplayerstartcvars()
 				start_weapons_default |= s;
 			if(w & 4)
 				start_weapons_defaultmask |= s;
-		));
+		});
 	}
 
 	if(!cvar("g_use_ammunition"))
@@ -642,6 +643,12 @@ void readplayerstartcvars()
 		start_ammo_cells = cvar("g_start_ammo_cells");
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
+		num_random_start_weapons = cvar("g_num_random_start_weapons");
+		random_start_shells = cvar("g_random_start_shells");
+		random_start_bullets = cvar("g_random_start_bullets");
+		random_start_rockets = cvar("g_random_start_rockets");
+		random_start_cells = cvar("g_random_start_cells");
+		random_start_plasma = cvar("g_random_start_plasma");
 	}
 
 	if (warmup_stage)
@@ -671,7 +678,7 @@ void readplayerstartcvars()
 			warmup_start_weapons = '0 0 0';
 			warmup_start_weapons_default = '0 0 0';
 			warmup_start_weapons_defaultmask = '0 0 0';
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				int w = want_weapon(it, g_warmup_allguns);
 				WepSet s = (it.m_wepset);
 				if(w & 1)
@@ -680,7 +687,7 @@ void readplayerstartcvars()
 					warmup_start_weapons_default |= s;
 				if(w & 4)
 					warmup_start_weapons_defaultmask |= s;
-			));
+			});
 		}
 	}
 
@@ -699,10 +706,10 @@ void readplayerstartcvars()
 	WepSet precache_weapons = start_weapons;
 	if (g_warmup_allguns != 1)
 		precache_weapons |= warmup_start_weapons;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		if(precache_weapons & (it.m_wepset))
 			it.wr_init(it);
-	));
+	});
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
@@ -710,6 +717,11 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
+	random_start_shells = max(0, random_start_shells);
+	random_start_bullets = max(0, random_start_bullets);
+	random_start_rockets = max(0, random_start_rockets);
+	random_start_cells = max(0, random_start_cells);
+	random_start_plasma = max(0, random_start_plasma);
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
@@ -763,7 +775,7 @@ void precache_all_playermodels(string pattern)
 
 void precache_playermodels(string s)
 {
-	FOREACH_WORD(s, true, LAMBDA(precache_playermodel(it)));
+	FOREACH_WORD(s, true, { precache_playermodel(it); });
 }
 
 void precache()

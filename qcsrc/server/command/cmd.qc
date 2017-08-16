@@ -1,4 +1,8 @@
 #include "cmd.qh"
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 #include <common/command/_mod.qh>
 
 #include "common.qh"
@@ -45,17 +49,19 @@ void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change,
 
 bool SV_ParseClientCommand_floodcheck(entity this)
 {
+	entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+
 	if (!timeout_status)  // not while paused
 	{
-		if (time <= (this.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
+		if (time <= (store.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
-			this.cmd_floodcount += 1;
-			if (this.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
+			store.cmd_floodcount += 1;
+			if (store.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
 		}
 		else
 		{
-			this.cmd_floodtime = time;
-			this.cmd_floodcount = 1;
+			store.cmd_floodtime = time;
+			store.cmd_floodcount = 1;
 		}
 	}
 	return true;  // continue, as we're not flooding yet
@@ -74,8 +80,8 @@ void ClientCommand_autoswitch(entity caller, float request, float argc)
 		{
 			if (argv(1) != "")
 			{
-				caller.autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (caller.autoswitch ? "on" : "off"), ".\n"));
+				CS(caller).autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS(caller).autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
@@ -214,7 +220,7 @@ void ClientCommand_physics(entity caller, float request, float argc)
 		}
 
 		default:
-			sprint(caller, strcat("Current physics set: ^3", caller.cvar_cl_physics, "\n"));
+			sprint(caller, strcat("Current physics set: ^3", CS(caller).cvar_cl_physics, "\n"));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd physics <physics>\n");
@@ -464,7 +470,7 @@ void ClientCommand_sentcvar(entity caller, float request, float argc, string com
 					tokenize_console(s);
 				}
 
-				GetCvars(caller, 1);
+				GetCvars(caller, CS(caller), 1);
 
 				return;
 			}

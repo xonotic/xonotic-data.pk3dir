@@ -1,5 +1,7 @@
 #include "main.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "pathlib.qh"
 #include "utility.qh"
 #include "../command/common.qh"

@@ -1254,7 +1254,7 @@ void turret_findtarget(entity this)
 		setthink(e, turrets_manager_think);
 		e.nextthink = time + 2;
 	}
-	
+
 	entity targ = find(NULL, targetname, this.target);
 	if(targ.classname == "turret_checkpoint")
 		return; // turrets don't defend checkpoints?

@@ -1,5 +1,7 @@
 #include "scores_rules.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "client.qh"
 #include "scores.qh"
 #include "teamplay.qh"

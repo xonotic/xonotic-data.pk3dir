@@ -1,5 +1,7 @@
 #include "havocbot.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "../cvars.qh"
 
 #include "../aim.qh"
@@ -187,13 +189,13 @@ void havocbot_ai(entity this)
 			if(skill >= 5) // bots can only look for unloaded weapons past this skill
 			if(this.(weaponentity).clip_load >= 0) // only if we're not reloading a weapon already
 			{
-				FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				FOREACH(Weapons, it != WEP_Null, {
 					if((this.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
 					{
 						this.(weaponentity).m_switchweapon = it;
 						break;
 					}
-				));
+				});
 			}
 		}
 	}
@@ -363,7 +365,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if(checkdistance)
 					{
 						this.aistatus &= ~AI_STATUS_RUNNING;
-						// increase stop distance in case the goal is on a slope or a lower platform 
+						// increase stop distance in case the goal is on a slope or a lower platform
 						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance + (this.origin.z - gco.z))
 							PHYS_INPUT_BUTTON_JUMP(this) = true;
 					}
@@ -1078,10 +1080,10 @@ float havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int n
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (this.(weaponentity).weapon_load[new_weapon] < 0)
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(it.wr_checkammo1(it, this, weaponentity) + it.wr_checkammo2(it, this, weaponentity))
 				return true; // other weapon available
-		));
+		});
 	}
 
 	return false;
@@ -1103,13 +1105,13 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	{
 		// If no weapon was chosen get the first available weapon
 		if(this.(weaponentity).m_weapon==WEP_Null)
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(client_hasweapon(this, it, weaponentity, true, false))
 			{
 				this.(weaponentity).m_switchweapon = it;
 				return;
 			}
-		));
+		});
 		return;
 	}
 

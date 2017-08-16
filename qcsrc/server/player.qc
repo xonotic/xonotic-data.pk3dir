@@ -1,5 +1,6 @@
 #include "player.qh"
 
+#include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
@@ -21,7 +22,7 @@
 #include "../common/minigames/sv_minigames.qh"
 
 #include "../common/physics/player.qh"
-#include "../common/effects/qc/all.qh"
+#include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/triggers/include.qh"
 #include "../common/wepent.qh"
@@ -235,10 +236,10 @@ void calculate_player_respawn_time(entity this)
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
 	if (teamplay)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 			if(it.team == this.team)
 				++pcount;
-		));
+		});
 		if (sdelay_small_count == 0)
 			sdelay_small_count = 1;
 		if (sdelay_large_count == 0)
@@ -246,9 +247,9 @@ void calculate_player_respawn_time(entity this)
 	}
 	else
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 			++pcount;
-		));
+		});
 		if (sdelay_small_count == 0)
 		{
 			if (IS_INDEPENDENT_PLAYER(this))
@@ -316,9 +317,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= bound(1.0, this.cvar_cl_handicap, 10.0);
-		if(this != attacker)
-			damage /= bound(1.0, attacker.cvar_cl_handicap, 10.0);
+		damage *= bound(1.0, CS(this).cvar_cl_handicap, 10.0);
+		if(this != attacker && IS_PLAYER(attacker))
+			damage /= bound(1.0, CS(attacker).cvar_cl_handicap, 10.0);
 	}
 
 	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)

@@ -259,9 +259,9 @@ string spritelookuptext(entity this, string s)
     }
 
     // need to loop, as our netname could be one of three
-    FOREACH(Waypoints, it.netname == s, LAMBDA(
+    FOREACH(Waypoints, it.netname == s, {
         return it.m_name;
-    ));
+    });
 
     return s;
 }

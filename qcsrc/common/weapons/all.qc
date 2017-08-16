@@ -50,9 +50,9 @@
 #ifdef SVQC
 	#include "config.qc"
 #endif
-#define IMPLEMENTATION
-#include "all.inc"
-#undef IMPLEMENTATION
+
+#include "weapon/_mod.inc"
+
 
 // WEAPON PLUGIN SYSTEM
 

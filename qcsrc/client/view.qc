@@ -1,5 +1,7 @@
 #include "view.qh"
 
+#include "autocvars.qh"
+#include "miscfunctions.qh"
 #include "announcer.qh"
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
@@ -21,6 +23,7 @@
 #include <common/stats.qh>
 #include <common/triggers/target/music.qh>
 #include <common/teams.qh>
+#include <common/wepent.qh>
 
 #include <common/weapons/weapon/tuba.qh>
 
@@ -311,6 +314,7 @@ void viewmodel_draw(entity this)
 		e.csqcmodel_effects = fx;
 		CSQCModel_Effects_Apply(e);
 	}
+	if(a >= 0)
 	{
 		string name = wep.mdl;
 		string newname = wep.wr_viewmodel(wep, this);

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 float internalteam;
 float weaponswapping;
 entity weapon_dropevent_item;

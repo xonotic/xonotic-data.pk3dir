@@ -65,7 +65,7 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 			this.enemy.health = -1;
 
 			if(this.enemy.message)
-				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(centerprint(it, this.enemy.message)));
+				FOREACH_CLIENT(IS_PLAYER(it), { centerprint(it, this.enemy.message); });
 
 			SUB_UseTargets(this.enemy, this, trigger);
 		}

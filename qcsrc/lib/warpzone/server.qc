@@ -811,7 +811,7 @@ void WarpZone_StartFrame()
 			WarpZone_StoreProjectileData(it);
 		});
 	}
-		
+
 
 	FOREACH_CLIENT(true,
 	{

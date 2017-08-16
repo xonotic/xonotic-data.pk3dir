@@ -1,6 +1,5 @@
 #include "gibs.qh"
 
-#ifdef IMPLEMENTATION
 REGISTER_NET_TEMP(net_gibsplash)
 
 #ifdef SVQC
@@ -313,6 +312,4 @@ NET_HANDLE(net_gibsplash, bool isNew)
 	}
 	delete(this);
 }
-#endif
-
 #endif
