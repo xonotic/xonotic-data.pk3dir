@@ -105,6 +105,19 @@ void GivePlayerArmor(entity player, float amount);
 /// \return No return.
 void GivePlayerAmmo(entity player, .float ammotype, float amount);
 
+/// \brief Give several random weapons and ammo to the player.
+/// \param[in,out] player Player to give weapons to.
+/// \param[in] num_weapons Number of weapons to give.
+/// \param[in] weapon_names Names of weapons to give separated by spaces.
+/// \param[in] shells Amount of shells to give with shell-based weapon.
+/// \param[in] bullets Amount of bullets to give with bullet-based weapon.
+/// \param[in] rockets Amount of rockets to give with rocket-based weapon.
+/// \param[in] cells Amount of cells to give with cell-based weapon.
+/// \param[in] cells Amount of plasma to give with plasma-based weapon.
+void GivePlayerRandomWeapons(entity player, int num_weapons,
+	string weapon_names, float shells, float bullets, float rockets,
+	float cells, float plasma);
+
 float ITEM_MODE_NONE = 0;
 float ITEM_MODE_HEALTH = 1;
 float ITEM_MODE_ARMOR = 2;
