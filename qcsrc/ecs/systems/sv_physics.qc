@@ -3,19 +3,17 @@
 void sys_phys_fix(entity this, float dt)
 {
 	WarpZone_PlayerPhysics_FixVAngle(this);
-	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
-	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this); // do it BEFORE the function so we can modify highspeed!
-	Physics_UpdateStats(this, PHYS_HIGHSPEED(this));
+	Physics_UpdateStats(this);
 }
 
 bool sys_phys_override(entity this, float dt)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
-	float idlesince = this.parm_idlesince;
-	this.parm_idlesince = time; // in the case that physics are overridden
+	float idlesince = CS(this).parm_idlesince;
+	CS(this).parm_idlesince = time; // in the case that physics are overridden
 	if (PM_check_specialcommand(this, buttons)) { return true; }
 	if (this.PlayerPhysplug && this.PlayerPhysplug(this, dt)) { return true; }
-	this.parm_idlesince = idlesince;
+	CS(this).parm_idlesince = idlesince;
 	return false;
 }
 
@@ -24,9 +22,9 @@ void sys_phys_monitor(entity this, float dt)
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 	anticheat_physics(this);
 	if (sv_maxidle > 0) {
-		if (buttons != this.buttons_old
-		    || this.movement != this.movement_old
-		    || this.v_angle != this.v_angle_old) { this.parm_idlesince = time; }
+		if (buttons != CS(this).buttons_old
+		    || CS(this).movement != CS(this).movement_old
+		    || this.v_angle != CS(this).v_angle_old) { CS(this).parm_idlesince = time; }
 	}
 	PM_check_nickspam(this);
 	PM_check_punch(this, dt);
@@ -57,28 +55,28 @@ void sys_phys_spectator_control(entity this)
 {
 	float maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
 	if (!this.spectatorspeed) { this.spectatorspeed = maxspeed_mod; }
-	if ((this.impulse >= 1 && this.impulse <= 19)
-	    || (this.impulse >= 200 && this.impulse <= 209)
-	    || (this.impulse >= 220 && this.impulse <= 229)
+	if ((CS(this).impulse >= 1 && CS(this).impulse <= 19)
+	    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
+	    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
 	   ) {
 		if (this.lastclassname != STR_PLAYER) {
-			if (this.impulse == 10
-			    || this.impulse == 15
-			    || this.impulse == 18
-			    || (this.impulse >= 200 && this.impulse <= 209)
-			   ) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (this.impulse == 11) {
+			if (CS(this).impulse == 10
+			    || CS(this).impulse == 15
+			    || CS(this).impulse == 18
+			    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
+			   ) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (CS(this).impulse == 11) {
 				this.spectatorspeed = maxspeed_mod;
-			} else if (this.impulse == 12
-			    || this.impulse == 16
-			    || this.impulse == 19
-			    || (this.impulse >= 220 && this.impulse <= 229)
+			} else if (CS(this).impulse == 12
+			    || CS(this).impulse == 16
+			    || CS(this).impulse == 19
+			    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
 			          ) {
 				this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
-			} else if (this.impulse >= 1 && this.impulse <= 9) {
-				this.spectatorspeed = 1 + 0.5 * (this.impulse - 1);
+			} else if (CS(this).impulse >= 1 && CS(this).impulse <= 9) {
+				this.spectatorspeed = 1 + 0.5 * (CS(this).impulse - 1);
 			}
 		}  // otherwise just clear
-		this.impulse = 0;
+		CS(this).impulse = 0;
 	}
 }
 

@@ -8,7 +8,7 @@ void minigame_hud_simpleboard(vector pos, vector mySize, string board_texture)
 					panel.current_panel_bg,
 					mySize + '1 1 0' * 2 * panel_bg_border,
 					panel_bg_color, panel_bg_alpha,
-					 '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));
+					'1 1 0' * BORDER_MULTIPLIER * panel_bg_border);
 	drawpic(pos, board_texture, mySize, '1 1 1', panel_bg_alpha, DRAWFLAG_NORMAL);
 }
 

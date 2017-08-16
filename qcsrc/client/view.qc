@@ -1,5 +1,7 @@
 #include "view.qh"
 
+#include "autocvars.qh"
+#include "miscfunctions.qh"
 #include "announcer.qh"
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
@@ -21,6 +23,7 @@
 #include <common/stats.qh>
 #include <common/triggers/target/music.qh>
 #include <common/teams.qh>
+#include <common/wepent.qh>
 
 #include <common/weapons/weapon/tuba.qh>
 
@@ -62,10 +65,9 @@ float autocvar_cl_leanmodel_highpass = 0.2;
 float autocvar_cl_leanmodel_lowpass = 0.05;
 
 #define avg_factor(avg_time) (1 - exp(-frametime / max(0.001, avg_time)))
-#define lowpass(value, frac, ref_store, ret) MACRO_BEGIN \
-{ \
-	ret = ref_store = ref_store * (1 - frac) + (value) * frac; \
-} MACRO_END
+
+#define lowpass(value, frac, ref_store, ret) \
+	ret = ref_store = ref_store * (1 - frac) + (value) * frac;
 
 #define lowpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
 { \
@@ -312,6 +314,7 @@ void viewmodel_draw(entity this)
 		e.csqcmodel_effects = fx;
 		CSQCModel_Effects_Apply(e);
 	}
+	if(a >= 0)
 	{
 		string name = wep.mdl;
 		string newname = wep.wr_viewmodel(wep, this);
@@ -770,6 +773,8 @@ bool WantEventchase(entity this)
 			return true;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return true;
+		if(autocvar_cl_eventchase_frozen && STAT(FROZEN))
+			return true;
 		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
 			if(autocvar_cl_eventchase_death == 2)
@@ -1200,7 +1205,7 @@ void HUD_Crosshair(entity this)
 					}
 
 					ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
-					ring_inner_rgb = eX * autocvar_crosshair_ring_vortex_inner_color_red + eY * autocvar_crosshair_ring_vortex_inner_color_green + eZ * autocvar_crosshair_ring_vortex_inner_color_blue;
+					ring_inner_rgb = vec3(autocvar_crosshair_ring_vortex_inner_color_red, autocvar_crosshair_ring_vortex_inner_color_green, autocvar_crosshair_ring_vortex_inner_color_blue);
 					ring_inner_image = "gfx/crosshair_ring_inner.tga";
 
 					// draw the outer ring to show the current charge of the weapon
@@ -1346,6 +1351,71 @@ void HUD_Crosshair(entity this)
 	}
 }
 
+const int MAX_SPECIALCOMMAND = 15;
+vector specialcommand_slots[MAX_SPECIALCOMMAND];
+vector specialcommand_colors[MAX_SPECIALCOMMAND];
+const float SPECIALCOMMAND_SPEED = 150;
+const float SPECIALCOMMAND_TURNSPEED = 2;
+const float SPECIALCOMMAND_SIZE = 0.025;
+const float SPECIALCOMMAND_CHANCE = 0.35;
+float sc_spawntime, sc_changetime;
+vector sc_color = '1 1 1';
+void SpecialCommand()
+{
+	if(!STAT(MOVEVARS_SPECIALCOMMAND))
+		return;
+
+	if(time >= sc_changetime)
+	{
+		sc_changetime = time + 1;
+		sc_color = randomvec() * 1.5;
+		sc_color.x = bound(0.2, sc_color.x, 0.75);
+		sc_color.y = bound(0.2, sc_color.y, 0.75);
+		sc_color.z = bound(0.2, sc_color.z, 0.75);
+	}
+	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), sc_color, autocvar_hud_colorflash_alpha * bound(0.1, sc_changetime - time, 0.3), DRAWFLAG_ADDITIVE);
+
+	if(!precache_pic("gfx/smile"))
+		return; // damn party poopers
+
+	for(int j = MAX_SPECIALCOMMAND - 1; j >= 0; --j)
+	{
+		vector slot = specialcommand_slots[j];
+		if(slot.y)
+			slot.y += SPECIALCOMMAND_SPEED * frametime;
+		if(slot.z)
+			slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
+		if(slot.y >= vid_conheight)
+			slot = '0 0 0';
+
+		if(slot == '0 0 0')
+		{
+			if(random() <= SPECIALCOMMAND_CHANCE && time > sc_spawntime) // low chance to spawn!
+			{
+				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
+				slot.y = 1; // start it off 0 so we can use it
+				slot.z = random();
+				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
+				vector newcolor = randomvec() * 2;
+				newcolor.x = bound(0.4, newcolor.x, 1);
+				newcolor.y = bound(0.4, newcolor.y, 1);
+				newcolor.z = bound(0.4, newcolor.z, 1);
+				specialcommand_colors[j] = newcolor;
+			}
+		}
+		else
+		{
+			vector splash_size = '0 0 0';
+			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
+			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
+			drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			//drawrotpic(vec2(slot), slot.z, "gfx/smile", vec2(splash_size), vec2(splash_size) / 2, specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+		}
+
+		specialcommand_slots[j] = slot;
+	}
+}
+
 void HUD_Draw(entity this)
 {
 	// if we don't know gametype and scores yet avoid drawing the scoreboard
@@ -1360,29 +1430,33 @@ void HUD_Draw(entity this)
 	if(!intermission)
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
+		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
 	}
 	else if(STAT(FROZEN))
 	{
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((STAT(REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * STAT(REVIVE_PROGRESS)) + ('0 1 1' * STAT(REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		vector col = '0.25 0.90 1';
+		if(STAT(REVIVE_PROGRESS))
+			col += vec3(STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS), -STAT(REVIVE_PROGRESS));
+		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 	}
 
 	HUD_Scale_Enable();
 	if(!intermission)
 	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * STAT(NADE_TIMER)) - ('0 1 1' * STAT(NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+		vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
+		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(NADE_TIMER), col, autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 	else if(STAT(CAPTURE_PROGRESS))
 	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 	else if(STAT(REVIVE_PROGRESS))
 	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+		DrawCircleClippedPic(vec2(0.5 * vid_conwidth, 0.6 * vid_conheight), 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), vec2(vid_conwidth, 0.025 * vid_conheight), '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 	HUD_Scale_Disable();
 
@@ -1397,6 +1471,7 @@ void HUD_Draw(entity this)
 		}
 
 	// crosshair goes VERY LAST
+	SpecialCommand();
 	UpdateDamage();
 	HUD_Crosshair(this);
 	HitSound();
@@ -2040,7 +2115,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 
 	// improved polyblend
-	if(autocvar_hud_contents)
+	if(autocvar_hud_contents && !MUTATOR_CALLHOOK(HUD_Contents))
 	{
 		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
 		vector liquidcolor;
@@ -2085,7 +2160,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
 
 		if(contentavgalpha)
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
+			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
 
 		if(autocvar_hud_postprocessing)
 		{
@@ -2161,13 +2236,13 @@ void CSQC_UpdateView(entity this, float w, float h)
 			if(autocvar_cl_gentle_damage == 2)
 			{
 				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
-					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+					myhealth_gentlergb = randomvec();
 			}
 			else
 				myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
 
 			if(myhealth_flash_temp > 0)
-				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+				drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
 		else if(myhealth_flash_temp > 0)
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
@@ -2251,7 +2326,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// draw 2D entities
 	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
-#ifdef DEBUGDRAW
+#if ENABLE_DEBUGDRAW
 	Debug_Draw();
 #endif
 

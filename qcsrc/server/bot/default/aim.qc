@@ -1,5 +1,7 @@
 #include "aim.qh"
 
+#include <server/defs.qh>
+
 #include "cvars.qh"
 
 #include "bot.qh"
@@ -157,7 +159,7 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 		return;
 	}
 	this.bot_aimtarg = e1;
-	this.bot_aimlatency = this.ping; // FIXME?  Shouldn't this be in the lag item?
+	this.bot_aimlatency = CS(this).ping; // FIXME?  Shouldn't this be in the lag item?
 	//this.bot_aimorigin = v1;
 	//this.bot_aimvelocity = v2;
 	this.bot_aimtargorigin = v3;

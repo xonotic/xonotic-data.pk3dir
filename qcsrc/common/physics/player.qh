@@ -2,7 +2,10 @@
 
 // Client/server mappings
 
-.float pm_frametime;
+#ifdef SVQC
+// TODO: get rid of this random dumb include!
+	#include <common/state.qh>
+#endif
 
 .entity conveyor;
 
@@ -19,8 +22,8 @@
 .float spectatorspeed;
 #endif
 
+.int buttons_old;
 .vector movement_old;
-.float buttons_old;
 .vector v_angle_old;
 .string lastclassname;
 
@@ -29,14 +32,18 @@ float AdjustAirAccelQW(float accelqw, float factor);
 
 bool IsFlying(entity a);
 
-#define BUFFS_STAT(s)                       STAT(BUFFS, s)
+#define PHYS_PL_MAX(s)						STAT(PL_MAX, s)
+#define PHYS_PL_MIN(s)						STAT(PL_MIN, s)
+#define PHYS_PL_CROUCH_MAX(s)				STAT(PL_CROUCH_MAX, s)
+#define PHYS_PL_CROUCH_MIN(s)				STAT(PL_CROUCH_MIN, s)
 
-#define GAMEPLAYFIX_DOWNTRACEONGROUND(s)    STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, s)
-#define GAMEPLAYFIX_EASIERWATERJUMP(s)      STAT(GAMEPLAYFIX_EASIERWATERJUMP, s)
-#define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN, s)
-#define GAMEPLAYFIX_STEPMULTIPLETIMES(s)    STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, s)
-#define GAMEPLAYFIX_UNSTICKPLAYERS(s)       STAT(GAMEPLAYFIX_UNSTICKPLAYERS, s)
-#define GAMEPLAYFIX_WATERTRANSITION(s) STAT(GAMEPLAYFIX_WATERTRANSITION, s)
+#define PHYS_PL_VIEWOFS(s)					STAT(PL_VIEW_OFS, s)
+#define PHYS_PL_CROUCH_VIEWOFS(s)			STAT(PL_CROUCH_VIEW_OFS, s)
+
+#define PHYS_VIEWHEIGHT(s)					STAT(VIEWHEIGHT, s)
+#define PHYS_HEALTH(s)						STAT(HEALTH, s)
+
+#define BUFFS_STAT(s)                       STAT(BUFFS, s)
 
 #define PHYS_ACCELERATE(s)                  STAT(MOVEVARS_ACCELERATE, s)
 #define PHYS_AIRACCELERATE(s)               STAT(MOVEVARS_AIRACCELERATE, s)
@@ -47,6 +54,7 @@ bool IsFlying(entity a);
 #define PHYS_AIRCONTROL_PENALTY(s)          STAT(MOVEVARS_AIRCONTROL_PENALTY, s)
 #define PHYS_AIRCONTROL_POWER(s)            STAT(MOVEVARS_AIRCONTROL_POWER, s)
 #define PHYS_AIRCONTROL_BACKWARDS(s)        STAT(MOVEVARS_AIRCONTROL_BACKWARDS, s)
+#define PHYS_AIRCONTROL_SIDEWARDS(s)        STAT(MOVEVARS_AIRCONTROL_SIDEWARDS, s)
 #define PHYS_AIRSPEEDLIMIT_NONQW(s)         STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, s)
 #define PHYS_AIRSTOPACCELERATE(s)           STAT(MOVEVARS_AIRSTOPACCELERATE, s)
 #define PHYS_AIRSTRAFEACCELERATE(s)         STAT(MOVEVARS_AIRSTRAFEACCELERATE, s)
@@ -72,22 +80,16 @@ bool IsFlying(entity a);
 #define PHYS_JETPACK_MAXSPEED_UP(s)         STAT(JETPACK_MAXSPEED_UP, s)
 #define PHYS_JETPACK_REVERSE_THRUST(s)		STAT(JETPACK_REVERSE_THRUST, s)
 
-#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, s)
-#define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP, s)
+#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, NULL)
 #define PHYS_JUMPVELOCITY(s)                STAT(MOVEVARS_JUMPVELOCITY, s)
 
 #define PHYS_MAXAIRSPEED(s)                 STAT(MOVEVARS_MAXAIRSPEED, s)
 #define PHYS_MAXAIRSTRAFESPEED(s)           STAT(MOVEVARS_MAXAIRSTRAFESPEED, s)
 #define PHYS_MAXSPEED(s)                    STAT(MOVEVARS_MAXSPEED, s)
 
-#define PHYS_NOSTEP(s)                      STAT(NOSTEP, s)
-#define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT, s)
-
 #define PHYS_STOPSPEED(s)                   STAT(MOVEVARS_STOPSPEED, s)
 
 #define PHYS_TRACK_CANJUMP(s)               STAT(MOVEVARS_TRACK_CANJUMP, s)
-
-#define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION, s)
 
 #define PHYS_WARSOWBUNNY_ACCEL(s)           STAT(MOVEVARS_WARSOWBUNNY_ACCEL, s)
 #define PHYS_WARSOWBUNNY_AIRFORWARDACCEL(s) STAT(MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, s)
@@ -95,9 +97,7 @@ bool IsFlying(entity a);
 #define PHYS_WARSOWBUNNY_TOPSPEED(s)        STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, s)
 #define PHYS_WARSOWBUNNY_TURNACCEL(s)       STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, s)
 
-#define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, s)
-
-#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY, s)
+#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY, NULL)
 
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)
@@ -190,6 +190,13 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	.int items;
 
 	.vector movement;
+
+	// angles of the player's view (as opposed to their model which uses `.vector angles;`) in degrees
+	// x is pitch: positive means down (unlike .angles)
+	// y is yaw: between -180 and 180, increases when turning left
+	// z is roll: positive means tilted clockwise, usually is 0
+	// when .fixangle is set, the player's view will change to the direction where the model is facing
+	// more info: https://gitlab.com/xonotic/xonotic-data.pk3dir/merge_requests/447#note_32816794
 	.vector v_angle;
 
 	.entity hook;
@@ -203,10 +210,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	//float player_multijump;
 	//float player_jumpheight;
 
-	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
-
-	#define TICRATE                             ticrate
-
 	#define PHYS_INPUT_ANGLES(s)                input_angles
 // TODO
 	#define PHYS_WORLD_ANGLES(s)                input_angles
@@ -215,6 +218,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define PHYS_INPUT_FRAMETIME                serverdeltatime
 
 	#define PHYS_INPUT_MOVEVALUES(s)            input_movevalues
+	#define PHYS_CS(s)                          (s)
 
 	#define PHYS_INPUT_BUTTON_BUTTON1(s)        boolean(input_buttons & BIT(0))
 	#define PHYS_INPUT_BUTTON_BUTTON2(s)        boolean(input_buttons & BIT(1))
@@ -236,10 +240,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define PHYS_INPUT_BUTTON_BUTTON15(s)       boolean(input_buttons & BIT(17))
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       boolean(input_buttons & BIT(18))
 
-	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  (boolean(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE))
-	#define GAMEPLAYFIX_NOGRAVITYONGROUND           (boolean(moveflags & MOVEFLAG_NOGRAVITYONGROUND))
-	#define GAMEPLAYFIX_Q2AIRACCELERATE             (boolean(moveflags & MOVEFLAG_Q2AIRACCELERATE))
-
 	#define IS_DUCKED(s)                        (boolean((s).flags & FL_DUCKED))
 	#define SET_DUCKED(s)                       ((s).flags |= FL_DUCKED)
 	#define UNSET_DUCKED(s)                     ((s).flags &= ~FL_DUCKED)
@@ -248,8 +248,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_cl_jumpspeedcap_max
 
 	#define PHYS_CL_TRACK_CANJUMP(s)            STAT(MOVEVARS_CL_TRACK_CANJUMP, s)
-	// FIXME: 0 doesn't mean zero gravity
-	#define PHYS_ENTGRAVITY(s)                  STAT(MOVEVARS_ENTGRAVITY, s)
 
 #elif defined(SVQC)
 
@@ -257,7 +255,9 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 
 	bool Physics_Valid(string thecvar);
 
-	void Physics_UpdateStats(entity this, float maxspd_mod);
+	void Physics_UpdateStats(entity this);
+
+	void PM_UpdateButtons(entity this, entity store);
 
 	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
 	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
@@ -266,41 +266,34 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	.string jumpspeedcap_min;
 	.string jumpspeedcap_max;
 
-	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
-
-	#define TICRATE sys_frametime
-
 	#define PHYS_INPUT_ANGLES(s)                ((s).v_angle)
 	#define PHYS_WORLD_ANGLES(s)                ((s).angles)
 
 	#define PHYS_INPUT_TIMELENGTH               frametime
 	#define PHYS_INPUT_FRAMETIME                sys_frametime
 
-	#define PHYS_INPUT_MOVEVALUES(s)            ((s).movement)
+	#define PHYS_INPUT_MOVEVALUES(s)            CS(s).movement
+	#define PHYS_CS(s)                          CS(s)
 
-	#define PHYS_INPUT_BUTTON_BUTTON1(s)        ((s).button0)
-	#define PHYS_INPUT_BUTTON_BUTTON2(s)        ((s).button2)
-	#define PHYS_INPUT_BUTTON_BUTTON3(s)        ((s).button3)
-	#define PHYS_INPUT_BUTTON_BUTTON4(s)        ((s).button4)
-	#define PHYS_INPUT_BUTTON_BUTTON5(s)        ((s).button5)
-	#define PHYS_INPUT_BUTTON_BUTTON6(s)        ((s).button6)
-	#define PHYS_INPUT_BUTTON_BUTTON7(s)        ((s).button7)
-	#define PHYS_INPUT_BUTTON_BUTTON8(s)        ((s).button8)
-	#define PHYS_INPUT_BUTTON_BUTTON_USE(s)     ((s).buttonuse)
-	#define PHYS_INPUT_BUTTON_BUTTON_CHAT(s)    ((s).buttonchat)
-	#define PHYS_INPUT_BUTTON_BUTTON_PRYDON(s)  ((s).cursor_active)
-	#define PHYS_INPUT_BUTTON_BUTTON9(s)        ((s).button9)
-	#define PHYS_INPUT_BUTTON_BUTTON10(s)       ((s).button10)
-	#define PHYS_INPUT_BUTTON_BUTTON11(s)       ((s).button11)
-	#define PHYS_INPUT_BUTTON_BUTTON12(s)       ((s).button12)
-	#define PHYS_INPUT_BUTTON_BUTTON13(s)       ((s).button13)
-	#define PHYS_INPUT_BUTTON_BUTTON14(s)       ((s).button14)
-	#define PHYS_INPUT_BUTTON_BUTTON15(s)       ((s).button15)
-	#define PHYS_INPUT_BUTTON_BUTTON16(s)       ((s).button16)
-
-	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  autocvar_sv_gameplayfix_gravityunaffectedbyticrate
-	#define GAMEPLAYFIX_NOGRAVITYONGROUND           autocvar_sv_gameplayfix_nogravityonground
-	#define GAMEPLAYFIX_Q2AIRACCELERATE             autocvar_sv_gameplayfix_q2airaccelerate
+	#define PHYS_INPUT_BUTTON_BUTTON1(s)        (CS(s).button0)
+	#define PHYS_INPUT_BUTTON_BUTTON2(s)        (CS(s).button2)
+	#define PHYS_INPUT_BUTTON_BUTTON3(s)        (CS(s).button3)
+	#define PHYS_INPUT_BUTTON_BUTTON4(s)        (CS(s).button4)
+	#define PHYS_INPUT_BUTTON_BUTTON5(s)        (CS(s).button5)
+	#define PHYS_INPUT_BUTTON_BUTTON6(s)        (CS(s).button6)
+	#define PHYS_INPUT_BUTTON_BUTTON7(s)        (CS(s).button7)
+	#define PHYS_INPUT_BUTTON_BUTTON8(s)        (CS(s).button8)
+	#define PHYS_INPUT_BUTTON_BUTTON_USE(s)     (CS(s).buttonuse)
+	#define PHYS_INPUT_BUTTON_BUTTON_CHAT(s)    (CS(s).buttonchat)
+	#define PHYS_INPUT_BUTTON_BUTTON_PRYDON(s)  (CS(s).cursor_active)
+	#define PHYS_INPUT_BUTTON_BUTTON9(s)        (CS(s).button9)
+	#define PHYS_INPUT_BUTTON_BUTTON10(s)       (CS(s).button10)
+	#define PHYS_INPUT_BUTTON_BUTTON11(s)       (CS(s).button11)
+	#define PHYS_INPUT_BUTTON_BUTTON12(s)       (CS(s).button12)
+	#define PHYS_INPUT_BUTTON_BUTTON13(s)       (CS(s).button13)
+	#define PHYS_INPUT_BUTTON_BUTTON14(s)       (CS(s).button14)
+	#define PHYS_INPUT_BUTTON_BUTTON15(s)       (CS(s).button15)
+	#define PHYS_INPUT_BUTTON_BUTTON16(s)       (CS(s).button16)
 
 	#define IS_DUCKED(s)                        ((s).crouch)
 	#define SET_DUCKED(s)                       ((s).crouch = true)
@@ -309,9 +302,19 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max
 
-	#define PHYS_CL_TRACK_CANJUMP(s)            ((s).cvar_cl_movement_track_canjump)
-	#define PHYS_ENTGRAVITY(s)                  ((s).gravity)
+	#define PHYS_CL_TRACK_CANJUMP(s)            (CS(s).cvar_cl_movement_track_canjump)
 
+#endif
+
+#ifdef SVQC
+// FIXME/EXPLAINME: why? Mario: because
+vector autocvar_sv_player_maxs = '16 16 45';
+vector autocvar_sv_player_mins = '-16 -16 -24';
+vector autocvar_sv_player_viewoffset = '0 0 35';
+vector autocvar_sv_player_crouch_maxs = '16 16 25';
+vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
+vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
+//vector autocvar_sv_player_headsize = '24 24 12';
 #endif
 
 REGISTER_NET_C2S(setpause)

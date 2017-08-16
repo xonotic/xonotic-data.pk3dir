@@ -5,6 +5,10 @@
 /** Additional networked waypoint state, used for items, weapons, buffs */
 .int wp_extra;
 
+const int SPRITERULE_DEFAULT = 0;
+const int SPRITERULE_TEAMPLAY = 1;
+const int SPRITERULE_SPECTATOR = 2;
+
 #ifdef CSQC
 entityclass(WaypointSprite);
 class(WaypointSprite) .float helpme;
@@ -23,7 +27,6 @@ class(WaypointSprite) .float build_started;
 class(WaypointSprite) .float build_starthealth;
 class(WaypointSprite) .float build_finished;
 
-bool autocvar_g_waypointsprite_uppercase;
 float autocvar_g_waypointsprite_alpha;
 float autocvar_g_waypointsprite_crosshairfadealpha;
 float autocvar_g_waypointsprite_crosshairfadedistance;
@@ -49,6 +52,7 @@ int autocvar_g_waypointsprite_spam;
 float autocvar_g_waypointsprite_timealphaexponent;
 bool autocvar_g_waypointsprite_turrets = true;
 float autocvar_g_waypointsprite_turrets_maxdist = 5000;
+bool autocvar_g_waypointsprite_uppercase;
 
 float waypointsprite_fadedistance;
 float waypointsprite_normdistance;

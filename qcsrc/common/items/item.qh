@@ -1,6 +1,11 @@
 #pragma once
 #include <common/t_items.qh>
 
+#ifdef GAMEQC
+#include <common/sounds/all.qh>
+#include <common/sounds/all.inc>
+#endif
+
 const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
 

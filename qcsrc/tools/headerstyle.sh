@@ -3,6 +3,8 @@ set -eu
 cd ${0%/*}
 cd ..
 
+VERBOSE=${VERBOSE:-1}
+
 function startswith() {
     declare -l file="${1}"
     declare -l prelude="${2}"
@@ -15,7 +17,7 @@ function startswith() {
 function check() {
     declare -l base="${1}"
     find "$base" -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
-        echo "$file"
+        [ "$VERBOSE" != "0" ] && echo "$file"
         declare -l file_h="${file%.qc}.qh"
         if [[ ! -f "$file_h" ]]; then echo "#pragma once" > "$file_h"; fi
 
@@ -25,7 +27,7 @@ function check() {
         startswith "$file" "$include"
     done
     find "$base" -type f -name '*.qh' -a \! -name '_mod.qh' -print0 | sort -z | while read -r -d '' file; do
-        echo "$file"
+        [ "$VERBOSE" != "0" ] && echo "$file"
         startswith "$file" "#pragma once"
     done
 }

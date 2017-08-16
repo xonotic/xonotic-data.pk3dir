@@ -18,6 +18,8 @@ int autocvar_g_invasion_monster_count;
 bool autocvar_g_invasion_zombies_only;
 float autocvar_g_invasion_spawn_delay;
 
+bool inv_warning_shown; // spammy
+
 .string spawnmob;
 
 spawnfunc(invasion_wave)
@@ -103,7 +105,11 @@ void invasion_SpawnChosenMonster(Monster mon)
 
 	if(spawn_point == NULL)
 	{
-		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations");
+		if(!inv_warning_shown)
+		{
+			inv_warning_shown = true;
+			LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations");
+		}
 		entity e = spawn();
 		setsize(e, mon.m_mins, mon.m_maxs);
 
@@ -156,6 +162,8 @@ void invasion_SpawnChosenMonster(Monster mon)
 		}
 	}
 
+	if(monster.monster_attack)
+		IL_REMOVE(g_monster_targets, monster);
 	monster.monster_attack = false; // it's the player's job to kill all the monsters
 
 	if(inv_roundcnt >= inv_maxrounds)
@@ -244,14 +252,14 @@ bool Invasion_CheckWinner()
 	}
 	else
 	{
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			float cs = PlayerScore_Add(it, SP_KILLS, 0);
 			if(cs > winning_score)
 			{
 				winning_score = cs;
 				winner = it;
 			}
-		));
+		});
 	}
 
 	IL_EACH(g_monsters, true,
@@ -287,10 +295,10 @@ bool Invasion_CheckPlayers()
 void Invasion_RoundStart()
 {
 	int numplayers = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.player_blocked = false;
 		++numplayers;
-	));
+	});
 
 	if(inv_roundcnt < inv_maxrounds)
 		inv_roundcnt += 1; // a limiter to stop crazy counts

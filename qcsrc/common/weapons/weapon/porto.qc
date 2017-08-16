@@ -1,49 +1,5 @@
 #include "porto.qh"
-#ifndef IMPLEMENTATION
-CLASS(PortoLaunch, Weapon)
-/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none);
-/* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0);
-/* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON);
-/* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
-/* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
-#ifdef GAMEQC
-/* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
-#endif
-/* crosshair */ ATTRIB(PortoLaunch, w_crosshair, string, "gfx/crosshairporto");
-/* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");
-/* refname   */ ATTRIB(PortoLaunch, netname, string, "porto");
-/* wepname   */ ATTRIB(PortoLaunch, m_name, string, _("Port-O-Launch"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, PortoLaunch, porto)
-#undef X
-ENDCLASS(PortoLaunch)
-REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
-
-#ifdef SVQC
-.entity porto_current;
-.vector porto_v_angle; // holds "held" view angles
-.float porto_v_angle_held;
-.vector right_vector;
-.float porto_forbidden;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 #include <common/triggers/trigger/jumppads.qh>
 
@@ -376,5 +332,4 @@ METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 METHOD(PortoLaunch, wr_impacteffect, void(entity this, entity actor)) {
     LOG_WARN("Since when does Porto send DamageInfo?");
 }
-#endif
 #endif

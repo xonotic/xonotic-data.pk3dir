@@ -1,11 +1,16 @@
 #include "main.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "pathlib.qh"
 #include "utility.qh"
 #include "../command/common.qh"
 
 void pathlib_deletepath(entity start)
 {
+    if(!start)
+        return;
+
     FOREACH_ENTITY_ENT(owner, start,
     {
         setthink(it, SUB_Remove);
@@ -17,6 +22,8 @@ const float PATHLIB_NODEEXPIRE = 20; // 0.05
 
 void dumpnode(entity n)
 {
+    if(n.is_path_node)
+        IL_REMOVE(g_pathlib_nodes, n);
     n.is_path_node = false;
     setthink(n, SUB_Remove);
     n.nextthink    = time;
@@ -44,6 +51,7 @@ entity pathlib_mknode(vector where,entity parent)
 
     setthink(node, SUB_Remove);
     node.nextthink    = time + PATHLIB_NODEEXPIRE;
+    IL_PUSH(g_pathlib_nodes, node);
     node.is_path_node = true;
     node.owner        = openlist;
     node.path_prev    = parent;
@@ -69,7 +77,7 @@ bool pathlib_makenode_adaptive(entity parent,vector start, vector to, vector goa
 
     if(inwater(parent.origin))
     {
-        LOG_TRACE("FromWater");
+        LOG_DEBUG("FromWater");
         pathlib_expandnode = pathlib_expandnode_box;
         pathlib_movenode   = pathlib_swimnode;
     }
@@ -77,13 +85,13 @@ bool pathlib_makenode_adaptive(entity parent,vector start, vector to, vector goa
     {
         if(inwater(to))
         {
-            LOG_TRACE("ToWater");
+            LOG_DEBUG("ToWater");
             pathlib_expandnode = pathlib_expandnode_box;
             pathlib_movenode   = pathlib_walknode;
         }
         else
         {
-            LOG_TRACE("LandToLoand");
+            LOG_DEBUG("LandToLoand");
             //if(edge_check(parent.origin))
             //    return 0;
 
@@ -96,7 +104,7 @@ bool pathlib_makenode_adaptive(entity parent,vector start, vector to, vector goa
     entity node = pathlib_nodeatpoint(to);
     if(node)
     {
-        LOG_TRACE("NodeAtPoint");
+        LOG_DEBUG("NodeAtPoint");
         ++pathlib_merge_cnt;
 
         if(node.owner == openlist)
@@ -129,7 +137,7 @@ bool pathlib_makenode_adaptive(entity parent,vector start, vector to, vector goa
     {
         //pathlib_showsquare(where, 0 ,30);
         //pathlib_showsquare(parent.origin, 1 ,30);
-        LOG_TRACE("pathlib_movenode_goodnode = 0");
+        LOG_DEBUG("pathlib_movenode_goodnode = 0");
         return false;
     }
 
@@ -137,9 +145,9 @@ bool pathlib_makenode_adaptive(entity parent,vector start, vector to, vector goa
 
     if(pathlib_nodeatpoint(where))
     {
-        LOG_TRACE("NAP WHERE :",vtos(where));
-        LOG_TRACE("not NAP TO:",vtos(to));
-        LOG_TRACE("NAP-NNAP:",ftos(vlen(to-where)));
+        LOG_DEBUG("NAP WHERE :",vtos(where));
+        LOG_DEBUG("not NAP TO:",vtos(to));
+        LOG_DEBUG("NAP-NNAP:",ftos(vlen(to-where)));
         return false;
     }
 
@@ -147,7 +155,7 @@ bool pathlib_makenode_adaptive(entity parent,vector start, vector to, vector goa
     if(dodge)
         if (!tile_check(parent, where))
         {
-            LOG_TRACE("tile_check fail");
+            LOG_DEBUG("tile_check fail");
 #if DEBUGPATHING
             pathlib_showsquare(where, 0 ,30);
 #endif
@@ -263,10 +271,12 @@ void pathlib_cleanup()
 
     //return;
 
-    FOREACH_ENTITY_FLOAT(is_path_node, true,
+    IL_EACH(g_pathlib_nodes, it.is_path_node,
     {
     	dumpnode(it);
     });
+
+    IL_CLEAR(g_pathlib_nodes);
 
     if(openlist)
         delete(openlist);
@@ -274,8 +284,8 @@ void pathlib_cleanup()
     if(closedlist)
         delete(closedlist);
 
-    openlist       = NULL;
-    closedlist     = NULL;
+    openlist = NULL;
+    closedlist = NULL;
 }
 
 float Cosine_Interpolate(float a, float b, float c)
@@ -283,7 +293,7 @@ float Cosine_Interpolate(float a, float b, float c)
 	float ft = c * 3.1415927;
 	float f = (1 - cos(ft)) * 0.5;
 
-	return  a*(1-f) + b*f;
+	return a*(1-f) + b*f;
 }
 
 bool buildpath_nodefilter_directional(vector n,vector c,vector p)
@@ -421,18 +431,18 @@ entity pathlib_astar(entity this, vector from, vector to)
 
     from.x = fsnap(from.x, pathlib_gridsize);
     from.y = fsnap(from.y, pathlib_gridsize);
-    //from_z += 32;
+    //from.z += 32;
 
     to.x = fsnap(to.x, pathlib_gridsize);
     to.y = fsnap(to.y, pathlib_gridsize);
-    //to_z += 32;
+    //to.z += 32;
 
-    LOG_TRACE("AStar init");
+    LOG_DEBUG("AStar init");
     entity path = pathlib_mknode(from, NULL);
     pathlib_close_node(path, to);
     if(pathlib_foundgoal)
     {
-        LOG_TRACE("AStar: Goal found on first node!");
+        LOG_DEBUG("AStar: Goal found on first node!");
 
         open           = new(path_end);
         open.owner     = open;
@@ -463,7 +473,7 @@ entity pathlib_astar(entity this, vector from, vector to)
     {
         if((gettime(GETTIME_REALTIME) - pathlib_starttime) > pathlib_maxtime)
         {
-            LOG_TRACE("Path took to long to compute!");
+            LOG_TRACE("Path took too long to compute!");
             LOG_TRACE("Nodes - created: ", ftos(pathlib_made_cnt));
             LOG_TRACE("Nodes -    open: ", ftos(pathlib_open_cnt));
             LOG_TRACE("Nodes -  merged: ", ftos(pathlib_merge_cnt));
@@ -484,7 +494,7 @@ entity pathlib_astar(entity this, vector from, vector to)
 
         if(pathlib_foundgoal)
         {
-            LOG_TRACE("Target found. Rebuilding and filtering path...");
+            LOG_DEBUG("Target found. Rebuilding and filtering path...");
             float ftime = gettime(GETTIME_REALTIME);
             ptime = ftime - ptime;
 

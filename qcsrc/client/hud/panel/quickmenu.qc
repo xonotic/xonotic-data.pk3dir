@@ -1,5 +1,8 @@
 #include "quickmenu.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 #include <common/ent_cs.qh>
 #include <client/hud/_mod.qh>
 #include <client/mapvoting.qh>
@@ -528,7 +531,7 @@ void QuickMenu_Mouse()
 				color = '1 1 0.3';
 			else
 				color = '1 1 1';
-			drawfill(panel_pos, eX * panel_size.x + eY * fontsize.y, color, .2, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), color, .2, DRAWFLAG_NORMAL);
 
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
 				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
@@ -552,7 +555,7 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 			pic = strcat("gfx/hud/default/", option);
 		vector option_size = '1 1 0' * fontsize.y * 0.8;
 		desc_width -= option_size.x;
-		drawpic(pos + eX * desc_width + eY * (fontsize.y - option_size.y) / 2, pic, option_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
+		drawpic(pos + vec2(desc_width, (fontsize.y - option_size.y) / 2), pic, option_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
 		desc_width -= fontsize.x / 4;
 	}
 	entry = textShortenToWidth(desc, desc_width, fontsize, stringwidth_colors);
@@ -682,7 +685,7 @@ void HUD_QuickMenu()
 
 		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
 			&& QuickMenu_Page_ActivatedEntry == i)
-			drawfill(panel_pos, eX * panel_size.x + eY * fontsize.y, '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, vec2(panel_size.x, fontsize.y), '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
 
 		panel_pos.y += fontsize.y;
 	}
@@ -740,12 +743,19 @@ void HUD_QuickMenu()
 
 // useful to Translate a string inside the Command
 #define QUICKMENU_ENTRY_TC(title,command,text,translated_text) {\
-	if(prvm_language == "en") \
-		QUICKMENU_ENTRY(title, sprintf(command, text)) \
-	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) \
-		QUICKMENU_ENTRY(strcat("(en)", title), sprintf(command, text)) \
-	else \
-		QUICKMENU_ENTRY(strcat("(", prvm_language, ")", title), sprintf(command, translated_text)) \
+	if(prvm_language == "en") { \
+		tc_title = title; \
+		tc_cmd = sprintf(command, text); \
+	} \
+	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) { \
+		tc_title = strcat("(en)", title); \
+		tc_cmd = sprintf(command, text); \
+	} \
+	else { \
+		tc_title = strcat("(", prvm_language, ")", title); \
+		tc_cmd = sprintf(command, translated_text); \
+	} \
+	QUICKMENU_ENTRY(tc_title, tc_cmd) \
 }
 
 void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me)
@@ -781,11 +791,14 @@ void QuickMenu_Default(string target_submenu)
 	if(target_submenu != "")
 		QuickMenu_Buffer_Size = QUICKMENU_BUFFER_MAXENTRIES; // forbids load of next entries until target_submenu
 
-	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
+	string tc_title;
+	string tc_cmd;
+
+	QUICKMENU_SMENU(_("Chat"), "Chat")
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
-	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
+	QUICKMENU_SMENU(_("Chat"), "Chat")
 
 	if(teamplay)
 	{
@@ -801,9 +814,9 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^defending, icon")), "say_team %s; g_waypointsprite_team_here", "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^roaming, icon")), "say_team %s; g_waypointsprite_team_here", "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^attacking, icon")), "say_team %s; g_waypointsprite_team_here", "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
-		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flag, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flagcarrier, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^dropped flag, icon")), "say_team %s; g_waypointsprite_team_here_d", "dropped flag (l:%d^7)", CTX(_("QMCMD^dropped flag (l:%d^7)")))
-		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop weapon, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped weapon %w^7 (l:%l^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	}

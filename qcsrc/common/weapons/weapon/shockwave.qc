@@ -1,91 +1,4 @@
 #include "shockwave.qh"
-#ifndef IMPLEMENTATION
-CLASS(Shockwave, Weapon)
-/* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none);
-/* impulse   */ ATTRIB(Shockwave, impulse, int, 2);
-/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
-/* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, 3000);
-/* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
-/* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Shockwave, m_model, Model, MDL_SHOCKWAVE_ITEM);
-#endif
-/* crosshair */ ATTRIB(Shockwave, w_crosshair, string, "gfx/crosshairshotgun");
-/* crosshair */ ATTRIB(Shockwave, w_crosshair_size, float, 0.7);
-/* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshockwave");
-/* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
-/* wepname   */ ATTRIB(Shockwave, m_name, string, _("Shockwave"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, blast_animtime, float, NONE) \
-		P(class, prefix, blast_damage, float, NONE) \
-		P(class, prefix, blast_distance, float, NONE) \
-		P(class, prefix, blast_edgedamage, float, NONE) \
-		P(class, prefix, blast_force, float, NONE) \
-		P(class, prefix, blast_force_forwardbias, float, NONE) \
-		P(class, prefix, blast_force_zscale, float, NONE) \
-		P(class, prefix, blast_jump_damage, float, NONE) \
-		P(class, prefix, blast_jump_edgedamage, float, NONE) \
-		P(class, prefix, blast_jump_force, float, NONE) \
-		P(class, prefix, blast_jump_force_velocitybias, float, NONE) \
-		P(class, prefix, blast_jump_force_zscale, float, NONE) \
-		P(class, prefix, blast_jump_multiplier_accuracy, float, NONE) \
-		P(class, prefix, blast_jump_multiplier_distance, float, NONE) \
-		P(class, prefix, blast_jump_multiplier_min, float, NONE) \
-		P(class, prefix, blast_jump_radius, float, NONE) \
-		P(class, prefix, blast_multiplier_accuracy, float, NONE) \
-		P(class, prefix, blast_multiplier_distance, float, NONE) \
-		P(class, prefix, blast_multiplier_min, float, NONE) \
-		P(class, prefix, blast_refire, float, NONE) \
-		P(class, prefix, blast_splash_damage, float, NONE) \
-		P(class, prefix, blast_splash_edgedamage, float, NONE) \
-		P(class, prefix, blast_splash_force, float, NONE) \
-		P(class, prefix, blast_splash_force_forwardbias, float, NONE) \
-		P(class, prefix, blast_splash_multiplier_accuracy, float, NONE) \
-		P(class, prefix, blast_splash_multiplier_distance, float, NONE) \
-		P(class, prefix, blast_splash_multiplier_min, float, NONE) \
-		P(class, prefix, blast_splash_radius, float, NONE) \
-		P(class, prefix, blast_spread_max, float, NONE) \
-		P(class, prefix, blast_spread_min, float, NONE) \
-		P(class, prefix, melee_animtime, float, NONE) \
-		P(class, prefix, melee_damage, float, NONE) \
-		P(class, prefix, melee_delay, float, NONE) \
-		P(class, prefix, melee_force, float, NONE) \
-		P(class, prefix, melee_multihit, float, NONE) \
-		P(class, prefix, melee_no_doubleslap, float, NONE) \
-		P(class, prefix, melee_nonplayerdamage, float, NONE) \
-		P(class, prefix, melee_range, float, NONE) \
-		P(class, prefix, melee_refire, float, NONE) \
-		P(class, prefix, melee_swing_side, float, NONE) \
-		P(class, prefix, melee_swing_up, float, NONE) \
-		P(class, prefix, melee_time, float, NONE) \
-		P(class, prefix, melee_traces, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Shockwave, shockwave)
-#undef X
-
-ENDCLASS(Shockwave)
-REGISTER_WEAPON(SHOCKWAVE, shockwave, NEW(Shockwave));
-
-
-#ifdef CSQC
-void Net_ReadShockwaveParticle();
-.vector sw_shotorg;
-.vector sw_shotdir;
-.float sw_distance;
-.float sw_spread_max;
-.float sw_spread_min;
-.float sw_time;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 
@@ -398,12 +311,11 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 		false
 	);
 
-	float lag = ANTILAG_LATENCY(actor);
+	float lag = ((IS_REAL_CLIENT(actor)) ? ANTILAG_LATENCY(actor) : 0);
+	bool noantilag = ((IS_CLIENT(actor)) ? CS(actor).cvar_cl_noantilag : false);
 	if(lag < 0.001)
 		lag = 0;
-	if (!IS_REAL_CLIENT(actor))
-		lag = 0;
-	if(autocvar_g_antilag == 0 || actor.cvar_cl_noantilag)
+	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{
@@ -884,5 +796,4 @@ METHOD(Shockwave, wr_impacteffect, void(entity thiswep, entity actor))
     //pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 }
 
-#endif
 #endif

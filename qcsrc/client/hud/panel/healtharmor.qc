@@ -1,5 +1,8 @@
 #include "healtharmor.qh"
 
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
+
 #include <common/deathtypes/all.qh>
 
 // Health/armor (#3)
@@ -110,7 +113,7 @@ void HUD_HealthArmor()
 			DrawNumIcon(pos, mySize, hp, biggercount, 0, iconalign, HUD_Get_Num_Color(hp, maxtotal), 1);
 
 		if(fuel)
-			HUD_Panel_DrawProgressBar(pos, eX * mySize.x + eY * 0.2 * mySize.y, "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(pos, vec2(mySize.x, 0.2 * mySize.y), "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 	}
 	else
 	{

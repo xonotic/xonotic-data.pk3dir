@@ -15,7 +15,6 @@ void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_o
 
 float WinningCondition_Scores(float limit, float leadlimit);
 void SetWinners(.float field, float value);
-void CheckRules_Player(entity this);
 void IntermissionThink(entity this);
 void GotoNextMap(float reinit);
 void ReadyRestart();

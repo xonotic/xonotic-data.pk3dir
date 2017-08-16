@@ -63,6 +63,24 @@ void bugrigs_SetVars()
 
 #endif
 
+float racecar_angle(float forward, float down)
+{
+	if (forward < 0)
+	{
+		forward = -forward;
+		down = -down;
+	}
+
+	float ret = vectoyaw('0 1 0' * down + '1 0 0' * forward);
+
+	float angle_mult = forward / (800 + forward);
+
+	if (ret > 180)
+		return ret * angle_mult + 360 * (1 - angle_mult);
+	else
+		return ret * angle_mult;
+}
+
 void RaceCarPhysics(entity this, float dt)
 {
 	// using this move type for "big rigs"
@@ -71,8 +89,8 @@ void RaceCarPhysics(entity this, float dt)
 	vector rigvel;
 
 	vector angles_save = this.angles;
-	float accel = bound(-1, this.movement.x / PHYS_MAXSPEED(this), 1);
-	float steer = bound(-1, this.movement.y / PHYS_MAXSPEED(this), 1);
+	float accel = bound(-1, PHYS_CS(this).movement.x / PHYS_MAXSPEED(this), 1);
+	float steer = bound(-1, PHYS_CS(this).movement.y / PHYS_MAXSPEED(this), 1);
 
 	if (PHYS_BUGRIGS_REVERSE_SPEEDING(this))
 	{
@@ -202,11 +220,11 @@ void RaceCarPhysics(entity this, float dt)
 		{
 			// now set angles_x so that the car points parallel to the surface
 			this.angles = vectoangles(
-					'1 0 0' * v_forward_x * trace_plane_normal_z
+					'1 0 0' * v_forward.x * trace_plane_normal.z
 					+
-					'0 1 0' * v_forward_y * trace_plane_normal_z
+					'0 1 0' * v_forward.y * trace_plane_normal.z
 					+
-					'0 0 1' * -(v_forward_x * trace_plane_normal_x + v_forward_y * trace_plane_normal_y)
+					'0 0 1' * -(v_forward.x * trace_plane_normal.x + v_forward.y * trace_plane_normal.y)
 					);
 			SET_ONGROUND(this);
 		}
@@ -231,11 +249,11 @@ void RaceCarPhysics(entity this, float dt)
 	if (trace_fraction != 1)
 	{
 		this.angles = vectoangles2(
-				'1 0 0' * v_forward_x * trace_plane_normal_z
+				'1 0 0' * v_forward.x * trace_plane_normal.z
 				+
-				'0 1 0' * v_forward_y * trace_plane_normal_z
+				'0 1 0' * v_forward.y * trace_plane_normal.z
 				+
-				'0 0 1' * -(v_forward_x * trace_plane_normal_x + v_forward_y * trace_plane_normal_y),
+				'0 0 1' * -(v_forward.x * trace_plane_normal.x + v_forward.y * trace_plane_normal.y),
 				trace_plane_normal
 				);
 	}
@@ -243,12 +261,12 @@ void RaceCarPhysics(entity this, float dt)
 	{
 		vector vel_local;
 
-		vel_local_x = v_forward * this.velocity;
-		vel_local_y = v_right * this.velocity;
-		vel_local_z = v_up * this.velocity;
+		vel_local.x = v_forward * this.velocity;
+		vel_local.y = v_right * this.velocity;
+		vel_local.z = v_up * this.velocity;
 
-		this.angles_x = racecar_angle(vel_local_x, vel_local_z);
-		this.angles_z = racecar_angle(-vel_local_y, vel_local_z);
+		this.angles_x = racecar_angle(vel_local.x, vel_local.z);
+		this.angles_z = racecar_angle(-vel_local.y, vel_local.z);
 	}
 
 	// smooth the angles
@@ -263,8 +281,8 @@ void RaceCarPhysics(entity this, float dt)
 	vf1 = vf1 + v_forward * (1 - f);
 	vu1 = vu1 + v_up * (1 - f);
 	smoothangles = vectoangles2(vf1, vu1);
-	this.angles_x = -smoothangles_x;
-	this.angles_z =  smoothangles_z;
+	this.angles_x = -smoothangles.x;
+	this.angles_z =  smoothangles.z;
 }
 
 #ifdef SVQC

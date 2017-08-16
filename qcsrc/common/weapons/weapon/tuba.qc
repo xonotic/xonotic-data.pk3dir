@@ -1,47 +1,4 @@
 #include "tuba.qh"
-#ifndef IMPLEMENTATION
-CLASS(Tuba, Weapon)
-/* impulse   */ ATTRIB(Tuba, impulse, int, 1);
-/* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, 2000);
-/* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
-/* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Tuba, m_model, Model, MDL_TUBA_ITEM);
-#endif
-/* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairtuba");
-/* crosshair */ //ATTRIB(Tuba, w_crosshair_size, float, 0.65);
-/* wepimg    */ ATTRIB(Tuba, model2, string, "weapontuba");
-/* refname   */ ATTRIB(Tuba, netname, string, "tuba");
-/* xgettext:no-c-format */
-/* wepname   */ ATTRIB(Tuba, m_name, string, _("@!#%'n Tuba"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, NONE) \
-		P(class, prefix, attenuation, float, NONE) \
-		P(class, prefix, damage, float, NONE) \
-		P(class, prefix, edgedamage, float, NONE) \
-		P(class, prefix, fadetime, float, NONE) \
-		P(class, prefix, force, float, NONE) \
-		P(class, prefix, pitchstep, float, NONE) \
-		P(class, prefix, radius, float, NONE) \
-		P(class, prefix, refire, float, NONE) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, volume, float, NONE) \
-		P(class, prefix, weaponreplace, string, NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Tuba, tuba)
-#undef X
-ENDCLASS(Tuba)
-REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
-#endif
-
-#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 
@@ -157,7 +114,7 @@ void W_Tuba_NoteOff(entity this)
 	if (actor.(weaponentity).tuba_note == this)
 	{
 		actor.(weaponentity).tuba_lastnotes_last = (actor.(weaponentity).tuba_lastnotes_last + 1) % MAX_TUBANOTES;
-		actor.(weaponentity).(tuba_lastnotes[actor.(weaponentity).tuba_lastnotes_last]) = eX * this.spawnshieldtime + eY * time + eZ * this.cnt;
+		actor.(weaponentity).(tuba_lastnotes[actor.(weaponentity).tuba_lastnotes_last]) = vec3(this.spawnshieldtime, time, this.cnt);
 		actor.(weaponentity).tuba_note = NULL;
 		actor.(weaponentity).tuba_lastnotes_cnt = bound(0, actor.(weaponentity).tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
 
@@ -186,10 +143,10 @@ void W_Tuba_NoteOff(entity this)
 int W_Tuba_GetNote(entity pl, int hittype)
 {
 	float movestate = 5;
-	if (pl.movement.x < 0)		movestate -= 3;
-	else if (pl.movement.x > 0)	movestate += 3;
-	if (pl.movement.y < 0)		movestate -= 1;
-	else if (pl.movement.y > 0)	movestate += 1;
+	if (CS(pl).movement.x < 0)		movestate -= 3;
+	else if (CS(pl).movement.x > 0)	movestate += 3;
+	if (CS(pl).movement.y < 0)		movestate -= 1;
+	else if (CS(pl).movement.y > 0)	movestate += 1;
 
 	int note = 0;
 	switch (movestate)
@@ -633,5 +590,4 @@ PRECACHE(Tuba)
 	}
 }
 
-#endif
 #endif

@@ -1,7 +1,5 @@
 #include "tesla.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 spawnfunc(turret_tesla) { if (!turret_initialize(this, TUR_TESLA)) delete(this); }
@@ -87,5 +85,4 @@ bool turret_tesla_firecheck(entity this)
     return false;
 }
 
-#endif
 #endif

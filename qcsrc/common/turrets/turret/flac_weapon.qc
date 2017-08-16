@@ -1,7 +1,5 @@
 #include "flac_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 void turret_flac_projectile_think_explode(entity this);
@@ -51,7 +49,5 @@ void turret_flac_projectile_think_explode(entity this)
 #endif
     delete(this);
 }
-
-#endif
 
 #endif

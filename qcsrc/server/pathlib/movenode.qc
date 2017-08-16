@@ -1,5 +1,7 @@
 #include "movenode.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "pathlib.qh"
 #include "utility.qh"
 
@@ -86,7 +88,7 @@ vector pathlib_walknode(entity this, vector start, vector end, float doedge)
 {
     vector point;
 
-    LOG_TRACE("Walking node from ", vtos(start), " to ", vtos(end));
+    LOG_DEBUG("Walking node from ", vtos(start), " to ", vtos(end));
 
     pathlib_movenode_goodnode = false;
 

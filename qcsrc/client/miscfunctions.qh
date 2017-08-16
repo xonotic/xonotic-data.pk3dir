@@ -45,8 +45,8 @@ float cvar_or(string cv, float v);
 vector project_3d_to_2d(vector vec);
 
 vector drawfontscale;
-#define draw_beginBoldFont()    MACRO_BEGIN { drawfont = FONT_USER + 2; } MACRO_END
-#define draw_endBoldFont()      MACRO_BEGIN { drawfont = FONT_USER + 1; } MACRO_END
+#define draw_beginBoldFont() drawfont = FONT_USER + 2
+#define draw_endBoldFont() drawfont = FONT_USER + 1
 
 float expandingbox_sizefactor_from_fadelerp(float fadelerp);
 

@@ -1,5 +1,7 @@
 #include "miscfunctions.qh"
 
+#include "autocvars.qh"
+#include "defs.qh"
 #include "hud/_mod.qh"
 
 #include <common/command/_mod.qh>
@@ -190,6 +192,15 @@ vector project_3d_to_2d(vector vec)
 		vec.y *= vid_conheight / vid_height;
 	}
 	return vec;
+}
+
+bool projected_on_screen(vector screen_pos)
+{
+	return screen_pos.z >= 0
+		&& screen_pos.x >= 0
+		&& screen_pos.y >= 0
+		&& screen_pos.x < vid_conwidth
+		&& screen_pos.y < vid_conheight;
 }
 
 float expandingbox_sizefactor_from_fadelerp(float fadelerp)
@@ -611,4 +622,3 @@ vector Accuracy_GetColor(float accuracy)
 	color = color + factor * (acc_col[j+1] - color);
 	return color;
 }
-

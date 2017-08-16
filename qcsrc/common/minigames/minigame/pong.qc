@@ -95,8 +95,8 @@ void pong_add_score(entity minigame, int team_thrower, int team_receiver, int de
 // get point in the box nearest to the given one (2D)
 vector box_nearest(vector box_min, vector box_max, vector p)
 {
-	return eX * ( p_x > box_max_x  ? box_max_x  : ( p_x < box_min_x ? box_min_x : p_x ) )
-		+ eY * ( p_y > box_max_y  ? box_max_y  : ( p_y < box_min_y ? box_min_y : p_y ) );
+	return vec2( p.x > box_max.x  ? box_max.x  : ( p.x < box_min.x ? box_min.x : p.x ),
+		p.y > box_max.y  ? box_max.y  : ( p.y < box_min.y ? box_min.y : p.y ) );
 }
 
 void pong_paddle_bounce(entity ball, int pteam)
@@ -123,9 +123,14 @@ bool pong_paddle_hit(entity ball, int pteam)
 	entity paddle = ball.owner.pong_paddles[pteam-1];
 	if (!paddle)
 		return false;
-	vector near_point = box_nearest(paddle.mins+paddle.origin,
-									paddle.maxs+paddle.origin, ball.origin);
+
+#if 1
+	vector near_point = box_nearest(paddle.m_mins+paddle.origin,
+									paddle.m_maxs+paddle.origin, ball.origin);
 	return vdist(near_point - ball.origin, <=, ball.pong_length);
+#else
+	return boxesoverlap(paddle.m_mins + paddle.origin, paddle.m_maxs + paddle.origin, ball.m_mins + ball.origin, ball.m_maxs + ball.origin);
+#endif
 }
 
 // Checks for a goal, when that happes adds scores and resets the ball
@@ -275,16 +280,16 @@ void pong_paddle_think(entity this)
 	if ( this.realowner.minigame_players.pong_keys == PONG_KEY_INCREASE ||
 		 this.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
 	{
-		float movement = autocvar_sv_minigames_pong_paddle_speed * think_speed;
+		float pmovement = autocvar_sv_minigames_pong_paddle_speed * think_speed;
 		float halflen = this.pong_length/2;
 
 		if ( this.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
-			movement *= -1;
+			pmovement *= -1;
 
 		if ( this.team > 2 )
-			this.origin_x = bound(halflen, this.origin_x+movement, 1-halflen);
+			this.origin_x = bound(halflen, this.origin_x+pmovement, 1-halflen);
 		else
-			this.origin_y = bound(halflen, this.origin_y+movement, 1-halflen);
+			this.origin_y = bound(halflen, this.origin_y+pmovement, 1-halflen);
 
 		this.SendFlags |= MINIG_SF_UPDATE;
 	}
@@ -293,8 +298,8 @@ void pong_paddle_think(entity this)
 vector pong_team_to_box_halfsize(int nteam, float length, float width)
 {
 	if ( nteam > 2 )
-		return eY*width/2 + eX*length/2;
-	return eX*width/2 + eY*length/2;
+		return vec2(length/2, width/2);
+	return vec2(width/2, length/2);
 }
 
 vector pong_team_to_paddlepos(int nteam)
@@ -319,8 +324,8 @@ entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 	setthink(paddle, pong_paddle_think);
 	paddle.nextthink = time;
 	paddle.team = pl_team;
-	paddle.mins = pong_team_to_box_halfsize(pl_team,-paddle.pong_length,-1/16);
-	paddle.maxs = pong_team_to_box_halfsize(pl_team,paddle.pong_length,1/16);
+	paddle.m_mins = pong_team_to_box_halfsize(pl_team,-paddle.pong_length,-1/16);
+	paddle.m_maxs = pong_team_to_box_halfsize(pl_team,paddle.pong_length,1/16);
 
 	if ( real_player == NULL )
 		pong_ai_spawn(paddle);
@@ -393,12 +398,13 @@ int pong_server_event(entity minigame, string event, ...)
 							(minigame.minigame_flags & ~PONG_STATUS_WAIT);
 						minigame.SendFlags |= MINIG_SF_UPDATE;
 
-						int i;
 						entity ball;
-						for ( i = 0; i < autocvar_sv_minigames_pong_ball_number; i++ )
+						for ( int j = 0; j < autocvar_sv_minigames_pong_ball_number; j++ )
 						{
 							ball = msle_spawn(minigame,"pong_ball");
 							ball.pong_length = autocvar_sv_minigames_pong_ball_radius;
+							ball.m_mins = vec2(-ball.pong_length, -ball.pong_length);
+							ball.m_maxs = vec2(ball.pong_length, ball.pong_length);
 							pong_ball_reset(ball);
 						}
 					}
@@ -415,15 +421,22 @@ int pong_server_event(entity minigame, string event, ...)
 				case "-moved":
 					player.pong_keys &= ~PONG_KEY_DECREASE;
 					return true;
+				case "move":
+					if(argv(1))
+						player.pong_keys = stoi(argv(1));
+					return true;
 				case "pong_aimore":
 				{
-					int i;
+					// keep declaration here, moving it into for() reverses weapon order
+					// potentially compiler bug
+					int j;
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
-						for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
+						for ( j = 0; j < PONG_MAX_PLAYERS; j++ )
+						//for ( int j = 0; j < PONG_MAX_PLAYERS; j++ )
 						{
-							if ( minigame.pong_paddles[i] == NULL )
+							if ( minigame.pong_paddles[j] == NULL )
 							{
-								pong_paddle_spawn(minigame,i+1,NULL);
+								pong_paddle_spawn(minigame,j+1,NULL);
 								return true;
 							}
 						}
@@ -435,14 +448,13 @@ int pong_server_event(entity minigame, string event, ...)
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
 					{
 						entity paddle;
-						int i;
-						for ( i = PONG_MAX_PLAYERS-1; i >= 0; i-- )
+						for ( int j = PONG_MAX_PLAYERS-1; j >= 0; j-- )
 						{
-							paddle = minigame.pong_paddles[i];
+							paddle = minigame.pong_paddles[j];
 							if ( paddle != NULL &&
 								paddle.realowner.classname == "pong_ai" )
 							{
-								minigame.pong_paddles[i] = NULL;
+								minigame.pong_paddles[j] = NULL;
 								delete(paddle.realowner);
 								delete(paddle);
 								return true;
@@ -499,9 +511,16 @@ vector pong_team_to_color(int nteam)
 	}
 }
 
+int pong_keys_pressed;
+int pong_keys_pressed_old;
+
 // Required function, draw the game board
 void pong_hud_board(vector pos, vector mySize)
 {
+	if(pong_keys_pressed != pong_keys_pressed_old)
+		minigame_cmd(strcat("move ", itos(pong_keys_pressed)));
+	pong_keys_pressed_old = pong_keys_pressed;
+
 	minigame_hud_fitsqare(pos, mySize);
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("pong/board"));
 
@@ -602,13 +621,15 @@ int pong_client_event(entity minigame, string event, ...)
 				case K_KP_UPARROW:
 				case K_LEFTARROW:
 				case K_KP_LEFTARROW:
-					minigame_cmd("+moved");
+					//minigame_cmd("+moved");
+					pong_keys_pressed |= PONG_KEY_DECREASE;
 					return true;
 				case K_DOWNARROW:
 				case K_KP_DOWNARROW:
 				case K_RIGHTARROW:
 				case K_KP_RIGHTARROW:
-					minigame_cmd("+movei");
+					//minigame_cmd("+movei");
+					pong_keys_pressed |= PONG_KEY_INCREASE;
 					return true;
 			}
 			return false;
@@ -619,13 +640,15 @@ int pong_client_event(entity minigame, string event, ...)
 				case K_KP_UPARROW:
 				case K_LEFTARROW:
 				case K_KP_LEFTARROW:
-					minigame_cmd("-moved");
+					//minigame_cmd("-moved");
+					pong_keys_pressed &= ~PONG_KEY_DECREASE;
 					return true;
 				case K_DOWNARROW:
 				case K_KP_DOWNARROW:
 				case K_RIGHTARROW:
 				case K_KP_RIGHTARROW:
-					minigame_cmd("-movei");
+					//minigame_cmd("-movei");
+					pong_keys_pressed &= ~PONG_KEY_INCREASE;
 					return true;
 			}
 			return false;

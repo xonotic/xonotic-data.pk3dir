@@ -1,5 +1,7 @@
 #include "utility.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "pathlib.qh"
 
 bool location_isok(vector point, bool waterok, bool air_isok)
@@ -28,12 +30,14 @@ entity pathlib_nodeatpoint(vector where)
     where.x = fsnap(where.x,pathlib_gridsize);
     where.y = fsnap(where.y,pathlib_gridsize);
 
-    FOREACH_ENTITY_RADIUS(where, pathlib_gridsize * 0.5, it.is_path_node,
+    entity found = NULL; // TODO: using FOREACH_ENTITY_RADIUS here causes mutex loop warnings, this may need a proper fix!
+    IL_EACH(g_pathlib_nodes, it.is_path_node && vdist(it.origin - where, <, pathlib_gridsize * 0.5),
     {
-    	return it;
+    	found = it;
+        break;
     });
 
-    return NULL;
+    return found;
 }
 
 bool tile_check_cross(entity this, vector where)

@@ -63,6 +63,8 @@ void Item_SetAlpha(entity this)
 		this.colormod = this.glowmod = autocvar_cl_weapon_stay_color;
 		this.alpha = autocvar_cl_weapon_stay_alpha;
 	}
+
+	this.drawmask = ((this.alpha <= 0) ? 0 : MASK_NORMAL);
 }
 
 void ItemDraw(entity this)
@@ -127,17 +129,22 @@ void Item_PreDraw(entity this)
 {
 	if(warpzone_warpzones_exist)
 	{
-		// just incase warpzones were initialized last, reset these
-		//this.alpha = 1; // alpha is already set by the draw function
-		this.drawmask = MASK_NORMAL;
+		setpredraw(this, func_null); // no need to keep running this
 		return;
 	}
 	float alph;
 	vector org = getpropertyvec(VF_ORIGIN);
-	if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
-		alph = 0;
-	else if(this.fade_start)
-		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	//if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
+		//alph = 0; // this shouldn't be needed, since items behind walls are culled anyway
+	if(this.fade_start)
+	{
+		if(vdist(org - this.origin, >, this.fade_end))
+			alph = 0; // save on some processing
+		else if(vdist(org - this.origin, <, this.fade_start))
+			alph = 1; // more processing saved
+		else
+			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	}
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
@@ -145,8 +152,8 @@ void Item_PreDraw(entity this)
 		this.alpha = alph;
 	if(alph <= 0)
 		this.drawmask = 0;
-	else
-		this.drawmask = MASK_NORMAL;
+	//else
+		//this.drawmask = MASK_NORMAL; // reset by the setalpha function
 }
 
 void ItemRemove(entity this)
@@ -213,7 +220,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         this.fade_end = ReadShort();
         this.fade_start = ReadShort();
-        if(this.fade_start && !autocvar_cl_items_nofade)
+        if(!warpzone_warpzones_exist && this.fade_start && !autocvar_cl_items_nofade)
         	setpredraw(this, Item_PreDraw);
 
         if(this.mdl)
@@ -227,14 +234,14 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             this.draw = ItemDrawSimple;
 
-            if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
-                this.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
+            if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".dpm"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".iqm"));
+            else if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl")))
+                this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
             else
             {
                 this.draw = ItemDraw;
@@ -641,6 +648,69 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
+void GivePlayerHealth(entity player, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	player.health = bound(player.health, player.health + amount,
+		 g_pickup_healthmega_max);
+	player.pauserothealth_finished = max(player.pauserothealth_finished, time +
+		autocvar_g_balance_pause_health_rot);
+}
+
+void GivePlayerArmor(entity player, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	player.armorvalue = bound(player.armorvalue, player.armorvalue + amount,
+		 g_pickup_armormega_max);
+	player.pauserotarmor_finished = max(player.pauserotarmor_finished, time +
+		autocvar_g_balance_pause_armor_rot);
+}
+
+void GivePlayerAmmo(entity player, .float ammotype, float amount)
+{
+	float maxvalue = 999;
+	switch (ammotype)
+	{
+		case ammo_shells:
+		{
+			maxvalue = g_pickup_shells_max;
+			break;
+		}
+		case ammo_cells:
+		{
+			maxvalue = g_pickup_cells_max;
+			break;
+		}
+		case ammo_rockets:
+		{
+			maxvalue = g_pickup_rockets_max;
+			break;
+		}
+		case ammo_plasma:
+		{
+			maxvalue = g_pickup_plasma_max;
+			break;
+		}
+		case ammo_nails:
+		{
+			maxvalue = g_pickup_nails_max;
+			break;
+		}
+		case ammo_fuel:
+		{
+			maxvalue = g_pickup_fuel_max;
+			break;
+		}
+	}
+	player.(ammotype) = min(player.(ammotype) + amount, maxvalue);
+}
+
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
 {
 	if (!item.(ammotype))
@@ -695,7 +765,7 @@ float Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(player.autoswitch)
+	if(CS(player).autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -868,7 +938,7 @@ LABEL(pickup)
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
-		delete (this);
+		delete(this);
 	else if (this.spawnshieldtime)
 	{
 		entity e;
@@ -1024,25 +1094,27 @@ float ammo_pickupevalfunc(entity player, entity item)
 		rating = item.bot_pickupbasevalue;
 	}
 
+	float noammorating = 0.5;
+
 	if ((need_shells) && (item.ammo_shells) && (player.ammo_shells < g_pickup_shells_max))
-		c = item.ammo_shells / player.ammo_shells;
+		c = item.ammo_shells / max(noammorating, player.ammo_shells);
 
 	if ((need_nails) && (item.ammo_nails) && (player.ammo_nails < g_pickup_nails_max))
-		c = item.ammo_nails / player.ammo_nails;
+		c = item.ammo_nails / max(noammorating, player.ammo_nails);
 
 	if ((need_rockets) && (item.ammo_rockets) && (player.ammo_rockets < g_pickup_rockets_max))
-		c = item.ammo_rockets / player.ammo_rockets;
+		c = item.ammo_rockets / max(noammorating, player.ammo_rockets);
 
 	if ((need_cells) && (item.ammo_cells) && (player.ammo_cells < g_pickup_cells_max))
-		c = item.ammo_cells / player.ammo_cells;
+		c = item.ammo_cells / max(noammorating, player.ammo_cells);
 
 	if ((need_plasma) && (item.ammo_plasma) && (player.ammo_plasma < g_pickup_plasma_max))
-		c = item.ammo_plasma / player.ammo_plasma;
+		c = item.ammo_plasma / max(noammorating, player.ammo_plasma);
 
 	if ((need_fuel) && (item.ammo_fuel) && (player.ammo_fuel < g_pickup_fuel_max))
-		c = item.ammo_fuel / player.ammo_fuel;
+		c = item.ammo_fuel / max(noammorating, player.ammo_fuel);
 
-	rating *= min(2, c);
+	rating *= min(c, 2);
 	if(wpn)
 		rating += wpn.bot_pickupbasevalue * 0.1;
 	return rating;
@@ -1170,7 +1242,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
-			delete (this);
+			delete(this);
 			return;
 		}
 
@@ -1208,7 +1280,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			// target_give not yet supported; maybe later
 			print("removed targeted ", this.classname, "\n");
 			startitem_failed = true;
-			remove (this);
+			delete(this);
 			return;
 		}
 		*/
@@ -1364,7 +1436,7 @@ spawnfunc(item_rockets)
 
 spawnfunc(item_bullets)
 {
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap && 
+	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
 	   (this.classname != "droppedweapon"))
 	{
 		weaponswapping = true;
@@ -1721,7 +1793,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(e.autoswitch)
+	if(CS(e).autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
