@@ -1,5 +1,6 @@
 #include "g_damage.qh"
 
+#include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
@@ -1266,7 +1267,7 @@ void Fire_ApplyDamage(entity e)
 
 	if(!IS_INDEPENDENT_PLAYER(e))
 	if(!STAT(FROZEN, e))
-		FOREACH_CLIENT(IS_PLAYER(it) && it != e, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != e, {
 			if(!IS_DEAD(it))
 			if(!IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
@@ -1275,7 +1276,7 @@ void Fire_ApplyDamage(entity e)
 				d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
 				Fire_AddDamage(it, o, d, t, DEATH_FIRE.m_id);
 			}
-		));
+		});
 }
 
 void Fire_ApplyEffect(entity e)

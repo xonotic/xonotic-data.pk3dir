@@ -1,6 +1,12 @@
 #include "main.qh"
 
-#include <common/effects/qc/all.qh>
+#include "defs.qh"
+#include <common/ent_cs.qh>
+#include "miscfunctions.qh"
+#include <common/effects/effect.qh>
+#include <common/effects/qc/_mod.qh>
+#include <common/effects/all.qh>
+#include <common/effects/all.inc>
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
@@ -101,11 +107,6 @@ void CSQC_Init()
 				break;
 		maxclients = i;
 	}
-
-	// needs to be done so early because of the constants they create
-	static_init();
-	static_init_late();
-	static_init_precache();
 
 	binddb = db_create();
 	tempdb = db_create();

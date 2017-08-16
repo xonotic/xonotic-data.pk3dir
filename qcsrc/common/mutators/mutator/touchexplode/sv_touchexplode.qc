@@ -33,7 +33,7 @@ MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
 	if(IS_PLAYER(player))
 	if(!IS_DEAD(player))
 	if(!IS_INDEPENDENT_PLAYER(player))
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(time > it.touchexplode_time)
 			if(!STAT(FROZEN, it))
 			if(!IS_DEAD(it))
@@ -43,5 +43,5 @@ MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
 				PlayerTouchExplode(player, it);
 				player.touchexplode_time = it.touchexplode_time = time + 0.2;
 			}
-		));
+		});
 }

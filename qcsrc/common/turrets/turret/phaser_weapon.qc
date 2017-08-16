@@ -1,7 +1,5 @@
 #include "phaser_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 void beam_think(entity this);
 
@@ -88,7 +86,5 @@ void beam_think(entity this)
     this.scale = vlen(this.owner.tur_shotorg - trace_endpos) / 256;
 
 }
-
-#endif
 
 #endif

@@ -1,6 +1,7 @@
 #include "gamemode_ctf.qh"
 
 #ifndef CSQC
+#include <common/effects/all.qh>
 void ctf_Initialize();
 
 REGISTER_MUTATOR(ctf, false)
@@ -288,7 +289,7 @@ bool ctf_CaptureShield_CheckStatus(entity p)
 		return false;
 
 	players_total = players_worseeq = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(DIFF_TEAM(it, p))
 			continue;
 		se  = PlayerScore_Add(it, SP_CTF_CAPS,    0);
@@ -301,7 +302,7 @@ bool ctf_CaptureShield_CheckStatus(entity p)
 		if(ser <= sr)
 			++players_worseeq;
 		++players_total;
-	));
+	});
 
 	// player is in the worse half, if >= half the players are better than him, or consequently, if < half of the players are worse
 	// use this rule here
@@ -441,14 +442,14 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	_sound(player, CH_TRIGGER, flag.snd_flag_pass, VOL_BASE, ATTEN_NORM);
 	ctf_EventLog("receive", flag.team, player);
 
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 		if(it == sender)
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_NUM(flag.team, CENTER_CTF_PASS_SENT), player.netname);
 		else if(it == player)
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_NUM(flag.team, CENTER_CTF_PASS_RECEIVED), sender.netname);
 		else if(SAME_TEAM(it, sender))
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_NUM(flag.team, CENTER_CTF_PASS_OTHER), sender.netname, player.netname);
-	));
+	});
 
 	// create new waypoint
 	ctf_FlagcarrierWaypoints(player);
@@ -720,16 +721,16 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
 
 	if(!flag.team)
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player && DIFF_TEAM(it, player), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY_NEUTRAL, Team_ColorCode(player.team), player.netname)));
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player && DIFF_TEAM(it, player), { Send_Notification(NOTIF_ONE, it, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY_NEUTRAL, Team_ColorCode(player.team), player.netname); });
 
 	if(flag.team)
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(CTF_SAMETEAM(flag, it))
 			if(SAME_TEAM(player, it))
 				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_PICKUP_TEAM), Team_ColorCode(player.team), player.netname);
 			else
 				Send_Notification(NOTIF_ONE, it, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
-		));
+		});
 
 	_sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
 
@@ -881,7 +882,7 @@ void ctf_CheckStalemate()
 
 		if (!wpforenemy_announced)
 		{
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, ((it.flagcarried) ? CENTER_CTF_STALEMATE_CARRIER : CENTER_CTF_STALEMATE_OTHER))));
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { Send_Notification(NOTIF_ONE, it, MSG_CENTER, ((it.flagcarried) ? CENTER_CTF_STALEMATE_CARRIER : CENTER_CTF_STALEMATE_OTHER)); });
 
 			wpforenemy_announced = true;
 		}
@@ -919,7 +920,7 @@ void ctf_FlagThink(entity this)
 
 	// captureshield
 	if(this == ctf_worldflaglist) // only for the first flag
-		FOREACH_CLIENT(true, LAMBDA(ctf_CaptureShield_Update(it, 1))); // release shield only
+		FOREACH_CLIENT(true, { ctf_CaptureShield_Update(it, 1); }); // release shield only
 
 	// sanity checks
 	if(this.mins != this.m_mins || this.maxs != this.m_maxs) { // reset the flag boundaries in case it got squished
@@ -1458,13 +1459,13 @@ int havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 
 	int c = 0;
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(DIFF_TEAM(it, bot) || IS_DEAD(it) || it == bot)
 			continue;
 
 		if(vdist(it.origin - org, <, tc_radius))
 			++c;
-	));
+	});
 
 	return c;
 }
@@ -1643,7 +1644,7 @@ void havocbot_ctf_reset_role(entity this)
 
 	// if there is only me on the team switch to offense
 	c = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this), LAMBDA(++c));
+	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this), { ++c; });
 
 	if(c==1)
 	{
@@ -1998,14 +1999,14 @@ void havocbot_role_ctf_defense(entity this)
 		// if enemies are closer to our base, go there
 		entity closestplayer = NULL;
 		float distance, bestdistance = 10000;
-		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
 			distance = vlen(org - it.origin);
 			if(distance<bestdistance)
 			{
 				closestplayer = it;
 				bestdistance = distance;
 			}
-		));
+		});
 
 		if(closestplayer)
 		if(DIFF_TEAM(closestplayer, this))
@@ -2237,7 +2238,7 @@ MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
 
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));
@@ -2525,7 +2526,7 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 			}
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(it.flagcarried && (it.team == _team || _team == 0))
 			{
 				found = true;
@@ -2533,7 +2534,7 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 					continue; // already spectating this fc, try another
 				return superspec_Spectate(player, it);
 			}
-		));
+		});
 
 		if(!found)
 			superspec_msg("", "", player, "No active flag carrier\n", 1);

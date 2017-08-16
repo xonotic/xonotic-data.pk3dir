@@ -1,5 +1,10 @@
 #include "weapons.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
+#include <client/view.qh>
+#include <common/wepent.qh>
 
 // Weapons (#0)
 

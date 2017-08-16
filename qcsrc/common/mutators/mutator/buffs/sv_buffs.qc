@@ -85,7 +85,7 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 	if (view.buffs)
 	{
-		return view.cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
+		return CS(view).cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
 	}
 
 	return WaypointSprite_visible_for_player(this, player, view);
@@ -179,7 +179,7 @@ void buff_Touch(entity this, entity toucher)
 
 	if (toucher.buffs)
 	{
-		if (toucher.cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
+		if (CS(toucher).cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
 		{
 			int buffid = buff_FirstFromFlags(toucher.buffs).m_id;
 			//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_DROP, toucher.buffs);
@@ -637,7 +637,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, player))
 			{
@@ -648,7 +648,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 					closest = it;
 				}
 			}
-		));
+		});
 
 		if(closest)
 		{

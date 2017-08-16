@@ -41,6 +41,13 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+// TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
+void bot_setclientfields(entity this)
+{
+	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+}
+
 entity bot_spawn()
 {
 	entity bot = spawnclient();
@@ -50,6 +57,7 @@ entity bot_spawn()
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
+		bot_setclientfields(bot);
 		PutClientInServer(bot);
 	}
 	return bot;
@@ -175,13 +183,13 @@ void bot_setnameandstuff(entity this)
 				continue;
 			s = argv(0);
 			prio = 1;
-			FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 				if(s == it.cleanname)
 				{
 					prio = 0;
 					break;
 				}
-			));
+			});
 			RandomSelection_AddString(readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
@@ -248,10 +256,10 @@ void bot_setnameandstuff(entity this)
 
 	// number bots with identical names
 	int j = 0;
-	FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 		if(it.cleanname == name)
 			++j;
-	));
+	});
 	if (j)
 		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
 	else
@@ -264,9 +272,6 @@ void bot_setnameandstuff(entity this)
 		bot_model = strcat(bot_model, ".iqm");
 	this.playermodel = this.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	this.playerskin = this.playerskin_freeme = strzone(bot_skin);
-
-	this.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the NULL
-	this.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 void bot_custom_weapon_priority_setup()
@@ -419,7 +424,10 @@ void bot_clientconnect(entity this)
 	this.createdtime = this.bot_nextthink;
 
 	if(!this.bot_config_loaded) // This is needed so team overrider doesn't break between matches
+	{
 		bot_setnameandstuff(this);
+		bot_setclientfields(this);
+	}
 
 	if(this.bot_forced_team==1)
 		this.team = NUM_TEAM_1;
@@ -526,12 +534,12 @@ void autoskill(float factor)
 
 	bestbot = -1;
 	bestplayer = -1;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(IS_REAL_CLIENT(it))
 			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
 		else
 			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
-	));
+	});
 
 	LOG_DEBUG("autoskill: best player got ", ftos(bestplayer), ", ");
 	LOG_DEBUG("best bot got ", ftos(bestbot), "; ");
@@ -565,7 +573,7 @@ void autoskill(float factor)
 		// don't reset counters, wait for them to accumulate
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.totalfrags_lastcheck = it.totalfrags));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.totalfrags_lastcheck = it.totalfrags; });
 }
 
 void bot_calculate_stepheightvec()
@@ -584,11 +592,11 @@ float bot_fixcount()
 		activerealplayers = M_ARGV(0, int);
 		realplayers = M_ARGV(1, int);
 	} else {
-		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 			if(IS_PLAYER(it))
 				++activerealplayers;
 			++realplayers;
-		));
+		});
 	}
 
 	int bots;

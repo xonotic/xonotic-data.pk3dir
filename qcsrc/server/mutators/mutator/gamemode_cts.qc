@@ -146,7 +146,7 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		if(it.race_place)
 		{
 			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
@@ -154,7 +154,7 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 				it.race_place = 0;
 		}
 		cts_EventLog(ftos(it.race_place), it);
-	));
+	});
 
 	if(g_race_qualifying == 2)
 	{
@@ -267,7 +267,7 @@ MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));

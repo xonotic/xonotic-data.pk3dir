@@ -71,11 +71,11 @@ float WinningCondition_Race(float fraglimit)
 
 	n = 0;
 	c = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		++n;
 		if(CS(it).race_completed)
 			++c;
-	));
+	});
 	if(n && (n == c))
 		return WINNING_YES;
 	wc = WinningCondition_Scores(fraglimit, 0);
@@ -198,7 +198,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		if(it.race_place)
 		{
 			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
@@ -206,7 +206,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 				it.race_place = 0;
 		}
 		race_EventLog(ftos(it.race_place), it);
-	));
+	});
 
 	if(g_race_qualifying == 2)
 	{
@@ -312,7 +312,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));

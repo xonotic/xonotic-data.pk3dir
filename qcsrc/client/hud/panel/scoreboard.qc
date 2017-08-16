@@ -1,5 +1,8 @@
 #include "scoreboard.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 #include "quickmenu.qh"
 #include <common/ent_cs.qh>
 #include <common/constants.qh>

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 vector w_shotorg;
 vector w_shotdir;
 vector w_shotend;

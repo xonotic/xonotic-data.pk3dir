@@ -6,6 +6,10 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 
+#ifdef CSQC
+#include <client/autocvars.qh>
+#endif
+
 /** main types/groups of notifications */
 ENUMCLASS(MSG)
 	/** "Global" AND "personal" announcer messages */
