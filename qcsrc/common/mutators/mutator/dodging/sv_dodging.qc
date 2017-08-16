@@ -90,15 +90,12 @@ REGISTER_MUTATOR(dodging, true);
 // and to ramp up the dodge acceleration in the physics hook.
 .float last_dodging_time;
 
-// This is the velocity gain to be added over the ramp time.
-// It will decrease from frame to frame during dodging_action = 1
-// until it's 0.
-//.float dodging_velocity_gain;
-
+// the total speed that will be added over the ramp time
 .float dodging_force_total;
+// the part of total yet to be added
 .float dodging_force_remaining;
 
-#ifdef CSQC // TODO what is this? 1) CSQC in sv_ file never even gets compiled 2) pressedkeys is only defined on server so this would be always 0
+#ifdef CSQC
 .int pressedkeys;
 #endif
 
@@ -242,21 +239,6 @@ void PM_dodging(entity this)
 
 	// if ramp time is smaller than frametime we get problems ;D
 	common_factor = min(common_factor, 1); // TODO necessary with dodging_force_remaining?
-
-	/*float horiz_speed = determine_speed(this); // TODO kill this
-	//LOG_INFOF("velocity %f -> force %f\n", vlen(vec2(this.velocity)), horiz_speed);
-	float new_velocity_gain = this.dodging_velocity_gain - (common_factor * horiz_speed);
-	new_velocity_gain = max(0, new_velocity_gain);
-
-	float velocity_difference = this.dodging_velocity_gain - new_velocity_gain;*/
-
-	/*float velocity_increase = min(common_factor * this.dodging_force_total, this.dodging_force_remaining;
-	this.dodging_force_remaining -= velocity_increase;*/
-
-	/*this.velocity += ((this.dodging_direction_y * velocity_difference) * v_right)
-				+ ((this.dodging_direction_x * velocity_difference) * v_forward);
-
-	this.dodging_velocity_gain = this.dodging_velocity_gain - velocity_difference;*/
 
 	float velocity_increase = min(common_factor * this.dodging_force_total, this.dodging_force_remaining);
 	this.dodging_force_remaining -= velocity_increase;
