@@ -7,8 +7,11 @@
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
 #define PHYS_DODGING_FROZEN_DOUBLETAP		autocvar_sv_dodging_frozen_doubletap
 #define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold
-#define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
-#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
+#define PHYS_DODGING_HORIZ_SPEED_MIN		autocvar_sv_dodging_horiz_speed_min
+#define PHYS_DODGING_HORIZ_SPEED_MAX		autocvar_sv_dodging_horiz_speed_max
+#define PHYS_DODGING_HORIZ_FORCE_SLOWEST	autocvar_sv_dodging_horiz_force_slowest
+#define PHYS_DODGING_HORIZ_FORCE_FASTEST	autocvar_sv_dodging_horiz_force_fastest
+#define PHYS_DODGING_HORIZ_FORCE_FROZEN 	autocvar_sv_dodging_horiz_force_frozen
 #define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
 #define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
 #define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
@@ -22,8 +25,11 @@
 #define PHYS_DODGING_DISTANCE_THRESHOLD 	STAT(DODGING_DISTANCE_THRESHOLD, this)
 #define PHYS_DODGING_FROZEN_DOUBLETAP		STAT(DODGING_FROZEN_DOUBLETAP, this)
 #define PHYS_DODGING_HEIGHT_THRESHOLD 		STAT(DODGING_HEIGHT_THRESHOLD, this)
-#define PHYS_DODGING_HORIZ_SPEED 			STAT(DODGING_HORIZ_SPEED, this)
-#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	STAT(DODGING_HORIZ_SPEED_FROZEN, this)
+#define PHYS_DODGING_HORIZ_SPEED_MIN		STAT(DODGING_HORIZ_SPEED_MIN, this)
+#define PHYS_DODGING_HORIZ_SPEED_MAX		STAT(DODGING_HORIZ_SPEED_MAX, this)
+#define PHYS_DODGING_HORIZ_FORCE_SLOWEST	STAT(DODGING_HORIZ_FORCE_SLOWEST, this)
+#define PHYS_DODGING_HORIZ_FORCE_FASTEST	STAT(DODGING_HORIZ_FORCE_FASTEST, this)
+#define PHYS_DODGING_HORIZ_FORCE_FROZEN 	STAT(DODGING_HORIZ_FORCE_FROZEN, this)
 #define PHYS_DODGING_RAMP_TIME 				STAT(DODGING_RAMP_TIME, this)
 #define PHYS_DODGING_UP_SPEED 				STAT(DODGING_UP_SPEED, this)
 #define PHYS_DODGING_WALL 					STAT(DODGING_WALL, this)
@@ -125,20 +131,13 @@ bool is_close_to_ground(entity this, float threshold)
 
 #undef X
 
-// TODO use real cvars
-/*float autocvar_velocity_min = 200;
-float autocvar_velocity_max = 700;
-float autocvar_force_min = 50;
-float autocvar_force_max = 350;*/
-float determine_speed(entity player) {
-	float x = PHYS_FROZEN(player) ? PHYS_DODGING_HORIZ_SPEED_FROZEN : PHYS_DODGING_HORIZ_SPEED;
-	x = x; // unused
-	return x;
+float determine_force(entity player) {
+	if (PHYS_FROZEN(player)) return PHYS_DODGING_HORIZ_FORCE_FROZEN;
 
-	/*float horiz_vel = vlen(vec2(player.velocity));
-	// force min and max are inverted - the faster you are the wekaer dodging becomes
-	// TODO document cvars in cfg
-	return map_bound_ranges(horiz_vel, autocvar_velocity_min, autocvar_velocity_max, autocvar_force_max, autocvar_force_min);*/
+	float horiz_vel = vlen(vec2(player.velocity));
+	return map_bound_ranges(horiz_vel,
+	                        PHYS_DODGING_HORIZ_SPEED_MIN, PHYS_DODGING_HORIZ_SPEED_MAX,
+	                        PHYS_DODGING_HORIZ_FORCE_SLOWEST, PHYS_DODGING_HORIZ_FORCE_FASTEST);
 }
 
 bool PM_dodging_checkpressedkeys(entity this)
@@ -194,8 +193,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 	this.dodging_action = 1;
 	this.dodging_single_action = 1;
 
-	//this.dodging_velocity_gain = PHYS_DODGING_HORIZ_SPEED;
-	this.dodging_force_total = determine_speed(this);
+	this.dodging_force_total = determine_force(this);
 	this.dodging_force_remaining = this.dodging_force_total;
 
 	this.dodging_direction.x = tap_direction_x;
