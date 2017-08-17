@@ -16,7 +16,8 @@
 #define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
 #define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
 #define PHYS_DODGING_AIR 					autocvar_sv_dodging_air_dodging
-#define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed // TODO separate max air speed, fix frozen dodging
+#define PHYS_DODGING_MAXSPEED 				autocvar_sv_dodging_maxspeed
+#define PHYS_DODGING_AIR_MAXSPEED			autocvar_sv_dodging_air_maxspeed
 
 // we ran out of stats slots! TODO: re-enable this when prediction is available for dodging
 #if 0
@@ -35,6 +36,7 @@
 #define PHYS_DODGING_WALL 					STAT(DODGING_WALL, this)
 #define PHYS_DODGING_AIR 					STAT(DODGING_AIR, this)
 #define PHYS_DODGING_MAXSPEED 				STAT(DODGING_MAXSPEED, this)
+#define PHYS_DODGING_AIR_MAXSPEED 			STAT(DODGING_AIR_MAXSPEED, this)
 #endif
 
 #ifdef CSQC
@@ -173,20 +175,14 @@ bool PM_dodging_checkpressedkeys(entity this)
 
 	if (!dodge_detected) return false;
 
+	//LOG_INFOF("dodge keys detected %f, speed %f\n", time, vlen(this.velocity));
+
 	makevectors(this.angles);
 
-	bool wall_dodge = false;
-
-	if(!PHYS_DODGING_AIR)
-	if(!is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD)) // TODO first check wall wallldodging - this fails for sloped walls
-	{
-		wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD));
-		if(!wall_dodge) // we're not on the ground, and wall dodging isn't allowed, end it!
-			return false;
-	}
-
-	if(!wall_dodge && PHYS_DODGING_MAXSPEED && vdist(this.velocity, >, PHYS_DODGING_MAXSPEED))
-		return false;
+	bool can_dodge = (is_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD) && (PHYS_DODGING_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_MAXSPEED)));
+	bool can_wall_dodge = (PHYS_DODGING_WALL && is_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD));
+	bool can_air_dodge = (PHYS_DODGING_AIR && (PHYS_DODGING_AIR_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_AIR_MAXSPEED)));
+	if (!can_dodge && !can_wall_dodge && !can_air_dodge) return false;
 
 	this.last_dodging_time = time;
 
