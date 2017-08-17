@@ -184,6 +184,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool can_air_dodge = (PHYS_DODGING_AIR && (PHYS_DODGING_AIR_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_AIR_MAXSPEED)));
 	if (!can_dodge && !can_wall_dodge && !can_air_dodge) return false;
 
+	//LOG_INFOF("dodge delay %f\n", time - this.last_dodging_time); // TODO lowest i got with double press: 0.63
 	this.last_dodging_time = time;
 
 	this.dodging_action = 1;
@@ -229,14 +230,12 @@ void PM_dodging(entity this)
 	// will be called ramp_time/frametime times = 2 times. so, we need to
 	// add 0.5 * the total speed each frame until the dodge action is done..
 	float common_factor = PHYS_DODGING_FRAMETIME / PHYS_DODGING_RAMP_TIME;
-	//common_factor /= 2; // FIXME this is WRONG but this function is called twice per frame!!!
-
-	// if ramp time is smaller than frametime we get problems ;D
-	common_factor = min(common_factor, 1); // TODO necessary with dodging_force_remaining?
+	// NOTE: depending on cl_netfps the client may (and probably will) send more input frames during each server frame
+	// but common_factor uses server frame rate so players with higher cl_netfps will ramp slightly faster
 
 	float velocity_increase = min(common_factor * this.dodging_force_total, this.dodging_force_remaining);
 	this.dodging_force_remaining -= velocity_increase;
-	LOG_INFOF("time %f velocity_increase: %f\n", time, velocity_increase);
+	//LOG_INFOF("time %f velocity_increase: %f\n", time, velocity_increase);
 	this.velocity += this.dodging_direction.x * velocity_increase * v_forward
 	               + this.dodging_direction.y * velocity_increase * v_right;
 
