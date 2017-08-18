@@ -631,12 +631,35 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	}
 }
 
+AUTOCVAR(g_pickup_respawntime_scaling_a, float, 0.0, "Scale respawn time according to a*rt / (p+b) + c*rt where rt is normal respawn time and p number of players");
+AUTOCVAR(g_pickup_respawntime_scaling_b, float, 0.0, "Scale respawn time according to a*rt / (p+b) + c*rt where rt is normal respawn time and p number of players");
+AUTOCVAR(g_pickup_respawntime_scaling_c, float, 1.0, "Scale respawn time according to a*rt / (p+b) + c*rt where rt is normal respawn time and p number of players");
 void Item_ScheduleRespawn(entity e)
 {
 	if(e.respawntime > 0)
 	{
 		Item_Show(e, 0);
-		Item_ScheduleRespawnIn(e, ITEM_RESPAWNTIME(e));
+
+		CheckAllowedTeams(NULL);
+		GetTeamCounts(NULL);
+		int players = 0;
+		if (c1 != -1) players += c1;
+		if (c2 != -1) players += c2;
+		if (c3 != -1) players += c3;
+		if (c4 != -1) players += c4;
+		float adjusted_respawntime;
+		if (players >= 2) {
+			float a = autocvar_g_pickup_respawntime_scaling_a;
+			float b = autocvar_g_pickup_respawntime_scaling_b;
+			float c = autocvar_g_pickup_respawntime_scaling_c;
+			adjusted_respawntime = a * e.respawntime / (players + b) + c * e.respawntime;
+		} else {
+			adjusted_respawntime = e.respawntime;
+		}
+		//LOG_INFOF("item %s will respawn in %f\n", e.classname, adjusted_respawntime);
+		// range: adjusted_respawntime - respawntimejitter .. adjusted_respawntime + respawntimejitter
+		float actual_time = adjusted_respawntime + crandom() * e.respawntimejitter;
+		Item_ScheduleRespawnIn(e, actual_time);
 	}
 	else // if respawntime is -1, this item does not respawn
 		Item_Show(e, -1);
