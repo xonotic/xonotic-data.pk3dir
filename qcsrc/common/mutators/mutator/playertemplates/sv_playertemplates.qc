@@ -47,6 +47,14 @@ string PlayerTemplate_GetDefaultCvarName(string variable)
 		{
 			return "g_start_ammo_fuel";
 		}
+		case "random_start_weapons_count":
+		{
+			return "g_random_start_weapons_count";
+		}
+		case "random_start_weapons":
+		{
+			return "g_random_start_weapons";
+		}
 		case "random_start_shells":
 		{
 			return "g_random_start_shells";
@@ -111,6 +119,7 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		case "start_ammo_cells":
 		case "start_ammo_plasma":
 		case "start_ammo_fuel":
+		case "random_start_weapons_count":
 		case "random_start_shells":
 		case "random_start_bullets":
 		case "random_start_rockets":
@@ -133,10 +142,6 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		{
 			return 1;
 		}
-		case "num_random_start_weapons":
-		{
-			return 0;
-		}
 		case "attack_scale":
 		case "defense_scale":
 		{
@@ -158,8 +163,11 @@ string PlayerTemplate_GetDefaultStringValue(string variable)
 {
 	switch (variable)
 	{
-		case "start_weapons":
 		case "random_start_weapons":
+		{
+			cvar_string(PlayerTemplate_GetDefaultCvarName(variable));
+		}
+		case "start_weapons":
 		{
 			return "";
 		}
@@ -330,7 +338,8 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 	if (!warmup_stage)
 	{
 		GivePlayerRandomWeapons(player,
-			PlayerTemplate_GetFloatValue(template, "num_random_start_weapons"),
+			PlayerTemplate_GetFloatValue(template,
+			"random_start_weapons_count"),
 			PlayerTemplate_GetStringValue(template, "random_start_weapons"),
 			PlayerTemplate_GetFloatValue(template, "random_start_shells"),
 			PlayerTemplate_GetFloatValue(template, "random_start_bullets"),
