@@ -343,9 +343,9 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	float solid_penetration_left = 1;
 	float total_damage = 0;
 
-	if(tracereffects & EF_RED)
+	if(max_solid_penetration >= 50)
 		fireBullet_trace_callback_eff = EFFECT_RIFLE;
-	else if(tracereffects & EF_BLUE)
+	else if(max_solid_penetration < 50)
 		fireBullet_trace_callback_eff = EFFECT_RIFLE_WEAK;
 	else
 		fireBullet_trace_callback_eff = EFFECT_BULLET;
