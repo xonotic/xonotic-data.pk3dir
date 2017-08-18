@@ -994,32 +994,33 @@ float waypoint_loadall()
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints");
 	file = fopen(filename, FILE_READ);
-	if (file >= 0)
-	{
-		while ((s = fgets(file)))
-		{
-			m1 = stov(s);
-			s = fgets(file);
-			if (!s)
-				break;
-			m2 = stov(s);
-			s = fgets(file);
-			if (!s)
-				break;
-			fl = stof(s);
-			waypoint_spawn(m1, m2, fl);
-			if (m1 == m2)
-				cwp = cwp + 1;
-			else
-				cwb = cwb + 1;
-		}
-		fclose(file);
-		LOG_TRACE("loaded ", ftos(cwp), " waypoints and ", ftos(cwb), " wayboxes from maps/", mapname, ".waypoints");
-	}
-	else
+
+	if (file < 0)
 	{
 		LOG_TRACE("waypoint load from ", filename, " failed");
+		return 0;
 	}
+
+	while ((s = fgets(file)))
+	{
+		m1 = stov(s);
+		s = fgets(file);
+		if (!s)
+			break;
+		m2 = stov(s);
+		s = fgets(file);
+		if (!s)
+			break;
+		fl = stof(s);
+		waypoint_spawn(m1, m2, fl);
+		if (m1 == m2)
+			cwp = cwp + 1;
+		else
+			cwb = cwb + 1;
+	}
+	fclose(file);
+	LOG_TRACE("loaded ", ftos(cwp), " waypoints and ", ftos(cwb), " wayboxes from maps/", mapname, ".waypoints");
+
 	return cwp + cwb;
 }
 
