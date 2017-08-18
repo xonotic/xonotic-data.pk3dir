@@ -184,7 +184,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool can_air_dodge = (PHYS_DODGING_AIR && (PHYS_DODGING_AIR_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_AIR_MAXSPEED)));
 	if (!can_dodge && !can_wall_dodge && !can_air_dodge) return false;
 
-	//LOG_INFOF("dodge delay %f\n", time - this.last_dodging_time); // TODO lowest i got with double press: 0.63
+	LOG_INFOF("dodge delay %f (%s)\n", time - this.last_dodging_time, this.netname); // TODO lowest i got with double press: 0.63
 	this.last_dodging_time = time;
 
 	this.dodging_action = 1;
