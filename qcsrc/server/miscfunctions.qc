@@ -643,7 +643,7 @@ void readplayerstartcvars()
 		start_ammo_cells = cvar("g_start_ammo_cells");
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
-		num_random_start_weapons = cvar("g_num_random_start_weapons");
+		random_start_weapons_count = cvar("g_random_start_weapons_count");
 		random_start_shells = cvar("g_random_start_shells");
 		random_start_bullets = cvar("g_random_start_bullets");
 		random_start_rockets = cvar("g_random_start_rockets");
