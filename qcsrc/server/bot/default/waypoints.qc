@@ -701,8 +701,27 @@ bool waypoint_load_links()
 		return false;
 	}
 
+	bool parse_comments = true;
+	float ver = 0;
+
 	while ((s = fgets(file)))
 	{
+		if(parse_comments)
+		{
+			if(substring(s, 0, 2) == "//")
+			{
+				if(substring(s, 2, 8) == "VERSION ")
+					ver = stof(substring(s, 10, -1));
+				continue;
+			}
+			else
+			{
+				if(ver < WAYPOINT_VERSION)
+					return false;
+				parse_comments = false;
+			}
+		}
+
 		tokens = tokenizebyseparator(s, "*");
 
 		if (tokens!=2)
@@ -925,6 +944,8 @@ void waypoint_save_links()
 		return;
 	}
 
+	fputs(file, strcat("//", "VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
+
 	int c = 0;
 	IL_EACH(g_waypoints, true,
 	{
@@ -961,6 +982,12 @@ void waypoint_saveall()
 		return;
 	}
 
+	// add 3 comments to not break compatibility with older Xonotic versions
+	// (they are read as a waypoint with origin '0 0 0' and flag 0 though)
+	fputs(file, strcat("//", "VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
+	fputs(file, strcat("//", "\n"));
+	fputs(file, strcat("//", "\n"));
+
 	int c = 0;
 	IL_EACH(g_waypoints, true,
 	{
@@ -995,6 +1022,9 @@ float waypoint_loadall()
 	filename = strcat(filename, ".waypoints");
 	file = fopen(filename, FILE_READ);
 
+	bool parse_comments = true;
+	float ver = 0;
+
 	if (file < 0)
 	{
 		LOG_TRACE("waypoint load from ", filename, " failed");
@@ -1003,6 +1033,21 @@ float waypoint_loadall()
 
 	while ((s = fgets(file)))
 	{
+		if(parse_comments)
+		{
+			if(substring(s, 0, 2) == "//")
+			{
+				if(substring(s, 2, 8) == "VERSION ")
+					ver = stof(substring(s, 10, -1));
+				continue;
+			}
+			else
+			{
+				if(floor(ver) < floor(WAYPOINT_VERSION))
+					LOG_TRACE("waypoints for this map are outdated");
+				parse_comments = false;
+			}
+		}
 		m1 = stov(s);
 		s = fgets(file);
 		if (!s)
