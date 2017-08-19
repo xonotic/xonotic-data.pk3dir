@@ -144,10 +144,6 @@ float determine_force(entity player) {
 
 bool PM_dodging_checkpressedkeys(entity this)
 {
-	// first check if the last dodge is far enough back in time so we can dodge again
-	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
-		return false;
-
 	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
 	bool frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_DOUBLETAP);
 
@@ -178,8 +174,14 @@ bool PM_dodging_checkpressedkeys(entity this)
 	#undef X
 
 	if (!dodge_detected) return false;
-
 	//LOG_INFOF("dodge keys detected %f, speed %f\n", time, vlen(this.velocity));
+
+	// this check has to be after checking keys:
+	// the first key press of the double tap is allowed to be before dodging delay,
+	// only the second has to be after, otherwise +dodge gives an advantage because typical repress time is 0.1 s
+	// or higher which means players using +dodge would be able to do it more often
+	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
+		return false;
 
 	makevectors(this.angles);
 
