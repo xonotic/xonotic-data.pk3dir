@@ -768,8 +768,8 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 		te_plasmaburn(org);
 
 	entity best = NULL;
-	vector v, v2;
-	float v2_height;
+	vector v = '0 0 0', v2 = '0 0 0';
+	float v2_height = 0;
 
 	if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
 	{
@@ -815,10 +815,10 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 // finds the waypoints near the bot initiating a navigation query
 float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 {
-	vector v;
+	vector v = '0 0 0';
 	//navigation_testtracewalk = true;
 	int c = 0;
-	float v_height;
+	float v_height = 0;
 	IL_EACH(g_waypoints, !it.wpconsidered,
 	{
 		SET_TRACEWALK_DESTCOORDS(it, this.origin, v, v_height);
@@ -1271,8 +1271,8 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
-	vector dest;
-	float dest_height;
+	vector dest = '0 0 0';
+	float dest_height = 0;
 	SET_TRACEWALK_DESTCOORDS(e, startposition, dest, dest_height);
 	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 		return true;

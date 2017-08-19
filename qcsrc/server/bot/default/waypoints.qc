@@ -559,8 +559,8 @@ void waypoint_addlink(entity from, entity to)
 // (SLOW!)
 void waypoint_think(entity this)
 {
-	vector sv, sv2, ev, ev2, dv;
-	float sv2_height, ev2_height;
+	vector sv = '0 0 0', sv2 = '0 0 0', ev = '0 0 0', ev2 = '0 0 0', dv;
+	float sv2_height = 0, ev2_height = 0;
 
 	bot_calculate_stepheightvec();
 

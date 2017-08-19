@@ -138,7 +138,7 @@ void havocbot_ai(entity this)
 		this.aistatus |= AI_STATUS_ROAMING;
 		this.aistatus &= ~AI_STATUS_ATTACKING;
 
-		vector v, now, next;
+		vector v = '0 0 0', now, next;
 		float aimdistance,skillblend,distanceblend,blend;
 
 		SET_DESTCOORDS(this.goalcurrent, this.origin, v);
@@ -286,7 +286,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 	float bunnyhopdistance;
 	vector deviation;
 	float maxspeed;
-	vector gco, gno;
+	vector gco = '0 0 0', gno;
 
 	// Don't jump when attacking
 	if(this.aistatus & AI_STATUS_ATTACKING)
@@ -448,7 +448,7 @@ bool havocbot_checkgoaldistance(entity this, vector gco)
 
 void havocbot_movetogoal(entity this)
 {
-	vector destorg;
+	vector destorg = '0 0 0';
 	vector diff;
 	vector dir;
 	vector flatdir;
@@ -1287,7 +1287,7 @@ float havocbot_moveto(entity this, vector pos)
 			debuggoalstack(this);
 
 		// Heading
-		vector dir;
+		vector dir = '0 0 0';
 		SET_DESTCOORDS(this.goalcurrent, this.origin, dir);
 		dir = dir - (this.origin + this.view_ofs);
 		dir.z = 0;
