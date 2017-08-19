@@ -454,7 +454,7 @@ void ClientCommand_sentcvar(entity caller, float request, float argc, string com
 					tokenize_console(s);
 				}
 
-				GetCvars(caller, 1);
+				GetCvars(caller, CS(caller), 1);
 
 				return;
 			}
