@@ -144,10 +144,6 @@ float determine_force(entity player) {
 
 bool PM_dodging_checkpressedkeys(entity this)
 {
-	// first check if the last dodge is far enough back in time so we can dodge again
-	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
-		return false;
-
 	bool frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
 	bool frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_DOUBLETAP);
 
@@ -156,17 +152,21 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool dodge_detected = false;
 	vector mymovement = PHYS_CS(this).movement;
 
-	#define X(COND,BTN,RESULT)															\
-	if (mymovement_##COND)												\
-		/* is this a state change? */													\
-		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
-			tap_direction_##RESULT;													\
-			if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap)	\
-				dodge_detected = true;												\
-			if(PHYS_INPUT_BUTTON_DODGE(this))										\
-				dodge_detected = true;												\
-			this.last_##BTN##_KEY_time = time;										\
-		}
+	#define X(COND,BTN,RESULT)																				\
+	if (mymovement_##COND) {																				\
+		/* is this a state change? */																		\
+		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {							\
+			/*LOG_INFOF("key press %f - %s\n", time, #BTN);*/ 													\
+			tap_direction_##RESULT;																			\
+			if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap) {	\
+				/*LOG_INFOF("dodge repress %f (%s)\n", time - this.last_##BTN##_KEY_time, this.netname);*/		\
+				dodge_detected = true;																		\
+			} else if(PHYS_INPUT_BUTTON_DODGE(this)) {														\
+				dodge_detected = true;																		\
+			}																								\
+			this.last_##BTN##_KEY_time = time;																\
+		}																									\
+	}
 	X(x < 0, BACKWARD,	x--);
 	X(x > 0, FORWARD,	x++);
 	X(y < 0, LEFT,		y--);
@@ -174,8 +174,14 @@ bool PM_dodging_checkpressedkeys(entity this)
 	#undef X
 
 	if (!dodge_detected) return false;
+	//LOG_INFOF("dodge keys detected %f - delay %f - %s\n", time, time - this.last_dodging_time, this.netname);
 
-	//LOG_INFOF("dodge keys detected %f, speed %f\n", time, vlen(this.velocity));
+	// this check has to be after checking keys:
+	// the first key press of the double tap is allowed to be before dodging delay,
+	// only the second has to be after, otherwise +dodge gives an advantage because typical repress time is 0.1 s
+	// or higher which means players using +dodge would be able to do it more often
+	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
+		return false;
 
 	makevectors(this.angles);
 
@@ -184,7 +190,6 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool can_air_dodge = (PHYS_DODGING_AIR && (PHYS_DODGING_AIR_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_AIR_MAXSPEED)));
 	if (!can_dodge && !can_wall_dodge && !can_air_dodge) return false;
 
-	LOG_INFOF("dodge delay %f (%s)\n", time - this.last_dodging_time, this.netname); // TODO lowest i got with double press: 0.63
 	this.last_dodging_time = time;
 
 	this.dodging_action = 1;
@@ -192,6 +197,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 
 	this.dodging_force_total = determine_force(this);
 	this.dodging_force_remaining = this.dodging_force_total;
+	//LOG_INFOF("speed %d -> %f\n", vlen(vec2(this.velocity)), this.dodging_force_total);
 
 	this.dodging_direction.x = tap_direction_x;
 	this.dodging_direction.y = tap_direction_y;
