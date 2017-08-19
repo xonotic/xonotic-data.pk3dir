@@ -156,17 +156,21 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool dodge_detected = false;
 	vector mymovement = PHYS_CS(this).movement;
 
-	#define X(COND,BTN,RESULT)															\
-	if (mymovement_##COND)												\
-		/* is this a state change? */													\
-		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
-			tap_direction_##RESULT;													\
-			if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap)	\
-				dodge_detected = true;												\
-			if(PHYS_INPUT_BUTTON_DODGE(this))										\
-				dodge_detected = true;												\
-			this.last_##BTN##_KEY_time = time;										\
-		}
+	#define X(COND,BTN,RESULT)																				\
+	if (mymovement_##COND) {																				\
+		/* is this a state change? */																		\
+		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {							\
+			/*LOG_INFOF("state change %f\n", time);*/ 															\
+			tap_direction_##RESULT;																			\
+			if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap) {	\
+				/*LOG_INFOF("dodge repress %f (%s)\n", time - this.last_##BTN##_KEY_time, this.netname);*/		\
+				dodge_detected = true;																		\
+			} else if(PHYS_INPUT_BUTTON_DODGE(this)) {														\
+				dodge_detected = true;																		\
+			}																								\
+			this.last_##BTN##_KEY_time = time;																\
+		}																									\
+	}
 	X(x < 0, BACKWARD,	x--);
 	X(x > 0, FORWARD,	x++);
 	X(y < 0, LEFT,		y--);
@@ -184,7 +188,7 @@ bool PM_dodging_checkpressedkeys(entity this)
 	bool can_air_dodge = (PHYS_DODGING_AIR && (PHYS_DODGING_AIR_MAXSPEED == 0 || vdist(this.velocity, <, PHYS_DODGING_AIR_MAXSPEED)));
 	if (!can_dodge && !can_wall_dodge && !can_air_dodge) return false;
 
-	LOG_INFOF("dodge delay %f (%s)\n", time - this.last_dodging_time, this.netname); // TODO lowest i got with double press: 0.63
+	//LOG_INFOF("dodge delay %f (%s)\n", time - this.last_dodging_time, this.netname); // TODO lowest i got with double press: 0.63
 	this.last_dodging_time = time;
 
 	this.dodging_action = 1;
