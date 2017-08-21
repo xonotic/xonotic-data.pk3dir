@@ -720,7 +720,7 @@ void navigation_poproute(entity this)
 // walking to wp (walkfromwp == false) v2 and v2_height will be used as
 // waypoint destination coordinates instead of v (only useful for box waypoints)
 // for normal waypoints v2 == v and v2_height == 0
-float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2, float v2_height, float walkfromwp, float bestdist)
+float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2, float v2_height, vector o2, float o2_height, float walkfromwp, float bestdist)
 {
 	if (vdist(v - org, <, bestdist))
 	{
@@ -729,12 +729,12 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2,
 		{
 			if (walkfromwp)
 			{
-				if (tracewalk(ent, v, PL_MIN_CONST, PL_MAX_CONST, org, 0, bot_navigation_movemode))
+				if (tracewalk(ent, v, PL_MIN_CONST, PL_MAX_CONST, v2, v2_height, bot_navigation_movemode))
 					return true;
 			}
 			else
 			{
-				if (tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v2, v2_height, bot_navigation_movemode))
+				if (tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, o2, o2_height, bot_navigation_movemode))
 					return true;
 			}
 		}
@@ -745,6 +745,9 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2,
 // find the spawnfunc_waypoint near a dynamic goal such as a dropped weapon
 entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfromwp, float bestdist, entity except)
 {
+	if(ent.tag_entity)
+		ent = ent.tag_entity;
+
 	vector pm1 = ent.origin + ent.mins;
 	vector pm2 = ent.origin + ent.maxs;
 
@@ -756,14 +759,6 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	});
 
 	vector org = ent.origin;
-	if(ent.size)
-	{
-		org += 0.5 * (ent.mins + ent.maxs);
-		org.z = ent.origin.z + ent.mins.z - PL_MIN_CONST.z; // player height
-	}
-	// TODO possibly make other code have the same support for bboxes
-	if(ent.tag_entity)
-		org = org + ent.tag_entity.origin;
 	if (navigation_testtracewalk)
 		te_plasmaburn(org);
 
@@ -791,8 +786,12 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	{
 		if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 			continue;
-		SET_TRACEWALK_DESTCOORDS_2(it, org, v, v2, v2_height);
-		if(navigation_waypoint_will_link(v, org, ent, v2, v2_height, walkfromwp, bestdist))
+		v = it.origin;
+		if(walkfromwp)
+			SET_TRACEWALK_DESTCOORDS(ent, v, v2, v2_height);
+		else
+			SET_TRACEWALK_DESTCOORDS(it, org, v2, v2_height);
+		if(navigation_waypoint_will_link(v, org, ent, v2, v2_height, v2, v2_height, walkfromwp, bestdist))
 		{
 			bestdist = vlen(v - org);
 			best = it;

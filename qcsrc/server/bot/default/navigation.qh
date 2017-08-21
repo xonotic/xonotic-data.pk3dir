@@ -161,4 +161,4 @@ void navigation_unstuck(entity this);
 void botframe_updatedangerousobjects(float maxupdate);
 
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
-float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2, float v2_height, float walkfromwp, float bestdist);
+float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2, float v2_height, vector o2, float o2_height, float walkfromwp, float bestdist);
