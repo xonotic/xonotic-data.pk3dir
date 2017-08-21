@@ -617,6 +617,11 @@ void Unfreeze (entity targ)
 	targ.iceblock = NULL;
 }
 
+// TODO balance cfgs
+float autocvar_g_balance_damagepush_scaling_speed_min;
+float autocvar_g_balance_damagepush_scaling_speed_max;
+float autocvar_g_balance_damagepush_scaling_factor_slowest;
+float autocvar_g_balance_damagepush_scaling_factor_fastest;
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float complainteamdamage = 0;
@@ -878,6 +883,25 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
+
+		/*LOG_INFOF("farce %v (%f)\n", farce, vlen(targ.velocity + farce));
+		vector velocity_end = targ.origin + targ.velocity / 10;
+		vector farce_end = velocity_end + farce / 10;
+		te_lightning1(NULL, targ.origin, velocity_end);
+		te_lightning1(NULL, velocity_end, farce_end);*/
+
+		//float horiz_speed = vlen(vec2(targ.velocity));
+		/*float factor = map_bound_ranges(horiz_speed,
+			autocvar_g_balance_damagepush_scaling_speed_min, autocvar_g_balance_damagepush_scaling_speed_max,
+			autocvar_g_balance_damagepush_scaling_factor_slowest, autocvar_g_balance_damagepush_scaling_factor_fastest);*/
+
+		float factor = map_bound_ranges(vlen(targ.velocity + farce),
+			autocvar_g_balance_damagepush_scaling_speed_min, autocvar_g_balance_damagepush_scaling_speed_max,
+			autocvar_g_balance_damagepush_scaling_factor_slowest, autocvar_g_balance_damagepush_scaling_factor_fastest);
+		farce = vec3(farce.x * factor, farce.y * factor, farce.z);
+		/*te_lightning1(NULL, targ.origin, targ.origin + farce / 10);
+		LOG_INFOF("factor %f - new farce %v (%f)\n", factor, farce, vlen(farce));*/
+
 		if(targ.move_movetype == MOVETYPE_PHYSICS)
 		{
 			entity farcent = new(farce);
