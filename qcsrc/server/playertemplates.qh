@@ -48,6 +48,8 @@ string PlayerTemplate_GetStringValue(string template, string variable);
 float PlayerTemplate_GivePlayerItem(entity player, string template,
 	string variable);
 
+// =========================== Hook handlers =================================
+
 /// \brief Setups the player during spawn according to the given template.
 /// \param[in] player Player to setup.
 /// \param[in] template Name of the template.
