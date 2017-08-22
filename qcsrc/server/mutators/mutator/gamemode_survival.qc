@@ -104,9 +104,6 @@ int autocvar_g_surv_defender_cannon_fodder_frag_rockets;
 /// \brief How many cells do defenders get when they frag cannon fodder.
 int autocvar_g_surv_defender_cannon_fodder_frag_cells;
 
-/// \brief Whether defenders drop weapons after death.
-int autocvar_g_surv_defender_drop_weapons;
-
 /// \brief A stat that is used to track the time left in the round.
 .float surv_round_time_stat = _STAT(SURV_ROUND_TIME);
 /// \brief A stat that is used to track defender team.
@@ -1910,6 +1907,14 @@ MUTATOR_HOOKFUNCTION(surv, FixPlayermodel)
 	M_ARGV(0, string) = player.surv_playermodel;
 }
 
+/// \brief Hook which is called when the player tries to throw their weapon.
+MUTATOR_HOOKFUNCTION(surv, ForbidThrowCurrentWeapon)
+{
+	entity player = M_ARGV(0, entity);
+	return PlayerTemplate_ForbidThrowCurrentWeapon(player,
+		Surv_GetPlayerTemplate(player));
+}
+
 /// \brief Hook that is called every frame to determine how player health should
 /// regenerate.
 MUTATOR_HOOKFUNCTION(surv, PlayerRegen)
@@ -1978,16 +1983,6 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-/// \brief Hook which is called when the player tries to throw their weapon.
-MUTATOR_HOOKFUNCTION(surv, ForbidThrowCurrentWeapon)
-{
-	entity player = M_ARGV(0, entity);
-	if (player.team == surv_defenderteam)
-	{
-		return true;
-	}
-}
-
 /// \brief Hook which is called when the damage amount must be determined.
 MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 {
@@ -2042,11 +2037,12 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 }
 
 /// \brief Hook which is called when the player dies.
-MUTATOR_HOOKFUNCTION(surv, PlayerDies)
+MUTATOR_HOOKFUNCTION(surv, PlayerDies, CBC_ORDER_FIRST)
 {
 	//DebugPrintToChatAll("PlayerDies");
 	entity attacker = M_ARGV(1, entity);
 	entity victim = M_ARGV(2, entity);
+	PlayerTemplate_PlayerDies(victim, Surv_GetPlayerTemplate(victim));
 	if ((attacker.team == surv_defenderteam) &&
 		(victim.team == surv_attackerteam))
 	{
@@ -2084,15 +2080,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 					autocvar_g_surv_defender_cannon_fodder_frag_cells);
 				break;
 			}
-		}
-	}
-	if ((victim.team == surv_defenderteam) &&
-		(autocvar_g_surv_defender_drop_weapons == false))
-	{
-		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity went = weaponentities[slot];
-			victim.(went).m_weapon = WEP_Null;
 		}
 	}
 	if (!Surv_CanPlayerSpawn(victim))
