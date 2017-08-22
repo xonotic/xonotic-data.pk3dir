@@ -289,7 +289,7 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 
 // =========================== Hook handlers =================================
 
-void PlayerTemplate_PlayerSpawn(entity player, string template)
+void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 {
 	if (template == "default")
 	{
@@ -373,12 +373,12 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 	}
 }
 
-bool PlayerTemplate_ForbidThrowCurrentWeapon(string template)
+bool PlayerTemplateHook_ForbidThrowCurrentWeapon(string template)
 {
 	return !PlayerTemplate_GetFloatValue(template, "drop_weapons");
 }
 
-float PlayerTemplate_PlayerRegen(entity player, string template)
+float PlayerTemplateHook_PlayerRegen(entity player, string template)
 {
 	if (template == "default")
 	{
@@ -399,7 +399,7 @@ float PlayerTemplate_PlayerRegen(entity player, string template)
 	return false;
 }
 
-float PlayerTemplate_ItemTouch(entity player, entity item, string template)
+float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 {
 	if (template == "default")
 	{
@@ -1070,8 +1070,9 @@ float PlayerTemplate_ItemTouch(entity player, entity item, string template)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
-	entity victim, string victimtemplate, float deathtype, float damage)
+float PlayerTemplateHook_Damage_Calculate(entity attacker,
+	string attackertemplate, entity victim, string victimtemplate,
+	float deathtype, float damage)
 {
 	if (autocvar_g_instagib == 1)
 	{
@@ -1088,7 +1089,7 @@ float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
 	return damage;
 }
 
-void PlayerTemplate_PlayerDies(entity player, string template)
+void PlayerTemplateHook_PlayerDies(entity player, string template)
 {
 	if (template == "default")
 	{
