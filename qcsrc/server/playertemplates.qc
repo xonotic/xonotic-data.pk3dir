@@ -75,6 +75,10 @@ string PlayerTemplate_GetDefaultCvarName(string variable)
 		{
 			return "g_random_start_plasma";
 		}
+		case "drop_weapons":
+		{
+			return "g_weapon_throwable";
+		}
 		case "health_regen_factor":
 		{
 			return "g_balance_health_regen";
@@ -125,6 +129,7 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		case "random_start_rockets":
 		case "random_start_cells":
 		case "random_start_plasma":
+		case "drop_weapons":
 		case "health_regen_factor":
 		case "health_regen_linear":
 		case "health_rot_factor":
@@ -366,6 +371,11 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 			}
 		});
 	}
+}
+
+bool PlayerTemplate_ForbidThrowCurrentWeapon(string template)
+{
+	return !PlayerTemplate_GetFloatValue(template, "drop_weapons");
 }
 
 float PlayerTemplate_PlayerRegen(entity player, string template)
@@ -1076,4 +1086,17 @@ float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
 	damage *= PlayerTemplate_GetFloatValue(attackertemplate, "attack_scale");
 	damage /= PlayerTemplate_GetFloatValue(victimtemplate, "defense_scale");
 	return damage;
+}
+
+void PlayerTemplate_PlayerDies(entity player, string template)
+{
+	if (template == "default")
+	{
+		return;
+	}
+	if (PlayerTemplate_GetFloatValue(template, "drop_weapons"))
+	{
+		return;
+	}
+	player.weapons = WEPSET(Null);
 }

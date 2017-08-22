@@ -51,10 +51,15 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 // =========================== Hook handlers =================================
 
 /// \brief Setups the player during spawn according to the given template.
-/// \param[in] player Player to setup.
+/// \param[in,out] player Player to setup.
 /// \param[in] template Name of the template.
 /// \return No return.
 void PlayerTemplate_PlayerSpawn(entity player, string template);
+
+/// \brief Forbids weapon dropping according to the given template.
+/// \param[in] template Name of the template.
+/// \return Value to pass to mutator hook.
+bool PlayerTemplate_ForbidThrowCurrentWeapon(string template);
 
 /// \brief Regenerates player health according to the given template.
 /// \param[in] player Player to regenerate.
@@ -63,7 +68,7 @@ void PlayerTemplate_PlayerSpawn(entity player, string template);
 float PlayerTemplate_PlayerRegen(entity player, string template);
 
 /// \brief Gives player items according to the given template.
-/// \param[in] player Player to give items to.
+/// \param[in,out] player Player to give items to.
 /// \param[in] item Item which player has picked up.
 /// \param[in] template Name of the template.
 /// \return Enum value to pass to mutator hook.
@@ -79,3 +84,11 @@ float PlayerTemplate_ItemTouch(entity player, entity item, string template);
 /// \return Adjusted damage.
 float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
 	entity victim, string victimtemplate, float deathtype, float damage);
+
+/// \brief Strips the player of their weapons if the player is not allowed to
+/// drop them.
+/// \param[in,out] player Player to work with.
+/// \param[in] template Name of the template.
+/// \return No return.
+/// \note You must hook with CBC_ORDER_FIRST in order for this to be effective.
+void PlayerTemplate_PlayerDies(entity player, string template);
