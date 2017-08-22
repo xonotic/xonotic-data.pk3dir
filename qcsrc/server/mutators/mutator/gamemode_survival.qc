@@ -104,9 +104,6 @@ int autocvar_g_surv_defender_cannon_fodder_frag_rockets;
 /// \brief How many cells do defenders get when they frag cannon fodder.
 int autocvar_g_surv_defender_cannon_fodder_frag_cells;
 
-/// \brief Whether defenders drop weapons after death.
-int autocvar_g_surv_defender_drop_weapons;
-
 /// \brief A stat that is used to track the time left in the round.
 .float surv_round_time_stat = _STAT(SURV_ROUND_TIME);
 /// \brief A stat that is used to track defender team.
@@ -1910,7 +1907,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	}
 	else
 	{
-		PlayerTemplate_PlayerSpawn(player, Surv_GetPlayerTemplate(player));
+		PlayerTemplateHook_PlayerSpawn(player, Surv_GetPlayerTemplate(player));
 	}
 	switch (player.team)
 	{
@@ -1941,6 +1938,14 @@ MUTATOR_HOOKFUNCTION(surv, FixPlayermodel)
 	M_ARGV(0, string) = player.surv_playermodel;
 }
 
+/// \brief Hook which is called when the player tries to throw their weapon.
+MUTATOR_HOOKFUNCTION(surv, ForbidThrowCurrentWeapon)
+{
+	entity player = M_ARGV(0, entity);
+	return PlayerTemplateHook_ForbidThrowCurrentWeapon(
+		Surv_GetPlayerTemplate(player));
+}
+
 /// \brief Hook that is called every frame to determine how player health should
 /// regenerate.
 MUTATOR_HOOKFUNCTION(surv, PlayerRegen)
@@ -1950,7 +1955,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerRegen)
 	{
 		return true;
 	}
-	return PlayerTemplate_PlayerRegen(player, Surv_GetPlayerTemplate(player));
+	return PlayerTemplateHook_PlayerRegen(player,
+		Surv_GetPlayerTemplate(player));
 }
 
 /// \brief Hook that is called to determine if balance messages will appear.
@@ -1968,7 +1974,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 	{
 		case surv_attackerteam:
 		{
-			return PlayerTemplate_ItemTouch(player, item,
+			return PlayerTemplateHook_ItemTouch(player, item,
 				Surv_GetPlayerTemplate(player));
 		}
 		case surv_defenderteam:
@@ -1998,7 +2004,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 				}
 				default:
 				{
-					return PlayerTemplate_ItemTouch(player, item,
+					return PlayerTemplateHook_ItemTouch(player, item,
 						Surv_GetPlayerTemplate(player));
 				}
 			}
@@ -2009,16 +2015,6 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-/// \brief Hook which is called when the player tries to throw their weapon.
-MUTATOR_HOOKFUNCTION(surv, ForbidThrowCurrentWeapon)
-{
-	entity player = M_ARGV(0, entity);
-	if (player.team == surv_defenderteam)
-	{
-		return true;
-	}
-}
-
 /// \brief Hook which is called when the damage amount must be determined.
 MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 {
@@ -2026,7 +2022,7 @@ MUTATOR_HOOKFUNCTION(surv, Damage_Calculate)
 	entity frag_target = M_ARGV(2, entity);
 	float deathtype = M_ARGV(3, float);
 	float damage = M_ARGV(4, float);
-	M_ARGV(4, float) = PlayerTemplate_Damage_Calculate(frag_attacker,
+	M_ARGV(4, float) = PlayerTemplateHook_Damage_Calculate(frag_attacker,
 		Surv_GetPlayerTemplate(frag_attacker), frag_target,
 		Surv_GetPlayerTemplate(frag_target), deathtype, damage);
 }
@@ -2073,11 +2069,12 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 }
 
 /// \brief Hook which is called when the player dies.
-MUTATOR_HOOKFUNCTION(surv, PlayerDies)
+MUTATOR_HOOKFUNCTION(surv, PlayerDies, CBC_ORDER_FIRST)
 {
 	//DebugPrintToChatAll("PlayerDies");
 	entity attacker = M_ARGV(1, entity);
 	entity victim = M_ARGV(2, entity);
+	PlayerTemplateHook_PlayerDies(victim, Surv_GetPlayerTemplate(victim));
 	if ((attacker.team == surv_defenderteam) &&
 		(victim.team == surv_attackerteam))
 	{
@@ -2115,15 +2112,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 					autocvar_g_surv_defender_cannon_fodder_frag_cells);
 				break;
 			}
-		}
-	}
-	if ((victim.team == surv_defenderteam) &&
-		(autocvar_g_surv_defender_drop_weapons == false))
-	{
-		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity went = weaponentities[slot];
-			victim.(went).m_weapon = WEP_Null;
 		}
 	}
 	if (!Surv_CanPlayerSpawn(victim))
