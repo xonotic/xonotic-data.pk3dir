@@ -23,7 +23,6 @@
 #include <common/mutators/mutator/overkill/_mod.inc>
 #include <common/mutators/mutator/physical_items/_mod.inc>
 #include <common/mutators/mutator/pinata/_mod.inc>
-#include <common/mutators/mutator/playertemplates/_mod.inc>
 #include <common/mutators/mutator/random_gravity/_mod.inc>
 #include <common/mutators/mutator/rocketflying/_mod.inc>
 #include <common/mutators/mutator/rocketminsta/_mod.inc>
