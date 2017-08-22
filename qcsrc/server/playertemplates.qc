@@ -75,6 +75,10 @@ string PlayerTemplate_GetDefaultCvarName(string variable)
 		{
 			return "g_random_start_plasma";
 		}
+		case "drop_weapons":
+		{
+			return "g_weapon_throwable";
+		}
 		case "health_regen_factor":
 		{
 			return "g_balance_health_regen";
@@ -125,6 +129,7 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		case "random_start_rockets":
 		case "random_start_cells":
 		case "random_start_plasma":
+		case "drop_weapons":
 		case "health_regen_factor":
 		case "health_regen_linear":
 		case "health_rot_factor":
@@ -284,7 +289,7 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 
 // =========================== Hook handlers =================================
 
-void PlayerTemplate_PlayerSpawn(entity player, string template)
+void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 {
 	if (template == "default")
 	{
@@ -368,7 +373,12 @@ void PlayerTemplate_PlayerSpawn(entity player, string template)
 	}
 }
 
-float PlayerTemplate_PlayerRegen(entity player, string template)
+bool PlayerTemplateHook_ForbidThrowCurrentWeapon(string template)
+{
+	return !PlayerTemplate_GetFloatValue(template, "drop_weapons");
+}
+
+float PlayerTemplateHook_PlayerRegen(entity player, string template)
 {
 	if (template == "default")
 	{
@@ -389,7 +399,7 @@ float PlayerTemplate_PlayerRegen(entity player, string template)
 	return false;
 }
 
-float PlayerTemplate_ItemTouch(entity player, entity item, string template)
+float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 {
 	if (template == "default")
 	{
@@ -1060,8 +1070,9 @@ float PlayerTemplate_ItemTouch(entity player, entity item, string template)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
-	entity victim, string victimtemplate, float deathtype, float damage)
+float PlayerTemplateHook_Damage_Calculate(entity attacker,
+	string attackertemplate, entity victim, string victimtemplate,
+	float deathtype, float damage)
 {
 	if (autocvar_g_instagib == 1)
 	{
@@ -1076,4 +1087,17 @@ float PlayerTemplate_Damage_Calculate(entity attacker, string attackertemplate,
 	damage *= PlayerTemplate_GetFloatValue(attackertemplate, "attack_scale");
 	damage /= PlayerTemplate_GetFloatValue(victimtemplate, "defense_scale");
 	return damage;
+}
+
+void PlayerTemplateHook_PlayerDies(entity player, string template)
+{
+	if (template == "default")
+	{
+		return;
+	}
+	if (PlayerTemplate_GetFloatValue(template, "drop_weapons"))
+	{
+		return;
+	}
+	player.weapons = WEPSET(Null);
 }
