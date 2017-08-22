@@ -8,7 +8,7 @@ CLASS(OverkillVortex, Weapon)
 /* color     */ ATTRIB(OverkillVortex, wpcolor, vector, '0.5 1 1');
 /* modelname */ ATTRIB(OverkillVortex, mdl, string, "ok_sniper");
 #ifdef GAMEQC
-/* model     */ ATTRIB(OverkillVortex, m_model, Model, MDL_VORTEX_ITEM);
+/* model     */ ATTRIB(OverkillVortex, m_model, Model, MDL_OK_SNIPER_ITEM);
 #endif
 /* crosshair */ ATTRIB(OverkillVortex, w_crosshair, string, "gfx/crosshairnex");
 /* crosshair */ ATTRIB(OverkillVortex, w_crosshair_size, float, 0.65);

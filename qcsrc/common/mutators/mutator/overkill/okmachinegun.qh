@@ -8,7 +8,7 @@ CLASS(OverkillMachineGun, Weapon)
 /* color	 */ ATTRIB(OverkillMachineGun, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(OverkillMachineGun, mdl, string, "ok_mg");
 #ifdef GAMEQC
-/* model	 */ ATTRIB(OverkillMachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);
+/* model	 */ ATTRIB(OverkillMachineGun, m_model, Model, MDL_OK_MG_ITEM);
 #endif
 /* crosshair */ ATTRIB(OverkillMachineGun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(OverkillMachineGun, w_crosshair_size, float, 0.6);
