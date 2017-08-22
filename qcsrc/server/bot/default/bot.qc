@@ -630,8 +630,7 @@ float bot_fixcount()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		//dprint(ftos(bots), " ? ", ftos(currentbots), "\n");
-		while (currentbots < bots)
+		if (currentbots < bots)
 		{
 			if (bot_spawn() == NULL)
 			{
