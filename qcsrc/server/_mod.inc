@@ -18,6 +18,7 @@
 #include <server/miscfunctions.qc>
 #include <server/player.qc>
 #include <server/playerdemo.qc>
+#include <server/playertemplates.qc>
 #include <server/portals.qc>
 #include <server/race.qc>
 #include <server/round_handler.qc>

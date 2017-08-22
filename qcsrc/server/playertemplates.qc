@@ -282,6 +282,8 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 	}
 }
 
+// =========================== Hook handlers =================================
+
 void PlayerTemplate_PlayerSpawn(entity player, string template)
 {
 	if (template == "default")
