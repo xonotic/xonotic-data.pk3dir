@@ -152,6 +152,9 @@ void CSQC_Init()
 
 	GetTeam(NUM_SPECTATOR, true); // add specs first
 
+	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
+		weapon_accuracy[w] = -1;
+
 	// precaches
 
 	if(autocvar_cl_reticle)
