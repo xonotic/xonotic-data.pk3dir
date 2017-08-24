@@ -631,9 +631,9 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	}
 }
 
-AUTOCVAR(g_pickup_respawntime_scaling_a, float, 0.0, "Scale respawn time according to a*rt / (p+b) + c*rt where rt is normal respawn time and p number of players");
-AUTOCVAR(g_pickup_respawntime_scaling_b, float, 0.0, "Scale respawn time according to a*rt / (p+b) + c*rt where rt is normal respawn time and p number of players");
-AUTOCVAR(g_pickup_respawntime_scaling_c, float, 1.0, "Scale respawn time according to a*rt / (p+b) + c*rt where rt is normal respawn time and p number of players");
+AUTOCVAR(g_pickup_respawntime_scaling_a, float, 0.0, "Multiply respawn time by `a / (p+b) + c` where `p` is the current number of players, takes effect with 2 or more players present");
+AUTOCVAR(g_pickup_respawntime_scaling_b, float, 0.0, "Multiply respawn time by `a / (p+b) + c` where `p` is the current number of players, takes effect with 2 or more players present");
+AUTOCVAR(g_pickup_respawntime_scaling_c, float, 1.0, "Multiply respawn time by `a / (p+b) + c` where `p` is the current number of players, takes effect with 2 or more players present");
 void Item_ScheduleRespawn(entity e)
 {
 	if(e.respawntime > 0)
@@ -652,7 +652,7 @@ void Item_ScheduleRespawn(entity e)
 			float a = autocvar_g_pickup_respawntime_scaling_a;
 			float b = autocvar_g_pickup_respawntime_scaling_b;
 			float c = autocvar_g_pickup_respawntime_scaling_c;
-			adjusted_respawntime = a * e.respawntime / (players + b) + c * e.respawntime;
+			adjusted_respawntime = e.respawntime * (a / (players + b) + c);
 		} else {
 			adjusted_respawntime = e.respawntime;
 		}
