@@ -496,9 +496,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 
     int f = ReadByte();
 
-	scoreboard_showscores_force = (f & 1);
+	scoreboard_showscores_force = (f & BIT(0));
 
-	if(f & 2)
+	if(f & BIT(1))
 	{
 		newspectatee_status = ReadByte();
 		if(newspectatee_status == player_localnum + 1)
@@ -507,9 +507,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	else
 		newspectatee_status = 0;
 
-	spectatorbutton_zoom = (f & 4);
+	spectatorbutton_zoom = (f & BIT(2));
 
-	if(f & 16)
+	if(f & BIT(4))
 	{
 		num_spectators = ReadByte();
 
