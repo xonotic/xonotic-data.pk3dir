@@ -1,7 +1,5 @@
 #include "walker_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 SOUND(WalkerTurretAttack_FIRE, W_Sound("electro_fire"));
@@ -22,7 +20,5 @@ METHOD(WalkerTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
     }
 }
-
-#endif
 
 #endif

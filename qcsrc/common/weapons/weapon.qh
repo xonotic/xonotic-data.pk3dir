@@ -4,7 +4,7 @@
 #include <common/stats.qh>
 
 #ifdef SVQC
-#include <common/effects/qc/all.qh>
+#include <common/effects/qc/_mod.qh>
 #endif
 
 USING(WepSet, vector);

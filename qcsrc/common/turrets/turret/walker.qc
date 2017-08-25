@@ -1,7 +1,5 @@
 #include "walker.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 float autocvar_g_turrets_unit_walker_melee_damage;
@@ -643,4 +641,3 @@ void walker_draw(entity this)
         }
 
 #endif // CSQC
-#endif

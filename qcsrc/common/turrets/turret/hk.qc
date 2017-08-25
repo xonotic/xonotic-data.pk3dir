@@ -1,7 +1,5 @@
 #include "hk.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 #ifdef TURRET_DEBUG_HK
@@ -47,4 +45,3 @@ bool turret_hk_addtarget(entity this, entity e_target,entity e_sender)
 }
 
 #endif // SVQC
-#endif

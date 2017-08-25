@@ -5,7 +5,7 @@
 #include <client/_mod.inc>
 
 #include <common/_all.inc>
-#include <common/effects/qc/all.qc>
+#include <common/effects/qc/_mod.inc>
 
 #include <lib/csqcmodel/cl_model.qc>
 #include <lib/csqcmodel/cl_player.qc>

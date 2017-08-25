@@ -7,3 +7,5 @@
 #ifdef SVQC
     #include <common/vehicles/sv_vehicles.qc>
 #endif
+
+#include <common/vehicles/vehicle/_mod.inc>
