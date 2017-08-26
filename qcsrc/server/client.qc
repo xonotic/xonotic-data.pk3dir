@@ -1622,13 +1622,6 @@ void player_regen(entity this)
 	regen_health_stable = M_ARGV(9, float);
 	regen_health_rotstable = M_ARGV(10, float);
 
-	// Ugly hack to make sure the haelth and armor don't go beyond hard limit.
-	// TODO: Remove this hack when all code uses GivePlayerHealth and
-	// GivePlayerArmor.
-	this.health = bound(0, this.health, ITEM_COUNT_HARD_LIMIT);
-	this.armorvalue = bound(0, this.armorvalue, ITEM_COUNT_HARD_LIMIT);
-	// End hack.
-
 	if(!mutator_returnvalue)
 	if(!STAT(FROZEN, this))
 	{
@@ -1667,6 +1660,12 @@ void player_regen(entity this)
 
 		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
 	}
+	// Ugly hack to make sure the haelth and armor don't go beyond hard limit.
+	// TODO: Remove this hack when all code uses GivePlayerHealth and
+	// GivePlayerArmor.
+	this.health = bound(0, this.health, ITEM_COUNT_HARD_LIMIT);
+	this.armorvalue = bound(0, this.armorvalue, ITEM_COUNT_HARD_LIMIT);
+	// End hack.
 }
 
 bool zoomstate_set;

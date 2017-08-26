@@ -686,7 +686,7 @@ void GivePlayerArmor(entity player, float amount)
 
 void GivePlayerAmmo(entity player, .float ammotype, float amount)
 {
-	float maxvalue = 999;
+	float maxvalue = ITEM_COUNT_HARD_LIMIT;
 	switch (ammotype)
 	{
 		case ammo_shells:
