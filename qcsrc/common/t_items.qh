@@ -105,6 +105,12 @@ void GivePlayerArmor(entity player, float amount);
 /// \return No return.
 void GivePlayerAmmo(entity player, .float ammotype, float amount);
 
+/// \brief Gives fuel to the player.
+/// \param[in,out] player Player to give fuel to.
+/// \param[in] amount Amount of fuel to give.
+/// \return No return.
+void GivePlayerFuel(entity player, float amount);
+
 float ITEM_MODE_NONE = 0;
 float ITEM_MODE_HEALTH = 1;
 float ITEM_MODE_ARMOR = 2;

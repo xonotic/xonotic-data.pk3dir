@@ -715,6 +715,18 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount)
 		min(maxvalue, ITEM_COUNT_HARD_LIMIT));
 }
 
+void GivePlayerFuel(entity player, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	player.ammo_fuel = bound(player.ammo_fuel, player.ammo_fuel + amount,
+		 min(g_pickup_fuel_max, ITEM_COUNT_HARD_LIMIT));
+	player.pauserotfuel_finished = max(player.pauserotfuel_finished, time +
+		autocvar_g_balance_pause_fuel_rot);
+}
+
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
 {
 	if (!item.(ammotype))
