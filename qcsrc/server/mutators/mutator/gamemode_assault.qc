@@ -429,8 +429,8 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 
 			this.havocbot_attack_time = 0;
 
-			if(checkpvs(this.view_ofs,it))
-			if(checkpvs(this.view_ofs,best))
+			if(checkpvs(this.origin + this.view_ofs, it))
+			if(checkpvs(this.origin + this.view_ofs, best))
 			{
 			//	dprint("increasing attack time for this target\n");
 				this.havocbot_attack_time = time + 2;

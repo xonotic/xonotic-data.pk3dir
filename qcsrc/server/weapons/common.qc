@@ -84,13 +84,13 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 	this.takedamage = DAMAGE_NO;
 	this.event_damage = func_null;
 
+	MUTATOR_CALLHOOK(PrepareExplosionByDamage, this, attacker);
+
 	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
 		this.owner = attacker;
 		this.realowner = attacker;
 	}
-
-	MUTATOR_CALLHOOK(PrepareExplosionByDamage, this, attacker);
 
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
