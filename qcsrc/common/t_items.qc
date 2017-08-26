@@ -34,9 +34,6 @@
 
 REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 
-/// \brief Unconditional maximum amount of items the player can have.
-const int ITEM_COUNT_HARD_LIMIT = 999; 
-
 #ifdef CSQC
 bool autocvar_cl_ghost_items_vehicle = true;
 .vector item_glowmod;
@@ -657,8 +654,14 @@ void GivePlayerHealth(entity player, float amount)
 	{
 		return;
 	}
+	// Ugly hack. We do not check if health goes beyond hard limit since
+	// currently it is done in player_regen. We need to bring back this check
+	// when other code is ported to this function.
 	player.health = bound(player.health, player.health + amount,
-		 min(autocvar_g_balance_health_limit, ITEM_COUNT_HARD_LIMIT));
+		autocvar_g_balance_health_limit);
+	// Correct code:
+	//player.health = bound(player.health, player.health + amount,
+	//	min(autocvar_g_balance_health_limit, ITEM_COUNT_HARD_LIMIT));
 	player.pauserothealth_finished = max(player.pauserothealth_finished, time +
 		autocvar_g_balance_pause_health_rot);
 }
@@ -669,8 +672,14 @@ void GivePlayerArmor(entity player, float amount)
 	{
 		return;
 	}
+	// Ugly hack. We do not check if armor goes beyond hard limit since
+	// currently it is done in player_regen. We need to bring back this check
+	// when other code is ported to this function.
 	player.armorvalue = bound(player.armorvalue, player.armorvalue + amount,
-		 min(autocvar_g_balance_armor_limit, ITEM_COUNT_HARD_LIMIT));
+		autocvar_g_balance_armor_limit);
+	// Correct code:
+	//player.armorvalue = bound(player.armorvalue, player.armorvalue + amount,
+	//	min(autocvar_g_balance_armor_limit, ITEM_COUNT_HARD_LIMIT));
 	player.pauserotarmor_finished = max(player.pauserotarmor_finished, time +
 		autocvar_g_balance_pause_armor_rot);
 }
@@ -703,11 +712,6 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount)
 		case ammo_nails:
 		{
 			maxvalue = g_pickup_nails_max;
-			break;
-		}
-		case ammo_fuel:
-		{
-			maxvalue = g_pickup_fuel_max;
 			break;
 		}
 	}

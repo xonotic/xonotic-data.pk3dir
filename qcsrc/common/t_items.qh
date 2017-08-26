@@ -4,6 +4,9 @@
 #include <server/defs.qh>
 #endif
 
+/// \brief Unconditional maximum amount of items the player can have.
+const int ITEM_COUNT_HARD_LIMIT = 999;
+
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
