@@ -89,6 +89,13 @@ void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
 
+/// \brief Gives player a resource such as health, armor or ammo.
+/// \param[in,out] player Player to give resource to.
+/// \param[in] resource_type Type of the resource.
+/// \param[in] amount Amount of resource to give.
+/// \return No return.
+void GivePlayerResource(entity player, .float resource_type, float amount);
+
 /// \brief Gives health to the player.
 /// \param[in,out] player Player to give health to.
 /// \param[in] amount Amount of health to give.
@@ -114,11 +121,7 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount);
 /// \return No return.
 void GivePlayerFuel(entity player, float amount);
 
-float ITEM_MODE_NONE = 0;
-float ITEM_MODE_HEALTH = 1;
-float ITEM_MODE_ARMOR = 2;
-float ITEM_MODE_FUEL = 3;
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode);
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax);
 
 float Item_GiveTo(entity item, entity player);
 
