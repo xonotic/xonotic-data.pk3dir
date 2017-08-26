@@ -1,5 +1,7 @@
 #include "wop.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include <common/weapons/_all.qh>
 // #include <server/mutators/gamemode.qh>
 

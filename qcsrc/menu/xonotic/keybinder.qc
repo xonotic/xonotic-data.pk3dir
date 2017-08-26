@@ -51,11 +51,11 @@ void Xonotic_KeyBinds_Read()
 	int i;
 
 	#define ADD_TO_W_LIST(pred) \
-		FOREACH(Weapons, it != WEP_Null, LAMBDA( \
+		FOREACH(Weapons, it != WEP_Null, { \
 			if (it.impulse != imp) continue; \
 			if (!(pred)) continue; \
 			w_list = strcat(w_list, it.m_name, " / "); \
-		))
+		})
 
 	for(int imp = 1; imp <= 9; ++imp)
 	{

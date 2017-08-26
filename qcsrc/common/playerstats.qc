@@ -24,7 +24,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	// set up player identification
 	string s = "";
 
-	if((e.crypto_idfp != "") && (e.cvar_cl_allow_uidtracking == 1))
+	if((e.crypto_idfp != "") && (CS(e).cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
@@ -108,7 +108,7 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 void PlayerStats_GameReport_Accuracy(entity p)
 {
 	#define ACCMAC(suffix, field) \
-		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), p.accuracy.(field[i-1]));
+		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
 	FOREACH(Weapons, it != WEP_Null, {
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
@@ -132,7 +132,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
+	if(CS(p).cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
 		db_put(PS_GR_OUT_DB, sprintf("%s:_netname", p.playerstats_id), playername(p, false));
 
 	if(teamplay)
@@ -146,9 +146,9 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 
 	if(IS_REAL_CLIENT(p))
 	{
-		if(p.latency_cnt)
+		if(CS(p).latency_cnt)
 		{
-			float latency = (p.latency_sum / p.latency_cnt);
+			float latency = (CS(p).latency_sum / CS(p).latency_cnt);
 			if(latency) { PS_GR_P_ADDVAL(p, PLAYERSTATS_AVGLATENCY, latency); }
 		}
 	}
@@ -260,7 +260,15 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 // this... is a hack, a temporary one until we get a proper duel gametype
 string PlayerStats_GetGametype()
 {
-	return ((IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2) ? "duel" : GetGametype());
+	if(IS_GAMETYPE(DEATHMATCH) && autocvar_g_maxplayers == 2)
+	{
+		// probably duel, but let's make sure
+		int plcount = 0;
+		FOREACH_CLIENT(IS_PLAYER(it), ++plcount);
+		if(plcount <= 2)
+			return "duel";
+	}
+	return GetGametype();
 }
 
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)

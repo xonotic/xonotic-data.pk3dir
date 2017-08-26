@@ -16,7 +16,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
         case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team);
     }
 
-    FOREACH(Nades, true, LAMBDA(
+    FOREACH(Nades, true, {
         for (int j = 0; j < 2; j++)
         {
             if (it.m_projectile[j] == proj)
@@ -26,7 +26,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
                 break;
             }
         }
-    ));
+    });
 
     return EFFECT_Null;
 }
@@ -133,7 +133,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 		DrawNadeProgressBar(myPos, mySize, bonusProgress, nadeColor);
 
 		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(textPos, ftos(bonusNades), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(textPos, ftos(bonusNades), vec2((2/3) * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if(draw_expanding)
 			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
@@ -1093,8 +1093,8 @@ void nade_prime(entity this)
 	}
 	else
 	{
-		ntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype = ((autocvar_g_nades_client_select) ? CS(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		pntype = ((autocvar_g_nades_client_select) ? CS(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
@@ -1250,8 +1250,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 			if(autocvar_g_nades_bonus_client_select)
 			{
-				player.nade_type = player.cvar_cl_nade_type;
-				player.pokenade_type = player.cvar_cl_pokenade_type;
+				player.nade_type = CS(player).cvar_cl_nade_type;
+				player.pokenade_type = CS(player).cvar_cl_pokenade_type;
 			}
 			else
 			{
@@ -1278,7 +1278,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(!IS_DEAD(it))
 			if(STAT(FROZEN, it) == 0)
 			if(SAME_TEAM(it, player))
@@ -1290,7 +1290,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 					it.reviving = true;
 				++n;
 			}
-		));
+		});
 	}
 
 	if(n && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
@@ -1306,10 +1306,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
 			it.revive_progress = player.revive_progress;
 			it.reviving = false;
-		));
+		});
 	}
 }
 
@@ -1345,7 +1345,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 		player.nade_refire  = time + autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
-		player.nade_type = player.cvar_cl_nade_type;
+		player.nade_type = CS(player).cvar_cl_nade_type;
 
 	player.nade_timer = 0;
 
@@ -1373,19 +1373,19 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	if(!STAT(FROZEN, frag_target) || !autocvar_g_freezetag_revive_nade)
 		toss_nade(frag_target, true, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 
-	float killcount_bonus = ((frag_attacker.killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * frag_attacker.killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
-
 	if(IS_PLAYER(frag_attacker))
 	{
+		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
+
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
 		else if(frag_target.flagcarried)
 			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
-		else if(autocvar_g_nades_bonus_score_spree && frag_attacker.killcount > 1)
+		else if(autocvar_g_nades_bonus_score_spree && CS(frag_attacker).killcount > 1)
 		{
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: { nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_spree); break; }
-			switch(frag_attacker.killcount)
+			switch(CS(frag_attacker).killcount)
 			{
 				KILL_SPREE_LIST
 				default: nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor); break;
@@ -1479,11 +1479,6 @@ REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Nades");
-}
-
-MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
-{
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Nades");
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)

@@ -1,7 +1,5 @@
 #include "machinegun_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 void W_MachineGun_MuzzleFlash(entity actor, .entity weaponentity);
@@ -24,7 +22,5 @@ METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, .ent
         setattachment(actor.(weaponentity).muzzle_flash, actor.tur_head, "tag_fire");
     }
 }
-
-#endif
 
 #endif

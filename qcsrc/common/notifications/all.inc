@@ -239,10 +239,10 @@
     MSG_INFO_NOTIF(CHAT_NOSPECTATORS,                       N_CHATCON,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "")
 
     MULTITEAM_INFO(CTF_CAPTURE, 4,                          N_CONSOLE,  1, 0, "s1", "s1",                       "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag"), "", FLAG)
-    MULTITEAM_INFO(CTF_CAPTURE_BROKEN, 4,                   N_CONSOLE,  2, 2, "s1 f1p2dec s2 f2p2dec", "s1",    "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds"), "", FLAG)
+    MULTITEAM_INFO(CTF_CAPTURE_BROKEN, 4,                   N_CONSOLE,  2, 2, "s1 f1dtime s2 f2dtime", "s1",    "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds"), "", FLAG)
     MSG_INFO_NOTIF(CTF_CAPTURE_NEUTRAL,                     N_CONSOLE,  1, 0, "s1", "s1",                       "notify_neutral_captured",  _("^BG%s^BG captured the flag"), "")
-    MULTITEAM_INFO(CTF_CAPTURE_TIME, 4,                     N_CONSOLE,  1, 1, "s1 f1p2dec", "s1",               "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"), "", FLAG)
-    MULTITEAM_INFO(CTF_CAPTURE_UNBROKEN, 4,                 N_CONSOLE,  2, 2, "s1 f1p2dec s2 f2p2dec", "s1",    "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%s^BG seconds"), "", FLAG)
+    MULTITEAM_INFO(CTF_CAPTURE_TIME, 4,                     N_CONSOLE,  1, 1, "s1 f1dtime", "s1",               "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"), "", FLAG)
+    MULTITEAM_INFO(CTF_CAPTURE_UNBROKEN, 4,                 N_CONSOLE,  2, 2, "s1 f1dtime s2 f2dtime", "s1",    "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%s^BG seconds"), "", FLAG)
     MULTITEAM_INFO(CTF_FLAGRETURN_ABORTRUN, 4,              N_CONSOLE,  0, 0, "", "",                           "",                         _("^BGThe ^TC^TT^BG flag was returned to base by its owner"), "", FLAG)
     MSG_INFO_NOTIF(CTF_FLAGRETURN_ABORTRUN_NEUTRAL,         N_CONSOLE,  0, 0, "", "",                           "",                         _("^BGThe flag was returned by its owner"), "")
     MULTITEAM_INFO(CTF_FLAGRETURN_DAMAGED, 4,               N_CONSOLE,  0, 0, "", "",                           "",                         _("^BGThe ^TC^TT^BG flag was destroyed and returned to base"), "", FLAG)
@@ -251,8 +251,8 @@
     MSG_INFO_NOTIF(CTF_FLAGRETURN_DROPPED_NEUTRAL,          N_CONSOLE,  0, 0, "", "",                           "",                         _("^BGThe flag was dropped in the base and returned itself"), "")
     MULTITEAM_INFO(CTF_FLAGRETURN_NEEDKILL, 4,              N_CONSOLE,  0, 0, "", "",                           "",                         _("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base"), "", FLAG)
     MSG_INFO_NOTIF(CTF_FLAGRETURN_NEEDKILL_NEUTRAL,         N_CONSOLE,  0, 0, "", "",                           "",                         _("^BGThe flag fell somewhere it couldn't be reached and returned to base"), "")
-    MULTITEAM_INFO(CTF_FLAGRETURN_SPEEDRUN, 4,              N_CONSOLE,  0, 1, "f1p2dec", "",                    "",                         _("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself"), "", FLAG)
-    MSG_INFO_NOTIF(CTF_FLAGRETURN_SPEEDRUN_NEUTRAL,         N_CONSOLE,  0, 1, "f1p2dec", "",                    "",                         _("^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"), "")
+    MULTITEAM_INFO(CTF_FLAGRETURN_SPEEDRUN, 4,              N_CONSOLE,  0, 1, "f1dtime", "",                    "",                         _("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself"), "", FLAG)
+    MSG_INFO_NOTIF(CTF_FLAGRETURN_SPEEDRUN_NEUTRAL,         N_CONSOLE,  0, 1, "f1dtime", "",                    "",                         _("^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"), "")
     MULTITEAM_INFO(CTF_FLAGRETURN_TIMEOUT, 4,               N_CONSOLE,  0, 0, "", "",                           "",                         _("^BGThe ^TC^TT^BG flag has returned to the base"), "", FLAG)
     MSG_INFO_NOTIF(CTF_FLAGRETURN_TIMEOUT_NEUTRAL,          N_CONSOLE,  0, 0, "", "",                           "",                         _("^BGThe flag has returned to the base"), "")
     MULTITEAM_INFO(CTF_LOST, 4,                             N_CONSOLE,  1, 0, "s1", "s1",                       "notify_%s_lost",           _("^BG%s^BG lost the ^TC^TT^BG flag"), "", FLAG)
@@ -785,7 +785,7 @@
     MSG_CENTER_NOTIF(VEHICLE_ENTER_GUNNER,              N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to enter the vehicle gunner"), "")
     MSG_CENTER_NOTIF(VEHICLE_ENTER_STEAL,               N_ENABLE,    0, 0, "pass_key",       CPID_VEHICLES,          "0 0",  _("^BGPress ^F2%s^BG to steal this vehicle"), "")
     MSG_CENTER_NOTIF(VEHICLE_STEAL,                     N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "")
-    MSG_CENTER_NOTIF(VEHICLE_STEAL_SELF,                N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "4 0",  _("^F2You have stolen the enemy's vehicle, you are now visible on their radar!"), "")
+    MSG_CENTER_NOTIF(VEHICLE_STEAL_SELF,                N_ENABLE,    0, 0, "",               CPID_VEHICLES_OTHER,    "4 0",  _("^F2Intruder detected, disabling shields!"), "")
 
     MSG_CENTER_NOTIF(WEAPON_MINELAYER_LIMIT,            N_ENABLE,    0, 1, "f1",             CPID_Null,              "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "")
 

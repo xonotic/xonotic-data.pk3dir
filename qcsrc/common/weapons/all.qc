@@ -26,7 +26,7 @@
     #include "../constants.qh"
     #include "../stats.qh"
     #include "../teams.qh"
-    #include "../util.qh"
+    #include <common/util.qh>
     #include "../monsters/_mod.qh"
     #include "config.qh"
     #include <server/weapons/csqcprojectile.qh>
@@ -50,9 +50,9 @@
 #ifdef SVQC
 	#include "config.qc"
 #endif
-#define IMPLEMENTATION
-#include "all.inc"
-#undef IMPLEMENTATION
+
+#include "weapon/_mod.inc"
+
 
 // WEAPON PLUGIN SYSTEM
 
@@ -192,14 +192,11 @@ string W_FixWeaponOrder_ForceComplete(string order)
 	return W_FixWeaponOrder(order, 1);
 }
 
-void W_RandomWeapons(entity e, float n)
+void W_RandomWeapons(entity e, int n)
 {
-	int i;
-	WepSet remaining;
-	WepSet result;
-	remaining = e.weapons;
-	result = '0 0 0';
-	for (i = 0; i < n; ++i)
+	WepSet remaining = e.weapons;
+	WepSet result = '0 0 0';
+	for (int j = 0; j < n; ++j)
 	{
 		RandomSelection_Init();
 		FOREACH(Weapons, it != WEP_Null, {

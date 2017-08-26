@@ -1,4 +1,7 @@
 #include "checkpoint.qh"
+
+#ifdef SVQC
+
 /**
     turret_checkpoint
 **/
@@ -11,8 +14,6 @@
 #define checkpoint_cache_from lastrocket
 #define checkpoint_cache_to   selected_player
 */
-
-.entity pathgoal;
 
 /*
 entity path_makeorcache(entity forwho,entity start, entity end)
@@ -77,3 +78,5 @@ spawnfunc(walker_checkpoint)
     this.classname = "turret_checkpoint";
     spawnfunc_turret_checkpoint(this);
 }
+
+#endif

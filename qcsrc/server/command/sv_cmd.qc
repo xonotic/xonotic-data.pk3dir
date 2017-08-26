@@ -1,6 +1,8 @@
 #include "sv_cmd.qh"
 #include "_mod.qh"
 
+#include <common/effects/all.qh>
+
 #include "banning.qh"
 #include "cmd.qh"
 #include "common.qh"
@@ -193,11 +195,11 @@ void GameCommand_allspec(float request, float argc)
 		{
 			string reason = argv(1);
 			int n = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 				if (it.caplayer) it.caplayer = 0;
 				PutObserverInServer(it);
 				++n;
-			));
+			});
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
 			else   LOG_INFO("No players found to spectate.\n");
 			return;
@@ -563,11 +565,11 @@ void GameCommand_defer_clear_all(float request)
 			int n = 0;
 			float argc;
 
-			FOREACH_CLIENT(true, LAMBDA(
+			FOREACH_CLIENT(true, {
 				argc = tokenize_console(strcat("defer_clear ", ftos(etof(it))));
 				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
 				++n;
-			));
+			});
 			if (n)   LOG_INFO(strcat("Successfully stuffed defer clear to all clients (", ftos(n), ")\n"));  // should a message be added if no players were found?
 			return;
 		}
@@ -1141,13 +1143,13 @@ void GameCommand_nospectators(float request)
 		{
 			blockSpectators = 1;
 			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, LAMBDA(
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, {
 				if(!it.caplayer)
 				{
-					it.spectatortime = time;
+					CS(it).spectatortime = time;
 					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 				}
-			));
+			});
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
 		}
@@ -1345,7 +1347,7 @@ void GameCommand_shuffleteams(float request)
 				return;
 			}
 
-			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, {
 				if (it.team_forced) {
 					// we could theoretically assign forced players to their teams
 					// and shuffle the rest to fill the empty spots but in practise
@@ -1353,7 +1355,7 @@ void GameCommand_shuffleteams(float request)
 					LOG_INFO("Can't shuffle teams because at least one player has a forced team.\n");
 					return;
 				}
-			));
+			});
 
 			int number_of_teams = 0;
 			CheckAllowedTeams(NULL);
@@ -1363,11 +1365,11 @@ void GameCommand_shuffleteams(float request)
 			if (c4 >= 0) number_of_teams = max(4, number_of_teams);
 
 			int team_index = 0;
-			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, LAMBDA(
+			FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || it.caplayer, {
 				int target_team_number = Team_NumberToTeam(team_index + 1);
 				if (it.team != target_team_number) MoveToTeam(it, target_team_number, 6);
 				team_index = (team_index + 1) % number_of_teams;
-			));
+			});
 
 			bprint("Successfully shuffled the players around randomly.\n");
 			return;
@@ -1731,32 +1733,32 @@ SERVER_COMMAND(warp, "Choose different level in campaign") { GameCommand_warp(re
 
 void GameCommand_macro_help()
 {
-	FOREACH(SERVER_COMMANDS, true, LAMBDA(LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description)));
+	FOREACH(SERVER_COMMANDS, true, { LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description); });
 }
 
 float GameCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
-	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(SERVER_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(it, CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
-	));
+	});
 	return false;
 }
 
 float GameCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
-	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(SERVER_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(it, CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
-	));
+	});
 	return false;
 }
 
 void GameCommand_macro_write_aliases(float fh)
 {
-	FOREACH(SERVER_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_sv", it.m_name, it.m_description)));
+	FOREACH(SERVER_COMMANDS, true, { CMD_Write_Alias("qc_cmd_sv", it.m_name, it.m_description); });
 }
 
 

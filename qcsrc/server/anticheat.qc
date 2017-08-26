@@ -81,8 +81,8 @@ void anticheat_physics(entity this)
 		MEAN_ACCUMULATE(CS(this), anticheat_div0_evade, 0.5 - 0.5 * (CS(this).anticheat_div0_evade_forward_initial * v_forward), 1);
 	}
 
-	MEAN_ACCUMULATE(CS(this), anticheat_div0_strafebot_old, movement_oddity(this.movement, CS(this).anticheat_div0_strafebot_movement_prev), 1);
-	CS(this).anticheat_div0_strafebot_movement_prev = this.movement;
+	MEAN_ACCUMULATE(CS(this), anticheat_div0_strafebot_old, movement_oddity(CS(this).movement, CS(this).anticheat_div0_strafebot_movement_prev), 1);
+	CS(this).anticheat_div0_strafebot_movement_prev = CS(this).movement;
 
 	// Note: this actually tries to detect snap-aim.
 	if(CS(this).anticheat_div0_strafebot_forward_prev && time > CS(this).anticheat_fixangle_endtime) {

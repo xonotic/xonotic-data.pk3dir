@@ -1,7 +1,5 @@
 #include "raptor.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 bool autocvar_g_vehicle_raptor = true;
@@ -17,9 +15,9 @@ float autocvar_g_vehicle_raptor_pitchspeed = 50;
 float autocvar_g_vehicle_raptor_pitchlimit = 45;
 
 float autocvar_g_vehicle_raptor_speed_forward = 1700;
-float autocvar_g_vehicle_raptor_speed_strafe = 900;
-float autocvar_g_vehicle_raptor_speed_up = 1700;
-float autocvar_g_vehicle_raptor_speed_down = 1700;
+float autocvar_g_vehicle_raptor_speed_strafe = 2200;
+float autocvar_g_vehicle_raptor_speed_up = 2300;
+float autocvar_g_vehicle_raptor_speed_down = 2000;
 float autocvar_g_vehicle_raptor_friction = 2;
 
 bool autocvar_g_vehicle_raptor_swim = false;
@@ -29,7 +27,7 @@ float autocvar_g_vehicle_raptor_cannon_turnlimit = 20;
 float autocvar_g_vehicle_raptor_cannon_pitchlimit_up = 12;
 float autocvar_g_vehicle_raptor_cannon_pitchlimit_down = 32;
 
-float autocvar_g_vehicle_raptor_cannon_locktarget = 0;
+bool autocvar_g_vehicle_raptor_cannon_locktarget = true;
 float autocvar_g_vehicle_raptor_cannon_locking_time = 0.2;
 float autocvar_g_vehicle_raptor_cannon_locking_releasetime = 0.45;
 float autocvar_g_vehicle_raptor_cannon_locked_time = 1;
@@ -39,11 +37,11 @@ float autocvar_g_vehicle_raptor_energy = 100;
 float autocvar_g_vehicle_raptor_energy_regen = 25;
 float autocvar_g_vehicle_raptor_energy_regen_pause = 0.25;
 
-float autocvar_g_vehicle_raptor_health = 150;
+float autocvar_g_vehicle_raptor_health = 250;
 float autocvar_g_vehicle_raptor_health_regen = 0;
 float autocvar_g_vehicle_raptor_health_regen_pause = 0;
 
-float autocvar_g_vehicle_raptor_shield = 75;
+float autocvar_g_vehicle_raptor_shield = 200;
 float autocvar_g_vehicle_raptor_shield_regen = 25;
 float autocvar_g_vehicle_raptor_shield_regen_pause = 1.5;
 
@@ -204,8 +202,8 @@ bool raptor_frame(entity this, float dt)
 
 	// Pitch
 	ftmp = 0;
-	if(this.movement_x > 0 && vang_x < autocvar_g_vehicle_raptor_pitchlimit) ftmp = 5;
-	else if(this.movement_x < 0 && vang_x > -autocvar_g_vehicle_raptor_pitchlimit) ftmp = -20;
+	if(CS(this).movement_x > 0 && vang_x < autocvar_g_vehicle_raptor_pitchlimit) ftmp = 5;
+	else if(CS(this).movement_x < 0 && vang_x > -autocvar_g_vehicle_raptor_pitchlimit) ftmp = -20;
 
 	df_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, df_x , autocvar_g_vehicle_raptor_pitchlimit);
 	ftmp = vang_x - bound(-autocvar_g_vehicle_raptor_pitchlimit, df_x + ftmp, autocvar_g_vehicle_raptor_pitchlimit);
@@ -222,22 +220,22 @@ bool raptor_frame(entity this, float dt)
 
 	df = vehic.velocity * -autocvar_g_vehicle_raptor_friction;
 
-	if(this.movement_x != 0)
+	if(CS(this).movement_x != 0)
 	{
-		if(this.movement_x > 0)
+		if(CS(this).movement_x > 0)
 			df += v_forward  * autocvar_g_vehicle_raptor_speed_forward;
-		else if(this.movement_x < 0)
+		else if(CS(this).movement_x < 0)
 			df -= v_forward  * autocvar_g_vehicle_raptor_speed_forward;
 	}
 
-	if(this.movement_y != 0)
+	if(CS(this).movement_y != 0)
 	{
-		if(this.movement_y < 0)
+		if(CS(this).movement_y < 0)
 			df -= v_right * autocvar_g_vehicle_raptor_speed_strafe;
-		else if(this.movement_y > 0)
+		else if(CS(this).movement_y > 0)
 			df += v_right * autocvar_g_vehicle_raptor_speed_strafe;
 
-		vehic.angles_z = bound(-30,vehic.angles_z + (this.movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
+		vehic.angles_z = bound(-30,vehic.angles_z + (CS(this).movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
 	}
 	else
 	{
@@ -252,7 +250,7 @@ bool raptor_frame(entity this, float dt)
 		df +=  v_up * autocvar_g_vehicle_raptor_speed_up;
 
 	vehic.velocity  += df * dt;
-	this.velocity = this.movement  = vehic.velocity;
+	this.velocity = CS(this).movement  = vehic.velocity;
 	setorigin(this, vehic.origin + '0 0 32');
 	this.oldorigin = this.origin; // negate fall damage
 
@@ -794,10 +792,10 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
             where = project_3d_to_2d(trace_endpos);
 
             setorigin(dropmark, trace_endpos);
-            tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
 
             if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
             {
+                tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
                 where.x -= tmpSize.x * 0.5;
                 where.y -= tmpSize.y * 0.5;
                 where.z = 0;
@@ -811,10 +809,10 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
             if(dropmark.cnt > time)
             {
                 where = project_3d_to_2d(dropmark.origin);
-                tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
 
                 if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
                 {
+                    tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
                     where.x -= tmpSize.x * 0.5;
                     where.y -= tmpSize.y * 0.5;
                     where.z = 0;
@@ -832,5 +830,4 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
     AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
 }
 
-#endif
 #endif

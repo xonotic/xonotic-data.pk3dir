@@ -1,5 +1,7 @@
 #include "roles.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "havocbot.qh"
 
 #include "../cvars.qh"
@@ -168,7 +170,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 	ratingscale = ratingscale * 0.00005; // enemies are rated around 20000 already
 
 	float t;
-	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), {
 		// TODO: Merge this logic with the bot_shouldattack function
 		if(vdist(it.origin - org, <, 100) || vdist(it.origin - org, >, sradius))
 			continue;
@@ -191,7 +193,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		ratingscale *= t;
 		if (ratingscale > 0)
 			navigation_routerating(this, it, ratingscale * BOT_RATING_ENEMY, 2000);
-	));
+	});
 }
 
 // legacy bot role for standard gamemodes

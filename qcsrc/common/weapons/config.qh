@@ -9,12 +9,9 @@ void Dump_Weapon_Settings();
 int wep_config_file;
 bool wep_config_alsoprint;
 
-const int MAX_WEP_CONFIG = 256;
 int WEP_CONFIG_COUNT;
-string wep_config_queue[MAX_WEP_CONFIG];
-
 #define WEP_CONFIG_QUEUE(a) { \
-	wep_config_queue[WEP_CONFIG_COUNT] = a; \
+	config_queue[WEP_CONFIG_COUNT] = a; \
 	++WEP_CONFIG_COUNT; }
 
 #define WEP_CONFIG_WRITETOFILE(a) MACRO_BEGIN { \

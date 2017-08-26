@@ -1,20 +1,19 @@
 #include "util.qh"
 
 #if defined(CSQC)
-    #include "../client/defs.qh"
     #include "constants.qh"
 	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications/all.qh"
+	#include "scores.qh"
     #include <common/deathtypes/all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
-    #include "../server/autocvars.qh"
-    #include "../server/defs.qh"
 	#include "../server/mutators/events.qh"
     #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
+	#include "scores.qh"
     #include "mapinfo.qh"
 #endif
 
@@ -183,6 +182,7 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 	}
 }
 
+#ifdef GAMEQC
 string ScoreString(int pFlags, float pValue)
 {
 	string valstr;
@@ -214,6 +214,7 @@ string ScoreString(int pFlags, float pValue)
 
 	return valstr;
 }
+#endif
 
 // compressed vector format:
 // like MD3, just even shorter

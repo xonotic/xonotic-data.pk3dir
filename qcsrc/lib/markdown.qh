@@ -5,6 +5,7 @@
  *   - two spaces escape a linebreak (otherwise text wraps)
  *   - two linebreaks become a paragraph (remain unchanged)
  */
+ERASEABLE
 string markdown(string s)
 {
 	string buf = "";

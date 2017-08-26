@@ -1,16 +1,4 @@
 #include "movetypes.qh"
-#include "../player.qh"
-
-#if defined(CSQC)
-	#include <client/defs.qh>
-	#include <common/stats.qh>
-	#include <common/util.qh>
-	#include <lib/csqcmodel/common.qh>
-	#include <common/t_items.qh>
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include <server/autocvars.qh>
-#endif
 
 #ifdef SVQC
 void set_movetype(entity this, int mt)
@@ -48,7 +36,7 @@ void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 vector planes[MAX_CLIP_PLANES];
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
 {
-	int blocked = 0, bumpcount;
+	int blocked = 0;
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
@@ -73,7 +61,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 
 	original_velocity = primal_velocity = restore_velocity = this.velocity;
 
-	for(bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
+	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
 	{
 		if(this.velocity == '0 0 0')
 			break;
@@ -138,7 +126,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 				break;
 			}
 			float trace2_fraction = trace_fraction;
-			steppush = '0 0 1' * (org_z - this.origin_z);
+			steppush = '0 0 1' * (org.z - this.origin_z);
 			_Movetype_PushEntity(this, steppush, true);
 			if(trace_startsolid)
 			{
@@ -147,7 +135,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			}
 
 			// accept the new position if it made some progress...
-			if(fabs(this.origin_x - org_x) >= 0.03125 || fabs(this.origin_y - org_y) >= 0.03125)
+			if(fabs(this.origin_x - org.x) >= 0.03125 || fabs(this.origin_y - org.y) >= 0.03125)
 			{
 				trace_endpos = this.origin;
 				time_left *= 1 - trace2_fraction;
@@ -382,21 +370,13 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 
 	if(this.flags & FL_ITEM)
 	{
-		mi.x -= 15;
-		mi.y -= 15;
-		mi.z -= 1;
-		ma.x += 15;
-		ma.y += 15;
-		ma.z += 1;
+		mi -= '15 15 1';
+		ma += '15 15 1';
 	}
 	else
 	{
-		mi.x -= 1;
-		mi.y -= 1;
-		mi.z -= 1;
-		ma.x += 1;
-		ma.y += 1;
-		ma.z += 1;
+		mi -= '1 1 1';
+		ma += '1 1 1';
 	}
 
 	this.absmin = mi;

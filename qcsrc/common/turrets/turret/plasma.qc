@@ -1,7 +1,5 @@
 #include "plasma.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 spawnfunc(turret_plasma) { if (!turret_initialize(this, TUR_PLASMA)) delete(this); }
@@ -45,5 +43,4 @@ METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
     turret_do_updates(it);
 }
 
-#endif
 #endif

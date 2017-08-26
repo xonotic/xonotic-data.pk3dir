@@ -120,10 +120,9 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
 		return;
 
-	if(PHYS_INPUT_BUTTON_ATCK2(player))
+	if(PHYS_INPUT_BUTTON_ATCK2(player) && time >= player.jump_interval)
 	if( !forbidWeaponUse(player)
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
-	if(time >= player.jump_interval)
 	{
 		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
 		makevectors(player.v_angle);

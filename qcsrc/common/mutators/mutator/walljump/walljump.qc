@@ -44,7 +44,7 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 	if(!IS_DEAD(player))
 	{
 		vector plane_normal = PlayerTouchWall(player);
-		
+
 		if(plane_normal != '0 0 0')
 		{
 			float wj_force = PHYS_WALLJUMP_FORCE(player);

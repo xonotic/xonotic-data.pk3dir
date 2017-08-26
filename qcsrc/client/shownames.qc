@@ -1,5 +1,7 @@
 #include "shownames.qh"
 
+#include "autocvars.qh"
+#include "miscfunctions.qh"
 #include "hud/_mod.qh"
 
 #include <common/ent_cs.qh>
@@ -63,7 +65,6 @@ void Draw_ShowNames(entity this)
 			overlap = 0;
 	}
 
-	float dist = vlen(this.origin - view_origin);
 	if (overlap == -1 && autocvar_hud_shownames_antioverlap)
 	{
 		// fade tag out if another tag that is closer to you overlaps
@@ -75,8 +76,8 @@ void Draw_ShowNames(entity this)
 			vector eo = project_3d_to_2d(it.origin);
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
-			if (vdist(((eX * o.x + eY * o.y) - eo), <, autocvar_hud_shownames_antioverlap_distance)
-			    && vdist((it.origin - view_origin), <, dist))
+			if (vdist((vec2(o) - eo), <, autocvar_hud_shownames_antioverlap_distance)
+			    && vlen2(it.origin - view_origin) < vlen2(this.origin - view_origin))
 			{
 				overlap = 1;
 				break;
@@ -118,6 +119,7 @@ void Draw_ShowNames(entity this)
 	}
 	if (a < ALPHA_MIN_VISIBLE && gametype != MAPINFO_TYPE_CTS) return;
 	if (vdist(this.origin - view_origin, >=, max_shot_distance)) return;
+	float dist = vlen(this.origin - view_origin);
 	if (autocvar_hud_shownames_maxdistance)
 	{
 		if (dist >= autocvar_hud_shownames_maxdistance) return;
@@ -135,8 +137,8 @@ void Draw_ShowNames(entity this)
 	if (o.z >= 0)
 	{
 		o.z = 0;
-		vector mySize = (eX * autocvar_hud_shownames_aspect + eY) * autocvar_hud_shownames_fontsize;
-		vector myPos = o - '0.5 0 0' * mySize.x - '0 1 0' * mySize.y;
+		vector mySize = (vec2(autocvar_hud_shownames_aspect, 1)) * autocvar_hud_shownames_fontsize;
+		vector myPos = o - vec2(0.5 * mySize.x, mySize.y);
 		// size scaling
 		mySize.x *= resize;
 		mySize.y *= resize;
@@ -147,17 +149,17 @@ void Draw_ShowNames(entity this)
 		float namewidth = mySize.x;
 		if (autocvar_hud_shownames_status && this.sameteam)
 		{
-			vector v = namepos + '0 1 0' * autocvar_hud_shownames_fontsize * resize;
-			vector s = eX * 0.5 * mySize.x + eY * resize * autocvar_hud_shownames_statusbar_height;
+			vector pos = namepos + eY * autocvar_hud_shownames_fontsize * resize;
+			vector sz = vec2(0.5 * mySize.x, resize * autocvar_hud_shownames_statusbar_height);
 			if (this.healthvalue > 0)
 			{
-				HUD_Panel_DrawProgressBar(v, s, "nametag_statusbar",
+				HUD_Panel_DrawProgressBar(pos, sz, "nametag_statusbar",
 					this.healthvalue / autocvar_hud_panel_healtharmor_maxhealth, false, 1, '1 0 0', a,
 					DRAWFLAG_NORMAL);
 			}
 			if (this.armorvalue > 0)
 			{
-				HUD_Panel_DrawProgressBar(v + eX * 0.5 * mySize.x, s, "nametag_statusbar",
+				HUD_Panel_DrawProgressBar(pos + eX * 0.5 * mySize.x, sz, "nametag_statusbar",
 					this.armorvalue / autocvar_hud_panel_healtharmor_maxarmor, false, 0, '0 1 0', a,
 					DRAWFLAG_NORMAL);
 			}

@@ -1,5 +1,7 @@
 #include "tracing.qh"
 
+#include <common/effects/all.qh>
+
 #include "accuracy.qh"
 #include "common.qh"
 #include "hitplot.qh"
@@ -25,10 +27,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 {
 	TC(Sound, snd);
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
-	float oldsolid;
-	vector vecs, dv;
-	oldsolid = ent.dphitcontentsmask;
-	if (IS_PLAYER(ent) && ent.(weaponentity).m_weapon == WEP_RIFLE)
+	float oldsolid = ent.dphitcontentsmask;
+	if(!IS_CLIENT(ent))
+		antilag = false; // no antilag for non-clients!
+	if (IS_PLAYER(ent) && (ent.(weaponentity).m_weapon.spawnflags & WEP_FLAG_PENETRATEWALLS))
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -60,12 +62,9 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		W_HitPlotAnalysis(ent, weaponentity, v_forward, v_right, v_up);
 
 	vector md = ent.(weaponentity).movedir;
-	if(md.x > 0)
-		vecs = md;
-	else
-		vecs = '0 0 0';
+	vector vecs = ((md.x > 0) ? md : '0 0 0');
 
-	dv = v_right * -vecs.y + v_up * vecs.z;
+	vector dv = v_right * -vecs.y + v_up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
 	// now move the shotorg forward as much as requested if possible
@@ -87,7 +86,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//vector prevend = w_shotend;
 
 	if (antilag)
-	if (!ent.cvar_cl_noantilag)
+	if (!CS(ent).cvar_cl_noantilag)
 	{
 		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
 		{
@@ -108,10 +107,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		else if(autocvar_g_antilag == 3) // client side hitscan
 		{
 			// this part MUST use prydon cursor
-			if (ent.cursor_trace_ent)                 // client was aiming at someone
-			if (ent.cursor_trace_ent != ent)         // just to make sure
-			if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-			if (IS_PLAYER(ent.cursor_trace_ent)) // and actually a player
+			if (CS(ent).cursor_trace_ent)                 // client was aiming at someone
+			if (CS(ent).cursor_trace_ent != ent)         // just to make sure
+			if (CS(ent).cursor_trace_ent.takedamage)      // and that person is killable
+			if (IS_PLAYER(CS(ent).cursor_trace_ent)) // and actually a player
 			{
 				// verify that the shot would miss without antilag
 				// (avoids an issue where guns would always shoot at their origin)
@@ -119,9 +118,9 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 				if (!trace_ent.takedamage)
 				{
 					// verify that the shot would hit if altered
-					traceline(w_shotorg, ent.cursor_trace_ent.origin, MOVE_NORMAL, ent);
-					if (trace_ent == ent.cursor_trace_ent)
-						w_shotdir = normalize(ent.cursor_trace_ent.origin - w_shotorg);
+					traceline(w_shotorg, CS(ent).cursor_trace_ent.origin, MOVE_NORMAL, ent);
+					if (trace_ent == CS(ent).cursor_trace_ent)
+						w_shotdir = normalize(CS(ent).cursor_trace_ent.origin - w_shotorg);
 					else
 						LOG_INFO("antilag fail\n");
 				}
@@ -234,6 +233,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 			break;
 
 		// make the entity non-solid so we can hit the next one
+		IL_PUSH(g_railgunhit, trace_ent);
 		trace_ent.railgunhit = true;
 		trace_ent.railgunhitloc = end;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
@@ -253,7 +253,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	float endq3surfaceflags = trace_dphitq3surfaceflags;
 
 	// find all the entities the railgun hit and restore their solid state
-	FOREACH_ENTITY_FLOAT(railgunhit, true,
+	IL_EACH(g_railgunhit, it.railgunhit,
 	{
 		it.solid = it.railgunhitsolidbackup;
 	});
@@ -264,7 +264,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
 	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, {
 			if(!it.railgunhit)
 			if(!(IS_SPEC(it) && it.enemy == this))
 			{
@@ -280,15 +280,17 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 					pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
 				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASE * f, ATTEN_NONE);
 			}
-		));
+		});
 
 		if(pseudoprojectile)
 			delete(pseudoprojectile);
 	}
 
 	// find all the entities the railgun hit and hurt them
-	FOREACH_ENTITY_FLOAT(railgunhit, true,
+	IL_EACH(g_railgunhit, it.railgunhit,
 	{
+		// removal from the list is handled below
+
 		// get the details we need to call the damage function
 		vector hitloc = it.railgunhitloc;
 
@@ -311,6 +313,8 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 		it.railgunhit = false;
 		it.railgundistance = 0;
 	});
+
+	IL_CLEAR(g_railgunhit);
 
 	// calculate hits and fired shots for hitscan
 	accuracy_add(this, this.(weaponentity).m_weapon.m_id, 0, min(bdamage, totaldmg));
@@ -346,12 +350,11 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	else
 		fireBullet_trace_callback_eff = EFFECT_BULLET;
 
-	float lag = ANTILAG_LATENCY(this);
+	float lag = ((IS_REAL_CLIENT(this)) ? ANTILAG_LATENCY(this) : 0);
 	if(lag < 0.001)
 		lag = 0;
-	if (!IS_REAL_CLIENT(this))
-		lag = 0;
-	if(autocvar_g_antilag == 0 || this.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(this)) ? CS(this).cvar_cl_noantilag : false);
+	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{
@@ -438,16 +441,17 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			break;
 
 		float maxdist;
+		entity hitstore = IS_PLAYER(hit) ? PS(hit) : hit;
 		if(max_solid_penetration < 0)
 			break;
-		else if(hit.ballistics_density < -1)
+		else if(hitstore.ballistics_density < -1)
 			break; // -2: no solid penetration, ever
-		else if(hit.ballistics_density < 0)
+		else if(hitstore.ballistics_density < 0)
 			maxdist = vlen(hit.maxs - hit.mins) + 1; // -1: infinite travel distance
-		else if(hit.ballistics_density == 0)
+		else if(hitstore.ballistics_density == 0)
 			maxdist = max_solid_penetration * solid_penetration_left;
 		else
-			maxdist = max_solid_penetration * solid_penetration_left * hit.ballistics_density;
+			maxdist = max_solid_penetration * solid_penetration_left * hitstore.ballistics_density;
 
 		if(maxdist <= autocvar_g_ballistics_mindistance)
 			break;

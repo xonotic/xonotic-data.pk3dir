@@ -50,7 +50,7 @@ void M_Shambler_Attack_Swing(entity this)
 	Monster_Attack_Melee(this, this.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((random() >= 0.5) ? this.anim_melee2 : this.anim_melee3), this.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW.m_id, true);
 }
 
-#include <common/effects/qc/all.qh>
+#include <common/effects/qc/_mod.qh>
 
 void M_Shambler_Attack_Lightning_Explode(entity this, entity directhitentity)
 {
@@ -116,11 +116,9 @@ void M_Shambler_Attack_Lightning_Think(entity this)
 
 void M_Shambler_Attack_Lightning(entity this)
 {
-	entity gren;
-
 	monster_makevectors(this, this.enemy);
 
-	gren = new(grenade);
+	entity gren = new(grenade);
 	gren.owner = gren.realowner = this;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
@@ -263,12 +261,6 @@ METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
     actor.spawnshieldtime = actor.spawn_time;
     actor.monster_attackfunc = M_Shambler_Attack;
 
-    return true;
-}
-
-METHOD(Shambler, mr_precache, bool(Shambler this))
-{
-    TC(Shambler, this);
     return true;
 }
 #endif

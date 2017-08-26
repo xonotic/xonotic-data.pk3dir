@@ -97,7 +97,7 @@ X(0)
 		for(int wepslot = 0; wepslot < MAX_WEAPONSLOTS; ++wepslot) \
 		{ \
 			.entity weaponentity = weaponentities[wepslot]; \
-			W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir, weaponentity); \
+			W_CycleWeapon(this, CS(this).cvar_cl_weaponpriorities[slot], dir, weaponentity); \
 			if(wepslot == 0 && autocvar_g_weaponswitch_debug != 1) \
 				break; \
 		} \
@@ -352,9 +352,9 @@ void ImpulseCommands(entity this)
 {
 	if (game_stopped) return;
 
-	int imp = this.impulse;
+	int imp = CS(this).impulse;
 	if (!imp) return;
-	this.impulse = 0;
+	CS(this).impulse = 0;
 
 	if (MinigameImpulse(this, imp)) return;
 
@@ -660,7 +660,7 @@ IMPULSE(navwaypoint_remove)
 	if (sym)
 	{
 		vector org = waypoint_getSymmetricalOrigin(e.origin, ctf_flags);
-		FOREACH_ENTITY_CLASS("waypoint", !(it.wpflags & WAYPOINTFLAG_GENERATED), {
+		IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_GENERATED), {
 			if(vdist(org - it.origin, <, 3))
 			{
 				wp_sym = it;

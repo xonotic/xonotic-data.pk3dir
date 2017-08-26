@@ -1,5 +1,9 @@
 #include "cheats.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
+
 #include "g_damage.qh"
 #include "race.qh"
 #include "../common/triggers/teleporters.qh"
@@ -264,7 +268,7 @@ float CheatImpulse(entity this, int imp)
 		case CHIMPULSE_R00T.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			RandomSelection_Init();
-			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), LAMBDA(RandomSelection_AddEnt(it, 1, 1)));
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), { RandomSelection_AddEnt(it, 1, 1); });
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else
@@ -780,21 +784,21 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 			{
 				if(PHYS_INPUT_BUTTON_DRAG(this))
 				{
-					if(this.impulse == 10 || this.impulse == 15 || this.impulse == 18)
+					if(CS(this).impulse == 10 || CS(this).impulse == 15 || CS(this).impulse == 18)
 					{
 						Drag_MoveForward(this);
-						this.impulse = 0;
+						CS(this).impulse = 0;
 					}
-					else if(this.impulse == 12 || this.impulse == 16 || this.impulse == 19)
+					else if(CS(this).impulse == 12 || CS(this).impulse == 16 || CS(this).impulse == 19)
 					{
 						Drag_MoveBackward(this);
-						this.impulse = 0;
+						CS(this).impulse = 0;
 					}
-					else if(this.impulse >= 1 && this.impulse <= 9)
+					else if(CS(this).impulse >= 1 && CS(this).impulse <= 9)
 					{
-						Drag_SetSpeed(this, this.impulse - 1);
+						Drag_SetSpeed(this, CS(this).impulse - 1);
 					}
-					else if(this.impulse == 14)
+					else if(CS(this).impulse == 14)
 					{
 						Drag_SetSpeed(this, 9);
 					}

@@ -65,7 +65,7 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 			this.enemy.health = -1;
 
 			if(this.enemy.message)
-				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(centerprint(it, this.enemy.message)));
+				FOREACH_CLIENT(IS_PLAYER(it), { centerprint(it, this.enemy.message); });
 
 			SUB_UseTargets(this.enemy, this, trigger);
 		}
@@ -195,13 +195,12 @@ void assault_new_round(entity this)
 	else
 		assault_attacker_team = NUM_TEAM_1;
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
+	IL_EACH(g_saved_team, !IS_CLIENT(it),
 	{
-		if(IS_CLIENT(it))
-			continue;
-
-		if (it.team_saved == NUM_TEAM_1) it.team_saved = NUM_TEAM_2;
-		else if (it.team_saved == NUM_TEAM_2) it.team_saved = NUM_TEAM_1;
+		if(it.team_saved == NUM_TEAM_1)
+			it.team_saved = NUM_TEAM_2;
+		else if(it.team_saved == NUM_TEAM_2)
+			it.team_saved = NUM_TEAM_1;
 	});
 
 	// reset the level with a countdown
@@ -430,8 +429,8 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 
 			this.havocbot_attack_time = 0;
 
-			if(checkpvs(this.view_ofs,it))
-			if(checkpvs(this.view_ofs,best))
+			if(checkpvs(this.origin + this.view_ofs, it))
+			if(checkpvs(this.origin + this.view_ofs, best))
 			{
 			//	dprint("increasing attack time for this target\n");
 				this.havocbot_attack_time = time + 2;
