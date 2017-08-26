@@ -30,7 +30,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	float oldsolid = ent.dphitcontentsmask;
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
-	if (IS_PLAYER(ent) && ent.(weaponentity).m_weapon == WEP_RIFLE)
+	if (IS_PLAYER(ent) && (ent.(weaponentity).m_weapon.spawnflags & WEP_FLAG_PENETRATEWALLS))
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
