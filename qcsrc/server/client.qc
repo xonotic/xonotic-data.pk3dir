@@ -113,20 +113,18 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (IS_SPEC(e)) e = e.enemy;
 
 	sf = 0;
-	if (CS(e).race_completed)       sf |= 1; // forced scoreboard
-	if (CS(to).spectatee_status)    sf |= 2; // spectator ent number follows
-	if (CS(e).zoomstate)            sf |= 4; // zoomed
-	if (autocvar_sv_showspectators) sf |= 16; // show spectators
+	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
+	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
+	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (autocvar_sv_showspectators) sf |= BIT(4); // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
 
-	if (sf & 2)
-	{
+	if (sf & BIT(1))
 		WriteByte(MSG_ENTITY, CS(to).spectatee_status);
-	}
 
-	if(sf & 16)
+	if(sf & BIT(4))
 	{
 		float specs = CountSpectators(e, to);
 		WriteByte(MSG_ENTITY, specs);
