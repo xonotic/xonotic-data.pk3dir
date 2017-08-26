@@ -76,6 +76,8 @@ spawnfunc(invasion_spawnpoint)
 	IL_PUSH(g_invasion_spawns, this);
 }
 
+void ClearWinners();
+
 // Invasion stage mode winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win.
 int WinningCondition_Invasion()
