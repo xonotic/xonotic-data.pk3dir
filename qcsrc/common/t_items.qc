@@ -655,7 +655,7 @@ void GivePlayerHealth(entity player, float amount)
 		return;
 	}
 	player.health = bound(player.health, player.health + amount,
-		 g_pickup_healthmega_max);
+		 autocvar_g_balance_health_limit);
 	player.pauserothealth_finished = max(player.pauserothealth_finished, time +
 		autocvar_g_balance_pause_health_rot);
 }
@@ -667,7 +667,7 @@ void GivePlayerArmor(entity player, float amount)
 		return;
 	}
 	player.armorvalue = bound(player.armorvalue, player.armorvalue + amount,
-		 g_pickup_armormega_max);
+		 autocvar_g_balance_armor_limit);
 	player.pauserotarmor_finished = max(player.pauserotarmor_finished, time +
 		autocvar_g_balance_pause_armor_rot);
 }
