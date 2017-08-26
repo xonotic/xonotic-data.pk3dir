@@ -1377,8 +1377,8 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 			best.cnt += 1;
 
 			this.havocbot_attack_time = 0;
-			if(checkpvs(this.view_ofs,cp))
-			if(checkpvs(this.view_ofs,best))
+			if(checkpvs(this.origin + this.view_ofs, cp))
+			if(checkpvs(this.origin + this.view_ofs, best))
 				this.havocbot_attack_time = time + 2;
 		}
 		else
@@ -1448,8 +1448,8 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 			bestwp.cnt += 1;
 
 			this.havocbot_attack_time = 0;
-			if(checkpvs(this.view_ofs,g))
-			if(checkpvs(this.view_ofs,bestwp))
+			if(checkpvs(this.origin + this.view_ofs, g))
+			if(checkpvs(this.origin + this.view_ofs, bestwp))
 				this.havocbot_attack_time = time + 5;
 
 			return true;

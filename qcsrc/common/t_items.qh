@@ -4,6 +4,9 @@
 #include <server/defs.qh>
 #endif
 
+/// \brief Unconditional maximum amount of items the player can have.
+const int ITEM_COUNT_HARD_LIMIT = 999;
+
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
@@ -86,6 +89,13 @@ void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
 
+/// \brief Gives player a resource such as health, armor or ammo.
+/// \param[in,out] player Player to give resource to.
+/// \param[in] resource_type Type of the resource.
+/// \param[in] amount Amount of resource to give.
+/// \return No return.
+void GivePlayerResource(entity player, .float resource_type, float amount);
+
 /// \brief Gives health to the player.
 /// \param[in,out] player Player to give health to.
 /// \param[in] amount Amount of health to give.
@@ -105,6 +115,12 @@ void GivePlayerArmor(entity player, float amount);
 /// \return No return.
 void GivePlayerAmmo(entity player, .float ammotype, float amount);
 
+/// \brief Gives fuel to the player.
+/// \param[in,out] player Player to give fuel to.
+/// \param[in] amount Amount of fuel to give.
+/// \return No return.
+void GivePlayerFuel(entity player, float amount);
+
 /// \brief Give several random weapons and ammo to the player.
 /// \param[in,out] player Player to give weapons to.
 /// \param[in] num_weapons Number of weapons to give.
@@ -119,11 +135,7 @@ void GivePlayerRandomWeapons(entity player, int num_weapons,
 	string weapon_names, float shells, float bullets, float rockets,
 	float cells, float plasma);
 
-float ITEM_MODE_NONE = 0;
-float ITEM_MODE_HEALTH = 1;
-float ITEM_MODE_ARMOR = 2;
-float ITEM_MODE_FUEL = 3;
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode);
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax);
 
 float Item_GiveTo(entity item, entity player);
 

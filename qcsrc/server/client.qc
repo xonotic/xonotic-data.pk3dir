@@ -113,20 +113,18 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (IS_SPEC(e)) e = e.enemy;
 
 	sf = 0;
-	if (CS(e).race_completed)       sf |= 1; // forced scoreboard
-	if (CS(to).spectatee_status)    sf |= 2; // spectator ent number follows
-	if (CS(e).zoomstate)            sf |= 4; // zoomed
-	if (autocvar_sv_showspectators) sf |= 16; // show spectators
+	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
+	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
+	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (autocvar_sv_showspectators) sf |= BIT(4); // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
 
-	if (sf & 2)
-	{
+	if (sf & BIT(1))
 		WriteByte(MSG_ENTITY, CS(to).spectatee_status);
-	}
 
-	if(sf & 16)
+	if(sf & BIT(4))
 	{
 		float specs = CountSpectators(e, to);
 		WriteByte(MSG_ENTITY, specs);
@@ -1626,7 +1624,6 @@ void player_regen(entity this)
 	regen_health_stable = M_ARGV(9, float);
 	regen_health_rotstable = M_ARGV(10, float);
 
-
 	if(!mutator_returnvalue)
 	if(!STAT(FROZEN, this))
 	{
@@ -1665,6 +1662,18 @@ void player_regen(entity this)
 
 		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
 	}
+	// Ugly hack to make sure the haelth and armor don't go beyond hard limit.
+	// TODO: Remove this hack when all code uses GivePlayerHealth and
+	// GivePlayerArmor.
+	if (this.health > ITEM_COUNT_HARD_LIMIT)
+	{
+		this.health = ITEM_COUNT_HARD_LIMIT;
+	}
+	if (this.armorvalue > ITEM_COUNT_HARD_LIMIT)
+	{
+		this.armorvalue = ITEM_COUNT_HARD_LIMIT;
+	}
+	// End hack.
 }
 
 bool zoomstate_set;
