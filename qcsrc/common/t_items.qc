@@ -34,6 +34,9 @@
 
 REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 
+/// \brief Unconditional maximum amount of items the player can have.
+const int ITEM_COUNT_HARD_LIMIT = 999; 
+
 #ifdef CSQC
 bool autocvar_cl_ghost_items_vehicle = true;
 .vector item_glowmod;
@@ -655,7 +658,7 @@ void GivePlayerHealth(entity player, float amount)
 		return;
 	}
 	player.health = bound(player.health, player.health + amount,
-		 autocvar_g_balance_health_limit);
+		 min(autocvar_g_balance_health_limit, ITEM_COUNT_HARD_LIMIT));
 	player.pauserothealth_finished = max(player.pauserothealth_finished, time +
 		autocvar_g_balance_pause_health_rot);
 }
@@ -667,7 +670,7 @@ void GivePlayerArmor(entity player, float amount)
 		return;
 	}
 	player.armorvalue = bound(player.armorvalue, player.armorvalue + amount,
-		 autocvar_g_balance_armor_limit);
+		 min(autocvar_g_balance_armor_limit, ITEM_COUNT_HARD_LIMIT));
 	player.pauserotarmor_finished = max(player.pauserotarmor_finished, time +
 		autocvar_g_balance_pause_armor_rot);
 }
@@ -708,7 +711,8 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount)
 			break;
 		}
 	}
-	player.(ammotype) = min(player.(ammotype) + amount, maxvalue);
+	player.(ammotype) = min(player.(ammotype) + amount,
+		min(maxvalue, ITEM_COUNT_HARD_LIMIT));
 }
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
