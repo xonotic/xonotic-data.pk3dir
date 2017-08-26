@@ -307,7 +307,7 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
 	// decide whether to fire this time
-	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * DEG2RAD))
+	if (v * shotdir >= cos(maxfiredeviation * DEG2RAD))
 	if(vdist(trace_endpos-shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10)) || random()*random()>bound(0,(skill+this.bot_aggresskill)*0.05,1))
 		this.bot_firetimer = time + bound(0.1, 0.5-(skill+this.bot_aggresskill)*0.05, 0.5);
 	//traceline(shotorg,shotorg+shotdir*1000,false,NULL);
