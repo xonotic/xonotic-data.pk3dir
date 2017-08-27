@@ -1064,7 +1064,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						force = force * a;
 
 						if(autocvar_g_throughfloor_debug)
-							LOG_INFOF(" D=%f F=%f\n", finaldmg, vlen(force));
+							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
 					}
 
 					//if (targ == attacker)

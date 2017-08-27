@@ -569,7 +569,7 @@ void URI_Get_Callback(int id, int status, string data)
 	}
 	else
 	{
-		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
+		LOG_INFOF("Received HTTP request data for an invalid id %d.", id);
 	}
 }
 

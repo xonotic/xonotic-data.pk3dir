@@ -181,12 +181,12 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 			if (fh >= 0)
 			{
 				Dump_Notifications(fh, alsoprint);
-				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
+				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.", filename);
 				fclose(fh);
 			}
 			else
 			{
-				LOG_INFOF("^1Error: ^7Could not open file '%s'!\n", filename);
+				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
 			}
 			#else
 			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));

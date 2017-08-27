@@ -303,8 +303,8 @@ GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt")
             int fh = fopen(filename, FILE_WRITE);
             if (fh >= 0) {
             	effectinfo_dump(fh, alsoprint);
-                LOG_INFOF("Dumping effectinfo... File located at ^2data/data/%s^7.\n", filename);
-				LOG_INFOF("Reload with ^2cl_particles_reloadeffects data/%s^7.\n", filename);
+                LOG_INFOF("Dumping effectinfo... File located at ^2data/data/%s^7.", filename);
+				LOG_INFOF("Reload with ^2cl_particles_reloadeffects data/%s^7.", filename);
                 fclose(fh);
             } else {
                 LOG_WARNF("Could not open file '%s'!", filename);

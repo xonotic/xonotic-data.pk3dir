@@ -303,9 +303,9 @@ void GameCommand_bbox(float request)
 				NULL);
 			size_max.z = (trace_startsolid) ? world.absmax.z : trace_endpos.z;
 
-			LOG_INFOF("Original size: %v %v\n", world.absmin, world.absmax);
-			LOG_INFOF("Currently set size: %v %v\n", world.mins, world.maxs);
-			LOG_INFOF("Solid bounding box size: %v %v\n", size_min, size_max);
+			LOG_INFOF("Original size: %v %v", world.absmin, world.absmax);
+			LOG_INFOF("Currently set size: %v %v", world.mins, world.maxs);
+			LOG_INFOF("Solid bounding box size: %v %v", size_min, size_max);
 			return;
 		}
 
@@ -1735,7 +1735,7 @@ SERVER_COMMAND(warp, "Choose different level in campaign") { GameCommand_warp(re
 
 void GameCommand_macro_help()
 {
-	FOREACH(SERVER_COMMANDS, true, { LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description); });
+	FOREACH(SERVER_COMMANDS, true, { LOG_INFOF("  ^2%s^7: %s", it.m_name, it.m_description); });
 }
 
 float GameCommand_macro_command(float argc, string command)

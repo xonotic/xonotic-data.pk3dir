@@ -613,7 +613,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	float i = 0;
 	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
 	{
-		LOG_INFOF("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e)));
+		LOG_INFOF("%d:%s:%s", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e)));
 		++i;
 	}
 #endif
@@ -679,7 +679,7 @@ void PlayerStats_PlayerDetail_CheckUpdate()
 	float gamecount = cvar("cl_matchcount");
 
 	#if 0
-	LOG_INFOF("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d\n",
+	LOG_INFOF("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d",
 		time,
 		PS_D_NEXTUPDATETIME,
 		PS_D_LASTGAMECOUNT,
@@ -782,7 +782,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 							"PlayerStats_PlayerDetail_Handler(): ERROR: "
 							"Key went unhandled? Is our version outdated?\n"
 							"PlayerStats_PlayerDetail_Handler(): "
-							"Key '%s', Event '%s', Data '%s'\n",
+							"Key '%s', Event '%s', Data '%s'",
 							key,
 							event,
 							data
@@ -794,7 +794,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 				#if 0
 				LOG_INFOF(
 					"PlayerStats_PlayerDetail_Handler(): "
-					"Key '%s', Event '%s', Data '%s'\n",
+					"Key '%s', Event '%s', Data '%s'",
 					key,
 					event,
 					data

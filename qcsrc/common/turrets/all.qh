@@ -38,14 +38,14 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")
             if(tur_config_file >= 0)
             {
                 Dump_Turret_Settings();
-                LOG_INFOF("Dumping turrets... File located in ^2data/data/%s^7.\n", filename);
+                LOG_INFOF("Dumping turrets... File located in ^2data/data/%s^7.", filename);
                 fclose(tur_config_file);
                 tur_config_file = -1;
                 tur_config_alsoprint = -1;
             }
             else
             {
-                LOG_INFOF("^1Error: ^7Could not open file '%s'!\n", filename);
+                LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
             }
             #else
             LOG_INFO(_("Turrets dump command only works with sv_cmd.\n"));

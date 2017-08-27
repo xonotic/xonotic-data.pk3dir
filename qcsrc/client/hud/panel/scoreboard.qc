@@ -475,7 +475,7 @@ LABEL(notfound)
 				else
 				{
 					if(!nocomplain)
-						LOG_INFOF("^1Error:^7 Unknown score field: '%s'\n", str);
+						LOG_INFOF("^1Error:^7 Unknown score field: '%s'", str);
 					continue;
 				}
 LABEL(found)
@@ -548,7 +548,7 @@ LABEL(found)
 			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 			sbt_field[sbt_num_fields] = ps_secondary;
 			++sbt_num_fields;
-			LOG_INFOF("fixed missing field '%s'\n", scores_label(ps_secondary));
+			LOG_INFOF("fixed missing field '%s'", scores_label(ps_secondary));
 		}
 		if(!have_primary)
 		{
@@ -557,7 +557,7 @@ LABEL(found)
 			sbt_field_size[sbt_num_fields] = stringwidth(sbt_field_title[sbt_num_fields], false, hud_fontsize);
 			sbt_field[sbt_num_fields] = ps_primary;
 			++sbt_num_fields;
-			LOG_INFOF("fixed missing field '%s'\n", scores_label(ps_primary));
+			LOG_INFOF("fixed missing field '%s'", scores_label(ps_primary));
 		}
 	}
 

@@ -111,7 +111,7 @@ void W_Shockwave_Melee_Think(entity this)
 
 			#ifdef DEBUG_SHOCKWAVE
 			LOG_INFOF(
-				"MELEE: %s hitting %s with %f damage (factor: %f) at %f time.\n",
+				"MELEE: %s hitting %s with %f damage (factor: %f) at %f time.",
 				this.realowner.netname,
 				target_victim.netname,
 				swing_damage,
@@ -399,7 +399,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 				#ifdef DEBUG_SHOCKWAVE
 				LOG_INFOF(
 					"SELF HIT: multiplier = %f, damage = %f, force = %f... "
-					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
+					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.",
 					multiplier,
 					final_damage,
 					vlen(final_force),
@@ -462,7 +462,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 				#ifdef DEBUG_SHOCKWAVE
 				LOG_INFOF(
 					"SPLASH HIT: multiplier = %f, damage = %f, force = %f... "
-					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
+					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.",
 					multiplier,
 					final_damage,
 					vlen(final_force),
@@ -551,7 +551,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 				#ifdef DEBUG_SHOCKWAVE
 				LOG_INFOF(
 					"BLAST HIT: multiplier = %f, damage = %f, force = %f... "
-					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
+					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.",
 					multiplier,
 					final_damage,
 					vlen(final_force),
@@ -585,7 +585,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 
 		#ifdef DEBUG_SHOCKWAVE
 		LOG_INFOF(
-			"SHOCKWAVE by %s: damage = %f, force = %f.\n",
+			"SHOCKWAVE by %s: damage = %f, force = %f.",
 			actor.netname,
 			final_damage,
 			vlen(final_force)

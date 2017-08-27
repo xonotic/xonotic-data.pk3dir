@@ -375,10 +375,10 @@ void GenericCommand_restartnotifs(float request)
 			int NOTIF_MULTI_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_MULTI,   { ++NOTIF_MULTI_COUNT;  });
 			int NOTIF_CHOICE_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CHOICE,  { ++NOTIF_CHOICE_COUNT; });
 			LOG_INFOF(
-				strcat(
-					"Restart_Notifications(): Restarting %d notifications... ",
-					"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
-				),
+			    (
+                    "Restart_Notifications(): Restarting %d notifications... "
+                    "Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d"
+                ),
 				(
 					NOTIF_ANNCE_COUNT +
 					NOTIF_INFO_COUNT +
@@ -531,7 +531,7 @@ GENERIC_COMMAND(runtest, "Run unit tests") { GenericCommand_runtest(request, arg
 
 void GenericCommand_macro_help()
 {
-	FOREACH(GENERIC_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description));
+	FOREACH(GENERIC_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s", it.m_name, it.m_description));
 }
 
 float GenericCommand_macro_command(float argc, string command)

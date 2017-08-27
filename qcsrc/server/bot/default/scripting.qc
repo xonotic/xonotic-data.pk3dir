@@ -315,7 +315,7 @@ float bot_decodecommand(string cmdstring)
 			case BOT_CMD_PARAMETER_VECTOR:
 				if(substring(parm, 0, 1) != "\'")
 				{
-					LOG_INFOF("ERROR: expected vector type \'x y z\', got %s\n", parm);
+					LOG_INFOF("ERROR: expected vector type \'x y z\', got %s", parm);
 					return 0;
 				}
 				bot_cmd.bot_cmd_parm_vector = stov(parm);

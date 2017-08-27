@@ -716,7 +716,7 @@ IMPULSE(navwaypoint_unreachable)
 		++j;
 		++m;
 	});
-	if (j) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)\n", j);
+	if (j) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)", j);
 	navigation_markroutes_inverted(e2);
 
 	j = 0;
@@ -729,8 +729,8 @@ IMPULSE(navwaypoint_unreachable)
 		it.effects |= EF_NODEPTHTEST | EF_RED;
 		++j;
 	});
-	if (j) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)\n", j);
-	if (m) LOG_INFOF("%d waypoints have been marked total\n", m);
+	if (j) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)", j);
+	if (m) LOG_INFOF("%d waypoints have been marked total", m);
 
 	j = 0;
 	IL_EACH(g_spawnpoints, true,
@@ -757,7 +757,7 @@ IMPULSE(navwaypoint_unreachable)
 			++j;
 		}
 	});
-	if (j) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)\n", j);
+	if (j) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)", j);
 
 	j = 0;
 	IL_EACH(g_items, true,
@@ -773,7 +773,7 @@ IMPULSE(navwaypoint_unreachable)
 		it.colormod_x = 8;
 		++j;
 	});
-	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)\n", j);
+	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)", j);
 
 	j = 0;
 	IL_EACH(g_items, true,
@@ -784,5 +784,5 @@ IMPULSE(navwaypoint_unreachable)
 		it.colormod_z = 8;
 		++j;
 	});
-	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", j);
+	if (j) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)", j);
 }

@@ -170,7 +170,7 @@ bool autocvar_debugdraw;
 					e.debug = true;
 					--rem;
 				}
-				LOG_INFOF("%d server entities sent\n", n - rem);
+				LOG_INFOF("%d server entities sent", n - rem);
 				return;
 			}
 
@@ -194,7 +194,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 			int bufhandle = stof(argv(1));
 			int string_index = stof(argv(2));
 			string s = bufstr_get(bufhandle, string_index);
-			LOG_INFOF("%s\n", s);
+			LOG_INFOF("%s", s);
 			return;
 		}
 
@@ -326,11 +326,11 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 			int entcnt = 0;
 			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true,
 			{
-				LOG_INFOF("%i (%s)\n", it, it.classname);
+				LOG_INFOF("%i (%s)", it, it.classname);
 				++entcnt;
 			});
 			if(entcnt)
-				LOG_INFOF("Found %d entities\n", entcnt);
+				LOG_INFOF("Found %d entities", entcnt);
 			return;
 		}
 
@@ -354,7 +354,7 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin")
 		case CMD_REQUEST_COMMAND:
 		{
 		    vector match = stov(argv(1));
-		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)\n", it, it.classname));
+		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)", it, it.classname));
 			return;
 		}
 

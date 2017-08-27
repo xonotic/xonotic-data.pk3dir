@@ -484,7 +484,7 @@ CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like weaponpriority)") { Lo
 
 void LocalCommand_macro_help()
 {
-	FOREACH(CLIENT_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description));
+	FOREACH(CLIENT_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s", it.m_name, it.m_description));
 }
 
 bool LocalCommand_macro_command(int argc, string command)

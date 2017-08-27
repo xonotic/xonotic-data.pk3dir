@@ -35,7 +35,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 	if (!e) return 0;
 	if (e.url_rbuf >= 0 || e.url_wbuf >= 0)
 	{
-		LOG_INFOF("WARNING: handle %d (%s) has already received data?!?\n", id + NUM_URL_ID, e.url_url);
+		LOG_INFOF("WARNING: handle %d (%s) has already received data?!?", id + NUM_URL_ID, e.url_url);
 		return 0;
 	}
 

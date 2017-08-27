@@ -639,7 +639,7 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 		}
 		default:
 		{
-			LOG_INFOF("Incorrect parameters for ^2%s^7\n", "weapon_find");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", "weapon_find");
 		}
 		case CMD_REQUEST_USAGE:
 		{

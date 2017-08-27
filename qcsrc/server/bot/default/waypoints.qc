@@ -615,7 +615,7 @@ void waypoint_save_links()
 	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
-		LOG_INFOF("waypoint link save to %s failed\n", filename);
+		LOG_INFOF("waypoint link save to %s failed", filename);
 		return;
 	}
 
@@ -636,7 +636,7 @@ void waypoint_save_links()
 	fclose(file);
 	botframe_cachedwaypointlinks = true;
 
-	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache\n", c, mapname);
+	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache", c, mapname);
 
 	waypoint_load_links_hardwired();
 }
@@ -651,7 +651,7 @@ void waypoint_saveall()
 		waypoint_save_links(); // save anyway?
 		botframe_loadedforcedlinks = false;
 
-		LOG_INFOF("waypoint links: save to %s failed\n", filename);
+		LOG_INFOF("waypoint links: save to %s failed", filename);
 		return;
 	}
 
@@ -674,7 +674,7 @@ void waypoint_saveall()
 	waypoint_save_links();
 	botframe_loadedforcedlinks = false;
 
-	LOG_INFOF("saved %d waypoints to maps/%s.waypoints\n", c, mapname);
+	LOG_INFOF("saved %d waypoints to maps/%s.waypoints", c, mapname);
 }
 
 // load waypoints from file
@@ -1119,7 +1119,7 @@ LABEL(next)
 
 	IL_EACH(g_waypoints, !(it.wpflags & (WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END)),
 	{
-		LOG_INFOF("Removed a waypoint at %v. Try again for more!\n", it.origin);
+		LOG_INFOF("Removed a waypoint at %v. Try again for more!", it.origin);
 		te_explosion(it.origin);
 		waypoint_remove(it);
 		break;

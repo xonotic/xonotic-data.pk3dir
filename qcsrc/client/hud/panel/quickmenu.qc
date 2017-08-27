@@ -88,7 +88,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 		{
 			fh = fopen(file, FILE_READ);
 			if(fh < 0)
-				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", file);
+				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu", file);
 		}
 		if(fh < 0)
 			mode = "default";

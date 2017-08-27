@@ -653,7 +653,7 @@ spawnfunc(worldspawn)
 				fclose(sentinel);
 				if (switchversion != "" && switchversion != WATERMARK)
 				{
-					LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
+					LOG_INFOF("Switching progs: " WATERMARK " -> %s", switchversion);
 					// if it doesn't exist, assume either:
 					//   a) the current program was overwritten
 					//   b) this is a client only update
@@ -674,7 +674,7 @@ spawnfunc(worldspawn)
 		}
 		if (wantrestart)
 		{
-			LOG_INFOF("Restart requested\n");
+			LOG_INFOF("Restart requested");
 			changelevel(mapname);
 			// let initialization continue, shutdown depends on it
 		}
