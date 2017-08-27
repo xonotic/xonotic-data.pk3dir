@@ -270,7 +270,6 @@ void W_Porto_Remove (entity p);
 .float bulletcounter;
 
 // Nexball
-.entity ballcarried; // Also used for keepaway
 float g_nexball_meter_period;
 
 void SUB_DontUseTargets(entity this, entity actor, entity trigger);

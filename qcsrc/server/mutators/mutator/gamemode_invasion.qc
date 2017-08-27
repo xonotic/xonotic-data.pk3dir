@@ -5,6 +5,9 @@
 
 #include <server/teamplay.qh>
 
+IntrusiveList g_invasion_roundends;
+STATIC_INIT(g_invasion_roundends) { g_invasion_roundends = IL_NEW(); }
+
 IntrusiveList g_invasion_waves;
 STATIC_INIT(g_invasion_waves) { g_invasion_waves = IL_NEW(); }
 
@@ -18,9 +21,45 @@ int autocvar_g_invasion_monster_count;
 bool autocvar_g_invasion_zombies_only;
 float autocvar_g_invasion_spawn_delay;
 
+bool victent_present;
+.bool inv_endreached;
+
 bool inv_warning_shown; // spammy
 
 .string spawnmob;
+
+void target_invasion_roundend_use(entity this, entity actor, entity trigger)
+{
+	if(!IS_PLAYER(actor)) { return; }
+
+	actor.inv_endreached = true;
+
+	int plnum = 0;
+	int realplnum = 0;
+	// let's not count bots
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
+		++realplnum;
+		if(it.inv_endreached)
+			++plnum;
+	});
+	if(plnum < ceil(realplnum * min(1, this.count))) // 70% of players
+		return;
+
+	this.winning = true;
+}
+
+spawnfunc(target_invasion_roundend)
+{
+	if(!g_invasion) { delete(this); return; }
+
+	victent_present = true; // a victory entity is present, we don't need to rely on monster count TODO: merge this with the intrusive list (can check empty)
+
+	if(!this.count) { this.count = 0.7; } // require at least 70% of the players to reach the end before triggering victory
+
+	this.use = target_invasion_roundend_use;
+
+	IL_PUSH(g_invasion_roundends, this);
+}
 
 spawnfunc(invasion_wave)
 {
@@ -35,6 +74,60 @@ spawnfunc(invasion_spawnpoint)
 
 	this.classname = "invasion_spawnpoint";
 	IL_PUSH(g_invasion_spawns, this);
+}
+
+void ClearWinners();
+
+// Invasion stage mode winning condition: If the attackers triggered a round end (by fulfilling all objectives)
+// they win.
+int WinningCondition_Invasion()
+{
+	WinningConditionHelper(NULL); // set worldstatus
+
+	int status = WINNING_NO;
+
+	if(autocvar_g_invasion_type == INV_TYPE_STAGE)
+	{
+		SetWinners(inv_endreached, true);
+
+		int found = 0;
+		IL_EACH(g_invasion_roundends, true,
+		{
+			++found;
+			if(it.winning)
+			{
+				bprint("Invasion: round completed.\n");
+				// winners already set (TODO: teamplay support)
+
+				status = WINNING_YES;
+				break;
+			}
+		});
+
+		if(!found)
+			status = WINNING_YES; // just end it? TODO: should warn mapper!
+	}
+	else if(autocvar_g_invasion_type == INV_TYPE_HUNT)
+	{
+		ClearWinners();
+
+		int found = 0; // NOTE: this ends the round if no monsters are placed
+		IL_EACH(g_monsters, !(it.spawnflags & MONSTERFLAG_RESPAWNED),
+		{
+			++found;
+		});
+
+		if(found <= 0)
+		{
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+			{
+				it.winning = true;
+			});
+			status = WINNING_YES;
+		}
+	}
+
+	return status;
 }
 
 Monster invasion_PickMonster(int supermonster_count)
@@ -253,7 +346,7 @@ bool Invasion_CheckWinner()
 	else
 	{
 		FOREACH_CLIENT(IS_PLAYER(it), {
-			float cs = PlayerScore_Add(it, SP_KILLS, 0);
+			float cs = GameRules_scoring_add(it, KILLS, 0);
 			if(cs > winning_score)
 			{
 				winning_score = cs;
@@ -328,16 +421,19 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 
 	if(!(frag_target.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
-		inv_numkilled += 1;
-		inv_maxcurrent -= 1;
+		if(autocvar_g_invasion_type == INV_TYPE_ROUND)
+		{
+			inv_numkilled += 1;
+			inv_maxcurrent -= 1;
+		}
 		if(teamplay) { inv_monsters_perteam[frag_target.team] -= 1; }
 
 		if(IS_PLAYER(frag_attacker))
 		if(SAME_TEAM(frag_attacker, frag_target)) // in non-teamplay modes, same team = same player, so this works
-			PlayerScore_Add(frag_attacker, SP_KILLS, -1);
+			GameRules_scoring_add(frag_attacker, KILLS, -1);
 		else
 		{
-			PlayerScore_Add(frag_attacker, SP_KILLS, +1);
+			GameRules_scoring_add(frag_attacker, KILLS, +1);
 			if(teamplay)
 				TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
 		}
@@ -347,6 +443,10 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 {
 	entity mon = M_ARGV(0, entity);
+	mon.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
+
+	if(autocvar_g_invasion_type == INV_TYPE_HUNT)
+		return false; // allowed
 
 	if(!(mon.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
@@ -361,29 +461,20 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 
 	if((get_monsterinfo(mon.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
-
-	mon.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
-}
-
-MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
-{
-	entity ent = M_ARGV(0, entity);
-
-	// TODO: allow these as "rogues" or something
-	if(startsWith(ent.classname, "monster_"))
-	if(!(ent.spawnflags & MONSTERFLAG_SPAWNED))
-		return true;
 }
 
 MUTATOR_HOOKFUNCTION(inv, SV_StartFrame)
 {
+	if(autocvar_g_invasion_type != INV_TYPE_ROUND)
+		return; // uses map spawned monsters
+
 	monsters_total = inv_maxspawned; // TODO: make sure numspawned never exceeds maxspawned
 	monsters_killed = inv_numkilled;
 }
 
 MUTATOR_HOOKFUNCTION(inv, PlayerRegen)
 {
-	// no regeneration in invasion
+	// no regeneration in invasion, regardless of the game type
 	return true;
 }
 
@@ -413,28 +504,6 @@ MUTATOR_HOOKFUNCTION(inv, Damage_Calculate)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(inv, SV_ParseClientCommand)
-{
-	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return;
-
-	entity player = M_ARGV(0, entity);
-	string cmd_name = M_ARGV(1, string);
-
-	if(cmd_name == "debuginvasion")
-	{
-		sprint(player, strcat("inv_maxspawned = ", ftos(inv_maxspawned), "\n"));
-		sprint(player, strcat("inv_numspawned = ", ftos(inv_numspawned), "\n"));
-		sprint(player, strcat("inv_numkilled = ", ftos(inv_numkilled), "\n"));
-		sprint(player, strcat("inv_roundcnt = ", ftos(inv_roundcnt), "\n"));
-		sprint(player, strcat("monsters_total = ", ftos(monsters_total), "\n"));
-		sprint(player, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
-		sprint(player, strcat("inv_monsterskill = ", ftos(inv_monsterskill), "\n"));
-
-		return true;
-	}
-}
-
 MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
 {
 	entity targ = M_ARGV(1, entity);
@@ -445,8 +514,11 @@ MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
 
 MUTATOR_HOOKFUNCTION(inv, SetStartItems)
 {
-	start_health = 200;
-	start_armorvalue = 200;
+	if(autocvar_g_invasion_type == INV_TYPE_ROUND)
+	{
+		start_health = 200;
+		start_armorvalue = 200;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(inv, AccuracyTargetValid)
@@ -465,6 +537,15 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobSpawning)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(inv, CheckRules_World)
+{
+	if(autocvar_g_invasion_type == INV_TYPE_ROUND)
+		return false;
+
+	M_ARGV(0, float) = WinningCondition_Invasion();
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(inv, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = invasion_teams;
@@ -479,24 +560,23 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 void invasion_ScoreRules(int inv_teams)
 {
 	if(inv_teams) { CheckAllowedTeams(NULL); }
-	ScoreRules_basics(inv_teams, 0, 0, false);
-	if(inv_teams) ScoreInfo_SetLabel_TeamScore(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
-	ScoreRules_basics_end();
+	GameRules_score_enabled(false);
+	GameRules_scoring(inv_teams, 0, 0, {
+	    if (inv_teams) {
+            field_team(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
+	    }
+	    field(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
+	});
 }
 
 void invasion_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
+	if(autocvar_g_invasion_type == INV_TYPE_HUNT || autocvar_g_invasion_type == INV_TYPE_STAGE)
+		cvar_set("fraglimit", "0");
+
 	if(autocvar_g_invasion_teams)
 	{
-		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);
-		int teams = 0;
-		if(invasion_teams >= 1) teams |= BIT(0);
-		if(invasion_teams >= 2) teams |= BIT(1);
-		if(invasion_teams >= 3) teams |= BIT(2);
-		if(invasion_teams >= 4) teams |= BIT(3);
-
-		invasion_teams = teams; // now set it?
+		invasion_teams = BITS(bound(2, autocvar_g_invasion_teams, 4));
 	}
 	else
 		invasion_teams = 0;
@@ -507,11 +587,14 @@ void invasion_DelayedInit(entity this) // Do this check with a delay so we can w
 
 	independent_players = 0;
 
-	round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
-	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
+	if(autocvar_g_invasion_type == INV_TYPE_ROUND)
+	{
+		round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
+		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 
-	inv_roundcnt = 0;
-	inv_maxrounds = 15; // 15?
+		inv_roundcnt = 0;
+		inv_maxrounds = 15; // 15?
+	}
 }
 
 void invasion_Initialize()

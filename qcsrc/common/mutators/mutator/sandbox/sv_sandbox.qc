@@ -407,7 +407,7 @@ void sandbox_Database_Load()
 	if(file_get < 0)
 	{
 		if(autocvar_g_sandbox_info > 0)
-			LOG_INFO(strcat("^3SANDBOX - SERVER: ^7could not find storage file ^3", file_name, "^7, no objects were loaded\n"));
+			LOG_INFO("^3SANDBOX - SERVER: ^7could not find storage file ^3", file_name, "^7, no objects were loaded");
 	}
 	else
 	{
@@ -432,7 +432,7 @@ void sandbox_Database_Load()
 			}
 		}
 		if(autocvar_g_sandbox_info > 0)
-			LOG_INFO(strcat("^3SANDBOX - SERVER: ^7successfully loaded storage file ^3", file_name, "\n"));
+			LOG_INFO("^3SANDBOX - SERVER: ^7successfully loaded storage file ^3", file_name);
 	}
 	fclose(file_get);
 }
@@ -524,7 +524,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				_setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
-					LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", player.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
+					LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " spawned an object at origin ^3", vtos(e.origin));
 				return true;
 
 			// ---------------- COMMAND: OBJECT, REMOVE ----------------
@@ -533,7 +533,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				if(e != NULL)
 				{
 					if(autocvar_g_sandbox_info > 0)
-						LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", player.netname, " removed an object at origin ^3", vtos(e.origin), "\n"));
+						LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " removed an object at origin ^3", vtos(e.origin));
 					sandbox_ObjectRemove(e);
 					return true;
 				}
@@ -582,7 +582,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 						print_to(player, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info > 0)
-							LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", player.netname, " pasted an object at origin ^3", vtos(e.origin), "\n"));
+							LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " pasted an object at origin ^3", vtos(e.origin));
 						return true;
 				}
 				return true;
@@ -617,7 +617,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							player.object_attach = NULL; // object was attached, no longer keep it scheduled for attachment
 							print_to(player, "^2SANDBOX - INFO: ^7Object attached successfully");
 							if(autocvar_g_sandbox_info > 1)
-								LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", player.netname, " attached objects at origin ^3", vtos(e.origin), "\n"));
+								LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " attached objects at origin ^3", vtos(e.origin));
 							return true;
 						}
 						print_to(player, "^1SANDBOX - WARNING: ^7Object could not be attached to the parent. Make sure you are facing an object that you have edit rights over");
@@ -630,7 +630,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							sandbox_ObjectAttach_Remove(e);
 							print_to(player, "^2SANDBOX - INFO: ^7Child objects detached successfully");
 							if(autocvar_g_sandbox_info > 1)
-								LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", player.netname, " detached objects at origin ^3", vtos(e.origin), "\n"));
+								LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " detached objects at origin ^3", vtos(e.origin));
 							return true;
 						}
 						print_to(player, "^1SANDBOX - WARNING: ^7Child objects could not be detached. Make sure you are facing an object that you have edit rights over");
@@ -721,7 +721,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S"));
 
 					if(autocvar_g_sandbox_info > 1)
-						LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", player.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin), "\n"));
+						LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin));
 					return true;
 				}
 

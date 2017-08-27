@@ -112,7 +112,7 @@ void turret_draw2d(entity this)
 	if(rgb == '0 0 0')
 	{
 		this.teamradar_color = '1 0 1';
-		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
+		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
 	}
 
 	txt = this.netname;

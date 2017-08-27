@@ -634,29 +634,40 @@ void Item_ScheduleRespawnIn(entity e, float t)
 AUTOCVAR(g_pickup_respawntime_scaling_reciprocal, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `reciprocal` (with `offset` and `linear` set to 0) can be used to achieve a constant number of items spawned *per player*");
 AUTOCVAR(g_pickup_respawntime_scaling_offset, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `offset` offsets the curve left or right - the results are not intuitive and I recommend plotting the respawn time and the number of items per player to see what's happening");
 AUTOCVAR(g_pickup_respawntime_scaling_linear, float, 1.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `linear` can be used to simply scale the respawn time linearly");
+
+float adjust_respawntime(float normal_respawntime) {
+	float r = autocvar_g_pickup_respawntime_scaling_reciprocal;
+	float o = autocvar_g_pickup_respawntime_scaling_offset;
+	float l = autocvar_g_pickup_respawntime_scaling_linear;
+
+	if (r == 0 && l == 1) {
+		return normal_respawntime;
+	}
+
+	CheckAllowedTeams(NULL);
+	GetTeamCounts(NULL);
+	int players = 0;
+	if (c1 != -1) players += c1;
+	if (c2 != -1) players += c2;
+	if (c3 != -1) players += c3;
+	if (c4 != -1) players += c4;
+
+	if (players >= 2) {
+		return normal_respawntime * (r / (players + o) + l);
+	} else {
+		return normal_respawntime;
+	}
+}
+
 void Item_ScheduleRespawn(entity e)
 {
 	if(e.respawntime > 0)
 	{
 		Item_Show(e, 0);
 
-		CheckAllowedTeams(NULL);
-		GetTeamCounts(NULL);
-		int players = 0;
-		if (c1 != -1) players += c1;
-		if (c2 != -1) players += c2;
-		if (c3 != -1) players += c3;
-		if (c4 != -1) players += c4;
-		float adjusted_respawntime;
-		if (players >= 2) {
-			float a = autocvar_g_pickup_respawntime_scaling_reciprocal;
-			float b = autocvar_g_pickup_respawntime_scaling_offset;
-			float c = autocvar_g_pickup_respawntime_scaling_linear;
-			adjusted_respawntime = e.respawntime * (a / (players + b) + c);
-		} else {
-			adjusted_respawntime = e.respawntime;
-		}
-		//LOG_INFOF("item %s will respawn in %f\n", e.classname, adjusted_respawntime);
+		float adjusted_respawntime = adjust_respawntime(e.respawntime);
+		//LOG_INFOF("item %s will respawn in %f", e.classname, adjusted_respawntime);
+
 		// range: adjusted_respawntime - respawntimejitter .. adjusted_respawntime + respawntimejitter
 		float actual_time = adjusted_respawntime + crandom() * e.respawntimejitter;
 		Item_ScheduleRespawnIn(e, actual_time);
@@ -671,7 +682,119 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
+void GivePlayerResource(entity player, .float resource_type, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	switch (resource_type)
+	{
+		case health:
+		{
+			// Ugly hack. We do not check if health goes beyond hard limit since
+			// currently it is done in player_regen. We need to bring back this
+			// check when other code is ported to this function.
+			player.health = bound(player.health, player.health + amount,
+				autocvar_g_balance_health_limit);
+			// Correct code:
+			//player.health = bound(player.health, player.health + amount,
+			//	min(autocvar_g_balance_health_limit,
+			//	RESOURCE_AMOUNT_HARD_LIMIT));
+			player.pauserothealth_finished = max(player.pauserothealth_finished,
+				time + autocvar_g_balance_pause_health_rot);
+			return;
+		}
+		case armorvalue:
+		{
+			// Ugly hack. We do not check if armor goes beyond hard limit since
+			// currently it is done in player_regen. We need to bring back this
+			// check when other code is ported to this function.
+			player.armorvalue = bound(player.armorvalue, player.armorvalue +
+				amount, autocvar_g_balance_armor_limit);
+			// Correct code:
+			//player.armorvalue = bound(player.armorvalue, player.armorvalue +
+			//	amount,	min(autocvar_g_balance_armor_limit,
+			//	RESOURCE_AMOUNT_HARD_LIMIT));
+			player.pauserotarmor_finished = max(player.pauserotarmor_finished,
+				time + autocvar_g_balance_pause_armor_rot);
+			return;
+		}
+		case ammo_shells:
+		case ammo_nails:
+		case ammo_rockets:
+		case ammo_cells:
+		case ammo_plasma:
+		{
+			GivePlayerAmmo(player, resource_type, amount);
+			return;
+		}
+		case ammo_fuel:
+		{
+			player.ammo_fuel = bound(player.ammo_fuel, player.ammo_fuel +
+				amount, min(g_pickup_fuel_max, RESOURCE_AMOUNT_HARD_LIMIT));
+			player.pauserotfuel_finished = max(player.pauserotfuel_finished,
+				time + autocvar_g_balance_pause_fuel_rot);
+			return;
+		}
+	}
+}
+
+void GivePlayerHealth(entity player, float amount)
+{
+	GivePlayerResource(player, health, amount);
+}
+
+void GivePlayerArmor(entity player, float amount)
+{
+	GivePlayerResource(player, armorvalue, amount);
+}
+
+void GivePlayerAmmo(entity player, .float ammotype, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	float maxvalue = RESOURCE_AMOUNT_HARD_LIMIT;
+	switch (ammotype)
+	{
+		case ammo_shells:
+		{
+			maxvalue = g_pickup_shells_max;
+			break;
+		}
+		case ammo_cells:
+		{
+			maxvalue = g_pickup_cells_max;
+			break;
+		}
+		case ammo_rockets:
+		{
+			maxvalue = g_pickup_rockets_max;
+			break;
+		}
+		case ammo_plasma:
+		{
+			maxvalue = g_pickup_plasma_max;
+			break;
+		}
+		case ammo_nails:
+		{
+			maxvalue = g_pickup_nails_max;
+			break;
+		}
+	}
+	player.(ammotype) = min(player.(ammotype) + amount,
+		min(maxvalue, RESOURCE_AMOUNT_HARD_LIMIT));
+}
+
+void GivePlayerFuel(entity player, float amount)
+{
+	GivePlayerResource(player, ammo_fuel, amount);
+}
+
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax)
 {
 	if (!item.(ammotype))
 		return false;
@@ -680,8 +803,13 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 	{
 		if ((player.(ammotype) < ammomax) || item.pickup_anyway > 0)
 		{
-			player.(ammotype) = bound(player.(ammotype), ammomax, player.(ammotype) + item.(ammotype));
-			goto YEAH;
+			float amount = item.(ammotype);
+			if ((player.(ammotype) + amount) > ammomax)
+			{
+				amount = ammomax - player.(ammotype);
+			}
+			GivePlayerResource(player, ammotype, amount);
+			return true;
 		}
 	}
 	else if(g_weapon_stay == 2)
@@ -689,29 +817,11 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 		float mi = min(item.(ammotype), ammomax);
 		if (player.(ammotype) < mi)
 		{
-			player.(ammotype) = mi;
-			goto YEAH;
+			GivePlayerResource(player, ammotype, mi - player.(ammotype));
 		}
+		return true;
 	}
-
 	return false;
-
-LABEL(YEAH)
-	switch(mode)
-	{
-		case ITEM_MODE_FUEL:
-			player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
-			break;
-		case ITEM_MODE_HEALTH:
-			player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-			break;
-		case ITEM_MODE_ARMOR:
-			player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
-			break;
-		default:
-			break;
-	}
-	return true;
 }
 
 float Item_GiveTo(entity item, entity player)
@@ -740,16 +850,14 @@ float Item_GiveTo(entity item, entity player)
 			}
 		}
 	}
-
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_plasma, g_pickup_plasma_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
-	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
-
+	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health);
+	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_plasma, g_pickup_plasma_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w;
