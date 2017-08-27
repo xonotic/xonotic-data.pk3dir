@@ -33,17 +33,9 @@ REGISTER_MUTATOR(ca, false)
 		ca_teams = autocvar_g_ca_teams_override;
 		if (ca_teams < 2)
 			ca_teams = cvar("g_ca_teams"); // read the cvar directly as it gets written earlier in the same frame
-		ca_teams = bound(2, ca_teams, 4);
 
-		int teams = 0;
-		if(ca_teams >= 1) teams |= BIT(0);
-		if(ca_teams >= 2) teams |= BIT(1);
-		if(ca_teams >= 3) teams |= BIT(2);
-		if(ca_teams >= 4) teams |= BIT(3);
-
-		ca_teams = teams; // now set it?
-
-        GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+		ca_teams = BITS(bound(2, ca_teams, 4));
+        GameRules_scoring(ca_teams, SFL_SORT_PRIO_PRIMARY, 0, {
             field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
         });
 

@@ -986,15 +986,7 @@ void kh_Initialize()  // sets up th KH environment
 	kh_teams = autocvar_g_keyhunt_teams_override;
 	if(kh_teams < 2)
 		kh_teams = cvar("g_keyhunt_teams"); // read the cvar directly as it gets written earlier in the same frame
-	kh_teams = bound(2, kh_teams, 4);
-
-	int teams = 0;
-	if(kh_teams >= 1) teams |= BIT(0);
-	if(kh_teams >= 2) teams |= BIT(1);
-	if(kh_teams >= 3) teams |= BIT(2);
-	if(kh_teams >= 4) teams |= BIT(3);
-
-	kh_teams = teams; // now set it?
+	kh_teams = BITS(bound(2, kh_teams, 4));
 
 	// make a KH entity for controlling the game
 	kh_controller = spawn();

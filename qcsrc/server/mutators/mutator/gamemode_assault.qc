@@ -618,10 +618,7 @@ MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 // scoreboard setup
 void assault_ScoreRules()
 {
-	int teams = 0;
-	teams |= BIT(0);
-	teams |= BIT(1); // always red vs blue
-
+	int teams = BITS(2); // always red vs blue
     GameRules_scoring(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, {
         field_team(ST_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
         field(SP_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);

@@ -440,14 +440,7 @@ void rc_SetLimits()
 	if(autocvar_g_race_teams)
 	{
 		GameRules_teams(true);
-		race_teams = bound(2, autocvar_g_race_teams, 4);
-		int teams = 0;
-		if(race_teams >= 1) teams |= BIT(0);
-		if(race_teams >= 2) teams |= BIT(1);
-		if(race_teams >= 3) teams |= BIT(2);
-		if(race_teams >= 4) teams |= BIT(3);
-
-		race_teams = teams; // now set it?
+		race_teams = BITS(bound(2, autocvar_g_race_teams, 4));
 	}
 	else
 		race_teams = 0;

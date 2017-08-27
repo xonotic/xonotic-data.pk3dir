@@ -7,13 +7,6 @@ float autocvar_g_freezetag_round_timelimit;
 int autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
 
-void freezetag_ScoreRules(int teams)
-{
-	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
-	    field(SP_FREEZETAG_REVIVALS, "revivals", 0);
-	});
-}
-
 void freezetag_count_alive_players()
 {
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
@@ -579,16 +572,11 @@ void freezetag_Initialize()
 	freezetag_teams = autocvar_g_freezetag_teams_override;
 	if(freezetag_teams < 2)
 		freezetag_teams = cvar("g_freezetag_teams"); // read the cvar directly as it gets written earlier in the same frame
-	freezetag_teams = bound(2, freezetag_teams, 4);
 
-	int teams = 0;
-	if(freezetag_teams >= 1) teams |= BIT(0);
-	if(freezetag_teams >= 2) teams |= BIT(1);
-	if(freezetag_teams >= 3) teams |= BIT(2);
-	if(freezetag_teams >= 4) teams |= BIT(3);
-
-	freezetag_teams = teams; // now set it?
-	freezetag_ScoreRules(freezetag_teams);
+	freezetag_teams = BITS(bound(2, freezetag_teams, 4));
+	GameRules_scoring(freezetag_teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
+	    field(SP_FREEZETAG_REVIVALS, "revivals", 0);
+	});
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
