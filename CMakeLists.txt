@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 project(xonotic-data ASM)
 
+set(all qc-all)
+add_custom_target(${all})
+
 set(checks qc-checks)
 add_custom_target(${checks})
 
@@ -73,14 +76,17 @@ set_source_files_properties(
 )
 
 add_executable(csprogs qcsrc/client/progs.inc)
+add_dependencies(${all} csprogs)
 add_dependencies(csprogs ${checks})
 target_compile_definitions(csprogs PRIVATE -DGAMEQC -DCSQC)
 
 add_executable(progs qcsrc/server/progs.inc)
+add_dependencies(${all} progs)
 add_dependencies(progs ${checks})
 target_compile_definitions(progs PRIVATE -DGAMEQC -DSVQC)
 
 add_executable(menu qcsrc/menu/progs.inc)
+add_dependencies(${all} menu)
 add_dependencies(menu ${checks})
 target_compile_definitions(menu PRIVATE -DMENUQC)
 

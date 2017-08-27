@@ -1136,7 +1136,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".");
 	}
 }
 

@@ -67,7 +67,7 @@ CLASS(GameItem, Object)
     METHOD(GameItem, show, void(GameItem this))
     {
         TC(GameItem, this);
-        LOG_INFO("A game item\n");
+        LOG_INFO("A game item");
     }
     void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
 ENDCLASS(GameItem)
