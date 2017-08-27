@@ -91,7 +91,7 @@
 #include <server/weapons/weaponsystem.qh>
 
 #include <common/physics/player.qh>
-#include <common/effects/qc/all.qh>
+#include <common/effects/qc/_mod.qh>
 #include <common/deathtypes/all.qh>
 #include <common/notifications/all.qh>
 #include <common/triggers/teleporters.qh>

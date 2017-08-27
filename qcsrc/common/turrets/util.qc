@@ -1,4 +1,7 @@
 #include "util.qh"
+
+#ifdef SVQC
+
 /*
 * Update this.tur_shotorg by getting up2date bone info
 * NOTICE this func overwrites the global v_forward, v_right and v_up vectors.
@@ -209,4 +212,6 @@ void paint_target3(vector where, float f_size, vector v_color, float f_time)
 	e.colormod = v_color;
 	SUB_SetFade(e,time,f_time);
 }
+#endif
+
 #endif

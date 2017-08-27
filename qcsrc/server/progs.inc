@@ -5,7 +5,7 @@
 #include <server/_mod.inc>
 
 #include <common/_all.inc>
-#include <common/effects/qc/all.qc>
+#include <common/effects/qc/_mod.inc>
 
 #include <lib/csqcmodel/sv_model.qc>
 

@@ -11,3 +11,5 @@
     #include <common/turrets/sv_turrets.qc>
 #endif
 #include <common/turrets/util.qc>
+
+#include <common/turrets/turret/_mod.inc>

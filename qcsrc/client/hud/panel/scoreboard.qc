@@ -153,13 +153,12 @@ float SetTeam(entity pl, float Team);
 //float lastpnum;
 void Scoreboard_UpdatePlayerTeams()
 {
-	float Team;
 	entity pl, tmp;
 	//int num = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		//num += 1;
-		Team = entcs_GetScoreTeam(pl.sv_entnum);
+		int Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
 		{
 			tmp = pl.sort_prev;
