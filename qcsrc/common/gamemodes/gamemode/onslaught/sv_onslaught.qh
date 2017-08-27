@@ -5,29 +5,14 @@ void ons_Initialize();
 
 REGISTER_MUTATOR(ons, false)
 {
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
 		ons_Initialize();
 
 		GameRules_teams(true);
 		GameRules_limit_score(autocvar_g_onslaught_point_limit);
 	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ons_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return false;
 }
 

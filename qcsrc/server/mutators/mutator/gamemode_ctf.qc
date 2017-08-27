@@ -6,30 +6,15 @@ void ctf_Initialize();
 
 REGISTER_MUTATOR(ctf, false)
 {
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
 		ctf_Initialize();
 
 		GameRules_teams(true);
         GameRules_limit_score(autocvar_capturelimit_override);
         GameRules_limit_lead(autocvar_captureleadlimit_override);
 	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ctf_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return 0;
 }
 #endif

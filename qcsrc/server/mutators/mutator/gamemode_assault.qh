@@ -6,28 +6,12 @@ void assault_ScoreRules();
 
 REGISTER_MUTATOR(as, false)
 {
-	GameRules_teams(true);
-
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+        GameRules_teams(true);
 		assault_ScoreRules();
 	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back assault_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return 0;
 }
 

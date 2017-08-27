@@ -9,10 +9,9 @@ void freezetag_Initialize();
 
 REGISTER_MUTATOR(ft, false)
 {
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
 		freezetag_Initialize();
 
 		GameRules_teams(true);
@@ -21,20 +20,6 @@ REGISTER_MUTATOR(ft, false)
 
         GameRules_spawning_teams(autocvar_g_freezetag_team_spawns);
 	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back freezetag_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return 0;
 }
 

@@ -23,11 +23,9 @@ bool ca_isEliminated(entity e);
 
 REGISTER_MUTATOR(ca, false)
 {
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		// game loads at time 1
-		if (time > 1) error("This is a game type and it cannot be added at runtime.");
-
 		allowed_to_spawn = true;
 
 		ca_teams = autocvar_g_ca_teams_override;
@@ -50,13 +48,6 @@ REGISTER_MUTATOR(ca, false)
 
         GameRules_spawning_teams(autocvar_g_ca_team_spawns);
 	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return 0;
 }
 

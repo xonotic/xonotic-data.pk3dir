@@ -9,10 +9,9 @@ void kh_Initialize();
 
 REGISTER_MUTATOR(kh, false)
 {
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
 		kh_Initialize();
 
 		GameRules_teams(true);
@@ -20,20 +19,6 @@ REGISTER_MUTATOR(kh, false)
         GameRules_limit_lead(autocvar_g_keyhunt_point_leadlimit);
         GameRules_spawning_teams(autocvar_g_keyhunt_team_spawns);
 	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back kh_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return 0;
 }
 

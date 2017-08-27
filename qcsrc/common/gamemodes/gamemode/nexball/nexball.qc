@@ -1141,6 +1141,7 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 
 REGISTER_MUTATOR(nb, g_nexball)
 {
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		g_nexball_meter_period = autocvar_g_nexball_meter_period;
@@ -1168,17 +1169,7 @@ REGISTER_MUTATOR(nb, g_nexball)
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
 		WEP_NEXBALL.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		// we actually cannot roll back nb_delayedinit here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
 	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return 0;
 }
 
