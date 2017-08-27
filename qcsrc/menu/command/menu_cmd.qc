@@ -16,15 +16,15 @@ void _dumptree_open(entity pass, entity me)
 	s = me.toString(me);
 	if (s == "") s = me.classname;
 	else s = strcat(me.classname, ": ", s);
-	LOG_INFO(_dumptree_space, etos(me), " (", s, ")");
+	print(_dumptree_space, etos(me), " (", s, ")");
 	if (me.firstChild)
 	{
-		LOG_INFO(" {\n");
+		print(" {\n");
 		_dumptree_space = strcat(_dumptree_space, "  ");
 	}
 	else
 	{
-		LOG_INFO("\n");
+		print("\n");
 	}
 }
 void _dumptree_close(entity pass, entity me)
@@ -32,7 +32,7 @@ void _dumptree_close(entity pass, entity me)
 	if (me.firstChild)
 	{
 		_dumptree_space = substring(_dumptree_space, 0, strlen(_dumptree_space) - 2);
-		LOG_INFO(_dumptree_space, "}\n");
+		print(_dumptree_space, "}\n");
 	}
 }
 
@@ -49,7 +49,7 @@ void GameCommand(string theCommand)
 		LOG_INFO(_("  sync - reloads all cvars on the current menu page\n"));
 		LOG_INFO(_("  directmenu ITEM - select a menu item as main item\n"));
 
-		LOG_INFO("\nGeneric commands shared by all programs:\n");
+		LOG_INFO("Generic commands shared by all programs:\n");
 		GenericCommand_macro_help();
 
 		return;

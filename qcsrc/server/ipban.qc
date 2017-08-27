@@ -100,11 +100,11 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 	tokenize_console(autocvar_g_ban_sync_uri);
 	uri = argv(id);
 
-	LOG_INFO("Received ban list from ", uri, ": ");
+	string prelude = strcat("Received ban list from ", uri, ": ");
 
 	if(OnlineBanList_RequestWaiting[id] == 0)
 	{
-		LOG_INFO("rejected (unexpected)\n");
+		LOG_INFO(prelude, "rejected (unexpected)\n");
 		return;
 	}
 
@@ -112,14 +112,14 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if(time > OnlineBanList_Timeout)
 	{
-		LOG_INFO("rejected (too late)\n");
+		LOG_INFO(prelude, "rejected (too late)\n");
 		return;
 	}
 
 	syncinterval = autocvar_g_ban_sync_interval;
 	if(syncinterval == 0)
 	{
-		LOG_INFO("rejected (syncing disabled)\n");
+		LOG_INFO(prelude, "rejected (syncing disabled)\n");
 		return;
 	}
 	if(syncinterval > 0)
@@ -127,19 +127,19 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if(status != 0)
 	{
-		LOG_INFO("error: status is ", ftos(status), "\n");
+		LOG_INFO(prelude, "error: status is ", ftos(status), "\n");
 		return;
 	}
 
 	if(substring(data, 0, 1) == "<")
 	{
-		LOG_INFO("error: received HTML instead of a ban list\n");
+		LOG_INFO(prelude, "error: received HTML instead of a ban list\n");
 		return;
 	}
 
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		LOG_INFO("error: received carriage returns\n");
+		LOG_INFO(prelude, "error: received carriage returns\n");
 		return;
 	}
 
@@ -150,11 +150,11 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if((n % 4) != 0)
 	{
-		LOG_INFO("error: received invalid item count: ", ftos(n), "\n");
+		LOG_INFO(prelude, "error: received invalid item count: ", ftos(n), "\n");
 		return;
 	}
 
-	LOG_INFO("OK, ", ftos(n / 4), " items\n");
+	LOG_INFO(prelude, "OK, ", ftos(n / 4), " items\n");
 
 	for(i = 0; i < n; i += 4)
 	{
@@ -191,8 +191,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 			// the ban will be prolonged on the next sync
 			// or expire 5 seconds after the next timeout
 		Ban_Insert(ip, timeleft, strcat("ban synced from ", serverip, " at ", uri), 0);
-		LOG_INFO("Ban list syncing: accepted ban of ", ip, " by ", serverip, " at ", uri, ": ");
-		LOG_INFO(reason, "\n");
+		LOG_INFO("Ban list syncing: accepted ban of ", ip, " by ", serverip, " at ", uri, ": ", reason);
 
 LABEL(skip)
 	}

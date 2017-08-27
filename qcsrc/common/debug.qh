@@ -177,7 +177,7 @@ bool autocvar_debugdraw;
 			default:
 			case CMD_REQUEST_USAGE:
 			{
-				LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv"));
+				LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
 				return;
 			}
 		}
@@ -201,7 +201,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index");
 			return;
 		}
 	}
@@ -219,7 +219,7 @@ GENERIC_COMMAND(version, "Print the current version")
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " version"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " version");
 			return;
 		}
 	}
@@ -253,7 +253,7 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " cvar_localchanges");
 			return;
 		}
 	}
@@ -340,7 +340,7 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
         }
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 " GetProgramCommandPrefix() " find classname\n");
+			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " find classname\n");
 			LOG_INFO("  Where 'classname' is the classname to search for.\n");
 			return;
 		}
@@ -362,7 +362,7 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin")
 			LOG_INFO("Incorrect parameters for ^2findat^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"\n");
+			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"\n");
 			return;
 		}
 	}

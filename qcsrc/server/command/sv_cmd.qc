@@ -156,7 +156,7 @@ void GameCommand_adminmsg(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2adminmsg^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd adminmsg clients \"message\" [infobartime]\n");
+			LOG_INFO("Usage:^3 sv_cmd adminmsg clients \"message\" [infobartime]\n");
 			LOG_INFO("  'clients' is a list (separated by commas) of player entity ID's or nicknames\n");
 			LOG_INFO("  If infobartime is provided, the message will be sent to infobar.\n");
 			LOG_INFO("  Otherwise, it will just be sent as a centerprint message.\n");
@@ -180,7 +180,7 @@ void GameCommand_allready(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd allready\n");
+			LOG_INFO("Usage:^3 sv_cmd allready\n");
 			LOG_INFO("  No arguments required.\n");
 			return;
 		}
@@ -208,7 +208,7 @@ void GameCommand_allspec(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd allspec [reason]\n");
+			LOG_INFO("Usage:^3 sv_cmd allspec [reason]\n");
 			LOG_INFO("  Where 'reason' is an optional argument for explanation of allspec command.\n");
 			LOG_INFO("See also: ^2moveplayer, shuffleteams^7\n");
 			return;
@@ -240,7 +240,7 @@ void GameCommand_anticheat(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2anticheat^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd anticheat client\n");
+			LOG_INFO("Usage:^3 sv_cmd anticheat client\n");
 			LOG_INFO("  'client' is the entity number or name of the player.\n");
 			return;
 		}
@@ -312,7 +312,7 @@ void GameCommand_bbox(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd bbox\n");
+			LOG_INFO("Usage:^3 sv_cmd bbox\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2gettaginfo, trace^7\n");
 			return;
@@ -415,7 +415,7 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 						bot_num++;
 					});
 					if(bot_num)
-						LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to all bots (", ftos(bot_num), ")\n"));
+						LOG_INFO("Command '", substring(command, argv_start_index(2), -1), "' sent to all bots (", ftos(bot_num), ")\n");
 					return;
 				}
 				else
@@ -424,13 +424,13 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 					if (bot == NULL) bot = find_bot_by_name(argv(1));
 					if (bot)
 					{
-						LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
+						LOG_INFO("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n");
 						bot_queuecommand(bot, substring(command, argv_start_index(2), -1));
 						return;
 					}
 					else
 					{
-						LOG_INFO(strcat("Error: Can't find bot with the name or id '", argv(1), "' - Did you mistype the command?\n"));  // don't return so that usage is shown
+						LOG_INFO("Error: Can't find bot with the name or id '", argv(1), "' - Did you mistype the command?\n");  // don't return so that usage is shown
 					}
 				}
 			}
@@ -440,7 +440,7 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 			LOG_INFO("Incorrect parameters for ^2bot_cmd^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd bot_cmd client command [argument]\n");
+			LOG_INFO("Usage:^3 sv_cmd bot_cmd client command [argument]\n");
 			LOG_INFO("  'client' can be either the name of the bot or a progressive number (not the entity number!)\n");
 			LOG_INFO("           can also be '*' or 'all' to allow sending the command to all the bots\n");
 			LOG_INFO("  For full list of commands, see bot_cmd help [command].\n");
@@ -469,7 +469,7 @@ void GameCommand_cointoss(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd cointoss [result1 result2]\n");
+			LOG_INFO("Usage:^3 sv_cmd cointoss [result1 result2]\n");
 			LOG_INFO("  Where 'result1' and 'result2' are user created options.\n");
 			return;
 		}
@@ -487,7 +487,7 @@ void GameCommand_database(float request, float argc)
 				if (argv(1) == "save")
 				{
 					db_save(ServerProgsDB, argv(2));
-					LOG_INFO(strcat("Copied serverprogs database to '", argv(2), "' in the data directory.\n"));
+					LOG_INFO("Copied serverprogs database to '", argv(2), "' in the data directory.\n");
 					return;
 				}
 				else if (argv(1) == "dump")
@@ -500,7 +500,7 @@ void GameCommand_database(float request, float argc)
 				{
 					db_close(ServerProgsDB);
 					ServerProgsDB = db_load(argv(2));
-					LOG_INFO(strcat("Loaded '", argv(2), "' as new serverprogs database.\n"));
+					LOG_INFO("Loaded '", argv(2), "' as new serverprogs database.\n");
 					return;
 				}
 			}
@@ -510,7 +510,7 @@ void GameCommand_database(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2database^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd database action filename\n");
+			LOG_INFO("Usage:^3 sv_cmd database action filename\n");
 			LOG_INFO("  Where 'action' is the command to complete,\n");
 			LOG_INFO("  and 'filename' is what it acts upon.\n");
 			LOG_INFO("  Full list of commands here: \"save, dump, load.\"\n");
@@ -548,7 +548,7 @@ void GameCommand_defer_clear(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2defer_clear^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd defer_clear client\n");
+			LOG_INFO("Usage:^3 sv_cmd defer_clear client\n");
 			LOG_INFO("  'client' is the entity number or name of the player.\n");
 			LOG_INFO("See also: ^2defer_clear_all^7\n");
 			return;
@@ -570,14 +570,14 @@ void GameCommand_defer_clear_all(float request)
 				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
 				++n;
 			});
-			if (n)   LOG_INFO(strcat("Successfully stuffed defer clear to all clients (", ftos(n), ")\n"));  // should a message be added if no players were found?
+			if (n)   LOG_INFO("Successfully stuffed defer clear to all clients (", ftos(n), ")\n");  // should a message be added if no players were found?
 			return;
 		}
 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd defer_clear_all\n");
+			LOG_INFO("Usage:^3 sv_cmd defer_clear_all\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2defer_clear^7\n");
 			return;
@@ -603,7 +603,7 @@ void GameCommand_delrec(float request, float argc)  // perhaps merge later with 
 			LOG_INFO("Incorrect parameters for ^2delrec^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd delrec ranking [map]\n");
+			LOG_INFO("Usage:^3 sv_cmd delrec ranking [map]\n");
 			LOG_INFO("  'ranking' is which ranking level to clear up to, \n");
 			LOG_INFO("  it will clear all records up to nth place.\n");
 			LOG_INFO("  if 'map' is not provided it will use current map.\n");
@@ -719,7 +719,7 @@ void GameCommand_effectindexdump(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd effectindexdump\n");
+			LOG_INFO("Usage:^3 sv_cmd effectindexdump\n");
 			LOG_INFO("  No arguments required.\n");
 			return;
 		}
@@ -739,7 +739,7 @@ void GameCommand_extendmatchtime(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd extendmatchtime\n");
+			LOG_INFO("Usage:^3 sv_cmd extendmatchtime\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2reducematchtime^7\n");
 			return;
@@ -789,7 +789,7 @@ void GameCommand_gametype(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2gametype^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd gametype mode\n");
+			LOG_INFO("Usage:^3 sv_cmd gametype mode\n");
 			LOG_INFO("  Where 'mode' is the gametype mode to switch to.\n");
 			LOG_INFO("See also: ^2gotomap^7\n");
 			return;
@@ -826,13 +826,15 @@ void GameCommand_gettaginfo(float request, float argc)
 				if (i)
 				{
 					v = gettaginfo(tmp_entity, i);
-					LOG_INFO("model ", tmp_entity.model, " frame ", ftos(tmp_entity.frame), " tag ", gettaginfo_name);
-					LOG_INFO(" index ", ftos(i), " parent ", ftos(gettaginfo_parent), "\n");
-					LOG_INFO(" vector = ", ftos(v.x), " ", ftos(v.y), " ", ftos(v.z), "\n");
-					LOG_INFO(" offset = ", ftos(gettaginfo_offset.x), " ", ftos(gettaginfo_offset.y), " ", ftos(gettaginfo_offset.z), "\n");
-					LOG_INFO(" forward = ", ftos(gettaginfo_forward.x), " ", ftos(gettaginfo_forward.y), " ", ftos(gettaginfo_forward.z), "\n");
-					LOG_INFO(" right = ", ftos(gettaginfo_right.x), " ", ftos(gettaginfo_right.y), " ", ftos(gettaginfo_right.z), "\n");
-					LOG_INFO(" up = ", ftos(gettaginfo_up.x), " ", ftos(gettaginfo_up.y), " ", ftos(gettaginfo_up.z), "\n");
+					LOG_INFOF(
+					    "model %s frame %s tag %s index %s parent %s",
+					    tmp_entity.model, ftos(tmp_entity.frame), gettaginfo_name, ftos(i), ftos(gettaginfo_parent)
+					);
+					LOG_INFOF(" vector = %s %s %s", ftos(v.x), ftos(v.y), ftos(v.z));
+					LOG_INFOF(" offset = %s %s %s", ftos(gettaginfo_offset.x), ftos(gettaginfo_offset.y), ftos(gettaginfo_offset.z));
+					LOG_INFOF(" forward = %s %s %s", ftos(gettaginfo_forward.x), ftos(gettaginfo_forward.y), ftos(gettaginfo_forward.z));
+					LOG_INFOF(" right = %s %s %s", ftos(gettaginfo_right.x), ftos(gettaginfo_right.y), ftos(gettaginfo_right.z));
+					LOG_INFOF(" up = %s %s %s", ftos(gettaginfo_up.x), ftos(gettaginfo_up.y), ftos(gettaginfo_up.z));
 					if (argc >= 6)
 					{
 						v.y = -v.y;
@@ -853,7 +855,7 @@ void GameCommand_gettaginfo(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2gettaginfo^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
+			LOG_INFO("Usage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
 			LOG_INFO("See also: ^2bbox, trace^7\n");
 			return;
 		}
@@ -912,7 +914,7 @@ void GameCommand_animbench(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2gettaginfo^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
+			LOG_INFO("Usage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
 			LOG_INFO("See also: ^2bbox, trace^7\n");
 			return;
 		}
@@ -936,7 +938,7 @@ void GameCommand_gotomap(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2gotomap^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd gotomap map\n");
+			LOG_INFO("Usage:^3 sv_cmd gotomap map\n");
 			LOG_INFO("  Where 'map' is the *.bsp file to change to.\n");
 			LOG_INFO("See also: ^2gametype^7\n");
 			return;
@@ -965,7 +967,7 @@ void GameCommand_lockteams(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd lockteams\n");
+			LOG_INFO("Usage:^3 sv_cmd lockteams\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2unlockteams^7\n");
 			return;
@@ -991,7 +993,7 @@ void GameCommand_make_mapinfo(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd make_mapinfo\n");
+			LOG_INFO("Usage:^3 sv_cmd make_mapinfo\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2radarmap^7\n");
 			return;
@@ -1123,7 +1125,7 @@ void GameCommand_moveplayer(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2moveplayer^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd moveplayer clients destination\n");
+			LOG_INFO("Usage:^3 sv_cmd moveplayer clients destination\n");
 			LOG_INFO("  'clients' is a list (separated by commas) of player entity ID's or nicknames\n");
 			LOG_INFO("  'destination' is what to send the player to, be it team or spectating\n");
 			LOG_INFO("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"\n");
@@ -1157,7 +1159,7 @@ void GameCommand_nospectators(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd nospectators\n");
+			LOG_INFO("Usage:^3 sv_cmd nospectators\n");
 			LOG_INFO("  No arguments required.\n");
 			return;
 		}
@@ -1237,7 +1239,7 @@ void GameCommand_playerdemo(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2playerdemo^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd playerdemo command (entitynumber filename | entitynumber botnumber)\n");
+			LOG_INFO("Usage:^3 sv_cmd playerdemo command (entitynumber filename | entitynumber botnumber)\n");
 			LOG_INFO("  Full list of commands here: \"read, write, auto_read_and_write, auto_read.\"\n");
 			return;
 		}
@@ -1258,7 +1260,7 @@ void GameCommand_printstats(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd printstats\n");
+			LOG_INFO("Usage:^3 sv_cmd printstats\n");
 			LOG_INFO("  No arguments required.\n");
 			return;
 		}
@@ -1278,7 +1280,7 @@ void GameCommand_radarmap(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2radarmap^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]\n");
+			LOG_INFO("Usage:^3 sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]\n");
 			LOG_INFO("  The quality factor Q is roughly proportional to the time taken.\n");
 			LOG_INFO("  trace supports no quality factor; its result should look like --block with infinite quality factor.\n");
 			LOG_INFO("See also: ^2make_mapinfo^7\n");
@@ -1300,7 +1302,7 @@ void GameCommand_reducematchtime(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd reducematchtime\n");
+			LOG_INFO("Usage:^3 sv_cmd reducematchtime\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2extendmatchtime^7\n");
 			return;
@@ -1327,7 +1329,7 @@ void GameCommand_setbots(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2setbots^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd setbots botnumber\n");
+			LOG_INFO("Usage:^3 sv_cmd setbots botnumber\n");
 			LOG_INFO("  Where 'botnumber' is the amount of bots to set bot_number cvar to.\n");
 			LOG_INFO("See also: ^2bot_cmd^7\n");
 			return;
@@ -1378,7 +1380,7 @@ void GameCommand_shuffleteams(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd shuffleteams\n");
+			LOG_INFO("Usage:^3 sv_cmd shuffleteams\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2moveplayer, allspec^7\n");
 			return;
@@ -1405,7 +1407,7 @@ void GameCommand_stuffto(float request, float argc)
 					if (accepted > 0)
 					{
 						stuffcmd(client, strcat("\n", argv(next_token), "\n"));
-						LOG_INFO(strcat("Command: \"", argv(next_token), "\" sent to ", GetCallerName(client), " (", argv(1), ").\n"));
+						LOG_INFO("Command: \"", argv(next_token), "\" sent to ", GetCallerName(client), " (", argv(1), ").");
 					}
 					else
 					{
@@ -1420,7 +1422,7 @@ void GameCommand_stuffto(float request, float argc)
 				LOG_INFO("Incorrect parameters for ^2stuffto^7\n");
 			case CMD_REQUEST_USAGE:
 			{
-				LOG_INFO("\nUsage:^3 sv_cmd stuffto client \"command\"\n");
+				LOG_INFO("Usage:^3 sv_cmd stuffto client \"command\"\n");
 				LOG_INFO("  'client' is the entity number or name of the player,\n");
 				LOG_INFO("  and 'command' is the command to be sent to that player.\n");
 				return;
@@ -1596,7 +1598,7 @@ void GameCommand_trace(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2trace^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd trace command (startpos endpos)\n");
+			LOG_INFO("Usage:^3 sv_cmd trace command (startpos endpos)\n");
 			LOG_INFO("  Full list of commands here: \"debug, debug2, walk, showline.\"\n");
 			LOG_INFO("See also: ^2bbox, gettaginfo^7\n");
 			return;
@@ -1625,7 +1627,7 @@ void GameCommand_unlockteams(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd unlockteams\n");
+			LOG_INFO("Usage:^3 sv_cmd unlockteams\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2lockteams^7\n");
 			return;
@@ -1662,7 +1664,7 @@ void GameCommand_warp(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 sv_cmd warp [level]\n");
+			LOG_INFO("Usage:^3 sv_cmd warp [level]\n");
 			LOG_INFO("  'level' is the level to change campaign mode to.\n");
 			LOG_INFO("  if 'level' is not provided it will change to the next level.\n");
 			return;
@@ -1780,20 +1782,22 @@ void GameCommand(string command)
 	{
 		if (argc == 1)
 		{
-			LOG_INFO("\nServer console commands:\n");
+			LOG_INFO("Server console commands:");
 			GameCommand_macro_help();
 
-			LOG_INFO("\nBanning commands:\n");
+			LOG_INFO("\nBanning commands:");
 			BanCommand_macro_help();
 
-			LOG_INFO("\nCommon networked commands:\n");
+			LOG_INFO("\nCommon networked commands:");
 			CommonCommand_macro_help(NULL);
 
-			LOG_INFO("\nGeneric commands shared by all programs:\n");
+			LOG_INFO("\nGeneric commands shared by all programs:");
 			GenericCommand_macro_help();
 
-			LOG_INFO("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are listed above.\n");
-			LOG_INFO("For help about a specific command, type sv_cmd help COMMAND\n");
+			LOG_INFO(
+			    "\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are listed above.\n"
+                "For help about a specific command, type sv_cmd help COMMAND"
+            );
 
 			return;
 		}

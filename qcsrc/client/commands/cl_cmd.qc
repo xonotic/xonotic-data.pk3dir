@@ -59,7 +59,7 @@ void LocalCommand_blurtest(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd blurtest\n");
+			LOG_INFO("Usage:^3 cl_cmd blurtest\n");
 			LOG_INFO("  No arguments required.\n");
 			return;
 		}
@@ -109,7 +109,7 @@ void LocalCommand_boxparticles(int request, int argc)
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 lv_cmd boxparticles effectname own org_from org_to, dir_from, dir_to, countmultiplier, flags\n");
+			LOG_INFO("Usage:^3 lv_cmd boxparticles effectname own org_from org_to, dir_from, dir_to, countmultiplier, flags\n");
 			LOG_INFO("  'effectname' is the name of a particle effect in effectinfo.txt\n");
 			LOG_INFO("  'own' is the entity number of the owner (negative for csqc ent, positive for svqc ent)\n");
 			LOG_INFO("  'org_from' is the starting origin of the box\n");
@@ -160,7 +160,7 @@ void LocalCommand_create_scrshot_ent(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd create_scrshot_ent [path]\n");
+			LOG_INFO("Usage:^3 cl_cmd create_scrshot_ent [path]\n");
 			LOG_INFO("  Where 'path' can be the subdirectory of data/data in which the file is saved.\n");
 			return;
 		}
@@ -190,7 +190,7 @@ void LocalCommand_debugmodel(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd debugmodel model\n");
+			LOG_INFO("Usage:^3 cl_cmd debugmodel model\n");
 			LOG_INFO("  Where 'model' is a string of the model name to use for the debug model.\n");
 			return;
 		}
@@ -240,7 +240,7 @@ void LocalCommand_handlevote(int request, int argc)
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd handlevote vote\n");
+			LOG_INFO("Usage:^3 cl_cmd handlevote vote\n");
 			LOG_INFO("  Where 'vote' is the selection for either the current poll or uid2name.\n");
 			return;
 		}
@@ -341,7 +341,7 @@ void LocalCommand_hud(int request, int argc)
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd hud action [configname | radartoggle | layout]\n");
+			LOG_INFO("Usage:^3 cl_cmd hud action [configname | radartoggle | layout]\n");
 			LOG_INFO("  Where 'action' is the command to complete,\n");
 			LOG_INFO("  'configname' is the name to save to for \"save\" action,\n");
 			LOG_INFO("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
@@ -372,7 +372,7 @@ void LocalCommand_localprint(int request, int argc)
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd localprint \"message\"\n");
+			LOG_INFO("Usage:^3 cl_cmd localprint \"message\"\n");
 			LOG_INFO("  'message' is the centerprint message to send to yourself.\n");
 			return;
 		}
@@ -399,7 +399,7 @@ void LocalCommand_mv_download(int request, int argc)
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd mv_download mapid\n");
+			LOG_INFO("Usage:^3 cl_cmd mv_download mapid\n");
 			LOG_INFO("  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
 			return;
 		}
@@ -436,7 +436,7 @@ void LocalCommand_sendcvar(int request, int argc)
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd sendcvar <cvar>\n");
+			LOG_INFO("Usage:^3 cl_cmd sendcvar <cvar>\n");
 			LOG_INFO("  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
 		}
@@ -531,7 +531,7 @@ void GameCommand(string command)
 	{
 		if (argc == 1)
 		{
-			LOG_INFO("\nClient console commands:\n");
+			LOG_INFO("Client console commands:\n");
 			LocalCommand_macro_help();
 
 			LOG_INFO("\nGeneric commands shared by all programs:\n");

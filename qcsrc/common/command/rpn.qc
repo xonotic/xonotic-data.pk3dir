@@ -563,7 +563,7 @@ LABEL(skip_difference)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " rpn EXPRESSION...\n"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " rpn EXPRESSION...\n");
 			LOG_INFO("    Operator description (x: string, s: set, f: float):\n");
 			LOG_INFO("    x pop ----------------------------->     : removes the top\n");
 			LOG_INFO("    x dup -----------------------------> x x : duplicates the top\n");

@@ -89,7 +89,7 @@ void GenericCommand_addtolist(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2addtolist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value\n"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " addtolist variable value\n");
 			LOG_INFO("  Where 'variable' is what to add 'value' to.\n");
 			LOG_INFO("See also: ^2removefromlist^7\n");
 			return;
@@ -163,7 +163,7 @@ void GenericCommand_qc_curl(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]");
 			return;
 		}
 	}
@@ -217,7 +217,7 @@ GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to *_cmd_dump.tx
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpcommands"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpcommands");
 			LOG_INFO("  No arguments required.\n");
 			return;
 		}
@@ -298,7 +298,7 @@ void GenericCommand_maplist(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2maplist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]\n"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " maplist action [map]\n");
 			LOG_INFO("  Where 'action' is the command to complete,\n");
 			LOG_INFO("  and 'map' is what it acts upon (if required).\n");
 			LOG_INFO("  Full list of commands here: \"add, cleanup, remove, shuffle.\"\n");
@@ -320,7 +320,7 @@ void GenericCommand_nextframe(float request, float arguments, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command...\n"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " nextframe command...\n");
 			LOG_INFO("  Where command will be executed next frame of this VM\n");
 			return;
 		}
@@ -354,7 +354,7 @@ void GenericCommand_removefromlist(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2removefromlist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value\n"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value\n");
 			LOG_INFO("  Where 'variable' is what cvar to remove 'value' from.\n");
 			LOG_INFO("See also: ^2addtolist^7\n");
 			return;
@@ -403,7 +403,7 @@ void GenericCommand_restartnotifs(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " restartnotifs"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " restartnotifs");
 			LOG_INFO("  No arguments required.\n");
 			return;
 		}
@@ -433,7 +433,7 @@ void GenericCommand_settemp(float request, float argc)
 			LOG_INFO("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"\n"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"\n");
 			LOG_INFO("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.\n");
 			LOG_INFO("See also: ^2settemp_restore^7\n");
 			return;
@@ -460,7 +460,7 @@ void GenericCommand_settemp_restore(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp_restore\n"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " settemp_restore\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2settemp^7\n");
 			return;
@@ -488,7 +488,7 @@ void GenericCommand_runtest(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " [function to run]"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " [function to run]");
 			return;
 		}
 	}

@@ -518,7 +518,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 			if(!found)
 			{
 				if(!removal_mode)
-					LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
+					LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n");
 				continue;
 			}
 		}
@@ -540,7 +540,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 		if(!found)
 		{
 			if(!removal_mode)
-				LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
+				LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n");
 			continue;
 		}
 

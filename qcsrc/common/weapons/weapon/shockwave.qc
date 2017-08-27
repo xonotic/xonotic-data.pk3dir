@@ -110,14 +110,14 @@ void W_Shockwave_Melee_Think(entity this)
 				{ accuracy_add(this.realowner, WEP_SHOCKWAVE.m_id, 0, swing_damage); }
 
 			#ifdef DEBUG_SHOCKWAVE
-			LOG_INFO(sprintf(
+			LOG_INFOF(
 				"MELEE: %s hitting %s with %f damage (factor: %f) at %f time.\n",
 				this.realowner.netname,
 				target_victim.netname,
 				swing_damage,
 				swing_factor,
 				time
-			));
+			);
 			#endif
 
 			// allow multiple hits with one swing, but not against the same player twice
@@ -397,7 +397,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 				);
 
 				#ifdef DEBUG_SHOCKWAVE
-				LOG_INFO(sprintf(
+				LOG_INFOF(
 					"SELF HIT: multiplier = %f, damage = %f, force = %f... "
 					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
 					multiplier,
@@ -405,7 +405,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 					vlen(final_force),
 					multiplier_from_accuracy,
 					multiplier_from_distance
-				));
+				);
 				#endif
 			}
 			else if(distance_to_head <= WEP_CVAR(shockwave, blast_splash_radius))
@@ -460,7 +460,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { queue = min(queue + 1, MAX_SHOCKWAVE_HITS); }
 
 				#ifdef DEBUG_SHOCKWAVE
-				LOG_INFO(sprintf(
+				LOG_INFOF(
 					"SPLASH HIT: multiplier = %f, damage = %f, force = %f... "
 					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
 					multiplier,
@@ -468,7 +468,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 					vlen(final_force),
 					multiplier_from_accuracy,
 					multiplier_from_distance
-				));
+				);
 				#endif
 			}
 		}
@@ -549,7 +549,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { queue = min(queue + 1, MAX_SHOCKWAVE_HITS); }
 
 				#ifdef DEBUG_SHOCKWAVE
-				LOG_INFO(sprintf(
+				LOG_INFOF(
 					"BLAST HIT: multiplier = %f, damage = %f, force = %f... "
 					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
 					multiplier,
@@ -557,7 +557,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 					vlen(final_force),
 					multiplier_from_accuracy,
 					multiplier_from_distance
-				));
+				);
 				#endif
 			}
 		}
@@ -584,12 +584,12 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 			accuracy_add(actor, WEP_SHOCKWAVE.m_id, 0, final_damage);
 
 		#ifdef DEBUG_SHOCKWAVE
-		LOG_INFO(sprintf(
+		LOG_INFOF(
 			"SHOCKWAVE by %s: damage = %f, force = %f.\n",
 			actor.netname,
 			final_damage,
 			vlen(final_force)
-		));
+		);
 		#endif
 
 		shockwave_hit[i-1] = NULL;

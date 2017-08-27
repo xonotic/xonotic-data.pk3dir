@@ -613,7 +613,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	float i = 0;
 	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
 	{
-		LOG_INFO(sprintf("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e))));
+		LOG_INFOF("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e)));
 		++i;
 	}
 #endif
@@ -792,13 +792,13 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 				}
 
 				#if 0
-				LOG_INFO(sprintf(
+				LOG_INFOF(
 					"PlayerStats_PlayerDetail_Handler(): "
 					"Key '%s', Event '%s', Data '%s'\n",
 					key,
 					event,
 					data
-				));
+				);
 				#endif
 			}
 			//print("PlayerStats_PlayerDetail_Handler(): End of response.\n");

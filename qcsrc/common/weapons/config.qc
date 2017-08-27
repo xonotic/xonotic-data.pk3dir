@@ -48,7 +48,7 @@ void Dump_Weapon_Settings()
 		WEP_CONFIG_WRITETOFILE("// }}}\n");
 
 		// step 5: debug info
-		LOG_INFO(sprintf("#%d: %s: %d settings...\n", i, it.m_name, WEP_CONFIG_COUNT));
+		LOG_INFOF("#%d: %s: %d settings...\n", i, it.m_name, WEP_CONFIG_COUNT);
 		totalweapons += 1;
 		totalsettings += WEP_CONFIG_COUNT;
 	});
@@ -59,5 +59,5 @@ void Dump_Weapon_Settings()
 		config_queue[x] = string_null;
 
 	// extra information
-	LOG_INFO(sprintf("Totals: %d weapons, %d settings\n", totalweapons, totalsettings));
+	LOG_INFOF("Totals: %d weapons, %d settings\n", totalweapons, totalsettings);
 }
