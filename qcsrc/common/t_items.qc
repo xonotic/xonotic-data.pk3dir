@@ -634,29 +634,40 @@ void Item_ScheduleRespawnIn(entity e, float t)
 AUTOCVAR(g_pickup_respawntime_scaling_reciprocal, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `reciprocal` (with `offset` and `linear` set to 0) can be used to achieve a constant number of items spawned *per player*");
 AUTOCVAR(g_pickup_respawntime_scaling_offset, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `offset` offsets the curve left or right - the results are not intuitive and I recommend plotting the respawn time and the number of items per player to see what's happening");
 AUTOCVAR(g_pickup_respawntime_scaling_linear, float, 1.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `linear` can be used to simply scale the respawn time linearly");
+
+float adjust_respawntime(float normal_respawntime) {
+	float r = autocvar_g_pickup_respawntime_scaling_reciprocal;
+	float o = autocvar_g_pickup_respawntime_scaling_offset;
+	float l = autocvar_g_pickup_respawntime_scaling_linear;
+
+	if (r == 0 && l == 1) {
+		return normal_respawntime;
+	}
+
+	CheckAllowedTeams(NULL);
+	GetTeamCounts(NULL);
+	int players = 0;
+	if (c1 != -1) players += c1;
+	if (c2 != -1) players += c2;
+	if (c3 != -1) players += c3;
+	if (c4 != -1) players += c4;
+
+	if (players >= 2) {
+		return normal_respawntime * (r / (players + o) + l);
+	} else {
+		return normal_respawntime;
+	}
+}
+
 void Item_ScheduleRespawn(entity e)
 {
 	if(e.respawntime > 0)
 	{
 		Item_Show(e, 0);
 
-		CheckAllowedTeams(NULL);
-		GetTeamCounts(NULL);
-		int players = 0;
-		if (c1 != -1) players += c1;
-		if (c2 != -1) players += c2;
-		if (c3 != -1) players += c3;
-		if (c4 != -1) players += c4;
-		float adjusted_respawntime;
-		if (players >= 2) {
-			float a = autocvar_g_pickup_respawntime_scaling_reciprocal;
-			float b = autocvar_g_pickup_respawntime_scaling_offset;
-			float c = autocvar_g_pickup_respawntime_scaling_linear;
-			adjusted_respawntime = e.respawntime * (a / (players + b) + c);
-		} else {
-			adjusted_respawntime = e.respawntime;
-		}
-		//LOG_INFOF("item %s will respawn in %f\n", e.classname, adjusted_respawntime);
+		float adjusted_respawntime = adjust_respawntime(e.respawntime);
+		//LOG_INFOF("item %s will respawn in %f", e.classname, adjusted_respawntime);
+
 		// range: adjusted_respawntime - respawntimejitter .. adjusted_respawntime + respawntimejitter
 		float actual_time = adjusted_respawntime + crandom() * e.respawntimejitter;
 		Item_ScheduleRespawnIn(e, actual_time);
