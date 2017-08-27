@@ -489,14 +489,14 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
     #if 0
     if(actor.rl_release == 0)
     {
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo));
         return true;
     }
     else
     {
         ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
         return ammo_amount;
     }
     #else

@@ -45,7 +45,7 @@ void RegisterSLCategories()
 				else \
 				{ \
 					LOG_INFOF( \
-						"RegisterSLCategories(): Improper override '%s' for category '%s'!\n", \
+						"RegisterSLCategories(): Improper override '%s' for category '%s'!", \
 						s, \
 						categories[i].cat_name \
 					); \

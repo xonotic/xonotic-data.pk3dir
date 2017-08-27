@@ -135,7 +135,7 @@ void GotoFirstMap(entity this)
 	else
 	{
 		this.nextthink = time + 1;
-		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...\n");
+		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...");
 	}
 }
 
@@ -532,7 +532,7 @@ void detect_maptype()
 			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, NULL);
 	if(trace_fraction == 1)
 		continue;
-			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos), "\n");
+			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos));
 		}
 
 		break;
@@ -597,18 +597,6 @@ void __init_dedicated_server_shutdown() {
 	MapInfo_Shutdown();
 }
 
-void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
-{
-	if(!autocvar_g_campaign)
-	{
-		if(fraglimit_override >= 0) cvar_set("fraglimit", ftos(fraglimit_override));
-		if(timelimit_override >= 0) cvar_set("timelimit", ftos(timelimit_override));
-		if(leadlimit_override >= 0) cvar_set("leadlimit", ftos(leadlimit_override));
-		if(qualifying_override >= 0) cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
-	}
-	limits_are_set = true;
-}
-
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
@@ -653,7 +641,7 @@ spawnfunc(worldspawn)
 				fclose(sentinel);
 				if (switchversion != "" && switchversion != WATERMARK)
 				{
-					LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
+					LOG_INFOF("Switching progs: " WATERMARK " -> %s", switchversion);
 					// if it doesn't exist, assume either:
 					//   a) the current program was overwritten
 					//   b) this is a client only update
@@ -674,7 +662,7 @@ spawnfunc(worldspawn)
 		}
 		if (wantrestart)
 		{
-			LOG_INFOF("Restart requested\n");
+			LOG_INFOF("Restart requested");
 			changelevel(mapname);
 			// let initialization continue, shutdown depends on it
 		}
@@ -759,8 +747,7 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 	GrappleHookInit();
 
-	if(!limits_are_set)
-		SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
+    GameRules_limit_fallbacks();
 
 	if(warmup_limit == 0)
 		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
@@ -846,23 +833,23 @@ spawnfunc(worldspawn)
 					continue;
 				if(argv(0) == "cd")
 				{
-					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:\n");
-					LOG_INFO("  cdtrack ", argv(2), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:");
+					LOG_INFO("  cdtrack ", argv(2));
 				}
 				else if(argv(0) == "fog")
 				{
-					LOG_INFO("Found ^1UNSUPPORTED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:\n");
-					LOG_INFO("  \"fog\" \"", s, "\"\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:");
+					LOG_INFO("  \"fog\" \"", s, "\"");
 				}
 				else if(argv(0) == "set")
 				{
-					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
-					LOG_INFO("  clientsettemp_for_type all ", argv(1), " ", argv(2), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:");
+					LOG_INFO("  clientsettemp_for_type all ", argv(1), " ", argv(2));
 				}
 				else if(argv(0) != "//")
 				{
-					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
-					LOG_INFO("  clientsettemp_for_type all ", argv(0), " ", argv(1), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:");
+					LOG_INFO("  clientsettemp_for_type all ", argv(0), " ", argv(1));
 				}
 			}
 			fclose(fd);
@@ -1438,7 +1425,7 @@ void DumpStats(float final)
 	s = strcat(s, GetGametype(), "_", GetMapname(), ":", ftos(rint(time)));
 
 	if(to_console)
-		LOG_INFO(s, "\n");
+		LOG_INFO(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 
@@ -1454,7 +1441,7 @@ void DumpStats(float final)
 
 	s = strcat(":labels:player:", GetPlayerScoreString(NULL, 0));
 	if(to_console)
-		LOG_INFO(s, "\n");
+		LOG_INFO(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 	if(to_file)
@@ -1469,7 +1456,7 @@ void DumpStats(float final)
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, playername(it, false), "\n");
+			LOG_INFO(s, playername(it, false));
 		if(to_eventlog)
 			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it, false)));
 		if(to_file)
@@ -1480,7 +1467,7 @@ void DumpStats(float final)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
-			LOG_INFO(s, "\n");
+			LOG_INFO(s);
 		if(to_eventlog)
 			GameLogEcho(s);
 		if(to_file)
@@ -1491,7 +1478,7 @@ void DumpStats(float final)
 			s = strcat(":teamscores:see-labels:", GetTeamScoreString(i, 0));
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
-				LOG_INFO(s, "\n");
+				LOG_INFO(s);
 			if(to_eventlog)
 				GameLogEcho(s);
 			if(to_file)
@@ -1500,7 +1487,7 @@ void DumpStats(float final)
 	}
 
 	if(to_console)
-		LOG_INFO(":end\n");
+		LOG_INFO(":end");
 	if(to_eventlog)
 		GameLogEcho(":end");
 	if(to_file)
@@ -1905,7 +1892,7 @@ void CheckRules_World()
 				totalplayers = playerswithlaps = readyplayers = 0;
 				FOREACH_CLIENT(IS_PLAYER(it), {
 					++totalplayers;
-					if(PlayerScore_Add(it, SP_RACE_FASTEST, 0))
+					if(GameRules_scoring_add(it, RACE_FASTEST, 0))
 						++playerswithlaps;
 					if(it.ready)
 						++readyplayers;
@@ -2131,7 +2118,7 @@ float RedirectionThink()
 	clients_found = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		// TODO add timer
-		LOG_INFO("Redirecting: sending connect command to ", it.netname, "\n");
+		LOG_INFO("Redirecting: sending connect command to ", it.netname);
 		if(redirection_target == "self")
 			stuffcmd(it, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
 		else
@@ -2139,7 +2126,7 @@ float RedirectionThink()
 		++clients_found;
 	});
 
-	LOG_INFO("Redirecting: ", ftos(clients_found), " clients left.\n");
+	LOG_INFO("Redirecting: ", ftos(clients_found), " clients left.");
 
 	if(time > redirection_timeout || clients_found == 0)
 		localcmd("\nwait; wait; wait; quit\n");
@@ -2204,7 +2191,7 @@ void Shutdown()
 	}
 	else if(world_initialized == 0)
 	{
-		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data\n");
+		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data");
 	}
 	else
 	{

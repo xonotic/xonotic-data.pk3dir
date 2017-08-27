@@ -1240,7 +1240,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			FOR_EACH_KH_KEY(key) if(key.owner == player) { ++key_count; }
 
 			float time_score;
-			if(player.flagcarried || player.ballcarried) // this player is important
+			if(GameRules_scoring_is_vip(player))
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
 				time_score = autocvar_g_nades_bonus_score_time;
@@ -1379,7 +1379,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
-		else if(frag_target.flagcarried)
+		else if(GameRules_scoring_is_vip(frag_target))
 			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
 		else if(autocvar_g_nades_bonus_score_spree && CS(frag_attacker).killcount > 1)
 		{

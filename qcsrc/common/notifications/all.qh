@@ -181,25 +181,25 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 			if (fh >= 0)
 			{
 				Dump_Notifications(fh, alsoprint);
-				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
+				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.", filename);
 				fclose(fh);
 			}
 			else
 			{
-				LOG_INFOF("^1Error: ^7Could not open file '%s'!\n", filename);
+				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
 			}
 			#else
-			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
+			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd."));
 			#endif
 			return;
 		}
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
-			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),\n");
-			LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-			LOG_INFO("  if left blank, it will only write to default.\n");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]");
+			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),");
+			LOG_INFO("  if supplied with '-' output to console as well as default,");
+			LOG_INFO("  if left blank, it will only write to default.");
 			return;
 		}
 	}

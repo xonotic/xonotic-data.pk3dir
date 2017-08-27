@@ -346,7 +346,7 @@ bool Invasion_CheckWinner()
 	else
 	{
 		FOREACH_CLIENT(IS_PLAYER(it), {
-			float cs = PlayerScore_Add(it, SP_KILLS, 0);
+			float cs = GameRules_scoring_add(it, KILLS, 0);
 			if(cs > winning_score)
 			{
 				winning_score = cs;
@@ -430,10 +430,10 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 
 		if(IS_PLAYER(frag_attacker))
 		if(SAME_TEAM(frag_attacker, frag_target)) // in non-teamplay modes, same team = same player, so this works
-			PlayerScore_Add(frag_attacker, SP_KILLS, -1);
+			GameRules_scoring_add(frag_attacker, KILLS, -1);
 		else
 		{
-			PlayerScore_Add(frag_attacker, SP_KILLS, +1);
+			GameRules_scoring_add(frag_attacker, KILLS, +1);
 			if(teamplay)
 				TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
 		}
@@ -560,10 +560,13 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 void invasion_ScoreRules(int inv_teams)
 {
 	if(inv_teams) { CheckAllowedTeams(NULL); }
-	ScoreRules_basics(inv_teams, 0, 0, false);
-	if(inv_teams) ScoreInfo_SetLabel_TeamScore(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
-	ScoreRules_basics_end();
+	GameRules_score_enabled(false);
+	GameRules_scoring(inv_teams, 0, 0, {
+	    if (inv_teams) {
+            field_team(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
+	    }
+	    field(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
+	});
 }
 
 void invasion_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
@@ -573,14 +576,7 @@ void invasion_DelayedInit(entity this) // Do this check with a delay so we can w
 
 	if(autocvar_g_invasion_teams)
 	{
-		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);
-		int teams = 0;
-		if(invasion_teams >= 1) teams |= BIT(0);
-		if(invasion_teams >= 2) teams |= BIT(1);
-		if(invasion_teams >= 3) teams |= BIT(2);
-		if(invasion_teams >= 4) teams |= BIT(3);
-
-		invasion_teams = teams; // now set it?
+		invasion_teams = BITS(bound(2, autocvar_g_invasion_teams, 4));
 	}
 	else
 		invasion_teams = 0;
