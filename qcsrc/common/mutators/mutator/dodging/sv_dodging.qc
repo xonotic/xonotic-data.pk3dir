@@ -104,19 +104,20 @@ REGISTER_MUTATOR(dodging, true);
 .int pressedkeys;
 #endif
 
-// returns 1 if the player is close to a wall
+// returns true if the player is close to a wall
 bool check_close_to_wall(entity this, float threshold)
 {
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
-#define X(OFFSET) \
-	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this); \
-	if(trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) && vdist(this.origin - trace_endpos, <, threshold)) \
+#define X(dir) \
+	tracebox(this.origin, this.mins, this.maxs, this.origin + threshold * dir, true, this); \
+	if (trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) \
 		return true;
-	X(1000*v_right);
-	X(-1000*v_right);
-	X(1000*v_forward);
-	X(-1000*v_forward);
+
+	X(v_right);
+	X(-v_right);
+	X(v_forward);
+	X(-v_forward);
 #undef X
 
 	return false;
