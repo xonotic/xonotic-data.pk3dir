@@ -1658,7 +1658,7 @@ void player_regen(entity this)
 
 		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
 	}
-	// Ugly hack to make sure the haelth and armor don't go beyond hard limit.
+	// Ugly hack to make sure the health and armor don't go beyond hard limit.
 	// TODO: Remove this hack when all code uses GivePlayerHealth and
 	// GivePlayerArmor.
 	if (this.health > RESOURCE_AMOUNT_HARD_LIMIT)
