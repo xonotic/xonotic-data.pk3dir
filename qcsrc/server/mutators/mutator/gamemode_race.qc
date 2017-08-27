@@ -448,8 +448,6 @@ void rc_SetLimits()
 		if(race_teams >= 4) teams |= BIT(3);
 
 		race_teams = teams; // now set it?
-
-		have_team_spawns = -1; // request team spawns
 	}
 	else
 		race_teams = 0;

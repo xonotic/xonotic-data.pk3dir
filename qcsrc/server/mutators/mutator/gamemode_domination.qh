@@ -24,7 +24,6 @@ REGISTER_MUTATOR(dom, false)
 		GameRules_teams(true);
         GameRules_limit_score(fraglimit_override);
         GameRules_limit_lead(autocvar_g_domination_point_leadlimit);
-		have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONREMOVE

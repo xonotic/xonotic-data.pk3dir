@@ -8,11 +8,18 @@ void GameRules_teams(bool value)
         serverflags |= SERVERFLAG_TEAMPLAY;
         teamplay = 1;
         cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
+        GameRules_spawning_teams(true);
     } else {
     	serverflags &= ~SERVERFLAG_TEAMPLAY;
     	teamplay = 0;
     	cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
+    	GameRules_spawning_teams(false);
     }
+}
+
+void GameRules_spawning_teams(bool value)
+{
+    have_team_spawns = value ? -1 : 0;
 }
 
 bool _GameRules_score_enabled = true;

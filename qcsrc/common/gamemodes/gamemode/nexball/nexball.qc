@@ -1158,7 +1158,6 @@ REGISTER_MUTATOR(nb, g_nexball)
 		GameRules_teams(true);
 		GameRules_limit_score(autocvar_g_nexball_goallimit);
 		GameRules_limit_lead(autocvar_g_nexball_goalleadlimit);
-		have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

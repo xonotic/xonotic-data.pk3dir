@@ -25,8 +25,7 @@ REGISTER_MUTATOR(inv, false)
 		if (autocvar_g_invasion_teams >= 2)
 		{
 			GameRules_teams(true);
-			if (autocvar_g_invasion_team_spawns)
-				have_team_spawns = -1; // request team spawns
+			GameRules_spawning_teams(autocvar_g_invasion_team_spawns);
 		}
 	}
 

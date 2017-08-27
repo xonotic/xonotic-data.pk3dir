@@ -56,8 +56,7 @@ REGISTER_MUTATOR(ca, false)
         GameRules_limit_score(autocvar_g_ca_point_limit);
         GameRules_limit_lead(autocvar_g_ca_point_leadlimit);
 
-		if (autocvar_g_ca_team_spawns)
-			have_team_spawns = -1; // request team spawns
+        GameRules_spawning_teams(autocvar_g_ca_team_spawns);
 	}
 
 	MUTATOR_ONREMOVE

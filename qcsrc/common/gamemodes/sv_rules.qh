@@ -4,6 +4,11 @@
 void GameRules_teams(bool value);
 
 /**
+ * Used to disable team spawns in team modes
+ */
+void GameRules_spawning_teams(bool value);
+
+/**
  * Disabling score disables the "score" column on the scoreboard
  */
 void GameRules_score_enabled(bool value);

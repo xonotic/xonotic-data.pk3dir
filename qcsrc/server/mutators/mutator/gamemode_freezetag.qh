@@ -19,8 +19,7 @@ REGISTER_MUTATOR(ft, false)
         GameRules_limit_score(autocvar_g_freezetag_point_limit);
         GameRules_limit_lead(autocvar_g_freezetag_point_leadlimit);
 
-		if (autocvar_g_freezetag_team_spawns)
-			have_team_spawns = -1; // request team spawns
+        GameRules_spawning_teams(autocvar_g_freezetag_team_spawns);
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

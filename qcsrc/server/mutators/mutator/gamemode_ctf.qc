@@ -15,7 +15,6 @@ REGISTER_MUTATOR(ctf, false)
 		GameRules_teams(true);
         GameRules_limit_score(autocvar_capturelimit_override);
         GameRules_limit_lead(autocvar_captureleadlimit_override);
-		have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
