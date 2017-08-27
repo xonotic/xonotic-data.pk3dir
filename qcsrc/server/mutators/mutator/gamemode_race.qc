@@ -197,7 +197,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	FOREACH_CLIENT(true, {
 		if(it.race_place)
 		{
-			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
+			s = GameRules_scoring_add(it, RACE_FASTEST, 0);
 			if(!s)
 				it.race_place = 0;
 		}
@@ -247,7 +247,7 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	if(g_race_qualifying)
-	if(PlayerScore_Add(player, SP_RACE_FASTEST, 0))
+	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
 		player.frags = FRAGS_LMS_LOSER;
 	else
 		player.frags = FRAGS_SPECTATOR;

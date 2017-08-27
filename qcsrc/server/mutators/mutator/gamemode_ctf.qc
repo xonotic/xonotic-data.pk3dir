@@ -278,10 +278,10 @@ bool ctf_CaptureShield_CheckStatus(entity p)
 	if(ctf_captureshield_max_ratio <= 0)
 		return false;
 
-	s  = PlayerScore_Add(p, SP_CTF_CAPS,    0);
-	s2 = PlayerScore_Add(p, SP_CTF_PICKUPS, 0);
-	s3 = PlayerScore_Add(p, SP_CTF_RETURNS, 0);
-	s4 = PlayerScore_Add(p, SP_CTF_FCKILLS, 0);
+	s  = GameRules_scoring_add(p, CTF_CAPS, 0);
+	s2 = GameRules_scoring_add(p, CTF_PICKUPS, 0);
+	s3 = GameRules_scoring_add(p, CTF_RETURNS, 0);
+	s4 = GameRules_scoring_add(p, CTF_FCKILLS, 0);
 
 	sr = ((s - s2) + (s3 + s4));
 
@@ -292,10 +292,10 @@ bool ctf_CaptureShield_CheckStatus(entity p)
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(DIFF_TEAM(it, p))
 			continue;
-		se  = PlayerScore_Add(it, SP_CTF_CAPS,    0);
-		se2 = PlayerScore_Add(it, SP_CTF_PICKUPS, 0);
-		se3 = PlayerScore_Add(it, SP_CTF_RETURNS, 0);
-		se4 = PlayerScore_Add(it, SP_CTF_FCKILLS, 0);
+		se  = GameRules_scoring_add(it, CTF_CAPS, 0);
+		se2 = GameRules_scoring_add(it, CTF_PICKUPS, 0);
+		se3 = GameRules_scoring_add(it, CTF_RETURNS, 0);
+		se4 = GameRules_scoring_add(it, CTF_FCKILLS, 0);
 
 		ser = ((se - se2) + (se3 + se4));
 
@@ -387,8 +387,8 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(player, -((flag.score_drop) ? flag.score_drop : autocvar_g_ctf_score_penalty_drop));
-	PlayerScore_Add(player, SP_CTF_DROPS, 1);
+	GameRules_scoring_add_team(player, SCORE, -((flag.score_drop) ? flag.score_drop : autocvar_g_ctf_score_penalty_drop));
+	GameRules_scoring_add(player, CTF_DROPS, 1);
 
 	// waypoints
 	if(autocvar_g_ctf_flag_dropped_waypoint) {
@@ -604,16 +604,16 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	float pscore = 0;
 	if(enemy_flag.score_capture || flag.score_capture)
 		pscore = floor((max(1, enemy_flag.score_capture) + max(1, flag.score_capture)) * 0.5);
-	PlayerTeamScore_AddScore(player, ((pscore) ? pscore : autocvar_g_ctf_score_capture));
+	GameRules_scoring_add_team(player, SCORE, ((pscore) ? pscore : autocvar_g_ctf_score_capture));
 	float capscore = 0;
 	if(enemy_flag.score_team_capture || flag.score_team_capture)
 		capscore = floor((max(1, enemy_flag.score_team_capture) + max(1, flag.score_team_capture)) * 0.5);
-	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, ((capscore) ? capscore : 1));
+	GameRules_scoring_add_team(player, CTF_CAPS, ((capscore) ? capscore : 1));
 
-	old_time = PlayerScore_Add(player, SP_CTF_CAPTIME, 0);
+	old_time = GameRules_scoring_add(player, CTF_CAPTIME, 0);
 	new_time = TIME_ENCODE(time - enemy_flag.ctf_pickuptime);
 	if(!old_time || new_time < old_time)
-		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
+		GameRules_scoring_add(player, CTF_CAPTIME, new_time - old_time);
 
 	// effects
 	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
@@ -626,7 +626,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
 
 		if((enemy_flag.ctf_dropper) && (player != enemy_flag.ctf_dropper))
-			{ PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
+			{ GameRules_scoring_add_team(enemy_flag.ctf_dropper, SCORE, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
 	}
 
 	// reset the flag
@@ -652,8 +652,8 @@ void ctf_Handle_Return(entity flag, entity player)
 	// scoring
 	if(IS_PLAYER(player))
 	{
-		PlayerTeamScore_AddScore(player, ((flag.score_return) ? flag.score_return : autocvar_g_ctf_score_return)); // reward for return
-		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+		GameRules_scoring_add_team(player, SCORE, ((flag.score_return) ? flag.score_return : autocvar_g_ctf_score_return)); // reward for return
+		GameRules_scoring_add(player, CTF_RETURNS, 1); // add to count of returns
 
 		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
 	}
@@ -662,7 +662,7 @@ void ctf_Handle_Return(entity flag, entity player)
 
 	if(flag.ctf_dropper)
 	{
-		PlayerScore_Add(flag.ctf_dropper, SP_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the player who dropped the flag
+		GameRules_scoring_add(flag.ctf_dropper, SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the player who dropped the flag
 		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield player from picking up flag
 		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay; // set next take time
 	}
@@ -738,13 +738,13 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	_sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
 
 	// scoring
-	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
+	GameRules_scoring_add(player, CTF_PICKUPS, 1);
 	nades_GiveBonus(player, autocvar_g_nades_bonus_score_minor);
 	switch(pickuptype)
 	{
 		case PICKUP_BASE:
 		{
-			PlayerTeamScore_AddScore(player, ((flag.score_pickup) ? flag.score_pickup : autocvar_g_ctf_score_pickup_base));
+			GameRules_scoring_add_team(player, SCORE, ((flag.score_pickup) ? flag.score_pickup : autocvar_g_ctf_score_pickup_base));
 			ctf_EventLog("steal", flag.team, player);
 			break;
 		}
@@ -754,7 +754,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
 			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
 			LOG_TRACE("pickup_dropped_score is ", ftos(pickup_dropped_score));
-			PlayerTeamScore_AddScore(player, pickup_dropped_score);
+			GameRules_scoring_add_team(player, SCORE, pickup_dropped_score);
 			ctf_EventLog("pickup", flag.team, player);
 			break;
 		}
@@ -2174,8 +2174,8 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
 	{
-		PlayerTeamScore_AddScore(frag_attacker, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
-		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
+		GameRules_scoring_add_team(frag_attacker, SCORE, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
+		GameRules_scoring_add(frag_attacker, CTF_FCKILLS, 1);
 	}
 
 	if(frag_target.flagcarried)

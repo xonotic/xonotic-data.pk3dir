@@ -435,9 +435,9 @@ void GoalTouch(entity this, entity toucher)
 	if(isclient)
 	{
 		if(pscore > 0)
-			PlayerScore_Add(ball.pusher, SP_NEXBALL_GOALS, pscore);
+			GameRules_scoring_add(ball.pusher, NEXBALL_GOALS, pscore);
 		else if(pscore < 0)
-			PlayerScore_Add(ball.pusher, SP_NEXBALL_FAULTS, -pscore);
+			GameRules_scoring_add(ball.pusher, NEXBALL_FAULTS, -pscore);
 	}
 
 	if(ball.owner)  // Happens on spawnflag GOAL_TOUCHPLAYER

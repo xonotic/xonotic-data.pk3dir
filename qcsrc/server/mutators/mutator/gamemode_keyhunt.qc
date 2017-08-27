@@ -441,7 +441,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 	if(key.kh_dropperteam != player.team)
 	{
 		kh_Scores_Event(player, key, "collect", autocvar_g_balance_keyhunt_score_collect, 0);
-		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
+		GameRules_scoring_add(player, KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
 	int realteam = kh_Team_ByID(key.count);
@@ -534,7 +534,7 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 	{
 		float f = DistributeEvenly_Get(1);
 		kh_Scores_Event(key.owner, key, "capture", f, 0);
-		PlayerTeamScore_Add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
+		GameRules_scoring_add_team(key.owner, KH_CAPS, 1);
 		nades_GiveBonus(key.owner, autocvar_g_nades_bonus_score_high);
 	}
 
@@ -593,7 +593,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			kh_Scores_Event(lostkey.kh_previous_owner, NULL, "pushed", 0, -autocvar_g_balance_keyhunt_score_push);
 			// don't actually GIVE him the -nn points, just log
 		kh_Scores_Event(attacker, NULL, "push", autocvar_g_balance_keyhunt_score_push, 0);
-		PlayerScore_Add(attacker, SP_KH_PUSHES, 1);
+		GameRules_scoring_add(attacker, KH_PUSHES, 1);
 		//centerprint(attacker, "Your push is the best!"); // does this really need to exist?
 	}
 	else
@@ -614,7 +614,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			// don't actually GIVE him the -nn points, just log
 
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			PlayerScore_Add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
+			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTROYS, 1);
 
 		DistributeEvenly_Init(autocvar_g_balance_keyhunt_score_destroyed, keys * of + players);
 
@@ -809,7 +809,7 @@ void kh_Key_DropOne(entity key)
 	key.enemy = player;
 
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
-	PlayerScore_Add(player, SP_KH_LOSSES, 1);
+	GameRules_scoring_add(player, KH_LOSSES, 1);
 	int realteam = kh_Team_ByID(key.count);
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DROP), player.netname);
 
@@ -836,7 +836,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 		while((key = player.kh_next))
 		{
 			kh_Scores_Event(player, key, "losekey", 0, 0);
-			PlayerScore_Add(player, SP_KH_LOSSES, 1);
+			GameRules_scoring_add(player, KH_LOSSES, 1);
 			int realteam = kh_Team_ByID(key.count);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_LOST), player.netname);
 			kh_Key_AssignTo(key, NULL);
@@ -972,7 +972,7 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 		else
 		{
 			kh_Scores_Event(attacker, targ.kh_next, "carrierfrag", autocvar_g_balance_keyhunt_score_carrierfrag-1, 0);
-			PlayerScore_Add(attacker, SP_KH_KCKILLS, 1);
+			GameRules_scoring_add(attacker, KH_KCKILLS, 1);
 			// the frag gets added later
 		}
 	}

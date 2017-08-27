@@ -1892,7 +1892,7 @@ void CheckRules_World()
 				totalplayers = playerswithlaps = readyplayers = 0;
 				FOREACH_CLIENT(IS_PLAYER(it), {
 					++totalplayers;
-					if(PlayerScore_Add(it, SP_RACE_FASTEST, 0))
+					if(GameRules_scoring_add(it, RACE_FASTEST, 0))
 						++playerswithlaps;
 					if(it.ready)
 						++readyplayers;

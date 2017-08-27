@@ -78,9 +78,9 @@ void ka_TimeScoring(entity this)
 	if(this.owner.ballcarried)
 	{ // add points for holding the ball after a certain amount of time
 		if(autocvar_g_keepaway_score_timepoints)
-			PlayerScore_Add(this.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
+			GameRules_scoring_add(this.owner, SCORE, autocvar_g_keepaway_score_timepoints);
 
-		PlayerScore_Add(this.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
+		GameRules_scoring_add(this.owner, KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
 		this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
 }
@@ -134,7 +134,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	sound(this.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
-	PlayerScore_Add(toucher, SP_KEEPAWAY_PICKUPS, 1);
+	GameRules_scoring_add(toucher, KEEPAWAY_PICKUPS, 1);
 
 	// waypoints
 	WaypointSprite_AttachCarrier(WP_KaBallCarrier, toucher, RADARICON_FLAGCARRIER);
@@ -178,7 +178,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
-	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
+	// GameRules_scoring_add(plyr, KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
 
 	// waypoints
 	WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
@@ -286,16 +286,16 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
-			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);
+			GameRules_scoring_add(frag_attacker, KEEPAWAY_CARRIERKILLS, 1);
 			if(autocvar_g_keepaway_score_bckill) // add bckills to the score
-				PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_bckill);
+				GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_bckill);
 		}
 		else if(!frag_attacker.ballcarried)
 			if(autocvar_g_keepaway_noncarrier_warn)
 				Send_Notification(NOTIF_ONE_ONLY, frag_attacker, MSG_CENTER, CENTER_KEEPAWAY_WARN);
 
 		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
-			PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_killac);
+			GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_killac);
 	}
 
 	if(frag_target.ballcarried) { ka_DropEvent(frag_target); } // a player with the ball has died, drop it

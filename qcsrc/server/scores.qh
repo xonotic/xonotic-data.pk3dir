@@ -66,11 +66,6 @@ float TeamScore_GetCompareValue(float t);
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score);
 
 /**
- * Adds to the generic score fields for both the player and the team.
- */
-#define PlayerTeamScore_AddScore(p, s) PlayerTeamScore_Add(p, SP_SCORE, ST_SCORE, s)
-
-/**
  * Set the label of a team score item, as well as the scoring flags.
  */
 void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags);

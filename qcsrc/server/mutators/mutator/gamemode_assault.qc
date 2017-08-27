@@ -55,13 +55,13 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 	{
 		if(this.enemy.health - this.dmg > 0.5)
 		{
-			PlayerTeamScore_Add(actor, SP_SCORE, ST_SCORE, this.dmg);
+			GameRules_scoring_add_team(actor, SCORE, this.dmg);
 			this.enemy.health = this.enemy.health - this.dmg;
 		}
 		else
 		{
-			PlayerTeamScore_Add(actor, SP_SCORE, ST_SCORE, this.enemy.health);
-			PlayerTeamScore_Add(actor, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
+			GameRules_scoring_add_team(actor, SCORE, this.enemy.health);
+			GameRules_scoring_add_team(actor, ASSAULT_OBJECTIVES, 1);
 			this.enemy.health = -1;
 
 			if(this.enemy.message)

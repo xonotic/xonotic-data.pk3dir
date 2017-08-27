@@ -11,6 +11,7 @@
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications/all.qh"
 #include "../common/mapinfo.qh"
+#include <common/gamemodes/rules.qh>
 #include <common/net_linked.qh>
 #include <common/state.qh>
 #include "../common/triggers/subs.qh"
@@ -386,20 +387,20 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		float s;
 		if(g_race_qualifying)
 		{
-			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			s = GameRules_scoring_add(e, RACE_FASTEST, 0);
 			if(!s || t < s)
-				PlayerScore_Add(e, SP_RACE_FASTEST, t - s);
+				GameRules_scoring_add(e, RACE_FASTEST, t - s);
 		}
 		else
 		{
-			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			s = GameRules_scoring_add(e, RACE_FASTEST, 0);
 			if(!s || t < s)
-				PlayerScore_Add(e, SP_RACE_FASTEST, t - s);
+				GameRules_scoring_add(e, RACE_FASTEST, t - s);
 
-			s = PlayerScore_Add(e, SP_RACE_TIME, 0);
+			s = GameRules_scoring_add(e, RACE_TIME, 0);
 			snew = TIME_ENCODE(time - game_starttime);
-			PlayerScore_Add(e, SP_RACE_TIME, snew - s);
-			l = PlayerTeamScore_Add(e, SP_RACE_LAPS, ST_RACE_LAPS, 1);
+			GameRules_scoring_add(e, RACE_TIME, snew - s);
+			l = GameRules_scoring_add_team(e, RACE_LAPS, 1);
 
 			if(autocvar_fraglimit)
 				if(l >= autocvar_fraglimit)
@@ -485,7 +486,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		entity oth = race_checkpoint_lastplayers[cp];
 		if(oth)
 		{
-			mylaps = PlayerScore_Add(e, SP_RACE_LAPS, 0);
+			mylaps = GameRules_scoring_add(e, RACE_LAPS, 0);
 			lother = race_checkpoint_lastlaps[cp];
 			othtime = race_checkpoint_lasttimes[cp];
 		}
@@ -1177,7 +1178,7 @@ float race_GetFractionalLapCount(entity e)
 	// links on CP entities)
 
 	float l;
-	l = PlayerScore_Add(e, SP_RACE_LAPS, 0);
+	l = GameRules_scoring_add(e, RACE_LAPS, 0);
 	if(CS(e).race_completed)
 		return l; // not fractional
 

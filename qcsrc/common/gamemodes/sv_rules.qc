@@ -101,3 +101,12 @@ bool GameRules_scoring_is_vip(entity player)
 {
     return player.m_GameRules_scoring_vip;
 }
+
+float _GameRules_scoring_add(entity client, entity sp, float value)
+{
+    return PlayerScore_Add(client, sp, value);
+}
+float _GameRules_scoring_add_team(entity client, entity sp, int st, float value)
+{
+    return PlayerTeamScore_Add(client, sp, st, value);
+}

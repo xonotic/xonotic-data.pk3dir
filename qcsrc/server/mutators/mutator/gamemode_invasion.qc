@@ -346,7 +346,7 @@ bool Invasion_CheckWinner()
 	else
 	{
 		FOREACH_CLIENT(IS_PLAYER(it), {
-			float cs = PlayerScore_Add(it, SP_KILLS, 0);
+			float cs = GameRules_scoring_add(it, KILLS, 0);
 			if(cs > winning_score)
 			{
 				winning_score = cs;
@@ -430,10 +430,10 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 
 		if(IS_PLAYER(frag_attacker))
 		if(SAME_TEAM(frag_attacker, frag_target)) // in non-teamplay modes, same team = same player, so this works
-			PlayerScore_Add(frag_attacker, SP_KILLS, -1);
+			GameRules_scoring_add(frag_attacker, KILLS, -1);
 		else
 		{
-			PlayerScore_Add(frag_attacker, SP_KILLS, +1);
+			GameRules_scoring_add(frag_attacker, KILLS, +1);
 			if(teamplay)
 				TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
 		}

@@ -434,13 +434,13 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 {
-	PlayerScore_Add(joiningplayer, SP_ELO, -1);
+	GameRules_scoring_add(joiningplayer, ELO, -1);
 	// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
 	if(autocvar_g_playerstats_playerbasic_uri != "")
 	{
 		string uri = autocvar_g_playerstats_playerbasic_uri;
 		if (joiningplayer.crypto_idfp == "") {
-			PlayerScore_Add(joiningplayer, SP_ELO, -1);
+			GameRules_scoring_add(joiningplayer, ELO, -1);
 		} else {
 			// create the database if it doesn't already exist
 			if(PS_B_IN_DB < 0)
@@ -472,7 +472,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 	else
 	{
 		// server has this disabled, kill the DB and set status to idle
-		PlayerScore_Add(joiningplayer, SP_ELO, -1);
+		GameRules_scoring_add(joiningplayer, ELO, -1);
 		if(PS_B_IN_DB >= 0)
 		{
 			db_close(PS_B_IN_DB);
@@ -573,7 +573,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
                         if (gt == PlayerStats_GetGametype()) {
                             handled = true;
                             float e = stof(data);
-                            PlayerScore_Add(p, SP_ELO, +1 + e);
+                            GameRules_scoring_add(p, ELO, +1 + e);
                         }
                         if (gt == "") {
                             // PlayerInfo_AddItem(p, value, data);
@@ -601,7 +601,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			break;
 		}
 	}
-	PlayerScore_Add(p, SP_ELO, -1);
+	GameRules_scoring_add(p, ELO, -1);
 }
 #endif // SVQC
 

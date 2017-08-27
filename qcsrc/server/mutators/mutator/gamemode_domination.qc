@@ -64,7 +64,7 @@ void dompoint_captured(entity this)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, head.netname, this.message, points, wait_time);
 
 	if(this.enemy.playerid == this.enemy_playerid)
-		PlayerScore_Add(this.enemy, SP_DOM_TAKES, 1);
+		GameRules_scoring_add(this.enemy, DOM_TAKES, 1);
 	else
 		this.enemy = NULL;
 
@@ -176,8 +176,8 @@ void dompointthink(entity this)
 		// give credit to the individual player, if he is still there
 		if (this.enemy.playerid == this.enemy_playerid)
 		{
-			PlayerScore_Add(this.enemy, SP_SCORE, fragamt);
-			PlayerScore_Add(this.enemy, SP_DOM_TICKS, fragamt);
+			GameRules_scoring_add(this.enemy, SCORE, fragamt);
+			GameRules_scoring_add(this.enemy, DOM_TICKS, fragamt);
 		}
 		else
 			this.enemy = NULL;
