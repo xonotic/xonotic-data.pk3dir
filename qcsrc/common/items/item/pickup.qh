@@ -37,7 +37,7 @@ CLASS(Pickup, GameItem)
     METHOD(Pickup, show, void(Pickup this))
     {
         TC(Pickup, this);
-        LOG_INFOF("%s: %s\n", etos(this), this.m_name);
+        LOG_INFOF("%s: %s", etos(this), this.m_name);
     }
     ATTRIB(Pickup, m_itemid, int, 0);
 #ifdef SVQC

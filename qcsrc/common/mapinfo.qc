@@ -283,7 +283,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	}
 	if(fh < 0)
 		return 0;
-	LOG_INFO("Analyzing ", fn, " to generate initial mapinfo\n");
+	LOG_INFO("Analyzing ", fn, " to generate initial mapinfo");
 
 	inWorldspawn = 2;
 	MapInfo_Map_flags = 0;
@@ -1190,7 +1190,7 @@ void MapInfo_LoadMap(string s, float reinit)
 	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH.m_flags);
 	//}
 
-	LOG_INFO("Switching to map ", s, "\n");
+	LOG_INFO("Switching to map ", s);
 
 	cvar_settemp_restore();
 	if(reinit)

@@ -6,6 +6,7 @@
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
+#include <common/gamemodes/rules.qh>
 
 #include "mutator.qh"
 

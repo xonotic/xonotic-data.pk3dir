@@ -13,7 +13,7 @@ string rpn_pop()
 		--rpn_sp;
 		return rpn_stack[rpn_sp];
 	} else {
-		LOG_INFO("rpn: stack underflow\n");
+		LOG_INFO("rpn: stack underflow");
 		rpn_error = true;
 		return "";
 	}
@@ -24,7 +24,7 @@ void rpn_push(string s)
 		rpn_stack[rpn_sp] = s;
 		++rpn_sp;
 	} else {
-		LOG_INFO("rpn: stack overflow\n");
+		LOG_INFO("rpn: stack overflow");
 		rpn_error = true;
 	}
 }
@@ -33,7 +33,7 @@ string rpn_get()
 	if(rpn_sp > 0) {
 		return rpn_stack[rpn_sp - 1];
 	} else {
-		LOG_INFO("rpn: empty stack\n");
+		LOG_INFO("rpn: empty stack");
 		rpn_error = true;
 		return "";
 	}
@@ -43,7 +43,7 @@ void rpn_set(string s)
 	if(rpn_sp > 0) {
 		rpn_stack[rpn_sp - 1] = s;
 	} else {
-		LOG_INFO("rpn: empty stack\n");
+		LOG_INFO("rpn: empty stack");
 		rpn_error = true;
 	}
 }
@@ -107,7 +107,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						}
 						else
 						{
-							LOG_INFO("rpn: empty cvar name for 'def'\n");
+							LOG_INFO("rpn: empty cvar name for 'def'");
 							rpn_error = true;
 						}
 					} else if(rpncmd == "defs" || rpncmd == "@") {
@@ -132,7 +132,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						}
 						else
 						{
-							LOG_INFO("rpn: empty cvar name for 'defs'\n");
+							LOG_INFO("rpn: empty cvar name for 'defs'");
 							rpn_error = true;
 						}
 					} else if(rpncmd == "load") {
@@ -288,7 +288,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 								db_put(rpn_db, "stack.pos", ftos(i-2));
 						} else {
 							rpn_error = 1;
-							LOG_INFO("rpn: database underflow\n");
+							LOG_INFO("rpn: database underflow");
 						}
 					} else if(rpncmd == "dbget") {
 
@@ -298,7 +298,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							rpn_push(db_get(rpn_db, strcat("stack.", ftos(i-1))));
 						} else {
 							rpn_error = 1;
-							LOG_INFO("rpn: database empty\n");
+							LOG_INFO("rpn: database empty");
 						}
 					} else if(rpncmd == "dblen") {
 						rpn_push(db_get(rpn_db, "stack.pointer"));
@@ -347,7 +347,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						if(!j)
 						{
 							rpn_error = true;
-							LOG_INFO("rpn: empty database\n");
+							LOG_INFO("rpn: empty database");
 						} else {
 							--j;
 							rpn_push(db_get(rpn_db, strcat("stack.", ftos(i))));
@@ -372,7 +372,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							rpn_push(db_get(rpn_db, strcat("stack.", s)));
 						} else {
 							rpn_error = 1;
-							LOG_INFO("rpn: empty database\n");
+							LOG_INFO("rpn: empty database");
 						}
 					} else if(rpncmd == "dbat") {
 						rpn_push(db_get(rpn_db, "stack.pos"));
@@ -384,7 +384,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						{
 							if(i < 0 || i >= j)
 							{
-								LOG_INFO("rpn: database cursor out of bounds\n");
+								LOG_INFO("rpn: database cursor out of bounds");
 								rpn_error = true;
 							}
 							if(!rpn_error)
@@ -398,7 +398,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						if(!j)
 						{
 							rpn_error = true;
-							LOG_INFO("rpn: empty database, cannot move cursor\n");
+							LOG_INFO("rpn: empty database, cannot move cursor");
 						}
 						if(!rpn_error)
 						{
@@ -412,7 +412,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							j = stof(db_get(rpn_db, "stack.pointer"));
 							if(i < 0 || i >= j)
 							{
-								LOG_INFO("rpn: database cursor destination out of bounds\n");
+								LOG_INFO("rpn: database cursor destination out of bounds");
 								rpn_error = true;
 							}
 							if(!rpn_error)
@@ -514,7 +514,7 @@ LABEL(skip_difference)
 						{
 							if (!fexists(s))
 							{
-								LOG_INFO("rpn: ERROR: ", s, " does not exist!\n");
+								LOG_INFO("rpn: ERROR: ", s, " does not exist!");
 								rpn_error = true;
 							}
 						}
@@ -553,7 +553,7 @@ LABEL(skip_difference)
 				while(rpn_sp > 0)
 				{
 					s = rpn_pop();
-					LOG_INFO("rpn: still on stack: ", s, "\n");
+					LOG_INFO("rpn: still on stack: ", s);
 				}
 			}
 
@@ -563,42 +563,42 @@ LABEL(skip_difference)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " rpn EXPRESSION...\n"));
-			LOG_INFO("    Operator description (x: string, s: set, f: float):\n");
-			LOG_INFO("    x pop ----------------------------->     : removes the top\n");
-			LOG_INFO("    x dup -----------------------------> x x : duplicates the top\n");
-			LOG_INFO("    x x exch --------------------------> x x : swap the top two\n");
-			LOG_INFO("    /cvarname load --------------------> x   : loads a cvar\n");
-			LOG_INFO("    /cvarname x def ------------------->     : writes to a cvar\n");
-			LOG_INFO("    f f add|sub|mul|div|mod|pow -------> f   : adds/... two numbers\n");
-			LOG_INFO("    f f and|or|xor|bitand|bitor|bitxor > f   : logical and bitwise operations\n");
-			LOG_INFO("    f f eq|ne|gt|ge|lt|le|max|min -----> f   : compares two numbers\n");
-			LOG_INFO("    f neg|abs|sgn|rand|floor|ceil------> f   : negates/... a number\n");
-			LOG_INFO("    f not|bitnot ----------------------> f   : logical and bitwise negation\n");
-			LOG_INFO("    f exp|log|sin|cos -----------------> f   : exponential function & Co.\n");
-			LOG_INFO("    f f f bound -----------------------> f   : bounds the middle number\n");
-			LOG_INFO("    f1 f2 b when ----------------------> f   : f1 if b, f2 otherwise\n");
-			LOG_INFO("    s s union|intersection|difference -> s   : set operations\n");
-			LOG_INFO("    s shuffle -------------------------> s   : randomly arrange elements\n");
-			LOG_INFO("    /key /value put ------------------->     : set a database key\n");
-			LOG_INFO("    /key get --------------------------> s   : get a database value\n");
-			LOG_INFO("    x dbpush -------------------------->     : pushes the top onto the database\n");
-			LOG_INFO("    dbpop|dbget -----------------------> x   : removes/reads DB's top\n");
-			LOG_INFO("    dblen|dbat ------------------------> f   : gets the DB's size/cursor pos\n");
-			LOG_INFO("    dbclr ----------------------------->     : clear the DB\n");
-			LOG_INFO("    s dbsave|dbload-------------------->     : save/load the DB to/from a file\n");
-			LOG_INFO("    x dbins --------------------------->     : moves the top into the DB\n");
-			LOG_INFO("    dbext|dbread ----------------------> x   : extract/get from the DB's cursor\n");
-			LOG_INFO("    f dbmov|dbgoto -------------------->     : move or set the DB's cursor\n");
-			LOG_INFO("    s localtime -----------------------> s   : formats the current local time\n");
-			LOG_INFO("    s gmtime --------------------------> s   : formats the current UTC time\n");
-			LOG_INFO("    time ------------------------------> f   : seconds since VM start\n");
-			LOG_INFO("    s /MD4 digest ---------------------> s   : MD4 digest\n");
-			LOG_INFO("    s /SHA256 digest ------------------> s   : SHA256 digest\n");
-			LOG_INFO("    s /formatstring sprintf1s ---------> s   : sprintf with 1 string (pad, cut)\n");
-			LOG_INFO("    s eval ---------------------------->     : does something eval\n");
-			LOG_INFO("    Set operations operate on 'such''strings'.\n");
-			LOG_INFO("    Unknown tokens insert their cvar value.\n");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " rpn EXPRESSION...");
+			LOG_INFO("    Operator description (x: string, s: set, f: float):");
+			LOG_INFO("    x pop ----------------------------->     : removes the top");
+			LOG_INFO("    x dup -----------------------------> x x : duplicates the top");
+			LOG_INFO("    x x exch --------------------------> x x : swap the top two");
+			LOG_INFO("    /cvarname load --------------------> x   : loads a cvar");
+			LOG_INFO("    /cvarname x def ------------------->     : writes to a cvar");
+			LOG_INFO("    f f add|sub|mul|div|mod|pow -------> f   : adds/... two numbers");
+			LOG_INFO("    f f and|or|xor|bitand|bitor|bitxor > f   : logical and bitwise operations");
+			LOG_INFO("    f f eq|ne|gt|ge|lt|le|max|min -----> f   : compares two numbers");
+			LOG_INFO("    f neg|abs|sgn|rand|floor|ceil------> f   : negates/... a number");
+			LOG_INFO("    f not|bitnot ----------------------> f   : logical and bitwise negation");
+			LOG_INFO("    f exp|log|sin|cos -----------------> f   : exponential function & Co.");
+			LOG_INFO("    f f f bound -----------------------> f   : bounds the middle number");
+			LOG_INFO("    f1 f2 b when ----------------------> f   : f1 if b, f2 otherwise");
+			LOG_INFO("    s s union|intersection|difference -> s   : set operations");
+			LOG_INFO("    s shuffle -------------------------> s   : randomly arrange elements");
+			LOG_INFO("    /key /value put ------------------->     : set a database key");
+			LOG_INFO("    /key get --------------------------> s   : get a database value");
+			LOG_INFO("    x dbpush -------------------------->     : pushes the top onto the database");
+			LOG_INFO("    dbpop|dbget -----------------------> x   : removes/reads DB's top");
+			LOG_INFO("    dblen|dbat ------------------------> f   : gets the DB's size/cursor pos");
+			LOG_INFO("    dbclr ----------------------------->     : clear the DB");
+			LOG_INFO("    s dbsave|dbload-------------------->     : save/load the DB to/from a file");
+			LOG_INFO("    x dbins --------------------------->     : moves the top into the DB");
+			LOG_INFO("    dbext|dbread ----------------------> x   : extract/get from the DB's cursor");
+			LOG_INFO("    f dbmov|dbgoto -------------------->     : move or set the DB's cursor");
+			LOG_INFO("    s localtime -----------------------> s   : formats the current local time");
+			LOG_INFO("    s gmtime --------------------------> s   : formats the current UTC time");
+			LOG_INFO("    time ------------------------------> f   : seconds since VM start");
+			LOG_INFO("    s /MD4 digest ---------------------> s   : MD4 digest");
+			LOG_INFO("    s /SHA256 digest ------------------> s   : SHA256 digest");
+			LOG_INFO("    s /formatstring sprintf1s ---------> s   : sprintf with 1 string (pad, cut)");
+			LOG_INFO("    s eval ---------------------------->     : does something eval");
+			LOG_INFO("    Set operations operate on 'such''strings'.");
+			LOG_INFO("    Unknown tokens insert their cvar value.");
 			return;
 		}
 	}

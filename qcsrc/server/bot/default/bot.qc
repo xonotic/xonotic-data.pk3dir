@@ -166,7 +166,7 @@ void bot_setnameandstuff(entity this)
 
 	if(file < 0)
 	{
-		LOG_INFO(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		LOG_INFOF("Error: Can not open the bot configuration file '%s'", autocvar_bot_config_file);
 		readfile = "";
 	}
 	else

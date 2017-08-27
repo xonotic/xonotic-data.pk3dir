@@ -149,7 +149,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		LOG_INFO("'safe' teleport location is not safe!\n");
+		LOG_INFO("'safe' teleport location is not safe!");
 		// FAIL TODO why does this happen?
 		return 0;
 	}
@@ -157,7 +157,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		LOG_INFO("trace_endpos in solid, this can't be!\n");
+		LOG_INFO("trace_endpos in solid, this can't be!");
 		// FAIL TODO why does this happen? (reported by MrBougo)
 		return 0;
 	}
@@ -216,7 +216,7 @@ float Portal_FindSafeOrigin(entity portal)
 	if(!move_out_of_solid(portal))
 	{
 #ifdef DEBUG
-		LOG_INFO("NO SAFE ORIGIN\n");
+		LOG_INFO("NO SAFE ORIGIN");
 #endif
 		return 0;
 	}

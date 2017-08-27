@@ -583,7 +583,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 	if(cvar_type(cvarname) & CVAR_TYPEFLAG_EXISTS)
 		cmdrestriction = cvar_string(cvarname);
 	else
-		LOG_INFO("NOTE: ", cvarname, " does not exist, no restrictions will be applied.\n");
+		LOG_INFO("NOTE: ", cvarname, " does not exist, no restrictions will be applied.");
 
 	if (cmdrestriction == "") return true;
 
