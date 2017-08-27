@@ -472,10 +472,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if (this != attacker) {
 		float realdmg = damage - excess;
 		if (IS_PLAYER(attacker)) {
-			PlayerScore_Add(attacker, SP_DMG, realdmg);
+			GameRules_scoring_add(attacker, DMG, realdmg);
 		}
 		if (IS_PLAYER(this)) {
-			PlayerScore_Add(this, SP_DMGTAKEN, realdmg);
+			GameRules_scoring_add(this, DMGTAKEN, realdmg);
 		}
 	}
 
