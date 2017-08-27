@@ -1,4 +1,8 @@
 #include "vote.qh"
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 #include <common/command/_mod.qh>
 #include "vote.qh"
 
@@ -579,7 +583,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 	if(cvar_type(cvarname) & CVAR_TYPEFLAG_EXISTS)
 		cmdrestriction = cvar_string(cvarname);
 	else
-		LOG_INFO("NOTE: ", cvarname, " does not exist, no restrictions will be applied.\n");
+		LOG_INFO("NOTE: ", cvarname, " does not exist, no restrictions will be applied.");
 
 	if (cmdrestriction == "") return true;
 
@@ -642,7 +646,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 	return true;
 }
 
-float VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
+int VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
 {
 	string first_command;
 
@@ -657,11 +661,11 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 	    (autocvar_sv_vote_limit > 0)
 	    &&
 	    (strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos))) > autocvar_sv_vote_limit)
-	   )   return false;
+	   )   return 0;
 
-	if (!VoteCommand_checkinlist(first_command, vote_list)) return false;
+	if (!VoteCommand_checkinlist(first_command, vote_list)) return 0;
 
-	if (!VoteCommand_checkargs(startpos, argc)) return false;
+	if (!VoteCommand_checkargs(startpos, argc)) return 0;
 
 	switch (first_command) // now go through and parse the proper commands to adjust as needed.
 	{
@@ -682,7 +686,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 				vote_parsed_command = strcat(first_command, " # ", ftos(etof(victim)), " ", command_arguments);
 				vote_parsed_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", reason);
 			}
-			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return false; }
+			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return 0; }
 
 			break;
 		}
@@ -692,7 +696,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		case "gotomap":  // re-direct all map selection commands to gotomap
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
-			if (!vote_command)   return false;
+			if (!vote_command)  return -1;
 			vote_parsed_command = strcat("gotomap ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
@@ -708,7 +712,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		}
 	}
 
-	return true;
+	return 1;
 }
 
 
@@ -755,6 +759,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 		case CMD_REQUEST_COMMAND:
 		{
 			float tmp_playercount = 0;
+			int parse_error;
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 
@@ -787,9 +792,10 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			{
 				print_to(caller, "^1Syntax error in command, see 'vhelp' for more info.");
 			}
-			else if (!VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc))
+			else if ((parse_error = VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc)) <= 0)
 			{
-				print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info.");
+				if(parse_error == 0)
+					print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info.");
 			}
 
 			else  // everything went okay, continue with calling the vote
@@ -844,6 +850,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 				{
 					case "do":
 					{
+						int parse_error;
 						vote_command = VoteCommand_extractcommand(vote_command, 3, argc);
 
 						if (!caller.vote_master) { print_to(caller, "^1You do not have vote master privelages."); }
@@ -851,9 +858,10 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						{
 							print_to(caller, "^1Syntax error in command, see 'vhelp' for more info.");
 						}
-						else if (!VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc))
+						else if ((parse_error = VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc)) <= 0)
 						{
-							print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info.");
+							if(parse_error == 0)
+								print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info.");
 						}
 
 						else  // everything went okay, proceed with command

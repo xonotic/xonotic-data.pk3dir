@@ -1,5 +1,7 @@
 #include "view.qh"
 
+#include "autocvars.qh"
+#include "miscfunctions.qh"
 #include "announcer.qh"
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
@@ -21,6 +23,7 @@
 #include <common/stats.qh>
 #include <common/triggers/target/music.qh>
 #include <common/teams.qh>
+#include <common/wepent.qh>
 
 #include <common/weapons/weapon/tuba.qh>
 
@@ -1779,7 +1782,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		ov_enabled = true;
 
 		#if 0
-		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f",
 			vtos(ov_org),
 			vtos(getpropertyvec(VF_ANGLES)),
 			ov_distance,

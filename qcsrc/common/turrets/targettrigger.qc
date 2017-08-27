@@ -1,4 +1,7 @@
 #include "targettrigger.qh"
+
+#ifdef SVQC
+
 spawnfunc(turret_targettrigger);
 void turret_targettrigger_touch(entity this, entity toucher);
 
@@ -24,3 +27,5 @@ spawnfunc(turret_targettrigger)
 
     settouch(this, turret_targettrigger_touch);
 }
+
+#endif

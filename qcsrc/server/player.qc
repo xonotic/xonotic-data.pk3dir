@@ -1,5 +1,6 @@
 #include "player.qh"
 
+#include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
@@ -21,7 +22,7 @@
 #include "../common/minigames/sv_minigames.qh"
 
 #include "../common/physics/player.qh"
-#include "../common/effects/qc/all.qh"
+#include "../common/effects/qc/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/triggers/include.qh"
 #include "../common/wepent.qh"
@@ -316,9 +317,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= bound(1.0, this.cvar_cl_handicap, 10.0);
-		if(this != attacker)
-			damage /= bound(1.0, attacker.cvar_cl_handicap, 10.0);
+		damage *= bound(1.0, CS(this).cvar_cl_handicap, 10.0);
+		if(this != attacker && IS_PLAYER(attacker))
+			damage /= bound(1.0, CS(attacker).cvar_cl_handicap, 10.0);
 	}
 
 	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
@@ -471,10 +472,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if (this != attacker) {
 		float realdmg = damage - excess;
 		if (IS_PLAYER(attacker)) {
-			PlayerScore_Add(attacker, SP_DMG, realdmg);
+			GameRules_scoring_add(attacker, DMG, realdmg);
 		}
 		if (IS_PLAYER(this)) {
-			PlayerScore_Add(this, SP_DMGTAKEN, realdmg);
+			GameRules_scoring_add(this, DMGTAKEN, realdmg);
 		}
 	}
 
@@ -942,7 +943,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 
 	if(flood)
-		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.\n");
+		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)

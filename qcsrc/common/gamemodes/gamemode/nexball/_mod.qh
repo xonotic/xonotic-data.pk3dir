@@ -1,3 +1,6 @@
 // generated file; do not modify
 #include <common/gamemodes/gamemode/nexball/nexball.qh>
 #include <common/gamemodes/gamemode/nexball/weapon.qh>
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/nexball/sv_weapon.qh>
+#endif

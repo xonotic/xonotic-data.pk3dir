@@ -41,6 +41,13 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+// TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
+void bot_setclientfields(entity this)
+{
+	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+}
+
 entity bot_spawn()
 {
 	entity bot = spawnclient();
@@ -50,6 +57,7 @@ entity bot_spawn()
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
+		bot_setclientfields(bot);
 		PutClientInServer(bot);
 	}
 	return bot;
@@ -158,7 +166,7 @@ void bot_setnameandstuff(entity this)
 
 	if(file < 0)
 	{
-		LOG_INFO(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		LOG_INFOF("Error: Can not open the bot configuration file '%s'", autocvar_bot_config_file);
 		readfile = "";
 	}
 	else
@@ -264,9 +272,6 @@ void bot_setnameandstuff(entity this)
 		bot_model = strcat(bot_model, ".iqm");
 	this.playermodel = this.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	this.playerskin = this.playerskin_freeme = strzone(bot_skin);
-
-	this.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the NULL
-	this.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 void bot_custom_weapon_priority_setup()
@@ -419,7 +424,10 @@ void bot_clientconnect(entity this)
 	this.createdtime = this.bot_nextthink;
 
 	if(!this.bot_config_loaded) // This is needed so team overrider doesn't break between matches
+	{
 		bot_setnameandstuff(this);
+		bot_setclientfields(this);
+	}
 
 	if(this.bot_forced_team==1)
 		this.team = NUM_TEAM_1;
@@ -590,6 +598,16 @@ float bot_fixcount()
 			++realplayers;
 		});
 	}
+	if(currentbots == -1)
+	{
+		currentbots = 0;
+		// human players joining early may cause weird issues (bots appearing on
+		// the scoreboard as spectators) when switching map with the gotomap
+		// command, as it doesn't remove bots of the previous match, and with
+		// minplayers > 1, so ignore human players in the first bot frame
+		// TODO maybe find a cleaner solution
+		activerealplayers = 0;
+	}
 
 	int bots;
 	// add/remove bots if needed to make sure there are at least
@@ -622,8 +640,7 @@ float bot_fixcount()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		//dprint(ftos(bots), " ? ", ftos(currentbots), "\n");
-		while (currentbots < bots)
+		if (currentbots < bots)
 		{
 			if (bot_spawn() == NULL)
 			{
@@ -677,7 +694,10 @@ void bot_serverframe()
 		return;
 
 	if (time < 2)
+	{
+		currentbots = -1;
 		return;
+	}
 
 	bot_calculate_stepheightvec();
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);

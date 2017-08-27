@@ -1,5 +1,8 @@
 #include "mapvoting.qh"
 
+#include "autocvars.qh"
+#include "miscfunctions.qh"
+#include "defs.qh"
 #include "hud/_mod.qh"
 #include "hud/panel/scoreboard.qh"
 
@@ -494,7 +497,7 @@ void Cmd_MapVote_MapDownload(int argc)
 
 	if(argc != 2 || !mv_pk3list)
 	{
-		LOG_INFO(_("mv_mapdownload: ^3You're not supposed to use this command on your own!\n"));
+		LOG_INFO(_("mv_mapdownload: ^3You're not supposed to use this command on your own!"));
 		return;
 	}
 
@@ -504,7 +507,7 @@ void Cmd_MapVote_MapDownload(int argc)
 			break;
 
 	if(!pak || pak.sv_entnum != id) {
-		LOG_INFO(_("^1Error:^7 Couldn't find pak index.\n"));
+		LOG_INFO(_("^1Error:^7 Couldn't find pak index."));
 		return;
 	}
 
@@ -513,7 +516,7 @@ void Cmd_MapVote_MapDownload(int argc)
 		mv_preview[id] = true;
 		return;
 	} else {
-		LOG_INFO(_("Requesting preview...\n"));
+		LOG_INFO(_("Requesting preview..."));
 		localcmd(strcat("\ncmd mv_getpicture ", ftos(id), "\n"));
 	}
 }

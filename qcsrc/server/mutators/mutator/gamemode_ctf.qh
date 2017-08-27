@@ -3,6 +3,23 @@
 #ifdef SVQC
 
 #include "../gamemode.qh"
+
+void ctf_Initialize();
+
+REGISTER_MUTATOR(ctf, false)
+{
+    MUTATOR_STATIC();
+    MUTATOR_ONADD
+    {
+        GameRules_teams(true);
+        GameRules_limit_score(autocvar_capturelimit_override);
+        GameRules_limit_lead(autocvar_captureleadlimit_override);
+
+        ctf_Initialize();
+    }
+    return 0;
+}
+
 // used in cheats.qc
 void ctf_RespawnFlag(entity flag);
 

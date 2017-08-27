@@ -889,20 +889,18 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	delete(e.fake_nade);
 	e.fake_nade = NULL;
 
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
+
 	makevectors(e.v_angle);
 
 	// NOTE: always throw from first weapon entity?
 	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0);
 
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
-
 	vector offset = (v_forward * autocvar_g_nades_throw_offset.x)
-				  + (v_right * autocvar_g_nades_throw_offset.y)
-				  + (v_up * autocvar_g_nades_throw_offset.z);
-	if(autocvar_g_nades_throw_offset == '0 0 0')
-		offset = '0 0 0';
+	              + (v_right * autocvar_g_nades_throw_offset.y)
+	              + (v_up * autocvar_g_nades_throw_offset.z);
 
-	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
+	setorigin(_nade, w_shotorg + offset);
 	//setmodel(_nade, MDL_PROJECTILE_NADE);
 	//setattachment(_nade, NULL, "");
 	PROJECTILE_MAKETRIGGER(_nade);
@@ -1093,8 +1091,8 @@ void nade_prime(entity this)
 	}
 	else
 	{
-		ntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype = ((autocvar_g_nades_client_select) ? CS(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		pntype = ((autocvar_g_nades_client_select) ? CS(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
@@ -1240,7 +1238,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			FOR_EACH_KH_KEY(key) if(key.owner == player) { ++key_count; }
 
 			float time_score;
-			if(player.flagcarried || player.ballcarried) // this player is important
+			if(GameRules_scoring_is_vip(player))
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
 				time_score = autocvar_g_nades_bonus_score_time;
@@ -1250,8 +1248,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 			if(autocvar_g_nades_bonus_client_select)
 			{
-				player.nade_type = player.cvar_cl_nade_type;
-				player.pokenade_type = player.cvar_cl_pokenade_type;
+				player.nade_type = CS(player).cvar_cl_nade_type;
+				player.pokenade_type = CS(player).cvar_cl_pokenade_type;
 			}
 			else
 			{
@@ -1345,7 +1343,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 		player.nade_refire  = time + autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
-		player.nade_type = player.cvar_cl_nade_type;
+		player.nade_type = CS(player).cvar_cl_nade_type;
 
 	player.nade_timer = 0;
 
@@ -1379,7 +1377,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
-		else if(frag_target.flagcarried)
+		else if(GameRules_scoring_is_vip(frag_target))
 			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
 		else if(autocvar_g_nades_bonus_score_spree && CS(frag_attacker).killcount > 1)
 		{
@@ -1479,11 +1477,6 @@ REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Nades");
-}
-
-MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
-{
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Nades");
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)

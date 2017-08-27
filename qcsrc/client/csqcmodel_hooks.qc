@@ -1,4 +1,7 @@
 #include "csqcmodel_hooks.qh"
+#include "autocvars.qh"
+#include "csqcmodel_hooks.qh"
+#include "miscfunctions.qh"
 #include "mutators/events.qh"
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
@@ -6,6 +9,8 @@
 #include <common/ent_cs.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/viewloc.qh>
+#include <common/effects/all.qh>
+#include <common/effects/all.inc>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -129,7 +134,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(entity this)
 		this.forceplayermodels_isgoodmodel = fexists(this.forceplayermodels_savemodel);
 		this.forceplayermodels_isgoodmodel_mdl = this.forceplayermodels_savemodel;
 		if(!this.forceplayermodels_isgoodmodel)
-			LOG_INFOF("Warning: missing model %s has been used\n", this.forceplayermodels_savemodel);
+			LOG_INFOF("Warning: missing model %s has been used", this.forceplayermodels_savemodel);
 	}
 }
 void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)

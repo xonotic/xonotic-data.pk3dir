@@ -1,5 +1,7 @@
 #include "tracing.qh"
 
+#include <common/effects/all.qh>
+
 #include "accuracy.qh"
 #include "common.qh"
 #include "hitplot.qh"
@@ -28,7 +30,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	float oldsolid = ent.dphitcontentsmask;
 	if(!IS_CLIENT(ent))
 		antilag = false; // no antilag for non-clients!
-	if (IS_PLAYER(ent) && ent.(weaponentity).m_weapon == WEP_RIFLE)
+	if (IS_PLAYER(ent) && (ent.(weaponentity).m_weapon.spawnflags & WEP_FLAG_PENETRATEWALLS))
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -84,7 +86,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//vector prevend = w_shotend;
 
 	if (antilag)
-	if (!ent.cvar_cl_noantilag)
+	if (!CS(ent).cvar_cl_noantilag)
 	{
 		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
 		{
@@ -120,7 +122,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 					if (trace_ent == CS(ent).cursor_trace_ent)
 						w_shotdir = normalize(CS(ent).cursor_trace_ent.origin - w_shotorg);
 					else
-						LOG_INFO("antilag fail\n");
+						LOG_INFO("antilag fail");
 				}
 			}
 		}
@@ -183,7 +185,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
 	mspercallcount += 1;
-	LOG_INFO("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
+	LOG_INFO("avg: ", ftos(mspercallcount / mspercallsum), " per sec");
 	#endif
 
 	proj.velocity = W_CalculateProjectileVelocity(proj.owner, proj.owner.velocity, pSpeed * dir, forceAbsolute);
@@ -351,7 +353,8 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	float lag = ((IS_REAL_CLIENT(this)) ? ANTILAG_LATENCY(this) : 0);
 	if(lag < 0.001)
 		lag = 0;
-	if(autocvar_g_antilag == 0 || this.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(this)) ? CS(this).cvar_cl_noantilag : false);
+	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{

@@ -1,5 +1,8 @@
 #include "client.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
 #include "anticheat.qh"
 #include "impulse.qh"
 #include "player.qh"
@@ -110,20 +113,18 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (IS_SPEC(e)) e = e.enemy;
 
 	sf = 0;
-	if (CS(e).race_completed)       sf |= 1; // forced scoreboard
-	if (CS(to).spectatee_status)    sf |= 2; // spectator ent number follows
-	if (CS(e).zoomstate)            sf |= 4; // zoomed
-	if (autocvar_sv_showspectators) sf |= 16; // show spectators
+	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
+	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
+	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (autocvar_sv_showspectators) sf |= BIT(4); // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
 
-	if (sf & 2)
-	{
+	if (sf & BIT(1))
 		WriteByte(MSG_ENTITY, CS(to).spectatee_status);
-	}
 
-	if(sf & 16)
+	if(sf & BIT(4))
 	{
 		float specs = CountSpectators(e, to);
 		WriteByte(MSG_ENTITY, specs);
@@ -1190,7 +1191,10 @@ void ClientConnect(entity this)
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
 	// always track bots, don't ask for cl_allow_uidtracking
-    if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
+	if (IS_BOT_CLIENT(this))
+		PlayerStats_GameReport_AddPlayer(this);
+	else
+		CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
@@ -1239,7 +1243,6 @@ void ClientConnect(entity this)
 	}
 
 	CS(this).jointime = time;
-	CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (IS_REAL_CLIENT(this))
 	{
@@ -1623,7 +1626,6 @@ void player_regen(entity this)
 	regen_health_stable = M_ARGV(9, float);
 	regen_health_rotstable = M_ARGV(10, float);
 
-
 	if(!mutator_returnvalue)
 	if(!STAT(FROZEN, this))
 	{
@@ -1662,6 +1664,18 @@ void player_regen(entity this)
 
 		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
 	}
+	// Ugly hack to make sure the health and armor don't go beyond hard limit.
+	// TODO: Remove this hack when all code uses GivePlayerHealth and
+	// GivePlayerArmor.
+	if (this.health > RESOURCE_AMOUNT_HARD_LIMIT)
+	{
+		this.health = RESOURCE_AMOUNT_HARD_LIMIT;
+	}
+	if (this.armorvalue > RESOURCE_AMOUNT_HARD_LIMIT)
+	{
+		this.armorvalue = RESOURCE_AMOUNT_HARD_LIMIT;
+	}
+	// End hack.
 }
 
 bool zoomstate_set;
@@ -2312,7 +2326,7 @@ void ObserverThink(entity this)
 				TRANSMUTE(Spectator, this);
 			}
 		} else {
-			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? this.cvar_cl_clippedspectating : !this.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS(this).cvar_cl_clippedspectating : !CS(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
 	} else {
@@ -2450,6 +2464,9 @@ Called every frame for each client before the physics are run
 .float last_vehiclecheck;
 void PlayerPreThink (entity this)
 {
+	STAT(GUNALIGN, this) = CS(this).cvar_cl_gunalign; // TODO
+	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS(this).cvar_cl_movement_track_canjump;
+
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
 	if (frametime) {
@@ -2479,19 +2496,19 @@ void PlayerPreThink (entity this)
 	}
 
 	// version nagging
-	if (CS(this).version_nagtime && this.cvar_g_xonoticversion && time > CS(this).version_nagtime) {
+	if (CS(this).version_nagtime && CS(this).cvar_g_xonoticversion && time > CS(this).version_nagtime) {
         CS(this).version_nagtime = 0;
-        if (strstrofs(this.cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(this.cvar_g_xonoticversion, "autobuild", 0) >= 0) {
+        if (strstrofs(CS(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS(this).cvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git client
         } else if (strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git server
-            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
         } else {
-            int r = vercmp(this.cvar_g_xonoticversion, autocvar_g_xonoticversion);
+            int r = vercmp(CS(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
             if (r < 0) { // old client
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
             } else if (r > 0) { // old server
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
             }
         }
     }
@@ -2555,7 +2572,7 @@ void PlayerPreThink (entity this)
 		this.last_vehiclecheck = time + 1;
 	}
 
-	if(!this.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
+	if(!CS(this).cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
 		if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 			PlayerUseKey(this);

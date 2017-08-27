@@ -1,5 +1,7 @@
 #include "roles.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "havocbot.qh"
 
 #include "../cvars.qh"

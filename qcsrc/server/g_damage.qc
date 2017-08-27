@@ -1,5 +1,6 @@
 #include "g_damage.qh"
 
+#include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
@@ -27,7 +28,7 @@
 
 void UpdateFrags(entity player, int f)
 {
-	PlayerTeamScore_AddScore(player, f);
+	GameRules_scoring_add_team(player, SCORE, f);
 }
 
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
@@ -40,23 +41,23 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		if(targ == attacker)
 		{
 			// suicide
-			PlayerScore_Add(attacker, SP_SUICIDES, 1);
+			GameRules_scoring_add(attacker, SUICIDES, 1);
 		}
 		else
 		{
 			// teamkill
-			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
+			GameRules_scoring_add(attacker, KILLS, -1); // or maybe add a teamkills field?
 		}
 	}
 	else
 	{
 		// regular frag
-		PlayerScore_Add(attacker, SP_KILLS, 1);
+		GameRules_scoring_add(attacker, KILLS, 1);
 		if(targ.playerid)
 			PS_GR_P_ADDVAL(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
-	PlayerScore_Add(targ, SP_DEATHS, 1);
+	GameRules_scoring_add(targ, DEATHS, 1);
 
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
@@ -508,7 +509,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		LogDeath("accident", deathtype, targ, targ);
 		GiveFrags(targ, targ, -1, deathtype);
 
-		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
+		if(GameRules_scoring_add(targ, SCORE, 0) == -5)
 		{
 			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
 			PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
@@ -1063,7 +1064,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						force = force * a;
 
 						if(autocvar_g_throughfloor_debug)
-							LOG_INFOF(" D=%f F=%f\n", finaldmg, vlen(force));
+							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
 					}
 
 					//if (targ == attacker)

@@ -1,5 +1,7 @@
 #include "round_handler.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "campaign.qh"
 #include "command/vote.qh"
 #include "../common/util.qh"
