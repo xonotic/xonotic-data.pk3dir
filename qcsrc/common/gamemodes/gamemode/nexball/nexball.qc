@@ -15,6 +15,8 @@ MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
 #ifdef SVQC
 .float metertime = _STAT(NB_METERSTART);
 
+.entity ballcarried;
+
 int autocvar_g_nexball_goalleadlimit;
 #define autocvar_g_nexball_goallimit cvar("g_nexball_goallimit")
 
@@ -151,6 +153,7 @@ void GiveBall(entity plyr, entity ball)
 	{
 		ownr.effects &= ~autocvar_g_nexball_basketball_effects_default;
 		ownr.ballcarried = NULL;
+		GameRules_scoring_vip(ownr, false);
 		if(ownr.metertime)
 		{
 			ownr.metertime = 0;
@@ -173,6 +176,7 @@ void GiveBall(entity plyr, entity ball)
 	ball.weaponentity_fld = weaponentity;
 	ball.team = plyr.team;
 	plyr.ballcarried = ball;
+	GameRules_scoring_vip(plyr, true);
 	ball.nb_dropper = plyr;
 
 	plyr.effects |= autocvar_g_nexball_basketball_effects_default;
@@ -230,8 +234,9 @@ void DropBall(entity ball, vector org, vector vel)
 	WaypointSprite_Spawn(WP_NbBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER); // no health bar please
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 
-	ball.owner.ballcarried = NULL;
-	ball.owner = NULL;
+	entity e = ball.owner; ball.owner = NULL;
+	e.ballcarried = NULL;
+	GameRules_scoring_vip(e, false);
 }
 
 void InitBall(entity this)

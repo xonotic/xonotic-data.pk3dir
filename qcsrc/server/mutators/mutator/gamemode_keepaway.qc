@@ -2,6 +2,8 @@
 
 #include <common/effects/all.qh>
 
+.entity ballcarried;
+
 int autocvar_g_keepaway_ballcarrier_effects;
 float autocvar_g_keepaway_ballcarrier_damage;
 float autocvar_g_keepaway_ballcarrier_force;
@@ -105,6 +107,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	// attach the ball to the player
 	this.owner = toucher;
 	toucher.ballcarried = this;
+	GameRules_scoring_vip(toucher, true);
 	setattachment(this, toucher, "");
 	setorigin(this, '0 0 0');
 
@@ -159,8 +162,9 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	ball.owner.ballcarried = world; // I hope nothing checks to see if the world has the ball in the rest of my code :P
-	ball.owner = NULL;
+	entity e = ball.owner; ball.owner = NULL;
+	e.ballcarried = NULL;
+	GameRules_scoring_vip(e, false);
 	navigation_dynamicgoal_set(ball);
 
 	// reset the player effects
@@ -441,12 +445,12 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 // Initialization
 // ==============
 
+MODEL(KA_BALL, "models/orbs/orbblue.md3");
+
 void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
 {
 	entity e = new(keepawayball);
-	e.model = "models/orbs/orbblue.md3";
-	precache_model(e.model);
-	_setmodel(e, e.model);
+	setmodel(e, MDL_KA_BALL);
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
@@ -466,17 +470,12 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
 }
 
-void ka_ScoreRules()
+void ka_Initialize() // run at the start of a match, initiates game mode
 {
 	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
         field(SP_KEEPAWAY_PICKUPS, "pickups", 0);
         field(SP_KEEPAWAY_CARRIERKILLS, "bckills", 0);
         field(SP_KEEPAWAY_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
-	});
-}
-
-void ka_Initialize() // run at the start of a match, initiates game mode
-{
-	ka_ScoreRules();
+    });
 	ka_SpawnBall();
 }

@@ -23,8 +23,6 @@ void GameRules_limit_time_qualifying(int limit);
  */
 void GameRules_limit_fallbacks();
 
-// derive score_enabled from !frags_enabled
-
 /**
  * @param teams a bitmask of active teams
  * @param spprio player score priority (if frags aren't enabled)
@@ -43,3 +41,11 @@ void _GameRules_scoring_begin(int teams, float spprio, float stprio);
 void _GameRules_scoring_field(entity i, string label, int scoreflags);
 void _GameRules_scoring_field_team(float i, string label, int scoreflags);
 void _GameRules_scoring_end();
+
+/**
+ * Mark a player as being 'important' (flag carrier, ball carrier, etc)
+ * @param player the entity to mark
+ * @param value VIP status
+ */
+void GameRules_scoring_vip(entity player, bool value);
+bool GameRules_scoring_is_vip(entity player);

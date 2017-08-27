@@ -419,6 +419,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	// transfer flag to player
 	flag.owner = player;
 	flag.owner.flagcarried = flag;
+	GameRules_scoring_vip(player, true);
 
 	// reset flag
 	if(player.vehicle)
@@ -476,6 +477,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	setattachment(flag, NULL, "");
 	setorigin(flag, player.origin + FLAG_DROP_OFFSET);
 	flag.owner.flagcarried = NULL;
+	GameRules_scoring_vip(flag.owner, false);
 	flag.owner = NULL;
 	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
@@ -681,6 +683,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	// attach the flag to the player
 	flag.owner = player;
 	player.flagcarried = flag;
+	GameRules_scoring_vip(player, true);
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
@@ -1167,6 +1170,7 @@ void ctf_RespawnFlag(entity flag)
 		WaypointSprite_Kill(flag.wps_flagcarrier);
 
 		flag.owner.flagcarried = NULL;
+		GameRules_scoring_vip(flag.owner, false);
 
 		if(flag.speedrunning)
 			ctf_FakeTimeLimit(flag.owner, -1);

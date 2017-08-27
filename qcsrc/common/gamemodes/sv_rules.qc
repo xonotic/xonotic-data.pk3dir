@@ -91,3 +91,13 @@ void _GameRules_scoring_end()
 {
     ScoreRules_basics_end();
 }
+
+.bool m_GameRules_scoring_vip;
+void GameRules_scoring_vip(entity player, bool value)
+{
+    player.m_GameRules_scoring_vip = value;
+}
+bool GameRules_scoring_is_vip(entity player)
+{
+    return player.m_GameRules_scoring_vip;
+}
