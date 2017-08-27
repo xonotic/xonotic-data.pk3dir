@@ -8,28 +8,19 @@ void lms_Initialize();
 
 REGISTER_MUTATOR(lms, false)
 {
+    MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+        GameRules_limit_score(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override));
+        GameRules_limit_lead(0);
+        GameRules_score_enabled(false);
+        GameRules_scoring(0, 0, 0, {
+            field(SP_LMS_LIVES, "lives", SFL_SORT_PRIO_SECONDARY);
+            field(SP_LMS_RANK, "rank", SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
+        });
+
 		lms_Initialize();
-
-		SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, autocvar_timelimit_override, -1);
 	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back lms_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
 	return 0;
 }
 

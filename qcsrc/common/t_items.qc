@@ -631,12 +631,46 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	}
 }
 
+AUTOCVAR(g_pickup_respawntime_scaling_reciprocal, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `reciprocal` (with `offset` and `linear` set to 0) can be used to achieve a constant number of items spawned *per player*");
+AUTOCVAR(g_pickup_respawntime_scaling_offset, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `offset` offsets the curve left or right - the results are not intuitive and I recommend plotting the respawn time and the number of items per player to see what's happening");
+AUTOCVAR(g_pickup_respawntime_scaling_linear, float, 1.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `linear` can be used to simply scale the respawn time linearly");
+
+float adjust_respawntime(float normal_respawntime) {
+	float r = autocvar_g_pickup_respawntime_scaling_reciprocal;
+	float o = autocvar_g_pickup_respawntime_scaling_offset;
+	float l = autocvar_g_pickup_respawntime_scaling_linear;
+
+	if (r == 0 && l == 1) {
+		return normal_respawntime;
+	}
+
+	CheckAllowedTeams(NULL);
+	GetTeamCounts(NULL);
+	int players = 0;
+	if (c1 != -1) players += c1;
+	if (c2 != -1) players += c2;
+	if (c3 != -1) players += c3;
+	if (c4 != -1) players += c4;
+
+	if (players >= 2) {
+		return normal_respawntime * (r / (players + o) + l);
+	} else {
+		return normal_respawntime;
+	}
+}
+
 void Item_ScheduleRespawn(entity e)
 {
 	if(e.respawntime > 0)
 	{
 		Item_Show(e, 0);
-		Item_ScheduleRespawnIn(e, ITEM_RESPAWNTIME(e));
+
+		float adjusted_respawntime = adjust_respawntime(e.respawntime);
+		//LOG_INFOF("item %s will respawn in %f", e.classname, adjusted_respawntime);
+
+		// range: adjusted_respawntime - respawntimejitter .. adjusted_respawntime + respawntimejitter
+		float actual_time = adjusted_respawntime + crandom() * e.respawntimejitter;
+		Item_ScheduleRespawnIn(e, actual_time);
 	}
 	else // if respawntime is -1, this item does not respawn
 		Item_Show(e, -1);
@@ -665,7 +699,8 @@ void GivePlayerResource(entity player, .float resource_type, float amount)
 				autocvar_g_balance_health_limit);
 			// Correct code:
 			//player.health = bound(player.health, player.health + amount,
-			//	min(autocvar_g_balance_health_limit, ITEM_COUNT_HARD_LIMIT));
+			//	min(autocvar_g_balance_health_limit,
+			//	RESOURCE_AMOUNT_HARD_LIMIT));
 			player.pauserothealth_finished = max(player.pauserothealth_finished,
 				time + autocvar_g_balance_pause_health_rot);
 			return;
@@ -680,7 +715,7 @@ void GivePlayerResource(entity player, .float resource_type, float amount)
 			// Correct code:
 			//player.armorvalue = bound(player.armorvalue, player.armorvalue +
 			//	amount,	min(autocvar_g_balance_armor_limit,
-			//	ITEM_COUNT_HARD_LIMIT));
+			//	RESOURCE_AMOUNT_HARD_LIMIT));
 			player.pauserotarmor_finished = max(player.pauserotarmor_finished,
 				time + autocvar_g_balance_pause_armor_rot);
 			return;
@@ -697,7 +732,7 @@ void GivePlayerResource(entity player, .float resource_type, float amount)
 		case ammo_fuel:
 		{
 			player.ammo_fuel = bound(player.ammo_fuel, player.ammo_fuel +
-				amount, min(g_pickup_fuel_max, ITEM_COUNT_HARD_LIMIT));
+				amount, min(g_pickup_fuel_max, RESOURCE_AMOUNT_HARD_LIMIT));
 			player.pauserotfuel_finished = max(player.pauserotfuel_finished,
 				time + autocvar_g_balance_pause_fuel_rot);
 			return;
@@ -721,7 +756,7 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount)
 	{
 		return;
 	}
-	float maxvalue = ITEM_COUNT_HARD_LIMIT;
+	float maxvalue = RESOURCE_AMOUNT_HARD_LIMIT;
 	switch (ammotype)
 	{
 		case ammo_shells:
@@ -751,7 +786,7 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount)
 		}
 	}
 	player.(ammotype) = min(player.(ammotype) + amount,
-		min(maxvalue, ITEM_COUNT_HARD_LIMIT));
+		min(maxvalue, RESOURCE_AMOUNT_HARD_LIMIT));
 }
 
 void GivePlayerFuel(entity player, float amount)

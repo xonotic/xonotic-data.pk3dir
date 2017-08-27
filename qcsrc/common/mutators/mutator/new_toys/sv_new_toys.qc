@@ -94,7 +94,7 @@ REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overk
 
 	MUTATOR_ONREMOVE
 	{
-		LOG_INFO("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime");
 		return -1;
 	}
 

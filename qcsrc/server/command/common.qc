@@ -179,7 +179,7 @@ float GetFilteredNumber(string input)
 void print_to(entity to, string input)
 {
 	if (to) sprint(to, strcat(input, "\n"));
-	else LOG_INFO(input, "\n");
+	else print(input, "\n");
 }
 
 // ==========================================
@@ -437,7 +437,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 				case "butcher":
 				{
 					if (caller) { print_to(caller, "This command is not available to players"); return; }
-					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(M_ARGV(0, string), "\n"); return; }
+					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFOF("%s", M_ARGV(0, string)); return; }
 
 					int tmp_remcount = 0;
 

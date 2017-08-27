@@ -72,7 +72,7 @@ void viewloc_init(entity this)
 			break;
 		}
 
-	if(!this.enemy) { LOG_INFO("^1FAIL!\n"); delete(this); return; }
+	if(!this.enemy) { LOG_INFO("^1FAIL!"); delete(this); return; }
 
 	if(!this.goalentity)
 		this.goalentity = this.enemy; // make them match so CSQC knows what to do
@@ -86,7 +86,7 @@ void viewloc_init(entity this)
 spawnfunc(trigger_viewlocation)
 {
 	// we won't check target2 here yet, as it may not even need to exist
-	if(this.target == "") { LOG_INFO("^1FAIL!\n"); delete(this); return; }
+	if(this.target == "") { LOG_INFO("^1FAIL!"); delete(this); return; }
 
 	EXACTTRIGGER_INIT;
 	InitializeEntity(this, viewloc_init, INITPRIO_FINDTARGET);
