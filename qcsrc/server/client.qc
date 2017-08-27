@@ -1187,7 +1187,10 @@ void ClientConnect(entity this)
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
 	// always track bots, don't ask for cl_allow_uidtracking
-    if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
+	if (IS_BOT_CLIENT(this))
+		PlayerStats_GameReport_AddPlayer(this);
+	else
+		CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
@@ -1236,7 +1239,6 @@ void ClientConnect(entity this)
 	}
 
 	CS(this).jointime = time;
-	CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (IS_REAL_CLIENT(this))
 	{
