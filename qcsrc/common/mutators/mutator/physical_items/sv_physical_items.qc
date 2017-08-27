@@ -23,7 +23,7 @@ REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
 
 	MUTATOR_ONREMOVE
 	{
-		LOG_INFO("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime");
 		return -1;
 	}
 
