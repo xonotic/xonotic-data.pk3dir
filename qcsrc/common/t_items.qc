@@ -665,7 +665,8 @@ void GivePlayerResource(entity player, .float resource_type, float amount)
 				autocvar_g_balance_health_limit);
 			// Correct code:
 			//player.health = bound(player.health, player.health + amount,
-			//	min(autocvar_g_balance_health_limit, ITEM_COUNT_HARD_LIMIT));
+			//	min(autocvar_g_balance_health_limit,
+			//	RESOURCE_AMOUNT_HARD_LIMIT));
 			player.pauserothealth_finished = max(player.pauserothealth_finished,
 				time + autocvar_g_balance_pause_health_rot);
 			return;
@@ -680,7 +681,7 @@ void GivePlayerResource(entity player, .float resource_type, float amount)
 			// Correct code:
 			//player.armorvalue = bound(player.armorvalue, player.armorvalue +
 			//	amount,	min(autocvar_g_balance_armor_limit,
-			//	ITEM_COUNT_HARD_LIMIT));
+			//	RESOURCE_AMOUNT_HARD_LIMIT));
 			player.pauserotarmor_finished = max(player.pauserotarmor_finished,
 				time + autocvar_g_balance_pause_armor_rot);
 			return;
@@ -697,7 +698,7 @@ void GivePlayerResource(entity player, .float resource_type, float amount)
 		case ammo_fuel:
 		{
 			player.ammo_fuel = bound(player.ammo_fuel, player.ammo_fuel +
-				amount, min(g_pickup_fuel_max, ITEM_COUNT_HARD_LIMIT));
+				amount, min(g_pickup_fuel_max, RESOURCE_AMOUNT_HARD_LIMIT));
 			player.pauserotfuel_finished = max(player.pauserotfuel_finished,
 				time + autocvar_g_balance_pause_fuel_rot);
 			return;
@@ -721,7 +722,7 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount)
 	{
 		return;
 	}
-	float maxvalue = ITEM_COUNT_HARD_LIMIT;
+	float maxvalue = RESOURCE_AMOUNT_HARD_LIMIT;
 	switch (ammotype)
 	{
 		case ammo_shells:
@@ -751,7 +752,7 @@ void GivePlayerAmmo(entity player, .float ammotype, float amount)
 		}
 	}
 	player.(ammotype) = min(player.(ammotype) + amount,
-		min(maxvalue, ITEM_COUNT_HARD_LIMIT));
+		min(maxvalue, RESOURCE_AMOUNT_HARD_LIMIT));
 }
 
 void GivePlayerFuel(entity player, float amount)
