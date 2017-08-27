@@ -1,7 +1,5 @@
 #include "damageeffects.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_NET_LINKED(ENT_CLIENT_DAMAGEINFO)
 
 #ifdef SVQC
@@ -244,7 +242,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		if(it.damageforcescale)
 			if(vdist(thisforce, !=, 0))
 			{
-				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, autocvar_g_balance_damagepush_speedfactor);
+				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, damagepush_speedfactor);
 				UNSET_ONGROUND(it);
 			}
 
@@ -390,6 +388,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		}
 	}
 
+	MUTATOR_CALLHOOK(DamageInfo, this, w_deathtype, w_org);
+
 	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
@@ -411,7 +411,5 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		}
 	}
 }
-
-#endif
 
 #endif

@@ -1,4 +1,8 @@
 #include "cmd.qh"
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 #include <common/command/_mod.qh>
 
 #include "common.qh"
@@ -45,17 +49,19 @@ void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change,
 
 bool SV_ParseClientCommand_floodcheck(entity this)
 {
+	entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+
 	if (!timeout_status)  // not while paused
 	{
-		if (time <= (this.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
+		if (time <= (store.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
-			this.cmd_floodcount += 1;
-			if (this.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
+			store.cmd_floodcount += 1;
+			if (store.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
 		}
 		else
 		{
-			this.cmd_floodtime = time;
-			this.cmd_floodcount = 1;
+			store.cmd_floodtime = time;
+			store.cmd_floodcount = 1;
 		}
 	}
 	return true;  // continue, as we're not flooding yet
@@ -74,8 +80,8 @@ void ClientCommand_autoswitch(entity caller, float request, float argc)
 		{
 			if (argv(1) != "")
 			{
-				caller.autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (caller.autoswitch ? "on" : "off"), ".\n"));
+				CS(caller).autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS(caller).autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
@@ -101,11 +107,11 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 			{
 				if (IS_CLIENT(caller))
 				{
-					caller.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+					CS(caller).version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 
-					if (caller.version < autocvar_gameversion_min || caller.version > autocvar_gameversion_max)
+					if (CS(caller).version < autocvar_gameversion_min || CS(caller).version > autocvar_gameversion_max)
 					{
-						caller.version_mismatch = 1;
+						CS(caller).version_mismatch = true;
 						ClientKill_TeamChange(caller, -2);  // observe
 					}
 					else if (autocvar_g_campaign || autocvar_g_balance_teams)
@@ -214,7 +220,7 @@ void ClientCommand_physics(entity caller, float request, float argc)
 		}
 
 		default:
-			sprint(caller, strcat("Current physics set: ^3", caller.cvar_cl_physics, "\n"));
+			sprint(caller, strcat("Current physics set: ^3", CS(caller).cvar_cl_physics, "\n"));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd physics <physics>\n");
@@ -354,7 +360,7 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 									{
 										sprint(caller, "^7You already are on that team.\n");
 									}
-									else if (caller.wasplayer && autocvar_g_changeteam_banned)
+									else if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
 									{
 										sprint(caller, "^1You cannot change team, forbidden by the server.\n");
 									}
@@ -448,7 +454,7 @@ void ClientCommand_sentcvar(entity caller, float request, float argc, string com
 					tokenize_console(s);
 				}
 
-				GetCvars(caller, 1);
+				GetCvars(caller, CS(caller), 1);
 
 				return;
 			}

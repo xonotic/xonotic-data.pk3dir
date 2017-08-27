@@ -61,7 +61,7 @@ void HUD_Reset ();
 void HUD_Main ();
 
 int race_CheckName(string net_name);
-string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname);
+string MakeRaceString(int cp, float mytime, float theirtime, float othertime, float lapdelta, string theirname);
 
 int vote_yescount;
 int vote_nocount;

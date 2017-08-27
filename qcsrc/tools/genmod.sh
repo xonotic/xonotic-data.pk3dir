@@ -6,9 +6,17 @@ ROOT=$PWD/
 
 MOD=_mod
 
+function hash() {
+    git hash-object $1
+}
+
 function genmod() {
     # use context to work around cmake issue #12619
     CTX="${PWD#$ROOT}/"
+    oldHashC=$(hash ${MOD}.inc)
+    oldTimeC=$(stat -c "%Y" ${MOD}.inc)
+    oldHashH=$(hash ${MOD}.qh)
+    oldTimeH=$(stat -c "%Y" ${MOD}.qh)
     echo '// generated file; do not modify' > ${MOD}.inc
     echo '// generated file; do not modify' > ${MOD}.qh
     for f in $(ls | sort -k 1,1 -t .); do
@@ -43,6 +51,10 @@ function genmod() {
             echo "#include <${CTX}$f/${mod}.qh>" >> ${MOD}.qh
         fi
     fi; done
+    newHashC=$(hash ${MOD}.inc)
+    if [[ $newHashC == $oldHashC ]]; then touch -d @$oldTimeC ${MOD}.inc; fi
+    newHashH=$(hash ${MOD}.qh)
+    if [[ $newHashH == $oldHashH ]]; then touch -d @$oldTimeH ${MOD}.qh; fi
 }
 
 (cd lib; genmod)

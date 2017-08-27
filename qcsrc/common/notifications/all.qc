@@ -200,7 +200,7 @@ string Process_Notif_Line(
 		LOG_INFOF(
 			(
 				"^1TRAILING NEW LINE AT END OF NOTIFICATION: "
-				"^7net_type = %s, net_name = %s, string = %s.\n"
+				"^7net_type = %s, net_name = %s, string = %s."
 			),
 			notiftype,
 			notifname,
@@ -235,7 +235,7 @@ string Process_Notif_Args(
 					LOG_INFOF(
 						(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: "
-							"^7net_type = %s, net_name = %s, max args = %d.\n"
+							"^7net_type = %s, net_name = %s, max args = %d."
 						),
 						notiftype,
 						notifname,
@@ -267,7 +267,7 @@ string Process_Notif_Args(
 						LOG_INFOF(
 							(
 								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: "
-								"^7net_type = %s, net_name = %s, args arg = '%s'.\n"
+								"^7net_type = %s, net_name = %s, args arg = '%s'."
 							),
 							notiftype,
 							notifname,
@@ -286,7 +286,7 @@ string Process_Notif_Args(
 					LOG_INFOF(
 						(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: "
-							"^7net_type = %s, net_name = %s, max hudargs = %d.\n"
+							"^7net_type = %s, net_name = %s, max hudargs = %d."
 						),
 						notiftype,
 						notifname,
@@ -318,7 +318,7 @@ string Process_Notif_Args(
 						LOG_INFOF(
 							(
 								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: "
-								"^7net_type = %s, net_name = %s, hudargs arg = '%s'.\n"
+								"^7net_type = %s, net_name = %s, hudargs arg = '%s'."
 							),
 							notiftype,
 							notifname,
@@ -337,7 +337,7 @@ string Process_Notif_Args(
 					LOG_INFOF(
 						(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: "
-							"^7net_type = %s, net_name = %s, max durcnt = %d.\n"
+							"^7net_type = %s, net_name = %s, max durcnt = %d."
 						),
 						notiftype,
 						notifname,
@@ -372,7 +372,7 @@ string Process_Notif_Args(
 							LOG_INFOF(
 								(
 									"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: "
-									"^7net_type = %s, net_name = %s, durcnt arg = '%s'.\n"
+									"^7net_type = %s, net_name = %s, durcnt arg = '%s'."
 								),
 								notiftype,
 								notifname,
@@ -421,7 +421,7 @@ void Create_Notification_Entity(entity notif,
 			LOG_INFOF(
 				(
 					"^1NOTIFICATION WITH IMPROPER TYPE: "
-					"^7net_type = %d, net_name = %s.\n"
+					"^7net_type = %d, net_name = %s."
 				),
 				typeId,
 				namestring
@@ -471,7 +471,7 @@ void Create_Notification_Entity_Annce(entity notif,
 					LOG_INFOF(
 						(
 							"^1NOTIFICATION WITH NO SOUND: "
-							"^7net_type = %s, net_name = %s.\n"
+							"^7net_type = %s, net_name = %s."
 						),
 						typestring,
 						namestring
@@ -529,7 +529,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 						LOG_INFOF(
 							(
 								"^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: "
-								"^7net_type = %s, net_name = %s, strnum = %d, flnum = %d\n"
+								"^7net_type = %s, net_name = %s, strnum = %d, flnum = %d"
 							),
 							typestring,
 							namestring,
@@ -563,7 +563,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 						LOG_INFOF(
 							(
 								"^1NOTIFICATION HAS HUDARGS BUT NO ICON: "
-								"^7net_type = %s, net_name = %s.\n"
+								"^7net_type = %s, net_name = %s."
 							),
 							typestring,
 							namestring
@@ -635,7 +635,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 					LOG_INFOF(
 						(
 							"^1EMPTY NOTIFICATION: "
-							"^7net_type = %s, net_name = %s.\n"
+							"^7net_type = %s, net_name = %s."
 						),
 						typestring,
 						namestring
@@ -661,7 +661,7 @@ void Create_Notification_Entity_Multi(entity notif,
 				LOG_INFOF(
 					(
 						"^1NOTIFICATION WITH NO SUBCALLS: "
-						"^7net_type = %s, net_name = %s.\n"
+						"^7net_type = %s, net_name = %s."
 					),
 					typestring,
 					namestring
@@ -713,7 +713,7 @@ void Create_Notification_Entity_Choice(entity notif,
 				LOG_INFOF(
 					(
 						"^1NOTIFICATION IS MISSING CHOICE PARAMS: "
-						"^7net_type = %s, net_name = %s.\n"
+						"^7net_type = %s, net_name = %s."
 					),
 					typestring,
 					namestring
@@ -764,6 +764,7 @@ void Notification_GetCvars(entity this)
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
 		GetCvars_handleFloat(
 			this,
+			CS(this),
 			get_cvars_s,
 			get_cvars_f,
 			msg_choice_choices[it.nent_choice_idx],
@@ -1605,7 +1606,7 @@ void Send_Notification(
 
 		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN { \
 			if (notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) { \
-				switch (ent.msg_choice_choices[net_name.nent_choice_idx]) \
+				switch (CS(ent).msg_choice_choices[net_name.nent_choice_idx]) \
 				{ \
 					case 1: found_choice = notif.nent_optiona; break; \
 					case 2: found_choice = notif.nent_optionb; break; \

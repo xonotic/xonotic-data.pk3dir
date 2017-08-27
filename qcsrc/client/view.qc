@@ -1,5 +1,7 @@
 #include "view.qh"
 
+#include "autocvars.qh"
+#include "miscfunctions.qh"
 #include "announcer.qh"
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
@@ -21,6 +23,7 @@
 #include <common/stats.qh>
 #include <common/triggers/target/music.qh>
 #include <common/teams.qh>
+#include <common/wepent.qh>
 
 #include <common/weapons/weapon/tuba.qh>
 
@@ -311,6 +314,7 @@ void viewmodel_draw(entity this)
 		e.csqcmodel_effects = fx;
 		CSQCModel_Effects_Apply(e);
 	}
+	if(a >= 0)
 	{
 		string name = wep.mdl;
 		string newname = wep.wr_viewmodel(wep, this);
@@ -1347,6 +1351,71 @@ void HUD_Crosshair(entity this)
 	}
 }
 
+const int MAX_SPECIALCOMMAND = 15;
+vector specialcommand_slots[MAX_SPECIALCOMMAND];
+vector specialcommand_colors[MAX_SPECIALCOMMAND];
+const float SPECIALCOMMAND_SPEED = 150;
+const float SPECIALCOMMAND_TURNSPEED = 2;
+const float SPECIALCOMMAND_SIZE = 0.025;
+const float SPECIALCOMMAND_CHANCE = 0.35;
+float sc_spawntime, sc_changetime;
+vector sc_color = '1 1 1';
+void SpecialCommand()
+{
+	if(!STAT(MOVEVARS_SPECIALCOMMAND))
+		return;
+
+	if(time >= sc_changetime)
+	{
+		sc_changetime = time + 1;
+		sc_color = randomvec() * 1.5;
+		sc_color.x = bound(0.2, sc_color.x, 0.75);
+		sc_color.y = bound(0.2, sc_color.y, 0.75);
+		sc_color.z = bound(0.2, sc_color.z, 0.75);
+	}
+	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), sc_color, autocvar_hud_colorflash_alpha * bound(0.1, sc_changetime - time, 0.3), DRAWFLAG_ADDITIVE);
+
+	if(!precache_pic("gfx/smile"))
+		return; // damn party poopers
+
+	for(int j = MAX_SPECIALCOMMAND - 1; j >= 0; --j)
+	{
+		vector slot = specialcommand_slots[j];
+		if(slot.y)
+			slot.y += SPECIALCOMMAND_SPEED * frametime;
+		if(slot.z)
+			slot.z = sin(SPECIALCOMMAND_TURNSPEED * M_PI * time);
+		if(slot.y >= vid_conheight)
+			slot = '0 0 0';
+
+		if(slot == '0 0 0')
+		{
+			if(random() <= SPECIALCOMMAND_CHANCE && time > sc_spawntime) // low chance to spawn!
+			{
+				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
+				slot.y = 1; // start it off 0 so we can use it
+				slot.z = random();
+				sc_spawntime = time + bound(0.4, random(), 0.75); // prevent spawning another one for this amount of time!
+				vector newcolor = randomvec() * 2;
+				newcolor.x = bound(0.4, newcolor.x, 1);
+				newcolor.y = bound(0.4, newcolor.y, 1);
+				newcolor.z = bound(0.4, newcolor.z, 1);
+				specialcommand_colors[j] = newcolor;
+			}
+		}
+		else
+		{
+			vector splash_size = '0 0 0';
+			splash_size.x = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
+			splash_size.y = max(vid_conwidth, vid_conheight) * SPECIALCOMMAND_SIZE;
+			drawpic(vec2(slot), "gfx/smile", vec2(splash_size), specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+			//drawrotpic(vec2(slot), slot.z, "gfx/smile", vec2(splash_size), vec2(splash_size) / 2, specialcommand_colors[j], 0.95, DRAWFLAG_NORMAL);
+		}
+
+		specialcommand_slots[j] = slot;
+	}
+}
+
 void HUD_Draw(entity this)
 {
 	// if we don't know gametype and scores yet avoid drawing the scoreboard
@@ -1402,6 +1471,7 @@ void HUD_Draw(entity this)
 		}
 
 	// crosshair goes VERY LAST
+	SpecialCommand();
 	UpdateDamage();
 	HUD_Crosshair(this);
 	HitSound();
@@ -1712,7 +1782,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		ov_enabled = true;
 
 		#if 0
-		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f",
 			vtos(ov_org),
 			vtos(getpropertyvec(VF_ANGLES)),
 			ov_distance,
@@ -2045,7 +2115,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 
 	// improved polyblend
-	if(autocvar_hud_contents)
+	if(autocvar_hud_contents && !MUTATOR_CALLHOOK(HUD_Contents))
 	{
 		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
 		vector liquidcolor;
@@ -2256,7 +2326,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// draw 2D entities
 	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
-#ifdef DEBUGDRAW
+#if ENABLE_DEBUGDRAW
 	Debug_Draw();
 #endif
 

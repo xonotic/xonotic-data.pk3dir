@@ -30,9 +30,9 @@ NET_HANDLE(itemstime, bool isNew)
 #ifdef CSQC
 void Item_ItemsTime_Init()
 {
-    FOREACH(Items, true, LAMBDA(
+    FOREACH(Items, true, {
         ItemsTime_time[it.m_id] = -1;
-    ));
+    });
     ItemsTime_time[Items_MAX] = -1;
 }
 
@@ -79,9 +79,9 @@ float it_times[Items_MAX + 1];
 
 void Item_ItemsTime_Init()
 {
-    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), {
         it_times[it.m_id] = -1;
-    ));
+    });
     it_times[Items_MAX] = -1;
 }
 
@@ -92,25 +92,25 @@ STATIC_INIT(ItemsTime_Init) {
 
 void Item_ItemsTime_ResetTimes()
 {
-    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), {
         it_times[it.m_id] = (it_times[it.m_id] == -1) ? -1 : 0;
-    ));
+    });
     it_times[Items_MAX] = (it_times[Items_MAX] == -1) ? -1 : 0;
 }
 
 void Item_ItemsTime_ResetTimesForPlayer(entity e)
 {
-    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), {
         IT_Write(e, it.m_id, (it_times[it.m_id] == -1) ? -1 : 0);
-    ));
+    });
     IT_Write(e, Items_MAX, (it_times[Items_MAX] == -1) ? -1 : 0);
 }
 
 void Item_ItemsTime_SetTimesForPlayer(entity e)
 {
-    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), {
         IT_Write(e, it.m_id, it_times[it.m_id]);
-    ));
+    });
     IT_Write(e, Items_MAX, it_times[Items_MAX]);
 }
 
@@ -131,7 +131,7 @@ void Item_ItemsTime_SetTime(entity e, float t)
 
 void Item_ItemsTime_SetTimesForAllPlayers()
 {
-    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it) || autocvar_sv_itemstime == 2), LAMBDA(Item_ItemsTime_SetTimesForPlayer(it)));
+    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it) || autocvar_sv_itemstime == 2), { Item_ItemsTime_SetTimesForPlayer(it); });
 }
 
 float Item_ItemsTime_UpdateTime(entity e, float t)
@@ -293,23 +293,23 @@ void HUD_ItemsTime()
     int count = 0;
     if (autocvar_hud_panel_itemstime_hidespawned == 1)
     {
-        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+        FOREACH(Items, Item_ItemsTime_Allow(it), {
             count += (Item_ItemsTime_GetTime(it.m_id) > time || -Item_ItemsTime_GetTime(it.m_id) > time);
-        ));
+        });
         count += (Item_ItemsTime_GetTime(Items_MAX) > time || -Item_ItemsTime_GetTime(Items_MAX) > time);
     }
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
     {
-        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+        FOREACH(Items, Item_ItemsTime_Allow(it), {
             count += (Item_ItemsTime_GetTime(it.m_id) > time);
-        ));
+        });
         count += (Item_ItemsTime_GetTime(Items_MAX) > time);
     }
     else
     {
-        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+        FOREACH(Items, Item_ItemsTime_Allow(it), {
             count += (Item_ItemsTime_GetTime(it.m_id) != -1);
-        ));
+        });
         count += (Item_ItemsTime_GetTime(Items_MAX) != -1);
     }
     if (count == 0)
@@ -385,7 +385,7 @@ void HUD_ItemsTime()
     bool item_available;
     int id = 0;
     string icon = "";
-    FOREACH(Items, Item_ItemsTime_Allow(it) && Item_ItemsTime_GetTime(it.m_id) != -1, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it) && Item_ItemsTime_GetTime(it.m_id) != -1, {
     	id = it.m_id;
     	icon = it.m_icon;
 
@@ -429,7 +429,7 @@ LABEL(iteration)
         }
         if(id == Items_MAX) // can happen only in the last fake iteration
         	break;
-    ));
+    });
     // add another fake iteration for superweapons time
     if(id < Items_MAX && Item_ItemsTime_GetTime(Items_MAX) != -1)
     {

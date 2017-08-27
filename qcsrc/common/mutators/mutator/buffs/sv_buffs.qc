@@ -85,7 +85,7 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 	if (view.buffs)
 	{
-		return view.cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
+		return CS(view).cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
 	}
 
 	return WaypointSprite_visible_for_player(this, player, view);
@@ -157,16 +157,8 @@ void buff_Touch(entity this, entity toucher)
 		return;
 	}
 
-	if((this.team && DIFF_TEAM(toucher, this))
-	|| (STAT(FROZEN, toucher))
-	|| (toucher.vehicle)
-	|| (time < toucher.buff_shield)
-	|| (!this.buff_active)
-	)
-	{
-		// can't touch this
+	if(!this.buff_active)
 		return;
-	}
 
 	if(MUTATOR_CALLHOOK(BuffTouch, this, toucher))
 		return;
@@ -175,9 +167,19 @@ void buff_Touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return; // incase mutator changed toucher
 
+	if((this.team && DIFF_TEAM(toucher, this))
+	|| (STAT(FROZEN, toucher))
+	|| (toucher.vehicle)
+	|| (time < PS(toucher).buff_shield)
+	)
+	{
+		// can't touch this
+		return;
+	}
+
 	if (toucher.buffs)
 	{
-		if (toucher.cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
+		if (CS(toucher).cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
 		{
 			int buffid = buff_FirstFromFlags(toucher.buffs).m_id;
 			//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_DROP, toucher.buffs);
@@ -550,7 +552,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 
 	player.buffs = 0;
 	player.buff_time = 0;
-	player.buff_shield = time + 0.5; // prevent picking up buffs immediately
+	PS(player).buff_shield = time + 0.5; // prevent picking up buffs immediately
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
@@ -619,7 +621,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		player.buffs = 0;
-		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
+		PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
 		//player.buff_time = 0; // already notified
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
@@ -635,7 +637,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, player))
 			{
@@ -646,7 +648,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 					closest = it;
 				}
 			}
-		));
+		});
 
 		if(closest)
 		{
@@ -821,7 +823,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			else
 				Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 			player.buffs = 0;
-			player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
+			PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
 		}
 	}
 

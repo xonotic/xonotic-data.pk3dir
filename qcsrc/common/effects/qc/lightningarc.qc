@@ -1,6 +1,5 @@
 #include "lightningarc.qh"
 
-#ifdef IMPLEMENTATION
 REGISTER_NET_TEMP(TE_CSQC_ARC)
 
 #if defined(SVQC)
@@ -115,7 +114,5 @@ void b_make(vector s,vector e, string t,float l,float z)
 			cl_effects_lightningarc(from, to, seglength, drifts, drifte, branchfactor, branchfactor_add);
 		}
 	}
-
-#endif
 
 #endif

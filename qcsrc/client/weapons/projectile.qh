@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/sounds/sound.qh>
+
 entityclass(Projectile);
 class(Projectile).int traileffect;
 

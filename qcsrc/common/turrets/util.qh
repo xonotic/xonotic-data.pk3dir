@@ -1,4 +1,8 @@
 #pragma once
 
+#ifdef SVQC
+
 float turret_tag_fire_update(entity this);
 void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax, float bforce, float f_dmg, float f_velfactor, float deathtype);
+
+#endif

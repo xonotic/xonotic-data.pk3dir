@@ -50,9 +50,9 @@
 #ifdef SVQC
 	#include "config.qc"
 #endif
-#define IMPLEMENTATION
-#include "all.inc"
-#undef IMPLEMENTATION
+
+#include "weapon/_mod.inc"
+
 
 // WEAPON PLUGIN SYSTEM
 
@@ -192,14 +192,11 @@ string W_FixWeaponOrder_ForceComplete(string order)
 	return W_FixWeaponOrder(order, 1);
 }
 
-void W_RandomWeapons(entity e, float n)
+void W_RandomWeapons(entity e, int n)
 {
-	int i;
-	WepSet remaining;
-	WepSet result;
-	remaining = e.weapons;
-	result = '0 0 0';
-	for (i = 0; i < n; ++i)
+	WepSet remaining = e.weapons;
+	WepSet result = '0 0 0';
+	for (int j = 0; j < n; ++j)
 	{
 		RandomSelection_Init();
 		FOREACH(Weapons, it != WEP_Null, {
@@ -642,12 +639,12 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 		}
 		default:
 		{
-			LOG_INFOF("Incorrect parameters for ^2%s^7\n", "weapon_find");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", "weapon_find");
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd weapon_find weapon\n");
-			LOG_INFO("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.\n");
+			LOG_INFO("Usage:^3 cl_cmd weapon_find weapon");
+			LOG_INFO("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
 		}
 	}

@@ -134,10 +134,17 @@ void Item_PreDraw(entity this)
 	}
 	float alph;
 	vector org = getpropertyvec(VF_ORIGIN);
-	if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
-		alph = 0;
-	else if(this.fade_start)
-		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	//if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
+		//alph = 0; // this shouldn't be needed, since items behind walls are culled anyway
+	if(this.fade_start)
+	{
+		if(vdist(org - this.origin, >, this.fade_end))
+			alph = 0; // save on some processing
+		else if(vdist(org - this.origin, <, this.fade_start))
+			alph = 1; // more processing saved
+		else
+			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	}
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
@@ -641,7 +648,119 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
+void GivePlayerResource(entity player, .float resource_type, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	switch (resource_type)
+	{
+		case health:
+		{
+			// Ugly hack. We do not check if health goes beyond hard limit since
+			// currently it is done in player_regen. We need to bring back this
+			// check when other code is ported to this function.
+			player.health = bound(player.health, player.health + amount,
+				autocvar_g_balance_health_limit);
+			// Correct code:
+			//player.health = bound(player.health, player.health + amount,
+			//	min(autocvar_g_balance_health_limit,
+			//	RESOURCE_AMOUNT_HARD_LIMIT));
+			player.pauserothealth_finished = max(player.pauserothealth_finished,
+				time + autocvar_g_balance_pause_health_rot);
+			return;
+		}
+		case armorvalue:
+		{
+			// Ugly hack. We do not check if armor goes beyond hard limit since
+			// currently it is done in player_regen. We need to bring back this
+			// check when other code is ported to this function.
+			player.armorvalue = bound(player.armorvalue, player.armorvalue +
+				amount, autocvar_g_balance_armor_limit);
+			// Correct code:
+			//player.armorvalue = bound(player.armorvalue, player.armorvalue +
+			//	amount,	min(autocvar_g_balance_armor_limit,
+			//	RESOURCE_AMOUNT_HARD_LIMIT));
+			player.pauserotarmor_finished = max(player.pauserotarmor_finished,
+				time + autocvar_g_balance_pause_armor_rot);
+			return;
+		}
+		case ammo_shells:
+		case ammo_nails:
+		case ammo_rockets:
+		case ammo_cells:
+		case ammo_plasma:
+		{
+			GivePlayerAmmo(player, resource_type, amount);
+			return;
+		}
+		case ammo_fuel:
+		{
+			player.ammo_fuel = bound(player.ammo_fuel, player.ammo_fuel +
+				amount, min(g_pickup_fuel_max, RESOURCE_AMOUNT_HARD_LIMIT));
+			player.pauserotfuel_finished = max(player.pauserotfuel_finished,
+				time + autocvar_g_balance_pause_fuel_rot);
+			return;
+		}
+	}
+}
+
+void GivePlayerHealth(entity player, float amount)
+{
+	GivePlayerResource(player, health, amount);
+}
+
+void GivePlayerArmor(entity player, float amount)
+{
+	GivePlayerResource(player, armorvalue, amount);
+}
+
+void GivePlayerAmmo(entity player, .float ammotype, float amount)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	float maxvalue = RESOURCE_AMOUNT_HARD_LIMIT;
+	switch (ammotype)
+	{
+		case ammo_shells:
+		{
+			maxvalue = g_pickup_shells_max;
+			break;
+		}
+		case ammo_cells:
+		{
+			maxvalue = g_pickup_cells_max;
+			break;
+		}
+		case ammo_rockets:
+		{
+			maxvalue = g_pickup_rockets_max;
+			break;
+		}
+		case ammo_plasma:
+		{
+			maxvalue = g_pickup_plasma_max;
+			break;
+		}
+		case ammo_nails:
+		{
+			maxvalue = g_pickup_nails_max;
+			break;
+		}
+	}
+	player.(ammotype) = min(player.(ammotype) + amount,
+		min(maxvalue, RESOURCE_AMOUNT_HARD_LIMIT));
+}
+
+void GivePlayerFuel(entity player, float amount)
+{
+	GivePlayerResource(player, ammo_fuel, amount);
+}
+
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax)
 {
 	if (!item.(ammotype))
 		return false;
@@ -650,8 +769,13 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 	{
 		if ((player.(ammotype) < ammomax) || item.pickup_anyway > 0)
 		{
-			player.(ammotype) = bound(player.(ammotype), ammomax, player.(ammotype) + item.(ammotype));
-			goto YEAH;
+			float amount = item.(ammotype);
+			if ((player.(ammotype) + amount) > ammomax)
+			{
+				amount = ammomax - player.(ammotype);
+			}
+			GivePlayerResource(player, ammotype, amount);
+			return true;
 		}
 	}
 	else if(g_weapon_stay == 2)
@@ -659,29 +783,11 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 		float mi = min(item.(ammotype), ammomax);
 		if (player.(ammotype) < mi)
 		{
-			player.(ammotype) = mi;
-			goto YEAH;
+			GivePlayerResource(player, ammotype, mi - player.(ammotype));
 		}
+		return true;
 	}
-
 	return false;
-
-LABEL(YEAH)
-	switch(mode)
-	{
-		case ITEM_MODE_FUEL:
-			player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
-			break;
-		case ITEM_MODE_HEALTH:
-			player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-			break;
-		case ITEM_MODE_ARMOR:
-			player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
-			break;
-		default:
-			break;
-	}
-	return true;
 }
 
 float Item_GiveTo(entity item, entity player)
@@ -695,7 +801,7 @@ float Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 
-	if(player.autoswitch)
+	if(CS(player).autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -710,16 +816,14 @@ float Item_GiveTo(entity item, entity player)
 			}
 		}
 	}
-
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_plasma, g_pickup_plasma_max, ITEM_MODE_NONE);
-	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
-	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
-
+	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health);
+	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_plasma, g_pickup_plasma_max);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w;
@@ -868,7 +972,7 @@ LABEL(pickup)
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
-		delete (this);
+		delete(this);
 	else if (this.spawnshieldtime)
 	{
 		entity e;
@@ -1024,25 +1128,27 @@ float ammo_pickupevalfunc(entity player, entity item)
 		rating = item.bot_pickupbasevalue;
 	}
 
+	float noammorating = 0.5;
+
 	if ((need_shells) && (item.ammo_shells) && (player.ammo_shells < g_pickup_shells_max))
-		c = item.ammo_shells / player.ammo_shells;
+		c = item.ammo_shells / max(noammorating, player.ammo_shells);
 
 	if ((need_nails) && (item.ammo_nails) && (player.ammo_nails < g_pickup_nails_max))
-		c = item.ammo_nails / player.ammo_nails;
+		c = item.ammo_nails / max(noammorating, player.ammo_nails);
 
 	if ((need_rockets) && (item.ammo_rockets) && (player.ammo_rockets < g_pickup_rockets_max))
-		c = item.ammo_rockets / player.ammo_rockets;
+		c = item.ammo_rockets / max(noammorating, player.ammo_rockets);
 
 	if ((need_cells) && (item.ammo_cells) && (player.ammo_cells < g_pickup_cells_max))
-		c = item.ammo_cells / player.ammo_cells;
+		c = item.ammo_cells / max(noammorating, player.ammo_cells);
 
 	if ((need_plasma) && (item.ammo_plasma) && (player.ammo_plasma < g_pickup_plasma_max))
-		c = item.ammo_plasma / player.ammo_plasma;
+		c = item.ammo_plasma / max(noammorating, player.ammo_plasma);
 
 	if ((need_fuel) && (item.ammo_fuel) && (player.ammo_fuel < g_pickup_fuel_max))
-		c = item.ammo_fuel / player.ammo_fuel;
+		c = item.ammo_fuel / max(noammorating, player.ammo_fuel);
 
-	rating *= min(2, c);
+	rating *= min(c, 2);
 	if(wpn)
 		rating += wpn.bot_pickupbasevalue * 0.1;
 	return rating;
@@ -1170,7 +1276,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
-			delete (this);
+			delete(this);
 			return;
 		}
 
@@ -1208,7 +1314,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			// target_give not yet supported; maybe later
 			print("removed targeted ", this.classname, "\n");
 			startitem_failed = true;
-			remove (this);
+			delete(this);
 			return;
 		}
 		*/
@@ -1364,7 +1470,7 @@ spawnfunc(item_rockets)
 
 spawnfunc(item_bullets)
 {
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap && 
+	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
 	   (this.classname != "droppedweapon"))
 	{
 		weaponswapping = true;
@@ -1721,7 +1827,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	int _switchweapon = 0;
 
-	if(e.autoswitch)
+	if(CS(e).autoswitch)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{

@@ -259,9 +259,9 @@ string spritelookuptext(entity this, string s)
     }
 
     // need to loop, as our netname could be one of three
-    FOREACH(Waypoints, it.netname == s, LAMBDA(
+    FOREACH(Waypoints, it.netname == s, {
         return it.m_name;
-    ));
+    });
 
     return s;
 }
@@ -530,7 +530,7 @@ void Draw_WaypointSprite(entity this)
     if (rgb == '0 0 0')
     {
         this.teamradar_color = '1 0 1';
-        LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
+        LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
     }
 
     if (time - floor(time) > 0.5)

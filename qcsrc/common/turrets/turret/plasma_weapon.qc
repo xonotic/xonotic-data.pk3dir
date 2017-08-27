@@ -1,7 +1,5 @@
 #include "plasma_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 SOUND(PlasmaAttack_FIRE, W_Sound("electro_fire"));
 METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -21,7 +19,5 @@ METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
 	}
 }
-
-#endif
 
 #endif

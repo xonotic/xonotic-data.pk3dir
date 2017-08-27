@@ -1,7 +1,5 @@
 #include "hellion_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 float autocvar_g_turrets_unit_hellion_shot_speed_gain;
@@ -101,7 +99,5 @@ void turret_hellion_missile_think(entity this)
 
     UpdateCSQCProjectile(this);
 }
-
-#endif
 
 #endif

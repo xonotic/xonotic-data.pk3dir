@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef SVQC
+#include <server/defs.qh>
+#endif
+
+/// \brief Unconditional maximum amount of resources the player can have.
+const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
+
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
@@ -81,11 +88,40 @@ void Item_ScheduleRespawnIn(entity e, float t);
 void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
-float ITEM_MODE_NONE = 0;
-float ITEM_MODE_HEALTH = 1;
-float ITEM_MODE_ARMOR = 2;
-float ITEM_MODE_FUEL = 3;
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode);
+
+/// \brief Gives player a resource such as health, armor or ammo.
+/// \param[in,out] player Player to give resource to.
+/// \param[in] resource_type Type of the resource.
+/// \param[in] amount Amount of resource to give.
+/// \return No return.
+void GivePlayerResource(entity player, .float resource_type, float amount);
+
+/// \brief Gives health to the player.
+/// \param[in,out] player Player to give health to.
+/// \param[in] amount Amount of health to give.
+/// \return No return.
+void GivePlayerHealth(entity player, float amount);
+
+/// \brief Gives armor to the player.
+/// \param[in,out] player Player to give armor to.
+/// \param[in] amount Amount of armor to give.
+/// \return No return.
+void GivePlayerArmor(entity player, float amount);
+
+/// \brief Gives ammo of the specified type to the player.
+/// \param[in,out] player Player to give ammo to.
+/// \param[in] type Ammo type property.
+/// \param[in] amount Amount of ammo to give.
+/// \return No return.
+void GivePlayerAmmo(entity player, .float ammotype, float amount);
+
+/// \brief Gives fuel to the player.
+/// \param[in,out] player Player to give fuel to.
+/// \param[in] amount Amount of fuel to give.
+/// \return No return.
+void GivePlayerFuel(entity player, float amount);
+
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax);
 
 float Item_GiveTo(entity item, entity player);
 

@@ -17,10 +17,10 @@ TODO:
 
 bool item_keys_usekey(entity l, entity p)
 {
-	float valid = l.itemkeys & p.itemkeys;
+	int valid = l.itemkeys & PS(p).itemkeys;
 
 	if (!valid) {
-		// other has none of the needed keys
+		// player has none of the needed keys
 		return false;
 	} else if (l.itemkeys == valid) {
 		// ALL needed keys were given
@@ -74,10 +74,10 @@ void item_key_touch(entity this, entity toucher)
 		return;
 
 	// player already picked up this key
-	if (toucher.itemkeys & this.itemkeys)
+	if (PS(toucher).itemkeys & this.itemkeys)
 		return;
 
-	toucher.itemkeys |= this.itemkeys;
+	PS(toucher).itemkeys |= this.itemkeys;
 	play2(toucher, this.noise);
 
 	centerprint(toucher, this.message);

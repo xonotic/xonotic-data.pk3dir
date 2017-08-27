@@ -4,6 +4,7 @@
 #elif defined(SVQC)
     #include "defs.qh"
     #include "playerdemo.qh"
+	#include <common/state.qh>
 #endif
 
 .float playerdemo_fh;
@@ -21,7 +22,7 @@ void playerdemo_shutdown(entity this)
 {
 	if(this.playerdemo_mode != PLAYERDEMO_MODE_OFF)
 	{
-		LOG_INFO("playerdemo: ", this.netname, " closed\n");
+		LOG_INFO("playerdemo: ", this.netname, " closed");
 		fclose(this.playerdemo_fh);
 	}
 	this.playerdemo_mode = 0;
@@ -35,7 +36,7 @@ void playerdemo_open_read(entity this, string f)
 	this.playerdemo_time = stof(fgets(this.playerdemo_fh));
 	this.playerdemo_time += this.playerdemo_starttime;
 	set_movetype(this, MOVETYPE_NONE);
-	LOG_INFO("playerdemo: ", this.netname, " reading from ", f, "\n");
+	LOG_INFO("playerdemo: ", this.netname, " reading from ", f);
 }
 void playerdemo_open_write(entity this, string f)
 {
@@ -43,8 +44,8 @@ void playerdemo_open_write(entity this, string f)
 	this.playerdemo_mode = PLAYERDEMO_MODE_WRITING;
 	this.playerdemo_fh = fopen(f, FILE_WRITE);
 	this.playerdemo_starttime = time - 1;
-	LOG_INFO("playerdemo: ", this.netname, " writing to ", f, "\n");
-	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
+	LOG_INFO("playerdemo: ", this.netname, " writing to ", f);
+	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!");
 }
 #define PLAYERDEMO_FIELD(ent,func,t,f) func##t(ent,f,#f);
 #define PLAYERDEMO_FIELDS(ent,func) \
@@ -60,11 +61,11 @@ void playerdemo_open_write(entity this, string f)
 	PLAYERDEMO_FIELD(ent,func,float,frame) \
 	PLAYERDEMO_FIELD(ent,func,float,effects) \
 	/* PLAYERDEMO_FIELD(ent,func,float,switchweapon) */ \
-	PLAYERDEMO_FIELD(ent,func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
-	PLAYERDEMO_FIELD(ent,func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
-	PLAYERDEMO_FIELD(ent,func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
-	PLAYERDEMO_FIELD(ent,func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
-	PLAYERDEMO_FIELD(ent,func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
+	PLAYERDEMO_FIELD(CS(ent),func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
 	PLAYERDEMO_FIELD(ent,func,float,flags) \
 	// end of list
 
@@ -160,6 +161,10 @@ float playerdemo_read(entity this)
 		this.playerdemo_time += this.playerdemo_starttime;
 	}
 	this.velocity = '0 0 0';
+	CS(this).movement = '0 0 0';
+	this.dmg_take = 0; // so screen doesn't stay blurry
+	this.dmg_save = 0;
+	this.dmg_inflictor = NULL;
 	time = t;
 	return 1;
 }

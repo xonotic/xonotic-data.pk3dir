@@ -1,5 +1,7 @@
 #include "navigation.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include "bot.qh"

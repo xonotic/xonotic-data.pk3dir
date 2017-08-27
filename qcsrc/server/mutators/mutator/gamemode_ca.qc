@@ -6,7 +6,7 @@ bool autocvar_g_ca_spectate_enemies;
 void CA_count_alive_players()
 {
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		switch(it.team)
 		{
 			case NUM_TEAM_1: ++total_players; if(!IS_DEAD(it)) ++redalive; break;
@@ -14,13 +14,13 @@ void CA_count_alive_players()
 			case NUM_TEAM_3: ++total_players; if(!IS_DEAD(it)) ++yellowalive; break;
 			case NUM_TEAM_4: ++total_players; if(!IS_DEAD(it)) ++pinkalive; break;
 		}
-	));
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	});
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		it.redalive_stat = redalive;
 		it.bluealive_stat = bluealive;
 		it.yellowalive_stat = yellowalive;
 		it.pinkalive_stat = pinkalive;
-	));
+	});
 }
 
 float CA_GetWinnerTeam()
@@ -58,7 +58,7 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
+		FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
 
 		allowed_to_spawn = false;
 		game_stopped = true;
@@ -87,7 +87,7 @@ float CA_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
+	FOREACH_CLIENT(IS_PLAYER(it), { nades_Clear(it); });
 
 	return 1;
 }
@@ -188,7 +188,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
 		TRANSMUTE(Observer, player);
-		if (player.jointime != time && !player.caplayer) // not when connecting
+		if (CS(player).jointime != time && !player.caplayer) // not when connecting
 		{
 			player.caplayer = 0.5;
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
@@ -199,7 +199,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
 	FOREACH_CLIENT(true, {
-		it.killcount = 0;
+		CS(it).killcount = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 		{
 			it.team = -1;
@@ -289,7 +289,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 
 	if (!IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
-	if (player.killindicator_teamchange == -2) // player wants to spectate
+	if (CS(player).killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
 		player.frags = FRAGS_LMS_LOSER;
@@ -366,7 +366,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
 	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
-		PlayerTeamScore_Add(frag_attacker, SP_SCORE, ST_SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerRegen)

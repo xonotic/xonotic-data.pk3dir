@@ -37,13 +37,6 @@ void default_delayedinit(entity this)
 		ScoreRules_generic();
 }
 
-void ActivateTeamplay()
-{
-	serverflags |= SERVERFLAG_TEAMPLAY;
-	teamplay = 1;
-	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
-}
-
 void InitGameplayMode()
 {
 	VoteReset();
@@ -59,13 +52,11 @@ void InitGameplayMode()
 	max_shot_distance = min(230000, vlen(world.maxs - world.mins));
 
 	MapInfo_LoadMapSettings(mapname);
-	serverflags &= ~SERVERFLAG_TEAMPLAY;
-	teamplay = 0;
-	cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
+	GameRules_teams(false);
 
 	if (!cvar_value_issafe(world.fog))
 	{
-		LOG_INFO("The current map contains a potentially harmful fog setting, ignored\n");
+		LOG_INFO("The current map contains a potentially harmful fog setting, ignored");
 		world.fog = string_null;
 	}
 	if(MapInfo_Map_fog != "")
@@ -87,8 +78,8 @@ void InitGameplayMode()
 
 string GetClientVersionMessage(entity this)
 {
-	if (this.version_mismatch) {
-		if(this.version < autocvar_gameversion) {
+	if (CS(this).version_mismatch) {
+		if(CS(this).version < autocvar_gameversion) {
 			return strcat("This is Xonotic ", autocvar_g_xonoticversion,
 				"\n^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8");
 		} else {
@@ -328,7 +319,7 @@ void GetTeamCounts(entity ignore)
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		float t;
 		if(IS_PLAYER(it) || it.caplayer)
 			t = it.team;
@@ -351,7 +342,7 @@ void GetTeamCounts(entity ignore)
 					cb1 = cb1 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_2)
+			else if(t == NUM_TEAM_2)
 			{
 				if(c2 >= 0)
 				{
@@ -359,7 +350,7 @@ void GetTeamCounts(entity ignore)
 					cb2 = cb2 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_3)
+			else if(t == NUM_TEAM_3)
 			{
 				if(c3 >= 0)
 				{
@@ -367,7 +358,7 @@ void GetTeamCounts(entity ignore)
 					cb3 = cb3 + bvalue;
 				}
 			}
-			if(t == NUM_TEAM_4)
+			else if(t == NUM_TEAM_4)
 			{
 				if(c4 >= 0)
 				{
@@ -376,7 +367,7 @@ void GetTeamCounts(entity ignore)
 				}
 			}
 		}
-	));
+	});
 
 	// if the player who has a forced team has not joined yet, reserve the spot
 	if(autocvar_g_campaign)
@@ -650,7 +641,7 @@ void SV_ChangeTeam(entity this, float _color)
 		return;
 	}
 
-	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && this.wasplayer)) {
+	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && CS(this).wasplayer)) {
 		Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
@@ -737,7 +728,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
-	FOREACH_CLIENT(IS_PLAYER(it) && it.team == steam, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it.team == steam, {
 		if(it.isbot)
 		{
 			if(it.totalfrags < lowest_bot_score)
@@ -754,7 +745,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 				lowest_player_score = it.totalfrags;
 			}
 		}
-	));
+	});
 
 	// prefers to move a bot...
 	if(lowest_bot != NULL)

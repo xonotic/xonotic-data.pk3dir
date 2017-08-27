@@ -78,23 +78,23 @@ REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overk
 			error("This cannot be added at runtime\n");
 
 		// mark the guns as ok to use by e.g. impulse 99
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(nt_IsNewToy(it.m_id))
 				it.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-		));
+		});
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(nt_IsNewToy(it.m_id))
 				it.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		));
+		});
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		LOG_INFO("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime");
 		return -1;
 	}
 
@@ -165,20 +165,20 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 
 	WepSet seti = '0 0 0';
 
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		seti = it.m_wepset;
 		n = tokenize_console(nt_GetReplacement(it.netname, autocvar_g_new_toys_autoreplace));
 
 		for(j = 0; j < n; ++j)
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				if(it.netname == argv(j))
 				{
 					WepSet setk = it.m_wepset;
 					if(start_weapons & seti) newdefault |= setk;
 					if(warmup_start_weapons & seti) warmup_newdefault |= setk;
 				}
-			));
-	));
+			});
+	});
 
 	newdefault &= start_weapons_defaultmask;
 	start_weapons &= ~start_weapons_defaultmask;

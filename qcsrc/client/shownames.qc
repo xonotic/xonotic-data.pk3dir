@@ -1,5 +1,7 @@
 #include "shownames.qh"
 
+#include "autocvars.qh"
+#include "miscfunctions.qh"
 #include "hud/_mod.qh"
 
 #include <common/ent_cs.qh>

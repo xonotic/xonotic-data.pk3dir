@@ -1,7 +1,5 @@
 #include "walker.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 float autocvar_g_turrets_unit_walker_melee_damage;
@@ -78,7 +76,7 @@ void walker_setnoanim(entity this)
 void walker_rocket_explode(entity this)
 {
     RadiusDamage (this, this.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), this, NULL, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET.m_id, NULL);
-    delete (this);
+    delete(this);
 }
 
 void walker_rocket_touch(entity this, entity toucher)
@@ -643,4 +641,3 @@ void walker_draw(entity this)
         }
 
 #endif // CSQC
-#endif

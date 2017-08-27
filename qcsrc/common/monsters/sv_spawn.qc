@@ -16,11 +16,12 @@ entity spawnmonster (entity e, string monster, int monster_id, entity spawnedby,
 	//if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
 
 	setorigin(e, orig);
+	bool allow_any = boolean(monster == "anyrandom");
 
-	if(monster == "random")
+	if(monster == "random" || allow_any)
 	{
-		RandomSelection_Init();	
-		FOREACH(Monsters, it != MON_Null && !(it.spawnflags & MONSTER_TYPE_PASSIVE) && !(it.spawnflags & MON_FLAG_HIDDEN),
+		RandomSelection_Init();
+		FOREACH(Monsters, it != MON_Null && (allow_any || (!(it.spawnflags & MONSTER_TYPE_PASSIVE) && !(it.spawnflags & MON_FLAG_HIDDEN))),
 		{
 			RandomSelection_AddEnt(it, 1, 1);
 		});

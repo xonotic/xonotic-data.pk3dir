@@ -1,5 +1,7 @@
 #include "scripting.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include <common/state.qh>
@@ -130,7 +132,7 @@ entity bot_getplace(entity this, string placename)
 		}
 		e = find(NULL, targetname, s);
 		if(!e)
-			LOG_INFO("invalid place ", s, "\n");
+			LOG_INFO("invalid place ", s);
 		if(i < MAX_BOT_PLACES)
 		{
 			this.(bot_placenames[i]) = strzone(placename);
@@ -143,7 +145,7 @@ entity bot_getplace(entity this, string placename)
 	{
 		e = find(NULL, targetname, placename);
 		if(!e)
-			LOG_INFO("invalid place ", placename, "\n");
+			LOG_INFO("invalid place ", placename);
 		return e;
 	}
 }
@@ -292,7 +294,7 @@ float bot_decodecommand(string cmdstring)
 
 		if(cmd_parm_type!=BOT_CMD_PARAMETER_NONE&&parm=="")
 		{
-			LOG_INFO("ERROR: A parameter is required for this command\n");
+			LOG_INFO("ERROR: A parameter is required for this command");
 			return 0;
 		}
 
@@ -313,7 +315,7 @@ float bot_decodecommand(string cmdstring)
 			case BOT_CMD_PARAMETER_VECTOR:
 				if(substring(parm, 0, 1) != "\'")
 				{
-					LOG_INFOF("ERROR: expected vector type \'x y z\', got %s\n", parm);
+					LOG_INFOF("ERROR: expected vector type \'x y z\', got %s", parm);
 					return 0;
 				}
 				bot_cmd.bot_cmd_parm_vector = stov(parm);
@@ -323,7 +325,7 @@ float bot_decodecommand(string cmdstring)
 		}
 		return 1;
 	}
-	LOG_INFO("ERROR: No such command '", cmdstring, "'\n");
+	LOG_INFO("ERROR: No such command '", cmdstring, "'");
 	return 0;
 }
 
@@ -358,87 +360,90 @@ void bot_cmdhelp(string scmd)
 				break;
 		}
 
-		LOG_INFO(strcat("Command: ",bot_cmd_string[i],"\nParameter: <",stype,"> \n"));
-
-		LOG_INFO("Description: ");
+		string prelude = strcat(
+		    "Command: ", bot_cmd_string[i], "\n",
+		    "Parameter: <", stype, ">", "\n",
+		    "Description: "
+        );
 		switch(i)
 		{
 			case BOT_CMD_PAUSE:
-				LOG_INFO("Stops the bot completely. Any command other than 'continue' will be ignored.");
+				LOG_INFO(prelude, "Stops the bot completely. Any command other than 'continue' will be ignored.");
 				break;
 			case BOT_CMD_CONTINUE:
-				LOG_INFO("Disable paused status");
+				LOG_INFO(prelude, "Disable paused status");
 				break;
 			case BOT_CMD_WAIT:
-				LOG_INFO("Pause command parsing and bot ai for N seconds. Pressed key will remain pressed");
+				LOG_INFO(prelude, "Pause command parsing and bot ai for N seconds. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_WAIT_UNTIL:
-				LOG_INFO("Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed");
+				LOG_INFO(prelude, "Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_BARRIER:
-				LOG_INFO("Waits till all bots that have a command queue reach this command. Pressed key will remain pressed");
+				LOG_INFO(prelude, "Waits till all bots that have a command queue reach this command. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_TURN:
-				LOG_INFO("Look to the right or left N degrees. For turning to the left use positive numbers.");
+				LOG_INFO(prelude, "Look to the right or left N degrees. For turning to the left use positive numbers.");
 				break;
 			case BOT_CMD_MOVETO:
-				LOG_INFO("Walk to an specific coordinate on the map. Usage: moveto \'x y z\'");
+				LOG_INFO(prelude, "Walk to an specific coordinate on the map. Usage: moveto \'x y z\'");
 				break;
 			case BOT_CMD_MOVETOTARGET:
-				LOG_INFO("Walk to the specific target on the map");
+				LOG_INFO(prelude, "Walk to the specific target on the map");
 				break;
 			case BOT_CMD_RESETGOAL:
-				LOG_INFO("Resets the goal stack");
+				LOG_INFO(prelude, "Resets the goal stack");
 				break;
 			case BOT_CMD_CC:
-				LOG_INFO("Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;");
+				LOG_INFO(prelude, "Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;");
 				break;
 			case BOT_CMD_IF:
-				LOG_INFO("Perform simple conditional execution.\n");
-				LOG_INFO("Syntax: \n");
-				LOG_INFO("        sv_cmd .. if \"condition\"\n");
-				LOG_INFO("        sv_cmd .. 	<instruction if true>\n");
-				LOG_INFO("        sv_cmd .. 	<instruction if true>\n");
-				LOG_INFO("        sv_cmd .. else\n");
-				LOG_INFO("        sv_cmd .. 	<instruction if false>\n");
-				LOG_INFO("        sv_cmd .. 	<instruction if false>\n");
-				LOG_INFO("        sv_cmd .. fi\n");
-				LOG_INFO("Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n");
-				LOG_INFO("            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n");
-				LOG_INFO("Fields: health, speed, flagcarrier\n");
-				LOG_INFO("Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;");
+				LOG_INFO(prelude, "Perform simple conditional execution.\n"
+                    "Syntax: \n"
+                    "        sv_cmd .. if \"condition\"\n"
+                    "        sv_cmd .. 	<instruction if true>\n"
+                    "        sv_cmd .. 	<instruction if true>\n"
+                    "        sv_cmd .. else\n"
+                    "        sv_cmd .. 	<instruction if false>\n"
+                    "        sv_cmd .. 	<instruction if false>\n"
+                    "        sv_cmd .. fi\n"
+                    "Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n"
+                    "            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n"
+                    "Fields: health, speed, flagcarrier\n"
+                    "Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;"
+				);
 				break;
 			case BOT_CMD_RESETAIM:
-				LOG_INFO("Points the aim to the coordinates x,y 0,0");
+				LOG_INFO(prelude, "Points the aim to the coordinates x,y 0,0");
 				break;
 			case BOT_CMD_AIM:
-				LOG_INFO("Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n");
-				LOG_INFO("There is a 3rd optional parameter telling in how many seconds the aim has to reach the new position\n");
-				LOG_INFO("Examples: aim \"90 0\"	// Turn 90 degrees inmediately (positive numbers move to the left/up)\n");
-				LOG_INFO("          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds");
+				LOG_INFO(prelude, "Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n"
+					"There is a 3rd optional parameter telling in how many seconds the aim has to reach the new position\n"
+					"Examples: aim \"90 0\"	// Turn 90 degrees inmediately (positive numbers move to the left/up)\n"
+					"          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds"
+				);
 				break;
 			case BOT_CMD_AIMTARGET:
-				LOG_INFO("Points the aim to given target");
+				LOG_INFO(prelude, "Points the aim to given target");
 				break;
 			case BOT_CMD_PRESSKEY:
-				LOG_INFO("Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use\n");
+				LOG_INFO(prelude, "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use");
 				LOG_INFO("Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called");
 				LOG_INFO("Note: The script will not return the control to the bot ai until all keys are released");
 				break;
 			case BOT_CMD_RELEASEKEY:
-				LOG_INFO("Release previoulsy used keys. Use the parameter \"all\" to release all keys");
+				LOG_INFO(prelude, "Release previoulsy used keys. Use the parameter \"all\" to release all keys");
 				break;
 			case BOT_CMD_SOUND:
-				LOG_INFO("play sound file at bot location");
+				LOG_INFO(prelude, "play sound file at bot location");
 				break;
 			case BOT_CMD_DEBUG_ASSERT_CANFIRE:
-				LOG_INFO("verify the state of the weapon entity");
+				LOG_INFO(prelude, "verify the state of the weapon entity");
 				break;
 			default:
-				LOG_INFO("This command has no description yet.");
+				LOG_INFO(prelude, "This command has no description yet.");
 				break;
 		}
-		LOG_INFO("\n");
 	}
 }
 
@@ -450,8 +455,10 @@ void bot_list_commands()
 	if(!bot_cmds_initialized)
 		bot_commands_init();
 
-	LOG_INFO("List of all available commands:\n");
-	LOG_INFO("  Command - Parameter Type\n");
+	LOG_INFO(
+	    "List of all available commands:\n"
+	    "  Command - Parameter Type\n"
+    );
 
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
@@ -470,7 +477,7 @@ void bot_list_commands()
 				ptype = "none";
 				break;
 		}
-		LOG_INFO(strcat("  ",bot_cmd_string[i]," - <",ptype,"> \n"));
+		LOG_INFO("  ", bot_cmd_string[i]," - <", ptype, ">");
 	}
 }
 
@@ -485,7 +492,7 @@ float bot_cmd_cc(entity this)
 
 float bot_cmd_impulse(entity this)
 {
-	this.impulse = bot_cmd.bot_cmd_parm_float;
+	CS(this).impulse = bot_cmd.bot_cmd_parm_float;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -539,16 +546,16 @@ float bot_cmd_barrier(entity this)
 
 	if(this.bot_barrier == 1) // find other bots
 	{
-		FOREACH_CLIENT(it.isbot, LAMBDA(
+		FOREACH_CLIENT(it.isbot, {
 			if(it.bot_cmdqueuebuf_allocated)
 			if(it.bot_barrier != 1)
 				return CMD_STATUS_EXECUTING; // not all are at the barrier yet
-		));
+		});
 
 		// all bots hit the barrier!
 
 		// acknowledge barrier
-		FOREACH_CLIENT(it.isbot, LAMBDA(it.bot_barrier = 2));
+		FOREACH_CLIENT(it.isbot, { it.bot_barrier = 2; });
 
 		bot_barriertime = time;
 	}
@@ -625,7 +632,7 @@ float bot_cmd_eval(entity this, string expr)
 			return ((this.flagcarried!=NULL));
 	}
 
-	LOG_INFO(strcat("ERROR: Unable to convert the expression '",expr,"' into a numeric value\n"));
+	LOG_INFO("ERROR: Unable to convert the expression '", expr, "' into a numeric value");
 	return 0;
 }
 
@@ -836,7 +843,7 @@ const int BOT_CMD_KEY_CHAT 		= BIT(10);
 
 bool bot_presskeys(entity this)
 {
-	this.movement = '0 0 0';
+	CS(this).movement = '0 0 0';
 	PHYS_INPUT_BUTTON_JUMP(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
 	PHYS_INPUT_BUTTON_ATCK(this) = false;
@@ -849,14 +856,14 @@ bool bot_presskeys(entity this)
 		return false;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
-		this.movement_x = autocvar_sv_maxspeed;
+		CS(this).movement_x = autocvar_sv_maxspeed;
 	else if(this.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
-		this.movement_x = -autocvar_sv_maxspeed;
+		CS(this).movement_x = -autocvar_sv_maxspeed;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
-		this.movement_y = autocvar_sv_maxspeed;
+		CS(this).movement_y = autocvar_sv_maxspeed;
 	else if(this.bot_cmd_keys & BOT_CMD_KEY_LEFT)
-		this.movement_y = -autocvar_sv_maxspeed;
+		CS(this).movement_y = -autocvar_sv_maxspeed;
 
 	if(this.bot_cmd_keys & BOT_CMD_KEY_JUMP)
 		PHYS_INPUT_BUTTON_JUMP(this) = true;
@@ -1008,7 +1015,7 @@ float bot_cmd_pause(entity this)
 	PHYS_INPUT_BUTTON_ATCK2(this) = false;
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
-	this.movement = '0 0 0';
+	CS(this).movement = '0 0 0';
 	this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 
 	bot_clear(this);
@@ -1075,7 +1082,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '0 8 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state");
 		}
 	}
 	else if(ATTACK_FINISHED(this, slot) > time)
@@ -1083,7 +1090,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '8 0 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)");
 		}
 	}
 	else if(this.(weaponentity).tuba_note)
@@ -1091,7 +1098,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '8 0 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, bot still has an active tuba note\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, bot still has an active tuba note");
 		}
 	}
 	else
@@ -1099,7 +1106,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(!f)
 		{
 			this.colormod = '8 8 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left");
 		}
 	}
 
@@ -1156,7 +1163,7 @@ void bot_setcurrentcommand(entity this)
 
 void bot_resetqueues()
 {
-	FOREACH_CLIENT(it.isbot, LAMBDA(
+	FOREACH_CLIENT(it.isbot, {
 		it.bot_cmd_execution_index = 0;
 		bot_clearqueue(it);
 		// also, cancel all barriers
@@ -1167,7 +1174,7 @@ void bot_resetqueues()
 			it.(bot_placenames[i]) = string_null;
 		}
 		it.bot_places_count = 0;
-	));
+	});
 
 	bot_barriertime = time;
 }
@@ -1196,7 +1203,7 @@ float bot_execute_commands_once(entity this)
 		if(bot_cmd.bot_cmd_type!=BOT_CMD_NULL)
 		{
 			bot_command_executed(this, true);
-			LOG_INFO( "WARNING: Commands are ignored while the bot is paused. Use the command 'continue' instead.\n");
+			LOG_INFO("WARNING: Commands are ignored while the bot is paused. Use the command 'continue' instead.");
 		}
 		return 1;
 	}
@@ -1294,12 +1301,12 @@ float bot_execute_commands_once(entity this)
 			status = bot_cmd_debug_assert_canfire(this);
 			break;
 		default:
-			LOG_INFO(strcat("ERROR: Invalid command on queue with id '",ftos(bot_cmd.bot_cmd_type),"'\n"));
+			LOG_INFOF("ERROR: Invalid command on queue with id '%s'", ftos(bot_cmd.bot_cmd_type));
 			return 0;
 	}
 
 	if (status==CMD_STATUS_ERROR)
-		LOG_INFO(strcat("ERROR: The command '",bot_cmd_string[bot_cmd.bot_cmd_type],"' returned an error status\n"));
+		LOG_INFOF("ERROR: The command '%s' returned an error status", bot_cmd_string[bot_cmd.bot_cmd_type]);
 
 	// Move execution pointer
 	if(status==CMD_STATUS_EXECUTING)
