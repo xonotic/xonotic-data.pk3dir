@@ -280,6 +280,20 @@ STATIC_INIT_LATE(Mutators) {
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)
 #define MUTATOR_ONREMOVE                if (mode == MUTATOR_REMOVING)
 #define MUTATOR_ONROLLBACK_OR_REMOVE    if (mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
+
+#define MUTATOR_STATIC() MACRO_BEGIN { \
+    MUTATOR_ONADD { \
+        /* game loads at time 1 */ \
+        if (time > 1) { \
+            error("This is a game type and it cannot be added at runtime."); \
+        } \
+    } \
+	MUTATOR_ONREMOVE { \
+		LOG_INFO("This is a game type and it cannot be removed at runtime."); \
+		return -1; \
+	} \
+} MACRO_END
+
 #define MUTATOR_ADD(name)               Mutator_Add(MUTATOR_##name)
 #define MUTATOR_REMOVE(name)            Mutator_Remove(MUTATOR_##name)
 #define MUTATOR_RETURNVALUE             CallbackChain_ReturnValue
@@ -305,7 +319,7 @@ STATIC_INIT_LATE(Mutators) {
 #define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN {                     \
     MUTATOR_ONADD {                                                     \
         if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
-            LOG_INFO("HOOK FAILED: ", #cb, ":", #func, "\n");           \
+            LOG_INFO("HOOK FAILED: ", #cb, ":", #func);                 \
             return true;                                                \
         }                                                               \
     }                                                                   \

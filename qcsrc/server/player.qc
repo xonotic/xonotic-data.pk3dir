@@ -472,10 +472,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if (this != attacker) {
 		float realdmg = damage - excess;
 		if (IS_PLAYER(attacker)) {
-			PlayerScore_Add(attacker, SP_DMG, realdmg);
+			GameRules_scoring_add(attacker, DMG, realdmg);
 		}
 		if (IS_PLAYER(this)) {
-			PlayerScore_Add(this, SP_DMGTAKEN, realdmg);
+			GameRules_scoring_add(this, DMGTAKEN, realdmg);
 		}
 	}
 
@@ -943,7 +943,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 
 	if(flood)
-		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.\n");
+		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)

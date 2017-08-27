@@ -69,7 +69,10 @@ string(string, string...) strcat1n = #115;
 #define _LOG_INFO(s) \
 	MACRO_BEGIN { \
 		dprint(_LOG_HEADER("^5INFO")); \
-		print("\n^7", s); \
+		string __s = s; \
+		print("\n^7", __s); \
+		/* TODO: unconditionally add a newline when possible */ \
+		if (str2chr(__s, strlen(__s) - 1) != '\n') { print("\n"); } \
 	} MACRO_END
 
 #define  LOG_TRACE(...) _LOG_TRACE(strcat1n(__VA_ARGS__))

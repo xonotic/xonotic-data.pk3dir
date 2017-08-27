@@ -1808,7 +1808,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		ov_enabled = true;
 
 		#if 0
-		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f",
 			vtos(ov_org),
 			vtos(getpropertyvec(VF_ANGLES)),
 			ov_distance,

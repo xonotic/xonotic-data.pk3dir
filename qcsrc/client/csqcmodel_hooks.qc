@@ -134,7 +134,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(entity this)
 		this.forceplayermodels_isgoodmodel = fexists(this.forceplayermodels_savemodel);
 		this.forceplayermodels_isgoodmodel_mdl = this.forceplayermodels_savemodel;
 		if(!this.forceplayermodels_isgoodmodel)
-			LOG_INFOF("Warning: missing model %s has been used\n", this.forceplayermodels_savemodel);
+			LOG_INFOF("Warning: missing model %s has been used", this.forceplayermodels_savemodel);
 	}
 }
 void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
