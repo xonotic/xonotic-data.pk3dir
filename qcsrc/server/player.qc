@@ -939,7 +939,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 
 	if(flood)
-		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.\n");
+		LOG_INFO("NOTE: ", playername(source, true), "^7 is flooding.");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)

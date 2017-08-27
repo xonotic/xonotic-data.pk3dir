@@ -132,7 +132,7 @@ entity bot_getplace(entity this, string placename)
 		}
 		e = find(NULL, targetname, s);
 		if(!e)
-			LOG_INFO("invalid place ", s, "\n");
+			LOG_INFO("invalid place ", s);
 		if(i < MAX_BOT_PLACES)
 		{
 			this.(bot_placenames[i]) = strzone(placename);
@@ -145,7 +145,7 @@ entity bot_getplace(entity this, string placename)
 	{
 		e = find(NULL, targetname, placename);
 		if(!e)
-			LOG_INFO("invalid place ", placename, "\n");
+			LOG_INFO("invalid place ", placename);
 		return e;
 	}
 }
@@ -294,7 +294,7 @@ float bot_decodecommand(string cmdstring)
 
 		if(cmd_parm_type!=BOT_CMD_PARAMETER_NONE&&parm=="")
 		{
-			LOG_INFO("ERROR: A parameter is required for this command\n");
+			LOG_INFO("ERROR: A parameter is required for this command");
 			return 0;
 		}
 
@@ -325,7 +325,7 @@ float bot_decodecommand(string cmdstring)
 		}
 		return 1;
 	}
-	LOG_INFO("ERROR: No such command '", cmdstring, "'\n");
+	LOG_INFO("ERROR: No such command '", cmdstring, "'");
 	return 0;
 }
 
@@ -427,7 +427,7 @@ void bot_cmdhelp(string scmd)
 				LOG_INFO(prelude, "Points the aim to given target");
 				break;
 			case BOT_CMD_PRESSKEY:
-				LOG_INFO(prelude, "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use\n");
+				LOG_INFO(prelude, "Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use");
 				LOG_INFO("Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called");
 				LOG_INFO("Note: The script will not return the control to the bot ai until all keys are released");
 				break;
@@ -1082,7 +1082,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '0 8 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by weaponentity state");
 		}
 	}
 	else if(ATTACK_FINISHED(this, slot) > time)
@@ -1090,7 +1090,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '8 0 8';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)");
 		}
 	}
 	else if(this.(weaponentity).tuba_note)
@@ -1098,7 +1098,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(f)
 		{
 			this.colormod = '8 0 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, bot still has an active tuba note\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " wants to fire, bot still has an active tuba note");
 		}
 	}
 	else
@@ -1106,7 +1106,7 @@ float bot_cmd_debug_assert_canfire(entity this)
 		if(!f)
 		{
 			this.colormod = '8 8 0';
-			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
+			LOG_INFO("Bot ", this.netname, " using ", this.(weaponentity).weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left");
 		}
 	}
 
@@ -1203,7 +1203,7 @@ float bot_execute_commands_once(entity this)
 		if(bot_cmd.bot_cmd_type!=BOT_CMD_NULL)
 		{
 			bot_command_executed(this, true);
-			LOG_INFO("WARNING: Commands are ignored while the bot is paused. Use the command 'continue' instead.\n");
+			LOG_INFO("WARNING: Commands are ignored while the bot is paused. Use the command 'continue' instead.");
 		}
 		return 1;
 	}

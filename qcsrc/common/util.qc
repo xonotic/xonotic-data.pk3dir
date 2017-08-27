@@ -1364,7 +1364,7 @@ void m_shutdown()
 {
 	if(shutdown_running)
 	{
-		LOG_INFO("Recursive shutdown detected! Only restoring cvars...\n");
+		LOG_INFO("Recursive shutdown detected! Only restoring cvars...");
 	}
 	else
 	{

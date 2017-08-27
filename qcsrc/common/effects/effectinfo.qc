@@ -314,9 +314,9 @@ GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt")
         default:
         case CMD_REQUEST_USAGE: {
             LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpeffectinfo [filename]");
-            LOG_INFO("  Where 'filename' is the file to write (default is effectinfo_dump.txt),\n");
-            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-            LOG_INFO("  if left blank, it will only write to default.\n");
+            LOG_INFO("  Where 'filename' is the file to write (default is effectinfo_dump.txt),");
+            LOG_INFO("  if supplied with '-' output to console as well as default,");
+            LOG_INFO("  if left blank, it will only write to default.");
             return;
         }
     }

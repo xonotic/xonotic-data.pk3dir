@@ -76,7 +76,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			{
 				if(autocvar_developer)
 				{
-					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin), "\n");
+					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin));
 					backtrace("Waypoint stuck");
 				}
 			}
@@ -518,7 +518,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 			if(!found)
 			{
 				if(!removal_mode)
-					LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n");
+					LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped");
 				continue;
 			}
 		}
@@ -540,7 +540,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 		if(!found)
 		{
 			if(!removal_mode)
-				LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n");
+				LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped");
 			continue;
 		}
 
@@ -952,7 +952,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		});
 		if(bestdist < maxdist)
 		{
-			LOG_INFO("update chain to new nearest WP ", etos(p.(fld)), "\n");
+			LOG_INFO("update chain to new nearest WP ", etos(p.(fld)));
 			return 0;
 		}
 
@@ -1031,7 +1031,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		tmax = t;
 	}
 
-	LOG_INFO("spawning a waypoint for connecting to ", etos(wp), "\n");
+	LOG_INFO("spawning a waypoint for connecting to ", etos(wp));
 	botframe_autowaypoints_createwp(o, p, fld, 0);
 	return 1;
 }
@@ -1047,7 +1047,7 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 	if(r != -1)
 		return;
 
-	LOG_INFO("emergency: got no good nearby WP to build a link from, starting a new chain\n");
+	LOG_INFO("emergency: got no good nearby WP to build a link from, starting a new chain");
 	if(!botframe_autowaypoints_fixdown(p.origin))
 		return; // shouldn't happen, caught above
 	botframe_autowaypoints_createwp(trace_endpos, p, fld, WAYPOINTFLAG_PROTECTED);

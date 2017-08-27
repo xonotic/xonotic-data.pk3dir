@@ -652,7 +652,7 @@ IMPULSE(navwaypoint_remove)
 
 	if (e.wphardwired)
 	{
-		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired\n");
+		LOG_INFO("^1Warning: ^7Removal of hardwired waypoints is not allowed in the editor. Please remove links from/to this waypoint (", vtos(e.origin), ") by hand from maps/", mapname, ".waypoints.hardwired");
 		return;
 	}
 
@@ -710,7 +710,7 @@ IMPULSE(navwaypoint_unreachable)
 	m = 0;
 	IL_EACH(g_waypoints, it.wpcost >= 10000000,
 	{
-		LOG_INFO("unreachable: ", etos(it), " ", vtos(it.origin), "\n");
+		LOG_INFO("unreachable: ", etos(it), " ", vtos(it.origin));
 		it.colormod_z = 8;
 		it.effects |= EF_NODEPTHTEST | EF_BLUE;
 		++j;
@@ -722,7 +722,7 @@ IMPULSE(navwaypoint_unreachable)
 	j = 0;
 	IL_EACH(g_waypoints, it.wpcost >= 10000000,
 	{
-		LOG_INFO("cannot reach me: ", etos(it), " ", vtos(it.origin), "\n");
+		LOG_INFO("cannot reach me: ", etos(it), " ", vtos(it.origin));
 		it.colormod_x = 8;
 		if (!(it.effects & EF_NODEPTHTEST))  // not already reported before
 			++m;
@@ -747,7 +747,7 @@ IMPULSE(navwaypoint_unreachable)
 		else
 		{
 			setorigin(it, org);
-			LOG_INFO("spawn without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+			LOG_INFO("spawn without waypoint: ", etos(it), " ", vtos(it.origin));
 			it.effects |= EF_NODEPTHTEST;
 			_setmodel(it, this.model);
 			it.frame = this.frame;
@@ -768,7 +768,7 @@ IMPULSE(navwaypoint_unreachable)
 	IL_EACH(g_items, true,
 	{
 		if (navigation_findnearestwaypoint(it, false)) continue;
-		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin));
 		it.effects |= EF_NODEPTHTEST | EF_RED;
 		it.colormod_x = 8;
 		++j;
@@ -779,7 +779,7 @@ IMPULSE(navwaypoint_unreachable)
 	IL_EACH(g_items, true,
 	{
 		if (navigation_findnearestwaypoint(it, true)) continue;
-		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin), "\n");
+		LOG_INFO("item without waypoint: ", etos(it), " ", vtos(it.origin));
 		it.effects |= EF_NODEPTHTEST | EF_BLUE;
 		it.colormod_z = 8;
 		++j;

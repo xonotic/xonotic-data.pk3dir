@@ -584,7 +584,7 @@ void Accuracy_LoadLevels()
 		if(acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;
 		if(acc_levels < 2)
-			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values\n");
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values");
 
 		int i;
 		for(i = 0; i < acc_levels; ++i)

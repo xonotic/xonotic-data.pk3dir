@@ -420,7 +420,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_ERROR:
 		default:
 		{
-			LOG_INFO("Player stats writing failed: ", ftos(status), "\n");
+			LOG_INFO("Player stats writing failed: ", ftos(status));
 			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -590,14 +590,14 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			LOG_INFO("Player stats synchronized with server\n");
+			LOG_INFO("Player stats synchronized with server");
 			return;
 		}
 
 		case URL_READY_ERROR:
 		default:
 		{
-			LOG_INFO("Receiving player stats failed: ", ftos(status), "\n");
+			LOG_INFO("Receiving player stats failed: ", ftos(status));
 			break;
 		}
 	}
@@ -811,14 +811,14 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.\n");
+			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.");
 			break;
 		}
 
 		case URL_READY_ERROR:
 		default:
 		{
-			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status), "\n");
+			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status));
 			PlayerStats_PlayerDetail_Status = PS_D_STATUS_ERROR;
 			if(PS_D_IN_DB >= 0)
 			{

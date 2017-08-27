@@ -11,7 +11,7 @@ bool RUN_ALL_TESTS()
 	}
 	else
 	{
-		LOG_INFO("All tests OK\n");
+		LOG_INFO("All tests OK");
 		return false;
 	}
 }

@@ -45,11 +45,11 @@ void GameCommand(string theCommand)
 
 	if (argv(0) == "help" || argc == 0)
 	{
-		LOG_INFO(_("Usage: menu_cmd command..., where possible commands are:\n"));
-		LOG_INFO(_("  sync - reloads all cvars on the current menu page\n"));
-		LOG_INFO(_("  directmenu ITEM - select a menu item as main item\n"));
+		LOG_INFO(_("Usage: menu_cmd command..., where possible commands are:"));
+		LOG_INFO(_("  sync - reloads all cvars on the current menu page"));
+		LOG_INFO(_("  directmenu ITEM - select a menu item as main item"));
 
-		LOG_INFO("Generic commands shared by all programs:\n");
+		LOG_INFO("Generic commands shared by all programs:");
 		GenericCommand_macro_help();
 
 		return;
@@ -76,7 +76,7 @@ void GameCommand(string theCommand)
 
 		if (argc == 1)
 		{
-			LOG_INFO(_("Available options:\n"));
+			LOG_INFO(_("Available options:"));
 
 			FOREACH_ENTITY_ORDERED(it.name != "", {
 				if (it.classname == "vtbl") continue;
@@ -125,5 +125,5 @@ void GameCommand(string theCommand)
 	if(MUTATOR_CALLHOOK(Menu_ConsoleCommand, ss, argc, theCommand)) // handled by a mutator
 		return;
 
-	LOG_INFO(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
+	LOG_INFO(_("Invalid command. For a list of supported commands, try menu_cmd help."));
 }

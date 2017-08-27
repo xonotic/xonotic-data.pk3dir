@@ -41,14 +41,14 @@ void BanCommand_ban(float request, float argc, string command)
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2ban^7\n");
+			LOG_INFO("Incorrect parameters for ^2ban^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd ban address [bantime] [reason]\n");
-			LOG_INFO("  'address' is the IP address or range of the player to ban,\n");
-			LOG_INFO("  'bantime' is the amount of time that the ban is active (default if not provided),\n");
-			LOG_INFO("  and 'reason' is the string to label the ban with as reason for banning.\n");
-			LOG_INFO("See also: ^2banlist, kickban, unban^7\n");
+			LOG_INFO("Usage:^3 sv_cmd ban address [bantime] [reason]");
+			LOG_INFO("  'address' is the IP address or range of the player to ban,");
+			LOG_INFO("  'bantime' is the amount of time that the ban is active (default if not provided),");
+			LOG_INFO("  and 'reason' is the string to label the ban with as reason for banning.");
+			LOG_INFO("See also: ^2banlist, kickban, unban^7");
 			return;
 		}
 	}
@@ -67,9 +67,9 @@ void BanCommand_banlist(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd banlist\n");
-			LOG_INFO("  No arguments required.\n");
-			LOG_INFO("See also: ^2ban, kickban, unban^7\n");
+			LOG_INFO("Usage:^3 sv_cmd banlist");
+			LOG_INFO("  No arguments required.");
+			LOG_INFO("See also: ^2ban, kickban, unban^7");
 			return;
 		}
 	}
@@ -102,21 +102,21 @@ void BanCommand_kickban(float request, float argc, string command)
 				}
 				else
 				{
-					LOG_INFO("kickban: ", GetClientErrorString(accepted, argv(1)), ".\n");
+					LOG_INFO("kickban: ", GetClientErrorString(accepted, argv(1)), ".");
 				}
 			}
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2kickban^7\n");
+			LOG_INFO("Incorrect parameters for ^2kickban^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd kickban client [bantime] [masksize] [reason]\n");
-			LOG_INFO("  'client' is the entity number or name of the player to ban,\n");
-			LOG_INFO("  'bantime' is the amount of time that the ban is active (default if not provided),\n");
-			LOG_INFO("  'masksize' is the range of the IP address (1-thru-4, default if not provided),\n");
-			LOG_INFO("  and 'reason' is the string to label the ban with as reason for banning.\n");
-			LOG_INFO("See also: ^2ban, banlist, unban^7\n");
+			LOG_INFO("Usage:^3 sv_cmd kickban client [bantime] [masksize] [reason]");
+			LOG_INFO("  'client' is the entity number or name of the player to ban,");
+			LOG_INFO("  'bantime' is the amount of time that the ban is active (default if not provided),");
+			LOG_INFO("  'masksize' is the range of the IP address (1-thru-4, default if not provided),");
+			LOG_INFO("  and 'reason' is the string to label the ban with as reason for banning.");
+			LOG_INFO("See also: ^2ban, banlist, unban^7");
 			return;
 		}
 	}
@@ -140,18 +140,18 @@ void BanCommand_mute(float request, float argc, string command)  // TODO: Add a 
 				}
 				else
 				{
-					LOG_INFO("mute: ", GetClientErrorString(accepted, argv(1)), ".\n");
+					LOG_INFO("mute: ", GetClientErrorString(accepted, argv(1)), ".");
 				}
 			}
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2mute^7\n");
+			LOG_INFO("Incorrect parameters for ^2mute^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd mute client\n");
-			LOG_INFO("  'client' is the entity number or name of the player to mute.\n");
-			LOG_INFO("See also: ^2unmute^7\n");
+			LOG_INFO("Usage:^3 sv_cmd mute client");
+			LOG_INFO("  'client' is the entity number or name of the player to mute.");
+			LOG_INFO("See also: ^2unmute^7");
 			return;
 		}
 	}
@@ -195,9 +195,9 @@ void BanCommand_unban(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd unban banid\n");
-			LOG_INFO("  Where 'banid' is the ID of the ban of which to remove.\n");
-			LOG_INFO("See also: ^2ban, banlist, kickban^7\n");
+			LOG_INFO("Usage:^3 sv_cmd unban banid");
+			LOG_INFO("  Where 'banid' is the ID of the ban of which to remove.");
+			LOG_INFO("See also: ^2ban, banlist, kickban^7");
 			return;
 		}
 	}
@@ -221,18 +221,18 @@ void BanCommand_unmute(float request, float argc)
 				}
 				else
 				{
-					LOG_INFO("unmute: ", GetClientErrorString(accepted, argv(1)), ".\n");
+					LOG_INFO("unmute: ", GetClientErrorString(accepted, argv(1)), ".");
 				}
 			}
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2mute^7\n");
+			LOG_INFO("Incorrect parameters for ^2mute^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 sv_cmd unmute client\n");
-			LOG_INFO("  'client' is the entity number or name of the player to unmute.\n");
-			LOG_INFO("See also: ^2mute^7\n");
+			LOG_INFO("Usage:^3 sv_cmd unmute client");
+			LOG_INFO("  'client' is the entity number or name of the player to unmute.");
+			LOG_INFO("See also: ^2mute^7");
 			return;
 		}
 	}
@@ -279,7 +279,7 @@ void BanCommand_(float request)
 void BanCommand_macro_help()
 {
 	#define BAN_COMMAND(name, function, description) \
-		{ if (strtolower(description) != "") { LOG_INFO("  ^2", name, "^7: ", description, "\n"); } }
+		{ if (strtolower(description) != "") { LOG_INFO("  ^2", name, "^7: ", description); } }
 
 	BAN_COMMANDS(0, 0, "");
 #undef BAN_COMMAND

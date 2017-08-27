@@ -114,7 +114,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		}
 		else
 		{
-			LOG_INFO("would have to put player in solid, won't do that\n");
+			LOG_INFO("would have to put player in solid, won't do that");
 			setorigin(player, o0 - player.view_ofs);
 			return 0;
 		}
@@ -348,13 +348,13 @@ float WarpZone_CheckProjectileImpact(entity player)
 		return 0;
 
 #ifdef WARPZONELIB_REMOVEHACK
-	LOG_INFO("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now\n");
+	LOG_INFO("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now");
 #else
-	LOG_INFO("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
+	LOG_INFO("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again");
 #endif
-	LOG_INFO("Entity type: ", player.classname, "\n");
-	LOG_INFO("Origin: ", vtos(player.origin), "\n");
-	LOG_INFO("Velocity: ", vtos(player.velocity), "\n");
+	LOG_INFO("Entity type: ", player.classname);
+	LOG_INFO("Origin: ", vtos(player.origin));
+	LOG_INFO("Velocity: ", vtos(player.velocity));
 
 #ifdef WARPZONELIB_REMOVEHACK
 	return 0;
@@ -583,7 +583,7 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 		point = point * (1 / (3 * area));
 		if(vdist(norm, <, 0.99))
 		{
-			LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " is nonplanar. BEWARE.\n");
+			LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " is nonplanar. BEWARE.");
 			area = 0; // no autofixing in this case
 		}
 		norm = normalize(norm);
@@ -600,15 +600,15 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 			makevectors(ang);
 			if(norm * v_forward < 0)
 			{
-				LOG_INFO("Position target of trigger_warpzone near ", vtos(this.aiment.origin), " points into trigger_warpzone. BEWARE.\n");
+				LOG_INFO("Position target of trigger_warpzone near ", vtos(this.aiment.origin), " points into trigger_warpzone. BEWARE.");
 				norm = -1 * norm;
 			}
 			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
 			ang.x = -ang.x;
 			if(norm * v_forward < 0.99)
-				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been turned to match plane orientation (", vtos(this.aiment.angles), " -> ", vtos(ang), "\n");
+				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been turned to match plane orientation (", vtos(this.aiment.angles), " -> ", vtos(ang));
 			if(vdist(org - this.aiment.origin, >, 0.5))
-				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been moved to match the plane (", vtos(this.aiment.origin), " -> ", vtos(org), ").\n");
+				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been moved to match the plane (", vtos(this.aiment.origin), " -> ", vtos(org), ").");
 		}
 	}
 	else if(area > 0)

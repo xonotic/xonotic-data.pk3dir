@@ -213,7 +213,7 @@ GENERIC_COMMAND(version, "Print the current version")
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			LOG_INFO(WATERMARK "\n");
+			LOG_INFO(WATERMARK);
 			return;
 		}
 		default:
@@ -336,12 +336,12 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 
 		default:
 		{
-			LOG_INFO("Incorrect parameters for ^2find^7\n");
+			LOG_INFO("Incorrect parameters for ^2find^7");
         }
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " find classname\n");
-			LOG_INFO("  Where 'classname' is the classname to search for.\n");
+			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " find classname");
+			LOG_INFO("  Where 'classname' is the classname to search for.");
 			return;
 		}
 	}
@@ -359,10 +359,10 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin")
 		}
 
 		default:
-			LOG_INFO("Incorrect parameters for ^2findat^7\n");
+			LOG_INFO("Incorrect parameters for ^2findat^7");
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"\n");
+			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"");
 			return;
 		}
 	}

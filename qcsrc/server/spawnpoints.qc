@@ -91,7 +91,7 @@ void relocate_spawnpoint(entity this)
         if (autocvar_g_spawnpoints_auto_move_out_of_solid)
         {
             if (!spawnpoint_nag)
-                LOG_INFO("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
+                LOG_INFO("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)");
             spawnpoint_nag = 1;
         }
         else

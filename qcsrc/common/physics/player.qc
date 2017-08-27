@@ -491,7 +491,7 @@ void SpecialCommand(entity this)
 	if(autocvar_sv_cheats || this.maycheat)
 	{
 		if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
-			LOG_INFO("A hollow voice says \"Plugh\".\n");
+			LOG_INFO("A hollow voice says \"Plugh\".");
 	}
 	else
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = true;
