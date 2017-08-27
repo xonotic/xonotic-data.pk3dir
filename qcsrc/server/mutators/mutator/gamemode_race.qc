@@ -37,25 +37,21 @@ void havocbot_role_race(entity this)
 
 void race_ScoreRules()
 {
-	ScoreRules_basics(race_teams, 0, 0, false);
-	if(race_teams)
-	{
-		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",       SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else if(g_race_qualifying)
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	ScoreRules_basics_end();
+    GameRules_score_enabled(false);
+	GameRules_scoring(race_teams, 0, 0, {
+        if (race_teams) {
+            field_team(ST_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
+        } else if (g_race_qualifying) {
+            field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+        } else {
+            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
+        }
+	});
 }
 
 void race_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -443,7 +439,7 @@ void rc_SetLimits()
 
 	if(autocvar_g_race_teams)
 	{
-		ActivateTeamplay();
+		GameRules_teams(true);
 		race_teams = bound(2, autocvar_g_race_teams, 4);
 		int teams = 0;
 		if(race_teams >= 1) teams |= BIT(0);
@@ -484,5 +480,8 @@ void rc_SetLimits()
 	}
 	else
 		g_race_qualifying = 0;
-	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
+    GameRules_limit_score(fraglimit_override);
+    GameRules_limit_lead(leadlimit_override);
+    GameRules_limit_time(timelimit_override);
+    GameRules_limit_time_qualifying(qualifying_override);
 }

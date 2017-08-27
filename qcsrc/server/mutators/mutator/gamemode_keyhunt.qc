@@ -88,15 +88,15 @@ int kh_Key_AllOwnedByWhichTeam();
 const float ST_KH_CAPS = 1;
 void kh_ScoreRules(int teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
-	ScoreInfo_SetLabel_TeamScore(  ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_PUSHES,    "pushes",    0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_DESTROYS,  "destroyed", SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_PICKUPS,   "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
+        field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+        field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+        field(SP_KH_PUSHES, "pushes", 0);
+        field(SP_KH_DESTROYS, "destroyed", SFL_LOWER_IS_BETTER);
+        field(SP_KH_PICKUPS, "pickups", 0);
+        field(SP_KH_KCKILLS, "kckills", 0);
+        field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);
+	});
 }
 
 bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)  // runs all the time

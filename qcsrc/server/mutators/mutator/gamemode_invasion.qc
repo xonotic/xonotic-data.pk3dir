@@ -560,10 +560,13 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 void invasion_ScoreRules(int inv_teams)
 {
 	if(inv_teams) { CheckAllowedTeams(NULL); }
-	ScoreRules_basics(inv_teams, 0, 0, false);
-	if(inv_teams) ScoreInfo_SetLabel_TeamScore(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
-	ScoreRules_basics_end();
+	GameRules_score_enabled(false);
+	GameRules_scoring(inv_teams, 0, 0, {
+	    if (inv_teams) {
+            field_team(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
+	    }
+	    field(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
+	});
 }
 
 void invasion_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.

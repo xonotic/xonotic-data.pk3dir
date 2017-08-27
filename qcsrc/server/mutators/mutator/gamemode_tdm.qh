@@ -15,8 +15,9 @@ REGISTER_MUTATOR(tdm, false)
 			error("This is a game type and it cannot be added at runtime.");
 		InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
 
-		ActivateTeamplay();
-		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, autocvar_timelimit_override, -1);
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_g_tdm_point_limit);
+        GameRules_limit_lead(autocvar_g_tdm_point_leadlimit);
 		if (autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}

@@ -20,10 +20,11 @@ REGISTER_MUTATOR(inv, false)
 
 		cvar_settemp("g_monsters", "1");
 
-		SetLimits(autocvar_g_invasion_point_limit, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
+        GameRules_limit_score(autocvar_g_invasion_point_limit);
+
 		if (autocvar_g_invasion_teams >= 2)
 		{
-			ActivateTeamplay();
+			GameRules_teams(true);
 			if (autocvar_g_invasion_team_spawns)
 				have_team_spawns = -1; // request team spawns
 		}

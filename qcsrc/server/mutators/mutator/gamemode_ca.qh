@@ -21,8 +21,6 @@ bool CA_CheckWinner();
 void CA_RoundStart();
 bool ca_isEliminated(entity e);
 
-void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override);
-
 REGISTER_MUTATOR(ca, false)
 {
 	MUTATOR_ONADD
@@ -45,17 +43,18 @@ REGISTER_MUTATOR(ca, false)
 
 		ca_teams = teams; // now set it?
 
-        ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-        ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
-        ScoreRules_basics_end();
+        GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+            field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+        });
 
 		round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 		EliminatedPlayers_Init(ca_isEliminated);
 
-		ActivateTeamplay();
-		SetLimits(autocvar_g_ca_point_limit, autocvar_g_ca_point_leadlimit, autocvar_timelimit_override, -1);
+		GameRules_teams(true);
+        GameRules_limit_score(autocvar_g_ca_point_limit);
+        GameRules_limit_lead(autocvar_g_ca_point_leadlimit);
 
 		if (autocvar_g_ca_team_spawns)
 			have_team_spawns = -1; // request team spawns

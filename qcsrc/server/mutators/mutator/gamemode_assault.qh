@@ -6,7 +6,7 @@ void assault_ScoreRules();
 
 REGISTER_MUTATOR(as, false)
 {
-	ActivateTeamplay();
+	GameRules_teams(true);
 	have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD

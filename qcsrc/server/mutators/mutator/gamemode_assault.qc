@@ -622,8 +622,8 @@ void assault_ScoreRules()
 	teams |= BIT(0);
 	teams |= BIT(1); // always red vs blue
 
-	ScoreRules_basics(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, true);
-	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreRules_basics_end();
+    GameRules_scoring(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, {
+        field_team(ST_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
+        field(SP_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
+    });
 }

@@ -9,9 +9,9 @@ float autocvar_g_freezetag_warmup;
 
 void freezetag_ScoreRules(int teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS, "revivals", 0);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
+	    field(SP_FREEZETAG_REVIVALS, "revivals", 0);
+	});
 }
 
 void freezetag_count_alive_players()

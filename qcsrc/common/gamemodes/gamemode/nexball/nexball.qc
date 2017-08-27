@@ -72,11 +72,11 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 const float ST_NEXBALL_GOALS = 1;
 void nb_ScoreRules(int teams)
 {
-	ScoreRules_basics(teams, 0, 0, true);
-	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
+    GameRules_scoring(teams, 0, 0, {
+        field_team(ST_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
+        field(SP_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
+        field(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+    });
 }
 
 void LogNB(string mode, entity actor)
@@ -1155,8 +1155,9 @@ REGISTER_MUTATOR(nb, g_nexball)
 		InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
-		ActivateTeamplay();
-		SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, autocvar_timelimit_override, -1);
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_g_nexball_goallimit);
+		GameRules_limit_lead(autocvar_g_nexball_goalleadlimit);
 		have_team_spawns = -1; // request team spawns
 	}
 

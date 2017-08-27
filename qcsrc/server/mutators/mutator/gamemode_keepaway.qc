@@ -468,11 +468,11 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 
 void ka_ScoreRules()
 {
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, true); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,		"pickups",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,   "bckills",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,		    "bctime",		SFL_SORT_PRIO_SECONDARY);
-	ScoreRules_basics_end();
+	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
+        field(SP_KEEPAWAY_PICKUPS, "pickups", 0);
+        field(SP_KEEPAWAY_CARRIERKILLS, "bckills", 0);
+        field(SP_KEEPAWAY_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
+	});
 }
 
 void ka_Initialize() // run at the start of a match, initiates game mode

@@ -559,10 +559,10 @@ void ScoreRules_dom(int teams)
 {
 	if(domination_roundbased)
 	{
-		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-		ScoreInfo_SetLabel_TeamScore  (ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES, "takes", 0);
-		ScoreRules_basics_end();
+	    GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+            field_team(ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_DOM_TAKES, "takes", 0);
+	    });
 	}
 	else
 	{
@@ -572,11 +572,11 @@ void ScoreRules_dom(int teams)
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
-		ScoreRules_basics(teams, sp_score, sp_score, true);
-		ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
-		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
-		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
-		ScoreRules_basics_end();
+		GameRules_scoring(teams, sp_score, sp_score, {
+            field_team(ST_DOM_TICKS, "ticks", sp_domticks);
+            field(SP_DOM_TICKS, "ticks", sp_domticks);
+            field(SP_DOM_TAKES, "takes", 0);
+		});
 	}
 }
 

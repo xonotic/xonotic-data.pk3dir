@@ -2174,11 +2174,11 @@ void ons_ScoreRules()
 	if(c2 >= 0) teams |= BIT(1);
 	if(c3 >= 0) teams |= BIT(2);
 	if(c4 >= 0) teams |= BIT(3);
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "destroyed", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,    "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
+	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+	    field(SP_ONS_TAKES,	"takes", 0);
+	});
 }
 
 void ons_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up

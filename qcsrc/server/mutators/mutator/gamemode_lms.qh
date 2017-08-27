@@ -14,7 +14,8 @@ REGISTER_MUTATOR(lms, false)
 			error("This is a game type and it cannot be added at runtime.");
 		lms_Initialize();
 
-		SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, autocvar_timelimit_override, -1);
+        GameRules_limit_score(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override));
+        GameRules_limit_lead(0);
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

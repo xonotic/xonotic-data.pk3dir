@@ -1,0 +1,40 @@
+#pragma once
+
+// todo: accept the number of teams as a parameter
+void GameRules_teams(bool value);
+
+/**
+ * Disabling score disables the "score" column on the scoreboard
+ */
+void GameRules_score_enabled(bool value);
+
+void GameRules_limit_score(int limit);
+void GameRules_limit_lead(int limit);
+void GameRules_limit_time(int limit);
+void GameRules_limit_time_qualifying(int limit);
+
+/**
+ * Set any unspecified rules to their defaults
+ */
+void GameRules_limit_fallbacks();
+
+// derive score_enabled from !frags_enabled
+
+/**
+ * @param teams a bitmask of active teams
+ * @param spprio player score priority (if frags aren't enabled)
+ * @param stprio team score priority (if frags aren't enabled)
+ */
+#define GameRules_scoring(teams, spprio, stprio, fields) MACRO_BEGIN { \
+    _GameRules_scoring_begin((teams), (spprio), (stprio)); \
+    noref void(entity, string, float) field = _GameRules_scoring_field; \
+    /* todo: just have the one `field` function */ \
+    noref void(int, string, float) field_team = _GameRules_scoring_field_team; \
+    LAMBDA(fields); \
+    _GameRules_scoring_end(); \
+} MACRO_END
+
+void _GameRules_scoring_begin(int teams, float spprio, float stprio);
+void _GameRules_scoring_field(entity i, string label, int scoreflags);
+void _GameRules_scoring_field_team(float i, string label, int scoreflags);
+void _GameRules_scoring_end();

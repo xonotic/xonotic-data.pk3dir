@@ -37,13 +37,6 @@ void default_delayedinit(entity this)
 		ScoreRules_generic();
 }
 
-void ActivateTeamplay()
-{
-	serverflags |= SERVERFLAG_TEAMPLAY;
-	teamplay = 1;
-	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
-}
-
 void InitGameplayMode()
 {
 	VoteReset();
@@ -59,9 +52,7 @@ void InitGameplayMode()
 	max_shot_distance = min(230000, vlen(world.maxs - world.mins));
 
 	MapInfo_LoadMapSettings(mapname);
-	serverflags &= ~SERVERFLAG_TEAMPLAY;
-	teamplay = 0;
-	cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
+	GameRules_teams(false);
 
 	if (!cvar_value_issafe(world.fog))
 	{

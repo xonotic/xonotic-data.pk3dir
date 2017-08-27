@@ -12,8 +12,9 @@ REGISTER_MUTATOR(ctf, false)
 			error("This is a game type and it cannot be added at runtime.");
 		ctf_Initialize();
 
-		ActivateTeamplay();
-		SetLimits(autocvar_capturelimit_override, autocvar_captureleadlimit_override, autocvar_timelimit_override, -1);
+		GameRules_teams(true);
+        GameRules_limit_score(autocvar_capturelimit_override);
+        GameRules_limit_lead(autocvar_captureleadlimit_override);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -2690,15 +2691,15 @@ spawnfunc(team_CTL_bluelolly)  { spawnfunc_item_flag_team2(this);    }
 void ctf_ScoreRules(int teams)
 {
 	CheckAllowedTeams(NULL);
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,    "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPTIME, "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS, "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS, "fckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS, "returns",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,   "drops",     SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+        field_team(ST_CTF_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
+        field(SP_CTF_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+        field(SP_CTF_CAPTIME, "captime", SFL_LOWER_IS_BETTER | SFL_TIME);
+        field(SP_CTF_PICKUPS, "pickups", 0);
+        field(SP_CTF_FCKILLS, "fckills", 0);
+        field(SP_CTF_RETURNS, "returns", 0);
+        field(SP_CTF_DROPS, "drops", SFL_LOWER_IS_BETTER);
+	});
 }
 
 // code from here on is just to support maps that don't have flag and team entities

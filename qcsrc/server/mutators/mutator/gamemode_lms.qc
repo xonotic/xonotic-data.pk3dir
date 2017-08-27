@@ -422,10 +422,11 @@ MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 // scoreboard stuff
 void lms_ScoreRules()
 {
-	ScoreRules_basics(0, 0, 0, false);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_LIVES,    "lives",     SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_RANK,     "rank",      SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
-	ScoreRules_basics_end();
+    GameRules_score_enabled(false);
+	GameRules_scoring(0, 0, 0, {
+        field(SP_LMS_LIVES, "lives", SFL_SORT_PRIO_SECONDARY);
+        field(SP_LMS_RANK, "rank", SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
+	});
 }
 
 void lms_Initialize()
