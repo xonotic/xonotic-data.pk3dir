@@ -614,13 +614,3 @@ MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 	// readyrestart not supported (yet)
 	return true;
 }
-
-// scoreboard setup
-void assault_ScoreRules()
-{
-	int teams = BITS(2); // always red vs blue
-    GameRules_scoring(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, {
-        field_team(ST_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
-        field(SP_ASSAULT_OBJECTIVES, "objectives", SFL_SORT_PRIO_PRIMARY);
-    });
-}

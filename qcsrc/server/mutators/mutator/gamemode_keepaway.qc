@@ -472,10 +472,5 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 
 void ka_Initialize() // run at the start of a match, initiates game mode
 {
-	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0, {
-        field(SP_KEEPAWAY_PICKUPS, "pickups", 0);
-        field(SP_KEEPAWAY_CARRIERKILLS, "bckills", 0);
-        field(SP_KEEPAWAY_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
-    });
 	ka_SpawnBall();
 }

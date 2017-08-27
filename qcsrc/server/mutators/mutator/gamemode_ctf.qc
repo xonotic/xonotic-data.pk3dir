@@ -1,28 +1,8 @@
 #include "gamemode_ctf.qh"
 
-#ifndef CSQC
 #include <common/effects/all.qh>
-void ctf_Initialize();
-
-REGISTER_MUTATOR(ctf, false)
-{
-    MUTATOR_STATIC();
-	MUTATOR_ONADD
-	{
-		ctf_Initialize();
-
-		GameRules_teams(true);
-        GameRules_limit_score(autocvar_capturelimit_override);
-        GameRules_limit_lead(autocvar_captureleadlimit_override);
-	}
-	return 0;
-}
-#endif
-
-#ifdef SVQC
 #include <common/vehicles/all.qh>
 #include <server/teamplay.qh>
-#endif
 
 #include <lib/warpzone/common.qh>
 

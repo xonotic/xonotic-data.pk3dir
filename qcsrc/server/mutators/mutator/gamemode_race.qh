@@ -11,6 +11,7 @@ REGISTER_MUTATOR(rc, false)
 	MUTATOR_ONADD
 	{
 		rc_SetLimits();
+
 		race_Initialize();
 	}
 	return 0;

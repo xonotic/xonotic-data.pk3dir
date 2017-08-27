@@ -26,7 +26,10 @@ REGISTER_MUTATOR(ca, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		allowed_to_spawn = true;
+		GameRules_teams(true);
+        GameRules_spawning_teams(autocvar_g_ca_team_spawns);
+        GameRules_limit_score(autocvar_g_ca_point_limit);
+        GameRules_limit_lead(autocvar_g_ca_point_leadlimit);
 
 		ca_teams = autocvar_g_ca_teams_override;
 		if (ca_teams < 2)
@@ -37,16 +40,10 @@ REGISTER_MUTATOR(ca, false)
             field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
         });
 
+		allowed_to_spawn = true;
 		round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-
 		EliminatedPlayers_Init(ca_isEliminated);
-
-		GameRules_teams(true);
-        GameRules_limit_score(autocvar_g_ca_point_limit);
-        GameRules_limit_lead(autocvar_g_ca_point_leadlimit);
-
-        GameRules_spawning_teams(autocvar_g_ca_team_spawns);
 	}
 	return 0;
 }

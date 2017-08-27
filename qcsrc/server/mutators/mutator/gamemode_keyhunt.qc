@@ -85,7 +85,7 @@ int kh_key_dropped, kh_key_carried;
 
 int kh_Key_AllOwnedByWhichTeam();
 
-const float ST_KH_CAPS = 1;
+const int ST_KH_CAPS = 1;
 void kh_ScoreRules(int teams)
 {
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {

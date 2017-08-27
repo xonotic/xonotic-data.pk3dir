@@ -14,18 +14,15 @@ REGISTER_MUTATOR(inv, false)
     MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		g_invasion = true;
-		invasion_Initialize();
-
-		cvar_settemp("g_monsters", "1");
-
-        GameRules_limit_score(autocvar_g_invasion_point_limit);
-
-		if (autocvar_g_invasion_teams >= 2)
-		{
+		if (autocvar_g_invasion_teams >= 2) {
 			GameRules_teams(true);
 			GameRules_spawning_teams(autocvar_g_invasion_team_spawns);
 		}
+        GameRules_limit_score(autocvar_g_invasion_point_limit);
+
+		g_invasion = true;
+		cvar_settemp("g_monsters", "1");
+		invasion_Initialize();
 	}
 	return 0;
 }
