@@ -4,6 +4,7 @@
 #include <server/miscfunctions.qh>
 #include "client.qh"
 #include "scores.qh"
+#include <common/gamemodes/rules.qh>
 #include "teamplay.qh"
 
 int ScoreRules_teams;
@@ -58,17 +59,13 @@ void ScoreRules_basics_end()
 }
 void ScoreRules_generic()
 {
-	if(teamplay)
-	{
+    int teams = 0;
+	if (teamplay) {
 		CheckAllowedTeams(NULL);
-		int teams = 0;
-		if(c1 >= 0) teams |= BIT(0);
-		if(c2 >= 0) teams |= BIT(1);
-		if(c3 >= 0) teams |= BIT(2);
-		if(c4 >= 0) teams |= BIT(3);
-		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
+		if (c1 >= 0) teams |= BIT(0);
+		if (c2 >= 0) teams |= BIT(1);
+		if (c3 >= 0) teams |= BIT(2);
+		if (c4 >= 0) teams |= BIT(3);
 	}
-	else
-		ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {});
 }

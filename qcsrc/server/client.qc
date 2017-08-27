@@ -1195,7 +1195,10 @@ void ClientConnect(entity this)
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
 	// always track bots, don't ask for cl_allow_uidtracking
-    if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
+	if (IS_BOT_CLIENT(this))
+		PlayerStats_GameReport_AddPlayer(this);
+	else
+		CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
@@ -1244,7 +1247,6 @@ void ClientConnect(entity this)
 	}
 
 	CS(this).jointime = time;
-	CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (IS_REAL_CLIENT(this))
 	{
@@ -1666,16 +1668,16 @@ void player_regen(entity this)
 
 		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
 	}
-	// Ugly hack to make sure the haelth and armor don't go beyond hard limit.
+	// Ugly hack to make sure the health and armor don't go beyond hard limit.
 	// TODO: Remove this hack when all code uses GivePlayerHealth and
 	// GivePlayerArmor.
-	if (this.health > ITEM_COUNT_HARD_LIMIT)
+	if (this.health > RESOURCE_AMOUNT_HARD_LIMIT)
 	{
-		this.health = ITEM_COUNT_HARD_LIMIT;
+		this.health = RESOURCE_AMOUNT_HARD_LIMIT;
 	}
-	if (this.armorvalue > ITEM_COUNT_HARD_LIMIT)
+	if (this.armorvalue > RESOURCE_AMOUNT_HARD_LIMIT)
 	{
-		this.armorvalue = ITEM_COUNT_HARD_LIMIT;
+		this.armorvalue = RESOURCE_AMOUNT_HARD_LIMIT;
 	}
 	// End hack.
 }

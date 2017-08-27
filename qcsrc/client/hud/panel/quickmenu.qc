@@ -83,12 +83,12 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 	if(mode == "file")
 	{
 		if(file == "" || file == "0")
-			LOG_INFO("No file name is set in hud_panel_quickmenu_file, loading default quickmenu\n");
+			LOG_INFO("No file name is set in hud_panel_quickmenu_file, loading default quickmenu");
 		else
 		{
 			fh = fopen(file, FILE_READ);
 			if(fh < 0)
-				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", file);
+				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu", file);
 		}
 		if(fh < 0)
 			mode = "default";

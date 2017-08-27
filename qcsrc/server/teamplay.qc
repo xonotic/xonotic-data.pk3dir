@@ -37,13 +37,6 @@ void default_delayedinit(entity this)
 		ScoreRules_generic();
 }
 
-void ActivateTeamplay()
-{
-	serverflags |= SERVERFLAG_TEAMPLAY;
-	teamplay = 1;
-	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
-}
-
 void InitGameplayMode()
 {
 	VoteReset();
@@ -59,13 +52,11 @@ void InitGameplayMode()
 	max_shot_distance = min(230000, vlen(world.maxs - world.mins));
 
 	MapInfo_LoadMapSettings(mapname);
-	serverflags &= ~SERVERFLAG_TEAMPLAY;
-	teamplay = 0;
-	cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
+	GameRules_teams(false);
 
 	if (!cvar_value_issafe(world.fog))
 	{
-		LOG_INFO("The current map contains a potentially harmful fog setting, ignored\n");
+		LOG_INFO("The current map contains a potentially harmful fog setting, ignored");
 		world.fog = string_null;
 	}
 	if(MapInfo_Map_fog != "")
@@ -851,12 +842,11 @@ int JoinBestTeam(entity this, bool only_return_best, bool force_best_team)
 	// find out what teams are available
 	CheckAllowedTeams(this);
 
-	int selected_team;
-
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if (!force_best_team)
 	{
+		int selected_team;
 		if(     c1 >= 0 && this.team == NUM_TEAM_1)
 			selected_team = this.team;
 		else if(c2 >= 0 && this.team == NUM_TEAM_2)
