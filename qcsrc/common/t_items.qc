@@ -716,7 +716,7 @@ int GetResourceType(.float resource_property)
 	return health;
 }
 
-float GetResourceLimit(entity player, int resource_type)
+float GetResourceLimit(entity e, int resource_type)
 {
 	float limit;
 	switch (resource_type)
@@ -767,7 +767,7 @@ float GetResourceLimit(entity player, int resource_type)
 			return 0;
 		}
 	}
-	MUTATOR_CALLHOOK(GetResourceLimit, player, resource_type, limit);
+	MUTATOR_CALLHOOK(GetResourceLimit, e, resource_type, limit);
 	limit = M_ARGV(2, float);
 	if (limit > RESOURCE_AMOUNT_HARD_LIMIT)
 	{
@@ -776,13 +776,13 @@ float GetResourceLimit(entity player, int resource_type)
 	return limit;
 }
 
-void GivePlayerResource(entity player, int resource_type, float amount)
+void GiveResource(entity receiver, int resource_type, float amount)
 {
 	if (amount == 0)
 	{
 		return;
 	}
-	bool forbid = MUTATOR_CALLHOOK(GivePlayerResource, player, resource_type,
+	bool forbid = MUTATOR_CALLHOOK(GiveResource, receiver, resource_type,
 		amount);
 	if (forbid)
 	{
@@ -791,51 +791,38 @@ void GivePlayerResource(entity player, int resource_type, float amount)
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
 	.float resource_property = GetResourceProperty(resource_type);
-	float max_amount = GetResourceLimit(player, resource_type);
-	player.(resource_property) = bound(player.(resource_property),
-		player.(resource_property) + amount, max_amount);
+	float max_amount = GetResourceLimit(receiver, resource_type);
+	receiver.(resource_property) = bound(receiver.(resource_property),
+		receiver.(resource_property) + amount, max_amount);
 	switch (resource_type)
 	{
 		case RESOURCE_HEALTH:
 		{
-			player.pauserothealth_finished = max(player.pauserothealth_finished,
-				time + autocvar_g_balance_pause_health_rot);
+			receiver.pauserothealth_finished =
+				max(receiver.pauserothealth_finished, time +
+				autocvar_g_balance_pause_health_rot);
 			return;
 		}
 		case RESOURCE_ARMOR:
 		{
-			player.pauserotarmor_finished = max(player.pauserotarmor_finished,
-				time + autocvar_g_balance_pause_armor_rot);
+			receiver.pauserotarmor_finished =
+				max(receiver.pauserotarmor_finished, time +
+				autocvar_g_balance_pause_armor_rot);
 			return;
 		}
 		case RESOURCE_FUEL:
 		{
-			player.pauserotfuel_finished = max(player.pauserotfuel_finished,
+			receiver.pauserotfuel_finished = max(receiver.pauserotfuel_finished,
 				time + autocvar_g_balance_pause_fuel_rot);
 			return;
 		}
 	}
 }
 
-void GivePlayerResourceViaProperty(entity player, .float resource_property,
+void GiveResourceViaProperty(entity receiver, .float resource_property,
 	float amount)
 {
-	GivePlayerResource(player, GetResourceType(resource_property), amount);
-}
-
-void GivePlayerHealth(entity player, float amount)
-{
-	GivePlayerResource(player, RESOURCE_HEALTH, amount);
-}
-
-void GivePlayerArmor(entity player, float amount)
-{
-	GivePlayerResource(player, RESOURCE_ARMOR, amount);
-}
-
-void GivePlayerFuel(entity player, float amount)
-{
-	GivePlayerResource(player, RESOURCE_FUEL, amount);
+	GiveResource(receiver, GetResourceType(resource_property), amount);
 }
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax)
@@ -852,7 +839,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 			{
 				amount = ammomax - player.(ammotype);
 			}
-			GivePlayerResourceViaProperty(player, ammotype, amount);
+			GiveResourceViaProperty(player, ammotype, amount);
 			return true;
 		}
 	}
@@ -861,8 +848,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 		float mi = min(item.(ammotype), ammomax);
 		if (player.(ammotype) < mi)
 		{
-			GivePlayerResourceViaProperty(player, ammotype, mi -
-				player.(ammotype));
+			GiveResourceViaProperty(player, ammotype, mi - player.(ammotype));
 		}
 		return true;
 	}
