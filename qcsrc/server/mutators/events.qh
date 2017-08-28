@@ -623,9 +623,10 @@ enum {
 /** Called when the amount of player resources changes. Can be used to override
 resource limit. */
 #define EV_GetResourceLimit(i, o) \
-	/** resource type */ i(int, MUTATOR_ARGV_0_int) \
-	/** limit */         i(float, MUTATOR_ARGV_1_float) \
-	/**/                 o(float, MUTATOR_ARGV_1_float) \
+	/** player */        i(entity, MUTATOR_ARGV_0_entity) \
+	/** resource type */ i(int, MUTATOR_ARGV_1_int) \
+	/** limit */         i(float, MUTATOR_ARGV_2_float) \
+	/**/                 o(float, MUTATOR_ARGV_2_float) \
 	/**/
 MUTATOR_HOOKABLE(GetResourceLimit, EV_GetResourceLimit);
 

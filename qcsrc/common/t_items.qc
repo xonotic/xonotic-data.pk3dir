@@ -716,7 +716,7 @@ int GetResourceType(.float resource_property)
 	return health;
 }
 
-float GetResourceLimit(int resource_type)
+float GetResourceLimit(entity player, int resource_type)
 {
 	float limit;
 	switch (resource_type)
@@ -767,8 +767,8 @@ float GetResourceLimit(int resource_type)
 			return 0;
 		}
 	}
-	MUTATOR_CALLHOOK(GetResourceLimit, resource_type, limit);
-	limit = M_ARGV(1, float);
+	MUTATOR_CALLHOOK(GetResourceLimit, player, resource_type, limit);
+	limit = M_ARGV(2, float);
 	if (limit > RESOURCE_AMOUNT_HARD_LIMIT)
 	{
 		limit = RESOURCE_AMOUNT_HARD_LIMIT;
@@ -791,7 +791,7 @@ void GivePlayerResource(entity player, int resource_type, float amount)
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
 	.float resource_property = GetResourceProperty(resource_type);
-	float max_amount = GetResourceLimit(resource_type);
+	float max_amount = GetResourceLimit(player, resource_type);
 	player.(resource_property) = bound(player.(resource_property),
 		player.(resource_property) + amount, max_amount);
 	switch (resource_type)
