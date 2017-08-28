@@ -62,6 +62,12 @@ float GetResourceLimit(entity e, int resource_type)
 	return limit;
 }
 
+float GetResourceAmount(entity e, int resource_type)
+{
+	.float resource_field = GetResourceField(resource_type);
+	return e.(resource_field);
+}
+
 void GiveResource(entity receiver, int resource_type, float amount)
 {
 	if (amount == 0)
@@ -76,10 +82,10 @@ void GiveResource(entity receiver, int resource_type, float amount)
 	}
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
-	.float resource_property = GetResourceProperty(resource_type);
+	.float resource_field = GetResourceField(resource_type);
 	float max_amount = GetResourceLimit(receiver, resource_type);
-	receiver.(resource_property) = bound(receiver.(resource_property),
-		receiver.(resource_property) + amount, max_amount);
+	receiver.(resource_field) = bound(receiver.(resource_field),
+		receiver.(resource_field) + amount, max_amount);
 	switch (resource_type)
 	{
 		case RESOURCE_HEALTH:
@@ -105,9 +111,9 @@ void GiveResource(entity receiver, int resource_type, float amount)
 	}
 }
 
-int GetResourceType(.float resource_property)
+int GetResourceType(.float resource_field)
 {
-	switch (resource_property)
+	switch (resource_field)
 	{
 		case health: { return RESOURCE_HEALTH; }
 		case armorvalue: { return RESOURCE_ARMOR; }
@@ -118,11 +124,11 @@ int GetResourceType(.float resource_property)
 		case ammo_plasma: { return RESOURCE_PLASMA; }
 		case ammo_fuel: { return RESOURCE_FUEL; }
 	}
-	error("GetResourceType: Invalid property.");
+	error("GetResourceType: Invalid field.");
 	return 0;
 }
 
-.float GetResourceProperty(int resource_type)
+.float GetResourceField(int resource_type)
 {
 	switch (resource_type)
 	{
@@ -135,6 +141,6 @@ int GetResourceType(.float resource_property)
 		case RESOURCE_PLASMA: { return ammo_plasma; }
 		case RESOURCE_FUEL: { return ammo_fuel; }
 	}
-	error("GetResourceProperty: Invalid resource type.");
+	error("GetResourceField: Invalid resource type.");
 	return health;
 }

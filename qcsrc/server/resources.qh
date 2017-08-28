@@ -24,7 +24,13 @@ enum
 /// \return Maximum amount of the given resource.
 float GetResourceLimit(entity e, int resource_type);
 
-/// \brief Gives player a resource such as health, armor or ammo.
+/// \brief Returns the current amount of resource the given entity has.
+/// \param[in] e Entity to check.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \return Current amount of resource the given entity has.
+float GetResourceAmount(entity e, int resource_type);
+
+/// \brief Gives an entity some resource.
 /// \param[in,out] receiver Entity to give resource to.
 /// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
 /// \param[in] amount Amount of resource to give.
@@ -33,12 +39,12 @@ void GiveResource(entity receiver, int resource_type, float amount);
 
 // ===================== Legacy and/or internal API ===========================
 
-/// \brief Converts resource entity property to resource type.
-/// \param[in] resource_property Resource entity property to convert.
+/// \brief Converts an entity field to resource type.
+/// \param[in] resource_field Entity field to convert.
 /// \return Resource type (a RESOURCE_* constant).
-int GetResourceType(.float resource_property);
+int GetResourceType(.float resource_field);
 
-/// \brief Converts resource type (a RESOURCE_* constant) to entity property.
+/// \brief Converts resource type (a RESOURCE_* constant) to entity field.
 /// \param[in] resource_type Type of the resource.
-/// \return Entity proprty for that resource.
-.float GetResourceProperty(int resource_type);
+/// \return Entity field for that resource.
+.float GetResourceField(int resource_type);
