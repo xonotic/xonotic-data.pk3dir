@@ -111,42 +111,25 @@ int GetResourceType(.float resource_property);
 .float GetResourceProperty(int resource_type);
 
 /// \brief Returns the maximum amount of the given resource.
+/// \param[in] e Entity to check.
 /// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
 /// \return Maximum amount of the given resource.
-float GetResourceLimit(int resource_type);
+float GetResourceLimit(entity e, int resource_type);
 
 /// \brief Gives player a resource such as health, armor or ammo.
-/// \param[in,out] player Player to give resource to.
+/// \param[in,out] receiver Entity to give resource to.
 /// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
 /// \param[in] amount Amount of resource to give.
 /// \return No return.
-void GivePlayerResource(entity player, int resource_type, float amount);
+void GiveResource(entity receiver, int resource_type, float amount);
 
 /// \brief Gives player a resource such as health, armor or ammo.
-/// \param[in,out] player Player to give resource to.
+/// \param[in,out] e Entity to give resource to.
 /// \param[in] resource_property Entity property of the resource.
 /// \param[in] amount Amount of resource to give.
 /// \return No return.
-void GivePlayerResourceViaProperty(entity player, .float resource_property,
+void GiveResourceViaProperty(entity receiver, .float resource_property,
 	float amount);
-
-/// \brief Gives health to the player.
-/// \param[in,out] player Player to give health to.
-/// \param[in] amount Amount of health to give.
-/// \return No return.
-void GivePlayerHealth(entity player, float amount);
-
-/// \brief Gives armor to the player.
-/// \param[in,out] player Player to give armor to.
-/// \param[in] amount Amount of armor to give.
-/// \return No return.
-void GivePlayerArmor(entity player, float amount);
-
-/// \brief Gives fuel to the player.
-/// \param[in,out] player Player to give fuel to.
-/// \param[in] amount Amount of fuel to give.
-/// \return No return.
-void GivePlayerFuel(entity player, float amount);
 
 /// \brief Give several random weapons and ammo to the player.
 /// \param[in,out] player Player to give weapons to.
