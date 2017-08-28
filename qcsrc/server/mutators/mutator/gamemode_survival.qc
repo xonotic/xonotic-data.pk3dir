@@ -131,6 +131,7 @@ int autocvar_g_surv_defender_cannon_fodder_frag_fuel;
 .string surv_playermodel; ///< Player model forced by the game.
 
 .entity surv_attack_sprite; ///< Holds the sprite telling attackers to attack.
+.entity surv_defend_sprite; ///< Holds the sprite telling defenders to defend.
 
 int surv_type; ///< Holds the type of survival. See SURVIVAL_TYPE constants.
 bool surv_warmup; ///< Holds whether warmup is active.
@@ -194,6 +195,11 @@ void Surv_UpdateAliveStats();
 /// \brief Updates defender health on the HUD.
 /// \return No return.
 void Surv_UpdateDefenderHealthStat();
+
+/// \brief Updates the health of defender sprite.
+/// \param[in,out] player Player that has the sprite.
+/// \return No return.
+void Surv_UpdateWaypointSpriteHealth(entity player);
 
 //========================= Free functions ====================================
 
@@ -853,6 +859,10 @@ void Surv_RemovePlayerFromAliveList(entity player, int teamnum)
 	{
 		WaypointSprite_Kill(player.surv_attack_sprite);
 	}
+	if (player.surv_defend_sprite)
+	{
+		WaypointSprite_Kill(player.surv_defend_sprite);
+	}
 	switch (teamnum)
 	{
 		case surv_attackerteam:
@@ -1096,6 +1106,10 @@ void Surv_RoundCleanup()
 		{
 			WaypointSprite_Kill(it.surv_attack_sprite);
 		}
+		if (it.surv_defend_sprite)
+		{
+			WaypointSprite_Kill(it.surv_defend_sprite);
+		}
 		if (it.surv_savedplayerstate)
 		{
 			delete(it.surv_savedplayerstate);
@@ -1257,22 +1271,47 @@ void Surv_DeterminePlayerModel(entity player)
 /// \return No return.
 void Surv_SetupWaypointSprite(entity player)
 {
-	WaypointSprite_Spawn(WP_AssaultDestroy, 0, 0, player, '0 0 64', NULL,
+	WaypointSprite_Spawn(WP_SurvivalKill, 0, 0, player, '0 0 64', NULL,
 		surv_attackerteam, player, surv_attack_sprite, false,
 		RADARICON_OBJECTIVE);
+	WaypointSprite_Spawn(WP_SurvivalDefend, 0, 0, player, '0 0 64', NULL,
+		surv_defenderteam, player, surv_defend_sprite, false,
+		RADARICON_OBJECTIVE);
+	//player.surv_attack_sprite.colormod = colormapPaletteColor(player.team - 1,
+	//	false);
+	//player.surv_defend_sprite.colormod = colormapPaletteColor(player.team - 1,
+	//	false);
+	float max_hp;
 	if (autocvar_g_instagib == 1)
 	{
-		WaypointSprite_UpdateMaxHealth(player.surv_attack_sprite,
-			PlayerTemplate_GetFloatValue("surv_defender", "start_armor") + 1);
-		WaypointSprite_UpdateHealth(player.surv_attack_sprite,
-			player.armorvalue + 1);
+		max_hp = PlayerTemplate_GetFloatValue(Surv_GetPlayerTemplate(player),
+			"start_armor") + 1;
+		WaypointSprite_UpdateMaxHealth(player.surv_attack_sprite, max_hp);
+		WaypointSprite_UpdateMaxHealth(player.surv_defend_sprite, max_hp);
+		Surv_UpdateWaypointSpriteHealth(player);
 		return;
 	}
-	WaypointSprite_UpdateMaxHealth(player.surv_attack_sprite,
-		PlayerTemplate_GetFloatValue("surv_defender", "start_health") +
-		PlayerTemplate_GetFloatValue("surv_defender", "start_armor"));
-	WaypointSprite_UpdateHealth(player.surv_attack_sprite, player.health +
-		player.armorvalue);
+	max_hp = PlayerTemplate_GetFloatValue(Surv_GetPlayerTemplate(player),
+		"start_health") + PlayerTemplate_GetFloatValue(Surv_GetPlayerTemplate(
+		player), "start_armor");
+	WaypointSprite_UpdateMaxHealth(player.surv_attack_sprite, max_hp);
+	WaypointSprite_UpdateMaxHealth(player.surv_defend_sprite, max_hp);
+	Surv_UpdateWaypointSpriteHealth(player);
+}
+
+void Surv_UpdateWaypointSpriteHealth(entity player)
+{
+	float hp;
+	if (autocvar_g_instagib == 1)
+	{
+		hp = player.armorvalue + 1;
+	}
+	else
+	{
+		hp = player.health + player.armorvalue;
+	}
+	WaypointSprite_UpdateHealth(player.surv_attack_sprite, hp);
+	WaypointSprite_UpdateHealth(player.surv_defend_sprite, hp);
 }
 
 //=============================== Callbacks ===================================
@@ -2060,19 +2099,11 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 	if (target.health < 1)
 	{
 		WaypointSprite_Kill(target.surv_attack_sprite);
+		WaypointSprite_Kill(target.surv_defend_sprite);
 	}
 	else
 	{
-		if (autocvar_g_instagib == 1)
-		{
-			WaypointSprite_UpdateHealth(target.surv_attack_sprite,
-				target.armorvalue + 1);
-		}
-		else
-		{
-			WaypointSprite_UpdateHealth(target.surv_attack_sprite,
-				target.health + target.armorvalue);
-		}
+		Surv_UpdateWaypointSpriteHealth(target);
 	}
 }
 
