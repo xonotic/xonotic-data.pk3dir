@@ -91,6 +91,10 @@ int autocvar_g_surv_defender_attacker_frag_bullets;
 int autocvar_g_surv_defender_attacker_frag_rockets;
 /// \brief How many cells do defenders get when they frag an attacker.
 int autocvar_g_surv_defender_attacker_frag_cells;
+/// \brief How much plasma do defenders get when they frag an attacker.
+int autocvar_g_surv_defender_attacker_frag_plasma;
+/// \brief How much fuel do defenders get when they frag an attacker.
+int autocvar_g_surv_defender_attacker_frag_fuel;
 /// \brief How much health do defenders get when they frag cannon fodder.
 int autocvar_g_surv_defender_cannon_fodder_frag_health;
 /// \brief How much armor do defenders get when they frag cannon fodder.
@@ -103,6 +107,10 @@ int autocvar_g_surv_defender_cannon_fodder_frag_bullets;
 int autocvar_g_surv_defender_cannon_fodder_frag_rockets;
 /// \brief How many cells do defenders get when they frag cannon fodder.
 int autocvar_g_surv_defender_cannon_fodder_frag_cells;
+/// \brief How much plasma do defenders get when they frag cannon fodder.
+int autocvar_g_surv_defender_cannon_fodder_frag_plasma;
+/// \brief How much fuel do defenders get when they frag cannon fodder.
+int autocvar_g_surv_defender_cannon_fodder_frag_fuel;
 
 /// \brief A stat that is used to track the time left in the round.
 .float surv_round_time_stat = _STAT(SURV_ROUND_TIME);
@@ -2082,34 +2090,42 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies, CBC_ORDER_FIRST)
 		{
 			case SURVIVAL_ROLE_PLAYER:
 			{
-				GivePlayerHealth(attacker,
+				GiveResource(attacker, RESOURCE_HEALTH,
 					autocvar_g_surv_defender_attacker_frag_health);
-				GivePlayerArmor(attacker,
+				GiveResource(attacker, RESOURCE_ARMOR,
 					autocvar_g_surv_defender_attacker_frag_armor);
-				GivePlayerAmmo(attacker, ammo_shells,
+				GiveResource(attacker, RESOURCE_SHELLS,
 					autocvar_g_surv_defender_attacker_frag_shells);
-				GivePlayerAmmo(attacker, ammo_nails,
+				GiveResource(attacker, RESOURCE_BULLETS,
 					autocvar_g_surv_defender_attacker_frag_bullets);
-				GivePlayerAmmo(attacker, ammo_rockets,
+				GiveResource(attacker, RESOURCE_ROCKETS,
 					autocvar_g_surv_defender_attacker_frag_rockets);
-				GivePlayerAmmo(attacker, ammo_cells,
+				GiveResource(attacker, RESOURCE_CELLS,
 					autocvar_g_surv_defender_attacker_frag_cells);
+				GiveResource(attacker, RESOURCE_PLASMA,
+					autocvar_g_surv_defender_attacker_frag_plasma);
+				GiveResource(attacker, RESOURCE_FUEL,
+					autocvar_g_surv_defender_attacker_frag_fuel);
 				break;
 			}
 			case SURVIVAL_ROLE_CANNON_FODDER:
 			{
-				GivePlayerHealth(attacker,
+				GiveResource(attacker, RESOURCE_HEALTH,
 					autocvar_g_surv_defender_cannon_fodder_frag_health);
-				GivePlayerArmor(attacker,
+				GiveResource(attacker, RESOURCE_ARMOR,
 					autocvar_g_surv_defender_cannon_fodder_frag_armor);
-				GivePlayerAmmo(attacker, ammo_shells,
+				GiveResource(attacker, RESOURCE_SHELLS,
 					autocvar_g_surv_defender_cannon_fodder_frag_shells);
-				GivePlayerAmmo(attacker, ammo_nails,
+				GiveResource(attacker, RESOURCE_BULLETS,
 					autocvar_g_surv_defender_cannon_fodder_frag_bullets);
-				GivePlayerAmmo(attacker, ammo_rockets,
+				GiveResource(attacker, RESOURCE_ROCKETS,
 					autocvar_g_surv_defender_cannon_fodder_frag_rockets);
-				GivePlayerAmmo(attacker, ammo_cells,
+				GiveResource(attacker, RESOURCE_CELLS,
 					autocvar_g_surv_defender_cannon_fodder_frag_cells);
+				GiveResource(attacker, RESOURCE_PLASMA,
+					autocvar_g_surv_defender_cannon_fodder_frag_plasma);
+				GiveResource(attacker, RESOURCE_FUEL,
+					autocvar_g_surv_defender_cannon_fodder_frag_fuel);
 				break;
 			}
 		}
