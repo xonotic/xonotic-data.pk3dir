@@ -250,22 +250,22 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 			}
 			case 3:
 			{
-				GivePlayerAmmo(player, ammo_shells, stof(argv(i)));
+				GivePlayerResource(player, RESOURCE_SHELLS, stof(argv(i)));
 				break;
 			}
 			case 4:
 			{
-				GivePlayerAmmo(player, ammo_nails, stof(argv(i)));
+				GivePlayerResource(player, RESOURCE_BULLETS, stof(argv(i)));
 				break;
 			}
 			case 5:
 			{
-				GivePlayerAmmo(player, ammo_rockets, stof(argv(i)));
+				GivePlayerResource(player, RESOURCE_ROCKETS, stof(argv(i)));
 				break;
 			}
 			case 6:
 			{
-				GivePlayerAmmo(player, ammo_cells, stof(argv(i)));
+				GivePlayerResource(player, RESOURCE_CELLS, stof(argv(i)));
 				break;
 			}
 		}
