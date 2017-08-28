@@ -715,7 +715,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 		{
 			case (ammo_shells):
 			{
-				if (receiver.ammo_shells != 0)
+				if (GetResourceAmount(receiver, RESOURCE_SHELLS) != 0)
 				{
 					break;
 				}
@@ -724,7 +724,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			}
 			case (ammo_nails):
 			{
-				if (receiver.ammo_nails != 0)
+				if (GetResourceAmount(receiver, RESOURCE_BULLETS) != 0)
 				{
 					break;
 				}
@@ -733,7 +733,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			}
 			case (ammo_rockets):
 			{
-				if (receiver.ammo_rockets != 0)
+				if (GetResourceAmount(receiver, RESOURCE_ROCKETS) != 0)
 				{
 					break;
 				}
@@ -742,7 +742,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			}
 			case (ammo_cells):
 			{
-				if (receiver.ammo_cells != 0)
+				if (GetResourceAmount(receiver, RESOURCE_CELLS) != 0)
 				{
 					break;
 				}
@@ -751,7 +751,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			}
 			case (ammo_plasma):
 			{
-				if (receiver.ammo_plasma != 0)
+				if (GetResourceAmount(receiver, RESOURCE_PLASMA) != 0)
 				{
 					break;
 				}
