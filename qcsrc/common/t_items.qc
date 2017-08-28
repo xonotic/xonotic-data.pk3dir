@@ -876,7 +876,7 @@ void GivePlayerRandomWeapons(entity player, int num_weapons,
 				{
 					break;
 				}
-				GivePlayerAmmo(player, ammo_shells, shells);
+				GivePlayerResource(player, RESOURCE_SHELLS, shells);
 				break;
 			}
 			case (ammo_nails):
@@ -885,7 +885,7 @@ void GivePlayerRandomWeapons(entity player, int num_weapons,
 				{
 					break;
 				}
-				GivePlayerAmmo(player, ammo_nails, bullets);
+				GivePlayerResource(player, RESOURCE_BULLETS, bullets);
 				break;
 			}
 			case (ammo_rockets):
@@ -894,7 +894,7 @@ void GivePlayerRandomWeapons(entity player, int num_weapons,
 				{
 					break;
 				}
-				GivePlayerAmmo(player, ammo_rockets, rockets);
+				GivePlayerResource(player, RESOURCE_ROCKETS, rockets);
 				break;
 			}
 			case (ammo_cells):
@@ -903,7 +903,7 @@ void GivePlayerRandomWeapons(entity player, int num_weapons,
 				{
 					break;
 				}
-				GivePlayerAmmo(player, ammo_cells, cells);
+				GivePlayerResource(player, RESOURCE_CELLS, cells);
 				break;
 			}
 			case (ammo_plasma):
@@ -912,7 +912,7 @@ void GivePlayerRandomWeapons(entity player, int num_weapons,
 				{
 					break;
 				}
-				GivePlayerAmmo(player, ammo_plasma, plasma);
+				GivePlayerResource(player, RESOURCE_PLASMA, plasma);
 				break;
 			}
 		}
