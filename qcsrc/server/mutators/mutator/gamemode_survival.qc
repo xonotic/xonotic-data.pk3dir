@@ -2043,7 +2043,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 		float health = M_ARGV(2, float);
 		float armor = M_ARGV(3, float);
 		float score = (health + armor) * autocvar_g_surv_attacker_damage_score;
-		PlayerScore_Add(attacker, SP_SCORE, score);
+		GameRules_scoring_add(attacker, SCORE, score);
 	}
 	if (autocvar_g_surv_stealth)
 	{
