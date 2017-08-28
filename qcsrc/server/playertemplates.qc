@@ -306,22 +306,28 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 		return;
 	}
 	// Give health, armor and ammo.
-	player.health = PlayerTemplate_GetFloatValue(template, "start_health");
-	player.armorvalue = PlayerTemplate_GetFloatValue(template, "start_armor");
+	SetResourceAmount(player, RESOURCE_HEALTH,
+		PlayerTemplate_GetFloatValue(template, "start_health"));
+	SetResourceAmount(player, RESOURCE_ARMOR, 
+		PlayerTemplate_GetFloatValue(template, "start_armor"));
 	if (PlayerTemplate_GetFloatValue(template, "unlimited_ammo"))
 	{
 		player.items |= IT_UNLIMITED_AMMO;
 	}
 	else
 	{
-		player.ammo_shells = PlayerTemplate_GetFloatValue(template,
-			"start_ammo_shells");
-		player.ammo_nails = PlayerTemplate_GetFloatValue(template,
-			"start_ammo_bullets");
-		player.ammo_rockets = PlayerTemplate_GetFloatValue(template,
-			"start_ammo_rockets");
-		player.ammo_cells = PlayerTemplate_GetFloatValue(template,
-			"start_ammo_cells");
+		SetResourceAmount(player, RESOURCE_SHELLS,
+			PlayerTemplate_GetFloatValue(template, "start_ammo_shells"));
+		SetResourceAmount(player, RESOURCE_BULLETS,
+			PlayerTemplate_GetFloatValue(template, "start_ammo_bullets"));
+		SetResourceAmount(player, RESOURCE_ROCKETS,
+			PlayerTemplate_GetFloatValue(template, "start_ammo_rockets"));
+		SetResourceAmount(player, RESOURCE_CELLS,
+			PlayerTemplate_GetFloatValue(template, "start_ammo_cells"));
+		SetResourceAmount(player, RESOURCE_PLASMA,
+			PlayerTemplate_GetFloatValue(template, "start_ammo_plasma"));
+		SetResourceAmount(player, RESOURCE_FUEL,
+			PlayerTemplate_GetFloatValue(template, "start_ammo_fuel"));
 	}
 	if (autocvar_g_instagib == 1)
 	{

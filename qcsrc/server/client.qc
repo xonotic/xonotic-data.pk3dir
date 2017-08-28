@@ -12,6 +12,7 @@
 #include "teamplay.qh"
 #include "playerdemo.qh"
 #include "spawnpoints.qh"
+#include "resources.qh"
 #include "g_damage.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
