@@ -242,9 +242,9 @@ void Surv_Initialize()
 	round_handler_Spawn(Surv_CanRoundStart, Surv_CanRoundEnd, Surv_RoundStart);
 	round_handler_Init(5, autocvar_g_surv_warmup, surv_timetobeat);
 	EliminatedPlayers_Init(Surv_IsEliminated);
-	ActivateTeamplay();
-	SetLimits(autocvar_g_surv_point_limit, autocvar_g_surv_point_leadlimit,
-		autocvar_timelimit_override, -1);
+	GameRules_teams(true);
+	GameRules_limit_score(autocvar_g_surv_point_limit);
+	GameRules_limit_lead(autocvar_g_surv_point_leadlimit);
 }
 
 /// \brief Returns the name of the template of the given player.
