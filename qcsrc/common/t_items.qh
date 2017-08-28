@@ -131,19 +131,18 @@ void GiveResource(entity receiver, int resource_type, float amount);
 void GiveResourceViaProperty(entity receiver, .float resource_property,
 	float amount);
 
-/// \brief Give several random weapons and ammo to the player.
-/// \param[in,out] player Player to give weapons to.
+/// \brief Give several random weapons and ammo to the entity.
+/// \param[in,out] receiver Entity to give weapons to.
 /// \param[in] num_weapons Number of weapons to give.
 /// \param[in] weapon_names Names of weapons to give separated by spaces.
 /// \param[in] shells Amount of shells to give with shell-based weapon.
 /// \param[in] bullets Amount of bullets to give with bullet-based weapon.
 /// \param[in] rockets Amount of rockets to give with rocket-based weapon.
 /// \param[in] cells Amount of cells to give with cell-based weapon.
-/// \param[in] cells Amount of plasma to give with plasma-based weapon.
+/// \param[in] plasma Amount of plasma to give with plasma-based weapon.
 /// \return No return.
-void GivePlayerRandomWeapons(entity player, int num_weapons,
-	string weapon_names, float shells, float bullets, float rockets,
-	float cells, float plasma);
+void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
+	float shells, float bullets, float rockets, float cells, float plasma);
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax);
 

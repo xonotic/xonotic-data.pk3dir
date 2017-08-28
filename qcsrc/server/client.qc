@@ -544,7 +544,7 @@ void PutPlayerInServer(entity this)
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
 		this.weapons = start_weapons;
-		GivePlayerRandomWeapons(this, random_start_weapons_count,
+		GiveRandomWeapons(this, random_start_weapons_count,
 			cvar_string("g_random_start_weapons"), random_start_shells,
 			random_start_bullets, random_start_rockets, random_start_cells,
 			random_start_plasma);

@@ -825,9 +825,8 @@ void GiveResourceViaProperty(entity receiver, .float resource_property,
 	GiveResource(receiver, GetResourceType(resource_property), amount);
 }
 
-void GivePlayerRandomWeapons(entity player, int num_weapons,
-	string weapon_names, float shells, float bullets, float rockets,
-	float cells, float plasma)
+void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
+	float shells, float bullets, float rockets, float cells, float plasma)
 {
 	if (num_weapons == 0)
 	{
@@ -843,7 +842,7 @@ void GivePlayerRandomWeapons(entity player, int num_weapons,
 			FOREACH(Weapons, it != WEP_Null,
 			{
 				// Finding a weapon which player doesn't have.
-				if (!(player.weapons & it.m_wepset) && (it.netname == weapon))
+				if (!(receiver.weapons & it.m_wepset) && (it.netname == weapon))
 				{
 					RandomSelection_AddEnt(it, 1, 1);
 					break;
@@ -854,52 +853,52 @@ void GivePlayerRandomWeapons(entity player, int num_weapons,
 		{
 			return;
 		}
-		player.weapons |= RandomSelection_chosen_ent.m_wepset;
+		receiver.weapons |= RandomSelection_chosen_ent.m_wepset;
 		switch (RandomSelection_chosen_ent.ammo_field)
 		{
 			case (ammo_shells):
 			{
-				if (player.ammo_shells != 0)
+				if (receiver.ammo_shells != 0)
 				{
 					break;
 				}
-				GivePlayerResource(player, RESOURCE_SHELLS, shells);
+				GiveResource(receiver, RESOURCE_SHELLS, shells);
 				break;
 			}
 			case (ammo_nails):
 			{
-				if (player.ammo_nails != 0)
+				if (receiver.ammo_nails != 0)
 				{
 					break;
 				}
-				GivePlayerResource(player, RESOURCE_BULLETS, bullets);
+				GiveResource(receiver, RESOURCE_BULLETS, bullets);
 				break;
 			}
 			case (ammo_rockets):
 			{
-				if (player.ammo_rockets != 0)
+				if (receiver.ammo_rockets != 0)
 				{
 					break;
 				}
-				GivePlayerResource(player, RESOURCE_ROCKETS, rockets);
+				GiveResource(receiver, RESOURCE_ROCKETS, rockets);
 				break;
 			}
 			case (ammo_cells):
 			{
-				if (player.ammo_cells != 0)
+				if (receiver.ammo_cells != 0)
 				{
 					break;
 				}
-				GivePlayerResource(player, RESOURCE_CELLS, cells);
+				GiveResource(receiver, RESOURCE_CELLS, cells);
 				break;
 			}
 			case (ammo_plasma):
 			{
-				if (player.ammo_plasma != 0)
+				if (receiver.ammo_plasma != 0)
 				{
 					break;
 				}
-				GivePlayerResource(player, RESOURCE_PLASMA, plasma);
+				GiveResource(receiver, RESOURCE_PLASMA, plasma);
 				break;
 			}
 		}
