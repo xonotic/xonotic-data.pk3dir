@@ -1,0 +1,44 @@
+#pragma once
+
+/// \brief Unconditional maximum amount of resources the player can have.
+const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
+
+/// \brief Describes the available resource types.
+enum
+{
+	RESOURCE_HEALTH, ///< Health.
+	RESOURCE_ARMOR, ///< Armor.
+	RESOURCE_SHELLS, ///< Shells (used by shotgun).
+	RESOURCE_BULLETS, ///< Bullets (used by machinegun and rifle)
+	RESOURCE_ROCKETS, ///< Rockets (used by mortar, hagar, devastator, etc).
+	RESOURCE_CELLS, ///< Cells (used by electro, crylink, vortex, etc)
+	RESOURCE_PLASMA, ///< Plasma (unused).
+	RESOURCE_FUEL ///< Fuel (used by jetpack).
+};
+
+// ============================ Public API ====================================
+
+/// \brief Returns the maximum amount of the given resource.
+/// \param[in] e Entity to check.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \return Maximum amount of the given resource.
+float GetResourceLimit(entity e, int resource_type);
+
+/// \brief Gives player a resource such as health, armor or ammo.
+/// \param[in,out] receiver Entity to give resource to.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] amount Amount of resource to give.
+/// \return No return.
+void GiveResource(entity receiver, int resource_type, float amount);
+
+// ===================== Legacy and/or internal API ===========================
+
+/// \brief Converts resource entity property to resource type.
+/// \param[in] resource_property Resource entity property to convert.
+/// \return Resource type (a RESOURCE_* constant).
+int GetResourceType(.float resource_property);
+
+/// \brief Converts resource type (a RESOURCE_* constant) to entity property.
+/// \param[in] resource_type Type of the resource.
+/// \return Entity proprty for that resource.
+.float GetResourceProperty(int resource_type);
