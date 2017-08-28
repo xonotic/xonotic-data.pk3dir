@@ -21,6 +21,7 @@
 #include <server/playertemplates.qc>
 #include <server/portals.qc>
 #include <server/race.qc>
+#include <server/resources.qc>
 #include <server/round_handler.qc>
 #include <server/scores.qc>
 #include <server/scores_rules.qc>

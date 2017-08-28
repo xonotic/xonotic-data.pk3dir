@@ -682,149 +682,6 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
-int GetResourceType(.float resource_property)
-{
-	switch (resource_property)
-	{
-		case health: { return RESOURCE_HEALTH; }
-		case armorvalue: { return RESOURCE_ARMOR; }
-		case ammo_shells: { return RESOURCE_SHELLS; }
-		case ammo_nails: { return RESOURCE_BULLETS; }
-		case ammo_rockets: { return RESOURCE_ROCKETS; }
-		case ammo_cells: { return RESOURCE_CELLS; }
-		case ammo_plasma: { return RESOURCE_PLASMA; }
-		case ammo_fuel: { return RESOURCE_FUEL; }
-	}
-	error("GetResourceType: Invalid property.");
-	return 0;
-}
-
-.float GetResourceProperty(int resource_type)
-{
-	switch (resource_type)
-	{
-		case RESOURCE_HEALTH: { return health; }
-		case RESOURCE_ARMOR: { return armorvalue; }
-		case RESOURCE_SHELLS: { return ammo_shells; }
-		case RESOURCE_BULLETS: { return ammo_nails; }
-		case RESOURCE_ROCKETS: { return ammo_rockets; }
-		case RESOURCE_CELLS: { return ammo_cells; }
-		case RESOURCE_PLASMA: { return ammo_plasma; }
-		case RESOURCE_FUEL: { return ammo_fuel; }
-	}
-	error("GetResourceProperty: Invalid resource type.");
-	return health;
-}
-
-float GetResourceLimit(entity e, int resource_type)
-{
-	float limit;
-	switch (resource_type)
-	{
-		case RESOURCE_HEALTH:
-		{
-			limit = autocvar_g_balance_health_limit;
-			break;
-		}
-		case RESOURCE_ARMOR:
-		{
-			limit = autocvar_g_balance_armor_limit;
-			break;
-		}
-		case RESOURCE_SHELLS:
-		{
-			limit = g_pickup_shells_max;
-			break;
-		}
-		case RESOURCE_BULLETS:
-		{
-			limit = g_pickup_nails_max;
-			break;
-		}
-		case RESOURCE_ROCKETS:
-		{
-			limit = g_pickup_rockets_max;
-			break;
-		}
-		case RESOURCE_CELLS:
-		{
-			limit = g_pickup_cells_max;
-			break;
-		}
-		case RESOURCE_PLASMA:
-		{
-			limit = g_pickup_plasma_max;
-			break;
-		}
-		case RESOURCE_FUEL:
-		{
-			limit = autocvar_g_balance_fuel_limit;
-			break;
-		}
-		default:
-		{
-			error("GetResourceLimit: Invalid resource type.");
-			return 0;
-		}
-	}
-	MUTATOR_CALLHOOK(GetResourceLimit, e, resource_type, limit);
-	limit = M_ARGV(2, float);
-	if (limit > RESOURCE_AMOUNT_HARD_LIMIT)
-	{
-		limit = RESOURCE_AMOUNT_HARD_LIMIT;
-	}
-	return limit;
-}
-
-void GiveResource(entity receiver, int resource_type, float amount)
-{
-	if (amount == 0)
-	{
-		return;
-	}
-	bool forbid = MUTATOR_CALLHOOK(GiveResource, receiver, resource_type,
-		amount);
-	if (forbid)
-	{
-		return;
-	}
-	resource_type = M_ARGV(1, int);
-	amount = M_ARGV(2, float);
-	.float resource_property = GetResourceProperty(resource_type);
-	float max_amount = GetResourceLimit(receiver, resource_type);
-	receiver.(resource_property) = bound(receiver.(resource_property),
-		receiver.(resource_property) + amount, max_amount);
-	switch (resource_type)
-	{
-		case RESOURCE_HEALTH:
-		{
-			receiver.pauserothealth_finished =
-				max(receiver.pauserothealth_finished, time +
-				autocvar_g_balance_pause_health_rot);
-			return;
-		}
-		case RESOURCE_ARMOR:
-		{
-			receiver.pauserotarmor_finished =
-				max(receiver.pauserotarmor_finished, time +
-				autocvar_g_balance_pause_armor_rot);
-			return;
-		}
-		case RESOURCE_FUEL:
-		{
-			receiver.pauserotfuel_finished = max(receiver.pauserotfuel_finished,
-				time + autocvar_g_balance_pause_fuel_rot);
-			return;
-		}
-	}
-}
-
-void GiveResourceViaProperty(entity receiver, .float resource_property,
-	float amount)
-{
-	GiveResource(receiver, GetResourceType(resource_property), amount);
-}
-
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 	float shells, float bullets, float rockets, float cells, float plasma)
 {
@@ -858,7 +715,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 		{
 			case (ammo_shells):
 			{
-				if (receiver.ammo_shells != 0)
+				if (GetResourceAmount(receiver, RESOURCE_SHELLS) != 0)
 				{
 					break;
 				}
@@ -867,7 +724,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			}
 			case (ammo_nails):
 			{
-				if (receiver.ammo_nails != 0)
+				if (GetResourceAmount(receiver, RESOURCE_BULLETS) != 0)
 				{
 					break;
 				}
@@ -876,7 +733,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			}
 			case (ammo_rockets):
 			{
-				if (receiver.ammo_rockets != 0)
+				if (GetResourceAmount(receiver, RESOURCE_ROCKETS) != 0)
 				{
 					break;
 				}
@@ -885,7 +742,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			}
 			case (ammo_cells):
 			{
-				if (receiver.ammo_cells != 0)
+				if (GetResourceAmount(receiver, RESOURCE_CELLS) != 0)
 				{
 					break;
 				}
@@ -894,7 +751,7 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			}
 			case (ammo_plasma):
 			{
-				if (receiver.ammo_plasma != 0)
+				if (GetResourceAmount(receiver, RESOURCE_PLASMA) != 0)
 				{
 					break;
 				}
@@ -919,7 +776,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 			{
 				amount = ammomax - player.(ammotype);
 			}
-			GiveResourceViaProperty(player, ammotype, amount);
+			GiveResource(player, GetResourceType(ammotype), amount);
 			return true;
 		}
 	}
@@ -928,7 +785,8 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 		float mi = min(item.(ammotype), ammomax);
 		if (player.(ammotype) < mi)
 		{
-			GiveResourceViaProperty(player, ammotype, mi - player.(ammotype));
+			GiveResource(player, GetResourceType(ammotype), mi -
+				player.(ammotype));
 		}
 		return true;
 	}
