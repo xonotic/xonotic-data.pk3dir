@@ -2051,33 +2051,33 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies, CBC_ORDER_FIRST)
 		{
 			case SURVIVAL_ROLE_PLAYER:
 			{
-				GivePlayerHealth(attacker,
+				GiveResource(attacker, RESOURCE_HEALTH,
 					autocvar_g_surv_defender_attacker_frag_health);
-				GivePlayerArmor(attacker,
+				GiveResource(attacker, RESOURCE_ARMOR,
 					autocvar_g_surv_defender_attacker_frag_armor);
-				GivePlayerResource(attacker, RESOURCE_SHELLS,
+				GiveResource(attacker, RESOURCE_SHELLS,
 					autocvar_g_surv_defender_attacker_frag_shells);
-				GivePlayerResource(attacker, RESOURCE_BULLETS,
+				GiveResource(attacker, RESOURCE_BULLETS,
 					autocvar_g_surv_defender_attacker_frag_bullets);
-				GivePlayerResource(attacker, RESOURCE_ROCKETS,
+				GiveResource(attacker, RESOURCE_ROCKETS,
 					autocvar_g_surv_defender_attacker_frag_rockets);
-				GivePlayerResource(attacker, RESOURCE_CELLS,
+				GiveResource(attacker, RESOURCE_CELLS,
 					autocvar_g_surv_defender_attacker_frag_cells);
 				break;
 			}
 			case SURVIVAL_ROLE_CANNON_FODDER:
 			{
-				GivePlayerHealth(attacker,
+				GiveResource(attacker, RESOURCE_HEALTH,
 					autocvar_g_surv_defender_cannon_fodder_frag_health);
-				GivePlayerArmor(attacker,
+				GiveResource(attacker, RESOURCE_ARMOR,
 					autocvar_g_surv_defender_cannon_fodder_frag_armor);
-				GivePlayerResource(attacker, RESOURCE_SHELLS,
+				GiveResource(attacker, RESOURCE_SHELLS,
 					autocvar_g_surv_defender_cannon_fodder_frag_shells);
-				GivePlayerResource(attacker, RESOURCE_BULLETS,
+				GiveResource(attacker, RESOURCE_BULLETS,
 					autocvar_g_surv_defender_cannon_fodder_frag_bullets);
-				GivePlayerResource(attacker, RESOURCE_ROCKETS,
+				GiveResource(attacker, RESOURCE_ROCKETS,
 					autocvar_g_surv_defender_cannon_fodder_frag_rockets);
-				GivePlayerResource(attacker, RESOURCE_CELLS,
+				GiveResource(attacker, RESOURCE_CELLS,
 					autocvar_g_surv_defender_cannon_fodder_frag_cells);
 				break;
 			}
