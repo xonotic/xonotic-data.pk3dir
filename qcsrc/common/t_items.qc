@@ -771,7 +771,7 @@ float GetResourceLimit(int resource_type)
 	limit = M_ARGV(1, float);
 	if (limit > RESOURCE_AMOUNT_HARD_LIMIT)
 	{
-		limit = RESOURCE_AMOUNT_HARD_LIMIT
+		limit = RESOURCE_AMOUNT_HARD_LIMIT;
 	}
 	return limit;
 }
