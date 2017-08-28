@@ -6,7 +6,7 @@ const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
 /// \brief Describes the available resource types.
 enum
 {
-	RESOURCE_HEALTH, ///< Health.
+	RESOURCE_HEALTH = 1, ///< Health.
 	RESOURCE_ARMOR, ///< Armor.
 	RESOURCE_SHELLS, ///< Shells (used by shotgun).
 	RESOURCE_BULLETS, ///< Bullets (used by machinegun and rifle)
