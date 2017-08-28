@@ -1,6 +1,7 @@
 #include "resources.qh"
 
-//#include <server/autocvars.qh>
+#include "autocvars.qh"
+#include "miscfunctions.qh"
 
 float GetResourceLimit(entity e, int resource_type)
 {
