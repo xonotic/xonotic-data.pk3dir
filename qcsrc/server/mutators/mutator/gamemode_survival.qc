@@ -1028,7 +1028,7 @@ void Surv_UpdateDefenderHealthStat()
 		{
 			if (it.team == surv_defenderteam)
 			{
-				totalhealth += it.armorvalue + 1;
+				totalhealth += GetResourceAmount(it, RESOURCE_ARMOR) + 1;
 			}
 		});
 	}
@@ -1041,8 +1041,8 @@ void Surv_UpdateDefenderHealthStat()
 		{
 			if (it.team == surv_defenderteam)
 			{
-				totalhealth += it.health;
-				totalhealth += it.armorvalue;
+				totalhealth += GetResourceAmount(it, RESOURCE_HEALTH);
+				totalhealth += GetResourceAmount(it, RESOURCE_ARMOR);
 			}
 		});
 	}
@@ -1304,11 +1304,12 @@ void Surv_UpdateWaypointSpriteHealth(entity player)
 	float hp;
 	if (autocvar_g_instagib == 1)
 	{
-		hp = player.armorvalue + 1;
+		hp = GetResourceAmount(player, RESOURCE_ARMOR) + 1;
 	}
 	else
 	{
-		hp = player.health + player.armorvalue;
+		hp = GetResourceAmount(player, RESOURCE_HEALTH) + GetResourceAmount(
+			player, RESOURCE_ARMOR);
 	}
 	WaypointSprite_UpdateHealth(player.surv_attack_sprite, hp);
 	WaypointSprite_UpdateHealth(player.surv_defend_sprite, hp);
@@ -2065,7 +2066,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDamaged)
 	{
 		return;
 	}
-	if (target.health < 1)
+	if (GetResourceAmount(target, RESOURCE_HEALTH) < 1)
 	{
 		WaypointSprite_Kill(target.surv_attack_sprite);
 		WaypointSprite_Kill(target.surv_defend_sprite);
