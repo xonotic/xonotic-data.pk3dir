@@ -7,6 +7,19 @@
 /// \brief Unconditional maximum amount of resources the player can have.
 const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
 
+/// \brief Describes the available resource types.
+enum
+{
+	RESOURCE_HEALTH, ///< Health.
+	RESOURCE_ARMOR, ///< Armor.
+	RESOURCE_SHELLS, ///< Shells (used by shotgun).
+	RESOURCE_BULLETS, ///< Bullets (used by machinegun and rifle)
+	RESOURCE_ROCKETS, ///< Rockets (used by mortar, hagar, devastator, etc).
+	RESOURCE_CELLS, ///< Cells (used by electro, crylink, vortex, etc)
+	RESOURCE_PLASMA, ///< Plasma (unused).
+	RESOURCE_FUEL ///< Fuel (used by jetpack).
+};
+
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
@@ -87,12 +100,35 @@ void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
 
+/// \brief Converts resource entity property to resource type.
+/// \param[in] resource_property Resource entity property to convert.
+/// \return Resource type (a RESOURCE_* constant).
+int GetResourceType(.float resource_property);
+
+/// \brief Converts resource type (a RESOURCE_* constant) to entity property.
+/// \param[in] resource_type Type of the resource.
+/// \return Entity proprty for that resource.
+.float GetResourceProperty(int resource_type);
+
+/// \brief Returns the maximum amount of the given resource.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \return Maximum amount of the given resource.
+float GetResourceLimit(int resource_type);
+
 /// \brief Gives player a resource such as health, armor or ammo.
 /// \param[in,out] player Player to give resource to.
-/// \param[in] resource_type Type of the resource.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
 /// \param[in] amount Amount of resource to give.
 /// \return No return.
-void GivePlayerResource(entity player, .float resource_type, float amount);
+void GivePlayerResource(entity player, int resource_type, float amount);
+
+/// \brief Gives player a resource such as health, armor or ammo.
+/// \param[in,out] player Player to give resource to.
+/// \param[in] resource_property Entity property of the resource.
+/// \param[in] amount Amount of resource to give.
+/// \return No return.
+void GivePlayerResourceViaProperty(entity player, .float resource_property,
+	float amount);
 
 /// \brief Gives health to the player.
 /// \param[in,out] player Player to give health to.
@@ -105,13 +141,6 @@ void GivePlayerHealth(entity player, float amount);
 /// \param[in] amount Amount of armor to give.
 /// \return No return.
 void GivePlayerArmor(entity player, float amount);
-
-/// \brief Gives ammo of the specified type to the player.
-/// \param[in,out] player Player to give ammo to.
-/// \param[in] type Ammo type property.
-/// \param[in] amount Amount of ammo to give.
-/// \return No return.
-void GivePlayerAmmo(entity player, .float ammotype, float amount);
 
 /// \brief Gives fuel to the player.
 /// \param[in,out] player Player to give fuel to.
