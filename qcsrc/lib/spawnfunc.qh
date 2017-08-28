@@ -27,34 +27,36 @@ noref bool require_spawnfunc_prefix;
 	#define _spawnfunc_check(fld) \
 		if (fieldname == #fld) continue;
 
-	noref bool __spawnfunc_expecting;
+	noref int __spawnfunc_expecting;
 	noref entity __spawnfunc_expect;
 	noref bool __spawnfunc_unreachable_workaround = true;
+
+    .void(entity) __spawnfunc_spawn;
+    noref IntrusiveList g_spawn_queue;
 
 	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
 	#define spawnfunc_2(id, whitelist) \
 		void __spawnfunc_##id(entity this); \
 		[[accumulate]] void spawnfunc_##id(entity this) \
 		{ \
-			if (__spawnfunc_expecting) \
-			{ \
+		    bool dospawn = true; \
+		    if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = false; } \
+			else if (__spawnfunc_expecting) { \
 				/* engine call */ \
+                if (!g_spawn_queue) { g_spawn_queue = IL_NEW(); } \
 				__spawnfunc_expecting = false; \
 				this = __spawnfunc_expect; \
 				__spawnfunc_expect = NULL; \
-			} \
-			else \
-			{ \
+                dospawn = false; \
+			} else { \
+			    /* userland call */ \
 				assert(this); \
 			} \
-			if (!this.sourceLoc) \
-			{ \
+			if (!this.sourceLoc) { \
 				this.sourceLoc = __FILE__ ":" STR(__LINE__); \
 			} \
-			if (!this.spawnfunc_checked) \
-			{ \
-				for (int i = 0, n = numentityfields(); i < n; ++i) \
-				{ \
+			if (!this.spawnfunc_checked) { \
+				for (int i = 0, n = numentityfields(); i < n; ++i) { \
 					string value = getentityfieldstring(i, this); \
 					string fieldname = entityfieldname(i); \
 					whitelist(_spawnfunc_checktypes) \
@@ -65,8 +67,13 @@ noref bool require_spawnfunc_prefix;
 					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), #id, fieldname, value); \
 				} \
 				this.spawnfunc_checked = true; \
+				if (this) { \
+                    /* not worldspawn, delay spawn */ \
+                    this.__spawnfunc_spawn = spawnfunc_##id; \
+                    IL_PUSH(g_spawn_queue, this); \
+                } \
 			} \
-			__spawnfunc_##id(this); \
+			if (dospawn) { __spawnfunc_##id(this); } \
 			if (__spawnfunc_unreachable_workaround) return; \
 		} \
 		void __spawnfunc_##id(entity this)

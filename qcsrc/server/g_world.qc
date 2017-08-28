@@ -949,6 +949,10 @@ spawnfunc(worldspawn)
 	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
+
+	IL_EACH(g_spawn_queue, true, {
+        it.__spawnfunc_spawn(it);
+    });
 }
 
 spawnfunc(light)
