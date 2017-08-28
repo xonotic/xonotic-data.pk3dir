@@ -758,7 +758,7 @@ float GetResourceLimit(int resource_type)
 		}
 		case RESOURCE_FUEL:
 		{
-			limit = g_pickup_fuel_max;
+			limit = autocvar_g_balance_fuel_limit;
 			break;
 		}
 		default:

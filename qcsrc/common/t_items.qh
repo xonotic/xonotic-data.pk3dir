@@ -110,6 +110,11 @@ int GetResourceType(.float resource_property);
 /// \return Entity proprty for that resource.
 .float GetResourceProperty(int resource_type);
 
+/// \brief Returns the maximum amount of the given resource.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \return Maximum amount of the given resource.
+float GetResourceLimit(int resource_type);
+
 /// \brief Gives player a resource such as health, armor or ammo.
 /// \param[in,out] player Player to give resource to.
 /// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
