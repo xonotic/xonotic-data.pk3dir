@@ -240,32 +240,42 @@ float PlayerTemplate_GivePlayerItem(entity player, string template,
 		{
 			case 1:
 			{
-				GivePlayerHealth(player, stof(argv(i)));
+				GiveResource(player, RESOURCE_HEALTH, stof(argv(i)));
 				break;
 			}
 			case 2:
 			{
-				GivePlayerArmor(player, stof(argv(i)));
+				GiveResource(player, RESOURCE_ARMOR, stof(argv(i)));
 				break;
 			}
 			case 3:
 			{
-				GivePlayerResource(player, RESOURCE_SHELLS, stof(argv(i)));
+				GiveResource(player, RESOURCE_SHELLS, stof(argv(i)));
 				break;
 			}
 			case 4:
 			{
-				GivePlayerResource(player, RESOURCE_BULLETS, stof(argv(i)));
+				GiveResource(player, RESOURCE_BULLETS, stof(argv(i)));
 				break;
 			}
 			case 5:
 			{
-				GivePlayerResource(player, RESOURCE_ROCKETS, stof(argv(i)));
+				GiveResource(player, RESOURCE_ROCKETS, stof(argv(i)));
 				break;
 			}
 			case 6:
 			{
-				GivePlayerResource(player, RESOURCE_CELLS, stof(argv(i)));
+				GiveResource(player, RESOURCE_CELLS, stof(argv(i)));
+				break;
+			}
+			case 7:
+			{
+				GiveResource(player, RESOURCE_PLASMA, stof(argv(i)));
+				break;
+			}
+			case 8:
+			{
+				GiveResource(player, RESOURCE_FUEL, stof(argv(i)));
 				break;
 			}
 		}
@@ -344,8 +354,7 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 	}
 	if (!warmup_stage)
 	{
-		GivePlayerRandomWeapons(player,
-			PlayerTemplate_GetFloatValue(template,
+		GiveRandomWeapons(player, PlayerTemplate_GetFloatValue(template,
 			"random_start_weapons_count"),
 			PlayerTemplate_GetStringValue(template, "random_start_weapons"),
 			PlayerTemplate_GetFloatValue(template, "random_start_shells"),
