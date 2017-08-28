@@ -1,6 +1,7 @@
 #include "resources.qh"
 
-//#include <server/autocvars.qh>
+#include "autocvars.qh"
+#include "miscfunctions.qh"
 
 float GetResourceLimit(entity e, int resource_type)
 {
@@ -68,6 +69,21 @@ float GetResourceAmount(entity e, int resource_type)
 	return e.(resource_field);
 }
 
+void SetResourceAmount(entity e, int resource_type, float amount)
+{
+	.float resource_field = GetResourceField(resource_type);
+	if (e.(resource_field) == amount)
+	{
+		return;
+	}
+	float max_amount = GetResourceLimit(e, resource_type);
+	if (amount > max_amount)
+	{
+		amount = max_amount;
+	}
+	e.(resource_field) = amount;
+}
+
 void GiveResource(entity receiver, int resource_type, float amount)
 {
 	if (amount == 0)
@@ -82,10 +98,12 @@ void GiveResource(entity receiver, int resource_type, float amount)
 	}
 	resource_type = M_ARGV(1, int);
 	amount = M_ARGV(2, float);
-	.float resource_field = GetResourceField(resource_type);
-	float max_amount = GetResourceLimit(receiver, resource_type);
-	receiver.(resource_field) = bound(receiver.(resource_field),
-		receiver.(resource_field) + amount, max_amount);
+	if (amount <= 0)
+	{
+		return;
+	}
+	SetResourceAmount(receiver, resource_type,
+		GetResourceAmount(receiver, resource_type) + amount);
 	switch (resource_type)
 	{
 		case RESOURCE_HEALTH:
