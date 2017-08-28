@@ -2055,13 +2055,13 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies, CBC_ORDER_FIRST)
 					autocvar_g_surv_defender_attacker_frag_health);
 				GivePlayerArmor(attacker,
 					autocvar_g_surv_defender_attacker_frag_armor);
-				GivePlayerAmmo(attacker, ammo_shells,
+				GivePlayerResource(attacker, RESOURCE_SHELLS,
 					autocvar_g_surv_defender_attacker_frag_shells);
-				GivePlayerAmmo(attacker, ammo_nails,
+				GivePlayerResource(attacker, RESOURCE_BULLETS,
 					autocvar_g_surv_defender_attacker_frag_bullets);
-				GivePlayerAmmo(attacker, ammo_rockets,
+				GivePlayerResource(attacker, RESOURCE_ROCKETS,
 					autocvar_g_surv_defender_attacker_frag_rockets);
-				GivePlayerAmmo(attacker, ammo_cells,
+				GivePlayerResource(attacker, RESOURCE_CELLS,
 					autocvar_g_surv_defender_attacker_frag_cells);
 				break;
 			}
@@ -2071,13 +2071,13 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies, CBC_ORDER_FIRST)
 					autocvar_g_surv_defender_cannon_fodder_frag_health);
 				GivePlayerArmor(attacker,
 					autocvar_g_surv_defender_cannon_fodder_frag_armor);
-				GivePlayerAmmo(attacker, ammo_shells,
+				GivePlayerResource(attacker, RESOURCE_SHELLS,
 					autocvar_g_surv_defender_cannon_fodder_frag_shells);
-				GivePlayerAmmo(attacker, ammo_nails,
+				GivePlayerResource(attacker, RESOURCE_BULLETS,
 					autocvar_g_surv_defender_cannon_fodder_frag_bullets);
-				GivePlayerAmmo(attacker, ammo_rockets,
+				GivePlayerResource(attacker, RESOURCE_ROCKETS,
 					autocvar_g_surv_defender_cannon_fodder_frag_rockets);
-				GivePlayerAmmo(attacker, ammo_cells,
+				GivePlayerResource(attacker, RESOURCE_CELLS,
 					autocvar_g_surv_defender_cannon_fodder_frag_cells);
 				break;
 			}
