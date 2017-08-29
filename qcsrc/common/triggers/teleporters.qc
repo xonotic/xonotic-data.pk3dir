@@ -235,7 +235,13 @@ void teleport_findtarget(entity this)
 		++n;
 #ifdef SVQC
 		if(e.move_movetype == MOVETYPE_NONE)
-			waypoint_spawnforteleporter(this, e.origin, 0);
+		{
+			entity tracetest_ent = spawn();
+			setsize(tracetest_ent, PL_MIN_CONST, PL_MAX_CONST);
+			tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+			waypoint_spawnforteleporter(this, e.origin, 0, tracetest_ent);
+			delete(tracetest_ent);
+		}
 		if(e.classname != "info_teleport_destination")
 			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.");
 #endif

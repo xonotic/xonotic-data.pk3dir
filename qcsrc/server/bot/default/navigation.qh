@@ -9,6 +9,7 @@ float navigation_testtracewalk;
 
 vector jumpstepheightvec;
 vector stepheightvec;
+vector jumpheight_vec;
 
 entity navigation_bestgoal;
 
@@ -22,12 +23,83 @@ entity navigation_bestgoal;
 .entity goalstack20, goalstack21, goalstack22, goalstack23;
 .entity goalstack24, goalstack25, goalstack26, goalstack27;
 .entity goalstack28, goalstack29, goalstack30, goalstack31;
+
+.entity goalcurrent_prev;
+.float goalcurrent_distance;
+.float goalcurrent_distance_time;
+
 .entity nearestwaypoint;
+.float nearestwaypoint_dist;
+.float nearestwaypointtimeout;
+
+/*
+// item it is linked from waypoint it.wpXX (INCOMING link)
+// links are sorted by their cost (wpXXmincost)
+.entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
+.entity wp16, wp17, wp18, wp19, wp20, wp21, wp22, wp23, wp24, wp25, wp26, wp27, wp28, wp29, wp30, wp31;
+
+.float wp00mincost, wp01mincost, wp02mincost, wp03mincost, wp04mincost, wp05mincost, wp06mincost, wp07mincost;
+.float wp08mincost, wp09mincost, wp10mincost, wp11mincost, wp12mincost, wp13mincost, wp14mincost, wp15mincost;
+.float wp16mincost, wp17mincost, wp18mincost, wp19mincost, wp20mincost, wp21mincost, wp22mincost, wp23mincost;
+.float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
+*/
+
+#define navigation_item_islinked(from_wp, to_item) waypoint_islinked(to_item, from_wp)
+#define navigation_item_addlink(from_wp, to_item) \
+	waypoint_addlink_customcost(to_item, from_wp, waypoint_getlinkcost(from_wp, to_item))
+
+// if ent is a box waypoint or an item v is set to coords of ent that are closer to org
+#define SET_DESTCOORDS(ent, org, v) MACRO_BEGIN { \
+	if ((ent.classname != "waypoint") || ent.wpisbox) { \
+		vector wm1 = ent.origin + ent.mins; \
+		vector wm2 = ent.origin + ent.maxs; \
+		v.x = bound(wm1.x, org.x, wm2.x); \
+		v.y = bound(wm1.y, org.y, wm2.y); \
+		v.z = bound(wm1.z, org.z, wm2.z); \
+	} else { \
+		v = ent.origin; \
+	} \
+} MACRO_END
+
+// if ent is a box waypoint or an item v is set to coords of ent that are closer to org
+// (but v.z is set to the lowest coord of ent), v_height is set to ent's height
+#define SET_TRACEWALK_DESTCOORDS(ent, org, v, v_height) MACRO_BEGIN { \
+	if ((ent.classname != "waypoint") || ent.wpisbox) { \
+		vector wm1 = ent.origin + ent.mins; \
+		vector wm2 = ent.origin + ent.maxs; \
+		v.x = bound(wm1.x, org.x, wm2.x); \
+		v.y = bound(wm1.y, org.y, wm2.y); \
+		v.z = wm1.z; \
+		v_height = wm2.z - wm1.z; \
+	} else { \
+		v = ent.origin; \
+		v_height = 0; \
+	} \
+} MACRO_END
+
+// if ent is a box waypoint or an item v and v2 are set to coords of ent that are closer to org
+// (but v2.z is set to the lowest coord of ent), v2_height is set to ent's height
+#define SET_TRACEWALK_DESTCOORDS_2(ent, org, v, v2, v2_height) MACRO_BEGIN { \
+	if ((ent.classname != "waypoint") || ent.wpisbox) { \
+		vector wm1 = ent.origin + ent.mins; \
+		vector wm2 = ent.origin + ent.maxs; \
+		v.x = bound(wm1.x, org.x, wm2.x); \
+		v.y = bound(wm1.y, org.y, wm2.y); \
+		v.z = bound(wm1.z, org.z, wm2.z); \
+		v2.x = v.x; \
+		v2.y = v.y; \
+		v2.z = wm1.z; \
+		v2_height = wm2.z - wm1.z; \
+	} else { \
+		v = ent.origin; \
+		v2 = v; \
+		v2_height = 0; \
+	} \
+} MACRO_END
 
 .entity wp_goal_prev0;
 .entity wp_goal_prev1;
 
-.float nearestwaypointtimeout;
 .float lastteleporttime;
 
 .float blacklisted;
@@ -52,6 +124,12 @@ void navigation_dynamicgoal_init(entity this, bool initially_static);
 void navigation_dynamicgoal_set(entity this);
 void navigation_dynamicgoal_unset(entity this);
 
+.int nav_submerged_state;
+#define SUBMERGED_UNDEFINED 0
+#define SUBMERGED_NO 1
+#define SUBMERGED_YES 2
+bool navigation_check_submerged_state(entity ent, vector pos);
+
 
 /*
  * Functions
@@ -63,7 +141,7 @@ void debugnodestatus(vector position, float status);
 
 void debuggoalstack(entity this);
 
-float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
+float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode);
 
 float navigation_markroutes_nearestwaypoints(entity this, float maxdist);
 float navigation_routetogoal(entity this, entity e, vector startposition);
@@ -83,4 +161,4 @@ void navigation_unstuck(entity this);
 void botframe_updatedangerousobjects(float maxupdate);
 
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
-float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist);
+float navigation_waypoint_will_link(vector v, vector org, entity ent, vector v2, float v2_height, vector o2, float o2_height, float walkfromwp, float bestdist);

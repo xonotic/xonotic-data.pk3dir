@@ -27,10 +27,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
 	  ht  - jump height, measured from the higher one of org and tgt's midpoint
 
 	Returns: velocity for the jump
-	the global trigger_push_calculatevelocity_flighttime is set to the total
-	jump time
  */
-
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 {
 	float grav, sdist, zdist, vs, vz, jumpheight;
@@ -88,6 +85,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	if(zdist == 0)
 		solution_x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
 
+	float flighttime;
 	if(zdist < 0)
 	{
 		// down-jump
@@ -96,14 +94,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			// almost straight line type
 			// jump apex is before the jump
 			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution.y;
+			flighttime = solution.y;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one too
-			trigger_push_calculatevelocity_flighttime = solution.y;
+			flighttime = solution.y;
 		}
 	}
 	else
@@ -114,17 +112,17 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			// almost straight line type
 			// jump apex is after the jump
 			// we must take the smaller one
-			trigger_push_calculatevelocity_flighttime = solution.x;
+			flighttime = solution.x;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution.y;
+			flighttime = solution.y;
 		}
 	}
-	vs = sdist / trigger_push_calculatevelocity_flighttime;
+	vs = sdist / flighttime;
 
 	// finally calculate the velocity
 	return sdir * vs + '0 0 1' * vz;
@@ -272,6 +270,37 @@ void trigger_push_touch(entity this, entity toucher)
 #ifdef SVQC
 void trigger_push_link(entity this);
 void trigger_push_updatelink(entity this);
+bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vector org)
+{
+	setorigin(tracetest_ent, org);
+	tracetoss(tracetest_ent, tracetest_ent);
+	if(trace_startsolid)
+		return false;
+
+	if(!jp.height)
+	{
+		// since tracetoss starting from jumppad's origin often fails when target
+		// is very close to real destination, start it directly from target's
+		// origin instead
+		tracetest_ent.velocity.z = 0;
+		setorigin(tracetest_ent, targ.origin + stepheightvec);
+		tracetoss(tracetest_ent, tracetest_ent);
+		if(trace_startsolid)
+		{
+			setorigin(tracetest_ent, targ.origin + stepheightvec / 2);
+			tracetoss(tracetest_ent, tracetest_ent);
+			if(trace_startsolid)
+			{
+				setorigin(tracetest_ent, targ.origin);
+				tracetoss(tracetest_ent, tracetest_ent);
+				if(trace_startsolid)
+					return false;
+			}
+		}
+	}
+	tracebox(trace_endpos, tracetest_ent.mins, tracetest_ent.maxs, trace_endpos - eZ * 1500, true, tracetest_ent);
+	return true;
+}
 #endif
 void trigger_push_findtarget(entity this)
 {
@@ -282,17 +311,80 @@ void trigger_push_findtarget(entity this)
 	if (this.target)
 	{
 		int n = 0;
+#ifdef SVQC
+		vector vel = '0 0 0';
+#endif
 		for(entity t = NULL; (t = find(t, targetname, this.target)); )
 		{
 			++n;
 #ifdef SVQC
+			if(t.move_movetype != MOVETYPE_NONE)
+				continue;
+
 			entity e = spawn();
-			setorigin(e, org);
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
-			tracetoss(e, e);
-			if(e.move_movetype == MOVETYPE_NONE)
-				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+			vel = e.velocity;
+			vector best_target = '0 0 0';
+			vector best_org = '0 0 0';
+			vector best_vel = '0 0 0';
+			bool valid_best_target = false;
+			if (trigger_push_testorigin(e, t, this, org))
+			{
+				best_target = trace_endpos;
+				best_org = org;
+				best_vel = e.velocity;
+				valid_best_target = true;
+			}
+
+			vector new_org;
+			vector dist = t.origin - org;
+			if (dist.x || dist.y) // if not perfectly vertical
+			{
+				// test trajectory with different starting points, sometimes the trajectory
+				// starting from the jumppad origin can't reach the real destination
+				// and destination waypoint ends up near the jumppad itself
+				vector flatdir = normalize(dist - eZ * dist.z);
+				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmax.y - this.absmin.y));
+				new_org = org + ofs;
+				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				vel = e.velocity;
+				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
+					e.velocity = autocvar_sv_maxspeed * flatdir;
+				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+				{
+					best_target = trace_endpos;
+					best_org = new_org;
+					best_vel = vel;
+					valid_best_target = true;
+				}
+				new_org = org - ofs;
+				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				vel = e.velocity;
+				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
+					e.velocity = autocvar_sv_maxspeed * flatdir;
+				if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+				{
+					best_target = trace_endpos;
+					best_org = new_org;
+					best_vel = vel;
+					valid_best_target = true;
+				}
+			}
+
+			if (valid_best_target)
+			{
+				if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, best_target + PL_MIN_CONST, best_target + PL_MAX_CONST)))
+				{
+					float velxy = vlen(vec2(best_vel));
+					float cost = vlen(vec2(t.origin - best_org)) / velxy;
+					if(velxy < autocvar_sv_maxspeed)
+						velxy = autocvar_sv_maxspeed;
+					cost += vlen(vec2(best_target - t.origin)) / velxy;
+					waypoint_spawnforteleporter(this, best_target, cost, e);
+				}
+			}
 			delete(e);
 #endif
 		}
@@ -320,11 +412,13 @@ void trigger_push_findtarget(entity this)
 	else
 	{
 		entity e = spawn();
-		setorigin(e, org);
 		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
+		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+		setorigin(e, org);
 		e.velocity = this.movedir;
 		tracetoss(e, e);
-		waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+		if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
+			waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
 		delete(e);
 	}
 
