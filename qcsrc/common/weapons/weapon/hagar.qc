@@ -119,6 +119,15 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+
+    entity world2 = new(worldspawn); _setmodel(world2, world.model); setorigin(world2, w_shotorg);
+    world2.solid = SOLID_BSP;
+    vector world2ofs = world2.origin - world.origin;
+    IL_EACH(g_spawn_queue, true, {
+        entity e = new(clone);
+        copyentity(it, e);
+        setorigin(e, e.origin += world2ofs);
+    });
 }
 
 void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
