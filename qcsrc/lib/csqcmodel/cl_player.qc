@@ -168,7 +168,7 @@ void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
-		LOG_INFO("the Weird code path got hit\n");
+		LOG_INFO("the Weird code path got hit");
 		return;
 	}
 #endif

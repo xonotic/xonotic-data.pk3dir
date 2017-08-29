@@ -184,7 +184,6 @@ void StartFrame()
 	if(time > client_cefc_accumulatortime + 1)
 	{
 		float t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
-		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
 		int c_seeing = 0;
 		int c_seen = 0;
 		FOREACH_CLIENT(true, {
@@ -193,9 +192,11 @@ void StartFrame()
 			if(IS_PLAYER(it))
 				++c_seen;
 		});
-		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
-		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
-
+		LOG_INFO(
+		    "CEFC time: ", ftos(t * 1000), "ms; ",
+            "CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ",
+            "CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0')
+        );
 		client_cefc_accumulatortime = time;
 		client_cefc_accumulator = 0;
 	}
