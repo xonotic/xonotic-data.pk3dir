@@ -28,7 +28,7 @@
 
 void UpdateFrags(entity player, int f)
 {
-	PlayerTeamScore_AddScore(player, f);
+	GameRules_scoring_add_team(player, SCORE, f);
 }
 
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
@@ -41,23 +41,23 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		if(targ == attacker)
 		{
 			// suicide
-			PlayerScore_Add(attacker, SP_SUICIDES, 1);
+			GameRules_scoring_add(attacker, SUICIDES, 1);
 		}
 		else
 		{
 			// teamkill
-			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
+			GameRules_scoring_add(attacker, KILLS, -1); // or maybe add a teamkills field?
 		}
 	}
 	else
 	{
 		// regular frag
-		PlayerScore_Add(attacker, SP_KILLS, 1);
+		GameRules_scoring_add(attacker, KILLS, 1);
 		if(targ.playerid)
 			PS_GR_P_ADDVAL(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
-	PlayerScore_Add(targ, SP_DEATHS, 1);
+	GameRules_scoring_add(targ, DEATHS, 1);
 
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
@@ -509,7 +509,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		LogDeath("accident", deathtype, targ, targ);
 		GiveFrags(targ, targ, -1, deathtype);
 
-		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
+		if(GameRules_scoring_add(targ, SCORE, 0) == -5)
 		{
 			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
 			PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
@@ -617,11 +617,12 @@ void Unfreeze (entity targ)
 	targ.iceblock = NULL;
 }
 
-// TODO balance cfgs
 float autocvar_g_balance_damagepush_scaling_speed_min;
 float autocvar_g_balance_damagepush_scaling_speed_max;
-float autocvar_g_balance_damagepush_scaling_factor_slowest;
-float autocvar_g_balance_damagepush_scaling_factor_fastest;
+float autocvar_g_balance_damagepush_scaling_reduction_slowest;
+float autocvar_g_balance_damagepush_scaling_reduction_fastest;
+float autocvar_g_balance_damagepush_scaling_sideways;
+float autocvar_g_balance_damagepush_scaling_vertical;
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float complainteamdamage = 0;
@@ -884,23 +885,31 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	{
 		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
 
-		/*LOG_INFOF("farce %v (%f)\n", farce, vlen(targ.velocity + farce));
-		vector velocity_end = targ.origin + targ.velocity / 10;
-		vector farce_end = velocity_end + farce / 10;
-		te_lightning1(NULL, targ.origin, velocity_end);
-		te_lightning1(NULL, velocity_end, farce_end);*/
+		if (targ == attacker && DEATH_ISWEAPON(deathtype, WEP_BLASTER)) {
+			if (vec2(targ.velocity) == '0 0 0') {
+				// using vectoangles here would give weird results (v_forward would point up)
+				makevectors(targ.angles);
+			} else {
+				vector horiz_vel = vec2(targ.velocity);
+				makevectors(vectoangles(horiz_vel));
+			}
 
-		//float horiz_speed = vlen(vec2(targ.velocity));
-		/*float factor = map_bound_ranges(horiz_speed,
-			autocvar_g_balance_damagepush_scaling_speed_min, autocvar_g_balance_damagepush_scaling_speed_max,
-			autocvar_g_balance_damagepush_scaling_factor_slowest, autocvar_g_balance_damagepush_scaling_factor_fastest);*/
+			// split farce into 3 perpendicular vectors
+			v_forward *= v_forward * farce;
+			v_right *= v_right * farce;
+			v_up *= v_up * farce;
+			//LOG_INFOF("farce vlen %f - sizes: %f %f %f", vlen(farce), vlen(v_forward), vlen(v_right), vlen(v_up));
 
-		float factor = map_bound_ranges(vlen(targ.velocity + farce),
-			autocvar_g_balance_damagepush_scaling_speed_min, autocvar_g_balance_damagepush_scaling_speed_max,
-			autocvar_g_balance_damagepush_scaling_factor_slowest, autocvar_g_balance_damagepush_scaling_factor_fastest);
-		farce = vec3(farce.x * factor, farce.y * factor, farce.z);
-		/*te_lightning1(NULL, targ.origin, targ.origin + farce / 10);
-		LOG_INFOF("factor %f - new farce %v (%f)\n", factor, farce, vlen(farce));*/
+			float reduction = map_bound_ranges(vlen(targ.velocity),
+				autocvar_g_balance_damagepush_scaling_speed_min, autocvar_g_balance_damagepush_scaling_speed_max,
+				autocvar_g_balance_damagepush_scaling_reduction_slowest, autocvar_g_balance_damagepush_scaling_reduction_fastest);
+			//LOG_INFOF("reduction %f", reduction);
+			v_forward -= reduction * v_forward;
+			v_right -= (reduction * autocvar_g_balance_damagepush_scaling_sideways) * v_right;
+			v_up -= (reduction * autocvar_g_balance_damagepush_scaling_vertical) * v_up;
+			farce = v_forward + v_right + v_up;
+			//LOG_INFOF("farce vlen %f - sizes: %f %f %f", vlen(farce), vlen(v_forward), vlen(v_right), vlen(v_up));
+		}
 
 		if(targ.move_movetype == MOVETYPE_PHYSICS)
 		{
@@ -1088,7 +1097,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						force = force * a;
 
 						if(autocvar_g_throughfloor_debug)
-							LOG_INFOF(" D=%f F=%f\n", finaldmg, vlen(force));
+							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
 					}
 
 					//if (targ == attacker)

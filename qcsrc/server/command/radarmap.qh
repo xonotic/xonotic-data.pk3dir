@@ -1,6 +1,6 @@
 #pragma once
 #ifndef RADARMAP
-bool RadarMap_Make(float argc) { LOG_INFO("radarmap is disabled, compile with -DRADARMAP to enable it.\n"); return true; }
+bool RadarMap_Make(float argc) { LOG_INFO("radarmap is disabled, compile with -DRADARMAP to enable it."); return true; }
 #else
 
 // ===========================================

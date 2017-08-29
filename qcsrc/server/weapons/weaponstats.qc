@@ -49,21 +49,21 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 		case URL_READY_CANREAD:
 			// url_fclose is processing, we got a response for writing the data
 			// this must come from HTTP
-			LOG_INFO("Got response from weapon stats server:\n");
+			LOG_INFO("Got response from weapon stats server:");
 			while((s = url_fgets(fh)))
-				LOG_INFO("  ", s, "\n");
-			LOG_INFO("End of response.\n");
+				LOG_INFO("  ", s);
+			LOG_INFO("End of response.");
 			url_fclose(fh);
 			break;
 		case URL_READY_CLOSED:
 			// url_fclose has finished
-			LOG_INFO("Weapon stats written\n");
+			LOG_INFO("Weapon stats written");
 			buf_del(weaponstats_buffer);
 			weaponstats_buffer = -1;
 			break;
 		case URL_READY_ERROR:
 		default:
-			LOG_INFO("Weapon stats writing failed: ", ftos(status), "\n");
+			LOG_INFO("Weapon stats writing failed: ", ftos(status));
 			buf_del(weaponstats_buffer);
 			weaponstats_buffer = -1;
 			break;

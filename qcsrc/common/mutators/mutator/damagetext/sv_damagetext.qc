@@ -1,13 +1,13 @@
 #include "sv_damagetext.qh"
 
-AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players");
+AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: visible to spectators, >= 2: visible to attacker, >= 3: all players see everyone's damage");
 
 REGISTER_MUTATOR(damagetext, true);
 
-#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
-#define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1 /* spectators only */)
-#define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)
-#define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3 /* all players */)
+#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 || autocvar_g_instagib)
+#define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1)
+#define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2)
+#define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3)
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     if (SV_DAMAGETEXT_DISABLED()) return;
     const entity attacker = M_ARGV(0, entity);

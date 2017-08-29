@@ -326,7 +326,9 @@ vector solve_quadratic(float a, float b, float c)
 /// Maps values between the src and dest range: src_min to dest_min, src_max to dest_max, values between them
 /// to the curresponding values between and extrapolates for values outside the range.
 ///
-/// Max can be lower than min if you want to invert the range, values can be negative.
+/// src_min and src_max must not be the same or division by zero accurs.
+///
+/// dest_max can be smaller than dest_min if you want the resulting range to be inverted, all values can be negative.
 ERASEABLE
 float map_ranges(float value, float src_min, float src_max, float dest_min, float dest_max) {
 	float src_diff = src_max - src_min;
@@ -338,6 +340,7 @@ float map_ranges(float value, float src_min, float src_max, float dest_min, floa
 /// Same as `map_ranges` except that values outside the source range are clamped to min or max.
 ERASEABLE
 float map_bound_ranges(float value, float src_min, float src_max, float dest_min, float dest_max) {
-	value = bound(src_min, value, src_max);
+	if (value <= src_min) return dest_min;
+	if (value >= src_max) return dest_max;
 	return map_ranges(value, src_min, src_max, dest_min, dest_max);
 }

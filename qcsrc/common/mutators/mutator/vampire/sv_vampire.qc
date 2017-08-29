@@ -12,8 +12,7 @@ MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
 	if(frag_target != frag_attacker)
 	if(!IS_DEAD(frag_target))
 	{
-		frag_attacker.health += bound(0, damage_take, frag_target.health);
-		frag_attacker.health = bound(0, frag_attacker.health, autocvar_g_balance_health_limit);
+		GivePlayerHealth(frag_attacker, bound(0, damage_take, frag_target.health));
 	}
 }
 

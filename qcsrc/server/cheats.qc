@@ -282,7 +282,7 @@ float CheatImpulse(entity this, int imp)
 			RadiusDamage(e2, this, 1000, 0, 128, NULL, NULL, 500, DEATH_CHEAT.m_id, e);
 			delete(e2);
 
-			LOG_INFO("404 Sportsmanship not found.\n");
+			LOG_INFO("404 Sportsmanship not found.");
 			DID_CHEAT();
 			break;
 	}

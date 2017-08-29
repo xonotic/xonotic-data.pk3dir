@@ -156,10 +156,8 @@ bool PM_dodging_checkpressedkeys(entity this)
 	if (mymovement_##COND) {																				\
 		/* is this a state change? */																		\
 		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {							\
-			/*LOG_INFOF("key press %f - %s\n", time, #BTN);*/ 													\
 			tap_direction_##RESULT;																			\
 			if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap) {	\
-				/*LOG_INFOF("dodge repress %f (%s)\n", time - this.last_##BTN##_KEY_time, this.netname);*/		\
 				dodge_detected = true;																		\
 			} else if(PHYS_INPUT_BUTTON_DODGE(this)) {														\
 				dodge_detected = true;																		\
@@ -174,7 +172,6 @@ bool PM_dodging_checkpressedkeys(entity this)
 	#undef X
 
 	if (!dodge_detected) return false;
-	//LOG_INFOF("dodge keys detected %f - delay %f - %s\n", time, time - this.last_dodging_time, this.netname);
 
 	// this check has to be after checking keys:
 	// the first key press of the double tap is allowed to be before dodging delay,
@@ -197,7 +194,6 @@ bool PM_dodging_checkpressedkeys(entity this)
 
 	this.dodging_force_total = determine_force(this);
 	this.dodging_force_remaining = this.dodging_force_total;
-	//LOG_INFOF("speed %d -> %f\n", vlen(vec2(this.velocity)), this.dodging_force_total);
 
 	this.dodging_direction.x = tap_direction_x;
 	this.dodging_direction.y = tap_direction_y;
@@ -241,7 +237,6 @@ void PM_dodging(entity this)
 
 	float velocity_increase = min(common_factor * this.dodging_force_total, this.dodging_force_remaining);
 	this.dodging_force_remaining -= velocity_increase;
-	//LOG_INFOF("time %f velocity_increase: %f\n", time, velocity_increase);
 	this.velocity += this.dodging_direction.x * velocity_increase * v_forward
 	               + this.dodging_direction.y * velocity_increase * v_right;
 
@@ -293,7 +288,6 @@ void PM_dodging_GetPressedKeys(entity this)
 MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
-	//LOG_INFOF("player %s, physics %f\n", player.netname, time);
 
 #ifdef CSQC
 	PM_dodging_GetPressedKeys(player);
@@ -308,7 +302,6 @@ REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
-	//LOG_INFOF("player %s, keys %f\n", player.netname, time);
 
 	PM_dodging_checkpressedkeys(player);
 }

@@ -22,7 +22,7 @@ void playerdemo_shutdown(entity this)
 {
 	if(this.playerdemo_mode != PLAYERDEMO_MODE_OFF)
 	{
-		LOG_INFO("playerdemo: ", this.netname, " closed\n");
+		LOG_INFO("playerdemo: ", this.netname, " closed");
 		fclose(this.playerdemo_fh);
 	}
 	this.playerdemo_mode = 0;
@@ -36,7 +36,7 @@ void playerdemo_open_read(entity this, string f)
 	this.playerdemo_time = stof(fgets(this.playerdemo_fh));
 	this.playerdemo_time += this.playerdemo_starttime;
 	set_movetype(this, MOVETYPE_NONE);
-	LOG_INFO("playerdemo: ", this.netname, " reading from ", f, "\n");
+	LOG_INFO("playerdemo: ", this.netname, " reading from ", f);
 }
 void playerdemo_open_write(entity this, string f)
 {
@@ -44,8 +44,8 @@ void playerdemo_open_write(entity this, string f)
 	this.playerdemo_mode = PLAYERDEMO_MODE_WRITING;
 	this.playerdemo_fh = fopen(f, FILE_WRITE);
 	this.playerdemo_starttime = time - 1;
-	LOG_INFO("playerdemo: ", this.netname, " writing to ", f, "\n");
-	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
+	LOG_INFO("playerdemo: ", this.netname, " writing to ", f);
+	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!");
 }
 #define PLAYERDEMO_FIELD(ent,func,t,f) func##t(ent,f,#f);
 #define PLAYERDEMO_FIELDS(ent,func) \

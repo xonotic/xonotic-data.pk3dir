@@ -166,7 +166,7 @@ void bot_setnameandstuff(entity this)
 
 	if(file < 0)
 	{
-		LOG_INFO(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		LOG_INFOF("Error: Can not open the bot configuration file '%s'", autocvar_bot_config_file);
 		readfile = "";
 	}
 	else
@@ -598,6 +598,16 @@ float bot_fixcount()
 			++realplayers;
 		});
 	}
+	if(currentbots == -1)
+	{
+		currentbots = 0;
+		// human players joining early may cause weird issues (bots appearing on
+		// the scoreboard as spectators) when switching map with the gotomap
+		// command, as it doesn't remove bots of the previous match, and with
+		// minplayers > 1, so ignore human players in the first bot frame
+		// TODO maybe find a cleaner solution
+		activerealplayers = 0;
+	}
 
 	int bots;
 	// add/remove bots if needed to make sure there are at least
@@ -630,8 +640,7 @@ float bot_fixcount()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		//dprint(ftos(bots), " ? ", ftos(currentbots), "\n");
-		while (currentbots < bots)
+		if (currentbots < bots)
 		{
 			if (bot_spawn() == NULL)
 			{
@@ -685,7 +694,10 @@ void bot_serverframe()
 		return;
 
 	if (time < 2)
+	{
+		currentbots = -1;
 		return;
+	}
 
 	bot_calculate_stepheightvec();
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
