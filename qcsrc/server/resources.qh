@@ -1,3 +1,8 @@
+/// \file
+/// \brief Header file that describes the resource system.
+/// \author Lyberta
+/// \copyright GNU GPLv3 or any later version.
+
 #pragma once
 
 /// \brief Unconditional maximum amount of resources the player can have.
