@@ -71,6 +71,13 @@ float GetResourceAmount(entity e, int resource_type)
 
 void SetResourceAmount(entity e, int resource_type, float amount)
 {
+	bool forbid = MUTATOR_CALLHOOK(SetResourceAmount, e, resource_type, amount);
+	if (forbid)
+	{
+		return;
+	}
+	resource_type = M_ARGV(1, int);
+	amount = M_ARGV(2, float);
 	.float resource_field = GetResourceField(resource_type);
 	if (e.(resource_field) == amount)
 	{
