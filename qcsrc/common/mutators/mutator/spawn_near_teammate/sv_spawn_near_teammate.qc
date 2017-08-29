@@ -20,6 +20,8 @@ REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 {
+	if (!teamplay) return;
+
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 	vector spawn_score = M_ARGV(2, vector);
@@ -28,9 +30,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 		return;
 
 	spawn_spot.msnt_lookat = NULL;
-
-	if(!teamplay)
-		return;
 
 	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it) && it != player && SAME_TEAM(it, player) && !IS_DEAD(it), {
@@ -56,7 +55,14 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {
-	if(!teamplay) { return; }
+	if (!teamplay) return;
+
+	// in assault it makes it prety much impossible to stop an attack
+	if (g_assault) return;
+
+	// when players fall off the map they respawn near a teammate which is usually a safe place and get unforzen too easily
+	if (g_freezetag) return;
+
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 
