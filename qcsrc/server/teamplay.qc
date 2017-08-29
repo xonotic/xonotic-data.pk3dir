@@ -50,8 +50,14 @@ void InitGameplayMode()
 
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
-	world.mins = mi_min;
-	world.maxs = mi_max;
+	// assign reflectively to avoid "assignment to world" warning
+	int done = 0; for (int i = 0, n = numentityfields(); i < n; ++i) {
+	    string k = entityfieldname(i); vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
+	    if (v) {
+            putentityfieldstring(i, world, sprintf("%d %d %d", v));
+            if (++done == 2) break;
+        }
+	}
 	// currently, NetRadiant's limit is 131072 qu for each side
 	// distance from one corner of a 131072qu cube to the opposite corner is approx. 227023 qu
 	// set the distance according to map size but don't go over the limit to avoid issues with float precision
