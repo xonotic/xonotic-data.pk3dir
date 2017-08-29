@@ -5,7 +5,7 @@
 
 #pragma once
 
-/// \brief Unconditional maximum amount of resources the player can have.
+/// \brief Unconditional maximum amount of resources the entity can have.
 const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
 
 /// \brief Describes the available resource types.
