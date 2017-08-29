@@ -9,7 +9,7 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	if(IS_PLAYER(player))
-	if(player.health <= autocvar_g_bloodloss && !IS_DEAD(player))
+	if(GetResourceAmount(player, RESOURCE_HEALTH) <= autocvar_g_bloodloss && !IS_DEAD(player))
 	{
 		PHYS_INPUT_BUTTON_CROUCH(player) = true;
 
@@ -28,7 +28,7 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.health <= autocvar_g_bloodloss)
+	if(GetResourceAmount(player, RESOURCE_HEALTH) <= autocvar_g_bloodloss)
 		return true;
 }
 
