@@ -84,7 +84,7 @@ void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
 
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax);
+float Item_GiveAmmoTo(entity item, entity player, int resource_type, float ammomax);
 
 float Item_GiveTo(entity item, entity player);
 
