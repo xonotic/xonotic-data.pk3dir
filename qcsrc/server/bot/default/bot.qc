@@ -598,6 +598,16 @@ float bot_fixcount()
 			++realplayers;
 		});
 	}
+	if(currentbots == -1)
+	{
+		currentbots = 0;
+		// human players joining early may cause weird issues (bots appearing on
+		// the scoreboard as spectators) when switching map with the gotomap
+		// command, as it doesn't remove bots of the previous match, and with
+		// minplayers > 1, so ignore human players in the first bot frame
+		// TODO maybe find a cleaner solution
+		activerealplayers = 0;
+	}
 
 	int bots;
 	// add/remove bots if needed to make sure there are at least
@@ -684,7 +694,10 @@ void bot_serverframe()
 		return;
 
 	if (time < 2)
+	{
+		currentbots = -1;
 		return;
+	}
 
 	bot_calculate_stepheightvec();
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
