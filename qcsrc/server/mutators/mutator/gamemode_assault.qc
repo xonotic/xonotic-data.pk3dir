@@ -55,13 +55,13 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 	{
 		if(this.enemy.health - this.dmg > 0.5)
 		{
-			PlayerTeamScore_Add(actor, SP_SCORE, ST_SCORE, this.dmg);
+			GameRules_scoring_add_team(actor, SCORE, this.dmg);
 			this.enemy.health = this.enemy.health - this.dmg;
 		}
 		else
 		{
-			PlayerTeamScore_Add(actor, SP_SCORE, ST_SCORE, this.enemy.health);
-			PlayerTeamScore_Add(actor, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
+			GameRules_scoring_add_team(actor, SCORE, this.enemy.health);
+			GameRules_scoring_add_team(actor, ASSAULT_OBJECTIVES, 1);
 			this.enemy.health = -1;
 
 			if(this.enemy.message)
@@ -429,8 +429,8 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 
 			this.havocbot_attack_time = 0;
 
-			if(checkpvs(this.view_ofs,it))
-			if(checkpvs(this.view_ofs,best))
+			if(checkpvs(this.origin + this.view_ofs, it))
+			if(checkpvs(this.origin + this.view_ofs, best))
 			{
 			//	dprint("increasing attack time for this target\n");
 				this.havocbot_attack_time = time + 2;
@@ -613,17 +613,4 @@ MUTATOR_HOOKFUNCTION(as, ReadyRestart_Deny)
 {
 	// readyrestart not supported (yet)
 	return true;
-}
-
-// scoreboard setup
-void assault_ScoreRules()
-{
-	int teams = 0;
-	teams |= BIT(0);
-	teams |= BIT(1); // always red vs blue
-
-	ScoreRules_basics(teams, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, true);
-	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreRules_basics_end();
 }
