@@ -10,6 +10,7 @@
 
 	#include "p99.qh"
 	#define OVERLOAD(F, ...) P99_IF_EMPTY(__VA_ARGS__)(P99_PASTE2(F, _00)())(P99_PASTE3(F, _, P00_NARG(__VA_ARGS__))(__VA_ARGS__))
+	/** for use within a macro */
 	#define OVERLOAD_(F, ...) P99_IF_EMPTY(__VA_ARGS__)(P99_PASTE2(F, _00)())(P99_PASTE3(F, _, P00_NARG(__VA_ARGS__))(__VA_ARGS__))
 #else
 	#define EVAL(...) __VA_ARGS__

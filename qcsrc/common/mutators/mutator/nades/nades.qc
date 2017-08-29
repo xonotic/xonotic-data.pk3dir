@@ -81,7 +81,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	entity nade_type = Nade_FromProjectile(proj.cnt);
 	if (nade_type == NADE_TYPE_Null) return;
-	if(STAT(NADES_SMALL, NULL))
+	if(STAT(NADES_SMALL))
 	{
 		proj.mins = '-8 -8 -8';
 		proj.maxs = '8 8 8';
