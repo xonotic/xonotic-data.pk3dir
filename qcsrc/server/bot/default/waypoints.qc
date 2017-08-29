@@ -710,8 +710,8 @@ bool waypoint_load_links()
 		{
 			if(substring(s, 0, 2) == "//")
 			{
-				if(substring(s, 2, 8) == "VERSION ")
-					ver = stof(substring(s, 10, -1));
+				if(substring(s, 2, 17) == "WAYPOINT_VERSION ")
+					ver = stof(substring(s, 19, -1));
 				continue;
 			}
 			else
@@ -944,7 +944,7 @@ void waypoint_save_links()
 		return;
 	}
 
-	fputs(file, strcat("//", "VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
+	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
 
 	int c = 0;
 	IL_EACH(g_waypoints, true,
@@ -984,7 +984,7 @@ void waypoint_saveall()
 
 	// add 3 comments to not break compatibility with older Xonotic versions
 	// (they are read as a waypoint with origin '0 0 0' and flag 0 though)
-	fputs(file, strcat("//", "VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
+	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
 	fputs(file, strcat("//", "\n"));
 	fputs(file, strcat("//", "\n"));
 
@@ -1037,8 +1037,8 @@ float waypoint_loadall()
 		{
 			if(substring(s, 0, 2) == "//")
 			{
-				if(substring(s, 2, 8) == "VERSION ")
-					ver = stof(substring(s, 10, -1));
+				if(substring(s, 2, 17) == "WAYPOINT_VERSION ")
+					ver = stof(substring(s, 19, -1));
 				continue;
 			}
 			else
