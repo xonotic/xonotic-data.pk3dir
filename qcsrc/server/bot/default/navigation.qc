@@ -766,6 +766,12 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	vector v = '0 0 0', v2 = '0 0 0';
 	float v2_height = 0;
 
+	if(ent.size && !IS_PLAYER(ent))
+	{
+		org += 0.5 * (ent.mins + ent.maxs);
+		org.z = ent.origin.z + ent.mins.z - PL_MIN_CONST.z; // player height
+	}
+
 	if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
 	{
 		waypoint_clearlinks(ent); // initialize wpXXmincost fields
