@@ -626,11 +626,12 @@ void nade_heal_touch(entity this, entity toucher)
 			float hp = GetResourceAmount(toucher, RESOURCE_HEALTH);
 			if (hp < maxhealth)
 			{
-				if ( this.nade_show_particles )
+				if (this.nade_show_particles)
+				{
 					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				SetResourceAmount(toucher, RESOURCE_HEALTH, min(hp + health_factor, maxhealth));
+				}
+				GiveResourceWithLimit(toucher, RESOURCE_HEALTH, health_factor, maxhealth);
 			}
-			toucher.pauserothealth_finished = max(toucher.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 		}
 		else if ( health_factor < 0 )
 		{

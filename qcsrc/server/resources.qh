@@ -49,6 +49,15 @@ void SetResourceAmount(entity e, int resource_type, float amount);
 /// \return No return.
 void GiveResource(entity receiver, int resource_type, float amount);
 
+/// \brief Gives an entity some resource but not more than a limit.
+/// \param[in,out] receiver Entity to give resource to.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] amount Amount of resource to give.
+/// \param[in] limit Limit of resources to give.
+/// \return No return.
+void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
+	float limit);
+
 // ===================== Legacy and/or internal API ===========================
 
 /// \brief Converts an entity field to resource type.

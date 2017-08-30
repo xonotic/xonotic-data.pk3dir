@@ -141,6 +141,21 @@ void GiveResource(entity receiver, int resource_type, float amount)
 	}
 }
 
+void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
+	float limit)
+{
+	if (amount == 0)
+	{
+		return;
+	}
+	float current_amount = GetResourceAmount(receiver, resource_type);
+	if (current_amount + amount > limit)
+	{
+		amount = limit - current_amount;
+	}
+	GiveResource(receiver, resource_type, amount);
+}
+
 int GetResourceType(.float resource_field)
 {
 	switch (resource_field)
