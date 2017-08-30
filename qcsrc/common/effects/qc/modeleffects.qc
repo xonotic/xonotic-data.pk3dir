@@ -1,7 +1,5 @@
 #include "modeleffects.qh"
 
-#ifdef IMPLEMENTATION
-
 REGISTER_NET_LINKED(ENT_CLIENT_MODELEFFECT)
 
 #ifdef SVQC
@@ -161,6 +159,4 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	if (!isnew) delete(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
 	return true;
 }
-#endif
-
 #endif

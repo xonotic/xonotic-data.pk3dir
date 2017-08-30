@@ -1,7 +1,5 @@
 #include "tesla_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 entity toast(entity actor, entity from, float range, float damage);
@@ -82,7 +80,5 @@ entity toast(entity actor, entity from, float range, float damage)
 
     return etarget;
 }
-
-#endif
 
 #endif

@@ -158,13 +158,9 @@ CLASS(DamageText, Object)
         if (this.text) strunzone(this.text);
         this.text = strzone(s);
 
-        float size_range = autocvar_cl_damagetext_size_max - autocvar_cl_damagetext_size_min;
-        float damage_range = autocvar_cl_damagetext_size_max_damage - autocvar_cl_damagetext_size_min_damage;
-        float scale_factor = size_range / damage_range;
-        this.m_size = bound(
-            autocvar_cl_damagetext_size_min,
-            (potential - autocvar_cl_damagetext_size_min_damage) * scale_factor + autocvar_cl_damagetext_size_min,
-            autocvar_cl_damagetext_size_max);
+        this.m_size = map_bound_ranges(potential,
+            autocvar_cl_damagetext_size_min_damage, autocvar_cl_damagetext_size_max_damage,
+            autocvar_cl_damagetext_size_min, autocvar_cl_damagetext_size_max);
     }
 
     CONSTRUCTOR(DamageText, int _group, vector _origin, bool _screen_coords, int _health, int _armor, int _potential_damage, int _deathtype, bool _friendlyfire) {
@@ -236,7 +232,11 @@ NET_HANDLE(damagetext, bool isNew)
             }
         }
         make_impure(NEW(DamageText, server_entity_index, entcs.origin, false, health, armor, potential_damage, deathtype, friendlyfire));
-    } else if (autocvar_cl_damagetext_2d) {
+    } else if (autocvar_cl_damagetext_2d && spectatee_status != -1) {
+        // never show 2d damagetext when observing
+        // on some maps (hearth_v2, The_Yard), sometimes has_origin is false even though observers should know about all players
+        // it happens mostly with bots but occasionally also with players
+
         // screen coords only
         vector screen_pos = vec2(vid_conwidth * autocvar_cl_damagetext_2d_pos.x, vid_conheight * autocvar_cl_damagetext_2d_pos.y);
         IL_EACH(g_drawables_2d, it.instanceOfDamageText && it.m_screen_coords && it.m_group == server_entity_index, {

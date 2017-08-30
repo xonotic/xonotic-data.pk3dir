@@ -19,7 +19,7 @@ void trigger_disablerelay_use(entity this, entity actor, entity trigger)
 	}
 
 	if((!a) == (!b))
-		LOG_INFO("Invalid use of trigger_disablerelay: ", ftos(a), " relays were on, ", ftos(b), " relays were off!\n");
+		LOG_INFO("Invalid use of trigger_disablerelay: ", ftos(a), " relays were on, ", ftos(b), " relays were off!");
 }
 
 spawnfunc(trigger_disablerelay)

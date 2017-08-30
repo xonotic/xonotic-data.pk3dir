@@ -1,7 +1,5 @@
 #include "racer.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 #include <common/triggers/trigger/impulse.qh>
 
@@ -637,5 +635,3 @@ METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
     AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
 #endif
 }
-
-#endif

@@ -1,7 +1,5 @@
 #include "hk_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 float autocvar_g_turrets_unit_hk_shot_speed;
@@ -276,7 +274,5 @@ bool hk_is_valid_target(entity this, entity proj, entity targ)
 
     return true;
 }
-
-#endif
 
 #endif

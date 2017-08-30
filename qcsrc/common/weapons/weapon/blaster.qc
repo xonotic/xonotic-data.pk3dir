@@ -1,58 +1,5 @@
 #include "blaster.qh"
-#ifndef IMPLEMENTATION
-CLASS(Blaster, Weapon)
-/* ammotype  */ //ATTRIB(Blaster, ammo_field, .int, ammo_none);
-/* impulse   */ ATTRIB(Blaster, impulse, int, 1);
-/* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
-/* modelname */ ATTRIB(Blaster, mdl, string, "laser");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
-#endif
-/* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");
-/* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
-/* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
-/* refname   */ ATTRIB(Blaster, netname, string, "blaster");
-/* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, delay, float, BOTH) \
-		P(class, prefix, edgedamage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, force_zscale, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, radius, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, shotangle, float, BOTH) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, spread, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Blaster, blaster)
-#undef X
-
-ENDCLASS(Blaster)
-REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
-
-#ifdef SVQC
-.float blaster_damage;
-.float blaster_edgedamage;
-.float blaster_radius;
-.float blaster_force;
-.float blaster_lifetime;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
 spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
@@ -259,5 +206,4 @@ METHOD(Blaster, wr_impacteffect, void(entity thiswep, entity actor))
     if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 }
 
-#endif
 #endif

@@ -2,7 +2,6 @@ models/ok_nade_counter/ok_nade_counter_01
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_01"
@@ -13,7 +12,6 @@ models/ok_nade_counter/ok_nade_counter_02
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_02"
@@ -24,7 +22,6 @@ models/ok_nade_counter/ok_nade_counter_03
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_03"
@@ -35,7 +32,6 @@ models/ok_nade_counter/ok_nade_counter_04
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_04"
@@ -46,7 +42,6 @@ models/ok_nade_counter/ok_nade_counter_05
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_05"
@@ -57,7 +52,6 @@ models/ok_nade_counter/ok_nade_counter_06
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_06"
@@ -68,7 +62,6 @@ models/ok_nade_counter/ok_nade_counter_07
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_07"
@@ -79,7 +72,6 @@ models/ok_nade_counter/ok_nade_counter_08
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_08"
@@ -90,7 +82,6 @@ models/ok_nade_counter/ok_nade_counter_09
 {
 	dpnoshadow
 	deformVertexes autosprite
-	dppolygonoffset -6000
 	nopicmip
 	{
 		map "models/ok_nade_counter/ok_nade_counter_09"

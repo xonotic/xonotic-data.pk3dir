@@ -1,4 +1,7 @@
 #include "checkpoint.qh"
+
+#ifdef SVQC
+
 /**
     turret_checkpoint
 **/
@@ -75,3 +78,5 @@ spawnfunc(walker_checkpoint)
     this.classname = "turret_checkpoint";
     spawnfunc_turret_checkpoint(this);
 }
+
+#endif

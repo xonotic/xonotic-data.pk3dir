@@ -24,7 +24,7 @@ void HUD_Vote()
 		{
 			vote_yescount = 0;
 			vote_nocount = 0;
-			LOG_INFO(_("^1You must answer before entering hud configure mode\n"));
+			LOG_INFO(_("^1You must answer before entering hud configure mode"));
 			cvar_set("_hud_configure", "0");
 		}
 		if(vote_called_vote)

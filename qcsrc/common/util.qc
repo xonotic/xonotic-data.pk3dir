@@ -336,17 +336,19 @@ STATIC_INIT(compressShortVector)
 
 	if(cvar("developer"))
 	{
-		LOG_INFO("Verifying vector compression table...\n");
+		LOG_INFO("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				LOG_INFO("BROKEN vector compression: ", ftos(i));
-				LOG_INFO(" -> ", vtos(decompressShortVector(i)));
-				LOG_INFO(" -> ", ftos(compressShortVector(decompressShortVector(i))));
-				LOG_INFO("\n");
+				LOG_INFOF(
+				    "BROKEN vector compression: %s -> %s -> %s",
+				    ftos(i),
+				    vtos(decompressShortVector(i)),
+				    ftos(compressShortVector(decompressShortVector(i)))
+                );
 				error("b0rk");
 			}
-		LOG_INFO("Done.\n");
+		LOG_INFO("Done.");
 	}
 }
 
@@ -596,7 +598,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if(!cvar_type(tmp_cvar))
 	{
-		LOG_INFOF("Error: cvar %s doesn't exist!\n", tmp_cvar);
+		LOG_INFOF("Error: cvar %s doesn't exist!", tmp_cvar);
 		return 0;
 	}
 
@@ -638,7 +640,7 @@ int cvar_settemp_restore()
 			++j;
 		}
 		else
-			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", it.netname);
+			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.", it.netname);
 	});
 
 #else
@@ -652,7 +654,7 @@ int cvar_settemp_restore()
 			++j;
 		}
 		else
-			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.", e.netname));
 	}
 #endif
 
@@ -1362,7 +1364,7 @@ void m_shutdown()
 {
 	if(shutdown_running)
 	{
-		LOG_INFO("Recursive shutdown detected! Only restoring cvars...\n");
+		LOG_INFO("Recursive shutdown detected! Only restoring cvars...");
 	}
 	else
 	{

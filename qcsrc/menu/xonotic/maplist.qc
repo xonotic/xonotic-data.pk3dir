@@ -288,7 +288,7 @@ void MapList_LoadMap(entity btn, entity me)
 	m = MapInfo_BSPName_ByID(i);
 	if (!m)
 	{
-		LOG_INFO(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"));
+		LOG_INFO(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again."));
 		me.refilter(me);
 		return;
 	}
@@ -301,7 +301,7 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 	else
 	{
-		LOG_INFO(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n"));
+		LOG_INFO(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again."));
 		me.refilter(me);
 		return;
 	}

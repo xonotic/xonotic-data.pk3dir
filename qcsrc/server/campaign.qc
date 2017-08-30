@@ -25,7 +25,7 @@ float CampaignBailout(string s)
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
 	cvar_set("g_campaign", "0");
-	LOG_INFO("^4campaign initialization failed: ", s, "\n");
+	LOG_INFO("^4campaign initialization failed: ", s);
 	if(autocvar__campaign_testrun)
 		error("CAMPAIGN FAIL AHAHAHAHAHAHAHAHAH))");
 	return 1;

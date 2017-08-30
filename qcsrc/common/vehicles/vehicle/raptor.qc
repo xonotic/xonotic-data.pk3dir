@@ -1,7 +1,5 @@
 #include "raptor.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 bool autocvar_g_vehicle_raptor = true;
@@ -832,5 +830,4 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
     AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
 }
 
-#endif
 #endif

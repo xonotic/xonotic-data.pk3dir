@@ -1,7 +1,5 @@
 #include "raptor_weapons.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -257,7 +255,5 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
     sfrag.alpha = 1;
     sfrag.drawmask = MASK_NORMAL;
 }
-
-#endif
 
 #endif

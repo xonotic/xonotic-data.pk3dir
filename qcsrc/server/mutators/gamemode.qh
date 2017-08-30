@@ -6,6 +6,7 @@
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
+#include <common/gamemodes/rules.qh>
 
 #include "mutator.qh"
 
@@ -91,7 +92,7 @@
 #include <server/weapons/weaponsystem.qh>
 
 #include <common/physics/player.qh>
-#include <common/effects/qc/all.qh>
+#include <common/effects/qc/_mod.qh>
 #include <common/deathtypes/all.qh>
 #include <common/notifications/all.qh>
 #include <common/triggers/teleporters.qh>
