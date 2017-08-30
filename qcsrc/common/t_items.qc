@@ -776,22 +776,14 @@ float Item_GiveAmmoTo(entity item, entity player, int resource_type, float ammom
 		{
 			return false;
 		}
-		if ((player_amount + amount) > ammomax)
-		{
-			amount = ammomax - player_amount;
-		}
-		GiveResource(player, resource_type, amount);
+		GiveResourceWithLimit(player, resource_type, amount, ammomax);
 		return true;
 	}
 	if (g_weapon_stay != 2)
 	{
 		return false;
 	}
-	float mi = min(amount, ammomax);
-	if (player_amount < mi)
-	{
-		GiveResource(player, resource_type, mi - player_amount);
-	}
+	GiveResourceWithLimit(player, resource_type, amount, min(amount, ammomax));
 	return true;
 }
 
