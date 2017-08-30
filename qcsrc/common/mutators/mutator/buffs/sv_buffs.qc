@@ -542,10 +542,15 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(frag_target.takedamage)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
-		float hp = GetResourceAmount(frag_attacker, RESOURCE_HEALTH);
-		SetResourceAmount(frag_attacker, RESOURCE_HEALTH, bound(0, hp + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, GetResourceAmount(frag_target, RESOURCE_HEALTH)), g_pickup_healthsmall_max));
-		if(frag_target.armorvalue)
-			frag_attacker.armorvalue = bound(0, frag_attacker.armorvalue + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.armorvalue), g_pickup_armorsmall_max);
+		float amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
+			GetResourceAmount(frag_target, RESOURCE_HEALTH));
+		GiveResourceWithLimit(frag_attacker, RESOURCE_HEALTH, amount, g_pickup_healthsmall_max);
+		if (frag_target.armorvalue)
+		{
+			amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
+				GetResourceAmount(frag_target, RESOURCE_ARMOR));
+			GiveResourceWithLimit(frag_attacker, RESOURCE_ARMOR, amount, g_pickup_armorsmall_max);
+		}
 	}
 
 	M_ARGV(4, float) = frag_damage;
