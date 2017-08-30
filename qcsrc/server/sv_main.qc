@@ -348,7 +348,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 	return;
 LABEL(cleanup)
-    delete(this);
+    builtin_remove(this);
     __spawnfunc_expecting = false;
 }
 
