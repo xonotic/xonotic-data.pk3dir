@@ -112,15 +112,6 @@ int autocvar_g_surv_defender_cannon_fodder_frag_plasma;
 /// \brief How much fuel do defenders get when they frag cannon fodder.
 int autocvar_g_surv_defender_cannon_fodder_frag_fuel;
 
-/// \brief A stat that is used to track the time left in the round.
-.float surv_round_time_stat = _STAT(SURV_ROUND_TIME);
-/// \brief A stat that is used to track defender team.
-.int surv_defender_team_stat = _STAT(SURV_DEFENDER_TEAM);
-/// \brief A stat that is used to track number of defenders alive.
-.int surv_defenders_alive_stat = _STAT(SURV_DEFENDERS_ALIVE);
-/// \brief A stat that is used to track the total health of defenders.
-.float surv_defender_health_stat = _STAT(SURV_DEFENDER_HEALTH);
-
 /// \brief Holds the state of the player. See SURVIVAL_STATE constants.
 .int surv_state;
 /// \brief Holds the role of the player. See SURVIVAL_ROLE constants.
@@ -1007,7 +998,7 @@ void Surv_UpdateAliveStats()
 	}
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		it.surv_defenders_alive_stat = surv_numdefendersalive;
+		STAT(SURV_DEFENDERS_ALIVE, it) = surv_numdefendersalive;
 		it.redalive_stat = redalive;
 		it.bluealive_stat = bluealive;
 	});
@@ -1057,7 +1048,7 @@ void Surv_UpdateDefenderHealthStat()
 	}
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		it.surv_defender_health_stat = healthratio;
+		STAT(SURV_DEFENDER_HEALTH, it) = healthratio;
 	});
 }
 
@@ -1152,7 +1143,7 @@ void Surv_SwapTeams()
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		it.surv_defender_team_stat = Team_TeamToNumber(surv_defenderteam);
+		STAT(SURV_DEFENDER_TEAM, it) = Team_TeamToNumber(surv_defenderteam);
 	});
 }
 
@@ -1573,7 +1564,7 @@ MUTATOR_HOOKFUNCTION(surv, SV_StartFrame)
 	}
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		it.surv_round_time_stat = roundtime;
+		STAT(SURV_ROUND_TIME, it) = roundtime;
 	});
 }
 
@@ -1828,8 +1819,8 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 	player.surv_savedplayermodel = player.playermodel;
 	if (IS_REAL_CLIENT(player))
 	{
-		player.surv_defender_team_stat = Team_TeamToNumber(surv_defenderteam);
-		player.surv_defenders_alive_stat = surv_numdefendersalive;
+		STAT(SURV_DEFENDER_TEAM, player) = Team_TeamToNumber(surv_defenderteam);
+		STAT(SURV_DEFENDERS_ALIVE, player) = surv_numdefendersalive;
 		player.redalive_stat = redalive;
 		player.bluealive_stat = bluealive;
 		player.yellowalive_stat = yellowalive;
@@ -1902,7 +1893,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_global)
 	{
 		FOREACH_CLIENT(IS_REAL_CLIENT(it),
 		{
-			it.surv_round_time_stat = 0;
+			STAT(SURV_ROUND_TIME, it) = 0;
 		});
 	}
 	return true;
