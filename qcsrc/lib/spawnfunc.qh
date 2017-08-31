@@ -99,6 +99,9 @@ noref bool require_spawnfunc_prefix;
 				if (this) { \
                     /* not worldspawn, delay spawn */ \
                     __spawnfunc_defer(this, __spawnfunc_##id); \
+                } else { \
+                    /* world might not be "worldspawn" */ \
+                    this.__spawnfunc_constructor = __spawnfunc_##id; \
                 } \
 			} \
 			if (dospawn) { __spawnfunc_##id(this); } \

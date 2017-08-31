@@ -188,7 +188,7 @@ void make_safe_for_remove(entity this);
 		if (!_StartFrame_init) {
 			_StartFrame_init = true;
 			float oldtime = time; time = 1;
-			__spawnfunc_expecting = 2; spawnfunc_worldspawn(NULL);
+			__spawnfunc_expecting = 2; NULL.__spawnfunc_constructor(NULL);
 			time = oldtime;
         }
         if (_StartFrame) _StartFrame();
