@@ -1,6 +1,11 @@
+/// \file
+/// \brief Header file that describes the resource system.
+/// \author Lyberta
+/// \copyright GNU GPLv3 or any later version.
+
 #pragma once
 
-/// \brief Unconditional maximum amount of resources the player can have.
+/// \brief Unconditional maximum amount of resources the entity can have.
 const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
 
 /// \brief Describes the available resource types.
@@ -43,6 +48,15 @@ void SetResourceAmount(entity e, int resource_type, float amount);
 /// \param[in] amount Amount of resource to give.
 /// \return No return.
 void GiveResource(entity receiver, int resource_type, float amount);
+
+/// \brief Gives an entity some resource but not more than a limit.
+/// \param[in,out] receiver Entity to give resource to.
+/// \param[in] resource_type Type of the resource (a RESOURCE_* constant).
+/// \param[in] amount Amount of resource to give.
+/// \param[in] limit Limit of resources to give.
+/// \return No return.
+void GiveResourceWithLimit(entity receiver, int resource_type, float amount,
+	float limit);
 
 // ===================== Legacy and/or internal API ===========================
 

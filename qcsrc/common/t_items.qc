@@ -762,35 +762,29 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 	}
 }
 
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax)
+float Item_GiveAmmoTo(entity item, entity player, int resource_type, float ammomax)
 {
-	if (!item.(ammotype))
+	float amount = GetResourceAmount(item, resource_type);
+	if (amount == 0)
+	{
 		return false;
-
+	}
+	float player_amount = GetResourceAmount(player, resource_type);
 	if (item.spawnshieldtime)
 	{
-		if ((player.(ammotype) < ammomax) || item.pickup_anyway > 0)
+		if ((player_amount >= ammomax) && (item.pickup_anyway <= 0))
 		{
-			float amount = item.(ammotype);
-			if ((player.(ammotype) + amount) > ammomax)
-			{
-				amount = ammomax - player.(ammotype);
-			}
-			GiveResource(player, GetResourceType(ammotype), amount);
-			return true;
+			return false;
 		}
-	}
-	else if(g_weapon_stay == 2)
-	{
-		float mi = min(item.(ammotype), ammomax);
-		if (player.(ammotype) < mi)
-		{
-			GiveResource(player, GetResourceType(ammotype), mi -
-				player.(ammotype));
-		}
+		GiveResourceWithLimit(player, resource_type, amount, ammomax);
 		return true;
 	}
-	return false;
+	if (g_weapon_stay != 2)
+	{
+		return false;
+	}
+	GiveResourceWithLimit(player, resource_type, amount, min(amount, ammomax));
+	return true;
 }
 
 float Item_GiveTo(entity item, entity player)
@@ -819,14 +813,14 @@ float Item_GiveTo(entity item, entity player)
 			}
 		}
 	}
-	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health);
-	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_plasma, g_pickup_plasma_max);
-	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_HEALTH, item.max_health);
+	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_ARMOR, item.max_armorvalue);
+	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_SHELLS, g_pickup_shells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_BULLETS, g_pickup_nails_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_ROCKETS, g_pickup_rockets_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_CELLS, g_pickup_cells_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_PLASMA, g_pickup_plasma_max);
+	pickedup |= Item_GiveAmmoTo(item, player, RESOURCE_FUEL, g_pickup_fuel_max);
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet w;
