@@ -271,6 +271,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
+		BADCVAR("g_gg");
 		BADCVAR("g_invasion_teams");
 		BADCVAR("g_invasion_type");
 		BADCVAR("g_jailbreak");

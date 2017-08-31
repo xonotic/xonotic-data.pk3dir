@@ -480,6 +480,29 @@ CLASS(Invasion, Gametype)
 ENDCLASS(Invasion)
 REGISTER_GAMETYPE(INVASION, NEW(Invasion));
 
+//=============================================================================
+
+#ifdef CSQC
+void HUD_Mod_GG(vector pos, vector mySize);
+#endif
+CLASS(GunGame, Gametype)
+    INIT(GunGame)
+    {
+        this.gametype_init(this, _("GunGame"), "gg", "g_gg", false, "", "timelimit=20", _("Kill players with all weapons"));
+    }
+    METHOD(GunGame, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return true;
+    }
+#ifdef CSQC
+    ATTRIB(GunGame, m_modicons, void(vector pos, vector mySize), HUD_Mod_GG);
+#endif
+ENDCLASS(GunGame)
+REGISTER_GAMETYPE(GUNGAME, NEW(GunGame));
+#define g_gg IS_GAMETYPE(GUNGAME)
+
+//=============================================================================
+
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;
 const int MAPINFO_FEATURE_TURRETS       = 4;

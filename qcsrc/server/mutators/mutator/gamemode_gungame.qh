@@ -1,0 +1,22 @@
+/// \file
+/// \brief Header file that describes the GunGame gamemode.
+/// \author Lyberta
+/// \copyright GNU GPLv3 or any later version.
+
+#pragma once
+
+#include "../gamemode.qh"
+
+/// \brief Initializes global data for the gametype.
+/// \return No return.
+void GunGame_Initialize();
+
+REGISTER_MUTATOR(gg, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GunGame_Initialize();
+	}
+	return 0;
+}

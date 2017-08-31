@@ -711,6 +711,38 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	}
 }
 
+void HUD_Mod_GG(vector pos, vector mySize)
+{
+	mod_active = 1; // required in each mod function that always shows something
+	int stat_weapon = STAT(GUNGAME_LEADING_WEAPON);
+	vector pic_pos, pic_size;
+	if (mySize.x > mySize.y)
+	{
+		pic_pos = pos + eX * 0.25 * mySize.x;
+		pic_size = vec2(0.5 * mySize.x, mySize.y);
+	}
+	else
+	{
+		pic_pos = pos + eY * 0.25 * mySize.y;
+		pic_size = vec2(mySize.x, 0.5 * mySize.y);
+	}
+	string weapon_pic = string_null;
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		if (it.m_id == stat_weapon)
+		{
+			weapon_pic = it.model2;
+			break;
+		}
+	});
+	if (!weapon_pic)
+	{
+		return;
+	}
+	drawpic_aspect_skin(pic_pos, weapon_pic, pic_size, '1 1 1', 1,
+		DRAWFLAG_NORMAL);
+}
+
 void HUD_ModIcons_SetFunc()
 {
 	HUD_ModIcons_GameType = gametype.m_modicons;
