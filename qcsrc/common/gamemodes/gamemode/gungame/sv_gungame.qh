@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../gamemode.qh"
+//#include "../gamemode.qh"
 
 /// \brief Initializes global data for the gametype.
 /// \return No return.

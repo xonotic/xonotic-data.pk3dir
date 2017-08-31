@@ -6,7 +6,6 @@
 #include <server/mutators/mutator/gamemode_deathmatch.qh>
 #include <server/mutators/mutator/gamemode_domination.qh>
 #include <server/mutators/mutator/gamemode_freezetag.qh>
-#include <server/mutators/mutator/gamemode_gungame.qh>
 #include <server/mutators/mutator/gamemode_invasion.qh>
 #include <server/mutators/mutator/gamemode_keepaway.qh>
 #include <server/mutators/mutator/gamemode_keyhunt.qh>

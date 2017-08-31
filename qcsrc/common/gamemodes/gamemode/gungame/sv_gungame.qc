@@ -3,7 +3,7 @@
 /// \author Lyberta
 /// \copyright GNU GPLv3 or any later version.
 
-#include "gamemode_gungame.qh"
+#include "sv_gungame.qh"
 
 //============================ Constants ======================================
 
