@@ -3,3 +3,4 @@
 #include <common/gamemodes/gamemode/gungame/_mod.qh>
 #include <common/gamemodes/gamemode/nexball/_mod.qh>
 #include <common/gamemodes/gamemode/onslaught/_mod.qh>
+#include <common/gamemodes/gamemode/survival/_mod.qh>

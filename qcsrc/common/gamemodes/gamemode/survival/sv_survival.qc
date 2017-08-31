@@ -1,4 +1,4 @@
-#include "gamemode_survival.qh"
+#include "sv_survival.qh"
 
 #include <common/mutators/mutator/overkill/hmg.qh>
 #include <common/mutators/mutator/overkill/rpc.qh>

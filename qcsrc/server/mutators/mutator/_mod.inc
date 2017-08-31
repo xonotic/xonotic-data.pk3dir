@@ -11,5 +11,4 @@
 #include <server/mutators/mutator/gamemode_keyhunt.qc>
 #include <server/mutators/mutator/gamemode_lms.qc>
 #include <server/mutators/mutator/gamemode_race.qc>
-#include <server/mutators/mutator/gamemode_survival.qc>
 #include <server/mutators/mutator/gamemode_tdm.qc>
