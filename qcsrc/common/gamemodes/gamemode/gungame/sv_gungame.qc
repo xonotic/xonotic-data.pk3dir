@@ -11,8 +11,6 @@ const string GUNGAME_WEAPONS = "g_gg_weapons";
 
 //======================= Global variables ====================================
 
-.int gungame_leading_weapon_stat = _STAT(GUNGAME_LEADING_WEAPON);
-
 int gungame_maxlevel; ///< Player who reaches this level wins.
 string gungame_weapons; ///< Holds weapons corresponding to levels.
 
@@ -127,7 +125,7 @@ void GunGame_UpdateStats()
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		it.gungame_leading_weapon_stat = gungame_leading_weapon.m_id;
+		STAT(GUNGAME_LEADING_WEAPON, it) = gungame_leading_weapon.m_id;
 	});
 }
 
@@ -184,7 +182,7 @@ MUTATOR_HOOKFUNCTION(gg, ClientConnect)
 	{
 		return true;
 	}
-	player.gungame_leading_weapon_stat = gungame_leading_weapon.m_id;
+	STAT(GUNGAME_LEADING_WEAPON, player) = gungame_leading_weapon.m_id;
 	return true;
 }
 
