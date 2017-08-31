@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../gamemode.qh"
-
 /// \brief Initializes global data for the gametype.
 /// \return No return.
 void Surv_Initialize();

@@ -1,4 +1,4 @@
-#include "gamemode_survival.qh"
+#include "sv_survival.qh"
 
 #include <common/mutators/mutator/overkill/hmg.qh>
 #include <common/mutators/mutator/overkill/rpc.qh>
@@ -1786,6 +1786,37 @@ MUTATOR_HOOKFUNCTION(surv, Player_ChangedTeam)
 	if ((oldteam != -1) && IS_PLAYER(player) && !IS_DEAD(player))
 	{
 		Surv_AddPlayerToAliveList(player, newteam);
+	}
+}
+
+/// \brief Hook that is called when player is about to be killed when changing
+/// teams.
+MUTATOR_HOOKFUNCTION(surv, Player_ChangeTeamKill)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.team != surv_defenderteam)
+	{
+		return false;
+	}
+	if (player.surv_savedplayerstate == NULL)
+	{
+		return false;
+	}
+	Surv_RestorePlayerState(player, player.surv_savedplayerstate);
+	delete(player.surv_savedplayerstate);
+	player.surv_savedplayerstate = NULL;
+	return true;
+}
+
+/// \brief Hook that is called when player is about to be killed as a result of
+/// the kill command or changing teams.
+MUTATOR_HOOKFUNCTION(surv, ClientKill_Now)
+{
+	entity player = M_ARGV(0, entity);
+	if (player.team == surv_defenderteam)
+	{
+		// Deny suicide.
+		return true;
 	}
 }
 
