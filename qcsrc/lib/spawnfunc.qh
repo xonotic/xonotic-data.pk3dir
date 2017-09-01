@@ -33,14 +33,20 @@ noref bool require_spawnfunc_prefix;
 
     .void(entity) __spawnfunc_constructor;
     noref IntrusiveList g_spawn_queue;
-    .string targetname, __spawnfunc_targetname;
+
     #define SPAWNFUNC_INTERNAL_FIELDS(X) \
-        X(targetname, string_null) \
+        X(string, classname, "spawnfunc") \
+        X(string, targetname, string_null) \
         /**/
+
+    #define X(T, fld, def) .T fld, __spawnfunc_##fld;
+    SPAWNFUNC_INTERNAL_FIELDS(X)
+    #undef X
+
     void __spawnfunc_defer(entity prototype, void(entity) constructor)
     {
         IL_PUSH(g_spawn_queue, prototype);
-        #define X(fld, def) { prototype.__spawnfunc_##fld = prototype.fld; prototype.fld = def; }
+        #define X(T, fld, def) { prototype.__spawnfunc_##fld = prototype.fld; prototype.fld = def; }
         SPAWNFUNC_INTERNAL_FIELDS(X);
         #undef X
         prototype.__spawnfunc_constructor = constructor;
@@ -57,7 +63,7 @@ noref bool require_spawnfunc_prefix;
         entity e = new(clone);
         copyentity(prototype, e);
         IL_PUSH(g_map_entities, e);
-        #define X(fld, def) { e.fld = e.__spawnfunc_##fld; e.__spawnfunc_##fld = def; }
+        #define X(T, fld, def) { e.fld = e.__spawnfunc_##fld; e.__spawnfunc_##fld = def; }
         SPAWNFUNC_INTERNAL_FIELDS(X);
         #undef X
         e.__spawnfunc_constructor(e);
