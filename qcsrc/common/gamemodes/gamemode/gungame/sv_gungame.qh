@@ -1,7 +1,7 @@
 /// \file
 /// \brief Header file that describes the GunGame gamemode.
 /// \author Lyberta
-/// \copyright GNU GPLv3 or any later version.
+/// \copyright GNU GPLv2 or any later version.
 
 #pragma once
 
