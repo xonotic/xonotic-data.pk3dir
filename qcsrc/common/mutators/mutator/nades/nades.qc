@@ -431,7 +431,7 @@ void nade_ice_think(entity this)
 
 	float current_freeze_time = this.ltime - time - 0.1;
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && it.health > 0 && current_freeze_time > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0 && current_freeze_time > 0,
 	{
 		if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(it, this.realowner) || it == this.realowner))
 		if(!it.revival_time || ((time - it.revival_time) >= 1.5))
@@ -623,13 +623,15 @@ void nade_heal_touch(entity this, entity toucher)
 		if ( health_factor > 0 )
 		{
 			maxhealth = (IS_MONSTER(toucher)) ? toucher.max_health : g_pickup_healthmega_max;
-			if ( toucher.health < maxhealth )
+			float hp = GetResourceAmount(toucher, RESOURCE_HEALTH);
+			if (hp < maxhealth)
 			{
-				if ( this.nade_show_particles )
+				if (this.nade_show_particles)
+				{
 					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				toucher.health = min(toucher.health+health_factor, maxhealth);
+				}
+				GiveResourceWithLimit(toucher, RESOURCE_HEALTH, health_factor, maxhealth);
 			}
-			toucher.pauserothealth_finished = max(toucher.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 		}
 		else if ( health_factor < 0 )
 		{
@@ -768,7 +770,7 @@ void nade_touch(entity this, entity toucher)
 
 	if(autocvar_g_nades_pickup)
 	if(time >= this.spawnshieldtime)
-	if(!toucher.nade && this.health == this.max_health) // no boosted shot pickups, thank you very much
+	if(!toucher.nade && GetResourceAmount(this, RESOURCE_HEALTH) == this.max_health) // no boosted shot pickups, thank you very much
 	if(CanThrowNade(toucher)) // prevent some obvious things, like dead players
 	if(IS_REAL_CLIENT(toucher)) // above checks for IS_PLAYER, don't need to do it here
 	{
@@ -796,7 +798,7 @@ void nade_touch(entity this, entity toucher)
 
 	//setsize(this, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(this);
-	if(this.health == this.max_health)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) == this.max_health)
 	{
 		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
 		return;
@@ -860,19 +862,22 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(damage <= 0 || ((IS_ONGROUND(this)) && IS_PLAYER(attacker)))
 		return;
 
-	if(this.health == this.max_health)
+	float hp = GetResourceAmount(this, RESOURCE_HEALTH);
+	if(hp == this.max_health)
 	{
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
 		this.nextthink = max(time + this.nade_lifetime, time);
 		setthink(this, nade_beep);
 	}
 
-	this.health -= damage;
+	hp -= damage;
+	SetResourceAmount(this, RESOURCE_HEALTH, hp);
+	
 
 	if ( this.nade_type != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
 		this.realowner = attacker;
 
-	if(this.health <= 0)
+	if(hp <= 0)
 		W_PrepareExplosionByDamage(this, attacker, nade_boom);
 	else
 		nade_burn_spawn(this);
@@ -928,7 +933,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	settouch(_nade, nade_touch);
 	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
-	_nade.health = autocvar_g_nades_nade_health;
+	SetResourceAmount(_nade, RESOURCE_HEALTH, autocvar_g_nades_nade_health);
 	_nade.max_health = _nade.health;
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
@@ -1294,7 +1299,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	if(n && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
 	{
 		player.revive_progress = bound(0, player.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		player.health = max(1, player.revive_progress * start_health);
+		SetResourceAmount(player, RESOURCE_HEALTH, max(1, player.revive_progress * start_health));
 
 		if(player.revive_progress >= 1)
 		{
@@ -1411,7 +1416,7 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
 		Unfreeze(frag_target);
-		frag_target.health = autocvar_g_freezetag_revive_nade_health;
+		SetResourceAmount(frag_target, RESOURCE_HEALTH, autocvar_g_freezetag_revive_nade_health);
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		M_ARGV(4, float) = 0;
 		M_ARGV(6, vector) = '0 0 0';

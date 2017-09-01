@@ -55,7 +55,7 @@ void instagib_ammocheck(entity this)
 
 	if(IS_DEAD(this) || game_stopped)
 		instagib_stop_countdown(this);
-	else if (this.ammo_cells > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
+	else if (GetResourceAmount(this, RESOURCE_CELLS) > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
 		instagib_stop_countdown(this);
 	else if(autocvar_g_rm && autocvar_g_rm_laser)
 	{
@@ -67,53 +67,54 @@ void instagib_ammocheck(entity this)
 	}
 	else
 	{
+		float hp = GetResourceAmount(this, RESOURCE_HEALTH);
 		this.instagib_needammo = true;
-		if (this.health <= 5)
+		if (hp <= 5)
 		{
 			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
 		}
-		else if (this.health <= 10)
+		else if (hp <= 10)
 		{
 			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_1);
 		}
-		else if (this.health <= 20)
+		else if (hp <= 20)
 		{
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_2);
 		}
-		else if (this.health <= 30)
+		else if (hp <= 30)
 		{
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_3);
 		}
-		else if (this.health <= 40)
+		else if (hp <= 40)
 		{
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_4);
 		}
-		else if (this.health <= 50)
+		else if (hp <= 50)
 		{
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_5);
 		}
-		else if (this.health <= 60)
+		else if (hp <= 60)
 		{
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_6);
 		}
-		else if (this.health <= 70)
+		else if (hp <= 70)
 		{
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_7);
 		}
-		else if (this.health <= 80)
+		else if (hp <= 80)
 		{
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_8);
 		}
-		else if (this.health <= 90)
+		else if (hp <= 90)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
@@ -289,13 +290,15 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 			if(!autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker))
 				frag_force = '0 0 0';
 
-			if(frag_target.armorvalue)
+			float armor = GetResourceAmount(frag_target, RESOURCE_ARMOR);
+			if(armor)
 			{
-				frag_target.armorvalue -= 1;
+				armor -= 1;
+				SetResourceAmount(frag_target, RESOURCE_ARMOR, armor);
 				frag_damage = 0;
 				frag_target.damage_dealt += 1;
 				frag_attacker.damage_dealt += 1;
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
 			}
 		}
 
@@ -312,7 +315,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 
 				if(frag_target != frag_attacker)
 				{
-					if(frag_damage <= 0 && frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
+					if(frag_damage <= 0 && GetResourceAmount(frag_target, RESOURCE_HEALTH) > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
 					if(!autocvar_g_instagib_blaster_keepforce)
 						frag_force = '0 0 0';
 				}
@@ -325,10 +328,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 	if(frag_mirrordamage > 0)
 	{
 		// just lose extra LIVES, don't kill the player for mirror damage
-		if(frag_attacker.armorvalue > 0)
+		float armor = GetResourceAmount(frag_attacker, RESOURCE_ARMOR);
+		if(armor > 0)
 		{
-			frag_attacker.armorvalue -= 1;
-			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_attacker.armorvalue);
+			armor -= 1;
+			SetResourceAmount(frag_attacker, RESOURCE_ARMOR, armor);
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
 			frag_attacker.damage_dealt += frag_mirrordamage;
 		}
 		frag_mirrordamage = 0;
@@ -415,7 +420,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 
 	if(item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon")
 	{
-		item.ammo_cells = autocvar_g_instagib_ammo_drop;
+		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;
 	}
 
@@ -428,10 +433,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 	if(item.flags & FL_POWERUP)
 		return false;
 
-	if(item.ammo_cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells")
-		item.ammo_cells = autocvar_g_instagib_ammo_drop;
+	float cells = GetResourceAmount(item, RESOURCE_CELLS);
+	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells")
+		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 
-	if(item.ammo_cells && !item.weapon)
+	if(cells && !item.weapon)
 		return false;
 
 	return true;
@@ -464,26 +470,27 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
-	if(item.ammo_cells)
+	if(GetResourceAmount(item, RESOURCE_CELLS))
 	{
 		// play some cool sounds ;)
+		float hp = GetResourceAmount(toucher, RESOURCE_HEALTH);
 		if (IS_CLIENT(toucher))
 		{
-			if(toucher.health <= 5)
+			if(hp <= 5)
 				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_LASTSECOND);
-			else if(toucher.health < 50)
+			else if(hp < 50)
 				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_NARROWLY);
 		}
 
-		if(toucher.health < 100)
-			toucher.health = 100;
+		if(hp < 100)
+			SetResourceAmount(toucher, RESOURCE_HEALTH, 100);
 
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
 
 	if(item.itemdef == ITEM_ExtraLife)
 	{
-		toucher.armorvalue = bound(toucher.armorvalue, 999, toucher.armorvalue + autocvar_g_instagib_extralives);
+		GiveResource(toucher, RESOURCE_ARMOR, autocvar_g_instagib_extralives);
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
 		return MUT_ITEMTOUCH_PICKUP;
 	}

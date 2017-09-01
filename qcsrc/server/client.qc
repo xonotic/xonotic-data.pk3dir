@@ -12,6 +12,7 @@
 #include "teamplay.qh"
 #include "playerdemo.qh"
 #include "spawnpoints.qh"
+#include "resources.qh"
 #include "g_damage.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
@@ -1628,8 +1629,8 @@ void player_regen(entity this)
 		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
 		mina = autocvar_g_balance_armor_regenstable;
-		limith = autocvar_g_balance_health_limit;
-		limita = autocvar_g_balance_armor_limit;
+		limith = GetResourceLimit(this, RESOURCE_HEALTH);
+		limita = GetResourceLimit(this, RESOURCE_ARMOR);
 
 		regen_health_rotstable = regen_health_rotstable * max_mod;
 		regen_health_stable = regen_health_stable * max_mod;
@@ -1656,7 +1657,7 @@ void player_regen(entity this)
 
 		maxf = autocvar_g_balance_fuel_rotstable;
 		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = autocvar_g_balance_fuel_limit;
+		limitf = GetResourceLimit(this, RESOURCE_FUEL);
 
 		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
 	}
