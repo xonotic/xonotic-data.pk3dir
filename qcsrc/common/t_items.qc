@@ -711,50 +711,39 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			return;
 		}
 		receiver.weapons |= RandomSelection_chosen_ent.m_wepset;
-		switch (RandomSelection_chosen_ent.ammo_field)
+		if (RandomSelection_chosen_ent.ammo_type == RESOURCE_NONE)
 		{
-			case (ammo_shells):
+			continue;
+		}
+		if (GetResourceAmount(receiver,
+			RandomSelection_chosen_ent.ammo_type) != 0)
+		{
+			continue;
+		}
+		switch (RandomSelection_chosen_ent.ammo_type)
+		{
+			case (RESOURCE_SHELLS):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_SHELLS) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_SHELLS, shells);
 				break;
 			}
-			case (ammo_nails):
+			case (RESOURCE_BULLETS):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_BULLETS) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_BULLETS, bullets);
 				break;
 			}
-			case (ammo_rockets):
+			case (RESOURCE_ROCKETS):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_ROCKETS) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_ROCKETS, rockets);
 				break;
 			}
-			case (ammo_cells):
+			case (RESOURCE_CELLS):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_CELLS) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_CELLS, cells);
 				break;
 			}
-			case (ammo_plasma):
+			case (RESOURCE_PLASMA):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_PLASMA) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_PLASMA, plasma);
 				break;
 			}
