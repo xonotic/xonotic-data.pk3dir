@@ -1,6 +1,7 @@
 #include "sv_bloodloss.qh"
 
-REGISTER_MUTATOR(bloodloss, cvar("g_bloodloss"));
+float autocvar_g_bloodloss;
+REGISTER_MUTATOR(bloodloss, autocvar_g_bloodloss);
 
 .float bloodloss_timer;
 

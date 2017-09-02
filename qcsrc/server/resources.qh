@@ -1,9 +1,8 @@
+#pragma once
 /// \file
 /// \brief Header file that describes the resource system.
 /// \author Lyberta
-/// \copyright GNU GPLv3 or any later version.
-
-#pragma once
+/// \copyright GNU GPLv2 or any later version.
 
 /// \brief Unconditional maximum amount of resources the entity can have.
 const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
