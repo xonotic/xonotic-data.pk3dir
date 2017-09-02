@@ -530,7 +530,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	int compressed_shotorg = compressShotOrigin(this.movedir);
 	// make them match perfectly
 #ifdef SVQC
-	this.movedir = decompressShotOrigin(this.owner.stat_shotorg = compressed_shotorg);
+    // null during init
+    if (this.owner) this.owner.stat_shotorg = compressed_shotorg;
+	this.movedir = decompressShotOrigin(compressed_shotorg);
 #else
 	this.movedir = decompressShotOrigin(compressed_shotorg);
 #endif
