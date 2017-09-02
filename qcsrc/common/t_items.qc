@@ -711,50 +711,39 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 			return;
 		}
 		receiver.weapons |= RandomSelection_chosen_ent.m_wepset;
-		switch (RandomSelection_chosen_ent.ammo_field)
+		if (RandomSelection_chosen_ent.ammo_type == RESOURCE_NONE)
 		{
-			case (ammo_shells):
+			continue;
+		}
+		if (GetResourceAmount(receiver,
+			RandomSelection_chosen_ent.ammo_type) != 0)
+		{
+			continue;
+		}
+		switch (RandomSelection_chosen_ent.ammo_type)
+		{
+			case (RESOURCE_SHELLS):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_SHELLS) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_SHELLS, shells);
 				break;
 			}
-			case (ammo_nails):
+			case (RESOURCE_BULLETS):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_BULLETS) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_BULLETS, bullets);
 				break;
 			}
-			case (ammo_rockets):
+			case (RESOURCE_ROCKETS):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_ROCKETS) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_ROCKETS, rockets);
 				break;
 			}
-			case (ammo_cells):
+			case (RESOURCE_CELLS):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_CELLS) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_CELLS, cells);
 				break;
 			}
-			case (ammo_plasma):
+			case (RESOURCE_PLASMA):
 			{
-				if (GetResourceAmount(receiver, RESOURCE_PLASMA) != 0)
-				{
-					break;
-				}
 				GiveResource(receiver, RESOURCE_PLASMA, plasma);
 				break;
 			}
@@ -1112,14 +1101,14 @@ float ammo_pickupevalfunc(entity player, entity item)
 			if(!(player.weapons & (it.m_wepset)))
 				continue;
 
-			switch(it.ammo_field)
+			switch(it.ammo_type)
 			{
-				case ammo_shells:  need_shells  = true; break;
-				case ammo_nails:   need_nails   = true; break;
-				case ammo_rockets: need_rockets = true; break;
-				case ammo_cells:   need_cells   = true; break;
-				case ammo_plasma:  need_plasma  = true; break;
-				case ammo_fuel:    need_fuel    = true; break;
+				case RESOURCE_SHELLS:  need_shells  = true; break;
+				case RESOURCE_BULLETS: need_nails   = true; break;
+				case RESOURCE_ROCKETS: need_rockets = true; break;
+				case RESOURCE_CELLS:   need_cells   = true; break;
+				case RESOURCE_PLASMA:  need_plasma  = true; break;
+				case RESOURCE_FUEL:    need_fuel    = true; break;
 			}
 		});
 		rating = item.bot_pickupbasevalue;
