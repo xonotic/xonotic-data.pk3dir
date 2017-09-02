@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(HLAC, Weapon)
-/* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells);
+/* ammotype  */ ATTRIB(HLAC, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
