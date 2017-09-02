@@ -57,12 +57,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {
 	if (!teamplay) return;
 
-	// in assault it makes it prety much impossible to stop an attack
-	if (g_assault) return;
-
-	// when players fall off the map they respawn near a teammate which is usually a safe place and get unforzen too easily
-	if (g_freezetag) return;
-
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 
