@@ -1032,14 +1032,14 @@ float ammo_pickupevalfunc(entity player, entity item)
 			if(!(player.weapons & (it.m_wepset)))
 				continue;
 
-			switch(it.ammo_field)
+			switch(it.ammo_type)
 			{
-				case ammo_shells:  need_shells  = true; break;
-				case ammo_nails:   need_nails   = true; break;
-				case ammo_rockets: need_rockets = true; break;
-				case ammo_cells:   need_cells   = true; break;
-				case ammo_plasma:  need_plasma  = true; break;
-				case ammo_fuel:    need_fuel    = true; break;
+				case RESOURCE_SHELLS:  need_shells  = true; break;
+				case RESOURCE_BULLETS: need_nails   = true; break;
+				case RESOURCE_ROCKETS: need_rockets = true; break;
+				case RESOURCE_CELLS:   need_cells   = true; break;
+				case RESOURCE_PLASMA:  need_plasma  = true; break;
+				case RESOURCE_FUEL:    need_fuel    = true; break;
 			}
 		});
 		rating = item.bot_pickupbasevalue;

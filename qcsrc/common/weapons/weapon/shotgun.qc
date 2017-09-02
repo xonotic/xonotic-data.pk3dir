@@ -241,7 +241,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     }
     if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     if(WEP_CVAR(shotgun, secondary) == 1)
-    if(((fire & 1) && actor.(thiswep.ammo_field) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (fire & 2))
+    if(((fire & 1) && GetResourceAmount(actor, thiswep.ammo_type) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (fire & 2))
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(shotgun, refire)))
     {
         // attempt forcing playback of the anim by switching to another anim (that we never play) here...
@@ -250,7 +250,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(shotgun, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
     return ammo_amount;
 }
@@ -264,7 +264,7 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
         case 1: return true; // melee does not use ammo
         case 2: // secondary triple shot
         {
-            float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
+            float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(shotgun, ammo);
             ammo_amount += actor.(weaponentity).(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
             return ammo_amount;
         }

@@ -1,4 +1,5 @@
 #include "resources.qh"
+
 /// \file
 /// \brief Source file that contains implementation of the resource system.
 /// \author Lyberta

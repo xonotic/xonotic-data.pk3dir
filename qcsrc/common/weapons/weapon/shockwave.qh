@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(Shockwave, Weapon)
-/* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none);
+/* ammotype  */ //ATTRIB(Shockwave, ammo_type, int, RESOURCE_NONE);
 /* impulse   */ ATTRIB(Shockwave, impulse, int, 2);
 /* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, 3000);

@@ -205,16 +205,16 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
 
 METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(rpc, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR_PRI(rpc, ammo);
-    return ammo_amount;
+	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(rpc, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR_PRI(rpc, ammo);
+	return ammo_amount;
 }
 
 METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(rpc, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR_SEC(rpc, ammo);
-    return ammo_amount;
+	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(rpc, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR_SEC(rpc, ammo);
+	return ammo_amount;
 }
 
 METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))

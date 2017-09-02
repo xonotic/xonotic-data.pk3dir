@@ -1,4 +1,5 @@
 #pragma once
+
 /// \file
 /// \brief Header file that describes the resource system.
 /// \author Lyberta
@@ -6,19 +7,6 @@
 
 /// \brief Unconditional maximum amount of resources the entity can have.
 const int RESOURCE_AMOUNT_HARD_LIMIT = 999;
-
-/// \brief Describes the available resource types.
-enum
-{
-	RESOURCE_HEALTH = 1, ///< Health.
-	RESOURCE_ARMOR, ///< Armor.
-	RESOURCE_SHELLS, ///< Shells (used by shotgun).
-	RESOURCE_BULLETS, ///< Bullets (used by machinegun and rifle)
-	RESOURCE_ROCKETS, ///< Rockets (used by mortar, hagar, devastator, etc).
-	RESOURCE_CELLS, ///< Cells (used by electro, crylink, vortex, etc)
-	RESOURCE_PLASMA, ///< Plasma (unused).
-	RESOURCE_FUEL ///< Fuel (used by jetpack).
-};
 
 // ============================ Public API ====================================
 

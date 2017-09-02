@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(HeavyMachineGun, Weapon)
-/* ammotype  */ ATTRIB(HeavyMachineGun, ammo_field, .int, ammo_nails);
+/* ammotype  */ ATTRIB(HeavyMachineGun, ammo_type, int, RESOURCE_BULLETS);
 /* impulse   */ ATTRIB(HeavyMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(HeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON);
 /* rating    */ ATTRIB(HeavyMachineGun, bot_pickupbasevalue, float, 10000);
