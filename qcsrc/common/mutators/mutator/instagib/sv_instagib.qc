@@ -1,5 +1,10 @@
 #include "sv_instagib.qh"
 
+bool autocvar_g_instagib_damagedbycontents = true;
+bool autocvar_g_instagib_blaster_keepdamage = false;
+bool autocvar_g_instagib_blaster_keepforce = false;
+bool autocvar_g_instagib_mirrordamage;
+bool autocvar_g_instagib_friendlypush = true;
 //int autocvar_g_instagib_ammo_drop;
 bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
@@ -12,7 +17,7 @@ float autocvar_g_instagib_speed_highspeed;
 
 #include <common/items/_mod.qh>
 
-REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
+REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball);
 
 spawnfunc(item_minst_cells)
 {

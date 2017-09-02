@@ -5,7 +5,7 @@
 #ifdef SVQC
 AUTOCVAR(g_grappling_hook_useammo, bool, false, "Use ammunition with the off-hand grappling hook");
 
-REGISTER_MUTATOR(hook, cvar("g_grappling_hook")) {
+REGISTER_MUTATOR(hook, expr_evaluate(cvar_string("g_grappling_hook"))) {
     MUTATOR_ONADD {
         g_grappling_hook = true;
         if(!autocvar_g_grappling_hook_useammo)

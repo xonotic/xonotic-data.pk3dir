@@ -1,10 +1,11 @@
 #include "sv_campcheck.qh"
 
+string autocvar_g_campcheck;
 float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;
 
-REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
+REGISTER_MUTATOR(campcheck, expr_evaluate(autocvar_g_campcheck));
 
 .float campcheck_nextcheck;
 .float campcheck_traveled_distance;

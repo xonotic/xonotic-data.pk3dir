@@ -522,7 +522,7 @@ void detect_maptype()
 		o.y += random() * (world.maxs.y - world.mins.y);
 		o.z += random() * (world.maxs.z - world.mins.z);
 
-		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, NULL);
+		tracebox(o, STAT(PL_MIN), STAT(PL_MAX), o - '0 0 32768', MOVE_WORLDONLY, NULL);
 		if(trace_fraction == 1)
 			continue;
 
@@ -937,6 +937,7 @@ spawnfunc(worldspawn)
 	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
+	__spawnfunc_spawn_all();
 }
 
 spawnfunc(light)
