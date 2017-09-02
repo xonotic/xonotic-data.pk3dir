@@ -1,6 +1,7 @@
 #include "sv_rocketflying.qh"
 
-REGISTER_MUTATOR(rocketflying, cvar("g_rocket_flying"));
+string autocvar_g_rocket_flying;
+REGISTER_MUTATOR(rocketflying, expr_evaluate(autocvar_g_rocket_flying));
 
 MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 {
