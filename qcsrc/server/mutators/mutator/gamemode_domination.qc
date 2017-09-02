@@ -554,32 +554,6 @@ spawnfunc(dom_team)
 		this.team = this.cnt + 1; // WHY are these different anyway?
 }
 
-// scoreboard setup
-void ScoreRules_dom(int teams)
-{
-	if(domination_roundbased)
-	{
-	    GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-            field_team(ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_DOM_TAKES, "takes", 0);
-	    });
-	}
-	else
-	{
-		float sp_domticks, sp_score;
-		sp_score = sp_domticks = 0;
-		if(autocvar_g_domination_disable_frags)
-			sp_domticks = SFL_SORT_PRIO_PRIMARY;
-		else
-			sp_score = SFL_SORT_PRIO_PRIMARY;
-		GameRules_scoring(teams, sp_score, sp_score, {
-            field_team(ST_DOM_TICKS, "ticks", sp_domticks);
-            field(SP_DOM_TICKS, "ticks", sp_domticks);
-            field(SP_DOM_TAKES, "takes", 0);
-		});
-	}
-}
-
 // code from here on is just to support maps that don't have control point and team entities
 void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, Sound capsound, string capnarration, string capmessage)
 {
@@ -628,8 +602,9 @@ void dom_spawnteams(int teams)
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, SND_Null, "", "");
 }
 
-void dom_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
+void dom_Initialize()
 {
+	g_domination = true;
 	// if no teams are found, spawn defaults
 	if(find(NULL, classname, "dom_team") == NULL || autocvar_g_domination_teams_override >= 2)
 	{
@@ -653,17 +628,23 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 	domination_roundbased = autocvar_g_domination_roundbased;
 
-	ScoreRules_dom(domination_teams);
+	if (domination_roundbased) {
+	    GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+            field_team(ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_DOM_TAKES, "takes", 0);
+	    });
+	} else {
+		float sp_score = autocvar_g_domination_disable_frags ? 0 : SFL_SORT_PRIO_PRIMARY;
+		float sp_domticks = autocvar_g_domination_disable_frags ? SFL_SORT_PRIO_PRIMARY : 0;
+		GameRules_scoring(teams, sp_score, sp_score, {
+            field_team(ST_DOM_TICKS, "ticks", sp_domticks);
+            field(SP_DOM_TICKS, "ticks", sp_domticks);
+            field(SP_DOM_TAKES, "takes", 0);
+		});
+	}
 
-	if(domination_roundbased)
-	{
+	if (domination_roundbased) {
 		round_handler_Spawn(Domination_CheckPlayers, Domination_CheckWinner, Domination_RoundStart);
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 	}
-}
-
-void dom_Initialize()
-{
-	g_domination = true;
-	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
 }

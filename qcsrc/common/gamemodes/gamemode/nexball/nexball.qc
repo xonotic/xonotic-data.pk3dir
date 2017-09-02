@@ -72,14 +72,6 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 }
 
 const int ST_NEXBALL_GOALS = 1;
-void nb_ScoreRules(int teams)
-{
-    GameRules_scoring(teams, 0, 0, {
-        field_team(ST_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
-        field(SP_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
-        field(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
-    });
-}
 
 void LogNB(string mode, entity actor)
 {
@@ -474,58 +466,6 @@ void nb_spawnteam(string teamname, float teamcolor)
 	e.team = e.cnt + 1;
 	//nb_teams += 1;
 }
-
-void nb_spawnteams()
-{
-	bool t_red = false, t_blue = false, t_yellow = false, t_pink = false;
-	entity e;
-	for(e = NULL; (e = find(e, classname, "nexball_goal"));)
-	{
-		switch(e.team)
-		{
-		case NUM_TEAM_1:
-			if(!t_red)
-			{
-				nb_spawnteam("Red", e.team-1)   ;
-				nb_teams |= BIT(0);
-				t_red = true;
-			}
-			break;
-		case NUM_TEAM_2:
-			if(!t_blue)
-			{
-				nb_spawnteam("Blue", e.team-1)  ;
-				t_blue = true;
-				nb_teams |= BIT(1);
-			}
-			break;
-		case NUM_TEAM_3:
-			if(!t_yellow)
-			{
-				nb_spawnteam("Yellow", e.team-1);
-				t_yellow = true;
-				nb_teams |= BIT(2);
-			}
-			break;
-		case NUM_TEAM_4:
-			if(!t_pink)
-			{
-				nb_spawnteam("Pink", e.team-1)  ;
-				t_pink = true;
-				nb_teams |= BIT(3);
-			}
-			break;
-		}
-	}
-}
-
-void nb_delayedinit(entity this)
-{
-	if(find(NULL, classname, "nexball_team") == NULL)
-		nb_spawnteams();
-	nb_ScoreRules(nb_teams);
-}
-
 
 //=======================//
 //	  spawnfuncs	   //
@@ -973,7 +913,22 @@ REGISTER_MUTATOR(nb, g_nexball)
 		*/
 		radar_showennemies = autocvar_g_nexball_radar_showallplayers;
 
-		InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
+	    if (find(NULL, classname, "nexball_team") == NULL) {
+	        int t_1 = 0, t_2 = 0, t_3 = 0, t_4 = 0;
+            for (entity e = NULL; (e = find(e, classname, "nexball_goal")); ) {
+                switch (e.team) {
+            		case NUM_TEAM_1: if (!t_1++) { nb_spawnteam("Red",    e.team - 1); nb_teams |= BIT(0); } break;
+            		case NUM_TEAM_2: if (!t_2++) { nb_spawnteam("Blue",   e.team - 1); nb_teams |= BIT(1); } break;
+            		case NUM_TEAM_3: if (!t_3++) { nb_spawnteam("Yellow", e.team - 1); nb_teams |= BIT(2); } break;
+            		case NUM_TEAM_4: if (!t_4++) { nb_spawnteam("Pink",   e.team - 1); nb_teams |= BIT(3); } break;
+                }
+            }
+	    }
+        GameRules_scoring(nb_teams, 0, 0, {
+            field_team(ST_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
+            field(SP_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
+            field(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+        });
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
 		GameRules_teams(true);

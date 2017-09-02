@@ -557,47 +557,31 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 	return true;
 }
 
-void invasion_ScoreRules(int inv_teams)
-{
-	if(inv_teams) { CheckAllowedTeams(NULL); }
-	GameRules_score_enabled(false);
-	GameRules_scoring(inv_teams, 0, 0, {
-	    if (inv_teams) {
-            field_team(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
-	    }
-	    field(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
-	});
-}
-
-void invasion_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
+void invasion_Initialize()
 {
 	if(autocvar_g_invasion_type == INV_TYPE_HUNT || autocvar_g_invasion_type == INV_TYPE_STAGE)
 		cvar_set("fraglimit", "0");
 
-	if(autocvar_g_invasion_teams)
-	{
-		invasion_teams = BITS(bound(2, autocvar_g_invasion_teams, 4));
-	}
-	else
-		invasion_teams = 0;
+    invasion_teams = autocvar_g_invasion_teams ? BITS(bound(2, autocvar_g_invasion_teams, 4)) : 0;
 
 	independent_players = 1; // to disable extra useless scores
 
-	invasion_ScoreRules(invasion_teams);
+    if (invasion_teams) { CheckAllowedTeams(NULL); }
+	GameRules_score_enabled(false);
+	GameRules_scoring(invasion_teams, 0, 0, {
+	    if (invasion_teams) {
+            field_team(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
+	    }
+	    field(SP_KILLS, "frags", ((invasion_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
+	});
 
 	independent_players = 0;
 
-	if(autocvar_g_invasion_type == INV_TYPE_ROUND)
-	{
+	if (autocvar_g_invasion_type == INV_TYPE_ROUND) {
 		round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
 		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 
 		inv_roundcnt = 0;
 		inv_maxrounds = 15; // 15?
 	}
-}
-
-void invasion_Initialize()
-{
-	InitializeEntity(NULL, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }

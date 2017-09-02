@@ -2655,21 +2655,6 @@ spawnfunc(team_CTL_bluelolly)  { spawnfunc_item_flag_team2(this);    }
 // Initialization
 // ==============
 
-// scoreboard setup
-void ctf_ScoreRules(int teams)
-{
-	CheckAllowedTeams(NULL);
-	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-        field_team(ST_CTF_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
-        field(SP_CTF_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
-        field(SP_CTF_CAPTIME, "captime", SFL_LOWER_IS_BETTER | SFL_TIME);
-        field(SP_CTF_PICKUPS, "pickups", 0);
-        field(SP_CTF_FCKILLS, "fckills", 0);
-        field(SP_CTF_RETURNS, "returns", 0);
-        field(SP_CTF_DROPS, "drops", SFL_LOWER_IS_BETTER);
-	});
-}
-
 // code from here on is just to support maps that don't have flag and team entities
 void ctf_SpawnTeam (string teamname, int teamcolor)
 {
@@ -2680,54 +2665,6 @@ void ctf_SpawnTeam (string teamname, int teamcolor)
 	this.team = teamcolor;
 }
 
-void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
-{
-	ctf_teams = 0;
-
-	entity tmp_entity;
-	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-	{
-		//if(tmp_entity.team == NUM_TEAM_3) { ctf_teams = max(3, ctf_teams); }
-		//if(tmp_entity.team == NUM_TEAM_4) { ctf_teams = max(4, ctf_teams); }
-
-		switch(tmp_entity.team)
-		{
-			case NUM_TEAM_1: BITSET_ASSIGN(ctf_teams, BIT(0)); break;
-			case NUM_TEAM_2: BITSET_ASSIGN(ctf_teams, BIT(1)); break;
-			case NUM_TEAM_3: BITSET_ASSIGN(ctf_teams, BIT(2)); break;
-			case NUM_TEAM_4: BITSET_ASSIGN(ctf_teams, BIT(3)); break;
-		}
-		if(tmp_entity.team == 0) { ctf_oneflag = true; }
-	}
-
-	havocbot_ctf_calculate_middlepoint();
-
-	if(NumTeams(ctf_teams) < 2) // somehow, there's not enough flags!
-	{
-		ctf_teams = 0; // so set the default red and blue teams
-		BITSET_ASSIGN(ctf_teams, BIT(0));
-		BITSET_ASSIGN(ctf_teams, BIT(1));
-	}
-
-	//ctf_teams = bound(2, ctf_teams, 4);
-
-	// if no teams are found, spawn defaults
-	if(find(NULL, classname, "ctf_team") == NULL)
-	{
-		LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.");
-		if(ctf_teams & BIT(0))
-			ctf_SpawnTeam("Red", NUM_TEAM_1);
-		if(ctf_teams & BIT(1))
-			ctf_SpawnTeam("Blue", NUM_TEAM_2);
-		if(ctf_teams & BIT(2))
-			ctf_SpawnTeam("Yellow", NUM_TEAM_3);
-		if(ctf_teams & BIT(3))
-			ctf_SpawnTeam("Pink", NUM_TEAM_4);
-	}
-
-	ctf_ScoreRules(ctf_teams);
-}
-
 void ctf_Initialize()
 {
 	ctf_captimerecord = stof(db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time")));
@@ -2736,5 +2673,48 @@ void ctf_Initialize()
 	ctf_captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	ctf_captureshield_force = autocvar_g_ctf_shield_force;
 
-	InitializeEntity(NULL, ctf_DelayedInit, INITPRIO_GAMETYPE);
+	ctf_teams = 0;
+
+    for (entity tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext) {
+        //if(tmp_entity.team == NUM_TEAM_3) { ctf_teams = max(3, ctf_teams); }
+        //if(tmp_entity.team == NUM_TEAM_4) { ctf_teams = max(4, ctf_teams); }
+
+        switch (tmp_entity.team) {
+            case NUM_TEAM_1: BITSET_ASSIGN(ctf_teams, BIT(0)); break;
+            case NUM_TEAM_2: BITSET_ASSIGN(ctf_teams, BIT(1)); break;
+            case NUM_TEAM_3: BITSET_ASSIGN(ctf_teams, BIT(2)); break;
+            case NUM_TEAM_4: BITSET_ASSIGN(ctf_teams, BIT(3)); break;
+        }
+        if (tmp_entity.team == 0) { ctf_oneflag = true; }
+    }
+
+    havocbot_ctf_calculate_middlepoint();
+
+    if (NumTeams(ctf_teams) < 2) { // somehow, there's not enough flags!
+        ctf_teams = 0; // so set the default red and blue teams
+        BITSET_ASSIGN(ctf_teams, BIT(0));
+        BITSET_ASSIGN(ctf_teams, BIT(1));
+    }
+
+    //ctf_teams = bound(2, ctf_teams, 4);
+
+    // if no teams are found, spawn defaults
+    if (find(NULL, classname, "ctf_team") == NULL) {
+        LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.");
+        if (ctf_teams & BIT(0)) ctf_SpawnTeam("Red", NUM_TEAM_1);
+        if (ctf_teams & BIT(1)) ctf_SpawnTeam("Blue", NUM_TEAM_2);
+        if (ctf_teams & BIT(2)) ctf_SpawnTeam("Yellow", NUM_TEAM_3);
+        if (ctf_teams & BIT(3)) ctf_SpawnTeam("Pink", NUM_TEAM_4);
+    }
+
+    CheckAllowedTeams(NULL);
+    GameRules_scoring(ctf_teams, SFL_SORT_PRIO_PRIMARY, 0, {
+        field_team(ST_CTF_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
+        field(SP_CTF_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+        field(SP_CTF_CAPTIME, "captime", SFL_LOWER_IS_BETTER | SFL_TIME);
+        field(SP_CTF_PICKUPS, "pickups", 0);
+        field(SP_CTF_FCKILLS, "fckills", 0);
+        field(SP_CTF_RETURNS, "returns", 0);
+        field(SP_CTF_DROPS, "drops", SFL_LOWER_IS_BETTER);
+    });
 }

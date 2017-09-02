@@ -5,7 +5,10 @@
 int autocvar_g_tdm_point_limit;
 int autocvar_g_tdm_point_leadlimit;
 bool autocvar_g_tdm_team_spawns;
-void tdm_DelayedInit(entity this);
+int autocvar_g_tdm_teams;
+int autocvar_g_tdm_teams_override;
+
+void tdm_SpawnTeam (string teamname, int teamcolor);
 
 REGISTER_MUTATOR(tdm, false)
 {
@@ -17,7 +20,19 @@ REGISTER_MUTATOR(tdm, false)
 		GameRules_limit_score(autocvar_g_tdm_point_limit);
         GameRules_limit_lead(autocvar_g_tdm_point_leadlimit);
 
-		InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
+        // if no teams are found, spawn defaults
+        if (find(NULL, classname, "tdm_team") == NULL) {
+            LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.");
+
+            int numteams = autocvar_g_tdm_teams_override;
+            if (numteams < 2) { numteams = autocvar_g_tdm_teams; }
+
+            int teams = BITS(bound(2, numteams, 4));
+            if (teams & BIT(0)) tdm_SpawnTeam("Red", NUM_TEAM_1);
+            if (teams & BIT(1)) tdm_SpawnTeam("Blue", NUM_TEAM_2);
+            if (teams & BIT(2)) tdm_SpawnTeam("Yellow", NUM_TEAM_3);
+            if (teams & BIT(3)) tdm_SpawnTeam("Pink", NUM_TEAM_4);
+        }
 	}
 	return 0;
 }

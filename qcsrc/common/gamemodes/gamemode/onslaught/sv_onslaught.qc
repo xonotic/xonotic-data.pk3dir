@@ -2165,30 +2165,6 @@ spawnfunc(onslaught_generator)
 	ons_GeneratorSetup(this);
 }
 
-// scoreboard setup
-void ons_ScoreRules()
-{
-	CheckAllowedTeams(NULL);
-	int teams = 0;
-	if(c1 >= 0) teams |= BIT(0);
-	if(c2 >= 0) teams |= BIT(1);
-	if(c3 >= 0) teams |= BIT(2);
-	if(c4 >= 0) teams |= BIT(3);
-	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
-	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
-	    field(SP_ONS_TAKES,	"takes", 0);
-	});
-}
-
-void ons_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up
-{
-	ons_ScoreRules();
-
-	round_handler_Spawn(Onslaught_CheckPlayers, Onslaught_CheckWinner, Onslaught_RoundStart);
-	round_handler_Init(5, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
-}
-
 void ons_Initialize()
 {
 	g_onslaught = true;
@@ -2196,5 +2172,18 @@ void ons_Initialize()
 
 	cam = new(objective_camera);
 
-	InitializeEntity(NULL, ons_DelayedInit, INITPRIO_GAMETYPE);
+	CheckAllowedTeams(NULL);
+    int teams = 0;
+    if (c1 >= 0) teams |= BIT(0);
+    if (c2 >= 0) teams |= BIT(1);
+    if (c3 >= 0) teams |= BIT(2);
+    if (c4 >= 0) teams |= BIT(3);
+    GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+        field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
+        field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+        field(SP_ONS_TAKES,	"takes", 0);
+    });
+
+    round_handler_Spawn(Onslaught_CheckPlayers, Onslaught_CheckWinner, Onslaught_RoundStart);
+    round_handler_Init(5, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 }

@@ -742,6 +742,7 @@ spawnfunc(worldspawn)
 	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	InitGameplayMode();
+    __spawnfunc_spawn_all();
 	static_init_late();
 	static_init_precache();
 	readlevelcvars();
@@ -936,7 +937,6 @@ spawnfunc(worldspawn)
 	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
-	__spawnfunc_spawn_all();
 }
 
 spawnfunc(light)
