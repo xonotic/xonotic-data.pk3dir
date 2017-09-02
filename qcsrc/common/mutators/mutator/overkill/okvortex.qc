@@ -314,17 +314,17 @@ METHOD(OverkillVortex, wr_setup, void(entity thiswep, entity actor, .entity weap
 
 METHOD(OverkillVortex, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(okvortex, ammo);
+	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(okvortex, ammo);
 	ammo_amount += (autocvar_g_balance_okvortex_reload_ammo && actor.(weaponentity).(weapon_load[WEP_OVERKILL_VORTEX.m_id]) >= WEP_CVAR_PRI(okvortex, ammo));
 	return ammo_amount;
 }
 
 METHOD(OverkillVortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	if(WEP_CVAR(okvortex, secondary))
+	if (WEP_CVAR(okvortex, secondary))
 	{
 		// don't allow charging if we don't have enough ammo
-		float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(okvortex, ammo);
+		float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okvortex, ammo);
 		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_VORTEX.m_id]) >= WEP_CVAR_SEC(okvortex, ammo);
 		return ammo_amount;
 	}

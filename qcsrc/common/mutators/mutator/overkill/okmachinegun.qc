@@ -263,17 +263,24 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 METHOD(OverkillMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount;
-	if(WEP_CVAR(okmachinegun, mode) == 1)
-		ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(okmachinegun, sustained_ammo);
-	else
-		ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(okmachinegun, first_ammo);
-
-	if(WEP_CVAR(okmachinegun, reload_ammo))
+	if (WEP_CVAR(okmachinegun, mode) == 1)
 	{
-		if(WEP_CVAR(okmachinegun, mode) == 1)
+		ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(okmachinegun, sustained_ammo);
+	}
+	else
+	{
+		ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(okmachinegun, first_ammo);
+	}
+	if (WEP_CVAR(okmachinegun, reload_ammo))
+	{
+		if (WEP_CVAR(okmachinegun, mode) == 1)
+		{
 			ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_MACHINEGUN.m_id]) >= WEP_CVAR(okmachinegun, sustained_ammo);
+		}
 		else
+		{
 			ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_MACHINEGUN.m_id]) >= WEP_CVAR(okmachinegun, first_ammo);
+		}
 	}
 	return ammo_amount;
 }
@@ -281,17 +288,24 @@ METHOD(OverkillMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .en
 METHOD(OverkillMachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount;
-	if(WEP_CVAR(okmachinegun, mode) == 1)
-		ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(okmachinegun, burst_ammo);
-	else
-		ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(okmachinegun, first_ammo);
-
-	if(WEP_CVAR(okmachinegun, reload_ammo))
+	if (WEP_CVAR(okmachinegun, mode) == 1)
 	{
-		if(WEP_CVAR(okmachinegun, mode) == 1)
+		ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(okmachinegun, burst_ammo);
+	}
+	else
+	{
+		ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(okmachinegun, first_ammo);
+	}
+	if (WEP_CVAR(okmachinegun, reload_ammo))
+	{
+		if (WEP_CVAR(okmachinegun, mode) == 1)
+		{
 			ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_MACHINEGUN.m_id]) >= WEP_CVAR(okmachinegun, burst_ammo);
+		}
 		else
+		{
 			ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_MACHINEGUN.m_id]) >= WEP_CVAR(okmachinegun, first_ammo);
+		}
 	}
 	return ammo_amount;
 }

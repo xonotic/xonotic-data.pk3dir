@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(OverkillVortex, Weapon)
-/* ammotype  */ ATTRIB(OverkillVortex, ammo_field, .int, ammo_cells);
+/* ammotype  */ ATTRIB(OverkillVortex, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(OverkillVortex, impulse, int, 7);
 /* flags     */ ATTRIB(OverkillVortex, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(OverkillVortex, bot_pickupbasevalue, float, 8000);

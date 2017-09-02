@@ -1,5 +1,6 @@
 #pragma once
 
+#include <common/resources.qh>
 #include <common/items/item/pickup.qh>
 #include <common/stats.qh>
 
@@ -59,8 +60,8 @@ CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_id, int, 0);
     /** A: WEPSET_id : WEPSET_... */
     ATTRIB(Weapon, weapons, WepSet, '0 0 0');
-    /** M: ammotype  : main ammo field */
-    ATTRIB(Weapon, ammo_field, .int, ammo_none);
+    /** M: ammotype  : main ammo type */
+    ATTRIB(Weapon, ammo_type, int, RESOURCE_NONE);
     /** M: impulse   : weapon impulse */
     ATTRIB(Weapon, impulse, int, -1);
     /** M: flags     : WEPSPAWNFLAG_... combined */
@@ -213,11 +214,11 @@ string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 void W_RandomWeapons(entity e, int n);
 
-string GetAmmoPicture(.int ammotype);
+string GetAmmoPicture(int ammotype);
 
 #ifdef CSQC
-.int GetAmmoFieldFromNum(int i);
-int GetAmmoStat(.int ammotype);
+int GetAmmoTypeFromNum(int i);
+int GetAmmoStat(int ammotype);
 #endif
 
 string W_Sound(string w_snd);

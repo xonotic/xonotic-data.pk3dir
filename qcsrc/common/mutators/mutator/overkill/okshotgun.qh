@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(OverkillShotgun, Weapon)
-/* ammotype  */ ATTRIB(OverkillShotgun, ammo_field, .int, ammo_shells);
+/* ammotype  */ ATTRIB(OverkillShotgun, ammo_type, int, RESOURCE_SHELLS);
 /* impulse   */ ATTRIB(OverkillShotgun, impulse, int, 2);
 /* flags     */ ATTRIB(OverkillShotgun, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(OverkillShotgun, bot_pickupbasevalue, float, 6000);

@@ -1,6 +1,7 @@
 #include "throwing.qh"
 
 #include "weaponsystem.qh"
+#include "../resources.qh"
 #include "../mutators/_mod.qh"
 #include <common/t_items.qh>
 #include "../g_damage.qh"
@@ -37,7 +38,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	float thisammo;
 	string s;
 	Weapon info = Weapons_from(wpn);
-	var .int ammotype = info.ammo_field;
+	int ammotype = info.ammo_type;
 
 	entity wep = new(droppedweapon);
 
@@ -88,7 +89,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.pickup_anyway = true; // these are ALWAYS pickable
 
 	//wa = W_AmmoItemCode(wpn);
-	if(ammotype == ammo_none)
+	if(ammotype == RESOURCE_NONE)
 	{
 		return "";
 	}
@@ -102,11 +103,10 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			int i = own.(weaponentity).m_weapon.m_id;
 			if(own.(weaponentity).(weapon_load[i]) > 0)
 			{
-				own.(ammotype) += own.(weaponentity).(weapon_load[i]);
+				GiveResource(own, ammotype, own.(weaponentity).(weapon_load[i]));
 				own.(weaponentity).(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
-
-			wep.(ammotype) = 0;
+			SetResourceAmount(wep, ammotype, 0);
 		}
 		else if(doreduce)
 		{
@@ -114,22 +114,23 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			int i = own.(weaponentity).m_weapon.m_id;
 			if(own.(weaponentity).(weapon_load[i]) > 0)
 			{
-				own.(ammotype) += own.(weaponentity).(weapon_load[i]);
+				GiveResource(own, ammotype, own.(weaponentity).(weapon_load[i]));
 				own.(weaponentity).(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
 
-			thisammo = min(own.(ammotype), wep.(ammotype));
-			wep.(ammotype) = thisammo;
-			own.(ammotype) -= thisammo;
+			float ownderammo = GetResourceAmount(own, ammotype);
+			thisammo = min(ownderammo, GetResourceAmount(wep, ammotype));
+			SetResourceAmount(wep, ammotype, thisammo);
+			SetResourceAmount(own, ammotype, ownderammo - thisammo);
 
-			switch(ammotype)
+			switch (ammotype)
 			{
-				case ammo_shells:  s = sprintf("%s and %d shells", s, thisammo);  break;
-				case ammo_nails:   s = sprintf("%s and %d nails", s, thisammo);   break;
-				case ammo_rockets: s = sprintf("%s and %d rockets", s, thisammo); break;
-				case ammo_cells:   s = sprintf("%s and %d cells", s, thisammo);   break;
-				case ammo_plasma:  s = sprintf("%s and %d plasma", s, thisammo);  break;
-				case ammo_fuel:    s = sprintf("%s and %d fuel", s, thisammo);    break;
+				case RESOURCE_SHELLS:  s = sprintf("%s and %d shells", s, thisammo);  break;
+				case RESOURCE_BULLETS: s = sprintf("%s and %d nails", s, thisammo);   break;
+				case RESOURCE_ROCKETS: s = sprintf("%s and %d rockets", s, thisammo); break;
+				case RESOURCE_CELLS:   s = sprintf("%s and %d cells", s, thisammo);   break;
+				case RESOURCE_PLASMA:  s = sprintf("%s and %d plasma", s, thisammo);  break;
+				case RESOURCE_FUEL:    s = sprintf("%s and %d fuel", s, thisammo);    break;
 			}
 
 			s = substring(s, 5, -1);
@@ -155,7 +156,7 @@ bool W_IsWeaponThrowable(entity this, int w)
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 			return false;
-		if((Weapons_from(w)).ammo_field == ammo_none)
+		if((Weapons_from(w)).ammo_type == RESOURCE_NONE)
 			return false;
 	}
 	return true;
