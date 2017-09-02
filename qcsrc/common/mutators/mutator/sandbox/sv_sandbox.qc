@@ -1,5 +1,6 @@
 #include "sv_sandbox.qh"
 
+string autocvar_g_sandbox;
 int autocvar_g_sandbox_info;
 bool autocvar_g_sandbox_readonly;
 string autocvar_g_sandbox_storage_name;
@@ -18,7 +19,7 @@ float autocvar_g_sandbox_object_material_velocity_factor;
 float autosave_time;
 void sandbox_Database_Load();
 
-REGISTER_MUTATOR(sandbox, cvar("g_sandbox"))
+REGISTER_MUTATOR(sandbox, expr_evaluate(autocvar_g_sandbox))
 {
 	MUTATOR_ONADD
 	{

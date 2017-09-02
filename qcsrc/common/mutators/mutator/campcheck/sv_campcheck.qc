@@ -1,10 +1,11 @@
 #include "sv_campcheck.qh"
 
+string autocvar_g_campcheck;
 float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;
 
-REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
+REGISTER_MUTATOR(campcheck, expr_evaluate(autocvar_g_campcheck));
 
 .float campcheck_nextcheck;
 .float campcheck_traveled_distance;
@@ -64,7 +65,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 				if(player.vehicle)
 					Damage(player.vehicle, NULL, NULL, autocvar_g_campcheck_damage * 2, DEATH_CAMP.m_id, player.vehicle.origin, '0 0 0');
 				else
-					Damage(player, NULL, NULL, bound(0, autocvar_g_campcheck_damage, player.health + player.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP.m_id, player.origin, '0 0 0');
+					Damage(player, NULL, NULL, bound(0, autocvar_g_campcheck_damage, GetResourceAmount(player, RESOURCE_HEALTH) + GetResourceAmount(player, RESOURCE_ARMOR) * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP.m_id, player.origin, '0 0 0');
 			}
 			player.campcheck_nextcheck = time + autocvar_g_campcheck_interval;
 			player.campcheck_traveled_distance = 0;

@@ -1,11 +1,12 @@
 #include "sv_touchexplode.qh"
 
+string autocvar_g_touchexplode;
 float autocvar_g_touchexplode_radius;
 float autocvar_g_touchexplode_damage;
 float autocvar_g_touchexplode_edgedamage;
 float autocvar_g_touchexplode_force;
 
-REGISTER_MUTATOR(touchexplode, cvar("g_touchexplode"));
+REGISTER_MUTATOR(touchexplode, expr_evaluate(autocvar_g_touchexplode));
 
 .float touchexplode_time;
 
