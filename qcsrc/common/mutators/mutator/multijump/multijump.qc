@@ -9,7 +9,7 @@
 
 
 #if defined(SVQC)
-REGISTER_MUTATOR(multijump, cvar("g_multijump"));
+REGISTER_MUTATOR(multijump, autocvar_g_multijump);
 #elif defined(CSQC)
 REGISTER_MUTATOR(multijump, true);
 #endif
