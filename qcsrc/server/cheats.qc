@@ -123,6 +123,12 @@ void info_autoscreenshot_findtarget(entity this)
 	this.angles_y = a.y;
 	// we leave Rick Roll alone
 }
+
+SPAWNFUNC_RESET(info_autoscreenshot)
+{
+    num_autoscreenshot = 0;
+}
+
 spawnfunc(info_autoscreenshot)
 {
 	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)

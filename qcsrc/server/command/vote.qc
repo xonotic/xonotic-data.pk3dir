@@ -366,6 +366,9 @@ void reset_map(bool dorespawn)
 		if (it.reset2) it.reset2(it);
 	});
 
+	__spawnfunc_remove_all();
+    __spawnfunc_spawn_all();
+
 	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), { Unfreeze(it); });
 
 	// Moving the player reset code here since the player-reset depends
