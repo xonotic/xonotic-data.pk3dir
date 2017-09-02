@@ -150,7 +150,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/monsters/sv_monsters.qh>
 #include <server/g_subs.qh>
 
-REGISTER_MUTATOR(nades, cvar("g_nades"));
+REGISTER_MUTATOR(nades, autocvar_g_nades);
 
 .float nade_time_primed;
 .float nade_lifetime;
@@ -872,7 +872,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 
 	hp -= damage;
 	SetResourceAmount(this, RESOURCE_HEALTH, hp);
-	
+
 
 	if ( this.nade_type != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
 		this.realowner = attacker;

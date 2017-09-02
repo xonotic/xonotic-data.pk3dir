@@ -2,6 +2,7 @@
 
 #include <lib/float.qh>
 
+string autocvar_g_spawn_near_teammate;
 float autocvar_g_spawn_near_teammate_distance;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint_max;
@@ -10,7 +11,7 @@ float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health;
 bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath;
 
-REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
+REGISTER_MUTATOR(spawn_near_teammate, expr_evaluate(autocvar_g_spawn_near_teammate));
 
 .entity msnt_lookat;
 

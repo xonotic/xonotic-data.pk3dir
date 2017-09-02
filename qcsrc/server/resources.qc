@@ -1,9 +1,8 @@
+#include "resources.qh"
 /// \file
 /// \brief Source file that contains implementation of the resource system.
 /// \author Lyberta
 /// \copyright GNU GPLv2 or any later version.
-
-#include "resources.qh"
 
 #include "autocvars.qh"
 #include "miscfunctions.qh"

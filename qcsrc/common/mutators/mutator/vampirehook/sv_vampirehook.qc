@@ -1,6 +1,7 @@
 #include "sv_vampirehook.qh"
 
-REGISTER_MUTATOR(vh, cvar("g_vampirehook"));
+string autocvar_g_vampirehook;
+REGISTER_MUTATOR(vh, expr_evaluate(autocvar_g_vampirehook));
 
 bool autocvar_g_vampirehook_teamheal;
 float autocvar_g_vampirehook_damage;
