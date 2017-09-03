@@ -74,6 +74,9 @@ float race_myrank;
 float nb_pb_period;
 
 // Spectating
+// -1 - observing
+// 0 - playing
+// >0 - id of spectated player
 float spectatee_status;
 
 // short mapname

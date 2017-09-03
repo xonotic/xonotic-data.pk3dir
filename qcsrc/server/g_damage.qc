@@ -9,6 +9,7 @@
 #include "../common/state.qh"
 #include "../common/physics/player.qh"
 #include "../common/t_items.qh"
+#include "resources.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
@@ -275,7 +276,7 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 	if(deathtype == DEATH_FIRE.m_id)
 	{
 		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : CS(targ).ping));
-		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
+		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, GetResourceAmount(attacker, RESOURCE_HEALTH), GetResourceAmount(attacker, RESOURCE_ARMOR), (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
 		return true;
 	}
 
@@ -427,8 +428,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_TYPEFRAGGED,
 					attacker.netname,
 					kill_count_to_target,
-					attacker.health,
-					attacker.armorvalue,
+					GetResourceAmount(attacker, RESOURCE_HEALTH),
+					GetResourceAmount(attacker, RESOURCE_ARMOR),
 					(IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping)
 				);
 			}
@@ -450,8 +451,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_FRAGGED,
 					attacker.netname,
 					kill_count_to_target,
-					attacker.health,
-					attacker.armorvalue,
+					GetResourceAmount(attacker, RESOURCE_HEALTH),
+					GetResourceAmount(attacker, RESOURCE_ARMOR),
 					(IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping)
 				);
 			}
@@ -543,7 +544,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	STAT(FROZEN, targ) = frozen_type;
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
-	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
+	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
 	targ.revive_speed = freeze_time;
 	if(targ.bot_attack)
 		IL_REMOVE(g_bot_targets, targ);
@@ -588,7 +589,7 @@ void Unfreeze (entity targ)
 
 	if(STAT(FROZEN, targ) && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
 	{
-		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
+		SetResourceAmount(targ, RESOURCE_HEALTH, ((IS_PLAYER(targ)) ? start_health : targ.max_health));
 		targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 	}
 
@@ -652,9 +653,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
-		targ.armorvalue = 0;
+		SetResourceAmount(targ, RESOURCE_ARMOR, 0);
 		targ.spawnshieldtime = 0;
-		targ.health = 0.9; // this is < 1
+		SetResourceAmount(targ, RESOURCE_HEALTH, 0.9); // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
@@ -754,7 +755,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			if(damage >= autocvar_g_frozen_revive_falldamage)
 			{
 				Unfreeze(targ);
-				targ.health = autocvar_g_frozen_revive_falldamage_health;
+				SetResourceAmount(targ, RESOURCE_HEALTH, autocvar_g_frozen_revive_falldamage_health);
 				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);

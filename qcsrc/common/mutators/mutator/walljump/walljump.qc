@@ -4,7 +4,7 @@
 #ifdef CSQC
 REGISTER_MUTATOR(walljump, true);
 #elif defined(SVQC)
-REGISTER_MUTATOR(walljump, cvar("g_walljump"));
+REGISTER_MUTATOR(walljump, autocvar_g_walljump);
 #endif
 
 #define PHYS_WALLJUMP(s) 						STAT(WALLJUMP, s)

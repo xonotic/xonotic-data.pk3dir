@@ -4,7 +4,7 @@ int autocvar_g_physical_items;
 float autocvar_g_physical_items_damageforcescale;
 float autocvar_g_physical_items_reset;
 
-REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
+REGISTER_MUTATOR(physical_items, autocvar_g_physical_items)
 {
 	// check if we have a physics engine
 	MUTATOR_ONADD
