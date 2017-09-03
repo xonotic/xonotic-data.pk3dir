@@ -380,7 +380,7 @@ void WarpZone_PostInitialize_Callback()
 		dst = (e.enemy.absmin + e.enemy.absmax) * 0.5;
 		makevectors(e.enemy.warpzone_angles);
 		dst = dst + ((e.enemy.warpzone_origin - dst) * v_forward) * v_forward - 16 * v_right;
-		waypoint_spawnforteleporter_wz(e, src, dst, 0, tracetest_ent);
+		waypoint_spawnforteleporter_wz(e, src, dst, 0, -v_up, tracetest_ent);
 	}
 	delete(tracetest_ent);
 }

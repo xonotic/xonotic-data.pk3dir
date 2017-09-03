@@ -710,8 +710,8 @@ bool waypoint_load_links()
 		{
 			if(substring(s, 0, 2) == "//")
 			{
-				if(substring(s, 2, 8) == "VERSION ")
-					ver = stof(substring(s, 10, -1));
+				if(substring(s, 2, 17) == "WAYPOINT_VERSION ")
+					ver = stof(substring(s, 19, -1));
 				continue;
 			}
 			else
@@ -944,7 +944,7 @@ void waypoint_save_links()
 		return;
 	}
 
-	fputs(file, strcat("//", "VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
+	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
 
 	int c = 0;
 	IL_EACH(g_waypoints, true,
@@ -984,7 +984,7 @@ void waypoint_saveall()
 
 	// add 3 comments to not break compatibility with older Xonotic versions
 	// (they are read as a waypoint with origin '0 0 0' and flag 0 though)
-	fputs(file, strcat("//", "VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
+	fputs(file, strcat("//", "WAYPOINT_VERSION ", ftos_decimals(WAYPOINT_VERSION, 2), "\n"));
 	fputs(file, strcat("//", "\n"));
 	fputs(file, strcat("//", "\n"));
 
@@ -1037,8 +1037,8 @@ float waypoint_loadall()
 		{
 			if(substring(s, 0, 2) == "//")
 			{
-				if(substring(s, 2, 8) == "VERSION ")
-					ver = stof(substring(s, 10, -1));
+				if(substring(s, 2, 17) == "WAYPOINT_VERSION ")
+					ver = stof(substring(s, 19, -1));
 				continue;
 			}
 			else
@@ -1069,9 +1069,16 @@ float waypoint_loadall()
 	return cwp + cwb;
 }
 
-vector waypoint_fixorigin(vector position, entity tracetest_ent)
+#define waypoint_fixorigin(position, tracetest_ent) \
+	waypoint_fixorigin_down_dir(position, tracetest_ent, '0 0 -1')
+
+vector waypoint_fixorigin_down_dir(vector position, entity tracetest_ent, vector down_dir)
 {
-	tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z), PL_MIN_CONST, PL_MAX_CONST, position + '0 0 -512', MOVE_NOMONSTERS, tracetest_ent);
+	tracebox(position + '0 0 1', PL_MIN_CONST, PL_MAX_CONST, position + down_dir * 3000, MOVE_NOMONSTERS, tracetest_ent);
+	if(trace_startsolid)
+		tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z / 2), PL_MIN_CONST, PL_MAX_CONST, position + down_dir * 3000, MOVE_NOMONSTERS, tracetest_ent);
+	if(trace_startsolid)
+		tracebox(position + '0 0 1' * (1 - PL_MIN_CONST.z), PL_MIN_CONST, PL_MAX_CONST, position + down_dir * 3000, MOVE_NOMONSTERS, tracetest_ent);
 	if(trace_fraction < 1)
 		position = trace_endpos;
 	return position;
@@ -1129,10 +1136,18 @@ void waypoint_spawnforteleporter_boxes(entity e, int teleport_flag, vector org1,
 	e.nearestwaypointtimeout = -1;
 }
 
-void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, entity tracetest_ent)
+void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, float timetaken, vector down_dir, entity tracetest_ent)
 {
-	org = waypoint_fixorigin(org, tracetest_ent);
-	destination = waypoint_fixorigin(destination, tracetest_ent);
+	// warpzones with oblique warp plane rely on down_dir to snap waypoints
+	// to the ground without leaving the warp plane
+	// warpzones with horizontal warp plane (down_dir.x == -1) generate
+	// destination waypoint snapped to the ground (leaving warpzone), source
+	// waypoint in the center of the warp plane
+	if(down_dir.x != -1)
+		org = waypoint_fixorigin_down_dir(org, tracetest_ent, down_dir);
+	if(down_dir.x == -1)
+		down_dir = '0 0 -1';
+	destination = waypoint_fixorigin_down_dir(destination, tracetest_ent, down_dir);
 	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, org, org, destination, destination, timetaken);
 }
 
