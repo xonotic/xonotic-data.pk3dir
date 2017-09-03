@@ -18,37 +18,14 @@ CLASS(OverkillMachineGun, Weapon)
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
-		P(class, prefix, burst, float, NONE) \
-		P(class, prefix, burst_ammo, float, NONE) \
-		P(class, prefix, burst_animtime, float, NONE) \
-		P(class, prefix, burst_refire2, float, NONE) \
-		P(class, prefix, burst_refire, float, NONE) \
-		P(class, prefix, burst_speed, float, NONE) \
-		P(class, prefix, first, float, NONE) \
-		P(class, prefix, first_ammo, float, NONE) \
-		P(class, prefix, first_damage, float, NONE) \
-		P(class, prefix, first_force, float, NONE) \
-		P(class, prefix, first_refire, float, NONE) \
-		P(class, prefix, first_spread, float, NONE) \
-		P(class, prefix, mode, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, solidpenetration, float, NONE) \
-		P(class, prefix, spread_add, float, NONE) \
-		P(class, prefix, spread_max, float, NONE) \
-		P(class, prefix, spread_min, float, NONE) \
-		P(class, prefix, sustained_ammo, float, NONE) \
-		P(class, prefix, sustained_damage, float, NONE) \
-		P(class, prefix, sustained_force, float, NONE) \
-		P(class, prefix, sustained_refire, float, NONE) \
-		P(class, prefix, sustained_spread, float, NONE) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-		P(class, prefix, ammo, float, SEC) \
+		P(class, prefix, ammo, float, PRI) \
+		P(class, prefix, damage, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, refire, float, PRI) \
+		P(class, prefix, solidpenetration, float, PRI) \
+		P(class, prefix, spread_add, float, PRI) \
+		P(class, prefix, spread_max, float, PRI) \
+		P(class, prefix, spread_min, float, PRI) \
 		P(class, prefix, animtime, float, SEC) \
 		P(class, prefix, damage, float, SEC) \
 		P(class, prefix, delay, float, SEC) \
@@ -61,7 +38,14 @@ CLASS(OverkillMachineGun, Weapon)
 		P(class, prefix, shotangle, float, SEC) \
 		P(class, prefix, speed, float, SEC) \
 		P(class, prefix, spread, float, SEC) \
-		P(class, prefix, type, float, SEC) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
 	W_PROPS(X, OverkillMachineGun, okmachinegun)
 #undef X

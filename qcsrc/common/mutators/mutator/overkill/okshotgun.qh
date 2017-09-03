@@ -27,7 +27,6 @@ CLASS(OverkillShotgun, Weapon)
 		P(class, prefix, refire, float, PRI) \
 		P(class, prefix, solidpenetration, float, PRI) \
 		P(class, prefix, spread, float, PRI) \
-		P(class, prefix, ammo, float, SEC) \
 		P(class, prefix, animtime, float, SEC) \
 		P(class, prefix, damage, float, SEC) \
 		P(class, prefix, delay, float, SEC) \
