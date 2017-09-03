@@ -57,7 +57,7 @@ vector damage_explosion_calcpush(vector explosion_f, vector target_v, float spee
 	v = explosion_calcpush(explosion_f * speedfactor, m, target_v, 1, 0);
 	// the factor we then get is:
 	//   1
-	LOG_INFOF("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f\n",
+	LOG_INFOF("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f",
 		m,
 		target_v, target_v + v,
 		target_v * target_v, m * explosion_f * speedfactor * explosion_f * speedfactor, target_v * target_v + m * explosion_f * speedfactor * explosion_f * speedfactor,
@@ -90,15 +90,11 @@ vector solve_cubic_pq(float p, float q)
 		// cos(a)
 		// cos(a + 2pi/3)
 		// cos(a + 4pi/3)
-		return
-			u *
-			(
-				'1 0 0' * cos(a + 2.0/3.0*M_PI)
-				+
-				'0 1 0' * cos(a + 4.0/3.0*M_PI)
-				+
-				'0 0 1' * cos(a)
-			);
+		return u * vec3(
+			cos(a + 2.0/3.0*M_PI),
+			cos(a + 4.0/3.0*M_PI),
+			cos(a)
+		);
 	}
 	else if(D == 0)
 	{
@@ -107,17 +103,15 @@ vector solve_cubic_pq(float p, float q)
 			return '0 0 0';
 		u = 3*q/p;
 		v = -u/2;
-		if(u >= v)
-			return '1 1 0' * v + '0 0 1' * u;
-		else
-			return '0 1 1' * v + '1 0 0' * u;
+		return (u >= v) ? vec3(v, v, u) : vec3(u, v, v);
 	}
 	else
 	{
 		// cardano
-		u = cbrt(-q/2.0 + sqrt(D));
-		v = cbrt(-q/2.0 - sqrt(D));
-		return '1 1 1' * (u + v);
+		//u = cbrt(-q/2.0 + sqrt(D));
+		//v = cbrt(-q/2.0 - sqrt(D));
+		a = cbrt(-q/2.0 + sqrt(D)) + cbrt(-q/2.0 - sqrt(D));
+		return vec3(a, a, a);
 	}
 }
 vector solve_cubic_abcd(float a, float b, float c, float d)
@@ -137,11 +131,7 @@ vector solve_cubic_abcd(float a, float b, float c, float d)
 
 vector findperpendicular(vector v)
 {
-	vector p;
-	p.x = v.z;
-	p.y = -v.x;
-	p.z = v.y;
-	return normalize(cliptoplane(p, v));
+	return normalize(cliptoplane(vec3(v.z, -v.x, v.y), v));
 }
 
 #ifdef SVQC

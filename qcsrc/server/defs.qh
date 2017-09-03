@@ -53,7 +53,6 @@ float server_is_dedicated;
 .float count;
 //.float cnt2;
 
-.float play_time;
 .int respawn_flags;
 .float respawn_time;
 .float respawn_time_max;
@@ -86,7 +85,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float		dmg;
 
 // for railgun damage (hitting multiple enemies)
-.float railgunhit;
+.bool railgunhit;
 .float railgunhitsolidbackup;
 .vector railgunhitloc;
 
@@ -131,8 +130,6 @@ float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
 
-.float version;
-
 // footstep interval
 .float nextstep;
 
@@ -165,7 +162,7 @@ float default_weapon_alpha;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
 .float cvar_cl_jetpack_jump;
-.float cvar_cl_movement_track_canjump = _STAT(MOVEVARS_CL_TRACK_CANJUMP);
+.float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 
 .string cvar_g_xonoticversion;
@@ -179,8 +176,6 @@ float default_weapon_alpha;
 .float cvar_cl_allow_uidtracking;
 .string stored_netname;
 
-.float version_nagtime;
-
 string gamemode_name;
 
 float startitem_failed;
@@ -191,7 +186,7 @@ void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
 // WEAPONTODO: remove this
-WepSet weaponsInMap;
+//WepSet weaponsInMap;
 
 #define weapons _STAT(WEAPONS)
 
@@ -220,19 +215,17 @@ float TemporaryDB;
 
 .float team_saved;
 
-float some_spawn_has_been_used;
-float have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
-float have_team_spawns_forteam[17]; // 0 = this team has no spawns, 1 = this team has spawns; team 0 is the "no-team"
+bool some_spawn_has_been_used;
+int have_team_spawns; // 0 = no team spawns requested, -1 = team spawns requested but none found, 1 = team spawns requested and found
+int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it has no spawns; team 0 is the "no-team"
 
 // set when showing a kill countdown
 .entity killindicator;
-.float killindicator_teamchange;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 float lockteams;
 
-.float parm_idlesince;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 int sv_maxidle_slots;
@@ -246,8 +239,6 @@ float next_pingtime;
 .float cvar_cl_autotaunt;
 .float cvar_cl_voice_directional;
 .float cvar_cl_voice_directional_taunt_attenuation;
-
-.float version_mismatch;
 
 int autocvar__independent_players;
 bool independent_players;
@@ -265,8 +256,8 @@ string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
 
-float game_starttime; //point in time when the countdown to game start is over
-float round_starttime; //point in time when the countdown to round start is over
+//float game_starttime; //point in time when the countdown to game start is over
+//float round_starttime; //point in time when the countdown to round start is over
 
 void W_Porto_Remove (entity p);
 
@@ -279,7 +270,6 @@ void W_Porto_Remove (entity p);
 .float bulletcounter;
 
 // Nexball
-.entity ballcarried; // Also used for keepaway
 float g_nexball_meter_period;
 
 void SUB_DontUseTargets(entity this, entity actor, entity trigger);
@@ -292,13 +282,11 @@ void ClientData_Touch(entity e);
 
 //vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
-.float wasplayer;
+.bool wasplayer;
 
 float servertime, serverprevtime, serverframetime;
 
 .float ammo_fuel;
-
-.vector prevorigin;
 
 //flood fields
 .float nickspamtime; // time of last nick change
@@ -418,6 +406,8 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .void(entity this, entity player) init_for_player;
 
+.WepSet dual_weapons;
+
 IntrusiveList g_monsters;
 STATIC_INIT(g_monsters) { g_monsters = IL_NEW(); }
 
@@ -465,3 +455,21 @@ STATIC_INIT(g_bot_dodge) { g_bot_dodge = IL_NEW(); }
 
 IntrusiveList g_damagedbycontents;
 STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
+
+IntrusiveList g_railgunhit;
+STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
+
+IntrusiveList g_ladders;
+STATIC_INIT(g_ladders) { g_ladders = IL_NEW(); }
+
+IntrusiveList g_locations;
+STATIC_INIT(g_locations) { g_locations = IL_NEW(); }
+
+IntrusiveList g_saved_team;
+STATIC_INIT(g_saved_team) { g_saved_team = IL_NEW(); }
+
+IntrusiveList g_monster_targets;
+STATIC_INIT(g_monster_targets) { g_monster_targets = IL_NEW(); }
+
+IntrusiveList g_pathlib_nodes;
+STATIC_INIT(g_pathlib_nodes) { g_pathlib_nodes = IL_NEW(); }

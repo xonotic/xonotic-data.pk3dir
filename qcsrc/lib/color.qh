@@ -3,6 +3,7 @@
 #include "string.qh"
 
 #define colormapPaletteColor(c, isPants) colormapPaletteColor_(c, isPants, time)
+ERASEABLE
 vector colormapPaletteColor_(int c, bool isPants, float t)
 {
 	switch (c)
@@ -35,6 +36,7 @@ vector colormapPaletteColor_(int c, bool isPants, float t)
 	}
 }
 
+ERASEABLE
 float rgb_mi_ma_to_hue(vector rgb, float mi, float ma)
 {
 	if (mi == ma)
@@ -56,6 +58,7 @@ float rgb_mi_ma_to_hue(vector rgb, float mi, float ma)
 	}
 }
 
+ERASEABLE
 vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 {
 	vector rgb;
@@ -110,6 +113,7 @@ vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 	return rgb;
 }
 
+ERASEABLE
 vector rgb_to_hsv(vector rgb)
 {
 	float mi, ma;
@@ -127,11 +131,13 @@ vector rgb_to_hsv(vector rgb)
 	return hsv;
 }
 
+ERASEABLE
 vector hsv_to_rgb(vector hsv)
 {
 	return hue_mi_ma_to_rgb(hsv.x, hsv.z * (1 - hsv.y), hsv.z);
 }
 
+ERASEABLE
 vector rgb_to_hsl(vector rgb)
 {
 	float mi, ma;
@@ -151,6 +157,7 @@ vector rgb_to_hsl(vector rgb)
 	return hsl;
 }
 
+ERASEABLE
 vector hsl_to_rgb(vector hsl)
 {
 	float mi, ma, maminusmi;
@@ -166,6 +173,7 @@ vector hsl_to_rgb(vector hsl)
 	return hue_mi_ma_to_rgb(hsl.x, mi, ma);
 }
 
+ERASEABLE
 string rgb_to_hexcolor(vector rgb)
 {
 	return strcat(

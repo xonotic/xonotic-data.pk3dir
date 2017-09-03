@@ -1,5 +1,7 @@
 #include "waypoints.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include "bot.qh"
@@ -74,7 +76,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			{
 				if(autocvar_developer)
 				{
-					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin), "\n");
+					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin));
 					backtrace("Waypoint stuck");
 				}
 			}
@@ -88,6 +90,46 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	waypoint_setupmodel(w);
 
 	return w;
+}
+
+void waypoint_removelink(entity from, entity to)
+{
+	if (from == to || (from.wpflags & WAYPOINTFLAG_NORELINK))
+		return;
+
+	bool found = false;
+	if (!found && from.wp00 == to) found = true; if (found) {from.wp00 = from.wp01; from.wp00mincost = from.wp01mincost;}
+	if (!found && from.wp01 == to) found = true; if (found) {from.wp01 = from.wp02; from.wp01mincost = from.wp02mincost;}
+	if (!found && from.wp02 == to) found = true; if (found) {from.wp02 = from.wp03; from.wp02mincost = from.wp03mincost;}
+	if (!found && from.wp03 == to) found = true; if (found) {from.wp03 = from.wp04; from.wp03mincost = from.wp04mincost;}
+	if (!found && from.wp04 == to) found = true; if (found) {from.wp04 = from.wp05; from.wp04mincost = from.wp05mincost;}
+	if (!found && from.wp05 == to) found = true; if (found) {from.wp05 = from.wp06; from.wp05mincost = from.wp06mincost;}
+	if (!found && from.wp06 == to) found = true; if (found) {from.wp06 = from.wp07; from.wp06mincost = from.wp07mincost;}
+	if (!found && from.wp07 == to) found = true; if (found) {from.wp07 = from.wp08; from.wp07mincost = from.wp08mincost;}
+	if (!found && from.wp08 == to) found = true; if (found) {from.wp08 = from.wp09; from.wp08mincost = from.wp09mincost;}
+	if (!found && from.wp09 == to) found = true; if (found) {from.wp09 = from.wp10; from.wp09mincost = from.wp10mincost;}
+	if (!found && from.wp10 == to) found = true; if (found) {from.wp10 = from.wp11; from.wp10mincost = from.wp11mincost;}
+	if (!found && from.wp11 == to) found = true; if (found) {from.wp11 = from.wp12; from.wp11mincost = from.wp12mincost;}
+	if (!found && from.wp12 == to) found = true; if (found) {from.wp12 = from.wp13; from.wp12mincost = from.wp13mincost;}
+	if (!found && from.wp13 == to) found = true; if (found) {from.wp13 = from.wp14; from.wp13mincost = from.wp14mincost;}
+	if (!found && from.wp14 == to) found = true; if (found) {from.wp14 = from.wp15; from.wp14mincost = from.wp15mincost;}
+	if (!found && from.wp15 == to) found = true; if (found) {from.wp15 = from.wp16; from.wp15mincost = from.wp16mincost;}
+	if (!found && from.wp16 == to) found = true; if (found) {from.wp16 = from.wp17; from.wp16mincost = from.wp17mincost;}
+	if (!found && from.wp17 == to) found = true; if (found) {from.wp17 = from.wp18; from.wp17mincost = from.wp18mincost;}
+	if (!found && from.wp18 == to) found = true; if (found) {from.wp18 = from.wp19; from.wp18mincost = from.wp19mincost;}
+	if (!found && from.wp19 == to) found = true; if (found) {from.wp19 = from.wp20; from.wp19mincost = from.wp20mincost;}
+	if (!found && from.wp20 == to) found = true; if (found) {from.wp20 = from.wp21; from.wp20mincost = from.wp21mincost;}
+	if (!found && from.wp21 == to) found = true; if (found) {from.wp21 = from.wp22; from.wp21mincost = from.wp22mincost;}
+	if (!found && from.wp22 == to) found = true; if (found) {from.wp22 = from.wp23; from.wp22mincost = from.wp23mincost;}
+	if (!found && from.wp23 == to) found = true; if (found) {from.wp23 = from.wp24; from.wp23mincost = from.wp24mincost;}
+	if (!found && from.wp24 == to) found = true; if (found) {from.wp24 = from.wp25; from.wp24mincost = from.wp25mincost;}
+	if (!found && from.wp25 == to) found = true; if (found) {from.wp25 = from.wp26; from.wp25mincost = from.wp26mincost;}
+	if (!found && from.wp26 == to) found = true; if (found) {from.wp26 = from.wp27; from.wp26mincost = from.wp27mincost;}
+	if (!found && from.wp27 == to) found = true; if (found) {from.wp27 = from.wp28; from.wp27mincost = from.wp28mincost;}
+	if (!found && from.wp28 == to) found = true; if (found) {from.wp28 = from.wp29; from.wp28mincost = from.wp29mincost;}
+	if (!found && from.wp29 == to) found = true; if (found) {from.wp29 = from.wp30; from.wp29mincost = from.wp30mincost;}
+	if (!found && from.wp30 == to) found = true; if (found) {from.wp30 = from.wp31; from.wp30mincost = from.wp31mincost;}
+	if (found) {from.wp31 = NULL; from.wp31mincost = 10000000;}
 }
 
 bool waypoint_islinked(entity from, entity to)
@@ -188,7 +230,7 @@ void waypoint_think(entity this)
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
 	sm1 = this.origin + this.mins;
 	sm2 = this.origin + this.maxs;
-	IL_EACH(g_waypoints, true,
+	IL_EACH(g_waypoints, this != it,
 	{
 		if (boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
 		{
@@ -308,7 +350,7 @@ void waypoint_remove(entity wp)
 	IL_EACH(g_waypoints, it != wp,
 	{
 		if (waypoint_islinked(it, wp))
-			waypoint_schedulerelink(it);
+			waypoint_removelink(it, wp);
 	});
 	delete(wp);
 }
@@ -384,7 +426,7 @@ float waypoint_load_links()
 
 			if(!found)
 			{
-				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin));
+				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from_pos));
 				continue;
 			}
 
@@ -406,7 +448,7 @@ float waypoint_load_links()
 
 		if(!found)
 		{
-			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin));
+			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to_pos));
 			continue;
 		}
 
@@ -422,7 +464,7 @@ float waypoint_load_links()
 	return true;
 }
 
-void waypoint_load_links_hardwired()
+void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 {
 	string filename, s;
 	float file, tokens, c = 0, found;
@@ -436,7 +478,8 @@ void waypoint_load_links_hardwired()
 
 	if (file < 0)
 	{
-		LOG_TRACE("waypoint links load from ", filename, " failed");
+		if(!removal_mode)
+			LOG_TRACE("waypoint links load from ", filename, " failed");
 		return;
 	}
 
@@ -474,7 +517,8 @@ void waypoint_load_links_hardwired()
 
 			if(!found)
 			{
-				LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
+				if(!removal_mode)
+					LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped");
 				continue;
 			}
 		}
@@ -495,11 +539,18 @@ void waypoint_load_links_hardwired()
 
 		if(!found)
 		{
-			LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
+			if(!removal_mode)
+				LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped");
 			continue;
 		}
 
 		++c;
+		if(removal_mode)
+		{
+			waypoint_removelink(wp_from, wp_to);
+			continue;
+		}
+
 		waypoint_addlink(wp_from, wp_to);
 		wp_from.wphardwired = true;
 		wp_to.wphardwired = true;
@@ -507,8 +558,12 @@ void waypoint_load_links_hardwired()
 
 	fclose(file);
 
-	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
+	if(!removal_mode)
+		LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
 }
+
+void waypoint_load_links_hardwired() { waypoint_load_or_remove_links_hardwired(false); }
+void waypoint_remove_links_hardwired() { waypoint_load_or_remove_links_hardwired(true); }
 
 entity waypoint_get_link(entity w, float i)
 {
@@ -553,11 +608,14 @@ entity waypoint_get_link(entity w, float i)
 // Save all waypoint links to a file
 void waypoint_save_links()
 {
+	// temporarily remove hardwired links so they don't get saved among normal links
+	waypoint_remove_links_hardwired();
+
 	string filename = sprintf("maps/%s.waypoints.cache", mapname);
 	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
-		LOG_INFOF("waypoint link save to %s failed\n", filename);
+		LOG_INFOF("waypoint link save to %s failed", filename);
 		return;
 	}
 
@@ -578,7 +636,9 @@ void waypoint_save_links()
 	fclose(file);
 	botframe_cachedwaypointlinks = true;
 
-	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache\n", c, mapname);
+	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache", c, mapname);
+
+	waypoint_load_links_hardwired();
 }
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
@@ -591,7 +651,7 @@ void waypoint_saveall()
 		waypoint_save_links(); // save anyway?
 		botframe_loadedforcedlinks = false;
 
-		LOG_INFOF("waypoint links: save to %s failed\n", filename);
+		LOG_INFOF("waypoint links: save to %s failed", filename);
 		return;
 	}
 
@@ -614,7 +674,7 @@ void waypoint_saveall()
 	waypoint_save_links();
 	botframe_loadedforcedlinks = false;
 
-	LOG_INFOF("saved %d waypoints to maps/%s.waypoints\n", c, mapname);
+	LOG_INFOF("saved %d waypoints to maps/%s.waypoints", c, mapname);
 }
 
 // load waypoints from file
@@ -892,7 +952,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		});
 		if(bestdist < maxdist)
 		{
-			LOG_INFO("update chain to new nearest WP ", etos(p.(fld)), "\n");
+			LOG_INFO("update chain to new nearest WP ", etos(p.(fld)));
 			return 0;
 		}
 
@@ -971,7 +1031,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		tmax = t;
 	}
 
-	LOG_INFO("spawning a waypoint for connecting to ", etos(wp), "\n");
+	LOG_INFO("spawning a waypoint for connecting to ", etos(wp));
 	botframe_autowaypoints_createwp(o, p, fld, 0);
 	return 1;
 }
@@ -987,7 +1047,7 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 	if(r != -1)
 		return;
 
-	LOG_INFO("emergency: got no good nearby WP to build a link from, starting a new chain\n");
+	LOG_INFO("emergency: got no good nearby WP to build a link from, starting a new chain");
 	if(!botframe_autowaypoints_fixdown(p.origin))
 		return; // shouldn't happen, caught above
 	botframe_autowaypoints_createwp(trace_endpos, p, fld, WAYPOINTFLAG_PROTECTED);
@@ -1059,7 +1119,7 @@ LABEL(next)
 
 	IL_EACH(g_waypoints, !(it.wpflags & (WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END)),
 	{
-		LOG_INFOF("Removed a waypoint at %v. Try again for more!\n", it.origin);
+		LOG_INFOF("Removed a waypoint at %v. Try again for more!", it.origin);
 		te_explosion(it.origin);
 		waypoint_remove(it);
 		break;
@@ -1073,12 +1133,12 @@ LABEL(next)
 
 void botframe_autowaypoints()
 {
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && !IS_DEAD(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && !IS_DEAD(it), {
 		// going back is broken, so only fix waypoints to walk TO the player
 		//botframe_autowaypoints_fix(p, false, botframe_autowaypoints_lastwp0);
 		botframe_autowaypoints_fix(it, true, botframe_autowaypoints_lastwp1);
 		//te_explosion(p.botframe_autowaypoints_lastwp0.origin);
-	));
+	});
 
 	if (autocvar_g_waypointeditor_auto >= 2) {
 		botframe_deleteuselesswaypoints();

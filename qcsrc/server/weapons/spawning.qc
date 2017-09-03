@@ -50,7 +50,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				FOREACH(Weapons, it != WEP_Null, {
 					if(it.netname == s)
 					{
 						entity replacement = spawn();
@@ -59,20 +59,20 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 						weapon_defaultspawnfunc(replacement, it);
 						break;
 					}
-				));
+				});
 			}
 		}
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
 			wpn = WEP_Null;
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				if(it.netname == s)
 				{
 					wpn = it;
 					break;
 				}
-			));
+			});
 		}
 		if (wpn == WEP_Null)
 		{
@@ -132,6 +132,9 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	// pickup anyway
 	if (g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
+
+	if(!this.owner)
+		this.glowmod = wpn.wpcolor;
 
 	GameItem def = wpn.m_pickup;
 	_StartItem(

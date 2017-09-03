@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/constants.qh>
+#include <common/scores.qh>
 
 entity scores_initialized; // non-NULL when scores labels/rules have been set
 .float scoreboard_pos;
@@ -23,6 +23,14 @@ void PlayerScore_Detach(entity player);
  * Returns the new score.
  */
 float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score);
+
+/**
+ * \brief Returns the player's score.
+ * \param[in] player Player to inspect.
+ * \param[in] scorefield Field of the score.
+ * \return Player's score.
+ */
+#define PlayerScore_Get(player, scorefield) PlayerScore_Add(player, scorefield, 0)
 
 /**
  * Initialize the score of this player if needed.
@@ -56,11 +64,6 @@ float TeamScore_GetCompareValue(float t);
  * possible, otherwise the player score.
  */
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score);
-
-/**
- * Adds to the generic score fields for both the player and the team.
- */
-#define PlayerTeamScore_AddScore(p, s) PlayerTeamScore_Add(p, SP_SCORE, ST_SCORE, s)
 
 /**
  * Set the label of a team score item, as well as the scoring flags.

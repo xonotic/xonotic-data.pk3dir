@@ -16,7 +16,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
         case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team);
     }
 
-    FOREACH(Nades, true, LAMBDA(
+    FOREACH(Nades, true, {
         for (int j = 0; j < 2; j++)
         {
             if (it.m_projectile[j] == proj)
@@ -26,7 +26,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
                 break;
             }
         }
-    ));
+    });
 
     return EFFECT_Null;
 }
@@ -74,14 +74,14 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
-		loopsound(proj, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
+		loopsound(proj, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
 		proj.mins = '-16 -16 -16';
 		proj.maxs = '16 16 16';
 	}
 
 	entity nade_type = Nade_FromProjectile(proj.cnt);
 	if (nade_type == NADE_TYPE_Null) return;
-	if(STAT(NADES_SMALL, NULL))
+	if(STAT(NADES_SMALL))
 	{
 		proj.mins = '-8 -8 -8';
 		proj.maxs = '8 8 8';
@@ -133,7 +133,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 		DrawNadeProgressBar(myPos, mySize, bonusProgress, nadeColor);
 
 		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(textPos, ftos(bonusNades), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(textPos, ftos(bonusNades), vec2((2/3) * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if(draw_expanding)
 			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
@@ -150,7 +150,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include <common/monsters/sv_monsters.qh>
 #include <server/g_subs.qh>
 
-REGISTER_MUTATOR(nades, cvar("g_nades"));
+REGISTER_MUTATOR(nades, autocvar_g_nades);
 
 .float nade_time_primed;
 .float nade_lifetime;
@@ -265,7 +265,7 @@ void nade_napalm_ball(entity this)
 	entity proj;
 	vector kick;
 
-	spamsound(this, CH_SHOTS, SND(FIREBALL_FIRE), VOL_BASE, ATTEN_NORM);
+	spamsound(this, CH_SHOTS, SND_FIREBALL_FIRE, VOL_BASE, ATTEN_NORM);
 
 	proj = new(grenade);
 	proj.owner = this.owner;
@@ -431,7 +431,7 @@ void nade_ice_think(entity this)
 
 	float current_freeze_time = this.ltime - time - 0.1;
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && it.health > 0 && current_freeze_time > 0,
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0 && current_freeze_time > 0,
 	{
 		if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(it, this.realowner) || it == this.realowner))
 		if(!it.revival_time || ((time - it.revival_time) >= 1.5))
@@ -623,13 +623,15 @@ void nade_heal_touch(entity this, entity toucher)
 		if ( health_factor > 0 )
 		{
 			maxhealth = (IS_MONSTER(toucher)) ? toucher.max_health : g_pickup_healthmega_max;
-			if ( toucher.health < maxhealth )
+			float hp = GetResourceAmount(toucher, RESOURCE_HEALTH);
+			if (hp < maxhealth)
 			{
-				if ( this.nade_show_particles )
+				if (this.nade_show_particles)
+				{
 					Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
-				toucher.health = min(toucher.health+health_factor, maxhealth);
+				}
+				GiveResourceWithLimit(toucher, RESOURCE_HEALTH, health_factor, maxhealth);
 			}
-			toucher.pauserothealth_finished = max(toucher.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 		}
 		else if ( health_factor < 0 )
 		{
@@ -768,7 +770,7 @@ void nade_touch(entity this, entity toucher)
 
 	if(autocvar_g_nades_pickup)
 	if(time >= this.spawnshieldtime)
-	if(!toucher.nade && this.health == this.max_health) // no boosted shot pickups, thank you very much
+	if(!toucher.nade && GetResourceAmount(this, RESOURCE_HEALTH) == this.max_health) // no boosted shot pickups, thank you very much
 	if(CanThrowNade(toucher)) // prevent some obvious things, like dead players
 	if(IS_REAL_CLIENT(toucher)) // above checks for IS_PLAYER, don't need to do it here
 	{
@@ -796,9 +798,9 @@ void nade_touch(entity this, entity toucher)
 
 	//setsize(this, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(this);
-	if(this.health == this.max_health)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) == this.max_health)
 	{
-		spamsound(this, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTEN_NORM);
+		spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
 		return;
 	}
 
@@ -860,19 +862,22 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(damage <= 0 || ((IS_ONGROUND(this)) && IS_PLAYER(attacker)))
 		return;
 
-	if(this.health == this.max_health)
+	float hp = GetResourceAmount(this, RESOURCE_HEALTH);
+	if(hp == this.max_health)
 	{
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
 		this.nextthink = max(time + this.nade_lifetime, time);
 		setthink(this, nade_beep);
 	}
 
-	this.health -= damage;
+	hp -= damage;
+	SetResourceAmount(this, RESOURCE_HEALTH, hp);
+
 
 	if ( this.nade_type != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
 		this.realowner = attacker;
 
-	if(this.health <= 0)
+	if(hp <= 0)
 		W_PrepareExplosionByDamage(this, attacker, nade_boom);
 	else
 		nade_burn_spawn(this);
@@ -889,20 +894,18 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	delete(e.fake_nade);
 	e.fake_nade = NULL;
 
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
+
 	makevectors(e.v_angle);
 
 	// NOTE: always throw from first weapon entity?
 	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0);
 
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
-
 	vector offset = (v_forward * autocvar_g_nades_throw_offset.x)
-				  + (v_right * autocvar_g_nades_throw_offset.y)
-				  + (v_up * autocvar_g_nades_throw_offset.z);
-	if(autocvar_g_nades_throw_offset == '0 0 0')
-		offset = '0 0 0';
+	              + (v_right * autocvar_g_nades_throw_offset.y)
+	              + (v_up * autocvar_g_nades_throw_offset.z);
 
-	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
+	setorigin(_nade, w_shotorg + offset);
 	//setmodel(_nade, MDL_PROJECTILE_NADE);
 	//setattachment(_nade, NULL, "");
 	PROJECTILE_MAKETRIGGER(_nade);
@@ -930,7 +933,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	settouch(_nade, nade_touch);
 	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
-	_nade.health = autocvar_g_nades_nade_health;
+	SetResourceAmount(_nade, RESOURCE_HEALTH, autocvar_g_nades_nade_health);
 	_nade.max_health = _nade.health;
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
@@ -1093,8 +1096,8 @@ void nade_prime(entity this)
 	}
 	else
 	{
-		ntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype = ((autocvar_g_nades_client_select) ? CS(this).cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		pntype = ((autocvar_g_nades_client_select) ? CS(this).cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
 	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
@@ -1240,7 +1243,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			FOR_EACH_KH_KEY(key) if(key.owner == player) { ++key_count; }
 
 			float time_score;
-			if(player.flagcarried || player.ballcarried) // this player is important
+			if(GameRules_scoring_is_vip(player))
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
 				time_score = autocvar_g_nades_bonus_score_time;
@@ -1250,8 +1253,8 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 			if(autocvar_g_nades_bonus_client_select)
 			{
-				player.nade_type = player.cvar_cl_nade_type;
-				player.pokenade_type = player.cvar_cl_pokenade_type;
+				player.nade_type = CS(player).cvar_cl_nade_type;
+				player.pokenade_type = CS(player).cvar_cl_pokenade_type;
 			}
 			else
 			{
@@ -1278,7 +1281,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(!IS_DEAD(it))
 			if(STAT(FROZEN, it) == 0)
 			if(SAME_TEAM(it, player))
@@ -1290,13 +1293,13 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 					it.reviving = true;
 				++n;
 			}
-		));
+		});
 	}
 
 	if(n && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
 	{
 		player.revive_progress = bound(0, player.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		player.health = max(1, player.revive_progress * start_health);
+		SetResourceAmount(player, RESOURCE_HEALTH, max(1, player.revive_progress * start_health));
 
 		if(player.revive_progress >= 1)
 		{
@@ -1306,10 +1309,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 		}
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
 			it.revive_progress = player.revive_progress;
 			it.reviving = false;
-		));
+		});
 	}
 }
 
@@ -1345,7 +1348,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 		player.nade_refire  = time + autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
-		player.nade_type = player.cvar_cl_nade_type;
+		player.nade_type = CS(player).cvar_cl_nade_type;
 
 	player.nade_timer = 0;
 
@@ -1373,19 +1376,19 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	if(!STAT(FROZEN, frag_target) || !autocvar_g_freezetag_revive_nade)
 		toss_nade(frag_target, true, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 
-	float killcount_bonus = ((frag_attacker.killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * frag_attacker.killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
-
 	if(IS_PLAYER(frag_attacker))
 	{
+		float killcount_bonus = ((CS(frag_attacker).killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * CS(frag_attacker).killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
+
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
-		else if(frag_target.flagcarried)
+		else if(GameRules_scoring_is_vip(frag_target))
 			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
-		else if(autocvar_g_nades_bonus_score_spree && frag_attacker.killcount > 1)
+		else if(autocvar_g_nades_bonus_score_spree && CS(frag_attacker).killcount > 1)
 		{
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: { nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_spree); break; }
-			switch(frag_attacker.killcount)
+			switch(CS(frag_attacker).killcount)
 			{
 				KILL_SPREE_LIST
 				default: nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor); break;
@@ -1413,7 +1416,7 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
 		Unfreeze(frag_target);
-		frag_target.health = autocvar_g_freezetag_revive_nade_health;
+		SetResourceAmount(frag_target, RESOURCE_HEALTH, autocvar_g_freezetag_revive_nade_health);
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		M_ARGV(4, float) = 0;
 		M_ARGV(6, vector) = '0 0 0';
@@ -1479,11 +1482,6 @@ REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Nades");
-}
-
-MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
-{
-	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Nades");
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)

@@ -36,9 +36,11 @@ float race_time;
 float race_laptime;
 float race_checkpointtime;
 float race_previousbesttime;
+float race_mypreviousbesttime;
 string race_previousbestname;
 float race_nextcheckpoint;
 float race_nextbesttime;
+float race_mybesttime;
 string race_nextbestname;
 float race_penaltyaccumulator; // qualifying: total penalty time in tenths
 float race_penaltyeventtime; // time when the player got the penalty
@@ -72,6 +74,9 @@ float race_myrank;
 float nb_pb_period;
 
 // Spectating
+// -1 - observing
+// 0 - playing
+// >0 - id of spectated player
 float spectatee_status;
 
 // short mapname

@@ -20,6 +20,7 @@
 #include <server/playerdemo.qc>
 #include <server/portals.qc>
 #include <server/race.qc>
+#include <server/resources.qc>
 #include <server/round_handler.qc>
 #include <server/scores.qc>
 #include <server/scores_rules.qc>
@@ -30,3 +31,10 @@
 #endif
 #include <server/teamplay.qc>
 #include <server/tests.qc>
+
+#include <server/bot/_mod.inc>
+#include <server/command/_mod.inc>
+#include <server/compat/_mod.inc>
+#include <server/mutators/_mod.inc>
+#include <server/pathlib/_mod.inc>
+#include <server/weapons/_mod.inc>

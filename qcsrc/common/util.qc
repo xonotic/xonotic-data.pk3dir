@@ -1,20 +1,19 @@
 #include "util.qh"
 
 #if defined(CSQC)
-    #include "../client/defs.qh"
     #include "constants.qh"
 	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications/all.qh"
+	#include "scores.qh"
     #include <common/deathtypes/all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
-    #include "../server/autocvars.qh"
-    #include "../server/defs.qh"
 	#include "../server/mutators/events.qh"
     #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
+	#include "scores.qh"
     #include "mapinfo.qh"
 #endif
 
@@ -24,10 +23,9 @@
 */
 vector real_origin(entity ent)
 {
-	entity e;
 	vector v = ((ent.absmin + ent.absmax) * 0.5);
+	entity e = ent.tag_entity;
 
-	e = ent.tag_entity;
 	while(e)
 	{
 		v = v + ((e.absmin + e.absmax) * 0.5);
@@ -184,6 +182,7 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 	}
 }
 
+#ifdef GAMEQC
 string ScoreString(int pFlags, float pValue)
 {
 	string valstr;
@@ -215,6 +214,7 @@ string ScoreString(int pFlags, float pValue)
 
 	return valstr;
 }
+#endif
 
 // compressed vector format:
 // like MD3, just even shorter
@@ -336,17 +336,19 @@ STATIC_INIT(compressShortVector)
 
 	if(cvar("developer"))
 	{
-		LOG_INFO("Verifying vector compression table...\n");
+		LOG_INFO("Verifying vector compression table...");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				LOG_INFO("BROKEN vector compression: ", ftos(i));
-				LOG_INFO(" -> ", vtos(decompressShortVector(i)));
-				LOG_INFO(" -> ", ftos(compressShortVector(decompressShortVector(i))));
-				LOG_INFO("\n");
+				LOG_INFOF(
+				    "BROKEN vector compression: %s -> %s -> %s",
+				    ftos(i),
+				    vtos(decompressShortVector(i)),
+				    ftos(compressShortVector(decompressShortVector(i)))
+                );
 				error("b0rk");
 			}
-		LOG_INFO("Done.\n");
+		LOG_INFO("Done.");
 	}
 }
 
@@ -414,11 +416,11 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 string mapPriorityList(string order, string(string) mapfunc)
 {
 	string neworder;
-	float i, n;
+	float n;
 
 	n = tokenize_console(order);
 	neworder = "";
-	for(i = 0; i < n; ++i)
+	for(float i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
 
 	return substring(neworder, 0, strlen(neworder) - 1);
@@ -426,15 +428,12 @@ string mapPriorityList(string order, string(string) mapfunc)
 
 string swapInPriorityList(string order, float i, float j)
 {
-	string s;
-	float w, n;
-
-	n = tokenize_console(order);
+	float n = tokenize_console(order);
 
 	if(i >= 0 && i < n && j >= 0 && j < n && i != j)
 	{
-		s = "";
-		for(w = 0; w < n; ++w)
+		string s = "";
+		for(float w = 0; w < n; ++w)
 		{
 			if(w == i)
 				s = strcat(s, argv(j), " ");
@@ -599,7 +598,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if(!cvar_type(tmp_cvar))
 	{
-		LOG_INFOF("Error: cvar %s doesn't exist!\n", tmp_cvar);
+		LOG_INFOF("Error: cvar %s doesn't exist!", tmp_cvar);
 		return 0;
 	}
 
@@ -641,7 +640,7 @@ int cvar_settemp_restore()
 			++j;
 		}
 		else
-			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", it.netname);
+			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.", it.netname);
 	});
 
 #else
@@ -655,7 +654,7 @@ int cvar_settemp_restore()
 			++j;
 		}
 		else
-			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.", e.netname));
 	}
 #endif
 
@@ -672,7 +671,6 @@ bool isCaretEscaped(string theText, float pos)
 
 int skipIncompleteTag(string theText, float pos, int len)
 {
-	int i = 0, ch = 0;
 	int tag_start = -1;
 
 	if(substring(theText, pos - 1, 1) == "^")
@@ -680,7 +678,7 @@ int skipIncompleteTag(string theText, float pos, int len)
 		if(isCaretEscaped(theText, pos - 1) || pos >= len)
 			return 0;
 
-		ch = str2chr(theText, pos);
+		int ch = str2chr(theText, pos);
 		if(ch >= '0' && ch <= '9')
 			return 1; // ^[0-9] color code found
 		else if (ch == 'x')
@@ -690,7 +688,7 @@ int skipIncompleteTag(string theText, float pos, int len)
 	}
 	else
 	{
-		for(i = 2; pos - i >= 0 && i <= 4; ++i)
+		for(int i = 2; pos - i >= 0 && i <= 4; ++i)
 		{
 			if(substring(theText, pos - i, 2) == "^x")
 			{
@@ -784,8 +782,7 @@ string find_last_color_code(string s)
 	if (start == -1) // no caret found
 		return "";
 	int len = strlen(s)-1;
-	int i;
-	for(i = len; i >= start; --i)
+	for(int i = len; i >= start; --i)
 	{
 		if(substring(s, i, 1) != "^")
 			continue;
@@ -1367,7 +1364,7 @@ void m_shutdown()
 {
 	if(shutdown_running)
 	{
-		LOG_INFO("Recursive shutdown detected! Only restoring cvars...\n");
+		LOG_INFO("Recursive shutdown detected! Only restoring cvars...");
 	}
 	else
 	{

@@ -1,5 +1,7 @@
 #include "navigation.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include "bot.qh"
@@ -136,7 +138,7 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 			if (trace_fraction < 1)
 			{
 				swimming = true;
-				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
+				org = trace_endpos + normalize(org - trace_endpos) * stepdist;
 				for (; org.z < end.z + e.maxs.z; org.z += stepdist)
 				{
 					if(autocvar_bot_debug_tracewalk)
@@ -181,12 +183,12 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float m
 						if(autocvar_bot_debug_tracewalk)
 							debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
 
-						FOREACH_ENTITY_CLASS("func_ladder", true,
+						IL_EACH(g_ladders, it.classname == "func_ladder",
 							{ it.solid = SOLID_BSP; });
 
 						traceline( org, move, movemode, e);
 
-						FOREACH_ENTITY_CLASS("func_ladder", true,
+						IL_EACH(g_ladders, it.classname == "func_ladder",
 							{ it.solid = SOLID_TRIGGER; });
 
 						if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")

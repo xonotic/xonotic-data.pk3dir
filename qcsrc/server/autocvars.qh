@@ -13,7 +13,7 @@ int autocvar_captureleadlimit_override;
 float autocvar_ekg;
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
-bool autocvar_g_allow_oldvortexbeam;
+//bool autocvar_g_allow_oldvortexbeam;
 int autocvar_g_antilag;
 float autocvar_g_antilag_nudge;
 float autocvar_g_balance_armor_blockpercent;
@@ -165,12 +165,7 @@ int autocvar_g_maxplayers;
 float autocvar_g_maxplayers_spectator_blocktime;
 float autocvar_g_maxpushtime;
 float autocvar_g_maxspeed;
-#define autocvar_g_instagib cvar("g_instagib")
-bool autocvar_g_instagib_damagedbycontents = true;
-bool autocvar_g_instagib_blaster_keepdamage = false;
-bool autocvar_g_instagib_blaster_keepforce = false;
-bool autocvar_g_instagib_mirrordamage;
-bool autocvar_g_instagib_friendlypush = true;
+bool autocvar_g_instagib;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 bool autocvar_g_mirrordamage_onlyweapons;
@@ -245,7 +240,9 @@ float autocvar_g_turrets_targetscan_mindelay;
 bool autocvar_g_use_ammunition;
 bool autocvar_g_waypointeditor;
 bool autocvar_g_waypointeditor_symmetrical;
-vector autocvar_g_waypointeditor_symmetrical_center;
+vector autocvar_g_waypointeditor_symmetrical_origin;
+int autocvar_g_waypointeditor_symmetrical_order;
+vector autocvar_g_waypointeditor_symmetrical_axis;
 bool autocvar_g_waypoints_for_items;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
 bool autocvar_g_weapon_throwable;
@@ -256,7 +253,7 @@ float autocvar_gameversion_min;
 float autocvar_gameversion_max;
 string autocvar_hostname;
 bool autocvar_lastlevel;
-int autocvar_leadlimit;
+//int autocvar_leadlimit;
 int autocvar_leadlimit_and_fraglimit;
 int autocvar_leadlimit_override;
 int autocvar_loddebug;
@@ -414,7 +411,6 @@ float autocvar_g_monsters_armor_blockpercent;
 float autocvar_g_monsters_healthbars;
 bool autocvar_g_monsters_lineofsight = true;
 //bool autocvar_g_monsters_ignoretraces = true;
-#define autocvar_g_bloodloss cvar("g_bloodloss")
 bool autocvar_g_nades;
 bool autocvar_g_nades_override_dropweapon = true;
 vector autocvar_g_nades_throw_offset;
@@ -516,6 +512,7 @@ float autocvar_sv_airaccel_sideways_friction;
 float autocvar_sv_aircontrol;
 float autocvar_sv_aircontrol_power;
 float autocvar_sv_aircontrol_backwards;
+float autocvar_sv_aircontrol_sidewards;
 float autocvar_sv_aircontrol_penalty;
 float autocvar_sv_warsowbunny_airforwardaccel;
 float autocvar_sv_warsowbunny_topspeed;

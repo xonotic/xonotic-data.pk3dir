@@ -348,7 +348,7 @@ void bd_move(entity minigame, entity player, string dir)
 			entity dozer = bd_find_dozer(minigame);
 			if(!dozer)
 			{
-				LOG_INFO("Dozer wasn't found!\n");
+				LOG_INFO("Dozer wasn't found!");
 				return; // should not happen... TODO: end match?
 			}
 
@@ -740,7 +740,7 @@ bool bd_save_level(entity minigame)
 
 		if(boulder_count != target_count)
 		{
-			LOG_INFO("Not enough targets or boulders, fix your level!\n");
+			LOG_INFO("Not enough targets or boulders, fix your level!");
 			return false;
 		}
 
@@ -791,7 +791,7 @@ void bd_load_level(entity minigame)
 	file_get = fopen(file_name, FILE_READ);
 	if(file_get < 0)
 	{
-		LOG_INFO("^3BULLDOZER: ^7could not find storage file ^3", file_name, "^7, no items were loaded\n");
+		LOG_INFO("^3BULLDOZER: ^7could not find storage file ^3", file_name, "^7, no items were loaded");
 	}
 	else
 	{
@@ -829,7 +829,7 @@ void bd_close_editor(entity minigame, entity player)
 	entity dozer = bd_find_dozer(minigame);
 	if(!dozer)
 	{
-		LOG_INFO("You need to place a bulldozer on the level to save it!\n");
+		LOG_INFO("You need to place a bulldozer on the level to save it!");
 		return;
 	}
 
@@ -840,7 +840,7 @@ void bd_close_editor(entity minigame, entity player)
 	}
 	else
 	{
-		LOG_INFO("You need to set the level name!\n");
+		LOG_INFO("You need to set the level name!");
 		return;
 	}
 }
@@ -1020,7 +1020,7 @@ void bd_hud_board(vector pos, vector mySize)
 				minigame_drawpic_centered( tile_pos,
 						minigame_texture(thepiece),
 						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-			}	
+			}
 		}
 		else if ( e.classname == "minigame_board_piece" )
 		{
@@ -1058,7 +1058,7 @@ void bd_hud_board(vector pos, vector mySize)
 				default:
 				case BD_DIR_DN: theang = M_PI; break;
 				case BD_DIR_LF: theang = M_PI * 3 / 2; break;
-				case BD_DIR_RT: theang = M_PI / 2; break; 
+				case BD_DIR_RT: theang = M_PI / 2; break;
 			}
 
 			drawrotpic(tile_pos, theang, minigame_texture("bd/dozer"),

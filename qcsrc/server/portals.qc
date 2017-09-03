@@ -1,5 +1,6 @@
 #include "portals.qh"
 
+#include <common/effects/all.qh>
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
 #include "../common/constants.qh"
@@ -148,7 +149,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		LOG_INFO("'safe' teleport location is not safe!\n");
+		LOG_INFO("'safe' teleport location is not safe!");
 		// FAIL TODO why does this happen?
 		return 0;
 	}
@@ -156,7 +157,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		LOG_INFO("trace_endpos in solid, this can't be!\n");
+		LOG_INFO("trace_endpos in solid, this can't be!");
 		// FAIL TODO why does this happen? (reported by MrBougo)
 		return 0;
 	}
@@ -215,7 +216,7 @@ float Portal_FindSafeOrigin(entity portal)
 	if(!move_out_of_solid(portal))
 	{
 #ifdef DEBUG
-		LOG_INFO("NO SAFE ORIGIN\n");
+		LOG_INFO("NO SAFE ORIGIN");
 #endif
 		return 0;
 	}
@@ -473,7 +474,7 @@ void Portal_Think(entity this)
 
 	fixedmakevectors(this.mangle);
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(it != o)
 			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
@@ -487,7 +488,7 @@ void Portal_Think(entity this)
 	    	if(it.(weaponentity).hook)
 	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g);
 	    }
-	));
+	});
 	this.solid = SOLID_TRIGGER;
 	this.aiment = o;
 #endif

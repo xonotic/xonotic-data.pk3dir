@@ -1,5 +1,7 @@
 #include "aim.qh"
 
+#include <server/defs.qh>
+
 #include "cvars.qh"
 
 #include "bot.qh"
@@ -157,7 +159,7 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 		return;
 	}
 	this.bot_aimtarg = e1;
-	this.bot_aimlatency = this.ping; // FIXME?  Shouldn't this be in the lag item?
+	this.bot_aimlatency = CS(this).ping; // FIXME?  Shouldn't this be in the lag item?
 	//this.bot_aimorigin = v1;
 	//this.bot_aimvelocity = v2;
 	this.bot_aimtargorigin = v3;
@@ -305,7 +307,7 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//dprint("e ", vtos(diffang), " < ", ftos(maxfiredeviation), "\n");
 
 	// decide whether to fire this time
-	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * DEG2RAD))
+	if (v * shotdir >= cos(maxfiredeviation * DEG2RAD))
 	if(vdist(trace_endpos-shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10)) || random()*random()>bound(0,(skill+this.bot_aggresskill)*0.05,1))
 		this.bot_firetimer = time + bound(0.1, 0.5-(skill+this.bot_aggresskill)*0.05, 0.5);
 	//traceline(shotorg,shotorg+shotdir*1000,false,NULL);

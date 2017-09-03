@@ -1,5 +1,7 @@
 #include "g_subs.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "antilag.qh"
 #include "command/common.qh"
 #include "../common/state.qh"
@@ -83,13 +85,15 @@ void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, false);
 }
@@ -99,13 +103,15 @@ void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, floa
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	WarpZone_traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, true);
 }
@@ -204,26 +210,22 @@ Ripped from DPMod
 */
 vector findbetterlocation (vector org, float mindist)
 {
-	vector	loc;
-	vector vec;
-	float c, h;
-
-	vec = mindist * '1 0 0';
-	c = 0;
+	vector vec = mindist * '1 0 0';
+	int c = 0;
 	while (c < 6)
 	{
 		traceline (org, org + vec, true, NULL);
 		vec = vec * -1;
 		if (trace_fraction < 1)
 		{
-			loc = trace_endpos;
+			vector loc = trace_endpos;
 			traceline (loc, loc + vec, true, NULL);
 			if (trace_fraction >= 1)
 				org = loc + vec;
 		}
 		if (c & 1)
 		{
-			h = vec.y;
+			float h = vec.y;
 			vec.y = vec.x;
 			vec.x = vec.z;
 			vec.z = h;

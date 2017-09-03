@@ -41,10 +41,10 @@ string WeaponArenaString()
 	s = "";
 	for(i = 0; i < n; ++i)
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(argv(i) == it.netname)
 				s = strcat(s, " & ", it.m_name);
-		));
+		});
 	}
 	s = sprintf(_("%s Arena"), substring(s, 3, strlen(s) - 3));
 

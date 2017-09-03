@@ -1,4 +1,7 @@
 #include "campaign.qh"
+
+#include "defs.qh"
+
 #include "cheats.qh"
 #include "miscfunctions.qh"
 #include "g_world.qh"
@@ -22,7 +25,7 @@ float CampaignBailout(string s)
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
 	cvar_set("g_campaign", "0");
-	LOG_INFO("^4campaign initialization failed: ", s, "\n");
+	LOG_INFO("^4campaign initialization failed: ", s);
 	if(autocvar__campaign_testrun)
 		error("CAMPAIGN FAIL AHAHAHAHAHAHAHAHAH))");
 	return 1;
@@ -192,12 +195,12 @@ void CampaignPreIntermission()
 	int lost = 0;
 	string savevar;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 		if(it.winning)
 			won += 1;
 		else
 			lost += 1;
-	));
+	});
 
 	if(autocvar__campaign_testrun)
 	{

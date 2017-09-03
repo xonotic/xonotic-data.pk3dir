@@ -169,7 +169,11 @@ bool door_check_keys(entity door, entity player)
 	if(!IS_PLAYER(player))
 		return false;
 
-	int valid = (door.itemkeys & player.itemkeys);
+	entity store = player;
+#ifdef SVQC
+	store = PS(player);
+#endif
+	int valid = (door.itemkeys & store.itemkeys);
 	door.itemkeys &= ~valid; // only some of the needed keys were given
 
 	if(!door.itemkeys)

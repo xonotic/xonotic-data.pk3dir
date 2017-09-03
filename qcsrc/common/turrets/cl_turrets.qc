@@ -112,7 +112,7 @@ void turret_draw2d(entity this)
 	if(rgb == '0 0 0')
 	{
 		this.teamradar_color = '1 0 1';
-		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
+		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
 	}
 
 	txt = this.netname;
@@ -212,7 +212,7 @@ void turret_construct(entity this, bool isnew)
 	setorigin(this, this.origin);
 	_setmodel(this, tur.model);
 	_setmodel(this.tur_head, tur.head_model);
-	setsize(this, tur.mins, tur.maxs);
+	setsize(this, tur.m_mins, tur.m_maxs);
 	setsize(this.tur_head, '0 0 0', '0 0 0');
 
 	if(this.m_id == TUR_EWHEEL.m_id)

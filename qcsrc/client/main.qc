@@ -1,6 +1,12 @@
 #include "main.qh"
 
-#include <common/effects/qc/all.qh>
+#include "defs.qh"
+#include <common/ent_cs.qh>
+#include "miscfunctions.qh"
+#include <common/effects/effect.qh>
+#include <common/effects/qc/_mod.qh>
+#include <common/effects/all.qh>
+#include <common/effects/all.inc>
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
@@ -17,6 +23,7 @@
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
+#include <common/scores.qh>
 #include <common/triggers/include.qh>
 #include <common/vehicles/all.qh>
 #include <lib/csqcmodel/cl_model.qh>
@@ -31,7 +38,7 @@
 
 void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
 {
-	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
+	ofs = vec2(ofs.x * SIZE_CURSOR.x, ofs.y * SIZE_CURSOR.y);
 	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
 }
 
@@ -90,7 +97,7 @@ void CSQC_Init()
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
+	LOG_INFOF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
 
 	{
@@ -144,6 +151,9 @@ void CSQC_Init()
 	players = Sort_Spawn();
 
 	GetTeam(NUM_SPECTATOR, true); // add specs first
+
+	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
+		weapon_accuracy[w] = -1;
 
 	// precaches
 
@@ -404,7 +414,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	if(!isNew && n != this.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", etof(this), this.classname);
+		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)", etof(this), this.classname);
 		isNew = true;
 		Ent_Remove(this);
 	}
@@ -486,9 +496,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 
     int f = ReadByte();
 
-	scoreboard_showscores_force = (f & 1);
+	scoreboard_showscores_force = (f & BIT(0));
 
-	if(f & 2)
+	if(f & BIT(1))
 	{
 		newspectatee_status = ReadByte();
 		if(newspectatee_status == player_localnum + 1)
@@ -497,9 +507,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	else
 		newspectatee_status = 0;
 
-	spectatorbutton_zoom = (f & 4);
+	spectatorbutton_zoom = (f & BIT(2));
 
-	if(f & 16)
+	if(f & BIT(4))
 	{
 		num_spectators = ReadByte();
 
@@ -656,6 +666,9 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 
 void Spawn_Draw(entity this)
 {
+	if(this.alpha <= 0)
+		return;
+
 	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
@@ -664,7 +677,14 @@ void Spawn_PreDraw(entity this)
 	float alph;
 	vector org = getpropertyvec(VF_ORIGIN);
 	if(this.fade_start)
-		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	{
+		if(vdist(org - this.origin, >, this.fade_end))
+			alph = 0; // save on some processing
+		else if(vdist(org - this.origin, <, this.fade_start))
+			alph = 1; // more processing saved
+		else
+			alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	}
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
@@ -806,7 +826,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	{
 		if (t != this.enttype || isnew)
 		{
-			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove(this);
 			clearentity(this);
 			isnew = true;
@@ -816,7 +836,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	{
 		if (!isnew)
 		{
-			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", etof(this), this.entnum, t);
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)", etof(this), this.entnum, t);
 			isnew = true;
 		}
 	}
@@ -826,7 +846,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	FOREACH(LinkedEntities, it.m_id == t, {
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
-            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
 		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
@@ -853,7 +873,7 @@ void Ent_Remove(entity this)
 
 	if(this.snd_looping > 0)
 	{
-		sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
+		sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
 		this.snd_looping = 0;
 	}
 
@@ -866,7 +886,7 @@ void Ent_Remove(entity this)
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
 void CSQC_Ent_Remove(entity this)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
 		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?");
@@ -888,20 +908,20 @@ void Gamemode_Init()
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")", strMessage);
 	localcmd(strMessage);
 }
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")", strMessage);
 	print(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
 	centerprint_hud(strMessage);
 }
 
@@ -915,12 +935,12 @@ bool CSQC_Parse_TempEntity()
 
 	FOREACH(TempEntities, it.m_id == nTEID, {
 		if (autocvar_developer_csqcentities)
-			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
+			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)", it.netname, nTEID);
 		return it.m_read(NULL, NULL, true);
 	});
 
 	if (autocvar_developer_csqcentities)
-		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
+		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d", nTEID);
 
 	// No special logic for this temporary entity; return 0 so the engine can handle it
 	return false;
@@ -975,6 +995,7 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	forcefog = strzone(ReadString());
 
 	armorblockpercent = ReadByte() / 255.0;
+	damagepush_speedfactor = ReadByte() / 255.0;
 
 	serverflags = ReadByte();
 
@@ -1033,9 +1054,18 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_checkpoint = ReadByte();
 			race_time = ReadInt24_t();
 			race_previousbesttime = ReadInt24_t();
+			race_mypreviousbesttime = ReadInt24_t();
 			if(race_previousbestname)
 				strunzone(race_previousbestname);
-			race_previousbestname = strzone(ReadString());
+			string pbestname = ReadString();
+			if(autocvar_cl_race_cptimes_onlyself)
+			{
+				race_previousbesttime = race_mypreviousbesttime;
+				race_mypreviousbesttime = 0;
+				race_previousbestname = strzone("");
+			}
+			else
+				race_previousbestname = strzone(pbestname);
 
 			race_checkpointtime = time;
 
@@ -1044,7 +1074,6 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_penaltyaccumulator = 0;
 				race_laptime = time; // valid
 			}
-
 			break;
 
 		case RACE_NET_CHECKPOINT_CLEAR:
@@ -1060,9 +1089,19 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_nextcheckpoint = ReadByte();
 
 			race_nextbesttime = ReadInt24_t();
+			if(b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING) // not while spectating (matches server)
+				race_mybesttime = ReadInt24_t();
 			if(race_nextbestname)
 				strunzone(race_nextbestname);
-			race_nextbestname = strzone(ReadString());
+			string newname = ReadString();
+			if(autocvar_cl_race_cptimes_onlyself && b != RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING)
+			{
+				race_nextbesttime = race_mybesttime;
+				race_mybesttime = 0;
+				race_nextbestname = strzone("");
+			}
+			else
+				race_nextbestname = strzone(newname);
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE:
@@ -1074,7 +1113,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_mycheckpointlapsdelta -= 256;
 			if(race_mycheckpointenemy)
 				strunzone(race_mycheckpointenemy);
-			race_mycheckpointenemy = strzone(ReadString());
+			int who = ReadByte();
+			if(who)
+				race_mycheckpointenemy = strzone(entcs_GetName(who - 1));
+			else
+				race_mycheckpointenemy = strzone(""); // TODO: maybe string_null works fine here?
 			break;
 
 		case RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT:
@@ -1086,7 +1129,11 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				race_othercheckpointlapsdelta -= 256;
 			if(race_othercheckpointenemy)
 				strunzone(race_othercheckpointenemy);
-			race_othercheckpointenemy = strzone(ReadString());
+			int what = ReadByte();
+			if(what)
+				race_othercheckpointenemy = strzone(entcs_GetName(what - 1));
+			else
+				race_othercheckpointenemy = strzone(""); // TODO: maybe string_null works fine here?
 			break;
 
 		case RACE_NET_PENALTY_RACE:
@@ -1232,7 +1279,7 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 	keys = db_get(binddb, command);
 	if (keys == "")
 	{
-		bool joy_detected = cvar("joy_detected");
+		bool joy_active = cvar("joy_active");
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
 		{
@@ -1240,7 +1287,7 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 			if(k != -1)
 			{
 				string key = keynumtostring(k);
-				if(!joy_detected && substring(key, 0, 3) == "JOY")
+				if(!joy_active && substring(key, 0, 3) == "JOY")
 					continue;
 
 				if (keys == "")

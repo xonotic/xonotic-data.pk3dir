@@ -94,6 +94,7 @@
 		PERSON(blkrbt) \
 		PERSON(chooksta) \
 		PERSON(Independent.nu) \
+		PERSON(Lea "TheAudioMonkey" Edwards) \
 		PERSON([master]mind) \
 		PERSON(Merlijn Hofstra) \
 		PERSON(Mick Rippon) \
@@ -139,7 +140,8 @@
 		NL() \
 	NL() \
 	TITLE(_("Other Active Contributors")) \
-		PERSON(Erik "Ablu" Schilling) \
+		PERSON(Jeff) \
+		PERSON(Lyberta) \
 		PERSON(Mircea "Taoki" Kitsune) \
 		PERSON(Penguinum) \
 	NL() \
@@ -182,6 +184,7 @@
 		NL() \
 		FUNCTION(_("Dutch")) \
 			PERSON(Alexander "freefang" van Dam) \
+			PERSON(Joeke "Mappack" de Graaf) \
 			PERSON(Jonathan "Jonakeys" van der Steege) \
 			PERSON(PinkRobot) \
 			PERSON(vegiburger) \
@@ -225,6 +228,9 @@
 			PERSON(Ruszkai "CuBe0wL" Ákos) \
 			PERSON(xaN1C4n3) \
 		NL() \
+		FUNCTION(_("Irish")) \
+			PERSON(Kevin "kscanne" Scannell) \
+		NL() \
 		FUNCTION(_("Italian")) \
 			PERSON(Antonio "terencehill" Piu) \
 			PERSON(Felice "MaidenBeast" Sallustio) \
@@ -244,6 +250,7 @@
 			PERSON(Amadeusz "amade/proraide" Sławiński) \
 			PERSON(Artur "artur9010" Motyka) \
 			PERSON(Jakub "KubeQ11" Pędziszewski) \
+			PERSON(Kriss7475) \
 		NL() \
 		FUNCTION(_("Portuguese")) \
 			PERSON(Ivan Paulos "greylica" Tomé) \
@@ -269,8 +276,12 @@
 			PERSON(Nikoli) \
 			PERSON(Sergej "Clearness High" Lutsyk) \
 		NL() \
+		FUNCTION(_("Scottish Gaelic")) \
+			PERSON_("GunChleoc") \
+		NL() \
 		FUNCTION(_("Serbian")) \
 			PERSON_("Саша \"salepetronije\" Петровић") \
+			PERSON(Marko M. Kostić) \
 			PERSON(Pendulla) \
 			PERSON(Rafael "Ristovski") \
 		NL() \
@@ -283,6 +294,7 @@
 			PERSON(roader_gentoo) \
 			PERSON(Rodrigo Mouton Laudin) \
 			PERSON(SouL) \
+			PERSON(Starfire24680) \
 		NL() \
 		FUNCTION(_("Swedish")) \
 			PERSON(Karl-Oskar "machine" Rikås) \
@@ -317,6 +329,7 @@
 		PERSON(Edgenetwork) \
 		PERSON(Edward "Ed" Holness) \
 		PERSON(Eric "Munyul Verminard" Sambach) \
+		PERSON(Erik "Ablu" Schilling) \
 		PERSON(Fabien "H. Reaper" Tschirhart) \
 		PERSON(Florian Paul "lda17h" Schmidt) \
 		PERSON(FrikaC) \

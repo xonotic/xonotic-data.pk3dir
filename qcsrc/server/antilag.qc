@@ -2,6 +2,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
+    #include <server/defs.qh>
     #include <common/state.qh>
     #include <common/vehicles/all.qh>
     #include "antilag.qh"

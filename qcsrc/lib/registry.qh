@@ -22,16 +22,22 @@
  */
 #define REGISTRY(id, max) \
 	void Register##id(); \
+	[[accumulate]] void REGISTRY_DEPENDS_(id) {} \
 	[[accumulate]] REGISTRY_BEGIN(id) {} \
 	[[accumulate]] REGISTRY_END(id) {} \
 	void _Register##id() {} \
-	void Register##id() { REGISTRY_BEGIN_(id); _Register##id(); REGISTRY_END_(id); } \
+	int id##_state = 0; \
+	void Register##id() { if (id##_state) return; id##_state = 1; REGISTRY_DEPENDS_(id); REGISTRY_BEGIN_(id); _Register##id(); id##_state = 2; REGISTRY_END_(id); } \
 	const int id##_MAX = max; \
 	int id##_COUNT; \
 	noref entity id##_first, id##_last; \
 	_R_MAP(_##id, id##_MAX); \
 	SHUTDOWN(id) { _R_DEL(_##id); } \
 	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+
+/** Add registry dependencies to a registry */
+#define REGISTRY_DEPENDS(id, dep) void Register##dep(); void REGISTRY_DEPENDS_(id) { Register##dep(); }
+#define REGISTRY_DEPENDS_(id) Register##id##_Depends()
 
 /** Called before initializing a registry. */
 #define REGISTRY_BEGIN(id) [[accumulate]] void REGISTRY_BEGIN_(id) { noref void() f = Register##id; } void REGISTRY_BEGIN_(id)
@@ -140,7 +146,9 @@ REGISTRY(Registries, BITS(8))
 
 #define REGISTRY_HASH(id) Registry_hash_##id
 
+ERASEABLE
 [[accumulate]] void Registry_check(string r, string server) { }
+ERASEABLE
 [[accumulate]] void Registry_send_all() { }
 
 #ifdef SVQC
@@ -187,5 +195,6 @@ void Registry_send(string id, string hash);
 	ENDCLASS(id##Registry) \
 	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry)); \
 	METHOD(id##Registry, m_reload, void()) { \
+	    id##_state = 0; \
 		Register##id(); \
 	}

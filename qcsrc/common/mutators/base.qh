@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef CSQC
+#include <client/main.qh>
+#endif
+
 const int CBC_ORDER_FIRST = 1;
 const int CBC_ORDER_LAST = 2;
 const int CBC_ORDER_EXCLUSIVE = 3;
@@ -162,10 +166,10 @@ ENDCLASS(Mutator)
 
 REGISTRY(Mutators, BITS(7))
 #define Mutators_from(i) _Mutators_from(i, NULL)
-Mutator loaded_mutators[Mutators_MAX];
 bool Mutator_Add(Mutator mut);
 void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
+.bool m_added;
 
 #ifdef GAMEQC
 /** server mutators activate corresponding client mutators for all clients */
@@ -185,9 +189,9 @@ bool Mutator_SendEntity(entity this, entity to, int sf)
 void NET_Mutator_Remove(entity this)
 {
     string s = this.netname;
-    WITH(bool, mutator_log, true, LAMBDA(
+    WITH(bool, mutator_log, true, {
         FOREACH(Mutators, it.registered_id == s, Mutator_Remove(it));
-    ));
+    });
 }
 NET_HANDLE(Mutator, bool isNew)
 {
@@ -199,9 +203,9 @@ NET_HANDLE(Mutator, bool isNew)
         make_pure(this);
         this.entremove = NET_Mutator_Remove;
         int added = 0;
-        WITH(bool, mutator_log, true, LAMBDA(
+        WITH(bool, mutator_log, true, {
             FOREACH(Mutators, it.registered_id == s, { Mutator_Add(it); ++added; });
-        ));
+        });
         if (added > 1) LOG_WARNF("Added more than one mutator for %s", s);
     }
 }
@@ -211,18 +215,10 @@ NET_HANDLE(Mutator, bool isNew)
 
 bool Mutator_Add(Mutator mut)
 {
-    int j = -1;
-    for (int i = 0; i < Mutators_MAX; ++i) {
-        if (loaded_mutators[i] == mut)
-            return true; // already added
-        if (!(loaded_mutators[i]))
-            j = i;
-    }
-    if (j < 0) {
-        backtrace("WARNING: too many mutators, cannot add any more\n");
-        return false;
-    }
-    loaded_mutators[j] = mut;
+    if(mut.m_added)
+        return true; // already added
+
+    mut.m_added = true;
     mutatorfunc_t func = mut.mutatorfunc;
     if (!func(MUTATOR_ADDING)) {
         // good
@@ -242,15 +238,13 @@ bool Mutator_Add(Mutator mut)
 
 void Mutator_Remove(Mutator mut)
 {
-    int i;
-    for (i = 0; i < Mutators_MAX; ++i)
-        if (loaded_mutators[i] == mut)
-            break;
-    if (i >= Mutators_MAX) {
+    if(!mut.m_added)
+    {
         backtrace("WARNING: removing not-added mutator\n");
         return;
     }
-    loaded_mutators[i] = NULL;
+
+    mut.m_added = false;
     mutatorfunc_t func = mut.mutatorfunc;
     if (func(MUTATOR_REMOVING)) {
         // baaaaad
@@ -286,6 +280,20 @@ STATIC_INIT_LATE(Mutators) {
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)
 #define MUTATOR_ONREMOVE                if (mode == MUTATOR_REMOVING)
 #define MUTATOR_ONROLLBACK_OR_REMOVE    if (mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
+
+#define MUTATOR_STATIC() MACRO_BEGIN { \
+    MUTATOR_ONADD { \
+        /* game loads at time 1 */ \
+        if (time > 1) { \
+            error("This is a game type and it cannot be added at runtime."); \
+        } \
+    } \
+	MUTATOR_ONREMOVE { \
+		LOG_INFO("This is a game type and it cannot be removed at runtime."); \
+		return -1; \
+	} \
+} MACRO_END
+
 #define MUTATOR_ADD(name)               Mutator_Add(MUTATOR_##name)
 #define MUTATOR_REMOVE(name)            Mutator_Remove(MUTATOR_##name)
 #define MUTATOR_RETURNVALUE             CallbackChain_ReturnValue
@@ -311,7 +319,7 @@ STATIC_INIT_LATE(Mutators) {
 #define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN {                     \
     MUTATOR_ONADD {                                                     \
         if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
-            LOG_INFO("HOOK FAILED: ", #cb, ":", #func, "\n");           \
+            LOG_INFO("HOOK FAILED: ", #cb, ":", #func);                 \
             return true;                                                \
         }                                                               \
     }                                                                   \

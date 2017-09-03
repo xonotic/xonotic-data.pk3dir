@@ -1,6 +1,7 @@
 #include "sv_superspec.qh"
 
-REGISTER_MUTATOR(superspec, cvar("g_superspectate"));
+string autocvar_g_superspectate;
+REGISTER_MUTATOR(superspec, expr_evaluate(autocvar_g_superspectate));
 
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL(ent) ((edict_num(1) == (ent)) ? true : false)
@@ -103,7 +104,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		if(!IS_SPEC(it) && !IS_OBSERVER(it))
 			continue;
 		if(it.superspec_flags & SSF_ITEMMSG)
@@ -143,7 +144,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 				}
 			}
 		}
-	));
+	});
 
 	return MUT_ITEMTOUCH_CONTINUE;
 }
@@ -345,7 +346,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followpowerup")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && (it.strength_finished > time || it.invincible_finished > time), LAMBDA(return superspec_Spectate(player, it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && (it.strength_finished > time || it.invincible_finished > time), { return superspec_Spectate(player, it); });
 
 		superspec_msg("", "", player, "No active powerup\n", 1);
 		return true;
@@ -353,7 +354,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followstrength")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it.strength_finished > time, LAMBDA(return superspec_Spectate(player, it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && it.strength_finished > time, { return superspec_Spectate(player, it); });
 
 		superspec_msg("", "", player, "No active Strength\n", 1);
 		return true;
@@ -361,7 +362,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followshield")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it.invincible_finished > time, LAMBDA(return superspec_Spectate(player, it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && it.invincible_finished > time, { return superspec_Spectate(player, it); });
 
 		superspec_msg("", "", player, "No active Shield\n", 1);
 		return true;
@@ -440,7 +441,7 @@ MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	FOREACH_CLIENT(IS_SPEC(it), LAMBDA(
+	FOREACH_CLIENT(IS_SPEC(it), {
 		if(it.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && it.enemy == frag_target)
 		{
 			if(it.autospec_flags & ASF_SHOWWHAT)
@@ -448,7 +449,7 @@ MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 
 			superspec_Spectate(it, frag_attacker);
 		}
-	));
+	});
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ClientDisconnect)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <server/defs.qh>
+
 #include <common/t_items.qh>
 
 #include "mutators/events.qh"
@@ -38,11 +40,11 @@ void play2all(string samp);
 
 void play2team(float t, string filename);
 
-void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name);
+void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name);
 
-float spamsound(entity e, float chan, string samp, float vol, float _atten);
+float spamsound(entity e, float chan, Sound samp, float vol, float _atten);
 
-void GetCvars_handleString(entity this, string thisname, float f, .string field, string name);
+void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name);
 
 void precache_all_playermodels(string pattern);
 
@@ -73,7 +75,7 @@ void GameLogInit();
 
 void GameLogClose();
 
-void GetCvars(entity this, float f);
+void GetCvars(entity this, entity store, int f);
 
 string GetMapname();
 
@@ -306,7 +308,7 @@ void readlevelcvars()
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(it.wr_init(it)));
+	FOREACH(Weapons, it != WEP_Null, { it.wr_init(it); });
 
 	readplayerstartcvars();
 }
@@ -333,3 +335,6 @@ entity initialize_entity_first;
 
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(entity this) func, float order);
+
+IntrusiveList g_ctrace_changed;
+STATIC_INIT(g_ctrace_changed) { g_ctrace_changed = IL_NEW(); }

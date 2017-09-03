@@ -53,21 +53,21 @@ void PingPLReport_Think(entity this)
 	this.nextthink = time + delta;
 
 	e = edict_num(this.cnt + 1);
-	if(IS_REAL_CLIENT(e))
+	if(IS_CLIENT(e) && IS_REAL_CLIENT(e))
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, this.cnt);
-		WriteShort(MSG_BROADCAST, bound(1, e.ping, 65535));
-		WriteByte(MSG_BROADCAST, min(ceil(e.ping_packetloss * 255), 255));
-		WriteByte(MSG_BROADCAST, min(ceil(e.ping_movementloss * 255), 255));
+		WriteShort(MSG_BROADCAST, bound(1, CS(e).ping, 65535));
+		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_packetloss * 255), 255));
+		WriteByte(MSG_BROADCAST, min(ceil(CS(e).ping_movementloss * 255), 255));
 
 		// record latency times for clients throughout the match so we can report it to playerstats
-		if(time > (e.latency_time + LATENCY_THINKRATE))
+		if(time > (CS(e).latency_time + LATENCY_THINKRATE))
 		{
-			e.latency_sum += e.ping;
-			e.latency_cnt += 1;
-			e.latency_time = time;
-			//print("sum: ", ftos(e.latency_sum), ", cnt: ", ftos(e.latency_cnt), ", avg: ", ftos(e.latency_sum / e.latency_cnt), ".\n");
+			CS(e).latency_sum += CS(e).ping;
+			CS(e).latency_cnt += 1;
+			CS(e).latency_time = time;
+			//print("sum: ", ftos(CS(e).latency_sum), ", cnt: ", ftos(CS(e).latency_cnt), ", avg: ", ftos(CS(e).latency_sum / CS(e).latency_cnt), ".\n");
 		}
 	}
 	else
@@ -135,7 +135,7 @@ void GotoFirstMap(entity this)
 	else
 	{
 		this.nextthink = time + 1;
-		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...\n");
+		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...");
 	}
 }
 
@@ -176,7 +176,6 @@ void cvar_changes_init()
 		BADPREFIX("cvar_check_");
 		BADCVAR("gamecfg");
 		BADCVAR("g_configversion");
-		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
 		BADCVAR("sv_mapformat_is_quake2");
 		BADCVAR("sv_mapformat_is_quake3");
@@ -211,6 +210,8 @@ void cvar_changes_init()
 		BADCVAR("mastervolume");
 		BADCVAR("volume");
 		BADCVAR("bgmvolume");
+		BADCVAR("in_pitch_min");
+		BADCVAR("in_pitch_max");
 
 		// private
 		BADCVAR("developer");
@@ -237,6 +238,7 @@ void cvar_changes_init()
 		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("log_file");
+		BADPREFIX("quit_");
 		BADPREFIX("rcon_");
 		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
@@ -250,6 +252,9 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
+		BADCVAR("sv_muteban_list");
+		BADCVAR("sv_allow_customplayermodels_idlist");
+		BADCVAR("sv_allow_customplayermodels_speciallist");
 
 		// mapinfo
 		BADCVAR("fraglimit");
@@ -267,6 +272,7 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
+		BADCVAR("g_invasion_type");
 		BADCVAR("g_jailbreak");
 		BADCVAR("g_jailbreak_teams");
 		BADCVAR("g_keepaway");
@@ -279,6 +285,7 @@ void cvar_changes_init()
 		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
+		BADCVAR("g_runematch");
 		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
@@ -314,6 +321,7 @@ void cvar_changes_init()
 
 		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
+		BADCVAR("condump_stripcolors");
 		BADCVAR("gameversion");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
@@ -333,7 +341,6 @@ void cvar_changes_init()
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keyhunt_point_leadlimit");
-		BADCVAR("g_maplist_selectrandom");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
@@ -345,6 +352,8 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_damagetext");
+		BADCVAR("sv_db_saveasdump");
 		BADCVAR("sv_intermission_cdtrack");
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
@@ -356,10 +365,11 @@ void cvar_changes_init()
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
-		BADPREFIX("g_maplist_votable_");
+		BADPREFIX("g_maplist_");
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
+		BADPREFIX("notification_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
@@ -394,6 +404,7 @@ void cvar_changes_init()
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
+		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_domination_teams_override");
 		BADCVAR("g_freezetag_teams_override");
@@ -404,13 +415,6 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_teams_override");
 		BADCVAR("g_lms_lives_override");
 		BADCVAR("g_maplist");
-		BADCVAR("g_maplist_check_waypoints");
-		BADCVAR("g_maplist_mostrecent_count");
-		BADCVAR("g_maplist_shuffle");
-		BADCVAR("g_maplist_votable");
-		BADCVAR("g_maplist_votable_abstain");
-		BADCVAR("g_maplist_votable_nodetail");
-		BADCVAR("g_maplist_votable_suggestions");
 		BADCVAR("g_maxplayers");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
@@ -460,6 +464,7 @@ void cvar_changes_init()
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
+		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
 		// mutators that announce themselves properly to the server browser
@@ -516,7 +521,7 @@ void detect_maptype()
 		o.y += random() * (world.maxs.y - world.mins.y);
 		o.z += random() * (world.maxs.z - world.mins.z);
 
-		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, NULL);
+		tracebox(o, STAT(PL_MIN), STAT(PL_MAX), o - '0 0 32768', MOVE_WORLDONLY, NULL);
 		if(trace_fraction == 1)
 			continue;
 
@@ -527,7 +532,7 @@ void detect_maptype()
 			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, NULL);
 	if(trace_fraction == 1)
 		continue;
-			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos), "\n");
+			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos));
 		}
 
 		break;
@@ -592,18 +597,6 @@ void __init_dedicated_server_shutdown() {
 	MapInfo_Shutdown();
 }
 
-void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
-{
-	if(!autocvar_g_campaign)
-	{
-		if(fraglimit_override >= 0) cvar_set("fraglimit", ftos(fraglimit_override));
-		if(timelimit_override >= 0) cvar_set("timelimit", ftos(timelimit_override));
-		if(leadlimit_override >= 0) cvar_set("leadlimit", ftos(leadlimit_override));
-		if(qualifying_override >= 0) cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
-	}
-	limits_are_set = true;
-}
-
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
@@ -648,7 +641,7 @@ spawnfunc(worldspawn)
 				fclose(sentinel);
 				if (switchversion != "" && switchversion != WATERMARK)
 				{
-					LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
+					LOG_INFOF("Switching progs: " WATERMARK " -> %s", switchversion);
 					// if it doesn't exist, assume either:
 					//   a) the current program was overwritten
 					//   b) this is a client only update
@@ -669,7 +662,7 @@ spawnfunc(worldspawn)
 		}
 		if (wantrestart)
 		{
-			LOG_INFOF("Restart requested\n");
+			LOG_INFOF("Restart requested");
 			changelevel(mapname);
 			// let initialization continue, shutdown depends on it
 		}
@@ -754,8 +747,7 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 	GrappleHookInit();
 
-	if(!limits_are_set)
-		SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
+    GameRules_limit_fallbacks();
 
 	if(warmup_limit == 0)
 		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
@@ -841,23 +833,23 @@ spawnfunc(worldspawn)
 					continue;
 				if(argv(0) == "cd")
 				{
-					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:\n");
-					LOG_INFO("  cdtrack ", argv(2), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:");
+					LOG_INFO("  cdtrack ", argv(2));
 				}
 				else if(argv(0) == "fog")
 				{
-					LOG_INFO("Found ^1UNSUPPORTED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:\n");
-					LOG_INFO("  \"fog\" \"", s, "\"\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:");
+					LOG_INFO("  \"fog\" \"", s, "\"");
 				}
 				else if(argv(0) == "set")
 				{
-					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
-					LOG_INFO("  clientsettemp_for_type all ", argv(1), " ", argv(2), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:");
+					LOG_INFO("  clientsettemp_for_type all ", argv(1), " ", argv(2));
 				}
 				else if(argv(0) != "//")
 				{
-					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
-					LOG_INFO("  clientsettemp_for_type all ", argv(0), " ", argv(1), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:");
+					LOG_INFO("  clientsettemp_for_type all ", argv(0), " ", argv(1));
 				}
 			}
 			fclose(fd);
@@ -944,6 +936,7 @@ spawnfunc(worldspawn)
 	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
+	__spawnfunc_spawn_all();
 }
 
 spawnfunc(light)
@@ -1326,8 +1319,8 @@ void IntermissionThink(entity this)
 {
 	FixIntermissionClient(this);
 
-	float server_screenshot = (autocvar_sv_autoscreenshot && this.cvar_cl_autoscreenshot);
-	float client_screenshot = (this.cvar_cl_autoscreenshot == 2);
+	float server_screenshot = (autocvar_sv_autoscreenshot && CS(this).cvar_cl_autoscreenshot);
+	float client_screenshot = (CS(this).cvar_cl_autoscreenshot == 2);
 
 	if( (server_screenshot || client_screenshot)
 		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
@@ -1433,7 +1426,7 @@ void DumpStats(float final)
 	s = strcat(s, GetGametype(), "_", GetMapname(), ":", ftos(rint(time)));
 
 	if(to_console)
-		LOG_INFO(s, "\n");
+		LOG_INFO(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 
@@ -1449,33 +1442,33 @@ void DumpStats(float final)
 
 	s = strcat(":labels:player:", GetPlayerScoreString(NULL, 0));
 	if(to_console)
-		LOG_INFO(s, "\n");
+		LOG_INFO(s);
 	if(to_eventlog)
 		GameLogEcho(s);
 	if(to_file)
 		fputs(file, strcat(s, "\n"));
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), {
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
-		s = strcat(s, ftos(rint(time - it.jointime)), ":");
+		s = strcat(s, ftos(rint(time - CS(it).jointime)), ":");
 		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");
 
 		if(to_console)
-			LOG_INFO(s, playername(it, false), "\n");
+			LOG_INFO(s, playername(it, false));
 		if(to_eventlog)
 			GameLogEcho(strcat(s, ftos(it.playerid), ":", playername(it, false)));
 		if(to_file)
 			fputs(file, strcat(s, playername(it, false), "\n"));
-	));
+	});
 
 	if(teamplay)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
-			LOG_INFO(s, "\n");
+			LOG_INFO(s);
 		if(to_eventlog)
 			GameLogEcho(s);
 		if(to_file)
@@ -1486,7 +1479,7 @@ void DumpStats(float final)
 			s = strcat(":teamscores:see-labels:", GetTeamScoreString(i, 0));
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
-				LOG_INFO(s, "\n");
+				LOG_INFO(s);
 			if(to_eventlog)
 				GameLogEcho(s);
 			if(to_file)
@@ -1495,7 +1488,7 @@ void DumpStats(float final)
 	}
 
 	if(to_console)
-		LOG_INFO(":end\n");
+		LOG_INFO(":end");
 	if(to_eventlog)
 		GameLogEcho(":end");
 	if(to_file)
@@ -1526,9 +1519,9 @@ void FixIntermissionClient(entity e)
 		{
 			stuffcmd(e, "\nscr_printspeed 1000000\n");
 			RandomSelection_Init();
-			FOREACH_WORD(autocvar_sv_intermission_cdtrack, true, LAMBDA(
+			FOREACH_WORD(autocvar_sv_intermission_cdtrack, true, {
 				RandomSelection_AddString(it, 1, 1);
-			));
+			});
 			if (RandomSelection_chosen_string != "")
 			{
 				stuffcmd(e, sprintf("\ncd loop %s\n", RandomSelection_chosen_string));
@@ -1578,11 +1571,11 @@ void NextLevel()
 
 	GameLogClose();
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		FixIntermissionClient(it);
 		if(it.winning)
 			bprint(playername(it, false), " ^7wins.\n");
-	));
+	});
 
 	target_music_kill();
 
@@ -1592,25 +1585,6 @@ void NextLevel()
 	MUTATOR_CALLHOOK(MatchEnd);
 
 	localcmd("\nsv_hook_gameend\n");
-}
-
-/*
-============
-CheckRules_Player
-
-Exit deathmatch games upon conditions
-============
-*/
-void CheckRules_Player(entity this)
-{
-	if (game_stopped) // someone else quit the game already
-		return;
-
-	if(!IS_DEAD(this))
-		this.play_time += frametime;
-
-	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
-	//   (div0: and that in CheckRules_World please)
 }
 
 
@@ -1675,22 +1649,22 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = (it.(field) == value)));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = (it.(field) == value); });
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(it.(field) == value)
 			it.winning = 1;
-	));
+	});
 }
 
 // clear the .winning flags
 void ClearWinners()
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = 0));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.winning = 0; });
 }
 
 void ShuffleMaplist()
@@ -1783,7 +1757,7 @@ float WinningCondition_RanOutOfSpawns()
 
 	team1_score = team2_score = team3_score = team4_score = 0;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
 		switch(it.team)
 		{
 			case NUM_TEAM_1: team1_score = 1; break;
@@ -1791,7 +1765,7 @@ float WinningCondition_RanOutOfSpawns()
 			case NUM_TEAM_3: team3_score = 1; break;
 			case NUM_TEAM_4: team4_score = 1; break;
 		}
-	));
+	});
 
 	IL_EACH(g_spawnpoints, true,
 	{
@@ -1917,13 +1891,13 @@ void CheckRules_World()
 				float playerswithlaps;
 				float readyplayers;
 				totalplayers = playerswithlaps = readyplayers = 0;
-				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it), {
 					++totalplayers;
-					if(PlayerScore_Add(it, SP_RACE_FASTEST, 0))
+					if(GameRules_scoring_add(it, RACE_FASTEST, 0))
 						++playerswithlaps;
 					if(it.ready)
 						++readyplayers;
-				));
+				});
 
 				// at least 2 of the players have completed a lap: start the RACE
 				// otherwise, the players should end the qualifying on their own
@@ -2143,17 +2117,17 @@ float RedirectionThink()
 	redirection_nextthink = time + 1;
 
 	clients_found = 0;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		// TODO add timer
-		LOG_INFO("Redirecting: sending connect command to ", it.netname, "\n");
+		LOG_INFO("Redirecting: sending connect command to ", it.netname);
 		if(redirection_target == "self")
 			stuffcmd(it, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
 		else
 			stuffcmd(it, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
-	));
+	});
 
-	LOG_INFO("Redirecting: ", ftos(clients_found), " clients left.\n");
+	LOG_INFO("Redirecting: ", ftos(clients_found), " clients left.");
 
 	if(time > redirection_timeout || clients_found == 0)
 		localcmd("\nwait; wait; wait; quit\n");
@@ -2218,7 +2192,7 @@ void Shutdown()
 	}
 	else if(world_initialized == 0)
 	{
-		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data\n");
+		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data");
 	}
 	else
 	{

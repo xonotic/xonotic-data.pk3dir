@@ -64,10 +64,16 @@ MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
     /** attacker    	*/ i(entity, MUTATOR_ARGV_1_entity) \
     /** target    		*/ i(entity, MUTATOR_ARGV_2_entity) \
     /** deathtype     	*/ i(float,  MUTATOR_ARGV_3_float) \
-    /** damage          */ i(float,  MUTATOR_ARGV_4_float) \
+    /** damage         */ i(float,  MUTATOR_ARGV_4_float) \
     /** damage  		*/ o(float,  MUTATOR_ARGV_4_float) \
     /**/
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
+
+/** called after a player died. */
+#define EV_PlayerDied(i, o) \
+    /** player    		*/ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerDied, EV_PlayerDied);
 
 /** allows overriding the frag centerprint messages */
 #define EV_FragCenterMessage(i, o) \
@@ -85,14 +91,6 @@ MUTATOR_HOOKABLE(FragCenterMessage, EV_FragCenterMessage);
     /** attacker */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
-
-/** called when a weapon sound is about to be played, allows custom paths etc. */
-#define EV_WeaponSound(i, o) \
-    /** sound       */ i(string, MUTATOR_ARGV_0_string) \
-    /** output      */ i(string, MUTATOR_ARGV_1_string) \
-    /**/               o(string, MUTATOR_ARGV_1_string) \
-    /**/
-MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
 
 /** called when an item model is about to be set, allows custom paths etc. */
 #define EV_ItemModel(i, o) \
@@ -622,6 +620,38 @@ enum {
 	MUT_ITEMTOUCH_PICKUP // return this flag to have the item "picked up" and taken even after mutator handled it
 };
 
+/** Called when the amount of entity resources changes. Can be used to override
+resource limit. */
+#define EV_GetResourceLimit(i, o) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
+	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
+	/** limit */          i(float, MUTATOR_ARGV_2_float) \
+	/**/                  o(float, MUTATOR_ARGV_2_float) \
+	/**/
+MUTATOR_HOOKABLE(GetResourceLimit, EV_GetResourceLimit);
+
+/** Called when the amount of resource of an entity changes. See RESOURCE_*
+constants for resource types. Return true to forbid the change. */
+#define EV_SetResourceAmount(i, o) \
+	/** checked entity */ i(entity, MUTATOR_ARGV_0_entity) \
+	/** resource type */  i(int, MUTATOR_ARGV_1_int) \
+	/**/                  o(int, MUTATOR_ARGV_1_int) \
+	/** amount */         i(float, MUTATOR_ARGV_2_float) \
+	/**/                  o(float, MUTATOR_ARGV_2_float) \
+	/**/
+MUTATOR_HOOKABLE(SetResourceAmount, EV_SetResourceAmount);
+
+/** Called when entity is being given some resource. See RESOURCE_* constants
+for resource types. Return true to forbid giving. */
+#define EV_GiveResource(i, o) \
+	/** receiver */      i(entity, MUTATOR_ARGV_0_entity) \
+	/** resource type */ i(int, MUTATOR_ARGV_1_int) \
+	/**/                 o(int, MUTATOR_ARGV_1_int) \
+	/** amount */        i(float, MUTATOR_ARGV_2_float) \
+	/**/                 o(float, MUTATOR_ARGV_2_float) \
+	/**/
+MUTATOR_HOOKABLE(GiveResource, EV_GiveResource);
+
 /** called at when a player connect */
 #define EV_ClientConnect(i, o) \
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -803,7 +833,7 @@ MUTATOR_HOOKABLE(CheckRules_World, EV_CheckRules_World);
 MUTATOR_HOOKABLE(WantWeapon, EV_WantWeapon);
 
 #define EV_AddPlayerScore(i, o) \
-    /** score field */  i(PlayerScoreField, MUTATOR_ARGV_0_entity) \
+    /** score field */  i(entity, MUTATOR_ARGV_0_entity) \
     /** score */        i(float, MUTATOR_ARGV_1_float) \
     /**/                o(float, MUTATOR_ARGV_1_float) \
     /** player */       i(entity, MUTATOR_ARGV_2_entity) \

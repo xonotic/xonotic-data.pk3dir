@@ -231,16 +231,13 @@ string MapInfo_BSPName_ByID(float i)
 
 string unquote(string s)
 {
-	float i, j, l;
-	l = strlen(s);
-	j = -1;
-	for(i = 0; i < l; ++i)
+	float l = strlen(s);
+	for(float i = 0; i < l; ++i)
 	{
-		string ch;
-		ch = substring(s, i, 1);
-		if(ch != " ") if(ch != "\"")
+		string ch = substring(s, i, 1);
+		if((ch != " ") && (ch != "\""))
 		{
-			for(j = strlen(s) - i - 1; j > 0; --j)
+			for(float j = l - i - 1; j > 0; --j)
 			{
 				ch = substring(s, i+j, 1);
 				if(ch != " ") if(ch != "\"")
@@ -286,7 +283,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	}
 	if(fh < 0)
 		return 0;
-	LOG_INFO("Analyzing ", fn, " to generate initial mapinfo\n");
+	LOG_INFO("Analyzing ", fn, " to generate initial mapinfo");
 
 	inWorldspawn = 2;
 	MapInfo_Map_flags = 0;
@@ -1193,7 +1190,7 @@ void MapInfo_LoadMap(string s, float reinit)
 	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH.m_flags);
 	//}
 
-	LOG_INFO("Switching to map ", s, "\n");
+	LOG_INFO("Switching to map ", s);
 
 	cvar_settemp_restore();
 	if(reinit)
@@ -1205,14 +1202,13 @@ void MapInfo_LoadMap(string s, float reinit)
 string MapInfo_ListAllowedMaps(Gametype type, float pRequiredFlags, float pForbiddenFlags)
 {
 	string out;
-	float i;
 
 	// to make absolutely sure:
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(type, MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);
 
 	out = "";
-	for(i = 0; i < MapInfo_count; ++i)
+	for(float i = 0; i < MapInfo_count; ++i)
 		out = strcat(out, " ", _MapInfo_GlobItem(MapInfo_FilterList_Lookup(i)));
 	return substring(out, 1, strlen(out) - 1);
 }
@@ -1220,14 +1216,13 @@ string MapInfo_ListAllowedMaps(Gametype type, float pRequiredFlags, float pForbi
 string MapInfo_ListAllAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
 {
 	string out;
-	float i;
 
 	// to make absolutely sure:
 	MapInfo_Enumerate();
 	_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, pRequiredFlags, pForbiddenFlags, 0);
 
 	out = "";
-	for(i = 0; i < MapInfo_count; ++i)
+	for(float i = 0; i < MapInfo_count; ++i)
 		out = strcat(out, " ", _MapInfo_GlobItem(MapInfo_FilterList_Lookup(i)));
 
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);

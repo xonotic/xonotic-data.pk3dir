@@ -85,7 +85,7 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 	if (view.buffs)
 	{
-		return view.cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
+		return CS(view).cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
 	}
 
 	return WaypointSprite_visible_for_player(this, player, view);
@@ -157,16 +157,8 @@ void buff_Touch(entity this, entity toucher)
 		return;
 	}
 
-	if((this.team && DIFF_TEAM(toucher, this))
-	|| (STAT(FROZEN, toucher))
-	|| (toucher.vehicle)
-	|| (time < toucher.buff_shield)
-	|| (!this.buff_active)
-	)
-	{
-		// can't touch this
+	if(!this.buff_active)
 		return;
-	}
 
 	if(MUTATOR_CALLHOOK(BuffTouch, this, toucher))
 		return;
@@ -175,9 +167,19 @@ void buff_Touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return; // incase mutator changed toucher
 
+	if((this.team && DIFF_TEAM(toucher, this))
+	|| (STAT(FROZEN, toucher))
+	|| (toucher.vehicle)
+	|| (time < PS(toucher).buff_shield)
+	)
+	{
+		// can't touch this
+		return;
+	}
+
 	if (toucher.buffs)
 	{
-		if (toucher.cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
+		if (CS(toucher).cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
 		{
 			int buffid = buff_FirstFromFlags(toucher.buffs).m_id;
 			//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_DROP, toucher.buffs);
@@ -260,7 +262,7 @@ void buff_Think(entity this)
 	}
 
 	if(!this.buff_active && !this.buff_activetime)
-	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || !(this.owner.buffs & this.buffs) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
+	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || this.owner.vehicle || !(this.owner.buffs & this.buffs) || this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway))
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
@@ -422,12 +424,17 @@ void buff_Medic_Heal(entity this)
 {
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
 	{
-		if(SAME_TEAM(it, this))
-		if(it.health < autocvar_g_balance_health_regenstable)
+		if (!SAME_TEAM(it, this))
 		{
-			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-			it.health = bound(0, it.health + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable);
+			continue;
 		}
+		float hp = GetResourceAmount(it, RESOURCE_HEALTH);
+		if(hp >= autocvar_g_balance_health_regenstable)
+		{
+			continue;
+		}
+		Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
+		SetResourceAmount(it, RESOURCE_HEALTH, bound(0, hp + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable));
 	});
 }
 
@@ -437,22 +444,6 @@ float buff_Inferno_CalculateTime(float damg, float offset_x, float offset_y, flo
 }
 
 // mutator hooks
-MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
-{
-	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(6, float);
-	float frag_damage = M_ARGV(7, float);
-
-	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
-
-	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
-	{
-		vector v = healtharmor_applydamage(50, autocvar_g_buffs_resistance_blockpercent, frag_deathtype, frag_damage);
-		M_ARGV(4, float) = v.x; // take
-		M_ARGV(5, float) = v.y; // save
-	}
-}
-
 MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
@@ -463,16 +454,22 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 
 	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
 
+	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
+	{
+		float reduced = frag_damage * autocvar_g_buffs_resistance_blockpercent;
+		frag_damage = bound(0, frag_damage - reduced, frag_damage);
+	}
+
 	if(frag_target.buffs & BUFF_SPEED.m_itemid)
 	if(frag_target != frag_attacker)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
 	if(frag_target.buffs & BUFF_MEDIC.m_itemid)
-	if((frag_target.health - frag_damage) <= 0)
+	if((GetResourceAmount(frag_target, RESOURCE_HEALTH) - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
-		frag_damage = max(5, frag_target.health - autocvar_g_buffs_medic_survive_health);
+		frag_damage = max(5, GetResourceAmount(frag_target, RESOURCE_HEALTH) - autocvar_g_buffs_medic_survive_health);
 
 	if(frag_target.buffs & BUFF_JUMP.m_itemid)
 	if(frag_deathtype == DEATH_FALL.m_id)
@@ -545,9 +542,15 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(frag_target.takedamage)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
-		frag_attacker.health = bound(0, frag_attacker.health + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.health), g_pickup_healthsmall_max);
-		if(frag_target.armorvalue)
-			frag_attacker.armorvalue = bound(0, frag_attacker.armorvalue + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.armorvalue), g_pickup_armorsmall_max);
+		float amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
+			GetResourceAmount(frag_target, RESOURCE_HEALTH));
+		GiveResourceWithLimit(frag_attacker, RESOURCE_HEALTH, amount, g_pickup_healthsmall_max);
+		if (frag_target.armorvalue)
+		{
+			amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
+				GetResourceAmount(frag_target, RESOURCE_ARMOR));
+			GiveResourceWithLimit(frag_attacker, RESOURCE_ARMOR, amount, g_pickup_armorsmall_max);
+		}
 	}
 
 	M_ARGV(4, float) = frag_damage;
@@ -560,7 +563,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 
 	player.buffs = 0;
 	player.buff_time = 0;
-	player.buff_shield = time + 0.5; // prevent picking up buffs immediately
+	PS(player).buff_shield = time + 0.5; // prevent picking up buffs immediately
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
@@ -629,7 +632,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		player.buffs = 0;
-		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
+		PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
 		//player.buff_time = 0; // already notified
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
@@ -645,7 +648,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, player))
 			{
@@ -656,7 +659,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 					closest = it;
 				}
 			}
-		));
+		});
 
 		if(closest)
 		{
@@ -831,7 +834,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			else
 				Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 			player.buffs = 0;
-			player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
+			PS(player).buff_shield = time + max(0, autocvar_g_buffs_pickup_delay); // always put in a delay, even if small
 		}
 	}
 
@@ -987,28 +990,6 @@ MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
 
 	client.buffs = spectatee.buffs;
 	client.buff_time = spectatee.buff_time;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
-{
-	entity player = M_ARGV(0, entity);
-	entity veh = M_ARGV(1, entity);
-
-	veh.buffs = player.buffs;
-	player.buffs = 0;
-	veh.buff_time = max(0, player.buff_time - time);
-	player.buff_time = 0;
-}
-
-MUTATOR_HOOKFUNCTION(buffs, VehicleExit)
-{
-	entity player = M_ARGV(0, entity);
-	entity veh = M_ARGV(1, entity);
-
-	player.buffs = player.oldbuffs = veh.buffs;
-	veh.buffs = 0;
-	player.buff_time = time + veh.buff_time;
-	veh.buff_time = 0;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)

@@ -33,13 +33,14 @@ void AuxiliaryXhair_Draw2D(entity this)
 	if (scoreboard_active)
 		return;
 
-	vector size = draw_getimagesize(this.axh_image) * autocvar_cl_vehicles_crosshair_size;
-	vector pos = project_3d_to_2d(this.origin) - 0.5 * size;
+	vector pos = project_3d_to_2d(this.origin);
 
 	if (!(pos.z < 0 || pos.x < 0 || pos.y < 0 || pos.x > vid_conwidth || pos.y > vid_conheight))
 	{
+		vector size = draw_getimagesize(this.axh_image) * autocvar_cl_vehicles_crosshair_size;
+		pos.x -= 0.5 * size.x;
+		pos.y -= 0.5 * size.y;
 		pos.z = 0;
-		size.z = 0;
 		drawpic(pos, this.axh_image, size, this.colormod, autocvar_crosshair_alpha * this.alpha, this.axh_drawflag);
 	}
 

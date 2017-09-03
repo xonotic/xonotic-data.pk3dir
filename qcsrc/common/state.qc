@@ -25,7 +25,7 @@ void PlayerState_detach(entity this)
     Inventory_delete(this);
 }
 
-void GetCvars(entity this, int);
+void GetCvars(entity this, entity store, int);
 void DecodeLevelParms(entity this);
 void PlayerScore_Attach(entity this);
 void ClientData_Attach(entity this);
@@ -40,7 +40,7 @@ void ClientState_attach(entity this)
 {
 	this._cs = NEW(ClientState, this);
 
-    GetCvars(this, 0);  // get other cvars from player
+    GetCvars(this, CS(this), 0);  // get other cvars from player
 
 	// TODO: fold all of these into ClientState
 
@@ -69,18 +69,18 @@ void PlayerScore_Detach(entity this);
 
 void ClientState_detach(entity this)
 {
+    GetCvars(this, CS(this), -1);  // free cvars TODO: is this still needed now that it's stored on the clientstate entity?
+    accuracy_free(this); // TODO: needs to be before CS() is deleted!
+    PlayerScore_Detach(this); // what ^they^ said
+    W_HitPlotClose(this);
+    ClientData_Detach(this);
 	delete(CS(this));
 	this._cs = NULL;
 
-    GetCvars(this, -1);  // free cvars
 
     bot_clientdisconnect(this);
 
-    W_HitPlotClose(this);
     anticheat_report_to_eventlog(this);
     playerdemo_shutdown(this);
     entcs_detach(this);
-    accuracy_free(this);
-    ClientData_Detach(this);
-    PlayerScore_Detach(this);
 }
