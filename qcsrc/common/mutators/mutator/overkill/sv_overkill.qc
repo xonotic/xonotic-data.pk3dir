@@ -3,6 +3,8 @@
 #include "hmg.qh"
 #include "rpc.qh"
 
+string autocvar_g_overkill;
+
 bool autocvar_g_overkill_powerups_replace;
 
 bool autocvar_g_overkill_itemwaypoints = true;
@@ -18,7 +20,7 @@ bool autocvar_g_overkill_filter_armormega;
 
 void ok_Initialize();
 
-REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
+REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
 {
 	MUTATOR_ONADD
 	{

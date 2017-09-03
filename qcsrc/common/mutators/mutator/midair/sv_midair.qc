@@ -1,8 +1,9 @@
 #include "sv_midair.qh"
 
+string autocvar_g_midair;
 float autocvar_g_midair_shieldtime;
 
-REGISTER_MUTATOR(midair, cvar("g_midair"));
+REGISTER_MUTATOR(midair, expr_evaluate(autocvar_g_midair));
 
 .float midair_shieldtime;
 
