@@ -1095,9 +1095,15 @@ void GameCommand_moveplayer(float request, float argc)
 
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
-								MoveToTeam(client, team_id, 6);
-								successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
-								LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
+								if (MoveToTeam(client, team_id, 6))
+								{
+									successful = strcat(successful, (successful ? ", " : ""), playername(client, false));
+									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ") has been moved to the ", Team_ColoredFullName(team_id), "^7.");
+								}
+								else
+								{
+									LOG_INFO("Unable to move player ", ftos(GetFilteredNumber(t)), " (", playername(client, false), ")");
+								}
 								continue;
 							}
 							else
