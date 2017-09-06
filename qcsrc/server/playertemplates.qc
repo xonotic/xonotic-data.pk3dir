@@ -4,6 +4,10 @@
 /// \author Lyberta
 /// \copyright GNU GPLv3 or any later version.
 
+#include "autocvars.qh"
+#include "resources.qh"
+#include "mutators/events.qh"
+
 const string playertemplate_cvar_prefix = "g_player_template_";
 
 string PlayerTemplate_GetFullCvarName(string template, string variable)
