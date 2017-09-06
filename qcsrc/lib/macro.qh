@@ -9,6 +9,9 @@
     #define MACRO_END } while (0)
 #endif
 
+/** Marker for use in (RVALUE, (expr)) */
+#define RVALUE 0
+
 #define _CAT(a, b) a ## b
 #define CAT(a, b) _CAT(a, b)
 

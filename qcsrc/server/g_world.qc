@@ -521,7 +521,7 @@ void detect_maptype()
 		o.y += random() * (world.maxs.y - world.mins.y);
 		o.z += random() * (world.maxs.z - world.mins.z);
 
-		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, NULL);
+		tracebox(o, STAT(PL_MIN), STAT(PL_MAX), o - '0 0 32768', MOVE_WORLDONLY, NULL);
 		if(trace_fraction == 1)
 			continue;
 
@@ -580,7 +580,15 @@ spawnfunc(__init_dedicated_server)
 
 	e = new(info_player_deathmatch);  // safeguard against player joining
 
-	this.classname = "worldspawn"; // safeguard against various stuff ;)
+    // assign reflectively to avoid "assignment to world" warning
+    for (int i = 0, n = numentityfields(); i < n; ++i) {
+        string k = entityfieldname(i);
+        if (k == "classname") {
+            // safeguard against various stuff ;)
+            putentityfieldstring(i, this, "worldspawn");
+            break;
+        }
+    }
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -595,6 +603,14 @@ spawnfunc(__init_dedicated_server)
 
 void __init_dedicated_server_shutdown() {
 	MapInfo_Shutdown();
+}
+
+STATIC_INIT_EARLY(maxclients)
+{
+	maxclients = 0;
+	for (entity head = nextent(NULL); head; head = nextent(head)) {
+		++maxclients;
+	}
 }
 
 void Map_MarkAsRecent(string m);
@@ -679,12 +695,6 @@ spawnfunc(worldspawn)
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
-
-	maxclients = 0;
-	for (entity head = nextent(NULL); head; head = nextent(head))
-	{
-		++maxclients;
-	}
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -936,6 +946,7 @@ spawnfunc(worldspawn)
 	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
+	__spawnfunc_spawn_all();
 }
 
 spawnfunc(light)
