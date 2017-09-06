@@ -9,6 +9,7 @@
 #include <common/mutators/mutator/damagetext/_mod.qh>
 #include <common/mutators/mutator/dodging/_mod.qh>
 #include <common/mutators/mutator/doublejump/_mod.qh>
+#include <common/mutators/mutator/dynamic_handicap/_mod.qh>
 #include <common/mutators/mutator/globalforces/_mod.qh>
 #include <common/mutators/mutator/hook/_mod.qh>
 #include <common/mutators/mutator/instagib/_mod.qh>
