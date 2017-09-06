@@ -69,11 +69,17 @@ noref bool require_spawnfunc_prefix;
         e.__spawnfunc_constructor(e);
     }
 
+	noref bool __spawnfunc_first;
+
 	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
 	#define spawnfunc_2(id, whitelist) \
 		void __spawnfunc_##id(entity this); \
 		[[accumulate]] void spawnfunc_##id(entity this) \
 		{ \
+		    if (!__spawnfunc_first) { \
+                __spawnfunc_first = true; \
+                static_init_early(); \
+		    } \
 		    bool dospawn = true; \
 		    if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = false; } \
 			else if (__spawnfunc_expecting) { \
