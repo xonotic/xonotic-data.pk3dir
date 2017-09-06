@@ -14,6 +14,7 @@
 #include "spawnpoints.qh"
 #include "resources.qh"
 #include "g_damage.qh"
+#include "handicap.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
 #include "cheats.qh"
@@ -1271,6 +1272,8 @@ void ClientConnect(entity this)
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
 	});
+
+	Handicap_Initialize(this);
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
 

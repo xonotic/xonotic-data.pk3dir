@@ -13,8 +13,6 @@ float autocvar_g_dynamic_handicap_scale;
 float autocvar_g_dynamic_handicap_min; ///< The minimum value of the handicap.
 float autocvar_g_dynamic_handicap_max; ///< The maximum value of the handicap.
 
-.float dynamic_handicap; ///< Holds the dynamic handicap value.
-
 //====================== Forward declarations =================================
 
 /// \brief Returns the base value of the handicap.
@@ -43,9 +41,9 @@ void DynamicHandicap_UpdateHandicap(entity player)
 	//PrintToChat(player, strcat("Base handicap = ", ftos(handicap)));
 	handicap = DynamicHandicap_ScaleHandicap(handicap);
 	//PrintToChat(player, strcat("Scaled handicap = ", ftos(handicap)));
-	player.dynamic_handicap = DynamicHandicap_ClampHandicap(handicap);
-	//PrintToChat(player, strcat("Clamped handicap = ",
-	//	ftos(player.dynamic_handicap)));
+	handicap = DynamicHandicap_ClampHandicap(handicap);
+	//PrintToChat(player, strcat("Clamped handicap = ", ftos(handicap)));
+	Handicap_SetForcedHandicap(player, handicap);
 }
 
 float DynamicHandicap_GetBaseValue(entity player)
@@ -128,28 +126,6 @@ MUTATOR_HOOKFUNCTION(dynamic_handicap, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
 	DynamicHandicap_UpdateHandicap(player);
-}
-
-/// \brief Hook which is called when the damage amount must be determined.
-MUTATOR_HOOKFUNCTION(dynamic_handicap, Damage_Calculate)
-{
-	entity frag_attacker = M_ARGV(1, entity);
-	entity frag_target = M_ARGV(2, entity);
-	float deathtype = M_ARGV(3, float);
-	float damage = M_ARGV(4, float);
-	if (DEATH_ISSPECIAL(deathtype))
-	{
-		return;
-	}
-	if (IS_CLIENT(frag_attacker))
-	{
-		damage /= frag_attacker.dynamic_handicap;
-	}
-	if (IS_CLIENT(frag_target))
-	{
-		damage *= frag_target.dynamic_handicap;
-	}
-	M_ARGV(4, float) = damage;
 }
 
 /// \brief Hook that is called when player dies.
