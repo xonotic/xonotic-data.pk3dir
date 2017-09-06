@@ -224,8 +224,6 @@ METHOD(Client, m_unwind, bool(Client this))
     return false;
 }
 
-float c1, c2, c3, c4;
-
 void play_countdown(entity this, float finished, Sound samp);
 
 float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
