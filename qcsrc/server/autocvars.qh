@@ -88,7 +88,7 @@ float autocvar_g_balance_superweapons_time;
 float autocvar_g_balance_selfdamagepercent;
 bool autocvar_g_balance_teams;
 bool autocvar_g_balance_teams_prevent_imbalance;
-float autocvar_g_balance_teams_scorefactor;
+//float autocvar_g_balance_teams_scorefactor;
 float autocvar_g_ballistics_density_corpse;
 float autocvar_g_ballistics_density_player;
 float autocvar_g_ballistics_mindistance;
@@ -165,12 +165,7 @@ int autocvar_g_maxplayers;
 float autocvar_g_maxplayers_spectator_blocktime;
 float autocvar_g_maxpushtime;
 float autocvar_g_maxspeed;
-#define autocvar_g_instagib cvar("g_instagib")
-bool autocvar_g_instagib_damagedbycontents = true;
-bool autocvar_g_instagib_blaster_keepdamage = false;
-bool autocvar_g_instagib_blaster_keepforce = false;
-bool autocvar_g_instagib_mirrordamage;
-bool autocvar_g_instagib_friendlypush = true;
+bool autocvar_g_instagib;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 bool autocvar_g_mirrordamage_onlyweapons;
@@ -416,7 +411,6 @@ float autocvar_g_monsters_armor_blockpercent;
 float autocvar_g_monsters_healthbars;
 bool autocvar_g_monsters_lineofsight = true;
 //bool autocvar_g_monsters_ignoretraces = true;
-#define autocvar_g_bloodloss cvar("g_bloodloss")
 bool autocvar_g_nades;
 bool autocvar_g_nades_override_dropweapon = true;
 vector autocvar_g_nades_throw_offset;

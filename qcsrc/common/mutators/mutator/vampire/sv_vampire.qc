@@ -1,6 +1,7 @@
 #include "sv_vampire.qh"
 
-REGISTER_MUTATOR(vampire, cvar("g_vampire") && !cvar("g_instagib"));
+string autocvar_g_vampire;
+REGISTER_MUTATOR(vampire, expr_evaluate(autocvar_g_vampire) && !cvar("g_instagib"));
 
 MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
 {
@@ -12,7 +13,8 @@ MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
 	if(frag_target != frag_attacker)
 	if(!IS_DEAD(frag_target))
 	{
-		GivePlayerHealth(frag_attacker, bound(0, damage_take, frag_target.health));
+		GiveResource(frag_attacker, RESOURCE_HEALTH,
+			bound(0, damage_take, frag_target.health));
 	}
 }
 

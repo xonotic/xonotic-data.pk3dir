@@ -27,34 +27,77 @@ noref bool require_spawnfunc_prefix;
 	#define _spawnfunc_check(fld) \
 		if (fieldname == #fld) continue;
 
-	noref bool __spawnfunc_expecting;
+	noref int __spawnfunc_expecting;
 	noref entity __spawnfunc_expect;
 	noref bool __spawnfunc_unreachable_workaround = true;
+
+    .void(entity) __spawnfunc_constructor;
+    noref IntrusiveList g_spawn_queue;
+
+    #define SPAWNFUNC_INTERNAL_FIELDS(X) \
+        X(string, classname, "spawnfunc") \
+        X(string, targetname, string_null) \
+        /**/
+
+    #define X(T, fld, def) .T fld, __spawnfunc_##fld;
+    SPAWNFUNC_INTERNAL_FIELDS(X)
+    #undef X
+
+    void __spawnfunc_defer(entity prototype, void(entity) constructor)
+    {
+        IL_PUSH(g_spawn_queue, prototype);
+        #define X(T, fld, def) { prototype.__spawnfunc_##fld = prototype.fld; prototype.fld = def; }
+        SPAWNFUNC_INTERNAL_FIELDS(X);
+        #undef X
+        prototype.__spawnfunc_constructor = constructor;
+    }
+
+    noref IntrusiveList g_map_entities;
+    #define __spawnfunc_spawn_all() MACRO_BEGIN \
+        g_map_entities = IL_NEW(); \
+        IL_EACH(g_spawn_queue, true, __spawnfunc_spawn(it)); \
+    MACRO_END
+
+    void __spawnfunc_spawn(entity prototype)
+    {
+        entity e = new(clone);
+        copyentity(prototype, e);
+        IL_PUSH(g_map_entities, e);
+        #define X(T, fld, def) { e.fld = e.__spawnfunc_##fld; e.__spawnfunc_##fld = def; }
+        SPAWNFUNC_INTERNAL_FIELDS(X);
+        #undef X
+        e.__spawnfunc_constructor(e);
+    }
+
+	noref bool __spawnfunc_first;
 
 	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
 	#define spawnfunc_2(id, whitelist) \
 		void __spawnfunc_##id(entity this); \
 		[[accumulate]] void spawnfunc_##id(entity this) \
 		{ \
-			if (__spawnfunc_expecting) \
-			{ \
+		    if (!__spawnfunc_first) { \
+                __spawnfunc_first = true; \
+                static_init_early(); \
+		    } \
+		    bool dospawn = true; \
+		    if (__spawnfunc_expecting > 1) { __spawnfunc_expecting = false; } \
+			else if (__spawnfunc_expecting) { \
 				/* engine call */ \
+                if (!g_spawn_queue) { g_spawn_queue = IL_NEW(); } \
 				__spawnfunc_expecting = false; \
 				this = __spawnfunc_expect; \
 				__spawnfunc_expect = NULL; \
-			} \
-			else \
-			{ \
+                dospawn = false; \
+			} else { \
+			    /* userland call */ \
 				assert(this); \
 			} \
-			if (!this.sourceLoc) \
-			{ \
+			if (!this.sourceLoc) { \
 				this.sourceLoc = __FILE__ ":" STR(__LINE__); \
 			} \
-			if (!this.spawnfunc_checked) \
-			{ \
-				for (int i = 0, n = numentityfields(); i < n; ++i) \
-				{ \
+			if (!this.spawnfunc_checked) { \
+				for (int i = 0, n = numentityfields(); i < n; ++i) { \
 					string value = getentityfieldstring(i, this); \
 					string fieldname = entityfieldname(i); \
 					whitelist(_spawnfunc_checktypes) \
@@ -65,8 +108,15 @@ noref bool require_spawnfunc_prefix;
 					LOG_WARNF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue."), #id, fieldname, value); \
 				} \
 				this.spawnfunc_checked = true; \
+				if (this) { \
+                    /* not worldspawn, delay spawn */ \
+                    __spawnfunc_defer(this, __spawnfunc_##id); \
+                } else { \
+                    /* world might not be "worldspawn" */ \
+                    this.__spawnfunc_constructor = __spawnfunc_##id; \
+                } \
 			} \
-			__spawnfunc_##id(this); \
+			if (dospawn) { __spawnfunc_##id(this); } \
 			if (__spawnfunc_unreachable_workaround) return; \
 		} \
 		void __spawnfunc_##id(entity this)

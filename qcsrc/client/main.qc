@@ -609,21 +609,23 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 {
 	make_pure(this);
-    int i, j, b, f;
-
-    int sf = ReadByte();
-	if(sf & 1)
-	{
-		for(j = 0; j < maxclients; ++j)
-			if(playerslots[j])
-				playerslots[j].eliminated = 1;
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			f = ReadByte();
-			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
-				if (!(f & b))
-					if(playerslots[j])
-						playerslots[j].eliminated = 0;
+    int sf; serialize(byte, 0, sf);
+	if (sf & 1) {
+		for (int j = 0; j < maxclients; ++j) {
+			if (playerslots[j]) {
+			    playerslots[j].eliminated = 1;
+			}
+        }
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			serialize(byte, 0, f);
+			for (int b = 0; b < 8; ++b) {
+				if (f & BIT(b)) continue;
+                int j = i - 1 + b;
+                if (playerslots[j]) {
+                    playerslots[j].eliminated = 0;
+                }
+            }
 		}
 	}
 	return true;
