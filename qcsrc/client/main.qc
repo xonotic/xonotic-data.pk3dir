@@ -471,11 +471,10 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 	int sf = ReadShort();
 	int lf = ReadShort();
 #endif
-	int p;
-	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(sf & p)
+	for(i = 0; i < MAX_TEAMSCORE; ++i)
+		if(sf & BIT(i))
 		{
-			if(lf & p)
+			if(lf & BIT(i))
 				o.(teamscores(i)) = ReadInt24_t();
 			else
 				o.(teamscores(i)) = ReadChar();
@@ -587,7 +586,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
-			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
+			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])
 						playerslots[j].ready = 0;
