@@ -747,7 +747,7 @@ void havocbot_movetogoal(entity this)
 			else if(this.goalentity == this.goalcurrent)
 				locked_goal = true; // wait for item to respawn
 		}
-		else if(!this.goalentity.solid)
+		else if(!this.goalentity.solid && !boxesoverlap(this.goalentity.absmin, this.goalentity.absmax, this.absmin, this.absmax))
 		{
 			if(checkpvs(this.origin, this.goalentity))
 			{
