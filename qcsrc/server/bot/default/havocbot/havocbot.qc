@@ -430,7 +430,8 @@ void havocbot_bunnyhop(entity this, vector dir)
 bool havocbot_checkgoaldistance(entity this, vector gco)
 {
 	float curr_dist = vlen(this.origin - gco);
-	if(curr_dist > this.goalcurrent_distance)
+	float curr_dist_2d = vlen(vec2(this.origin - gco));
+	if(curr_dist > this.goalcurrent_distance && curr_dist_2d > this.goalcurrent_distance_2d)
 	{
 		if(!this.goalcurrent_distance_time)
 			this.goalcurrent_distance_time = time;
@@ -440,7 +441,8 @@ bool havocbot_checkgoaldistance(entity this, vector gco)
 	else
 	{
 		// reduce it a little bit so it works even with very small approaches to the goal
-		this.goalcurrent_distance = max(20, curr_dist - 15);
+		this.goalcurrent_distance = max(20, curr_dist - 10);
+		this.goalcurrent_distance_2d = max(20, curr_dist_2d - 10);
 		this.goalcurrent_distance_time = 0;
 	}
 	return false;

@@ -26,6 +26,7 @@ entity navigation_bestgoal;
 
 .entity goalcurrent_prev;
 .float goalcurrent_distance;
+.float goalcurrent_distance_2d;
 .float goalcurrent_distance_time;
 
 .entity nearestwaypoint;
