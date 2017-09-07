@@ -24,6 +24,12 @@ void button_done(entity this)
 
 void button_return(entity this)
 {
+	if (this.active != ACTIVE_ACTIVE)
+	{
+		this.nextthink = this.ltime + frametime;
+		setthink(this, button_return);
+		return;
+	}
 	this.state = STATE_DOWN;
 	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, button_done);
 	this.frame = 0;			// use normal textures
@@ -77,6 +83,8 @@ void button_use(entity this, entity actor, entity trigger)
 
 void button_touch(entity this, entity toucher)
 {
+	if (this.active != ACTIVE_ACTIVE)
+		return;
 	if (!toucher)
 		return;
 	if (!toucher.iscreature)
@@ -91,6 +99,8 @@ void button_touch(entity this, entity toucher)
 
 void button_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
+	if (this.active != ACTIVE_ACTIVE)
+		return;
 	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
