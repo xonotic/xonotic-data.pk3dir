@@ -1426,6 +1426,41 @@ void navigation_poptouchedgoals(entity this)
 	}
 }
 
+entity navigation_get_really_close_waypoint(entity this)
+{
+	entity wp = this.goalcurrent;
+	if(!wp || vdist(wp.origin - this.origin, >, 50))
+		wp = this.goalcurrent_prev;
+	if(!wp)
+		return NULL;
+	if(wp.classname != "waypoint")
+	{
+		wp = wp.nearestwaypoint;
+		if(!wp)
+			return NULL;
+	}
+	if(vdist(wp.origin - this.origin, >, 50))
+	{
+		IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_TELEPORT),
+		{
+			if(vdist(it.origin - this.origin, <, 50))
+			{
+				wp = it;
+				break;
+			}
+		});
+	}
+	if(wp.wpflags & WAYPOINTFLAG_TELEPORT)
+		return NULL;
+
+	vector dest = '0 0 0';
+	float dest_height = 0;
+	SET_TRACEWALK_DESTCOORDS(wp, this.origin, dest, dest_height);
+	if (!tracewalk(this, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
+		return NULL;
+	return wp;
+}
+
 // begin a goal selection session (queries spawnfunc_waypoint network)
 void navigation_goalrating_start(entity this)
 {
@@ -1434,9 +1469,10 @@ void navigation_goalrating_start(entity this)
 
 	this.navigation_jetpack_goal = NULL;
 	navigation_bestrating = -1;
+	entity wp = navigation_get_really_close_waypoint(this);
 	navigation_clearroute(this);
 	navigation_bestgoal = NULL;
-	navigation_markroutes(this, NULL);
+	navigation_markroutes(this, wp);
 }
 
 // ends a goal selection session (updates goal stack to the best goal)
