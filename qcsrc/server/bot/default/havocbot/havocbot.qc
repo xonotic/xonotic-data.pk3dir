@@ -734,19 +734,25 @@ void havocbot_movetogoal(entity this)
 				this.goalentity.bot_pickup_respawning = false;
 			else if(time < this.goalentity.scheduledrespawntime - 10) // item already taken (by someone else)
 			{
-				this.goalentity.bot_pickup_respawning = false;
-				navigation_clearroute(this);
-				this.bot_strategytime = 0;
-				return;
+				if(checkpvs(this.origin, this.goalentity))
+				{
+					this.goalentity.bot_pickup_respawning = false;
+					navigation_clearroute(this);
+					this.bot_strategytime = 0;
+					return;
+				}
 			}
 			else if(this.goalentity == this.goalcurrent)
 				locked_goal = true; // wait for item to respawn
 		}
 		else if(!this.goalentity.solid)
 		{
-			navigation_clearroute(this);
-			this.bot_strategytime = 0;
-			return;
+			if(checkpvs(this.origin, this.goalentity))
+			{
+				navigation_clearroute(this);
+				this.bot_strategytime = 0;
+				return;
+			}
 		}
 	}
 	if(!locked_goal)
