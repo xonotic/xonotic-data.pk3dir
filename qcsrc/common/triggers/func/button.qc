@@ -5,6 +5,36 @@
 void button_wait(entity this);
 void button_return(entity this);
 
+.float wait_remaining;
+.float activation_time;
+
+void button_setactive(entity this, int astate)
+{
+	int oldstate = this.active;
+	if (astate == ACTIVE_TOGGLE)
+	{
+		if (this.active == ACTIVE_ACTIVE)
+			this.active = ACTIVE_NOT;
+		else
+			this.active = ACTIVE_ACTIVE;
+	}
+	else
+		this.active = astate;
+
+	if (this.active == ACTIVE_ACTIVE && oldstate == ACTIVE_NOT)
+	{
+		if (this.wait_remaining >= 0)
+		{
+			this.nextthink =  this.wait_remaining + this.ltime;
+			setthink(this, button_return);
+		}
+	}
+	else if (this.active == ACTIVE_NOT && oldstate == ACTIVE_ACTIVE)
+	{
+		this.wait_remaining = this.wait - (time - this.activation_time);
+	}
+}
+
 void button_wait(entity this)
 {
 	this.state = STATE_TOP;
@@ -26,8 +56,6 @@ void button_return(entity this)
 {
 	if (this.active != ACTIVE_ACTIVE)
 	{
-		this.nextthink = this.ltime + frametime;
-		setthink(this, button_return);
 		return;
 	}
 	this.state = STATE_DOWN;
@@ -35,6 +63,7 @@ void button_return(entity this)
 	this.frame = 0;			// use normal textures
 	if (this.health)
 		this.takedamage = DAMAGE_YES;	// can be shot again
+	this.wait_remaining = this.wait;
 }
 
 
@@ -51,6 +80,8 @@ void button_fire(entity this)
 
 	if (this.state == STATE_UP || this.state == STATE_TOP)
 		return;
+
+	this.activation_time = time;
 
 	if (this.noise != "")
 		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
@@ -157,10 +188,14 @@ spawnfunc(func_button)
 	if (!this.lip)
 		this.lip = 4;
 
+	this.wait_remaining = this.wait;
+
     if(this.noise != "")
         precache_sound(this.noise);
 
 	this.active = ACTIVE_ACTIVE;
+
+	this.setactive = button_setactive;
 
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
