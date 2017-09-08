@@ -1357,9 +1357,9 @@ void navigation_poptouchedgoals(entity this)
 	if(vlen2(this.goalcurrent.origin - this.origin) > vlen2(this.goalstack01.origin - this.origin))
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
 	{
-		vector dest = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
-		dest.z = this.goalstack01.absmin.z;
-		float dest_height = this.goalstack01.absmax.z - this.goalstack01.absmin.z;
+		vector dest = '0 0 0';
+		float dest_height = 0;
+		SET_TRACEWALK_DESTCOORDS(this.goalstack01, this.origin, dest, dest_height);
 		if(tracewalk(this, this.origin, this.mins, this.maxs, dest, dest_height, bot_navigation_movemode))
 		{
 			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
@@ -1552,9 +1552,9 @@ void navigation_unstuck(entity this)
 		// evaluate the next goal on the queue
 		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
 		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
-		vector dest = (bot_waypoint_queue_goal.absmin + bot_waypoint_queue_goal.absmax) * 0.5;
-		dest.z = bot_waypoint_queue_goal.absmin.z;
-		float dest_height = bot_waypoint_queue_goal.absmax.z - bot_waypoint_queue_goal.absmin.z;
+		vector dest = '0 0 0';
+		float dest_height = 0;
+		SET_TRACEWALK_DESTCOORDS(bot_waypoint_queue_goal, this.origin, dest, dest_height);
 		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
