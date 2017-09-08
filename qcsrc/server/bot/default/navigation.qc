@@ -1331,8 +1331,9 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 
 // removes any currently touching waypoints from the goal stack
 // (this is how bots detect if they reached a goal)
-void navigation_poptouchedgoals(entity this)
+int navigation_poptouchedgoals(entity this)
 {
+	int removed_goals = 0;
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
 		// make sure jumppad is really hit, don't rely on distance based checks
@@ -1347,9 +1348,10 @@ void navigation_poptouchedgoals(entity this)
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			}
 			navigation_poproute(this);
+			++removed_goals;
 		}
 		else
-			return;
+			return removed_goals;
 	}
 
 	// If for some reason the bot is closer to the next goal, pop the current one
@@ -1364,8 +1366,9 @@ void navigation_poptouchedgoals(entity this)
 		{
 			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
 			navigation_poproute(this);
+			++removed_goals;
 			if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
-				return;
+				return removed_goals;
 			// TODO this may also be a nice idea to do "early" (e.g. by
 			// manipulating the vlen() comparisons) to shorten paths in
 			// general - this would make bots walk more "on rails" than
@@ -1394,8 +1397,9 @@ void navigation_poptouchedgoals(entity this)
 				}
 
 				navigation_poproute(this);
+				++removed_goals;
 				if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
-					return;
+					return removed_goals;
 			}
 		}
 	}
@@ -1421,9 +1425,11 @@ void navigation_poptouchedgoals(entity this)
 		}
 
 		navigation_poproute(this);
+		++removed_goals;
 		if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
-			return;
+			return removed_goals;
 	}
+	return removed_goals;
 }
 
 entity navigation_get_really_close_waypoint(entity this)

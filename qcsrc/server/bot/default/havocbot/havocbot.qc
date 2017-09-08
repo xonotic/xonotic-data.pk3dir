@@ -758,7 +758,10 @@ void havocbot_movetogoal(entity this)
 		}
 	}
 	if(!locked_goal)
-		navigation_poptouchedgoals(this);
+	{
+		if(navigation_poptouchedgoals(this) && this.bot_strategytime < time + 1)
+			this.bot_strategytime = 0;
+	}
 
 	// if ran out of goals try to use an alternative goal or get a new strategy asap
 	if(this.goalcurrent == NULL)
