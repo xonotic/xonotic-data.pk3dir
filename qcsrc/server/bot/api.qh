@@ -30,7 +30,6 @@ float skill;
 .float bot_moveskill; // moving technique
 .float bot_pickup;
 .float(entity player, entity item) bot_pickupevalfunc;
-.float bot_strategytime;
 .string cleanname;
 .float havocbot_role_timeout;
 .float isbot; // true if this client is actually a bot
@@ -84,6 +83,9 @@ void navigation_dynamicgoal_unset(entity this);
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
 void navigation_goalrating_end(entity this);
 void navigation_goalrating_start(entity this);
+void navigation_goalrating_timeout_set(entity this);
+void navigation_goalrating_timeout_force(entity this);
+bool navigation_goalrating_timeout(entity this);
 void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
 void navigation_routerating(entity this, entity e, float f, float rangebias);

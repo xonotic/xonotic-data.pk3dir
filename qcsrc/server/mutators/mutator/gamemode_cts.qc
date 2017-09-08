@@ -13,9 +13,8 @@ void havocbot_role_cts(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		IL_EACH(g_racecheckpoints, true,
@@ -27,6 +26,8 @@ void havocbot_role_cts(entity this)
 		});
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 

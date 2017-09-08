@@ -17,6 +17,24 @@
 
 .float speed;
 
+void navigation_goalrating_timeout_set(entity this)
+{
+	if((IS_PLAYER(this.goalentity) || IS_MONSTER(this.goalentity)) && !STAT(FROZEN, this.goalentity))
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval_movingtarget;
+	else
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+}
+
+void navigation_goalrating_timeout_force(entity this)
+{
+	this.bot_strategytime = 0;
+}
+
+bool navigation_goalrating_timeout(entity this)
+{
+	return this.bot_strategytime < time;
+}
+
 void navigation_dynamicgoal_init(entity this, bool initially_static)
 {
 	this.navigation_dynamicgoal = true;
@@ -1577,7 +1595,7 @@ void navigation_unstuck(entity this)
 			{
 				LOG_DEBUG(this.netname, " stuck, reachable waypoint found, heading to it");
 				navigation_routetogoal(this, bot_waypoint_queue_bestgoal, this.origin);
-				this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+				navigation_goalrating_timeout_set(this);
 				this.aistatus &= ~AI_STATUS_STUCK;
 			}
 			else

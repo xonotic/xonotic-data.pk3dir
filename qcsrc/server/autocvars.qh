@@ -6,6 +6,7 @@ int autocvar__campaign_index;
 string autocvar__campaign_name;
 bool autocvar__sv_init;
 float autocvar_bot_ai_strategyinterval;
+float autocvar_bot_ai_strategyinterval_movingtarget;
 #define autocvar_bot_number cvar("bot_number")
 int autocvar_bot_vs_human;
 int autocvar_captureleadlimit_override;

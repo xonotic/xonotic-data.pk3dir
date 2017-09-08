@@ -1071,9 +1071,8 @@ void havocbot_role_kh_carrier(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		if(kh_Key_AllOwnedByWhichTeam() == this.team)
@@ -1082,6 +1081,8 @@ void havocbot_role_kh_carrier(entity this)
 			havocbot_goalrating_kh(this, 4, 4, 1); // play defensively
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1108,10 +1109,9 @@ void havocbot_role_kh_defense(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		float key_owner_team;
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1123,6 +1123,8 @@ void havocbot_role_kh_defense(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1149,11 +1151,10 @@ void havocbot_role_kh_offense(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		float key_owner_team;
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1165,6 +1166,8 @@ void havocbot_role_kh_offense(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK! EMERGENCY!
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1199,9 +1202,8 @@ void havocbot_role_kh_freelancer(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		int key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1213,6 +1215,8 @@ void havocbot_role_kh_freelancer(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 

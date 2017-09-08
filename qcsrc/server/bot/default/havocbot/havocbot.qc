@@ -584,7 +584,7 @@ void havocbot_movetogoal(entity this)
 				else if(havocbot_checkgoaldistance(this, gco))
 				{
 					navigation_clearroute(this);
-					this.bot_strategytime = 0;
+					navigation_goalrating_timeout_force(this);
 				}
 				else
 					return;
@@ -725,7 +725,7 @@ void havocbot_movetogoal(entity this)
 	if(this.goalentity && wasfreed(this.goalentity))
 	{
 		navigation_clearroute(this);
-		this.bot_strategytime = 0;
+		navigation_goalrating_timeout_force(this);
 		return;
 	}
 	else if(this.goalentity.bot_pickup)
@@ -740,7 +740,7 @@ void havocbot_movetogoal(entity this)
 				{
 					this.goalentity.bot_pickup_respawning = false;
 					navigation_clearroute(this);
-					this.bot_strategytime = 0;
+					navigation_goalrating_timeout_force(this);
 					return;
 				}
 			}
@@ -752,7 +752,7 @@ void havocbot_movetogoal(entity this)
 			if(checkpvs(this.origin, this.goalentity))
 			{
 				navigation_clearroute(this);
-				this.bot_strategytime = 0;
+				navigation_goalrating_timeout_force(this);
 				return;
 			}
 		}
@@ -760,13 +760,13 @@ void havocbot_movetogoal(entity this)
 	if(!locked_goal)
 	{
 		if(navigation_poptouchedgoals(this) && this.bot_strategytime < time + 1)
-			this.bot_strategytime = 0;
+			navigation_goalrating_timeout_force(this);
 	}
 
 	// if ran out of goals try to use an alternative goal or get a new strategy asap
 	if(this.goalcurrent == NULL)
 	{
-		this.bot_strategytime = 0;
+		navigation_goalrating_timeout_force(this);
 		return;
 	}
 
@@ -853,7 +853,7 @@ void havocbot_movetogoal(entity this)
 			if(havocbot_checkgoaldistance(this, gco))
 			{
 				navigation_clearroute(this);
-				this.bot_strategytime = 0;
+				navigation_goalrating_timeout_force(this);
 				return;
 			}
 
@@ -914,7 +914,7 @@ void havocbot_movetogoal(entity this)
 			if(unreachable)
 			{
 				navigation_clearroute(this);
-				this.bot_strategytime = 0;
+				navigation_goalrating_timeout_force(this);
 			}
 		}
 

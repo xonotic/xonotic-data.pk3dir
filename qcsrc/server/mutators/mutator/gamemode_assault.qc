@@ -461,7 +461,7 @@ void havocbot_role_ast_offense(entity this)
 	if(this.havocbot_attack_time>time)
 		return;
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 650);
@@ -469,7 +469,7 @@ void havocbot_role_ast_offense(entity this)
 		havocbot_goalrating_items(this, 15000, this.origin, 10000);
 		navigation_goalrating_end(this);
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -495,7 +495,7 @@ void havocbot_role_ast_defense(entity this)
 	if(this.havocbot_attack_time>time)
 		return;
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		navigation_goalrating_start(this);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 3000);
@@ -503,7 +503,7 @@ void havocbot_role_ast_defense(entity this)
 		havocbot_goalrating_items(this, 15000, this.origin, 10000);
 		navigation_goalrating_end(this);
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_timeout_set(this);
 	}
 }
 

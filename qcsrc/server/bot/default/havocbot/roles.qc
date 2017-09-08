@@ -202,17 +202,15 @@ void havocbot_role_generic(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 
-		if(IS_PLAYER(this.goalentity))
-			this.bot_strategytime = time + min(2, autocvar_bot_ai_strategyinterval);
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -224,7 +222,7 @@ void havocbot_chooserole_generic(entity this)
 void havocbot_chooserole(entity this)
 {
 	LOG_TRACE("choosing a role...");
-	this.bot_strategytime = 0;
+	navigation_goalrating_timeout_force(this);
 	if(!MUTATOR_CALLHOOK(HavocBot_ChooseRole, this))
 		havocbot_chooserole_generic(this);
 }

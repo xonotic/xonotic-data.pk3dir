@@ -133,7 +133,7 @@ void bot_think(entity this)
 		if (this.deadflag == DEAD_DEAD)
 		{
 			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
-			this.bot_strategytime = 0;
+			navigation_goalrating_timeout_force(this);
 		}
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)

@@ -157,6 +157,9 @@ void navigation_routerating(entity this, entity e, float f, float rangebias);
 int navigation_poptouchedgoals(entity this);
 void navigation_goalrating_start(entity this);
 void navigation_goalrating_end(entity this);
+void navigation_goalrating_timeout_set(entity this);
+void navigation_goalrating_timeout_force(entity this);
+bool navigation_goalrating_timeout(entity this);
 void navigation_unstuck(entity this);
 
 void botframe_updatedangerousobjects(float maxupdate);
