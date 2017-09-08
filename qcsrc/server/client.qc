@@ -269,7 +269,9 @@ void PutObserverInServer(entity this)
 	if (mutator_returnvalue) {
 	    // mutator prevents resetting teams+score
 	} else {
+		int oldteam = this.team;
 		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
+		MUTATOR_CALLHOOK(Player_ChangedTeam, this, oldteam, this.team);
         this.frags = FRAGS_SPECTATOR;
         PlayerScore_Clear(this);  // clear scores when needed
     }
@@ -893,8 +895,10 @@ void ClientKill_Now(entity this)
 	if(CS(this).killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
-	if(!IS_SPEC(this) && !IS_OBSERVER(this))
+	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
+	{
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
+	}
 
 	// now I am sure the player IS dead
 }
