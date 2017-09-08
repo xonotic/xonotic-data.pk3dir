@@ -5,6 +5,8 @@
 void button_wait(entity this);
 void button_return(entity this);
 
+// in case button is deactivated by a relay_deactivate while it pressed down
+// set both fields to -1 in button_return!!
 .float wait_remaining;
 .float activation_time;
 
@@ -23,6 +25,7 @@ void button_setactive(entity this, int astate)
 
 	if (this.active == ACTIVE_ACTIVE && oldstate == ACTIVE_NOT)
 	{
+		// button was deactivated while it was pressed
 		if (this.wait_remaining >= 0)
 		{
 			this.nextthink =  this.wait_remaining + this.ltime;
@@ -31,7 +34,11 @@ void button_setactive(entity this, int astate)
 	}
 	else if (this.active == ACTIVE_NOT && oldstate == ACTIVE_ACTIVE)
 	{
-		this.wait_remaining = this.wait - (time - this.activation_time);
+		// check if button is in pressed state
+		if (this.activation_time >= 0)
+		{
+			this.wait_remaining = this.wait - (time - this.activation_time);
+		}
 	}
 }
 
@@ -63,7 +70,8 @@ void button_return(entity this)
 	this.frame = 0;			// use normal textures
 	if (this.health)
 		this.takedamage = DAMAGE_YES;	// can be shot again
-	this.wait_remaining = this.wait;
+	this.wait_remaining = -1;
+	this.activation_time = -1;
 }
 
 
@@ -188,7 +196,8 @@ spawnfunc(func_button)
 	if (!this.lip)
 		this.lip = 4;
 
-	this.wait_remaining = this.wait;
+	this.wait_remaining = -1;
+	this.activation_time = -1;
 
     if(this.noise != "")
         precache_sound(this.noise);
