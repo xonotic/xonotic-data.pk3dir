@@ -605,7 +605,8 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 {
 	make_pure(this);
-	int sf; serialize(byte, 0, sf);
+	int sf = 0;
+	serialize(byte, 0, sf);
 	if (sf & 1) {
 		for (int j = 0; j < maxclients; ++j) {
 			if (playerslots[j]) {
