@@ -5,6 +5,7 @@
 #include "client.qh"
 #include "scores.qh"
 #include <common/gamemodes/rules.qh>
+#include "teamplay.qh"
 
 int ScoreRules_teams;
 

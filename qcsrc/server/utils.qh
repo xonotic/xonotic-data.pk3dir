@@ -41,7 +41,7 @@ const string STR_OBSERVER = "observer";
 		} \
 	} MACRO_END
 
-#define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), body)
+#define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), LAMBDA(body))
 
 // using the "inside out" version of knuth-fisher-yates shuffle
 // https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
