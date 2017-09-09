@@ -465,6 +465,7 @@ void havocbot_movetogoal(entity this)
 	CS(this).movement = '0 0 0';
 	maxspeed = autocvar_sv_maxspeed;
 
+	PHYS_INPUT_BUTTON_JETPACK(this) = false;
 	// Jetpack navigation
 	if(this.goalcurrent)
 	if(this.navigation_jetpack_goal)
@@ -525,7 +526,7 @@ void havocbot_movetogoal(entity this)
 		}
 
 		// Flying
-		PHYS_INPUT_BUTTON_HOOK(this) = true;
+		PHYS_INPUT_BUTTON_JETPACK(this) = true;
 		if(this.navigation_jetpack_point.z - STAT(PL_MAX, this).z + STAT(PL_MIN, this).z < this.origin.z)
 		{
 			CS(this).movement_x = dir * v_forward * maxspeed;
@@ -612,8 +613,7 @@ void havocbot_movetogoal(entity this)
 		this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
 
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
-	if(skill>6)
-	if (!(IS_ONGROUND(this)))
+	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
 		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
 			* ((this.strength_finished < time) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
@@ -627,12 +627,10 @@ void havocbot_movetogoal(entity this)
 			if(tracebox_hits_trigger_hurt(this.origin, this.mins, this.maxs, trace_endpos + '0 0 1' ))
 			{
 				if(this.velocity.z<0)
-				{
-					PHYS_INPUT_BUTTON_HOOK(this) = true;
-				}
+					PHYS_INPUT_BUTTON_JETPACK(this) = true;
 			}
 			else
-				PHYS_INPUT_BUTTON_HOOK(this) = true;
+				PHYS_INPUT_BUTTON_JETPACK(this) = true;
 
 			// If there is no goal try to move forward
 
