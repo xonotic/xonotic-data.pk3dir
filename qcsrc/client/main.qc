@@ -435,11 +435,10 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	//	RegisterPlayer(o);
 	//playerchecker will do this for us later, if it has not already done so
 
-    int sf, lf;
-	sf = ReadShort();
-	lf = ReadShort();
+	int sf = ReadShort();
+	int lf = ReadShort();
 	FOREACH(Scores, true, {
-        int p = 1 << (i % 16);
+		int p = 1 << (i % 16);
 		if (sf & p)
 		{
 			if (lf & p)
@@ -447,7 +446,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 			else
 				o.(scores(it)) = ReadChar();
 		}
-    });
+	});
 
 	return = true;
 
@@ -461,24 +460,21 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 {
 	make_pure(this);
 	int i;
-	entity o;
 
 	this.team = ReadByte();
-	o = this.owner = GetTeam(this.team, true); // these team numbers can always be trusted
+	entity o = this.owner = GetTeam(this.team, true); // these team numbers can always be trusted
 
-    int sf, lf;
 #if MAX_TEAMSCORE <= 8
-	sf = ReadByte();
-	lf = ReadByte();
+	int sf = ReadByte();
+	int lf = ReadByte();
 #else
-	sf = ReadShort();
-	lf = ReadShort();
+	int sf = ReadShort();
+	int lf = ReadShort();
 #endif
-	int p;
-	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(sf & p)
+	for(i = 0; i < MAX_TEAMSCORE; ++i)
+		if(sf & BIT(i))
 		{
-			if(lf & p)
+			if(lf & BIT(i))
 				o.(teamscores(i)) = ReadInt24_t();
 			else
 				o.(teamscores(i)) = ReadChar();
@@ -494,7 +490,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	make_pure(this);
 	float newspectatee_status;
 
-    int f = ReadByte();
+	int f = ReadByte();
 
 	scoreboard_showscores_force = (f & BIT(0));
 
@@ -551,9 +547,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 {
 	make_pure(this);
-    int i, j, b, f;
+	int i, j, b, f;
 
-    int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
+	int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
 	if(!(nags & BIT(2)))
 	{
@@ -590,7 +586,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
-			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
+			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])
 						playerslots[j].ready = 0;
@@ -609,21 +605,24 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 {
 	make_pure(this);
-    int i, j, b, f;
-
-    int sf = ReadByte();
-	if(sf & 1)
-	{
-		for(j = 0; j < maxclients; ++j)
-			if(playerslots[j])
+	int sf = 0;
+	serialize(byte, 0, sf);
+	if (sf & 1) {
+		for (int j = 0; j < maxclients; ++j) {
+			if (playerslots[j]) {
 				playerslots[j].eliminated = 1;
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			f = ReadByte();
-			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
-				if (!(f & b))
-					if(playerslots[j])
-						playerslots[j].eliminated = 0;
+			}
+		}
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			serialize(byte, 0, f);
+			for (int b = 0; b < 8; ++b) {
+				if (f & BIT(b)) continue;
+				int j = i - 1 + b;
+				if (playerslots[j]) {
+					playerslots[j].eliminated = 0;
+				}
+			}
 		}
 	}
 	return true;
@@ -641,7 +640,7 @@ NET_HANDLE(ENT_CLIENT_RANDOMSEED, bool isnew)
 NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 {
 	make_pure(this);
-    int sf = ReadInt24_t();
+	int sf = ReadInt24_t();
 	if (sf == 0) {
 		for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
 			weapon_accuracy[w] = -1;
@@ -651,7 +650,7 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 	int f = 1;
 	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
 		if (sf & f) {
-            int b = ReadByte();
+			int b = ReadByte();
 			if (b == 0)
 				weapon_accuracy[w] = -1;
 			else if (b == 255)

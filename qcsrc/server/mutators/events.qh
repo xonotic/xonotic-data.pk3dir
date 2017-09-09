@@ -130,6 +130,31 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(CheckAllowedTeams, EV_CheckAllowedTeams);
 
+/** return true to manually override team counts */
+MUTATOR_HOOKABLE(GetTeamCounts, EV_NO_ARGS);
+
+/** allow overriding of team counts */
+#define EV_GetTeamCount(i, o) \
+    /** team to count                   */ i(float, MUTATOR_ARGV_0_float) \
+    /** player to ignore                */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** number of players in a team     */ i(float, MUTATOR_ARGV_2_float) \
+    /**/                                   o(float, MUTATOR_ARGV_2_float) \
+    /** number of bots in a team        */ i(float, MUTATOR_ARGV_3_float) \
+    /**/                                   o(float, MUTATOR_ARGV_3_float) \
+    /** lowest scoring human in a team  */ i(entity, MUTATOR_ARGV_4_entity) \
+    /**/                                   o(entity, MUTATOR_ARGV_4_entity) \
+    /** lowest scoring bot in a team    */ i(entity, MUTATOR_ARGV_5_entity) \
+    /**/                                   o(entity, MUTATOR_ARGV_5_entity) \
+    /**/
+MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
+
+/** allows overriding best teams */
+#define EV_FindBestTeams(i, o) \
+    /** player checked   */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** bitmask of teams */ o(float, MUTATOR_ARGV_1_float) \
+    /**/
+MUTATOR_HOOKABLE(FindBestTeams, EV_FindBestTeams);
+
 /** copies variables for spectating "spectatee" to "this" */
 #define EV_SpectateCopy(i, o) \
     /** spectatee   */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -760,6 +785,12 @@ MUTATOR_HOOKABLE(Race_FinalCheckpoint, EV_Race_FinalCheckpoint);
     /**/
 MUTATOR_HOOKABLE(ClientKill, EV_ClientKill);
 
+/** called when player is about to be killed during kill command or changing teams */
+#define EV_ClientKill_Now(i, o) \
+    /** player */        i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(ClientKill_Now, EV_ClientKill_Now);
+
 #define EV_FixClientCvars(i, o) \
     /** player */        i(entity, MUTATOR_ARGV_0_entity) \
     /**/
@@ -907,13 +938,33 @@ MUTATOR_HOOKABLE(PrepareExplosionByDamage, EV_PrepareExplosionByDamage);
     /**/
 MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
 
-/**/
+/**
+ * Called before player changes their team. Return true to block team change.
+ */
 #define EV_Player_ChangeTeam(i, o) \
     /** player */         i(entity, MUTATOR_ARGV_0_entity) \
 	/** current team */   i(float, MUTATOR_ARGV_1_float) \
 	/** new team */       i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
+
+/**
+ * Called after player has changed their team.
+ */
+#define EV_Player_ChangedTeam(i, o) \
+    /** player */         i(entity, MUTATOR_ARGV_0_entity) \
+	/** old team */       i(float, MUTATOR_ARGV_1_float) \
+	/** current team */   i(float, MUTATOR_ARGV_2_float) \
+    /**/
+MUTATOR_HOOKABLE(Player_ChangedTeam, EV_Player_ChangedTeam);
+
+/**
+ * Called when player is about to be killed when changing teams. Return true to block killing.
+ */
+#define EV_Player_ChangeTeamKill(i, o) \
+    /** player */    i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Player_ChangeTeamKill, EV_Player_ChangeTeamKill);
 
 /**/
 #define EV_URI_GetCallback(i, o) \
