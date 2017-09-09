@@ -379,6 +379,8 @@ REPLICATE(autoswitch, bool, "cl_autoswitch");
 
 REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
 
+REPLICATE(cvar_cl_allow_eloranking, bool, "cl_allow_eloranking");
+
 REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
 
 REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
