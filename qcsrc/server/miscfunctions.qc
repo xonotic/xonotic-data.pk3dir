@@ -949,8 +949,8 @@ bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 	serialize(byte, out, sendflags);
 	if (sendflags & 1) {
 		for (int i = 1; i <= maxclients; i += 8) {
-		    int f = 0;
-            entity e = edict_num(i);
+			int f = 0;
+			entity e = edict_num(i);
 			for (int b = 0; b < 8; ++b, e = nextent(e)) {
 				if (eliminatedPlayers.isEliminated(e)) {
 					f |= BIT(b);
