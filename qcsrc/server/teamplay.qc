@@ -47,7 +47,7 @@ void InitGameplayMode()
 	int done = 0; for (int i = 0, n = numentityfields(); i < n; ++i) {
 	    string k = entityfieldname(i); vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
 	    if (v) {
-            putentityfieldstring(i, world, sprintf("%d %d %d", v));
+            putentityfieldstring(i, world, sprintf("%v", v));
             if (++done == 2) break;
         }
 	}
