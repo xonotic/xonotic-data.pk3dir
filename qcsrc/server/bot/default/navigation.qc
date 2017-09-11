@@ -1202,29 +1202,8 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
 			&& e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 		{
-			nwp = navigation_findnearestwaypoint(e, true);
-			if(nwp)
-			{
-				e.nearestwaypoint = nwp;
-
-				vector m1 = nwp.absmin, m2 = nwp.absmax;
-				m1.x = nwp.origin.x; m1.y = nwp.origin.y;
-				m2.x = nwp.origin.x; m2.y = nwp.origin.y;
-				vector ve = (e.absmin - e.absmax) * 0.5;
-				ve.x = bound(m1.x, ve.x, m2.x);
-				ve.y = bound(m1.y, ve.y, m2.y);
-				ve.z = bound(m1.z, ve.z, m2.z);
-
-				m1 = e.absmin; m2 = e.absmax;
-				m1.x = e.origin.x; m1.y = e.origin.y;
-				m2.x = e.origin.x; m2.y = e.origin.y;
-				vector vnwp = nwp.origin;
-				vnwp.x = bound(m1.x, vnwp.x, m2.x);
-				vnwp.y = bound(m1.y, vnwp.y, m2.y);
-				vnwp.z = bound(m1.z, vnwp.z, m2.z);
-				e.nearestwaypoint_dist = vlen(ve - vnwp);
-			}
-			else
+			e.nearestwaypoint = nwp = navigation_findnearestwaypoint(e, true);
+			if(!nwp)
 			{
 				LOG_DEBUG("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e));
 
@@ -1325,20 +1304,15 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if(nearest_wp && nearest_wp.enemy)
 	{
 		// often path can be optimized by not adding the nearest waypoint
-		if (this.goalentity.nearestwaypoint_dist < 8)
-			e = nearest_wp.enemy;
-		else
+		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
 		{
-			if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
-			{
-				SET_TRACEWALK_DESTCOORDS(this.goalentity, nearest_wp.enemy.origin, dest, dest_height);
-				if(vdist(dest - nearest_wp.enemy.origin, <, 1050))
-				if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
-					e = nearest_wp.enemy;
-			}
-			else if(navigation_item_islinked(nearest_wp.enemy, this.goalentity))
+			SET_TRACEWALK_DESTCOORDS(this.goalentity, nearest_wp.enemy.origin, dest, dest_height);
+			if(vdist(dest - nearest_wp.enemy.origin, <, 1050))
+			if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 				e = nearest_wp.enemy;
 		}
+		else if(navigation_item_islinked(nearest_wp.enemy, this.goalentity))
+			e = nearest_wp.enemy;
 	}
 
 	for (;;)

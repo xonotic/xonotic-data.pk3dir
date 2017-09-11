@@ -30,7 +30,6 @@ entity navigation_bestgoal;
 .float goalcurrent_distance_time;
 
 .entity nearestwaypoint;
-.float nearestwaypoint_dist;
 .float nearestwaypointtimeout;
 
 /*
