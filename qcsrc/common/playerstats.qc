@@ -379,7 +379,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 
 				// elo ranking enabled
 				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_elo", p));
-				if(nn != "") { url_fputs(fh, sprintf("E %s\n", nn)); }
+				if(nn != "") { url_fputs(fh, sprintf("r %s\n", nn)); }
 
 				// output player events
 				for(e = PS_GR_OUT_EVL; (en = db_get(PS_GR_OUT_DB, sprintf("*:%s", e))) != ""; e = en)
