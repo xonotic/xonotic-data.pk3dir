@@ -773,7 +773,14 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	IL_EACH(g_waypoints, it != ent && it != except,
 	{
 		if(boxesoverlap(pm1, pm2, it.absmin, it.absmax))
+		{
+			if(!autocvar_g_waypointeditor && walkfromwp && !ent.navigation_dynamicgoal)
+			{
+				waypoint_clearlinks(ent); // initialize wpXXmincost fields
+				navigation_item_addlink(it, ent);
+			}
 			return it;
+		}
 	});
 
 	vector org = ent.origin;
