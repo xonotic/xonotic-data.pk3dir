@@ -761,7 +761,7 @@ void havocbot_movetogoal(entity this)
 	}
 	if(!locked_goal)
 	{
-		if(navigation_poptouchedgoals(this) && this.bot_strategytime < time + 1)
+		if(navigation_poptouchedgoals(this) && time > this.bot_strategytime - (IS_MOVABLE(this.goalentity) ? 3 : 2))
 			navigation_goalrating_timeout_force(this);
 	}
 

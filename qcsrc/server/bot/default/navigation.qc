@@ -19,7 +19,7 @@
 
 void navigation_goalrating_timeout_set(entity this)
 {
-	if((IS_PLAYER(this.goalentity) || IS_MONSTER(this.goalentity)) && !STAT(FROZEN, this.goalentity))
+	if(IS_MOVABLE(this.goalentity))
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval_movingtarget;
 	else
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
