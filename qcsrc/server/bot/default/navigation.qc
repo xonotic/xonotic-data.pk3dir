@@ -1331,7 +1331,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		{
 			if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
 			{
-				SET_TRACEWALK_DESTCOORDS(e, nearest_wp.enemy.origin, dest, dest_height);
+				SET_TRACEWALK_DESTCOORDS(this.goalentity, nearest_wp.enemy.origin, dest, dest_height);
 				if(vdist(dest - nearest_wp.enemy.origin, <, 1050))
 				if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
 					e = nearest_wp.enemy;
