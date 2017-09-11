@@ -152,7 +152,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 			if(latency) { PS_GR_P_ADDVAL(p, PLAYERSTATS_AVGLATENCY, latency); }
 		}
 
-		db_put(PS_GR_OUT_DB, sprintf("%s:_elo", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
+		db_put(PS_GR_OUT_DB, sprintf("%s:_ranked", p.playerstats_id), ftos(CS(p).cvar_cl_allow_uidranking));
 	}
 
 	strunzone(p.playerstats_id);
@@ -378,7 +378,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 				}
 
 				// elo ranking enabled
-				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_elo", p));
+				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_ranked", p));
 				if(nn != "") { url_fputs(fh, sprintf("r %s\n", nn)); }
 
 				// output player events
