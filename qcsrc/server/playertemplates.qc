@@ -1,9 +1,10 @@
 /// \file
-/// \brief Source file that contains implementation of the Player Templates
-/// mutator.
+/// \brief Source file that contains implementation of the player templates
+/// system.
 /// \author Lyberta
 /// \copyright GNU GPLv3 or any later version.
 
+#include <common/items/item.qh>
 #include "autocvars.qh"
 #include "resources.qh"
 #include "mutators/events.qh"
