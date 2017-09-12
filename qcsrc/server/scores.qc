@@ -54,7 +54,7 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
 
 bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 {
-	float i, p, longflags;
+	float i, longflags;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
 	int t = this.team - 1;
@@ -62,9 +62,9 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 	WriteByte(MSG_ENTITY, t);
 
 	longflags = 0;
-	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
+	for(i = 0; i < MAX_TEAMSCORE; ++i)
 		if(this.(teamscores(i)) > 127 || this.(teamscores(i)) <= -128)
-			longflags |= p;
+			longflags |= BIT(i);
 
 #if MAX_TEAMSCORE <= 8
 	WriteByte(MSG_ENTITY, sendflags);
@@ -73,10 +73,10 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 	WriteShort(MSG_ENTITY, sendflags);
 	WriteShort(MSG_ENTITY, longflags);
 #endif
-	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(sendflags & p)
+	for(i = 0; i < MAX_TEAMSCORE; ++i)
+		if(sendflags & BIT(i))
 		{
-			if(longflags & p)
+			if(longflags & BIT(i))
 				WriteInt24_t(MSG_ENTITY, this.(teamscores(i)));
 			else
 				WriteChar(MSG_ENTITY, this.(teamscores(i)));

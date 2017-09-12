@@ -102,7 +102,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	if (!GetResourceAmount(this, wpn.ammo_type))
+	if ((wpn.ammo_type != RESOURCE_NONE) && !GetResourceAmount(this, wpn.ammo_type))
 	{
 		switch (wpn.ammo_type)
 		{
