@@ -970,6 +970,7 @@ LABEL(pickup)
 				if(it.itemdef) // is a registered item
 				{
 					Item_Show(it, -1);
+					it.scheduledrespawntime = 0;
 					RandomSelection_AddEnt(it, it.cnt, 0);
 				}
 			});

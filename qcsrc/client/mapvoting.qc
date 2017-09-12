@@ -563,7 +563,7 @@ void MapVote_ReadMask()
 	int i;
 	if ( mv_num_maps < 24 )
 	{
-		int mask, power;
+		int mask;
 		if(mv_num_maps < 8)
 			mask = ReadByte();
 		else if(mv_num_maps < 16)
@@ -571,9 +571,9 @@ void MapVote_ReadMask()
 		else
 			mask = ReadLong();
 
-		for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
+		for(i = 0; i < mv_num_maps; ++i)
 		{
-			if ( mask & power )
+			if (mask & BIT(i))
 				mv_flags[i] |= GTV_AVAILABLE;
 			else
 				mv_flags[i] &= ~GTV_AVAILABLE;

@@ -944,24 +944,21 @@ void InitializeEntitiesRun()
 .float(entity) isEliminated;
 bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
-	float i, f, b;
-	entity e;
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
-	WriteByte(MSG_ENTITY, sendflags);
-
-	if(sendflags & 1)
-	{
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
-			{
-				if(eliminatedPlayers.isEliminated(e))
-					f |= b;
+	Stream out = MSG_ENTITY;
+	WriteHeader(out, ENT_CLIENT_ELIMINATEDPLAYERS);
+	serialize(byte, out, sendflags);
+	if (sendflags & 1) {
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			entity e = edict_num(i);
+			for (int b = 0; b < 8; ++b, e = nextent(e)) {
+				if (eliminatedPlayers.isEliminated(e)) {
+					f |= BIT(b);
+				}
 			}
-			WriteByte(MSG_ENTITY, f);
+			serialize(byte, out, f);
 		}
 	}
-
 	return true;
 }
 

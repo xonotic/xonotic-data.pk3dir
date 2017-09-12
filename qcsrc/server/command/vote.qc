@@ -81,8 +81,9 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 	{
 		for (i = 1; i <= maxclients; i += 8)
 		{
-			for (f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
-				if (!IS_REAL_CLIENT(e) || e.ready) f |= b;
+			for (f = 0, e = edict_num(i), b = BIT(0); b < BIT(8); b <<= 1, e = nextent(e))
+				if (!IS_REAL_CLIENT(e) || e.ready)
+					f |= b;
 			WriteByte(MSG_ENTITY, f);
 		}
 	}
