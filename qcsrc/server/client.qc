@@ -219,9 +219,20 @@ void PutObserverInServer(entity this)
     bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
-	if (IS_PLAYER(this) && this.health >= 1) {
-        // despawn effect
-		Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	if (IS_PLAYER(this))
+	{
+		if(this.health >= 1)
+		{
+        	// despawn effect
+			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+		}
+
+		// was a player, recount votes and ready status
+		if(IS_REAL_CLIENT(this))
+		{
+			VoteCount(false);
+			ReadyCount();
+		}
     }
 
     {
