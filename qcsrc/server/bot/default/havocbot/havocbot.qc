@@ -431,11 +431,14 @@ bool havocbot_checkgoaldistance(entity this, vector gco)
 {
 	float curr_dist = vlen(this.origin - gco);
 	float curr_dist_2d = vlen(vec2(this.origin - gco));
+	float distance_time = this.goalcurrent_distance_time;
+	if(distance_time < 0)
+		distance_time = -distance_time;
 	if(curr_dist > this.goalcurrent_distance && curr_dist_2d > this.goalcurrent_distance_2d)
 	{
-		if(!this.goalcurrent_distance_time)
+		if(!distance_time)
 			this.goalcurrent_distance_time = time;
-		else if (time - this.goalcurrent_distance_time > 0.5)
+		else if (time - distance_time > 0.5)
 			return true;
 	}
 	else
@@ -854,9 +857,28 @@ void havocbot_movetogoal(entity this)
 			if(!this.jumppadcount && !IS_PLAYER(this.goalcurrent) && !(this.goalcurrent.bot_pickup_respawning && this.goalcurrent_distance < 50))
 			if(havocbot_checkgoaldistance(this, gco))
 			{
-				navigation_clearroute(this);
-				navigation_goalrating_timeout_force(this);
-				return;
+				if(this.goalcurrent_distance_time < 0) // can't get close for the second time
+				{
+					navigation_clearroute(this);
+					navigation_goalrating_timeout_force(this);
+					return;
+				}
+
+				vector dest = '0 0 0';
+				float dest_height = 0;
+				SET_TRACEWALK_DESTCOORDS(this.goalcurrent, this.origin, dest, dest_height);
+				if (!tracewalk(this, this.origin, this.mins, this.maxs, dest, dest_height, bot_navigation_movemode))
+				{
+					navigation_clearroute(this);
+					navigation_goalrating_timeout_force(this);
+					return;
+				}
+
+				// give bot only another chance to prevent bot getting stuck
+				// in case it thinks it can walk but actually can't
+				this.goalcurrent_distance = FLOAT_MAX;
+				this.goalcurrent_distance_2d = FLOAT_MAX;
+				this.goalcurrent_distance_time = -time; // mark second try
 			}
 
 			// Check for water/slime/lava and dangerous edges
