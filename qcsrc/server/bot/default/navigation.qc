@@ -1333,6 +1333,13 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 int navigation_poptouchedgoals(entity this)
 {
 	int removed_goals = 0;
+
+	if(IS_PLAYER(this.goalcurrent) && IS_DEAD(this.goalcurrent) && checkpvs(this.origin + this.view_ofs, this.goalcurrent))
+	{
+		navigation_poproute(this);
+		++removed_goals;
+	}
+
 	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
 		// make sure jumppad is really hit, don't rely on distance based checks
