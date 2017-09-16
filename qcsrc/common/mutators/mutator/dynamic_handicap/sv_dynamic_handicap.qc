@@ -1,3 +1,4 @@
+#include "sv_dynamic_handicap.qh"
 /// \file
 /// \brief Source file that contains implementation of the Dynamic handicap
 /// mutator.
