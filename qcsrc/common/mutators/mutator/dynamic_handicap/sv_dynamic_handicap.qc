@@ -38,11 +38,8 @@ float DynamicHandicap_ClampHandicap(float handicap);
 void DynamicHandicap_UpdateHandicap(entity player)
 {
 	float handicap = DynamicHandicap_GetBaseValue(player);
-	//PrintToChat(player, strcat("Base handicap = ", ftos(handicap)));
 	handicap = DynamicHandicap_ScaleHandicap(handicap);
-	//PrintToChat(player, strcat("Scaled handicap = ", ftos(handicap)));
 	handicap = DynamicHandicap_ClampHandicap(handicap);
-	//PrintToChat(player, strcat("Clamped handicap = ", ftos(handicap)));
 	Handicap_SetForcedHandicap(player, handicap);
 }
 
