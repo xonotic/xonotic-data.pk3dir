@@ -88,7 +88,6 @@ void CreatureFrame_Liquids(entity this)
 			this.dmgtime = 0;
 		}
 		this.air_finished = time + 12;
-		this.dmg = 2;
 	}
 }
 

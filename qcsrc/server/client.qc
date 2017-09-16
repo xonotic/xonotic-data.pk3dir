@@ -537,7 +537,6 @@ void PutPlayerInServer(entity this)
 		this.flags |= FL_NOTARGET;
 	this.takedamage = DAMAGE_AIM;
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
-	this.dmg = 2; // WTF
 
 	if (warmup_stage) {
 		this.ammo_shells = warmup_start_ammo_shells;
@@ -2664,7 +2663,6 @@ void DrownPlayer(entity this)
 		if(this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
-		this.dmg = 2;
 	}
 	else if (this.air_finished < time)
 	{	// drown!
