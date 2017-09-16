@@ -14,6 +14,7 @@
 #include "spawnpoints.qh"
 #include "resources.qh"
 #include "g_damage.qh"
+#include "handicap.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
 #include "cheats.qh"
@@ -219,9 +220,20 @@ void PutObserverInServer(entity this)
     bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
-	if (IS_PLAYER(this) && this.health >= 1) {
-        // despawn effect
-		Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	if (IS_PLAYER(this))
+	{
+		if(this.health >= 1)
+		{
+        	// despawn effect
+			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+		}
+
+		// was a player, recount votes and ready status
+		if(IS_REAL_CLIENT(this))
+		{
+			VoteCount(false);
+			ReadyCount();
+		}
     }
 
     {
@@ -1271,6 +1283,8 @@ void ClientConnect(entity this)
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
 	});
+
+	Handicap_Initialize(this);
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
