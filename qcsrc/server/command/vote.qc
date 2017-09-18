@@ -670,6 +670,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			if (accepted > 0)
 			{
 				string reason = "No reason provided";
+				string command_arguments;
 				if(argc > next_token)
 					reason = substring(vote_command, argv_start_index(next_token) - missing_chars, -1);
 
