@@ -854,7 +854,8 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						int parse_error;
 						vote_command = VoteCommand_extractcommand(vote_command, 3, argc);
 
-						if (!caller.vote_master) { print_to(caller, "^1You do not have vote master privelages."); }
+						if (!caller.vote_master)
+							print_to(caller, "^1You do not have vote master privileges.");
 						else if (!VoteCommand_checknasty(vote_command))
 						{
 							print_to(caller, "^1Syntax error in command, see 'vhelp' for more info.");
