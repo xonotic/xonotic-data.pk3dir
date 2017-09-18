@@ -649,20 +649,10 @@ float VoteCommand_checkargs(float startpos, float argc)
 
 int VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
 {
-	string first_command;
+	string first_command = argv(startpos);
 
-	first_command = argv(startpos);
-
-	/*printf("VoteCommand_parse(): Command: '%s', Length: %f.\n",
-	    substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)),
-	    strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)))
-	);*/
-
-	if (
-	    (autocvar_sv_vote_limit > 0)
-	    &&
-	    (strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos))) > autocvar_sv_vote_limit)
-	   )   return 0;
+	if (autocvar_sv_vote_limit > 0 && strlen(vote_command) > autocvar_sv_vote_limit)
+		return 0;
 
 	if (!VoteCommand_checkinlist(first_command, vote_list)) return 0;
 
