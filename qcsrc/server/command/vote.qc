@@ -650,6 +650,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 int VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
 {
 	string first_command = argv(startpos);
+	int missing_chars = argv_start_index(startpos);
 
 	if (autocvar_sv_vote_limit > 0 && strlen(vote_command) > autocvar_sv_vote_limit)
 		return 0;
@@ -668,8 +669,9 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 
 			if (accepted > 0)
 			{
-				string reason = ((argc > next_token) ? substring(vote_command, argv_start_index(next_token), strlen(vote_command) - argv_start_index(next_token)) : "No reason provided");
-				string command_arguments;
+				string reason = "No reason provided";
+				if(argc > next_token)
+					reason = substring(vote_command, argv_start_index(next_token) - missing_chars, -1);
 
 				if (first_command == "kickban") command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
 				else command_arguments = reason;
