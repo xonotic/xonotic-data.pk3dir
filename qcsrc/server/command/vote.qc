@@ -673,8 +673,9 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				if(argc > next_token)
 					reason = substring(vote_command, argv_start_index(next_token) - missing_chars, -1);
 
-				if (first_command == "kickban") command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
-				else command_arguments = reason;
+				string command_arguments = reason;
+				if (first_command == "kickban")
+					command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
 
 				vote_parsed_command = strcat(first_command, " # ", ftos(etof(victim)), " ", command_arguments);
 				vote_parsed_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", reason);
@@ -808,10 +809,12 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				}
 
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++tmp_playercount; });
-				if (tmp_playercount > 1)   Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_CALL);  // don't announce a "vote now" sound if player is alone
+				if (tmp_playercount > 1)
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_CALL);
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");
-				if (autocvar_sv_eventlog)   GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display));
+				if (autocvar_sv_eventlog)
+					GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display));
 				Nagger_VoteChanged();
 				VoteCount(true);  // needed if you are the only one
 			}
