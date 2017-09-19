@@ -1362,7 +1362,8 @@ int navigation_poptouchedgoals(entity this)
 
 	// If for some reason the bot is closer to the next goal, pop the current one
 	if(this.goalstack01 && !wasfreed(this.goalstack01))
-	if(vlen2(this.goalcurrent.origin - this.origin) > vlen2(this.goalstack01.origin - this.origin))
+	if(vlen2(this.goalcurrent.origin - this.origin) > vlen2(this.goalstack01.origin - this.origin)
+		|| vlen2(this.goalcurrent.origin - this.goalstack01.origin) > vlen2(this.goalstack01.origin - this.origin))
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
 	{
 		vector dest = '0 0 0';
