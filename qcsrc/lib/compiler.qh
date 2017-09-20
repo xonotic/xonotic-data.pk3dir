@@ -18,8 +18,11 @@
 	#endif
 #endif
 
+// uncrustify segfaults on this
+// *INDENT-OFF*
 #ifdef GMQCC
-    #define LABEL(id) :id
+	#define LABEL(id) :id
 #else
-    #define LABEL(id) id:
+	#define LABEL(id) id:
 #endif
+// *INDENT_ON*
