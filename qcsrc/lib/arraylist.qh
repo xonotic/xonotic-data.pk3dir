@@ -6,7 +6,6 @@ USING(ArrayList, entity);
 
 #define AL_NEW(this, n, default, T) \
 	MACRO_BEGIN \
-	{ \
 		ArrayList _al = this = new_pure(ArrayList); \
 		_al.al_buf = buf_create(); \
 		for (int i = 0, _n = _al.al_len = n; i < _n; ++i) \
@@ -14,15 +13,14 @@ USING(ArrayList, entity);
 			const _AL_type__##T() it = default; \
 			AL_set##T(this, i, it); \
 		} \
-	} MACRO_END
+	MACRO_END
 
 #define AL_DELETE(this) \
 	MACRO_BEGIN \
-	{ \
 		buf_del(this.al_buf); \
 		delete(this); \
 		this = NULL; \
-	} MACRO_END
+	MACRO_END
 
 #define _AL_type__s() string
 #define AL_gets(this, idx) bufstr_get(this.al_buf, idx)
@@ -60,11 +58,10 @@ entity al_ftoe(int i) = #80;
 
 #define AL_EACH(this, T, cond, body) \
 	MACRO_BEGIN \
-	{ \
 		const noref ArrayList _al = this; \
 		for (int i = 0, n = _al.al_len; i < n; ++i) \
 		{ \
 			const noref _AL_type__##T() it = AL_get##T(_al, i); \
 			if (cond) { body } \
 		} \
-	} MACRO_END
+	MACRO_END

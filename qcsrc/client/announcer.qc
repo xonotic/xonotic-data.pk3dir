@@ -115,7 +115,7 @@ void Announcer_Gamestart()
 	previous_game_starttime = startTime;
 }
 
-#define ANNOUNCER_CHECKMINUTE(minute) MACRO_BEGIN { \
+#define ANNOUNCER_CHECKMINUTE(minute) MACRO_BEGIN \
 	if(announcer_##minute##min) { \
 		if(timeleft > minute * 60) \
 			announcer_##minute##min = false; \
@@ -125,7 +125,7 @@ void Announcer_Gamestart()
 			Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_##minute); \
 		} \
 	} \
-} MACRO_END
+MACRO_END
 
 void Announcer_Time()
 {

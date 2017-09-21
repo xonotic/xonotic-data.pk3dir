@@ -6,14 +6,14 @@
 #define devassert(...) MACRO_BEGIN if (autocvar_developer) assert(__VA_ARGS__); MACRO_END
 
 #define assert_once(expr, ...) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		static bool __once; \
 		if (!__once) \
 		{ \
 			assert(expr, __VA_ARGS__); \
 			__once = true; \
 		} \
-	} MACRO_END
+	MACRO_END
 #define devassert_once(...) MACRO_BEGIN if (autocvar_developer) assert_once(__VA_ARGS__); MACRO_END
 
 #define demand(expr, ...) _assert(LOG_FATAL, expr, __VA_ARGS__)
@@ -21,13 +21,12 @@
 
 #define _assert(f, expr, then) \
 	MACRO_BEGIN \
-	{ \
 		if (!(expr)) \
 		{ \
 			f("assertion failed: `" #expr "`\n"); \
 			then; \
 		} \
-	} MACRO_END
+	MACRO_END
 
 #define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
 
@@ -48,9 +47,9 @@ string(string, string...) strcat1n = #115;
 
 #define _LOG_HEADER(level) "^9[::" "^7"PROGNAME"^9" "::" level"^9" "] ", __SOURCELOC__
 #define _LOG(f, level, s) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		f(strcat1n(_LOG_HEADER(level), "\n^7", s, "\n")); \
-	} MACRO_END
+	MACRO_END
 
 #define  LOG_FATAL(...) _LOG_FATAL(strcat1n(__VA_ARGS__))
 #define  LOG_FATALF(...) _LOG_FATAL(sprintf(__VA_ARGS__))
@@ -67,13 +66,13 @@ string(string, string...) strcat1n = #115;
 #define  LOG_INFO(...) _LOG_INFO(strcat1n(__VA_ARGS__))
 #define  LOG_INFOF(...) _LOG_INFO(sprintf(__VA_ARGS__))
 #define _LOG_INFO(s) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		dprint(_LOG_HEADER("^5INFO")); \
 		string __s = s; \
 		print("\n^7", __s); \
 		/* TODO: unconditionally add a newline when possible */ \
 		if (str2chr(__s, strlen(__s) - 1) != '\n') { print("\n"); } \
-	} MACRO_END
+	MACRO_END
 
 #define  LOG_TRACE(...) _LOG_TRACE(strcat1n(__VA_ARGS__))
 #define  LOG_TRACEF(...) _LOG_TRACE(sprintf(__VA_ARGS__))
@@ -84,9 +83,9 @@ string(string, string...) strcat1n = #115;
 #define _LOG_DEBUG(s) _LOG(dprint2, "^2DEBUG", s)
 
 #define dprint2(msg) \
-	MACRO_BEGIN { \
+	MACRO_BEGIN \
 		if (autocvar_developer > 1) dprint(msg); \
-	} MACRO_END
+	MACRO_END
 
 // TODO: this sucks, lets find a better way to do backtraces?
 #define _backtrace() builtin_remove(NULL)
@@ -102,7 +101,6 @@ noref bool autocvar_prvm_backtraceforwarnings;
 
 #define backtrace(msg) \
 	MACRO_BEGIN \
-	{ \
 		int dev = autocvar_developer; \
 		bool war = autocvar_prvm_backtraceforwarnings; \
 		bt_cvar_set("developer", "1"); \
@@ -112,4 +110,4 @@ noref bool autocvar_prvm_backtraceforwarnings;
 		print("\n--- CUT UNTIL HERE ---\n"); \
 		bt_cvar_set("developer", ftos(dev)); \
 		bt_cvar_set("prvm_backtraceforwarnings", ftos(war)); \
-	} MACRO_END
+	MACRO_END

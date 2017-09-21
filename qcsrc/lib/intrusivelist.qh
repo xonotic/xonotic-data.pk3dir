@@ -146,27 +146,24 @@ void IL_REMOVE(IntrusiveList this, entity it)
  */
 #define IL_CLEAR(this) \
 	MACRO_BEGIN \
-	{ \
 		IntrusiveList __il = this; \
 		assert(__il); \
 		.entity il_prev = __il.il_prevfld; \
 		IL_EACH(__il, true, it.(il_next) = it.(il_prev) = NULL); \
 		__il.il_head = __il.il_tail = NULL; \
-	} MACRO_END
+	MACRO_END
 
 /**
  * Delete the list
  */
 #define IL_DELETE(this) \
 	MACRO_BEGIN \
-	{ \
 		delete(this); \
 		this = NULL; \
-	} MACRO_END
+	MACRO_END
 
 #define IL_EACH(this, cond, body) \
 	MACRO_BEGIN \
-	{ \
 		IntrusiveList _il = this; \
 		assert(_il); \
 		.entity il_next = _il.il_nextfld; \
@@ -177,7 +174,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 			_next = it.(il_next); \
 			if (cond) { LAMBDA(body) } \
 		} \
-	} MACRO_END
+	MACRO_END
 
 .int il_id;
 IntrusiveList il_links[IL_MAX];
