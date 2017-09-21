@@ -5,11 +5,14 @@
 /// \author Lyberta
 /// \copyright GNU GPLv2 or any later version.
 
+#include <common/state.qh>
+#include "client.qh"
+
 .float m_handicap; ///< Holds the handicap value.
 
 void Handicap_Initialize(entity player)
 {
-	player.m_handicap = 1;
+	CS(player).m_handicap = 1;
 }
 
 float Handicap_GetVoluntaryHandicap(entity player)
@@ -19,7 +22,7 @@ float Handicap_GetVoluntaryHandicap(entity player)
 
 float Handicap_GetForcedHandicap(entity player)
 {
-	return player.m_handicap;
+	return CS(player).m_handicap;
 }
 
 void Handicap_SetForcedHandicap(entity player, float value)
@@ -28,7 +31,7 @@ void Handicap_SetForcedHandicap(entity player, float value)
 	{
 		error("Handicap_SetForcedHandicap: Invalid handicap value.");
 	}
-	player.m_handicap = value;
+	CS(player).m_handicap = value;
 }
 
 float Handicap_GetTotalHandicap(entity player)

@@ -4,6 +4,7 @@
 #include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
+#include "handicap.qh"
 #include "g_subs.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
