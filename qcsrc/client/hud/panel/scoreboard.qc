@@ -96,6 +96,7 @@ string TranslateScoresLabel(string l)
 		case "kd": return CTX(_("SCO^k/d"));
 		case "kdr": return CTX(_("SCO^kdr"));
 		case "kills": return CTX(_("SCO^kills"));
+		case "teamkills": return CTX(_("SC0^teamkills"));
 		case "laps": return CTX(_("SCO^laps"));
 		case "lives": return CTX(_("SCO^lives"));
 		case "losses": return CTX(_("SCO^losses"));
@@ -312,6 +313,7 @@ void Cmd_Scoreboard_Help()
 	LOG_INFO(_("^3deaths^7                   Number of deaths"));
 	LOG_INFO(_("^3suicides^7                 Number of suicides"));
 	LOG_INFO(_("^3frags^7                    kills - suicides"));
+	LOG_INFO(_("^3teamkills^7                Number of teamkills"));
 	LOG_INFO(_("^3kd^7                       The kill-death ratio"));
 	LOG_INFO(_("^3dmg^7                      The total damage done"));
 	LOG_INFO(_("^3dmgtaken^7                 The total damage taken"));
@@ -361,6 +363,7 @@ void Cmd_Scoreboard_Help()
 " -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
 " -teams,lms/deaths +ft,tdm/deaths" \
 " -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
+" +teams/teamkills"\
 " -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
 " -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
 " +ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes" \

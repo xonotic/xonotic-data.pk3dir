@@ -47,7 +47,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		else
 		{
 			// teamkill
-			GameRules_scoring_add(attacker, KILLS, -1); // or maybe add a teamkills field?
+			GameRules_scoring_add(attacker, TEAMKILLS, 1);
 		}
 	}
 	else
