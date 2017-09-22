@@ -10,6 +10,7 @@
 #include <server/g_models.qc>
 #include <server/g_subs.qc>
 #include <server/g_world.qc>
+#include <server/handicap.qc>
 #include <server/impulse.qc>
 #include <server/ipban.qc>
 #include <server/item_key.qc>
