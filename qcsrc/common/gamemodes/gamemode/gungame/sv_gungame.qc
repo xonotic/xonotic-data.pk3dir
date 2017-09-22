@@ -11,6 +11,9 @@ const string GUNGAME_WEAPONS = "g_gg_weapons";
 
 //======================= Global variables ====================================
 
+/// \brief Number of kills needed to advance to the next weapon.
+int autocvar_g_gg_kills_per_weapon;
+
 int gungame_maxlevel; ///< Player who reaches this level wins.
 string gungame_weapons; ///< Holds weapons corresponding to levels.
 
@@ -47,7 +50,8 @@ void GunGame_Reset()
 		strunzone(gungame_weapons);
 	}
 	gungame_weapons = strzone(cvar_string(GUNGAME_WEAPONS));
-	gungame_maxlevel = tokenize_console(gungame_weapons);
+	gungame_maxlevel = tokenize_console(gungame_weapons) *
+		autocvar_g_gg_kills_per_weapon;
 	if (gungame_maxlevel == 0)
 	{
 		error("GunGame: Invalid weapon configuration.");
@@ -66,7 +70,7 @@ entity GunGame_GetWeapon(int level)
 		return NULL;
 	}
 	tokenize_console(gungame_weapons);
-	string weapon = argv(level);
+	string weapon = argv(floor(level / autocvar_g_gg_kills_per_weapon));
 	FOREACH(Weapons, it != WEP_Null,
 	{
 		if (it.netname == weapon)
