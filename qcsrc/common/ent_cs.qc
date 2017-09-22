@@ -1,5 +1,7 @@
 #include "ent_cs.qh"
 
+// *INDENT-OFF* uncrustify is too dumb to handle all the macros
+
 REGISTRY(EntCSProps, BITS(16) - 1)
 #define EntCSProps_from(i) _EntCSProps_from(i, NULL)
 REGISTER_REGISTRY(EntCSProps)
