@@ -12,7 +12,7 @@
 		{ \
 			const noref int i = _i; \
 			ITER_CONST noref entity it = arr[i]; \
-			if (cond) { LAMBDA(body) } \
+			if (cond) { LAMBDA(body); } \
 		} \
 	MACRO_END
 
@@ -26,7 +26,7 @@
 			const noref int i = _i; \
 			ITER_CONST noref entity it = _it; \
 			_next = _it.next; \
-			if (cond) { LAMBDA(body) } \
+			if (cond) { LAMBDA(body); } \
 		} \
 	MACRO_END
 
@@ -38,7 +38,7 @@
 		{ \
 			const noref int i = _i; \
 			const noref string it = _it; \
-			if (cond) { LAMBDA(body) } \
+			if (cond) { LAMBDA(body); } \
 		} \
 	MACRO_END
 
@@ -66,7 +66,7 @@
 		while ((_it = STRING_ITERATOR_GET(iter)) > 0) \
 		{ \
 			const noref int it = _it; \
-			if (cond) { LAMBDA(body) } \
+			if (cond) { LAMBDA(body); } \
 		} \
 	MACRO_END
 
@@ -116,7 +116,7 @@
         { \
             const noref int i = _i; \
             ITER_CONST noref entity it = _it; \
-            if (cond) LAMBDA(body) \
+            if (cond) LAMBDA(body); \
         } \
     MACRO_END
 #define MUTEX_LOCK(this) MACRO_BEGIN \
@@ -142,7 +142,7 @@ MACRO_END
 		{ \
 			const noref int i = _i; \
 			ITER_CONST noref entity it = _it; \
-			if (cond) LAMBDA(body) \
+			if (cond) LAMBDA(body); \
 		} \
 	MACRO_END
 /** marker field, always NULL */

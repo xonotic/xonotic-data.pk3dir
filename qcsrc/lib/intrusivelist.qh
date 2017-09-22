@@ -172,7 +172,7 @@ void IL_REMOVE(IntrusiveList this, entity it)
 		{ \
 			const noref entity it = _it; \
 			_next = it.(il_next); \
-			if (cond) { LAMBDA(body) } \
+			if (cond) { LAMBDA(body); } \
 		} \
 	MACRO_END
 

@@ -37,7 +37,7 @@ const string STR_OBSERVER = "observer";
 		{ \
 			const noref int i = _i; \
 			ITER_CONST noref entity it = ftoe(i); \
-			if(cond) { LAMBDA(body) } \
+			if(cond) { LAMBDA(body); } \
 		} \
 	MACRO_END
 
@@ -69,7 +69,7 @@ bool _FCR_entered = false;
 		{ \
 			const noref int i = _i; \
 			ITER_CONST noref entity it = _FCR_clients[i]; \
-			if (cond) { LAMBDA(body) } \
+			if (cond) { LAMBDA(body); } \
 		} \
 		_FCR_entered = false; \
 	MACRO_END
