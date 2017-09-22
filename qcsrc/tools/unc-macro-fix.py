@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-# removes redundant { and } from macros because uncrustify is too dumb to indent them properly (or even not touch them)
+# Removes redundant { and } from macros because uncrustify is too dumb to indent them properly (or even not touch them).
+# Actually, after running this, you might wanna put some back, for cases like `MACRO_BEGIN { ++this##_i; } MACRO_END`,
+# otherwise it ends up like MACRO_BEGIN++ ... sigh'
 
 # all those fancy unix utilities like grep, sed and awk are either woefully inadequate for this or just completely
 # unreadable with their arcane syntaxes - and yes, the plural is intentional because why extend existing tools

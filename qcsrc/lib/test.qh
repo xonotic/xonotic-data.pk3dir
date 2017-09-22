@@ -15,7 +15,7 @@
 #define SUCCEED() (TEST_ok = true)
 
 /** Add a failure, but continue */
-#define ADD_FAILURE(msg) MACRO_BEGIN ++TEST_failed; LOG_WARN(msg); MACRO_END
+#define ADD_FAILURE(msg) MACRO_BEGIN { ++TEST_failed; LOG_WARN(msg); } MACRO_END
 
 /** Add a failure and return */
 #define FAIL(msg) _TEST_ASSERT(ADD_FAILURE(msg))

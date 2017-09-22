@@ -22,7 +22,8 @@ def main():
 
 	# get all remote branches - those would potentially get merge conflicts if we formatted everything
 	branches = run('git branch --list --remotes')
-	branches = [b.strip() for b in branches]
+	# strip the leading spaces and ignore branches that are presumably used for debugging uncrustify
+	branches = [b.strip() for b in branches if "uncrustify" not in b]
 	branches.remove('origin/HEAD -> origin/master')
 	branches.remove('origin/master')
 
