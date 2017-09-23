@@ -348,7 +348,9 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 		s.SendFlags |= (2 ** (scorefield.m_id % 16));
 	if(!warmup_stage)
 		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
-	return (s.(scores(scorefield)) += score);
+	s.(scores(scorefield)) += score;
+	MUTATOR_CALLHOOK(AddedPlayerScore, scorefield, score, player);
+	return s.(scores(scorefield));
 }
 
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score)
