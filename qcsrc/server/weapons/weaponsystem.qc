@@ -5,6 +5,7 @@
 #include "../command/common.qh"
 #include "../mutators/_mod.qh"
 #include "../round_handler.qh"
+#include "../resources.qh"
 #include <common/t_items.qh>
 #include <common/animdecide.qh>
 #include <common/constants.qh>
@@ -668,21 +669,22 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 		w_ent.clip_load -= ammo_use;
 		w_ent.(weapon_load[w_ent.m_weapon.m_id]) = w_ent.clip_load;
 	}
-	else if (wep.ammo_field != ammo_none)
+	else if (wep.ammo_type != RESOURCE_NONE)
 	{
-		actor.(wep.ammo_field) -= ammo_use;
-		if (actor.(wep.ammo_field) < 0)
+		float ammo = GetResourceAmount(actor, wep.ammo_type);
+		if (ammo < ammo_use)
 		{
 			backtrace(sprintf(
 				"W_DecreaseAmmo(%.2f): '%s' subtracted too much %s from '%s', resulting with '%.2f' left... "
 				"Please notify Samual immediately with a copy of this backtrace!\n",
 				ammo_use,
 				wep.netname,
-				GetAmmoPicture(wep.ammo_field),
+				GetAmmoPicture(wep.ammo_type),
 				actor.netname,
-				actor.(wep.ammo_field)
+				ammo
 				             ));
 		}
+		SetResourceAmount(actor, wep.ammo_type, ammo - ammo_use);
 	}
 }
 
@@ -702,16 +704,17 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	w_ent.clip_load = w_ent.old_clip_load;  // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || wpn.ammo_field == ammo_none)
+	if (!w_ent.reload_ammo_min || (actor.items & IT_UNLIMITED_WEAPON_AMMO) || wpn.ammo_type == RESOURCE_NONE)
 	{
 		w_ent.clip_load = w_ent.reload_ammo_amount;
 	}
 	else
 	{
 		// make sure we don't add more ammo than we have
-		float load = min(w_ent.reload_ammo_amount - w_ent.clip_load, actor.(wpn.ammo_field));
+		float ammo = GetResourceAmount(actor, wpn.ammo_type);
+		float load = min(w_ent.reload_ammo_amount - w_ent.clip_load, ammo);
 		w_ent.clip_load += load;
-		actor.(wpn.ammo_field) -= load;
+		SetResourceAmount(actor, wpn.ammo_type, ammo - load);
 	}
 	w_ent.(weapon_load[w_ent.m_weapon.m_id]) = w_ent.clip_load;
 
@@ -754,9 +757,9 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	if (this.clip_load >= this.reload_ammo_amount) return;
 
 	// no ammo, so nothing to load
-	if (e.ammo_field != ammo_none)
+	if (e.ammo_type != RESOURCE_NONE)
 	{
-		if (!actor.(e.ammo_field) && this.reload_ammo_min)
+		if (!GetResourceAmount(actor, e.ammo_type) && this.reload_ammo_min)
 		{
 			if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 			{
