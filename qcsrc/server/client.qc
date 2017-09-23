@@ -224,14 +224,14 @@ void PutObserverInServer(entity this)
 	{
 		if(this.health >= 1)
 		{
-        	// despawn effect
+			// despawn effect
 			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 		}
 
 		// was a player, recount votes and ready status
 		if(IS_REAL_CLIENT(this))
 		{
-			VoteCount(false);
+			if (vote_called) { VoteCount(false); }
 			ReadyCount();
 		}
     }

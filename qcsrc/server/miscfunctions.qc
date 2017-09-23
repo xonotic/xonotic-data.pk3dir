@@ -199,14 +199,14 @@ string NearestLocation(vector p)
 string AmmoNameFromWeaponentity(entity wpn)
 {
 	string ammoitems = "batteries";
-	switch((wpn.m_weapon).ammo_field)
+	switch ((wpn.m_weapon).ammo_type)
 	{
-		case ammo_shells:  ammoitems = ITEM_Shells.m_name;      break;
-		case ammo_nails:   ammoitems = ITEM_Bullets.m_name;     break;
-		case ammo_rockets: ammoitems = ITEM_Rockets.m_name;     break;
-		case ammo_cells:   ammoitems = ITEM_Cells.m_name;       break;
-		case ammo_plasma:  ammoitems = ITEM_Plasma.m_name;      break;
-		case ammo_fuel:    ammoitems = ITEM_JetpackFuel.m_name; break;
+		case RESOURCE_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
+		case RESOURCE_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
+		case RESOURCE_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
+		case RESOURCE_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
+		case RESOURCE_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
+		case RESOURCE_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
 	}
 	return ammoitems;
 }

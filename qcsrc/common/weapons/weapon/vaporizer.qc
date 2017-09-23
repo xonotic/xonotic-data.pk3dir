@@ -291,7 +291,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 
 METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    if(actor.(thiswep.ammo_field) > 0)
+    if(GetResourceAmount(actor, thiswep.ammo_type) > 0)
         PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 1, false);
     else
         PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
@@ -378,7 +378,7 @@ METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor, .entity weaponent
 METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
-    float ammo_amount = actor.(thiswep.ammo_field) >= vaporizer_ammo;
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= vaporizer_ammo;
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
     return ammo_amount;
 }
@@ -386,7 +386,7 @@ METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weap
 {
     if(!WEP_CVAR_SEC(vaporizer, ammo))
         return true;
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(vaporizer, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(vaporizer, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
     return ammo_amount;
 }
