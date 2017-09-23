@@ -471,7 +471,7 @@ void havocbot_movetogoal(entity this)
 			dxy = this.origin - ( ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5 ); dxy.z = 0;
 			d = vlen(dxy);
 			v = vlen(this.velocity -  this.velocity.z * '0 0 1');
-			db = (EXP(v, 2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
+			db = (POW(v, 2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
 		//	dprint("distance ", ftos(ceil(d)), " velocity ", ftos(ceil(v)), " brake at ", ftos(ceil(db)), "\n");
 			if(d < db || d < 500)
 			{
@@ -1143,7 +1143,7 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		this.lastcombotime = time;
 	}
 
-	distance *= EXP(2, this.bot_rangepreference);
+	distance *= POW(2, this.bot_rangepreference);
 
 	// Custom weapon list based on distance to the enemy
 	if(bot_custom_weapon){

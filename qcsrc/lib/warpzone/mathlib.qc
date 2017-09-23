@@ -61,11 +61,11 @@ float tanh(float e)
 
 float exp(float e)
 {
-	return EXP(M_E, e);
+	return POW(M_E, e);
 }
 float exp2(float e)
 {
-	return EXP(2, e);
+	return POW(2, e);
 }
 float expm1(float e)
 {
@@ -77,7 +77,7 @@ vector frexp(float e)
 	vector v;
 	v.z = 0;
 	v.y = ilogb(e) + 1;
-	v.x = e / EXP(2, v.y);
+	v.x = e / POW(2, v.y);
 	return v;
 }
 int ilogb(float e)
@@ -86,7 +86,7 @@ int ilogb(float e)
 }
 float ldexp(float e, int e)
 {
-	return e * EXP(2, e);
+	return e * POW(2, e);
 }
 float logn(float e, float base)
 {
@@ -115,12 +115,12 @@ vector modf(float f)
 
 float scalbn(float e, int n)
 {
-	return e * EXP(2, n);
+	return e * POW(2, n);
 }
 
 float cbrt(float e)
 {
-	return copysign(EXP(fabs(e), (1.0/3.0)), e);
+	return copysign(POW(fabs(e), (1.0/3.0)), e);
 }
 float hypot(float e, float f)
 {

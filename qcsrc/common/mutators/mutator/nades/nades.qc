@@ -577,7 +577,7 @@ void nade_entrap_touch(entity this, entity toucher)
 		if(!pushdeltatime) return;
 
 		// div0: ticrate independent, 1 = identity (not 20)
-		toucher.velocity = toucher.velocity * EXP(autocvar_g_nades_entrap_strength, pushdeltatime);
+		toucher.velocity = toucher.velocity * POW(autocvar_g_nades_entrap_strength, pushdeltatime);
 
 	#ifdef SVQC
 		UpdateCSQCProjectile(toucher);
