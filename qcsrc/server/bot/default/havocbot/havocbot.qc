@@ -470,7 +470,6 @@ void havocbot_movetogoal(entity this)
 
 	PHYS_INPUT_BUTTON_JETPACK(this) = false;
 	// Jetpack navigation
-	if(this.goalcurrent)
 	if(this.navigation_jetpack_goal)
 	if(this.goalcurrent==this.navigation_jetpack_goal)
 	if(this.ammo_fuel)
@@ -497,14 +496,10 @@ void havocbot_movetogoal(entity this)
 		if(this.aistatus & AI_STATUS_JETPACK_LANDING)
 		{
 			// Calculate brake distance in xy
-			float db, v, d;
-			vector dxy;
-
-			dxy = this.origin - ( ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5 ); dxy.z = 0;
-			d = vlen(dxy);
-			v = vlen(this.velocity -  this.velocity.z * '0 0 1');
-			db = ((v ** 2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
-		//	dprint("distance ", ftos(ceil(d)), " velocity ", ftos(ceil(v)), " brake at ", ftos(ceil(db)), "\n");
+			float d = vlen(vec2(this.origin - (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5));
+			float v = vlen(vec2(this.velocity));
+			float db = ((v ** 2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
+			//LOG_INFOF("distance %d, velocity %d, brake at %d ", ceil(d), ceil(v), ceil(db));
 			if(d < db || d < 500)
 			{
 				// Brake
