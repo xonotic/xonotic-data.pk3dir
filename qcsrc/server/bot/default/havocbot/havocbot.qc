@@ -508,7 +508,7 @@ void havocbot_movetogoal(entity this)
 			if(d < db || d < 500)
 			{
 				// Brake
-				if(fabs(this.velocity.x)>maxspeed*0.3)
+				if(v > maxspeed * 0.3)
 				{
 					CS(this).movement_x = dir * v_forward * -maxspeed;
 					return;
