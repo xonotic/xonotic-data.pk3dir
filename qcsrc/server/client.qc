@@ -548,9 +548,7 @@ void PutPlayerInServer(entity this)
 		this.armorvalue = start_armorvalue;
 		this.weapons = start_weapons;
 		GiveRandomWeapons(this, random_start_weapons_count,
-			cvar_string("g_random_start_weapons"), random_start_shells,
-			random_start_bullets, random_start_rockets, random_start_cells,
-			random_start_plasma);
+			cvar_string("g_random_start_weapons"), random_start_ammo);
 	}
 	SetSpectatee_status(this, 0);
 
