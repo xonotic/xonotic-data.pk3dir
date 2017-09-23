@@ -420,20 +420,24 @@ Spawned if a door lacks a real activator
 
 void door_trigger_touch(entity this, entity toucher)
 {
-	if (toucher.health < 1)
+	if (toucher.health < 1){
 #ifdef SVQC
-		if (!((toucher.iscreature || (toucher.flags & FL_PROJECTILE)) && !IS_DEAD(toucher)))
+		if (!((toucher.iscreature || (toucher.flags & FL_PROJECTILE)) && !IS_DEAD(toucher))){
 #elif defined(CSQC)
-		if(!((IS_CLIENT(toucher) || toucher.classname == "csqcprojectile") && !IS_DEAD(toucher)))
+		if(!((IS_CLIENT(toucher) || toucher.classname == "csqcprojectile") && !IS_DEAD(toucher))){
 #endif
 			return;
+		}
+	}
 
-	if (time < this.door_finished)
+	if (time < this.door_finished){
 		return;
+	}
 
 	// check if door is locked
-	if (!door_check_keys(this, toucher))
+	if (!door_check_keys(this, toucher)){
 		return;
+	}
 
 	this.door_finished = time + 1;
 
@@ -498,8 +502,9 @@ void LinkDoors(entity this)
 	door_link();
 #endif
 
-	if (this.enemy)
+	if (this.enemy){
 		return;		// already linked by another door
+	}
 	if (this.spawnflags & 4)
 	{
 		this.owner = this.enemy = this;
@@ -537,26 +542,36 @@ void LinkDoors(entity this)
 	cmaxs = this.absmax;
 	for(t = this; ; t = t.enemy)
 	{
-		if(t.health && !this.health)
+		if(t.health && !this.health){
 			this.health = t.health;
-		if((t.targetname != "") && (this.targetname == ""))
+		}
+		if((t.targetname != "") && (this.targetname == "")){
 			this.targetname = t.targetname;
-		if((t.message != "") && (this.message == ""))
+		}
+		if((t.message != "") && (this.message == "")){
 			this.message = t.message;
-		if (t.absmin_x < cmins_x)
+		}
+		if (t.absmin_x < cmins_x){
 			cmins_x = t.absmin_x;
-		if (t.absmin_y < cmins_y)
+		}
+		if (t.absmin_y < cmins_y){
 			cmins_y = t.absmin_y;
-		if (t.absmin_z < cmins_z)
+		}
+		if (t.absmin_z < cmins_z){
 			cmins_z = t.absmin_z;
-		if (t.absmax_x > cmaxs_x)
+		}
+		if (t.absmax_x > cmaxs_x){
 			cmaxs_x = t.absmax_x;
-		if (t.absmax_y > cmaxs_y)
+		}
+		if (t.absmax_y > cmaxs_y){
 			cmaxs_y = t.absmax_y;
-		if (t.absmax_z > cmaxs_z)
+		}
+		if (t.absmax_z > cmaxs_z){
 			cmaxs_z = t.absmax_z;
-		if(t.enemy == this)
+		}
+		if(t.enemy == this){
 			break;
+		}
 	}
 
 	// distribute health, targetname, message
@@ -572,12 +587,15 @@ void LinkDoors(entity this)
 	// shootable, or triggered doors just needed the owner/enemy links,
 	// they don't spawn a field
 
-	if (this.health)
+	if (this.health) {
 		return;
-	if(THIS_TARGETED)
+	}
+	if(THIS_TARGETED) {
 		return;
-	if (this.items)
+	}
+	if (this.items) {
 		return;
+	}
 
 	door_spawnfield(this, cmins, cmaxs);
 }
@@ -706,36 +724,42 @@ void door_reset(entity this)
 spawnfunc(func_door)
 {
 	// Quake 1 keys compatibility
-	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
+	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY) {
 		this.itemkeys |= ITEM_KEY_BIT(0);
-	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
+	}
+	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY) {
 		this.itemkeys |= ITEM_KEY_BIT(1);
+	}
 
 	SetMovedir(this);
 
 	this.max_health = this.health;
-	if (!InitMovingBrushTrigger(this))
+	if (!InitMovingBrushTrigger(this)) {
 		return;
+	}
 	this.effects |= EF_LOWPRECISION;
 	this.classname = "door";
 
-	if(this.noise == "")
+	if(this.noise == "") {
 		this.noise = "misc/talk.wav";
-	if(this.noise3 == "")
+	}
+	if(this.noise3 == "") {
 		this.noise3 = "misc/talk.wav";
+	}
 	precache_sound(this.noise);
 	precache_sound(this.noise3);
 
 	setblocked(this, door_blocked);
 	this.use = door_use;
 
-	if(this.dmg && (this.message == ""))
+	if(this.dmg && (this.message == "")) {
 		this.message = "was squished";
-	if(this.dmg && (this.message2 == ""))
+	}
+	if(this.dmg && (this.message2 == "")) {
 		this.message2 = "was squished by";
+	}
 
-	if (this.sounds > 0)
-	{
+	if (this.sounds > 0) {
 		this.noise2 = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
 	}
@@ -743,39 +767,44 @@ spawnfunc(func_door)
 	if(this.noise1 && this.noise1 != "") { precache_sound(this.noise1); }
 	if(this.noise2 && this.noise2 != "") { precache_sound(this.noise2); }
 
-	if (!this.speed)
+	if (!this.speed) {
 		this.speed = 100;
-	if (!this.wait)
+	}
+	if (!this.wait) {
 		this.wait = 3;
-	if (!this.lip)
+	}
+	if (!this.lip) {
 		this.lip = 8;
+	}
 
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
-	if(this.spawnflags & DOOR_NONSOLID)
+	if(this.spawnflags & DOOR_NONSOLID) {
 		this.solid = SOLID_NOT;
+	}
 
-// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
-// but spawn in the open position
-	if (this.spawnflags & DOOR_START_OPEN)
+	// DOOR_START_OPEN is to allow an entity to be lighted in the closed position
+	// but spawn in the open position
+	if (this.spawnflags & DOOR_START_OPEN) {
 		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
+	}
 
 	this.state = STATE_BOTTOM;
 
-	if (this.health)
-	{
+	if (this.health) {
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = door_damage;
 	}
 
-	if (this.items)
+	if (this.items) {
 		this.wait = -1;
+	}
 
 	settouch(this, door_touch);
 
-// LinkDoors can't be done until all of the doors have been spawned, so
-// the sizes can be detected properly.
+	// LinkDoors can't be done until all of the doors have been spawned, so
+	// the sizes can be detected properly.
 	InitializeEntity(this, LinkDoors, INITPRIO_LINKDOORS);
 
 	this.reset = door_reset;
