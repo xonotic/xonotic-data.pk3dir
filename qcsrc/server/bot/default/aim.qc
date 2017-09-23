@@ -184,6 +184,9 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	this.v_angle_y = this.v_angle.y - floor(this.v_angle.y / 360) * 360;
 	this.v_angle_z = 0;
 
+	// invalid aim dir (can happen when bot overlaps target)
+	if(!v) return false;
+
 	// get the desired angles to aim at
 	//dprint(" at:", vtos(v));
 	v = normalize(v);
