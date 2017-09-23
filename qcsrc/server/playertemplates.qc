@@ -365,14 +365,22 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 	}
 	if (!warmup_stage)
 	{
+		entity ammo_entity = spawn();
+		SetResourceAmount(ammo_entity, RESOURCE_SHELLS,
+			PlayerTemplate_GetFloatValue(template, "random_start_shells"));
+		SetResourceAmount(ammo_entity, RESOURCE_BULLETS,
+			PlayerTemplate_GetFloatValue(template, "random_start_bullets"));
+		SetResourceAmount(ammo_entity, RESOURCE_ROCKETS,
+			PlayerTemplate_GetFloatValue(template, "random_start_rockets"));
+		SetResourceAmount(ammo_entity, RESOURCE_CELLS,
+			PlayerTemplate_GetFloatValue(template, "random_start_cells"));
+		SetResourceAmount(ammo_entity, RESOURCE_PLASMA,
+			PlayerTemplate_GetFloatValue(template, "random_start_plasma"));
 		GiveRandomWeapons(player, PlayerTemplate_GetFloatValue(template,
 			"random_start_weapons_count"),
 			PlayerTemplate_GetStringValue(template, "random_start_weapons"),
-			PlayerTemplate_GetFloatValue(template, "random_start_shells"),
-			PlayerTemplate_GetFloatValue(template, "random_start_bullets"),
-			PlayerTemplate_GetFloatValue(template, "random_start_rockets"),
-			PlayerTemplate_GetFloatValue(template, "random_start_cells"),
-			PlayerTemplate_GetFloatValue(template, "random_start_plasma"));
+			ammo_entity);
+		remove(ammo_entity);
 		return;
 	}
 	// Give random weapons.
