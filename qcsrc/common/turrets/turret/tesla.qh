@@ -11,6 +11,6 @@ CLASS(TeslaCoil, Turret)
 /* head_model */ ATTRIB_STRZONE(TeslaCoil, head_model, string, strcat("models/turrets/", "tesla_head.md3"));
 /* netname    */ ATTRIB(TeslaCoil, netname, string, "tesla");
 /* fullname   */ ATTRIB(TeslaCoil, turret_name, string, _("Tesla Coil"));
-    ATTRIB(TeslaCoil, m_weapon, Weapon, WEP_TESLA);
+	ATTRIB(TeslaCoil, m_weapon, Weapon, WEP_TESLA);
 ENDCLASS(TeslaCoil)
 REGISTER_TURRET(TESLA, NEW(TeslaCoil));

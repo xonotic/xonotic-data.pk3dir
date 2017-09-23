@@ -16,13 +16,12 @@ spawnfunc(trigger_gamestart)
 	this.use = gamestart_use;
 	this.reset2 = spawnfunc_trigger_gamestart;
 
-	if(this.wait)
-	{
+	if (this.wait) {
 		setthink(this, adaptor_think2use);
 		this.nextthink = game_starttime + this.wait;
-	}
-	else
+	} else {
 		InitializeEntity(this, gamestart_use_this, INITPRIO_FINDTARGET);
+	}
 }
 
 #endif

@@ -24,15 +24,16 @@ float gravity_delay;
 
 MUTATOR_HOOKFUNCTION(random_gravity, SV_StartFrame)
 {
-	if(game_stopped || !cvar("g_random_gravity")) return false;
-	if(time < gravity_delay) return false;
-	if(time < game_starttime) return false;
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted()) return false;
+	if (game_stopped || !cvar("g_random_gravity")) { return false; }
+	if (time < gravity_delay) { return false; }
+	if (time < game_starttime) { return false; }
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) { return false; }
 
-    if(random() >= autocvar_g_random_gravity_negative_chance)
-        cvar_set("sv_gravity", ftos(bound(autocvar_g_random_gravity_min, random() - random() * -autocvar_g_random_gravity_negative, autocvar_g_random_gravity_max)));
-    else
-        cvar_set("sv_gravity", ftos(bound(autocvar_g_random_gravity_min, random() * autocvar_g_random_gravity_positive, autocvar_g_random_gravity_max)));
+	if (random() >= autocvar_g_random_gravity_negative_chance) {
+		cvar_set("sv_gravity", ftos(bound(autocvar_g_random_gravity_min, random() - random() * -autocvar_g_random_gravity_negative, autocvar_g_random_gravity_max)));
+	} else {
+		cvar_set("sv_gravity", ftos(bound(autocvar_g_random_gravity_min, random() * autocvar_g_random_gravity_positive, autocvar_g_random_gravity_max)));
+	}
 
 	gravity_delay = time + autocvar_g_random_gravity_delay;
 

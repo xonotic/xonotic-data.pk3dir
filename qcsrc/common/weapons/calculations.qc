@@ -9,12 +9,13 @@ float explosion_calcpush_getmultiplier(vector explosion_v, vector target_v)
 	float a;
 	a  = explosion_v * (explosion_v - target_v);
 
-	if(a <= 0)
+	if (a <= 0) {
 		// target is too fast to be hittable by this
 		return 0;
+	}
 
 	a /= (explosion_v * explosion_v);
-		// we know we can divide by this, or above a would be == 0
+	// we know we can divide by this, or above a would be == 0
 
 	return a;
 }
@@ -45,8 +46,9 @@ vector explosion_calcpush(vector explosion_v, float explosion_m, vector target_v
 vector damage_explosion_calcpush(vector explosion_f, vector target_v, float speedfactor)
 {
 	// if below 1, the formulas make no sense (and would cause superjumps)
-	if(speedfactor < 1)
+	if (speedfactor < 1) {
 		return explosion_f;
+	}
 
 #if 0
 	float m;
@@ -80,37 +82,33 @@ vector cliptoplane(vector v, vector p)
 vector solve_cubic_pq(float p, float q)
 {
 	float D, u, v, a;
-	D = q*q/4.0 + p*p*p/27.0;
-	if(D < 0)
-	{
+	D = q * q / 4.0 + p * p * p / 27.0;
+	if (D < 0) {
 		// irreducibilis
-		a = 1.0/3.0 * acos(-q/2.0 * sqrt(-27.0/(p*p*p)));
-		u = sqrt(-4.0/3.0 * p);
+		a = 1.0 / 3.0 * acos(-q / 2.0 * sqrt(-27.0 / (p * p * p)));
+		u = sqrt(-4.0 / 3.0 * p);
 		// a in range 0..pi/3
 		// cos(a)
 		// cos(a + 2pi/3)
 		// cos(a + 4pi/3)
 		return u * vec3(
-			cos(a + 2.0/3.0*M_PI),
-			cos(a + 4.0/3.0*M_PI),
+			cos(a + 2.0 / 3.0 * M_PI),
+			cos(a + 4.0 / 3.0 * M_PI),
 			cos(a)
 		);
-	}
-	else if(D == 0)
-	{
+	} else if (D == 0) {
 		// simple
-		if(p == 0)
+		if (p == 0) {
 			return '0 0 0';
-		u = 3*q/p;
-		v = -u/2;
+		}
+		u = 3 * q / p;
+		v = -u / 2;
 		return (u >= v) ? vec3(v, v, u) : vec3(u, v, v);
-	}
-	else
-	{
+	} else {
 		// cardano
-		//u = cbrt(-q/2.0 + sqrt(D));
-		//v = cbrt(-q/2.0 - sqrt(D));
-		a = cbrt(-q/2.0 + sqrt(D)) + cbrt(-q/2.0 - sqrt(D));
+		// u = cbrt(-q/2.0 + sqrt(D));
+		// v = cbrt(-q/2.0 - sqrt(D));
+		a = cbrt(-q / 2.0 + sqrt(D)) + cbrt(-q / 2.0 - sqrt(D));
 		return vec3(a, a, a);
 	}
 }
@@ -120,12 +118,13 @@ vector solve_cubic_abcd(float a, float b, float c, float d)
 	// x = (y - b) / 3a
 	float p, q;
 	vector v;
-	p = (9*a*c - 3*b*b);
-	q = (27*a*a*d - 9*a*b*c + 2*b*b*b);
+	p = (9 * a * c - 3 * b * b);
+	q = (27 * a * a * d - 9 * a * b * c + 2 * b * b * b);
 	v = solve_cubic_pq(p, q);
 	v = (v -  b * '1 1 1') * (1.0 / (3.0 * a));
-	if(a < 0)
+	if (a < 0) {
 		v += '1 0 -1' * (v.z - v.x); // swap x, z
+	}
 	return v;
 }
 
@@ -135,49 +134,52 @@ vector findperpendicular(vector v)
 }
 
 #ifdef SVQC
-	int W_GunAlign(entity this, int preferred_align)
-	{
-		if(this.m_gunalign)
-			return this.m_gunalign; // no adjustment needed
+int W_GunAlign(entity this, int preferred_align)
+{
+	if (this.m_gunalign) {
+		return this.m_gunalign; // no adjustment needed
+	}
+	entity own = this.owner;
 
-		entity own = this.owner;
-
-		if(preferred_align < 1 || preferred_align > 4)
-			preferred_align = 3; // default
-
-		for(int j = 4; j > 1; --j) // > 1 as 1 is just center again
-		{
-			int taken = 0;
-			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-			{
-				.entity weaponentity = weaponentities[slot];
-				if(own.(weaponentity).m_gunalign == j) // we know it can't be ours thanks to the above check
-					taken |= BIT(j);
-				if(own.(weaponentity).m_gunalign == preferred_align)
-					taken |= BIT(preferred_align);
+	if (preferred_align < 1 || preferred_align > 4) {
+		preferred_align = 3; // default
+	}
+	for (int j = 4; j > 1; --j) { // > 1 as 1 is just center again
+		int taken = 0;
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) {
+			.entity weaponentity = weaponentities[slot];
+			if (own.(weaponentity).m_gunalign == j) { // we know it can't be ours thanks to the above check
+				taken |= BIT(j);
 			}
-
-			if(!(taken & BIT(preferred_align)))
-				return preferred_align; // prefer the recommended
-			if(!(taken & BIT(j)))
-				return j; // or fall back if it's not available
+			if (own.(weaponentity).m_gunalign == preferred_align) {
+				taken |= BIT(preferred_align);
+			}
 		}
 
-		return preferred_align; // return it anyway
+		if (!(taken & BIT(preferred_align))) {
+			return preferred_align; // prefer the recommended
+		}
+		if (!(taken & BIT(j))) {
+			return j;               // or fall back if it's not available
+		}
 	}
+
+	return preferred_align; // return it anyway
+}
 #else
-	int W_GunAlign(entity this, int preferred_align)
-	{
-		return this.m_gunalign > 0 ? this.m_gunalign : preferred_align;
-	}
+int W_GunAlign(entity this, int preferred_align)
+{
+	return this.m_gunalign > 0 ? this.m_gunalign : preferred_align;
+}
 #endif
 
 #if 0
 int W_GetGunAlignment(entity player)
 {
 	int gunalign = STAT(GUNALIGN, player);
-	if(gunalign < 1 || gunalign > 4)
+	if (gunalign < 1 || gunalign > 4) {
 		gunalign = 3; // default value
+	}
 	--gunalign;
 
 	return gunalign;
@@ -189,12 +191,12 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 	float sigma;
 	vector v1 = '0 0 0', v2;
 	float dx, dy, r;
-	spread *= spreadfactor; //g_weaponspreadfactor;
-	if(spread <= 0)
+	spread *= spreadfactor; // g_weaponspreadfactor;
+	if (spread <= 0) {
 		return forward;
+	}
 
-	switch(spreadstyle)
-	{
+	switch (spreadstyle) {
 		case 0:
 		{
 			// this is the baseline for the spread value!
@@ -222,7 +224,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 			r = sqrt(r);
 			return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
 		}
-		case 3: // gauss 3d
+		case 3:                                // gauss 3d
 		{
 			sigma = spread * 0.44721359549996; // match baseline stddev
 			// note: 2D gaussian has sqrt(2) times the stddev of 1D, so this factor is right
@@ -232,7 +234,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 			v1_z += gsl_ran_gaussian(sigma);
 			return v1;
 		}
-		case 4: // gauss 2d
+		case 4:                                // gauss 2d
 		{
 			sigma = spread * 0.44721359549996; // match baseline stddev
 			// note: 2D gaussian has sqrt(2) times the stddev of 1D, so this factor is right
@@ -241,7 +243,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 			v1_z = gsl_ran_gaussian(sigma);
 			return normalize(forward + cliptoplane(v1, forward));
 		}
-		case 5: // 1-r
+		case 5:                                 // 1-r
 		{
 			sigma = spread * 1.154700538379252; // match baseline stddev
 			v1 = findperpendicular(forward);
@@ -255,7 +257,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 			r = solve_cubic_abcd(-2, 3, 0, -r) * '0 1 0';
 			return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
 		}
-		case 6: // 1-r^2
+		case 6:                                 // 1-r^2
 		{
 			sigma = spread * 1.095445115010332; // match baseline stddev
 			v1 = findperpendicular(forward);
@@ -270,7 +272,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 			r = sqrt(1 - r);
 			return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
 		}
-		case 7: // (1-r) (2-r)
+		case 7:                                 // (1-r) (2-r)
 		{
 			sigma = spread * 1.224744871391589; // match baseline stddev
 			v1 = findperpendicular(forward);

@@ -28,11 +28,12 @@
 .float warpzone_teleport_finishtime;
 .entity warpzone_teleport_zone;
 
-#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN \
-	entity e = e_; \
-	e.warpzone_oldorigin = e.origin; \
-	e.warpzone_oldvelocity = e.velocity; \
-	e.warpzone_oldangles = e.angles; \
+#define WarpZone_StoreProjectileData(e_) \
+	MACRO_BEGIN \
+		entity e = e_; \
+		e.warpzone_oldorigin = e.origin; \
+		e.warpzone_oldvelocity = e.velocity; \
+		e.warpzone_oldangles = e.angles; \
 	MACRO_END
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
@@ -47,8 +48,9 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
-	if(IS_PLAYER(player))
+	if (IS_PLAYER(player)) {
 		BITCLR_ASSIGN(player.flags, FL_ONGROUND);
+	}
 
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
@@ -74,13 +76,13 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 	o10 = o1 = WarpZone_TransformOrigin(wz, o0);
 	v1 = WarpZone_TransformVelocity(wz, v0);
-	if (!IS_NOT_A_CLIENT(player))
+	if (!IS_NOT_A_CLIENT(player)) {
 		a1 = WarpZone_TransformVAngles(wz, PHYS_INPUT_ANGLES(player));
-	else
+	} else {
 		a1 = WarpZone_TransformAngles(wz, a0);
+	}
 
-	if(f0 != 0 || f1 != 0)
-	{
+	if (f0 != 0 || f1 != 0) {
 		// retry last move but behind the warpzone!
 		// we must first go back as far as we can, then forward again, to not cause double touch events!
 
@@ -98,22 +100,19 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		md = max(vlen(player.mins), vlen(player.maxs));
 		d = WarpZone_TargetPlaneDist(wz, o1);
 		dv = WarpZone_TargetPlaneDist(wz, v1);
-		if(d < 0)
+		if (d < 0) {
 			o1 = o1 - v1 * (d / dv);
+		}
 	}
 
 	// put him out of solid
 	tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
-	if(trace_startsolid)
-	{
+	if (trace_startsolid) {
 		setorigin(player, o1 - player.view_ofs);
-		if(WarpZoneLib_MoveOutOfSolid(player))
-		{
+		if (WarpZoneLib_MoveOutOfSolid(player)) {
 			o1 = player.origin + player.view_ofs;
 			setorigin(player, o0 - player.view_ofs);
-		}
-		else
-		{
+		} else {
 			LOG_INFO("would have to put player in solid, won't do that");
 			setorigin(player, o0 - player.view_ofs);
 			return 0;
@@ -131,16 +130,17 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 #ifdef SVQC
 	// prevent further teleports back
 	float dt = (o1 - o10) * v1 * (1 / (v1 * v1));
-	if(dt < PHYS_INPUT_FRAMETIME)
+	if (dt < PHYS_INPUT_FRAMETIME) {
 		player.warpzone_teleport_finishtime += PHYS_INPUT_FRAMETIME - dt;
+	}
 #endif
 
 #ifndef WARPZONE_USE_FIXANGLE
 	#ifdef SVQC
-	if(IS_VEHICLE(player) && player.owner)
+	if (IS_VEHICLE(player) && player.owner) {
 		player = player.owner; // hax
-	if(IS_PLAYER(player))
-	{
+	}
+	if (IS_PLAYER(player)) {
 		// instead of fixangle, send the transform to the client for smoother operation
 		player.fixangle = false;
 
@@ -158,8 +158,8 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	}
 	#elif defined(CSQC)
 	setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(wz, getpropertyvec(VF_CL_VIEWANGLES)));
-	//if(checkextension("DP_CSQC_ROTATEMOVES"))
-		//CL_RotateMoves(wz.warpzone_transform);
+	// if(checkextension("DP_CSQC_ROTATEMOVES"))
+	// CL_RotateMoves(wz.warpzone_transform);
 	#endif
 #endif
 
@@ -168,25 +168,30 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 void WarpZone_Touch(entity this, entity toucher)
 {
-	if(toucher.classname == "trigger_warpzone")
+	if (toucher.classname == "trigger_warpzone") {
 		return;
+	}
 
-	if(time <= toucher.warpzone_teleport_finishtime) // already teleported this frame
+	if (time <= toucher.warpzone_teleport_finishtime) { // already teleported this frame
 		return;
+	}
 
 	// FIXME needs a better check to know what is safe to teleport and what not
-	if((toucher.move_movetype == MOVETYPE_NONE && toucher.move_movetype == MOVETYPE_NONE) || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity
+	if ((toucher.move_movetype == MOVETYPE_NONE && toucher.move_movetype == MOVETYPE_NONE) || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_entity
 #ifdef CSQC
-	|| tag_networkentity
+		|| tag_networkentity
 #endif
-	)
+	) {
 		return;
+	}
 
-	if(WarpZoneLib_ExactTrigger_Touch(this, toucher))
+	if (WarpZoneLib_ExactTrigger_Touch(this, toucher)) {
 		return;
+	}
 
-	if(WarpZone_PlaneDist(this, toucher.origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
+	if (WarpZone_PlaneDist(this, toucher.origin + toucher.view_ofs) >= 0) { // wrong side of the trigger_warpzone (don't teleport yet)
 		return;
+	}
 
 	float f;
 	// number of frames we need to go back:
@@ -201,30 +206,32 @@ void WarpZone_Touch(entity this, entity toucher)
 	//       96*frametime
 	float d;
 	d = 24 + max(vlen(toucher.mins), vlen(toucher.maxs));
-	if(IS_NOT_A_CLIENT(toucher))
+	if (IS_NOT_A_CLIENT(toucher)) {
 		f = -d / bound(frametime * d * 1, frametime * vlen(toucher.velocity), d);
-	else
+	} else {
 		f = -1;
-	if(WarpZone_Teleport(this, toucher, f, 0))
-	{
+	}
+	if (WarpZone_Teleport(this, toucher, f, 0)) {
 #ifdef SVQC
 		string save1, save2;
 
-		save1 = this.target; this.target = string_null;
-		save2 = this.target3; this.target3 = string_null;
+		save1 = this.target;
+		this.target = string_null;
+		save2 = this.target3;
+		this.target3 = string_null;
 		SUB_UseTargets(this, toucher, toucher); // use toucher too?
-		if (!this.target) this.target = save1;
-		if (!this.target3) this.target3 = save2;
+		if (!this.target) { this.target = save1; }
+		if (!this.target3) { this.target3 = save2; }
 
-		save1 = this.target; this.target = string_null;
-		save2 = this.target2; this.target2 = string_null;
+		save1 = this.target;
+		this.target = string_null;
+		save2 = this.target2;
+		this.target2 = string_null;
 		SUB_UseTargets(this.enemy, toucher, toucher); // use toucher too?
-		if (!this.target) this.target = save1;
-		if (!this.target2) this.target2 = save2;
+		if (!this.target) { this.target = save1; }
+		if (!this.target2) { this.target2 = save2; }
 #endif
-	}
-	else
-	{
+	} else {
 		LOG_TRACE("WARPZONE FAIL AHAHAHAHAH))");
 	}
 }
@@ -236,17 +243,19 @@ bool WarpZone_Send(entity this, entity to, int sendflags)
 
 	// we must send this flag for clientside to match properly too
 	int f = 0;
-	if(this.warpzone_isboxy)
+	if (this.warpzone_isboxy) {
 		BITSET_ASSIGN(f, 1);
-	if(this.warpzone_fadestart)
+	}
+	if (this.warpzone_fadestart) {
 		BITSET_ASSIGN(f, 2);
-	if(this.origin != '0 0 0')
+	}
+	if (this.origin != '0 0 0') {
 		BITSET_ASSIGN(f, 4);
+	}
 	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
-	if(f & 4)
-	{
+	if (f & 4) {
 		WriteCoord(MSG_ENTITY, this.origin.x);
 		WriteCoord(MSG_ENTITY, this.origin.y);
 		WriteCoord(MSG_ENTITY, this.origin.z);
@@ -275,8 +284,7 @@ bool WarpZone_Send(entity this, entity to, int sendflags)
 	WriteCoord(MSG_ENTITY, this.warpzone_targetangles.y);
 	WriteCoord(MSG_ENTITY, this.warpzone_targetangles.z);
 
-	if(f & 2)
-	{
+	if (f & 2) {
 		WriteShort(MSG_ENTITY, this.warpzone_fadestart);
 		WriteShort(MSG_ENTITY, this.warpzone_fadeend);
 	}
@@ -289,15 +297,16 @@ bool WarpZone_Camera_Send(entity this, entity to, int sendflags)
 	int f = 0;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
-	if(this.warpzone_fadestart)
+	if (this.warpzone_fadestart) {
 		BITSET_ASSIGN(f, 2);
-	if(this.origin != '0 0 0')
+	}
+	if (this.origin != '0 0 0') {
 		BITSET_ASSIGN(f, 4);
+	}
 	WriteByte(MSG_ENTITY, f);
 
 	// we need THESE to render the warpzone (and cull properly)...
-	if(f & 4)
-	{
+	if (f & 4) {
 		WriteCoord(MSG_ENTITY, this.origin.x);
 		WriteCoord(MSG_ENTITY, this.origin.y);
 		WriteCoord(MSG_ENTITY, this.origin.z);
@@ -320,8 +329,7 @@ bool WarpZone_Camera_Send(entity this, entity to, int sendflags)
 	WriteCoord(MSG_ENTITY, this.enemy.angles.y);
 	WriteCoord(MSG_ENTITY, this.enemy.angles.z);
 
-	if(f & 2)
-	{
+	if (f & 2) {
 		WriteShort(MSG_ENTITY, this.warpzone_fadestart);
 		WriteShort(MSG_ENTITY, this.warpzone_fadeend);
 	}
@@ -338,14 +346,16 @@ float WarpZone_CheckProjectileImpact(entity player)
 	v0 = player.velocity;
 
 	// if we teleported shortly before, abort
-	if(time <= player.warpzone_teleport_finishtime + 0.1)
+	if (time <= player.warpzone_teleport_finishtime + 0.1) {
 		return 0;
+	}
 
 	// if player hit a warpzone, abort
 	entity wz;
 	wz = WarpZone_Find(o0 + player.mins, o0 + player.maxs);
-	if(!wz)
+	if (!wz) {
 		return 0;
+	}
 
 #ifdef WARPZONELIB_REMOVEHACK
 	LOG_INFO("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now");
@@ -362,24 +372,25 @@ float WarpZone_CheckProjectileImpact(entity player)
 	// retry previous move
 	setorigin(player, player.warpzone_oldorigin);
 	player.velocity = player.warpzone_oldvelocity;
-	if(WarpZone_Teleport(wz, player, 0, 1))
-	{
+	if (WarpZone_Teleport(wz, player, 0, 1)) {
 		string save1, save2;
 
-		save1 = wz.target; wz.target = string_null;
-		save2 = wz.target3; wz.target3 = string_null;
+		save1 = wz.target;
+		wz.target = string_null;
+		save2 = wz.target3;
+		wz.target3 = string_null;
 		SUB_UseTargets(wz, player, player);
-		if (!wz.target) wz.target = save1;
-		if (!wz.target3) wz.target3 = save2;
+		if (!wz.target) { wz.target = save1; }
+		if (!wz.target3) { wz.target3 = save2; }
 
-		save1 = wz.enemy.target; wz.enemy.target = string_null;
-		save2 = wz.enemy.target2; wz.enemy.target2 = string_null;
+		save1 = wz.enemy.target;
+		wz.enemy.target = string_null;
+		save2 = wz.enemy.target2;
+		wz.enemy.target2 = string_null;
 		SUB_UseTargets(wz.enemy, player, player);
-		if (!wz.enemy.target) wz.enemy.target = save1;
-		if (!wz.enemy.target2) wz.enemy.target2 = save2;
-	}
-	else
-	{
+		if (!wz.enemy.target) { wz.enemy.target = save1; }
+		if (!wz.enemy.target2) { wz.enemy.target2 = save2; }
+	} else {
 		setorigin(player, o0 - player.view_ofs);
 		player.velocity = v0;
 	}
@@ -392,8 +403,9 @@ float WarpZone_CheckProjectileImpact(entity player)
 
 float WarpZone_Projectile_Touch(entity this, entity toucher)
 {
-	if(toucher.classname == "trigger_warpzone")
+	if (toucher.classname == "trigger_warpzone") {
 		return true;
+	}
 
 	// no further impacts if we teleported this frame!
 	// this is because even if we did teleport, the engine still may raise
@@ -401,8 +413,9 @@ float WarpZone_Projectile_Touch(entity this, entity toucher)
 	// engine now aborts moves on teleport, so this SHOULD not happen any more
 	// but if this is called from TouchAreaGrid of the projectile moving,
 	// then this won't do
-	if(time == this.warpzone_teleport_time)
+	if (time == this.warpzone_teleport_time) {
 		return true;
+	}
 
 #ifdef SVQC
 #ifdef WARPZONELIB_KEEPDEBUG
@@ -435,7 +448,7 @@ float WarpZone_Projectile_Touch(entity this, entity toucher)
 		save_inopen = trace_inopen;
 		save_inwater = trace_inwater;
 		float f = WarpZone_CheckProjectileImpact(this);
-		if (f) return (f > 0);
+		if (f) { return f > 0; }
 		trace_dpstartcontents = save_dpstartcontents;
 		trace_dphitcontents = save_dphitcontents;
 		trace_dphitq3surfaceflags = save_dphitq3surfaceflags;
@@ -452,8 +465,9 @@ float WarpZone_Projectile_Touch(entity this, entity toucher)
 	}
 #endif
 
-	if(WarpZone_Projectile_Touch_ImpactFilter_Callback(this, toucher))
+	if (WarpZone_Projectile_Touch_ImpactFilter_Callback(this, toucher)) {
 		return true;
+	}
 #endif
 
 	return false;
@@ -463,11 +477,9 @@ float WarpZone_Projectile_Touch(entity this, entity toucher)
 
 void WarpZone_InitStep_FindOriginTarget(entity this)
 {
-	if(this.killtarget != "")
-	{
+	if (this.killtarget != "") {
 		this.aiment = find(NULL, targetname, this.killtarget);
-		if(this.aiment == NULL)
-		{
+		if (this.aiment == NULL) {
 			error("Warp zone with nonexisting killtarget");
 			return;
 		}
@@ -477,19 +489,16 @@ void WarpZone_InitStep_FindOriginTarget(entity this)
 
 void WarpZonePosition_InitStep_FindTarget(entity this)
 {
-	if(this.target == "")
-	{
+	if (this.target == "") {
 		error("Warp zone position with no target");
 		return;
 	}
 	this.enemy = find(NULL, targetname, this.target);
-	if(this.enemy == NULL)
-	{
+	if (this.enemy == NULL) {
 		error("Warp zone position with nonexisting target");
 		return;
 	}
-	if(this.enemy.aiment)
-	{
+	if (this.enemy.aiment) {
 		// already is positioned
 		error("Warp zone position targeting already oriented warpzone");
 		return;
@@ -499,11 +508,10 @@ void WarpZonePosition_InitStep_FindTarget(entity this)
 
 void WarpZoneCamera_Think(entity this)
 {
-	if(this.warpzone_save_origin != this.origin
-	|| this.warpzone_save_angles != this.angles
-	|| this.warpzone_save_eorigin != this.enemy.origin
-	|| this.warpzone_save_eangles != this.enemy.angles)
-	{
+	if (this.warpzone_save_origin != this.origin
+		|| this.warpzone_save_angles != this.angles
+		|| this.warpzone_save_eorigin != this.enemy.origin
+		|| this.warpzone_save_eangles != this.enemy.angles) {
 		WarpZone_Camera_SetUp(this, this.enemy.origin, this.enemy.angles);
 		this.warpzone_save_origin = this.origin;
 		this.warpzone_save_angles = this.angles;
@@ -517,30 +525,29 @@ void WarpZoneCamera_InitStep_FindTarget(entity this)
 {
 	entity e;
 	float i;
-	if(this.target == "")
-	{
+	if (this.target == "") {
 		error("Camera with no target");
 		return;
 	}
 	this.enemy = NULL;
-	for(e = NULL, i = 0; (e = find(e, targetname, this.target)); )
-		if(random() * ++i < 1)
+	for (e = NULL, i = 0; (e = find(e, targetname, this.target)); ) {
+		if (random() * ++i < 1) {
 			this.enemy = e;
-	if(this.enemy == NULL)
-	{
+		}
+	}
+	if (this.enemy == NULL) {
 		error("Camera with nonexisting target");
 		return;
 	}
 	warpzone_cameras_exist = 1;
 	WarpZone_Camera_SetUp(this, this.enemy.origin, this.enemy.angles);
 	this.SendFlags = 0xFFFFFF;
-	if(this.spawnflags & 1)
-	{
+	if (this.spawnflags & 1) {
 		setthink(this, WarpZoneCamera_Think);
 		this.nextthink = time;
-	}
-	else
+	} else {
 		this.nextthink = 0;
+	}
 }
 
 void WarpZone_InitStep_UpdateTransform(entity this)
@@ -552,21 +559,22 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 	string tex;
 
 	org = this.origin;
-	if(org == '0 0 0')
+	if (org == '0 0 0') {
 		org = 0.5 * (this.mins + this.maxs);
+	}
 
 	norm = point = '0 0 0';
 	area = 0;
-	for(i_s = 0; ; ++i_s)
-	{
+	for (i_s = 0; ; ++i_s) {
 		tex = getsurfacetexture(this, i_s);
-		if (!tex)
+		if (!tex) {
 			break; // this is beyond the last one
-		if(tex == "textures/common/trigger" || tex == "trigger")
+		}
+		if (tex == "textures/common/trigger" || tex == "trigger") {
 			continue;
+		}
 		n_t = getsurfacenumtriangles(this, i_s);
-		for(i_t = 0; i_t < n_t; ++i_t)
-		{
+		for (i_t = 0; i_t < n_t; ++i_t) {
 			tri = getsurfacetriangle(this, i_s, i_t);
 			a = getsurfacepoint(this, i_s, tri.x);
 			b = getsurfacepoint(this, i_s, tri.y);
@@ -577,12 +585,10 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 			point = point + vlen(n) * (a + b + c);
 		}
 	}
-	if(area > 0)
-	{
+	if (area > 0) {
 		norm = norm * (1 / area);
 		point = point * (1 / (3 * area));
-		if(vdist(norm, <, 0.99))
-		{
+		if (vdist(norm, <, 0.99)) {
 			LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " is nonplanar. BEWARE.");
 			area = 0; // no autofixing in this case
 		}
@@ -590,35 +596,32 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 	}
 
 	ang = '0 0 0';
-	if(this.aiment)
-	{
+	if (this.aiment) {
 		org = this.aiment.origin;
 		ang = this.aiment.angles;
-		if(area > 0)
-		{
+		if (area > 0) {
 			org = org - ((org - point) * norm) * norm; // project to plane
 			makevectors(ang);
-			if(norm * v_forward < 0)
-			{
+			if (norm * v_forward < 0) {
 				LOG_INFO("Position target of trigger_warpzone near ", vtos(this.aiment.origin), " points into trigger_warpzone. BEWARE.");
 				norm = -1 * norm;
 			}
 			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
 			ang.x = -ang.x;
-			if(norm * v_forward < 0.99)
+			if (norm * v_forward < 0.99) {
 				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been turned to match plane orientation (", vtos(this.aiment.angles), " -> ", vtos(ang));
-			if(vdist(org - this.aiment.origin, >, 0.5))
+			}
+			if (vdist(org - this.aiment.origin, >, 0.5)) {
 				LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " has been moved to match the plane (", vtos(this.aiment.origin), " -> ", vtos(org), ").");
+			}
 		}
-	}
-	else if(area > 0)
-	{
+	} else if (area > 0) {
 		org = point;
 		ang = vectoangles(norm);
 		ang.x = -ang.x;
-	}
-	else
+	} else {
 		error("cannot infer origin/angles for this warpzone, please use a killtarget or a trigger_warpzone_position");
+	}
 
 	this.warpzone_origin = org;
 	this.warpzone_angles = ang;
@@ -626,8 +629,9 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 
 void WarpZone_InitStep_ClearTarget(entity this)
 {
-	if(this.enemy)
+	if (this.enemy) {
 		this.enemy.enemy = NULL;
+	}
 	this.enemy = NULL;
 }
 
@@ -636,22 +640,25 @@ void WarpZone_InitStep_FindTarget(entity this)
 	float i;
 	entity e, e2;
 
-	if(this.enemy)
+	if (this.enemy) {
 		return;
+	}
 
 	// this way only one of the two ents needs to target
-	if(this.target != "")
-	{
+	if (this.target != "") {
 		this.enemy = this; // so the if(!e.enemy) check also skips this, saves one IF
 
 		e2 = NULL;
-		for(e = NULL, i = 0; (e = find(e, targetname, this.target)); )
-			if(!e.enemy)
-				if(e.classname == this.classname) // possibly non-warpzones may use the same targetname!
-					if(random() * ++i < 1)
+		for (e = NULL, i = 0; (e = find(e, targetname, this.target)); ) {
+			if (!e.enemy) {
+				if (e.classname == this.classname) { // possibly non-warpzones may use the same targetname!
+					if (random() * ++i < 1) {
 						e2 = e;
-		if(!e2)
-		{
+					}
+				}
+			}
+		}
+		if (!e2) {
 			this.enemy = NULL;
 			error("Warpzone with non-existing target");
 			return;
@@ -664,8 +671,7 @@ void WarpZone_InitStep_FindTarget(entity this)
 void WarpZone_Think(entity this);
 void WarpZone_InitStep_FinalizeTransform(entity this)
 {
-	if(!this.enemy || this.enemy.enemy != this)
-	{
+	if (!this.enemy || this.enemy.enemy != this) {
 		error("Invalid warp zone detected. Killed.");
 		return;
 	}
@@ -674,17 +680,16 @@ void WarpZone_InitStep_FinalizeTransform(entity this)
 	WarpZone_SetUp(this, this.warpzone_origin, this.warpzone_angles, this.enemy.warpzone_origin, this.enemy.warpzone_angles);
 	settouch(this, WarpZone_Touch);
 	this.SendFlags = 0xFFFFFF;
-	if(this.spawnflags & 1)
-	{
+	if (this.spawnflags & 1) {
 		setthink(this, WarpZone_Think);
 		this.nextthink = time;
-	}
-	else
+	} else {
 		this.nextthink = 0;
+	}
 }
 
 float warpzone_initialized;
-//entity warpzone_first;
+// entity warpzone_first;
 entity warpzone_position_first;
 entity warpzone_camera_first;
 .entity warpzone_next;
@@ -708,23 +713,25 @@ spawnfunc(trigger_warpzone)
 	//              the map, with another killtarget to designate its
 	//              orientation
 
-	if(!this.scale)
+	if (!this.scale) {
 		this.scale = this.modelscale;
-	if(!this.scale)
+	}
+	if (!this.scale) {
 		this.scale = 1;
+	}
 	string m;
 	m = this.model;
 	WarpZoneLib_ExactTrigger_Init(this);
- 	if(m != "")
- 	{
- 		precache_model(m);
- 		_setmodel(this, m); // no precision needed
+	if (m != "") {
+		precache_model(m);
+		_setmodel(this, m); // no precision needed
 	}
 	setorigin(this, this.origin);
-	if(this.scale)
+	if (this.scale) {
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
-	else
+	} else {
 		setsize(this, this.mins, this.maxs);
+	}
 	setSendEntity(this, WarpZone_Send);
 	this.SendFlags = 0xFFFFFF;
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
@@ -735,24 +742,27 @@ spawnfunc(trigger_warpzone)
 }
 spawnfunc(func_camera)
 {
-	if(!this.scale)
+	if (!this.scale) {
 		this.scale = this.modelscale;
-	if(!this.scale)
+	}
+	if (!this.scale) {
 		this.scale = 1;
- 	if(this.model != "")
- 	{
- 		precache_model(this.model);
- 		_setmodel(this, this.model); // no precision needed
+	}
+	if (this.model != "") {
+		precache_model(this.model);
+		_setmodel(this, this.model); // no precision needed
 	}
 	setorigin(this, this.origin);
-	if(this.scale)
+	if (this.scale) {
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
-	else
+	} else {
 		setsize(this, this.mins, this.maxs);
-	if(!this.solid)
+	}
+	if (!this.solid) {
 		this.solid = SOLID_BSP;
-	else if(this.solid < 0)
+	} else if (this.solid < 0) {
 		this.solid = SOLID_NOT;
+	}
 	setSendEntity(this, WarpZone_Camera_Send);
 	this.SendFlags = 0xFFFFFF;
 	this.warpzone_next = warpzone_camera_first;
@@ -760,23 +770,26 @@ spawnfunc(func_camera)
 }
 void WarpZones_Reconnect()
 {
-	for(entity e = warpzone_first; e; e = e.warpzone_next)
+	for (entity e = warpzone_first; e; e = e.warpzone_next) {
 		WarpZone_InitStep_ClearTarget(e);
-	for(entity e = warpzone_first; e; e = e.warpzone_next)
+	}
+	for (entity e = warpzone_first; e; e = e.warpzone_next) {
 		WarpZone_InitStep_FindTarget(e);
-	for(entity e = warpzone_camera_first; e; e = e.warpzone_next)
+	}
+	for (entity e = warpzone_camera_first; e; e = e.warpzone_next) {
 		WarpZoneCamera_InitStep_FindTarget(e);
-	for(entity e = warpzone_first; e; e = e.warpzone_next)
+	}
+	for (entity e = warpzone_first; e; e = e.warpzone_next) {
 		WarpZone_InitStep_FinalizeTransform(e);
+	}
 }
 
 void WarpZone_Think(entity this)
 {
-	if(this.warpzone_save_origin != this.origin
-	|| this.warpzone_save_angles != this.angles
-	|| this.warpzone_save_eorigin != this.enemy.origin
-	|| this.warpzone_save_eangles != this.enemy.angles)
-	{
+	if (this.warpzone_save_origin != this.origin
+		|| this.warpzone_save_angles != this.angles
+		|| this.warpzone_save_eorigin != this.enemy.origin
+		|| this.warpzone_save_eangles != this.enemy.angles) {
 		WarpZone_InitStep_UpdateTransform(this);
 		WarpZone_InitStep_UpdateTransform(this.enemy);
 		WarpZone_InitStep_FinalizeTransform(this);
@@ -791,21 +804,22 @@ void WarpZone_Think(entity this)
 
 void WarpZone_StartFrame()
 {
-	if (!warpzone_initialized)
-	{
+	if (!warpzone_initialized) {
 		warpzone_initialized = true;
-		for(entity e = warpzone_first; e; e = e.warpzone_next)
+		for (entity e = warpzone_first; e; e = e.warpzone_next) {
 			WarpZone_InitStep_FindOriginTarget(e);
-		for(entity e = warpzone_position_first; e; e = e.warpzone_next)
+		}
+		for (entity e = warpzone_position_first; e; e = e.warpzone_next) {
 			WarpZonePosition_InitStep_FindTarget(e);
-		for(entity e = warpzone_first; e; e = e.warpzone_next)
+		}
+		for (entity e = warpzone_first; e; e = e.warpzone_next) {
 			WarpZone_InitStep_UpdateTransform(e);
+		}
 		WarpZones_Reconnect();
 		WarpZone_PostInitialize_Callback();
 	}
 
-	if(warpzone_warpzones_exist)
-	{
+	if (warpzone_warpzones_exist) {
 		IL_EACH(g_projectiles, true,
 		{
 			WarpZone_StoreProjectileData(it);
@@ -815,28 +829,32 @@ void WarpZone_StartFrame()
 
 	FOREACH_CLIENT(true,
 	{
-		if(warpzone_warpzones_exist)
+		if (warpzone_warpzones_exist) {
 			WarpZone_StoreProjectileData(it); // TODO: not actually needed
+		}
+		if (IS_OBSERVER(it) || it.solid == SOLID_NOT) {
+			if (IS_CLIENT(it)) { // we don't care about it being a bot
+		        // warpzones
+				if (warpzone_warpzones_exist) {
+					entity e = WarpZone_Find(it.origin + it.mins, it.origin + it.maxs);
+					if (e) {
+						if (!WarpZoneLib_ExactTrigger_Touch(e, it)) {
+							if (WarpZone_PlaneDist(e, it.origin + it.view_ofs) <= 0) {
+								WarpZone_Teleport(e, it, -1, 0); // NOT triggering targets by this!
+							}
+						}
+					}
+				}
 
-		if(IS_OBSERVER(it) || it.solid == SOLID_NOT)
-		if(IS_CLIENT(it)) // we don't care about it being a bot
-		{
-			// warpzones
-			if (warpzone_warpzones_exist) {
-				entity e = WarpZone_Find(it.origin + it.mins, it.origin + it.maxs);
-				if (e)
-				if (!WarpZoneLib_ExactTrigger_Touch(e, it))
-				if (WarpZone_PlaneDist(e, it.origin + it.view_ofs) <= 0)
-					WarpZone_Teleport(e, it, -1, 0); // NOT triggering targets by this!
-			}
-
-			// teleporters
-			if(it.teleportable)
-			{
-				entity ent = Teleport_Find(it.origin + it.mins, it.origin + it.maxs);
-				if (ent)
-				if (!WarpZoneLib_ExactTrigger_Touch(ent, it))
-					Simple_TeleportPlayer(ent, it); // NOT triggering targets by this!
+		        // teleporters
+				if (it.teleportable) {
+					entity ent = Teleport_Find(it.origin + it.mins, it.origin + it.maxs);
+					if (ent) {
+						if (!WarpZoneLib_ExactTrigger_Touch(ent, it)) {
+							Simple_TeleportPlayer(ent, it); // NOT triggering targets by this!
+						}
+					}
+				}
 			}
 		}
 	});
@@ -855,22 +873,32 @@ void trigger_warpzone_reconnect_use(entity this, entity actor, entity trigger)
 {
 	// NOTE: this matches for target, not targetname, but of course
 	// targetname must be set too on the other entities
-	for(entity e = warpzone_first; e; e = e.warpzone_next)
+	for (entity e = warpzone_first; e; e = e.warpzone_next) {
 		e.warpzone_reconnecting = ((this.target == "" || e.target == this.target) && !((this.spawnflags & 1) && (visible_to_some_client(e) || visible_to_some_client(e.enemy))));
-	for(entity e = warpzone_camera_first; e; e = e.warpzone_next)
+	}
+	for (entity e = warpzone_camera_first; e; e = e.warpzone_next) {
 		e.warpzone_reconnecting = ((this.target == "" || e.target == this.target) && !((this.spawnflags & 1) && visible_to_some_client(e)));
-	for(entity e = warpzone_first; e; e = e.warpzone_next)
-		if(e.warpzone_reconnecting)
+	}
+	for (entity e = warpzone_first; e; e = e.warpzone_next) {
+		if (e.warpzone_reconnecting) {
 			WarpZone_InitStep_ClearTarget(e);
-	for(entity e = warpzone_first; e; e = e.warpzone_next)
-		if(e.warpzone_reconnecting)
+		}
+	}
+	for (entity e = warpzone_first; e; e = e.warpzone_next) {
+		if (e.warpzone_reconnecting) {
 			WarpZone_InitStep_FindTarget(e);
-	for(entity e = warpzone_camera_first; e; e = e.warpzone_next)
-		if(e.warpzone_reconnecting)
+		}
+	}
+	for (entity e = warpzone_camera_first; e; e = e.warpzone_next) {
+		if (e.warpzone_reconnecting) {
 			WarpZoneCamera_InitStep_FindTarget(e);
-	for(entity e = warpzone_first; e; e = e.warpzone_next)
-		if(e.warpzone_reconnecting || e.enemy.warpzone_reconnecting)
+		}
+	}
+	for (entity e = warpzone_first; e; e = e.warpzone_next) {
+		if (e.warpzone_reconnecting || e.enemy.warpzone_reconnecting) {
 			WarpZone_InitStep_FinalizeTransform(e);
+		}
+	}
 }
 
 spawnfunc(trigger_warpzone_reconnect)
@@ -886,12 +914,13 @@ spawnfunc(target_warpzone_reconnect)
 void WarpZone_PlayerPhysics_FixVAngle(entity this)
 {
 #ifndef WARPZONE_DONT_FIX_VANGLE
-	if(IS_REAL_CLIENT(this))
-	if(this.v_angle.z <= 360) // if not already adjusted
-	if(time - CS(this).ping * 0.001 < this.warpzone_teleport_time)
-	{
-		this.v_angle = WarpZone_TransformVAngles(this.warpzone_teleport_zone, this.v_angle);
-		this.v_angle_z += 720; // mark as adjusted
+	if (IS_REAL_CLIENT(this)) {
+		if (this.v_angle.z <= 360) { // if not already adjusted
+			if (time - CS(this).ping * 0.001 < this.warpzone_teleport_time) {
+				this.v_angle = WarpZone_TransformVAngles(this.warpzone_teleport_zone, this.v_angle);
+				this.v_angle_z += 720; // mark as adjusted
+			}
+		}
 	}
 #endif
 }

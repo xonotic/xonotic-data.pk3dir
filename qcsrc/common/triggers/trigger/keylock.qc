@@ -4,9 +4,11 @@
  */
 void trigger_keylock_trigger(entity this, entity actor, string s)
 {
-	for(entity t = NULL; (t = find(t, targetname, s)); )
-		if(t.use)
+	for (entity t = NULL; (t = find(t, targetname, s)); ) {
+		if (t.use) {
 			t.use(t, actor, this);
+		}
+	}
 }
 
 /**
@@ -15,8 +17,9 @@ void trigger_keylock_trigger(entity this, entity actor, string s)
 void trigger_keylock_kill(string s)
 {
 	entity t;
-	for(t = NULL; (t = find(t, targetname, s)); )
+	for (t = NULL; (t = find(t, targetname, s)); ) {
 		delete(t);
+	}
 }
 
 void trigger_keylock_touch(entity this, entity toucher)
@@ -25,26 +28,24 @@ void trigger_keylock_touch(entity this, entity toucher)
 	bool started_delay = false;
 
 	// only player may trigger the lock
-	if(!IS_PLAYER(toucher))
+	if (!IS_PLAYER(toucher)) {
 		return;
+	}
 
 	// check silver key
-	if(this.itemkeys)
+	if (this.itemkeys) {
 		key_used = item_keys_usekey(this, toucher);
+	}
 
-	if(this.itemkeys)
-	{
+	if (this.itemkeys) {
 #ifdef SVQC
 		// at least one of the keys is missing
-		if(key_used)
-		{
+		if (key_used) {
 			// one or more keys were given, but others are still missing!
 			play2(toucher, this.noise1);
 			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(this.itemkeys));
 			toucher.key_door_messagetime = time + 2;
-		}
-		else if(toucher.key_door_messagetime <= time)
-		{
+		} else if (toucher.key_door_messagetime <= time) {
 			// no keys were given
 			play2(toucher, this.noise2);
 			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(this.itemkeys));
@@ -53,31 +54,30 @@ void trigger_keylock_touch(entity this, entity toucher)
 #endif
 
 		// trigger target2
-		if(this.delay <= time || started_delay == true)
-		if(this.target2)
-		{
-			trigger_keylock_trigger(this, toucher, this.target2);
-			started_delay = true;
-			this.delay = time + this.wait;
+		if (this.delay <= time || started_delay == true) {
+			if (this.target2) {
+				trigger_keylock_trigger(this, toucher, this.target2);
+				started_delay = true;
+				this.delay = time + this.wait;
+			}
 		}
-	}
-	else
-	{
+	} else {
 #ifdef SVQC
 		// all keys were given!
 		play2(toucher, this.noise);
 		centerprint(toucher, this.message);
 #endif
 
-		if(this.target)
+		if (this.target) {
 			trigger_keylock_trigger(this, toucher, this.target);
+		}
 
-		if(this.killtarget)
+		if (this.killtarget) {
 			trigger_keylock_kill(this.killtarget);
+		}
 
 		delete(this);
 	}
-
 }
 
 REGISTER_NET_LINKED(ENT_CLIENT_KEYLOCK)
@@ -98,7 +98,7 @@ bool trigger_keylock_send(entity this, entity to, int sf)
 void trigger_keylock_link(entity this)
 {
 	// uncomment to network keylocks
-	//Net_LinkEntity(this, false, 0, trigger_keylock_send);
+	// Net_LinkEntity(this, false, 0, trigger_keylock_send);
 }
 
 /*QUAKED trigger_keylock (.0 .5 .8) ?
@@ -122,33 +122,36 @@ message2 and noise2 will be resent to the player every 2 seconds while he is in 
 */
 spawnfunc(trigger_keylock)
 {
-	if(!this.itemkeys) { delete(this); return; }
+	if (!this.itemkeys) { delete(this); return; }
 
 	// set unlocked message
-	if(this.message == "")
+	if (this.message == "") {
 		this.message = "Unlocked!";
+	}
 
 	// set default unlock noise
-	if(this.noise == "")
-	{
-		if(this.sounds == 1)
+	if (this.noise == "") {
+		if (this.sounds == 1) {
 			this.noise = "misc/secret.wav";
-		else if(this.sounds == 2)
+		} else if (this.sounds == 2) {
 			this.noise = strzone(SND(TALK));
-		else //if (this.sounds == 3) {
+		} else { // if (this.sounds == 3) {
 			this.noise = "misc/trigger1.wav";
+		}
 	}
 
 	// set default use key sound
-	if(this.noise1 == "")
+	if (this.noise1 == "") {
 		this.noise1 = "misc/decreasevalue.wav";
+	}
 
 	// set closed sourd
-	if(this.noise2 == "")
+	if (this.noise2 == "") {
 		this.noise2 = SND(TALK);
+	}
 
 	// delay between triggering message2 and trigger2
-	if(!this.wait) { this.wait = 5; }
+	if (!this.wait) { this.wait = 5; }
 
 	// precache sounds
 	precache_sound(this.noise);
@@ -164,22 +167,22 @@ spawnfunc(trigger_keylock)
 #elif defined(CSQC)
 void keylock_remove(entity this)
 {
-	if(this.target) { strunzone(this.target); }
+	if (this.target) { strunzone(this.target); }
 	this.target = string_null;
 
-	if(this.target2) { strunzone(this.target2); }
+	if (this.target2) { strunzone(this.target2); }
 	this.target2 = string_null;
 
-	if(this.target3) { strunzone(this.target3); }
+	if (this.target3) { strunzone(this.target3); }
 	this.target3 = string_null;
 
-	if(this.target4) { strunzone(this.target4); }
+	if (this.target4) { strunzone(this.target4); }
 	this.target4 = string_null;
 
-	if(this.killtarget) { strunzone(this.killtarget); }
+	if (this.killtarget) { strunzone(this.killtarget); }
 	this.killtarget = string_null;
 
-	if(this.targetname) { strunzone(this.targetname); }
+	if (this.targetname) { strunzone(this.targetname); }
 	this.targetname = string_null;
 }
 

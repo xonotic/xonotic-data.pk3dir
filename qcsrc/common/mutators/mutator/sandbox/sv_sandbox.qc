@@ -24,8 +24,9 @@ REGISTER_MUTATOR(sandbox, expr_evaluate(autocvar_g_sandbox))
 	MUTATOR_ONADD
 	{
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
-		if(autocvar_g_sandbox_storage_autoload)
+		if (autocvar_g_sandbox_storage_autoload) {
 			sandbox_Database_Load();
+		}
 	}
 }
 
@@ -40,45 +41,48 @@ void sandbox_ObjectFunction_Touch(entity this, entity toucher)
 {
 	// apply material impact effects
 
-	if(!this.material)
+	if (!this.material) {
 		return;
-	if(this.touch_timer > time)
+	}
+	if (this.touch_timer > time) {
 		return; // don't execute each frame
+	}
 	this.touch_timer = time + 0.1;
 
 	// make particle count and sound volume depend on impact speed
 	float intensity;
 	intensity = vlen(this.velocity) + vlen(toucher.velocity);
-	if(intensity) // avoid divisions by 0
-		intensity /= 2; // average the two velocities
-	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))
-		return; // impact not strong enough to do anything
+	if (intensity) { // avoid divisions by 0
+		intensity /= 2;                                           // average the two velocities
+	}
+	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min)) {
+		return;                                                   // impact not strong enough to do anything
+	}
 	// now offset intensity and apply it to the effects
 	intensity -= autocvar_g_sandbox_object_material_velocity_min; // start from minimum velocity, not actual velocity
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
-	_sound(this, CH_TRIGGER, strcat("object/impact_", this.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTEN_NORM);
+	_sound(this, CH_TRIGGER, strcat("object/impact_", this.material, "_", ftos(ceil(random() * 5)), ".wav"), VOL_BASE * intensity, ATTEN_NORM);
 	Send_Effect_(strcat("impact_", this.material), this.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
 void sandbox_ObjectFunction_Think(entity this)
 {
 	// decide if and how this object can be grabbed
-	if(autocvar_g_sandbox_readonly)
+	if (autocvar_g_sandbox_readonly) {
 		this.grab = 0; // no grabbing
-	else if(autocvar_g_sandbox_editor_free < 2 && this.crypto_idfp)
+	} else if (autocvar_g_sandbox_editor_free < 2 && this.crypto_idfp) {
 		this.grab = 1; // owner only
-	else
+	} else {
 		this.grab = 3; // anyone
-
+	}
 	// Object owner is stored via player UID, but we also need the owner as an entity (if the player is available on the server).
 	// Therefore, scan for all players, and update the owner as long as the player is present. We must always do this,
 	// since if the owning player disconnects, the object's owner should also be reset.
 
 	// bots can't have objects
 	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-		if(this.crypto_idfp == it.crypto_idfp)
-		{
+		if (this.crypto_idfp == it.crypto_idfp) {
 			this.realowner = it;
 			break;
 		}
@@ -98,26 +102,30 @@ entity sandbox_ObjectEdit_Get(entity this, float permissions)
 	// Attached objects are SOLID_NOT and do not get traced.
 
 	crosshair_trace_plusvisibletriggers(this);
-	if(vdist(this.origin - trace_ent.origin, >, autocvar_g_sandbox_editor_distance_edit))
-		return NULL; // out of trace range
-	if(trace_ent.classname != "object")
-		return NULL; // entity is not an object
-	if(!permissions)
+	if (vdist(this.origin - trace_ent.origin, >, autocvar_g_sandbox_editor_distance_edit)) {
+		return NULL;      // out of trace range
+	}
+	if (trace_ent.classname != "object") {
+		return NULL;      // entity is not an object
+	}
+	if (!permissions) {
 		return trace_ent; // don't check permissions, anyone can edit this object
-	if(trace_ent.crypto_idfp == "")
+	}
+	if (trace_ent.crypto_idfp == "") {
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
-	if (!(trace_ent.realowner != this && autocvar_g_sandbox_editor_free < 2))
+	}
+	if (!(trace_ent.realowner != this && autocvar_g_sandbox_editor_free < 2)) {
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
+	}
 	return NULL;
 }
 
 void sandbox_ObjectEdit_Scale(entity e, float f)
 {
 	e.scale = f;
-	if(e.scale)
-	{
+	if (e.scale) {
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
-		_setmodel(e, e.model); // reset mins and maxs based on mesh
+		_setmodel(e, e.model);                          // reset mins and maxs based on mesh
 		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 	}
 }
@@ -130,7 +138,7 @@ void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 	// we can't attach to an attachment, for obvious reasons
 	sandbox_ObjectAttach_Remove(e);
 
-	e.old_solid = e.solid; // persist solidity
+	e.old_solid = e.solid;            // persist solidity
 	e.old_movetype = e.move_movetype; // persist physics
 	set_movetype(e, MOVETYPE_FOLLOW);
 	e.solid = SOLID_NOT;
@@ -152,9 +160,9 @@ void sandbox_ObjectAttach_Remove(entity e)
 
 		// objects change origin and angles when detached, so apply previous position
 		setorigin(it, org);
-		it.angles = e.angles; // don't allow detached objects to spin or roll
+		it.angles = e.angles;              // don't allow detached objects to spin or roll
 
-		it.solid = it.old_solid; // restore persisted solidity
+		it.solid = it.old_solid;           // restore persisted solidity
 		set_movetype(it, it.old_movetype); // restore persisted physics
 		it.takedamage = DAMAGE_AIM;
 	});
@@ -176,20 +184,20 @@ entity sandbox_ObjectSpawn(entity this, float database)
 	settouch(e, sandbox_ObjectFunction_Touch);
 	setthink(e, sandbox_ObjectFunction_Think);
 	e.nextthink = time;
-	//e.effects |= EF_SELECTABLE; // don't do this all the time, maybe just when editing objects?
+	// e.effects |= EF_SELECTABLE; // don't do this all the time, maybe just when editing objects?
 
-	if(!database)
-	{
+	if (!database) {
 		// set the object's owner via player UID
 		// if the player does not have an UID, the owner cannot be stored and his objects may be edited by anyone
-		if(this.crypto_idfp != "")
+		if (this.crypto_idfp != "") {
 			e.crypto_idfp = strzone(this.crypto_idfp);
-		else
+		} else {
 			print_to(this, "^1SANDBOX - WARNING: ^7You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
+		}
 
 		// set public object information
-		e.netname = strzone(this.netname); // name of the owner
-		e.message = strzone(strftime(true, "%d-%m-%Y %H:%M:%S")); // creation time
+		e.netname = strzone(this.netname);                         // name of the owner
+		e.message = strzone(strftime(true, "%d-%m-%Y %H:%M:%S"));  // creation time
 		e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S")); // last editing time
 
 		// set origin and direction based on player position and view angle
@@ -210,13 +218,14 @@ void sandbox_ObjectRemove(entity e)
 	sandbox_ObjectAttach_Remove(e); // detach child objects
 
 	// if the object being removed has been selected for attachment by a player, unset it
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.object_attach == e, { it.object_attach = NULL; });
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.object_attach == e, { it.object_attach = NULL;
+		});
 
-	if(e.material)	{	strunzone(e.material);	e.material = string_null;	}
-	if(e.crypto_idfp)	{	strunzone(e.crypto_idfp);	e.crypto_idfp = string_null;	}
-	if(e.netname)	{	strunzone(e.netname);	e.netname = string_null;	}
-	if(e.message)	{	strunzone(e.message);	e.message = string_null;	}
-	if(e.message2)	{	strunzone(e.message2);	e.message2 = string_null;	}
+	if (e.material) {   strunzone(e.material);  e.material = string_null;   }
+	if (e.crypto_idfp) {   strunzone(e.crypto_idfp);   e.crypto_idfp = string_null;    }
+	if (e.netname) {   strunzone(e.netname);   e.netname = string_null;    }
+	if (e.message) {   strunzone(e.message);   e.message = string_null;    }
+	if (e.message2) {   strunzone(e.message2);  e.message2 = string_null;   }
 	delete(e);
 	e = NULL;
 
@@ -232,44 +241,38 @@ string sandbox_ObjectPort_Save(entity e, bool database)
 
 	// order doesn't really matter, as we're writing the file fresh
 	IL_EACH(g_sandbox_objects, it == e || it.owner == e, LAMBDA(
-		// the main object needs to be first in the array [0] with attached objects following
+			// the main object needs to be first in the array [0] with attached objects following
 		int slot, physics, solidity;
-		if(it == e) // this is the main object, place it first
-		{
-			slot = 0;
-			solidity = it.solid; // applied solidity is normal solidity for children
-			physics = it.move_movetype; // applied physics are normal physics for parents
-		}
-		else if(it.owner == e) // child object, list them in order
-		{
-			o += 1; // children start from 1
-			slot = o;
-			solidity = it.old_solid; // persisted solidity is normal solidity for children
-			physics = it.old_movetype; // persisted physics are normal physics for children
-			gettaginfo(it.owner, it.tag_index); // get the name of the tag our object is attached to, used further below
-		}
-		else
-			continue;
+		if (it == e) { // this is the main object, place it first
+		slot = 0;
+		solidity = it.solid;                // applied solidity is normal solidity for children
+		physics = it.move_movetype;         // applied physics are normal physics for parents
+	} else if (it.owner == e) { // child object, list them in order
+		o += 1;                             // children start from 1
+		slot = o;
+		solidity = it.old_solid;            // persisted solidity is normal solidity for children
+		physics = it.old_movetype;          // persisted physics are normal physics for children
+		gettaginfo(it.owner, it.tag_index); // get the name of the tag our object is attached to, used further below
+	} else {
+		continue;
+	}
 
-		// ---------------- OBJECT PROPERTY STORAGE: SAVE ----------------
-		if(slot)
-		{
-			// properties stored only for child objects
-			if(gettaginfo_name)
-				port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");
-			else
-				port_string[slot] = strcat(port_string[slot], "\"\" "); // none
+			// ---------------- OBJECT PROPERTY STORAGE: SAVE ----------------
+		if (slot) {
+		// properties stored only for child objects
+		if (gettaginfo_name) {
+			port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");
+		} else {
+			port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 		}
-		else
-		{
-			// properties stored only for parent objects
-			if(database)
-			{
-				port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", it.origin), " ");
-				port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", it.angles), " ");
-			}
+	} else {
+		// properties stored only for parent objects
+		if (database) {
+			port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", it.origin), " ");
+			port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", it.angles), " ");
 		}
-		// properties stored for all objects
+	}
+			// properties stored for all objects
 		port_string[slot] = strcat(port_string[slot], "\"", it.model, "\" ");
 		port_string[slot] = strcat(port_string[slot], ftos(it.skin), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(it.alpha), " ");
@@ -280,29 +283,30 @@ string sandbox_ObjectPort_Save(entity e, bool database)
 		port_string[slot] = strcat(port_string[slot], ftos(solidity), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(physics), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(it.damageforcescale), " ");
-		if(it.material)
-			port_string[slot] = strcat(port_string[slot], "\"", it.material, "\" ");
-		else
+		if (it.material) {
+		port_string[slot] = strcat(port_string[slot], "\"", it.material, "\" ");
+	} else {
+		port_string[slot] = strcat(port_string[slot], "\"\" "); // none
+	}
+		if (database) {
+		// properties stored only for the database
+		if (it.crypto_idfp) {
+			port_string[slot] = strcat(port_string[slot], "\"", it.crypto_idfp, "\" ");
+		} else {
 			port_string[slot] = strcat(port_string[slot], "\"\" "); // none
-		if(database)
-		{
-			// properties stored only for the database
-			if(it.crypto_idfp)
-				port_string[slot] = strcat(port_string[slot], "\"", it.crypto_idfp, "\" ");
-			else
-				port_string[slot] = strcat(port_string[slot], "\"\" "); // none
-			port_string[slot] = strcat(port_string[slot], "\"", e.netname, "\" ");
-			port_string[slot] = strcat(port_string[slot], "\"", e.message, "\" ");
-			port_string[slot] = strcat(port_string[slot], "\"", e.message2, "\" ");
 		}
-	));
+		port_string[slot] = strcat(port_string[slot], "\"", e.netname, "\" ");
+		port_string[slot] = strcat(port_string[slot], "\"", e.message, "\" ");
+		port_string[slot] = strcat(port_string[slot], "\"", e.message2, "\" ");
+	}
+		));
 
 	// now apply the array to a simple string, with the ; symbol separating objects
 	string s = "";
-	for(int j = 0; j <= MAX_STORAGE_ATTACHMENTS; ++j)
-	{
-		if(port_string[j])
+	for (int j = 0; j <= MAX_STORAGE_ATTACHMENTS; ++j) {
+		if (port_string[j]) {
 			s = strcat(s, port_string[j], "; ");
+		}
 		port_string[j] = string_null; // fully clear the string
 	}
 
@@ -317,12 +321,12 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 
 	// separate objects between the ; symbols
 	n = tokenizebyseparator(s, "; ");
-	for(i = 0; i < n; ++i)
+	for (i = 0; i < n; ++i) {
 		port_string[i] = argv(i);
+	}
 
 	// now separate and apply the properties of each object
-	for(i = 0; i < n; ++i)
-	{
+	for (i = 0; i < n; ++i) {
 		float argv_num;
 		string tagname = string_null;
 		argv_num = 0;
@@ -330,51 +334,62 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 		e = sandbox_ObjectSpawn(this, database);
 
 		// ---------------- OBJECT PROPERTY STORAGE: LOAD ----------------
-		if(i)
-		{
+		if (i) {
 			// properties stored only for child objects
-			if(argv(argv_num) != "")	tagname = argv(argv_num);	else tagname = string_null;	++argv_num;
-		}
-		else
-		{
+			if (argv(argv_num) != "") { tagname = argv(argv_num); } else { tagname = string_null; } ++argv_num;
+		} else {
 			// properties stored only for parent objects
-			if(database)
-			{
-				setorigin(e, stov(argv(argv_num)));	++argv_num;
-				e.angles = stov(argv(argv_num));	++argv_num;
+			if (database) {
+				setorigin(e, stov(argv(argv_num)));
+				++argv_num;
+				e.angles = stov(argv(argv_num));
+				++argv_num;
 			}
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		_setmodel(e, argv(argv_num));	++argv_num;
-		e.skin = stof(argv(argv_num));	++argv_num;
-		e.alpha = stof(argv(argv_num));	++argv_num;
-		e.colormod = stov(argv(argv_num));	++argv_num;
-		e.glowmod = stov(argv(argv_num));	++argv_num;
-		e.frame = stof(argv(argv_num));	++argv_num;
-		sandbox_ObjectEdit_Scale(e, stof(argv(argv_num)));	++argv_num;
-		e.solid = e.old_solid = stof(argv(argv_num));	++argv_num;
-		e.old_movetype = stof(argv(argv_num));	++argv_num;
+		_setmodel(e, argv(argv_num));
+		++argv_num;
+		e.skin = stof(argv(argv_num));
+		++argv_num;
+		e.alpha = stof(argv(argv_num));
+		++argv_num;
+		e.colormod = stov(argv(argv_num));
+		++argv_num;
+		e.glowmod = stov(argv(argv_num));
+		++argv_num;
+		e.frame = stof(argv(argv_num));
+		++argv_num;
+		sandbox_ObjectEdit_Scale(e, stof(argv(argv_num)));
+		++argv_num;
+		e.solid = e.old_solid = stof(argv(argv_num));
+		++argv_num;
+		e.old_movetype = stof(argv(argv_num));
+		++argv_num;
 		set_movetype(e, e.old_movetype);
-		e.damageforcescale = stof(argv(argv_num));	++argv_num;
-		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
-		if(database)
-		{
+		e.damageforcescale = stof(argv(argv_num));
+		++argv_num;
+		if (e.material) { strunzone(e.material); } if (argv(argv_num) != "") { e.material = strzone(argv(argv_num)); } else { e.material = string_null; } ++argv_num;
+		if (database) {
 			// properties stored only for the database
-			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
-			if(e.netname)	strunzone(e.netname);	e.netname = strzone(argv(argv_num));	++argv_num;
-			if(e.message)	strunzone(e.message);	e.message = strzone(argv(argv_num));	++argv_num;
-			if(e.message2)	strunzone(e.message2);	e.message2 = strzone(argv(argv_num));	++argv_num;
+			if (e.crypto_idfp) { strunzone(e.crypto_idfp); } if (argv(argv_num) != "") { e.crypto_idfp = strzone(argv(argv_num)); } else { e.crypto_idfp = string_null; } ++argv_num;
+			if (e.netname) { strunzone(e.netname); } e.netname = strzone(argv(argv_num));
+			++argv_num;
+			if (e.message) { strunzone(e.message); } e.message = strzone(argv(argv_num));
+			++argv_num;
+			if (e.message2) { strunzone(e.message2); } e.message2 = strzone(argv(argv_num));
+			++argv_num;
 		}
 
 		// attach last
-		if(i)
+		if (i) {
 			sandbox_ObjectAttach_Set(e, parent, tagname);
+		}
 	}
 
-	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
+	for (i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i) {
 		port_string[i] = string_null; // fully clear the string
-
+	}
 	return e;
 }
 
@@ -405,63 +420,61 @@ void sandbox_Database_Load()
 
 	file_name = strcat("sandbox/storage_", autocvar_g_sandbox_storage_name, "_", GetMapname(), ".txt");
 	file_get = fopen(file_name, FILE_READ);
-	if(file_get < 0)
-	{
-		if(autocvar_g_sandbox_info > 0)
+	if (file_get < 0) {
+		if (autocvar_g_sandbox_info > 0) {
 			LOG_INFO("^3SANDBOX - SERVER: ^7could not find storage file ^3", file_name, "^7, no objects were loaded");
-	}
-	else
-	{
-		for (;;)
-		{
+		}
+	} else {
+		for ( ; ; ) {
 			file_read = fgets(file_get);
-			if(file_read == "")
+			if (file_read == "") {
 				break;
-			if(substring(file_read, 0, 2) == "//")
+			}
+			if (substring(file_read, 0, 2) == "//") {
 				continue;
-			if(substring(file_read, 0, 1) == "#")
+			}
+			if (substring(file_read, 0, 1) == "#") {
 				continue;
+			}
 
 			entity e;
 			e = sandbox_ObjectPort_Load(NULL, file_read, true);
 
-			if(e.material)
-			{
+			if (e.material) {
 				// since objects are being loaded for the first time, precache material sounds for each
-				for (i = 1; i <= 5; i++) // 5 sounds in total
+				for (i = 1; i <= 5; i++) { // 5 sounds in total
 					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".wav"));
+				}
 			}
 		}
-		if(autocvar_g_sandbox_info > 0)
+		if (autocvar_g_sandbox_info > 0) {
 			LOG_INFO("^3SANDBOX - SERVER: ^7successfully loaded storage file ^3", file_name);
+		}
 	}
 	fclose(file_get);
 }
 
 MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 {
-	if(MUTATOR_RETURNVALUE) // command was already handled?
+	if (MUTATOR_RETURNVALUE) { // command was already handled?
 		return;
+	}
 
 	entity player = M_ARGV(0, entity);
 	string cmd_name = M_ARGV(1, string);
 	int cmd_argc = M_ARGV(2, int);
 
-	if(cmd_name == "g_sandbox")
-	{
-		if(autocvar_g_sandbox_readonly)
-		{
+	if (cmd_name == "g_sandbox") {
+		if (autocvar_g_sandbox_readonly) {
 			print_to(player, "^2SANDBOX - INFO: ^7Sandbox mode is active, but in read-only mode. Sandbox commands cannot be used");
 			return true;
 		}
-		if(cmd_argc < 2)
-		{
+		if (cmd_argc < 2) {
 			print_to(player, "^2SANDBOX - INFO: ^7Sandbox mode is active. For usage information, type 'sandbox help'");
 			return true;
 		}
 
-		switch(argv(1))
-		{
+		switch (argv(1)) {
 			entity e;
 			int j;
 			string s;
@@ -499,24 +512,20 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 			// ---------------- COMMAND: OBJECT, SPAWN ----------------
 			case "object_spawn":
-				if(time < player.object_flood)
-				{
+				if (time < player.object_flood) {
 					print_to(player, strcat("^1SANDBOX - WARNING: ^7Flood protection active. Please wait ^3", ftos(player.object_flood - time), " ^7seconds beofore spawning another object"));
 					return true;
 				}
 				player.object_flood = time + autocvar_g_sandbox_editor_flood;
-				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
-				{
+				if (object_count >= autocvar_g_sandbox_editor_maxobjects) {
 					print_to(player, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
 					return true;
 				}
-				if(cmd_argc < 3)
-				{
+				if (cmd_argc < 3) {
 					print_to(player, "^1SANDBOX - WARNING: ^7Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'object_spawn' command");
 					return true;
 				}
-				if (!(fexists(argv(2))))
-				{
+				if (!(fexists(argv(2)))) {
 					print_to(player, "^1SANDBOX - WARNING: ^7Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
 					return true;
 				}
@@ -524,17 +533,18 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				e = sandbox_ObjectSpawn(player, false);
 				_setmodel(e, argv(2));
 
-				if(autocvar_g_sandbox_info > 0)
+				if (autocvar_g_sandbox_info > 0) {
 					LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " spawned an object at origin ^3", vtos(e.origin));
+				}
 				return true;
 
 			// ---------------- COMMAND: OBJECT, REMOVE ----------------
 			case "object_remove":
 				e = sandbox_ObjectEdit_Get(player, true);
-				if(e != NULL)
-				{
-					if(autocvar_g_sandbox_info > 0)
+				if (e != NULL) {
+					if (autocvar_g_sandbox_info > 0) {
 						LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " removed an object at origin ^3", vtos(e.origin));
+					}
 					sandbox_ObjectRemove(e);
 					return true;
 				}
@@ -544,13 +554,11 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 			// ---------------- COMMAND: OBJECT, DUPLICATE ----------------
 			case "object_duplicate":
-				switch(argv(2))
-				{
+				switch (argv(2)) {
 					case "copy":
 						// copies customizable properties of the selected object to the clipboard cvar
 						e = sandbox_ObjectEdit_Get(player, autocvar_g_sandbox_editor_free); // can we copy objects we can't edit?
-						if(e != NULL)
-						{
+						if (e != NULL) {
 							s = sandbox_ObjectPort_Save(e, false);
 							s = strreplace("\"", "\\\"", s);
 							stuffcmd(player, strcat("set ", argv(3), " \"", s, "\""));
@@ -563,40 +571,36 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 					case "paste":
 						// spawns a new object using the properties in the player's clipboard cvar
-						if(time < player.object_flood)
-						{
+						if (time < player.object_flood) {
 							print_to(player, strcat("^1SANDBOX - WARNING: ^7Flood protection active. Please wait ^3", ftos(player.object_flood - time), " ^7seconds beofore spawning another object"));
 							return true;
 						}
 						player.object_flood = time + autocvar_g_sandbox_editor_flood;
-						if(argv(3) == "") // no object in clipboard
-						{
+						if (argv(3) == "") { // no object in clipboard
 							print_to(player, "^1SANDBOX - WARNING: ^7No object in clipboard. You must copy an object before you can paste it");
 							return true;
 						}
-						if(object_count >= autocvar_g_sandbox_editor_maxobjects)
-						{
+						if (object_count >= autocvar_g_sandbox_editor_maxobjects) {
 							print_to(player, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
 							return true;
 						}
 						e = sandbox_ObjectPort_Load(player, argv(3), false);
 
 						print_to(player, "^2SANDBOX - INFO: ^7Object pasted successfully");
-						if(autocvar_g_sandbox_info > 0)
+						if (autocvar_g_sandbox_info > 0) {
 							LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " pasted an object at origin ^3", vtos(e.origin));
+						}
 						return true;
 				}
 				return true;
 
 			// ---------------- COMMAND: OBJECT, ATTACH ----------------
 			case "object_attach":
-				switch(argv(2))
-				{
+				switch (argv(2)) {
 					case "get":
 						// select e as the object as meant to be attached
 						e = sandbox_ObjectEdit_Get(player, true);
-						if(e != NULL)
-						{
+						if (e != NULL) {
 							player.object_attach = e;
 							print_to(player, "^2SANDBOX - INFO: ^7Object selected for attachment");
 							return true;
@@ -604,21 +608,20 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 						print_to(player, "^1SANDBOX - WARNING: ^7Object could not be selected for attachment. Make sure you are facing an object that you have edit rights over");
 						return true;
 					case "set":
-						if(player.object_attach == NULL)
-						{
+						if (player.object_attach == NULL) {
 							print_to(player, "^1SANDBOX - WARNING: ^7No object selected for attachment. Please select an object to be attached first.");
 							return true;
 						}
 
 						// attaches the previously selected object to e
 						e = sandbox_ObjectEdit_Get(player, true);
-						if(e != NULL)
-						{
+						if (e != NULL) {
 							sandbox_ObjectAttach_Set(player.object_attach, e, argv(3));
 							player.object_attach = NULL; // object was attached, no longer keep it scheduled for attachment
 							print_to(player, "^2SANDBOX - INFO: ^7Object attached successfully");
-							if(autocvar_g_sandbox_info > 1)
+							if (autocvar_g_sandbox_info > 1) {
 								LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " attached objects at origin ^3", vtos(e.origin));
+							}
 							return true;
 						}
 						print_to(player, "^1SANDBOX - WARNING: ^7Object could not be attached to the parent. Make sure you are facing an object that you have edit rights over");
@@ -626,12 +629,12 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					case "remove":
 						// removes e if it was attached
 						e = sandbox_ObjectEdit_Get(player, true);
-						if(e != NULL)
-						{
+						if (e != NULL) {
 							sandbox_ObjectAttach_Remove(e);
 							print_to(player, "^2SANDBOX - INFO: ^7Child objects detached successfully");
-							if(autocvar_g_sandbox_info > 1)
+							if (autocvar_g_sandbox_info > 1) {
 								LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " detached objects at origin ^3", vtos(e.origin));
+							}
 							return true;
 						}
 						print_to(player, "^1SANDBOX - WARNING: ^7Child objects could not be detached. Make sure you are facing an object that you have edit rights over");
@@ -641,17 +644,14 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 			// ---------------- COMMAND: OBJECT, EDIT ----------------
 			case "object_edit":
-				if(argv(2) == "")
-				{
+				if (argv(2) == "") {
 					print_to(player, "^1SANDBOX - WARNING: ^7Too few parameters. You must specify a property to edit");
 					return true;
 				}
 
 				e = sandbox_ObjectEdit_Get(player, true);
-				if(e != NULL)
-				{
-					switch(argv(2))
-					{
+				if (e != NULL) {
+					switch (argv(2)) {
 						case "skin":
 							e.skin = stof(argv(3));
 							break;
@@ -671,8 +671,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							sandbox_ObjectEdit_Scale(e, stof(argv(3)));
 							break;
 						case "solidity":
-							switch(argv(3))
-							{
+							switch (argv(3)) {
 								case "0": // non-solid
 									e.solid = SOLID_TRIGGER;
 									break;
@@ -683,8 +682,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 									break;
 							}
 						case "physics":
-							switch(argv(3))
-							{
+							switch (argv(3)) {
 								case "0": // static
 									set_movetype(e, MOVETYPE_NONE);
 									break;
@@ -702,15 +700,15 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							e.damageforcescale = stof(argv(3));
 							break;
 						case "material":
-							if(e.material)	strunzone(e.material);
-							if(argv(3))
-							{
-								for (j = 1; j <= 5; j++) // precache material sounds, 5 in total
+							if (e.material) { strunzone(e.material); }
+							if (argv(3)) {
+								for (j = 1; j <= 5; j++) { // precache material sounds, 5 in total
 									precache_sound(strcat("object/impact_", argv(3), "_", ftos(j), ".wav"));
+								}
 								e.material = strzone(argv(3));
-							}
-							else
+							} else {
 								e.material = string_null; // no material
+							}
 							break;
 						default:
 							print_to(player, "^1SANDBOX - WARNING: ^7Invalid object property. For usage information, type 'sandbox help'");
@@ -718,11 +716,12 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					}
 
 					// update last editing time
-					if(e.message2)	strunzone(e.message2);
+					if (e.message2) { strunzone(e.message2); }
 					e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S"));
 
-					if(autocvar_g_sandbox_info > 1)
+					if (autocvar_g_sandbox_info > 1) {
 						LOG_INFO("^3SANDBOX - SERVER: ^7", player.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin));
+					}
 					return true;
 				}
 
@@ -732,31 +731,27 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 			// ---------------- COMMAND: OBJECT, CLAIM ----------------
 			case "object_claim":
 				// if the player can edit an object but is not its owner, this can be used to claim that object
-				if(player.crypto_idfp == "")
-				{
+				if (player.crypto_idfp == "") {
 					print_to(player, "^1SANDBOX - WARNING: ^7You do not have a player UID, and cannot claim objects");
 					return true;
 				}
 				e = sandbox_ObjectEdit_Get(player, true);
-				if(e != NULL)
-				{
+				if (e != NULL) {
 					// update the owner's name
 					// Do this before checking if you're already the owner and skipping if such, so we
 					// also update the player's nickname if he changed it (but has the same player UID)
-					if(e.netname != player.netname)
-					{
-						if(e.netname)	strunzone(e.netname);
+					if (e.netname != player.netname) {
+						if (e.netname) { strunzone(e.netname); }
 						e.netname = strzone(player.netname);
 						print_to(player, "^2SANDBOX - INFO: ^7Object owner name updated");
 					}
 
-					if(e.crypto_idfp == player.crypto_idfp)
-					{
+					if (e.crypto_idfp == player.crypto_idfp) {
 						print_to(player, "^2SANDBOX - INFO: ^7Object is already yours, nothing to claim");
 						return true;
 					}
 
-					if(e.crypto_idfp)	strunzone(e.crypto_idfp);
+					if (e.crypto_idfp) { strunzone(e.crypto_idfp); }
 					e.crypto_idfp = strzone(player.crypto_idfp);
 
 					print_to(player, "^2SANDBOX - INFO: ^7Object claimed successfully");
@@ -768,17 +763,15 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 			case "object_info":
 				// prints public information about the object to the player
 				e = sandbox_ObjectEdit_Get(player, false);
-				if(e != NULL)
-				{
-					switch(argv(2))
-					{
+				if (e != NULL) {
+					switch (argv(2)) {
 						case "object":
 							print_to(player, strcat("^2SANDBOX - INFO: ^7Object is owned by \"^7", e.netname, "^7\", created \"^3", e.message, "^7\", last edited \"^3", e.message2, "^7\""));
 							return true;
 						case "mesh":
 							s = "";
 							FOR_EACH_TAG(e)
-								s = strcat(s, "^7\"^5", gettaginfo_name, "^7\", ");
+							s = strcat(s, "^7\"^5", gettaginfo_name, "^7\", ");
 							print_to(player, strcat("^2SANDBOX - INFO: ^7Object mesh is \"^3", e.model, "^7\" at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", s));
 							return true;
 						case "attachments":
@@ -786,16 +779,17 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							s = "";
 							j = 0;
 							IL_EACH(g_sandbox_objects, it.owner == e,
-							{
-								++j; // start from 1
-								gettaginfo(e, it.tag_index);
-								s = strcat(s, "^1attachment ", ftos(j), "^7 has mesh \"^3", it.model, "^7\" at animation frame ^3", ftos(it.frame));
-								s = strcat(s, "^7 and is attached to bone \"^5", gettaginfo_name, "^7\", ");
-							});
-							if(j) // object contains attachments
+					{
+						++j; // start from 1
+						gettaginfo(e, it.tag_index);
+						s = strcat(s, "^1attachment ", ftos(j), "^7 has mesh \"^3", it.model, "^7\" at animation frame ^3", ftos(it.frame));
+						s = strcat(s, "^7 and is attached to bone \"^5", gettaginfo_name, "^7\", ");
+					});
+							if (j) { // object contains attachments
 								print_to(player, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(j), "^7 attachment(s): ", s));
-							else
+							} else {
 								print_to(player, "^2SANDBOX - INFO: ^7Object contains no attachments");
+							}
 							return true;
 					}
 				}
@@ -812,10 +806,12 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(sandbox, SV_StartFrame)
 {
-	if(!autocvar_g_sandbox_storage_autosave)
+	if (!autocvar_g_sandbox_storage_autosave) {
 		return;
-	if(time < autosave_time)
+	}
+	if (time < autosave_time) {
 		return;
+	}
 	autosave_time = time + autocvar_g_sandbox_storage_autosave;
 
 	sandbox_Database_Save();

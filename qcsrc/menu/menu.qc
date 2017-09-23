@@ -40,7 +40,7 @@ float realconwidth, realconheight;
 void m_sync()
 {
 	updateCompression();
-	vidwidth_s = vidheight_s = vidpixelheight_s = 0;  // Force updateConwidths on next draw
+	vidwidth_s = vidheight_s = vidpixelheight_s = 0; // Force updateConwidths on next draw
 
 	loadAllCvars(main);
 }
@@ -48,9 +48,9 @@ void m_sync()
 void m_gamestatus()
 {
 	gamestatus = 0;
-	if (isserver()) gamestatus |= GAME_ISSERVER;
-	if (clientstate() == CS_CONNECTED || isdemo()) gamestatus |= GAME_CONNECTED;
-	if (cvar("developer")) gamestatus |= GAME_DEVELOPER;
+	if (isserver()) { gamestatus |= GAME_ISSERVER; }
+	if (clientstate() == CS_CONNECTED || isdemo()) { gamestatus |= GAME_CONNECTED; }
+	if (cvar("developer")) { gamestatus |= GAME_DEVELOPER; }
 }
 
 void m_init()
@@ -58,8 +58,7 @@ void m_init()
 	bool restarting = false;
 	cvar_set("_menu_alpha", "0");
 	prvm_language = cvar_string("prvm_language");
-	if (prvm_language == "")
-	{
+	if (prvm_language == "") {
 		prvm_language = "en";
 		cvar_set("prvm_language", prvm_language);
 		localcmd("\nmenu_restart\n");
@@ -69,16 +68,14 @@ void m_init()
 	cvar_set("_menu_prvm_language", prvm_language);
 
 #ifdef WATERMARK
-		LOG_INFOF("^4MQC Build information: ^1%s", WATERMARK);
+	LOG_INFOF("^4MQC Build information: ^1%s", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
-	if (cvar("developer"))
-	{
-		for (int i = 0; ; ++i)
-		{
+	if (cvar("developer")) {
+		for (int i = 0; ; ++i) {
 			string s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if (!s) break;
+			if (!s) { break; }
 			LOG_TRACE(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
@@ -93,13 +90,12 @@ void m_init()
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");
 	updateCompression();
-	if (ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression")) localcmd("\nr_restart\n");
+	if (ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression")) { localcmd("\nr_restart\n"); }
 
-	if (!restarting)
-	{
-		if (cvar("_menu_initialized"))  // always show menu after menu_restart
+	if (!restarting) {
+		if (cvar("_menu_initialized")) { // always show menu after menu_restart
 			m_display();
-		else m_hide();
+		} else { m_hide(); }
 		cvar_set("_menu_initialized", "1");
 	}
 }
@@ -117,9 +113,8 @@ void draw_reset_full()
 
 void UpdateConWidthHeight(float w, float h, float p)
 {
-	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
-	{
-		if (updateConwidths(w, h, p)) localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s) {
+		if (updateConwidths(w, h, p)) { localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg"))); }
 		vidwidth_s = w;
 		vidheight_s = h;
 		vidpixelheight_s = p;
@@ -128,29 +123,22 @@ void UpdateConWidthHeight(float w, float h, float p)
 	conheight_s = conheight;
 	realconwidth = cvar("vid_conwidth");
 	realconheight = cvar("vid_conheight");
-	if (realconwidth / realconheight > MENU_ASPECT)
-	{
+	if (realconwidth / realconheight > MENU_ASPECT) {
 		// widescreen
 		conwidth = realconheight * MENU_ASPECT;
 		conheight = realconheight;
-	}
-	else
-	{
+	} else {
 		// squarescreen
 		conwidth = realconwidth;
 		conheight = realconwidth / MENU_ASPECT;
 	}
-	if (main)
-	{
-		if (conwidth_s != conwidth || conheight_s != conheight)
-		{
+	if (main) {
+		if (conwidth_s != conwidth || conheight_s != conheight) {
 			draw_reset_cropped();
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
-	}
-	else
-	{
-		vidwidth_s = vidheight_s = vidpixelheight_s = 0;  // retry next frame
+	} else {
+		vidwidth_s = vidheight_s = vidpixelheight_s = 0; // retry next frame
 	}
 }
 
@@ -160,44 +148,40 @@ void m_init_delayed()
 	draw_reset_cropped();
 
 	menuInitialized = false;
-	if (!preMenuInit()) return;
+	if (!preMenuInit()) { return; }
 	menuInitialized = true;
 
 	int fh = -1;
-	if (cvar_string("menu_skin") != "")
-	{
+	if (cvar_string("menu_skin") != "") {
 		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
 		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
-	if (fh < 0 && cvar_defstring("menu_skin") != "")
-	{
+	if (fh < 0 && cvar_defstring("menu_skin") != "") {
 		cvar_set("menu_skin", cvar_defstring("menu_skin"));
 		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
 		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
-	if (fh < 0)
-	{
+	if (fh < 0) {
 		draw_currentSkin = "gfx/menu/default";
 		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
-	if (fh < 0) error("cannot load any menu skin\n");
+	if (fh < 0) { error("cannot load any menu skin\n"); }
 	draw_currentSkin = strzone(draw_currentSkin);
-	for (string s; (s = fgets(fh)); )
-	{
+	for (string s; (s = fgets(fh)); ) {
 		// these two are handled by skinlist.qc
-		if (substring(s, 0, 6) == "title ") continue;
-		if (substring(s, 0, 7) == "author ") continue;
+		if (substring(s, 0, 6) == "title ") { continue; }
+		if (substring(s, 0, 7) == "author ") { continue; }
 		int n = tokenize_console(s);
-		if (n < 2) continue;
+		if (n < 2) { continue; }
 		Skin_ApplySetting(argv(0), substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 	}
 	fclose(fh);
 
 	int glob = search_begin(strcat(draw_currentSkin, "/*.tga"), true, true);
-	if (glob >= 0)
-	{
-		for (int i = 0, n = search_getsize(glob); i < n; ++i)
+	if (glob >= 0) {
+		for (int i = 0, n = search_getsize(glob); i < n; ++i) {
 			precache_pic(search_getfilename(glob, i));
+		}
 		search_end(glob);
 	}
 
@@ -214,84 +198,78 @@ void m_init_delayed()
 
 	m_sync();
 
-	if (m_goto_buffer)
-	{
+	if (m_goto_buffer) {
 		m_goto(m_goto_buffer);
 		strunzone(m_goto_buffer);
 		m_goto_buffer = string_null;
 	}
 
-	if (Menu_Active) m_display();  // delayed menu display
+	if (Menu_Active) {
+		m_display(); // delayed menu display
+	}
 }
 
 void m_keyup(float key, float ascii)
 {
-	if (!menuInitialized) return;
-	if (!Menu_Active) return;
+	if (!menuInitialized) { return; }
+	if (!Menu_Active) { return; }
 	draw_reset_cropped();
 	main.keyUp(main, key, ascii, menuShiftState);
-	if (key >= K_MOUSE1 && key <= K_MOUSE3)
-	{
+	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
 		--mouseButtonsPressed;
-		if (!mouseButtonsPressed) main.mouseRelease(main, menuMousePos);
-		if (mouseButtonsPressed < 0)
-		{
+		if (!mouseButtonsPressed) { main.mouseRelease(main, menuMousePos); }
+		if (mouseButtonsPressed < 0) {
 			mouseButtonsPressed = 0;
 			LOG_TRACE("Warning: released an already released button");
 		}
 	}
-	if (key == K_ALT) menuShiftState &= ~S_ALT;
-	if (key == K_CTRL) menuShiftState &= ~S_CTRL;
-	if (key == K_SHIFT) menuShiftState &= ~S_SHIFT;
+	if (key == K_ALT) { menuShiftState &= ~S_ALT; }
+	if (key == K_CTRL) { menuShiftState &= ~S_CTRL; }
+	if (key == K_SHIFT) { menuShiftState &= ~S_SHIFT; }
 }
 
 void m_keydown(float key, float ascii)
 {
-	if (!menuInitialized) return;
-	if (!Menu_Active) return;
+	if (!menuInitialized) { return; }
+	if (!Menu_Active) { return; }
 
-	if (menuMouseMode && key >= K_MOUSE1 && key <= K_MOUSE3)
-	{
+	if (menuMouseMode && key >= K_MOUSE1 && key <= K_MOUSE3) {
 		// detect a click outside of the game window
 		vector p = getmousepos();
-		if (p.x < 0 || p.x > realconwidth || p.y < 0 || p.y > realconheight)
-		{
+		if (p.x < 0 || p.x > realconwidth || p.y < 0 || p.y > realconheight) {
 			++mouseButtonsPressed;
 			return;
 		}
 	}
 
-	if (keyGrabber)
-	{
+	if (keyGrabber) {
 		entity e = keyGrabber;
 		keyGrabber = NULL;
 		e.keyGrabbed(e, key, ascii);
-	}
-	else
-	{
+	} else {
 		draw_reset_cropped();
-		if (!mouseButtonsPressed && key >= K_MOUSE1 && key <= K_MOUSE3)
+		if (!mouseButtonsPressed && key >= K_MOUSE1 && key <= K_MOUSE3) {
 			main.mousePress(main, menuMousePos);
-		if (!main.keyDown(main, key, ascii, menuShiftState))
-		{
+		}
+		if (!main.keyDown(main, key, ascii, menuShiftState)) {
 			// disable menu on unhandled ESC
-			if (key == K_ESCAPE)
-				if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))  // don't back out to console only
+			if (key == K_ESCAPE) {
+				if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) { // don't back out to console only
 					m_hide();
+				}
+			}
 		}
 	}
-	if (key >= K_MOUSE1 && key <= K_MOUSE3)
-	{
+	if (key >= K_MOUSE1 && key <= K_MOUSE3) {
 		++mouseButtonsPressed;
-		if (mouseButtonsPressed > 10)
-		{
+		if (mouseButtonsPressed > 10) {
 			mouseButtonsPressed = 10;
 			LOG_TRACE("Warning: pressed an already pressed button");
 		}
 	}
-	if (key == K_ALT) menuShiftState |= S_ALT;
-	if (key == K_CTRL) menuShiftState |= S_CTRL;
-	if (key == K_SHIFT) menuShiftState |= S_SHIFT;
+	if (key == K_ALT) { menuShiftState |= S_ALT; }
+	if (key == K_CTRL) { menuShiftState |= S_CTRL; }
+	if (key == K_SHIFT) { menuShiftState |= S_SHIFT; }
 }
 
 enum {
@@ -308,8 +286,7 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 	vector isz_w = '1 0 0' + '0 1 0' * ((sz.y / sz.x) * (draw_scale.x / draw_scale.y));
 	vector isz_h = '0 1 0' + '1 0 0' * ((sz.x / sz.y) * (draw_scale.y / draw_scale.x));
 	vector isz;
-	switch (scalemode)
-	{
+	switch (scalemode) {
 		default:
 		case SCALEMODE_CROP:
 			isz = (width_is_larger ? isz_h : isz_w);
@@ -333,14 +310,12 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 void drawBackground(string img, float a, string algn, float force1)
 {
-	if (main.mainNexposee.ModalController_state == 0) return;
+	if (main.mainNexposee.ModalController_state == 0) { return; }
 	vector v = '0 0 0';
 	int scalemode = SCALEMODE_CROP;
-	for (int i = 0, l = 0; i < strlen(algn); ++i)
-	{
+	for (int i = 0, l = 0; i < strlen(algn); ++i) {
 		string c = substring(algn, i, 1);
-		switch (c)
-		{
+		switch (c) {
 			case "c":
 				scalemode = SCALEMODE_CROP;
 				goto nopic;
@@ -369,8 +344,7 @@ void drawBackground(string img, float a, string algn, float force1)
 				v.x = random();
 				break;
 		}
-		switch (c)
-		{
+		switch (c) {
 			case "7": case "8": case "9":
 				v.y = 0.0;
 				break;
@@ -384,23 +358,18 @@ void drawBackground(string img, float a, string algn, float force1)
 				v.y = random();
 				break;
 		}
-		if (l == 0)
-		{
+		if (l == 0) {
 			draw_Picture_Aligned(v, scalemode, img, a);
-		}
-		else if (force1)
-		{
+		} else if (force1) {
 			// force all secondary layers to use alpha 1. Prevents ugly issues
 			// with overlap. It's a flag because it cannot be used for the
 			// ingame background
 			draw_Picture_Aligned(v, scalemode, strcat(img, "_l", ftos(l + 1)), 1);
-		}
-		else
-		{
+		} else {
 			draw_Picture_Aligned(v, scalemode, strcat(img, "_l", ftos(l + 1)), a);
 		}
 		++l;
-LABEL(nopic)
+		LABEL(nopic)
 	}
 }
 
@@ -412,20 +381,20 @@ vector menuTooltipOrigin;
 vector menuTooltipSize;
 float menuTooltipAlpha;
 string menuTooltipText;
-int menuTooltipState;  // 0: static, 1: fading in, 2: fading out, 3: forced fading out
+int menuTooltipState; // 0: static, 1: fading in, 2: fading out, 3: forced fading out
 bool m_testmousetooltipbox(vector pos)
 {
 	return !(
-	    (pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
-	    && (pos.y >= menuTooltipOrigin.y && pos.y < menuTooltipOrigin.y + menuTooltipSize.y)
-	        );
+		(pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
+		&& (pos.y >= menuTooltipOrigin.y && pos.y < menuTooltipOrigin.y + menuTooltipSize.y)
+	);
 }
 bool m_testtooltipbox(vector tooltippos)
 {
-	if (tooltippos.x < 0) return false;
-	if (tooltippos.y < 0) return false;
-	if (tooltippos.x + menuTooltipSize.x > 1) return false;
-	if (tooltippos.y + menuTooltipSize.y > 1) return false;
+	if (tooltippos.x < 0) { return false; }
+	if (tooltippos.y < 0) { return false; }
+	if (tooltippos.x + menuTooltipSize.x > 1) { return false; }
+	if (tooltippos.y + menuTooltipSize.y > 1) { return false; }
 	menuTooltipOrigin = tooltippos;
 	return true;
 }
@@ -443,58 +412,53 @@ bool m_allocatetooltipbox(vector pos)
 
 	// bottom right
 	vector v = pos + avoidplus;
-	if (m_testtooltipbox(v)) return true;
+	if (m_testtooltipbox(v)) { return true; }
 
 	// bottom center
 	v.x = pos.x - menuTooltipSize.x * 0.5;
-	if (m_testtooltipbox(v)) return true;
+	if (m_testtooltipbox(v)) { return true; }
 
 	// bottom left
 	v.x = pos.x - avoidminus.x;
-	if (m_testtooltipbox(v)) return true;
+	if (m_testtooltipbox(v)) { return true; }
 
 	// top left
 	v.y = pos.y - avoidminus.y;
-	if (m_testtooltipbox(v)) return true;
+	if (m_testtooltipbox(v)) { return true; }
 
 	// top center
 	v.x = pos.x - menuTooltipSize.x * 0.5;
-	if (m_testtooltipbox(v)) return true;
+	if (m_testtooltipbox(v)) { return true; }
 
 	// top right
 	v.x = pos.x + avoidplus.x;
-	if (m_testtooltipbox(v)) return true;
+	if (m_testtooltipbox(v)) { return true; }
 
 	return false;
 }
 entity m_findtooltipitem(entity root, vector pos)
 {
 	entity best = NULL;
-	for (entity it = root; it.instanceOfContainer; )
-	{
-		while (it.instanceOfNexposee && it.focusedChild)
-		{
+	for (entity it = root; it.instanceOfContainer; ) {
+		while (it.instanceOfNexposee && it.focusedChild) {
 			it = it.focusedChild;
 			pos = globalToBox(pos, it.Container_origin, it.Container_size);
 		}
-		if (it.instanceOfNexposee)
-		{
+		if (it.instanceOfNexposee) {
 			it = it.itemFromPoint(it, pos);
-			if (it.tooltip) best = it;
-			else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+			if (it.tooltip) { best = it; } else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) {
+				best = it;
+			}
 			it = NULL;
-		}
-		else if (it.instanceOfModalController)
-		{
+		} else if (it.instanceOfModalController) {
 			it = it.focusedChild;
-		}
-		else
-		{
+		} else {
 			it = it.itemFromPoint(it, pos);
 		}
-		if (!it) break;
-		if (it.tooltip) best = it;
-		else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) best = it;
+		if (!it) { break; }
+		if (it.tooltip) { best = it; } else if (menu_tooltips == 2 && (it.cvarName || it.onClickCommand)) {
+			best = it;
+		}
 		pos = globalToBox(pos, it.Container_origin, it.Container_size);
 	}
 
@@ -502,24 +466,19 @@ entity m_findtooltipitem(entity root, vector pos)
 }
 string gettooltip()
 {
-	if (menu_tooltips == 2)
-	{
+	if (menu_tooltips == 2) {
 		string s;
-		if (menuTooltipItem.cvarName)
-		{
-			if (getCvarsMulti(menuTooltipItem)) s =
-				    strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
-			else s = strcat("[", menuTooltipItem.cvarName, "]");
-		}
-		else if (menuTooltipItem.onClickCommand)
-		{
+		if (menuTooltipItem.cvarName) {
+			if (getCvarsMulti(menuTooltipItem)) {
+				s =
+					strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
+			} else { s = strcat("[", menuTooltipItem.cvarName, "]"); }
+		} else if (menuTooltipItem.onClickCommand) {
 			s = strcat("<", menuTooltipItem.onClickCommand, ">");
-		}
-		else
-		{
+		} else {
 			return menuTooltipItem.tooltip;
 		}
-		if (menuTooltipItem.tooltip) return strcat(menuTooltipItem.tooltip, " ", s);
+		if (menuTooltipItem.tooltip) { return strcat(menuTooltipItem.tooltip, " ", s); }
 		return s;
 	}
 	return menuTooltipItem.tooltip;
@@ -529,73 +488,59 @@ void m_tooltip(vector pos)
 	static string prev_tooltip;
 	entity it;
 	menu_tooltips = cvar("menu_tooltips");
-	if (!menu_tooltips)
-	{
+	if (!menu_tooltips) {
 		// don't return immediately, fade out the active tooltip first
-		if (menuTooltipItem == NULL) return;
+		if (menuTooltipItem == NULL) { return; }
 		it = NULL;
 		menu_tooltips_old = menu_tooltips;
-	}
-	else
-	{
+	} else {
 		float f = bound(0, frametime * 2, 1);
 		menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
-		if (vdist(pos - menuTooltipAveragedMousePos, <, 0.01))
-		{
+		if (vdist(pos - menuTooltipAveragedMousePos, <, 0.01)) {
 			it = m_findtooltipitem(main, pos);
 
-			if (it.instanceOfListBox && it.isScrolling(it)) it = NULL;
+			if (it.instanceOfListBox && it.isScrolling(it)) { it = NULL; }
 
-			if (it && prev_tooltip != it.tooltip)
-			{
+			if (it && prev_tooltip != it.tooltip) {
 				// fade out if tooltip of a certain item has changed
 				menuTooltipState = 3;
-				if (prev_tooltip) strunzone(prev_tooltip);
+				if (prev_tooltip) { strunzone(prev_tooltip); }
 				prev_tooltip = strzone(it.tooltip);
+			} else if (menuTooltipItem && !m_testmousetooltipbox(pos)) {
+				menuTooltipState = 3; // fade out if mouse touches it
 			}
-			else if (menuTooltipItem && !m_testmousetooltipbox(pos))
-			{
-				menuTooltipState = 3;  // fade out if mouse touches it
-			}
-		}
-		else
-		{
+		} else {
 			it = NULL;
 		}
 	}
 	vector fontsize = '1 0 0' * (SKINFONTSIZE_TOOLTIP / conwidth) + '0 1 0' * (SKINFONTSIZE_TOOLTIP / conheight);
 
 	// float menuTooltipState; // 0: static, 1: fading in, 2: fading out, 3: forced fading out
-	if (it != menuTooltipItem)
-	{
-		switch (menuTooltipState)
-		{
+	if (it != menuTooltipItem) {
+		switch (menuTooltipState) {
 			case 0:
-				if (menuTooltipItem)
-				{
+				if (menuTooltipItem) {
 					// another item: fade out first
 					menuTooltipState = 2;
-				}
-				else
-				{
+				} else {
 					// new item: fade in
 					menuTooltipState = 1;
 					menuTooltipItem = it;
 
-					menuTooltipOrigin.x = -1;  // unallocated
+					menuTooltipOrigin.x = -1; // unallocated
 
-					if (menuTooltipText) strunzone(menuTooltipText);
+					if (menuTooltipText) { strunzone(menuTooltipText); }
 					menuTooltipText = strzone(gettooltip());
 
 					int i = 0;
 					float w = 0;
-					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i)
-					{
+					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i) {
 						string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-						if (i == 16)
+						if (i == 16) {
 							s = "...";
+						}
 						float f = draw_TextWidth(s, false, fontsize);
-						if (f > w) w = f;
+						if (f > w) { w = f; }
 					}
 					menuTooltipSize.x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
 					menuTooltipSize.y = i * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
@@ -610,51 +555,41 @@ void m_tooltip(vector pos)
 				// changing item while fading out: can't
 				break;
 		}
-	}
-	else if (menuTooltipState == 2)  // re-fade in?
-	{
+	} else if (menuTooltipState == 2) { // re-fade in?
 		menuTooltipState = 1;
 	}
 
-	switch (menuTooltipState)
-	{
-		case 1:  // fade in
+	switch (menuTooltipState) {
+		case 1: // fade in
 			menuTooltipAlpha = bound(0, menuTooltipAlpha + 5 * frametime, 1);
-			if (menuTooltipAlpha == 1) menuTooltipState = 0;
+			if (menuTooltipAlpha == 1) { menuTooltipState = 0; }
 			break;
-		case 2:  // fade out
-		case 3:  // forced fade out
+		case 2: // fade out
+		case 3: // forced fade out
 			menuTooltipAlpha = bound(0, menuTooltipAlpha - 2 * frametime, 1);
-			if (menuTooltipAlpha == 0)
-			{
+			if (menuTooltipAlpha == 0) {
 				menuTooltipState = 0;
 				menuTooltipItem = NULL;
 			}
 			break;
 	}
 
-	if (menuTooltipItem == NULL)
-	{
-		if (menuTooltipText)
-		{
+	if (menuTooltipItem == NULL) {
+		if (menuTooltipText) {
 			strunzone(menuTooltipText);
 			menuTooltipText = string_null;
 		}
 		return;
-	}
-	else
-	{
-		if (menu_tooltips != menu_tooltips_old)
-		{
-			if (menu_tooltips != 0 && menu_tooltips_old != 0) menuTooltipItem = NULL; // reload tooltip next frame
+	} else {
+		if (menu_tooltips != menu_tooltips_old) {
+			if (menu_tooltips != 0 && menu_tooltips_old != 0) {
+				menuTooltipItem = NULL;       // reload tooltip next frame
+			}
 			menu_tooltips_old = menu_tooltips;
-		}
-		else if (menuTooltipOrigin.x < 0)                                             // unallocated?
-		{
+		} else if (menuTooltipOrigin.x < 0) { // unallocated?
 			m_allocatetooltipbox(pos);
 		}
-		if (menuTooltipOrigin.x >= 0)
-		{
+		if (menuTooltipOrigin.x >= 0) {
 			// draw the tooltip!
 			vector p = SKINBORDER_TOOLTIP;
 			p.x *= 1 / conwidth;
@@ -664,11 +599,11 @@ void m_tooltip(vector pos)
 			p.x += SKINMARGIN_TOOLTIP_x / conwidth;
 			p.y += SKINMARGIN_TOOLTIP_y / conheight;
 			int i = 0;
-			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i, p.y += fontsize.y)
-			{
+			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i, p.y += fontsize.y) {
 				string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-				if (i == 16)
+				if (i == 16) {
 					s = "...";
+				}
 				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
 			}
 		}
@@ -678,19 +613,16 @@ void m_tooltip(vector pos)
 float autocvar_menu_force_on_disconnection;
 void m_draw(float width, float height)
 {
-	if (autocvar_menu_force_on_disconnection > 0)
-	{
+	if (autocvar_menu_force_on_disconnection > 0) {
 		static float connected_time;
-		if (clientstate() == CS_DISCONNECTED)
-		{
-			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
-			{
+		if (clientstate() == CS_DISCONNECTED) {
+			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection) {
 				m_toggle(true);
 				connected_time = 0;
 			}
-		}
-		else
+		} else {
 			connected_time = time;
+		}
 	}
 
 	m_gamestatus();
@@ -699,24 +631,21 @@ void m_draw(float width, float height)
 
 	menuMouseMode = cvar("menu_mouse_absolute");
 
-	if (anim) anim.tickAll(anim);
+	if (anim) { anim.tickAll(anim); }
 
 	UpdateConWidthHeight(width, height, cvar("vid_pixelheight"));
 
-	if (!menuInitialized)
-	{
+	if (!menuInitialized) {
 		// TODO draw an info image about this situation
 		m_init_delayed();
 		return;
 	}
-	if (!menuNotTheFirstFrame)
-	{
+	if (!menuNotTheFirstFrame) {
 		menuNotTheFirstFrame = true;
-		if (Menu_Active && !cvar("menu_video_played"))
-        {
-            localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
-            menuLogoAlpha = -0.8;  // no idea why, but when I start this at zero, it jumps instead of fading FIXME
-        }
+		if (Menu_Active && !cvar("menu_video_played")) {
+			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
+			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
+		}
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
 		localcmd("set menu_video_played 1\n");
 	}
@@ -727,67 +656,52 @@ void m_draw(float width, float height)
 	time += frametime;
 
 	t = cvar("menu_slowmo");
-	if (t)
-	{
+	if (t) {
 		frametime *= t;
 		realFrametime *= t;
-	}
-	else
-	{
+	} else {
 		t = 1;
 	}
 
-	if (Menu_Active)
-	{
+	if (Menu_Active) {
 		if (getmousetarget() == (menuMouseMode ? MT_CLIENT : MT_MENU)
-		    && (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED))
-		    	setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
-		else m_hide();
+			&& (getkeydest() == KEY_MENU || getkeydest() == KEY_MENU_GRABBED)) {
+			setkeydest(keyGrabber ? KEY_MENU_GRABBED : KEY_MENU);
+		} else { m_hide(); }
 	}
 
-	if (cvar("cl_capturevideo")) frametime = t / cvar("cl_capturevideo_fps");  // make capturevideo work smoothly
-
+	if (cvar("cl_capturevideo")) {
+		frametime = t / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
+	}
 	prevMenuAlpha = menuAlpha;
-	if (Menu_Active)
-	{
-		if (menuAlpha == 0 && menuLogoAlpha < 2)
-		{
+	if (Menu_Active) {
+		if (menuAlpha == 0 && menuLogoAlpha < 2) {
 			menuLogoAlpha += 2 * frametime;
-		}
-		else
-		{
+		} else {
 			menuAlpha = min(1, menuAlpha + 5 * frametime);
 			menuLogoAlpha = 2;
 		}
-	}
-	else
-	{
+	} else {
 		menuAlpha = max(0, menuAlpha - 5 * frametime);
 		menuLogoAlpha = 2;
 	}
 
 	draw_reset_cropped();
 
-	if (!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
-	{
-		if (menuLogoAlpha > 0)
-		{
+	if (!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) {
+		if (menuLogoAlpha > 0) {
 			draw_reset_full();
 			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_BACKGROUND, 1);
 			drawBackground(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, true);
 			draw_reset_cropped();
-			if (menuAlpha <= 0 && SKINALPHA_CURSOR_INTRO > 0)
-			{
+			if (menuAlpha <= 0 && SKINALPHA_CURSOR_INTRO > 0) {
 				draw_alpha = SKINALPHA_CURSOR_INTRO * bound(0, menuLogoAlpha, 1);
 				draw_drawMousePointer(menuMousePos);
 				draw_alpha = 1;
 			}
 		}
-	}
-	else if (SKINALPHA_BACKGROUND_INGAME)
-	{
-		if (menuAlpha > 0)
-		{
+	} else if (SKINALPHA_BACKGROUND_INGAME) {
+		if (menuAlpha > 0) {
 			draw_reset_full();
 			drawBackground(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME,
 				SKINALIGN_BACKGROUND_INGAME, false);
@@ -795,15 +709,14 @@ void m_draw(float width, float height)
 		}
 	}
 
-	if (menuAlpha != prevMenuAlpha) cvar_set("_menu_alpha", ftos(menuAlpha));
+	if (menuAlpha != prevMenuAlpha) { cvar_set("_menu_alpha", ftos(menuAlpha)); }
 
 	draw_reset_cropped();
 	preMenuDraw();
 	draw_reset_cropped();
 
-	if (menuAlpha <= 0)
-	{
-		if (prevMenuAlpha > 0) main.initializeDialog(main, main.firstChild);
+	if (menuAlpha <= 0) {
+		if (prevMenuAlpha > 0) { main.initializeDialog(main, main.firstChild); }
 		draw_reset_cropped();
 		postMenuDraw();
 		return;
@@ -811,30 +724,23 @@ void m_draw(float width, float height)
 
 	draw_alpha *= menuAlpha;
 
-	if (menuMouseMode)
-	{
+	if (menuMouseMode) {
 		vector rawMousePos = getmousepos();
 		vector newMouse = globalToBox(rawMousePos, draw_shift, draw_scale);
-		if (rawMousePos != '0 0 0' && newMouse != menuMousePos)
-		{
+		if (rawMousePos != '0 0 0' && newMouse != menuMousePos) {
 			menuMousePos = newMouse;
-			if (mouseButtonsPressed) main.mouseDrag(main, menuMousePos);
-			else main.mouseMove(main, menuMousePos);
+			if (mouseButtonsPressed) { main.mouseDrag(main, menuMousePos); } else { main.mouseMove(main, menuMousePos); }
 		}
-	}
-	else if (frametime > 0)
-	{
-		vector dMouse = getmousepos() * (frametime / realFrametime);  // for capturevideo
-		if (dMouse != '0 0 0')
-		{
+	} else if (frametime > 0) {
+		vector dMouse = getmousepos() * (frametime / realFrametime); // for capturevideo
+		if (dMouse != '0 0 0') {
 			vector minpos = globalToBox('0 0 0', draw_shift, draw_scale);
 			vector maxpos = globalToBox(eX * (realconwidth - 1) + eY * (realconheight - 1), draw_shift, draw_scale);
 			dMouse = globalToBoxSize(dMouse, draw_scale);
 			menuMousePos += dMouse * cvar("menu_mouse_speed");
 			menuMousePos.x = bound(minpos.x, menuMousePos.x, maxpos.x);
 			menuMousePos.y = bound(minpos.y, menuMousePos.y, maxpos.y);
-			if (mouseButtonsPressed) main.mouseDrag(main, menuMousePos);
-			else main.mouseMove(main, menuMousePos);
+			if (mouseButtonsPressed) { main.mouseDrag(main, menuMousePos); } else { main.mouseMove(main, menuMousePos); }
 		}
 	}
 	main.draw(main);
@@ -858,9 +764,9 @@ void m_display()
 	setkeydest(KEY_MENU);
 	setmousetarget((menuMouseMode ? MT_CLIENT : MT_MENU));
 
-	if (!menuInitialized) return;
+	if (!menuInitialized) { return; }
 
-	if (mouseButtonsPressed) main.mouseRelease(main, menuMousePos);
+	if (mouseButtonsPressed) { main.mouseRelease(main, menuMousePos); }
 	mouseButtonsPressed = 0;
 
 	main.focusEnter(main);
@@ -873,7 +779,7 @@ void m_hide()
 	setkeydest(KEY_GAME);
 	setmousetarget(MT_CLIENT);
 
-	if (!menuInitialized) return;
+	if (!menuInitialized) { return; }
 
 	main.focusLeave(main);
 	main.hideNotify(main);
@@ -881,14 +787,11 @@ void m_hide()
 
 void m_toggle(int mode)
 {
-	if (Menu_Active)
-	{
-		if (mode == 1) return;
+	if (Menu_Active) {
+		if (mode == 1) { return; }
 		m_hide();
-	}
-	else
-	{
-		if (mode == 0) return;
+	} else {
+		if (mode == 0) { return; }
 		m_display();
 	}
 }
@@ -897,88 +800,77 @@ void Shutdown()
 {
 	m_hide();
 	FOREACH_ENTITY_ORDERED(it.destroy, {
-		if (it.classname == "vtbl") continue;
+		if (it.classname == "vtbl") { continue; }
 		it.destroy(it);
 	});
 }
 
 void m_focus_item_chain(entity outermost, entity innermost)
 {
-	if (innermost.parent != outermost) m_focus_item_chain(outermost, innermost.parent);
+	if (innermost.parent != outermost) { m_focus_item_chain(outermost, innermost.parent); }
 	innermost.parent.setFocus(innermost.parent, innermost);
 }
 
 void m_activate_window(entity wnd)
 {
 	entity par = wnd.parent;
-	if (par) m_activate_window(par);
+	if (par) { m_activate_window(par); }
 
-	if (par.instanceOfModalController)
-	{
-		if (wnd.tabSelectingButton)
+	if (par.instanceOfModalController) {
+		if (wnd.tabSelectingButton) {
 			// tabs
 			TabButton_Click(wnd.tabSelectingButton, wnd);
-		else
+		} else {
 			// root
 			par.initializeDialog(par, wnd);
-	}
-	else if (par.instanceOfNexposee)
-	{
+		}
+	} else if (par.instanceOfNexposee) {
 		// nexposee (sorry for violating abstraction here)
 		par.selectedChild = wnd;
 		par.animationState = 1;
 		Container_setFocus(par, NULL);
-	}
-	else if (par.instanceOfContainer)
-	{
+	} else if (par.instanceOfContainer) {
 		// other containers
-		if (par.focused) par.setFocus(par, wnd);
+		if (par.focused) { par.setFocus(par, wnd); }
 	}
 }
 
 void m_setpointerfocus(entity wnd)
 {
-	if (!wnd.instanceOfContainer) return;
+	if (!wnd.instanceOfContainer) { return; }
 	entity focus = wnd.preferredFocusedGrandChild(wnd);
-	if (!focus) return;
+	if (!focus) { return; }
 	menuMousePos = focus.origin + 0.5 * focus.size;
 	menuMousePos.x *= 1 / conwidth;
 	menuMousePos.y *= 1 / conheight;
 	entity par = wnd.parent;
-	if (par.focused) par.setFocus(par, wnd);
-	if (wnd.focused) m_focus_item_chain(wnd, focus);
+	if (par.focused) { par.setFocus(par, wnd); }
+	if (wnd.focused) { m_focus_item_chain(wnd, focus); }
 }
 
 void m_goto(string itemname)
 {
-	if (!menuInitialized)
-	{
-		if (m_goto_buffer) strunzone(m_goto_buffer);
+	if (!menuInitialized) {
+		if (m_goto_buffer) { strunzone(m_goto_buffer); }
 		m_goto_buffer = strzone(itemname);
 		return;
 	}
-	if (itemname == "")  // this can be called by GameCommand
-	{
-		if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
-		{
+	if (itemname == "") { // this can be called by GameCommand
+		if (gamestatus & (GAME_ISSERVER | GAME_CONNECTED)) {
 			m_hide();
-		}
-		else
-		{
+		} else {
 			m_activate_window(main.mainNexposee);
 			m_display();
 		}
-	}
-	else
-	{
+	} else {
 		entity e;
-		for (e = NULL; (e = find(e, name, itemname)); )
-			if (e.classname != "vtbl") break;
+		for (e = NULL; (e = find(e, name, itemname)); ) {
+			if (e.classname != "vtbl") { break; } }
 
-		if ((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
-		{
-			if(!Menu_Active)
+		if ((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED)))) {
+			if (!Menu_Active) {
 				e.hideMenuOnClose = true;
+			}
 			m_hide();
 			m_activate_window(e);
 			m_setpointerfocus(e);
@@ -990,14 +882,14 @@ void m_goto(string itemname)
 void m_play_focus_sound()
 {
 	static float menuLastFocusSoundTime;
-	if (cvar("menu_sounds") < 2) return;
-	if (time - menuLastFocusSoundTime <= 0.25) return;
+	if (cvar("menu_sounds") < 2) { return; }
+	if (time - menuLastFocusSoundTime <= 0.25) { return; }
 	localsound(MENU_SOUND_FOCUS);
 	menuLastFocusSoundTime = time;
 }
 
 void m_play_click_sound(string soundfile)
 {
-	if (!cvar("menu_sounds")) return;
+	if (!cvar("menu_sounds")) { return; }
 	localsound(soundfile);
 }

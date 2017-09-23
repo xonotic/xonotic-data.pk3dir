@@ -47,54 +47,59 @@ void door_rotating_init_startopen(entity this)
 
 spawnfunc(func_door_rotating)
 {
-
-	//if (!this.deathtype) // map makers can override this
+	// if (!this.deathtype) // map makers can override this
 	//	this.deathtype = " got in the way";
 
 	// I abuse "movedir" for denoting the axis for now
-	if (this.spawnflags & 64) // X (untested)
+	if (this.spawnflags & 64) { // X (untested)
 		this.movedir = '0 0 1';
-	else if (this.spawnflags & 128) // Y (untested)
+	} else if (this.spawnflags & 128) { // Y (untested)
 		this.movedir = '1 0 0';
-	else // Z
+	} else {                            // Z
 		this.movedir = '0 1 0';
+	}
 
-	if (this.angles_y==0) this.angles_y = 90;
+	if (this.angles_y == 0) { this.angles_y = 90; }
 
 	this.movedir = this.movedir * this.angles_y;
 	this.angles = '0 0 0';
 
 	this.max_health = this.health;
 	this.avelocity = this.movedir;
-	if (!InitMovingBrushTrigger(this))
+	if (!InitMovingBrushTrigger(this)) {
 		return;
+	}
 	this.velocity = '0 0 0';
-	//this.effects |= EF_LOWPRECISION;
+	// this.effects |= EF_LOWPRECISION;
 	this.classname = "door_rotating";
 
 	setblocked(this, door_blocked);
 	this.use = door_use;
 
-    if(this.spawnflags & 8)
-        this.dmg = 10000;
+	if (this.spawnflags & 8) {
+		this.dmg = 10000;
+	}
 
-    if(this.dmg && (this.message == ""))
+	if (this.dmg && (this.message == "")) {
 		this.message = "was squished";
-    if(this.dmg && (this.message2 == ""))
+	}
+	if (this.dmg && (this.message2 == "")) {
 		this.message2 = "was squished by";
+	}
 
-    if (this.sounds > 0)
-	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
+	if (this.sounds > 0) {
+		precache_sound("plats/medplat1.wav");
+		precache_sound("plats/medplat2.wav");
 		this.noise2 = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
 	}
 
-	if (!this.speed)
+	if (!this.speed) {
 		this.speed = 50;
-	if (!this.wait)
+	}
+	if (!this.wait) {
 		this.wait = 1;
+	}
 	this.lip = 0; // this.lip is used to remember reverse opening direction for door_rotating
 
 	this.pos1 = '0 0 0';
@@ -102,19 +107,20 @@ spawnfunc(func_door_rotating)
 
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position
-	if (this.spawnflags & DOOR_START_OPEN)
+	if (this.spawnflags & DOOR_START_OPEN) {
 		InitializeEntity(this, door_rotating_init_startopen, INITPRIO_SETLOCATION);
+	}
 
 	this.state = STATE_BOTTOM;
 
-	if (this.health)
-	{
+	if (this.health) {
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = door_damage;
 	}
 
-	if (this.items)
+	if (this.items) {
 		this.wait = -1;
+	}
 
 	settouch(this, door_touch);
 

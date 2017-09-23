@@ -1,6 +1,6 @@
 #pragma once
 
-//#define EWHEEL_FANCYPATH
+// #define EWHEEL_FANCYPATH
 
 #include "ewheel_weapon.qh"
 
@@ -13,6 +13,6 @@ CLASS(EWheel, Turret)
 /* head_model */ ATTRIB_STRZONE(EWheel, head_model, string, strcat("models/turrets/", "ewheel-gun1.md3"));
 /* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
 /* fullname   */ ATTRIB(EWheel, turret_name, string, _("eWheel Turret"));
-    ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
+	ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
 ENDCLASS(EWheel)
 REGISTER_TURRET(EWHEEL, NEW(EWheel));

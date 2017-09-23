@@ -3,13 +3,14 @@
 #ifdef SVQC
 void target_levelwarp_use(entity this, entity actor, entity trigger)
 {
-	if(!autocvar_g_campaign)
-		return; // only in campaign
-
-	if(this.cnt)
+	if (!autocvar_g_campaign) {
+		return;                          // only in campaign
+	}
+	if (this.cnt) {
 		CampaignLevelWarp(this.cnt - 1); // specific level
-	else
-		CampaignLevelWarp(-1); // next level
+	} else {
+		CampaignLevelWarp(-1);           // next level
+	}
 }
 
 spawnfunc(target_levelwarp)

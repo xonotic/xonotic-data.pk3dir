@@ -33,26 +33,30 @@ bool item_keys_usekey(entity l, entity p)
 	}
 }
 
-string item_keys_keylist(float keylist) {
+string item_keys_keylist(float keylist)
+{
 	// no keys
-	if (!keylist)
+	if (!keylist) {
 		return "";
+	}
 
 	// one key
-	if ((keylist & (keylist-1)) == 0)
+	if ((keylist & (keylist - 1)) == 0) {
 		return strcat("the ", item_keys_names[lowestbit(keylist)]);
+	}
 
 	string n = "";
 	int base = 0;
 	while (keylist) {
 		int l = lowestbit(keylist);
-		if (n)
+		if (n) {
 			n = strcat(n, ", the ", item_keys_names[base + l]);
-		else
+		} else {
 			n = strcat("the ", item_keys_names[base + l]);
+		}
 
 		keylist = bitshift(keylist,  -(l + 1));
-		base+= l + 1;
+		base += l + 1;
 	}
 
 	return n;
@@ -70,12 +74,14 @@ item_key
  */
 void item_key_touch(entity this, entity toucher)
 {
-	if (!IS_PLAYER(toucher))
+	if (!IS_PLAYER(toucher)) {
 		return;
+	}
 
 	// player already picked up this key
-	if (PS(toucher).itemkeys & this.itemkeys)
+	if (PS(toucher).itemkeys & this.itemkeys) {
 		return;
+	}
 
 	PS(toucher).itemkeys |= this.itemkeys;
 	play2(toucher, this.noise);
@@ -86,7 +92,7 @@ void item_key_touch(entity this, entity toucher)
 	this.message = "";
 	SUB_UseTargets(this, toucher, toucher); // TODO: should we be using toucher for the trigger here?
 	this.message = oldmsg;
-};
+}
 
 /**
  * Spawn a key with given model, key code and color.
@@ -95,27 +101,28 @@ void spawn_item_key(entity this)
 {
 	precache_model(this.model);
 
-	if (this.spawnflags & 1) // FLOATING
+	if (this.spawnflags & 1) { // FLOATING
 		this.noalign = 1;
+	}
 
-	if (this.noalign)
+	if (this.noalign) {
 		set_movetype(this, MOVETYPE_NONE);
-	else
+	} else {
 		set_movetype(this, MOVETYPE_TOSS);
+	}
 
 	precache_sound(this.noise);
 
 	this.mdl = this.model;
 	this.effects = EF_LOWPRECISION;
 	_setmodel(this, this.model);
-	//setsize(this, '-16 -16 -24', '16 16 32');
+	// setsize(this, '-16 -16 -24', '16 16 32');
 	setorigin(this, this.origin + '0 0 32');
 	setsize(this, '-16 -16 -56', '16 16 0');
 	this.modelflags |= MF_ROTATE;
 	this.solid = SOLID_TRIGGER;
 
-	if (!this.noalign)
-	{
+	if (!this.noalign) {
 		// first nudge it off the floor a little bit to avoid math errors
 		setorigin(this, this.origin + '0 0 1');
 		// note droptofloor returns false if stuck/or would fall too far
@@ -123,7 +130,7 @@ void spawn_item_key(entity this)
 	}
 
 	settouch(this, item_key_touch);
-};
+}
 
 
 /*QUAKED item_key (0 .5 .8) (-16 -16 -24) (16 16 32) FLOATING
@@ -158,55 +165,54 @@ spawnfunc(item_key)
 	vector _colormod;
 
 	// reject this entity if more than one key was set!
-	if (this.itemkeys>0 && (this.itemkeys & (this.itemkeys-1)) != 0) {
+	if (this.itemkeys > 0 && (this.itemkeys & (this.itemkeys - 1)) != 0) {
 		objerror(this, "item_key.itemkeys must contain only 1 bit set specifying the key it represents!");
 		delete(this);
 		return;
 	}
 
 	// find default netname and colormod
-	switch(this.itemkeys) {
-	case BIT(0):
-		_netname = "GOLD key";
-		_colormod = '1 .9 0';
-		break;
+	switch (this.itemkeys) {
+		case BIT(0):
+			_netname = "GOLD key";
+			_colormod = '1 .9 0';
+			break;
 
-	case BIT(1):
-		_netname = "SILVER key";
-		_colormod = '.9 .9 .9';
-		break;
+		case BIT(1):
+			_netname = "SILVER key";
+			_colormod = '.9 .9 .9';
+			break;
 
-	case BIT(2):
-		_netname = "BRONZE key";
-		_colormod = '.6 .25 0';
-		break;
+		case BIT(2):
+			_netname = "BRONZE key";
+			_colormod = '.6 .25 0';
+			break;
 
-	case BIT(3):
-		_netname = "RED keycard";
-		_colormod = '.9 0 0';
-		break;
+		case BIT(3):
+			_netname = "RED keycard";
+			_colormod = '.9 0 0';
+			break;
 
-	case BIT(4):
-		_netname = "BLUE keycard";
-		_colormod = '0 0 .9';
-		break;
+		case BIT(4):
+			_netname = "BLUE keycard";
+			_colormod = '0 0 .9';
+			break;
 
-	case BIT(5):
-		_netname = "GREEN keycard";
-		_colormod = '0 .9 0';
-		break;
+		case BIT(5):
+			_netname = "GREEN keycard";
+			_colormod = '0 .9 0';
+			break;
 
-	default:
-		_netname = "FLUFFY PINK keycard";
-		_colormod = '1 1 1';
+		default:
+			_netname = "FLUFFY PINK keycard";
+			_colormod = '1 1 1';
 
-		if (this.netname == "") {
-			objerror(this, "item_key doesn't have a default name for this key and a custom one was not specified!");
-			delete(this);
-			return;
-		}
-		break;
-
+			if (this.netname == "") {
+				objerror(this, "item_key doesn't have a default name for this key and a custom one was not specified!");
+				delete(this);
+				return;
+			}
+			break;
 	}
 
 	// find default model
@@ -222,23 +228,28 @@ spawnfunc(item_key)
 	}
 
 	// set defailt netname
-	if (this.netname == "")
+	if (this.netname == "") {
 		this.netname = _netname;
+	}
 
 	// set default colormod
-	if (!this.colormod)
+	if (!this.colormod) {
 		this.colormod = _colormod;
+	}
 
 	// set default model
-	if (this.model == "")
+	if (this.model == "") {
 		this.model = _model;
+	}
 
 	// set default pickup message
-	if (this.message == "")
+	if (this.message == "") {
 		this.message = strzone(strcat("You've picked up the ", this.netname, "!"));
+	}
 
-	if (this.noise == "")
+	if (this.noise == "") {
 		this.noise = strzone(SND(ITEMPICKUP));
+	}
 
 	// save the name for later
 	item_keys_names[lowestbit(this.itemkeys)] = this.netname;

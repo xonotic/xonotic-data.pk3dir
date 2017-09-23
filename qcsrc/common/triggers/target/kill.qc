@@ -4,23 +4,26 @@
 
 void target_kill_use(entity this, entity actor, entity trigger)
 {
-	if(actor.takedamage == DAMAGE_NO)
+	if (actor.takedamage == DAMAGE_NO) {
 		return;
+	}
 
-	if(!actor.iscreature && !actor.damagedbytriggers)
+	if (!actor.iscreature && !actor.damagedbytriggers) {
 		return;
+	}
 
 	Damage(actor, this, trigger, 1000, DEATH_HURTTRIGGER.m_id, actor.origin, '0 0 0');
 }
 
 spawnfunc(target_kill)
 {
-    this.classname = "target_kill";
+	this.classname = "target_kill";
 
-    if (this.message == "")
+	if (this.message == "") {
 		this.message = "was in the wrong place";
+	}
 
-    this.use = target_kill_use;
+	this.use = target_kill_use;
 }
 
 #endif

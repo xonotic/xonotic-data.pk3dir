@@ -11,8 +11,8 @@ void XonoticHUDTimerDialog_fill(entity me)
 	DIALOG_HUDPANEL_COMMON();
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Timer:")));
+	me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Timer:")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_timer_increment", _("Show elapsed time")));
+	me.TDempty(me, 0.2);
+	me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_timer_increment", _("Show elapsed time")));
 }

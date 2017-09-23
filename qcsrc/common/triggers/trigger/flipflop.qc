@@ -5,17 +5,19 @@
 */
 void flipflop_use(entity this, entity actor, entity trigger)
 {
-    this.state = !this.state;
-    if(this.state)
-        SUB_UseTargets(this, actor, trigger);
+	this.state = !this.state;
+	if (this.state) {
+		SUB_UseTargets(this, actor, trigger);
+	}
 }
 
 spawnfunc(trigger_flipflop)
 {
-    if(this.spawnflags & 1)
-        this.state = 1;
-    this.use = flipflop_use;
-    this.reset = spawnfunc_trigger_flipflop; // perfect resetter
+	if (this.spawnflags & 1) {
+		this.state = 1;
+	}
+	this.use = flipflop_use;
+	this.reset = spawnfunc_trigger_flipflop; // perfect resetter
 }
 
 #endif

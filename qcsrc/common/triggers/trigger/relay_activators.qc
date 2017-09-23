@@ -2,20 +2,20 @@
 #ifdef SVQC
 void relay_activators_use(entity this, entity actor, entity trigger)
 {
-	for(entity trg = NULL; (trg = find(trg, targetname, this.target)); )
-	{
-		if (trg.setactive)
+	for (entity trg = NULL; (trg = find(trg, targetname, this.target)); ) {
+		if (trg.setactive) {
 			trg.setactive(trg, this.cnt);
-		else
-		{
-			//bprint("Not using setactive\n");
-			if(this.cnt == ACTIVE_TOGGLE)
-				if(trg.active == ACTIVE_ACTIVE)
+		} else {
+			// bprint("Not using setactive\n");
+			if (this.cnt == ACTIVE_TOGGLE) {
+				if (trg.active == ACTIVE_ACTIVE) {
 					trg.active = ACTIVE_NOT;
-				else
+				} else {
 					trg.active = ACTIVE_ACTIVE;
-			else
+				}
+			} else {
 				trg.active = this.cnt;
+			}
 		}
 	}
 }

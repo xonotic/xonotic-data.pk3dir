@@ -9,8 +9,7 @@ entity makeXonoticNexposee()
 }
 
 void XonoticNexposee_configureXonoticNexposee(entity me)
-{
-}
+{}
 
 void XonoticNexposee_close(entity me)
 {

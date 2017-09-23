@@ -32,7 +32,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data);
 entity GameType_GetID(int cnt);
 string GameType_GetName(int cnt);
 string GameType_GetIcon(int cnt);
-//string GameType_GetTeams(float cnt);
+// string GameType_GetTeams(float cnt);
 int GameType_GetCount();
 int GameType_GetTotalCount();
 
@@ -41,7 +41,7 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 	dialog_hudpanel_common_notoggle(me, panelname)
 #define DIALOG_HUDPANEL_COMMON() \
 	me.TR(me); \
-		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
+	me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
 
 float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha);

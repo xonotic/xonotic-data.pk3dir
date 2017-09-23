@@ -9,52 +9,48 @@
 void RegisterSLCategories()
 {
 	entity cat;
-	#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
-		SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) \
-		CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") \
-		cat = categories[name - 1] = new(slist_category); \
-		cat.cat_name = #name; \
-		cat.cat_enoverride_string = strzone(SLIST_CATEGORY_AUTOCVAR(name)); \
-		cat.cat_dioverride_string = strzone(dioverride); \
-		cat.cat_string = strzone(str);
+	#define SLIST_CATEGORY(name, enoverride, dioverride, str) \
+	SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) \
+	CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") \
+	cat = categories[name - 1] = new(slist_category); \
+	cat.cat_name = #name; \
+	cat.cat_enoverride_string = strzone(SLIST_CATEGORY_AUTOCVAR(name)); \
+	cat.cat_dioverride_string = strzone(dioverride); \
+	cat.cat_string = strzone(str);
 	SLIST_CATEGORIES
 	#undef SLIST_CATEGORY
 
 	int i, x, catnum;
 	string s;
 
-	#define PROCESS_OVERRIDE(override_string,override_field) \
-		for(i = 0; i < category_ent_count; ++i) \
-		{ \
-			s = categories[i].override_string; \
-			if((s != "") && (s != categories[i].cat_name)) \
-			{ \
-				catnum = 0; \
-				for(x = 0; x < category_ent_count; ++x) \
-				{ if(categories[x].cat_name == s) { \
-					catnum = (x+1); \
+	#define PROCESS_OVERRIDE(override_string, override_field) \
+	for (i = 0; i < category_ent_count; ++i) { \
+		s = categories[i].override_string; \
+		if ((s != "") && (s != categories[i].cat_name)) { \
+			catnum = 0; \
+			for (x = 0; x < category_ent_count; ++x) { \
+				if (categories[x].cat_name == s) { \
+					catnum = (x + 1); \
 					break; \
-				} } \
-				if(catnum) \
-				{ \
-					strunzone(categories[i].override_string); \
-					categories[i].override_string = string_null; \
-					categories[i].override_field = catnum; \
-					continue; \
-				} \
-				else \
-				{ \
-					LOG_INFOF( \
-						"RegisterSLCategories(): Improper override '%s' for category '%s'!", \
-						s, \
-						categories[i].cat_name \
-					); \
 				} \
 			} \
-			strunzone(categories[i].override_string); \
-			categories[i].override_string = string_null; \
-			categories[i].override_field = 0; \
-		}
+			if (catnum) { \
+				strunzone(categories[i].override_string); \
+				categories[i].override_string = string_null; \
+				categories[i].override_field = catnum; \
+				continue; \
+			} else { \
+				LOG_INFOF( \
+					"RegisterSLCategories(): Improper override '%s' for category '%s'!", \
+					s, \
+					categories[i].cat_name \
+				); \
+			} \
+		} \
+		strunzone(categories[i].override_string); \
+		categories[i].override_string = string_null; \
+		categories[i].override_field = 0; \
+	}
 	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
 	PROCESS_OVERRIDE(cat_dioverride_string, cat_dioverride)
 	#undef PROCESS_OVERRIDE
@@ -63,12 +59,9 @@ void RegisterSLCategories()
 // Supporting Functions
 entity RetrieveCategoryEnt(int catnum)
 {
-	if((catnum > 0) && (catnum <= category_ent_count))
-	{
+	if ((catnum > 0) && (catnum <= category_ent_count)) {
 		return categories[catnum - 1];
-	}
-	else
-	{
+	} else {
 		error(sprintf("RetrieveCategoryEnt(%d): Improper category number!\n", catnum));
 		return NULL;
 	}
@@ -78,25 +71,26 @@ bool IsServerInList(string list, string srv)
 {
 	string p;
 	int i, n;
-	if(srv == "")
+	if (srv == "") {
 		return false;
+	}
 	srv = netaddress_resolve(srv, 26000);
-	if(srv == "")
+	if (srv == "") {
 		return false;
+	}
 	p = crypto_getidfp(srv);
 	n = tokenize_console(list);
-	for(i = 0; i < n; ++i)
-	{
-		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
-		{
-			if(p)
-				if(argv(i) == p)
+	for (i = 0; i < n; ++i) {
+		if (substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0) {
+			if (p) {
+				if (argv(i) == p) {
 					return true;
-		}
-		else
-		{
-			if(srv == netaddress_resolve(argv(i), 26000))
+				}
+			}
+		} else {
+			if (srv == netaddress_resolve(argv(i), 26000)) {
 				return true;
+			}
 		}
 	}
 	return false;
@@ -105,14 +99,10 @@ bool IsServerInList(string list, string srv)
 int CheckCategoryOverride(int cat)
 {
 	entity catent = RetrieveCategoryEnt(cat);
-	if(catent)
-	{
+	if (catent) {
 		int override = (autocvar_menu_slist_categories ? catent.cat_enoverride : catent.cat_dioverride);
-		if(override) { return override; }
-		else { return cat; }
-	}
-	else
-	{
+		if (override) { return override; } else { return cat; }
+	} else {
 		error(sprintf("CheckCategoryOverride(%d): Improper category number!\n", cat));
 		return cat;
 	}
@@ -125,42 +115,46 @@ int CheckCategoryForEntry(int entry)
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, entry);
 	m = tokenizebyseparator(s, ":");
 
-	for(j = 2; j < m; ++j)
-	{
-		if(argv(j) == "") { break; }
+	for (j = 2; j < m; ++j) {
+		if (argv(j) == "") { break; }
 		k = substring(argv(j), 0, 1);
 		v = substring(argv(j), 1, -1);
-		switch(k)
-		{
-			case "P": { impure = stof(v); break; }
-			case "S": { freeslots = stof(v); break; }
-			case "F": { sflags = stof(v); break; }
-			case "M": { modtype = strtolower(v); break; }
+		switch (k) {
+			case "P":
+			{ impure = stof(v);
+			  break;
+			}
+			case "S":
+			{ freeslots = stof(v);
+			  break;
+			}
+			case "F":
+			{ sflags = stof(v);
+			  break;
+			}
+			case "M":
+			{ modtype = strtolower(v);
+			  break;
+			}
 		}
 	}
 
-	if(modtype != "xonotic") { impure += autocvar_menu_slist_modimpurity; }
+	if (modtype != "xonotic") { impure += autocvar_menu_slist_modimpurity; }
 
 	// check if this server is favorited
-	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CAT_FAVORITED; }
+	if (gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CAT_FAVORITED; }
 
 	// now check if it's recommended
-	if(autocvar_menu_slist_recommendations)
-	{
+	if (autocvar_menu_slist_recommendations) {
 		string cname = gethostcachestring(SLIST_FIELD_CNAME, entry);
 
-		if(IsPromoted(cname)) { return CAT_RECOMMENDED; }
-		else
-		{
+		if (IsPromoted(cname)) { return CAT_RECOMMENDED; } else {
 			float recommended = 0;
-			if(autocvar_menu_slist_recommendations & 1)
-			{
-				if(IsRecommended(cname)) { ++recommended; }
-				else { --recommended; }
+			if (autocvar_menu_slist_recommendations & 1) {
+				if (IsRecommended(cname)) { ++recommended; } else { --recommended; }
 			}
-			if(autocvar_menu_slist_recommendations & 2)
-			{
-				if(
+			if (autocvar_menu_slist_recommendations & 2) {
+				if (
 					///// check for minimum free slots
 					(freeslots >= autocvar_menu_slist_recommendations_minfreeslots)
 
@@ -185,39 +179,49 @@ int CheckCategoryForEntry(int entry)
 						autocvar_menu_slist_recommendations_maxping
 					)
 				)
-					{ ++recommended; }
-				else
-					{ --recommended; }
+				{ ++recommended; } else
+				{ --recommended; }
 			}
-			if(recommended > 0) { return CAT_RECOMMENDED; }
+			if (recommended > 0) { return CAT_RECOMMENDED; }
 		}
 	}
 
 	// if not favorited or recommended, check modname
-	if(modtype != "xonotic")
-	{
-		switch(modtype)
-		{
+	if (modtype != "xonotic") {
+		switch (modtype) {
 			// old servers which don't report their mod name are considered modified now
-			case "": { return CAT_MODIFIED; }
+			case "":
+			{ return CAT_MODIFIED;
+			}
 
-			case "xpm": { return CAT_XPM; }
+			case "xpm":
+			{ return CAT_XPM;
+			}
 			case "minstagib":
-			case "instagib": { return CAT_INSTAGIB; }
-			case "overkill": { return CAT_OVERKILL; }
-			//case "nix": { return CAT_NIX; }
-			//case "newtoys": { return CAT_NEWTOYS; }
+			case "instagib":
+			{ return CAT_INSTAGIB;
+			}
+			case "overkill":
+			{ return CAT_OVERKILL;
+			}
+			// case "nix": { return CAT_NIX; }
+			// case "newtoys": { return CAT_NEWTOYS; }
 
 			// "cts" is allowed as compat, xdf is replacement
 			case "cts":
-			case "xdf": { return CAT_DEFRAG; }
+			case "xdf":
+			{ return CAT_DEFRAG;
+			}
 
-			default: { LOG_TRACEF("Found strange mod type: %s", modtype); return CAT_MODIFIED; }
+			default:
+			{ LOG_TRACEF("Found strange mod type: %s", modtype);
+			  return CAT_MODIFIED;
+			}
 		}
 	}
 
 	// must be normal or impure server
-	return ((impure > autocvar_menu_slist_purethreshold) ? CAT_MODIFIED : CAT_NORMAL);
+	return (impure > autocvar_menu_slist_purethreshold) ? CAT_MODIFIED : CAT_NORMAL;
 }
 
 METHOD(XonoticServerList, toggleFavorite, void(XonoticServerList this, string srv))
@@ -227,20 +231,16 @@ METHOD(XonoticServerList, toggleFavorite, void(XonoticServerList this, string sr
 	string p = crypto_getidfp(srv_resolved);
 	string s = cvar_string("net_slist_favorites");
 	string ret = s;
-	for (int i = 0, n = tokenize_console(s); i < n; ++i)
-	{
+	for (int i = 0, n = tokenize_console(s); i < n; ++i) {
 		bool match;
-		if (substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
-		{
+		if (substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0) {
 			// it's a pubkey hash
 			match = (p && p == argv(i));
-		}
-		else
-		{
+		} else {
 			// it's an ip
 			match = (srv_resolved == netaddress_resolve(argv(i), 26000));
 		}
-		if (!match) continue;
+		if (!match) { continue; }
 		// on match: remove
 		adding = false;
 		string before = (i > 0) ? substring(s, 0, argv_end_index(i - 1)) : "";
@@ -252,8 +252,7 @@ METHOD(XonoticServerList, toggleFavorite, void(XonoticServerList this, string sr
 		n = tokenize_console(s);
 		--i; // offset the increment that is about to happen
 	}
-	if (adding)
-	{
+	if (adding) {
 		ret = strcat(s, (s != "" ? " " : ""), p ? p : srv);
 	}
 	cvar_set("net_slist_favorites", ret);
@@ -263,13 +262,10 @@ METHOD(XonoticServerList, toggleFavorite, void(XonoticServerList this, string sr
 void ServerList_Update_favoriteButton(entity btn, entity me)
 {
 	entity e = me.favoriteButton;
-	if(IsFavorite(me.ipAddressBox.text))
-	{
+	if (IsFavorite(me.ipAddressBox.text)) {
 		e.setText(e, _("Remove"));
 		clearTooltip(e);
-	}
-	else
-	{
+	} else {
 		e.setText(e, _("Favorite"));
 		setZonedTooltip(e, _("Bookmark the currently highlighted server so that it's faster to find in the future"), string_null);
 	}
@@ -287,7 +283,7 @@ void XonoticServerList_configureXonoticServerList(entity me)
 	me.configureXonoticListBox(me);
 
 	// update field ID's
-	#define SLIST_FIELD(suffix,name) SLIST_FIELD_##suffix = gethostcacheindexforkey(name);
+	#define SLIST_FIELD(suffix, name) SLIST_FIELD_##suffix = gethostcacheindexforkey(name);
 	SLIST_FIELDS
 	#undef SLIST_FIELD
 
@@ -297,19 +293,21 @@ void XonoticServerList_configureXonoticServerList(entity me)
 void XonoticServerList_setSelected(entity me, int i)
 {
 	me.lockedSelectedItem = false;
-	//int save = me.selectedItem;
+	// int save = me.selectedItem;
 	SUPER(XonoticServerList).setSelected(me, i);
 	/*
 	if(me.selectedItem == save)
-		return;
+	    return;
 	*/
-	if(me.nItems == 0)
+	if (me.nItems == 0) {
 		return;
-	if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
+	}
+	if (gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems) {
 		return; // sorry, it would be wrong
-
-	if(me.selectedServer)
+	}
+	if (me.selectedServer) {
 		strunzone(me.selectedServer);
+	}
 	me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 
 	me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
@@ -318,10 +316,9 @@ void XonoticServerList_setSelected(entity me, int i)
 }
 void XonoticServerList_refreshServerList(entity me, int mode)
 {
-	//print("refresh of type ", ftos(mode), "\n");
+	// print("refresh of type ", ftos(mode), "\n");
 
-	if(mode >= REFRESHSERVERLIST_REFILTER)
-	{
+	if (mode >= REFRESHSERVERLIST_REFILTER) {
 		float m;
 		int i, n;
 		int listflags = 0;
@@ -330,15 +327,15 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		s = me.filterString;
 
 		m = strstrofs(s, ":", 0);
-		if(m >= 0)
-		{
+		if (m >= 0) {
 			typestr = substring(s, 0, m);
 			s = substring(s, m + 1, strlen(s) - m - 1);
-			while(substring(s, 0, 1) == " ")
+			while (substring(s, 0, 1) == " ") {
 				s = substring(s, 1, strlen(s) - 1);
-		}
-		else
+			}
+		} else {
 			typestr = "";
+		}
 
 		modstr = cvar_string("menu_slist_modfilter");
 
@@ -349,38 +346,40 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
 
 		// show full button
-		if(!me.filterShowFull)
-		{
-			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
+		if (!me.filterShowFull) {
+			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL);   // legacy
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
 		}
 
 		// show empty button
-		if(!me.filterShowEmpty)
+		if (!me.filterShowEmpty) {
 			sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
+		}
 
 		// gametype filtering
-		if(typestr != "")
+		if (typestr != "") {
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
+		}
 
 		// mod filtering
-		if(modstr != "")
-		{
-			if(substring(modstr, 0, 1) == "!")
+		if (modstr != "") {
+			if (substring(modstr, 0, 1) == "!") {
 				sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(substring(modstr, 1, strlen(modstr) - 1)), SLIST_TEST_NOTEQUAL);
-			else
+			} else {
 				sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(modstr), SLIST_TEST_EQUAL);
+			}
 		}
 
 		// server banning
 		n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
-		for(i = 0; i < n; ++i)
-			if(argv(i) != "")
+		for (i = 0; i < n; ++i) {
+			if (argv(i) != "") {
 				sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
+			}
+		}
 
 		m = SLIST_MASK_OR - 1;
-		if(s != "")
-		{
+		if (s != "") {
 			sethostcachemaskstring(++m, SLIST_FIELD_NAME, s, SLIST_TEST_CONTAINS);
 			sethostcachemaskstring(++m, SLIST_FIELD_MAP, s, SLIST_TEST_CONTAINS);
 			sethostcachemaskstring(++m, SLIST_FIELD_PLAYERS, s, SLIST_TEST_CONTAINS);
@@ -388,22 +387,22 @@ void XonoticServerList_refreshServerList(entity me, int mode)
 		}
 
 		// sorting flags
-		//listflags |= SLSF_FAVORITES;
+		// listflags |= SLSF_FAVORITES;
 		listflags |= SLSF_CATEGORIES;
-		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
+		if (me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
 		sethostcachesort(me.currentSortField, listflags);
 	}
 
 	resorthostcache();
-	if(mode >= REFRESHSERVERLIST_ASK)
+	if (mode >= REFRESHSERVERLIST_ASK) {
 		refreshhostcache(mode >= REFRESHSERVERLIST_RESET);
+	}
 }
 void XonoticServerList_focusEnter(entity me)
 {
 	SUPER(XonoticServerList).focusEnter(me);
-	if(time < me.nextRefreshTime)
-	{
-		//print("sorry, no refresh yet\n");
+	if (time < me.nextRefreshTime) {
+		// print("sorry, no refresh yet\n");
 		return;
 	}
 	me.nextRefreshTime = time + 10;
@@ -415,64 +414,59 @@ void XonoticServerList_draw(entity me)
 	int i;
 	bool found = false, owned;
 
-	if(_Nex_ExtResponseSystem_BannedServersNeedsRefresh)
-	{
-		if(!me.needsRefresh)
+	if (_Nex_ExtResponseSystem_BannedServersNeedsRefresh) {
+		if (!me.needsRefresh) {
 			me.needsRefresh = 2;
+		}
 		_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 0;
 	}
 
-	if(_Nex_ExtResponseSystem_PromotedServersNeedsRefresh)
-	{
-		if(!me.needsRefresh)
+	if (_Nex_ExtResponseSystem_PromotedServersNeedsRefresh) {
+		if (!me.needsRefresh) {
 			me.needsRefresh = 3;
+		}
 		_Nex_ExtResponseSystem_PromotedServersNeedsRefresh = 0;
 	}
 
-	if(_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh)
-	{
-		if(!me.needsRefresh)
+	if (_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh) {
+		if (!me.needsRefresh) {
 			me.needsRefresh = 3;
+		}
 		_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 0;
 	}
 
-	if(me.currentSortField == -1)
-	{
+	if (me.currentSortField == -1) {
 		me.setSortOrder(me, SLIST_FIELD_PING, +1);
 		me.refreshServerList(me, REFRESHSERVERLIST_RESET);
-	}
-	else if(me.needsRefresh == 1)
-	{
+	} else if (me.needsRefresh == 1) {
 		me.needsRefresh = 2; // delay by one frame to make sure "slist" has been executed
-	}
-	else if(me.needsRefresh == 2)
-	{
+	} else if (me.needsRefresh == 2) {
 		me.needsRefresh = 0;
 		me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
-	}
-	else if(me.needsRefresh == 3)
-	{
+	} else if (me.needsRefresh == 3) {
 		me.needsRefresh = 0;
 		me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 	}
 
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
 
-	for(i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
+	for (i = 0; i < category_draw_count; ++i) {
+		category_name[i] = -1;
+		category_item[i] = -1;
+	}
 	category_draw_count = 0;
 
-	if(autocvar_menu_slist_categories >= 0) // if less than 0, don't even draw a category heading for favorites
-	{
+	if (autocvar_menu_slist_categories >= 0) { // if less than 0, don't even draw a category heading for favorites
 		float itemcount = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
 		me.nItems = itemcount;
 
-		//float visible = floor(me.scrollPos / me.itemHeight);
+		// float visible = floor(me.scrollPos / me.itemHeight);
 		// ^ unfortunately no such optimization can be made-- we must process through the
 		// entire list, otherwise there is no way to know which item is first in its category.
 
 		// binary search method suggested by div
 		float begin = 0;
-		for(int j = 1; j <= category_ent_count; ++j) {
+		for (int j = 1; j <= category_ent_count; ++j) {
 			float first = begin;
 			float last = (itemcount - 1);
 			if (first > last) {
@@ -494,11 +488,14 @@ void XonoticServerList_draw(entity me)
 				// Starts at first. This breaks the loop
 				// invariant in the binary search and thus has
 				// to be handled separately.
-				if(gethostcachenumber(SLIST_FIELD_CATEGORY, first) != j)
+				if (gethostcachenumber(SLIST_FIELD_CATEGORY, first) != j) {
 					error("Category mismatch I");
-				if(first > 0)
-					if(gethostcachenumber(SLIST_FIELD_CATEGORY, first - 1) == j)
+				}
+				if (first > 0) {
+					if (gethostcachenumber(SLIST_FIELD_CATEGORY, first - 1) == j) {
 						error("Category mismatch II");
+					}
+				}
 				category_name[category_draw_count] = j;
 				category_item[category_draw_count] = first;
 				++category_draw_count;
@@ -525,53 +522,48 @@ void XonoticServerList_draw(entity me)
 					}
 				}
 				if (catl == j) {
-					if(gethostcachenumber(SLIST_FIELD_CATEGORY, last) != j)
+					if (gethostcachenumber(SLIST_FIELD_CATEGORY, last) != j) {
 						error("Category mismatch III");
-					if(last > 0)
-						if(gethostcachenumber(SLIST_FIELD_CATEGORY, last - 1) == j)
+					}
+					if (last > 0) {
+						if (gethostcachenumber(SLIST_FIELD_CATEGORY, last - 1) == j) {
 							error("Category mismatch IV");
+						}
+					}
 					category_name[category_draw_count] = j;
 					category_item[category_draw_count] = last;
 					++category_draw_count;
 					begin = last + 1; // already scanned through these, skip 'em
+				} else {
+					begin = last;     // already scanned through these, skip 'em
 				}
-				else
-					begin = last; // already scanned through these, skip 'em
 			}
 		}
-		if(autocvar_menu_slist_categories_onlyifmultiple && (category_draw_count == 1))
-		{
+		if (autocvar_menu_slist_categories_onlyifmultiple && (category_draw_count == 1)) {
 			category_name[0] = -1;
 			category_item[0] = -1;
 			category_draw_count = 0;
 			me.nItems = itemcount;
 		}
-	}
-	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
+	} else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
 
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
 	me.favoriteButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 
-	if(me.lockedSelectedItem)
-	{
-		if(me.nItems > 0)
-		{
-			if(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem) != me.selectedServer)
-			{
-				if(me.selectedServer)
+	if (me.lockedSelectedItem) {
+		if (me.nItems > 0) {
+			if (gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem) != me.selectedServer) {
+				if (me.selectedServer) {
 					strunzone(me.selectedServer);
+				}
 				me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 			}
 			found = true;
 		}
-	}
-	else if(me.selectedServer)
-	{
-		for(i = 0; i < me.nItems; ++i)
-		{
-			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
-			{
+	} else if (me.selectedServer) {
+		for (i = 0; i < me.nItems; ++i) {
+			if (gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer) {
 				// don't follow the selected item with SUPER(XonoticServerList).setSelected(me, i);
 				me.selectedItem = i;
 				found = true;
@@ -579,33 +571,31 @@ void XonoticServerList_draw(entity me)
 			}
 		}
 	}
-	if(!found)
-	{
-		if(me.nItems > 0)
-		{
+	if (!found) {
+		if (me.nItems > 0) {
 			// selected server disappeared, select the last server (scrolling to it)
-			if(me.selectedItem >= me.nItems)
+			if (me.selectedItem >= me.nItems) {
 				SUPER(XonoticServerList).setSelected(me, me.nItems - 1);
-			if(me.selectedServer)
+			}
+			if (me.selectedServer) {
 				strunzone(me.selectedServer);
+			}
 			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 		}
 	}
 
-	if(owned)
-	{
-		if(me.selectedServer != me.ipAddressBox.text)
-		{
+	if (owned) {
+		if (me.selectedServer != me.ipAddressBox.text) {
 			me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
 			me.ipAddressBox.cursorPos = strlen(me.selectedServer);
 			me.ipAddressBoxFocused = -1;
 		}
 	}
 
-	if(me.ipAddressBoxFocused != me.ipAddressBox.focused)
-	{
-		if(me.ipAddressBox.focused || me.ipAddressBoxFocused < 0)
+	if (me.ipAddressBoxFocused != me.ipAddressBox.focused) {
+		if (me.ipAddressBox.focused || me.ipAddressBoxFocused < 0) {
 			ServerList_Update_favoriteButton(NULL, me);
+		}
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
 
@@ -631,23 +621,25 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 {
 	string s = me.filterString;
 	int m = strstrofs(s, ":", 0);
-	if(m >= 0)
-	{
+	if (m >= 0) {
 		s = substring(s, 0, m);
-		while(substring(s, m+1, 1) == " ") // skip spaces
+		while (substring(s, m + 1, 1) == " ") { // skip spaces
 			++m;
-	}
-	else
+		}
+	} else {
 		s = "";
+	}
 
-	Gametype first = NULL; FOREACH(Gametypes, !first, first = it; break);
+	Gametype first = NULL;
+	FOREACH(Gametypes, !first, first = it;
+		break);
 	bool flag = false;
 	FOREACH(Gametypes, s == MapInfo_Type_ToString(it), {
 		// the type was found
 		// choose the next one
 		flag = true;
 		s = MapInfo_Type_ToString(Gametypes_from(it.m_id + 1));
-		if (s == "") s = MapInfo_Type_ToString(first);
+		if (s == "") { s = MapInfo_Type_ToString(first); }
 		break;
 	});
 	if (!flag) {
@@ -656,22 +648,24 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 		s = MapInfo_Type_ToString(first);
 	}
 
-	if(s != "") s = strcat(s, ":");
-	s = strcat(s, substring(me.filterString, m+1, strlen(me.filterString) - m - 1));
+	if (s != "") { s = strcat(s, ":"); }
+	s = strcat(s, substring(me.filterString, m + 1, strlen(me.filterString) - m - 1));
 
 	me.controlledTextbox.setText(me.controlledTextbox, s);
 	me.controlledTextbox.keyDown(me.controlledTextbox, K_END, 0, 0);
 	me.controlledTextbox.keyUp(me.controlledTextbox, K_END, 0, 0);
-	//ServerList_Filter_Change(me.controlledTextbox, me);
+	// ServerList_Filter_Change(me.controlledTextbox, me);
 }
 void ServerList_Filter_Change(entity box, entity me)
 {
-	if(me.filterString)
+	if (me.filterString) {
 		strunzone(me.filterString);
-	if(box.text != "")
+	}
+	if (box.text != "") {
 		me.filterString = strzone(box.text);
-	else
+	} else {
 		me.filterString = string_null;
+	}
 	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
@@ -707,8 +701,9 @@ void ServerList_ShowFull_Click(entity box, entity me)
 }
 void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 {
-	if(me.currentSortField == fld)
+	if (me.currentSortField == fld) {
 		direction = -me.currentSortOrder;
+	}
 	me.currentSortOrder = direction;
 	me.currentSortField = fld;
 	me.sortButton1.forcePressed = (fld == SLIST_FIELD_PING);
@@ -717,8 +712,9 @@ void XonoticServerList_setSortOrder(entity me, int fld, int direction)
 	me.sortButton4.forcePressed = 0;
 	me.sortButton5.forcePressed = (fld == SLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
-	if(me.selectedServer)
+	if (me.selectedServer) {
 		strunzone(me.selectedServer);
+	}
 	me.selectedServer = string_null;
 	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 }
@@ -767,8 +763,7 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.positionSortButton(me, me.sortButton5, me.columnPlayersOrigin, me.columnPlayersSize, _("Players"), ServerList_PlayerSort_Click);
 
 	int f = me.currentSortField;
-	if(f >= 0)
-	{
+	if (f >= 0) {
 		me.currentSortField = -1;
 		me.setSortOrder(me, f, me.currentSortOrder); // force resetting the sort order
 	}
@@ -776,24 +771,25 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 void ServerList_Connect_Click(entity btn, entity me)
 {
 	localcmd(sprintf("connect %s\n",
-		((me.ipAddressBox.text != "") ?
-			me.ipAddressBox.text : me.selectedServer
+		((me.ipAddressBox.text != "")
+		? me.ipAddressBox.text : me.selectedServer
 		)
-	));
+		));
 }
 void ServerList_Favorite_Click(entity btn, entity this)
 {
 	string addr = this.ipAddressBox.text;
 	string ipstr = netaddress_resolve(addr, 26000);
-	if (ipstr == "") return;
+	if (ipstr == "") { return; }
 	m_play_click_sound(MENU_SOUND_SELECT);
 	this.toggleFavorite(this, addr);
 	this.ipAddressBoxFocused = -1;
 }
 void ServerList_Info_Click(entity btn, entity me)
 {
-	if (me.nItems != 0)
+	if (me.nItems != 0) {
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
+	}
 
 	vector org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
 	vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
@@ -815,25 +811,24 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	int freeslots = -1, sflags = -1, j, m;
 	string s, typestr, versionstr, k, v, modname;
 
-	//printf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems);
+	// printf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems);
 
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
-#define SET_YRANGE(start,end) \
+#define SET_YRANGE(start, end) \
 	draw_scale = boxToGlobalSize(eX * 1 + eY * (end - start), oldscale); \
 	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
 
 	for (j = 0; j < category_draw_count; ++j) {
 		// Matches exactly the headings with increased height.
-		if (i == category_item[j])
+		if (i == category_item[j]) {
 			break;
+		}
 	}
 
-	if (j < category_draw_count)
-	{
+	if (j < category_draw_count) {
 		entity catent = RetrieveCategoryEnt(category_name[j]);
-		if(catent)
-		{
+		if (catent) {
 			SET_YRANGE(
 				(me.categoriesHeight - 1) / (me.categoriesHeight + 1),
 				me.categoriesHeight / (me.categoriesHeight + 1)
@@ -857,10 +852,9 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		}
 	}
 
-	if(isSelected)
+	if (isSelected) {
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(isFocused)
-	{
+	} else if (isFocused) {
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
@@ -868,35 +862,34 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	m = tokenizebyseparator(s, ":");
 	typestr = "";
-	if(m >= 2)
-	{
+	if (m >= 2) {
 		typestr = argv(0);
 		versionstr = argv(1);
 	}
 	freeslots = -1;
 	modname = "";
-	for(j = 2; j < m; ++j)
-	{
-		if(argv(j) == "")
+	for (j = 2; j < m; ++j) {
+		if (argv(j) == "") {
 			break;
+		}
 		k = substring(argv(j), 0, 1);
 		v = substring(argv(j), 1, -1);
-		if(k == "P")
-		{
+		if (k == "P") {
 			pure = (stof(v) == 0);
 			pure_available = true;
-		}
-		else if(k == "S")
+		} else if (k == "S") {
 			freeslots = stof(v);
-		else if(k == "F")
+		} else if (k == "F") {
 			sflags = stoi(v);
-		else if(k == "M")
+		} else if (k == "M") {
 			modname = v;
+		}
 	}
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
-	if(modname == "")
+	if (modname == "") {
 		modname = "Xonotic";
+	}
 #endif
 
 	string original_modname = modname;
@@ -906,48 +899,50 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	SLIST_FIELD_MOD = gethostcacheindexforkey("mod");
 	s = gethostcachestring(SLIST_FIELD_MOD, i);
 	if(s != "data")
-		if(modname == "xonotic")
-			modname = s;
+	    if(modname == "xonotic")
+	        modname = s;
 	*/
 
 	// list the mods here on which the pure server check actually works
-	if(modname != "xonotic")
-	if(modname != "instagib" || modname != "minstagib")
-	if(modname != "cts")
-	if(modname != "nix")
-	if(modname != "newtoys")
-		pure_available = false;
+	if (modname != "xonotic") {
+		if (modname != "instagib" || modname != "minstagib") {
+			if (modname != "cts") {
+				if (modname != "nix") {
+					if (modname != "newtoys") {
+						pure_available = false;
+					}
+				}
+			}
+		}
+	}
 
-	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
+	if (gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0) {
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
-	else if(freeslots == 0)
+	} else if (freeslots == 0) {
 		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
-	else if (!gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
+	} else if (!gethostcachenumber(SLIST_FIELD_NUMHUMANS, i)) {
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
-	else
+	} else {
 		theAlpha = 1;
+	}
 
 	p = gethostcachenumber(SLIST_FIELD_PING, i);
 	const int PING_LOW = 75;
 	const int PING_MED = 200;
 	const int PING_HIGH = 500;
-	if(p < PING_LOW)
+	if (p < PING_LOW) {
 		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * (p / PING_LOW);
-	else if(p < PING_MED)
+	} else if (p < PING_MED) {
 		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((p - PING_LOW) / (PING_MED - PING_LOW));
-	else if(p < PING_HIGH)
-	{
+	} else if (p < PING_HIGH) {
 		theColor = SKINCOLOR_SERVERLIST_HIGHPING;
 		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((p - PING_MED) / (PING_HIGH - PING_MED));
-	}
-	else
-	{
+	} else {
 		theColor = eX;
 		theAlpha *= SKINALPHA_SERVERLIST_HIGHPING;
 	}
 
-	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
-	{
+	if (gethostcachenumber(SLIST_FIELD_ISFAVORITE, i)) {
 		theColor = theColor * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINCOLOR_SERVERLIST_FAVORITE * SKINALPHA_SERVERLIST_FAVORITE;
 		theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
 	}
@@ -955,38 +950,35 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	s = gethostcachestring(SLIST_FIELD_CNAME, i);
 
 	isv4 = isv6 = false;
-	if(substring(s, 0, 1) == "[")
-	{
+	if (substring(s, 0, 1) == "[") {
 		isv6 = true;
 		me.seenIPv6 += 1;
-	}
-	else if(IS_DIGIT(substring(s, 0, 1)))
-	{
+	} else if (IS_DIGIT(substring(s, 0, 1))) {
 		isv4 = true;
 		me.seenIPv4 += 1;
 	}
 
 	q = stof(substring(crypto_getencryptlevel(s), 0, 1));
-	if((q <= 0 && cvar("crypto_aeslevel") >= 3) || (q >= 3 && cvar("crypto_aeslevel") <= 0))
-	{
+	if ((q <= 0 && cvar("crypto_aeslevel") >= 3) || (q >= 3 && cvar("crypto_aeslevel") <= 0)) {
 		theColor = SKINCOLOR_SERVERLIST_IMPOSSIBLE;
 		theAlpha = SKINALPHA_SERVERLIST_IMPOSSIBLE;
 	}
 
-	if(q == 1)
-	{
-		if(cvar("crypto_aeslevel") >= 2)
+	if (q == 1) {
+		if (cvar("crypto_aeslevel") >= 2) {
 			q |= 4;
+		}
 	}
-	if(q == 2)
-	{
-		if(cvar("crypto_aeslevel") >= 1)
+	if (q == 2) {
+		if (cvar("crypto_aeslevel") >= 1) {
 			q |= 4;
+		}
 	}
-	if(q == 3)
+	if (q == 3) {
 		q = 5;
-	else if(q >= 3)
+	} else if (q >= 3) {
 		q -= 2;
+	}
 	// possible status:
 	// 0: crypto off
 	// 1: AES possible
@@ -1007,60 +999,63 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	iconPos_y = (1 - iconSize.y) * 0.5;
 
 	// IP
-	if(me.seenIPv4 && me.seenIPv6)
-	{
-		if(isv6)
+	if (me.seenIPv4 && me.seenIPv6) {
+		if (isv6) {
 			draw_Picture(iconPos, "icon_ipv6", iconSize, '1 1 1', 1);
-		else if(isv4)
+		} else if (isv4) {
 			draw_Picture(iconPos, "icon_ipv4", iconSize, '1 1 1', 1);
+		}
 	}
 
 	iconPos.x += iconSize.x;
 
 	// AES
-	if(q > 0)
+	if (q > 0) {
 		draw_Picture(iconPos, strcat("icon_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+	}
 
 	iconPos.x += iconSize.x;
 
 	// Mod
-	if(modname == "xonotic")
-	{
+	if (modname == "xonotic") {
 		// Here, pure_available should always be set. If not, consider
 		// it an impurity.
-		if(pure_available && pure)
+		if (pure_available && pure) {
 			draw_Picture(iconPos, "icon_pure1", iconSize, '1 1 1', 1);
-	}
-	else
-	{
+		}
+	} else {
 		string icon = strcat("icon_mod_", modname);
-		if(draw_PictureSize(icon) == '0 0 0')
+		if (draw_PictureSize(icon) == '0 0 0') {
 			icon = "icon_mod_";
+		}
 
 		// In mods, pure_available not being present indicates
 		// non-support of the feature. Just show the mod icon as is
 		// then.
-		if(pure_available && !pure)
+		if (pure_available && !pure) {
 			draw_Picture(iconPos, icon, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
-		else
+		} else {
 			draw_Picture(iconPos, icon, iconSize, '1 1 1', 1);
+		}
 	}
 
 	iconPos.x += iconSize.x;
 
 	// Stats
-	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
+	if (sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) {
 		draw_Picture(iconPos, "icon_stats1", iconSize, '1 1 1', 1);
+	}
 
-	if(isFocused && me.mouseOverIcons && !me.tooltip)
-	{
+	if (isFocused && me.mouseOverIcons && !me.tooltip) {
 		string t = "";
-		if(me.seenIPv4 && me.seenIPv6)
+		if (me.seenIPv4 && me.seenIPv6) {
 			t = strcat(t, (isv6) ? "IPv6, " : "IPv4, ");
+		}
 		t = strcat(t, _("encryption:"), " ", (q ? sprintf(_("AES level %d"), q) : ZCTX(_("ENC^none"))), ", ");
 		t = strcat(t, sprintf(_("mod: %s"), ((modname == "xonotic") ? ZCTX(_("MOD^Default")) : original_modname)));
-		if(pure_available)
+		if (pure_available) {
 			t = strcat(t, sprintf(" (%s)", (pure) ? _("official settings") : _("modified settings")));
+		}
 		t = strcat(t, ", ");
 		t = strcat(t, ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) ? _("stats enabled") : _("stats disabled")));
 		setZonedTooltip(me, t, string_null);
@@ -1097,16 +1092,16 @@ void XonoticServerList_focusedItemChangeNotify(entity me)
 
 float XonoticServerList_mouseMove(entity me, vector pos)
 {
-	if(!SUPER(XonoticServerList).mouseMove(me, pos))
-	{
+	if (!SUPER(XonoticServerList).mouseMove(me, pos)) {
 		me.mouseOverIcons = false;
 		clearTooltip(me);
 		return 1;
 	}
 
 	me.mouseOverIcons = (pos_x <= me.columnIconsSize);
-	if(!me.mouseOverIcons)
+	if (!me.mouseOverIcons) {
 		clearTooltip(me);
+	}
 	return 1;
 }
 
@@ -1117,38 +1112,31 @@ bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
 	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
 
-	if(scan == K_ENTER || scan == K_KP_ENTER)
-	{
+	if (scan == K_ENTER || scan == K_KP_ENTER) {
 		ServerList_Connect_Click(NULL, me);
 		return true;
-	}
-	else if(scan == K_MOUSE2 || scan == K_SPACE)
-	{
-		if(me.nItems != 0)
-		{
+	} else if (scan == K_MOUSE2 || scan == K_SPACE) {
+		if (me.nItems != 0) {
 			m_play_click_sound(MENU_SOUND_OPEN);
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 			return true;
 		}
 		return false;
-	}
-	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
-	{
-		if(me.nItems != 0)
-		{
+	} else if (scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS) {
+		if (me.nItems != 0) {
 			me.toggleFavorite(me, me.selectedServer);
 			me.ipAddressBoxFocused = -1;
 			return true;
 		}
 		return false;
-	}
-	else if(SUPER(XonoticServerList).keyDown(me, scan, ascii, shift))
+	} else if (SUPER(XonoticServerList).keyDown(me, scan, ascii, shift)) {
 		return true;
-	else if(!me.controlledTextbox)
+	} else if (!me.controlledTextbox) {
 		return false;
-	else
+	} else {
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
+	}
 }
 
 float XonoticServerList_getTotalHeight(entity me)
@@ -1164,10 +1152,12 @@ int XonoticServerList_getItemAtPos(entity me, float pos)
 	for (i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
 		float itempos = i * me.categoriesHeight + category_item[i];
-		if (pos >= itempos + me.categoriesHeight + 1)
+		if (pos >= itempos + me.categoriesHeight + 1) {
 			return itemidx + 1 + floor(pos - (itempos + me.categoriesHeight + 1));
-		if (pos >= itempos)
+		}
+		if (pos >= itempos) {
 			return itemidx;
+		}
 	}
 	// No category matches? Note that category 0 is... 0. Therefore no headings exist at all.
 	return floor(pos);
@@ -1178,10 +1168,12 @@ float XonoticServerList_getItemStart(entity me, int item)
 	for (i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
 		float itempos = i * me.categoriesHeight + category_item[i];
-		if (item >= itemidx + 1)
+		if (item >= itemidx + 1) {
 			return (itempos + me.categoriesHeight + 1 + item - (itemidx + 1)) * me.itemHeight;
-		if (item >= itemidx)
+		}
+		if (item >= itemidx) {
 			return itempos * me.itemHeight;
+		}
 	}
 	// No category matches? Note that category 0 is... 0. Therefore no headings exist at all.
 	return item * me.itemHeight;
@@ -1191,8 +1183,9 @@ float XonoticServerList_getItemHeight(entity me, int item)
 	int i;
 	for (i = 0; i < category_draw_count; ++i) {
 		// Matches exactly the headings with increased height.
-		if (item == category_item[i])
+		if (item == category_item[i]) {
 			return me.itemHeight * (me.categoriesHeight + 1);
+		}
 	}
 	return me.itemHeight;
 }

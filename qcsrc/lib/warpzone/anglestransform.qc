@@ -6,15 +6,18 @@ vector AnglesTransform_Apply(vector transform, vector v)
 {
 	fixedmakevectors(transform);
 	return v_forward * v.x
-		+ v_right   * (-v.y)
-		+ v_up      * v.z;
+		   + v_right   * (-v.y)
+		   + v_up      * v.z;
 }
 
 vector AnglesTransform_Multiply(vector t1, vector t2)
 {
 	vector m_forward, m_up;
-	fixedmakevectors(t2); m_forward = v_forward; m_up = v_up;
-	m_forward = AnglesTransform_Apply(t1, m_forward); m_up = AnglesTransform_Apply(t1, m_up);
+	fixedmakevectors(t2);
+	m_forward = v_forward;
+	m_up = v_up;
+	m_forward = AnglesTransform_Apply(t1, m_forward);
+	m_up = AnglesTransform_Apply(t1, m_up);
 	return fixedvectoangles2(m_forward, m_up);
 }
 
@@ -39,8 +42,8 @@ vector AnglesTransform_TurnDirectionFR(vector transform)
 {
 	// turn 180 degrees around v_up
 	// changes in-direction to out-direction
-	//fixedmakevectors(transform);
-	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
+	// fixedmakevectors(transform);
+	// return fixedvectoangles2(-1 * v_forward, 1 * v_up);
 	transform.x = -transform.x;
 	transform.y = 180 + transform.y;
 	transform.z = -transform.z;
@@ -54,8 +57,8 @@ vector AnglesTransform_TurnDirectionFU(vector transform)
 {
 	// turn 180 degrees around v_up
 	// changes in-direction to out-direction
-	//fixedmakevectors(transform);
-	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
+	// fixedmakevectors(transform);
+	// return fixedvectoangles2(-1 * v_forward, 1 * v_up);
 	transform.x = -transform.x;
 	transform.y = 180 + transform.y;
 	transform.z = 180 - transform.z;
@@ -79,15 +82,15 @@ vector AnglesTransform_Normalize(vector t, float minimize_roll)
 	t.x = t.x - 360 * rint(t.x / 360);
 	t.y = t.y - 360 * rint(t.y / 360);
 	t.z = t.z - 360 * rint(t.z / 360);
-	if(minimize_roll)
+	if (minimize_roll) {
 		need_flip = (t.z > 90 || t.z <= -90);
-	else
+	} else {
 		need_flip = (t.x > 90 || t.x < -90); // for pitch we prefer to allow exactly -90 degrees for looking straight down
-	if(need_flip)
-	{
-		if(t.x >= 0) t.x = 180 - t.x; else t.x = -180 - t.x;
-		if(t.y > 0) t.y -= 180; else t.y += 180;
-		if(t.z > 0) t.z -= 180; else t.z += 180;
+	}
+	if (need_flip) {
+		if (t.x >= 0) { t.x = 180 - t.x; } else { t.x = -180 - t.x; }
+		if (t.y > 0) { t.y -= 180; } else { t.y += 180; }
+		if (t.z > 0) { t.z -= 180; } else { t.z += 180; }
 	}
 	return t;
 }
@@ -105,18 +108,14 @@ vector AnglesTransform_CancelRoll(vector t)
 	// FIXME find a better method
 
 	f = fabs(t.x - (-90)) / epsilon;
-	if(f < 1)
-	{
-		//t_x = -90;
+	if (f < 1) {
+		// t_x = -90;
 		t.y += t.z;
 		t.z = 0;
-	}
-	else
-	{
+	} else {
 		f = fabs(t.x - 90) / epsilon;
-		if(f < 1)
-		{
-			//t_x = 90;
+		if (f < 1) {
+			// t_x = 90;
 			t.y -= t.z;
 			t.z = 0;
 		}

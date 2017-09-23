@@ -1,8 +1,8 @@
 #pragma once
 
 #ifdef SVQC
-	/** Use new sound handling. TODO: use when sounds play correctly on clients */
-	bool autocvar_g_debug_globalsounds = false;
+/** Use new sound handling. TODO: use when sounds play correctly on clients */
+bool autocvar_g_debug_globalsounds = false;
 #endif
 
 // player sounds, voice messages
@@ -110,39 +110,39 @@ REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
 
 bool GetPlayerSoundSampleField_notFound;
 void PrecachePlayerSounds(string f);
-//#ifdef CSQC
-	.string GetVoiceMessageSampleField(string type);
-	.string GetPlayerSoundSampleField(string type);
-	void ClearPlayerSounds(entity this);
-	float LoadPlayerSounds(entity this, string f, bool strict);
-	void UpdatePlayerSounds(entity this);
-//#endif
+// #ifdef CSQC
+.string GetVoiceMessageSampleField(string type);
+.string GetPlayerSoundSampleField(string type);
+void ClearPlayerSounds(entity this);
+float LoadPlayerSounds(entity this, string f, bool strict);
+void UpdatePlayerSounds(entity this);
+// #endif
 entity GetVoiceMessage(string type);
 
 #ifdef SVQC
 
-	void _GlobalSound(entity this, entity gs, entity ps, string sample, float chan, float vol, float voicetype, bool fake);
+void _GlobalSound(entity this, entity gs, entity ps, string sample, float chan, float vol, float voicetype, bool fake);
 	#define GlobalSound(this, def, chan, vol, voicetype) _GlobalSound(this, def, NULL, string_null, chan, vol, voicetype, false)
 	#define GlobalSound_string(this, def, chan, vol, voicetype) _GlobalSound(this, NULL, NULL, def, chan, vol, voicetype, false)
 	#define PlayerSound(this, def, chan, vol, voicetype) _GlobalSound(this, NULL, def, string_null, chan, vol, voicetype, false)
 	#define VoiceMessage(this, def, msg) \
-		MACRO_BEGIN \
-			entity VM = def; \
-			int voicetype = VM.m_playersoundvt; \
-			bool ownteam = (voicetype == VOICETYPE_TEAMRADIO); \
-			int flood = Say(this, ownteam, NULL, msg, true); \
-			bool fake; \
-			if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true; \
-			else if (flood > 0) fake = false; \
-			else break; \
-			_GlobalSound(this, NULL, VM, string_null, CH_VOICE, VOL_BASEVOICE, voicetype, fake); \
-		MACRO_END
+	MACRO_BEGIN \
+		entity VM = def; \
+		int voicetype = VM.m_playersoundvt; \
+		bool ownteam = (voicetype == VOICETYPE_TEAMRADIO); \
+		int flood = Say(this, ownteam, NULL, msg, true); \
+		bool fake; \
+		if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) { fake = true; } else if (flood > 0) { \
+			fake = false; \
+		} else { break; } \
+		_GlobalSound(this, NULL, VM, string_null, CH_VOICE, VOL_BASEVOICE, voicetype, fake); \
+	MACRO_END
 
 #endif
 
 string allvoicesamples;
 STATIC_INIT(allvoicesamples)
 {
-    FOREACH(PlayerSounds, it.instanceOfVoiceMessage, allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr));
-    allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
+	FOREACH(PlayerSounds, it.instanceOfVoiceMessage, allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr));
+	allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
 }

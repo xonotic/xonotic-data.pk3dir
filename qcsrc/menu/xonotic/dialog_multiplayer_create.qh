@@ -7,7 +7,7 @@ CLASS(XonoticServerCreateTab, XonoticTab)
 	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity));
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticServerCreateTab, rows, float, 23);
-	ATTRIB(XonoticServerCreateTab, columns, float, 6.2);  // added extra .2 for center space
+	ATTRIB(XonoticServerCreateTab, columns, float, 6.2); // added extra .2 for center space
 
 	ATTRIB(XonoticServerCreateTab, mapListBox, entity);
 	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity);

@@ -26,4 +26,4 @@ CLASS(XonoticTextSlider, TextSlider)
 	ATTRIB(XonoticTextSlider, disabledAlpha, float, SKINALPHA_DISABLED);
 ENDCLASS(XonoticTextSlider)
 entity makeXonoticTextSlider_T(string, string theTooltip);
-entity makeXonoticTextSlider(string);  // note: you still need to call addValue and configureXonoticTextSliderValues!
+entity makeXonoticTextSlider(string); // note: you still need to call addValue and configureXonoticTextSliderValues!

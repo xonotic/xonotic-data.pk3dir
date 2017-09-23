@@ -18,30 +18,25 @@ entity makeXonoticPlayerList()
 
 void XonoticPlayerList_setPlayerList(entity me, string plist)
 {
-	int buf,i,n;
+	int buf, i, n;
 	string s;
 
 	buf = buf_create();
 	me.nItems = tokenizebyseparator(plist, "\n");
-	for(i = 0; i < me.nItems; ++i)
-	{
+	for (i = 0; i < me.nItems; ++i) {
 		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME, argv(i)); // -666 100 "^4Nex ^2Player"
 	}
 
-	for(i = 0; i < me.nItems; ++i)
-	{
+	for (i = 0; i < me.nItems; ++i) {
 		s = bufstr_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
 		n = tokenize_console(s);
 
-		if(n == 4)
-		{
+		if (n == 4) {
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  argv(2)); // 0 for spec, else 1, 2, 3, 4
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(3)); // ^4Nex ^2Player
-		}
-		else
-		{
+		} else {
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  "-1");
@@ -81,33 +76,34 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	vector rgb;
 
 	t = stof(me.getPlayerList(me, i, PLAYERPARM_TEAM));
-	if(t == 1)
+	if (t == 1) {
 		rgb = colormapPaletteColor(4, 0);
-	else if(t == 2)
+	} else if (t == 2) {
 		rgb = colormapPaletteColor(13, 0);
-	else if(t == 3)
+	} else if (t == 3) {
 		rgb = colormapPaletteColor(12, 0);
-	else if(t == 4)
+	} else if (t == 4) {
 		rgb = colormapPaletteColor(9, 0);
-	else
+	} else {
 		rgb = SKINCOLOR_TEXT;
+	}
 
 	s = me.getPlayerList(me, i, PLAYERPARM_NAME);
 	score = me.getPlayerList(me, i, PLAYERPARM_SCORE);
 
-	if(substring(score, strlen(score) - 10, 10) == ":spectator")
-	{
+	if (substring(score, strlen(score) - 10, 10) == ":spectator") {
 		score = _("spectator");
-	}
-	else
-	{
-		if((t = strstrofs(score, ":", 0)) >= 0)
+	} else {
+		if ((t = strstrofs(score, ":", 0)) >= 0) {
 			score = substring(score, 0, t);
-		if((t = strstrofs(score, ",", 0)) >= 0)
+		}
+		if ((t = strstrofs(score, ",", 0)) >= 0) {
 			score = substring(score, 0, t);
+		}
 
-		if(stof(score) == FRAGS_SPECTATOR)
+		if (stof(score) == FRAGS_SPECTATOR) {
 			score = _("spectator");
+		}
 	}
 
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 1, me.realFontSize);

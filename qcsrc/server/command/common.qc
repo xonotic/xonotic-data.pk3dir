@@ -21,30 +21,32 @@
 // select the proper prefix for usage and other messages
 string GetCommandPrefix(entity caller)
 {
-	if (caller) return "cmd";
-	else return "sv_cmd";
+	if (caller) { return "cmd"; } else { return "sv_cmd"; }
 }
 
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
-	if (caller) return playername(caller, false);
-	else return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"); // autocvar_hostname
+	if (caller) { return playername(caller, false); } else {
+		return (autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"; // autocvar_hostname
+	}
 }
 
 // verify that the client provided is acceptable for kicking
 float VerifyKickableEntity(entity client)
 {
-	if (!IS_REAL_CLIENT(client)) return CLIENT_NOT_REAL;
+	if (!IS_REAL_CLIENT(client)) { return CLIENT_NOT_REAL; }
 	return CLIENT_ACCEPTABLE;
 }
 
 // verify that the client provided is acceptable for use
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
-	if (!IS_CLIENT(client)) return CLIENT_DOESNT_EXIST;
-	else if (must_be_real && !IS_REAL_CLIENT(client)) return CLIENT_NOT_REAL;
-	else if (must_be_bots && !IS_BOT_CLIENT(client)) return CLIENT_NOT_BOT;
+	if (!IS_CLIENT(client)) { return CLIENT_DOESNT_EXIST; } else if (must_be_real && !IS_REAL_CLIENT(client)) {
+		return CLIENT_NOT_REAL;
+	} else if (must_be_bots && !IS_BOT_CLIENT(client)) {
+		return CLIENT_NOT_BOT;
+	}
 
 	return CLIENT_ACCEPTABLE;
 }
@@ -52,8 +54,7 @@ float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 // if the client is not acceptable, return a string to be used for error messages
 string GetClientErrorString_color(float clienterror, string original_input, string col)
 {
-	switch (clienterror)
-	{
+	switch (clienterror) {
 		case CLIENT_DOESNT_EXIST:
 		{ return strcat(col, "Client '", original_input, col, "' doesn't exist");
 		}
@@ -72,8 +73,7 @@ string GetClientErrorString_color(float clienterror, string original_input, stri
 // is this entity number even in the possible range of entities?
 float VerifyClientNumber(float tmp_number)
 {
-	if ((tmp_number < 1) || (tmp_number > maxclients)) return false;
-	else return true;
+	if ((tmp_number < 1) || (tmp_number > maxclients)) { return false; } else { return true; }
 }
 
 entity GetIndexedEntity(float argc, float start_index)
@@ -86,42 +86,29 @@ entity GetIndexedEntity(float argc, float start_index)
 	index = start_index;
 	selection = NULL;
 
-	if (argc > start_index)
-	{
-		if (substring(argv(index), 0, 1) == "#")
-		{
+	if (argc > start_index) {
+		if (substring(argv(index), 0, 1) == "#") {
 			tmp_string = substring(argv(index), 1, -1);
 			++index;
 
-			if (tmp_string != "")  // is it all one token? like #1
-			{
+			if (tmp_string != "") { // is it all one token? like #1
 				tmp_number = stof(tmp_string);
-			}
-			else if (argc > index)  // no, it's two tokens? # 1
-			{
+			} else if (argc > index) { // no, it's two tokens? # 1
 				tmp_number = stof(argv(index));
 				++index;
-			}
-			else
-			{
+			} else {
 				tmp_number = 0;
 			}
-		}
-		else  // maybe it's ONLY a number?
-		{
+		} else { // maybe it's ONLY a number?
 			tmp_number = stof(argv(index));
 			++index;
 		}
 
-		if (VerifyClientNumber(tmp_number))
-		{
-			selection = edict_num(tmp_number);  // yes, it was a number
-		}
-		else  // no, maybe it's a name?
-		{
+		if (VerifyClientNumber(tmp_number)) {
+			selection = edict_num(tmp_number); // yes, it was a number
+		} else { // no, maybe it's a name?
 			FOREACH_CLIENT(true, {
-				if(strdecolorize(it.netname) == strdecolorize(argv(start_index)))
-				{
+				if (strdecolorize(it.netname) == strdecolorize(argv(start_index))) {
 					selection = it;
 					break; // no reason to keep looking
 				}
@@ -142,19 +129,14 @@ entity GetFilteredEntity(string input)
 	entity selection;
 	float tmp_number;
 
-	if (substring(input, 0, 1) == "#") tmp_number = stof(substring(input, 1, -1));
-	else tmp_number = stof(input);
+	if (substring(input, 0, 1) == "#") { tmp_number = stof(substring(input, 1, -1)); } else { tmp_number = stof(input); }
 
-	if (VerifyClientNumber(tmp_number))
-	{
+	if (VerifyClientNumber(tmp_number)) {
 		selection = edict_num(tmp_number);
-	}
-	else
-	{
+	} else {
 		selection = NULL;
 		FOREACH_CLIENT(true, {
-			if(strdecolorize(it.netname) == strdecolorize(input))
-			{
+			if (strdecolorize(it.netname) == strdecolorize(input)) {
 				selection = it;
 				break; // no reason to keep looking
 			}
@@ -178,8 +160,7 @@ float GetFilteredNumber(string input)
 // switch between sprint and print depending on whether the receiver is the server or a player
 void print_to(entity to, string input)
 {
-	if (to) sprint(to, strcat(input, "\n"));
-	else print(input, "\n");
+	if (to) { sprint(to, strcat(input, "\n")); } else { print(input, "\n"); }
 }
 
 // ==========================================
@@ -198,22 +179,19 @@ void timeout_handler_reset(entity this)
 
 void timeout_handler_think(entity this)
 {
-	switch (timeout_status)
-	{
+	switch (timeout_status) {
 		case TIMEOUT_ACTIVE:
 		{
-			if (timeout_time > 0)  // countdown is still going
-			{
+			if (timeout_time > 0) { // countdown is still going
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
 
-				if (timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
+				if (timeout_time == autocvar_sv_timeout_resumetime) { // play a warning sound when only <sv_timeout_resumetime> seconds are left
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_PREPARE);
+				}
 
-				this.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
-				timeout_time -= 1;                                  // decrease the time counter
-			}
-			else  // time to end the timeout
-			{
+				this.nextthink = time + TIMEOUT_SLOWMO_VALUE; // think again in one second
+				timeout_time -= 1;                            // decrease the time counter
+			} else { // time to end the timeout
 				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_TIMEIN);
 				timeout_status = TIMEOUT_INACTIVE;
 
@@ -233,15 +211,12 @@ void timeout_handler_think(entity this)
 
 		case TIMEOUT_LEADTIME:
 		{
-			if (timeout_leadtime > 0)  // countdown is still going
-			{
+			if (timeout_leadtime > 0) {    // countdown is still going
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 
 				this.nextthink = time + 1; // think again in one second
 				timeout_leadtime -= 1;     // decrease the time counter
-			}
-			else  // time to begin the timeout
-			{
+			} else { // time to begin the timeout
 				timeout_status = TIMEOUT_ACTIVE;
 
 				// set the slowmo value to the timeout default slowmo value
@@ -250,8 +225,8 @@ void timeout_handler_think(entity this)
 				// reset all the flood variables
 				FOREACH_CLIENT(true, {
 					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
-						it.floodcontrol_chatteam = it.floodcontrol_chattell =
-							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
+					it.floodcontrol_chatteam = it.floodcontrol_chattell =
+					it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
 				});
 
 				// copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
@@ -259,7 +234,7 @@ void timeout_handler_think(entity this)
 					it.lastV_angle = it.v_angle;
 				});
 
-				this.nextthink = time;  // think again next frame to handle it under TIMEOUT_ACTIVE code
+				this.nextthink = time; // think again next frame to handle it under TIMEOUT_ACTIVE code
 			}
 
 			return;
@@ -282,12 +257,11 @@ void timeout_handler_think(entity this)
 
 void CommonCommand_cvar_changes(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			print_to(caller, cvar_changes);
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -303,12 +277,11 @@ void CommonCommand_cvar_changes(float request, entity caller)
 
 void CommonCommand_cvar_purechanges(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			print_to(caller, cvar_purechanges);
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -324,15 +297,13 @@ void CommonCommand_cvar_purechanges(float request, entity caller)
 
 void CommonCommand_editmob(int request, entity caller, int argc)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			if (autocvar_g_campaign) { print_to(caller, "Monster editing is disabled in singleplayer"); return; }
 			// no checks for g_monsters here, as it may be toggled mid match which existing monsters
 
-			if (caller)
-			{
+			if (caller) {
 				makevectors(caller.v_angle);
 				WarpZone_TraceLine(caller.origin + caller.view_ofs, caller.origin + caller.view_ofs + v_forward * 100, MOVE_NORMAL, caller);
 			}
@@ -341,12 +312,13 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 			bool is_visible = IS_MONSTER(mon);
 			string argument = argv(2);
 
-			switch (argv(1))
-			{
+			switch (argv(1)) {
 				case "name":
 				{
 					if (!caller) { print_to(caller, "Only players can edit monsters"); return; }
-					if (!argument)   break;  // escape to usage
+					if (!argument) {
+						break; // escape to usage
+					}
 					if (!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
@@ -354,18 +326,19 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					string mon_oldname = mon.monster_name;
 
 					mon.monster_name = argument;
-					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null);
+					if (mon.sprite) { WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); }
 					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
 					return;
 				}
 				case "spawn":
 				{
 					if (!caller) { print_to(caller, "Only players can spawn monsters"); return; }
-					if (!argv(2))   break;  // escape to usage
-
+					if (!argv(2)) {
+						break; // escape to usage
+					}
 					int moveflag, tmp_moncount = 0;
 					string arg_lower = strtolower(argument);
-					moveflag = (argv(3)) ? stof(argv(3)) : 1;  // follow owner if not defined
+					moveflag = (argv(3)) ? stof(argv(3)) : 1; // follow owner if not defined
 
 					if (arg_lower == "list") { print_to(caller, monsterlist_reply); return; }
 
@@ -412,11 +385,13 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 				case "skin":
 				{
 					if (!caller) { print_to(caller, "Only players can edit monsters"); return; }
-					if (!argument)   break;  // escape to usage
+					if (!argument) {
+						break; // escape to usage
+					}
 					if (!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
-					if (mon.monsterid == MON_MAGE.monsterid) { print_to(caller, "Mage skins can't be changed"); return; }  // TODO
+					if (mon.monsterid == MON_MAGE.monsterid) { print_to(caller, "Mage skins can't be changed"); return; } // TODO
 
 					mon.skin = stof(argument);
 					print_to(caller, strcat("Monster skin successfully changed to ", ftos(mon.skin)));
@@ -425,7 +400,9 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 				case "movetarget":
 				{
 					if (!caller) { print_to(caller, "Only players can edit monsters"); return; }
-					if (!argument)   break;  // escape to usage
+					if (!argument) {
+						break; // escape to usage
+					}
 					if (!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
@@ -471,16 +448,14 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 void CommonCommand_info(float request, entity caller, float argc)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			string command = builtin_cvar_string(strcat("sv_info_", argv(1)));
 
-			if (command) wordwrap_sprint(caller, command, 1000);
-			else print_to(caller, "ERROR: unsupported info command");
+			if (command) { wordwrap_sprint(caller, command, 1000); } else { print_to(caller, "ERROR: unsupported info command"); }
 
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -495,12 +470,11 @@ void CommonCommand_info(float request, entity caller, float argc)
 
 void CommonCommand_ladder(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			print_to(caller, ladder_reply);
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -515,12 +489,11 @@ void CommonCommand_ladder(float request, entity caller)
 
 void CommonCommand_lsmaps(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			print_to(caller, lsmaps_reply);
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -535,12 +508,11 @@ void CommonCommand_lsmaps(float request, entity caller)
 
 void CommonCommand_printmaplist(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			print_to(caller, maplist_reply);
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -555,12 +527,11 @@ void CommonCommand_printmaplist(float request, entity caller)
 
 void CommonCommand_rankings(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			print_to(caller, rankings_reply);
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -575,20 +546,18 @@ void CommonCommand_rankings(float request, entity caller)
 
 void CommonCommand_records(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			int num = stoi(argv(1));
-			if(num > 0 && num <= 10 && records_reply[num - 1] != "")
+			if (num > 0 && num <= 10 && records_reply[num - 1] != "") {
 				print_to(caller, records_reply[num - 1]);
-			else
-			{
-				for (int i = 0; i < 10; ++i)
-					if (records_reply[i] != "") print_to(caller, records_reply[i]);
+			} else {
+				for (int i = 0; i < 10; ++i) {
+					if (records_reply[i] != "") { print_to(caller, records_reply[i]); } }
 			}
 
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -603,12 +572,11 @@ void CommonCommand_records(float request, entity caller)
 
 void CommonCommand_teamstatus(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			Score_NicePrint(caller);
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -623,8 +591,7 @@ void CommonCommand_teamstatus(float request, entity caller)
 
 void CommonCommand_time(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			print_to(caller, strcat("time = ", ftos(time)));
@@ -649,27 +616,19 @@ void CommonCommand_time(float request, entity caller)
 
 void CommonCommand_timein(float request, entity caller)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!caller || autocvar_sv_timeout)
-			{
-				if (!timeout_status) { print_to(caller, "^7Error: There is no active timeout called."); }
-				else if (caller && (caller != timeout_caller))
-				{
+			if (!caller || autocvar_sv_timeout) {
+				if (!timeout_status) { print_to(caller, "^7Error: There is no active timeout called."); } else if (caller && (caller != timeout_caller)) {
 					print_to(caller, "^7Error: You are not allowed to stop the active timeout.");
-				}
-
-				else  // everything should be okay, continue aborting timeout
-				{
-					switch (timeout_status)
-					{
+				} else { // everything should be okay, continue aborting timeout
+					switch (timeout_status) {
 						case TIMEOUT_LEADTIME:
 						{
 							timeout_status = TIMEOUT_INACTIVE;
 							timeout_time = 0;
-							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
+							timeout_handler.nextthink = time; // timeout_handler has to take care of it immediately
 							bprint(strcat("^7The timeout was aborted by ", GetCallerName(caller), " !\n"));
 							return;
 						}
@@ -677,7 +636,7 @@ void CommonCommand_timein(float request, entity caller)
 						case TIMEOUT_ACTIVE:
 						{
 							timeout_time = autocvar_sv_timeout_resumetime;
-							timeout_handler.nextthink = time;  // timeout_handler has to take care of it immediately
+							timeout_handler.nextthink = time; // timeout_handler has to take care of it immediately
 							bprint(strcat("^1Attention: ^7", GetCallerName(caller), " resumed the game! Prepare for battle!\n"));
 							return;
 						}
@@ -686,10 +645,9 @@ void CommonCommand_timein(float request, entity caller)
 							return;
 					}
 				}
-			}
-			else { print_to(caller, "^1Timeins are not allowed to be called, enable them with sv_timeout 1.\n"); }
+			} else { print_to(caller, "^1Timeins are not allowed to be called, enable them with sv_timeout 1.\n"); }
 
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -702,45 +660,28 @@ void CommonCommand_timein(float request, entity caller)
 	}
 }
 
-void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMAND IS TERRIBLE.
+void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAND IS TERRIBLE.
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
-			if (!caller || autocvar_sv_timeout)
-			{
+			if (!caller || autocvar_sv_timeout) {
 				float last_possible_timeout = ((autocvar_timelimit * 60) - autocvar_sv_timeout_leadtime - 1);
 
-				if (timeout_status) { print_to(caller, "^7Error: A timeout is already active."); }
-				else if (vote_called)
-				{
+				if (timeout_status) { print_to(caller, "^7Error: A timeout is already active."); } else if (vote_called) {
 					print_to(caller, "^7Error: You can not call a timeout while a vote is active.");
-				}
-				else if (warmup_stage && !g_warmup_allow_timeout)
-				{
+				} else if (warmup_stage && !g_warmup_allow_timeout) {
 					print_to(caller, "^7Error: You can not call a timeout in warmup-stage.");
-				}
-				else if (time < game_starttime)
-				{
+				} else if (time < game_starttime) {
 					print_to(caller, "^7Error: You can not call a timeout while the map is being restarted.");
-				}
-				else if (caller && (CS(caller).allowed_timeouts < 1))
-				{
+				} else if (caller && (CS(caller).allowed_timeouts < 1)) {
 					print_to(caller, "^7Error: You already used all your timeout calls for this map.");
-				}
-				else if (caller && !IS_PLAYER(caller))
-				{
+				} else if (caller && !IS_PLAYER(caller)) {
 					print_to(caller, "^7Error: You must be a player to call a timeout.");
-				}
-				else if ((autocvar_timelimit) && (last_possible_timeout < time - game_starttime))
-				{
+				} else if ((autocvar_timelimit) && (last_possible_timeout < time - game_starttime)) {
 					print_to(caller, "^7Error: It is too late to call a timeout now!");
-				}
-
-				else  // everything should be okay, proceed with starting the timeout
-				{
-					if (caller)   CS(caller).allowed_timeouts -= 1;
+				} else { // everything should be okay, proceed with starting the timeout
+					if (caller) { CS(caller).allowed_timeouts -= 1; }
 					// write a bprint who started the timeout (and how many they have left)
 					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(CS(caller).allowed_timeouts), " timeout(s) left)") : ""), "!\n");
 
@@ -751,14 +692,13 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 
 					timeout_handler = spawn();
 					setthink(timeout_handler, timeout_handler_think);
-					timeout_handler.nextthink = time;  // always let the entity think asap
+					timeout_handler.nextthink = time; // always let the entity think asap
 
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TIMEOUT);
 				}
-			}
-			else { print_to(caller, "^1Timeouts are not allowed to be called, enable them with sv_timeout 1.\n"); }
+			} else { print_to(caller, "^1Timeouts are not allowed to be called, enable them with sv_timeout 1.\n"); }
 
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:
@@ -773,8 +713,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 
 void CommonCommand_who(float request, entity caller, float argc)
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			float total_listed_players, is_bot;
@@ -791,37 +730,32 @@ void CommonCommand_who(float request, entity caller, float argc)
 			FOREACH_CLIENT(true, {
 				is_bot = (IS_BOT_CLIENT(it));
 
-				if (is_bot)
-				{
+				if (is_bot) {
 					tmp_netaddress = "null/botclient";
 					tmp_crypto_idfp = "null/botclient";
-				}
-				else if (privacy)
-				{
+				} else if (privacy) {
 					tmp_netaddress = "hidden";
 					tmp_crypto_idfp = "hidden";
-				}
-				else
-				{
+				} else {
 					tmp_netaddress = it.netaddress;
 					tmp_crypto_idfp = it.crypto_idfp;
 				}
 
 				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "),
-					etof(it),
-					it.netname,
-					CS(it).ping,
-					CS(it).ping_packetloss,
-					process_time(1, time - CS(it).jointime),
-					tmp_netaddress,
-					tmp_crypto_idfp));
+				etof(it),
+				it.netname,
+				CS(it).ping,
+				CS(it).ping_packetloss,
+				process_time(1, time - CS(it).jointime),
+				tmp_netaddress,
+				tmp_crypto_idfp));
 
 				++total_listed_players;
 			});
 
 			print_to(caller, strcat("Finished listing ", ftos(total_listed_players), " client(s) out of ", ftos(maxclients), " slots."));
 
-			return;  // never fall through to usage
+			return; // never fall through to usage
 		}
 
 		default:

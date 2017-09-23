@@ -27,10 +27,9 @@ void XonoticLanguageList_configureXonoticLanguageList(entity me)
 void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s, p;
-	if(isSelected)
+	if (isSelected) {
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(isFocused)
-	{
+	} else if (isFocused) {
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
@@ -46,8 +45,7 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 	draw_fontscale = save_fontscale;
 
 	p = me.languageParameter(me, i, LANGPARM_PERCENTAGE);
-	if(p != "")
-	{
+	if (p != "") {
 		vector save_fontscale = draw_fontscale;
 		float f = draw_CondensedFontFactor(p, false, me.realFontSize, 1);
 		draw_fontscale.x *= f;
@@ -84,20 +82,16 @@ void XonoticLanguageList_loadCvars(entity me)
 	n = me.nItems;
 
 	// default to English
-	for(i = 0; i < n; ++i)
-	{
-		if(me.languageParameter(me, i, LANGPARM_ID) == "en")
-		{
+	for (i = 0; i < n; ++i) {
+		if (me.languageParameter(me, i, LANGPARM_ID) == "en") {
 			SUPER(XonoticLanguageList).setSelected(me, i);
 			break;
 		}
 	}
 
 	// otherwise, find the language
-	for(i = 0; i < n; ++i)
-	{
-		if(me.languageParameter(me, i, LANGPARM_ID) == s)
-		{
+	for (i = 0; i < n; ++i) {
+		if (me.languageParameter(me, i, LANGPARM_ID) == s) {
 			SUPER(XonoticLanguageList).setSelected(me, i);
 			break;
 		}
@@ -120,14 +114,13 @@ void XonoticLanguageList_doubleClickListBoxItem(entity me, float i, vector where
 
 float XonoticLanguageList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER)
-	{
+	if (scan == K_ENTER || scan == K_KP_ENTER) {
 		m_play_click_sound(MENU_SOUND_EXECUTE);
 		me.setLanguage(me);
 		return 1;
-	}
-	else
+	} else {
 		return SUPER(XonoticLanguageList).keyDown(me, scan, ascii, shift);
+	}
 }
 
 void XonoticLanguageList_destroy(entity me)
@@ -144,17 +137,18 @@ void XonoticLanguageList_getLanguages(entity me)
 
 	fh = fopen("languages.txt", FILE_READ);
 	i = 0;
-	while((s = fgets(fh)))
-	{
+	while ((s = fgets(fh))) {
 		n = tokenize_console(s);
-		if(n < 3)
+		if (n < 3) {
 			continue;
+		}
 		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_ID, argv(0));
 		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_NAME, argv(1));
 		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_NAME_LOCALIZED, argv(2));
 		string percent = argv(3);
-		if(percent && percent != "100%")
+		if (percent && percent != "100%") {
 			bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_PERCENTAGE, percent);
+		}
 		++i;
 	}
 	fclose(fh);
@@ -165,12 +159,12 @@ void XonoticLanguageList_getLanguages(entity me)
 
 void XonoticLanguageList_setLanguage(entity me)
 {
-	if(prvm_language != cvar_string("_menu_prvm_language"))
-	{
-		if(!(gamestatus & GAME_CONNECTED))
+	if (prvm_language != cvar_string("_menu_prvm_language")) {
+		if (!(gamestatus & GAME_CONNECTED)) {
 			localcmd("\nprvm_language \"$_menu_prvm_language\"; menu_restart; menu_cmd languageselect\n");
-		else
+		} else {
 			DialogOpenButton_Click(me, main.languageWarningDialog);
+		}
 	}
 }
 

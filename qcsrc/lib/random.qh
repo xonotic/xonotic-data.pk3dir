@@ -21,12 +21,12 @@ void RandomSelection_Add(entity e, float f, string s, vector v, float weight, fl
 #define USE_PRANDOM
 
 #ifdef USE_PRANDOM
-	float prandom();
-	vector prandomvec();
+float prandom();
+vector prandomvec();
 
-	void psrandom(float seed);
+void psrandom(float seed);
 	#ifdef USE_PRANDOM_DEBUG
-		void prandom_debug();
+void prandom_debug();
 	#else
 		#define prandom_debug()
 	#endif

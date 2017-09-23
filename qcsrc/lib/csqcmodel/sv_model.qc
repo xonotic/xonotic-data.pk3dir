@@ -36,14 +36,14 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 	WriteInt24_t(MSG_ENTITY, sf);
 	WriteByte(MSG_ENTITY, isplayer);
 
-#define CSQCMODEL_IF(cond) if(cond) {
-#define CSQCMODEL_ENDIF }
-#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
-	if(sf & flag) \
-	{ \
+#define CSQCMODEL_IF(cond) if (cond) {
+#define CSQCMODEL_ENDIF \
+	}
+#define CSQCMODEL_PROPERTY(flag, t, r, w, f) \
+	if (sf & flag) { \
 		w(MSG_ENTITY, this.csqcmodel_##f); \
 	}
-#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
+#define CSQCMODEL_PROPERTY_SCALED(flag, t, r, w, f, s, mi, ma) CSQCMODEL_PROPERTY(flag, t, r, w, f)
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY
@@ -60,45 +60,41 @@ void CSQCModel_CheckUpdate(entity e)
 {
 	// some nice flags for CSQCMODEL_IF
 	noref float isplayer = IS_CLIENT(e);
-	noref float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
+	noref float islocalplayer = isplayer;   // we set BOTH to 1 here as we need the sendflags
 	noref float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 
 #if CSQCPLAYER_FORCE_UPDATES
-	if(isplayer && time > e.csqcmodel_nextforcedupdate)
-	{
+	if (isplayer && time > e.csqcmodel_nextforcedupdate) {
 		e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
 		e.csqcmodel_nextforcedupdate = time + (1 / (CSQCPLAYER_FORCE_UPDATES)) * (0.5 + random()); // ensure about 4 origin sends per sec
 	}
 #endif
 
-	if(e.effects & EF_RESTARTANIM_BIT)
-	{
+	if (e.effects & EF_RESTARTANIM_BIT) {
 		e.SendFlags |= CSQCMODEL_PROPERTY_FRAME | CSQCMODEL_PROPERTY_FRAME2; // full anim resend please
 		e.effects &= ~EF_RESTARTANIM_BIT;
 	}
 
-	if(e.effects & EF_TELEPORT_BIT)
-	{
+	if (e.effects & EF_TELEPORT_BIT) {
 		e.SendFlags |= CSQCMODEL_PROPERTY_TELEPORTED; // no interpolation please
 		e.effects &= ~EF_TELEPORT_BIT;
 	}
 
-#define CSQCMODEL_IF(cond) if(cond) {
-#define CSQCMODEL_ENDIF }
-#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
+#define CSQCMODEL_IF(cond) if (cond) {
+#define CSQCMODEL_ENDIF \
+	}
+#define CSQCMODEL_PROPERTY(flag, t, r, w, f) \
 	{ \
 		t tmp = e.f; \
-		if(tmp != e.csqcmodel_##f) \
-		{ \
+		if (tmp != e.csqcmodel_##f) { \
 			e.csqcmodel_##f = tmp; \
 			e.SendFlags |= flag; \
 		} \
 	}
-#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
+#define CSQCMODEL_PROPERTY_SCALED(flag, t, r, w, f, s, mi, ma) \
 	{ \
 		t tmp = rint(bound(mi, s * e.f, ma) - mi); \
-		if(tmp != e.csqcmodel_##f) \
-		{ \
+		if (tmp != e.csqcmodel_##f) { \
 			e.csqcmodel_##f = tmp; \
 			e.SendFlags |= flag; \
 		} \

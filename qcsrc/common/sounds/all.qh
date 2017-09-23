@@ -7,14 +7,18 @@ REGISTRY(Sounds, BITS(9))
 REGISTER_REGISTRY(Sounds)
 
 #define SOUND(name, path) \
-    string SND_##name##_get() { return path; } \
-    REGISTER(Sounds, SND, name, m_id, NEW(Sound, SND_##name##_get))
+	string SND_##name##_get() \
+	{ \
+		return path; \
+	} \
+	REGISTER(Sounds, SND, name, m_id, NEW(Sound, SND_##name##_get))
 
 /** @deprecated Used in places where a string is required for legacy reasons, prefer using SND_id constants instead */
 #define SND(id) Sound_fixpath(SND_##id)
 
-PRECACHE(Sounds) {
-    FOREACH(Sounds, true, it.sound_precache(it));
+PRECACHE(Sounds)
+{
+	FOREACH(Sounds, true, it.sound_precache(it));
 }
 
 SOUND(Null, "misc/null");

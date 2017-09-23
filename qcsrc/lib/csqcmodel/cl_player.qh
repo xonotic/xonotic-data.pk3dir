@@ -32,8 +32,8 @@ const int CSQCPLAYERSTATUS_PREDICTED = 2;
 // only ever READ these!
 .int pmove_flags;
 const int PMF_JUMP_HELD = 1;
-//const int PMF_DUCKED = 4;
-//const int PMF_ONGROUND = 8;
+// const int PMF_DUCKED = 4;
+// const int PMF_ONGROUND = 8;
 
 const int FL_DUCKED = 524288;
 

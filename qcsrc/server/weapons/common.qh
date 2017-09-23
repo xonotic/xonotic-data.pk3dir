@@ -1,6 +1,6 @@
 #pragma once
 
-void W_GiveWeapon (entity e, float wep);
+void W_GiveWeapon(entity e, float wep);
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
 void W_PlayStrengthSound(entity player);

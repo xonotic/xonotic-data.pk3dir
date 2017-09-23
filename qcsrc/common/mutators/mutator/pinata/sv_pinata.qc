@@ -7,18 +7,21 @@ MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot) {
 		.entity weaponentity = weaponentities[slot];
 
-		if(frag_target.(weaponentity).m_weapon == WEP_Null)
+		if (frag_target.(weaponentity).m_weapon == WEP_Null) {
 			continue;
+		}
 
 		FOREACH(Weapons, it != WEP_Null, {
-			if(frag_target.weapons & WepSet_FromWeapon(it))
-			if(frag_target.(weaponentity).m_weapon != it)
-			if(W_IsWeaponThrowable(frag_target, it.m_id))
-				W_ThrowNewWeapon(frag_target, it.m_id, false, CENTER_OR_VIEWOFS(frag_target), randomvec() * 175 + '0 0 325', weaponentity);
+			if (frag_target.weapons & WepSet_FromWeapon(it)) {
+				if (frag_target.(weaponentity).m_weapon != it) {
+					if (W_IsWeaponThrowable(frag_target, it.m_id)) {
+						W_ThrowNewWeapon(frag_target, it.m_id, false, CENTER_OR_VIEWOFS(frag_target), randomvec() * 175 + '0 0 325', weaponentity);
+					}
+				}
+			}
 		});
 	}
 

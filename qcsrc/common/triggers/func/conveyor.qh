@@ -1,4 +1,7 @@
 #pragma once
 
 IntrusiveList g_conveyed;
-STATIC_INIT(g_conveyed) { g_conveyed = IL_NEW(); }
+STATIC_INIT(g_conveyed)
+{
+	g_conveyed = IL_NEW();
+}

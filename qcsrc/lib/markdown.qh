@@ -14,7 +14,7 @@ string markdown(string s)
 	FOREACH_CHAR(s, true, {
 		switch (it) {
 			default:
-				for (; spaces > 0; --spaces) {
+				for ( ; spaces > 0; --spaces) {
 					buf = strcat(buf, " ");
 				}
 				buf = strcat(buf, chr2str(it));
@@ -44,7 +44,8 @@ string markdown(string s)
 
 TEST(Markdown, LineWrap)
 {
-	#define X(expect, in) MACRO_BEGIN \
+	#define X(expect, in) \
+	MACRO_BEGIN \
 		string out = markdown(in); \
 		EXPECT_TRUE(expect == out); \
 		LOG_INFO(expect); \

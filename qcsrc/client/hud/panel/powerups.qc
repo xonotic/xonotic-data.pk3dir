@@ -20,21 +20,25 @@ int powerupItemsCount;
 void resetPowerupItems()
 {
 	entity item;
-	for(item = powerupItems; item; item = item.chain)
+	for (item = powerupItems; item; item = item.chain) {
 		item.count = 0;
+	}
 
 	powerupItemsCount = 0;
 }
 
 void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime)
 {
-	if(!powerupItems)
+	if (!powerupItems) {
 		powerupItems = spawn();
+	}
 
 	entity item;
-	for(item = powerupItems; item.count; item = item.chain)
-		if(!item.chain)
+	for (item = powerupItems; item.count; item = item.chain) {
+		if (!item.chain) {
 			item.chain = spawn();
+		}
+	}
 
 	item.message  = name;
 	item.netname  = icon;
@@ -47,17 +51,23 @@ void addPowerupItem(string name, string icon, vector color, float currentTime, f
 
 int getPowerupItemAlign(int align, int column, int row, int columns, int rows, bool isVertical)
 {
-    TC(int, align); TC(int, column); TC(int, row); TC(int, columns); TC(int, rows); TC(bool, isVertical);
-	if(align < 2)
+	TC(int, align);
+	TC(int, column);
+	TC(int, row);
+	TC(int, columns);
+	TC(int, rows);
+	TC(bool, isVertical);
+	if (align < 2) {
 		return align;
+	}
 
 	bool isTop    =  isVertical && rows > 1 && row == 0;
-	bool isBottom =  isVertical && rows > 1 && row == rows-1;
+	bool isBottom =  isVertical && rows > 1 && row == rows - 1;
 	bool isLeft   = !isVertical && columns > 1 && column == 0;
-	bool isRight  = !isVertical && columns > 1 && column == columns-1;
+	bool isRight  = !isVertical && columns > 1 && column == columns - 1;
 
-	if(isTop    || isLeft)  return (align == 2) ? 1 : 0;
-	if(isBottom || isRight) return (align == 2) ? 0 : 1;
+	if (isTop    || isLeft) { return (align == 2) ? 1 : 0; }
+	if (isBottom || isRight) { return (align == 2) ? 0 : 1; }
 
 	return 2;
 }
@@ -69,27 +79,28 @@ void HUD_Powerups()
 	float strengthTime, shieldTime, superTime;
 
 	// Initialize items
-	if(!autocvar__hud_configure)
-	{
-		if((!autocvar_hud_panel_powerups) || (spectatee_status == -1))
+	if (!autocvar__hud_configure) {
+		if ((!autocvar_hud_panel_powerups) || (spectatee_status == -1)) {
 			return;
-		if(STAT(HEALTH) <= 0 && autocvar_hud_panel_powerups_hide_ondeath)
+		}
+		if (STAT(HEALTH) <= 0 && autocvar_hud_panel_powerups_hide_ondeath) {
 			return;
-		//if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
+		}
+		// if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);
 		shieldTime = bound(0, STAT(INVINCIBLE_FINISHED) - time, 99);
 		superTime = bound(0, STAT(SUPERWEAPONS_FINISHED) - time, 99);
 
-		if(allItems & IT_UNLIMITED_SUPERWEAPONS)
+		if (allItems & IT_UNLIMITED_SUPERWEAPONS) {
 			superTime = 99;
+		}
 
 		// Prevent stuff to show up on mismatch that will be fixed next frame
-		if(!(allItems & IT_SUPERWEAPON))
+		if (!(allItems & IT_SUPERWEAPON)) {
 			superTime = 0;
-	}
-	else
-	{
+		}
+	} else {
 		strengthTime = 15;
 		shieldTime = 27;
 		superTime = 13;
@@ -99,25 +110,30 @@ void HUD_Powerups()
 	// Add items to linked list
 	resetPowerupItems();
 
-	if(strengthTime)
+	if (strengthTime) {
 		addPowerupItem("Strength", "strength", autocvar_hud_progressbar_strength_color, strengthTime, 30);
-	if(shieldTime)
+	}
+	if (shieldTime) {
 		addPowerupItem("Shield", "shield", autocvar_hud_progressbar_shield_color, shieldTime, 30);
-	if(superTime)
+	}
+	if (superTime) {
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
+	}
 
 	MUTATOR_CALLHOOK(HUD_Powerups_add);
 
-	if(!powerupItemsCount)
+	if (!powerupItemsCount) {
 		return;
+	}
 
 	// Draw panel background
 	HUD_Panel_LoadCvars();
 
-	if (autocvar_hud_panel_powerups_dynamichud)
+	if (autocvar_hud_panel_powerups_dynamichud) {
 		HUD_Scale_Enable();
-	else
+	} else {
 		HUD_Scale_Disable();
+	}
 	HUD_Panel_DrawBg();
 
 	// Set drawing area
@@ -125,8 +141,7 @@ void HUD_Powerups()
 	vector size = panel_size;
 	bool isVertical = size.y > size.x;
 
-	if(panel_bg_padding)
-	{
+	if (panel_bg_padding) {
 		pos += '1 1 0' * panel_bg_padding;
 		size -= '2 2 0' * panel_bg_padding;
 	}
@@ -138,31 +153,24 @@ void HUD_Powerups()
 	int rows = 0, r;
 	int i = 1;
 
-	do
-	{
+	do {
 		c = floor(powerupItemsCount / i);
 		r = ceil(powerupItemsCount / c);
-		a = isVertical ? (size.y/r) / (size.x/c) : (size.x/c) / (size.y/r);
+		a = isVertical ? (size.y / r) / (size.x / c) : (size.x / c) / (size.y / r);
 
-		if(i == 1 || fabs(DESIRED_ASPECT - a) < fabs(DESIRED_ASPECT - aspect))
-		{
+		if (i == 1 || fabs(DESIRED_ASPECT - a) < fabs(DESIRED_ASPECT - aspect)) {
 			aspect = a;
 			columns = c;
 			rows = r;
 		}
-	}
-	while(++i <= powerupItemsCount);
+	} while (++i <= powerupItemsCount);
 
 	// Prevent single items from getting too wide
-	if(powerupItemsCount == 1 && aspect > DESIRED_ASPECT)
-	{
-		if(isVertical)
-		{
+	if (powerupItemsCount == 1 && aspect > DESIRED_ASPECT) {
+		if (isVertical) {
 			size.y *= 0.5;
 			pos.y += size.y * 0.5;
-		}
-		else
-		{
+		} else {
 			size.x *= 0.5;
 			pos.x += size.x * 0.5;
 		}
@@ -179,43 +187,37 @@ void HUD_Powerups()
 	int row = 0;
 
 	draw_beginBoldFont();
-	for(entity item = powerupItems; item.count; item = item.chain)
-	{
+	for (entity item = powerupItems; item.count; item = item.chain) {
 		itemPos = vec2(pos.x + column * itemSize.x, pos.y + row * itemSize.y);
 
 		// Draw progressbar
-		if(autocvar_hud_panel_powerups_progressbar)
-		{
+		if (autocvar_hud_panel_powerups_progressbar) {
 			align = getPowerupItemAlign(autocvar_hud_panel_powerups_baralign, column, row, columns, rows, isVertical);
 			HUD_Panel_DrawProgressBar(itemPos, itemSize, "progressbar", item.count / item.lifetime, isVertical, align, item.colormod, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 
 		// Draw icon and text
-		if(autocvar_hud_panel_powerups_text)
-		{
+		if (autocvar_hud_panel_powerups_text) {
 			align = getPowerupItemAlign(autocvar_hud_panel_powerups_iconalign, column, row, columns, rows, isVertical);
 			fullSeconds = ceil(item.count);
 			textColor = '0.6 0.6 0.6' + (item.colormod * 0.4);
 
-			if(item.count > 1)
+			if (item.count > 1) {
 				DrawNumIcon(itemPos, itemSize, fullSeconds, item.netname, isVertical, align, textColor, panel_fg_alpha);
-			if(item.count <= 5)
+			}
+			if (item.count <= 5) {
 				DrawNumIcon_expanding(itemPos, itemSize, fullSeconds, item.netname, isVertical, align, textColor, panel_fg_alpha, bound(0, (fullSeconds - item.count) / 0.5, 1));
+			}
 		}
 
 		// Determine next section
-		if(isVertical)
-		{
-			if(++column >= columns)
-			{
+		if (isVertical) {
+			if (++column >= columns) {
 				column = 0;
 				++row;
 			}
-		}
-		else
-		{
-			if(++row >= rows)
-			{
+		} else {
+			if (++row >= rows) {
 				row = 0;
 				++column;
 			}

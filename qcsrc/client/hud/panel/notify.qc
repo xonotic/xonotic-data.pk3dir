@@ -7,33 +7,35 @@
 
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
-	if (icon == "")
+	if (icon == "") {
 		return;
+	}
 
 	++notify_count;
 	--notify_index;
 
-	if (notify_index == -1)
-		notify_index = NOTIFY_MAX_ENTRIES-1;
+	if (notify_index == -1) {
+		notify_index = NOTIFY_MAX_ENTRIES - 1;
+	}
 
 	// Free old strings
-	if (notify_attackers[notify_index])
+	if (notify_attackers[notify_index]) {
 		strunzone(notify_attackers[notify_index]);
+	}
 
-	if (notify_victims[notify_index])
+	if (notify_victims[notify_index]) {
 		strunzone(notify_victims[notify_index]);
+	}
 
-	if (notify_icons[notify_index])
+	if (notify_icons[notify_index]) {
 		strunzone(notify_icons[notify_index]);
+	}
 
 	// Allocate new strings
-	if (victim != "")
-	{
+	if (victim != "") {
 		notify_attackers[notify_index] = strzone(attacker);
 		notify_victims[notify_index] = strzone(victim);
-	}
-	else
-	{
+	} else {
 		// In case of a notification without a victim, the attacker
 		// is displayed on the victim's side. Instead of special
 		// treatment later on, we can simply switch them here.
@@ -47,28 +49,32 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void HUD_Notify()
 {
-	if (!autocvar__hud_configure)
-		if (!autocvar_hud_panel_notify)
+	if (!autocvar__hud_configure) {
+		if (!autocvar_hud_panel_notify) {
 			return;
+		}
+	}
 
 	HUD_Panel_LoadCvars();
 
-	if (autocvar_hud_panel_notify_dynamichud)
+	if (autocvar_hud_panel_notify_dynamichud) {
 		HUD_Scale_Enable();
-	else
+	} else {
 		HUD_Scale_Disable();
+	}
 	HUD_Panel_DrawBg();
 
-	if (!autocvar__hud_configure)
-		if (notify_count == 0)
+	if (!autocvar__hud_configure) {
+		if (notify_count == 0) {
 			return;
+		}
+	}
 
 	vector pos, size;
 	pos  = panel_pos;
 	size = panel_size;
 
-	if (panel_bg_padding)
-	{
+	if (panel_bg_padding) {
 		pos  += '1 1 0' * panel_bg_padding;
 		size -= '2 2 0' * panel_bg_padding;
 	}
@@ -95,53 +101,46 @@ void HUD_Notify()
 	int i, j, count, step, limit;
 	float alpha;
 
-	if (autocvar_hud_panel_notify_flip)
-	{
+	if (autocvar_hud_panel_notify_flip) {
 		// Order items from the top down
 		i = 0;
 		step = +1;
 		limit = entry_count;
-	}
-	else
-	{
+	} else {
 		// Order items from the bottom up
 		i = entry_count - 1;
 		step = -1;
 		limit = -1;
 	}
 
-	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
-	{
-		if(autocvar__hud_configure)
-		{
+	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count) {
+		if (autocvar__hud_configure) {
 			attacker = sprintf(_("Player %d"), count + 1);
 			victim = sprintf(_("Player %d"), count + 2);
 			icon = Weapons_from(min(WEP_FIRST + count * 2, WEP_LAST)).model2;
 			alpha = bound(0, 1.2 - count / entry_count, 1);
-		}
-		else
-		{
-			if (j == NOTIFY_MAX_ENTRIES)
+		} else {
+			if (j == NOTIFY_MAX_ENTRIES) {
 				j = 0;
-
-			if (notify_times[j] + fade_start > time)
-				alpha = 1;
-			else if (fade_time != 0)
-			{
-				alpha = bound(0, (notify_times[j] + fade_start + fade_time - time) / fade_time, 1);
-				if (alpha == 0)
-					break;
 			}
-			else
+
+			if (notify_times[j] + fade_start > time) {
+				alpha = 1;
+			} else if (fade_time != 0) {
+				alpha = bound(0, (notify_times[j] + fade_start + fade_time - time) / fade_time, 1);
+				if (alpha == 0) {
+					break;
+				}
+			} else {
 				break;
+			}
 
 			attacker = notify_attackers[j];
 			victim = notify_victims[j];
 			icon = notify_icons[j];
 		}
 
-		if (icon != "" && victim != "")
-		{
+		if (icon != "" && victim != "") {
 			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size.y));
 
 			icon_pos = pos + icon_left + eY * i * entry_height;
@@ -151,8 +150,7 @@ void HUD_Notify()
 			victim_pos = pos + victim_left + name_top;
 			drawcolorcodedstring(victim_pos, victim, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 
-			if (attacker != "")
-			{
+			if (attacker != "") {
 				attacker = textShortenToWidth(ColorTranslateRGB(attacker), name_maxwidth, font_size, stringwidth_colors);
 				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, true, font_size) + name_top;
 				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);

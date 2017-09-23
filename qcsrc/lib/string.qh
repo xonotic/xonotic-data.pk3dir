@@ -5,26 +5,26 @@
 #include "oo.qh"
 
 #ifdef CSQC
-	float stringwidth_colors(string s, vector theSize)
-	{
-		return stringwidth_builtin(s, true, theSize);
-	}
+float stringwidth_colors(string s, vector theSize)
+{
+	return stringwidth_builtin(s, true, theSize);
+}
 
-	float stringwidth_nocolors(string s, vector theSize)
-	{
-		return stringwidth_builtin(s, false, theSize);
-	}
+float stringwidth_nocolors(string s, vector theSize)
+{
+	return stringwidth_builtin(s, false, theSize);
+}
 #endif
 #ifdef MENUQC
-	float stringwidth_colors(string s, vector theSize)
-	{
-		return stringwidth(s, true, theSize);
-	}
+float stringwidth_colors(string s, vector theSize)
+{
+	return stringwidth(s, true, theSize);
+}
 
-	float stringwidth_nocolors(string s, vector theSize)
-	{
-		return stringwidth(s, false, theSize);
-	}
+float stringwidth_nocolors(string s, vector theSize)
+{
+	return stringwidth(s, false, theSize);
+}
 #endif
 
 ERASEABLE
@@ -45,8 +45,7 @@ string format_time(float seconds)
 	seconds -= hours * 36000;
 	float minutes = floor(seconds / 600);
 	seconds -= minutes * 600;
-	if (days > 0) return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
-	else return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+	if (days > 0) { return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds); } else { return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds); }
 }
 
 ERASEABLE
@@ -109,7 +108,7 @@ string CCR(string input)
 
 	// background colors
 	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
-	input = strreplace("^N", "^7", input);  // "none"-- reset to white...
+	input = strreplace("^N", "^7", input); // "none"-- reset to white...
 	return input;
 }
 #endif
@@ -129,7 +128,7 @@ noref string _endsWith_suffix;
 ERASEABLE
 string fstrunzone(string s)
 {
-	if (!s) return s;
+	if (!s) { return s; }
 	string sc = strcat(s, "");
 	strunzone(s);
 	return sc;
@@ -140,7 +139,7 @@ ERASEABLE
 string car(string s)
 {
 	int o = strstrofs(s, " ", 0);
-	if (o < 0) return s;
+	if (o < 0) { return s; }
 	return substring(s, 0, o);
 }
 
@@ -149,15 +148,15 @@ ERASEABLE
 string cdr(string s)
 {
 	int o = strstrofs(s, " ", 0);
-	if (o < 0) return string_null;
+	if (o < 0) { return string_null; }
 	return substring(s, o + 1, strlen(s) - (o + 1));
 }
 
 ERASEABLE
 string cons(string a, string b)
 {
-	if (a == "") return b;
-	if (b == "") return a;
+	if (a == "") { return b; }
+	if (b == "") { return a; }
 	return strcat(a, " ", b);
 }
 
@@ -173,7 +172,7 @@ string swapwords(string str, float i, float j)
 	float n;
 	string s1, s2, s3, s4, s5;
 	float si, ei, sj, ej, s0, en;
-	n = tokenizebyseparator(str, " ");  // must match g_maplist processing in ShuffleMaplist and "shuffle"
+	n = tokenizebyseparator(str, " "); // must match g_maplist processing in ShuffleMaplist and "shuffle"
 	si = argv_start_index(i);
 	sj = argv_start_index(j);
 	ei = argv_end_index(i);
@@ -209,19 +208,17 @@ string shufflewords(string str)
 ERASEABLE
 string unescape(string in)
 {
-	in = strzone(in);  // but it doesn't seem to be necessary in my tests at least
+	in = strzone(in); // but it doesn't seem to be necessary in my tests at least
 
 	int len = strlen(in);
 	string str = "";
-	for (int i = 0; i < len; ++i)
-	{
+	for (int i = 0; i < len; ++i) {
 		string s = substring(in, i, 1);
-		if (s == "\\")
-		{
+		if (s == "\\") {
 			s = substring(in, i + 1, 1);
-			if (s == "n") str = strcat(str, "\n");
-			else if (s == "\\") str = strcat(str, "\\");
-			else str = strcat(str, substring(in, i, 2));
+			if (s == "n") { str = strcat(str, "\n"); } else if (s == "\\") {
+				str = strcat(str, "\\");
+			} else { str = strcat(str, substring(in, i, 2)); }
 			++i;
 			continue;
 		}
@@ -235,9 +232,10 @@ ERASEABLE
 string strwords(string s, int w)
 {
 	int endpos = 0;
-	for ( ; w && endpos >= 0; --w)
+	for ( ; w && endpos >= 0; --w) {
 		endpos = strstrofs(s, " ", endpos + 1);
-	if (endpos < 0) return s;
+	}
+	if (endpos < 0) { return s; }
 	return substring(s, 0, endpos);
 }
 
@@ -247,8 +245,7 @@ ERASEABLE
 int u8_strsize(string s)
 {
 	int l = 0;
-	for (int i = 0, c; (c = str2chr(s, i)) > 0; ++i, ++l)
-	{
+	for (int i = 0, c; (c = str2chr(s, i)) > 0; ++i, ++l) {
 		l += (c >= 0x80);
 		l += (c >= 0x800);
 		l += (c >= 0x10000);
@@ -261,20 +258,18 @@ bool isInvisibleString(string s)
 {
 	s = strdecolorize(s);
 	bool utf8 = cvar("utf8_enable");
-	for (int i = 0, n = strlen(s); i < n; ++i)
-	{
+	for (int i = 0, n = strlen(s); i < n; ++i) {
 		int c = str2chr(s, i);
-		switch (c)
-		{
+		switch (c) {
 			case 0:
 			case 32:           // space
 				break;
 			case 192:          // charmap space
-				if (!utf8) break;
+				if (!utf8) { break; }
 				return false;
 			case 160:          // space in unicode fonts
 			case 0xE000 + 192: // utf8 charmap space
-				if (utf8) break;
+				if (utf8) { break; }
 			default:
 				return false;
 		}
@@ -288,16 +283,16 @@ ERASEABLE
 int buf_load(string pFilename)
 {
 	int buf = buf_create();
-	if (buf < 0) return -1;
+	if (buf < 0) { return -1; }
 	int fh = fopen(pFilename, FILE_READ);
-	if (fh < 0)
-	{
+	if (fh < 0) {
 		buf_del(buf);
 		return -1;
 	}
 	string l;
-	for (int i = 0; (l = fgets(fh)); ++i)
+	for (int i = 0; (l = fgets(fh)); ++i) {
 		bufstr_set(buf, i, l);
+	}
 	fclose(fh);
 	return buf;
 }
@@ -306,10 +301,11 @@ ERASEABLE
 void buf_save(float buf, string pFilename)
 {
 	int fh = fopen(pFilename, FILE_WRITE);
-	if (fh < 0) error(strcat("Can't write buf to ", pFilename));
+	if (fh < 0) { error(strcat("Can't write buf to ", pFilename)); }
 	int n = buf_getsize(buf);
-	for (int i = 0; i < n; ++i)
+	for (int i = 0; i < n; ++i) {
 		fputs(fh, strcat(bufstr_get(buf, i), "\n"));
+	}
 	fclose(fh);
 }
 
@@ -320,7 +316,7 @@ ERASEABLE
 string ftos_decimals(float number, int decimals)
 {
 	// inhibit stupid negative zero
-	if (number == 0) number = 0;
+	if (number == 0) { number = 0; }
 	return sprintf("%.*f", decimals, number);
 }
 
@@ -331,7 +327,7 @@ ERASEABLE
 string ftos_mindecimals(float number)
 {
 	// inhibit stupid negative zero
-	if (number == 0) number = 0;
+	if (number == 0) { number = 0; }
 	return sprintf("%.7g", number);
 }
 
@@ -345,23 +341,23 @@ int vercmp_recursive(string v1, string v2)
 
 	float r;
 	r = stof(s1) - stof(s2);
-	if (r != 0) return r;
+	if (r != 0) { return r; }
 
 	r = strcasecmp(s1, s2);
-	if (r != 0) return r;
+	if (r != 0) { return r; }
 
-	if (dot1 == -1) return (dot2 == -1) ? 0 : -1;
-	else return (dot2 == -1) ? 1 : vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
+	if (dot1 == -1) { return (dot2 == -1) ? 0 : -1; } else { return (dot2 == -1) ? 1 : vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999)); }
 }
 
 ERASEABLE
 int vercmp(string v1, string v2)
 {
-	if (strcasecmp(v1, v2) == 0) return 0;  // early out check
-
+	if (strcasecmp(v1, v2) == 0) {
+		return 0; // early out check
+	}
 	// "git" beats all
-	if (v1 == "git") return 1;
-	if (v2 == "git") return -1;
+	if (v1 == "git") { return 1; }
+	if (v2 == "git") { return -1; }
 
 	return vercmp_recursive(v1, v2);
 }

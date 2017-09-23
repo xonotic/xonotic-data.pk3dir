@@ -1,19 +1,19 @@
 #pragma once
 
 #ifdef SVQC
-    // For FL_POWERUP
-    #include <server/constants.qh>
+// For FL_POWERUP
+	#include <server/constants.qh>
 #endif
 
 #include "pickup.qh"
 CLASS(Powerup, Pickup)
 #ifdef SVQC
-    ATTRIB(Powerup, m_mins, vector, '-16 -16 0');
-    ATTRIB(Powerup, m_maxs, vector, '16 16 80');
-    ATTRIB(Powerup, m_botvalue, int, 20000);
-    ATTRIB(Powerup, m_itemflags, int, FL_POWERUP);
-    ATTRIB(Powerup, m_respawntime, float(), GET(g_pickup_respawntime_powerup));
-    ATTRIB(Powerup, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_powerup));
+	ATTRIB(Powerup, m_mins, vector, '-16 -16 0');
+	ATTRIB(Powerup, m_maxs, vector, '16 16 80');
+	ATTRIB(Powerup, m_botvalue, int, 20000);
+	ATTRIB(Powerup, m_itemflags, int, FL_POWERUP);
+	ATTRIB(Powerup, m_respawntime, float(), GET(g_pickup_respawntime_powerup));
+	ATTRIB(Powerup, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_powerup));
 #endif
 ENDCLASS(Powerup)
 
@@ -26,26 +26,28 @@ SOUND(Strength, Item_Sound("powerup"));
 float autocvar_g_balance_powerup_strength_time;
 void powerup_strength_init(entity item)
 {
-    if(!item.strength_finished)
-        item.strength_finished = autocvar_g_balance_powerup_strength_time;
+	if (!item.strength_finished) {
+		item.strength_finished = autocvar_g_balance_powerup_strength_time;
+	}
 }
 #endif
-REGISTER_ITEM(Strength, Powerup) {
+REGISTER_ITEM(Strength, Powerup)
+{
 #ifdef GAMEQC
-    this.m_model            =   MDL_Strength_ITEM;
-    this.m_sound            =   SND_Strength;
-    this.m_glow             =   true;
-    this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
+	this.m_model            =   MDL_Strength_ITEM;
+	this.m_sound            =   SND_Strength;
+	this.m_glow             =   true;
+	this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
 #endif
-    this.netname            =   "strength";
-    this.m_name             =   "Strength Powerup";
-    this.m_icon             =   "strength";
-    this.m_color            =   '0 0 1';
-    this.m_waypoint         =   _("Strength");
-    this.m_waypointblink    =   2;
-    this.m_itemid           =   IT_STRENGTH;
+	this.netname            =   "strength";
+	this.m_name             =   "Strength Powerup";
+	this.m_icon             =   "strength";
+	this.m_color            =   '0 0 1';
+	this.m_waypoint         =   _("Strength");
+	this.m_waypointblink    =   2;
+	this.m_itemid           =   IT_STRENGTH;
 #ifdef SVQC
-    this.m_iteminit         =   powerup_strength_init;
+	this.m_iteminit         =   powerup_strength_init;
 #endif
 }
 
@@ -58,25 +60,27 @@ SOUND(Shield, Item_Sound("powerup_shield"));
 float autocvar_g_balance_powerup_invincible_time;
 void powerup_shield_init(entity item)
 {
-    if(!item.invincible_finished)
-        item.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	if (!item.invincible_finished) {
+		item.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	}
 }
 #endif
-REGISTER_ITEM(Shield, Powerup) {
+REGISTER_ITEM(Shield, Powerup)
+{
 #ifdef GAMEQC
-    this.m_model            =   MDL_Shield_ITEM;
-    this.m_sound            =   SND_Shield;
-    this.m_glow             =   true;
-    this.m_respawnsound     =   SND_SHIELD_RESPAWN;
+	this.m_model            =   MDL_Shield_ITEM;
+	this.m_sound            =   SND_Shield;
+	this.m_glow             =   true;
+	this.m_respawnsound     =   SND_SHIELD_RESPAWN;
 #endif
-    this.netname            =   "invincible";
-    this.m_name             =   "Shield";
-    this.m_icon             =   "shield";
-    this.m_color            =   '1 0 1';
-    this.m_waypoint         =   _("Shield");
-    this.m_waypointblink    =   2;
-    this.m_itemid           =   IT_INVINCIBLE;
+	this.netname            =   "invincible";
+	this.m_name             =   "Shield";
+	this.m_icon             =   "shield";
+	this.m_color            =   '1 0 1';
+	this.m_waypoint         =   _("Shield");
+	this.m_waypointblink    =   2;
+	this.m_itemid           =   IT_INVINCIBLE;
 #ifdef SVQC
-    this.m_iteminit         =   powerup_shield_init;
+	this.m_iteminit         =   powerup_shield_init;
 #endif
 }

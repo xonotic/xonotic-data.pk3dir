@@ -11,6 +11,6 @@ CLASS(Hellion, Turret)
 /* head_model */ ATTRIB_STRZONE(Hellion, head_model, string, strcat("models/turrets/", "hellion.md3"));
 /* netname    */ ATTRIB(Hellion, netname, string, "hellion");
 /* fullname   */ ATTRIB(Hellion, turret_name, string, _("Hellion Missile Turret"));
-    ATTRIB(Hellion, m_weapon, Weapon, WEP_HELLION);
+	ATTRIB(Hellion, m_weapon, Weapon, WEP_HELLION);
 ENDCLASS(Hellion)
 REGISTER_TURRET(HELLION, NEW(Hellion));

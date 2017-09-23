@@ -31,7 +31,7 @@ float GenericCommand(string command);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 #define CMD_Write(s) fputs(fh, s)
-#define CMD_Write_Alias(execute,command,description) CMD_Write(sprintf("alias %-20s \"%-13s %-20s ${* ?}\" // %s\n", command, execute, command, description))
+#define CMD_Write_Alias(execute, command, description) CMD_Write(sprintf("alias %-20s \"%-13s %-20s ${* ?}\" // %s\n", command, execute, command, description))
 void GenericCommand_macro_write_aliases(float fh);
 
 void Curl_URI_Get_Callback(int id, float status, string data);

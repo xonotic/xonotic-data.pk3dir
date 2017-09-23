@@ -1,9 +1,9 @@
 #pragma once
 
 #ifndef QCC_SUPPORT_BOOL
-	// Boolean Constants
-	const int true  = 1;
-	const int false = 0;
+// Boolean Constants
+const int true  = 1;
+const int false = 0;
 #endif
 
 #define boolean(value) ((value) != 0)
@@ -12,8 +12,7 @@
 ERASEABLE
 float InterpretBoolean(string input)
 {
-	switch (strtolower(input))
-	{
+	switch (strtolower(input)) {
 		case "yes":
 		case "true":
 		case "on":

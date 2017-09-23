@@ -5,8 +5,9 @@
 /** Use UpperCamelCase for suite and test only */
 #define TEST(suite, test) \
 	void _TEST_##suite##_##test(); \
-	[[accumulate]] int TEST_RunAll_accumulated(int f) { \
-		if (!TEST_Run(#suite "_" #test)) ++f; \
+	[[accumulate]] int TEST_RunAll_accumulated(int f) \
+	{ \
+		if (!TEST_Run( #suite "_" #test)) { ++f; } \
 		return = f; \
 	} \
 	void _TEST_##suite##_##test()
@@ -26,18 +27,19 @@ bool RUN_ALL_TESTS();
 
 // difference between expect/assert: assert returns early
 
-#define EXPECT_EQ(expected_, actual_) MACRO_BEGIN \
-	int expected = expected_; \
-	int actual = actual_; \
-	if ((expected) != (actual)) { \
-		ADD_FAILURE(sprintf( \
-			"Value of: " #actual_ "\n" \
-			"  Actual: %d\n" \
-			"Expected: %d\n", \
-			actual, expected \
-		)); \
-	} \
-MACRO_END
+#define EXPECT_EQ(expected_, actual_) \
+	MACRO_BEGIN \
+		int expected = expected_; \
+		int actual = actual_; \
+		if ((expected) != (actual)) { \
+			ADD_FAILURE(sprintf( \
+				"Value of: " #actual_ "\n" \
+				"  Actual: %d\n" \
+				"Expected: %d\n", \
+				actual, expected \
+				)); \
+		} \
+	MACRO_END
 #define ASSERT_EQ(expected, actual) _TEST_ASSERT(EXPECT_EQ(expected, actual))
 
 #define EXPECT_TRUE(condition) EXPECT_EQ(true, condition)
@@ -61,7 +63,7 @@ MACRO_END
 #define EXPECT_GE(val1, val2) EXPECT_TRUE((val1) >= (val2))
 #define ASSERT_GE(val1, val2) _TEST_ASSERT(EXPECT_GE(val1, val2))
 
-#define EXPECT_NO_FATAL_FAILURE(statement) EXPECT_NO_FATAL_FAILURE_(statement, { })
+#define EXPECT_NO_FATAL_FAILURE(statement) EXPECT_NO_FATAL_FAILURE_(statement, {})
 #define ASSERT_NO_FATAL_FAILURE(statement) EXPECT_NO_FATAL_FAILURE_(statement, { ++TEST_fatal; return; })
 
 // private:
@@ -81,16 +83,17 @@ int TEST_failed;
 	MACRO_BEGIN \
 		int TEST_prevfatal = TEST_fatal; \
 		LAMBDA(statement); \
-		if (TEST_fatal != TEST_prevfatal) \
+		if (TEST_fatal != TEST_prevfatal) { \
 			LAMBDA(then); \
+		} \
 	MACRO_END
 
 #define EXPECT_NO_FATAL_FAILURE_(statement, then) \
 	EXPECT_NO_FATAL_FAILURE__(statement, { \
 		LOG_WARNF( \
-			"  Actual: %d fatal failures\n" \
-			"Expected: no fatal failures\n", \
-			TEST_fatal - TEST_prevfatal \
+		"  Actual: %d fatal failures\n" \
+		"Expected: no fatal failures\n", \
+		TEST_fatal - TEST_prevfatal \
 		); \
 		LAMBDA(then); \
 	})

@@ -12,7 +12,7 @@ REGISTRY(Effects, BITS(8))
 REGISTER_REGISTRY(Effects)
 REGISTRY_CHECK(Effects)
 #define EFFECT(istrail, name, realname) \
-    REGISTER(Effects, EFFECT, name, m_id, Create_Effect_Entity(realname, istrail));
+	REGISTER(Effects, EFFECT, name, m_id, Create_Effect_Entity(realname, istrail));
 
 EFFECT(0, Null, string_null)
 #include "all.inc"

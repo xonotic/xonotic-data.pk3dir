@@ -3,8 +3,8 @@
 /*
 
 CORE    laser   vortex     lg      rl      cry     gl      elec    hagar   fireb   hook
-									vaporizer  porto
-									tuba
+                                    vaporizer  porto
+                                    tuba
 
 NEW             rifle   hlac    minel                           seeker
 IDEAS                                   OPEN    flak    OPEN            FUN FUN FUN FUN
@@ -76,21 +76,24 @@ REGISTER_MUTATOR(nt, expr_evaluate(autocvar_g_new_toys) && !cvar("g_instagib") &
 {
 	MUTATOR_ONADD
 	{
-		if(time > 1) // game loads at time 1
+		if (time > 1) { // game loads at time 1
 			error("This cannot be added at runtime\n");
+		}
 
 		// mark the guns as ok to use by e.g. impulse 99
 		FOREACH(Weapons, it != WEP_Null, {
-			if(nt_IsNewToy(it.m_id))
+			if (nt_IsNewToy(it.m_id)) {
 				it.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+			}
 		});
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
 		FOREACH(Weapons, it != WEP_Null, {
-			if(nt_IsNewToy(it.m_id))
+			if (nt_IsNewToy(it.m_id)) {
 				it.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+			}
 		});
 	}
 
@@ -113,8 +116,7 @@ const float NT_AUTOREPLACE_RANDOM = 2;
 
 bool nt_IsNewToy(int w)
 {
-	switch(w)
-	{
+	switch (w) {
 		case WEP_SEEKER.m_id:
 		case WEP_MINE_LAYER.m_id:
 		case WEP_HLAC.m_id:
@@ -128,26 +130,28 @@ bool nt_IsNewToy(int w)
 
 string nt_GetFullReplacement(string w)
 {
-	switch(w)
-	{
+	switch (w) {
 		case "hagar": return "seeker";
 		case "devastator": return "minelayer";
 		case "machinegun": return "hlac";
 		case "vortex": return "rifle";
-		//case "shotgun": return "shockwave";
+		// case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }
 
 string nt_GetReplacement(string w, float m)
 {
-	if(m == NT_AUTOREPLACE_NEVER)
+	if (m == NT_AUTOREPLACE_NEVER) {
 		return w;
+	}
 	string s = nt_GetFullReplacement(w);
-	if (!s)
+	if (!s) {
 		return w;
-	if(m == NT_AUTOREPLACE_RANDOM)
+	}
+	if (m == NT_AUTOREPLACE_RANDOM) {
 		s = strcat(w, " ", s);
+	}
 	return s;
 }
 
@@ -171,15 +175,15 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 		seti = it.m_wepset;
 		n = tokenize_console(nt_GetReplacement(it.netname, autocvar_g_new_toys_autoreplace));
 
-		for(j = 0; j < n; ++j)
+		for (j = 0; j < n; ++j) {
 			FOREACH(Weapons, it != WEP_Null, {
-				if(it.netname == argv(j))
-				{
+				if (it.netname == argv(j)) {
 					WepSet setk = it.m_wepset;
-					if(start_weapons & seti) newdefault |= setk;
-					if(warmup_start_weapons & seti) warmup_newdefault |= setk;
+					if (start_weapons & seti) { newdefault |= setk; }
+					if (warmup_start_weapons & seti) { warmup_newdefault |= setk; }
 				}
 			});
+		}
 	});
 
 	newdefault &= start_weapons_defaultmask;
@@ -198,13 +202,10 @@ MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
 	string ret_string = M_ARGV(2, string);
 
 	// otherwise, we do replace
-	if(wep.new_toys)
-	{
+	if (wep.new_toys) {
 		// map defined replacement:
 		ret_string = wep.new_toys;
-	}
-	else
-	{
+	} else {
 		// auto replacement:
 		ret_string = nt_GetReplacement(wepinfo.netname, autocvar_g_new_toys_autoreplace);
 	}
@@ -219,7 +220,7 @@ MUTATOR_HOOKFUNCTION(nt, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(nt_IsNewToy(item.weapon) && autocvar_g_new_toys_use_pickupsound) {
+	if (nt_IsNewToy(item.weapon) && autocvar_g_new_toys_use_pickupsound) {
 		item.item_pickupsound = string_null;
 		item.item_pickupsound_ent = SND_WEAPONPICKUP_NEW_TOYS;
 	}

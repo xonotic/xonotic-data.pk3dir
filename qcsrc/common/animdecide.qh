@@ -13,7 +13,7 @@ CLASS(Animation, Object)
 	{
 		FOREACH_WORD(this.m_framenames, true, {
 			int f = frameforname(mdlidx, it);
-			if (f != -1) return f;
+			if (f != -1) { return f; }
 		});
 #ifdef CSQC
 		LOG_DEBUGF("Missing animation for %s: %s", modelnameforindex(mdlidx), this.registered_id);
@@ -29,7 +29,8 @@ REGISTER_REGISTRY(Animations)
 #define ReadAnimation() ReadRegistered(Animations)
 #define REGISTER_ANIMATION(id, framenames) \
 	.vector anim_##id; \
-	REGISTER(Animations, ANIM_##id, m_id, NEW(Animation)) { \
+	REGISTER(Animations, ANIM_##id, m_id, NEW(Animation)) \
+	{ \
 		this.m_framenames = framenames; \
 	}
 
@@ -121,9 +122,9 @@ REGISTER_ANIMATION(duckwalkbackleft, "duckwalkbackleft duckbackwardleft groupifi
 
 // explicit anim states (networked)
 void animdecide_setstate(entity e, int newstate, float restart);
-const int ANIMSTATE_DEAD1 = BIT(0); // base frames: die1
-const int ANIMSTATE_DEAD2 = BIT(1); // base frames: die2
-const int ANIMSTATE_DUCK = BIT(2); // turns walk into duckwalk, jump into duckjump, etc.
+const int ANIMSTATE_DEAD1 = BIT(0);  // base frames: die1
+const int ANIMSTATE_DEAD2 = BIT(1);  // base frames: die2
+const int ANIMSTATE_DUCK = BIT(2);   // turns walk into duckwalk, jump into duckjump, etc.
 const int ANIMSTATE_FROZEN = BIT(3); // force idle
 const int ANIMSTATE_FOLLOW = BIT(4); // also force idle
 
@@ -138,7 +139,7 @@ const int ANIMIMPLICITSTATE_JUMPRELEASED = BIT(5);
 // explicit actions (networked); negative values are for lower body
 void animdecide_setaction(entity e, float action, float restart);
 const int ANIMACTION_JUMP = -1; // jump
-const int ANIMACTION_DRAW = 1; // draw
+const int ANIMACTION_DRAW = 1;  // draw
 const int ANIMACTION_PAIN1 = 2; // pain
 const int ANIMACTION_PAIN2 = 3; // pain
 const int ANIMACTION_SHOOT = 4; // shoot

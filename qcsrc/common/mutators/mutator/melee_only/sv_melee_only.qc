@@ -24,8 +24,7 @@ MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	switch (item.itemdef)
-	{
+	switch (item.itemdef) {
 		case ITEM_HealthSmall:
 		case ITEM_ArmorSmall:
 			return false;

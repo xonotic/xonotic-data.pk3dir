@@ -27,28 +27,28 @@ REGISTRY_CHECK(Nades)
 #define REGISTER_NADE(id) REGISTER(Nades, NADE_TYPE, id, m_id, NEW(Nade))
 
 CLASS(Nade, Object)
-    ATTRIB(Nade, m_id, int, 0);
-    ATTRIB(Nade, m_color, vector, '0 0 0');
-    ATTRIB(Nade, m_name, string, _("Grenade"));
-    ATTRIB(Nade, m_icon, string, "nade_normal");
-    ATTRIBARRAY(Nade, m_projectile, int, 2);
-    ATTRIBARRAY(Nade, m_trail, entity, 2);
-    METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
-        returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
-    }
+	ATTRIB(Nade, m_id, int, 0);
+	ATTRIB(Nade, m_color, vector, '0 0 0');
+	ATTRIB(Nade, m_name, string, _("Grenade"));
+	ATTRIB(Nade, m_icon, string, "nade_normal");
+	ATTRIBARRAY(Nade, m_projectile, int, 2);
+	ATTRIBARRAY(Nade, m_trail, entity, 2);
+	METHOD(Nade, display, void(entity this, void(string name, string icon) returns))
+	{
+		returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
+	}
 ENDCLASS(Nade)
 
 REGISTER_NADE(Null);
 
 Nade Nade_FromProjectile(int proj)
 {
-    FOREACH(Nades, true, {
-        for (int j = 0; j < 2; j++)
-        {
-            if (it.m_projectile[j] == proj) return it;
-        }
-    });
-    return NADE_TYPE_Null;
+	FOREACH(Nades, true, {
+		for (int j = 0; j < 2; j++) {
+			if (it.m_projectile[j] == proj) { return it; }
+		}
+	});
+	return NADE_TYPE_Null;
 }
 
 #ifdef GAMEQC
@@ -91,13 +91,13 @@ void nades_GiveBonus(entity player, float score);
  * called to adjust nade damage and force on hit
  */
 #define EV_Nade_Damage(i, o) \
-    /** nade */   i(entity, MUTATOR_ARGV_0_entity) \
- 	/** weapon */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** force */  i(vector, MUTATOR_ARGV_2_vector) \
-    /**/          o(vector, MUTATOR_ARGV_2_vector) \
- 	/** damage */ i(float,  MUTATOR_ARGV_3_float) \
-    /**/          o(float,  MUTATOR_ARGV_3_float) \
-    /**/
+	/** nade */ i(entity, MUTATOR_ARGV_0_entity) \
+	/** weapon */ i(entity, MUTATOR_ARGV_1_entity) \
+	/** force */ i(vector, MUTATOR_ARGV_2_vector) \
+	/**/ o(vector, MUTATOR_ARGV_2_vector) \
+	/** damage */ i(float,  MUTATOR_ARGV_3_float) \
+	/**/ o(float,  MUTATOR_ARGV_3_float) \
+	/**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 
 #endif

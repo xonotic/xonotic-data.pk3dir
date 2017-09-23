@@ -1,11 +1,11 @@
 #include "triggers.qh"
-void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
+void SUB_DontUseTargets(entity this, entity actor, entity trigger) {}
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 void DelayThink(entity this)
 {
-	SUB_UseTargets (this, this.enemy, NULL);
+	SUB_UseTargets(this, this.enemy, NULL);
 	delete(this);
 }
 
@@ -28,22 +28,22 @@ void trigger_init(entity this)
 {
 	string m = this.model;
 	EXACTTRIGGER_INIT;
-	if(autocvar_g_triggers_debug)
-	{
-		if(m != "")
-	 	{
-	 		precache_model(m);
-	 		_setmodel(this, m); // no precision needed
+	if (autocvar_g_triggers_debug) {
+		if (m != "") {
+			precache_model(m);
+			_setmodel(this, m); // no precision needed
 		}
 		setorigin(this, this.origin);
-		if(this.scale)
+		if (this.scale) {
 			setsize(this, this.mins * this.scale, this.maxs * this.scale);
-		else
+		} else {
 			setsize(this, this.mins, this.maxs);
+		}
 	}
 
-	if(autocvar_g_triggers_debug)
+	if (autocvar_g_triggers_debug) {
 		BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
+	}
 }
 
 void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)
@@ -55,14 +55,15 @@ void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendf
 void trigger_common_write(entity this, bool withtarget)
 {
 	int f = 0;
-	if(this.warpzone_isboxy)
+	if (this.warpzone_isboxy) {
 		BITSET_ASSIGN(f, 1);
-	if(this.origin != '0 0 0')
+	}
+	if (this.origin != '0 0 0') {
 		BITSET_ASSIGN(f, 4);
+	}
 	WriteByte(MSG_ENTITY, f);
 
-	if(withtarget)
-	{
+	if (withtarget) {
 		WriteString(MSG_ENTITY, this.target);
 		WriteString(MSG_ENTITY, this.target2);
 		WriteString(MSG_ENTITY, this.target3);
@@ -71,8 +72,7 @@ void trigger_common_write(entity this, bool withtarget)
 		WriteString(MSG_ENTITY, this.killtarget);
 	}
 
-	if(f & 4)
-	{
+	if (f & 4) {
 		WriteCoord(MSG_ENTITY, this.origin.x);
 		WriteCoord(MSG_ENTITY, this.origin.y);
 		WriteCoord(MSG_ENTITY, this.origin.z);
@@ -103,30 +103,28 @@ void trigger_common_read(entity this, bool withtarget)
 	int f = ReadByte();
 	this.warpzone_isboxy = (f & 1);
 
-	if(withtarget)
-	{
-		if(this.target) { strunzone(this.target); }
+	if (withtarget) {
+		if (this.target) { strunzone(this.target); }
 		this.target = strzone(ReadString());
-		if(this.target2) { strunzone(this.target2); }
+		if (this.target2) { strunzone(this.target2); }
 		this.target2 = strzone(ReadString());
-		if(this.target3) { strunzone(this.target3); }
+		if (this.target3) { strunzone(this.target3); }
 		this.target3 = strzone(ReadString());
-		if(this.target4) { strunzone(this.target4); }
+		if (this.target4) { strunzone(this.target4); }
 		this.target4 = strzone(ReadString());
-		if(this.targetname) { strunzone(this.targetname); }
+		if (this.targetname) { strunzone(this.targetname); }
 		this.targetname = strzone(ReadString());
-		if(this.killtarget) { strunzone(this.killtarget); }
+		if (this.killtarget) { strunzone(this.killtarget); }
 		this.killtarget = strzone(ReadString());
 	}
 
-	if(f & 4)
-	{
+	if (f & 4) {
 		this.origin_x = ReadCoord();
 		this.origin_y = ReadCoord();
 		this.origin_z = ReadCoord();
-	}
-	else
+	} else {
 		this.origin = '0 0 0';
+	}
 	setorigin(this, this.origin);
 
 	this.modelindex = ReadShort();
@@ -150,22 +148,22 @@ void trigger_common_read(entity this, bool withtarget)
 
 void trigger_remove_generic(entity this)
 {
-	if(this.target) { strunzone(this.target); }
+	if (this.target) { strunzone(this.target); }
 	this.target = string_null;
 
-	if(this.target2) { strunzone(this.target2); }
+	if (this.target2) { strunzone(this.target2); }
 	this.target2 = string_null;
 
-	if(this.target3) { strunzone(this.target3); }
+	if (this.target3) { strunzone(this.target3); }
 	this.target3 = string_null;
 
-	if(this.target4) { strunzone(this.target4); }
+	if (this.target4) { strunzone(this.target4); }
 	this.target4 = string_null;
 
-	if(this.targetname) { strunzone(this.targetname); }
+	if (this.targetname) { strunzone(this.targetname); }
 	this.target = string_null;
 
-	if(this.killtarget) { strunzone(this.killtarget); }
+	if (this.killtarget) { strunzone(this.killtarget); }
 	this.killtarget = string_null;
 }
 #endif
@@ -185,8 +183,8 @@ Centerprints any this.message to the activator.
 Removes all entities with a targetname that match this.killtarget,
 and removes them, so some events can remove other triggers.
 
-Search for (string)targetname in all entities that
-match (string)this.target and call their .use function
+Search for (string) targetname in all entities that
+match (string) this.target and call their .use function
 
 ==============================
 */
@@ -196,9 +194,8 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 //
 // check for a delay
 //
-	if (this.delay)
-	{
-	// create a temp object to fire at a later time
+	if (this.delay) {
+		// create a temp object to fire at a later time
 		entity t = new(DelayedUse);
 		t.nextthink = time + this.delay;
 		setthink(t, DelayThink);
@@ -219,23 +216,25 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 // print the message
 //
 #ifdef SVQC
-	if(this)
-	if(IS_PLAYER(actor) && this.message != "")
-	if(IS_REAL_CLIENT(actor))
-	{
-		centerprint(actor, this.message);
-		if (this.noise == "")
-			play2(actor, SND(TALK));
+	if (this) {
+		if (IS_PLAYER(actor) && this.message != "") {
+			if (IS_REAL_CLIENT(actor)) {
+				centerprint(actor, this.message);
+				if (this.noise == "") {
+					play2(actor, SND(TALK));
+				}
+			}
+		}
 	}
 
 //
 // kill the killtagets
 //
 	s = this.killtarget;
-	if (s != "")
-	{
-		for(entity t = NULL; (t = find(t, targetname, s)); )
+	if (s != "") {
+		for (entity t = NULL; (t = find(t, targetname, s)); ) {
 			delete(t);
+		}
 	}
 #endif
 
@@ -243,51 +242,50 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 // fire targets
 //
 
-	if(this.target_random)
+	if (this.target_random) {
 		RandomSelection_Init();
+	}
 
-	for(int i = 0; i < 4; ++i)
-	{
-		switch(i)
-		{
+	for (int i = 0; i < 4; ++i) {
+		switch (i) {
 			default:
-			case 0: s = this.target; break;
-			case 1: s = this.target2; break;
-			case 2: s = this.target3; break;
-			case 3: s = this.target4; break;
+			case 0: s = this.target;
+				break;
+			case 1: s = this.target2;
+				break;
+			case 2: s = this.target3;
+				break;
+			case 3: s = this.target4;
+				break;
 		}
-		if (s != "")
-		{
+		if (s != "") {
 			// Flag to set func_clientwall state
 			// 1 == deactivate, 2 == activate, 0 == do nothing
 			int aw_flag = this.antiwall_flag;
-			for(entity t = NULL; (t = find(t, targetname, s)); )
-			{
-				if(t.use && (t.sub_target_used != time || !preventReuse))
-				{
-					if(this.target_random)
-					{
+			for (entity t = NULL; (t = find(t, targetname, s)); ) {
+				if (t.use && (t.sub_target_used != time || !preventReuse)) {
+					if (this.target_random) {
 						RandomSelection_AddEnt(t, 1, 0);
-					}
-					else
-					{
-						if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
+					} else {
+						if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary") {
 							t.antiwall_flag = aw_flag;
+						}
 
 						t.use(t, actor, this);
-						if(preventReuse)
+						if (preventReuse) {
 							t.sub_target_used = time;
+						}
 					}
 				}
 			}
 		}
 	}
 
-	if(this.target_random && RandomSelection_chosen_ent)
-	{
+	if (this.target_random && RandomSelection_chosen_ent) {
 		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
-		if(preventReuse)
+		if (preventReuse) {
 			RandomSelection_chosen_ent.sub_target_used = time;
+		}
 	}
 }
 

@@ -12,8 +12,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 	me.startButton.onClickEntity = mlb;
 	MapInfo_Get_ByID(i);
 
-	if(me.currentMapBSPName)
-	{
+	if (me.currentMapBSPName) {
 		strunzone(me.currentMapBSPName);
 		strunzone(me.currentMapTitle);
 		strunzone(me.currentMapAuthor);
@@ -30,13 +29,13 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 	me.titleLabel.setText(me.titleLabel, me.currentMapTitle);
 	me.authorLabel.setText(me.authorLabel, me.currentMapAuthor);
 	me.descriptionLabel.setText(me.descriptionLabel, me.currentMapDescription);
-	if(draw_PictureSize(me.currentMapPreviewImage) == '0 0 0')
+	if (draw_PictureSize(me.currentMapPreviewImage) == '0 0 0') {
 		me.previewImage.src = "nopreview_map";
-	else
+	} else {
 		me.previewImage.src = me.currentMapPreviewImage;
+	}
 
-	for(i = 0; i < GameType_GetTotalCount(); ++i)
-	{
+	for (i = 0; i < GameType_GetTotalCount(); ++i) {
 		entity e;
 		e = me.(typeLabels[i]);
 		e.disabled = !(MapInfo_Map_supportedGametypes & GameType_GetID(i).m_flags);
@@ -50,50 +49,49 @@ void XonoticMapInfoDialog_fill(entity me)
 	int i;
 	float w, wgt, n;
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, me.rows - 2, 3, e = makeXonoticImage(string_null, 4.0/3.0));
-		me.previewImage = e;
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.TDempty(me, 0.2);
+	me.TD(me, me.rows - 2, 3, e = makeXonoticImage(string_null, 4.0 / 3.0));
+	me.previewImage = e;
+	me.gotoRC(me, 0, 3.5);
+	me.setFirstColumn(me, me.currentColumn);
 	w = me.columns - me.currentColumn;
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Title:")));
-		me.TD(me, 1, w-1, e = makeXonoticTextLabel(0, ""));
-			e.colorL = SKINCOLOR_MAPLIST_TITLE;
-			e.allowCut = 1;
-			me.titleLabel = e;
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Title:")));
+	me.TD(me, 1, w - 1, e = makeXonoticTextLabel(0, ""));
+	e.colorL = SKINCOLOR_MAPLIST_TITLE;
+	e.allowCut = 1;
+	me.titleLabel = e;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Author:")));
-		me.TD(me, 1, w-1, e = makeXonoticTextLabel(0, ""));
-			e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
-			e.allowCut = 1;
-			me.authorLabel = e;
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Author:")));
+	me.TD(me, 1, w - 1, e = makeXonoticTextLabel(0, ""));
+	e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
+	e.allowCut = 1;
+	me.authorLabel = e;
 	me.TR(me);
-		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
+	me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
 
 	n = ceil(GameType_GetTotalCount() / (me.rows - 6));
 	wgt = (w - 0.2) / n;
-	for(i = 0; i < GameType_GetTotalCount(); ++i)
-	{
-		if(mod(i, n) == 0)
-		{
+	for (i = 0; i < GameType_GetTotalCount(); ++i) {
+		if (mod(i, n) == 0) {
 			me.TR(me);
 			me.TDempty(me, 0.2);
 		}
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, MapInfo_Type_ToText(GameType_GetID(i))));
-			me.(typeLabels[i]) = e;
+		me.(typeLabels[i]) = e;
 	}
 
 	me.gotoRC(me, me.rows - 2, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, ""));
-			e.allowCut = 1;
-			me.descriptionLabel = e;
+	me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, ""));
+	e.allowCut = 1;
+	me.descriptionLabel = e;
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TDempty(me, 0.5);
+	me.TDempty(me, 0.5);
 
-		me.TD(me, 1, me.columns - 5.5, e = makeXonoticButton(_("Close"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;
-		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeXonoticButton(ZCTX(_("MAP^Play")), '0 0 0'));
-			me.startButton.onClick = MapList_LoadMap;
-			me.startButton.onClickEntity = NULL; // filled later
+	me.TD(me, 1, me.columns - 5.5, e = makeXonoticButton(_("Close"), '0 0 0'));
+	e.onClick = Dialog_Close;
+	e.onClickEntity = me;
+	me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeXonoticButton(ZCTX(_("MAP^Play")), '0 0 0'));
+	me.startButton.onClick = MapList_LoadMap;
+	me.startButton.onClickEntity = NULL; // filled later
 }

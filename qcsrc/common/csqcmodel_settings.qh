@@ -1,29 +1,29 @@
 #pragma once
 
 // define this if svqc code wants to use .frame2 and .lerpfrac
-//#define CSQCMODEL_HAVE_TWO_FRAMES
+// #define CSQCMODEL_HAVE_TWO_FRAMES
 
 // don't define this ever
-//#define CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
+// #define CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
 
 // server decides crouching, this lags, but so be it
-//#define CSQCMODEL_SERVERSIDE_CROUCH
+// #define CSQCMODEL_SERVERSIDE_CROUCH
 
 // a hack for Xonotic
 #ifdef CSQC
-# define TAG_ENTITY_NAME tag_networkentity
-# define TAG_ENTITY_TYPE float
+#define TAG_ENTITY_NAME tag_networkentity
+#define TAG_ENTITY_TYPE float
 .float tag_networkentity;
 
-# define TAG_VIEWLOC_NAME tag_networkviewloc
-# define TAG_VIEWLOC_TYPE int
+#define TAG_VIEWLOC_NAME tag_networkviewloc
+#define TAG_VIEWLOC_TYPE int
 .float tag_networkviewloc;
 #else
-# define TAG_ENTITY_NAME tag_entity
-# define TAG_ENTITY_TYPE entity
+#define TAG_ENTITY_NAME tag_entity
+#define TAG_ENTITY_TYPE entity
 
-# define TAG_VIEWLOC_NAME viewloc
-# define TAG_VIEWLOC_TYPE entity
+#define TAG_VIEWLOC_NAME viewloc
+#define TAG_VIEWLOC_TYPE entity
 #endif
 
 // add properties you want networked to CSQC here
@@ -36,23 +36,23 @@
 	CSQCMODEL_PROPERTY(BIT(5), float, ReadApproxPastTime, WriteApproxPastTime, death_time) \
 	CSQCMODEL_PROPERTY(BIT(6), float, ReadByte, WriteByte, solid) \
 	CSQCMODEL_IF(!isplayer) \
-		CSQCMODEL_PROPERTY(BIT(7), TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
-		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_x, 254, -1, 254) \
-		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_y, 254, -1, 254) \
-		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_z, 254, -1, 254) \
-		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_x, 254, -1, 254) \
-		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_y, 254, -1, 254) \
-		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_z, 254, -1, 254) \
+	CSQCMODEL_PROPERTY(BIT(7), TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_x, 254, -1, 254) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_y, 254, -1, 254) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_z, 254, -1, 254) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_x, 254, -1, 254) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_y, 254, -1, 254) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_z, 254, -1, 254) \
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_IF(isplayer) \
-		CSQCMODEL_PROPERTY(BIT(7), int, ReadByte, WriteByte, anim_state) \
-		CSQCMODEL_PROPERTY(BIT(7), float, ReadApproxPastTime, WriteApproxPastTime, anim_time) \
-		CSQCMODEL_IF(!islocalplayer) \
-			CSQCMODEL_PROPERTY(BIT(8), float, ReadChar, WriteChar, anim_lower_action) \
-			CSQCMODEL_PROPERTY(BIT(8), float, ReadApproxPastTime, WriteApproxPastTime, anim_lower_time) \
-		CSQCMODEL_ENDIF \
-		CSQCMODEL_PROPERTY(BIT(9), float, ReadChar, WriteChar, anim_upper_action) \
-		CSQCMODEL_PROPERTY(BIT(9), float, ReadApproxPastTime, WriteApproxPastTime, anim_upper_time) \
+	CSQCMODEL_PROPERTY(BIT(7), int, ReadByte, WriteByte, anim_state) \
+	CSQCMODEL_PROPERTY(BIT(7), float, ReadApproxPastTime, WriteApproxPastTime, anim_time) \
+	CSQCMODEL_IF(!islocalplayer) \
+	CSQCMODEL_PROPERTY(BIT(8), float, ReadChar, WriteChar, anim_lower_action) \
+	CSQCMODEL_PROPERTY(BIT(8), float, ReadApproxPastTime, WriteApproxPastTime, anim_lower_time) \
+	CSQCMODEL_ENDIF \
+	CSQCMODEL_PROPERTY(BIT(9), float, ReadChar, WriteChar, anim_upper_action) \
+	CSQCMODEL_PROPERTY(BIT(9), float, ReadApproxPastTime, WriteApproxPastTime, anim_upper_time) \
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_PROPERTY(BIT(10), float, ReadAngle, WriteAngle, v_angle_x) \
 	CSQCMODEL_PROPERTY(BIT(11), int, ReadByte, WriteByte, traileffect) \
@@ -73,16 +73,16 @@
 #endif
 
 // mod must define:
-//vector PL_MIN  = ...;
-//vector PL_MAX  = ...;
-//vector PL_VIEW_OFS  = ...;
-//vector PL_CROUCH_MIN  = ...;
-//vector PL_CROUCH_MAX  = ...;
-//vector PL_CROUCH_VIEW_OFS  = ...;
+// vector PL_MIN  = ...;
+// vector PL_MAX  = ...;
+// vector PL_VIEW_OFS  = ...;
+// vector PL_CROUCH_MIN  = ...;
+// vector PL_CROUCH_MAX  = ...;
+// vector PL_CROUCH_VIEW_OFS  = ...;
 
 #ifdef SVQC
-# define CSQCMODEL_AUTOINIT(e) CSQCModel_LinkEntity(e)
-# define CSQCMODEL_AUTOUPDATE(e) CSQCModel_CheckUpdate(e)
+#define CSQCMODEL_AUTOINIT(e) CSQCModel_LinkEntity(e)
+#define CSQCMODEL_AUTOUPDATE(e) CSQCModel_CheckUpdate(e)
 #endif
 
 #define CSQCMODEL_EF_RESPAWNGHOST EF_SELECTABLE

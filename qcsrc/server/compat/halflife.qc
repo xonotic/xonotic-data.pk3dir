@@ -24,7 +24,7 @@ void ammo_9mmAR() {}
 spawnfunc(ammo_357) {}
 spawnfunc(weapon_gauss) {}
 spawnfunc(weapon_hornetgun) {}
-//spawnfunc(weapon_shotgun) {}
+// spawnfunc(weapon_shotgun) {}
 spawnfunc(item_healthkit) {}
 spawnfunc(item_longjump) {}
 spawnfunc(item_antidote) {}

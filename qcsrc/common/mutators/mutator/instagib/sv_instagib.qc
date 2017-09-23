@@ -5,7 +5,7 @@ bool autocvar_g_instagib_blaster_keepdamage = false;
 bool autocvar_g_instagib_blaster_keepforce = false;
 bool autocvar_g_instagib_mirrordamage;
 bool autocvar_g_instagib_friendlypush = true;
-//int autocvar_g_instagib_ammo_drop;
+// int autocvar_g_instagib_ammo_drop;
 bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
@@ -46,87 +46,64 @@ void instagib_speed(entity this)
 .float instagib_needammo;
 void instagib_stop_countdown(entity e)
 {
-	if (!e.instagib_needammo)
+	if (!e.instagib_needammo) {
 		return;
+	}
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_INSTAGIB_FINDAMMO);
 	e.instagib_needammo = false;
 }
 void instagib_ammocheck(entity this)
 {
-	if(time < this.instagib_nextthink)
+	if (time < this.instagib_nextthink) {
 		return;
-	if(!IS_PLAYER(this))
+	}
+	if (!IS_PLAYER(this)) {
 		return; // not a player
-
-	if(IS_DEAD(this) || game_stopped)
+	}
+	if (IS_DEAD(this) || game_stopped) {
 		instagib_stop_countdown(this);
-	else if (GetResourceAmount(this, RESOURCE_CELLS) > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
+	} else if (GetResourceAmount(this, RESOURCE_CELLS) > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE)) {
 		instagib_stop_countdown(this);
-	else if(autocvar_g_rm && autocvar_g_rm_laser)
-	{
-		if(!this.instagib_needammo)
-		{
+	} else if (autocvar_g_rm && autocvar_g_rm_laser) {
+		if (!this.instagib_needammo) {
 			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_INSTAGIB_DOWNGRADE);
 			this.instagib_needammo = true;
 		}
-	}
-	else
-	{
+	} else {
 		float hp = GetResourceAmount(this, RESOURCE_HEALTH);
 		this.instagib_needammo = true;
-		if (hp <= 5)
-		{
+		if (hp <= 5) {
 			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
-		}
-		else if (hp <= 10)
-		{
+		} else if (hp <= 10) {
 			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_1);
-		}
-		else if (hp <= 20)
-		{
+		} else if (hp <= 20) {
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_2);
-		}
-		else if (hp <= 30)
-		{
+		} else if (hp <= 30) {
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_3);
-		}
-		else if (hp <= 40)
-		{
+		} else if (hp <= 40) {
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_4);
-		}
-		else if (hp <= 50)
-		{
+		} else if (hp <= 50) {
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_5);
-		}
-		else if (hp <= 60)
-		{
+		} else if (hp <= 60) {
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_6);
-		}
-		else if (hp <= 70)
-		{
+		} else if (hp <= 70) {
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_7);
-		}
-		else if (hp <= 80)
-		{
+		} else if (hp <= 80) {
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_8);
-		}
-		else if (hp <= 90)
-		{
+		} else if (hp <= 90) {
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_9);
-		}
-		else
-		{
+		} else {
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, MULTI_INSTAGIB_FINDAMMO);
 			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 		}
@@ -136,7 +113,8 @@ void instagib_ammocheck(entity this)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { instagib_stop_countdown(it); });
+	FOREACH_CLIENT(IS_PLAYER(it), { instagib_stop_countdown(it);
+		});
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
@@ -151,16 +129,18 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 	entity mon = M_ARGV(0, entity);
 
 	// always refill ammo
-	if(mon.monsterid == MON_MAGE.monsterid)
+	if (mon.monsterid == MON_MAGE.monsterid) {
 		mon.skin = 1;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BotShouldAttack)
 {
 	entity targ = M_ARGV(1, entity);
 
-	if (targ.items & ITEM_Invisibility.m_itemid)
+	if (targ.items & ITEM_Invisibility.m_itemid) {
 		return true;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
@@ -194,24 +174,20 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (!(player.effects & EF_FULLBRIGHT))
+	if (!(player.effects & EF_FULLBRIGHT)) {
 		player.effects |= EF_FULLBRIGHT;
+	}
 
-	if (player.items & ITEM_Invisibility.m_itemid)
-	{
+	if (player.items & ITEM_Invisibility.m_itemid) {
 		play_countdown(player, player.strength_finished, SND_POWEROFF);
-		if (time > player.strength_finished)
-		{
+		if (time > player.strength_finished) {
 			player.alpha = default_player_alpha;
 			player.exteriorweaponentity.alpha = default_weapon_alpha;
 			player.items &= ~ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
-	}
-	else
-	{
-		if (time < player.strength_finished)
-		{
+	} else {
+		if (time < player.strength_finished) {
 			player.alpha = autocvar_g_instagib_invis_alpha;
 			player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
 			player.items |= ITEM_Invisibility.m_itemid;
@@ -220,19 +196,14 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 		}
 	}
 
-	if (player.items & ITEM_Speed.m_itemid)
-	{
+	if (player.items & ITEM_Speed.m_itemid) {
 		play_countdown(player, player.invincible_finished, SND_POWEROFF);
-		if (time > player.invincible_finished)
-		{
+		if (time > player.invincible_finished) {
 			player.items &= ~ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_SPEED);
 		}
-	}
-	else
-	{
-		if (time < player.invincible_finished)
-		{
+	} else {
+		if (time < player.invincible_finished) {
 			player.items |= ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SPEED, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_SPEED);
@@ -246,14 +217,15 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.items & ITEM_Speed.m_itemid)
+	if (player.items & ITEM_Speed.m_itemid) {
 		player.stat_sv_maxspeed = player.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
 {
 	M_ARGV(4, float) = M_ARGV(7, float); // take = damage
-	M_ARGV(5, float) = 0; // save
+	M_ARGV(5, float) = 0;                // save
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
@@ -271,82 +243,82 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 	float frag_mirrordamage = M_ARGV(5, float);
 	vector frag_force = M_ARGV(6, vector);
 
-	if(autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
+	if (autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker)) {
 		frag_damage = 0;
+	}
 
-	if(IS_PLAYER(frag_target))
-	{
-		if(frag_deathtype == DEATH_FALL.m_id)
+	if (IS_PLAYER(frag_target)) {
+		if (frag_deathtype == DEATH_FALL.m_id) {
 			frag_damage = 0; // never count fall damage
-
-		if(!autocvar_g_instagib_damagedbycontents)
-		switch(DEATH_ENT(frag_deathtype))
-		{
-			case DEATH_DROWN:
-			case DEATH_SLIME:
-			case DEATH_LAVA:
-				frag_damage = 0;
-				break;
 		}
-
-		if(IS_PLAYER(frag_attacker))
-		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
-		{
-			if(!autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker))
-				frag_force = '0 0 0';
-
-			float armor = GetResourceAmount(frag_target, RESOURCE_ARMOR);
-			if(armor)
-			{
-				armor -= 1;
-				SetResourceAmount(frag_target, RESOURCE_ARMOR, armor);
-				frag_damage = 0;
-				frag_target.damage_dealt += 1;
-				frag_attacker.damage_dealt += 1;
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
-			}
-		}
-
-		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
-		{
-			if(frag_deathtype & HITTYPE_SECONDARY)
-			{
-				if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
-				{
+		if (!autocvar_g_instagib_damagedbycontents) {
+			switch (DEATH_ENT(frag_deathtype)) {
+				case DEATH_DROWN:
+				case DEATH_SLIME:
+				case DEATH_LAVA:
 					frag_damage = 0;
-					if(!autocvar_g_instagib_mirrordamage)
-						frag_mirrordamage = 0; // never do mirror damage on enemies
+					break;
+			}
+		}
+
+		if (IS_PLAYER(frag_attacker)) {
+			if (DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER)) {
+				if (!autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker)) {
+					frag_force = '0 0 0';
 				}
 
-				if(frag_target != frag_attacker)
-				{
-					if(frag_damage <= 0 && GetResourceAmount(frag_target, RESOURCE_HEALTH) > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
-					if(!autocvar_g_instagib_blaster_keepforce)
+				float armor = GetResourceAmount(frag_target, RESOURCE_ARMOR);
+				if (armor) {
+					armor -= 1;
+					SetResourceAmount(frag_target, RESOURCE_ARMOR, armor);
+					frag_damage = 0;
+					frag_target.damage_dealt += 1;
+					frag_attacker.damage_dealt += 1;
+					Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
+				}
+			}
+		}
+
+		if (IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER)) {
+			if (frag_deathtype & HITTYPE_SECONDARY) {
+				if (!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target) {
+					frag_damage = 0;
+					if (!autocvar_g_instagib_mirrordamage) {
+						frag_mirrordamage = 0; // never do mirror damage on enemies
+					}
+				}
+
+				if (frag_target != frag_attacker) {
+					if (frag_damage <= 0 && GetResourceAmount(frag_target, RESOURCE_HEALTH) > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
+					if (!autocvar_g_instagib_blaster_keepforce) {
 						frag_force = '0 0 0';
+					}
 				}
 			}
 		}
 	}
 
-	if(!autocvar_g_instagib_mirrordamage) // only apply the taking lives hack if we don't want to support real damage mirroring
-	if(IS_PLAYER(frag_attacker))
-	if(frag_mirrordamage > 0)
-	{
-		// just lose extra LIVES, don't kill the player for mirror damage
-		float armor = GetResourceAmount(frag_attacker, RESOURCE_ARMOR);
-		if(armor > 0)
-		{
-			armor -= 1;
-			SetResourceAmount(frag_attacker, RESOURCE_ARMOR, armor);
-			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
-			frag_attacker.damage_dealt += frag_mirrordamage;
+	if (!autocvar_g_instagib_mirrordamage) { // only apply the taking lives hack if we don't want to support real damage mirroring
+		if (IS_PLAYER(frag_attacker)) {
+			if (frag_mirrordamage > 0) {
+				// just lose extra LIVES, don't kill the player for mirror damage
+				float armor = GetResourceAmount(frag_attacker, RESOURCE_ARMOR);
+				if (armor > 0) {
+					armor -= 1;
+					SetResourceAmount(frag_attacker, RESOURCE_ARMOR, armor);
+					Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, armor);
+					frag_attacker.damage_dealt += frag_mirrordamage;
+				}
+				frag_mirrordamage = 0;
+			}
 		}
-		frag_mirrordamage = 0;
 	}
 
-	if(frag_target.alpha && frag_target.alpha < 1)
-	if(IS_PLAYER(frag_target))
-		yoda = 1;
+	if (frag_target.alpha && frag_target.alpha < 1) {
+		if (IS_PLAYER(frag_target)) {
+			yoda = 1;
+		}
+	}
 
 	M_ARGV(4, float) = frag_damage;
 	M_ARGV(5, float) = frag_mirrordamage;
@@ -363,7 +335,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
 	start_ammo_rockets = warmup_start_ammo_rockets = 0;
-	//start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
+	// start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
 	start_weapons = warmup_start_weapons = WEPSET(VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
@@ -390,60 +362,50 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.classname == "item_cells")
-	{
-		if(autocvar_g_instagib_ammo_convert_cells)
-		{
+	if (item.classname == "item_cells") {
+		if (autocvar_g_instagib_ammo_convert_cells) {
 			replace_with_insta_cells(item);
 		}
 		return true;
-	}
-	else if(item.classname == "item_rockets")
-	{
-		if(autocvar_g_instagib_ammo_convert_rockets)
-		{
+	} else if (item.classname == "item_rockets") {
+		if (autocvar_g_instagib_ammo_convert_rockets) {
 			replace_with_insta_cells(item);
 		}
 		return true;
-	}
-	else if(item.classname == "item_shells")
-	{
-		if(autocvar_g_instagib_ammo_convert_shells)
-		{
+	} else if (item.classname == "item_shells") {
+		if (autocvar_g_instagib_ammo_convert_shells) {
 			replace_with_insta_cells(item);
 		}
 		return true;
-	}
-	else if(item.classname == "item_bullets")
-	{
-		if(autocvar_g_instagib_ammo_convert_bullets)
-		{
+	} else if (item.classname == "item_bullets") {
+		if (autocvar_g_instagib_ammo_convert_bullets) {
 			replace_with_insta_cells(item);
 		}
 		return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon")
-	{
+	if (item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon") {
 		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;
 	}
 
-	if(item.weapon == WEP_DEVASTATOR.m_id || item.weapon == WEP_VORTEX.m_id)
-	{
+	if (item.weapon == WEP_DEVASTATOR.m_id || item.weapon == WEP_VORTEX.m_id) {
 		replace_with_insta_cells(item);
 		return true;
 	}
 
-	if(item.flags & FL_POWERUP)
+	if (item.flags & FL_POWERUP) {
 		return false;
+	}
 
 	float cells = GetResourceAmount(item, RESOURCE_CELLS);
-	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells")
+	if (cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells") {
 		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
+	}
 
-	if(cells && !item.weapon)
+	if (cells && !item.weapon) {
 		return false;
+	}
 
 	return true;
 }
@@ -457,17 +419,20 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, CustomizeWaypoint)
 
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
-	if((wp.owner.flags & FL_CLIENT) && (wp.owner.items & ITEM_Invisibility.m_itemid) && (e == player))
-	if(DIFF_TEAM(wp.owner, e))
-		return true;
+	if ((wp.owner.flags & FL_CLIENT) && (wp.owner.items & ITEM_Invisibility.m_itemid) && (e == player)) {
+		if (DIFF_TEAM(wp.owner, e)) {
+			return true;
+		}
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 {
 	float frag_deathtype = M_ARGV(3, float);
 
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
+	if (DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER)) {
 		M_ARGV(4, float) = 1000; // always gib if it was a vaporizer death
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
@@ -475,26 +440,25 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
-	if(GetResourceAmount(item, RESOURCE_CELLS))
-	{
+	if (GetResourceAmount(item, RESOURCE_CELLS)) {
 		// play some cool sounds ;)
 		float hp = GetResourceAmount(toucher, RESOURCE_HEALTH);
-		if (IS_CLIENT(toucher))
-		{
-			if(hp <= 5)
+		if (IS_CLIENT(toucher)) {
+			if (hp <= 5) {
 				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_LASTSECOND);
-			else if(hp < 50)
+			} else if (hp < 50) {
 				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_NARROWLY);
+			}
 		}
 
-		if(hp < 100)
+		if (hp < 100) {
 			SetResourceAmount(toucher, RESOURCE_HEALTH, 100);
+		}
 
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
 
-	if(item.itemdef == ITEM_ExtraLife)
-	{
+	if (item.itemdef == ITEM_ExtraLife) {
 		GiveResource(toucher, RESOURCE_ARMOR, autocvar_g_instagib_extralives);
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
 		return MUT_ITEMTOUCH_PICKUP;
@@ -508,18 +472,20 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
+	if (!(ent.classname == "item_strength" || ent.classname == "item_invincible" || ent.classname == "item_health_mega")) {
 		return;
+	}
 
 	entity e = spawn();
 
 	float r = random();
-	if (r < 0.3)
+	if (r < 0.3) {
 		setthink(e, instagib_invisibility);
-	else if (r < 0.6)
+	} else if (r < 0.6) {
 		setthink(e, instagib_extralife);
-	else
+	} else {
 		setthink(e, instagib_speed);
+	}
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = ent.spawnflags;

@@ -11,40 +11,44 @@ REGISTER_NET_TEMP(net_debug)
 #endif
 
 #ifdef CSQC
-	NET_HANDLE(net_debug, bool isNew)
-	{
-		Net_Accept(net_debug);
-		this.sv_entnum = ReadShort();
-		if (ReadByte()) make_pure(this);
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
-		setorigin(this, this.origin);
-		this.debug = true;  // identify server entities by this
-		this.classname = strzone(ReadString());
-		this.sourceLoc = strzone(ReadString());
-		return true;
-	}
+NET_HANDLE(net_debug, bool isNew)
+{
+	Net_Accept(net_debug);
+	this.sv_entnum = ReadShort();
+	if (ReadByte()) { make_pure(this); }
+	this.origin_x = ReadCoord();
+	this.origin_y = ReadCoord();
+	this.origin_z = ReadCoord();
+	setorigin(this, this.origin);
+	this.debug = true; // identify server entities by this
+	this.classname = strzone(ReadString());
+	this.sourceLoc = strzone(ReadString());
+	return true;
+}
 #endif
 
 #ifdef SVQC
-	bool debug_send(entity this, entity to, int sf)
-	{
-		int channel = MSG_ONE;
-		msg_entity = to;
-		WriteHeader(channel, net_debug);
-		WriteShort(channel, etof(this));
-		WriteByte(channel, is_pure(this));
-		vector o = this.origin;
-		if (o == '0 0 0') // brushes
-			o = (this.absmin + this.absmax) / 2;
-		if (this.tag_entity)
-			o += this.tag_entity.origin;
-		WriteCoord(channel, o.x); WriteCoord(channel, o.y); WriteCoord(channel, o.z);
-		WriteString(channel, this.classname);
-		WriteString(channel, this.sourceLoc);
-		return true;
+bool debug_send(entity this, entity to, int sf)
+{
+	int channel = MSG_ONE;
+	msg_entity = to;
+	WriteHeader(channel, net_debug);
+	WriteShort(channel, etof(this));
+	WriteByte(channel, is_pure(this));
+	vector o = this.origin;
+	if (o == '0 0 0') { // brushes
+		o = (this.absmin + this.absmax) / 2;
 	}
+	if (this.tag_entity) {
+		o += this.tag_entity.origin;
+	}
+	WriteCoord(channel, o.x);
+	WriteCoord(channel, o.y);
+	WriteCoord(channel, o.z);
+	WriteString(channel, this.classname);
+	WriteString(channel, this.sourceLoc);
+	return true;
+}
 #endif
 
 #if ENABLE_DEBUGDRAW
@@ -62,39 +66,34 @@ bool autocvar_debugdraw;
 #endif
 
 #ifdef CSQC
-	string autocvar_debugdraw_filter, autocvar_debugdraw_filterout;
-	.int debugdraw_last;
-	vector project_3d_to_2d(vector vec);
-	void Debug_Draw()
-	{
-		if (!autocvar_debugdraw) return;
-		static int debugdraw_frame;
-		++debugdraw_frame;
-		const int sz = 8;
-		FOREACH_ENTITY(true, {
-			if (it.debugdraw_last == debugdraw_frame) continue;
-			int ofs = 0;
-			FOREACH_ENTITY_RADIUS(it.origin, 100, it.debugdraw_last != debugdraw_frame, {
-				it.debugdraw_last = debugdraw_frame;
-				vector rgb = (it.debug) ? '0 0 1' : '1 0 0';
-				if (autocvar_debugdraw_filterout != "" && strhasword(autocvar_debugdraw_filterout, it.classname)) continue;
-				if (autocvar_debugdraw_filter != "" && !strhasword(autocvar_debugdraw_filter, it.classname)) continue;
-				if (autocvar_debugdraw == 3)
-				{
-					if (!it.entnum) continue;
-				}
-				if (autocvar_debugdraw == 4)
-				{
-					if (it.origin) continue;
-				}
-				if (autocvar_debugdraw == 5)
-				{
-					if (!it.debug) continue;
-				}
-				else if (autocvar_debugdraw > 5)
-				{
-					bool flag = true;
-					do {
+string autocvar_debugdraw_filter, autocvar_debugdraw_filterout;
+.int debugdraw_last;
+vector project_3d_to_2d(vector vec);
+void Debug_Draw()
+{
+	if (!autocvar_debugdraw) { return; }
+	static int debugdraw_frame;
+	++debugdraw_frame;
+	const int sz = 8;
+	FOREACH_ENTITY(true, {
+		if (it.debugdraw_last == debugdraw_frame) { continue; }
+		int ofs = 0;
+		FOREACH_ENTITY_RADIUS(it.origin, 100, it.debugdraw_last != debugdraw_frame, {
+			it.debugdraw_last = debugdraw_frame;
+			vector rgb = (it.debug) ? '0 0 1' : '1 0 0';
+			if (autocvar_debugdraw_filterout != "" && strhasword(autocvar_debugdraw_filterout, it.classname)) { continue; }
+			if (autocvar_debugdraw_filter != "" && !strhasword(autocvar_debugdraw_filter, it.classname)) { continue; }
+			if (autocvar_debugdraw == 3) {
+				if (!it.entnum) { continue; }
+			}
+			if (autocvar_debugdraw == 4) {
+				if (it.origin) { continue; }
+			}
+			if (autocvar_debugdraw == 5) {
+				if (!it.debug) { continue; }
+			} else if (autocvar_debugdraw > 5) {
+				bool flag = true;
+				do {
 //						if (it.modelindex) break;
 //						if (it.absmin) break;
 //						if (it.absmax) break;
@@ -102,7 +101,7 @@ bool autocvar_debugdraw;
 //						if (it.drawmask) break;
 //						if (it.predraw) break;
 //						if (it.move_movetype) break;
-						if (it.solid) break;
+					if (it.solid) { break; }
 //						if (it.origin) break;
 //						if (it.oldorigin) break;
 //						if (it.velocity) break;
@@ -127,68 +126,64 @@ bool autocvar_debugdraw;
 //						if (it.flags) break;
 //						if (it.colormap) break;
 //						if (it.owner) break;
-						flag = false;
-					} while (0);
-					if (!flag) continue;
-				}
-				else if (is_pure(it))
-				{
-					if (autocvar_debugdraw < 2) continue;
-					rgb.y = 1;
-				}
-				vector o = it.origin;
-				if (it.tag_entity)
-					o += it.tag_entity.origin;
-				vector pos = project_3d_to_2d(o);
-				if (pos.z < 0) continue;
-				pos.z = 0;
-				pos.y += ofs * sz;
-				drawcolorcodedstring2_builtin(pos,
-					sprintf("%d: '%s'@%s", (it.debug ? it.sv_entnum : etof(it)),
-					it.classname, it.sourceLoc),
-					sz * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
-				++ofs;
-            });
+					flag = false;
+				} while (0);
+				if (!flag) { continue; }
+			} else if (is_pure(it)) {
+				if (autocvar_debugdraw < 2) { continue; }
+				rgb.y = 1;
+			}
+			vector o = it.origin;
+			if (it.tag_entity) {
+				o += it.tag_entity.origin;
+			}
+			vector pos = project_3d_to_2d(o);
+			if (pos.z < 0) { continue; }
+			pos.z = 0;
+			pos.y += ofs * sz;
+			drawcolorcodedstring2_builtin(pos,
+			sprintf("%d: '%s'@%s", (it.debug ? it.sv_entnum : etof(it)),
+			it.classname, it.sourceLoc),
+			sz * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
+			++ofs;
 		});
-	}
+	});
+}
 #endif
 
 #ifdef SVQC
-	COMMON_COMMAND(debugdraw_sv, "Dump all server entities")
-	{
-		switch (request)
+COMMON_COMMAND(debugdraw_sv, "Dump all server entities")
+{
+	switch (request) {
+		case CMD_REQUEST_COMMAND:
 		{
-			case CMD_REQUEST_COMMAND:
-			{
-				if (!autocvar_debugdraw) return;
-				int n = 1000;
-				int rem = n;
-				for (entity e = NULL; (e = findfloat(e, debug, 0)) && rem > 0; )
-				{
-					if (autocvar_debugdraw < 2 && is_pure(e)) continue;
-					debug_send(e, caller, 0);
-					e.debug = true;
-					--rem;
-				}
-				LOG_INFOF("%d server entities sent", n - rem);
-				return;
+			if (!autocvar_debugdraw) { return; }
+			int n = 1000;
+			int rem = n;
+			for (entity e = NULL; (e = findfloat(e, debug, 0)) && rem > 0; ) {
+				if (autocvar_debugdraw < 2 && is_pure(e)) { continue; }
+				debug_send(e, caller, 0);
+				e.debug = true;
+				--rem;
 			}
+			LOG_INFOF("%d server entities sent", n - rem);
+			return;
+		}
 
-			default:
-			case CMD_REQUEST_USAGE:
-			{
-				LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
-				return;
-			}
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv");
+			return;
 		}
 	}
+}
 #endif
 #endif
 
 GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			int bufhandle = stof(argv(1));
@@ -209,8 +204,7 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 
 GENERIC_COMMAND(version, "Print the current version")
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			LOG_INFO(WATERMARK);
@@ -230,8 +224,7 @@ void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
 #endif
 GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			string s = "";
@@ -242,8 +235,9 @@ GENERIC_COMMAND(cvar_localchanges, "Print locally changed cvars")
 				string k = bufstr_get(h, i);
 				string v = cvar_string(k);
 				string d = cvar_defstring(k);
-				if (v == d)
+				if (v == d) {
 					continue;
+				}
 				s = strcat(s, k, " \"", v, "\" // \"", d, "\"\n");
 			}
 			buf_del(h);
@@ -273,25 +267,27 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 	FOREACH_CLIENT(true, {
 		bool skip = false;
 		bool btn = PHYS_INPUT_BUTTON_HOOK(it);
-		if (btn == it.debug_trace_button) skip = true;
+		if (btn == it.debug_trace_button) { skip = true; }
 		it.debug_trace_button = btn;
-		if (!btn || skip) continue;
+		if (!btn || skip) { continue; }
 		FOREACH_ENTITY(true, {
-		    it.solid_prev = it.solid;
+			it.solid_prev = it.solid;
 			it.solid = SOLID_BBOX;
 		});
-		vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
+		vector forward = '0 0 0';
+		vector right = '0 0 0';
+		vector up = '0 0 0';
 		MAKEVECTORS(makevectors, it.v_angle, forward, right, up);
 		vector pos = it.origin + it.view_ofs;
 		traceline(pos, pos + forward * max_shot_distance, MOVE_NORMAL, it);
 		FOREACH_ENTITY(true, {
-		    it.solid = it.solid_prev;
-            it.solid_prev = 0;
+			it.solid = it.solid_prev;
+			it.solid_prev = 0;
 		});
 		entity e = trace_ent;
 		int i = etof(e);
 		STAT(TRACE_ENT, it) = i;
-		if (!e) continue;
+		if (!e) { continue; }
 		setorigin(e, e.origin + '0 0 100');
 		stuffcmd(it, sprintf("prvm_edict server %d\n", i));
 	});
@@ -302,7 +298,7 @@ entity TRACE_ENT;
 void Trace_draw2d(entity this)
 {
 	int e = STAT(TRACE_ENT);
-	if (!e) return;
+	if (!e) { return; }
 	vector pos = '0 0 0';
 	pos.y += vid_conheight / 2;
 	drawstring(pos, sprintf("prvm_edict server %d", e), '10 10 0', '1 1 1', 1, DRAWFLAG_NORMAL);
@@ -319,8 +315,7 @@ STATIC_INIT(TRACE_ENT)
 
 GENERIC_COMMAND(find, "Search through entities for matching classname")
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
 			int entcnt = 0;
@@ -329,15 +324,16 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 				LOG_INFOF("%i (%s)", it, it.classname);
 				++entcnt;
 			});
-			if(entcnt)
+			if (entcnt) {
 				LOG_INFOF("Found %d entities", entcnt);
+			}
 			return;
 		}
 
 		default:
 		{
 			LOG_INFO("Incorrect parameters for ^2find^7");
-        }
+		}
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_INFO("Usage:^3 " GetProgramCommandPrefix() " find classname");
@@ -349,12 +345,11 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 
 GENERIC_COMMAND(findat, "Search through entities for matching origin")
 {
-	switch (request)
-	{
+	switch (request) {
 		case CMD_REQUEST_COMMAND:
 		{
-		    vector match = stov(argv(1));
-		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)", it, it.classname));
+			vector match = stov(argv(1));
+			FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)", it, it.classname));
 			return;
 		}
 

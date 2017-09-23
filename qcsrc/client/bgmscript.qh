@@ -1,13 +1,13 @@
 #pragma once
 
 entityclass(BGMScript);
-class(BGMScript) .string bgmscript;
-class(BGMScript) .float bgmscriptattack;
-class(BGMScript) .float bgmscriptdecay;
-class(BGMScript) .float bgmscriptsustain;
-class(BGMScript) .float bgmscriptrelease;
+class(BGMScript).string bgmscript;
+class(BGMScript).float bgmscriptattack;
+class(BGMScript).float bgmscriptdecay;
+class(BGMScript).float bgmscriptsustain;
+class(BGMScript).float bgmscriptrelease;
 
-class(BGMScript) .float just_toggled;
+class(BGMScript).float just_toggled;
 
 #ifdef CSQC
 void BGMScript_InitEntity(entity e);
