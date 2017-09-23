@@ -34,6 +34,10 @@ def main():
 	for branch in branches:
 		print(branch)
 
+		# getting this info is a bit slow
+		last_change = run(r'git show --pretty=format:"%ci" {}'.format(branch))[0]
+		print("\t last change:", last_change)
+
 		# If some complex branching and merging happens, there can be multiple merge bases.
 		# The diff between each of them and the tip of the branch can contain changes that are not in master
 		# and could cause conflicts.
