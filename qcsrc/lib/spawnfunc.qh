@@ -57,7 +57,9 @@ noref bool require_spawnfunc_prefix;
         g_map_entities = IL_NEW(); \
         IL_EACH(g_spawn_queue, true, __spawnfunc_spawn(it)); \
     MACRO_END
-
+#ifdef SVQC
+    void _SV_OnEntityPreSpawnFunction(entity this);
+#endif
     void __spawnfunc_spawn(entity prototype)
     {
         entity e = new(clone);
@@ -66,6 +68,12 @@ noref bool require_spawnfunc_prefix;
         #define X(T, fld, def) { e.fld = e.__spawnfunc_##fld; e.__spawnfunc_##fld = def; }
         SPAWNFUNC_INTERNAL_FIELDS(X);
         #undef X
+#ifdef SVQC
+        _SV_OnEntityPreSpawnFunction(e);
+        if (wasfreed(e)) {
+            return;
+        }
+#endif
         e.__spawnfunc_constructor(e);
     }
 
