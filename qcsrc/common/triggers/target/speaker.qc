@@ -85,7 +85,7 @@ spawnfunc(target_speaker)
 
 	if(!this.atten && !(this.spawnflags & 4))
 	{
-		IFTARGETED
+		if(THIS_TARGETED)
 			this.atten = ATTEN_NORM;
 		else
 			this.atten = ATTEN_STATIC;
@@ -96,7 +96,7 @@ spawnfunc(target_speaker)
 	if(!this.volume)
 		this.volume = 1;
 
-	IFTARGETED
+	if(THIS_TARGETED)
 	{
 		if(this.spawnflags & 8) // ACTIVATOR
 			this.use = target_speaker_use_activator;

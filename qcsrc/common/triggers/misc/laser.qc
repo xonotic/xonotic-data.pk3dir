@@ -241,7 +241,7 @@ spawnfunc(misc_laser)
 
 	Net_LinkEntity(this, false, 0, laser_SendEntity);
 
-	IFTARGETED
+	if(THIS_TARGETED)
 	{
 		this.reset = laser_reset;
 		this.reset(this);

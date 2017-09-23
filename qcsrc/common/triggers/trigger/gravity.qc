@@ -97,7 +97,7 @@ spawnfunc(trigger_gravity)
 		precache_sound(this.noise);
 
 	this.state = true;
-	IFTARGETED
+	if(THIS_TARGETED)
 	{
 		this.use = trigger_gravity_use;
 		if(this.spawnflags & 2)

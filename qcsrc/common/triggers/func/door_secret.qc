@@ -220,7 +220,7 @@ spawnfunc(func_door_secret)
 	setblocked(this, secret_blocked);
 	this.speed = 50;
 	this.use = fd_secret_use;
-	IFTARGETED
+	if(THIS_TARGETED)
 	{
 	}
 	else

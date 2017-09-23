@@ -14,8 +14,10 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 
 .float height;
 
+// we love double negation around here
+// TODO check why grep doesn't find any assignments to it
 .float nottargeted;
-#define IFTARGETED if(!this.nottargeted && this.targetname != "")
+#define THIS_TARGETED !this.nottargeted && this.targetname != ""
 
 .float lip;
 

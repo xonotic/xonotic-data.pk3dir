@@ -119,7 +119,7 @@ void conveyor_init(entity this)
 	this.movedir *= this.speed;
 	setthink(this, conveyor_think);
 	this.nextthink = time;
-	IFTARGETED
+	if(THIS_TARGETED)
 	{
 		this.use = conveyor_use;
 		this.reset = conveyor_reset;

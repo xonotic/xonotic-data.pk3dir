@@ -506,7 +506,7 @@ void LinkDoors(entity this)
 
 		if (this.health)
 			return;
-		IFTARGETED
+		if(THIS_TARGETED)
 			return;
 		if (this.items)
 			return;
@@ -574,7 +574,7 @@ void LinkDoors(entity this)
 
 	if (this.health)
 		return;
-	IFTARGETED
+	if(THIS_TARGETED)
 		return;
 	if (this.items)
 		return;

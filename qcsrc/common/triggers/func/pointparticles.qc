@@ -136,7 +136,7 @@ spawnfunc(func_pointparticles)
 
 	Net_LinkEntity(this, (this.spawnflags & 4), 0, pointparticles_SendEntity);
 
-	IFTARGETED
+	if(THIS_TARGETED)
 	{
 		this.use = pointparticles_use;
 		this.reset = pointparticles_reset;
