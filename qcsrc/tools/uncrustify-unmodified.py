@@ -6,6 +6,8 @@
 
 # If you're on Windows, you probably wanna fix path separators and maybe other tihngs, I am not touching that.
 
+from datetime import datetime, timedelta, timezone
+from dateutil import parser
 import glob
 import os.path
 import shlex
@@ -35,8 +37,13 @@ def main():
 		print(branch)
 
 		# getting this info is a bit slow
-		last_change = run(r'git show --pretty=format:"%ci" {}'.format(branch))[0]
-		print("\t last change:", last_change)
+		last_change_str = run(r'git show --pretty=format:"%ci" {}'.format(branch))[0]
+		print("\t last change:", last_change_str)
+
+		last_change = parser.parse(last_change_str)
+		if datetime.now(timezone.utc) - last_change > timedelta(days=365*2):  # who cares about leap years
+			print("\t ignoring")
+			continue
 
 		# If some complex branching and merging happens, there can be multiple merge bases.
 		# The diff between each of them and the tip of the branch can contain changes that are not in master
