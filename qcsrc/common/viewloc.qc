@@ -36,25 +36,26 @@ void viewloc_PlayerPhysics(entity this)
 		if(PHYS_CS(this).movement_x > 0) // right
 			this.angles_y = forward_y;
 
-		if(old_movement_x > 0)
+		if(old_movement_x > 0) {
 #ifdef CSQC
 			input_angles_x =
 #endif
 			this.v_angle_x = this.angles_x = -50;
-		else if(old_movement_x < 0)
+		} else if(old_movement_x < 0) {
 #ifdef CSQC
 			input_angles_x =
 #endif
 			this.v_angle_x = this.angles_x = 50;
+		}
 
 		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
 #ifdef SVQC
 			//PHYS_INPUT_BUTTON_CROUCH(this) = (old_movement_x < 0);
-			if (old_movement.x < 0)
+			if (old_movement.x < 0) {
 				PHYS_INPUT_BUTTON_CROUCH(this) = true;
+			}
 #elif defined(CSQC)
-			if (old_movement.x < 0)
-			{
+			if (old_movement.x < 0) {
 				input_buttons |= BIT(4);
 				this.flags |= FL_DUCKED;
 			}
