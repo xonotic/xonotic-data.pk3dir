@@ -8,11 +8,13 @@
 
 // zero overhead mode, use this for releases
 
+// *INDENT-OFF* uncrustify doesn't like the braces in different macros
 #define ENUMCLASS(id) USING(id, int); enum { CASE(id, Null)
 #define CASE(class, id) class##_##id,
 #define ENUMCLASS_END(id) };
 #define ORDINAL(it) (it)
 #define ENUMCAST(T, it) (it)
+// *INDENT-ON*
 
 #else
 
