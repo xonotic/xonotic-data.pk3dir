@@ -690,12 +690,13 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 		return;
 	}
 	int num_potential_weapons = tokenize_console(weapon_names);
-	for (int i = 0; i < num_weapons; ++i)
+	for (int give_attempt = 0; give_attempt < num_weapons; ++give_attempt)
 	{
 		RandomSelection_Init();
-		for (int j = 0; j < num_potential_weapons; ++j)
+		for (int weapon_index = 0; weapon_index < num_potential_weapons;
+			++weapon_index)
 		{
-			string weapon = argv(j);
+			string weapon = argv(weapon_index);
 			FOREACH(Weapons, it != WEP_Null,
 			{
 				// Finding a weapon which player doesn't have.
