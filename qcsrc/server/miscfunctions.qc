@@ -525,6 +525,10 @@ void readplayerstartcvars()
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
 	start_ammo_plasma = 0;
+	if (random_start_ammo == NULL)
+	{
+		random_start_ammo = spawn();
+	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
@@ -644,11 +648,16 @@ void readplayerstartcvars()
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 		random_start_weapons_count = cvar("g_random_start_weapons_count");
-		random_start_shells = cvar("g_random_start_shells");
-		random_start_bullets = cvar("g_random_start_bullets");
-		random_start_rockets = cvar("g_random_start_rockets");
-		random_start_cells = cvar("g_random_start_cells");
-		random_start_plasma = cvar("g_random_start_plasma");
+		SetResourceAmount(random_start_ammo, RESOURCE_SHELLS, cvar(
+			"g_random_start_shells"));
+		SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, cvar(
+			"g_random_start_bullets"));
+		SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, 
+			cvar("g_random_start_rockets"));
+		SetResourceAmount(random_start_ammo, RESOURCE_CELLS, cvar(
+			"g_random_start_cells"));
+		SetResourceAmount(random_start_ammo, RESOURCE_PLASMA, cvar(
+			"g_random_start_plasma"));
 	}
 
 	if (warmup_stage)
@@ -717,11 +726,16 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
-	random_start_shells = max(0, random_start_shells);
-	random_start_bullets = max(0, random_start_bullets);
-	random_start_rockets = max(0, random_start_rockets);
-	random_start_cells = max(0, random_start_cells);
-	random_start_plasma = max(0, random_start_plasma);
+	SetResourceAmount(random_start_ammo, RESOURCE_SHELLS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_SHELLS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_BULLETS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_ROCKETS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_CELLS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_CELLS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_PLASMA, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);

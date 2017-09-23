@@ -683,7 +683,7 @@ void Item_ScheduleInitialRespawn(entity e)
 }
 
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
-	float shells, float bullets, float rockets, float cells, float plasma)
+	entity ammo_entity)
 {
 	if (num_weapons == 0)
 	{
@@ -720,34 +720,9 @@ void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
 		{
 			continue;
 		}
-		switch (RandomSelection_chosen_ent.ammo_type)
-		{
-			case (RESOURCE_SHELLS):
-			{
-				GiveResource(receiver, RESOURCE_SHELLS, shells);
-				break;
-			}
-			case (RESOURCE_BULLETS):
-			{
-				GiveResource(receiver, RESOURCE_BULLETS, bullets);
-				break;
-			}
-			case (RESOURCE_ROCKETS):
-			{
-				GiveResource(receiver, RESOURCE_ROCKETS, rockets);
-				break;
-			}
-			case (RESOURCE_CELLS):
-			{
-				GiveResource(receiver, RESOURCE_CELLS, cells);
-				break;
-			}
-			case (RESOURCE_PLASMA):
-			{
-				GiveResource(receiver, RESOURCE_PLASMA, plasma);
-				break;
-			}
-		}
+		GiveResource(receiver, RandomSelection_chosen_ent.ammo_type,
+			GetResourceAmount(ammo_entity,
+			RandomSelection_chosen_ent.ammo_type));
 	}
 }
 

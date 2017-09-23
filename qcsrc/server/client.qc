@@ -14,6 +14,7 @@
 #include "spawnpoints.qh"
 #include "resources.qh"
 #include "g_damage.qh"
+#include "handicap.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
 #include "cheats.qh"
@@ -219,9 +220,20 @@ void PutObserverInServer(entity this)
     bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
-	if (IS_PLAYER(this) && this.health >= 1) {
-        // despawn effect
-		Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	if (IS_PLAYER(this))
+	{
+		if(this.health >= 1)
+		{
+			// despawn effect
+			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+		}
+
+		// was a player, recount votes and ready status
+		if(IS_REAL_CLIENT(this))
+		{
+			if (vote_called) { VoteCount(false); }
+			ReadyCount();
+		}
     }
 
     {
@@ -525,7 +537,6 @@ void PutPlayerInServer(entity this)
 		this.flags |= FL_NOTARGET;
 	this.takedamage = DAMAGE_AIM;
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
-	this.dmg = 2; // WTF
 
 	if (warmup_stage) {
 		this.ammo_shells = warmup_start_ammo_shells;
@@ -548,9 +559,7 @@ void PutPlayerInServer(entity this)
 		this.armorvalue = start_armorvalue;
 		this.weapons = start_weapons;
 		GiveRandomWeapons(this, random_start_weapons_count,
-			cvar_string("g_random_start_weapons"), random_start_shells,
-			random_start_bullets, random_start_rockets, random_start_cells,
-			random_start_plasma);
+			cvar_string("g_random_start_weapons"), random_start_ammo);
 	}
 	SetSpectatee_status(this, 0);
 
@@ -1275,6 +1284,8 @@ void ClientConnect(entity this)
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
 	});
+
+	Handicap_Initialize(this);
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
@@ -2654,7 +2665,6 @@ void DrownPlayer(entity this)
 		if(this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
-		this.dmg = 2;
 	}
 	else if (this.air_finished < time)
 	{	// drown!

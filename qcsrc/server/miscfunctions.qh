@@ -190,16 +190,9 @@ float start_ammo_plasma;
 float start_ammo_fuel;
 /// \brief Number of random start weapons to give to players.
 int random_start_weapons_count;
-/// \brief Amount of shells to give with a shell-based random start weapon.
-float random_start_shells;
-/// \brief Amount of bullets to give with a bullet-based random start weapon.
-float random_start_bullets;
-/// \brief Amount of rockets to give with a rocket-based random start weapon.
-float random_start_rockets;
-/// \brief Amount of cells to give with a cell-based random start weapon.
-float random_start_cells;
-/// \brief Amount of plasma to give with a plasma-based random start weapon.
-float random_start_plasma;
+/// \brief Entity that contains amount of ammo to give with random start
+/// weapons.
+entity random_start_ammo;
 float start_health;
 float start_armorvalue;
 WepSet warmup_start_weapons;
