@@ -11,20 +11,14 @@ int autocvar_g_dynamic_handicap; ///< Whether to enable dynamic handicap.
 /// \brief The scale of the handicap. Larget values mean more penalties for
 /// strong players and more buffs for weak players.
 float autocvar_g_dynamic_handicap_scale;
+/// \brief The exponent used to calculate handicap. 1 means linear scale. Values
+/// more than 1 mean stronger non-linear handicap. Values less than 1 mean
+/// weaker non-linear handicap.
+float autocvar_g_dynamic_handicap_exponent;
 float autocvar_g_dynamic_handicap_min; ///< The minimum value of the handicap.
 float autocvar_g_dynamic_handicap_max; ///< The maximum value of the handicap.
 
 //====================== Forward declarations =================================
-
-/// \brief Returns the base value of the handicap.
-/// \param[in] player Player to evaluate.
-/// \return Base handicap value.
-float DynamicHandicap_GetBaseValue(entity player);
-
-/// \brief Scales the base value of the handicap.
-/// \param[in] handicap Value to scale.
-/// \return Scaled value.
-float DynamicHandicap_ScaleHandicap(float handicap);
 
 /// \brief Clamps the value of the handicap.
 /// \param[in] handicap Value to clamp.
@@ -33,61 +27,39 @@ float DynamicHandicap_ClampHandicap(float handicap);
 
 //========================= Free functions ====================================
 
-/// \brief Updates the handicap of a given player.
-/// \param[in,out] player Player to update.
+/// \brief Updates the handicap of all players.
 /// \return No return.
-void DynamicHandicap_UpdateHandicap(entity player)
+void DynamicHandicap_UpdateHandicap()
 {
-	float handicap = DynamicHandicap_GetBaseValue(player);
-	handicap = DynamicHandicap_ScaleHandicap(handicap);
-	handicap = DynamicHandicap_ClampHandicap(handicap);
-	Handicap_SetForcedHandicap(player, handicap);
-}
-
-float DynamicHandicap_GetBaseValue(entity player)
-{
-	int kills = PlayerScore_Get(player, SP_KILLS);
-	int deaths = PlayerScore_Get(player, SP_DEATHS);
-	if (kills == deaths)
+	float total_score = 0;
+	float total_players = 0;
+	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		return 1;
-	}
-	if (deaths == 0)
+		total_score += PlayerScore_Get(it, SP_SCORE);
+		++total_players;
+	});
+	float mean_score = total_score / total_players;
+	FOREACH_CLIENT(true,
 	{
-		return kills;
-	}
-	if (kills == 0)
-	{
-		return 1 / deaths;
-	}
-	return kills / deaths;
-}
-
-float DynamicHandicap_ScaleHandicap(float handicap)
-{
-	if (handicap == 1)
-	{
-		return 1;
-	}
-	if (autocvar_g_dynamic_handicap_scale == 1)
-	{
-		return handicap;
-	}
-	if (handicap > 1)
-	{
-		handicap -= 1;
-		handicap *= autocvar_g_dynamic_handicap_scale;
-		return handicap + 1;
-	}
-	if (handicap < 1)
-	{
-		handicap = 1 / handicap;
-		handicap -= 1;
-		handicap *= autocvar_g_dynamic_handicap_scale;
-		handicap += 1;
-		return 1 / handicap;
-	}
-	return 1;
+		float score = PlayerScore_Get(it, SP_SCORE);
+		float handicap = fabs((score - mean_score) *
+			autocvar_g_dynamic_handicap_scale);
+		handicap = handicap ** autocvar_g_dynamic_handicap_exponent;
+		if (score < mean_score)
+		{
+			handicap = -handicap;
+		}
+		if (handicap >= 0)
+		{
+			handicap += 1;
+		}
+		else
+		{
+			handicap = 1 / (fabs(handicap) + 1);
+		}
+		handicap = DynamicHandicap_ClampHandicap(handicap);
+		Handicap_SetForcedHandicap(it, handicap);
+	});
 }
 
 float DynamicHandicap_ClampHandicap(float handicap)
@@ -119,22 +91,26 @@ MUTATOR_HOOKFUNCTION(dynamic_handicap, BuildMutatorsPrettyString)
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Dynamic handicap");
 }
 
-/// \brief Hook that is called when player connects to the server.
-MUTATOR_HOOKFUNCTION(dynamic_handicap, ClientConnect)
+MUTATOR_HOOKFUNCTION(dynamic_handicap, ClientDisconnect)
 {
-	entity player = M_ARGV(0, entity);
-	DynamicHandicap_UpdateHandicap(player);
+	DynamicHandicap_UpdateHandicap();
 }
 
-/// \brief Hook that is called when player dies.
-MUTATOR_HOOKFUNCTION(dynamic_handicap, PlayerDies)
+MUTATOR_HOOKFUNCTION(dynamic_handicap, PutClientInServer)
 {
-	entity attacker = M_ARGV(1, entity);
-	entity victim = M_ARGV(2, entity);
-	DynamicHandicap_UpdateHandicap(victim);
-	if (!IS_CLIENT(attacker))
+	DynamicHandicap_UpdateHandicap();
+}
+
+MUTATOR_HOOKFUNCTION(dynamic_handicap, MakePlayerObserver)
+{
+	DynamicHandicap_UpdateHandicap();
+}
+
+MUTATOR_HOOKFUNCTION(dynamic_handicap, AddedPlayerScore)
+{
+	if (M_ARGV(0, entity) != SP_SCORE)
 	{
 		return;
 	}
-	DynamicHandicap_UpdateHandicap(attacker);
+	DynamicHandicap_UpdateHandicap();
 }
