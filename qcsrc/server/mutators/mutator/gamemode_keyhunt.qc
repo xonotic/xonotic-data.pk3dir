@@ -130,7 +130,7 @@ void kh_update_state()
 			f = key.team;
 		else
 			f = 30;
-		s |= EXP(32, key.count) * f;
+		s |= (32 ** key.count) * f;
 	}
 
 	FOREACH_CLIENT(true, { it.kh_state = s; });
@@ -138,7 +138,7 @@ void kh_update_state()
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
-			key.owner.kh_state |= EXP(32, key.count) * 31;
+			key.owner.kh_state |= (32 ** key.count) * 31;
 	}
 	//print(ftos((nextent(NULL)).kh_state), "\n");
 }
@@ -863,7 +863,7 @@ int kh_GetMissingTeams()
 				++players;
 		});
 		if (!players)
-			missing_teams |= EXP(2, i);
+			missing_teams |= (2 ** i);
 	}
 	return missing_teams;
 }

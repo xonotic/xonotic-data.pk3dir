@@ -1,6 +1,8 @@
 #include "mathlib.qh"
-
-#include <lib/math.qh>
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
 
 int fpclassify(float e)
 {
@@ -61,11 +63,11 @@ float tanh(float e)
 
 float exp(float e)
 {
-	return EXP(M_E, e);
+	return (M_E ** e);
 }
 float exp2(float e)
 {
-	return EXP(2, e);
+	return (2 ** e);
 }
 float expm1(float e)
 {
@@ -77,7 +79,7 @@ vector frexp(float e)
 	vector v;
 	v.z = 0;
 	v.y = ilogb(e) + 1;
-	v.x = e / EXP(2, v.y);
+	v.x = e / (2 ** v.y);
 	return v;
 }
 int ilogb(float e)
@@ -86,7 +88,7 @@ int ilogb(float e)
 }
 float ldexp(float e, int e)
 {
-	return e * EXP(2, e);
+	return e * (2 ** e);
 }
 float logn(float e, float base)
 {
@@ -115,12 +117,12 @@ vector modf(float f)
 
 float scalbn(float e, int n)
 {
-	return e * EXP(2, n);
+	return e * (2 ** n);
 }
 
 float cbrt(float e)
 {
-	return copysign(EXP(fabs(e), (1.0/3.0)), e);
+	return copysign((fabs(e) ** (1.0/3.0)), e);
 }
 float hypot(float e, float f)
 {
