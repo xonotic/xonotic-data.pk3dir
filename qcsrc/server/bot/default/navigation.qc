@@ -1354,6 +1354,7 @@ int navigation_poptouchedgoals(entity this)
 				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			}
 			navigation_poproute(this);
+			this.lastteleporttime = 0;
 			++removed_goals;
 		}
 		else
