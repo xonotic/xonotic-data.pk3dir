@@ -4,7 +4,10 @@
 // #define KEEP_ROLL
 
 IntrusiveList g_warpzones;
-STATIC_INIT(g_warpzones) { g_warpzones = IL_NEW(); }
+STATIC_INIT(g_warpzones)
+{
+	g_warpzones = IL_NEW();
+}
 
 float warpzone_warpzones_exist;
 float warpzone_cameras_exist;
@@ -31,14 +34,14 @@ void WarpZone_MakeAllSolid();
 void WarpZone_MakeAllOther();
 
 #define MOVE_NOTHING -1
-entity WarpZone_trace_forent; // temp, callback is allowed to change it
+entity WarpZone_trace_forent;                                                 // temp, callback is allowed to change it
 USING(WarpZone_trace_callback_t, void(vector start, vector hit, vector end)); // called on every elementary trace
 var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
-entity WarpZone_trace_transform; // transform accumulator during a trace
-entity WarpZone_trace_firstzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
-entity WarpZone_trace_lastzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
-vector WarpZone_tracetoss_velocity; // ending velocity of a tracetoss (post-transform)
-float WarpZone_tracetoss_time; // duration of toss (approximate)
+entity WarpZone_trace_transform;                                              // transform accumulator during a trace
+entity WarpZone_trace_firstzone;                                              // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
+entity WarpZone_trace_lastzone;                                               // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
+vector WarpZone_tracetoss_velocity;                                           // ending velocity of a tracetoss (post-transform)
+float WarpZone_tracetoss_time;                                                // duration of toss (approximate)
 void WarpZone_TraceBox(vector org, vector min, vector max, vector end, float nomonsters, entity forent);
 void WarpZone_TraceBox_ThroughZone(vector org, vector min, vector max, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb);
 void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent);
@@ -68,43 +71,43 @@ vector WarpZone_UnTransformAngles(entity wz, vector v);
 vector WarpZone_UnTransformVAngles(entity wz, vector v);
 
 // reference systems (chained warpzone transforms)
-void WarpZone_RefSys_Clear(entity me); // R := id
-void WarpZone_RefSys_Add(entity me, entity wz); // me.R := wz me.R
-void WarpZone_RefSys_AddInverse(entity me, entity wz); // me.R := wz^-1 me.R
-void WarpZone_RefSys_AddTransform(entity me, vector t, vector s); // me.R := [t s] me.R
+void WarpZone_RefSys_Clear(entity me);                                   // R := id
+void WarpZone_RefSys_Add(entity me, entity wz);                          // me.R := wz me.R
+void WarpZone_RefSys_AddInverse(entity me, entity wz);                   // me.R := wz^-1 me.R
+void WarpZone_RefSys_AddTransform(entity me, vector t, vector s);        // me.R := [t s] me.R
 void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s); // me.R := [t s]^-1 me.R
 
 // makes this reference system track ref's changes
 // NOTE: this is ONLY sensible if WarpZone_RefSys_Add is no longer called on "me" while doing this
 // To achieve this, make sure no touch events on warpzone are raised by this entity
 // or set a movetype that causes no warpzoning (e.g. MOVETYPE_NONE, MOVETYPE_FOLLOW)
-void WarpZone_RefSys_AddIncrementally(entity me, entity ref); // me.R := ref.R me.Rref^-1 me.R; me.Rref := ref.R
-void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref); // me.Rref := ref.R
+void WarpZone_RefSys_AddIncrementally(entity me, entity ref);                 // me.R := ref.R me.Rref^-1 me.R; me.Rref := ref.R
+void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref);         // me.Rref := ref.R
 
-vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org); // return to.R from.R^-1 org
+vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org);   // return to.R from.R^-1 org
 vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel); // return to.R from.R^-1 vel
-vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang); // return to.R from.R^-1 ang
-vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang); // return to.R from.R^-1 ang
-void WarpZone_RefSys_Copy(entity me, entity from); // to.R := from.R
-entity WarpZone_RefSys_SpawnSameRefSys(entity me); // spawn().R = me.R
+vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang);   // return to.R from.R^-1 ang
+vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang);  // return to.R from.R^-1 ang
+void WarpZone_RefSys_Copy(entity me, entity from);                            // to.R := from.R
+entity WarpZone_RefSys_SpawnSameRefSys(entity me);                            // spawn().R = me.R
 
 #ifndef BITCLR
-# define BITCLR(a,b) ((a) - ((a) & (b)))
+#define BITCLR(a, b) ((a) - ((a) & (b)))
 #endif
 #ifndef BITSET
-# define BITSET(a,b) ((a) | (b))
+#define BITSET(a, b) ((a) | (b))
 #endif
 #ifndef BITXOR
-# define BITXOR(a,b) (((a) | (b)) - ((a) & (b)))
+#define BITXOR(a, b) (((a) | (b)) - ((a) & (b)))
 #endif
 #ifndef BITCLR_ASSIGN
-# define BITCLR_ASSIGN(a,b) ((a) = (a) - ((a) & (b)))
+#define BITCLR_ASSIGN(a, b) ((a) = (a) - ((a) & (b)))
 #endif
 #ifndef BITSET_ASSIGN
-# define BITSET_ASSIGN(a,b) ((a) |= (b))
+#define BITSET_ASSIGN(a, b) ((a) |= (b))
 #endif
 #ifndef BITXOR_ASSIGN
-# define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
+#define BITXOR_ASSIGN(a, b) ((a) = ((a) | (b)) - ((a) & (b)))
 #endif
 bool WarpZoneLib_MoveOutOfSolid(entity e);
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
@@ -113,5 +116,5 @@ bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher);
 void WarpZoneLib_ExactTrigger_Init(entity this);
 
 // WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH(e,t) if(WarpZoneLib_ExactTrigger_Touch((e), (t))) return
-#define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init(this)
+#define EXACTTRIGGER_TOUCH(e, t) if (WarpZoneLib_ExactTrigger_Touch((e), (t))) return
+#define EXACTTRIGGER_INIT WarpZoneLib_ExactTrigger_Init(this)

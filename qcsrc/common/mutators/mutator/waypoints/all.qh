@@ -11,18 +11,19 @@ REGISTRY_CHECK(Waypoints)
 #define REGISTER_WAYPOINT_(id, init) REGISTER(Waypoints, WP, id, m_id, init)
 
 CLASS(Waypoint, Object)
-    ATTRIB(Waypoint, m_id, int, 0);
-    ATTRIB(Waypoint, netname, string);
-    ATTRIB(Waypoint, m_name, string);
-    ATTRIB(Waypoint, m_color, vector, '1 1 1');
-    ATTRIB(Waypoint, m_blink, int, 1);
-    CONSTRUCTOR(Waypoint, string _netname, string _name, vector _color, int _blink) {
-        CONSTRUCT(Waypoint);
-        this.netname = _netname;
-        this.m_name = _name;
-        this.m_color = _color;
-        this.m_blink = _blink;
-    }
+	ATTRIB(Waypoint, m_id, int, 0);
+	ATTRIB(Waypoint, netname, string);
+	ATTRIB(Waypoint, m_name, string);
+	ATTRIB(Waypoint, m_color, vector, '1 1 1');
+	ATTRIB(Waypoint, m_blink, int, 1);
+	CONSTRUCTOR(Waypoint, string _netname, string _name, vector _color, int _blink)
+	{
+		CONSTRUCT(Waypoint);
+		this.netname = _netname;
+		this.m_name = _name;
+		this.m_color = _color;
+		this.m_blink = _blink;
+	}
 ENDCLASS(Waypoint)
 
 #define REGISTER_WAYPOINT(id, text, color, blink) REGISTER_WAYPOINT_(id, NEW(Waypoint, #id, text, color, blink))
@@ -33,7 +34,11 @@ REGISTER_REGISTRY(RadarIcons)
 REGISTRY_CHECK(RadarIcons)
 
 .int m_radaricon;
-#define REGISTER_RADARICON(id, num) REGISTER(RadarIcons, RADARICON, id, m_id, new_pure(RadarIcon)) { this.m_radaricon = num; this.netname = #id; }
+#define REGISTER_RADARICON(id, num) \
+	REGISTER(RadarIcons, RADARICON, id, m_id, new_pure(RadarIcon)) \
+	{ \
+		this.m_radaricon = num; this.netname = #id; \
+	}
 
 REGISTER_WAYPOINT(Null, "", '0 0 0', 1);
 

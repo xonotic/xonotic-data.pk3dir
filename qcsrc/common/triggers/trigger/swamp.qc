@@ -2,10 +2,10 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <lib/warpzone/util_server.qh>
-    #include <common/weapons/_all.qh>
-    #include <server/defs.qh>
-    #include <common/deathtypes/all.qh>
+#include <lib/warpzone/util_server.qh>
+#include <common/weapons/_all.qh>
+#include <server/defs.qh>
+#include <common/deathtypes/all.qh>
 #endif
 
 /*
@@ -16,8 +16,8 @@
 *		2005 11 29
 */
 
-.float swamp_interval;	//Hurt players in swamp with this interval
-.float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
+.float swamp_interval; // Hurt players in swamp with this interval
+.float swamp_slowdown; // Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
 .entity swampslug;
 
 #ifdef SVQC
@@ -39,15 +39,14 @@ void swampslug_think(entity this);
 */
 void swampslug_think(entity this)
 {
-	//Slowly kill the slug
+	// Slowly kill the slug
 	this.health = this.health - 1;
 
-	//Slug dead? then remove curses.
-	if(this.health <= 0)
-	{
+	// Slug dead? then remove curses.
+	if (this.health <= 0) {
 		this.owner.in_swamp = 0;
 		delete(this);
-		//centerprint(this.owner,"Killing slug...\n");
+		// centerprint(this.owner,"Killing slug...\n");
 		return;
 	}
 
@@ -55,7 +54,7 @@ void swampslug_think(entity this)
 	// Or we have exited it very recently.
 	// Do the damage and renew the timer.
 #ifdef SVQC
-	Damage (this.owner, this, this, this.dmg, DEATH_SWAMP.m_id, this.owner.origin, '0 0 0');
+	Damage(this.owner, this, this, this.dmg, DEATH_SWAMP.m_id, this.owner.origin, '0 0 0');
 #endif
 
 	this.nextthink = time + this.swamp_interval;
@@ -65,16 +64,16 @@ void swamp_touch(entity this, entity toucher)
 {
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
-	if(!IS_PLAYER(toucher) || IS_DEAD(toucher))
+	if (!IS_PLAYER(toucher) || IS_DEAD(toucher)) {
 		return;
+	}
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 	// Chech if player alredy got a swampslug.
-	if(toucher.in_swamp != 1)
-	{
+	if (toucher.in_swamp != 1) {
 		// If not attach one.
-		//centerprint(toucher,"Entering swamp!\n");
+		// centerprint(toucher,"Entering swamp!\n");
 		toucher.swampslug = spawn();
 		toucher.swampslug.health = 2;
 		setthink(toucher.swampslug, swampslug_think);
@@ -87,9 +86,9 @@ void swamp_touch(entity this, entity toucher)
 		return;
 	}
 
-	//toucher.in_swamp = 1;
+	// toucher.in_swamp = 1;
 
-	//Revitalize players swampslug
+	// Revitalize players swampslug
 	toucher.swampslug.health = 2;
 }
 
@@ -125,12 +124,15 @@ spawnfunc(trigger_swamp)
 	settouch(this, swamp_touch);
 
 	// Setup default keys, if missing
-	if(this.dmg <= 0)
+	if (this.dmg <= 0) {
 		this.dmg = 5;
-	if(this.swamp_interval <= 0)
+	}
+	if (this.swamp_interval <= 0) {
 		this.swamp_interval = 1;
-	if(this.swamp_slowdown <= 0)
+	}
+	if (this.swamp_slowdown <= 0) {
 		this.swamp_slowdown = 0.5;
+	}
 
 	swamp_link(this);
 }

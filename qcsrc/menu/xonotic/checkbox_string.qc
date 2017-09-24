@@ -23,21 +23,25 @@ void XonoticCheckBoxString_setChecked(entity me, float foo)
 }
 void XonoticCheckBoxString_loadCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.cvarName) {
 		return;
+	}
 
-	if(cvar_string(me.cvarName) == me.yesString)
+	if (cvar_string(me.cvarName) == me.yesString) {
 		me.checked = 1;
+	}
 }
 void XonoticCheckBoxString_saveCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.cvarName) {
 		return;
+	}
 
-	if(me.checked)
+	if (me.checked) {
 		cvar_set(me.cvarName, me.yesString);
-	else
+	} else {
 		cvar_set(me.cvarName, me.noString);
+	}
 
 	CheckSendCvars(me, me.cvarName);
 }

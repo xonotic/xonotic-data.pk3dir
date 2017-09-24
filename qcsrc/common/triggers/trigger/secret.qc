@@ -2,8 +2,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <common/util.qh>
-    #include <server/defs.qh>
+#include <common/util.qh>
+#include <server/defs.qh>
 #endif
 
 #ifdef SVQC
@@ -20,13 +20,14 @@ void secrets_setstatus(entity this)
 void trigger_secret_touch(entity this, entity toucher)
 {
 	// only a player can trigger this
-	if (!IS_PLAYER(toucher))
+	if (!IS_PLAYER(toucher)) {
 		return;
+	}
 
 	// update secrets found counter
 	secrets_found += 1;
-	//print("Secret found: ", ftos(secret_counter.cnt), "/");
-	//print(ftos(secret_counter.count), "\n");
+	// print("Secret found: ", ftos(secret_counter.cnt), "/");
+	// print(ftos(secret_counter.count), "\n");
 
 	// centerprint message (multi_touch() doesn't always call centerprint())
 	centerprint(toucher, this.message);
@@ -36,7 +37,7 @@ void trigger_secret_touch(entity this, entity toucher)
 	multi_touch(this, toucher);
 	// we can't just delete(this) here, because this is a touch function
 	// called while C code is looping through area links...
-	//delete(this);
+	// delete(this);
 }
 
 /*QUAKED trigger_secret (.5 .5 .5) ?
@@ -60,14 +61,16 @@ spawnfunc(trigger_secret)
 	secrets_total += 1;
 
 	// add default message
-	if (this.message == "")
+	if (this.message == "") {
 		this.message = "You found a secret!";
+	}
 
 	// set default sound
-	if (this.noise == "")
-	if (!this.sounds)
-		this.sounds = 1; // misc/secret.wav
-
+	if (this.noise == "") {
+		if (!this.sounds) {
+			this.sounds = 1; // misc/secret.wav
+		}
+	}
 	// this entity can't be a target itself!!!!
 	this.targetname = "";
 
@@ -78,7 +81,7 @@ spawnfunc(trigger_secret)
 	this.delay = 0;
 
 	// convert this trigger to trigger_once
-	//this.classname = "trigger_once";
+	// this.classname = "trigger_once";
 	spawnfunc_trigger_once(this);
 
 	// take over the touch() function, so we can mark secret as found

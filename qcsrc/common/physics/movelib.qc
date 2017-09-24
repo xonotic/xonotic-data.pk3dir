@@ -9,29 +9,29 @@
 **/
 vector movelib_dragvec(entity this, float drag, float exp_)
 {
-    float lspeed,ldrag;
+	float lspeed, ldrag;
 
-    lspeed = vlen(this.velocity);
-    ldrag = lspeed * drag;
-    ldrag = ldrag * (drag * exp_);
-    ldrag = 1 - (ldrag / lspeed);
+	lspeed = vlen(this.velocity);
+	ldrag = lspeed * drag;
+	ldrag = ldrag * (drag * exp_);
+	ldrag = 1 - (ldrag / lspeed);
 
-    return this.velocity * ldrag;
+	return this.velocity * ldrag;
 }
 
 /**
     Simulate drag
     this.velocity *= movelib_dragflt(somespeed,0.01,0.7);
 **/
-float movelib_dragflt(float fspeed,float drag,float exp_)
+float movelib_dragflt(float fspeed, float drag, float exp_)
 {
-    float ldrag;
+	float ldrag;
 
-    ldrag = fspeed * drag;
-    ldrag = ldrag * ldrag * exp_;
-    ldrag = 1 - (ldrag / fspeed);
+	ldrag = fspeed * drag;
+	ldrag = ldrag * ldrag * exp_;
+	ldrag = 1 - (ldrag / fspeed);
 
-    return ldrag;
+	return ldrag;
 }
 
 /**
@@ -39,68 +39,69 @@ float movelib_dragflt(float fspeed,float drag,float exp_)
     Basicaly, this allows you to simulate loss of steering with higher speed.
     this.velocity = movelib_inertmove_byspeed(this.velocity,newvel,1000,0.1,0.9);
 **/
-vector movelib_inertmove_byspeed(entity this, vector vel_new, float vel_max,float newmin,float oldmax)
+vector movelib_inertmove_byspeed(entity this, vector vel_new, float vel_max, float newmin, float oldmax)
 {
-    float influense;
+	float influense;
 
-    influense = vlen(this.velocity) * (1 / vel_max);
+	influense = vlen(this.velocity) * (1 / vel_max);
 
-    influense = bound(newmin,influense,oldmax);
+	influense = bound(newmin, influense, oldmax);
 
-    return (vel_new * (1 - influense)) + (this.velocity * influense);
+	return (vel_new * (1 - influense)) + (this.velocity * influense);
 }
 
-vector movelib_inertmove(entity this, vector new_vel,float new_bias)
+vector movelib_inertmove(entity this, vector new_vel, float new_bias)
 {
-    return new_vel * new_bias + this.velocity * (1-new_bias);
+	return new_vel * new_bias + this.velocity * (1 - new_bias);
 }
 
-void movelib_move(entity this, vector force,float max_velocity,float drag,float theMass,float breakforce)
+void movelib_move(entity this, vector force, float max_velocity, float drag, float theMass, float breakforce)
 {
-    float deltatime;
-    float acceleration;
-    float mspeed;
-    vector breakvec;
+	float deltatime;
+	float acceleration;
+	float mspeed;
+	vector breakvec;
 
-    deltatime = time - this.movelib_lastupdate;
-    if (deltatime > 0.15) deltatime = 0;
-    this.movelib_lastupdate = time;
-    if (!deltatime) return;
+	deltatime = time - this.movelib_lastupdate;
+	if (deltatime > 0.15) { deltatime = 0; }
+	this.movelib_lastupdate = time;
+	if (!deltatime) { return; }
 
-    mspeed = vlen(this.velocity);
+	mspeed = vlen(this.velocity);
 
-    if (theMass)
-        acceleration = vlen(force) / theMass;
-    else
-        acceleration = vlen(force);
+	if (theMass) {
+		acceleration = vlen(force) / theMass;
+	} else {
+		acceleration = vlen(force);
+	}
 
-    if (IS_ONGROUND(this))
-    {
-        if (breakforce)
-        {
-            breakvec = (normalize(this.velocity) * (breakforce / theMass) * deltatime);
-            this.velocity = this.velocity - breakvec;
-        }
+	if (IS_ONGROUND(this)) {
+		if (breakforce) {
+			breakvec = (normalize(this.velocity) * (breakforce / theMass) * deltatime);
+			this.velocity = this.velocity - breakvec;
+		}
 
-        this.velocity = this.velocity + force * (acceleration * deltatime);
-    }
+		this.velocity = this.velocity + force * (acceleration * deltatime);
+	}
 
-    if (drag)
-        this.velocity = movelib_dragvec(this, drag, 1);
+	if (drag) {
+		this.velocity = movelib_dragvec(this, drag, 1);
+	}
 
-    if (this.waterlevel > 1)
-    {
-        this.velocity = this.velocity + force * (acceleration * deltatime);
-        this.velocity = this.velocity + '0 0 0.05' * autocvar_sv_gravity * deltatime;
-    }
-    else
-        this.velocity = this.velocity + '0 0 -1' * autocvar_sv_gravity * deltatime;
+	if (this.waterlevel > 1) {
+		this.velocity = this.velocity + force * (acceleration * deltatime);
+		this.velocity = this.velocity + '0 0 0.05' * autocvar_sv_gravity * deltatime;
+	} else {
+		this.velocity = this.velocity + '0 0 -1' * autocvar_sv_gravity * deltatime;
+	}
 
-    mspeed = vlen(this.velocity);
+	mspeed = vlen(this.velocity);
 
-    if (max_velocity)
-        if (mspeed > max_velocity)
-            this.velocity = normalize(this.velocity) * (mspeed - 50);//* max_velocity;
+	if (max_velocity) {
+		if (mspeed > max_velocity) {
+			this.velocity = normalize(this.velocity) * (mspeed - 50); // * max_velocity;
+		}
+	}
 }
 
 /*
@@ -165,15 +166,15 @@ void movelib_update(entity this, vector dir,float force)
 
 void movelib_brake_simple(entity this, float force)
 {
-    float mspeed;
-    vector mdir;
-    float vz;
+	float mspeed;
+	vector mdir;
+	float vz;
 
-    mspeed = max(0,vlen(this.velocity) - force);
-    mdir   = normalize(this.velocity);
-    vz = this.velocity.z;
-    this.velocity = mdir * mspeed;
-    this.velocity_z = vz;
+	mspeed = max(0, vlen(this.velocity) - force);
+	mdir   = normalize(this.velocity);
+	vz = this.velocity.z;
+	this.velocity = mdir * mspeed;
+	this.velocity_z = vz;
 }
 
 /**
@@ -184,54 +185,53 @@ Yed need to set v_up and v_forward (generally by calling makevectors) before cal
 
 void movelib_groundalign4point(entity this, float spring_length, float spring_up, float blendrate, float _max)
 {
-    vector a, b, c, d, e, r, push_angle, ahead, side;
+	vector a, b, c, d, e, r, push_angle, ahead, side;
 
-    push_angle.y = 0;
-    r = (this.absmax + this.absmin) * 0.5 + (v_up * spring_up);
-    e = v_up * spring_length;
+	push_angle.y = 0;
+	r = (this.absmax + this.absmin) * 0.5 + (v_up * spring_up);
+	e = v_up * spring_length;
 
-    // Put springs slightly inside bbox
-    ahead = v_forward * (this.maxs.x * 0.8);
-    side  = v_right   * (this.maxs.y * 0.8);
+	// Put springs slightly inside bbox
+	ahead = v_forward * (this.maxs.x * 0.8);
+	side  = v_right   * (this.maxs.y * 0.8);
 
-    a = r + ahead + side;
-    b = r + ahead - side;
-    c = r - ahead + side;
-    d = r - ahead - side;
+	a = r + ahead + side;
+	b = r + ahead - side;
+	c = r - ahead + side;
+	d = r - ahead - side;
 
-    traceline(a, a - e,MOVE_NORMAL,this);
-    a.z =  (1 - trace_fraction);
-    r = trace_endpos;
+	traceline(a, a - e, MOVE_NORMAL, this);
+	a.z =  (1 - trace_fraction);
+	r = trace_endpos;
 
-    traceline(b, b - e,MOVE_NORMAL,this);
-    b.z =  (1 - trace_fraction);
-    r += trace_endpos;
+	traceline(b, b - e, MOVE_NORMAL, this);
+	b.z =  (1 - trace_fraction);
+	r += trace_endpos;
 
-    traceline(c, c - e,MOVE_NORMAL,this);
-    c.z =  (1 - trace_fraction);
-    r += trace_endpos;
+	traceline(c, c - e, MOVE_NORMAL, this);
+	c.z =  (1 - trace_fraction);
+	r += trace_endpos;
 
-    traceline(d, d - e,MOVE_NORMAL,this);
-    d.z =  (1 - trace_fraction);
-    r += trace_endpos;
+	traceline(d, d - e, MOVE_NORMAL, this);
+	d.z =  (1 - trace_fraction);
+	r += trace_endpos;
 
-    a.x = r.z;
-    r = this.origin;
-    r.z = r.z;
+	a.x = r.z;
+	r = this.origin;
+	r.z = r.z;
 
-    push_angle.x = (a.z - c.z) * _max;
-    push_angle.x += (b.z - d.z) * _max;
+	push_angle.x = (a.z - c.z) * _max;
+	push_angle.x += (b.z - d.z) * _max;
 
-    push_angle.z = (b.z - a.z) * _max;
-    push_angle.z += (d.z - c.z) * _max;
+	push_angle.z = (b.z - a.z) * _max;
+	push_angle.z += (d.z - c.z) * _max;
 
-    //this.angles_x += push_angle_x * 0.95;
-    //this.angles_z += push_angle_z * 0.95;
+	// this.angles_x += push_angle_x * 0.95;
+	// this.angles_z += push_angle_z * 0.95;
 
-    this.angles_x = ((1-blendrate) *  this.angles.x)  + (push_angle.x * blendrate);
-    this.angles_z = ((1-blendrate) *  this.angles.z)  + (push_angle.z * blendrate);
+	this.angles_x = ((1 - blendrate) *  this.angles.x)  + (push_angle.x * blendrate);
+	this.angles_z = ((1 - blendrate) *  this.angles.z)  + (push_angle.z * blendrate);
 
-    //a = this.origin;
-    setorigin(this, r);
+	// a = this.origin;
+	setorigin(this, r);
 }
-

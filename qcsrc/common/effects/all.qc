@@ -17,20 +17,21 @@ NET_HANDLE(net_effect, bool isNew)
 	v_z = ReadCoord();
 
 	bool use_vel = ReadByte();
-	if(use_vel)
-	{
+	if (use_vel) {
 		vel_x = ReadCoord();
 		vel_y = ReadCoord();
 		vel_z = ReadCoord();
 	}
 
-	if(!eff_trail)
+	if (!eff_trail) {
 		eff_cnt = ReadByte();
+	}
 
-	if(eff_trail)
+	if (eff_trail) {
 		WarpZone_TrailParticles(NULL, particleeffectnum(eff), v, vel);
-	else
+	} else {
 		pointparticles(eff, v, vel, eff_cnt);
+	}
 	return true;
 }
 #endif
@@ -49,26 +50,24 @@ bool Net_Write_Effect(entity this, entity client, int sf)
 	WriteCoord(channel, this.eent_net_location_z);
 
 	// attempt to save a tiny bit more bandwidth by not sending velocity if it isn't set
-	if(this.eent_net_velocity)
-	{
+	if (this.eent_net_velocity) {
 		WriteByte(channel, true);
 		WriteCoord(channel, this.eent_net_velocity_x);
 		WriteCoord(channel, this.eent_net_velocity_y);
 		WriteCoord(channel, this.eent_net_velocity_z);
-	}
-	else { WriteByte(channel, false); }
+	} else { WriteByte(channel, false); }
 
-	if(!this.eent_eff_trail) { WriteByte(channel, this.eent_net_count); }
+	if (!this.eent_eff_trail) { WriteByte(channel, this.eent_net_count); }
 	return true;
 }
 
 void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 {
-	if(!eff) { return; }
-	if(!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
+	if (!eff) { return; }
+	if (!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
 	entity net_eff = new_pure(net_effect);
 	net_eff.owner = eff;
-	//net_eff.eent_broadcast = broadcast;
+	// net_eff.eent_broadcast = broadcast;
 	net_eff.m_id = eff.m_id;
 	net_eff.eent_net_velocity = eff_vel;
 	net_eff.eent_net_location = eff_loc;
@@ -92,5 +91,5 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 #endif
 
 #if ENABLE_EFFECTINFO
-	#include "effectinfo.qc"
+#include "effectinfo.qc"
 #endif

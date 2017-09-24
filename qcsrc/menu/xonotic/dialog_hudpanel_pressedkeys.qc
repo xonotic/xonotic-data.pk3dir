@@ -10,16 +10,16 @@ void XonoticHUDPressedKeysDialog_fill(entity me)
 	string panelname = "pressedkeys";
 
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_pressedkeys"));
-			e.addValue(e, _("Panel disabled"), "0");
-			e.addValue(e, _("Panel enabled when spectating"), "1");
-			e.addValue(e, _("Panel always enabled"), "2");
-			e.configureXonoticTextSliderValues(e);
+	me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_pressedkeys"));
+	e.addValue(e, _("Panel disabled"), "0");
+	e.addValue(e, _("Panel enabled when spectating"), "1");
+	e.addValue(e, _("Panel always enabled"), "2");
+	e.configureXonoticTextSliderValues(e);
 
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE();
 
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Forced aspect:")));
-			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.2, 4, 0.1, "hud_panel_pressedkeys_aspect"));
+	me.TDempty(me, 0.2);
+	me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Forced aspect:")));
+	me.TD(me, 1, 2.6, e = makeXonoticSlider(0.2, 4, 0.1, "hud_panel_pressedkeys_aspect"));
 }

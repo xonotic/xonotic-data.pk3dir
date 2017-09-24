@@ -2,16 +2,18 @@
 
 string crosshairpicker_cellToCrosshair(entity me, vector cell)
 {
-	if(cell.x < 0 || cell.x >= me.columns || cell.y < 0 || cell.y >= me.rows)
+	if (cell.x < 0 || cell.x >= me.columns || cell.y < 0 || cell.y >= me.rows) {
 		return "";
+	}
 	return ftos(31 + cell.y * me.columns + cell.x);
 }
 
 vector crosshairpicker_crosshairToCell(entity me, string crosshair_str)
 {
 	float crosshair = stof(crosshair_str) - 31;
-	if(crosshair - floor(crosshair) > 0)
+	if (crosshair - floor(crosshair) > 0) {
 		return '-1 -1 0';
+	}
 	return mod(crosshair, me.columns) * eX + floor(crosshair / me.columns) * eY;
 }
 
@@ -37,8 +39,9 @@ void XonoticCrosshairPicker_cellSelect(entity me, vector cell)
 
 bool XonoticCrosshairPicker_cellIsValid(entity me, vector cell)
 {
-	if(crosshairpicker_cellToCrosshair(me, cell) == "")
+	if (crosshairpicker_cellToCrosshair(me, cell) == "") {
 		return false;
+	}
 	return true;
 }
 
@@ -56,6 +59,7 @@ void XonoticCrosshairPicker_cellDraw(entity me, vector cell, vector cellPos)
 	vector crosshairPos = cellPos + 0.5 * me.realCellSize;
 	draw_Picture(crosshairPos - 0.5 * sz, s, sz, SKINCOLOR_CROSSHAIRPICKER_CROSSHAIR, SKINALPHA_CROSSHAIRPICKER_CROSSHAIR);
 
-	if(cvar("crosshair_dot"))
+	if (cvar("crosshair_dot")) {
 		draw_Picture(crosshairPos - 0.5 * sz * cvar("crosshair_dot_size"), "/gfx/crosshairdot", sz * cvar("crosshair_dot_size"), SKINCOLOR_CROSSHAIRPICKER_CROSSHAIR, SKINALPHA_CROSSHAIRPICKER_CROSSHAIR);
+	}
 }

@@ -39,16 +39,18 @@ flags:
 */
 void dynlight_think(entity this)
 {
-	if(!this.owner)
+	if (!this.owner) {
 		delete(this);
+	}
 
 	this.nextthink = time + 0.1;
 }
 void dynlight_find_aiment(entity this)
 {
 	entity targ;
-	if (!this.target)
-		objerror (this, "dynlight: no target to follow");
+	if (!this.target) {
+		objerror(this, "dynlight: no target to follow");
+	}
 
 	targ = find(NULL, targetname, this.target);
 	set_movetype(this, MOVETYPE_FOLLOW);
@@ -63,8 +65,9 @@ void dynlight_find_aiment(entity this)
 void dynlight_find_path(entity this)
 {
 	entity targ;
-	if (!this.target)
-		objerror (this, "dynlight: no target to follow");
+	if (!this.target) {
+		objerror(this, "dynlight: no target to follow");
+	}
 
 	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
@@ -75,8 +78,9 @@ void dynlight_find_path(entity this)
 void dynlight_find_target(entity this)
 {
 	entity targ;
-	if (!this.target)
-		objerror (this, "dynlight: no target to follow");
+	if (!this.target) {
+		objerror(this, "dynlight: no target to follow");
+	}
 
 	targ = find(NULL, targetname, this.target);
 	setattachment(this, targ, this.dtagname);
@@ -86,49 +90,50 @@ void dynlight_find_target(entity this)
 }
 void dynlight_use(entity this, entity actor, entity trigger)
 {
-	if (this.light_lev == 0)
+	if (this.light_lev == 0) {
 		this.light_lev = this.lefty;
-	else
+	} else {
 		this.light_lev = 0;
+	}
 }
 spawnfunc(dynlight)
 {
-	if (!this.light_lev)
+	if (!this.light_lev) {
 		this.light_lev = 200;
-	if (!this.color)
+	}
+	if (!this.color) {
 		this.color = '1 1 1';
+	}
 	this.lefty = this.light_lev;
 	this.use = dynlight_use;
-	setsize (this, '0 0 0', '0 0 0');
+	setsize(this, '0 0 0', '0 0 0');
 	setorigin(this, this.origin);
-	//this.pflags = PFLAGS_FULLDYNAMIC;
+	// this.pflags = PFLAGS_FULLDYNAMIC;
 	this.solid = SOLID_NOT;
-	//this.blocked = func_null;
-	//if (this.spawnflags & DNOSHADOW)
+	// this.blocked = func_null;
+	// if (this.spawnflags & DNOSHADOW)
 	//	this.pflags = this.pflags + PFLAGS_NOSHADOW;
-	//if (this.spawnflags & START_OFF)
+	// if (this.spawnflags & START_OFF)
 	//	this.light_lev = 0;
 
-//tag attaching
-	if (this.dtagname)
-	{
+// tag attaching
+	if (this.dtagname) {
 		InitializeEntity(this, dynlight_find_target, INITPRIO_FINDTARGET);
 		return;
 	}
 
 // entity following
-	if (this.spawnflags & DFOLLOW)
-	{
+	if (this.spawnflags & DFOLLOW) {
 		InitializeEntity(this, dynlight_find_aiment, INITPRIO_FINDTARGET);
 		return;
 	}
 // path following
-	if (this.target)
+	if (this.target) {
 //	if (!(this.spawnflags & DFOLLOW))
-	{
 		set_movetype(this, MOVETYPE_NOCLIP);
-		if (!this.speed)
+		if (!this.speed) {
 			this.speed = 100;
+		}
 		InitializeEntity(this, dynlight_find_path, INITPRIO_FINDTARGET);
 		return;
 	}

@@ -7,15 +7,17 @@ void monoflop_use(entity this, entity actor, entity trigger)
 {
 	this.nextthink = time + this.wait;
 	this.enemy = actor;
-	if(this.state)
+	if (this.state) {
 		return;
+	}
 	this.state = 1;
 	SUB_UseTargets(this, actor, trigger);
 }
 void monoflop_fixed_use(entity this, entity actor, entity trigger)
 {
-	if(this.state)
+	if (this.state) {
 		return;
+	}
 	this.nextthink = time + this.wait;
 	this.state = 1;
 	this.enemy = actor;
@@ -36,12 +38,14 @@ void monoflop_reset(entity this)
 
 spawnfunc(trigger_monoflop)
 {
-	if(!this.wait)
+	if (!this.wait) {
 		this.wait = 1;
-	if(this.spawnflags & 1)
+	}
+	if (this.spawnflags & 1) {
 		this.use = monoflop_fixed_use;
-	else
+	} else {
 		this.use = monoflop_use;
+	}
 	setthink(this, monoflop_think);
 	this.state = 0;
 	this.reset = monoflop_reset;

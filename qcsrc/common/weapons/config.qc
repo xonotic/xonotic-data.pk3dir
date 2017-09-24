@@ -2,8 +2,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <common/util.qh>
-    #include "all.qh"
+#include <common/util.qh>
+#include "all.qh"
 #endif
 
 // ==========================
@@ -28,8 +28,9 @@ void Dump_Weapon_Settings()
 	FOREACH(Weapons, it != WEP_Null, {
 		// step 1: clear the queue
 		WEP_CONFIG_COUNT = 0;
-		for (int x = 0; x <= MAX_CONFIG_SETTINGS; ++x)
+		for (int x = 0; x <= MAX_CONFIG_SETTINGS; ++x) {
 			config_queue[x] = string_null;
+		}
 
 		// step 2: build new queue
 		it.wr_config(it);
@@ -39,12 +40,14 @@ void Dump_Weapon_Settings()
 
 		// step 4: write queue
 		WEP_CONFIG_WRITETOFILE(sprintf(
-			"// {{{ #%d: %s%s\n",
-			i,
-			it.m_name,
-			((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) ? " (MUTATOR WEAPON)" : "")
+		"// {{{ #%d: %s%s\n",
+		i,
+		it.m_name,
+		((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) ? " (MUTATOR WEAPON)" : "")
 		));
-		for (int x = 0; x <= WEP_CONFIG_COUNT; ++x) { WEP_CONFIG_WRITETOFILE(config_queue[x]); }
+		for (int x = 0; x <= WEP_CONFIG_COUNT; ++x) {
+			WEP_CONFIG_WRITETOFILE(config_queue[x]);
+		}
 		WEP_CONFIG_WRITETOFILE("// }}}\n");
 
 		// step 5: debug info
@@ -55,8 +58,9 @@ void Dump_Weapon_Settings()
 
 	// clear queue now that we're finished
 	WEP_CONFIG_COUNT = 0;
-	for(int x = 0; x <= MAX_CONFIG_SETTINGS; ++x)
+	for (int x = 0; x <= MAX_CONFIG_SETTINGS; ++x) {
 		config_queue[x] = string_null;
+	}
 
 	// extra information
 	LOG_INFOF("Totals: %d weapons, %d settings", totalweapons, totalsettings);

@@ -27,10 +27,8 @@ void XonoticSkinList_loadCvars(entity me)
 	float i, n;
 	s = cvar_string("menu_skin");
 	n = me.nItems;
-	for(i = 0; i < n; ++i)
-	{
-		if(me.skinParameter(me, i, SKINPARM_NAME) == s)
-		{
+	for (i = 0; i < n; ++i) {
+		if (me.skinParameter(me, i, SKINPARM_NAME) == s) {
 			me.setSelected(me, i);
 			break;
 		}
@@ -54,43 +52,40 @@ void XonoticSkinList_getSkins(entity me)
 
 	buf = buf_create();
 	glob = search_begin("gfx/menu/*/skinvalues.txt", true, true);
-	if(glob < 0)
-	{
+	if (glob < 0) {
 		me.skinlist = buf;
 		me.nItems = 0;
 		return;
 	}
 
 	n = search_getsize(glob);
-	for(i = 0; i < n; ++i)
-	{
+	for (i = 0; i < n; ++i) {
 		s = search_getfilename(glob, i);
 		name = substring(s, 9, strlen(s) - 24); // the * part
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, name);
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, _("<TITLE>"));
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, _("<AUTHOR>"));
-		if(draw_PictureSize(strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview")) == '0 0 0')
+		if (draw_PictureSize(strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview")) == '0 0 0') {
 			bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, "nopreview_menuskin");
-		else
+		} else {
 			bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview"));
+		}
 		fh = fopen(s, FILE_READ);
-		if(fh < 0)
-		{
+		if (fh < 0) {
 			LOG_INFO("Warning: can't open skinvalues.txt file");
 			continue;
 		}
-		while((s = fgets(fh)))
-		{
+		while ((s = fgets(fh))) {
 			// these two are handled by skinlist.qc
-			if(substring(s, 0, 6) == "title ")
-			{
-				if (name == cvar_defstring("menu_skin"))
+			if (substring(s, 0, 6) == "title ") {
+				if (name == cvar_defstring("menu_skin")) {
 					bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, strcat(substring(s, 6, strlen(s) - 6), " (", _("Default"), ")"));
-				else
+				} else {
 					bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, substring(s, 6, strlen(s) - 6));
-			}
-			else if(substring(s, 0, 7) == "author ")
+				}
+			} else if (substring(s, 0, 7) == "author ") {
 				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, substring(s, 7, strlen(s) - 7));
+			}
 		}
 		fclose(fh);
 	}
@@ -126,10 +121,9 @@ void XonoticSkinList_drawListBoxItem(entity me, int i, vector absSize, bool isSe
 {
 	string s;
 
-	if(isSelected)
+	if (isSelected) {
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(isFocused)
-	{
+	} else if (isFocused) {
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
@@ -165,12 +159,11 @@ void XonoticSkinList_doubleClickListBoxItem(entity me, float i, vector where)
 
 float XonoticSkinList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER)
-	{
+	if (scan == K_ENTER || scan == K_KP_ENTER) {
 		m_play_click_sound(MENU_SOUND_EXECUTE);
 		me.setSkin(me);
 		return 1;
-	}
-	else
+	} else {
 		return SUPER(XonoticSkinList).keyDown(me, scan, ascii, shift);
+	}
 }

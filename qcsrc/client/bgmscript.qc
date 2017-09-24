@@ -11,12 +11,12 @@ float bgmscriptbuf;
 float bgmscriptbufsize;
 float bgmscriptbufloaded;
 
-class(BGMScript) .float bgmscriptline;
-class(BGMScript) .float bgmscriptline0;
-class(BGMScript) .float bgmscriptvolume;
-class(BGMScript) .float bgmscripttime;
-class(BGMScript) .float bgmscriptstate;
-class(BGMScript) .float bgmscriptstatetime;
+class(BGMScript).float bgmscriptline;
+class(BGMScript).float bgmscriptline0;
+class(BGMScript).float bgmscriptvolume;
+class(BGMScript).float bgmscripttime;
+class(BGMScript).float bgmscriptstate;
+class(BGMScript).float bgmscriptstatetime;
 
 float GetAttackDecaySustainAmplitude(float a, float d, float s, float t)
 {
@@ -25,16 +25,21 @@ float GetAttackDecaySustainAmplitude(float a, float d, float s, float t)
 	//   decay: from 1 to s, in time d
 	//   sustain: s
 
-	if(t < 0)
+	if (t < 0) {
 		return 0;
+	}
 
-	if(a)
-		if(t <= a)
+	if (a) {
+		if (t <= a) {
 			return t / a;
+		}
+	}
 
-	if(d)
-		if(t <= a + d)
+	if (d) {
+		if (t <= a + d) {
 			return ((t - a) / d) * (s - 1) + 1;
+		}
+	}
 
 	return s;
 }
@@ -43,19 +48,21 @@ float GetReleaseAmplitude(float d, float s, float r, float t)
 {
 	float decayval, releaseval;
 
-	if(!r)
+	if (!r) {
 		return 0;
+	}
 
-	if(t > r)
+	if (t > r) {
 		return 0;
+	}
 
 	releaseval = s * (1 - t / r);
 
-	if(t < -d)
+	if (t < -d) {
 		return 1;
+	}
 
-	if(t < 0 && t >= -d)
-	{
+	if (t < 0 && t >= -d) {
 		// pre-time decay
 		// value is s at time  0
 		//          1 at time -d
@@ -75,16 +82,17 @@ float GetReleaseTime(float d, float s, float r, float amp)
 {
 	float decaytime, releasetime;
 
-	if(!s)
+	if (!s) {
 		return 0;
+	}
 
 	// if amp > s, we may be in the attack or in the prolonged decay curve
 	releasetime = (1 - amp / s) * r;
 
-	if(amp > s)
-	{
-		if(s == 1) // gracefully handle division by zero here
+	if (amp > s) {
+		if (s == 1) { // gracefully handle division by zero here
 			return 0;
+		}
 
 		// pre-time decay
 		// value is s at time  0
@@ -104,11 +112,11 @@ void BGMScript_Init()
 	bgmscriptbufloaded = 1;
 	s = strcat("maps/", mi_shortname, ".bgs");
 	fh = fopen(s, FILE_READ);
-	if(fh < 0)
+	if (fh < 0) {
 		return;
+	}
 	bgmscriptbuf = buf_create();
-	while((s = fgets(fh)))
-	{
+	while ((s = fgets(fh))) {
 		bufstr_set(bgmscriptbuf, bgmscriptbufsize, s);
 		++bgmscriptbufsize;
 	}
@@ -119,10 +127,10 @@ void BGMScript_InitEntity(entity e)
 {
 	float l;
 	string m;
-	if(e.bgmscript != "")
-	{
-		if(!bgmscriptbufloaded)
+	if (e.bgmscript != "") {
+		if (!bgmscriptbufloaded) {
 			BGMScript_Init();
+		}
 
 		float i;
 
@@ -130,14 +138,13 @@ void BGMScript_InitEntity(entity e)
 		l = strlen(m);
 
 		e.bgmscriptline0 = -1;
-		for(i = 0; i < bgmscriptbufsize; ++i)
-		{
-			if(substring(bufstr_get(bgmscriptbuf, i), 0, l) == m)
+		for (i = 0; i < bgmscriptbufsize; ++i) {
+			if (substring(bufstr_get(bgmscriptbuf, i), 0, l) == m) {
 				break;
+			}
 		}
 		e.bgmscriptline = e.bgmscriptline0 = i;
-		if(i >= bgmscriptbufsize)
-		{
+		if (i >= bgmscriptbufsize) {
 			LOG_INFOF("ERROR: bgmscript does not define %s", e.bgmscript);
 			strunzone(e.bgmscript);
 			e.bgmscript = string_null;
@@ -147,10 +154,9 @@ void BGMScript_InitEntity(entity e)
 
 float GetCurrentAmplitude(entity e, float trel)
 {
-	if(e.bgmscriptstate)
+	if (e.bgmscriptstate) {
 		return GetAttackDecaySustainAmplitude(e.bgmscriptattack, e.bgmscriptdecay, e.bgmscriptsustain, trel) * e.bgmscriptvolume;
-	else
-	{
+	} else {
 #ifdef CONSTANT_SPEED_DECAY
 		return GetReleaseAmplitude(e.bgmscriptdecay, e.bgmscriptsustain * e.bgmscriptvolume, e.bgmscriptrelease, trel);
 #else
@@ -161,10 +167,9 @@ float GetCurrentAmplitude(entity e, float trel)
 
 float GetTimeForAmplitude(entity e, float amp)
 {
-	if(e.bgmscriptstate)
+	if (e.bgmscriptstate) {
 		return GetAttackTime(e.bgmscriptattack, amp / e.bgmscriptvolume);
-	else
-	{
+	} else {
 #ifdef CONSTANT_SPEED_DECAY
 		return GetReleaseTime(e.bgmscriptdecay, e.bgmscriptsustain * e.bgmscriptvolume, e.bgmscriptrelease, amp);
 #else
@@ -177,19 +182,21 @@ float doBGMScript(entity e)
 {
 	float amp, vel;
 
-	if(e.bgmscript == "")
+	if (e.bgmscript == "") {
 		return 1;
+	}
 
-	if(autocvar_bgmvolume <= 0)
+	if (autocvar_bgmvolume <= 0) {
 		return -1;
+	}
 
 	e.just_toggled = false;
 
-	if(bgmtime < 0)
+	if (bgmtime < 0) {
 		return -1;
+	}
 
-	if(bgmtime < e.bgmscripttime)
-	{
+	if (bgmtime < e.bgmscripttime) {
 		amp = GetCurrentAmplitude(e, e.bgmscripttime - e.bgmscriptstatetime + drawframetime);
 
 		e.bgmscriptline = e.bgmscriptline0;
@@ -202,16 +209,12 @@ float doBGMScript(entity e)
 	}
 
 	// find the CURRENT line
-	for (;;)
-	{
+	for ( ; ; ) {
 		tokenize_console(bufstr_get(bgmscriptbuf, e.bgmscriptline));
-		if(stof(argv(1)) >= bgmtime || argv(0) != e.bgmscript)
-		{
+		if (stof(argv(1)) >= bgmtime || argv(0) != e.bgmscript) {
 			e.bgmscripttime = bgmtime;
 			return GetCurrentAmplitude(e, bgmtime - e.bgmscriptstatetime);
-		}
-		else if(bgmtime >= stof(argv(1)))
-		{
+		} else if (bgmtime >= stof(argv(1))) {
 			e.bgmscriptline += 1;
 			e.bgmscripttime = stof(argv(1));
 
@@ -219,16 +222,14 @@ float doBGMScript(entity e)
 
 			// time code reached!
 			vel = stof(argv(2));
-			if(vel > 0)
-			{
+			if (vel > 0) {
 				e.just_toggled = e.bgmscriptstate = true;
 				e.bgmscriptvolume = vel;
-			}
-			else
+			} else {
 				e.just_toggled = e.bgmscriptstate = false;
+			}
 
 			e.bgmscriptstatetime = e.bgmscripttime - GetTimeForAmplitude(e, amp);
 		}
 	}
 }
-

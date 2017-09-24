@@ -7,8 +7,7 @@ MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 {
 	entity proj = M_ARGV(1, entity);
 
-	if(proj.classname == "rocket" || proj.classname == "mine")
-	{
+	if (proj.classname == "rocket" || proj.classname == "mine") {
 		// kill detonate delay of rockets
 		proj.spawnshieldtime = time;
 	}

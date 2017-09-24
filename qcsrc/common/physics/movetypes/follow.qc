@@ -3,12 +3,9 @@ void _Movetype_Physics_Follow(entity this) // SV_Physics_Follow
 {
 	entity e = this.aiment;
 
-	if(e.angles == this.punchangle)
-	{
+	if (e.angles == this.punchangle) {
 		this.origin = e.origin + this.view_ofs;
-	}
-	else
-	{
+	} else {
 		vector ang, v;
 		ang_x = -this.punchangle_x;
 		ang_y = this.punchangle_y;

@@ -8,7 +8,6 @@ entity tracetossfaketarget;
 vector findtrajectory_velocity;
 
 
-
 vector shotorg;
 vector shotdir;
 
@@ -74,8 +73,8 @@ vector shotdir;
 .vector bot_5th_order_aimfilter;
 .vector bot_olddesiredang;
 
-//.vector bot_aimorigin;
-//.vector bot_aimvelocity;
+// .vector bot_aimorigin;
+// .vector bot_aimvelocity;
 .vector bot_aimtargorigin;
 .vector bot_aimtargvelocity;
 

@@ -16,8 +16,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 	float i, j, n, ibot, jbot, idx;
 	vector v;
 	string prefix, s;
-	switch(status)
-	{
+	switch (status) {
 		case URL_READY_CANWRITE:
 			// we can write
 			prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
@@ -29,20 +28,24 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			url_fputs(fh, strcat("#config ", ftos(crc16(false, cvar_purechanges)), "\n"));
 			url_fputs(fh, strcat("#cvar_purechanges ", ftos(cvar_purechanges_count), "\n"));
 			n = tokenizebyseparator(cvar_purechanges, "\n");
-			for(i = 0; i < n; ++i)
+			for (i = 0; i < n; ++i) {
 				url_fputs(fh, strcat("#cvar_purechange ", argv(i), "\n"));
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i) for(ibot = 0; ibot <= 1; ++ibot)
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j) for(jbot = 0; jbot <= 1; ++jbot)
-				{
-					idx = WEAPONSTATS_GETINDEX(i, ibot, j, jbot);
-					v = stov(bufstr_get(weaponstats_buffer, idx));
-					if(v != '0 0 0')
-					{
-						//vector is: kills hits damage
-						url_fputs(fh, sprintf("%s%d %d\t%d %d\t", prefix, i, ibot, j, jbot));
-						url_fputs(fh, sprintf("%d %d %g\n", v.x, v.y, v.z));
+			}
+			for (i = WEP_FIRST; i <= WEP_LAST; ++i) {
+				for (ibot = 0; ibot <= 1; ++ibot) {
+					for (j = WEP_FIRST; j <= WEP_LAST; ++j) {
+						for (jbot = 0; jbot <= 1; ++jbot) {
+							idx = WEAPONSTATS_GETINDEX(i, ibot, j, jbot);
+							v = stov(bufstr_get(weaponstats_buffer, idx));
+							if (v != '0 0 0') {
+								// vector is: kills hits damage
+								url_fputs(fh, sprintf("%s%d %d\t%d %d\t", prefix, i, ibot, j, jbot));
+								url_fputs(fh, sprintf("%d %d %g\n", v.x, v.y, v.z));
+							}
+						}
 					}
 				}
+			}
 			url_fputs(fh, "#end\n\n");
 			url_fclose(fh);
 			break;
@@ -50,8 +53,9 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			// url_fclose is processing, we got a response for writing the data
 			// this must come from HTTP
 			LOG_INFO("Got response from weapon stats server:");
-			while((s = url_fgets(fh)))
+			while ((s = url_fgets(fh))) {
 				LOG_INFO("  ", s);
+			}
 			LOG_INFO("End of response.");
 			url_fclose(fh);
 			break;
@@ -72,14 +76,12 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 
 void WeaponStats_Shutdown()
 {
-	if(weaponstats_buffer < 0)
+	if (weaponstats_buffer < 0) {
 		return;
-	if(autocvar_sv_weaponstats_file != "")
-	{
-		url_multi_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, NULL);
 	}
-	else
-	{
+	if (autocvar_sv_weaponstats_file != "") {
+		url_multi_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, NULL);
+	} else {
 		buf_del(weaponstats_buffer);
 		weaponstats_buffer = -1;
 	}
@@ -88,20 +90,24 @@ void WeaponStats_Shutdown()
 void WeaponStats_LogItem(float awep, float abot, float vwep, float vbot, vector item)
 {
 	float idx;
-	if(weaponstats_buffer < 0)
+	if (weaponstats_buffer < 0) {
 		return;
-	if(awep < WEP_FIRST || vwep < WEP_FIRST)
+	}
+	if (awep < WEP_FIRST || vwep < WEP_FIRST) {
 		return;
-	if(awep > WEP_LAST || vwep > WEP_LAST)
+	}
+	if (awep > WEP_LAST || vwep > WEP_LAST) {
 		return;
-	idx = WEAPONSTATS_GETINDEX(awep,abot,vwep,vbot);
+	}
+	idx = WEAPONSTATS_GETINDEX(awep, abot, vwep, vbot);
 	bufstr_set(weaponstats_buffer, idx, vtos(stov(bufstr_get(weaponstats_buffer, idx)) + item));
 }
 
 void WeaponStats_LogDamage(float awep, float abot, float vwep, float vbot, float damage)
 {
-	if(damage < 0)
+	if (damage < 0) {
 		error("negative damage?");
+	}
 	WeaponStats_LogItem(awep, abot, vwep, vbot, '0 0 1' * damage + '0 1 0');
 }
 

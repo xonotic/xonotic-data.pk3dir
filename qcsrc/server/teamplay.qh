@@ -14,22 +14,22 @@ float c1;
 float c2;
 float c3;
 float c4;
-float num_bots_team1; ///< Number of bots in the first team.
-float num_bots_team2; ///< Number of bots in the second team.
-float num_bots_team3; ///< Number of bots in the third team.
-float num_bots_team4; ///< Number of bots in the fourth team.
+float num_bots_team1;      ///< Number of bots in the first team.
+float num_bots_team2;      ///< Number of bots in the second team.
+float num_bots_team3;      ///< Number of bots in the third team.
+float num_bots_team4;      ///< Number of bots in the fourth team.
 entity lowest_human_team1; ///< Human with the lowest score in the first team.
 entity lowest_human_team2; ///< Human with the lowest score in the second team.
 entity lowest_human_team3; ///< Human with the lowest score in the third team.
 entity lowest_human_team4; ///< Human with the lowest score in the fourth team.
-entity lowest_bot_team1; ///< Bot with the lowest score in the first team.
-entity lowest_bot_team2; ///< Bot with the lowest score in the second team.
-entity lowest_bot_team3; ///< Bot with the lowest score in the third team.
-entity lowest_bot_team4; ///< Bot with the lowest score in the fourth team.
+entity lowest_bot_team1;   ///< Bot with the lowest score in the first team.
+entity lowest_bot_team2;   ///< Bot with the lowest score in the second team.
+entity lowest_bot_team3;   ///< Bot with the lowest score in the third team.
+entity lowest_bot_team4;   ///< Bot with the lowest score in the fourth team.
 
 int redowned, blueowned, yellowowned, pinkowned;
 
-//float audit_teams_time;
+// float audit_teams_time;
 
 void TeamchangeFrags(entity e);
 
@@ -62,8 +62,7 @@ bool SetPlayerTeamSimple(entity player, int team_num);
 /// \param[in] source_team Previous team of the player.
 /// \param[in] no_print Whether to print this event to players' console.
 /// \return True if team switch was successful, false otherwise.
-bool SetPlayerTeam(entity player, int destination_team, int source_team,
-	bool no_print);
+bool SetPlayerTeam(entity player, int destination_team, int source_team, bool no_print);
 
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams(entity for_whom);
@@ -82,8 +81,7 @@ void GetTeamCounts(entity ignore);
 /// \return True if first team is smaller than the second one, false otherwise.
 /// \note This function assumes that CheckAllowedTeams and GetTeamCounts have
 /// been called.
-bool IsTeamSmallerThanTeam(int team_a, int team_b, entity player,
-	bool use_score);
+bool IsTeamSmallerThanTeam(int team_a, int team_b, entity player, bool use_score);
 
 /// \brief Returns whether one team is equal to the other.
 /// \param[in] team_a First team.

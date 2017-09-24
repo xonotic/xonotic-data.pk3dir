@@ -1,6 +1,6 @@
 #pragma once
 
-//#define TURRET_DEBUG_HK
+// #define TURRET_DEBUG_HK
 
 #include "hk_weapon.qh"
 
@@ -13,6 +13,6 @@ CLASS(HunterKiller, Turret)
 /* head_model */ ATTRIB_STRZONE(HunterKiller, head_model, string, strcat("models/turrets/", "hk.md3"));
 /* netname    */ ATTRIB(HunterKiller, netname, string, "hk");
 /* fullname   */ ATTRIB(HunterKiller, turret_name, string, _("Hunter-Killer Turret"));
-    ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
+	ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
 ENDCLASS(HunterKiller)
 REGISTER_TURRET(HK, NEW(HunterKiller));

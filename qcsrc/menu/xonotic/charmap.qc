@@ -23,10 +23,11 @@ string charmap_cellToChar(entity me, vector cell)
 {
 	string character = substring(CHARMAP, cell.y * me.columns + cell.x, 1);
 
-	if(character != " ")
+	if (character != " ") {
 		return character;
-	else
+	} else {
 		return "";
+	}
 }
 
 entity makeXonoticCharmap(entity controlledInputBox)
@@ -50,45 +51,45 @@ void XonoticCharmap_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	float maxFontWidth = SKINFONTSIZE_NORMAL / absSize.x;
 	float maxFontHeight = SKINFONTSIZE_NORMAL / absSize.y;
 
-	if((me.realCellSize.x * absSize.x) > (me.realCellSize.y * absSize.y))
-	{
+	if ((me.realCellSize.x * absSize.x) > (me.realCellSize.y * absSize.y)) {
 		me.realFontSize_x = me.realCellSize.y * absSize.y / absSize.x;
 		me.realFontSize_y = me.realCellSize.y;
-	}
-	else
-	{
+	} else {
 		me.realFontSize_x = me.realCellSize.x;
 		me.realFontSize_y = me.realCellSize.x * absSize.x / absSize.y;
 	}
 
-	if(me.realFontSize.x > maxFontWidth || me.realFontSize.y > maxFontHeight)
+	if (me.realFontSize.x > maxFontWidth || me.realFontSize.y > maxFontHeight) {
 		me.realFontSize = eX * maxFontWidth + eY * maxFontHeight;
+	}
 
 	me.charOffset = eX * me.realCellSize.x / 2 + eY * ((me.realCellSize.y - me.realFontSize.y) / 2);
 }
 
 float XonoticCharmap_keyDown(entity me, float key, float ascii, float shift)
 {
-	if(SUPER(XonoticCharmap).keyDown(me, key, ascii, shift))
+	if (SUPER(XonoticCharmap).keyDown(me, key, ascii, shift)) {
 		return 1;
+	}
 	return me.inputBox.keyDown(me.inputBox, key, ascii, shift);
 }
 
 void XonoticCharmap_cellSelect(entity me, vector cell)
 {
 	string character = charmap_cellToChar(me, cell);
-	if(character != "")
-	{
+	if (character != "") {
 		me.inputBox.enterText(me.inputBox, character);
-		if(me.inputBox.applyButton)
+		if (me.inputBox.applyButton) {
 			me.inputBox.applyButton.disabled = false;
+		}
 	}
 }
 
 bool XonoticCharmap_cellIsValid(entity me, vector cell)
 {
-	if(charmap_cellToChar(me, cell) == "")
+	if (charmap_cellToChar(me, cell) == "") {
 		return false;
+	}
 	return true;
 }
 

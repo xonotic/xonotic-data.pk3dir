@@ -29,40 +29,40 @@ PROPERTY(float, g_pickup_respawntimejitter_powerup)
 
 CLASS(Pickup, GameItem)
 #ifdef GAMEQC
-    ATTRIB(Pickup, m_model, Model);
-    ATTRIB(Pickup, m_sound, Sound, SND_ITEMPICKUP);
+	ATTRIB(Pickup, m_model, Model);
+	ATTRIB(Pickup, m_sound, Sound, SND_ITEMPICKUP);
 #endif
-    ATTRIB(Pickup, netname, string);
-    ATTRIB(Pickup, m_name, string);
-    METHOD(Pickup, show, void(Pickup this))
-    {
-        TC(Pickup, this);
-        LOG_INFOF("%s: %s", etos(this), this.m_name);
-    }
-    ATTRIB(Pickup, m_itemid, int, 0);
+	ATTRIB(Pickup, netname, string);
+	ATTRIB(Pickup, m_name, string);
+	METHOD(Pickup, show, void(Pickup this))
+	{
+		TC(Pickup, this);
+		LOG_INFOF("%s: %s", etos(this), this.m_name);
+	}
+	ATTRIB(Pickup, m_itemid, int, 0);
 #ifdef SVQC
-    ATTRIB(Pickup, m_mins, vector, '-16 -16 0');
-    ATTRIB(Pickup, m_maxs, vector, '16 16 32');
-    ATTRIB(Pickup, m_botvalue, int, 0);
-    ATTRIB(Pickup, m_itemflags, int, 0);
-    float generic_pickupevalfunc(entity player, entity item);
-    ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc);
-    ATTRIB(Pickup, m_respawntime, float());
-    ATTRIB(Pickup, m_respawntimejitter, float());
-    ATTRIB(Pickup, m_pickupanyway, float());
-    ATTRIB(Pickup, m_iteminit, void(entity item));
-    float Item_GiveTo(entity item, entity player);
-    METHOD(Pickup, giveTo, bool(Pickup this, entity item, entity player))
-    {
-        TC(Pickup, this);
-        bool b = Item_GiveTo(item, player);
-        if (b) {
-            LOG_DEBUGF("entity %i picked up %s", player, this.m_name);
-            player.inventory.inv_items[this.m_id]++;
-            Inventory_update(player);
-        }
-        return b;
-    }
-    bool ITEM_HANDLE(Pickup, Pickup this, entity item, entity player);
+	ATTRIB(Pickup, m_mins, vector, '-16 -16 0');
+	ATTRIB(Pickup, m_maxs, vector, '16 16 32');
+	ATTRIB(Pickup, m_botvalue, int, 0);
+	ATTRIB(Pickup, m_itemflags, int, 0);
+	float generic_pickupevalfunc(entity player, entity item);
+	ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc);
+	ATTRIB(Pickup, m_respawntime, float());
+	ATTRIB(Pickup, m_respawntimejitter, float());
+	ATTRIB(Pickup, m_pickupanyway, float());
+	ATTRIB(Pickup, m_iteminit, void(entity item));
+	float Item_GiveTo(entity item, entity player);
+	METHOD(Pickup, giveTo, bool(Pickup this, entity item, entity player))
+	{
+		TC(Pickup, this);
+		bool b = Item_GiveTo(item, player);
+		if (b) {
+			LOG_DEBUGF("entity %i picked up %s", player, this.m_name);
+			player.inventory.inv_items[this.m_id]++;
+			Inventory_update(player);
+		}
+		return b;
+	}
+	bool ITEM_HANDLE(Pickup, Pickup this, entity item, entity player);
 #endif
 ENDCLASS(Pickup)

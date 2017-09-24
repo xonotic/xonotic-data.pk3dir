@@ -6,17 +6,18 @@ void trigger_impulse_touch1(entity this, entity toucher)
 	float pushdeltatime;
 	float str;
 
-	if (this.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE) {
 		return;
+	}
 
-	if (!isPushable(toucher))
+	if (!isPushable(toucher)) {
 		return;
+	}
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 	targ = find(NULL, targetname, this.target);
-	if(!targ)
-	{
+	if (!targ) {
 		objerror(this, "trigger_force without a (valid) .target!\n");
 		delete(this);
 		return;
@@ -24,29 +25,28 @@ void trigger_impulse_touch1(entity this, entity toucher)
 
 	str = min(this.radius, vlen(this.origin - toucher.origin));
 
-	if(this.falloff == 1)
+	if (this.falloff == 1) {
 		str = (str / this.radius) * this.strength;
-	else if(this.falloff == 2)
+	} else if (this.falloff == 2) {
 		str = (1 - (str / this.radius)) * this.strength;
-	else
+	} else {
 		str = this.strength;
+	}
 
 	pushdeltatime = time - toucher.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
+	if (pushdeltatime > 0.15) { pushdeltatime = 0; }
 	toucher.lastpushtime = time;
-	if(!pushdeltatime) return;
+	if (!pushdeltatime) { return; }
 
-	if(this.spawnflags & 64)
-	{
+	if (this.spawnflags & 64) {
 		float addspeed = str - toucher.velocity * normalize(targ.origin - this.origin);
-		if (addspeed > 0)
-		{
+		if (addspeed > 0) {
 			float accelspeed = min(8 * pushdeltatime * str, addspeed);
 			toucher.velocity += accelspeed * normalize(targ.origin - this.origin);
 		}
-	}
-	else
+	} else {
 		toucher.velocity = toucher.velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
+	}
 
 	UNSET_ONGROUND(toucher);
 
@@ -60,18 +60,20 @@ void trigger_impulse_touch2(entity this, entity toucher)
 {
 	float pushdeltatime;
 
-	if (this.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE) {
 		return;
+	}
 
-	if (!isPushable(toucher))
+	if (!isPushable(toucher)) {
 		return;
+	}
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 	pushdeltatime = time - toucher.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
+	if (pushdeltatime > 0.15) { pushdeltatime = 0; }
 	toucher.lastpushtime = time;
-	if(!pushdeltatime) return;
+	if (!pushdeltatime) { return; }
 
 	// div0: ticrate independent, 1 = identity (not 20)
 	toucher.velocity = toucher.velocity * POW(this.strength, pushdeltatime);
@@ -87,29 +89,32 @@ void trigger_impulse_touch3(entity this, entity toucher)
 	float pushdeltatime;
 	float str;
 
-	if (this.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE) {
 		return;
+	}
 
-	if (!isPushable(toucher))
+	if (!isPushable(toucher)) {
 		return;
+	}
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
 	pushdeltatime = time - toucher.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
+	if (pushdeltatime > 0.15) { pushdeltatime = 0; }
 	toucher.lastpushtime = time;
-	if(!pushdeltatime) return;
+	if (!pushdeltatime) { return; }
 
-	setsize(this, '-1 -1 -1' * this.radius,'1 1 1' * this.radius);
+	setsize(this, '-1 -1 -1' * this.radius, '1 1 1' * this.radius);
 
 	str = min(this.radius, vlen(this.origin - toucher.origin));
 
-	if(this.falloff == 1)
+	if (this.falloff == 1) {
 		str = (1 - str / this.radius) * this.strength; // 1 in the inside
-	else if(this.falloff == 2)
-		str = (str / this.radius) * this.strength; // 0 in the inside
-	else
+	} else if (this.falloff == 2) {
+		str = (str / this.radius) * this.strength;     // 0 in the inside
+	} else {
 		str = this.strength;
+	}
 
 	toucher.velocity = toucher.velocity + normalize(toucher.origin - this.origin) * str * pushdeltatime;
 
@@ -123,11 +128,11 @@ REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_IMPULSE)
 /*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
 -------- KEYS --------
 target : If this is set, this points to the spawnfunc_target_position to which the player will get pushed.
-		 If not, this trigger acts like a damper/accelerator field.
+         If not, this trigger acts like a damper/accelerator field.
 
 strength : This is how mutch force to add in the direction of .target each second
-		   when .target is set. If not, this is hoe mutch to slow down/accelerate
-		   someting cought inside this trigger. (1=no change, 0,5 half speed rougthly each tic, 2 = doubble)
+           when .target is set. If not, this is hoe mutch to slow down/accelerate
+           someting cought inside this trigger. (1=no change, 0,5 half speed rougthly each tic, 2 = doubble)
 
 radius   : If set, act as a spherical device rather then a liniar one.
 
@@ -164,23 +169,17 @@ spawnfunc(trigger_impulse)
 
 	trigger_init(this);
 
-	if(this.radius)
-	{
-		if(!this.strength) this.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;
+	if (this.radius) {
+		if (!this.strength) { this.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier; }
 		setorigin(this, this.origin);
-		setsize(this, '-1 -1 -1' * this.radius,'1 1 1' * this.radius);
+		setsize(this, '-1 -1 -1' * this.radius, '1 1 1' * this.radius);
 		settouch(this, trigger_impulse_touch3);
-	}
-	else
-	{
-		if(this.target)
-		{
-			if(!this.strength) this.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier;
+	} else {
+		if (this.target) {
+			if (!this.strength) { this.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier; }
 			settouch(this, trigger_impulse_touch1);
-		}
-		else
-		{
-			if(!this.strength) this.strength = 0.9;
+		} else {
+			if (!this.strength) { this.strength = 0.9; }
 			this.strength = POW(this.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
 			settouch(this, trigger_impulse_touch2);
 		}
@@ -205,8 +204,8 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 	this.entremove = trigger_remove_generic;
 	this.move_time = time;
 
-	if (this.radius) { settouch(this, trigger_impulse_touch3); }
-	else if (this.target) { settouch(this, trigger_impulse_touch1); }
-	else { settouch(this, trigger_impulse_touch2); }
+	if (this.radius) { settouch(this, trigger_impulse_touch3); } else if (this.target) {
+		settouch(this, trigger_impulse_touch1);
+	} else { settouch(this, trigger_impulse_touch2); }
 }
 #endif

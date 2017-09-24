@@ -1,21 +1,21 @@
 #pragma once
 
 #ifndef QCC_SUPPORT_ACCUMULATE
-	#ifdef GMQCC
-		#define QCC_SUPPORT_ACCUMULATE
-	#endif
+#ifdef GMQCC
+#define QCC_SUPPORT_ACCUMULATE
+#endif
 #endif
 
 #ifndef QCC_SUPPORT_NIL
-	#ifdef GMQCC
-		#define QCC_SUPPORT_NIL
-	#endif
+#ifdef GMQCC
+#define QCC_SUPPORT_NIL
+#endif
 #endif
 
 #ifndef QCC_SUPPORT_ERASEABLE
-	#ifdef GMQCC
-		#define QCC_SUPPORT_ERASEABLE
-	#endif
+#ifdef GMQCC
+#define QCC_SUPPORT_ERASEABLE
+#endif
 #endif
 
 // uncrustify segfaults on this

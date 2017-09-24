@@ -26,7 +26,7 @@ bool corner_send(entity this, entity to, int sf)
 
 void corner_link(entity this)
 {
-	//Net_LinkEntity(this, false, 0, corner_send);
+	// Net_LinkEntity(this, false, 0, corner_send);
 }
 
 spawnfunc(path_corner)
@@ -41,22 +41,22 @@ spawnfunc(path_corner)
 
 void corner_remove(entity this)
 {
-	if(this.target) { strunzone(this.target); }
+	if (this.target) { strunzone(this.target); }
 	this.target = string_null;
 
-	if(this.target2) { strunzone(this.target2); }
+	if (this.target2) { strunzone(this.target2); }
 	this.target2 = string_null;
 
-	if(this.target3) { strunzone(this.target3); }
+	if (this.target3) { strunzone(this.target3); }
 	this.target3 = string_null;
 
-	if(this.target4) { strunzone(this.target4); }
+	if (this.target4) { strunzone(this.target4); }
 	this.target4 = string_null;
 
-	if(this.targetname) { strunzone(this.targetname); }
+	if (this.targetname) { strunzone(this.targetname); }
 	this.targetname = string_null;
 
-	if(this.platmovetype) { strunzone(this.platmovetype); }
+	if (this.platmovetype) { strunzone(this.platmovetype); }
 	this.platmovetype = string_null;
 }
 

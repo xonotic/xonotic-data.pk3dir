@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef DEBUGPATHING
-	#define DEBUGPATHING 0
+#define DEBUGPATHING 0
 #endif
 
 .entity pathlib_list;
@@ -11,9 +11,9 @@
 #define inwater(point) (pointcontents(point) == CONTENT_WATER)
 
 const vector PLIB_FORWARD = '0 1 0';
-//#define PLIB_BACK    '0 -1 0'
+// #define PLIB_BACK    '0 -1 0'
 const vector PLIB_RIGHT = '1 0 0';
-//#define PLIB_LEFT    '-1 0 0'
+// #define PLIB_LEFT    '-1 0 0'
 
 #if DEBUGPATHING
 void pathlib_showpath(entity start);
@@ -32,16 +32,16 @@ entity start_node;
 .float pathlib_node_f;
 .float pathlib_node_c;
 
-const float pathlib_node_edgeflag_unknown 		= 0;
-const float pathlib_node_edgeflag_left 			= BIT(1);
-const float pathlib_node_edgeflag_right 		= BIT(2);
-const float pathlib_node_edgeflag_forward 		= BIT(3);
-const float pathlib_node_edgeflag_back 			= BIT(4);
-const float pathlib_node_edgeflag_backleft 		= BIT(5);
-const float pathlib_node_edgeflag_backright 	= BIT(6);
-const float pathlib_node_edgeflag_forwardleft 	= BIT(7);
-const float pathlib_node_edgeflag_forwardright 	= BIT(8);
-const float pathlib_node_edgeflag_none 			= BIT(9);
+const float pathlib_node_edgeflag_unknown       = 0;
+const float pathlib_node_edgeflag_left          = BIT(1);
+const float pathlib_node_edgeflag_right         = BIT(2);
+const float pathlib_node_edgeflag_forward       = BIT(3);
+const float pathlib_node_edgeflag_back          = BIT(4);
+const float pathlib_node_edgeflag_backleft      = BIT(5);
+const float pathlib_node_edgeflag_backright     = BIT(6);
+const float pathlib_node_edgeflag_forwardleft   = BIT(7);
+const float pathlib_node_edgeflag_forwardright  = BIT(8);
+const float pathlib_node_edgeflag_none          = BIT(9);
 .float pathlib_node_edgeflags;
 
 float pathlib_open_cnt;
@@ -98,14 +98,14 @@ var float  pathlib_cost(entity parent, vector to, float static_cost);
 
 float      pathlib_h_manhattan(vector a, vector b);
 float      pathlib_h_diagonal(vector a, vector b);
-float      pathlib_h_euclidean(vector a,vector b);
+float      pathlib_h_euclidean(vector a, vector b);
 float      pathlib_h_diagonal2(vector a, vector b);
 float      pathlib_h_diagonal3(vector a, vector b);
 float      pathlib_h_diagonal2sdp(vector preprev, vector prev, vector point, vector end);
 float      pathlib_h_none(vector preprev, vector prev) { return 0; }
 var float  pathlib_heuristic(vector from, vector to);
 
-var bool  pathlib_makenode(entity parent,vector start, vector to, vector goal,float cost);
-var bool  buildpath_nodefilter(vector n,vector c,vector p);
+var bool  pathlib_makenode(entity parent, vector start, vector to, vector goal, float cost);
+var bool  buildpath_nodefilter(vector n, vector c, vector p);
 
 var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);

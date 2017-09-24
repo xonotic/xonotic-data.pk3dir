@@ -21,12 +21,11 @@ void XonoticScoreboardFadeTimeSlider_loadCvars(entity me)
 	me.setValueFromIdentifier_noAnim(me, sprintf("%s %s",
 		cvar_string("hud_panel_scoreboard_fadeinspeed"),
 		cvar_string("hud_panel_scoreboard_fadeoutspeed")
-	));
+		));
 }
 void XonoticScoreboardFadeTimeSlider_saveCvars(entity me)
 {
-	if(me.value >= 0 || me.value < me.nValues)
-	{
+	if (me.value >= 0 || me.value < me.nValues) {
 		tokenize_console(me.getIdentifier(me));
 		cvar_set("hud_panel_scoreboard_fadeinspeed", argv(0));
 		cvar_set("hud_panel_scoreboard_fadeoutspeed", argv(1));

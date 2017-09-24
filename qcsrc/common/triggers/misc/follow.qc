@@ -7,55 +7,43 @@ void follow_init(entity this)
 	entity src, dst;
 	src = NULL;
 	dst = NULL;
-	if(this.killtarget != "")
+	if (this.killtarget != "") {
 		src = find(NULL, targetname, this.killtarget);
-	if(this.target != "")
+	}
+	if (this.target != "") {
 		dst = find(NULL, targetname, this.target);
+	}
 
-	if(!src && !dst)
-	{
+	if (!src && !dst) {
 		objerror(this, "follow: could not find target/killtarget");
 		return;
 	}
 
-	if(this.jointtype)
-	{
+	if (this.jointtype) {
 		// already done :P entity must stay
 		this.aiment = src;
 		this.enemy = dst;
-	}
-	else if(!src || !dst)
-	{
+	} else if (!src || !dst) {
 		objerror(this, "follow: could not find target/killtarget");
 		return;
-	}
-	else if(this.spawnflags & 1)
-	{
+	} else if (this.spawnflags & 1) {
 		// attach
-		if(this.spawnflags & 2)
-		{
+		if (this.spawnflags & 2) {
 			setattachment(dst, src, this.message);
-		}
-		else
-		{
+		} else {
 			attach_sameorigin(dst, src, this.message);
 		}
 
 		dst.solid = SOLID_NOT; // solid doesn't work with attachment
 		delete(this);
-	}
-	else
-	{
-		if(this.spawnflags & 2)
-		{
+	} else {
+		if (this.spawnflags & 2) {
 			set_movetype(dst, MOVETYPE_FOLLOW);
 			dst.aiment = src;
 			// dst.punchangle = '0 0 0'; // keep unchanged
 			dst.view_ofs = dst.origin;
 			dst.v_angle = dst.angles;
-		}
-		else
-		{
+		} else {
 			follow_sameorigin(dst, src);
 		}
 

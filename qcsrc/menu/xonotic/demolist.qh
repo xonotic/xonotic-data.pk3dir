@@ -27,7 +27,7 @@ CLASS(XonoticDemoList, XonoticListBox)
 	ATTRIB(XonoticDemoList, filterString, string);
 ENDCLASS(XonoticDemoList)
 
-entity demolist;  // for reference elsewhere
+entity demolist; // for reference elsewhere
 entity makeXonoticDemoList();
 void DemoList_Refresh_Click(entity btn, entity me);
 void DemoList_Filter_Change(entity box, entity me);

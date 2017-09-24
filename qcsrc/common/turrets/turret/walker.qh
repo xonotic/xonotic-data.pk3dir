@@ -1,6 +1,6 @@
 #pragma once
 
-//#define WALKER_FANCYPATHING
+// #define WALKER_FANCYPATHING
 
 #include "walker_weapon.qh"
 
@@ -13,6 +13,6 @@ CLASS(WalkerTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(WalkerTurret, head_model, string, strcat("models/turrets/", "walker_head_minigun.md3"));
 /* netname    */ ATTRIB(WalkerTurret, netname, string, "walker");
 /* fullname   */ ATTRIB(WalkerTurret, turret_name, string, _("Walker Turret"));
-    ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);
+	ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);
 ENDCLASS(WalkerTurret)
 REGISTER_TURRET(WALKER, NEW(WalkerTurret));

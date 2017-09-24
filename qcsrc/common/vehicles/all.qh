@@ -13,9 +13,9 @@ const int VEH_FIRST = 1;
 #define REGISTER_VEHICLE(id, inst) REGISTER(Vehicles, VEH, id, vehicleid, inst)
 
 #if defined(SVQC)
-	#include "sv_vehicles.qh"
+#include "sv_vehicles.qh"
 #elif defined(CSQC)
-	#include "cl_vehicles.qh"
+#include "cl_vehicles.qh"
 #endif
 
 REGISTER_VEHICLE(Null, NEW(Vehicle));

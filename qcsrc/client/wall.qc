@@ -13,77 +13,70 @@
 
 void Ent_Wall_PreDraw(entity this)
 {
-	if (this.inactive)
-	{
+	if (this.inactive) {
 		this.alpha = 0;
-	}
-	else
-	{
+	} else {
 		vector org = getpropertyvec(VF_ORIGIN);
-		if(!checkpvs(org, this))
+		if (!checkpvs(org, this)) {
 			this.alpha = 0;
-		else if(this.fade_start || this.fade_end) {
+		} else if (this.fade_start || this.fade_end) {
 			vector offset = '0 0 0';
 			offset_z = this.fade_vertical_offset;
 			float player_dist = vlen(org - this.origin - 0.5 * (this.mins + this.maxs) + offset);
-			if (this.fade_end == this.fade_start)
-			{
-				if (player_dist >= this.fade_start)
+			if (this.fade_end == this.fade_start) {
+				if (player_dist >= this.fade_start) {
 					this.alpha = 0;
-				else
+				} else {
 					this.alpha = 1;
-			}
-			else
-			{
+				}
+			} else {
 				this.alpha = (this.alpha_min + this.alpha_max * bound(0,
-							   (this.fade_end - player_dist)
-							   / (this.fade_end - this.fade_start), 1)) / 100.0;
+					(this.fade_end - player_dist)
+					/ (this.fade_end - this.fade_start), 1)) / 100.0;
 			}
-		}
-		else
-		{
+		} else {
 			this.alpha = 1;
 		}
 	}
-	if(this.alpha <= 0)
+	if (this.alpha <= 0) {
 		this.drawmask = 0;
-	else
+	} else {
 		this.drawmask = MASK_NORMAL;
+	}
 }
 
 void Ent_Wall_Draw(entity this)
 {
 	float f;
-	var .vector fld;
+	var.vector fld;
 
-	if(this.bgmscriptangular)
+	if (this.bgmscriptangular) {
 		fld = angles;
-	else
+	} else {
 		fld = origin;
+	}
 	this.(fld) = this.saved;
 
-	if(this.lodmodelindex1)
-	{
-		if(autocvar_cl_modeldetailreduction <= 0)
-		{
-			if(this.lodmodelindex2 && autocvar_cl_modeldetailreduction <= -2)
+	if (this.lodmodelindex1) {
+		if (autocvar_cl_modeldetailreduction <= 0) {
+			if (this.lodmodelindex2 && autocvar_cl_modeldetailreduction <= -2) {
 				this.modelindex = this.lodmodelindex2;
-			else if(autocvar_cl_modeldetailreduction <= -1)
+			} else if (autocvar_cl_modeldetailreduction <= -1) {
 				this.modelindex = this.lodmodelindex1;
-			else
+			} else {
 				this.modelindex = this.lodmodelindex0;
-		}
-		else
-		{
+			}
+		} else {
 			float distance = vlen(NearestPointOnBox(this, view_origin) - view_origin);
 			f = (distance * current_viewzoom + 100.0) * autocvar_cl_modeldetailreduction;
 			f *= 1.0 / bound(0.01, view_quality, 1);
-			if(this.lodmodelindex2 && f > this.loddistance2)
+			if (this.lodmodelindex2 && f > this.loddistance2) {
 				this.modelindex = this.lodmodelindex2;
-			else if(f > this.loddistance1)
+			} else if (f > this.loddistance1) {
 				this.modelindex = this.lodmodelindex1;
-			else
+			} else {
 				this.modelindex = this.lodmodelindex0;
+			}
 		}
 	}
 
@@ -92,121 +85,113 @@ void Ent_Wall_Draw(entity this)
 	this.saved = this.(fld);
 
 	f = doBGMScript(this);
-	if(f >= 0)
-	{
-		if(this.lip < 0) // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)
+	if (f >= 0) {
+		if (this.lip < 0) { // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)
 			this.alpha = 1 + this.lip * f;
-		else // > 0: alpha goes from 1-|lip| to 1 when toggled (toggling adds lip)
+		} else { // > 0: alpha goes from 1-|lip| to 1 when toggled (toggling adds lip)
 			this.alpha = 1 - this.lip * (1 - f);
+		}
 		this.(fld) = this.(fld) + this.movedir * f;
-	}
-	else
+	} else {
 		this.alpha = 1;
+	}
 
-	if(this.alpha >= ALPHA_MIN_VISIBLE)
+	if (this.alpha >= ALPHA_MIN_VISIBLE) {
 		this.drawmask = MASK_NORMAL;
-	else
+	} else {
 		this.drawmask = 0;
+	}
 }
 
 void Ent_Wall_Remove(entity this)
 {
-	if(this.bgmscript)
+	if (this.bgmscript) {
 		strunzone(this.bgmscript);
+	}
 	this.bgmscript = string_null;
 }
 
 NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 {
 	int f;
-	var .vector fld;
+	var.vector fld;
 
 	InterpolateOrigin_Undo(this);
 	this.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
 
-	if(this.bgmscriptangular)
+	if (this.bgmscriptangular) {
 		fld = angles;
-	else
+	} else {
 		fld = origin;
+	}
 	this.(fld) = this.saved;
 
 	f = ReadByte();
 
-	if(f & 1)
-	{
-		if(f & 0x40)
+	if (f & 1) {
+		if (f & 0x40) {
 			this.colormap = ReadShort();
-		else
+		} else {
 			this.colormap = 0;
+		}
 		this.skin = ReadByte();
 	}
 
-	if(f & 2)
-	{
+	if (f & 2) {
 		this.origin_x = ReadCoord();
 		this.origin_y = ReadCoord();
 		this.origin_z = ReadCoord();
 		setorigin(this, this.origin);
 	}
 
-	if(f & 4)
-	{
-		if(f & 0x10)
-		{
+	if (f & 4) {
+		if (f & 0x10) {
 			this.angles_x = ReadAngle();
 			this.angles_y = ReadAngle();
 			this.angles_z = ReadAngle();
-		}
-		else
+		} else {
 			this.angles = '0 0 0';
+		}
 	}
 
-	if(f & 8)
-	{
-		if(f & 0x80)
-		{
+	if (f & 8) {
+		if (f & 0x80) {
 			this.lodmodelindex0 = ReadShort();
 			this.loddistance1 = ReadShort();
 			this.lodmodelindex1 = ReadShort();
 			this.loddistance2 = ReadShort();
 			this.lodmodelindex2 = ReadShort();
-		}
-		else
-		{
+		} else {
 			this.modelindex = ReadShort();
 			this.loddistance1 = 0;
 			this.loddistance2 = 0;
 		}
 		this.solid = ReadByte();
 		this.scale = ReadShort() / 256.0;
-		if(f & 0x20)
-		{
+		if (f & 0x20) {
 			this.mins_x = ReadCoord();
 			this.mins_y = ReadCoord();
 			this.mins_z = ReadCoord();
 			this.maxs_x = ReadCoord();
 			this.maxs_y = ReadCoord();
 			this.maxs_z = ReadCoord();
-		}
-		else
+		} else {
 			this.mins = this.maxs = '0 0 0';
+		}
 		setsize(this, this.mins, this.maxs);
 
-		if(this.bgmscript)
+		if (this.bgmscript) {
 			strunzone(this.bgmscript);
+		}
 		this.bgmscript = ReadString();
-		if(substring(this.bgmscript, 0, 1) == "<")
-		{
+		if (substring(this.bgmscript, 0, 1) == "<") {
 			this.bgmscript = strzone(substring(this.bgmscript, 1, -1));
 			this.bgmscriptangular = 1;
-		}
-		else
-		{
+		} else {
 			this.bgmscript = strzone(this.bgmscript);
 			this.bgmscriptangular = 0;
 		}
-		if(this.bgmscript != "")
-		{
+		if (this.bgmscript != "") {
 			this.bgmscriptattack = ReadByte() / 64.0;
 			this.bgmscriptdecay = ReadByte() / 64.0;
 			this.bgmscriptsustain = ReadByte() / 255.0;
@@ -233,6 +218,6 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 
 	this.entremove = Ent_Wall_Remove;
 	this.draw = Ent_Wall_Draw;
-	if (isnew) IL_PUSH(g_drawables, this);
+	if (isnew) { IL_PUSH(g_drawables, this); }
 	setpredraw(this, Ent_Wall_PreDraw);
 }

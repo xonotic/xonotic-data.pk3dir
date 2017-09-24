@@ -21,32 +21,25 @@ void XonoticRadioButton_configureXonoticRadioButton(entity me, float theGroup, s
 }
 void XonoticRadioButton_setChecked(entity me, float val)
 {
-	if(val != me.checked)
-	{
+	if (val != me.checked) {
 		me.checked = val;
 		me.saveCvars(me);
 	}
 }
 void XonoticRadioButton_loadCvars(entity me)
 {
-	if(me.cvarValue)
-	{
-		if(me.cvarName)
-		{
-			if(me.cvarValueIsAnotherCvar)
+	if (me.cvarValue) {
+		if (me.cvarName) {
+			if (me.cvarValueIsAnotherCvar) {
 				me.checked = (cvar_string(me.cvarName) == cvar_string(me.cvarValue));
-			else
+			} else {
 				me.checked = (cvar_string(me.cvarName) == me.cvarValue);
+			}
 		}
-	}
-	else
-	{
-		if(me.cvarName)
-		{
+	} else {
+		if (me.cvarName) {
 			me.checked = boolean(cvar(me.cvarName));
-		}
-		else
-		{
+		} else {
 			// this is difficult
 			// this is the "generic" selection... but at this time, not
 			// everything is constructed yet.
@@ -57,44 +50,43 @@ void XonoticRadioButton_loadCvars(entity me)
 }
 void XonoticRadioButton_draw(entity me)
 {
-	if (!me.cvarValue)
-		if (!me.cvarName)
-		{
+	if (!me.cvarValue) {
+		if (!me.cvarName) {
 			// this is the "other" option
 			// always select this if none other is
 			entity e;
 			float found;
 			found = 0;
-			for(e = me.parent.firstChild; e; e = e.nextSibling)
-				if(e.group == me.group)
-					if(e.checked)
+			for (e = me.parent.firstChild; e; e = e.nextSibling) {
+				if (e.group == me.group) {
+					if (e.checked) {
 						found = 1;
-			if(!found)
+					}
+				}
+			}
+			if (!found) {
 				me.setChecked(me, 1);
+			}
 		}
+	}
 	SUPER(XonoticRadioButton).draw(me);
 }
 void XonoticRadioButton_saveCvars(entity me)
 {
-	if(me.cvarValue)
-	{
-		if(me.cvarName)
-		{
-			if(me.checked)
-			{
-				if(me.cvarValueIsAnotherCvar)
+	if (me.cvarValue) {
+		if (me.cvarName) {
+			if (me.checked) {
+				if (me.cvarValueIsAnotherCvar) {
 					cvar_set(me.cvarName, cvar_string(me.cvarValue));
-				else
+				} else {
 					cvar_set(me.cvarName, me.cvarValue);
-			}
-			else if(me.cvarOffValue)
+				}
+			} else if (me.cvarOffValue) {
 				cvar_set(me.cvarName, me.cvarOffValue);
+			}
 		}
-	}
-	else
-	{
-		if(me.cvarName)
-		{
+	} else {
+		if (me.cvarName) {
 			cvar_set(me.cvarName, ftos(me.checked));
 		}
 	}

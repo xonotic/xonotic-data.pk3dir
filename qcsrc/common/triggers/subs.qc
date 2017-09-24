@@ -1,5 +1,5 @@
 #include "subs.qh"
-void SUB_NullThink(entity this) { }
+void SUB_NullThink(entity this) {}
 
 void SUB_CalcMoveDone(entity this);
 void SUB_CalcAngleMoveDone(entity this);
@@ -12,11 +12,12 @@ Applies some friction to this
 ==================
 */
 .float friction;
-void SUB_Friction (entity this)
+void SUB_Friction(entity this)
 {
 	this.nextthink = time;
-	if(IS_ONGROUND(this))
+	if (IS_ONGROUND(this)) {
 		this.velocity = this.velocity * (1 - frametime * this.friction);
+	}
 }
 
 /*
@@ -26,10 +27,9 @@ SUB_VanishOrRemove
 Makes client invisible or removes non-client
 ==================
 */
-void SUB_VanishOrRemove (entity ent)
+void SUB_VanishOrRemove(entity ent)
 {
-	if (IS_CLIENT(ent))
-	{
+	if (IS_CLIENT(ent)) {
 		// vanish
 		ent.alpha = -1;
 		ent.effects = 0;
@@ -37,25 +37,25 @@ void SUB_VanishOrRemove (entity ent)
 		ent.glow_size = 0;
 		ent.pflags = 0;
 #endif
-	}
-	else
-	{
+	} else {
 		// remove
 		delete(ent);
 	}
 }
 
-void SUB_SetFade_Think (entity this)
+void SUB_SetFade_Think(entity this)
 {
-	if(this.alpha == 0)
+	if (this.alpha == 0) {
 		this.alpha = 1;
+	}
 	setthink(this, SUB_SetFade_Think);
 	this.nextthink = time;
 	this.alpha -= frametime * this.fade_rate;
-	if (this.alpha < 0.01)
+	if (this.alpha < 0.01) {
 		SUB_VanishOrRemove(this);
-	else
+	} else {
 		this.nextthink = time;
+	}
 }
 
 /*
@@ -65,9 +65,9 @@ SUB_SetFade
 Fade 'ent' out when time >= 'when'
 ==================
 */
-void SUB_SetFade (entity ent, float when, float fading_time)
+void SUB_SetFade(entity ent, float when, float fading_time)
 {
-	ent.fade_rate = 1/fading_time;
+	ent.fade_rate = 1 / fading_time;
 	setthink(ent, SUB_SetFade_Think);
 	ent.nextthink = when;
 }
@@ -84,15 +84,16 @@ void SUB_CalcMoveDone(entity this)
 {
 	// After moving, set origin to exact final destination
 
-	setorigin (this, this.finaldest);
+	setorigin(this, this.finaldest);
 	this.velocity = '0 0 0';
 	this.nextthink = -1;
-	if (this.think1 && this.think1 != SUB_CalcMoveDone)
-		this.think1 (this);
+	if (this.think1 && this.think1 != SUB_CalcMoveDone) {
+		this.think1(this);
+	}
 }
 
 .float platmovetype_turn;
-void SUB_CalcMove_controller_think (entity this)
+void SUB_CalcMove_controller_think(entity this)
 {
 	float traveltime;
 	float phasepos;
@@ -104,8 +105,7 @@ void SUB_CalcMove_controller_think (entity this)
 	vector nextpos;
 	delta = this.destvec;
 	delta2 = this.destvec2;
-	if(time < this.animstate_endtime)
-	{
+	if (time < this.animstate_endtime) {
 		nexttick = time + PHYS_INPUT_FRAMETIME;
 
 		traveltime = this.animstate_endtime - this.animstate_starttime;
@@ -114,8 +114,7 @@ void SUB_CalcMove_controller_think (entity this)
 		nextpos = this.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
 		// derivative: delta + 2 * delta2 * phasepos (e.g. for angle positioning)
 
-		if(this.owner.platmovetype_turn)
-		{
+		if (this.owner.platmovetype_turn) {
 			vector destangle;
 			destangle = delta + 2 * delta2 * phasepos;
 			destangle = vectoangles(destangle);
@@ -131,17 +130,16 @@ void SUB_CalcMove_controller_think (entity this)
 			angloc = angloc * (1 / PHYS_INPUT_FRAMETIME); // so it arrives for the next frame
 			this.owner.avelocity = angloc;
 		}
-		if(nexttick < this.animstate_endtime)
+		if (nexttick < this.animstate_endtime) {
 			veloc = nextpos - this.owner.origin;
-		else
+		} else {
 			veloc = this.finaldest - this.owner.origin;
+		}
 		veloc = veloc * (1 / PHYS_INPUT_FRAMETIME); // so it arrives for the next frame
 
 		this.owner.velocity = veloc;
 		this.nextthink = nexttick;
-	}
-	else
-	{
+	} else {
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
 		entity own = this.owner;
 		setthink(own, this.think1);
@@ -150,7 +148,7 @@ void SUB_CalcMove_controller_think (entity this)
 	}
 }
 
-void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector control, vector destin)
+void SUB_CalcMove_controller_setbezier(entity controller, vector org, vector control, vector destin)
 {
 	// 0 * (1-t) * (1-t) + 2 * control * t * (1-t) + destin * t * t
 	// 2 * control * t - 2 * control * t * t + destin * t * t
@@ -160,12 +158,12 @@ void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector co
 	control -= org;
 	destin -= org;
 
-	controller.destvec = 2 * control; // control point
+	controller.destvec = 2 * control;           // control point
 	controller.destvec2 = destin - 2 * control; // quadratic part required to reach end point
 	// also: initial d/dphasepos origin = 2 * control, final speed = 2 * (destin - control)
 }
 
-void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector destin)
+void SUB_CalcMove_controller_setlinear(entity controller, vector org, vector destin)
 {
 	// 0 * (1-t) * (1-t) + 2 * control * t * (1-t) + destin * t * t
 	// 2 * control * t - 2 * control * t * t + destin * t * t
@@ -184,20 +182,20 @@ float TSPEED_START = 1;
 float TSPEED_END = 2;
 // TODO average too?
 
-void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
+void SUB_CalcMove_Bezier(entity this, vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {
-	float	traveltime;
+	float   traveltime;
 	entity controller;
 
-	if (!tspeed)
-		objerror (this, "No speed is defined!");
+	if (!tspeed) {
+		objerror(this, "No speed is defined!");
+	}
 
 	this.think1 = func;
 	this.finaldest = tdest;
 	setthink(this, SUB_CalcMoveDone);
 
-	switch(tspeedtype)
-	{
+	switch (tspeedtype) {
 		default:
 		case TSPEED_START:
 			traveltime = 2 * vlen(tcontrol - this.origin) / tspeed;
@@ -213,8 +211,7 @@ void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspe
 			break;
 	}
 
-	if (traveltime < 0.1) // useless anim
-	{
+	if (traveltime < 0.1) { // useless anim
 		this.velocity = '0 0 0';
 		this.nextthink = this.ltime + 0.1;
 		return;
@@ -240,20 +237,20 @@ void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspe
 	getthink(controller)(controller);
 }
 
-void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
+void SUB_CalcMove(entity this, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {
-	vector	delta;
-	float	traveltime;
+	vector  delta;
+	float   traveltime;
 
-	if (!tspeed)
-		objerror (this, "No speed is defined!");
+	if (!tspeed) {
+		objerror(this, "No speed is defined!");
+	}
 
 	this.think1 = func;
 	this.finaldest = tdest;
 	setthink(this, SUB_CalcMoveDone);
 
-	if (tdest == this.origin)
-	{
+	if (tdest == this.origin) {
 		this.velocity = '0 0 0';
 		this.nextthink = this.ltime + 0.1;
 		return;
@@ -261,13 +258,12 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 
 	delta = tdest - this.origin;
 
-	switch(tspeedtype)
-	{
+	switch (tspeedtype) {
 		default:
 		case TSPEED_START:
 		case TSPEED_END:
 		case TSPEED_LINEAR:
-			traveltime = vlen (delta) / tspeed;
+			traveltime = vlen(delta) / tspeed;
 			break;
 		case TSPEED_TIME:
 			traveltime = tspeed;
@@ -277,10 +273,9 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
-        // The only currently implemented alternative movement is linear (value 1)
-	if (traveltime < 0.15 || (this.platmovetype_start == 1 && this.platmovetype_end == 1)) // is this correct?
-	{
-		this.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
+	// The only currently implemented alternative movement is linear (value 1)
+	if (traveltime < 0.15 || (this.platmovetype_start == 1 && this.platmovetype_end == 1)) { // is this correct?
+		this.velocity = delta * (1 / traveltime); // QuakeC doesn't allow vector/float division
 		this.nextthink = this.ltime + traveltime;
 		return;
 	}
@@ -289,7 +284,7 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 	SUB_CalcMove_Bezier(this, (this.origin + tdest) * 0.5, tdest, tspeedtype, tspeed, func);
 }
 
-void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
+void SUB_CalcMoveEnt(entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {
 	SUB_CalcMove(ent, tdest, tspeedtype, tspeed, func);
 }
@@ -310,15 +305,17 @@ void SUB_CalcAngleMoveDone(entity this)
 	this.angles = this.finalangle;
 	this.avelocity = '0 0 0';
 	this.nextthink = -1;
-	if (this.think1 && this.think1 != SUB_CalcAngleMoveDone) // avoid endless loops
-		this.think1 (this);
+	if (this.think1 && this.think1 != SUB_CalcAngleMoveDone) { // avoid endless loops
+		this.think1(this);
+	}
 }
 
 // FIXME: I fixed this function only for rotation around the main axes
-void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
+void SUB_CalcAngleMove(entity this, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
 {
-	if (!tspeed)
-		objerror (this, "No speed is defined!");
+	if (!tspeed) {
+		objerror(this, "No speed is defined!");
+	}
 
 	// take the shortest distance for the angles
 	this.angles_x -= 360 * floor((this.angles_x - destangle_x) / 360 + 0.5);
@@ -327,13 +324,12 @@ void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float t
 	vector delta = destangle - this.angles;
 	float traveltime;
 
-	switch(tspeedtype)
-	{
+	switch (tspeedtype) {
 		default:
 		case TSPEED_START:
 		case TSPEED_END:
 		case TSPEED_LINEAR:
-			traveltime = vlen (delta) / tspeed;
+			traveltime = vlen(delta) / tspeed;
 			break;
 		case TSPEED_TIME:
 			traveltime = tspeed;
@@ -344,8 +340,7 @@ void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float t
 	this.finalangle = destangle;
 	setthink(this, SUB_CalcAngleMoveDone);
 
-	if (traveltime < 0.1)
-	{
+	if (traveltime < 0.1) {
 		this.avelocity = '0 0 0';
 		this.nextthink = this.ltime + 0.1;
 		return;
@@ -355,7 +350,7 @@ void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float t
 	this.nextthink = this.ltime + traveltime;
 }
 
-void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
+void SUB_CalcAngleMoveEnt(entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
 {
-	SUB_CalcAngleMove (ent, destangle, tspeedtype, tspeed, func);
+	SUB_CalcAngleMove(ent, destangle, tspeedtype, tspeed, func);
 }

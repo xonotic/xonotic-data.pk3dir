@@ -12,12 +12,15 @@ bool modeleffect_SendEntity(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
 
 	f = 0;
-	if(this.velocity != '0 0 0')
+	if (this.velocity != '0 0 0') {
 		f |= 1;
-	if(this.angles != '0 0 0')
+	}
+	if (this.angles != '0 0 0') {
 		f |= 2;
-	if(this.avelocity != '0 0 0')
+	}
+	if (this.avelocity != '0 0 0') {
 		f |= 4;
+	}
 
 	WriteByte(MSG_ENTITY, f);
 	WriteShort(MSG_ENTITY, this.modelindex);
@@ -26,20 +29,17 @@ bool modeleffect_SendEntity(entity this, entity to, int sf)
 	WriteCoord(MSG_ENTITY, this.origin.x);
 	WriteCoord(MSG_ENTITY, this.origin.y);
 	WriteCoord(MSG_ENTITY, this.origin.z);
-	if(f & 1)
-	{
+	if (f & 1) {
 		WriteCoord(MSG_ENTITY, this.velocity.x);
 		WriteCoord(MSG_ENTITY, this.velocity.y);
 		WriteCoord(MSG_ENTITY, this.velocity.z);
 	}
-	if(f & 2)
-	{
+	if (f & 2) {
 		WriteCoord(MSG_ENTITY, this.angles.x);
 		WriteCoord(MSG_ENTITY, this.angles.y);
 		WriteCoord(MSG_ENTITY, this.angles.z);
 	}
-	if(f & 4)
-	{
+	if (f & 4) {
 		WriteCoord(MSG_ENTITY, this.avelocity.x);
 		WriteCoord(MSG_ENTITY, this.avelocity.y);
 		WriteCoord(MSG_ENTITY, this.avelocity.z);
@@ -66,14 +66,16 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 	e.teleport_time = t1;
 	e.fade_time = t2;
 	e.skin = s;
-	if(s0 >= 0)
+	if (s0 >= 0) {
 		e.scale = s0 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
-	else
+	} else {
 		e.scale = -s0;
-	if(s2 >= 0)
+	}
+	if (s2 >= 0) {
 		e.scale2 = s2 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
-	else
+	} else {
 		e.scale2 = -s2;
+	}
 	float sz = max(e.scale, e.scale2);
 	setsize(e, e.mins * sz, e.maxs * sz);
 	Net_LinkEntity(e, false, 0.1, modeleffect_SendEntity);
@@ -84,10 +86,10 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 #ifdef CSQC
 
 entityclass(ModelEffect);
-class(ModelEffect) .float frame1time;
-class(ModelEffect) .float lifetime, fadetime;
-class(ModelEffect) .float teleport_time;
-class(ModelEffect) .float scale1, scale2;
+class(ModelEffect).float frame1time;
+class(ModelEffect).float lifetime, fadetime;
+class(ModelEffect).float teleport_time;
+class(ModelEffect).float scale1, scale2;
 
 .float cnt;
 .float scale;
@@ -99,14 +101,12 @@ void ModelEffect_Draw(entity this)
 	setorigin(this, this.origin + frametime * this.velocity);
 	this.scale = this.scale1 + (this.scale2 - this.scale1) * (time - this.teleport_time) / (this.lifetime + this.fadetime - this.teleport_time);
 	this.alpha = this.cnt * bound(0, 1 - (time - this.lifetime) / this.fadetime, 1);
-	if(this.alpha < ALPHA_MIN_VISIBLE)
-	{
+	if (this.alpha < ALPHA_MIN_VISIBLE) {
 		delete(this);
 		return;
 	}
 	this.drawmask = MASK_NORMAL;
-	if(this.scale <= 0)
-	{
+	if (this.scale <= 0) {
 		this.drawmask = 0;
 		return;
 	}
@@ -128,20 +128,17 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	e.origin_y = ReadCoord();
 	e.origin_z = ReadCoord();
 	setorigin(e, e.origin);
-	if(f & 1)
-	{
+	if (f & 1) {
 		e.velocity_x = ReadCoord();
 		e.velocity_y = ReadCoord();
 		e.velocity_z = ReadCoord();
 	}
-	if(f & 2)
-	{
+	if (f & 2) {
 		e.angles_x = ReadAngle();
 		e.angles_y = ReadAngle();
 		e.angles_z = ReadAngle();
 	}
-	if(f & 4)
-	{
+	if (f & 4) {
 		e.avelocity_x = ReadAngle();
 		e.avelocity_y = ReadAngle();
 		e.avelocity_z = ReadAngle();
@@ -154,9 +151,11 @@ NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 	e.cnt = ReadByte() / 255.0; // actually alpha
 
 	e.draw = ModelEffect_Draw;
-	if (isnew) IL_PUSH(g_drawables, e);
+	if (isnew) { IL_PUSH(g_drawables, e); }
 
-	if (!isnew) delete(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
+	if (!isnew) {
+		delete(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
+	}
 	return true;
 }
 #endif

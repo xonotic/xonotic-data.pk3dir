@@ -20,78 +20,72 @@ void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar, str
 }
 void XonoticTextSlider_setValue(entity me, float val)
 {
-	if(val != me.value)
-	{
-		SUPER(XonoticTextSlider).setValue( me, val );
+	if (val != me.value) {
+		SUPER(XonoticTextSlider).setValue(me, val);
 		me.saveCvars(me);
 	}
 }
 void XonoticTextSlider_setValue_noAnim(entity me, float val)
 {
-	if(val != me.value)
-	{
+	if (val != me.value) {
 		SUPER(XonoticTextSlider).setValue_noAnim(me, val);
 		me.saveCvars(me);
 	}
 }
 void XonoticTextSlider_loadCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.cvarName) {
 		return;
+	}
 
 	float n = tokenize_console(me.cvarName);
 	string s = cvar_string(argv(0));
 	float i;
-	for(i = 1; i < n; ++i)
+	for (i = 1; i < n; ++i) {
 		s = strcat(s, " ", cvar_string(argv(i)));
+	}
 	me.setValueFromIdentifier_noAnim(me, s);
-	if(me.value < 0 && n > 1)
-	{
+	if (me.value < 0 && n > 1) {
 		// if it failed: check if all cvars have the same value
 		// if yes, try its value as 1-word identifier
-		for(i = 1; i < n; ++i)
-			if(cvar_string(argv(i)) != cvar_string(argv(i-1)))
+		for (i = 1; i < n; ++i) {
+			if (cvar_string(argv(i)) != cvar_string(argv(i - 1))) {
 				break;
-		if(i >= n)
+			}
+		}
+		if (i >= n) {
 			me.setValueFromIdentifier_noAnim(me, cvar_string(argv(0)));
+		}
 	}
 }
 void XonoticTextSlider_saveCvars(entity me)
 {
-	if (!me.cvarName)
+	if (!me.cvarName) {
 		return;
+	}
 
-	if(me.value >= 0 && me.value < me.nValues)
-	{
+	if (me.value >= 0 && me.value < me.nValues) {
 		float n = tokenize_console(me.cvarName);
-		if(n == 1)
-		{
+		if (n == 1) {
 			// this is a special case to allow spaces in the identifiers
 			cvar_set(argv(0), me.getIdentifier(me));
 			CheckSendCvars(me, argv(0));
-		}
-		else
-		{
+		} else {
 			float i;
 			float m = tokenize_console(strcat(me.cvarName, " ", me.getIdentifier(me)));
-			if(m == n + 1)
-			{
-				for(i = 0; i < n; ++i)
-				{
+			if (m == n + 1) {
+				for (i = 0; i < n; ++i) {
 					cvar_set(argv(i), argv(n));
 					CheckSendCvars(me, argv(i));
 				}
-			}
-			else if(m == n * 2)
-			{
-				for(i = 0; i < n; ++i)
-				{
+			} else if (m == n * 2) {
+				for (i = 0; i < n; ++i) {
 					cvar_set(argv(i), argv(i + n));
 					CheckSendCvars(me, argv(i));
 				}
-			}
-			else
+			} else {
 				error("XonoticTextSlider: invalid identifier ", me.getIdentifier(me), " does not match cvar list ", me.cvarName);
+			}
 		}
 	}
 }

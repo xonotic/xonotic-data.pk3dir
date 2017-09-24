@@ -2,8 +2,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include <common/util.qh>
-    #include <server/defs.qh>
+#include <common/util.qh>
+#include <server/defs.qh>
 #endif
 
 #ifdef SVQC
@@ -41,144 +41,106 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 
 	n = tokenize_console(msg);
 
-	for(i = 0; i < n-1; i += 2)
-	{
+	for (i = 0; i < n - 1; i += 2) {
 		key = argv(i);
-		value = argv(i+1);
-		if(key == "$")
-		{
+		value = argv(i + 1);
+		if (key == "$") {
 			data.x = -1;
 			data.y = FIELD_STRING;
-		}
-		else
-		{
+		} else {
 			data = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", key)));
-			if(data.y == 0) // undefined field, i.e., invalid type
-			{
+			if (data.y == 0) { // undefined field, i.e., invalid type
 				LOG_INFO("target_spawn: invalid/unknown entity key ", key, " specified, ignored!");
 				continue;
 			}
 		}
-		if(substring(value, 0, 1) == "$")
-		{
+		if (substring(value, 0, 1) == "$") {
 			value = substring(value, 1, strlen(value) - 1);
-			if(substring(value, 0, 1) == "$")
-			{
+			if (substring(value, 0, 1) == "$") {
 				// deferred replacement
 				// do nothing
 				// useful for creating target_spawns with this!
-			}
-			else
-			{
+			} else {
 				// replace me!
 				valuefieldpos = strstrofs(value, "+", 0);
 				valueoffset = "";
-				if(valuefieldpos != -1)
-				{
+				if (valuefieldpos != -1) {
 					valueoffset = substring(value, valuefieldpos + 1, strlen(value) - valuefieldpos - 1);
 					value = substring(value, 0, valuefieldpos);
 				}
 
 				valuefieldpos = strstrofs(valueoffset, "+", 0);
 				valueoffsetrandom = "";
-				if(valuefieldpos != -1)
-				{
+				if (valuefieldpos != -1) {
 					valueoffsetrandom = substring(valueoffset, valuefieldpos + 1, strlen(valueoffset) - valuefieldpos - 1);
 					valueoffset = substring(valueoffset, 0, valuefieldpos);
 				}
 
 				valuefieldpos = strstrofs(value, ".", 0);
 				valuefield = "";
-				if(valuefieldpos != -1)
-				{
+				if (valuefieldpos != -1) {
 					valuefield = substring(value, valuefieldpos + 1, strlen(value) - valuefieldpos - 1);
 					value = substring(value, 0, valuefieldpos);
 				}
 
-				if(value == "self")
-				{
+				if (value == "self") {
 					valueent = this;
 					value = "";
-				}
-				else if(value == "activator")
-				{
+				} else if (value == "activator") {
 					valueent = act;
 					value = "";
-				}
-				else if(value == "other")
-				{
+				} else if (value == "other") {
 					valueent = trigger;
 					value = "";
-				}
-				else if(value == "pusher")
-				{
-					if(time < act.pushltime)
+				} else if (value == "pusher") {
+					if (time < act.pushltime) {
 						valueent = act.pusher;
-					else
+					} else {
 						valueent = NULL;
+					}
 					value = "";
-				}
-				else if(value == "target")
-				{
+				} else if (value == "target") {
 					valueent = e;
 					value = "";
-				}
-				else if(value == "killtarget")
-				{
+				} else if (value == "killtarget") {
 					valueent = kt;
 					value = "";
-				}
-				else if(value == "target2")
-				{
+				} else if (value == "target2") {
 					valueent = t2;
 					value = "";
-				}
-				else if(value == "target3")
-				{
+				} else if (value == "target3") {
 					valueent = t3;
 					value = "";
-				}
-				else if(value == "target4")
-				{
+				} else if (value == "target4") {
 					valueent = t4;
 					value = "";
-				}
-				else if(value == "time")
-				{
+				} else if (value == "time") {
 					valueent = NULL;
 					value = ftos(time);
-				}
-				else
-				{
+				} else {
 					LOG_INFO("target_spawn: invalid/unknown variable replacement ", value, " specified, ignored!");
 					continue;
 				}
 
-				if(valuefield == "")
-				{
-					if(value == "")
+				if (valuefield == "") {
+					if (value == "") {
 						value = ftos(etof(valueent));
-				}
-				else
-				{
-					if(value != "")
-					{
+					}
+				} else {
+					if (value != "") {
 						LOG_INFO("target_spawn: try to get a field of a non-entity, ignored!");
 						continue;
 					}
 					data2 = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", valuefield)));
-					if(data2_y == 0) // undefined field, i.e., invalid type
-					{
+					if (data2_y == 0) { // undefined field, i.e., invalid type
 						LOG_INFO("target_spawn: invalid/unknown entity key replacement ", valuefield, " specified, ignored!");
 						continue;
 					}
 					value = getentityfieldstring(data2_x, valueent);
 				}
 
-				if(valueoffset != "")
-				{
-					switch(data.y)
-					{
+				if (valueoffset != "") {
+					switch (data.y) {
 						case FIELD_STRING:
 							value = strcat(value, valueoffset);
 							break;
@@ -194,10 +156,8 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 					}
 				}
 
-				if(valueoffsetrandom != "")
-				{
-					switch(data.y)
-					{
+				if (valueoffsetrandom != "") {
+					switch (data.y) {
 						case FIELD_FLOAT:
 							value = ftos(stof(value) + random() * stof(valueoffsetrandom));
 							break;
@@ -212,21 +172,20 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 				}
 			}
 		}
-		if(key == "$")
-		{
-			if(substring(value, 0, 1) == "_")
+		if (key == "$") {
+			if (substring(value, 0, 1) == "_") {
 				value = strcat("target_spawn_helper", value);
+			}
 			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
 
 			e.target_spawn_spawnfunc(e);
 
 			// We called an external function, so we have to re-tokenize msg.
 			n = tokenize_console(msg);
-		}
-		else
-		{
-			if(data.y == FIELD_VECTOR)
+		} else {
+			if (data.y == FIELD_VECTOR) {
 				value = strreplace("'", "", value); // why?!?
+			}
 			putentityfieldstring(data.x, e, value);
 		}
 	}
@@ -254,39 +213,37 @@ bool target_spawn_cancreate(entity this)
 	entity e;
 
 	c = this.count;
-	if(c == 0) // no limit?
+	if (c == 0) { // no limit?
 		return true;
+	}
 
 	++c; // increase count to not include MYSELF
-	for(e = NULL; (e = findfloat(e, target_spawn_id, this.target_spawn_id)); --c)
-		;
+	for (e = NULL; (e = findfloat(e, target_spawn_id, this.target_spawn_id)); --c) {}
 
 	// if c now is 0, we have AT LEAST the given count (maybe more), so don't spawn any more
-	if(c == 0)
+	if (c == 0) {
 		return false;
+	}
 	return true;
 }
 
 void target_spawn_use(entity this, entity actor, entity trigger)
 {
-	if(this.target == "")
-	{
+	if (this.target == "") {
 		// spawn new entity
-		if(!target_spawn_cancreate(this))
+		if (!target_spawn_cancreate(this)) {
 			return;
+		}
 		entity e = spawn();
 		e.spawnfunc_checked = true;
 		target_spawn_useon(e, this, actor, trigger);
 		e.target_spawn_id = this.target_spawn_id;
-	}
-	else if(this.target == "*activator")
-	{
+	} else if (this.target == "*activator") {
 		// edit entity
-		if(actor)
+		if (actor) {
 			target_spawn_useon(actor, this, actor, trigger);
-	}
-	else
-	{
+		}
+	} else {
 		// edit entity
 		FOREACH_ENTITY_STRING(targetname, this.target,
 		{
@@ -298,31 +255,30 @@ void target_spawn_use(entity this, entity actor, entity trigger)
 void target_spawn_spawnfirst(entity this)
 {
 	entity act = this.target_spawn_activator;
-	if(this.spawnflags & 2)
+	if (this.spawnflags & 2) {
 		target_spawn_use(this, act, NULL);
+	}
 }
 
 void initialize_field_db()
 {
-	if(!target_spawn_initialized)
-	{
+	if (!target_spawn_initialized) {
 		float n, i;
 		string fn;
 		vector prev, next;
 		float ft;
 
 		n = numentityfields();
-		for(i = 0; i < n; ++i)
-		{
+		for (i = 0; i < n; ++i) {
 			fn = entityfieldname(i);
 			ft = entityfieldtype(i);
 			next = i * '1 0 0' + ft * '0 1 0' + '0 0 1';
 			prev = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", fn)));
-			if(prev.y == 0)
-			{
+			if (prev.y == 0) {
 				db_put(TemporaryDB, strcat("/target_spawn/field/", fn), vtos(next));
-				if(fn == "target_spawn_spawnfunc")
+				if (fn == "target_spawn_spawnfunc") {
 					target_spawn_spawnfunc_field = i;
+				}
 			}
 		}
 

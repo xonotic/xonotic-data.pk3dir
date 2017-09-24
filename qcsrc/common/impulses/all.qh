@@ -12,7 +12,7 @@ REGISTRY_CHECK(IMPULSES)
 .void(entity this) impulse_handle;
 
 #if defined(CSQC)
-#define IMPULSE_ALIAS(alias, id) localcmd("\nalias " #alias " \"", id ,"\"\n")
+#define IMPULSE_ALIAS(alias, id) localcmd("\nalias " #alias " \"", id, "\"\n")
 #else
 #define IMPULSE_ALIAS(alias, id)
 #endif
@@ -28,12 +28,16 @@ REGISTRY_CHECK(IMPULSES)
 #define LEGACY_IMPULSE_ID(alias, id) LEGACY_IMPULSE(alias, id, sprintf("impulse %d", IMP_##alias.impulse))
 
 #define LEGACY_IMPULSE(alias, id, new) \
-	STATIC_INIT(legacy_##alias) { \
+	STATIC_INIT(legacy_##alias) \
+	{ \
 		string s = new; \
-		if (s == #alias) LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s); \
+		if (s == #alias) { LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s); } \
 		IMPULSE_ALIAS(alias, s); \
 	} \
-	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
+	SHUTDOWN(legacy_##alias) \
+	{ \
+		IMPULSE_ALIAS(alias, "impulse " #id); \
+	}
 
 #define X(slot, imp) \
 	REGISTER_IMPULSE(weapon_group_##slot, imp) \

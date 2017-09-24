@@ -42,9 +42,9 @@ ENDCLASS(ClientState)
 .ClientState _cs;
 
 #if NDEBUG
-	#define CS(this) (this._cs)
+#define CS(this) (this._cs)
 #else
-	ClientState CS(Client this) { TC(Client, this); assert(this._cs); return this._cs; }
+ClientState CS(Client this) { TC(Client, this); assert(this._cs); return this._cs; }
 #endif
 
 void ClientState_attach(entity this);

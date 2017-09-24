@@ -4,22 +4,22 @@ void target_push_init(entity this);
 
 spawnfunc(target_location)
 {
-    this.classname = "target_location";
-    // location name in netname
-    // eventually support: count, teamgame selectors, line of sight?
+	this.classname = "target_location";
+	// location name in netname
+	// eventually support: count, teamgame selectors, line of sight?
 
-    target_push_init(this);
+	target_push_init(this);
 
-    IL_PUSH(g_locations, this);
+	IL_PUSH(g_locations, this);
 }
 
 spawnfunc(info_location)
 {
-    this.classname = "target_location";
-    this.message = this.netname;
+	this.classname = "target_location";
+	this.message = this.netname;
 
-    target_push_init(this);
+	target_push_init(this);
 
-    IL_PUSH(g_locations, this);
+	IL_PUSH(g_locations, this);
 }
 #endif

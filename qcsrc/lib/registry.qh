@@ -3,15 +3,19 @@
 #include "oo.qh"
 
 #if 1
-	#define _R_MAP(r, max) ArrayList r; STATIC_INIT(r) { AL_NEW(r, max, NULL, e); }
-	#define _R_GET(r, i) AL_gete(r, i)
-	#define _R_SET(r, i, e) AL_sete(r, i, e)
-	#define _R_DEL(r) AL_DELETE(r)
+#define _R_MAP(r, max) \
+	ArrayList r; STATIC_INIT(r) \
+	{ \
+		AL_NEW(r, max, NULL, e); \
+	}
+#define _R_GET(r, i) AL_gete(r, i)
+#define _R_SET(r, i, e) AL_sete(r, i, e)
+#define _R_DEL(r) AL_DELETE(r)
 #else
-	#define _R_MAP(r, max) entity r[max]
-	#define _R_GET(r, i) r[i]
-	#define _R_SET(r, i, e) r[i] = e
-	#define _R_DEL(r)
+#define _R_MAP(r, max) entity r[max]
+#define _R_GET(r, i) r[i]
+#define _R_SET(r, i, e) r[i] = e
+#define _R_DEL(r)
 #endif
 
 /**
@@ -27,24 +31,53 @@
 	[[accumulate]] REGISTRY_END(id) {} \
 	void _Register##id() {} \
 	int id##_state = 0; \
-	void Register##id() { if (id##_state) return; id##_state = 1; REGISTRY_DEPENDS_(id); REGISTRY_BEGIN_(id); _Register##id(); id##_state = 2; REGISTRY_END_(id); } \
+	void Register##id() \
+	{ \
+		if (id##_state) { \
+			return; \
+		} \
+		id##_state = 1; REGISTRY_DEPENDS_(id); REGISTRY_BEGIN_(id); _Register##id(); id##_state = 2; REGISTRY_END_(id); \
+	} \
 	const int id##_MAX = max; \
 	int id##_COUNT; \
 	noref entity id##_first, id##_last; \
 	_R_MAP(_##id, id##_MAX); \
-	SHUTDOWN(id) { _R_DEL(_##id); } \
-	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+	SHUTDOWN(id) \
+	{ \
+		_R_DEL(_##id); \
+	} \
+	entity _##id##_from(int i, entity null) \
+	{ \
+		if (i >= 0 && i < id##_COUNT) { \
+			entity e = _R_GET(_##id, i); if (e) { \
+				return e; \
+			} \
+		} \
+		return null; \
+	}
 
 /** Add registry dependencies to a registry */
-#define REGISTRY_DEPENDS(id, dep) void Register##dep(); void REGISTRY_DEPENDS_(id) { Register##dep(); }
+#define REGISTRY_DEPENDS(id, dep) \
+	void Register##dep(); void REGISTRY_DEPENDS_(id) \
+	{ \
+		Register##dep(); \
+	}
 #define REGISTRY_DEPENDS_(id) Register##id##_Depends()
 
 /** Called before initializing a registry. */
-#define REGISTRY_BEGIN(id) [[accumulate]] void REGISTRY_BEGIN_(id) { noref void() f = Register##id; } void REGISTRY_BEGIN_(id)
+#define REGISTRY_BEGIN(id) \
+	[[accumulate]] void REGISTRY_BEGIN_(id) \
+	{ \
+		noref void() f = Register##id; \
+	} void REGISTRY_BEGIN_(id)
 #define REGISTRY_BEGIN_(id) Register##id##_First()
 
 /** Called after initializing a registry. */
-#define REGISTRY_END(id) [[accumulate]] void REGISTRY_END_(id) { noref void() f = Register##id; } void REGISTRY_END_(id)
+#define REGISTRY_END(id) \
+	[[accumulate]] void REGISTRY_END_(id) \
+	{ \
+		noref void() f = Register##id; \
+	} void REGISTRY_END_(id)
 #define REGISTRY_END_(id) Register##id##_Done()
 
 REGISTRY(Registries, BITS(8))
@@ -79,7 +112,7 @@ REGISTRY(Registries, BITS(8))
 	{ \
 		entity this = id; \
 		if (this == NULL) { \
-			if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
+			if (registry##_COUNT >= registry##_MAX) { LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); } \
 			this = id = inst; \
 			this.registered_id = #id; \
 			REGISTRY_PUSH(registry, fld, this); \
@@ -89,20 +122,22 @@ REGISTRY(Registries, BITS(8))
 	ACCUMULATE_FUNCTION(_Register##registry, Register_##id) \
 	REGISTER_INIT(id)
 
-#define REGISTRY_PUSH(registry, fld, it) MACRO_BEGIN \
-	it.fld = registry##_COUNT; \
-	_R_SET(_##registry, registry##_COUNT, it); \
-	++registry##_COUNT; \
-	if (!registry##_first) registry##_first = it; \
-	if (registry##_last)   registry##_last.REGISTRY_NEXT = it; \
-	registry##_last = it; \
-MACRO_END
+#define REGISTRY_PUSH(registry, fld, it) \
+	MACRO_BEGIN \
+		it.fld = registry##_COUNT; \
+		_R_SET(_##registry, registry##_COUNT, it); \
+		++registry##_COUNT; \
+		if (!registry##_first) { registry##_first = it; } \
+		if (registry##_last) { registry##_last.REGISTRY_NEXT = it; } \
+		registry##_last = it; \
+	MACRO_END
 
-#define REGISTRY_RESERVE(registry, fld, id, suffix) MACRO_BEGIN \
-	entity e = new_pure(registry_reserved); \
-	e.registered_id = #id "/" #suffix; \
-	REGISTRY_PUSH(registry, fld, e); \
-MACRO_END
+#define REGISTRY_RESERVE(registry, fld, id, suffix) \
+	MACRO_BEGIN \
+		entity e = new_pure(registry_reserved); \
+		e.registered_id = #id "/" #suffix; \
+		REGISTRY_PUSH(registry, fld, e); \
+	MACRO_END
 
 #define REGISTER_INIT(id) [[accumulate]] void Register_##id##_init(entity this)
 
@@ -117,7 +152,7 @@ MACRO_END
 	void _REGISTRY_SWAP_##id(int i, int j, entity pass) \
 	{ \
 		i += skip; j += skip; \
-		\
+        \
 		entity a = _R_GET(_##id, i), b = _R_GET(_##id, j); \
 		_R_SET(_##id, i, b); \
 		_R_SET(_##id, j, a); \
@@ -126,11 +161,9 @@ MACRO_END
 		a.REGISTRY_NEXT = b_next; \
 		b.REGISTRY_NEXT = a_next; \
         \
-		if (i == 0) id##_first = b; \
-		else _R_GET(_##id, i - 1).REGISTRY_NEXT = b; \
+		if (i == 0) { id##_first = b; } else { _R_GET(_##id, i - 1).REGISTRY_NEXT = b; } \
         \
-		if (j == 0) id##_first = a; \
-		else _R_GET(_##id, j - 1).REGISTRY_NEXT = a; \
+		if (j == 0) { id##_first = a; } else { _R_GET(_##id, j - 1).REGISTRY_NEXT = a; } \
 	} \
 	int _REGISTRY_CMP_##id(int i, int j, entity pass) \
 	{ \
@@ -147,9 +180,9 @@ MACRO_END
 #define REGISTRY_HASH(id) Registry_hash_##id
 
 ERASEABLE
-[[accumulate]] void Registry_check(string r, string server) { }
+[[accumulate]] void Registry_check(string r, string server) {}
 ERASEABLE
-[[accumulate]] void Registry_send_all() { }
+[[accumulate]] void Registry_send_all() {}
 
 #ifdef SVQC
 void Registry_send(string id, string hash);
@@ -168,20 +201,21 @@ void Registry_send(string id, string hash);
 		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
 		s = substring(s, strlen(join), -1); \
 		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
-		LOG_DEBUGF(#id ": %s\n[%s]", h, s); \
+		LOG_DEBUGF( #id ": %s\n[%s]", h, s); \
 	} \
 	void Registry_check(string r, string sv) \
 	{ \
-		if (r == #id) \
-		{ \
+		if (r == #id) { \
 			string cl = REGISTRY_HASH(id); \
-			if (cl != sv) \
-			{ \
+			if (cl != sv) { \
 				LOG_FATALF("client/server mismatch (%s).\nCL: %s\nSV: %s", r, cl, sv); \
 			} \
 		} \
 	} \
-	void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
+	void Registry_send_all() \
+	{ \
+		Registry_send( #id, REGISTRY_HASH(id)); \
+	} \
 
 #define REGISTER_REGISTRY(...) EVAL_REGISTER_REGISTRY(OVERLOAD(REGISTER_REGISTRY, __VA_ARGS__))
 #define EVAL_REGISTER_REGISTRY(...) __VA_ARGS__
@@ -194,7 +228,8 @@ void Registry_send(string id, string hash);
 		METHOD(id##Registry, m_reload, void()); \
 	ENDCLASS(id##Registry) \
 	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry)); \
-	METHOD(id##Registry, m_reload, void()) { \
-	    id##_state = 0; \
+	METHOD(id##Registry, m_reload, void()) \
+	{ \
+		id##_state = 0; \
 		Register##id(); \
 	}

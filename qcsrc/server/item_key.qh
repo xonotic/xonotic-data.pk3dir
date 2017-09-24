@@ -3,9 +3,9 @@
 /**
  * Returns the bit ID of a key
  */
-#define ITEM_KEY_BIT(n)	( bitshift(1, n) )
+#define ITEM_KEY_BIT(n) (bitshift(1, n))
 
-#define ITEM_KEY_MAX	24
+#define ITEM_KEY_MAX 24
 
 /**
  * list of key names.

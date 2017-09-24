@@ -9,14 +9,16 @@ void multivibrator_send(entity this)
 
 	newstate = (time < cyclestart + this.wait);
 
-	if(this.state != newstate)
+	if (this.state != newstate) {
 		SUB_UseTargets(this, this, NULL);
+	}
 	this.state = newstate;
 
-	if(this.state)
+	if (this.state) {
 		this.nextthink = cyclestart + this.wait + 0.01;
-	else
+	} else {
 		this.nextthink = cyclestart + this.wait + this.respawntime + 0.01;
+	}
 }
 
 void multivibrator_send_think(entity this)
@@ -26,14 +28,10 @@ void multivibrator_send_think(entity this)
 
 void multivibrator_toggle(entity this, entity actor, entity trigger)
 {
-	if(this.nextthink == 0)
-	{
+	if (this.nextthink == 0) {
 		multivibrator_send(this);
-	}
-	else
-	{
-		if(this.state)
-		{
+	} else {
+		if (this.state) {
 			SUB_UseTargets(this, actor, trigger);
 			this.state = 0;
 		}
@@ -43,10 +41,11 @@ void multivibrator_toggle(entity this, entity actor, entity trigger)
 
 void multivibrator_reset(entity this)
 {
-	if(!(this.spawnflags & 1))
+	if (!(this.spawnflags & 1)) {
 		this.nextthink = 0; // wait for a trigger event
-	else
+	} else {
 		this.nextthink = max(1, time);
+	}
 }
 
 /*QUAKED trigger_multivibrator (.5 .5 .5) (-8 -8 -8) (8 8 8) START_ON
@@ -62,17 +61,20 @@ START_ON: assume it is already turned on (when targeted)
 */
 spawnfunc(trigger_multivibrator)
 {
-	if(!this.wait)
+	if (!this.wait) {
 		this.wait = 1;
-	if(!this.respawntime)
+	}
+	if (!this.respawntime) {
 		this.respawntime = this.wait;
+	}
 
 	this.state = 0;
 	this.use = multivibrator_toggle;
 	setthink(this, multivibrator_send_think);
 	this.nextthink = max(1, time);
 
-	if(THIS_TARGETED)
+	if (THIS_TARGETED) {
 		multivibrator_reset(this);
+	}
 }
 #endif

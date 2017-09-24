@@ -18,7 +18,7 @@ CLASS(XonoticLanguageList, XonoticListBox)
 	ATTRIB(XonoticLanguageList, columnPercentageSize, float, 0);
 
 	METHOD(XonoticLanguageList, doubleClickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float));  // enter handling
+	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float)); // enter handling
 
 	METHOD(XonoticLanguageList, destroy, void(entity));
 
@@ -27,7 +27,7 @@ CLASS(XonoticLanguageList, XonoticListBox)
 	METHOD(XonoticLanguageList, setLanguage, void(entity));
 	METHOD(XonoticLanguageList, languageParameter, string(entity, float, float));
 
-	ATTRIB(XonoticLanguageList, name, string, "languageselector");  // change this to make it noninteractive (for first run dialog);
+	ATTRIB(XonoticLanguageList, name, string, "languageselector"); // change this to make it noninteractive (for first run dialog);
 ENDCLASS(XonoticLanguageList)
 
 entity makeXonoticLanguageList();

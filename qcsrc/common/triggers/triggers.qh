@@ -4,8 +4,8 @@ const float SF_TRIGGER_INIT = 1;
 const float SF_TRIGGER_UPDATE = 2;
 const float SF_TRIGGER_RESET = 4;
 
-const float	SPAWNFLAG_NOMESSAGE = 1;
-const float	SPAWNFLAG_NOTOUCH = 1;
+const float SPAWNFLAG_NOMESSAGE = 1;
+const float SPAWNFLAG_NOTOUCH = 1;
 
 .bool pushable;
 
@@ -49,9 +49,9 @@ void trigger_remove_generic(entity this);
 .string target;
 .string targetname;
 
-const int ACTIVE_NOT 		= 0;
-const int ACTIVE_ACTIVE 	= 1;
-const int ACTIVE_IDLE 		= 2;
-const int ACTIVE_BUSY 		= 2;
-const int ACTIVE_TOGGLE		= 3;
+const int ACTIVE_NOT        = 0;
+const int ACTIVE_ACTIVE     = 1;
+const int ACTIVE_IDLE       = 2;
+const int ACTIVE_BUSY       = 2;
+const int ACTIVE_TOGGLE     = 3;
 #endif

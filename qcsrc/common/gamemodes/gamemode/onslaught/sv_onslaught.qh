@@ -5,7 +5,7 @@ void ons_Initialize();
 
 REGISTER_MUTATOR(ons, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		GameRules_teams(true);
@@ -73,10 +73,10 @@ bool ons_ControlPoint_Attackable(entity cp, int teamnumber);
 float ons_captureshield_force; // push force of the shield
 
 // bot player logic
-const int HAVOCBOT_ONS_ROLE_NONE 		= 0;
-const int HAVOCBOT_ONS_ROLE_DEFENSE 	= 2;
-const int HAVOCBOT_ONS_ROLE_ASSISTANT 	= 4;
-const int HAVOCBOT_ONS_ROLE_OFFENSE 	= 8;
+const int HAVOCBOT_ONS_ROLE_NONE        = 0;
+const int HAVOCBOT_ONS_ROLE_DEFENSE     = 2;
+const int HAVOCBOT_ONS_ROLE_ASSISTANT   = 4;
+const int HAVOCBOT_ONS_ROLE_OFFENSE     = 8;
 
 .entity havocbot_ons_target;
 

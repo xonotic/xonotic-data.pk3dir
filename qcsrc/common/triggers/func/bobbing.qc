@@ -6,8 +6,7 @@ void func_bobbing_controller_think(entity this)
 	vector v;
 	this.nextthink = time + 0.1;
 
-	if(this.owner.active != ACTIVE_ACTIVE)
-	{
+	if (this.owner.active != ACTIVE_ACTIVE) {
 		this.owner.velocity = '0 0 0';
 		return;
 	}
@@ -15,9 +14,10 @@ void func_bobbing_controller_think(entity this)
 	// calculate sinewave using makevectors
 	makevectors((this.nextthink * this.owner.cnt + this.owner.phase * 360) * '0 1 0');
 	v = this.owner.destvec + this.owner.movedir * v_forward_y;
-	if(this.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
+	if (this.owner.classname == "func_bobbing") { // don't brake stuff if the func_bobbing was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
 		this.owner.velocity = (v - this.owner.origin) * 10;
+	}
 }
 
 /*QUAKED spawnfunc_func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
@@ -32,15 +32,16 @@ dmgtime : See above.
 spawnfunc(func_bobbing)
 {
 	entity controller;
-	if (this.noise != "")
-	{
+	if (this.noise != "") {
 		precache_sound(this.noise);
 		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
-	if (!this.speed)
+	if (!this.speed) {
 		this.speed = 4;
-	if (!this.height)
+	}
+	if (!this.height) {
 		this.height = 32;
+	}
 	// center of bobbing motion
 	this.destvec = this.origin;
 	// time scale to get degrees
@@ -50,24 +51,29 @@ spawnfunc(func_bobbing)
 
 	// damage when blocked
 	setblocked(this, generic_plat_blocked);
-	if(this.dmg && (this.message == ""))
+	if (this.dmg && (this.message == "")) {
 		this.message = " was squished";
-    if(this.dmg && (this.message2 == ""))
+	}
+	if (this.dmg && (this.message2 == "")) {
 		this.message2 = "was squished by";
-	if(this.dmg && (!this.dmgtime))
+	}
+	if (this.dmg && (!this.dmgtime)) {
 		this.dmgtime = 0.25;
+	}
 	this.dmgtime2 = time;
 
 	// how far to bob
-	if (this.spawnflags & 1) // X
+	if (this.spawnflags & 1) { // X
 		this.movedir = '1 0 0' * this.height;
-	else if (this.spawnflags & 2) // Y
+	} else if (this.spawnflags & 2) { // Y
 		this.movedir = '0 1 0' * this.height;
-	else // Z
+	} else {                          // Z
 		this.movedir = '0 0 1' * this.height;
+	}
 
-	if (!InitMovingBrushTrigger(this))
+	if (!InitMovingBrushTrigger(this)) {
 		return;
+	}
 
 	// wait for targets to spawn
 	controller = new(func_bobbing_controller);

@@ -8,62 +8,49 @@
 
 void round_handler_Think(entity this)
 {
-	if (intermission_running)
-	{
+	if (intermission_running) {
 		round_handler_Reset(0);
 		round_handler_Remove();
 		return;
 	}
 
-	if (time < game_starttime)
-	{
+	if (time < game_starttime) {
 		round_handler_Reset(game_starttime);
 		return;
 	}
 
 	game_stopped = false;
 
-	if (this.wait)
-	{
+	if (this.wait) {
 		this.wait = false;
-		this.cnt = this.count + 1;  // init countdown
+		this.cnt = this.count + 1; // init countdown
 		round_starttime = time + this.count;
 		reset_map(true);
 	}
 
-	if (this.cnt > 0)  // countdown running
-	{
-		if (this.canRoundStart() && !(autocvar_g_campaign && !campaign_bots_may_start))
-		{
-			if (this.cnt == this.count + 1) round_starttime = time + this.count;
+	if (this.cnt > 0) { // countdown running
+		if (this.canRoundStart() && !(autocvar_g_campaign && !campaign_bots_may_start)) {
+			if (this.cnt == this.count + 1) { round_starttime = time + this.count; }
 			int f = this.cnt - 1;
-			if (f == 0)
-			{
+			if (f == 0) {
 				this.cnt = 0;
 				this.round_endtime = (this.round_timelimit) ? time + this.round_timelimit : 0;
 				this.nextthink = time;
-				if (this.roundStart) this.roundStart();
+				if (this.roundStart) { this.roundStart(); }
 				return;
 			}
 			this.cnt = this.cnt - 1;
-		}
-		else
-		{
+		} else {
 			round_handler_Reset(0);
 		}
-		this.nextthink = time + 1;  // canRoundStart every second
-	}
-	else
-	{
-		if (this.canRoundEnd())
-		{
+		this.nextthink = time + 1; // canRoundStart every second
+	} else {
+		if (this.canRoundEnd()) {
 			// schedule a new round
 			this.wait = true;
 			this.nextthink = time + this.delay;
-		}
-		else
-		{
-			this.nextthink = time;  // canRoundEnd every frame
+		} else {
+			this.nextthink = time; // canRoundEnd every frame
 		}
 	}
 }
@@ -88,8 +75,7 @@ void round_handler_FirstThink(entity this)
 
 void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func)
 {
-	if (round_handler)
-	{
+	if (round_handler) {
 		backtrace("Can't spawn round_handler again!");
 		return;
 	}
@@ -108,8 +94,8 @@ void round_handler_Reset(float next_think)
 {
 	entity this = round_handler;
 	this.wait = false;
-	if (this.count)
-		if (this.cnt < this.count + 1) this.cnt = this.count + 1;
+	if (this.count) {
+		if (this.cnt < this.count + 1) { this.cnt = this.count + 1; } }
 	this.nextthink = next_think;
 	round_starttime = (next_think) ? (next_think + this.count) : -1;
 }

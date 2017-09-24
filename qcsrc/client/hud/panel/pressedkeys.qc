@@ -8,10 +8,9 @@
 
 void HUD_PressedKeys()
 {
-	if(!autocvar__hud_configure)
-	{
-		if(!autocvar_hud_panel_pressedkeys) return;
-		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
+	if (!autocvar__hud_configure) {
+		if (!autocvar_hud_panel_pressedkeys) { return; }
+		if (spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) { return; }
 	}
 
 	HUD_Panel_LoadCvars();
@@ -19,32 +18,28 @@ void HUD_PressedKeys()
 	pos = panel_pos;
 	mySize = panel_size;
 
-	if (autocvar_hud_panel_pressedkeys_dynamichud)
+	if (autocvar_hud_panel_pressedkeys_dynamichud) {
 		HUD_Scale_Enable();
-	else
+	} else {
 		HUD_Scale_Disable();
+	}
 	HUD_Panel_DrawBg();
-	if(panel_bg_padding)
-	{
+	if (panel_bg_padding) {
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
 	// force custom aspect
 	float aspect = autocvar_hud_panel_pressedkeys_aspect;
-	if(aspect)
-	{
+	if (aspect) {
 		vector newSize = '0 0 0';
-		if(mySize.x/mySize.y > aspect)
-		{
+		if (mySize.x / mySize.y > aspect) {
 			newSize.x = aspect * mySize.y;
 			newSize.y = mySize.y;
 
 			pos.x = pos.x + (mySize.x - newSize.x) / 2;
-		}
-		else
-		{
-			newSize.y = 1/aspect * mySize.x;
+		} else {
+			newSize.y = 1 / aspect * mySize.x;
 			newSize.x = mySize.x;
 
 			pos.y = pos.y + (mySize.y - newSize.y) / 2;
@@ -55,8 +50,7 @@ void HUD_PressedKeys()
 	vector keysize = vec2(mySize.x / 3, mySize.y / (3 - !autocvar_hud_panel_pressedkeys_attack));
 	int pressedkeys = STAT(PRESSED_KEYS);
 
-	if(autocvar_hud_panel_pressedkeys_attack)
-	{
+	if (autocvar_hud_panel_pressedkeys_attack) {
 		drawpic_aspect_skin(pos + eX * keysize.x * 0.5, ((pressedkeys & KEY_ATCK) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawpic_aspect_skin(pos + eX * keysize.x * 1.5, ((pressedkeys & KEY_ATCK2) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += keysize.y;

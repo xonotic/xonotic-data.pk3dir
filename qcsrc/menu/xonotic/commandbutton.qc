@@ -14,13 +14,14 @@ entity makeXonoticCommandButton(string theText, vector theColor, string theComma
 
 void XonoticCommandButton_Click(entity me, entity other)
 {
-	//if(me.flags & COMMANDBUTTON_APPLY)
+	// if(me.flags & COMMANDBUTTON_APPLY)
 	//	saveAllCvars(me.parent);
 	cmd("\n", me.onClickCommand, "\n");
-	//if(me.flags & COMMANDBUTTON_REVERT)
+	// if(me.flags & COMMANDBUTTON_REVERT)
 	//	loadAllCvars(me.parent);
-	if(me.flags & COMMANDBUTTON_CLOSE)
+	if (me.flags & COMMANDBUTTON_CLOSE) {
 		m_goto(string_null);
+	}
 }
 
 void XonoticCommandButton_configureXonoticCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags, string theTooltip)

@@ -20,19 +20,19 @@ void XonoticCvarList_configureXonoticCvarList(entity me)
 }
 void CvarList_Load(entity me, string filter)
 {
-	if(me.handle < 0)
+	if (me.handle < 0) {
 		return;
+	}
 
 	buf_cvarlist(me.handle, filter, "_");
 	me.nItems = buf_getsize(me.handle);
-	if(autocvar_menu_cvarlist_onlymodified)
-	{
+	if (autocvar_menu_cvarlist_onlymodified) {
 		float newbuf = buf_create();
-		for (int i = 0; i < me.nItems; ++i)
-		{
+		for (int i = 0; i < me.nItems; ++i) {
 			string k = bufstr_get(me.handle, i);
-			if(cvar_string(k) != cvar_defstring(k))
+			if (cvar_string(k) != cvar_defstring(k)) {
 				bufstr_add(newbuf, k, false);
+			}
 		}
 		buf_del(me.handle);
 		me.handle = newbuf;
@@ -42,23 +42,27 @@ void CvarList_Load(entity me, string filter)
 void XonoticCvarList_showNotify(entity me)
 {
 	bool force_initial_selection = false;
-	if(me.handle >= 0 && me.nItems <= 0) // me.handle not loaded yet?
+	if (me.handle >= 0 && me.nItems <= 0) { // me.handle not loaded yet?
 		force_initial_selection = true;
+	}
 	CvarList_Load(me, me.controlledTextbox.text);
-	if(force_initial_selection)
+	if (force_initial_selection) {
 		me.setSelected(me, 0);
+	}
 }
 void XonoticCvarList_hideNotify(entity me)
 {
-	if(me.handle)
+	if (me.handle) {
 		buf_del(me.handle);
+	}
 	me.handle = buf_create();
 	me.nItems = 0;
 }
 void XonoticCvarList_destroy(entity me)
 {
-	if(me.handle)
+	if (me.handle) {
 		buf_del(me.handle);
+	}
 }
 string autocvar_menu_forced_saved_cvars;
 string autocvar_menu_reverted_nonsaved_cvars;
@@ -68,33 +72,29 @@ float XonoticCvarList_updateCvarType(entity me)
 	t = cvar_type(me.cvarName);
 	me.cvarType = "";
 	float needsForcing;
-	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
-	{
+	if (strhasword(autocvar_menu_forced_saved_cvars, me.cvarName)) {
 		me.cvarType = strcat(me.cvarType, ", ", _("forced to be saved to config.cfg"));
 		needsForcing = 0;
-	}
-	else if(strhasword(autocvar_menu_reverted_nonsaved_cvars, me.cvarName))
-	{
+	} else if (strhasword(autocvar_menu_reverted_nonsaved_cvars, me.cvarName)) {
 		// Currently claims to be saved, but won't be on next startup.
 		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
 		needsForcing = 1;
-	}
-	else if(t & CVAR_TYPEFLAG_SAVED)
-	{
+	} else if (t & CVAR_TYPEFLAG_SAVED) {
 		me.cvarType = strcat(me.cvarType, ", ", _("will be saved to config.cfg"));
 		needsForcing = 0;
-	}
-	else
-	{
+	} else {
 		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
 		needsForcing = 1;
 	}
-	if(t & CVAR_TYPEFLAG_PRIVATE)
+	if (t & CVAR_TYPEFLAG_PRIVATE) {
 		me.cvarType = strcat(me.cvarType, ", ", _("private"));
-	if(t & CVAR_TYPEFLAG_ENGINE)
+	}
+	if (t & CVAR_TYPEFLAG_ENGINE) {
 		me.cvarType = strcat(me.cvarType, ", ", _("engine setting"));
-	if(t & CVAR_TYPEFLAG_READONLY)
+	}
+	if (t & CVAR_TYPEFLAG_READONLY) {
 		me.cvarType = strcat(me.cvarType, ", ", _("read only"));
+	}
 	me.cvarType = strzone(substring(me.cvarType, 2, strlen(me.cvarType) - 2));
 	me.cvarTypeBox.setText(me.cvarTypeBox, me.cvarType);
 	return needsForcing;
@@ -104,17 +104,22 @@ void XonoticCvarList_setSelected(entity me, float i)
 	string s;
 
 	SUPER(XonoticCvarList).setSelected(me, i);
-	if(me.nItems == 0)
+	if (me.nItems == 0) {
 		return;
+	}
 
-	if(me.cvarName)
+	if (me.cvarName) {
 		strunzone(me.cvarName);
-	if(me.cvarDescription)
+	}
+	if (me.cvarDescription) {
 		strunzone(me.cvarDescription);
-	if(me.cvarType)
+	}
+	if (me.cvarType) {
 		strunzone(me.cvarType);
-	if(me.cvarDefault)
+	}
+	if (me.cvarDefault) {
 		strunzone(me.cvarDefault);
+	}
 	me.cvarName = strzone(bufstr_get(me.handle, me.selectedItem));
 	me.cvarDescription = strzone(cvar_description(me.cvarName));
 	me.cvarDefault = strzone(cvar_defstring(me.cvarName));
@@ -165,10 +170,9 @@ void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSe
 
 	string s;
 
-	if(isSelected)
+	if (isSelected) {
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(isFocused)
-	{
+	} else if (isFocused) {
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
@@ -178,18 +182,20 @@ void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSe
 	v = cvar_string(k);
 	d = cvar_defstring(k);
 	t = cvar_type(k);
-	if(strhasword(autocvar_menu_forced_saved_cvars, k))
+	if (strhasword(autocvar_menu_forced_saved_cvars, k)) {
 		theAlpha = SKINALPHA_CVARLIST_SAVED;
-	else if(strhasword(autocvar_menu_reverted_nonsaved_cvars, k))
+	} else if (strhasword(autocvar_menu_reverted_nonsaved_cvars, k)) {
 		theAlpha = SKINALPHA_CVARLIST_TEMPORARY;
-	else if(t & CVAR_TYPEFLAG_SAVED)
+	} else if (t & CVAR_TYPEFLAG_SAVED) {
 		theAlpha = SKINALPHA_CVARLIST_SAVED;
-	else
+	} else {
 		theAlpha = SKINALPHA_CVARLIST_TEMPORARY;
-	if(v == d)
+	}
+	if (v == d) {
 		theColor = SKINCOLOR_CVARLIST_UNCHANGED;
-	else
+	} else {
 		theColor = SKINCOLOR_CVARLIST_CHANGED;
+	}
 
 	s = draw_TextShortenToWidth(k, me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
@@ -199,42 +205,40 @@ void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSe
 
 float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE))
-	{
+	if (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE)) {
 		CvarList_Revert_Click(NULL, me);
 		return 1;
-	}
-	else if(scan == K_ENTER)
-	{
+	} else if (scan == K_ENTER) {
 		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
 		return 1;
-	}
-	else if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
+	} else if (SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift)) {
 		return 1;
-	else if(!me.controlledTextbox)
+	} else if (!me.controlledTextbox) {
 		return 0;
-	else
+	} else {
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
+	}
 }
 
 float XonoticCvarList_mouseRelease(entity me, vector pos)
 {
-	if(me.pressed == 2)
+	if (me.pressed == 2) {
 		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
+	}
 	return SUPER(XonoticCvarList).mouseRelease(me, pos);
 }
 
 void CvarList_Value_Change(entity box, entity me)
 {
 	cvar_set(me.cvarNameBox.text, box.text);
-	if(me.cvarNeedsForcing)
-	{
+	if (me.cvarNeedsForcing) {
 		localcmd(sprintf("\nseta %1$s \"$%1$s\"\n", me.cvarName));
 		cvar_set("menu_reverted_nonsaved_cvars", substring(strreplace(strcat(" ", me.cvarName, " "), " ", strcat(" ", autocvar_menu_reverted_nonsaved_cvars, " ")), 1, -2));
-		if (autocvar_menu_forced_saved_cvars == "")
+		if (autocvar_menu_forced_saved_cvars == "") {
 			cvar_set("menu_forced_saved_cvars", me.cvarName);
-		else
+		} else {
 			cvar_set("menu_forced_saved_cvars", strcat(autocvar_menu_forced_saved_cvars, " ", me.cvarName));
+		}
 		me.cvarNeedsForcing = 0;
 		me.updateCvarType(me);
 	}
@@ -244,13 +248,13 @@ void CvarList_Revert_Click(entity btn, entity me)
 {
 	me.cvarValueBox.setText(me.cvarValueBox, me.cvarDefault);
 	me.cvarValueBox.cursorPos = strlen(me.cvarDefault);
-	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
-	{
+	if (strhasword(autocvar_menu_forced_saved_cvars, me.cvarName)) {
 		cvar_set("menu_forced_saved_cvars", substring(strreplace(strcat(" ", me.cvarName, " "), " ", strcat(" ", autocvar_menu_forced_saved_cvars, " ")), 1, -2));
-		if (autocvar_menu_reverted_nonsaved_cvars == "")
+		if (autocvar_menu_reverted_nonsaved_cvars == "") {
 			cvar_set("menu_reverted_nonsaved_cvars", me.cvarName);
-		else
+		} else {
 			cvar_set("menu_reverted_nonsaved_cvars", strcat(autocvar_menu_reverted_nonsaved_cvars, " ", me.cvarName));
+		}
 	}
 	me.cvarNeedsForcing = me.updateCvarType(me);
 }

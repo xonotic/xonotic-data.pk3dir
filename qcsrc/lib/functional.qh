@@ -28,15 +28,15 @@
 #define APPLY(f, ...) f(__VA_ARGS__)
 
 #ifdef SVQC
-	#define SV(f, ...) f(__VA_ARGS__)
+#define SV(f, ...) f(__VA_ARGS__)
 #else
-	#define SV(f, ...)
+#define SV(f, ...)
 #endif
 
 #ifdef CSQC
-	#define CL(f, ...) f(__VA_ARGS__)
+#define CL(f, ...) f(__VA_ARGS__)
 #else
-	#define CL(f, ...)
+#define CL(f, ...)
 #endif
 
 #define IF(cond, f, ...) cond(f, __VA_ARGS__)

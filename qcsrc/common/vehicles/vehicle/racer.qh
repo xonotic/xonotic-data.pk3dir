@@ -8,8 +8,8 @@ CLASS(Racer, Vehicle)
 /* maxs       */ ATTRIB(Racer, m_maxs, vector, '120 120 40' * 0.5);
 /* view offset*/ ATTRIB(Racer, view_ofs, vector, '0 0 50');
 /* view dist  */ ATTRIB(Racer, height, float, 200);
-/* model	  */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
-/* model	  */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
+/* model	  */ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
+/* model	  */ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
 /* head_model */ ATTRIB(Racer, head_model, string, "null");
 /* hud_model  */ ATTRIB(Racer, hud_model, string, "models/vehicles/wakizashi_cockpit.dpm");
 /* tags       */ ATTRIB(Racer, tag_head, string, "");

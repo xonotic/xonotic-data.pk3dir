@@ -2,8 +2,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "util.qh"
-    #include "campaign_common.qh"
+#include "util.qh"
+#include "campaign_common.qh"
 #endif
 
 // CampaignFileLoad(offset, n)
@@ -19,8 +19,9 @@ float CampaignFile_Load(int offset, float n)
 	string l, a;
 	string fn;
 
-	if(n > CAMPAIGN_MAX_ENTRIES)
+	if (n > CAMPAIGN_MAX_ENTRIES) {
 		n = CAMPAIGN_MAX_ENTRIES;
+	}
 
 	campaign_offset = offset;
 	campaign_entries = 0;
@@ -28,51 +29,64 @@ float CampaignFile_Load(int offset, float n)
 
 	fn = language_filename(strcat("maps/campaign", campaign_name, ".txt"));
 	fh = fopen(fn, FILE_READ);
-	if(fh >= 0)
-	{
-		for(lineno = 0; (l = fgets(fh)); )
-		{
-			if(strlen(l) == 0)
+	if (fh >= 0) {
+		for (lineno = 0; (l = fgets(fh)); ) {
+			if (strlen(l) == 0) {
 				continue; // empty line
-			if(substring(l, 0, 11) == "//campaign:")
+			}
+			if (substring(l, 0, 11) == "//campaign:") {
 				campaign_title = substring(l, 11, strlen(l) - 11);
-			if(substring(l, 0, 2) == "//")
+			}
+			if (substring(l, 0, 2) == "//") {
 				continue; // comment
-			if(substring(l, 0, 12) == "\"//campaign:")
+			}
+			if (substring(l, 0, 12) == "\"//campaign:") {
 				campaign_title = substring(l, 12, strlen(l) - 13);
-			if(substring(l, 0, 3) == "\"//")
-				continue; // comment
-			if(lineno >= offset)
-			{
+			}
+			if (substring(l, 0, 3) == "\"//") {
+				continue;             // comment
+			}
+			if (lineno >= offset) {
 				entlen = tokenize(l); // using insane tokenizer for CSV
 
 #define CAMPAIGN_GETARG \
 	a = argv(++i); \
-	if(a == ",") \
+	if (a == ",") { \
 		a = ""; \
-	else \
+	} else \
 		++i
 // What you're seeing here is what people will do when your compiler supports
 // C-style macros but no line continuations.
 
 				i = -1; // starts at -1 so I don't need postincrement; that is, i points to BEFORE the current arg!
-				CAMPAIGN_GETARG; campaign_gametype[campaign_entries] = strzone(a);
-				CAMPAIGN_GETARG; campaign_mapname[campaign_entries] = strzone(a);
-				CAMPAIGN_GETARG; campaign_bots[campaign_entries] = stof(a);
-				CAMPAIGN_GETARG; campaign_botskill[campaign_entries] = stof(a);
-				CAMPAIGN_GETARG; campaign_fraglimit[campaign_entries] = stof(a);
-				CAMPAIGN_GETARG; campaign_timelimit[campaign_entries] = stof(a);
-				CAMPAIGN_GETARG; campaign_mutators[campaign_entries] = strzone(a);
-				CAMPAIGN_GETARG; campaign_shortdesc[campaign_entries] = strzone(a);
-				CAMPAIGN_GETARG; campaign_longdesc[campaign_entries] = strzone(strreplace("\\n", "\n", a));
+				CAMPAIGN_GETARG;
+				campaign_gametype[campaign_entries] = strzone(a);
+				CAMPAIGN_GETARG;
+				campaign_mapname[campaign_entries] = strzone(a);
+				CAMPAIGN_GETARG;
+				campaign_bots[campaign_entries] = stof(a);
+				CAMPAIGN_GETARG;
+				campaign_botskill[campaign_entries] = stof(a);
+				CAMPAIGN_GETARG;
+				campaign_fraglimit[campaign_entries] = stof(a);
+				CAMPAIGN_GETARG;
+				campaign_timelimit[campaign_entries] = stof(a);
+				CAMPAIGN_GETARG;
+				campaign_mutators[campaign_entries] = strzone(a);
+				CAMPAIGN_GETARG;
+				campaign_shortdesc[campaign_entries] = strzone(a);
+				CAMPAIGN_GETARG;
+				campaign_longdesc[campaign_entries] = strzone(strreplace("\\n", "\n", a));
 
-				if(i > entlen)
+				if (i > entlen) {
 					error("syntax error in campaign file: line has not enough fields");
+				}
 
 				campaign_entries = campaign_entries + 1;
 
-				if(campaign_entries >= n)
+				if (campaign_entries >= n) {
 					break;
+				}
 			}
 			lineno = lineno + 1;
 		}
@@ -86,11 +100,9 @@ float CampaignFile_Load(int offset, float n)
 
 void CampaignFile_Unload()
 {
-	if(campaign_title)
-	{
+	if (campaign_title) {
 		strunzone(campaign_title);
-		for(int i = 0; i < campaign_entries; ++i)
-		{
+		for (int i = 0; i < campaign_entries; ++i) {
 			strunzone(campaign_gametype[i]);
 			strunzone(campaign_mapname[i]);
 			strunzone(campaign_mutators[i]);

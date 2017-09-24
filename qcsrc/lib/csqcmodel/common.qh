@@ -87,7 +87,8 @@ const int CSQCMODEL_PROPERTY_SIZE = BIT(15);
 .float frame4;
 .float frame4time;
 .float lerpfrac4;
-#define ALLPROPERTIES ALLPROPERTIES_COMMON \
+#define ALLPROPERTIES \
+	ALLPROPERTIES_COMMON \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME2, int, ReadByte, WriteByte, frame2) \
 	CSQCMODEL_PROPERTY_SCALED(CSQCMODEL_PROPERTY_LERPFRAC, float, ReadByte, WriteByte, lerpfrac, 255, 0, 255)
 #else

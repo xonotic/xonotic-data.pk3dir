@@ -10,12 +10,12 @@ void RegisterCvars(void(string name, string def, string desc, bool archive, stri
 ERASEABLE
 bool cvar_value_issafe(string s)
 {
-	if (strstrofs(s, "\"", 0) >= 0) return false;
-	if (strstrofs(s, "\\", 0) >= 0) return false;
-	if (strstrofs(s, ";", 0) >= 0) return false;
-	if (strstrofs(s, "$", 0) >= 0) return false;
-	if (strstrofs(s, "\r", 0) >= 0) return false;
-	if (strstrofs(s, "\n", 0) >= 0) return false;
+	if (strstrofs(s, "\"", 0) >= 0) { return false; }
+	if (strstrofs(s, "\\", 0) >= 0) { return false; }
+	if (strstrofs(s, ";", 0) >= 0) { return false; }
+	if (strstrofs(s, "$", 0) >= 0) { return false; }
+	if (strstrofs(s, "\r", 0) >= 0) { return false; }
+	if (strstrofs(s, "\n", 0) >= 0) { return false; }
 	return true;
 }
 
@@ -46,14 +46,14 @@ ERASEABLE
 void RegisterCvars_Set(string name, string def, string desc, bool archive, string file)
 {
 	cvar_describe(name, desc);
-	if (archive) cvar_archive(name);
+	if (archive) { cvar_archive(name); }
 }
 
 int RegisterCvars_Save_fd;
 ERASEABLE
 void RegisterCvars_Save(string name, string def, string desc, bool archive, string file)
 {
-	if (!archive) return;
+	if (!archive) { return; }
 	fputs(RegisterCvars_Save_fd, sprintf("seta %s \"%s\"\n", name, def));
 }
 
@@ -61,8 +61,7 @@ STATIC_INIT_LATE(Cvars)
 {
 	RegisterCvars(RegisterCvars_Set);
 	RegisterCvars_Save_fd = fopen(sprintf("default%s.cfg", PROGNAME), FILE_WRITE);
-	if (RegisterCvars_Save_fd >= 0)
-	{
+	if (RegisterCvars_Save_fd >= 0) {
 		RegisterCvars(RegisterCvars_Save);
 		fclose(RegisterCvars_Save_fd);
 	}
@@ -80,7 +79,7 @@ const noref vector default_vector = '0 0 0';
 #define repr_cvar_string(x) (x)
 #define repr_cvar_vector(x) (sprintf("%v", x))
 
-//pseudo prototypes:
+// pseudo prototypes:
 // void AUTOCVAR(<cvar_name>, <qc_var_type>, default_cvar_value, string desc)
 // void AUTOCVAR_SAVE(<cvar_name>, <qc_var_type>, default_cvar_value, string desc)
 //  where default_cvar_value has type <qc_var_type>

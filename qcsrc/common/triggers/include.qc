@@ -17,4 +17,3 @@
 
 // trigger
 #include "trigger/include.qc"
-

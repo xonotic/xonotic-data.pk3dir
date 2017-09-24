@@ -1,10 +1,10 @@
 #pragma once
 
 #define SKINBEGIN
-#define SKINVECTOR(name,def) vector SKIN##name = def
-#define SKINFLOAT(name,def) float SKIN##name = def
-//#define SKINSTRING(name,def) const string SKIN##name = def
-#define SKINSTRING(name,def) string SKIN##name = def
+#define SKINVECTOR(name, def) vector SKIN##name = def
+#define SKINFLOAT(name, def) float SKIN##name = def
+// #define SKINSTRING(name,def) const string SKIN##name = def
+#define SKINSTRING(name, def) string SKIN##name = def
 #define SKINEND
 #include "skin-customizables.inc"
 #undef SKINEND
@@ -13,12 +13,12 @@
 #undef SKINFLOAT
 #undef SKINVECTOR
 
-#define SKINBEGIN void Skin_ApplySetting(string key, string _value) { switch(key) {
-#define SKINVECTOR(name,def) case #name: SKIN##name = stov(_value); break
-#define SKINFLOAT(name,def) case #name: SKIN##name = stof(_value); break
-//#define SKINSTRING(name,def) case #name: break
-#define SKINSTRING(name,def) case #name: SKIN##name = strzone(_value); break
-	// I know this leaks memory when skin is read multiple times. Screw it.
+#define SKINBEGIN void Skin_ApplySetting(string key, string _value) { switch (key) {
+#define SKINVECTOR(name, def) case #name: SKIN##name = stov(_value); break
+#define SKINFLOAT(name, def) case #name: SKIN##name = stof(_value); break
+// #define SKINSTRING(name,def) case #name: break
+#define SKINSTRING(name, def) case #name: SKIN##name = strzone(_value); break
+// I know this leaks memory when skin is read multiple times. Screw it.
 #define SKINEND case "": break; case "//": break; default: LOG_TRACE("Invalid key in skin file: ", key); } }
 #include "skin-customizables.inc"
 #undef SKINEND

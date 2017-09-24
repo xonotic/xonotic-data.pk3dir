@@ -20,5 +20,5 @@ CLASS(XonoticStatsList, XonoticListBox)
 	ATTRIB(XonoticStatsList, columnNameSize, float, 0);
 ENDCLASS(XonoticStatsList)
 
-entity statslist;  // for reference elsewhere
+entity statslist; // for reference elsewhere
 entity makeXonoticStatsList();

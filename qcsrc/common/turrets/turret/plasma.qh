@@ -11,6 +11,6 @@ CLASS(PlasmaTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(PlasmaTurret, head_model, string, strcat("models/turrets/", "plasma.md3"));
 /* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
 /* fullname   */ ATTRIB(PlasmaTurret, turret_name, string, _("Plasma Cannon"));
-    ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
+	ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
 ENDCLASS(PlasmaTurret)
 REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));

@@ -23,8 +23,8 @@ void sys_phys_monitor(entity this, float dt)
 	anticheat_physics(this);
 	if (sv_maxidle > 0) {
 		if (buttons != CS(this).buttons_old
-		    || CS(this).movement != CS(this).movement_old
-		    || this.v_angle != CS(this).v_angle_old) { CS(this).parm_idlesince = time; }
+			|| CS(this).movement != CS(this).movement_old
+			|| this.v_angle != CS(this).v_angle_old) { CS(this).parm_idlesince = time; }
 	}
 	PM_check_nickspam(this);
 	PM_check_punch(this, dt);
@@ -56,26 +56,26 @@ void sys_phys_spectator_control(entity this)
 	float maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
 	if (!this.spectatorspeed) { this.spectatorspeed = maxspeed_mod; }
 	if ((CS(this).impulse >= 1 && CS(this).impulse <= 19)
-	    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
-	    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
-	   ) {
+		|| (CS(this).impulse >= 200 && CS(this).impulse <= 209)
+		|| (CS(this).impulse >= 220 && CS(this).impulse <= 229)
+	) {
 		if (this.lastclassname != STR_PLAYER) {
 			if (CS(this).impulse == 10
-			    || CS(this).impulse == 15
-			    || CS(this).impulse == 18
-			    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
-			   ) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (CS(this).impulse == 11) {
+				|| CS(this).impulse == 15
+				|| CS(this).impulse == 18
+				|| (CS(this).impulse >= 200 && CS(this).impulse <= 209)
+			) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (CS(this).impulse == 11) {
 				this.spectatorspeed = maxspeed_mod;
 			} else if (CS(this).impulse == 12
-			    || CS(this).impulse == 16
-			    || CS(this).impulse == 19
-			    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
-			          ) {
+				|| CS(this).impulse == 16
+				|| CS(this).impulse == 19
+				|| (CS(this).impulse >= 220 && CS(this).impulse <= 229)
+			) {
 				this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
 			} else if (CS(this).impulse >= 1 && CS(this).impulse <= 9) {
 				this.spectatorspeed = 1 + 0.5 * (CS(this).impulse - 1);
 			}
-		}  // otherwise just clear
+		} // otherwise just clear
 		CS(this).impulse = 0;
 	}
 }

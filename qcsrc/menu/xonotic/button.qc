@@ -14,12 +14,9 @@ entity makeXonoticButton(string theText, vector theColor)
 
 void XonoticButton_configureXonoticButton(entity me, string theText, vector theColor, string theTooltip)
 {
-	if(theColor == '0 0 0')
-	{
+	if (theColor == '0 0 0') {
 		me.configureButton(me, theText, me.fontSize, me.image);
-	}
-	else
-	{
+	} else {
 		me.configureButton(me, theText, me.fontSize, me.grayImage);
 		me.color = theColor;
 		me.colorC = theColor;

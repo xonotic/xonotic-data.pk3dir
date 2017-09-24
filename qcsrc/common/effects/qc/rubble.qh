@@ -6,14 +6,16 @@ entityclass(Rubble);
 class(Rubble).float creationtime;
 
 IntrusiveList g_rubble;
-STATIC_INIT(g_rubble) { g_rubble = IL_NEW(); }
+STATIC_INIT(g_rubble)
+{
+	g_rubble = IL_NEW();
+}
 
 void RubbleLimit(string cname, int limit, void(entity) deleteproc)
 {
 	// remove rubble of the same type if it's at the limit
 	// remove multiple rubble if the limit has been decreased
-	while (1)
-	{
+	while (1) {
 		// walk the list and count the entities, find the oldest
 		// initialize our search with the first entity
 		int c = 0;
@@ -23,15 +25,14 @@ void RubbleLimit(string cname, int limit, void(entity) deleteproc)
 		IL_EACH(g_rubble, it.classname == cname,
 		{
 			++c;
-			if(!oldest || oldesttime > it.creationtime)
-			{
+			if (!oldest || oldesttime > it.creationtime) {
 				oldest = it;
 				oldesttime = it.creationtime;
 			}
 		});
 
 		// stop if there are less than the limit already
-		if (c <= limit) break;
+		if (c <= limit) { break; }
 
 		// delete this oldest one and search again
 		deleteproc(oldest);

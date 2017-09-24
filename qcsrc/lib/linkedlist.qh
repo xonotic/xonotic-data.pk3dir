@@ -34,12 +34,11 @@ entity LL_PUSH(LinkedList this, entity e)
 entity LL_POP(LinkedList this)
 {
 	assert(this);
-	if (!this.ll_tail) return NULL;
+	if (!this.ll_tail) { return NULL; }
 	LinkedListNode n = this.ll_tail;
 	entity e = n.ll_data;
 	LinkedListNode prev = n.ll_prev;
-	if (prev) (this.ll_tail = prev).ll_next = NULL;
-	else this.ll_head = this.ll_tail = NULL;
+	if (prev) { (this.ll_tail = prev).ll_next = NULL; } else { this.ll_head = this.ll_tail = NULL; }
 	delete(n);
 	return e;
 }
@@ -51,10 +50,9 @@ entity LL_POP(LinkedList this)
 	MACRO_BEGIN \
 		LinkedList _ll = this; \
 		assert(_ll); \
-		while (_ll.ll_tail) \
-		{ \
+		while (_ll.ll_tail) { \
 			entity it = LL_POP(_ll); \
-			if (!it) continue; \
+			if (!it) { continue; } \
 			dtor \
 			delete(it); \
 		} \
@@ -73,8 +71,7 @@ entity LL_POP(LinkedList this)
 #define LL_EACH(list, cond, body) \
 	MACRO_BEGIN                                                                   \
 		noref int i = 0;                                                \
-		for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i))  \
-		{                                                               \
+		for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i)) { \
 			ITER_CONST noref entity it = _it.ll_data;                   \
 			if (cond) { body }                                          \
 		}                                                               \

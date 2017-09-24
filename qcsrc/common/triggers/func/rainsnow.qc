@@ -33,21 +33,26 @@ spawnfunc(func_rain)
 {
 	this.dest = this.velocity;
 	this.velocity = '0 0 0';
-	if (!this.dest)
+	if (!this.dest) {
 		this.dest = '0 0 -700';
+	}
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this);
-	if (!this.cnt)
+	if (!this.cnt) {
 		this.cnt = 12;
-	if (!this.count)
+	}
+	if (!this.count) {
 		this.count = 2000;
+	}
 	this.count = 0.01 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
-	if (this.count < 1)
+	if (this.count < 1) {
 		this.count = 1;
-	if(this.count > 65535)
+	}
+	if (this.count > 65535) {
 		this.count = 65535;
+	}
 
 	this.state = 1; // 1 is rain, 0 is snow
 	this.Version = 1;
@@ -71,21 +76,26 @@ spawnfunc(func_snow)
 {
 	this.dest = this.velocity;
 	this.velocity = '0 0 0';
-	if (!this.dest)
+	if (!this.dest) {
 		this.dest = '0 0 -300';
+	}
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this);
-	if (!this.cnt)
+	if (!this.cnt) {
 		this.cnt = 12;
-	if (!this.count)
+	}
+	if (!this.count) {
 		this.count = 2000;
+	}
 	this.count = 0.01 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
-	if (this.count < 1)
+	if (this.count < 1) {
 		this.count = 1;
-	if(this.count > 65535)
+	}
+	if (this.count > 65535) {
 		this.count = 65535;
+	}
 
 	this.state = 0; // 1 is rain, 0 is snow
 	this.Version = 1;
@@ -99,18 +109,20 @@ void Draw_Rain(entity this)
 {
 	vector maxdist = '1 1 0' * autocvar_cl_rainsnow_maxdrawdist;
 	maxdist.z = 5;
-	if(boxesoverlap(vec2(view_origin) - maxdist, vec2(view_origin) + maxdist, vec2(this.absmin) - '0 0 5', vec2(this.absmax) + '0 0 5'))
-	//if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
-    	te_particlerain(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
+	if (boxesoverlap(vec2(view_origin) - maxdist, vec2(view_origin) + maxdist, vec2(this.absmin) - '0 0 5', vec2(this.absmax) + '0 0 5')) {
+		// if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
+		te_particlerain(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
+	}
 }
 
 void Draw_Snow(entity this)
 {
 	vector maxdist = '1 1 0' * autocvar_cl_rainsnow_maxdrawdist;
 	maxdist.z = 5;
-	if(boxesoverlap(vec2(view_origin) - maxdist, vec2(view_origin) + maxdist, vec2(this.absmin) - '0 0 5', vec2(this.absmax) + '0 0 5'))
-	//if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
-    	te_particlesnow(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
+	if (boxesoverlap(vec2(view_origin) - maxdist, vec2(view_origin) + maxdist, vec2(this.absmin) - '0 0 5', vec2(this.absmax) + '0 0 5')) {
+		// if(autocvar_cl_rainsnow_maxdrawdist <= 0 || vdist(vec2(this.origin) - vec2(this.absmin + this.absmax * 0.5), <=, autocvar_cl_rainsnow_maxdrawdist))
+		te_particlesnow(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
+	}
 }
 
 NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
@@ -135,10 +147,11 @@ NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 	setorigin(this, this.origin);
 	setsize(this, this.mins, this.maxs);
 	this.solid = SOLID_NOT;
-	if (isnew) IL_PUSH(g_drawables, this);
-	if(this.impulse)
+	if (isnew) { IL_PUSH(g_drawables, this); }
+	if (this.impulse) {
 		this.draw = Draw_Rain;
-	else
+	} else {
 		this.draw = Draw_Snow;
+	}
 }
 #endif

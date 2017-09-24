@@ -22,16 +22,16 @@ float GenericCommand(string command);
 
 // Returns command prefix specific for whatever program it is compiled in
 #ifdef SVQC
-	#define GetProgramCommandPrefix() "sv_cmd"
+#define GetProgramCommandPrefix() "sv_cmd"
 #elif defined(CSQC)
-	#define GetProgramCommandPrefix() "cl_cmd"
+#define GetProgramCommandPrefix() "cl_cmd"
 #elif defined(MENUQC)
-	#define GetProgramCommandPrefix() "menu_cmd"
+#define GetProgramCommandPrefix() "menu_cmd"
 #endif
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 #define CMD_Write(s) fputs(fh, s)
-#define CMD_Write_Alias(execute,command,description) CMD_Write(sprintf("alias %-20s \"%-13s %-20s ${* ?}\" // %s\n", command, execute, command, description))
+#define CMD_Write_Alias(execute, command, description) CMD_Write(sprintf("alias %-20s \"%-13s %-20s ${* ?}\" // %s\n", command, execute, command, description))
 void GenericCommand_macro_write_aliases(float fh);
 
 void Curl_URI_Get_Callback(int id, float status, string data);
