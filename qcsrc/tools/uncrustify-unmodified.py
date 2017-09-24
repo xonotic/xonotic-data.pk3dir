@@ -21,6 +21,8 @@ def main():
 
 	# get the latest changes on all branches
 	run('git fetch')
+	# remove merged/deleted remote branches
+	run('git remote prune origin')
 
 	# get all remote branches - those would potentially get merge conflicts if we formatted everything
 	branches = run('git branch --list --remotes')
