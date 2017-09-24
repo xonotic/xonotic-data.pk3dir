@@ -558,6 +558,8 @@ void PutPlayerInServer(entity this)
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
 		this.weapons = start_weapons;
+		GiveRandomWeapons(this, random_start_weapons_count,
+			autocvar_g_random_start_weapons, random_start_ammo);
 	}
 	SetSpectatee_status(this, 0);
 
