@@ -9,7 +9,7 @@ void W_Hook_ExplodeThink(entity this)
 	float dt, dmg_remaining_next, f;
 
 	dt = time - this.teleport_time;
-	dmg_remaining_next = POW(bound(0, 1 - dt / this.dmg_duration, 1), this.dmg_power);
+	dmg_remaining_next = EXP(bound(0, 1 - dt / this.dmg_duration, 1), this.dmg_power);
 
 	f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
