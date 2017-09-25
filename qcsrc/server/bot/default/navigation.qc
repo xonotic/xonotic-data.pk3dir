@@ -805,9 +805,9 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 				continue;
 
-			SET_TRACEWALK_DESTCOORDS(it, org, v2, v2_height);
-			if(vdist(v2 - org, <, 1050))
-			if(tracewalk(ent, org, PL_MIN_CONST, PL_MAX_CONST, v2, v2_height, bot_navigation_movemode))
+			SET_TRACEWALK_DESTCOORDS(ent, it.origin, v2, v2_height);
+			if(vdist(v2 - it.origin, <, 1050))
+			if(tracewalk(ent, it.origin, PL_MIN_CONST, PL_MAX_CONST, v2, v2_height, bot_navigation_movemode))
 				navigation_item_addlink(it, ent);
 		});
 	}
