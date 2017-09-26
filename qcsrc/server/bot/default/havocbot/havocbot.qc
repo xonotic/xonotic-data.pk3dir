@@ -429,12 +429,12 @@ void havocbot_bunnyhop(entity this, vector dir)
 // return true when bot isn't getting closer to the current goal
 bool havocbot_checkgoaldistance(entity this, vector gco)
 {
-	float curr_dist = vlen(this.origin - gco);
-	float curr_dist_2d = vlen(vec2(this.origin - gco));
+	float curr_dist_z = max(20, fabs(this.origin.z - gco.z));
+	float curr_dist_2d = max(20, vlen(vec2(this.origin - gco)));
 	float distance_time = this.goalcurrent_distance_time;
 	if(distance_time < 0)
 		distance_time = -distance_time;
-	if(curr_dist > this.goalcurrent_distance && curr_dist_2d > this.goalcurrent_distance_2d)
+	if(curr_dist_z >= this.goalcurrent_distance_z && curr_dist_2d >= this.goalcurrent_distance_2d)
 	{
 		if(!distance_time)
 			this.goalcurrent_distance_time = time;
@@ -444,7 +444,7 @@ bool havocbot_checkgoaldistance(entity this, vector gco)
 	else
 	{
 		// reduce it a little bit so it works even with very small approaches to the goal
-		this.goalcurrent_distance = max(20, curr_dist - 10);
+		this.goalcurrent_distance_z = max(20, curr_dist_z - 10);
 		this.goalcurrent_distance_2d = max(20, curr_dist_2d - 10);
 		this.goalcurrent_distance_time = 0;
 	}
@@ -849,7 +849,8 @@ void havocbot_movetogoal(entity this)
 			}
 
 			// if bot for some reason doesn't get close to the current goal find another one
-			if(!this.jumppadcount && !IS_PLAYER(this.goalcurrent) && !(this.goalcurrent.bot_pickup_respawning && this.goalcurrent_distance < 50))
+			if(!this.jumppadcount && !IS_PLAYER(this.goalcurrent))
+			if(!(this.goalcurrent.bot_pickup_respawning && this.goalcurrent_distance_z < 50 && this.goalcurrent_distance_2d < 50))
 			if(havocbot_checkgoaldistance(this, gco))
 			{
 				if(this.goalcurrent_distance_time < 0) // can't get close for the second time
@@ -871,7 +872,7 @@ void havocbot_movetogoal(entity this)
 
 				// give bot only another chance to prevent bot getting stuck
 				// in case it thinks it can walk but actually can't
-				this.goalcurrent_distance = FLOAT_MAX;
+				this.goalcurrent_distance_z = FLOAT_MAX;
 				this.goalcurrent_distance_2d = FLOAT_MAX;
 				this.goalcurrent_distance_time = -time; // mark second try
 			}

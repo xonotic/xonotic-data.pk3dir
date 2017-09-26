@@ -604,7 +604,8 @@ bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float e
 void navigation_clearroute(entity this)
 {
 	this.goalcurrent_prev = this.goalcurrent;
-	this.goalcurrent_distance = 10000000;
+	this.goalcurrent_distance_2d = FLOAT_MAX;
+	this.goalcurrent_distance_z = FLOAT_MAX;
 	this.goalcurrent_distance_time = 0;
 	//print("bot ", etos(this), " clear\n");
 	this.goalentity = NULL;
@@ -651,7 +652,8 @@ void navigation_clearroute(entity this)
 void navigation_pushroute(entity this, entity e)
 {
 	this.goalcurrent_prev = this.goalcurrent;
-	this.goalcurrent_distance = 10000000;
+	this.goalcurrent_distance_2d = FLOAT_MAX;
+	this.goalcurrent_distance_z = FLOAT_MAX;
 	this.goalcurrent_distance_time = 0;
 	//print("bot ", etos(this), " push ", etos(e), "\n");
 	if(this.goalstack31 == this.goalentity)
@@ -696,7 +698,8 @@ void navigation_pushroute(entity this, entity e)
 void navigation_poproute(entity this)
 {
 	this.goalcurrent_prev = this.goalcurrent;
-	this.goalcurrent_distance = 10000000;
+	this.goalcurrent_distance_2d = FLOAT_MAX;
+	this.goalcurrent_distance_z = FLOAT_MAX;
 	this.goalcurrent_distance_time = 0;
 	//print("bot ", etos(this), " pop\n");
 	if(this.goalcurrent == this.goalentity)

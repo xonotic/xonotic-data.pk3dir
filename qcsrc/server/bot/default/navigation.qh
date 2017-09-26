@@ -25,7 +25,7 @@ entity navigation_bestgoal;
 .entity goalstack28, goalstack29, goalstack30, goalstack31;
 
 .entity goalcurrent_prev;
-.float goalcurrent_distance;
+.float goalcurrent_distance_z;
 .float goalcurrent_distance_2d;
 .float goalcurrent_distance_time;
 
