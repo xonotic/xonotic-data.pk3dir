@@ -7,6 +7,7 @@
 #include "ipban.qh"
 #include "mutators/_mod.qh"
 #include "../common/t_items.qh"
+#include "resources.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -525,6 +526,10 @@ void readplayerstartcvars()
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
 	start_ammo_plasma = 0;
+	if (random_start_ammo == NULL)
+	{
+		random_start_ammo = spawn();
+	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
@@ -643,6 +648,17 @@ void readplayerstartcvars()
 		start_ammo_cells = cvar("g_start_ammo_cells");
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
+		random_start_weapons_count = cvar("g_random_start_weapons_count");
+		SetResourceAmount(random_start_ammo, RESOURCE_SHELLS, cvar(
+			"g_random_start_shells"));
+		SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, cvar(
+			"g_random_start_bullets"));
+		SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, 
+			cvar("g_random_start_rockets"));
+		SetResourceAmount(random_start_ammo, RESOURCE_CELLS, cvar(
+			"g_random_start_cells"));
+		SetResourceAmount(random_start_ammo, RESOURCE_PLASMA, cvar(
+			"g_random_start_plasma"));
 	}
 
 	if (warmup_stage)
@@ -711,6 +727,16 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
+	SetResourceAmount(random_start_ammo, RESOURCE_SHELLS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_SHELLS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_BULLETS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_ROCKETS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_CELLS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_CELLS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_PLASMA, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
@@ -933,24 +959,21 @@ void InitializeEntitiesRun()
 .float(entity) isEliminated;
 bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
-	float i, f, b;
-	entity e;
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
-	WriteByte(MSG_ENTITY, sendflags);
-
-	if(sendflags & 1)
-	{
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
-			{
-				if(eliminatedPlayers.isEliminated(e))
-					f |= b;
+	Stream out = MSG_ENTITY;
+	WriteHeader(out, ENT_CLIENT_ELIMINATEDPLAYERS);
+	serialize(byte, out, sendflags);
+	if (sendflags & 1) {
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			entity e = edict_num(i);
+			for (int b = 0; b < 8; ++b, e = nextent(e)) {
+				if (eliminatedPlayers.isEliminated(e)) {
+					f |= BIT(b);
+				}
 			}
-			WriteByte(MSG_ENTITY, f);
+			serialize(byte, out, f);
 		}
 	}
-
 	return true;
 }
 

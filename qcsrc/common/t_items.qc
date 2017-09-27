@@ -682,6 +682,51 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
+void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
+	entity ammo_entity)
+{
+	if (num_weapons == 0)
+	{
+		return;
+	}
+	int num_potential_weapons = tokenize_console(weapon_names);
+	for (int give_attempt = 0; give_attempt < num_weapons; ++give_attempt)
+	{
+		RandomSelection_Init();
+		for (int weapon_index = 0; weapon_index < num_potential_weapons;
+			++weapon_index)
+		{
+			string weapon = argv(weapon_index);
+			FOREACH(Weapons, it != WEP_Null,
+			{
+				// Finding a weapon which player doesn't have.
+				if (!(receiver.weapons & it.m_wepset) && (it.netname == weapon))
+				{
+					RandomSelection_AddEnt(it, 1, 1);
+					break;
+				}
+			});
+		}
+		if (RandomSelection_chosen_ent == NULL)
+		{
+			return;
+		}
+		receiver.weapons |= RandomSelection_chosen_ent.m_wepset;
+		if (RandomSelection_chosen_ent.ammo_type == RESOURCE_NONE)
+		{
+			continue;
+		}
+		if (GetResourceAmount(receiver,
+			RandomSelection_chosen_ent.ammo_type) != 0)
+		{
+			continue;
+		}
+		GiveResource(receiver, RandomSelection_chosen_ent.ammo_type,
+			GetResourceAmount(ammo_entity,
+			RandomSelection_chosen_ent.ammo_type));
+	}
+}
+
 float Item_GiveAmmoTo(entity item, entity player, int resource_type, float ammomax)
 {
 	float amount = GetResourceAmount(item, resource_type);
@@ -901,6 +946,7 @@ LABEL(pickup)
 				if(it.itemdef) // is a registered item
 				{
 					Item_Show(it, -1);
+					it.scheduledrespawntime = 0;
 					RandomSelection_AddEnt(it, it.cnt, 0);
 				}
 			});

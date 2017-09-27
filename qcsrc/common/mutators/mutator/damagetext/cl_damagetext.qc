@@ -233,9 +233,7 @@ NET_HANDLE(damagetext, bool isNew)
         }
         make_impure(NEW(DamageText, server_entity_index, entcs.origin, false, health, armor, potential_damage, deathtype, friendlyfire));
     } else if (autocvar_cl_damagetext_2d && spectatee_status != -1) {
-        // never show 2d damagetext when observing
-        // on some maps (hearth_v2, The_Yard), sometimes has_origin is false even though observers should know about all players
-        // it happens mostly with bots but occasionally also with players
+        // never show 2d damagetext when observing - might be a bug in .has_origin
 
         // screen coords only
         vector screen_pos = vec2(vid_conwidth * autocvar_cl_damagetext_2d_pos.x, vid_conheight * autocvar_cl_damagetext_2d_pos.y);

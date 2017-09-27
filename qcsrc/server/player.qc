@@ -4,6 +4,7 @@
 #include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
+#include "handicap.qh"
 #include "g_subs.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
@@ -317,9 +318,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= bound(1.0, CS(this).cvar_cl_handicap, 10.0);
-		if(this != attacker && IS_PLAYER(attacker))
-			damage /= bound(1.0, CS(attacker).cvar_cl_handicap, 10.0);
+		damage *= Handicap_GetTotalHandicap(this);
+		if (this != attacker && IS_PLAYER(attacker))
+		{
+			damage /= Handicap_GetTotalHandicap(attacker);
+		}
 	}
 
 	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
@@ -668,15 +671,19 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 }
 
-void MoveToTeam(entity client, int team_colour, int type)
+bool MoveToTeam(entity client, int team_colour, int type)
 {
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
 	TeamchangeFrags(client);  // move the players frags
-	SetPlayerColors(client, team_colour - 1);  // set the players colour
+	if (!SetPlayerTeamSimple(client, team_colour))
+	{
+		return false;
+	}
 	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
 	lockteams = lockteams_backup;  // restore the team lock
 	LogTeamchange(client.playerid, client.team, type);
+	return true;
 }
 
 /** print(), but only print if the server is not local */

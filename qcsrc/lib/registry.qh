@@ -187,7 +187,7 @@ void Registry_send(string id, string hash);
 #define EVAL_REGISTER_REGISTRY(...) __VA_ARGS__
 #define REGISTER_REGISTRY_1(id) REGISTER_REGISTRY_2(id, #id)
 #define REGISTER_REGISTRY_2(id, str) \
-	ACCUMULATE_FUNCTION(__static_init, Register##id) \
+	ACCUMULATE_FUNCTION(__static_init_1, Register##id) \
 	CLASS(id##Registry, Object) \
 		ATTRIB(id##Registry, m_name, string, str); \
 		ATTRIB(id##Registry, REGISTRY_NEXT, entity, id##_first); \
