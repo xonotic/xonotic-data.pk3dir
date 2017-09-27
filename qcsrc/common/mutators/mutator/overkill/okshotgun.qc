@@ -85,7 +85,7 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 		{
 			return;
 		}
-		// ugly instagib hack to reuse the fire mode of the laser
+		// Ugly hack to reuse the fire mode of the blaster.
 		makevectors(actor.v_angle);
 		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
 		actor.(weaponentity).m_weapon = WEP_BLASTER;
@@ -117,13 +117,7 @@ METHOD(OverkillShotgun, wr_checkammo1, bool(entity thiswep, entity actor, .entit
 
 METHOD(OverkillShotgun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	if (WEP_CVAR_SEC(okshotgun, ammo) == 0)
-	{
-		return true;
-	}
-	float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(okshotgun, ammo);
-	ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_SHOTGUN.m_id]) >= WEP_CVAR_SEC(okshotgun, ammo);
-	return ammo_amount;
+	return true; // Blaster secondary is unlimited.
 }
 
 METHOD(OverkillShotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
