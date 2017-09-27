@@ -652,9 +652,11 @@ void PutPlayerInServer(entity this)
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
+	// player was spectator
 	if (CS(this).killcount == FRAGS_SPECTATOR) {
 		PlayerScore_Clear(this);
 		CS(this).killcount = 0;
+		CS(this).startplaytime = time;
 	}
 
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)

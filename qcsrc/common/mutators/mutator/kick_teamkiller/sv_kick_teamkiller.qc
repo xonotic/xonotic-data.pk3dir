@@ -22,7 +22,7 @@ MUTATOR_HOOKFUNCTION(kick_teamkiller, PlayerDies)
 
 	int teamkills = PlayerScore_Get(attacker, SP_TEAMKILLS);
 	// use the players actual playtime
-	float playtime = time - attacker.alivetime;
+	float playtime = time - CS(attacker).startplaytime;
 	// rate is in teamkills/minutes, playtime in seconds
 	if (teamkills >= autocvar_g_kick_teamkiller_lower_limit && 
 	    teamkills >= autocvar_g_kick_teamkiller_rate*playtime/60.0)

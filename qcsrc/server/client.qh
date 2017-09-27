@@ -86,6 +86,7 @@ CLASS(Client, Object)
     ATTRIB(Client, motd_actived_time, float, this.motd_actived_time);
     ATTRIB(Client, jointime, float, this.jointime);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
+    ATTRIB(Client, startplaytime, float, this.startplaytime);
     ATTRIB(Client, version_nagtime, float, this.version_nagtime);
     ATTRIB(Client, netname_previous, string, this.netname_previous);
     ATTRIB(Client, allowed_timeouts, int, this.allowed_timeouts);
