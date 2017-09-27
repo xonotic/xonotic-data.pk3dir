@@ -390,9 +390,6 @@ bool PlayerJump(entity this)
 	SET_JUMP_HELD(this);
 
 #ifdef SVQC
-
-	this.oldvelocity_z = this.velocity_z;
-
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
