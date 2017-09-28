@@ -881,7 +881,7 @@ void Item_Touch(entity this, entity toucher)
 {
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (this.classname == "droppedweapon")
+	if (Item_IsLoot(this))
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
@@ -906,7 +906,7 @@ void Item_Touch(entity this, entity toucher)
 
 	toucher = M_ARGV(1, entity);
 
-	if (this.classname == "droppedweapon")
+	if (Item_IsLoot(this))
 	{
 		this.strength_finished = max(0, this.strength_finished - time);
 		this.invincible_finished = max(0, this.invincible_finished - time);
@@ -916,7 +916,7 @@ void Item_Touch(entity this, entity toucher)
 	bool gave = ITEM_HANDLE(Pickup, it, this, toucher);
 	if (!gave)
 	{
-		if (this.classname == "droppedweapon")
+		if (Item_IsLoot(this))
 		{
 			// undo what we did above
 			this.strength_finished += time;
@@ -932,31 +932,41 @@ LABEL(pickup)
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
-
-	if (this.classname == "droppedweapon")
-		delete(this);
-	else if (this.spawnshieldtime)
+	
+	MUTATOR_CALLHOOK(ItemTouched, this, toucher);
+	if (wasfreed(this))
 	{
-		entity e;
-		if(this.team)
-		{
-			RandomSelection_Init();
-			IL_EACH(g_items, it.team == this.team,
-			{
-				if(it.itemdef) // is a registered item
-				{
-					Item_Show(it, -1);
-					it.scheduledrespawntime = 0;
-					RandomSelection_AddEnt(it, it.cnt, 0);
-				}
-			});
-			e = RandomSelection_chosen_ent;
-			Item_Show(e, 1); // reset its state so it is visible (extra sendflags doesn't matter, this happens anyway)
-		}
-		else
-			e = this;
-		Item_ScheduleRespawn(e);
+		return;
 	}
+
+	if (Item_IsLoot(this))
+	{
+		delete(this);
+		return;
+	}
+	if (!this.spawnshieldtime)
+	{
+		return;
+	}
+	entity e;
+	if (this.team)
+	{
+		RandomSelection_Init();
+		IL_EACH(g_items, it.team == this.team,
+		{
+			if (it.itemdef) // is a registered item
+			{
+				Item_Show(it, -1);
+				it.scheduledrespawntime = 0;
+				RandomSelection_AddEnt(it, it.cnt, 0);
+			}
+		});
+		e = RandomSelection_chosen_ent;
+		Item_Show(e, 1); // reset its state so it is visible (extra sendflags doesn't matter, this happens anyway)
+	}
+	else
+		e = this;
+	Item_ScheduleRespawn(e);
 }
 
 void Item_Reset(entity this)
@@ -964,16 +974,19 @@ void Item_Reset(entity this)
 	Item_Show(this, !this.state);
 	setorigin(this, this.origin);
 
-	if (this.classname != "droppedweapon")
+	if (Item_IsLoot(this))
 	{
-		setthink(this, Item_Think);
-		this.nextthink = time;
-
-		if (this.waypointsprite_attached)
-			WaypointSprite_Kill(this.waypointsprite_attached);
-
-		if (this.itemdef.instanceOfPowerup || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
-			Item_ScheduleInitialRespawn(this);
+		return;
+	}
+	setthink(this, Item_Think);
+	this.nextthink = time;
+	if (this.waypointsprite_attached)
+	{
+		WaypointSprite_Kill(this.waypointsprite_attached);
+	}
+	if (this.itemdef.instanceOfPowerup || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
+	{
+		Item_ScheduleInitialRespawn(this);
 	}
 }
 
@@ -1205,8 +1218,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		return;
 	}
 
-	// is it a dropped weapon?
-	if (this.classname == "droppedweapon")
+	if (Item_IsLoot(this))
 	{
 		this.reset = SUB_Remove;
 		// it's a dropped weapon
