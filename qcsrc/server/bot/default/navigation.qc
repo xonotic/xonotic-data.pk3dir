@@ -1366,6 +1366,7 @@ int navigation_poptouchedgoals(entity this)
 
 	// If for some reason the bot is closer to the next goal, pop the current one
 	if(this.goalstack01 && !wasfreed(this.goalstack01))
+	if(random() < 0.7) // randomness should help on certain hard paths with climbs and tight corners
 	if(vlen2(this.goalcurrent.origin - this.goalstack01.origin) > vlen2(this.goalstack01.origin - this.origin))
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
 	{
