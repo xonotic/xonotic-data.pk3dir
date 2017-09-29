@@ -9,7 +9,7 @@ enum
 {
 	RANDOM_ITEM_TYPE_HEALTH,
 	RANDOM_ITEM_TYPE_ARMOR,
-	RANDOM_ITEM_TYPE_AMMO,
+	RANDOM_ITEM_TYPE_RESOURCE,
 	RANDOM_ITEM_TYPE_WEAPON,
 	RANDOM_ITEM_TYPE_POWERUP
 };
@@ -32,10 +32,12 @@ enum
 
 enum
 {
-	RANDOM_ITEM_SUBTYPE_AMMO_SHELLS,
-	RANDOM_ITEM_SUBTYPE_AMMO_BULLETS,
-	RANDOM_ITEM_SUBTYPE_AMMO_ROCKETS,
-	RANDOM_ITEM_SUBTYPE_AMMO_CELLS
+	RANDOM_ITEM_SUBTYPE_RESOURCE_SHELLS,
+	RANDOM_ITEM_SUBTYPE_RESOURCE_BULLETS,
+	RANDOM_ITEM_SUBTYPE_RESOURCE_ROCKETS,
+	RANDOM_ITEM_SUBTYPE_RESOURCE_CELLS,
+	RANDOM_ITEM_SUBTYPE_RESOURCE_PLASMA,
+	RANDOM_ITEM_SUBTYPE_RESOURCE_FUEL,
 };
 
 enum
@@ -65,7 +67,9 @@ enum
 enum
 {
 	RANDOM_ITEM_SUBTYPE_POWERUP_STRENGTH,
-	RANDOM_ITEM_SUBTYPE_POWERUP_SHIELD
+	RANDOM_ITEM_SUBTYPE_POWERUP_SHIELD,
+	RANDOM_ITEM_SUBTYPE_POWERUP_FUEL_REGEN,
+	RANDOM_ITEM_SUBTYPE_POWERUP_JETPACK
 };
 
 //======================= Global variables ====================================
@@ -100,6 +104,10 @@ bool autocvar_g_random_items_replace_item_bullets;
 bool autocvar_g_random_items_replace_item_rockets;
 /// \brief Whether to randomly replace cells.
 bool autocvar_g_random_items_replace_item_cells;
+/// \brief Whether to randomly replace plasma.
+bool autocvar_g_random_items_replace_item_plasma;
+/// \brief Whether to randomly replace fuel.
+bool autocvar_g_random_items_replace_item_fuel;
 
 /// \brief Whether to randomly replace blaster.
 bool autocvar_g_random_items_replace_weapon_blaster;
@@ -146,98 +154,207 @@ bool autocvar_g_random_items_replace_weapon_vaporizer;
 bool autocvar_g_random_items_replace_item_strength;
 /// \brief Whether to randomly replace shield.
 bool autocvar_g_random_items_replace_item_shield;
+/// \brief Whether to randomly replace fuel regeneration.
+bool autocvar_g_random_items_replace_item_fuel_regen;
+/// \brief Whether to randomly replace jetpack.
+bool autocvar_g_random_items_replace_item_jetpack;
 
 // Map probability cvars
 
 /// \brief Probability of random health items spawning in the map.
-float autocvar_g_random_map_health_probability;
+float autocvar_g_random_items_health_probability;
 /// \brief Probability of random armor items spawning in the map.
-float autocvar_g_random_map_armor_probability;
-/// \brief Probability of random ammo items spawning in the map.
-float autocvar_g_random_map_ammo_probability;
+float autocvar_g_random_items_armor_probability;
+/// \brief Probability of random resource items spawning in the map.
+float autocvar_g_random_items_resource_probability;
 /// \brief Probability of random weapons spawning in the map.
-float autocvar_g_random_map_weapon_probability;
+float autocvar_g_random_items_weapon_probability;
 /// \brief Probability of random powerups spawning in the map.
-float autocvar_g_random_map_powerup_probability;
+float autocvar_g_random_items_powerup_probability;
 
 /// \brief Probability of random small health spawning in the map.
-float autocvar_g_random_map_health_small_probability;
+float autocvar_g_random_items_health_small_probability;
 /// \brief Probability of random medium health spawning in the map.
-float autocvar_g_random_map_health_medium_probability;
+float autocvar_g_random_items_health_medium_probability;
 /// \brief Probability of random big health spawning in the map.
-float autocvar_g_random_map_health_big_probability;
+float autocvar_g_random_items_health_big_probability;
 /// \brief Probability of random mega health spawning in the map.
-float autocvar_g_random_map_health_mega_probability;
+float autocvar_g_random_items_health_mega_probability;
 
 /// \brief Probability of random small armor spawning in the map.
-float autocvar_g_random_map_armor_small_probability;
+float autocvar_g_random_items_armor_small_probability;
 /// \brief Probability of random medium armor.spawning in the map.
-float autocvar_g_random_map_armor_medium_probability;
+float autocvar_g_random_items_armor_medium_probability;
 /// \brief Probability of random big armor spawning in the map.
-float autocvar_g_random_map_armor_big_probability;
+float autocvar_g_random_items_armor_big_probability;
 /// \brief Probability of random mega armor spawning in the map.
-float autocvar_g_random_map_armor_mega_probability;
+float autocvar_g_random_items_armor_mega_probability;
 
 /// \brief Probability of random shells spawning in the map.
-float autocvar_g_random_map_ammo_shells_probability;
+float autocvar_g_random_items_resource_shells_probability;
 /// \brief Probability of random bullets spawning in the map.
-float autocvar_g_random_map_ammo_bullets_probability;
+float autocvar_g_random_items_resource_bullets_probability;
 /// \brief Probability of random rockets spawning in the map.
-float autocvar_g_random_map_ammo_rockets_probability;
+float autocvar_g_random_items_resource_rockets_probability;
 /// \brief Probability of random cells spawning in the map.
-float autocvar_g_random_map_ammo_cells_probability;
+float autocvar_g_random_items_resource_cells_probability;
+/// \brief Probability of random plasma spawning in the map.
+float autocvar_g_random_items_resource_plasma_probability;
+/// \brief Probability of random fuel spawning in the map.
+float autocvar_g_random_items_resource_fuel_probability;
 
 /// \brief Probability of random blaster spawning in the map.
-float autocvar_g_random_map_weapon_blaster_probability;
+float autocvar_g_random_items_weapon_blaster_probability;
 /// \brief Probability of random shotgun spawning in the map.
-float autocvar_g_random_map_weapon_shotgun_probability;
+float autocvar_g_random_items_weapon_shotgun_probability;
 /// \brief Probability of random machinegun spawning in the map.
-float autocvar_g_random_map_weapon_machinegun_probability;
+float autocvar_g_random_items_weapon_machinegun_probability;
 /// \brief Probability of random mortar spawning in the map.
-float autocvar_g_random_map_weapon_mortar_probability;
+float autocvar_g_random_items_weapon_mortar_probability;
 /// \brief Probability of random electro spawning in the map.
-float autocvar_g_random_map_weapon_electro_probability;
+float autocvar_g_random_items_weapon_electro_probability;
 /// \brief Probability of random crylink spawning in the map.
-float autocvar_g_random_map_weapon_crylink_probability;
+float autocvar_g_random_items_weapon_crylink_probability;
 /// \brief Probability of random vortex spawning in the map.
-float autocvar_g_random_map_weapon_vortex_probability;
+float autocvar_g_random_items_weapon_vortex_probability;
 /// \brief Probability of random hagar spawning in the map.
-float autocvar_g_random_map_weapon_hagar_probability;
+float autocvar_g_random_items_weapon_hagar_probability;
 /// \brief Probability of random devastator spawning in the map.
-float autocvar_g_random_map_weapon_devastator_probability;
+float autocvar_g_random_items_weapon_devastator_probability;
 /// \brief Probability of random shockwave spawning in the map.
-float autocvar_g_random_map_weapon_shockwave_probability;
+float autocvar_g_random_items_weapon_shockwave_probability;
 /// \brief Probability of random arc spawning in the map.
-float autocvar_g_random_map_weapon_arc_probability;
+float autocvar_g_random_items_weapon_arc_probability;
 /// \brief Probability of random hook spawning in the map.
-float autocvar_g_random_map_weapon_hook_probability;
+float autocvar_g_random_items_weapon_hook_probability;
 /// \brief Probability of random tuba spawning in the map.
-float autocvar_g_random_map_weapon_tuba_probability;
+float autocvar_g_random_items_weapon_tuba_probability;
 /// \brief Probability of random port-o-launch spawning in the map.
-float autocvar_g_random_map_weapon_porto_probability;
+float autocvar_g_random_items_weapon_porto_probability;
 /// \brief Probability of random fireball spawning in the map.
-float autocvar_g_random_map_weapon_fireball_probability;
+float autocvar_g_random_items_weapon_fireball_probability;
 /// \brief Probability of random mine layer spawning in the map.
-float autocvar_g_random_map_weapon_minelayer_probability;
+float autocvar_g_random_items_weapon_minelayer_probability;
 /// \brief Probability of random HLAC spawning in the map.
-float autocvar_g_random_map_weapon_hlac_probability;
+float autocvar_g_random_items_weapon_hlac_probability;
 /// \brief Probability of random rifle spawning in the map.
-float autocvar_g_random_map_weapon_rifle_probability;
+float autocvar_g_random_items_weapon_rifle_probability;
 /// \brief Probability of random TAG seeker spawning in the map.
-float autocvar_g_random_map_weapon_seeker_probability;
+float autocvar_g_random_items_weapon_seeker_probability;
 /// \brief Probability of random vaporizer spawning in the map.
-float autocvar_g_random_map_weapon_vaporizer_probability;
+float autocvar_g_random_items_weapon_vaporizer_probability;
 
 /// \brief Probability of random strength spawning in the map.
-float autocvar_g_random_map_strength_probability;
+float autocvar_g_random_items_strength_probability;
 /// \brief Probability of random shield spawning in the map.
-float autocvar_g_random_map_shield_probability;
+float autocvar_g_random_items_shield_probability;
+/// \brief Probability of random fuel regeneration spawning in the map.
+float autocvar_g_random_items_fuel_regen_probability;
+/// \brief Probability of random jetpack spawning in the map.
+float autocvar_g_random_items_jetpack_probability;
 
 // Loot
+
+bool autocvar_g_random_loot; ///< Whether to enable random loot.
 
 float autocvar_g_random_loot_min; ///< Minimum amount of loot items.
 float autocvar_g_random_loot_max; ///< Maximum amount of loot items.
 float autocvar_g_random_loot_time; ///< Amount of time the loot will stay.
+float autocvar_g_random_loot_spread; ///< How far can loot be thrown.
+
+// Loot probability cvars
+
+/// \brief Probability of random health items spawning as loot.
+float autocvar_g_random_loot_health_probability;
+/// \brief Probability of random armor items spawning as loot.
+float autocvar_g_random_loot_armor_probability;
+/// \brief Probability of random resource items spawning as loot.
+float autocvar_g_random_loot_resource_probability;
+/// \brief Probability of random weapons spawning as loot.
+float autocvar_g_random_loot_weapon_probability;
+/// \brief Probability of random powerups spawning as loot.
+float autocvar_g_random_loot_powerup_probability;
+
+/// \brief Probability of random small health spawning as loot.
+float autocvar_g_random_loot_health_small_probability;
+/// \brief Probability of random medium health spawning as loot.
+float autocvar_g_random_loot_health_medium_probability;
+/// \brief Probability of random big health spawning as loot.
+float autocvar_g_random_loot_health_big_probability;
+/// \brief Probability of random mega health spawning as loot.
+float autocvar_g_random_loot_health_mega_probability;
+
+/// \brief Probability of random small armor spawning as loot.
+float autocvar_g_random_loot_armor_small_probability;
+/// \brief Probability of random medium armor.spawning as loot.
+float autocvar_g_random_loot_armor_medium_probability;
+/// \brief Probability of random big armor spawning as loot.
+float autocvar_g_random_loot_armor_big_probability;
+/// \brief Probability of random mega armor spawning as loot.
+float autocvar_g_random_loot_armor_mega_probability;
+
+/// \brief Probability of random shells spawning as loot.
+float autocvar_g_random_loot_resource_shells_probability;
+/// \brief Probability of random bullets spawning as loot.
+float autocvar_g_random_loot_resource_bullets_probability;
+/// \brief Probability of random rockets spawning as loot.
+float autocvar_g_random_loot_resource_rockets_probability;
+/// \brief Probability of random cells spawning as loot.
+float autocvar_g_random_loot_resource_cells_probability;
+/// \brief Probability of random plasma spawning as loot.
+float autocvar_g_random_loot_resource_plasma_probability;
+/// \brief Probability of random fuel spawning as loot.
+float autocvar_g_random_loot_resource_fuel_probability;
+
+/// \brief Probability of random blaster spawning as loot.
+float autocvar_g_random_loot_weapon_blaster_probability;
+/// \brief Probability of random shotgun spawning as loot.
+float autocvar_g_random_loot_weapon_shotgun_probability;
+/// \brief Probability of random machinegun spawning as loot.
+float autocvar_g_random_loot_weapon_machinegun_probability;
+/// \brief Probability of random mortar spawning as loot.
+float autocvar_g_random_loot_weapon_mortar_probability;
+/// \brief Probability of random electro spawning as loot.
+float autocvar_g_random_loot_weapon_electro_probability;
+/// \brief Probability of random crylink spawning as loot.
+float autocvar_g_random_loot_weapon_crylink_probability;
+/// \brief Probability of random vortex spawning as loot.
+float autocvar_g_random_loot_weapon_vortex_probability;
+/// \brief Probability of random hagar spawning as loot.
+float autocvar_g_random_loot_weapon_hagar_probability;
+/// \brief Probability of random devastator spawning as loot.
+float autocvar_g_random_loot_weapon_devastator_probability;
+/// \brief Probability of random shockwave spawning as loot.
+float autocvar_g_random_loot_weapon_shockwave_probability;
+/// \brief Probability of random arc spawning as loot.
+float autocvar_g_random_loot_weapon_arc_probability;
+/// \brief Probability of random hook spawning as loot.
+float autocvar_g_random_loot_weapon_hook_probability;
+/// \brief Probability of random tuba spawning as loot.
+float autocvar_g_random_loot_weapon_tuba_probability;
+/// \brief Probability of random port-o-launch spawning as loot.
+float autocvar_g_random_loot_weapon_porto_probability;
+/// \brief Probability of random fireball spawning as loot.
+float autocvar_g_random_loot_weapon_fireball_probability;
+/// \brief Probability of random mine layer spawning as loot.
+float autocvar_g_random_loot_weapon_minelayer_probability;
+/// \brief Probability of random HLAC spawning as loot.
+float autocvar_g_random_loot_weapon_hlac_probability;
+/// \brief Probability of random rifle spawning as loot.
+float autocvar_g_random_loot_weapon_rifle_probability;
+/// \brief Probability of random TAG seeker spawning as loot.
+float autocvar_g_random_loot_weapon_seeker_probability;
+/// \brief Probability of random vaporizer spawning as loot.
+float autocvar_g_random_loot_weapon_vaporizer_probability;
+
+/// \brief Probability of random strength spawning as loot.
+float autocvar_g_random_loot_strength_probability;
+/// \brief Probability of random shield spawning as loot.
+float autocvar_g_random_loot_shield_probability;
+/// \brief Probability of random fuel regeneration spawning as loot.
+float autocvar_g_random_loot_fuel_regen_probability;
+/// \brief Probability of random jetpack spawning as loot.
+float autocvar_g_random_loot_jetpack_probability;
 
 /// \brief Holds whether random item is spawning. Used to prevent infinite
 /// recursion.
@@ -245,6 +362,9 @@ bool random_items_is_spawning = false;
 
 //========================= Free functions ====================================
 
+/// \brief Returns whether a map item should be replaced.
+/// \param[in] item Item to inspect.
+/// \return True if the item should be replaced, false otherwise.
 bool RandomItems_ShouldReplaceItem(entity item)
 {
 	switch (item.classname)
@@ -299,7 +419,16 @@ bool RandomItems_ShouldReplaceItem(entity item)
 		{
 			return autocvar_g_random_items_replace_item_cells;
 		}
+		case "item_plasma":
+		{
+			return autocvar_g_random_items_replace_item_plasma;
+		}
+		case "item_fuel":
+		{
+			return autocvar_g_random_items_replace_item_fuel;
+		}
 		case "weapon_blaster":
+		case "weapon_laser":
 		{
 			return autocvar_g_random_items_replace_weapon_blaster;
 		}
@@ -312,6 +441,7 @@ bool RandomItems_ShouldReplaceItem(entity item)
 		{
 			return autocvar_g_random_items_replace_weapon_machinegun;
 		}
+		case "weapon_mortar":
 		case "weapon_grenadelauncher":
 		{
 			return autocvar_g_random_items_replace_weapon_mortar;
@@ -324,6 +454,7 @@ bool RandomItems_ShouldReplaceItem(entity item)
 		{
 			return autocvar_g_random_items_replace_weapon_crylink;
 		}
+		case "weapon_vortex":
 		case "weapon_nex":
 		{
 			return autocvar_g_random_items_replace_weapon_vortex;
@@ -332,6 +463,7 @@ bool RandomItems_ShouldReplaceItem(entity item)
 		{
 			return autocvar_g_random_items_replace_weapon_hagar;
 		}
+		case "weapon_devastator":
 		case "weapon_rocketlauncher":
 		{
 			return autocvar_g_random_items_replace_weapon_devastator;
@@ -369,6 +501,8 @@ bool RandomItems_ShouldReplaceItem(entity item)
 			return autocvar_g_random_items_replace_weapon_hlac;
 		}
 		case "weapon_rifle":
+		case "weapon_campingrifle":
+		case "weapon_sniperrifle":
 		{
 			return autocvar_g_random_items_replace_weapon_rifle;
 		}
@@ -377,6 +511,7 @@ bool RandomItems_ShouldReplaceItem(entity item)
 			return autocvar_g_random_items_replace_weapon_seeker;
 		}
 		case "weapon_vaporizer":
+		case "weapon_minstanex":
 		{
 			return autocvar_g_random_items_replace_weapon_vaporizer;
 		}
@@ -387,6 +522,14 @@ bool RandomItems_ShouldReplaceItem(entity item)
 		case "item_invincible":
 		{
 			return autocvar_g_random_items_replace_item_shield;
+		}
+		case "item_fuel_regen":
+		{
+			return autocvar_g_random_items_replace_item_fuel_regen;
+		}
+		case "item_jetpack":
+		{
+			return autocvar_g_random_items_replace_item_jetpack;
 		}
 		case "replacedweapon":
 		{
@@ -421,376 +564,315 @@ bool RandomItems_ShouldReplaceItem(entity item)
 	}
 }
 
-entity RandomItems_SpawnItem(vector position)
+/// \brief Returns a random classname of the map item.
+/// \return Random classname of the map item.
+string RandomItems_GetRandomMapItemClassName()
 {
-	random_items_is_spawning = true;
 	RandomSelection_Init();
 	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
-		autocvar_g_random_map_health_probability, 1);
+		autocvar_g_random_items_health_probability, 1);
 	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_ARMOR,
-		autocvar_g_random_map_armor_probability, 1);
-	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_AMMO,
-		autocvar_g_random_map_ammo_probability, 1);
+		autocvar_g_random_items_armor_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_RESOURCE,
+		autocvar_g_random_items_resource_probability, 1);
 	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_WEAPON,
-		autocvar_g_random_map_weapon_probability, 1);
+		autocvar_g_random_items_weapon_probability, 1);
 	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_POWERUP,
-		autocvar_g_random_map_powerup_probability, 1);
+		autocvar_g_random_items_powerup_probability, 1);
 	int item_type = RandomSelection_chosen_float;
-	entity item = NULL;
 	switch (item_type)
 	{
 		case RANDOM_ITEM_TYPE_HEALTH:
 		{
 			RandomSelection_Init();
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_HEALTH_SMALL,
-				autocvar_g_random_map_health_small_probability, 1);
+				autocvar_g_random_items_health_small_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_HEALTH_MEDIUM,
-				autocvar_g_random_map_health_medium_probability, 1);
+				autocvar_g_random_items_health_medium_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_HEALTH_BIG,
-				autocvar_g_random_map_health_big_probability, 1);
+				autocvar_g_random_items_health_big_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_HEALTH_MEGA,
-				autocvar_g_random_map_health_mega_probability, 1);
+				autocvar_g_random_items_health_mega_probability, 1);
 			item_type = RandomSelection_chosen_float;
 			switch (item_type)
 			{
 				case RANDOM_ITEM_SUBTYPE_HEALTH_SMALL:
 				{
-					item = new(item_health_small);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_health_small(item);
-					break;
+					return "item_health_small";
 				}
 				case RANDOM_ITEM_SUBTYPE_HEALTH_MEDIUM:
 				{
-					item = new(item_health_medium);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_health_medium(item);
-					break;
+					return "item_health_medium";
 				}
 				case RANDOM_ITEM_SUBTYPE_HEALTH_BIG:
 				{
-					item = new(item_health_big);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_health_big(item);
-					break;
+					return "item_health_big";
 				}
 				case RANDOM_ITEM_SUBTYPE_HEALTH_MEGA:
 				{
-					item = new(item_health_mega);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_health_mega(item);
-					break;
+					return "item_health_mega";
 				}
 			}
-			break;
+			return string_null;
 		}
 		case RANDOM_ITEM_TYPE_ARMOR:
 		{
 			RandomSelection_Init();
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_ARMOR_SMALL,
-				autocvar_g_random_map_armor_small_probability, 1);
+				autocvar_g_random_items_armor_small_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_ARMOR_MEDIUM,
-				autocvar_g_random_map_armor_medium_probability, 1);
+				autocvar_g_random_items_armor_medium_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_ARMOR_BIG,
-				autocvar_g_random_map_armor_big_probability, 1);
+				autocvar_g_random_items_armor_big_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_ARMOR_MEGA,
-				autocvar_g_random_map_armor_mega_probability, 1);
+				autocvar_g_random_items_armor_mega_probability, 1);
 			item_type = RandomSelection_chosen_float;
 			switch (item_type)
 			{
 				case RANDOM_ITEM_SUBTYPE_ARMOR_SMALL:
 				{
-					item = new(item_armor_small);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_armor_small(item);
-					break;
+					return "item_armor_small";
 				}
 				case RANDOM_ITEM_SUBTYPE_ARMOR_MEDIUM:
 				{
-					item = new(item_armor_medium);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_armor_medium(item);
-					break;
+					return "item_armor_medium";
 				}
 				case RANDOM_ITEM_SUBTYPE_ARMOR_BIG:
 				{
-					item = new(item_armor_big);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_armor_big(item);
-					break;
+					return "item_armor_big";
 				}
 				case RANDOM_ITEM_SUBTYPE_ARMOR_MEGA:
 				{
-					item = new(item_armor_mega);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_armor_mega(item);
-					break;
+					return "item_armor_mega";
 				}
 			}
-			break;
+			return string_null;
 		}
-		case RANDOM_ITEM_TYPE_AMMO:
+		case RANDOM_ITEM_TYPE_RESOURCE:
 		{
 			RandomSelection_Init();
-			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_AMMO_SHELLS,
-				autocvar_g_random_map_ammo_shells_probability, 1);
-			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_AMMO_BULLETS,
-				autocvar_g_random_map_ammo_bullets_probability, 1);
-			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_AMMO_ROCKETS,
-				autocvar_g_random_map_ammo_rockets_probability, 1);
-			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_AMMO_CELLS,
-				autocvar_g_random_map_ammo_cells_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_SHELLS,
+				autocvar_g_random_items_resource_shells_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_BULLETS,
+				autocvar_g_random_items_resource_bullets_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_ROCKETS,
+				autocvar_g_random_items_resource_rockets_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_CELLS,
+				autocvar_g_random_items_resource_cells_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_PLASMA,
+				autocvar_g_random_items_resource_plasma_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_FUEL,
+				autocvar_g_random_items_resource_fuel_probability, 1);
 			item_type = RandomSelection_chosen_float;
 			switch (item_type)
 			{
-				case RANDOM_ITEM_SUBTYPE_AMMO_SHELLS:
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_SHELLS:
 				{
-					item = new(item_shells);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_shells(item);
-					break;
+					return "item_shells";
 				}
-				case RANDOM_ITEM_SUBTYPE_AMMO_BULLETS:
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_BULLETS:
 				{
-					item = new(item_bullets);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_bullets(item);
-					break;
+					return "item_bullets";
 				}
-				case RANDOM_ITEM_SUBTYPE_AMMO_ROCKETS:
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_ROCKETS:
 				{
-					item = new(item_rockets);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_rockets(item);
-					break;
+					return "item_rockets";
 				}
-				case RANDOM_ITEM_SUBTYPE_AMMO_CELLS:
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_CELLS:
 				{
-					item = new(item_cells);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_cells(item);
-					break;
+					return "item_cells";
+				}
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_PLASMA:
+				{
+					return "item_plasma";
+				}
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_FUEL:
+				{
+					return "item_fuel";
 				}
 			}
-			break;
+			return string_null;
 		}
 		case RANDOM_ITEM_TYPE_WEAPON:
 		{
 			RandomSelection_Init();
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_BLASTER,
-				autocvar_g_random_map_weapon_blaster_probability, 1);
+				autocvar_g_random_items_weapon_blaster_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_SHOTGUN,
-				autocvar_g_random_map_weapon_shotgun_probability, 1);
+				autocvar_g_random_items_weapon_shotgun_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_MACHINEGUN,
-				autocvar_g_random_map_weapon_machinegun_probability, 1);
+				autocvar_g_random_items_weapon_machinegun_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_MORTAR,
-				autocvar_g_random_map_weapon_mortar_probability, 1);
+				autocvar_g_random_items_weapon_mortar_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_ELECTRO,
-				autocvar_g_random_map_weapon_electro_probability, 1);
+				autocvar_g_random_items_weapon_electro_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_CRYLINK,
-				autocvar_g_random_map_weapon_crylink_probability, 1);
+				autocvar_g_random_items_weapon_crylink_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_VORTEX,
-				autocvar_g_random_map_weapon_vortex_probability, 1);
+				autocvar_g_random_items_weapon_vortex_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_HAGAR,
-				autocvar_g_random_map_weapon_hagar_probability, 1);
+				autocvar_g_random_items_weapon_hagar_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_DEVASTATOR,
-				autocvar_g_random_map_weapon_devastator_probability, 1);
+				autocvar_g_random_items_weapon_devastator_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_SHOCKWAVE,
-				autocvar_g_random_map_weapon_shockwave_probability, 1);
+				autocvar_g_random_items_weapon_shockwave_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_ARC,
-				autocvar_g_random_map_weapon_arc_probability, 1);
+				autocvar_g_random_items_weapon_arc_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_HOOK,
-				autocvar_g_random_map_weapon_hook_probability, 1);
+				autocvar_g_random_items_weapon_hook_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_TUBA,
-				autocvar_g_random_map_weapon_tuba_probability, 1);
+				autocvar_g_random_items_weapon_tuba_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_PORTO,
-				autocvar_g_random_map_weapon_porto_probability, 1);
+				autocvar_g_random_items_weapon_porto_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_FIREBALL,
-				autocvar_g_random_map_weapon_fireball_probability, 1);
+				autocvar_g_random_items_weapon_fireball_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_MINELAYER,
-				autocvar_g_random_map_weapon_minelayer_probability, 1);
+				autocvar_g_random_items_weapon_minelayer_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_HLAC,
-				autocvar_g_random_map_weapon_hlac_probability, 1);
+				autocvar_g_random_items_weapon_hlac_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_RIFLE,
-				autocvar_g_random_map_weapon_rifle_probability, 1);
+				autocvar_g_random_items_weapon_rifle_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_SEEKER,
-				autocvar_g_random_map_weapon_seeker_probability, 1);
+				autocvar_g_random_items_weapon_seeker_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_VAPORIZER,
-				autocvar_g_random_map_weapon_vaporizer_probability, 1);
+				autocvar_g_random_items_weapon_vaporizer_probability, 1);
 			item_type = RandomSelection_chosen_float;
 			switch (item_type)
 			{
 				case RANDOM_ITEM_SUBTYPE_WEAPON_BLASTER:
 				{
-					item = new(weapon_blaster);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_blaster(item);
-					break;
+					return "weapon_blaster";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_SHOTGUN:
 				{
-					item = new(weapon_shotgun);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_shotgun(item);
-					break;
+					return "weapon_shotgun";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_MACHINEGUN:
 				{
-					item = new(weapon_machinegun);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_machinegun(item);
-					break;
+					return "weapon_machinegun";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_MORTAR:
 				{
-					item = new(weapon_grenadelauncher);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_grenadelauncher(item);
-					break;
+					return "weapon_mortar";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_ELECTRO:
 				{
-					item = new(weapon_electro);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_electro(item);
-					break;
+					return "weapon_electro";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_CRYLINK:
 				{
-					item = new(weapon_crylink);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_crylink(item);
-					break;
+					return "weapon_crylink";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_VORTEX:
 				{
-					item = new(weapon_nex);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_nex(item);
-					break;
+					return "weapon_vortex";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_HAGAR:
 				{
-					item = new(weapon_hagar);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_hagar(item);
-					break;
+					return "weapon_hagar";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_DEVASTATOR:
 				{
-					item = new(weapon_rocketlauncher);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_rocketlauncher(item);
-					break;
+					return "weapon_devastator";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_SHOCKWAVE:
 				{
-					item = new(weapon_shockwave);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_shockwave(item);
-					break;
+					return "weapon_shockwave";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_ARC:
 				{
-					item = new(weapon_arc);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_arc(item);
-					break;
+					return "weapon_arc";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_HOOK:
 				{
-					item = new(weapon_hook);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_hook(item);
-					break;
+					return "weapon_hook";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_TUBA:
 				{
-					item = new(weapon_tuba);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_tuba(item);
-					break;
+					return "weapon_tuba";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_PORTO:
 				{
-					item = new(weapon_porto);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_porto(item);
-					break;
+					return "weapon_porto";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_FIREBALL:
 				{
-					item = new(weapon_fireball);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_fireball(item);
-					break;
+					return "weapon_fireball";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_MINELAYER:
 				{
-					item = new(weapon_minelayer);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_minelayer(item);
-					break;
+					return "weapon_minelayer";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_HLAC:
 				{
-					item = new(weapon_hlac);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_hlac(item);
-					break;
+					return "weapon_hlac";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_RIFLE:
 				{
-					item = new(weapon_rifle);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_rifle(item);
-					break;
+					return "weapon_rifle";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_SEEKER:
 				{
-					item = new(weapon_seeker);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_seeker(item);
-					break;
+					return "weapon_seeker";
 				}
 				case RANDOM_ITEM_SUBTYPE_WEAPON_VAPORIZER:
 				{
-					item = new(weapon_vaporizer);
-					item.spawnfunc_checked = true;
-					spawnfunc_weapon_vaporizer(item);
-					break;
+					return "weapon_vaporizer";
 				}
 			}
-			break;
+			return string_null;
 		}
 		case RANDOM_ITEM_TYPE_POWERUP:
 		{
 			RandomSelection_Init();
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_POWERUP_STRENGTH,
-				autocvar_g_random_map_strength_probability, 1);
+				autocvar_g_random_items_strength_probability, 1);
 			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_POWERUP_SHIELD,
-				autocvar_g_random_map_shield_probability, 1);
+				autocvar_g_random_items_shield_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_POWERUP_FUEL_REGEN,
+				autocvar_g_random_items_fuel_regen_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_POWERUP_JETPACK,
+				autocvar_g_random_items_jetpack_probability, 1);
 			item_type = RandomSelection_chosen_float;
 			switch (item_type)
 			{
 				case RANDOM_ITEM_SUBTYPE_POWERUP_STRENGTH:
 				{
-					item = new(item_strength);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_strength(item);
-					break;
+					return "item_strength";
 				}
 				case RANDOM_ITEM_SUBTYPE_POWERUP_SHIELD:
 				{
-					item = new(item_invincible);
-					item.spawnfunc_checked = true;
-					spawnfunc_item_invincible(item);
-					break;
+					return "item_invincible";
+				}
+				case RANDOM_ITEM_SUBTYPE_POWERUP_FUEL_REGEN:
+				{
+					return "item_fuel_regen";
+				}
+				case RANDOM_ITEM_SUBTYPE_POWERUP_JETPACK:
+				{
+					return "item_jetpack";
 				}
 			}
-			break;
+			return string_null;
 		}
 	}
+	return string_null;
+}
+
+/// \brief Spawns a random map item.
+/// \param[in] position Position of the item.
+/// \return Spawned item on success, NULL otherwise.
+entity RandomItems_SpawnMapItem(vector position)
+{
+	string class_name = RandomItems_GetRandomMapItemClassName();
+	if (!class_name)
+	{
+		return NULL;
+	}
+	random_items_is_spawning = true;
+	entity item = spawn();
+	item.classname = class_name;
+	Item_Initialize(item, class_name);
 	random_items_is_spawning = false;
 	if (wasfreed(item))
 	{
@@ -800,9 +882,323 @@ entity RandomItems_SpawnItem(vector position)
 	return item;
 }
 
+/// \brief Returns a random classname of the loot item.
+/// \return Random classname of the loot item.
+string RandomItems_GetRandomLootItemClassName()
+{
+	RandomSelection_Init();
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
+		autocvar_g_random_loot_health_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_ARMOR,
+		autocvar_g_random_loot_armor_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_RESOURCE,
+		autocvar_g_random_loot_resource_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_WEAPON,
+		autocvar_g_random_loot_weapon_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_POWERUP,
+		autocvar_g_random_loot_powerup_probability, 1);
+	int item_type = RandomSelection_chosen_float;
+	switch (item_type)
+	{
+		case RANDOM_ITEM_TYPE_HEALTH:
+		{
+			RandomSelection_Init();
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_HEALTH_SMALL,
+				autocvar_g_random_loot_health_small_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_HEALTH_MEDIUM,
+				autocvar_g_random_loot_health_medium_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_HEALTH_BIG,
+				autocvar_g_random_loot_health_big_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_HEALTH_MEGA,
+				autocvar_g_random_loot_health_mega_probability, 1);
+			item_type = RandomSelection_chosen_float;
+			switch (item_type)
+			{
+				case RANDOM_ITEM_SUBTYPE_HEALTH_SMALL:
+				{
+					return "item_health_small";
+				}
+				case RANDOM_ITEM_SUBTYPE_HEALTH_MEDIUM:
+				{
+					return "item_health_medium";
+				}
+				case RANDOM_ITEM_SUBTYPE_HEALTH_BIG:
+				{
+					return "item_health_big";
+				}
+				case RANDOM_ITEM_SUBTYPE_HEALTH_MEGA:
+				{
+					return "item_health_mega";
+				}
+			}
+			return string_null;
+		}
+		case RANDOM_ITEM_TYPE_ARMOR:
+		{
+			RandomSelection_Init();
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_ARMOR_SMALL,
+				autocvar_g_random_loot_armor_small_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_ARMOR_MEDIUM,
+				autocvar_g_random_loot_armor_medium_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_ARMOR_BIG,
+				autocvar_g_random_loot_armor_big_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_ARMOR_MEGA,
+				autocvar_g_random_loot_armor_mega_probability, 1);
+			item_type = RandomSelection_chosen_float;
+			switch (item_type)
+			{
+				case RANDOM_ITEM_SUBTYPE_ARMOR_SMALL:
+				{
+					return "item_armor_small";
+				}
+				case RANDOM_ITEM_SUBTYPE_ARMOR_MEDIUM:
+				{
+					return "item_armor_medium";
+				}
+				case RANDOM_ITEM_SUBTYPE_ARMOR_BIG:
+				{
+					return "item_armor_big";
+				}
+				case RANDOM_ITEM_SUBTYPE_ARMOR_MEGA:
+				{
+					return "item_armor_mega";
+				}
+			}
+			return string_null;
+		}
+		case RANDOM_ITEM_TYPE_RESOURCE:
+		{
+			RandomSelection_Init();
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_SHELLS,
+				autocvar_g_random_loot_resource_shells_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_BULLETS,
+				autocvar_g_random_loot_resource_bullets_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_ROCKETS,
+				autocvar_g_random_loot_resource_rockets_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_CELLS,
+				autocvar_g_random_loot_resource_cells_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_PLASMA,
+				autocvar_g_random_loot_resource_plasma_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_RESOURCE_FUEL,
+				autocvar_g_random_loot_resource_fuel_probability, 1);
+			item_type = RandomSelection_chosen_float;
+			switch (item_type)
+			{
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_SHELLS:
+				{
+					return "item_shells";
+				}
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_BULLETS:
+				{
+					return "item_bullets";
+				}
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_ROCKETS:
+				{
+					return "item_rockets";
+				}
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_CELLS:
+				{
+					return "item_cells";
+				}
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_PLASMA:
+				{
+					return "item_plasma";
+				}
+				case RANDOM_ITEM_SUBTYPE_RESOURCE_FUEL:
+				{
+					return "item_fuel";
+				}
+			}
+			return string_null;
+		}
+		case RANDOM_ITEM_TYPE_WEAPON:
+		{
+			RandomSelection_Init();
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_BLASTER,
+				autocvar_g_random_loot_weapon_blaster_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_SHOTGUN,
+				autocvar_g_random_loot_weapon_shotgun_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_MACHINEGUN,
+				autocvar_g_random_loot_weapon_machinegun_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_MORTAR,
+				autocvar_g_random_loot_weapon_mortar_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_ELECTRO,
+				autocvar_g_random_loot_weapon_electro_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_CRYLINK,
+				autocvar_g_random_loot_weapon_crylink_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_VORTEX,
+				autocvar_g_random_loot_weapon_vortex_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_HAGAR,
+				autocvar_g_random_loot_weapon_hagar_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_DEVASTATOR,
+				autocvar_g_random_loot_weapon_devastator_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_SHOCKWAVE,
+				autocvar_g_random_loot_weapon_shockwave_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_ARC,
+				autocvar_g_random_loot_weapon_arc_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_HOOK,
+				autocvar_g_random_loot_weapon_hook_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_TUBA,
+				autocvar_g_random_loot_weapon_tuba_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_PORTO,
+				autocvar_g_random_loot_weapon_porto_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_FIREBALL,
+				autocvar_g_random_loot_weapon_fireball_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_MINELAYER,
+				autocvar_g_random_loot_weapon_minelayer_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_HLAC,
+				autocvar_g_random_loot_weapon_hlac_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_RIFLE,
+				autocvar_g_random_loot_weapon_rifle_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_SEEKER,
+				autocvar_g_random_loot_weapon_seeker_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_WEAPON_VAPORIZER,
+				autocvar_g_random_loot_weapon_vaporizer_probability, 1);
+			item_type = RandomSelection_chosen_float;
+			switch (item_type)
+			{
+				case RANDOM_ITEM_SUBTYPE_WEAPON_BLASTER:
+				{
+					return "weapon_blaster";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_SHOTGUN:
+				{
+					return "weapon_shotgun";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_MACHINEGUN:
+				{
+					return "weapon_machinegun";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_MORTAR:
+				{
+					return "weapon_mortar";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_ELECTRO:
+				{
+					return "weapon_electro";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_CRYLINK:
+				{
+					return "weapon_crylink";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_VORTEX:
+				{
+					return "weapon_vortex";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_HAGAR:
+				{
+					return "weapon_hagar";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_DEVASTATOR:
+				{
+					return "weapon_devastator";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_SHOCKWAVE:
+				{
+					return "weapon_shockwave";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_ARC:
+				{
+					return "weapon_arc";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_HOOK:
+				{
+					return "weapon_hook";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_TUBA:
+				{
+					return "weapon_tuba";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_PORTO:
+				{
+					return "weapon_porto";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_FIREBALL:
+				{
+					return "weapon_fireball";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_MINELAYER:
+				{
+					return "weapon_minelayer";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_HLAC:
+				{
+					return "weapon_hlac";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_RIFLE:
+				{
+					return "weapon_rifle";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_SEEKER:
+				{
+					return "weapon_seeker";
+				}
+				case RANDOM_ITEM_SUBTYPE_WEAPON_VAPORIZER:
+				{
+					return "weapon_vaporizer";
+				}
+			}
+			return string_null;
+		}
+		case RANDOM_ITEM_TYPE_POWERUP:
+		{
+			RandomSelection_Init();
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_POWERUP_STRENGTH,
+				autocvar_g_random_loot_strength_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_POWERUP_SHIELD,
+				autocvar_g_random_loot_shield_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_POWERUP_FUEL_REGEN,
+				autocvar_g_random_loot_fuel_regen_probability, 1);
+			RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_POWERUP_JETPACK,
+				autocvar_g_random_loot_jetpack_probability, 1);
+			item_type = RandomSelection_chosen_float;
+			switch (item_type)
+			{
+				case RANDOM_ITEM_SUBTYPE_POWERUP_STRENGTH:
+				{
+					return "item_strength";
+				}
+				case RANDOM_ITEM_SUBTYPE_POWERUP_SHIELD:
+				{
+					return "item_invincible";
+				}
+				case RANDOM_ITEM_SUBTYPE_POWERUP_FUEL_REGEN:
+				{
+					return "item_fuel_regen";
+				}
+				case RANDOM_ITEM_SUBTYPE_POWERUP_JETPACK:
+				{
+					return "item_jetpack";
+				}
+			}
+			return string_null;
+		}
+	}
+	return string_null;
+}
+
+/// \brief Spawns a random loot item.
+/// \param[in] position Position of the item.
+/// \return No return.
+void RandomItems_SpawnLootItem(vector position)
+{
+	string class_name = RandomItems_GetRandomLootItemClassName();
+	if (!class_name)
+	{
+		return;
+	}
+	vector spread = '0 0 0';
+	spread.z = autocvar_g_random_loot_spread / 2;
+	spread += randomvec() * autocvar_g_random_loot_spread;
+	random_items_is_spawning = true;
+	Item_CreateLoot(class_name, position, spread, autocvar_g_random_loot_time);
+	random_items_is_spawning = false;
+}
+
 //============================= Hooks ========================================
 
-REGISTER_MUTATOR(random_items, autocvar_g_random_items);
+REGISTER_MUTATOR(random_items, (autocvar_g_random_items ||
+	autocvar_g_random_loot));
 
 MUTATOR_HOOKFUNCTION(random_items, BuildMutatorsString)
 {
@@ -818,6 +1214,10 @@ MUTATOR_HOOKFUNCTION(random_items, BuildMutatorsPrettyString)
 MUTATOR_HOOKFUNCTION(random_items, FilterItem)
 {
 	//PrintToChatAll("FilterItem");
+	if (!autocvar_g_random_items)
+	{
+		return;
+	}
 	if (random_items_is_spawning == true)
 	{
 		return false;
@@ -831,7 +1231,7 @@ MUTATOR_HOOKFUNCTION(random_items, FilterItem)
 	{
 		return false;
 	}
-	if (RandomItems_SpawnItem(item.origin) == NULL)
+	if (RandomItems_SpawnMapItem(item.origin) == NULL)
 	{
 		return false;
 	}
@@ -842,6 +1242,10 @@ MUTATOR_HOOKFUNCTION(random_items, FilterItem)
 MUTATOR_HOOKFUNCTION(random_items, ItemTouched, CBC_ORDER_LAST)
 {
 	//PrintToChatAll("ItemTouched");
+	if (!autocvar_g_random_items)
+	{
+		return;
+	}
 	entity item = M_ARGV(0, entity);
 	if (Item_IsLoot(item))
 	{
@@ -851,7 +1255,7 @@ MUTATOR_HOOKFUNCTION(random_items, ItemTouched, CBC_ORDER_LAST)
 	{
 		return;
 	}
-	entity new_item = RandomItems_SpawnItem(item.origin);
+	entity new_item = RandomItems_SpawnMapItem(item.origin);
 	if (new_item == NULL)
 	{
 		return;
@@ -864,22 +1268,16 @@ MUTATOR_HOOKFUNCTION(random_items, ItemTouched, CBC_ORDER_LAST)
 MUTATOR_HOOKFUNCTION(random_items, PlayerDies)
 {
 	//PrintToChatAll("PlayerDies");
+	if (!autocvar_g_random_loot)
+	{
+		return;
+	}
 	entity victim = M_ARGV(2, entity);
+	vector loot_position = victim.origin + '0 0 32';
 	int num_loot_items = floor(autocvar_g_random_loot_min + random() *
 		autocvar_g_random_loot_max);
 	for (int item_index = 0; item_index < num_loot_items; ++item_index)
 	{
-		entity loot = RandomItems_SpawnItem(victim.origin);
-		if (loot == NULL)
-		{
-			continue;
-		}
-		Item_SetLoot(loot, true);
-		set_movetype(loot, MOVETYPE_TOSS);
-        loot.gravity = 1;
-        loot.reset = SUB_Remove;
-        setorigin(loot, victim.origin + '0 0 32');
-        loot.velocity = '0 0 200' + randomvec() * 500;
-        SUB_SetFade(loot, time + autocvar_g_random_loot_time, 1);
+		RandomItems_SpawnLootItem(loot_position);
 	}
 }

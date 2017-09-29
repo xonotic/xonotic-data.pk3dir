@@ -4,9 +4,35 @@
 
 #pragma once
 
-/// \brief Returns whether item is loot.
+/// \brief Initializes the item according to classname.
+/// \param[in,out] item Item to initialize.
+/// \param[in] class_name Class name to use.
+/// \return No return.
+void Item_Initialize(entity item, string class_name);
+
+/// \brief Creates a loot item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \param[in] velocity of the item.
+/// \param[in] time_to_live Amount of time after which the item will disappear.
+/// \return Item on success, NULL otherwise.
+entity Item_CreateLoot(string class_name, vector position, vector vel,
+	float time_to_live);
+
+/// \brief Initializes the loot item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \param[in] velocity of the item.
+/// \param[in] time_to_live Amount of time after which the item will disappear.
+/// \return True on success, false otherwise.
+/// \nore This function is useful if you want to set some item properties before
+/// initialization.
+bool Item_InitializeLoot(entity item, string class_name, vector position,
+	vector vel, float time_to_live);
+
+/// \brief Returns whether the item is loot.
 /// \param[in] item Item to check.
-/// \return True if item is loot, false otherwise.
+/// \return True if the item is loot, false otherwise.
 bool Item_IsLoot(entity item);
 
 /// \brief Sets the item loot status.
