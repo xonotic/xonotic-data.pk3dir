@@ -78,91 +78,91 @@ bool autocvar_g_random_items; ///< Whether to enable random items.
 
 // Replace cvars
 
-/// \brief Whether to randomly replace small health.
-bool autocvar_g_random_items_replace_health_small;
-/// \brief Whether to randomly replace medium health.
-bool autocvar_g_random_items_replace_health_medium;
-/// \brief Whether to randomly replace big health.
-bool autocvar_g_random_items_replace_health_big;
-/// \brief Whether to randomly replace mega health.
-bool autocvar_g_random_items_replace_health_mega;
+/// \brief Classnames to replace small health with.
+string autocvar_g_random_items_replace_health_small;
+/// \brief Classnames to replace medium health with.
+string autocvar_g_random_items_replace_health_medium;
+/// \brief Classnames to replace big health with.
+string autocvar_g_random_items_replace_health_big;
+/// \brief Classnames to replace mega health with.
+string autocvar_g_random_items_replace_health_mega;
 
-/// \brief Whether to randomly replace small armor.
-bool autocvar_g_random_items_replace_armor_small;
-/// \brief Whether to randomly replace medium armor.
-bool autocvar_g_random_items_replace_armor_medium;
-/// \brief Whether to randomly replace big armor.
-bool autocvar_g_random_items_replace_armor_big;
-/// \brief Whether to randomly replace mega armor.
-bool autocvar_g_random_items_replace_armor_mega;
+/// \brief Classnames to replace small armor with.
+string autocvar_g_random_items_replace_armor_small;
+/// \brief Classnames to replace medium armor with.
+string autocvar_g_random_items_replace_armor_medium;
+/// \brief Classnames to replace big armor with.
+string autocvar_g_random_items_replace_armor_big;
+/// \brief Classnames to replace mega armor with.
+string autocvar_g_random_items_replace_armor_mega;
 
-/// \brief Whether to randomly replace shells.
-bool autocvar_g_random_items_replace_item_shells;
-/// \brief Whether to randomly replace bullets.
-bool autocvar_g_random_items_replace_item_bullets;
-/// \brief Whether to randomly replace rockets.
-bool autocvar_g_random_items_replace_item_rockets;
-/// \brief Whether to randomly replace cells.
-bool autocvar_g_random_items_replace_item_cells;
-/// \brief Whether to randomly replace plasma.
-bool autocvar_g_random_items_replace_item_plasma;
-/// \brief Whether to randomly replace fuel.
-bool autocvar_g_random_items_replace_item_fuel;
+/// \brief Classnames to replace shells with.
+string autocvar_g_random_items_replace_item_shells;
+/// \brief Classnames to replace bullets with.
+string autocvar_g_random_items_replace_item_bullets;
+/// \brief Classnames to replace rockets with.
+string autocvar_g_random_items_replace_item_rockets;
+/// \brief Classnames to replace cells with.
+string autocvar_g_random_items_replace_item_cells;
+/// \brief Classnames to replace plasma with.
+string autocvar_g_random_items_replace_item_plasma;
+/// \brief Classnames to replace fuel with.
+string autocvar_g_random_items_replace_item_fuel;
 
-/// \brief Whether to randomly replace blaster.
-bool autocvar_g_random_items_replace_weapon_blaster;
-/// \brief Whether to randomly replace shotgun.
-bool autocvar_g_random_items_replace_weapon_shotgun;
-/// \brief Whether to randomly replace machinegun.
-bool autocvar_g_random_items_replace_weapon_machinegun;
-/// \brief Whether to randomly replace mortar.
-bool autocvar_g_random_items_replace_weapon_mortar;
-/// \brief Whether to randomly replace electro.
-bool autocvar_g_random_items_replace_weapon_electro;
-/// \brief Whether to randomly replace crylink.
-bool autocvar_g_random_items_replace_weapon_crylink;
-/// \brief Whether to randomly replace vortex.
-bool autocvar_g_random_items_replace_weapon_vortex;
-/// \brief Whether to randomly replace hagar.
-bool autocvar_g_random_items_replace_weapon_hagar;
-/// \brief Whether to randomly replace devastator.
-bool autocvar_g_random_items_replace_weapon_devastator;
-/// \brief Whether to randomly replace shockwave.
-bool autocvar_g_random_items_replace_weapon_shockwave;
-/// \brief Whether to randomly replace arc.
-bool autocvar_g_random_items_replace_weapon_arc;
-/// \brief Whether to randomly replace hook.
-bool autocvar_g_random_items_replace_weapon_hook;
-/// \brief Whether to randomly replace tuba.
-bool autocvar_g_random_items_replace_weapon_tuba;
-/// \brief Whether to randomly replace port-o-launch.
-bool autocvar_g_random_items_replace_weapon_porto;
-/// \brief Whether to randomly replace fireball.
-bool autocvar_g_random_items_replace_weapon_fireball;
-/// \brief Whether to randomly replace mine layer.
-bool autocvar_g_random_items_replace_weapon_minelayer;
-/// \brief Whether to randomly replace HLAC.
-bool autocvar_g_random_items_replace_weapon_hlac;
-/// \brief Whether to randomly replace rifle.
-bool autocvar_g_random_items_replace_weapon_rifle;
-/// \brief Whether to randomly replace TAG seeker.
-bool autocvar_g_random_items_replace_weapon_seeker;
-/// \brief Whether to randomly replace vaporizer.
-bool autocvar_g_random_items_replace_weapon_vaporizer;
+/// \brief Classnames to replace blaster with.
+string autocvar_g_random_items_replace_weapon_blaster;
+/// \brief Classnames to replace shotgun with.
+string autocvar_g_random_items_replace_weapon_shotgun;
+/// \brief Classnames to replace machinegun with.
+string autocvar_g_random_items_replace_weapon_machinegun;
+/// \brief Classnames to replace mortar with.
+string autocvar_g_random_items_replace_weapon_mortar;
+/// \brief Classnames to replace electro with.
+string autocvar_g_random_items_replace_weapon_electro;
+/// \brief Classnames to replace crylink with.
+string autocvar_g_random_items_replace_weapon_crylink;
+/// \brief Classnames to replace vortex with.
+string autocvar_g_random_items_replace_weapon_vortex;
+/// \brief Classnames to replace hagar with.
+string autocvar_g_random_items_replace_weapon_hagar;
+/// \brief Classnames to replace devastator with.
+string autocvar_g_random_items_replace_weapon_devastator;
+/// \brief Classnames to replace shockwave with.
+string autocvar_g_random_items_replace_weapon_shockwave;
+/// \brief Classnames to replace arc with.
+string autocvar_g_random_items_replace_weapon_arc;
+/// \brief Classnames to replace hook with.
+string autocvar_g_random_items_replace_weapon_hook;
+/// \brief Classnames to replace tuba with.
+string autocvar_g_random_items_replace_weapon_tuba;
+/// \brief Classnames to replace port-o-launch with.
+string autocvar_g_random_items_replace_weapon_porto;
+/// \brief Classnames to replace fireball with.
+string autocvar_g_random_items_replace_weapon_fireball;
+/// \brief Classnames to replace mine layer with.
+string autocvar_g_random_items_replace_weapon_minelayer;
+/// \brief Classnames to replace HLAC with.
+string autocvar_g_random_items_replace_weapon_hlac;
+/// \brief Classnames to replace rifle with.
+string autocvar_g_random_items_replace_weapon_rifle;
+/// \brief Classnames to replace TAG seeker with.
+string autocvar_g_random_items_replace_weapon_seeker;
+/// \brief Classnames to replace vaporizer with.
+string autocvar_g_random_items_replace_weapon_vaporizer;
 
-/// \brief Whether to randomly replace strength.
-bool autocvar_g_random_items_replace_item_strength;
-/// \brief Whether to randomly replace shield.
-bool autocvar_g_random_items_replace_item_shield;
-/// \brief Whether to randomly replace fuel regeneration.
-bool autocvar_g_random_items_replace_item_fuel_regen;
-/// \brief Whether to randomly replace jetpack.
-bool autocvar_g_random_items_replace_item_jetpack;
+/// \brief Classnames to replace strength with.
+string autocvar_g_random_items_replace_item_strength;
+/// \brief Classnames to replace shield with.
+string autocvar_g_random_items_replace_item_shield;
+/// \brief Classnames to replace fuel regeneration with.
+string autocvar_g_random_items_replace_item_fuel_regen;
+/// \brief Classnames to replace jetpack with.
+string autocvar_g_random_items_replace_item_jetpack;
 
-bool autocvar_g_random_items_replace_item_minst_cells;
-bool autocvar_g_random_items_replace_item_invisibility;
-bool autocvar_g_random_items_replace_item_extralife;
-bool autocvar_g_random_items_replace_item_speed;
+string autocvar_g_random_items_replace_item_minst_cells;
+string autocvar_g_random_items_replace_item_invisibility;
+string autocvar_g_random_items_replace_item_extralife;
+string autocvar_g_random_items_replace_item_speed;
 
 // Map probability cvars
 
@@ -372,10 +372,10 @@ bool random_items_is_spawning = false;
 
 //========================= Free functions ====================================
 
-/// \brief Returns whether a map item should be replaced.
+/// \brief Returns list of classnames to replace a map item with.
 /// \param[in] item Item to inspect.
-/// \return True if the item should be replaced, false otherwise.
-bool RandomItems_ShouldReplaceItem(entity item)
+/// \return List of classnames to replace a map item with.
+string RandomItems_GetItemReplacementClassNames(entity item)
 {
 	switch (item.classname)
 	{
@@ -579,13 +579,13 @@ bool RandomItems_ShouldReplaceItem(entity item)
 				}
 				default:
 				{
-					return false;
+					return string_null;
 				}
 			}
 		}
 		default:
 		{
-			return false;
+			return string_null;
 		}
 	}
 }
@@ -885,27 +885,50 @@ string RandomItems_GetRandomMapItemClassName()
 	return string_null;
 }
 
-/// \brief Spawns a random map item.
-/// \param[in] position Position of the item.
+/// \brief Replaces a map item.
+/// \param[in] item Item to replace.
 /// \return Spawned item on success, NULL otherwise.
-entity RandomItems_SpawnMapItem(vector position)
+entity RandomItems_ReplaceMapItem(entity item)
 {
-	string class_name = RandomItems_GetRandomMapItemClassName();
-	if (!class_name)
+	string classnames = RandomItems_GetItemReplacementClassNames(item);
+	if (!classnames)
 	{
 		return NULL;
+	}
+	string class_name;
+	if (classnames == "random")
+	{
+		class_name = RandomItems_GetRandomMapItemClassName();
+		if (!class_name)
+		{
+			return NULL;
+		}
+	}
+	else
+	{
+		int num_classnames = tokenize_console(classnames);
+		if (num_classnames == 1)
+		{
+			class_name = classnames;
+		}
+		else
+		{
+			int classname_index = floor(random() * num_classnames);
+			class_name = argv(classname_index);
+		}
 	}
 	random_items_is_spawning = true;
-	entity item = spawn();
-	item.classname = class_name;
-	Item_Initialize(item, class_name);
+	entity new_item = spawn();
+	new_item.classname = strzone(class_name);
+	new_item.spawnfunc_checked = true;
+	Item_Initialize(new_item, class_name);
 	random_items_is_spawning = false;
-	if (wasfreed(item))
+	if (wasfreed(new_item))
 	{
 		return NULL;
 	}
-	setorigin(item, position);
-	return item;
+	setorigin(new_item, item.origin);
+	return new_item;
 }
 
 /// \brief Returns a random classname of the loot item.
@@ -1253,11 +1276,7 @@ MUTATOR_HOOKFUNCTION(random_items, FilterItem, CBC_ORDER_LAST)
 	{
 		return false;
 	}
-	if (!RandomItems_ShouldReplaceItem(item))
-	{
-		return false;
-	}
-	if (RandomItems_SpawnMapItem(item.origin) == NULL)
+	if (RandomItems_ReplaceMapItem(item) == NULL)
 	{
 		return false;
 	}
@@ -1277,14 +1296,10 @@ MUTATOR_HOOKFUNCTION(random_items, ItemTouched, CBC_ORDER_LAST)
 	{
 		return;
 	}
-	if (!RandomItems_ShouldReplaceItem(item))
-	{
-		return;
-	}
-	entity new_item = RandomItems_SpawnMapItem(item.origin);
+	entity new_item = RandomItems_ReplaceMapItem(item);
 	if (new_item == NULL)
 	{
-		return;
+		return false;
 	}
 	Item_ScheduleRespawn(new_item);
 	delete(item);
