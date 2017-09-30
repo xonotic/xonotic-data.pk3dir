@@ -10,6 +10,20 @@
 
 .bool m_isloot; ///< Holds whether item is loot.
 
+entity Item_Create(string class_name, vector position)
+{
+	entity item = spawn();
+	item.classname = class_name;
+	item.spawnfunc_checked = true;
+	Item_Initialize(item, class_name);
+	if (wasfreed(item))
+	{
+		return NULL;
+	}
+	setorigin(item, position);
+	return item;
+}
+
 void Item_Initialize(entity item, string class_name)
 {
 	switch (class_name)

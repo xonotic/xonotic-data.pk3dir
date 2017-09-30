@@ -989,16 +989,8 @@ entity RandomItems_ReplaceMapItem(entity item)
 		return NULL;
 	}
 	random_items_is_spawning = true;
-	entity new_item = spawn();
-	new_item.classname = strzone(new_classname);
-	new_item.spawnfunc_checked = true;
-	Item_Initialize(new_item, new_classname);
+	entity new_item = Item_Create(strzone(new_classname), item.origin);
 	random_items_is_spawning = false;
-	if (wasfreed(new_item))
-	{
-		return NULL;
-	}
-	setorigin(new_item, item.origin);
 	return new_item;
 }
 

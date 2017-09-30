@@ -4,10 +4,18 @@
 
 #pragma once
 
+/// \brief Creates a new item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \return Item on success, NULL otherwise.
+entity Item_Create(string class_name, vector position);
+
 /// \brief Initializes the item according to classname.
 /// \param[in,out] item Item to initialize.
 /// \param[in] class_name Class name to use.
 /// \return No return.
+/// \nore This function is useful if you want to set some item properties before
+/// initialization.
 void Item_Initialize(entity item, string class_name);
 
 /// \brief Creates a loot item.
