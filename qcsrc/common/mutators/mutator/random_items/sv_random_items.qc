@@ -72,6 +72,14 @@ enum
 	RANDOM_ITEM_SUBTYPE_POWERUP_JETPACK
 };
 
+enum
+{
+	RANDOM_ITEM_SUBTYPE_INSTAGIB_VAPORIZER_CELLS,
+	RANDOM_ITEM_SUBTYPE_INSTAGIB_INVISIBILITY,
+	RANDOM_ITEM_SUBTYPE_INSTAGIB_EXTRA_LIFE,
+	RANDOM_ITEM_SUBTYPE_INSTAGIB_SPEED
+};
+
 //======================= Global variables ====================================
 
 bool autocvar_g_random_items; ///< Whether to enable random items.
@@ -159,9 +167,13 @@ string autocvar_g_random_items_replace_item_fuel_regen;
 /// \brief Classnames to replace jetpack with.
 string autocvar_g_random_items_replace_item_jetpack;
 
-string autocvar_g_random_items_replace_item_minst_cells;
+/// \brief Classnames to replace vaporizer cells with.
+string autocvar_g_random_items_replace_item_vaporizer_cells;
+/// \brief Classnames to replace invisibility with.
 string autocvar_g_random_items_replace_item_invisibility;
+/// \brief Classnames to replace extra life with.
 string autocvar_g_random_items_replace_item_extralife;
+/// \brief Classnames to replace speed with.
 string autocvar_g_random_items_replace_item_speed;
 
 // Map probability cvars
@@ -258,10 +270,14 @@ float autocvar_g_random_items_fuel_regen_probability;
 /// \brief Probability of random jetpack spawning in the map.
 float autocvar_g_random_items_jetpack_probability;
 
-//float autocvar_g_random_items_minst_cells_probability;
-//float autocvar_g_random_items_invisibility_probability;
-//float autocvar_g_random_items_extralife_probability;
-//float autocvar_g_random_items_speed_probability;
+/// \brief Probability of random vaporizer cells spawning in the map.
+float autocvar_g_random_items_vaporizer_cells_probability;
+/// \brief Probability of random invisibility spawning in the map.
+float autocvar_g_random_items_invisibility_probability;
+/// \brief Probability of random extra life spawning in the map.
+float autocvar_g_random_items_extralife_probability;
+/// \brief Probability of random speed spawning in the map.
+float autocvar_g_random_items_speed_probability;
 
 // Loot
 
@@ -365,6 +381,15 @@ float autocvar_g_random_loot_shield_probability;
 float autocvar_g_random_loot_fuel_regen_probability;
 /// \brief Probability of random jetpack spawning as loot.
 float autocvar_g_random_loot_jetpack_probability;
+
+/// \brief Probability of random vaporizer cells spawning as loot.
+float autocvar_g_random_loot_vaporizer_cells_probability;
+/// \brief Probability of random invisibility spawning as loot.
+float autocvar_g_random_loot_invisibility_probability;
+/// \brief Probability of random extra life spawning as loot.
+float autocvar_g_random_loot_extralife_probability;
+/// \brief Probability of random speed spawning as loot.
+float autocvar_g_random_loot_speed_probability;
 
 /// \brief Holds whether random item is spawning. Used to prevent infinite
 /// recursion.
@@ -541,9 +566,9 @@ string RandomItems_GetItemReplacementClassNames(entity item)
 		{
 			return autocvar_g_random_items_replace_item_jetpack;
 		}
-		case "item_minst_cells":
+		case "item_vaporizer_cells":
 		{
-			return autocvar_g_random_items_replace_item_minst_cells;
+			return autocvar_g_random_items_replace_item_vaporizer_cells;
 		}
 		case "item_invisibility":
 		{
@@ -579,21 +604,61 @@ string RandomItems_GetItemReplacementClassNames(entity item)
 				}
 				default:
 				{
-					return string_null;
+					return "";
 				}
 			}
 		}
 		default:
 		{
-			return string_null;
+			return "";
 		}
 	}
+}
+
+/// \brief Returns a random instagib classname of the map item.
+/// \return Random instagib classname of the map item.
+string RandomItems_GetRandomInstagibMapItemClassName()
+{
+	RandomSelection_Init();
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_INSTAGIB_VAPORIZER_CELLS,
+		autocvar_g_random_items_vaporizer_cells_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_INSTAGIB_INVISIBILITY,
+		autocvar_g_random_items_invisibility_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_INSTAGIB_EXTRA_LIFE,
+		autocvar_g_random_items_extralife_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_INSTAGIB_SPEED,
+		autocvar_g_random_items_speed_probability, 1);
+	int item_type = RandomSelection_chosen_float;
+	switch (item_type)
+	{
+		case RANDOM_ITEM_SUBTYPE_INSTAGIB_VAPORIZER_CELLS:
+		{
+			return "item_vaporizer_cells";
+		}
+		case RANDOM_ITEM_SUBTYPE_INSTAGIB_INVISIBILITY:
+		{
+			return "item_invisibility";
+		}
+		case RANDOM_ITEM_SUBTYPE_INSTAGIB_EXTRA_LIFE:
+		{
+			return "item_extralife";
+		}
+		case RANDOM_ITEM_SUBTYPE_INSTAGIB_SPEED:
+		{
+			return "item_speed";
+		}
+	}
+	return "";
 }
 
 /// \brief Returns a random classname of the map item.
 /// \return Random classname of the map item.
 string RandomItems_GetRandomMapItemClassName()
 {
+	if (autocvar_g_instagib)
+	{
+		return RandomItems_GetRandomInstagibMapItemClassName();
+	}
 	RandomSelection_Init();
 	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
 		autocvar_g_random_items_health_probability, 1);
@@ -639,7 +704,7 @@ string RandomItems_GetRandomMapItemClassName()
 					return "item_health_mega";
 				}
 			}
-			return string_null;
+			return "";
 		}
 		case RANDOM_ITEM_TYPE_ARMOR:
 		{
@@ -672,7 +737,7 @@ string RandomItems_GetRandomMapItemClassName()
 					return "item_armor_mega";
 				}
 			}
-			return string_null;
+			return "";
 		}
 		case RANDOM_ITEM_TYPE_RESOURCE:
 		{
@@ -717,7 +782,7 @@ string RandomItems_GetRandomMapItemClassName()
 					return "item_fuel";
 				}
 			}
-			return string_null;
+			return "";
 		}
 		case RANDOM_ITEM_TYPE_WEAPON:
 		{
@@ -846,7 +911,7 @@ string RandomItems_GetRandomMapItemClassName()
 					return "weapon_vaporizer";
 				}
 			}
-			return string_null;
+			return "";
 		}
 		case RANDOM_ITEM_TYPE_POWERUP:
 		{
@@ -879,10 +944,10 @@ string RandomItems_GetRandomMapItemClassName()
 					return "item_jetpack";
 				}
 			}
-			return string_null;
+			return "";
 		}
 	}
-	return string_null;
+	return "";
 }
 
 /// \brief Replaces a map item.
@@ -890,38 +955,44 @@ string RandomItems_GetRandomMapItemClassName()
 /// \return Spawned item on success, NULL otherwise.
 entity RandomItems_ReplaceMapItem(entity item)
 {
-	string classnames = RandomItems_GetItemReplacementClassNames(item);
-	if (!classnames)
+	//PrintToChatAll(strcat("Replacing ", item.classname));
+	string new_classnames = RandomItems_GetItemReplacementClassNames(item);
+	if (new_classnames == "")
 	{
 		return NULL;
 	}
-	string class_name;
-	if (classnames == "random")
+	string new_classname;
+	if (new_classnames == "random")
 	{
-		class_name = RandomItems_GetRandomMapItemClassName();
-		if (!class_name)
+		new_classname = RandomItems_GetRandomMapItemClassName();
+		if (new_classname == "")
 		{
 			return NULL;
 		}
 	}
 	else
 	{
-		int num_classnames = tokenize_console(classnames);
-		if (num_classnames == 1)
+		int num_new_classnames = tokenize_console(new_classnames);
+		if (num_new_classnames == 1)
 		{
-			class_name = classnames;
+			new_classname = new_classnames;
 		}
 		else
 		{
-			int classname_index = floor(random() * num_classnames);
-			class_name = argv(classname_index);
+			int classname_index = floor(random() * num_new_classnames);
+			new_classname = argv(classname_index);
 		}
+	}
+	//PrintToChatAll(strcat("Replacing with ", new_classname));
+	if (new_classname == item.classname)
+	{
+		return NULL;
 	}
 	random_items_is_spawning = true;
 	entity new_item = spawn();
-	new_item.classname = strzone(class_name);
+	new_item.classname = strzone(new_classname);
 	new_item.spawnfunc_checked = true;
-	Item_Initialize(new_item, class_name);
+	Item_Initialize(new_item, new_classname);
 	random_items_is_spawning = false;
 	if (wasfreed(new_item))
 	{
@@ -931,10 +1002,51 @@ entity RandomItems_ReplaceMapItem(entity item)
 	return new_item;
 }
 
+/// \brief Returns a random instagib classname of the loot item.
+/// \return Random instagib classname of the loot item.
+string RandomItems_GetRandomInstagibLootItemClassName()
+{
+	RandomSelection_Init();
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_INSTAGIB_VAPORIZER_CELLS,
+		autocvar_g_random_loot_vaporizer_cells_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_INSTAGIB_INVISIBILITY,
+		autocvar_g_random_loot_invisibility_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_INSTAGIB_EXTRA_LIFE,
+		autocvar_g_random_loot_extralife_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_INSTAGIB_SPEED,
+		autocvar_g_random_loot_speed_probability, 1);
+	int item_type = RandomSelection_chosen_float;
+	switch (item_type)
+	{
+		case RANDOM_ITEM_SUBTYPE_INSTAGIB_VAPORIZER_CELLS:
+		{
+			return "item_vaporizer_cells";
+		}
+		case RANDOM_ITEM_SUBTYPE_INSTAGIB_INVISIBILITY:
+		{
+			return "item_invisibility";
+		}
+		case RANDOM_ITEM_SUBTYPE_INSTAGIB_EXTRA_LIFE:
+		{
+			return "item_extralife";
+		}
+		case RANDOM_ITEM_SUBTYPE_INSTAGIB_SPEED:
+		{
+			return "item_speed";
+		}
+	}
+	return "";
+}
+
+
 /// \brief Returns a random classname of the loot item.
 /// \return Random classname of the loot item.
 string RandomItems_GetRandomLootItemClassName()
 {
+	if (autocvar_g_instagib)
+	{
+		return RandomItems_GetRandomInstagibLootItemClassName();
+	}
 	RandomSelection_Init();
 	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
 		autocvar_g_random_loot_health_probability, 1);
@@ -980,7 +1092,7 @@ string RandomItems_GetRandomLootItemClassName()
 					return "item_health_mega";
 				}
 			}
-			return string_null;
+			return "";
 		}
 		case RANDOM_ITEM_TYPE_ARMOR:
 		{
@@ -1013,7 +1125,7 @@ string RandomItems_GetRandomLootItemClassName()
 					return "item_armor_mega";
 				}
 			}
-			return string_null;
+			return "";
 		}
 		case RANDOM_ITEM_TYPE_RESOURCE:
 		{
@@ -1058,7 +1170,7 @@ string RandomItems_GetRandomLootItemClassName()
 					return "item_fuel";
 				}
 			}
-			return string_null;
+			return "";
 		}
 		case RANDOM_ITEM_TYPE_WEAPON:
 		{
@@ -1187,7 +1299,7 @@ string RandomItems_GetRandomLootItemClassName()
 					return "weapon_vaporizer";
 				}
 			}
-			return string_null;
+			return "";
 		}
 		case RANDOM_ITEM_TYPE_POWERUP:
 		{
@@ -1220,10 +1332,10 @@ string RandomItems_GetRandomLootItemClassName()
 					return "item_jetpack";
 				}
 			}
-			return string_null;
+			return "";
 		}
 	}
-	return string_null;
+	return "";
 }
 
 /// \brief Spawns a random loot item.
@@ -1232,7 +1344,7 @@ string RandomItems_GetRandomLootItemClassName()
 void RandomItems_SpawnLootItem(vector position)
 {
 	string class_name = RandomItems_GetRandomLootItemClassName();
-	if (!class_name)
+	if (class_name == "")
 	{
 		return;
 	}
@@ -1299,7 +1411,7 @@ MUTATOR_HOOKFUNCTION(random_items, ItemTouched, CBC_ORDER_LAST)
 	entity new_item = RandomItems_ReplaceMapItem(item);
 	if (new_item == NULL)
 	{
-		return false;
+		return;
 	}
 	Item_ScheduleRespawn(new_item);
 	delete(item);

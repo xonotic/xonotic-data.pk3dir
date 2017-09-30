@@ -214,9 +214,9 @@ void Item_Initialize(entity item, string class_name)
 			spawnfunc_item_jetpack(item);
 			return;
 		}
-		case "item_minst_cells":
+		case "item_vaporizer_cells":
 		{
-			spawnfunc_item_minst_cells(item);
+			spawnfunc_item_vaporizer_cells(item);
 			return;
 		}
 		case "item_invisibility":
@@ -235,7 +235,7 @@ void Item_Initialize(entity item, string class_name)
 			return;
 		}
 	}
-	error("Item_Initialize: Invalid classname");
+	error("Item_Initialize: Invalid classname ", class_name);
 }
 
 entity Item_CreateLoot(string class_name, vector position, vector vel,
