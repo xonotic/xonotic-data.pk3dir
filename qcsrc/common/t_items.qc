@@ -1443,110 +1443,7 @@ void setItemGroupCount()
 	}
 }
 
-spawnfunc(item_rockets)
-{
-    StartItem(this, ITEM_Rockets);
-}
-
-spawnfunc(item_bullets)
-{
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
-	   (this.classname != "droppedweapon"))
-	{
-		weaponswapping = true;
-		spawnfunc_item_shells(this);
-		weaponswapping = false;
-		return;
-	}
-
-    StartItem(this, ITEM_Bullets);
-}
-
-spawnfunc(item_cells)
-{
-	StartItem(this, ITEM_Cells);
-}
-
-spawnfunc(item_plasma)
-{
-	StartItem(this, ITEM_Plasma);
-}
-
-spawnfunc(item_shells)
-{
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
-	   (this.classname != "droppedweapon"))
-	{
-		weaponswapping = true;
-		spawnfunc_item_bullets(this);
-		weaponswapping = false;
-		return;
-	}
-
-	StartItem(this, ITEM_Shells);
-}
-
-spawnfunc(item_armor_small)
-{
-	StartItem(this, ITEM_ArmorSmall);
-}
-
-spawnfunc(item_armor_medium)
-{
-	StartItem(this, ITEM_ArmorMedium);
-}
-
-spawnfunc(item_armor_big)
-{
-	StartItem(this, ITEM_ArmorBig);
-}
-
-spawnfunc(item_armor_mega)
-{
-	StartItem(this, ITEM_ArmorMega);
-}
-
-spawnfunc(item_health_small)
-{
-	StartItem(this, ITEM_HealthSmall);
-}
-
-spawnfunc(item_health_medium)
-{
-    StartItem(this, ITEM_HealthMedium);
-}
-
-spawnfunc(item_health_big)
-{
-	StartItem(this, ITEM_HealthBig);
-}
-
-spawnfunc(item_health_mega)
-{
-    StartItem(this, ITEM_HealthMega);
-}
-
 // support old misnamed entities
-spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
-spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
-spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
-spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
-spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
-spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
-
-spawnfunc(item_strength)
-{
-	StartItem(this, ITEM_Strength);
-}
-
-spawnfunc(item_invincible)
-{
-	StartItem(this, ITEM_Shield);
-}
-
-// compatibility:
-spawnfunc(item_quad) { this.classname = "item_strength";spawnfunc_item_strength(this);}
 
 void target_items_use(entity this, entity actor, entity trigger)
 {
@@ -1685,31 +1582,6 @@ spawnfunc(target_items)
             break;
 		});
 	}
-}
-
-spawnfunc(item_fuel)
-{
-	StartItem(this, ITEM_JetpackFuel);
-}
-
-spawnfunc(item_fuel_regen)
-{
-	if(start_items & ITEM_JetpackRegen.m_itemid)
-	{
-		spawnfunc_item_fuel(this);
-		return;
-	}
-	StartItem(this, ITEM_JetpackRegen);
-}
-
-spawnfunc(item_jetpack)
-{
-	if(start_items & ITEM_Jetpack.m_itemid)
-	{
-		spawnfunc_item_fuel(this);
-		return;
-	}
-	StartItem(this, ITEM_Jetpack);
 }
 
 float GiveWeapon(entity e, float wpn, float op, float val)

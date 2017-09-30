@@ -159,6 +159,11 @@ bool autocvar_g_random_items_replace_item_fuel_regen;
 /// \brief Whether to randomly replace jetpack.
 bool autocvar_g_random_items_replace_item_jetpack;
 
+bool autocvar_g_random_items_replace_item_minst_cells;
+bool autocvar_g_random_items_replace_item_invisibility;
+bool autocvar_g_random_items_replace_item_extralife;
+bool autocvar_g_random_items_replace_item_speed;
+
 // Map probability cvars
 
 /// \brief Probability of random health items spawning in the map.
@@ -252,6 +257,11 @@ float autocvar_g_random_items_shield_probability;
 float autocvar_g_random_items_fuel_regen_probability;
 /// \brief Probability of random jetpack spawning in the map.
 float autocvar_g_random_items_jetpack_probability;
+
+//float autocvar_g_random_items_minst_cells_probability;
+//float autocvar_g_random_items_invisibility_probability;
+//float autocvar_g_random_items_extralife_probability;
+//float autocvar_g_random_items_speed_probability;
 
 // Loot
 
@@ -530,6 +540,22 @@ bool RandomItems_ShouldReplaceItem(entity item)
 		case "item_jetpack":
 		{
 			return autocvar_g_random_items_replace_item_jetpack;
+		}
+		case "item_minst_cells":
+		{
+			return autocvar_g_random_items_replace_item_minst_cells;
+		}
+		case "item_invisibility":
+		{
+			return autocvar_g_random_items_replace_item_invisibility;
+		}
+		case "item_extralife":
+		{
+			return autocvar_g_random_items_replace_item_extralife;
+		}
+		case "item_speed":
+		{
+			return autocvar_g_random_items_replace_item_speed;
 		}
 		case "replacedweapon":
 		{
@@ -1211,12 +1237,12 @@ MUTATOR_HOOKFUNCTION(random_items, BuildMutatorsPrettyString)
 }
 
 /// \brief Hook that is called when an item is about to spawn.
-MUTATOR_HOOKFUNCTION(random_items, FilterItem)
+MUTATOR_HOOKFUNCTION(random_items, FilterItem, CBC_ORDER_LAST)
 {
 	//PrintToChatAll("FilterItem");
 	if (!autocvar_g_random_items)
 	{
-		return;
+		return false;
 	}
 	if (random_items_is_spawning == true)
 	{

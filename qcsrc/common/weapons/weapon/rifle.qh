@@ -50,4 +50,5 @@ REGISTER_WEAPON(RIFLE, rifle, NEW(Rifle));
 
 #ifdef SVQC
 .float rifle_accumulator;
+spawnfunc(weapon_rifle);
 #endif

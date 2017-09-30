@@ -377,7 +377,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 
 void replace_with_insta_cells(entity item)
 {
-	entity e = spawn();
+	entity e = new(item_minst_cells);
 	setorigin(e, item.origin);
 	e.noalign = item.noalign;
 	e.cnt = item.cnt;
@@ -515,11 +515,20 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 
 	float r = random();
 	if (r < 0.3)
+	{
+		e.classname = "item_invisibility";
 		setthink(e, instagib_invisibility);
+	}
 	else if (r < 0.6)
+	{
+		e.classname = "item_extralife";
 		setthink(e, instagib_extralife);
+	}
 	else
+	{
+		e.classname = "item_speed";
 		setthink(e, instagib_speed);
+	}
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = ent.spawnflags;

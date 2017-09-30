@@ -3,3 +3,8 @@
 #include "items.qh"
 
 float autocvar_g_instagib_invis_alpha;
+
+spawnfunc(item_minst_cells);
+void instagib_invisibility(entity this);
+void instagib_extralife(entity this);
+void instagib_speed(entity this);

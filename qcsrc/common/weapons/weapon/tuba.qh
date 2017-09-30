@@ -48,3 +48,7 @@ class(Tuba) .float tuba_volume;
 class(Tuba) .float tuba_volume_initial;
 class(Tuba) .int tuba_instrument;
 #endif
+
+#ifdef SVQC
+spawnfunc(weapon_tuba);
+#endif

@@ -54,3 +54,7 @@ CLASS(MachineGun, Weapon)
 
 ENDCLASS(MachineGun)
 REGISTER_WEAPON(MACHINEGUN, machinegun, NEW(MachineGun));
+
+#ifdef SVQC
+spawnfunc(weapon_machinegun);
+#endif

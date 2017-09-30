@@ -52,16 +52,9 @@ void ItemDrawSimple(entity this);
 
 #endif
 #ifdef SVQC
-spawnfunc(item_strength);
-spawnfunc(item_invincible);
-spawnfunc(item_armor_small);
-spawnfunc(item_shells);
-spawnfunc(item_bullets);
-spawnfunc(item_rockets);
 
 float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
-
 
 bool have_pickup_item(entity this);
 

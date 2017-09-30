@@ -6,6 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include <common/t_items.qh>
+#include <common/mutators/mutator/instagib/sv_instagib.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
 
@@ -15,202 +16,222 @@ void Item_Initialize(entity item, string class_name)
 	{
 		case "item_health_small":
 		{
-			StartItem(item, ITEM_HealthSmall);
+			spawnfunc_item_health_small(item);
 			return;
 		}
 		case "item_health_medium":
 		{
-			StartItem(item, ITEM_HealthMedium);
+			spawnfunc_item_health_medium(item);
 			return;
 		}
 		case "item_health_big":
 		case "item_health_large":
 		{
-			StartItem(item, ITEM_HealthBig);
+			spawnfunc_item_health_big(item);
 			return;
 		}
 		case "item_health_mega":
 		{
-			StartItem(item, ITEM_HealthMega);
+			spawnfunc_item_health_mega(item);
 			return;
 		}
 		case "item_armor_small":
 		{
-			StartItem(item, ITEM_ArmorSmall);
+			spawnfunc_item_armor_small(item);
 			return;
 		}
 		case "item_armor_medium":
 		{
-			StartItem(item, ITEM_ArmorMedium);
+			spawnfunc_item_armor_medium(item);
 			return;
 		}
 		case "item_armor_big":
 		case "item_armor_large":
 		{
-			StartItem(item, ITEM_ArmorBig);
+			spawnfunc_item_armor_big(item);
 			return;
 		}
 		case "item_armor_mega":
 		{
-			StartItem(item, ITEM_ArmorMega);
+			spawnfunc_item_armor_mega(item);
 			return;
 		}
 		case "item_shells":
 		{
-			StartItem(item, ITEM_Shells);
+			spawnfunc_item_shells(item);
 			return;
 		}
 		case "item_bullets":
 		{
-			StartItem(item, ITEM_Bullets);
+			spawnfunc_item_bullets(item);
 			return;
 		}
 		case "item_rockets":
 		{
-			StartItem(item, ITEM_Rockets);
+			spawnfunc_item_rockets(item);
 			return;
 		}
 		case "item_cells":
 		{
-			StartItem(item, ITEM_Cells);
+			spawnfunc_item_cells(item);
 			return;
 		}
 		case "item_plasma":
 		{
-			StartItem(item, ITEM_Plasma);
+			spawnfunc_item_plasma(item);
 			return;
 		}
 		case "item_fuel":
 		{
-			StartItem(item, ITEM_JetpackFuel);
+			spawnfunc_item_fuel(item);
 			return;
 		}
 		case "weapon_blaster":
 		case "weapon_laser":
 		{
-			weapon_defaultspawnfunc(item, WEP_BLASTER);
+			spawnfunc_weapon_blaster(item);
 			return;
 		}
 		case "weapon_shotgun":
 		{
-			weapon_defaultspawnfunc(item, WEP_SHOTGUN);
+			spawnfunc_weapon_shotgun(item);
 			return;
 		}
 		case "weapon_machinegun":
 		case "weapon_uzi":
 		{
-			weapon_defaultspawnfunc(item, WEP_MACHINEGUN);
+			spawnfunc_weapon_machinegun(item);
 			return;
 		}
 		case "weapon_mortar":
 		case "weapon_grenadelauncher":
 		{
-			weapon_defaultspawnfunc(item, WEP_MORTAR);
+			spawnfunc_weapon_mortar(item);
 			return;
 		}
 		case "weapon_electro":
 		{
-			weapon_defaultspawnfunc(item, WEP_ELECTRO);
+			spawnfunc_weapon_electro(item);
 			return;
 		}
 		case "weapon_crylink":
 		{
-			weapon_defaultspawnfunc(item, WEP_CRYLINK);
+			spawnfunc_weapon_crylink(item);
 			return;
 		}
 		case "weapon_vortex":
 		case "weapon_nex":
 		{
-			weapon_defaultspawnfunc(item, WEP_VORTEX);
+			spawnfunc_weapon_vortex(item);
 			return;
 		}
 		case "weapon_hagar":
 		{
-			weapon_defaultspawnfunc(item, WEP_HAGAR);
+			spawnfunc_weapon_hagar(item);
 			return;
 		}
 		case "weapon_devastator":
 		case "weapon_rocketlauncher":
 		{
-			weapon_defaultspawnfunc(item, WEP_DEVASTATOR);
+			spawnfunc_weapon_devastator(item);
 			return;
 		}
 		case "weapon_shockwave":
 		{
-			weapon_defaultspawnfunc(item, WEP_SHOCKWAVE);
+			spawnfunc_weapon_shockwave(item);
 			return;
 		}
 		case "weapon_arc":
 		{
-			weapon_defaultspawnfunc(item, WEP_ARC);
+			spawnfunc_weapon_arc(item);
 			return;
 		}
 		case "weapon_hook":
 		{
-			weapon_defaultspawnfunc(item, WEP_HOOK);
+			spawnfunc_weapon_hook(item);
 			return;
 		}
 		case "weapon_tuba":
 		{
-			weapon_defaultspawnfunc(item, WEP_TUBA);
+			spawnfunc_weapon_tuba(item);
 			return;
 		}
 		case "weapon_porto":
 		{
-			weapon_defaultspawnfunc(item, WEP_PORTO);
+			spawnfunc_weapon_porto(item);
 			return;
 		}
 		case "weapon_fireball":
 		{
-			weapon_defaultspawnfunc(item, WEP_FIREBALL);
+			spawnfunc_weapon_fireball(item);
 			return;
 		}
 		case "weapon_minelayer":
 		{
-			weapon_defaultspawnfunc(item, WEP_MINE_LAYER);
+			spawnfunc_weapon_minelayer(item);
 			return;
 		}
 		case "weapon_hlac":
 		{
-			weapon_defaultspawnfunc(item, WEP_HLAC);
+			spawnfunc_weapon_hlac(item);
 			return;
 		}
 		case "weapon_rifle":
 		case "weapon_campingrifle":
 		case "weapon_sniperrifle":
 		{
-			weapon_defaultspawnfunc(item, WEP_RIFLE);
+			spawnfunc_weapon_rifle(item);
 			return;
 		}
 		case "weapon_seeker":
 		{
-			weapon_defaultspawnfunc(item, WEP_SEEKER);
+			spawnfunc_weapon_seeker(item);
 			return;
 		}
 		case "weapon_vaporizer":
 		case "weapon_minstanex":
 		{
-			weapon_defaultspawnfunc(item, WEP_VAPORIZER);
+			spawnfunc_weapon_vaporizer(item);
 			return;
 		}
 		case "item_strength":
 		{
-			StartItem(item, ITEM_Strength);
+			spawnfunc_item_strength(item);
 			return;
 		}
 		case "item_invincible":
 		{
-			StartItem(item, ITEM_Shield);
+			spawnfunc_item_invincible(item);
 			return;
 		}
 		case "item_fuel_regen":
 		{
-			StartItem(item, ITEM_JetpackRegen);
+			spawnfunc_item_fuel_regen(item);
 			return;
 		}
 		case "item_jetpack":
 		{
-			StartItem(item, ITEM_Jetpack);
+			spawnfunc_item_jetpack(item);
+			return;
+		}
+		case "item_minst_cells":
+		{
+			spawnfunc_item_minst_cells(item);
+			return;
+		}
+		case "item_invisibility":
+		{
+			instagib_invisibility(item);
+			return;
+		}
+		case "item_extralife":
+		{
+			instagib_extralife(item);
+			return;
+		}
+		case "item_speed":
+		{
+			instagib_speed(item);
 			return;
 		}
 	}
@@ -256,4 +277,136 @@ bool Item_IsLoot(entity item)
 void Item_SetLoot(entity item, bool loot)
 {
 	item.m_isloot = loot;
+}
+
+spawnfunc(item_health_small)
+{
+	StartItem(this, ITEM_HealthSmall);
+}
+
+spawnfunc(item_health_medium)
+{
+	StartItem(this, ITEM_HealthMedium);
+}
+
+spawnfunc(item_health_big)
+{
+	StartItem(this, ITEM_HealthBig);
+}
+
+spawnfunc(item_health_mega)
+{
+	StartItem(this, ITEM_HealthMega);
+}
+
+spawnfunc(item_armor_small)
+{
+	StartItem(this, ITEM_ArmorSmall);
+}
+
+spawnfunc(item_armor_medium)
+{
+	StartItem(this, ITEM_ArmorMedium);
+}
+
+spawnfunc(item_armor_big)
+{
+	StartItem(this, ITEM_ArmorBig);
+}
+
+spawnfunc(item_armor_mega)
+{
+	StartItem(this, ITEM_ArmorMega);
+}
+
+spawnfunc(item_shells)
+{
+	if (!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
+		(this.classname != "droppedweapon"))
+	{
+		weaponswapping = true;
+		spawnfunc_item_bullets(this);
+		weaponswapping = false;
+		return;
+	}
+	StartItem(this, ITEM_Shells);
+}
+
+spawnfunc(item_bullets)
+{
+	if (!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
+		(this.classname != "droppedweapon"))
+	{
+		weaponswapping = true;
+		spawnfunc_item_shells(this);
+		weaponswapping = false;
+		return;
+	}
+	StartItem(this, ITEM_Bullets);
+}
+
+spawnfunc(item_rockets)
+{
+	StartItem(this, ITEM_Rockets);
+}
+
+spawnfunc(item_cells)
+{
+	StartItem(this, ITEM_Cells);
+}
+
+spawnfunc(item_plasma)
+{
+	StartItem(this, ITEM_Plasma);
+}
+
+spawnfunc(item_fuel)
+{
+	StartItem(this, ITEM_JetpackFuel);
+}
+
+spawnfunc(item_strength)
+{
+	StartItem(this, ITEM_Strength);
+}
+
+spawnfunc(item_invincible)
+{
+	StartItem(this, ITEM_Shield);
+}
+
+spawnfunc(item_fuel_regen)
+{
+	if (start_items & ITEM_JetpackRegen.m_itemid)
+	{
+		spawnfunc_item_fuel(this);
+		return;
+	}
+	StartItem(this, ITEM_JetpackRegen);
+}
+
+spawnfunc(item_jetpack)
+{
+	if(start_items & ITEM_Jetpack.m_itemid)
+	{
+		spawnfunc_item_fuel(this);
+		return;
+	}
+	StartItem(this, ITEM_Jetpack);
+}
+
+// Compatibility spawn functions
+
+spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
+spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
+spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
+spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
+spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
+spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
+spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
+
+spawnfunc(item_quad)
+{
+	this.classname = "item_strength";
+	spawnfunc_item_strength(this);
 }

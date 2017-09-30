@@ -59,4 +59,5 @@ REGISTER_WEAPON(VAPORIZER, vaporizer, NEW(Vaporizer));
 .float rm_force;
 .float rm_damage;
 .float rm_edmg;
+spawnfunc(weapon_vaporizer);
 #endif
