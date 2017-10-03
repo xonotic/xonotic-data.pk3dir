@@ -5,7 +5,6 @@
 /// game items.
 /// \copyright GNU GPLv2 or any later version.
 
-#include <common/t_items.qh>
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
@@ -418,9 +417,3 @@ spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
 spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
 spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
 spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
-
-spawnfunc(item_quad)
-{
-	this.classname = "item_strength";
-	spawnfunc_item_strength(this);
-}
