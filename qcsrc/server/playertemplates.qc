@@ -590,68 +590,110 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 		{
 			switch (item.weapon)
 			{
+				case WEP_BLASTER.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_shotgun");
+				}
 				case WEP_SHOTGUN.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_shotgun");
+						"pickup_weapon_shotgun");
 				}
 				case WEP_MACHINEGUN.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_machinegun");
+						"pickup_weapon_machinegun");
 				}
 				case WEP_MORTAR.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_mortar");
+						"pickup_weapon_mortar");
 				}
 				case WEP_ELECTRO.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_electro");
+						"pickup_weapon_electro");
 				}
 				case WEP_CRYLINK.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_crylink");
+						"pickup_weapon_crylink");
 				}
 				case WEP_VORTEX.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_vortex");
+						"pickup_weapon_vortex");
 				}
 				case WEP_HAGAR.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_hagar");
+						"pickup_weapon_hagar");
 				}
 				case WEP_DEVASTATOR.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_devastator");
+						"pickup_weapon_devastator");
+				}
+				case WEP_SHOCKWAVE.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_shockwave");
+				}
+				case WEP_ARC.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_arc");
+				}
+				case WEP_HOOK.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_hook");
+				}
+				case WEP_TUBA.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_tuba");
+				}
+				case WEP_PORTO.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_porto");
+				}
+				case WEP_FIREBALL.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_fireball");
 				}
 				case WEP_MINE_LAYER.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_minelayer");
+						"pickup_weapon_minelayer");
 				}
 				case WEP_HLAC.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_hlac");
+						"pickup_weapon_hlac");
 				}
 				case WEP_RIFLE.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_rifle");
+						"pickup_weapon_rifle");
 				}
 				case WEP_SEEKER.m_id:
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_dropped_seeker");
+						"pickup_weapon_seeker");
+				}
+				case WEP_VAPORIZER.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_vaporizer");
 				}
 				default:
 				{
+					PrintToChatAll(strcat("Unrecognized item, classname: ",
+						item.classname, " netname: ", item.netname));
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
@@ -682,6 +724,8 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				}
 				default:
 				{
+					PrintToChatAll(strcat("Unrecognized item, classname: ",
+						item.classname, " netname: ", item.netname));
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
@@ -730,13 +774,6 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 		{
 			switch (item.netname)
 			{
-				//case "Vaporizer Ammo":
-				//case "Extra life":
-				//case "Invisibility":
-				//case "Speed":
-				//{
-				//	return MUT_ITEMTOUCH_CONTINUE;
-				//}
 				default:
 				{
 					PrintToChatAll(strcat("Unrecognized item, classname: ",
