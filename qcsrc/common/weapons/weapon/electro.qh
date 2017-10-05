@@ -70,5 +70,6 @@ REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
 #ifdef SVQC
 .float electro_count;
 .float electro_secondarytime;
+spawnfunc(weapon_electro);
 void W_Electro_ExplodeCombo(entity this);
 #endif

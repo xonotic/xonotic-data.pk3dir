@@ -2,6 +2,10 @@
 
 #include "pickup.qh"
 #ifdef SVQC
+    #include <common/t_items.qh>
+#endif
+
+#ifdef SVQC
 PROPERTY(float, g_pickup_ammo_anyway);
 #endif
 
@@ -14,9 +18,6 @@ CLASS(Ammo, Pickup)
 #endif
 ENDCLASS(Ammo)
 
-#ifdef SVQC
-    #include <common/t_items.qh>
-#endif
 
 #ifdef GAMEQC
 MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));

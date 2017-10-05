@@ -61,6 +61,6 @@ REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
 
 
 #ifdef SVQC
-
 .float vortex_lasthit;
+spawnfunc(weapon_vortex);
 #endif

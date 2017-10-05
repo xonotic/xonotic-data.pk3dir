@@ -2,34 +2,10 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
+#include <server/items.qh>
 #include <common/weapons/_all.qh>
-// #include <server/mutators/gamemode.qh>
-
-spawnfunc(weapon_arc);
-spawnfunc(weapon_crylink);
-spawnfunc(weapon_electro);
-spawnfunc(weapon_mortar);
-spawnfunc(weapon_hagar);
-spawnfunc(weapon_machinegun);
-spawnfunc(weapon_devastator);
-spawnfunc(weapon_shotgun);
-spawnfunc(weapon_vortex);
-
-spawnfunc(item_armor_big);
-spawnfunc(item_armor_mega);
-spawnfunc(item_armor_small);
-
-spawnfunc(item_bullets);
-spawnfunc(item_cells);
-spawnfunc(item_quad);
-spawnfunc(item_rockets);
-spawnfunc(item_shells);
-
-spawnfunc(item_jetpack);
 
 spawnfunc(item_haste);
-spawnfunc(item_health_medium);
-spawnfunc(item_health_mega);
 spawnfunc(item_invis);
 
 //***********************
@@ -57,6 +33,11 @@ spawnfunc(ammo_boaster)		{ spawnfunc_item_cells(this);			}
 spawnfunc(ammo_betty)		{ spawnfunc_item_rockets(this);			}
 spawnfunc(ammo_imperius)	{ spawnfunc_item_cells(this);			}
 
+spawnfunc(item_quad)
+{
+	this.classname = "item_strength";
+	spawnfunc_item_strength(this);
+}
 spawnfunc(item_padpower)	{ spawnfunc_item_quad(this);			}
 spawnfunc(item_climber)		{ spawnfunc_item_invincible(this);		}
 spawnfunc(item_speedy)		{ spawnfunc_item_haste(this);			}

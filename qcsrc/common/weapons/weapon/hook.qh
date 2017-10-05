@@ -73,4 +73,5 @@ OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(Offhand
 .float hook_refire;
 .float hook_time_hooked;
 .float hook_time_fueldecrease;
+spawnfunc(weapon_hook);
 #endif

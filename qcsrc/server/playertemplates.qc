@@ -713,6 +713,75 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				}
 			}
 		}
+		case "item_plasma":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_plasma");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ITEMPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_blaster":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_blaster");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ITEMPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_shotgun":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_shotgun");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_ITEMPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
 		case "weapon_machinegun":
 		case "weapon_uzi":
 		{
@@ -737,6 +806,7 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				}
 			}
 		}
+		case "weapon_mortar":
 		case "weapon_grenadelauncher":
 		{
 			float result = PlayerTemplate_GivePlayerItem(player, template,
@@ -806,6 +876,7 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				}
 			}
 		}
+		case "weapon_vortex":
 		case "weapon_nex":
 		{
 			float result = PlayerTemplate_GivePlayerItem(player, template,
@@ -852,10 +923,172 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				}
 			}
 		}
+		case "weapon_devastator":
 		case "weapon_rocketlauncher":
 		{
 			float result = PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_devastator");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_shockwave":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_shockwave");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_arc":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_arc");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_hook":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_hook");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_tuba":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_tuba");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_porto":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_porto");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_fireball":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_fireball");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_WEAPONPICKUP, VOL_BASE,
+						ATTEN_NORM);
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "weapon_vaporizer":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_vaporizer");
 			switch (result)
 			{
 				case MUT_ITEMTOUCH_CONTINUE:
@@ -1075,17 +1308,155 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				}
 			}
 		}
+		case "item_fuel_regen":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_fuel_regen");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_Shield, VOL_BASE,
+						ATTEN_NORM); //TODO: Fix.
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_jetpack":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_jetpack");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_Shield, VOL_BASE,
+						ATTEN_NORM); //TODO: Fix.
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_vaporizer_cells":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_vaporizer_cells");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_Shield, VOL_BASE,
+						ATTEN_NORM); //TODO: Fix.
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_invisibility":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_invisibility");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_Shield, VOL_BASE,
+						ATTEN_NORM); //TODO: Fix.
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_extralife":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_extralife");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_Shield, VOL_BASE,
+						ATTEN_NORM); //TODO: Fix.
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
+		case "item_speed":
+		{
+			float result = PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_speed");
+			switch (result)
+			{
+				case MUT_ITEMTOUCH_CONTINUE:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+				case MUT_ITEMTOUCH_RETURN:
+				{
+					Item_ScheduleRespawn(item);
+					sound(player, CH_TRIGGER, SND_Shield, VOL_BASE,
+						ATTEN_NORM); //TODO: Fix.
+					return MUT_ITEMTOUCH_RETURN;
+				}
+				default:
+				{
+					return MUT_ITEMTOUCH_CONTINUE;
+				}
+			}
+		}
 		default:
 		{
 			switch (item.netname)
 			{
-				case "Vaporizer Ammo":
-				case "Extra life":
-				case "Invisibility":
-				case "Speed":
-				{
-					return MUT_ITEMTOUCH_CONTINUE;
-				}
+				//case "Vaporizer Ammo":
+				//case "Extra life":
+				//case "Invisibility":
+				//case "Speed":
+				//{
+				//	return MUT_ITEMTOUCH_CONTINUE;
+				//}
 				default:
 				{
 					PrintToChatAll(strcat("Unrecognized item, classname: ",
