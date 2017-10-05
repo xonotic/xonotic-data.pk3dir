@@ -629,6 +629,16 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_vaporizer");
 		}
+		case "weapon_hmg":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_hmg");
+		}
+		case "weapon_rpc":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_rpc");
+		}
 		case "droppedweapon":
 		{
 			switch (item.weapon)
@@ -732,6 +742,16 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				{
 					return PlayerTemplate_GivePlayerItem(player, template,
 						"pickup_weapon_vaporizer");
+				}
+				case WEP_HMG.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_hmg");
+				}
+				case WEP_RPC.m_id:
+				{
+					return PlayerTemplate_GivePlayerItem(player, template,
+						"pickup_weapon_rpc");
 				}
 				default:
 				{
