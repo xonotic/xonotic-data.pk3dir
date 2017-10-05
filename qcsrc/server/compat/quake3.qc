@@ -2,31 +2,10 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
+#include <server/items.qh>
 #include <common/weapons/_all.qh>
 
-spawnfunc(weapon_crylink);
-spawnfunc(weapon_electro);
-spawnfunc(weapon_hagar);
-spawnfunc(weapon_hook);
-spawnfunc(weapon_machinegun);
-spawnfunc(weapon_vortex);
-spawnfunc(weapon_minelayer);
-
 spawnfunc(target_items);
-
-spawnfunc(item_bullets);
-spawnfunc(item_cells);
-spawnfunc(item_rockets);
-spawnfunc(item_shells);
-
-spawnfunc(item_strength);
-
-spawnfunc(item_armor_big);
-spawnfunc(item_armor_mega);
-spawnfunc(item_armor_small);
-
-spawnfunc(item_health_medium);
-spawnfunc(item_health_mega);
 
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons

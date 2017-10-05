@@ -879,7 +879,6 @@ LABEL(skip)
 
 void Item_Touch(entity this, entity toucher)
 {
-
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
 	if (Item_IsLoot(this))
 	{
@@ -906,14 +905,17 @@ void Item_Touch(entity this, entity toucher)
 
 	toucher = M_ARGV(1, entity);
 
-	if (Item_IsLoot(this))
+	// TODO: Proper way to handle expiring and not expiring loot.
+	// Expiring loot will have strength "ticking" will it's dropped.
+	// Not expiring will not tick.
+	// OTOH, do we really need expiring loot?
+	if (this.classname == "droppedweapon")
 	{
 		this.strength_finished = max(0, this.strength_finished - time);
 		this.invincible_finished = max(0, this.invincible_finished - time);
 		this.superweapons_finished = max(0, this.superweapons_finished - time);
 	}
-	entity it = this.itemdef;
-	bool gave = ITEM_HANDLE(Pickup, it, this, toucher);
+	bool gave = ITEM_HANDLE(Pickup, this.itemdef, this, toucher);
 	if (!gave)
 	{
 		if (Item_IsLoot(this))
@@ -1221,7 +1223,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if (Item_IsLoot(this))
 	{
 		this.reset = SUB_Remove;
-		// it's a dropped weapon
 		set_movetype(this, MOVETYPE_TOSS);
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
@@ -1231,7 +1232,11 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
 
-		if(this.strength_finished || this.invincible_finished || this.superweapons_finished)
+		// TODO: Proper way to handle expiring and not expiring loot.
+		// Expiring loot will have strength "ticking" will it's dropped.
+		// Not expiring will not tick.
+		// OTOH, do we really need expiring loot?
+		if (this.strength_finished || this.invincible_finished || this.superweapons_finished)
 		{
 			// if item is worthless after a timer, have it expire then
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
@@ -1438,110 +1443,7 @@ void setItemGroupCount()
 	}
 }
 
-spawnfunc(item_rockets)
-{
-    StartItem(this, ITEM_Rockets);
-}
-
-spawnfunc(item_bullets)
-{
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
-	   (this.classname != "droppedweapon"))
-	{
-		weaponswapping = true;
-		spawnfunc_item_shells(this);
-		weaponswapping = false;
-		return;
-	}
-
-    StartItem(this, ITEM_Bullets);
-}
-
-spawnfunc(item_cells)
-{
-	StartItem(this, ITEM_Cells);
-}
-
-spawnfunc(item_plasma)
-{
-	StartItem(this, ITEM_Plasma);
-}
-
-spawnfunc(item_shells)
-{
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
-	   (this.classname != "droppedweapon"))
-	{
-		weaponswapping = true;
-		spawnfunc_item_bullets(this);
-		weaponswapping = false;
-		return;
-	}
-
-	StartItem(this, ITEM_Shells);
-}
-
-spawnfunc(item_armor_small)
-{
-	StartItem(this, ITEM_ArmorSmall);
-}
-
-spawnfunc(item_armor_medium)
-{
-	StartItem(this, ITEM_ArmorMedium);
-}
-
-spawnfunc(item_armor_big)
-{
-	StartItem(this, ITEM_ArmorBig);
-}
-
-spawnfunc(item_armor_mega)
-{
-	StartItem(this, ITEM_ArmorMega);
-}
-
-spawnfunc(item_health_small)
-{
-	StartItem(this, ITEM_HealthSmall);
-}
-
-spawnfunc(item_health_medium)
-{
-    StartItem(this, ITEM_HealthMedium);
-}
-
-spawnfunc(item_health_big)
-{
-	StartItem(this, ITEM_HealthBig);
-}
-
-spawnfunc(item_health_mega)
-{
-    StartItem(this, ITEM_HealthMega);
-}
-
 // support old misnamed entities
-spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
-spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
-spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
-spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
-spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
-spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
-
-spawnfunc(item_strength)
-{
-	StartItem(this, ITEM_Strength);
-}
-
-spawnfunc(item_invincible)
-{
-	StartItem(this, ITEM_Shield);
-}
-
-// compatibility:
-spawnfunc(item_quad) { this.classname = "item_strength";spawnfunc_item_strength(this);}
 
 void target_items_use(entity this, entity actor, entity trigger)
 {
@@ -1680,31 +1582,6 @@ spawnfunc(target_items)
             break;
 		});
 	}
-}
-
-spawnfunc(item_fuel)
-{
-	StartItem(this, ITEM_JetpackFuel);
-}
-
-spawnfunc(item_fuel_regen)
-{
-	if(start_items & ITEM_JetpackRegen.m_itemid)
-	{
-		spawnfunc_item_fuel(this);
-		return;
-	}
-	StartItem(this, ITEM_JetpackRegen);
-}
-
-spawnfunc(item_jetpack)
-{
-	if(start_items & ITEM_Jetpack.m_itemid)
-	{
-		spawnfunc_item_fuel(this);
-		return;
-	}
-	StartItem(this, ITEM_Jetpack);
 }
 
 float GiveWeapon(entity e, float wpn, float op, float val)

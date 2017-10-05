@@ -48,3 +48,7 @@ CLASS(HLAC, Weapon)
 
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, hlac, NEW(HLAC));
+
+#ifdef SVQC
+spawnfunc(weapon_hlac);
+#endif

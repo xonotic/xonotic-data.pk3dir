@@ -4,9 +4,43 @@
 
 #pragma once
 
-/// \brief Returns whether item is loot.
+/// \brief Creates a new item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \return Item on success, NULL otherwise.
+entity Item_Create(string class_name, vector position);
+
+/// \brief Initializes the item according to classname.
+/// \param[in,out] item Item to initialize.
+/// \param[in] class_name Class name to use.
+/// \return No return.
+/// \nore This function is useful if you want to set some item properties before
+/// initialization.
+void Item_Initialize(entity item, string class_name);
+
+/// \brief Creates a loot item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \param[in] velocity of the item.
+/// \param[in] time_to_live Amount of time after which the item will disappear.
+/// \return Item on success, NULL otherwise.
+entity Item_CreateLoot(string class_name, vector position, vector vel,
+	float time_to_live);
+
+/// \brief Initializes the loot item.
+/// \param[in] class_name Class name of the item.
+/// \param[in] position Position of the item.
+/// \param[in] velocity of the item.
+/// \param[in] time_to_live Amount of time after which the item will disappear.
+/// \return True on success, false otherwise.
+/// \nore This function is useful if you want to set some item properties before
+/// initialization.
+bool Item_InitializeLoot(entity item, string class_name, vector position,
+	vector vel, float time_to_live);
+
+/// \brief Returns whether the item is loot.
 /// \param[in] item Item to check.
-/// \return True if item is loot, false otherwise.
+/// \return True if the item is loot, false otherwise.
 bool Item_IsLoot(entity item);
 
 /// \brief Sets the item loot status.
@@ -14,3 +48,28 @@ bool Item_IsLoot(entity item);
 /// \param[in] loot Whether item is loot.
 /// \return No return.
 void Item_SetLoot(entity item, bool loot);
+
+// Item spawn functions.
+// If a function is declared like this:
+// spawnfunc(foo);
+// You need to call it like this:
+// spawnfunc_foo(item);
+
+spawnfunc(item_health_small);
+spawnfunc(item_health_medium);
+spawnfunc(item_health_big);
+spawnfunc(item_health_mega);
+spawnfunc(item_armor_small);
+spawnfunc(item_armor_medium);
+spawnfunc(item_armor_big);
+spawnfunc(item_armor_mega);
+spawnfunc(item_shells);
+spawnfunc(item_bullets);
+spawnfunc(item_rockets);
+spawnfunc(item_cells);
+spawnfunc(item_plasma);
+spawnfunc(item_fuel);
+spawnfunc(item_strength);
+spawnfunc(item_invincible);
+spawnfunc(item_fuel_regen);
+spawnfunc(item_jetpack);

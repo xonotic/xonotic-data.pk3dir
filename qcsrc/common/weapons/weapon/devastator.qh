@@ -65,4 +65,5 @@ REGISTER_WEAPON(DEVASTATOR, devastator, NEW(Devastator));
 #ifdef SVQC
 .float rl_release;
 .float rl_detonate_later;
+spawnfunc(weapon_devastator);
 #endif

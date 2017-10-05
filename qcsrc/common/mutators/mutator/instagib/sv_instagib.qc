@@ -19,7 +19,7 @@ float autocvar_g_instagib_speed_highspeed;
 
 REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball);
 
-spawnfunc(item_minst_cells)
+spawnfunc(item_vaporizer_cells)
 {
 	if (!g_instagib) { delete(this); return; }
 	StartItem(this, ITEM_VaporizerCells);
@@ -377,13 +377,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 
 void replace_with_insta_cells(entity item)
 {
-	entity e = spawn();
+	entity e = new(item_vaporizer_cells);
 	setorigin(e, item.origin);
 	e.noalign = item.noalign;
 	e.cnt = item.cnt;
 	e.team = item.team;
 	e.spawnfunc_checked = true;
-	spawnfunc_item_minst_cells(e);
+	spawnfunc_item_vaporizer_cells(e);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
@@ -439,7 +439,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return false;
 
 	float cells = GetResourceAmount(item, RESOURCE_CELLS);
-	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells")
+	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
 		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 
 	if(cells && !item.weapon)
@@ -515,11 +515,20 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 
 	float r = random();
 	if (r < 0.3)
+	{
+		e.classname = "item_invisibility";
 		setthink(e, instagib_invisibility);
+	}
 	else if (r < 0.6)
+	{
+		e.classname = "item_extralife";
 		setthink(e, instagib_extralife);
+	}
 	else
+	{
+		e.classname = "item_speed";
 		setthink(e, instagib_speed);
+	}
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = ent.spawnflags;

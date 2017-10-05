@@ -85,6 +85,7 @@ REGISTER_WEAPON(SEEKER, seeker, NEW(Seeker));
 #ifdef SVQC
 .entity tag_target, wps_tag_tracker;
 .float tag_time;
+spawnfunc(weapon_seeker);
 
 IntrusiveList g_seeker_trackers;
 STATIC_INIT(g_seeker_trackers) { g_seeker_trackers = IL_NEW(); }
