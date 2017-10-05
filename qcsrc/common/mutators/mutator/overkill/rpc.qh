@@ -45,3 +45,7 @@ CLASS(RocketPropelledChainsaw, Weapon)
 
 ENDCLASS(RocketPropelledChainsaw)
 REGISTER_WEAPON(RPC, rpc, NEW(RocketPropelledChainsaw));
+
+#ifdef SVQC
+spawnfunc(weapon_rpc);
+#endif

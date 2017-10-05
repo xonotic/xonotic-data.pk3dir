@@ -6,6 +6,8 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include <common/mutators/mutator/instagib/sv_instagib.qh>
+#include <common/mutators/mutator/overkill/hmg.qh>
+#include <common/mutators/mutator/overkill/rpc.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
 
@@ -205,6 +207,16 @@ void Item_Initialize(entity item, string class_name)
 		case "weapon_minstanex":
 		{
 			spawnfunc_weapon_vaporizer(item);
+			return;
+		}
+		case "weapon_hmg":
+		{
+			spawnfunc_weapon_hmg(item);
+			return;
+		}
+		case "weapon_rpc":
+		{
+			spawnfunc_weapon_rpc(item);
 			return;
 		}
 		case "item_strength":
