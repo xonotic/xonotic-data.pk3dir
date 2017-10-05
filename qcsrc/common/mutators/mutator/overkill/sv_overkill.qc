@@ -9,13 +9,6 @@ bool autocvar_g_overkill_powerups_replace;
 
 bool autocvar_g_overkill_itemwaypoints = true;
 
-bool autocvar_g_overkill_filter_healthmega;
-bool autocvar_g_overkill_filter_armormedium;
-bool autocvar_g_overkill_filter_armorbig;
-bool autocvar_g_overkill_filter_armormega;
-
-.float ok_item;
-
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
 void ok_Initialize();

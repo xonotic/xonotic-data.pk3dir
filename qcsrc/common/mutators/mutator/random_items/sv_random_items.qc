@@ -80,6 +80,17 @@ enum
 	RANDOM_ITEM_SUBTYPE_INSTAGIB_SPEED
 };
 
+enum
+{
+	RANDOM_ITEM_SUBTYPE_OVERKILL_HEALTH_MEGA,
+	RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_SMALL,
+	RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEDIUM,
+	RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_BIG,
+	RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEGA,
+	RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_HMG,
+	RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_RPC
+};
+
 //======================= Global variables ====================================
 
 bool autocvar_g_random_items; ///< Whether to enable random items.
@@ -157,6 +168,10 @@ string autocvar_g_random_items_replace_weapon_rifle;
 string autocvar_g_random_items_replace_weapon_seeker;
 /// \brief Classnames to replace vaporizer with.
 string autocvar_g_random_items_replace_weapon_vaporizer;
+/// \brief Classnames to replace HMG with.
+string autocvar_g_random_items_replace_weapon_hmg;
+/// \brief Classnames to replace RPC with.
+string autocvar_g_random_items_replace_weapon_rpc;
 
 /// \brief Classnames to replace strength with.
 string autocvar_g_random_items_replace_item_strength;
@@ -279,6 +294,23 @@ float autocvar_g_random_items_extralife_probability;
 /// \brief Probability of random speed spawning in the map.
 float autocvar_g_random_items_speed_probability;
 
+/// \brief Probability of random mega health spawning in the map during overkill.
+float autocvar_g_random_items_overkill_health_mega_probability;
+/// \brief Probability of random small armor spawning in the map during
+/// overkill.
+float autocvar_g_random_items_overkill_armor_small_probability;
+/// \brief Probability of random medium armor spawning in the map during
+/// overkill.
+float autocvar_g_random_items_overkill_armor_medium_probability;
+/// \brief Probability of random big armor spawning in the map during overkill.
+float autocvar_g_random_items_overkill_armor_big_probability;
+/// \brief Probability of random mega armor spawning in the map during overkill.
+float autocvar_g_random_items_overkill_armor_mega_probability;
+/// \brief Probability of random HMG spawning in the map during overkill.
+float autocvar_g_random_items_overkill_weapon_hmg_probability;
+/// \brief Probability of random RPC spawning in the map during overkill.
+float autocvar_g_random_items_overkill_weapon_rpc_probability;
+
 // Loot
 
 bool autocvar_g_random_loot; ///< Whether to enable random loot.
@@ -390,6 +422,22 @@ float autocvar_g_random_loot_invisibility_probability;
 float autocvar_g_random_loot_extralife_probability;
 /// \brief Probability of random speed spawning as loot.
 float autocvar_g_random_loot_speed_probability;
+
+/// \brief Probability of random mega health spawning as loot during overkill.
+float autocvar_g_random_loot_overkill_health_mega_probability;
+/// \brief Probability of random small armor spawning as loot during overkill.
+float autocvar_g_random_loot_overkill_armor_small_probability;
+/// \brief Probability of random medium armor spawning as loot during overkill.
+float autocvar_g_random_loot_overkill_armor_medium_probability;
+/// \brief Probability of random big armor spawning as loot during overkill.
+float autocvar_g_random_loot_overkill_armor_big_probability;
+/// \brief Probability of random mega armor spawning as loot during overkill.
+float autocvar_g_random_loot_overkill_armor_mega_probability;
+/// \brief Probability of random HMG spawning as loot during overkill.
+float autocvar_g_random_loot_overkill_weapon_hmg_probability;
+/// \brief Probability of random RPC spawning as loot during overkill.
+float autocvar_g_random_loot_overkill_weapon_rpc_probability;
+
 
 /// \brief Holds whether random item is spawning. Used to prevent infinite
 /// recursion.
@@ -550,6 +598,14 @@ string RandomItems_GetItemReplacementClassNames(entity item)
 		{
 			return autocvar_g_random_items_replace_weapon_vaporizer;
 		}
+		case "weapon_hmg":
+		{
+			return autocvar_g_random_items_replace_weapon_hmg;
+		}
+		case "weapon_rpc":
+		{
+			return autocvar_g_random_items_replace_weapon_rpc;
+		}
 		case "item_strength":
 		{
 			return autocvar_g_random_items_replace_item_strength;
@@ -615,8 +671,8 @@ string RandomItems_GetItemReplacementClassNames(entity item)
 	}
 }
 
-/// \brief Returns a random instagib classname of the map item.
-/// \return Random instagib classname of the map item.
+/// \brief Returns a random classname of the instagib map item.
+/// \return Random classname of the instagib map item.
 string RandomItems_GetRandomInstagibMapItemClassName()
 {
 	RandomSelection_Init();
@@ -651,6 +707,72 @@ string RandomItems_GetRandomInstagibMapItemClassName()
 	return "";
 }
 
+/// \brief Returns a random classname of the overkill map item.
+/// \return Random classname of the overkill map item.
+string RandomItems_GetRandomOverkillMapItemClassName()
+{
+	RandomSelection_Init();
+	if (!autocvar_g_overkill_filter_healthmega)
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_HEALTH_MEGA,
+			autocvar_g_random_items_overkill_health_mega_probability, 1);
+	}
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_SMALL,
+		autocvar_g_random_items_overkill_armor_small_probability, 1);
+	if (!autocvar_g_overkill_filter_armormedium)
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEDIUM,
+			autocvar_g_random_items_overkill_armor_medium_probability, 1);
+	}
+	if (!autocvar_g_overkill_filter_armorbig)
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_BIG,
+			autocvar_g_random_items_overkill_armor_big_probability, 1);
+	}
+	if (!autocvar_g_overkill_filter_armormega)
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEGA,
+			autocvar_g_random_items_overkill_armor_mega_probability, 1);
+	}
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_HMG,
+		autocvar_g_random_items_overkill_weapon_hmg_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_RPC,
+		autocvar_g_random_items_overkill_weapon_rpc_probability, 1);
+	int item_type = RandomSelection_chosen_float;
+	switch (item_type)
+	{
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_HEALTH_MEGA:
+		{
+			return "item_health_mega";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_SMALL:
+		{
+			return "item_armor_small";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEDIUM:
+		{
+			return "item_armor_medium";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_BIG:
+		{
+			return "item_armor_big";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEGA:
+		{
+			return "item_armor_mega";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_HMG:
+		{
+			return "weapon_hmg";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_RPC:
+		{
+			return "weapon_rpc";
+		}
+	}
+	return "";
+}
+
 /// \brief Returns a random classname of the map item.
 /// \return Random classname of the map item.
 string RandomItems_GetRandomMapItemClassName()
@@ -658,6 +780,10 @@ string RandomItems_GetRandomMapItemClassName()
 	if (autocvar_g_instagib)
 	{
 		return RandomItems_GetRandomInstagibMapItemClassName();
+	}
+	if (autocvar_g_overkill)
+	{
+		return RandomItems_GetRandomOverkillMapItemClassName();
 	}
 	RandomSelection_Init();
 	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
@@ -989,13 +1115,30 @@ entity RandomItems_ReplaceMapItem(entity item)
 		return NULL;
 	}
 	random_items_is_spawning = true;
-	entity new_item = Item_Create(strzone(new_classname), item.origin);
+	entity new_item;
+	if (!autocvar_g_overkill)
+	{
+		new_item = Item_Create(strzone(new_classname), item.origin);
+	}
+	else
+	{
+		new_item = spawn();
+		new_item.classname = strzone(new_classname);
+		new_item.spawnfunc_checked = true;
+		new_item.ok_item = true;
+		Item_Initialize(new_item, new_classname);
+		if (wasfreed(new_item))
+		{
+			return NULL;
+		}
+		setorigin(new_item, item.origin);
+	}
 	random_items_is_spawning = false;
 	return new_item;
 }
 
-/// \brief Returns a random instagib classname of the loot item.
-/// \return Random instagib classname of the loot item.
+/// \brief Returns a random classname of the instagib loot item.
+/// \return Random classname of the instagib loot item.
 string RandomItems_GetRandomInstagibLootItemClassName()
 {
 	RandomSelection_Init();
@@ -1030,6 +1173,71 @@ string RandomItems_GetRandomInstagibLootItemClassName()
 	return "";
 }
 
+/// \brief Returns a random classname of the overkill loot item.
+/// \return Random classname of the overkill loot item.
+string RandomItems_GetRandomOverkillLootItemClassName()
+{
+	RandomSelection_Init();
+	if (!autocvar_g_overkill_filter_healthmega)
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_HEALTH_MEGA,
+			autocvar_g_random_loot_overkill_health_mega_probability, 1);
+	}
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_SMALL,
+		autocvar_g_random_loot_overkill_armor_small_probability, 1);
+	if (!autocvar_g_overkill_filter_armormedium)
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEDIUM,
+			autocvar_g_random_loot_overkill_armor_medium_probability, 1);
+	}
+	if (!autocvar_g_overkill_filter_armorbig)
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_BIG,
+			autocvar_g_random_loot_overkill_armor_big_probability, 1);
+	}
+	if (!autocvar_g_overkill_filter_armormega)
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEGA,
+			autocvar_g_random_loot_overkill_armor_mega_probability, 1);
+	}
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_HMG,
+		autocvar_g_random_loot_overkill_weapon_hmg_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_RPC,
+		autocvar_g_random_loot_overkill_weapon_rpc_probability, 1);
+	int item_type = RandomSelection_chosen_float;
+	switch (item_type)
+	{
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_HEALTH_MEGA:
+		{
+			return "item_health_mega";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_SMALL:
+		{
+			return "item_armor_small";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEDIUM:
+		{
+			return "item_armor_medium";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_BIG:
+		{
+			return "item_armor_big";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_ARMOR_MEGA:
+		{
+			return "item_armor_mega";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_HMG:
+		{
+			return "weapon_hmg";
+		}
+		case RANDOM_ITEM_SUBTYPE_OVERKILL_WEAPON_RPC:
+		{
+			return "weapon_rpc";
+		}
+	}
+	return "";
+}
 
 /// \brief Returns a random classname of the loot item.
 /// \return Random classname of the loot item.
@@ -1038,6 +1246,10 @@ string RandomItems_GetRandomLootItemClassName()
 	if (autocvar_g_instagib)
 	{
 		return RandomItems_GetRandomInstagibLootItemClassName();
+	}
+	if (autocvar_g_overkill)
+	{
+		return RandomItems_GetRandomOverkillLootItemClassName();
 	}
 	RandomSelection_Init();
 	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
@@ -1344,7 +1556,19 @@ void RandomItems_SpawnLootItem(vector position)
 	spread.z = autocvar_g_random_loot_spread / 2;
 	spread += randomvec() * autocvar_g_random_loot_spread;
 	random_items_is_spawning = true;
-	Item_CreateLoot(class_name, position, spread, autocvar_g_random_loot_time);
+	if (!autocvar_g_overkill)
+	{
+		Item_CreateLoot(class_name, position, spread,
+			autocvar_g_random_loot_time);
+	}
+	else
+	{
+		entity item = spawn();
+		item.ok_item = true;
+		item.classname = class_name;
+		Item_InitializeLoot(item, class_name, position, spread,
+			autocvar_g_random_loot_time);
+	}
 	random_items_is_spawning = false;
 }
 
