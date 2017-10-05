@@ -781,7 +781,7 @@ string RandomItems_GetRandomMapItemClassName()
 	{
 		return RandomItems_GetRandomInstagibMapItemClassName();
 	}
-	if (autocvar_g_overkill)
+	if (expr_evaluate(autocvar_g_overkill))
 	{
 		return RandomItems_GetRandomOverkillMapItemClassName();
 	}
@@ -1116,7 +1116,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	}
 	random_items_is_spawning = true;
 	entity new_item;
-	if (!autocvar_g_overkill)
+	if (!expr_evaluate(autocvar_g_overkill))
 	{
 		new_item = Item_Create(strzone(new_classname), item.origin);
 	}
@@ -1247,7 +1247,7 @@ string RandomItems_GetRandomLootItemClassName()
 	{
 		return RandomItems_GetRandomInstagibLootItemClassName();
 	}
-	if (autocvar_g_overkill)
+	if (expr_evaluate(autocvar_g_overkill))
 	{
 		return RandomItems_GetRandomOverkillLootItemClassName();
 	}
@@ -1556,7 +1556,7 @@ void RandomItems_SpawnLootItem(vector position)
 	spread.z = autocvar_g_random_loot_spread / 2;
 	spread += randomvec() * autocvar_g_random_loot_spread;
 	random_items_is_spawning = true;
-	if (!autocvar_g_overkill)
+	if (!expr_evaluate(autocvar_g_overkill))
 	{
 		Item_CreateLoot(class_name, position, spread,
 			autocvar_g_random_loot_time);
