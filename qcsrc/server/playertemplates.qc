@@ -502,6 +502,11 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_item_plasma");
 		}
+		case "item_fuel":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_item_fuel");
+		}
 		case "weapon_blaster":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
@@ -580,6 +585,26 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_fireball");
+		}
+		case "weapon_minelayer":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_minelayer");
+		}
+		case "weapon_hlac":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_hlac");
+		}
+		case "weapon_rifle":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_rifle");
+		}
+		case "weapon_seeker":
+		{
+			return PlayerTemplate_GivePlayerItem(player, template,
+				"pickup_weapon_seeker");
 		}
 		case "weapon_vaporizer":
 		{
