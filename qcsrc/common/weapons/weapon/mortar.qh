@@ -57,4 +57,5 @@ REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
 #ifdef SVQC
 .float gl_detonate_later;
 .float gl_bouncecnt;
+spawnfunc(weapon_mortar);
 #endif

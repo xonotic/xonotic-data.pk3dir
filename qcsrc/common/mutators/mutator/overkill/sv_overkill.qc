@@ -61,20 +61,10 @@ MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 
 void ok_DropItem(entity this, entity targ)
 {
-	entity e = new(droppedweapon); // hax
+	entity e = spawn();
 	e.ok_item = true;
-	e.noalign = true;
-	e.pickup_anyway = true;
-	e.spawnfunc_checked = true;
-	spawnfunc_item_armor_small(e);
-	if (!wasfreed(e)) { // might have been blocked by a mutator
-        set_movetype(e, MOVETYPE_TOSS);
-        e.gravity = 1;
-        e.reset = SUB_Remove;
-        setorigin(e, this.origin + '0 0 32');
-        e.velocity = '0 0 200' + normalize(targ.origin - this.origin) * 500;
-        SUB_SetFade(e, time + 5, 1);
-	}
+	Item_InitializeLoot(e, "item_armor_small", this.origin + '0 0 32',
+		'0 0 200' + normalize(targ.origin - this.origin) * 500, 5);
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDies)

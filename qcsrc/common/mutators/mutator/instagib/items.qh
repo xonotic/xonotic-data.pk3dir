@@ -27,7 +27,7 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
     this.m_model                =   MDL_VaporizerCells_ITEM;
     this.m_sound                =   SND_VaporizerCells;
 #endif
-    this.netname                =   "minst_cells";
+    this.netname                =   "vaporizer_cells";
     this.m_name                 =   "Vaporizer Ammo";
     this.m_icon                 =   "ammo_supercells";
 #ifdef SVQC

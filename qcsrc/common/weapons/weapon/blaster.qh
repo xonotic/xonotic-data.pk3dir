@@ -50,4 +50,6 @@ REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
 .float blaster_radius;
 .float blaster_force;
 .float blaster_lifetime;
+
+spawnfunc(weapon_blaster);
 #endif

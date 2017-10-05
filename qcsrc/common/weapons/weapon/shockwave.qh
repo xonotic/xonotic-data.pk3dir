@@ -84,3 +84,7 @@ void Net_ReadShockwaveParticle();
 .float sw_spread_min;
 .float sw_time;
 #endif
+
+#ifdef SVQC
+spawnfunc(weapon_shockwave);
+#endif

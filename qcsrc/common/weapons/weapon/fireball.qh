@@ -57,4 +57,5 @@ REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
+spawnfunc(weapon_fireball);
 #endif

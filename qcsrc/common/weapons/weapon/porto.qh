@@ -41,4 +41,5 @@ REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
 .float porto_v_angle_held;
 .vector right_vector;
 .float porto_forbidden;
+spawnfunc(weapon_porto);
 #endif

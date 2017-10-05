@@ -56,3 +56,7 @@ CLASS(Hagar, Weapon)
 
 ENDCLASS(Hagar)
 REGISTER_WEAPON(HAGAR, hagar, NEW(Hagar));
+
+#ifdef SVQC
+spawnfunc(weapon_hagar);
+#endif
