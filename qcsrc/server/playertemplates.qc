@@ -80,6 +80,10 @@ string PlayerTemplate_GetDefaultCvarName(string variable)
 		{
 			return "g_random_start_plasma";
 		}
+		case "start_ammo_vaporizer_cells":
+		{
+			return "g_instagib_ammo_start";
+		}
 		case "drop_weapons":
 		{
 			return "g_weapon_throwable";
@@ -134,6 +138,7 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		case "random_start_rockets":
 		case "random_start_cells":
 		case "random_start_plasma":
+		case "start_ammo_vaporizer_cells":
 		case "drop_weapons":
 		case "health_regen_factor":
 		case "health_regen_linear":
@@ -151,6 +156,10 @@ float PlayerTemplate_GetDefaultFloatValue(string variable)
 		case "default_start_weapons":
 		{
 			return 1;
+		}
+		case "start_extra_lives":
+		{
+			return 0;
 		}
 		case "attack_scale":
 		case "defense_scale":
@@ -310,6 +319,19 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 	{
 		return;
 	}
+	if (autocvar_g_instagib)
+	{
+		SetResourceAmount(player, RESOURCE_ARMOR,
+			PlayerTemplate_GetFloatValue(template, "start_extra_lives"));
+		SetResourceAmount(player, RESOURCE_CELLS,
+			PlayerTemplate_GetFloatValue(template,
+			"start_ammo_vaporizer_cells"));
+		if (PlayerTemplate_GetFloatValue(template, "unlimited_ammo"))
+		{
+			player.items |= IT_UNLIMITED_AMMO;
+		}
+		return;
+	}
 	// Give health, armor and ammo.
 	SetResourceAmount(player, RESOURCE_HEALTH,
 		PlayerTemplate_GetFloatValue(template, "start_health"));
@@ -333,10 +355,6 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 			PlayerTemplate_GetFloatValue(template, "start_ammo_plasma"));
 		SetResourceAmount(player, RESOURCE_FUEL,
 			PlayerTemplate_GetFloatValue(template, "start_ammo_fuel"));
-	}
-	if (autocvar_g_instagib == 1)
-	{
-		return;
 	}
 	// Give weapons.
 	if (PlayerTemplate_GetFloatValue(template, "default_start_weapons"))
