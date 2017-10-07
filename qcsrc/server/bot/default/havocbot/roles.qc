@@ -44,16 +44,65 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 	}
 };
 
+bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, entity item, vector item_org)
+{
+	if(!teamplay)
+		return true;
+
+	float friend_distance = FLOAT_MAX;
+	float enemy_distance = FLOAT_MAX;
+	bool discard = false;
+
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
+	{
+		if (it.team == this.team)
+		{
+			if (!IS_REAL_CLIENT(it) || discard)
+				continue;
+
+			if(vdist(it.origin - item_org, >, friend_distance))
+				continue;
+
+			friend_distance = vlen(it.origin - item_org);
+			discard = true;
+
+			if (item.health && it.health > this.health) continue;
+			if (item.armorvalue && it.armorvalue > this.armorvalue) continue;
+
+			if (item.weapons && (item.weapons & ~it.weapons)) continue;
+
+			if (item.ammo_shells && it.ammo_shells > this.ammo_shells) continue;
+			if (item.ammo_nails && it.ammo_nails > this.ammo_nails) continue;
+			if (item.ammo_rockets && it.ammo_rockets > this.ammo_rockets) continue;
+			if (item.ammo_cells && it.ammo_cells > this.ammo_cells) continue;
+			if (item.ammo_plasma && it.ammo_plasma > this.ammo_plasma) continue;
+
+			discard = false;
+		}
+		else
+		{
+			// If enemy only track distances
+			// TODO: track only if visible ?
+			if(vdist(it.origin - item_org, <, enemy_distance))
+				enemy_distance = vlen(it.origin - item_org);
+		}
+	});
+
+	// Rate the item only if no one needs it, or if an enemy is closer to it
+	if ((enemy_distance < friend_distance && vdist(item_org - org, <, enemy_distance)) ||
+		(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius) || !discard)
+		return true;
+	return false;
+};
+
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
-	float rating, discard, friend_distance, enemy_distance;
+	float rating;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
-		rating = 0;
-
 		if(!it.solid)
 		{
 			if(!autocvar_bot_ai_timeitems)
@@ -102,54 +151,10 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 				continue;
 		}
 
-		if(teamplay)
-		{
-			friend_distance = 10000; enemy_distance = 10000;
-			discard = false;
-
-			entity picker = it;
-			FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
-			{
-				if ( it.team == this.team )
-				{
-					if ( !IS_REAL_CLIENT(it) || discard )
-						continue;
-
-					if( vdist(it.origin - o, >, friend_distance) )
-						continue;
-
-					friend_distance = vlen(it.origin - o); // distance between player and item
-					discard = true;
-
-					if (picker.health && it.health > this.health) continue;
-					if (picker.armorvalue && it.armorvalue > this.armorvalue) continue;
-
-					if (picker.weapons && (picker.weapons & ~it.weapons)) continue;
-
-					if (picker.ammo_shells && it.ammo_shells > this.ammo_shells) continue;
-					if (picker.ammo_nails && it.ammo_nails > this.ammo_nails) continue;
-					if (picker.ammo_rockets && it.ammo_rockets > this.ammo_rockets) continue;
-					if (picker.ammo_cells && it.ammo_cells > this.ammo_cells) continue;
-					if (picker.ammo_plasma && it.ammo_plasma > this.ammo_plasma) continue;
-
-					discard = false;
-				}
-				else
-				{
-					// If enemy only track distances
-					// TODO: track only if visible ?
-					if( vdist(it.origin - o, <, enemy_distance) )
-						enemy_distance = vlen(it.origin - o); // distance between player and item
-				}
-			});
-
-			// Rate the item only if no one needs it, or if an enemy is closer to it
-			if ( (enemy_distance < friend_distance && vdist(o - org, <, enemy_distance)) ||
-				(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ) || !discard )
-				rating = it.bot_pickupevalfunc(this, it);
-		}
-		else
-			rating = it.bot_pickupevalfunc(this, it);
+		if(!havocbot_goalrating_item_pickable_check_players(this, org, it, o))
+			continue;
+		
+		rating = it.bot_pickupevalfunc(this, it);
 
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
