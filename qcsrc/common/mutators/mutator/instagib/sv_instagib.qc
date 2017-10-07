@@ -25,6 +25,11 @@ spawnfunc(item_vaporizer_cells)
 	StartItem(this, ITEM_VaporizerCells);
 }
 
+spawnfunc(item_minst_cells)
+{
+	spawnfunc_item_vaporizer_cells(this);
+}
+
 void instagib_invisibility(entity this)
 {
 	this.strength_finished = autocvar_g_balance_powerup_strength_time;
