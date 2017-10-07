@@ -1443,8 +1443,6 @@ void setItemGroupCount()
 	}
 }
 
-// support old misnamed entities
-
 void target_items_use(entity this, entity actor, entity trigger)
 {
 	if(actor.classname == "droppedweapon")
