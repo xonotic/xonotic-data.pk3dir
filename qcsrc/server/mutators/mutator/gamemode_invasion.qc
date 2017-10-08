@@ -72,7 +72,6 @@ spawnfunc(invasion_spawnpoint)
 {
 	if(!g_invasion) { delete(this); return; }
 
-	this.classname = "invasion_spawnpoint";
 	IL_PUSH(g_invasion_spawns, this);
 }
 

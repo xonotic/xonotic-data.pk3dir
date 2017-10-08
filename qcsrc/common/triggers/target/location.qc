@@ -4,7 +4,6 @@ void target_push_init(entity this);
 
 spawnfunc(target_location)
 {
-    this.classname = "target_location";
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
 

@@ -75,7 +75,6 @@ spawnfunc(turret_checkpoint)
 // Compat.
 spawnfunc(walker_checkpoint)
 {
-    this.classname = "turret_checkpoint";
     spawnfunc_turret_checkpoint(this);
 }
 

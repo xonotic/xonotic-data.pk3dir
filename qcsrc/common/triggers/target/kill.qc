@@ -15,8 +15,6 @@ void target_kill_use(entity this, entity actor, entity trigger)
 
 spawnfunc(target_kill)
 {
-    this.classname = "target_kill";
-
     if (this.message == "")
 		this.message = "was in the wrong place";
 

@@ -261,7 +261,6 @@ Don't use this entity on new maps! Use item_key instead.
 */
 spawnfunc(item_key1)
 {
-	this.classname = "item_key";
 	this.itemkeys = ITEM_KEY_BIT(1);
 	spawnfunc_item_key(this);
 };
@@ -280,7 +279,6 @@ Don't use this entity on new maps! Use item_key instead.
 */
 spawnfunc(item_key2)
 {
-	this.classname = "item_key";
 	this.itemkeys = ITEM_KEY_BIT(0);
 	spawnfunc_item_key(this);
 };

@@ -119,13 +119,11 @@ void viewloc_link(entity this)
 
 spawnfunc(target_viewlocation_start)
 {
-	this.classname = "target_viewlocation_start";
 	this.cnt = 1;
 	viewloc_link(this);
 }
 spawnfunc(target_viewlocation_end)
 {
-	this.classname = "target_viewlocation_end";
 	this.cnt = 2;
 	viewloc_link(this);
 }

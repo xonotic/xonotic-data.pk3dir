@@ -1036,7 +1036,6 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	ons_worldgeneratorlist = gen;
 
 	gen.netname = sprintf("%s generator", Team_ColoredFullName(teamnumber));
-	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
 	gen.team_saved = teamnumber;
 	IL_PUSH(g_saved_team, gen);

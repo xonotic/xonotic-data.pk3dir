@@ -1529,7 +1529,7 @@ spawnfunc(item_invincible)
 }
 
 // compatibility:
-spawnfunc(item_quad) { this.classname = "item_strength";spawnfunc_item_strength(this);}
+spawnfunc(item_quad) { spawnfunc_item_strength(this);}
 
 void target_items_use(entity this, entity actor, entity trigger)
 {

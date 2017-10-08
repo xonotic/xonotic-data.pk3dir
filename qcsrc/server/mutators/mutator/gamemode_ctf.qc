@@ -2625,7 +2625,6 @@ spawnfunc(ctf_team)
 {
 	if(!g_ctf) { delete(this); return; }
 
-	this.classname = "ctf_team";
 	this.team = this.cnt + 1;
 }
 

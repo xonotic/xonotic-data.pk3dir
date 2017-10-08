@@ -78,7 +78,6 @@ spawnfunc(trigger_secret)
 	this.delay = 0;
 
 	// convert this trigger to trigger_once
-	//this.classname = "trigger_once";
 	spawnfunc_trigger_once(this);
 
 	// take over the touch() function, so we can mark secret as found

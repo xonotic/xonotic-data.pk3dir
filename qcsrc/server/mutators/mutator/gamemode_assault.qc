@@ -294,7 +294,6 @@ spawnfunc(target_objective)
 {
 	if (!g_assault) { delete(this); return; }
 
-	this.classname = "target_objective";
 	IL_PUSH(g_assault_objectives, this);
 	this.use = assault_objective_use;
 	this.reset = assault_objective_reset;
@@ -306,7 +305,6 @@ spawnfunc(target_objective_decrease)
 {
 	if (!g_assault) { delete(this); return; }
 
-	this.classname = "target_objective_decrease";
 	IL_PUSH(g_assault_objectivedecreasers, this);
 
 	if(!this.dmg)
@@ -327,7 +325,6 @@ spawnfunc(func_assault_destructible)
 	if (!g_assault) { delete(this); return; }
 
 	this.spawnflags = 3;
-	this.classname = "func_assault_destructible";
 	IL_PUSH(g_assault_destructibles, this);
 
 	if(assault_attacker_team == NUM_TEAM_1)
@@ -342,7 +339,6 @@ spawnfunc(func_assault_wall)
 {
 	if (!g_assault) { delete(this); return; }
 
-	this.classname = "func_assault_wall";
 	this.mdl = this.model;
 	_setmodel(this, this.mdl);
 	this.solid = SOLID_BSP;
@@ -356,7 +352,6 @@ spawnfunc(target_assault_roundend)
 	if (!g_assault) { delete(this); return; }
 
 	this.winning = 0; // round not yet won by attackers
-	this.classname = "target_assault_roundend";
 	this.use = target_assault_roundend_use;
 	this.cnt = 0; // first round
 	this.reset = target_assault_roundend_reset;
@@ -367,7 +362,6 @@ spawnfunc(target_assault_roundstart)
 	if (!g_assault) { delete(this); return; }
 
 	assault_attacker_team = NUM_TEAM_1;
-	this.classname = "target_assault_roundstart";
 	this.use = assault_roundstart_use;
 	this.reset2 = assault_roundstart_use_this;
 	InitializeEntity(this, assault_roundstart_use_this, INITPRIO_FINDTARGET);
