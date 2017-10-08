@@ -909,22 +909,22 @@ void Item_Touch(entity this, entity toucher)
 	// Expiring loot will have strength "ticking" will it's dropped.
 	// Not expiring will not tick.
 	// OTOH, do we really need expiring loot?
-	if (this.classname == "droppedweapon")
-	{
-		this.strength_finished = max(0, this.strength_finished - time);
-		this.invincible_finished = max(0, this.invincible_finished - time);
-		this.superweapons_finished = max(0, this.superweapons_finished - time);
-	}
+	//if (this.classname == "droppedweapon")
+	//{
+	//	this.strength_finished = max(0, this.strength_finished - time);
+	//	this.invincible_finished = max(0, this.invincible_finished - time);
+	//	this.superweapons_finished = max(0, this.superweapons_finished - time);
+	//}
 	bool gave = ITEM_HANDLE(Pickup, this.itemdef, this, toucher);
 	if (!gave)
 	{
-		if (Item_IsLoot(this))
-		{
-			// undo what we did above
-			this.strength_finished += time;
-			this.invincible_finished += time;
-			this.superweapons_finished += time;
-		}
+		//if (this.classname == "droppedweapon")
+		//{
+		//	// undo what we did above
+		//	this.strength_finished += time;
+		//	this.invincible_finished += time;
+		//	this.superweapons_finished += time;
+		//}
 		return;
 	}
 
