@@ -94,32 +94,32 @@ string RandomItems_GetItemVarName(string class_name)
 	{
 		#define X(classname, var) case #classname: return #var
 		#define XCOND(classname, var, expr) case #classname: if (expr) return #var; else break
-		X(item_health_small, health_small);
-		X(item_health_medium, health_medium);
-		X(item_health_big, health_big);
-		XCOND(item_health_mega, health_mega, !is_ok || !autocvar_g_overkill_filter_healthmega);
+		X(item_health_small, item_health_small);
+		X(item_health_medium, item_health_medium);
+		X(item_health_big, item_health_big);
+		XCOND(item_health_mega, item_health_mega, !is_ok || !autocvar_g_overkill_filter_healthmega);
 
-		X(item_armor_small, armor_small);
-		XCOND(item_armor_medium, armor_medium, !is_ok || !autocvar_g_overkill_filter_armormedium);
-		XCOND(item_armor_big, armor_big, !is_ok || !autocvar_g_overkill_filter_armorbig);
-		XCOND(item_armor_mega, armor_mega, !is_ok || !autocvar_g_overkill_filter_armormega);
+		X(item_armor_small, item_armor_small);
+		XCOND(item_armor_medium, item_armor_medium, !is_ok || !autocvar_g_overkill_filter_armormedium);
+		XCOND(item_armor_big, item_armor_big, !is_ok || !autocvar_g_overkill_filter_armorbig);
+		XCOND(item_armor_mega, item_armor_mega, !is_ok || !autocvar_g_overkill_filter_armormega);
 
-		X(item_shells, resource_shells);
-		X(item_bullets, resource_bullets);
-		X(item_rockets, resource_rockets);
-		X(item_cells, resource_cells);
-		X(item_plasma, resource_plasma);
-		X(item_fuel, resource_fuel);
+		X(item_shells, item_shells);
+		X(item_bullets, item_bullets);
+		X(item_rockets, item_rockets);
+		X(item_cells, item_cells);
+		X(item_plasma, item_plasma);
+		X(item_fuel, item_fuel);
 
-		X(item_strength, strength);
-		X(item_invincible, shield);
-		X(item_fuel_regen, fuel_regen);
-		X(item_jetpack, jetpack);
+		X(item_strength, item_strength);
+		X(item_invincible, item_shield);
+		X(item_fuel_regen, item_fuel_regen);
+		X(item_jetpack, item_jetpack);
 
-		X(item_vaporizer_cells, vaporizer_cells);
-		X(item_invisibility, invisibility);
-		X(item_extralife, extralife);
-		X(item_speed, speed);
+		X(item_vaporizer_cells, item_vaporizer_cells);
+		X(item_invisibility, item_invisibility);
+		X(item_extralife, item_extralife);
+		X(item_speed, item_speed);
 
 		#undef X
 		#undef XCOND
@@ -270,16 +270,17 @@ string RandomItems_GetRandomMapItemClassName()
 		case RANDOM_ITEM_TYPE_WEAPON:
 		{
 			RandomSelection_Init();
-			#define X(classname) \
-				RandomSelection_AddString( \
-					classname, \
-					cvar(sprintf("g_random_items_%s_probability", RandomItems_GetItemVarName(classname))), \
-					1 \
-				)
-			FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED), {
-				X(sprintf("weapon_%s", it.netname));
+			FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+			{
+				string class_name = strcat("weapon_", it.netname);
+				string cvar_name = sprintf(
+					"g_random_items_%s_probability", class_name);
+				if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+				{
+					continue;
+				}
+				RandomSelection_AddString(class_name, cvar(cvar_name), 1);
 			});
-			#undef X
 			return RandomSelection_chosen_string;
 		}
 		case RANDOM_ITEM_TYPE_POWERUP:
@@ -485,16 +486,17 @@ string RandomItems_GetRandomLootItemClassName()
 		case RANDOM_ITEM_TYPE_WEAPON:
 		{
 			RandomSelection_Init();
-			#define X(classname) \
-				RandomSelection_AddString( \
-					classname, \
-					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
-					1 \
-				)
-			FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED), {
-				X(sprintf("weapon_%s", it.netname));
+			FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+			{
+				string class_name = strcat("weapon_", it.netname);
+				string cvar_name = sprintf(
+					"g_random_loot_%s_probability", class_name);
+				if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+				{
+					continue;
+				}
+				RandomSelection_AddString(class_name, cvar(cvar_name), 1);
 			});
-			#undef X
 			return RandomSelection_chosen_string;
 		}
 		case RANDOM_ITEM_TYPE_POWERUP:
