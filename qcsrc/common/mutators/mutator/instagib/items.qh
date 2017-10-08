@@ -50,6 +50,7 @@ SOUND(ExtraLife, Item_Sound("megahealth"));
 #endif
 
 REGISTER_ITEM(ExtraLife, Powerup) {
+    this.m_canonical_spawnfunc = "item_extralife";
 #ifdef GAMEQC
     this.m_model                =   MDL_ExtraLife_ITEM;
     this.m_sound                =   SND_ExtraLife;
@@ -69,6 +70,7 @@ SOUND(Invisibility, Item_Sound("powerup"));
 #endif
 
 REGISTER_ITEM(Invisibility, Powerup) {
+    this.m_canonical_spawnfunc = "item_invisibility";
 #ifdef GAMEQC
     this.m_model            =   MDL_Invisibility_ITEM;
     this.m_sound            =   SND_Invisibility;
@@ -88,6 +90,7 @@ SOUND(Speed, Item_Sound("powerup_shield"));
 #endif
 
 REGISTER_ITEM(Speed, Powerup) {
+    this.m_canonical_spawnfunc = "item_speed";
 #ifdef GAMEQC
     this.m_model            =   MDL_Speed_ITEM;
     this.m_sound            =   SND_Speed;
