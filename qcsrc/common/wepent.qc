@@ -155,8 +155,6 @@ MACRO_END
 
 	NET_HANDLE(ENT_CLIENT_WEPENT, bool isnew)
 	{
-		if (isnew)
-			this.classname = "wepent_receiver";
 		return ReadWepent(this);
 	}
 

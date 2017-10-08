@@ -192,7 +192,6 @@ NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
 
 	return = true;
 
-	this.classname = "trigger_keylock";
 	this.entremove = keylock_remove;
 }
 #endif

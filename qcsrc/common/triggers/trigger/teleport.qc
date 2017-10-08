@@ -104,7 +104,6 @@ spawnfunc(trigger_teleport)
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 {
-	this.classname = "trigger_teleport";
 	if(isnew)
 		IL_PUSH(g_teleporters, this);
 	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }

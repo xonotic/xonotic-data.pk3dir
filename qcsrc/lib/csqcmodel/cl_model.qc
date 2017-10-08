@@ -234,7 +234,6 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	bool islocalplayer = (this.entnum == player_localnum + 1);
 	noref bool isnolocalplayer = (isplayer && !islocalplayer);
 
-	this.classname = "csqcmodel";
 	this.iflags |= IFLAG_ORIGIN; // interpolate origin too
 	this.iflags |= IFLAG_ANGLES; // interpolate angles too
 	this.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically

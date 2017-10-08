@@ -161,7 +161,6 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
 	setthink(this, trigger_viewloc_updatelink);
 	this.nextthink = time + 1; // we need to delay this or else
 
-	this.classname = "trigger_viewlocation";
 	this.drawmask = MASK_NORMAL; // not so concerned, but better keep it alive
 }
 
