@@ -5,6 +5,19 @@
     #include <common/t_items.qh>
 #endif
 
+.int ammo_none;
+.int ammo_shells;
+.int ammo_nails;
+.int ammo_rockets;
+.int ammo_cells;
+#ifdef SVQC
+.int ammo_plasma = _STAT(PLASMA);
+.int ammo_fuel = _STAT(FUEL);
+#else
+.int ammo_plasma;
+.int ammo_fuel;
+#endif
+
 #ifdef SVQC
 PROPERTY(float, g_pickup_ammo_anyway);
 #endif

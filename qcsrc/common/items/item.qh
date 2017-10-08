@@ -1,9 +1,10 @@
 #pragma once
-#include <common/t_items.qh>
 
 #ifdef GAMEQC
+#include <common/models/all.qh>
 #include <common/sounds/all.qh>
 #include <common/sounds/all.inc>
+#include <common/stats.qh>
 #endif
 
 const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.

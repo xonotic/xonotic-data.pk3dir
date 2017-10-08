@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/weapons/all.qh>
+
 CLASS(HeavyMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(HeavyMachineGun, m_canonical_spawnfunc, string, "weapon_hmg");
 /* ammotype  */ ATTRIB(HeavyMachineGun, ammo_type, int, RESOURCE_BULLETS);

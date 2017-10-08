@@ -5,9 +5,8 @@
 /// game items.
 /// \copyright GNU GPLv2 or any later version.
 
-#include <common/mutators/mutator/instagib/sv_instagib.qh>
-#include <common/mutators/mutator/overkill/hmg.qh>
-#include <common/mutators/mutator/overkill/rpc.qh>
+#include "g_subs.qh"
+#include <common/weapons/all.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
 

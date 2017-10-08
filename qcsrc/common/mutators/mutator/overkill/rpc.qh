@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/weapons/all.qh>
+
 CLASS(RocketPropelledChainsaw, Weapon)
 /* spawnfunc */ ATTRIB(RocketPropelledChainsaw, m_canonical_spawnfunc, string, "weapon_rpc");
 /* ammotype  */ ATTRIB(RocketPropelledChainsaw, ammo_type, int, RESOURCE_ROCKETS);
