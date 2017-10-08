@@ -23,6 +23,8 @@ void ammo_vaporizercells_init(entity item)
 }
 #endif
 REGISTER_ITEM(VaporizerCells, Ammo) {
+    this.m_canonical_spawnfunc = "item_vaporizer_cells";
+    this.spawnflags = ITEM_FLAG_MUTATORBLOCKED;
 #ifdef GAMEQC
     this.m_model                =   MDL_VaporizerCells_ITEM;
     this.m_sound                =   SND_VaporizerCells;
@@ -38,6 +40,9 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
     this.m_iteminit             =   ammo_vaporizercells_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_vaporizer_cells, ITEM_VaporizerCells)
+SPAWNFUNC_ITEM(item_minst_cells, ITEM_VaporizerCells)
 
 #ifdef GAMEQC
 MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));

@@ -934,7 +934,7 @@ LABEL(pickup)
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
-	
+
 	MUTATOR_CALLHOOK(ItemTouched, this, toucher);
 	if (wasfreed(this))
 	{
@@ -1387,6 +1387,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 void StartItem(entity this, GameItem def)
 {
+    def = def.m_spawnfunc_hookreplace(def, this);
+    if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+    {
+        delete(this);
+        return;
+    }
+    this.classname = def.m_canonical_spawnfunc;
     _StartItem(
     	this,
     	this.itemdef = def,

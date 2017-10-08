@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(Arc, Weapon)
+/* spawnfunc */ ATTRIB(Arc, m_canonical_spawnfunc, string, "weapon_arc");
 /* ammotype  */ ATTRIB(Arc, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
 /* flags     */ ATTRIB(Arc, spawnflags, int, WEP_TYPE_HITSCAN);
@@ -74,6 +75,7 @@ CLASS(Arc, Weapon)
 ENDCLASS(Arc)
 REGISTER_WEAPON(ARC, arc, NEW(Arc));
 
+SPAWNFUNC_WEAPON(weapon_arc, WEP_ARC)
 
 #ifdef GAMEQC
 const float ARC_MAX_SEGMENTS = 20;
@@ -112,7 +114,6 @@ const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 .float arc_cooldown; // (dropped arc/player) cooling speed
 .float arc_heat_percent = _STAT(ARC_HEAT);
 .float arc_smoke_sound;
-spawnfunc(weapon_arc);
 #endif
 #ifdef CSQC
 

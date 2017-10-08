@@ -31,6 +31,7 @@ void powerup_strength_init(entity item)
 }
 #endif
 REGISTER_ITEM(Strength, Powerup) {
+    this.m_canonical_spawnfunc = "item_strength";
 #ifdef GAMEQC
     this.m_model            =   MDL_Strength_ITEM;
     this.m_sound            =   SND_Strength;
@@ -49,6 +50,8 @@ REGISTER_ITEM(Strength, Powerup) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_strength, ITEM_Strength)
+
 #ifdef GAMEQC
 MODEL(Shield_ITEM, Item_Model("g_invincible.md3"));
 SOUND(Shield, Item_Sound("powerup_shield"));
@@ -63,6 +66,7 @@ void powerup_shield_init(entity item)
 }
 #endif
 REGISTER_ITEM(Shield, Powerup) {
+    this.m_canonical_spawnfunc = "item_invincible";
 #ifdef GAMEQC
     this.m_model            =   MDL_Shield_ITEM;
     this.m_sound            =   SND_Shield;
@@ -80,3 +84,5 @@ REGISTER_ITEM(Shield, Powerup) {
     this.m_iteminit         =   powerup_shield_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_invincible, ITEM_Shield)

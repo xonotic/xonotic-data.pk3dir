@@ -58,6 +58,10 @@ const int WS_READY  = 4;
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
 CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_id, int, 0);
+	/** the canonical spawnfunc name */
+    ATTRIB(Weapon, m_canonical_spawnfunc, string);
+    /** control what happens when this weapon is spawned */
+    METHOD(Weapon, m_spawnfunc_hookreplace, Weapon(Weapon this, entity e)) { return this; }
     /** A: WEPSET_id : WEPSET_... */
     ATTRIB(Weapon, weapons, WepSet, '0 0 0');
     /** M: ammotype  : main ammo type */
@@ -136,6 +140,18 @@ CLASS(Weapon, Object)
 		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
 	}
 ENDCLASS(Weapon)
+
+#ifdef SVQC
+
+void weapon_defaultspawnfunc(entity this, Weapon e);
+#define SPAWNFUNC_WEAPON(name, weapon) \
+    spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
+
+#else
+
+#define SPAWNFUNC_WEAPON(name, weapon)
+
+#endif
 
 #include <common/items/_mod.qh>
 CLASS(WeaponPickup, Pickup)

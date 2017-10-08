@@ -45,11 +45,26 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 #ifdef SVQC
 .float  strength_finished = _STAT(STRENGTH_FINISHED);
 .float  invincible_finished = _STAT(INVINCIBLE_FINISHED);
+
+#define SPAWNFUNC_ITEM(name, item) \
+    spawnfunc(name) { StartItem(this, item); }
+
+#else
+
+#define SPAWNFUNC_ITEM(name, item)
+
 #endif
+
+enum {
+    ITEM_FLAG_MUTATORBLOCKED = BIT(0)
+};
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)
     ATTRIB(GameItem, m_id, int, 0);
+    /** the canonical spawnfunc name */
+    ATTRIB(GameItem, m_canonical_spawnfunc, string);
+    METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
     ATTRIB(GameItem, m_name, string);
     ATTRIB(GameItem, m_icon, string);
     ATTRIB(GameItem, m_color, vector, '1 1 1');

@@ -28,8 +28,6 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") &
 }
 
 void W_Blaster_Attack(entity, .entity, float, float, float, float, float, float, float, float, float, float);
-spawnfunc(weapon_hmg);
-spawnfunc(weapon_rpc);
 
 MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 {

@@ -1,3 +1,4 @@
+#pragma once
 /// \file
 /// \brief Header file that describes the functions related to game items.
 /// \copyright GNU GPLv2 or any later version.
@@ -49,27 +50,3 @@ bool Item_IsLoot(entity item);
 /// \return No return.
 void Item_SetLoot(entity item, bool loot);
 
-// Item spawn functions.
-// If a function is declared like this:
-// spawnfunc(foo);
-// You need to call it like this:
-// spawnfunc_foo(item);
-
-spawnfunc(item_health_small);
-spawnfunc(item_health_medium);
-spawnfunc(item_health_big);
-spawnfunc(item_health_mega);
-spawnfunc(item_armor_small);
-spawnfunc(item_armor_medium);
-spawnfunc(item_armor_big);
-spawnfunc(item_armor_mega);
-spawnfunc(item_shells);
-spawnfunc(item_bullets);
-spawnfunc(item_rockets);
-spawnfunc(item_cells);
-spawnfunc(item_plasma);
-spawnfunc(item_fuel);
-spawnfunc(item_strength);
-spawnfunc(item_invincible);
-spawnfunc(item_fuel_regen);
-spawnfunc(item_jetpack);

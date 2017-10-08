@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(RocketPropelledChainsaw, Weapon)
+/* spawnfunc */ ATTRIB(RocketPropelledChainsaw, m_canonical_spawnfunc, string, "weapon_rpc");
 /* ammotype  */ ATTRIB(RocketPropelledChainsaw, ammo_type, int, RESOURCE_ROCKETS);
 /* impulse   */ ATTRIB(RocketPropelledChainsaw, impulse, int, 9);
 /* flags     */ ATTRIB(RocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
@@ -46,6 +47,4 @@ CLASS(RocketPropelledChainsaw, Weapon)
 ENDCLASS(RocketPropelledChainsaw)
 REGISTER_WEAPON(RPC, rpc, NEW(RocketPropelledChainsaw));
 
-#ifdef SVQC
-spawnfunc(weapon_rpc);
-#endif
+SPAWNFUNC_WEAPON(weapon_rpc, WEP_RPC)

@@ -1,7 +1,6 @@
 #include "fireball.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_fireball) { weapon_defaultspawnfunc(this, WEP_FIREBALL); }
 
 void W_Fireball_Explode(entity this, entity directhitentity)
 {

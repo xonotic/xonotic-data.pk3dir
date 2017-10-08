@@ -17,17 +17,16 @@ float autocvar_g_instagib_speed_highspeed;
 
 #include <common/items/_mod.qh>
 
-REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball);
-
-spawnfunc(item_vaporizer_cells)
+REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
 {
-	if (!g_instagib) { delete(this); return; }
-	StartItem(this, ITEM_VaporizerCells);
-}
-
-spawnfunc(item_minst_cells)
-{
-	spawnfunc_item_vaporizer_cells(this);
+    MUTATOR_ONADD
+    {
+        ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+    }
+    MUTATOR_ONROLLBACK_OR_REMOVE
+    {
+        ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+    }
 }
 
 void instagib_invisibility(entity this)
