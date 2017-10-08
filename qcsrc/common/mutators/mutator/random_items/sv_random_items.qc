@@ -79,6 +79,16 @@ bool random_items_is_spawning = false;
 
 string RandomItems_GetItemVarName(string class_name)
 {
+	if (startsWith(class_name, "weapon_"))
+	{
+		FOREACH(Weapons, sprintf("weapon_%s", it.netname) == class_name, {
+			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			{
+				return "";
+			}
+			return class_name;
+		});
+	}
 	bool is_ok = expr_evaluate(autocvar_g_overkill);
 	switch (class_name)
 	{
@@ -101,27 +111,6 @@ string RandomItems_GetItemVarName(string class_name)
 		X(item_plasma, resource_plasma);
 		X(item_fuel, resource_fuel);
 
-		X(weapon_blaster, weapon_blaster);
-		X(weapon_shotgun, weapon_shotgun);
-		X(weapon_machinegun, weapon_machinegun);
-		X(weapon_mortar, weapon_mortar);
-		X(weapon_electro, weapon_electro);
-		X(weapon_crylink, weapon_crylink);
-		X(weapon_vortex, weapon_vortex);
-		X(weapon_hagar, weapon_hagar);
-		X(weapon_devastator, weapon_devastator);
-		X(weapon_shockwave, weapon_shockwave);
-		X(weapon_arc, weapon_arc);
-		X(weapon_hook, weapon_hook);
-		X(weapon_tuba, weapon_tuba);
-		X(weapon_porto, weapon_porto);
-		X(weapon_fireball, weapon_fireball);
-		X(weapon_minelayer, weapon_minelayer);
-		X(weapon_hlac, weapon_hlac);
-		X(weapon_rifle, weapon_rifle);
-		X(weapon_seeker, weapon_seeker);
-		X(weapon_vaporizer, weapon_vaporizer);
-
 		X(item_strength, strength);
 		X(item_invincible, shield);
 		X(item_fuel_regen, fuel_regen);
@@ -132,8 +121,6 @@ string RandomItems_GetItemVarName(string class_name)
 		X(item_extralife, extralife);
 		X(item_speed, speed);
 
-		XCOND(weapon_hmg, weapon_hmg, is_ok);
-		XCOND(weapon_rpc, weapon_rpc, is_ok);
 		#undef X
 		#undef XCOND
 	}
@@ -244,10 +231,9 @@ string RandomItems_GetRandomMapItemClassName()
 					cvar(sprintf("g_random_items_%s_probability", RandomItems_GetItemVarName(classname))), \
 					1 \
 				)
-			X("item_health_small");
-			X("item_health_medium");
-			X("item_health_big");
-			X("item_health_mega");
+			FOREACH(Items, it.instanceOfHealth, {
+				X(sprintf("item_%s", it.netname));
+			});
 			#undef X
 			return RandomSelection_chosen_string;
 		}
@@ -260,10 +246,9 @@ string RandomItems_GetRandomMapItemClassName()
 					cvar(sprintf("g_random_items_%s_probability", RandomItems_GetItemVarName(classname))), \
 					1 \
 				)
-			X("item_health_small");
-			X("item_health_medium");
-			X("item_health_big");
-			X("item_health_mega");
+			FOREACH(Items, it.instanceOfArmor, {
+				X(sprintf("item_%s", it.netname));
+			});
 			#undef X
 			return RandomSelection_chosen_string;
 		}
@@ -276,12 +261,9 @@ string RandomItems_GetRandomMapItemClassName()
 					cvar(sprintf("g_random_items_%s_probability", RandomItems_GetItemVarName(classname))), \
 					1 \
 				)
-			X("item_shells");
-			X("item_bullets");
-			X("item_rockets");
-			X("item_cells");
-			X("item_plasma");
-			X("item_fuel");
+			FOREACH(Items, it.instanceOfAmmo, {
+				X(sprintf("item_%s", it.netname));
+			});
 			#undef X
 			return RandomSelection_chosen_string;
 		}
@@ -294,26 +276,9 @@ string RandomItems_GetRandomMapItemClassName()
 					cvar(sprintf("g_random_items_%s_probability", RandomItems_GetItemVarName(classname))), \
 					1 \
 				)
-			X("weapon_blaster");
-			X("weapon_shotgun");
-			X("weapon_machinegun");
-			X("weapon_mortar");
-			X("weapon_electro");
-			X("weapon_crylink");
-			X("weapon_vortex");
-			X("weapon_hagar");
-			X("weapon_devastator");
-			X("weapon_shockwave");
-			X("weapon_arc");
-			X("weapon_hook");
-			X("weapon_tuba");
-			X("weapon_porto");
-			X("weapon_fireball");
-			X("weapon_minelayer");
-			X("weapon_hlac");
-			X("weapon_rifle");
-			X("weapon_seeker");
-			X("weapon_vaporizer");
+			FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED), {
+				X(sprintf("weapon_%s", it.netname));
+			});
 			#undef X
 			return RandomSelection_chosen_string;
 		}
@@ -481,10 +446,9 @@ string RandomItems_GetRandomLootItemClassName()
 					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
 					1 \
 				)
-			X("item_health_small");
-			X("item_health_medium");
-			X("item_health_big");
-			X("item_health_mega");
+			FOREACH(Items, it.instanceOfHealth, {
+				X(sprintf("item_%s", it.netname));
+			});
 			#undef X
 			return RandomSelection_chosen_string;
 		}
@@ -497,10 +461,9 @@ string RandomItems_GetRandomLootItemClassName()
 					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
 					1 \
 				)
-			X("item_armor_small");
-			X("item_armor_medium");
-			X("item_armor_big");
-			X("item_armor_mega");
+			FOREACH(Items, it.instanceOfArmor, {
+				X(sprintf("item_%s", it.netname));
+			});
 			#undef X
 			return RandomSelection_chosen_string;
 		}
@@ -513,12 +476,9 @@ string RandomItems_GetRandomLootItemClassName()
 					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
 					1 \
 				)
-			X("item_shells");
-			X("item_bullets");
-			X("item_rockets");
-			X("item_cells");
-			X("item_plasma");
-			X("item_fuel");
+			FOREACH(Items, it.instanceOfAmmo, {
+				X(sprintf("item_%s", it.netname));
+			});
 			#undef X
 			return RandomSelection_chosen_string;
 		}
@@ -531,26 +491,9 @@ string RandomItems_GetRandomLootItemClassName()
 					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
 					1 \
 				)
-			X("weapon_blaster");
-			X("weapon_shotgun");
-			X("weapon_machinegun");
-			X("weapon_mortar");
-			X("weapon_electro");
-			X("weapon_crylink");
-			X("weapon_vortex");
-			X("weapon_hagar");
-			X("weapon_devastator");
-			X("weapon_shockwave");
-			X("weapon_arc");
-			X("weapon_hook");
-			X("weapon_tuba");
-			X("weapon_porto");
-			X("weapon_fireball");
-			X("weapon_minelayer");
-			X("weapon_hlac");
-			X("weapon_rifle");
-			X("weapon_seeker");
-			X("weapon_vaporizer");
+			FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED), {
+				X(sprintf("weapon_%s", it.netname));
+			});
 			#undef X
 			return RandomSelection_chosen_string;
 		}
