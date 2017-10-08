@@ -81,6 +81,8 @@ REGISTER_ITEM(Invisibility, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Invisibility_ITEM;
     this.m_sound            =   SND_Invisibility;
+    this.m_glow             =   true;
+    this.m_respawnsound     =   SND_STRENGTH_RESPAWN;
 #endif
     this.netname            =   "invisibility";
     this.m_name             =   "Invisibility";
@@ -111,6 +113,8 @@ REGISTER_ITEM(Speed, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Speed_ITEM;
     this.m_sound            =   SND_Speed;
+    this.m_glow             =   true;
+    this.m_respawnsound     =   SND_SHIELD_RESPAWN;
 #endif
     this.netname            =   "speed";
     this.m_name             =   "Speed";
