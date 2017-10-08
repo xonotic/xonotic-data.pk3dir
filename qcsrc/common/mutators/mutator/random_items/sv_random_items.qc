@@ -346,6 +346,11 @@ entity RandomItems_ReplaceMapItem(entity item)
 	if (!expr_evaluate(autocvar_g_overkill))
 	{
 		new_item = Item_Create(strzone(new_classname), item.origin);
+		random_items_is_spawning = false;
+		if (new_item == NULL)
+		{
+			return NULL;
+		}
 	}
 	else
 	{
@@ -354,13 +359,17 @@ entity RandomItems_ReplaceMapItem(entity item)
 		new_item.spawnfunc_checked = true;
 		new_item.ok_item = true;
 		Item_Initialize(new_item, new_classname);
+		random_items_is_spawning = false;
 		if (wasfreed(new_item))
 		{
 			return NULL;
 		}
 		setorigin(new_item, item.origin);
 	}
-	random_items_is_spawning = false;
+	if (item.team)
+	{
+		new_item.team = item.team;
+	}
 	return new_item;
 }
 
