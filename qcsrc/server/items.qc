@@ -422,10 +422,44 @@ spawnfunc(item_jetpack)
 
 // Compatibility spawn functions
 
-spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
-spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
-spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
-spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
-spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
-spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
+spawnfunc(item_armor1)
+{
+	this.classname = "item_armor_small";
+	spawnfunc_item_armor_small(this); // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
+}
+
+spawnfunc(item_armor25)
+{
+	this.classname = "item_armor_mega";
+	spawnfunc_item_armor_mega(this);
+}
+
+spawnfunc(item_armor_large)
+{
+	this.classname = "item_armor_mega";
+	spawnfunc_item_armor_mega(this);
+}
+
+spawnfunc(item_health1)
+{
+	this.classname = "item_health_small";
+	spawnfunc_item_health_small(this);
+}
+
+spawnfunc(item_health25)
+{
+	this.classname = "item_health_medium";
+	spawnfunc_item_health_medium(this);
+}
+
+spawnfunc(item_health_large)
+{
+	this.classname = "item_health_big";
+	spawnfunc_item_health_big(this);
+}
+
+spawnfunc(item_health100)
+{
+	this.classname = "item_health_mega";
+	spawnfunc_item_health_mega(this);
+}
