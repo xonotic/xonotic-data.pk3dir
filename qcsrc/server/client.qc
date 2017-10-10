@@ -1217,8 +1217,6 @@ void ClientConnect(entity this)
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
-	CS(this).netname_previous = strzone(this.netname);
-
 	if(teamplay && IS_PLAYER(this))
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_CONNECT_TEAM), this.netname);
 	else
@@ -2499,11 +2497,13 @@ void PlayerPreThink (entity this)
 	zoomstate_set = false;
 
 	// Check for nameless players
-	if (isInvisibleString(this.netname)) {
-		this.netname = strzone(sprintf("Player#%d", this.playerid));
-		// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
-	}
-	if (this.netname != CS(this).netname_previous) {
+	if (this.netname == "" || this.netname != CS(this).netname_previous)
+	{
+		if (isInvisibleString(this.netname))
+		{
+			this.netname = strzone(sprintf("Player#%d", this.playerid));
+			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+		}
 		if (autocvar_sv_eventlog) {
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
         }
