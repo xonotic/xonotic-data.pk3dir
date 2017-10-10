@@ -55,6 +55,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 	if(WepSet_FromWeapon(Weapons_from(wpn)) & WEPSET_SUPERWEAPONS)
 	{
+		Item_SetExpiring(wep, true);
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
 			wep.superweapons_finished = time + autocvar_g_balance_superweapons_time;

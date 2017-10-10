@@ -905,26 +905,22 @@ void Item_Touch(entity this, entity toucher)
 
 	toucher = M_ARGV(1, entity);
 
-	// TODO: Proper way to handle expiring and not expiring loot.
-	// Expiring loot will have strength "ticking" will it's dropped.
-	// Not expiring will not tick.
-	// OTOH, do we really need expiring loot?
-	//if (this.classname == "droppedweapon")
-	//{
-	//	this.strength_finished = max(0, this.strength_finished - time);
-	//	this.invincible_finished = max(0, this.invincible_finished - time);
-	//	this.superweapons_finished = max(0, this.superweapons_finished - time);
-	//}
+	if (Item_IsExpiring(this))
+	{
+		this.strength_finished = max(0, this.strength_finished - time);
+		this.invincible_finished = max(0, this.invincible_finished - time);
+		this.superweapons_finished = max(0, this.superweapons_finished - time);
+	}
 	bool gave = ITEM_HANDLE(Pickup, this.itemdef, this, toucher);
 	if (!gave)
 	{
-		//if (this.classname == "droppedweapon")
-		//{
-		//	// undo what we did above
-		//	this.strength_finished += time;
-		//	this.invincible_finished += time;
-		//	this.superweapons_finished += time;
-		//}
+		if (Item_IsExpiring(this))
+		{
+			// undo what we did above
+			this.strength_finished += time;
+			this.invincible_finished += time;
+			this.superweapons_finished += time;
+		}
 		return;
 	}
 
@@ -1232,11 +1228,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
 
-		// TODO: Proper way to handle expiring and not expiring loot.
-		// Expiring loot will have strength "ticking" will it's dropped.
-		// Not expiring will not tick.
-		// OTOH, do we really need expiring loot?
-		if (this.strength_finished || this.invincible_finished || this.superweapons_finished)
+		if (Item_IsExpiring(this))
 		{
 			// if item is worthless after a timer, have it expire then
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);

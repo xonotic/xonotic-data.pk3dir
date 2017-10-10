@@ -9,6 +9,9 @@
 #include <common/weapons/all.qh>
 
 .bool m_isloot; ///< Holds whether item is loot.
+/// \brief Holds whether strength, shield or superweapon timers expire while
+/// this item is on the ground.
+.bool m_isexpiring;
 
 entity Item_Create(string class_name, vector position)
 {
@@ -78,6 +81,16 @@ bool Item_IsLoot(entity item)
 void Item_SetLoot(entity item, bool loot)
 {
 	item.m_isloot = loot;
+}
+
+bool Item_IsExpiring(entity item)
+{
+	return item.m_isexpiring;
+}
+
+void Item_SetExpiring(entity item, bool expiring)
+{
+	item.m_isexpiring = expiring;
 }
 
 // Compatibility spawn functions
