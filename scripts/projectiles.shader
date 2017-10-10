@@ -3,6 +3,7 @@ arc_projectile_core
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite
+    nopicmip
 	{
 		map textures/projectiles/arc_projectile_core.tga
 		blendfunc GL_SRC_ALPHA GL_ONE
@@ -14,6 +15,7 @@ arc_projectile_long
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite2
+    nopicmip
 	{
 		map textures/projectiles/arc_projectile_long.tga
 		blendfunc GL_SRC_ALPHA GL_ONE
@@ -25,6 +27,7 @@ crylink_projectile_core
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite
+    nopicmip
 	{
 		map textures/projectiles/crylink_projectile_core.tga
 		blendfunc GL_SRC_ALPHA GL_ONE
@@ -36,6 +39,7 @@ crylink_projectile_long
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite2
+    nopicmip
 	{
 		map textures/projectiles/crylink_projectile_long.tga
 		blendfunc GL_SRC_ALPHA GL_ONE
@@ -47,6 +51,7 @@ hlac_projectile_core
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite
+    nopicmip
 	{
 		map textures/projectiles/hlac_projectile_core.tga
 		blendfunc add
@@ -58,6 +63,7 @@ hlac_projectile_long
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite2
+    nopicmip
 	{
 		map textures/projectiles/hlac_projectile_long.tga
 		blendfunc add
@@ -69,6 +75,7 @@ electro_projectile_core
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite
+        nopicmip
 	{
 		map textures/projectiles/electro_projectile_core.tga
 		blendfunc add
@@ -81,6 +88,7 @@ electro_projectile_long
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite2
+        nopicmip
 	{
 		map textures/projectiles/electro_projectile_long.tga
 		blendfunc add
@@ -93,6 +101,7 @@ laser_projectile_core
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite
+        nopicmip
 	{
 		map textures/projectiles/laser_projectile_core.tga
 		blendfunc add
@@ -104,6 +113,7 @@ laser_projectile_long
 	surfaceparm nonsolid
 	surfaceparm nolightmap
 	deformVertexes autosprite2
+        nopicmip
 	{
 		map textures/projectiles/laser_projectile_long.tga
 		blendfunc add
