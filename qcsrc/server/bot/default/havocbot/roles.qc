@@ -44,6 +44,20 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 	}
 };
 
+bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player, entity item)
+{
+	if (item.health && player.health <= this.health) {return true;}
+	if (item.armorvalue && player.armorvalue <= this.armorvalue) {return true;}
+	if (item.weapons && !(player.weapons & item.weapons)) {return true;}
+	if (item.ammo_shells && player.ammo_shells <= this.ammo_shells) {return true;}
+	if (item.ammo_nails && player.ammo_nails <= this.ammo_nails) {return true;}
+	if (item.ammo_rockets && player.ammo_rockets <= this.ammo_rockets) {return true;}
+	if (item.ammo_cells && player.ammo_cells <= this.ammo_cells) {return true;}
+	if (item.ammo_plasma && player.ammo_plasma <= this.ammo_plasma) {return true;}
+
+	return false;
+};
+
 bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, entity item, vector item_org)
 {
 	if(!teamplay)
@@ -51,33 +65,22 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 
 	float friend_distance = FLOAT_MAX;
 	float enemy_distance = FLOAT_MAX;
-	bool discard = false;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
 	{
 		if (it.team == this.team)
 		{
-			if (!IS_REAL_CLIENT(it) || discard)
+			if (!IS_REAL_CLIENT(it))
 				continue;
 
 			if(vdist(it.origin - item_org, >, friend_distance))
 				continue;
 
-			friend_distance = vlen(it.origin - item_org);
-			discard = true;
-
-			if (item.health && it.health > this.health) continue;
-			if (item.armorvalue && it.armorvalue > this.armorvalue) continue;
-
-			if (item.weapons && (item.weapons & ~it.weapons)) continue;
-
-			if (item.ammo_shells && it.ammo_shells > this.ammo_shells) continue;
-			if (item.ammo_nails && it.ammo_nails > this.ammo_nails) continue;
-			if (item.ammo_rockets && it.ammo_rockets > this.ammo_rockets) continue;
-			if (item.ammo_cells && it.ammo_cells > this.ammo_cells) continue;
-			if (item.ammo_plasma && it.ammo_plasma > this.ammo_plasma) continue;
-
-			discard = false;
+			if(havocbot_goalrating_item_can_be_left_to_teammate(this, it, item))
+			{
+				friend_distance = vlen(it.origin - item_org);
+				continue;
+			}
 		}
 		else
 		{
@@ -90,7 +93,7 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 
 	// Rate the item only if no one needs it, or if an enemy is closer to it
 	if ((enemy_distance < friend_distance && vdist(item_org - org, <, enemy_distance)) ||
-		(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius) || !discard)
+		(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius))
 		return true;
 	return false;
 };
