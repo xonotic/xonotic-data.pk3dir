@@ -54,6 +54,7 @@ bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player
 	if (item.ammo_rockets && player.ammo_rockets <= this.ammo_rockets) {return true;}
 	if (item.ammo_cells && player.ammo_cells <= this.ammo_cells) {return true;}
 	if (item.ammo_plasma && player.ammo_plasma <= this.ammo_plasma) {return true;}
+	if (item.itemdef.instanceOfPowerup) {return true;}
 
 	return false;
 };
