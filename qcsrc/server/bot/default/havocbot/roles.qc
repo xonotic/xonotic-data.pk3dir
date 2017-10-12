@@ -97,8 +97,10 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 	});
 
 	// Rate the item only if no one needs it, or if an enemy is closer to it
-	if ((enemy_distance < friend_distance && vlen2(item_org - org) < enemy_distance) ||
-		(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ** 2))
+	dist = vlen2(item_org - org);
+	if ((enemy_distance < friend_distance && dist < enemy_distance) ||
+		(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ** 2) ||
+		(dist < friend_distance && dist < 200 ** 2))
 		return true;
 	return false;
 };
