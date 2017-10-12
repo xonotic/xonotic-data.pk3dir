@@ -759,8 +759,14 @@ void havocbot_movetogoal(entity this)
 	}
 	if(!locked_goal)
 	{
-		if(navigation_poptouchedgoals(this) && time > this.bot_strategytime - (IS_MOVABLE(this.goalentity) ? 3 : 2))
-			navigation_goalrating_timeout_force(this);
+		// optimize path finding by anticipating goalrating when bot is near a waypoint;
+		// in this case path finding can start directly from a waypoint instead of
+		// looking for all the reachable waypoints up to a certain distance
+		if(navigation_poptouchedgoals(this) && this.goalcurrent)
+		{
+			if(navigation_goalrating_timeout_can_be_anticipated(this))
+				navigation_goalrating_timeout_force(this);
+		}
 	}
 
 	// if ran out of goals try to use an alternative goal or get a new strategy asap

@@ -35,6 +35,24 @@ bool navigation_goalrating_timeout(entity this)
 	return this.bot_strategytime < time;
 }
 
+bool navigation_goalrating_timeout_can_be_anticipated(entity this)
+{
+	if(time > this.bot_strategytime - (IS_MOVABLE(this.goalentity) ? 3 : 2))
+		return true;
+
+	if (this.goalentity.bot_pickup && time > this.bot_strategytime - 5)
+	{
+		vector gco = (this.goalentity.absmin + this.goalentity.absmax) * 0.5;
+		if(!havocbot_goalrating_item_pickable_check_players(this, this.origin, this.goalentity, gco))
+		{
+			this.ignoregoal = this.goalentity;
+			this.ignoregoaltime = time + autocvar_bot_ai_ignoregoal_timeout;
+			return true;
+		}
+	}
+	return false;
+}
+
 void navigation_dynamicgoal_init(entity this, bool initially_static)
 {
 	this.navigation_dynamicgoal = true;

@@ -71,6 +71,8 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius);
 void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, float sradius);
 
+bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, entity item, vector item_org);
+
 vector havocbot_middlepoint;
 float havocbot_middlepoint_radius;
 vector havocbot_symmetryaxis_equation;
@@ -86,6 +88,7 @@ void navigation_goalrating_start(entity this);
 void navigation_goalrating_timeout_set(entity this);
 void navigation_goalrating_timeout_force(entity this);
 bool navigation_goalrating_timeout(entity this);
+bool navigation_goalrating_timeout_can_be_anticipated(entity this);
 void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
 void navigation_routerating(entity this, entity e, float f, float rangebias);
