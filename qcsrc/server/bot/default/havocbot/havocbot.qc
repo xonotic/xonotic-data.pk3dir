@@ -614,8 +614,8 @@ void havocbot_movetogoal(entity this)
 	if (skill > 6 && !(IS_ONGROUND(this)))
 	{
 		#define ROCKETJUMP_DAMAGE() WEP_CVAR(devastator, damage) * 0.8 \
-			* ((this.strength_finished < time) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
-			* ((this.invincible_finished < time) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
+			* ((this.strength_finished > time) ? autocvar_g_balance_powerup_strength_selfdamage : 1) \
+			* ((this.invincible_finished > time) ? autocvar_g_balance_powerup_invincible_takedamage : 1)
 
 		tracebox(this.origin, this.mins, this.maxs, this.origin + '0 0 -65536', MOVE_NOMONSTERS, this);
 		if(tracebox_hits_trigger_hurt(this.origin, this.mins, this.maxs, trace_endpos ))
