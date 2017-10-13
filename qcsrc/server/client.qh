@@ -87,7 +87,6 @@ CLASS(Client, Object)
     ATTRIB(Client, jointime, float, this.jointime);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
     ATTRIB(Client, version_nagtime, float, this.version_nagtime);
-    ATTRIB(Client, netname_previous, string, this.netname_previous);
     ATTRIB(Client, allowed_timeouts, int, this.allowed_timeouts);
     ATTRIB(Client, active_minigame, entity, this.active_minigame);
     ATTRIB(Client, taunt_soundtime, float, this.taunt_soundtime);
