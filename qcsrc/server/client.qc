@@ -2492,21 +2492,22 @@ void PlayerPreThink (entity this)
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
 		checkSpectatorBlock(this);
-    }
+	}
 
 	zoomstate_set = false;
 
 	// Check for nameless players
 	if (this.netname == "" || this.netname != CS(this).netname_previous)
 	{
+		bool assume_unchanged = (CS(this).netname_previous == "");
 		if (isInvisibleString(this.netname))
 		{
 			this.netname = strzone(sprintf("Player#%d", this.playerid));
+			assume_unchanged = false;
 			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
 		}
-		if (autocvar_sv_eventlog) {
+		if (!assume_unchanged && autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
-        }
 		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
 		CS(this).netname_previous = strzone(this.netname);
 	}
