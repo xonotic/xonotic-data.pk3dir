@@ -1304,7 +1304,6 @@ Called when a client disconnects from the server
 =============
 */
 .entity chatbubbleentity;
-.string netname_previous;
 void ReadyCount();
 void ClientDisconnect(entity this)
 {
@@ -1325,7 +1324,7 @@ void ClientDisconnect(entity this)
 
     MUTATOR_CALLHOOK(ClientDisconnect, this);
 
-	if (this.netname_previous) strunzone(this.netname_previous); // needs to be before the CS entity is removed!
+	if (CS(this).netname_previous) strunzone(CS(this).netname_previous); // needs to be before the CS entity is removed!
 	ClientState_detach(this);
 
 	Portal_ClearAll(this);
@@ -2498,7 +2497,7 @@ void PlayerPreThink (entity this)
 	zoomstate_set = false;
 
 	// Check for nameless players
-	if (this.netname == "" || this.netname != this.netname_previous)
+	if (this.netname == "" || this.netname != CS(this).netname_previous)
 	{
 		if (isInvisibleString(this.netname))
 		{
@@ -2508,8 +2507,8 @@ void PlayerPreThink (entity this)
 		if (autocvar_sv_eventlog) {
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
         }
-		if (this.netname_previous) strunzone(this.netname_previous);
-		this.netname_previous = strzone(this.netname);
+		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
+		CS(this).netname_previous = strzone(this.netname);
 	}
 
 	// version nagging
