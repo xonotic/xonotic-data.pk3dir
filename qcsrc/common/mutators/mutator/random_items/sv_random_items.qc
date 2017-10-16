@@ -250,15 +250,13 @@ string RandomItems_GetRandomMapItemClassName()
 		case RANDOM_ITEM_TYPE_WEAPON:
 		{
 			RandomSelection_Init();
-			FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+			FOREACH(Weapons, it != WEP_Null &&
+				!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
 			{
 				string cvar_name = sprintf("g_random_items_%s_probability",
 					it.m_canonical_spawnfunc);
-				if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-				{
-					continue;
-				}
-				RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
+				RandomSelection_AddString(it.m_canonical_spawnfunc,
+					cvar(cvar_name), 1);
 			});
 			return RandomSelection_chosen_string;
 		}
@@ -462,16 +460,13 @@ string RandomItems_GetRandomLootItemClassName()
 		case RANDOM_ITEM_TYPE_WEAPON:
 		{
 			RandomSelection_Init();
-			FOREACH(Weapons, !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+			FOREACH(Weapons, it != WEP_Null &&
+				!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
 			{
-				string class_name = strcat("weapon_", it.netname);
-				string cvar_name = sprintf(
-					"g_random_loot_%s_probability", class_name);
-				if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
-				{
-					continue;
-				}
-				RandomSelection_AddString(class_name, cvar(cvar_name), 1);
+				string cvar_name = sprintf("g_random_loot_%s_probability",
+					it.m_canonical_spawnfunc);
+				RandomSelection_AddString(it.m_canonical_spawnfunc,
+					cvar(cvar_name), 1);
 			});
 			return RandomSelection_chosen_string;
 		}
