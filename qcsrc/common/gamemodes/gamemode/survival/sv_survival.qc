@@ -2031,7 +2031,7 @@ MUTATOR_HOOKFUNCTION(surv, ItemTouch)
 						ATTEN_NORM);
 					return MUT_ITEMTOUCH_RETURN;
 				}
-				case "item_invincible":
+				case "item_shield":
 				{
 					W_GiveWeapon(player, WEP_RPC.m_id);
 					player.superweapons_finished = max(
