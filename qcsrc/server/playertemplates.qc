@@ -8,6 +8,8 @@
 #include "autocvars.qh"
 #include "resources.qh"
 #include "mutators/events.qh"
+#include <common/mutators/mutator/overkill/hmg.qh>
+#include <common/mutators/mutator/overkill/rpc.qh>
 
 const string playertemplate_cvar_prefix = "g_player_template_";
 
