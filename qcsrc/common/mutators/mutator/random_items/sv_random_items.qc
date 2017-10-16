@@ -137,14 +137,6 @@ string RandomItems_GetItemReplacementClassNames(entity item)
 	{
 		return cvar_string(sprintf("g_random_items_replace_%s", class_name));
 	}
-	if (item.classname == "replacedweapon")
-	{
-		Weapon w = Weapons_from(item.weapon);
-		if (w != WEP_Null)
-		{
-			return cvar_string(sprintf("g_random_items_replace_weapon_%s", w.netname));
-		}
-	}
 	return "";
 }
 
