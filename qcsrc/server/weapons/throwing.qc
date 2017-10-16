@@ -2,6 +2,7 @@
 
 #include "weaponsystem.qh"
 #include "../resources.qh"
+#include "../items.qh"
 #include "../mutators/_mod.qh"
 #include <common/t_items.qh>
 #include "../g_damage.qh"
@@ -41,7 +42,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	int ammotype = info.ammo_type;
 
 	entity wep = new(droppedweapon);
-
+	Item_SetLoot(wep, true);
 	setorigin(wep, org);
 	wep.velocity = velo;
 	wep.owner = wep.enemy = own;
@@ -54,6 +55,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 	if(WepSet_FromWeapon(Weapons_from(wpn)) & WEPSET_SUPERWEAPONS)
 	{
+		Item_SetExpiring(wep, true);
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
 			wep.superweapons_finished = time + autocvar_g_balance_superweapons_time;

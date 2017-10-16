@@ -10,8 +10,6 @@ MUTATOR_HOOKFUNCTION(hmg_nadesupport, Nade_Damage)
 	M_ARGV(3, float) /* damage */ = (M_ARGV(0, entity)).max_health * 0.1;
 }
 
-spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
-
 void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	if (!PHYS_INPUT_BUTTON_ATCK(actor))

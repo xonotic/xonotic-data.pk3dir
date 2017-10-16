@@ -301,6 +301,7 @@ REGISTER_STAT(SLICK_APPLYGRAVITY, bool, autocvar_sv_slick_applygravity)
 
 #ifdef SVQC
 #include "physics/movetypes/movetypes.qh"
+float warmup_limit;
 #endif
 
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)

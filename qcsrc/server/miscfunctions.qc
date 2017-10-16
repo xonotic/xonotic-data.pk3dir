@@ -653,7 +653,7 @@ void readplayerstartcvars()
 			"g_random_start_shells"));
 		SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, cvar(
 			"g_random_start_bullets"));
-		SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, 
+		SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS,
 			cvar("g_random_start_rockets"));
 		SetResourceAmount(random_start_ammo, RESOURCE_CELLS, cvar(
 			"g_random_start_cells"));
