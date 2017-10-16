@@ -512,7 +512,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
+	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_health_mega"))
 		return;
 
 	entity e = spawn();

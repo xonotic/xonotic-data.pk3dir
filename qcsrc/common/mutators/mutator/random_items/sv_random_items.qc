@@ -112,7 +112,7 @@ string RandomItems_GetItemVarName(string class_name)
 		X(item_fuel);
 
 		X(item_strength);
-		case "item_invincible" : return "item_shield";
+		X(item_shield);
 		X(item_fuel_regen);
 		X(item_jetpack);
 
@@ -272,7 +272,7 @@ string RandomItems_GetRandomMapItemClassName()
 					1 \
 				)
 			X("item_strength");
-			X("item_invincible");
+			X("item_shield");
 			X("item_fuel_regen");
 			X("item_jetpack");
 			#undef X
@@ -497,7 +497,7 @@ string RandomItems_GetRandomLootItemClassName()
 					1 \
 				)
 			X("item_strength");
-			X("item_invincible");
+			X("item_shield");
 			X("item_jetpack");
 			X("item_fuel_regen");
 			#undef X
