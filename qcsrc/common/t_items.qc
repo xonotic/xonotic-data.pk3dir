@@ -1343,7 +1343,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	if(def.instanceOfWeaponPickup)
 	{
-		if (this.classname != "droppedweapon") // if dropped, colormap is already set up nicely
+		if (!Item_IsLoot(this)) // if dropped, colormap is already set up nicely
 			this.colormap = 1024; // color shirt=0 pants=0 grey
 		else
 			this.gravity = 1;
@@ -1444,7 +1444,7 @@ void setItemGroupCount()
 
 void target_items_use(entity this, entity actor, entity trigger)
 {
-	if(actor.classname == "droppedweapon")
+	if(Item_IsLoot(actor))
 	{
 		EXACTTRIGGER_TOUCH(this, trigger);
 		delete(actor);
@@ -1459,7 +1459,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 		EXACTTRIGGER_TOUCH(this, trigger);
 	}
 
-	IL_EACH(g_items, it.enemy == actor && it.classname == "droppedweapon",
+	IL_EACH(g_items, it.enemy == actor && Item_IsLoot(it),
 	{
 		delete(it);
 	});

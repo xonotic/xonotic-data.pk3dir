@@ -66,7 +66,7 @@ void powerup_shield_init(entity item)
 }
 #endif
 REGISTER_ITEM(Shield, Powerup) {
-    this.m_canonical_spawnfunc = "item_invincible";
+    this.m_canonical_spawnfunc = "item_shield";
 #ifdef GAMEQC
     this.m_model            =   MDL_Shield_ITEM;
     this.m_sound            =   SND_Shield;
@@ -85,4 +85,5 @@ REGISTER_ITEM(Shield, Powerup) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_shield, ITEM_Shield)
 SPAWNFUNC_ITEM(item_invincible, ITEM_Shield)
