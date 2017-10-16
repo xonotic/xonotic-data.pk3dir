@@ -25,4 +25,4 @@
 #else
 	#define LABEL(id) id:
 #endif
-// *INDENT_ON*
+// *INDENT-ON*
