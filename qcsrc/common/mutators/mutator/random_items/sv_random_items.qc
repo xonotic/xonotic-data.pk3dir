@@ -81,7 +81,7 @@ string RandomItems_GetItemVarName(string class_name)
 {
 	if (startsWith(class_name, "weapon_"))
 	{
-		FOREACH(Weapons, sprintf("weapon_%s", it.netname) == class_name, {
+		FOREACH(Weapons, it.m_canonical_spawnfunc == class_name, {
 			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			{
 				return "";
