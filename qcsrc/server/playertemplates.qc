@@ -464,7 +464,6 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				"pickup_health_medium");
 		}
 		case "item_health_big":
-		case "item_health_large":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_health_big");
@@ -485,7 +484,6 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				"pickup_armor_medium");
 		}
 		case "item_armor_big":
-		case "item_armor_large":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_armor_big");
@@ -536,13 +534,11 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				"pickup_weapon_shotgun");
 		}
 		case "weapon_machinegun":
-		case "weapon_uzi":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_machinegun");
 		}
 		case "weapon_mortar":
-		case "weapon_grenadelauncher":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_mortar");
@@ -558,7 +554,6 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				"pickup_weapon_crylink");
 		}
 		case "weapon_vortex":
-		case "weapon_nex":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_vortex");
@@ -569,7 +564,6 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 				"pickup_weapon_hagar");
 		}
 		case "weapon_devastator":
-		case "weapon_rocketlauncher":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_devastator");
