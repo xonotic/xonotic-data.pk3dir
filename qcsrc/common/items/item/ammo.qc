@@ -4,7 +4,7 @@
 
 METHOD(Bullets, m_spawnfunc_hookreplace, GameItem(Bullets this, entity e))
 {
-	if (autocvar_sv_q3acompat_machineshotgunswap && e.classname != "droppedweapon")
+	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
 	{
 		return ITEM_Shells;
 	}
@@ -13,7 +13,7 @@ METHOD(Bullets, m_spawnfunc_hookreplace, GameItem(Bullets this, entity e))
 
 METHOD(Shells, m_spawnfunc_hookreplace, GameItem(Shells this, entity e))
 {
-	if (autocvar_sv_q3acompat_machineshotgunswap && e.classname != "droppedweapon")
+	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
 	{
 		return ITEM_Bullets;
 	}
