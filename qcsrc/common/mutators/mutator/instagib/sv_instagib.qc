@@ -427,7 +427,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon")
+	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item))
 	{
 		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;
