@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(HLAC, Weapon)
+/* spawnfunc */ ATTRIB(HLAC, m_canonical_spawnfunc, string, "weapon_hlac");
 /* ammotype  */ ATTRIB(HLAC, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
@@ -49,6 +50,4 @@ CLASS(HLAC, Weapon)
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, hlac, NEW(HLAC));
 
-#ifdef SVQC
-spawnfunc(weapon_hlac);
-#endif
+SPAWNFUNC_WEAPON(weapon_hlac, WEP_HLAC)

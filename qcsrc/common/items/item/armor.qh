@@ -32,6 +32,7 @@ void item_armorsmall_init(entity item)
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
+    this.m_canonical_spawnfunc = "item_armor_small";
 #ifdef GAMEQC
     this.m_model                =   MDL_ArmorSmall_ITEM;
     this.m_sound                =   SND_ArmorSmall;
@@ -47,6 +48,8 @@ REGISTER_ITEM(ArmorSmall, Armor) {
     this.m_iteminit             =   item_armorsmall_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_armor_small, ITEM_ArmorSmall)
 
 #ifdef GAMEQC
 MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
@@ -66,6 +69,7 @@ void item_armormedium_init(entity item)
 #endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
+    this.m_canonical_spawnfunc = "item_armor_medium";
 #ifdef GAMEQC
     this.m_model                =   MDL_ArmorMedium_ITEM;
     this.m_sound                =   SND_ArmorMedium;
@@ -81,6 +85,8 @@ REGISTER_ITEM(ArmorMedium, Armor) {
     this.m_iteminit             =   item_armormedium_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_armor_medium, ITEM_ArmorMedium)
 
 #ifdef GAMEQC
 MODEL(ArmorBig_ITEM, Item_Model("item_armor_big.md3"));
@@ -100,6 +106,7 @@ void item_armorbig_init(entity item)
 #endif
 
 REGISTER_ITEM(ArmorBig, Armor) {
+    this.m_canonical_spawnfunc = "item_armor_big";
 #ifdef GAMEQC
     this.m_model                =   MDL_ArmorBig_ITEM;
     this.m_sound                =   SND_ArmorBig;
@@ -117,6 +124,8 @@ REGISTER_ITEM(ArmorBig, Armor) {
     this.m_iteminit             =   item_armorbig_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_armor_big, ITEM_ArmorBig)
 
 #ifdef GAMEQC
 MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
@@ -136,6 +145,7 @@ void item_armormega_init(entity item)
 #endif
 
 REGISTER_ITEM(ArmorMega, Armor) {
+    this.m_canonical_spawnfunc = "item_armor_mega";
 #ifdef GAMEQC
     this.m_model                =   MDL_ArmorMega_ITEM;
     this.m_sound                =   SND_ArmorMega;
@@ -155,3 +165,5 @@ REGISTER_ITEM(ArmorMega, Armor) {
     this.m_iteminit             =   item_armormega_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_armor_mega, ITEM_ArmorMega)

@@ -3,16 +3,15 @@
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 
 #ifdef SVQC
-spawnfunc(weapon_shockwave)
+METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 {
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
 	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(this.classname != "droppedweapon")
+	if(e.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
-		return;
+		return WEP_MACHINEGUN;
 	}
-	weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
+	return this;
 }
 
 const float MAX_SHOCKWAVE_HITS = 10;

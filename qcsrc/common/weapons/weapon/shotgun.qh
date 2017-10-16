@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(Shotgun, Weapon)
+/* spawnfunc */ ATTRIB(Shotgun, m_canonical_spawnfunc, string, "weapon_shotgun");
 /* ammotype  */ ATTRIB(Shotgun, ammo_type, int, RESOURCE_SHELLS);
 /* impulse   */ ATTRIB(Shotgun, impulse, int, 2);
 /* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
@@ -53,6 +54,4 @@ CLASS(Shotgun, Weapon)
 ENDCLASS(Shotgun)
 REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
 
-#ifdef SVQC
-spawnfunc(weapon_shotgun);
-#endif
+SPAWNFUNC_WEAPON(weapon_shotgun, WEP_SHOTGUN)

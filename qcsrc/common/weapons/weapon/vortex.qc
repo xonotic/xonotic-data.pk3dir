@@ -71,8 +71,6 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 #endif
 
 #ifdef SVQC
-spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(this, WEP_VORTEX); }
-spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 
 REGISTER_MUTATOR(vortex_charge, true);
 

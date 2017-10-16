@@ -1,8 +1,6 @@
 #include "blaster.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
-spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
 void W_Blaster_Touch(entity this, entity toucher)
 {

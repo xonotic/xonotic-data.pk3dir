@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(Seeker, Weapon)
+/* spawnfunc */ ATTRIB(Seeker, m_canonical_spawnfunc, string, "weapon_seeker");
 /* ammotype  */ ATTRIB(Seeker, ammo_type, int, RESOURCE_ROCKETS);
 /* impulse   */ ATTRIB(Seeker, impulse, int, 8);
 /* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
@@ -82,10 +83,11 @@ CLASS(Seeker, Weapon)
 ENDCLASS(Seeker)
 REGISTER_WEAPON(SEEKER, seeker, NEW(Seeker));
 
+SPAWNFUNC_WEAPON(weapon_seeker, WEP_SEEKER)
+
 #ifdef SVQC
 .entity tag_target, wps_tag_tracker;
 .float tag_time;
-spawnfunc(weapon_seeker);
 
 IntrusiveList g_seeker_trackers;
 STATIC_INIT(g_seeker_trackers) { g_seeker_trackers = IL_NEW(); }

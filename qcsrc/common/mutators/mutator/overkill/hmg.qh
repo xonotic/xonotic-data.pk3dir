@@ -1,6 +1,9 @@
 #pragma once
 
+#include <common/weapons/all.qh>
+
 CLASS(HeavyMachineGun, Weapon)
+/* spawnfunc */ ATTRIB(HeavyMachineGun, m_canonical_spawnfunc, string, "weapon_hmg");
 /* ammotype  */ ATTRIB(HeavyMachineGun, ammo_type, int, RESOURCE_BULLETS);
 /* impulse   */ ATTRIB(HeavyMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(HeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON);
@@ -54,6 +57,4 @@ CLASS(HeavyMachineGun, Weapon)
 ENDCLASS(HeavyMachineGun)
 REGISTER_WEAPON(HMG, hmg, NEW(HeavyMachineGun));
 
-#ifdef SVQC
-spawnfunc(weapon_hmg);
-#endif
+SPAWNFUNC_WEAPON(weapon_hmg, WEP_HMG)

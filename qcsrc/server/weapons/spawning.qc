@@ -26,6 +26,8 @@ string W_Apply_Weaponreplace(string in)
 void weapon_defaultspawnfunc(entity this, Weapon e)
 {
 	Weapon wpn = e;
+	e = wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
+	this.classname = wpn.m_canonical_spawnfunc;
 	if (this.classname != "droppedweapon" && this.classname != "replacedweapon")
 	{
 		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
