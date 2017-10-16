@@ -41,7 +41,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	Weapon info = Weapons_from(wpn);
 	int ammotype = info.ammo_type;
 
-	entity wep = new(droppedweapon);
+	entity wep = spawn();
 	Item_SetLoot(wep, true);
 	setorigin(wep, org);
 	wep.velocity = velo;
