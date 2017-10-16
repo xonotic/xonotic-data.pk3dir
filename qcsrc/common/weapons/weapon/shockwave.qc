@@ -6,8 +6,7 @@ REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 {
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(e.classname != "droppedweapon")
+	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
 	{
 		return WEP_MACHINEGUN;
 	}
