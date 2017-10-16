@@ -11,13 +11,18 @@ bool autocvar_g_overkill_itemwaypoints = true;
 
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
-void ok_Initialize();
-
 REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
 {
 	MUTATOR_ONADD
 	{
-		ok_Initialize();
+		precache_all_playermodels("models/ok_player/*.dpm");
+
+		WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+
+		WEP_SHOTGUN.mdl = "ok_shotgun";
+		WEP_MACHINEGUN.mdl = "ok_mg";
+		WEP_VORTEX.mdl = "ok_sniper";
 	}
 
 	MUTATOR_ONREMOVE
@@ -28,8 +33,6 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") &
 }
 
 void W_Blaster_Attack(entity, .entity, float, float, float, float, float, float, float, float, float, float);
-spawnfunc(weapon_hmg);
-spawnfunc(weapon_rpc);
 
 MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 {
@@ -286,16 +289,4 @@ MUTATOR_HOOKFUNCTION(ok, SetModname)
 {
 	M_ARGV(0, string) = "Overkill";
 	return true;
-}
-
-void ok_Initialize()
-{
-	precache_all_playermodels("models/ok_player/*.dpm");
-
-	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-	WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-
-	WEP_SHOTGUN.mdl = "ok_shotgun";
-	WEP_MACHINEGUN.mdl = "ok_mg";
-	WEP_VORTEX.mdl = "ok_sniper";
 }

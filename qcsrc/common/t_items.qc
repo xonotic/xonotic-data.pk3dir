@@ -905,11 +905,7 @@ void Item_Touch(entity this, entity toucher)
 
 	toucher = M_ARGV(1, entity);
 
-	// TODO: Proper way to handle expiring and not expiring loot.
-	// Expiring loot will have strength "ticking" will it's dropped.
-	// Not expiring will not tick.
-	// OTOH, do we really need expiring loot?
-	if (this.classname == "droppedweapon")
+	if (Item_IsExpiring(this))
 	{
 		this.strength_finished = max(0, this.strength_finished - time);
 		this.invincible_finished = max(0, this.invincible_finished - time);
@@ -918,7 +914,7 @@ void Item_Touch(entity this, entity toucher)
 	bool gave = ITEM_HANDLE(Pickup, this.itemdef, this, toucher);
 	if (!gave)
 	{
-		if (Item_IsLoot(this))
+		if (Item_IsExpiring(this))
 		{
 			// undo what we did above
 			this.strength_finished += time;
@@ -934,7 +930,7 @@ LABEL(pickup)
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
-	
+
 	MUTATOR_CALLHOOK(ItemTouched, this, toucher);
 	if (wasfreed(this))
 	{
@@ -1232,11 +1228,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
 
-		// TODO: Proper way to handle expiring and not expiring loot.
-		// Expiring loot will have strength "ticking" will it's dropped.
-		// Not expiring will not tick.
-		// OTOH, do we really need expiring loot?
-		if (this.strength_finished || this.invincible_finished || this.superweapons_finished)
+		if (Item_IsExpiring(this))
 		{
 			// if item is worthless after a timer, have it expire then
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
@@ -1387,6 +1379,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 void StartItem(entity this, GameItem def)
 {
+    def = def.m_spawnfunc_hookreplace(def, this);
+    if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+    {
+        delete(this);
+        return;
+    }
+    this.classname = def.m_canonical_spawnfunc;
     _StartItem(
     	this,
     	this.itemdef = def,
@@ -1442,8 +1441,6 @@ void setItemGroupCount()
 			IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { it.item_group_count = count; });
 	}
 }
-
-// support old misnamed entities
 
 void target_items_use(entity this, entity actor, entity trigger)
 {

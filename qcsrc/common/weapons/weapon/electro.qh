@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(Electro, Weapon)
+/* spawnfunc */ ATTRIB(Electro, m_canonical_spawnfunc, string, "weapon_electro");
 /* ammotype  */ ATTRIB(Electro, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(Electro, impulse, int, 5);
 /* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
@@ -66,10 +67,10 @@ CLASS(Electro, Weapon)
 ENDCLASS(Electro)
 REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
 
+SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 
 #ifdef SVQC
 .float electro_count;
 .float electro_secondarytime;
-spawnfunc(weapon_electro);
 void W_Electro_ExplodeCombo(entity this);
 #endif
