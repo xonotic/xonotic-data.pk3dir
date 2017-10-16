@@ -608,6 +608,7 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint)
 			cost = it.wpcost;
 			p = it.wpnearestpoint;
 			entity wp;
+			// *INDENT-OFF*
 			wp = it.wp00;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp00mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
 			wp = it.wp01;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp01mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
 			wp = it.wp02;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp02mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
@@ -641,6 +642,7 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint)
 			wp = it.wp30;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp30mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
 			wp = it.wp31;if (wp){cost2 = cost + wp.dmg;if (wp.wpcost > cost2 + it.wp31mincost) navigation_markroutes_checkwaypoint(it, wp, cost2, p);
 			}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+			// *INDENT-ON*
 		});
 	}
 }
