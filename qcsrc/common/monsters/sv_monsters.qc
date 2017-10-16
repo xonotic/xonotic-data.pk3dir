@@ -35,7 +35,8 @@ void monster_dropitem(entity this, entity attacker)
 		return;
 
 	vector org = CENTER_OR_VIEWOFS(this);
-	entity e = new(droppedweapon); // use weapon handling to remove it on touch
+	entity e = spawn();
+	Item_SetLoot(e, true);
 	e.spawnfunc_checked = true;
 
 	e.monster_loot = this.monster_loot;
@@ -48,8 +49,6 @@ void monster_dropitem(entity this, entity attacker)
 		e.noalign = true;
 		StartItem(e, e.monster_loot);
 		e.gravity = 1;
-		set_movetype(e, MOVETYPE_TOSS);
-		e.reset = SUB_Remove;
 		setorigin(e, org);
 		e.velocity = randomvec() * 175 + '0 0 325';
 		e.item_spawnshieldtime = time + 0.7;
