@@ -221,7 +221,7 @@ string RandomItems_GetRandomMapItemClassName()
 			{
 				RandomSelection_AddString(it.m_canonical_spawnfunc,
 					cvar(sprintf("g_random_items_%s_probability",
-					RandomItems_GetItemVarName(it.m_canonical_spawnfunc))), 1);
+					it.m_canonical_spawnfunc)), 1);
 			});
 			return RandomSelection_chosen_string;
 		}
@@ -232,7 +232,7 @@ string RandomItems_GetRandomMapItemClassName()
 			{
 				RandomSelection_AddString(it.m_canonical_spawnfunc,
 					cvar(sprintf("g_random_items_%s_probability",
-					RandomItems_GetItemVarName(it.m_canonical_spawnfunc))), 1);
+					it.m_canonical_spawnfunc)), 1);
 			});
 			return RandomSelection_chosen_string;
 		}
@@ -243,7 +243,7 @@ string RandomItems_GetRandomMapItemClassName()
 			{
 				RandomSelection_AddString(it.m_canonical_spawnfunc,
 					cvar(sprintf("g_random_items_%s_probability",
-					RandomItems_GetItemVarName(it.m_canonical_spawnfunc))), 1);
+					it.m_canonical_spawnfunc)), 1);
 			});
 			return RandomSelection_chosen_string;
 		}
@@ -268,7 +268,7 @@ string RandomItems_GetRandomMapItemClassName()
 			#define X(classname) \
 				RandomSelection_AddString( \
 					classname, \
-					cvar(sprintf("g_random_items_%s_probability", RandomItems_GetItemVarName(classname))), \
+					cvar(sprintf("g_random_items_%s_probability", classname)), \
 					1 \
 				)
 			X("item_strength");
@@ -429,46 +429,34 @@ string RandomItems_GetRandomLootItemClassName()
 		case RANDOM_ITEM_TYPE_HEALTH:
 		{
 			RandomSelection_Init();
-			#define X(classname) \
-				RandomSelection_AddString( \
-					classname, \
-					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
-					1 \
-				)
-			FOREACH(Items, it.instanceOfHealth, {
-				X(sprintf("item_%s", it.netname));
+			FOREACH(Items, it.instanceOfHealth,
+			{
+				RandomSelection_AddString(it.m_canonical_spawnfunc,
+					cvar(sprintf("g_random_loot_%s_probability",
+					it.m_canonical_spawnfunc)), 1);
 			});
-			#undef X
 			return RandomSelection_chosen_string;
 		}
 		case RANDOM_ITEM_TYPE_ARMOR:
 		{
 			RandomSelection_Init();
-			#define X(classname) \
-				RandomSelection_AddString( \
-					classname, \
-					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
-					1 \
-				)
-			FOREACH(Items, it.instanceOfArmor, {
-				X(sprintf("item_%s", it.netname));
+			FOREACH(Items, it.instanceOfArmor,
+			{
+				RandomSelection_AddString(it.m_canonical_spawnfunc,
+					cvar(sprintf("g_random_loot_%s_probability",
+					it.m_canonical_spawnfunc)), 1);
 			});
-			#undef X
 			return RandomSelection_chosen_string;
 		}
 		case RANDOM_ITEM_TYPE_RESOURCE:
 		{
 			RandomSelection_Init();
-			#define X(classname) \
-				RandomSelection_AddString( \
-					classname, \
-					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
-					1 \
-				)
-			FOREACH(Items, it.instanceOfAmmo, {
-				X(sprintf("item_%s", it.netname));
+			FOREACH(Items, it.instanceOfAmmo,
+			{
+				RandomSelection_AddString(it.m_canonical_spawnfunc,
+					cvar(sprintf("g_random_loot_%s_probability",
+					it.m_canonical_spawnfunc)), 1);
 			});
-			#undef X
 			return RandomSelection_chosen_string;
 		}
 		case RANDOM_ITEM_TYPE_WEAPON:
@@ -493,7 +481,7 @@ string RandomItems_GetRandomLootItemClassName()
 			#define X(classname) \
 				RandomSelection_AddString( \
 					classname, \
-					cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
+					cvar(sprintf("g_random_loot_%s_probability", classname)), \
 					1 \
 				)
 			X("item_strength");
