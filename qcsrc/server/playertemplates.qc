@@ -635,44 +635,12 @@ float PlayerTemplateHook_ItemTouch(entity player, entity item, string template)
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_weapon_rpc");
 		}
-		case "replacedweapon":
-		{
-			switch (item.weapon)
-			{
-				case WEP_MINE_LAYER.m_id:
-				{
-					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_minelayer");
-				}
-				case WEP_HLAC.m_id:
-				{
-					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_hlac");
-				}
-				case WEP_RIFLE.m_id:
-				{
-					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_rifle");
-				}
-				case WEP_SEEKER.m_id:
-				{
-					return PlayerTemplate_GivePlayerItem(player, template,
-						"pickup_weapon_seeker");
-				}
-				default:
-				{
-					PrintToChatAll(strcat("Unrecognized item, classname: ",
-						item.classname, " netname: ", item.netname));
-					return MUT_ITEMTOUCH_CONTINUE;
-				}
-			}
-		}
 		case "item_strength":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_item_strength");
 		}
-		case "item_invincible":
+		case "item_shield":
 		{
 			return PlayerTemplate_GivePlayerItem(player, template,
 				"pickup_item_shield");
