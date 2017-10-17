@@ -21,10 +21,10 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
 
-void DrawAmmoItem(vector myPos, vector mySize, .int ammoType, bool isCurrent, bool isInfinite)
+void DrawAmmoItem(vector myPos, vector mySize, int ammoType, bool isCurrent, bool isInfinite)
 {
     TC(bool, isCurrent); TC(bool, isInfinite);
-	if(ammoType == ammo_none)
+	if(ammoType == RESOURCE_NONE)
 		return;
 
 	// Initialize variables
@@ -32,7 +32,7 @@ void DrawAmmoItem(vector myPos, vector mySize, .int ammoType, bool isCurrent, bo
 	int ammo;
 	if(autocvar__hud_configure)
 	{
-		isCurrent = (ammoType == ammo_rockets); // Rockets always current
+		isCurrent = (ammoType == RESOURCE_ROCKETS); // Rockets always current
 		ammo = 60;
 	}
 	else
@@ -184,14 +184,14 @@ void HUD_Ammo()
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, ammo_rockets, true, false);
+			DrawAmmoItem(pos, ammo_size, RESOURCE_ROCKETS, true, false);
 		}
 		else
 		{
 			DrawAmmoItem(
 				pos,
 				ammo_size,
-				wep.ammo_field,
+				wep.ammo_type,
 				true,
 				infinite_ammo
 			);
@@ -206,16 +206,16 @@ void HUD_Ammo()
 	}
 	else
 	{
-		.int ammotype;
+		int ammotype;
 		row = column = 0;
 		for(i = 0; i < AMMO_COUNT; ++i)
 		{
-			ammotype = GetAmmoFieldFromNum(i);
+			ammotype = GetAmmoTypeFromNum(i);
 			DrawAmmoItem(
 				pos + vec2(column * (ammo_size.x + offset.x), row * (ammo_size.y + offset.y)),
 				ammo_size,
 				ammotype,
-				(wep.ammo_field == ammotype),
+				(wep.ammo_type == ammotype),
 				infinite_ammo
 			);
 

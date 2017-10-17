@@ -270,7 +270,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 	else if(autocvar_g_balance_hagar_reload_ammo)
 		enough_ammo = actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
-		enough_ammo = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hagar, ammo);
+		enough_ammo = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
 
 	bool stopped = loaded || !enough_ammo;
 
@@ -448,13 +448,13 @@ METHOD(Hagar, wr_setup, void(entity thiswep, entity actor, .entity weaponentity)
 }
 METHOD(Hagar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(hagar, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hagar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
     return ammo_amount;
 }
 METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hagar, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
     return ammo_amount;
 }

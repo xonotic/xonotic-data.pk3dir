@@ -241,7 +241,8 @@ void make_safe_for_remove(entity this);
 	void SV_OnEntityPreSpawnFunction()
 	{
 		ENGINE_EVENT();
-		if (_SV_OnEntityPreSpawnFunction) _SV_OnEntityPreSpawnFunction(this);
+		__spawnfunc_expecting = true;
+		__spawnfunc_expect = this;
 	}
 	#define SV_OnEntityPreSpawnFunction _SV_OnEntityPreSpawnFunction
 

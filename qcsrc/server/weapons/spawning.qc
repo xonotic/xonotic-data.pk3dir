@@ -1,6 +1,7 @@
 #include "spawning.qh"
 
 #include "weaponsystem.qh"
+#include "../resources.qh"
 #include "../mutators/_mod.qh"
 #include <common/t_items.qh>
 #include <common/weapons/_all.qh>
@@ -101,16 +102,16 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	if (!this.(wpn.ammo_field))
+	if ((wpn.ammo_type != RESOURCE_NONE) && !GetResourceAmount(this, wpn.ammo_type))
 	{
-		switch (wpn.ammo_field)
+		switch (wpn.ammo_type)
 		{
-			case ammo_shells:  this.ammo_shells  = cvar("g_pickup_shells_weapon");  break;
-			case ammo_nails:   this.ammo_nails   = cvar("g_pickup_nails_weapon");   break;
-			case ammo_rockets: this.ammo_rockets = cvar("g_pickup_rockets_weapon"); break;
-			case ammo_cells:   this.ammo_cells   = cvar("g_pickup_cells_weapon");   break;
-			case ammo_plasma:  this.ammo_plasma  = cvar("g_pickup_plasma_weapon");  break;
-			case ammo_fuel:    this.ammo_fuel    = cvar("g_pickup_fuel_weapon");    break;
+			case RESOURCE_SHELLS:  SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_shells_weapon"));  break;
+			case RESOURCE_BULLETS: SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_nails_weapon"));   break;
+			case RESOURCE_ROCKETS: SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_rockets_weapon")); break;
+			case RESOURCE_CELLS:   SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_cells_weapon"));   break;
+			case RESOURCE_PLASMA:  SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_plasma_weapon"));  break;
+			case RESOURCE_FUEL:    SetResourceAmount(this, wpn.ammo_type, cvar("g_pickup_fuel_weapon"));    break;
 		}
 	}
 
