@@ -83,7 +83,7 @@ METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity wea
 
 METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.ammo_nails >= WEP_CVAR(hmg, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(hmg, ammo);
 
     if(autocvar_g_balance_hmg_reload_ammo)
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
@@ -93,7 +93,7 @@ METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entit
 
 METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.ammo_nails >= WEP_CVAR(hmg, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(hmg, ammo);
 
     if(autocvar_g_balance_hmg_reload_ammo)
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);

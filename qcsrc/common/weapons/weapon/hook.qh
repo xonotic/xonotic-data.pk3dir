@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(Hook, Weapon)
-/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel);
+/* ammotype  */ ATTRIB(Hook, ammo_type, int, RESOURCE_FUEL);
 /* impulse   */ ATTRIB(Hook, impulse, int, 0);
 /* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
