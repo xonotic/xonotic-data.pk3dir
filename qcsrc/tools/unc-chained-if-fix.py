@@ -9,9 +9,10 @@ CHAINED_IF_REGEX = regex.compile(r"""
 (?<indent>
     [\t ]*
 )
-if[\t ]*\(                          # the first condition
-    (?<cond>
-        (?<expr1>
+if(?<ws>[\t ]*)                     # the first if
+\(
+    (?<cond>                        # the condition itself
+        (?<expr1>                   # various parts of the condition, not exactly an expression but anything separated by parens
             [^()\n]*
         |
             [^()\n]*\(
@@ -19,12 +20,16 @@ if[\t ]*\(                          # the first condition
             \)[^()\n]*
         )+
     )
-\)[\t ]*
-(?://.*|/\*.*\*/)?                  # comments
+\)
+(?<comm>                            # trailing comments
+    [\t ]*
+    (?://.*|/\*.*\*/)?
+)
 \n
-(?:                                 # all subsequent conditions with the same indentation
+(?:                                 # all subsequent ifs with the same indentation
     \1
-    if[\t ]*\(
+    if[\t ]*
+    \(
         (?<conds>
             (?<expr2>
                 [^()\n]*
@@ -34,8 +39,11 @@ if[\t ]*\(                          # the first condition
                 \)[^()\n]*
             )+
         )
-    \)[\t ]*
-    (?://.*|/\*.*\*/)?
+    \)
+    (?<comms>
+        [\t ]*
+        (?://.*|/\*.*\*/)?
+    )
     \n
 )+
 """, regex.VERBOSE)
@@ -58,19 +66,57 @@ for file_name in all_files:
             global total
             total += 1
 
+            indent = match.group('indent')
+            whitespace = match.group('ws')
+            first_cond = match.group('cond')
+            first_comment = match.group('comm')
+
+            other_conds = match.captures('conds')
+            other_comments = match.captures('comms')
+            assert len(middle_conds) == len(middle_comments)
+
+            middle_conds = other_conds[0:-1]
+            middle_comments = other_comments[0:-1]
+
+            last_cond = other_conds[-1]
+            last_comment = other_comments[-1]
+
+            #logical_ops = '||' in match.group(0) or '^' in match.group(0)
+
             print("whole match:")
             print(match.group(0))
             print("lines:", len(match.group(0).split('\n')))
-            print("captures 1:", match.captures('indent'))
-            print("captures 2:", match.captures('cond'))
-            print("captures 3:", match.captures('conds'))
-            if '||' in match.group(0) or '^' in match.group(0):
-                print("WARNING - logical ops")
+            print("indent:", indent)
+            print("first cond:", first_cond)
+            print("first comm:", first_comment)
+            print("other conds:", other_conds)
+            print("other comms:", other_comments)
+            #print("captures expr1:", match.captures('expr1'))
+            #print("captures expr2:", match.captures('expr2'))
+            #if logical_ops:  # TODO per cond
+            #    print("WARNING - logical ops")
 
             print()
             print()
 
-            return str(match.group(0))
+            def fix_logical_ops(cond):
+                if '||' in cond or '^' in cond:
+                    return '(' + cond + ')'
+                else:
+                    return cond
+
+            replacement = "\n{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(first_cond), first_comment)
+            for cond, comm in zip(middle_conds, middle_comments):
+                replacement += "{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(cond), comm)
+            replacement += "{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(last_cond), last_comment)
+
+            #replacement = "\n{}if{}({}{}\n".format(indent, whitespace, fix_logical_ops(first_cond), first_comment)
+            #for cond, comm in zip(middle_conds, middle_comments):
+            #    replacement += "{}\t&& {}{}\n".format(indent, fix_logical_ops(cond), comm)
+            #replacement += "{}\t&& {}){}\n".format(indent, fix_logical_ops(last_cond), last_comment)
+
+            #return str(match.group(0))
+            return replacement
 
         old_code = f.read()
         new_code = CHAINED_IF_REGEX.sub(repl, old_code)
