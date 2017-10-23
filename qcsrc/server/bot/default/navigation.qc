@@ -849,6 +849,20 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			best = it;
 		}
 	});
+	if(!best && !ent.navigation_dynamicgoal)
+	{
+		int solid_save = ent.solid;
+		ent.solid = SOLID_BSP;
+		IL_EACH(g_jumppads, true,
+		{
+			if(trigger_push_test(it, ent))
+			{
+				best = it.nearestwaypoint;
+				break;
+			}
+		});
+		ent.solid = solid_save;
+	}
 	return best;
 }
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp)

@@ -1,5 +1,8 @@
 #pragma once
 
+IntrusiveList g_jumppads;
+STATIC_INIT(g_jumppads) { g_jumppads = IL_NEW(); }
+
 const float PUSH_ONCE		= 1;
 const float PUSH_SILENT		= 2;
 
@@ -14,6 +17,7 @@ const int NUM_JUMPPADSUSED = 3;
 #ifdef SVQC
 void SUB_UseTargets(entity this, entity actor, entity trigger);
 void trigger_push_use(entity this, entity actor, entity trigger);
+bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vector org);
 #endif
 
 /*
@@ -32,6 +36,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
 void trigger_push_touch(entity this, entity toucher);
 
 .vector dest;
+bool trigger_push_test(entity this, entity item);
 void trigger_push_findtarget(entity this);
 
 /*

@@ -212,7 +212,7 @@ bool jumppad_push(entity this, entity targ)
 				animdecide_setaction(targ, ANIMACTION_JUMP, true);
 		}
 		else
-			targ.jumppadcount = true;
+			targ.jumppadcount = 1;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		targ.pushltime = 0;
@@ -302,7 +302,10 @@ bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vecto
 	return true;
 }
 #endif
-void trigger_push_findtarget(entity this)
+
+/// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
+/// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
+bool trigger_push_test(entity this, entity item)
 {
 	// first calculate a typical start point for the jump
 	vector org = (this.absmin + this.absmax) * 0.5;
@@ -325,6 +328,16 @@ void trigger_push_findtarget(entity this)
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
+
+			if(item)
+			{
+				setorigin(e, org);
+				tracetoss(e, e);
+				bool r = (trace_ent == item);
+				delete(e);
+				return r;
+			}
+
 			vel = e.velocity;
 			vector best_target = '0 0 0';
 			vector best_org = '0 0 0';
@@ -389,13 +402,16 @@ void trigger_push_findtarget(entity this)
 #endif
 		}
 
+		if(item)
+			return false;
+
 		if(!n)
 		{
 			// no dest!
 #ifdef SVQC
 			objerror (this, "Jumppad with nonexistant target");
 #endif
-			return;
+			return false;
 		}
 		else if(n == 1)
 		{
@@ -417,6 +433,12 @@ void trigger_push_findtarget(entity this)
 		setorigin(e, org);
 		e.velocity = this.movedir;
 		tracetoss(e, e);
+		if(item)
+		{
+			bool r = (trace_ent == item);
+			delete(e);
+			return r;
+		}
 		if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
 			waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
 		delete(e);
@@ -424,6 +446,12 @@ void trigger_push_findtarget(entity this)
 
 	defer(this, 0.1, trigger_push_updatelink);
 #endif
+	return true;
+}
+
+void trigger_push_findtarget(entity this)
+{
+	trigger_push_test(this, NULL);
 }
 
 #ifdef SVQC
@@ -487,6 +515,8 @@ spawnfunc(trigger_push)
 	precache_sound (this.noise);
 
 	trigger_push_link(this); // link it now
+
+	IL_PUSH(g_jumppads, this);
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
