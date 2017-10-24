@@ -1,4 +1,5 @@
 #include "sv_random_items.qh"
+
 /// \file
 /// \brief Source file that contains implementation of the random items mutator.
 /// \author Lyberta
@@ -16,8 +17,6 @@ enum
 };
 
 //======================= Global variables ====================================
-
-bool autocvar_g_random_items; ///< Whether to enable random items.
 
 // Replace cvars
 
