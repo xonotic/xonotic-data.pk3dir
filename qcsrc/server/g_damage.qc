@@ -379,15 +379,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			}
 			#undef SPREE_ITEM
 
-			if(!checkrules_firstblood)
+			if(!warmup_stage && !checkrules_firstblood)
 			{
 				checkrules_firstblood = true;
 				notif_firstblood = true; // modify the current messages so that they too show firstblood information
-				if (!warmup_stage)
-				{
-					PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
-					PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
-				}
+				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+				PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
