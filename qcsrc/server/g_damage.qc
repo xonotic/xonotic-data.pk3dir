@@ -183,49 +183,25 @@ void Obituary_SpecialDeath(
 	if(g_cts && deathtype == DEATH_KILL.m_id)
 		return; // TODO: somehow put this in CTS gamemode file!
 
-	if(murder)
+	Notification death_message = (murder) ? deathent.death_msgmurder : deathent.death_msgself;
+	if(death_message)
 	{
-		if(deathent.death_msgmurder)
-		{
-			Send_Notification_WOCOVA(
-				NOTIF_ONE,
-				notif_target,
-				MSG_MULTI,
-				deathent.death_msgmurder,
-				s1, s2, s3, "",
-				f1, f2, f3, 0
-			);
-			Send_Notification_WOCOVA(
-				NOTIF_ALL_EXCEPT,
-				notif_target,
-				MSG_INFO,
-				deathent.death_msgmurder.nent_msginfo,
-				s1, s2, s3, "",
-				f1, f2, f3, 0
-			);
-		}
-	}
-	else
-	{
-		if(deathent.death_msgself)
-		{
-			Send_Notification_WOCOVA(
-				NOTIF_ONE,
-				notif_target,
-				MSG_MULTI,
-				deathent.death_msgself,
-				s1, s2, s3, "",
-				f1, f2, f3, 0
-			);
-			Send_Notification_WOCOVA(
-				NOTIF_ALL_EXCEPT,
-				notif_target,
-				MSG_INFO,
-				deathent.death_msgself.nent_msginfo,
-				s1, s2, s3, "",
-				f1, f2, f3, 0
-			);
-		}
+		Send_Notification_WOCOVA(
+			NOTIF_ONE,
+			notif_target,
+			MSG_MULTI,
+			death_message,
+			s1, s2, s3, "",
+			f1, f2, f3, 0
+		);
+		Send_Notification_WOCOVA(
+			NOTIF_ALL_EXCEPT,
+			notif_target,
+			MSG_INFO,
+			death_message.nent_msginfo,
+			s1, s2, s3, "",
+			f1, f2, f3, 0
+		);
 	}
 }
 
