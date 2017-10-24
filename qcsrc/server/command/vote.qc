@@ -430,7 +430,8 @@ void ReadyRestart_force()
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.alivetime = 0;
 		CS(it).killcount = 0;
-		PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, 0));
+		float val = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, -val);
 	});
 
 	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
