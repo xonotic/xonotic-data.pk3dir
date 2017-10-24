@@ -54,7 +54,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	{
 		// regular frag
 		GameRules_scoring_add(attacker, KILLS, 1);
-		if(targ.playerid)
+		if(!warmup_stage && targ.playerid)
 			PlayerStats_GameReport_Event_Player(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
@@ -360,11 +360,16 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			attacker.killsound += 1;
 
+			// TODO: improve SPREE_ITEM and KILL_SPREE_LIST
+			// these 2 macros are spread over multiple files
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \
 					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
-					PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
+					if (!warmup_stage)\
+					{\
+						PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
+					}\
 					break; \
 				}
 			switch(CS(attacker).killcount)
@@ -378,8 +383,11 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			{
 				checkrules_firstblood = true;
 				notif_firstblood = true; // modify the current messages so that they too show firstblood information
-				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
-				PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
+				if (!warmup_stage)
+				{
+					PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+					PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
+				}
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
@@ -494,7 +502,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		if(GameRules_scoring_add(targ, SCORE, 0) == -5)
 		{
 			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
-			PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
+			if (!warmup_stage)
+			{
+				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
+			}
 		}
 	}
 
