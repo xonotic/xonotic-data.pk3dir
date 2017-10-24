@@ -167,60 +167,66 @@ void Obituary_SpecialDeath(
 	string s1, string s2, string s3,
 	float f1, float f2, float f3)
 {
-	if(DEATH_ISSPECIAL(deathtype))
+	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = Deathtypes_from(deathtype - DT_FIRST);
-		if (!deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
+		backtrace("Obituary_SpecialDeath called without a special deathtype?\n");
+		return;
+	}
 
-		if(g_cts && deathtype == DEATH_KILL.m_id)
-			return; // TODO: somehow put this in CTS gamemode file!
+	entity deathent = Deathtypes_from(deathtype - DT_FIRST);
+	if (!deathent)
+	{
+		backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n");
+		return;
+	}
 
-		if(murder)
+	if(g_cts && deathtype == DEATH_KILL.m_id)
+		return; // TODO: somehow put this in CTS gamemode file!
+
+	if(murder)
+	{
+		if(deathent.death_msgmurder)
 		{
-			if(deathent.death_msgmurder)
-			{
-				Send_Notification_WOCOVA(
-					NOTIF_ONE,
-					notif_target,
-					MSG_MULTI,
-					deathent.death_msgmurder,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-				Send_Notification_WOCOVA(
-					NOTIF_ALL_EXCEPT,
-					notif_target,
-					MSG_INFO,
-					deathent.death_msgmurder.nent_msginfo,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-			}
-		}
-		else
-		{
-			if(deathent.death_msgself)
-			{
-				Send_Notification_WOCOVA(
-					NOTIF_ONE,
-					notif_target,
-					MSG_MULTI,
-					deathent.death_msgself,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-				Send_Notification_WOCOVA(
-					NOTIF_ALL_EXCEPT,
-					notif_target,
-					MSG_INFO,
-					deathent.death_msgself.nent_msginfo,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-			}
+			Send_Notification_WOCOVA(
+				NOTIF_ONE,
+				notif_target,
+				MSG_MULTI,
+				deathent.death_msgmurder,
+				s1, s2, s3, "",
+				f1, f2, f3, 0
+			);
+			Send_Notification_WOCOVA(
+				NOTIF_ALL_EXCEPT,
+				notif_target,
+				MSG_INFO,
+				deathent.death_msgmurder.nent_msginfo,
+				s1, s2, s3, "",
+				f1, f2, f3, 0
+			);
 		}
 	}
-	else { backtrace("Obituary_SpecialDeath called without a special deathtype?\n"); return; }
+	else
+	{
+		if(deathent.death_msgself)
+		{
+			Send_Notification_WOCOVA(
+				NOTIF_ONE,
+				notif_target,
+				MSG_MULTI,
+				deathent.death_msgself,
+				s1, s2, s3, "",
+				f1, f2, f3, 0
+			);
+			Send_Notification_WOCOVA(
+				NOTIF_ALL_EXCEPT,
+				notif_target,
+				MSG_INFO,
+				deathent.death_msgself.nent_msginfo,
+				s1, s2, s3, "",
+				f1, f2, f3, 0
+			);
+		}
+	}
 }
 
 float Obituary_WeaponDeath(
@@ -231,44 +237,43 @@ float Obituary_WeaponDeath(
 	float f1, float f2)
 {
 	Weapon death_weapon = DEATH_WEAPONOF(deathtype);
-	if (death_weapon != WEP_Null)
+	if (death_weapon == WEP_Null)
+		return false;
+
+	w_deathtype = deathtype;
+	Notification death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
+	w_deathtype = false;
+
+	if (death_message)
 	{
-		w_deathtype = deathtype;
-		Notification death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
-		w_deathtype = false;
-
-		if (death_message)
-		{
-			Send_Notification_WOCOVA(
-				NOTIF_ONE,
-				notif_target,
-				MSG_MULTI,
-				death_message,
-				s1, s2, s3, "",
-				f1, f2, 0, 0
-			);
-			// send the info part to everyone
-			Send_Notification_WOCOVA(
-				NOTIF_ALL_EXCEPT,
-				notif_target,
-				MSG_INFO,
-				death_message.nent_msginfo,
-				s1, s2, s3, "",
-				f1, f2, 0, 0
-			);
-		}
-		else
-		{
-			LOG_TRACEF(
-				"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
-				deathtype,
-				death_weapon
-			);
-		}
-
-		return true;
+		Send_Notification_WOCOVA(
+			NOTIF_ONE,
+			notif_target,
+			MSG_MULTI,
+			death_message,
+			s1, s2, s3, "",
+			f1, f2, 0, 0
+		);
+		// send the info part to everyone
+		Send_Notification_WOCOVA(
+			NOTIF_ALL_EXCEPT,
+			notif_target,
+			MSG_INFO,
+			death_message.nent_msginfo,
+			s1, s2, s3, "",
+			f1, f2, 0, 0
+		);
 	}
-	return false;
+	else
+	{
+		LOG_TRACEF(
+			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
+			deathtype,
+			death_weapon
+		);
+	}
+
+	return true;
 }
 
 bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target)
