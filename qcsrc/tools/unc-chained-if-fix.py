@@ -37,6 +37,10 @@ if(?<ws>[\t ]*)                     # the first if
                 [^()\n]*\(
                     (?&expr2)
                 \)[^()\n]*
+            |
+                (?:                 # i am not sure why this branch is necessary
+                    [^()\n]*\([^()\n]*\)[^()\n]*
+                )+
             )+
         )
     \)
@@ -46,13 +50,61 @@ if(?<ws>[\t ]*)                     # the first if
     )
     \n
 )+
+(?<then_indent>
+    [\t ]*
+)
+(?<then>
+    [^{\n].*
+    \n
+|
+    (?<block>
+        \{
+    )
+)
 """, regex.VERBOSE)
+
+#(?<then>
+#    [\t ]*
+#    [^{}\n]+
+#    \n
+#|
+#    [\t ]*
+#    {
+#)
+
+# allows empty match
+#(?<block>
+#    [^{}\n]*
+#|
+#    [^{}\n]*{
+#        (?&block)+     # not sure if + is necessary
+#    }[^{}\n]*
+#)
+
+# [\t ]*(?:[^{\n]+)
+
+def count_indents(whitespace: str):
+    print("counting: >{}<".format(whitespace))
+    print("type:", type(whitespace))
+    count = 0.0
+    for c in whitespace:
+        print(ord(c))
+        if c == '\t':
+            count += 1.0
+        elif c == ' ':
+            count += 0.25
+        else:
+            print("WARNING - non whitespace: >{}<".format(c))
+    if not count.is_integer():
+        print("WARNING - not integer")
+    return count
+
 
 all_files = set(glob.glob('**/*.qc', recursive=True) + glob.glob('**/*.qh', recursive=True))
 all_files = sorted({f for f in all_files if not f.startswith('qcsrc/dpdefs')})
 
 if 0:  # for debugging
-    all_files = ["qcsrc/common/mutators/mutator/campcheck/sv_campcheck.qc", "qcsrc/common/weapons/weapon/minelayer.qc", "qcsrc/server/bot/default/navigation.qc"]
+    all_files = ["qcsrc/common/mutators/mutator/buffs/sv_buffs.qc", "qcsrc/common/mutators/mutator/campcheck/sv_campcheck.qc", "qcsrc/common/weapons/weapon/minelayer.qc", "qcsrc/server/bot/default/navigation.qc"]
 
 total = 0
 for file_name in all_files:
@@ -73,14 +125,17 @@ for file_name in all_files:
 
             other_conds = match.captures('conds')
             other_comments = match.captures('comms')
-            assert len(middle_conds) == len(middle_comments)
 
             middle_conds = other_conds[0:-1]
             middle_comments = other_comments[0:-1]
 
+            assert len(middle_conds) == len(middle_comments)
+
             last_cond = other_conds[-1]
             last_comment = other_comments[-1]
 
+            then_indent = match.group('then_indent')
+            then = match.group('then')
             #logical_ops = '||' in match.group(0) or '^' in match.group(0)
 
             print("whole match:")
@@ -91,6 +146,9 @@ for file_name in all_files:
             print("first comm:", first_comment)
             print("other conds:", other_conds)
             print("other comms:", other_comments)
+            print("then:", then)
+            if then.startswith("if"):
+                print("WARNING - then if", count_indents(indent), count_indents(then_indent))
             #print("captures expr1:", match.captures('expr1'))
             #print("captures expr2:", match.captures('expr2'))
             #if logical_ops:  # TODO per cond
@@ -100,6 +158,7 @@ for file_name in all_files:
             print()
 
             def fix_logical_ops(cond):
+                return cond  # TODO for debugging
                 if '||' in cond or '^' in cond:
                     return '(' + cond + ')'
                 else:
@@ -115,16 +174,16 @@ for file_name in all_files:
             #    replacement += "{}\t&& {}{}\n".format(indent, fix_logical_ops(cond), comm)
             #replacement += "{}\t&& {}){}\n".format(indent, fix_logical_ops(last_cond), last_comment)
 
-            #return str(match.group(0))
-            return replacement
+            return str(match.group(0))  # TODO for debugging
+            #return replacement
 
         old_code = f.read()
         new_code = CHAINED_IF_REGEX.sub(repl, old_code)
         #with open('new-code', 'w') as f:
         #    f.write(new_code)
 
-        f.seek(0)
-        f.truncate()
-        f.write(new_code)
+        #f.seek(0)  # TODO
+        #f.truncate()
+        #f.write(new_code)
 
 print("total if chains:", total)
