@@ -149,16 +149,16 @@ bool bumblebee_gunner_frame(entity this, float dt)
 						  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
 						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
 
-	if(!forbidWeaponUse(this))
-	if(PHYS_INPUT_BUTTON_ATCK(this))
-		if(time > gun.attack_finished_single[0])
-			if(gun.vehicle_energy >= autocvar_g_vehicle_bumblebee_cannon_cost)
-			{
-				gun.vehicle_energy -= autocvar_g_vehicle_bumblebee_cannon_cost;
-				bumblebee_fire_cannon(vehic, gun, "fire", this);
-				gun.delay = time;
-				gun.attack_finished_single[0] = time + autocvar_g_vehicle_bumblebee_cannon_refire;
-			}
+	if (!forbidWeaponUse(this)
+		&& PHYS_INPUT_BUTTON_ATCK(this)
+		&& time > gun.attack_finished_single[0]
+		&& gun.vehicle_energy >= autocvar_g_vehicle_bumblebee_cannon_cost)
+	{
+		gun.vehicle_energy -= autocvar_g_vehicle_bumblebee_cannon_cost;
+		bumblebee_fire_cannon(vehic, gun, "fire", this);
+		gun.delay = time;
+		gun.attack_finished_single[0] = time + autocvar_g_vehicle_bumblebee_cannon_refire;
+	}
 
 	VEHICLE_UPDATE_PLAYER(this, vehic, health, bumblebee);
 
