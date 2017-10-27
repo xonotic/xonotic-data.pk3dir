@@ -18,6 +18,10 @@ if(?<ws>[\t ]*)                     # the first if
             [^()\n]*\(
                 (?&expr1)           # this is to match nested parentheses correctly
             \)[^()\n]*
+        |
+            (?:                     # i am not sure why this branch is necessary
+                [^()\n]*\([^()\n]*\)[^()\n]*
+            )+
         )+
     )
 \)
@@ -38,7 +42,7 @@ if(?<ws>[\t ]*)                     # the first if
                     (?&expr2)
                 \)[^()\n]*
             |
-                (?:                 # i am not sure why this branch is necessary
+                (?:
                     [^()\n]*\([^()\n]*\)[^()\n]*
                 )+
             )+
@@ -54,34 +58,32 @@ if(?<ws>[\t ]*)                     # the first if
     [\t ]*
 )
 (?<then>
-    [^{\n].*
-    \n
+    [^{}\n].*\n
 |
-    (?<block>
-        \{
-    )
+    \{
+        (?<block>           # the more options here and inside, the fewer results because some overlap
+            [^{}]*
+        |
+            [^{}]*
+            \{
+                (?&block)*
+            \}
+            [^{}]*
+        |
+            (?:
+                [^{}]*
+                \{
+                [^{}]*
+                \}
+                [^{}]*
+            )+
+        )+
+    \}
 )
 """, regex.VERBOSE)
 
-#(?<then>
-#    [\t ]*
-#    [^{}\n]+
-#    \n
-#|
-#    [\t ]*
-#    {
-#)
-
-# allows empty match
-#(?<block>
-#    [^{}\n]*
-#|
-#    [^{}\n]*{
-#        (?&block)+     # not sure if + is necessary
-#    }[^{}\n]*
-#)
-
-# [\t ]*(?:[^{\n]+)
+# TODO remove <then> and rerun to see overlapping
+# TODO try removing \n from nested exprs
 
 def count_indents(whitespace: str):
     print("counting: >{}<".format(whitespace))
@@ -146,7 +148,7 @@ for file_name in all_files:
             print("first comm:", first_comment)
             print("other conds:", other_conds)
             print("other comms:", other_comments)
-            print("then:", then)
+            print("then:", then)  # TODO check for comments
             if then.startswith("if"):
                 print("WARNING - then if", count_indents(indent), count_indents(then_indent))
             #print("captures expr1:", match.captures('expr1'))
