@@ -577,6 +577,16 @@ void havocbot_movetogoal(entity this)
 			}
 			else
 			{
+				if (this.goalcurrent.bot_pickup)
+				{
+					entity jumppad_wp = this.goalcurrent_prev;
+					navigation_poptouchedgoals(this);
+					if(!this.goalcurrent && jumppad_wp.wp00)
+					{
+						// head to the jumppad destination once bot reaches the goal item
+						navigation_pushroute(this, jumppad_wp.wp00);
+					}
+				}
 				gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
 				if (this.origin.z > gco.z && vdist(vec2(this.velocity), <, autocvar_sv_maxspeed))
 					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
