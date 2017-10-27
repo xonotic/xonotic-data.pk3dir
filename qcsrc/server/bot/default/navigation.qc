@@ -1261,11 +1261,15 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	}
 
 	LOG_DEBUG("-- checking ", e.classname, " (with cost ", ftos(nwp.wpcost), ")");
-	if (nwp)
-	if (nwp.wpcost < 10000000)
+	if (nwp && nwp.wpcost < 10000000)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
-		float cost = nwp.wpcost + waypoint_gettravelcost(nwp.wpnearestpoint, goal_org, nwp, e);
+		float nwptoitem_cost = 0;
+		if(nwp.wpflags & WAYPOINTFLAG_TELEPORT)
+			nwptoitem_cost = nwp.wp00mincost;
+		else
+			nwptoitem_cost = waypoint_gettravelcost(nwp.wpnearestpoint, goal_org, nwp, e);
+		float cost = nwp.wpcost + nwptoitem_cost;
 		LOG_DEBUG(e.classname, " ", ftos(f), "/(1+", ftos(cost), "/", ftos(rangebias), ") = ");
 		f = f * rangebias / (rangebias + cost);
 		LOG_DEBUG("considering ", e.classname, " (with rating ", ftos(f), ")");
