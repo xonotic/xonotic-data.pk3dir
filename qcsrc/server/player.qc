@@ -436,10 +436,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 						}
 					}
 
-					if(sound_allowed(MSG_BROADCAST, attacker))
-					if(this.health < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
-					if(this.health > 1)
-					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
+					if (sound_allowed(MSG_BROADCAST, attacker)
+						// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
+						&& (this.health < 25 || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || take > 20 || attacker != this)
+						&& this.health > 1)
 					{
 						if(deathtype == DEATH_FALL.m_id)
 							PlayerSound(this, playersound_fall, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);

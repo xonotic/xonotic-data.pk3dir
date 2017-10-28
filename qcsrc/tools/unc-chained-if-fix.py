@@ -54,51 +54,49 @@ if(?<ws>[\t ]*)                     # the first if
     )
     \n
 )+
-(?<then_indent>
-    [\t ]*
-)
-(?<then>
-    [^{}\n].*\n
-|
-    \{
-        (?<block>           # the more options here and inside, the fewer results because some overlap
-            [^{}]*
-        |
-            [^{}]*
-            \{
-                (?&block)*
-            \}
-            [^{}]*
-        |
-            (?:
+(?=
+    (?<then_indent>
+        [\t ]*
+    )
+    (?<then>
+        [^{}\n].*\n
+    |
+        \{
+            (?<block>
+                [^{}]*
+            |
                 [^{}]*
                 \{
-                [^{}]*
+                    (?&block)*
                 \}
                 [^{}]*
+            |
+                (?:
+                    [^{}]*
+                    \{
+                    [^{}]*
+                    \}
+                    [^{}]*
+                )+
             )+
-        )+
-    \}
+        \}
+    )
 )
 """, regex.VERBOSE)
 
-# TODO remove <then> and rerun to see overlapping
 # TODO try removing \n from nested exprs
 
 def count_indents(whitespace: str):
-    print("counting: >{}<".format(whitespace))
-    print("type:", type(whitespace))
     count = 0.0
     for c in whitespace:
-        print(ord(c))
         if c == '\t':
             count += 1.0
         elif c == ' ':
             count += 0.25
         else:
-            print("WARNING - non whitespace: >{}<".format(c))
+            assert False
     if not count.is_integer():
-        print("WARNING - not integer")
+        print("WARNING - non-integer sized indent")
     return count
 
 
@@ -148,9 +146,11 @@ for file_name in all_files:
             print("first comm:", first_comment)
             print("other conds:", other_conds)
             print("other comms:", other_comments)
-            print("then:", then)  # TODO check for comments
+            print("then:", then)
             if then.startswith("if"):
                 print("WARNING - then if", count_indents(indent), count_indents(then_indent))
+            if then.startswith("//") or then.startswith("/*"):
+                print("WARNING - then comment", count_indents(indent), count_indents(then_indent))
             #print("captures expr1:", match.captures('expr1'))
             #print("captures expr2:", match.captures('expr2'))
             #if logical_ops:  # TODO per cond

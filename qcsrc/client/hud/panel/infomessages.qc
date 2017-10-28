@@ -205,9 +205,7 @@ void HUD_InfoMessages()
 			}
 		}
 
-		if(autocvar_cl_showspectators)
-		if(num_spectators)
-		//if(spectatee_status != -1)
+		if(autocvar_cl_showspectators && num_spectators /*&& spectatee_status != -1*/)
 		{
 			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
 			// InfoMessage(s)
