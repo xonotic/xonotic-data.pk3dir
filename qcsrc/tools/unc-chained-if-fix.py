@@ -84,8 +84,6 @@ if(?<ws>[\t ]*)                     # the first if
 )
 """, regex.VERBOSE)
 
-# TODO try removing \n from nested exprs
-
 def count_indents(whitespace: str):
     count = 0.0
     for c in whitespace:
@@ -107,6 +105,7 @@ if 0:  # for debugging
     all_files = ["qcsrc/common/mutators/mutator/buffs/sv_buffs.qc", "qcsrc/common/mutators/mutator/campcheck/sv_campcheck.qc", "qcsrc/common/weapons/weapon/minelayer.qc", "qcsrc/server/bot/default/navigation.qc"]
 
 total = 0
+total_fixed = 0
 for file_name in all_files:
     with open(file_name, 'r+') as f:
         print()
@@ -114,8 +113,11 @@ for file_name in all_files:
         print("=================")
         print()
 
+        old_code = f.read()
+
         def repl(match):
-            global total
+            global total, total_fixed
+
             total += 1
 
             indent = match.group('indent')
@@ -136,8 +138,16 @@ for file_name in all_files:
 
             then_indent = match.group('then_indent')
             then = match.group('then')
-            #logical_ops = '||' in match.group(0) or '^' in match.group(0)
+            then_end = match.end('then')
+            next_code = old_code[then_end : then_end + 50]  # won't error when past end
+            contains_else = regex.search("[\n\t ]*else", next_code) != None
 
+            if then.startswith("if"):
+                print("WARNING - then if", count_indents(indent), count_indents(then_indent))
+            if then.startswith("//") or then.startswith("/*"):
+                print("WARNING - then comment", count_indents(indent), count_indents(then_indent))
+            if contains_else:
+                print("WARNING - else after {} ifs - skipping".format(len(other_conds) + 1))
             print("whole match:")
             print(match.group(0))
             print("lines:", len(match.group(0).split('\n')))
@@ -147,45 +157,40 @@ for file_name in all_files:
             print("other conds:", other_conds)
             print("other comms:", other_comments)
             print("then:", then)
-            if then.startswith("if"):
-                print("WARNING - then if", count_indents(indent), count_indents(then_indent))
-            if then.startswith("//") or then.startswith("/*"):
-                print("WARNING - then comment", count_indents(indent), count_indents(then_indent))
-            #print("captures expr1:", match.captures('expr1'))
-            #print("captures expr2:", match.captures('expr2'))
-            #if logical_ops:  # TODO per cond
-            #    print("WARNING - logical ops")
+            print("next:", next_code)
+
+            if contains_else:
+                return str(match.group(0))
+
+            total_fixed += 1
 
             print()
             print()
 
             def fix_logical_ops(cond):
-                return cond  # TODO for debugging
+                #return cond  # for debugging
                 if '||' in cond or '^' in cond:
                     return '(' + cond + ')'
                 else:
                     return cond
 
-            replacement = "\n{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(first_cond), first_comment)
-            for cond, comm in zip(middle_conds, middle_comments):
-                replacement += "{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(cond), comm)
-            replacement += "{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(last_cond), last_comment)
-
-            #replacement = "\n{}if{}({}{}\n".format(indent, whitespace, fix_logical_ops(first_cond), first_comment)
+            #replacement = "\n{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(first_cond), first_comment)
             #for cond, comm in zip(middle_conds, middle_comments):
-            #    replacement += "{}\t&& {}{}\n".format(indent, fix_logical_ops(cond), comm)
-            #replacement += "{}\t&& {}){}\n".format(indent, fix_logical_ops(last_cond), last_comment)
+            #    replacement += "{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(cond), comm)
+            #replacement += "{}if{}({}){}\n".format(indent, whitespace, fix_logical_ops(last_cond), last_comment)
 
-            return str(match.group(0))  # TODO for debugging
-            #return replacement
+            replacement = "\n{}if{}({}{}\n".format(indent, whitespace, fix_logical_ops(first_cond), first_comment)
+            for cond, comm in zip(middle_conds, middle_comments):
+                replacement += "{}\t&& {}{}\n".format(indent, fix_logical_ops(cond), comm)
+            replacement += "{}\t&& {}){}\n".format(indent, fix_logical_ops(last_cond), last_comment)
 
-        old_code = f.read()
+            return replacement
+
         new_code = CHAINED_IF_REGEX.sub(repl, old_code)
-        #with open('new-code', 'w') as f:
-        #    f.write(new_code)
 
-        #f.seek(0)  # TODO
-        #f.truncate()
-        #f.write(new_code)
+        f.seek(0)
+        f.truncate()
+        f.write(new_code)
 
 print("total if chains:", total)
+print("fixed:", total_fixed)
