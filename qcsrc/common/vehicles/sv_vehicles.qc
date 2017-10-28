@@ -965,11 +965,10 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.owner)
 		return; // got here and didn't enter the gunner, return
 
-	if(teamplay)
-	if(veh.team)
-	if(DIFF_TEAM(pl, veh))
-	if(autocvar_g_vehicles_steal)
+	if (teamplay && veh.team && DIFF_TEAM(pl, veh))
 	{
+		if (!autocvar_g_vehicles_steal) return;
+
 		FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, veh), Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_VEHICLE_STEAL));
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
@@ -983,7 +982,6 @@ void vehicles_enter(entity pl, entity veh)
 			wp.colormod = Team_ColorRGB(pl.team);
 		}
 	}
-	else return;
 
 	RemoveGrapplingHooks(pl);
 
