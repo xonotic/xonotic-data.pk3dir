@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 
+# converts code like
+# ```
+# if (some_long_condition)
+# if (some_other_long_condition)
+# ```
+# into
+# ```
+# if (some_long_condition
+#     && some_other_long_condition)
+# ```
+
 import regex # needs regex instead of re for multiple captures of a group
 import glob
 
@@ -140,7 +151,7 @@ for file_name in all_files:
             then = match.group('then')
             then_end = match.end('then')
             next_code = old_code[then_end : then_end + 50]  # won't error when past end
-            contains_else = regex.search("[\n\t ]*else", next_code) != None
+            contains_else = regex.search("^[\n\t ]*else", next_code) != None
 
             if then.startswith("if"):
                 print("WARNING - then if", count_indents(indent), count_indents(then_indent))
