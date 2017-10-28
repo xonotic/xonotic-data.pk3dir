@@ -188,6 +188,8 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		// TODO: Merge this logic with the bot_shouldattack function
 		if(vdist(it.origin - org, <, 100) || vdist(it.origin - org, >, sradius))
 			continue;
+		if(vdist(vec2(it.velocity), >, autocvar_sv_maxspeed * 2))
+			continue;
 
 		// rate only visible enemies
 		/*
