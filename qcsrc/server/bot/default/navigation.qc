@@ -1237,7 +1237,10 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 		if ((!e.nearestwaypoint || e.navigation_dynamicgoal)
 			&& e.nearestwaypointtimeout >= 0 && time > e.nearestwaypointtimeout)
 		{
-			e.nearestwaypoint = nwp = navigation_findnearestwaypoint(e, true);
+			if(IS_BOT_CLIENT(e) && e.goalcurrent && e.goalcurrent.classname == "waypoint")
+				e.nearestwaypoint = nwp = e.goalcurrent;
+			else
+				e.nearestwaypoint = nwp = navigation_findnearestwaypoint(e, true);
 			if(!nwp)
 			{
 				LOG_DEBUG("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e));
