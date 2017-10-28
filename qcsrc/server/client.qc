@@ -270,7 +270,7 @@ void PutObserverInServer(entity this)
 	if (this.alivetime)
 	{
 		if (!warmup_stage)
-			PS_GR_P_ADDVAL(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
 		this.alivetime = 0;
 	}
 
