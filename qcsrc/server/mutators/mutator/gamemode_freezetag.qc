@@ -137,14 +137,11 @@ float freezetag_CheckWinner()
 entity freezetag_LastPlayerForTeam(entity this)
 {
 	entity last_pl = NULL;
-	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
-		if(it.health >= 1)
-		if(!STAT(FROZEN, it))
-		if(SAME_TEAM(it, this))
-		if(!last_pl)
-			last_pl = it;
-		else
-			return NULL;
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && it.health >= 1 && !STAT(FROZEN, it) && SAME_TEAM(it, this),
+	{
+		if (last_pl) { return NULL; }
+
+		last_pl = it;
 	});
 	return last_pl;
 }
