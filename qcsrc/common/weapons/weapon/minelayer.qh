@@ -1,7 +1,7 @@
 #pragma once
 
 CLASS(MineLayer, Weapon)
-/* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets);
+/* ammotype  */ ATTRIB(MineLayer, ammo_type, int, RESOURCE_ROCKETS);
 /* impulse   */ ATTRIB(MineLayer, impulse, int, 4);
 /* flags     */ ATTRIB(MineLayer, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, 7000);

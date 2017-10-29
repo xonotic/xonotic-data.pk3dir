@@ -210,48 +210,48 @@ void W_RandomWeapons(entity e, int n)
 	e.weapons = result;
 }
 
-string GetAmmoPicture(.int ammotype)
+string GetAmmoPicture(int ammotype)
 {
 	switch (ammotype)
 	{
-		case ammo_shells:  return ITEM_Shells.m_icon;
-		case ammo_nails:   return ITEM_Bullets.m_icon;
-		case ammo_rockets: return ITEM_Rockets.m_icon;
-		case ammo_cells:   return ITEM_Cells.m_icon;
-		case ammo_plasma:  return ITEM_Plasma.m_icon;
-		case ammo_fuel:    return ITEM_JetpackFuel.m_icon;
+		case RESOURCE_SHELLS:  return ITEM_Shells.m_icon;
+		case RESOURCE_BULLETS: return ITEM_Bullets.m_icon;
+		case RESOURCE_ROCKETS: return ITEM_Rockets.m_icon;
+		case RESOURCE_CELLS:   return ITEM_Cells.m_icon;
+		case RESOURCE_PLASMA:  return ITEM_Plasma.m_icon;
+		case RESOURCE_FUEL:    return ITEM_JetpackFuel.m_icon;
 		default: return "";  // wtf, no ammo type?
 	}
 }
 
 #ifdef CSQC
-	.int GetAmmoFieldFromNum(int i)
+int GetAmmoTypeFromNum(int i)
+{
+	switch (i)
 	{
-		switch (i)
-		{
-			case 0: return ammo_shells;
-			case 1: return ammo_nails;
-			case 2: return ammo_rockets;
-			case 3: return ammo_cells;
-			case 4: return ammo_plasma;
-			case 5: return ammo_fuel;
-			default: return ammo_none;
-		}
+		case 0: return RESOURCE_SHELLS;
+		case 1: return RESOURCE_BULLETS;
+		case 2: return RESOURCE_ROCKETS;
+		case 3: return RESOURCE_CELLS;
+		case 4: return RESOURCE_PLASMA;
+		case 5: return RESOURCE_FUEL;
+		default: return RESOURCE_NONE;
 	}
+}
 
-	int GetAmmoStat(.int ammotype)
+int GetAmmoStat(int ammotype)
+{
+	switch (ammotype)
 	{
-		switch (ammotype)
-		{
-			case ammo_shells: return STAT_SHELLS;
-			case ammo_nails: return STAT_NAILS;
-			case ammo_rockets: return STAT_ROCKETS;
-			case ammo_cells: return STAT_CELLS;
-			case ammo_plasma: return STAT_PLASMA.m_id;
-			case ammo_fuel: return STAT_FUEL.m_id;
-			default: return -1;
-		}
+		case RESOURCE_SHELLS: return STAT_SHELLS;
+		case RESOURCE_BULLETS: return STAT_NAILS;
+		case RESOURCE_ROCKETS: return STAT_ROCKETS;
+		case RESOURCE_CELLS: return STAT_CELLS;
+		case RESOURCE_PLASMA: return STAT_PLASMA.m_id;
+		case RESOURCE_FUEL: return STAT_FUEL.m_id;
+		default: return -1;
 	}
+}
 #endif
 
 string W_Sound(string w_snd)
