@@ -9,6 +9,8 @@
 #include "../bot.qh"
 #include "../navigation.qh"
 
+.float bot_ratingscale;
+.float bot_ratingscale_time;
 .float max_armorvalue;
 .float havocbot_role_timeout;
 
@@ -113,6 +115,13 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
+		// ignore if bot already rated this item with a higher ratingscale
+		// NOTE: this code assumes each bot rates items in a different frame
+		if(it.bot_ratingscale_time == time && ratingscale < it.bot_ratingscale)
+			continue;
+		it.bot_ratingscale_time = time;
+		it.bot_ratingscale = ratingscale;
+
 		if(!it.solid)
 		{
 			if(!autocvar_bot_ai_timeitems)
@@ -163,9 +172,8 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 
 		if(!havocbot_goalrating_item_pickable_check_players(this, org, it, o))
 			continue;
-		
-		rating = it.bot_pickupevalfunc(this, it);
 
+		rating = it.bot_pickupevalfunc(this, it);
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
 	});
