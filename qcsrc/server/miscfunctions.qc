@@ -7,6 +7,7 @@
 #include "ipban.qh"
 #include "mutators/_mod.qh"
 #include "../common/t_items.qh"
+#include "resources.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -199,14 +200,14 @@ string NearestLocation(vector p)
 string AmmoNameFromWeaponentity(entity wpn)
 {
 	string ammoitems = "batteries";
-	switch((wpn.m_weapon).ammo_field)
+	switch ((wpn.m_weapon).ammo_type)
 	{
-		case ammo_shells:  ammoitems = ITEM_Shells.m_name;      break;
-		case ammo_nails:   ammoitems = ITEM_Bullets.m_name;     break;
-		case ammo_rockets: ammoitems = ITEM_Rockets.m_name;     break;
-		case ammo_cells:   ammoitems = ITEM_Cells.m_name;       break;
-		case ammo_plasma:  ammoitems = ITEM_Plasma.m_name;      break;
-		case ammo_fuel:    ammoitems = ITEM_JetpackFuel.m_name; break;
+		case RESOURCE_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
+		case RESOURCE_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
+		case RESOURCE_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
+		case RESOURCE_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
+		case RESOURCE_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
+		case RESOURCE_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
 	}
 	return ammoitems;
 }
@@ -525,6 +526,10 @@ void readplayerstartcvars()
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
 	start_ammo_plasma = 0;
+	if (random_start_ammo == NULL)
+	{
+		random_start_ammo = spawn();
+	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
@@ -643,6 +648,17 @@ void readplayerstartcvars()
 		start_ammo_cells = cvar("g_start_ammo_cells");
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
+		random_start_weapons_count = cvar("g_random_start_weapons_count");
+		SetResourceAmount(random_start_ammo, RESOURCE_SHELLS, cvar(
+			"g_random_start_shells"));
+		SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, cvar(
+			"g_random_start_bullets"));
+		SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, 
+			cvar("g_random_start_rockets"));
+		SetResourceAmount(random_start_ammo, RESOURCE_CELLS, cvar(
+			"g_random_start_cells"));
+		SetResourceAmount(random_start_ammo, RESOURCE_PLASMA, cvar(
+			"g_random_start_plasma"));
 	}
 
 	if (warmup_stage)
@@ -711,6 +727,16 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
+	SetResourceAmount(random_start_ammo, RESOURCE_SHELLS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_SHELLS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_BULLETS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_ROCKETS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_CELLS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_CELLS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_PLASMA, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);

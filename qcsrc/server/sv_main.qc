@@ -88,7 +88,6 @@ void CreatureFrame_Liquids(entity this)
 			this.dmgtime = 0;
 		}
 		this.air_finished = time + 12;
-		this.dmg = 2;
 	}
 }
 
@@ -318,8 +317,6 @@ bool expr_evaluate(string s)
 
 void SV_OnEntityPreSpawnFunction(entity this)
 {
-	__spawnfunc_expecting = true;
-	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
@@ -361,7 +358,6 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	return;
 LABEL(cleanup)
     builtin_remove(this);
-    __spawnfunc_expecting = false;
 }
 
 void WarpZone_PostInitialize_Callback()

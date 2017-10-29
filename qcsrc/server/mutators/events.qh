@@ -871,6 +871,13 @@ MUTATOR_HOOKABLE(WantWeapon, EV_WantWeapon);
     /**/
 MUTATOR_HOOKABLE(AddPlayerScore, EV_AddPlayerScore);
 
+#define EV_AddedPlayerScore(i, o) \
+    /** score field */  i(entity, MUTATOR_ARGV_0_entity) \
+    /** score */        i(float, MUTATOR_ARGV_1_float) \
+    /** player */       i(entity, MUTATOR_ARGV_2_entity) \
+    /**/
+MUTATOR_HOOKABLE(AddedPlayerScore, EV_AddPlayerScore);
+
 #define EV_GetPlayerStatus(i, o) \
     /** player */    i(entity, MUTATOR_ARGV_0_entity) \
     /**/

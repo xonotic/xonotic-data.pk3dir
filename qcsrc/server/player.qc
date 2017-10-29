@@ -4,6 +4,7 @@
 #include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
+#include "handicap.qh"
 #include "g_subs.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
@@ -317,9 +318,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= bound(1.0, CS(this).cvar_cl_handicap, 10.0);
-		if(this != attacker && IS_PLAYER(attacker))
-			damage /= bound(1.0, CS(attacker).cvar_cl_handicap, 10.0);
+		damage *= Handicap_GetTotalHandicap(this);
+		if (this != attacker && IS_PLAYER(attacker))
+		{
+			damage /= Handicap_GetTotalHandicap(attacker);
+		}
 	}
 
 	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
@@ -514,7 +517,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		if(this.alivetime)
 		{
-			PS_GR_P_ADDVAL(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
 			this.alivetime = 0;
 		}
 
