@@ -540,6 +540,9 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	if(CTF_DIFFTEAM(player, flag)) { return; }
 	if((flag.cnt || enemy_flag.cnt) && flag.cnt != enemy_flag.cnt) { return; } // this should catch some edge cases (capturing grouped flag at ungrouped flag disallowed etc)
 
+	if (toucher.goalentity == flag.bot_basewaypoint)
+		toucher.goalentity_lock_timeout = 0;
+
 	if(ctf_oneflag)
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 	if(SAME_TEAM(tmp_entity, player))
@@ -1668,6 +1671,17 @@ void havocbot_role_ctf_carrier(entity this)
 		navigation_goalrating_end(this);
 
 		navigation_goalrating_timeout_set(this);
+
+		entity head = ctf_worldflaglist;
+		while (head)
+		{
+			if (this.goalentity == head.bot_basewaypoint)
+			{
+				this.goalentity_lock_timeout = time + 5;
+				break;
+			}
+			head = head.ctf_worldflagnext;
+		}
 
 		if (this.goalentity)
 			this.havocbot_cantfindflag = time + 10;

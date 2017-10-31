@@ -625,7 +625,7 @@ void navigation_clearroute(entity this)
 	this.goalcurrent_distance_2d = FLOAT_MAX;
 	this.goalcurrent_distance_z = FLOAT_MAX;
 	this.goalcurrent_distance_time = 0;
-	//print("bot ", etos(this), " clear\n");
+	this.goalentity_lock_timeout = 0;
 	this.goalentity = NULL;
 	this.goalcurrent = NULL;
 	this.goalstack01 = NULL;
@@ -721,7 +721,10 @@ void navigation_poproute(entity this)
 	this.goalcurrent_distance_time = 0;
 	//print("bot ", etos(this), " pop\n");
 	if(this.goalcurrent == this.goalentity)
+	{
 		this.goalentity = NULL;
+		this.goalentity_lock_timeout = 0;
+	}
 	this.goalcurrent = this.goalstack01;
 	this.goalstack01 = this.goalstack02;
 	this.goalstack02 = this.goalstack03;

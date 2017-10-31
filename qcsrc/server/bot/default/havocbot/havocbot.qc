@@ -753,6 +753,7 @@ void havocbot_movetogoal(entity this)
 					navigation_goalrating_timeout_force(this);
 					return;
 				}
+				locked_goal = true; // wait for item to respawn
 			}
 			else if(this.goalentity == this.goalcurrent)
 				locked_goal = true; // wait for item to respawn
@@ -767,6 +768,9 @@ void havocbot_movetogoal(entity this)
 			}
 		}
 	}
+	if (this.goalcurrent == this.goalentity && this.goalentity_lock_timeout > time)
+		locked_goal = true;
+
 	if(!locked_goal)
 	{
 		// optimize path finding by anticipating goalrating when bot is near a waypoint;
@@ -804,7 +808,15 @@ void havocbot_movetogoal(entity this)
 	}
 
 	diff = destorg - this.origin;
-	//dist = vlen(diff);
+
+	if (fabs(diff.x) < 10 && fabs(diff.y) < 10
+		&& this.goalcurrent == this.goalentity && time < this.goalentity_lock_timeout)
+	{
+		destorg = this.origin;
+		diff.x = 0;
+		diff.y = 0;
+	}
+
 	dir = normalize(diff);
 	flatdir = diff;flatdir.z = 0;
 	flatdir = normalize(flatdir);
@@ -866,7 +878,7 @@ void havocbot_movetogoal(entity this)
 
 			// if bot for some reason doesn't get close to the current goal find another one
 			if(!this.jumppadcount && !IS_PLAYER(this.goalcurrent))
-			if(!(this.goalcurrent.bot_pickup_respawning && this.goalcurrent_distance_z < 50 && this.goalcurrent_distance_2d < 50))
+			if(!(locked_goal && this.goalcurrent_distance_z < 50 && this.goalcurrent_distance_2d < 50))
 			if(havocbot_checkgoaldistance(this, gco))
 			{
 				if(this.goalcurrent_distance_time < 0) // can't get close for the second time

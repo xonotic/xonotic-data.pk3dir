@@ -29,6 +29,8 @@ entity navigation_bestgoal;
 .float goalcurrent_distance_2d;
 .float goalcurrent_distance_time;
 
+.float goalentity_lock_timeout;
+
 .entity nearestwaypoint;
 .float nearestwaypointtimeout;
 
