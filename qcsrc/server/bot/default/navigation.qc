@@ -1412,6 +1412,17 @@ int navigation_poptouchedgoals(entity this)
 	if(vlen2(this.goalcurrent.origin - this.goalstack01.origin) > vlen2(this.goalstack01.origin - this.origin))
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
 	{
+		// this can happen when a player stands still or is frozen
+		// NOTE: this is only needed because tracewalk always fail when destination
+		// point is on a player and bot_navigation_ignoreplayers is false
+		if (this.goalentity.navigation_dynamicgoal
+			&& boxesoverlap(this.absmin, this.absmax, this.goalentity.absmin, this.goalentity.absmax))
+		{
+			navigation_poproute(this);
+			++removed_goals;
+			return removed_goals;
+		}
+
 		vector dest = '0 0 0';
 		float dest_height = 0;
 		SET_TRACEWALK_DESTCOORDS(this.goalstack01, this.origin, dest, dest_height);
