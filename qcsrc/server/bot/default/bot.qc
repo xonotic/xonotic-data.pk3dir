@@ -770,6 +770,8 @@ void bot_serverframe()
 		//  frame, which causes choppy framerates)
 		if (bot_strategytoken_taken)
 		{
+			// give goal token to the first bot without goals; if all bots don't have
+			// any goal (or are dead/frozen) simply give it to the next one
 			bot_strategytoken_taken = false;
 			entity bot_strategytoken_save = bot_strategytoken;
 			while (true)
@@ -779,7 +781,8 @@ void bot_serverframe()
 				if (!bot_strategytoken)
 					bot_strategytoken = bot_list;
 
-				if (!(IS_DEAD(bot_strategytoken) || STAT(FROZEN, bot_strategytoken)))
+				if (!(IS_DEAD(bot_strategytoken) || STAT(FROZEN, bot_strategytoken))
+					&& !bot_strategytoken.goalcurrent)
 					break;
 
 				if (!bot_strategytoken_save) // break loop if all the bots are dead or frozen

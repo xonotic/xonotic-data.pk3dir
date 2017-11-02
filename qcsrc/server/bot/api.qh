@@ -87,6 +87,7 @@ void navigation_goalrating_end(entity this);
 void navigation_goalrating_start(entity this);
 void navigation_goalrating_timeout_set(entity this);
 void navigation_goalrating_timeout_force(entity this);
+void navigation_goalrating_timeout_expire(entity this, float seconds);
 bool navigation_goalrating_timeout(entity this);
 bool navigation_goalrating_timeout_can_be_anticipated(entity this);
 void navigation_markroutes(entity this, entity fixed_source_waypoint);

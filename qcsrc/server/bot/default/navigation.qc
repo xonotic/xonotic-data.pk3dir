@@ -25,9 +25,20 @@ void navigation_goalrating_timeout_set(entity this)
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 }
 
+// use this when current goal must be discarded immediately
 void navigation_goalrating_timeout_force(entity this)
 {
-	this.bot_strategytime = 0;
+	navigation_goalrating_timeout_expire(this, 0);
+}
+
+// use this when current goal can be kept for a short while to increase the chance
+// of bot touching a waypoint, which helps to find a new goal more efficiently
+void navigation_goalrating_timeout_expire(entity this, float seconds)
+{
+	if (seconds <= 0)
+		this.bot_strategytime = 0;
+	else if (this.bot_strategytime > time + seconds)
+		this.bot_strategytime = time + seconds;
 }
 
 bool navigation_goalrating_timeout(entity this)

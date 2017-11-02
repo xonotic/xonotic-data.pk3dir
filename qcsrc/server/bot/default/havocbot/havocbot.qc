@@ -752,9 +752,7 @@ void havocbot_movetogoal(entity this)
 				if(checkpvs(this.origin, this.goalentity))
 				{
 					this.goalentity.bot_pickup_respawning = false;
-					navigation_clearroute(this);
-					navigation_goalrating_timeout_force(this);
-					return;
+					navigation_goalrating_timeout_expire(this, random());
 				}
 				locked_goal = true; // wait for item to respawn
 			}
@@ -765,9 +763,7 @@ void havocbot_movetogoal(entity this)
 		{
 			if(checkpvs(this.origin, this.goalentity))
 			{
-				navigation_clearroute(this);
-				navigation_goalrating_timeout_force(this);
-				return;
+				navigation_goalrating_timeout_expire(this, random());
 			}
 		}
 	}
@@ -797,7 +793,7 @@ void havocbot_movetogoal(entity this)
 	if(autocvar_bot_debug_goalstack)
 		debuggoalstack(this);
 
-	bool bunnyhop_forbidden = false;;
+	bool bunnyhop_forbidden = false;
 	SET_DESTCOORDS(this.goalcurrent, this.origin, destorg);
 
 	// in case bot ends up inside the teleport waypoint without touching
