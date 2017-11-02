@@ -85,7 +85,11 @@ void havocbot_ai(entity this)
 	}
 
 	if(IS_DEAD(this) || STAT(FROZEN, this))
+	{
+		if (this.goalcurrent)
+			navigation_clearroute(this);
 		return;
+	}
 
 	havocbot_chooseenemy(this);
 
