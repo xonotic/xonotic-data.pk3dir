@@ -33,8 +33,7 @@ void havocbot_ai(entity this)
 	if(bot_execute_commands(this))
 		return;
 
-	if (bot_strategytoken == this)
-	if (!bot_strategytoken_taken)
+	if (bot_strategytoken == this && !bot_strategytoken_taken)
 	{
 		if(this.havocbot_blockhead)
 		{

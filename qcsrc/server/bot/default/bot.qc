@@ -771,10 +771,22 @@ void bot_serverframe()
 		if (bot_strategytoken_taken)
 		{
 			bot_strategytoken_taken = false;
-			if (bot_strategytoken)
-				bot_strategytoken = bot_strategytoken.nextbot;
-			if (!bot_strategytoken)
-				bot_strategytoken = bot_list;
+			entity bot_strategytoken_save = bot_strategytoken;
+			while (true)
+			{
+				if (bot_strategytoken)
+					bot_strategytoken = bot_strategytoken.nextbot;
+				if (!bot_strategytoken)
+					bot_strategytoken = bot_list;
+
+				if (!(IS_DEAD(bot_strategytoken) || STAT(FROZEN, bot_strategytoken)))
+					break;
+
+				if (!bot_strategytoken_save) // break loop if all the bots are dead or frozen
+					break;
+				if (bot_strategytoken == bot_strategytoken_save)
+					bot_strategytoken_save = NULL; // looped through all the bots
+			}
 		}
 
 		if (botframe_nextdangertime < time)
