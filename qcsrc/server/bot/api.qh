@@ -108,6 +108,3 @@ void waypoint_spawnforteleporter_wz(entity e, vector org, vector destination, fl
 void waypoint_spawn_fromeditor(entity pl);
 entity waypoint_spawn(vector m1, vector m2, float f);
 void waypoint_unreachable(entity pl);
-
-.entity goalcurrent;
-void navigation_clearroute(entity this);

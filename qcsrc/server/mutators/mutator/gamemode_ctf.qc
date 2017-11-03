@@ -597,6 +597,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 			{ GameRules_scoring_add_team(enemy_flag.ctf_dropper, SCORE, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
 	}
 
+	flag.enemy = toucher;
+
 	// reset the flag
 	player.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
 	ctf_RespawnFlag(enemy_flag);
@@ -638,6 +640,8 @@ void ctf_Handle_Return(entity flag, entity player)
 	// other
 	if(player.flagcarried == flag)
 		WaypointSprite_Kill(player.wps_flagcarrier);
+
+	flag.enemy = player;
 
 	// reset the flag
 	ctf_RespawnFlag(flag);
@@ -776,6 +780,7 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 			}
 			_sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTEN_NONE);
 			ctf_EventLog("returned", flag.team, NULL);
+			flag.enemy = NULL;
 			ctf_RespawnFlag(flag);
 		}
 	}
@@ -1179,8 +1184,9 @@ void ctf_RespawnFlag(entity flag)
 void ctf_Reset(entity this)
 {
 	if(this.owner && IS_PLAYER(this.owner))
-        ctf_Handle_Throw(this.owner, NULL, DROP_RESET);
+		ctf_Handle_Throw(this.owner, NULL, DROP_RESET);
 
+	this.enemy = NULL;
 	ctf_RespawnFlag(this);
 }
 
@@ -1863,11 +1869,8 @@ void havocbot_role_ctf_retriever(entity this)
 	mf = havocbot_ctf_find_flag(this);
 	if(mf.ctf_status==FLAG_BASE)
 	{
-		if(this.goalcurrent == mf)
-		{
-			navigation_clearroute(this);
+		if (mf.enemy == this) // did this bot return the flag?
 			navigation_goalrating_timeout_force(this);
-		}
 		havocbot_ctf_reset_role(this);
 		return;
 	}
