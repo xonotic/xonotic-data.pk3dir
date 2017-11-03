@@ -77,6 +77,8 @@ void navigation_dynamicgoal_init(entity this, bool initially_static)
 void navigation_dynamicgoal_set(entity this)
 {
 	this.nearestwaypointtimeout = time;
+	if (this.nearestwaypoint)
+		this.nearestwaypointtimeout += 2;
 }
 
 void navigation_dynamicgoal_unset(entity this)
