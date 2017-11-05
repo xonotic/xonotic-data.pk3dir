@@ -120,6 +120,10 @@ void target_give_init(entity this)
 			this.ammo_rockets += it.count * WEP_CVAR(devastator, ammo);
 			this.netname = cons(this.netname, "devastator");
 		}
+		else if (it.classname == "weapon_railgun") {
+			this.ammo_cells += it.count * WEP_CVAR_PRI(vortex, ammo); // WEAPONTODO
+			this.netname = cons(this.netname, "vortex");
+		}
 		else if (it.classname == "weapon_lightning") {
 			this.ammo_cells += it.count * WEP_CVAR_PRI(electro, ammo); // WEAPONTODO
 			this.netname = cons(this.netname, "electro");
