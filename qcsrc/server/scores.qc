@@ -347,7 +347,7 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	if(scores_label(scorefield) != "")
 		s.SendFlags |= (2 ** (scorefield.m_id % 16));
 	if(!warmup_stage)
-		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
+		PlayerStats_GameReport_Event_Player(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
 	s.(scores(scorefield)) += score;
 	MUTATOR_CALLHOOK(AddedPlayerScore, scorefield, score, player);
 	return s.(scores(scorefield));
@@ -908,10 +908,10 @@ void PlayerScore_PlayerStats(entity p)
 {
 	entity s = CS(p).scorekeeper;
 	FOREACH(Scores, true, {
-		if(s.(scores(it)) != 0)
-			if(scores_label(it) != "")
-				PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label(it)), s.(scores(it)));
-    });
+		if(s.(scores(it)) != 0 && scores_label(it) != "")
+			PlayerStats_GameReport_Event_Player(s.owner,
+				strcat(PLAYERSTATS_SCOREBOARD, scores_label(it)), s.(scores(it)));
+	});
 }
 
 void PlayerScore_TeamStats()
@@ -924,9 +924,9 @@ void PlayerScore_TeamStats()
 		if(!sk)
 			continue;
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(sk.(teamscores(i)) != 0)
-				if(teamscores_label(i) != "")
-					// the +1 is important here!
-					PS_GR_T_ADDVAL(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label(i)), sk.(teamscores(i)));
+			if(sk.(teamscores(i)) != 0 && teamscores_label(i) != "")
+				// the +1 is important here!
+				PlayerStats_GameReport_Event_Team(t+1,
+					strcat(PLAYERSTATS_SCOREBOARD, teamscores_label(i)), sk.(teamscores(i)));
 	}
 }
