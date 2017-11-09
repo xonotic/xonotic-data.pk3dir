@@ -141,10 +141,10 @@ void havocbot_ai(entity this)
 		this.aistatus |= AI_STATUS_ROAMING;
 		this.aistatus &= ~AI_STATUS_ATTACKING;
 
-		vector v = '0 0 0', now, next;
+		vector now, next;
 		float aimdistance,skillblend,distanceblend,blend;
 
-		SET_DESTCOORDS(this.goalcurrent, this.origin, v);
+		vector v = get_closer_dest(this.goalcurrent, this.origin);
 		if(this.goalcurrent.wpisbox)
 		{
 			// avoid a glitch when bot is teleported but teleport waypoint isn't removed yet
@@ -289,7 +289,6 @@ void havocbot_bunnyhop(entity this, vector dir)
 	float bunnyhopdistance;
 	vector deviation;
 	float maxspeed;
-	vector gco = '0 0 0', gno;
 
 	// Don't jump when attacking
 	if(this.aistatus & AI_STATUS_ATTACKING)
@@ -322,7 +321,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 		this.bot_timelastseengoal = 0;
 	}
 
-	SET_DESTCOORDS(this.goalcurrent, this.origin, gco);
+	vector gco = get_closer_dest(this.goalcurrent, this.origin);
 	bunnyhopdistance = vlen(this.origin - gco);
 
 	// Run only to visible goals
@@ -359,7 +358,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if(fabs(gco.z - this.origin.z) < this.maxs.z - this.mins.z)
 					if(this.goalstack01 && !wasfreed(this.goalstack01))
 					{
-						gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
+						vector gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
 						deviation = vectoangles(gno - this.origin) - vectoangles(gco - this.origin);
 						while (deviation.y < -180) deviation.y = deviation.y + 360;
 						while (deviation.y > 180) deviation.y = deviation.y - 360;
@@ -456,7 +455,6 @@ bool havocbot_checkgoaldistance(entity this, vector gco)
 
 void havocbot_movetogoal(entity this)
 {
-	vector destorg = '0 0 0';
 	vector diff;
 	vector dir;
 	vector flatdir;
@@ -794,7 +792,7 @@ void havocbot_movetogoal(entity this)
 		debuggoalstack(this);
 
 	bool bunnyhop_forbidden = false;
-	SET_DESTCOORDS(this.goalcurrent, this.origin, destorg);
+	vector destorg = get_closer_dest(this.goalcurrent, this.origin);
 
 	// in case bot ends up inside the teleport waypoint without touching
 	// the teleport itself, head to the teleport origin
@@ -887,10 +885,9 @@ void havocbot_movetogoal(entity this)
 					return;
 				}
 
-				vector dest = '0 0 0';
-				float dest_height = 0;
-				SET_TRACEWALK_DESTCOORDS(this.goalcurrent, this.origin, dest, dest_height);
-				if (!tracewalk(this, this.origin, this.mins, this.maxs, dest, dest_height, bot_navigation_movemode))
+				set_tracewalk_dest(this.goalcurrent, this.origin, false);
+				if (!tracewalk(this, this.origin, this.mins, this.maxs,
+					tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
 				{
 					navigation_clearroute(this);
 					navigation_goalrating_timeout_force(this);
@@ -1345,8 +1342,7 @@ float havocbot_moveto(entity this, vector pos)
 			debuggoalstack(this);
 
 		// Heading
-		vector dir = '0 0 0';
-		SET_DESTCOORDS(this.goalcurrent, this.origin, dir);
+		vector dir = get_closer_dest(this.goalcurrent, this.origin);
 		dir = dir - (this.origin + this.view_ofs);
 		dir.z = 0;
 		bot_aimdir(this, dir, -1);

@@ -50,61 +50,8 @@ entity navigation_bestgoal;
 #define navigation_item_addlink(from_wp, to_item) \
 	waypoint_addlink_customcost(to_item, from_wp, waypoint_getlinkcost(from_wp, to_item))
 
-// if ent is a box waypoint or an item v is set to coords of ent that are closer to org
-#define SET_DESTCOORDS(ent, org, v) MACRO_BEGIN { \
-	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
-		v.x = bound(wm1.x, org.x, wm2.x); \
-		v.y = bound(wm1.y, org.y, wm2.y); \
-		v.z = bound(wm1.z, org.z, wm2.z); \
-	} else { \
-		v = ent.origin; \
-	} \
-} MACRO_END
-
-// if ent is a box waypoint or an item v is set to coords of ent that are closer to org
-// (but v.z is set to the lowest coord of ent), v_height is set to ent's height
-// if destination ent is a player make so that destination point doesn't overlap with
-// player bbox, otherwise tracebox always fails (if bot_navigation_ignoreplayers is false)
-#define SET_TRACEWALK_DESTCOORDS(ent, org, v, v_height) MACRO_BEGIN { \
-	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
-		if (IS_PLAYER(ent) || IS_MONSTER(ent)) \
-		{ \
-			wm1 += vec2(PL_MIN_CONST) + '-1 -1 0'; \
-			wm2 += vec2(PL_MAX_CONST) + '1 1 0'; \
-		} \
-		v.x = bound(wm1.x, org.x, wm2.x); \
-		v.y = bound(wm1.y, org.y, wm2.y); \
-		v.z = wm1.z; \
-		v_height = wm2.z - wm1.z; \
-	} else { \
-		v = ent.origin; \
-		v_height = 0; \
-	} \
-} MACRO_END
-
-// if ent is a box waypoint or an item v and v2 are set to coords of ent that are closer to org
-// (but v2.z is set to the lowest coord of ent), v2_height is set to ent's height
-#define SET_TRACEWALK_DESTCOORDS_2(ent, org, v, v2, v2_height) MACRO_BEGIN { \
-	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
-		v.x = bound(wm1.x, org.x, wm2.x); \
-		v.y = bound(wm1.y, org.y, wm2.y); \
-		v.z = bound(wm1.z, org.z, wm2.z); \
-		v2.x = v.x; \
-		v2.y = v.y; \
-		v2.z = wm1.z; \
-		v2_height = wm2.z - wm1.z; \
-	} else { \
-		v = ent.origin; \
-		v2 = v; \
-		v2_height = 0; \
-	} \
-} MACRO_END
+vector tracewalk_dest;
+float tracewalk_dest_height;
 
 .entity wp_goal_prev0;
 .entity wp_goal_prev1;

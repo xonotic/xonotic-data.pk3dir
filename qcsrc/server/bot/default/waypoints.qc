@@ -583,8 +583,12 @@ void waypoint_think(entity this)
 				continue;
 			}
 
-			SET_TRACEWALK_DESTCOORDS_2(this, it.origin, sv, sv2, sv2_height);
-			SET_TRACEWALK_DESTCOORDS_2(it, this.origin, ev, ev2, ev2_height);
+			sv = set_tracewalk_dest_2(this, it.origin);
+			sv2 = tracewalk_dest;
+			sv2_height = tracewalk_dest_height;
+			ev = set_tracewalk_dest_2(it, this.origin);
+			ev2 = tracewalk_dest;
+			ev2_height = tracewalk_dest_height;
 
 			dv = ev - sv;
 			dv.z = 0;

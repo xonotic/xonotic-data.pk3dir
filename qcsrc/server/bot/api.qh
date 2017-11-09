@@ -94,6 +94,10 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
 void navigation_routerating(entity this, entity e, float f, float rangebias);
 
+vector get_closer_dest(entity ent, vector org);
+
+void set_tracewalk_dest(entity ent, vector org, bool fix_player_dest);
+vector set_tracewalk_dest_2(entity ent, vector org);
 bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float end_height, float movemode);
 
 void waypoint_remove_fromeditor(entity pl);

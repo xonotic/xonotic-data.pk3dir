@@ -88,6 +88,87 @@ void navigation_dynamicgoal_unset(entity this)
 	this.nearestwaypointtimeout = -1;
 }
 
+// returns point of ent closer to org
+vector get_closer_dest(entity ent, vector org)
+{
+	vector dest = '0 0 0';
+	if ((ent.classname != "waypoint") || ent.wpisbox)
+	{
+		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1);
+		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1);
+		dest.x = bound(wm1.x, org.x, wm2.x);
+		dest.y = bound(wm1.y, org.y, wm2.y);
+		dest.z = bound(wm1.z, org.z, wm2.z);
+	}
+	else
+		dest = ent.origin;
+	return dest;
+}
+
+void set_tracewalk_dest(entity ent, vector org, bool fix_player_dest)
+{
+	if ((ent.classname != "waypoint") || ent.wpisbox)
+	{
+		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1);
+		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1);
+		if (IS_PLAYER(ent) || IS_MONSTER(ent))
+		{
+			// move destination point out of player bbox otherwise tracebox always fails
+			// (if bot_navigation_ignoreplayers is false)
+			wm1 += vec2(PL_MIN_CONST) + '-1 -1 0';
+			wm2 += vec2(PL_MAX_CONST) + '1 1 0';
+		}
+		// set destination point to x and y coords of ent that are closer to org
+		// z coord is set to ent's min height
+		tracewalk_dest.x = bound(wm1.x, org.x, wm2.x);
+		tracewalk_dest.y = bound(wm1.y, org.y, wm2.y);
+		tracewalk_dest.z = wm1.z;
+		tracewalk_dest_height = wm2.z - wm1.z; // destination height
+	}
+	else
+	{
+		tracewalk_dest = ent.origin;
+		tracewalk_dest_height = 0;
+	}
+	if (fix_player_dest && IS_PLAYER(ent) && !IS_ONGROUND(ent))
+	{
+		// snap player to the ground
+		tracebox(tracewalk_dest, ent.mins, ent.maxs, tracewalk_dest - '0 0 700', MOVE_NORMAL, ent);
+		if (!trace_startsolid && tracewalk_dest.z - trace_endpos.z > 0)
+		{
+			tracewalk_dest_height = tracewalk_dest.z - trace_endpos.z;
+			tracewalk_dest.z = trace_endpos.z;
+		}
+	}
+}
+
+// returns point of ent closer to org
+vector set_tracewalk_dest_2(entity ent, vector org)
+{
+	vector closer_dest = '0 0 0';
+	if ((ent.classname != "waypoint") || ent.wpisbox)
+	{
+		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1);
+		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1);
+		closer_dest.x = bound(wm1.x, org.x, wm2.x);
+		closer_dest.y = bound(wm1.y, org.y, wm2.y);
+		closer_dest.z = bound(wm1.z, org.z, wm2.z);
+		// set destination point to x and y coords of ent that are closer to org
+		// z coord is set to ent's min height
+		tracewalk_dest.x = closer_dest.x;
+		tracewalk_dest.y = closer_dest.y;
+		tracewalk_dest.z = wm1.z;
+		tracewalk_dest_height = wm2.z - wm1.z; // destination height
+	}
+	else
+	{
+		closer_dest = ent.origin;
+		tracewalk_dest = closer_dest;
+		tracewalk_dest_height = 0;
+	}
+	return closer_dest;
+}
+
 bool navigation_check_submerged_state(entity ent, vector pos)
 {
 	bool submerged;
@@ -825,8 +906,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 		te_plasmaburn(org);
 
 	entity best = NULL;
-	vector v = '0 0 0', v2 = '0 0 0';
-	float v2_height = 0;
+	vector v = '0 0 0';
 
 	if(ent.size && !IS_PLAYER(ent))
 	{
@@ -842,10 +922,13 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 				continue;
 
-			SET_TRACEWALK_DESTCOORDS(ent, it.origin, v2, v2_height);
-			if(vdist(v2 - it.origin, <, 1050))
-			if(tracewalk(ent, it.origin, PL_MIN_CONST, PL_MAX_CONST, v2, v2_height, bot_navigation_movemode))
+			set_tracewalk_dest(ent, it.origin, false);
+			if (vdist(tracewalk_dest - it.origin, <, 1050)
+				&& tracewalk(ent, it.origin, PL_MIN_CONST, PL_MAX_CONST,
+				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+			{
 				navigation_item_addlink(it, ent);
+			}
 		});
 	}
 
@@ -856,10 +939,12 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			continue;
 		v = it.origin;
 		if(walkfromwp)
-			SET_TRACEWALK_DESTCOORDS(ent, v, v2, v2_height);
+			set_tracewalk_dest(ent, v, false);
 		else
-			SET_TRACEWALK_DESTCOORDS(it, org, v2, v2_height);
-		if(navigation_waypoint_will_link(v, org, ent, v2, v2_height, v2, v2_height, walkfromwp, bestdist))
+			set_tracewalk_dest(it, org, false);
+		if (navigation_waypoint_will_link(v, org, ent,
+			tracewalk_dest, tracewalk_dest_height,
+			tracewalk_dest, tracewalk_dest_height, walkfromwp, bestdist))
 		{
 			bestdist = vlen(v - org);
 			best = it;
@@ -896,23 +981,22 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 // finds the waypoints near the bot initiating a navigation query
 float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 {
-	vector v = '0 0 0';
 	//navigation_testtracewalk = true;
 	int c = 0;
-	float v_height = 0;
 	IL_EACH(g_waypoints, !it.wpconsidered,
 	{
-		SET_TRACEWALK_DESTCOORDS(it, this.origin, v, v_height);
+		set_tracewalk_dest(it, this.origin, false);
 
-		vector diff = v - this.origin;
+		vector diff = tracewalk_dest - this.origin;
 		diff.z = max(0, diff.z);
 		if(vdist(diff, <, maxdist))
 		{
 			it.wpconsidered = true;
-			if (tracewalk(this, this.origin, this.mins, this.maxs, v, v_height, bot_navigation_movemode))
+			if (tracewalk(this, this.origin, this.mins, this.maxs,
+				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
 			{
-				it.wpnearestpoint = v;
-				it.wpcost = waypoint_gettravelcost(this.origin, v, this, it) + it.dmg;
+				it.wpnearestpoint = tracewalk_dest;
+				it.wpcost = waypoint_gettravelcost(this.origin, tracewalk_dest, this, it) + it.dmg;
 				it.wpfire = 1;
 				it.enemy = NULL;
 				c = c + 1;
@@ -1338,11 +1422,12 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
-	vector dest = '0 0 0';
-	float dest_height = 0;
-	SET_TRACEWALK_DESTCOORDS(e, startposition, dest, dest_height);
-	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
+	set_tracewalk_dest(e, startposition, true);
+	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this),
+		tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+	{
 		return true;
+	}
 
 	entity nearest_wp = NULL;
 	// see if there are waypoints describing a path to the item
@@ -1364,10 +1449,13 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		// often path can be optimized by not adding the nearest waypoint
 		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
 		{
-			SET_TRACEWALK_DESTCOORDS(this.goalentity, nearest_wp.enemy.origin, dest, dest_height);
-			if(vdist(dest - nearest_wp.enemy.origin, <, 1050))
-			if(tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
+			set_tracewalk_dest(this.goalentity, nearest_wp.enemy.origin, true);
+			if (vdist(tracewalk_dest - nearest_wp.enemy.origin, <, 1050)
+				&& tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
+				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+			{
 				e = nearest_wp.enemy;
+			}
 		}
 		else if(navigation_item_islinked(nearest_wp.enemy, this.goalentity))
 			e = nearest_wp.enemy;
@@ -1425,10 +1513,9 @@ int navigation_poptouchedgoals(entity this)
 	if(vlen2(this.goalcurrent.origin - this.goalstack01.origin) > vlen2(this.goalstack01.origin - this.origin))
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
 	{
-		vector dest = '0 0 0';
-		float dest_height = 0;
-		SET_TRACEWALK_DESTCOORDS(this.goalstack01, this.origin, dest, dest_height);
-		if(tracewalk(this, this.origin, this.mins, this.maxs, dest, dest_height, bot_navigation_movemode))
+		set_tracewalk_dest(this.goalstack01, this.origin, false);
+		if(tracewalk(this, this.origin, this.mins, this.maxs,
+			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
 		{
 			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
 			navigation_poproute(this);
@@ -1525,11 +1612,12 @@ entity navigation_get_really_close_waypoint(entity this)
 	if(wp.wpflags & WAYPOINTFLAG_TELEPORT)
 		return NULL;
 
-	vector dest = '0 0 0';
-	float dest_height = 0;
-	SET_TRACEWALK_DESTCOORDS(wp, this.origin, dest, dest_height);
-	if (!tracewalk(this, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
+	set_tracewalk_dest(wp, this.origin, false);
+	if (!tracewalk(this, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
+		tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+	{
 		return NULL;
+	}
 	return wp;
 }
 
@@ -1624,10 +1712,9 @@ void navigation_unstuck(entity this)
 		// evaluate the next goal on the queue
 		float d = vlen2(this.origin - bot_waypoint_queue_goal.origin);
 		LOG_DEBUG(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d));
-		vector dest = '0 0 0';
-		float dest_height = 0;
-		SET_TRACEWALK_DESTCOORDS(bot_waypoint_queue_goal, this.origin, dest, dest_height);
-		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), dest, dest_height, bot_navigation_movemode))
+		set_tracewalk_dest(bot_waypoint_queue_goal, this.origin, false);
+		if (tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
+			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
 			{
