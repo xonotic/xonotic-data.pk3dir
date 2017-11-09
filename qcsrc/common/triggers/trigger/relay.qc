@@ -8,4 +8,6 @@ spawnfunc(trigger_relay)
 	this.use = SUB_UseTargets;
 	this.reset = spawnfunc_trigger_relay; // this spawnfunc resets fully
 }
+
+spawnfunc(target_relay) { spawnfunc_trigger_relay(this); }
 #endif
