@@ -18,12 +18,12 @@ entity Item_Create(string class_name, vector position)
 	entity item = spawn();
 	item.classname = class_name;
 	item.spawnfunc_checked = true;
+	setorigin(item, position);
 	Item_Initialize(item, class_name);
 	if (wasfreed(item))
 	{
 		return NULL;
 	}
-	setorigin(item, position);
 	return item;
 }
 
@@ -59,6 +59,7 @@ bool Item_InitializeLoot(entity item, string class_name, vector position,
 	item.classname = class_name;
 	Item_SetLoot(item, true);
 	item.noalign = true;
+	setorigin(item, position);
 	item.pickup_anyway = true;
 	item.spawnfunc_checked = true;
 	Item_Initialize(item, class_name);
@@ -67,7 +68,6 @@ bool Item_InitializeLoot(entity item, string class_name, vector position,
 		return false;
 	}
 	item.gravity = 1;
-	setorigin(item, position);
 	item.velocity = vel;
 	SUB_SetFade(item, time + time_to_live, 1);
 	return true;

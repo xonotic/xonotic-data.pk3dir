@@ -842,8 +842,6 @@ float Item_GiveTo(entity item, entity player)
 		player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
 	}
 
-LABEL(skip)
-
 	// always eat teamed entities
 	if(item.team)
 		pickedup = true;

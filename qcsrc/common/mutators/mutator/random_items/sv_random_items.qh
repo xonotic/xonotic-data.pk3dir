@@ -1,1 +1,3 @@
 #pragma once
+
+bool autocvar_g_random_items; ///< Whether to enable random items.

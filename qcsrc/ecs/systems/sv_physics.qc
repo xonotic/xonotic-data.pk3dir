@@ -64,7 +64,9 @@ void sys_phys_spectator_control(entity this)
 			    || CS(this).impulse == 15
 			    || CS(this).impulse == 18
 			    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
-			   ) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (CS(this).impulse == 11) {
+			   ) {
+				this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5);
+			} else if (CS(this).impulse == 11) {
 				this.spectatorspeed = maxspeed_mod;
 			} else if (CS(this).impulse == 12
 			    || CS(this).impulse == 16
