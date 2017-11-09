@@ -91,36 +91,34 @@ string RandomItems_GetItemVarName(string class_name)
 	bool is_ok = expr_evaluate(autocvar_g_overkill);
 	switch (class_name)
 	{
-		#define X(classname) case #classname: return #classname
-		#define XCOND(classname, var, expr) case #classname: if (expr) return #var; else break
-		X(item_health_small);
-		X(item_health_medium);
-		X(item_health_big);
-		XCOND(item_health_mega, item_health_mega, !is_ok || !autocvar_g_overkill_filter_healthmega);
+		#define XCOND(classname, expr) case #classname: if (expr) return #classname; else break
+		case "item_health_small": return "item_health_small";
+		case "item_health_medium": return "item_health_medium";
+		case "item_health_big": return "item_health_big";
+		XCOND(item_health_mega, !is_ok || !autocvar_g_overkill_filter_healthmega);
 
-		X(item_armor_small);
-		XCOND(item_armor_medium, item_armor_medium, !is_ok || !autocvar_g_overkill_filter_armormedium);
-		XCOND(item_armor_big, item_armor_big, !is_ok || !autocvar_g_overkill_filter_armorbig);
-		XCOND(item_armor_mega, item_armor_mega, !is_ok || !autocvar_g_overkill_filter_armormega);
+		case "item_armor_small": return "item_armor_small";
+		XCOND(item_armor_medium, !is_ok || !autocvar_g_overkill_filter_armormedium);
+		XCOND(item_armor_big, !is_ok || !autocvar_g_overkill_filter_armorbig);
+		XCOND(item_armor_mega, !is_ok || !autocvar_g_overkill_filter_armormega);
 
-		X(item_shells);
-		X(item_bullets);
-		X(item_rockets);
-		X(item_cells);
-		X(item_plasma);
-		X(item_fuel);
+		case "item_shells": return "item_shells";
+		case "item_bullets": return "item_bullets";
+		case "item_rockets": return "item_rockets";
+		case "item_cells": return "item_cells";
+		case "item_plasma": return "item_plasma";
+		case "item_fuel": return "item_fuel";
 
-		X(item_strength);
-		X(item_shield);
-		X(item_fuel_regen);
-		X(item_jetpack);
+		case "item_strength": return "item_strength";
+		case "item_shield": return "item_shield";
+		case "item_fuel_regen": return "item_fuel_regen";
+		case "item_jetpack": return "item_jetpack";
 
-		X(item_vaporizer_cells);
-		X(item_invisibility);
-		X(item_extralife);
-		X(item_speed);
+		case "item_vaporizer_cells": return "item_vaporizer_cells";
+		case "item_invisibility": return "item_invisibility";
+		case "item_extralife": return "item_extralife";
+		case "item_speed": return "item_speed";
 
-		#undef X
 		#undef XCOND
 	}
 	return "";
