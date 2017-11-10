@@ -196,18 +196,16 @@ string RandomItems_GetRandomMapItemClassName()
 		return RandomItems_GetRandomOverkillMapItemClassName();
 	}
 	RandomSelection_Init();
-	#define X(type, name) \
-		RandomSelection_AddFloat( \
-			RANDOM_ITEM_TYPE_##type, \
-			autocvar_g_random_items_##name##_probability, \
-			1 \
-		)
-	X(HEALTH, health);
-	X(ARMOR, armor);
-	X(RESOURCE, resource);
-	X(WEAPON, weapon);
-	X(POWERUP, powerup);
-	#undef X
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
+		autocvar_g_random_items_health_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_ARMOR,
+		autocvar_g_random_items_armor_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_RESOURCE,
+		autocvar_g_random_items_resource_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_WEAPON,
+		autocvar_g_random_items_weapon_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_POWERUP,
+		autocvar_g_random_items_powerup_probability, 1);
 	int item_type = RandomSelection_chosen_float;
 	switch (item_type)
 	{
@@ -406,18 +404,16 @@ string RandomItems_GetRandomLootItemClassName()
 		return RandomItems_GetRandomOverkillLootItemClassName();
 	}
 	RandomSelection_Init();
-	#define X(type, name) \
-		RandomSelection_AddFloat( \
-			RANDOM_ITEM_TYPE_##type, \
-			autocvar_g_random_loot_##name##_probability, \
-			1 \
-		)
-	X(HEALTH, health);
-	X(ARMOR, armor);
-	X(RESOURCE, resource);
-	X(WEAPON, weapon);
-	X(POWERUP, powerup);
-	#undef X
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH,
+		autocvar_g_random_loot_health_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_ARMOR,
+		autocvar_g_random_loot_armor_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_RESOURCE,
+		autocvar_g_random_loot_resource_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_WEAPON,
+		autocvar_g_random_loot_weapon_probability, 1);
+	RandomSelection_AddFloat(RANDOM_ITEM_TYPE_POWERUP,
+		autocvar_g_random_loot_powerup_probability, 1);
 	int item_type = RandomSelection_chosen_float;
 	switch (item_type)
 	{
