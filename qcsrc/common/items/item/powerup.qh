@@ -33,6 +33,7 @@ void powerup_strength_init(entity item)
 REGISTER_ITEM(Strength, Powerup) {
     this.m_canonical_spawnfunc = "item_strength";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model            =   MDL_Strength_ITEM;
     this.m_sound            =   SND_Strength;
     this.m_glow             =   true;
@@ -68,6 +69,7 @@ void powerup_shield_init(entity item)
 REGISTER_ITEM(Shield, Powerup) {
     this.m_canonical_spawnfunc = "item_shield";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model            =   MDL_Shield_ITEM;
     this.m_sound            =   SND_Shield;
     this.m_glow             =   true;

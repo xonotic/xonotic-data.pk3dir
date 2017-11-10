@@ -121,19 +121,8 @@ string RandomItems_GetRandomVanillaItemClassName(string prefix)
 		}
 		case RANDOM_ITEM_TYPE_POWERUP:
 		{
-			RandomSelection_Init();
-			#define X(classname) \
-				RandomSelection_AddString( \
-					classname, \
-					cvar(sprintf("g_%s_%s_probability", prefix, classname)), \
-					1 \
-				)
-			X("item_strength");
-			X("item_shield");
-			X("item_fuel_regen");
-			X("item_jetpack");
-			#undef X
-			return RandomSelection_chosen_string;
+			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
+				instanceOfPowerup);
 		}
 	}
 	return "";
@@ -182,7 +171,7 @@ string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 	.bool item_property)
 {
 	RandomSelection_Init();
-	FOREACH(Items, it.item_property,
+	FOREACH(Items, it.item_property && (it.spawnflags & ITEM_FLAG_NORMAL),
 	{
 		RandomSelection_AddString(it.m_canonical_spawnfunc,
 			cvar(sprintf("g_%s_%s_probability", prefix,
