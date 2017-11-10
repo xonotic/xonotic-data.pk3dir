@@ -144,17 +144,12 @@ string RandomItems_GetRandomVanillaItemClassName(string prefix)
 string RandomItems_GetRandomInstagibItemClassName(string prefix)
 {
 	RandomSelection_Init();
-	#define X(classname) \
-		RandomSelection_AddString( \
-			classname, \
-			cvar(sprintf("g_%s_%s_probability", prefix, classname)), \
-			1 \
-		)
-	X("item_vaporizer_cells");
-	X("item_invisibility");
-	X("item_extralife");
-	X("item_speed");
-	#undef X
+	FOREACH(Items, it.spawnflags & ITEM_FLAG_INSTAGIB,
+	{
+		RandomSelection_AddString(it.m_canonical_spawnfunc,
+			cvar(sprintf("g_%s_%s_probability", prefix,
+			it.m_canonical_spawnfunc)), 1);
+	});
 	return RandomSelection_chosen_string;
 }
 
