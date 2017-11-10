@@ -17,6 +17,23 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") &
 	{
 		precache_all_playermodels("models/ok_player/*.dpm");
 
+		if (autocvar_g_overkill_filter_healthmega)
+		{
+			ITEM_HealthMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armormedium)
+		{
+			ITEM_ArmorMedium.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armorbig)
+		{
+			ITEM_ArmorBig.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armormega)
+		{
+			ITEM_ArmorMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+
 		WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 		WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
@@ -27,6 +44,11 @@ REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") &
 
 	MUTATOR_ONREMOVE
 	{
+		ITEM_HealthMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorMedium.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+
 		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 		WEP_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
@@ -246,14 +268,6 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 
 	if(item.ok_item)
 		return false;
-
-	switch(item.itemdef)
-	{
-		case ITEM_HealthMega: return autocvar_g_overkill_filter_healthmega;
-		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
-		case ITEM_ArmorBig: return autocvar_g_overkill_filter_armorbig;
-		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armormega;
-	}
 
 	return true;
 }

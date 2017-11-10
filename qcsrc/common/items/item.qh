@@ -59,7 +59,8 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 enum
 {
 	ITEM_FLAG_INSTAGIB = BIT(0), ///< Item is usable in instagib.
-    ITEM_FLAG_MUTATORBLOCKED = BIT(1)
+	ITEM_FLAG_OVERKILL = BIT(1), ///< Item is usable in overkill.
+    ITEM_FLAG_MUTATORBLOCKED = BIT(2)
 };
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)

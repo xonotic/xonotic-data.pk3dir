@@ -60,8 +60,6 @@ bool random_items_is_spawning = false;
 string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 	.bool item_property);
 
-string RandomItems_GetItemVarName(string class_name);
-
 //=========================== Public API ======================================
 
 string RandomItems_GetRandomItemClassName(string prefix)
@@ -156,54 +154,21 @@ string RandomItems_GetRandomInstagibItemClassName(string prefix)
 string RandomItems_GetRandomOverkillItemClassName(string prefix)
 {
 	RandomSelection_Init();
-	string varname;
-	#define X(classname) MACRO_BEGIN \
-		if ((varname = RandomItems_GetItemVarName(classname))) \
-		{ \
-			RandomSelection_AddString( \
-				classname, \
-				cvar(sprintf("g_%s_overkill_%s_probability", prefix, varname)), \
-				1 \
-			); \
-		} \
-	MACRO_END
-	X("item_health_mega");
-	X("item_armor_small");
-	X("item_armor_medium");
-	X("item_armor_big");
-	X("item_armor_mega");
-	X("weapon_hmg");
-	X("weapon_rpc");
-	#undef X
+	FOREACH(Items, (it.spawnflags & ITEM_FLAG_OVERKILL) &&
+		!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED),
+	{
+		RandomSelection_AddString(it.m_canonical_spawnfunc,
+			cvar(sprintf("g_%s_overkill_%s_probability", prefix,
+			it.m_canonical_spawnfunc)), 1);
+	});
+	RandomSelection_AddString("weapon_hmg",
+		cvar(sprintf("g_%s_overkill_weapon_hmg_probability", prefix)), 1);
+	RandomSelection_AddString("weapon_rpc",
+		cvar(sprintf("g_%s_overkill_weapon_rpc_probability", prefix)), 1);
 	return RandomSelection_chosen_string;
 }
 
 //========================= Free functions ====================================
-
-string RandomItems_GetItemVarName(string class_name)
-{
-	if (startsWith(class_name, "weapon_"))
-	{
-		FOREACH(Weapons, it.m_canonical_spawnfunc == class_name, {
-			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-			{
-				return "";
-			}
-			return class_name;
-		});
-	}
-	switch (class_name)
-	{
-		#define XCOND(classname, expr) case #classname: if (expr) return #classname; else break
-		XCOND(item_health_mega, !autocvar_g_overkill_filter_healthmega);
-		case "item_armor_small": return "item_armor_small";
-		XCOND(item_armor_medium, !autocvar_g_overkill_filter_armormedium);
-		XCOND(item_armor_big, !autocvar_g_overkill_filter_armorbig);
-		XCOND(item_armor_mega, !autocvar_g_overkill_filter_armormega);
-		#undef XCOND
-	}
-	return "";
-}
 
 /// \brief Returns list of classnames to replace a map item with.
 /// \param[in] item Item to inspect.
