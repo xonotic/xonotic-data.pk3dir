@@ -768,14 +768,42 @@ void havocbot_movetogoal(entity this)
 	if (this.goalcurrent == this.goalentity && this.goalentity_lock_timeout > time)
 		locked_goal = true;
 
+	if (IS_MOVABLE(this.goalcurrent))
+	{
+		if (IS_DEAD(this.goalcurrent))
+		{
+			if (checkpvs(this.origin + this.view_ofs, this.goalcurrent))
+			{
+				navigation_goalrating_timeout_force(this);
+				return;
+			}
+		}
+		else if (this.bot_tracewalk_time < time)
+		{
+			set_tracewalk_dest(this.goalcurrent, this.origin, true);
+			if (!(trace_ent == this || tracewalk(this, this.origin, this.mins, this.maxs,
+				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode)))
+			{
+				navigation_goalrating_timeout_force(this);
+				return;
+			}
+			this.bot_tracewalk_time = max(time, this.bot_tracewalk_time) + 0.25;
+		}
+	}
 	if(!locked_goal)
 	{
 		// optimize path finding by anticipating goalrating when bot is near a waypoint;
 		// in this case path finding can start directly from a waypoint instead of
 		// looking for all the reachable waypoints up to a certain distance
-		if(navigation_poptouchedgoals(this) && this.goalcurrent)
+		if (navigation_poptouchedgoals(this) && this.goalcurrent)
 		{
-			if(navigation_goalrating_timeout_can_be_anticipated(this))
+			if (IS_MOVABLE(this.goalcurrent) && IS_DEAD(this.goalcurrent))
+			{
+				// remove even if not visible
+				navigation_goalrating_timeout_force(this);
+				return;
+			}
+			else if (navigation_goalrating_timeout_can_be_anticipated(this))
 				navigation_goalrating_timeout_force(this);
 		}
 	}
