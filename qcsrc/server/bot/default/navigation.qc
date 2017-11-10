@@ -948,15 +948,28 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 		if(walkfromwp && (it.wpflags & WAYPOINTFLAG_NORELINK))
 			continue;
 		v = it.origin;
-		if(walkfromwp)
-			set_tracewalk_dest(ent, v, false);
+
+		if (walkfromwp)
+		{
+			set_tracewalk_dest(ent, v, true);
+			if (trace_ent == ent)
+			{
+				bestdist = 0;
+				best = it;
+				break;
+			}
+		}
 		else
 			set_tracewalk_dest(it, org, false);
+
 		if (navigation_waypoint_will_link(v, org, ent,
 			tracewalk_dest, tracewalk_dest_height,
 			tracewalk_dest, tracewalk_dest_height, walkfromwp, bestdist))
 		{
-			bestdist = vlen(v - org);
+			if (walkfromwp)
+				bestdist = vlen(tracewalk_dest - org);
+			else
+				bestdist = vlen(v - org);
 			best = it;
 		}
 	});
