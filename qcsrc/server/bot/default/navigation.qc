@@ -1531,26 +1531,34 @@ int navigation_poptouchedgoals(entity this)
 	}
 
 	// If for some reason the bot is closer to the next goal, pop the current one
-	if(this.goalstack01 && !wasfreed(this.goalstack01))
-	if(random() < 0.7) // randomness should help on certain hard paths with climbs and tight corners
-	if(vlen2(this.goalcurrent.origin - this.goalstack01.origin) > vlen2(this.goalstack01.origin - this.origin))
-	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
+	// randomness should help to get unstuck bot on certain hard paths with climbs and tight corners
+	if (this.goalstack01 && !wasfreed(this.goalstack01) && random() < 0.7)
 	{
-		set_tracewalk_dest(this.goalstack01, this.origin, false);
-		if(tracewalk(this, this.origin, this.mins, this.maxs,
-			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+		entity next = IS_PLAYER(this.goalentity) ? this.goalentity : this.goalstack01;
+		if (vlen2(this.goalcurrent.origin - next.origin) > vlen2(next.origin - this.origin)
+			&& checkpvs(this.origin + this.view_ofs, next))
 		{
-			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
-			navigation_poproute(this);
-			++removed_goals;
-			if(this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
-				return removed_goals;
-			// TODO this may also be a nice idea to do "early" (e.g. by
-			// manipulating the vlen() comparisons) to shorten paths in
-			// general - this would make bots walk more "on rails" than
-			// "zigzagging" which they currently do with sufficiently
-			// random-like waypoints, and thus can make a nice bot
-			// personality property
+			set_tracewalk_dest(next, this.origin, true);
+			if (trace_ent == this || tracewalk(this, this.origin, this.mins, this.maxs,
+				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+			{
+				LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
+				do
+				{
+					// loop clears the whole route if next is a player
+					navigation_poproute(this);
+					++removed_goals;
+				}
+				while (this.goalcurrent == next);
+				if (this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+					return removed_goals;
+				// TODO this may also be a nice idea to do "early" (e.g. by
+				// manipulating the vlen() comparisons) to shorten paths in
+				// general - this would make bots walk more "on rails" than
+				// "zigzagging" which they currently do with sufficiently
+				// random-like waypoints, and thus can make a nice bot
+				// personality property
+			}
 		}
 	}
 
