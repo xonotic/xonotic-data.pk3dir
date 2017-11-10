@@ -133,11 +133,21 @@ void set_tracewalk_dest(entity ent, vector org, bool fix_player_dest)
 	if (fix_player_dest && IS_PLAYER(ent) && !IS_ONGROUND(ent))
 	{
 		// snap player to the ground
-		tracebox(tracewalk_dest, ent.mins, ent.maxs, tracewalk_dest - '0 0 700', MOVE_NORMAL, ent);
-		if (!trace_startsolid && tracewalk_dest.z - trace_endpos.z > 0)
+		if (org.x == tracewalk_dest.x && org.y == tracewalk_dest.y)
 		{
-			tracewalk_dest_height = tracewalk_dest.z - trace_endpos.z;
-			tracewalk_dest.z = trace_endpos.z;
+			// bot is right under the player
+			tracebox(ent.origin, ent.mins, ent.maxs, ent.origin - '0 0 700', MOVE_NORMAL, ent);
+			tracewalk_dest = trace_endpos;
+			tracewalk_dest_height = 0;
+		}
+		else
+		{
+			tracebox(tracewalk_dest, ent.mins, ent.maxs, tracewalk_dest - '0 0 700', MOVE_NORMAL, ent);
+			if (!trace_startsolid && tracewalk_dest.z - trace_endpos.z > 0)
+			{
+				tracewalk_dest_height = tracewalk_dest.z - trace_endpos.z;
+				tracewalk_dest.z = trace_endpos.z;
+			}
 		}
 	}
 }
@@ -1423,7 +1433,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 
 	// if it can reach the goal there is nothing more to do
 	set_tracewalk_dest(e, startposition, true);
-	if (tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this),
+	if (trace_ent == this || tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this),
 		tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
 	{
 		return true;
@@ -1450,9 +1460,9 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
 		{
 			set_tracewalk_dest(this.goalentity, nearest_wp.enemy.origin, true);
-			if (vdist(tracewalk_dest - nearest_wp.enemy.origin, <, 1050)
+			if (trace_ent == this || (vdist(tracewalk_dest - nearest_wp.enemy.origin, <, 1050)
 				&& tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
-				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode)))
 			{
 				e = nearest_wp.enemy;
 			}
