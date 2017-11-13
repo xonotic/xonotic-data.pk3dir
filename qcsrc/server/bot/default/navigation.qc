@@ -967,7 +967,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 			tracewalk_dest, tracewalk_dest_height, walkfromwp, bestdist))
 		{
 			if (walkfromwp)
-				bestdist = vlen(tracewalk_dest - org);
+				bestdist = vlen(tracewalk_dest - v);
 			else
 				bestdist = vlen(v - org);
 			best = it;
