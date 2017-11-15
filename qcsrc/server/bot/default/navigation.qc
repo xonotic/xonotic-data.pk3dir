@@ -1474,6 +1474,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		{
 			set_tracewalk_dest(this.goalentity, nearest_wp.enemy.origin, true);
 			if (trace_ent == this || (vdist(tracewalk_dest - nearest_wp.enemy.origin, <, 1050)
+				&& vlen2(tracewalk_dest - nearest_wp.enemy.origin) < vlen2(nearest_wp.origin - nearest_wp.enemy.origin)
 				&& tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
 				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode)))
 			{
