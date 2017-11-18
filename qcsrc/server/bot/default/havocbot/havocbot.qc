@@ -711,8 +711,7 @@ void havocbot_movetogoal(entity this)
 	}
 
 	// If we are under water with no goals, swim up
-	if(this.waterlevel)
-	if(this.goalcurrent==NULL)
+	if(this.waterlevel && !this.goalcurrent)
 	{
 		dir = '0 0 0';
 		if(this.waterlevel>WATERLEVEL_SWIMMING)
@@ -767,6 +766,8 @@ void havocbot_movetogoal(entity this)
 	}
 	if (this.goalcurrent == this.goalentity && this.goalentity_lock_timeout > time)
 		locked_goal = true;
+
+	navigation_shortenpath(this);
 
 	if (IS_MOVABLE(this.goalcurrent))
 	{

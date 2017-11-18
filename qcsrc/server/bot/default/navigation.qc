@@ -46,6 +46,7 @@ bool navigation_goalrating_timeout(entity this)
 	return this.bot_strategytime < time;
 }
 
+#define MAX_CHASE_DISTANCE 700
 bool navigation_goalrating_timeout_can_be_anticipated(entity this)
 {
 	if(time > this.bot_strategytime - (IS_MOVABLE(this.goalentity) ? 3 : 2))
@@ -1446,8 +1447,9 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 
 	// if it can reach the goal there is nothing more to do
 	set_tracewalk_dest(e, startposition, true);
-	if (trace_ent == this || tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this),
-		tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+	if ((!IS_MOVABLE(this.goalcurrent) || vdist(tracewalk_dest - this.origin, <, MAX_CHASE_DISTANCE))
+		&& (trace_ent == this || tracewalk(this, startposition, STAT(PL_MIN, this), STAT(PL_MAX, this),
+		tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode)))
 	{
 		return true;
 	}
@@ -1498,6 +1500,77 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	return false;
 }
 
+// shorten path by removing intermediate goals
+void navigation_shortenpath(entity this)
+{
+	if (!this.goalstack01 || wasfreed(this.goalstack01))
+		return;
+	if (this.bot_tracewalk_time > time)
+		return;
+	this.bot_tracewalk_time = max(time, this.bot_tracewalk_time) + 0.25;
+
+	bool cut_allowed = false;
+	entity next = this.goalentity;
+	// evaluate whether bot can discard current route and chase directly a player, trying to
+	// keep waypoint route as long as possible, as it is safer and faster (bot can bunnyhop)
+	if (IS_MOVABLE(next))
+	{
+		set_tracewalk_dest(next, this.origin, true);
+		if (vdist(this.origin - tracewalk_dest, <, 200))
+			cut_allowed = true;
+		else if (vdist(tracewalk_dest - this.origin, <, MAX_CHASE_DISTANCE)
+			&& vdist(tracewalk_dest - this.goalcurrent.origin, >, 200)
+			&& vdist(this.origin - this.goalcurrent.origin, >, 100)
+			&& checkpvs(this.origin + this.view_ofs, next))
+		{
+			if (vlen2(next.origin - this.origin) < vlen2(this.goalcurrent.origin - this.origin))
+				cut_allowed = true;
+			else
+			{
+				vector deviation = vectoangles(this.goalcurrent.origin - this.origin) - vectoangles(next.origin - this.origin);
+				while (deviation.y < -180) deviation.y += 360;
+				while (deviation.y > 180) deviation.y -= 360;
+				if (fabs(deviation.y) > 25)
+					cut_allowed = true;
+			}
+		}
+		if (cut_allowed)
+		{
+			if (trace_ent == this || tracewalk(this, this.origin, this.mins, this.maxs,
+				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+			{
+				LOG_DEBUG("path optimized for ", this.netname, ", route cleared");
+				do
+				{
+					navigation_poproute(this);
+				}
+				while (this.goalcurrent != next);
+			}
+			return;
+		}
+	}
+
+	next = this.goalstack01;
+	// if for some reason the bot is closer to the next goal, pop the current one
+	if (!IS_MOVABLE(next) // already checked in the previous case
+		&& vlen2(this.goalcurrent.origin - next.origin) > vlen2(next.origin - this.origin)
+		&& checkpvs(this.origin + this.view_ofs, next))
+	{
+		set_tracewalk_dest(next, this.origin, true);
+		cut_allowed = true;
+	}
+
+	if (cut_allowed)
+	{
+		if (trace_ent == this || tracewalk(this, this.origin, this.mins, this.maxs,
+			tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+		{
+			LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue"); 
+			navigation_poproute(this);
+		}
+	}
+}
+
 // removes any currently touching waypoints from the goal stack
 // (this is how bots detect if they reached a goal)
 int navigation_poptouchedgoals(entity this)
@@ -1526,38 +1599,6 @@ int navigation_poptouchedgoals(entity this)
 		}
 		else
 			return removed_goals;
-	}
-
-	// If for some reason the bot is closer to the next goal, pop the current one
-	// randomness should help to get unstuck bot on certain hard paths with climbs and tight corners
-	if (this.goalstack01 && !wasfreed(this.goalstack01) && random() < 0.7)
-	{
-		entity next = IS_PLAYER(this.goalentity) ? this.goalentity : this.goalstack01;
-		if (vlen2(this.goalcurrent.origin - next.origin) > vlen2(next.origin - this.origin)
-			&& checkpvs(this.origin + this.view_ofs, next))
-		{
-			set_tracewalk_dest(next, this.origin, true);
-			if (trace_ent == this || tracewalk(this, this.origin, this.mins, this.maxs,
-				tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
-			{
-				LOG_DEBUG("path optimized for ", this.netname, ", removed a goal from the queue");
-				do
-				{
-					// loop clears the whole route if next is a player
-					navigation_poproute(this);
-					++removed_goals;
-				}
-				while (this.goalcurrent == next);
-				if (this.goalcurrent && this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
-					return removed_goals;
-				// TODO this may also be a nice idea to do "early" (e.g. by
-				// manipulating the vlen() comparisons) to shorten paths in
-				// general - this would make bots walk more "on rails" than
-				// "zigzagging" which they currently do with sufficiently
-				// random-like waypoints, and thus can make a nice bot
-				// personality property
-			}
-		}
 	}
 
 	// Loose goal touching check when running
