@@ -266,7 +266,11 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 
 	ca_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
-		frag_target.respawn_flags =  RESPAWN_SILENT;
+	{
+		frag_target.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and move of spectator camera
+		frag_target.respawn_time = time + 2;
+	}
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	if(IS_BOT_CLIENT(frag_target))
