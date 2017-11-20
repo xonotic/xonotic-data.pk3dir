@@ -988,6 +988,8 @@ void havocbot_movetogoal(entity this)
 			{
 				navigation_clearroute(this);
 				navigation_goalrating_timeout_force(this);
+				this.ignoregoal = this.goalcurrent;
+				this.ignoregoaltime = time + autocvar_bot_ai_ignoregoal_timeout;
 			}
 		}
 

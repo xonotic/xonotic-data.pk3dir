@@ -77,6 +77,9 @@ vector havocbot_middlepoint;
 float havocbot_middlepoint_radius;
 vector havocbot_symmetryaxis_equation;
 
+.float ignoregoaltime;
+.entity ignoregoal;
+
 .entity bot_basewaypoint;
 .bool navigation_dynamicgoal;
 void navigation_dynamicgoal_init(entity this, bool initially_static);
