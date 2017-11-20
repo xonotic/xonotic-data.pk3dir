@@ -246,7 +246,7 @@ void havocbot_role_ka_carrier(entity this)
 	if (!this.ballcarried)
 	{
 		this.havocbot_role = havocbot_role_ka_collector;
-		navigation_goalrating_timeout_force(this);
+		navigation_goalrating_timeout_expire(this, 2);
 	}
 }
 
@@ -269,7 +269,7 @@ void havocbot_role_ka_collector(entity this)
 	if (this.ballcarried)
 	{
 		this.havocbot_role = havocbot_role_ka_carrier;
-		navigation_goalrating_timeout_force(this);
+		navigation_goalrating_timeout_expire(this, 2);
 	}
 }
 

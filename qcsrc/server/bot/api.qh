@@ -32,6 +32,8 @@ float skill;
 .float(entity player, entity item) bot_pickupevalfunc;
 .string cleanname;
 .float havocbot_role_timeout;
+.void(entity this) havocbot_role;
+.void(entity this) havocbot_previous_role;
 .float isbot; // true if this client is actually a bot
 .float lastteleporttime;
 .float navigation_hasgoals;
@@ -77,6 +79,7 @@ vector havocbot_middlepoint;
 float havocbot_middlepoint_radius;
 vector havocbot_symmetryaxis_equation;
 
+.float goalentity_lock_timeout;
 .float ignoregoaltime;
 .entity ignoregoal;
 

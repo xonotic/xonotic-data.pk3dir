@@ -2034,7 +2034,8 @@ void havocbot_role_ctf_setrole(entity bot, int role)
 			bot.havocbot_role = havocbot_role_ctf_carrier;
 			bot.havocbot_role_timeout = 0;
 			bot.havocbot_cantfindflag = time + 10;
-			navigation_goalrating_timeout_force(bot);
+			if (bot.havocbot_previous_role != bot.havocbot_role)
+				navigation_goalrating_timeout_force(bot);
 			break;
 		case HAVOCBOT_CTF_ROLE_DEFENSE:
 			s = "defense";
@@ -2056,14 +2057,16 @@ void havocbot_role_ctf_setrole(entity bot, int role)
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_retriever;
 			bot.havocbot_role_timeout = time + 10;
-			navigation_goalrating_timeout_force(bot);
+			if (bot.havocbot_previous_role != bot.havocbot_role)
+				navigation_goalrating_timeout_expire(bot, 2);
 			break;
 		case HAVOCBOT_CTF_ROLE_ESCORT:
 			s = "escort";
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_escort;
 			bot.havocbot_role_timeout = time + 30;
-			navigation_goalrating_timeout_force(bot);
+			if (bot.havocbot_previous_role != bot.havocbot_role)
+				navigation_goalrating_timeout_expire(bot, 2);
 			break;
 	}
 	LOG_TRACE(bot.netname, " switched to ", s);
