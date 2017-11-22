@@ -3,6 +3,8 @@
 #include "hmg.qh"
 #include "rpc.qh"
 
+string autocvar_g_overkill;
+
 bool autocvar_g_overkill_powerups_replace;
 
 bool autocvar_g_overkill_itemwaypoints = true;
@@ -18,7 +20,7 @@ bool autocvar_g_overkill_filter_armormega;
 
 void ok_Initialize();
 
-REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
+REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
 {
 	MUTATOR_ONADD
 	{
@@ -120,10 +122,9 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
 		return;
 
-	if(PHYS_INPUT_BUTTON_ATCK2(player))
+	if(PHYS_INPUT_BUTTON_ATCK2(player) && time >= player.jump_interval)
 	if( !forbidWeaponUse(player)
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
-	if(time >= player.jump_interval)
 	{
 		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
 		makevectors(player.v_angle);
@@ -304,19 +305,8 @@ MUTATOR_HOOKFUNCTION(ok, SetModname)
 	return true;
 }
 
-void ok_SetCvars()
-{
-	// hack to force overkill playermodels
-	cvar_settemp("sv_defaultcharacter", "1");
-	cvar_settemp("sv_defaultplayermodel", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
-	cvar_settemp("sv_defaultplayermodel_red", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm");
-	cvar_settemp("sv_defaultplayermodel_blue", "models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
-}
-
 void ok_Initialize()
 {
-	ok_SetCvars();
-
 	precache_all_playermodels("models/ok_player/*.dpm");
 
 	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;

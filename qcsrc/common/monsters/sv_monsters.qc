@@ -954,7 +954,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 
 	if(IS_PLAYER(attacker))
 	if(autocvar_g_monsters_score_spawned || !((this.spawnflags & MONSTERFLAG_SPAWNED) || (this.spawnflags & MONSTERFLAG_RESPAWNED)))
-		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
+		GameRules_scoring_add(attacker, SCORE, +autocvar_g_monsters_score_kill);
 
 	if(gibbed)
 	{

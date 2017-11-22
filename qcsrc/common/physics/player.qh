@@ -80,8 +80,9 @@ bool IsFlying(entity a);
 #define PHYS_JETPACK_MAXSPEED_UP(s)         STAT(JETPACK_MAXSPEED_UP, s)
 #define PHYS_JETPACK_REVERSE_THRUST(s)		STAT(JETPACK_REVERSE_THRUST, s)
 
-#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, NULL)
+#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
 #define PHYS_JUMPVELOCITY(s)                STAT(MOVEVARS_JUMPVELOCITY, s)
+#define PHYS_JUMPVELOCITY_CROUCH(s)         STAT(MOVEVARS_JUMPVELOCITY_CROUCH, s)
 
 #define PHYS_MAXAIRSPEED(s)                 STAT(MOVEVARS_MAXAIRSPEED, s)
 #define PHYS_MAXAIRSTRAFESPEED(s)           STAT(MOVEVARS_MAXAIRSTRAFESPEED, s)
@@ -97,7 +98,7 @@ bool IsFlying(entity a);
 #define PHYS_WARSOWBUNNY_TOPSPEED(s)        STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, s)
 #define PHYS_WARSOWBUNNY_TURNACCEL(s)       STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, s)
 
-#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY, NULL)
+#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY)
 
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)
@@ -190,6 +191,13 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	.int items;
 
 	.vector movement;
+
+	// angles of the player's view (as opposed to their model which uses `.vector angles;`) in degrees
+	// x is pitch: positive means down (unlike .angles)
+	// y is yaw: between -180 and 180, increases when turning left
+	// z is roll: positive means tilted clockwise, usually is 0
+	// when .fixangle is set, the player's view will change to the direction where the model is facing
+	// more info: https://gitlab.com/xonotic/xonotic-data.pk3dir/merge_requests/447#note_32816794
 	.vector v_angle;
 
 	.entity hook;
@@ -295,7 +303,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max
 
-	#define PHYS_CL_TRACK_CANJUMP(s)            ((s).cvar_cl_movement_track_canjump)
+	#define PHYS_CL_TRACK_CANJUMP(s)            (CS(s).cvar_cl_movement_track_canjump)
 
 #endif
 

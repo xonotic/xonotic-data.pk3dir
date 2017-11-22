@@ -85,7 +85,7 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 
 	if (view.buffs)
 	{
-		return view.cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
+		return CS(view).cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
 	}
 
 	return WaypointSprite_visible_for_player(this, player, view);
@@ -179,7 +179,7 @@ void buff_Touch(entity this, entity toucher)
 
 	if (toucher.buffs)
 	{
-		if (toucher.cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
+		if (CS(toucher).cvar_cl_buffs_autoreplace && toucher.buffs != this.buffs)
 		{
 			int buffid = buff_FirstFromFlags(toucher.buffs).m_id;
 			//Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, ITEM_BUFF_DROP, toucher.buffs);
@@ -424,12 +424,17 @@ void buff_Medic_Heal(entity this)
 {
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
 	{
-		if(SAME_TEAM(it, this))
-		if(it.health < autocvar_g_balance_health_regenstable)
+		if (!SAME_TEAM(it, this))
 		{
-			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
-			it.health = bound(0, it.health + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable);
+			continue;
 		}
+		float hp = GetResourceAmount(it, RESOURCE_HEALTH);
+		if(hp >= autocvar_g_balance_health_regenstable)
+		{
+			continue;
+		}
+		Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
+		SetResourceAmount(it, RESOURCE_HEALTH, bound(0, hp + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable));
 	});
 }
 
@@ -460,11 +465,11 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
 	if(frag_target.buffs & BUFF_MEDIC.m_itemid)
-	if((frag_target.health - frag_damage) <= 0)
+	if((GetResourceAmount(frag_target, RESOURCE_HEALTH) - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
-		frag_damage = max(5, frag_target.health - autocvar_g_buffs_medic_survive_health);
+		frag_damage = max(5, GetResourceAmount(frag_target, RESOURCE_HEALTH) - autocvar_g_buffs_medic_survive_health);
 
 	if(frag_target.buffs & BUFF_JUMP.m_itemid)
 	if(frag_deathtype == DEATH_FALL.m_id)
@@ -537,9 +542,15 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if(frag_target.takedamage)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
-		frag_attacker.health = bound(0, frag_attacker.health + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.health), g_pickup_healthsmall_max);
-		if(frag_target.armorvalue)
-			frag_attacker.armorvalue = bound(0, frag_attacker.armorvalue + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.armorvalue), g_pickup_armorsmall_max);
+		float amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
+			GetResourceAmount(frag_target, RESOURCE_HEALTH));
+		GiveResourceWithLimit(frag_attacker, RESOURCE_HEALTH, amount, g_pickup_healthsmall_max);
+		if (frag_target.armorvalue)
+		{
+			amount = bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal,
+				GetResourceAmount(frag_target, RESOURCE_ARMOR));
+			GiveResourceWithLimit(frag_attacker, RESOURCE_ARMOR, amount, g_pickup_armorsmall_max);
+		}
 	}
 
 	M_ARGV(4, float) = frag_damage;

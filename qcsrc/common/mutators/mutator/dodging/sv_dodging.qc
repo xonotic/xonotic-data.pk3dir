@@ -35,7 +35,7 @@
 	#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
 #elif defined(SVQC)
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
-	#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
+	#define PHYS_DODGING_TIMEOUT(s) 			CS(s).cvar_cl_dodging_timeout
 	#define PHYS_DODGING_PRESSED_KEYS(s)		CS(s).pressedkeys
 #endif
 
@@ -52,7 +52,7 @@ bool autocvar_sv_dodging_sound;
 #include <common/animdecide.qh>
 #include <common/physics/player.qh>
 
-.float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
+.float cvar_cl_dodging_timeout;
 
 REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 {
@@ -104,19 +104,20 @@ REGISTER_MUTATOR(dodging, true);
 .int pressedkeys;
 #endif
 
-// returns 1 if the player is close to a wall
+// returns true if the player is close to a wall
 bool check_close_to_wall(entity this, float threshold)
 {
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
-#define X(OFFSET) \
-	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this); \
-	if(trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY) && vdist(this.origin - trace_endpos, <, threshold)) \
+#define X(dir) \
+	tracebox(this.origin, this.mins, this.maxs, this.origin + threshold * dir, true, this); \
+	if (trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) \
 		return true;
-	X(1000*v_right);
-	X(-1000*v_right);
-	X(1000*v_forward);
-	X(-1000*v_forward);
+
+	X(v_right);
+	X(-v_right);
+	X(v_forward);
+	X(-v_forward);
 #undef X
 
 	return false;
@@ -306,6 +307,13 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 #ifdef SVQC
 
 REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
+
+MUTATOR_HOOKFUNCTION(dodging, PlayerPreThink)
+{
+	entity player = M_ARGV(0, entity);
+
+	STAT(DODGING_TIMEOUT, player) = CS(player).cvar_cl_dodging_timeout;
+}
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {

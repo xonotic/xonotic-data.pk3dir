@@ -59,8 +59,10 @@ function check1() {
     declare -l prog="${1}"
     declare -l file="${2}"
     MODE=${prog}
+    includes="-include lib/_all.inc"
+    [ -f ${prog}/_all.qh ] && includes="${includes} -include ${prog}/_all.qh"
     qpp ${file} test.dat \
-            -include lib/_all.inc -include ${prog}/_all.qh \
+            ${includes} \
             -I. ${QCCIDENT} ${QCCDEFS} > ${WORKDIR}/${prog}.qc
     qcc ${QCCFLAGS} -o ../${WORKDIR}/test.dat ../${WORKDIR}/${prog}.qc >/dev/null
 }
@@ -72,6 +74,12 @@ function check() {
     done
 }
 
-check client
-check server
-check menu
+if [ ${#@} -eq 0 ]; then
+    check client
+    check server
+    check menu
+else
+    for var in ${@}; do
+        check ${var}
+    done
+fi

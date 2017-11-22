@@ -50,8 +50,6 @@ void M_Golem_Attack_Swing(entity this)
 	Monster_Attack_Melee(this, this.enemy, (autocvar_g_monster_golem_attack_claw_damage), ((random() >= 0.5) ? this.anim_melee2 : this.anim_melee3), this.attack_range, 0.8, DEATH_MONSTER_GOLEM_CLAW.m_id, true);
 }
 
-#include <common/effects/qc/all.qh>
-
 void M_Golem_Attack_Lightning_Explode(entity this, entity directhitentity)
 {
 	sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);

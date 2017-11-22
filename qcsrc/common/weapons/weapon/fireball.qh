@@ -1,1 +1,60 @@
 #pragma once
+
+CLASS(Fireball, Weapon)
+/* ammotype  */ //ATTRIB(Fireball, ammo_type, int, RESOURCE_NONE);
+/* impulse   */ ATTRIB(Fireball, impulse, int, 9);
+/* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
+/* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, 5000);
+/* color     */ ATTRIB(Fireball, wpcolor, vector, '1 0.5 0');
+/* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
+#ifdef GAMEQC
+/* model     */ ATTRIB(Fireball, m_model, Model, MDL_FIREBALL_ITEM);
+#endif
+/* crosshair */ ATTRIB(Fireball, w_crosshair, string, "gfx/crosshairfireball");
+/* crosshair */ //ATTRIB(Fireball, w_crosshair_size, float, 0.65);
+/* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
+/* refname   */ ATTRIB(Fireball, netname, string, "fireball");
+/* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bfgdamage, float, PRI) \
+		P(class, prefix, bfgforce, float, PRI) \
+		P(class, prefix, bfgradius, float, PRI) \
+		P(class, prefix, damageforcescale, float, BOTH) \
+		P(class, prefix, damagetime, float, SEC) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, health, float, PRI) \
+		P(class, prefix, laserburntime, float, BOTH) \
+		P(class, prefix, laserdamage, float, BOTH) \
+		P(class, prefix, laseredgedamage, float, BOTH) \
+		P(class, prefix, laserradius, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, radius, float, PRI) \
+		P(class, prefix, refire2, float, PRI) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, speed_up, float, SEC) \
+		P(class, prefix, speed_z, float, SEC) \
+		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Fireball, fireball)
+#undef X
+
+ENDCLASS(Fireball)
+REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
+
+#ifdef SVQC
+.float bot_primary_fireballmooth; // whatever a mooth is
+.vector fireball_impactvec;
+.float fireball_primarytime;
+#endif

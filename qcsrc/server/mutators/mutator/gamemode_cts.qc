@@ -32,18 +32,16 @@ void havocbot_role_cts(entity this)
 
 void cts_ScoreRules()
 {
-	ScoreRules_basics(0, 0, 0, false);
-	if(g_race_qualifying)
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	ScoreRules_basics_end();
+    GameRules_score_enabled(false);
+    GameRules_scoring(0, 0, 0, {
+        if (g_race_qualifying) {
+            field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+        } else {
+            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
+        }
+    });
 }
 
 void cts_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -149,7 +147,7 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 	FOREACH_CLIENT(true, {
 		if(it.race_place)
 		{
-			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
+			s = GameRules_scoring_add(it, RACE_FASTEST, 0);
 			if(!s)
 				it.race_place = 0;
 		}
@@ -206,7 +204,7 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(PlayerScore_Add(player, SP_RACE_FASTEST, 0))
+	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
 		player.frags = FRAGS_LMS_LOSER;
 	else
 		player.frags = FRAGS_SPECTATOR;
@@ -267,7 +265,7 @@ MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));

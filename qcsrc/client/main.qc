@@ -1,6 +1,12 @@
 #include "main.qh"
 
-#include <common/effects/qc/all.qh>
+#include "defs.qh"
+#include <common/ent_cs.qh>
+#include "miscfunctions.qh"
+#include <common/effects/effect.qh>
+#include <common/effects/qc/_mod.qh>
+#include <common/effects/all.qh>
+#include <common/effects/all.inc>
 #include "hud/_mod.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
@@ -91,7 +97,7 @@ void CSQC_Init()
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
+	LOG_INFOF("^4CSQC Build information: ^1%s", WATERMARK);
 #endif
 
 	{
@@ -145,6 +151,9 @@ void CSQC_Init()
 	players = Sort_Spawn();
 
 	GetTeam(NUM_SPECTATOR, true); // add specs first
+
+	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
+		weapon_accuracy[w] = -1;
 
 	// precaches
 
@@ -405,7 +414,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	if(!isNew && n != this.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", etof(this), this.classname);
+		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)", etof(this), this.classname);
 		isNew = true;
 		Ent_Remove(this);
 	}
@@ -426,11 +435,10 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	//	RegisterPlayer(o);
 	//playerchecker will do this for us later, if it has not already done so
 
-    int sf, lf;
-	sf = ReadShort();
-	lf = ReadShort();
+	int sf = ReadShort();
+	int lf = ReadShort();
 	FOREACH(Scores, true, {
-        int p = 1 << (i % 16);
+		int p = 1 << (i % 16);
 		if (sf & p)
 		{
 			if (lf & p)
@@ -438,7 +446,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 			else
 				o.(scores(it)) = ReadChar();
 		}
-    });
+	});
 
 	return = true;
 
@@ -452,24 +460,21 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 {
 	make_pure(this);
 	int i;
-	entity o;
 
 	this.team = ReadByte();
-	o = this.owner = GetTeam(this.team, true); // these team numbers can always be trusted
+	entity o = this.owner = GetTeam(this.team, true); // these team numbers can always be trusted
 
-    int sf, lf;
 #if MAX_TEAMSCORE <= 8
-	sf = ReadByte();
-	lf = ReadByte();
+	int sf = ReadByte();
+	int lf = ReadByte();
 #else
-	sf = ReadShort();
-	lf = ReadShort();
+	int sf = ReadShort();
+	int lf = ReadShort();
 #endif
-	int p;
-	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(sf & p)
+	for(i = 0; i < MAX_TEAMSCORE; ++i)
+		if(sf & BIT(i))
 		{
-			if(lf & p)
+			if(lf & BIT(i))
 				o.(teamscores(i)) = ReadInt24_t();
 			else
 				o.(teamscores(i)) = ReadChar();
@@ -485,11 +490,11 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	make_pure(this);
 	float newspectatee_status;
 
-    int f = ReadByte();
+	int f = ReadByte();
 
-	scoreboard_showscores_force = (f & 1);
+	scoreboard_showscores_force = (f & BIT(0));
 
-	if(f & 2)
+	if(f & BIT(1))
 	{
 		newspectatee_status = ReadByte();
 		if(newspectatee_status == player_localnum + 1)
@@ -498,9 +503,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	else
 		newspectatee_status = 0;
 
-	spectatorbutton_zoom = (f & 4);
+	spectatorbutton_zoom = (f & BIT(2));
 
-	if(f & 16)
+	if(f & BIT(4))
 	{
 		num_spectators = ReadByte();
 
@@ -542,9 +547,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 {
 	make_pure(this);
-    int i, j, b, f;
+	int i, j, b, f;
 
-    int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
+	int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
 	if(!(nags & BIT(2)))
 	{
@@ -581,7 +586,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			f = ReadByte();
-			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
+			for(j = i-1, b = BIT(0); b < BIT(8); b <<= 1, ++j)
 				if (!(f & b))
 					if(playerslots[j])
 						playerslots[j].ready = 0;
@@ -600,21 +605,24 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 {
 	make_pure(this);
-    int i, j, b, f;
-
-    int sf = ReadByte();
-	if(sf & 1)
-	{
-		for(j = 0; j < maxclients; ++j)
-			if(playerslots[j])
+	int sf = 0;
+	serialize(byte, 0, sf);
+	if (sf & 1) {
+		for (int j = 0; j < maxclients; ++j) {
+			if (playerslots[j]) {
 				playerslots[j].eliminated = 1;
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			f = ReadByte();
-			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
-				if (!(f & b))
-					if(playerslots[j])
-						playerslots[j].eliminated = 0;
+			}
+		}
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			serialize(byte, 0, f);
+			for (int b = 0; b < 8; ++b) {
+				if (f & BIT(b)) continue;
+				int j = i - 1 + b;
+				if (playerslots[j]) {
+					playerslots[j].eliminated = 0;
+				}
+			}
 		}
 	}
 	return true;
@@ -632,7 +640,7 @@ NET_HANDLE(ENT_CLIENT_RANDOMSEED, bool isnew)
 NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 {
 	make_pure(this);
-    int sf = ReadInt24_t();
+	int sf = ReadInt24_t();
 	if (sf == 0) {
 		for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
 			weapon_accuracy[w] = -1;
@@ -642,7 +650,7 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 	int f = 1;
 	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
 		if (sf & f) {
-            int b = ReadByte();
+			int b = ReadByte();
 			if (b == 0)
 				weapon_accuracy[w] = -1;
 			else if (b == 255)
@@ -817,7 +825,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	{
 		if (t != this.enttype || isnew)
 		{
-			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove(this);
 			clearentity(this);
 			isnew = true;
@@ -827,7 +835,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	{
 		if (!isnew)
 		{
-			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", etof(this), this.entnum, t);
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)", etof(this), this.entnum, t);
 			isnew = true;
 		}
 	}
@@ -837,7 +845,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	FOREACH(LinkedEntities, it.m_id == t, {
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
-            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
 		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
@@ -877,7 +885,7 @@ void Ent_Remove(entity this)
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
 void CSQC_Ent_Remove(entity this)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
 		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?");
@@ -899,20 +907,20 @@ void Gamemode_Init()
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")", strMessage);
 	localcmd(strMessage);
 }
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")", strMessage);
 	print(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
 	centerprint_hud(strMessage);
 }
 
@@ -926,12 +934,12 @@ bool CSQC_Parse_TempEntity()
 
 	FOREACH(TempEntities, it.m_id == nTEID, {
 		if (autocvar_developer_csqcentities)
-			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
+			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)", it.netname, nTEID);
 		return it.m_read(NULL, NULL, true);
 	});
 
 	if (autocvar_developer_csqcentities)
-		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
+		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d", nTEID);
 
 	// No special logic for this temporary entity; return 0 so the engine can handle it
 	return false;

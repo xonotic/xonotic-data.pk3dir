@@ -68,9 +68,11 @@ roflsound "New toys, new toys!" sound.
 
 */
 
+string autocvar_g_new_toys;
+
 bool nt_IsNewToy(int w);
 
-REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overkill"))
+REGISTER_MUTATOR(nt, expr_evaluate(autocvar_g_new_toys) && !cvar("g_instagib") && !cvar("g_overkill"))
 {
 	MUTATOR_ONADD
 	{
@@ -94,7 +96,7 @@ REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overk
 
 	MUTATOR_ONREMOVE
 	{
-		LOG_INFO("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime");
 		return -1;
 	}
 

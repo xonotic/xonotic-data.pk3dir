@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef SVQC
+#include <server/defs.qh>
+#endif
+
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
@@ -63,8 +67,6 @@ bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
-#define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
-	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
 #define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
 	// range: 10 .. respawntime + respawntimejitter
 
@@ -81,11 +83,17 @@ void Item_ScheduleRespawnIn(entity e, float t);
 void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
-float ITEM_MODE_NONE = 0;
-float ITEM_MODE_HEALTH = 1;
-float ITEM_MODE_ARMOR = 2;
-float ITEM_MODE_FUEL = 3;
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode);
+
+/// \brief Give several random weapons and ammo to the entity.
+/// \param[in,out] receiver Entity to give weapons to.
+/// \param[in] num_weapons Number of weapons to give.
+/// \param[in] weapon_names Names of weapons to give separated by spaces.
+/// \param[in] ammo Entity containing the ammo amount for each possible weapon.
+/// \return No return.
+void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
+	entity ammo_entity);
+
+float Item_GiveAmmoTo(entity item, entity player, int resource_type, float ammomax);
 
 float Item_GiveTo(entity item, entity player);
 

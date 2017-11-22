@@ -1,7 +1,5 @@
 #include "flac.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 spawnfunc(turret_flac) { if (!turret_initialize(this, TUR_FLAC)) delete(this); }
@@ -13,7 +11,5 @@ METHOD(Flac, tr_setup, void(Flac this, entity it))
     it.damage_flags |= TFL_DMG_HEADSHAKE;
     it.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
 }
-
-#endif
 
 #endif

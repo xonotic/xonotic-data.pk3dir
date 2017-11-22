@@ -1,5 +1,6 @@
 #include "g_damage.qh"
 
+#include <common/effects/all.qh>
 #include "bot/api.qh"
 #include "g_hook.qh"
 #include "mutators/_mod.qh"
@@ -8,6 +9,7 @@
 #include "../common/state.qh"
 #include "../common/physics/player.qh"
 #include "../common/t_items.qh"
+#include "resources.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/_mod.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
@@ -27,7 +29,7 @@
 
 void UpdateFrags(entity player, int f)
 {
-	PlayerTeamScore_AddScore(player, f);
+	GameRules_scoring_add_team(player, SCORE, f);
 }
 
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
@@ -40,23 +42,23 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		if(targ == attacker)
 		{
 			// suicide
-			PlayerScore_Add(attacker, SP_SUICIDES, 1);
+			GameRules_scoring_add(attacker, SUICIDES, 1);
 		}
 		else
 		{
 			// teamkill
-			PlayerScore_Add(attacker, SP_KILLS, -1); // or maybe add a teamkills field?
+			GameRules_scoring_add(attacker, KILLS, -1); // or maybe add a teamkills field?
 		}
 	}
 	else
 	{
 		// regular frag
-		PlayerScore_Add(attacker, SP_KILLS, 1);
+		GameRules_scoring_add(attacker, KILLS, 1);
 		if(targ.playerid)
-			PS_GR_P_ADDVAL(attacker, sprintf("kills-%d", targ.playerid), 1);
+			PlayerStats_GameReport_Event_Player(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
-	PlayerScore_Add(targ, SP_DEATHS, 1);
+	GameRules_scoring_add(targ, DEATHS, 1);
 
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
@@ -165,60 +167,42 @@ void Obituary_SpecialDeath(
 	string s1, string s2, string s3,
 	float f1, float f2, float f3)
 {
-	if(DEATH_ISSPECIAL(deathtype))
+	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = Deathtypes_from(deathtype - DT_FIRST);
-		if (!deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
-
-		if(g_cts && deathtype == DEATH_KILL.m_id)
-			return; // TODO: somehow put this in CTS gamemode file!
-
-		if(murder)
-		{
-			if(deathent.death_msgmurder)
-			{
-				Send_Notification_WOCOVA(
-					NOTIF_ONE,
-					notif_target,
-					MSG_MULTI,
-					deathent.death_msgmurder,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-				Send_Notification_WOCOVA(
-					NOTIF_ALL_EXCEPT,
-					notif_target,
-					MSG_INFO,
-					deathent.death_msgmurder.nent_msginfo,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-			}
-		}
-		else
-		{
-			if(deathent.death_msgself)
-			{
-				Send_Notification_WOCOVA(
-					NOTIF_ONE,
-					notif_target,
-					MSG_MULTI,
-					deathent.death_msgself,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-				Send_Notification_WOCOVA(
-					NOTIF_ALL_EXCEPT,
-					notif_target,
-					MSG_INFO,
-					deathent.death_msgself.nent_msginfo,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-			}
-		}
+		backtrace("Obituary_SpecialDeath called without a special deathtype?\n");
+		return;
 	}
-	else { backtrace("Obituary_SpecialDeath called without a special deathtype?\n"); return; }
+
+	entity deathent = Deathtypes_from(deathtype - DT_FIRST);
+	if (!deathent)
+	{
+		backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n");
+		return;
+	}
+
+	if(g_cts && deathtype == DEATH_KILL.m_id)
+		return; // TODO: somehow put this in CTS gamemode file!
+
+	Notification death_message = (murder) ? deathent.death_msgmurder : deathent.death_msgself;
+	if(death_message)
+	{
+		Send_Notification_WOCOVA(
+			NOTIF_ONE,
+			notif_target,
+			MSG_MULTI,
+			death_message,
+			s1, s2, s3, "",
+			f1, f2, f3, 0
+		);
+		Send_Notification_WOCOVA(
+			NOTIF_ALL_EXCEPT,
+			notif_target,
+			MSG_INFO,
+			death_message.nent_msginfo,
+			s1, s2, s3, "",
+			f1, f2, f3, 0
+		);
+	}
 }
 
 float Obituary_WeaponDeath(
@@ -229,44 +213,43 @@ float Obituary_WeaponDeath(
 	float f1, float f2)
 {
 	Weapon death_weapon = DEATH_WEAPONOF(deathtype);
-	if (death_weapon != WEP_Null)
+	if (death_weapon == WEP_Null)
+		return false;
+
+	w_deathtype = deathtype;
+	Notification death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
+	w_deathtype = false;
+
+	if (death_message)
 	{
-		w_deathtype = deathtype;
-		Notification death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
-		w_deathtype = false;
-
-		if (death_message)
-		{
-			Send_Notification_WOCOVA(
-				NOTIF_ONE,
-				notif_target,
-				MSG_MULTI,
-				death_message,
-				s1, s2, s3, "",
-				f1, f2, 0, 0
-			);
-			// send the info part to everyone
-			Send_Notification_WOCOVA(
-				NOTIF_ALL_EXCEPT,
-				notif_target,
-				MSG_INFO,
-				death_message.nent_msginfo,
-				s1, s2, s3, "",
-				f1, f2, 0, 0
-			);
-		}
-		else
-		{
-			LOG_TRACEF(
-				"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
-				deathtype,
-				death_weapon
-			);
-		}
-
-		return true;
+		Send_Notification_WOCOVA(
+			NOTIF_ONE,
+			notif_target,
+			MSG_MULTI,
+			death_message,
+			s1, s2, s3, "",
+			f1, f2, 0, 0
+		);
+		// send the info part to everyone
+		Send_Notification_WOCOVA(
+			NOTIF_ALL_EXCEPT,
+			notif_target,
+			MSG_INFO,
+			death_message.nent_msginfo,
+			s1, s2, s3, "",
+			f1, f2, 0, 0
+		);
 	}
-	return false;
+	else
+	{
+		LOG_TRACEF(
+			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
+			deathtype,
+			death_weapon
+		);
+	}
+
+	return true;
 }
 
 bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target)
@@ -274,7 +257,7 @@ bool frag_centermessage_override(entity attacker, entity targ, int deathtype, in
 	if(deathtype == DEATH_FIRE.m_id)
 	{
 		Send_Notification(NOTIF_ONE, attacker, MSG_CHOICE, CHOICE_FRAG_FIRE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? -1 : CS(targ).ping));
-		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
+		Send_Notification(NOTIF_ONE, targ, MSG_CHOICE, CHOICE_FRAGGED_FIRE, attacker.netname, kill_count_to_target, GetResourceAmount(attacker, RESOURCE_HEALTH), GetResourceAmount(attacker, RESOURCE_ARMOR), (IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping));
 		return true;
 	}
 
@@ -381,7 +364,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 				case counta: \
 				{ \
 					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
-					PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
+					PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break; \
 				}
 			switch(CS(attacker).killcount)
@@ -395,8 +378,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			{
 				checkrules_firstblood = true;
 				notif_firstblood = true; // modify the current messages so that they too show firstblood information
-				PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
-				PS_GR_P_ADDVAL(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
+				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+				PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
@@ -426,8 +409,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_TYPEFRAGGED,
 					attacker.netname,
 					kill_count_to_target,
-					attacker.health,
-					attacker.armorvalue,
+					GetResourceAmount(attacker, RESOURCE_HEALTH),
+					GetResourceAmount(attacker, RESOURCE_ARMOR),
 					(IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping)
 				);
 			}
@@ -449,8 +432,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_FRAGGED,
 					attacker.netname,
 					kill_count_to_target,
-					attacker.health,
-					attacker.armorvalue,
+					GetResourceAmount(attacker, RESOURCE_HEALTH),
+					GetResourceAmount(attacker, RESOURCE_ARMOR),
 					(IS_BOT_CLIENT(attacker) ? -1 : CS(attacker).ping)
 				);
 			}
@@ -508,10 +491,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		LogDeath("accident", deathtype, targ, targ);
 		GiveFrags(targ, targ, -1, deathtype);
 
-		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
+		if(GameRules_scoring_add(targ, SCORE, 0) == -5)
 		{
 			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
-			PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
+			PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
 	}
 
@@ -542,7 +525,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	STAT(FROZEN, targ) = frozen_type;
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
-	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
+	SetResourceAmount(targ, RESOURCE_HEALTH, ((frozen_type == 3) ? targ_maxhealth : 1));
 	targ.revive_speed = freeze_time;
 	if(targ.bot_attack)
 		IL_REMOVE(g_bot_targets, targ);
@@ -587,7 +570,7 @@ void Unfreeze (entity targ)
 
 	if(STAT(FROZEN, targ) && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
 	{
-		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
+		SetResourceAmount(targ, RESOURCE_HEALTH, ((IS_PLAYER(targ)) ? start_health : targ.max_health));
 		targ.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 	}
 
@@ -645,9 +628,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
-		targ.armorvalue = 0;
+		SetResourceAmount(targ, RESOURCE_ARMOR, 0);
 		targ.spawnshieldtime = 0;
-		targ.health = 0.9; // this is < 1
+		SetResourceAmount(targ, RESOURCE_HEALTH, 0.9); // this is < 1
 		targ.flags -= targ.flags & FL_GODMODE;
 		damage = 100000;
 	}
@@ -747,7 +730,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			if(damage >= autocvar_g_frozen_revive_falldamage)
 			{
 				Unfreeze(targ);
-				targ.health = autocvar_g_frozen_revive_falldamage_health;
+				SetResourceAmount(targ, RESOURCE_HEALTH, autocvar_g_frozen_revive_falldamage_health);
 				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
@@ -1063,7 +1046,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						force = force * a;
 
 						if(autocvar_g_throughfloor_debug)
-							LOG_INFOF(" D=%f F=%f\n", finaldmg, vlen(force));
+							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
 					}
 
 					//if (targ == attacker)

@@ -41,3 +41,5 @@ const int PROJECTILE_ARC_BOLT = 35;
 // projectile IDs 40-50 reserved
 
 const int PROJECTILE_RPC = 60;
+
+// projectile IDs 70-100 reserved

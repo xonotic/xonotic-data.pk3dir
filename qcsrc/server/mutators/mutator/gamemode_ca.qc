@@ -266,7 +266,11 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 
 	ca_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
-		frag_target.respawn_flags =  RESPAWN_SILENT;
+	{
+		frag_target.respawn_flags = RESPAWN_SILENT;
+		// prevent unwanted sudden rejoin as spectator and move of spectator camera
+		frag_target.respawn_time = time + 2;
+	}
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	if(IS_BOT_CLIENT(frag_target))
@@ -366,7 +370,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
 	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
-		PlayerTeamScore_Add(frag_attacker, SP_SCORE, ST_SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+		GameRules_scoring_add_team(frag_attacker, SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerRegen)

@@ -1,11 +1,14 @@
 #pragma once
 
+#include <common/resources.qh>
 #include <common/items/item/pickup.qh>
 #include <common/stats.qh>
 
 #ifdef SVQC
-#include <common/effects/qc/all.qh>
+#include <common/effects/qc/_mod.qh>
 #endif
+
+USING(WepSet, vector);
 
 const int MAX_WEAPONSLOTS = 2;
 .entity weaponentities[MAX_WEAPONSLOTS];
@@ -57,8 +60,8 @@ CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_id, int, 0);
     /** A: WEPSET_id : WEPSET_... */
     ATTRIB(Weapon, weapons, WepSet, '0 0 0');
-    /** M: ammotype  : main ammo field */
-    ATTRIB(Weapon, ammo_field, .int, ammo_none);
+    /** M: ammotype  : main ammo type */
+    ATTRIB(Weapon, ammo_type, int, RESOURCE_NONE);
     /** M: impulse   : weapon impulse */
     ATTRIB(Weapon, impulse, int, -1);
     /** M: flags     : WEPSPAWNFLAG_... combined */
@@ -196,6 +199,7 @@ const int WEP_TYPE_MELEE_PRI      = 0x400; // primary attack is melee swing (for
 const int WEP_TYPE_MELEE_SEC      = 0x800; // secondary attack is melee swing (for animation)
 const int WEP_FLAG_DUALWIELD      = 0x1000; // weapon can be dual wielded
 const int WEP_FLAG_NODUAL         = 0x2000; // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
+const int WEP_FLAG_PENETRATEWALLS = 0x4000; // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
 
 // variables:
 string weaponorder_byid;
@@ -210,11 +214,11 @@ string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 void W_RandomWeapons(entity e, int n);
 
-string GetAmmoPicture(.int ammotype);
+string GetAmmoPicture(int ammotype);
 
 #ifdef CSQC
-.int GetAmmoFieldFromNum(int i);
-int GetAmmoStat(.int ammotype);
+int GetAmmoTypeFromNum(int i);
+int GetAmmoStat(int ammotype);
 #endif
 
 string W_Sound(string w_snd);

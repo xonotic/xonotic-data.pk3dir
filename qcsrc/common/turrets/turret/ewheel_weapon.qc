@@ -1,7 +1,5 @@
 #include "ewheel_weapon.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 void turret_initparams(entity);
@@ -34,7 +32,5 @@ METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weapon
         }
     }
 }
-
-#endif
 
 #endif

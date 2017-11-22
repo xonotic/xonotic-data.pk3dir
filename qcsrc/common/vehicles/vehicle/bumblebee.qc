@@ -1,7 +1,5 @@
 #include "bumblebee.qh"
 
-#ifdef IMPLEMENTATION
-
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
 const float BRG_END = 8;
@@ -967,5 +965,4 @@ METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
     AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
 }
 
-#endif
 #endif

@@ -1,58 +1,5 @@
 #include "rifle.qh"
-#ifndef IMPLEMENTATION
-CLASS(Rifle, Weapon)
-/* ammotype  */ ATTRIB(Rifle, ammo_field, .int, ammo_nails);
-/* impulse   */ ATTRIB(Rifle, impulse, int, 7);
-/* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
-/* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(Rifle, wpcolor, vector, '0.5 1 0');
-/* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);
-#endif
-/* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");
-/* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
-/* reticle   */ ATTRIB(Rifle, w_reticle, string, "gfx/reticle_nex");
-/* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
-/* refname   */ ATTRIB(Rifle, netname, string, "rifle");
-/* wepname   */ ATTRIB(Rifle, m_name, string, _("Rifle"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, BOTH) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bullethail, float, BOTH) \
-		P(class, prefix, burstcost, float, BOTH) \
-		P(class, prefix, bursttime, float, NONE) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, reload, float, SEC) \
-		P(class, prefix, reload_ammo, float, NONE) \
-    	P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, shots, float, BOTH) \
-		P(class, prefix, solidpenetration, float, BOTH) \
-		P(class, prefix, spread, float, BOTH) \
-    	P(class, prefix, switchdelay_drop, float, NONE) \
-    	P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, tracer, float, BOTH) \
-    	P(class, prefix, weaponreplace, string, NONE) \
-    	P(class, prefix, weaponstartoverride, float, NONE) \
-    	P(class, prefix, weaponstart, float, NONE) \
-    	P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Rifle, rifle)
-#undef X
-ENDCLASS(Rifle)
-REGISTER_WEAPON(RIFLE, rifle, NEW(Rifle));
-
-
-#ifdef SVQC
-.float rifle_accumulator;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(this, WEP_RIFLE); }
 spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
@@ -203,13 +150,13 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 }
 METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(rifle, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(rifle, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(rifle, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(rifle, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
     return ammo_amount;
 }
@@ -280,5 +227,4 @@ METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

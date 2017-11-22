@@ -178,7 +178,7 @@ void func_breakable_behave_restore(entity this)
 
 void func_breakable_init_for_player(entity this, entity player)
 {
-	if (this.noise1 && this.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
+	if (this.noise1 && this.state == 0 && IS_REAL_CLIENT(player))
 	{
 		msg_entity = player;
 		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);

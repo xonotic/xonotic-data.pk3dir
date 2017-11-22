@@ -1,5 +1,8 @@
 #include "client.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
 #include "anticheat.qh"
 #include "impulse.qh"
 #include "player.qh"
@@ -9,7 +12,9 @@
 #include "teamplay.qh"
 #include "playerdemo.qh"
 #include "spawnpoints.qh"
+#include "resources.qh"
 #include "g_damage.qh"
+#include "handicap.qh"
 #include "g_hook.qh"
 #include "command/common.qh"
 #include "cheats.qh"
@@ -110,20 +115,18 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (IS_SPEC(e)) e = e.enemy;
 
 	sf = 0;
-	if (CS(e).race_completed)       sf |= 1; // forced scoreboard
-	if (CS(to).spectatee_status)    sf |= 2; // spectator ent number follows
-	if (CS(e).zoomstate)            sf |= 4; // zoomed
-	if (autocvar_sv_showspectators) sf |= 16; // show spectators
+	if (CS(e).race_completed)       sf |= BIT(0); // forced scoreboard
+	if (CS(to).spectatee_status)    sf |= BIT(1); // spectator ent number follows
+	if (CS(e).zoomstate)            sf |= BIT(2); // zoomed
+	if (autocvar_sv_showspectators) sf |= BIT(4); // show spectators
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
 
-	if (sf & 2)
-	{
+	if (sf & BIT(1))
 		WriteByte(MSG_ENTITY, CS(to).spectatee_status);
-	}
 
-	if(sf & 16)
+	if(sf & BIT(4))
 	{
 		float specs = CountSpectators(e, to);
 		WriteByte(MSG_ENTITY, specs);
@@ -217,9 +220,20 @@ void PutObserverInServer(entity this)
     bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
-	if (IS_PLAYER(this) && this.health >= 1) {
-        // despawn effect
-		Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	if (IS_PLAYER(this))
+	{
+		if(this.health >= 1)
+		{
+			// despawn effect
+			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+		}
+
+		// was a player, recount votes and ready status
+		if(IS_REAL_CLIENT(this))
+		{
+			if (vote_called) { VoteCount(false); }
+			ReadyCount();
+		}
     }
 
     {
@@ -256,7 +270,7 @@ void PutObserverInServer(entity this)
 	if (this.alivetime)
 	{
 		if (!warmup_stage)
-			PS_GR_P_ADDVAL(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
 		this.alivetime = 0;
 	}
 
@@ -267,7 +281,9 @@ void PutObserverInServer(entity this)
 	if (mutator_returnvalue) {
 	    // mutator prevents resetting teams+score
 	} else {
+		int oldteam = this.team;
 		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
+		MUTATOR_CALLHOOK(Player_ChangedTeam, this, oldteam, this.team);
         this.frags = FRAGS_SPECTATOR;
         PlayerScore_Clear(this);  // clear scores when needed
     }
@@ -521,7 +537,6 @@ void PutPlayerInServer(entity this)
 		this.flags |= FL_NOTARGET;
 	this.takedamage = DAMAGE_AIM;
 	this.effects = EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
-	this.dmg = 2; // WTF
 
 	if (warmup_stage) {
 		this.ammo_shells = warmup_start_ammo_shells;
@@ -543,6 +558,8 @@ void PutPlayerInServer(entity this)
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
 		this.weapons = start_weapons;
+		GiveRandomWeapons(this, random_start_weapons_count,
+			autocvar_g_random_start_weapons, random_start_ammo);
 	}
 	SetSpectatee_status(this, 0);
 
@@ -891,8 +908,10 @@ void ClientKill_Now(entity this)
 	if(CS(this).killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
-	if(!IS_SPEC(this) && !IS_OBSERVER(this))
+	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
+	{
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
+	}
 
 	// now I am sure the player IS dead
 }
@@ -1186,7 +1205,10 @@ void ClientConnect(entity this)
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
 	// always track bots, don't ask for cl_allow_uidtracking
-    if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
+	if (IS_BOT_CLIENT(this))
+		PlayerStats_GameReport_AddPlayer(this);
+	else
+		CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", playername(this, false)));
@@ -1194,8 +1216,6 @@ void ClientConnect(entity this)
 	LogTeamchange(this.playerid, this.team, 1);
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
-
-	CS(this).netname_previous = strzone(this.netname);
 
 	if(teamplay && IS_PLAYER(this))
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_CONNECT_TEAM), this.netname);
@@ -1235,7 +1255,6 @@ void ClientConnect(entity this)
 	}
 
 	CS(this).jointime = time;
-	CS(this).allowed_timeouts = autocvar_sv_timeout_number;
 
 	if (IS_REAL_CLIENT(this))
 	{
@@ -1263,6 +1282,8 @@ void ClientConnect(entity this)
 	IL_EACH(g_initforplayer, it.init_for_player, {
 		it.init_for_player(it, this);
 	});
+
+	Handicap_Initialize(this);
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
 
@@ -1619,15 +1640,14 @@ void player_regen(entity this)
 	regen_health_stable = M_ARGV(9, float);
 	regen_health_rotstable = M_ARGV(10, float);
 
-
 	if(!mutator_returnvalue)
 	if(!STAT(FROZEN, this))
 	{
 		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
 		mina = autocvar_g_balance_armor_regenstable;
-		limith = autocvar_g_balance_health_limit;
-		limita = autocvar_g_balance_armor_limit;
+		limith = GetResourceLimit(this, RESOURCE_HEALTH);
+		limita = GetResourceLimit(this, RESOURCE_ARMOR);
 
 		regen_health_rotstable = regen_health_rotstable * max_mod;
 		regen_health_stable = regen_health_stable * max_mod;
@@ -1654,10 +1674,22 @@ void player_regen(entity this)
 
 		maxf = autocvar_g_balance_fuel_rotstable;
 		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = autocvar_g_balance_fuel_limit;
+		limitf = GetResourceLimit(this, RESOURCE_FUEL);
 
 		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
 	}
+	// Ugly hack to make sure the health and armor don't go beyond hard limit.
+	// TODO: Remove this hack when all code uses GivePlayerHealth and
+	// GivePlayerArmor.
+	if (this.health > RESOURCE_AMOUNT_HARD_LIMIT)
+	{
+		this.health = RESOURCE_AMOUNT_HARD_LIMIT;
+	}
+	if (this.armorvalue > RESOURCE_AMOUNT_HARD_LIMIT)
+	{
+		this.armorvalue = RESOURCE_AMOUNT_HARD_LIMIT;
+	}
+	// End hack.
 }
 
 bool zoomstate_set;
@@ -2308,7 +2340,7 @@ void ObserverThink(entity this)
 				TRANSMUTE(Spectator, this);
 			}
 		} else {
-			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? this.cvar_cl_clippedspectating : !this.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			int preferred_movetype = ((!PHYS_INPUT_BUTTON_USE(this) ? CS(this).cvar_cl_clippedspectating : !CS(this).cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			set_movetype(this, preferred_movetype);
 		}
 	} else {
@@ -2446,6 +2478,9 @@ Called every frame for each client before the physics are run
 .float last_vehiclecheck;
 void PlayerPreThink (entity this)
 {
+	STAT(GUNALIGN, this) = CS(this).cvar_cl_gunalign; // TODO
+	STAT(MOVEVARS_CL_TRACK_CANJUMP, this) = CS(this).cvar_cl_movement_track_canjump;
+
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
 	if (frametime) {
@@ -2457,37 +2492,40 @@ void PlayerPreThink (entity this)
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
 		checkSpectatorBlock(this);
-    }
+	}
 
 	zoomstate_set = false;
 
 	// Check for nameless players
-	if (isInvisibleString(this.netname)) {
-		this.netname = strzone(sprintf("Player#%d", this.playerid));
-		// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
-	}
-	if (this.netname != CS(this).netname_previous) {
-		if (autocvar_sv_eventlog) {
+	if (this.netname == "" || this.netname != CS(this).netname_previous)
+	{
+		bool assume_unchanged = (CS(this).netname_previous == "");
+		if (isInvisibleString(this.netname))
+		{
+			this.netname = strzone(sprintf("Player#%d", this.playerid));
+			assume_unchanged = false;
+			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+		}
+		if (!assume_unchanged && autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
-        }
 		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
 		CS(this).netname_previous = strzone(this.netname);
 	}
 
 	// version nagging
-	if (CS(this).version_nagtime && this.cvar_g_xonoticversion && time > CS(this).version_nagtime) {
+	if (CS(this).version_nagtime && CS(this).cvar_g_xonoticversion && time > CS(this).version_nagtime) {
         CS(this).version_nagtime = 0;
-        if (strstrofs(this.cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(this.cvar_g_xonoticversion, "autobuild", 0) >= 0) {
+        if (strstrofs(CS(this).cvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(CS(this).cvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git client
         } else if (strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0) {
             // git server
-            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+            Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
         } else {
-            int r = vercmp(this.cvar_g_xonoticversion, autocvar_g_xonoticversion);
+            int r = vercmp(CS(this).cvar_g_xonoticversion, autocvar_g_xonoticversion);
             if (r < 0) { // old client
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
             } else if (r > 0) { // old server
-                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, this.cvar_g_xonoticversion);
+                Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, CS(this).cvar_g_xonoticversion);
             }
         }
     }
@@ -2551,7 +2589,7 @@ void PlayerPreThink (entity this)
 		this.last_vehiclecheck = time + 1;
 	}
 
-	if(!this.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
+	if(!CS(this).cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
 		if(PHYS_INPUT_BUTTON_USE(this) && !CS(this).usekeypressed)
 			PlayerUseKey(this);
@@ -2628,7 +2666,6 @@ void DrownPlayer(entity this)
 		if(this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
-		this.dmg = 2;
 	}
 	else if (this.air_finished < time)
 	{	// drown!

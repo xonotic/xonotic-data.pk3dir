@@ -1,5 +1,9 @@
 #include "timer.qh"
 
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
+
 // Timer (#5)
 
 void HUD_Timer()

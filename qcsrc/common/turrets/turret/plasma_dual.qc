@@ -1,7 +1,5 @@
 #include "plasma_dual.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 spawnfunc(turret_plasma_dual) { if (!turret_initialize(this, TUR_PLASMA_DUAL)) delete(this); }
@@ -33,5 +31,4 @@ METHOD(DualPlasmaTurret, tr_think, void(DualPlasmaTurret thistur, entity it))
         it.tur_head.frame = 0;
 }
 
-#endif
 #endif

@@ -13,10 +13,14 @@ function hash() {
 function genmod() {
     # use context to work around cmake issue #12619
     CTX="${PWD#$ROOT}/"
-    oldHashC=$(hash ${MOD}.inc)
-    oldTimeC=$(stat -c "%Y" ${MOD}.inc)
-    oldHashH=$(hash ${MOD}.qh)
-    oldTimeH=$(stat -c "%Y" ${MOD}.qh)
+    if [ -f ${MOD}.inc ]; then
+        oldHashC=$(hash ${MOD}.inc)
+        oldTimeC=$(stat -c "%Y" ${MOD}.inc)
+    fi
+    if [ -f ${MOD}.qh ]; then
+        oldHashH=$(hash ${MOD}.qh)
+        oldTimeH=$(stat -c "%Y" ${MOD}.qh)
+    fi
     echo '// generated file; do not modify' > ${MOD}.inc
     echo '// generated file; do not modify' > ${MOD}.qh
     for f in $(ls | sort -k 1,1 -t .); do

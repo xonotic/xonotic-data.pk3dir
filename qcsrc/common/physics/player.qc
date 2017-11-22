@@ -15,9 +15,9 @@ bool Physics_Valid(string thecvar)
 
 float Physics_ClientOption(entity this, string option, float defaultval)
 {
-	if(IS_REAL_CLIENT(this) && Physics_Valid(this.cvar_cl_physics))
+	if(IS_REAL_CLIENT(this) && Physics_Valid(CS(this).cvar_cl_physics))
 	{
-		string s = strcat("g_physics_", this.cvar_cl_physics, "_", option);
+		string s = strcat("g_physics_", CS(this).cvar_cl_physics, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
@@ -75,6 +75,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate", autocvar_sv_airaccelerate);
 	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate", autocvar_sv_airstopaccelerate);
 	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
+	STAT(MOVEVARS_JUMPVELOCITY_CROUCH, this) = Physics_ClientOption(this, "jumpvelocity_crouch", autocvar_sv_jumpvelocity_crouch);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 }
 #endif
@@ -303,7 +304,7 @@ bool PlayerJump(entity this)
 #endif
 
 	bool doublejump = false;
-	float mjumpheight = PHYS_JUMPVELOCITY(this);
+	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
 	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 
 	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
@@ -433,7 +434,7 @@ void CheckWaterJump(entity this)
 
 
 #ifdef SVQC
-	#define JETPACK_JUMP(s)	s.cvar_cl_jetpack_jump
+	#define JETPACK_JUMP(s)	CS(s).cvar_cl_jetpack_jump
 #elif defined(CSQC)
 	float autocvar_cl_jetpack_jump;
 	#define JETPACK_JUMP(s)	autocvar_cl_jetpack_jump
@@ -491,7 +492,7 @@ void SpecialCommand(entity this)
 	if(autocvar_sv_cheats || this.maycheat)
 	{
 		if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
-			LOG_INFO("A hollow voice says \"Plugh\".\n");
+			LOG_INFO("A hollow voice says \"Plugh\".");
 	}
 	else
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = true;

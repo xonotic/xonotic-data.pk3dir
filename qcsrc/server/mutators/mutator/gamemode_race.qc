@@ -37,25 +37,21 @@ void havocbot_role_race(entity this)
 
 void race_ScoreRules()
 {
-	ScoreRules_basics(race_teams, 0, 0, false);
-	if(race_teams)
-	{
-		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",       SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else if(g_race_qualifying)
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	ScoreRules_basics_end();
+    GameRules_score_enabled(false);
+	GameRules_scoring(race_teams, 0, 0, {
+        if (race_teams) {
+            field_team(ST_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
+        } else if (g_race_qualifying) {
+            field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+        } else {
+            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
+        }
+	});
 }
 
 void race_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -201,7 +197,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	FOREACH_CLIENT(true, {
 		if(it.race_place)
 		{
-			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
+			s = GameRules_scoring_add(it, RACE_FASTEST, 0);
 			if(!s)
 				it.race_place = 0;
 		}
@@ -251,7 +247,7 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	if(g_race_qualifying)
-	if(PlayerScore_Add(player, SP_RACE_FASTEST, 0))
+	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
 		player.frags = FRAGS_LMS_LOSER;
 	else
 		player.frags = FRAGS_SPECTATOR;
@@ -312,7 +308,7 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
+	if(CS(player).cvar_cl_allow_uidtracking == 1 && CS(player).cvar_cl_allow_uid2name == 1)
 	{
 		if (!player.stored_netname)
 			player.stored_netname = strzone(uid2name(player.crypto_idfp));
@@ -443,17 +439,8 @@ void rc_SetLimits()
 
 	if(autocvar_g_race_teams)
 	{
-		ActivateTeamplay();
-		race_teams = bound(2, autocvar_g_race_teams, 4);
-		int teams = 0;
-		if(race_teams >= 1) teams |= BIT(0);
-		if(race_teams >= 2) teams |= BIT(1);
-		if(race_teams >= 3) teams |= BIT(2);
-		if(race_teams >= 4) teams |= BIT(3);
-
-		race_teams = teams; // now set it?
-
-		have_team_spawns = -1; // request team spawns
+		GameRules_teams(true);
+		race_teams = BITS(bound(2, autocvar_g_race_teams, 4));
 	}
 	else
 		race_teams = 0;
@@ -484,5 +471,8 @@ void rc_SetLimits()
 	}
 	else
 		g_race_qualifying = 0;
-	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
+    GameRules_limit_score(fraglimit_override);
+    GameRules_limit_lead(leadlimit_override);
+    GameRules_limit_time(timelimit_override);
+    GameRules_limit_time_qualifying(qualifying_override);
 }

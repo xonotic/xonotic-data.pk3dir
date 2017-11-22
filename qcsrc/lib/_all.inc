@@ -182,7 +182,17 @@ void make_safe_for_remove(entity this);
 	#define SV_Shutdown _SV_Shutdown
 
 	void _StartFrame();
-	void StartFrame() { if (_StartFrame) _StartFrame(); }
+	bool _StartFrame_init;
+	void spawnfunc_worldspawn(entity);
+	void StartFrame() {
+		if (!_StartFrame_init) {
+			_StartFrame_init = true;
+			float oldtime = time; time = 1;
+			__spawnfunc_expecting = 2; NULL.__spawnfunc_constructor(NULL);
+			time = oldtime;
+        }
+        if (_StartFrame) _StartFrame();
+	}
 	#define StartFrame _StartFrame
 
 	void _SetNewParms();
@@ -231,7 +241,8 @@ void make_safe_for_remove(entity this);
 	void SV_OnEntityPreSpawnFunction()
 	{
 		ENGINE_EVENT();
-		if (_SV_OnEntityPreSpawnFunction) _SV_OnEntityPreSpawnFunction(this);
+		__spawnfunc_expecting = true;
+		__spawnfunc_expect = this;
 	}
 	#define SV_OnEntityPreSpawnFunction _SV_OnEntityPreSpawnFunction
 

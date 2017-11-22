@@ -1,5 +1,7 @@
 #include "miscfunctions.qh"
 
+#include "autocvars.qh"
+#include "defs.qh"
 #include "hud/_mod.qh"
 
 #include <common/command/_mod.qh>
@@ -567,7 +569,7 @@ void URI_Get_Callback(int id, int status, string data)
 	}
 	else
 	{
-		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
+		LOG_INFOF("Received HTTP request data for an invalid id %d.", id);
 	}
 }
 
@@ -582,7 +584,7 @@ void Accuracy_LoadLevels()
 		if(acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;
 		if(acc_levels < 2)
-			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values\n");
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values");
 
 		int i;
 		for(i = 0; i < acc_levels; ++i)

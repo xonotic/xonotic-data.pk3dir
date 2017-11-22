@@ -1,5 +1,7 @@
 #include "waypoints.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "cvars.qh"
 
 #include "bot.qh"
@@ -74,7 +76,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			{
 				if(autocvar_developer)
 				{
-					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin), "\n");
+					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin));
 					backtrace("Waypoint stuck");
 				}
 			}
@@ -516,7 +518,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 			if(!found)
 			{
 				if(!removal_mode)
-					LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
+					LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped");
 				continue;
 			}
 		}
@@ -538,7 +540,7 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 		if(!found)
 		{
 			if(!removal_mode)
-				LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
+				LOG_INFO("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped");
 			continue;
 		}
 
@@ -613,7 +615,7 @@ void waypoint_save_links()
 	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
-		LOG_INFOF("waypoint link save to %s failed\n", filename);
+		LOG_INFOF("waypoint link save to %s failed", filename);
 		return;
 	}
 
@@ -634,7 +636,7 @@ void waypoint_save_links()
 	fclose(file);
 	botframe_cachedwaypointlinks = true;
 
-	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache\n", c, mapname);
+	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache", c, mapname);
 
 	waypoint_load_links_hardwired();
 }
@@ -649,7 +651,7 @@ void waypoint_saveall()
 		waypoint_save_links(); // save anyway?
 		botframe_loadedforcedlinks = false;
 
-		LOG_INFOF("waypoint links: save to %s failed\n", filename);
+		LOG_INFOF("waypoint links: save to %s failed", filename);
 		return;
 	}
 
@@ -672,7 +674,7 @@ void waypoint_saveall()
 	waypoint_save_links();
 	botframe_loadedforcedlinks = false;
 
-	LOG_INFOF("saved %d waypoints to maps/%s.waypoints\n", c, mapname);
+	LOG_INFOF("saved %d waypoints to maps/%s.waypoints", c, mapname);
 }
 
 // load waypoints from file
@@ -950,7 +952,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		});
 		if(bestdist < maxdist)
 		{
-			LOG_INFO("update chain to new nearest WP ", etos(p.(fld)), "\n");
+			LOG_INFO("update chain to new nearest WP ", etos(p.(fld)));
 			return 0;
 		}
 
@@ -1029,7 +1031,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		tmax = t;
 	}
 
-	LOG_INFO("spawning a waypoint for connecting to ", etos(wp), "\n");
+	LOG_INFO("spawning a waypoint for connecting to ", etos(wp));
 	botframe_autowaypoints_createwp(o, p, fld, 0);
 	return 1;
 }
@@ -1045,7 +1047,7 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 	if(r != -1)
 		return;
 
-	LOG_INFO("emergency: got no good nearby WP to build a link from, starting a new chain\n");
+	LOG_INFO("emergency: got no good nearby WP to build a link from, starting a new chain");
 	if(!botframe_autowaypoints_fixdown(p.origin))
 		return; // shouldn't happen, caught above
 	botframe_autowaypoints_createwp(trace_endpos, p, fld, WAYPOINTFLAG_PROTECTED);
@@ -1117,7 +1119,7 @@ LABEL(next)
 
 	IL_EACH(g_waypoints, !(it.wpflags & (WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END)),
 	{
-		LOG_INFOF("Removed a waypoint at %v. Try again for more!\n", it.origin);
+		LOG_INFOF("Removed a waypoint at %v. Try again for more!", it.origin);
 		te_explosion(it.origin);
 		waypoint_remove(it);
 		break;

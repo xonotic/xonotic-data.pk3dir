@@ -1,63 +1,5 @@
 #include "machinegun.qh"
-#ifndef IMPLEMENTATION
-CLASS(MachineGun, Weapon)
-/* ammotype  */ ATTRIB(MachineGun, ammo_field, .int, ammo_nails);
-/* impulse   */ ATTRIB(MachineGun, impulse, int, 3);
-/* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
-/* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(MachineGun, wpcolor, vector, '1 1 0');
-/* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
-#ifdef GAMEQC
-/* model     */ ATTRIB(MachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);
-#endif
-/* crosshair */ ATTRIB(MachineGun, w_crosshair, string, "gfx/crosshairuzi");
-/* crosshair */ ATTRIB(MachineGun, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponuzi");
-/* refname   */ ATTRIB(MachineGun, netname, string, "machinegun");
-/* wepname   */ ATTRIB(MachineGun, m_name, string, _("MachineGun"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, burst, float, NONE) \
-		P(class, prefix, burst_ammo, float, NONE) \
-		P(class, prefix, burst_animtime, float, NONE) \
-		P(class, prefix, burst_refire2, float, NONE) \
-		P(class, prefix, burst_refire, float, NONE) \
-		P(class, prefix, burst_speed, float, NONE) \
-		P(class, prefix, first, float, NONE) \
-		P(class, prefix, first_ammo, float, NONE) \
-		P(class, prefix, first_damage, float, NONE) \
-		P(class, prefix, first_force, float, NONE) \
-		P(class, prefix, first_refire, float, NONE) \
-		P(class, prefix, first_spread, float, NONE) \
-		P(class, prefix, mode, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, solidpenetration, float, NONE) \
-		P(class, prefix, spread_add, float, NONE) \
-		P(class, prefix, spread_max, float, NONE) \
-		P(class, prefix, spread_min, float, NONE) \
-		P(class, prefix, sustained_ammo, float, NONE) \
-		P(class, prefix, sustained_damage, float, NONE) \
-		P(class, prefix, sustained_force, float, NONE) \
-		P(class, prefix, sustained_refire, float, NONE) \
-		P(class, prefix, sustained_spread, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, MachineGun, machinegun)
-#undef X
-
-ENDCLASS(MachineGun)
-REGISTER_WEAPON(MACHINEGUN, machinegun, NEW(MachineGun));
-
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 
 spawnfunc(weapon_machinegun)
@@ -316,9 +258,9 @@ METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 {
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(machinegun, sustained_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, sustained_ammo);
     else
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(machinegun, first_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, first_ammo);
 
     if(WEP_CVAR(machinegun, reload_ammo))
     {
@@ -333,9 +275,9 @@ METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity wea
 {
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(machinegun, burst_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, burst_ammo);
     else
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(machinegun, first_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, first_ammo);
 
     if(WEP_CVAR(machinegun, reload_ammo))
     {
@@ -374,5 +316,4 @@ METHOD(MachineGun, wr_impacteffect, void(entity thiswep, entity actor))
         sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
 }
 
-#endif
 #endif

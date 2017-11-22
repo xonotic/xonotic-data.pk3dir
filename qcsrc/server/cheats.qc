@@ -1,5 +1,9 @@
 #include "cheats.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <common/effects/all.qh>
+
 #include "g_damage.qh"
 #include "race.qh"
 #include "../common/triggers/teleporters.qh"
@@ -278,7 +282,7 @@ float CheatImpulse(entity this, int imp)
 			RadiusDamage(e2, this, 1000, 0, 128, NULL, NULL, 500, DEATH_CHEAT.m_id, e);
 			delete(e2);
 
-			LOG_INFO("404 Sportsmanship not found.\n");
+			LOG_INFO("404 Sportsmanship not found.");
 			DID_CHEAT();
 			break;
 	}

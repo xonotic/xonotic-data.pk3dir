@@ -83,14 +83,15 @@ void relocate_spawnpoint(entity this)
         this.maxs = PL_MAX_CONST;
         if (!move_out_of_solid(this))
             objerror(this, "could not get out of solid at all!");
-        LOG_INFO("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
-        LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(this.origin.x - o.x));
-        LOG_INFO(" ", ftos(this.origin.y - o.y));
-        LOG_INFO(" ", ftos(this.origin.z - o.z), "'\n");
+        LOG_INFOF(
+            "^1NOTE: this map needs FIXING. Spawnpoint at %s needs to be moved out of solid, e.g. by %s",
+            vtos(o - '0 0 1'),
+            vtos(this.origin - o)
+        );
         if (autocvar_g_spawnpoints_auto_move_out_of_solid)
         {
             if (!spawnpoint_nag)
-                LOG_INFO("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
+                LOG_INFO("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)");
             spawnpoint_nag = 1;
         }
         else

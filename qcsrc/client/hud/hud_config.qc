@@ -2,6 +2,9 @@
 
 #include "hud.qh"
 #include "panel/scoreboard.qh"
+#include <client/autocvars.qh>
+#include <client/defs.qh>
+#include <client/miscfunctions.qh>
 
 #define HUD_Write(s) fputs(fh, s)
 #define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
@@ -236,11 +239,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
-		LOG_INFOF(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename);
+		LOG_INFOF(_("^2Successfully exported to %s! (Note: It's saved in data/data/)"), filename);
 		fclose(fh);
 	}
 	else
-		LOG_INFOF(_("^1Couldn't write to %s\n"), filename);
+		LOG_INFOF(_("^1Couldn't write to %s"), filename);
 }
 
 void HUD_Configure_Exit_Force()

@@ -1,79 +1,5 @@
 #include "electro.qh"
-#ifndef IMPLEMENTATION
-CLASS(Electro, Weapon)
-/* ammotype  */ ATTRIB(Electro, ammo_field, .int, ammo_cells);
-/* impulse   */ ATTRIB(Electro, impulse, int, 5);
-/* flags     */ ATTRIB(Electro, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Electro, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Electro, wpcolor, vector, '0 0.5 1');
-/* modelname */ ATTRIB(Electro, mdl, string, "electro");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Electro, m_model, Model, MDL_ELECTRO_ITEM);
-#endif
-/* crosshair */ ATTRIB(Electro, w_crosshair, string, "gfx/crosshairelectro");
-/* crosshair */ ATTRIB(Electro, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(Electro, model2, string, "weaponelectro");
-/* refname   */ ATTRIB(Electro, netname, string, "electro");
-/* wepname   */ ATTRIB(Electro, m_name, string, _("Electro"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, BOTH) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bouncefactor, float, SEC) \
-		P(class, prefix, bouncestop, float, SEC) \
-		P(class, prefix, comboradius, float, PRI) \
-		P(class, prefix, combo_comboradius, float, NONE) \
-		P(class, prefix, combo_comboradius_thruwall, float, NONE) \
-		P(class, prefix, combo_damage, float, NONE) \
-		P(class, prefix, combo_edgedamage, float, NONE) \
-		P(class, prefix, combo_force, float, NONE) \
-		P(class, prefix, combo_radius, float, NONE) \
-		P(class, prefix, combo_safeammocheck, float, NONE) \
-		P(class, prefix, combo_speed, float, NONE) \
-		P(class, prefix, count, float, SEC) \
-		P(class, prefix, damagedbycontents, float, SEC) \
-		P(class, prefix, damageforcescale, float, SEC) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, edgedamage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, health, float, SEC) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, midaircombo_explode, float, PRI) \
-		P(class, prefix, midaircombo_interval, float, PRI) \
-		P(class, prefix, midaircombo_radius, float, PRI) \
-		P(class, prefix, radius, float, BOTH) \
-		P(class, prefix, refire2, float, SEC) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, speed_up, float, SEC) \
-		P(class, prefix, speed_z, float, SEC) \
-		P(class, prefix, spread, float, BOTH) \
-		P(class, prefix, stick, float, SEC) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, touchexplode, float, SEC) \
-		P(class, prefix, weaponreplace, string,NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Electro, electro)
-#undef X
-
-ENDCLASS(Electro)
-REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
-
-
-#ifdef SVQC
-.float electro_count;
-.float electro_secondarytime;
-void W_Electro_ExplodeCombo(entity this);
-#endif
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 spawnfunc(weapon_electro) { weapon_defaultspawnfunc(this, WEP_ELECTRO); }
 
@@ -558,7 +484,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(Electro, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(electro, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(electro, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_PRI(electro, ammo);
     return ammo_amount;
 }
@@ -567,12 +493,12 @@ METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
     float ammo_amount;
     if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
     }
     else
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(electro, ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(electro, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo);
     }
     return ammo_amount;
@@ -642,5 +568,4 @@ METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

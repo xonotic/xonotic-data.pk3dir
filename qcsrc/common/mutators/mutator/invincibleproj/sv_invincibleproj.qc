@@ -1,6 +1,7 @@
 #include "sv_invincibleproj.qh"
 
-REGISTER_MUTATOR(invincibleprojectiles, cvar("g_invincible_projectiles"));
+string autocvar_g_invincible_projectiles;
+REGISTER_MUTATOR(invincibleprojectiles, expr_evaluate(autocvar_g_invincible_projectiles));
 
 MUTATOR_HOOKFUNCTION(invincibleprojectiles, EditProjectile)
 {

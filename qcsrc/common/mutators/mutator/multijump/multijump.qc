@@ -9,7 +9,7 @@
 
 
 #if defined(SVQC)
-REGISTER_MUTATOR(multijump, cvar("g_multijump"));
+REGISTER_MUTATOR(multijump, autocvar_g_multijump);
 #elif defined(CSQC)
 REGISTER_MUTATOR(multijump, true);
 #endif
@@ -30,7 +30,7 @@ bool autocvar_cl_multijump = true;
 #elif defined(SVQC)
 .bool cvar_cl_multijump;
 
-	#define PHYS_MULTIJUMP_CLIENT(s)	(s).cvar_cl_multijump
+	#define PHYS_MULTIJUMP_CLIENT(s)	CS(s).cvar_cl_multijump
 #endif
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)

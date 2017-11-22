@@ -426,8 +426,8 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
 
-		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
-		PlayerScore_Add(attacker, SP_SCORE, 10);
+		GameRules_scoring_add(attacker, ONS_TAKES, 1);
+		GameRules_scoring_add(attacker, SCORE, 10);
 
 		this.owner.goalentity = NULL;
 		this.owner.islinked = false;
@@ -555,8 +555,8 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
 			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE_TEAM), this.owner.message);
 			Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
-			PlayerScore_Add(this.owner.ons_toucher, SP_ONS_CAPS, 1);
-			PlayerTeamScore_AddScore(this.owner.ons_toucher, 10);
+			GameRules_scoring_add(this.owner.ons_toucher, ONS_CAPS, 1);
+			GameRules_scoring_add_team(this.owner.ons_toucher, SCORE, 10);
 		}
 
 		this.owner.ons_toucher = NULL;
@@ -911,7 +911,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		else
 		{
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED));
-			PlayerScore_Add(attacker, SP_SCORE, 100);
+			GameRules_scoring_add(attacker, SCORE, 100);
 		}
 		this.iscaptured = false;
 		this.islinked = false;
@@ -1377,8 +1377,8 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 			best.cnt += 1;
 
 			this.havocbot_attack_time = 0;
-			if(checkpvs(this.view_ofs,cp))
-			if(checkpvs(this.view_ofs,best))
+			if(checkpvs(this.origin + this.view_ofs, cp))
+			if(checkpvs(this.origin + this.view_ofs, best))
 				this.havocbot_attack_time = time + 2;
 		}
 		else
@@ -1448,8 +1448,8 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 			bestwp.cnt += 1;
 
 			this.havocbot_attack_time = 0;
-			if(checkpvs(this.view_ofs,g))
-			if(checkpvs(this.view_ofs,bestwp))
+			if(checkpvs(this.origin + this.view_ofs, g))
+			if(checkpvs(this.origin + this.view_ofs, bestwp))
 				this.havocbot_attack_time = time + 5;
 
 			return true;
@@ -2174,11 +2174,11 @@ void ons_ScoreRules()
 	if(c2 >= 0) teams |= BIT(1);
 	if(c3 >= 0) teams |= BIT(2);
 	if(c4 >= 0) teams |= BIT(3);
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "destroyed", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,    "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+	    field_team(ST_ONS_CAPS, "destroyed", SFL_SORT_PRIO_PRIMARY);
+	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+	    field(SP_ONS_TAKES,	"takes", 0);
+	});
 }
 
 void ons_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up

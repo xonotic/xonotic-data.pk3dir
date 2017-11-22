@@ -2,12 +2,24 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 project(xonotic-data ASM)
 
+set(all qc-all)
+add_custom_target(${all})
+
 set(checks qc-checks)
 add_custom_target(${checks})
 
-# depend on qcc
-if (TARGET gmqcc)
-    add_dependencies(${checks} gmqcc)
+if (gmqcc_BINARY_DIR)
+    set(compilerinfo "${gmqcc_BINARY_DIR}/gmqcc.h")
+    add_custom_command(
+            OUTPUT "${compilerinfo}"
+            DEPENDS "${gmqcc_BINARY_DIR}/gmqcc"
+            VERBATIM
+            COMMAND ${CMAKE_COMMAND} -E
+                md5sum "${gmqcc_BINARY_DIR}/gmqcc" > "${compilerinfo}"
+            )
+    add_custom_target(qcc ALL
+            DEPENDS "${compilerinfo}"
+            )
 endif ()
 
 add_dependencies(${checks} data-check-cvars)
@@ -42,6 +54,25 @@ add_custom_target(qc-whitespace
         VERBATIM COMMAND ./tools/whitespace.sh
         )
 
+function(prog name dir)
+    add_executable(${name} qcsrc/${dir}/progs.inc)
+    add_dependencies(${all} ${name})
+    add_dependencies(${name} ${checks})
+    add_dependencies(${name} qcc)
+    set_source_files_properties(qcsrc/${dir}/progs.inc PROPERTIES OBJECT_DEPENDS "${compilerinfo}")
+endfunction()
+
+function(set_prelude target prelude)
+    get_target_property(MY_PROJECT_SOURCES ${target} SOURCES)
+    foreach (source IN LISTS MY_PROJECT_SOURCES)
+        set_property(
+                SOURCE ${source}
+                APPEND PROPERTY COMPILE_FLAGS
+                "-include ${prelude}"
+        )
+    endforeach ()
+endfunction()
+
 include_directories(qcsrc)
 
 add_definitions(-DXONOTIC=1)
@@ -72,29 +103,15 @@ set_source_files_properties(
         HEADER_FILE_ONLY FALSE
 )
 
-add_executable(csprogs qcsrc/client/progs.inc)
-add_dependencies(csprogs ${checks})
+prog(csprogs client)
 target_compile_definitions(csprogs PRIVATE -DGAMEQC -DCSQC)
+# set_prelude(csprogs "${PROJECT_SOURCE_DIR}/qcsrc/lib/_all.inc")
 
-add_executable(progs qcsrc/server/progs.inc)
-add_dependencies(progs ${checks})
+prog(progs server)
 target_compile_definitions(progs PRIVATE -DGAMEQC -DSVQC)
 
-add_executable(menu qcsrc/menu/progs.inc)
-add_dependencies(menu ${checks})
+prog(menu menu)
 target_compile_definitions(menu PRIVATE -DMENUQC)
-
-function(set_prelude target prelude)
-    get_target_property(MY_PROJECT_SOURCES target SOURCES)
-    foreach (source IN LISTS MY_PROJECT_SOURCES)
-        set_property(
-                SOURCE ${source}
-                APPEND PROPERTY COMPILE_FLAGS
-                "-include ${PROJECT_SOURCE_DIR}/${prelude}"
-        )
-    endforeach ()
-endfunction()
-# set_prelude(csprogs qcsrc/lib/_all.inc)
 
 function(copy prog)
     add_custom_command(TARGET ${prog} POST_BUILD

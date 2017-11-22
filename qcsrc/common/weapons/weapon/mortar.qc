@@ -1,65 +1,5 @@
 #include "mortar.qh"
-#ifndef IMPLEMENTATION
-CLASS(Mortar, Weapon)
-/* ammotype  */ ATTRIB(Mortar, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(Mortar, impulse, int, 4);
-/* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(Mortar, wpcolor, vector, '1 0 0');
-/* modelname */ ATTRIB(Mortar, mdl, string, "gl");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Mortar, m_model, Model, MDL_MORTAR_ITEM);
-#endif
-/* crosshair */ ATTRIB(Mortar, w_crosshair, string, "gfx/crosshairgrenadelauncher");
-/* crosshair */ ATTRIB(Mortar, w_crosshair_size, float, 0.7);
-/* wepimg    */ ATTRIB(Mortar, model2, string, "weapongrenadelauncher");
-/* refname   */ ATTRIB(Mortar, netname, string, "mortar");
-/* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, BOTH) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, bouncefactor, float, NONE) \
-		P(class, prefix, bouncestop, float, NONE) \
-		P(class, prefix, damageforcescale, float, BOTH) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, edgedamage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, health, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, lifetime_bounce, float, SEC) \
-		P(class, prefix, lifetime_stick, float, BOTH) \
-		P(class, prefix, radius, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, remote_detonateprimary, float, SEC) \
-		P(class, prefix, remote_minbouncecnt, float, PRI) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, speed_up, float, BOTH) \
-		P(class, prefix, speed_z, float, BOTH) \
-		P(class, prefix, spread, float, BOTH) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, type, float, BOTH) \
-		P(class, prefix, weaponreplace, string, NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Mortar, mortar)
-#undef X
-ENDCLASS(Mortar)
-REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
-
-
-#ifdef SVQC
-.float gl_detonate_later;
-.float gl_bouncecnt;
-#endif
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
 
 spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(this, WEP_MORTAR); }
@@ -385,13 +325,13 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 }
 METHOD(Mortar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(mortar, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(mortar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
     return ammo_amount;
 }
 METHOD(Mortar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(mortar, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(mortar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
     return ammo_amount;
 }
@@ -426,5 +366,4 @@ METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
         sound(actor, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
-#endif
 #endif

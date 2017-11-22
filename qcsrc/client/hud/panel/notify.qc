@@ -1,5 +1,7 @@
 #include "notify.qh"
 
+#include <client/autocvars.qh>
+#include <client/miscfunctions.qh>
 
 // Notifications (#4)
 
