@@ -31,6 +31,7 @@
 #include <common/mutators/mutator/running_guns/_mod.inc>
 #include <common/mutators/mutator/sandbox/_mod.inc>
 #include <common/mutators/mutator/spawn_near_teammate/_mod.inc>
+#include <common/mutators/mutator/stale_move_negation/_mod.inc>
 #include <common/mutators/mutator/superspec/_mod.inc>
 #include <common/mutators/mutator/touchexplode/_mod.inc>
 #include <common/mutators/mutator/vampire/_mod.inc>

@@ -30,6 +30,7 @@ ENDCLASS(Jetpack)
 REGISTER_ITEM(Jetpack, Powerup) {
     this.m_canonical_spawnfunc = "item_jetpack";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_Jetpack_ITEM;
     this.m_itemid               =   IT_JETPACK;
 #endif
@@ -63,6 +64,7 @@ void ammo_fuel_init(entity item)
 REGISTER_ITEM(JetpackFuel, Ammo) {
     this.m_canonical_spawnfunc = "item_fuel";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model    =   MDL_JetpackFuel_ITEM;
 #endif
     this.netname    =   "fuel";
@@ -87,6 +89,7 @@ ENDCLASS(JetpackRegen)
 REGISTER_ITEM(JetpackRegen, JetpackRegen) {
     this.m_canonical_spawnfunc = "item_fuel_regen";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model                =   MDL_JetpackRegen_ITEM;
 #endif
     this.netname                =   "fuel_regen";
