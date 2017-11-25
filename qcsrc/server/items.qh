@@ -7,8 +7,10 @@
 /// \brief Creates a new item.
 /// \param[in] class_name Class name of the item.
 /// \param[in] position Position of the item.
+/// \param[in] no_align True if item should be placed directly at specified
+/// position, false to let it drop to the ground.
 /// \return Item on success, NULL otherwise.
-entity Item_Create(string class_name, vector position);
+entity Item_Create(string class_name, vector position, bool no_align);
 
 /// \brief Initializes the item according to classname.
 /// \param[in,out] item Item to initialize.

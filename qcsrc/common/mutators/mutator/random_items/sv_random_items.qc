@@ -222,7 +222,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	entity new_item;
 	if (!expr_evaluate(autocvar_g_overkill))
 	{
-		new_item = Item_Create(strzone(new_classname), item.origin);
+		new_item = Item_Create(strzone(new_classname), item.origin, true);
 		random_items_is_spawning = false;
 		if (new_item == NULL)
 		{
