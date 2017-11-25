@@ -538,7 +538,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		{
 			delete(this.killindicator);
 			this.killindicator = NULL;
-			if(CS(this).killindicator_teamchange)
+			if(this.killindicator_teamchange)
 				defer_ClientKill_Now_TeamChange = true;
 
 			if(this.classname == "body")
@@ -558,6 +558,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
 			CS(attacker).accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
+		this.respawn_time = 0;
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		damage = M_ARGV(4, float);
 		excess = max(0, damage - take - save);
@@ -585,6 +586,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// e.g. players in freezetag get frozen, they don't really die
 		if(this.health >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
+
+		if (!this.respawn_time) // can be set in the mutator hook PlayerDies
+			calculate_player_respawn_time(this);
 
 		// when we get here, player actually dies
 
@@ -620,9 +624,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.deadflag = DEAD_DYING;
 
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
-
-		// when to allow respawn
-		calculate_player_respawn_time(this);
 
 		this.death_time = time;
 		if (random() < 0.5)

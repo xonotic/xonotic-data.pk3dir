@@ -13,12 +13,13 @@
 /// this item is on the ground.
 .bool m_isexpiring;
 
-entity Item_Create(string class_name, vector position)
+entity Item_Create(string class_name, vector position, bool no_align)
 {
 	entity item = spawn();
 	item.classname = class_name;
 	item.spawnfunc_checked = true;
 	setorigin(item, position);
+	item.noalign = no_align;
 	Item_Initialize(item, class_name);
 	if (wasfreed(item))
 	{

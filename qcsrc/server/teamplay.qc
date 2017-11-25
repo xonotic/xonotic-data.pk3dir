@@ -925,6 +925,11 @@ void SV_ChangeTeam(entity this, float _color)
 	source_team = Team_TeamToNumber(source_color + 1);
 	destination_team = Team_TeamToNumber(destination_color + 1);
 
+	if (destination_team == -1)
+	{
+		return;
+	}
+
 	CheckAllowedTeams(this);
 
 	if (destination_team == 1 && c1 < 0) destination_team = 4;

@@ -73,7 +73,6 @@ CLASS(Client, Object)
 
     ATTRIB(Client, parm_idlesince, int, this.parm_idlesince);
     ATTRIB(Client, muted, bool, this.muted);
-    ATTRIB(Client, killindicator_teamchange, int, this.killindicator_teamchange);
     ATTRIB(Client, idlekick_lasttimeleft, float, this.idlekick_lasttimeleft);
     ATTRIB(Client, pm_frametime, float, this.pm_frametime);
     ATTRIB(Client, pressedkeys, int, this.pressedkeys);
