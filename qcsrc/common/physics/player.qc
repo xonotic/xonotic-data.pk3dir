@@ -75,6 +75,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate", autocvar_sv_airaccelerate);
 	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate", autocvar_sv_airstopaccelerate);
 	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
+	STAT(MOVEVARS_JUMPVELOCITY_CROUCH, this) = Physics_ClientOption(this, "jumpvelocity_crouch", autocvar_sv_jumpvelocity_crouch);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 }
 #endif
@@ -303,7 +304,7 @@ bool PlayerJump(entity this)
 #endif
 
 	bool doublejump = false;
-	float mjumpheight = PHYS_JUMPVELOCITY(this);
+	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
 	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 
 	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))

@@ -873,19 +873,19 @@ Called when a client types 'kill' in the console
 .float clientkill_nexttime;
 void ClientKill_Now_TeamChange(entity this)
 {
-	if(CS(this).killindicator_teamchange == -1)
+	if(this.killindicator_teamchange == -1)
 	{
 		JoinBestTeam( this, false, true );
 	}
-	else if(CS(this).killindicator_teamchange == -2)
+	else if(this.killindicator_teamchange == -2)
 	{
 		if(blockSpectators)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 		PutObserverInServer(this);
 	}
 	else
-		SV_ChangeTeam(this, CS(this).killindicator_teamchange - 1);
-	CS(this).killindicator_teamchange = 0;
+		SV_ChangeTeam(this, this.killindicator_teamchange - 1);
+	this.killindicator_teamchange = 0;
 }
 
 void ClientKill_Now(entity this)
@@ -893,7 +893,7 @@ void ClientKill_Now(entity this)
 	if(this.vehicle)
 	{
 	    vehicles_exit(this.vehicle, VHEF_RELEASE);
-	    if(!CS(this).killindicator_teamchange)
+	    if(!this.killindicator_teamchange)
 	    {
             this.vehicle_health = -1;
             Damage(this, this, this, 1 , DEATH_KILL.m_id, this.origin, '0 0 0');
@@ -905,7 +905,7 @@ void ClientKill_Now(entity this)
 
 	this.killindicator = NULL;
 
-	if(CS(this).killindicator_teamchange)
+	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
 	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
@@ -970,7 +970,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
     	return;
     killtime = M_ARGV(1, float);
 
-	CS(this).killindicator_teamchange = targetteam;
+	this.killindicator_teamchange = targetteam;
 
     if(!this.killindicator)
 	{
