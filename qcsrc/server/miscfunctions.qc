@@ -8,6 +8,7 @@
 #include "mutators/_mod.qh"
 #include "../common/t_items.qh"
 #include "resources.qh"
+#include "items.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -653,7 +654,7 @@ void readplayerstartcvars()
 			"g_random_start_shells"));
 		SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, cvar(
 			"g_random_start_bullets"));
-		SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, 
+		SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS,
 			cvar("g_random_start_rockets"));
 		SetResourceAmount(random_start_ammo, RESOURCE_CELLS, cvar(
 			"g_random_start_cells"));
@@ -1437,10 +1438,13 @@ bool isPushable(entity e)
 		return false;
 	if(e.iscreature)
 		return true;
+	if (Item_IsLoot(e))
+	{
+		return true;
+	}
 	switch(e.classname)
 	{
 		case "body":
-		case "droppedweapon":
 			return true;
 		case "bullet": // antilagged bullets can't hit this either
 			return false;

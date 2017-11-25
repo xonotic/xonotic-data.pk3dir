@@ -1,7 +1,6 @@
 #include "hlac.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
 void W_HLAC_Touch(entity this, entity toucher)
 {
