@@ -3,8 +3,6 @@
 #ifdef SVQC
 #include <common/triggers/trigger/jumppads.qh>
 
-spawnfunc(weapon_porto) { weapon_defaultspawnfunc(this, WEP_PORTO); }
-
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
 	FOREACH_CLIENT(IS_PLAYER(it), it.porto_forbidden = max(0, it.porto_forbidden - 1));

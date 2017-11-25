@@ -1,7 +1,6 @@
 #include "hagar.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_hagar) { weapon_defaultspawnfunc(this, WEP_HAGAR); }
 
 // NO bounce protection, as bounces are limited!
 

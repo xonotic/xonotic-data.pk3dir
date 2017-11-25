@@ -2,6 +2,7 @@
 
 #include "weaponsystem.qh"
 #include <common/t_items.qh>
+#include <server/items.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/util.qh>
@@ -25,8 +26,10 @@ void Weapon_whereis(Weapon this, entity cl)
 	if (!autocvar_g_showweaponspawns) return;
 	IL_EACH(g_items, it.weapon == this.m_id && (!it.team || (it.ItemStatus & ITS_AVAILABLE)),
 	{
-		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
+		if (Item_IsLoot(it) && (autocvar_g_showweaponspawns < 2))
+		{
 			continue;
+		}
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,
 			-2, 0,

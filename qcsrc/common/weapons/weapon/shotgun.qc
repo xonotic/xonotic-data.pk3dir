@@ -1,7 +1,6 @@
 #include "shotgun.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(this, WEP_SHOTGUN); }
 
 void W_Shotgun_Attack(Weapon thiswep, entity actor, .entity weaponentity, float isprimary)
 {

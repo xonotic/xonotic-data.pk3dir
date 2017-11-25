@@ -1,6 +1,5 @@
 #pragma once
 
-float warmup_limit;
 #include <common/weapons/_all.qh>
 #include <common/stats.qh>
 

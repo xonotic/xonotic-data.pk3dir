@@ -1,7 +1,6 @@
 #include "arc.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_arc) { weapon_defaultspawnfunc(this, WEP_ARC); }
 
 bool W_Arc_Beam_Send(entity this, entity to, int sf)
 {

@@ -1,7 +1,6 @@
 #include "crylink.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_crylink) { weapon_defaultspawnfunc(this, WEP_CRYLINK); }
 
 void W_Crylink_CheckLinks(entity e)
 {
