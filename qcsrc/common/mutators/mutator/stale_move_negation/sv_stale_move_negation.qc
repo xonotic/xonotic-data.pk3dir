@@ -20,7 +20,7 @@ float smneg_multiplier(float weight) {
     float a = autocvar_g_smneg_bonus_asymptote;
     float x = max(
         (!autocvar_g_smneg_bonus ? 0 : (-a + .1)),
-        weight / cvar("g_balance_health_start")
+        weight / start_health
     );
     float z = (M_PI / 5) * a;
     float f = (x > 0)
