@@ -2,17 +2,14 @@
 
 #ifdef SVQC
 
-spawnfunc(weapon_machinegun)
+METHOD(MachineGun, m_spawnfunc_hookreplace, Weapon(MachineGun this, entity e))
 {
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(this.classname != "droppedweapon")
+	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
 	{
-		weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
-		return;
+		return WEP_SHOCKWAVE;
 	}
-	weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
+	return this;
 }
-spawnfunc(weapon_uzi) { spawnfunc_weapon_machinegun(this); }
 
 void W_MachineGun_MuzzleFlash_Think(entity this)
 {

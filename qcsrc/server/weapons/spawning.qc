@@ -4,7 +4,10 @@
 #include "../resources.qh"
 #include "../mutators/_mod.qh"
 #include <common/t_items.qh>
+#include <server/items.qh>
 #include <common/weapons/_all.qh>
+
+.bool m_isreplaced; ///< Holds whether the weapon has been replaced.
 
 string W_Apply_Weaponreplace(string in)
 {
@@ -26,7 +29,9 @@ string W_Apply_Weaponreplace(string in)
 void weapon_defaultspawnfunc(entity this, Weapon e)
 {
 	Weapon wpn = e;
-	if (this.classname != "droppedweapon" && this.classname != "replacedweapon")
+	e = wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
+	this.classname = wpn.m_canonical_spawnfunc;
+	if (!Item_IsLoot(this) && !this.m_isreplaced)
 	{
 		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
@@ -56,7 +61,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 					{
 						entity replacement = spawn();
 						copyentity(this, replacement);
-						replacement.classname = "replacedweapon";
+						replacement.m_isreplaced = true;
 						weapon_defaultspawnfunc(replacement, it);
 						break;
 					}
