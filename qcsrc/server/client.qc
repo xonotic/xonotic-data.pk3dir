@@ -270,7 +270,7 @@ void PutObserverInServer(entity this)
 	if (this.alivetime)
 	{
 		if (!warmup_stage)
-			PS_GR_P_ADDVAL(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
 		this.alivetime = 0;
 	}
 
@@ -558,6 +558,8 @@ void PutPlayerInServer(entity this)
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
 		this.weapons = start_weapons;
+		GiveRandomWeapons(this, random_start_weapons_count,
+			autocvar_g_random_start_weapons, random_start_ammo);
 	}
 	SetSpectatee_status(this, 0);
 
@@ -873,19 +875,19 @@ Called when a client types 'kill' in the console
 .float clientkill_nexttime;
 void ClientKill_Now_TeamChange(entity this)
 {
-	if(CS(this).killindicator_teamchange == -1)
+	if(this.killindicator_teamchange == -1)
 	{
 		JoinBestTeam( this, false, true );
 	}
-	else if(CS(this).killindicator_teamchange == -2)
+	else if(this.killindicator_teamchange == -2)
 	{
 		if(blockSpectators)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 		PutObserverInServer(this);
 	}
 	else
-		SV_ChangeTeam(this, CS(this).killindicator_teamchange - 1);
-	CS(this).killindicator_teamchange = 0;
+		SV_ChangeTeam(this, this.killindicator_teamchange - 1);
+	this.killindicator_teamchange = 0;
 }
 
 void ClientKill_Now(entity this)
@@ -893,7 +895,7 @@ void ClientKill_Now(entity this)
 	if(this.vehicle)
 	{
 	    vehicles_exit(this.vehicle, VHEF_RELEASE);
-	    if(!CS(this).killindicator_teamchange)
+	    if(!this.killindicator_teamchange)
 	    {
             this.vehicle_health = -1;
             Damage(this, this, this, 1 , DEATH_KILL.m_id, this.origin, '0 0 0');
@@ -905,7 +907,7 @@ void ClientKill_Now(entity this)
 
 	this.killindicator = NULL;
 
-	if(CS(this).killindicator_teamchange)
+	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
 	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
@@ -970,7 +972,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
     	return;
     killtime = M_ARGV(1, float);
 
-	CS(this).killindicator_teamchange = targetteam;
+	this.killindicator_teamchange = targetteam;
 
     if(!this.killindicator)
 	{
@@ -1216,8 +1218,6 @@ void ClientConnect(entity this)
 	LogTeamchange(this.playerid, this.team, 1);
 
 	CS(this).just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
-
-	CS(this).netname_previous = strzone(this.netname);
 
 	if(teamplay && IS_PLAYER(this))
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_JOIN_CONNECT_TEAM), this.netname);
@@ -2494,19 +2494,22 @@ void PlayerPreThink (entity this)
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
 		checkSpectatorBlock(this);
-    }
+	}
 
 	zoomstate_set = false;
 
 	// Check for nameless players
-	if (isInvisibleString(this.netname)) {
-		this.netname = strzone(sprintf("Player#%d", this.playerid));
-		// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
-	}
-	if (this.netname != CS(this).netname_previous) {
-		if (autocvar_sv_eventlog) {
+	if (this.netname == "" || this.netname != CS(this).netname_previous)
+	{
+		bool assume_unchanged = (CS(this).netname_previous == "");
+		if (isInvisibleString(this.netname))
+		{
+			this.netname = strzone(sprintf("Player#%d", this.playerid));
+			assume_unchanged = false;
+			// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+		}
+		if (!assume_unchanged && autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", playername(this, false)));
-        }
 		if (CS(this).netname_previous) strunzone(CS(this).netname_previous);
 		CS(this).netname_previous = strzone(this.netname);
 	}

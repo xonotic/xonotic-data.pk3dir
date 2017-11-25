@@ -94,11 +94,22 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	this.health = this.health - damage;
-	if (this.health <= 0)
+	if (this.spawnflags & BUTTON_DONTACCUMULATEDMG)
 	{
-		this.enemy = attacker;
-		button_fire(this);
+		if (this.health <= damage)
+		{
+			this.enemy = attacker;
+			button_fire(this);
+		}
+	}
+	else
+	{
+		this.health = this.health - damage;
+		if (this.health <= 0)
+		{
+			this.enemy = attacker;
+			button_fire(this);
+		}
 	}
 }
 

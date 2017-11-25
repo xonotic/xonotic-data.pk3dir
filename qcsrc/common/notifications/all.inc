@@ -461,7 +461,7 @@
     MSG_INFO_NOTIF(WEAPON_CRYLINK_MURDER,                   N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponcrylink",            _("^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_CRYLINK_SUICIDE,                  N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponcrylink",            _("^BG%s^K1 felt the strong pull of their Crylink%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_DEVASTATOR_MURDER_DIRECT,         N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponrocketlauncher",     _("^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s"), "")
-    MSG_INFO_NOTIF(WEAPON_DEVASTATOR_MURDER_SPLASH,         N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponrocketlauncher",     _("^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"), "")
+    MSG_INFO_NOTIF(WEAPON_DEVASTATOR_MURDER_SPLASH,         N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponrocketlauncher",     _("^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_DEVASTATOR_SUICIDE,               N_CONSOLE,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponrocketlauncher",     _("^BG%s^K1 blew themself up with their Devastator%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_ELECTRO_MURDER_BOLT,              N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponelectro",            _("^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"), "")
     MSG_INFO_NOTIF(WEAPON_ELECTRO_MURDER_COMBO,             N_CONSOLE,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponelectro",            _("^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s"), "")

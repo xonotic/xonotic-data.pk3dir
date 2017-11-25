@@ -217,28 +217,36 @@ float autocvar_sv_dodging_wall_distance_threshold;
 bool autocvar_sv_dodging_frozen;
 bool autocvar_sv_dodging_frozen_doubletap;
 float autocvar_sv_dodging_height_threshold;
-float autocvar_sv_dodging_horiz_speed;
-float autocvar_sv_dodging_horiz_speed_frozen;
+float autocvar_sv_dodging_horiz_speed_min;
+float autocvar_sv_dodging_horiz_speed_max;
+float autocvar_sv_dodging_horiz_force_slowest;
+float autocvar_sv_dodging_horiz_force_fastest;
+float autocvar_sv_dodging_horiz_force_frozen;
 float autocvar_sv_dodging_ramp_time;
 float autocvar_sv_dodging_up_speed;
 bool autocvar_sv_dodging_wall_dodging;
 bool autocvar_sv_dodging_air_dodging;
-float autocvar_sv_dodging_maxspeed = 450;
+float autocvar_sv_dodging_maxspeed;
+float autocvar_sv_dodging_air_maxspeed;
 #endif
 
 #if 0
 REGISTER_STAT(DODGING, int, g_dodging)
 REGISTER_STAT(DODGING_DELAY, float, autocvar_sv_dodging_delay)
 REGISTER_STAT(DODGING_DISTANCE_THRESHOLD, float, autocvar_sv_dodging_wall_distance_threshold)
-REGISTER_STAT(DODGING_FROZEN_NO_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
+REGISTER_STAT(DODGING_FROZEN_DOUBLETAP, int, autocvar_sv_dodging_frozen_doubletap)
 REGISTER_STAT(DODGING_HEIGHT_THRESHOLD, float, autocvar_sv_dodging_height_threshold)
-REGISTER_STAT(DODGING_HORIZ_SPEED, float, autocvar_sv_dodging_horiz_speed)
-REGISTER_STAT(DODGING_HORIZ_SPEED_FROZEN, float, autocvar_sv_dodging_horiz_speed_frozen)
+REGISTER_STAT(DODGING_HORIZ_SPEED_MIN, float, autocvar_sv_dodging_horiz_speed_min)
+REGISTER_STAT(DODGING_HORIZ_SPEED_MAX, float, autocvar_sv_dodging_horiz_speed_max)
+REGISTER_STAT(DODGING_HORIZ_FORCE_SLOWEST, float, autocvar_sv_dodging_horiz_force_slowest)
+REGISTER_STAT(DODGING_HORIZ_FORCE_FASTEST, float, autocvar_sv_dodging_horiz_force_fastest)
+REGISTER_STAT(DODGING_HORIZ_FORCE_FROZEN, float, autocvar_sv_dodging_horiz_force_frozen)
 REGISTER_STAT(DODGING_RAMP_TIME, float, autocvar_sv_dodging_ramp_time)
 REGISTER_STAT(DODGING_UP_SPEED, float, autocvar_sv_dodging_up_speed)
 REGISTER_STAT(DODGING_WALL, bool, autocvar_sv_dodging_wall_dodging)
 REGISTER_STAT(DODGING_AIR, bool, autocvar_sv_dodging_air_dodging)
 REGISTER_STAT(DODGING_MAXSPEED, float, autocvar_sv_dodging_maxspeed)
+REGISTER_STAT(DODGING_AIR_MAXSPEED, float, autocvar_sv_dodging_air_maxspeed)
 #endif
 /** cvar loopback */
 REGISTER_STAT(DODGING_FROZEN, int, autocvar_sv_dodging_frozen)
@@ -338,6 +346,7 @@ REGISTER_STAT(MOVEVARS_AIRACCELERATE, float)
 // FIXME: Was 0 on server, 1 on client. Still want that?
 REGISTER_STAT(MOVEVARS_ENTGRAVITY, float, (this.gravity) ? this.gravity : 1)
 REGISTER_STAT(MOVEVARS_JUMPVELOCITY, float)
+REGISTER_STAT(MOVEVARS_JUMPVELOCITY_CROUCH, float)
 REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
 REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)

@@ -54,8 +54,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	{
 		// regular frag
 		GameRules_scoring_add(attacker, KILLS, 1);
-		if(targ.playerid)
-			PS_GR_P_ADDVAL(attacker, sprintf("kills-%d", targ.playerid), 1);
+		if(!warmup_stage && targ.playerid)
+			PlayerStats_GameReport_Event_Player(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
 	GameRules_scoring_add(targ, DEATHS, 1);
@@ -167,60 +167,42 @@ void Obituary_SpecialDeath(
 	string s1, string s2, string s3,
 	float f1, float f2, float f3)
 {
-	if(DEATH_ISSPECIAL(deathtype))
+	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = Deathtypes_from(deathtype - DT_FIRST);
-		if (!deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
-
-		if(g_cts && deathtype == DEATH_KILL.m_id)
-			return; // TODO: somehow put this in CTS gamemode file!
-
-		if(murder)
-		{
-			if(deathent.death_msgmurder)
-			{
-				Send_Notification_WOCOVA(
-					NOTIF_ONE,
-					notif_target,
-					MSG_MULTI,
-					deathent.death_msgmurder,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-				Send_Notification_WOCOVA(
-					NOTIF_ALL_EXCEPT,
-					notif_target,
-					MSG_INFO,
-					deathent.death_msgmurder.nent_msginfo,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-			}
-		}
-		else
-		{
-			if(deathent.death_msgself)
-			{
-				Send_Notification_WOCOVA(
-					NOTIF_ONE,
-					notif_target,
-					MSG_MULTI,
-					deathent.death_msgself,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-				Send_Notification_WOCOVA(
-					NOTIF_ALL_EXCEPT,
-					notif_target,
-					MSG_INFO,
-					deathent.death_msgself.nent_msginfo,
-					s1, s2, s3, "",
-					f1, f2, f3, 0
-				);
-			}
-		}
+		backtrace("Obituary_SpecialDeath called without a special deathtype?\n");
+		return;
 	}
-	else { backtrace("Obituary_SpecialDeath called without a special deathtype?\n"); return; }
+
+	entity deathent = Deathtypes_from(deathtype - DT_FIRST);
+	if (!deathent)
+	{
+		backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n");
+		return;
+	}
+
+	if(g_cts && deathtype == DEATH_KILL.m_id)
+		return; // TODO: somehow put this in CTS gamemode file!
+
+	Notification death_message = (murder) ? deathent.death_msgmurder : deathent.death_msgself;
+	if(death_message)
+	{
+		Send_Notification_WOCOVA(
+			NOTIF_ONE,
+			notif_target,
+			MSG_MULTI,
+			death_message,
+			s1, s2, s3, "",
+			f1, f2, f3, 0
+		);
+		Send_Notification_WOCOVA(
+			NOTIF_ALL_EXCEPT,
+			notif_target,
+			MSG_INFO,
+			death_message.nent_msginfo,
+			s1, s2, s3, "",
+			f1, f2, f3, 0
+		);
+	}
 }
 
 float Obituary_WeaponDeath(
@@ -231,44 +213,43 @@ float Obituary_WeaponDeath(
 	float f1, float f2)
 {
 	Weapon death_weapon = DEATH_WEAPONOF(deathtype);
-	if (death_weapon != WEP_Null)
+	if (death_weapon == WEP_Null)
+		return false;
+
+	w_deathtype = deathtype;
+	Notification death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
+	w_deathtype = false;
+
+	if (death_message)
 	{
-		w_deathtype = deathtype;
-		Notification death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
-		w_deathtype = false;
-
-		if (death_message)
-		{
-			Send_Notification_WOCOVA(
-				NOTIF_ONE,
-				notif_target,
-				MSG_MULTI,
-				death_message,
-				s1, s2, s3, "",
-				f1, f2, 0, 0
-			);
-			// send the info part to everyone
-			Send_Notification_WOCOVA(
-				NOTIF_ALL_EXCEPT,
-				notif_target,
-				MSG_INFO,
-				death_message.nent_msginfo,
-				s1, s2, s3, "",
-				f1, f2, 0, 0
-			);
-		}
-		else
-		{
-			LOG_TRACEF(
-				"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
-				deathtype,
-				death_weapon
-			);
-		}
-
-		return true;
+		Send_Notification_WOCOVA(
+			NOTIF_ONE,
+			notif_target,
+			MSG_MULTI,
+			death_message,
+			s1, s2, s3, "",
+			f1, f2, 0, 0
+		);
+		// send the info part to everyone
+		Send_Notification_WOCOVA(
+			NOTIF_ALL_EXCEPT,
+			notif_target,
+			MSG_INFO,
+			death_message.nent_msginfo,
+			s1, s2, s3, "",
+			f1, f2, 0, 0
+		);
 	}
-	return false;
+	else
+	{
+		LOG_TRACEF(
+			"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
+			deathtype,
+			death_weapon
+		);
+	}
+
+	return true;
 }
 
 bool frag_centermessage_override(entity attacker, entity targ, int deathtype, int kill_count_to_attacker, int kill_count_to_target)
@@ -379,11 +360,16 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			attacker.killsound += 1;
 
+			// TODO: improve SPREE_ITEM and KILL_SPREE_LIST
+			// these 2 macros are spread over multiple files
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \
 					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
-					PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
+					if (!warmup_stage)\
+					{\
+						PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
+					}\
 					break; \
 				}
 			switch(CS(attacker).killcount)
@@ -393,12 +379,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			}
 			#undef SPREE_ITEM
 
-			if(!checkrules_firstblood)
+			if(!warmup_stage && !checkrules_firstblood)
 			{
 				checkrules_firstblood = true;
 				notif_firstblood = true; // modify the current messages so that they too show firstblood information
-				PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
-				PS_GR_P_ADDVAL(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
+				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+				PlayerStats_GameReport_Event_Player(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
@@ -513,7 +499,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		if(GameRules_scoring_add(targ, SCORE, 0) == -5)
 		{
 			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
-			PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
+			if (!warmup_stage)
+			{
+				PlayerStats_GameReport_Event_Player(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
+			}
 		}
 	}
 
