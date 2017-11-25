@@ -910,7 +910,8 @@ vector crosshair_getcolor(entity this, float health_stat)
 
 		case 2: // crosshair_color_by_health
 		{
-			float hp = health_stat;
+			vector v = healtharmor_maxdamage(health_stat, STAT(ARMOR), armorblockpercent, DEATH_WEAPON.m_id);
+			float hp = floor(v.x + 1);
 
 			//x = red
 			//y = green
