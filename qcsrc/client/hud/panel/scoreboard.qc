@@ -96,7 +96,7 @@ string TranslateScoresLabel(string l)
 		case "kd": return CTX(_("SCO^k/d"));
 		case "kdr": return CTX(_("SCO^kdr"));
 		case "kills": return CTX(_("SCO^kills"));
-		case "teamkills": return CTX(_("SC0^teamkills"));
+		case "teamkills": return CTX(_("SCO^teamkills"));
 		case "laps": return CTX(_("SCO^laps"));
 		case "lives": return CTX(_("SCO^lives"));
 		case "losses": return CTX(_("SCO^losses"));
