@@ -25,17 +25,6 @@ enum
 
 // Map probability cvars
 
-/// \brief Probability of random health items spawning in the map.
-float autocvar_g_random_items_health_probability;
-/// \brief Probability of random armor items spawning in the map.
-float autocvar_g_random_items_armor_probability;
-/// \brief Probability of random resource items spawning in the map.
-float autocvar_g_random_items_resource_probability;
-/// \brief Probability of random weapons spawning in the map.
-float autocvar_g_random_items_weapon_probability;
-/// \brief Probability of random powerups spawning in the map.
-float autocvar_g_random_items_powerup_probability;
-
 /// \brief Probability of random %s spawning in the map.
 /// float autocvar_g_random_items_%s_probability;
 
@@ -53,19 +42,8 @@ float autocvar_g_random_loot_spread; ///< How far can loot be thrown.
 
 // Loot probability cvars
 
-/// \brief Probability of random health items spawning as loot.
-float autocvar_g_random_loot_health_probability;
-/// \brief Probability of random armor items spawning as loot.
-float autocvar_g_random_loot_armor_probability;
-/// \brief Probability of random resource items spawning as loot.
-float autocvar_g_random_loot_resource_probability;
-/// \brief Probability of random weapons spawning as loot.
-float autocvar_g_random_loot_weapon_probability;
-/// \brief Probability of random powerups spawning as loot.
-float autocvar_g_random_loot_powerup_probability;
-
 /// \brief Probability of random %s spawning as loot.
-/// float autocvar_g_random_loot_weapon_%s_probability;
+/// float autocvar_g_random_loot_%s_probability;
 
 /// \brief Probability of random %s spawning as loot during overkill.
 /// float autocvar_g_random_loot_overkill_%s_probability;
@@ -74,177 +52,94 @@ float autocvar_g_random_loot_powerup_probability;
 /// recursion.
 bool random_items_is_spawning = false;
 
-//========================= Free functions ====================================
+//====================== Forward declarations =================================
 
-string RandomItems_GetItemVarName(string class_name)
-{
-	if (startsWith(class_name, "weapon_"))
-	{
-		FOREACH(Weapons, it.m_canonical_spawnfunc == class_name, {
-			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-			{
-				return "";
-			}
-			return class_name;
-		});
-	}
-	bool is_ok = expr_evaluate(autocvar_g_overkill);
-	switch (class_name)
-	{
-		#define X(classname) case #classname: return #classname
-		#define XCOND(classname, var, expr) case #classname: if (expr) return #var; else break
-		X(item_health_small);
-		X(item_health_medium);
-		X(item_health_big);
-		XCOND(item_health_mega, item_health_mega, !is_ok || !autocvar_g_overkill_filter_healthmega);
+/// \brief Returns a random classname of the item with specific property.
+/// \param[in] prefix Prefix of the cvars that hold probabilities.
+/// \return Random classname of the item.
+string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
+	.bool item_property);
 
-		X(item_armor_small);
-		XCOND(item_armor_medium, item_armor_medium, !is_ok || !autocvar_g_overkill_filter_armormedium);
-		XCOND(item_armor_big, item_armor_big, !is_ok || !autocvar_g_overkill_filter_armorbig);
-		XCOND(item_armor_mega, item_armor_mega, !is_ok || !autocvar_g_overkill_filter_armormega);
+//=========================== Public API ======================================
 
-		X(item_shells);
-		X(item_bullets);
-		X(item_rockets);
-		X(item_cells);
-		X(item_plasma);
-		X(item_fuel);
-
-		X(item_strength);
-		X(item_shield);
-		X(item_fuel_regen);
-		X(item_jetpack);
-
-		X(item_vaporizer_cells);
-		X(item_invisibility);
-		X(item_extralife);
-		X(item_speed);
-
-		#undef X
-		#undef XCOND
-	}
-	return "";
-}
-
-/// \brief Returns list of classnames to replace a map item with.
-/// \param[in] item Item to inspect.
-/// \return List of classnames to replace a map item with.
-string RandomItems_GetItemReplacementClassNames(entity item)
-{
-	string class_name = RandomItems_GetItemVarName(item.classname);
-	if (class_name)
-	{
-		return cvar_string(sprintf("g_random_items_replace_%s", class_name));
-	}
-	return "";
-}
-
-/// \brief Returns a random classname of the instagib map item.
-/// \return Random classname of the instagib map item.
-string RandomItems_GetRandomInstagibMapItemClassName()
-{
-	RandomSelection_Init();
-	#define X(classname) \
-		RandomSelection_AddString( \
-			classname, \
-			cvar(sprintf("g_random_items_%s_probability", RandomItems_GetItemVarName(classname))), \
-			1 \
-		)
-	X("item_vaporizer_cells");
-	X("item_invisibility");
-	X("item_extralife");
-	X("item_speed");
-	#undef X
-	return RandomSelection_chosen_string;
-}
-
-/// \brief Returns a random classname of the overkill map item.
-/// \return Random classname of the overkill map item.
-string RandomItems_GetRandomOverkillMapItemClassName()
-{
-	RandomSelection_Init();
-	string varname;
-	#define X(classname) MACRO_BEGIN \
-		if ((varname = RandomItems_GetItemVarName(classname))) \
-		{ \
-			RandomSelection_AddString( \
-				classname, \
-				cvar(sprintf("g_random_items_overkill_%s_probability", varname)), \
-				1 \
-			); \
-		} \
-	MACRO_END
-	X("item_health_mega");
-	X("item_armor_small");
-	X("item_armor_medium");
-	X("item_armor_big");
-	X("item_armor_mega");
-	X("weapon_hmg");
-	X("weapon_rpc");
-	#undef X
-	return RandomSelection_chosen_string;
-}
-
-/// \brief Returns a random classname of the map item.
-/// \return Random classname of the map item.
-string RandomItems_GetRandomMapItemClassName()
+string RandomItems_GetRandomItemClassName(string prefix)
 {
 	if (autocvar_g_instagib)
 	{
-		return RandomItems_GetRandomInstagibMapItemClassName();
+		return RandomItems_GetRandomInstagibItemClassName(prefix);
 	}
 	if (expr_evaluate(autocvar_g_overkill))
 	{
-		return RandomItems_GetRandomOverkillMapItemClassName();
+		return RandomItems_GetRandomOverkillItemClassName(prefix);
 	}
+	return RandomItems_GetRandomVanillaItemClassName(prefix);
+}
+
+string RandomItems_GetRandomVanillaItemClassName(string prefix)
+{
 	RandomSelection_Init();
-	#define X(type, name) \
-		RandomSelection_AddFloat( \
-			RANDOM_ITEM_TYPE_##type, \
-			autocvar_g_random_items_##name##_probability, \
-			1 \
-		)
-	X(HEALTH, health);
-	X(ARMOR, armor);
-	X(RESOURCE, resource);
-	X(WEAPON, weapon);
-	X(POWERUP, powerup);
-	#undef X
+	string cvar_name = sprintf("g_%s_health_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_HEALTH, cvar(cvar_name), 1);
+	}
+	cvar_name = sprintf("g_%s_armor_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_ARMOR, cvar(cvar_name), 1);
+	}
+	cvar_name = sprintf("g_%s_resource_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_RESOURCE, cvar(cvar_name), 1);
+	}
+	cvar_name = sprintf("g_%s_weapon_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_WEAPON, cvar(cvar_name), 1);
+	}
+	cvar_name = sprintf("g_%s_powerup_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddFloat(RANDOM_ITEM_TYPE_POWERUP, cvar(cvar_name), 1);
+	}
 	int item_type = RandomSelection_chosen_float;
 	switch (item_type)
 	{
 		case RANDOM_ITEM_TYPE_HEALTH:
 		{
-			RandomSelection_Init();
-			FOREACH(Items, it.instanceOfHealth,
-			{
-				RandomSelection_AddString(it.m_canonical_spawnfunc,
-					cvar(sprintf("g_random_items_%s_probability",
-					it.m_canonical_spawnfunc)), 1);
-			});
-			return RandomSelection_chosen_string;
+			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
+				instanceOfHealth);
 		}
 		case RANDOM_ITEM_TYPE_ARMOR:
 		{
-			RandomSelection_Init();
-			FOREACH(Items, it.instanceOfArmor,
-			{
-				RandomSelection_AddString(it.m_canonical_spawnfunc,
-					cvar(sprintf("g_random_items_%s_probability",
-					it.m_canonical_spawnfunc)), 1);
-			});
-			return RandomSelection_chosen_string;
+			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
+				instanceOfArmor);
 		}
 		case RANDOM_ITEM_TYPE_RESOURCE:
 		{
-			RandomSelection_Init();
-			FOREACH(Items, it.instanceOfAmmo,
-			{
-				RandomSelection_AddString(it.m_canonical_spawnfunc,
-					cvar(sprintf("g_random_items_%s_probability",
-					it.m_canonical_spawnfunc)), 1);
-			});
-			return RandomSelection_chosen_string;
+			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
+				instanceOfAmmo);
 		}
 		case RANDOM_ITEM_TYPE_WEAPON:
 		{
@@ -252,8 +147,14 @@ string RandomItems_GetRandomMapItemClassName()
 			FOREACH(Weapons, it != WEP_Null &&
 				!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
 			{
-				string cvar_name = sprintf("g_random_items_%s_probability",
+				cvar_name = sprintf("g_%s_%s_probability", prefix,
 					it.m_canonical_spawnfunc);
+				if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+				{
+					LOG_WARNF("Random items: cvar %s doesn't exist.",
+						cvar_name);
+					continue;
+				}
 				RandomSelection_AddString(it.m_canonical_spawnfunc,
 					cvar(cvar_name), 1);
 			});
@@ -261,22 +162,98 @@ string RandomItems_GetRandomMapItemClassName()
 		}
 		case RANDOM_ITEM_TYPE_POWERUP:
 		{
-			RandomSelection_Init();
-			#define X(classname) \
-				RandomSelection_AddString( \
-					classname, \
-					cvar(sprintf("g_random_items_%s_probability", classname)), \
-					1 \
-				)
-			X("item_strength");
-			X("item_shield");
-			X("item_fuel_regen");
-			X("item_jetpack");
-			#undef X
-			return RandomSelection_chosen_string;
+			return RandomItems_GetRandomItemClassNameWithProperty(prefix,
+				instanceOfPowerup);
 		}
 	}
 	return "";
+}
+
+string RandomItems_GetRandomInstagibItemClassName(string prefix)
+{
+	RandomSelection_Init();
+	FOREACH(Items, it.spawnflags & ITEM_FLAG_INSTAGIB,
+	{
+		string cvar_name = sprintf("g_%s_%s_probability", prefix,
+			it.m_canonical_spawnfunc);
+		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+		{
+			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			continue;
+		}
+		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
+	});
+	return RandomSelection_chosen_string;
+}
+
+string RandomItems_GetRandomOverkillItemClassName(string prefix)
+{
+	RandomSelection_Init();
+	FOREACH(Items, (it.spawnflags & ITEM_FLAG_OVERKILL) &&
+		!(it.spawnflags & ITEM_FLAG_MUTATORBLOCKED),
+	{
+		string cvar_name = sprintf("g_%s_overkill_%s_probability", prefix,
+			it.m_canonical_spawnfunc);
+		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+		{
+			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			continue;
+		}
+		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
+	});
+	string cvar_name = sprintf("g_%s_overkill_weapon_hmg_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddString("weapon_hmg", cvar(cvar_name), 1);
+	}
+	cvar_name = sprintf("g_%s_overkill_weapon_rpc_probability", prefix);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+	}
+	else
+	{
+		RandomSelection_AddString("weapon_rpc", cvar(cvar_name), 1);
+	}
+	return RandomSelection_chosen_string;
+}
+
+//========================= Free functions ====================================
+
+/// \brief Returns list of classnames to replace a map item with.
+/// \param[in] item Item to inspect.
+/// \return List of classnames to replace a map item with.
+string RandomItems_GetItemReplacementClassNames(entity item)
+{
+	string cvar_name = sprintf("g_random_items_replace_%s", item.classname);
+	if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+	{
+		LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+		return "";
+	}
+	return cvar_string(cvar_name);
+}
+
+string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
+	.bool item_property)
+{
+	RandomSelection_Init();
+	FOREACH(Items, it.item_property && (it.spawnflags & ITEM_FLAG_NORMAL),
+	{
+		string cvar_name = sprintf("g_%s_%s_probability", prefix,
+			it.m_canonical_spawnfunc);
+		if (!(cvar_type(cvar_name) & CVAR_TYPEFLAG_EXISTS))
+		{
+			LOG_WARNF("Random items: cvar %s doesn't exist.", cvar_name);
+			continue;
+		}
+		RandomSelection_AddString(it.m_canonical_spawnfunc, cvar(cvar_name), 1);
+	});
+	return RandomSelection_chosen_string;
 }
 
 /// \brief Replaces a map item.
@@ -293,7 +270,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	string new_classname;
 	if (new_classnames == "random")
 	{
-		new_classname = RandomItems_GetRandomMapItemClassName();
+		new_classname = RandomItems_GetRandomItemClassName("random_items");
 		if (new_classname == "")
 		{
 			return NULL;
@@ -321,7 +298,8 @@ entity RandomItems_ReplaceMapItem(entity item)
 	entity new_item;
 	if (!expr_evaluate(autocvar_g_overkill))
 	{
-		new_item = Item_Create(strzone(new_classname), item.origin);
+		new_item = Item_Create(strzone(new_classname), item.origin,
+			item.noalign);
 		random_items_is_spawning = false;
 		if (new_item == NULL)
 		{
@@ -333,6 +311,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 		new_item = spawn();
 		new_item.classname = strzone(new_classname);
 		new_item.spawnfunc_checked = true;
+		new_item.noalign = item.noalign;
 		new_item.ok_item = true;
 		Item_Initialize(new_item, new_classname);
 		random_items_is_spawning = false;
@@ -349,152 +328,12 @@ entity RandomItems_ReplaceMapItem(entity item)
 	return new_item;
 }
 
-/// \brief Returns a random classname of the instagib loot item.
-/// \return Random classname of the instagib loot item.
-string RandomItems_GetRandomInstagibLootItemClassName()
-{
-	RandomSelection_Init();
-	#define X(classname) \
-		RandomSelection_AddString( \
-			classname, \
-			cvar(sprintf("g_random_loot_%s_probability", RandomItems_GetItemVarName(classname))), \
-			1 \
-		)
-	X("item_vaporizer_cells");
-	X("item_invisibility");
-	X("item_extralife");
-	X("item_speed");
-	#undef X
-	return RandomSelection_chosen_string;
-}
-
-/// \brief Returns a random classname of the overkill loot item.
-/// \return Random classname of the overkill loot item.
-string RandomItems_GetRandomOverkillLootItemClassName()
-{
-	RandomSelection_Init();
-	string varname;
-	#define X(classname) MACRO_BEGIN \
-		if ((varname = RandomItems_GetItemVarName(classname))) \
-		{ \
-			RandomSelection_AddString( \
-				classname, \
-				cvar(sprintf("g_random_loot_overkill_%s_probability", varname)), \
-				1 \
-			); \
-		} \
-	MACRO_END
-	X("item_health_mega");
-	X("item_armor_small");
-	X("item_armor_medium");
-	X("item_armor_big");
-	X("item_armor_mega");
-	X("weapon_hmg");
-	X("weapon_rpc");
-	#undef X
-	return RandomSelection_chosen_string;
-}
-
-/// \brief Returns a random classname of the loot item.
-/// \return Random classname of the loot item.
-string RandomItems_GetRandomLootItemClassName()
-{
-	if (autocvar_g_instagib)
-	{
-		return RandomItems_GetRandomInstagibLootItemClassName();
-	}
-	if (expr_evaluate(autocvar_g_overkill))
-	{
-		return RandomItems_GetRandomOverkillLootItemClassName();
-	}
-	RandomSelection_Init();
-	#define X(type, name) \
-		RandomSelection_AddFloat( \
-			RANDOM_ITEM_TYPE_##type, \
-			autocvar_g_random_loot_##name##_probability, \
-			1 \
-		)
-	X(HEALTH, health);
-	X(ARMOR, armor);
-	X(RESOURCE, resource);
-	X(WEAPON, weapon);
-	X(POWERUP, powerup);
-	#undef X
-	int item_type = RandomSelection_chosen_float;
-	switch (item_type)
-	{
-		case RANDOM_ITEM_TYPE_HEALTH:
-		{
-			RandomSelection_Init();
-			FOREACH(Items, it.instanceOfHealth,
-			{
-				RandomSelection_AddString(it.m_canonical_spawnfunc,
-					cvar(sprintf("g_random_loot_%s_probability",
-					it.m_canonical_spawnfunc)), 1);
-			});
-			return RandomSelection_chosen_string;
-		}
-		case RANDOM_ITEM_TYPE_ARMOR:
-		{
-			RandomSelection_Init();
-			FOREACH(Items, it.instanceOfArmor,
-			{
-				RandomSelection_AddString(it.m_canonical_spawnfunc,
-					cvar(sprintf("g_random_loot_%s_probability",
-					it.m_canonical_spawnfunc)), 1);
-			});
-			return RandomSelection_chosen_string;
-		}
-		case RANDOM_ITEM_TYPE_RESOURCE:
-		{
-			RandomSelection_Init();
-			FOREACH(Items, it.instanceOfAmmo,
-			{
-				RandomSelection_AddString(it.m_canonical_spawnfunc,
-					cvar(sprintf("g_random_loot_%s_probability",
-					it.m_canonical_spawnfunc)), 1);
-			});
-			return RandomSelection_chosen_string;
-		}
-		case RANDOM_ITEM_TYPE_WEAPON:
-		{
-			RandomSelection_Init();
-			FOREACH(Weapons, it != WEP_Null &&
-				!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
-			{
-				string cvar_name = sprintf("g_random_loot_%s_probability",
-					it.m_canonical_spawnfunc);
-				RandomSelection_AddString(it.m_canonical_spawnfunc,
-					cvar(cvar_name), 1);
-			});
-			return RandomSelection_chosen_string;
-		}
-		case RANDOM_ITEM_TYPE_POWERUP:
-		{
-			RandomSelection_Init();
-			#define X(classname) \
-				RandomSelection_AddString( \
-					classname, \
-					cvar(sprintf("g_random_loot_%s_probability", classname)), \
-					1 \
-				)
-			X("item_strength");
-			X("item_shield");
-			X("item_jetpack");
-			X("item_fuel_regen");
-			#undef X
-			return RandomSelection_chosen_string;
-		}
-	}
-	return "";
-}
-
 /// \brief Spawns a random loot item.
 /// \param[in] position Position of the item.
 /// \return No return.
 void RandomItems_SpawnLootItem(vector position)
 {
-	string class_name = RandomItems_GetRandomLootItemClassName();
+	string class_name = RandomItems_GetRandomItemClassName("random_loot");
 	if (class_name == "")
 	{
 		return;

@@ -27,8 +27,6 @@ METHOD(OverkillVortex, wr_glow, vector(OverkillVortex this, entity actor, entity
 #endif
 
 #ifdef SVQC
-spawnfunc(weapon_okvortex) { weapon_defaultspawnfunc(this, WEP_OVERKILL_VORTEX); }
-
 REGISTER_MUTATOR(okvortex_charge, true);
 
 MUTATOR_HOOKFUNCTION(okvortex_charge, GetPressedKeys)

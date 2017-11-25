@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(OverkillVortex, Weapon)
+/* spawnfunc */ ATTRIB(OverkillVortex, m_canonical_spawnfunc, string, "weapon_okvortex");
 /* ammotype  */ ATTRIB(OverkillVortex, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(OverkillVortex, impulse, int, 7);
 /* flags     */ ATTRIB(OverkillVortex, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
@@ -72,3 +73,5 @@ CLASS(OverkillVortex, Weapon)
 ENDCLASS(OverkillVortex)
 REGISTER_WEAPON(OVERKILL_VORTEX, okvortex, NEW(OverkillVortex));
 
+
+SPAWNFUNC_WEAPON(weapon_okvortex, WEP_OVERKILL_VORTEX)
