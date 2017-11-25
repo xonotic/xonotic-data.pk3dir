@@ -2,17 +2,6 @@
 
 #ifdef SVQC
 
-spawnfunc(weapon_okmachinegun)
-{
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(this.classname != "droppedweapon")
-	{
-		weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
-		return;
-	}
-	weapon_defaultspawnfunc(this, WEP_OVERKILL_MACHINEGUN);
-}
-
 void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	float okmachinegun_spread;

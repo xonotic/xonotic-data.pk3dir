@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(OverkillMachineGun, Weapon)
+/* spawnfunc */ ATTRIB(OverkillMachineGun, m_canonical_spawnfunc, string, "weapon_okmachinegun");
 /* ammotype  */ ATTRIB(OverkillMachineGun, ammo_type, int, RESOURCE_BULLETS);
 /* impulse   */ ATTRIB(OverkillMachineGun, impulse, int, 3);
 /* flags	 */ ATTRIB(OverkillMachineGun, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS);
@@ -53,3 +54,4 @@ CLASS(OverkillMachineGun, Weapon)
 ENDCLASS(OverkillMachineGun)
 REGISTER_WEAPON(OVERKILL_MACHINEGUN, okmachinegun, NEW(OverkillMachineGun));
 
+SPAWNFUNC_WEAPON(weapon_okmachinegun, WEP_OVERKILL_MACHINEGUN)

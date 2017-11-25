@@ -1,8 +1,6 @@
 #include "okshotgun.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_okshotgun) { weapon_defaultspawnfunc(this, WEP_OVERKILL_SHOTGUN); }
-
 METHOD(OverkillShotgun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	if (vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR_PRI(okshotgun, bot_range)))
