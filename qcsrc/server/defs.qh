@@ -376,6 +376,8 @@ const float ACTIVE_TOGGLE 	= 3;
 
 .float stat_respawn_time = _STAT(RESPAWN_TIME); // shows respawn time, and is negative when awaiting respawn
 
+.int killindicator_teamchange;
+
 void PlayerUseKey(entity this);
 
 USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector current));
