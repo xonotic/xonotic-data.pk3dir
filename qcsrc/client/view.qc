@@ -12,6 +12,7 @@
 #include "mutators/events.qh"
 
 #include <common/animdecide.qh>
+#include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
 #include <common/anim.qh>
 #include <common/constants.qh>
