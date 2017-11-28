@@ -864,7 +864,7 @@ void JoinBestTeam(entity this, bool force_best_team)
 	// find out what teams are available
 	CheckAllowedTeams(this);
 
-	// if we don't care what team they ends up on, put them on whatever team they entered as.
+	// if we don't care what team they end up on, put them on whatever team they entered as.
 	// if they're not on a valid team, then let other code put them on the smallest team
 	if (!force_best_team)
 	{
