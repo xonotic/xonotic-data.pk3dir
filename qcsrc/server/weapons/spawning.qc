@@ -30,7 +30,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 {
 	Weapon wpn = e;
 	e = wpn = wpn.m_spawnfunc_hookreplace(wpn, this);
-	this.classname = wpn.m_canonical_spawnfunc;
+	//this.classname = wpn.m_canonical_spawnfunc;
 	if (!Item_IsLoot(this) && !this.m_isreplaced)
 	{
 		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
