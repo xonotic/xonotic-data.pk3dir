@@ -51,6 +51,13 @@ bool Item_IsLoot(entity item);
 /// \return No return.
 void Item_SetLoot(entity item, bool loot);
 
+/// \brief Returns whether item should keep its position or be dropped to the
+/// ground.
+/// \param[in] item Item to check.
+/// \return True if item should keep its position or false if it should be
+/// dropped to the ground.
+bool Item_ShouldKeepPosition(entity item);
+
 /// \brief Returns whether the item is expiring (i.e. its strength, shield and
 /// superweapon timers expire while it is on the ground).
 /// \param[in] item Item to check.
