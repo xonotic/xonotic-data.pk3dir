@@ -1,9 +1,6 @@
 #include "rifle.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(this, WEP_RIFLE); }
-spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
-spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 
 void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
 {

@@ -1,8 +1,6 @@
 #include "devastator.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_devastator) { weapon_defaultspawnfunc(this, WEP_DEVASTATOR); }
-spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
 .entity lastrocket;
 

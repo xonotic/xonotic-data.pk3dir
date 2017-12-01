@@ -1,7 +1,6 @@
 #include "electro.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_electro) { weapon_defaultspawnfunc(this, WEP_ELECTRO); }
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
