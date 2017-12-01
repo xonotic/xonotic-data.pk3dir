@@ -95,31 +95,31 @@ void target_give_init(entity this)
 {
 	IL_EACH(g_items, it.targetname == this.target,
 	{
-		if (it.classname == "weapon_rocketlauncher" || it.classname == "weapon_devastator") {
+		if (it.classname == "weapon_devastator") {
 			this.ammo_rockets += it.count * WEP_CVAR(devastator, ammo);
 			this.netname = cons(this.netname, "devastator");
 		}
-		else if (it.classname == "weapon_railgun") {
+		else if (it.classname == "weapon_vortex") {
 			this.ammo_cells += it.count * WEP_CVAR_PRI(vortex, ammo); // WEAPONTODO
 			this.netname = cons(this.netname, "vortex");
 		}
-		else if (it.classname == "weapon_lightning") {
+		else if (it.classname == "weapon_electro") {
 			this.ammo_cells += it.count * WEP_CVAR_PRI(electro, ammo); // WEAPONTODO
 			this.netname = cons(this.netname, "electro");
 		}
-		else if (it.classname == "weapon_plasmagun") {
+		else if (it.classname == "weapon_hagar") {
 			this.ammo_rockets += it.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
 			this.netname = cons(this.netname, "hagar");
 		}
-		else if (it.classname == "weapon_bfg") {
+		else if (it.classname == "weapon_crylink") {
 			this.ammo_cells += it.count * WEP_CVAR_PRI(crylink, ammo);
 			this.netname = cons(this.netname, "crylink");
 		}
-		else if (it.classname == "weapon_grenadelauncher" || it.classname == "weapon_mortar") {
+		else if (it.classname == "weapon_mortar") {
 			this.ammo_rockets += it.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
 			this.netname = cons(this.netname, "mortar");
 		}
-		else if (it.classname == "item_armor_body")
+		else if (it.classname == "item_armor_mega")
 			this.armorvalue = 100;
 		else if (it.classname == "item_health_mega")
 			this.health = 200;
