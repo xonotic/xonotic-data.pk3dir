@@ -1038,6 +1038,10 @@ void AutoBalanceBots(int source_team, int destination_team)
 			break;
 		}
 	}
+	if (num_players_source_team < 0)
+	{
+		return;
+	}
 	switch (destination_team)
 	{
 		case 1:
