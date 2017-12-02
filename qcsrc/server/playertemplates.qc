@@ -359,6 +359,7 @@ void PlayerTemplateHook_PlayerSpawn(entity player, string template)
 			PlayerTemplate_GetFloatValue(template, "start_ammo_fuel"));
 	}
 	// Give weapons.
+	player.weapons = WEPSET(Null);
 	if (PlayerTemplate_GetFloatValue(template, "default_start_weapons"))
 	{
 		FOREACH(Weapons, it != WEP_Null,
