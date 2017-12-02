@@ -158,7 +158,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			setorigin(wep, ent.origin);
 			setmodel(wep, MDL_OK_HMG);
 			wep.ok_item = true;
-			wep.noalign = ent.noalign;
+			wep.noalign = Item_ShouldKeepPosition(ent);
 			wep.cnt = ent.cnt;
 			wep.team = ent.team;
 			wep.respawntime = g_pickup_respawntime_superweapon;
@@ -174,7 +174,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			setorigin(wep, ent.origin);
 			setmodel(wep, MDL_OK_RPC);
 			wep.ok_item = true;
-			wep.noalign = ent.noalign;
+			wep.noalign = Item_ShouldKeepPosition(ent);
 			wep.cnt = ent.cnt;
 			wep.team = ent.team;
 			wep.respawntime = g_pickup_respawntime_superweapon;

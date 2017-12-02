@@ -84,6 +84,11 @@ void Item_SetLoot(entity item, bool loot)
 	item.m_isloot = loot;
 }
 
+bool Item_ShouldKeepPosition(entity item)
+{
+	return item.noalign || (item.spawnflags & 1);
+}
+
 bool Item_IsExpiring(entity item)
 {
 	return item.m_isexpiring;
