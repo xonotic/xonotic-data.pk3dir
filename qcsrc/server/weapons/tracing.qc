@@ -357,13 +357,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_takeback(it, CS(it), time - lag));
-		IL_EACH(g_monsters, it != this,
-		{
-			antilag_takeback(it, it, time - lag);
-		});
-	}
+		antilag_takeback_all(this, lag);
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
 	int oldsolid = this.dphitcontentsmask;
@@ -480,13 +474,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	}
 
 	if(lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_restore(it, CS(it)));
-		IL_EACH(g_monsters, it != this,
-		{
-			antilag_restore(it, it);
-		});
-	}
+		antilag_restore_all(this);
 
 	// restore shooter solid type
 	if(this)

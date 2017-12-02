@@ -52,7 +52,7 @@ float TeamScore_Add(entity player, float scorefield, float score);
  * NEVER call this if team has not been set yet!
  * Returns the new score.
  */
-float TeamScore_AddToTeam(float t, float scorefield, float score);
+float TeamScore_AddToTeam(int t, float scorefield, float score);
 
 /**
  * Returns a value indicating the team score (and higher is better).
