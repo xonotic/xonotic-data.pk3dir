@@ -509,7 +509,7 @@ void PutPlayerInServer(entity this)
 	accuracy_resend(this);
 
 	if (this.team < 0)
-		JoinBestTeam(this, false, true);
+		JoinBestTeam(this, true);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -879,7 +879,7 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if(this.killindicator_teamchange == -1)
 	{
-		JoinBestTeam( this, false, true );
+		JoinBestTeam( this, true );
 	}
 	else if(this.killindicator_teamchange == -2)
 	{
@@ -1191,7 +1191,7 @@ void ClientConnect(entity this)
     {
         int id = this.playerid;
         this.playerid = 0; // silent
-	    JoinBestTeam(this, false, false); // if the team number is valid, keep it
+	    JoinBestTeam(this, false); // if the team number is valid, keep it
 	    this.playerid = id;
     }
 
@@ -2006,7 +2006,7 @@ void Join(entity this)
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		JoinBestTeam(this, false, true);
+		JoinBestTeam(this, true);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
