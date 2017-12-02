@@ -1,9 +1,6 @@
 #include "rifle.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(this, WEP_RIFLE); }
-spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
-spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 
 void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
 {
@@ -150,13 +147,13 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 }
 METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(rifle, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(rifle, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(rifle, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(rifle, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
     return ammo_amount;
 }

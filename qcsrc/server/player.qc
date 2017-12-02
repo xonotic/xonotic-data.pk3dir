@@ -4,6 +4,7 @@
 #include "bot/api.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
+#include "handicap.qh"
 #include "g_subs.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
@@ -317,9 +318,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= bound(1.0, CS(this).cvar_cl_handicap, 10.0);
-		if(this != attacker && IS_PLAYER(attacker))
-			damage /= bound(1.0, CS(attacker).cvar_cl_handicap, 10.0);
+		damage *= Handicap_GetTotalHandicap(this);
+		if (this != attacker && IS_PLAYER(attacker))
+		{
+			damage /= Handicap_GetTotalHandicap(attacker);
+		}
 	}
 
 	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
@@ -514,7 +517,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		if(this.alivetime)
 		{
-			PS_GR_P_ADDVAL(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
 			this.alivetime = 0;
 		}
 
@@ -535,7 +538,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		{
 			delete(this.killindicator);
 			this.killindicator = NULL;
-			if(CS(this).killindicator_teamchange)
+			if(this.killindicator_teamchange)
 				defer_ClientKill_Now_TeamChange = true;
 
 			if(this.classname == "body")
@@ -555,6 +558,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(w != WEP_Null && accuracy_isgooddamage(attacker, this))
 			CS(attacker).accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
+		this.respawn_time = 0;
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		damage = M_ARGV(4, float);
 		excess = max(0, damage - take - save);
@@ -582,6 +586,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// e.g. players in freezetag get frozen, they don't really die
 		if(this.health >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
+
+		if (!this.respawn_time) // can be set in the mutator hook PlayerDies
+			calculate_player_respawn_time(this);
 
 		// when we get here, player actually dies
 
@@ -617,9 +624,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.deadflag = DEAD_DYING;
 
 		STAT(MOVEVARS_SPECIALCOMMAND, this) = false; // sweet release
-
-		// when to allow respawn
-		calculate_player_respawn_time(this);
 
 		this.death_time = time;
 		if (random() < 0.5)
@@ -668,15 +672,19 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	}
 }
 
-void MoveToTeam(entity client, int team_colour, int type)
+bool MoveToTeam(entity client, int team_colour, int type)
 {
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
 	TeamchangeFrags(client);  // move the players frags
-	SetPlayerColors(client, team_colour - 1);  // set the players colour
+	if (!SetPlayerTeamSimple(client, team_colour))
+	{
+		return false;
+	}
 	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
 	lockteams = lockteams_backup;  // restore the team lock
 	LogTeamchange(client.playerid, client.team, type);
+	return true;
 }
 
 /** print(), but only print if the server is not local */

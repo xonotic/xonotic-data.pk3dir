@@ -4,7 +4,6 @@
 #include <server/miscfunctions.qh>
 
 float internalteam;
-float weaponswapping;
 entity weapon_dropevent_item;
 
 ..entity weaponentity_fld;

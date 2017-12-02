@@ -1,8 +1,6 @@
 #include "devastator.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_devastator) { weapon_defaultspawnfunc(this, WEP_DEVASTATOR); }
-spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
 .entity lastrocket;
 
@@ -47,7 +45,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(this.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
+		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = WEP_DEVASTATOR.m_id;
@@ -139,7 +137,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	Weapon thiswep = WEP_DEVASTATOR;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(this.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
+		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = WEP_DEVASTATOR.m_id;
@@ -478,10 +476,10 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
         ammo_amount = false;
         if(WEP_CVAR(devastator, reload_ammo))
         {
-            if(actor.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo) && actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
+            if(GetResourceAmount(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo) && actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
                 ammo_amount = true;
         }
-        else if(actor.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
+        else if(GetResourceAmount(actor, thiswep.ammo_type) < WEP_CVAR(devastator, ammo))
             ammo_amount = true;
         return !ammo_amount;
     }
@@ -489,18 +487,18 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
     #if 0
     if(actor.rl_release == 0)
     {
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE", actor.rl_release, GetResourceAmount(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo));
         return true;
     }
     else
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s", actor.rl_release, GetResourceAmount(actor, thiswep.ammo_type), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
         return ammo_amount;
     }
     #else
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(devastator, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
     return ammo_amount;
     #endif

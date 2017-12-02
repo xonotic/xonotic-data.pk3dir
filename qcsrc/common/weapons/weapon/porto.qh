@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(PortoLaunch, Weapon)
-/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none);
+/* spawnfunc */ ATTRIB(PortoLaunch, m_canonical_spawnfunc, string, "weapon_porto");
+/* ammotype  */ ATTRIB(PortoLaunch, ammo_type, int, RESOURCE_NONE);
 /* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0);
 /* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
@@ -34,6 +35,8 @@ CLASS(PortoLaunch, Weapon)
 #undef X
 ENDCLASS(PortoLaunch)
 REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
+
+SPAWNFUNC_WEAPON(weapon_porto, WEP_PORTO)
 
 #ifdef SVQC
 .entity porto_current;

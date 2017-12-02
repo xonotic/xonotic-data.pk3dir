@@ -5,6 +5,7 @@
 #include "client.qh"
 #include "scores.qh"
 #include <common/gamemodes/rules.qh>
+#include "teamplay.qh"
 
 int ScoreRules_teams;
 
@@ -43,7 +44,10 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 	ScoreInfo_SetLabel_PlayerScore(SP_DEATHS,       "deaths",    SFL_LOWER_IS_BETTER);
 
 	if (!INDEPENDENT_PLAYERS)
+	{
 		ScoreInfo_SetLabel_PlayerScore(SP_SUICIDES,     "suicides",  SFL_LOWER_IS_BETTER);
+		ScoreInfo_SetLabel_PlayerScore(SP_TEAMKILLS,     "teamkills", SFL_LOWER_IS_BETTER);
+	}
 
 	if(score_enabled)
 		ScoreInfo_SetLabel_PlayerScore(SP_SCORE,        "score",     sprio);

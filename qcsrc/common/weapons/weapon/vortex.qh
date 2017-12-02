@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(Vortex, Weapon)
-/* ammotype  */ ATTRIB(Vortex, ammo_field, .int, ammo_cells);
+/* spawnfunc */ ATTRIB(Vortex, m_canonical_spawnfunc, string, "weapon_vortex");
+/* ammotype  */ ATTRIB(Vortex, ammo_type, int, RESOURCE_CELLS);
 /* impulse   */ ATTRIB(Vortex, impulse, int, 7);
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
@@ -59,8 +60,9 @@ CLASS(Vortex, Weapon)
 ENDCLASS(Vortex)
 REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
 
+SPAWNFUNC_WEAPON(weapon_vortex, WEP_VORTEX)
+SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX)
 
 #ifdef SVQC
-
 .float vortex_lasthit;
 #endif

@@ -479,21 +479,21 @@ void HUD_Weapons()
 			}
 
 			// draw ammo status bar
-			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_field != ammo_none))
+			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_type != RESOURCE_NONE))
 			{
 				float ammo_full;
-				a = getstati(GetAmmoStat(it.ammo_field)); // how much ammo do we have?
+				a = getstati(GetAmmoStat(it.ammo_type)); // how much ammo do we have?
 
 				if(a > 0)
 				{
-					switch(it.ammo_field)
+					switch (it.ammo_type)
 					{
-						case ammo_shells:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
-						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
-						case ammo_rockets: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
-						case ammo_cells:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
-						case ammo_plasma:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
-						case ammo_fuel:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
+						case RESOURCE_SHELLS:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
+						case RESOURCE_BULLETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
+						case RESOURCE_ROCKETS: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case RESOURCE_CELLS:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case RESOURCE_PLASMA:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
+						case RESOURCE_FUEL:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
 

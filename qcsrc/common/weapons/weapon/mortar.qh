@@ -1,7 +1,8 @@
 #pragma once
 
 CLASS(Mortar, Weapon)
-/* ammotype  */ ATTRIB(Mortar, ammo_field, .int, ammo_rockets);
+/* spawnfunc */ ATTRIB(Mortar, m_canonical_spawnfunc, string, "weapon_mortar");
+/* ammotype  */ ATTRIB(Mortar, ammo_type, int, RESOURCE_ROCKETS);
 /* impulse   */ ATTRIB(Mortar, impulse, int, 4);
 /* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, 7000);
@@ -53,6 +54,8 @@ CLASS(Mortar, Weapon)
 ENDCLASS(Mortar)
 REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
 
+SPAWNFUNC_WEAPON(weapon_mortar, WEP_MORTAR)
+SPAWNFUNC_WEAPON(weapon_grenadelauncher, WEP_MORTAR)
 
 #ifdef SVQC
 .float gl_detonate_later;

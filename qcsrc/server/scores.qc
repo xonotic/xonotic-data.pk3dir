@@ -54,7 +54,7 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
 
 bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 {
-	float i, p, longflags;
+	float i, longflags;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
 	int t = this.team - 1;
@@ -62,9 +62,9 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 	WriteByte(MSG_ENTITY, t);
 
 	longflags = 0;
-	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
+	for(i = 0; i < MAX_TEAMSCORE; ++i)
 		if(this.(teamscores(i)) > 127 || this.(teamscores(i)) <= -128)
-			longflags |= p;
+			longflags |= BIT(i);
 
 #if MAX_TEAMSCORE <= 8
 	WriteByte(MSG_ENTITY, sendflags);
@@ -73,10 +73,10 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 	WriteShort(MSG_ENTITY, sendflags);
 	WriteShort(MSG_ENTITY, longflags);
 #endif
-	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(sendflags & p)
+	for(i = 0; i < MAX_TEAMSCORE; ++i)
+		if(sendflags & BIT(i))
 		{
-			if(longflags & p)
+			if(longflags & BIT(i))
 				WriteInt24_t(MSG_ENTITY, this.(teamscores(i)));
 			else
 				WriteChar(MSG_ENTITY, this.(teamscores(i)));
@@ -96,7 +96,7 @@ void TeamScore_Spawn(float t, string name)
 	PlayerStats_GameReport_AddTeam(t);
 }
 
-float TeamScore_AddToTeam(float t, float scorefield, float score)
+float TeamScore_AddToTeam(int t, float scorefield, float score)
 {
 	entity s;
 
@@ -347,8 +347,10 @@ float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score)
 	if(scores_label(scorefield) != "")
 		s.SendFlags |= (2 ** (scorefield.m_id % 16));
 	if(!warmup_stage)
-		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
-	return (s.(scores(scorefield)) += score);
+		PlayerStats_GameReport_Event_Player(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label(scorefield)), score);
+	s.(scores(scorefield)) += score;
+	MUTATOR_CALLHOOK(AddedPlayerScore, scorefield, score, player);
+	return s.(scores(scorefield));
 }
 
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score)
@@ -906,10 +908,10 @@ void PlayerScore_PlayerStats(entity p)
 {
 	entity s = CS(p).scorekeeper;
 	FOREACH(Scores, true, {
-		if(s.(scores(it)) != 0)
-			if(scores_label(it) != "")
-				PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label(it)), s.(scores(it)));
-    });
+		if(s.(scores(it)) != 0 && scores_label(it) != "")
+			PlayerStats_GameReport_Event_Player(s.owner,
+				strcat(PLAYERSTATS_SCOREBOARD, scores_label(it)), s.(scores(it)));
+	});
 }
 
 void PlayerScore_TeamStats()
@@ -922,9 +924,9 @@ void PlayerScore_TeamStats()
 		if(!sk)
 			continue;
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(sk.(teamscores(i)) != 0)
-				if(teamscores_label(i) != "")
-					// the +1 is important here!
-					PS_GR_T_ADDVAL(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label(i)), sk.(teamscores(i)));
+			if(sk.(teamscores(i)) != 0 && teamscores_label(i) != "")
+				// the +1 is important here!
+				PlayerStats_GameReport_Event_Team(t+1,
+					strcat(PLAYERSTATS_SCOREBOARD, teamscores_label(i)), sk.(teamscores(i)));
 	}
 }
