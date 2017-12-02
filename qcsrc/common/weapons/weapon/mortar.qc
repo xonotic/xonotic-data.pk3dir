@@ -2,9 +2,6 @@
 
 #ifdef SVQC
 
-spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(this, WEP_MORTAR); }
-spawnfunc(weapon_grenadelauncher) { spawnfunc_weapon_mortar(this); }
-
 void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 {
 	if(directhitentity.takedamage == DAMAGE_AIM)

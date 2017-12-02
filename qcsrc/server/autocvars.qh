@@ -312,6 +312,7 @@ string autocvar_sv_jumpspeedcap_max;
 float autocvar_sv_jumpspeedcap_max_disable_on_ramps;
 string autocvar_sv_jumpspeedcap_min;
 float autocvar_sv_jumpvelocity;
+float autocvar_sv_jumpvelocity_crouch;
 bool autocvar_sv_logscores_bots;
 bool autocvar_sv_logscores_console;
 bool autocvar_sv_logscores_file;

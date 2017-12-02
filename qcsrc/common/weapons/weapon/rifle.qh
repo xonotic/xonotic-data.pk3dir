@@ -1,6 +1,7 @@
 #pragma once
 
 CLASS(Rifle, Weapon)
+/* spawnfunc */ ATTRIB(Rifle, m_canonical_spawnfunc, string, "weapon_rifle");
 /* ammotype  */ ATTRIB(Rifle, ammo_type, int, RESOURCE_BULLETS);
 /* impulse   */ ATTRIB(Rifle, impulse, int, 7);
 /* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS);
@@ -47,6 +48,9 @@ CLASS(Rifle, Weapon)
 ENDCLASS(Rifle)
 REGISTER_WEAPON(RIFLE, rifle, NEW(Rifle));
 
+SPAWNFUNC_WEAPON(weapon_rifle, WEP_RIFLE)
+SPAWNFUNC_WEAPON(weapon_campingrifle, WEP_RIFLE)
+SPAWNFUNC_WEAPON(weapon_sniperrifle, WEP_RIFLE)
 
 #ifdef SVQC
 .float rifle_accumulator;

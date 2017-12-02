@@ -1,7 +1,6 @@
 #include "rpc.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(this, WEP_RPC); }
 
 void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 {

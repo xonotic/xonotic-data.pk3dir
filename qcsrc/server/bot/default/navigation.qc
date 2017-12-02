@@ -95,8 +95,8 @@ vector get_closer_dest(entity ent, vector org)
 	vector dest = '0 0 0';
 	if ((ent.classname != "waypoint") || ent.wpisbox)
 	{
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1);
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1);
+		vector wm1 = ent.origin + ent.mins;
+		vector wm2 = ent.origin + ent.maxs;
 		dest.x = bound(wm1.x, org.x, wm2.x);
 		dest.y = bound(wm1.y, org.y, wm2.y);
 		dest.z = bound(wm1.z, org.z, wm2.z);
@@ -110,8 +110,8 @@ void set_tracewalk_dest(entity ent, vector org, bool fix_player_dest)
 {
 	if ((ent.classname != "waypoint") || ent.wpisbox)
 	{
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1);
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1);
+		vector wm1 = ent.origin + ent.mins;
+		vector wm2 = ent.origin + ent.maxs;
 		if (IS_PLAYER(ent) || IS_MONSTER(ent))
 		{
 			// move destination point out of player bbox otherwise tracebox always fails
@@ -159,8 +159,8 @@ vector set_tracewalk_dest_2(entity ent, vector org)
 	vector closer_dest = '0 0 0';
 	if ((ent.classname != "waypoint") || ent.wpisbox)
 	{
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1);
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1);
+		vector wm1 = ent.origin + ent.mins;
+		vector wm2 = ent.origin + ent.maxs;
 		closer_dest.x = bound(wm1.x, org.x, wm2.x);
 		closer_dest.y = bound(wm1.y, org.y, wm2.y);
 		closer_dest.z = bound(wm1.z, org.z, wm2.z);

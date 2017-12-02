@@ -202,9 +202,10 @@ void anticheat_report_to_eventlog(entity this) {
 }
 
 void anticheat_report_to_playerstats(entity this) {
-	PS_GR_P_ADDVAL(this, strcat(PLAYERSTATS_ANTICHEAT, "_time"), servertime - CS(this).anticheat_jointime);
+	PlayerStats_GameReport_Event_Player(this,
+		strcat(PLAYERSTATS_ANTICHEAT, "_time"), servertime - CS(this).anticheat_jointime);
 #define ANTICHEAT_REPORT_ONE(name, f, tmin, mi, ma) \
-	PS_GR_P_ADDVAL(this, strcat(PLAYERSTATS_ANTICHEAT, name), f)
+	PlayerStats_GameReport_Event_Player(this, strcat(PLAYERSTATS_ANTICHEAT, name), f)
 	ANTICHEATS(ANTICHEAT_REPORT_ONE);
 #undef ANTICHEAT_REPORT_ONE
 }
