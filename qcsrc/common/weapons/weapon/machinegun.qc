@@ -2,17 +2,14 @@
 
 #ifdef SVQC
 
-spawnfunc(weapon_machinegun)
+METHOD(MachineGun, m_spawnfunc_hookreplace, Weapon(MachineGun this, entity e))
 {
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(this.classname != "droppedweapon")
+	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
 	{
-		weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
-		return;
+		return WEP_SHOCKWAVE;
 	}
-	weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
+	return this;
 }
-spawnfunc(weapon_uzi) { spawnfunc_weapon_machinegun(this); }
 
 void W_MachineGun_MuzzleFlash_Think(entity this)
 {
@@ -258,9 +255,9 @@ METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 {
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(machinegun, sustained_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, sustained_ammo);
     else
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(machinegun, first_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, first_ammo);
 
     if(WEP_CVAR(machinegun, reload_ammo))
     {
@@ -275,9 +272,9 @@ METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity wea
 {
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(machinegun, burst_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, burst_ammo);
     else
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(machinegun, first_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(machinegun, first_ammo);
 
     if(WEP_CVAR(machinegun, reload_ammo))
     {

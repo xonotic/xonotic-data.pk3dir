@@ -2,6 +2,7 @@
 
 #include <server/defs.qh>
 #include <server/miscfunctions.qh>
+#include <server/items.qh>
 #include "havocbot.qh"
 
 #include "../cvars.qh"
@@ -81,7 +82,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 			continue;
 
 		// Check if the item can be picked up safely
-		if(it.classname == "droppedweapon")
+		if(Item_IsLoot(it))
 		{
 			if(!IS_ONGROUND(it))
 				continue;

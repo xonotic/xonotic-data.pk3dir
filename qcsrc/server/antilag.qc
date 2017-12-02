@@ -119,3 +119,30 @@ void antilag_clear(entity e, entity store)
 	}
 	store.antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
 }
+
+// TODO: use a single intrusive list across all antilagged entities
+void antilag_takeback_all(entity ignore, float lag)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && it != ignore, antilag_takeback(it, CS(it), time - lag));
+	IL_EACH(g_monsters, it != ignore,
+	{
+		antilag_takeback(it, it, time - lag);
+	});
+	IL_EACH(g_projectiles, it != ignore && it.classname == "nade",
+	{
+		antilag_takeback(it, it, time - lag);
+	});
+}
+
+void antilag_restore_all(entity ignore)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && it != ignore, antilag_restore(it, CS(it)));
+	IL_EACH(g_monsters, it != ignore,
+	{
+		antilag_restore(it, it);
+	});
+	IL_EACH(g_projectiles, it != ignore && it.classname == "nade",
+	{
+		antilag_restore(it, it);
+	});
+}

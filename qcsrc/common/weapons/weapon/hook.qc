@@ -2,8 +2,6 @@
 
 #ifdef SVQC
 
-spawnfunc(weapon_hook) { weapon_defaultspawnfunc(this, WEP_HOOK); }
-
 void W_Hook_ExplodeThink(entity this)
 {
 	float dt, dmg_remaining_next, f;

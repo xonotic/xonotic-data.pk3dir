@@ -73,7 +73,6 @@ CLASS(Client, Object)
 
     ATTRIB(Client, parm_idlesince, int, this.parm_idlesince);
     ATTRIB(Client, muted, bool, this.muted);
-    ATTRIB(Client, killindicator_teamchange, int, this.killindicator_teamchange);
     ATTRIB(Client, idlekick_lasttimeleft, float, this.idlekick_lasttimeleft);
     ATTRIB(Client, pm_frametime, float, this.pm_frametime);
     ATTRIB(Client, pressedkeys, int, this.pressedkeys);
@@ -86,6 +85,7 @@ CLASS(Client, Object)
     ATTRIB(Client, motd_actived_time, float, this.motd_actived_time);
     ATTRIB(Client, jointime, float, this.jointime);
     ATTRIB(Client, spectatortime, float, this.spectatortime);
+    ATTRIB(Client, startplaytime, float, this.startplaytime);
     ATTRIB(Client, version_nagtime, float, this.version_nagtime);
     ATTRIB(Client, netname_previous, string, this.netname_previous);
     ATTRIB(Client, allowed_timeouts, int, this.allowed_timeouts);

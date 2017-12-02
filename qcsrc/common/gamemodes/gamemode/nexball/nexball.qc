@@ -909,7 +909,7 @@ MUTATOR_HOOKFUNCTION(nb, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.classname == "droppedweapon")
+	if(Item_IsLoot(item))
 	if(item.weapon == WEP_NEXBALL.m_id)
 		return true;
 

@@ -1,7 +1,6 @@
 #include "arc.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_arc) { weapon_defaultspawnfunc(this, WEP_ARC); }
 
 bool W_Arc_Beam_Send(entity this, entity to, int sf)
 {
@@ -258,8 +257,8 @@ void W_Arc_Beam_Think(entity this)
 
 		if(rootammo)
 		{
-			coefficient = min(coefficient, own.(thiswep.ammo_field) / rootammo);
-			own.(thiswep.ammo_field) = max(0, own.(thiswep.ammo_field) - (rootammo * frametime));
+			coefficient = min(coefficient, GetResourceAmount(own, thiswep.ammo_type) / rootammo);
+			SetResourceAmount(own, thiswep.ammo_type, max(0, GetResourceAmount(own, thiswep.ammo_type) - (rootammo * frametime)));
 		}
 	}
 	float heat_speed = burst ? WEP_CVAR(arc, burst_heat) : WEP_CVAR(arc, beam_heat);
@@ -697,19 +696,19 @@ METHOD(Arc, wr_init, void(entity thiswep))
 }
 METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    return ((!WEP_CVAR(arc, beam_ammo)) || (actor.(thiswep.ammo_field) > 0));
+    return ((!WEP_CVAR(arc, beam_ammo)) || (GetResourceAmount(actor, thiswep.ammo_type) > 0));
 }
 METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(WEP_CVAR(arc, bolt))
     {
-        float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(arc, bolt_ammo);
+        float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(arc, bolt_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(arc, bolt_ammo);
         return ammo_amount;
     }
     else
         return WEP_CVAR(arc, overheat_max) > 0 &&
-            ((!WEP_CVAR(arc, burst_ammo)) || (actor.(thiswep.ammo_field) > 0));
+            ((!WEP_CVAR(arc, burst_ammo)) || (GetResourceAmount(actor, thiswep.ammo_type) > 0));
 }
 METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 {

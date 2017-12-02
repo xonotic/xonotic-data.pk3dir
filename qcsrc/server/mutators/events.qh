@@ -645,6 +645,13 @@ enum {
 	MUT_ITEMTOUCH_PICKUP // return this flag to have the item "picked up" and taken even after mutator handled it
 };
 
+/** called after the item has been touched. */
+#define EV_ItemTouched(i, o) \
+    /** item */    i(entity, MUTATOR_ARGV_0_entity) \
+    /** toucher */ i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(ItemTouched, EV_ItemTouched);
+
 /** Called when the amount of entity resources changes. Can be used to override
 resource limit. */
 #define EV_GetResourceLimit(i, o) \
@@ -870,6 +877,13 @@ MUTATOR_HOOKABLE(WantWeapon, EV_WantWeapon);
     /** player */       i(entity, MUTATOR_ARGV_2_entity) \
     /**/
 MUTATOR_HOOKABLE(AddPlayerScore, EV_AddPlayerScore);
+
+#define EV_AddedPlayerScore(i, o) \
+    /** score field */  i(entity, MUTATOR_ARGV_0_entity) \
+    /** score */        i(float, MUTATOR_ARGV_1_float) \
+    /** player */       i(entity, MUTATOR_ARGV_2_entity) \
+    /**/
+MUTATOR_HOOKABLE(AddedPlayerScore, EV_AddPlayerScore);
 
 #define EV_GetPlayerStatus(i, o) \
     /** player */    i(entity, MUTATOR_ARGV_0_entity) \

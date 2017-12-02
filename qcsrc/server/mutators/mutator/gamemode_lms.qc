@@ -1,6 +1,6 @@
 #include "gamemode_lms.qh"
 
-#include <common/mutators/mutator/instagib/items.qc>
+#include <common/mutators/mutator/instagib/items.qh>
 #include <server/campaign.qh>
 #include <server/command/_mod.qh>
 

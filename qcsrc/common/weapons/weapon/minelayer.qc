@@ -1,7 +1,6 @@
 #include "minelayer.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(this, WEP_MINE_LAYER); }
 
 void W_MineLayer_Stick(entity this, entity to)
 {
@@ -453,7 +452,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
     {
         // not if we're holding the minelayer without enough ammo, but can detonate existing mines
-        if(!(W_MineLayer_PlacedMines(actor, weaponentity, false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
+        if(!(W_MineLayer_PlacedMines(actor, weaponentity, false) && GetResourceAmount(actor, thiswep.ammo_type) < WEP_CVAR(minelayer, ammo))) {
             thiswep.wr_reload(thiswep, actor, weaponentity);
         }
     }
@@ -478,7 +477,7 @@ METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weap
     // actually do // don't switch while placing a mine
     //if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
     //{
-        float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
+        float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(minelayer, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
         return ammo_amount;
     //}

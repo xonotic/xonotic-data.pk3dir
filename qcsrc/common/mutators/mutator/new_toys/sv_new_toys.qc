@@ -1,5 +1,7 @@
 #include "sv_new_toys.qh"
 
+#include "../random_items/sv_random_items.qh"
+
 /*
 
 CORE    laser   vortex     lg      rl      cry     gl      elec    hagar   fireb   hook
@@ -193,6 +195,11 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
 {
+	if (autocvar_g_random_items)
+	{
+		// Do not replace weapons when random items are enabled.
+		return;
+	}
 	entity wep = M_ARGV(0, entity);
 	entity wepinfo = M_ARGV(1, entity);
 	string ret_string = M_ARGV(2, string);
