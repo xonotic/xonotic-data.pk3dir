@@ -51,8 +51,8 @@ entity navigation_bestgoal;
 // if ent is a box waypoint or an item v is set to coords of ent that are closer to org
 #define SET_DESTCOORDS(ent, org, v) MACRO_BEGIN { \
 	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
+		vector wm1 = ent.origin + ent.mins; \
+		vector wm2 = ent.origin + ent.maxs; \
 		v.x = bound(wm1.x, org.x, wm2.x); \
 		v.y = bound(wm1.y, org.y, wm2.y); \
 		v.z = bound(wm1.z, org.z, wm2.z); \
@@ -65,8 +65,8 @@ entity navigation_bestgoal;
 // (but v.z is set to the lowest coord of ent), v_height is set to ent's height
 #define SET_TRACEWALK_DESTCOORDS(ent, org, v, v_height) MACRO_BEGIN { \
 	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
+		vector wm1 = ent.origin + ent.mins; \
+		vector wm2 = ent.origin + ent.maxs; \
 		v.x = bound(wm1.x, org.x, wm2.x); \
 		v.y = bound(wm1.y, org.y, wm2.y); \
 		v.z = wm1.z; \
@@ -81,8 +81,8 @@ entity navigation_bestgoal;
 // (but v2.z is set to the lowest coord of ent), v2_height is set to ent's height
 #define SET_TRACEWALK_DESTCOORDS_2(ent, org, v, v2, v2_height) MACRO_BEGIN { \
 	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
+		vector wm1 = ent.origin + ent.mins; \
+		vector wm2 = ent.origin + ent.maxs; \
 		v.x = bound(wm1.x, org.x, wm2.x); \
 		v.y = bound(wm1.y, org.y, wm2.y); \
 		v.z = bound(wm1.z, org.z, wm2.z); \
