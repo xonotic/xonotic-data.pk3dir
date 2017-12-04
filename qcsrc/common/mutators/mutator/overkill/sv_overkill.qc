@@ -120,6 +120,36 @@ MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
+{
+	if (game_stopped)
+	{
+		return;
+	}
+	entity player = M_ARGV(0, entity);
+	if (!IS_PLAYER(player) || IS_DEAD(player) || STAT(FROZEN, player))
+	{
+		return;
+	}
+	if (!PHYS_INPUT_BUTTON_ATCK2(player) || forbidWeaponUse(player) ||
+		!(round_handler_IsActive() && !round_handler_IsRoundStarted()))
+	{
+		return;
+	}
+	// Allow secondary blaster during countdown.
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		Weapon weapon = player.(weaponentity).m_weapon;
+		if (weapon == WEP_Null && slot != 0)
+		{
+			continue;
+		}
+		weapon.wr_think(weapon, player, weaponentity, 2);
+	}
+	PHYS_INPUT_BUTTON_ATCK2(player) = false;
+}
+
 MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 {
 	entity player = M_ARGV(0, entity);
