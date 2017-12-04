@@ -206,7 +206,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 #ifdef SVQC
 	if(!e) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
 #elif defined(CSQC)
-	if(!e) { LOG_INFO("Teleport destination could not be found from CSQC.\n"); }
+	if(!e) { LOG_INFO("Teleport destination could not be found from CSQC."); }
 #endif
 
 	makevectors(e.mangle);
@@ -228,16 +228,17 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 
 void teleport_findtarget(entity this)
 {
+	bool istrigger = (this.solid == SOLID_TRIGGER);
+
 	int n = 0;
-	entity e;
-	for(e = NULL; (e = find(e, targetname, this.target)); )
+	for(entity e = NULL; (e = find(e, targetname, this.target)); )
 	{
 		++n;
 #ifdef SVQC
 		if(e.move_movetype == MOVETYPE_NONE)
 			waypoint_spawnforteleporter(this, e.origin, 0);
 		if(e.classname != "info_teleport_destination")
-			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
+			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.");
 #endif
 	}
 
@@ -250,7 +251,7 @@ void teleport_findtarget(entity this)
 	else if(n == 1)
 	{
 		// exactly one dest - bots love that
-		this.enemy = find(e, targetname, this.target);
+		this.enemy = find(NULL, targetname, this.target);
 	}
 	else
 	{
@@ -259,9 +260,11 @@ void teleport_findtarget(entity this)
 	}
 
 	// now enable touch
-	settouch(this, Teleport_Touch);
+	if(istrigger)
+		settouch(this, Teleport_Touch);
 #ifdef SVQC
-	trigger_teleport_link(this);
+	if(istrigger)
+		trigger_teleport_link(this);
 #endif
 }
 
@@ -292,7 +295,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	#elif defined(CSQC)
 		if(!(pl.flags & BIT(15))) // FL_PROJECTILE
 	#endif
-			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
+			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".");
 		pl.owner = NULL;
 	}
 	if(IS_PLAYER(pl))

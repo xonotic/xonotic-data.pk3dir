@@ -1,5 +1,7 @@
 #include "miscfunctions.qh"
 
+#include "autocvars.qh"
+#include "defs.qh"
 #include "hud/_mod.qh"
 
 #include <common/command/_mod.qh>
@@ -190,6 +192,15 @@ vector project_3d_to_2d(vector vec)
 		vec.y *= vid_conheight / vid_height;
 	}
 	return vec;
+}
+
+bool projected_on_screen(vector screen_pos)
+{
+	return screen_pos.z >= 0
+		&& screen_pos.x >= 0
+		&& screen_pos.y >= 0
+		&& screen_pos.x < vid_conwidth
+		&& screen_pos.y < vid_conheight;
 }
 
 float expandingbox_sizefactor_from_fadelerp(float fadelerp)
@@ -558,7 +569,7 @@ void URI_Get_Callback(int id, int status, string data)
 	}
 	else
 	{
-		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
+		LOG_INFOF("Received HTTP request data for an invalid id %d.", id);
 	}
 }
 
@@ -573,7 +584,7 @@ void Accuracy_LoadLevels()
 		if(acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;
 		if(acc_levels < 2)
-			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values\n");
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values");
 
 		int i;
 		for(i = 0; i < acc_levels; ++i)
@@ -611,4 +622,3 @@ vector Accuracy_GetColor(float accuracy)
 	color = color + factor * (acc_col[j+1] - color);
 	return color;
 }
-

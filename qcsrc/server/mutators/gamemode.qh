@@ -1,10 +1,12 @@
 #pragma once
 
+#include <server/miscfunctions.qh>
 #include <server/g_world.qh>
 #include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
+#include <common/gamemodes/rules.qh>
 
 #include "mutator.qh"
 
@@ -15,6 +17,7 @@
 #include <lib/warpzone/util_server.qh>
 #include <lib/warpzone/server.qh>
 #include <common/constants.qh>
+#include <common/scores.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -71,6 +74,8 @@
 #include <server/pathlib/pathlib.qh>
 #include <common/vehicles/all.qh>
 
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+
 #include <server/client.qh>
 #include <server/player.qh>
 #include <server/impulse.qh>
@@ -87,7 +92,7 @@
 #include <server/weapons/weaponsystem.qh>
 
 #include <common/physics/player.qh>
-#include <common/effects/qc/all.qh>
+#include <common/effects/qc/_mod.qh>
 #include <common/deathtypes/all.qh>
 #include <common/notifications/all.qh>
 #include <common/triggers/teleporters.qh>

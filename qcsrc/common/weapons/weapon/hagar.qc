@@ -1,66 +1,6 @@
 #include "hagar.qh"
-#ifndef IMPLEMENTATION
-CLASS(Hagar, Weapon)
-/* ammotype  */ ATTRIB(Hagar, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(Hagar, impulse, int, 8);
-/* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');
-/* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Hagar, m_model, Model, MDL_HAGAR_ITEM);
-#endif
-/* crosshair */ ATTRIB(Hagar, w_crosshair, string, "gfx/crosshairhagar");
-/* crosshair */ ATTRIB(Hagar, w_crosshair_size, float, 0.8);
-/* wepimg    */ ATTRIB(Hagar, model2, string, "weaponhagar");
-/* refname   */ ATTRIB(Hagar, netname, string, "hagar");
-/* wepname   */ ATTRIB(Hagar, m_name, string, _("Hagar"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, BOTH) \
-        P(class, prefix, damageforcescale, float, BOTH) \
-        P(class, prefix, damage, float, BOTH) \
-        P(class, prefix, edgedamage, float, BOTH) \
-        P(class, prefix, force, float, BOTH) \
-        P(class, prefix, health, float, BOTH) \
-        P(class, prefix, lifetime, float, PRI) \
-        P(class, prefix, lifetime_min, float, SEC) \
-        P(class, prefix, lifetime_rand, float, SEC) \
-        P(class, prefix, load, float, SEC) \
-        P(class, prefix, load_abort, float, SEC) \
-        P(class, prefix, load_animtime, float, SEC) \
-        P(class, prefix, load_hold, float, SEC) \
-        P(class, prefix, load_linkexplode, float, SEC) \
-        P(class, prefix, load_max, float, SEC) \
-        P(class, prefix, load_releasedeath, float, SEC) \
-        P(class, prefix, load_speed, float, SEC) \
-        P(class, prefix, load_spread, float, SEC) \
-        P(class, prefix, load_spread_bias, float, SEC) \
-        P(class, prefix, radius, float, BOTH) \
-        P(class, prefix, refire, float, BOTH) \
-        P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, secondary, float, NONE) \
-        P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, spread, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, Hagar, hagar)
-#undef X
-
-ENDCLASS(Hagar)
-REGISTER_WEAPON(HAGAR, hagar, NEW(Hagar));
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_hagar) { weapon_defaultspawnfunc(this, WEP_HAGAR); }
 
 // NO bounce protection, as bounces are limited!
 
@@ -329,7 +269,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 	else if(autocvar_g_balance_hagar_reload_ammo)
 		enough_ammo = actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
-		enough_ammo = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hagar, ammo);
+		enough_ammo = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
 
 	bool stopped = loaded || !enough_ammo;
 
@@ -500,13 +440,13 @@ METHOD(Hagar, wr_setup, void(entity thiswep, entity actor, .entity weaponentity)
 }
 METHOD(Hagar, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(hagar, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hagar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
     return ammo_amount;
 }
 METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hagar, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hagar, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
     return ammo_amount;
 }
@@ -561,5 +501,4 @@ METHOD(Hagar, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

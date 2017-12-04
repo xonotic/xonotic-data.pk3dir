@@ -25,7 +25,7 @@ noref vector _dotproduct_a, _dotproduct_b;
 #if 1
 #define cross(a, b) ((a) >< (b))
 #else
-[[eraseable]]
+ERASEABLE
 vector cross(vector a, vector b)
 {
 	return
@@ -46,7 +46,7 @@ const vector eX = '1 0 0';
 const vector eY = '0 1 0';
 const vector eZ = '0 0 1';
 
-[[eraseable]]
+ERASEABLE
 vector randompos(vector m1, vector m2)
 {
 	vector v;
@@ -57,19 +57,19 @@ vector randompos(vector m1, vector m2)
 	return v;
 }
 
-[[eraseable]]
+ERASEABLE
 float vlen_maxnorm2d(vector v)
 {
 	return max(v.x, v.y, -v.x, -v.y);
 }
 
-[[eraseable]]
+ERASEABLE
 float vlen_minnorm2d(vector v)
 {
 	return min(max(v.x, -v.x), max(v.y, -v.y));
 }
 
-[[eraseable]]
+ERASEABLE
 float dist_point_line(vector p, vector l0, vector ldir)
 {
 	ldir = normalize(ldir);
@@ -82,11 +82,11 @@ float dist_point_line(vector p, vector l0, vector ldir)
 }
 
 /** requires that m2>m1 in all coordinates, and that m4>m3 */
-[[eraseable]]
+ERASEABLE
 float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z; }
 
 /** requires the same as boxesoverlap, but is a stronger condition */
-[[eraseable]]
+ERASEABLE
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z; }
 
 #define PITCH(v) ((v).x)
@@ -112,7 +112,7 @@ noref vector _vec2;
 noref vector _vec3;
 #define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
 
-[[eraseable]]
+ERASEABLE
 vector Rotate(vector v, float a)
 {
 	float a_sin = sin(a), a_cos = cos(a);
@@ -127,7 +127,7 @@ noref vector _yinvert;
  * @param norm the normalized normal
  * @returns dir reflected by norm
  */
-[[eraseable]]
+ERASEABLE
 vector reflect(vector dir, vector norm)
 {
 	return dir - 2 * (dir * norm) * norm;
@@ -136,13 +136,13 @@ vector reflect(vector dir, vector norm)
 /**
  * clip vel along the plane defined by norm (assuming 0 distance away), bounciness determined by bounce 0..1
  */
-[[eraseable]]
+ERASEABLE
 vector vec_reflect(vector vel, vector norm, float bounce)
 {
 	return vel - (1 + bounce) * (vel * norm) * norm;
 }
 
-[[eraseable]]
+ERASEABLE
 vector vec_epsilon(vector this, float eps)
 {
 	if (this.x > -eps && this.x < eps) this.x = 0;
@@ -155,7 +155,7 @@ vector vec_epsilon(vector this, float eps)
 	(out = vec_epsilon(vec_reflect(in, normal, (overbounce) - 1), 0.1))
 
 #ifdef GAMEQC
-	[[eraseable]]
+	ERASEABLE
 	vector get_corner_position(entity box, int corner)
 	{
 		switch (corner)
@@ -172,7 +172,7 @@ vector vec_epsilon(vector this, float eps)
 		}
 	}
 
-	[[eraseable]]
+	ERASEABLE
 	vector NearestPointOnBox(entity box, vector org)
 	{
 		vector m1 = box.mins + box.origin;

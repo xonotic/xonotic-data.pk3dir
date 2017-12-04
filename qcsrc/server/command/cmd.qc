@@ -1,4 +1,8 @@
 #include "cmd.qh"
+
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 #include <common/command/_mod.qh>
 
 #include "common.qh"
@@ -45,17 +49,19 @@ void ClientKill_TeamChange(entity this, float targetteam);  // 0 = don't change,
 
 bool SV_ParseClientCommand_floodcheck(entity this)
 {
+	entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+
 	if (!timeout_status)  // not while paused
 	{
-		if (time <= (this.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
+		if (time <= (store.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
-			this.cmd_floodcount += 1;
-			if (this.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
+			store.cmd_floodcount += 1;
+			if (store.cmd_floodcount > autocvar_sv_clientcommand_antispam_count)   return false;  // too much spam, halt
 		}
 		else
 		{
-			this.cmd_floodtime = time;
-			this.cmd_floodcount = 1;
+			store.cmd_floodtime = time;
+			store.cmd_floodcount = 1;
 		}
 	}
 	return true;  // continue, as we're not flooding yet
@@ -74,8 +80,8 @@ void ClientCommand_autoswitch(entity caller, float request, float argc)
 		{
 			if (argv(1) != "")
 			{
-				caller.autoswitch = InterpretBoolean(argv(1));
-				sprint(caller, strcat("^1autoswitch is currently turned ", (caller.autoswitch ? "on" : "off"), ".\n"));
+				CS(caller).autoswitch = InterpretBoolean(argv(1));
+				sprint(caller, strcat("^1autoswitch is currently turned ", (CS(caller).autoswitch ? "on" : "off"), ".\n"));
 				return;
 			}
 		}
@@ -101,11 +107,11 @@ void ClientCommand_clientversion(entity caller, float request, float argc)  // i
 			{
 				if (IS_CLIENT(caller))
 				{
-					caller.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+					CS(caller).version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 
-					if (caller.version < autocvar_gameversion_min || caller.version > autocvar_gameversion_max)
+					if (CS(caller).version < autocvar_gameversion_min || CS(caller).version > autocvar_gameversion_max)
 					{
-						caller.version_mismatch = 1;
+						CS(caller).version_mismatch = true;
 						ClientKill_TeamChange(caller, -2);  // observe
 					}
 					else if (autocvar_g_campaign || autocvar_g_balance_teams)
@@ -214,7 +220,7 @@ void ClientCommand_physics(entity caller, float request, float argc)
 		}
 
 		default:
-			sprint(caller, strcat("Current physics set: ^3", caller.cvar_cl_physics, "\n"));
+			sprint(caller, strcat("Current physics set: ^3", CS(caller).cvar_cl_physics, "\n"));
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(caller, "\nUsage:^3 cmd physics <physics>\n");
@@ -319,82 +325,90 @@ void ClientCommand_selectteam(entity caller, float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argv(1) != "")
+			if (argv(1) == "")
 			{
-				if (IS_CLIENT(caller))
-				{
-					if (teamplay)
-					{
-						if (caller.team_forced <= 0)
-						{
-							if (!lockteams)
-							{
-								float selection;
-
-								switch (argv(1))
-								{
-									case "red": selection = NUM_TEAM_1;
-										break;
-									case "blue": selection = NUM_TEAM_2;
-										break;
-									case "yellow": selection = NUM_TEAM_3;
-										break;
-									case "pink": selection = NUM_TEAM_4;
-										break;
-									case "auto": selection = (-1);
-										break;
-
-									default: selection = 0;
-										break;
-								}
-
-								if (selection)
-								{
-									if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
-									{
-										sprint(caller, "^7You already are on that team.\n");
-									}
-									else if (caller.wasplayer && autocvar_g_changeteam_banned)
-									{
-										sprint(caller, "^1You cannot change team, forbidden by the server.\n");
-									}
-									else
-									{
-										if (autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
-										{
-											CheckAllowedTeams(caller);
-											GetTeamCounts(caller);
-											if (!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(caller.team), caller))
-											{
-												Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-												return;
-											}
-										}
-										ClientKill_TeamChange(caller, selection);
-									}
-									if(!IS_PLAYER(caller))
-										caller.team_selected = true; // avoids asking again for team selection on join
-								}
-							}
-							else
-							{
-								sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
-							}
-						}
-						else
-						{
-							sprint(caller, "^7selectteam can not be used as your team is forced\n");
-						}
-					}
-					else
-					{
-						sprint(caller, "^7selectteam can only be used in teamgames\n");
-					}
-				}
 				return;
 			}
+			if (!IS_CLIENT(caller))
+			{
+				return;
+			}
+			if (!teamplay)
+			{
+				sprint(caller, "^7selectteam can only be used in teamgames\n");
+				return;
+			}
+			if (caller.team_forced > 0)
+			{
+				sprint(caller, "^7selectteam can not be used as your team is forced\n");
+				return;
+			}
+			if (lockteams)
+			{
+				sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+				return;
+			}
+			float selection;
+			switch (argv(1))
+			{
+				case "red":
+				{
+					selection = NUM_TEAM_1;
+					break;
+				}
+				case "blue":
+				{
+					selection = NUM_TEAM_2;
+					break;
+				}
+				case "yellow":
+				{
+					selection = NUM_TEAM_3;
+					break;
+				}
+				case "pink":
+				{
+					selection = NUM_TEAM_4;
+					break;
+				}
+				case "auto":
+				{
+					selection = (-1);
+					break;
+				}
+				default:
+				{
+					return;
+				}
+			}
+			if (caller.team == selection && selection != -1 && !IS_DEAD(caller))
+			{
+				sprint(caller, "^7You already are on that team.\n");
+				return;
+			}
+			if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
+			{
+				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
+				return;
+			}
+			if ((selection != -1) && autocvar_g_balance_teams &&
+				autocvar_g_balance_teams_prevent_imbalance)
+			{
+				CheckAllowedTeams(caller);
+				GetTeamCounts(caller);
+				if ((BIT(Team_TeamToNumber(selection) - 1) & FindBestTeams(caller, false)) == 0)
+				{
+					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					return;
+				}
+			}
+			ClientKill_TeamChange(caller, selection);
+			if (!IS_PLAYER(caller))
+			{
+				caller.team_selected = true; // avoids asking again for team selection on join
+			}
+			return;
 		}
-
 		default:
 			sprint(caller, "Incorrect parameters for ^2selectteam^7\n");
 		case CMD_REQUEST_USAGE:
@@ -448,7 +462,7 @@ void ClientCommand_sentcvar(entity caller, float request, float argc, string com
 					tokenize_console(s);
 				}
 
-				GetCvars(caller, 1);
+				GetCvars(caller, CS(caller), 1);
 
 				return;
 			}

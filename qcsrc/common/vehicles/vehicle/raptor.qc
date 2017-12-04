@@ -1,7 +1,5 @@
 #include "raptor.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 bool autocvar_g_vehicle_raptor = true;
@@ -204,8 +202,8 @@ bool raptor_frame(entity this, float dt)
 
 	// Pitch
 	ftmp = 0;
-	if(this.movement_x > 0 && vang_x < autocvar_g_vehicle_raptor_pitchlimit) ftmp = 5;
-	else if(this.movement_x < 0 && vang_x > -autocvar_g_vehicle_raptor_pitchlimit) ftmp = -20;
+	if(CS(this).movement_x > 0 && vang_x < autocvar_g_vehicle_raptor_pitchlimit) ftmp = 5;
+	else if(CS(this).movement_x < 0 && vang_x > -autocvar_g_vehicle_raptor_pitchlimit) ftmp = -20;
 
 	df_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, df_x , autocvar_g_vehicle_raptor_pitchlimit);
 	ftmp = vang_x - bound(-autocvar_g_vehicle_raptor_pitchlimit, df_x + ftmp, autocvar_g_vehicle_raptor_pitchlimit);
@@ -222,22 +220,22 @@ bool raptor_frame(entity this, float dt)
 
 	df = vehic.velocity * -autocvar_g_vehicle_raptor_friction;
 
-	if(this.movement_x != 0)
+	if(CS(this).movement_x != 0)
 	{
-		if(this.movement_x > 0)
+		if(CS(this).movement_x > 0)
 			df += v_forward  * autocvar_g_vehicle_raptor_speed_forward;
-		else if(this.movement_x < 0)
+		else if(CS(this).movement_x < 0)
 			df -= v_forward  * autocvar_g_vehicle_raptor_speed_forward;
 	}
 
-	if(this.movement_y != 0)
+	if(CS(this).movement_y != 0)
 	{
-		if(this.movement_y < 0)
+		if(CS(this).movement_y < 0)
 			df -= v_right * autocvar_g_vehicle_raptor_speed_strafe;
-		else if(this.movement_y > 0)
+		else if(CS(this).movement_y > 0)
 			df += v_right * autocvar_g_vehicle_raptor_speed_strafe;
 
-		vehic.angles_z = bound(-30,vehic.angles_z + (this.movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
+		vehic.angles_z = bound(-30,vehic.angles_z + (CS(this).movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
 	}
 	else
 	{
@@ -252,7 +250,7 @@ bool raptor_frame(entity this, float dt)
 		df +=  v_up * autocvar_g_vehicle_raptor_speed_up;
 
 	vehic.velocity  += df * dt;
-	this.velocity = this.movement  = vehic.velocity;
+	this.velocity = CS(this).movement  = vehic.velocity;
 	setorigin(this, vehic.origin + '0 0 32');
 	this.oldorigin = this.origin; // negate fall damage
 
@@ -832,5 +830,4 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
     AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
 }
 
-#endif
 #endif

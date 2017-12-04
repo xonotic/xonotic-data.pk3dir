@@ -6,6 +6,10 @@
 #include <common/teams.qh>
 #include <common/util.qh>
 
+#ifdef CSQC
+#include <client/autocvars.qh>
+#endif
+
 /** main types/groups of notifications */
 ENUMCLASS(MSG)
 	/** "Global" AND "personal" announcer messages */
@@ -177,25 +181,25 @@ GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt"
 			if (fh >= 0)
 			{
 				Dump_Notifications(fh, alsoprint);
-				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
+				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.", filename);
 				fclose(fh);
 			}
 			else
 			{
-				LOG_INFOF("^1Error: ^7Could not open file '%s'!\n", filename);
+				LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
 			}
 			#else
-			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
+			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd."));
 			#endif
 			return;
 		}
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
-			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),\n");
-			LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-			LOG_INFO("  if left blank, it will only write to default.\n");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]");
+			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),");
+			LOG_INFO("  if supplied with '-' output to console as well as default,");
+			LOG_INFO("  if left blank, it will only write to default.");
 			return;
 		}
 	}
@@ -402,8 +406,8 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
 	ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
 	ARG_CASE(ARG_CS_SV,     "f4",            ftos(f4)) \
-	ARG_CASE(ARG_CS_SV,     "f1p2dec",       ftos_decimals(f1/100, 2)) \
-	ARG_CASE(ARG_CS_SV,     "f2p2dec",       ftos_decimals(f2/100, 2)) \
+	ARG_CASE(ARG_CS_SV,     "f1dtime",       ftos_decimals(TIME_DECODE(f1), 2)) \
+	ARG_CASE(ARG_CS_SV,     "f2dtime",       ftos_decimals(TIME_DECODE(f2), 2)) \
 	ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \

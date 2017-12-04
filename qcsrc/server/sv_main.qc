@@ -88,7 +88,6 @@ void CreatureFrame_Liquids(entity this)
 			this.dmgtime = 0;
 		}
 		this.air_finished = time + 12;
-		this.dmg = 2;
 	}
 }
 
@@ -139,10 +138,10 @@ void CreatureFrame_All()
 void Pause_TryPause(bool ispaused)
 {
 	int n = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
 		++n;
-	));
+	});
 	if (!n) return;
 	setpause(ispaused);
 }
@@ -184,18 +183,19 @@ void StartFrame()
 	if(time > client_cefc_accumulatortime + 1)
 	{
 		float t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
-		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
 		int c_seeing = 0;
 		int c_seen = 0;
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true, {
 			if(IS_REAL_CLIENT(it))
 				++c_seeing;
 			if(IS_PLAYER(it))
 				++c_seen;
-		));
-		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
-		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
-
+		});
+		LOG_INFO(
+		    "CEFC time: ", ftos(t * 1000), "ms; ",
+            "CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ",
+            "CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0')
+        );
 		client_cefc_accumulatortime = time;
 		client_cefc_accumulator = 0;
 	}
@@ -246,168 +246,120 @@ void StartFrame()
 .string gametypefilter;
 .string cvarfilter;
 bool DoesQ3ARemoveThisEntity(entity this);
+
+/**
+ * Evaluate an expression of the form: [+ | -]? [var[op]val | [op]var | val | var] ...
+ * +: all must match. this is the default
+ * -: one must NOT match
+ *
+ * var>x
+ * var<x
+ * var>=x
+ * var<=x
+ * var==x
+ * var!=x
+ * var===x
+ * var!==x
+ */
+bool expr_evaluate(string s)
+{
+    bool ret = false;
+    if (str2chr(s, 0) == '+') {
+        s = substring(s, 1, -1);
+    } else if (str2chr(s, 0) == '-') {
+        ret = true;
+        s = substring(s, 1, -1);
+    }
+    bool expr_fail = false;
+    for (int i = 0, n = tokenize_console(s); i < n; ++i) {
+        int o;
+        string k, v;
+        s = argv(i);
+        #define X(expr) \
+            if (expr) { \
+                continue; \
+            } else { \
+                expr_fail = true; \
+                break; \
+            }
+        #define BINOP(op, len, expr) \
+            if ((o = strstrofs(s, op, 0)) >= 0) { \
+                k = substring(s, 0, o); \
+                v = substring(s, o + len, -1); \
+                X(expr); \
+            }
+        BINOP(">=", 2, cvar(k) >= stof(v));
+        BINOP("<=", 2, cvar(k) <= stof(v));
+        BINOP(">",  1, cvar(k) >  stof(v));
+        BINOP("<",  1, cvar(k) <  stof(v));
+        BINOP("==", 2, cvar(k) == stof(v));
+        BINOP("!=", 2, cvar(k) != stof(v));
+        BINOP("===", 3, cvar_string(k) == v);
+        BINOP("!==", 3, cvar_string(k) != v);
+        {
+            k = s;
+            bool b = true;
+            if (str2chr(k, 0) == '!') {
+                k = substring(s, 1, -1);
+                b = false;
+            }
+            float f = stof(k);
+            bool isnum = ftos(f) == k;
+            X(boolean(isnum ? f : cvar(k)) == b);
+        }
+        #undef BINOP
+        #undef X
+    }
+    if (!expr_fail) {
+        ret = !ret;
+    }
+    // now ret is true if we want to keep the item, and false if we want to get rid of it
+    return ret;
+}
+
 void SV_OnEntityPreSpawnFunction(entity this)
 {
-	__spawnfunc_expecting = true;
-	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		delete(this);
-		__spawnfunc_expecting = false;
-		return;
+		goto cleanup;
 	}
-	if(this.cvarfilter != "")
-	{
-		float n, i, o, inv;
-		string s, k, v;
-		inv = 0;
-
-		s = this.cvarfilter;
-		if(substring(s, 0, 1) == "+")
-		{
-			s = substring(s, 1, -1);
-		}
-		else if(substring(s, 0, 1) == "-")
-		{
-			inv = 1;
-			s = substring(s, 1, -1);
-		}
-
-		n = tokenize_console(s);
-		for(i = 0; i < n; ++i)
-		{
-			s = argv(i);
-			// syntax:
-			// var>x
-			// var<x
-			// var>=x
-			// var<=x
-			// var==x
-			// var!=x
-			// var===x
-			// var!==x
-			if((o = strstrofs(s, ">=", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar(k) < stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "<=", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar(k) > stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, ">", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+1, -1);
-				if(cvar(k) <= stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "<", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+1, -1);
-				if(cvar(k) >= stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "==", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar(k) != stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "!=", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar(k) == stof(v))
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "===", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar_string(k) != v)
-					goto cvar_fail;
-			}
-			else if((o = strstrofs(s, "!==", 0)) >= 0)
-			{
-				k = substring(s, 0, o);
-				v = substring(s, o+2, -1);
-				if(cvar_string(k) == v)
-					goto cvar_fail;
-			}
-			else if(substring(s, 0, 1) == "!")
-			{
-				k = substring(s, 1, -1);
-				if(cvar(k))
-					goto cvar_fail;
-			}
-			else
-			{
-				k = s;
-				if (!cvar(k))
-					goto cvar_fail;
-			}
-		}
-		inv = !inv;
-LABEL(cvar_fail)
-		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
-		if (!inv)
-		{
-			//print("cvarfilter fail\n");
-			delete(this);
-			__spawnfunc_expecting = false;
-			return;
-		}
+	if (this.cvarfilter != "" && !expr_evaluate(this.cvarfilter)) {
+        goto cleanup;
 	}
 
-	if(DoesQ3ARemoveThisEntity(this))
-	{
-		delete(this);
-		__spawnfunc_expecting = false;
-		return;
+	if (DoesQ3ARemoveThisEntity(this)) {
+		goto cleanup;
 	}
 
 	set_movetype(this, this.movetype);
 
-	if(this.monster_attack)
+	if (this.monster_attack) {
 		IL_PUSH(g_monster_targets, this);
+    }
 
 	// support special -1 and -2 angle from radiant
-	if (this.angles == '0 -1 0')
+	if (this.angles == '0 -1 0') {
 		this.angles = '-90 0 0';
-	else if (this.angles == '0 -2 0')
+	} else if (this.angles == '0 -2 0') {
 		this.angles = '+90 0 0';
+    }
 
-	if(this.originjitter.x != 0)
-		this.origin_x = this.origin.x + (random() * 2 - 1) * this.originjitter.x;
-	if(this.originjitter.y != 0)
-		this.origin_y = this.origin.y + (random() * 2 - 1) * this.originjitter.y;
-	if(this.originjitter.z != 0)
-		this.origin_z = this.origin.z + (random() * 2 - 1) * this.originjitter.z;
-	if(this.anglesjitter.x != 0)
-		this.angles_x = this.angles.x + (random() * 2 - 1) * this.anglesjitter.x;
-	if(this.anglesjitter.y != 0)
-		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglesjitter.y;
-	if(this.anglesjitter.z != 0)
-		this.angles_z = this.angles.z + (random() * 2 - 1) * this.anglesjitter.z;
-	if(this.anglejitter != 0)
-		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglejitter;
+    #define X(out, in) MACRO_BEGIN \
+        if (in != 0) { out = out + (random() * 2 - 1) * in; } \
+    MACRO_END
+    X(this.origin.x, this.originjitter.x); X(this.origin.y, this.originjitter.y); X(this.origin.z, this.originjitter.z);
+    X(this.angles.x, this.anglesjitter.x); X(this.angles.y, this.anglesjitter.y); X(this.angles.z, this.anglesjitter.z);
+    X(this.angles.y, this.anglejitter);
+    #undef X
 
-	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
-	{
-		delete(this);
-		__spawnfunc_expecting = false;
-		return;
+	if (MUTATOR_CALLHOOK(OnEntityPreSpawn, this)) {
+		goto cleanup;
 	}
+	return;
+LABEL(cleanup)
+    builtin_remove(this);
 }
 
 void WarpZone_PostInitialize_Callback()

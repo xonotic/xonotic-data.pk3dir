@@ -1,96 +1,6 @@
 #include "seeker.qh"
-#ifndef IMPLEMENTATION
-CLASS(Seeker, Weapon)
-/* ammotype  */ ATTRIB(Seeker, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(Seeker, impulse, int, 8);
-/* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Seeker, wpcolor, vector, '0.5 1 0');
-/* modelname */ ATTRIB(Seeker, mdl, string, "seeker");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Seeker, m_model, Model, MDL_SEEKER_ITEM);
-#endif
-/* crosshair */ ATTRIB(Seeker, w_crosshair, string, "gfx/crosshairseeker");
-/* crosshair */ ATTRIB(Seeker, w_crosshair_size, float, 0.8);
-/* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
-/* refname   */ ATTRIB(Seeker, netname, string, "seeker");
-/* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-    	P(class, prefix, flac_ammo, float, NONE) \
-    	P(class, prefix, flac_animtime, float, NONE) \
-    	P(class, prefix, flac_damage, float, NONE) \
-    	P(class, prefix, flac_edgedamage, float, NONE) \
-    	P(class, prefix, flac_force, float, NONE) \
-    	P(class, prefix, flac_lifetime, float, NONE) \
-    	P(class, prefix, flac_lifetime_rand, float, NONE) \
-    	P(class, prefix, flac_radius, float, NONE) \
-    	P(class, prefix, flac_refire, float, NONE) \
-    	P(class, prefix, flac_speed, float, NONE) \
-    	P(class, prefix, flac_speed_up, float, NONE) \
-    	P(class, prefix, flac_speed_z, float, NONE) \
-    	P(class, prefix, flac_spread, float, NONE) \
-    	P(class, prefix, missile_accel, float, NONE) \
-    	P(class, prefix, missile_ammo, float, NONE) \
-    	P(class, prefix, missile_animtime, float, NONE) \
-    	P(class, prefix, missile_count, float, NONE) \
-    	P(class, prefix, missile_damageforcescale, float, NONE) \
-    	P(class, prefix, missile_damage, float, NONE) \
-    	P(class, prefix, missile_decel, float, NONE) \
-    	P(class, prefix, missile_delay, float, NONE) \
-    	P(class, prefix, missile_edgedamage, float, NONE) \
-    	P(class, prefix, missile_force, float, NONE) \
-    	P(class, prefix, missile_health, float, NONE) \
-    	P(class, prefix, missile_lifetime, float, NONE) \
-    	P(class, prefix, missile_proxy, float, NONE) \
-    	P(class, prefix, missile_proxy_delay, float, NONE) \
-    	P(class, prefix, missile_proxy_maxrange, float, NONE) \
-    	P(class, prefix, missile_radius, float, NONE) \
-    	P(class, prefix, missile_refire, float, NONE) \
-    	P(class, prefix, missile_smart, float, NONE) \
-    	P(class, prefix, missile_smart_mindist, float, NONE) \
-    	P(class, prefix, missile_smart_trace_max, float, NONE) \
-    	P(class, prefix, missile_smart_trace_min, float, NONE) \
-    	P(class, prefix, missile_speed, float, NONE) \
-    	P(class, prefix, missile_speed_max, float, NONE) \
-    	P(class, prefix, missile_speed_up, float, NONE) \
-    	P(class, prefix, missile_speed_z, float, NONE) \
-    	P(class, prefix, missile_spread, float, NONE) \
-    	P(class, prefix, missile_turnrate, float, NONE) \
-    	P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-    	P(class, prefix, tag_ammo, float, NONE) \
-    	P(class, prefix, tag_animtime, float, NONE) \
-    	P(class, prefix, tag_damageforcescale, float, NONE) \
-    	P(class, prefix, tag_health, float, NONE) \
-    	P(class, prefix, tag_lifetime, float, NONE) \
-    	P(class, prefix, tag_refire, float, NONE) \
-    	P(class, prefix, tag_speed, float, NONE) \
-    	P(class, prefix, tag_spread, float, NONE) \
-    	P(class, prefix, tag_tracker_lifetime, float, NONE) \
-		P(class, prefix, type, float, NONE) \
-		P(class, prefix, weaponreplace, string, NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Seeker, seeker)
-#undef X
-ENDCLASS(Seeker)
-REGISTER_WEAPON(SEEKER, seeker, NEW(Seeker));
-
 
 #ifdef SVQC
-.entity tag_target, wps_tag_tracker;
-.float tag_time;
-#endif
-#endif
-#ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
@@ -437,7 +347,7 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	Weapon thiswep = WEP_SEEKER;
 	.entity weaponentity = this.weaponentity_fld;
-	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && this.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER))
+	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER))
 	{
 		delete(this);
 		return;
@@ -678,12 +588,12 @@ METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapone
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, missile_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, missile_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
     }
     else
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, tag_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     return ammo_amount;
@@ -693,12 +603,12 @@ METHOD(Seeker, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, tag_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     else
     {
-        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, flac_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(seeker, flac_ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
     }
     return ammo_amount;
@@ -762,5 +672,4 @@ METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

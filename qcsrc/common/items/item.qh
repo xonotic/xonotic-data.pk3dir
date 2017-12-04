@@ -1,5 +1,11 @@
 #pragma once
-#include <common/t_items.qh>
+
+#ifdef GAMEQC
+#include <common/models/all.qh>
+#include <common/sounds/all.qh>
+#include <common/sounds/all.inc>
+#include <common/stats.qh>
+#endif
 
 const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
@@ -40,11 +46,30 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FU
 #ifdef SVQC
 .float  strength_finished = _STAT(STRENGTH_FINISHED);
 .float  invincible_finished = _STAT(INVINCIBLE_FINISHED);
+
+#define SPAWNFUNC_ITEM(name, item) \
+    spawnfunc(name) { StartItem(this, item); }
+
+#else
+
+#define SPAWNFUNC_ITEM(name, item)
+
 #endif
+
+enum
+{
+	ITEM_FLAG_NORMAL = BIT(0), ///< Item is usable during normal gameplay.
+	ITEM_FLAG_INSTAGIB = BIT(1), ///< Item is usable in instagib.
+	ITEM_FLAG_OVERKILL = BIT(2), ///< Item is usable in overkill.
+	ITEM_FLAG_MUTATORBLOCKED = BIT(3)
+};
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)
     ATTRIB(GameItem, m_id, int, 0);
+    /** the canonical spawnfunc name */
+    ATTRIB(GameItem, m_canonical_spawnfunc, string);
+    METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
     ATTRIB(GameItem, m_name, string);
     ATTRIB(GameItem, m_icon, string);
     ATTRIB(GameItem, m_color, vector, '1 1 1');
@@ -62,7 +87,7 @@ CLASS(GameItem, Object)
     METHOD(GameItem, show, void(GameItem this))
     {
         TC(GameItem, this);
-        LOG_INFO("A game item\n");
+        LOG_INFO("A game item");
     }
     void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
 ENDCLASS(GameItem)

@@ -1,13 +1,13 @@
 #include "sv_damagetext.qh"
 
-AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players");
+AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: visible to spectators, >= 2: visible to attacker, >= 3: all players see everyone's damage");
 
 REGISTER_MUTATOR(damagetext, true);
 
-#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
-#define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1 /* spectators only */)
-#define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)
-#define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3 /* all players */)
+#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 || autocvar_g_instagib)
+#define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1)
+#define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2)
+#define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3)
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     if (SV_DAMAGETEXT_DISABLED()) return;
     const entity attacker = M_ARGV(0, entity);
@@ -16,8 +16,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const float armor = M_ARGV(3, float);
     const int deathtype = M_ARGV(5, int);
     const float potential_damage = M_ARGV(6, float);
-    const vector location = hit.origin;
-    FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+    FOREACH_CLIENT(IS_REAL_CLIENT(it), {
         if (
             (SV_DAMAGETEXT_ALL()) ||
             (SV_DAMAGETEXT_PLAYERS() && it == attacker) ||
@@ -34,10 +33,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
-            WriteEntity(MSG_ONE, hit);
-            WriteCoord(MSG_ONE, location.x);
-            WriteCoord(MSG_ONE, location.y);
-            WriteCoord(MSG_ONE, location.z);
+            WriteByte(MSG_ONE, etof(hit));
             WriteInt24_t(MSG_ONE, deathtype);
             WriteByte(MSG_ONE, flags);
 
@@ -57,5 +53,5 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
                 else WriteShort(MSG_ONE, potential_damage * DAMAGETEXT_PRECISION_MULTIPLIER);
 			}
         }
-    ));
+    });
 }

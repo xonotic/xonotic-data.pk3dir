@@ -22,7 +22,7 @@ THINK FUNCTIONS
 */
 
 void door_go_down(entity this);
-void door_go_up(entity this);
+void door_go_up(entity this, entity actor, entity trigger);
 void door_rotating_go_down(entity this);
 void door_rotating_go_up(entity this, entity oth);
 
@@ -59,7 +59,7 @@ void door_blocked(entity this, entity blocker)
 				if (this.state == STATE_DOWN)
 			if (this.classname == "door")
 			{
-				door_go_up (this);
+				door_go_up (this, NULL, NULL);
 			} else
 			{
 				door_rotating_go_up(this, blocker);
@@ -123,7 +123,7 @@ void door_go_down(entity this)
 	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, door_hit_bottom);
 }
 
-void door_go_up(entity this)
+void door_go_up(entity this, entity actor, entity trigger)
 {
 	if (this.state == STATE_UP)
 		return;		// already going up
@@ -142,7 +142,7 @@ void door_go_up(entity this)
 	string oldmessage;
 	oldmessage = this.message;
 	this.message = "";
-	SUB_UseTargets(this, NULL, NULL);
+	SUB_UseTargets(this, actor, trigger);
 	this.message = oldmessage;
 }
 
@@ -169,7 +169,11 @@ bool door_check_keys(entity door, entity player)
 	if(!IS_PLAYER(player))
 		return false;
 
-	int valid = (door.itemkeys & player.itemkeys);
+	entity store = player;
+#ifdef SVQC
+	store = PS(player);
+#endif
+	int valid = (door.itemkeys & store.itemkeys);
 	door.itemkeys &= ~valid; // only some of the needed keys were given
 
 	if(!door.itemkeys)
@@ -233,7 +237,7 @@ void door_fire(entity this, entity actor, entity trigger)
 	entity e = this;
 	do {
 		if (e.classname == "door") {
-			door_go_up(e);
+			door_go_up(e, actor, trigger);
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
 			if ((e.spawnflags & 2) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {

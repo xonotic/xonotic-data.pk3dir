@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/constants.qh>
+#include <common/scores.qh>
 
 entity scores_initialized; // non-NULL when scores labels/rules have been set
 .float scoreboard_pos;
@@ -52,7 +52,7 @@ float TeamScore_Add(entity player, float scorefield, float score);
  * NEVER call this if team has not been set yet!
  * Returns the new score.
  */
-float TeamScore_AddToTeam(float t, float scorefield, float score);
+float TeamScore_AddToTeam(int t, float scorefield, float score);
 
 /**
  * Returns a value indicating the team score (and higher is better).
@@ -64,11 +64,6 @@ float TeamScore_GetCompareValue(float t);
  * possible, otherwise the player score.
  */
 float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score);
-
-/**
- * Adds to the generic score fields for both the player and the team.
- */
-#define PlayerTeamScore_AddScore(p, s) PlayerTeamScore_Add(p, SP_SCORE, ST_SCORE, s)
 
 /**
  * Set the label of a team score item, as well as the scoring flags.

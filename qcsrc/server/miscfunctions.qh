@@ -1,5 +1,7 @@
 #pragma once
 
+#include <server/defs.qh>
+
 #include <common/t_items.qh>
 
 #include "mutators/events.qh"
@@ -38,11 +40,11 @@ void play2all(string samp);
 
 void play2team(float t, string filename);
 
-void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name);
+void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name);
 
 float spamsound(entity e, float chan, Sound samp, float vol, float _atten);
 
-void GetCvars_handleString(entity this, string thisname, float f, .string field, string name);
+void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name);
 
 void precache_all_playermodels(string pattern);
 
@@ -73,7 +75,7 @@ void GameLogInit();
 
 void GameLogClose();
 
-void GetCvars(entity this, float f);
+void GetCvars(entity this, entity store, int f);
 
 string GetMapname();
 
@@ -186,6 +188,13 @@ float start_ammo_rockets;
 float start_ammo_cells;
 float start_ammo_plasma;
 float start_ammo_fuel;
+/// \brief Number of random start weapons to give to players.
+int random_start_weapons_count;
+/// \brief Holds a list of possible random start weapons.
+string autocvar_g_random_start_weapons;
+/// \brief Entity that contains amount of ammo to give with random start
+/// weapons.
+entity random_start_ammo;
 float start_health;
 float start_armorvalue;
 WepSet warmup_start_weapons;
@@ -306,7 +315,7 @@ void readlevelcvars()
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(it.wr_init(it)));
+	FOREACH(Weapons, it != WEP_Null, { it.wr_init(it); });
 
 	readplayerstartcvars();
 }

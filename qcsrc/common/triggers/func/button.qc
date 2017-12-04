@@ -8,8 +8,11 @@ void button_return(entity this);
 void button_wait(entity this)
 {
 	this.state = STATE_TOP;
-	this.nextthink = this.ltime + this.wait;
-	setthink(this, button_return);
+	if(this.wait >= 0)
+	{
+		this.nextthink = this.ltime + this.wait;
+		setthink(this, button_return);
+	}
 	SUB_UseTargets(this, this.enemy, NULL);
 	this.frame = 1;			// use alternate textures
 }
@@ -56,6 +59,9 @@ void button_reset(entity this)
 	setorigin(this, this.pos1);
 	this.frame = 0;			// use normal textures
 	this.state = STATE_BOTTOM;
+	this.velocity = '0 0 0';
+	setthink(this, func_null);
+	this.nextthink = 0;
 	if (this.health)
 		this.takedamage = DAMAGE_YES;	// can be shot again
 }
@@ -88,11 +94,22 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	this.health = this.health - damage;
-	if (this.health <= 0)
+	if (this.spawnflags & BUTTON_DONTACCUMULATEDMG)
 	{
-		this.enemy = attacker;
-		button_fire(this);
+		if (this.health <= damage)
+		{
+			this.enemy = attacker;
+			button_fire(this);
+		}
+	}
+	else
+	{
+		this.health = this.health - damage;
+		if (this.health <= 0)
+		{
+			this.enemy = attacker;
+			button_fire(this);
+		}
 	}
 }
 
@@ -149,6 +166,8 @@ spawnfunc(func_button)
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
     this.flags |= FL_NOTARGET;
+
+    this.reset = button_reset;
 
 	button_reset(this);
 }

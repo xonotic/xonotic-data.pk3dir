@@ -1,5 +1,8 @@
 #pragma once
 
+#include "utils.qh"
+#include <common/sounds/all.qh>
+
 void ClientState_attach(entity this);
 
 IntrusiveList g_players;
@@ -29,9 +32,117 @@ CLASS(Client, Object)
     /** the string "HMAC-SHA256" if signing, and string_null if plaintext */
     ATTRIB(Client, crypto_signmethod, string, this.crypto_signmethod);
 
+    // engine client fields
+    ATTRIB(Client, impulse, int, this.impulse);
+
+    ATTRIB(Client, button0, int, this.button0);
+    ATTRIB(Client, button2, int, this.button2);
+    ATTRIB(Client, button3, int, this.button3);
+    ATTRIB(Client, button4, int, this.button4);
+    ATTRIB(Client, button5, int, this.button5);
+    ATTRIB(Client, button6, int, this.button6);
+    ATTRIB(Client, button7, int, this.button7);
+    ATTRIB(Client, button8, int, this.button8);
+    ATTRIB(Client, button9, int, this.button9);
+    ATTRIB(Client, button10, int, this.button10);
+    ATTRIB(Client, button11, int, this.button11);
+    ATTRIB(Client, button12, int, this.button12);
+    ATTRIB(Client, button13, int, this.button13);
+    ATTRIB(Client, button14, int, this.button14);
+    ATTRIB(Client, button15, int, this.button15);
+    ATTRIB(Client, button16, int, this.button16);
+    ATTRIB(Client, buttonuse, int, this.buttonuse);
+    ATTRIB(Client, buttonchat, int, this.buttonchat);
+
+    ATTRIB(Client, cursor_active, int, this.cursor_active);
+    ATTRIB(Client, cursor_screen, vector, this.cursor_screen);
+    ATTRIB(Client, cursor_trace_start, vector, this.cursor_trace_start);
+    ATTRIB(Client, cursor_trace_endpos, vector, this.cursor_trace_endpos);
+    ATTRIB(Client, cursor_trace_ent, entity, this.cursor_trace_ent);
+
+    ATTRIB(Client, ping, float, this.ping);
+    ATTRIB(Client, ping_packetloss, float, this.ping_packetloss);
+    ATTRIB(Client, ping_movementloss, float, this.ping_movementloss);
+
+    ATTRIB(Client, v_angle, vector, this.v_angle);
+    ATTRIB(Client, movement, vector, this.movement);
+
     // custom
 
     ATTRIB(Client, playerid, int, this.playerid);
+
+    ATTRIB(Client, parm_idlesince, int, this.parm_idlesince);
+    ATTRIB(Client, muted, bool, this.muted);
+    ATTRIB(Client, idlekick_lasttimeleft, float, this.idlekick_lasttimeleft);
+    ATTRIB(Client, pm_frametime, float, this.pm_frametime);
+    ATTRIB(Client, pressedkeys, int, this.pressedkeys);
+    ATTRIB(Client, movement_old, vector, this.movement_old);
+    ATTRIB(Client, buttons_old, int, this.buttons_old);
+    ATTRIB(Client, teamkill_complain, float, this.teamkill_complain);
+    ATTRIB(Client, teamkill_soundtime, float, this.teamkill_soundtime);
+    ATTRIB(Client, teamkill_soundsource, entity, this.teamkill_soundsource);
+    ATTRIB(Client, usekeypressed, bool, this.usekeypressed);
+    ATTRIB(Client, motd_actived_time, float, this.motd_actived_time);
+    ATTRIB(Client, jointime, float, this.jointime);
+    ATTRIB(Client, spectatortime, float, this.spectatortime);
+    ATTRIB(Client, startplaytime, float, this.startplaytime);
+    ATTRIB(Client, version_nagtime, float, this.version_nagtime);
+    ATTRIB(Client, netname_previous, string, this.netname_previous);
+    ATTRIB(Client, allowed_timeouts, int, this.allowed_timeouts);
+    ATTRIB(Client, active_minigame, entity, this.active_minigame);
+    ATTRIB(Client, taunt_soundtime, float, this.taunt_soundtime);
+    ATTRIB(Client, killcount, int, this.killcount);
+    ATTRIB(Client, version_mismatch, bool, this.version_mismatch);
+    ATTRIB(Client, version, int, this.version);
+    ATTRIB(Client, spectatee_status, int, this.spectatee_status);
+    ATTRIB(Client, zoomstate, bool, this.zoomstate);
+    ATTRIB(Client, just_joined, bool, this.just_joined);
+    ATTRIB(Client, race_completed, bool, this.race_completed);
+    ATTRIBARRAY(Client, msg_choice_choices, int, 50); // TODO: actually NOTIF_CHOICE_MAX
+    ATTRIB(Client, latency_sum, float, this.latency_sum);
+    ATTRIB(Client, latency_cnt, int, this.latency_cnt);
+    ATTRIB(Client, latency_time, float, this.latency_time);
+    ATTRIB(Client, v_angle_old, vector, this.v_angle_old);
+    ATTRIB(Client, model_randomizer, float, this.model_randomizer);
+    ATTRIB(Client, accuracy, entity, this.accuracy);
+    ATTRIB(Client, hasweapon_complain_spam, float, this.hasweapon_complain_spam);
+    ATTRIB(Client, scorekeeper, entity, this.scorekeeper);
+    ATTRIB(Client, specialcommand_pos, int, this.specialcommand_pos);
+    ATTRIB(Client, hitplotfh, int, this.hitplotfh);
+    ATTRIB(Client, clientdata, entity, this.clientdata);
+    ATTRIB(Client, cmd_floodcount, int, this.cmd_floodcount);
+    ATTRIB(Client, cmd_floodtime, float, this.cmd_floodtime);
+    ATTRIB(Client, wasplayer, bool, this.wasplayer);
+
+    // networked cvars
+
+    ATTRIB(Client, cvar_cl_allow_uid2name, int, this.cvar_cl_allow_uid2name);
+    ATTRIB(Client, cvar_cl_allow_uidtracking, int, this.cvar_cl_allow_uidtracking);
+    ATTRIB(Client, cvar_cl_autotaunt, float, this.cvar_cl_autotaunt);
+    ATTRIB(Client, cvar_cl_voice_directional, int, this.cvar_cl_voice_directional);
+    ATTRIB(Client, cvar_cl_voice_directional_taunt_attenuation, float, this.cvar_cl_voice_directional_taunt_attenuation);
+    ATTRIB(Client, cvar_cl_physics, string, this.cvar_cl_physics);
+    ATTRIB(Client, cvar_cl_buffs_autoreplace, bool, this.cvar_cl_buffs_autoreplace);
+    ATTRIB(Client, cvar_cl_nade_type, int, this.cvar_cl_nade_type);
+    ATTRIB(Client, cvar_cl_pokenade_type, string, this.cvar_cl_pokenade_type);
+    ATTRIB(Client, cvar_cl_spawn_near_teammate, bool, this.cvar_cl_spawn_near_teammate);
+    ATTRIB(Client, cvar_cl_gunalign, int, this.cvar_cl_gunalign);
+    ATTRIB(Client, cvar_cl_handicap, float, this.cvar_cl_handicap);
+    ATTRIB(Client, cvar_cl_clippedspectating, bool, this.cvar_cl_clippedspectating);
+    ATTRIB(Client, cvar_cl_autoscreenshot, int, this.cvar_cl_autoscreenshot);
+    ATTRIB(Client, cvar_cl_jetpack_jump, bool, this.cvar_cl_jetpack_jump);
+    ATTRIB(Client, cvar_cl_newusekeysupported, bool, this.cvar_cl_newusekeysupported);
+    ATTRIB(Client, cvar_cl_noantilag, bool, this.cvar_cl_noantilag);
+    ATTRIB(Client, cvar_cl_movement_track_canjump, bool, this.cvar_cl_movement_track_canjump);
+    ATTRIB(Client, cvar_cl_weaponimpulsemode, int, this.cvar_cl_weaponimpulsemode);
+    ATTRIB(Client, cvar_g_xonoticversion, string, this.cvar_g_xonoticversion);
+    ATTRIB(Client, autoswitch, bool, this.autoswitch);
+    ATTRIB(Client, cvar_cl_dodging_timeout, float, this.cvar_cl_dodging_timeout);
+    ATTRIB(Client, cvar_cl_multijump, bool, this.cvar_cl_multijump);
+    ATTRIB(Client, cvar_cl_accuracy_data_share, bool, this.cvar_cl_accuracy_data_share);
+    ATTRIB(Client, cvar_cl_accuracy_data_receive, bool, this.cvar_cl_accuracy_data_receive);
+    ATTRIBARRAY(Client, cvar_cl_weaponpriorities, string, 10);
+    ATTRIB(Client, cvar_cl_weaponpriority, string, this.cvar_cl_weaponpriority);
 
     METHOD(Client, m_unwind, bool(Client this));
 
@@ -72,6 +183,16 @@ CLASS(Spectator, Client)
 ENDCLASS(Spectator)
 
 CLASS(Player, Client)
+
+    // custom
+
+    ATTRIB(Player, dual_weapons, vector, this.dual_weapons); // TODO: actually WepSet!
+    ATTRIB(Player, itemkeys, int, this.itemkeys);
+    ATTRIB(Player, ballistics_density, float, this.ballistics_density);
+    ATTRIB(Player, prevstrengthsound, float, this.prevstrengthsound);
+    ATTRIB(Player, prevstrengthsoundattempt, float, this.prevstrengthsoundattempt);
+    ATTRIB(Player, buff_shield, float, this.buff_shield);
+
     INIT(Player) {
         this.classname = STR_PLAYER;
         IL_PUSH(g_players, this);
@@ -102,8 +223,6 @@ METHOD(Client, m_unwind, bool(Client this))
     #undef UNWIND
     return false;
 }
-
-float c1, c2, c3, c4;
 
 void play_countdown(entity this, float finished, Sound samp);
 

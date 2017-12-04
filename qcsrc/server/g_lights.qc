@@ -1,5 +1,8 @@
 #include "g_lights.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+
 void train_next(entity this);
 
 const float LOOP = 1;

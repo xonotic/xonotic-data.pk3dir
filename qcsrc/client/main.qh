@@ -86,6 +86,7 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 const float ALPHA_MIN_VISIBLE = 0.003;
 
 float armorblockpercent;
+float damagepush_speedfactor;
 
 //hooks
 int calledhooks;

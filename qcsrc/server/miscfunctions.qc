@@ -1,4 +1,5 @@
 #include "miscfunctions.qh"
+
 #include "antilag.qh"
 #include "command/common.qh"
 #include "constants.qh"
@@ -6,6 +7,8 @@
 #include "ipban.qh"
 #include "mutators/_mod.qh"
 #include "../common/t_items.qh"
+#include "resources.qh"
+#include "items.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -33,7 +36,7 @@
 
 void crosshair_trace(entity pl)
 {
-	traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
+	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 .bool ctrace_solidchanged;
 void crosshair_trace_plusvisibletriggers(entity pl)
@@ -60,7 +63,7 @@ void crosshair_trace_plusvisibletriggers(entity pl)
 }
 void WarpZone_crosshair_trace(entity pl)
 {
-	WarpZone_traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
+	WarpZone_traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
 
@@ -198,14 +201,14 @@ string NearestLocation(vector p)
 string AmmoNameFromWeaponentity(entity wpn)
 {
 	string ammoitems = "batteries";
-	switch((wpn.m_weapon).ammo_field)
+	switch ((wpn.m_weapon).ammo_type)
 	{
-		case ammo_shells:  ammoitems = ITEM_Shells.m_name;      break;
-		case ammo_nails:   ammoitems = ITEM_Bullets.m_name;     break;
-		case ammo_rockets: ammoitems = ITEM_Rockets.m_name;     break;
-		case ammo_cells:   ammoitems = ITEM_Cells.m_name;       break;
-		case ammo_plasma:  ammoitems = ITEM_Plasma.m_name;      break;
-		case ammo_fuel:    ammoitems = ITEM_JetpackFuel.m_name; break;
+		case RESOURCE_SHELLS:  ammoitems = ITEM_Shells.m_name;      break;
+		case RESOURCE_BULLETS: ammoitems = ITEM_Bullets.m_name;     break;
+		case RESOURCE_ROCKETS: ammoitems = ITEM_Rockets.m_name;     break;
+		case RESOURCE_CELLS:   ammoitems = ITEM_Cells.m_name;       break;
+		case RESOURCE_PLASMA:  ammoitems = ITEM_Plasma.m_name;      break;
+		case RESOURCE_FUEL:    ammoitems = ITEM_JetpackFuel.m_name; break;
 	}
 	return ammoitems;
 }
@@ -291,41 +294,41 @@ Called with:
   0:  sends the request
   >0: receives a cvar from name=argv(f) value=argv(f+1)
 */
-void GetCvars_handleString(entity this, string thisname, float f, .string field, string name)
+void GetCvars_handleString(entity this, entity store, string thisname, float f, .string field, string name)
 {
 	if (f < 0)
 	{
-		if (this.(field))
-			strunzone(this.(field));
-		this.(field) = string_null;
+		if (store.(field))
+			strunzone(store.(field));
+		store.(field) = string_null;
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (this.(field))
-				strunzone(this.(field));
-			this.(field) = strzone(argv(f + 1));
+			if (store.(field))
+				strunzone(store.(field));
+			store.(field) = strzone(argv(f + 1));
 		}
 	}
 	else
 		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleString_Fixup(entity this, string thisname, float f, .string field, string name, string(entity, string) func)
+void GetCvars_handleString_Fixup(entity this, entity store, string thisname, float f, .string field, string name, string(entity, string) func)
 {
-	GetCvars_handleString(this, thisname, f, field, name);
+	GetCvars_handleString(this, store, thisname, f, field, name);
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
 		{
-			string s = func(this, strcat1(this.(field)));
-			if (s != this.(field))
+			string s = func(this, strcat1(store.(field)));
+			if (s != store.(field))
 			{
-				strunzone(this.(field));
-				this.(field) = strzone(s);
+				strunzone(store.(field));
+				store.(field) = strzone(s);
 			}
 		}
 }
-void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name)
+void GetCvars_handleFloat(entity this, entity store, string thisname, float f, .float field, string name)
 {
 	if (f < 0)
 	{
@@ -333,12 +336,12 @@ void GetCvars_handleFloat(entity this, string thisname, float f, .float field, s
 	else if (f > 0)
 	{
 		if (thisname == name)
-			this.(field) = stof(argv(f + 1));
+			store.(field) = stof(argv(f + 1));
 	}
 	else
 		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleFloatOnce(entity this, string thisname, float f, .float field, string name)
+void GetCvars_handleFloatOnce(entity this, entity store, string thisname, float f, .float field, string name)
 {
 	if (f < 0)
 	{
@@ -347,17 +350,17 @@ void GetCvars_handleFloatOnce(entity this, string thisname, float f, .float fiel
 	{
 		if (thisname == name)
 		{
-			if (!this.(field))
+			if (!store.(field))
 			{
-				this.(field) = stof(argv(f + 1));
-				if (!this.(field))
-					this.(field) = -1;
+				store.(field) = stof(argv(f + 1));
+				if (!store.(field))
+					store.(field) = -1;
 			}
 		}
 	}
 	else
 	{
-		if (!this.(field))
+		if (!store.(field))
 			stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
@@ -407,7 +410,7 @@ REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
-void GetCvars(entity this, int f)
+void GetCvars(entity this, entity store, int f)
 {
 	string s = string_null;
 
@@ -420,21 +423,21 @@ void GetCvars(entity this, int f)
 
 	Notification_GetCvars(this);
 
-	ReplicateVars(this, s, f);
+	ReplicateVars(this, store, s, f);
 
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, store, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 
-	GetCvars_handleFloat(this, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(this, store, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -463,7 +466,7 @@ string playername(entity p, bool team_colorize)
         return strcat(t, strdecolorize(p.netname));
     }
     else
-        return ColorTranslateRGB(p.netname);
+        return p.netname;
 }
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
@@ -524,6 +527,10 @@ void readplayerstartcvars()
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
 	start_ammo_plasma = 0;
+	if (random_start_ammo == NULL)
+	{
+		random_start_ammo = spawn();
+	}
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
@@ -547,10 +554,10 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				g_weaponarena_weapons |= (it.m_wepset);
-		));
+		});
 	}
 	else if (s == "devall")
 	{
@@ -565,11 +572,11 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if(it.spawnflags & WEP_FLAG_NORMAL)
 					g_weaponarena_weapons |= (it.m_wepset);
-		));
+		});
 	}
 	else if (s == "none")
 	{
@@ -584,14 +591,14 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				if(it.netname == s)
 				{
 					g_weaponarena_weapons |= (it.m_wepset);
 					g_weaponarena_list = strcat(g_weaponarena_list, it.m_name, " & ");
 					break;
 				}
-			));
+			});
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
@@ -610,7 +617,7 @@ void readplayerstartcvars()
 	}
 	else
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			int w = want_weapon(it, false);
 			WepSet s = it.m_wepset;
 			if(w & 1)
@@ -619,7 +626,7 @@ void readplayerstartcvars()
 				start_weapons_default |= s;
 			if(w & 4)
 				start_weapons_defaultmask |= s;
-		));
+		});
 	}
 
 	if(!cvar("g_use_ammunition"))
@@ -642,6 +649,17 @@ void readplayerstartcvars()
 		start_ammo_cells = cvar("g_start_ammo_cells");
 		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
+		random_start_weapons_count = cvar("g_random_start_weapons_count");
+		SetResourceAmount(random_start_ammo, RESOURCE_SHELLS, cvar(
+			"g_random_start_shells"));
+		SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, cvar(
+			"g_random_start_bullets"));
+		SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS,
+			cvar("g_random_start_rockets"));
+		SetResourceAmount(random_start_ammo, RESOURCE_CELLS, cvar(
+			"g_random_start_cells"));
+		SetResourceAmount(random_start_ammo, RESOURCE_PLASMA, cvar(
+			"g_random_start_plasma"));
 	}
 
 	if (warmup_stage)
@@ -671,7 +689,7 @@ void readplayerstartcvars()
 			warmup_start_weapons = '0 0 0';
 			warmup_start_weapons_default = '0 0 0';
 			warmup_start_weapons_defaultmask = '0 0 0';
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				int w = want_weapon(it, g_warmup_allguns);
 				WepSet s = (it.m_wepset);
 				if(w & 1)
@@ -680,7 +698,7 @@ void readplayerstartcvars()
 					warmup_start_weapons_default |= s;
 				if(w & 4)
 					warmup_start_weapons_defaultmask |= s;
-			));
+			});
 		}
 	}
 
@@ -699,10 +717,10 @@ void readplayerstartcvars()
 	WepSet precache_weapons = start_weapons;
 	if (g_warmup_allguns != 1)
 		precache_weapons |= warmup_start_weapons;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		if(precache_weapons & (it.m_wepset))
 			it.wr_init(it);
-	));
+	});
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
@@ -710,6 +728,16 @@ void readplayerstartcvars()
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
+	SetResourceAmount(random_start_ammo, RESOURCE_SHELLS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_SHELLS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_BULLETS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_BULLETS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_ROCKETS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_ROCKETS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_CELLS, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_CELLS)));
+	SetResourceAmount(random_start_ammo, RESOURCE_PLASMA, max(0,
+		GetResourceAmount(random_start_ammo, RESOURCE_PLASMA)));
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
@@ -763,7 +791,7 @@ void precache_all_playermodels(string pattern)
 
 void precache_playermodels(string s)
 {
-	FOREACH_WORD(s, true, LAMBDA(precache_playermodel(it)));
+	FOREACH_WORD(s, true, { precache_playermodel(it); });
 }
 
 void precache()
@@ -932,24 +960,21 @@ void InitializeEntitiesRun()
 .float(entity) isEliminated;
 bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
-	float i, f, b;
-	entity e;
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
-	WriteByte(MSG_ENTITY, sendflags);
-
-	if(sendflags & 1)
-	{
-		for(i = 1; i <= maxclients; i += 8)
-		{
-			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
-			{
-				if(eliminatedPlayers.isEliminated(e))
-					f |= b;
+	Stream out = MSG_ENTITY;
+	WriteHeader(out, ENT_CLIENT_ELIMINATEDPLAYERS);
+	serialize(byte, out, sendflags);
+	if (sendflags & 1) {
+		for (int i = 1; i <= maxclients; i += 8) {
+			int f = 0;
+			entity e = edict_num(i);
+			for (int b = 0; b < 8; ++b, e = nextent(e)) {
+				if (eliminatedPlayers.isEliminated(e)) {
+					f |= BIT(b);
+				}
 			}
-			WriteByte(MSG_ENTITY, f);
+			serialize(byte, out, f);
 		}
 	}
-
 	return true;
 }
 
@@ -1124,7 +1149,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".");
 	}
 }
 
@@ -1413,10 +1438,13 @@ bool isPushable(entity e)
 		return false;
 	if(e.iscreature)
 		return true;
+	if (Item_IsLoot(e))
+	{
+		return true;
+	}
 	switch(e.classname)
 	{
 		case "body":
-		case "droppedweapon":
 			return true;
 		case "bullet": // antilagged bullets can't hit this either
 			return false;

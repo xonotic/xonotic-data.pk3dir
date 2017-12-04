@@ -6,6 +6,8 @@
 #include "../mutators/events.qh"
 
 #include <common/constants.qh>
+#include <common/effects/effect.qh>
+#include <common/effects/all.qh>
 #include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
 

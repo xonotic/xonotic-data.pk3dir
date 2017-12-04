@@ -784,7 +784,7 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	return e;
 }
 
-float WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
+bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
 {
 	return !WarpZoneLib_BoxTouchesBrush(toucher.absmin, toucher.absmax, this, toucher);
 }
@@ -804,11 +804,9 @@ void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 	}
 }
 
-float WarpZoneLib_MoveOutOfSolid(entity e)
+bool WarpZoneLib_MoveOutOfSolid(entity e)
 {
-	vector o, m0, m1;
-
-	o = e.origin;
+	vector o = e.origin;
 	traceline(o, o, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 		return false;
@@ -817,22 +815,16 @@ float WarpZoneLib_MoveOutOfSolid(entity e)
 	if (!trace_startsolid)
 		return true;
 
-	m0 = e.mins;
-	m1 = e.maxs;
+	vector m0 = e.mins;
+	vector m1 = e.maxs;
 	e.mins = '0 0 0';
 	e.maxs = '0 0 0';
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '1 0 0' * m0_x);
-	e.mins_x = m0_x;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '1 0 0' * m1_x);
-	e.maxs_x = m1_x;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 1 0' * m0_y);
-	e.mins_y = m0_y;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 1 0' * m1_y);
-	e.maxs_y = m1_y;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 0 1' * m0_z);
-	e.mins_z = m0_z;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 0 1' * m1_z);
-	e.maxs_z = m1_z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m0.x); e.mins_x = m0.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m1.x); e.maxs_x = m1.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m0.y); e.mins_y = m0.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m1.y); e.maxs_y = m1.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m0.z); e.mins_z = m0.z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m1.z); e.maxs_z = m1.z;
 	setorigin(e, e.origin);
 
 	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);

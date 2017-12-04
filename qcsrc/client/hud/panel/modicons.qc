@@ -1,7 +1,10 @@
 #include "modicons.qh"
 
+#include <client/miscfunctions.qh>
+#include <client/autocvars.qh>
 #include <common/mapinfo.qh>
 #include <common/ent_cs.qh>
+#include <common/scores.qh>
 #include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
 
 // Mod icons (#10)
@@ -512,14 +515,16 @@ void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, 
 
 void HUD_Mod_Race(vector pos, vector mySize)
 {
-	mod_active = 1; // race should never hide the mod icons panel
-	entity me;
-	me = playerslots[player_localnum];
-	float score;
-	score = me.(scores(ps_primary));
+	entity me = playerslots[player_localnum];
+	float score = me.(scores(ps_primary));
 
 	if(!(scores_flags(ps_primary) & SFL_TIME) || teamplay) // race/cts record display on HUD
+	{
+		mod_active = 0; // hide it in this case!
 		return; // no records in the actual race
+	}
+
+	mod_active = 1;
 
 	// clientside personal record
 	string rr;
@@ -584,24 +589,15 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	}
 
 	// race "awards"
-	float a;
-	a = bound(0, race_status_time - time, 1);
+	float a = bound(0, race_status_time - time, 1);
+	string s = textShortenToWidth(ColorTranslateRGB(race_status_name), squareSize, '1 1 0' * 0.1 * squareSize, stringwidth_colors);
 
-	string s;
-	s = textShortenToWidth(ColorTranslateRGB(race_status_name), squareSize, '1 1 0' * 0.1 * squareSize, stringwidth_colors);
-
-	float rank;
+	float rank = 0;
 	if(race_status > 0)
 		rank = race_CheckName(race_status_name);
-	else
-		rank = 0;
-	string rankname;
-	rankname = count_ordinal(rank);
-
-	vector namepos;
-	namepos = medalPos + '0 0.8 0' * squareSize;
-	vector rankpos;
-	rankpos = medalPos + '0 0.15 0' * squareSize;
+	string rankname = count_ordinal(rank);
+	vector namepos = medalPos + '0 0.8 0' * squareSize;
+	vector rankpos = medalPos + '0 0.15 0' * squareSize;
 
 	if(race_status == 0)
 		drawpic_aspect_skin(medalPos, "race_newfail", '1 1 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);

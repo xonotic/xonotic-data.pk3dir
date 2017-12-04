@@ -1,7 +1,5 @@
 #include "spiderbot_weapons.qh"
 
-#ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
 void spiderbot_rocket_artillery(entity this)
@@ -246,7 +244,5 @@ void spiderbot_rocket_do(entity this)
 
     this.gun2.cnt = time + this.attack_finished_single[0];
 }
-
-#endif
 
 #endif

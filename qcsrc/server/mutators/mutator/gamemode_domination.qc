@@ -64,7 +64,7 @@ void dompoint_captured(entity this)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, head.netname, this.message, points, wait_time);
 
 	if(this.enemy.playerid == this.enemy_playerid)
-		PlayerScore_Add(this.enemy, SP_DOM_TAKES, 1);
+		GameRules_scoring_add(this.enemy, DOM_TAKES, 1);
 	else
 		this.enemy = NULL;
 
@@ -124,7 +124,7 @@ void dompoint_captured(entity this)
 
 	this.captime = time;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(set_dom_state(it)));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { set_dom_state(it); });
 }
 
 void AnimateDomPoint(entity this)
@@ -176,8 +176,8 @@ void dompointthink(entity this)
 		// give credit to the individual player, if he is still there
 		if (this.enemy.playerid == this.enemy_playerid)
 		{
-			PlayerScore_Add(this.enemy, SP_SCORE, fragamt);
-			PlayerScore_Add(this.enemy, SP_DOM_TICKS, fragamt);
+			GameRules_scoring_add(this.enemy, SCORE, fragamt);
+			GameRules_scoring_add(this.enemy, DOM_TICKS, fragamt);
 		}
 		else
 			this.enemy = NULL;
@@ -380,7 +380,7 @@ float Domination_CheckPlayers()
 
 void Domination_RoundStart()
 {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.player_blocked = false));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.player_blocked = false; });
 }
 
 //go to best items, or control points you don't own
@@ -445,13 +445,13 @@ MUTATOR_HOOKFUNCTION(dom, CheckAllowedTeams)
 MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 {
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		PutClientInServer(it);
 		if(domination_roundbased)
 			it.player_blocked = 1;
 		if(IS_REAL_CLIENT(it))
 			set_dom_state(it);
-	));
+	});
 	return true;
 }
 
@@ -559,10 +559,10 @@ void ScoreRules_dom(int teams)
 {
 	if(domination_roundbased)
 	{
-		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-		ScoreInfo_SetLabel_TeamScore  (ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES, "takes", 0);
-		ScoreRules_basics_end();
+	    GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+            field_team(ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
+            field(SP_DOM_TAKES, "takes", 0);
+	    });
 	}
 	else
 	{
@@ -572,11 +572,11 @@ void ScoreRules_dom(int teams)
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
-		ScoreRules_basics(teams, sp_score, sp_score, true);
-		ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
-		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
-		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
-		ScoreRules_basics_end();
+		GameRules_scoring(teams, sp_score, sp_score, {
+            field_team(ST_DOM_TICKS, "ticks", sp_domticks);
+            field(SP_DOM_TICKS, "ticks", sp_domticks);
+            field(SP_DOM_TAKES, "takes", 0);
+		});
 	}
 }
 

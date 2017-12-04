@@ -24,7 +24,7 @@ const float URL_FH_STDOUT = -2;
 entity url_fromid[NUM_URL_ID];
 int autocvar__urllib_nextslot;
 
-[[eraseable]]
+ERASEABLE
 float url_URI_Get_Callback(int id, float status, string data)
 {
 	if (id < MIN_URL_ID) return 0;
@@ -35,7 +35,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 	if (!e) return 0;
 	if (e.url_rbuf >= 0 || e.url_wbuf >= 0)
 	{
-		LOG_INFOF("WARNING: handle %d (%s) has already received data?!?\n", id + NUM_URL_ID, e.url_url);
+		LOG_INFOF("WARNING: handle %d (%s) has already received data?!?", id + NUM_URL_ID, e.url_url);
 		return 0;
 	}
 
@@ -53,7 +53,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 		e.url_rbuf = buf_create();
 		if (e.url_rbuf < 0)
 		{
-			LOG_INFO("url_URI_Get_Callback: out of memory in buf_create\n");
+			LOG_INFO("url_URI_Get_Callback: out of memory in buf_create");
 			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 			strunzone(e.url_url);
 			delete(e);
@@ -62,7 +62,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 		e.url_rbufpos = 0;
 		if (e.url_rbuf < 0)
 		{
-			LOG_INFO("url_URI_Get_Callback: out of memory in buf_create\n");
+			LOG_INFO("url_URI_Get_Callback: out of memory in buf_create");
 			e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 			strunzone(e.url_url);
 			delete(e);
@@ -83,7 +83,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 	}
 }
 
-[[eraseable]]
+ERASEABLE
 void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
 	entity e;
@@ -106,7 +106,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				e.url_wbuf = buf_create();
 				if (e.url_wbuf < 0)
 				{
-					LOG_INFO("url_single_fopen: out of memory in buf_create\n");
+					LOG_INFO("url_single_fopen: out of memory in buf_create");
 					rdy(e, pass, URL_READY_ERROR);
 					strunzone(e.url_url);
 					delete(e);
@@ -131,7 +131,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 						if (url_fromid[i] == NULL) break;
 					if (i >= autocvar__urllib_nextslot)
 					{
-						LOG_INFO("url_single_fopen: too many concurrent requests\n");
+						LOG_INFO("url_single_fopen: too many concurrent requests");
 						rdy(NULL, pass, URL_READY_ERROR);
 						return;
 					}
@@ -140,7 +140,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				// GET the data
 				if (!crypto_uri_postbuf(url, i + MIN_URL_ID, string_null, string_null, -1, 0))
 				{
-					LOG_INFO("url_single_fopen: failure in crypto_uri_postbuf\n");
+					LOG_INFO("url_single_fopen: failure in crypto_uri_postbuf");
 					rdy(NULL, pass, URL_READY_ERROR);
 					return;
 				}
@@ -176,7 +176,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				rdy(e, pass, URL_READY_CANWRITE);
 				break;
 			case FILE_READ:
-				LOG_INFO("url_single_fopen: cannot open '-' for reading\n");
+				LOG_INFO("url_single_fopen: cannot open '-' for reading");
 				rdy(NULL, pass, URL_READY_ERROR);
 				break;
 		}
@@ -203,7 +203,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 }
 
 // close a file
-[[eraseable]]
+ERASEABLE
 void url_fclose(entity e)
 {
 	int i;
@@ -228,7 +228,7 @@ void url_fclose(entity e)
 					if (url_fromid[i] == NULL) break;
 				if (i >= autocvar__urllib_nextslot)
 				{
-					LOG_INFO("url_fclose: too many concurrent requests\n");
+					LOG_INFO("url_fclose: too many concurrent requests");
 					e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 					buf_del(e.url_wbuf);
 					strunzone(e.url_url);
@@ -240,7 +240,7 @@ void url_fclose(entity e)
 			// POST the data
 			if (!crypto_uri_postbuf(e.url_url, i + MIN_URL_ID, e.url_content_type, e.url_verb, e.url_wbuf, 0))
 			{
-				LOG_INFO("url_fclose: failure in crypto_uri_postbuf\n");
+				LOG_INFO("url_fclose: failure in crypto_uri_postbuf");
 				e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 				buf_del(e.url_wbuf);
 				strunzone(e.url_url);
@@ -283,7 +283,7 @@ void url_fclose(entity e)
 }
 
 // with \n (blame FRIK_FILE)
-[[eraseable]]
+ERASEABLE
 string url_fgets(entity e)
 {
 	if (e.url_fh == URL_FH_CURL)
@@ -308,7 +308,7 @@ string url_fgets(entity e)
 }
 
 // without \n (blame FRIK_FILE)
-[[eraseable]]
+ERASEABLE
 void url_fputs(entity e, string s)
 {
 	if (e.url_fh == URL_FH_CURL)
@@ -331,7 +331,7 @@ void url_fputs(entity e, string s)
 }
 
 // multi URL object, tries URLs separated by space in sequence
-[[eraseable]]
+ERASEABLE
 void url_multi_ready(entity fh, entity me, float status)
 {
 	float n;
@@ -339,7 +339,7 @@ void url_multi_ready(entity fh, entity me, float status)
 	{
 		if (status == -422)  // Unprocessable Entity
 		{
-			LOG_INFO("uri_multi_ready: got HTTP error 422, data is in unusable format - not continuing\n");
+			LOG_INFO("uri_multi_ready: got HTTP error 422, data is in unusable format - not continuing");
 			me.url_ready(fh, me.url_ready_pass, status);
 			strunzone(me.url_url);
 			delete(me);
@@ -360,14 +360,14 @@ void url_multi_ready(entity fh, entity me, float status)
 	me.url_ready(fh, me.url_ready_pass, status);
 }
 
-[[eraseable]]
+ERASEABLE
 void url_multi_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
 	float n;
 	n = tokenize_console(url);
 	if (n <= 0)
 	{
-		LOG_INFO("url_multi_fopen: need at least one URL\n");
+		LOG_INFO("url_multi_fopen: need at least one URL");
 		rdy(NULL, pass, URL_READY_ERROR);
 		return;
 	}

@@ -1,9 +1,4 @@
 #include "casings.qh"
-#ifdef SVQC
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, .entity weaponentity);
-#endif
-
-#ifdef IMPLEMENTATION
 
 #include <common/util.qh>
 
@@ -177,5 +172,4 @@ NET_HANDLE(casings, bool isNew)
     RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
 }
 
-#endif
 #endif
