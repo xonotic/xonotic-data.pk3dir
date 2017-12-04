@@ -1,5 +1,6 @@
 before_script:
   - ln -s $PWD data/xonotic-data.pk3dir
+  - export SED=sed
 
   - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
   - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
