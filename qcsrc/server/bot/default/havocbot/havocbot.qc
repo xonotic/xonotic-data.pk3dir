@@ -885,18 +885,49 @@ void havocbot_movetogoal(entity this)
 
 			// jump if going toward an obstacle that doesn't look like stairs we
 			// can walk up directly
-			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : v_forward * 32);
-			tracebox(this.origin, this.mins, this.maxs, this.origin + offset, false, this);
+			vector deviation = '0 0 0';
+			if (this.velocity)
+			{
+				deviation = vectoangles(diff) - vectoangles(this.velocity);
+				while (deviation.y < -180) deviation.y += 360;
+				while (deviation.y > 180) deviation.y -= 360;
+			}
+			vector flat_diff = vec2(diff);
+			offset = max(32, vlen(vec2(this.velocity)) * cos(deviation.y * DEG2RAD) * 0.2) * flatdir;
+			vector actual_destorg = this.origin + offset;
+			if (!this.goalstack01 || this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+			{
+				if (vlen2(flat_diff) < vlen2(offset))
+				{
+					actual_destorg.x = destorg.x;
+					actual_destorg.y = destorg.y;
+				}
+			}
+			else if (vdist(flat_diff, <, 32) && diff.z < -16) // destination is under the bot
+			{
+				actual_destorg.x = destorg.x;
+				actual_destorg.y = destorg.y;
+			}
+			else if (vlen2(flat_diff) < vlen2(offset))
+			{
+				vector next_goal_org = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
+				vector next_dir = normalize(vec2(next_goal_org - destorg));
+				float next_dist = vlen(vec2(this.origin + offset - destorg));
+				actual_destorg = vec2(destorg) + next_dist * next_dir;
+				actual_destorg.z = this.origin.z;
+			}
+
+			tracebox(this.origin, this.mins, this.maxs, actual_destorg, false, this);
 			if (trace_fraction < 1)
 			if (trace_plane_normal.z < 0.7)
 			{
 				s = trace_fraction;
-				tracebox(this.origin + stepheightvec, this.mins, this.maxs, this.origin + offset + stepheightvec, false, this);
+				tracebox(this.origin + stepheightvec, this.mins, this.maxs, actual_destorg + stepheightvec, false, this);
 				if (trace_fraction < s + 0.01)
 				if (trace_plane_normal.z < 0.7)
 				{
 					s = trace_fraction;
-					tracebox(this.origin + jumpstepheightvec, this.mins, this.maxs, this.origin + offset + jumpstepheightvec, false, this);
+					tracebox(this.origin + jumpstepheightvec, this.mins, this.maxs, actual_destorg + jumpstepheightvec, false, this);
 					if (trace_fraction > s)
 						PHYS_INPUT_BUTTON_JUMP(this) = true;
 				}
@@ -933,6 +964,7 @@ void havocbot_movetogoal(entity this)
 			// Check for water/slime/lava and dangerous edges
 			// (only when the bot is on the ground or jumping intentionally)
 
+			offset = (vdist(this.velocity, >, 32) ? this.velocity * 0.2 : v_forward * 32);
 			vector dst_ahead = this.origin + this.view_ofs + offset;
 			vector dst_down = dst_ahead - '0 0 3000';
 			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
