@@ -1474,16 +1474,20 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		// often path can be optimized by not adding the nearest waypoint
 		if (this.goalentity.navigation_dynamicgoal || autocvar_g_waypointeditor)
 		{
-			if (nearest_wp.enemy.wpcost < autocvar_bot_ai_strategyinterval_movingtarget
-				&& vdist(vec2(this.goalentity.origin - nearest_wp.origin), >, 16))
+			if (nearest_wp.enemy.wpcost < autocvar_bot_ai_strategyinterval_movingtarget)
 			{
-				set_tracewalk_dest(this.goalentity, nearest_wp.enemy.origin, true);
-				if (trace_ent == this || (vdist(tracewalk_dest - nearest_wp.enemy.origin, <, 1050)
-					&& vlen2(tracewalk_dest - nearest_wp.enemy.origin) < vlen2(nearest_wp.origin - nearest_wp.enemy.origin)
-					&& tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
-					tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode)))
-				{
+				if (vdist(vec2(this.goalentity.origin - nearest_wp.origin), <, 32))
 					e = nearest_wp.enemy;
+				else
+				{
+					set_tracewalk_dest(this.goalentity, nearest_wp.enemy.origin, true);
+					if (trace_ent == this || (vdist(tracewalk_dest - nearest_wp.enemy.origin, <, 1050)
+						&& vlen2(tracewalk_dest - nearest_wp.enemy.origin) < vlen2(nearest_wp.origin - nearest_wp.enemy.origin)
+						&& tracewalk(this, nearest_wp.enemy.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
+						tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode)))
+					{
+						e = nearest_wp.enemy;
+					}
 				}
 			}
 		}
