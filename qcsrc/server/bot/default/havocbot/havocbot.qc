@@ -732,11 +732,16 @@ void havocbot_movetogoal(entity this)
 
 
 	bool locked_goal = false;
-	if(this.goalentity && wasfreed(this.goalentity))
+	if((this.goalentity && wasfreed(this.goalentity))
+		|| (this.goalcurrent == this.goalentity && this.goalentity.tag_entity))
 	{
 		navigation_clearroute(this);
 		navigation_goalrating_timeout_force(this);
 		return;
+	}
+	else if(this.goalentity.tag_entity)
+	{
+		navigation_goalrating_timeout_expire(this, 2);
 	}
 	else if(this.goalentity.bot_pickup)
 	{
