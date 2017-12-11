@@ -1674,6 +1674,7 @@ entity navigation_get_really_close_waypoint(entity this)
 	}
 	if(vdist(wp.origin - this.origin, >, 50))
 	{
+		wp = NULL;
 		IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_TELEPORT),
 		{
 			if(vdist(it.origin - this.origin, <, 50))
@@ -1682,6 +1683,8 @@ entity navigation_get_really_close_waypoint(entity this)
 				break;
 			}
 		});
+		if(!wp)
+			return NULL;
 	}
 	if(wp.wpflags & WAYPOINTFLAG_TELEPORT)
 		return NULL;
