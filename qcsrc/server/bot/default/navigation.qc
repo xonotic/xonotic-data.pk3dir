@@ -1662,10 +1662,16 @@ int navigation_poptouchedgoals(entity this)
 entity navigation_get_really_close_waypoint(entity this)
 {
 	entity wp = this.goalcurrent;
-	if(!wp || vdist(wp.origin - this.origin, >, 50))
+	if(!wp)
 		wp = this.goalcurrent_prev;
 	if(!wp)
 		return NULL;
+	if(wp != this.goalcurrent_prev && vdist(wp.origin - this.origin, >, 50))
+	{
+		wp = this.goalcurrent_prev;
+		if(!wp)
+			return NULL;
+	}
 	if(wp.classname != "waypoint")
 	{
 		wp = wp.nearestwaypoint;
