@@ -25,19 +25,20 @@ REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
 	  tgt - target entity (can be either a point or a model entity; if it is
 	        the latter, its midpoint is used)
 	  ht  - jump height, measured from the higher one of org and tgt's midpoint
+	  pushed_entity - object that is to be pushed
 
 	Returns: velocity for the jump
  */
-vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
+vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity pushed_entity)
 {
 	float grav, sdist, zdist, vs, vz, jumpheight;
 	vector sdir, torg;
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = PHYS_GRAVITY(tgt);
-	if(PHYS_ENTGRAVITY(tgt))
-		grav *= PHYS_ENTGRAVITY(tgt);
+	grav = PHYS_GRAVITY(NULL);
+	if(pushed_entity && PHYS_ENTGRAVITY(pushed_entity))
+		grav *= PHYS_ENTGRAVITY(pushed_entity);
 
 	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -135,7 +136,7 @@ bool jumppad_push(entity this, entity targ)
 
 	if(this.enemy)
 	{
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height);
+		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height, targ);
 	}
 	else if(this.target && this.target != "")
 	{
@@ -148,7 +149,7 @@ bool jumppad_push(entity this, entity targ)
 			else
 				RandomSelection_AddEnt(e, 1, 1);
 		}
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height);
+		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height, targ);
 	}
 	else
 	{
@@ -324,7 +325,7 @@ void trigger_push_findtarget(entity this)
 			entity e = spawn();
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
+			e.velocity = trigger_push_calculatevelocity(org, t, this.height, e);
 			vel = e.velocity;
 			vector best_target = '0 0 0';
 			vector best_org = '0 0 0';
@@ -348,7 +349,7 @@ void trigger_push_findtarget(entity this)
 				vector flatdir = normalize(dist - eZ * dist.z);
 				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmax.y - this.absmin.y));
 				new_org = org + ofs;
-				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
 				vel = e.velocity;
 				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
 					e.velocity = autocvar_sv_maxspeed * flatdir;
@@ -360,7 +361,7 @@ void trigger_push_findtarget(entity this)
 					valid_best_target = true;
 				}
 				new_org = org - ofs;
-				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
 				vel = e.velocity;
 				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
 					e.velocity = autocvar_sv_maxspeed * flatdir;

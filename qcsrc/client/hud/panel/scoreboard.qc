@@ -363,8 +363,8 @@ void Cmd_Scoreboard_Help()
 " -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
 " -teams,lms/deaths +ft,tdm/deaths" \
 " -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
-" +teams/teamkills"\
 " -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
+" +tdm,ft,dom,ons,as/teamkills"\
 " -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
 " +ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes" \
 " +lms/lives +lms/rank" \

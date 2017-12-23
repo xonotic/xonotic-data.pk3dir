@@ -2,7 +2,7 @@
 
 void W_Nexball_Attack(entity actor, .entity weaponentity, float t);
 void W_Nexball_Attack2(entity actor, .entity weaponentity);
-vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
+vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity pushed_entity);
 
 METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -147,7 +147,7 @@ void W_Nexball_Attack2(entity actor, .entity weaponentity)
 	{
 		entity _ball = actor.ballcarried;
 		W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
-		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
+		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32, _ball));
 		setthink(_ball, W_Nexball_Think);
 		_ball.nextthink = time;
 		return;

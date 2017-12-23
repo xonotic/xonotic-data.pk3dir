@@ -545,6 +545,14 @@ void GetTeamCounts(entity ignore)
 bool IsTeamSmallerThanTeam(int team_a, int team_b, entity player,
 	bool use_score)
 {
+	if (!Team_IsValidNumber(team_a))
+	{
+		LOG_FATALF("IsTeamSmallerThanTeam: team_a is invalid: %f", team_a);
+	}
+	if (!Team_IsValidNumber(team_b))
+	{
+		LOG_FATALF("IsTeamSmallerThanTeam: team_b is invalid: %f", team_b);
+	}
 	if (team_a == team_b)
 	{
 		return false;
@@ -642,6 +650,14 @@ bool IsTeamSmallerThanTeam(int team_a, int team_b, entity player,
 
 bool IsTeamEqualToTeam(int team_a, int team_b, entity player, bool use_score)
 {
+	if (!Team_IsValidNumber(team_a))
+	{
+		LOG_FATALF("IsTeamEqualToTeam: team_a is invalid: %f", team_a);
+	}
+	if (!Team_IsValidNumber(team_b))
+	{
+		LOG_FATALF("IsTeamEqualToTeam: team_b is invalid: %f", team_b);
+	}
 	if (team_a == team_b)
 	{
 		return true;
@@ -837,53 +853,56 @@ int FindSmallestTeam(entity player, float ignore_player)
 	return RandomSelection_chosen_float;
 }
 
-int JoinBestTeam(entity this, bool only_return_best, bool force_best_team)
+void JoinBestTeam(entity this, bool force_best_team)
 {
 	// don't join a team if we're not playing a team game
 	if (!teamplay)
 	{
-		return 0;
+		return;
 	}
 
 	// find out what teams are available
 	CheckAllowedTeams(this);
 
-	// if we don't care what team he ends up on, put him on whatever team he entered as.
-	// if he's not on a valid team, then let other code put him on the smallest team
+	// if we don't care what team they end up on, put them on whatever team they entered as.
+	// if they're not on a valid team, then let other code put them on the smallest team
 	if (!force_best_team)
 	{
 		int selected_team;
-		if(     c1 >= 0 && this.team == NUM_TEAM_1)
+		if ((c1 >= 0) && (this.team == NUM_TEAM_1))
+		{
 			selected_team = this.team;
-		else if(c2 >= 0 && this.team == NUM_TEAM_2)
+		}
+		else if ((c2 >= 0) && (this.team == NUM_TEAM_2))
+		{
 			selected_team = this.team;
-		else if(c3 >= 0 && this.team == NUM_TEAM_3)
+		}
+		else if ((c3 >= 0) && (this.team == NUM_TEAM_3))
+		{
 			selected_team = this.team;
-		else if(c4 >= 0 && this.team == NUM_TEAM_4)
+		}
+		else if ((c4 >= 0) && (this.team == NUM_TEAM_4))
+		{
 			selected_team = this.team;
+		}
 		else
+		{
 			selected_team = -1;
+		}
 
 		if (selected_team > 0)
 		{
-			if (!only_return_best)
-			{
-				SetPlayerTeamSimple(this, selected_team);
-
-				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
-				// when JoinBestTeam is called by client.qc/ClientConnect the player_id is 0 the log attempt is rejected
-				LogTeamchange(this.playerid, this.team, 99);
-			}
-			return selected_team;
+			SetPlayerTeamSimple(this, selected_team);
+			LogTeamchange(this.playerid, this.team, 99);
+			return;
 		}
-		// otherwise end up on the smallest team (handled below)
 	}
-
-	int best_team = FindSmallestTeam(this, true);
-	if (only_return_best || this.bot_forced_team)
+	// otherwise end up on the smallest team (handled below)
+	if (this.bot_forced_team)
 	{
-		return best_team;
+		return;
 	}
+	int best_team = FindSmallestTeam(this, true);
 	best_team = Team_NumberToTeam(best_team);
 	if (best_team == -1)
 	{
@@ -893,12 +912,11 @@ int JoinBestTeam(entity this, bool only_return_best, bool force_best_team)
 	TeamchangeFrags(this);
 	SetPlayerTeamSimple(this, best_team);
 	LogTeamchange(this.playerid, this.team, 2); // log auto join
-	if (!IS_BOT_CLIENT(this))
+	if ((old_team != -1) && !IS_BOT_CLIENT(this))
 	{
 		AutoBalanceBots(old_team, Team_TeamToNumber(best_team));
 	}
 	KillPlayerForTeamChange(this);
-	return best_team;
 }
 
 void SV_ChangeTeam(entity this, float _color)
@@ -978,8 +996,15 @@ void SV_ChangeTeam(entity this, float _color)
 
 void AutoBalanceBots(int source_team, int destination_team)
 {
-	if ((source_team == -1) || (destination_team == -1))
+	if (!Team_IsValidNumber(source_team))
 	{
+		LOG_WARNF("AutoBalanceBots: Source team is invalid: %f", source_team);
+		return;
+	}
+	if (!Team_IsValidNumber(destination_team))
+	{
+		LOG_WARNF("AutoBalanceBots: Destination team is invalid: %f",
+			destination_team);
 		return;
 	}
 	if (!autocvar_g_balance_teams ||
@@ -1012,6 +1037,10 @@ void AutoBalanceBots(int source_team, int destination_team)
 			num_players_source_team = c4;
 			break;
 		}
+	}
+	if (num_players_source_team < 0)
+	{
+		return;
 	}
 	switch (destination_team)
 	{

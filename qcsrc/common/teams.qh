@@ -125,6 +125,42 @@ float Team_ColorToTeam(string team_color)
 	return -1;
 }
 
+/// \brief Returns whether team is valid.
+/// \param[in] team_ Team to check.
+/// \return True if team is valid, false otherwise.
+bool Team_IsValidTeam(int team_)
+{
+	switch (team_)
+	{
+		case NUM_TEAM_1:
+		case NUM_TEAM_2:
+		case NUM_TEAM_3:
+		case NUM_TEAM_4:
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+/// \brief Returns whether team number is valid.
+/// \param[in] number Team number to check.
+/// \return True if team number is valid, false otherwise.
+bool Team_IsValidNumber(int number)
+{
+	switch (number)
+	{
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 float Team_NumberToTeam(float number)
 {
 	switch(number)
