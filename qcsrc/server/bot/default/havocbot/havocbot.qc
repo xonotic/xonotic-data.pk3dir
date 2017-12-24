@@ -461,7 +461,6 @@ void havocbot_movetogoal(entity this)
 	vector evadeobstacle;
 	vector evadelava;
 	float maxspeed;
-	vector gco;
 	//float dist;
 	vector dodge;
 	//if (this.goalentity)
@@ -588,7 +587,7 @@ void havocbot_movetogoal(entity this)
 						navigation_pushroute(this, jumppad_wp.wp00);
 					}
 				}
-				gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
+				vector gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
 				if (this.origin.z > gco.z && vdist(vec2(this.velocity), <, autocvar_sv_maxspeed))
 					this.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
 				else if(havocbot_checkgoaldistance(this, gco))
@@ -851,7 +850,6 @@ void havocbot_movetogoal(entity this)
 	dir = normalize(diff);
 	flatdir = diff;flatdir.z = 0;
 	flatdir = normalize(flatdir);
-	gco = (this.goalcurrent.absmin + this.goalcurrent.absmax) * 0.5;
 
 	//if (this.bot_dodgevector_time < time)
 	{
@@ -868,13 +866,13 @@ void havocbot_movetogoal(entity this)
 			{
 				if(!this.goalcurrent)
 					this.aistatus |= AI_STATUS_OUT_WATER;
-				else if(gco.z > this.origin.z)
+				else if(destorg.z > this.origin.z)
 					PHYS_INPUT_BUTTON_JUMP(this) = true;
 			}
 			else
 			{
 				dir = flatdir;
-				if(this.velocity.z >= 0 && !(this.watertype == CONTENT_WATER && gco.z < this.origin.z) &&
+				if(this.velocity.z >= 0 && !(this.watertype == CONTENT_WATER && destorg.z < this.origin.z) &&
 					( !(this.waterlevel == WATERLEVEL_WETFEET && this.watertype == CONTENT_WATER) || this.aistatus & AI_STATUS_OUT_WATER))
 					PHYS_INPUT_BUTTON_JUMP(this) = true;
 				else
@@ -941,7 +939,7 @@ void havocbot_movetogoal(entity this)
 			// if bot for some reason doesn't get close to the current goal find another one
 			if(!this.jumppadcount && !IS_PLAYER(this.goalcurrent))
 			if(!(locked_goal && this.goalcurrent_distance_z < 50 && this.goalcurrent_distance_2d < 50))
-			if(havocbot_checkgoaldistance(this, gco))
+			if(havocbot_checkgoaldistance(this, destorg))
 			{
 				if(this.goalcurrent_distance_time < 0) // can't get close for the second time
 				{
@@ -998,7 +996,7 @@ void havocbot_movetogoal(entity this)
 						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
 						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 						{
-							if (gco.z > this.origin.z + jumpstepheightvec.z)
+							if (destorg.z > this.origin.z + jumpstepheightvec.z)
 							{
 								// the goal is probably on an upper platform, assume bot can't get there
 								unreachable = true;
