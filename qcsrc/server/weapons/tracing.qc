@@ -137,8 +137,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		int held_weapons = 0; // HACK: muffle weapon sounds slightly while dual wielding!
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			.entity weaponentity = weaponentities[slot];
-			if(ent.(weaponentity) && ent.(weaponentity).m_switchweapon != WEP_Null)
+			.entity wep_ent = weaponentities[slot];
+			if(ent.(wep_ent) && ent.(wep_ent).m_switchweapon != WEP_Null)
 				++held_weapons;
 		}
 		sound (ent, chan, snd, ((held_weapons > 1) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
