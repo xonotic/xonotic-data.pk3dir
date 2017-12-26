@@ -6,7 +6,7 @@
 
 const int WAYPOINTFLAG_GENERATED = BIT(23);
 const int WAYPOINTFLAG_ITEM = BIT(22);
-const int WAYPOINTFLAG_TELEPORT = BIT(21);
+const int WAYPOINTFLAG_TELEPORT = BIT(21); // teleports, warpzones and jumppads
 const int WAYPOINTFLAG_NORELINK = BIT(20);
 const int WAYPOINTFLAG_PERSONAL = BIT(19);
 const int WAYPOINTFLAG_PROTECTED = BIT(18);  // Useless WP detection never kills these.
@@ -23,6 +23,7 @@ float bot_weapons_far[Weapons_MAX];
 float bot_weapons_mid[Weapons_MAX];
 float skill;
 
+.float bot_tracewalk_time;
 .float bot_attack;
 .float bot_dodgerating;
 .float bot_dodge;
