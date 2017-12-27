@@ -13,13 +13,37 @@ REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC_TRIGGER)
 
 void viewloc_think(entity this)
 {
-	entity e;
-
 	// we abuse this method, rather than using normal .touch, because touch isn't reliable with multiple clients inside the same trigger, and can't "untouch" entities
 
 	// set myself as current viewloc where possible
+#if 1
+	FOREACH_CLIENT(it.viewloc == this,
+	{
+		it.viewloc = NULL;
+	});
+#else
+	entity e;
 	for(e = NULL; (e = findentity(e, viewloc, this)); )
 		e.viewloc = NULL;
+#endif
+
+#if 1
+	FOREACH_CLIENT(!it.viewloc && IS_PLAYER(it),
+	{
+		vector emin = it.absmin;
+		vector emax = it.absmax;
+		if(this.solid == SOLID_BSP)
+		{
+			emin -= '1 1 1';
+			emax += '1 1 1';
+		}
+		if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+		{
+			if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, it)) // accurate
+				it.viewloc = this;
+		}
+	});
+#else
 
 		for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
 			if(!e.viewloc)
@@ -37,6 +61,7 @@ void viewloc_think(entity this)
 						if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
 							e.viewloc = this;
 				}
+#endif
 
 	this.nextthink = time;
 }
