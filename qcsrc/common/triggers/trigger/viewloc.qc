@@ -46,6 +46,8 @@ bool trigger_viewloc_send(entity this, entity to, int sf)
 	// CSQC doesn't need to know our origin (yet), as we're only available for referencing
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_VIEWLOC_TRIGGER);
 
+	WriteByte(MSG_ENTITY, this.spawnflags);
+
 	WriteEntity(MSG_ENTITY, this.enemy);
 	WriteEntity(MSG_ENTITY, this.goalentity);
 
@@ -143,6 +145,8 @@ void trigger_viewloc_updatelink(entity this)
 
 NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
 {
+	this.spawnflags = ReadByte();
+
 	float point1 = ReadShort();
 	float point2 = ReadShort();
 
