@@ -453,6 +453,34 @@ bool havocbot_checkgoaldistance(entity this, vector gco)
 	return false;
 }
 
+entity havocbot_select_an_item_of_group(entity this, int gr)
+{
+	entity selected = NULL;
+	float selected_dist2 = 0;
+	// select farthest item of this group from bot's position
+	IL_EACH(g_items, it.item_group == gr && it.solid,
+	{
+		float dist2 = vlen2(this.origin - it.origin);
+		if (dist2 < 600 ** 2 && dist2 > selected_dist2)
+		{
+			selected = it;
+			selected_dist2 = vlen2(this.origin - selected.origin);
+		}
+	});
+
+	if (!selected)
+		return NULL;
+
+	set_tracewalk_dest(selected, this.origin, false);
+	if (!tracewalk(this, this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this),
+		tracewalk_dest, tracewalk_dest_height, bot_navigation_movemode))
+	{
+		return NULL;
+	}
+
+	return selected;
+}
+
 void havocbot_movetogoal(entity this)
 {
 	vector diff;
@@ -800,16 +828,34 @@ void havocbot_movetogoal(entity this)
 		// optimize path finding by anticipating goalrating when bot is near a waypoint;
 		// in this case path finding can start directly from a waypoint instead of
 		// looking for all the reachable waypoints up to a certain distance
-		if (navigation_poptouchedgoals(this) && this.goalcurrent)
+		if (navigation_poptouchedgoals(this))
 		{
-			if (IS_MOVABLE(this.goalcurrent) && IS_DEAD(this.goalcurrent))
+			if (this.goalcurrent)
 			{
-				// remove even if not visible
-				navigation_goalrating_timeout_force(this);
-				return;
+				if (IS_MOVABLE(this.goalcurrent) && IS_DEAD(this.goalcurrent))
+				{
+					// remove even if not visible
+					navigation_goalrating_timeout_force(this);
+					return;
+				}
+				else if (navigation_goalrating_timeout_can_be_anticipated(this))
+					navigation_goalrating_timeout_force(this);
 			}
-			else if (navigation_goalrating_timeout_can_be_anticipated(this))
-				navigation_goalrating_timeout_force(this);
+			else
+			{
+				entity old_goal = this.goalcurrent_prev;
+				if (old_goal.item_group && this.item_group != old_goal.item_group)
+				{
+					// Avoid multiple costly calls of path finding code that selects one of the closest
+					// item of the group by telling the bot to head directly to the farthest item.
+					// Next time we let the bot select a goal as usual which can be another item
+					// of this group (the closest one) and so on
+					this.item_group = old_goal.item_group;
+					entity new_goal = havocbot_select_an_item_of_group(this, old_goal.item_group);
+					if (new_goal)
+						navigation_pushroute(this, new_goal);
+				}
+			}
 		}
 	}
 

@@ -26,6 +26,8 @@ const int ISF_SIZE 				= BIT(7);
 
 #ifdef SVQC
 void StartItem(entity this, entity a);
+.int item_group;
+.int item_group_count;
 #endif
 
 #ifdef CSQC

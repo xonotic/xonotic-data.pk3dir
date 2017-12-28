@@ -1126,8 +1126,6 @@ float ammo_pickupevalfunc(entity player, entity item)
 	return rating;
 }
 
-.int item_group;
-.int item_group_count;
 float healtharmor_pickupevalfunc(entity player, entity item)
 {
 	float c = 0;
