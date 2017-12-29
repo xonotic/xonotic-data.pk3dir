@@ -1,7 +1,7 @@
 #include "gamemode_cts.qh"
-#include <server/race.qh>
 
 #include <server/race.qh>
+#include <server/items.qh>
 
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;
@@ -314,8 +314,10 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.classname == "droppedweapon")
+	if (Item_IsLoot(item))
+	{
 		return true;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)

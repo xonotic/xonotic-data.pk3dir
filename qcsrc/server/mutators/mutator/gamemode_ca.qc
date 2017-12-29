@@ -293,7 +293,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 
 	if (!IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify(player);
-	if (CS(player).killindicator_teamchange == -2) // player wants to spectate
+	if (player.killindicator_teamchange == -2) // player wants to spectate
 		player.caplayer = 0;
 	if (player.caplayer)
 		player.frags = FRAGS_LMS_LOSER;

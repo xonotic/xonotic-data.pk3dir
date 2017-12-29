@@ -3,8 +3,6 @@
 #ifdef SVQC
 #include <common/triggers/trigger/jumppads.qh>
 
-spawnfunc(weapon_porto) { weapon_defaultspawnfunc(this, WEP_PORTO); }
-
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
 	FOREACH_CLIENT(IS_PLAYER(it), it.porto_forbidden = max(0, it.porto_forbidden - 1));
@@ -47,7 +45,7 @@ void W_Porto_Fail(entity this, float failhard)
 		{
 			this.flags = FL_ITEM;
 			IL_PUSH(g_items, this);
-			this.velocity = trigger_push_calculatevelocity(this.origin, this.realowner, 128);
+			this.velocity = trigger_push_calculatevelocity(this.origin, this.realowner, 128, this);
 			tracetoss(this, this);
 			if(vdist(trace_endpos - this.realowner.origin, <, 128))
 			{

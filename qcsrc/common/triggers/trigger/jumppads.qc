@@ -25,22 +25,23 @@ REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
 	  tgt - target entity (can be either a point or a model entity; if it is
 	        the latter, its midpoint is used)
 	  ht  - jump height, measured from the higher one of org and tgt's midpoint
+	  pushed_entity - object that is to be pushed
 
 	Returns: velocity for the jump
 	the global trigger_push_calculatevelocity_flighttime is set to the total
 	jump time
  */
 
-vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
+vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity pushed_entity)
 {
 	float grav, sdist, zdist, vs, vz, jumpheight;
 	vector sdir, torg;
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = PHYS_GRAVITY(tgt);
-	if(PHYS_ENTGRAVITY(tgt))
-		grav *= PHYS_ENTGRAVITY(tgt);
+	grav = PHYS_GRAVITY(NULL);
+	if(pushed_entity && PHYS_ENTGRAVITY(pushed_entity))
+		grav *= PHYS_ENTGRAVITY(pushed_entity);
 
 	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -137,7 +138,7 @@ bool jumppad_push(entity this, entity targ)
 
 	if(this.enemy)
 	{
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height);
+		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height, targ);
 	}
 	else if(this.target && this.target != "")
 	{
@@ -150,7 +151,7 @@ bool jumppad_push(entity this, entity targ)
 			else
 				RandomSelection_AddEnt(e, 1, 1);
 		}
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height);
+		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height, targ);
 	}
 	else
 	{
@@ -289,7 +290,7 @@ void trigger_push_findtarget(entity this)
 			entity e = spawn();
 			setorigin(e, org);
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
-			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
+			e.velocity = trigger_push_calculatevelocity(org, t, this.height, e);
 			tracetoss(e, e);
 			if(e.move_movetype == MOVETYPE_NONE)
 				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));

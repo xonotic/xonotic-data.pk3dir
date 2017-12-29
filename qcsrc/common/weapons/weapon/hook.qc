@@ -2,8 +2,6 @@
 
 #ifdef SVQC
 
-spawnfunc(weapon_hook) { weapon_defaultspawnfunc(this, WEP_HOOK); }
-
 void W_Hook_ExplodeThink(entity this)
 {
 	float dt, dmg_remaining_next, f;
@@ -320,7 +318,7 @@ void Draw_GrapplingHook(entity this)
 		{
 			default:
 			case NET_ENT_CLIENT_HOOK:
-				if(autocvar_chase_active > 0)
+				if(autocvar_chase_active)
 					a = csqcplayer.origin;
 				else
 					a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;

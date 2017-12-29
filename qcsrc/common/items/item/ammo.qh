@@ -2,6 +2,23 @@
 
 #include "pickup.qh"
 #ifdef SVQC
+    #include <common/t_items.qh>
+#endif
+
+.int ammo_none;
+.int ammo_shells;
+.int ammo_nails;
+.int ammo_rockets;
+.int ammo_cells;
+#ifdef SVQC
+.int ammo_plasma = _STAT(PLASMA);
+.int ammo_fuel = _STAT(FUEL);
+#else
+.int ammo_plasma;
+.int ammo_fuel;
+#endif
+
+#ifdef SVQC
 PROPERTY(float, g_pickup_ammo_anyway);
 #endif
 
@@ -14,9 +31,6 @@ CLASS(Ammo, Pickup)
 #endif
 ENDCLASS(Ammo)
 
-#ifdef SVQC
-    #include <common/t_items.qh>
-#endif
 
 #ifdef GAMEQC
 MODEL(Bullets_ITEM, Item_Model("a_bullets.mdl"));
@@ -30,8 +44,14 @@ void ammo_bullets_init(entity item)
         item.ammo_nails = g_pickup_nails;
 }
 #endif
-REGISTER_ITEM(Bullets, Ammo) {
+
+CLASS(Bullets, Ammo)
+ENDCLASS(Bullets)
+
+REGISTER_ITEM(Bullets, Bullets) {
+    this.m_canonical_spawnfunc = "item_bullets";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model    =   MDL_Bullets_ITEM;
 #endif
     this.netname    =   "bullets";
@@ -43,6 +63,8 @@ REGISTER_ITEM(Bullets, Ammo) {
     this.m_iteminit =   ammo_bullets_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_bullets, ITEM_Bullets)
 
 #ifdef GAMEQC
 MODEL(Cells_ITEM, Item_Model("a_cells.md3"));
@@ -57,7 +79,9 @@ void ammo_cells_init(entity item)
 }
 #endif
 REGISTER_ITEM(Cells, Ammo) {
+    this.m_canonical_spawnfunc = "item_cells";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model    =   MDL_Cells_ITEM;
 #endif
     this.netname    =   "cells";
@@ -69,6 +93,8 @@ REGISTER_ITEM(Cells, Ammo) {
     this.m_iteminit =   ammo_cells_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_cells, ITEM_Cells)
 
 #ifdef GAMEQC
 MODEL(Plasma_ITEM, Item_Model("a_cells.md3"));
@@ -83,7 +109,9 @@ void ammo_plasma_init(entity item)
 }
 #endif
 REGISTER_ITEM(Plasma, Ammo) {
+    this.m_canonical_spawnfunc = "item_plasma";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model    =   MDL_Plasma_ITEM;
 #endif
     this.netname    =   "plasma";
@@ -95,6 +123,8 @@ REGISTER_ITEM(Plasma, Ammo) {
     this.m_iteminit =   ammo_plasma_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_plasma, ITEM_Plasma)
 
 #ifdef GAMEQC
 MODEL(Rockets_ITEM, Item_Model("a_rockets.md3"));
@@ -109,7 +139,9 @@ void ammo_rockets_init(entity item)
 }
 #endif
 REGISTER_ITEM(Rockets, Ammo) {
+    this.m_canonical_spawnfunc = "item_rockets";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model    =   MDL_Rockets_ITEM;
 #endif
     this.netname    =   "rockets";
@@ -121,6 +153,8 @@ REGISTER_ITEM(Rockets, Ammo) {
     this.m_iteminit =   ammo_rockets_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_rockets, ITEM_Rockets)
 
 #ifdef GAMEQC
 MODEL(Shells_ITEM, Item_Model("a_shells.md3"));
@@ -134,8 +168,14 @@ void ammo_shells_init(entity item)
         item.ammo_shells = g_pickup_shells;
 }
 #endif
-REGISTER_ITEM(Shells, Ammo) {
+
+CLASS(Shells, Ammo)
+ENDCLASS(Shells)
+
+REGISTER_ITEM(Shells, Shells) {
+    this.m_canonical_spawnfunc = "item_shells";
 #ifdef GAMEQC
+	this.spawnflags = ITEM_FLAG_NORMAL;
     this.m_model    =   MDL_Shells_ITEM;
 #endif
     this.netname    =   "shells";
@@ -147,3 +187,5 @@ REGISTER_ITEM(Shells, Ammo) {
     this.m_iteminit =   ammo_shells_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_shells, ITEM_Shells)

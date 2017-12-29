@@ -21,31 +21,38 @@ void viewloc_PlayerPhysics(entity this)
 		PHYS_CS(this).movement_x = old_movement_y;
 		PHYS_CS(this).movement_y = 0;
 
-		if(PHYS_CS(this).movement_x < 0)
-			PHYS_CS(this).movement_x = -PHYS_CS(this).movement_x;
-
 		vector level_start, level_end;
 		level_start = this.viewloc.enemy.origin;
 		level_end = this.viewloc.goalentity.origin;
-		vector forward, backward;
-		forward = vectoangles(normalize(level_end - level_start));
-		backward = vectoangles(normalize(level_start - level_end));
+		vector forward = vectoangles(normalize(level_end - level_start));
+		vector backward = vectoangles(normalize(level_start - level_end));
 
-		if(PHYS_CS(this).movement_x < 0) // left
-			this.angles_y = backward_y;
-		if(PHYS_CS(this).movement_x > 0) // right
-			this.angles_y = forward_y;
+		if(this.viewloc.spawnflags & VIEWLOC_FREEAIM)
+		{
+			if(this.angles_y > 0)
+				PHYS_CS(this).movement_x = -PHYS_CS(this).movement_x;
+		}
+		else
+		{
+			if(PHYS_CS(this).movement_x < 0)
+				PHYS_CS(this).movement_x = -PHYS_CS(this).movement_x;
 
-		if(old_movement_x > 0)
-#ifdef CSQC
-			input_angles_x =
-#endif
-			this.v_angle_x = this.angles_x = -50;
-		else if(old_movement_x < 0)
-#ifdef CSQC
-			input_angles_x =
-#endif
-			this.v_angle_x = this.angles_x = 50;
+			if(PHYS_CS(this).movement_x < 0) // left
+				this.angles_y = backward.y;
+			if(PHYS_CS(this).movement_x > 0) // right
+				this.angles_y = forward.y;
+
+			if(old_movement_x > 0)
+	#ifdef CSQC
+				input_angles_x =
+	#endif
+				this.v_angle_x = this.angles_x = -50;
+			else if(old_movement_x < 0)
+	#ifdef CSQC
+				input_angles_x =
+	#endif
+				this.v_angle_x = this.angles_x = 50;
+		}
 
 		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
 #ifdef SVQC
@@ -75,6 +82,14 @@ void viewloc_SetTags(entity this)
 		this.viewloc = NULL;
 	else
 		this.viewloc = findfloat(NULL, entnum, this.tag_networkviewloc);
+}
+
+vector CursorToWorldCoord(vector mpos)
+{
+	vector wnear = cs_unproject(vec2(mpos)); // determine the world coordinate for the mouse cursor upon the near clip plane
+	vector wfar = cs_unproject(vec3(mpos.x, mpos.y, max_shot_distance)); // determine the world coordinate for the mouse cursor upon the far clip plane, with an outrageously large value as a workaround for dp.
+	traceline(wnear, wfar, MOVE_NOMONSTERS, NULL);
+	return trace_endpos;
 }
 
 vector old_camera_angle = '0 0 0';
@@ -128,18 +143,18 @@ void viewloc_SetViewLocation()
 			 * NOTE: bug/feature: this will use non-snaped angles for one frame.
 			 * doing this resualts in less code, faster code, and a smoother transisition between angles.
 			 */
-			float camera_angle_diff = max(camera_angle_y, old_camera_angle_y) - min(camera_angle_y, old_camera_angle_y);
+			float camera_angle_diff = max(camera_angle.y, old_camera_angle.y) - min(camera_angle.y, old_camera_angle.y);
 
 			if ( camera_angle_diff >= 60)
-				old_camera_angle_y = angle_snap_f(camera_angle_y, 90);
+				old_camera_angle.y = angle_snap_f(camera_angle.y, 90);
 			else
-				camera_angle_y = old_camera_angle_y;
+				camera_angle.y = old_camera_angle.y;
 		}
 
 		//unlocking this allows the camera to look up and down. this also allows a top-down view.
 		if (!autocvar_cam_snap_unlock) {
-			camera_angle_x = 0;
-			camera_angle_z = 0;
+			camera_angle.x = 0;
+			camera_angle.z = 0;
 		}
 
 #if 0
@@ -158,12 +173,23 @@ void viewloc_SetViewLocation()
 			forward = vectoangles(normalize(vec_to_min(position_b, position_a) - vec_to_max(position_b, position_a)));
 			backward = vectoangles(normalize(vec_to_max(position_b, position_a) - vec_to_min(position_b, position_a)));
 
-			if(input_movevalues_y < 0) // left
-				view.angles_y = backward.y;
-			if(input_movevalues_y > 0) // favour right
-				view.angles_y = forward.y;
+			if(!(view.viewloc.spawnflags & VIEWLOC_FREEAIM))
+			{
+				if(input_movevalues_y < 0) // left
+					view.angles_y = backward.y;
+				if(input_movevalues_y > 0) // favour right
+					view.angles_y = forward.y;
 
-			setproperty(VF_CL_VIEWANGLES, view.angles);
+				setproperty(VF_CL_VIEWANGLES, view.angles);
+			}
+			else
+			{
+				//vector fpos = view.origin + view.view_ofs + forward * max_shot_distance;
+				//vector bpos = view.origin + view.view_ofs + backward * max_shot_distance;
+				vector mpos = CursorToWorldCoord(viewloc_mousepos);
+				//vector pos_bounds = vec_bounds_in(mpos, fpos, bpos);
+				setproperty(VF_CL_VIEWANGLES, aim_vec(view.origin + view.view_ofs, mpos));
+			}
 		}
 	}
 }

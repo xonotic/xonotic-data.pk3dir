@@ -343,8 +343,9 @@ IMPULSE(weapon_reload)
 		Weapon w = this.(weaponentity).m_weapon;
 		w.wr_reload(w, actor, weaponentity);
 
-		if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
-			break;
+		// allow reloading all active slots?
+		//if(slot == 0 && autocvar_g_weaponswitch_debug != 1)
+			//break;
 	}
 }
 

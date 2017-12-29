@@ -105,8 +105,6 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 #endif
 
 #ifdef SVQC
-spawnfunc(weapon_vaporizer) { weapon_defaultspawnfunc(this, WEP_VAPORIZER); }
-spawnfunc(weapon_minstanex) { spawnfunc_weapon_vaporizer(this); }
 
 void W_RocketMinsta_Explosion(entity actor, vector loc)
 {
