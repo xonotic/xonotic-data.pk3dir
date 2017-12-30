@@ -2,6 +2,9 @@
 
 .entity viewloc;
 
+const int VIEWLOC_NOSIDESCROLL = BIT(0); // NOTE: currently unimplemented
+const int VIEWLOC_FREEAIM = BIT(1);
+
 #ifdef CSQC
 .entity goalentity;
 .entity enemy;
