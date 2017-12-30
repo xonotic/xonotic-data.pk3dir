@@ -188,7 +188,7 @@ void viewloc_SetViewLocation()
 				//vector bpos = view.origin + view.view_ofs + backward * max_shot_distance;
 				vector mpos = CursorToWorldCoord(viewloc_mousepos);
 				//vector pos_bounds = vec_bounds_in(mpos, fpos, bpos);
-				setproperty(VF_CL_VIEWANGLES, aim_vec(view.origin + view.view_ofs, mpos));
+				setproperty(VF_CL_VIEWANGLES, aim_vec(view.origin + view.view_ofs, vec3(view.origin_x + view.view_ofs_x, mpos.y, mpos.z)));
 			}
 		}
 	}
