@@ -184,14 +184,10 @@ void waypoint_setupmodel(entity wp)
 // (suitable for spawnfunc_waypoint editor)
 entity waypoint_spawn(vector m1, vector m2, float f)
 {
-	if(!(f & WAYPOINTFLAG_PERSONAL))
+	if(!(f & (WAYPOINTFLAG_PERSONAL | WAYPOINTFLAG_GENERATED)) && m1 == m2)
 	{
-		vector em1 = m1, em2 = m2;
-		if (!(f & WAYPOINTFLAG_GENERATED) && m1 == m2)
-		{
-			em1 = m1 - '8 8 8';
-			em2 = m2 + '8 8 8';
-		}
+		vector em1 = m1 - '8 8 8';
+		vector em2 = m2 + '8 8 8';
 		IL_EACH(g_waypoints, boxesoverlap(em1, em2, it.absmin, it.absmax),
 		{
 			return it;
