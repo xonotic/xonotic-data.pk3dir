@@ -41,17 +41,6 @@ void viewloc_PlayerPhysics(entity this)
 				this.angles_y = backward.y;
 			if(PHYS_CS(this).movement_x > 0) // right
 				this.angles_y = forward.y;
-
-			if(old_movement_x > 0)
-	#ifdef CSQC
-				input_angles_x =
-	#endif
-				this.v_angle_x = this.angles_x = -50;
-			else if(old_movement_x < 0)
-	#ifdef CSQC
-				input_angles_x =
-	#endif
-				this.v_angle_x = this.angles_x = 50;
 		}
 
 		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
@@ -105,22 +94,14 @@ void viewloc_SetViewLocation()
 	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
 	{
 		bool have_sidescroll = (view.viewloc.enemy != view.viewloc.goalentity);
-		vector position_a, position_b, camera_position, camera_angle = '0 0 0', forward, backward;
-		//vector scratch;
+		vector position_a = view.viewloc.enemy.origin;
+		vector position_b = view.viewloc.goalentity.origin;
+		vector camera_angle = '0 0 0';
+		vector camera_position;
 
-		position_a = view.viewloc.enemy.origin;
-		position_b = view.viewloc.goalentity.origin;
-
-#if 0
 		/*TODO: have the camera only move when a player moves too much from the center of the camera
-		 * basically the player can move around in a "box" in the center of th screen with out changing the camera position or angles
-		*/
-		if (cvar("cam_box")) {
-			camera_position = vec_bounds_in(view.origin, position_a, position_b);
-		}
-		else
-#endif
-			camera_position = vec_bounds_in(view.origin, position_a, position_b);
+		 * basically the player would move around in a small "box" in the center of the screen with out changing the camera position or angles */
+		camera_position = vec_bounds_in(view.origin, position_a, position_b);
 
 
 		// a tracking camera follows the player when it leaves the world box
@@ -129,13 +110,12 @@ void viewloc_SetViewLocation()
 		}
 
 		// hard snap changes the angle as soon as it crosses over the nearest 90 degree mark
-		if (autocvar_cam_snap_hard){
+		if (autocvar_cam_snap_hard) {
 			camera_angle = angle_snap_vec(aim_vec(camera_position, view.origin), 90);
 		}
 
 		// tries to avoid snapping unless it *really* needs to
-		if (autocvar_cam_snap_close){
-
+		if (autocvar_cam_snap_close) {
 			// like hard snap, but don't snap angles yet.
 			camera_angle = aim_vec(camera_position, view.origin);
 
@@ -145,10 +125,11 @@ void viewloc_SetViewLocation()
 			 */
 			float camera_angle_diff = max(camera_angle.y, old_camera_angle.y) - min(camera_angle.y, old_camera_angle.y);
 
-			if ( camera_angle_diff >= 60)
+			if (60 <= camera_angle_diff) { // use new angles
 				old_camera_angle.y = angle_snap_f(camera_angle.y, 90);
-			else
+			} else { // use old angles
 				camera_angle.y = old_camera_angle.y;
+			}
 		}
 
 		//unlocking this allows the camera to look up and down. this also allows a top-down view.
@@ -168,28 +149,33 @@ void viewloc_SetViewLocation()
 		setproperty(VF_ORIGIN, camera_position);
 		setproperty(VF_ANGLES, camera_angle);
 
-		if(have_sidescroll)
-		{
-			forward = vectoangles(normalize(vec_to_min(position_b, position_a) - vec_to_max(position_b, position_a)));
-			backward = vectoangles(normalize(vec_to_max(position_b, position_a) - vec_to_min(position_b, position_a)));
+		if (have_sidescroll) {
+			vector view_angle = view.angles;
+			if (!(view.viewloc.spawnflags & VIEWLOC_FREEAIM)) {
+				vector avatar_facing_dir;
+				// get the player's forward-facing direction, based on positions a and b
+				if (0 == input_movevalues.y) {
+					avatar_facing_dir = view_angle; // default to the previous values
+				} else if (0 > input_movevalues.y) { // left is forward
+					avatar_facing_dir = vectoangles(normalize(vec_to_max(position_b, position_a) - vec_to_min(position_b, position_a)));
+				} else { // right is forward
+					avatar_facing_dir = vectoangles(normalize(vec_to_min(position_b, position_a) - vec_to_max(position_b, position_a)));
+				}
+				view_angle.y = avatar_facing_dir.y; // snap avatar to look on along the correct axis
 
-			if(!(view.viewloc.spawnflags & VIEWLOC_FREEAIM))
-			{
-				if(input_movevalues_y < 0) // left
-					view.angles_y = backward.y;
-				if(input_movevalues_y > 0) // favour right
-					view.angles_y = forward.y;
-
-				setproperty(VF_CL_VIEWANGLES, view.angles);
-			}
-			else
-			{
-				//vector fpos = view.origin + view.view_ofs + forward * max_shot_distance;
-				//vector bpos = view.origin + view.view_ofs + backward * max_shot_distance;
+				// if (0 == input_movevalues.x) look straight ahead
+				if (0 > input_movevalues.x) { // look up
+					view_angle.x = 50;
+				} else if (0 < input_movevalues.x) { // look down
+					view_angle.x = -50;
+				}
+			} else {
 				vector mpos = CursorToWorldCoord(viewloc_mousepos);
-				//vector pos_bounds = vec_bounds_in(mpos, fpos, bpos);
-				setproperty(VF_CL_VIEWANGLES, aim_vec(view.origin + view.view_ofs, vec3(view.origin_x + view.view_ofs_x, mpos.y, mpos.z)));
+				mpos.x = view.origin.x; // replace the cursor's x position with the player's
+				view_angle = aim_vec(view.origin, mpos); // get new angles
 			}
+			view.angles_y = view_angle.y;
+			setproperty(VF_CL_VIEWANGLES, view_angle);
 		}
 	}
 }
