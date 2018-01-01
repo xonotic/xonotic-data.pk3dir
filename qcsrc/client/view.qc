@@ -2074,7 +2074,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 		// the view to go back to normal, so reticle_type would become 0 as we fade out)
-		if(spectatee_status || is_dead || hud != HUD_NORMAL)
+		if(spectatee_status || is_dead || hud != HUD_NORMAL || local_player.viewloc)
 		{
 			// no zoom reticle while dead
 			reticle_type = 0;
