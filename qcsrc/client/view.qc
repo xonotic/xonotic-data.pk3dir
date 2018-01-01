@@ -1482,6 +1482,9 @@ void HUD_Draw(entity this)
 
 void ViewLocation_Mouse()
 {
+	if(spectatee_status)
+		return; // don't draw it as spectator!
+
 	viewloc_mousepos += getmousepos() * autocvar_menu_mouse_speed;
 	viewloc_mousepos.x = bound(0, viewloc_mousepos.x, vid_conwidth);
 	viewloc_mousepos.y = bound(0, viewloc_mousepos.y, vid_conheight);
