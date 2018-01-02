@@ -101,6 +101,7 @@ entity navigation_bestgoal;
 .entity wp_goal_prev1;
 
 .float lastteleporttime;
+.vector lastteleport_origin;
 
 .float blacklisted;
 

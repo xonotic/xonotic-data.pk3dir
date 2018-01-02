@@ -207,7 +207,10 @@ bool jumppad_push(entity this, entity targ)
 					centerprint(targ, this.message);
 			}
 			else
+			{
 				targ.lastteleporttime = time;
+				targ.lastteleport_origin = targ.origin;
+			}
 
 			if (!IS_DEAD(targ))
 				animdecide_setaction(targ, ANIMACTION_JUMP, true);
