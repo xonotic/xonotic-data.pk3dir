@@ -82,7 +82,7 @@ void powerup_invisibility_init(entity item);
 REGISTER_ITEM(Invisibility, Powerup) {
     this.m_canonical_spawnfunc = "item_invisibility";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_INSTAGIB;
+	this.spawnflags = ITEM_FLAG_INSTAGIB | ITEM_FLAG_MUTATORBLOCKED;
     this.m_model            =   MDL_Invisibility_ITEM;
     this.m_sound            =   SND_Invisibility;
     this.m_glow             =   true;
@@ -117,7 +117,7 @@ void powerup_speed_init(entity item);
 REGISTER_ITEM(Speed, Powerup) {
     this.m_canonical_spawnfunc = "item_speed";
 #ifdef GAMEQC
-	this.spawnflags = ITEM_FLAG_INSTAGIB;
+	this.spawnflags = ITEM_FLAG_INSTAGIB | ITEM_FLAG_MUTATORBLOCKED;
     this.m_model            =   MDL_Speed_ITEM;
     this.m_sound            =   SND_Speed;
     this.m_glow             =   true;
