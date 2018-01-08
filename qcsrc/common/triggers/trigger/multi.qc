@@ -104,6 +104,9 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (this.team != attacker.team))
+			return;
 	this.health = this.health - damage;
 	if (this.health <= 0)
 	{
@@ -169,6 +172,7 @@ spawnfunc(trigger_multiple)
 	{
 		if (this.spawnflags & SPAWNFLAG_NOTOUCH)
 			objerror (this, "health and notouch don't make sense\n");
+		this.canteamdamage = true;
 		this.max_health = this.health;
 		this.event_damage = multi_eventdamage;
 		this.takedamage = DAMAGE_YES;

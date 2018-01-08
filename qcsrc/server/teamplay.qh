@@ -107,7 +107,7 @@ int FindBestTeams(entity player, bool use_score);
 // NOTE: Assumes CheckAllowedTeams has already been called!
 int FindSmallestTeam(entity player, float ignore_player);
 
-int JoinBestTeam(entity this, bool only_return_best, bool force_best_team);
+void JoinBestTeam(entity this, bool force_best_team);
 
 /// \brief Auto balances bots in teams after the player has changed team.
 /// \param[in] source_team Previous team of the player (1, 2, 3, 4).
