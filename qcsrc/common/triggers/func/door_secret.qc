@@ -228,6 +228,7 @@ spawnfunc(func_door_secret)
 
 	if (this.spawnflags & SECRET_YES_SHOOT)
 	{
+		//this.canteamdamage = true; // TODO
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = fd_secret_damage;

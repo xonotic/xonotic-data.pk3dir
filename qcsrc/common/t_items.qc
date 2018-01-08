@@ -533,7 +533,7 @@ void Item_Respawn (entity this)
 
 void Item_RespawnCountdown (entity this)
 {
-	if(this.count >= ITEM_RESPAWN_TICKS)
+	if(this.item_respawncounter >= ITEM_RESPAWN_TICKS)
 	{
 		if(this.waypointsprite_attached)
 			WaypointSprite_Kill(this.waypointsprite_attached);
@@ -542,8 +542,8 @@ void Item_RespawnCountdown (entity this)
 	else
 	{
 		this.nextthink = time + 1;
-		this.count += 1;
-		if(this.count == 1)
+		this.item_respawncounter += 1;
+		if(this.item_respawncounter == 1)
 		{
 			do {
 				{
@@ -584,7 +584,7 @@ void Item_RespawnCountdown (entity this)
 			});
 
 			WaypointSprite_Ping(this.waypointsprite_attached);
-			//WaypointSprite_UpdateHealth(this.waypointsprite_attached, this.count);
+			//WaypointSprite_UpdateHealth(this.waypointsprite_attached, this.item_respawncounter);
 		}
 	}
 }
@@ -607,7 +607,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
-		e.count = 0;
+		e.item_respawncounter = 0;
 		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
 		{
 			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
