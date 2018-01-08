@@ -19,19 +19,23 @@ float autocvar_g_instagib_speed_highspeed;
 
 REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
 {
-    MUTATOR_ONADD
-    {
-        ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
-    }
-    MUTATOR_ONROLLBACK_OR_REMOVE
-    {
-        ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
-    }
+	MUTATOR_ONADD
+	{
+		ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Invisibility.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Speed.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+	}
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Invisibility.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Speed.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+	}
 }
 
 void instagib_invisibility(entity this)
 {
-	this.strength_finished = autocvar_g_balance_powerup_strength_time;
+	this.strength_finished = autocvar_g_instagib_invisibility_time;
 	StartItem(this, ITEM_Invisibility);
 }
 
@@ -42,7 +46,7 @@ void instagib_extralife(entity this)
 
 void instagib_speed(entity this)
 {
-	this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	this.invincible_finished = autocvar_g_instagib_speed_time;
 	StartItem(this, ITEM_Speed);
 }
 

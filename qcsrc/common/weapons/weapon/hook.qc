@@ -318,8 +318,8 @@ void Draw_GrapplingHook(entity this)
 		{
 			default:
 			case NET_ENT_CLIENT_HOOK:
-				if(autocvar_chase_active > 0)
-					a = csqcplayer.origin;
+				if(autocvar_chase_active)
+					a = csqcplayer.origin + csqcplayer.view_ofs;
 				else
 					a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				b = this.origin;
