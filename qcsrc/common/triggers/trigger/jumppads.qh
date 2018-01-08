@@ -26,13 +26,14 @@ void trigger_push_use(entity this, entity actor, entity trigger);
 	  tgt - target entity (can be either a point or a model entity; if it is
 	        the latter, its midpoint is used)
 	  ht  - jump height, measured from the higher one of org and tgt's midpoint
+	  pushed_entity - object that is to be pushed
 
 	Returns: velocity for the jump
 	the global trigger_push_calculatevelocity_flighttime is set to the total
 	jump time
  */
 
-vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
+vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity pushed_entity);
 
 void trigger_push_touch(entity this, entity toucher);
 

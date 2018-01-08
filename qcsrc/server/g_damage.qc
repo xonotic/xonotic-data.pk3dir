@@ -698,7 +698,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 									force = '0 0 0';
 							}
 						}
-						else
+						else if(!targ.canteamdamage)
 							damage = 0;
 					}
 				}
