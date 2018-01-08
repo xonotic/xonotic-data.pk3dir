@@ -765,6 +765,7 @@ spawnfunc(func_door)
 
 	if (this.health)
 	{
+		//this.canteamdamage = true; // TODO
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = door_damage;
 	}

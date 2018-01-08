@@ -31,6 +31,7 @@
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
 #include <common/viewloc.qh>
+#include <common/triggers/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 
@@ -1479,6 +1480,19 @@ void HUD_Draw(entity this)
 	HitSound();
 }
 
+void ViewLocation_Mouse()
+{
+	if(spectatee_status)
+		return; // don't draw it as spectator!
+
+	viewloc_mousepos += getmousepos() * autocvar_menu_mouse_speed;
+	viewloc_mousepos.x = bound(0, viewloc_mousepos.x, vid_conwidth);
+	viewloc_mousepos.y = bound(0, viewloc_mousepos.y, vid_conheight);
+
+	float cursor_alpha = 1 - autocvar__menu_alpha;
+	draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
+}
+
 bool ov_enabled;
 float oldr_nearclip;
 float oldr_farclip_base;
@@ -1576,6 +1590,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 		button_zoom = false;
 	}
 
+	// abused multiple places below
+	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
+	if(!local_player)
+		local_player = this; // fall back!
+
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
@@ -1626,10 +1645,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 				chase_distance_override = M_ARGV(0, float);
 			}
 			eventchase_running = true;
-
-			entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
-			if(!local_player)
-				local_player = this; // fall back!
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -2062,7 +2077,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 		// the view to go back to normal, so reticle_type would become 0 as we fade out)
-		if(spectatee_status || is_dead || hud != HUD_NORMAL)
+		if(spectatee_status || is_dead || hud != HUD_NORMAL || local_player.viewloc)
 		{
 			// no zoom reticle while dead
 			reticle_type = 0;
@@ -2375,6 +2390,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 		HUD_Minigame_Mouse();
 	else if(QuickMenu_IsOpened())
 		QuickMenu_Mouse();
+	else if(local_player.viewloc && (local_player.viewloc.spawnflags & VIEWLOC_FREEAIM))
+		ViewLocation_Mouse(); // NOTE: doesn't use cursormode
 	else
 		HUD_Radar_Mouse();
 
