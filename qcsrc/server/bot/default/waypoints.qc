@@ -678,16 +678,27 @@ void waypoint_schedulerelinkall()
 	waypoint_load_links_hardwired();
 }
 
+#define GET_GAMETYPE_EXTENSION() ((g_race) ? ".race" : "")
+
 // Load waypoint links from file
 bool waypoint_load_links()
 {
-	string filename, s;
+	string s;
 	float file, tokens, c = 0, found;
 	entity wp_from = NULL, wp_to;
 	vector wp_to_pos, wp_from_pos;
-	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.cache");
+
+	string gt_ext = GET_GAMETYPE_EXTENSION();
+
+	string filename = sprintf("maps/%s.waypoints.cache", strcat(mapname, gt_ext));
 	file = fopen(filename, FILE_READ);
+
+	if (gt_ext != "" && file < 0)
+	{
+		// if race waypoint file doesn't exist load the default one
+		filename = sprintf("maps/%s.waypoints.cache", mapname);
+		file = fopen(filename, FILE_READ);
+	}
 
 	if (file < 0)
 	{
@@ -751,7 +762,6 @@ bool waypoint_load_links()
 				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from_pos));
 				continue;
 			}
-
 		}
 
 		// Search "to" waypoint
@@ -780,7 +790,7 @@ bool waypoint_load_links()
 
 	fclose(file);
 
-	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.cache");
+	LOG_TRACE("loaded ", ftos(c), " waypoint links from ", filename);
 
 	botframe_cachedwaypointlinks = true;
 	return true;
@@ -788,13 +798,22 @@ bool waypoint_load_links()
 
 void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 {
-	string filename, s;
+	string s;
 	float file, tokens, c = 0, found;
 	entity wp_from = NULL, wp_to;
 	vector wp_to_pos, wp_from_pos;
-	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints.hardwired");
+
+	string gt_ext = GET_GAMETYPE_EXTENSION();
+
+	string filename = sprintf("maps/%s.waypoints.hardwired", strcat(mapname, gt_ext));
 	file = fopen(filename, FILE_READ);
+
+	if (gt_ext != "" && file < 0)
+	{
+		// if race waypoint file doesn't exist load the default one
+		filename = sprintf("maps/%s.waypoints.hardwired", mapname);
+		file = fopen(filename, FILE_READ);
+	}
 
 	botframe_loadedforcedlinks = true;
 
@@ -932,7 +951,9 @@ void waypoint_save_links()
 	// temporarily remove hardwired links so they don't get saved among normal links
 	waypoint_remove_links_hardwired();
 
-	string filename = sprintf("maps/%s.waypoints.cache", mapname);
+	string gt_ext = GET_GAMETYPE_EXTENSION();
+
+	string filename = sprintf("maps/%s.waypoints.cache", strcat(mapname, gt_ext));
 	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
@@ -957,9 +978,10 @@ void waypoint_save_links()
 		}
 	});
 	fclose(file);
+
 	botframe_cachedwaypointlinks = true;
 
-	LOG_INFOF("saved %d waypoint links to maps/%s.waypoints.cache", c, mapname);
+	LOG_INFOF("saved %d waypoint links to %s", c, filename);
 
 	waypoint_load_links_hardwired();
 }
@@ -967,7 +989,9 @@ void waypoint_save_links()
 // save waypoints to gamedir/data/maps/mapname.waypoints
 void waypoint_saveall()
 {
-	string filename = sprintf("maps/%s.waypoints", mapname);
+	string gt_ext = GET_GAMETYPE_EXTENSION();
+
+	string filename = sprintf("maps/%s.waypoints", strcat(mapname, gt_ext));
 	int file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
@@ -1003,29 +1027,38 @@ void waypoint_saveall()
 	waypoint_save_links();
 	botframe_loadedforcedlinks = false;
 
-	LOG_INFOF("saved %d waypoints to maps/%s.waypoints", c, mapname);
+	LOG_INFOF("saved %d waypoints to %s", c, filename);
 }
 
 // load waypoints from file
 float waypoint_loadall()
 {
-	string filename, s;
+	string s;
 	float file, cwp, cwb, fl;
 	vector m1, m2;
 	cwp = 0;
 	cwb = 0;
-	filename = strcat("maps/", mapname);
-	filename = strcat(filename, ".waypoints");
+
+	string gt_ext = GET_GAMETYPE_EXTENSION();
+
+	string filename = sprintf("maps/%s.waypoints", strcat(mapname, gt_ext));
 	file = fopen(filename, FILE_READ);
 
-	bool parse_comments = true;
-	float ver = 0;
+	if (gt_ext != "" && file < 0)
+	{
+		// if race waypoint file doesn't exist load the default one
+		filename = sprintf("maps/%s.waypoints", mapname);
+		file = fopen(filename, FILE_READ);
+	}
 
 	if (file < 0)
 	{
 		LOG_TRACE("waypoint load from ", filename, " failed");
 		return 0;
 	}
+
+	bool parse_comments = true;
+	float ver = 0;
 
 	while ((s = fgets(file)))
 	{
