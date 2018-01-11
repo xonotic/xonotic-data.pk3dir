@@ -724,7 +724,18 @@ bool waypoint_load_links()
 			else
 			{
 				if(ver < WAYPOINT_VERSION)
-					return false;
+				{
+					LOG_TRACE("waypoint links for this map are outdated.");
+					if (g_assault)
+					{
+						LOG_TRACE("Assault waypoint links need to be manually updated in the editor");
+					}
+					else
+					{
+						LOG_TRACE("automatically updating...");
+						return false;
+					}
+				}
 				parse_comments = false;
 			}
 		}
@@ -1073,7 +1084,10 @@ float waypoint_loadall()
 			else
 			{
 				if(floor(ver) < floor(WAYPOINT_VERSION))
+				{
 					LOG_TRACE("waypoints for this map are outdated");
+					LOG_TRACE("please update them in the editor");
+				}
 				parse_comments = false;
 			}
 		}
