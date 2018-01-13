@@ -178,6 +178,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 	instagib_stop_countdown(player);
 }
 
+MUTATOR_HOOKFUNCTION(mutator_instagib, ShouldGiveRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
