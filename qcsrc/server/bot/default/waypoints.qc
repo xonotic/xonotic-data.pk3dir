@@ -702,9 +702,7 @@ bool waypoint_load_links()
 
 	if (file < 0)
 	{
-		LOG_TRACE("waypoint links load from ");
-		LOG_TRACE(filename);
-		LOG_TRACE(" failed");
+		LOG_TRACE("waypoint links load from ", filename, " failed");
 		return false;
 	}
 
@@ -733,6 +731,7 @@ bool waypoint_load_links()
 					else
 					{
 						LOG_TRACE("automatically updating...");
+						fclose(file);
 						return false;
 					}
 				}
@@ -912,8 +911,8 @@ void waypoint_load_or_remove_links_hardwired(bool removal_mode)
 
 	fclose(file);
 
-	if(!removal_mode)
-		LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
+	LOG_TRACE(((removal_mode) ? "unloaded " : "loaded "),
+		ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired");
 }
 
 entity waypoint_get_link(entity w, float i)
