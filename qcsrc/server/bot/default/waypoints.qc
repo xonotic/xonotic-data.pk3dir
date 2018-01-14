@@ -179,9 +179,6 @@ void waypoint_setupmodel(entity wp)
 		wp.model = "";
 }
 
-// create a new spawnfunc_waypoint and automatically link it to other waypoints, and link
-// them back to it as well
-// (suitable for spawnfunc_waypoint editor)
 entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	if(!(f & (WAYPOINTFLAG_PERSONAL | WAYPOINTFLAG_GENERATED)) && m1 == m2)
