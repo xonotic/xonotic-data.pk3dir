@@ -1244,6 +1244,7 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
     });
 	if(!sp)
 	{
+		int items_checked = 0;
 		IL_EACH(g_items, checkpvs(mstart, it),
 		{
 			if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
@@ -1251,6 +1252,10 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
 				sp = it;
 				break;
 			}
+
+			++items_checked;
+			if(items_checked >= attempts)
+				break; // sanity
 		});
 
 		if(!sp)

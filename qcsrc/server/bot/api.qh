@@ -37,6 +37,7 @@ float skill;
 .void(entity this) havocbot_previous_role;
 .float isbot; // true if this client is actually a bot
 .float lastteleporttime;
+.vector lastteleport_origin;
 .float navigation_hasgoals;
 .float nearestwaypointtimeout;
 .entity nearestwaypoint;

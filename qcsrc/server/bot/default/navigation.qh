@@ -57,6 +57,7 @@ float tracewalk_dest_height;
 .entity wp_goal_prev1;
 
 .float lastteleporttime;
+.vector lastteleport_origin;
 
 .float blacklisted;
 

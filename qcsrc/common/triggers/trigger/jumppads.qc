@@ -207,7 +207,10 @@ bool jumppad_push(entity this, entity targ)
 					centerprint(targ, this.message);
 			}
 			else
+			{
 				targ.lastteleporttime = time;
+				targ.lastteleport_origin = targ.origin;
+			}
 
 			if (!IS_DEAD(targ))
 				animdecide_setaction(targ, ANIMACTION_JUMP, true);
@@ -278,23 +281,27 @@ bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vecto
 	if(trace_startsolid)
 		return false;
 
-	if(!jp.height)
+	if (!jp.height)
 	{
 		// since tracetoss starting from jumppad's origin often fails when target
 		// is very close to real destination, start it directly from target's
 		// origin instead
+		vector ofs = '0 0 0';
+		if (vdist(vec2(tracetest_ent.velocity), <, autocvar_sv_maxspeed))
+			ofs = stepheightvec;
+
 		tracetest_ent.velocity.z = 0;
-		setorigin(tracetest_ent, targ.origin + stepheightvec);
+		setorigin(tracetest_ent, targ.origin + ofs);
 		tracetoss(tracetest_ent, tracetest_ent);
-		if(trace_startsolid)
+		if (trace_startsolid && ofs.z)
 		{
-			setorigin(tracetest_ent, targ.origin + stepheightvec / 2);
+			setorigin(tracetest_ent, targ.origin + ofs / 2);
 			tracetoss(tracetest_ent, tracetest_ent);
-			if(trace_startsolid)
+			if (trace_startsolid && ofs.z)
 			{
 				setorigin(tracetest_ent, targ.origin);
 				tracetoss(tracetest_ent, tracetest_ent);
-				if(trace_startsolid)
+				if (trace_startsolid)
 					return false;
 			}
 		}
@@ -310,7 +317,7 @@ bool trigger_push_test(entity this, entity item)
 {
 	// first calculate a typical start point for the jump
 	vector org = (this.absmin + this.absmax) * 0.5;
-	org.z = this.absmax.z - PL_MIN_CONST.z;
+	org.z = this.absmax.z - PL_MIN_CONST.z - 10;
 
 	if (this.target)
 	{

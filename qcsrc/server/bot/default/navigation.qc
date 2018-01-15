@@ -1595,6 +1595,12 @@ int navigation_poptouchedgoals(entity this)
 		if(this.lastteleporttime > 0
 			&& time - this.lastteleporttime < ((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15))
 		{
+			if (this.jumppadcount && !boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax,
+				this.lastteleport_origin + STAT(PL_MIN, this), this.lastteleport_origin + STAT(PL_MAX, this)))
+			{
+				return;
+			}
+
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
 			{
