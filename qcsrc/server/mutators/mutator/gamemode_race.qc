@@ -36,6 +36,7 @@ void havocbot_role_race(entity this)
 					goto search_racecheckpoints;
 				}
 				navigation_routerating(this, it, 1000000, 5000);
+			}
 		});
 
 		navigation_goalrating_end(this);

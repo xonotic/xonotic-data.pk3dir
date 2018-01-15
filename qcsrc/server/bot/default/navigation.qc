@@ -1598,7 +1598,7 @@ int navigation_poptouchedgoals(entity this)
 			if (this.jumppadcount && !boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax,
 				this.lastteleport_origin + STAT(PL_MIN, this), this.lastteleport_origin + STAT(PL_MAX, this)))
 			{
-				return;
+				return removed_goals;
 			}
 
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
