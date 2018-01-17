@@ -16,6 +16,7 @@
 #include <common/util.qh>
 
 #include <common/weapons/_all.qh>
+#include <common/wepent.qh>
 #include <common/state.qh>
 
 #include <lib/warpzone/common.qh>

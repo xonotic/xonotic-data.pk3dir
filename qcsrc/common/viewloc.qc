@@ -149,6 +149,9 @@ void viewloc_SetViewLocation()
 		setproperty(VF_ORIGIN, camera_position);
 		setproperty(VF_ANGLES, camera_angle);
 
+		if(spectatee_status)
+			return; // if spectating, don't replace angles or inputs!
+
 		if (have_sidescroll) {
 			vector view_angle = view.angles;
 			if (!(view.viewloc.spawnflags & VIEWLOC_FREEAIM)) {

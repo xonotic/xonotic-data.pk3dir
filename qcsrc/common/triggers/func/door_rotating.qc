@@ -109,6 +109,7 @@ spawnfunc(func_door_rotating)
 
 	if (this.health)
 	{
+		//this.canteamdamage = true; // TODO
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = door_damage;
 	}
