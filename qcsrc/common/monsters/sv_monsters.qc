@@ -1394,7 +1394,7 @@ bool Monster_Spawn(entity this, bool check_appear, int mon_id)
 	if(autocvar_g_nodepthtestplayers) { this.effects |= EF_NODEPTHTEST; }
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { this.flags |= FL_SWIM; }
 
-	if(autocvar_g_playerclip_collisions)
+	if(autocvar_g_monsters_playerclip_collisions)
 		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
 	if(mon.spawnflags & MONSTER_TYPE_FLY)
