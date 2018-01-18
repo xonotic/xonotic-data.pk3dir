@@ -7,10 +7,20 @@
 #include <server/miscfunctions.qh>
 #include "../triggers/trigger/viewloc.qh"
 
+bool Physics_HasWord(string thelist, string theword)
+{
+	FOREACH_WORD(thelist, it == theword,
+	{
+		return true;
+	});
+
+	return false;
+}
+
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	return autocvar_g_physics_clientselect && thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
+	return autocvar_g_physics_clientselect && thecvar != "" && thecvar && thecvar != "default" && Physics_HasWord(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity this, string option, float defaultval)
