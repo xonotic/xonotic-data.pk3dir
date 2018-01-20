@@ -1592,15 +1592,8 @@ int navigation_poptouchedgoals(entity this)
 	{
 		// make sure jumppad is really hit, don't rely on distance based checks
 		// as they may report a touch even if it didn't really happen
-		if(this.lastteleporttime > 0
-			&& time - this.lastteleporttime < ((this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15))
+		if(this.lastteleporttime > 0 && TELEPORT_USED(this, this.goalcurrent))
 		{
-			if (!boxesoverlap(this.goalcurrent.absmin, this.goalcurrent.absmax,
-				this.lastteleport_origin + STAT(PL_MIN, this), this.lastteleport_origin + STAT(PL_MAX, this)))
-			{
-				return removed_goals;
-			}
-
 			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
 			{
@@ -1613,6 +1606,37 @@ int navigation_poptouchedgoals(entity this)
 		}
 		else
 			return removed_goals;
+	}
+	else if (this.lastteleporttime > 0)
+	{
+		// sometimes bot is pushed so hard (by a jumppad or a shot) that ends up touching the next
+		// teleport / jumppad / warpzone present in its path skipping check of one or more goals
+		// if so immediately fix bot path by removing skipped goals
+		entity tele_ent = NULL;
+		if (this.goalstack01 && (this.goalstack01.wpflags & WAYPOINTFLAG_TELEPORT))
+			tele_ent = this.goalstack01;
+		else if (this.goalstack02 && (this.goalstack02.wpflags & WAYPOINTFLAG_TELEPORT))
+			tele_ent = this.goalstack02;
+		else if (this.goalstack03 && (this.goalstack03.wpflags & WAYPOINTFLAG_TELEPORT))
+			tele_ent = this.goalstack03;
+		if (tele_ent && TELEPORT_USED(this, tele_ent))
+		{
+			if (this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
+			if (tele_ent.wpflags & WAYPOINTFLAG_PERSONAL && tele_ent.owner == this)
+			{
+				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
+				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
+			}
+			while (this.goalcurrent != tele_ent)
+			{
+				navigation_poproute(this);
+				++removed_goals;
+			}
+			navigation_poproute(this);
+			this.lastteleporttime = 0;
+			++removed_goals;
+			return removed_goals;
+		}
 	}
 
 	// Loose goal touching check when running
