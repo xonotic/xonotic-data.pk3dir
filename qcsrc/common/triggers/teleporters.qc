@@ -165,6 +165,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		}
 
 		player.lastteleporttime = time;
+		player.lastteleport_origin = from;
 	}
 #endif
 }
@@ -310,7 +311,5 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	#ifdef SVQC
 		pl.oldvelocity = pl.velocity;
 	#endif
-		// reset teleport time tracking too (or multijump can cause insane speeds)
-		pl.lastteleporttime = time;
 	}
 }
