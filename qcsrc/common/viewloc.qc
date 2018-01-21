@@ -175,7 +175,7 @@ void viewloc_SetViewLocation()
 			} else {
 				vector mpos = CursorToWorldCoord(viewloc_mousepos);
 				mpos.x = view.origin.x; // replace the cursor's x position with the player's
-				view_angle = aim_vec(view.origin, mpos); // get new angles
+				view_angle = aim_vec(view.origin + view.view_ofs, mpos); // get new angles
 			}
 			view.angles_y = view_angle.y;
 			setproperty(VF_CL_VIEWANGLES, view_angle);
