@@ -44,7 +44,6 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 .vector colormod;
 
 void ItemDraw(entity this);
-void ItemDrawSimple(entity this);
 
 #endif
 #ifdef SVQC
