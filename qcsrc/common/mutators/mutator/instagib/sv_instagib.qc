@@ -392,7 +392,7 @@ void replace_with_insta_cells(entity item)
 {
 	entity e = new(item_vaporizer_cells);
 	setorigin(e, item.origin);
-	e.noalign = item.noalign;
+	e.noalign = Item_ShouldKeepPosition(item);
 	e.cnt = item.cnt;
 	e.team = item.team;
 	e.spawnfunc_checked = true;
