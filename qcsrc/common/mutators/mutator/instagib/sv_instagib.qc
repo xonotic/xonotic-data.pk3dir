@@ -178,7 +178,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 	instagib_stop_countdown(player);
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, ShouldGiveRandomStartWeapons)
+MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidRandomStartWeapons)
 {
 	return true;
 }
