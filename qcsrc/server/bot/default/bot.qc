@@ -729,8 +729,6 @@ void bot_serverframe()
 			botframe_nextthink = time + 10;
 	}
 
-	bot_ignore_bots = autocvar_bot_ignore_bots;
-
 	if(botframe_spawnedwaypoints)
 	{
 		if(autocvar_waypoint_benchmark)

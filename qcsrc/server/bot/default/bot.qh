@@ -76,7 +76,6 @@ float botframe_spawnedwaypoints;
 float botframe_nextthink;
 float botframe_nextdangertime;
 float bot_cvar_nextthink;
-float bot_ignore_bots; // let bots not attack other bots (only works in non-teamplay)
 
 int _content_type;
 #define IN_LAVA(pos) (_content_type = pointcontents(pos), (_content_type == CONTENT_LAVA || _content_type == CONTENT_SLIME))

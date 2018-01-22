@@ -132,9 +132,8 @@ bool bot_shouldattack(entity this, entity targ)
 		if(targ.team==0)
 			return false;
 	}
-	else if(bot_ignore_bots)
-		if(IS_BOT_CLIENT(targ))
-			return false;
+	else if (autocvar_bot_ignore_bots && IS_BOT_CLIENT(targ))
+		return false;
 
 	if (!targ.takedamage)
 		return false;
