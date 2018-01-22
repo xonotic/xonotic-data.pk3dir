@@ -86,6 +86,7 @@ bool autocvar_cam_snap_close;
 bool autocvar_cam_track;
 bool autocvar_cam_snap_hard;
 bool autocvar_cam_snap_unlock;
+bool autocvar_cam_useangle = true;
 void viewloc_SetViewLocation()
 {
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
@@ -103,6 +104,10 @@ void viewloc_SetViewLocation()
 		 * basically the player would move around in a small "box" in the center of the screen with out changing the camera position or angles */
 		camera_position = vec_bounds_in(view.origin, position_a, position_b);
 
+		// use camera's angle when possible
+		if (autocvar_cam_useangle) {
+			camera_angle = view.viewloc.enemy.movedir;
+		}
 
 		// a tracking camera follows the player when it leaves the world box
 		if (autocvar_cam_track || !have_sidescroll) {
@@ -121,7 +126,7 @@ void viewloc_SetViewLocation()
 
 			/* if the difference between the old and new angle is 60 degrees or more, switch angles.
 			 * NOTE: bug/feature: this will use non-snaped angles for one frame.
-			 * doing this resualts in less code, faster code, and a smoother transisition between angles.
+			 * doing this results in less code, faster code, and a smoother transisition between angles.
 			 */
 			float camera_angle_diff = max(camera_angle.y, old_camera_angle.y) - min(camera_angle.y, old_camera_angle.y);
 
