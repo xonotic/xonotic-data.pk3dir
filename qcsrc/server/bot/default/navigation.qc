@@ -1808,6 +1808,15 @@ void botframe_updatedangerousobjects(float maxupdate)
 
 void navigation_unstuck(entity this)
 {
+	bool has_user_waypoints = false;
+	IL_EACH(g_waypoints, !(it.wpflags & WAYPOINTFLAG_GENERATED),
+	{
+		has_user_waypoints = true;
+		break;
+	});
+	if (!has_user_waypoints)
+		return;
+
 	float search_radius = 1000;
 
 	if (!autocvar_bot_wander_enable)
