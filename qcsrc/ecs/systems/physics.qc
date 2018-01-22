@@ -108,6 +108,7 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_water = true;
 		sys_phys_simulate(this, dt);
 		this.com_phys_water = false;
+		this.jumppadcount = 0;
 	} else if (time < this.ladder_time) {
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;

@@ -15,6 +15,11 @@ MUTATOR_HOOKFUNCTION(melee_only, SetWeaponArena)
 	M_ARGV(0, string) = "off";
 }
 
+MUTATOR_HOOKFUNCTION(melee_only, ForbidRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
 {
 	return true;

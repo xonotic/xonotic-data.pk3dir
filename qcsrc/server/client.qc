@@ -558,8 +558,11 @@ void PutPlayerInServer(entity this)
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
 		this.weapons = start_weapons;
-		GiveRandomWeapons(this, random_start_weapons_count,
-			autocvar_g_random_start_weapons, random_start_ammo);
+		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
+		{
+			GiveRandomWeapons(this, random_start_weapons_count,
+				autocvar_g_random_start_weapons, random_start_ammo);
+		}
 	}
 	SetSpectatee_status(this, 0);
 
@@ -636,7 +639,6 @@ void PutPlayerInServer(entity this)
 	setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 	// don't reset back to last position, even if new position is stuck in solid
 	this.oldorigin = this.origin;
-	this.lastteleporttime = time; // prevent insane speeds due to changing origin
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
 	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
