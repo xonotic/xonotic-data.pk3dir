@@ -174,7 +174,7 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 		this.bot_canfire = 1;
 }
 
-float bot_aimdir(entity this, vector v, float maxfiredeviation)
+void bot_aimdir(entity this, vector v, float maxfiredeviation)
 {
 	float dist, delta_t, blend;
 	vector desiredang, diffang;
@@ -183,6 +183,9 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	// make sure v_angle is sane first
 	this.v_angle_y = this.v_angle.y - floor(this.v_angle.y / 360) * 360;
 	this.v_angle_z = 0;
+
+	// invalid aim dir (can happen when bot overlaps target)
+	if(!v) return;
 
 	// get the desired angles to aim at
 	//dprint(" at:", vtos(v));
@@ -314,7 +317,7 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//dprint(ftos(maxfiredeviation),"\n");
 	//dprint(" diff:", vtos(diffang), "\n");
 
-	return this.bot_canfire && (time < this.bot_firetimer);
+	//return this.bot_canfire && (time < this.bot_firetimer);
 }
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay)
@@ -325,7 +328,7 @@ vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, flo
 
 bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity)
 {
-	float f, r, hf, distanceratio;
+	float r, hf, distanceratio;
 	vector v;
 	/*
 	eprint(this);
@@ -367,11 +370,11 @@ bool bot_aim(entity this, .entity weaponentity, float shotspeed, float shotspeed
 			return false;
 		}
 
-		f = bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', r);
+		bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', r);
 	}
 	else
 	{
-		f = bot_aimdir(this, v - shotorg, r);
+		bot_aimdir(this, v - shotorg, r);
 		//dprint("AIM: ");dprint(vtos(this.bot_aimtargorigin));dprint(" + ");dprint(vtos(this.bot_aimtargvelocity));dprint(" * ");dprint(ftos(this.bot_aimlatency + vlen(this.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
 		//traceline(shotorg, shotorg + shotdir * 10000, false, this);
 		//if (trace_ent.takedamage)
