@@ -679,6 +679,19 @@ void bot_clear(entity this)
 
 void bot_serverframe()
 {
+	if (intermission_running && currentbots > 0)
+	{
+		// after the end of the match all bots stay unless all human players disconnect
+		int realplayers = 0;
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++realplayers; });
+		if (!realplayers)
+		{
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), { dropclient(it); });
+			currentbots = 0;
+		}
+		return;
+	}
+
 	if (game_stopped)
 		return;
 
