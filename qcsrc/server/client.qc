@@ -617,7 +617,10 @@ void PutPlayerInServer(entity this)
 	this.fire_endtime = -1;
 	this.revive_progress = 0;
 	this.revival_time = 0;
+
 	this.air_finished = time + 12;
+	this.waterlevel = WATERLEVEL_NONE;
+	this.watertype = CONTENT_EMPTY;
 
 	entity spawnevent = new_pure(spawnevent);
 	spawnevent.owner = this;
