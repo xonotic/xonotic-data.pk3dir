@@ -2665,7 +2665,7 @@ void PlayerPreThink (entity this)
 
 void DrownPlayer(entity this)
 {
-	if(IS_DEAD(this))
+	if(IS_DEAD(this) || game_stopped || time < game_starttime)
 		return;
 
 	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)
