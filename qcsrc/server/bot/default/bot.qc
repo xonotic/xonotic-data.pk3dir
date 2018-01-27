@@ -597,16 +597,6 @@ float bot_fixcount()
 			++realplayers;
 		});
 	}
-	if(currentbots == -1)
-	{
-		currentbots = 0;
-		// human players joining early may cause weird issues (bots appearing on
-		// the scoreboard as spectators) when switching map with the gotomap
-		// command, as it doesn't remove bots of the previous match, and with
-		// minplayers > 1, so ignore human players in the first bot frame
-		// TODO maybe find a cleaner solution
-		activerealplayers = 0;
-	}
 
 	int bots;
 	// add/remove bots if needed to make sure there are at least
@@ -689,13 +679,37 @@ void bot_clear(entity this)
 
 void bot_serverframe()
 {
+	if (intermission_running && currentbots > 0)
+	{
+		// after the end of the match all bots stay unless all human players disconnect
+		int realplayers = 0;
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++realplayers; });
+		if (!realplayers)
+		{
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), { dropclient(it); });
+			currentbots = 0;
+		}
+		return;
+	}
+
 	if (game_stopped)
 		return;
 
-	if (time < 2)
+	// Added 0.5 to avoid possible addition + immediate removal of bots that would make them appear as
+	// spectators in the scoreboard and never go away. This issue happens at time 2 if map is changed
+	// with the gotomap command, minplayers is > 1 and human clients join as players very soon
+	// either intentionally or automatically (sv_spectate 0)
+	if (time < 2.5)
 	{
 		currentbots = -1;
 		return;
+	}
+
+	if (currentbots == -1)
+	{
+		// count bots already in the server from the previous match
+		currentbots = 0;
+		FOREACH_CLIENT(IS_BOT_CLIENT(it), { ++currentbots; });
 	}
 
 	if(autocvar_skill != skill)

@@ -126,6 +126,9 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
+	if(game_stopped || time < game_starttime)
+		return;
+
 	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
