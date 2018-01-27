@@ -4,6 +4,7 @@
 
 const int VIEWLOC_NOSIDESCROLL = BIT(0); // NOTE: currently unimplemented
 const int VIEWLOC_FREEAIM = BIT(1);
+const int VIEWLOC_FREEMOVE = BIT(2);
 
 #ifdef CSQC
 .entity goalentity;
