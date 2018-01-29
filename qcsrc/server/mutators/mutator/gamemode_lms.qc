@@ -250,6 +250,8 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 
 MUTATOR_HOOKFUNCTION(lms, AutoJoinOnConnection)
 {
+	if(autocvar_g_campaign)
+		return false;
 	return true;
 }
 
