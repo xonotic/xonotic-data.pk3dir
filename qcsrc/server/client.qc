@@ -1191,12 +1191,10 @@ void ClientConnect(entity this)
 	}
 	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-    {
-        int id = this.playerid;
-        this.playerid = 0; // silent
-	    JoinBestTeam(this, false); // if the team number is valid, keep it
-	    this.playerid = id;
-    }
+	int playerid_save = this.playerid;
+	this.playerid = 0; // silent
+	JoinBestTeam(this, false); // if the team number is valid, keep it
+	this.playerid = playerid_save;
 
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
 		TRANSMUTE(Observer, this);
