@@ -48,6 +48,16 @@ int WinningCondition_LMS()
 		if (total_players > 1)
 		{
 			// two or more active players - continue with the game
+
+			if (autocvar_g_campaign)
+			{
+				FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+					float pl_lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+					if (!pl_lives)
+						return WINNING_YES; // human player lost, game over
+					break;
+				});
+			}
 		}
 		else
 		{
