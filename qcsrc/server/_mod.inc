@@ -10,9 +10,11 @@
 #include <server/g_models.qc>
 #include <server/g_subs.qc>
 #include <server/g_world.qc>
+#include <server/handicap.qc>
 #include <server/impulse.qc>
 #include <server/ipban.qc>
 #include <server/item_key.qc>
+#include <server/items.qc>
 #include <server/mapvoting.qc>
 #include <server/matrix.qc>
 #include <server/miscfunctions.qc>
@@ -20,6 +22,7 @@
 #include <server/playerdemo.qc>
 #include <server/portals.qc>
 #include <server/race.qc>
+#include <server/resources.qc>
 #include <server/round_handler.qc>
 #include <server/scores.qc>
 #include <server/scores_rules.qc>
@@ -30,3 +33,10 @@
 #endif
 #include <server/teamplay.qc>
 #include <server/tests.qc>
+
+#include <server/bot/_mod.inc>
+#include <server/command/_mod.inc>
+#include <server/compat/_mod.inc>
+#include <server/mutators/_mod.inc>
+#include <server/pathlib/_mod.inc>
+#include <server/weapons/_mod.inc>

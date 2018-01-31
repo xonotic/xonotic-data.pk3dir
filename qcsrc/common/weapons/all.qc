@@ -26,7 +26,7 @@
     #include "../constants.qh"
     #include "../stats.qh"
     #include "../teams.qh"
-    #include "../util.qh"
+    #include <common/util.qh>
     #include "../monsters/_mod.qh"
     #include "config.qh"
     #include <server/weapons/csqcprojectile.qh>
@@ -50,9 +50,9 @@
 #ifdef SVQC
 	#include "config.qc"
 #endif
-#define IMPLEMENTATION
-#include "all.inc"
-#undef IMPLEMENTATION
+
+#include "weapon/_mod.inc"
+
 
 // WEAPON PLUGIN SYSTEM
 
@@ -192,14 +192,11 @@ string W_FixWeaponOrder_ForceComplete(string order)
 	return W_FixWeaponOrder(order, 1);
 }
 
-void W_RandomWeapons(entity e, float n)
+void W_RandomWeapons(entity e, int n)
 {
-	int i;
-	WepSet remaining;
-	WepSet result;
-	remaining = e.weapons;
-	result = '0 0 0';
-	for (i = 0; i < n; ++i)
+	WepSet remaining = e.weapons;
+	WepSet result = '0 0 0';
+	for (int j = 0; j < n; ++j)
 	{
 		RandomSelection_Init();
 		FOREACH(Weapons, it != WEP_Null, {
@@ -213,48 +210,48 @@ void W_RandomWeapons(entity e, float n)
 	e.weapons = result;
 }
 
-string GetAmmoPicture(.int ammotype)
+string GetAmmoPicture(int ammotype)
 {
 	switch (ammotype)
 	{
-		case ammo_shells:  return ITEM_Shells.m_icon;
-		case ammo_nails:   return ITEM_Bullets.m_icon;
-		case ammo_rockets: return ITEM_Rockets.m_icon;
-		case ammo_cells:   return ITEM_Cells.m_icon;
-		case ammo_plasma:  return ITEM_Plasma.m_icon;
-		case ammo_fuel:    return ITEM_JetpackFuel.m_icon;
+		case RESOURCE_SHELLS:  return ITEM_Shells.m_icon;
+		case RESOURCE_BULLETS: return ITEM_Bullets.m_icon;
+		case RESOURCE_ROCKETS: return ITEM_Rockets.m_icon;
+		case RESOURCE_CELLS:   return ITEM_Cells.m_icon;
+		case RESOURCE_PLASMA:  return ITEM_Plasma.m_icon;
+		case RESOURCE_FUEL:    return ITEM_JetpackFuel.m_icon;
 		default: return "";  // wtf, no ammo type?
 	}
 }
 
 #ifdef CSQC
-	.int GetAmmoFieldFromNum(int i)
+int GetAmmoTypeFromNum(int i)
+{
+	switch (i)
 	{
-		switch (i)
-		{
-			case 0: return ammo_shells;
-			case 1: return ammo_nails;
-			case 2: return ammo_rockets;
-			case 3: return ammo_cells;
-			case 4: return ammo_plasma;
-			case 5: return ammo_fuel;
-			default: return ammo_none;
-		}
+		case 0: return RESOURCE_SHELLS;
+		case 1: return RESOURCE_BULLETS;
+		case 2: return RESOURCE_ROCKETS;
+		case 3: return RESOURCE_CELLS;
+		case 4: return RESOURCE_PLASMA;
+		case 5: return RESOURCE_FUEL;
+		default: return RESOURCE_NONE;
 	}
+}
 
-	int GetAmmoStat(.int ammotype)
+int GetAmmoStat(int ammotype)
+{
+	switch (ammotype)
 	{
-		switch (ammotype)
-		{
-			case ammo_shells: return STAT_SHELLS;
-			case ammo_nails: return STAT_NAILS;
-			case ammo_rockets: return STAT_ROCKETS;
-			case ammo_cells: return STAT_CELLS;
-			case ammo_plasma: return STAT_PLASMA.m_id;
-			case ammo_fuel: return STAT_FUEL.m_id;
-			default: return -1;
-		}
+		case RESOURCE_SHELLS: return STAT_SHELLS;
+		case RESOURCE_BULLETS: return STAT_NAILS;
+		case RESOURCE_ROCKETS: return STAT_ROCKETS;
+		case RESOURCE_CELLS: return STAT_CELLS;
+		case RESOURCE_PLASMA: return STAT_PLASMA.m_id;
+		case RESOURCE_FUEL: return STAT_FUEL.m_id;
+		default: return -1;
 	}
+}
 #endif
 
 string W_Sound(string w_snd)
@@ -533,7 +530,9 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	int compressed_shotorg = compressShotOrigin(this.movedir);
 	// make them match perfectly
 #ifdef SVQC
-	this.movedir = decompressShotOrigin(this.owner.stat_shotorg = compressed_shotorg);
+    // null during init
+    if (this.owner) this.owner.stat_shotorg = compressed_shotorg;
+	this.movedir = decompressShotOrigin(compressed_shotorg);
 #else
 	this.movedir = decompressShotOrigin(compressed_shotorg);
 #endif
@@ -642,12 +641,12 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 		}
 		default:
 		{
-			LOG_INFOF("Incorrect parameters for ^2%s^7\n", "weapon_find");
+			LOG_INFOF("Incorrect parameters for ^2%s^7", "weapon_find");
 		}
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_INFO("\nUsage:^3 cl_cmd weapon_find weapon\n");
-			LOG_INFO("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.\n");
+			LOG_INFO("Usage:^3 cl_cmd weapon_find weapon");
+			LOG_INFO("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
 		}
 	}

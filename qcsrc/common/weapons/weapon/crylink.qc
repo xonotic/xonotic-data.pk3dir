@@ -1,78 +1,6 @@
 #include "crylink.qh"
-#ifndef IMPLEMENTATION
-CLASS(Crylink, Weapon)
-/* ammotype  */ ATTRIB(Crylink, ammo_field, .int, ammo_cells);
-/* impulse   */ ATTRIB(Crylink, impulse, int, 6);
-/* flags     */ ATTRIB(Crylink, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CANCLIMB | WEP_FLAG_NODUAL);
-/* rating    */ ATTRIB(Crylink, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Crylink, wpcolor, vector, '1 0.5 1');
-/* modelname */ ATTRIB(Crylink, mdl, string, "crylink");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Crylink, m_model, Model, MDL_CRYLINK_ITEM);
-#endif
-/* crosshair */ ATTRIB(Crylink, w_crosshair, string, "gfx/crosshaircrylink");
-/* crosshair */ ATTRIB(Crylink, w_crosshair_size, float, 0.5);
-/* wepimg    */ ATTRIB(Crylink, model2, string, "weaponcrylink");
-/* refname   */ ATTRIB(Crylink, netname, string, "crylink");
-/* wepname   */ ATTRIB(Crylink, m_name, string, _("Crylink"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, BOTH) \
-        P(class, prefix, animtime, float, BOTH) \
-        P(class, prefix, bouncedamagefactor, float, BOTH) \
-        P(class, prefix, bounces, float, BOTH) \
-        P(class, prefix, damage, float, BOTH) \
-        P(class, prefix, edgedamage, float, BOTH) \
-        P(class, prefix, force, float, BOTH) \
-        P(class, prefix, joindelay, float, BOTH) \
-        P(class, prefix, joinexplode, float, BOTH) \
-        P(class, prefix, joinexplode_damage, float, BOTH) \
-        P(class, prefix, joinexplode_edgedamage, float, BOTH) \
-        P(class, prefix, joinexplode_force, float, BOTH) \
-        P(class, prefix, joinexplode_radius, float, BOTH) \
-        P(class, prefix, joinspread, float, BOTH) \
-        P(class, prefix, linkexplode, float, BOTH) \
-        P(class, prefix, middle_fadetime, float, BOTH) \
-        P(class, prefix, middle_lifetime, float, BOTH) \
-        P(class, prefix, other_fadetime, float, BOTH) \
-        P(class, prefix, other_lifetime, float, BOTH) \
-        P(class, prefix, radius, float, BOTH) \
-        P(class, prefix, refire, float, BOTH) \
-        P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, secondary, float, NONE) \
-        P(class, prefix, shots, float, BOTH) \
-        P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, spreadtype, float, SEC) \
-        P(class, prefix, spread, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_PROPS(X, Crylink, crylink)
-#undef X
-
-ENDCLASS(Crylink)
-REGISTER_WEAPON(CRYLINK, crylink, NEW(Crylink));
 
 #ifdef SVQC
-.float gravity;
-.float crylink_waitrelease;
-.entity crylink_lastgroup;
-
-.entity crylink_owner; // we can't use realowner, as that's subject to change
-
-.entity queuenext;
-.entity queueprev;
-#endif
-#endif
-#ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_crylink) { weapon_defaultspawnfunc(this, WEP_CRYLINK); }
 
 void W_Crylink_CheckLinks(entity e)
 {
@@ -653,7 +581,7 @@ METHOD(Crylink, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapon
     if(actor.(weaponentity).crylink_lastgroup && actor.(weaponentity).crylink_waitrelease)
         return true;
 
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(crylink, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(crylink, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
     return ammo_amount;
 }
@@ -663,7 +591,7 @@ METHOD(Crylink, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapon
     if(actor.(weaponentity).crylink_lastgroup && actor.(weaponentity).crylink_waitrelease)
         return true;
 
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(crylink, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(crylink, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
     return ammo_amount;
 }
@@ -698,5 +626,4 @@ METHOD(Crylink, wr_impacteffect, void(entity thiswep, entity actor))
             sound(actor, CH_SHOTS, SND_CRYLINK_IMPACT, VOL_BASE, ATTN_NORM);
     }
 }
-#endif
 #endif

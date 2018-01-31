@@ -41,7 +41,7 @@ void SUB_VanishOrRemove (entity ent)
 	else
 	{
 		// remove
-		delete (ent);
+		delete(ent);
 	}
 }
 

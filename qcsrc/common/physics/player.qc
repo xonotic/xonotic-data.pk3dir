@@ -15,13 +15,13 @@ bool Physics_Valid(string thecvar)
 
 float Physics_ClientOption(entity this, string option, float defaultval)
 {
-	if(IS_REAL_CLIENT(this) && Physics_Valid(this.cvar_cl_physics))
+	if(IS_REAL_CLIENT(this) && Physics_Valid(CS(this).cvar_cl_physics))
 	{
-		string s = strcat("g_physics_", this.cvar_cl_physics, "_", option);
+		string s = strcat("g_physics_", CS(this).cvar_cl_physics, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
-	if(autocvar_g_physics_clientselect && autocvar_g_physics_clientselect_default)
+	if(autocvar_g_physics_clientselect && autocvar_g_physics_clientselect_default && autocvar_g_physics_clientselect_default != "")
 	{
 		string s = strcat("g_physics_", autocvar_g_physics_clientselect_default, "_", option);
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
@@ -30,8 +30,14 @@ float Physics_ClientOption(entity this, string option, float defaultval)
 	return defaultval;
 }
 
-void Physics_UpdateStats(entity this, float maxspd_mod)
+void Physics_UpdateStats(entity this)
 {
+	// update this first, as it's used on all stats (wouldn't want to update them all manually from a mutator hook now, would we?)
+	STAT(MOVEVARS_HIGHSPEED, this) = autocvar_g_movement_highspeed;
+
+	MUTATOR_CALLHOOK(PlayerPhysics_UpdateStats, this);
+	float maxspd_mod = PHYS_HIGHSPEED(this);
+
 	STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw", autocvar_sv_airaccel_qw), maxspd_mod);
 	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw))
 		? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw", autocvar_sv_airstrafeaccel_qw), maxspd_mod)
@@ -69,6 +75,7 @@ void Physics_UpdateStats(entity this, float maxspd_mod)
 	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate", autocvar_sv_airaccelerate);
 	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate", autocvar_sv_airstopaccelerate);
 	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
+	STAT(MOVEVARS_JUMPVELOCITY_CROUCH, this) = Physics_ClientOption(this, "jumpvelocity_crouch", autocvar_sv_jumpvelocity_crouch);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 }
 #endif
@@ -135,13 +142,13 @@ void PM_ClientMovement_UpdateStatus(entity this)
 
 void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 {
-	float movity = IsMoveInDirection(this.movement, 0);
+	float movity = IsMoveInDirection(PHYS_CS(this).movement, 0);
 	if(PHYS_AIRCONTROL_BACKWARDS(this))
-		movity += IsMoveInDirection(this.movement, 180);
+		movity += IsMoveInDirection(PHYS_CS(this).movement, 180);
 	if(PHYS_AIRCONTROL_SIDEWARDS(this))
 	{
-		movity += IsMoveInDirection(this.movement, 90);
-		movity += IsMoveInDirection(this.movement, -90);
+		movity += IsMoveInDirection(PHYS_CS(this).movement, 90);
+		movity += IsMoveInDirection(PHYS_CS(this).movement, -90);
 	}
 
 	float k = 32 * (2 * movity - 1);
@@ -297,7 +304,7 @@ bool PlayerJump(entity this)
 #endif
 
 	bool doublejump = false;
-	float mjumpheight = PHYS_JUMPVELOCITY(this);
+	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
 	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
 
 	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
@@ -427,7 +434,7 @@ void CheckWaterJump(entity this)
 
 
 #ifdef SVQC
-	#define JETPACK_JUMP(s)	s.cvar_cl_jetpack_jump
+	#define JETPACK_JUMP(s)	CS(s).cvar_cl_jetpack_jump
 #elif defined(CSQC)
 	float autocvar_cl_jetpack_jump;
 	#define JETPACK_JUMP(s)	autocvar_cl_jetpack_jump
@@ -477,31 +484,18 @@ void CheckPlayerJump(entity this)
 		CheckWaterJump(this);
 }
 
-float racecar_angle(float forward, float down)
-{
-	if (forward < 0)
-	{
-		forward = -forward;
-		down = -down;
-	}
-
-	float ret = vectoyaw('0 1 0' * down + '1 0 0' * forward);
-
-	float angle_mult = forward / (800 + forward);
-
-	if (ret > 180)
-		return ret * angle_mult + 360 * (1 - angle_mult);
-	else
-		return ret * angle_mult;
-}
-
 #ifdef SVQC
 string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
 void SpecialCommand(entity this)
 {
-	if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
-		LOG_INFO("A hollow voice says \"Plugh\".\n");
+	if(autocvar_sv_cheats || this.maycheat)
+	{
+		if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
+			LOG_INFO("A hollow voice says \"Plugh\".");
+	}
+	else
+		STAT(MOVEVARS_SPECIALCOMMAND, this) = true;
 }
 #endif
 
@@ -526,18 +520,18 @@ bool PM_check_specialcommand(entity this, int buttons)
 	else
 		c = "?";
 
-	if (c == substring(specialcommand, this.specialcommand_pos, 1))
+	if (c == substring(specialcommand, CS(this).specialcommand_pos, 1))
 	{
-		this.specialcommand_pos += 1;
-		if (this.specialcommand_pos >= strlen(specialcommand))
+		CS(this).specialcommand_pos += 1;
+		if (CS(this).specialcommand_pos >= strlen(specialcommand))
 		{
-			this.specialcommand_pos = 0;
+			CS(this).specialcommand_pos = 0;
 			SpecialCommand(this);
 			return true;
 		}
 	}
-	else if (this.specialcommand_pos && (c != substring(specialcommand, this.specialcommand_pos - 1, 1)))
-		this.specialcommand_pos = 0;
+	else if (CS(this).specialcommand_pos && (c != substring(specialcommand, CS(this).specialcommand_pos - 1, 1)))
+		CS(this).specialcommand_pos = 0;
 #endif
 	return false;
 }
@@ -550,7 +544,7 @@ void PM_check_nickspam(entity this)
 	if (this.nickspamcount >= autocvar_g_nick_flood_penalty_yellow)
 	{
 		// slight annoyance for nick change scripts
-		this.movement = -1 * this.movement;
+		PHYS_CS(this).movement = -1 * PHYS_CS(this).movement;
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = PHYS_INPUT_BUTTON_HOOK(this) = PHYS_INPUT_BUTTON_USE(this) = false;
 
 		if (this.nickspamcount >= autocvar_g_nick_flood_penalty_red) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
@@ -598,12 +592,12 @@ void PM_check_frozen(entity this)
 #endif
 	)
 	{
-		this.movement_x = bound(-5, this.movement.x, 5);
-		this.movement_y = bound(-5, this.movement.y, 5);
-		this.movement_z = bound(-5, this.movement.z, 5);
+		PHYS_CS(this).movement_x = bound(-5, PHYS_CS(this).movement.x, 5);
+		PHYS_CS(this).movement_y = bound(-5, PHYS_CS(this).movement.y, 5);
+		PHYS_CS(this).movement_z = bound(-5, PHYS_CS(this).movement.z, 5);
 	}
 	else
-		this.movement = '0 0 0';
+		PHYS_CS(this).movement = '0 0 0';
 
 	vector midpoint = ((this.absmin + this.absmax) * 0.5);
 	if (pointcontents(midpoint) == CONTENT_WATER)
@@ -684,7 +678,7 @@ void PM_check_blocked(entity this)
 #ifdef SVQC
 	if (!this.player_blocked)
 		return;
-	this.movement = '0 0 0';
+	PHYS_CS(this).movement = '0 0 0';
 	this.disableclientprediction = 1;
 #endif
 }
@@ -693,8 +687,8 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 {
 	//makevectors(this.v_angle.y * '0 1 0');
 	makevectors(this.v_angle);
-	vector wishvel = v_forward * this.movement_x
-					+ v_right * this.movement_y;
+	vector wishvel = v_forward * PHYS_CS(this).movement_x
+					+ v_right * PHYS_CS(this).movement_y;
 	// add remaining speed as Z component
 	float maxairspd = PHYS_MAXAIRSPEED(this) * max(1, maxspd_mod);
 	// fix speedhacks :P
@@ -818,10 +812,16 @@ void SV_PlayerPhysics(entity this)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
+#ifdef SVQC
+	// needs to be called before physics are run!
+	if(IS_REAL_CLIENT(this))
+		PM_UpdateButtons(this, CS(this));
+#endif
+
 	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);
 
 #ifdef SVQC
-	this.pm_frametime = frametime;
+	CS(this).pm_frametime = frametime;
 #elif defined(CSQC)
 	if((ITEMS_STAT(this) & IT_USING_JETPACK) && !IS_DEAD(this) && !intermission)
 		this.csqcmodel_modelflags |= MF_ROCKET;

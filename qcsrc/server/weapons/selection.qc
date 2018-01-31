@@ -2,6 +2,7 @@
 
 #include "weaponsystem.qh"
 #include <common/t_items.qh>
+#include <server/items.qh>
 #include <common/constants.qh>
 #include <common/net_linked.qh>
 #include <common/util.qh>
@@ -25,8 +26,10 @@ void Weapon_whereis(Weapon this, entity cl)
 	if (!autocvar_g_showweaponspawns) return;
 	IL_EACH(g_items, it.weapon == this.m_id && (!it.team || (it.ItemStatus & ITS_AVAILABLE)),
 	{
-		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
+		if (Item_IsLoot(it) && (autocvar_g_showweaponspawns < 2))
+		{
 			continue;
+		}
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,
 			-2, 0,
@@ -44,7 +47,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 {
 	float f = 0;
 
-	if (time < this.hasweapon_complain_spam)
+	if (time < CS(this).hasweapon_complain_spam)
 		complain = 0;
 
 	// ignore hook button when using other offhand equipment
@@ -53,7 +56,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 	    complain = 0;
 
 	if (complain)
-		this.hasweapon_complain_spam = time + 0.2;
+		CS(this).hasweapon_complain_spam = time + 0.2;
 
 	if (wpn == WEP_Null)
 	{
@@ -61,7 +64,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 			sprint(this, "Invalid weapon\n");
 		return false;
 	}
-	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(this.dual_weapons & wpn.m_wepset))
+	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(PS(this).dual_weapons & wpn.m_wepset))
 		return false; // no complaints needed
 	if (this.weapons & WepSet_FromWeapon(wpn))
 	{
@@ -290,7 +293,7 @@ void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponent
 void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
 {
 	float w;
-	w = W_GetCycleWeapon(this, this.cvar_cl_weaponpriority, +1, imp, 1, (this.cvar_cl_weaponimpulsemode == 0), weaponentity);
+	w = W_GetCycleWeapon(this, CS(this).cvar_cl_weaponpriority, +1, imp, 1, (CS(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
 	if(w > 0)
 		W_SwitchWeapon(this, Weapons_from(w), weaponentity);
 }
@@ -303,7 +306,7 @@ void W_NextWeapon(entity this, int list, .entity weaponentity)
 	else if(list == 1)
 		W_CycleWeapon(this, this.weaponorder_byimpulse, -1, weaponentity);
 	else if(list == 2)
-		W_CycleWeapon(this, this.cvar_cl_weaponpriority, -1, weaponentity);
+		W_CycleWeapon(this, CS(this).cvar_cl_weaponpriority, -1, weaponentity);
 }
 
 // prev weapon
@@ -314,7 +317,7 @@ void W_PreviousWeapon(entity this, float list, .entity weaponentity)
 	else if(list == 1)
 		W_CycleWeapon(this, this.weaponorder_byimpulse, +1, weaponentity);
 	else if(list == 2)
-		W_CycleWeapon(this, this.cvar_cl_weaponpriority, +1, weaponentity);
+		W_CycleWeapon(this, CS(this).cvar_cl_weaponpriority, +1, weaponentity);
 }
 
 // previously used if exists and has ammo, (second) best otherwise

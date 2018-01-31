@@ -1,6 +1,6 @@
 #include "random.qh"
 
-[[eraseable]]
+ERASEABLE
 void RandomSelection_Init()
 {
 	RandomSelection_totalweight = 0;
@@ -10,7 +10,7 @@ void RandomSelection_Init()
 	RandomSelection_best_priority = -1;
 }
 
-[[eraseable]]
+ERASEABLE
 void RandomSelection_Add(entity e, float f, string s, vector v, float weight, float priority)
 {
 	if (priority > RandomSelection_best_priority)
@@ -38,7 +38,7 @@ void RandomSelection_Add(entity e, float f, string s, vector v, float weight, fl
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
 
-[[eraseable]]
+ERASEABLE
 void DistributeEvenly_Init(float amount, float totalweight)
 {
 	if (DistributeEvenly_amount)
@@ -50,7 +50,7 @@ void DistributeEvenly_Init(float amount, float totalweight)
 	DistributeEvenly_totalweight = totalweight;
 }
 
-[[eraseable]]
+ERASEABLE
 float DistributeEvenly_Get(float weight)
 {
 	float f;
@@ -61,7 +61,7 @@ float DistributeEvenly_Get(float weight)
 	return f;
 }
 
-[[eraseable]]
+ERASEABLE
 float DistributeEvenly_GetRandomized(float weight)
 {
 	float f;
@@ -75,7 +75,7 @@ float DistributeEvenly_GetRandomized(float weight)
 // from the GNU Scientific Library
 float gsl_ran_gaussian_lastvalue;
 float gsl_ran_gaussian_lastvalue_set;
-[[eraseable]]
+ERASEABLE
 float gsl_ran_gaussian(float sigma)
 {
 	if (gsl_ran_gaussian_lastvalue_set)

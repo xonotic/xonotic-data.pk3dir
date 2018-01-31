@@ -85,18 +85,18 @@ int kh_key_dropped, kh_key_carried;
 
 int kh_Key_AllOwnedByWhichTeam();
 
-const float ST_KH_CAPS = 1;
+const int ST_KH_CAPS = 1;
 void kh_ScoreRules(int teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
-	ScoreInfo_SetLabel_TeamScore(  ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_PUSHES,    "pushes",    0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_DESTROYS,  "destroyed", SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_PICKUPS,   "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
+        field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+        field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+        field(SP_KH_PUSHES, "pushes", 0);
+        field(SP_KH_DESTROYS, "destroyed", SFL_LOWER_IS_BETTER);
+        field(SP_KH_PICKUPS, "pickups", 0);
+        field(SP_KH_KCKILLS, "kckills", 0);
+        field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);
+	});
 }
 
 bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)  // runs all the time
@@ -133,7 +133,7 @@ void kh_update_state()
 		s |= (32 ** key.count) * f;
 	}
 
-	FOREACH_CLIENT(true, LAMBDA(it.kh_state = s));
+	FOREACH_CLIENT(true, { it.kh_state = s; });
 
 	FOR_EACH_KH_KEY(key)
 	{
@@ -394,9 +394,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			{
 				if (!k.owner) continue;
 				entity first = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, { first = it; break; });
 				entity third = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, { third = it; break; });
 				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFinish, third);
 			}
 		}
@@ -409,9 +409,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			{
 				if (!k.owner) continue;
 				entity first = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, { first = it; break; });
 				entity third = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, { third = it; break; });
 				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFriend, third);
 			}
 		}
@@ -441,7 +441,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 	if(key.kh_dropperteam != player.team)
 	{
 		kh_Scores_Event(player, key, "collect", autocvar_g_balance_keyhunt_score_collect, 0);
-		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
+		GameRules_scoring_add(player, KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
 	int realteam = kh_Team_ByID(key.count);
@@ -534,7 +534,7 @@ void kh_WinnerTeam(int winner_team)  // runs when a team wins
 	{
 		float f = DistributeEvenly_Get(1);
 		kh_Scores_Event(key.owner, key, "capture", f, 0);
-		PlayerTeamScore_Add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
+		GameRules_scoring_add_team(key.owner, KH_CAPS, 1);
 		nades_GiveBonus(key.owner, autocvar_g_nades_bonus_score_high);
 	}
 
@@ -593,7 +593,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			kh_Scores_Event(lostkey.kh_previous_owner, NULL, "pushed", 0, -autocvar_g_balance_keyhunt_score_push);
 			// don't actually GIVE him the -nn points, just log
 		kh_Scores_Event(attacker, NULL, "push", autocvar_g_balance_keyhunt_score_push, 0);
-		PlayerScore_Add(attacker, SP_KH_PUSHES, 1);
+		GameRules_scoring_add(attacker, KH_PUSHES, 1);
 		//centerprint(attacker, "Your push is the best!"); // does this really need to exist?
 	}
 	else
@@ -601,7 +601,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 		int players = 0;
 		float of = autocvar_g_balance_keyhunt_score_destroyed_ownfactor;
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.team != loser_team, LAMBDA(++players));
+		FOREACH_CLIENT(IS_PLAYER(it) && it.team != loser_team, { ++players; });
 
 		entity key;
 		int keys = 0;
@@ -614,7 +614,7 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 			// don't actually GIVE him the -nn points, just log
 
 		if(lostkey.kh_previous_owner.playerid == lostkey.kh_previous_owner_playerid)
-			PlayerScore_Add(lostkey.kh_previous_owner, SP_KH_DESTROYS, 1);
+			GameRules_scoring_add(lostkey.kh_previous_owner, KH_DESTROYS, 1);
 
 		DistributeEvenly_Init(autocvar_g_balance_keyhunt_score_destroyed, keys * of + players);
 
@@ -636,16 +636,16 @@ void kh_LoserTeam(int loser_team, entity lostkey)  // runs when a player pushes 
 				continue;
 
 			players = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, LAMBDA(++players));
+			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, { ++players; });
 
 			DistributeEvenly_Init(fragsleft, j);
 			fragsleft = DistributeEvenly_Get(j - 1);
 			DistributeEvenly_Init(DistributeEvenly_Get(1), players);
 
-			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, {
 				f = DistributeEvenly_Get(1);
 				kh_Scores_Event(it, NULL, "destroyed", f, 0);
-			));
+			});
 
 			--j;
 		}
@@ -703,7 +703,7 @@ LABEL(not_winning)
 	if(kh_interferemsg_time && time > kh_interferemsg_time)
 	{
 		kh_interferemsg_time = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(it.team == kh_interferemsg_team)
 				if(it.kh_next)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_MEET);
@@ -711,7 +711,7 @@ LABEL(not_winning)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
 			else
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
-		));
+		});
 	}
 
 	this.nextthink = time + 0.05;
@@ -809,7 +809,7 @@ void kh_Key_DropOne(entity key)
 	key.enemy = player;
 
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
-	PlayerScore_Add(player, SP_KH_LOSSES, 1);
+	GameRules_scoring_add(player, KH_LOSSES, 1);
 	int realteam = kh_Team_ByID(key.count);
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_DROP), player.netname);
 
@@ -836,7 +836,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 		while((key = player.kh_next))
 		{
 			kh_Scores_Event(player, key, "losekey", 0, 0);
-			PlayerScore_Add(player, SP_KH_LOSSES, 1);
+			GameRules_scoring_add(player, KH_LOSSES, 1);
 			int realteam = kh_Team_ByID(key.count);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(realteam, INFO_KEYHUNT_LOST), player.netname);
 			kh_Key_AssignTo(key, NULL);
@@ -858,10 +858,10 @@ int kh_GetMissingTeams()
 	{
 		int teem = kh_Team_ByID(i);
 		int players = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
 				++players;
-		));
+		});
 		if (!players)
 			missing_teams |= (2 ** i);
 	}
@@ -939,14 +939,14 @@ void kh_StartRound()  // runs at the start of each round
 		int teem = kh_Team_ByID(i);
 		int players = 0;
 		entity my_player = NULL;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
 			{
 				++players;
 				if(random() * players <= 1)
 					my_player = it;
 			}
-		));
+		});
 		kh_Key_Spawn(my_player, 360 * i / NumTeams(kh_teams), i);
 	}
 
@@ -972,7 +972,7 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 		else
 		{
 			kh_Scores_Event(attacker, targ.kh_next, "carrierfrag", autocvar_g_balance_keyhunt_score_carrierfrag-1, 0);
-			PlayerScore_Add(attacker, SP_KH_KCKILLS, 1);
+			GameRules_scoring_add(attacker, KH_KCKILLS, 1);
 			// the frag gets added later
 		}
 	}
@@ -986,15 +986,7 @@ void kh_Initialize()  // sets up th KH environment
 	kh_teams = autocvar_g_keyhunt_teams_override;
 	if(kh_teams < 2)
 		kh_teams = cvar("g_keyhunt_teams"); // read the cvar directly as it gets written earlier in the same frame
-	kh_teams = bound(2, kh_teams, 4);
-
-	int teams = 0;
-	if(kh_teams >= 1) teams |= BIT(0);
-	if(kh_teams >= 2) teams |= BIT(1);
-	if(kh_teams >= 3) teams |= BIT(2);
-	if(kh_teams >= 4) teams |= BIT(3);
-
-	kh_teams = teams; // now set it?
+	kh_teams = BITS(bound(2, kh_teams, 4));
 
 	// make a KH entity for controlling the game
 	kh_controller = spawn();
@@ -1079,9 +1071,8 @@ void havocbot_role_kh_carrier(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		if(kh_Key_AllOwnedByWhichTeam() == this.team)
@@ -1090,6 +1081,8 @@ void havocbot_role_kh_carrier(entity this)
 			havocbot_goalrating_kh(this, 4, 4, 1); // play defensively
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1116,10 +1109,9 @@ void havocbot_role_kh_defense(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		float key_owner_team;
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1131,6 +1123,8 @@ void havocbot_role_kh_defense(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1157,11 +1151,10 @@ void havocbot_role_kh_offense(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		float key_owner_team;
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1173,6 +1166,8 @@ void havocbot_role_kh_offense(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK! EMERGENCY!
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1207,9 +1202,8 @@ void havocbot_role_kh_freelancer(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		int key_owner_team = kh_Key_AllOwnedByWhichTeam();
@@ -1221,6 +1215,8 @@ void havocbot_role_kh_freelancer(entity this)
 			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 

@@ -1,5 +1,7 @@
 #include "mapvoting.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "g_world.qh"
 #include "command/cmd.qh"
 #include "command/getreplies.qh"
@@ -7,6 +9,7 @@
 #include <common/net_linked.qh>
 #include "../common/mapinfo.qh"
 #include "../common/playerstats.qh"
+#include <common/state.qh>
 #include "../common/util.qh"
 
 
@@ -99,7 +102,7 @@ string GameTypeVote_MapInfo_FixName(string m)
 
 void MapVote_ClearAllVotes()
 {
-	FOREACH_CLIENT(true, LAMBDA(it.mapvote = 0));
+	FOREACH_CLIENT(true, { it.mapvote = 0; });
 }
 
 void MapVote_UnzoneStrings()
@@ -453,7 +456,7 @@ bool MapVote_Finished(int mappos)
 			GameLogEcho(strcat(":vote:suggestion_accepted:", mapvote_maps[mappos]));
 	}
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(FixClientCvars(it)));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), { FixClientCvars(it); });
 
 	if(gametypevote)
 	{
@@ -594,12 +597,12 @@ void MapVote_Tick()
 		return;
 
 	int totalvotes = 0;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		// hide scoreboard again
 		if(it.health != 2342)
 		{
 			it.health = 2342;
-			it.impulse = 0;
+			CS(it).impulse = 0;
 
 			msg_entity = it;
 			WriteByte(MSG_ONE, SVC_FINALE);
@@ -610,17 +613,17 @@ void MapVote_Tick()
 		if ( !(mapvote_maps_flags[it.mapvote-1] & GTV_AVAILABLE) )
 			it.mapvote = 0;
 		// use impulses as new vote
-		if(it.impulse >= 1 && it.impulse <= mapvote_count)
-			if( mapvote_maps_flags[it.impulse - 1] & GTV_AVAILABLE )
+		if(CS(it).impulse >= 1 && CS(it).impulse <= mapvote_count)
+			if( mapvote_maps_flags[CS(it).impulse - 1] & GTV_AVAILABLE )
 			{
-				it.mapvote = it.impulse;
+				it.mapvote = CS(it).impulse;
 				MapVote_TouchVotes(it);
 			}
-		it.impulse = 0;
+		CS(it).impulse = 0;
 
 		if(it.mapvote)
 			++totalvotes;
-	));
+	});
 
 	MapVote_CheckRules_1(); // just count
 }

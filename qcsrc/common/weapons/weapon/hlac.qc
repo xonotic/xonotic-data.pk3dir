@@ -1,59 +1,6 @@
 #include "hlac.qh"
-#ifndef IMPLEMENTATION
-CLASS(HLAC, Weapon)
-/* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells);
-/* impulse   */ ATTRIB(HLAC, impulse, int, 6);
-/* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
-/* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
-/* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
-#ifdef GAMEQC
-/* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);
-#endif
-/* crosshair */ ATTRIB(HLAC, w_crosshair, string, "gfx/crosshairhlac");
-/* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(HLAC, model2, string, "weaponhlac");
-/* refname   */ ATTRIB(HLAC, netname, string, "hlac");
-/* wepname   */ ATTRIB(HLAC, m_name, string, _("Heavy Laser Assault Cannon"));
 
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, BOTH) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, edgedamage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, radius, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, shots, float, SEC) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, spread, float, SEC) \
-		P(class, prefix, spread_add, float, PRI) \
-		P(class, prefix, spread_crouchmod, float, BOTH) \
-		P(class, prefix, spread_max, float, PRI) \
-		P(class, prefix, spread_min, float, PRI) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, HLAC, hlac)
-#undef X
-
-ENDCLASS(HLAC)
-REGISTER_WEAPON(HLAC, hlac, NEW(HLAC));
-
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
 void W_HLAC_Touch(entity this, entity toucher)
 {
@@ -241,13 +188,13 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(HLAC, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(hlac, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(hlac, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
     return ammo_amount;
 }
 METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hlac, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(hlac, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
     return ammo_amount;
 }
@@ -276,5 +223,4 @@ METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
         sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
 }
 
-#endif
 #endif

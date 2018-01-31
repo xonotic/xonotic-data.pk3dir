@@ -3,6 +3,8 @@
 //  Turret Config Generator
 // ==========================
 
+#ifdef SVQC
+
 void T_Config_Queue_Swap(float root, float child, entity pass)
 {
 	string oldroot = config_queue[root];
@@ -48,7 +50,7 @@ void Dump_Turret_Settings()
 		TUR_CONFIG_WRITETOFILE("// }}}\n")
 
 		// step 5: debug info
-		LOG_INFO(sprintf("#%d: %s: %d settings...\n", i, it.turret_name, TUR_CONFIG_COUNT));
+		LOG_INFOF("#%d: %s: %d settings...", i, it.turret_name, TUR_CONFIG_COUNT);
 		totalsettings += TUR_CONFIG_COUNT;
 	});
 
@@ -58,5 +60,7 @@ void Dump_Turret_Settings()
 		config_queue[j] = string_null;
 
 	// extra information
-	LOG_INFO(sprintf("Totals: %d turrets, %d settings\n", (Turrets_COUNT - 1), totalsettings));
+	LOG_INFOF("Totals: %d turrets, %d settings", (Turrets_COUNT - 1), totalsettings);
 }
+
+#endif

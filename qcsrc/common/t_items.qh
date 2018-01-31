@@ -26,6 +26,8 @@ const int ISF_SIZE 				= BIT(7);
 
 #ifdef SVQC
 void StartItem(entity this, entity a);
+.int item_group;
+.int item_group_count;
 #endif
 
 #ifdef CSQC
@@ -44,32 +46,24 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 .vector colormod;
 
 void ItemDraw(entity this);
-void ItemDrawSimple(entity this);
 
 #endif
 #ifdef SVQC
-spawnfunc(item_strength);
-spawnfunc(item_invincible);
-spawnfunc(item_armor_small);
-spawnfunc(item_shells);
-spawnfunc(item_bullets);
-spawnfunc(item_rockets);
 
 float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
-
 
 bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
-#define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
-	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
 #define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
 	// range: 10 .. respawntime + respawntimejitter
 
 .float max_armorvalue;
 .float pickup_anyway;
+
+.float item_respawncounter;
 
 void Item_Show (entity e, float mode);
 
@@ -81,11 +75,17 @@ void Item_ScheduleRespawnIn(entity e, float t);
 void Item_ScheduleRespawn(entity e);
 
 void Item_ScheduleInitialRespawn(entity e);
-float ITEM_MODE_NONE = 0;
-float ITEM_MODE_HEALTH = 1;
-float ITEM_MODE_ARMOR = 2;
-float ITEM_MODE_FUEL = 3;
-float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode);
+
+/// \brief Give several random weapons and ammo to the entity.
+/// \param[in,out] receiver Entity to give weapons to.
+/// \param[in] num_weapons Number of weapons to give.
+/// \param[in] weapon_names Names of weapons to give separated by spaces.
+/// \param[in] ammo Entity containing the ammo amount for each possible weapon.
+/// \return No return.
+void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
+	entity ammo_entity);
+
+float Item_GiveAmmoTo(entity item, entity player, int resource_type, float ammomax);
 
 float Item_GiveTo(entity item, entity player);
 

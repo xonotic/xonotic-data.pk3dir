@@ -67,6 +67,8 @@ const float VHSF_FACTORY = 2;
 .int hud = _STAT(HUD);
 .float dmg_time;
 
+.float play_time;
+
 .int volly_counter;
 
 const int MAX_AXH = 4;

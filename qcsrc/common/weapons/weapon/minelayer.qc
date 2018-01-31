@@ -1,68 +1,6 @@
 #include "minelayer.qh"
-#ifndef IMPLEMENTATION
-CLASS(MineLayer, Weapon)
-/* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(MineLayer, impulse, int, 4);
-/* flags     */ ATTRIB(MineLayer, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(MineLayer, wpcolor, vector, '0.75 1 0');
-/* modelname */ ATTRIB(MineLayer, mdl, string, "minelayer");
-#ifdef GAMEQC
-/* model     */ ATTRIB(MineLayer, m_model, Model, MDL_MINELAYER_ITEM);
-#endif
-/* crosshair */ ATTRIB(MineLayer, w_crosshair, string, "gfx/crosshairminelayer");
-/* crosshair */ ATTRIB(MineLayer, w_crosshair_size, float, 0.9);
-/* wepimg    */ ATTRIB(MineLayer, model2, string, "weaponminelayer");
-/* refname   */ ATTRIB(MineLayer, netname, string, "minelayer");
-/* wepname   */ ATTRIB(MineLayer, m_name, string, _("Mine Layer"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, NONE) \
-		P(class, prefix, animtime, float, NONE) \
-		P(class, prefix, damageforcescale, float, NONE) \
-		P(class, prefix, damage, float, NONE) \
-		P(class, prefix, detonatedelay, float, NONE) \
-		P(class, prefix, edgedamage, float, NONE) \
-		P(class, prefix, force, float, NONE) \
-		P(class, prefix, health, float, NONE) \
-		P(class, prefix, lifetime, float, NONE) \
-		P(class, prefix, lifetime_countdown, float, NONE) \
-		P(class, prefix, limit, float, NONE) \
-		P(class, prefix, protection, float, NONE) \
-		P(class, prefix, proximityradius, float, NONE) \
-		P(class, prefix, radius, float, NONE) \
-		P(class, prefix, refire, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, remote_damage, float, NONE) \
-		P(class, prefix, remote_edgedamage, float, NONE) \
-		P(class, prefix, remote_force, float, NONE) \
-		P(class, prefix, remote_radius, float, NONE) \
-		P(class, prefix, speed, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, time, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_PROPS(X, MineLayer, minelayer)
-#undef X
-ENDCLASS(MineLayer)
-REGISTER_WEAPON(MINE_LAYER, minelayer, NEW(MineLayer));
 
 #ifdef SVQC
-void W_MineLayer_Think(entity this);
-.float minelayer_detonate, mine_explodeanyway;
-.float mine_time;
-.vector mine_orientation;
-#endif
-#endif
-#ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(this, WEP_MINE_LAYER); }
 
 void W_MineLayer_Stick(entity this, entity to)
 {
@@ -514,7 +452,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
     {
         // not if we're holding the minelayer without enough ammo, but can detonate existing mines
-        if(!(W_MineLayer_PlacedMines(actor, weaponentity, false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
+        if(!(W_MineLayer_PlacedMines(actor, weaponentity, false) && GetResourceAmount(actor, thiswep.ammo_type) < WEP_CVAR(minelayer, ammo))) {
             thiswep.wr_reload(thiswep, actor, weaponentity);
         }
     }
@@ -539,7 +477,7 @@ METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor, .entity weap
     // actually do // don't switch while placing a mine
     //if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
     //{
-        float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
+        float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(minelayer, ammo);
         ammo_amount += actor.(weaponentity).(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
         return ammo_amount;
     //}
@@ -586,5 +524,4 @@ METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
         sound(actor, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
 }
 
-#endif
 #endif

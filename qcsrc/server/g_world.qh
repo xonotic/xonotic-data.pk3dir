@@ -10,12 +10,8 @@ const int WINNING_YES = 1; // winner found
 const int WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
 const int WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
 
-bool limits_are_set = false;
-void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override);
-
 float WinningCondition_Scores(float limit, float leadlimit);
 void SetWinners(.float field, float value);
-void CheckRules_Player(entity this);
 void IntermissionThink(entity this);
 void GotoNextMap(float reinit);
 void ReadyRestart();

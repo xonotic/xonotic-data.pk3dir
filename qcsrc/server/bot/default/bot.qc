@@ -41,6 +41,13 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/util_server.qh>
 
+// TODO: remove this function! its only purpose is to update these fields since bot_setnameandstuff is called before ClientState
+void bot_setclientfields(entity this)
+{
+	CS(this).cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	CS(this).cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+}
+
 entity bot_spawn()
 {
 	entity bot = spawnclient();
@@ -50,6 +57,7 @@ entity bot_spawn()
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
+		bot_setclientfields(bot);
 		PutClientInServer(bot);
 	}
 	return bot;
@@ -74,7 +82,7 @@ void bot_think(entity this)
 
 	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		this.bot_nextthink = time + 0.5;
 		return;
 	}
@@ -94,7 +102,7 @@ void bot_think(entity this)
 	// (simulated network latency + naturally delayed reflexes)
 	//this.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
 	// minimum ping 20+10 random
-	this.ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
+	CS(this).ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
 	// skill 10 = ping 0.2 (adrenaline)
 	// skill 0 = ping 0.7 (slightly drunk)
 
@@ -113,7 +121,7 @@ void bot_think(entity this)
 	if (time < game_starttime)
 	{
 		// block the bot during the countdown to game start
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		this.bot_nextthink = game_starttime;
 		return;
 	}
@@ -121,11 +129,11 @@ void bot_think(entity this)
 	// if dead, just wait until we can respawn
 	if (IS_DEAD(this))
 	{
-		this.movement = '0 0 0';
+		CS(this).movement = '0 0 0';
 		if (this.deadflag == DEAD_DEAD)
 		{
 			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
-			this.bot_strategytime = 0;
+			navigation_goalrating_timeout_force(this);
 		}
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
@@ -158,7 +166,7 @@ void bot_setnameandstuff(entity this)
 
 	if(file < 0)
 	{
-		LOG_INFO(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		LOG_INFOF("Error: Can not open the bot configuration file '%s'", autocvar_bot_config_file);
 		readfile = "";
 	}
 	else
@@ -175,13 +183,13 @@ void bot_setnameandstuff(entity this)
 				continue;
 			s = argv(0);
 			prio = 1;
-			FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 				if(s == it.cleanname)
 				{
 					prio = 0;
 					break;
 				}
-			));
+			});
 			RandomSelection_AddString(readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
@@ -248,10 +256,10 @@ void bot_setnameandstuff(entity this)
 
 	// number bots with identical names
 	int j = 0;
-	FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 		if(it.cleanname == name)
 			++j;
-	));
+	});
 	if (j)
 		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
 	else
@@ -264,9 +272,6 @@ void bot_setnameandstuff(entity this)
 		bot_model = strcat(bot_model, ".iqm");
 	this.playermodel = this.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	this.playerskin = this.playerskin_freeme = strzone(bot_skin);
-
-	this.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the NULL
-	this.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 void bot_custom_weapon_priority_setup()
@@ -419,7 +424,10 @@ void bot_clientconnect(entity this)
 	this.createdtime = this.bot_nextthink;
 
 	if(!this.bot_config_loaded) // This is needed so team overrider doesn't break between matches
+	{
 		bot_setnameandstuff(this);
+		bot_setclientfields(this);
+	}
 
 	if(this.bot_forced_team==1)
 		this.team = NUM_TEAM_1;
@@ -430,7 +438,7 @@ void bot_clientconnect(entity this)
 	else if(this.bot_forced_team==4)
 		this.team = NUM_TEAM_4;
 	else
-		JoinBestTeam(this, false, true);
+		JoinBestTeam(this, true);
 
 	havocbot_setupbot(this);
 }
@@ -526,12 +534,12 @@ void autoskill(float factor)
 
 	bestbot = -1;
 	bestplayer = -1;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		if(IS_REAL_CLIENT(it))
 			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
 		else
 			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
-	));
+	});
 
 	LOG_DEBUG("autoskill: best player got ", ftos(bestplayer), ", ");
 	LOG_DEBUG("best bot got ", ftos(bestbot), "; ");
@@ -565,15 +573,14 @@ void autoskill(float factor)
 		// don't reset counters, wait for them to accumulate
 	}
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.totalfrags_lastcheck = it.totalfrags));
+	FOREACH_CLIENT(IS_PLAYER(it), { it.totalfrags_lastcheck = it.totalfrags; });
 }
 
 void bot_calculate_stepheightvec()
 {
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
-	jumpstepheightvec = stepheightvec +
-		((autocvar_sv_jumpvelocity * autocvar_sv_jumpvelocity) / (2 * autocvar_sv_gravity)) * '0 0 0.85';
-		// 0.75 factor is for safety to make the jumps easy
+	jumpheight_vec = (autocvar_sv_jumpvelocity ** 2) / (2 * autocvar_sv_gravity) * '0 0 1';
+	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
 }
 
 float bot_fixcount()
@@ -584,11 +591,11 @@ float bot_fixcount()
 		activerealplayers = M_ARGV(0, int);
 		realplayers = M_ARGV(1, int);
 	} else {
-		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 			if(IS_PLAYER(it))
 				++activerealplayers;
 			++realplayers;
-		));
+		});
 	}
 
 	int bots;
@@ -622,8 +629,7 @@ float bot_fixcount()
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
-		//dprint(ftos(bots), " ? ", ftos(currentbots), "\n");
-		while (currentbots < bots)
+		if (currentbots < bots)
 		{
 			if (bot_spawn() == NULL)
 			{
@@ -673,11 +679,51 @@ void bot_clear(entity this)
 
 void bot_serverframe()
 {
+	if (intermission_running && currentbots > 0)
+	{
+		// after the end of the match all bots stay unless all human players disconnect
+		int realplayers = 0;
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++realplayers; });
+		if (!realplayers)
+		{
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), { dropclient(it); });
+			currentbots = 0;
+		}
+		return;
+	}
+
 	if (game_stopped)
 		return;
 
-	if (time < 2)
+	// Added 0.5 to avoid possible addition + immediate removal of bots that would make them appear as
+	// spectators in the scoreboard and never go away. This issue happens at time 2 if map is changed
+	// with the gotomap command, minplayers is > 1 and human clients join as players very soon
+	// either intentionally or automatically (sv_spectate 0)
+	if (time < 2.5)
+	{
+		currentbots = -1;
 		return;
+	}
+
+	if (currentbots == -1)
+	{
+		// count bots already in the server from the previous match
+		currentbots = 0;
+		FOREACH_CLIENT(IS_BOT_CLIENT(it), { ++currentbots; });
+	}
+
+	if(autocvar_skill != skill)
+	{
+		float wpcost_update = false;
+		if(skill >= autocvar_bot_ai_bunnyhop_skilloffset && autocvar_skill < autocvar_bot_ai_bunnyhop_skilloffset)
+			wpcost_update = true;
+		if(skill < autocvar_bot_ai_bunnyhop_skilloffset && autocvar_skill >= autocvar_bot_ai_bunnyhop_skilloffset)
+			wpcost_update = true;
+
+		skill = autocvar_skill;
+		if (wpcost_update)
+			waypoint_updatecost_foralllinks();
+	}
 
 	bot_calculate_stepheightvec();
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
@@ -696,8 +742,6 @@ void bot_serverframe()
 		if(!bot_fixcount())
 			botframe_nextthink = time + 10;
 	}
-
-	bot_ignore_bots = autocvar_bot_ignore_bots;
 
 	if(botframe_spawnedwaypoints)
 	{
@@ -727,8 +771,7 @@ void bot_serverframe()
 	{
 		botframe_spawnedwaypoints = true;
 		waypoint_loadall();
-		if(!waypoint_load_links())
-			waypoint_schedulerelinkall();
+		waypoint_load_links();
 	}
 
 	if (bot_list)
@@ -738,11 +781,26 @@ void bot_serverframe()
 		//  frame, which causes choppy framerates)
 		if (bot_strategytoken_taken)
 		{
+			// give goal token to the first bot without goals; if all bots don't have
+			// any goal (or are dead/frozen) simply give it to the next one
 			bot_strategytoken_taken = false;
-			if (bot_strategytoken)
-				bot_strategytoken = bot_strategytoken.nextbot;
-			if (!bot_strategytoken)
-				bot_strategytoken = bot_list;
+			entity bot_strategytoken_save = bot_strategytoken;
+			while (true)
+			{
+				if (bot_strategytoken)
+					bot_strategytoken = bot_strategytoken.nextbot;
+				if (!bot_strategytoken)
+					bot_strategytoken = bot_list;
+
+				if (!(IS_DEAD(bot_strategytoken) || STAT(FROZEN, bot_strategytoken))
+					&& !bot_strategytoken.goalcurrent)
+					break;
+
+				if (!bot_strategytoken_save) // break loop if all the bots are dead or frozen
+					break;
+				if (bot_strategytoken == bot_strategytoken_save)
+					bot_strategytoken_save = NULL; // looped through all the bots
+			}
 		}
 
 		if (botframe_nextdangertime < time)

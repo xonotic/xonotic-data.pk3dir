@@ -1,30 +1,11 @@
 #include "quake3.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
+#include <server/items.qh>
 #include <common/weapons/_all.qh>
 
-spawnfunc(weapon_crylink);
-spawnfunc(weapon_electro);
-spawnfunc(weapon_hagar);
-spawnfunc(weapon_hook);
-spawnfunc(weapon_machinegun);
-spawnfunc(weapon_vortex);
-spawnfunc(weapon_minelayer);
-
 spawnfunc(target_items);
-
-spawnfunc(item_bullets);
-spawnfunc(item_cells);
-spawnfunc(item_rockets);
-spawnfunc(item_shells);
-
-spawnfunc(item_strength);
-
-spawnfunc(item_armor_big);
-spawnfunc(item_armor_mega);
-spawnfunc(item_armor_small);
-
-spawnfunc(item_health_medium);
-spawnfunc(item_health_mega);
 
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
@@ -33,51 +14,51 @@ spawnfunc(item_health_mega);
 // NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
 
 // SG -> SG
-spawnfunc(ammo_shells)         { spawnfunc_item_shells(this);         }
+SPAWNFUNC_ITEM(ammo_shells, ITEM_Shells)
 
 // MG -> MG
-spawnfunc(ammo_bullets)        { spawnfunc_item_bullets(this);        }
+SPAWNFUNC_ITEM(ammo_bullets, ITEM_Bullets)
 
 // GL -> Mortar
-spawnfunc(ammo_grenades)       { spawnfunc_item_rockets(this);        }
+SPAWNFUNC_ITEM(ammo_grenades, ITEM_Rockets)
 
 // Mines -> Rockets
-spawnfunc(weapon_prox_launcher) { spawnfunc_weapon_minelayer(this);   }
-spawnfunc(ammo_mines)           { spawnfunc_item_rockets(this);       }
+SPAWNFUNC_WEAPON(weapon_prox_launcher, WEP_MINE_LAYER)
+SPAWNFUNC_ITEM(ammo_mines, ITEM_Rockets)
 
 // LG -> Lightning
-spawnfunc(weapon_lightning)    { spawnfunc_weapon_electro(this);      }
-spawnfunc(ammo_lightning)      { spawnfunc_item_cells(this);          }
+SPAWNFUNC_WEAPON(weapon_lightning, WEP_ELECTRO)
+SPAWNFUNC_ITEM(ammo_lightning, ITEM_Cells)
 
 // Plasma -> Hagar
-spawnfunc(weapon_plasmagun)    { spawnfunc_weapon_hagar(this);        }
-spawnfunc(ammo_cells)          { spawnfunc_item_rockets(this);        }
+SPAWNFUNC_WEAPON(weapon_plasmagun, WEP_HAGAR)
+SPAWNFUNC_ITEM(ammo_cells, ITEM_Rockets)
 
 // Rail -> Vortex
-spawnfunc(weapon_railgun)      { spawnfunc_weapon_vortex(this);       }
-spawnfunc(ammo_slugs)          { spawnfunc_item_cells(this);          }
+SPAWNFUNC_WEAPON(weapon_railgun, WEP_VORTEX)
+SPAWNFUNC_ITEM(ammo_slugs, ITEM_Cells)
 
 // BFG -> Crylink
-spawnfunc(weapon_bfg)          { spawnfunc_weapon_crylink(this);      }
-spawnfunc(ammo_bfg)            { spawnfunc_item_cells(this);          }
+SPAWNFUNC_WEAPON(weapon_bfg, WEP_CRYLINK)
+SPAWNFUNC_ITEM(ammo_bfg, ITEM_Cells)
 
 // grappling hook -> hook
-spawnfunc(weapon_grapplinghook) { spawnfunc_weapon_hook(this);        }
+SPAWNFUNC_WEAPON(weapon_grapplinghook, WEP_HOOK)
 
 // RL -> RL
-spawnfunc(ammo_rockets)        { spawnfunc_item_rockets(this);        }
+SPAWNFUNC_ITEM(ammo_rockets, ITEM_Rockets)
 
 // Armor
-spawnfunc(item_armor_body)     { spawnfunc_item_armor_mega(this);     }
-spawnfunc(item_armor_combat)   { spawnfunc_item_armor_big(this);      }
-spawnfunc(item_armor_shard)    { spawnfunc_item_armor_small(this);    }
-spawnfunc(item_enviro)         { spawnfunc_item_invincible(this);     }
+SPAWNFUNC_ITEM(item_armor_body, ITEM_ArmorMega)
+SPAWNFUNC_ITEM(item_armor_combat, ITEM_ArmorBig)
+SPAWNFUNC_ITEM(item_armor_shard, ITEM_ArmorSmall)
+SPAWNFUNC_ITEM(item_enviro, ITEM_Shield)
 
 // medkit -> armor (we have no holdables)
-spawnfunc(holdable_medkit)	   { spawnfunc_item_armor_mega(this);     }
+SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorMega)
 
 // doubler -> strength
-spawnfunc(item_doubler)        { spawnfunc_item_strength(this); }
+SPAWNFUNC_ITEM(item_doubler, ITEM_Strength)
 
 .float wait;
 .float delay;
@@ -114,39 +95,31 @@ void target_give_init(entity this)
 {
 	IL_EACH(g_items, it.targetname == this.target,
 	{
-		if (it.classname == "weapon_rocketlauncher" || it.classname == "weapon_devastator") {
+		if (it.classname == "weapon_devastator") {
 			this.ammo_rockets += it.count * WEP_CVAR(devastator, ammo);
-			this.netname = "devastator";
+			this.netname = cons(this.netname, "devastator");
 		}
-		else if (it.classname == "weapon_lightning") {
+		else if (it.classname == "weapon_vortex") {
+			this.ammo_cells += it.count * WEP_CVAR_PRI(vortex, ammo); // WEAPONTODO
+			this.netname = cons(this.netname, "vortex");
+		}
+		else if (it.classname == "weapon_electro") {
 			this.ammo_cells += it.count * WEP_CVAR_PRI(electro, ammo); // WEAPONTODO
-			if(this.netname == "")
-				this.netname = "electro";
-			else
-				this.netname = strcat(this.netname, " electro");
+			this.netname = cons(this.netname, "electro");
 		}
-		else if (it.classname == "weapon_plasmagun") {
+		else if (it.classname == "weapon_hagar") {
 			this.ammo_rockets += it.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
-			if(this.netname == "")
-				this.netname = "hagar";
-			else
-				this.netname = strcat(this.netname, " hagar");
+			this.netname = cons(this.netname, "hagar");
 		}
-		else if (it.classname == "weapon_bfg") {
+		else if (it.classname == "weapon_crylink") {
 			this.ammo_cells += it.count * WEP_CVAR_PRI(crylink, ammo);
-			if(this.netname == "")
-				this.netname = "crylink";
-			else
-				this.netname = strcat(this.netname, " crylink");
+			this.netname = cons(this.netname, "crylink");
 		}
-		else if (it.classname == "weapon_grenadelauncher" || it.classname == "weapon_mortar") {
+		else if (it.classname == "weapon_mortar") {
 			this.ammo_rockets += it.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
-			if(this.netname == "")
-				this.netname = "mortar";
-			else
-				this.netname = strcat(this.netname, " mortar");
+			this.netname = cons(this.netname, "mortar");
 		}
-		else if (it.classname == "item_armor_body")
+		else if (it.classname == "item_armor_mega")
 			this.armorvalue = 100;
 		else if (it.classname == "item_health_mega")
 			this.health = 200;

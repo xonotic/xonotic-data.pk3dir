@@ -55,7 +55,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 			data = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", key)));
 			if(data.y == 0) // undefined field, i.e., invalid type
 			{
-				LOG_INFO("target_spawn: invalid/unknown entity key ", key, " specified, ignored!\n");
+				LOG_INFO("target_spawn: invalid/unknown entity key ", key, " specified, ignored!");
 				continue;
 			}
 		}
@@ -150,7 +150,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 				}
 				else
 				{
-					LOG_INFO("target_spawn: invalid/unknown variable replacement ", value, " specified, ignored!\n");
+					LOG_INFO("target_spawn: invalid/unknown variable replacement ", value, " specified, ignored!");
 					continue;
 				}
 
@@ -163,13 +163,13 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 				{
 					if(value != "")
 					{
-						LOG_INFO("target_spawn: try to get a field of a non-entity, ignored!\n");
+						LOG_INFO("target_spawn: try to get a field of a non-entity, ignored!");
 						continue;
 					}
 					data2 = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", valuefield)));
 					if(data2_y == 0) // undefined field, i.e., invalid type
 					{
-						LOG_INFO("target_spawn: invalid/unknown entity key replacement ", valuefield, " specified, ignored!\n");
+						LOG_INFO("target_spawn: invalid/unknown entity key replacement ", valuefield, " specified, ignored!");
 						continue;
 					}
 					value = getentityfieldstring(data2_x, valueent);
@@ -189,7 +189,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 							value = vtos(stov(value) + stov(valueoffset));
 							break;
 						default:
-							LOG_INFO("target_spawn: only string, float and vector fields can do calculations, calculation ignored!\n");
+							LOG_INFO("target_spawn: only string, float and vector fields can do calculations, calculation ignored!");
 							break;
 					}
 				}
@@ -206,7 +206,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 							value = vtos(stov(value) + random() * data2_x * '1 0 0' + random() * data2_y * '0 1 0' + random() * data2_z * '0 0 1');
 							break;
 						default:
-							LOG_INFO("target_spawn: only float and vector fields can do random calculations, calculation ignored!\n");
+							LOG_INFO("target_spawn: only float and vector fields can do random calculations, calculation ignored!");
 							break;
 					}
 				}

@@ -3,38 +3,58 @@
 #include "hmg.qh"
 #include "rpc.qh"
 
+string autocvar_g_overkill;
+
 bool autocvar_g_overkill_powerups_replace;
 
 bool autocvar_g_overkill_itemwaypoints = true;
 
-bool autocvar_g_overkill_filter_healthmega;
-bool autocvar_g_overkill_filter_armormedium;
-bool autocvar_g_overkill_filter_armorbig;
-bool autocvar_g_overkill_filter_armormega;
-
-.float ok_item;
-
 .Weapon ok_lastwep[MAX_WEAPONSLOTS];
 
-void ok_Initialize();
-
-REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
+REGISTER_MUTATOR(ok, expr_evaluate(autocvar_g_overkill) && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
 {
 	MUTATOR_ONADD
 	{
-		ok_Initialize();
+		precache_all_playermodels("models/ok_player/*.dpm");
+
+		if (autocvar_g_overkill_filter_healthmega)
+		{
+			ITEM_HealthMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armormedium)
+		{
+			ITEM_ArmorMedium.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armorbig)
+		{
+			ITEM_ArmorBig.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+		if (autocvar_g_overkill_filter_armormega)
+		{
+			ITEM_ArmorMega.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		}
+
+		WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+
+		WEP_SHOTGUN.mdl = "ok_shotgun";
+		WEP_MACHINEGUN.mdl = "ok_mg";
+		WEP_VORTEX.mdl = "ok_sniper";
 	}
 
 	MUTATOR_ONREMOVE
 	{
+		ITEM_HealthMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorMedium.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorBig.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_ArmorMega.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+
 		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 		WEP_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 }
 
 void W_Blaster_Attack(entity, .entity, float, float, float, float, float, float, float, float, float, float);
-spawnfunc(weapon_hmg);
-spawnfunc(weapon_rpc);
 
 MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 {
@@ -59,20 +79,10 @@ MUTATOR_HOOKFUNCTION(ok, Damage_Calculate, CBC_ORDER_LAST)
 
 void ok_DropItem(entity this, entity targ)
 {
-	entity e = new(droppedweapon); // hax
+	entity e = spawn();
 	e.ok_item = true;
-	e.noalign = true;
-	e.pickup_anyway = true;
-	e.spawnfunc_checked = true;
-	spawnfunc_item_armor_small(e);
-	if (!wasfreed(e)) { // might have been blocked by a mutator
-        set_movetype(e, MOVETYPE_TOSS);
-        e.gravity = 1;
-        e.reset = SUB_Remove;
-        setorigin(e, this.origin + '0 0 32');
-        e.velocity = '0 0 200' + normalize(targ.origin - this.origin) * 500;
-        SUB_SetFade(e, time + 5, 1);
-	}
+	Item_InitializeLoot(e, "item_armor_small", this.origin + '0 0 32',
+		'0 0 200' + normalize(targ.origin - this.origin) * 500, 5);
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDies)
@@ -120,10 +130,9 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
 		return;
 
-	if(PHYS_INPUT_BUTTON_ATCK2(player))
+	if(PHYS_INPUT_BUTTON_ATCK2(player) && time >= player.jump_interval)
 	if( !forbidWeaponUse(player)
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted()) )
-	if(time >= player.jump_interval)
 	{
 		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
 		makevectors(player.v_angle);
@@ -158,6 +167,11 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	PHYS_INPUT_BUTTON_ATCK2(player) = false;
 }
 
+MUTATOR_HOOKFUNCTION(ok, ForbidRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 {
 	entity player = M_ARGV(0, entity);
@@ -176,51 +190,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 				newwep = WEP_VORTEX;
 			thiswep.m_switchweapon = newwep;
 			player.ok_lastwep[slot] = WEP_Null;
-		}
-	}
-}
-
-void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
-void self_spawnfunc_weapon_rpc(entity this) { spawnfunc_weapon_rpc(this); }
-
-MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
-{
-	entity ent = M_ARGV(0, entity);
-
-	if(autocvar_g_powerups)
-	if(autocvar_g_overkill_powerups_replace)
-	{
-		if(ent.classname == "item_strength")
-		{
-			entity wep = new(weapon_hmg);
-			setorigin(wep, ent.origin);
-			setmodel(wep, MDL_OK_HMG);
-			wep.ok_item = true;
-			wep.noalign = ent.noalign;
-			wep.cnt = ent.cnt;
-			wep.team = ent.team;
-			wep.respawntime = g_pickup_respawntime_superweapon;
-			wep.pickup_anyway = true;
-			wep.spawnfunc_checked = true;
-			setthink(wep, self_spawnfunc_weapon_hmg);
-			wep.nextthink = time + 0.1;
-			return true;
-		}
-		else if(ent.classname == "item_invincible")
-		{
-			entity wep = new(weapon_rpc);
-			setorigin(wep, ent.origin);
-			setmodel(wep, MDL_OK_RPC);
-			wep.ok_item = true;
-			wep.noalign = ent.noalign;
-			wep.cnt = ent.cnt;
-			wep.team = ent.team;
-			wep.respawntime = g_pickup_respawntime_superweapon;
-			wep.pickup_anyway = true;
-			wep.spawnfunc_checked = true;
-			setthink(wep, self_spawnfunc_weapon_rpc);
-			wep.nextthink = time + 0.1;
-			return true;
 		}
 	}
 }
@@ -257,17 +226,42 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.ok_item)
-		return false;
-
-	switch(item.itemdef)
+	if (item.ok_item)
 	{
-		case ITEM_HealthMega: return autocvar_g_overkill_filter_healthmega;
-		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
-		case ITEM_ArmorBig: return autocvar_g_overkill_filter_armorbig;
-		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armormega;
+		return false;
 	}
-
+	if (!autocvar_g_powerups || !autocvar_g_overkill_powerups_replace)
+	{
+		return true;
+	}
+	if (item.classname == "item_strength")
+	{
+		entity wep = new(weapon_hmg);
+		setorigin(wep, item.origin);
+		wep.ok_item = true;
+		wep.noalign = Item_ShouldKeepPosition(item);
+		wep.cnt = item.cnt;
+		wep.team = item.team;
+		wep.respawntime = g_pickup_respawntime_superweapon;
+		wep.pickup_anyway = true;
+		wep.spawnfunc_checked = true;
+		Item_Initialize(wep, "weapon_hmg");
+		return true;
+	}
+	else if (item.classname == "item_shield")
+	{
+		entity wep = new(weapon_rpc);
+		setorigin(wep, item.origin);
+		wep.ok_item = true;
+		wep.noalign = Item_ShouldKeepPosition(item);
+		wep.cnt = item.cnt;
+		wep.team = item.team;
+		wep.respawntime = g_pickup_respawntime_superweapon;
+		wep.pickup_anyway = true;
+		wep.spawnfunc_checked = true;
+		Item_Initialize(wep, "weapon_rpc");
+		return true;
+	}
 	return true;
 }
 
@@ -302,27 +296,4 @@ MUTATOR_HOOKFUNCTION(ok, SetModname)
 {
 	M_ARGV(0, string) = "Overkill";
 	return true;
-}
-
-void ok_SetCvars()
-{
-	// hack to force overkill playermodels
-	cvar_settemp("sv_defaultcharacter", "1");
-	cvar_settemp("sv_defaultplayermodel", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
-	cvar_settemp("sv_defaultplayermodel_red", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm");
-	cvar_settemp("sv_defaultplayermodel_blue", "models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
-}
-
-void ok_Initialize()
-{
-	ok_SetCvars();
-
-	precache_all_playermodels("models/ok_player/*.dpm");
-
-	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-	WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-
-	WEP_SHOTGUN.mdl = "ok_shotgun";
-	WEP_MACHINEGUN.mdl = "ok_mg";
-	WEP_VORTEX.mdl = "ok_sniper";
 }

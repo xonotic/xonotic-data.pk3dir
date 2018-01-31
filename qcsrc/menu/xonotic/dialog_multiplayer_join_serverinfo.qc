@@ -198,6 +198,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 			break;
 	}
 	me.encryptLabel.setText(me.encryptLabel, me.currentServerEncrypt);
+	setZonedTooltip(me.encryptLabel, _("Use the `crypto_aeslevel` cvar to change your preferences"), string_null);
 
 	s = crypto_getidfp(me.currentServerCName);
 	if (!s) { s = _("N/A"); }

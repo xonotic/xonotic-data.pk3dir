@@ -1,5 +1,7 @@
 #include "g_subs.qh"
 
+#include <server/defs.qh>
+#include <server/miscfunctions.qh>
 #include "antilag.qh"
 #include "command/common.qh"
 #include "../common/state.qh"
@@ -48,14 +50,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	if (lag)
-	{
-		// take players back into the past
-		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_takeback(it, CS(it), time - lag));
-		IL_EACH(g_monsters, it != forent,
-		{
-			antilag_takeback(it, it, time - lag);
-		});
-	}
+		antilag_takeback_all(forent, lag);
 
 	// do the trace
 	if(wz)
@@ -65,13 +60,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 
 	// restore players to current positions
 	if (lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_restore(it, CS(it)));
-		IL_EACH(g_monsters, it != forent,
-		{
-			antilag_restore(it, it);
-		});
-	}
+		antilag_restore_all(forent);
 
 	// restore shooter solid type
 	if(source)
@@ -83,13 +72,15 @@ void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, false);
 }
@@ -99,13 +90,15 @@ void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, floa
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	WarpZone_traceline_antilag_force(source, v1, v2, nomonst, forent, lag);
 }
 void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag)
 {
-	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
+	bool noantilag = ((IS_CLIENT(source)) ? CS(source).cvar_cl_noantilag : false);
+	if (autocvar_g_antilag != 2 || noantilag)
 		lag = 0;
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, true);
 }

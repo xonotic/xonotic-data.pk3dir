@@ -4,8 +4,8 @@
 #include <common/stats.qh>
 #include "config.qh"
 
-// weapon sets
-USING(WepSet, vector);
+#include "weapon.qh"
+
 #ifdef SVQC
 void WriteWepSet(float dest, WepSet w);
 #endif
@@ -16,10 +16,9 @@ WepSet WepSet_GetFromStat_InMap();
 WepSet ReadWepSet();
 #endif
 
-#include "weapon.qh"
-
 #ifdef GAMEQC
 #include "calculations.qh"
+#include "projectiles.qh"
 #include <common/models/all.qh>
 #endif
 
@@ -65,17 +64,17 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
             if(wep_config_file >= 0)
             {
                 Dump_Weapon_Settings();
-                LOG_INFO(sprintf("Dumping weapons... File located in ^2data/data/%s^7.\n", filename));
+                LOG_INFOF("Dumping weapons... File located in ^2data/data/%s^7.", filename);
                 fclose(wep_config_file);
                 wep_config_file = -1;
                 wep_config_alsoprint = -1;
             }
             else
             {
-                LOG_INFO(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+                LOG_INFOF("^1Error: ^7Could not open file '%s'!", filename);
             }
             #else
-            LOG_INFO(_("Weapons dump command only works with sv_cmd.\n"));
+            LOG_INFO(_("Weapons dump command only works with sv_cmd."));
             #endif
             return;
         }
@@ -83,10 +82,10 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
         default:
         case CMD_REQUEST_USAGE:
         {
-            LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
-            LOG_INFO("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
-            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-            LOG_INFO("  if left blank, it will only write to default.\n");
+            LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]");
+            LOG_INFO("  Where 'filename' is the file to write (default is weapons_dump.cfg),");
+            LOG_INFO("  if supplied with '-' output to console as well as default,");
+            LOG_INFO("  if left blank, it will only write to default.");
             return;
         }
     }

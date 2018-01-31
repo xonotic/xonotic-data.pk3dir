@@ -1,5 +1,9 @@
 #pragma once
 
+#include <common/weapons/weapon.qh>
+
 vector crosshair_getcolor(entity this, float health_stat);
 
 entity viewmodels[MAX_WEAPONSLOTS];
+
+vector viewloc_mousepos;

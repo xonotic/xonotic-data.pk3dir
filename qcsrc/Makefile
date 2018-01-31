@@ -8,20 +8,23 @@ QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='~')
 VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
 NDEBUG ?= 1
 XONOTIC ?= 1
+ENABLE_EFFECTINFO ?= 0
+ENABLE_DEBUGDRAW ?= 0
+ENABLE_DEBUGTRACE ?= 0
 BUILD_MOD ?=
 
 ifndef ZIP
-	ifneq ($(shell which zip),)
+	ifneq ($(shell which zip 2>/dev/null),)
 		ZIP := zip -9
 	endif
-	ifneq ($(shell which 7z),)
+	ifneq ($(shell which 7z 2>/dev/null),)
 		ZIP := 7z a -tzip -mx=9
 	endif
-	ifneq ($(shell which 7za),)
+	ifneq ($(shell which 7za 2>/dev/null),)
 		ZIP := 7za a -tzip -mx=9
 	endif
     ifndef ZIP
-        $(warning "No zip in ($(PATH))")
+        $(warning "No zip / 7z / 7za in ($(PATH))")
         ZIP := : zip_not_found
     endif
 endif
@@ -34,6 +37,9 @@ QCCDEFS ?= \
 	-DXONOTIC=$(XONOTIC) \
 	-DWATERMARK="$(QCCFLAGS_WATERMARK)" \
 	-DNDEBUG=$(NDEBUG) \
+	-DENABLE_EFFECTINFO=$(ENABLE_EFFECTINFO) \
+	-DENABLE_DEBUGDRAW=$(ENABLE_DEBUGDRAW) \
+	-DENABLE_DEBUGTRACE=$(ENABLE_DEBUGTRACE) \
 	$(if $(BUILD_MOD), -DBUILD_MOD="$(BUILD_MOD)" -I$(BUILD_MOD), ) \
 	$(QCCDEFS_EXTRA)
 

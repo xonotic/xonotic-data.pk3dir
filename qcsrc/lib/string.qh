@@ -27,7 +27,7 @@
 	}
 #endif
 
-[[eraseable]]
+ERASEABLE
 string seconds_tostring(float sec)
 {
 	float minutes = floor(sec / 60);
@@ -35,7 +35,7 @@ string seconds_tostring(float sec)
 	return sprintf("%d:%02d", minutes, sec);
 }
 
-[[eraseable]]
+ERASEABLE
 string format_time(float seconds)
 {
 	seconds = floor(seconds + 0.5);
@@ -49,7 +49,7 @@ string format_time(float seconds)
 	else return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
 }
 
-[[eraseable]]
+ERASEABLE
 string mmsss(float tenths)
 {
 	tenths = floor(tenths + 0.5);
@@ -59,7 +59,7 @@ string mmsss(float tenths)
 	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 1));
 }
 
-[[eraseable]]
+ERASEABLE
 string mmssss(float hundredths)
 {
 	hundredths = floor(hundredths + 0.5);
@@ -71,7 +71,7 @@ string mmssss(float hundredths)
 
 int ColorTranslateMode;
 
-[[eraseable]]
+ERASEABLE
 string ColorTranslateRGB(string s)
 {
 	return (ColorTranslateMode & 1) ? strdecolorize(s) : s;
@@ -116,7 +116,7 @@ string CCR(string input)
 
 #define startsWith(haystack, needle) (strstrofs(haystack, needle, 0) == 0)
 
-[[eraseable]]
+ERASEABLE
 bool startsWithNocase(string haystack, string needle)
 {
 	return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
@@ -126,7 +126,7 @@ noref string _endsWith_suffix;
 #define endsWith(this, suffix) (_endsWith_suffix = suffix, substring(this, -strlen(_endsWith_suffix), -1) == _endsWith_suffix)
 
 /** unzone the string, and return it as tempstring. Safe to be called on string_null */
-[[eraseable]]
+ERASEABLE
 string fstrunzone(string s)
 {
 	if (!s) return s;
@@ -136,7 +136,7 @@ string fstrunzone(string s)
 }
 
 /** returns first word */
-[[eraseable]]
+ERASEABLE
 string car(string s)
 {
 	int o = strstrofs(s, " ", 0);
@@ -145,7 +145,7 @@ string car(string s)
 }
 
 /** returns all but first word */
-[[eraseable]]
+ERASEABLE
 string cdr(string s)
 {
 	int o = strstrofs(s, " ", 0);
@@ -153,7 +153,7 @@ string cdr(string s)
 	return substring(s, o + 1, strlen(s) - (o + 1));
 }
 
-[[eraseable]]
+ERASEABLE
 string cons(string a, string b)
 {
 	if (a == "") return b;
@@ -161,13 +161,13 @@ string cons(string a, string b)
 	return strcat(a, " ", b);
 }
 
-[[eraseable]]
+ERASEABLE
 string substring_range(string s, float b, float e)
 {
 	return substring(s, b, e - b);
 }
 
-[[eraseable]]
+ERASEABLE
 string swapwords(string str, float i, float j)
 {
 	float n;
@@ -189,13 +189,13 @@ string swapwords(string str, float i, float j)
 }
 
 string _shufflewords_str;
-[[eraseable]]
+ERASEABLE
 void _shufflewords_swapfunc(float i, float j, entity pass)
 {
 	_shufflewords_str = swapwords(_shufflewords_str, i, j);
 }
 
-[[eraseable]]
+ERASEABLE
 string shufflewords(string str)
 {
 	_shufflewords_str = str;
@@ -206,7 +206,7 @@ string shufflewords(string str)
 	return str;
 }
 
-[[eraseable]]
+ERASEABLE
 string unescape(string in)
 {
 	in = strzone(in);  // but it doesn't seem to be necessary in my tests at least
@@ -231,7 +231,7 @@ string unescape(string in)
 	return str;
 }
 
-[[eraseable]]
+ERASEABLE
 string strwords(string s, int w)
 {
 	int endpos = 0;
@@ -243,7 +243,7 @@ string strwords(string s, int w)
 
 #define strhasword(s, w) (strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0)
 
-[[eraseable]]
+ERASEABLE
 int u8_strsize(string s)
 {
 	int l = 0;
@@ -256,7 +256,8 @@ int u8_strsize(string s)
 	return l;
 }
 
-[[eraseable]]
+//List of Unicode spaces: https://www.cs.tut.fi/~jkorpela/chars/spaces.html
+ERASEABLE
 bool isInvisibleString(string s)
 {
 	s = strdecolorize(s);
@@ -272,8 +273,26 @@ bool isInvisibleString(string s)
 			case 192:          // charmap space
 				if (!utf8) break;
 				return false;
-			case 160:          // space in unicode fonts
 			case 0xE000 + 192: // utf8 charmap space
+			case 0x00A0: // NO-BREAK SPACE
+			//case 0x1680: // OGHAM SPACE MARK
+			case 0x180E: // MONGOLIAN VOWEL SEPARATOR
+			case 0x2000: // EN QUAD
+			case 0x2001: // EM QUAD
+			case 0x2002: // EN SPACE
+			case 0x2003: // EM SPACE
+			case 0x2004: // THREE-PER-EM SPACE
+			case 0x2005: // FOUR-PER-EM SPACE
+			case 0x2006: // SIX-PER-EM SPACE
+			case 0x2007: // FIGURE SPACE
+			case 0x2008: // PUNCTUATION SPACE
+			case 0x2009: // THIN SPACE
+			case 0x200A: // HAIR SPACE
+			case 0x200B: // ZERO WIDTH SPACE
+			case 0x202F: // NARROW NO-BREAK SPACE
+			case 0x205F: // MEDIUM MATHEMATICAL SPACE
+			case 0x3000: // IDEOGRAPHIC SPACE
+			case 0xFEFF: // ZERO WIDTH NO-BREAK SPACE
 				if (utf8) break;
 			default:
 				return false;
@@ -284,7 +303,7 @@ bool isInvisibleString(string s)
 
 // Multiline text file buffers
 
-[[eraseable]]
+ERASEABLE
 int buf_load(string pFilename)
 {
 	int buf = buf_create();
@@ -302,7 +321,7 @@ int buf_load(string pFilename)
 	return buf;
 }
 
-[[eraseable]]
+ERASEABLE
 void buf_save(float buf, string pFilename)
 {
 	int fh = fopen(pFilename, FILE_WRITE);
@@ -316,7 +335,7 @@ void buf_save(float buf, string pFilename)
 /**
  * converts a number to a string with the indicated number of decimals
  */
-[[eraseable]]
+ERASEABLE
 string ftos_decimals(float number, int decimals)
 {
 	// inhibit stupid negative zero
@@ -327,7 +346,7 @@ string ftos_decimals(float number, int decimals)
 /**
  * converts a number to a string with the minimum number of decimals
  */
-[[eraseable]]
+ERASEABLE
 string ftos_mindecimals(float number)
 {
 	// inhibit stupid negative zero
@@ -335,7 +354,7 @@ string ftos_mindecimals(float number)
 	return sprintf("%.7g", number);
 }
 
-[[eraseable]]
+ERASEABLE
 int vercmp_recursive(string v1, string v2)
 {
 	int dot1 = strstrofs(v1, ".", 0);
@@ -354,7 +373,7 @@ int vercmp_recursive(string v1, string v2)
 	else return (dot2 == -1) ? 1 : vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
 }
 
-[[eraseable]]
+ERASEABLE
 int vercmp(string v1, string v2)
 {
 	if (strcasecmp(v1, v2) == 0) return 0;  // early out check
