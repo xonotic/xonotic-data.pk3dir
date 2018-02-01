@@ -8,12 +8,14 @@ void counter_use(entity this, entity actor, entity trigger)
 	if (this.count < 0)
 		return;
 
+	bool doactivate = (this.spawnflags & 4);
+
 	if (this.count == 0)
 	{
 		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
 			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
-		SUB_UseTargets(this, actor, trigger);
+		doactivate = true;
 
 		if(this.respawntime)
 		{
@@ -31,6 +33,9 @@ void counter_use(entity this, entity actor, entity trigger)
 				Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, this.count);
 		}
 	}
+
+	if(doactivate)
+		SUB_UseTargets(this, actor, trigger);
 }
 
 void counter_reset(entity this)
