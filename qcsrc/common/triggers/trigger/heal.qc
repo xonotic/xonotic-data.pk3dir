@@ -16,7 +16,8 @@ void trigger_heal_touch(entity this, entity toucher)
 			bool is_trigger = !boolean(!this.nottargeted && this.targetname != "");
 			if(is_trigger)
 				EXACTTRIGGER_TOUCH(this, toucher);
-			toucher.triggerhealtime = time + this.delay;
+			if(this.delay > 0)
+				toucher.triggerhealtime = time + this.delay;
 
 			bool playthesound = (this.spawnflags & 4);
 			if (toucher.health < this.max_health)
