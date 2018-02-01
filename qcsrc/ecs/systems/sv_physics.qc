@@ -73,7 +73,7 @@ void sys_phys_spectator_control(entity this)
 			    || CS(this).impulse == 19
 			    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
 			          ) {
-				this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
+				this.spectatorspeed = bound(autocvar_sv_spectator_speed_multiplier_min, this.spectatorspeed - 0.5, autocvar_sv_spectator_speed_multiplier_max);
 			} else if (CS(this).impulse >= 1 && CS(this).impulse <= 9) {
 				this.spectatorspeed = 1 + 0.5 * (CS(this).impulse - 1);
 			}
