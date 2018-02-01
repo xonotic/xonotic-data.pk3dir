@@ -18,12 +18,16 @@ void trigger_heal_touch(entity this, entity toucher)
 				EXACTTRIGGER_TOUCH(this, toucher);
 			toucher.triggerhealtime = time + 1;
 
+			bool playthesound = (this.spawnflags & 4);
 			if (toucher.health < this.max_health)
 			{
+				playthesound = true;
 				toucher.health = min(toucher.health + this.health, this.max_health);
 				toucher.pauserothealth_finished = max(toucher.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				_sound (toucher, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 			}
+
+			if(playthesound)
+				_sound (toucher, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 		}
 	}
 }
