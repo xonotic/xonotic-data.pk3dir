@@ -290,6 +290,11 @@ MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
 		NIX_GiveCurrentWeapon(player);
 }
 
+MUTATOR_HOOKFUNCTION(nix, ForbidRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(nix, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);

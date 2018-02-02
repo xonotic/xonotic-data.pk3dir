@@ -50,14 +50,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	if (lag)
-	{
-		// take players back into the past
-		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_takeback(it, CS(it), time - lag));
-		IL_EACH(g_monsters, it != forent,
-		{
-			antilag_takeback(it, it, time - lag);
-		});
-	}
+		antilag_takeback_all(forent, lag);
 
 	// do the trace
 	if(wz)
@@ -67,13 +60,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 
 	// restore players to current positions
 	if (lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_restore(it, CS(it)));
-		IL_EACH(g_monsters, it != forent,
-		{
-			antilag_restore(it, it);
-		});
-	}
+		antilag_restore_all(forent);
 
 	// restore shooter solid type
 	if(source)

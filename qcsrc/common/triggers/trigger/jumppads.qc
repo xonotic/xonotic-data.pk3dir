@@ -25,19 +25,20 @@ REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
 	  tgt - target entity (can be either a point or a model entity; if it is
 	        the latter, its midpoint is used)
 	  ht  - jump height, measured from the higher one of org and tgt's midpoint
+	  pushed_entity - object that is to be pushed
 
 	Returns: velocity for the jump
  */
-vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
+vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity pushed_entity)
 {
 	float grav, sdist, zdist, vs, vz, jumpheight;
 	vector sdir, torg;
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = PHYS_GRAVITY(other);
-	if(PHYS_ENTGRAVITY(other))
-		grav *= PHYS_ENTGRAVITY(other);
+	grav = PHYS_GRAVITY(NULL);
+	if(pushed_entity && PHYS_ENTGRAVITY(pushed_entity))
+		grav *= PHYS_ENTGRAVITY(pushed_entity);
 
 	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -135,7 +136,7 @@ bool jumppad_push(entity this, entity targ)
 
 	if(this.enemy)
 	{
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height);
+		targ.velocity = trigger_push_calculatevelocity(targ.origin, this.enemy, this.height, targ);
 	}
 	else if(this.target && this.target != "")
 	{
@@ -148,7 +149,7 @@ bool jumppad_push(entity this, entity targ)
 			else
 				RandomSelection_AddEnt(e, 1, 1);
 		}
-		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height);
+		targ.velocity = trigger_push_calculatevelocity(targ.origin, RandomSelection_chosen_ent, this.height, targ);
 	}
 	else
 	{
@@ -206,13 +207,16 @@ bool jumppad_push(entity this, entity targ)
 					centerprint(targ, this.message);
 			}
 			else
+			{
 				targ.lastteleporttime = time;
+				targ.lastteleport_origin = targ.origin;
+			}
 
 			if (!IS_DEAD(targ))
 				animdecide_setaction(targ, ANIMACTION_JUMP, true);
 		}
 		else
-			targ.jumppadcount = true;
+			targ.jumppadcount = 1;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		targ.pushltime = 0;
@@ -277,23 +281,27 @@ bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vecto
 	if(trace_startsolid)
 		return false;
 
-	if(!jp.height)
+	if (!jp.height)
 	{
 		// since tracetoss starting from jumppad's origin often fails when target
 		// is very close to real destination, start it directly from target's
 		// origin instead
+		vector ofs = '0 0 0';
+		if (vdist(vec2(tracetest_ent.velocity), <, autocvar_sv_maxspeed))
+			ofs = stepheightvec;
+
 		tracetest_ent.velocity.z = 0;
-		setorigin(tracetest_ent, targ.origin + stepheightvec);
+		setorigin(tracetest_ent, targ.origin + ofs);
 		tracetoss(tracetest_ent, tracetest_ent);
-		if(trace_startsolid)
+		if (trace_startsolid && ofs.z)
 		{
-			setorigin(tracetest_ent, targ.origin + stepheightvec / 2);
+			setorigin(tracetest_ent, targ.origin + ofs / 2);
 			tracetoss(tracetest_ent, tracetest_ent);
-			if(trace_startsolid)
+			if (trace_startsolid && ofs.z)
 			{
 				setorigin(tracetest_ent, targ.origin);
 				tracetoss(tracetest_ent, tracetest_ent);
-				if(trace_startsolid)
+				if (trace_startsolid)
 					return false;
 			}
 		}
@@ -302,11 +310,14 @@ bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vecto
 	return true;
 }
 #endif
-void trigger_push_findtarget(entity this)
+
+/// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
+/// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
+bool trigger_push_test(entity this, entity item)
 {
 	// first calculate a typical start point for the jump
 	vector org = (this.absmin + this.absmax) * 0.5;
-	org.z = this.absmax.z - PL_MIN_CONST.z;
+	org.z = this.absmax.z - PL_MIN_CONST.z - 10;
 
 	if (this.target)
 	{
@@ -324,7 +335,17 @@ void trigger_push_findtarget(entity this)
 			entity e = spawn();
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
+			e.velocity = trigger_push_calculatevelocity(org, t, this.height, e);
+
+			if(item)
+			{
+				setorigin(e, org);
+				tracetoss(e, e);
+				bool r = (trace_ent == item);
+				delete(e);
+				return r;
+			}
+
 			vel = e.velocity;
 			vector best_target = '0 0 0';
 			vector best_org = '0 0 0';
@@ -348,7 +369,7 @@ void trigger_push_findtarget(entity this)
 				vector flatdir = normalize(dist - eZ * dist.z);
 				vector ofs = flatdir * 0.5 * min(fabs(this.absmax.x - this.absmin.x), fabs(this.absmax.y - this.absmin.y));
 				new_org = org + ofs;
-				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
 				vel = e.velocity;
 				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
 					e.velocity = autocvar_sv_maxspeed * flatdir;
@@ -360,7 +381,7 @@ void trigger_push_findtarget(entity this)
 					valid_best_target = true;
 				}
 				new_org = org - ofs;
-				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height);
+				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
 				vel = e.velocity;
 				if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
 					e.velocity = autocvar_sv_maxspeed * flatdir;
@@ -389,13 +410,16 @@ void trigger_push_findtarget(entity this)
 #endif
 		}
 
+		if(item)
+			return false;
+
 		if(!n)
 		{
 			// no dest!
 #ifdef SVQC
 			objerror (this, "Jumppad with nonexistant target");
 #endif
-			return;
+			return false;
 		}
 		else if(n == 1)
 		{
@@ -417,6 +441,12 @@ void trigger_push_findtarget(entity this)
 		setorigin(e, org);
 		e.velocity = this.movedir;
 		tracetoss(e, e);
+		if(item)
+		{
+			bool r = (trace_ent == item);
+			delete(e);
+			return r;
+		}
 		if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
 			waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
 		delete(e);
@@ -424,6 +454,12 @@ void trigger_push_findtarget(entity this)
 
 	defer(this, 0.1, trigger_push_updatelink);
 #endif
+	return true;
+}
+
+void trigger_push_findtarget(entity this)
+{
+	trigger_push_test(this, NULL);
 }
 
 #ifdef SVQC
@@ -487,6 +523,8 @@ spawnfunc(trigger_push)
 	precache_sound (this.noise);
 
 	trigger_push_link(this); // link it now
+
+	IL_PUSH(g_jumppads, this);
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);

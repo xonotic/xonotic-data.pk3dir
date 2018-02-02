@@ -165,6 +165,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		}
 
 		player.lastteleporttime = time;
+		player.lastteleport_origin = from;
 	}
 #endif
 }
@@ -228,9 +229,10 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 
 void teleport_findtarget(entity this)
 {
+	bool istrigger = (this.solid == SOLID_TRIGGER);
+
 	int n = 0;
-	entity e;
-	for(e = NULL; (e = find(e, targetname, this.target)); )
+	for(entity e = NULL; (e = find(e, targetname, this.target)); )
 	{
 		++n;
 #ifdef SVQC
@@ -256,7 +258,7 @@ void teleport_findtarget(entity this)
 	else if(n == 1)
 	{
 		// exactly one dest - bots love that
-		this.enemy = find(e, targetname, this.target);
+		this.enemy = find(NULL, targetname, this.target);
 	}
 	else
 	{
@@ -265,9 +267,11 @@ void teleport_findtarget(entity this)
 	}
 
 	// now enable touch
-	settouch(this, Teleport_Touch);
+	if(istrigger)
+		settouch(this, Teleport_Touch);
 #ifdef SVQC
-	trigger_teleport_link(this);
+	if(istrigger)
+		trigger_teleport_link(this);
 #endif
 }
 
@@ -307,7 +311,5 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	#ifdef SVQC
 		pl.oldvelocity = pl.velocity;
 	#endif
-		// reset teleport time tracking too (or multijump can cause insane speeds)
-		pl.lastteleporttime = time;
 	}
 }

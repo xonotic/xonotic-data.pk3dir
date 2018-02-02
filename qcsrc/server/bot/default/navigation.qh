@@ -25,11 +25,13 @@ entity navigation_bestgoal;
 .entity goalstack28, goalstack29, goalstack30, goalstack31;
 
 .entity goalcurrent_prev;
-.float goalcurrent_distance;
+.float goalcurrent_distance_z;
+.float goalcurrent_distance_2d;
 .float goalcurrent_distance_time;
 
+.float goalentity_lock_timeout;
+
 .entity nearestwaypoint;
-.float nearestwaypoint_dist;
 .float nearestwaypointtimeout;
 
 /*
@@ -48,59 +50,18 @@ entity navigation_bestgoal;
 #define navigation_item_addlink(from_wp, to_item) \
 	waypoint_addlink_customcost(to_item, from_wp, waypoint_getlinkcost(from_wp, to_item))
 
-// if ent is a box waypoint or an item v is set to coords of ent that are closer to org
-#define SET_DESTCOORDS(ent, org, v) MACRO_BEGIN { \
-	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
-		v.x = bound(wm1.x, org.x, wm2.x); \
-		v.y = bound(wm1.y, org.y, wm2.y); \
-		v.z = bound(wm1.z, org.z, wm2.z); \
-	} else { \
-		v = ent.origin; \
-	} \
-} MACRO_END
+#define TELEPORT_USED(pl, tele_wp) \
+	(time - pl.lastteleporttime < ((tele_wp.wpflags & WAYPOINTFLAG_PERSONAL) ? 2 : 0.15) \
+	&& boxesoverlap(tele_wp.absmin, tele_wp.absmax, pl.lastteleport_origin + STAT(PL_MIN, pl), pl.lastteleport_origin + STAT(PL_MAX, pl)))
 
-// if ent is a box waypoint or an item v is set to coords of ent that are closer to org
-// (but v.z is set to the lowest coord of ent), v_height is set to ent's height
-#define SET_TRACEWALK_DESTCOORDS(ent, org, v, v_height) MACRO_BEGIN { \
-	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
-		v.x = bound(wm1.x, org.x, wm2.x); \
-		v.y = bound(wm1.y, org.y, wm2.y); \
-		v.z = wm1.z; \
-		v_height = wm2.z - wm1.z; \
-	} else { \
-		v = ent.origin; \
-		v_height = 0; \
-	} \
-} MACRO_END
-
-// if ent is a box waypoint or an item v and v2 are set to coords of ent that are closer to org
-// (but v2.z is set to the lowest coord of ent), v2_height is set to ent's height
-#define SET_TRACEWALK_DESTCOORDS_2(ent, org, v, v2, v2_height) MACRO_BEGIN { \
-	if ((ent.classname != "waypoint") || ent.wpisbox) { \
-		vector wm1 = ent.origin + ent.mins - eZ * (PL_MAX_CONST.z - 1); \
-		vector wm2 = ent.origin + ent.maxs - eZ * (PL_MIN_CONST.z + 1); \
-		v.x = bound(wm1.x, org.x, wm2.x); \
-		v.y = bound(wm1.y, org.y, wm2.y); \
-		v.z = bound(wm1.z, org.z, wm2.z); \
-		v2.x = v.x; \
-		v2.y = v.y; \
-		v2.z = wm1.z; \
-		v2_height = wm2.z - wm1.z; \
-	} else { \
-		v = ent.origin; \
-		v2 = v; \
-		v2_height = 0; \
-	} \
-} MACRO_END
+vector tracewalk_dest;
+float tracewalk_dest_height;
 
 .entity wp_goal_prev0;
 .entity wp_goal_prev1;
 
 .float lastteleporttime;
+.vector lastteleport_origin;
 
 .float blacklisted;
 
@@ -153,9 +114,13 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
 void navigation_routerating(entity this, entity e, float f, float rangebias);
-void navigation_poptouchedgoals(entity this);
+void navigation_shortenpath(entity this);
+int navigation_poptouchedgoals(entity this);
 void navigation_goalrating_start(entity this);
 void navigation_goalrating_end(entity this);
+void navigation_goalrating_timeout_set(entity this);
+void navigation_goalrating_timeout_force(entity this);
+bool navigation_goalrating_timeout(entity this);
 void navigation_unstuck(entity this);
 
 void botframe_updatedangerousobjects(float maxupdate);

@@ -1,7 +1,6 @@
 #include "electro.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_electro) { weapon_defaultspawnfunc(this, WEP_ELECTRO); }
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
@@ -282,7 +281,7 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 	if(toucher.takedamage == DAMAGE_AIM)
 		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(this, toucher); } }
-	else
+	else if(toucher.owner != this.owner && toucher.classname != this.classname) // don't stick to player's other projectiles!
 	{
 		//UpdateCSQCProjectile(this);
 		spamsound(this, CH_SHOTS, SND_ELECTRO_BOUNCE, VOL_BASE, ATTEN_NORM);

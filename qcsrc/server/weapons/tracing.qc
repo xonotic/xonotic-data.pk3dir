@@ -16,6 +16,7 @@
 #include <common/util.qh>
 
 #include <common/weapons/_all.qh>
+#include <common/wepent.qh>
 #include <common/state.qh>
 
 #include <lib/warpzone/common.qh>
@@ -134,7 +135,14 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != SND_Null) {
-		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+		int held_weapons = 0; // HACK: muffle weapon sounds slightly while dual wielding!
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity wep_ent = weaponentities[slot];
+			if(ent.(wep_ent) && ent.(wep_ent).m_switchweapon != WEP_Null)
+				++held_weapons;
+		}
+		sound (ent, chan, snd, ((held_weapons > 1) ? VOL_BASE * 0.7 : VOL_BASE), ATTN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 
@@ -357,13 +365,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_takeback(it, CS(it), time - lag));
-		IL_EACH(g_monsters, it != this,
-		{
-			antilag_takeback(it, it, time - lag);
-		});
-	}
+		antilag_takeback_all(this, lag);
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
 	int oldsolid = this.dphitcontentsmask;
@@ -480,13 +482,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 	}
 
 	if(lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_restore(it, CS(it)));
-		IL_EACH(g_monsters, it != this,
-		{
-			antilag_restore(it, it);
-		});
-	}
+		antilag_restore_all(this);
 
 	// restore shooter solid type
 	if(this)

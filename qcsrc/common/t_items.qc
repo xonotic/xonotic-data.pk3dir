@@ -37,6 +37,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 #ifdef CSQC
 bool autocvar_cl_ghost_items_vehicle = true;
 .vector item_glowmod;
+.bool item_simple; // probably not really needed, but better safe than sorry
 void Item_SetAlpha(entity this)
 {
 	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);
@@ -96,30 +97,19 @@ void ItemDraw(entity this)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
         {
-            this.angles += this.avelocity * frametime;
+        	if(!this.item_simple)
+            	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
-            this.angles += this.avelocity * frametime;
+        	if(!this.item_simple)
+            	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
         }
-    }
-
-    Item_SetAlpha(this);
-}
-
-void ItemDrawSimple(entity this)
-{
-    if(this.gravity)
-    {
-        Movetype_Physics_MatchServer(this, false);
-
-        if(IS_ONGROUND(this))
-            this.gravity = 0;
     }
 
     Item_SetAlpha(this);
@@ -228,11 +218,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         this.mdl = "";
         string _fn = ReadString();
+        this.item_simple = false; // reset it!
 
         if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-            this.draw = ItemDrawSimple;
+            this.item_simple = true;
 
             if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
                 this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
@@ -244,12 +235,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
                 this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
             else
             {
-                this.draw = ItemDraw;
+                this.item_simple = false;
                 LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it");
             }
         }
 
-        if(this.draw != ItemDrawSimple)
+        if(!this.item_simple)
             this.mdl = strzone(_fn);
 
 
@@ -533,7 +524,7 @@ void Item_Respawn (entity this)
 
 void Item_RespawnCountdown (entity this)
 {
-	if(this.count >= ITEM_RESPAWN_TICKS)
+	if(this.item_respawncounter >= ITEM_RESPAWN_TICKS)
 	{
 		if(this.waypointsprite_attached)
 			WaypointSprite_Kill(this.waypointsprite_attached);
@@ -542,8 +533,8 @@ void Item_RespawnCountdown (entity this)
 	else
 	{
 		this.nextthink = time + 1;
-		this.count += 1;
-		if(this.count == 1)
+		this.item_respawncounter += 1;
+		if(this.item_respawncounter == 1)
 		{
 			do {
 				{
@@ -584,7 +575,7 @@ void Item_RespawnCountdown (entity this)
 			});
 
 			WaypointSprite_Ping(this.waypointsprite_attached);
-			//WaypointSprite_UpdateHealth(this.waypointsprite_attached, this.count);
+			//WaypointSprite_UpdateHealth(this.waypointsprite_attached, this.item_respawncounter);
 		}
 	}
 }
@@ -607,7 +598,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
-		e.count = 0;
+		e.item_respawncounter = 0;
 		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
 		{
 			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
@@ -877,9 +868,8 @@ float Item_GiveTo(entity item, entity player)
 
 void Item_Touch(entity this, entity toucher)
 {
-
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (this.classname == "droppedweapon")
+	if (Item_IsLoot(this))
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
@@ -904,17 +894,16 @@ void Item_Touch(entity this, entity toucher)
 
 	toucher = M_ARGV(1, entity);
 
-	if (this.classname == "droppedweapon")
+	if (Item_IsExpiring(this))
 	{
 		this.strength_finished = max(0, this.strength_finished - time);
 		this.invincible_finished = max(0, this.invincible_finished - time);
 		this.superweapons_finished = max(0, this.superweapons_finished - time);
 	}
-	entity it = this.itemdef;
-	bool gave = ITEM_HANDLE(Pickup, it, this, toucher);
+	bool gave = ITEM_HANDLE(Pickup, this.itemdef, this, toucher);
 	if (!gave)
 	{
-		if (this.classname == "droppedweapon")
+		if (Item_IsExpiring(this))
 		{
 			// undo what we did above
 			this.strength_finished += time;
@@ -931,30 +920,40 @@ LABEL(pickup)
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
-	if (this.classname == "droppedweapon")
-		delete(this);
-	else if (this.spawnshieldtime)
+	MUTATOR_CALLHOOK(ItemTouched, this, toucher);
+	if (wasfreed(this))
 	{
-		entity e;
-		if(this.team)
-		{
-			RandomSelection_Init();
-			IL_EACH(g_items, it.team == this.team,
-			{
-				if(it.itemdef) // is a registered item
-				{
-					Item_Show(it, -1);
-					it.scheduledrespawntime = 0;
-					RandomSelection_AddEnt(it, it.cnt, 0);
-				}
-			});
-			e = RandomSelection_chosen_ent;
-			Item_Show(e, 1); // reset its state so it is visible (extra sendflags doesn't matter, this happens anyway)
-		}
-		else
-			e = this;
-		Item_ScheduleRespawn(e);
+		return;
 	}
+
+	if (Item_IsLoot(this))
+	{
+		delete(this);
+		return;
+	}
+	if (!this.spawnshieldtime)
+	{
+		return;
+	}
+	entity e;
+	if (this.team)
+	{
+		RandomSelection_Init();
+		IL_EACH(g_items, it.team == this.team,
+		{
+			if (it.itemdef) // is a registered item
+			{
+				Item_Show(it, -1);
+				it.scheduledrespawntime = 0;
+				RandomSelection_AddEnt(it, it.cnt, 0);
+			}
+		});
+		e = RandomSelection_chosen_ent;
+		Item_Show(e, 1); // reset its state so it is visible (extra sendflags doesn't matter, this happens anyway)
+	}
+	else
+		e = this;
+	Item_ScheduleRespawn(e);
 }
 
 void Item_Reset(entity this)
@@ -962,16 +961,19 @@ void Item_Reset(entity this)
 	Item_Show(this, !this.state);
 	setorigin(this, this.origin);
 
-	if (this.classname != "droppedweapon")
+	if (Item_IsLoot(this))
 	{
-		setthink(this, Item_Think);
-		this.nextthink = time;
-
-		if (this.waypointsprite_attached)
-			WaypointSprite_Kill(this.waypointsprite_attached);
-
-		if (this.itemdef.instanceOfPowerup || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
-			Item_ScheduleInitialRespawn(this);
+		return;
+	}
+	setthink(this, Item_Think);
+	this.nextthink = time;
+	if (this.waypointsprite_attached)
+	{
+		WaypointSprite_Kill(this.waypointsprite_attached);
+	}
+	if (this.itemdef.instanceOfPowerup || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
+	{
+		Item_ScheduleInitialRespawn(this);
 	}
 }
 
@@ -1115,8 +1117,6 @@ float ammo_pickupevalfunc(entity player, entity item)
 	return rating;
 }
 
-.int item_group;
-.int item_group_count;
 float healtharmor_pickupevalfunc(entity player, entity item)
 {
 	float c = 0;
@@ -1203,11 +1203,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		return;
 	}
 
-	// is it a dropped weapon?
-	if (this.classname == "droppedweapon")
+	if (Item_IsLoot(this))
 	{
 		this.reset = SUB_Remove;
-		// it's a dropped weapon
 		set_movetype(this, MOVETYPE_TOSS);
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
@@ -1217,7 +1215,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.takedamage = DAMAGE_YES;
 		this.event_damage = Item_Damage;
 
-		if(this.strength_finished || this.invincible_finished || this.superweapons_finished)
+		if (Item_IsExpiring(this))
 		{
 			// if item is worthless after a timer, have it expire then
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
@@ -1332,7 +1330,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	if(def.instanceOfWeaponPickup)
 	{
-		if (this.classname != "droppedweapon") // if dropped, colormap is already set up nicely
+		if (!Item_IsLoot(this)) // if dropped, colormap is already set up nicely
 			this.colormap = 1024; // color shirt=0 pants=0 grey
 		else
 			this.gravity = 1;
@@ -1368,6 +1366,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 void StartItem(entity this, GameItem def)
 {
+    def = def.m_spawnfunc_hookreplace(def, this);
+    if (def.spawnflags & ITEM_FLAG_MUTATORBLOCKED)
+    {
+        delete(this);
+        return;
+    }
+    this.classname = def.m_canonical_spawnfunc;
     _StartItem(
     	this,
     	this.itemdef = def,
@@ -1424,114 +1429,9 @@ void setItemGroupCount()
 	}
 }
 
-spawnfunc(item_rockets)
-{
-    StartItem(this, ITEM_Rockets);
-}
-
-spawnfunc(item_bullets)
-{
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
-	   (this.classname != "droppedweapon"))
-	{
-		weaponswapping = true;
-		spawnfunc_item_shells(this);
-		weaponswapping = false;
-		return;
-	}
-
-    StartItem(this, ITEM_Bullets);
-}
-
-spawnfunc(item_cells)
-{
-	StartItem(this, ITEM_Cells);
-}
-
-spawnfunc(item_plasma)
-{
-	StartItem(this, ITEM_Plasma);
-}
-
-spawnfunc(item_shells)
-{
-	if(!weaponswapping && autocvar_sv_q3acompat_machineshotgunswap &&
-	   (this.classname != "droppedweapon"))
-	{
-		weaponswapping = true;
-		spawnfunc_item_bullets(this);
-		weaponswapping = false;
-		return;
-	}
-
-	StartItem(this, ITEM_Shells);
-}
-
-spawnfunc(item_armor_small)
-{
-	StartItem(this, ITEM_ArmorSmall);
-}
-
-spawnfunc(item_armor_medium)
-{
-	StartItem(this, ITEM_ArmorMedium);
-}
-
-spawnfunc(item_armor_big)
-{
-	StartItem(this, ITEM_ArmorBig);
-}
-
-spawnfunc(item_armor_mega)
-{
-	StartItem(this, ITEM_ArmorMega);
-}
-
-spawnfunc(item_health_small)
-{
-	StartItem(this, ITEM_HealthSmall);
-}
-
-spawnfunc(item_health_medium)
-{
-    StartItem(this, ITEM_HealthMedium);
-}
-
-spawnfunc(item_health_big)
-{
-	StartItem(this, ITEM_HealthBig);
-}
-
-spawnfunc(item_health_mega)
-{
-    StartItem(this, ITEM_HealthMega);
-}
-
-// support old misnamed entities
-spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-spawnfunc(item_armor25) { spawnfunc_item_armor_mega(this); }
-spawnfunc(item_armor_large) { spawnfunc_item_armor_mega(this); }
-spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
-spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
-spawnfunc(item_health_large) { spawnfunc_item_health_big(this); }
-spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
-
-spawnfunc(item_strength)
-{
-	StartItem(this, ITEM_Strength);
-}
-
-spawnfunc(item_invincible)
-{
-	StartItem(this, ITEM_Shield);
-}
-
-// compatibility:
-spawnfunc(item_quad) { this.classname = "item_strength";spawnfunc_item_strength(this);}
-
 void target_items_use(entity this, entity actor, entity trigger)
 {
-	if(actor.classname == "droppedweapon")
+	if(Item_IsLoot(actor))
 	{
 		EXACTTRIGGER_TOUCH(this, trigger);
 		delete(actor);
@@ -1546,7 +1446,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 		EXACTTRIGGER_TOUCH(this, trigger);
 	}
 
-	IL_EACH(g_items, it.enemy == actor && it.classname == "droppedweapon",
+	IL_EACH(g_items, it.enemy == actor && Item_IsLoot(it),
 	{
 		delete(it);
 	});
@@ -1666,31 +1566,6 @@ spawnfunc(target_items)
             break;
 		});
 	}
-}
-
-spawnfunc(item_fuel)
-{
-	StartItem(this, ITEM_JetpackFuel);
-}
-
-spawnfunc(item_fuel_regen)
-{
-	if(start_items & ITEM_JetpackRegen.m_itemid)
-	{
-		spawnfunc_item_fuel(this);
-		return;
-	}
-	StartItem(this, ITEM_JetpackRegen);
-}
-
-spawnfunc(item_jetpack)
-{
-	if(start_items & ITEM_Jetpack.m_itemid)
-	{
-		spawnfunc_item_fuel(this);
-		return;
-	}
-	StartItem(this, ITEM_Jetpack);
 }
 
 float GiveWeapon(entity e, float wpn, float op, float val)

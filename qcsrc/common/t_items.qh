@@ -1,9 +1,5 @@
 #pragma once
 
-#ifdef SVQC
-#include <server/defs.qh>
-#endif
-
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
@@ -30,6 +26,8 @@ const int ISF_SIZE 				= BIT(7);
 
 #ifdef SVQC
 void StartItem(entity this, entity a);
+.int item_group;
+.int item_group_count;
 #endif
 
 #ifdef CSQC
@@ -48,20 +46,12 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 .vector colormod;
 
 void ItemDraw(entity this);
-void ItemDrawSimple(entity this);
 
 #endif
 #ifdef SVQC
-spawnfunc(item_strength);
-spawnfunc(item_invincible);
-spawnfunc(item_armor_small);
-spawnfunc(item_shells);
-spawnfunc(item_bullets);
-spawnfunc(item_rockets);
 
 float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
-
 
 bool have_pickup_item(entity this);
 
@@ -72,6 +62,8 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float max_armorvalue;
 .float pickup_anyway;
+
+.float item_respawncounter;
 
 void Item_Show (entity e, float mode);
 

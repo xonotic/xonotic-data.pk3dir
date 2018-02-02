@@ -750,7 +750,7 @@ MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 	switch(ent.classname)
 	{
 		case "item_strength":
-		case "item_invincible":
+		case "item_shield":
 		{
 			entity e = spawn();
 			buff_SpawnReplacement(e, ent);

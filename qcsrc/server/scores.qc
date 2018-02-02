@@ -96,7 +96,7 @@ void TeamScore_Spawn(float t, string name)
 	PlayerStats_GameReport_AddTeam(t);
 }
 
-float TeamScore_AddToTeam(float t, float scorefield, float score)
+float TeamScore_AddToTeam(int t, float scorefield, float score)
 {
 	entity s;
 

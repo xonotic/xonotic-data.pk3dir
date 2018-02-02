@@ -3,16 +3,14 @@
 REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
 
 #ifdef SVQC
-spawnfunc(weapon_shockwave)
+METHOD(Shockwave, m_spawnfunc_hookreplace, Weapon(Shockwave this, entity e))
 {
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(this.classname != "droppedweapon")
+	if (autocvar_sv_q3acompat_machineshotgunswap && !Item_IsLoot(e))
 	{
-		weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
-		return;
+		return WEP_MACHINEGUN;
 	}
-	weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
+	return this;
 }
 
 const float MAX_SHOCKWAVE_HITS = 10;
@@ -318,13 +316,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 	if(autocvar_g_antilag == 0 || noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != actor, antilag_takeback(it, CS(it), time - lag));
-		IL_EACH(g_monsters, it != actor,
-		{
-			antilag_takeback(it, it, time - lag);
-		});
-	}
+		antilag_takeback_all(actor, lag);
 
 	while(head)
 	{
@@ -598,13 +590,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 	}
 
 	if(lag)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != actor, antilag_restore(it, CS(it)));
-		IL_EACH(g_monsters, it != actor,
-		{
-			antilag_restore(it, it);
-		});
-	}
+		antilag_restore_all(actor);
 }
 
 METHOD(Shockwave, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))

@@ -24,6 +24,12 @@ MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
     /**/
 MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
 
+/** called when player spawns to determine whether to give them random start weapons. Return true to forbid giving them. */
+#define EV_ForbidRandomStartWeapons(i, o) \
+	/** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(ForbidRandomStartWeapons, EV_ForbidRandomStartWeapons);
+
 /** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
 #define EV_PlayerSpawn(i, o) \
 	/** player spawning */ i(entity, MUTATOR_ARGV_0_entity) \
@@ -644,6 +650,13 @@ enum {
 	MUT_ITEMTOUCH_RETURN, // return this flag to make the function return (handled entirely by mutator)
 	MUT_ITEMTOUCH_PICKUP // return this flag to have the item "picked up" and taken even after mutator handled it
 };
+
+/** called after the item has been touched. */
+#define EV_ItemTouched(i, o) \
+    /** item */    i(entity, MUTATOR_ARGV_0_entity) \
+    /** toucher */ i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(ItemTouched, EV_ItemTouched);
 
 /** Called when the amount of entity resources changes. Can be used to override
 resource limit. */

@@ -2093,6 +2093,10 @@ void EndFrame()
 	{
 		antilag_record(it, it, altime);
 	});
+	IL_EACH(g_projectiles, it.classname == "nade",
+	{
+		antilag_record(it, it, altime);
+	});
 	systems_update();
 	IL_ENDFRAME();
 }

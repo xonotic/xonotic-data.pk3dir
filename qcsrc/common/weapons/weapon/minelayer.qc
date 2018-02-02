@@ -1,7 +1,6 @@
 #include "minelayer.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(this, WEP_MINE_LAYER); }
 
 void W_MineLayer_Stick(entity this, entity to)
 {
