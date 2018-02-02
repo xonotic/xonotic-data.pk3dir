@@ -42,9 +42,71 @@ void func_ladder_link(entity this)
 void func_ladder_init(entity this)
 {
 	settouch(this, func_ladder_touch);
-
 	trigger_init(this);
 	func_ladder_link(this);
+
+	if(min(this.absmax.x - this.absmin.x, this.absmax.y - this.absmin.y) > 100)
+		return;
+
+	entity tracetest_ent = spawn();
+	setsize(tracetest_ent, PL_MIN_CONST, PL_MAX_CONST);
+	tracetest_ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+
+	vector top_min = (this.absmin + this.absmax) / 2;
+	top_min.z = this.absmax.z;
+	vector top_max = top_min;
+	top_max.z += PL_MAX_CONST.z - PL_MIN_CONST.z;
+	tracebox(top_max + jumpstepheightvec, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
+	if(trace_startsolid)
+	{
+		tracebox(top_max + stepheightvec, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
+		if(trace_startsolid)
+		{
+			tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
+			if(trace_startsolid)
+			{
+				if(this.absmax.x - this.absmin.x > PL_MAX_CONST.x - PL_MIN_CONST.x
+					&& this.absmax.y - this.absmin.y < this.absmax.x - this.absmin.x)
+				{
+					// move top on one side
+					top_max.y = top_min.y = this.absmin.y + (PL_MAX_CONST.y - PL_MIN_CONST.y) * 0.75;
+				}
+				else if(this.absmax.y - this.absmin.y > PL_MAX_CONST.y - PL_MIN_CONST.y
+					&& this.absmax.x - this.absmin.x < this.absmax.y - this.absmin.y)
+				{
+					// move top on one side
+					top_max.x = top_min.x = this.absmin.x + (PL_MAX_CONST.x - PL_MIN_CONST.x) * 0.75;
+				}
+				tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
+				if(trace_startsolid)
+				{
+					if(this.absmax.x - this.absmin.x > PL_MAX_CONST.x - PL_MIN_CONST.x
+						&& this.absmax.y - this.absmin.y < this.absmax.x - this.absmin.x)
+					{
+						// alternatively on the other side
+						top_max.y = top_min.y = this.absmax.y - (PL_MAX_CONST.y - PL_MIN_CONST.y) * 0.75;
+					}
+					else if(this.absmax.y - this.absmin.y > PL_MAX_CONST.y - PL_MIN_CONST.y
+						&& this.absmax.x - this.absmin.x < this.absmax.y - this.absmin.y)
+					{
+						// alternatively on the other side
+						top_max.x = top_min.x = this.absmax.x - (PL_MAX_CONST.x - PL_MIN_CONST.x) * 0.75;
+					}
+					tracebox(top_max, PL_MIN_CONST, PL_MAX_CONST, top_min, MOVE_NOMONSTERS, tracetest_ent);
+				}
+			}
+		}
+	}
+	if(trace_startsolid || trace_endpos.z < this.absmax.z)
+	{
+		delete(tracetest_ent);
+		return;
+	}
+
+	this.bot_pickup = true; // allow bots to make use of this ladder
+	float cost = waypoint_getlinearcost(trace_endpos.z - this.absmin.z);
+	top_min = trace_endpos;
+	waypoint_spawnforteleporter_boxes(this, WAYPOINTFLAG_LADDER, this.absmin, this.absmax, top_min, top_min, cost);
 }
 
 spawnfunc(func_ladder)

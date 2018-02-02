@@ -37,6 +37,10 @@
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
+#ifdef SVQC
+	player.lastteleport_origin = player.origin;
+	player.lastteleporttime = time;
+#endif
 	setorigin(player, to); // NOTE: this also aborts the move, when this is called by touch
 #ifdef SVQC
 	player.oldorigin = to; // for DP's unsticking

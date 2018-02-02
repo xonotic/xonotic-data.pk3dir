@@ -67,5 +67,4 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl);
 
 #ifdef CSQC
 .entity realowner;
-.float lastteleporttime;
 #endif

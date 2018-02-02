@@ -10,8 +10,6 @@
 .float tuba_lastnotes_cnt; // over
 .vector tuba_lastnotes[MAX_TUBANOTES];
 
-spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(this, WEP_TUBA); }
-
 bool W_Tuba_HasPlayed(entity pl, .entity weaponentity, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
 	float i, j, mmin, mmax, nolength;

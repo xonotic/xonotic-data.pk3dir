@@ -12,51 +12,82 @@ void trigger_teleport_use(entity this, entity actor, entity trigger)
 }
 #endif
 
-void Teleport_Touch(entity this, entity toucher)
+bool Teleport_Active(entity this, entity player)
 {
 	if (this.active != ACTIVE_ACTIVE)
-		return;
+		return false;
 
 #ifdef SVQC
-	if (!toucher.teleportable)
-		return;
+	if (!player.teleportable)
+		return false;
 
-	if(toucher.vehicle)
-	if(!toucher.vehicle.teleportable)
-		return;
+	if(player.vehicle)
+	if(!player.vehicle.teleportable)
+		return false;
 
-	if(IS_TURRET(toucher))
-		return;
+	if(IS_TURRET(player))
+		return false;
 #elif defined(CSQC)
-	if(!IS_PLAYER(toucher))
-		return;
+	if(!IS_PLAYER(player))
+		return false;
 #endif
 
-	if(IS_DEAD(toucher))
-		return;
+	if(IS_DEAD(player))
+		return false;
 
 	if(this.team)
-		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, toucher)))
-			return;
+		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, player)))
+			return false;
 
-	EXACTTRIGGER_TOUCH(this, toucher);
+	return true;
+}
+
+void Teleport_Touch(entity this, entity toucher)
+{
+	entity player = toucher;
+
+	if(!Teleport_Active(this, player))
+		return;
+
+	EXACTTRIGGER_TOUCH(this, player);
 
 #ifdef SVQC
-	if(IS_PLAYER(toucher))
-		RemoveGrapplingHooks(toucher);
+	if(IS_PLAYER(player))
+		RemoveGrapplingHooks(player);
 #endif
 
 	entity e;
-	e = Simple_TeleportPlayer(this, toucher);
+	e = Simple_TeleportPlayer(this, player);
 
 #ifdef SVQC
 	string s = this.target; this.target = string_null;
-	SUB_UseTargets(this, toucher, toucher); // TODO: should we be using toucher for trigger too?
+	SUB_UseTargets(this, player, player); // TODO: should we be using toucher for trigger too?
 	if (!this.target) this.target = s;
 
-	SUB_UseTargets(e, toucher, toucher);
+	SUB_UseTargets(e, player, player);
 #endif
 }
+
+#ifdef SVQC
+void target_teleport_use(entity this, entity actor, entity trigger)
+{
+	entity player = actor;
+
+	if(!Teleport_Active(this, player))
+		return;
+
+	if(IS_PLAYER(player))
+		RemoveGrapplingHooks(player);
+
+	entity e = Simple_TeleportPlayer(this, player);
+
+	string s = this.target; this.target = string_null;
+	SUB_UseTargets(this, player, player); // TODO: should we be using toucher for trigger too?
+	if (!this.target) this.target = s;
+
+	SUB_UseTargets(e, player, player);
+}
+#endif
 
 #ifdef SVQC
 float trigger_teleport_send(entity this, entity to, float sf)
@@ -100,6 +131,25 @@ spawnfunc(trigger_teleport)
 	}
 
 	IL_PUSH(g_teleporters, this);
+}
+
+spawnfunc(target_teleporter)
+{
+	if(this.target == "")
+	{
+		// actually a destination!
+		spawnfunc_info_teleport_destination(this);
+		return;
+	}
+
+	this.active = ACTIVE_ACTIVE;
+
+	this.use = target_teleport_use;
+
+	if(this.noise != "")
+		FOREACH_WORD(this.noise, true, precache_sound(it));
+
+	InitializeEntity(this, teleport_findtarget, INITPRIO_FINDTARGET);
 }
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)

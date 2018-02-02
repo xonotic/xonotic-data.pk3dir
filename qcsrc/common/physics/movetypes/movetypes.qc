@@ -544,7 +544,6 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			_Movetype_CheckWater(this);
 			this.origin = this.origin + movedt * this.velocity;
 			this.angles = this.angles + movedt * this.avelocity;
-			_Movetype_LinkEdict(this, false);
 			break;
 		case MOVETYPE_STEP:
 			_Movetype_Physics_Step(this, movedt);
@@ -563,6 +562,12 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 		case MOVETYPE_PHYSICS:
 			break;
 	}
+
+	//_Movetype_CheckVelocity(this);
+
+	_Movetype_LinkEdict(this, true);
+
+	//_Movetype_CheckVelocity(this);
 }
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient)  // to be run every move frame

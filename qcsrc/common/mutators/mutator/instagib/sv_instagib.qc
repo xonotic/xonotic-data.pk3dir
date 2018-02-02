@@ -17,17 +17,25 @@ float autocvar_g_instagib_speed_highspeed;
 
 #include <common/items/_mod.qh>
 
-REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball);
-
-spawnfunc(item_minst_cells)
+REGISTER_MUTATOR(mutator_instagib, autocvar_g_instagib && !g_nexball)
 {
-	if (!g_instagib) { delete(this); return; }
-	StartItem(this, ITEM_VaporizerCells);
+	MUTATOR_ONADD
+	{
+		ITEM_VaporizerCells.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Invisibility.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Speed.spawnflags &= ~ITEM_FLAG_MUTATORBLOCKED;
+	}
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		ITEM_VaporizerCells.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Invisibility.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+		ITEM_Speed.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+	}
 }
 
 void instagib_invisibility(entity this)
 {
-	this.strength_finished = autocvar_g_balance_powerup_strength_time;
+	this.strength_finished = autocvar_g_instagib_invisibility_time;
 	StartItem(this, ITEM_Invisibility);
 }
 
@@ -38,7 +46,7 @@ void instagib_extralife(entity this)
 
 void instagib_speed(entity this)
 {
-	this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	this.invincible_finished = autocvar_g_instagib_speed_time;
 	StartItem(this, ITEM_Speed);
 }
 
@@ -168,6 +176,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	instagib_stop_countdown(player);
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidRandomStartWeapons)
+{
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
@@ -377,13 +390,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 
 void replace_with_insta_cells(entity item)
 {
-	entity e = spawn();
+	entity e = new(item_vaporizer_cells);
 	setorigin(e, item.origin);
-	e.noalign = item.noalign;
+	e.noalign = Item_ShouldKeepPosition(item);
 	e.cnt = item.cnt;
 	e.team = item.team;
 	e.spawnfunc_checked = true;
-	spawnfunc_item_minst_cells(e);
+	spawnfunc_item_vaporizer_cells(e);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
@@ -423,7 +436,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return true;
 	}
 
-	if(item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon")
+	if(item.weapon == WEP_VAPORIZER.m_id && Item_IsLoot(item))
 	{
 		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 		return false;
@@ -439,7 +452,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		return false;
 
 	float cells = GetResourceAmount(item, RESOURCE_CELLS);
-	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells")
+	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
 		SetResourceAmount(item, RESOURCE_CELLS, autocvar_g_instagib_ammo_drop);
 
 	if(cells && !item.weapon)
@@ -508,18 +521,27 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
+	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_health_mega"))
 		return;
 
 	entity e = spawn();
 
 	float r = random();
 	if (r < 0.3)
+	{
+		e.classname = "item_invisibility";
 		setthink(e, instagib_invisibility);
+	}
 	else if (r < 0.6)
+	{
+		e.classname = "item_extralife";
 		setthink(e, instagib_extralife);
+	}
 	else
+	{
+		e.classname = "item_speed";
 		setthink(e, instagib_speed);
+	}
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = ent.spawnflags;

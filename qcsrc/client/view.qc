@@ -12,6 +12,7 @@
 #include "mutators/events.qh"
 
 #include <common/animdecide.qh>
+#include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
 #include <common/anim.qh>
 #include <common/constants.qh>
@@ -30,6 +31,7 @@
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
 #include <common/viewloc.qh>
+#include <common/triggers/trigger/viewloc.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 
@@ -910,7 +912,8 @@ vector crosshair_getcolor(entity this, float health_stat)
 
 		case 2: // crosshair_color_by_health
 		{
-			float hp = health_stat;
+			vector v = healtharmor_maxdamage(health_stat, STAT(ARMOR), armorblockpercent, DEATH_WEAPON.m_id);
+			float hp = floor(v.x + 1);
 
 			//x = red
 			//y = green
@@ -976,7 +979,7 @@ void HUD_Crosshair(entity this)
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) &&
-		spectatee_status != -1 && !csqcplayer.viewloc && !MUTATOR_CALLHOOK(DrawCrosshair) &&
+		spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair) &&
 		!HUD_MinigameMenu_IsOpened() )
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
@@ -1007,7 +1010,10 @@ void HUD_Crosshair(entity this)
 		float shottype;
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
+		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
+			wcross_origin = viewloc_mousepos;
+		else
+			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
 		if(autocvar_crosshair_hittest)
 		{
@@ -1477,6 +1483,19 @@ void HUD_Draw(entity this)
 	HitSound();
 }
 
+void ViewLocation_Mouse()
+{
+	if(spectatee_status)
+		return; // don't draw it as spectator!
+
+	viewloc_mousepos += getmousepos() * autocvar_menu_mouse_speed;
+	viewloc_mousepos.x = bound(0, viewloc_mousepos.x, vid_conwidth);
+	viewloc_mousepos.y = bound(0, viewloc_mousepos.y, vid_conheight);
+
+	//float cursor_alpha = 1 - autocvar__menu_alpha;
+	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
+}
+
 bool ov_enabled;
 float oldr_nearclip;
 float oldr_farclip_base;
@@ -1574,6 +1593,11 @@ void CSQC_UpdateView(entity this, float w, float h)
 		button_zoom = false;
 	}
 
+	// abused multiple places below
+	entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
+	if(!local_player)
+		local_player = this; // fall back!
+
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
@@ -1624,10 +1648,6 @@ void CSQC_UpdateView(entity this, float w, float h)
 				chase_distance_override = M_ARGV(0, float);
 			}
 			eventchase_running = true;
-
-			entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
-			if(!local_player)
-				local_player = this; // fall back!
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -2060,7 +2080,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 		// the view to go back to normal, so reticle_type would become 0 as we fade out)
-		if(spectatee_status || is_dead || hud != HUD_NORMAL)
+		if(spectatee_status || is_dead || hud != HUD_NORMAL || local_player.viewloc)
 		{
 			// no zoom reticle while dead
 			reticle_type = 0;
@@ -2373,6 +2393,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 		HUD_Minigame_Mouse();
 	else if(QuickMenu_IsOpened())
 		QuickMenu_Mouse();
+	else if(local_player.viewloc && (local_player.viewloc.spawnflags & VIEWLOC_FREEAIM))
+		ViewLocation_Mouse(); // NOTE: doesn't use cursormode
 	else
 		HUD_Radar_Mouse();
 

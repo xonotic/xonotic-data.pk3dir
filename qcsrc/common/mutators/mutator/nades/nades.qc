@@ -1273,30 +1273,27 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		}
 	}
 
-	float n = 0;
+	int n = 0;
 	entity o = NULL;
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
-	else
+	else if(STAT(FROZEN, player) == 3)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
-			if(!IS_DEAD(it))
-			if(STAT(FROZEN, it) == 0)
-			if(SAME_TEAM(it, player))
+			if(!IS_DEAD(it) && STAT(FROZEN, it) == 0 && SAME_TEAM(it, player))
 			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 			{
 				if(!o)
 					o = it;
-				if(STAT(FROZEN, player) == 1)
-					it.reviving = true;
+				it.reviving = true;
 				++n;
 			}
 		});
 	}
 
-	if(n && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
+	if(n > 0 && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
 	{
 		player.revive_progress = bound(0, player.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 		SetResourceAmount(player, RESOURCE_HEALTH, max(1, player.revive_progress * start_health));

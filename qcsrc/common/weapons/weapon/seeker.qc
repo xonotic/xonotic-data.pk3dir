@@ -1,7 +1,6 @@
 #include "seeker.qh"
 
 #ifdef SVQC
-spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
