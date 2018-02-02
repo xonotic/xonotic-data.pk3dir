@@ -210,6 +210,7 @@ float warmup_start_ammo_fuel;
 float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
+bool sv_ready_restart_after_countdown;
 
 float want_weapon(entity weaponinfo, float allguns); // WEAPONTODO: what still needs done?
 void readplayerstartcvars();
@@ -235,6 +236,7 @@ void readlevelcvars()
 	sv_maxidle_slots_countbots = cvar("sv_maxidle_slots_countbots");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
+	sv_ready_restart_after_countdown = cvar("sv_ready_restart_after_countdown");
 
 	warmup_stage = cvar("g_warmup");
 	warmup_limit = cvar("g_warmup_limit");
