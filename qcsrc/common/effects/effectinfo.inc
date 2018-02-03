@@ -4425,6 +4425,23 @@ SUB(tr_bullet) {
 	MY(type) = "spark";
 	MY(velocitymultiplier) = 3;
 }
+// trail
+SUB(tr_bullet) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xff8960";
+	MY(color_max) = "0xff8533";
+	MY(size_min) = 0.150000;
+	MY(size_max) = 0.150000;
+	MY(sizeincrease) = 3;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocitymultiplier) = 0.010000;
+}
 
 // smoke emitter for small pipes
 DEF(smoking_smallemitter);

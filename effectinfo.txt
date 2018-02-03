@@ -2759,6 +2759,17 @@ effect tr_bullet
 	tex 70 70
 	trailspacing 750
 	velocitymultiplier 3
+effect tr_bullet
+	type smoke
+	airfriction -4
+	alpha 256 256 512
+	color 0xff8960 0xff8533
+	sizeincrease 3
+	size 0.150000 0.150000
+	tex 46 46
+	trailspacing 8
+	velocityjitter 3 3 3
+	velocitymultiplier 0.010000
 effect smoking_smallemitter
 	type alphastatic
 	airfriction -1
