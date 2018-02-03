@@ -1,13 +1,22 @@
 #include "delay.qh"
 #ifdef SVQC
+void delay_delayeduse(entity this)
+{
+	SUB_UseTargets(this, this.enemy, this.goalentity);
+	this.enemy = this.goalentity = NULL;
+}
+
 void delay_use(entity this, entity actor, entity trigger)
 {
-   setthink(this, SUB_UseTargets_self);
-   this.nextthink = time + this.wait;
+	this.enemy = actor;
+	this.goalentity = trigger;
+	setthink(this, delay_delayeduse);
+	this.nextthink = time + this.wait;
 }
 
 void delay_reset(entity this)
 {
+	this.enemy = this.goalentity = NULL;
 	setthink(this, func_null);
 	this.nextthink = 0;
 }

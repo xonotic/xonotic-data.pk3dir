@@ -330,6 +330,8 @@ bool autocvar_sv_ready_restart_repeatable;
 bool autocvar_sv_servermodelsonly;
 int autocvar_sv_spectate;
 float autocvar_sv_spectator_speed_multiplier;
+float autocvar_sv_spectator_speed_multiplier_min = 1;
+float autocvar_sv_spectator_speed_multiplier_max = 5;
 bool autocvar_sv_status_privacy;
 float autocvar_sv_stepheight;
 float autocvar_sv_strengthsound_antispam_refire_threshold;
