@@ -55,11 +55,6 @@ spawnfunc(misc_teleporter_dest)
 	spawnfunc_info_teleport_destination(this);
 }
 
-spawnfunc(target_teleporter)
-{
-	spawnfunc_info_teleport_destination(this);
-}
-
 #elif defined(CSQC)
 
 void teleport_dest_remove(entity this)

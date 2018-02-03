@@ -37,6 +37,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 #ifdef CSQC
 bool autocvar_cl_ghost_items_vehicle = true;
 .vector item_glowmod;
+.bool item_simple; // probably not really needed, but better safe than sorry
 void Item_SetAlpha(entity this)
 {
 	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);
@@ -96,30 +97,19 @@ void ItemDraw(entity this)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
         {
-            this.angles += this.avelocity * frametime;
+        	if(!this.item_simple)
+            	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
-            this.angles += this.avelocity * frametime;
+        	if(!this.item_simple)
+            	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
         }
-    }
-
-    Item_SetAlpha(this);
-}
-
-void ItemDrawSimple(entity this)
-{
-    if(this.gravity)
-    {
-        Movetype_Physics_MatchServer(this, false);
-
-        if(IS_ONGROUND(this))
-            this.gravity = 0;
     }
 
     Item_SetAlpha(this);
@@ -228,11 +218,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         this.mdl = "";
         string _fn = ReadString();
+        this.item_simple = false; // reset it!
 
         if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-            this.draw = ItemDrawSimple;
+            this.item_simple = true;
 
             if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
                 this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
@@ -244,12 +235,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
                 this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
             else
             {
-                this.draw = ItemDraw;
+                this.item_simple = false;
                 LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it");
             }
         }
 
-        if(this.draw != ItemDrawSimple)
+        if(!this.item_simple)
             this.mdl = strzone(_fn);
 
 
@@ -533,7 +524,7 @@ void Item_Respawn (entity this)
 
 void Item_RespawnCountdown (entity this)
 {
-	if(this.count >= ITEM_RESPAWN_TICKS)
+	if(this.item_respawncounter >= ITEM_RESPAWN_TICKS)
 	{
 		if(this.waypointsprite_attached)
 			WaypointSprite_Kill(this.waypointsprite_attached);
@@ -542,8 +533,8 @@ void Item_RespawnCountdown (entity this)
 	else
 	{
 		this.nextthink = time + 1;
-		this.count += 1;
-		if(this.count == 1)
+		this.item_respawncounter += 1;
+		if(this.item_respawncounter == 1)
 		{
 			do {
 				{
@@ -584,7 +575,7 @@ void Item_RespawnCountdown (entity this)
 			});
 
 			WaypointSprite_Ping(this.waypointsprite_attached);
-			//WaypointSprite_UpdateHealth(this.waypointsprite_attached, this.count);
+			//WaypointSprite_UpdateHealth(this.waypointsprite_attached, this.item_respawncounter);
 		}
 	}
 }
@@ -607,7 +598,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
-		e.count = 0;
+		e.item_respawncounter = 0;
 		if(Item_ItemsTime_Allow(e.itemdef) || (e.weapons & WEPSET_SUPERWEAPONS))
 		{
 			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
@@ -1126,8 +1117,6 @@ float ammo_pickupevalfunc(entity player, entity item)
 	return rating;
 }
 
-.int item_group;
-.int item_group_count;
 float healtharmor_pickupevalfunc(entity player, entity item)
 {
 	float c = 0;

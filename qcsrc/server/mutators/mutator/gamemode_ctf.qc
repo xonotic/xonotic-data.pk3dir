@@ -540,6 +540,9 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	if(CTF_DIFFTEAM(player, flag)) { return; }
 	if((flag.cnt || enemy_flag.cnt) && flag.cnt != enemy_flag.cnt) { return; } // this should catch some edge cases (capturing grouped flag at ungrouped flag disallowed etc)
 
+	if (toucher.goalentity == flag.bot_basewaypoint)
+		toucher.goalentity_lock_timeout = 0;
+
 	if(ctf_oneflag)
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 	if(SAME_TEAM(tmp_entity, player))
@@ -594,6 +597,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 			{ GameRules_scoring_add_team(enemy_flag.ctf_dropper, SCORE, ((enemy_flag.score_assist) ? enemy_flag.score_assist : autocvar_g_ctf_score_capture_assist)); }
 	}
 
+	flag.enemy = toucher;
+
 	// reset the flag
 	player.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
 	ctf_RespawnFlag(enemy_flag);
@@ -635,6 +640,8 @@ void ctf_Handle_Return(entity flag, entity player)
 	// other
 	if(player.flagcarried == flag)
 		WaypointSprite_Kill(player.wps_flagcarrier);
+
+	flag.enemy = player;
 
 	// reset the flag
 	ctf_RespawnFlag(flag);
@@ -773,6 +780,7 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 			}
 			_sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTEN_NONE);
 			ctf_EventLog("returned", flag.team, NULL);
+			flag.enemy = NULL;
 			ctf_RespawnFlag(flag);
 		}
 	}
@@ -1176,8 +1184,9 @@ void ctf_RespawnFlag(entity flag)
 void ctf_Reset(entity this)
 {
 	if(this.owner && IS_PLAYER(this.owner))
-        ctf_Handle_Throw(this.owner, NULL, DROP_RESET);
+		ctf_Handle_Throw(this.owner, NULL, DROP_RESET);
 
+	this.enemy = NULL;
 	ctf_RespawnFlag(this);
 }
 
@@ -1653,11 +1662,10 @@ void havocbot_role_ctf_carrier(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-
 		navigation_goalrating_start(this);
+
 		if(ctf_oneflag)
 			havocbot_goalrating_ctf_enemybase(this, 50000);
 		else
@@ -1667,6 +1675,19 @@ void havocbot_role_ctf_carrier(entity this)
 			havocbot_goalrating_ctf_carrieritems(this, 1000, this.origin, 1000);
 
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
+
+		entity head = ctf_worldflaglist;
+		while (head)
+		{
+			if (this.goalentity == head.bot_basewaypoint)
+			{
+				this.goalentity_lock_timeout = time + 5;
+				break;
+			}
+			head = head.ctf_worldflagnext;
+		}
 
 		if (this.goalentity)
 			this.havocbot_cantfindflag = time + 10;
@@ -1729,14 +1750,17 @@ void havocbot_role_ctf_escort(entity this)
 	}
 
 	// Chase the flag carrier
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
+
 		havocbot_goalrating_ctf_enemyflag(this, 30000);
 		havocbot_goalrating_ctf_ourstolenflag(this, 40000);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1809,15 +1833,18 @@ void havocbot_role_ctf_offense(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
+
 		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
 		havocbot_goalrating_ctf_enemybase(this, 20000);
 		havocbot_goalrating_items(this, 5000, this.origin, 1000);
 		havocbot_goalrating_items(this, 1000, this.origin, 10000);
+
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1842,11 +1869,8 @@ void havocbot_role_ctf_retriever(entity this)
 	mf = havocbot_ctf_find_flag(this);
 	if(mf.ctf_status==FLAG_BASE)
 	{
-		if(this.goalcurrent == mf)
-		{
-			navigation_clearroute(this);
-			this.bot_strategytime = 0;
-		}
+		if (mf.enemy == this) // did this bot return the flag?
+			navigation_goalrating_timeout_force(this);
 		havocbot_ctf_reset_role(this);
 		return;
 	}
@@ -1860,18 +1884,21 @@ void havocbot_role_ctf_retriever(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		float rt_radius;
 		rt_radius = 10000;
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
+
 		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
 		havocbot_goalrating_ctf_droppedflags(this, 40000, this.origin, rt_radius);
 		havocbot_goalrating_ctf_enemybase(this, 30000);
 		havocbot_goalrating_items(this, 500, this.origin, rt_radius);
+
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1907,22 +1934,25 @@ void havocbot_role_ctf_middle(entity this)
 		return;
 	}
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		vector org;
 
 		org = havocbot_middlepoint;
 		org.z = this.origin.z;
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
+
 		havocbot_goalrating_ctf_ourstolenflag(this, 50000);
 		havocbot_goalrating_ctf_droppedflags(this, 30000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 10000, org, havocbot_middlepoint_radius * 0.5);
 		havocbot_goalrating_items(this, 5000, org, havocbot_middlepoint_radius * 0.5);
 		havocbot_goalrating_items(this, 2500, this.origin, 10000);
 		havocbot_goalrating_ctf_enemybase(this, 2500);
+
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -1958,11 +1988,10 @@ void havocbot_role_ctf_defense(entity this)
 		havocbot_ctf_reset_role(this);
 		return;
 	}
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
 		vector org = mf.dropped_origin;
 
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
 		// if enemies are closer to our base, go there
@@ -1988,7 +2017,10 @@ void havocbot_role_ctf_defense(entity this)
 		havocbot_goalrating_enemyplayers(this, 15000, org, havocbot_middlepoint_radius);
 		havocbot_goalrating_items(this, 10000, org, havocbot_middlepoint_radius);
 		havocbot_goalrating_items(this, 5000, this.origin, 10000);
+
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -2002,7 +2034,8 @@ void havocbot_role_ctf_setrole(entity bot, int role)
 			bot.havocbot_role = havocbot_role_ctf_carrier;
 			bot.havocbot_role_timeout = 0;
 			bot.havocbot_cantfindflag = time + 10;
-			bot.bot_strategytime = 0;
+			if (bot.havocbot_previous_role != bot.havocbot_role)
+				navigation_goalrating_timeout_force(bot);
 			break;
 		case HAVOCBOT_CTF_ROLE_DEFENSE:
 			s = "defense";
@@ -2024,14 +2057,16 @@ void havocbot_role_ctf_setrole(entity bot, int role)
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_retriever;
 			bot.havocbot_role_timeout = time + 10;
-			bot.bot_strategytime = 0;
+			if (bot.havocbot_previous_role != bot.havocbot_role)
+				navigation_goalrating_timeout_expire(bot, 2);
 			break;
 		case HAVOCBOT_CTF_ROLE_ESCORT:
 			s = "escort";
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_escort;
 			bot.havocbot_role_timeout = time + 30;
-			bot.bot_strategytime = 0;
+			if (bot.havocbot_previous_role != bot.havocbot_role)
+				navigation_goalrating_timeout_expire(bot, 2);
 			break;
 	}
 	LOG_TRACE(bot.netname, " switched to ", s);

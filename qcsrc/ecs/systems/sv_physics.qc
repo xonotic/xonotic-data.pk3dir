@@ -65,7 +65,7 @@ void sys_phys_spectator_control(entity this)
 			    || CS(this).impulse == 18
 			    || (CS(this).impulse >= 200 && CS(this).impulse <= 209)
 			   ) {
-				this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5);
+				this.spectatorspeed = bound(autocvar_sv_spectator_speed_multiplier_min, this.spectatorspeed + 0.5, autocvar_sv_spectator_speed_multiplier_max);
 			} else if (CS(this).impulse == 11) {
 				this.spectatorspeed = maxspeed_mod;
 			} else if (CS(this).impulse == 12
@@ -73,7 +73,7 @@ void sys_phys_spectator_control(entity this)
 			    || CS(this).impulse == 19
 			    || (CS(this).impulse >= 220 && CS(this).impulse <= 229)
 			          ) {
-				this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
+				this.spectatorspeed = bound(autocvar_sv_spectator_speed_multiplier_min, this.spectatorspeed - 0.5, autocvar_sv_spectator_speed_multiplier_max);
 			} else if (CS(this).impulse >= 1 && CS(this).impulse <= 9) {
 				this.spectatorspeed = 1 + 0.5 * (CS(this).impulse - 1);
 			}
@@ -86,7 +86,7 @@ void sys_phys_fixspeed(entity this, float maxspeed_mod)
 {
 	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
 	if (this.speed != spd) {
-		this.speed = spd;
+		this.speed = spd; // TODO: send this as a stat and set the below cvars on the client?
 		string temps = ftos(spd);
 		stuffcmd(this, strcat("cl_forwardspeed ", temps, "\n"));
 		stuffcmd(this, strcat("cl_backspeed ", temps, "\n"));

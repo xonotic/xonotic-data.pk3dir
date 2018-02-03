@@ -26,6 +26,8 @@ const int ISF_SIZE 				= BIT(7);
 
 #ifdef SVQC
 void StartItem(entity this, entity a);
+.int item_group;
+.int item_group_count;
 #endif
 
 #ifdef CSQC
@@ -44,7 +46,6 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 .vector colormod;
 
 void ItemDraw(entity this);
-void ItemDrawSimple(entity this);
 
 #endif
 #ifdef SVQC
@@ -61,6 +62,8 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 .float max_armorvalue;
 .float pickup_anyway;
+
+.float item_respawncounter;
 
 void Item_Show (entity e, float mode);
 

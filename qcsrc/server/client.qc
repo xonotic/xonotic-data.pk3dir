@@ -507,7 +507,7 @@ void PutPlayerInServer(entity this)
 	accuracy_resend(this);
 
 	if (this.team < 0)
-		JoinBestTeam(this, false, true);
+		JoinBestTeam(this, true);
 
 	entity spot = SelectSpawnPoint(this, false);
 	if (!spot) {
@@ -558,8 +558,11 @@ void PutPlayerInServer(entity this)
 		this.health = start_health;
 		this.armorvalue = start_armorvalue;
 		this.weapons = start_weapons;
-		GiveRandomWeapons(this, random_start_weapons_count,
-			autocvar_g_random_start_weapons, random_start_ammo);
+		if (MUTATOR_CALLHOOK(ForbidRandomStartWeapons, this) == false)
+		{
+			GiveRandomWeapons(this, random_start_weapons_count,
+				autocvar_g_random_start_weapons, random_start_ammo);
+		}
 	}
 	SetSpectatee_status(this, 0);
 
@@ -614,7 +617,10 @@ void PutPlayerInServer(entity this)
 	this.fire_endtime = -1;
 	this.revive_progress = 0;
 	this.revival_time = 0;
+
 	this.air_finished = time + 12;
+	this.waterlevel = WATERLEVEL_NONE;
+	this.watertype = CONTENT_EMPTY;
 
 	entity spawnevent = new_pure(spawnevent);
 	spawnevent.owner = this;
@@ -636,7 +642,6 @@ void PutPlayerInServer(entity this)
 	setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 	// don't reset back to last position, even if new position is stuck in solid
 	this.oldorigin = this.origin;
-	this.lastteleporttime = time; // prevent insane speeds due to changing origin
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
 	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
@@ -877,7 +882,7 @@ void ClientKill_Now_TeamChange(entity this)
 {
 	if(this.killindicator_teamchange == -1)
 	{
-		JoinBestTeam( this, false, true );
+		JoinBestTeam( this, true );
 	}
 	else if(this.killindicator_teamchange == -2)
 	{
@@ -1186,12 +1191,10 @@ void ClientConnect(entity this)
 	}
 	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-    {
-        int id = this.playerid;
-        this.playerid = 0; // silent
-	    JoinBestTeam(this, false, false); // if the team number is valid, keep it
-	    this.playerid = id;
-    }
+	int playerid_save = this.playerid;
+	this.playerid = 0; // silent
+	JoinBestTeam(this, false); // if the team number is valid, keep it
+	this.playerid = playerid_save;
 
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
 		TRANSMUTE(Observer, this);
@@ -2002,7 +2005,7 @@ void Join(entity this)
 
 	if(!this.team_selected)
 	if(autocvar_g_campaign || autocvar_g_balance_teams)
-		JoinBestTeam(this, false, true);
+		JoinBestTeam(this, true);
 
 	if(autocvar_g_campaign)
 		campaign_bots_may_start = true;
@@ -2660,7 +2663,7 @@ void PlayerPreThink (entity this)
 
 void DrownPlayer(entity this)
 {
-	if(IS_DEAD(this))
+	if(IS_DEAD(this) || game_stopped || time < game_starttime)
 		return;
 
 	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)

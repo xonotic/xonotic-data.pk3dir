@@ -299,7 +299,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	if (!expr_evaluate(autocvar_g_overkill))
 	{
 		new_item = Item_Create(strzone(new_classname), item.origin,
-			item.noalign);
+			Item_ShouldKeepPosition(item));
 		random_items_is_spawning = false;
 		if (new_item == NULL)
 		{
@@ -311,7 +311,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 		new_item = spawn();
 		new_item.classname = strzone(new_classname);
 		new_item.spawnfunc_checked = true;
-		new_item.noalign = item.noalign;
+		new_item.noalign = Item_ShouldKeepPosition(item);
 		new_item.ok_item = true;
 		Item_Initialize(new_item, new_classname);
 		random_items_is_spawning = false;

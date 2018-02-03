@@ -24,6 +24,12 @@ MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
     /**/
 MUTATOR_HOOKABLE(ForbidSpawn, EV_ForbidSpawn);
 
+/** called when player spawns to determine whether to give them random start weapons. Return true to forbid giving them. */
+#define EV_ForbidRandomStartWeapons(i, o) \
+	/** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(ForbidRandomStartWeapons, EV_ForbidRandomStartWeapons);
+
 /** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
 #define EV_PlayerSpawn(i, o) \
 	/** player spawning */ i(entity, MUTATOR_ARGV_0_entity) \
