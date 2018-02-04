@@ -698,6 +698,16 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
+		case "nextmap":
+		{
+			vote_command = ValidateMap(argv(startpos + 1), caller);
+			if (!vote_command)  return -1;
+			vote_parsed_command = strcat("nextmap ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+
+			break;
+		}
+
 		default:
 		{
 			vote_parsed_command = vote_command;
