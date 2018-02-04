@@ -265,6 +265,25 @@ string spritelookuptext(entity this, string s)
 
     return s;
 }
+
+string spritelookupicon(entity this, string s)
+{
+    // TODO: needs icons! //if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
+    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
+    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_icon;
+    //if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_icon;
+    if (MUTATOR_CALLHOOK(WP_Format, this, s))
+    {
+        return M_ARGV(4, string);
+    }
+
+    // need to loop, as our netname could be one of three
+    FOREACH(Waypoints, it.netname == s, {
+        return it.m_icon;
+    });
+
+    return s;
+}
 #endif
 
 #ifdef CSQC
@@ -646,20 +665,40 @@ void Draw_WaypointSprite(entity this)
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
 
-    string txt;
-    if (autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-        txt = _("Spam");
-    else
-        txt = spritelookuptext(this, spriteimage);
-    if (this.helpme && time < this.helpme)
-        txt = sprintf(_("%s needing help!"), txt);
-    if (autocvar_g_waypointsprite_uppercase)
-        txt = strtoupper(txt);
+    string spr_icon = spritelookupicon(this, spriteimage);
+    string pic = spr_icon;
+    bool icon_found = !(!spr_icon || spr_icon == "");
+    if (icon_found) // it's valid, but let's make sure it exists!
+    {
+        pic = strcat(hud_skin_path, "/", spr_icon);
+        if(precache_pic(pic) == "")
+        {
+            pic = strcat("gfx/hud/default/", spr_icon);
+            if(!precache_pic(pic))
+                icon_found = false;
+        }
+    }
+
+    string txt = string_null;
+    if (autocvar_g_waypointsprite_text || !icon_found)
+    {
+        if (autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
+            txt = _("Spam");
+        else
+            txt = spritelookuptext(this, spriteimage);
+        if (this.helpme && time < this.helpme)
+            txt = sprintf(_("%s needing help!"), txt);
+        if (autocvar_g_waypointsprite_uppercase)
+            txt = strtoupper(txt);
+    }
 
     draw_beginBoldFont();
     if (this.health >= 0)
     {
-        o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+        if(autocvar_g_waypointsprite_text || !icon_found)
+            o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+        else
+            drawpic_aspect(o, pic, vec2(SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t), rgb, a, DRAWFLAG_NORMAL);
 
         float align, marg;
         if (this.build_finished)
@@ -690,7 +729,10 @@ void Draw_WaypointSprite(entity this)
     }
     else
     {
-        o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+        if (autocvar_g_waypointsprite_text || !icon_found)
+            o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+        else
+            drawpic_aspect(o, pic, vec2(SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t), rgb, a, DRAWFLAG_NORMAL);
     }
     draw_endBoldFont();
 }

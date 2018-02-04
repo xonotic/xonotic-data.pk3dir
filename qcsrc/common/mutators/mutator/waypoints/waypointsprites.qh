@@ -53,6 +53,7 @@ float autocvar_g_waypointsprite_timealphaexponent;
 bool autocvar_g_waypointsprite_turrets = true;
 float autocvar_g_waypointsprite_turrets_maxdist = 5000;
 bool autocvar_g_waypointsprite_uppercase;
+bool autocvar_g_waypointsprite_text;
 
 float waypointsprite_fadedistance;
 float waypointsprite_normdistance;
