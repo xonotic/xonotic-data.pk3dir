@@ -695,11 +695,6 @@ void Draw_WaypointSprite(entity this)
     draw_beginBoldFont();
     if (this.health >= 0)
     {
-        if(autocvar_g_waypointsprite_text || !icon_found)
-            o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
-        else
-            drawpic_aspect(o, pic, vec2(SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t), rgb, a, DRAWFLAG_NORMAL);
-
         float align, marg;
         if (this.build_finished)
             align = 0.5;
@@ -726,6 +721,11 @@ void Draw_WaypointSprite(entity this)
                 a * SPRITE_HEALTHBAR_HEALTHALPHA,
                 DRAWFLAG_NORMAL
                  );
+
+        if(autocvar_g_waypointsprite_text || !icon_found)
+            o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+        else
+            drawpic(o - vec2(iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2*marg + SPRITE_HEALTHBAR_HEIGHT*t), pic, '1 1 0'*iconsize, rgb, a, DRAWFLAG_NORMAL);
     }
     else
     {
