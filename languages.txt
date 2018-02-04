@@ -14,7 +14,7 @@ ro    Romanian "Romana" 83%
 fi    Finnish "Suomi" 33%
 zh_TW "Chinese (Taiwan)" "國語" 68%
 el    Greek "Ελληνική" 33%
-be    Belarusian "Беларуская" 62%
+be    Belarusian "Беларуская" 61%
 bg    Bulgarian "Български" 68%
 ru    Russian "Русский" 99%
 sr    Serbian "Српски" 71%

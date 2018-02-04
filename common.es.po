@@ -16,6 +16,7 @@
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
 # Simon <inactive+0000simon@transifex.com>, 2014-2015
 # starfire24680 <starfire24680@gmail.com>, 2017
+# starfire24680 <starfire24680@gmail.com>, 2017
 # Vitama Piru Leta <vitamanrules@gmail.com>, 2017
 # Ari_tent <xonotic@outlook.com>, 2014
 # Yllelder, 2016
@@ -247,7 +248,7 @@ msgstr "Continuar..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Chat"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -9465,6 +9466,9 @@ msgstr "Color del equipo:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Activar panel"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^Chat"
 
 #~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
 #~ msgstr "^BG%s%s^K1 se acercó demasiado al misil de ^BG%s^K1%s%s"

@@ -234,7 +234,7 @@ msgstr "继续..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "对话"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -9160,3 +9160,6 @@ msgstr "队伍颜色："
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "启用面板"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^对话"

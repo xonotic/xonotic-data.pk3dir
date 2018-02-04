@@ -235,7 +235,7 @@ msgstr "Настави..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Ћаскање"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -9262,3 +9262,6 @@ msgstr "Боја екипе:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Омогући плочу"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^Ћаскање"
