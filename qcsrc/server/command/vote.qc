@@ -698,7 +698,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			break;
 		}
 
-		case "nextmap":
+		case "nextmap": // TODO: replicate the old behaviour of being able to vote for maps from different modes on multimode servers (possibly support it in gotomap too), maybe fallback instead of aborting if map name is invalid?
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
