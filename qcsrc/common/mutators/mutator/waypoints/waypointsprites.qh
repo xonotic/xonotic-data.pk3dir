@@ -54,7 +54,8 @@ bool autocvar_g_waypointsprite_turrets = true;
 float autocvar_g_waypointsprite_turrets_maxdist = 5000;
 bool autocvar_g_waypointsprite_uppercase;
 bool autocvar_g_waypointsprite_text;
-float autocvar_g_waypointsprite_iconsize = 64;
+float autocvar_g_waypointsprite_iconsize = 32;
+bool autocvar_g_waypointsprite_iconcolor;
 
 float waypointsprite_fadedistance;
 float waypointsprite_normdistance;

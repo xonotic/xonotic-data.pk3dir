@@ -271,6 +271,7 @@ string spritelookupicon(entity this, string s)
     // TODO: needs icons! //if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).model2;
     if (s == WP_Item.netname) return Items_from(this.wp_extra).m_icon;
+    if (s == WP_Buff.netname) return strcat("buff_", Buffs_from(this.wp_extra).m_name);
     //if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).m_icon;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
@@ -665,6 +666,7 @@ void Draw_WaypointSprite(entity this)
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
 
+    vector iconcolor = ((autocvar_g_waypointsprite_iconcolor) ? '1 1 1' : rgb);
     string spr_icon = spritelookupicon(this, spriteimage);
     string pic = spr_icon;
     bool icon_found = !(!spr_icon || spr_icon == "");
@@ -725,14 +727,14 @@ void Draw_WaypointSprite(entity this)
         if(autocvar_g_waypointsprite_text || !icon_found)
             o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
         else
-            drawpic(o - vec2(iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2*marg + SPRITE_HEALTHBAR_HEIGHT*t), pic, '1 1 0'*iconsize, rgb, a, DRAWFLAG_NORMAL);
+            drawpic(o - vec2(autocvar_g_waypointsprite_iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2*marg + SPRITE_HEALTHBAR_HEIGHT*t), pic, '1 1 0'*autocvar_g_waypointsprite_iconsize, iconcolor, a, DRAWFLAG_NORMAL);
     }
     else
     {
         if (autocvar_g_waypointsprite_text || !icon_found)
             o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
         else
-            drawpic_aspect(o, pic, vec2(SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t), rgb, a, DRAWFLAG_NORMAL);
+            drawpic(o - vec2(autocvar_g_waypointsprite_iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2 + SPRITE_HEALTHBAR_HEIGHT*t), pic, '1 1 0'*autocvar_g_waypointsprite_iconsize, iconcolor, a, DRAWFLAG_NORMAL);
     }
     draw_endBoldFont();
 }
