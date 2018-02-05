@@ -626,6 +626,7 @@ AUTOCVAR(g_pickup_respawntime_scaling_reciprocal, float, 0.0, "Multiply respawn 
 AUTOCVAR(g_pickup_respawntime_scaling_offset, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `offset` offsets the curve left or right - the results are not intuitive and I recommend plotting the respawn time and the number of items per player to see what's happening");
 AUTOCVAR(g_pickup_respawntime_scaling_linear, float, 1.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `linear` can be used to simply scale the respawn time linearly");
 
+/// Adjust respawn time according to the number of players.
 float adjust_respawntime(float normal_respawntime) {
 	float r = autocvar_g_pickup_respawntime_scaling_reciprocal;
 	float o = autocvar_g_pickup_respawntime_scaling_offset;
@@ -660,17 +661,34 @@ void Item_ScheduleRespawn(entity e)
 		//LOG_INFOF("item %s will respawn in %f", e.classname, adjusted_respawntime);
 
 		// range: adjusted_respawntime - respawntimejitter .. adjusted_respawntime + respawntimejitter
-		float actual_time = adjusted_respawntime + crandom() * e.respawntimejitter;
-		Item_ScheduleRespawnIn(e, actual_time);
+		float respawn_in = adjusted_respawntime + crandom() * e.respawntimejitter;
+		Item_ScheduleRespawnIn(e, respawn_in);
 	}
 	else // if respawntime is -1, this item does not respawn
 		Item_Show(e, -1);
 }
 
+AUTOCVAR(g_pickup_respawntime_initial_random, bool, 0, "Make the initial respawn time of items between 10 and their normal respawn time");
+
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
-	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
+
+	float spawn_in;
+	if (autocvar_g_pickup_respawntime_initial_random)
+	{
+		// range:
+		// if respawntime >= ITEM_RESPAWN_TICKS: ITEM_RESPAWN_TICKS .. respawntime + respawntimejitter
+		// else: 0 .. ITEM_RESPAWN_TICKS
+		spawn_in = ITEM_RESPAWN_TICKS + random() * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
+	}
+	else
+	{
+		// range: respawntime .. respawntime + respawntimejitter
+		spawn_in = e.respawntime + random() * e.respawntimejitter;
+	}
+
+	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : spawn_in));
 }
 
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
