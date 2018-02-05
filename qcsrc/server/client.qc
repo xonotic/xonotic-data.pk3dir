@@ -61,7 +61,7 @@
 
 #include "../lib/warpzone/server.qh"
 
-#include <common/mutators/mutator/overkill/okvortex.qh>
+#include <common/mutators/mutator/overkill/oknex.qh>
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
@@ -619,7 +619,10 @@ void PutPlayerInServer(entity this)
 	this.fire_endtime = -1;
 	this.revive_progress = 0;
 	this.revival_time = 0;
+
 	this.air_finished = time + 12;
+	this.waterlevel = WATERLEVEL_NONE;
+	this.watertype = CONTENT_EMPTY;
 
 	entity spawnevent = new_pure(spawnevent);
 	spawnevent.owner = this;
@@ -641,7 +644,6 @@ void PutPlayerInServer(entity this)
 	setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 	// don't reset back to last position, even if new position is stuck in solid
 	this.oldorigin = this.origin;
-	this.lastteleporttime = time; // prevent insane speeds due to changing origin
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
 	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
@@ -1191,12 +1193,10 @@ void ClientConnect(entity this)
 	}
 	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-    {
-        int id = this.playerid;
-        this.playerid = 0; // silent
-	    JoinBestTeam(this, false); // if the team number is valid, keep it
-	    this.playerid = id;
-    }
+	int playerid_save = this.playerid;
+	this.playerid = 0; // silent
+	JoinBestTeam(this, false); // if the team number is valid, keep it
+	this.playerid = playerid_save;
 
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
 		TRANSMUTE(Observer, this);
@@ -1763,8 +1763,8 @@ void SpectateCopy(entity this, entity spectatee)
 	this.weapons = spectatee.weapons;
 	this.vortex_charge = spectatee.vortex_charge;
 	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
-	this.okvortex_charge = spectatee.okvortex_charge;
-	this.okvortex_chargepool_ammo = spectatee.okvortex_chargepool_ammo;
+	this.oknex_charge = spectatee.oknex_charge;
+	this.oknex_chargepool_ammo = spectatee.oknex_chargepool_ammo;
 	this.hagar_load = spectatee.hagar_load;
 	this.arc_heat_percent = spectatee.arc_heat_percent;
 	this.minelayer_mines = spectatee.minelayer_mines;
@@ -2667,7 +2667,7 @@ void PlayerPreThink (entity this)
 
 void DrownPlayer(entity this)
 {
-	if(IS_DEAD(this))
+	if(IS_DEAD(this) || game_stopped || time < game_starttime)
 		return;
 
 	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)

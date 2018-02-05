@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
+"PO-Revision-Date: 2017-09-19 19:55+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -242,7 +242,7 @@ msgstr "Продолжить..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Чат"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -2923,8 +2923,8 @@ msgstr "^BG%s%s^K1 скушал ракету ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 оказался слишком близко к ракете ^BG%s^K1%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -9389,3 +9389,9 @@ msgstr "Цвет команды:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Включить панель"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^Чат"
+
+#~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+#~ msgstr "^BG%s%s^K1 оказался слишком близко к ракете ^BG%s^K1%s%s"

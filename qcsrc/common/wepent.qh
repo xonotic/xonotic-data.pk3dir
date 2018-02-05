@@ -4,7 +4,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_WEPENT)
 REGISTER_NET_TEMP(CLIENT_WEPENT)
 
 .float vortex_charge;
-.float okvortex_charge;
+.float oknex_charge;
 .int tuba_instrument;
 
 #ifdef SVQC

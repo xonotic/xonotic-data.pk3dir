@@ -250,7 +250,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 
 MUTATOR_HOOKFUNCTION(ok, SetStartItems, CBC_ORDER_LAST)
 {
-	WepSet ok_start_items = (WEPSET(OVERKILL_MACHINEGUN) | WEPSET(OVERKILL_VORTEX) | WEPSET(OVERKILL_SHOTGUN));
+	WepSet ok_start_items = (WEPSET(OVERKILL_MACHINEGUN) | WEPSET(OVERKILL_NEX) | WEPSET(OVERKILL_SHOTGUN));
 
 	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET(RPC); }
 	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET(HMG); }
