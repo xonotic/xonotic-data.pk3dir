@@ -150,6 +150,11 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	PHYS_INPUT_BUTTON_ATCK2(player) = false;
 }
 
+MUTATOR_HOOKFUNCTION(ok, ForbidRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 {
 	entity player = M_ARGV(0, entity);

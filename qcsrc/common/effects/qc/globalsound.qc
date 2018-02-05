@@ -11,8 +11,6 @@
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
 
-	string GlobalSound_sample(string pair, float r);
-
 	#ifdef SVQC
 		/**
 		 * @param from the source entity, its position is sent
