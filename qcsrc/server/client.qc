@@ -61,7 +61,7 @@
 
 #include "../lib/warpzone/server.qh"
 
-#include <common/mutators/mutator/overkill/okvortex.qh>
+#include <common/mutators/mutator/overkill/oknex.qh>
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
@@ -1763,8 +1763,8 @@ void SpectateCopy(entity this, entity spectatee)
 	this.weapons = spectatee.weapons;
 	this.vortex_charge = spectatee.vortex_charge;
 	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
-	this.okvortex_charge = spectatee.okvortex_charge;
-	this.okvortex_chargepool_ammo = spectatee.okvortex_chargepool_ammo;
+	this.oknex_charge = spectatee.oknex_charge;
+	this.oknex_chargepool_ammo = spectatee.oknex_chargepool_ammo;
 	this.hagar_load = spectatee.hagar_load;
 	this.arc_heat_percent = spectatee.arc_heat_percent;
 	this.minelayer_mines = spectatee.minelayer_mines;
