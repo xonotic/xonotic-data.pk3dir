@@ -522,6 +522,7 @@ void vehicles_showwp(entity this)
 	else
 		rgb = '1 1 1';
 	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, ent, '0 0 64', NULL, 0, ent, waypointsprite_attached, true, RADARICON_Vehicle);
+	wp.wp_extra = ent.wp00.vehicleid;
 	wp.colormod = rgb;
 	if(ent.waypointsprite_attached)
 	{
