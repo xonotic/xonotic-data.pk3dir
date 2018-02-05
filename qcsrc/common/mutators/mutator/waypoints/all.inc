@@ -28,7 +28,7 @@ REGISTER_WAYPOINT(FlagBaseYellow, _("Yellow base"), "flag_yellow_taken", '0.8 0.
 REGISTER_WAYPOINT(FlagBasePink, _("Pink base"), "flag_pink_taken", '0.8 0.8 0', 1);
 REGISTER_WAYPOINT(FlagReturn, _("Return flag here"), "", '0 0.8 0.8', 1);
 
-REGISTER_WAYPOINT(DomNeut, _("Control point"), "", '0 1 1', 1);
+REGISTER_WAYPOINT(DomNeut, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
 REGISTER_WAYPOINT(DomRed, _("Control point"), "dom_icon_red-highlighted", '0 1 1', 1);
 REGISTER_WAYPOINT(DomBlue, _("Control point"), "dom_icon_blue-highlighted", '0 1 1', 1);
 REGISTER_WAYPOINT(DomYellow, _("Control point"), "dom_icon_yellow-highlighted", '0 1 1', 1);
