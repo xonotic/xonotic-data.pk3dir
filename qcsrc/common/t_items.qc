@@ -668,24 +668,37 @@ void Item_ScheduleRespawn(entity e)
 		Item_Show(e, -1);
 }
 
-AUTOCVAR(g_pickup_respawntime_initial_random, bool, 0, "Make the initial respawn time of items between 10 and their normal respawn time");
+AUTOCVAR(g_pickup_respawntime_initial_random, int, 1,
+	"For items that don't start spawned: 0: spawn after their normal respawntime; 1: spawn after `random * respawntime` with the *same* random; 2: same as 1 but each item has separate random");
 
+float shared_random = -1;
 void Item_ScheduleInitialRespawn(entity e)
 {
+	// initializing during declaration causes the compiler to segfault
+	if (shared_random == -1) {
+		shared_random = random();
+	}
+
 	Item_Show(e, 0);
 
 	float spawn_in;
-	if (autocvar_g_pickup_respawntime_initial_random)
+	if (autocvar_g_pickup_respawntime_initial_random == 0)
+	{
+		// range: respawntime .. respawntime + respawntimejitter
+		spawn_in = e.respawntime + random() * e.respawntimejitter;
+	}
+	else if (autocvar_g_pickup_respawntime_initial_random == 1)
 	{
 		// range:
 		// if respawntime >= ITEM_RESPAWN_TICKS: ITEM_RESPAWN_TICKS .. respawntime + respawntimejitter
 		// else: 0 .. ITEM_RESPAWN_TICKS
-		spawn_in = ITEM_RESPAWN_TICKS + random() * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
+		// this is to prevent powerups spawning unexpectedly without waypoints
+		spawn_in = ITEM_RESPAWN_TICKS + shared_random * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
 	}
 	else
 	{
-		// range: respawntime .. respawntime + respawntimejitter
-		spawn_in = e.respawntime + random() * e.respawntimejitter;
+		// range: same as 1
+		spawn_in = ITEM_RESPAWN_TICKS + random() * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
 	}
 
 	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : spawn_in));
