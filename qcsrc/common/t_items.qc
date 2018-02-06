@@ -671,14 +671,10 @@ void Item_ScheduleRespawn(entity e)
 AUTOCVAR(g_pickup_respawntime_initial_random, int, 1,
 	"For items that don't start spawned: 0: spawn after their normal respawntime; 1: spawn after `random * respawntime` with the *same* random; 2: same as 1 but each item has separate random");
 
-float shared_random = -1;
+float shared_random;
+STATIC_INIT(shared_random) { shared_random = random(); }
 void Item_ScheduleInitialRespawn(entity e)
 {
-	// initializing during declaration causes the compiler to segfault
-	if (shared_random == -1) {
-		shared_random = random();
-	}
-
 	Item_Show(e, 0);
 
 	float spawn_in;
