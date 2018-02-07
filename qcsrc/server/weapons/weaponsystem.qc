@@ -472,6 +472,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 
 	if (this.m_switchweapon == WEP_Null)
 	{
+		if (this.state != WS_CLEAR)
+			w_ready(this.m_weapon, actor, weaponentity, button_atck | (button_atck2 << 1));
 		this.m_weapon = WEP_Null;
 		this.m_switchingweapon = WEP_Null;
 		this.state = WS_CLEAR;

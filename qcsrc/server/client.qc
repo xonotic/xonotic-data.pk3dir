@@ -352,6 +352,8 @@ void PutObserverInServer(entity this)
 	this.weapons = '0 0 0';
 	this.drawonlytoclient = this;
 
+	this.viewloc = NULL;
+
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
