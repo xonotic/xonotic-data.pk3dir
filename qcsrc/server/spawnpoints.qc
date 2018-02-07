@@ -341,6 +341,9 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	if (spot)
 		return spot;
 
+	if(this.spawnpoint_targ)
+		return this.spawnpoint_targ;
+
 	if(anypoint || autocvar_g_spawn_useallspawns)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)

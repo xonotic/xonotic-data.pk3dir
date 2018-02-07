@@ -35,6 +35,7 @@
 
 #include "../common/triggers/func/conveyor.qh"
 #include "../common/triggers/teleporters.qh"
+#include "../common/triggers/target/spawnpoint.qh"
 
 #include "../common/vehicles/all.qh"
 
@@ -354,6 +355,8 @@ void PutObserverInServer(entity this)
 
 	this.viewloc = NULL;
 
+	//this.spawnpoint_targ = NULL; // keep it so they can return to where they were?
+
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -636,6 +639,8 @@ void PutPlayerInServer(entity this)
 	this.drawonlytoclient = NULL;
 
 	this.viewloc = NULL;
+
+	this.spawnpoint_targ = NULL;
 
 	this.crouch = false;
 	this.view_ofs = STAT(PL_VIEW_OFS, this);
