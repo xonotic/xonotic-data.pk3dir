@@ -357,6 +357,14 @@ void PutObserverInServer(entity this)
 
 	//this.spawnpoint_targ = NULL; // keep it so they can return to where they were?
 
+	for(int slot = 0; slot < MAX_AXH; ++slot)
+	{
+		entity axh = this.(AuxiliaryXhair[slot]);
+		this.(AuxiliaryXhair[slot]) = NULL;
+		if(axh && axh.owner == this)
+			delete(axh);
+	}
+
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -642,6 +650,14 @@ void PutPlayerInServer(entity this)
 	this.viewloc = NULL;
 
 	this.spawnpoint_targ = NULL;
+
+	for(int slot = 0; slot < MAX_AXH; ++slot)
+	{
+		entity axh = this.(AuxiliaryXhair[slot]);
+		this.(AuxiliaryXhair[slot]) = NULL;
+		if(axh && axh.owner == this)
+			delete(axh);
+	}
 
 	this.crouch = false;
 	this.view_ofs = STAT(PL_VIEW_OFS, this);
