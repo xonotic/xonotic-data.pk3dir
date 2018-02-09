@@ -694,9 +694,6 @@ void Draw_WaypointSprite(entity this)
             txt = strtoupper(txt);
     }
 
-    float txt_offset = 0;
-    vector icon_offset;
-
     draw_beginBoldFont();
     if (this.health >= 0)
     {
@@ -709,6 +706,12 @@ void Draw_WaypointSprite(entity this)
             marg = -(SPRITE_HEALTHBAR_MARGIN + SPRITE_HEALTHBAR_HEIGHT + 2 * SPRITE_HEALTHBAR_BORDER) * t - 0.5 * waypointsprite_fontsize;
         else
             marg = SPRITE_HEALTHBAR_MARGIN * t + 0.5 * waypointsprite_fontsize;
+
+        if (autocvar_g_waypointsprite_text || !icon_found)
+            o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+        else
+            drawpic(o - vec2(autocvar_g_waypointsprite_iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2*marg + SPRITE_HEALTHBAR_HEIGHT*t), pic, '1 1 0'*autocvar_g_waypointsprite_iconsize, iconcolor, a, DRAWFLAG_NORMAL);
+
         drawhealthbar(
                 o,
                 0,
@@ -726,17 +729,14 @@ void Draw_WaypointSprite(entity this)
                 a * SPRITE_HEALTHBAR_HEALTHALPHA,
                 DRAWFLAG_NORMAL
                  );
-
-        txt_offset = (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t;
-        icon_offset = vec2(autocvar_g_waypointsprite_iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2*marg + SPRITE_HEALTHBAR_HEIGHT*t);
     }
     else
-        icon_offset = vec2(autocvar_g_waypointsprite_iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2 + SPRITE_HEALTHBAR_HEIGHT*t);
-
-    if (autocvar_g_waypointsprite_text || !icon_found)
-        o = drawspritetext(o, ang, txt_offset, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
-    else
-        drawpic(o - icon_offset, pic, '1 1 0'*autocvar_g_waypointsprite_iconsize, iconcolor, a, DRAWFLAG_NORMAL);
+    {
+        if (autocvar_g_waypointsprite_text || !icon_found)
+            o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+        else
+            drawpic(o - vec2(autocvar_g_waypointsprite_iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2 + SPRITE_HEALTHBAR_HEIGHT*t), pic, '1 1 0'*autocvar_g_waypointsprite_iconsize, iconcolor, a, DRAWFLAG_NORMAL);
+    }
 
     draw_endBoldFont();
 }
