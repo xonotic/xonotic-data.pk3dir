@@ -1,3 +1,6 @@
+// docs: https://www.quakewiki.net/darkplaces-wiki/effectinfo-scripting-reference/
+// use cl_particles_reloadeffects to reload effects without restarting engine
+
 // item respawn effect
 DEF(TE_WIZSPIKE);
 // flare particle and light
