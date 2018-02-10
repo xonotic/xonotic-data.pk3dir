@@ -384,18 +384,22 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 }
 
 // returns location of sprite healthbar
-vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s)
+vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str)
 {
     float algnx, algny;
     float sw, w, h;
     float aspect, sa, ca;
 
-    sw = stringwidth(s, false, fontsize);
+    if (is_text)
+        sw = stringwidth(str, false, sz);
+    else
+        sw = sz.x;
+
     if (sw > minwidth)
         w = sw;
     else
         w = minwidth;
-    h = fontsize.y;
+    h = sz.y;
 
     // how do corners work?
     aspect = vid_conwidth / vid_conheight;
@@ -426,11 +430,14 @@ vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, 
     if (o.x > vid_conwidth - w)
         o.x = vid_conwidth - w;
     if (o.y > vid_conheight - h)
-        o.x = vid_conheight - h;
+        o.y = vid_conheight - h;
 
     o.x += 0.5 * (w - sw);
 
-    drawstring(o, s, fontsize, rgb, a, DRAWFLAG_NORMAL);
+    if (is_text)
+        drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+    else
+        drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
 
     o.x += 0.5 * sw;
     o.y += 0.5 * h;
@@ -695,6 +702,12 @@ void Draw_WaypointSprite(entity this)
     }
 
     draw_beginBoldFont();
+    bool is_text = (autocvar_g_waypointsprite_text || !icon_found);
+    vector sz;
+    if (is_text)
+    	sz = waypointsprite_fontsize * '1 1 0';
+    else
+    	sz = autocvar_g_waypointsprite_iconsize * '1 1 0';
     if (this.health >= 0)
     {
         float align = 0, marg;
@@ -703,15 +716,12 @@ void Draw_WaypointSprite(entity this)
         else
             align = 0;
         if (cos(ang) > 0)
-            marg = -(SPRITE_HEALTHBAR_MARGIN + SPRITE_HEALTHBAR_HEIGHT + 2 * SPRITE_HEALTHBAR_BORDER) * t - 0.5 * waypointsprite_fontsize;
+            marg = -(SPRITE_HEALTHBAR_MARGIN + SPRITE_HEALTHBAR_HEIGHT + 2 * SPRITE_HEALTHBAR_BORDER) * t - 0.5 * sz.y;
         else
-            marg = SPRITE_HEALTHBAR_MARGIN * t + 0.5 * waypointsprite_fontsize;
+            marg = SPRITE_HEALTHBAR_MARGIN * t + 0.5 * sz.y;
 
-        if (autocvar_g_waypointsprite_text || !icon_found)
-            o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
-        else
-            drawpic(o - vec2(autocvar_g_waypointsprite_iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2*marg + SPRITE_HEALTHBAR_HEIGHT*t), pic, '1 1 0'*autocvar_g_waypointsprite_iconsize, iconcolor, a, DRAWFLAG_NORMAL);
-
+        float minwidth = (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t;
+        o = drawsprite_TextOrIcon(is_text, o, ang, minwidth, iconcolor, a, sz, pic);
         drawhealthbar(
                 o,
                 0,
@@ -732,10 +742,7 @@ void Draw_WaypointSprite(entity this)
     }
     else
     {
-        if (autocvar_g_waypointsprite_text || !icon_found)
-            o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
-        else
-            drawpic(o - vec2(autocvar_g_waypointsprite_iconsize/2, autocvar_g_waypointsprite_iconsize*t + 2 + SPRITE_HEALTHBAR_HEIGHT*t), pic, '1 1 0'*autocvar_g_waypointsprite_iconsize, iconcolor, a, DRAWFLAG_NORMAL);
+        drawsprite_TextOrIcon(is_text, o, ang, 0, iconcolor, a, sz, pic);
     }
 
     draw_endBoldFont();
