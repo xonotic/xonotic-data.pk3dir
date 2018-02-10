@@ -35,6 +35,7 @@
 
 #include "../common/triggers/func/conveyor.qh"
 #include "../common/triggers/teleporters.qh"
+#include "../common/triggers/target/spawnpoint.qh"
 
 #include "../common/vehicles/all.qh"
 
@@ -352,6 +353,10 @@ void PutObserverInServer(entity this)
 	this.weapons = '0 0 0';
 	this.drawonlytoclient = this;
 
+	this.viewloc = NULL;
+
+	//this.spawnpoint_targ = NULL; // keep it so they can return to where they were?
+
 	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -577,14 +582,15 @@ void PutPlayerInServer(entity this)
 	this.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
 	this.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
 	this.pauseregen_finished = time + autocvar_g_balance_pause_health_regen_spawn;
-	// extend the pause of rotting if client was reset at the beginning of the countdown
-	if (!autocvar_sv_ready_restart_after_countdown && time < game_starttime) { // TODO why is this cvar NOTted?
+	if (!sv_ready_restart_after_countdown && time < game_starttime)
+	{
 		float f = game_starttime - time;
 		this.spawnshieldtime += f;
 		this.pauserotarmor_finished += f;
 		this.pauserothealth_finished += f;
 		this.pauseregen_finished += f;
 	}
+
 	this.damageforcescale = 2;
 	this.death_time = 0;
 	this.respawn_flags = 0;
@@ -634,6 +640,17 @@ void PutPlayerInServer(entity this)
 	this.drawonlytoclient = NULL;
 
 	this.viewloc = NULL;
+
+	for(int slot = 0; slot < MAX_AXH; ++slot)
+	{
+		entity axh = this.(AuxiliaryXhair[slot]);
+		this.(AuxiliaryXhair[slot]) = NULL;
+
+		if(axh.owner == this && axh != NULL && !wasfreed(axh))
+			delete(axh);
+	}
+
+	this.spawnpoint_targ = NULL;
 
 	this.crouch = false;
 	this.view_ofs = STAT(PL_VIEW_OFS, this);
@@ -1785,11 +1802,6 @@ void SpectateCopy(entity this, entity spectatee)
 	{
 		.entity weaponentity = weaponentities[slot];
 		this.(weaponentity) = spectatee.(weaponentity);
-	}
-
-	for(int slot = 0; slot < MAX_AXH; ++slot)
-	{
-		this.(AuxiliaryXhair[slot]) = spectatee.(AuxiliaryXhair[slot]);
 	}
 
     anticheat_spectatecopy(this, spectatee);
