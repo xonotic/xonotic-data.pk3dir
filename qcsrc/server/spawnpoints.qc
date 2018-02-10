@@ -7,6 +7,7 @@
 #include <common/net_linked.qh>
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
+#include "../common/triggers/target/spawnpoint.qh"
 #include "../common/util.qh"
 #include "../lib/warpzone/common.qh"
 #include "../lib/warpzone/util_server.qh"
