@@ -384,7 +384,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 }
 
 // returns location of sprite healthbar
-vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str, string pic)
+vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str)
 {
     float algnx, algny;
     float sw, w, h;
@@ -437,7 +437,7 @@ vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, 
     if (is_text)
         drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
     else
-        drawpic(o, pic, sz, rgb, a, DRAWFLAG_NORMAL);
+        drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
 
     o.x += 0.5 * sw;
     o.y += 0.5 * h;
@@ -673,23 +673,31 @@ void Draw_WaypointSprite(entity this)
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
 
-    vector iconcolor = ((autocvar_g_waypointsprite_iconcolor) ? '1 1 1' : rgb);
-    string spr_icon = spritelookupicon(this, spriteimage);
-    string pic = spr_icon;
-    bool icon_found = !(!spr_icon || spr_icon == "");
-    if (icon_found) // it's valid, but let's make sure it exists!
-    {
-        pic = strcat(hud_skin_path, "/", spr_icon);
-        if(precache_pic(pic) == "")
-        {
-            pic = strcat("gfx/hud/default/", spr_icon);
-            if(!precache_pic(pic))
-                icon_found = false;
-        }
-    }
+	string pic = "";
+	bool is_text = true;
+	if (!autocvar_g_waypointsprite_text)
+	{
+		string spr_icon = spritelookupicon(this, spriteimage);
+		pic = spr_icon;
+		bool icon_found = !(!spr_icon || spr_icon == "");
+		if (icon_found) // it's valid, but let's make sure it exists!
+		{
+			pic = strcat(hud_skin_path, "/", spr_icon);
+			if(precache_pic(pic) == "")
+			{
+				pic = strcat("gfx/hud/default/", spr_icon);
+				if(!precache_pic(pic))
+					icon_found = false;
+			}
+		}
+		if (icon_found)
+			is_text = false;
+	}
 
+	vector sz;
+	vector txt_color;
     string txt = string_null;
-    if (autocvar_g_waypointsprite_text || !icon_found)
+    if (is_text)
     {
         if (autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
             txt = _("Spam");
@@ -699,15 +707,18 @@ void Draw_WaypointSprite(entity this)
             txt = sprintf(_("%s needing help!"), txt);
         if (autocvar_g_waypointsprite_uppercase)
             txt = strtoupper(txt);
+        txt_color = rgb;
+        sz = waypointsprite_fontsize * '1 1 0';
+    }
+    else
+    {
+        // for convenience icon path and color are saved to txt and txt_color
+        txt = pic;
+        txt_color = ((autocvar_g_waypointsprite_iconcolor) ? '1 1 1' : rgb);
+        sz = autocvar_g_waypointsprite_iconsize * '1 1 0';
     }
 
     draw_beginBoldFont();
-    bool is_text = (autocvar_g_waypointsprite_text || !icon_found);
-    vector sz;
-    if (is_text)
-    	sz = waypointsprite_fontsize * '1 1 0';
-    else
-    	sz = autocvar_g_waypointsprite_iconsize * '1 1 0';
     if (this.health >= 0)
     {
         float align = 0, marg;
@@ -721,7 +732,7 @@ void Draw_WaypointSprite(entity this)
             marg = SPRITE_HEALTHBAR_MARGIN * t + 0.5 * sz.y;
 
         float minwidth = (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t;
-        o = drawsprite_TextOrIcon(is_text, o, ang, minwidth, iconcolor, a, sz, txt, pic);
+        o = drawsprite_TextOrIcon(is_text, o, ang, minwidth, txt_color, a, sz, txt);
         drawhealthbar(
                 o,
                 0,
@@ -742,7 +753,7 @@ void Draw_WaypointSprite(entity this)
     }
     else
     {
-        drawsprite_TextOrIcon(is_text, o, ang, 0, iconcolor, a, sz, txt, pic);
+        drawsprite_TextOrIcon(is_text, o, ang, 0, txt_color, a, sz, txt);
     }
 
     draw_endBoldFont();
