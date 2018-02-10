@@ -6,7 +6,7 @@
 # adem4ik, 2014
 # Alex Talker <alextalker7@gmail.com>, 2014-2015
 # Andrei Stepanov, 2014
-# Andrei Stepanov, 2014-2017
+# Andrei Stepanov, 2014-2018
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # Lord Canistra <lordcanistra@gmail.com>, 2011
@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
+"PO-Revision-Date: 2018-02-07 11:27+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -242,7 +242,7 @@ msgstr "Продолжить..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Чат"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -1305,8 +1305,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
-"Поражайте врагов, чтобы заморозить их всех и выиграть раунд, и "
-"размораживайте союзников, стоя рядом с ними"
+"Поражайте врагов, чтобы заморозить их всех и выиграть раунд. Размораживайте "
+"союзников, стоя рядом с ними"
 
 #: qcsrc/common/mapinfo.qh:446
 msgid "Hold the ball to get points for kills"
@@ -1758,11 +1758,11 @@ msgstr "Нажать"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Flag carrier"
-msgstr "Знаменосец"
+msgstr "Флагоносец"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Enemy carrier"
-msgstr "Вражеский знаменосец"
+msgstr "Вражеский флагоносец"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:23
 msgid "Dropped flag"
@@ -1790,7 +1790,7 @@ msgstr "Розовая база"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Return flag here"
-msgstr "Вернуть флаг здесь"
+msgstr "Вернуть флаг отсюда"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:32
@@ -2923,8 +2923,8 @@ msgstr "^BG%s%s^K1 скушал ракету ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 оказался слишком близко к ракете ^BG%s^K1%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -3036,7 +3036,7 @@ msgstr "^BG%s%s^K1 был расстрелян из Пулемёта ^BG%s^K1%s%
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 был изрешечен Пулемётом ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 был изрешечён Пулемётом ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #: qcsrc/common/notifications/all.inc:790
@@ -3314,32 +3314,32 @@ msgstr "^BGВы подобрали %sвражеский^BG флаг, верни�
 #: qcsrc/common/notifications/all.inc:573
 #, c-format
 msgid "^BGThe %senemy^BG got your flag! Retrieve it!"
-msgstr "^BG%sпротивник^BG забрал ваш флаг! Верните его!"
+msgstr "^BG%sПротивник^BG забрал ваш флаг! Верните его!"
 
 #: qcsrc/common/notifications/all.inc:574
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"
-msgstr "^BG%sпротивник (^BG%s%s)^BG забрал ваш флаг! Верните его!"
+msgstr "^BG%sПротивник (^BG%s%s)^BG забрал ваш флаг! Верните его!"
 
 #: qcsrc/common/notifications/all.inc:575
 #, c-format
 msgid "^BGThe %senemy^BG got the flag! Retrieve it!"
-msgstr "^BG%sпротивник^BG забрал флаг! Верните его!"
+msgstr "^BG%sПротивник^BG забрал флаг! Верните его!"
 
 #: qcsrc/common/notifications/all.inc:576
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"
-msgstr "^BG%sпротивник (^BG%s%s)^BG забрал флаг! Верните его!"
+msgstr "^BG%sПротивник (^BG%s%s)^BG забрал флаг! Верните его!"
 
 #: qcsrc/common/notifications/all.inc:577
 #, c-format
 msgid "^BGThe %senemy^BG got their flag! Retrieve it!"
-msgstr "^BG%sпротивник^BG забрал свой флаг! Верните его!"
+msgstr "^BG%sПротивник^BG забрал свой флаг! Верните его!"
 
 #: qcsrc/common/notifications/all.inc:578
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"
-msgstr "^BG%sпротивник (^BG%s%s)^BG забрал свой флаг! Верните его!"
+msgstr "^BG%sПротивник (^BG%s%s)^BG забрал свой флаг! Верните его!"
 
 #: qcsrc/common/notifications/all.inc:579
 #, c-format
@@ -5131,7 +5131,7 @@ msgstr "Добро пожаловать"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:16
 msgid "Ammunition display:"
-msgstr "Показ патронов:"
+msgstr "Отображение патронов:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:19
 msgid "Show only current ammo type"
@@ -5140,17 +5140,17 @@ msgstr "Показывать только текущий вид патронов
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:22
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:44
 msgid "Noncurrent alpha:"
-msgstr "Другая прозраночть:"
+msgstr "Неактивная прозрачность:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:26
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:48
 msgid "Noncurrent scale:"
-msgstr "Другой размер:"
+msgstr "Неактивный размер:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "Align icon:"
-msgstr "Выровнять значок:"
+msgstr "Выровнять значки:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:30
@@ -7149,7 +7149,7 @@ msgstr "Максимальная"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:65
 msgid "Geometry detail:"
-msgstr "Детали геометрии:"
+msgstr "Детализация окружения:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Change the smoothness of the curves on the map (default: normal)"
@@ -9389,3 +9389,9 @@ msgstr "Цвет команды:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Включить панель"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^Чат"
+
+#~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+#~ msgstr "^BG%s%s^K1 оказался слишком близко к ракете ^BG%s^K1%s%s"

@@ -230,6 +230,13 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	{
 		return false;
 	}
+	switch(item.itemdef)
+	{
+		case ITEM_HealthMega: return autocvar_g_overkill_filter_healthmega;
+		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
+		case ITEM_ArmorBig: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armormega;
+	}
 	if (!autocvar_g_powerups || !autocvar_g_overkill_powerups_replace)
 	{
 		return true;

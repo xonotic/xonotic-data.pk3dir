@@ -806,7 +806,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 			// apply invincibility multiplier
 			if (targ.items & ITEM_Shield.m_itemid)
+			{
 				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
+				if (targ != attacker)
+				{
+					force = force * autocvar_g_balance_powerup_invincible_takeforce;
+				}
+			}
 		}
 
 		if (targ == attacker)

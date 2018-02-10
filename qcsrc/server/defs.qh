@@ -13,6 +13,10 @@ float g_warmup_allow_timeout;
 float warmup_stage;
 float g_jetpack;
 
+bool sv_ready_restart;
+bool sv_ready_restart_after_countdown;
+bool sv_ready_restart_repeatable;
+
 float sv_clones;
 float sv_foginterval;
 

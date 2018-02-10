@@ -6,5 +6,6 @@
 #include <common/triggers/target/location.qc>
 #include <common/triggers/target/music.qc>
 #include <common/triggers/target/spawn.qc>
+#include <common/triggers/target/spawnpoint.qc>
 #include <common/triggers/target/speaker.qc>
 #include <common/triggers/target/voicescript.qc>
