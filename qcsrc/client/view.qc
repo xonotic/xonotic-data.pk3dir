@@ -997,6 +997,8 @@ void HUD_Crosshair(entity this)
 		string wcross_style;
 		float wcross_alpha, wcross_resolution;
 		wcross_style = autocvar_crosshair;
+		if (csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM) && autocvar_crosshair_2d != "")
+			wcross_style = autocvar_crosshair_2d;
 		if (wcross_style == "0")
 			return;
 		wcross_resolution = autocvar_crosshair_size;
