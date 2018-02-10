@@ -384,7 +384,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 }
 
 // returns location of sprite healthbar
-vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str)
+vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str, string pic)
 {
     float algnx, algny;
     float sw, w, h;
@@ -437,7 +437,7 @@ vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, 
     if (is_text)
         drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
     else
-        drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+        drawpic(o, pic, sz, rgb, a, DRAWFLAG_NORMAL);
 
     o.x += 0.5 * sw;
     o.y += 0.5 * h;
@@ -721,7 +721,7 @@ void Draw_WaypointSprite(entity this)
             marg = SPRITE_HEALTHBAR_MARGIN * t + 0.5 * sz.y;
 
         float minwidth = (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t;
-        o = drawsprite_TextOrIcon(is_text, o, ang, minwidth, iconcolor, a, sz, pic);
+        o = drawsprite_TextOrIcon(is_text, o, ang, minwidth, iconcolor, a, sz, txt, pic);
         drawhealthbar(
                 o,
                 0,
@@ -742,7 +742,7 @@ void Draw_WaypointSprite(entity this)
     }
     else
     {
-        drawsprite_TextOrIcon(is_text, o, ang, 0, iconcolor, a, sz, pic);
+        drawsprite_TextOrIcon(is_text, o, ang, 0, iconcolor, a, sz, txt, pic);
     }
 
     draw_endBoldFont();
