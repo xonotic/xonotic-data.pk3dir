@@ -700,7 +700,7 @@ void Draw_WaypointSprite(entity this)
     if (is_text)
     {
         if (autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-            txt = _("Spam");
+            txt = "Spam"; // no need to translate this debug string
         else
             txt = spritelookuptext(this, spriteimage);
         if (this.helpme && time < this.helpme)
