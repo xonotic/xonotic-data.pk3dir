@@ -17,7 +17,7 @@ void viewloc_think(entity this)
 
 	// set myself as current viewloc where possible
 #if 1
-	FOREACH_CLIENT(it.viewloc == this,
+	FOREACH_CLIENT(IS_PLAYER(it) && it.viewloc == this,
 	{
 		it.viewloc = NULL;
 	});

@@ -452,7 +452,7 @@ void ReadyRestart_force()
 	}
 
 	// initiate the restart-countdown-announcer entity
-	if (autocvar_sv_ready_restart_after_countdown)
+	if (sv_ready_restart_after_countdown)
 	{
 		entity restart_timer = new_pure(restart_timer);
 		setthink(restart_timer, ReadyRestart_think);
@@ -464,8 +464,8 @@ void ReadyRestart_force()
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
 	}
-    // reset map immediately if this cvar is not set
-    if (!autocvar_sv_ready_restart_after_countdown) reset_map(true);
+
+	if (!sv_ready_restart_after_countdown) reset_map(true);
 	if (autocvar_sv_eventlog) GameLogEcho(":restart");
 }
 
@@ -476,7 +476,7 @@ void ReadyRestart()
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
-	if (!autocvar_sv_ready_restart_after_countdown) Score_ClearAll();
+	if (!sv_ready_restart_after_countdown) Score_ClearAll();
 	ReadyRestart_force();
 }
 
