@@ -405,7 +405,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = (old.noalign || (old.spawnflags & 1));
+	ent.noalign = Item_ShouldKeepPosition(old);
 
 	buff_Init(ent);
 }
@@ -739,24 +739,28 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 		return true;
 }
 
-MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
+MUTATOR_HOOKFUNCTION(buffs, FilterItem)
 {
 	if(autocvar_g_buffs < 0)
-		return; // no auto replacing of entities in this mode
+		return false; // no auto replacing of entities in this mode
 
-	entity ent = M_ARGV(0, entity);
+	entity item = M_ARGV(0, entity);
 
 	if(autocvar_g_buffs_replace_powerups)
-	switch(ent.classname)
 	{
-		case "item_strength":
-		case "item_shield":
+		switch(item.classname)
 		{
-			entity e = spawn();
-			buff_SpawnReplacement(e, ent);
-			return true;
+			case "item_strength":
+			case "item_shield":
+			{
+				entity e = spawn();
+				buff_SpawnReplacement(e, item);
+				return true;
+			}
 		}
 	}
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)

@@ -167,6 +167,11 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	PHYS_INPUT_BUTTON_ATCK2(player) = false;
 }
 
+MUTATOR_HOOKFUNCTION(ok, ForbidRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 {
 	entity player = M_ARGV(0, entity);
@@ -185,51 +190,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 				newwep = WEP_VORTEX;
 			thiswep.m_switchweapon = newwep;
 			player.ok_lastwep[slot] = WEP_Null;
-		}
-	}
-}
-
-void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
-void self_spawnfunc_weapon_rpc(entity this) { spawnfunc_weapon_rpc(this); }
-
-MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
-{
-	entity ent = M_ARGV(0, entity);
-
-	if(autocvar_g_powerups)
-	if(autocvar_g_overkill_powerups_replace)
-	{
-		if(ent.classname == "item_strength")
-		{
-			entity wep = new(weapon_hmg);
-			setorigin(wep, ent.origin);
-			setmodel(wep, MDL_OK_HMG);
-			wep.ok_item = true;
-			wep.noalign = Item_ShouldKeepPosition(ent);
-			wep.cnt = ent.cnt;
-			wep.team = ent.team;
-			wep.respawntime = g_pickup_respawntime_superweapon;
-			wep.pickup_anyway = true;
-			wep.spawnfunc_checked = true;
-			setthink(wep, self_spawnfunc_weapon_hmg);
-			wep.nextthink = time + 0.1;
-			return true;
-		}
-		else if(ent.classname == "item_shield")
-		{
-			entity wep = new(weapon_rpc);
-			setorigin(wep, ent.origin);
-			setmodel(wep, MDL_OK_RPC);
-			wep.ok_item = true;
-			wep.noalign = Item_ShouldKeepPosition(ent);
-			wep.cnt = ent.cnt;
-			wep.team = ent.team;
-			wep.respawntime = g_pickup_respawntime_superweapon;
-			wep.pickup_anyway = true;
-			wep.spawnfunc_checked = true;
-			setthink(wep, self_spawnfunc_weapon_rpc);
-			wep.nextthink = time + 0.1;
-			return true;
 		}
 	}
 }
@@ -266,9 +226,49 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.ok_item)
+	if (item.ok_item)
+	{
 		return false;
-
+	}
+	switch(item.itemdef)
+	{
+		case ITEM_HealthMega: return autocvar_g_overkill_filter_healthmega;
+		case ITEM_ArmorMedium: return autocvar_g_overkill_filter_armormedium;
+		case ITEM_ArmorBig: return autocvar_g_overkill_filter_armorbig;
+		case ITEM_ArmorMega: return autocvar_g_overkill_filter_armormega;
+	}
+	if (!autocvar_g_powerups || !autocvar_g_overkill_powerups_replace)
+	{
+		return true;
+	}
+	if (item.classname == "item_strength")
+	{
+		entity wep = new(weapon_hmg);
+		setorigin(wep, item.origin);
+		wep.ok_item = true;
+		wep.noalign = Item_ShouldKeepPosition(item);
+		wep.cnt = item.cnt;
+		wep.team = item.team;
+		wep.respawntime = g_pickup_respawntime_superweapon;
+		wep.pickup_anyway = true;
+		wep.spawnfunc_checked = true;
+		Item_Initialize(wep, "weapon_hmg");
+		return true;
+	}
+	else if (item.classname == "item_shield")
+	{
+		entity wep = new(weapon_rpc);
+		setorigin(wep, item.origin);
+		wep.ok_item = true;
+		wep.noalign = Item_ShouldKeepPosition(item);
+		wep.cnt = item.cnt;
+		wep.team = item.team;
+		wep.respawntime = g_pickup_respawntime_superweapon;
+		wep.pickup_anyway = true;
+		wep.spawnfunc_checked = true;
+		Item_Initialize(wep, "weapon_rpc");
+		return true;
+	}
 	return true;
 }
 

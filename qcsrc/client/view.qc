@@ -979,7 +979,7 @@ void HUD_Crosshair(entity this)
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) &&
-		spectatee_status != -1 && !csqcplayer.viewloc && !MUTATOR_CALLHOOK(DrawCrosshair) &&
+		spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair) &&
 		!HUD_MinigameMenu_IsOpened() )
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
@@ -997,6 +997,8 @@ void HUD_Crosshair(entity this)
 		string wcross_style;
 		float wcross_alpha, wcross_resolution;
 		wcross_style = autocvar_crosshair;
+		if (csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM) && autocvar_crosshair_2d != "")
+			wcross_style = autocvar_crosshair_2d;
 		if (wcross_style == "0")
 			return;
 		wcross_resolution = autocvar_crosshair_size;
@@ -1010,7 +1012,10 @@ void HUD_Crosshair(entity this)
 		float shottype;
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
+		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
+			wcross_origin = viewloc_mousepos;
+		else
+			wcross_origin = project_3d_to_2d(view_origin + max_shot_distance * view_forward);
 		wcross_origin.z = 0;
 		if(autocvar_crosshair_hittest)
 		{
@@ -1489,8 +1494,8 @@ void ViewLocation_Mouse()
 	viewloc_mousepos.x = bound(0, viewloc_mousepos.x, vid_conwidth);
 	viewloc_mousepos.y = bound(0, viewloc_mousepos.y, vid_conheight);
 
-	float cursor_alpha = 1 - autocvar__menu_alpha;
-	draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
+	//float cursor_alpha = 1 - autocvar__menu_alpha;
+	//draw_cursor(viewloc_mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
 }
 
 bool ov_enabled;

@@ -26,8 +26,8 @@ bool SendAuxiliaryXhair(entity this, entity to, int sf)
 
 bool AuxiliaryXhair_customize(entity this, entity client)
 {
-	//entity e = WaypointSprite_getviewentity(client);
-	entity axh = client.(AuxiliaryXhair[this.cnt]);
+	entity e = WaypointSprite_getviewentity(client);
+	entity axh = e.(AuxiliaryXhair[this.cnt]);
 	return axh.owner == this.owner; // cheaply check if the client's axh owner is the same as our real owner
 }
 
@@ -522,6 +522,7 @@ void vehicles_showwp(entity this)
 	else
 		rgb = '1 1 1';
 	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, ent, '0 0 64', NULL, 0, ent, waypointsprite_attached, true, RADARICON_Vehicle);
+	wp.wp_extra = ent.wp00.vehicleid;
 	wp.colormod = rgb;
 	if(ent.waypointsprite_attached)
 	{

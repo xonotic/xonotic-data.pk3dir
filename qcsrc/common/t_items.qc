@@ -37,6 +37,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 #ifdef CSQC
 bool autocvar_cl_ghost_items_vehicle = true;
 .vector item_glowmod;
+.bool item_simple; // probably not really needed, but better safe than sorry
 void Item_SetAlpha(entity this)
 {
 	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);
@@ -96,30 +97,19 @@ void ItemDraw(entity this)
     {
         if(this.ItemStatus & ITS_ANIMATE1)
         {
-            this.angles += this.avelocity * frametime;
+        	if(!this.item_simple)
+            	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 10' + '0 0 8' * sin((time - this.onground_time) * 2)));
         }
 
         if(this.ItemStatus & ITS_ANIMATE2)
         {
-            this.angles += this.avelocity * frametime;
+        	if(!this.item_simple)
+            	this.angles += this.avelocity * frametime;
             float fade_in = bound(0, time - this.onground_time, 1);
             setorigin(this, this.oldorigin + fade_in * ('0 0 8' + '0 0 4' * sin((time - this.onground_time) * 3)));
         }
-    }
-
-    Item_SetAlpha(this);
-}
-
-void ItemDrawSimple(entity this)
-{
-    if(this.gravity)
-    {
-        Movetype_Physics_MatchServer(this, false);
-
-        if(IS_ONGROUND(this))
-            this.gravity = 0;
     }
 
     Item_SetAlpha(this);
@@ -228,11 +218,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         this.mdl = "";
         string _fn = ReadString();
+        this.item_simple = false; // reset it!
 
         if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-            this.draw = ItemDrawSimple;
+            this.item_simple = true;
 
             if(fexists(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3")))
                 this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".md3"));
@@ -244,12 +235,12 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
                 this.mdl = strzone(strcat(_fn2, autocvar_cl_simpleitems_postfix, ".mdl"));
             else
             {
-                this.draw = ItemDraw;
+                this.item_simple = false;
                 LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it");
             }
         }
 
-        if(this.draw != ItemDrawSimple)
+        if(!this.item_simple)
             this.mdl = strzone(_fn);
 
 
@@ -635,6 +626,7 @@ AUTOCVAR(g_pickup_respawntime_scaling_reciprocal, float, 0.0, "Multiply respawn 
 AUTOCVAR(g_pickup_respawntime_scaling_offset, float, 0.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `offset` offsets the curve left or right - the results are not intuitive and I recommend plotting the respawn time and the number of items per player to see what's happening");
 AUTOCVAR(g_pickup_respawntime_scaling_linear, float, 1.0, "Multiply respawn time by `reciprocal / (p + offset) + linear` where `p` is the current number of players, takes effect with 2 or more players present, `linear` can be used to simply scale the respawn time linearly");
 
+/// Adjust respawn time according to the number of players.
 float adjust_respawntime(float normal_respawntime) {
 	float r = autocvar_g_pickup_respawntime_scaling_reciprocal;
 	float o = autocvar_g_pickup_respawntime_scaling_offset;
@@ -669,17 +661,43 @@ void Item_ScheduleRespawn(entity e)
 		//LOG_INFOF("item %s will respawn in %f", e.classname, adjusted_respawntime);
 
 		// range: adjusted_respawntime - respawntimejitter .. adjusted_respawntime + respawntimejitter
-		float actual_time = adjusted_respawntime + crandom() * e.respawntimejitter;
-		Item_ScheduleRespawnIn(e, actual_time);
+		float respawn_in = adjusted_respawntime + crandom() * e.respawntimejitter;
+		Item_ScheduleRespawnIn(e, respawn_in);
 	}
 	else // if respawntime is -1, this item does not respawn
 		Item_Show(e, -1);
 }
 
+AUTOCVAR(g_pickup_respawntime_initial_random, int, 1,
+	"For items that don't start spawned: 0: spawn after their normal respawntime; 1: spawn after `random * respawntime` with the *same* random; 2: same as 1 but each item has separate random");
+
+float shared_random;
+STATIC_INIT(shared_random) { shared_random = random(); }
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
-	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
+
+	float spawn_in;
+	if (autocvar_g_pickup_respawntime_initial_random == 0)
+	{
+		// range: respawntime .. respawntime + respawntimejitter
+		spawn_in = e.respawntime + random() * e.respawntimejitter;
+	}
+	else if (autocvar_g_pickup_respawntime_initial_random == 1)
+	{
+		// range:
+		// if respawntime >= ITEM_RESPAWN_TICKS: ITEM_RESPAWN_TICKS .. respawntime + respawntimejitter
+		// else: 0 .. ITEM_RESPAWN_TICKS
+		// this is to prevent powerups spawning unexpectedly without waypoints
+		spawn_in = ITEM_RESPAWN_TICKS + shared_random * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
+	}
+	else
+	{
+		// range: same as 1
+		spawn_in = ITEM_RESPAWN_TICKS + random() * (e.respawntime + e.respawntimejitter - ITEM_RESPAWN_TICKS);
+	}
+
+	Item_ScheduleRespawnIn(e, max(0, game_starttime - time) + ((e.respawntimestart) ? e.respawntimestart : spawn_in));
 }
 
 void GiveRandomWeapons(entity receiver, int num_weapons, string weapon_names,
@@ -1126,8 +1144,6 @@ float ammo_pickupevalfunc(entity player, entity item)
 	return rating;
 }
 
-.int item_group;
-.int item_group_count;
 float healtharmor_pickupevalfunc(entity player, entity item)
 {
 	float c = 0;
