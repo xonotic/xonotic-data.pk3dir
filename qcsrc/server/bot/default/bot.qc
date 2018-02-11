@@ -133,7 +133,7 @@ void bot_think(entity this)
 		if (this.deadflag == DEAD_DEAD)
 		{
 			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
-			this.bot_strategytime = 0;
+			navigation_goalrating_timeout_force(this);
 		}
 	}
 	else if(this.aistatus & AI_STATUS_STUCK)
@@ -579,9 +579,8 @@ void autoskill(float factor)
 void bot_calculate_stepheightvec()
 {
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
-	jumpstepheightvec = stepheightvec +
-		((autocvar_sv_jumpvelocity * autocvar_sv_jumpvelocity) / (2 * autocvar_sv_gravity)) * '0 0 0.85';
-		// 0.75 factor is for safety to make the jumps easy
+	jumpheight_vec = (autocvar_sv_jumpvelocity ** 2) / (2 * autocvar_sv_gravity) * '0 0 1';
+	jumpstepheightvec = stepheightvec + jumpheight_vec * 0.85; // reduce it a bit to make the jumps easy
 }
 
 float bot_fixcount()
@@ -597,16 +596,6 @@ float bot_fixcount()
 				++activerealplayers;
 			++realplayers;
 		});
-	}
-	if(currentbots == -1)
-	{
-		currentbots = 0;
-		// human players joining early may cause weird issues (bots appearing on
-		// the scoreboard as spectators) when switching map with the gotomap
-		// command, as it doesn't remove bots of the previous match, and with
-		// minplayers > 1, so ignore human players in the first bot frame
-		// TODO maybe find a cleaner solution
-		activerealplayers = 0;
 	}
 
 	int bots;
@@ -690,13 +679,50 @@ void bot_clear(entity this)
 
 void bot_serverframe()
 {
+	if (intermission_running && currentbots > 0)
+	{
+		// after the end of the match all bots stay unless all human players disconnect
+		int realplayers = 0;
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), { ++realplayers; });
+		if (!realplayers)
+		{
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), { dropclient(it); });
+			currentbots = 0;
+		}
+		return;
+	}
+
 	if (game_stopped)
 		return;
 
-	if (time < 2)
+	// Added 0.5 to avoid possible addition + immediate removal of bots that would make them appear as
+	// spectators in the scoreboard and never go away. This issue happens at time 2 if map is changed
+	// with the gotomap command, minplayers is > 1 and human clients join as players very soon
+	// either intentionally or automatically (sv_spectate 0)
+	if (time < 2.5)
 	{
 		currentbots = -1;
 		return;
+	}
+
+	if (currentbots == -1)
+	{
+		// count bots already in the server from the previous match
+		currentbots = 0;
+		FOREACH_CLIENT(IS_BOT_CLIENT(it), { ++currentbots; });
+	}
+
+	if(autocvar_skill != skill)
+	{
+		float wpcost_update = false;
+		if(skill >= autocvar_bot_ai_bunnyhop_skilloffset && autocvar_skill < autocvar_bot_ai_bunnyhop_skilloffset)
+			wpcost_update = true;
+		if(skill < autocvar_bot_ai_bunnyhop_skilloffset && autocvar_skill >= autocvar_bot_ai_bunnyhop_skilloffset)
+			wpcost_update = true;
+
+		skill = autocvar_skill;
+		if (wpcost_update)
+			waypoint_updatecost_foralllinks();
 	}
 
 	bot_calculate_stepheightvec();
@@ -716,8 +742,6 @@ void bot_serverframe()
 		if(!bot_fixcount())
 			botframe_nextthink = time + 10;
 	}
-
-	bot_ignore_bots = autocvar_bot_ignore_bots;
 
 	if(botframe_spawnedwaypoints)
 	{
@@ -747,8 +771,7 @@ void bot_serverframe()
 	{
 		botframe_spawnedwaypoints = true;
 		waypoint_loadall();
-		if(!waypoint_load_links())
-			waypoint_schedulerelinkall();
+		waypoint_load_links();
 	}
 
 	if (bot_list)
@@ -758,11 +781,26 @@ void bot_serverframe()
 		//  frame, which causes choppy framerates)
 		if (bot_strategytoken_taken)
 		{
+			// give goal token to the first bot without goals; if all bots don't have
+			// any goal (or are dead/frozen) simply give it to the next one
 			bot_strategytoken_taken = false;
-			if (bot_strategytoken)
-				bot_strategytoken = bot_strategytoken.nextbot;
-			if (!bot_strategytoken)
-				bot_strategytoken = bot_list;
+			entity bot_strategytoken_save = bot_strategytoken;
+			while (true)
+			{
+				if (bot_strategytoken)
+					bot_strategytoken = bot_strategytoken.nextbot;
+				if (!bot_strategytoken)
+					bot_strategytoken = bot_list;
+
+				if (!(IS_DEAD(bot_strategytoken) || STAT(FROZEN, bot_strategytoken))
+					&& !bot_strategytoken.goalcurrent)
+					break;
+
+				if (!bot_strategytoken_save) // break loop if all the bots are dead or frozen
+					break;
+				if (bot_strategytoken == bot_strategytoken_save)
+					bot_strategytoken_save = NULL; // looped through all the bots
+			}
 		}
 
 		if (botframe_nextdangertime < time)

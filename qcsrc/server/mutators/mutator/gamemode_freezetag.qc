@@ -257,16 +257,16 @@ void havocbot_role_ft_offense(entity this)
 		return;
 	}
 
-	if (time > this.bot_strategytime)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
 		havocbot_goalrating_freeplayers(this, 9000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -286,16 +286,16 @@ void havocbot_role_ft_freeing(entity this)
 		return;
 	}
 
-	if (time > this.bot_strategytime)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 8000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
 		havocbot_goalrating_freeplayers(this, 20000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
