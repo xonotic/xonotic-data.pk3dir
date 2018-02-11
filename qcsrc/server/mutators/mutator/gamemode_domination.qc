@@ -88,7 +88,7 @@ void dompoint_captured(entity this)
 	this.team = old_team;
 
 	entity msg = WP_DomNeut;
-	switch(this.team)
+	switch(real_team)
 	{
 		case NUM_TEAM_1: msg = WP_DomRed; break;
 		case NUM_TEAM_2: msg = WP_DomBlue; break;
