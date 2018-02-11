@@ -168,9 +168,9 @@ MUTATOR_HOOKFUNCTION(ok, PlayerWeaponSelect)
 		{
 			Weapon newwep = player.ok_lastwep[slot];
 			if(player.ok_lastwep[slot] == WEP_HMG)
-				newwep = WEP_MACHINEGUN;
+				newwep = WEP_OVERKILL_MACHINEGUN;
 			if(player.ok_lastwep[slot] == WEP_RPC)
-				newwep = WEP_VORTEX;
+				newwep = WEP_OVERKILL_NEX;
 			thiswep.m_switchweapon = newwep;
 			player.ok_lastwep[slot] = WEP_Null;
 		}
