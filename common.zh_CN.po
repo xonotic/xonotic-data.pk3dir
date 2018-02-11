@@ -4950,7 +4950,7 @@ msgstr "好的"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
-msgstr "制作人员"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
