@@ -249,6 +249,8 @@ vector spritelookupcolor(entity this, string s, vector def)
 
 string spritelookuptext(entity this, string s)
 {
+	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
+		return "Spam"; // no need to translate this debug string
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_name;
     if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint;
@@ -699,10 +701,7 @@ void Draw_WaypointSprite(entity this)
     string txt = string_null;
     if (is_text)
     {
-        if (autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-            txt = "Spam"; // no need to translate this debug string
-        else
-            txt = spritelookuptext(this, spriteimage);
+        txt = spritelookuptext(this, spriteimage);
         if (this.helpme && time < this.helpme)
             txt = sprintf(_("%s needing help!"), txt);
         if (autocvar_g_waypointsprite_uppercase)

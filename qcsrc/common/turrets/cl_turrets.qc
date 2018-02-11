@@ -115,11 +115,7 @@ void turret_draw2d(entity this)
 		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
 	}
 
-	txt = this.netname;
-	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-		txt = _("Spam");
-	else
-		txt = spritelookuptext(this, spriteimage);
+	txt = spritelookuptext(this, spriteimage);
 
 	if(time - floor(time) > 0.5 && t == this.team)
 	{
