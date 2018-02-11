@@ -363,7 +363,7 @@ METHOD(OverkillNex, wr_suicidemessage, Notification(entity thiswep))
 
 METHOD(OverkillNex, wr_killmessage, Notification(entity thiswep))
 {
-	return WEAPON_VORTEX_MURDER;
+	return WEAPON_OVERKILL_NEX_MURDER;
 }
 
 METHOD(OverkillNex, wr_zoom, bool(entity thiswep, entity actor))
