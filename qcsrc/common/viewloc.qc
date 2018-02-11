@@ -19,13 +19,19 @@ void viewloc_PlayerPhysics(entity this)
 
 		vector old_movement = PHYS_CS(this).movement;
 		PHYS_CS(this).movement_x = old_movement_y;
-		PHYS_CS(this).movement_y = 0;
+		if((this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && !(time < this.ladder_time))
+			PHYS_CS(this).movement_y = old_movement_x;
+		else
+			PHYS_CS(this).movement_y = 0;
 
 		vector level_start, level_end;
 		level_start = this.viewloc.enemy.origin;
 		level_end = this.viewloc.goalentity.origin;
 		vector forward = vectoangles(normalize(level_end - level_start));
 		vector backward = vectoangles(normalize(level_start - level_end));
+
+		if((this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && this.angles_y < 0 && !(time < this.ladder_time))
+			PHYS_CS(this).movement_y = -PHYS_CS(this).movement_y;
 
 		if(this.viewloc.spawnflags & VIEWLOC_FREEAIM)
 		{
@@ -44,6 +50,8 @@ void viewloc_PlayerPhysics(entity this)
 		}
 
 		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
+		if(!(this.viewloc.spawnflags & VIEWLOC_FREEMOVE))
+		{
 #ifdef SVQC
 			//PHYS_INPUT_BUTTON_CROUCH(this) = (old_movement_x < 0);
 			if (old_movement.x < 0)
@@ -56,6 +64,7 @@ void viewloc_PlayerPhysics(entity this)
 			}
 			//else { input_buttons &= ~16; this.flags &= ~FL_DUCKED; }
 #endif
+		}
 	}
 }
 
@@ -86,6 +95,7 @@ bool autocvar_cam_snap_close;
 bool autocvar_cam_track;
 bool autocvar_cam_snap_hard;
 bool autocvar_cam_snap_unlock;
+bool autocvar_cam_useangle = true;
 void viewloc_SetViewLocation()
 {
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
@@ -103,6 +113,10 @@ void viewloc_SetViewLocation()
 		 * basically the player would move around in a small "box" in the center of the screen with out changing the camera position or angles */
 		camera_position = vec_bounds_in(view.origin, position_a, position_b);
 
+		// use camera's angle when possible
+		if (autocvar_cam_useangle) {
+			camera_angle = view.viewloc.enemy.movedir;
+		}
 
 		// a tracking camera follows the player when it leaves the world box
 		if (autocvar_cam_track || !have_sidescroll) {
@@ -121,7 +135,7 @@ void viewloc_SetViewLocation()
 
 			/* if the difference between the old and new angle is 60 degrees or more, switch angles.
 			 * NOTE: bug/feature: this will use non-snaped angles for one frame.
-			 * doing this resualts in less code, faster code, and a smoother transisition between angles.
+			 * doing this results in less code, faster code, and a smoother transisition between angles.
 			 */
 			float camera_angle_diff = max(camera_angle.y, old_camera_angle.y) - min(camera_angle.y, old_camera_angle.y);
 
@@ -167,10 +181,12 @@ void viewloc_SetViewLocation()
 				view_angle.y = avatar_facing_dir.y; // snap avatar to look on along the correct axis
 
 				// if (0 == input_movevalues.x) look straight ahead
-				if (0 > input_movevalues.x) { // look up
-					view_angle.x = 50;
-				} else if (0 < input_movevalues.x) { // look down
-					view_angle.x = -50;
+				if (!(view.viewloc.spawnflags & VIEWLOC_FREEMOVE)) {
+					if (0 > input_movevalues.x) { // look up
+						view_angle.x = 50;
+					} else if (0 < input_movevalues.x) { // look down
+						view_angle.x = -50;
+					}
 				}
 			} else {
 				vector mpos = CursorToWorldCoord(viewloc_mousepos);

@@ -4,7 +4,7 @@
 #include <common/util.qh>
 
 #ifdef GAMEQC
-REGISTER_WAYPOINT(Buff, _("Buff"), '1 0.5 0', 1);
+REGISTER_WAYPOINT(Buff, _("Buff"), "", '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
 #endif
 

@@ -293,8 +293,3 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 
 void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false); }
 void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true); }
-
-void SUB_UseTargets_self(entity this)
-{
-	SUB_UseTargets(this, NULL, NULL);
-}
