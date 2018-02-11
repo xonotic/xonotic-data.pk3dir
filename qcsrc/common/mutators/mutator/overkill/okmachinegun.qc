@@ -173,10 +173,7 @@ METHOD(OverkillMachineGun, wr_suicidemessage, Notification(entity thiswep))
 
 METHOD(OverkillMachineGun, wr_killmessage, Notification(entity thiswep))
 {
-	if(w_deathtype & HITTYPE_SECONDARY)
-		return WEAPON_MACHINEGUN_MURDER_SNIPE;
-	else
-		return WEAPON_MACHINEGUN_MURDER_SPRAY;
+	return WEAPON_OVERKILL_MACHINEGUN_MURDER;
 }
 
 #endif

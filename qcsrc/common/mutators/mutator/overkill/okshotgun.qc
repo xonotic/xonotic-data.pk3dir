@@ -130,10 +130,7 @@ METHOD(OverkillShotgun, wr_suicidemessage, Notification(entity thiswep))
 
 METHOD(OverkillShotgun, wr_killmessage, Notification(entity thiswep))
 {
-	if(w_deathtype & HITTYPE_SECONDARY)
-		return WEAPON_BLASTER_MURDER;
-	else
-		return WEAPON_SHOTGUN_MURDER;
+	return WEAPON_OVERKILL_SHOTGUN_MURDER;
 }
 
 #endif

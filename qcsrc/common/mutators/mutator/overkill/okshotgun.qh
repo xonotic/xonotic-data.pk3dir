@@ -13,7 +13,7 @@ CLASS(OverkillShotgun, Weapon)
 #endif
 /* crosshair */ ATTRIB(OverkillShotgun, w_crosshair, string, "gfx/crosshairshotgun");
 /* crosshair */ ATTRIB(OverkillShotgun, w_crosshair_size, float, 0.65);
-/* wepimg    */ ATTRIB(OverkillShotgun, model2, string, "weaponshotgun");
+/* wepimg    */ ATTRIB(OverkillShotgun, model2, string, "weaponokshotgun");
 /* refname   */ ATTRIB(OverkillShotgun, netname, string, "okshotgun");
 /* wepname   */ ATTRIB(OverkillShotgun, m_name, string, _("Overkill Shotgun"));
 
