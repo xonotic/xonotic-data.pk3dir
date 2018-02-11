@@ -10,6 +10,8 @@
 #include "../bot.qh"
 #include "../navigation.qh"
 
+.float bot_ratingscale;
+.float bot_ratingscale_time;
 .float max_armorvalue;
 .float havocbot_role_timeout;
 
@@ -45,15 +47,81 @@ void havocbot_goalrating_waypoints(entity this, float ratingscale, vector org, f
 	}
 };
 
+bool havocbot_goalrating_item_can_be_left_to_teammate(entity this, entity player, entity item)
+{
+	if (item.health && player.health <= this.health) {return true;}
+	if (item.armorvalue && player.armorvalue <= this.armorvalue) {return true;}
+	if (item.weapons && !(player.weapons & item.weapons)) {return true;}
+	if (item.ammo_shells && player.ammo_shells <= this.ammo_shells) {return true;}
+	if (item.ammo_nails && player.ammo_nails <= this.ammo_nails) {return true;}
+	if (item.ammo_rockets && player.ammo_rockets <= this.ammo_rockets) {return true;}
+	if (item.ammo_cells && player.ammo_cells <= this.ammo_cells) {return true;}
+	if (item.ammo_plasma && player.ammo_plasma <= this.ammo_plasma) {return true;}
+	if (item.itemdef.instanceOfPowerup) {return true;}
+
+	return false;
+};
+
+bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, entity item, vector item_org)
+{
+	if(!teamplay)
+		return true;
+
+	// actually these variables hold the squared distances in order to optimize code
+	float friend_distance = FLOAT_MAX;
+	float enemy_distance = FLOAT_MAX;
+	float dist;
+
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
+	{
+		if (it.team == this.team)
+		{
+			if (!IS_REAL_CLIENT(it))
+				continue;
+
+			dist = vlen2(it.origin - item_org);
+			if(dist > friend_distance)
+				continue;
+
+			if(havocbot_goalrating_item_can_be_left_to_teammate(this, it, item))
+			{
+				friend_distance = dist;
+				continue;
+			}
+		}
+		else
+		{
+			// If enemy only track distances
+			// TODO: track only if visible ?
+			dist = vlen2(it.origin - item_org);
+			if(dist < enemy_distance)
+				enemy_distance = dist;
+		}
+	});
+
+	// Rate the item only if no one needs it, or if an enemy is closer to it
+	dist = vlen2(item_org - org);
+	if ((enemy_distance < friend_distance && dist < enemy_distance) ||
+		(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ** 2) ||
+		(dist < friend_distance && dist < 200 ** 2))
+		return true;
+	return false;
+};
+
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
-	float rating, discard, friend_distance, enemy_distance;
+	float rating;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
-		rating = 0;
+		// ignore if bot already rated this item with a higher ratingscale
+		// NOTE: this code assumes each bot rates items in a different frame
+		if(it.bot_ratingscale_time == time && ratingscale < it.bot_ratingscale)
+			continue;
+		it.bot_ratingscale_time = time;
+		it.bot_ratingscale = ratingscale;
 
 		if(!it.solid)
 		{
@@ -88,8 +156,9 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 				continue;
 			traceline(o, o + '0 0 -1500', true, NULL);
 
-			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(trace_endpos + '0 0 1')) & DPCONTENTS_LIQUIDSMASK)
+			if(IN_LAVA(trace_endpos + '0 0 1'))
 				continue;
+
 			// this tracebox_hits_trigger_hurt call isn't needed:
 			// dropped weapons are removed as soon as they fall on a trigger_hurt
 			// and can't be rated while they are in the air
@@ -98,61 +167,14 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		}
 		else
 		{
-			// Ignore items under water
-			// TODO: can't .waterlevel be used here?
-			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(it.origin + ((it.mins + it.maxs) * 0.5))) & DPCONTENTS_LIQUIDSMASK)
+			if(IN_LAVA(it.origin + (it.mins + it.maxs) * 0.5))
 				continue;
 		}
 
-		if(teamplay)
-		{
-			friend_distance = 10000; enemy_distance = 10000;
-			discard = false;
+		if(!havocbot_goalrating_item_pickable_check_players(this, org, it, o))
+			continue;
 
-			entity picker = it;
-			FOREACH_CLIENT(IS_PLAYER(it) && it != this && !IS_DEAD(it),
-			{
-				if ( it.team == this.team )
-				{
-					if ( !IS_REAL_CLIENT(it) || discard )
-						continue;
-
-					if( vdist(it.origin - o, >, friend_distance) )
-						continue;
-
-					friend_distance = vlen(it.origin - o); // distance between player and item
-					discard = true;
-
-					if (picker.health && it.health > this.health) continue;
-					if (picker.armorvalue && it.armorvalue > this.armorvalue) continue;
-
-					if (picker.weapons && (picker.weapons & ~it.weapons)) continue;
-
-					if (picker.ammo_shells && it.ammo_shells > this.ammo_shells) continue;
-					if (picker.ammo_nails && it.ammo_nails > this.ammo_nails) continue;
-					if (picker.ammo_rockets && it.ammo_rockets > this.ammo_rockets) continue;
-					if (picker.ammo_cells && it.ammo_cells > this.ammo_cells) continue;
-					if (picker.ammo_plasma && it.ammo_plasma > this.ammo_plasma) continue;
-
-					discard = false;
-				}
-				else
-				{
-					// If enemy only track distances
-					// TODO: track only if visible ?
-					if( vdist(it.origin - o, <, enemy_distance) )
-						enemy_distance = vlen(it.origin - o); // distance between player and item
-				}
-			});
-
-			// Rate the item only if no one needs it, or if an enemy is closer to it
-			if ( (enemy_distance < friend_distance && vdist(o - org, <, enemy_distance)) ||
-				(friend_distance > autocvar_bot_ai_friends_aware_pickup_radius ) || !discard )
-				rating = it.bot_pickupevalfunc(this, it);
-		}
-		else
-			rating = it.bot_pickupevalfunc(this, it);
-
+		rating = it.bot_pickupevalfunc(this, it);
 		if(rating > 0)
 			navigation_routerating(this, it, rating * ratingscale, 2000);
 	});
@@ -175,6 +197,8 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		// TODO: Merge this logic with the bot_shouldattack function
 		if(vdist(it.origin - org, <, 100) || vdist(it.origin - org, >, sradius))
 			continue;
+		if(vdist(vec2(it.velocity), >, autocvar_sv_maxspeed * 2))
+			continue;
 
 		// rate only visible enemies
 		/*
@@ -189,6 +213,8 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		{
 			if (time < this.strength_finished - 1) t += 0.5;
 			if (time < it.strength_finished - 1) t -= 0.5;
+			if (time < this.invincible_finished - 1) t += 0.2;
+			if (time < it.invincible_finished - 1) t -= 0.4;
 		}
 		t += max(0, 8 - skill) * 0.05; // less skilled bots attack more mindlessly
 		ratingscale *= t;
@@ -204,17 +230,15 @@ void havocbot_role_generic(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 		havocbot_goalrating_items(this, 10000, this.origin, 10000);
 		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
 
-		if(IS_PLAYER(this.goalentity))
-			this.bot_strategytime = time + min(2, autocvar_bot_ai_strategyinterval);
+		navigation_goalrating_timeout_set(this);
 	}
 }
 
@@ -226,7 +250,7 @@ void havocbot_chooserole_generic(entity this)
 void havocbot_chooserole(entity this)
 {
 	LOG_TRACE("choosing a role...");
-	this.bot_strategytime = 0;
+	navigation_goalrating_timeout_force(this);
 	if(!MUTATOR_CALLHOOK(HavocBot_ChooseRole, this))
 		havocbot_chooserole_generic(this);
 }

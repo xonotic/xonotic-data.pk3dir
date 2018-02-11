@@ -88,7 +88,7 @@ void dompoint_captured(entity this)
 	this.team = old_team;
 
 	entity msg = WP_DomNeut;
-	switch(this.team)
+	switch(real_team)
 	{
 		case NUM_TEAM_1: msg = WP_DomRed; break;
 		case NUM_TEAM_2: msg = WP_DomBlue; break;
@@ -402,15 +402,16 @@ void havocbot_role_dom(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	if (this.bot_strategytime < time)
+	if (navigation_goalrating_timeout(this))
 	{
-		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 		havocbot_goalrating_controlpoints(this, 10000, this.origin, 15000);
 		havocbot_goalrating_items(this, 8000, this.origin, 8000);
 		//havocbot_goalrating_enemyplayers(this, 3000, this.origin, 2000);
 		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
 		navigation_goalrating_end(this);
+
+		navigation_goalrating_timeout_set(this);
 	}
 }
 

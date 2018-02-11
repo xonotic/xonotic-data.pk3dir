@@ -336,7 +336,11 @@ void Monster_Sound(entity this, .string samplefield, float sound_delay, bool del
 	if(delaytoo)
 	if(time < this.msound_delay)
 		return; // too early
-	GlobalSound_string(this, this.(samplefield), chan, VOL_BASE, VOICETYPE_PLAYERSOUND);
+	string sample = this.(samplefield);
+	if (sample != "") sample = GlobalSound_sample(sample, random());
+	float myscale = ((this.scale) ? this.scale : 1); // safety net
+	// TODO: change volume depending on size too?
+	sound7(this, chan, sample, VOL_BASE, ATTEN_NORM, 100 / myscale, 0);
 
 	this.msound_delay = time + sound_delay;
 }

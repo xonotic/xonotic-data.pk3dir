@@ -35,25 +35,29 @@ void ClearWinners();
 // limit.
 int WinningCondition_LMS()
 {
-	entity head, head2;
-	bool have_player = false;
-	bool have_players = false;
+	entity first_player = NULL;
+	int total_players = 0;
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		if (!total_players)
+			first_player = it;
+		++total_players;
+	});
 
-	int l = LMS_NewPlayerLives();
-
-	head = find(NULL, classname, STR_PLAYER);
-	if(head)
-		have_player = true;
-	head2 = find(head, classname, STR_PLAYER);
-	if(head2)
-		have_players = true;
-
-	if(have_player)
+	if (total_players)
 	{
-		// we have at least one player
-		if(have_players)
+		if (total_players > 1)
 		{
 			// two or more active players - continue with the game
+
+			if (autocvar_g_campaign)
+			{
+				FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+					float pl_lives = GameRules_scoring_add(it, LMS_LIVES, 0);
+					if (!pl_lives)
+						return WINNING_YES; // human player lost, game over
+					break;
+				});
+			}
 		}
 		else
 		{
@@ -62,7 +66,7 @@ int WinningCondition_LMS()
 			ClearWinners();
 			SetWinners(winning, 0); // NOTE: exactly one player is still "player", so this works out
 
-			if(l)
+			if (LMS_NewPlayerLives())
 			{
 				// game still running (that is, nobody got removed from the game by a frag yet)? then continue
 				return WINNING_NO;
@@ -71,7 +75,7 @@ int WinningCondition_LMS()
 			{
 				// a winner!
 				// and assign him his first place
-				GameRules_scoring_add(head, LMS_RANK, 1);
+				GameRules_scoring_add(first_player, LMS_RANK, 1);
 				if(warmup_stage)
 					return WINNING_NO;
 				else
@@ -82,7 +86,7 @@ int WinningCondition_LMS()
 	else
 	{
 		// nobody is playing at all...
-		if(l)
+		if (LMS_NewPlayerLives())
 		{
 			// wait for players...
 		}
