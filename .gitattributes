@@ -87,7 +87,7 @@ etc_svc_git-daemon_run crlf=input
 gendox crlf=input
 gendoxfunctions crlf=input
 genDoxyfile crlf=input
-*.gif -diff -crlf
+*.gif -crlf
 *.gitattributes crlf=input
 git-branch-manager crlf=input
 git-filter-index crlf=input
@@ -113,7 +113,7 @@ GPL crlf=input
 *.html crlf=input
 *.html-part crlf=input
 *.icns -diff -crlf
-*.ico -diff -crlf
+*.ico -crlf
 *.idl crlf=input
 *.idsoftware crlf=input
 *.inc crlf=input
@@ -128,7 +128,7 @@ GPL crlf=input
 *.jhm crlf=input
 *.jnlp crlf=input
 jpegtran -diff -crlf
-*.jpg -diff -crlf
+*.jpg -crlf
 *.jsmooth crlf=input
 *.la crlf=input
 LGPL crlf=input
@@ -175,13 +175,13 @@ PkgInfo crlf=input
 *.pl crlf=input
 *.plist crlf=input
 *.pm crlf=input
-*.png -diff -crlf
+*.png -crlf
 *.po crlf=input
 POSITIONS -diff -crlf
 *.pot crlf=input
 *.proj -crlf
 *.properties crlf=input
-*.psd -diff -crlf
+*.psd -crlf
 *.py crlf=input
 *.q3map1 crlf=input
 *.qc crlf=input
@@ -211,13 +211,13 @@ SDL -diff -crlf
 *.src crlf=input
 *.strings crlf=input
 strip crlf=input
-*.svg -diff -crlf
+*.svg -crlf
 *.TAB -diff -crlf
-*.tga -diff -crlf
+*.tga -crlf
 TMAP -diff -crlf
 todo crlf=input
 TODO crlf=input
-*.ttf -diff -crlf
+*.ttf -crlf
 *.txt crlf=input
 *.txt.* crlf=input
 update-shaderlists crlf=input
@@ -231,7 +231,7 @@ versionbuilder crlf=input
 *.width crlf=input
 *.workspace -crlf
 wrjpgcom -diff -crlf
-*.xcf -diff -crlf
+*.xcf -crlf
 *.xlink crlf=input
 *.xml crlf=input
 xonotic-map-compiler-autobuild crlf=input
