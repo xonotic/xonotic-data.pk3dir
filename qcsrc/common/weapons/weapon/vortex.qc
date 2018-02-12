@@ -358,5 +358,9 @@ METHOD(Vortex, wr_zoom, bool(entity thiswep, entity actor))
         return false;
     }
 }
+METHOD(Vortex, wr_zoomdir, bool(entity thiswep))
+{
+    return button_attack2 && !WEP_CVAR(vortex, secondary);
+}
 
 #endif
