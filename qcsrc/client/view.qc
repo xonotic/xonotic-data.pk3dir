@@ -471,9 +471,14 @@ vector GetCurrentFov(float fov)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			entity wepent = viewmodels[slot];
-			if(wepent.switchweapon == wepent.activeweapon)
-			if((wepent.activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (wepent.activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
-				zoomdir += button_attack2;
+			if(wepent.switchweapon != wepent.activeweapon)
+				continue;
+			Weapon wep = wepent.activeweapon;
+			if(wep != WEP_Null && wep.wr_zoomdir)
+			{
+				bool do_zoom = wep.wr_zoomdir(wep); // TODO: merge this with wr_zoom?
+				zoomdir += do_zoom;
+			}
 		}
 	}
 	if(spectatee_status > 0 || isdemo())
