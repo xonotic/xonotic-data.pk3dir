@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-02-07 11:27+0000\n"
+"PO-Revision-Date: 2018-02-12 23:32+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -931,7 +931,7 @@ msgstr "Рейтинг времени захвата"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1354
 msgid "Rankings"
-msgstr "Ранг"
+msgstr "Рейтинг"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1519
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
@@ -1629,11 +1629,11 @@ msgstr "Показывать цифры урона"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:20
 msgid "Font size minimum:"
-msgstr "Минимальный размер шрифта:"
+msgstr "Мин. размер шрифта:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
 msgid "Font size maximum:"
-msgstr "Максимальный размер шрифта:"
+msgstr "Макс. размер шрифта:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:30
 msgid "Accumulate range:"
@@ -2100,7 +2100,7 @@ msgstr "^BG%s%s^K1 был отправлен в открытый космос ^B
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 был утоплен в слизи ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 утоплен в слизи ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
@@ -2171,7 +2171,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s"
-msgstr "^BG%s%s^K1 был измельчён Spiderbot'ом, управляемым ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 измельчён Spiderbot'ом, управляемым ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
@@ -2273,7 +2273,7 @@ msgstr "^BG%s^K1 был взорван Магом%s%s"
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr "^BG%s^K1's был вывернут наизнанку Шамблером%s%s"
+msgstr "^BG%s^K1's вывернут наизнанку Шамблером%s%s"
 
 #: qcsrc/common/notifications/all.inc:317
 #, c-format
@@ -2410,7 +2410,7 @@ msgstr "^BG%s^K1 не смог спрятаться от турели Hunter%s%s
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr "^BG%s^K1 был изрешечён Пулемётной башней%s%s"
+msgstr "^BG%s^K1 изрешечён Пулемётной башней%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
@@ -2435,7 +2435,7 @@ msgstr "^BG%s^K1 был убит электрическим током туре�
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"
-msgstr "^BG%s^K1 был обогащён свинцом из турели Walker'a%s%s"
+msgstr "^BG%s^K1 обогащён свинцом из турели Walker'a%s%s"
 
 #: qcsrc/common/notifications/all.inc:347
 #, c-format
@@ -2899,7 +2899,7 @@ msgstr "^BG%s%s^K1 был взорван кривыми болтами%s%s ^BG%s
 #: qcsrc/common/notifications/all.inc:458
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"
-msgstr "^BG%s%s^K1 был застрелен из Бластера ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 застрелен из Бластера ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:459
 #, c-format
@@ -2979,12 +2979,12 @@ msgstr "^BG%s^K1 забыл о своей зажигательной мине ds
 #: qcsrc/common/notifications/all.inc:474
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s"
-msgstr "^BG%s%s^K1 был утрамбован очередью из Hagar'а от ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 утрамбован очередью из Hagar'а от ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:475
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s"
-msgstr "^BG%s%s^K1 был обстрелян из Hagar'а со стороны ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 обстрелян из Hagar'а со стороны ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:476
 #, c-format
@@ -3004,12 +3004,12 @@ msgstr "^BG%s^K1 не соблюдал технику безопасности �
 #: qcsrc/common/notifications/all.inc:479
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Heavy Machine Gun%s%s"
-msgstr "^BG%s%s^K1 был застрелен из Тяжёлого пулемёта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 застрелен из Тяжёлого пулемёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:480
 #, c-format
 msgid "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Heavy Machine Gun%s%s"
-msgstr "^BG%s%s^K1 был разорван на куски из Тяжёлого пулемёта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 разорван на куски из Тяжёлого пулемёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:481
 #, c-format
@@ -3031,12 +3031,12 @@ msgstr "^BGУ %s^K1 завяли уши от игры на @!#%%й Бутылк�
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 был расстрелян из Пулемёта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 расстрелян из Пулемёта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 был изрешечён Пулемётом ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 изрешечён Пулемётом ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #: qcsrc/common/notifications/all.inc:790
@@ -3079,7 +3079,7 @@ msgstr "^BG%s^K1 взорвал сам себя с помощью Mortar'a%s%s"
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
 msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 был расстрелян из Rifle ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 расстрелян из Rifle ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
@@ -3137,7 +3137,7 @@ msgstr "^BG%s^K1 доигрался с ракетками из Самонаво�
 #: qcsrc/common/notifications/all.inc:504
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shockwave%s%s"
-msgstr "^BG%s%s^K1 был растрелян из Шоковой Волны ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 застрелен из Шоковой Волны ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:505
 #, c-format
@@ -3147,7 +3147,7 @@ msgstr "^BG%s%s^K1 был отшлёпан ^BG%s^K1 огромной Шоков�
 #: qcsrc/common/notifications/all.inc:506
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr "^BG%s%s^K1 был пристрелен из Shotgun'a ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 пристрелен из Shotgun'a ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
@@ -3177,7 +3177,7 @@ msgstr "^BG%s%s^K1 был преобразован в пар Испарител�
 #: qcsrc/common/notifications/all.inc:512
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr "^BG%s%s^K1 был испарён с помощью Вихря ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 испарён с помощью Вихря ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:537
 msgid "^F4You are now alone!"
