@@ -9,6 +9,8 @@ REGISTER_NET_TEMP(CLIENT_WEPENT)
 .int minelayer_mines;
 .float arc_heat_percent;
 .int hagar_load;
+.int clip_load;
+.int clip_size;
 
 #ifdef SVQC
 

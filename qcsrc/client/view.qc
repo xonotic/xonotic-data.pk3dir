@@ -1191,11 +1191,10 @@ void HUD_Crosshair(entity this)
 
 				ring_scale = autocvar_crosshair_ring_size;
 
-				float weapon_clipload, weapon_clipsize;
-				weapon_clipload = STAT(WEAPON_CLIPLOAD);
-				weapon_clipsize = STAT(WEAPON_CLIPSIZE);
-
 				entity wepent = viewmodels[0]; // TODO: unhardcode
+
+				int weapon_clipload = wepent.clip_load;
+				int weapon_clipsize = wepent.clip_size;
 
 				float arc_heat = wepent.arc_heat_percent;
 				float vcharge = wepent.vortex_charge;

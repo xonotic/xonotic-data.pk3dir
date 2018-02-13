@@ -1763,8 +1763,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.ammo_nails = spectatee.ammo_nails;
 	this.ammo_rockets = spectatee.ammo_rockets;
 	this.ammo_fuel = spectatee.ammo_fuel;
-	this.clip_load = spectatee.clip_load;
-	this.clip_size = spectatee.clip_size;
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	this.health = spectatee.health;
 	CS(this).impulse = 0;
@@ -2289,12 +2287,6 @@ bool PlayerThink(entity this)
 		{
 			.entity weaponentity = weaponentities[slot];
 			W_WeaponFrame(this, weaponentity);
-
-			if(slot == 0)
-			{
-				this.clip_load = this.(weaponentity).clip_load;
-				this.clip_size = this.(weaponentity).clip_size;
-			}
 		}
 
 		this.items_added = 0;
