@@ -87,7 +87,7 @@ float Arc_GetHeat_Percent(entity player, .entity weaponentity)
 }
 void Arc_Player_SetHeat(entity player, .entity weaponentity)
 {
-	player.arc_heat_percent = Arc_GetHeat_Percent(player, weaponentity);
+	player.(weaponentity).arc_heat_percent = Arc_GetHeat_Percent(player, weaponentity);
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
 }
 
@@ -565,7 +565,7 @@ void Arc_Smoke(entity actor, .entity weaponentity)
 	vector smoke_origin = w_shotorg + actor.velocity*frametime;
 	if ( actor.arc_overheat > time )
 	{
-		if ( random() < actor.arc_heat_percent )
+		if ( random() < actor.(weaponentity).arc_heat_percent )
 			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
 		if ( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) )
 		{

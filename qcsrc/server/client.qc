@@ -1776,11 +1776,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
-	this.vortex_charge = spectatee.vortex_charge;
-	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
-	this.hagar_load = spectatee.hagar_load;
-	this.arc_heat_percent = spectatee.arc_heat_percent;
-	this.minelayer_mines = spectatee.minelayer_mines;
 	this.punchangle = spectatee.punchangle;
 	this.view_ofs = spectatee.view_ofs;
 	this.velocity = spectatee.velocity;
@@ -1797,12 +1792,6 @@ void SpectateCopy(entity this, entity spectatee)
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(this, CS(spectatee).zoomstate);
-
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		this.(weaponentity) = spectatee.(weaponentity);
-	}
 
     anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;

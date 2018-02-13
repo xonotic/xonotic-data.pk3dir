@@ -168,9 +168,6 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
     if(WEP_CVAR(vortex, charge) && actor.(weaponentity).vortex_charge < WEP_CVAR(vortex, charge_limit))
         actor.(weaponentity).vortex_charge = min(1, actor.(weaponentity).vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
 
-    if(weaponslot(weaponentity) == 0)
-        actor.vortex_charge = actor.(weaponentity).vortex_charge;
-
     if(WEP_CVAR_SEC(vortex, chargepool))
         if(actor.(weaponentity).vortex_chargepool_ammo < 1)
         {
@@ -178,9 +175,6 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                 actor.(weaponentity).vortex_chargepool_ammo = min(1, actor.(weaponentity).vortex_chargepool_ammo + WEP_CVAR_SEC(vortex, chargepool_regen) * frametime / W_TICSPERFRAME);
             actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(vortex, chargepool_pause_regen));
         }
-
-    if(weaponslot(weaponentity) == 0)
-        actor.vortex_chargepool_ammo = actor.(weaponentity).vortex_chargepool_ammo;
 
     if(autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
@@ -296,10 +290,6 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
 METHOD(Vortex, wr_resetplayer, void(entity thiswep, entity actor))
 {
     if (WEP_CVAR(vortex, charge)) {
-        if (WEP_CVAR_SEC(vortex, chargepool)) {
-            actor.vortex_chargepool_ammo = 1;
-        }
-        actor.vortex_charge = WEP_CVAR(vortex, charge_start);
         for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
         {
             .entity weaponentity = weaponentities[slot];
