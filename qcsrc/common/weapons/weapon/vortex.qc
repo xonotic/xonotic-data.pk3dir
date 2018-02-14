@@ -208,11 +208,11 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
                         if(WEP_CVAR_SEC(vortex, ammo))
                         {
                             // always deplete if secondary is held
-                            actor.vortex_chargepool_ammo = max(0, actor.vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
+                            actor.(weaponentity).vortex_chargepool_ammo = max(0, actor.(weaponentity).vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
 
                             dt = min(dt, (1 - actor.(weaponentity).vortex_charge) / WEP_CVAR(vortex, charge_rate));
                             actor.vortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(vortex, chargepool_pause_regen);
-                            dt = min(dt, actor.vortex_chargepool_ammo);
+                            dt = min(dt, actor.(weaponentity).vortex_chargepool_ammo);
                             dt = max(0, dt);
 
                             actor.(weaponentity).vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
