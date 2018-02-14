@@ -244,11 +244,11 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 	//				if(WEP_CVAR_SEC(oknex, ammo))
 	//				{
 	//					// always deplete if secondary is held
-	//					actor.oknex_chargepool_ammo = max(0, actor.oknex_chargepool_ammo - WEP_CVAR_SEC(oknex, ammo) * dt);
+	//					actor.(weaponentity).oknex_chargepool_ammo = max(0, actor.(weaponentity).oknex_chargepool_ammo - WEP_CVAR_SEC(oknex, ammo) * dt);
 
 	//					dt = min(dt, (1 - actor.(weaponentity).oknex_charge) / WEP_CVAR(oknex, charge_rate));
 	//					actor.oknex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(oknex, chargepool_pause_regen);
-	//					dt = min(dt, actor.oknex_chargepool_ammo);
+	//					dt = min(dt, actor.(weaponentity).oknex_chargepool_ammo);
 	//					dt = max(0, dt);
 
 	//					actor.(weaponentity).oknex_charge += dt * WEP_CVAR(oknex, charge_rate);
