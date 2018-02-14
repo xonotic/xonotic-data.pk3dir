@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2018-02-12 23:32+0000\n"
+"PO-Revision-Date: 2018-02-13 16:58+0000\n"
 "Last-Translator: Andrei Stepanov\n"
 "Language-Team: Russian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
@@ -77,12 +77,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "next weapon"
-msgstr "следующее оружие"
+msgstr "след. оружие"
 
 #: qcsrc/client/hud/panel/infomessages.qc:102
 #: qcsrc/client/hud/panel/infomessages.qc:106
 msgid "previous weapon"
-msgstr "предыдущее оружие"
+msgstr "пред. оружие"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -102,7 +102,7 @@ msgstr "бросить оружие"
 #: qcsrc/client/hud/panel/infomessages.qc:108
 #: qcsrc/menu/xonotic/keybinder.qc:41
 msgid "secondary fire"
-msgstr "дополнительный огонь"
+msgstr "вторичный огонь"
 
 #: qcsrc/client/hud/panel/infomessages.qc:111
 #, c-format
@@ -1242,8 +1242,8 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
-"Найдите и принесите флаг противника на свою базу для захвата, защищайте вашу "
-"базу от команды противника"
+"Найдите и принесите флаг противника на свою базу, защищайте свой флаг от "
+"команды противника"
 
 #: qcsrc/common/mapinfo.qh:249
 msgid "Clan Arena"
@@ -2530,7 +2530,7 @@ msgstr "^BG%s^K1 заморозил сам себя"
 #: qcsrc/common/notifications/all.inc:370
 #: qcsrc/common/notifications/all.inc:684
 msgid "^TC^TT^BG team wins the round"
-msgstr "^TC^TT^BG команда выиграла этот раунд"
+msgstr "^BGКоманда ^TC^TT^BG выиграла этот раунд"
 
 #: qcsrc/common/notifications/all.inc:371
 #: qcsrc/common/notifications/all.inc:685
@@ -2819,7 +2819,7 @@ msgstr "^F4Вас пригласил ^BG%s^F4 к себе на игру в ^F2%s
 
 #: qcsrc/common/notifications/all.inc:439
 msgid "^TC^TT ^BGteam scores!"
-msgstr "^TC^TT ^BG команда увеличивает счет!"
+msgstr "^BGКоманда ^TC^TT^BG увеличивает счёт!"
 
 #: qcsrc/common/notifications/all.inc:441
 #, c-format
@@ -3785,7 +3785,7 @@ msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
-"^BG^TC^TT команда^BG собрала все ключи!\n"
+"^BGКоманда ^TC^TT^BG собрала все ключи!\n"
 "Помешайте им встретиться. ^F4БЫСТРО^BG!"
 
 #: qcsrc/common/notifications/all.inc:713
@@ -3836,7 +3836,7 @@ msgstr "^F4^COUNT^BG осталось на поиск патронов!"
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
-msgstr "^BGНайдите патронов, иначе вы умрёте через ^F4^COUNT^BG!"
+msgstr "^BGНайдите патроны, иначе вы погибните через ^F4^COUNT^BG!"
 
 #: qcsrc/common/notifications/all.inc:725
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
@@ -3869,7 +3869,7 @@ msgstr "^BGВы захватили контрольную точку %s^BG"
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr "Команда ^TC^TT^BG захватила контрольную точку %s^BG"
+msgstr "^BGКоманда ^TC^TT^BG захватила контрольную точку %s^BG"
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^BGThis control point currently cannot be captured"
@@ -7149,7 +7149,7 @@ msgstr "Максимальная"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:65
 msgid "Geometry detail:"
-msgstr "Детализация окружения:"
+msgstr "Детализация геометрии:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:67
 msgid "Change the smoothness of the curves on the map (default: normal)"
@@ -7785,7 +7785,7 @@ msgstr "Добавлять расширенную информацию о фра
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:62
 msgid "Add frag location to death messages when available"
-msgstr "Добавлять сведения о месте фрага в сообщения о смерти когда возможно"
+msgstr "Указывать место фрага в сообщения о смерти, если возможно"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:65
 msgid "Gamemode Settings"
@@ -7900,7 +7900,7 @@ msgstr "Применить мои цвета к другим игрокам"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
 msgid "In non teamplay modes only"
-msgstr "Только в некомандных режимах"
+msgstr "В некомандных режимах"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Body fading:"
