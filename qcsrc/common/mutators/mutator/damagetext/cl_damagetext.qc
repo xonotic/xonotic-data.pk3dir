@@ -21,14 +21,16 @@ AUTOCVAR_SAVE(cl_damagetext_size_max,               float,  16,         "Damage 
 AUTOCVAR_SAVE(cl_damagetext_size_max_damage,        float,  140,        "How much damage is considered large");
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,            float,  1,          "Damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,         float,  3,          "Damage text lifetime in seconds");
-AUTOCVAR_SAVE(cl_damagetext_velocity,               vector, '0 0 20',   "Damage text move direction (world coordinates)");
-AUTOCVAR_SAVE(cl_damagetext_offset,                 vector, '0 -40 0',  "Damage text offset (screen coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_velocity_screen,        vector, '0 -20 0',  "Damage text move direction (screen coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_velocity_world,         vector, '0 0 0',    "Damage text move direction (world coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_offset_screen,          vector, '0 -40 0',  "Damage text offset (screen coordinates)");
+AUTOCVAR_SAVE(cl_damagetext_offset_world,           vector, '0 0 0',    "Damage text offset (world coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage text spawned within this range is accumulated");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_alpha_rel,   float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show damage text for friendlyfire too");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
 
-AUTOCVAR_SAVE(cl_damagetext_2d,                     bool,   true,       "Show damagetext in 2D coordinated if the enemy's location is not known");
+AUTOCVAR_SAVE(cl_damagetext_2d,                     bool,   true,       "Show damagetext in 2D coordinates if the enemy's location is not known");
 AUTOCVAR_SAVE(cl_damagetext_2d_pos,                 vector, '0.47 0.53 0',     "2D damage text initial position (X and Y between 0 and 1)");
 AUTOCVAR_SAVE(cl_damagetext_2d_alpha_start,         float,  1,          "2D damage text initial alpha");
 AUTOCVAR_SAVE(cl_damagetext_2d_alpha_lifetime,      float,  1.3,        "2D damage text lifetime (alpha fading) in seconds");
@@ -70,7 +72,10 @@ CLASS(DamageText, Object)
         if (this.m_screen_coords) {
             screen_pos = this.origin + since_hit * autocvar_cl_damagetext_2d_velocity;
         } else {
-            screen_pos = project_3d_to_2d(this.origin + since_hit * autocvar_cl_damagetext_velocity) + autocvar_cl_damagetext_offset;
+            makevectors(view_angles);
+            vector world_offset = since_hit * autocvar_cl_damagetext_velocity_world + autocvar_cl_damagetext_offset_world;
+            vector world_pos = this.origin + world_offset.x * v_forward + world_offset.y * v_right + world_offset.z * v_up;
+            screen_pos = project_3d_to_2d(world_pos) + since_hit * autocvar_cl_damagetext_velocity_screen + autocvar_cl_damagetext_offset_screen;
         }
         if (screen_pos.z >= 0) {
             screen_pos.z = 0;
