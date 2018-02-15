@@ -62,6 +62,7 @@ CLASS(DamageText, Object)
 
     void DamageText_draw2d(DamageText this) {
         float since_hit = time - this.hit_time;
+        // can't use `dt = hit_time - prev_update_time` because shrinking wouldn't be linear
         float size = this.m_size - since_hit * this.m_shrink_rate * this.m_size;
         float alpha_ = this.alpha - since_hit * this.fade_rate;
         if (alpha_ <= 0 || size <= 0) {
@@ -194,6 +195,11 @@ CLASS(DamageText, Object)
     }
 ENDCLASS(DamageText)
 
+float current_alpha(entity damage_text) {
+    // alpha doesn't change - actual alpha is always calculated from the initial value
+    return damage_text.alpha - (time - damage_text.hit_time) * damage_text.fade_rate;
+}
+
 NET_HANDLE(damagetext, bool isNew)
 {
     int server_entity_index = ReadByte();
@@ -230,7 +236,7 @@ NET_HANDLE(damagetext, bool isNew)
                 if (e.instanceOfDamageText
                     && !e.m_screen_coords // we're using origin for both world coords and screen coords so avoid mismatches
                     && e.m_group == server_entity_index
-                    && e.alpha > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
+                    && current_alpha(e) > autocvar_cl_damagetext_accumulate_alpha_rel * autocvar_cl_damagetext_alpha_start) {
                     DamageText_update(e, entcs.origin, e.m_healthdamage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
                     return;
                 }
