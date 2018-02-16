@@ -247,9 +247,6 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hagar, load_animtime), w_ready);
 	actor.(weaponentity).hagar_loadstep = time + WEP_CVAR_SEC(hagar, refire) * W_WeaponRateFactor(actor);
 	actor.(weaponentity).hagar_load = 0;
-
-	if(weaponslot(weaponentity) == 0)
-		actor.hagar_load = 0;
 }
 
 void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
@@ -283,8 +280,6 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 				actor.(weaponentity).state = WS_READY;
 				W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hagar, ammo) * actor.(weaponentity).hagar_load * -1, weaponentity); // give back ammo
 				actor.(weaponentity).hagar_load = 0;
-				if(weaponslot(weaponentity) == 0)
-					actor.hagar_load = 0;
 				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
@@ -404,8 +399,6 @@ METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 {
     float loadable_secondary;
     loadable_secondary = (WEP_CVAR_SEC(hagar, load) && WEP_CVAR(hagar, secondary));
-    if(weaponslot(weaponentity) == 0)
-    	actor.hagar_load = actor.(weaponentity).hagar_load;
 
     if(loadable_secondary)
         W_Hagar_Attack2_Load(thiswep, actor, weaponentity); // must always run each frame
@@ -437,7 +430,6 @@ METHOD(Hagar, wr_gonethink, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(Hagar, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	actor.hagar_load = 0;
     actor.(weaponentity).hagar_loadblock = false;
     if(actor.(weaponentity).hagar_load)
     {
@@ -459,7 +451,6 @@ METHOD(Hagar, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponen
 }
 METHOD(Hagar, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.hagar_load = 0;
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];

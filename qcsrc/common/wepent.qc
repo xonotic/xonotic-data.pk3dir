@@ -42,6 +42,30 @@ MACRO_END
 	{ WriteByte(chan, this.tuba_instrument); }, \
 	{ (viewmodels[this.m_wepent_slot]).tuba_instrument = ReadByte(); }) \
     \
+    PROP(false, hagar_load, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.hagar_load); }, \
+	{ (viewmodels[this.m_wepent_slot]).hagar_load = ReadByte(); }) \
+    \
+    PROP(false, minelayer_mines, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.minelayer_mines); }, \
+	{ (viewmodels[this.m_wepent_slot]).minelayer_mines = ReadByte(); }) \
+    \
+    PROP(false, arc_heat_percent, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.arc_heat_percent * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).arc_heat_percent = ReadByte() / 16; }) \
+    \
+    PROP(false, vortex_chargepool_ammo, WEPENT_SET_NORMAL, \
+	{ WriteByte(chan, this.vortex_chargepool_ammo * 16); }, \
+	{ (viewmodels[this.m_wepent_slot]).vortex_chargepool_ammo = ReadByte() / 16; }) \
+    \
+    PROP(false, clip_load, WEPENT_SET_NORMAL, \
+	{ WriteShort(chan, this.clip_load); }, \
+	{ (viewmodels[this.m_wepent_slot]).clip_load = ReadShort(); }) \
+    \
+    PROP(false, clip_size, WEPENT_SET_NORMAL, \
+	{ WriteShort(chan, this.clip_size); }, \
+	{ (viewmodels[this.m_wepent_slot]).clip_size = ReadShort(); }) \
+    \
 	/**/
 
 #ifdef SVQC
@@ -115,9 +139,9 @@ MACRO_END
 
 	bool wepent_customize(entity this, entity client)
 	{
-		//entity e = WaypointSprite_getviewentity(client);
+		entity e = WaypointSprite_getviewentity(client);
 		.entity weaponentity = this.owner.weaponentity_fld;
-		return client.(weaponentity) == this.owner;
+		return e.(weaponentity) == this.owner;
 	}
 
 	void wepent_link(entity wep)
