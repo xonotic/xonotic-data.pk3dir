@@ -108,6 +108,8 @@ CLASS(Weapon, Object)
         // no weapon specific image for this weapon
         return false;
     }
+    /** (CLIENT) check whether the weapon should zoom (special handling) */
+    METHOD(Weapon, wr_zoomdir, bool(Weapon this)) {return false;}
     /** (CLIENT) weapon specific view model */
     METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
     /** (CLIENT) weapon specific glow */

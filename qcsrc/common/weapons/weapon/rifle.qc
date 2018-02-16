@@ -223,5 +223,9 @@ METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
         return false;
     }
 }
+METHOD(Rifle, wr_zoomdir, bool(entity thiswep))
+{
+    return button_attack2 && !WEP_CVAR(rifle, secondary);
+}
 
 #endif

@@ -324,18 +324,18 @@ float client_cefc_accumulatortime;
 
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
-.float clip_load = _STAT(WEAPON_CLIPLOAD);
+.float clip_load;
 .float old_clip_load;
-.float clip_size = _STAT(WEAPON_CLIPSIZE);
+.float clip_size;
 
-.float minelayer_mines = _STAT(LAYED_MINES);
-.float vortex_charge = _STAT(VORTEX_CHARGE);
+.int minelayer_mines;
+.float vortex_charge;
 .float vortex_charge_rottime;
-.float vortex_chargepool_ammo = _STAT(VORTEX_CHARGEPOOL);
-.float oknex_charge = _STAT(OVERKILL_NEX_CHARGE);
+.float vortex_chargepool_ammo;
+.float oknex_charge;
 .float oknex_charge_rottime;
-.float oknex_chargepool_ammo = _STAT(OVERKILL_NEX_CHARGEPOOL);
-.float hagar_load = _STAT(HAGAR_LOAD);
+.float oknex_chargepool_ammo;
+.int hagar_load;
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 

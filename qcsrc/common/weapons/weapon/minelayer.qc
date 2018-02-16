@@ -446,9 +446,6 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if(weaponslot(weaponentity) == 0)
-		actor.minelayer_mines = actor.(weaponentity).minelayer_mines;
-
     if(autocvar_g_balance_minelayer_reload_ammo && actor.(weaponentity).clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
     {
         // not if we're holding the minelayer without enough ammo, but can detonate existing mines
@@ -492,7 +489,6 @@ METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor, .entity weap
 }
 METHOD(MineLayer, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.minelayer_mines = 0;
     for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
     {
     	.entity weaponentity = weaponentities[slot];
