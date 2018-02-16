@@ -106,14 +106,14 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 
 #ifdef SVQC
 
-void W_RocketMinsta_Explosion(entity actor, vector loc)
+void W_RocketMinsta_Explosion(entity actor, .entity weaponentity, vector loc)
 {
 	if(accuracy_canbegooddamage(actor))
 		accuracy_add(actor, WEP_DEVASTATOR.m_id, autocvar_g_rm_damage, 0);
 	entity dmgent = spawn();
 	dmgent.owner = dmgent.realowner = actor;
 	setorigin(dmgent, loc);
-	RadiusDamage (dmgent, actor, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, NULL, NULL, autocvar_g_rm_force, WEP_DEVASTATOR.m_id | HITTYPE_SPLASH, NULL);
+	RadiusDamage (dmgent, actor, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, NULL, NULL, autocvar_g_rm_force, WEP_DEVASTATOR.m_id | HITTYPE_SPLASH, weaponentity, NULL);
 	delete(dmgent);
 }
 
@@ -146,7 +146,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
-		W_RocketMinsta_Explosion(actor, trace_endpos);
+		W_RocketMinsta_Explosion(actor, weaponentity, trace_endpos);
 
 	W_DecreaseAmmo(thiswep, actor, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)), weaponentity);
 }
@@ -162,7 +162,7 @@ void W_RocketMinsta_Laser_Explode (entity this, entity directhitentity)
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
-	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, directhitentity);
+	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 	delete(this);
 }
 
@@ -175,7 +175,7 @@ void W_RocketMinsta_Laser_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
 	//W_RocketMinsta_Laser_Explode ();
-	RadiusDamage(this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, toucher);
+	RadiusDamage(this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, this.weaponentity_fld, toucher);
 	delete(this);
 }
 
@@ -207,6 +207,7 @@ void W_RocketMinsta_Attack2(entity actor, .entity weaponentity)
         proj.nextthink = time + autocvar_g_rm_laser_lifetime;
         PROJECTILE_MAKETRIGGER(proj);
         proj.projectiledeathtype = WEP_ELECTRO.m_id;
+        proj.weaponentity_fld = weaponentity;
         setorigin(proj, w_shotorg);
 
 		proj.rm_force = autocvar_g_rm_laser_force / total;
@@ -261,6 +262,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
         proj.nextthink = time + autocvar_g_rm_laser_lifetime;
         PROJECTILE_MAKETRIGGER(proj);
         proj.projectiledeathtype = WEP_ELECTRO.m_id;
+        proj.weaponentity_fld = weaponentity;
         setorigin(proj, w_shotorg);
 
 		proj.rm_force = autocvar_g_rm_laser_force / total;

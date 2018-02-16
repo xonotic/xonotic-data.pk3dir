@@ -15,7 +15,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 
 	// 1. dist damage
 	d = (this.realowner.health + this.realowner.armorvalue);
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 	if(this.realowner.health + this.realowner.armorvalue >= d)
 	if(!this.cnt)
 	{
@@ -44,7 +44,7 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 			if(accuracy_isgooddamage(this.realowner, e))
 				accuracy_add(this.realowner, WEP_FIREBALL.m_id, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
-			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
+			Damage(e, this, this.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, this.weaponentity_fld, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
 			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
 		}
 	}
@@ -117,7 +117,7 @@ void W_Fireball_Think(entity this)
 	this.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -154,6 +154,8 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	proj.damageforcescale = WEP_CVAR_PRI(fireball, damageforcescale);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_FIREBALL.m_id;
+	proj.weaponentity_fld = weaponentity;
+	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	set_movetype(proj, MOVETYPE_FLY);

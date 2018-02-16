@@ -341,7 +341,7 @@ void GrapplingHookTouch(entity this, entity toucher)
 	//this.realowner.disableclientprediction = true;
 }
 
-void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;

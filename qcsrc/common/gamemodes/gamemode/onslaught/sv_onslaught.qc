@@ -68,7 +68,7 @@ void ons_CaptureShield_Touch(entity this, entity toucher)
 	vector mymid = (this.absmin + this.absmax) * 0.5;
 	vector theirmid = (toucher.absmin + toucher.absmax) * 0.5;
 
-	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(theirmid - mymid) * ons_captureshield_force);
+	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, mymid, normalize(theirmid - mymid) * ons_captureshield_force);
 
 	if(IS_REAL_CLIENT(toucher))
 	{
@@ -381,7 +381,7 @@ int ons_ControlPoint_Attackable(entity cp, int teamnumber)
 	return 0;
 }
 
-void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(damage <= 0) { return; }
 
@@ -479,7 +479,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 		this.SendFlags |= CPSF_STATUS;
 		if(this.health <= 0)
 		{
-			ons_ControlPoint_Icon_Damage(this, this, this, 1, 0, this.origin, '0 0 0');
+			ons_ControlPoint_Icon_Damage(this, this, this, 1, 0, DMG_NOWEP, this.origin, '0 0 0');
 			return;
 		}
 	}
@@ -868,7 +868,7 @@ void ons_camSetup(entity this)
 	WriteAngle(MSG_ALL, cam.angles_z);
 }
 
-void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(damage <= 0) return;
 	if(warmup_stage || game_stopped) return;
@@ -1155,7 +1155,7 @@ bool Onslaught_CheckWinner()
 			else
 				d = d * tmp_entity.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
 
-			Damage(tmp_entity, tmp_entity, tmp_entity, d, DEATH_HURTTRIGGER.m_id, tmp_entity.origin, '0 0 0');
+			Damage(tmp_entity, tmp_entity, tmp_entity, d, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, tmp_entity.origin, '0 0 0');
 
 			tmp_entity.sprite.SendFlags |= 16;
 

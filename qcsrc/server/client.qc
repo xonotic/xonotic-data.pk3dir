@@ -920,7 +920,7 @@ void ClientKill_Now(entity this)
 	    if(!this.killindicator_teamchange)
 	    {
             this.vehicle_health = -1;
-            Damage(this, this, this, 1 , DEATH_KILL.m_id, this.origin, '0 0 0');
+            Damage(this, this, this, 1 , DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	    }
 	}
 
@@ -934,7 +934,7 @@ void ClientKill_Now(entity this)
 
 	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
 	{
-		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
+		Damage(this, this, this, 100000, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	}
 
 	// now I am sure the player IS dead
@@ -1687,7 +1687,7 @@ void player_regen(entity this)
 		if(this.vehicle)
 			vehicles_exit(this.vehicle, VHEF_RELEASE);
 		if(this.event_damage)
-			this.event_damage(this, this, this, 1, DEATH_ROT.m_id, this.origin, '0 0 0');
+			this.event_damage(this, this, this, 1, DEATH_ROT.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	}
 
 	if (!(this.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -2556,7 +2556,7 @@ void PlayerPreThink (entity this)
 				if (this.vehicle)
 					vehicles_exit(this.vehicle, VHEF_RELEASE);
 				if(this.event_damage)
-					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
+					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			}
 			else if (this.revive_progress <= 0)
 				Unfreeze(this);
@@ -2669,7 +2669,7 @@ void DrownPlayer(entity this)
 	{	// drown!
 		if (this.pain_finished < time)
 		{
-			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.pain_finished = time + 0.5;
 		}
 	}

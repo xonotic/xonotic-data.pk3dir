@@ -12,7 +12,8 @@ void W_HLAC_Touch(entity this, entity toucher)
 
 	isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, toucher);
+	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), 
+						NULL, NULL, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, this.weaponentity_fld, toucher);
 
 	delete(this);
 }
@@ -61,6 +62,7 @@ void W_HLAC_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
 	missile.projectiledeathtype = WEP_HLAC.m_id;
+	missile.weaponentity_fld = weaponentity;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
@@ -106,6 +108,7 @@ void W_HLAC_Attack2(entity actor, .entity weaponentity)
 	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = WEP_HLAC.m_id | HITTYPE_SECONDARY;
+	missile.weaponentity_fld = weaponentity;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 

@@ -50,7 +50,7 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
 }
 
 void raptor_flare_think(entity this);
-void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 void raptor_flare_touch(entity this, entity toucher);
 
 METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -88,7 +88,7 @@ void raptor_bomblet_boom(entity this)
     RadiusDamage (this, this.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
                                     autocvar_g_vehicle_raptor_bomblet_radius, NULL, NULL,
-                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, NULL);
+                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, DMG_NOWEP, NULL);
     delete(this);
 }
 
@@ -189,7 +189,7 @@ void raptor_flare_touch(entity this, entity toucher)
     delete(this);
 }
 
-void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
     this.health -= damage;
     if(this.health <= 0)

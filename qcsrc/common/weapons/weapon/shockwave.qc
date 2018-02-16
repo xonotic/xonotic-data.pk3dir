@@ -99,6 +99,7 @@ void W_Shockwave_Melee_Think(entity this)
 				this.realowner,
 				swing_damage,
 				(WEP_SHOCKWAVE.m_id | HITTYPE_SECONDARY),
+				this.weaponentity_fld,
 				(this.realowner.origin + this.realowner.view_ofs),
 				(v_forward * WEP_CVAR(shockwave, melee_force))
 			);
@@ -155,6 +156,7 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shockwave_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor(actor);
+	meleetemp.weaponentity_fld = weaponentity;
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
 }
 
@@ -384,6 +386,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 					actor,
 					final_damage,
 					WEP_SHOCKWAVE.m_id,
+					weaponentity,
 					head.origin,
 					final_force
 				);
@@ -568,6 +571,7 @@ void W_Shockwave_Attack(entity actor, .entity weaponentity)
 			actor,
 			final_damage,
 			WEP_SHOCKWAVE.m_id,
+			weaponentity,
 			head.origin,
 			final_force
 		);

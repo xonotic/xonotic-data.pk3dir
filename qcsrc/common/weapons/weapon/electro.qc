@@ -65,6 +65,7 @@ void W_Electro_ExplodeCombo(entity this)
 		NULL,
 		WEP_CVAR(electro, combo_force),
 		WEP_ELECTRO.m_id | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
+		this.weaponentity_fld,
 		NULL
 	);
 
@@ -95,6 +96,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 			NULL,
 			WEP_CVAR_SEC(electro, force),
 			this.projectiledeathtype,
+			this.weaponentity_fld,
 			directhitentity
 		);
 	}
@@ -111,6 +113,7 @@ void W_Electro_Explode(entity this, entity directhitentity)
 			NULL,
 			WEP_CVAR_PRI(electro, force),
 			this.projectiledeathtype,
+			this.weaponentity_fld,
 			directhitentity
 		);
 	}
@@ -216,6 +219,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.ltime = time + WEP_CVAR_PRI(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO.m_id;
+	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	// if (IS_CSQC)
@@ -261,6 +265,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 
 	set_movetype(newproj, MOVETYPE_NONE); // lock the orb in place
 	newproj.projectiledeathtype = this.projectiledeathtype;
+	newproj.weaponentity_fld = this.weaponentity_fld;
 
 	settouch(newproj, func_null);
 	setthink(newproj, getthink(this));
@@ -292,7 +297,7 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 	}
 }
 
-void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -363,6 +368,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.nextthink = time + WEP_CVAR_SEC(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_SECONDARY;
+	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
 
 	//proj.glow_size = 50;

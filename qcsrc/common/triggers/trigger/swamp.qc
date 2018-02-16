@@ -55,7 +55,7 @@ void swampslug_think(entity this)
 	// Or we have exited it very recently.
 	// Do the damage and renew the timer.
 #ifdef SVQC
-	Damage (this.owner, this, this, this.dmg, DEATH_SWAMP.m_id, this.owner.origin, '0 0 0');
+	Damage (this.owner, this, this, this.dmg, DEATH_SWAMP.m_id, DMG_NOWEP, this.owner.origin, '0 0 0');
 #endif
 
 	this.nextthink = time + this.swamp_interval;

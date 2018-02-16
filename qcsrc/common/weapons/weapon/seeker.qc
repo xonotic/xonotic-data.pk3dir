@@ -8,7 +8,7 @@
 void W_Seeker_Missile_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), NULL, NULL, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), NULL, NULL, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -122,7 +122,7 @@ void W_Seeker_Missile_Think(entity this)
 
 
 
-void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -189,6 +189,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.solid           = SOLID_BBOX;
 	missile.scale           = 2;
 	missile.takedamage      = DAMAGE_YES;
+	missile.weaponentity_fld = weaponentity;
 	missile.health          = WEP_CVAR(seeker, missile_health);
 	missile.damageforcescale = WEP_CVAR(seeker, missile_damageforcescale);
 	missile.damagedbycontents = true;
@@ -225,7 +226,7 @@ void W_Seeker_Flac_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), NULL, NULL, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), NULL, NULL, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -282,6 +283,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 	set_movetype(missile, MOVETYPE_FLY);
 	missile.projectiledeathtype = WEP_SEEKER.m_id;
 	missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
+	missile.weaponentity_fld = weaponentity;
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
@@ -412,7 +414,7 @@ void W_Seeker_Tag_Explode(entity this)
 	delete(this);
 }
 
-void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
