@@ -66,7 +66,7 @@ MACRO_END
 	{ WriteByte(chan, this.oknex_chargepool_ammo * 16); }, \
 	{ (viewmodels[this.m_wepent_slot]).oknex_chargepool_ammo = ReadByte() / 16; }) \
     \
-    PROP(false, clip_load, WEPENT_SET_NORMAL, \
+	PROP(false, clip_load, WEPENT_SET_NORMAL, \
 	{ WriteShort(chan, this.clip_load); }, \
 	{ (viewmodels[this.m_wepent_slot]).clip_load = ReadShort(); }) \
     \
