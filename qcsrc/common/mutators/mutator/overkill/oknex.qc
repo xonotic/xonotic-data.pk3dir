@@ -327,10 +327,6 @@ METHOD(OverkillNex, wr_checkammo2, bool(entity thiswep, entity actor, .entity we
 METHOD(OverkillNex, wr_resetplayer, void(entity thiswep, entity actor))
 {
 	if (WEP_CVAR(oknex, charge)) {
-		if (WEP_CVAR_SEC(oknex, chargepool)) {
-			actor.oknex_chargepool_ammo = 1;
-		}
-		actor.oknex_charge = WEP_CVAR(oknex, charge_start);
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
