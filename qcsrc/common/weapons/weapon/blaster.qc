@@ -193,6 +193,17 @@ METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
     return WEAPON_BLASTER_MURDER;
 }
 
+METHOD(OffhandBlaster, offhand_think, void(OffhandBlaster this, entity actor, bool key_pressed))
+{
+	if (!key_pressed || (time < actor.jump_interval))
+	{
+		return;
+	}
+	actor.jump_interval = time + WEP_CVAR_SEC(blaster, refire) * W_WeaponRateFactor(actor);
+	.entity weaponentity = weaponentities[1];
+	BLASTER_SECONDARY_ATTACK_HACK(blaster, actor, weaponentity);
+}
+
 #endif
 #ifdef CSQC
 
