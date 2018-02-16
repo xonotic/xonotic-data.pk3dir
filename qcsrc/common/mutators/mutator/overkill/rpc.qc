@@ -2,12 +2,15 @@
 
 #ifdef SVQC
 
+.float m_chainsaw_damage; // accumulated damage of the missile as it passes trough enemies
+.float m_explosion_damage;
+
 void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
+	this.m_explosion_damage = RadiusDamage(this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
 
 	delete(this);
 }
@@ -17,7 +20,7 @@ void W_RocketPropelledChainsaw_Explode_think(entity this)
 	W_RocketPropelledChainsaw_Explode(this, NULL);
 }
 
-void W_RocketPropelledChainsaw_Touch (entity this, entity toucher)
+void W_RocketPropelledChainsaw_Touch(entity this, entity toucher)
 {
 	if(WarpZone_Projectile_Touch(this, toucher))
 		if(wasfreed(this))
@@ -53,8 +56,12 @@ void W_RocketPropelledChainsaw_Think(entity this)
 	vector mydir = normalize(this.velocity);
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
-	if(IS_PLAYER(trace_ent))
-		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
+	if (IS_PLAYER(trace_ent)) {
+		if (accuracy_isgooddamage(this.realowner, trace_ent)) {
+			this.m_chainsaw_damage += WEP_CVAR(rpc, damage2);
+		}
+		Damage(trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
+	}
 
 	this.velocity = mydir * (myspeed + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
 
@@ -62,13 +69,26 @@ void W_RocketPropelledChainsaw_Think(entity this)
 	this.nextthink = time;
 }
 
-void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity weaponentity)
+void chainsaw_dtor(entity this) {
+	if (this.m_chainsaw_damage > 0) {
+		float damage_fired = WEP_CVAR(rpc, damage2);
+		float damage_hit = WEP_CVAR(rpc, damage2); // never go above 100% even if we hit multiple enemies
+		if (!this.m_explosion_damage) {
+			// The fired damage of the explosion (WEP_CVAR(rpc, damage)) is already counted in the statistics (when launching the chainsaw).
+			// We remove it here so that a direct hit that passes through and doesn't damage anytihng by the explosion later is still 100%.
+			damage_fired -= WEP_CVAR(rpc, damage);
+		}
+		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, damage_fired, damage_hit);
+	}
+}
+
+void W_RocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo), weaponentity);
-	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -105,6 +125,9 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
+	missile.m_chainsaw_damage = 0;
+	missile.m_explosion_damage = 0;
+	missile.dtor = chainsaw_dtor;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }

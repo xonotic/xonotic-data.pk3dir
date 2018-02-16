@@ -32,7 +32,7 @@ void UpdateFrags(entity player, int f)
 	GameRules_scoring_add_team(player, SCORE, f);
 }
 
-void GiveFrags (entity attacker, entity targ, float f, int deathtype)
+void GiveFrags(entity attacker, entity targ, float f, int deathtype)
 {
 	// TODO route through PlayerScores instead
 	if(game_stopped) return;
@@ -521,7 +521,7 @@ void Ice_Think(entity this)
 	this.nextthink = time;
 }
 
-void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
+void Freeze(entity targ, float freeze_time, float frozen_type, float show_waypoint)
 {
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
@@ -571,7 +571,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
-void Unfreeze (entity targ)
+void Unfreeze(entity targ)
 {
 	if(!STAT(FROZEN, targ))
 		return;
@@ -607,7 +607,7 @@ void Unfreeze (entity targ)
 	targ.iceblock = NULL;
 }
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Damage(entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float complainteamdamage = 0;
 	float mirrordamage = 0;
@@ -909,7 +909,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	}
 }
 
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, int deathtype, entity directhitentity)
+float RadiusDamageForSource(entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, int deathtype, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
@@ -1080,9 +1080,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						}
 
 						if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
-							Damage (targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
+							Damage(targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
 						else
-							Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
+							Damage(targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
 					}
 				}
 			}
@@ -1098,9 +1098,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	return total_damage_to_creatures;
 }
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, entity directhitentity)
+float RadiusDamage(entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, entity directhitentity)
 {
-	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, directhitentity);
+	return RadiusDamageForSource(inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, directhitentity);
 }
 
 float Fire_IsBurning(entity e)
