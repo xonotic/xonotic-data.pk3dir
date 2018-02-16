@@ -22,7 +22,7 @@ MUTATOR_HOOKFUNCTION(breakablehook, Damage_Calculate)
 		// hurt the owner of the hook
 		if(DIFF_TEAM(frag_attacker, frag_target.realowner))
 		{
-			Damage (frag_target.realowner, frag_attacker, frag_attacker, 5, WEP_HOOK.m_id | HITTYPE_SPLASH, frag_target.realowner.origin, '0 0 0');
+			Damage (frag_target.realowner, frag_attacker, frag_attacker, 5, WEP_HOOK.m_id | HITTYPE_SPLASH, DMG_NOWEP, frag_target.realowner.origin, '0 0 0'); // TODO: should get weapon entity from mutator hook
 			RemoveHook(frag_target);
 			return; // dead
 		}

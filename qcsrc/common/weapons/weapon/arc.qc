@@ -94,7 +94,7 @@ void Arc_Player_SetHeat(entity player, .entity weaponentity)
 void W_Arc_Bolt_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -104,7 +104,7 @@ void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 	W_Arc_Bolt_Explode(this, trigger);
 }
 
-void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -154,6 +154,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_ARC.m_id | HITTYPE_SECONDARY;
+	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -504,6 +505,7 @@ void W_Arc_Beam_Think(entity this)
 					own,
 					rootdamage * coefficient * falloff,
 					WEP_ARC.m_id,
+					weaponentity,
 					hitorigin,
 					WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
 				);

@@ -305,7 +305,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
 	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, NULL);
+	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
 
 	o = gettaginfo(actor.exteriorweaponentity, 0);
 	if(time > actor.(weaponentity).tuba_smoketime)

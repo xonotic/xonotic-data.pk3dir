@@ -18,6 +18,7 @@ void W_Blaster_Touch(entity this, entity toucher)
 		NULL,
 		this.blaster_force,
 		this.projectiledeathtype,
+		this.weaponentity_fld,
 		toucher
 	);
 
@@ -88,6 +89,7 @@ void W_Blaster_Attack(
 	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = atk_deathtype;
+	missile.weaponentity_fld = weaponentity;
 	setthink(missile, W_Blaster_Think);
 	missile.nextthink = time + atk_delay;
 

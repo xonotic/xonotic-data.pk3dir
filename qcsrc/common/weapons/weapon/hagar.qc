@@ -7,7 +7,7 @@
 void W_Hagar_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -20,7 +20,7 @@ void W_Hagar_Explode_use(entity this, entity actor, entity trigger)
 void W_Hagar_Explode2(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -30,7 +30,7 @@ void W_Hagar_Explode2_use(entity this, entity actor, entity trigger)
 	W_Hagar_Explode2(this, trigger);
 }
 
-void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -103,6 +103,7 @@ void W_Hagar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.nextthink = time + WEP_CVAR_PRI(hagar, lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_HAGAR.m_id;
+	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -149,6 +150,7 @@ void W_Hagar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
+	missile.weaponentity_fld = weaponentity;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 

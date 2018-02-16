@@ -17,7 +17,7 @@ void W_Mortar_Grenade_Explode(entity this, entity directhitentity)
 	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -42,7 +42,7 @@ void W_Mortar_Grenade_Explode2(entity this, entity directhitentity)
 	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -52,7 +52,7 @@ void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)
 	W_Mortar_Grenade_Explode2(this, trigger);
 }
 
-void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -165,6 +165,7 @@ void W_Mortar_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_MORTAR.m_id;
+	gren.weaponentity_fld = weaponentity;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
@@ -216,6 +217,7 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_MORTAR.m_id | HITTYPE_SECONDARY;
+	gren.weaponentity_fld = weaponentity;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 

@@ -101,7 +101,7 @@ void M_Spider_Attack_Web_Explode(entity this)
 	if(this)
 	{
 		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
-		RadiusDamage(this, this.realowner, 0, 0, 25, NULL, NULL, 25, this.projectiledeathtype, NULL);
+		RadiusDamage(this, this.realowner, 0, 0, 25, NULL, NULL, 25, this.projectiledeathtype, DMG_NOWEP, NULL);
 
 		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && it.health > 0 && it.monsterid != MON_SPIDER.monsterid,
 		{

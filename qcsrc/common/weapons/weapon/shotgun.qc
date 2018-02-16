@@ -91,7 +91,7 @@ void W_Shotgun_Melee_Think(entity this)
 			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 			Damage(target_victim, this.realowner, this.realowner,
-				swing_damage, WEP_SHOTGUN.m_id | HITTYPE_SECONDARY,
+				swing_damage, WEP_SHOTGUN.m_id | HITTYPE_SECONDARY, this.weaponentity_fld,
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR_SEC(shotgun, force));
 
@@ -136,6 +136,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shotgun_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor(actor);
+	meleetemp.weaponentity_fld = weaponentity;
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
 

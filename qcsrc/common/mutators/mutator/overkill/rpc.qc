@@ -7,7 +7,7 @@ void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -26,7 +26,7 @@ void W_RocketPropelledChainsaw_Touch (entity this, entity toucher)
 	W_RocketPropelledChainsaw_Explode(this, toucher);
 }
 
-void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if (this.health <= 0)
 		return;
@@ -54,7 +54,7 @@ void W_RocketPropelledChainsaw_Think(entity this)
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
 	if(IS_PLAYER(trace_ent))
-		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
+		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.weaponentity_fld, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
 
 	this.velocity = mydir * (myspeed + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
 
@@ -85,6 +85,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	set_movetype(missile, MOVETYPE_FLY);
 
 	missile.projectiledeathtype = WEP_RPC.m_id;
+	missile.weaponentity_fld = weaponentity;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point

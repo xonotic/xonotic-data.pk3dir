@@ -303,7 +303,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 		// apply the damage
 		if (it.takedamage)
-			Damage (it, this, this, bdamage * foff, deathtype, hitloc, it.railgunforce * ffs);
+			Damage (it, this, this, bdamage * foff, deathtype, weaponentity, hitloc, it.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin(explosion, hitloc);
@@ -416,7 +416,7 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage, this.(weaponentity));
 			damage = M_ARGV(4, float);
 			float g = accuracy_isgooddamage(this, hit);
-			Damage(hit, this, this, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
+			Damage(hit, this, this, damage * solid_penetration_left, dtype, weaponentity, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons
 			if(g)
 			{
