@@ -88,6 +88,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ);
 
+// NOTE: the .weaponentity parameter can be set to DMG_NOWEP if the attack wasn't caused by a weapon or player
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
 float RadiusDamage_running;
