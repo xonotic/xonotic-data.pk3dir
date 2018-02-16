@@ -1228,14 +1228,14 @@ void HUD_Crosshair(entity this)
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (autocvar_crosshair_ring && (wepent.activeweapon == WEP_OVERKILL_NEX) && oknex_charge && autocvar_crosshair_ring_vortex)
+				else if (autocvar_crosshair_ring && (wepent.activeweapon == WEP_OVERKILL_NEX) && oknex_charge_ && autocvar_crosshair_ring_vortex)
 				{
-					if (oknex_chargepool || use_vortex_chargepool) {
+					if (oknex_chargepool_ || use_vortex_chargepool) {
 						use_vortex_chargepool = 1;
-						ring_inner_value = oknex_chargepool;
+						ring_inner_value = oknex_chargepool_;
 					} else {
-						vortex_charge_movingavg = (1 - autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate) * vortex_charge_movingavg + autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate * oknex_charge;
-						ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (oknex_charge - vortex_charge_movingavg), 1);
+						vortex_charge_movingavg = (1 - autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate) * vortex_charge_movingavg + autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate * oknex_charge_;
+						ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (oknex_charge_ - vortex_charge_movingavg), 1);
 					}
 
 					ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
@@ -1243,7 +1243,7 @@ void HUD_Crosshair(entity this)
 					ring_inner_image = "gfx/crosshair_ring_inner.tga";
 
 					// draw the outer ring to show the current charge of the weapon
-					ring_value = oknex_charge;
+					ring_value = oknex_charge_;
 					ring_alpha = autocvar_crosshair_ring_vortex_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";

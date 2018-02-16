@@ -128,11 +128,6 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 		actor.(weaponentity).oknex_charge = min(1, actor.(weaponentity).oknex_charge + WEP_CVAR(oknex, charge_rate) * frametime / W_TICSPERFRAME);
 	}
 
-	if (weaponslot(weaponentity) == 0)
-	{
-		actor.oknex_charge = actor.(weaponentity).oknex_charge;
-	}
-
 	if (WEP_CVAR_SEC(oknex, chargepool))
 		if (actor.(weaponentity).oknex_chargepool_ammo < 1)
 		{
@@ -140,9 +135,6 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 				actor.(weaponentity).oknex_chargepool_ammo = min(1, actor.(weaponentity).oknex_chargepool_ammo + WEP_CVAR_SEC(oknex, chargepool_regen) * frametime / W_TICSPERFRAME);
 			actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(oknex, chargepool_pause_regen));
 		}
-
-	if(weaponslot(weaponentity) == 0)
-		actor.oknex_chargepool_ammo = actor.(weaponentity).oknex_chargepool_ammo;
 
 	if ((WEP_CVAR_SEC(oknex, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
 	{
@@ -343,9 +335,6 @@ METHOD(OverkillNex, wr_resetplayer, void(entity thiswep, entity actor))
 		{
 			.entity weaponentity = weaponentities[slot];
 			actor.(weaponentity).oknex_charge = WEP_CVAR(oknex, charge_start);
-
-			if (WEP_CVAR_SEC(oknex, chargepool))
-				actor.(weaponentity).oknex_chargepool_ammo = 1;
 		}
 	}
 	actor.oknex_lasthit = 0;
