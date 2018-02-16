@@ -48,15 +48,15 @@ void W_RocketPropelledChainsaw_Think(entity this)
 		return;
 	}
 
-	this.cnt = vlen(this.velocity);
-	this.wait = this.cnt * sys_frametime;
-	this.pos1 = normalize(this.velocity);
+	float myspeed = vlen(this.velocity);
+	float myspeed_accel = myspeed * sys_frametime;
+	vector mydir = normalize(this.velocity);
 
-	tracebox(this.origin, this.mins, this.maxs, this.origin + this.pos1 * (2 * this.wait), MOVE_NORMAL, this);
+	tracebox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
 	if(IS_PLAYER(trace_ent))
 		Damage (trace_ent, this, this.realowner, WEP_CVAR_PRI(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - other.origin) * WEP_CVAR_PRI(rpc, force));
 
-	this.velocity = this.pos1 * (this.cnt + (WEP_CVAR_PRI(rpc, speedaccel) * sys_frametime));
+	this.velocity = mydir * (myspeed + (WEP_CVAR_PRI(rpc, speedaccel) * sys_frametime));
 
 	UpdateCSQCProjectile(this);
 	this.nextthink = time;
@@ -105,7 +105,6 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
-	missile.pos1 = missile.velocity;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }

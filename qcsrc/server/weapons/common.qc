@@ -10,6 +10,7 @@
 #include <common/state.qh>
 #include <common/util.qh>
 #include <common/weapons/_all.qh>
+#include <common/wepent.qh>
 #include <common/items/_mod.qh>
 
 bool W_DualWielding(entity player)

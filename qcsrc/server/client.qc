@@ -1765,8 +1765,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.ammo_nails = spectatee.ammo_nails;
 	this.ammo_rockets = spectatee.ammo_rockets;
 	this.ammo_fuel = spectatee.ammo_fuel;
-	this.clip_load = spectatee.clip_load;
-	this.clip_size = spectatee.clip_size;
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	this.health = spectatee.health;
 	CS(this).impulse = 0;
@@ -1778,13 +1776,6 @@ void SpectateCopy(entity this, entity spectatee)
 	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
-	this.vortex_charge = spectatee.vortex_charge;
-	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
-	this.oknex_charge = spectatee.oknex_charge;
-	this.oknex_chargepool_ammo = spectatee.oknex_chargepool_ammo;
-	this.hagar_load = spectatee.hagar_load;
-	this.arc_heat_percent = spectatee.arc_heat_percent;
-	this.minelayer_mines = spectatee.minelayer_mines;
 	this.punchangle = spectatee.punchangle;
 	this.view_ofs = spectatee.view_ofs;
 	this.velocity = spectatee.velocity;
@@ -1801,12 +1792,6 @@ void SpectateCopy(entity this, entity spectatee)
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(this, CS(spectatee).zoomstate);
-
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		this.(weaponentity) = spectatee.(weaponentity);
-	}
 
     anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;
@@ -2304,12 +2289,6 @@ bool PlayerThink(entity this)
 		{
 			.entity weaponentity = weaponentities[slot];
 			W_WeaponFrame(this, weaponentity);
-
-			if(slot == 0)
-			{
-				this.clip_load = this.(weaponentity).clip_load;
-				this.clip_size = this.(weaponentity).clip_size;
-			}
 		}
 
 		this.items_added = 0;
