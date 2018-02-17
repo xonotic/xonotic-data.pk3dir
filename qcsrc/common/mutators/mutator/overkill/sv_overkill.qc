@@ -144,20 +144,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 			if(player.(weaponentity).m_weapon == WEP_Null && slot != 0)
 				continue;
 
-			W_Blaster_Attack(
-				player,
-				weaponentity,
-				WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-				WEP_CVAR_SEC(vaporizer, shotangle),
-				WEP_CVAR_SEC(vaporizer, damage),
-				WEP_CVAR_SEC(vaporizer, edgedamage),
-				WEP_CVAR_SEC(vaporizer, radius),
-				WEP_CVAR_SEC(vaporizer, force),
-				WEP_CVAR_SEC(vaporizer, speed),
-				WEP_CVAR_SEC(vaporizer, spread),
-				WEP_CVAR_SEC(vaporizer, delay),
-				WEP_CVAR_SEC(vaporizer, lifetime)
-			);
+			BLASTER_SECONDARY_ATTACK(vaporizer, player, weaponentity);
 		}
 	}
 
