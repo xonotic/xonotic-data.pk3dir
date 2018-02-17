@@ -4,14 +4,12 @@ REGISTER_NET_LINKED(ENT_CLIENT_RAINSNOW)
 #ifdef SVQC
 bool rainsnow_SendEntity(entity this, entity to, float sf)
 {
+	vector myorg = this.origin + this.mins;
+	vector mysize = this.maxs - this.mins;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, this.state);
-	WriteCoord(MSG_ENTITY, this.origin_x + this.mins_x);
-	WriteCoord(MSG_ENTITY, this.origin_y + this.mins_y);
-	WriteCoord(MSG_ENTITY, this.origin_z + this.mins_z);
-	WriteCoord(MSG_ENTITY, this.maxs_x - this.mins_x);
-	WriteCoord(MSG_ENTITY, this.maxs_y - this.mins_y);
-	WriteCoord(MSG_ENTITY, this.maxs_z - this.mins_z);
+	WriteVector(MSG_ENTITY, myorg);
+	WriteVector(MSG_ENTITY, mysize);
 	WriteShort(MSG_ENTITY, compressShortVector(this.dest));
 	WriteShort(MSG_ENTITY, this.count);
 	WriteByte(MSG_ENTITY, this.cnt);
@@ -116,12 +114,8 @@ void Draw_Snow(entity this)
 NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 {
 	this.impulse = ReadByte(); // Rain, Snow, or Whatever
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
-	this.maxs_x = ReadCoord();
-	this.maxs_y = ReadCoord();
-	this.maxs_z = ReadCoord();
+	this.origin = ReadVector();
+	this.maxs = ReadVector();
 	this.velocity = decompressShortVector(ReadShort());
 	this.count = ReadShort() * 10;
 	this.glow_color = ReadByte(); // color

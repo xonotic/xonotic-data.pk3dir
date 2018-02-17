@@ -42,7 +42,7 @@ void M_Shambler_Attack_Smash(entity this)
 	tracebox(this.origin + v_forward * 50, this.mins * 0.5, this.maxs * 0.5, this.origin + v_forward * autocvar_g_monster_shambler_attack_smash_range, MOVE_NORMAL, this);
 
 	if(trace_ent.takedamage)
-		Damage(trace_ent, this, this, (autocvar_g_monster_shambler_attack_smash_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_SMASH.m_id, trace_ent.origin, normalize(trace_ent.origin - this.origin));
+		Damage(trace_ent, this, this, (autocvar_g_monster_shambler_attack_smash_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_SMASH.m_id, DMG_NOWEP, trace_ent.origin, normalize(trace_ent.origin - this.origin));
 }
 
 void M_Shambler_Attack_Swing(entity this)
@@ -66,12 +66,12 @@ void M_Shambler_Attack_Lightning_Explode(entity this, entity directhitentity)
 		this.velocity = this.oldvelocity;
 
 	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius),
-					NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, directhitentity);
+					NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, DMG_NOWEP, directhitentity);
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_shambler_attack_lightning_radius_zap, it != this.realowner && it.takedamage,
 	{
 		te_csqc_lightningarc(this.origin, it.origin);
-		Damage(it, this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_ZAP.m_id, it.origin, '0 0 0');
+		Damage(it, this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_ZAP.m_id, DMG_NOWEP, it.origin, '0 0 0');
 	});
 
 	setthink(this, SUB_Remove);
@@ -83,7 +83,7 @@ void M_Shambler_Attack_Lightning_Explode_use(entity this, entity actor, entity t
 	M_Shambler_Attack_Lightning_Explode(this, trigger);
 }
 
-void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if (this.health <= 0)
 		return;

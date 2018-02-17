@@ -429,7 +429,7 @@ void Portal_Remove(entity portal, float killed)
 	}
 }
 
-void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(deathtype == DEATH_TELEFRAG.m_id)
 		return;
