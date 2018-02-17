@@ -54,7 +54,7 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 	return ret;
 }
 
-void W_HitPlotAnalysis(entity player, Weapon wep, vector screenforward, vector screenright, vector screenup)
+void W_HitPlotAnalysis(entity player, entity wep, vector screenforward, vector screenright, vector screenup)
 {
 	if(CS(player).hitplotfh >= 0)
 	{
