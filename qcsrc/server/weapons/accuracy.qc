@@ -63,7 +63,6 @@ void accuracy_resend(entity e)
 
 void accuracy_add(entity this, int w, int fired, int hit)
 {
-	LOG_INFOF("fired %d hit %d\n", fired, hit);
 	if (IS_INDEPENDENT_PLAYER(this)) return;
 	entity a = CS(this).accuracy;
 	if (!a) return;

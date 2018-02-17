@@ -3,14 +3,18 @@
 #ifdef SVQC
 
 .float m_chainsaw_damage; // accumulated damage of the missile as it passes trough enemies
-.float m_explosion_damage;
 
 void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	this.m_explosion_damage = RadiusDamage(this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
+	float explosion_damage = RadiusDamage(this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
+	if (explosion_damage > 0 && this.m_chainsaw_damage > 0) {
+		// if chainsaw hit something, it removed fired damage (so that direct hit is 100%)
+		// now that we also damaged something by explosion we'd go over 100% so let's add the fired damage back
+		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, WEP_CVAR(rpc, damage), 0);
+	}
 
 	delete(this);
 }
@@ -58,6 +62,11 @@ void W_RocketPropelledChainsaw_Think(entity this)
 	tracebox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
 	if (IS_PLAYER(trace_ent)) {
 		if (accuracy_isgooddamage(this.realowner, trace_ent)) {
+			if (this.m_chainsaw_damage == 0) { // first hit
+				// The fired damage of the explosion (WEP_CVAR(rpc, damage)) is already counted in the statistics (when launching the chainsaw).
+				// We remove it here so that a direct hit that passes through and doesn't damage anytihng by the explosion later is still 100%.
+				accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, WEP_CVAR(rpc, damage2) - WEP_CVAR(rpc, damage), WEP_CVAR(rpc, damage2));
+			}
 			this.m_chainsaw_damage += WEP_CVAR(rpc, damage2);
 		}
 		Damage(trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
@@ -67,19 +76,6 @@ void W_RocketPropelledChainsaw_Think(entity this)
 
 	UpdateCSQCProjectile(this);
 	this.nextthink = time;
-}
-
-void chainsaw_dtor(entity this) {
-	if (this.m_chainsaw_damage > 0) {
-		float damage_fired = WEP_CVAR(rpc, damage2);
-		float damage_hit = WEP_CVAR(rpc, damage2); // never go above 100% even if we hit multiple enemies
-		if (!this.m_explosion_damage) {
-			// The fired damage of the explosion (WEP_CVAR(rpc, damage)) is already counted in the statistics (when launching the chainsaw).
-			// We remove it here so that a direct hit that passes through and doesn't damage anytihng by the explosion later is still 100%.
-			damage_fired -= WEP_CVAR(rpc, damage);
-		}
-		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, damage_fired, damage_hit);
-	}
 }
 
 void W_RocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .entity weaponentity)
@@ -126,8 +122,6 @@ void W_RocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .entity weap
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(actor, weaponentity, flash, '5 0 0');
 	missile.m_chainsaw_damage = 0;
-	missile.m_explosion_damage = 0;
-	missile.dtor = chainsaw_dtor;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
