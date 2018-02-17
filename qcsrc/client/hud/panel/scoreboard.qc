@@ -1140,6 +1140,11 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
+		if(it.spawnflags & WEP_TYPE_OTHER)
+		{
+			++nHidden;
+			continue;
+		}
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
 		{
 			if (((it.spawnflags & WEP_FLAG_HIDDEN) || (it.spawnflags & WEP_FLAG_MUTATORBLOCKED)))
@@ -1219,6 +1224,8 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
 
 		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
+			continue;
+		if (it.spawnflags & WEP_TYPE_OTHER)
 			continue;
 
 		float weapon_alpha;

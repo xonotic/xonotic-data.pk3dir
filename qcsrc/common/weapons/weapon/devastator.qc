@@ -38,6 +38,7 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 		NULL,
 		WEP_CVAR(devastator, force),
 		this.projectiledeathtype,
+		this.weaponentity_fld,
 		directhitentity
 	);
 
@@ -112,6 +113,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 						head,
 						(WEP_CVAR(devastator, remote_jump_force) ? WEP_CVAR(devastator, remote_jump_force) : 0),
 						this.projectiledeathtype | HITTYPE_BOUNCE,
+						this.weaponentity_fld,
 						NULL
 					);
 					break;
@@ -131,6 +133,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 		NULL,
 		WEP_CVAR(devastator, remote_force),
 		this.projectiledeathtype | HITTYPE_BOUNCE,
+		this.weaponentity_fld,
 		NULL
 	);
 
@@ -276,7 +279,7 @@ void W_Devastator_Touch(entity this, entity toucher)
 	W_Devastator_Explode(this, toucher);
 }
 
-void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -295,7 +298,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage), WEP_DEVASTATOR.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);

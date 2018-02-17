@@ -27,7 +27,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	W_DecreaseAmmo(WEP_HMG, actor, WEP_CVAR(hmg, ammo), weaponentity);
 
-	W_SetupShot (actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage), WEP_HMG.m_id);
 
 	if(!autocvar_g_norecoil)
 	{

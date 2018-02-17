@@ -9,9 +9,7 @@ REGISTER_NET_LINKED(ENT_ONSCAMERA)
 entity generator_camera;
 NET_HANDLE(ENT_ONSCAMERA, bool isnew)
 {
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
+	this.origin = ReadVector();
 	setorigin(this, this.origin);
 
 	this.angles_x = ReadAngle();
