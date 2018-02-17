@@ -29,9 +29,7 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 	}
 	if(fl & 4)
 	{
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 	if(fl & 1)
 	{
@@ -40,12 +38,8 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 			WriteShort(MSG_ENTITY, this.modelindex);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, this.mins_x);
-				WriteCoord(MSG_ENTITY, this.mins_y);
-				WriteCoord(MSG_ENTITY, this.mins_z);
-				WriteCoord(MSG_ENTITY, this.maxs_x);
-				WriteCoord(MSG_ENTITY, this.maxs_y);
-				WriteCoord(MSG_ENTITY, this.maxs_z);
+				WriteVector(MSG_ENTITY, this.mins);
+				WriteVector(MSG_ENTITY, this.maxs);
 			}
 		}
 		else
@@ -53,9 +47,7 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 			WriteShort(MSG_ENTITY, 0);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, this.maxs_x);
-				WriteCoord(MSG_ENTITY, this.maxs_y);
-				WriteCoord(MSG_ENTITY, this.maxs_z);
+				WriteVector(MSG_ENTITY, this.maxs);
 			}
 		}
 		WriteShort(MSG_ENTITY, this.cnt);
@@ -286,9 +278,7 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 	}
 	if(f & 4)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 	}
 	if(f & 1)
 	{
@@ -297,19 +287,13 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 		{
 			if(this.modelindex)
 			{
-				this.mins_x = ReadCoord();
-				this.mins_y = ReadCoord();
-				this.mins_z = ReadCoord();
-				this.maxs_x = ReadCoord();
-				this.maxs_y = ReadCoord();
-				this.maxs_z = ReadCoord();
+				this.mins = ReadVector();
+				this.maxs = ReadVector();
 			}
 			else
 			{
 				this.mins    = '0 0 0';
-				this.maxs_x = ReadCoord();
-				this.maxs_y = ReadCoord();
-				this.maxs_z = ReadCoord();
+				this.maxs = ReadVector();
 			}
 		}
 		else

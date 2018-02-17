@@ -16,9 +16,7 @@ REGISTER_NET_TEMP(net_debug)
 		Net_Accept(net_debug);
 		this.sv_entnum = ReadShort();
 		if (ReadByte()) make_pure(this);
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 		this.debug = true;  // identify server entities by this
 		this.classname = strzone(ReadString());
@@ -40,7 +38,7 @@ REGISTER_NET_TEMP(net_debug)
 			o = (this.absmin + this.absmax) / 2;
 		if (this.tag_entity)
 			o += this.tag_entity.origin;
-		WriteCoord(channel, o.x); WriteCoord(channel, o.y); WriteCoord(channel, o.z);
+		WriteVector(channel, o);
 		WriteString(channel, this.classname);
 		WriteString(channel, this.sourceLoc);
 		return true;

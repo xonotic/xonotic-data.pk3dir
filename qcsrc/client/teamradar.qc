@@ -208,17 +208,13 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 
 	if(sendflags & 1)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
 
 	if(sendflags & 2)
 	{
-		this.velocity_x = ReadCoord();
-		this.velocity_y = ReadCoord();
-		this.velocity_z = ReadCoord();
+		this.velocity = ReadVector();
 	}
 
 	if(sendflags & 4)

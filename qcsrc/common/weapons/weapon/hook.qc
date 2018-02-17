@@ -466,16 +466,12 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 	}
 	if(sf & 2)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
 	if(sf & 4)
 	{
-		this.velocity_x = ReadCoord();
-		this.velocity_y = ReadCoord();
-		this.velocity_z = ReadCoord();
+		this.velocity = ReadVector();
 	}
 
 	InterpolateOrigin_Note(this);

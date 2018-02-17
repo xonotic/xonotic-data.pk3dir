@@ -38,21 +38,16 @@ void SendCSQCVortexBeamParticle(float charge) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
-	WriteCoord(MSG_BROADCAST, w_shotorg.x);
-	WriteCoord(MSG_BROADCAST, w_shotorg.y);
-	WriteCoord(MSG_BROADCAST, w_shotorg.z);
-	WriteCoord(MSG_BROADCAST, v.x);
-	WriteCoord(MSG_BROADCAST, v.y);
-	WriteCoord(MSG_BROADCAST, v.z);
+	WriteVector(MSG_BROADCAST, w_shotorg);
+	WriteVector(MSG_BROADCAST, v);
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
 #elif defined(CSQC)
 NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 {
-	vector shotorg, endpos;
 	float charge;
-	shotorg.x = ReadCoord(); shotorg.y = ReadCoord(); shotorg.z = ReadCoord();
-	endpos.x = ReadCoord(); endpos.y = ReadCoord(); endpos.z = ReadCoord();
+    vector shotorg = ReadVector();
+    vector endpos = ReadVector();
 	charge = ReadByte() / 255.0;
 
 	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);

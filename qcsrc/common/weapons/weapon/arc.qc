@@ -30,21 +30,17 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 	}
 	if(sf & ARC_SF_START) // starting location
 	{
-		WriteCoord(MSG_ENTITY, this.beam_start.x);
-		WriteCoord(MSG_ENTITY, this.beam_start.y);
-		WriteCoord(MSG_ENTITY, this.beam_start.z);
+		WriteVector(MSG_ENTITY, this.beam_start);
 	}
 	if(sf & ARC_SF_WANTDIR) // want/aim direction
 	{
-		WriteCoord(MSG_ENTITY, this.beam_wantdir.x);
-		WriteCoord(MSG_ENTITY, this.beam_wantdir.y);
-		WriteCoord(MSG_ENTITY, this.beam_wantdir.z);
+		WriteVector(MSG_ENTITY, this.beam_wantdir);
 	}
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		WriteCoord(MSG_ENTITY, this.beam_dir.x);
-		WriteCoord(MSG_ENTITY, this.beam_dir.y);
-		WriteCoord(MSG_ENTITY, this.beam_dir.z);
+		WriteAngle(MSG_ENTITY, this.beam_dir.x);
+		WriteAngle(MSG_ENTITY, this.beam_dir.y);
+		WriteAngle(MSG_ENTITY, this.beam_dir.z);
 	}
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
@@ -1227,9 +1223,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(sf & ARC_SF_START) // starting location
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 	}
 	else if(this.beam_usevieworigin) // infer the location from player location
 	{
@@ -1249,16 +1243,14 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(sf & ARC_SF_WANTDIR) // want/aim direction
 	{
-		this.v_angle_x = ReadCoord();
-		this.v_angle_y = ReadCoord();
-		this.v_angle_z = ReadCoord();
+		this.v_angle = ReadVector();
 	}
 
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		this.angles_x = ReadCoord();
-		this.angles_y = ReadCoord();
-		this.angles_z = ReadCoord();
+		this.angles_x = ReadAngle();
+		this.angles_y = ReadAngle();
+		this.angles_z = ReadAngle();
 	}
 
 	if(sf & ARC_SF_BEAMTYPE) // beam type

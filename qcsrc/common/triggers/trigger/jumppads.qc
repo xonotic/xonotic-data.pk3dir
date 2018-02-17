@@ -472,9 +472,7 @@ float trigger_push_send(entity this, entity to, float sf)
 	WriteByte(MSG_ENTITY, this.active);
 	WriteCoord(MSG_ENTITY, this.height);
 
-	WriteCoord(MSG_ENTITY, this.movedir_x);
-	WriteCoord(MSG_ENTITY, this.movedir_y);
-	WriteCoord(MSG_ENTITY, this.movedir_z);
+	WriteVector(MSG_ENTITY, this.movedir);
 
 	trigger_common_write(this, true);
 
@@ -537,9 +535,7 @@ bool target_push_send(entity this, entity to, float sf)
 
 	WriteByte(MSG_ENTITY, this.cnt);
 	WriteString(MSG_ENTITY, this.targetname);
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	WriteAngle(MSG_ENTITY, this.angles_x);
 	WriteAngle(MSG_ENTITY, this.angles_y);
@@ -595,9 +591,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	this.active = ReadByte();
 	this.height = ReadCoord();
 
-	this.movedir_x = ReadCoord();
-	this.movedir_y = ReadCoord();
-	this.movedir_z = ReadCoord();
+	this.movedir = ReadVector();
 
 	trigger_common_read(this, true);
 
@@ -626,9 +620,7 @@ NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 	this.classname = "push_target";
 	this.cnt = ReadByte();
 	this.targetname = strzone(ReadString());
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
+	this.origin = ReadVector();
 
 	this.angles_x = ReadAngle();
 	this.angles_y = ReadAngle();

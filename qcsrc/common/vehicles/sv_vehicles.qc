@@ -9,9 +9,7 @@ bool SendAuxiliaryXhair(entity this, entity to, int sf)
 
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 
 	if(sf & 4)

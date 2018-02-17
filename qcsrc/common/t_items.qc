@@ -158,9 +158,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_LOCATION)
     {
-        this.origin_x = ReadCoord();
-        this.origin_y = ReadCoord();
-        this.origin_z = ReadCoord();
+        this.origin = ReadVector();
         setorigin(this, this.origin);
         this.oldorigin = this.origin;
     }
@@ -267,9 +265,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         this.pushable = true;
         //this.angles = '0 0 0';
         set_movetype(this, MOVETYPE_TOSS);
-        this.velocity_x = ReadCoord();
-        this.velocity_y = ReadCoord();
-        this.velocity_z = ReadCoord();
+        this.velocity = ReadVector();
         setorigin(this, this.oldorigin);
 
         if(!this.move_time)
@@ -311,9 +307,7 @@ bool ItemSend(entity this, entity to, int sf)
 	//WriteByte(MSG_ENTITY, this.cnt);
 	if(sf & ISF_LOCATION)
 	{
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 
 	if(sf & ISF_ANGLES)
@@ -356,9 +350,7 @@ bool ItemSend(entity this, entity to, int sf)
 
 	if(sf & ISF_DROP)
 	{
-		WriteCoord(MSG_ENTITY, this.velocity.x);
-		WriteCoord(MSG_ENTITY, this.velocity.y);
-		WriteCoord(MSG_ENTITY, this.velocity.z);
+		WriteVector(MSG_ENTITY, this.velocity);
 	}
 
 	return true;

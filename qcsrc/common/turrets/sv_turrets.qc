@@ -313,9 +313,7 @@ bool turret_send(entity this, entity to, float sf)
 	{
 		WriteByte(MSG_ENTITY, this.m_id);
 
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 
 		WriteAngle(MSG_ENTITY, this.angles_x);
 		WriteAngle(MSG_ENTITY, this.angles_y);
@@ -335,13 +333,9 @@ bool turret_send(entity this, entity to, float sf)
 
 	if(sf & TNSF_MOVE)
 	{
-		WriteShort(MSG_ENTITY, rint(this.origin_x));
-		WriteShort(MSG_ENTITY, rint(this.origin_y));
-		WriteShort(MSG_ENTITY, rint(this.origin_z));
+		WriteVector(MSG_ENTITY, this.origin);
 
-		WriteShort(MSG_ENTITY, rint(this.velocity_x));
-		WriteShort(MSG_ENTITY, rint(this.velocity_y));
-		WriteShort(MSG_ENTITY, rint(this.velocity_z));
+		WriteVector(MSG_ENTITY, this.velocity);
 
 		WriteShort(MSG_ENTITY, rint(this.angles_y));
 	}
