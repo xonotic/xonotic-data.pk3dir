@@ -203,7 +203,7 @@ METHOD(OffhandBlaster, offhand_think, void(OffhandBlaster this, entity actor, bo
 	}
 	actor.jump_interval = time + WEP_CVAR_SEC(blaster, refire) * W_WeaponRateFactor(actor);
 	.entity weaponentity = weaponentities[1];
-	BLASTER_SECONDARY_ATTACK_HACK(blaster, actor, weaponentity);
+	BLASTER_SECONDARY_ATTACK(blaster, actor, weaponentity);
 }
 
 #endif

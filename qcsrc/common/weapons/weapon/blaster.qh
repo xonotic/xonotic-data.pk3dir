@@ -59,10 +59,9 @@ OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER =
 .float blaster_force;
 .float blaster_lifetime;
 
-#define BLASTER_SECONDARY_ATTACK_HACK(weapon_name, actor, weaponentity) \
+// Will be demacroed after WEP_CVAR macros are also demacroed.
+#define BLASTER_SECONDARY_ATTACK(weapon_name, actor, weaponentity) \
 	makevectors(actor.v_angle); \
-	Weapon oldwep = actor.(weaponentity).m_weapon; \
-	actor.(weaponentity).m_weapon = WEP_BLASTER; \
 	W_Blaster_Attack( \
 		actor, \
 		weaponentity, \
@@ -76,7 +75,6 @@ OffhandBlaster OFFHAND_BLASTER; STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER =
 		WEP_CVAR_SEC(weapon_name, spread), \
 		WEP_CVAR_SEC(weapon_name, delay), \
 		WEP_CVAR_SEC(weapon_name, lifetime) \
-	); \
-	actor.(weaponentity).m_weapon = oldwep;
+	);
 
 #endif
