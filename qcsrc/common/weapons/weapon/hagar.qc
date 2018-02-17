@@ -212,6 +212,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 		missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 		PROJECTILE_MAKETRIGGER(missile);
 		missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
+		missile.weaponentity_fld = weaponentity;
 		setorigin(missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		set_movetype(missile, MOVETYPE_FLY);
