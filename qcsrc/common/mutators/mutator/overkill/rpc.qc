@@ -64,7 +64,7 @@ void W_RocketPropelledChainsaw_Think(entity this)
 		if (accuracy_isgooddamage(this.realowner, trace_ent)) {
 			if (this.m_chainsaw_damage == 0) { // first hit
 				// The fired damage of the explosion (WEP_CVAR(rpc, damage)) is already counted in the statistics (when launching the chainsaw).
-				// We remove it here so that a direct hit that passes through and doesn't damage anytihng by the explosion later is still 100%.
+				// We remove it here so that a direct hit that passes through and doesn't damage anything by the explosion later is still 100%.
 				accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype).m_id, WEP_CVAR(rpc, damage2) - WEP_CVAR(rpc, damage), WEP_CVAR(rpc, damage2));
 			}
 			this.m_chainsaw_damage += WEP_CVAR(rpc, damage2);
