@@ -7,7 +7,7 @@ void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR_PRI(rpc, damage), WEP_CVAR_PRI(rpc, edgedamage), WEP_CVAR_PRI(rpc, radius), NULL, NULL, WEP_CVAR_PRI(rpc, force), this.projectiledeathtype, directhitentity);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(rpc, damage), WEP_CVAR_PRI(rpc, edgedamage), WEP_CVAR_PRI(rpc, radius), NULL, NULL, WEP_CVAR_PRI(rpc, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	delete(this);
 }
@@ -26,7 +26,7 @@ void W_RocketPropelledChainsaw_Touch (entity this, entity toucher)
 	W_RocketPropelledChainsaw_Explode(this, toucher);
 }
 
-void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if (this.health <= 0)
 		return;
@@ -54,7 +54,7 @@ void W_RocketPropelledChainsaw_Think(entity this)
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
 	if(IS_PLAYER(trace_ent))
-		Damage (trace_ent, this, this.realowner, WEP_CVAR_PRI(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - other.origin) * WEP_CVAR_PRI(rpc, force));
+		Damage(trace_ent, this, this.realowner, WEP_CVAR_PRI(rpc, damage2), this.projectiledeathtype, this.weaponentity_fld, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR_PRI(rpc, force));
 
 	this.velocity = mydir * (myspeed + (WEP_CVAR_PRI(rpc, speedaccel) * sys_frametime));
 
@@ -68,7 +68,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(rpc, ammo), weaponentity);
-	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(rpc, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(rpc, damage), WEP_RPC.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -85,6 +85,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor, .entity wea
 	set_movetype(missile, MOVETYPE_FLY);
 
 	missile.projectiledeathtype = WEP_RPC.m_id;
+	missile.weaponentity_fld = weaponentity;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
@@ -180,8 +181,6 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
 		}
 		// ugly instagib hack to reuse the fire mode of the laser
 		makevectors(actor.v_angle);
-		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-		actor.(weaponentity).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			actor,
 			weaponentity,
@@ -196,7 +195,6 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
 			WEP_CVAR_SEC(rpc, delay),
 			WEP_CVAR_SEC(rpc, lifetime)
 		);
-		actor.(weaponentity).m_weapon = oldwep;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(rpc, animtime), w_ready);
 	}
 }

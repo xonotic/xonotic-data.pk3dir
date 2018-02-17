@@ -12,7 +12,7 @@ void W_Hook_ExplodeThink(entity this)
 	f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
 
-	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
+	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, NULL, this.dmg_force * f, this.projectiledeathtype, this.weaponentity_fld, NULL);
 	this.projectiledeathtype |= HITTYPE_BOUNCE;
 	//RadiusDamage(this, NULL, this.dmg * f, this.dmg_edge * f, this.dmg_radius, NULL, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
 
@@ -46,7 +46,7 @@ void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
 	W_Hook_Explode2(this);
 }
 
-void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -69,7 +69,7 @@ void W_Hook_Touch2(entity this, entity toucher)
 void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage), WEP_HOOK.m_id | HITTYPE_SECONDARY);
 
 	entity gren = new(hookbomb);
 	gren.owner = gren.realowner = actor;
@@ -78,6 +78,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	set_movetype(gren, MOVETYPE_TOSS);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
+	gren.weaponentity_fld = weaponentity;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 

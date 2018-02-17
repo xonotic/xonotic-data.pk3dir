@@ -212,7 +212,7 @@ void turret_die(entity this)
 	}
 }
 
-void turret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
+void turret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
 	// Enough already!
 	if(this.deadflag == DEAD_DEAD)
@@ -439,11 +439,11 @@ void turret_projectile_explode(entity this)
 	this.event_damage = func_null;
 #ifdef TURRET_DEBUG
 	float d;
-	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
+	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, DMG_NOWEP, NULL);
 	this.owner.tur_debug_dmg_t_h = this.owner.tur_debug_dmg_t_h + d;
 	this.owner.tur_debug_dmg_t_f = this.owner.tur_debug_dmg_t_f + this.owner.shot_dmg;
 #else
-	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
+	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, DMG_NOWEP, NULL);
 #endif
 	delete(this);
 }
@@ -454,7 +454,7 @@ void turret_projectile_touch(entity this, entity toucher)
 	turret_projectile_explode(this);
 }
 
-void turret_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
+void turret_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector vforce)
 {
 	this.velocity  += vforce;
 	this.health	-= damage;
