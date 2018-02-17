@@ -811,8 +811,8 @@ void Surv_UpdateTeamStats()
 	}
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		it.yellowalive_stat = yellowalive;
-		it.pinkalive_stat = pinkalive;
+		STAT(YELLOWALIVE, it) = yellowalive;
+		STAT(PINKALIVE, it) = pinkalive;
 	});
 }
 
@@ -999,8 +999,8 @@ void Surv_UpdateAliveStats()
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
 		STAT(SURV_DEFENDERS_ALIVE, it) = surv_numdefendersalive;
-		it.redalive_stat = redalive;
-		it.bluealive_stat = bluealive;
+		STAT(REDALIVE, it) = redalive;
+		STAT(BLUEALIVE, it) = bluealive;
 	});
 	Surv_UpdateDefenderHealthStat();
 }
@@ -1821,10 +1821,10 @@ MUTATOR_HOOKFUNCTION(surv, ClientConnect)
 	{
 		STAT(SURV_DEFENDER_TEAM, player) = Team_TeamToNumber(surv_defenderteam);
 		STAT(SURV_DEFENDERS_ALIVE, player) = surv_numdefendersalive;
-		player.redalive_stat = redalive;
-		player.bluealive_stat = bluealive;
-		player.yellowalive_stat = yellowalive;
-		player.pinkalive_stat = pinkalive;
+		STAT(REDALIVE, player) = redalive;
+		STAT(BLUEALIVE, player) = bluealive;
+		STAT(YELLOWALIVE, player) = yellowalive;
+		STAT(PINKALIVE, player) = pinkalive;
 	}
 	if (player.surv_role == SURVIVAL_ROLE_NONE)
 	{
