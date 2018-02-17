@@ -121,25 +121,7 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
 		actor.jump_interval = time + WEP_CVAR_SEC(rpc, refire) * W_WeaponRateFactor(actor);
-		// Ugly hack to reuse the fire mode of the blaster.
-		makevectors(actor.v_angle);
-		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-		actor.(weaponentity).m_weapon = WEP_BLASTER;
-		W_Blaster_Attack(
-			actor,
-			weaponentity,
-			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-			WEP_CVAR_SEC(rpc, shotangle),
-			WEP_CVAR_SEC(rpc, damage),
-			WEP_CVAR_SEC(rpc, edgedamage),
-			WEP_CVAR_SEC(rpc, radius),
-			WEP_CVAR_SEC(rpc, force),
-			WEP_CVAR_SEC(rpc, speed),
-			WEP_CVAR_SEC(rpc, spread),
-			WEP_CVAR_SEC(rpc, delay),
-			WEP_CVAR_SEC(rpc, lifetime)
-		);
-		actor.(weaponentity).m_weapon = oldwep;
+		BLASTER_SECONDARY_ATTACK(rpc, actor, weaponentity);
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -179,22 +161,7 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
 		{
 			return;
 		}
-		// ugly instagib hack to reuse the fire mode of the laser
-		makevectors(actor.v_angle);
-		W_Blaster_Attack(
-			actor,
-			weaponentity,
-			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-			WEP_CVAR_SEC(rpc, shotangle),
-			WEP_CVAR_SEC(rpc, damage),
-			WEP_CVAR_SEC(rpc, edgedamage),
-			WEP_CVAR_SEC(rpc, radius),
-			WEP_CVAR_SEC(rpc, force),
-			WEP_CVAR_SEC(rpc, speed),
-			WEP_CVAR_SEC(rpc, spread),
-			WEP_CVAR_SEC(rpc, delay),
-			WEP_CVAR_SEC(rpc, lifetime)
-		);
+		BLASTER_SECONDARY_ATTACK(rpc, actor, weaponentity);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(rpc, animtime), w_ready);
 	}
 }
