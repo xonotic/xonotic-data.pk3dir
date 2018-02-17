@@ -2070,12 +2070,12 @@ void EndFrame()
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		entity e = IS_SPEC(it) ? it.enemy : it;
 		if (e.typehitsound) {
-			it.typehit_time = time;
+			STAT(TYPEHIT_TIME, it) = time;
 		} else if (e.killsound) {
-			it.kill_time = time;
+			STAT(KILL_TIME, it) = time;
 		} else if (e.damage_dealt) {
-			it.hit_time = time;
-			it.damage_dealt_total += ceil(e.damage_dealt);
+			STAT(HIT_TIME, it) = time;
+			STAT(DAMAGE_DEALT_TOTAL, it) += ceil(e.damage_dealt);
 		}
 	});
 	// add 1 frametime because after this, engine SV_Physics

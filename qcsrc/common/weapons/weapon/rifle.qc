@@ -8,7 +8,7 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 
 	W_DecreaseAmmo(thiswep, actor, pAmmo, weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
+	W_SetupShot(actor, weaponentity, true, 2, pSound, CH_WEAPON_A, pDamage * pShots, deathtype);
 
 	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
@@ -222,6 +222,10 @@ METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
         // no weapon specific image for this weapon
         return false;
     }
+}
+METHOD(Rifle, wr_zoomdir, bool(entity thiswep))
+{
+    return button_attack2 && !WEP_CVAR(rifle, secondary);
 }
 
 #endif

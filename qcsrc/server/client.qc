@@ -308,7 +308,7 @@ void PutObserverInServer(entity this)
 	if(this.bot_attack)
 		IL_REMOVE(g_bot_targets, this);
 	this.bot_attack = false;
-    this.hud = HUD_NORMAL;
+    STAT(HUD, this) = HUD_NORMAL;
 	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
@@ -331,7 +331,7 @@ void PutObserverInServer(entity this)
 	this.death_time = 0;
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
-	this.stat_respawn_time = 0;
+	STAT(RESPAWN_TIME, this) = 0;
 	this.alpha = 0;
 	this.scale = 0;
 	this.fade_time = 0;
@@ -346,7 +346,7 @@ void PutObserverInServer(entity this)
 	this.nextthink = 0;
 	this.deadflag = DEAD_NO;
 	this.crouch = false;
-	this.revive_progress = 0;
+	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
 
 	this.items = 0;
@@ -595,7 +595,7 @@ void PutPlayerInServer(entity this)
 	this.death_time = 0;
 	this.respawn_flags = 0;
 	this.respawn_time = 0;
-	this.stat_respawn_time = 0;
+	STAT(RESPAWN_TIME, this) = 0;
 	this.scale = autocvar_sv_player_scale;
 	this.fade_time = 0;
 	this.pain_frame = 0;
@@ -621,7 +621,7 @@ void PutPlayerInServer(entity this)
 	this.strength_finished = 0;
 	this.invincible_finished = 0;
 	this.fire_endtime = -1;
-	this.revive_progress = 0;
+	STAT(REVIVE_PROGRESS, this) = 0;
 	this.revival_time = 0;
 
 	this.air_finished = time + 12;
@@ -662,7 +662,7 @@ void PutPlayerInServer(entity this)
 	if(this.conveyor)
 		IL_REMOVE(g_conveyed, this);
 	this.conveyor = NULL; // prevent conveyors at the previous location from moving a freshly spawned player
-	this.hud = HUD_NORMAL;
+	STAT(HUD, this) = HUD_NORMAL;
 
 	this.event_damage = PlayerDamage;
 
@@ -920,7 +920,7 @@ void ClientKill_Now(entity this)
 	    if(!this.killindicator_teamchange)
 	    {
             this.vehicle_health = -1;
-            Damage(this, this, this, 1 , DEATH_KILL.m_id, this.origin, '0 0 0');
+            Damage(this, this, this, 1 , DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	    }
 	}
 
@@ -934,7 +934,7 @@ void ClientKill_Now(entity this)
 
 	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
 	{
-		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
+		Damage(this, this, this, 100000, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	}
 
 	// now I am sure the player IS dead
@@ -1687,7 +1687,7 @@ void player_regen(entity this)
 		if(this.vehicle)
 			vehicles_exit(this.vehicle, VHEF_RELEASE);
 		if(this.event_damage)
-			this.event_damage(this, this, this, 1, DEATH_ROT.m_id, this.origin, '0 0 0');
+			this.event_damage(this, this, this, 1, DEATH_ROT.m_id, DMG_NOWEP, this.origin, '0 0 0');
 	}
 
 	if (!(this.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -1763,24 +1763,17 @@ void SpectateCopy(entity this, entity spectatee)
 	this.ammo_nails = spectatee.ammo_nails;
 	this.ammo_rockets = spectatee.ammo_rockets;
 	this.ammo_fuel = spectatee.ammo_fuel;
-	this.clip_load = spectatee.clip_load;
-	this.clip_size = spectatee.clip_size;
 	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
 	this.health = spectatee.health;
 	CS(this).impulse = 0;
 	this.items = spectatee.items;
-	this.last_pickup = spectatee.last_pickup;
-	this.hit_time = spectatee.hit_time;
+	STAT(LAST_PICKUP, this) = STAT(LAST_PICKUP, spectatee);
+	STAT(HIT_TIME, this) = STAT(HIT_TIME, spectatee);
 	this.strength_finished = spectatee.strength_finished;
 	this.invincible_finished = spectatee.invincible_finished;
 	this.superweapons_finished = spectatee.superweapons_finished;
 	STAT(PRESSED_KEYS, this) = STAT(PRESSED_KEYS, spectatee);
 	this.weapons = spectatee.weapons;
-	this.vortex_charge = spectatee.vortex_charge;
-	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
-	this.hagar_load = spectatee.hagar_load;
-	this.arc_heat_percent = spectatee.arc_heat_percent;
-	this.minelayer_mines = spectatee.minelayer_mines;
 	this.punchangle = spectatee.punchangle;
 	this.view_ofs = spectatee.view_ofs;
 	this.velocity = spectatee.velocity;
@@ -1790,7 +1783,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.v_angle = spectatee.v_angle;
 	this.angles = spectatee.v_angle;
 	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
-	this.revive_progress = spectatee.revive_progress;
+	STAT(REVIVE_PROGRESS, this) = STAT(REVIVE_PROGRESS, spectatee);
 	this.viewloc = spectatee.viewloc;
 	if(!PHYS_INPUT_BUTTON_USE(this) && STAT(CAMERA_SPECTATOR, this) != 2)
 		this.fixangle = true;
@@ -1798,14 +1791,8 @@ void SpectateCopy(entity this, entity spectatee)
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(this, CS(spectatee).zoomstate);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	{
-		.entity weaponentity = weaponentities[slot];
-		this.(weaponentity) = spectatee.(weaponentity);
-	}
-
     anticheat_spectatecopy(this, spectatee);
-	this.hud = spectatee.hud;
+	STAT(HUD, this) = STAT(HUD, spectatee);
 	if(spectatee.vehicle)
     {
     	this.angles = spectatee.v_angle;
@@ -2300,12 +2287,6 @@ bool PlayerThink(entity this)
 		{
 			.entity weaponentity = weaponentities[slot];
 			W_WeaponFrame(this, weaponentity);
-
-			if(slot == 0)
-			{
-				this.clip_load = this.(weaponentity).clip_load;
-				this.clip_size = this.(weaponentity).clip_size;
-			}
 		}
 
 		this.items_added = 0;
@@ -2558,26 +2539,26 @@ void PlayerPreThink (entity this)
 	{
 		if (STAT(FROZEN, this) == 2)
 		{
-			this.revive_progress = bound(0, this.revive_progress + frametime * this.revive_speed, 1);
-			this.health = max(1, this.revive_progress * start_health);
-			this.iceblock.alpha = bound(0.2, 1 - this.revive_progress, 1);
+			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) + frametime * this.revive_speed, 1);
+			this.health = max(1, STAT(REVIVE_PROGRESS, this) * start_health);
+			this.iceblock.alpha = bound(0.2, 1 - STAT(REVIVE_PROGRESS, this), 1);
 
-			if (this.revive_progress >= 1)
+			if (STAT(REVIVE_PROGRESS, this) >= 1)
 				Unfreeze(this);
 		}
 		else if (STAT(FROZEN, this) == 3)
 		{
-			this.revive_progress = bound(0, this.revive_progress - frametime * this.revive_speed, 1);
-			this.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * this.revive_progress );
+			STAT(REVIVE_PROGRESS, this) = bound(0, STAT(REVIVE_PROGRESS, this) - frametime * this.revive_speed, 1);
+			this.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * STAT(REVIVE_PROGRESS, this) );
 
 			if (this.health < 1)
 			{
 				if (this.vehicle)
 					vehicles_exit(this.vehicle, VHEF_RELEASE);
 				if(this.event_damage)
-					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
+					this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			}
-			else if (this.revive_progress <= 0)
+			else if (STAT(REVIVE_PROGRESS, this) <= 0)
 				Unfreeze(this);
 		}
 	}
@@ -2688,7 +2669,7 @@ void DrownPlayer(entity this)
 	{	// drown!
 		if (this.pain_finished < time)
 		{
-			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.pain_finished = time + 0.5;
 		}
 	}
