@@ -53,6 +53,9 @@ float autocvar_g_waypointsprite_timealphaexponent;
 bool autocvar_g_waypointsprite_turrets = true;
 float autocvar_g_waypointsprite_turrets_maxdist = 5000;
 bool autocvar_g_waypointsprite_uppercase;
+bool autocvar_g_waypointsprite_text;
+float autocvar_g_waypointsprite_iconsize = 32;
+bool autocvar_g_waypointsprite_iconcolor;
 
 float waypointsprite_fadedistance;
 float waypointsprite_normdistance;
@@ -98,7 +101,7 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 vector drawspritearrow(vector o, float ang, vector rgb, float a, float t);
 
 // returns location of sprite healthbar
-vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s);
+vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str);
 
 float spritelookupblinkvalue(entity this, string s);
 vector spritelookupcolor(entity this, string s, vector def);

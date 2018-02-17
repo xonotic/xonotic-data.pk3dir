@@ -72,9 +72,9 @@ void accuracy_add(entity this, int w, int fired, int hit)
 	if (hit)    a.accuracy_hit  [w] += hit;
 	if (fired)  a.accuracy_fired[w] += fired;
 
-    if (hit && a.hit_time != time) { // only run this once per frame
+    if (hit && STAT(HIT_TIME, a) != time) { // only run this once per frame
         a.accuracy_cnt_hit[w] += 1;
-        a.hit_time = time;
+        STAT(HIT_TIME, a) = time;
     }
 
     if (fired && a.fired_time != time) { // only run this once per frame

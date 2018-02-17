@@ -37,14 +37,14 @@ void door_blocked(entity this, entity blocker)
 	)
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 #ifdef SVQC
 		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
 		 // don't change direction for dead or dying stuff
@@ -79,7 +79,7 @@ void door_blocked(entity this, entity blocker)
 		{
 			//gib dying stuff just to make sure
 			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
 	}
@@ -263,7 +263,7 @@ void door_use(entity this, entity actor, entity trigger)
 		door_fire(this.owner, actor, trigger);
 }
 
-void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
@@ -317,7 +317,7 @@ void door_generic_plat_blocked(entity this, entity blocker)
 {
 	if((this.spawnflags & 8) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
 #ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 	}
 	else
@@ -325,7 +325,7 @@ void door_generic_plat_blocked(entity this, entity blocker)
 
 #ifdef SVQC
 		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
 		 //Dont chamge direction for dead or dying stuff
@@ -344,7 +344,7 @@ void door_generic_plat_blocked(entity this, entity blocker)
 		{
 			//gib dying stuff just to make sure
 			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
 	}
@@ -628,16 +628,10 @@ float door_send(entity this, entity to, float sf)
 
 		trigger_common_write(this, true);
 
-		WriteCoord(MSG_ENTITY, this.pos1_x);
-		WriteCoord(MSG_ENTITY, this.pos1_y);
-		WriteCoord(MSG_ENTITY, this.pos1_z);
-		WriteCoord(MSG_ENTITY, this.pos2_x);
-		WriteCoord(MSG_ENTITY, this.pos2_y);
-		WriteCoord(MSG_ENTITY, this.pos2_z);
+		WriteVector(MSG_ENTITY, this.pos1);
+		WriteVector(MSG_ENTITY, this.pos2);
 
-		WriteCoord(MSG_ENTITY, this.size_x);
-		WriteCoord(MSG_ENTITY, this.size_y);
-		WriteCoord(MSG_ENTITY, this.size_z);
+		WriteVector(MSG_ENTITY, this.size);
 
 		WriteShort(MSG_ENTITY, this.wait);
 		WriteShort(MSG_ENTITY, this.speed);
@@ -653,16 +647,10 @@ float door_send(entity this, entity to, float sf)
 
 	if(sf & SF_TRIGGER_UPDATE)
 	{
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 
-		WriteCoord(MSG_ENTITY, this.pos1_x);
-		WriteCoord(MSG_ENTITY, this.pos1_y);
-		WriteCoord(MSG_ENTITY, this.pos1_z);
-		WriteCoord(MSG_ENTITY, this.pos2_x);
-		WriteCoord(MSG_ENTITY, this.pos2_y);
-		WriteCoord(MSG_ENTITY, this.pos2_z);
+		WriteVector(MSG_ENTITY, this.pos1);
+		WriteVector(MSG_ENTITY, this.pos2);
 	}
 
 	return true;
@@ -798,22 +786,10 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 
 		trigger_common_read(this, true);
 
-		vector v;
+		this.pos1 = ReadVector();
+		this.pos2 = ReadVector();
 
-		v.x = ReadCoord();
-		v.y = ReadCoord();
-		v.z = ReadCoord();
-		this.pos1 = v;
-
-		v.x = ReadCoord();
-		v.y = ReadCoord();
-		v.z = ReadCoord();
-		this.pos2 = v;
-
-		v.x = ReadCoord();
-		v.y = ReadCoord();
-		v.z = ReadCoord();
-		this.size = v;
+		this.size = ReadVector();
 
 		this.wait = ReadShort();
 		this.speed = ReadShort();
@@ -841,17 +817,11 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 
 	if(sf & SF_TRIGGER_UPDATE)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.pos1_x = ReadCoord();
-		this.pos1_y = ReadCoord();
-		this.pos1_z = ReadCoord();
-		this.pos2_x = ReadCoord();
-		this.pos2_y = ReadCoord();
-		this.pos2_z = ReadCoord();
+		this.pos1 = ReadVector();
+		this.pos2 = ReadVector();
 	}
 	return true;
 }

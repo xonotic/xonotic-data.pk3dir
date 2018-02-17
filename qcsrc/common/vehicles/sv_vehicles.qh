@@ -64,7 +64,6 @@ const float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 const float VHSF_NORMAL = 0;
 const float VHSF_FACTORY = 2;
 
-.int hud = _STAT(HUD);
 .float dmg_time;
 
 .float play_time;
@@ -85,7 +84,6 @@ const float	DAMAGE_TARGETDRONE = 10;
 // vehicle functions
 .void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
 .bool(entity this, int _imp) vehicles_impulse;
-.int vehicle_weapon2mode = _STAT(VEHICLESTAT_W2MODE);
 .void(entity this, int exit_flags) vehicle_exit;
 .bool(entity this, entity player) vehicle_enter;
 const int VHEF_NORMAL = 0;  /// User pressed exit key

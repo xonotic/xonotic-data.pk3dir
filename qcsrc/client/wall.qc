@@ -143,9 +143,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 
 	if(f & 2)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
 
@@ -181,12 +179,8 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 		this.scale = ReadShort() / 256.0;
 		if(f & 0x20)
 		{
-			this.mins_x = ReadCoord();
-			this.mins_y = ReadCoord();
-			this.mins_z = ReadCoord();
-			this.maxs_x = ReadCoord();
-			this.maxs_y = ReadCoord();
-			this.maxs_z = ReadCoord();
+			this.mins = ReadVector();
+			this.maxs = ReadVector();
 		}
 		else
 			this.mins = this.maxs = '0 0 0';
@@ -211,9 +205,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 			this.bgmscriptdecay = ReadByte() / 64.0;
 			this.bgmscriptsustain = ReadByte() / 255.0;
 			this.bgmscriptrelease = ReadByte() / 64.0;
-			this.movedir_x = ReadCoord();
-			this.movedir_y = ReadCoord();
-			this.movedir_z = ReadCoord();
+			this.movedir = ReadVector();
 			this.lip = ReadByte() / 255.0;
 		}
 		this.fade_start = ReadByte();
