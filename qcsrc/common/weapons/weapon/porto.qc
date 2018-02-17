@@ -202,7 +202,7 @@ void W_Porto_Attack(entity actor, .entity weaponentity, float type)
 {
 	entity gren;
 
-	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
+	W_SetupShot(actor, weaponentity, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: does the deathtype even need to be set here? porto can't hurt people
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;

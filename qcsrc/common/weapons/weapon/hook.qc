@@ -69,7 +69,7 @@ void W_Hook_Touch2(entity this, entity toucher)
 void W_Hook_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(actor, weaponentity, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage), WEP_HOOK.m_id | HITTYPE_SECONDARY);
 
 	entity gren = new(hookbomb);
 	gren.owner = gren.realowner = actor;

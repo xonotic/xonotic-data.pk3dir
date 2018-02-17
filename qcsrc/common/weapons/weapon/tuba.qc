@@ -268,17 +268,15 @@ void W_Tuba_NoteThink(entity this)
 void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 {
 	vector o;
-	float n;
-
-	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
-
-	n = W_Tuba_GetNote(actor, hittype);
+	float n = W_Tuba_GetNote(actor, hittype);
 
 	hittype = 0;
 	if(actor.(weaponentity).tuba_instrument & 1)
 		hittype |= HITTYPE_SECONDARY;
 	if(actor.(weaponentity).tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
+
+	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage), hittype | WEP_TUBA.m_id);
 
 	if(actor.(weaponentity).tuba_note)
 	{
@@ -378,7 +376,12 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 				actor.(weaponentity).weaponname = "tuba";
 				break;
 		}
-		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0);
+		int hittype = 0;
+		if(actor.(weaponentity).tuba_instrument & 1)
+			hittype |= HITTYPE_SECONDARY;
+		if(actor.(weaponentity).tuba_instrument & 2)
+			hittype |= HITTYPE_BOUNCE;
+		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0, hittype | WEP_TUBA.m_id);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);

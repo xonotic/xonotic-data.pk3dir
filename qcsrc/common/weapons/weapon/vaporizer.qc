@@ -122,7 +122,7 @@ void W_Vaporizer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	bool flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
 	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
-	W_SetupShot(actor, weaponentity, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage);
+	W_SetupShot(actor, weaponentity, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage, WEP_VAPORIZER.m_id);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
 	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
@@ -189,10 +189,7 @@ void W_RocketMinsta_Attack2(entity actor, .entity weaponentity)
 	float spread = autocvar_g_rm_laser_spread;
 	float rndspread = autocvar_g_rm_laser_spread_random;
 
-	Weapon w = actor.(weaponentity).m_weapon;
-	actor.(weaponentity).m_weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage);
-	actor.(weaponentity).m_weapon = w;
+	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -244,10 +241,7 @@ void W_RocketMinsta_Attack3 (entity actor, .entity weaponentity)
 	float counter = 0;
 	float total = 1;
 
-	Weapon w = actor.(weaponentity).m_weapon;
-	actor.(weaponentity).m_weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage);
-	actor.(weaponentity).m_weapon = w;
+	W_SetupShot_ProjectileSize (actor, weaponentity, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO.m_id);
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -346,8 +340,6 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 
             // ugly instagib hack to reuse the fire mode of the laser
             makevectors(actor.v_angle);
-            Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-            actor.(weaponentity).m_weapon = WEP_BLASTER;
             W_Blaster_Attack(
                 actor,
                 weaponentity,
@@ -362,7 +354,6 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
                 WEP_CVAR_SEC(vaporizer, delay),
                 WEP_CVAR_SEC(vaporizer, lifetime)
             );
-            actor.(weaponentity).m_weapon = oldwep;
 
             // now do normal refire
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);

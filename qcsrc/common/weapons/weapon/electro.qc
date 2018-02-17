@@ -204,7 +204,8 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 		2,
 		SND_ELECTRO_FIRE,
 		CH_WEAPON_A,
-		WEP_CVAR_PRI(electro, damage)
+		WEP_CVAR_PRI(electro, damage),
+		WEP_ELECTRO.m_id
 	);
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -352,7 +353,8 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 		2,
 		SND_ELECTRO_FIRE2,
 		CH_WEAPON_A,
-		WEP_CVAR_SEC(electro, damage)
+		WEP_CVAR_SEC(electro, damage),
+		WEP_ELECTRO.m_id | HITTYPE_SECONDARY
 	);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please

@@ -144,8 +144,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 			if(player.(weaponentity).m_weapon == WEP_Null && slot != 0)
 				continue;
 
-			Weapon oldwep = player.(weaponentity).m_weapon;
-			player.(weaponentity).m_weapon = WEP_BLASTER;
 			W_Blaster_Attack(
 				player,
 				weaponentity,
@@ -160,7 +158,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 				WEP_CVAR_SEC(vaporizer, delay),
 				WEP_CVAR_SEC(vaporizer, lifetime)
 			);
-			player.(weaponentity).m_weapon = oldwep;
 		}
 	}
 

@@ -329,7 +329,7 @@ float CheatCommand(entity this, int argc)
 				// arguments:
 				//   effectname
 				effectnum = _particleeffectnum(argv(1));
-				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
+				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * max_shot_distance, MOVE_NORMAL, this);
 				__trailparticles(this, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -344,7 +344,7 @@ float CheatCommand(entity this, int argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0);
+				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, this);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
