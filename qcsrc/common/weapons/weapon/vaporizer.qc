@@ -7,12 +7,8 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteHeader(MSG_BROADCAST, TE_CSQC_VAPORBEAMPARTICLE);
-	WriteCoord(MSG_BROADCAST, w_shotorg.x);
-	WriteCoord(MSG_BROADCAST, w_shotorg.y);
-	WriteCoord(MSG_BROADCAST, w_shotorg.z);
-	WriteCoord(MSG_BROADCAST, v.x);
-	WriteCoord(MSG_BROADCAST, v.y);
-	WriteCoord(MSG_BROADCAST, v.z);
+	WriteVector(MSG_BROADCAST, w_shotorg);
+	WriteVector(MSG_BROADCAST, v);
 	WriteByte(MSG_BROADCAST, hit);
 	WriteByte(MSG_BROADCAST, etof(player));
 	WriteByte(MSG_BROADCAST, player.team);
@@ -82,8 +78,8 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	if (isNew) IL_PUSH(g_drawables, this);
 	this.drawmask = MASK_NORMAL;
 
-	this.vorg1_x = ReadCoord(); this.vorg1_y = ReadCoord(); this.vorg1_z = ReadCoord();
-	this.vorg2_x = ReadCoord(); this.vorg2_y = ReadCoord(); this.vorg2_z = ReadCoord();
+	this.vorg1 = ReadVector();
+	this.vorg2 = ReadVector();
 	this.cnt = ReadByte();
 	int myowner = ReadByte();
 	this.owner = playerslots[myowner - 1];

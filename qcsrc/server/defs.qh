@@ -306,17 +306,7 @@ float servertime, serverprevtime, serverframetime;
 .float floodcontrol_voice;
 .float floodcontrol_voiceteam;
 
-.float stat_shotorg = _STAT(SHOTORG); // networked stat for trueaim HUD
-
 string matchid;
-
-.float last_pickup = _STAT(LAST_PICKUP);
-
-.float hit_time = _STAT(HIT_TIME);
-.float typehit_time = _STAT(TYPEHIT_TIME);
-.float kill_time = _STAT(KILL_TIME);
-
-.float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
 
 bool radar_showennemies;
 
@@ -377,7 +367,6 @@ const float ACTIVE_TOGGLE 	= 3;
 
 .float player_blocked;
 
-.float revive_progress = _STAT(REVIVE_PROGRESS);
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
 .entity iceblock;
@@ -385,8 +374,6 @@ const float ACTIVE_TOGGLE 	= 3;
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
-
-.float stat_respawn_time = _STAT(RESPAWN_TIME); // shows respawn time, and is negative when awaiting respawn
 
 .int killindicator_teamchange;
 

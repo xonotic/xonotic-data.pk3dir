@@ -85,20 +85,12 @@ bool conveyor_send(entity this, entity to, int sf)
 	if(sf & 1)
 	{
 		WriteByte(MSG_ENTITY, this.warpzone_isboxy);
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 
-		WriteCoord(MSG_ENTITY, this.mins_x);
-		WriteCoord(MSG_ENTITY, this.mins_y);
-		WriteCoord(MSG_ENTITY, this.mins_z);
-		WriteCoord(MSG_ENTITY, this.maxs_x);
-		WriteCoord(MSG_ENTITY, this.maxs_y);
-		WriteCoord(MSG_ENTITY, this.maxs_z);
+		WriteVector(MSG_ENTITY, this.mins);
+		WriteVector(MSG_ENTITY, this.maxs);
 
-		WriteCoord(MSG_ENTITY, this.movedir_x);
-		WriteCoord(MSG_ENTITY, this.movedir_y);
-		WriteCoord(MSG_ENTITY, this.movedir_z);
+		WriteVector(MSG_ENTITY, this.movedir);
 
 		WriteByte(MSG_ENTITY, this.speed);
 		WriteByte(MSG_ENTITY, this.state);
@@ -174,22 +166,14 @@ NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 	if(sf & 1)
 	{
 		this.warpzone_isboxy = ReadByte();
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.mins_x = ReadCoord();
-		this.mins_y = ReadCoord();
-		this.mins_z = ReadCoord();
-		this.maxs_x = ReadCoord();
-		this.maxs_y = ReadCoord();
-		this.maxs_z = ReadCoord();
+		this.mins = ReadVector();
+		this.maxs = ReadVector();
 		setsize(this, this.mins, this.maxs);
 
-		this.movedir_x = ReadCoord();
-		this.movedir_y = ReadCoord();
-		this.movedir_z = ReadCoord();
+		this.movedir = ReadVector();
 
 		this.speed = ReadByte();
 		this.state = ReadByte();

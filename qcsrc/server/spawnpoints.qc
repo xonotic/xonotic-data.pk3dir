@@ -17,9 +17,7 @@ bool SpawnPoint_Send(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, this.team);
-	WriteCoord(MSG_ENTITY, this.origin.x);
-	WriteCoord(MSG_ENTITY, this.origin.y);
-	WriteCoord(MSG_ENTITY, this.origin.z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	return true;
 }
@@ -33,9 +31,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 	if(autocvar_g_spawn_alloweffects)
 	{
 		WriteByte(MSG_ENTITY, etof(this.owner));
-		WriteCoord(MSG_ENTITY, this.owner.origin.x);
-		WriteCoord(MSG_ENTITY, this.owner.origin.y);
-		WriteCoord(MSG_ENTITY, this.owner.origin.z);
+		WriteVector(MSG_ENTITY, this.owner.origin);
 		send = true;
 	}
 	else if((to == this.owner) || (IS_SPEC(to) && (to.enemy == this.owner)) )

@@ -21,13 +21,13 @@ void dom_EventLog(string mode, float team_before, entity actor) // use an alias 
 
 void set_dom_state(entity e)
 {
-	e.dom_total_pps = total_pps;
-	e.dom_pps_red = pps_red;
-	e.dom_pps_blue = pps_blue;
+	STAT(DOM_TOTAL_PPS, e) = total_pps;
+	STAT(DOM_PPS_RED, e) = pps_red;
+	STAT(DOM_PPS_BLUE, e) = pps_blue;
 	if(domination_teams >= 3)
-		e.dom_pps_yellow = pps_yellow;
+		STAT(DOM_PPS_YELLOW, e) = pps_yellow;
 	if(domination_teams >= 4)
-		e.dom_pps_pink = pps_pink;
+		STAT(DOM_PPS_PINK, e) = pps_pink;
 }
 
 void dompoint_captured(entity this)

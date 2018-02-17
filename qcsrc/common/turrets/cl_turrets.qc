@@ -361,9 +361,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 	{
 		this.m_id = ReadByte();
 
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
 		this.angles_x = ReadAngle();
@@ -397,14 +395,10 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 	if(sf & TNSF_MOVE)
 	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.velocity_x = ReadShort();
-		this.velocity_y = ReadShort();
-		this.velocity_z = ReadShort();
+		this.velocity = ReadVector();
 
 		this.angles_y = ReadShort();
 
