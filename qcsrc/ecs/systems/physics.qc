@@ -48,7 +48,7 @@ void sys_phys_update(entity this, float dt)
 
 	if (!IS_PLAYER(this)) {
 		sys_phys_spectator_control(this);
-		maxspeed_mod = this.spectatorspeed;
+		maxspeed_mod = STAT(SPECTATORSPEED, this);
 	}
 	sys_phys_fixspeed(this, maxspeed_mod);
 

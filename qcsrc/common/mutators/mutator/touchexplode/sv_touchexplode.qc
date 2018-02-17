@@ -20,7 +20,7 @@ void PlayerTouchExplode(entity p1, entity p2)
 
 	entity e = spawn();
 	setorigin(e, org);
-	RadiusDamage(e, NULL, autocvar_g_touchexplode_damage, autocvar_g_touchexplode_edgedamage, autocvar_g_touchexplode_radius, NULL, NULL, autocvar_g_touchexplode_force, DEATH_TOUCHEXPLODE.m_id, NULL);
+	RadiusDamage(e, NULL, autocvar_g_touchexplode_damage, autocvar_g_touchexplode_edgedamage, autocvar_g_touchexplode_radius, NULL, NULL, autocvar_g_touchexplode_force, DEATH_TOUCHEXPLODE.m_id, DMG_NOWEP, NULL);
 	delete(e);
 }
 

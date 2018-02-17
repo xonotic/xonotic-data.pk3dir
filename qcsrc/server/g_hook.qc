@@ -140,15 +140,11 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, this.hook_start.x);
-		WriteCoord(MSG_ENTITY, this.hook_start.y);
-		WriteCoord(MSG_ENTITY, this.hook_start.z);
+		WriteVector(MSG_ENTITY, this.hook_start);
 	}
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, this.hook_end.x);
-		WriteCoord(MSG_ENTITY, this.hook_end.y);
-		WriteCoord(MSG_ENTITY, this.hook_end.z);
+		WriteVector(MSG_ENTITY, this.hook_end);
 	}
 	return true;
 }
@@ -341,7 +337,7 @@ void GrapplingHookTouch(entity this, entity toucher)
 	//this.realowner.disableclientprediction = true;
 }
 
-void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
