@@ -37,14 +37,14 @@ void door_blocked(entity this, entity blocker)
 	)
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 #ifdef SVQC
 		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
 		 // don't change direction for dead or dying stuff
@@ -79,7 +79,7 @@ void door_blocked(entity this, entity blocker)
 		{
 			//gib dying stuff just to make sure
 			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
 	}
@@ -263,7 +263,7 @@ void door_use(entity this, entity actor, entity trigger)
 		door_fire(this.owner, actor, trigger);
 }
 
-void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
@@ -317,7 +317,7 @@ void door_generic_plat_blocked(entity this, entity blocker)
 {
 	if((this.spawnflags & 8) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
 #ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 	}
 	else
@@ -325,7 +325,7 @@ void door_generic_plat_blocked(entity this, entity blocker)
 
 #ifdef SVQC
 		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 #endif
 
 		 //Dont chamge direction for dead or dying stuff
@@ -344,7 +344,7 @@ void door_generic_plat_blocked(entity this, entity blocker)
 		{
 			//gib dying stuff just to make sure
 			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
 		}
 #endif
 	}

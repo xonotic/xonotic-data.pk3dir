@@ -23,8 +23,8 @@ MACRO_END
 	{ (viewmodels[this.m_wepent_slot]).alpha = (ReadByte() + -1) / 254; }) \
     \
     PROP(false, vortex_charge, WEPENT_SET_NORMAL, \
-	{ WriteByte(chan, this.vortex_charge * 16); }, \
-	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 16; }) \
+	{ WriteByte(chan, this.vortex_charge * 255); }, \
+	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 255; }) \
     \
     PROP(false, m_gunalign, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.m_gunalign); }, \
@@ -82,7 +82,7 @@ MACRO_END
 		}
 		WEPENT_NETPROPS(X);
 	#undef X
-		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded WEPENT_NETPROPS limit");
+		if (i >= BITS(24 - 1)) LOG_FATAL("Exceeded WEPENT_NETPROPS limit");
 	}
 
 	bool _wepent_send(entity this, entity to, int sf, int chan)
@@ -95,7 +95,7 @@ MACRO_END
 			WriteHeader(chan, CLIENT_WEPENT);
 		.entity weaponentity = this.owner.weaponentity_fld;
 		WriteByte(chan, weaponslot(weaponentity));
-		WriteShort(chan, sf);
+		WriteInt24_t(chan, sf);
 		int i = 0;
 		#define X(public, fld, set, sv, cl) { \
 			if (sf & BIT(i)) { \
@@ -164,7 +164,7 @@ MACRO_END
 		int slot = ReadByte();
 		this.m_wepent_slot = slot;
 		viewmodels[slot].m_wepent_slot = slot;
-		int sf = ReadShort();
+		int sf = ReadInt24_t();
 		int i = 0;
 		#define X(public, fld, set, sv, cl) { \
 			if (sf & BIT(i)) { \

@@ -112,7 +112,7 @@ void W_Nexball_Attack(entity actor, .entity weaponentity, float t)
 	if(!(ball = actor.ballcarried))
 		return;
 
-	W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
+	W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: use ballstealer weapon here? we don't want duplicates in the scoreboard
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, NULL);
 	if(trace_startsolid)
 	{
@@ -146,7 +146,7 @@ void W_Nexball_Attack2(entity actor, .entity weaponentity)
 	if(actor.ballcarried.enemy)
 	{
 		entity _ball = actor.ballcarried;
-		W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
+		W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id | HITTYPE_SECONDARY); // TODO: use the ball stealer weapon here? probably don't want duplicates
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32, _ball));
 		setthink(_ball, W_Nexball_Think);
 		_ball.nextthink = time;
@@ -156,7 +156,7 @@ void W_Nexball_Attack2(entity actor, .entity weaponentity)
 	if(!autocvar_g_nexball_tackling)
 		return;
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0);
+	W_SetupShot(actor, weaponentity, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0, WEP_PORTO.m_id);
 	entity missile = new(ballstealer);
 
 	missile.owner = actor;

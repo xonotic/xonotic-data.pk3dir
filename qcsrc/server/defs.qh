@@ -34,7 +34,7 @@ float server_is_dedicated;
 
 // Fields
 
-.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
+.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force) event_damage;
 
 //.string	wad;
 //.string	map;
@@ -228,7 +228,10 @@ int have_team_spawns_forteams; // if Xth bit is 1 then team X has spawns else it
 
 .bool canteamdamage;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
+
+// WEAPONTODO
+#define DMG_NOWEP (weaponentities[0])
 
 float lockteams;
 

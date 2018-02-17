@@ -304,7 +304,7 @@ void ctf_CaptureShield_Touch(entity this, entity toucher)
 	vector mymid = (this.absmin + this.absmax) * 0.5;
 	vector theirmid = (toucher.absmin + toucher.absmax) * 0.5;
 
-	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(theirmid - mymid) * ctf_captureshield_force);
+	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, mymid, normalize(theirmid - mymid) * ctf_captureshield_force);
 	if(IS_REAL_CLIENT(toucher)) { Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
 }
 
@@ -865,7 +865,7 @@ void ctf_CheckStalemate()
 	}
 }
 
-void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -1695,7 +1695,7 @@ void havocbot_role_ctf_carrier(entity this)
 		{
 			// Can't navigate to my own base, suicide!
 			// TODO: drop it and wander around
-			Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
+			Damage(this, this, this, 100000, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			return;
 		}
 	}

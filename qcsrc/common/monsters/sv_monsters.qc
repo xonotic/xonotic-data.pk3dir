@@ -366,7 +366,7 @@ bool Monster_Attack_Melee(entity this, entity targ, float damg, vector anim, flo
 	traceline(this.origin + this.view_ofs, this.origin + v_forward * er, 0, this);
 
 	if(trace_ent.takedamage)
-		Damage(trace_ent, this, this, damg * MONSTER_SKILLMOD(this), deathtype, trace_ent.origin, normalize(trace_ent.origin - this.origin));
+		Damage(trace_ent, this, this, damg * MONSTER_SKILLMOD(this), deathtype, DMG_NOWEP, trace_ent.origin, normalize(trace_ent.origin - this.origin));
 
 	return true;
 }
@@ -719,7 +719,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 			{
 				this.last_trace = time + 0.4;
 
-				Damage (this, NULL, NULL, 2, DEATH_DROWN.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, 2, DEATH_DROWN.m_id, DMG_NOWEP, this.origin, '0 0 0');
 				this.angles = '90 90 0';
 				if(random() < 0.5)
 				{
@@ -906,7 +906,7 @@ void Monster_Reset(entity this)
 	this.moveto = this.origin;
 }
 
-void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	this.health -= damage;
 
@@ -985,7 +985,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	}
 }
 
-void Monster_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Monster_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if((this.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL.m_id && !ITEM_DAMAGE_NEEDKILL(deathtype))
 		return;
@@ -1174,7 +1174,7 @@ void Monster_Frozen_Think(entity this)
 			Unfreeze(this);
 			this.health = 0;
 			if(this.event_damage)
-				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
+				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, DMG_NOWEP, this.origin, '0 0 0');
 		}
 
 		else if ( this.revive_progress <= 0 )
@@ -1212,7 +1212,7 @@ void Monster_Think(entity this)
 
 	if(this.monster_lifetime && time >= this.monster_lifetime)
 	{
-		Damage(this, this, this, this.health + this.max_health, DEATH_KILL.m_id, this.origin, this.origin);
+		Damage(this, this, this, this.health + this.max_health, DEATH_KILL.m_id, DMG_NOWEP, this.origin, this.origin);
 		return;
 	}
 

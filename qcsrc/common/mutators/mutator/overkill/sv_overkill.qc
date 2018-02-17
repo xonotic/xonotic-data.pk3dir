@@ -144,7 +144,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 			if(player.(weaponentity).m_weapon == WEP_Null && slot != 0)
 				continue;
 
-			BLASTER_SECONDARY_ATTACK_HACK(vaporizer, player, weaponentity);
+			BLASTER_SECONDARY_ATTACK(vaporizer, player, weaponentity);
 		}
 	}
 

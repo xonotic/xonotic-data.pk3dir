@@ -449,7 +449,7 @@ void spiderbot_blowup(entity this)
 	SUB_SetFade(g1, time, min(this.respawntime, 10));
 	SUB_SetFade(g2, time, min(this.respawntime, 10));
 
-	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_SPID_DEATH.m_id, NULL);
+	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_SPID_DEATH.m_id, DMG_NOWEP, NULL);
 
 	this.alpha = this.tur_head.alpha = this.gun1.alpha = this.gun2.alpha = -1;
 	set_movetype(this, MOVETYPE_NONE);
