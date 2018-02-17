@@ -113,6 +113,3 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
 void Fire_ApplyDamage(entity e);
 
 void Fire_ApplyEffect(entity e);
-
-// WEAPONTODO
-#define DMG_NOWEP (weaponentities[0])
