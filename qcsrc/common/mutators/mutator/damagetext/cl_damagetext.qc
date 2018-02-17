@@ -27,7 +27,7 @@ AUTOCVAR_SAVE(cl_damagetext_offset_screen,          vector, '0 -40 0',  "Damage 
 AUTOCVAR_SAVE(cl_damagetext_offset_world,           vector, '0 0 0',    "Damage text offset (world coordinates)");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_range,       float,  30,         "Damage text spawned within this range is accumulated");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_alpha_rel,   float,  0.65,       "Only update existing damage text when it's above this much percentage (0 to 1) of the starting alpha");
-AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           bool,   true,       "Show damage text for friendlyfire too");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire,           int,    1,          "0: never show for friendly fire, 1: when more than 0 damage, 2: always");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color,     vector, '1 0 0',    "Damage text color for friendlyfire");
 
 AUTOCVAR_SAVE(cl_damagetext_2d,                     bool,   true,       "Show damagetext in 2D coordinates if the enemy's location is not known");
@@ -218,8 +218,11 @@ NET_HANDLE(damagetext, bool isNew)
     else potential_damage = ReadShort();
 
     return = true;
-    if (!autocvar_cl_damagetext) return;
-    if (friendlyfire && !autocvar_cl_damagetext_friendlyfire) return;
+    if (autocvar_cl_damagetext == 0) return;
+    if (friendlyfire) {
+        if (autocvar_cl_damagetext_friendlyfire == 0) return;
+        if (autocvar_cl_damagetext_friendlyfire == 1 && health == 0 && armor == 0) return;
+    }
 
     int client_entity_index = server_entity_index - 1;
     entity entcs = entcs_receiver(client_entity_index);
