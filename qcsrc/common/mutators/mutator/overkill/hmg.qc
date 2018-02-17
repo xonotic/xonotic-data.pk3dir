@@ -70,25 +70,7 @@ METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity wea
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
 		actor.jump_interval = time + WEP_CVAR_SEC(hmg, refire) * W_WeaponRateFactor(actor);
-		// Ugly hack to reuse the fire mode of the blaster.
-		makevectors(actor.v_angle);
-		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-		actor.(weaponentity).m_weapon = WEP_BLASTER;
-		W_Blaster_Attack(
-			actor,
-			weaponentity,
-			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-			WEP_CVAR_SEC(hmg, shotangle),
-			WEP_CVAR_SEC(hmg, damage),
-			WEP_CVAR_SEC(hmg, edgedamage),
-			WEP_CVAR_SEC(hmg, radius),
-			WEP_CVAR_SEC(hmg, force),
-			WEP_CVAR_SEC(hmg, speed),
-			WEP_CVAR_SEC(hmg, spread),
-			WEP_CVAR_SEC(hmg, delay),
-			WEP_CVAR_SEC(hmg, lifetime)
-		);
-		actor.(weaponentity).m_weapon = oldwep;
+		BLASTER_SECONDARY_ATTACK(hmg, actor, weaponentity);
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -128,22 +110,7 @@ METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity wea
 		{
 			return;
 		}
-		// ugly instagib hack to reuse the fire mode of the laser
-		makevectors(actor.v_angle);
-		W_Blaster_Attack(
-			actor,
-			weaponentity,
-			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-			WEP_CVAR_SEC(hmg, shotangle),
-			WEP_CVAR_SEC(hmg, damage),
-			WEP_CVAR_SEC(hmg, edgedamage),
-			WEP_CVAR_SEC(hmg, radius),
-			WEP_CVAR_SEC(hmg, force),
-			WEP_CVAR_SEC(hmg, speed),
-			WEP_CVAR_SEC(hmg, spread),
-			WEP_CVAR_SEC(hmg, delay),
-			WEP_CVAR_SEC(hmg, lifetime)
-		);
+		BLASTER_SECONDARY_ATTACK(hmg, actor, weaponentity);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hmg, animtime), w_ready);
 	}
 }

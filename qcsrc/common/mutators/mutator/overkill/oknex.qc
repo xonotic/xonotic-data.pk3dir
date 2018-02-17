@@ -140,22 +140,7 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
 		actor.jump_interval = time + WEP_CVAR_SEC(oknex, refire) * W_WeaponRateFactor(actor);
-		// Ugly hack to reuse the fire mode of the blaster.
-		makevectors(actor.v_angle);
-		W_Blaster_Attack(
-			actor,
-			weaponentity,
-			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-			WEP_CVAR_SEC(oknex, shotangle),
-			WEP_CVAR_SEC(oknex, damage),
-			WEP_CVAR_SEC(oknex, edgedamage),
-			WEP_CVAR_SEC(oknex, radius),
-			WEP_CVAR_SEC(oknex, force),
-			WEP_CVAR_SEC(oknex, speed),
-			WEP_CVAR_SEC(oknex, spread),
-			WEP_CVAR_SEC(oknex, delay),
-			WEP_CVAR_SEC(oknex, lifetime)
-		);
+		BLASTER_SECONDARY_ATTACK(oknex, actor, weaponentity);
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -197,22 +182,7 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 		{
 			return;
 		}
-		// ugly instagib hack to reuse the fire mode of the laser
-		makevectors(actor.v_angle);
-		W_Blaster_Attack(
-			actor,
-			weaponentity,
-			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-			WEP_CVAR_SEC(oknex, shotangle),
-			WEP_CVAR_SEC(oknex, damage),
-			WEP_CVAR_SEC(oknex, edgedamage),
-			WEP_CVAR_SEC(oknex, radius),
-			WEP_CVAR_SEC(oknex, force),
-			WEP_CVAR_SEC(oknex, speed),
-			WEP_CVAR_SEC(oknex, spread),
-			WEP_CVAR_SEC(oknex, delay),
-			WEP_CVAR_SEC(oknex, lifetime)
-		);
+		BLASTER_SECONDARY_ATTACK(oknex, actor, weaponentity);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(oknex, animtime), w_ready);
 		return;
 	}
