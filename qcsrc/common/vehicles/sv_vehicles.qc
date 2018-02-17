@@ -201,7 +201,7 @@ vector vehicles_force_fromtag_maglev(entity this, string tag_name, float spring_
 }
 
 // projectile handling
-void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	// Ignore damage from oterh projectiles from my owner (dont mess up volly's)
 	if(inflictor.owner == this.owner)
@@ -232,7 +232,7 @@ void vehicles_projectile_explode(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, toucher);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, DMG_NOWEP, toucher);
 
 	delete(this);
 }
@@ -640,7 +640,7 @@ void vehicles_frame(entity this, entity actor)
 	vehicles_painframe(this);
 }
 
-void vehicles_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void vehicles_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	this.dmg_time = time;
 
@@ -753,7 +753,7 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 		if(_minspeed < wc)
 		{
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 			this.play_time = time + 0.25;
 
 			//dprint("wc: ", ftos(wc), "\n");
@@ -901,7 +901,7 @@ void vehicles_touch(entity this, entity toucher)
 		if(vehicles_crushable(toucher))
 		{
 			if(vdist(this.velocity, >=, 30))
-				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
+				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, DMG_NOWEP, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}

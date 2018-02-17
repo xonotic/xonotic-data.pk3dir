@@ -82,7 +82,7 @@ void W_OverkillNex_Attack(Weapon thiswep, entity actor, .entity weaponentity, fl
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
+	W_SetupShot(actor, weaponentity, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg, WEP_OVERKILL_NEX.m_id);
 	if(charge > WEP_CVAR(oknex, charge_animlimit) && WEP_CVAR(oknex, charge_animlimit)) // if the OverkillNex is overcharged, we play an extra sound
 	{
 		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(oknex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(oknex, charge_animlimit)), ATTN_NORM);
@@ -142,8 +142,6 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 		actor.jump_interval = time + WEP_CVAR_SEC(oknex, refire) * W_WeaponRateFactor(actor);
 		// Ugly hack to reuse the fire mode of the blaster.
 		makevectors(actor.v_angle);
-		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-		actor.(weaponentity).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			actor,
 			weaponentity,
@@ -158,7 +156,6 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 			WEP_CVAR_SEC(oknex, delay),
 			WEP_CVAR_SEC(oknex, lifetime)
 		);
-		actor.(weaponentity).m_weapon = oldwep;
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -202,8 +199,6 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 		}
 		// ugly instagib hack to reuse the fire mode of the laser
 		makevectors(actor.v_angle);
-		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-		actor.(weaponentity).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			actor,
 			weaponentity,
@@ -218,7 +213,6 @@ METHOD(OverkillNex, wr_think, void(entity thiswep, entity actor, .entity weapone
 			WEP_CVAR_SEC(oknex, delay),
 			WEP_CVAR_SEC(oknex, lifetime)
 		);
-		actor.(weaponentity).m_weapon = oldwep;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(oknex, animtime), w_ready);
 		return;
 	}

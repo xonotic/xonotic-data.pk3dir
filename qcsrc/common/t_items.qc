@@ -1168,7 +1168,7 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 	return rating;
 }
 
-void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 		RemoveItem(this);

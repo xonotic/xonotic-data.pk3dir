@@ -493,7 +493,7 @@ void raptor_blowup(entity this, entity toucher)
 {
 	this.deadflag	= DEAD_DEAD;
 	this.vehicle_exit(this, VHEF_NORMAL);
-	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_RAPT_DEATH.m_id, NULL);
+	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_RAPT_DEATH.m_id, DMG_NOWEP, NULL);
 
 	this.alpha		  = -1;
 	set_movetype(this, MOVETYPE_NONE);

@@ -23,8 +23,8 @@ MACRO_END
 	{ (viewmodels[this.m_wepent_slot]).alpha = (ReadByte() + -1) / 254; }) \
     \
     PROP(false, vortex_charge, WEPENT_SET_NORMAL, \
-	{ WriteByte(chan, this.vortex_charge * 16); }, \
-	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 16; }) \
+	{ WriteByte(chan, this.vortex_charge * 255); }, \
+	{ (viewmodels[this.m_wepent_slot]).vortex_charge = ReadByte() / 255; }) \
     \
     PROP(false, oknex_charge, WEPENT_SET_NORMAL, \
 	{ WriteByte(chan, this.oknex_charge * 16); }, \

@@ -399,7 +399,7 @@ void nade_ice_think(entity this)
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, this.enemy);
+				autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, DMG_NOWEP, this.enemy);
 			Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 		}
@@ -637,7 +637,7 @@ void nade_heal_touch(entity this, entity toucher)
 		}
 		else if ( health_factor < 0 )
 		{
-			Damage(toucher,this,this.realowner,-health_factor,DEATH_NADE_HEAL.m_id,toucher.origin,'0 0 0');
+			Damage(toucher,this,this.realowner,-health_factor,DEATH_NADE_HEAL.m_id,DMG_NOWEP,toucher.origin,'0 0 0');
 		}
 
 	}
@@ -724,7 +724,7 @@ void nade_boom(entity this)
 	if(nade_blast)
 	{
 		RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				 autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, this.enemy);
+				 autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, DMG_NOWEP, this.enemy);
 		Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 	}
 
@@ -817,7 +817,7 @@ void nade_beep(entity this)
 	this.nextthink = max(this.wait, time);
 }
 
-void nade_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void nade_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -901,7 +901,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	makevectors(e.v_angle);
 
 	// NOTE: always throw from first weapon entity?
-	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0);
+	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0, DEATH_NADE.m_id);
 
 	vector offset = (v_forward * autocvar_g_nades_throw_offset.x)
 	              + (v_right * autocvar_g_nades_throw_offset.y)

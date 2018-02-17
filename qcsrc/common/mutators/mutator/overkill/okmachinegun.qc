@@ -22,7 +22,7 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 
 	W_DecreaseAmmo(WEP_OVERKILL_MACHINEGUN, actor, WEP_CVAR_PRI(okmachinegun, ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okmachinegun, damage));
+	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(okmachinegun, damage), WEP_OVERKILL_MACHINEGUN.m_id);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
@@ -66,8 +66,6 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 		actor.jump_interval = time + WEP_CVAR_SEC(okmachinegun, refire) * W_WeaponRateFactor(actor);
 		// Ugly hack to reuse the fire mode of the blaster.
 		makevectors(actor.v_angle);
-		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-		actor.(weaponentity).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			actor,
 			weaponentity,
@@ -82,7 +80,6 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 			WEP_CVAR_SEC(okmachinegun, delay),
 			WEP_CVAR_SEC(okmachinegun, lifetime)
 		);
-		actor.(weaponentity).m_weapon = oldwep;
 		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
 			(actor.(weaponentity).wframe == WFRAME_FIRE2))
 		{
@@ -124,8 +121,6 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 		}
 		// Ugly hack to reuse the fire mode of the blaster.
 		makevectors(actor.v_angle);
-		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-		actor.(weaponentity).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			actor,
 			weaponentity,
@@ -140,7 +135,6 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 			WEP_CVAR_SEC(okmachinegun, delay),
 			WEP_CVAR_SEC(okmachinegun, lifetime)
 		);
-		actor.(weaponentity).m_weapon = oldwep;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(okmachinegun, animtime), w_ready);
 	}
 }

@@ -27,7 +27,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	W_DecreaseAmmo(WEP_HMG, actor, WEP_CVAR_PRI(hmg, ammo), weaponentity);
 
-	W_SetupShot (actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hmg, damage));
+	W_SetupShot(actor, weaponentity, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hmg, damage), WEP_HMG.m_id);
 
 	if(!autocvar_g_norecoil)
 	{
@@ -130,8 +130,6 @@ METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity wea
 		}
 		// ugly instagib hack to reuse the fire mode of the laser
 		makevectors(actor.v_angle);
-		Weapon oldwep = actor.(weaponentity).m_weapon; // we can't avoid this hack
-		actor.(weaponentity).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			actor,
 			weaponentity,
@@ -146,7 +144,6 @@ METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity wea
 			WEP_CVAR_SEC(hmg, delay),
 			WEP_CVAR_SEC(hmg, lifetime)
 		);
-		actor.(weaponentity).m_weapon = oldwep;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hmg, animtime), w_ready);
 	}
 }
