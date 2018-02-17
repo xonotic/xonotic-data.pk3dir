@@ -16,11 +16,6 @@
 .float lastflags;
 .float lastground;
 .float wasFlying;
-#ifdef SVQC
-.float spectatorspeed = _STAT(SPECTATORSPEED);
-#elif defined(CSQC)
-.float spectatorspeed;
-#endif
 
 .int buttons_old;
 .vector movement_old;
@@ -260,6 +255,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON_DODGE)
 
 	void PM_UpdateButtons(entity this, entity store);
 
+	// TODO: modify maxspeed_mod and get rid of these!
 	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
 	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
 

@@ -934,7 +934,7 @@ void Item_Touch(entity this, entity toucher)
 
 LABEL(pickup)
 
-	toucher.last_pickup = time;
+	STAT(LAST_PICKUP, toucher) = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
@@ -1511,7 +1511,7 @@ spawnfunc(target_items)
 					s = Buff_UndeprecateName(argv(j));
 					if(s == it.m_name)
 					{
-						this.buffs |= (it.m_itemid);
+						STAT(BUFFS, this) |= (it.m_itemid);
 						break;
 					}
 				});
@@ -1571,7 +1571,7 @@ spawnfunc(target_items)
 		if(this.ammo_fuel != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_fuel), "fuel");
 		if(this.health != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.health), "health");
 		if(this.armorvalue != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.armorvalue), "armor");
-		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.buffs & (it.m_itemid)), it.m_name));
+		FOREACH(Buffs, it != BUFF_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(STAT(BUFFS, this) & (it.m_itemid)), it.m_name));
 		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.weapons & (it.m_wepset)), it.netname));
 	}
 	this.netname = strzone(this.netname);
@@ -1620,30 +1620,30 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 
 bool GiveBuff(entity e, Buff thebuff, int op, int val)
 {
-	bool had_buff = (e.buffs & thebuff.m_itemid);
+	bool had_buff = (STAT(BUFFS, e) & thebuff.m_itemid);
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				e.buffs |= thebuff.m_itemid;
+				STAT(BUFFS, e) |= thebuff.m_itemid;
 			else
-				e.buffs &= ~thebuff.m_itemid;
+				STAT(BUFFS, e) &= ~thebuff.m_itemid;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				e.buffs |= thebuff.m_itemid;
+				STAT(BUFFS, e) |= thebuff.m_itemid;
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.buffs &= ~thebuff.m_itemid;
+				STAT(BUFFS, e) &= ~thebuff.m_itemid;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.buffs &= ~thebuff.m_itemid;
+				STAT(BUFFS, e) &= ~thebuff.m_itemid;
 			break;
 	}
-	bool have_buff = (e.buffs & thebuff.m_itemid);
+	bool have_buff = (STAT(BUFFS, e) & thebuff.m_itemid);
 	return (had_buff != have_buff);
 }
 

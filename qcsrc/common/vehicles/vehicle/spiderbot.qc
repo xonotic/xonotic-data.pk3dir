@@ -63,7 +63,7 @@ bool spiderbot_frame(entity this, float dt)
 		.entity weaponentity = weaponentities[slot];
 		this.(weaponentity).m_switchweapon = WEP_Null;
 	}
-	this.vehicle_weapon2mode = vehic.vehicle_weapon2mode;
+	STAT(VEHICLESTAT_W2MODE, this) = STAT(VEHICLESTAT_W2MODE, vehic);
 
 
 #if 1 // 0 to enable per-gun impact aux crosshairs
@@ -464,37 +464,37 @@ bool spiderbot_impulse(entity this, int _imp)
 	switch(_imp)
 	{
 		case IMP_weapon_group_1.impulse:
-			this.vehicle.vehicle_weapon2mode = SBRM_VOLLY;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) = SBRM_VOLLY;
 			CSQCVehicleSetup(this, 0);
 			return true;
 		case IMP_weapon_group_2.impulse:
-			this.vehicle.vehicle_weapon2mode = SBRM_GUIDE;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) = SBRM_GUIDE;
 			CSQCVehicleSetup(this, 0);
 			return true;
 		case IMP_weapon_group_3.impulse:
-			this.vehicle.vehicle_weapon2mode = SBRM_ARTILLERY;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) = SBRM_ARTILLERY;
 			CSQCVehicleSetup(this, 0);
 			return true;
 
 		case IMP_weapon_next_byid.impulse:
 		case IMP_weapon_next_bypriority.impulse:
 		case IMP_weapon_next_bygroup.impulse:
-			this.vehicle.vehicle_weapon2mode += 1;
-			if(this.vehicle.vehicle_weapon2mode > SBRM_LAST)
-				this.vehicle.vehicle_weapon2mode = SBRM_FIRST;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) += 1;
+			if(STAT(VEHICLESTAT_W2MODE, this.vehicle) > SBRM_LAST)
+				STAT(VEHICLESTAT_W2MODE, this.vehicle) = SBRM_FIRST;
 
-			//centerprint(this, strcat("Rocket mode is ", ftos(this.vehicle.vehicle_weapon2mode)));
+			//centerprint(this, strcat("Rocket mode is ", ftos(STAT(VEHICLESTAT_W2MODE, this.vehicle))));
 			CSQCVehicleSetup(this, 0);
 			return true;
 		case IMP_weapon_last.impulse:
 		case IMP_weapon_prev_byid.impulse:
 		case IMP_weapon_prev_bypriority.impulse:
 		case IMP_weapon_prev_bygroup.impulse:
-			this.vehicle.vehicle_weapon2mode -= 1;
-			if(this.vehicle.vehicle_weapon2mode < SBRM_FIRST)
-				this.vehicle.vehicle_weapon2mode = SBRM_LAST;
+			STAT(VEHICLESTAT_W2MODE, this.vehicle) -= 1;
+			if(STAT(VEHICLESTAT_W2MODE, this.vehicle) < SBRM_FIRST)
+				STAT(VEHICLESTAT_W2MODE, this.vehicle) = SBRM_LAST;
 
-			//centerprint(this, strcat("Rocket mode is ", ftos(this.vehicle.vehicle_weapon2mode)));
+			//centerprint(this, strcat("Rocket mode is ", ftos(STAT(VEHICLESTAT_W2MODE, this.vehicle))));
 			CSQCVehicleSetup(this, 0);
 			return true;
 
@@ -521,7 +521,7 @@ METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 {
-    instance.vehicle_weapon2mode = SBRM_GUIDE;
+    STAT(VEHICLESTAT_W2MODE, instance) = SBRM_GUIDE;
     set_movetype(instance, MOVETYPE_WALK);
     CSQCVehicleSetup(instance.owner, 0);
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;

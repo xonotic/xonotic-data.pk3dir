@@ -49,7 +49,6 @@ bool kh_no_radar_circles;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.int kh_state = _STAT(KH_KEYS);
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
 
@@ -133,12 +132,12 @@ void kh_update_state()
 		s |= (32 ** key.count) * f;
 	}
 
-	FOREACH_CLIENT(true, { it.kh_state = s; });
+	FOREACH_CLIENT(true, { STAT(KH_KEYS, it) = s; });
 
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
-			key.owner.kh_state |= (32 ** key.count) * 31;
+			STAT(KH_KEYS, key.owner) |= (32 ** key.count) * 31;
 	}
 	//print(ftos((nextent(NULL)).kh_state), "\n");
 }
@@ -1273,7 +1272,7 @@ MUTATOR_HOOKFUNCTION(kh, SpectateCopy)
 	entity spectatee = M_ARGV(0, entity);
 	entity client = M_ARGV(1, entity);
 
-	client.kh_state = spectatee.kh_state;
+	STAT(KH_KEYS, client) = STAT(KH_KEYS, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)

@@ -367,7 +367,7 @@ bool vehicle_addplayerslot(	entity _owner,
 	_slot.PlayerPhysplug = _framefunc;
 	_slot.vehicle_exit = _exitfunc;
 	_slot.vehicle_enter = _enterfunc;
-	_slot.hud = _hud;
+	STAT(HUD, _slot) = _hud;
 	_slot.vehicle_flags = VHF_PLAYERSLOT;
 	_slot.vehicle_viewport = spawn();
 	_slot.vehicle_hudmodel = spawn();
@@ -825,13 +825,13 @@ void vehicles_exit(entity vehic, bool eject)
 		player.solid			= SOLID_SLIDEBOX;
 		set_movetype(player, MOVETYPE_WALK);
 		player.effects		   &= ~EF_NODRAW;
-		player.teleportable	= TELEPORT_NORMAL;
+		player.teleportable		= TELEPORT_NORMAL;
 		player.alpha			= 1;
 		player.PlayerPhysplug	= func_null;
 		player.vehicle			= NULL;
-		player.view_ofs		= STAT(PL_VIEW_OFS, player);
-		player.event_damage	= PlayerDamage;
-		player.hud				= HUD_NORMAL;
+		player.view_ofs			= STAT(PL_VIEW_OFS, player);
+		player.event_damage		= PlayerDamage;
+		STAT(HUD, player)		= HUD_NORMAL;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++ slot)
 		{
 			.entity weaponentity = weaponentities[slot];
@@ -1025,7 +1025,7 @@ void vehicles_enter(entity pl, entity veh)
 		veh.(weaponentity) = new(temp_wepent);
 		veh.(weaponentity).m_switchweapon = pl.(weaponentity).m_switchweapon;
 	}
-	pl.hud = veh.vehicleid;
+	STAT(HUD, pl) = veh.vehicleid;
 	pl.PlayerPhysplug = veh.PlayerPhysplug;
 
 	pl.vehicle_ammo1 = veh.vehicle_ammo1;
@@ -1086,7 +1086,7 @@ void vehicles_think(entity this)
 	this.nextthink = time + autocvar_g_vehicles_thinkrate;
 
 	if(this.owner)
-		this.owner.vehicle_weapon2mode = this.vehicle_weapon2mode;
+		STAT(VEHICLESTAT_W2MODE, this.owner) = STAT(VEHICLESTAT_W2MODE, this);
 
 	Vehicle info = Vehicles_from(this.vehicleid);
 	info.vr_think(info, this);

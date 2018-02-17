@@ -118,7 +118,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 	{
 		actor.strength_finished = 0;
 		actor.invincible_finished = 0;
-		actor.buffs = 0;
+		STAT(BUFFS, actor) = 0;
 	}
 
 	if (!(this.spawnflags & 16))

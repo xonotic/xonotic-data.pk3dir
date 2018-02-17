@@ -11,8 +11,8 @@ METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity we
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
             if(autocvar_g_nexball_basketball_meter)
             {
-                if(actor.ballcarried && !actor.metertime)
-                    actor.metertime = time;
+                if(actor.ballcarried && !STAT(NB_METERSTART, actor))
+                    STAT(NB_METERSTART, actor) = time;
                 else
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
             }
@@ -28,9 +28,9 @@ METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity we
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
         }
 
-    if(!(fire & 1) && actor.metertime && actor.ballcarried)
+    if(!(fire & 1) && STAT(NB_METERSTART, actor) && actor.ballcarried)
     {
-        W_Nexball_Attack(actor, weaponentity, time - actor.metertime);
+        W_Nexball_Attack(actor, weaponentity, time - STAT(NB_METERSTART, actor));
         // DropBall or stealing will set metertime back to 0
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
     }
@@ -116,8 +116,8 @@ void W_Nexball_Attack(entity actor, .entity weaponentity, float t)
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, NULL);
 	if(trace_startsolid)
 	{
-		if(actor.metertime)
-			actor.metertime = 0; // Shot failed, hide the power meter
+		if(STAT(NB_METERSTART, actor))
+			STAT(NB_METERSTART, actor) = 0; // Shot failed, hide the power meter
 		return;
 	}
 
