@@ -8,14 +8,15 @@
 # Ari_tent <xonotic@outlook.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
 # brunodeleo <bruno.laurenzano@gmail.com>, 2014
-# Starfire24680 <starfire24680@gmail.com>, 2017
+# starfire24680 <starfire24680@gmail.com>, 2017
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # kammy smb <kammysmb@gmail.com>, 2013
 # kammy smb <kammysmb@gmail.com>, 2013
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
 # Simon <inactive+0000simon@transifex.com>, 2014-2015
-# Starfire24680 <starfire24680@gmail.com>, 2017
+# starfire24680 <starfire24680@gmail.com>, 2017
+# starfire24680 <starfire24680@gmail.com>, 2017
 # Vitama Piru Leta <vitamanrules@gmail.com>, 2017
 # Ari_tent <xonotic@outlook.com>, 2014
 # Yllelder, 2016
@@ -25,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
+"PO-Revision-Date: 2017-09-19 19:54+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/team-xonotic/xonotic/"
 "language/es/)\n"
@@ -247,7 +248,7 @@ msgstr "Continuar..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Chat"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -2959,8 +2960,8 @@ msgstr "^BG%s%s^K1 se comió el misil de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 se acercó demasiado al misil de ^BG%s^K1%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -9465,3 +9466,9 @@ msgstr "Color del equipo:"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Activar panel"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "QMCMD^Chat"
+
+#~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+#~ msgstr "^BG%s%s^K1 se acercó demasiado al misil de ^BG%s^K1%s%s"

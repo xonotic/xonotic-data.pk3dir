@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-09 00:35+0200\n"
-"PO-Revision-Date: 2017-07-09 23:06+0000\n"
+"PO-Revision-Date: 2017-09-14 13:32+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
@@ -245,7 +245,7 @@ msgstr "Continuer..."
 #: qcsrc/client/hud/panel/quickmenu.qc:794
 #: qcsrc/client/hud/panel/quickmenu.qc:798
 msgid "Chat"
-msgstr "Tchat"
+msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:795
 msgid "QMCMD^:-) / nice one"
@@ -2971,8 +2971,8 @@ msgstr "^BG%s%s^K1 a goûté à la roquette de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:463
 #, c-format
-msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 s'est approché trop près de la roquette de ^BG%s^K1%s%s"
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:464
 #, c-format
@@ -5173,7 +5173,7 @@ msgstr "Nom :"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:60
 msgid "Name under which you will appear in the game"
-msgstr "Pseudonyme utilisé pour vous reconnaître dans le jeu"
+msgstr "Nom sous lequel vous apparaîtrez dans le jeu"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:69
 msgid "Text language:"
@@ -6381,7 +6381,7 @@ msgstr "Les joueurs lâchent toutes leurs armes quand ils meurent"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:230
 msgid "Weapons stay after they are picked up"
-msgstr "Les armes restent où elles sont lorsqu'elles sont ramassées"
+msgstr "Les armes restent présentes après avoir été ramassées"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:235
 msgid "Regular (no arena)"
@@ -9499,3 +9499,9 @@ msgstr "Couleur de l'Équipe :"
 #: qcsrc/menu/xonotic/util.qh:44
 msgid "Enable panel"
 msgstr "Afficher le tableau de bord"
+
+#~ msgid "QMCMD^Chat"
+#~ msgstr "Tchat"
+
+#~ msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"
+#~ msgstr "^BG%s%s^K1 s'est approché trop près de la roquette de ^BG%s^K1%s%s"

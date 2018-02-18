@@ -167,7 +167,7 @@ void player_anim(entity this)
 	animdecide_setimplicitstate(this, IS_ONGROUND(this));
 }
 
-void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	float take, save;
 	vector v;
@@ -304,7 +304,7 @@ void calculate_player_respawn_time(entity this)
 		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
 }
 
-void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	float take, save, dh, da;
 	vector v;
@@ -484,7 +484,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	bool valid_damage_for_weaponstats = false;
 	Weapon awep = WEP_Null;
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 
 	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
@@ -548,7 +547,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// print an obituary message
 		if(this.classname != "body")
-			Obituary (attacker, inflictor, this, deathtype);
+			Obituary (attacker, inflictor, this, deathtype, weaponentity);
 
         // increment frag counter for used weapon type
         Weapon w = DEATH_WEAPONOF(deathtype);
@@ -564,9 +563,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity went = weaponentities[slot];
-			if(!this.(weaponentity))
+			if(!this.(went))
 				continue; // TODO: clones have no weapon, but we don't want to have to check this all the time
-			Weapon wep = this.(weaponentity).m_weapon;
+			Weapon wep = this.(went).m_weapon;
 			wep.wr_playerdeath(wep, this, went);
 		}
 
@@ -640,7 +639,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// set damage function to corpse damage
 		this.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
-		this.event_damage(this, inflictor, attacker, excess, deathtype, hitloc, force);
+		this.event_damage(this, inflictor, attacker, excess, deathtype, weaponentity, hitloc, force);
 
 		// set up to fade out later
 		SUB_SetFade (this, time + 6 + random (), 1);
@@ -655,7 +654,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(autocvar_sv_gentle > 0 || autocvar_ekg || this.classname == "body") {
 			// remove corpse
 			// clones don't run any animation code any more, so we must gib them when they die :(
-			this.event_damage(this, inflictor, attacker, autocvar_sv_gibhealth + 1, deathtype, hitloc, force);
+			this.event_damage(this, inflictor, attacker, autocvar_sv_gibhealth + 1, deathtype, weaponentity, hitloc, force);
 		}
 
 		// reset fields the weapons may use just in case
@@ -683,7 +682,7 @@ bool MoveToTeam(entity client, int team_colour, int type)
 	{
 		return false;
 	}
-	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, DMG_NOWEP, client.origin, '0 0 0');  // kill the player
 	lockteams = lockteams_backup;  // restore the team lock
 	LogTeamchange(client.playerid, client.team, type);
 	return true;

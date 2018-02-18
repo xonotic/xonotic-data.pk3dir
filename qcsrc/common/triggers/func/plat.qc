@@ -26,16 +26,10 @@ float plat_send(entity this, entity to, float sf)
 
 		trigger_common_write(this, true);
 
-		WriteCoord(MSG_ENTITY, this.pos1_x);
-		WriteCoord(MSG_ENTITY, this.pos1_y);
-		WriteCoord(MSG_ENTITY, this.pos1_z);
-		WriteCoord(MSG_ENTITY, this.pos2_x);
-		WriteCoord(MSG_ENTITY, this.pos2_y);
-		WriteCoord(MSG_ENTITY, this.pos2_z);
+		WriteVector(MSG_ENTITY, this.pos1);
+		WriteVector(MSG_ENTITY, this.pos2);
 
-		WriteCoord(MSG_ENTITY, this.size_x);
-		WriteCoord(MSG_ENTITY, this.size_y);
-		WriteCoord(MSG_ENTITY, this.size_z);
+		WriteVector(MSG_ENTITY, this.size);
 
 		WriteAngle(MSG_ENTITY, this.mangle_x);
 		WriteAngle(MSG_ENTITY, this.mangle_y);
@@ -138,16 +132,10 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		trigger_common_read(this, true);
 
-		this.pos1_x = ReadCoord();
-		this.pos1_y = ReadCoord();
-		this.pos1_z = ReadCoord();
-		this.pos2_x = ReadCoord();
-		this.pos2_y = ReadCoord();
-		this.pos2_z = ReadCoord();
+		this.pos1 = ReadVector();
+		this.pos2 = ReadVector();
 
-		this.size_x = ReadCoord();
-		this.size_y = ReadCoord();
-		this.size_z = ReadCoord();
+		this.size = ReadVector();
 
 		this.mangle_x = ReadAngle();
 		this.mangle_y = ReadAngle();

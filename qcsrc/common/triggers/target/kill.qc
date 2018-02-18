@@ -10,7 +10,7 @@ void target_kill_use(entity this, entity actor, entity trigger)
 	if(!actor.iscreature && !actor.damagedbytriggers)
 		return;
 
-	Damage(actor, this, trigger, 1000, DEATH_HURTTRIGGER.m_id, actor.origin, '0 0 0');
+	Damage(actor, this, trigger, 1000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, actor.origin, '0 0 0');
 }
 
 spawnfunc(target_kill)

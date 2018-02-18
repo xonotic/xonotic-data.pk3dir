@@ -17,7 +17,7 @@ void viewloc_think(entity this)
 
 	// set myself as current viewloc where possible
 #if 1
-	FOREACH_CLIENT(it.viewloc == this,
+	FOREACH_CLIENT(IS_PLAYER(it) && it.viewloc == this,
 	{
 		it.viewloc = NULL;
 	});
@@ -76,9 +76,7 @@ bool trigger_viewloc_send(entity this, entity to, int sf)
 	WriteEntity(MSG_ENTITY, this.enemy);
 	WriteEntity(MSG_ENTITY, this.goalentity);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	return true;
 }
@@ -125,9 +123,7 @@ bool viewloc_send(entity this, entity to, int sf)
 
 	WriteByte(MSG_ENTITY, this.cnt);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	WriteAngle(MSG_ENTITY, this.angles_x);
 	WriteAngle(MSG_ENTITY, this.angles_y);
@@ -178,9 +174,7 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
 	this.enemy = findfloat(NULL, entnum, point1);
 	this.goalentity = findfloat(NULL, entnum, point2);
 
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
+	this.origin = ReadVector();
 
 	return = true;
 
@@ -200,9 +194,7 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC, bool isnew)
 {
 	this.cnt = ReadByte();
 
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
+	this.origin = ReadVector();
 	setorigin(this, this.origin);
 
 	this.movedir_x = ReadAngle();

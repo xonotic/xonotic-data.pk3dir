@@ -115,11 +115,7 @@ void turret_draw2d(entity this)
 		LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it", spriteimage);
 	}
 
-	txt = this.netname;
-	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
-		txt = _("Spam");
-	else
-		txt = spritelookuptext(this, spriteimage);
+	txt = spritelookuptext(this, spriteimage);
 
 	if(time - floor(time) > 0.5 && t == this.team)
 	{
@@ -180,7 +176,7 @@ void turret_draw2d(entity this)
 	}
 
 	o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t);
-	o = drawspritetext(o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+	o = drawsprite_TextOrIcon(true, o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 	drawhealthbar(
 			o,
 			0,
@@ -365,9 +361,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 	{
 		this.m_id = ReadByte();
 
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
 		this.angles_x = ReadAngle();
@@ -401,14 +395,10 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 	if(sf & TNSF_MOVE)
 	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 
-		this.velocity_x = ReadShort();
-		this.velocity_y = ReadShort();
-		this.velocity_z = ReadShort();
+		this.velocity = ReadVector();
 
 		this.angles_y = ReadShort();
 
