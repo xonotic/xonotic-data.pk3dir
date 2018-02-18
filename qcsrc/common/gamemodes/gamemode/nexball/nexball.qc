@@ -13,8 +13,6 @@ MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
 }
 #endif
 #ifdef SVQC
-.float metertime = _STAT(NB_METERSTART);
-
 .entity ballcarried;
 
 int autocvar_g_nexball_goalleadlimit;
@@ -154,9 +152,9 @@ void GiveBall(entity plyr, entity ball)
 		ownr.effects &= ~autocvar_g_nexball_basketball_effects_default;
 		ownr.ballcarried = NULL;
 		GameRules_scoring_vip(ownr, false);
-		if(ownr.metertime)
+		if(STAT(NB_METERSTART, ownr))
 		{
-			ownr.metertime = 0;
+			STAT(NB_METERSTART, ownr) = 0;
 			ownr.(weaponentity).state = WS_READY;
 		}
 		WaypointSprite_Kill(ownr.waypointsprite_attachedforcarrier);
@@ -223,9 +221,9 @@ void DropBall(entity ball, vector org, vector vel)
 	setthink(ball, ResetBall);
 	ball.nextthink = min(time + autocvar_g_nexball_delay_idle, ball.teamtime);
 
-	if(ball.owner.metertime)
+	if(STAT(NB_METERSTART, ball.owner))
 	{
-		ball.owner.metertime = 0;
+		STAT(NB_METERSTART, ball.owner) = 0;
 		.entity weaponentity = ball.weaponentity_fld;
 		ball.owner.(weaponentity).state = WS_READY;
 	}
@@ -853,14 +851,14 @@ MUTATOR_HOOKFUNCTION(nb, SpectateCopy)
 	entity spectatee = M_ARGV(0, entity);
 	entity client = M_ARGV(1, entity);
 
-	client.metertime = spectatee.metertime;
+	STAT(NB_METERSTART, client) = STAT(NB_METERSTART, spectatee);
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.metertime = 0;
+	STAT(NB_METERSTART, player) = 0;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
@@ -875,18 +873,13 @@ MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 	return false;
 }
 
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
-
-MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(nb, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.ballcarried)
-	{
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_nexball_basketball_carrier_highspeed;
-		player.stat_sv_maxspeed *= autocvar_g_nexball_basketball_carrier_highspeed;
-	}
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_nexball_basketball_carrier_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)

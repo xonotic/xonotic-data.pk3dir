@@ -396,18 +396,14 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
 		player.effects |= autocvar_g_keepaway_ballcarrier_effects;
 }
 
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
 
-MUTATOR_HOOKFUNCTION(ka, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(ka, PlayerPhysics_UpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
 	if(player.ballcarried)
-	{
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
-		player.stat_sv_maxspeed *= autocvar_g_keepaway_ballcarrier_highspeed;
-	}
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_keepaway_ballcarrier_highspeed;
 }
 
 MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)

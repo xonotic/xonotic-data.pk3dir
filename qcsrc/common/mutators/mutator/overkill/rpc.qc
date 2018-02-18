@@ -9,7 +9,7 @@ void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	float explosion_damage = RadiusDamage(this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
+	float explosion_damage = RadiusDamage(this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 	if (explosion_damage > 0 && this.m_chainsaw_damage > 0) {
 		// if chainsaw hit something, it removed fired damage (so that direct hit is 100%)
 		// now that we also damaged something by explosion we'd go over 100% so let's add the fired damage back
@@ -33,7 +33,7 @@ void W_RocketPropelledChainsaw_Touch(entity this, entity toucher)
 	W_RocketPropelledChainsaw_Explode(this, toucher);
 }
 
-void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if (this.health <= 0)
 		return;
@@ -69,7 +69,7 @@ void W_RocketPropelledChainsaw_Think(entity this)
 			}
 			this.m_chainsaw_damage += WEP_CVAR(rpc, damage2);
 		}
-		Damage(trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
+		Damage(trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.weaponentity_fld, this.origin, normalize(this.origin - trace_ent.origin) * WEP_CVAR(rpc, force));
 	}
 
 	this.velocity = mydir * (myspeed + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
@@ -84,7 +84,7 @@ void W_RocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .entity weap
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo), weaponentity);
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage), WEP_RPC.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -101,6 +101,7 @@ void W_RocketPropelledChainsaw_Attack(Weapon thiswep, entity actor, .entity weap
 	set_movetype(missile, MOVETYPE_FLY);
 
 	missile.projectiledeathtype = WEP_RPC.m_id;
+	missile.weaponentity_fld = weaponentity;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point

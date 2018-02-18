@@ -20,10 +20,10 @@ void freezetag_count_alive_players()
 		}
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		it.redalive_stat = redalive;
-		it.bluealive_stat = bluealive;
-		it.yellowalive_stat = yellowalive;
-		it.pinkalive_stat = pinkalive;
+		STAT(REDALIVE, it) = redalive;
+		STAT(BLUEALIVE, it) = bluealive;
+		STAT(YELLOWALIVE, it) = yellowalive;
+		STAT(PINKALIVE, it) = pinkalive;
 	});
 
 	eliminatedPlayers.SendFlags |= 1;
@@ -465,10 +465,10 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 	if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
 	{
-		player.revive_progress = bound(0, player.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		player.health = max(1, player.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
+		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+		player.health = max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health));
 
-		if(player.revive_progress >= 1)
+		if(STAT(REVIVE_PROGRESS, player) >= 1)
 		{
 			freezetag_Unfreeze(player);
 			freezetag_count_alive_players();
@@ -493,18 +493,18 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		}
 
 		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, {
-			it.revive_progress = player.revive_progress;
+			STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 			it.reviving = false;
 		});
 	}
 	else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
 	{
-		player.revive_progress = bound(0, player.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		player.health = max(1, player.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
+		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+		player.health = max(1, STAT(REVIVE_PROGRESS, player) * ((warmup_stage) ? warmup_start_health : start_health));
 	}
 	else if(!n && !STAT(FROZEN, player))
 	{
-		player.revive_progress = 0; // thawing nobody
+		STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
 	}
 
 	return true;

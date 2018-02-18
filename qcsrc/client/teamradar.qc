@@ -187,7 +187,7 @@ void teamradar_loadcvars()
 	hud_panel_radar_maximized_zoommode = autocvar_hud_panel_radar_maximized_zoommode;
 
 	// others default to 0
-	// match this to defaultXonotic.cfg!
+	// match this to default hud cfg file!
 	if(!hud_panel_radar_scale) hud_panel_radar_scale = 4096;
 	if(!hud_panel_radar_foreground_alpha) hud_panel_radar_foreground_alpha = 0.8 * panel_fg_alpha;
 	if(!hud_panel_radar_size.x) hud_panel_radar_size.x = 128;
@@ -208,17 +208,13 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 
 	if(sendflags & 1)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
 
 	if(sendflags & 2)
 	{
-		this.velocity_x = ReadCoord();
-		this.velocity_y = ReadCoord();
-		this.velocity_z = ReadCoord();
+		this.velocity = ReadVector();
 	}
 
 	if(sendflags & 4)
